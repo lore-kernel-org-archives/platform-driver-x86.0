@@ -2,82 +2,69 @@ Return-Path: <platform-driver-x86-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15DAEB64DD
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 03:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5567BEB64DD
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Aug 2023 03:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbjHGDlT (ORCPT
+        id S230024AbjHGDwW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Aug 2023 23:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57984 "EHLO
+        Sun, 6 Aug 2023 23:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjHGDlR (ORCPT
+        with ESMTP id S229690AbjHGDwV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Aug 2023 23:41:17 -0400
+        Sun, 6 Aug 2023 23:52:21 -0400
 Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.196])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2DE8AD;
-        Sun,  6 Aug 2023 20:41:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B488310FD;
+        Sun,  6 Aug 2023 20:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/v5lH
-        CD4095ylXk3bIxsvLNqIL1BFCOYqFMwytNhM6k=; b=NaG1GOsHPYcKybDV3dMho
-        ZzbxEKI8Vs7B7eKbdGdx20AmAXYQo8Hko23IOACnr+zg60WEMgjwWgV0uTeifAcM
-        NWDK//Dy4Qwt2uq8RDlbJtI925419N2RW9DQn4GTImJdKbH1OqUHCC/hFP8YqTgl
-        bknm6Mpp6aDSeM/q3c/5pk=
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=TA8ZO
+        F4Cd3S6yJAnesaFglbxk/2g0jy6+FsK1Jy8oAU=; b=DN0WdONdJKeH/0PWvSYTf
+        7t9nyLlxYR5eLbYhSWu7b8ddlT8X+/VTA19PgBRdetXZamJeGh9FQ1tBEkl8O3sc
+        THYvNU5g98DvFnSVuP8iaQP7FO+lJn4LAq1RuzhJZArQooDabWV3gkaq6JHmkv0y
+        oTYW75w8CLYtvkUovE5eSo=
 Received: from localhost.localdomain (unknown [39.144.137.13])
-        by zwqz-smtp-mta-g2-2 (Coremail) with SMTP id _____wD3EpCyZ9BkgCbcCQ--.7851S2;
-        Mon, 07 Aug 2023 11:40:35 +0800 (CST)
+        by zwqz-smtp-mta-g0-4 (Coremail) with SMTP id _____wAnC8nLZtBkztfiCQ--.36380S2;
+        Mon, 07 Aug 2023 11:36:45 +0800 (CST)
 From:   xingtong_wu@163.com
 To:     ilpo.jarvinen@linux.intel.com
-Cc:     hdegoede@redhat.com, markgross@kernel.org, xingtong.wu@siemens.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gerd.haeussler.ext@siemens.com, tobias.schaffner@siemens.com,
-        lkp@intel.com
-Subject: [PATCH v2 2/2] platform/x86/siemens: simatic-ipc-batt: fix logic error for BX-59A
-Date:   Sat,  1 Aug 2043 01:34:17 +0800
-Message-Id: <20430731173417.2692-1-xingtong_wu@163.com>
+Cc:     hdegoede@redhat.com, markgross@kernel.org,
+        andriy.shevchenko@linux.intel.com, xingtong.wu@siemens.com,
+        lee@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gerd.haeussler.ext@siemens.com,
+        tobias.schaffner@siemens.com, lkp@intel.com
+Subject: [PATCH v2 0/2] fix logic errors in BX-59A
+Date:   Sat,  1 Aug 2043 01:30:25 +0800
+Message-Id: <20430731173026.2631-1-xingtong_wu@163.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <d41d3ae3-9c1b-661-4664-51d62ad1d786@linux.intel.com>
-References: <d41d3ae3-9c1b-661-4664-51d62ad1d786@linux.intel.com>
+In-Reply-To: <7196d4b9-34fe-4a18-863b-65d07c4a348c@linux.intel.com>
+References: <7196d4b9-34fe-4a18-863b-65d07c4a348c@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wD3EpCyZ9BkgCbcCQ--.7851S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJrWrtFW7CFyrur1rKFWkCrg_yoW8GFWUpF
-        4rXa10kFW3Gw15tw4DGay7Zr45Za15KrW7GFyqyw13Z3sFv3ZxKr13Aa13ZFsIyr45Way5
-        J3Z3trZrCa1DZFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jReHDUUUUU=
+X-CM-TRANSID: _____wAnC8nLZtBkztfiCQ--.36380S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU6Ma0UUUUU
 X-Originating-IP: [39.144.137.13]
-X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/xtbBEBbE0GNfugX+sgAAsd
+X-CM-SenderInfo: p0lqw35rqjs4rx6rljoofrz/xtbBEA-E0GNfugXwNQAAsN
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: "xingtong.wu" <xingtong.wu@siemens.com>
 
-The variable "priv.devmode" is missing from if statement that leads
-to a logical error. Add the missing variable to the if condition.
+change since v1:
+ - Improve the changelog to make things clear
 
-Fixes: c56beff20375 ("platform/x86/siemens: simatic-ipc-batt: add support for module BX-59A")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202308010001.BGYCSQrl-lkp@intel.com/
+These are rather simple patches fixing logic errors in Siemens
+IPC drivers.
 
-Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
----
+xingtong.wu (2):
+  platform/x86/siemens: simatic-ipc: fix logic error in BX-59A
+  platform/x86/siemens: simatic-ipc-batt: fix logic error for BX-59A
+
  drivers/platform/x86/siemens/simatic-ipc-batt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/siemens/simatic-ipc.c      | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/siemens/simatic-ipc-batt.c b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-index d66b9969234b..e6c12c52843c 100644
---- a/drivers/platform/x86/siemens/simatic-ipc-batt.c
-+++ b/drivers/platform/x86/siemens/simatic-ipc-batt.c
-@@ -194,7 +194,8 @@ int simatic_ipc_batt_probe(struct platform_device *pdev, struct gpiod_lookup_tab
- 
- 	if (table->table[2].key) {
- 		flags = GPIOD_OUT_HIGH;
--		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A || SIMATIC_IPC_DEVICE_BX_59A)
-+		if (priv.devmode == SIMATIC_IPC_DEVICE_BX_21A ||
-+		    priv.devmode == SIMATIC_IPC_DEVICE_BX_59A)
- 			flags = GPIOD_OUT_LOW;
- 		priv.gpios[2] = devm_gpiod_get_index(dev, "CMOSBattery meter", 2, flags);
- 		if (IS_ERR(priv.gpios[2])) {
 -- 
 2.25.1
 
