@@ -1,31 +1,42 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] compal-laptop.c: added JHL90, battery & hwmon interface
-Date: Mon, 12 Apr 2010 18:16:03 +0100
-Message-ID: <20100412171603.GC657@srcf.ucam.org>
-References: <y2z4bc8bc021004051214qf2adadf6u54862990349a7433@mail.gmail.com> <l2j4bc8bc021004060720nc724722ag65746ec44280d393@mail.gmail.com>
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: [PATCH -next] eeepc-wmi: depends on INPUT_SPARSEKMAP
+Date: Tue, 13 Apr 2010 09:45:44 -0700
+Message-ID: <20100413094544.38369da9.randy.dunlap@oracle.com>
+References: <20100413163427.8acd04e5.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:51862 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753255Ab0DLRQG (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Apr 2010 13:16:06 -0400
-Content-Disposition: inline
-In-Reply-To: <l2j4bc8bc021004060720nc724722ag65746ec44280d393@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Roald Frederickx <roald.frederickx@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20100413163427.8acd04e5.sfr@canb.auug.org.au>
+Sender: linux-next-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Matthew Garrett <mjg@redhat.com>
+Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Raold,
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
-This would be best sent as a patch, even if there's a lot of changes. If 
-there's multiple logical changes then this would be best done as a 
-series of patches, each making individual changes. We'll also need a 
-Signed-off-by: line so we can track the origin of the code - check 
-Documentation/SubmittingPatches in the kernel tree for more on this. 
-Thanks for working on this driver!
+When EEEPC_WMI=y and INPUT_SPARSEKMAP=m, the build fails,
+so make EEEPC_WMI depend on INPUT_SPARSEKMAP.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+eeepc-wmi.c:(.text+0x28d1a9): undefined reference to `sparse_keymap_setup'
+eeepc-wmi.c:(.text+0x28d1f9): undefined reference to `sparse_keymap_free'
+eeepc-wmi.c:(.text+0x28d2e0): undefined reference to `sparse_keymap_report_event'
+eeepc-wmi.c:(.init.text+0x17069): undefined reference to `sparse_keymap_free'
+eeepc-wmi.c:(.exit.text+0x2bae): undefined reference to `sparse_keymap_free'
+
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+---
+ drivers/platform/x86/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-next-20100413.orig/drivers/platform/x86/Kconfig
++++ linux-next-20100413/drivers/platform/x86/Kconfig
+@@ -388,7 +388,7 @@ config EEEPC_LAPTOP
+ config EEEPC_WMI
+ 	tristate "Eee PC WMI Hotkey Driver (EXPERIMENTAL)"
+ 	depends on ACPI_WMI
+-	depends on INPUT
++	depends on INPUT && INPUT_SPARSEKMAP
+ 	depends on EXPERIMENTAL
+ 	---help---
+ 	  Say Y here if you want to support WMI-based hotkeys on Eee PC laptops.
