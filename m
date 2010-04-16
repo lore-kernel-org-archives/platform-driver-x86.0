@@ -1,201 +1,161 @@
-From: "Wang, Yong Y" <yong.y.wang@intel.com>
-Subject: RE: [Acpi4asus-user] 1005PE's and backlight controls
-Date: Thu, 15 Apr 2010 12:35:51 +0800
-Message-ID: <FC2FB65B4D919844ADE4BE3C2BB739AD1E29AAE5@shsmsx501.ccr.corp.intel.com>
+From: Chris Bagwell <chris@cnpbagwell.com>
+Subject: Re: [Acpi4asus-user] 1005PE's and backlight controls
+Date: Thu, 15 Apr 2010 19:02:25 -0500
+Message-ID: <o2mdb599ead1004151702x5ec21e37j9d69ac1dbf5f1742@mail.gmail.com>
 References: <y2g3b2dfeb01004131934x67e23d80vc73dfd6d5af133fa@mail.gmail.com>
-	 <o2z71cd59b01004132316jd06b2a40m593ee5376e4dfa28@mail.gmail.com>
-	 <r2odb599ead1004140624g56c2465qc4aaa3d1ee1c79b3@mail.gmail.com>
-	 <p2t71cd59b01004140645v587098bdg2fb3628bcf2a78d3@mail.gmail.com>
- <i2tdb599ead1004140700v22d8e0c2ta01d5d130922a075@mail.gmail.com>
- <FC2FB65B4D919844ADE4BE3C2BB739AD1E216823@shsmsx501.ccr.corp.intel.com>
+	 <t2i9b2b86521004140923x9c1aaa64p867674329ae158af@mail.gmail.com>
+	 <20100414164030.GA14758@srcf.ucam.org>
+	 <v2vdb599ead1004141014qb02bc808l6aa29c3b5b23de51@mail.gmail.com>
+	 <20100414172608.GA15965@srcf.ucam.org>
+	 <w2rdb599ead1004141518ze39ccb45g8b588888e6a87fcf@mail.gmail.com>
+	 <1271295002.7167.187.camel@rzhang1-desktop>
+	 <1271295779.7167.188.camel@rzhang1-desktop>
+	 <j2vdb599ead1004141910r2a3206f8nb17d055db0ba2959@mail.gmail.com>
+	 <1271298553.7167.230.camel@rzhang1-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:55712 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752486Ab0DOEf5 convert rfc822-to-8bit (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:62165 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758114Ab0DPAC0 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Apr 2010 00:35:57 -0400
-In-Reply-To: <FC2FB65B4D919844ADE4BE3C2BB739AD1E216823@shsmsx501.ccr.corp.intel.com>
-Content-Language: en-US
+	Thu, 15 Apr 2010 20:02:26 -0400
+In-Reply-To: <1271298553.7167.230.camel@rzhang1-desktop>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Bagwell <chris@cnpbagwell.com>, Corentin Chary <corentin.chary@gmail.com>
-Cc: "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Alan Jenkins <sourcejedi.lkml@googlemail.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-> -----Original Message-----
-> From: platform-driver-x86-owner@vger.kernel.org
-> [mailto:platform-driver-x86-owner@vger.kernel.org] On Behalf Of Wang,=
- Yong
-> Y
-> Sent: Thursday, April 15, 2010 11:34 AM
-> To: Chris Bagwell; Corentin Chary
-> Cc: acpi4asus-user@lists.sourceforge.net;
-> platform-driver-x86@vger.kernel.org
-> Subject: RE: [Acpi4asus-user] 1005PE's and backlight controls
->=20
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org
-> > [mailto:platform-driver-x86-owner@vger.kernel.org] On Behalf Of Chr=
+On Wed, Apr 14, 2010 at 9:29 PM, Zhang Rui <rui.zhang@intel.com> wrote:
+> On Thu, 2010-04-15 at 10:10 +0800, Chris Bagwell wrote:
+>> On Wed, Apr 14, 2010 at 8:42 PM, Zhang Rui <rui.zhang@intel.com> wro=
+te:
+>> > On Thu, 2010-04-15 at 09:30 +0800, Zhang Rui wrote:
+>> >> On Thu, 2010-04-15 at 06:18 +0800, Chris Bagwell wrote:
+>> >> > On Wed, Apr 14, 2010 at 12:26 PM, Matthew Garrett <mjg59@srcf.u=
+cam.org> wrote:
+>> >> > > On Wed, Apr 14, 2010 at 12:14:04PM -0500, Chris Bagwell wrote=
+:
+>> >> > >
+>> >> > >> Does the acpi-video logic not have logic on its own to send =
+key
+>> >> > >> events? =A0So I guess laptops that don't have custom modules=
+ to handle
+>> >> > >> this type of stuff don't get visual feedback from gnome-powe=
+r-manager?
+>> >> > >
+>> >> > > It does, but it's dependent upon the firmware sending them.
+>> >> >
+>> >> > I think the following tells me firmware is sending them. =A0If =
+I leave
+>> >> > acpi_osi=3D"Windows 2009" so that eeepc_laptop doesn't get load=
+ed, I see
+>> >> > events like this on /pro/acpi/event:
+>> >> >
+>> >> > video LCDD 00000087 00000000
+>> >> > video LCDD 00000087 00000000
+>> >> > video LCDD 00000086 00000000
+>> >> > video LCDD 00000086 00000000
+>> >> >
+>> >> > Thats a couple decreases followed by a couple increases.
+>> >> >
+>> >> I have a EEEpc 1005PE. I'm looking at the backlight problem on th=
 is
-> > Bagwell
-> > Sent: Wednesday, April 14, 2010 10:00 PM
-> > To: Corentin Chary
-> > Cc: acpi4asus-user@lists.sourceforge.net;
-> > platform-driver-x86@vger.kernel.org
-> > Subject: Re: [Acpi4asus-user] 1005PE's and backlight controls
-> >
-> > On Wed, Apr 14, 2010 at 8:45 AM, Corentin Chary
-> > <corentin.chary@gmail.com> wrote:
-> > > On Wed, Apr 14, 2010 at 3:24 PM, Chris Bagwell <chris@cnpbagwell.=
-com>
-> > wrote:
-> > >> On Wed, Apr 14, 2010 at 1:16 AM, Corentin Chary
-> > >> <corentin.chary@gmail.com> wrote:
-> > >>> On Wed, Apr 14, 2010 at 4:34 AM, Chris Bagwell
-> <chris@cnpbagwell.com>
-> > wrote:
-> > >>>> Hi all,
-> > >>>>
-> > >>>> I've seen the following issue reported on various web pages bu=
-t not sure
-> if
-> > >>>> it was directly reported.=A0 First up, you guys know about iss=
-ue with
-> > acpi_osi
-> > >>>> of "Windows 2009" disables eeepc_backend and thats were eeepc_=
-wmi
-> > comes in.
-> > >>>>
-> > >>>> There is a secondary bug though if you boot with acpi_osi=3D"!=
-Windows
-> > 2009"
-> > >>>> (or "Linux").=A0 The ACPI driver will take control of backligh=
-t controls with
-> > >>>> Fn-F5/F6.=A0 Those keys will work but has issues with Gnome an=
-d other
-> > user
-> > >>>> processes.
-> > >>>>
-> > >>>> Anything that uses any of the /sys/* interfaces to control bac=
-klight do
-> not
-> > >>>> work correctly.=A0 When software cycles threw levels, the beha=
-vior is
-> kinda
-> > >>>> odd.=A0 It will cycle each time you dim to something like
-> > >>>> Bright->Dim->Bight->Off->Bright->etc.=A0 Also, Gnome will give=
- no
-> > feedback
-> > >>>> because eeepc_laptop discards the events and it will not make =
-it to
-> > >>>> /dev/input/event*.=A0 And last, the status of current brightne=
-ss is never
-> > >>>> updated under /sys/* correctly which confuses Gnome as well.
-> > >>>>
-> > >>>> The secondary work around is to add acpi_backlight=3Dvendor to=
- boot
-> > options.
-> > >>>> Then eepc_backlight takes charge and life is good.=A0 Gnome gi=
-ves visual
-> > >>>> feedback and dimmer works as expected.
-> > >>>>
-> > >>>> Baring a firmware fix from Asus, would it be possible to enabl=
-e some
-> sort
-> > of
-> > >>>> backlist for using ACPI backlight support and have 1005P's use
-> > eeepc_laptop?
-> > >>>>
-> > >>>> Chris
-> > >>>
-> > >>> Hi,
-> > >>> Did you try the eeepc-wmi ? It's the long term solution and it =
-don't need
-> > >>> any extra kernel parameters. Yong Wang just added backlight sup=
-port to
-> it.
-> > >>>
-> > >>>
-> >
-> http://git.kernel.org/?p=3Dlinux/kernel/git/mjg59/platform-drivers-x8=
-6.git;a=3Dsho
-> > rtlog;h=3Drefs/heads/for_linus
-> > >>>
-> > >>
-> > >> I havent't tried it yet but it looks like it has same issue that
-> > >> eeepc-laptop does. =A0If ACPI reports it handles backlight then
-> > >> eeepc-wmi disables controlling of backlight and I'd get buggy AC=
-PI
-> > >> version.
-> > >>
-> > >> Does Yong happen to be on this email list?
-> > >
-> > > I don't think, but he reads platform-x86 which is now CCed
-> > >
-> > > Are you sure that the backlight behavior is the same with and wit=
-hout
-> > > acpi_osi=3DLinux ?
-> > >
-> >
-> > I just retested to be sure and I think this confirms my suspicion t=
-hat
-> > using eeepc-wmi will not work either for 1005PE's backlights.
-> >
->=20
-> That is correct. Eeepc-wmi does not work on 1005PE at this moment. Th=
-at is
-> because
-> the ACPI BIOS of 1005PE has not fully implemented all the necessary W=
-MI
-> interfaces yet.
-> If you dump the 1005PE BIOS using acpidump, you will find that many c=
-ontrol
-> methods
-> end up calling a dummy method. We are following up this issue with AS=
-US and
-> hopefully
-> they will fix it in later BIOS updates. Current eeepc-wmi driver has =
-been tested
-> on Eee PC
-> 1008HA.
->=20
-> > I tried no acpi_osi (same as "WIndows 2009" I guess),
-> > acpi_osi=3D"!Windows 2009", and acpi_osi=3D"Linux"... all without
-> > specifying acpi_backlight=3Dvendor.  They all had the same behaviou=
-r.
-> > The later two options allow eeepc-laptop to load and it always give=
-s
-> > message about ACPI controlling backlight.
-> >
-> > You can see bad behaviour easiest by using Gnome's Preferences->Pow=
-er
-> > Management and controlling dimmer.  Sliding between 0% and 100% giv=
-es
-> > seemingly random behaviour.  Anything software based acts bad.
-> >
-> > Since ACPI did seem to be controlling backlight when I didn't speci=
-fy
-> > an acpi_osi, I suspect that means eeepc-wmi's logic to disable
-> > backlight support would be invoked for 1005PE's.
-> >
->=20
-> Yes, eeepc-wmi will be loaded if acpi_osi is not specified. And if yo=
-u don't
-> specify
-> acpi_backlight=3Dvendor, the generic ACPI video driver will control e=
-verything.
->=20
+>> >> machine, but it seems to be different from this one.
+>> >>
+>> >> The hotkey seems to work perfectly when ACPI video driver is load=
+ed.
+>> >> i.e. I get a single hotkey event when pressing the hotkey and the=
+ value
+>> >> of /sys/class/backlight/acpi_video0/brightness changes correctly.
+>> >>
+>> >> The only problem I get is that the actual brightness does not cha=
+nge
+>> >> consistently.
+>> >> say, there are 15 brightness levels in all,
+>> >> level 0, level 5 and level 12 give me a screen with lowest bright=
+ness.
+>> >> If I want to get maximum backlight, I need to set it to level 4 o=
+r level
+>> >> 11.
+>>
+>> I'm curious, do you still see this issue if you first kill
+>> gnome-power-manager first?
+>>
+>> >>
+>> > Oh, this have already been fixed in the latest BIOS.
+>>
+>> Wasn't fixed in my case. =A0I'd be curious to here if it fixes for y=
+ou.
+>>
+> no, the problem still exists.
+> I misread your comment at
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D15182#c33
+>
+>> >
+>> > Chris,
+>> > do you mean you get duplicate hotkey events after upgrading the BI=
+OS?
+>>
+>> With latest firmware, I get zero hotkey events over /dev/input/event=
+*
+>> unless I add acpi_backlight=3Dvendor to boot options.
+>
+> I just upgrade the BIOS to 1003, and I can still get input event
+> from /dev/input/event4 (which is ACPI video bus).
+> and there is no duplicate input events when pressing hotkey.
+>
+> thanks,
+> rui
 
-Another piece of information is that eeepc-wmi only works on latest 2.6=
-=2E34-rc
-kernels. If you are running 2.6.33 kernel on Fedora 13 (I saw that in y=
-our comment
-of bug 15182), you need to backport b7b30de53aef6ce773d34837ba7d8422bd3=
-baeec
-to make the WMI device visible so that wmi can bind to it.
+OK, I played around a little more and can now  reproduce what your
+seeing.  What I need to do is boot such that eeepc-laptop is not
+loaded.
 
+Thanks for mentioning exact device name /dev/input/event4.  Its
+interesting that mine is registered so late at /dev/input/event7.
+
+input: Video Bus as
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input7
+ACPI: Video Device [VGA] (multi-head: yes  rom: no  post: no)
+
+If I bootup with no options then eeepc-laptop is not loaded.  In this
+case, I do see events on input7 (I previously stated that I didn't.
+Sorry about that).  In this case, it appears that gnome-power-manager
+gets involved (I see the percentage bar updates) and the screen does
+those funky non-linear updates.
+
+If I bootup with just acpi_osi=3D"!Windows 2009" then eeepc-laptop does
+get loaded.  In this case, the input7 still gets created but no events
+are sent on it.  Also, an input9 device is created for eeepc-laptop
+and brightness keys are NOT sent over it as well.  In this case, the
+brightness levels are linear as long as I use Fn-keys only (not the
+/sys/* interface).
+
+And finally, if I boot with both acpi_osi=3D"!Windows 2009" and
+acpi_backlight=3Dvendor then I  see events on eeepc-laptop input9 and
+gnome-power-manager seems to get involved as well but this time the
+display is updated linearly.
+
+So in summary, I think it tells me this:
+
+1) If ACPI only is involved then brightness controls work fine.  By
+ACPI only, I mean using Fn-keys for brightness and doing something to
+prevent software like gnome-power-manager from getting involved with
+/sys/* interface.
+2) Anything that writes to /sys/class/backlight/acpi_video0/brightness
+works non-linearly.
+3) If you keep software from writing to
+/sys/class/backlight/acpi_video0/brightness then brightness changes
+made with Fn-keys do not get reflected into any of those acpi_video0
+files.  Writing to those files controls brightness non-linearly and
+show up when you read back.
+4) If I use acpi_backlight=3Dvendor then I can access
+/sys/class/backlight/eeepc/brightness and it works linearly.  Things
+like gnome-power-manager work good with this interface.
+
+Chris
 --
 To unsubscribe from this list: send the line "unsubscribe platform-driv=
 er-x86" in
