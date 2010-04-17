@@ -1,147 +1,123 @@
-From: =?ISO-8859-1?Q?=C9ric_Piel?= <Eric.Piel@tremplin-utc.net>
-Subject: Re: [PATCH 1/2] Make WMI be selected automatically when needed
-Date: Sat, 17 Apr 2010 02:58:29 +0200
-Message-ID: <4BC907B5.2050104@tremplin-utc.net>
-References: <4BC8FF9D.7050500@tremplin-utc.net> <20100416173127.6b968fd4.randy.dunlap@oracle.com>
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <Eric.Piel@tremplin-utc.net>
+Subject: [PATCH 2/2 v2] Make BACKLIGHT_CLASS_DEVICE be selected automatically
+ when needed
+Date: Sat, 17 Apr 2010 14:54:54 +0200
+Message-ID: <4BC9AF9E.8040902@tremplin-utc.net>
+References: <4BC8FFA4.2090906@tremplin-utc.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailservice.tudelft.nl ([130.161.131.5]:49027 "EHLO
+Received: from mailservice.tudelft.nl ([130.161.131.5]:46345 "EHLO
 	mailservice.tudelft.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758652Ab0DQA6d (ORCPT
+	with ESMTP id S1751112Ab0DQMy7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 16 Apr 2010 20:58:33 -0400
-In-Reply-To: <20100416173127.6b968fd4.randy.dunlap@oracle.com>
+	Sat, 17 Apr 2010 08:54:59 -0400
+In-Reply-To: <4BC8FFA4.2090906@tremplin-utc.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@osdl.org>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@osdl.org>
+Cc: "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-Op 17-04-10 02:31, Randy Dunlap schreef:
-> On Sat, 17 Apr 2010 02:23:57 +0200 =C9ric Piel wrote:
->=20
->> Many different modules depend on WMI. In Kconfig, some used to "depe=
-nd"
->> on it, while others "selected" it. As WMI by itself is useless and m=
-ore
->> like a library, it's easier for the user to have it automatically
->> selected whenever needed. It's especially true for options in comple=
-tely
->> different places (like LEDS_DELL_NETBOOKS). So we consistently "sele=
-ct"
->> it.
->>
->> Signed-off-by: =C9ric Piel <eric.piel@tremplin-utc.net>
->=20
-> config ACPI_WMI
-> 	tristate "WMI"
-> 	depends on ACPI
->=20
-> so what happens when one of these configs selects ACPI_WMI
-> but ACPI is not enabled?  Hint:  that will not enable ACPI.
->=20
-> Did you test that kconfig combination?
-Indeed, I hadn't really thought of no ACPI support at all... I guess th=
-e best
-is to just do like the other config which select ACPI_WMI, make them de=
-pend
-on ACPI. Sounds good to you? (new version appended)
+Here is a new version, compatible with the v2 of PATCH 1.
 
 Eric
+8<----------------------------------
 
-8<------------------------------
-Many different modules depend on WMI. In Kconfig, some used to "depend"
-on it, while others "selected" it. As WMI by itself is useless and more
-like a library, it's easier for the user to have it automatically
-selected whenever needed. It's especially true for options in completel=
-y
-different places (like LEDS_DELL_NETBOOKS). So we consistently "select"
-it.
+Many different modules depend on BACKLIGHT_CLASS_DEVICE, and are
+situated in completely different places. In Kconfig, some used to "depe=
+nd"
+on it, while others "selected" it. Excepted for the drivers just below
+the option, it's easier for the user to have it automatically
+selected whenever needed. So we consistently "select" it for platform
+and ACPI drivers.
 
-v2: depend on ACPI to avoid selecting ACPI_WMI without ACPI.
-
-Signed-off-by: =C9ric Piel <eric.piel@tremplin-utc.net>
+Signed-off-by: =C3=89ric Piel <eric.piel@tremplin-utc.net>
 ---
- drivers/leds/Kconfig         |    4 +++-
- drivers/platform/x86/Kconfig |   12 ++++++++----
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/platform/x86/Kconfig |   14 +++++++-------
+ 1 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 505eb64..f937f88 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -280,7 +280,9 @@ config LEDS_ADP5520
-=20
- config LEDS_DELL_NETBOOKS
- 	tristate "External LED on Dell Business Netbooks"
--	depends on X86 && ACPI_WMI
-+	depends on X86
-+	depends on ACPI
-+	select ACPI_WMI
- 	help
- 	  This adds support for the Latitude 2100 and similar
- 	  notebooks that have an external LED.
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
 g
-index 7bec458..28c33e8 100644
+index 28c33e8..de5e99d 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -89,8 +89,9 @@ config DELL_LAPTOP
-=20
- config DELL_WMI
- 	tristate "Dell WMI extras"
--	depends on ACPI_WMI
- 	depends on INPUT
-+	depends on ACPI
-+	select ACPI_WMI
- 	---help---
- 	  Say Y here if you want to support WMI-based hotkeys on Dell laptops=
-=2E
-=20
-@@ -136,9 +137,10 @@ config TC1100_WMI
-=20
- config HP_WMI
- 	tristate "HP WMI extras"
--	depends on ACPI_WMI
- 	depends on INPUT
+@@ -19,9 +19,9 @@ config ACER_WMI
+ 	depends on ACPI
+ 	depends on LEDS_CLASS
+ 	depends on NEW_LEDS
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on SERIO_I8042
  	depends on RFKILL || RFKILL =3D n
-+	depends on ACPI
-+	select ACPI_WMI
- 	help
- 	 Say Y here if you want to support WMI-based hotkeys on HP laptops an=
-d
- 	 to read data from WMI such as docking or ambient light sensor state.
-@@ -387,9 +389,10 @@ config EEEPC_LAPTOP
-=20
- config EEEPC_WMI
- 	tristate "Eee PC WMI Hotkey Driver (EXPERIMENTAL)"
--	depends on ACPI_WMI
- 	depends on INPUT
- 	depends on EXPERIMENTAL
-+	depends on ACPI
-+	select ACPI_WMI
++	select BACKLIGHT_CLASS_DEVICE
+ 	select ACPI_WMI
  	---help---
- 	  Say Y here if you want to support WMI-based hotkeys on Eee PC lapto=
-ps.
+ 	  This is a driver for newer Acer (and Wistron) laptops. It adds
+@@ -78,10 +78,10 @@ config DELL_LAPTOP
+ 	depends on X86
+ 	depends on DCDBAS
+ 	depends on EXPERIMENTAL
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on RFKILL || RFKILL =3D n
+ 	depends on POWER_SUPPLY
+ 	depends on SERIO_I8042
++	select BACKLIGHT_CLASS_DEVICE
+ 	default n
+ 	---help---
+ 	This driver adds support for rfkill and backlight control to Dell
+@@ -102,8 +102,8 @@ config FUJITSU_LAPTOP
+ 	tristate "Fujitsu Laptop Extras"
+ 	depends on ACPI
+ 	depends on INPUT
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on LEDS_CLASS || LEDS_CLASS=3Dn
++	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This is a driver for laptops built by Fujitsu:
 =20
-@@ -419,9 +422,10 @@ config ACPI_WMI
+@@ -151,8 +151,8 @@ config HP_WMI
+ config MSI_LAPTOP
+ 	tristate "MSI Laptop Extras"
+ 	depends on ACPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on RFKILL
++	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This is a driver for laptops built by MSI (MICRO-STAR
+ 	  INTERNATIONAL):
+@@ -170,7 +170,7 @@ config MSI_LAPTOP
+ config PANASONIC_LAPTOP
+ 	tristate "Panasonic Laptop Extras"
+ 	depends on INPUT && ACPI
+-	depends on BACKLIGHT_CLASS_DEVICE
++	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This driver adds support for access to backlight control and hotkey=
+s
+ 	  on Panasonic Let's Note laptops.
+@@ -181,8 +181,8 @@ config PANASONIC_LAPTOP
+ config COMPAL_LAPTOP
+ 	tristate "Compal Laptop Extras"
+ 	depends on ACPI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on RFKILL
++	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This is a driver for laptops built by Compal:
 =20
+@@ -423,8 +423,8 @@ config ACPI_WMI
  config MSI_WMI
  	tristate "MSI WMI extras"
--	depends on ACPI_WMI
  	depends on INPUT
- 	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on ACPI
-+	select ACPI_WMI
+-	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on ACPI
++	select BACKLIGHT_CLASS_DEVICE
+ 	select ACPI_WMI
  	select INPUT_SPARSEKMAP
  	help
- 	 Say Y here if you want to support WMI-based hotkeys on MSI laptops.
 --=20
 1.7.0.5
 
-
-=20
 --
 To unsubscribe from this list: send the line "unsubscribe platform-driv=
 er-x86" in
