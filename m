@@ -1,26 +1,81 @@
-From: "Brown, Len" <len.brown@intel.com>
-Subject: RE: [PATCH 0/2] Change some config options to be automatically
- selected
-Date: Sat, 17 Apr 2010 19:00:29 -0700
-Message-ID: <E87738D94A6AD54789B5B8D1BAEB06CC6F04B30811@azsmsx503.amr.corp.intel.com>
-References: <4BC8FF97.6040502@tremplin-utc.net>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: Looking for some pointers on WMI/EC access
+Date: Sun, 18 Apr 2010 21:21:14 +0200
+Message-ID: <q2s71cd59b01004181221kce7c1e5cn7742b1063827ac3b@mail.gmail.com>
+References: <1271518653.4549.186.camel@flunder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:51084 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756508Ab0DRCAd (ORCPT
+Received: from mail-bw0-f225.google.com ([209.85.218.225]:48466 "EHLO
+	mail-bw0-f225.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751776Ab0DRTVQ convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 17 Apr 2010 22:00:33 -0400
-In-Reply-To: <4BC8FF97.6040502@tremplin-utc.net>
-Content-Language: en-US
+	Sun, 18 Apr 2010 15:21:16 -0400
+In-Reply-To: <1271518653.4549.186.camel@flunder>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?w4lyaWMgUGllbA==?= <Eric.Piel@tremplin-utc.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andrew Morton <akpm@osdl.org>
-Cc: Matthew Garrett <mjg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Florian Echtler <floe@butterbrot.org>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-PiBJJ20gbm90IHN1cmUgaWYgdGhlcmUgaXMgYW55b25lIHdobyBmZWVscyByZWFsbHkgdGhlIG1h
-aW50YWluZXIgb2YgdGhlDQo+IHBsYXRmb3JtLXg4NiBkaXJlY3RvcnkNCg0KTWF0dGhldyBHYXJy
-ZXR0IG1haW50YWlucyB0aGUgcGxhdGZvcm0teDg2IGRpcmVjdG9yeS4NCg0KQ2hlZXJzLA0KLUxl
-bg0KDQo=
+On Sat, Apr 17, 2010 at 5:37 PM, Florian Echtler <floe@butterbrot.org> =
+wrote:
+> Hello everyone,
+>
+> I've just bought an Ideapad S10-3t, and most features including ACPI
+> work fine. However, since neither thinkpad-acpi nor lenovo-sl-laptop
+> support this device, I've been looking around for some hints on how t=
+o
+> access the embedded controller in order to get the hotkeys working. I=
+'ll
+> post what I've found so far and hope that somebody could give me some
+> hints as to how to proceed.
+>
+> First, I've dumped the DSDT and browsed through it. I've found a _WDT
+> section, and wmidump shows:
+
+Wow, someone actually used that tool ^^
+A Quick hint would be to look at
+https://patchwork.kernel.org/patch/87210/ which is basically a really
+short example of what a wmi-driver is.
+Just change the guid, buid/load, push some hotkeys, see dmesg, edit
+the keymap, build, load, test ..
+
+> ABBC0F20-8EA1-11D1-00A0-C90629100000:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: =EF=BF=BD
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 80
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 00
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0x8 ACPI_WMI_EVENT
+> ABBC0F40-8EA1-11D1-00A0-C90629100000:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: IO
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 49
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 4F
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0x1 ACPI_WMI_EXPENSIVE
+> 05901221-D566-11D1-B2F0-00A0C9062910:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: AE
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 41
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 45
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0
+>
+> As this laptop also runs some kind of Splashtop instant-on Linux call=
+ed
+> Lenovo Quickstart, I've decided to extract the initrd from its kernel
+> (*) and browse through the modules. Interestingly, I've found a
+> lenovo_ec.ko: strings shows that it accesses some DSDT elements which
+> are present on the S10-3t. Would it make sense to disassemble this?
+
+You can also try to see if the manufacturer give some sources or ask th=
+em to ...
+
+(ccing platform-x86)
+--=20
+Corentin Chary
+http://xf.iksaif.net
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
