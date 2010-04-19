@@ -1,81 +1,92 @@
-From: Corentin Chary <corentin.chary@gmail.com>
+From: Florian Echtler <floe@butterbrot.org>
 Subject: Re: Looking for some pointers on WMI/EC access
-Date: Sun, 18 Apr 2010 21:21:14 +0200
-Message-ID: <q2s71cd59b01004181221kce7c1e5cn7742b1063827ac3b@mail.gmail.com>
+Date: Mon, 19 Apr 2010 16:25:30 +0200
+Message-ID: <1271687130.26267.147.camel@pancake>
 References: <1271518653.4549.186.camel@flunder>
+	 <q2s71cd59b01004181221kce7c1e5cn7742b1063827ac3b@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f225.google.com ([209.85.218.225]:48466 "EHLO
-	mail-bw0-f225.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751776Ab0DRTVQ convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 18 Apr 2010 15:21:16 -0400
-In-Reply-To: <1271518653.4549.186.camel@flunder>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Florian Echtler <floe@butterbrot.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <q2s71cd59b01004181221kce7c1e5cn7742b1063827ac3b@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
 Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Apr 17, 2010 at 5:37 PM, Florian Echtler <floe@butterbrot.org> =
-wrote:
-> Hello everyone,
->
-> I've just bought an Ideapad S10-3t, and most features including ACPI
-> work fine. However, since neither thinkpad-acpi nor lenovo-sl-laptop
-> support this device, I've been looking around for some hints on how t=
-o
-> access the embedded controller in order to get the hotkeys working. I=
-'ll
-> post what I've found so far and hope that somebody could give me some
-> hints as to how to proceed.
->
-> First, I've dumped the DSDT and browsed through it. I've found a _WDT
-> section, and wmidump shows:
+Am Sonntag, den 18.04.2010, 21:21 +0200 schrieb Corentin Chary:
+> On Sat, Apr 17, 2010 at 5:37 PM, Florian Echtler <floe@butterbrot.org=
+> wrote:
+> > I've just bought an Ideapad S10-3t, and most features including ACP=
+I
+> > work fine. However, since neither thinkpad-acpi nor lenovo-sl-lapto=
+p
+> > support this device, I've been looking around for some hints on how=
+ to
+> > access the embedded controller in order to get the hotkeys working.=
+ I'll
+> > post what I've found so far and hope that somebody could give me so=
+me
+> > hints as to how to proceed.
+> > First, I've dumped the DSDT and browsed through it. I've found a _W=
+DT
+> > section, and wmidump shows:
+> Wow, someone actually used that tool ^^
+> A Quick hint would be to look at
+> https://patchwork.kernel.org/patch/87210/ which is basically a really
+> short example of what a wmi-driver is.
+> Just change the guid, buid/load, push some hotkeys, see dmesg, edit
+> the keymap, build, load, test ..
+Thanks for the pointer - I've given it a quick try and the driver loads
+successfully, however, the event doesn't seem to be triggered. I've put
+a printk into the eeepc_wmi_notify function, and this is seemingly neve=
+r
+called.. although I believe this may be the right direction, as the GUI=
+D
+from the eeepc driver (ABBC0F72-8EA1-11D1-00A0-C90629100000) and the on=
+e
+from my Lenovo (ABBC0F20-8EA1-11D1-00A0-C90629100000) differ only by a
+single byte. Could this event be disabled somehow?=20
 
-Wow, someone actually used that tool ^^
-A Quick hint would be to look at
-https://patchwork.kernel.org/patch/87210/ which is basically a really
-short example of what a wmi-driver is.
-Just change the guid, buid/load, push some hotkeys, see dmesg, edit
-the keymap, build, load, test ..
+> > ABBC0F20-8EA1-11D1-00A0-C90629100000:
+> >        object_id: =EF=BF=BD
+> >        notify_id: 80
+> >        reserved: 00
+> >        instance_count: 1
+> >        flags: 0x8 ACPI_WMI_EVENT
+> > ABBC0F40-8EA1-11D1-00A0-C90629100000:
+> >        object_id: IO
+> >        notify_id: 49
+> >        reserved: 4F
+> >        instance_count: 1
+> >        flags: 0x1 ACPI_WMI_EXPENSIVE
+> > 05901221-D566-11D1-B2F0-00A0C9062910:
+> >        object_id: AE
+> >        notify_id: 41
+> >        reserved: 45
+> >        instance_count: 1
+> >        flags: 0
+Corresponding to the 2nd GUID, there's also a WQIO method in my DSDT
+which should return a data block, correct?
 
-> ABBC0F20-8EA1-11D1-00A0-C90629100000:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: =EF=BF=BD
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 80
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 00
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0x8 ACPI_WMI_EVENT
-> ABBC0F40-8EA1-11D1-00A0-C90629100000:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: IO
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 49
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 4F
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0x1 ACPI_WMI_EXPENSIVE
-> 05901221-D566-11D1-B2F0-00A0C9062910:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0object_id: AE
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0notify_id: 41
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0reserved: 45
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0instance_count: 1
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0flags: 0
->
-> As this laptop also runs some kind of Splashtop instant-on Linux call=
-ed
-> Lenovo Quickstart, I've decided to extract the initrd from its kernel
-> (*) and browse through the modules. Interestingly, I've found a
-> lenovo_ec.ko: strings shows that it accesses some DSDT elements which
-> are present on the S10-3t. Would it make sense to disassemble this?
+> > As this laptop also runs some kind of Splashtop instant-on Linux ca=
+lled
+> > Lenovo Quickstart, I've decided to extract the initrd from its kern=
+el
+> > (*) and browse through the modules. Interestingly, I've found a
+> > lenovo_ec.ko: strings shows that it accesses some DSDT elements whi=
+ch
+> > are present on the S10-3t. Would it make sense to disassemble this?
+> You can also try to see if the manufacturer give some sources or ask =
+them to ...
+I've done that, let's see if I will get some response.
 
-You can also try to see if the manufacturer give some sources or ask th=
-em to ...
-
-(ccing platform-x86)
+=46lorian
 --=20
-Corentin Chary
-http://xf.iksaif.net
+0666 - Filemode of the Beast
+
 --
-To unsubscribe from this list: send the line "unsubscribe platform-driv=
-er-x86" in
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
 the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
