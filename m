@@ -1,26 +1,45 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Looking for some pointers on WMI/EC access
-Date: Fri, 23 Apr 2010 18:47:29 +0100
-Message-ID: <20100423174729.GB31005@srcf.ucam.org>
-References: <1271853961.1537.1781.camel@pancake> <20100421133305.GA28710@srcf.ucam.org> <1271860206.1537.1914.camel@pancake> <20100421143239.GA484@srcf.ucam.org> <1271924488.3790.25.camel@flunder> <20100422133605.GA31680@srcf.ucam.org> <1271944219.29664.42.camel@pancake.fritz.box> <20100422135336.GA31984@srcf.ucam.org> <20100422140518.GA32558@srcf.ucam.org> <1272021870.29664.109.camel@pancake.fritz.box>
+Subject: Re: [PATCH 1/2] Make WMI be selected automatically when needed
+Date: Fri, 23 Apr 2010 20:20:59 +0100
+Message-ID: <20100423192059.GA32705@srcf.ucam.org>
+References: <4BC8FF9D.7050500@tremplin-utc.net> <20100416173127.6b968fd4.randy.dunlap@oracle.com> <4BC907B5.2050104@tremplin-utc.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:49778 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750993Ab0DWTVI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 23 Apr 2010 15:21:08 -0400
 Content-Disposition: inline
-In-Reply-To: <1272021870.29664.109.camel@pancake.fritz.box>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Florian Echtler <floe@butterbrot.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <4BC907B5.2050104@tremplin-utc.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?iso-8859-1?Q?=C9ric?= Piel <Eric.Piel@tremplin-utc.net>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@osdl.org>, "Brown, Len" <len.brown@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Fri, Apr 23, 2010 at 01:24:30PM +0200, Florian Echtler wrote:
+On Sat, Apr 17, 2010 at 02:58:29AM +0200, =C9ric Piel wrote:
 
-> You mean, change the initial value for ERQ0 in the DSDT and load that
-> through the kernel? I'll try that. I'll also try a BIOS update and see
-> if there's a little more sense in the DSDT afterwards..
+>  config LEDS_DELL_NETBOOKS
+>  	tristate "External LED on Dell Business Netbooks"
+> -	depends on X86 && ACPI_WMI
+> +	depends on X86
+> +	depends on ACPI
+> +	select ACPI_WMI
 
-More manipulate the buffer directly from the driver. This ought to be 
-possible, if a little fiddly.
+I dislike this. The originally stated dependencies are correct and more=
+=20
+accurately represent what the code requires, and changing that for the=20
+sake of making it easier for people to find the driver sounds like it's=
+=20
+trying to cover up shortcomings in our configuration system more than=20
+anything else.
 
--- 
+--=20
 Matthew Garrett | mjg59@srcf.ucam.org
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
