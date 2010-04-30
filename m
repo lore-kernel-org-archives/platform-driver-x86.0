@@ -1,80 +1,42 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: Re: [PATCH] classmate-laptop: Add RFKILL support.
-Date: Tue, 27 Apr 2010 13:32:48 -0300
-Message-ID: <20100427163247.GD1493@holoscopio.com>
-References: <1272384900-3982-1-git-send-email-cascardo@holoscopio.com>
- <20100427162227.GA5645@srcf.ucam.org>
+From: Romm Astley <novelle@ewing.com>
+Subject: ot go again
+Date: Sat, 01 May 2010 01:26:21 +0200
+Message-ID: <4BDB652D.4020706@sid.mlsi.gov.cy>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Type: application/octet-stream; name="adaptors.rtf"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade.minaslivre.org ([72.232.254.139]:35586 "EHLO
-	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756396Ab0D0Qc4 (ORCPT
+Received: from 153.139.72-86.rev.gaoland.net ([86.72.139.153]:50430 "HELO
+	tblhjl.gaoland.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with SMTP id S1756687Ab0D3X0X (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 27 Apr 2010 12:32:56 -0400
-Content-Disposition: inline
-In-Reply-To: <20100427162227.GA5645@srcf.ucam.org>
+	Fri, 30 Apr 2010 19:26:23 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, don@syst.com.br, johannes@sipsolutions.net, rpurdie@rpsys.net
+To: Redmer Aperges <platform-driver-x86@vger.kernel.org>
 
-
---kVXhAStRUZ/+rrGn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 27, 2010 at 05:22:27PM +0100, Matthew Garrett wrote:
-> On Tue, Apr 27, 2010 at 01:15:00PM -0300, Thadeu Lima de Souza Cascardo w=
-rote:
-> > The RFKILL device shares the same ACPI device used for backlight. So, it
-> > required a new struct sharing both a backlight_device and a rfkill
-> > device.
->=20
-> Is this purely a software-controlled toggle, or can the firmware change=
-=20
-> the state as well? If the latter, how is synchronisation between=20
-> hardware and OS state handled?
->=20
-> --=20
-> Matthew Garrett | mjg59@srcf.ucam.org
-
-It's purely a soft block device. I'll add that in the commit message
-with any other changes suggested or requested.
-
-I'd really like some feedback about the implementation. I've done tests
-around here, but I may still have gotten something wrong. And I sure
-hope I haven't messed with the backlight. But nothing points that I've
-done so.
-
-Anyway, I'd like some review.
-
-Thanks,
-Cascardo.
-
---kVXhAStRUZ/+rrGn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQIcBAEBAgAGBQJL1xGtAAoJEEWxSg7udFZI1z4P/252xoDdNkQlLysMUX+FTHxM
-Xs041rpMSvVyUhdmZKiFSkrKJaMcNXpJt3385pRK+27U5xgnyuOp0V7AaM98Wx//
-1Y6x64+wKBhHYUrfAKH0B9Y9uD5ApmMx64JtCwbOnOgJNGr74DVFMuCjpW85n4kx
-otEO6Dam0/MNo4so0OxOYoyrB1WokiQ00mNTWLalaUkQnnkhOYZB3ukBysj/lrIK
-VJk5edYo7+bwMjUi6Sj0TkfKHR5tHqjCrVRqS4ZZF6GxC/gAyjpymyQX/8EFHcpm
-34axigcqSqOedoCRJjpsVSj1aqBg+Tkyhtt5LjOuCvrEP7C4DF1Qcjzzy2O+ISCU
-7J3RwxxtErp1UEFN+hdb3CZ/vbTX+nSiAzNV7YXAAyFPKCoX3Gl083oL826UXC8y
-9QYyjz0m1bYfR4LaqUj2SczzVf0aG/6Nx25T3x68E0aItlPcwGmvishLt90OQL51
-WO6ZsqPFoKse5bF1gPZyz9V0pxaZSdWi0WbpE38K6CZnKEFkfrIVxLDTP+pQGRZ6
-41hwZnCVZTRTFT9F8tnV/6KzpTrESMDR4KlYAj7LT7P0p1dOikV/l60vySaiR693
-tP/7YqRaPMsCppbTegY7HubVGpFY2JOIP0FDH/naJBfX93F7D46VmcdJxPve2Wps
-CoPiC2d5mvwjLC50K1d+
-=Yhtu
------END PGP SIGNATURE-----
-
---kVXhAStRUZ/+rrGn--
+e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
+IE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
+YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9e1xjb2xv
+cnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7XHJlZDE5MlxncmVlbjgwXGJsdWU3NztccmVk
+MFxncmVlbjE3NlxibHVlODA7XHJlZDIwNFxncmVlbjE4MFxibHVlMDtccmVkMjU1XGdyZWVu
+MFxibHVlMDtccmVkMjIzXGdyZWVuMjA2XGJsdWU0O1xyZWQxNTVcZ3JlZW4wXGJsdWUyMTE7
+XHJlZDc5XGdyZWVuMTI5XGJsdWUxODk7XHJlZDE2NVxncmVlbjE2NVxibHVlMTY1O1xyZWQx
+MjhcZ3JlZW4xNThcYmx1ZTE5NDtccmVkMjQ3XGdyZWVuMTUwXGJsdWU3MDtccmVkMFxncmVl
+bjc3XGJsdWUxODc7XHJlZDc1XGdyZWVuMTcyXGJsdWUxOTg7XHJlZDIyMVxncmVlbjEzMlxi
+bHVlMTMyO1xyZWQ1MVxncmVlbjUxXGJsdWU1MTtccmVkMTU4XGdyZWVuMTI0XGJsdWUxMjQ7
+XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCAwLjI2
+LjQ2LjY1MzE7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
+OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHR0cDovL3d3dy5rYTc3
+LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3dy5rYTc3LnJ1fX19XGYwXGNmMVxi
+XGZzMzIgIC0gT3JkZXIgdGhlIGNoZWFwZXN0IG1lZGljYXRpb25zIG5vdyFccGFyDQpWaWFn
+cmEgXGNmNCBDaWFsaXMgXGNmMyBWaWFncmEgUHJvZmVzc2lvbmFsIFxjZjUgQ2lhbGlzIFBy
+b2Zlc3Npb25hbCBcY2Y2IFZpYWdyYSBTdXBlciBBY3RpdmUrIFxjZjMgQ2lhbGlzIFN1cGVy
+IEFjdGl2ZSsgXGNmNyBMZXZpdHJhXGNmMCAgXGNmOCBWaWFncmEgU29mdCBUYWJzIFxjZjkg
+Q2lhbGlzIFNvZnQgVGFic1xjZjEwICBcY2YxMSBMZXZpdHJhIFByb2Zlc3Npb25hbCBcY2Y0
+IEZlbWFsZSBWaWFncmEgXGNmMTIgUHJvcGVjaWEgXGNmNyBBY29tcGxpYSBcY2Y2IFhlbmlj
+YWxcY2YwICBcY2Y1IEJyYW5kIExldml0cmEgXGNmMTMgRmVtYWxlIENpYWxpcyBcY2YxNCBM
+ZXZpdHJhIFN1cGVyIEFjdGl2ZSsgXGNmMTUgVGFtaWZsdVxjZjAgIFxjZjcgVlBYTFxjZjAg
+IFxjZjE2IFZpYWdyYSBTb2Z0IEZsYXZvdXJlZCBcY2Y1IEJyYW5kIFZpYWdyYSBcY2YxNyBC
+cmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9
+fQ==
