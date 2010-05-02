@@ -1,23 +1,23 @@
-From: Romm Astley <novelle@ewing.com>
-Subject: ot go again
-Date: Sat, 01 May 2010 01:26:21 +0200
-Message-ID: <4BDB652D.4020706@sid.mlsi.gov.cy>
+From: Avon Elkan <unfading@standardmems.de>
+Subject: be taken up, and two or three of the largest planted in the middle of a pot filled
+Date: Sun, 02 May 2010 05:02:23 +0200
+Message-ID: <4BDCEA38.6030806@vlife.com.tw>
 Mime-Version: 1.0
-Content-Type: application/octet-stream; name="adaptors.rtf"
+Content-Type: application/octet-stream; name="bonne.rtf"
 Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 153.139.72-86.rev.gaoland.net ([86.72.139.153]:50430 "HELO
-	tblhjl.gaoland.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with SMTP id S1756687Ab0D3X0X (ORCPT
+Received: from e180228015.adsl.alicedsl.de ([85.180.228.15]:61724 "HELO
+	whoweil.alicedsl.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with SMTP id S1752907Ab0EBDCS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 30 Apr 2010 19:26:23 -0400
+	Sat, 1 May 2010 23:02:18 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Redmer Aperges <platform-driver-x86@vger.kernel.org>
+To: Aurich Denyes <platform-driver-x86@vger.kernel.org>
 
 e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
-IE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
-YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9e1xjb2xv
+IE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
+YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9e1xjb2xv
 cnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7XHJlZDE5MlxncmVlbjgwXGJsdWU3NztccmVk
 MFxncmVlbjE3NlxibHVlODA7XHJlZDIwNFxncmVlbjE4MFxibHVlMDtccmVkMjU1XGdyZWVu
 MFxibHVlMDtccmVkMjIzXGdyZWVuMjA2XGJsdWU0O1xyZWQxNTVcZ3JlZW4wXGJsdWUyMTE7
@@ -25,10 +25,10 @@ XHJlZDc5XGdyZWVuMTI5XGJsdWUxODk7XHJlZDE2NVxncmVlbjE2NVxibHVlMTY1O1xyZWQx
 MjhcZ3JlZW4xNThcYmx1ZTE5NDtccmVkMjQ3XGdyZWVuMTUwXGJsdWU3MDtccmVkMFxncmVl
 bjc3XGJsdWUxODc7XHJlZDc1XGdyZWVuMTcyXGJsdWUxOTg7XHJlZDIyMVxncmVlbjEzMlxi
 bHVlMTMyO1xyZWQ1MVxncmVlbjUxXGJsdWU1MTtccmVkMTU4XGdyZWVuMTI0XGJsdWUxMjQ7
-XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCAwLjI2
-LjQ2LjY1MzE7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
-OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHR0cDovL3d3dy5rYTc3
-LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3dy5rYTc3LnJ1fX19XGYwXGNmMVxi
+XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCAzLjIw
+LjQ0LjIwMDc7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
+OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHR0cDovL3d3dy5mdTk5
+LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3dy5mdTk5LnJ1fX19XGYwXGNmMVxi
 XGZzMzIgIC0gT3JkZXIgdGhlIGNoZWFwZXN0IG1lZGljYXRpb25zIG5vdyFccGFyDQpWaWFn
 cmEgXGNmNCBDaWFsaXMgXGNmMyBWaWFncmEgUHJvZmVzc2lvbmFsIFxjZjUgQ2lhbGlzIFBy
 b2Zlc3Npb25hbCBcY2Y2IFZpYWdyYSBTdXBlciBBY3RpdmUrIFxjZjMgQ2lhbGlzIFN1cGVy
@@ -38,5 +38,5 @@ IEZlbWFsZSBWaWFncmEgXGNmMTIgUHJvcGVjaWEgXGNmNyBBY29tcGxpYSBcY2Y2IFhlbmlj
 YWxcY2YwICBcY2Y1IEJyYW5kIExldml0cmEgXGNmMTMgRmVtYWxlIENpYWxpcyBcY2YxNCBM
 ZXZpdHJhIFN1cGVyIEFjdGl2ZSsgXGNmMTUgVGFtaWZsdVxjZjAgIFxjZjcgVlBYTFxjZjAg
 IFxjZjE2IFZpYWdyYSBTb2Z0IEZsYXZvdXJlZCBcY2Y1IEJyYW5kIFZpYWdyYSBcY2YxNyBC
-cmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDAuMjYuNDYuNjUzMTt9
+cmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9
 fQ==
