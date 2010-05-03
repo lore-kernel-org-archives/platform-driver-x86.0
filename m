@@ -1,42 +1,56 @@
-From: Avon Elkan <unfading@standardmems.de>
-Subject: be taken up, and two or three of the largest planted in the middle of a pot filled
-Date: Sun, 02 May 2010 05:02:23 +0200
-Message-ID: <4BDCEA38.6030806@vlife.com.tw>
-Mime-Version: 1.0
-Content-Type: application/octet-stream; name="bonne.rtf"
-Content-Transfer-Encoding: base64
+From: Thomas Renninger <trenn@suse.de>
+Subject: [PATCH 2/2] X86 platform wmi: Also log GUID string when an event happens and debug is set
+Date: Mon,  3 May 2010 11:10:08 +0200
+Message-ID: <1272877808-13468-2-git-send-email-trenn@suse.de>
+References: <1272877808-13468-1-git-send-email-trenn@suse.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from e180228015.adsl.alicedsl.de ([85.180.228.15]:61724 "HELO
-	whoweil.alicedsl.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with SMTP id S1752907Ab0EBDCS (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:47747 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752776Ab0ECJKW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 1 May 2010 23:02:18 -0400
+	Mon, 3 May 2010 05:10:22 -0400
+In-Reply-To: <1272877808-13468-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Aurich Denyes <platform-driver-x86@vger.kernel.org>
+To: mjg59@srcf.ucam.org
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, Thomas Renninger <trenn@suse.de>
 
-e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
-IE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
-YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9e1xjb2xv
-cnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7XHJlZDE5MlxncmVlbjgwXGJsdWU3NztccmVk
-MFxncmVlbjE3NlxibHVlODA7XHJlZDIwNFxncmVlbjE4MFxibHVlMDtccmVkMjU1XGdyZWVu
-MFxibHVlMDtccmVkMjIzXGdyZWVuMjA2XGJsdWU0O1xyZWQxNTVcZ3JlZW4wXGJsdWUyMTE7
-XHJlZDc5XGdyZWVuMTI5XGJsdWUxODk7XHJlZDE2NVxncmVlbjE2NVxibHVlMTY1O1xyZWQx
-MjhcZ3JlZW4xNThcYmx1ZTE5NDtccmVkMjQ3XGdyZWVuMTUwXGJsdWU3MDtccmVkMFxncmVl
-bjc3XGJsdWUxODc7XHJlZDc1XGdyZWVuMTcyXGJsdWUxOTg7XHJlZDIyMVxncmVlbjEzMlxi
-bHVlMTMyO1xyZWQ1MVxncmVlbjUxXGJsdWU1MTtccmVkMTU4XGdyZWVuMTI0XGJsdWUxMjQ7
-XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCAzLjIw
-LjQ0LjIwMDc7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
-OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHR0cDovL3d3dy5mdTk5
-LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3dy5mdTk5LnJ1fX19XGYwXGNmMVxi
-XGZzMzIgIC0gT3JkZXIgdGhlIGNoZWFwZXN0IG1lZGljYXRpb25zIG5vdyFccGFyDQpWaWFn
-cmEgXGNmNCBDaWFsaXMgXGNmMyBWaWFncmEgUHJvZmVzc2lvbmFsIFxjZjUgQ2lhbGlzIFBy
-b2Zlc3Npb25hbCBcY2Y2IFZpYWdyYSBTdXBlciBBY3RpdmUrIFxjZjMgQ2lhbGlzIFN1cGVy
-IEFjdGl2ZSsgXGNmNyBMZXZpdHJhXGNmMCAgXGNmOCBWaWFncmEgU29mdCBUYWJzIFxjZjkg
-Q2lhbGlzIFNvZnQgVGFic1xjZjEwICBcY2YxMSBMZXZpdHJhIFByb2Zlc3Npb25hbCBcY2Y0
-IEZlbWFsZSBWaWFncmEgXGNmMTIgUHJvcGVjaWEgXGNmNyBBY29tcGxpYSBcY2Y2IFhlbmlj
-YWxcY2YwICBcY2Y1IEJyYW5kIExldml0cmEgXGNmMTMgRmVtYWxlIENpYWxpcyBcY2YxNCBM
-ZXZpdHJhIFN1cGVyIEFjdGl2ZSsgXGNmMTUgVGFtaWZsdVxjZjAgIFxjZjcgVlBYTFxjZjAg
-IFxjZjE2IFZpYWdyYSBTb2Z0IEZsYXZvdXJlZCBcY2Y1IEJyYW5kIFZpYWdyYSBcY2YxNyBC
-cmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDMuMjAuNDQuMjAwNzt9
-fQ==
+Output in log with debug=1:
+ACPI: WMI: DEBUG Event INTEGER_TYPE - 65535
+ACPI: WMI: DEBUG Event GUID: CC1A61AC-4256-41A3-B9E0-05A445ADE2F5
+
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+CC: platform-driver-x86@vger.kernel.org
+CC: mjg59@srcf.ucam.org
+CC: corentin.chary@gmail.com
+---
+ drivers/platform/x86/wmi.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index dbd7281..73ccce2 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -882,6 +882,7 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
+ 	struct guid_block *block;
+ 	struct wmi_block *wblock;
+ 	struct list_head *p;
++	char guid_string[37];
+ 
+ 	list_for_each(p, &wmi_blocks.list) {
+ 		wblock = list_entry(p, struct wmi_block, list);
+@@ -891,6 +892,11 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
+ 			(block->notify_id == event)) {
+ 			if (wblock->handler)
+ 				wblock->handler(event, wblock->handler_data);
++			if (debug) {
++				wmi_gtoa(wblock->gblock.guid, guid_string);
++				printk(KERN_INFO PREFIX "DEBUG Event GUID:"
++				       " %s\n", guid_string);
++			}
+ 
+ 			acpi_bus_generate_netlink_event(
+ 				device->pnp.device_class, dev_name(&device->dev),
+-- 
+1.6.3
+
