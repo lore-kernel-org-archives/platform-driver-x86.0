@@ -1,95 +1,46 @@
-From: timg@tpi.com (Tim Gardner)
-Subject: Sony laptop: Some Sony Vaio laptops do not enable wwan power by default
-Date: Tue,  4 May 2010 10:58:18 -0600 (MDT)
-Message-ID: <20100504165818.1B206F899A@sepang.rtg.net>
+From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Subject: Re: [PATCH 1/3] X86 platform wmi: Introduce debug param to log all WMI events
+Date: Tue, 4 May 2010 18:39:57 +0100
+Message-ID: <201005041839.57611.carlos@strangeworlds.co.uk>
+References: <1272893417-3481-1-git-send-email-trenn@suse.de>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.tpi.com ([70.99.223.143]:4029 "EHLO mail.tpi.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755463Ab0EDRXm (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:40999 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754924Ab0EDRkG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 4 May 2010 13:23:42 -0400
+	Tue, 4 May 2010 13:40:06 -0400
+Received: by wye20 with SMTP id 20so2572124wye.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 04 May 2010 10:40:05 -0700 (PDT)
+In-Reply-To: <1272893417-3481-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: malattia@linux.it
-Cc: platform-driver-x86@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com
 
-From ed5c70a6ad8fbc9834d76818e5f47bfec17a0026 Mon Sep 17 00:00:00 2001
-From: Tim Gardner <tim.gardner@canonical.com>
-Date: Tue, 21 Apr 2009 11:09:10 -0600
-Subject: [PATCH] Sony laptop: Some Sony Vaio laptops do not enable wwan power by default.
+On Monday 03 May 2010 14:30:15 Thomas Renninger wrote:
+> To give people easily an idea what could be WMI driven on their system.
+> Introduces:
+> wmi.debug=[01]
+> 
+> Tested on an acer:
+> ACPI: WMI: DEBUG Event INTEGER_TYPE - 65535
+> 
+> Situation where a driver registers for specific event and debug
+> handler gets overridden and set again if the registering driver gets
+> unloaded again is untested, but should work.
+> 
+> Signed-off-by: Thomas Renninger <trenn@suse.de>
 
-BugLink: http://bugs.launchpad.net/bugs/364678
+Signed-off-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
 
-Added quirk to enable wwan power based on DMI information already present in the module.
-It appears that Vaio's do not enable power to wwan from a cold boot.
-
-Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
----
- drivers/platform/x86/sony-laptop.c |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 1387c5f..fcef9c7 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1447,6 +1447,10 @@ struct sonypi_eventtypes {
- 	struct sonypi_event	*events;
- };
- 
-+struct sony_pic_quirk_entry {
-+	u8				set_wwan_power;
-+};
-+
- struct sony_pic_dev {
- 	struct acpi_device		*acpi_dev;
- 	struct sony_pic_irq		*cur_irq;
-@@ -1457,6 +1461,7 @@ struct sony_pic_dev {
- 	struct sonypi_eventtypes	*event_types;
- 	int                             (*handle_irq)(const u8, const u8);
- 	int				model;
-+	struct sony_pic_quirk_entry	*quirks;
- 	u16				evport_offset;
- 	u8				camera_power;
- 	u8				bluetooth_power;
-@@ -2887,6 +2892,12 @@ static int sony_pic_add(struct acpi_device *device)
- 	if (result)
- 		goto err_remove_pf;
- 
-+	if (spic_dev.quirks && spic_dev.quirks->set_wwan_power) {
-+		/*
-+		 * Power isn't enabled by default.
-+		 */
-+		__sony_pic_set_wwanpower(1);
-+	}
- 	return 0;
- 
- err_remove_pf:
-@@ -2957,6 +2968,16 @@ static struct acpi_driver sony_pic_driver = {
- 		},
- };
- 
-+static struct sony_pic_quirk_entry sony_pic_vaio_vgn = {
-+	.set_wwan_power = 1,
-+};
-+
-+static int dmi_matched(const struct dmi_system_id *dmi)
-+{
-+	spic_dev.quirks = dmi->driver_data;
-+	return 0;
-+}
-+
- static struct dmi_system_id __initdata sonypi_dmi_table[] = {
- 	{
- 		.ident = "Sony Vaio",
-@@ -2971,6 +2992,8 @@ static struct dmi_system_id __initdata sonypi_dmi_table[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "VGN-"),
- 		},
-+		.callback = dmi_matched,
-+		.driver_data = &sony_pic_vaio_vgn,
- 	},
- 	{ }
- };
+> CC: platform-driver-x86@vger.kernel.org
+> CC: mjg59@srcf.ucam.org
+> CC: corentin.chary@gmail.com
 -- 
-1.7.0.4
-
+E-Mail: carlos@strangeworlds.co.uk
+Web: strangeworlds.co.uk
+GPG Key ID: 0x23EE722D
