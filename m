@@ -1,43 +1,43 @@
-From: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] thinkpad_acpi: Hook volume events
-Date: Thu, 6 May 2010 13:47:48 +0100
-Message-ID: <20100506124748.GA22190@srcf.ucam.org>
-References: <1272916980-11835-1-git-send-email-mjg@redhat.com>
-	<1272916980-11835-2-git-send-email-mjg@redhat.com>
-	<20100505113004.GA19480@khazad-dum.debian.net>
-	<20100505132030.GA24372@srcf.ucam.org>
-	<20100506030239.GB19265@khazad-dum.debian.net>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: Sony laptop: Some Sony Vaio laptops do not enable wwan power
+ by default
+Date: Fri, 7 May 2010 07:36:23 +0900
+Message-ID: <20100506223623.GA5345@kamineko.org>
+References: <20100504165818.1B206F899A@sepang.rtg.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:39123
+	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753479Ab0EFWqA (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 6 May 2010 18:46:00 -0400
 Content-Disposition: inline
-In-Reply-To: <20100506030239.GB19265-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20100504165818.1B206F899A@sepang.rtg.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Tim Gardner <timg@tpi.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Thu, May 06, 2010 at 12:02:39AM -0300, Henrique de Moraes Holschuh wrote:
-
-> Reading that stuff ain't cheap.  Either a locked trip through the LPC bus
-> for the CMOS nvram, or ACPI EC I/O (which is even worse, I fear.  That EC is
-> also hooked to LPC, and there's a lot more code involved).
+On Tue, May 04, 2010 at 10:58:18AM -0600, Tim Gardner wrote:
+> From ed5c70a6ad8fbc9834d76818e5f47bfec17a0026 Mon Sep 17 00:00:00 2001
+> From: Tim Gardner <tim.gardner@canonical.com>
+> Date: Tue, 21 Apr 2009 11:09:10 -0600
+> Subject: [PATCH] Sony laptop: Some Sony Vaio laptops do not enable wwan power by default.
 > 
-> I really would rather not enable it on boxes where it isn't required.  And
-> we know which ones are those: IBM thinkpads where the all-available-hotkeys
-> mask has the bits for the volume hotkeys set.
+> BugLink: http://bugs.launchpad.net/bugs/364678
+>
+> Added quirk to enable wwan power based on DMI information already present in the module.
+> It appears that Vaio's do not enable power to wwan from a cold boot.
 
-Ok, that's easy enough to do. I'll rework and send that.
+Could it be related to this bug instead?
+https://bugzilla.kernel.org/show_bug.cgi?id=15303
 
+I would be nice to have a the log of the module loading with debug=1 on
+those TZ models (as well as the DSDT table) but I can't get the
+submitter's email address from launchpad.
+
+Thanks
 -- 
-Matthew Garrett | mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org
-
-------------------------------------------------------------------------------
+mattia
+:wq!
