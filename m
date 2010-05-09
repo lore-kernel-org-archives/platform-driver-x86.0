@@ -1,37 +1,42 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH -next] eeepc-wmi: depends on BACKLIGHT_CLASS_DEVICE
-Date: Fri, 7 May 2010 19:26:47 +0100
-Message-ID: <20100507182647.GC24478@srcf.ucam.org>
-References: <20100507155520.75026a8b.sfr@canb.auug.org.au> <20100507112411.0212242d.randy.dunlap@oracle.com>
+From: Andrej Gelenberg <andrej.gelenberg@udo.edu>
+Subject: [PATCH] thinkpad_acpi: add support for thinkpad x100e
+Date: Sun, 09 May 2010 21:05:57 +0200
+Message-ID: <4BE70795.6060403@udo.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:42098 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755511Ab0EGS04 (ORCPT
+Received: from mx1.HRZ.Uni-Dortmund.DE ([129.217.128.51]:33817 "EHLO
+	unimail.uni-dortmund.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751181Ab0EITXh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 7 May 2010 14:26:56 -0400
-Content-Disposition: inline
-In-Reply-To: <20100507112411.0212242d.randy.dunlap@oracle.com>
+	Sun, 9 May 2010 15:23:37 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: borislav@users.sf.net, hmh@hmh.eng.br
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, May 07, 2010 at 11:24:11AM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <randy.dunlap@oracle.com>
-> 
-> eeepc-wmi uses backlight*() interfaces so it should depend on
-> BACKLIGHT_CLASS_DEVICE.
-> 
-> eeepc-wmi.c:(.text+0x2d7f54): undefined reference to `backlight_force_update'
-> eeepc-wmi.c:(.text+0x2d8012): undefined reference to `backlight_device_register'
-> eeepc-wmi.c:(.devinit.text+0x1c31c): undefined reference to `backlight_device_unregister'
-> eeepc-wmi.c:(.devexit.text+0x2f8b): undefined reference to `backlight_device_unregister'
-> 
-> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+Embedded controller path is "\\_SB.PCI0.LPC0.EC" on Lenovo Thinkpad X100e.
 
-Thanks, applied for -next. I'll send this one for .34 as well.
+  Signed-off-by: Andrej Gelenberg <andrej.gelenberg@udo.edu>
 
+---
+  drivers/platform/x86/thinkpad_acpi.c |    1 +
+  1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+b/drivers/platform/x86/thinkpad_acpi.c
+index 63290b3..7113457 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -508,6 +508,7 @@ TPACPI_HANDLE(ec, root, "\\_SB.PCI0.ISA.EC0", 
+/* 240, 240x */
+            "\\_SB.PCI0.AD4S.EC0",       /* i1400, R30 */
+            "\\_SB.PCI0.ICH3.EC0",       /* R31 */
+            "\\_SB.PCI0.LPC.EC", /* all others */
++          "\\_SB.PCI0.LPC0.EC",        /* X100e */
+            );
+
+  TPACPI_HANDLE(ecrd, ec, "ECRD");       /* 570 */
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.1
