@@ -1,7 +1,7 @@
 From: Greg Kroah-Hartman <gregkh@suse.de>
-Subject: [PATCH 4/4] msi-laptop: Add i8042 filter to sync sw state with BIOS when function key pressed
-Date: Wed, 12 May 2010 09:58:10 -0700
-Message-ID: <1273683490-27090-4-git-send-email-gregkh@suse.de>
+Subject: [PATCH 3/4] msi-laptop: Set rfkill init state when msi-laptop intiial
+Date: Wed, 12 May 2010 09:58:09 -0700
+Message-ID: <1273683490-27090-3-git-send-email-gregkh@suse.de>
 References: <20100512141149.GB20564@kroah.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20100512141149.GB20564@kroah.com>
@@ -12,108 +12,61 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Lee, Chun-Yi <jlee@novell.com>
 
-There have some MSI netbook change devices state by EC when user press
-wlan/bluetooth/wwan function keys. So, add a i8042 filter to sync sw
-state with BIOS when function keys pressed.
+Setup Wlan/Bluetooth/3G rfkill initial state to sync with the hardware
+state from EC 0x2e address.
 
 Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 ---
- drivers/platform/x86/msi-laptop.c |   59 ++++++++++++++++++++++++++++++++++++-
- 1 files changed, 58 insertions(+), 1 deletions(-)
+ drivers/platform/x86/msi-laptop.c |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-index 34bec2e..3c6e160 100644
+index 45197d7..34bec2e 100644
 --- a/drivers/platform/x86/msi-laptop.c
 +++ b/drivers/platform/x86/msi-laptop.c
-@@ -59,6 +59,7 @@
- #include <linux/backlight.h>
- #include <linux/platform_device.h>
- #include <linux/rfkill.h>
-+#include <linux/i8042.h>
- 
- #define MSI_DRIVER_VERSION "0.5"
- 
-@@ -581,6 +582,46 @@ static void rfkill_cleanup(void)
+@@ -581,11 +581,31 @@ static void rfkill_cleanup(void)
  	}
  }
  
-+static void msi_update_rfkill(struct work_struct *ignored)
++static void msi_init_rfkill(struct work_struct *ignored)
 +{
++	if (rfk_wlan) {
++		rfkill_set_sw_state(rfk_wlan, !wlan_s);
++		rfkill_wlan_set(NULL, !wlan_s);
++	}
++	if (rfk_bluetooth) {
++		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
++		rfkill_bluetooth_set(NULL, !bluetooth_s);
++	}
++	if (rfk_threeg) {
++		rfkill_set_sw_state(rfk_threeg, !threeg_s);
++		rfkill_threeg_set(NULL, !threeg_s);
++	}
++}
++static DECLARE_DELAYED_WORK(msi_rfkill_init, msi_init_rfkill);
++
+ static int rfkill_init(struct platform_device *sdev)
+ {
+ 	/* add rfkill */
+ 	int retval;
+ 
++	/* keep the hardware wireless state */
 +	get_wireless_state_ec_standard();
 +
-+	if (rfk_wlan)
-+		rfkill_set_sw_state(rfk_wlan, !wlan_s);
-+	if (rfk_bluetooth)
-+		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
-+	if (rfk_threeg)
-+		rfkill_set_sw_state(rfk_threeg, !threeg_s);
-+}
-+static DECLARE_DELAYED_WORK(msi_rfkill_work, msi_update_rfkill);
-+
-+bool msi_laptop_i8042_filter(unsigned char data, unsigned char str,
-+				struct serio *port)
-+{
-+	static bool extended;
-+
-+	if (str & 0x20)
-+		return false;
-+
-+	/* 0x54 wwan, 0x62 bluetooth, 0x76 wlan*/
-+	if (unlikely(data == 0xe0)) {
-+		extended = true;
-+		return false;
-+	} else if (unlikely(extended)) {
-+		switch (data) {
-+		case 0x54:
-+		case 0x62:
-+		case 0x76:
-+			schedule_delayed_work(&msi_rfkill_work,
-+				round_jiffies_relative(0.5 * HZ));
-+			break;
-+		}
-+		extended = false;
-+	}
-+
-+	return false;
-+}
-+
- static void msi_init_rfkill(struct work_struct *ignored)
- {
- 	if (rfk_wlan) {
-@@ -706,9 +747,24 @@ static int load_scm_model_init(struct platform_device *sdev)
- 	/* initial rfkill */
- 	result = rfkill_init(sdev);
- 	if (result < 0)
--		return result;
-+		goto fail_rfkill;
-+
-+	result = i8042_install_filter(msi_laptop_i8042_filter);
-+	if (result) {
-+		printk(KERN_WARNING
-+			"msi-laptop: Unable to install key filter\n");
-+		goto fail_filter;
-+	}
+ 	rfk_bluetooth = rfkill_alloc("msi-bluetooth", &sdev->dev,
+ 				RFKILL_TYPE_BLUETOOTH,
+ 				&rfkill_bluetooth_ops, NULL);
+@@ -619,6 +639,10 @@ static int rfkill_init(struct platform_device *sdev)
+ 			goto err_threeg;
+ 	}
  
++	/* schedule to run rfkill state initial */
++	schedule_delayed_work(&msi_rfkill_init,
++				round_jiffies_relative(1 * HZ));
++
  	return 0;
-+
-+fail_filter:
-+	rfkill_cleanup();
-+
-+fail_rfkill:
-+
-+	return result;
-+
- }
  
- static int __init msi_init(void)
-@@ -819,6 +875,7 @@ static void __exit msi_cleanup(void)
- 	platform_driver_unregister(&msipf_driver);
- 	backlight_device_unregister(msibl_device);
- 
-+	i8042_remove_filter(msi_laptop_i8042_filter);
- 	rfkill_cleanup();
- 
- 	/* Enable automatic brightness control again */
+ err_threeg:
 -- 
 1.7.1
