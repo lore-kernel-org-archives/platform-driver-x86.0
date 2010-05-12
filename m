@@ -1,32 +1,27 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: add support for thinkpad x100e
-Date: Mon, 10 May 2010 09:10:34 -0300
-Message-ID: <20100510121034.GA7164@khazad-dum.debian.net>
-References: <4BE70795.6060403@udo.edu>
+From: Greg KH <greg@kroah.com>
+Subject: [PATCH 0/4] msi-laptop patches
+Date: Wed, 12 May 2010 09:56:45 -0700
+Message-ID: <20100512165645.GA27064@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from kroah.org ([198.145.64.141]:59283 "EHLO coco.kroah.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752518Ab0ELQ63 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 12 May 2010 12:58:29 -0400
 Content-Disposition: inline
-In-Reply-To: <4BE70795.6060403@udo.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrej Gelenberg <andrej.gelenberg@udo.edu>
-Cc: borislav@users.sf.net, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: gregkh@suse.de, Lennart Poettering <mzxreary@0pointer.de>, Richard Purdie <rpurdie@linux.intel.com>, "Lee, Chun-Yi" <jlee@novell.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Sun, 09 May 2010, Andrej Gelenberg wrote:
-> Embedded controller path is "\\_SB.PCI0.LPC0.EC" on Lenovo Thinkpad X100e.
+Hi,
 
-Yeah, and I have a proper fix queued already, that locates the EC by
-HID, so NACK.
+Here's some msi-laptop.c patches that Joey has found necessary for some
+newer MSI models.  Please apply them to your tree, or let us know if
+there are any problems with them.
 
-However, even that is not enough.  The vid_handle needs to be fixed as
-well, and there are a few bugs in that area that make it somewhat
-not-a-good-idea to just fix the EC detection.
+thanks,
 
-This is why I didn't push the simple fix yet.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+greg k-h
