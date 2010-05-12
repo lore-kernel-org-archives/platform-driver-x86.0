@@ -1,27 +1,49 @@
-From: Greg KH <greg@kroah.com>
-Subject: [PATCH 0/4] msi-laptop patches
-Date: Wed, 12 May 2010 09:56:45 -0700
-Message-ID: <20100512165645.GA27064@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from kroah.org ([198.145.64.141]:59283 "EHLO coco.kroah.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752518Ab0ELQ63 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 12 May 2010 12:58:29 -0400
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: gregkh@suse.de, Lennart Poettering <mzxreary@0pointer.de>, Richard Purdie <rpurdie@linux.intel.com>, "Lee, Chun-Yi" <jlee@novell.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+From: Greg Kroah-Hartman <gregkh@suse.de>
+Subject: [PATCH 2/4] msi-laptop: Add MSI CR620 notebook dmi information to scm models table
+Date: Wed, 12 May 2010 09:58:08 -0700
+Message-ID: <1273683490-27090-2-git-send-email-gregkh@suse.de>
+References: <20100512141149.GB20564@kroah.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20100512141149.GB20564@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mjg@redhat.com
+Cc: mzxreary@0pointer.de, rpurdie@linux.intel.com, jlee@novell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, greg@kroah.com, Greg Kroah-Hartman <gregkh@suse.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+From: Lee, Chun-Yi <jlee@novell.com>
 
-Here's some msi-laptop.c patches that Joey has found necessary for some
-newer MSI models.  Please apply them to your tree, or let us know if
-there are any problems with them.
+Add new MSI notebook CR620 dmi information to scm models table.
 
-thanks,
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+---
+ drivers/platform/x86/msi-laptop.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-greg k-h
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index bcd9c0d..45197d7 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -489,6 +489,15 @@ static struct dmi_system_id __initdata msi_dmi_table[] = {
+ 		},
+ 		.callback = dmi_check_cb
+ 	},
++	{
++		.ident = "MSI CR620",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR,
++				"Micro-Star International"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CR620"),
++		},
++		.callback = dmi_check_cb
++	},
+ 	{ }
+ };
+ 
+@@ -810,3 +819,4 @@ MODULE_ALIAS("dmi:*:svnNOTEBOOK:pnSAM2000:pvr0131*:cvnMICRO-STARINT'LCO.,LTD:ct1
+ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N034:*");
+ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N051:*");
+ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N014:*");
++MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnCR620:*");
+-- 
+1.7.1
