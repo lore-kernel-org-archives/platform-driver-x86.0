@@ -1,41 +1,42 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4/4] msi-laptop: Add i8042 filter to sync sw state with
- BIOS when function key pressed
-Date: Thu, 13 May 2010 00:52:18 -0700
-Message-ID: <20100513075217.GC30110@core.coreip.homeip.net>
-References: <20100512141149.GB20564@kroah.com>
- <1273683490-27090-4-git-send-email-gregkh@suse.de>
- <20100512173359.GA16431@core.coreip.homeip.net>
- <20100512185647.GC28990@suse.de>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH 4/4] msi-laptop: Add i8042 filter to sync sw state
+	 with BIOS when function key pressed
+Date: Thu, 13 May 2010 05:53:04 -0600
+Message-ID: <4BEC74C002000023000190EE@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:48225 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756788Ab0EMHwW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 May 2010 03:52:22 -0400
 Content-Disposition: inline
-In-Reply-To: <20100512185647.GC28990@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@suse.de>
-Cc: mjg@redhat.com, mzxreary@0pointer.de, rpurdie@linux.intel.com, jlee@novell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, greg@kroah.com
+To: dmitry.torokhov@gmail.com
+Cc: mzxreary@0pointer.de, greg@kroah.com, rpurdie@linux.intel.com, mjg@redhat.com, gregkh@suse.de, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Wed, May 12, 2010 at 11:56:47AM -0700, Greg KH wrote:
->  static int __init msi_init(void)
-> @@ -819,6 +875,7 @@ static void __exit msi_cleanup(void)
->  	platform_driver_unregister(&msipf_driver);
->  	backlight_device_unregister(msibl_device);
->  
-> +	i8042_remove_filter(msi_laptop_i8042_filter);
+Hi Dmitry,=20
 
-You also need cancel_delayed_work_sync() here. Sorry for not noticing
-this before.
+Thank's for your review.
 
->  	rfkill_cleanup();
->  
->  	/* Enable automatic brightness control again */
+=E6=96=BC =E5=9B=9B=EF=BC=8C2010-05-13 =E6=96=BC 00:52 -0700=EF=BC=8CDm=
+itry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Wed, May 12, 2010 at 11:56:47AM -0700, Greg KH wrote:
+> >  static int __init msi_init(void)
+> > @@ -819,6 +875,7 @@ static void __exit msi_cleanup(void)
+> >  	platform_driver_unregister(&msipf_driver);
+> >  	backlight_device_unregister(msibl_device);
+> > =20
+> > +	i8042_remove_filter(msi_laptop_i8042_filter);
+>=20
+> You also need cancel_delayed_work_sync() here. Sorry for not noticing
+> this before.
+>=20
 
--- 
-Dmitry
+Yes, you are right, need add cancel_delayed_work_sync().
+
+Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
