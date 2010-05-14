@@ -1,63 +1,94 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 4/4] msi-laptop: Add i8042 filter to sync sw state
-	 with BIOS when function key pressed
-Date: Thu, 13 May 2010 18:37:02 -0600
-Message-ID: <4BED27CE020000230001917C@novprvlin0050.provo.novell.com>
+From: Jorge Pereira <jpereiran@gmail.com>
+Subject: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the
+	laptop Vaio E Series.
+Date: Fri, 14 May 2010 18:53:05 -0300
+Message-ID: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/mixed; boundary=00163646b8b2912eca048694e773
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:51079 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932246Ab0ENVx1 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 14 May 2010 17:53:27 -0400
+Received: by fxm6 with SMTP id 6so1976379fxm.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 May 2010 14:53:25 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: gregkh@suse.de
-Cc: mzxreary@0pointer.de, dmitry.torokhov@gmail.com, greg@kroah.com, rpurdie@linux.intel.com, mjg@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
 
-Hi Greg,=20
+--00163646b8b2912eca048694e773
+Content-Type: text/plain; charset=ISO-8859-1
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2010-05-13 =E6=96=BC 15:54 -0700=EF=BC=8CGr=
-eg KH =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Thu, May 13, 2010 at 05:53:04AM -0600, Joey Lee wrote:
-> > Hi Dmitry,=20
-> >=20
-> > Thank's for your review.
-> >=20
-> > =E6=96=BC =E5=9B=9B=EF=BC=8C2010-05-13 =E6=96=BC 00:52 -0700=EF=BC=8C=
-Dmitry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
-> > > On Wed, May 12, 2010 at 11:56:47AM -0700, Greg KH wrote:
-> > > >  static int __init msi_init(void)
-> > > > @@ -819,6 +875,7 @@ static void __exit msi_cleanup(void)
-> > > >  	platform_driver_unregister(&msipf_driver);
-> > > >  	backlight_device_unregister(msibl_device);
-> > > > =20
-> > > > +	i8042_remove_filter(msi_laptop_i8042_filter);
-> > >=20
-> > > You also need cancel_delayed_work_sync() here. Sorry for not noti=
-cing
-> > > this before.
-> > >=20
-> >=20
-> > Yes, you are right, need add cancel_delayed_work_sync().
->=20
-> Want to make up an additional patch to add on top of this that does i=
-t?
->=20
+Hi!
 
-OK! I am doing it, and will submit another patch to fix this issue.
+  Recently i bought the sony laptop model 'VPCEB15FB' and this model
+has Three buttons top of
+keyboard[1] that don't work until then.
+added support to all three keys at the driver sony-laptop.c and sonypi.h
 
+Atc, if you have something wrong, I would be grateful if someone helps.
 
-Thank's
-Joey Lee
+[1] Same family of
+http://www.sonystyle.com/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10551&storeId=10151&langId=-1&categoryId=8198552921644699998&N=4294953240
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
+Thanks,
 --
-To unsubscribe from this list: send the line "unsubscribe platform-driv=
-er-x86" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
++--------------------------------------------+
+ Jorge Pereira,
+ Blog: http://blog.jorgepereira.com.br/
++--------------------------------------------+
+
+--00163646b8b2912eca048694e773
+Content-Type: text/x-patch; charset=US-ASCII;
+	name="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
+Content-Disposition: attachment;
+	filename="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_g97jmbrd0
+
+RnJvbSBkMmM4MTIyNzBiZmNlODJkYTU3YTg4YzQwZjQzYTdlZWE0MmJhMWYyIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBKb3JnZSBQZXJlaXJhIDxqcGVyZWlyYW5AZ21haWwuY29tPgpE
+YXRlOiBGcmksIDE0IE1heSAyMDEwIDE4OjE4OjE5IC0wMzAwClN1YmplY3Q6IFtQQVRDSF0gQWRk
+aW5nIHN1cHBvcnQgZm9yIG5ldyBrZXlzIChBU1NJU1QsIFdFQiBhbmQgVkFJTykgb2YgdGhlIGxh
+cHRvcCBWYWlvIEUgU2VyaWVzLgoKLS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRv
+cC5jIHwgICAxMiArKysrKysrKysrKysKIGluY2x1ZGUvbGludXgvc29ueXBpLmggICAgICAgICAg
+ICAgfCAgICAzICsrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAwIGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMg
+Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRvcC5jCmluZGV4IGEyYTc0MmMuLmQ0MzJi
+MDggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMKKysrIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvc29ueS1sYXB0b3AuYwpAQCAtMjMyLDYgKzIzMiw5IEBAIHN0
+YXRpYyBpbnQgc29ueV9sYXB0b3BfaW5wdXRfaW5kZXhbXSA9IHsKIAk1NiwJLyogNjkgU09OWVBJ
+X0VWRU5UX1ZPTFVNRV9JTkNfUFJFU1NFRCAqLwogCTU3LAkvKiA3MCBTT05ZUElfRVZFTlRfVk9M
+VU1FX0RFQ19QUkVTU0VEICovCiAJLTEsCS8qIDcxIFNPTllQSV9FVkVOVF9CUklHSFRORVNTX1BS
+RVNTRUQgKi8KKwk1OCwgLyogNzIgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUICovCisJ
+NTksIC8qIDczIFNPTllQSV9FVkVOVF9ERURJQ0FURURfV0VCICovCisJNjAsIC8qIDc0IFNPTllQ
+SV9FVkVOVF9ERURJQ0FURURfVkFJTyAqLwogfTsKIAogc3RhdGljIGludCBzb255X2xhcHRvcF9p
+bnB1dF9rZXljb2RlX21hcFtdID0gewpAQCAtMjkzLDYgKzI5Niw5IEBAIHN0YXRpYyBpbnQgc29u
+eV9sYXB0b3BfaW5wdXRfa2V5Y29kZV9tYXBbXSA9IHsKIAlLRVlfRjE1LAkvKiA1NSBTT05ZUElf
+RVZFTlRfU0VUVElOR0tFWV9QUkVTU0VEICovCiAJS0VZX1ZPTFVNRVVQLAkvKiA1NiBTT05ZUElf
+RVZFTlRfVk9MVU1FX0lOQ19QUkVTU0VEICovCiAJS0VZX1ZPTFVNRURPV04sCS8qIDU3IFNPTllQ
+SV9FVkVOVF9WT0xVTUVfREVDX1BSRVNTRUQgKi8KKwlLRVlfSEVMUCwgLyogNTggU09OWVBJX0VW
+RU5UX0RFRElDQVRFRF9TVVBQT1JUICovIAorCUtFWV9IT01FUEFHRSwgLyogNTkgU09OWVBJX0VW
+RU5UX0RFRElDQVRFRF9XRUIgKi8KKwlLRVlfU0hPUCwgLyogNjAgU09OWVBJX0VWRU5UX0RFRElD
+QVRFRF9WQUlPICovCiB9OwogCiAvKiByZWxlYXNlIGJ1dHRvbnMgYWZ0ZXIgYSBzaG9ydCBkZWxh
+eSBpZiBwcmVzc2VkICovCkBAIC04OTAsNiArODk2LDEyIEBAIHN0YXRpYyBzdHJ1Y3Qgc29ueV9u
+Y19ldmVudCBzb255XzEwMF9ldmVudHNbXSA9IHsKIAl7IDB4MEMsIFNPTllQSV9FVkVOVF9GTktF
+WV9SRUxFQVNFRCB9LAogCXsgMHg5ZiwgU09OWVBJX0VWRU5UX0NEX0VKRUNUX1BSRVNTRUQgfSwK
+IAl7IDB4MWYsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTQsIFNP
+TllQSV9FVkVOVF9ERURJQ0FURURfV0VCIH0sCisJeyAweDI0LCBTT05ZUElfRVZFTlRfQU5ZQlVU
+VE9OX1JFTEVBU0VEIH0sCisJeyAweGE1LCBTT05ZUElfRVZFTlRfREVESUNBVEVEX1ZBSU8gfSwK
+Kwl7IDB4MjUsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTYsIFNP
+TllQSV9FVkVOVF9ERURJQ0FURURfU1VQUE9SVCB9LAorCXsgMHgyNiwgU09OWVBJX0VWRU5UX0FO
+WUJVVFRPTl9SRUxFQVNFRCB9LAogCXsgMCwgMCB9LAogfTsKIApkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9saW51eC9zb255cGkuaCBiL2luY2x1ZGUvbGludXgvc29ueXBpLmgKaW5kZXggMzRjNDQ3NS4u
+ZDFlYmIwMiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9zb255cGkuaAorKysgYi9pbmNsdWRl
+L2xpbnV4L3NvbnlwaS5oCkBAIC0xMTEsNiArMTExLDkgQEAKICNkZWZpbmUgU09OWVBJX0VWRU5U
+X1ZPTFVNRV9JTkNfUFJFU1NFRAkJNjkKICNkZWZpbmUgU09OWVBJX0VWRU5UX1ZPTFVNRV9ERUNf
+UFJFU1NFRAkJNzAKICNkZWZpbmUgU09OWVBJX0VWRU5UX0JSSUdIVE5FU1NfUFJFU1NFRAkJNzEK
+KyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUCQk3MgorI2RlZmluZSBTT05Z
+UElfRVZFTlRfREVESUNBVEVEX1dFQgkJNzMKKyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRF
+RF9WQUlPCQk3NAogCiAvKiBnZXQvc2V0IGJyaWdodG5lc3MgKi8KICNkZWZpbmUgU09OWVBJX0lP
+Q0dCUlQJCV9JT1IoJ3YnLCAwLCBfX3U4KQotLSAKMS43LjAuNAoK
+--00163646b8b2912eca048694e773--
