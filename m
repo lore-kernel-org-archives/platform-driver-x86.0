@@ -1,40 +1,59 @@
-From: Jorge Pereira <jpereiran@gmail.com>
-Subject: Re: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the
-	laptop Vaio E Series.
-Date: Sat, 15 May 2010 15:57:24 -0300
-Message-ID: <AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
-References: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 30/37] drivers/platform/x86: Use kmemdup
+Date: Sat, 15 May 2010 23:22:18 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1005152322010.21345@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:58213 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752321Ab0EOS5p (ORCPT
+Received: from mgw1.diku.dk ([130.225.96.91]:51489 "EHLO mgw1.diku.dk"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753458Ab0EOVWX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 15 May 2010 14:57:45 -0400
-Received: by fxm6 with SMTP id 6so2511958fxm.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 May 2010 11:57:44 -0700 (PDT)
-In-Reply-To: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
+	Sat, 15 May 2010 17:22:23 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
-Cc: Mattia Dongili <malattia@linux.it>, Mattia Dongili <malattia@gmail.com>
+To: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-Hi!
+From: Julia Lawall <julia@diku.dk>
 
- Recently i bought the sony laptop model 'VPCEB15FB' and this model
-has Three buttons top of keyboard[1] that don't work until then.
-added support to all three keys at the driver sony-laptop.c and sonypi.h
+Use kmemdup when some other buffer is immediately copied into the
+allocated region.
 
-Atc, if you have something wrong, I would be grateful if someone helps.
+A simplified version of the semantic patch that makes this change is as
+follows: (http://coccinelle.lip6.fr/)
 
-[1] Same family of
-http://www.sonystyle.com/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10551&storeId=10151&langId=-1&categoryId=8198552921644699998&N=4294953240
+// <smpl>
+@@
+expression from,to,size,flag;
+statement S;
+@@
 
-Thanks,
---
-Regards,
-+--------------------------------------------+
- Jorge Pereira,
- Blog: http://blog.jorgepereira.com.br/
-+--------------------------------------------+
+-  to = \(kmalloc\|kzalloc\)(size,flag);
++  to = kmemdup(from,size,flag);
+   if (to==NULL || ...) S
+-  memcpy(to, from, size);
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
+---
+ drivers/platform/x86/wmi.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff -u -p a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -756,12 +756,10 @@ static __init acpi_status parse_wdg(acpi
+ 
+ 	total = obj->buffer.length / sizeof(struct guid_block);
+ 
+-	gblock = kzalloc(obj->buffer.length, GFP_KERNEL);
++	gblock = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
+ 	if (!gblock)
+ 		return AE_NO_MEMORY;
+ 
+-	memcpy(gblock, obj->buffer.pointer, obj->buffer.length);
+-
+ 	for (i = 0; i < total; i++) {
+ 		/*
+ 		  Some WMI devices, like those for nVidia hooks, have a
