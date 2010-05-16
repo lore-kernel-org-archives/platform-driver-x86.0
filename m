@@ -1,59 +1,97 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 30/37] drivers/platform/x86: Use kmemdup
-Date: Sat, 15 May 2010 23:22:18 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1005152322010.21345@ask.diku.dk>
+From: Jorge Pereira <jpereiran@gmail.com>
+Subject: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the
+	laptop Vaio E Series.
+Date: Sun, 16 May 2010 03:36:52 -0300
+Message-ID: <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
+References: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
+	<AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/mixed; boundary=000325557df29b6f330486b056bc
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mgw1.diku.dk ([130.225.96.91]:51489 "EHLO mgw1.diku.dk"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753458Ab0EOVWX (ORCPT
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:35614 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751827Ab0EPGhO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 15 May 2010 17:22:23 -0400
+	Sun, 16 May 2010 02:37:14 -0400
+Received: by fxm6 with SMTP id 6so2731526fxm.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 May 2010 23:37:12 -0700 (PDT)
+In-Reply-To: <AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
+Cc: Mattia Dongili <malattia@linux.it>, Mattia Dongili <malattia@gmail.com>
 
-From: Julia Lawall <julia@diku.dk>
+--000325557df29b6f330486b056bc
+Content-Type: text/plain; charset=ISO-8859-1
 
-Use kmemdup when some other buffer is immediately copied into the
-allocated region.
+Hi!
 
-A simplified version of the semantic patch that makes this change is as
-follows: (http://coccinelle.lip6.fr/)
+ Recently i bought the sony laptop model 'VPCEB15FB' and this model
+has Three buttons top of keyboard[1] that don't work until then.
+added support to all three keys at the driver sony-laptop.c and sonypi.h
 
-// <smpl>
-@@
-expression from,to,size,flag;
-statement S;
-@@
+Atc, if you have something wrong, I would be grateful if someone helps.
 
--  to = \(kmalloc\|kzalloc\)(size,flag);
-+  to = kmemdup(from,size,flag);
-   if (to==NULL || ...) S
--  memcpy(to, from, size);
-// </smpl>
+[1] Same family of
+http://www.sonystyle.com/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10551&storeId=10151&langId=-1&categoryId=8198552921644699998&N=4294953240
 
-Signed-off-by: Julia Lawall <julia@diku.dk>
+Thanks,
+--
+Regards,
++--------------------------------------------+
+ Jorge Pereira,
+ Blog: http://blog.jorgepereira.com.br/
++--------------------------------------------+
 
----
- drivers/platform/x86/wmi.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--000325557df29b6f330486b056bc
+Content-Type: text/x-patch; charset=US-ASCII;
+	name="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
+Content-Disposition: attachment;
+	filename="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_g99htik50
 
-diff -u -p a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -756,12 +756,10 @@ static __init acpi_status parse_wdg(acpi
- 
- 	total = obj->buffer.length / sizeof(struct guid_block);
- 
--	gblock = kzalloc(obj->buffer.length, GFP_KERNEL);
-+	gblock = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
- 	if (!gblock)
- 		return AE_NO_MEMORY;
- 
--	memcpy(gblock, obj->buffer.pointer, obj->buffer.length);
--
- 	for (i = 0; i < total; i++) {
- 		/*
- 		  Some WMI devices, like those for nVidia hooks, have a
+RnJvbSBkMmM4MTIyNzBiZmNlODJkYTU3YTg4YzQwZjQzYTdlZWE0MmJhMWYyIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBKb3JnZSBQZXJlaXJhIDxqcGVyZWlyYW5AZ21haWwuY29tPgpE
+YXRlOiBGcmksIDE0IE1heSAyMDEwIDE4OjE4OjE5IC0wMzAwClN1YmplY3Q6IFtQQVRDSF0gQWRk
+aW5nIHN1cHBvcnQgZm9yIG5ldyBrZXlzIChBU1NJU1QsIFdFQiBhbmQgVkFJTykgb2YgdGhlIGxh
+cHRvcCBWYWlvIEUgU2VyaWVzLgoKLS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRv
+cC5jIHwgICAxMiArKysrKysrKysrKysKIGluY2x1ZGUvbGludXgvc29ueXBpLmggICAgICAgICAg
+ICAgfCAgICAzICsrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAwIGRlbGV0
+aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMg
+Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRvcC5jCmluZGV4IGEyYTc0MmMuLmQ0MzJi
+MDggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMKKysrIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvc29ueS1sYXB0b3AuYwpAQCAtMjMyLDYgKzIzMiw5IEBAIHN0
+YXRpYyBpbnQgc29ueV9sYXB0b3BfaW5wdXRfaW5kZXhbXSA9IHsKIAk1NiwJLyogNjkgU09OWVBJ
+X0VWRU5UX1ZPTFVNRV9JTkNfUFJFU1NFRCAqLwogCTU3LAkvKiA3MCBTT05ZUElfRVZFTlRfVk9M
+VU1FX0RFQ19QUkVTU0VEICovCiAJLTEsCS8qIDcxIFNPTllQSV9FVkVOVF9CUklHSFRORVNTX1BS
+RVNTRUQgKi8KKwk1OCwgLyogNzIgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUICovCisJ
+NTksIC8qIDczIFNPTllQSV9FVkVOVF9ERURJQ0FURURfV0VCICovCisJNjAsIC8qIDc0IFNPTllQ
+SV9FVkVOVF9ERURJQ0FURURfVkFJTyAqLwogfTsKIAogc3RhdGljIGludCBzb255X2xhcHRvcF9p
+bnB1dF9rZXljb2RlX21hcFtdID0gewpAQCAtMjkzLDYgKzI5Niw5IEBAIHN0YXRpYyBpbnQgc29u
+eV9sYXB0b3BfaW5wdXRfa2V5Y29kZV9tYXBbXSA9IHsKIAlLRVlfRjE1LAkvKiA1NSBTT05ZUElf
+RVZFTlRfU0VUVElOR0tFWV9QUkVTU0VEICovCiAJS0VZX1ZPTFVNRVVQLAkvKiA1NiBTT05ZUElf
+RVZFTlRfVk9MVU1FX0lOQ19QUkVTU0VEICovCiAJS0VZX1ZPTFVNRURPV04sCS8qIDU3IFNPTllQ
+SV9FVkVOVF9WT0xVTUVfREVDX1BSRVNTRUQgKi8KKwlLRVlfSEVMUCwgLyogNTggU09OWVBJX0VW
+RU5UX0RFRElDQVRFRF9TVVBQT1JUICovIAorCUtFWV9IT01FUEFHRSwgLyogNTkgU09OWVBJX0VW
+RU5UX0RFRElDQVRFRF9XRUIgKi8KKwlLRVlfU0hPUCwgLyogNjAgU09OWVBJX0VWRU5UX0RFRElD
+QVRFRF9WQUlPICovCiB9OwogCiAvKiByZWxlYXNlIGJ1dHRvbnMgYWZ0ZXIgYSBzaG9ydCBkZWxh
+eSBpZiBwcmVzc2VkICovCkBAIC04OTAsNiArODk2LDEyIEBAIHN0YXRpYyBzdHJ1Y3Qgc29ueV9u
+Y19ldmVudCBzb255XzEwMF9ldmVudHNbXSA9IHsKIAl7IDB4MEMsIFNPTllQSV9FVkVOVF9GTktF
+WV9SRUxFQVNFRCB9LAogCXsgMHg5ZiwgU09OWVBJX0VWRU5UX0NEX0VKRUNUX1BSRVNTRUQgfSwK
+IAl7IDB4MWYsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTQsIFNP
+TllQSV9FVkVOVF9ERURJQ0FURURfV0VCIH0sCisJeyAweDI0LCBTT05ZUElfRVZFTlRfQU5ZQlVU
+VE9OX1JFTEVBU0VEIH0sCisJeyAweGE1LCBTT05ZUElfRVZFTlRfREVESUNBVEVEX1ZBSU8gfSwK
+Kwl7IDB4MjUsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTYsIFNP
+TllQSV9FVkVOVF9ERURJQ0FURURfU1VQUE9SVCB9LAorCXsgMHgyNiwgU09OWVBJX0VWRU5UX0FO
+WUJVVFRPTl9SRUxFQVNFRCB9LAogCXsgMCwgMCB9LAogfTsKIApkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9saW51eC9zb255cGkuaCBiL2luY2x1ZGUvbGludXgvc29ueXBpLmgKaW5kZXggMzRjNDQ3NS4u
+ZDFlYmIwMiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9zb255cGkuaAorKysgYi9pbmNsdWRl
+L2xpbnV4L3NvbnlwaS5oCkBAIC0xMTEsNiArMTExLDkgQEAKICNkZWZpbmUgU09OWVBJX0VWRU5U
+X1ZPTFVNRV9JTkNfUFJFU1NFRAkJNjkKICNkZWZpbmUgU09OWVBJX0VWRU5UX1ZPTFVNRV9ERUNf
+UFJFU1NFRAkJNzAKICNkZWZpbmUgU09OWVBJX0VWRU5UX0JSSUdIVE5FU1NfUFJFU1NFRAkJNzEK
+KyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUCQk3MgorI2RlZmluZSBTT05Z
+UElfRVZFTlRfREVESUNBVEVEX1dFQgkJNzMKKyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRF
+RF9WQUlPCQk3NAogCiAvKiBnZXQvc2V0IGJyaWdodG5lc3MgKi8KICNkZWZpbmUgU09OWVBJX0lP
+Q0dCUlQJCV9JT1IoJ3YnLCAwLCBfX3U4KQotLSAKMS43LjAuNAoK
+--000325557df29b6f330486b056bc--
