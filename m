@@ -1,97 +1,64 @@
-From: Jorge Pereira <jpereiran@gmail.com>
-Subject: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the
-	laptop Vaio E Series.
-Date: Sun, 16 May 2010 03:36:52 -0300
-Message-ID: <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of
+ the laptop Vaio E Series.
+Date: Tue, 18 May 2010 07:19:36 +0900
+Message-ID: <20100517221936.GA22300@kamineko.org>
 References: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
-	<AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
+ <AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
+ <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=000325557df29b6f330486b056bc
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:35614 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751827Ab0EPGhO (ORCPT
+Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:48179
+	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751996Ab0EQWTj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 16 May 2010 02:37:14 -0400
-Received: by fxm6 with SMTP id 6so2731526fxm.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 May 2010 23:37:12 -0700 (PDT)
-In-Reply-To: <AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
+	Mon, 17 May 2010 18:19:39 -0400
+Content-Disposition: inline
+In-Reply-To: <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
-Cc: Mattia Dongili <malattia@linux.it>, Mattia Dongili <malattia@gmail.com>
+To: Jorge Pereira <jpereiran@gmail.com>
+Cc: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
 
---000325557df29b6f330486b056bc
-Content-Type: text/plain; charset=ISO-8859-1
+Hi Jorge
 
-Hi!
+On Sun, May 16, 2010 at 03:36:52AM -0300, Jorge Pereira wrote:
+> Hi!
+> 
+>  Recently i bought the sony laptop model 'VPCEB15FB' and this model
+> has Three buttons top of keyboard[1] that don't work until then.
+> added support to all three keys at the driver sony-laptop.c and sonypi.h
 
- Recently i bought the sony laptop model 'VPCEB15FB' and this model
-has Three buttons top of keyboard[1] that don't work until then.
-added support to all three keys at the driver sony-laptop.c and sonypi.h
+Thanks for the patch, it's fundamentally ok but to be honest I'm not too
+convinced about the naming. I'm not sure how "dedicated" the Web will
+be after you pressed the DEDICATED_WEB button. :)
+Also, you seem to have patched an old version of the driver, please
+make sure the patch applies on current code.
 
-Atc, if you have something wrong, I would be grateful if someone helps.
+See a couple of comments below.
 
-[1] Same family of
-http://www.sonystyle.com/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10551&storeId=10151&langId=-1&categoryId=8198552921644699998&N=4294953240
+...
+> From d2c812270bfce82da57a88c40f43a7eea42ba1f2 Mon Sep 17 00:00:00 2001
+> From: Jorge Pereira <jpereiran@gmail.com>
+> Date: Fri, 14 May 2010 18:18:19 -0300
+> Subject: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the laptop Vaio E Series.
+> 
+> ---
 
-Thanks,
---
-Regards,
-+--------------------------------------------+
- Jorge Pereira,
- Blog: http://blog.jorgepereira.com.br/
-+--------------------------------------------+
+Please also Sign-off the patch in your commit log.
 
---000325557df29b6f330486b056bc
-Content-Type: text/x-patch; charset=US-ASCII;
-	name="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
-Content-Disposition: attachment;
-	filename="0001-Adding-support-for-new-keys-ASSIST-WEB-and-VAIO-of-t.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_g99htik50
+...
+> +	58, /* 72 SONYPI_EVENT_DEDICATED_SUPPORT */
+> +	59, /* 73 SONYPI_EVENT_DEDICATED_WEB */
+> +	60, /* 74 SONYPI_EVENT_DEDICATED_VAIO */
 
-RnJvbSBkMmM4MTIyNzBiZmNlODJkYTU3YTg4YzQwZjQzYTdlZWE0MmJhMWYyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBKb3JnZSBQZXJlaXJhIDxqcGVyZWlyYW5AZ21haWwuY29tPgpE
-YXRlOiBGcmksIDE0IE1heSAyMDEwIDE4OjE4OjE5IC0wMzAwClN1YmplY3Q6IFtQQVRDSF0gQWRk
-aW5nIHN1cHBvcnQgZm9yIG5ldyBrZXlzIChBU1NJU1QsIFdFQiBhbmQgVkFJTykgb2YgdGhlIGxh
-cHRvcCBWYWlvIEUgU2VyaWVzLgoKLS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRv
-cC5jIHwgICAxMiArKysrKysrKysrKysKIGluY2x1ZGUvbGludXgvc29ueXBpLmggICAgICAgICAg
-ICAgfCAgICAzICsrKwogMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAwIGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMg
-Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9zb255LWxhcHRvcC5jCmluZGV4IGEyYTc0MmMuLmQ0MzJi
-MDggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3NvbnktbGFwdG9wLmMKKysrIGIv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvc29ueS1sYXB0b3AuYwpAQCAtMjMyLDYgKzIzMiw5IEBAIHN0
-YXRpYyBpbnQgc29ueV9sYXB0b3BfaW5wdXRfaW5kZXhbXSA9IHsKIAk1NiwJLyogNjkgU09OWVBJ
-X0VWRU5UX1ZPTFVNRV9JTkNfUFJFU1NFRCAqLwogCTU3LAkvKiA3MCBTT05ZUElfRVZFTlRfVk9M
-VU1FX0RFQ19QUkVTU0VEICovCiAJLTEsCS8qIDcxIFNPTllQSV9FVkVOVF9CUklHSFRORVNTX1BS
-RVNTRUQgKi8KKwk1OCwgLyogNzIgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUICovCisJ
-NTksIC8qIDczIFNPTllQSV9FVkVOVF9ERURJQ0FURURfV0VCICovCisJNjAsIC8qIDc0IFNPTllQ
-SV9FVkVOVF9ERURJQ0FURURfVkFJTyAqLwogfTsKIAogc3RhdGljIGludCBzb255X2xhcHRvcF9p
-bnB1dF9rZXljb2RlX21hcFtdID0gewpAQCAtMjkzLDYgKzI5Niw5IEBAIHN0YXRpYyBpbnQgc29u
-eV9sYXB0b3BfaW5wdXRfa2V5Y29kZV9tYXBbXSA9IHsKIAlLRVlfRjE1LAkvKiA1NSBTT05ZUElf
-RVZFTlRfU0VUVElOR0tFWV9QUkVTU0VEICovCiAJS0VZX1ZPTFVNRVVQLAkvKiA1NiBTT05ZUElf
-RVZFTlRfVk9MVU1FX0lOQ19QUkVTU0VEICovCiAJS0VZX1ZPTFVNRURPV04sCS8qIDU3IFNPTllQ
-SV9FVkVOVF9WT0xVTUVfREVDX1BSRVNTRUQgKi8KKwlLRVlfSEVMUCwgLyogNTggU09OWVBJX0VW
-RU5UX0RFRElDQVRFRF9TVVBQT1JUICovIAorCUtFWV9IT01FUEFHRSwgLyogNTkgU09OWVBJX0VW
-RU5UX0RFRElDQVRFRF9XRUIgKi8KKwlLRVlfU0hPUCwgLyogNjAgU09OWVBJX0VWRU5UX0RFRElD
-QVRFRF9WQUlPICovCiB9OwogCiAvKiByZWxlYXNlIGJ1dHRvbnMgYWZ0ZXIgYSBzaG9ydCBkZWxh
-eSBpZiBwcmVzc2VkICovCkBAIC04OTAsNiArODk2LDEyIEBAIHN0YXRpYyBzdHJ1Y3Qgc29ueV9u
-Y19ldmVudCBzb255XzEwMF9ldmVudHNbXSA9IHsKIAl7IDB4MEMsIFNPTllQSV9FVkVOVF9GTktF
-WV9SRUxFQVNFRCB9LAogCXsgMHg5ZiwgU09OWVBJX0VWRU5UX0NEX0VKRUNUX1BSRVNTRUQgfSwK
-IAl7IDB4MWYsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTQsIFNP
-TllQSV9FVkVOVF9ERURJQ0FURURfV0VCIH0sCisJeyAweDI0LCBTT05ZUElfRVZFTlRfQU5ZQlVU
-VE9OX1JFTEVBU0VEIH0sCisJeyAweGE1LCBTT05ZUElfRVZFTlRfREVESUNBVEVEX1ZBSU8gfSwK
-Kwl7IDB4MjUsIFNPTllQSV9FVkVOVF9BTllCVVRUT05fUkVMRUFTRUQgfSwKKwl7IDB4YTYsIFNP
-TllQSV9FVkVOVF9ERURJQ0FURURfU1VQUE9SVCB9LAorCXsgMHgyNiwgU09OWVBJX0VWRU5UX0FO
-WUJVVFRPTl9SRUxFQVNFRCB9LAogCXsgMCwgMCB9LAogfTsKIApkaWZmIC0tZ2l0IGEvaW5jbHVk
-ZS9saW51eC9zb255cGkuaCBiL2luY2x1ZGUvbGludXgvc29ueXBpLmgKaW5kZXggMzRjNDQ3NS4u
-ZDFlYmIwMiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9zb255cGkuaAorKysgYi9pbmNsdWRl
-L2xpbnV4L3NvbnlwaS5oCkBAIC0xMTEsNiArMTExLDkgQEAKICNkZWZpbmUgU09OWVBJX0VWRU5U
-X1ZPTFVNRV9JTkNfUFJFU1NFRAkJNjkKICNkZWZpbmUgU09OWVBJX0VWRU5UX1ZPTFVNRV9ERUNf
-UFJFU1NFRAkJNzAKICNkZWZpbmUgU09OWVBJX0VWRU5UX0JSSUdIVE5FU1NfUFJFU1NFRAkJNzEK
-KyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRFRF9TVVBQT1JUCQk3MgorI2RlZmluZSBTT05Z
-UElfRVZFTlRfREVESUNBVEVEX1dFQgkJNzMKKyNkZWZpbmUgU09OWVBJX0VWRU5UX0RFRElDQVRF
-RF9WQUlPCQk3NAogCiAvKiBnZXQvc2V0IGJyaWdodG5lc3MgKi8KICNkZWZpbmUgU09OWVBJX0lP
-Q0dCUlQJCV9JT1IoJ3YnLCAwLCBfX3U4KQotLSAKMS43LjAuNAoK
---000325557df29b6f330486b056bc--
+Can't these just be SONYPY_EVENT_ASSIST_PRESSED,
+SONYPI_EVENT_WEB_PRESSED and SONYPI_EVENT_VAIO_PRESSED?
+If necessary you can describe what they were originally inteded to in
+the commit message.
+
+Thanks!
+-- 
+mattia
+:wq!
