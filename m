@@ -1,64 +1,42 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of
- the laptop Vaio E Series.
-Date: Tue, 18 May 2010 07:19:36 +0900
-Message-ID: <20100517221936.GA22300@kamineko.org>
-References: <AANLkTimzHRev7_RES6KVT3HysQoNdjmTobhoGivqrkMr@mail.gmail.com>
- <AANLkTilYw3bKQpXvQr9JRUqZ6G3uPYDI6ERGiUFlt9rA@mail.gmail.com>
- <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
+From: Butta Bonet <blench@vial.fr>
+Subject: e? AMPH. I, y
+Date: Tue, 18 May 2010 03:11:50 +0200
+Message-ID: <4BF1E85D.3010807@nreic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/octet-stream; name="jejunum.rtf"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:48179
-	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751996Ab0EQWTj (ORCPT
+Received: from [85.94.228.185] ([85.94.228.185]:23692 "HELO jgdnklv.cbryk.com"
+	rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with SMTP
+	id S1753328Ab0ERBLx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 May 2010 18:19:39 -0400
-Content-Disposition: inline
-In-Reply-To: <AANLkTimYSSglpdSXOffJvYSNK0FxDy3smuiLGrIAX7Cy@mail.gmail.com>
+	Mon, 17 May 2010 21:11:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jorge Pereira <jpereiran@gmail.com>
-Cc: Kernel - PlatformDriver-x86 <platform-driver-x86@vger.kernel.org>
+To: Cotelesse Balk <platform-driver-x86@vger.kernel.org>
 
-Hi Jorge
-
-On Sun, May 16, 2010 at 03:36:52AM -0300, Jorge Pereira wrote:
-> Hi!
-> 
->  Recently i bought the sony laptop model 'VPCEB15FB' and this model
-> has Three buttons top of keyboard[1] that don't work until then.
-> added support to all three keys at the driver sony-laptop.c and sonypi.h
-
-Thanks for the patch, it's fundamentally ok but to be honest I'm not too
-convinced about the naming. I'm not sure how "dedicated" the Web will
-be after you pressed the DEDICATED_WEB button. :)
-Also, you seem to have patched an old version of the driver, please
-make sure the patch applies on current code.
-
-See a couple of comments below.
-
-...
-> From d2c812270bfce82da57a88c40f43a7eea42ba1f2 Mon Sep 17 00:00:00 2001
-> From: Jorge Pereira <jpereiran@gmail.com>
-> Date: Fri, 14 May 2010 18:18:19 -0300
-> Subject: [PATCH] Adding support for new keys (ASSIST, WEB and VAIO) of the laptop Vaio E Series.
-> 
-> ---
-
-Please also Sign-off the patch in your commit log.
-
-...
-> +	58, /* 72 SONYPI_EVENT_DEDICATED_SUPPORT */
-> +	59, /* 73 SONYPI_EVENT_DEDICATED_WEB */
-> +	60, /* 74 SONYPI_EVENT_DEDICATED_VAIO */
-
-Can't these just be SONYPY_EVENT_ASSIST_PRESSED,
-SONYPI_EVENT_WEB_PRESSED and SONYPI_EVENT_VAIO_PRESSED?
-If necessary you can describe what they were originally inteded to in
-the commit message.
-
-Thanks!
--- 
-mattia
-:wq!
+e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
+IE1zZnRlZGl0IDAuMjUuMC44OTMxO317XGZvbnR0Ymx7XGYwXGZuaWxcZmNoYXJzZXQwIENh
+bGlicmk7fX0NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMC4yNS4wLjg5MzE7fXtcY29sb3J0
+YmwgO1xyZWQwXGdyZWVuMFxibHVlMjU1O1xyZWQxOTJcZ3JlZW44MFxibHVlNzc7XHJlZDBc
+Z3JlZW4xNzZcYmx1ZTgwO1xyZWQyMDRcZ3JlZW4xODBcYmx1ZTA7XHJlZDI1NVxncmVlbjBc
+Ymx1ZTA7XHJlZDIyM1xncmVlbjIwNlxibHVlNDtccmVkMTU1XGdyZWVuMFxibHVlMjExO1xy
+ZWQ3OVxncmVlbjEyOVxibHVlMTg5O1xyZWQxNjVcZ3JlZW4xNjVcYmx1ZTE2NTtccmVkMTI4
+XGdyZWVuMTU4XGJsdWUxOTQ7XHJlZDI0N1xncmVlbjE1MFxibHVlNzA7XHJlZDBcZ3JlZW43
+N1xibHVlMTg3O1xyZWQ3NVxncmVlbjE3MlxibHVlMTk4O1xyZWQyMjFcZ3JlZW4xMzJcYmx1
+ZTEzMjtccmVkNTFcZ3JlZW41MVxibHVlNTE7XHJlZDE1OFxncmVlbjEyNFxibHVlMTI0O1xy
+ZWQxNTVcZ3JlZW4xODdcYmx1ZTg5O30NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMC4yNS4w
+Ljg5MzE7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5nOVxm
+MFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCAwLjI1LjAuODkz
+MTt9dHRwOi8vd3d3LnhhNjYucnUifX17XGZsZHJzbHR7XHVsXGNmMSBodHRwOi8vd3d3Lnhh
+NjYucnV9fX1cZjBcY2YxXGJcZnMzMiAgLSBPcmRlciB0aGUgY2hlYXBlc3QgbWVkaWNhdGlv
+bnMgbm93IVxwYXINClZpYWdyYSBcY2Y0IENpYWxpcyBcY2YzIFZpYWdyYSBQcm9mZXNzaW9u
+YWwgXGNmNSBDaWFsaXMgUHJvZmVzc2lvbmFsIFxjZjYgVmlhZ3JhIFN1cGVyIEFjdGl2ZSsg
+XGNmMyBDaWFsaXMgU3VwZXIgQWN0aXZlKyBcY2Y3IExldml0cmFcY2YwICBcY2Y4IFZpYWdy
+YSBTb2Z0IFRhYnMgXGNmOSBDaWFsaXMgU29mdCBUYWJzXGNmMTAgIFxjZjExIExldml0cmEg
+UHJvZmVzc2lvbmFsIFxjZjQgRmVtYWxlIFZpYWdyYSBcY2YxMiBQcm9wZWNpYSBcY2Y3IEFj
+b21wbGlhIFxjZjYgWGVuaWNhbFxjZjAgIFxjZjUgQnJhbmQgTGV2aXRyYSBcY2YxMyBGZW1h
+bGUgQ2lhbGlzIFxjZjE0IExldml0cmEgU3VwZXIgQWN0aXZlKyBcY2YxNSBUYW1pZmx1XGNm
+MCAgXGNmNyBWUFhMXGNmMCAgXGNmMTYgVmlhZ3JhIFNvZnQgRmxhdm91cmVkIFxjZjUgQnJh
+bmQgVmlhZ3JhIFxjZjE3IEJyYW5kIENpYWxpc1xjZjANCntcKlxnZW5lcmF0b3IgTXNmdGVk
+aXQgMC4yNS4wLjg5MzE7fX0=
