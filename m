@@ -1,412 +1,59 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 05/14] thinkpad-acpi: let other subdrivers know backlight level range
-Date: Wed, 19 May 2010 00:26:15 -0300
-Message-ID: <1274239584-17743-6-git-send-email-hmh@hmh.eng.br>
-References: <1274239584-17743-1-git-send-email-hmh@hmh.eng.br>
+From: Daniel Mack <daniel@caiaq.de>
+Subject: [PATCH] drivers/platform/x86/eeepc-wmi.c: fix build warning
+Date: Wed, 19 May 2010 12:37:01 +0200
+Message-ID: <1274265421-26747-1-git-send-email-daniel@caiaq.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:45960 "EHLO
-	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756174Ab0ESD0f (ORCPT
+Received: from buzzloop.caiaq.de ([212.112.241.133]:38360 "EHLO
+	buzzloop.caiaq.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757404Ab0ESKhk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 18 May 2010 23:26:35 -0400
-In-Reply-To: <1274239584-17743-1-git-send-email-hmh@hmh.eng.br>
+	Wed, 19 May 2010 06:37:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To: linux-kernel@vger.kernel.org
+Cc: Daniel Mack <daniel@caiaq.de>, Matthew Garrett <mjg@redhat.com>, Yong Wang <yong.y.wang@intel.com>, Corentin Chary <corentincj@iksaif.net>, Dmitry Torokhov <dtor@mail.ru>, Tejun Heo <tj@kernel.org>, platform-driver-x86@vger.kernel.org
 
-Extract the backlight level range size detection from the brightness
-subdriver, and allow the other subdrivers access to that information.
+drivers/platform/x86/eeepc-wmi.c: In function =E2=80=98eeepc_wmi_notify=
+=E2=80=99:
+drivers/platform/x86/eeepc-wmi.c:209: warning: =E2=80=98new=E2=80=99 ma=
+y be used uninitialized in this function
+drivers/platform/x86/eeepc-wmi.c:209: note: =E2=80=98new=E2=80=99 was d=
+eclared here
 
-This also allows us to relocate some code to a more convenient place.
-The moved code was largerly unmodified, except for the return type of
-tpacpi_check_std_acpi_brightness_support(), which now is correctly
-marked as returning "unsigned int", and and two cosmetic fixes to make
-checkpatch.pl happy.
-
-Fixes for the NVRAM polling mode for the brightness hotkeys will need
-this.
-
-Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Daniel Mack <daniel@caiaq.de>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Yong Wang <yong.y.wang@intel.com>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/thinkpad_acpi.c |  251 +++++++++++++++++++---------------
- 1 files changed, 140 insertions(+), 111 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index a768a69..b03bf51 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -304,8 +304,8 @@ static struct {
- 	u32 hotkey_tablet:1;
- 	u32 light:1;
- 	u32 light_status:1;
--	u32 bright_16levels:1;
- 	u32 bright_acpimode:1;
-+	u32 bright_unkfw:1;
- 	u32 wan:1;
- 	u32 uwb:1;
- 	u32 fan_ctrl_status_undef:1;
-@@ -368,6 +368,9 @@ struct tpacpi_led_classdev {
- 	unsigned int led;
- };
- 
-+/* brightness level capabilities */
-+static unsigned int bright_maxlvl;	/* 0 = unknown */
-+
- #ifdef CONFIG_THINKPAD_ACPI_DEBUGFACILITIES
- static int dbg_wlswemul;
- static int tpacpi_wlsw_emulstate;
-@@ -1051,80 +1054,6 @@ static void tpacpi_disable_brightness_delay(void)
- 			"ACPI backlight control delay disabled\n");
- }
- 
--static int __init tpacpi_query_bcl_levels(acpi_handle handle)
--{
--	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
--	int rc;
--
--	if (ACPI_SUCCESS(acpi_evaluate_object(handle, NULL, NULL, &buffer))) {
--		obj = (union acpi_object *)buffer.pointer;
--		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
--			printk(TPACPI_ERR "Unknown _BCL data, "
--			       "please report this to %s\n", TPACPI_MAIL);
--			rc = 0;
--		} else {
--			rc = obj->package.count;
--		}
--	} else {
--		return 0;
--	}
--
--	kfree(buffer.pointer);
--	return rc;
--}
--
--static acpi_status __init tpacpi_acpi_walk_find_bcl(acpi_handle handle,
--					u32 lvl, void *context, void **rv)
--{
--	char name[ACPI_PATH_SEGMENT_LENGTH];
--	struct acpi_buffer buffer = { sizeof(name), &name };
--
--	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &buffer)) &&
--	    !strncmp("_BCL", name, sizeof(name) - 1)) {
--		BUG_ON(!rv || !*rv);
--		**(int **)rv = tpacpi_query_bcl_levels(handle);
--		return AE_CTRL_TERMINATE;
--	} else {
--		return AE_OK;
--	}
--}
--
--/*
-- * Returns 0 (no ACPI _BCL or _BCL invalid), or size of brightness map
-- */
--static int __init tpacpi_check_std_acpi_brightness_support(void)
--{
--	int status;
--	int bcl_levels = 0;
--	void *bcl_ptr = &bcl_levels;
--
--	if (!vid_handle) {
--		TPACPI_ACPIHANDLE_INIT(vid);
--	}
--	if (!vid_handle)
--		return 0;
--
--	/*
--	 * Search for a _BCL method, and execute it.  This is safe on all
--	 * ThinkPads, and as a side-effect, _BCL will place a Lenovo Vista
--	 * BIOS in ACPI backlight control mode.  We do NOT have to care
--	 * about calling the _BCL method in an enabled video device, any
--	 * will do for our purposes.
--	 */
--
--	status = acpi_walk_namespace(ACPI_TYPE_METHOD, vid_handle, 3,
--				     tpacpi_acpi_walk_find_bcl, NULL, NULL,
--				     &bcl_ptr);
--
--	if (ACPI_SUCCESS(status) && bcl_levels > 2) {
--		tp_features.bright_acpimode = 1;
--		return (bcl_levels - 2);
--	}
--
--	return 0;
--}
--
- static void printk_deprecated_attribute(const char * const what,
- 					const char * const details)
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/ee=
+epc-wmi.c
+index b227eb4..9dc50fb 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -206,7 +206,7 @@ static int eeepc_wmi_backlight_notify(struct eeepc_=
+wmi *eeepc, int code)
  {
-@@ -3420,11 +3349,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	}
- 
- 	/* Do not issue duplicate brightness change events to
--	 * userspace */
--	if (!tp_features.bright_acpimode)
--		/* update bright_acpimode... */
--		tpacpi_check_std_acpi_brightness_support();
--
-+	 * userspace. tpacpi_detect_brightness_capabilities() must have
-+	 * been called before this point  */
- 	if (tp_features.bright_acpimode && acpi_video_backlight_support()) {
- 		printk(TPACPI_INFO
- 		       "This ThinkPad has standard ACPI backlight "
-@@ -5989,7 +5915,7 @@ static unsigned int tpacpi_brightness_nvram_get(void)
- 	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
- 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
--	lnvram &= (tp_features.bright_16levels) ? 0x0f : 0x07;
-+	lnvram &= bright_maxlvl;
- 
- 	return lnvram;
- }
-@@ -6098,8 +6024,7 @@ static int brightness_set(unsigned int value)
- {
- 	int res;
- 
--	if (value > ((tp_features.bright_16levels)? 15 : 7) ||
--	    value < 0)
-+	if (value > bright_maxlvl || value < 0)
- 		return -EINVAL;
- 
- 	vdbg_printk(TPACPI_DBG_BRGHT,
-@@ -6174,6 +6099,80 @@ static struct backlight_ops ibm_backlight_data = {
- 
- /* --------------------------------------------------------------------- */
- 
-+static int __init tpacpi_query_bcl_levels(acpi_handle handle)
-+{
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	int rc;
-+
-+	if (ACPI_SUCCESS(acpi_evaluate_object(handle, NULL, NULL, &buffer))) {
-+		obj = (union acpi_object *)buffer.pointer;
-+		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
-+			printk(TPACPI_ERR "Unknown _BCL data, "
-+			       "please report this to %s\n", TPACPI_MAIL);
-+			rc = 0;
-+		} else {
-+			rc = obj->package.count;
-+		}
-+	} else {
-+		return 0;
-+	}
-+
-+	kfree(buffer.pointer);
-+	return rc;
-+}
-+
-+static acpi_status __init tpacpi_acpi_walk_find_bcl(acpi_handle handle,
-+					u32 lvl, void *context, void **rv)
-+{
-+	char name[ACPI_PATH_SEGMENT_LENGTH];
-+	struct acpi_buffer buffer = { sizeof(name), &name };
-+
-+	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_SINGLE_NAME, &buffer)) &&
-+	    !strncmp("_BCL", name, sizeof(name) - 1)) {
-+		BUG_ON(!rv || !*rv);
-+		**(int **)rv = tpacpi_query_bcl_levels(handle);
-+		return AE_CTRL_TERMINATE;
-+	} else {
-+		return AE_OK;
-+	}
-+}
-+
-+/*
-+ * Returns 0 (no ACPI _BCL or _BCL invalid), or size of brightness map
-+ */
-+static unsigned int __init tpacpi_check_std_acpi_brightness_support(void)
-+{
-+	int status;
-+	int bcl_levels = 0;
-+	void *bcl_ptr = &bcl_levels;
-+
-+	if (!vid_handle)
-+		TPACPI_ACPIHANDLE_INIT(vid);
-+
-+	if (!vid_handle)
-+		return 0;
-+
-+	/*
-+	 * Search for a _BCL method, and execute it.  This is safe on all
-+	 * ThinkPads, and as a side-effect, _BCL will place a Lenovo Vista
-+	 * BIOS in ACPI backlight control mode.  We do NOT have to care
-+	 * about calling the _BCL method in an enabled video device, any
-+	 * will do for our purposes.
-+	 */
-+
-+	status = acpi_walk_namespace(ACPI_TYPE_METHOD, vid_handle, 3,
-+				     tpacpi_acpi_walk_find_bcl, NULL, NULL,
-+				     &bcl_ptr);
-+
-+	if (ACPI_SUCCESS(status) && bcl_levels > 2) {
-+		tp_features.bright_acpimode = 1;
-+		return bcl_levels - 2;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * These are only useful for models that have only one possibility
-  * of GPU.  If the BIOS model handles both ATI and Intel, don't use
-@@ -6204,6 +6203,47 @@ static const struct tpacpi_quirk brightness_quirk_table[] __initconst = {
- 	TPACPI_Q_IBM('7', '5', TPACPI_BRGHT_Q_NOEC),	/* X41 Tablet */
- };
- 
-+/*
-+ * Returns < 0 for error, otherwise sets tp_features.bright_*
-+ * and bright_maxlvl.
-+ */
-+static void __init tpacpi_detect_brightness_capabilities(void)
-+{
-+	unsigned int b;
-+
-+	vdbg_printk(TPACPI_DBG_INIT,
-+		    "detecting firmware brightness interface capabilities\n");
-+
-+	/* we could run a quirks check here (same table used by
-+	 * brightness_init) if needed */
-+
-+	/*
-+	 * We always attempt to detect acpi support, so as to switch
-+	 * Lenovo Vista BIOS to ACPI brightness mode even if we are not
-+	 * going to publish a backlight interface
-+	 */
-+	b = tpacpi_check_std_acpi_brightness_support();
-+	switch (b) {
-+	case 16:
-+		bright_maxlvl = 15;
-+		printk(TPACPI_INFO
-+		       "detected a 16-level brightness capable ThinkPad\n");
-+		break;
-+	case 8:
-+	case 0:
-+		bright_maxlvl = 7;
-+		printk(TPACPI_INFO
-+		       "detected a 8-level brightness capable ThinkPad\n");
-+		break;
-+	default:
-+		printk(TPACPI_ERR
-+		       "Unsupported brightness interface, "
-+		       "please contact %s\n", TPACPI_MAIL);
-+		tp_features.bright_unkfw = 1;
-+		bright_maxlvl = b - 1;
-+	}
-+}
-+
- static int __init brightness_init(struct ibm_init_struct *iibm)
- {
- 	struct backlight_properties props;
-@@ -6217,14 +6257,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 	quirks = tpacpi_check_quirks(brightness_quirk_table,
- 				ARRAY_SIZE(brightness_quirk_table));
- 
--	/*
--	 * We always attempt to detect acpi support, so as to switch
--	 * Lenovo Vista BIOS to ACPI brightness mode even if we are not
--	 * going to publish a backlight interface
--	 */
--	b = tpacpi_check_std_acpi_brightness_support();
--	if (b > 0) {
-+	/* tpacpi_detect_brightness_capabilities() must have run already */
-+
-+	/* if it is unknown, we don't handle it: it wouldn't be safe */
-+	if (tp_features.bright_unkfw)
-+		return 1;
- 
-+	if (tp_features.bright_acpimode) {
- 		if (acpi_video_backlight_support()) {
- 			if (brightness_enable > 1) {
- 				printk(TPACPI_NOTICE
-@@ -6253,15 +6292,6 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 		return 1;
- 	}
- 
--	if (b > 16) {
--		printk(TPACPI_ERR
--		       "Unsupported brightness interface, "
--		       "please contact %s\n", TPACPI_MAIL);
--		return 1;
--	}
--	if (b == 16)
--		tp_features.bright_16levels = 1;
--
- 	/*
- 	 * Check for module parameter bogosity, note that we
- 	 * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
-@@ -6292,12 +6322,9 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 	if (tpacpi_brightness_get_raw(&b) < 0)
- 		return 1;
- 
--	if (tp_features.bright_16levels)
--		printk(TPACPI_INFO
--		       "detected a 16-level brightness capable ThinkPad\n");
--
- 	memset(&props, 0, sizeof(struct backlight_properties));
--	props.max_brightness = (tp_features.bright_16levels) ? 15 : 7;
-+	props.max_brightness = bright_maxlvl;
-+	props.brightness = b & TP_EC_BACKLIGHT_LVLMSK;
- 	ibm_backlight_device = backlight_device_register(TPACPI_BACKLIGHT_DEV_NAME,
- 							 NULL, NULL,
- 							 &ibm_backlight_data,
-@@ -6320,7 +6347,6 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 			"or not on your ThinkPad\n", TPACPI_MAIL);
- 	}
- 
--	ibm_backlight_device->props.brightness = b & TP_EC_BACKLIGHT_LVLMSK;
- 	backlight_update_status(ibm_backlight_device);
- 
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_BRGHT,
-@@ -6363,9 +6389,8 @@ static int brightness_read(struct seq_file *m)
- 	} else {
- 		seq_printf(m, "level:\t\t%d\n", level);
- 		seq_printf(m, "commands:\tup, down\n");
--		seq_printf(m, "commands:\tlevel <level>"
--			       " (<level> is 0-%d)\n",
--			       (tp_features.bright_16levels) ? 15 : 7);
-+		seq_printf(m, "commands:\tlevel <level> (<level> is 0-%d)\n",
-+			       bright_maxlvl);
- 	}
- 
- 	return 0;
-@@ -6376,7 +6401,6 @@ static int brightness_write(char *buf)
- 	int level;
- 	int rc;
- 	char *cmd;
--	int max_level = (tp_features.bright_16levels) ? 15 : 7;
- 
- 	level = brightness_get(NULL);
- 	if (level < 0)
-@@ -6384,13 +6408,13 @@ static int brightness_write(char *buf)
- 
- 	while ((cmd = next_cmd(&buf))) {
- 		if (strlencmp(cmd, "up") == 0) {
--			if (level < max_level)
-+			if (level < bright_maxlvl)
- 				level++;
- 		} else if (strlencmp(cmd, "down") == 0) {
- 			if (level > 0)
- 				level--;
- 		} else if (sscanf(cmd, "level %d", &level) == 1 &&
--			   level >= 0 && level <= max_level) {
-+			   level >= 0 && level <= bright_maxlvl) {
- 			/* new level set */
- 		} else
- 			return -EINVAL;
-@@ -9130,6 +9154,11 @@ static int __init thinkpad_acpi_module_init(void)
- 		tpacpi_inputdev->id.version = TPACPI_HKEY_INPUT_VERSION;
- 		tpacpi_inputdev->dev.parent = &tpacpi_pdev->dev;
- 	}
-+
-+	/* Init subdriver dependencies */
-+	tpacpi_detect_brightness_capabilities();
-+
-+	/* Init subdrivers */
- 	for (i = 0; i < ARRAY_SIZE(ibms_init); i++) {
- 		ret = ibm_init(&ibms_init[i]);
- 		if (ret >= 0 && *ibms_init[i].param)
--- 
+ 	struct backlight_device *bd =3D eeepc->backlight_device;
+ 	int old =3D bd->props.brightness;
+-	int new;
++	int new =3D old;
+=20
+ 	if (code >=3D NOTIFY_BRNUP_MIN && code <=3D NOTIFY_BRNUP_MAX)
+ 		new =3D code - NOTIFY_BRNUP_MIN + 1;
+--=20
 1.7.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
