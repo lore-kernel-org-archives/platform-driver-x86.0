@@ -1,103 +1,55 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 12/14] thinkpad-acpi: don't depend on led_path for led firmware type (v2)
-Date: Wed, 19 May 2010 00:26:22 -0300
-Message-ID: <1274239584-17743-13-git-send-email-hmh@hmh.eng.br>
-References: <1274239584-17743-1-git-send-email-hmh@hmh.eng.br>
+Subject: [GIT PULL] thinkpad-acpi fixes for the merge window
+Date: Wed, 19 May 2010 00:26:10 -0300
+Message-ID: <1274239584-17743-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:43975 "EHLO
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:45396 "EHLO
 	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756255Ab0ESD0h (ORCPT
+	by vger.kernel.org with ESMTP id S1756116Ab0ESD0f (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 18 May 2010 23:26:37 -0400
-In-Reply-To: <1274239584-17743-1-git-send-email-hmh@hmh.eng.br>
+	Tue, 18 May 2010 23:26:35 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-Don't depend on the contents of led_path to know which LED interface
-the firmware wants.
+Matthew,
 
-This removes the only user of *_path for the thinkpad-acpi ACPI
-handlers, which will simplify future code.
+Please pull from:
+  git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git for-upstream/platform-x86_tpacpi
 
-Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
----
- drivers/platform/x86/thinkpad_acpi.c |   47 ++++++++++++++++++++-------------
- 1 files changed, 28 insertions(+), 19 deletions(-)
+To get the following changes:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index a39f159..29ad273 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5009,11 +5009,7 @@ enum {	/* For TPACPI_LED_OLD */
- 
- static enum led_access_mode led_supported;
- 
--TPACPI_HANDLE(led, ec, "SLED",	/* 570 */
--	   "SYSL",		/* 600e/x, 770e, 770x, A21e, A2xm/p, */
--				/* T20-22, X20-21 */
--	   "LED",		/* all others */
--	   );			/* R30, R31 */
-+static acpi_handle led_handle;
- 
- #define TPACPI_LED_NUMLEDS 16
- static struct tpacpi_led_classdev *tpacpi_leds;
-@@ -5273,6 +5269,32 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
- #undef TPACPI_LEDQ_IBM
- #undef TPACPI_LEDQ_LNV
- 
-+static enum led_access_mode __init led_init_detect_mode(void)
-+{
-+	acpi_status status;
-+
-+	if (tpacpi_is_ibm()) {
-+		/* 570 */
-+		status = acpi_get_handle(ec_handle, "SLED", &led_handle);
-+		if (ACPI_SUCCESS(status))
-+			return TPACPI_LED_570;
-+
-+		/* 600e/x, 770e, 770x, A21e, A2xm/p, T20-22, X20-21 */
-+		status = acpi_get_handle(ec_handle, "SYSL", &led_handle);
-+		if (ACPI_SUCCESS(status))
-+			return TPACPI_LED_OLD;
-+	}
-+
-+	/* most others */
-+	status = acpi_get_handle(ec_handle, "LED", &led_handle);
-+	if (ACPI_SUCCESS(status))
-+		return TPACPI_LED_NEW;
-+
-+	/* R30, R31, and unknown firmwares */
-+	led_handle = NULL;
-+	return TPACPI_LED_NONE;
-+}
-+
- static int __init led_init(struct ibm_init_struct *iibm)
- {
- 	unsigned int i;
-@@ -5281,20 +5303,7 @@ static int __init led_init(struct ibm_init_struct *iibm)
- 
- 	vdbg_printk(TPACPI_DBG_INIT, "initializing LED subdriver\n");
- 
--	TPACPI_ACPIHANDLE_INIT(led);
--
--	if (!led_handle)
--		/* led not supported on R30, R31 */
--		led_supported = TPACPI_LED_NONE;
--	else if (tpacpi_is_ibm() && strlencmp(led_path, "SLED") == 0)
--		/* 570 */
--		led_supported = TPACPI_LED_570;
--	else if (tpacpi_is_ibm() && strlencmp(led_path, "SYSL") == 0)
--		/* 600e/x, 770e, 770x, A21e, A2xm/p, T20-22, X20-21 */
--		led_supported = TPACPI_LED_OLD;
--	else
--		/* all others */
--		led_supported = TPACPI_LED_NEW;
-+	led_supported = led_init_detect_mode();
- 
- 	vdbg_printk(TPACPI_DBG_INIT, "LED commands are %s, mode %d\n",
- 		str_supported(led_supported), led_supported);
+Henrique de Moraes Holschuh (14):
+      thinkpad-acpi: constrain IBM-era support to IBM boxes
+      thinkpad-acpi: X100e quick fixes
+      thinkpad-acpi: fix volume/mute hotkey poll handling
+      thinkpad-acpi: move greeting messages out of the first subdriver (v2)
+      thinkpad-acpi: let other subdrivers know backlight level range
+      thinkpad-acpi: fix brightness hotkey poll handling
+      thinkpad-acpi: update HKEY and hotkey subdriver documentation (v2)
+      thinkpad-acpi: disclose usertask for ALSA callbacks
+      thinkpad-acpi: detect EC node using its HID (v2)
+      thinkpad-acpi: acpi_evalf fixes
+      thinkpad-acpi: explain errors from acpi_install_notify_handler
+      thinkpad-acpi: don't depend on led_path for led firmware type (v2)
+      thinkpad-acpi: clean up ACPI handles handling
+      thinkpad-acpi: document backlight level writeback at driver init
+
+ Documentation/laptops/thinkpad-acpi.txt |   66 +++-
+ drivers/platform/x86/thinkpad_acpi.c    |  600 +++++++++++++++++++------------
+ 2 files changed, 425 insertions(+), 241 deletions(-)
+
+Please note that this branch contains a merge from mainline (at v2.6.34-rc7) on
+top of the branch you pulled from me the last time.
+
+If you'd prefer that I rebase the above patchset on top of 2.6.34, please say
+so and I will do that.
+
+I will also send the patchset as replies to this email.
+
 -- 
-1.7.1
-
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
