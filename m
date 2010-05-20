@@ -1,29 +1,31 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 4/4] msi-laptop: Add i8042 filter to sync sw state with
-	BIOS when function key pressed
-Date: Thu, 20 May 2010 14:32:37 +0100
-Message-ID: <20100520133237.GC15356@srcf.ucam.org>
-References: <4BEE602B020000230001928D@novprvlin0050.provo.novell.com>
+Subject: Re: [PATCH 1/3] X86 platform wmi: Introduce debug param to log all
+	WMI events
+Date: Thu, 20 May 2010 14:37:18 +0100
+Message-ID: <20100520133718.GD15356@srcf.ucam.org>
+References: <1272893417-3481-1-git-send-email-trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:38303 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:42925 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751961Ab0ETNcv (ORCPT
+	with ESMTP id S1753220Ab0ETNhX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 May 2010 09:32:51 -0400
+	Thu, 20 May 2010 09:37:23 -0400
 Content-Disposition: inline
-In-Reply-To: <4BEE602B020000230001928D@novprvlin0050.provo.novell.com>
+In-Reply-To: <1272893417-3481-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: dmitry.torokhov@gmail.com, gregkh@suse.de, mzxreary@0pointer.de, greg@kroah.com, rpurdie@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com
 
-Hi Joey,
+On Mon, May 03, 2010 at 03:30:15PM +0200, Thomas Renninger wrote:
+> +module_param(debug_event, bool, 0444);
+> +MODULE_PARM_DESC(debug_event,
+> +		 "Log WMI Events [0/1]");
 
-This patch didn't apply cleanly, but I've fixed it up by hand. I've also 
-applied the rest of the patchset.
+It's an insanely small nit, but it's already declared as a bool 
+parameter so the 0/1 is kind of unnecessary.
 
-Thanks,
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
