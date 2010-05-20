@@ -1,30 +1,43 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 1/3] X86 platform wmi: Introduce debug param to log all
-	WMI events
-Date: Thu, 20 May 2010 15:37:25 +0100
-Message-ID: <20100520143725.GA17731@srcf.ucam.org>
-References: <1272893417-3481-1-git-send-email-trenn@suse.de> <20100520134211.GE15356@srcf.ucam.org> <201005201635.10743.trenn@suse.de>
+From: Roes Sulc <ouessant@ml.nissin.co.jp>
+Subject: it closely
+Date: Thu, 20 May 2010 20:46:37 +0200
+Message-ID: <4BF58284.3080607@st-anthony.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: application/octet-stream; name="memo.rtf"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:60775 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752571Ab0ETOha (ORCPT
+Received: from host68-0-dynamic.55-79-r.retail.telecomitalia.it ([79.55.0.68]:1360
+	"HELO host68-0-dynamic.55-79-r.retail.telecomitalia.it"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+	id S1751029Ab0ETSqg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 May 2010 10:37:30 -0400
-Content-Disposition: inline
-In-Reply-To: <201005201635.10743.trenn@suse.de>
+	Thu, 20 May 2010 14:46:36 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com
+To: Penberthy Sully <platform-driver-x86@vger.kernel.org>
 
-On Thu, May 20, 2010 at 04:35:10PM +0200, Thomas Renninger wrote:
-> You could have removed the 0/1 manually.
-> No need to ask for such a tiny change and the patch
-> had not needed rediffing.
-
-Yeah, in the end I didn't worry about it - it's entirely harmless.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
+IE1zZnRlZGl0IDEuMjguMS4zNDk5O317XGZvbnR0Ymx7XGYwXGZuaWxcZmNoYXJzZXQwIENh
+bGlicmk7fX0NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMS4yOC4xLjM0OTk7fXtcY29sb3J0
+YmwgO1xyZWQwXGdyZWVuMFxibHVlMjU1O1xyZWQxOTJcZ3JlZW44MFxibHVlNzc7XHJlZDBc
+Z3JlZW4xNzZcYmx1ZTgwO1xyZWQyMDRcZ3JlZW4xODBcYmx1ZTA7XHJlZDI1NVxncmVlbjBc
+Ymx1ZTA7XHJlZDIyM1xncmVlbjIwNlxibHVlNDtccmVkMTU1XGdyZWVuMFxibHVlMjExO1xy
+ZWQ3OVxncmVlbjEyOVxibHVlMTg5O1xyZWQxNjVcZ3JlZW4xNjVcYmx1ZTE2NTtccmVkMTI4
+XGdyZWVuMTU4XGJsdWUxOTQ7XHJlZDI0N1xncmVlbjE1MFxibHVlNzA7XHJlZDBcZ3JlZW43
+N1xibHVlMTg3O1xyZWQ3NVxncmVlbjE3MlxibHVlMTk4O1xyZWQyMjFcZ3JlZW4xMzJcYmx1
+ZTEzMjtccmVkNTFcZ3JlZW41MVxibHVlNTE7XHJlZDE1OFxncmVlbjEyNFxibHVlMTI0O1xy
+ZWQxNTVcZ3JlZW4xODdcYmx1ZTg5O30NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMS4yOC4x
+LjM0OTk7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5nOVxm
+MFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCAxLjI4LjEuMzQ5
+OTt9dHRwOi8vd3d3LmthNzcucnUifX17XGZsZHJzbHR7XHVsXGNmMSBodHRwOi8vd3d3Lmth
+NzcucnV9fX1cZjBcY2YxXGJcZnMzMiAgLSBPcmRlciB0aGUgY2hlYXBlc3QgbWVkaWNhdGlv
+bnMgbm93IVxwYXINClZpYWdyYSBcY2Y0IENpYWxpcyBcY2YzIFZpYWdyYSBQcm9mZXNzaW9u
+YWwgXGNmNSBDaWFsaXMgUHJvZmVzc2lvbmFsIFxjZjYgVmlhZ3JhIFN1cGVyIEFjdGl2ZSsg
+XGNmMyBDaWFsaXMgU3VwZXIgQWN0aXZlKyBcY2Y3IExldml0cmFcY2YwICBcY2Y4IFZpYWdy
+YSBTb2Z0IFRhYnMgXGNmOSBDaWFsaXMgU29mdCBUYWJzXGNmMTAgIFxjZjExIExldml0cmEg
+UHJvZmVzc2lvbmFsIFxjZjQgRmVtYWxlIFZpYWdyYSBcY2YxMiBQcm9wZWNpYSBcY2Y3IEFj
+b21wbGlhIFxjZjYgWGVuaWNhbFxjZjAgIFxjZjUgQnJhbmQgTGV2aXRyYSBcY2YxMyBGZW1h
+bGUgQ2lhbGlzIFxjZjE0IExldml0cmEgU3VwZXIgQWN0aXZlKyBcY2YxNSBUYW1pZmx1XGNm
+MCAgXGNmNyBWUFhMXGNmMCAgXGNmMTYgVmlhZ3JhIFNvZnQgRmxhdm91cmVkIFxjZjUgQnJh
+bmQgVmlhZ3JhIFxjZjE3IEJyYW5kIENpYWxpc1xjZjANCntcKlxnZW5lcmF0b3IgTXNmdGVk
+aXQgMS4yOC4xLjM0OTk7fX0=
