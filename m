@@ -1,132 +1,125 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] intel_menlow: fix memory leaks in error path
-Date: Fri, 21 May 2010 17:10:33 +0800
-Message-ID: <1274433033.21567.2.camel@mola>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Thomas Renninger <trenn@suse.de>
+Subject: [PATCH 1/7] x86 platform drivers: hp-wmi Reorder event id processing
+Date: Fri, 21 May 2010 16:18:09 +0200
+Message-ID: <1274451495-10252-2-git-send-email-trenn@suse.de>
+References: <1274451495-10252-1-git-send-email-trenn@suse.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:33491 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751356Ab0EUJJM (ORCPT
+Received: from cantor.suse.de ([195.135.220.2]:46644 "EHLO mx1.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753690Ab0EUOST (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 21 May 2010 05:09:12 -0400
+	Fri, 21 May 2010 10:18:19 -0400
+In-Reply-To: <1274451495-10252-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Sujith Thomas <sujith.thomas@intel.com>, Zhang Rui <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>, platform-driver-x86@vger.kernel.org
+To: mjg@redhat.com, trenn@suse.de
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-This patch includes below fixes in error path:
-1. fix a memory leak if device_create_file failed in
-intel_menlow_add_one_attribute
-2. properly free added attributes before return error in
-intel_menlow_register_sensor error handler
-3. properly call acpi_bus_unregister_driver before return error in
-intel_menlow_module_init
+Event id 0x4 defines the hotkey event.
+No need (or even wrong) to query HPWMI_HOTKEY_QUERY if event id is != 0x4.
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Reorder the eventcode conditionals and use switch case instead of if/else.
+Use an enum for the event ids cases.
+
+
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+CC: mjg@redhat.com
+CC: linux-acpi@vger.kernel.org
+CC: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/intel_menlow.c |   33 ++++++++++++++++++++++-----------
- 1 files changed, 22 insertions(+), 11 deletions(-)
+ drivers/platform/x86/hp-wmi.c |   51 +++++++++++++++++++++++++---------------
+ 1 files changed, 32 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-index 2f795ce..eacd5da 100644
---- a/drivers/platform/x86/intel_menlow.c
-+++ b/drivers/platform/x86/intel_menlow.c
-@@ -53,6 +53,8 @@ MODULE_LICENSE("GPL");
- #define MEMORY_ARG_CUR_BANDWIDTH 1
- #define MEMORY_ARG_MAX_BANDWIDTH 0
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 51c07a0..f1c1862 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -58,6 +58,12 @@ enum hp_wmi_radio {
+ 	HPWMI_WWAN = 2,
+ };
  
-+static void intel_menlow_unregister_sensor(void);
++enum hp_wmi_event_ids {
++	HPWMI_DOCK_EVENT = 1,
++	HPWMI_BEZEL_BUTTON = 4,
++	HPWMI_WIRELESS = 5,
++};
 +
- /*
-  * GTHS returning 'n' would mean that [0,n-1] states are supported
-  * In that case max_cstate would be n-1
-@@ -406,8 +408,10 @@ static int intel_menlow_add_one_attribute(char *name, int mode, void *show,
- 	attr->handle = handle;
+ static int __devinit hp_wmi_bios_setup(struct platform_device *device);
+ static int __exit hp_wmi_bios_remove(struct platform_device *device);
+ static int hp_wmi_resume_handler(struct device *device);
+@@ -338,7 +344,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	static struct key_entry *key;
+ 	union acpi_object *obj;
+-	int eventcode;
++	int eventcode, key_code;
+ 	acpi_status status;
  
- 	result = device_create_file(dev, &attr->attr);
--	if (result)
-+	if (result) {
-+		kfree(attr);
- 		return result;
+ 	status = wmi_get_event_data(value, &response);
+@@ -357,28 +363,32 @@ static void hp_wmi_notify(u32 value, void *context)
+ 
+ 	eventcode = *((u8 *) obj->buffer.pointer);
+ 	kfree(obj);
+-	if (eventcode == 0x4)
+-		eventcode = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
+-						0);
+-	key = hp_wmi_get_entry_by_scancode(eventcode);
+-	if (key) {
+-		switch (key->type) {
+-		case KE_KEY:
+-			input_report_key(hp_wmi_input_dev,
+-					 key->keycode, 1);
+-			input_sync(hp_wmi_input_dev);
+-			input_report_key(hp_wmi_input_dev,
+-					 key->keycode, 0);
+-			input_sync(hp_wmi_input_dev);
+-			break;
+-		}
+-	} else if (eventcode == 0x1) {
++	switch (eventcode) {
++	case HPWMI_DOCK_EVENT:
+ 		input_report_switch(hp_wmi_input_dev, SW_DOCK,
+ 				    hp_wmi_dock_state());
+ 		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+ 				    hp_wmi_tablet_state());
+ 		input_sync(hp_wmi_input_dev);
+-	} else if (eventcode == 0x5) {
++		break;
++	case HPWMI_BEZEL_BUTTON:
++		key_code = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
++						 0);
++		key = hp_wmi_get_entry_by_scancode(key_code);
++		if (key) {
++			switch (key->type) {
++			case KE_KEY:
++				input_report_key(hp_wmi_input_dev,
++						 key->keycode, 1);
++				input_sync(hp_wmi_input_dev);
++				input_report_key(hp_wmi_input_dev,
++						 key->keycode, 0);
++				input_sync(hp_wmi_input_dev);
++				break;
++			}
++		}
++		break;
++	case HPWMI_WIRELESS:
+ 		if (wifi_rfkill)
+ 			rfkill_set_states(wifi_rfkill,
+ 					  hp_wmi_get_sw_state(HPWMI_WIFI),
+@@ -391,9 +401,12 @@ static void hp_wmi_notify(u32 value, void *context)
+ 			rfkill_set_states(wwan_rfkill,
+ 					  hp_wmi_get_sw_state(HPWMI_WWAN),
+ 					  hp_wmi_get_hw_state(HPWMI_WWAN));
+-	} else
++		break;
++	default:
+ 		printk(KERN_INFO "HP WMI: Unknown key pressed - %x\n",
+ 			eventcode);
++		break;
 +	}
- 
- 	mutex_lock(&intel_menlow_attr_lock);
- 	list_add_tail(&attr->node, &intel_menlow_attr_list);
-@@ -431,11 +435,11 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
- 	/* _TZ must have the AUX0/1 methods */
- 	status = acpi_get_handle(handle, GET_AUX0, &dummy);
- 	if (ACPI_FAILURE(status))
--		goto not_found;
-+		return (status == AE_NOT_FOUND) ? AE_OK : status;
- 
- 	status = acpi_get_handle(handle, SET_AUX0, &dummy);
- 	if (ACPI_FAILURE(status))
--		goto not_found;
-+		return (status == AE_NOT_FOUND) ? AE_OK : status;
- 
- 	result = intel_menlow_add_one_attribute("aux0", 0644,
- 						aux0_show, aux0_store,
-@@ -445,17 +449,19 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
- 
- 	status = acpi_get_handle(handle, GET_AUX1, &dummy);
- 	if (ACPI_FAILURE(status))
--		goto not_found;
-+		goto aux1_not_found;
- 
- 	status = acpi_get_handle(handle, SET_AUX1, &dummy);
- 	if (ACPI_FAILURE(status))
--		goto not_found;
-+		goto aux1_not_found;
- 
- 	result = intel_menlow_add_one_attribute("aux1", 0644,
- 						aux1_show, aux1_store,
- 						&thermal->device, handle);
--	if (result)
-+	if (result) {
-+		intel_menlow_unregister_sensor();
- 		return AE_ERROR;
-+	}
- 
- 	/*
- 	 * create the "dabney_enabled" attribute which means the user app
-@@ -465,14 +471,17 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
- 	result = intel_menlow_add_one_attribute("bios_enabled", 0444,
- 						bios_enabled_show, NULL,
- 						&thermal->device, handle);
--	if (result)
-+	if (result) {
-+		intel_menlow_unregister_sensor();
- 		return AE_ERROR;
-+	}
- 
-- not_found:
-+ aux1_not_found:
- 	if (status == AE_NOT_FOUND)
- 		return AE_OK;
--	else
--		return status;
-+
-+	intel_menlow_unregister_sensor();
-+	return status;
  }
  
- static void intel_menlow_unregister_sensor(void)
-@@ -513,8 +522,10 @@ static int __init intel_menlow_module_init(void)
- 	status = acpi_walk_namespace(ACPI_TYPE_THERMAL, ACPI_ROOT_OBJECT,
- 				     ACPI_UINT32_MAX,
- 				     intel_menlow_register_sensor, NULL, NULL, NULL);
--	if (ACPI_FAILURE(status))
-+	if (ACPI_FAILURE(status)) {
-+		acpi_bus_unregister_driver(&intel_menlow_memory_driver);
- 		return -ENODEV;
-+	}
- 
- 	return 0;
- }
+ static int __init hp_wmi_input_setup(void)
 -- 
-1.5.4.3
-
-
+1.6.3
 
