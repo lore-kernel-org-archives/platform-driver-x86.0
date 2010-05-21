@@ -1,28 +1,46 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH] x86 platform drivers: hp-wmi fix buffer size depending on ACPI version
-Date: Fri, 21 May 2010 16:45:28 +0200
-Message-ID: <201005211645.28431.trenn@suse.de>
-References: <1274451495-10252-7-git-send-email-trenn@suse.de> <1274452903-15519-1-git-send-email-trenn@suse.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/7] x86 platform drivers: hp-wmi Use consistent prefix string for messages.
+Date: Fri, 21 May 2010 11:14:53 -0700
+Message-ID: <201005211114.54902.dmitry.torokhov@gmail.com>
+References: <1274451495-10252-1-git-send-email-trenn@suse.de> <1274451495-10252-4-git-send-email-trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-6"
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:44388 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755891Ab0EUOoM (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:43166 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758272Ab0EUSPB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 21 May 2010 10:44:12 -0400
-In-Reply-To: <1274452903-15519-1-git-send-email-trenn@suse.de>
+	Fri, 21 May 2010 14:15:01 -0400
+In-Reply-To: <1274451495-10252-4-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: robert.moore@intel.com, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: mjg@redhat.com, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Friday 21 May 2010 16:41:43 Thomas Renninger wrote:
-> Depending on ACPI version (1.0 -> 32 bit) an integer could be
-checkpatch cleaned up version of 6/7 and 7/7 sent.
-The others are fine.
-Sorry about that.
+On Friday 21 May 2010 07:18:11 am Thomas Renninger wrote:
+> Signed-off-by: Thomas Renninger <trenn@suse.de>
+> CC: mjg@redhat.com
+> CC: linux-acpi@vger.kernel.org
+> CC: platform-driver-x86@vger.kernel.org
+> ---
+>  drivers/platform/x86/hp-wmi.c |   10 ++++++----
+>  1 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 7b086dd..e04715a 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -52,6 +52,8 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>  #define HPWMI_WIRELESS_QUERY 0x5
+>  #define HPWMI_HOTKEY_QUERY 0xc
+> 
+> +#define PREFIX "HP WMI: "
 
-    Thomas
+
+Better yet, define pr_fmt() and  switch to using pr_info() and friends.
+dev_xxx() is another option too.
+
+-- 
+Dmitry
