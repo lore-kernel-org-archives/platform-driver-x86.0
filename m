@@ -1,43 +1,132 @@
-From: Roes Sulc <ouessant@ml.nissin.co.jp>
-Subject: it closely
-Date: Thu, 20 May 2010 20:46:37 +0200
-Message-ID: <4BF58284.3080607@st-anthony.org>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] intel_menlow: fix memory leaks in error path
+Date: Fri, 21 May 2010 17:10:33 +0800
+Message-ID: <1274433033.21567.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: application/octet-stream; name="memo.rtf"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from host68-0-dynamic.55-79-r.retail.telecomitalia.it ([79.55.0.68]:1360
-	"HELO host68-0-dynamic.55-79-r.retail.telecomitalia.it"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
-	id S1751029Ab0ETSqg (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:33491 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751356Ab0EUJJM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 May 2010 14:46:36 -0400
+	Fri, 21 May 2010 05:09:12 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Penberthy Sully <platform-driver-x86@vger.kernel.org>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Sujith Thomas <sujith.thomas@intel.com>, Zhang Rui <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>, platform-driver-x86@vger.kernel.org
 
-e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
-IE1zZnRlZGl0IDEuMjguMS4zNDk5O317XGZvbnR0Ymx7XGYwXGZuaWxcZmNoYXJzZXQwIENh
-bGlicmk7fX0NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMS4yOC4xLjM0OTk7fXtcY29sb3J0
-YmwgO1xyZWQwXGdyZWVuMFxibHVlMjU1O1xyZWQxOTJcZ3JlZW44MFxibHVlNzc7XHJlZDBc
-Z3JlZW4xNzZcYmx1ZTgwO1xyZWQyMDRcZ3JlZW4xODBcYmx1ZTA7XHJlZDI1NVxncmVlbjBc
-Ymx1ZTA7XHJlZDIyM1xncmVlbjIwNlxibHVlNDtccmVkMTU1XGdyZWVuMFxibHVlMjExO1xy
-ZWQ3OVxncmVlbjEyOVxibHVlMTg5O1xyZWQxNjVcZ3JlZW4xNjVcYmx1ZTE2NTtccmVkMTI4
-XGdyZWVuMTU4XGJsdWUxOTQ7XHJlZDI0N1xncmVlbjE1MFxibHVlNzA7XHJlZDBcZ3JlZW43
-N1xibHVlMTg3O1xyZWQ3NVxncmVlbjE3MlxibHVlMTk4O1xyZWQyMjFcZ3JlZW4xMzJcYmx1
-ZTEzMjtccmVkNTFcZ3JlZW41MVxibHVlNTE7XHJlZDE1OFxncmVlbjEyNFxibHVlMTI0O1xy
-ZWQxNTVcZ3JlZW4xODdcYmx1ZTg5O30NCntcKlxnZW5lcmF0b3IgTXNmdGVkaXQgMS4yOC4x
-LjM0OTk7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5nOVxm
-MFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCAxLjI4LjEuMzQ5
-OTt9dHRwOi8vd3d3LmthNzcucnUifX17XGZsZHJzbHR7XHVsXGNmMSBodHRwOi8vd3d3Lmth
-NzcucnV9fX1cZjBcY2YxXGJcZnMzMiAgLSBPcmRlciB0aGUgY2hlYXBlc3QgbWVkaWNhdGlv
-bnMgbm93IVxwYXINClZpYWdyYSBcY2Y0IENpYWxpcyBcY2YzIFZpYWdyYSBQcm9mZXNzaW9u
-YWwgXGNmNSBDaWFsaXMgUHJvZmVzc2lvbmFsIFxjZjYgVmlhZ3JhIFN1cGVyIEFjdGl2ZSsg
-XGNmMyBDaWFsaXMgU3VwZXIgQWN0aXZlKyBcY2Y3IExldml0cmFcY2YwICBcY2Y4IFZpYWdy
-YSBTb2Z0IFRhYnMgXGNmOSBDaWFsaXMgU29mdCBUYWJzXGNmMTAgIFxjZjExIExldml0cmEg
-UHJvZmVzc2lvbmFsIFxjZjQgRmVtYWxlIFZpYWdyYSBcY2YxMiBQcm9wZWNpYSBcY2Y3IEFj
-b21wbGlhIFxjZjYgWGVuaWNhbFxjZjAgIFxjZjUgQnJhbmQgTGV2aXRyYSBcY2YxMyBGZW1h
-bGUgQ2lhbGlzIFxjZjE0IExldml0cmEgU3VwZXIgQWN0aXZlKyBcY2YxNSBUYW1pZmx1XGNm
-MCAgXGNmNyBWUFhMXGNmMCAgXGNmMTYgVmlhZ3JhIFNvZnQgRmxhdm91cmVkIFxjZjUgQnJh
-bmQgVmlhZ3JhIFxjZjE3IEJyYW5kIENpYWxpc1xjZjANCntcKlxnZW5lcmF0b3IgTXNmdGVk
-aXQgMS4yOC4xLjM0OTk7fX0=
+This patch includes below fixes in error path:
+1. fix a memory leak if device_create_file failed in
+intel_menlow_add_one_attribute
+2. properly free added attributes before return error in
+intel_menlow_register_sensor error handler
+3. properly call acpi_bus_unregister_driver before return error in
+intel_menlow_module_init
+
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/intel_menlow.c |   33 ++++++++++++++++++++++-----------
+ 1 files changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
+index 2f795ce..eacd5da 100644
+--- a/drivers/platform/x86/intel_menlow.c
++++ b/drivers/platform/x86/intel_menlow.c
+@@ -53,6 +53,8 @@ MODULE_LICENSE("GPL");
+ #define MEMORY_ARG_CUR_BANDWIDTH 1
+ #define MEMORY_ARG_MAX_BANDWIDTH 0
+ 
++static void intel_menlow_unregister_sensor(void);
++
+ /*
+  * GTHS returning 'n' would mean that [0,n-1] states are supported
+  * In that case max_cstate would be n-1
+@@ -406,8 +408,10 @@ static int intel_menlow_add_one_attribute(char *name, int mode, void *show,
+ 	attr->handle = handle;
+ 
+ 	result = device_create_file(dev, &attr->attr);
+-	if (result)
++	if (result) {
++		kfree(attr);
+ 		return result;
++	}
+ 
+ 	mutex_lock(&intel_menlow_attr_lock);
+ 	list_add_tail(&attr->node, &intel_menlow_attr_list);
+@@ -431,11 +435,11 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
+ 	/* _TZ must have the AUX0/1 methods */
+ 	status = acpi_get_handle(handle, GET_AUX0, &dummy);
+ 	if (ACPI_FAILURE(status))
+-		goto not_found;
++		return (status == AE_NOT_FOUND) ? AE_OK : status;
+ 
+ 	status = acpi_get_handle(handle, SET_AUX0, &dummy);
+ 	if (ACPI_FAILURE(status))
+-		goto not_found;
++		return (status == AE_NOT_FOUND) ? AE_OK : status;
+ 
+ 	result = intel_menlow_add_one_attribute("aux0", 0644,
+ 						aux0_show, aux0_store,
+@@ -445,17 +449,19 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
+ 
+ 	status = acpi_get_handle(handle, GET_AUX1, &dummy);
+ 	if (ACPI_FAILURE(status))
+-		goto not_found;
++		goto aux1_not_found;
+ 
+ 	status = acpi_get_handle(handle, SET_AUX1, &dummy);
+ 	if (ACPI_FAILURE(status))
+-		goto not_found;
++		goto aux1_not_found;
+ 
+ 	result = intel_menlow_add_one_attribute("aux1", 0644,
+ 						aux1_show, aux1_store,
+ 						&thermal->device, handle);
+-	if (result)
++	if (result) {
++		intel_menlow_unregister_sensor();
+ 		return AE_ERROR;
++	}
+ 
+ 	/*
+ 	 * create the "dabney_enabled" attribute which means the user app
+@@ -465,14 +471,17 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
+ 	result = intel_menlow_add_one_attribute("bios_enabled", 0444,
+ 						bios_enabled_show, NULL,
+ 						&thermal->device, handle);
+-	if (result)
++	if (result) {
++		intel_menlow_unregister_sensor();
+ 		return AE_ERROR;
++	}
+ 
+- not_found:
++ aux1_not_found:
+ 	if (status == AE_NOT_FOUND)
+ 		return AE_OK;
+-	else
+-		return status;
++
++	intel_menlow_unregister_sensor();
++	return status;
+ }
+ 
+ static void intel_menlow_unregister_sensor(void)
+@@ -513,8 +522,10 @@ static int __init intel_menlow_module_init(void)
+ 	status = acpi_walk_namespace(ACPI_TYPE_THERMAL, ACPI_ROOT_OBJECT,
+ 				     ACPI_UINT32_MAX,
+ 				     intel_menlow_register_sensor, NULL, NULL, NULL);
+-	if (ACPI_FAILURE(status))
++	if (ACPI_FAILURE(status)) {
++		acpi_bus_unregister_driver(&intel_menlow_memory_driver);
+ 		return -ENODEV;
++	}
+ 
+ 	return 0;
+ }
+-- 
+1.5.4.3
+
+
+
