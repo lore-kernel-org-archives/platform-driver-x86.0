@@ -1,40 +1,53 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: [PATCH -next] platform/x86: msi-laptop depends on SERIO_I8042
-Date: Sun, 23 May 2010 16:33:17 -0700
-Message-ID: <20100523163317.d1224414.randy.dunlap@oracle.com>
-References: <20100522170459.4c89723d.sfr@canb.auug.org.au>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 3/7] x86 platform drivers: hp-wmi Use consistent prefix string for messages.
+Date: Mon, 24 May 2010 22:04:57 +0200
+Message-ID: <201005242204.58240.trenn@suse.de>
+References: <1274451495-10252-1-git-send-email-trenn@suse.de> <1274451495-10252-4-git-send-email-trenn@suse.de> <201005211114.54902.dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100522170459.4c89723d.sfr@canb.auug.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Lennart Poettering <mzxreary@0pointer.de>
-Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:55987 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755759Ab0EXUEk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 24 May 2010 16:04:40 -0400
+In-Reply-To: <201005211114.54902.dmitry.torokhov@gmail.com>
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: mjg@redhat.com, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-From: Randy Dunlap <randy.dunlap@oracle.com>
+On Friday 21 May 2010 08:14:53 pm Dmitry Torokhov wrote:
+> On Friday 21 May 2010 07:18:11 am Thomas Renninger wrote:
+> > Signed-off-by: Thomas Renninger <trenn@suse.de>
+> > CC: mjg@redhat.com
+> > CC: linux-acpi@vger.kernel.org
+> > CC: platform-driver-x86@vger.kernel.org
+> > ---
+> >  drivers/platform/x86/hp-wmi.c |   10 ++++++----
+> >  1 files changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/hp-wmi.c
+> > b/drivers/platform/x86/hp-wmi.c index 7b086dd..e04715a 100644
+> > --- a/drivers/platform/x86/hp-wmi.c
+> > +++ b/drivers/platform/x86/hp-wmi.c
+> > @@ -52,6 +52,8 @@
+> > MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4"); #define
+> > HPWMI_WIRELESS_QUERY 0x5
+> >  #define HPWMI_HOTKEY_QUERY 0xc
+> >
+> > +#define PREFIX "HP WMI: "
+>
+> Better yet, define pr_fmt() and  switch to using pr_info() and friends.
+> dev_xxx() is another option too.
 
-msi-laptop uses i8042_*() interfaces, so it should depend on
-SERIO_I8042.  E.g., when SERIO_I8042=m and MSI_LAPTOP=y:
+I would have to rediff the other patches...
+As printk was already used, I'd appreciate if these can be merged and I can 
+also fix this on top.
 
-msi-laptop.c:(.text+0x18a7fe): undefined reference to `i8042_install_filter'
-msi-laptop.c:(.init.text+0xd69d): undefined reference to `i8042_remove_filter'
-msi-laptop.c:(.exit.text+0x19c3): undefined reference to `i8042_remove_filter'
+Thanks,
 
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Lennart Poettering <mzxreary@0pointer.de>
----
- drivers/platform/x86/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20100522.orig/drivers/platform/x86/Kconfig
-+++ linux-next-20100522/drivers/platform/x86/Kconfig
-@@ -151,6 +151,7 @@ config MSI_LAPTOP
- 	depends on ACPI
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on RFKILL
-+	depends on SERIO_I8042
- 	---help---
- 	  This is a driver for laptops built by MSI (MICRO-STAR
- 	  INTERNATIONAL):
+      Thomas
