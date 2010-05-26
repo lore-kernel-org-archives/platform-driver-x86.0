@@ -1,53 +1,48 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 3/7] x86 platform drivers: hp-wmi Use consistent prefix string for messages.
-Date: Mon, 24 May 2010 22:04:57 +0200
-Message-ID: <201005242204.58240.trenn@suse.de>
-References: <1274451495-10252-1-git-send-email-trenn@suse.de> <1274451495-10252-4-git-send-email-trenn@suse.de> <201005211114.54902.dmitry.torokhov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Subject: [PATCH] classmate-laptop: depends on RFKILL or RFKILL=n
+Date: Wed, 26 May 2010 12:00:10 -0300
+Message-ID: <1274886010-6058-1-git-send-email-cascardo@holoscopio.com>
+References: <20100523151540.68e67298.randy.dunlap@oracle.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:55987 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755759Ab0EXUEk (ORCPT
+Received: from liberdade2.minaslivre.org ([74.50.53.203]:47274 "EHLO
+	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755035Ab0EZPIp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 May 2010 16:04:40 -0400
-In-Reply-To: <201005211114.54902.dmitry.torokhov@gmail.com>
-Content-Disposition: inline
+	Wed, 26 May 2010 11:08:45 -0400
+In-Reply-To: <20100523151540.68e67298.randy.dunlap@oracle.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: mjg@redhat.com, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernelorg
+Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Randy Dunlap <randy.dunlap@oracle.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Daniel Oliveira Nascimento <don@syst.com.br>
 
-On Friday 21 May 2010 08:14:53 pm Dmitry Torokhov wrote:
-> On Friday 21 May 2010 07:18:11 am Thomas Renninger wrote:
-> > Signed-off-by: Thomas Renninger <trenn@suse.de>
-> > CC: mjg@redhat.com
-> > CC: linux-acpi@vger.kernel.org
-> > CC: platform-driver-x86@vger.kernel.org
-> > ---
-> >  drivers/platform/x86/hp-wmi.c |   10 ++++++----
-> >  1 files changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/hp-wmi.c
-> > b/drivers/platform/x86/hp-wmi.c index 7b086dd..e04715a 100644
-> > --- a/drivers/platform/x86/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp-wmi.c
-> > @@ -52,6 +52,8 @@
-> > MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4"); #define
-> > HPWMI_WIRELESS_QUERY 0x5
-> >  #define HPWMI_HOTKEY_QUERY 0xc
-> >
-> > +#define PREFIX "HP WMI: "
->
-> Better yet, define pr_fmt() and  switch to using pr_info() and friends.
-> dev_xxx() is another option too.
+Randy Dunlap has reported that building classmate-laptop fails when
+CONFIG_RFKILL=m and CONFIG_ACPI_CMPC=y. He suggested depending on
+RFKILL, but, then, it will not be possible to select classmate-laptop
+when RFKILL is off. There's no known problem with building and using
+classmate-laptop with RFKILL off. So depend on RFKILL or RFKILL=n.
 
-I would have to rediff the other patches...
-As printk was already used, I'd appreciate if these can be merged and I can 
-also fix this on top.
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Reported-by: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Daniel Oliveira Nascimento <don@syst.com.br>
+---
+ drivers/platform/x86/Kconfig |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Thanks,
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3e1b8a2..fe7d670 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -520,6 +520,7 @@ config TOSHIBA_BT_RFKILL
+ config ACPI_CMPC
+ 	tristate "CMPC Laptop Extras"
+ 	depends on X86 && ACPI
++	depends on RFKILL || RFKILL=n
+ 	select INPUT
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	default n
+-- 
+1.7.1
 
-      Thomas
