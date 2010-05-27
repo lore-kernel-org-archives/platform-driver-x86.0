@@ -1,48 +1,65 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: [PATCH] classmate-laptop: depends on RFKILL or RFKILL=n
-Date: Wed, 26 May 2010 12:00:10 -0300
-Message-ID: <1274886010-6058-1-git-send-email-cascardo@holoscopio.com>
-References: <20100523151540.68e67298.randy.dunlap@oracle.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade2.minaslivre.org ([74.50.53.203]:47274 "EHLO
-	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755035Ab0EZPIp (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 May 2010 11:08:45 -0400
-In-Reply-To: <20100523151540.68e67298.randy.dunlap@oracle.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernelorg
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Randy Dunlap <randy.dunlap@oracle.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Daniel Oliveira Nascimento <don@syst.com.br>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 9/11] drivers/platform/x86: Eliminate a NULL pointer dereference
+Date: Thu, 27 May 2010 14:37:00 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1005271436460.5422@ask.diku.dk>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Randy Dunlap has reported that building classmate-laptop fails when
-CONFIG_RFKILL=m and CONFIG_ACPI_CMPC=y. He suggested depending on
-RFKILL, but, then, it will not be possible to select classmate-laptop
-when RFKILL is off. There's no known problem with building and using
-classmate-laptop with RFKILL off. So depend on RFKILL or RFKILL=n.
+From: Julia Lawall <julia@diku.dk>
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Reported-by: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Daniel Oliveira Nascimento <don@syst.com.br>
+Give different error messages if device_enum is NULL or if its type field
+has the wrong value.
+
+A simplified version of the semantic match that finds this problem is as
+follows: (http://coccinelle.lip6.fr/)
+
+// <smpl>
+@r exists@
+expression E,E1;
+identifier f;
+statement S1,S2,S3;
+@@
+
+if ((E == NULL && ...) || ...)
+{
+  ... when != if (...) S1 else S2
+      when != E = E1
+* E->f
+  ... when any
+  return ...;
+}
+else S3
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
 ---
- drivers/platform/x86/Kconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+This may be too much clutter for little benefit.  Other, perhaps less
+informative solutions are possible.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 3e1b8a2..fe7d670 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -520,6 +520,7 @@ config TOSHIBA_BT_RFKILL
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on X86 && ACPI
-+	depends on RFKILL || RFKILL=n
- 	select INPUT
- 	select BACKLIGHT_CLASS_DEVICE
- 	default n
--- 
-1.7.1
+ drivers/platform/x86/sony-laptop.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 1387c5f..9db8d2b 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -1196,8 +1196,12 @@ static void sony_nc_rfkill_setup(struct acpi_device *device)
+ 	}
+ 
+ 	device_enum = (union acpi_object *) buffer.pointer;
+-	if (!device_enum || device_enum->type != ACPI_TYPE_BUFFER) {
+-		printk(KERN_ERR "Invalid SN06 return object 0x%.2x\n",
++	if (!device_enum) {
++		pr_err("Invalid SN06 return object\n");
++		goto out_no_enum;
++	}
++	if (device_enum->type != ACPI_TYPE_BUFFER) {
++		printk(KERN_ERR "Invalid SN06 return object type 0x%.2x\n",
+ 				device_enum->type);
+ 		goto out_no_enum;
+ 	}
