@@ -1,72 +1,54 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PULL] x86 platform driver updates for 2.6.35
-Date: Fri, 28 May 2010 19:25:49 +0100
-Message-ID: <20100528182549.GA32694@srcf.ucam.org>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: [Patch 1/4] intel scu ipc
+Date: Fri, 28 May 2010 19:51:33 +0100
+Message-ID: <20100528195133.708ab02c@linux.intel.com>
+References: <0AE3E14D83C76F4994657326177D1FF9042CE9F49C@bgsmsx501.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:57066 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752151Ab0E1SZz (ORCPT
+Received: from mga05.intel.com ([192.55.52.89]:50860 "EHLO
+	fmsmga101.fm.intel.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1753412Ab0E1Tgm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 May 2010 14:25:55 -0400
-Content-Disposition: inline
+	Fri, 28 May 2010 15:36:42 -0400
+In-Reply-To: <0AE3E14D83C76F4994657326177D1FF9042CE9F49C@bgsmsx501.gar.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Ds, Sreedhara" <sreedhara.ds@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "mjg@redhat.com" <mjg@redhat.com>, "x86@kernel.org" <x86@kernel.org>
 
-Hi Linus,
+On Fri, 28 May 2010 14:09:39 +0530
+"Ds, Sreedhara" <sreedhara.ds@intel.com> wrote:
 
-The hp-wmi update looks large but is mostly code cleanup with no 
-functional change. The rest is obvious fixes plus Jesse's IPS driver for 
-power saving on recent Intel.
+> Hello,
+> Please review and accept the patch
+> 
+> 
+> From 443010eead6d69e3b60b460fd3f82344de95da5d Mon Sep 17 00:00:00 2001
+> From: Sreedhara DS <sreedhara.ds@intel.com>
+> Date: Fri, 28 May 2010 13:53:38 +0530
+> Subject: [PATCH] changes to find platform type during int
+>  	modified:   intel_scu_ipc.c
+> 
+> 
+> Signed-off-by: Sreedhara DS <sreedhara.ds@intel.com>
 
-The following changes since commit 9dda696f0de87a2e5cfabb147e28c76b7d3c6846:
-  Linus Torvalds (1):
-        Merge branch 'release' of git://git.kernel.org/.../aegl/linux-2.6
+Code is fine but your subject/comments don't reflect the patch. That
+causes problems for the upstream merge because the upstream history
+needs to accurately describe it.
 
-are available in the git repository at:
+Something like
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+Subject: intel_scu_ipc: detect CPU type automatically
 
-Axel Lin (1):
-      intel_menlow: fix memory leaks in error path
+Intel SCU message formats depend upon the processor type. Replace the
+module option with automatic detection of the processor type.
 
-Jesse Barnes (3):
-      timer: add on-stack deferrable timer interfaces
-      x86 platform driver: intelligent power sharing driver
-      IPS driver: add GPU busy and turbo checking
 
-Julia Lawall (1):
-      drivers/platform/x86: Eliminate a NULL pointer dereference
+----
 
-Randy Dunlap (1):
-      platform/x86: msi-laptop depends on SERIO_I8042
+Code looks fine and I'll add it to the Meego working tree but with the
+comment I quoted if that is ok
 
-Thadeu Lima de Souza Cascardo (1):
-      classmate-laptop: depends on RFKILL or RFKILL=n
-
-Thomas Renninger (7):
-      x86 platform drivers: hp-wmi Reorder event id processing
-      x86 platform drivers: hp-wmi Catch and log unkown event and key codes correctly
-      x86 platform drivers: hp-wmi Use consistent prefix string for messages.
-      x86 platform drivers: hp-wmi Add media key 0x20e8
-      x86 platform drivers: hp-wmi Set placeholder for unimplemented events
-      x86 platform drivers: hp-wmi fix buffer size depending on ACPI version
-      X86 platform: hp-wmi Better match the HP WMI query interface
-
- drivers/platform/x86/Kconfig        |   12 +
- drivers/platform/x86/Makefile       |    1 +
- drivers/platform/x86/hp-wmi.c       |  234 ++++--
- drivers/platform/x86/intel_ips.c    | 1659 +++++++++++++++++++++++++++++++++++
- drivers/platform/x86/intel_menlow.c |   33 +-
- drivers/platform/x86/sony-laptop.c  |   10 +-
- include/drm/i915_drm.h              |    9 +
- include/linux/timer.h               |   15 +
- kernel/timer.c                      |   13 +
- 9 files changed, 1920 insertions(+), 66 deletions(-)
- create mode 100644 drivers/platform/x86/intel_ips.c
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Alan
