@@ -1,28 +1,27 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Patch [4/4] intel scu ipc
-Date: Fri, 28 May 2010 14:50:59 +0100
-Message-ID: <20100528135059.GC25798@srcf.ucam.org>
-References: <0AE3E14D83C76F4994657326177D1FF9042CE9F4A6@bgsmsx501.gar.corp.intel.com>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 5/7] x86 platform drivers: hp-wmi Set placeholder for unimplemented events
+Date: Fri, 28 May 2010 17:10:08 +0200
+Message-ID: <201005281710.08893.trenn@suse.de>
+References: <1274451495-10252-1-git-send-email-trenn@suse.de> <1274451495-10252-6-git-send-email-trenn@suse.de> <20100528133314.GB25189@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:39649 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756795Ab0E1NvF (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 May 2010 09:51:05 -0400
-Content-Disposition: inline
-In-Reply-To: <0AE3E14D83C76F4994657326177D1FF9042CE9F4A6@bgsmsx501.gar.corp.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Ds, Sreedhara" <sreedhara.ds@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Alan Cox <alan@linux.intel.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20100528133314.GB25189@srcf.ucam.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, May 28, 2010 at 02:14:06PM +0530, Ds, Sreedhara wrote:
-> Subject: [PATCH] Remove indirect read write api support.
->  Firmware nolonger support these api, security issue
+On Friday 28 May 2010 15:33:14 Matthew Garrett wrote:
+> On Fri, May 21, 2010 at 04:18:13PM +0200, Thomas Renninger wrote:
+> > And tell the user that those have happened.
+> 
+> Marking these as unimplemented seems fine, but I think the message is 
+> too much - my system generates the smart charger events, and I'd
+> rather not have even more spew when I plug/unplug. Mind if I merge
+> this without the messages?
+Fine with me, thanks.
 
-What security issues?
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+     Thomas
