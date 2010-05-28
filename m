@@ -1,27 +1,37 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH 5/7] x86 platform drivers: hp-wmi Set placeholder for unimplemented events
-Date: Fri, 28 May 2010 17:10:08 +0200
-Message-ID: <201005281710.08893.trenn@suse.de>
-References: <1274451495-10252-1-git-send-email-trenn@suse.de> <1274451495-10252-6-git-send-email-trenn@suse.de> <20100528133314.GB25189@srcf.ucam.org>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: Patch [4/4] intel scu ipc
+Date: Fri, 28 May 2010 17:24:04 +0100
+Message-ID: <20100528172404.267674c3@linux.intel.com>
+References: <0AE3E14D83C76F4994657326177D1FF9042CE9F4A6@bgsmsx501.gar.corp.intel.com>
+	<20100528135059.GC25798@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20100528133314.GB25189@srcf.ucam.org>
-Sender: linux-acpi-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga06.intel.com ([134.134.136.21]:32214 "EHLO
+	orsmga101.jf.intel.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1754843Ab0E1RJP (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 28 May 2010 13:09:15 -0400
+In-Reply-To: <20100528135059.GC25798@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: "Ds, Sreedhara" <sreedhara.ds@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
 
-On Friday 28 May 2010 15:33:14 Matthew Garrett wrote:
-> On Fri, May 21, 2010 at 04:18:13PM +0200, Thomas Renninger wrote:
-> > And tell the user that those have happened.
+On Fri, 28 May 2010 14:50:59 +0100
+Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+
+> On Fri, May 28, 2010 at 02:14:06PM +0530, Ds, Sreedhara wrote:
+> > Subject: [PATCH] Remove indirect read write api support.
+> >  Firmware nolonger support these api, security issue
 > 
-> Marking these as unimplemented seems fine, but I think the message is 
-> too much - my system generates the smart charger events, and I'd
-> rather not have even more spew when I plug/unplug. Mind if I merge
-> this without the messages?
-Fine with me, thanks.
+> What security issues?
 
-     Thomas
+It's just stuff that is gone, didn't work out internally. No driver
+will use those methods, no public firmware will support them. Dead code
+might be a better description.
+
+It's not security in a Linux sense.
+
+Alan
