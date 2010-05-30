@@ -1,22 +1,38 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [Patch 1/4] intel scu ipc
-Date: Fri, 28 May 2010 19:51:33 +0100
-Message-ID: <20100528195133.708ab02c@linux.intel.com>
+From: "Ds, Sreedhara" <sreedhara.ds@intel.com>
+Subject: RE: [Patch 1/4] intel scu ipc
+Date: Sun, 30 May 2010 21:09:59 +0530
+Message-ID: <0AE3E14D83C76F4994657326177D1FF9042CE9F757@bgsmsx501.gar.corp.intel.com>
 References: <0AE3E14D83C76F4994657326177D1FF9042CE9F49C@bgsmsx501.gar.corp.intel.com>
+ <20100528195133.708ab02c@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga05.intel.com ([192.55.52.89]:50860 "EHLO
-	fmsmga101.fm.intel.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1753412Ab0E1Tgm (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:26788 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752749Ab0E3PlJ convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 May 2010 15:36:42 -0400
-In-Reply-To: <0AE3E14D83C76F4994657326177D1FF9042CE9F49C@bgsmsx501.gar.corp.intel.com>
+	Sun, 30 May 2010 11:41:09 -0400
+In-Reply-To: <20100528195133.708ab02c@linux.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Ds, Sreedhara" <sreedhara.ds@intel.com>
+To: Alan Cox <alan@linux.intel.com>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "mjg@redhat.com" <mjg@redhat.com>, "x86@kernel.org" <x86@kernel.org>
+
+Alan,
+Your comment is valid. 
+Please add it to the Meego working tree
+
+
+--Sreedhara
+
+-----Original Message-----
+From: Alan Cox [mailto:alan@linux.intel.com] 
+Sent: Saturday, May 29, 2010 12:22 AM
+To: Ds, Sreedhara
+Cc: platform-driver-x86@vger.kernel.org; mjg@redhat.com; x86@kernel.org
+Subject: Re: [Patch 1/4] intel scu ipc
 
 On Fri, 28 May 2010 14:09:39 +0530
 "Ds, Sreedhara" <sreedhara.ds@intel.com> wrote:
