@@ -1,25 +1,75 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] x86 platform driver updates for 2.6.35
-Date: Sun, 30 May 2010 09:15:32 -0700 (PDT)
-Message-ID: <alpine.LFD.2.00.1005300914460.4639@i5.linux-foundation.org>
-References: <20100528182549.GA32694@srcf.ucam.org>
+From: "Ds, Sreedhara" <sreedhara.ds@intel.com>
+Subject: RE: [Patch 2/4] intel scu ipcAlan Cox
+Date: Sun, 30 May 2010 22:49:12 +0530
+Message-ID: <0AE3E14D83C76F4994657326177D1FF9042CE9F771@bgsmsx501.gar.corp.intel.com>
+References: <0AE3E14D83C76F4994657326177D1FF9042CE9F49E@bgsmsx501.gar.corp.intel.com>
+ <20100528134716.GA25798@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13]:37315 "EHLO
-	smtp1.linux-foundation.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751016Ab0E3QTQ (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:53307 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751530Ab0E3RTY convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 30 May 2010 12:19:16 -0400
-In-Reply-To: <20100528182549.GA32694@srcf.ucam.org>
+	Sun, 30 May 2010 13:19:24 -0400
+In-Reply-To: <20100528134716.GA25798@srcf.ucam.org>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
 
+Hello,
 
+I am resending the patch with corrections.
+With these corrections, patch[4/4] is also changed. I will resend all 4 patches once again
 
-This doesn't seem to have the proper sign-off chains, so I'm not pulling 
-it. 
+--Sreedhara
 
-		Linus
+-----Original Message-----
+From: Matthew Garrett [mailto:mjg59@srcf.ucam.org] 
+Sent: Friday, May 28, 2010 7:17 PM
+To: Ds, Sreedhara
+Cc: platform-driver-x86@vger.kernel.org; x86@kernel.org; Alan Cox
+Subject: Re: [Patch 2/4] intel scu ipc
+
+On Fri, May 28, 2010 at 02:10:51PM +0530, Ds, Sreedhara wrote:
+> From cfe6eb1f2ea12732f03d4edee85c50ba713a9d36 Mon Sep 17 00:00:00 2001
+> From: Sreedhara DS <sreedhara.ds@intel.com>
+> Date: Fri, 28 May 2010 13:55:44 +0530
+> Subject: [PATCH] changes to work on both moorestown and medfield
+>  new pci id added for medfiled
+>  return type of ipc_data_readl chnaged from u8 u32
+
+This sounds like a separate bugfix that should be in a different patch.
+
+> -	u8 cbuf[IPC_WWBUF_SIZE] = { '\0' };
+> +	u8 cbuf[IPC_WWBUF_SIZE] = { };
+
+Why this change?
+
+> -		for (nc = 0; nc < count; nc++) {
+> +		for (nc = 0; nc < count; nc++, offset += 3) {
+>  			cbuf[offset] = addr[nc];
+>  			cbuf[offset + 1] = addr[nc] >> 8;
+>  			if (id != IPC_CMD_PCNTRL_R)
+> @@ -201,33 +202,44 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+>  				cbuf[offset + 3] = data[nc + 1];
+>  				offset += 1;
+>  			}
+> -			offset += 3;
+
+Again, what does this have to do with the patch description?
+
+>  		/* Workaround: values are read as 0 without memcpy_fromio */
+> -		memcpy_fromio(cbuf, ipcdev.ipc_base + IPC_READ_BUFFER, 16);
+> -		if (platform == 1) {
+> +		memcpy_fromio(cbuf, ipcdev.ipc_base + 0x90, 16);
+> +		if (platform == PLATFORM_LANGWELL) {
+
+You've replaced one constant with a define, and replaced another define 
+with a constant. That seems a little odd.
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
