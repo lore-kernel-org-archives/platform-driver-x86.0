@@ -1,41 +1,31 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: intel_scu_ipc: detect CPU type automatically [Patch 1/4]
-Date: Mon, 31 May 2010 12:46:44 +0200 (CEST)
-Message-ID: <alpine.LFD.2.00.1005311242170.2933@localhost.localdomain>
-References: <0AE3E14D83C76F4994657326177D1FF9042CE9F772@bgsmsx501.gar.corp.intel.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [GIT PULL] x86 platform driver updates for 2.6.35
+Date: Mon, 31 May 2010 16:03:00 +0100
+Message-ID: <20100531150300.GA19134@srcf.ucam.org>
+References: <20100528182549.GA32694@srcf.ucam.org> <alpine.LFD.2.00.1005300914460.4639@i5.linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from www.tglx.de ([62.245.132.106]:39323 "EHLO www.tglx.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753544Ab0EaKq4 (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:57746 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753840Ab0EaPDH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 31 May 2010 06:46:56 -0400
-In-Reply-To: <0AE3E14D83C76F4994657326177D1FF9042CE9F772@bgsmsx501.gar.corp.intel.com>
+	Mon, 31 May 2010 11:03:07 -0400
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1005300914460.4639@i5.linux-foundation.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Ds, Sreedhara" <sreedhara.ds@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "Cox, Alan" <alan.cox@intel.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Sun, 30 May 2010, Ds, Sreedhara wrote:
+On Sun, May 30, 2010 at 09:15:32AM -0700, Linus Torvalds wrote:
 
->  Intel SCU message formats depend upon the processor type. Replace
-> the module option with automatic detection of the processor type.
+> This doesn't seem to have the proper sign-off chains, so I'm not pulling 
+> it. 
 
-> Resending the patch
-> 
-> >From 443010eead6d69e3b60b460fd3f82344de95da5d Mon Sep 17 00:00:00 2001
-> From: Sreedhara DS <sreedhara.ds@intel.com>
-> Date: Fri, 28 May 2010 13:53:38 +0530
-> Subject: [PATCH] changes to find platform type during int
->  	modified:   intel_scu_ipc.c
+Sorry about that. I've fixed things up - are you ok with still pulling 
+this? If not I can separate out the bugfixes and new drivers from the 
+cleanups.
 
-We merged a platform detection and a function for drivers to retrieve
-the platform into the moorestown code in arch/x86 a few weeks
-ago. It's in the x86/mrst branch of the tip tree.
-
-We really don't want to have another instance of this.
-
-Thanks,
-
-	tglx
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
