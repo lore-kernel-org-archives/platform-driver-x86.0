@@ -1,45 +1,54 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: [PATCH] intel_scu_ipc: add definitions for vRTC related command
-Date: Tue, 01 Jun 2010 13:07:34 +0100
-Message-ID: <20100601120729.25165.82881.stgit@localhost.localdomain>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] Vibrator Driver for Intel MID Platforms
+Date: Tue, 1 Jun 2010 14:06:43 +0100
+Message-ID: <20100601130643.GA6849@srcf.ucam.org>
+References: <20100601115558.23256.16674.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:57501 "EHLO
-	bob.linux.org.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1756102Ab0FAMxy (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:37371 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756098Ab0FANGq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 1 Jun 2010 08:53:54 -0400
+	Tue, 1 Jun 2010 09:06:46 -0400
+Content-Disposition: inline
+In-Reply-To: <20100601115558.23256.16674.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+To: Alan Cox <alan@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-From: Feng Tang <feng.tang@intel.com>
+On Tue, Jun 01, 2010 at 12:56:46PM +0100, Alan Cox wrote:
+> From: Kalhan Trisal <kalhan.trisal@intel.com>
+> 
+> This patch provides support for the MID vibrator can be switched
+> on/off using sysfs interfaces.
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Signed-off-by: Alan Cox <alan@linux.intel.com>
----
+Looking through the kernel, it seems that we've got there main 
+approaches to vibrator control - sysfs with a "speed" attribute, an 
+input device using the force feedback ioctls or something that's plumbed 
+through the sound codec. While the absence of any consistency here is 
+obviously a problem, I'd prefer not to add a fourth - can you at least 
+make the sysfs attribute "speed" (with it accepting only 0 and 1 if you 
+don't have any way to control the hardware beyond on and off) so it's 
+compatible with one of the existing implementations?
 
- arch/x86/include/asm/intel_scu_ipc.h |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+> +/*
+> + *	If the PMIC hasn't been discovered or one is not found then
+> + *	the calls will error for us.
 
+Can't you do this at probe time?
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index 4470c9a..0320045 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -1,6 +1,12 @@
- #ifndef _ASM_X86_INTEL_SCU_IPC_H_
- #define  _ASM_X86_INTEL_SCU_IPC_H_
- 
-+#define IPCMSG_VRTC	0xFA	 /* Set vRTC device */
-+
-+/* Command id associated with message IPCMSG_VRTC */
-+#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
-+#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
-+
- /* Read single register */
- int intel_scu_ipc_ioread8(u16 addr, u8 *data);
- 
+> +		if (intel_scu_ipc_iowrite8(0x49, 0xAD))
+> +			return -EINVAL;
+> +	} else  {
+> +		if (intel_scu_ipc_iowrite8(0x49, 0x14))
+> +			return -EINVAL;
 
+Is there any significance to 0xAD and 0x14? Is this register specific to 
+the vibrator?
+
+Otherwise, looks good.
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
