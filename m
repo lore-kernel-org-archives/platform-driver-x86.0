@@ -1,39 +1,61 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] Vibrator Driver for Intel MID Platforms
-Date: Tue, 1 Jun 2010 14:24:10 +0100
-Message-ID: <20100601132410.GA7842@srcf.ucam.org>
-References: <20100601115558.23256.16674.stgit@localhost.localdomain> <20100601130643.GA6849@srcf.ucam.org> <20100601133513.118825bb@linux.intel.com>
+From: Islam Amer <pharon@gmail.com>
+Subject: Dell Studio 1555 eject key does not work ( small patch to fix
+	included )
+Date: Thu, 3 Jun 2010 01:14:09 +0400
+Message-ID: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:33295 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755995Ab0FANYO (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:59228 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932912Ab0FBVOb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 1 Jun 2010 09:24:14 -0400
-Content-Disposition: inline
-In-Reply-To: <20100601133513.118825bb@linux.intel.com>
+	Wed, 2 Jun 2010 17:14:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Cox <alan@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, akpm@linux-foundation.org
 
-On Tue, Jun 01, 2010 at 01:35:13PM +0100, Alan Cox wrote:
-> > > + *	If the PMIC hasn't been discovered or one is not found
-> > > then
-> > > + *	the calls will error for us.
-> > 
-> > Can't you do this at probe time?
-> 
-> We have to check for errors anyway. We could also check at probe time
-> but that would add ordering issues or mean we needed the scu_ipc driver
-> to create the platform device for the vibrator - which given it's not
-> current discoverable is a bit ugly.
+Hello,
 
-The ipc driver is presumably intended to probe first (and module 
-dependencies will ensure that in the modular case). Once that probe has 
-completed, isn't it expected that scu_ipc_ioread will error if there's 
-no device?
+Pressing the eject key on my Dell Studio 1555 does not work and dmesg produces
+this message :
+dell-wmi: Unknown key 0 pressed
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Adding a debugging printk in dell-wmi.c after line 222 like this :
+
+printk(KERN_INFO "dell:wmi 0x%x , 0x%x \n", buffer_entry[1], buffer_entry[2]);
+
+dmesg now shows :
+
+dell:wmi 0x0 , 0xe009
+dell-wmi: Unknown key 0 pressed
+
+So for some reason buffer_entry[1] is used although it is empty.
+
+Falling back to buffer_entry[2] in case buffer_entry[1] is 0x0 makes
+the button work.
+
+I suspect it might be better to fix the "dell_new_hk_type" logic though
+
+I had submitted this as
+https://bugzilla.kernel.org/show_bug.cgi?id=16075 but repeating the
+information and patch
+here as per Andrew Morton's suggestion.
+
+
+Thanks.
+
+--- linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c.orig	2010-06-03
+01:02:17.418824168 +0400
++++ linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c	2010-06-03
+01:01:40.641833249 +0400
+@@ -221,7 +221,7 @@ static void dell_wmi_notify(u32 value, v
+ 			return;
+ 		}
+
+-		if (dell_new_hk_type)
++		if (dell_new_hk_type || buffer_entry[1] == 0x0)
+ 			reported_key = (int)buffer_entry[2];
+ 		else
+ 			reported_key = (int)buffer_entry[1] & 0xffff;
