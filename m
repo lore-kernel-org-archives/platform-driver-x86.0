@@ -1,69 +1,55 @@
 From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] wmi: fix memory leak in parse_wdg
-Date: Thu, 03 Jun 2010 11:45:45 +0800
-Message-ID: <1275536745.9797.2.camel@mola>
+Subject: [PATCH] acer-wmi/hp-wmi: use platform_device_unregister instead of
+	platform_device_del in module_exit
+Date: Thu, 03 Jun 2010 15:18:03 +0800
+Message-ID: <1275549483.16917.2.camel@mola>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:43899 "EHLO
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:50956 "EHLO
 	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933805Ab0FCDpX (ORCPT
+	with ESMTP id S1751871Ab0FCHRj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 2 Jun 2010 23:45:23 -0400
+	Thu, 3 Jun 2010 03:17:39 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, "John W. Linville" <linville@tuxdriver.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, Len Brown <len.brown@intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
 
-This patch properly kfree out.pointer and gblock in error path.
+platform_device_unregister will also call platform_device_put() to drop reference count.
 
 Signed-off-by: Axel Lin <axel.lin@gmail.com>
 ---
- drivers/platform/x86/wmi.c |   16 +++++++++++-----
- 1 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/platform/x86/acer-wmi.c |    2 +-
+ drivers/platform/x86/hp-wmi.c   |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e4eaa14..bb8a3c6 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -827,8 +827,10 @@ static __init acpi_status parse_wdg(acpi_handle handle)
- 	total = obj->buffer.length / sizeof(struct guid_block);
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 1ea6c43..d3904e5 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1358,7 +1358,7 @@ static void __exit acer_wmi_exit(void)
+ {
+ 	remove_sysfs(acer_platform_device);
+ 	remove_debugfs();
+-	platform_device_del(acer_platform_device);
++	platform_device_unregister(acer_platform_device);
+ 	platform_driver_unregister(&acer_platform_driver);
  
- 	gblock = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
--	if (!gblock)
--		return AE_NO_MEMORY;
-+	if (!gblock) {
-+		status = AE_NO_MEMORY;
-+		goto out_free_pointer;
-+	}
- 
- 	for (i = 0; i < total; i++) {
- 		/*
-@@ -848,8 +850,10 @@ static __init acpi_status parse_wdg(acpi_handle handle)
- 			wmi_dump_wdg(&gblock[i]);
- 
- 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
--		if (!wblock)
--			return AE_NO_MEMORY;
-+		if (!wblock) {
-+			status = AE_NO_MEMORY;
-+			goto out_free_gblock;
-+		}
- 
- 		wblock->gblock = gblock[i];
- 		wblock->handle = handle;
-@@ -860,8 +864,10 @@ static __init acpi_status parse_wdg(acpi_handle handle)
- 		list_add_tail(&wblock->list, &wmi_blocks.list);
+ 	printk(ACER_INFO "Acer Laptop WMI Extras unloaded\n");
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 51c07a0..409115d 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -611,7 +611,7 @@ static void __exit hp_wmi_exit(void)
+ 		input_unregister_device(hp_wmi_input_dev);
  	}
- 
--	kfree(out.pointer);
-+out_free_gblock:
- 	kfree(gblock);
-+out_free_pointer:
-+	kfree(out.pointer);
- 
- 	return status;
+ 	if (hp_wmi_platform_dev) {
+-		platform_device_del(hp_wmi_platform_dev);
++		platform_device_unregister(hp_wmi_platform_dev);
+ 		platform_driver_unregister(&hp_wmi_driver);
+ 	}
  }
 -- 
 1.5.4.3
