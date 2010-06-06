@@ -1,23 +1,23 @@
-From: McGurk Upchurch <outstate@logis62.fr>
-Subject: nged violently and
-Date: Sat, 05 Jun 2010 07:21:38 +0200
-Message-ID: <4C09DDC8.2060806@kaosevent.se>
+From: Houzah Azore <conceive@inegames.com>
+Subject: hurl at the head of that worthy, whom he thus addr
+Date: Mon, 07 Jun 2010 00:19:42 +0200
+Message-ID: <4C0C1DE9.6020801@viewgood.com>
 Mime-Version: 1.0
-Content-Type: application/octet-stream; name="monosepalous.rtf"
+Content-Type: application/octet-stream; name="mosey.rtf"
 Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 197.20.18.95.dynamic.jazztel.es ([95.18.20.197]:53510 "HELO
-	xwafv.jazztel.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with SMTP id S1752092Ab0FEFVB (ORCPT
+Received: from host84-194-dynamic.247-95-r.retail.telecomitalia.it ([95.247.194.84]:61954
+	"HELO tyyomf.telecomitalia.it" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with SMTP id S1754279Ab0FFWTg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 5 Jun 2010 01:21:01 -0400
+	Sun, 6 Jun 2010 18:19:36 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dashner Branson <platform-driver-x86@vger.kernel.org>
+To: Homiak Aboudi <platform-driver-x86@vger.kernel.org>
 
 e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
-IE1zZnRlZGl0IDUuNDguMTYuOTg0NDt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
-YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDUuNDguMTYuOTg0NDt9e1xjb2xv
+IE1zZnRlZGl0IDQuNDQuMTUuMzk5OTt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
+YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDQuNDQuMTUuMzk5OTt9e1xjb2xv
 cnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7XHJlZDE5MlxncmVlbjgwXGJsdWU3NztccmVk
 MFxncmVlbjE3NlxibHVlODA7XHJlZDIwNFxncmVlbjE4MFxibHVlMDtccmVkMjU1XGdyZWVu
 MFxibHVlMDtccmVkMjIzXGdyZWVuMjA2XGJsdWU0O1xyZWQxNTVcZ3JlZW4wXGJsdWUyMTE7
@@ -25,10 +25,10 @@ XHJlZDc5XGdyZWVuMTI5XGJsdWUxODk7XHJlZDE2NVxncmVlbjE2NVxibHVlMTY1O1xyZWQx
 MjhcZ3JlZW4xNThcYmx1ZTE5NDtccmVkMjQ3XGdyZWVuMTUwXGJsdWU3MDtccmVkMFxncmVl
 bjc3XGJsdWUxODc7XHJlZDc1XGdyZWVuMTcyXGJsdWUxOTg7XHJlZDIyMVxncmVlbjEzMlxi
 bHVlMTMyO1xyZWQ1MVxncmVlbjUxXGJsdWU1MTtccmVkMTU4XGdyZWVuMTI0XGJsdWUxMjQ7
-XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCA1LjQ4
-LjE2Ljk4NDQ7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
-OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCA1LjQ4LjE2
-Ljk4NDQ7fXR0cDovL3d3dy5kYTg1LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3
+XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCA0LjQ0
+LjE1LjM5OTk7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
+OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCA0LjQ0LjE1
+LjM5OTk7fXR0cDovL3d3dy5kYTg1LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3
 dy5kYTg1LnJ1fX19XGYwXGNmMVxiXGZzMzIgIC0gT3JkZXIgdGhlIGNoZWFwZXN0IG1lZGlj
 YXRpb25zIG5vdyFccGFyDQpWaWFncmEgXGNmNCBDaWFsaXMgXGNmMyBWaWFncmEgUHJvZmVz
 c2lvbmFsIFxjZjUgQ2lhbGlzIFByb2Zlc3Npb25hbCBcY2Y2IFZpYWdyYSBTdXBlciBBY3Rp
@@ -39,4 +39,4 @@ NyBBY29tcGxpYSBcY2Y2IFhlbmljYWxcY2YwICBcY2Y1IEJyYW5kIExldml0cmEgXGNmMTMg
 RmVtYWxlIENpYWxpcyBcY2YxNCBMZXZpdHJhIFN1cGVyIEFjdGl2ZSsgXGNmMTUgVGFtaWZs
 dVxjZjAgIFxjZjcgVlBYTFxjZjAgIFxjZjE2IFZpYWdyYSBTb2Z0IEZsYXZvdXJlZCBcY2Y1
 IEJyYW5kIFZpYWdyYSBcY2YxNyBCcmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1z
-ZnRlZGl0IDUuNDguMTYuOTg0NDt9fQ==
+ZnRlZGl0IDQuNDQuMTUuMzk5OTt9fQ==
