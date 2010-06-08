@@ -1,42 +1,135 @@
-From: Houzah Azore <conceive@inegames.com>
-Subject: hurl at the head of that worthy, whom he thus addr
-Date: Mon, 07 Jun 2010 00:19:42 +0200
-Message-ID: <4C0C1DE9.6020801@viewgood.com>
+From: Islam Amer <pharon@gmail.com>
+Subject: Re: Dell Studio 1555 eject key does not work ( small patch to fix
+	included )
+Date: Tue, 8 Jun 2010 13:57:57 +0300
+Message-ID: <AANLkTin0qht1XR2rUgIXMEeJNU_gb3IZWqSBJb7NXD8K@mail.gmail.com>
+References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
+	<20100602213429.GA14866@srcf.ucam.org> <57DF5FDC2DC0634FA2A310BC5B81A68D01DF4CD01E@AUSX7MCPC108.AMER.DELL.COM>
+	<AANLkTimIl6UL0HQT1wxRgXuj_m0O3CwMHQIa1xNE1Ax9@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: application/octet-stream; name="mosey.rtf"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from host84-194-dynamic.247-95-r.retail.telecomitalia.it ([95.247.194.84]:61954
-	"HELO tyyomf.telecomitalia.it" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with SMTP id S1754279Ab0FFWTg (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:35619 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751716Ab0FHK6S convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 Jun 2010 18:19:36 -0400
+	Tue, 8 Jun 2010 06:58:18 -0400
+In-Reply-To: <AANLkTimIl6UL0HQT1wxRgXuj_m0O3CwMHQIa1xNE1Ax9@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Homiak Aboudi <platform-driver-x86@vger.kernel.org>
+To: Rezwanul_Kabir@dell.com
+Cc: mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org
 
-e1xydGYxXGFuc2lcYW5zaWNwZzEyNTJcZGVmZjBcZGVmbGFuZzEwMzN7XCpcZ2VuZXJhdG9y
-IE1zZnRlZGl0IDQuNDQuMTUuMzk5OTt9e1xmb250dGJse1xmMFxmbmlsXGZjaGFyc2V0MCBD
-YWxpYnJpO319DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDQuNDQuMTUuMzk5OTt9e1xjb2xv
-cnRibCA7XHJlZDBcZ3JlZW4wXGJsdWUyNTU7XHJlZDE5MlxncmVlbjgwXGJsdWU3NztccmVk
-MFxncmVlbjE3NlxibHVlODA7XHJlZDIwNFxncmVlbjE4MFxibHVlMDtccmVkMjU1XGdyZWVu
-MFxibHVlMDtccmVkMjIzXGdyZWVuMjA2XGJsdWU0O1xyZWQxNTVcZ3JlZW4wXGJsdWUyMTE7
-XHJlZDc5XGdyZWVuMTI5XGJsdWUxODk7XHJlZDE2NVxncmVlbjE2NVxibHVlMTY1O1xyZWQx
-MjhcZ3JlZW4xNThcYmx1ZTE5NDtccmVkMjQ3XGdyZWVuMTUwXGJsdWU3MDtccmVkMFxncmVl
-bjc3XGJsdWUxODc7XHJlZDc1XGdyZWVuMTcyXGJsdWUxOTg7XHJlZDIyMVxncmVlbjEzMlxi
-bHVlMTMyO1xyZWQ1MVxncmVlbjUxXGJsdWU1MTtccmVkMTU4XGdyZWVuMTI0XGJsdWUxMjQ7
-XHJlZDE1NVxncmVlbjE4N1xibHVlODk7fQ0Ke1wqXGdlbmVyYXRvciBNc2Z0ZWRpdCA0LjQ0
-LjE1LjM5OTk7fVx2aWV3a2luZDRcdWMxXHBhcmRcc2EyMDBcc2wyNzZcc2xtdWx0MVxsYW5n
-OVxmMFxmczMye1xmaWVsZHtcKlxmbGRpbnN0e0hZUEVSTElOSyAiaHtcKlxkZCA0LjQ0LjE1
-LjM5OTk7fXR0cDovL3d3dy5kYTg1LnJ1In19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL3d3
-dy5kYTg1LnJ1fX19XGYwXGNmMVxiXGZzMzIgIC0gT3JkZXIgdGhlIGNoZWFwZXN0IG1lZGlj
-YXRpb25zIG5vdyFccGFyDQpWaWFncmEgXGNmNCBDaWFsaXMgXGNmMyBWaWFncmEgUHJvZmVz
-c2lvbmFsIFxjZjUgQ2lhbGlzIFByb2Zlc3Npb25hbCBcY2Y2IFZpYWdyYSBTdXBlciBBY3Rp
-dmUrIFxjZjMgQ2lhbGlzIFN1cGVyIEFjdGl2ZSsgXGNmNyBMZXZpdHJhXGNmMCAgXGNmOCBW
-aWFncmEgU29mdCBUYWJzIFxjZjkgQ2lhbGlzIFNvZnQgVGFic1xjZjEwICBcY2YxMSBMZXZp
-dHJhIFByb2Zlc3Npb25hbCBcY2Y0IEZlbWFsZSBWaWFncmEgXGNmMTIgUHJvcGVjaWEgXGNm
-NyBBY29tcGxpYSBcY2Y2IFhlbmljYWxcY2YwICBcY2Y1IEJyYW5kIExldml0cmEgXGNmMTMg
-RmVtYWxlIENpYWxpcyBcY2YxNCBMZXZpdHJhIFN1cGVyIEFjdGl2ZSsgXGNmMTUgVGFtaWZs
-dVxjZjAgIFxjZjcgVlBYTFxjZjAgIFxjZjE2IFZpYWdyYSBTb2Z0IEZsYXZvdXJlZCBcY2Y1
-IEJyYW5kIFZpYWdyYSBcY2YxNyBCcmFuZCBDaWFsaXNcY2YwDQp7XCpcZ2VuZXJhdG9yIE1z
-ZnRlZGl0IDQuNDQuMTUuMzk5OTt9fQ==
+Dear Rezwanul,
+
+I have been using this fix for quite some time without any visible ill
+effects on the other keys or the system in general.
+Of course it would be necessary to get feedback from other dell users.
+
+Thanks.
+
+On Thu, Jun 3, 2010 at 11:16 PM, Islam Amer <pharon@gmail.com> wrote:
+> Hello,
+>
+> I suspected the same about dell_new_hk_type, but I am confused that
+> the rest of the fn keys work just fine out of the box. The only butto=
+n
+> that didn't work was the eject key.
+>
+> Attached is the dmidecode output.
+>
+> Thanks
+>
+> On Thu, Jun 3, 2010 at 5:57 AM, =A0<Rezwanul_Kabir@dell.com> wrote:
+>>
+>>>Hi Rez,
+>>>
+>>>Any thoughts on this?
+>>>
+>>
+>>
+>> =A0From the discussion below, it seems that this system does not imp=
+lement the new
+>> WMI scheme ( which is when dell_new_hk_type=3Dtrue is set). So, at i=
+ssue here is the
+>> legacy code. Without knowing exactly why BIOS would behave different=
+ly in this particular case,
+>> the fix seems arbitrary. Let me see if I can get hold of the BIOS de=
+veloper(if possible) and provide feedback in this thread.
+>>
+>> Islam Amer
+>>
+>> =A0 Can you attach dmidecode output from the system here?
+>>
+>> Thanks..
+>> =A0 --rez
+>>
+>>
+>>
+>>
+>>
+>>>On Thu, Jun 03, 2010 at 01:14:09AM +0400, Islam Amer wrote
+>>>> Hello,
+>>>>
+>>>> Pressing the eject key on my Dell Studio 1555 does not work
+>>>and dmesg
+>>>> produces this message :
+>>>> dell-wmi: Unknown key 0 pressed
+>>>>
+>>>> Adding a debugging printk in dell-wmi.c after line 222 like this :
+>>>>
+>>>> printk(KERN_INFO "dell:wmi 0x%x , 0x%x \n", buffer_entry[1],
+>>>> buffer_entry[2]);
+>>>>
+>>>> dmesg now shows :
+>>>>
+>>>> dell:wmi 0x0 , 0xe009
+>>>> dell-wmi: Unknown key 0 pressed
+>>>>
+>>>> So for some reason buffer_entry[1] is used although it is empty.
+>>>>
+>>>> Falling back to buffer_entry[2] in case buffer_entry[1] is 0x0 mak=
+es
+>>>> the button work.
+>>>>
+>>>> I suspect it might be better to fix the "dell_new_hk_type" logic
+>>>> though
+>>>>
+>>>> I had submitted this as
+>>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D16075 but repeating =
+the
+>>>> information and patch here as per Andrew Morton's suggestion.
+>>>>
+>>>>
+>>>> Thanks.
+>>>>
+>>>> ---
+>>>linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c.orig
+>>>2010-06-03
+>>>> 01:02:17.418824168 +0400
+>>>> +++ linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c
+>>>2010-06-03
+>>>> 01:01:40.641833249 +0400
+>>>> @@ -221,7 +221,7 @@ static void dell_wmi_notify(u32 value, v
+>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
+>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+>>>>
+>>>> - =A0 =A0 =A0 =A0 =A0 =A0if (dell_new_hk_type)
+>>>> + =A0 =A0 =A0 =A0 =A0 =A0if (dell_new_hk_type || buffer_entry[1] =3D=
+=3D 0x0)
+>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reported_key =3D (int)b=
+uffer_entry[2];
+>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0else
+>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reported_key =3D (int)b=
+uffer_entry[1] & 0xffff;
+>>>>
+>>>--
+>>>Matthew Garrett | mjg59@srcf.ucam.org
+>>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
