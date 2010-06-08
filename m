@@ -1,161 +1,70 @@
-From: <Rezwanul_Kabir@Dell.com>
-Subject: RE: Dell Studio 1555 eject key does not work ( small patch to fix
- 	included )
-Date: Tue, 8 Jun 2010 11:33:39 -0500
-Message-ID: <57DF5FDC2DC0634FA2A310BC5B81A68D01DF54BF73@AUSX7MCPC108.AMER.DELL.COM>
-References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
- 	<20100602213429.GA14866@srcf.ucam.org>
- <57DF5FDC2DC0634FA2A310BC5B81A68D01DF4CD01E@AUSX7MCPC108.AMER.DELL.COM>
- 	<AANLkTimIl6UL0HQT1wxRgXuj_m0O3CwMHQIa1xNE1Ax9@mail.gmail.com>
- <AANLkTin0qht1XR2rUgIXMEeJNU_gb3IZWqSBJb7NXD8K@mail.gmail.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT PULL] x86 platform driver updates for 2.6.35-rc3
+Date: Tue, 8 Jun 2010 23:19:01 +0100
+Message-ID: <20100608221901.GA25294@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxipps301.us.dell.com ([143.166.148.223]:62281 "EHLO
-	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755492Ab0FHQhb convert rfc822-to-8bit (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:59523 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756651Ab0FHWTG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Jun 2010 12:37:31 -0400
-In-Reply-To: <AANLkTin0qht1XR2rUgIXMEeJNU_gb3IZWqSBJb7NXD8K@mail.gmail.com>
-Content-Language: en-US
+	Tue, 8 Jun 2010 18:19:06 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pharon@gmail.com
-Cc: mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Hi Islam Amer
+Hi Linus,
 
-    I have asked feedback from the BIOS team and will update this threa=
-d as soon as I get it.
-    Thanks..
-       --rez
+Some fixes for error paths, some config fixes, a minor update to hp-wmi 
+that deals with some annoying corner cases like AC adapter events being 
+interpreted as brightness down keystrokes and the Intel IPS driver. This 
+requires a small addition to the timer API but doesn't modify any 
+existing code. Should all be entirely low impact.
 
+The following changes since commit 3975d16760d4be7402d1067c548c30c427971331:
+  Linus Torvalds (1):
+        Merge git://git.infradead.org/~dwmw2/mtd-2.6.35
 
+are available in the git repository at:
 
-Rezwanul Kabir
-Dell Linux Development
-512-725-0766
-=20
+  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
 
->-----Original Message-----
->From: Islam Amer [mailto:pharon@gmail.com]=20
->Sent: Tuesday, June 08, 2010 5:58 AM
->To: Kabir, Rezwanul
->Cc: mjg59@srcf.ucam.org; linux-kernel@vger.kernel.org;=20
->platform-driver-x86@vger.kernel.org; akpm@linux-foundation.org
->Subject: Re: Dell Studio 1555 eject key does not work ( small=20
->patch to fix included )
->
->Dear Rezwanul,
->
->I have been using this fix for quite some time without any=20
->visible ill effects on the other keys or the system in general.
->Of course it would be necessary to get feedback from other dell users.
->
->Thanks.
->
->On Thu, Jun 3, 2010 at 11:16 PM, Islam Amer <pharon@gmail.com> wrote:
->> Hello,
->>
->> I suspected the same about dell_new_hk_type, but I am confused that=20
->> the rest of the fn keys work just fine out of the box. The=20
->only button=20
->> that didn't work was the eject key.
->>
->> Attached is the dmidecode output.
->>
->> Thanks
->>
->> On Thu, Jun 3, 2010 at 5:57 AM, =A0<Rezwanul_Kabir@dell.com> wrote:
->>>
->>>>Hi Rez,
->>>>
->>>>Any thoughts on this?
->>>>
->>>
->>>
->>> =A0From the discussion below, it seems that this system does not=20
->>> implement the new WMI scheme ( which is when=20
->dell_new_hk_type=3Dtrue is=20
->>> set). So, at issue here is the legacy code. Without knowing exactly=
-=20
->>> why BIOS would behave differently in this particular case,=20
->the fix seems arbitrary. Let me see if I can get hold of the=20
->BIOS developer(if possible) and provide feedback in this thread.
->>>
->>> Islam Amer
->>>
->>> =A0 Can you attach dmidecode output from the system here?
->>>
->>> Thanks..
->>> =A0 --rez
->>>
->>>
->>>
->>>
->>>
->>>>On Thu, Jun 03, 2010 at 01:14:09AM +0400, Islam Amer wrote
->>>>> Hello,
->>>>>
->>>>> Pressing the eject key on my Dell Studio 1555 does not work
->>>>and dmesg
->>>>> produces this message :
->>>>> dell-wmi: Unknown key 0 pressed
->>>>>
->>>>> Adding a debugging printk in dell-wmi.c after line 222 like this =
-:
->>>>>
->>>>> printk(KERN_INFO "dell:wmi 0x%x , 0x%x \n", buffer_entry[1],=20
->>>>> buffer_entry[2]);
->>>>>
->>>>> dmesg now shows :
->>>>>
->>>>> dell:wmi 0x0 , 0xe009
->>>>> dell-wmi: Unknown key 0 pressed
->>>>>
->>>>> So for some reason buffer_entry[1] is used although it is empty.
->>>>>
->>>>> Falling back to buffer_entry[2] in case buffer_entry[1] is 0x0=20
->>>>> makes the button work.
->>>>>
->>>>> I suspect it might be better to fix the "dell_new_hk_type" logic=20
->>>>> though
->>>>>
->>>>> I had submitted this as
->>>>> https://bugzilla.kernel.org/show_bug.cgi?id=3D16075 but=20
->repeating the=20
->>>>> information and patch here as per Andrew Morton's suggestion.
->>>>>
->>>>>
->>>>> Thanks.
->>>>>
->>>>> ---
->>>>linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c.orig
->>>>2010-06-03
->>>>> 01:02:17.418824168 +0400
->>>>> +++ linux-sidux-2.6-2.6.34/drivers/platform/x86/dell-wmi.c
->>>>2010-06-03
->>>>> 01:01:40.641833249 +0400
->>>>> @@ -221,7 +221,7 @@ static void dell_wmi_notify(u32 value, v
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0}
->>>>>
->>>>> - =A0 =A0 =A0 =A0 =A0 =A0if (dell_new_hk_type)
->>>>> + =A0 =A0 =A0 =A0 =A0 =A0if (dell_new_hk_type || buffer_entry[1] =
-=3D=3D 0x0)
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reported_key =3D (int)=
-buffer_entry[2];
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0else
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reported_key =3D (int)=
-buffer_entry[1] & 0xffff;
->>>>>
->>>>--
->>>>Matthew Garrett | mjg59@srcf.ucam.org
->>>>
->>
->--
-To unsubscribe from this list: send the line "unsubscribe platform-driv=
-er-x86" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Axel Lin (1):
+      intel_menlow: fix memory leaks in error path
+
+Jesse Barnes (3):
+      timer: add on-stack deferrable timer interfaces
+      x86 platform driver: intelligent power sharing driver
+      IPS driver: add GPU busy and turbo checking
+
+Julia Lawall (1):
+      drivers/platform/x86: Eliminate a NULL pointer dereference
+
+Randy Dunlap (1):
+      platform/x86: msi-laptop depends on SERIO_I8042
+
+Thadeu Lima de Souza Cascardo (1):
+      classmate-laptop: depends on RFKILL or RFKILL=n
+
+Thomas Renninger (3):
+      x86 platform drivers: hp-wmi Reorder event id processing
+      x86 platform drivers: hp-wmi Add media key 0x20e8
+      x86 platform drivers: hp-wmi fix buffer size depending on ACPI version
+
+ drivers/platform/x86/Kconfig        |   12 +
+ drivers/platform/x86/Makefile       |    1 +
+ drivers/platform/x86/hp-wmi.c       |   82 ++-
+ drivers/platform/x86/intel_ips.c    | 1659 +++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/intel_menlow.c |   33 +-
+ drivers/platform/x86/sony-laptop.c  |   10 +-
+ include/drm/i915_drm.h              |    9 +
+ include/linux/timer.h               |   15 +
+ kernel/timer.c                      |   13 +
+ 9 files changed, 1796 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_ips.c
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
