@@ -1,52 +1,75 @@
 From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: Re: [PATCH] classmate-laptop: should check for NULL as retval for
- rfkill_alloc
-Date: Wed, 9 Jun 2010 16:49:32 -0300
-Message-ID: <20100609194931.GC2551@barata.holoscopio.com>
-References: <20100609185803.GB2551@barata.holoscopio.com>
- <1276112368-3057-1-git-send-email-cascardo@holoscopio.com>
- <1276112777.14580.24.camel@jlt3.sipsolutions.net>
+Subject: Re: [PATCH -next] classmate-laptop: fix for RFKILL=m, CMPC=y
+Date: Wed, 9 Jun 2010 17:02:18 -0300
+Message-ID: <20100609200218.GD2551@barata.holoscopio.com>
+References: <20100603134753.710a64b3.sfr@canb.auug.org.au>
+ <20100603093903.d9378c9a.randy.dunlap@oracle.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z4+8/lEcDcG5Ke9S"
+	protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade2.minaslivre.org ([74.50.53.203]:37870 "EHLO
+Received: from liberdade2.minaslivre.org ([74.50.53.203]:35386 "EHLO
 	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752496Ab0FITth (ORCPT
+	with ESMTP id S1756424Ab0FIUCY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Jun 2010 15:49:37 -0400
+	Wed, 9 Jun 2010 16:02:24 -0400
 Content-Disposition: inline
-In-Reply-To: <1276112777.14580.24.camel@jlt3.sipsolutions.net>
+In-Reply-To: <20100603093903.d9378c9a.randy.dunlap@oracle.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: alan-jenkins@tuffmail.co.uk, platform-driver-x86@vger.kernel.org, mjg@redhat.com, don@syst.com.br, rpurdie@rpsys.net
+To: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Daniel Oliveira Nascimento <don@syst.com.br>
 
 
---z4+8/lEcDcG5Ke9S
+--T7mxYSe680VjQnyC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 09, 2010 at 09:46:17PM +0200, Johannes Berg wrote:
-> On Wed, 2010-06-09 at 16:39 -0300, Thadeu Lima de Souza Cascardo wrote:
+On Thu, Jun 03, 2010 at 09:39:03AM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <randy.dunlap@oracle.com>
 >=20
-> > +	/*
-> > +	 * If RFKILL is disabled, rfkill_alloc will return ERR_PTR(-ENODEV).
-> > +	 * This is OK, however, since all other uses of the device will not
-> > +	 * derefence it.
-> > +	 */
-> > +	if (!ipml->rf) {
+> Fix build error when CONFIG_RFKILL=3Dm and CONFIG_ACPI_CMPC=3Dy:
+> classmate-laptop should depend on RFKILL or RFKILL=3Dn.
 >=20
-> the ! shouldn't be there
+> classmate-laptop.c:(.text+0x1351fc): undefined reference to `rfkill_unreg=
+ister'
+> classmate-laptop.c:(.text+0x135204): undefined reference to `rfkill_destr=
+oy'
+> classmate-laptop.c:(.text+0x135237): undefined reference to `rfkill_set_s=
+w_state'
+> classmate-laptop.c:(.text+0x1352b9): undefined reference to `rfkill_alloc'
+> classmate-laptop.c:(.text+0x1352ca): undefined reference to `rfkill_regis=
+ter'
+> classmate-laptop.c:(.text+0x1352d6): undefined reference to `rfkill_destr=
+oy'
 >=20
-> johannes
->=20
+> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+> ---
 
-Sorry for that. The else case is unneeded too. Removed in the next
-patch.
 
---z4+8/lEcDcG5Ke9S
+Randy,
+
+Since this implies a build failure, shouldn't it be sent for rc too?
+
+Best Regards,
+Cascardo.
+
+>  drivers/platform/x86/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> --- linux-next-20100603.orig/drivers/platform/x86/Kconfig
+> +++ linux-next-20100603/drivers/platform/x86/Kconfig
+> @@ -520,6 +520,7 @@ config TOSHIBA_BT_RFKILL
+>  config ACPI_CMPC
+>  	tristate "CMPC Laptop Extras"
+>  	depends on X86 && ACPI
+> +	depends on RFKILL || RFKILL=3Dn
+>  	select INPUT
+>  	select BACKLIGHT_CLASS_DEVICE
+>  	default n
+
+--T7mxYSe680VjQnyC
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 Content-Disposition: inline
@@ -54,19 +77,19 @@ Content-Disposition: inline
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iQIcBAEBAgAGBQJMD/BLAAoJEEWxSg7udFZI52UP+wbJRvO7xy3+MskYoZrmuSPv
-pUI9uBSIqfVTtA5N5HqhHlxu2rjyPJiMK1HTlv6F8D7oISD8pEaA8zDU90z4quRp
-6TlXAk0GKkGUTHJzqAqbot0SjhxhhXXp3Y7Z1pCfMTmAmqd6lMkZYt7wpurBNZ1u
-Vejobm96pDSdEoL+1L540a1fMdrCbFvtbhcNdK8CLeA3NSFR9X59OgalK8Tkt81C
-R5oaM951uj/0GmEZ2p9yMRXvKAoni4YBuRVqHujeBAdGMzAU2rCUtQ4+ZSndom00
-ci/099uAbHNzgrfqCtUbhSKISMPiljckZrve+2BoovvB15NF8wJ/5d0Pcw7ECtKd
-fwM720oMVZ7mB6xmHP3dVg2CiVA64/y73Te6OcLsXu3UouSVqW3bWJ4pY4GEY+tr
-h0pWgE5DySmUxA6SIchm6SiISAOvdyHFdad5orWwHyJ0O2hOGozj9IqZGbe2hgzT
-P/DWPUOoFNXfvF5VP9Ob4fm8k6YqPCSm8q8Wj9KkgaQFnydRJq2bRiw8kMABbcPm
-KQjM4QBt19RoCUIR29Hs4pmAEl1Y5j3JQAS/16mjorcA9bSMo6MdrWgUthEiHQxI
-pXYl3nlV9/wBzFVuCvlblwc/IHXJWibRJuGBdqOUqC7w0tmoE1EnKWQ/cgRHXIQJ
-IiSDs0KXpr+1CHyOGJsx
-=O3t1
+iQIcBAEBAgAGBQJMD/NJAAoJEEWxSg7udFZIEjIQAIenV6K05GdBWoI1YqO038Wf
+mSUDfHv5jpeHUk2FR/nHo5Ky48uO+kHHQJ1zdZXUy4XZSnTlCXfiWCAc4rHdL2KC
+V83a9xtQNTxCnqFuLWaOG3VYvbIyt/XHmfVRQg1aZyjhRqs3LjXYLi+LZ9ryDnZQ
+63n6RpysYu3gi1yurA9SBmVj7MjEU2mZryEbUVGyKbKbm0fSx8Kd50rRJHVXcqFk
+8JH9uImiW8kvNUq2Zpn0oarBRVSO+oCzVNnLGaSKT41n2dWQCHP1iFftxkwU2tO1
+KkLu3+7fPTyJNAKboEMJRg8UVgjThdTBwYpON5invH4mkNypuz7ux5F9wnqEEjTl
+Q/rFLgG5jASv/q+5/u03sdpdibXxe9vT0mGXUojmMWx+7tlrUyeyU5sljT9nV8qf
+5MDLJQFuxwOOeIzgSVlUlAy9YmB7XQWJnai2Y6Z4+nvBCTeLdqDAyX7B4wGVvmEA
+yQOxz6fJsYmQUWSWc8VlbIP/P3U3etx4uQ6Q3itWMvDuWmhsjd9f4F8jjO/r+qAz
+JKvKoMzdOwAhYQV2TRnAoeNBqKYn8bSroJtISrxSNMtewwd/VeilIcg749ZMS4NI
+sGFCig8LyzBcRUUFj7tER2BLlCXd9flDTjTewWY/w4S3s0mqC209efVUL85BEz2M
+G630J4qyYNdP0qUhfgvW
+=vXM3
 -----END PGP SIGNATURE-----
 
---z4+8/lEcDcG5Ke9S--
+--T7mxYSe680VjQnyC--
