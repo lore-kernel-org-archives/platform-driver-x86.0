@@ -1,46 +1,57 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
 Subject: Re: [GIT PULL] x86 platform driver updates for 2.6.35-rc3
-Date: Tue, 8 Jun 2010 18:10:33 -0700 (PDT)
-Message-ID: <alpine.LFD.2.00.1006081806040.4506@i5.linux-foundation.org>
+Date: Tue, 8 Jun 2010 18:24:56 -0700
+Message-ID: <20100608182456.3e681359@virtuousgeek.org>
 References: <20100608221901.GA25294@srcf.ucam.org>
+	<alpine.LFD.2.00.1006081806040.4506@i5.linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13]:49187 "EHLO
-	smtp1.linux-foundation.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756060Ab0FIBKk (ORCPT
+Received: from cpoproxy2-pub.bluehost.com ([67.222.39.38]:58322 "HELO
+	cpoproxy2-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1751810Ab0FIB0I (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Jun 2010 21:10:40 -0400
-In-Reply-To: <20100608221901.GA25294@srcf.ucam.org>
+	Tue, 8 Jun 2010 21:26:08 -0400
+In-Reply-To: <alpine.LFD.2.00.1006081806040.4506@i5.linux-foundation.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
+On Tue, 8 Jun 2010 18:10:33 -0700 (PDT)
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-
-On Tue, 8 Jun 2010, Matthew Garrett wrote:
 > 
-> Some fixes for error paths, some config fixes, a minor update to hp-wmi 
-> that deals with some annoying corner cases like AC adapter events being 
-> interpreted as brightness down keystrokes and the Intel IPS driver. This 
-> requires a small addition to the timer API but doesn't modify any 
-> existing code. Should all be entirely low impact.
+> 
+> On Tue, 8 Jun 2010, Matthew Garrett wrote:
+> > 
+> > Some fixes for error paths, some config fixes, a minor update to hp-wmi 
+> > that deals with some annoying corner cases like AC adapter events being 
+> > interpreted as brightness down keystrokes and the Intel IPS driver. This 
+> > requires a small addition to the timer API but doesn't modify any 
+> > existing code. Should all be entirely low impact.
+> 
+> [ Very shortly after sending out an email about how most developers 
+>   probably don't end up reading much of lkml, and thus having missed all 
+>   the other threads on this subject ]
+> 
+> Everybody repeat after me: "After -rc2 I won't be taking patches or pull 
+> requests that aren't regression fixes or fixes to major bugs (oopses or 
+> security etc)".
+> 
+> See the -rc2 announcement, or any of (by now) roughly ten different 
+> threads on lkml and a couple of other mailing lists as response to pull 
+> requests etc ;^)
+> 
+> And yes, that very much does include new drivers. Especially if they end 
+> up affecting anything else (but in al honesty, I probably wouldn't take it 
+> now even if it was entirely standalone).
 
-[ Very shortly after sending out an email about how most developers 
-  probably don't end up reading much of lkml, and thus having missed all 
-  the other threads on this subject ]
+FWIW this is the "make ironlake go fast" driver.  It interacts with the
+i915 driver to increase graphics performance significantly.  But yeah,
+Matthew and I didn't get it integrated into his tree in time for the
+merge window, so I understand if you don't want it right now.
 
-Everybody repeat after me: "After -rc2 I won't be taking patches or pull 
-requests that aren't regression fixes or fixes to major bugs (oopses or 
-security etc)".
-
-See the -rc2 announcement, or any of (by now) roughly ten different 
-threads on lkml and a couple of other mailing lists as response to pull 
-requests etc ;^)
-
-And yes, that very much does include new drivers. Especially if they end 
-up affecting anything else (but in al honesty, I probably wouldn't take it 
-now even if it was entirely standalone).
-
-		Linus
+-- 
+Jesse Barnes, Intel Open Source Technology Center
