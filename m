@@ -1,56 +1,84 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [GIT PULL] x86 platform driver updates for 2.6.35-rc3
-Date: Wed, 9 Jun 2010 12:03:55 +1000
-Message-ID: <AANLkTin45ibtZoThRwOG3eTjFmT0LJ4gKS-ExXqpKx2v@mail.gmail.com>
-References: <20100608221901.GA25294@srcf.ucam.org>
-	<alpine.LFD.2.00.1006081806040.4506@i5.linux-foundation.org>
-	<20100608182456.3e681359@virtuousgeek.org>
-	<alpine.LFD.2.00.1006081855170.4506@i5.linux-foundation.org>
+From: Alan Jenkins <alan-jenkins@tuffmail.co.uk>
+Subject: Re: [PATCH] classmate-laptop: Add RFKILL support.
+Date: Wed, 09 Jun 2010 11:28:47 +0100
+Message-ID: <4C0F6CDF.9060608@tuffmail.co.uk>
+References: <1272384900-3982-1-git-send-email-cascardo@holoscopio.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:38020 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751453Ab0FICD4 convert rfc822-to-8bit (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:42904 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757391Ab0FIK3H (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Jun 2010 22:03:56 -0400
-In-Reply-To: <alpine.LFD.2.00.1006081855170.4506@i5.linux-foundation.org>
+	Wed, 9 Jun 2010 06:29:07 -0400
+Received: by wyf28 with SMTP id 28so796079wyf.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Jun 2010 03:29:01 -0700 (PDT)
+In-Reply-To: <1272384900-3982-1-git-send-email-cascardo@holoscopio.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Cc: platform-driver-x86@vger.kernel.org, mjg@redhat.com, don@syst.com.br, johannes@sipsolutions.net, rpurdie@rpsys.net
 
-On Wed, Jun 9, 2010 at 11:57 AM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->
-> On Tue, 8 Jun 2010, Jesse Barnes wrote:
->>
->> FWIW this is the "make ironlake go fast" driver. =A0It interacts wit=
-h the
->> i915 driver to increase graphics performance significantly. =A0But y=
-eah,
->> Matthew and I didn't get it integrated into his tree in time for the
->> merge window, so I understand if you don't want it right now.
->
-> I'm not great at all the intel code-names. Is ironlake the expected-Q=
-4
-> on-die GPU or the current one?
->
-> Not that I'd prefer to pull it even if it's the current one, but if i=
-t's
-> the next-gen one then we're in even less of a hurry, I think.
->
+Thadeu Lima de Souza Cascardo wrote:
+> The RFKILL device shares the same ACPI device used for backlight. So, it
+> required a new struct sharing both a backlight_device and a rfkill
+> device.
+> 
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+> ---
 
-Its probably the one on your desk, its at least the one in the two
-laptops on mine.
+Apologies for tardiness.  You did ask for review, so I've scanned it for some common rfkill pitfalls.
 
-So definitely now-gen.
 
-Dave.
---
-To unsubscribe from this list: send the line "unsubscribe platform-driv=
-er-x86" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/platform/x86/classmate-laptop.c |  170 +++++++++++++++++++++++++++----
+>  1 files changed, 148 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
+> index 7f9e5dd..3bf399f 100644
+> --- a/drivers/platform/x86/classmate-laptop.c
+> +++ b/drivers/platform/x86/classmate-laptop.c
+
+> +static const struct rfkill_ops cmpc_rfkill_ops = {
+> +	.query = cmpc_rfkill_query,
+> +	.set_block = cmpc_rfkill_block,
+> +};
+
+You said down-thread that firmware does not change the state.  In that case, I believe the query method is unnecessary
+
+
+ * @query: query the rfkill block state(s) and call exactly one of the
+ *	rfkill_set{,_hw,_sw}_state family of functions. Assign this
+ *	method if input events can cause hardware state changes to make
+ *	the rfkill core query your driver before setting a requested
+ *	block.
+
+
+Generally, the rfkill core caches the soft blocked state.  It doesn't call query() during registration either - it calls set_block() with a default value (usually "unblocked").  query() is only used to minimize a race with the firmware during set_block().
+
+
+> +	ipml->rf = rfkill_alloc("cmpc_rfkill", &acpi->dev, RFKILL_TYPE_WLAN,
+> +				&cmpc_rfkill_ops, acpi->handle);
+> +	/* rfkill_alloc may fail if RFKILL is disabled. We should still work
+> +	 * anyway. */
+> +	if (!IS_ERR(ipml->rf)) {
+> +		retval = rfkill_register(ipml->rf);
+> +		if (retval) {
+> +			rfkill_destroy(ipml->rf);
+> +			ipml->rf = NULL;
+> +		}
+> +	} else {
+> +		ipml->rf = NULL;
+> +	}
+
+I think the comment is wrong, and so is the code it references.
+
+rfkill_alloc() is documented as returning NULL on failure, not an ERR_PTR.  So you're going to pass NULL into rfkill_register() on allocation failure, which will BUG out.
+
+eeepc_laptop tests for NULL here, not ERR_PTR.
+
+If you look at the implementation when RFKILL is disabled, rfkill_register() is designed to accept  ERR_PTR(-ENODEV) without complaint.  (And the other rfkill functions won't care either; they'll just be completely empty stubs).
+
+
+Regards
+Alan
