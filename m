@@ -1,70 +1,46 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PULL] x86 platform driver updates for 2.6.35-rc3
-Date: Tue, 8 Jun 2010 23:19:01 +0100
-Message-ID: <20100608221901.GA25294@srcf.ucam.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] x86 platform driver updates for 2.6.35-rc3
+Date: Tue, 8 Jun 2010 18:10:33 -0700 (PDT)
+Message-ID: <alpine.LFD.2.00.1006081806040.4506@i5.linux-foundation.org>
+References: <20100608221901.GA25294@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:59523 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756651Ab0FHWTG (ORCPT
+Received: from smtp1.linux-foundation.org ([140.211.169.13]:49187 "EHLO
+	smtp1.linux-foundation.org" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756060Ab0FIBKk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Jun 2010 18:19:06 -0400
-Content-Disposition: inline
+	Tue, 8 Jun 2010 21:10:40 -0400
+In-Reply-To: <20100608221901.GA25294@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Hi Linus,
 
-Some fixes for error paths, some config fixes, a minor update to hp-wmi 
-that deals with some annoying corner cases like AC adapter events being 
-interpreted as brightness down keystrokes and the Intel IPS driver. This 
-requires a small addition to the timer API but doesn't modify any 
-existing code. Should all be entirely low impact.
 
-The following changes since commit 3975d16760d4be7402d1067c548c30c427971331:
-  Linus Torvalds (1):
-        Merge git://git.infradead.org/~dwmw2/mtd-2.6.35
+On Tue, 8 Jun 2010, Matthew Garrett wrote:
+> 
+> Some fixes for error paths, some config fixes, a minor update to hp-wmi 
+> that deals with some annoying corner cases like AC adapter events being 
+> interpreted as brightness down keystrokes and the Intel IPS driver. This 
+> requires a small addition to the timer API but doesn't modify any 
+> existing code. Should all be entirely low impact.
 
-are available in the git repository at:
+[ Very shortly after sending out an email about how most developers 
+  probably don't end up reading much of lkml, and thus having missed all 
+  the other threads on this subject ]
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+Everybody repeat after me: "After -rc2 I won't be taking patches or pull 
+requests that aren't regression fixes or fixes to major bugs (oopses or 
+security etc)".
 
-Axel Lin (1):
-      intel_menlow: fix memory leaks in error path
+See the -rc2 announcement, or any of (by now) roughly ten different 
+threads on lkml and a couple of other mailing lists as response to pull 
+requests etc ;^)
 
-Jesse Barnes (3):
-      timer: add on-stack deferrable timer interfaces
-      x86 platform driver: intelligent power sharing driver
-      IPS driver: add GPU busy and turbo checking
+And yes, that very much does include new drivers. Especially if they end 
+up affecting anything else (but in al honesty, I probably wouldn't take it 
+now even if it was entirely standalone).
 
-Julia Lawall (1):
-      drivers/platform/x86: Eliminate a NULL pointer dereference
-
-Randy Dunlap (1):
-      platform/x86: msi-laptop depends on SERIO_I8042
-
-Thadeu Lima de Souza Cascardo (1):
-      classmate-laptop: depends on RFKILL or RFKILL=n
-
-Thomas Renninger (3):
-      x86 platform drivers: hp-wmi Reorder event id processing
-      x86 platform drivers: hp-wmi Add media key 0x20e8
-      x86 platform drivers: hp-wmi fix buffer size depending on ACPI version
-
- drivers/platform/x86/Kconfig        |   12 +
- drivers/platform/x86/Makefile       |    1 +
- drivers/platform/x86/hp-wmi.c       |   82 ++-
- drivers/platform/x86/intel_ips.c    | 1659 +++++++++++++++++++++++++++++++++++
- drivers/platform/x86/intel_menlow.c |   33 +-
- drivers/platform/x86/sony-laptop.c  |   10 +-
- include/drm/i915_drm.h              |    9 +
- include/linux/timer.h               |   15 +
- kernel/timer.c                      |   13 +
- 9 files changed, 1796 insertions(+), 38 deletions(-)
- create mode 100644 drivers/platform/x86/intel_ips.c
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+		Linus
