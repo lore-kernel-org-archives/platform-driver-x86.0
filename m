@@ -1,95 +1,65 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+From: Randy Dunlap <randy.dunlap@oracle.com>
 Subject: Re: [PATCH -next] classmate-laptop: fix for RFKILL=m, CMPC=y
-Date: Wed, 9 Jun 2010 17:02:18 -0300
-Message-ID: <20100609200218.GD2551@barata.holoscopio.com>
-References: <20100603134753.710a64b3.sfr@canb.auug.org.au>
- <20100603093903.d9378c9a.randy.dunlap@oracle.com>
+Date: Wed, 09 Jun 2010 13:05:04 -0700
+Message-ID: <4C0FF3F0.2080601@oracle.com>
+References: <20100603134753.710a64b3.sfr@canb.auug.org.au> <20100603093903.d9378c9a.randy.dunlap@oracle.com> <20100609200218.GD2551@barata.holoscopio.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade2.minaslivre.org ([74.50.53.203]:35386 "EHLO
-	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756424Ab0FIUCY (ORCPT
+Received: from rcsinet10.oracle.com ([148.87.113.121]:59915 "EHLO
+	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757220Ab0FIUGe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Jun 2010 16:02:24 -0400
-Content-Disposition: inline
-In-Reply-To: <20100603093903.d9378c9a.randy.dunlap@oracle.com>
+	Wed, 9 Jun 2010 16:06:34 -0400
+In-Reply-To: <20100609200218.GD2551@barata.holoscopio.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
+To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Daniel Oliveira Nascimento <don@syst.com.br>
 
+On 06/09/10 13:02, Thadeu Lima de Souza Cascardo wrote:
+> On Thu, Jun 03, 2010 at 09:39:03AM -0700, Randy Dunlap wrote:
+>> From: Randy Dunlap <randy.dunlap@oracle.com>
+>>
+>> Fix build error when CONFIG_RFKILL=m and CONFIG_ACPI_CMPC=y:
+>> classmate-laptop should depend on RFKILL or RFKILL=n.
+>>
+>> classmate-laptop.c:(.text+0x1351fc): undefined reference to `rfkill_unregister'
+>> classmate-laptop.c:(.text+0x135204): undefined reference to `rfkill_destroy'
+>> classmate-laptop.c:(.text+0x135237): undefined reference to `rfkill_set_sw_state'
+>> classmate-laptop.c:(.text+0x1352b9): undefined reference to `rfkill_alloc'
+>> classmate-laptop.c:(.text+0x1352ca): undefined reference to `rfkill_register'
+>> classmate-laptop.c:(.text+0x1352d6): undefined reference to `rfkill_destroy'
+>>
+>> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+>> ---
+> 
+> 
+> Randy,
+> 
+> Since this implies a build failure, shouldn't it be sent for rc too?
 
---T7mxYSe680VjQnyC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 03, 2010 at 09:39:03AM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <randy.dunlap@oracle.com>
->=20
-> Fix build error when CONFIG_RFKILL=3Dm and CONFIG_ACPI_CMPC=3Dy:
-> classmate-laptop should depend on RFKILL or RFKILL=3Dn.
->=20
-> classmate-laptop.c:(.text+0x1351fc): undefined reference to `rfkill_unreg=
-ister'
-> classmate-laptop.c:(.text+0x135204): undefined reference to `rfkill_destr=
-oy'
-> classmate-laptop.c:(.text+0x135237): undefined reference to `rfkill_set_s=
-w_state'
-> classmate-laptop.c:(.text+0x1352b9): undefined reference to `rfkill_alloc'
-> classmate-laptop.c:(.text+0x1352ca): undefined reference to `rfkill_regis=
-ter'
-> classmate-laptop.c:(.text+0x1352d6): undefined reference to `rfkill_destr=
-oy'
->=20
-> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-> ---
+Yes, it should.
+I hit the problem during a linux-next build, but it does apply to mainline as well.
+Thanks.
 
 
-Randy,
+>>  drivers/platform/x86/Kconfig |    1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> --- linux-next-20100603.orig/drivers/platform/x86/Kconfig
+>> +++ linux-next-20100603/drivers/platform/x86/Kconfig
+>> @@ -520,6 +520,7 @@ config TOSHIBA_BT_RFKILL
+>>  config ACPI_CMPC
+>>  	tristate "CMPC Laptop Extras"
+>>  	depends on X86 && ACPI
+>> +	depends on RFKILL || RFKILL=n
+>>  	select INPUT
+>>  	select BACKLIGHT_CLASS_DEVICE
+>>  	default n
 
-Since this implies a build failure, shouldn't it be sent for rc too?
 
-Best Regards,
-Cascardo.
-
->  drivers/platform/x86/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
->=20
-> --- linux-next-20100603.orig/drivers/platform/x86/Kconfig
-> +++ linux-next-20100603/drivers/platform/x86/Kconfig
-> @@ -520,6 +520,7 @@ config TOSHIBA_BT_RFKILL
->  config ACPI_CMPC
->  	tristate "CMPC Laptop Extras"
->  	depends on X86 && ACPI
-> +	depends on RFKILL || RFKILL=3Dn
->  	select INPUT
->  	select BACKLIGHT_CLASS_DEVICE
->  	default n
-
---T7mxYSe680VjQnyC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQIcBAEBAgAGBQJMD/NJAAoJEEWxSg7udFZIEjIQAIenV6K05GdBWoI1YqO038Wf
-mSUDfHv5jpeHUk2FR/nHo5Ky48uO+kHHQJ1zdZXUy4XZSnTlCXfiWCAc4rHdL2KC
-V83a9xtQNTxCnqFuLWaOG3VYvbIyt/XHmfVRQg1aZyjhRqs3LjXYLi+LZ9ryDnZQ
-63n6RpysYu3gi1yurA9SBmVj7MjEU2mZryEbUVGyKbKbm0fSx8Kd50rRJHVXcqFk
-8JH9uImiW8kvNUq2Zpn0oarBRVSO+oCzVNnLGaSKT41n2dWQCHP1iFftxkwU2tO1
-KkLu3+7fPTyJNAKboEMJRg8UVgjThdTBwYpON5invH4mkNypuz7ux5F9wnqEEjTl
-Q/rFLgG5jASv/q+5/u03sdpdibXxe9vT0mGXUojmMWx+7tlrUyeyU5sljT9nV8qf
-5MDLJQFuxwOOeIzgSVlUlAy9YmB7XQWJnai2Y6Z4+nvBCTeLdqDAyX7B4wGVvmEA
-yQOxz6fJsYmQUWSWc8VlbIP/P3U3etx4uQ6Q3itWMvDuWmhsjd9f4F8jjO/r+qAz
-JKvKoMzdOwAhYQV2TRnAoeNBqKYn8bSroJtISrxSNMtewwd/VeilIcg749ZMS4NI
-sGFCig8LyzBcRUUFj7tER2BLlCXd9flDTjTewWY/w4S3s0mqC209efVUL85BEz2M
-G630J4qyYNdP0qUhfgvW
-=vXM3
------END PGP SIGNATURE-----
-
---T7mxYSe680VjQnyC--
+-- 
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
