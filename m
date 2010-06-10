@@ -1,33 +1,85 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH -next] classmate-laptop: fix for RFKILL=m, CMPC=y
-Date: Wed, 9 Jun 2010 21:11:18 +0100
-Message-ID: <20100609201118.GA27593@srcf.ucam.org>
-References: <20100603134753.710a64b3.sfr@canb.auug.org.au> <20100603093903.d9378c9a.randy.dunlap@oracle.com> <20100609200218.GD2551@barata.holoscopio.com> <4C0FF3F0.2080601@oracle.com>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] hp-wmi: add error handling for hp_wmi_init
+Date: Thu, 10 Jun 2010 16:06:40 +0800
+Message-ID: <1276157200.29462.3.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:60164 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756653Ab0FIULf (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:52212 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752524Ab0FJIFo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Jun 2010 16:11:35 -0400
-Content-Disposition: inline
-In-Reply-To: <4C0FF3F0.2080601@oracle.com>
+	Thu, 10 Jun 2010 04:05:44 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Stephen Rothwell <sfr@canb.auug.org.au>, platform-driver-x86@vger.kernel.org, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Daniel Oliveira Nascimento <don@syst.com.br>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, "John W. Linville" <linville@tuxdriver.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 09, 2010 at 01:05:04PM -0700, Randy Dunlap wrote:
-> On 06/09/10 13:02, Thadeu Lima de Souza Cascardo wrote:
-> > Since this implies a build failure, shouldn't it be sent for rc too?
-> 
-> Yes, it should.
-> I hit the problem during a linux-next build, but it does apply to mainline as well.
-> Thanks.
+Current implementation in hp_wmi_init does not check any error and always
+return success.
+This patch properly handles recource reclaim and return err in error path.
 
-It's been sent upstream, but Linus didn't pull. I'll see if I can find a 
-set he's willing to take.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/hp-wmi.c |   31 +++++++++++++++++++++++++------
+ 1 files changed, 25 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 51c07a0..2fa4577 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -585,23 +585,42 @@ static int __init hp_wmi_init(void)
+ 	if (wmi_has_guid(HPWMI_EVENT_GUID)) {
+ 		err = wmi_install_notify_handler(HPWMI_EVENT_GUID,
+ 						 hp_wmi_notify, NULL);
+-		if (ACPI_SUCCESS(err))
+-			hp_wmi_input_setup();
++		if (ACPI_FAILURE(err))
++			return -EINVAL;
++		err = hp_wmi_input_setup();
++		if (err) {
++			wmi_remove_notify_handler(HPWMI_EVENT_GUID);
++			return err;
++		}
+ 	}
+ 
+ 	if (wmi_has_guid(HPWMI_BIOS_GUID)) {
+ 		err = platform_driver_register(&hp_wmi_driver);
+ 		if (err)
+-			return 0;
++			goto err_driver_reg;
+ 		hp_wmi_platform_dev = platform_device_alloc("hp-wmi", -1);
+ 		if (!hp_wmi_platform_dev) {
+-			platform_driver_unregister(&hp_wmi_driver);
+-			return 0;
++			err = -ENOMEM;
++			goto err_device_alloc;
+ 		}
+-		platform_device_add(hp_wmi_platform_dev);
++		err = platform_device_add(hp_wmi_platform_dev);
++		if (err)
++			goto err_device_add;
+ 	}
+ 
+ 	return 0;
++
++err_device_add:
++	platform_device_put(hp_wmi_platform_dev);
++err_device_alloc:
++	platform_driver_unregister(&hp_wmi_driver);
++err_driver_reg:
++	if (wmi_has_guid(HPWMI_EVENT_GUID)) {
++		input_unregister_device(hp_wmi_input_dev);
++		wmi_remove_notify_handler(HPWMI_EVENT_GUID);
++	}
++
++	return err;
+ }
+ 
+ static void __exit hp_wmi_exit(void)
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.5.4.3
+
+
+
