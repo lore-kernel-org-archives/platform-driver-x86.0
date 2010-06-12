@@ -1,228 +1,34 @@
-From: Islam Amer <pharon@gmail.com>
-Subject: Re: Dell Studio 1555 eject key does not work ( small patch to fix
-	included )
-Date: Sat, 12 Jun 2010 04:26:38 +0300
-Message-ID: <AANLkTin1bEjYt08P923v1c0aSM1O6kYDwoaOYiFufGCd@mail.gmail.com>
-References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
-	<20100602213429.GA14866@srcf.ucam.org> <57DF5FDC2DC0634FA2A310BC5B81A68D01DF4CD01E@AUSX7MCPC108.AMER.DELL.COM>
-	<AANLkTimIl6UL0HQT1wxRgXuj_m0O3CwMHQIa1xNE1Ax9@mail.gmail.com>
-	<AANLkTin0qht1XR2rUgIXMEeJNU_gb3IZWqSBJb7NXD8K@mail.gmail.com>
-	<57DF5FDC2DC0634FA2A310BC5B81A68D01DFD57663@AUSX7MCPC108.AMER.DELL.COM>
-	<20100610184023.GA17320@srcf.ucam.org> <AANLkTilT3KCeJUpG-APK0MFh2ChMlZ4qwVPhOJpHnPB9@mail.gmail.com>
-	<57DF5FDC2DC0634FA2A310BC5B81A68D01DFD5780A@AUSX7MCPC108.AMER.DELL.COM>
-	<AANLkTinoWK4uSL2KOhgF-EVWuBhgCeAqWwL9cJKeGRD1@mail.gmail.com>
-	<4C124358.8020007@canonical.com> <AANLkTimxo3CeRR2YZptTL6RoEi8Q5sdnUEMIi9A5-KcA@mail.gmail.com>
-	<AANLkTilaoFJuT8d9iPWqDzyxBC8o4E1Vhh03ufiwLEk-@mail.gmail.com>
-	<4C128201.8020104@canonical.com>
+From: Sit Salvadore <pillared@jobbnorge.no>
+Subject: Ht? Sometimes when a bright star is twinkling Like a
+Date: Sun, 13 Jun 2010 00:30:11 +0200
+Message-ID: <4C140980.2050305@poudenas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: application/octet-stream; name="kindnesses.rtf"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:43001 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755965Ab0FLB07 convert rfc822-to-8bit (ORCPT
+Received: from g230100203.adsl.alicedsl.de ([92.230.100.203]:65111 "HELO
+	wnaj.alicedsl.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with SMTP id S1752689Ab0FLWaN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Jun 2010 21:26:59 -0400
-In-Reply-To: <4C128201.8020104@canonical.com>
+	Sat, 12 Jun 2010 18:30:13 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: tim.gardner@canonical.com
-Cc: Rezwanul_Kabir@dell.com, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org
+To: Siddique Pavek <platform-driver-x86@vger.kernel.org>
 
-What would you like me to do now? I want to help :)
-
-Thanks.
-
-On Fri, Jun 11, 2010 at 9:35 PM, Tim Gardner <tim.gardner@canonical.com=
-> wrote:
-> The only difference between 2.6.32.15 and Ubuntu Lucid wrt dell-wmi.c=
- is
-> this:
->
-> 43,46d42
-> < /* Temporary workaround until the WMI sysfs interface goes in.
-> < =A0 =A0Borrowed from acer-wmi */
-> < MODULE_ALIAS("dmi:*:*Dell*:*:");
-> <
->
-> I wonder about input event filtering? There are substantial differenc=
-es in
-> drivers/input/input.c.
->
-> rtg
->
-> On 06/11/2010 12:02 PM, Islam Amer wrote:
->>
->> Dear Tim,
->>
->> I tried the mainline kernel 2.6.32-0206321505-generic as you suggest=
-ed
->> and the eject key doesn't work but it also doesn't produce the error
->> message in dmesg.
->>
->> I then tried the 2.6.32-22.36-generic from
->> http://packages.ubuntu.com/lucid/linux-image-2.6.32-22-generic and I
->> found the eject key working fine.
->>
->> So there is something in the ubuntu patchset that fixes this issue.
->>
->> On Fri, Jun 11, 2010 at 5:23 PM, Islam Amer<pharon@gmail.com> =A0wro=
-te:
->>>
->>> Tim I am running debian,
->>>
->>> I think it's the other way round, the mainline kernel is borked (
->>> regarding dell-wmi and eject key ) while the lucid patched kernel
->>> works ( as reported by dell team ).
->>>
->>> I guess I could download a Lucid livecd and see if the eject key wo=
-rks
->>> there ( event only as it won't eject the lived while it is running =
-:)
->>> )
->>>
->>> On Fri, Jun 11, 2010 at 5:08 PM, Tim Gardner<tim.gardner@canonical.=
-com>
->>> =A0wrote:
->>>>
->>>> Islam Amer,
->>>>
->>>> You could try a vanilla stable kernel from
->>>> http://kernel.ubuntu.com/~kernel-ppa/mainline/v2.6.32.15.5-lucid/ =
-to see
->>>> if
->>>> we've borked the dell-wmi code.
->>>>
->>>> rtg
->>>>
->>>> On 06/11/2010 07:28 AM, Islam Amer wrote:
->>>>>
->>>>> Rezwanul,
->>>>>
->>>>> I've updated my bios to A11 and installed a new unmodified kernel=
-=2E The
->>>>> issue still persists that the eject key produces "dell-wmi: Unkno=
-wn
->>>>> key 0 pressed" in the dmesg output and it doesn't work.
->>>>>
->>>>> It is possible that Ubuntu is including patches to fix stuff. The
->>>>> latest patch for the Lucid kernel at
->>>>>
->>>>>
->>>>> http://archive.ubuntu.com/ubuntu/pool/main/l/linux/linux_2.6.32-2=
-2.36.diff.gz
->>>>> does include patches that touch wmi and dell-wmi code, but I can'=
-t
->>>>> find a specific change that would fix this issue.
->>>>>
->>>>> I might try to selectively apply patches from it and see if it ge=
-ts
->>>>> fixed.
->>>>>
->>>>> Thanks.
->>>>>
->>>>>
->>>>> On Fri, Jun 11, 2010 at 3:15 AM,<Rezwanul_Kabir@dell.com> =A0 =A0=
-wrote:
->>>>>>
->>>>>> Islam Amer
->>>>>>
->>>>>> =A0 Please try the new BIOS A11 and eliminate any potential BIOS=
- issues.
->>>>>> The BIOS team confirmed that
->>>>>> =A0 they weren't able to reproduce the issue with Ubuntu 10.04 a=
-nd A11.
->>>>>>
->>>>>> Thanks..
->>>>>> =A0 --rez
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> Rezwanul Kabir
->>>>>> Dell Linux Development
->>>>>> 512-725-0766
->>>>>>
->>>>>>
->>>>>>> -----Original Message-----
->>>>>>> From: Islam Amer [mailto:pharon@gmail.com]
->>>>>>> Sent: Thursday, June 10, 2010 6:52 PM
->>>>>>> To: Matthew Garrett
->>>>>>> Cc: Kabir, Rezwanul; linux-kernel@vger.kernel.org;
->>>>>>> platform-driver-x86@vger.kernel.org; akpm@linux-foundation.org
->>>>>>> Subject: Re: Dell Studio 1555 eject key does not work ( small
->>>>>>> patch to fix included )
->>>>>>>
->>>>>>> Hello all,
->>>>>>>
->>>>>>> My bios version is A08 , I see that A11 was recently released
->>>>>>> but the changelog doesn't say much.
->>>>>>>
->>>>>>> Which is better, upgrade and hope the problem goes away, or
->>>>>>> wait until we have a fix that is agreed upon ?
->>>>>>>
->>>>>>> Thanks.
->>>>>>>
->>>>>>> On Thu, Jun 10, 2010 at 9:40 PM, Matthew Garrett
->>>>>>> <mjg59@srcf.ucam.org> =A0 =A0wrote:
->>>>>>>>
->>>>>>>> On Thu, Jun 10, 2010 at 01:36:56PM -0500,
->>>>>>>
->>>>>>> Rezwanul_Kabir@Dell.com wrote:
->>>>>>>>>
->>>>>>>>> Hi Islam Amer
->>>>>>>>>
->>>>>>>>> =A0 =A0I got report that "Ubuntu 10.04 + BIOS A11" was tested=
- and the
->>>>>>>>> "Eject CD" key is working
->>>>>>>>> =A0 =A0as expected. Sorry, I couldn't find any Studio 1555 to
->>>>>>>
->>>>>>> test myself
->>>>>>>>>
->>>>>>>>> and cannot provide you
->>>>>>>>> =A0 =A0with more details.
->>>>>>>>>
->>>>>>>>> =A0 =A0 Also, you may try acpi_osi=3D"Windows 2009" kernel
->>>>>>>
->>>>>>> parameter and see if there is any difference.
->>>>>>>>
->>>>>>>> That's the default on any kernel that has this support in dell=
--wmi.
->>>>>>>> Rez, could you let me know if the proposed patch breaks the sp=
-ec in
->>>>>>>> ways that are likely to cause problems?
->>>>>>>>
->>>>>>>> --
->>>>>>>> Matthew Garrett | mjg59@srcf.ucam.org
->>>>>>>>
->>>>>>>
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe linux-k=
-ernel"
->>>>> in
->>>>> the body of a message to majordomo@vger.kernel.org
->>>>> More majordomo info at =A0http://vger.kernel.org/majordomo-info.h=
-tml
->>>>> Please read the FAQ at =A0http://www.tux.org/lkml/
->>>>
->>>>
->>>> --
->>>> Tim Gardner tim.gardner@canonical.com
->>>>
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kern=
-el" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at =A0http://www.tux.org/lkml/
->
->
-> --
-> Tim Gardner tim.gardner@canonical.com
->
---
-To unsubscribe from this list: send the line "unsubscribe platform-driv=
-er-x86" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+e1xydGYxXGFuc2lcYW5zaWNwZzEyNTFcZGVmZjBcZGVmbGFuZzEwNDl7XGZvbnR0Ymx7XGYw
+XGZzd2lzc1xmcHJxMlxmY2hhcnNldDIwNHtcKlxmbmFtZSBBcmlhbDt9QXJpYWwgQ1lSO317
+XGYxXGZzd2lzc1xmY2hhcnNldDIwNHtcKlxmbmFtZSBBcmlhbDt9QXJpYWwgQ1lSO319DQp7
+XGNvbG9ydGJsIDtccmVkMFxncmVlbjBcYmx1ZTI1NTtccmVkMFxncmVlbjEyOFxibHVlMDt9
+DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDIuMjEuMzAuMTMyMDt9XHZpZXdraW5kNFx1YzFc
+cGFyZFxzYTIwMFxzbDI3NlxzbG11bHQxXGxhbmc5XGYwXGZzMzJ7XGZpZWxke1wqXGZsZGlu
+c3R7SFlQRVJMSU5LICJoe1wqXGRkIDIuMjEuMzAuMTMyMDt9dHRwOi8vY2x1YnBhbGFjZS5p
+bmZvIn19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL2NsdWJwYWxhY2UuaW5mb319fVxmMFxj
+ZjFcYlxmczMyICAtIE9OTElORSBDQVNJTk8hXHBhcg0KXGxpbmVcY2YyXGJcZjBcZnMyOCBW
+SVAgQ0xVQiBDYXNpbm8gaXMgYSBncmVhdCBvbmxpbmUgY2FzaW5vIHRoYXQgb2ZmZXJzIHRo
+ZSB1bmlxdWUgY29tYmluYXRpb24gb2YgdG9wIHF1YWxpdHkgZ2FtZXMsIGhpZ2ggcGF5b3V0
+cyBhbmQgYSAyNC83IHByb2Zlc3Npb25hbCBjdXN0b21lciBzdXBwb3J0LlxwYXINClxwYXIx
+MDAgcHJvZ3Jlc3NpdmUgZ2FtZXMgd2l0aCB0b3dlcmluZyBqYWNrcG90cywgd2hpY2ggYXJl
+IHJlYWR5IHRvIGV4cGxvZGUgYW5kIGNhbiBtYWtlIG11bHRpLW1pbGxpb25haXJlcyBvdXQg
+b2YgVklQIENMVUIgcGxheWVycyEgRG93bmxvYWQgdGhlIHNvZnR3YXJlIGZvciBmcmVlLCBw
+aWNrIHVwIHRoZSBpbmNyZWRpYmxlICQ3NzcgV2VsY29tZSBCb251cyBvbiB5b3Ugd2F5IGlu
+IGFuZCBzdGFydCBwbGF5aW5nICYgd2lubmluZyFccGFyDQp9DQoA
