@@ -1,34 +1,34 @@
-From: Sit Salvadore <pillared@jobbnorge.no>
-Subject: Ht? Sometimes when a bright star is twinkling Like a
-Date: Sun, 13 Jun 2010 00:30:11 +0200
-Message-ID: <4C140980.2050305@poudenas.com>
+From: Notter Cradler <circumflex@wgcrs.com>
+Subject: Ocated. This much is written, not to lessen
+Date: Mon, 14 Jun 2010 22:23:10 +0200
+Message-ID: <4C168EDB.6040801@itage.cz>
 Mime-Version: 1.0
-Content-Type: application/octet-stream; name="kindnesses.rtf"
+Content-Type: application/octet-stream; name="lorgnette.rtf"
 Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from g230100203.adsl.alicedsl.de ([92.230.100.203]:65111 "HELO
-	wnaj.alicedsl.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with SMTP id S1752689Ab0FLWaN (ORCPT
+Received: from 124.23.21.95.dynamic.jazztel.es ([95.21.23.124]:2553 "HELO
+	avmwd.jazztel.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with SMTP id S1755537Ab0FNUXk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 12 Jun 2010 18:30:13 -0400
+	Mon, 14 Jun 2010 16:23:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Siddique Pavek <platform-driver-x86@vger.kernel.org>
+To: Arens Cominotti <platform-driver-x86@vger.kernel.org>
 
 e1xydGYxXGFuc2lcYW5zaWNwZzEyNTFcZGVmZjBcZGVmbGFuZzEwNDl7XGZvbnR0Ymx7XGYw
 XGZzd2lzc1xmcHJxMlxmY2hhcnNldDIwNHtcKlxmbmFtZSBBcmlhbDt9QXJpYWwgQ1lSO317
 XGYxXGZzd2lzc1xmY2hhcnNldDIwNHtcKlxmbmFtZSBBcmlhbDt9QXJpYWwgQ1lSO319DQp7
 XGNvbG9ydGJsIDtccmVkMFxncmVlbjBcYmx1ZTI1NTtccmVkMFxncmVlbjEyOFxibHVlMDt9
-DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDIuMjEuMzAuMTMyMDt9XHZpZXdraW5kNFx1YzFc
+DQp7XCpcZ2VuZXJhdG9yIE1zZnRlZGl0IDMuMjIuNDkuOTM4MTt9XHZpZXdraW5kNFx1YzFc
 cGFyZFxzYTIwMFxzbDI3NlxzbG11bHQxXGxhbmc5XGYwXGZzMzJ7XGZpZWxke1wqXGZsZGlu
-c3R7SFlQRVJMSU5LICJoe1wqXGRkIDIuMjEuMzAuMTMyMDt9dHRwOi8vY2x1YnBhbGFjZS5p
-bmZvIn19e1xmbGRyc2x0e1x1bFxjZjEgaHR0cDovL2NsdWJwYWxhY2UuaW5mb319fVxmMFxj
-ZjFcYlxmczMyICAtIE9OTElORSBDQVNJTk8hXHBhcg0KXGxpbmVcY2YyXGJcZjBcZnMyOCBW
-SVAgQ0xVQiBDYXNpbm8gaXMgYSBncmVhdCBvbmxpbmUgY2FzaW5vIHRoYXQgb2ZmZXJzIHRo
-ZSB1bmlxdWUgY29tYmluYXRpb24gb2YgdG9wIHF1YWxpdHkgZ2FtZXMsIGhpZ2ggcGF5b3V0
-cyBhbmQgYSAyNC83IHByb2Zlc3Npb25hbCBjdXN0b21lciBzdXBwb3J0LlxwYXINClxwYXIx
-MDAgcHJvZ3Jlc3NpdmUgZ2FtZXMgd2l0aCB0b3dlcmluZyBqYWNrcG90cywgd2hpY2ggYXJl
-IHJlYWR5IHRvIGV4cGxvZGUgYW5kIGNhbiBtYWtlIG11bHRpLW1pbGxpb25haXJlcyBvdXQg
-b2YgVklQIENMVUIgcGxheWVycyEgRG93bmxvYWQgdGhlIHNvZnR3YXJlIGZvciBmcmVlLCBw
-aWNrIHVwIHRoZSBpbmNyZWRpYmxlICQ3NzcgV2VsY29tZSBCb251cyBvbiB5b3Ugd2F5IGlu
-IGFuZCBzdGFydCBwbGF5aW5nICYgd2lubmluZyFccGFyDQp9DQoA
+c3R7SFlQRVJMSU5LICJoe1wqXGRkIDMuMjIuNDkuOTM4MTt9dHRwOi8vY2x1YnBsYXkuaW5m
+byJ9fXtcZmxkcnNsdHtcdWxcY2YxIGh0dHA6Ly9jbHVicGxheS5pbmZvfX19XGYwXGNmMVxi
+XGZzMzIgIC0gT05MSU5FIENBU0lOTyFccGFyDQpcbGluZVxjZjJcYlxmMFxmczI4IFZJUCBD
+TFVCIENhc2lubyBpcyBhIGdyZWF0IG9ubGluZSBjYXNpbm8gdGhhdCBvZmZlcnMgdGhlIHVu
+aXF1ZSBjb21iaW5hdGlvbiBvZiB0b3AgcXVhbGl0eSBnYW1lcywgaGlnaCBwYXlvdXRzIGFu
+ZCBhIDI0LzcgcHJvZmVzc2lvbmFsIGN1c3RvbWVyIHN1cHBvcnQuXHBhcg0KXHBhcjEwMCBw
+cm9ncmVzc2l2ZSBnYW1lcyB3aXRoIHRvd2VyaW5nIGphY2twb3RzLCB3aGljaCBhcmUgcmVh
+ZHkgdG8gZXhwbG9kZSBhbmQgY2FuIG1ha2UgbXVsdGktbWlsbGlvbmFpcmVzIG91dCBvZiBW
+SVAgQ0xVQiBwbGF5ZXJzISBEb3dubG9hZCB0aGUgc29mdHdhcmUgZm9yIGZyZWUsIHBpY2sg
+dXAgdGhlIGluY3JlZGlibGUgJDc3NyBXZWxjb21lIEJvbnVzIG9uIHlvdSB3YXkgaW4gYW5k
+IHN0YXJ0IHBsYXlpbmcgJiB3aW5uaW5nIVxwYXINCn0NCgA=
