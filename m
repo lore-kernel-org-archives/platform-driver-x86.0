@@ -1,40 +1,25 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH] rar: Move the RAR driver into the right place as its
- now clean
-Date: Fri, 18 Jun 2010 08:11:26 -0700
-Message-ID: <20100618151126.GA16843@kroah.com>
-References: <20100618130536.7800.28973.stgit@localhost.localdomain>
+From: OXFAM <rlahiffe@eircom.net>
+Subject: Qualification Number(OG/N231/E101/BDB)
+Date: Sat, 19 Jun 2010 23:29:09 +0100 (IST)
+Message-ID: <18292871.120741276986549591.JavaMail.root@webmailbox102.eircom.net>
+Reply-To: OXFAM <ox_fam@yahoo.ie>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from kroah.org ([198.145.64.141]:54353 "EHLO coco.kroah.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932219Ab0FRPQE (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 Jun 2010 11:16:04 -0400
-Content-Disposition: inline
-In-Reply-To: <20100618130536.7800.28973.stgit@localhost.localdomain>
+Received: from mail24.svc.cra.dublin.eircom.net ([159.134.118.53]:31258 "HELO
+	mail24.svc.cra.dublin.eircom.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1752259Ab0FSW3L convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 19 Jun 2010 18:29:11 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Cox <alan@linux.intel.com>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 18, 2010 at 02:05:52PM +0100, Alan Cox wrote:
-> We exit staging rar! rar! rar!...
-> 
-> Signed-off-by: Alan Cox <alan@linux.intel.com>
-
-Nice, no objection from me.
-
-Matthew, do you want to take this in the platform driver tree, or do you
-want me to take this through the staging tree?
-
-If you want to take it, that's fine with me, feel free to add an:
-	Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-to the patch.
-
-If not, just let me know and I can easily take it.
-
-thanks,
-
-greg k-h
+You have been officially granted =C2=A3850,000 from the OXFAM GB -UK Co=
+ntact email mrglennmorgan@live.ca
+Qualification Number(OG/N231/E101/BDB)
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driv=
+er-x86" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
