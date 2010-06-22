@@ -1,88 +1,85 @@
-From: Jesse Barnes <jbarnes@virtuousgeek.org>
-Subject: Re: [PATCH] X86: intel_ips, check for kzalloc properly
-Date: Mon, 21 Jun 2010 09:58:07 -0700
-Message-ID: <20100621095807.28c13775@virtuousgeek.org>
-References: <20100621083418.6315d1d5@virtuousgeek.org>
-	<1277134815-17666-1-git-send-email-jslaby@suse.cz>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] acer-wmi: fix resource reclaim in acer_wmi_init error path
+Date: Tue, 22 Jun 2010 16:17:38 +0800
+Message-ID: <1277194658.7248.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cpoproxy2-pub.bluehost.com ([67.222.39.38]:54918 "HELO
-	cpoproxy2-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1758028Ab0FUQ7z (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:57412 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758282Ab0FVIPw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 21 Jun 2010 12:59:55 -0400
-In-Reply-To: <1277134815-17666-1-git-send-email-jslaby@suse.cz>
+	Tue, 22 Jun 2010 04:15:52 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jiri Slaby <jslaby@suse.cz>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jirislaby@gmail.com
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
 
-On Mon, 21 Jun 2010 17:40:15 +0200
-Jiri Slaby <jslaby@suse.cz> wrote:
+This patch fixes the resource reclaim in acer_wmi_init error path.
 
-> Or what about this one?
-> 
-> --
-> 
-> Stanse found that there are two NULL checks missing in ips_monitor. So
-> check their value too and bail out appropriately if the allocation
-> failed.
-> 
-> While at it, add one more kfree to the fail path. It is not necessary
-> now, but may be needed in the future when a new allocation is added.
-> And for completeness.
-> 
-> Also remove unneeded initialization of the variables. They are all set
-> right after their declaration.
-> 
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-> Cc: Jesse Barnes <jbarnes@virtuousgeek.org>
-> Cc: Matthew Garrett <mjg@redhat.com>
-> ---
->  drivers/platform/x86/intel_ips.c |    9 +++++----
->  1 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index cdaf40e..0344822 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -920,9 +920,8 @@ static int ips_monitor(void *data)
->  	struct timer_list timer;
->  	unsigned long seqno_timestamp, expire, last_msecs, last_sample_period;
->  	int i;
-> -	u32 *cpu_samples = NULL, *mchp_samples = NULL, old_cpu_power;
-> -	u16 *mcp_samples = NULL, *ctv1_samples = NULL, *ctv2_samples = NULL,
-> -		*mch_samples = NULL;
-> +	u32 *cpu_samples, *mchp_samples, old_cpu_power;
-> +	u16 *mcp_samples, *ctv1_samples, *ctv2_samples, *mch_samples;
->  	u8 cur_seqno, last_seqno;
->  
->  	mcp_samples = kzalloc(sizeof(u16) * IPS_SAMPLE_COUNT, GFP_KERNEL);
-> @@ -931,7 +930,8 @@ static int ips_monitor(void *data)
->  	mch_samples = kzalloc(sizeof(u16) * IPS_SAMPLE_COUNT, GFP_KERNEL);
->  	cpu_samples = kzalloc(sizeof(u32) * IPS_SAMPLE_COUNT, GFP_KERNEL);
->  	mchp_samples = kzalloc(sizeof(u32) * IPS_SAMPLE_COUNT, GFP_KERNEL);
-> -	if (!mcp_samples || !ctv1_samples || !ctv2_samples || !mch_samples) {
-> +	if (!mcp_samples || !ctv1_samples || !ctv2_samples || !mch_samples ||
-> +			!cpu_samples || !mchp_samples) {
->  		dev_err(&ips->dev->dev,
->  			"failed to allocate sample array, ips disabled\n");
->  		kfree(mcp_samples);
-> @@ -939,6 +939,7 @@ static int ips_monitor(void *data)
->  		kfree(ctv2_samples);
->  		kfree(mch_samples);
->  		kfree(cpu_samples);
-> +		kfree(mchp_samples);
->  		kthread_stop(ips->adjust);
->  		return -ENOMEM;
->  	}
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/acer-wmi.c |   27 ++++++++++++++++++++++-----
+ 1 files changed, 22 insertions(+), 5 deletions(-)
 
-Even better.
-
-Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
-
-Thanks,
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 1ea6c43..1415d97 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1327,22 +1327,31 @@ static int __init acer_wmi_init(void)
+ 		       "generic video driver\n");
+ 	}
+ 
+-	if (platform_driver_register(&acer_platform_driver)) {
++	err = platform_driver_register(&acer_platform_driver);
++	if (err) {
+ 		printk(ACER_ERR "Unable to register platform driver.\n");
+ 		goto error_platform_register;
+ 	}
++
+ 	acer_platform_device = platform_device_alloc("acer-wmi", -1);
+-	platform_device_add(acer_platform_device);
++	if (!acer_platform_device) {
++		err = -ENOMEM;
++		goto error_device_alloc;
++	}
++
++	err = platform_device_add(acer_platform_device);
++	if (err)
++		goto error_device_add;
+ 
+ 	err = create_sysfs();
+ 	if (err)
+-		return err;
++		goto error_create_sys;
+ 
+ 	if (wmi_has_guid(WMID_GUID2)) {
+ 		interface->debug.wmid_devices = get_wmid_devices();
+ 		err = create_debugfs();
+ 		if (err)
+-			return err;
++			goto error_create_debugfs;
+ 	}
+ 
+ 	/* Override any initial settings with values from the commandline */
+@@ -1350,8 +1359,16 @@ static int __init acer_wmi_init(void)
+ 
+ 	return 0;
+ 
++error_create_debugfs:
++	remove_sysfs(acer_platform_device);
++error_create_sys:
++	platform_device_del(acer_platform_device);
++error_device_add:
++	platform_device_put(acer_platform_device);
++error_device_alloc:
++	platform_driver_unregister(&acer_platform_driver);
+ error_platform_register:
+-	return -ENODEV;
++	return err;
+ }
+ 
+ static void __exit acer_wmi_exit(void)
 -- 
-Jesse Barnes, Intel Open Source Technology Center
+1.5.4.3
