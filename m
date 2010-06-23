@@ -1,85 +1,42 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] acer-wmi: fix resource reclaim in acer_wmi_init error path
-Date: Tue, 22 Jun 2010 16:17:38 +0800
-Message-ID: <1277194658.7248.2.camel@mola>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
+Subject: dell-laptop: Add another Dell laptop family to the DMI whitelist
+Date: Wed, 23 Jun 2010 12:02:43 -0500
+Message-ID: <1277312563-31921-1-git-send-email-Rezwanul_Kabir@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:57412 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758282Ab0FVIPw (ORCPT
+Received: from ausc60ps301.us.dell.com ([143.166.148.206]:21355 "EHLO
+	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752036Ab0FWRDB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Jun 2010 04:15:52 -0400
+	Wed, 23 Jun 2010 13:03:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: mjg59@srcf.ucam.org, Rezwanul_Kabir@dell.com
 
-This patch fixes the resource reclaim in acer_wmi_init error path.
+This is to support Precision M4500 and others.
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Signed-off-by: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
 ---
- drivers/platform/x86/acer-wmi.c |   27 ++++++++++++++++++++++-----
- 1 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1ea6c43..1415d97 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1327,22 +1327,31 @@ static int __init acer_wmi_init(void)
- 		       "generic video driver\n");
- 	}
- 
--	if (platform_driver_register(&acer_platform_driver)) {
-+	err = platform_driver_register(&acer_platform_driver);
-+	if (err) {
- 		printk(ACER_ERR "Unable to register platform driver.\n");
- 		goto error_platform_register;
- 	}
-+
- 	acer_platform_device = platform_device_alloc("acer-wmi", -1);
--	platform_device_add(acer_platform_device);
-+	if (!acer_platform_device) {
-+		err = -ENOMEM;
-+		goto error_device_alloc;
-+	}
-+
-+	err = platform_device_add(acer_platform_device);
-+	if (err)
-+		goto error_device_add;
- 
- 	err = create_sysfs();
- 	if (err)
--		return err;
-+		goto error_create_sys;
- 
- 	if (wmi_has_guid(WMID_GUID2)) {
- 		interface->debug.wmid_devices = get_wmid_devices();
- 		err = create_debugfs();
- 		if (err)
--			return err;
-+			goto error_create_debugfs;
- 	}
- 
- 	/* Override any initial settings with values from the commandline */
-@@ -1350,8 +1359,16 @@ static int __init acer_wmi_init(void)
- 
- 	return 0;
- 
-+error_create_debugfs:
-+	remove_sysfs(acer_platform_device);
-+error_create_sys:
-+	platform_device_del(acer_platform_device);
-+error_device_add:
-+	platform_device_put(acer_platform_device);
-+error_device_alloc:
-+	platform_driver_unregister(&acer_platform_driver);
- error_platform_register:
--	return -ENODEV;
-+	return err;
- }
- 
- static void __exit acer_wmi_exit(void)
--- 
-1.5.4.3
+diff -urNp a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+--- a/drivers/platform/x86/dell-laptop.c	2010-06-22 19:58:03.889177921 -0500
++++ b/drivers/platform/x86/dell-laptop.c	2010-06-22 20:00:38.199933620 -0500
+@@ -83,6 +83,12 @@ static const struct dmi_system_id __init
+ 		},
+ 	},
+ 	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "9"), /*Laptop*/
++		},
++	},
++	{
+ 		.ident = "Dell Computer Corporation",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
+@@ -621,4 +627,5 @@ MODULE_AUTHOR("Matthew Garrett <mjg@redh
+ MODULE_DESCRIPTION("Dell laptop driver");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("dmi:*svnDellInc.:*:ct8:*");
++MODULE_ALIAS("dmi:*svnDellInc.:*:ct9:*");
+ MODULE_ALIAS("dmi:*svnDellComputerCorporation.:*:ct8:*");
