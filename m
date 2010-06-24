@@ -1,42 +1,36 @@
-From: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
-Subject: dell-laptop: Add another Dell laptop family to the DMI whitelist
-Date: Wed, 23 Jun 2010 12:02:43 -0500
-Message-ID: <1277312563-31921-1-git-send-email-Rezwanul_Kabir@dell.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] rar: Move the RAR driver into the right place as its
+	now clean
+Date: Thu, 24 Jun 2010 15:51:03 +0100
+Message-ID: <20100624145103.GA32622@srcf.ucam.org>
+References: <20100618130536.7800.28973.stgit@localhost.localdomain> <20100618151126.GA16843@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60ps301.us.dell.com ([143.166.148.206]:21355 "EHLO
-	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752036Ab0FWRDB (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:44829 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755573Ab0FXOvJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Jun 2010 13:03:01 -0400
+	Thu, 24 Jun 2010 10:51:09 -0400
+Content-Disposition: inline
+In-Reply-To: <20100618151126.GA16843@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, Rezwanul_Kabir@dell.com
+To: Greg KH <greg@kroah.com>
+Cc: Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-This is to support Precision M4500 and others.
+On Fri, Jun 18, 2010 at 08:11:26AM -0700, Greg KH wrote:
+> On Fri, Jun 18, 2010 at 02:05:52PM +0100, Alan Cox wrote:
+> > We exit staging rar! rar! rar!...
+> > 
+> > Signed-off-by: Alan Cox <alan@linux.intel.com>
+> 
+> Nice, no objection from me.
+> 
+> Matthew, do you want to take this in the platform driver tree, or do you
+> want me to take this through the staging tree?
 
-Signed-off-by: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
----
+I've no problem taking it.
 
-diff -urNp a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
---- a/drivers/platform/x86/dell-laptop.c	2010-06-22 19:58:03.889177921 -0500
-+++ b/drivers/platform/x86/dell-laptop.c	2010-06-22 20:00:38.199933620 -0500
-@@ -83,6 +83,12 @@ static const struct dmi_system_id __init
- 		},
- 	},
- 	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_CHASSIS_TYPE, "9"), /*Laptop*/
-+		},
-+	},
-+	{
- 		.ident = "Dell Computer Corporation",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
-@@ -621,4 +627,5 @@ MODULE_AUTHOR("Matthew Garrett <mjg@redh
- MODULE_DESCRIPTION("Dell laptop driver");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("dmi:*svnDellInc.:*:ct8:*");
-+MODULE_ALIAS("dmi:*svnDellInc.:*:ct9:*");
- MODULE_ALIAS("dmi:*svnDellComputerCorporation.:*:ct8:*");
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
