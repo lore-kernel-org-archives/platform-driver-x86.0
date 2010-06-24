@@ -1,36 +1,25 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] rar: Move the RAR driver into the right place as its
-	now clean
-Date: Thu, 24 Jun 2010 15:51:03 +0100
-Message-ID: <20100624145103.GA32622@srcf.ucam.org>
-References: <20100618130536.7800.28973.stgit@localhost.localdomain> <20100618151126.GA16843@kroah.com>
+Subject: Re: Dell Studio 1555 eject key does not work ( small patch to fix
+	included )
+Date: Thu, 24 Jun 2010 16:09:06 +0100
+Message-ID: <20100624150906.GB32622@srcf.ucam.org>
+References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:44829 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755573Ab0FXOvJ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Jun 2010 10:51:09 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20100618151126.GA16843@kroah.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <greg@kroah.com>
-Cc: Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Islam Amer <pharon@gmail.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, akpm@linux-foundation.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 18, 2010 at 08:11:26AM -0700, Greg KH wrote:
-> On Fri, Jun 18, 2010 at 02:05:52PM +0100, Alan Cox wrote:
-> > We exit staging rar! rar! rar!...
-> > 
-> > Signed-off-by: Alan Cox <alan@linux.intel.com>
-> 
-> Nice, no objection from me.
-> 
-> Matthew, do you want to take this in the platform driver tree, or do you
-> want me to take this through the staging tree?
+Hi Islam,
 
-I've no problem taking it.
+Before I apply this, can I ask you to send it along with a 
+"Signed-off-by:" line as described in Documentation/SubmittingPatches ? 
+Once that's done I'll put it in my tree.
 
+Thanks,
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
