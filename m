@@ -1,60 +1,62 @@
-From: Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: Bug#587014: screen brightness can't be modified on Panasonic S9
-Date: Sun, 27 Jun 2010 03:14:44 +0100
-Message-ID: <1277604884.26161.372.camel@localhost>
-References: <20100625011257.GA3993@nashi.ohno.39mm.net>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] wmi: fix a memory leak in wmi_notify_debug
+Date: Mon, 28 Jun 2010 09:30:45 +0800
+Message-ID: <1277688645.22992.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-abfHkyDRMTEu6oCArNi6"
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:39808 "EHLO
-	shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752047Ab0F0CPG (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:34732 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751885Ab0F1B2d (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 26 Jun 2010 22:15:06 -0400
-In-Reply-To: <20100625011257.GA3993@nashi.ohno.39mm.net>
+	Sun, 27 Jun 2010 21:28:33 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Harald Welte <laforge@gnumonks.org>
-Cc: Nicolas Limare <nicolas+debian@limare.net>, 587014@bugs.debian.org, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
 
+When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
+the caller must kfree the returned buffer if AE_OK is returned.
 
---=-abfHkyDRMTEu6oCArNi6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The callers of wmi_get_event_data() pass ACPI_ALLOCATE_BUFFER,
+and thus must check its return value before accessing
+or kfree() on the buffer.
 
-Harald,
+This patch adds return value checking for wmi_get_event_data()
+and adds a missing kfree(obj) in the end of wmi_notify_debug
 
-Nicolas Limare reported that the backlight control in panasonic-laptop
-is non-functional on the S9; see <http://bugs.debian.org/587014>.
-There's a kernel log attached to that bug report, but it doesn't show
-very much.  Can you suggest how to investigate this?
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/wmi.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
-Ben.
-
---=20
-Ben Hutchings
-Once a job is fouled up, anything done to improve it makes it worse.
-
---=-abfHkyDRMTEu6oCArNi6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQIVAwUATCa0Cue/yOyVhhEJAQIn5hAAk9ZpaeMUlEKXVv6eihO67qDbnH43Qzu2
-wUG3gNUdgmoKnjdYYQsTL315+k6c3iWK9YTXmoEBcj0mh/2JyOy0Q0ZqqVVhmp8n
-4j0daJ9QDzRuStkE50A2qHoSipbNXdzge30ch/3D87k7jlWtCxtsbh3uNDNTzweH
-14tHRjHkaKwZe9DAV7wjuQpSLBlWPIiy2QXotZRdh+fHsmVBbgfAEIZkM5W0NvIV
-MHFkx7KdTdEMxF//cWe+t7mXElQ1IFJxconJG5nSLbpC1jcjzH3gb0AJCfwNt9oK
-Ls1wfZnyJz238n39WFWLfE4I2lqRchHocYsNQP3ERBiA6G3yVDjmgk6fsmmVay75
-+0ov5vZUdAlwMDMvIy08bAVUWO9WC4AVYo3T5ScvVHx92F3W5t0Df1AxK06Nn+qY
-DzTpPi+W316a2Gi7FAHTZzXK/qALUGBTbZDUA6BTEe47KkuzF4gCFFjZpN0zRTBC
-0QoqTD7JJ5W+m4EXZd9Vr+Lg1Y1jVkR0XPewKcMHarJJEsnvY3Dmfgb2mwDYCmT1
-lFu9ZbmJ+KMjHMDHF1yItNYWPOAhBCVhziGzZY2b7E8CAWvT0gG5OdYh4wYuEzLy
-wiUgNYYmdrwa/ptZVUq7Ad73f+TjYWOA9gZGI8JkSO6sueWkTLo8TuBMqR5sD0AQ
-S/Vgymxx1ec=
-=7YW8
------END PGP SIGNATURE-----
-
---=-abfHkyDRMTEu6oCArNi6--
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index e4eaa14..5bb0ae1 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -518,8 +518,13 @@ static void wmi_notify_debug(u32 value, void *context)
+ {
+ 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
++	acpi_status status;
+ 
+-	wmi_get_event_data(value, &response);
++	status = wmi_get_event_data(value, &response);
++	if (status != AE_OK) {
++		printk(KERN_INFO "wmi: bad event status 0x%x\n", status);
++		return;
++	}
+ 
+ 	obj = (union acpi_object *)response.pointer;
+ 
+@@ -543,6 +548,7 @@ static void wmi_notify_debug(u32 value, void *context)
+ 	default:
+ 		printk("object type 0x%X\n", obj->type);
+ 	}
++	kfree(obj);
+ }
+ 
+ /**
+-- 
+1.5.4.3
