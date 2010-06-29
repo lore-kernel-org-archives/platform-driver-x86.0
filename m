@@ -1,33 +1,48 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH] wmi: fix a memory leak in wmi_notify_debug
-Date: Mon, 28 Jun 2010 14:55:28 +0200
-Message-ID: <201006281455.28599.trenn@suse.de>
-References: <1277688645.22992.2.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] asus-laptop: fix a memory leak in asus_laptop_get_info
+	error path
+Date: Tue, 29 Jun 2010 11:09:47 +0800
+Message-ID: <1277780987.5478.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-6"
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:38428 "EHLO mx1.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754185Ab0F1Mzb (ORCPT
+Received: from mail-qy0-f174.google.com ([209.85.216.174]:56384 "EHLO
+	mail-qy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751680Ab0F2DHc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Jun 2010 08:55:31 -0400
-In-Reply-To: <1277688645.22992.2.camel@mola>
+	Mon, 28 Jun 2010 23:07:32 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Monday 28 June 2010 03:30:45 Axel Lin wrote:
-> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
-> the caller must kfree the returned buffer if AE_OK is returned.
-Oops, I forgot to free the buffer...
-Thanks!
+The callers of write_acpi_int_ret() pass ACPI_ALLOCATE_BUFFER,
+the caller must kfree the returned buffer if AE_OK is returned.
 
-Matthew, can you queue this up, please.
-It's a safe memleak fix (if wmi driver is loaded with debug_event=1).
+This patch adds a missing kfree(buffer.pointer) before return -ENOMEM
+if kstrdup fail.
 
-Signed-off-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/asus-laptop.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
 
-      Thomas
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 71db2ef..3d76c6a 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -1397,8 +1397,10 @@ static int asus_laptop_get_info(struct asus_laptop *asus)
+ 		}
+ 	}
+ 	asus->name = kstrdup(string, GFP_KERNEL);
+-	if (!asus->name)
++	if (!asus->name) {
++		kfree(buffer.pointer);
+ 		return -ENOMEM;
++	}
+ 
+ 	if (*string)
+ 		pr_notice("  %s model detected\n", string);
+-- 
+1.5.4.3
