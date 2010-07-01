@@ -1,30 +1,32 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Provide /sys/../ec with read/write access and some cleanups
-Date: Thu,  1 Jul 2010 17:02:44 +0200
-Message-ID: <1277996570-2686-1-git-send-email-trenn@suse.de>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: lenb@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, astarikovskiy@suse.de
-List-Id: platform-driver-x86.vger.kernel.org
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: Bug#587014: screen brightness can't be modified on Panasonic S9
+Date: Thu, 1 Jul 2010 16:16:22 +0100
+Message-ID: <20100701151622.GA1693@srcf.ucam.org>
+References: <20100625011257.GA3993@nashi.ohno.39mm.net> <1277604884.26161.372.camel@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:54281 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752048Ab0GAPQc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 1 Jul 2010 11:16:32 -0400
+Content-Disposition: inline
+In-Reply-To: <1277604884.26161.372.camel@localhost>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: Harald Welte <laforge@gnumonks.org>, Nicolas Limare <nicolas+debian@limare.net>, 587014@bugs.debian.org, platform-driver-x86@vger.kernel.org
 
-These patches are diffed against the test branch of the ACPI tree, but also
-patch fine with 2.6.35-rc3.
+On Sun, Jun 27, 2010 at 03:14:44AM +0100, Ben Hutchings wrote:
+> Harald,
+> 
+> Nicolas Limare reported that the backlight control in panasonic-laptop
+> is non-functional on the S9; see <http://bugs.debian.org/587014>.
+> There's a kernel log attached to that bug report, but it doesn't show
+> very much.  Can you suggest how to investigate this?
 
-I thought about tainting the kernel if someone writes to the EC, but as
-userspace can also write to graphics IO, PCI config or MSRs, it shouldn't
-matter that much.
-Eventually this should still be added (by a separate patch), one can easily
-confuse the EC to not switch on the fans anymore.
+Could be a number of things. The output of acpidump would help.
 
-A small tool to read out and write to /sys/devices/system/ec/*/io can be
-found here:
-ftp://ftp.suse.com/pub/people/trenn/sources/ec/ec_access.c
-
-Len: Can you apply these into your test branch and schedule them for linux-next
-and 2.6.36 if there are no objections, please.
-
-Thanks,
-
-     Thomas
-
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
