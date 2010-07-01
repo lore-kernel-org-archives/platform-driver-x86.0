@@ -1,32 +1,46 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Bug#587014: screen brightness can't be modified on Panasonic S9
-Date: Thu, 1 Jul 2010 16:16:22 +0100
-Message-ID: <20100701151622.GA1693@srcf.ucam.org>
-References: <20100625011257.GA3993@nashi.ohno.39mm.net> <1277604884.26161.372.camel@localhost>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: Provide /sys/../ec with read/write access and some cleanups
+Date: Thu, 1 Jul 2010 13:22:39 -0300
+Message-ID: <20100701162239.GB4789@khazad-dum.debian.net>
+References: <1277996570-2686-1-git-send-email-trenn@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:54281 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752048Ab0GAPQc (ORCPT
+Received: from out1.smtp.messagingengine.com ([66.111.4.25]:45731 "EHLO
+	out1.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752775Ab0GAQWv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Jul 2010 11:16:32 -0400
+	Thu, 1 Jul 2010 12:22:51 -0400
 Content-Disposition: inline
-In-Reply-To: <1277604884.26161.372.camel@localhost>
+In-Reply-To: <1277996570-2686-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Harald Welte <laforge@gnumonks.org>, Nicolas Limare <nicolas+debian@limare.net>, 587014@bugs.debian.org, platform-driver-x86@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: lenb@kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, astarikovskiy@suse.de
 
-On Sun, Jun 27, 2010 at 03:14:44AM +0100, Ben Hutchings wrote:
-> Harald,
+On Thu, 01 Jul 2010, Thomas Renninger wrote:
+> These patches are diffed against the test branch of the ACPI tree, but also
+> patch fine with 2.6.35-rc3.
 > 
-> Nicolas Limare reported that the backlight control in panasonic-laptop
-> is non-functional on the S9; see <http://bugs.debian.org/587014>.
-> There's a kernel log attached to that bug report, but it doesn't show
-> very much.  Can you suggest how to investigate this?
+> I thought about tainting the kernel if someone writes to the EC, but as
+> userspace can also write to graphics IO, PCI config or MSRs, it shouldn't
+> matter that much.
+> Eventually this should still be added (by a separate patch), one can easily
+> confuse the EC to not switch on the fans anymore.
+> 
+> A small tool to read out and write to /sys/devices/system/ec/*/io can be
+> found here:
+> ftp://ftp.suse.com/pub/people/trenn/sources/ec/ec_access.c
+> 
+> Len: Can you apply these into your test branch and schedule them for linux-next
+> and 2.6.36 if there are no objections, please.
 
-Could be a number of things. The output of acpidump would help.
+I am just wondering if we shouldn't have this in debugfs instead of regular
+/sys.  Do you envision *production* use of this facility, or should it just
+be something to use for debugging and hacking?
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
