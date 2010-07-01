@@ -1,33 +1,30 @@
 From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [PATCH] wmi: fix a memory leak in wmi_notify_debug
-Date: Thu, 1 Jul 2010 14:51:00 +0100
-Message-ID: <20100701135100.GB31804@srcf.ucam.org>
-References: <1277688645.22992.2.camel@mola>
+Subject: Re: [PATCH] asus-laptop: fix a memory leak in asus_laptop_get_info
+	error path
+Date: Thu, 1 Jul 2010 14:53:11 +0100
+Message-ID: <20100701135311.GC31804@srcf.ucam.org>
+References: <1277780987.5478.2.camel@mola>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:54608 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:54641 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755509Ab0GANvL (ORCPT
+	with ESMTP id S1752548Ab0GANxU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Jul 2010 09:51:11 -0400
+	Thu, 1 Jul 2010 09:53:20 -0400
 Content-Disposition: inline
-In-Reply-To: <1277688645.22992.2.camel@mola>
+In-Reply-To: <1277780987.5478.2.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Corentin Chary <corentincj@iksaif.net>, Len Brown <len.brown@intel.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 28, 2010 at 09:30:45AM +0800, Axel Lin wrote:
-> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
+On Tue, Jun 29, 2010 at 11:09:47AM +0800, Axel Lin wrote:
+> The callers of write_acpi_int_ret() pass ACPI_ALLOCATE_BUFFER,
 > the caller must kfree the returned buffer if AE_OK is returned.
 > 
-> The callers of wmi_get_event_data() pass ACPI_ALLOCATE_BUFFER,
-> and thus must check its return value before accessing
-> or kfree() on the buffer.
-> 
-> This patch adds return value checking for wmi_get_event_data()
-> and adds a missing kfree(obj) in the end of wmi_notify_debug
+> This patch adds a missing kfree(buffer.pointer) before return -ENOMEM
+> if kstrdup fail.
 
 Applied, thanks.
 
