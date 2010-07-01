@@ -1,43 +1,44 @@
-From: Thomas Renninger <trenn@suse.de>
+From: Maxim Levitsky <maximlevitsky@gmail.com>
 Subject: Re: Provide /sys/../ec with read/write access and some cleanups
-Date: Thu, 1 Jul 2010 21:44:26 +0200
-Message-ID: <201007012144.27477.trenn@suse.de>
-References: <1277996570-2686-1-git-send-email-trenn@suse.de> <20100701162239.GB4789@khazad-dum.debian.net>
+Date: Thu, 01 Jul 2010 23:47:13 +0300
+Message-ID: <1278017233.7029.7.camel@localhost.localdomain>
+References: <1277996570-2686-1-git-send-email-trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20100701162239.GB4789@khazad-dum.debian.net>
-Content-Disposition: inline
+In-Reply-To: <1277996570-2686-1-git-send-email-trenn@suse.de>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To: Thomas Renninger <trenn@suse.de>
 Cc: lenb@kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, astarikovskiy@suse.de
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 01 July 2010 06:22:39 pm Henrique de Moraes Holschuh wrote:
-> On Thu, 01 Jul 2010, Thomas Renninger wrote:
-> > These patches are diffed against the test branch of the ACPI tree, but
-> > also patch fine with 2.6.35-rc3.
-> >
-> > I thought about tainting the kernel if someone writes to the EC, but as
-> > userspace can also write to graphics IO, PCI config or MSRs, it shouldn't
-> > matter that much.
-> > Eventually this should still be added (by a separate patch), one can
-> > easily confuse the EC to not switch on the fans anymore.
-> >
-> > A small tool to read out and write to /sys/devices/system/ec/*/io can be
-> > found here:
-> > ftp://ftp.suse.com/pub/people/trenn/sources/ec/ec_access.c
-> >
-> > Len: Can you apply these into your test branch and schedule them for
-> > linux-next and 2.6.36 if there are no objections, please.
->
-> I am just wondering if we shouldn't have this in debugfs instead of regular
-> /sys.  Do you envision *production* use of this facility, or should it just
-> be something to use for debugging and hacking?
-Only for debugging and hacking. Apps must not use it for production.
-On the one hand I agree, on the other hand side  I think the EC somehow
-fits into /sys/devices/system/ec. I don't have a strong opion on that, though.
+On Thu, 2010-07-01 at 17:02 +0200, Thomas Renninger wrote:
+> These patches are diffed against the test branch of the ACPI tree, but also
+> patch fine with 2.6.35-rc3.
+> 
+> I thought about tainting the kernel if someone writes to the EC, but as
+> userspace can also write to graphics IO, PCI config or MSRs, it shouldn't
+> matter that much.
+> Eventually this should still be added (by a separate patch), one can easily
+> confuse the EC to not switch on the fans anymore.
+> 
+> A small tool to read out and write to /sys/devices/system/ec/*/io can be
+> found here:
+> ftp://ftp.suse.com/pub/people/trenn/sources/ec/ec_access.c
+> 
+> Len: Can you apply these into your test branch and schedule them for linux-next
+> and 2.6.36 if there are no objections, please.
+> 
+> Thanks,
+> 
+>      Thomas
 
-      Thomas
+This is great patchset, I was even thinking doing that myself.
+
+While at it, could you also provide a broken down table of EC GPEs like
+the one in /sys/firmware/acpi/interrupts/ ?
+
+Best regards,
+	Maxim Levitsky
+
