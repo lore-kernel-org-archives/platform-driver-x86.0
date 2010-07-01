@@ -1,63 +1,47 @@
 From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] dell-wmi: fix a memory leak
-Date: Wed, 30 Jun 2010 17:25:46 +0800
-Message-ID: <1277889946.30827.2.camel@mola>
+Subject: [PATCH] sony-laptop: use platform_device_unregister in
+	sony_pf_remove
+Date: Thu, 01 Jul 2010 10:18:01 +0800
+Message-ID: <1277950681.30073.1.camel@mola>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:60837 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751805Ab0F3JXY (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:38356 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751972Ab0GACPk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Jun 2010 05:23:24 -0400
+	Wed, 30 Jun 2010 22:15:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Dmitry Torokhov <dtor@mail.ru>, =?ISO-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, platform-driver-x86@vger.kernel.org
+Cc: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-If dell_new_hk_type is true, dell_legacy_wmi_keymap will point to a memory
-allocated in setup_new_hk_map().
-In this case, the memory is not freed in current implementation.
-This patch fixes the leak by kfree(dell_wmi_keymap) if dell_new_hk_type is true.
+platform_device_unregister calls platform_device_del and platform_device_put,
+thus this change is logically equivalent to original code.
+
+I made this change because the documents in platform.c shows that:
+platform_device_del and platform_device_put must _only_ be externally called
+in error cases.  All other usage is a bug.
 
 Signed-off-by: Axel Lin <axel.lin@gmail.com>
 ---
- drivers/platform/x86/dell-wmi.c |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+ drivers/platform/x86/sony-laptop.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 66f53c3..ee6452e 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -339,13 +339,18 @@ static int __init dell_wmi_init(void)
- 	acpi_video = acpi_video_backlight_support();
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 1387c5f..6b7ea49 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -561,8 +561,7 @@ static void sony_pf_remove(void)
+ 	if (!atomic_dec_and_test(&sony_pf_users))
+ 		return;
  
- 	err = dell_wmi_input_setup();
--	if (err)
-+	if (err) {
-+		if (dell_new_hk_type)
-+			kfree(dell_wmi_keymap);
- 		return err;
-+	}
- 
- 	status = wmi_install_notify_handler(DELL_EVENT_GUID,
- 					 dell_wmi_notify, NULL);
- 	if (ACPI_FAILURE(status)) {
- 		input_unregister_device(dell_wmi_input_dev);
-+		if (dell_new_hk_type)
-+			kfree(dell_wmi_keymap);
- 		printk(KERN_ERR
- 			"dell-wmi: Unable to register notify handler - %d\n",
- 			status);
-@@ -359,6 +364,8 @@ static void __exit dell_wmi_exit(void)
- {
- 	wmi_remove_notify_handler(DELL_EVENT_GUID);
- 	input_unregister_device(dell_wmi_input_dev);
-+	if (dell_new_hk_type)
-+		kfree(dell_wmi_keymap);
+-	platform_device_del(sony_pf_device);
+-	platform_device_put(sony_pf_device);
++	platform_device_unregister(sony_pf_device);
+ 	platform_driver_unregister(&sony_pf_driver);
  }
  
- module_init(dell_wmi_init);
 -- 
 1.5.4.3
