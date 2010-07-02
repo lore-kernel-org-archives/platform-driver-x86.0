@@ -1,56 +1,96 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: Provide /sys/../ec with read/write access and some cleanups
-Date: Thu, 1 Jul 2010 20:27:37 -0300
-Message-ID: <20100701232737.GB15824@khazad-dum.debian.net>
-References: <1277996570-2686-1-git-send-email-trenn@suse.de>
- <20100701162239.GB4789@khazad-dum.debian.net>
- <201007012144.27477.trenn@suse.de>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] fujitsu-laptop: remove unnecessary input_free_device calls
+Date: Fri, 02 Jul 2010 09:42:57 +0800
+Message-ID: <1278034977.24246.6.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1.smtp.messagingengine.com ([66.111.4.25]:38315 "EHLO
-	out1.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752925Ab0GAX1l (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:33812 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752177Ab0GBBk1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Jul 2010 19:27:41 -0400
-Content-Disposition: inline
-In-Reply-To: <201007012144.27477.trenn@suse.de>
+	Thu, 1 Jul 2010 21:40:27 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: lenb@kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, astarikovskiy@suse.de
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-On Thu, 01 Jul 2010, Thomas Renninger wrote:
-> On Thursday 01 July 2010 06:22:39 pm Henrique de Moraes Holschuh wrote:
-> > On Thu, 01 Jul 2010, Thomas Renninger wrote:
-> > > These patches are diffed against the test branch of the ACPI tree, but
-> > > also patch fine with 2.6.35-rc3.
-> > >
-> > > I thought about tainting the kernel if someone writes to the EC, but as
-> > > userspace can also write to graphics IO, PCI config or MSRs, it shouldn't
-> > > matter that much.
-> > > Eventually this should still be added (by a separate patch), one can
-> > > easily confuse the EC to not switch on the fans anymore.
-> > >
-> > > A small tool to read out and write to /sys/devices/system/ec/*/io can be
-> > > found here:
-> > > ftp://ftp.suse.com/pub/people/trenn/sources/ec/ec_access.c
-> > >
-> > > Len: Can you apply these into your test branch and schedule them for
-> > > linux-next and 2.6.36 if there are no objections, please.
-> >
-> > I am just wondering if we shouldn't have this in debugfs instead of regular
-> > /sys.  Do you envision *production* use of this facility, or should it just
-> > be something to use for debugging and hacking?
-> Only for debugging and hacking. Apps must not use it for production.
-> On the one hand I agree, on the other hand side  I think the EC somehow
-> fits into /sys/devices/system/ec. I don't have a strong opion on that, though.
+input_free_device should only be used if input_register_device()
+was not called yet or if it failed.
+This patch removes unnecessary input_free_device calls.
 
-You can have the ec metadata in sys, and the EC direct access in
-debugfs, for example...
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/fujitsu-laptop.c |   21 ++++++++-------------
+ 1 files changed, 8 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index e325aeb..dab1a0e 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -686,8 +686,10 @@ static int acpi_fujitsu_add(struct acpi_device *device)
+ 	set_bit(KEY_UNKNOWN, input->keybit);
+ 
+ 	error = input_register_device(input);
+-	if (error)
+-		goto err_free_input_dev;
++	if (error) {
++		input_free_device(input);
++		goto err_stop;
++	}
+ 
+ 	result = acpi_bus_get_power(fujitsu->acpi_handle, &state);
+ 	if (result) {
+@@ -725,8 +727,6 @@ static int acpi_fujitsu_add(struct acpi_device *device)
+ 
+ err_unregister_input_dev:
+ 	input_unregister_device(input);
+-err_free_input_dev:
+-	input_free_device(input);
+ err_stop:
+ 	return result;
+ }
+@@ -737,9 +737,6 @@ static int acpi_fujitsu_remove(struct acpi_device *device, int type)
+ 	struct input_dev *input = fujitsu->input;
+ 
+ 	input_unregister_device(input);
+-
+-	input_free_device(input);
+-
+ 	fujitsu->acpi_handle = NULL;
+ 
+ 	return 0;
+@@ -855,8 +852,10 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+ 	set_bit(KEY_UNKNOWN, input->keybit);
+ 
+ 	error = input_register_device(input);
+-	if (error)
+-		goto err_free_input_dev;
++	if (error) {
++		input_free_device(input);
++		goto err_free_fifo;
++	}
+ 
+ 	result = acpi_bus_get_power(fujitsu_hotkey->acpi_handle, &state);
+ 	if (result) {
+@@ -930,8 +929,6 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+ 
+ err_unregister_input_dev:
+ 	input_unregister_device(input);
+-err_free_input_dev:
+-	input_free_device(input);
+ err_free_fifo:
+ 	kfifo_free(&fujitsu_hotkey->fifo);
+ err_stop:
+@@ -953,8 +950,6 @@ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device, int type)
+ 
+ 	input_unregister_device(input);
+ 
+-	input_free_device(input);
+-
+ 	kfifo_free(&fujitsu_hotkey->fifo);
+ 
+ 	fujitsu_hotkey->acpi_handle = NULL;
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+1.5.4.3
