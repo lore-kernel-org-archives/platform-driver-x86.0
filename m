@@ -1,56 +1,111 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH 2/2] asus_acpi: fix coding style to improve readability
-Date: Mon, 05 Jul 2010 08:54:40 +0800
-Message-ID: <1278291280.12801.4.camel@mola>
-References: <1278291181.12801.2.camel@mola>
+From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
+Subject: Re: [PATCH] compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb
+Date: Mon, 5 Jul 2010 16:42:51 +0930 (CST)
+Message-ID: <201007050712.o657CpjO028121@turbo.physics.adelaide.edu.au>
+References: <1278061453.15256.1.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:46510 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751450Ab0GEAyi (ORCPT
+Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:33024 "EHLO
+	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753494Ab0GEHQj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 4 Jul 2010 20:54:38 -0400
-In-Reply-To: <1278291181.12801.2.camel@mola>
+	Mon, 5 Jul 2010 03:16:39 -0400
+In-Reply-To: <1278061453.15256.1.camel@mola> from "Axel Lin" at Jul 02, 2010 05:04:13 PM
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Corentin Chary <corentincj@iksaif.net>, Karol Kozimor <sziwan@users.sourceforge.net>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, Tim Gardner <tim.gardner@canonical.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Richard Purdie <rpurdie@linux.intel.com>, Michal Marek <mmarek@suse.cz>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, Lennart Poettering <mzxreary@0pointer.de>, Lee Chun-Yi <jlee@novell.com>, platform-driver-x86@vger.kernel.org
 
-In the case of no match ( hotk->model == END_MODEL ),
-the only posible case to return 0 is to have a Samsung P30 detected.
-This patch improves readability by moving related code after if/else clause
-to be inside if clause.
+Is there no possibility of some other matching function existing after ours
+in the tree which might need to also be called?  If so, this change would
+prevent that.
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/asus_acpi.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+Regards
+  jonathan
 
-diff --git a/drivers/platform/x86/asus_acpi.c b/drivers/platform/x86/asus_acpi.c
-index ae0914d..e058c2b 100644
---- a/drivers/platform/x86/asus_acpi.c
-+++ b/drivers/platform/x86/asus_acpi.c
-@@ -1330,6 +1330,9 @@ static int asus_hotk_get_info(void)
- 			hotk->model = P30;
- 			printk(KERN_NOTICE
- 			       "  Samsung P30 detected, supported\n");
-+			hotk->methods = &model_conf[hotk->model];
-+			kfree(model);
-+			return 0;
- 		} else {
- 			hotk->model = M2E;
- 			printk(KERN_NOTICE "  unsupported model %s, trying "
-@@ -1339,9 +1342,6 @@ static int asus_hotk_get_info(void)
- 			kfree(model);
- 			return -ENODEV;
- 		}
--		hotk->methods = &model_conf[hotk->model];
--		kfree(model);
--		return 0;
- 	}
- 	hotk->methods = &model_conf[hotk->model];
- 	printk(KERN_NOTICE "  %s model detected, supported\n", string);
+> dmi_check_system() walks the table running matching functions until someone
+> returns non zero or we hit the end.
+> 
+> This patch makes dmi_check_cb to return 1 so dmi_check_system() return
+> immediately when a match is found.
+> 
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+> ---
+>  drivers/platform/x86/compal-laptop.c  |    2 +-
+>  drivers/platform/x86/fujitsu-laptop.c |    6 +++---
+>  drivers/platform/x86/msi-laptop.c     |    2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+> index 71ff154..dc31a08 100644
+> --- a/drivers/platform/x86/compal-laptop.c
+> +++ b/drivers/platform/x86/compal-laptop.c
+> @@ -190,7 +190,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
+>  	printk(KERN_INFO "compal-laptop: Identified laptop model '%s'.\n",
+>  		id->ident);
+>  
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id __initdata compal_dmi_table[] = {
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index dab1a0e..1859d7f 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -603,7 +603,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+>  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+> @@ -611,7 +611,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+>  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+> @@ -620,7 +620,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+>  	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
+>  	fujitsu->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
+>  	fujitsu->keycode4 = KEY_WWW;	/* "Internet" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id fujitsu_dmi_table[] = {
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index afd762b..c67a74c 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -434,7 +434,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
+>  {
+>  	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
+>  	       id->ident);
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id __initdata msi_dmi_table[] = {
+> -- 
+> 1.5.4.3
+> 
+> 
+> 
+
+
 -- 
-1.5.4.3
+* Jonathan Woithe    jwoithe@physics.adelaide.edu.au                        *
+*                    http://www.physics.adelaide.edu.au/~jwoithe            *
+***-----------------------------------------------------------------------***
+** "Time is an illusion; lunchtime doubly so"                              **
+*  "...you wouldn't recognize a subtle plan if it painted itself purple and *
+*   danced naked on a harpsichord singing 'subtle plans are here again'"    *
