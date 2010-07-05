@@ -1,111 +1,68 @@
-From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
-Subject: Re: [PATCH] compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb
-Date: Mon, 5 Jul 2010 16:42:51 +0930 (CST)
-Message-ID: <201007050712.o657CpjO028121@turbo.physics.adelaide.edu.au>
-References: <1278061453.15256.1.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] asus-laptop: fix asus_input_init error path
+Date: Mon, 05 Jul 2010 15:29:00 +0800
+Message-ID: <1278314940.12801.10.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:33024 "EHLO
-	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753494Ab0GEHQj (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:50651 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752837Ab0GEH25 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 Jul 2010 03:16:39 -0400
-In-Reply-To: <1278061453.15256.1.camel@mola> from "Axel Lin" at Jul 02, 2010 05:04:13 PM
+	Mon, 5 Jul 2010 03:28:57 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, Tim Gardner <tim.gardner@canonical.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Richard Purdie <rpurdie@linux.intel.com>, Michal Marek <mmarek@suse.cz>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, Lennart Poettering <mzxreary@0pointer.de>, Lee Chun-Yi <jlee@novell.com>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Is there no possibility of some other matching function existing after ours
-in the tree which might need to also be called?  If so, this change would
-prevent that.
+This patch includes below fixes:
+1. return -ENOMEM instead of 0 if input_allocate_device fail.
+2. fix wrong goto if sparse_keymap_setup fail.
+3. fix wrong goto if input_register_device fail.
 
-Regards
-  jonathan
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/asus-laptop.c |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
 
-> dmi_check_system() walks the table running matching functions until someone
-> returns non zero or we hit the end.
-> 
-> This patch makes dmi_check_cb to return 1 so dmi_check_system() return
-> immediately when a match is found.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
-> ---
->  drivers/platform/x86/compal-laptop.c  |    2 +-
->  drivers/platform/x86/fujitsu-laptop.c |    6 +++---
->  drivers/platform/x86/msi-laptop.c     |    2 +-
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-> index 71ff154..dc31a08 100644
-> --- a/drivers/platform/x86/compal-laptop.c
-> +++ b/drivers/platform/x86/compal-laptop.c
-> @@ -190,7 +190,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
->  	printk(KERN_INFO "compal-laptop: Identified laptop model '%s'.\n",
->  		id->ident);
->  
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id __initdata compal_dmi_table[] = {
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index dab1a0e..1859d7f 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -603,7 +603,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
->  	dmi_check_cb_common(id);
->  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
->  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static int dmi_check_cb_s6420(const struct dmi_system_id *id)
-> @@ -611,7 +611,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
->  	dmi_check_cb_common(id);
->  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
->  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static int dmi_check_cb_p8010(const struct dmi_system_id *id)
-> @@ -620,7 +620,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
->  	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
->  	fujitsu->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
->  	fujitsu->keycode4 = KEY_WWW;	/* "Internet" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id fujitsu_dmi_table[] = {
-> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-> index afd762b..c67a74c 100644
-> --- a/drivers/platform/x86/msi-laptop.c
-> +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -434,7 +434,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
->  {
->  	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
->  	       id->ident);
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id __initdata msi_dmi_table[] = {
-> -- 
-> 1.5.4.3
-> 
-> 
-> 
-
-
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 71db2ef..3a7aeb9 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -1123,7 +1123,7 @@ static int asus_input_init(struct asus_laptop *asus)
+ 	input = input_allocate_device();
+ 	if (!input) {
+ 		pr_info("Unable to allocate input device\n");
+-		return 0;
++		return -ENOMEM;
+ 	}
+ 	input->name = "Asus Laptop extra buttons";
+ 	input->phys = ASUS_LAPTOP_FILE "/input0";
+@@ -1134,20 +1134,20 @@ static int asus_input_init(struct asus_laptop *asus)
+ 	error = sparse_keymap_setup(input, asus_keymap, NULL);
+ 	if (error) {
+ 		pr_err("Unable to setup input device keymap\n");
+-		goto err_keymap;
++		goto err_free_dev;
+ 	}
+ 	error = input_register_device(input);
+ 	if (error) {
+ 		pr_info("Unable to register input device\n");
+-		goto err_device;
++		goto err_free_keymap;
+ 	}
+ 
+ 	asus->inputdev = input;
+ 	return 0;
+ 
+-err_keymap:
++err_free_keymap:
+ 	sparse_keymap_free(input);
+-err_device:
++err_free_dev:
+ 	input_free_device(input);
+ 	return error;
+ }
 -- 
-* Jonathan Woithe    jwoithe@physics.adelaide.edu.au                        *
-*                    http://www.physics.adelaide.edu.au/~jwoithe            *
-***-----------------------------------------------------------------------***
-** "Time is an illusion; lunchtime doubly so"                              **
-*  "...you wouldn't recognize a subtle plan if it painted itself purple and *
-*   danced naked on a harpsichord singing 'subtle plans are here again'"    *
+1.5.4.3
