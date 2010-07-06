@@ -1,79 +1,126 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] acer-wmi: fix memory leaks in WMID_set_capabilities and
-	get_wmid_devices
-Date: Tue, 06 Jul 2010 10:55:36 +0800
-Message-ID: <1278384936.12801.17.camel@mola>
+From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
+Subject: Re: [PATCH] compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb
+Date: Tue, 6 Jul 2010 13:58:28 +0930 (CST)
+Message-ID: <201007060428.o664SStV010981@turbo.physics.adelaide.edu.au>
+References: <1278061453.15256.1.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:36057 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752699Ab0GFCz3 (ORCPT
+Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:50512 "EHLO
+	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751038Ab0GFE3h (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 Jul 2010 22:55:29 -0400
+	Tue, 6 Jul 2010 00:29:37 -0400
+In-Reply-To: <1278061453.15256.1.camel@mola> from "Axel Lin" at Jul 02, 2010 05:04:13 PM
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, Tim Gardner <tim.gardner@canonical.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Richard Purdie <rpurdie@linux.intel.com>, Michal Marek <mmarek@suse.cz>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, Lennart Poettering <mzxreary@0pointer.de>, Lee Chun-Yi <jlee@novell.com>, platform-driver-x86@vger.kernel.org
 
-When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
-the caller must kfree the returned buffer if AE_OK is returned.
+Hi Axel
 
-The callers of wmi_query_block() pass ACPI_ALLOCATE_BUFFER,
-and thus must check its return value before accessing
-or kfree() on the buffer.
+> 2010/7/5 Jonathan Woithe <jwoithe@physics.adelaide.edu.au>:
+> > Is there no possibility of some other matching function existing after ours
+> > in the tree which might need to also be called?  If so, this change would
+> > prevent that.
+>      
+> I checked the implementation of dmi_check_system() and the useage cases in
+> compal-laptop/fujitsu-laptop/msi-laptop, it should be no problem with
+> this change.
+> 
+> In compal-laptop and msi-laptop, we call dmi_check_system() to
+> identify the laptop model.
+> (The callback simply print the identified laptop model)
+> It should have zero or exactly one successful match.
+> 
+> In fujitsu-laptop, we call dmi_check_system() to identify the laptop
+> model and set parameters accordingly.
+> The callback print the identified laptop model and set parameters
+> (use_alt_lcd_levels / fujitsu->keycode[1|2|3|4|5] ).
+> It should have zero or exactly one successful match.
 
-This patch adds a missing kfree(out.pointer) before exit
-WMID_set_capabilities() and get_wmid_devices().
+Yes, that seems to be the situation.  If that is the case then I'm happy
+with the fujitsu-laptop component of this patch (I can't speak for the
+maintainers of the other drivers touched by this patch).
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/acer-wmi.c |   10 +++++++---
- 1 files changed, 7 insertions(+), 3 deletions(-)
+Acked-by: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1ea6c43..fe644c6 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -772,6 +772,7 @@ static acpi_status WMID_set_capabilities(void)
- 		obj->buffer.length == sizeof(u32)) {
- 		devices = *((u32 *) obj->buffer.pointer);
- 	} else {
-+		kfree(out.pointer);
- 		return AE_ERROR;
- 	}
- 
-@@ -788,6 +789,7 @@ static acpi_status WMID_set_capabilities(void)
- 	if (!(devices & 0x20))
- 		max_brightness = 0x9;
- 
-+	kfree(out.pointer);
- 	return status;
- }
- 
-@@ -1095,6 +1097,7 @@ static u32 get_wmid_devices(void)
- 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
- 	union acpi_object *obj;
- 	acpi_status status;
-+	u32 devices = 0;
- 
- 	status = wmi_query_block(WMID_GUID2, 1, &out);
- 	if (ACPI_FAILURE(status))
-@@ -1103,10 +1106,11 @@ static u32 get_wmid_devices(void)
- 	obj = (union acpi_object *) out.pointer;
- 	if (obj && obj->type == ACPI_TYPE_BUFFER &&
- 		obj->buffer.length == sizeof(u32)) {
--		return *((u32 *) obj->buffer.pointer);
--	} else {
--		return 0;
-+		devices = *((u32 *) obj->buffer.pointer);
- 	}
-+
-+	kfree(out.pointer);
-+	return devices;
- }
- 
- /*
--- 
-1.5.4.3
+Regards
+  jonathan
+
+> dmi_check_system() walks the table running matching functions until someone
+> returns non zero or we hit the end.
+> 
+> This patch makes dmi_check_cb to return 1 so dmi_check_system() return
+> immediately when a match is found.
+> 
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+> ---
+>  drivers/platform/x86/compal-laptop.c  |    2 +-
+>  drivers/platform/x86/fujitsu-laptop.c |    6 +++---
+>  drivers/platform/x86/msi-laptop.c     |    2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+> index 71ff154..dc31a08 100644
+> --- a/drivers/platform/x86/compal-laptop.c
+> +++ b/drivers/platform/x86/compal-laptop.c
+> @@ -190,7 +190,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
+>  	printk(KERN_INFO "compal-laptop: Identified laptop model '%s'.\n",
+>  		id->ident);
+>  
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id __initdata compal_dmi_table[] = {
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index dab1a0e..1859d7f 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -603,7 +603,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+>  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+> @@ -611,7 +611,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+>  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+> @@ -620,7 +620,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+>  	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
+>  	fujitsu->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
+>  	fujitsu->keycode4 = KEY_WWW;	/* "Internet" */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id fujitsu_dmi_table[] = {
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index afd762b..c67a74c 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -434,7 +434,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
+>  {
+>  	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
+>  	       id->ident);
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  static struct dmi_system_id __initdata msi_dmi_table[] = {
+> -- 
+> 1.5.4.3
+> 
+> 
+> 
