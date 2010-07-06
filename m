@@ -1,67 +1,88 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] panasonic-laptop: fix acpi_pcc_write_sset return value
-Date: Tue, 06 Jul 2010 14:46:58 +0800
-Message-ID: <1278398818.12801.20.camel@mola>
+From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Subject: Re: [PATCH] acer-wmi: fix memory leaks in WMID_set_capabilities and get_wmid_devices
+Date: Tue, 6 Jul 2010 08:22:44 +0100
+Message-ID: <201007060822.44702.carlos@strangeworlds.co.uk>
+References: <1278384936.12801.17.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:40382 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752939Ab0GFGwj (ORCPT
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:50045 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751194Ab0GFHWz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 02:52:39 -0400
+	Tue, 6 Jul 2010 03:22:55 -0400
+In-Reply-To: <1278384936.12801.17.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?ISO-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, Dmitry Torokhov <dtor@mail.ru>, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
 
-In current implementation, acpi_pcc_write_sset return 1
-if write is successful, 0 if write is failed.
-But all the callers consider acpi_pcc_write_sset return 0
-if write is successful and return negative if write is failed.
+On Tuesday 06 July 2010 03:55:36 Axel Lin wrote:
+> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
+> the caller must kfree the returned buffer if AE_OK is returned.
+> 
+> The callers of wmi_query_block() pass ACPI_ALLOCATE_BUFFER,
+> and thus must check its return value before accessing
+> or kfree() on the buffer.
+> 
+> This patch adds a missing kfree(out.pointer) before exit
+> WMID_set_capabilities() and get_wmid_devices().
+> 
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
 
-This patch changes the implementation of acpi_pcc_write_sset to
-return 0 if write is successful, -1 if write is failed.
+Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/panasonic-laptop.c |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+> ---
+>  drivers/platform/x86/acer-wmi.c |   10 +++++++---
+>  1 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c
+> b/drivers/platform/x86/acer-wmi.c index 1ea6c43..fe644c6 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -772,6 +772,7 @@ static acpi_status WMID_set_capabilities(void)
+>  		obj->buffer.length == sizeof(u32)) {
+>  		devices = *((u32 *) obj->buffer.pointer);
+>  	} else {
+> +		kfree(out.pointer);
+>  		return AE_ERROR;
+>  	}
+> 
+> @@ -788,6 +789,7 @@ static acpi_status WMID_set_capabilities(void)
+>  	if (!(devices & 0x20))
+>  		max_brightness = 0x9;
+> 
+> +	kfree(out.pointer);
+>  	return status;
+>  }
+> 
+> @@ -1095,6 +1097,7 @@ static u32 get_wmid_devices(void)
+>  	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+>  	union acpi_object *obj;
+>  	acpi_status status;
+> +	u32 devices = 0;
+> 
+>  	status = wmi_query_block(WMID_GUID2, 1, &out);
+>  	if (ACPI_FAILURE(status))
+> @@ -1103,10 +1106,11 @@ static u32 get_wmid_devices(void)
+>  	obj = (union acpi_object *) out.pointer;
+>  	if (obj && obj->type == ACPI_TYPE_BUFFER &&
+>  		obj->buffer.length == sizeof(u32)) {
+> -		return *((u32 *) obj->buffer.pointer);
+> -	} else {
+> -		return 0;
+> +		devices = *((u32 *) obj->buffer.pointer);
+>  	}
+> +
+> +	kfree(out.pointer);
+> +	return devices;
+>  }
+> 
+>  /*
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 2fb9a32..d36cbf8 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -248,7 +248,7 @@ static int acpi_pcc_write_sset(struct pcc_acpi *pcc, int func, int val)
- 	status = acpi_evaluate_object(pcc->handle, METHOD_HKEY_SSET,
- 				      &params, NULL);
- 
--	return status == AE_OK;
-+	return (status == AE_OK) ? 0 : -1;
- }
- 
- static inline int acpi_pcc_get_sqty(struct acpi_device *device)
-@@ -586,7 +586,7 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
- static int acpi_pcc_hotkey_resume(struct acpi_device *device)
- {
- 	struct pcc_acpi *pcc = acpi_driver_data(device);
--	acpi_status status = AE_OK;
-+	int ret;
- 
- 	if (device == NULL || pcc == NULL)
- 		return -EINVAL;
-@@ -594,9 +594,9 @@ static int acpi_pcc_hotkey_resume(struct acpi_device *device)
- 	ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Sticky mode restore: %d\n",
- 			  pcc->sticky_mode));
- 
--	status = acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
-+	ret = acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
- 
--	return status == AE_OK ? 0 : -EINVAL;
-+	return (ret < 0) ? -EINVAL : 0;
- }
- 
- static int acpi_pcc_hotkey_add(struct acpi_device *device)
 -- 
-1.5.4.3
+E-Mail: carlos@strangeworlds.co.uk
+Web: strangeworlds.co.uk
+GPG Key ID: 0x23EE722D
