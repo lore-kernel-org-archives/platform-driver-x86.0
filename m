@@ -1,34 +1,43 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH] hp-wmi: add return value checking for input_allocate_device()
-Date: Tue, 6 Jul 2010 10:11:14 +0200
-Message-ID: <201007061011.15205.trenn@suse.de>
-References: <1278383426.12801.15.camel@mola> <201007060956.45726.trenn@suse.de> <AANLkTimpkmAoPep9s1Hp5gZvdjzDm_1iBO32xYeAQL5F@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] panasonic-laptop: fix acpi_pcc_write_sset return value
+Date: Tue, 6 Jul 2010 09:28:43 -0700
+Message-ID: <20100706162842.GB9408@core.coreip.homeip.net>
+References: <1278398818.12801.20.camel@mola>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:44567 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751625Ab0GFILR (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:56732 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754331Ab0GFQ2w (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 04:11:17 -0400
-In-Reply-To: <AANLkTimpkmAoPep9s1Hp5gZvdjzDm_1iBO32xYeAQL5F@mail.gmail.com>
+	Tue, 6 Jul 2010 12:28:52 -0400
+Content-Disposition: inline
+In-Reply-To: <1278398818.12801.20.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: axel.lin@gmail.com
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Frans Pop <elendil@planet.nl>, Anisse Astier <anisse@astier.eu>, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?iso-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, platform-driver-x86@vger.kernel.org
 
-On Tuesday 06 July 2010 10:07:49 Axel Lin wrote:
-> hi Thomas,
-> 2010/7/6 Thomas Renninger <trenn@suse.de>:
-...
-> > Do you mind to incorporate above if you agree.
-> 
-> Checking hp_wmi_input_setup() is already done in my previous patch.
-> ( which is already merged in platform-driver-x86 tree.
-...
-Perfect!
-Acked-by: Thomas Renninger <trenn@suse.de>
+Hi Axel,
 
-     Thomas
+On Tue, Jul 06, 2010 at 02:46:58PM +0800, Axel Lin wrote:
+> In current implementation, acpi_pcc_write_sset return 1
+> if write is successful, 0 if write is failed.
+> But all the callers consider acpi_pcc_write_sset return 0
+> if write is successful and return negative if write is failed.
+>
+
+Yes, I think most of the times we see AE_* outside of
+drivers/acpi/acpica it is an error; we should be using standard eoro
+codes instead.
+
+> This patch changes the implementation of acpi_pcc_write_sset to
+> return 0 if write is successful, -1 if write is failed.
+
+Why not use something better than -1, maybe -EIO, and the propagate that
+return code up the stack?
+
+Thanks.
+
+-- 
+Dmitry
