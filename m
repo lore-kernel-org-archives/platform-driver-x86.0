@@ -1,126 +1,67 @@
-From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
-Subject: Re: [PATCH] compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb
-Date: Tue, 6 Jul 2010 13:58:28 +0930 (CST)
-Message-ID: <201007060428.o664SStV010981@turbo.physics.adelaide.edu.au>
-References: <1278061453.15256.1.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] panasonic-laptop: fix acpi_pcc_write_sset return value
+Date: Tue, 06 Jul 2010 14:46:58 +0800
+Message-ID: <1278398818.12801.20.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:50512 "EHLO
-	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751038Ab0GFE3h (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:40382 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752939Ab0GFGwj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 00:29:37 -0400
-In-Reply-To: <1278061453.15256.1.camel@mola> from "Axel Lin" at Jul 02, 2010 05:04:13 PM
+	Tue, 6 Jul 2010 02:52:39 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, Tim Gardner <tim.gardner@canonical.com>, Mario Limonciello <Mario_Limonciello@Dell.com>, Richard Purdie <rpurdie@linux.intel.com>, Michal Marek <mmarek@suse.cz>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, Lennart Poettering <mzxreary@0pointer.de>, Lee Chun-Yi <jlee@novell.com>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?ISO-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, Dmitry Torokhov <dtor@mail.ru>, platform-driver-x86@vger.kernel.org
 
-Hi Axel
+In current implementation, acpi_pcc_write_sset return 1
+if write is successful, 0 if write is failed.
+But all the callers consider acpi_pcc_write_sset return 0
+if write is successful and return negative if write is failed.
 
-> 2010/7/5 Jonathan Woithe <jwoithe@physics.adelaide.edu.au>:
-> > Is there no possibility of some other matching function existing after ours
-> > in the tree which might need to also be called?  If so, this change would
-> > prevent that.
->      
-> I checked the implementation of dmi_check_system() and the useage cases in
-> compal-laptop/fujitsu-laptop/msi-laptop, it should be no problem with
-> this change.
-> 
-> In compal-laptop and msi-laptop, we call dmi_check_system() to
-> identify the laptop model.
-> (The callback simply print the identified laptop model)
-> It should have zero or exactly one successful match.
-> 
-> In fujitsu-laptop, we call dmi_check_system() to identify the laptop
-> model and set parameters accordingly.
-> The callback print the identified laptop model and set parameters
-> (use_alt_lcd_levels / fujitsu->keycode[1|2|3|4|5] ).
-> It should have zero or exactly one successful match.
+This patch changes the implementation of acpi_pcc_write_sset to
+return 0 if write is successful, -1 if write is failed.
 
-Yes, that seems to be the situation.  If that is the case then I'm happy
-with the fujitsu-laptop component of this patch (I can't speak for the
-maintainers of the other drivers touched by this patch).
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/panasonic-laptop.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
-
-Regards
-  jonathan
-
-> dmi_check_system() walks the table running matching functions until someone
-> returns non zero or we hit the end.
-> 
-> This patch makes dmi_check_cb to return 1 so dmi_check_system() return
-> immediately when a match is found.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
-> ---
->  drivers/platform/x86/compal-laptop.c  |    2 +-
->  drivers/platform/x86/fujitsu-laptop.c |    6 +++---
->  drivers/platform/x86/msi-laptop.c     |    2 +-
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-> index 71ff154..dc31a08 100644
-> --- a/drivers/platform/x86/compal-laptop.c
-> +++ b/drivers/platform/x86/compal-laptop.c
-> @@ -190,7 +190,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
->  	printk(KERN_INFO "compal-laptop: Identified laptop model '%s'.\n",
->  		id->ident);
->  
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id __initdata compal_dmi_table[] = {
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index dab1a0e..1859d7f 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -603,7 +603,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
->  	dmi_check_cb_common(id);
->  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
->  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static int dmi_check_cb_s6420(const struct dmi_system_id *id)
-> @@ -611,7 +611,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
->  	dmi_check_cb_common(id);
->  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
->  	fujitsu->keycode2 = KEY_HELP;	/* "Mobility Center" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static int dmi_check_cb_p8010(const struct dmi_system_id *id)
-> @@ -620,7 +620,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
->  	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
->  	fujitsu->keycode3 = KEY_SWITCHVIDEOMODE;	/* "Presentation" */
->  	fujitsu->keycode4 = KEY_WWW;	/* "Internet" */
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id fujitsu_dmi_table[] = {
-> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-> index afd762b..c67a74c 100644
-> --- a/drivers/platform/x86/msi-laptop.c
-> +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -434,7 +434,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
->  {
->  	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
->  	       id->ident);
-> -	return 0;
-> +	return 1;
->  }
->  
->  static struct dmi_system_id __initdata msi_dmi_table[] = {
-> -- 
-> 1.5.4.3
-> 
-> 
-> 
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 2fb9a32..d36cbf8 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -248,7 +248,7 @@ static int acpi_pcc_write_sset(struct pcc_acpi *pcc, int func, int val)
+ 	status = acpi_evaluate_object(pcc->handle, METHOD_HKEY_SSET,
+ 				      &params, NULL);
+ 
+-	return status == AE_OK;
++	return (status == AE_OK) ? 0 : -1;
+ }
+ 
+ static inline int acpi_pcc_get_sqty(struct acpi_device *device)
+@@ -586,7 +586,7 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
+ static int acpi_pcc_hotkey_resume(struct acpi_device *device)
+ {
+ 	struct pcc_acpi *pcc = acpi_driver_data(device);
+-	acpi_status status = AE_OK;
++	int ret;
+ 
+ 	if (device == NULL || pcc == NULL)
+ 		return -EINVAL;
+@@ -594,9 +594,9 @@ static int acpi_pcc_hotkey_resume(struct acpi_device *device)
+ 	ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Sticky mode restore: %d\n",
+ 			  pcc->sticky_mode));
+ 
+-	status = acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
++	ret = acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
+ 
+-	return status == AE_OK ? 0 : -EINVAL;
++	return (ret < 0) ? -EINVAL : 0;
+ }
+ 
+ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+-- 
+1.5.4.3
