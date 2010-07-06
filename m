@@ -1,88 +1,58 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Subject: Re: [PATCH] acer-wmi: fix memory leaks in WMID_set_capabilities and get_wmid_devices
-Date: Tue, 6 Jul 2010 08:22:44 +0100
-Message-ID: <201007060822.44702.carlos@strangeworlds.co.uk>
-References: <1278384936.12801.17.camel@mola>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH] hp-wmi: add return value checking for input_allocate_device()
+Date: Tue, 6 Jul 2010 09:56:45 +0200
+Message-ID: <201007060956.45726.trenn@suse.de>
+References: <1278383426.12801.15.camel@mola>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-15"
+  charset="iso-8859-6"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:50045 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751194Ab0GFHWz (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:44166 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751194Ab0GFH4t (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 03:22:55 -0400
-In-Reply-To: <1278384936.12801.17.camel@mola>
+	Tue, 6 Jul 2010 03:56:49 -0400
+In-Reply-To: <1278383426.12801.15.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Frans Pop <elendil@planet.nl>, Anisse Astier <anisse@astier.eu>, platform-driver-x86@vger.kernel.org
 
-On Tuesday 06 July 2010 03:55:36 Axel Lin wrote:
-> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
-> the caller must kfree the returned buffer if AE_OK is returned.
-> 
-> The callers of wmi_query_block() pass ACPI_ALLOCATE_BUFFER,
-> and thus must check its return value before accessing
-> or kfree() on the buffer.
-> 
-> This patch adds a missing kfree(out.pointer) before exit
-> WMID_set_capabilities() and get_wmid_devices().
+Hi,
+
+it's incredible how much cleanups and fixes you find in this
+handful of drivers... It's very much appreciated!
+
+On Tuesday 06 July 2010 04:30:26 Axel Lin wrote:
+> Add error checking and return -ENOMEM if input_allocate_device() fail.
 > 
 > Signed-off-by: Axel Lin <axel.lin@gmail.com>
-
-Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
-
 > ---
->  drivers/platform/x86/acer-wmi.c |   10 +++++++---
->  1 files changed, 7 insertions(+), 3 deletions(-)
+>  drivers/platform/x86/hp-wmi.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/acer-wmi.c
-> b/drivers/platform/x86/acer-wmi.c index 1ea6c43..fe644c6 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -772,6 +772,7 @@ static acpi_status WMID_set_capabilities(void)
->  		obj->buffer.length == sizeof(u32)) {
->  		devices = *((u32 *) obj->buffer.pointer);
->  	} else {
-> +		kfree(out.pointer);
->  		return AE_ERROR;
->  	}
-> 
-> @@ -788,6 +789,7 @@ static acpi_status WMID_set_capabilities(void)
->  	if (!(devices & 0x20))
->  		max_brightness = 0x9;
-> 
-> +	kfree(out.pointer);
->  	return status;
->  }
-> 
-> @@ -1095,6 +1097,7 @@ static u32 get_wmid_devices(void)
->  	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
->  	union acpi_object *obj;
->  	acpi_status status;
-> +	u32 devices = 0;
-> 
->  	status = wmi_query_block(WMID_GUID2, 1, &out);
->  	if (ACPI_FAILURE(status))
-> @@ -1103,10 +1106,11 @@ static u32 get_wmid_devices(void)
->  	obj = (union acpi_object *) out.pointer;
->  	if (obj && obj->type == ACPI_TYPE_BUFFER &&
->  		obj->buffer.length == sizeof(u32)) {
-> -		return *((u32 *) obj->buffer.pointer);
-> -	} else {
-> -		return 0;
-> +		devices = *((u32 *) obj->buffer.pointer);
->  	}
-> +
-> +	kfree(out.pointer);
-> +	return devices;
->  }
-> 
->  /*
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 51c07a0..c508e20 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -402,6 +402,8 @@ static int __init hp_wmi_input_setup(void)
+>  	int err;
+>  
+>  	hp_wmi_input_dev = input_allocate_device();
+> +	if (!hp_wmi_input_dev)
+> +		return -ENOMEM;
+>  
+>  	hp_wmi_input_dev->name = "HP WMI hotkeys";
+>  	hp_wmi_input_dev->phys = "wmi/input0";
+But also hp_wmi_input_setup() call should get checked and if it
+fails, the previous wmi_install_notify_handler() must get uninstalled
+again. Hm, probably the whole driver shouldn't load then and
+the error code from hp_wmi_input_setup() can be returned in
+hp_wmi_init(void).
 
--- 
-E-Mail: carlos@strangeworlds.co.uk
-Web: strangeworlds.co.uk
-GPG Key ID: 0x23EE722D
+Do you mind to incorporate above if you agree.
+
+Thanks,
+
+   Thomas
