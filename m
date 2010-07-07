@@ -1,43 +1,65 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] panasonic-laptop: fix acpi_pcc_write_sset return value
-Date: Tue, 6 Jul 2010 09:28:43 -0700
-Message-ID: <20100706162842.GB9408@core.coreip.homeip.net>
-References: <1278398818.12801.20.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH v2] panasonic-laptop: fix acpi_pcc_write_sset return value
+Date: Wed, 07 Jul 2010 08:21:48 +0800
+Message-ID: <1278462108.12801.23.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:56732 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754331Ab0GFQ2w (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:49881 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755345Ab0GGAVj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 12:28:52 -0400
-Content-Disposition: inline
-In-Reply-To: <1278398818.12801.20.camel@mola>
+	Tue, 6 Jul 2010 20:21:39 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?iso-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?ISO-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, Dmitry Torokhov <dtor@mail.ru>, platform-driver-x86@vger.kernel.org
 
-Hi Axel,
+In current implementation, acpi_pcc_write_sset return 1
+if write is successful, 0 if write is failed.
+But all the callers consider acpi_pcc_write_sset return 0
+if write is successful and return negtive if write is failed.
 
-On Tue, Jul 06, 2010 at 02:46:58PM +0800, Axel Lin wrote:
-> In current implementation, acpi_pcc_write_sset return 1
-> if write is successful, 0 if write is failed.
-> But all the callers consider acpi_pcc_write_sset return 0
-> if write is successful and return negative if write is failed.
->
+This patch changes the implementation of acpi_pcc_write_sset to
+return 0 if write is successful, -EIO if write is failed.
 
-Yes, I think most of the times we see AE_* outside of
-drivers/acpi/acpica it is an error; we should be using standard eoro
-codes instead.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/panasonic-laptop.c |    7 ++-----
+ 1 files changed, 2 insertions(+), 5 deletions(-)
 
-> This patch changes the implementation of acpi_pcc_write_sset to
-> return 0 if write is successful, -1 if write is failed.
-
-Why not use something better than -1, maybe -EIO, and the propagate that
-return code up the stack?
-
-Thanks.
-
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 2fb9a32..ec01c3d 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -248,7 +248,7 @@ static int acpi_pcc_write_sset(struct pcc_acpi *pcc, int func, int val)
+ 	status = acpi_evaluate_object(pcc->handle, METHOD_HKEY_SSET,
+ 				      &params, NULL);
+ 
+-	return status == AE_OK;
++	return (status == AE_OK) ? 0 : -EIO;
+ }
+ 
+ static inline int acpi_pcc_get_sqty(struct acpi_device *device)
+@@ -586,7 +586,6 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
+ static int acpi_pcc_hotkey_resume(struct acpi_device *device)
+ {
+ 	struct pcc_acpi *pcc = acpi_driver_data(device);
+-	acpi_status status = AE_OK;
+ 
+ 	if (device == NULL || pcc == NULL)
+ 		return -EINVAL;
+@@ -594,9 +593,7 @@ static int acpi_pcc_hotkey_resume(struct acpi_device *device)
+ 	ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Sticky mode restore: %d\n",
+ 			  pcc->sticky_mode));
+ 
+-	status = acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
+-
+-	return status == AE_OK ? 0 : -EINVAL;
++	return acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_mode);
+ }
+ 
+ static int acpi_pcc_hotkey_add(struct acpi_device *device)
 -- 
-Dmitry
+1.5.4.3
