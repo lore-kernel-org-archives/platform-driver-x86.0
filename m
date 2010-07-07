@@ -1,94 +1,89 @@
 From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] acerhdf: fix resource reclaim in error path
-Date: Wed, 07 Jul 2010 10:22:19 +0800
-Message-ID: <1278469339.12801.27.camel@mola>
+Subject: [PATCH 1/2] toshiba_acpi: make remove_device() and add_device()
+	void
+Date: Wed, 07 Jul 2010 14:03:50 +0800
+Message-ID: <1278482630.12801.30.camel@mola>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:34094 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753117Ab0GGCWK (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:45249 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750974Ab0GGGDk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jul 2010 22:22:10 -0400
+	Wed, 7 Jul 2010 02:03:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Peter Feuerer <peter@piie.net>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Len Brown <len.brown@intel.com>, Borislav Petkov <petkovbb@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, =?ISO-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Alexey Dobriyan <adobriyan@gmail.com>, platform-driver-x86@vger.kernel.org
 
-This patch fix resource reclaim in below cases:
-1. acerhdf_register_platform() does not properly handle
-   platform_device_alloc() failure and platform_device_add() failure.
-   This patch adds error handling for acerhdf_register_platform().
-2. acerhdf_register_platform() return err with acerhdf_dev == NULL.
-   as a result, acerhdf_unregister_platform() does not do resource
-   reclaim in acerhdf_init() error path.
-   This patch adds error handing for acerhdf_register_platform(),
-   thus correct the error handing path in acerhdf_init().
-   goto out_err instead of err_unreg if acerhdf_register_platform() fail.
-3. platform_device_del() should be only used in error handling.
-   Current implementation missed a platform_device_put() in acerhdf_exit.
-   This patch fixes it by using platform_device_unregister() instead of
-   platform_device_del() in acerhdf_unregister_platform().
+remove_device() and add_device() are not related to ACPI APIs,
+it does not make sense to return acpi_status for both functions.
+
+Current implementation of add_device() always AE_OK, thus the return
+value checking for add_device() always return false for ACPI_FAILURE(status).
+This patch makes add_device() to be void and remove the unnecessary
+return value checking.
+
+remove_proc_entry() won't fail, thus change remove_device() to be void.
 
 Signed-off-by: Axel Lin <axel.lin@gmail.com>
 ---
- drivers/platform/x86/acerhdf.c |   20 ++++++++++++++++----
- 1 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c |   14 +++-----------
+ 1 files changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 7b2384d..e938a86 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -579,9 +579,21 @@ static int acerhdf_register_platform(void)
- 		return err;
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 37aa147..702869a 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -720,25 +720,22 @@ static const struct file_operations version_proc_fops = {
  
- 	acerhdf_dev = platform_device_alloc("acerhdf", -1);
--	platform_device_add(acerhdf_dev);
-+	if (!acerhdf_dev) {
-+		err = -ENOMEM;
-+		goto err_device_alloc;
-+	}
-+	err = platform_device_add(acerhdf_dev);
-+	if (err)
-+		goto err_device_add;
+ #define PROC_TOSHIBA		"toshiba"
  
- 	return 0;
-+
-+err_device_add:
-+	platform_device_put(acerhdf_dev);
-+err_device_alloc:
-+	platform_driver_unregister(&acerhdf_driver);
-+	return err;
+-static acpi_status __init add_device(void)
++static void __init add_device(void)
+ {
+ 	proc_create("lcd", S_IRUGO | S_IWUSR, toshiba_proc_dir, &lcd_proc_fops);
+ 	proc_create("video", S_IRUGO | S_IWUSR, toshiba_proc_dir, &video_proc_fops);
+ 	proc_create("fan", S_IRUGO | S_IWUSR, toshiba_proc_dir, &fan_proc_fops);
+ 	proc_create("keys", S_IRUGO | S_IWUSR, toshiba_proc_dir, &keys_proc_fops);
+ 	proc_create("version", S_IRUGO, toshiba_proc_dir, &version_proc_fops);
+-
+-	return AE_OK;
  }
  
- static void acerhdf_unregister_platform(void)
-@@ -589,7 +601,7 @@ static void acerhdf_unregister_platform(void)
- 	if (!acerhdf_dev)
- 		return;
- 
--	platform_device_del(acerhdf_dev);
-+	platform_device_unregister(acerhdf_dev);
- 	platform_driver_unregister(&acerhdf_driver);
+-static acpi_status remove_device(void)
++static void remove_device(void)
+ {
+ 	remove_proc_entry("lcd", toshiba_proc_dir);
+ 	remove_proc_entry("video", toshiba_proc_dir);
+ 	remove_proc_entry("fan", toshiba_proc_dir);
+ 	remove_proc_entry("keys", toshiba_proc_dir);
+ 	remove_proc_entry("version", toshiba_proc_dir);
+-	return AE_OK;
  }
  
-@@ -633,7 +645,7 @@ static int __init acerhdf_init(void)
+ static struct backlight_ops toshiba_backlight_data = {
+@@ -921,7 +918,6 @@ static void toshiba_acpi_exit(void)
  
- 	err = acerhdf_register_platform();
- 	if (err)
--		goto err_unreg;
-+		goto out_err;
+ static int __init toshiba_acpi_init(void)
+ {
+-	acpi_status status = AE_OK;
+ 	u32 hci_result;
+ 	bool bt_present;
+ 	int ret = 0;
+@@ -969,11 +965,7 @@ static int __init toshiba_acpi_init(void)
+ 		toshiba_acpi_exit();
+ 		return -ENODEV;
+ 	} else {
+-		status = add_device();
+-		if (ACPI_FAILURE(status)) {
+-			toshiba_acpi_exit();
+-			return -ENODEV;
+-		}
++		add_device();
+ 	}
  
- 	err = acerhdf_register_thermal();
- 	if (err)
-@@ -646,7 +658,7 @@ err_unreg:
- 	acerhdf_unregister_platform();
- 
- out_err:
--	return -ENODEV;
-+	return err;
- }
- 
- static void __exit acerhdf_exit(void)
+ 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
 -- 
 1.5.4.3
