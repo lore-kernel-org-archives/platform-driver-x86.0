@@ -1,38 +1,113 @@
-From: Harald Welte <laforge@gnumonks.org>
-Subject: Re: [PATCH v2] panasonic-laptop: fix acpi_pcc_write_sset return
- value
-Date: Wed, 7 Jul 2010 07:40:19 +0200
-Message-ID: <20100707054019.GM23331@prithivi.gnumonks.org>
-References: <1278462108.12801.23.camel@mola>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] acerhdf: fix resource reclaim in error path
+Date: Wed, 7 Jul 2010 10:19:00 +0200
+Message-ID: <20100707081900.GA5308@liondog.tnic>
+References: <1278469339.12801.27.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ganesha.gnumonks.org ([213.95.27.120]:36326 "EHLO
-	ganesha.gnumonks.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750937Ab0GGGPk (ORCPT
+Received: from mail.skyhub.de ([78.46.96.112]:59150 "EHLO mail.skyhub.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752749Ab0GGITV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 Jul 2010 02:15:40 -0400
+	Wed, 7 Jul 2010 04:19:21 -0400
 Content-Disposition: inline
-In-Reply-To: <1278462108.12801.23.camel@mola>
+In-Reply-To: <1278469339.12801.27.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, =?iso-8859-1?Q?M=E1rton_N=E9meth?= <nm127@freemail.hu>, Jiri Kosina <jkosina@suse.cz>, Dmitry Torokhov <dtor@mail.ru>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Peter Feuerer <peter@piie.net>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Len Brown <len.brown@intel.com>, Alexey Dobriyan <adobriyan@gmail.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2010 at 08:21:48AM +0800, Axel Lin wrote:
-> In current implementation, acpi_pcc_write_sset return 1
-> if write is successful, 0 if write is failed.
-> But all the callers consider acpi_pcc_write_sset return 0
-> if write is successful and return negtive if write is failed.
-> 
-> This patch changes the implementation of acpi_pcc_write_sset to
-> return 0 if write is successful, -EIO if write is failed.
+From: Axel Lin <axel.lin@gmail.com>
+Date: Wed, Jul 07, 2010 at 10:22:19AM +0800
+
+Good, I like it. Go down for comments :)
+
+> This patch fix resource reclaim in below cases:
+> 1. acerhdf_register_platform() does not properly handle
+>    platform_device_alloc() failure and platform_device_add() failure.
+>    This patch adds error handling for acerhdf_register_platform().
+> 2. acerhdf_register_platform() return err with acerhdf_dev == NULL.
+>    as a result, acerhdf_unregister_platform() does not do resource
+>    reclaim in acerhdf_init() error path.
+>    This patch adds error handing for acerhdf_register_platform(),
+>    thus correct the error handing path in acerhdf_init().
+>    goto out_err instead of err_unreg if acerhdf_register_platform() fail.
+> 3. platform_device_del() should be only used in error handling.
+>    Current implementation missed a platform_device_put() in acerhdf_exit.
+>    This patch fixes it by using platform_device_unregister() instead of
+>    platform_device_del() in acerhdf_unregister_platform().
 > 
 > Signed-off-by: Axel Lin <axel.lin@gmail.com>
+> ---
+>  drivers/platform/x86/acerhdf.c |   20 ++++++++++++++++----
+>  1 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 7b2384d..e938a86 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -579,9 +579,21 @@ static int acerhdf_register_platform(void)
+>  		return err;
+>  
+>  	acerhdf_dev = platform_device_alloc("acerhdf", -1);
+> -	platform_device_add(acerhdf_dev);
+> +	if (!acerhdf_dev) {
+> +		err = -ENOMEM;
+> +		goto err_device_alloc;
+> +	}
+> +	err = platform_device_add(acerhdf_dev);
+> +	if (err)
+> +		goto err_device_add;
+>  
+>  	return 0;
+> +
+> +err_device_add:
+> +	platform_device_put(acerhdf_dev);
+> +err_device_alloc:
+> +	platform_driver_unregister(&acerhdf_driver);
+> +	return err;
+>  }
+>  
+>  static void acerhdf_unregister_platform(void)
+> @@ -589,7 +601,7 @@ static void acerhdf_unregister_platform(void)
+>  	if (!acerhdf_dev)
+>  		return;
 
-Acked-By: Harald Welte <laforge@gnumonks.org>
+while you're at it, you can remove the above check since
+platform_device_del() does that anyway and with your error checking,
+acerhdf_dev won't be unitialized in this path.
+
+>  
+> -	platform_device_del(acerhdf_dev);
+> +	platform_device_unregister(acerhdf_dev);
+>  	platform_driver_unregister(&acerhdf_driver);
+>  }
+>  
+> @@ -633,7 +645,7 @@ static int __init acerhdf_init(void)
+>  
+>  	err = acerhdf_register_platform();
+>  	if (err)
+> -		goto err_unreg;
+> +		goto out_err;
+>  
+>  	err = acerhdf_register_thermal();
+>  	if (err)
+> @@ -646,7 +658,7 @@ err_unreg:
+>  	acerhdf_unregister_platform();
+>  
+>  out_err:
+> -	return -ENODEV;
+> +	return err;
+>  }
+>  
+>  static void __exit acerhdf_exit(void)
+> -- 
+> 1.5.4.3
+> 
+> 
+> 
+
 -- 
-- Harald Welte <laforge@gnumonks.org>           http://laforge.gnumonks.org/
-============================================================================
-"Privacy in residential applications is a desirable marketing option."
-                                                  (ETSI EN 300 175-7 Ch. A6)
+Regards/Gruss,
+    Boris.
