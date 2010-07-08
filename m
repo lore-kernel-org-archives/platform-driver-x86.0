@@ -1,73 +1,76 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH] msi-laptop: make struct rfkill_ops const
-Date: Thu, 8 Jul 2010 11:39:03 -0700
-Message-ID: <20100708183903.GD31823@kroah.com>
-References: <4C369D2B020000230001CA27@novprvlin0050.provo.novell.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] gpio: Add PMIC GPIO block support
+Date: Thu, 8 Jul 2010 20:37:08 +0100
+Message-ID: <20100708193708.GA5319@srcf.ucam.org>
+References: <20100708170818.16711.74269.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:57438 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758488Ab0GHThN (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 8 Jul 2010 15:37:13 -0400
 Content-Disposition: inline
-In-Reply-To: <4C369D2B020000230001CA27@novprvlin0050.provo.novell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joey Lee <jlee@novell.com>
-Cc: axel.lin@gmail.com, mzxreary@0pointer.de, rpurdie@linux.intel.com, mjg@redhat.com, gregkh@suse.de, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20100708170818.16711.74269.stgit@localhost.localdomain>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alan Cox <alan@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 08, 2010 at 11:53:15AM -0600, Joey Lee wrote:
-> Hi Axel,=20
->=20
-> =E6=96=BC =E5=9B=9B=EF=BC=8C2010-07-08 =E6=96=BC 10:08 +0800=EF=BC=8C=
-Axel Lin =E6=8F=90=E5=88=B0=EF=BC=9A
-> > rfkill uses a const struct rfkill_ops pointer.
-> >=20
-> > Signed-off-by: Axel Lin <axel.lin@gmail.com>
-> > ---
-> >  drivers/platform/x86/msi-laptop.c |    6 +++---
-> >  1 files changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x=
-86/msi-laptop.c
-> > index afd762b..05634f8 100644
-> > --- a/drivers/platform/x86/msi-laptop.c
-> > +++ b/drivers/platform/x86/msi-laptop.c
-> > @@ -562,15 +562,15 @@ static int rfkill_threeg_set(void *data, bool=
- blocked)
-> >  	return 0;
-> >  }
-> > =20
-> > -static struct rfkill_ops rfkill_bluetooth_ops =3D {
-> > +static const struct rfkill_ops rfkill_bluetooth_ops =3D {
-> >  	.set_block =3D rfkill_bluetooth_set
-> >  };
-> > =20
-> > -static struct rfkill_ops rfkill_wlan_ops =3D {
-> > +static const struct rfkill_ops rfkill_wlan_ops =3D {
-> >  	.set_block =3D rfkill_wlan_set
-> >  };
-> > =20
-> > -static struct rfkill_ops rfkill_threeg_ops =3D {
-> > +static const struct rfkill_ops rfkill_threeg_ops =3D {
-> >  	.set_block =3D rfkill_threeg_set
-> >  };
-> > =20
->=20
-> The patch good to me, do I need Signed-off it?
-> How can I signed off a patch?
+On Thu, Jul 08, 2010 at 06:09:27PM +0100, Alan Cox wrote:
+> +	else if (offset < 14)/* it is GPOSW */
+> +		rc = intel_scu_ipc_update_register(GPOSWCTL0 + offset - 8,
+> +				GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV,
+> +				GPOSW_DRV | (value ? GPOSW_DOU : 0));
+> +	else if (offset > 15 && offset < 24)/* it is GPO */
 
-You can say:
-	Signed-off-by: your name <your_email>
+What happened to gpios 14 and 15?
 
-and then Matthew will add it.
+> +
+> +static int pmic_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +	u8 r;
+> +
+> +	/* we only have 8 GPIO pins we can use as input */
+> +	if (offset > 8)
+> +		return -1;
 
-Or you can take the original patch, add your signed-off-by, and resend
-it to Matthew keeping the correct authorship information there by makin=
-g
-sure the first line in the body of the email has:
-	From: Original author <email>
+Is there any chance of this getting passed up to userspace? Using 
+something more descriptive would be nice (ditto for a couple of other 
+places)
 
-so git will get it right.
+> +	if (intel_scu_ipc_ioread8(GPIO0 + offset, &r))
+> +		return -1;
 
-hope this helps,
+...especially since you get the same error for two different failure 
+modes :)
 
-greg k-h
+> +static int pmic_irq_type(unsigned irq, unsigned type)
+> +{
+> +	struct pmic_gpio *pg = get_irq_chip_data(irq);
+> +	u32 gpio = irq - pg->irq_base;
+> +	unsigned long flags;
+> +
+> +	if (gpio < 0 || gpio > pg->chip.ngpio)
+
+It's unsigned, don't need to check that it's < 0.
+
+> +static int __devinit platform_pmic_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int irq = platform_get_irq(pdev, 0);
+> +	struct intel_pmic_gpio_platform_data *pdata = dev->platform_data;
+
+I don't think it's really necessary to indicate that the driver's loaded 
+here.
+
+> +	if (!pdata || !pdata->gpio_base || !pdata->irq_base) {
+> +		dev_dbg(dev, "incorrect or missing platform data\n");
+> +		return -EINVAL;
+> +	}
+
+Shouldn't there be an is_mrst() check before trying to dereference this?
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
