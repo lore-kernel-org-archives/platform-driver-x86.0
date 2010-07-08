@@ -1,83 +1,43 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: Re: [PATCH] classmate-laptop: make needlessly global symbols static
-Date: Wed, 7 Jul 2010 23:42:27 -0300
-Message-ID: <20100708024226.GA19890@barata.holoscopio.com>
-References: <1278553670.7162.4.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] asus-laptop: fix incorrect return value for
+	write_acpi_int_ret if handle is NULL
+Date: Thu, 08 Jul 2010 13:52:33 +0800
+Message-ID: <1278568354.7162.15.camel@mola>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade2.minaslivre.org ([74.50.53.203]:44893 "EHLO
-	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751377Ab0GHCmg (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:38455 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750810Ab0GHFwZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 Jul 2010 22:42:36 -0400
-Content-Disposition: inline
-In-Reply-To: <1278553670.7162.4.camel@mola>
+	Thu, 8 Jul 2010 01:52:25 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Daniel Oliveira Nascimento <don@syst.com.br>, Matthew Garrett <mjg@redhat.com>, Richard Purdie <rpurdie@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
+According to the comments of write_acpi_int_ret(),
+write_acpi_int_ret() should return 0 if write is successful, -1 else.
+Thus if handle is NULL, the write does not happen, it should return -1.
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/asus-laptop.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-On Thu, Jul 08, 2010 at 09:47:50AM +0800, Axel Lin wrote:
-> cmpc_accel_sensitivity_attr is needlessly defined global.
-> This patch makes the symbol static.
->=20
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
-> ---
->  drivers/platform/x86/classmate-laptop.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x=
-86/classmate-laptop.c
-> index 3bf399f..6c63303 100644
-> --- a/drivers/platform/x86/classmate-laptop.c
-> +++ b/drivers/platform/x86/classmate-laptop.c
-> @@ -208,7 +208,7 @@ static ssize_t cmpc_accel_sensitivity_store(struct de=
-vice *dev,
->  	return strnlen(buf, count);
->  }
-> =20
-> -struct device_attribute cmpc_accel_sensitivity_attr =3D {
-> +static struct device_attribute cmpc_accel_sensitivity_attr =3D {
->  	.attr =3D { .name =3D "sensitivity", .mode =3D 0660 },
->  	.show =3D cmpc_accel_sensitivity_show,
->  	.store =3D cmpc_accel_sensitivity_store
-> --=20
-> 1.5.4.3
->=20
->=20
->=20
-
-Acked-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQIcBAEBAgAGBQJMNTsSAAoJEEWxSg7udFZIF6gQAN7AKK4gEAvGqhtL+Dp40zig
-FJadGyAFSnfZDAd+AU7KmIzDntXQHY8bdN+7+S7UMOAeg0idNygt9vEtBko9CTyD
-qHVo0uIaLQDuw70id0J+cvG8boVjpn7ncKGDuobrElvS/wJ2gp3S0g19zI17iw6l
-o9os/p7sFq+csCEuM/mffX4I4mExYZzruwY+XTvACrWMvJsQAi5m6KzgQXuAeZ+P
-NKI2hN/WOOTk5m7NU3vcQA6IHZEs5FNMtDj7n481qQltkYSWnmf6vJK565vJrry7
-Ed0rATML94gZuY+huzczKNnJ8JPpk+5+zu1z54FNCzvv6aAHj70BylHUL90Ck3n5
-gxoUEFooQb5nXIapR/zjJFhVKue3AAluwExjgrNHgc+VEyaQnt/IIlq7uxBisV6J
-DTBKtttAWDqgFb50lp9rC9/7jtbmHdxDbhQQeplQ8MFewoDUHMqzryv6AN71cPoB
-nae8zLgtYjtJOFmk3k2NRc1emV5YfM6dD1d1v2aknSJtzMTQKVaI1BpfjfVyU6w4
-zMqCSBGQAfLI/qF7YEOC97Sz8yMfBrXILi936tdUE8Ctauo5X1WbpFA/IhR9CPZl
-4vVFU+POfHYmrmKMUfFtRMxiWGR7DEVwOfDZuIVHk7HdpaLCNKCoWZ3vdqGboKMx
-F02bhMJK0MCkiXBCuWIA
-=hrgq
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 71db2ef..93487eb 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -297,7 +297,7 @@ static int write_acpi_int_ret(acpi_handle handle, const char *method, int val,
+ 	acpi_status status;
+ 
+ 	if (!handle)
+-		return 0;
++		return -1;
+ 
+ 	params.count = 1;
+ 	params.pointer = &in_obj;
+-- 
+1.5.4.3
