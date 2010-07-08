@@ -1,51 +1,85 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [PATCH] msi-wmi: make needlessly global symbols static
-Date: Thu, 8 Jul 2010 10:34:42 +0200
-Message-ID: <20100708103442.28520f6f@destiny.ordissimo>
-References: <1278553830.7162.9.camel@mola>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] acerhdf: make needlessly global symbols static
+Date: Thu, 8 Jul 2010 11:08:36 +0200
+Message-ID: <20100708090836.GA14580@a1.tnic>
+References: <1278553580.7162.1.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:51790 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754647Ab0GHIoI (ORCPT
+Received: from mail.skyhub.de ([78.46.96.112]:43995 "EHLO mail.skyhub.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752613Ab0GHJIm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Jul 2010 04:44:08 -0400
-In-Reply-To: <1278553830.7162.9.camel@mola>
+	Thu, 8 Jul 2010 05:08:42 -0400
+Content-Disposition: inline
+In-Reply-To: <1278553580.7162.1.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Thomas Renninger <trenn@suse.de>, Richard Purdie <rpurdie@linux.intel.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Peter Feuerer <peter@piie.net>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <petkovbb@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>, platform-driver-x86@vger.kernel.org
 
-Hi Axel,
+From: Axel Lin <axel.lin@gmail.com>
+Date: Thu, Jul 08, 2010 at 09:46:20AM +0800
 
-On Thu, 08 Jul 2010 09:50:30 +0800, Axel Lin <axel.lin@gmail.com> wrote :
-
-> backlight is needlessly defined global.
-> This patch makes the symbol static.
+> The following symbols are needlessly defined global:
+> 
+> thz_dev
+> cl_dev
+> acerhdf_dev
+> acerhdf_dev_ops
+> acerhdf_cooling_ops
+> 
+> This patch makes the symbols static.
 > 
 > Signed-off-by: Axel Lin <axel.lin@gmail.com>
-Acked-by: Anisse Astier <anisse@astier.eu>
 
-Thanks,
-
-Anisse
+Acked-by: Borislav Petkov <bp@alien8.de>
 
 > ---
->  drivers/platform/x86/msi-wmi.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+>  drivers/platform/x86/acerhdf.c |   10 +++++-----
+>  1 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-> index d173600..42a5469 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -57,7 +57,7 @@ static struct key_entry msi_wmi_keymap[] = {
->  };
->  static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 7b2384d..5caaaf0 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -92,9 +92,9 @@ static unsigned int fanstate = ACERHDF_FAN_AUTO;
+>  static char force_bios[16];
+>  static char force_product[16];
+>  static unsigned int prev_interval;
+> -struct thermal_zone_device *thz_dev;
+> -struct thermal_cooling_device *cl_dev;
+> -struct platform_device *acerhdf_dev;
+> +static struct thermal_zone_device *thz_dev;
+> +static struct thermal_cooling_device *cl_dev;
+> +static struct platform_device *acerhdf_dev;
 >  
-> -struct backlight_device *backlight;
-> +static struct backlight_device *backlight;
+>  module_param(kernelmode, uint, 0);
+>  MODULE_PARM_DESC(kernelmode, "Kernel mode fan control on / off");
+> @@ -374,7 +374,7 @@ static int acerhdf_get_crit_temp(struct thermal_zone_device *thermal,
+>  }
 >  
->  static int backlight_map[] = { 0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF };
+>  /* bind callback functions to thermalzone */
+> -struct thermal_zone_device_ops acerhdf_dev_ops = {
+> +static struct thermal_zone_device_ops acerhdf_dev_ops = {
+>  	.bind = acerhdf_bind,
+>  	.unbind = acerhdf_unbind,
+>  	.get_temp = acerhdf_get_ec_temp,
+> @@ -449,7 +449,7 @@ err_out:
+>  }
 >  
+>  /* bind fan callbacks to fan device */
+> -struct thermal_cooling_device_ops acerhdf_cooling_ops = {
+> +static struct thermal_cooling_device_ops acerhdf_cooling_ops = {
+>  	.get_max_state = acerhdf_get_max_state,
+>  	.get_cur_state = acerhdf_get_cur_state,
+>  	.set_cur_state = acerhdf_set_cur_state,
+> -- 
+> 1.5.4.3
+> 
+> 
+> 
+
+-- 
+Regards/Gruss,
+Boris.
