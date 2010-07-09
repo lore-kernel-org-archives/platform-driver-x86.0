@@ -1,57 +1,40 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH 1/6] ACPI: Provide /sys/devices/system/ec/
-Date: Fri, 9 Jul 2010 12:18:25 -0700
-Message-ID: <20100709191825.GB8989@kroah.com>
-References: <1277996570-2686-1-git-send-email-trenn@suse.de>
- <1277996570-2686-2-git-send-email-trenn@suse.de>
+From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Subject: Re: [PATCH] acer-wmi: fix memory leaks in wmab_execute error path
+Date: Fri, 9 Jul 2010 21:53:55 +0100
+Message-ID: <201007092153.55715.carlos@strangeworlds.co.uk>
+References: <1278647475.26099.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1277996570-2686-2-git-send-email-trenn@suse.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thomas Renninger <trenn@suse.de>
-Cc: lenb@kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, astarikovskiy@suse.de, Bjorn Helgaas <bjorn.helgaas@hp.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:60608 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754960Ab0GIUyJ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 9 Jul 2010 16:54:09 -0400
+In-Reply-To: <1278647475.26099.2.camel@mola>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 01, 2010 at 05:02:45PM +0200, Thomas Renninger wrote:
-> This patch provides the same information through sysfs, which previously was
-> provided through /proc/acpi/embedded_controller/*/info
+On Friday 09 July 2010 04:51:15 Axel Lin wrote:
+> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
+> the caller must kfree the returned buffer if AE_OK is returned.
 > 
-> Signed-off-by: Thomas Renninger <trenn@suse.de>
+> Call Trace:
+> wmab_execute
+>   -> wmi_evaluate_method
+>     -> acpi_evaluate_object
 > 
-> CC: Alexey Starikovskiy <astarikovskiy@suse.de>
-> CC: Len Brown <lenb@kernel.org>
-> CC: linux-kernel@vger.kernel.org
-> CC: linux-acpi@vger.kernel.org
-> CC: Bjorn Helgaas <bjorn.helgaas@hp.com>
-> CC: platform-driver-x86@vger.kernel.org
+> Thus if callers of wmab_execute() pass ACPI_ALLOCATE_BUFFER,
+> the return buffer must be kfreed if wmab_execute return AE_OK.
 > 
-> Index: linux-2.6.34-master/drivers/acpi/Kconfig
-> ===================================================================
-> ---
->  drivers/acpi/Kconfig    |   13 +++++++
->  drivers/acpi/Makefile   |    1 +
->  drivers/acpi/ec.c       |   18 +++-------
->  drivers/acpi/ec_sys.c   |   92 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/acpi/internal.h |   24 ++++++++++++
->  5 files changed, 135 insertions(+), 13 deletions(-)
->  create mode 100644 drivers/acpi/ec_sys.c
-> 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index 7464115..f13708a 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -104,6 +104,19 @@ config ACPI_SYSFS_POWER
->  	help
->  	  Say N to disable power /sys interface
->  
-> +config ACPI_EC_SYSFS
-> +	tristate "EC read/write access through sysfs"
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
 
-As you are adding new sysfs files, please document them in
-Documentation/ABI/
-
-thanks,
-
-greg k-h
+Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+-- 
+E-Mail: carlos@strangeworlds.co.uk
+Web: strangeworlds.co.uk
+GPG Key ID: 0x23EE722D
