@@ -1,80 +1,78 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH v2] acer-wmi: fix memory leaks in wmab_execute error path
-Date: Fri, 09 Jul 2010 12:37:36 +0800
-Message-ID: <1278650256.26099.4.camel@mola>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH] msi-laptop: make struct rfkill_ops const
+Date: Fri, 09 Jul 2010 04:24:38 -0600
+Message-ID: <4C378586020000230001CAF9@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:54555 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751016Ab0GIEhS (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Jul 2010 00:37:18 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
+To: greg@kroah.com
+Cc: mzxreary@0pointer.de, axel.lin@gmail.com, rpurdie@linux.intel.com, mjg@redhat.com, gregkh@suse.de, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
-the caller must kfree the returned buffer if AE_OK is returned.
+Hi Greg,=20
 
-Call Trace:
-wmab_execute
-  -> wmi_evaluate_method
-    -> acpi_evaluate_object
+=E6=96=BC =E5=9B=9B=EF=BC=8C2010-07-08 =E6=96=BC 11:39 -0700=EF=BC=8CGr=
+eg KH =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Thu, Jul 08, 2010 at 11:53:15AM -0600, Joey Lee wrote:
+> > Hi Axel,=20
+> >=20
+> > =E6=96=BC =E5=9B=9B=EF=BC=8C2010-07-08 =E6=96=BC 10:08 +0800=EF=BC=8C=
+Axel Lin =E6=8F=90=E5=88=B0=EF=BC=9A
+> > > rfkill uses a const struct rfkill_ops pointer.
+> > >=20
+> > > Signed-off-by: Axel Lin <axel.lin@gmail.com>
+> > > ---
+> > >  drivers/platform/x86/msi-laptop.c |    6 +++---
+> > >  1 files changed, 3 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform=
+/x86/msi-laptop.c
+> > > index afd762b..05634f8 100644
+> > > --- a/drivers/platform/x86/msi-laptop.c
+> > > +++ b/drivers/platform/x86/msi-laptop.c
+> > > @@ -562,15 +562,15 @@ static int rfkill_threeg_set(void *data, bo=
+ol blocked)
+> > >  	return 0;
+> > >  }
+> > > =20
+> > > -static struct rfkill_ops rfkill_bluetooth_ops =3D {
+> > > +static const struct rfkill_ops rfkill_bluetooth_ops =3D {
+> > >  	.set_block =3D rfkill_bluetooth_set
+> > >  };
+> > > =20
+> > > -static struct rfkill_ops rfkill_wlan_ops =3D {
+> > > +static const struct rfkill_ops rfkill_wlan_ops =3D {
+> > >  	.set_block =3D rfkill_wlan_set
+> > >  };
+> > > =20
+> > > -static struct rfkill_ops rfkill_threeg_ops =3D {
+> > > +static const struct rfkill_ops rfkill_threeg_ops =3D {
+> > >  	.set_block =3D rfkill_threeg_set
+> > >  };
+> > > =20
+> >=20
+> > The patch good to me, do I need Signed-off it?
+> > How can I signed off a patch?
+>=20
+> You can say:
+> 	Signed-off-by: your name <your_email>
+>=20
+> and then Matthew will add it.
+>=20
+> Or you can take the original patch, add your signed-off-by, and resen=
+d
+> it to Matthew keeping the correct authorship information there by mak=
+ing
+> sure the first line in the body of the email has:
+> 	From: Original author <email>
+>=20
+> so git will get it right.
+>=20
+> hope this helps,
 
-Thus if callers of wmab_execute() pass ACPI_ALLOCATE_BUFFER,
-the return buffer must be kfreed if wmab_execute return AE_OK.
+Thank's for your kindly teach, it's useful to a rookie. :-)
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/acer-wmi.c |   11 ++++++++++-
- 1 files changed, 10 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1ea6c43..3f44446 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -555,6 +555,7 @@ static acpi_status AMW0_find_mailled(void)
- 	obj->buffer.length == sizeof(struct wmab_ret)) {
- 		ret = *((struct wmab_ret *) obj->buffer.pointer);
- 	} else {
-+		kfree(out.pointer);
- 		return AE_ERROR;
- 	}
- 
-@@ -598,6 +599,7 @@ static acpi_status AMW0_set_capabilities(void)
- 	obj->buffer.length == sizeof(struct wmab_ret)) {
- 		ret = *((struct wmab_ret *) obj->buffer.pointer);
- 	} else {
-+		kfree(out.pointer);
- 		return AE_ERROR;
- 	}
- 
-@@ -607,15 +609,22 @@ static acpi_status AMW0_set_capabilities(void)
- 	args.ebx = 2 << 8;
- 	args.ebx |= ACER_AMW0_BLUETOOTH_MASK;
- 
-+	/*
-+	 * It's ok to use existing buffer for next wmab_execute call.
-+	 * But we need to kfree(out.pointer) if next wmab_execute fail.
-+	 */
- 	status = wmab_execute(&args, &out);
--	if (ACPI_FAILURE(status))
-+	if (ACPI_FAILURE(status)) {
-+		kfree(out.pointer);
- 		return status;
-+	}
- 
- 	obj = (union acpi_object *) out.pointer;
- 	if (obj && obj->type == ACPI_TYPE_BUFFER
- 	&& obj->buffer.length == sizeof(struct wmab_ret)) {
- 		ret = *((struct wmab_ret *) obj->buffer.pointer);
- 	} else {
-+		kfree(out.pointer);
- 		return AE_ERROR;
- 	}
- 
--- 
-1.5.4.3
+Joey Lee
