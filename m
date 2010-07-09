@@ -1,63 +1,82 @@
-From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
-Subject: Re: [PATCH] fujitsu-laptop: make needlessly global symbols static
-Date: Fri, 9 Jul 2010 08:37:01 +0930 (CST)
-Message-ID: <201007082307.o68N71vX031390@turbo.physics.adelaide.edu.au>
-References: <1278553745.7162.6.camel@mola>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] acer-wmi: fix memory leaks in wmab_execute error path
+Date: Fri, 09 Jul 2010 11:51:15 +0800
+Message-ID: <1278647475.26099.2.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:52395 "EHLO
-	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756762Ab0GHXHw (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:43556 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751765Ab0GIDvB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Jul 2010 19:07:52 -0400
-In-Reply-To: <1278553745.7162.6.camel@mola> from "Axel Lin" at Jul 08, 2010 09:49:05 AM
+	Thu, 8 Jul 2010 23:51:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Stefani Seibold <stefani@seibold.net>, Andi Kleen <ak@linux.intel.com>, platform-driver-x86@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
 
-Looks fine to me.
+When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
+the caller must kfree the returned buffer if AE_OK is returned.
 
-Acked-by: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
+Call Trace:
+wmab_execute
+  -> wmi_evaluate_method
+    -> acpi_evaluate_object
 
-> The following symbols are needlessly defined global:
-> 
-> logolamp_led
-> kblamps_led
-> 
-> This patch makes the symbols static.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
-> ---
->  drivers/platform/x86/fujitsu-laptop.c |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index e325aeb..a758d59 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -182,7 +182,7 @@ static enum led_brightness logolamp_get(struct led_classdev *cdev);
->  static void logolamp_set(struct led_classdev *cdev,
->  			       enum led_brightness brightness);
->  
-> -struct led_classdev logolamp_led = {
-> +static struct led_classdev logolamp_led = {
->   .name = "fujitsu::logolamp",
->   .brightness_get = logolamp_get,
->   .brightness_set = logolamp_set
-> @@ -192,7 +192,7 @@ static enum led_brightness kblamps_get(struct led_classdev *cdev);
->  static void kblamps_set(struct led_classdev *cdev,
->  			       enum led_brightness brightness);
->  
-> -struct led_classdev kblamps_led = {
-> +static struct led_classdev kblamps_led = {
->   .name = "fujitsu::kblamps",
->   .brightness_get = kblamps_get,
->   .brightness_set = kblamps_set
-> -- 
-> 1.5.4.3
-> 
-> 
-> 
+Thus if callers of wmab_execute() pass ACPI_ALLOCATE_BUFFER,
+the return buffer must be kfreed if wmab_execute return AE_OK.
+
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/acer-wmi.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 1ea6c43..a158d39 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -555,6 +555,7 @@ static acpi_status AMW0_find_mailled(void)
+ 	obj->buffer.length == sizeof(struct wmab_ret)) {
+ 		ret = *((struct wmab_ret *) obj->buffer.pointer);
+ 	} else {
++		kfree(out.pointer);
+ 		return AE_ERROR;
+ 	}
+ 
+@@ -598,6 +599,7 @@ static acpi_status AMW0_set_capabilities(void)
+ 	obj->buffer.length == sizeof(struct wmab_ret)) {
+ 		ret = *((struct wmab_ret *) obj->buffer.pointer);
+ 	} else {
++		kfree(out.pointer);
+ 		return AE_ERROR;
+ 	}
+ 
+@@ -607,15 +609,24 @@ static acpi_status AMW0_set_capabilities(void)
+ 	args.ebx = 2 << 8;
+ 	args.ebx |= ACER_AMW0_BLUETOOTH_MASK;
+ 
++	/*
++	 * It's ok to use existing buffer for next wmab_execute call.
++	 * But we need to kfree(out.pointer) if next wmab_execute call
++	 * returns AE_BUFFER_OVERFLOW.
++	 */
+ 	status = wmab_execute(&args, &out);
+-	if (ACPI_FAILURE(status))
++	if (ACPI_FAILURE(status)) {
++		if (status == AE_BUFFER_OVERFLOW)
++			kfree(out.pointer);
+ 		return status;
++	}
+ 
+ 	obj = (union acpi_object *) out.pointer;
+ 	if (obj && obj->type == ACPI_TYPE_BUFFER
+ 	&& obj->buffer.length == sizeof(struct wmab_ret)) {
+ 		ret = *((struct wmab_ret *) obj->buffer.pointer);
+ 	} else {
++		kfree(out.pointer);
+ 		return AE_ERROR;
+ 	}
+ 
+-- 
+1.5.4.3
