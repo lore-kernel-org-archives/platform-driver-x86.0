@@ -1,40 +1,115 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Subject: Re: [PATCH] acer-wmi: fix memory leaks in wmab_execute error path
-Date: Fri, 9 Jul 2010 21:53:55 +0100
-Message-ID: <201007092153.55715.carlos@strangeworlds.co.uk>
-References: <1278647475.26099.2.camel@mola>
+From: Peter Feuerer <peter@piie.net>
+Subject: Re: [PATCH v2] acerhdf: fix resource reclaim in error path
+Date: Sat, 10 Jul 2010 19:41:52 +0200
+Message-ID: <cone.1278783712.579501.3926.1000@deskpiie>
+References: <1278491971.12801.36.camel@mola> <20100707122932.GA3115@a1.tnic>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; format=flowed; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:60608 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754960Ab0GIUyJ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Jul 2010 16:54:09 -0400
-In-Reply-To: <1278647475.26099.2.camel@mola>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Thomas Renninger <trenn@suse.de>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Axel Lin <axel.lin@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <petkovbb@gmail.com>, Alexey Dobriyan <adobriyan@gmail.com>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Friday 09 July 2010 04:51:15 Axel Lin wrote:
-> When acpi_evaluate_object() is passed ACPI_ALLOCATE_BUFFER,
-> the caller must kfree the returned buffer if AE_OK is returned.
-> 
-> Call Trace:
-> wmab_execute
->   -> wmi_evaluate_method
->     -> acpi_evaluate_object
-> 
-> Thus if callers of wmab_execute() pass ACPI_ALLOCATE_BUFFER,
-> the return buffer must be kfreed if wmab_execute return AE_OK.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Borislav Petkov writes:
 
-Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
--- 
-E-Mail: carlos@strangeworlds.co.uk
-Web: strangeworlds.co.uk
-GPG Key ID: 0x23EE722D
+> From: Axel Lin <axel.lin@gmail.com>
+> Date: Wed, Jul 07, 2010 at 04:39:31PM +0800
+> 
+>> This patch fix resource reclaim in below cases:
+>> 1. acerhdf_register_platform() does not properly handle
+>>    platform_device_alloc() failure and platform_device_add() failure
+>>    This patch adds error handing for acerhdf_register_platform().
+>> 2. acerhdf_register_platform() return err with acerhdf_dev == NULL.
+>>    as a result, acerhdf_unregister_platform() does not do resource
+>>    reclaim in acerhdf_init() error path.
+>>    This patch adds error handing for acerhdf_register_platform(),
+>>    thus correct the error handing path in acerhdf_init().
+>>    goto out_err instead of err_unreg if acerhdf_register_platform() fail.
+>> 3. platform_device_del() should only used in error handling.
+>>    Current implementation missed a platform_device_put() in acerhdf_exit.
+>>    This patch fixes it by using platform_device_unregister() instead of
+>>    platform_device_del() in acerhdf_unregister_platform.
+>> 
+>> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+> 
+> Ok, I just gave it a run and it looks good. Just a minor nitpick: when
+> writing your commit messages you don't have to explain what the code
+> does since we can see it in the patch itself. Rather, your commit
+> message should explain why you do this.
+> 
+> See http://userweb.kernel.org/~akpm/stuff/tpp.txt for further info on
+> how to create your patches.
+> 
+> Other than that:
+> 
+> Acked-by: Borislav Petkov <bp@alien8.de>
+
+Acked-by: Peter Feuerer <peter@piie.net>
+
+> 
+>> ---
+>>  drivers/platform/x86/acerhdf.c |   23 ++++++++++++++++-------
+>>  1 files changed, 16 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+>> index 7b2384d..d9f5ebb 100644
+>> --- a/drivers/platform/x86/acerhdf.c
+>> +++ b/drivers/platform/x86/acerhdf.c
+>> @@ -579,17 +579,26 @@ static int acerhdf_register_platform(void)
+>>  		return err;
+>>  
+>>  	acerhdf_dev = platform_device_alloc("acerhdf", -1);
+>> -	platform_device_add(acerhdf_dev);
+>> +	if (!acerhdf_dev) {
+>> +		err = -ENOMEM;
+>> +		goto err_device_alloc;
+>> +	}
+>> +	err = platform_device_add(acerhdf_dev);
+>> +	if (err)
+>> +		goto err_device_add;
+>>  
+>>  	return 0;
+>> +
+>> +err_device_add:
+>> +	platform_device_put(acerhdf_dev);
+>> +err_device_alloc:
+>> +	platform_driver_unregister(&acerhdf_driver);
+>> +	return err;
+>>  }
+>>  
+>>  static void acerhdf_unregister_platform(void)
+>>  {
+>> -	if (!acerhdf_dev)
+>> -		return;
+>> -
+>> -	platform_device_del(acerhdf_dev);
+>> +	platform_device_unregister(acerhdf_dev);
+>>  	platform_driver_unregister(&acerhdf_driver);
+>>  }
+>>  
+>> @@ -633,7 +642,7 @@ static int __init acerhdf_init(void)
+>>  
+>>  	err = acerhdf_register_platform();
+>>  	if (err)
+>> -		goto err_unreg;
+>> +		goto out_err;
+>>  
+>>  	err = acerhdf_register_thermal();
+>>  	if (err)
+>> @@ -646,7 +655,7 @@ err_unreg:
+>>  	acerhdf_unregister_platform();
+>>  
+>>  out_err:
+>> -	return -ENODEV;
+>> +	return err;
+>>  }
+>>  
+>>  static void __exit acerhdf_exit(void)
+>> -- 
+>> 1.5.4.3
+
+thank you,
+--peter;
