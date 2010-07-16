@@ -1,38 +1,54 @@
 From: Thomas Renninger <trenn@suse.de>
-Subject: Re: How to read time stamp from HPET timer from device driver?
-Date: Thu, 15 Jul 2010 18:39:35 +0200
-Message-ID: <201007151839.35690.trenn@suse.de>
-References: <AANLkTimTF1tNxpfd86a9h6PDKDeFiq9zQcHCbKyfTm5M@mail.gmail.com> <20100713130836.GD9114@barata.holoscopio.com> <AANLkTimILvk8XUGeoct6_DZKtAvjSSg9wmQwXRkt42_h@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 6/7] X86 platform driver: Fix section mismatch in wmi.c
+Date: Fri, 16 Jul 2010 13:11:36 +0200
+Message-ID: <1279278697-3694-7-git-send-email-trenn@suse.de>
+References: <1279278697-3694-1-git-send-email-trenn@suse.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:43579 "EHLO mx2.suse.de"
+Received: from cantor2.suse.de ([195.135.220.15]:43427 "EHLO mx2.suse.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933768Ab0GOQjb (ORCPT
+	id S965141Ab0GPLLm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Jul 2010 12:39:31 -0400
-In-Reply-To: <AANLkTimILvk8XUGeoct6_DZKtAvjSSg9wmQwXRkt42_h@mail.gmail.com>
-Content-Disposition: inline
+	Fri, 16 Jul 2010 07:11:42 -0400
+In-Reply-To: <1279278697-3694-1-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Samuel Xu <samuel.xu.tech@gmail.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, platform-driver-x86@vger.kernel.org
+To: lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Thomas Renninger <trenn@suse.de>, Alexey Starikovskiy <astarikovskiy@suse.de>
 
-On Tuesday 13 July 2010 03:34:50 pm Samuel Xu wrote:
-> Hi, Cascardo:
-> Thanks for reply! I just want to get the guide on some sample code of
-> HPET usage invoked from kernel mode driver.
-You must not use hpet directly to keep track of the time.
-There is HW which does not have an hpet, or the kernel may choose a better
-(faster, eventually broken hpet timers workarounds, whatever...)
-time source to retrieve the time.
+The .add function must not be declared __init.
 
-> Any directly guide?
-Have a look at: include/linux/time.h
-An example making a bit use of it is:
-drivers/cpufreq/cpufreq_ondemand.c
-grepping for time shows some examples.
+Signed-off-by: Thomas Renninger <trenn@suse.de>
 
-      Thomas
+CC: Alexey Starikovskiy <astarikovskiy@suse.de>
+CC: Len Brown <lenb@kernel.org>
+CC: linux-kernel@vger.kernel.org
+CC: linux-acpi@vger.kernel.org
+CC: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/wmi.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index e4eaa14..635ebb4 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -804,7 +804,7 @@ static bool guid_already_parsed(const char *guid_string)
+ /*
+  * Parse the _WDG method for the GUID data blocks
+  */
+-static __init acpi_status parse_wdg(acpi_handle handle)
++static acpi_status parse_wdg(acpi_handle handle)
+ {
+ 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	union acpi_object *obj;
+@@ -947,7 +947,7 @@ static int acpi_wmi_remove(struct acpi_device *device, int type)
+ 	return 0;
+ }
+ 
+-static int __init acpi_wmi_add(struct acpi_device *device)
++static int acpi_wmi_add(struct acpi_device *device)
+ {
+ 	acpi_status status;
+ 	int result = 0;
+-- 
+1.6.3
