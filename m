@@ -1,31 +1,26 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Version 2: Provide /sys/../ec with read/write access and some
-	cleanups
-Date: Thu, 22 Jul 2010 16:03:30 +0100
-Message-ID: <20100722150330.GC25002@srcf.ucam.org>
-References: <1279278697-3694-1-git-send-email-trenn@suse.de>
+Subject: Re: [PATCH] eeepc-laptop: fix hotplug_disabled module_param
+	permissions
+Date: Thu, 22 Jul 2010 16:11:06 +0100
+Message-ID: <20100722151106.GD25002@srcf.ucam.org>
+References: <1278897325.6563.7.camel@mola>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:34835 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:59587 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752312Ab0GVPDi (ORCPT
+	with ESMTP id S1752322Ab0GVPLM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Jul 2010 11:03:38 -0400
+	Thu, 22 Jul 2010 11:11:12 -0400
 Content-Disposition: inline
-In-Reply-To: <1279278697-3694-1-git-send-email-trenn@suse.de>
+In-Reply-To: <1278897325.6563.7.camel@mola>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: lenb@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 16, 2010 at 01:11:30PM +0200, Thomas Renninger wrote:
-> This patchset is againt the acpi test branch.
-> It would be great if these can be applied there.
-> Patches are test compiled, booted and I played a bit with reading
-> writing...
-
-I've applied this set, thanks!
+I think I've got all of your patches merged now, but let me know if I've 
+missed any. They should be in my linux-next branch.
 
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
