@@ -1,40 +1,38 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [RESEND PATCH] From: Sreedhara DS <sreedhara.ds@intel.com>
-Date: Thu, 22 Jul 2010 15:45:42 +0100
-Message-ID: <20100722154542.3c9de0ec@linux.intel.com>
-References: <20100713095944.3399.28528.stgit@localhost.localdomain>
-	<20100722150310.GB25002@srcf.ucam.org>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: Re: [PATCH] eeepc-laptop: fix hotplug_disabled module_param
+	permissions
+Date: Fri, 23 Jul 2010 08:45:39 +0800
+Message-ID: <AANLkTingKYmfwx9ASUCvxn08OAEjnhyLFGUHHxgRBNBw@mail.gmail.com>
+References: <1278897325.6563.7.camel@mola> <20100722151106.GD25002@srcf.ucam.org>
+Reply-To: axel.lin@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:25992 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751758Ab0GVPR5 (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:39298 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755808Ab0GWAqH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Jul 2010 11:17:57 -0400
-In-Reply-To: <20100722150310.GB25002@srcf.ucam.org>
+	Thu, 22 Jul 2010 20:46:07 -0400
+In-Reply-To: <20100722151106.GD25002@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Thu, 22 Jul 2010 16:03:10 +0100
-Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+2010/7/22 Matthew Garrett <mjg59@srcf.ucam.org>:
+> I think I've got all of your patches merged now, but let me know if I've
+> missed any. They should be in my linux-next branch.
 
-> On Tue, Jul 13, 2010 at 10:59:52AM +0100, Alan Cox wrote:
-> > intel_scu_ipc: Resync with development branch
-> > 
-> > - Add support for Medfield (different message format)
-> > - Use the mrst_platform_id to autodetect the correct type of message
-> > - delete unused interfaces
-> > - fix reversing of command/sub argments in simple_command
-> > - fix a crash if the i2c interface is called before the device is
-> > found
-> > - new PCI identifier
-> 
-> This doesn't apply against the -next tree. Have I missed an
-> intermediate patch?
+hi Matthew,
+Thanks for merging the patches.
 
-I sent a couple of more urgent bits direct to Linus. I'll resync and
-send you the other bits.
+Below 3 patches are missing:
+[PATCH] asus-laptop: fix asus_input_init error path
+        http://lkml.org/lkml/2010/7/5/21
+[PATCH] dell-laptop: make dell_laptop_i8042_filter() static
+        http://lkml.org/lkml/2010/7/5/69
+[PATCH] msi-wmi: make needlessly global symbols static
+        http://lkml.org/lkml/2010/7/8/66
+
+Regards,
+Axel
