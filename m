@@ -1,38 +1,41 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: fix hotplug_disabled module_param
-	permissions
-Date: Fri, 23 Jul 2010 08:45:39 +0800
-Message-ID: <AANLkTingKYmfwx9ASUCvxn08OAEjnhyLFGUHHxgRBNBw@mail.gmail.com>
-References: <1278897325.6563.7.camel@mola> <20100722151106.GD25002@srcf.ucam.org>
-Reply-To: axel.lin@gmail.com
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: [PATCH -next] compal-laptop: depends on POWER_SUPPLY
+Date: Fri, 23 Jul 2010 09:41:34 -0700
+Message-ID: <20100723094134.10c86761.randy.dunlap@oracle.com>
+References: <20100723164931.7bf2160f.sfr@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vw0-f46.google.com ([209.85.212.46]:39298 "EHLO
-	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755808Ab0GWAqH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Jul 2010 20:46:07 -0400
-In-Reply-To: <20100722151106.GD25002@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20100723164931.7bf2160f.sfr@canb.auug.org.au>
+Sender: linux-next-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>
+Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-2010/7/22 Matthew Garrett <mjg59@srcf.ucam.org>:
-> I think I've got all of your patches merged now, but let me know if I've
-> missed any. They should be in my linux-next branch.
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
-hi Matthew,
-Thanks for merging the patches.
+compal-laptop uses power_supply interfaces so it should depend
+on POWER_SUPPLY.
 
-Below 3 patches are missing:
-[PATCH] asus-laptop: fix asus_input_init error path
-        http://lkml.org/lkml/2010/7/5/21
-[PATCH] dell-laptop: make dell_laptop_i8042_filter() static
-        http://lkml.org/lkml/2010/7/5/69
-[PATCH] msi-wmi: make needlessly global symbols static
-        http://lkml.org/lkml/2010/7/8/66
+ERROR: "power_supply_register" [drivers/platform/x86/compal-laptop.ko] undefined!
+ERROR: "power_supply_unregister" [drivers/platform/x86/compal-laptop.ko] undefined!
 
-Regards,
-Axel
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+Cc:	Cezary Jackiewicz <cezary.jackiewicz@gmail.com>
+Cc:	Matthew Garrett <mjg@redhat.com>
+Cc:	platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- linux-next-20100723.orig/drivers/platform/x86/Kconfig
++++ linux-next-20100723/drivers/platform/x86/Kconfig
+@@ -183,6 +183,7 @@ config COMPAL_LAPTOP
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on RFKILL
+ 	depends on HWMON
++	depends on POWER_SUPPLY
+ 	---help---
+ 	  This is a driver for laptops built by Compal:
+ 
