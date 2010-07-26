@@ -1,80 +1,45 @@
 From: Alan Cox <alan@linux.intel.com>
-Subject: [PATCH 08/11] Clean up command packing on MRST.
-Date: Mon, 26 Jul 2010 10:05:03 +0100
-Message-ID: <20100726090444.12329.24098.stgit@localhost.localdomain>
+Subject: [PATCH 11/11] intel_scu_ipc: fix size field for intel_scu_ipc_command
+Date: Mon, 26 Jul 2010 10:06:31 +0100
+Message-ID: <20100726090619.12329.82658.stgit@localhost.localdomain>
 References: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([143.182.124.37]:31829 "EHLO mga14.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:53401 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753835Ab0GZJiO (ORCPT
+	id S1753321Ab0GZJjm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 26 Jul 2010 05:38:14 -0400
+	Mon, 26 Jul 2010 05:39:42 -0400
 In-Reply-To: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, mjg@redhat.com
 
-From: Andy Ross <andy.ross@windriver.com>
+From: Hong Liu <hong.liu@intel.com>
 
-Don't pass more bytes in the command length field than we filled.
+Size for PMIC read/write command is byte, while it is DWORD for other
+IPC commands.
 
-Signed-off-by: Andy Ross <andy.ross@windriver.com>
-Signed-off-by: Alan Cox <alan@linux.intel.com>
+Signed-off-by: Hong Liu <hong.liu@intel.com>
+Signed-off-by: ALan Cox <alan@linux.intel.com>
 ---
 
- drivers/platform/x86/intel_scu_ipc.c |   29 +++++++++++------------------
- 1 files changed, 11 insertions(+), 18 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index b903420..5055c52 100644
+index 23b6d46..943f908 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -154,7 +154,7 @@ static inline int busy_loop(void) /* Wait till scu status is busy */
- /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
- static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- {
--	int nc;
-+	int i, nc, bytes;
- 	u32 offset = 0;
- 	u32 err = 0;
- 	u8 cbuf[IPC_WWBUF_SIZE] = { };
-@@ -170,25 +170,18 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- 	}
+@@ -444,7 +444,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 	for (i = 0; i < inlen; i++)
+ 		ipc_data_writel(*in++, 4 * i);
  
- 	if (platform != MRST_CPU_CHIP_PENWELL) {
--		/* Entry is 4 bytes for read/write, 5 bytes for read modify */
--		for (nc = 0; nc < count; nc++, offset += 3) {
--			cbuf[offset] = addr[nc];
--			cbuf[offset + 1] = addr[nc] >> 8;
-+		bytes = 0;
-+		for(i=0; i<count; i++) {
-+			cbuf[bytes++] = addr[i];
-+			cbuf[bytes++] = addr[i] >> 8;
- 			if (id != IPC_CMD_PCNTRL_R)
--				cbuf[offset + 2] = data[nc];
--			if (id == IPC_CMD_PCNTRL_M) {
--				cbuf[offset + 3] = data[nc + 1];
--				offset += 1;
--			}
-+				cbuf[bytes++] = data[i];
-+			if (id == IPC_CMD_PCNTRL_M)
-+				cbuf[bytes++] = data[i + 1];
- 		}
--		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
--			ipc_data_writel(wbuf[nc], offset); /* Write wbuff */
--
--		if (id != IPC_CMD_PCNTRL_M)
--			ipc_command((count*4) << 16 |  id << 12 | 0 << 8 | op);
--		else
--			ipc_command((count*5) << 16 |  id << 12 | 0 << 8 | op);
--
-+		for(i=0; i<bytes; i+=4)
-+			ipc_data_writel(wbuf[i/4], i);
-+		ipc_command(bytes << 16 |  id << 12 | 0 << 8 | op);
- 	} else {
- 		for (nc = 0; nc < count; nc++, offset += 2) {
- 			cbuf[offset] = addr[nc];
+-	ipc_command((sub << 12) | cmd | (inlen << 18));
++	ipc_command((inlen << 16) | (sub << 12) | cmd);
+ 	err = busy_loop();
+ 
+ 	for (i = 0; i < outlen; i++)
