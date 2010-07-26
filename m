@@ -1,50 +1,75 @@
 From: Alan Cox <alan@linux.intel.com>
-Subject: [PATCH 00/11] Series short description
-Date: Mon, 26 Jul 2010 10:02:15 +0100
-Message-ID: <20100726090031.12329.53555.stgit@localhost.localdomain>
+Subject: [PATCH 01/11] intel_scu_ipc: detect CPU type automatically
+Date: Mon, 26 Jul 2010 10:02:25 +0100
+Message-ID: <20100726090222.12329.19653.stgit@localhost.localdomain>
+References: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:37996 "EHLO mga11.intel.com"
+Received: from mga03.intel.com ([143.182.124.21]:46606 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753909Ab0GZJfZ (ORCPT
+	id S1753835Ab0GZJfv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 26 Jul 2010 05:35:25 -0400
+	Mon, 26 Jul 2010 05:35:51 -0400
+In-Reply-To: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, mjg@redhat.com
 
-This patch set updates the intel SCU IPC to our internal version and fixes
-various bugs/cleanliness issues as well as making the CPU detection occur
-automatically and removing the module parameter.
+From: Sreedhara DS <sreedhara.ds@intel.com>
+
+Intel SCU message formats depend upon the processor type. Replace the
+module option with automatic detection of the processor type.
+
+Signed-off-by: Sreedhara DS <sreedhara.ds@intel.com>
 ---
 
-Alan Cox (1):
-      intel_scu_ipc: Use the new cpu identification function
-
-Andy Ross (1):
-      Clean up command packing on MRST.
-
-Arjan van de Ven (2):
-      zero the stack buffer before giving random garbage to the SCU
-      Fix stack buffer size for IPC writev messages
-
-Hong Liu (3):
-      intel_scu_ipc: fix size field for intel_scu_ipc_command
-      intel_scu_ipc: return -EIO for error condition in busy_loop
-
-Sreedhara DS (4):
-      intel_scu_ipc: tidy up unused bits
-      Remove indirect read write api support.
-      intel_scu_ipc: Support Medfield processors
-      intel_scu_ipc: detect CPU type automatically
+ drivers/platform/x86/intel_scu_ipc.c |   19 ++++++++++++-------
+ 1 files changed, 12 insertions(+), 7 deletions(-)
 
 
- arch/x86/include/asm/intel_scu_ipc.h |   14 ---
- drivers/platform/x86/intel_scu_ipc.c |  180 ++++++++++------------------------
- 2 files changed, 52 insertions(+), 142 deletions(-)
-
--- 
-	"It's 106 miles to Chicago, we've got a full tank of gas, the
-	 sat-nav has crashed, it's dark and we're completely lost"
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index bb2f1fb..b6a0344 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -23,7 +23,7 @@
+ #include <linux/pm.h>
+ #include <linux/pci.h>
+ #include <linux/interrupt.h>
+-#include <asm/setup.h>
++#include <asm/mrst.h>
+ #include <asm/intel_scu_ipc.h>
+ 
+ /* IPC defines the following message types */
+@@ -78,12 +78,9 @@ struct intel_scu_ipc_dev {
+ 
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ 
+-static int platform = 1;
+-module_param(platform, int, 0);
+-MODULE_PARM_DESC(platform, "1 for moorestown platform");
+-
+-
+-
++#define PLATFORM_LANGWELL 1
++#define PLATFORM_PENWELL 2
++static int platform;		/* Platform type */
+ 
+ /*
+  * IPC Read Buffer (Read Only):
+@@ -817,6 +814,14 @@ static struct pci_driver ipc_driver = {
+ 
+ static int __init intel_scu_ipc_init(void)
+ {
++	if (boot_cpu_data.x86 == 6 &&
++		boot_cpu_data.x86_model == 0x27 &&
++		boot_cpu_data.x86_mask == 1)
++			platform = PLATFORM_PENWELL;
++	else if (boot_cpu_data.x86 == 6 &&
++		boot_cpu_data.x86_model == 0x26)
++			platform = PLATFORM_LANGWELL;
++
+ 	return  pci_register_driver(&ipc_driver);
+ }
+ 
