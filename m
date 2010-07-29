@@ -1,41 +1,193 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: Patch for toshiba_acpi driver : add illumination support
-Date: Thu, 29 Jul 2010 07:12:10 +0200
-Message-ID: <AANLkTikM5EM6w51uAQuaN1zErhTycdfJnpKHObrf5GHG@mail.gmail.com>
-References: <201007282322.17656.pinaraf@pinaraf.info>
+From: Pierre Ducroquet <pinaraf@pinaraf.info>
+Subject: [PATCH] Add support for Toshiba Illumination. This is a set of LEDs installed on some Toshiba laptops. It is controlled through ACPI, the commands has been found through reverse engineering. It has been tested on a Toshiba Qosmio G50-122.
+Date: Thu, 29 Jul 2010 11:56:59 +0200
+Message-ID: <1280397419-6799-1-git-send-email-pinaraf@pinaraf.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:58416 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750829Ab0G2FMM (ORCPT
+Received: from smtp5-g21.free.fr ([212.27.42.5]:43685 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756045Ab0G2J6F (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Jul 2010 01:12:12 -0400
-Received: by bwz1 with SMTP id 1so78473bwz.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2010 22:12:10 -0700 (PDT)
-In-Reply-To: <201007282322.17656.pinaraf@pinaraf.info>
+	Thu, 29 Jul 2010 05:58:05 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pierre <pinaraf@pinaraf.info>
-Cc: platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: mjg@redhat.com, akpm@linux-foundation.org, len.brown@intel.com, nm127@freemail.hu, adobriyan@gmail.com, linux-kernel@vger.kernel.org, Pierre Ducroquet <pinaraf@pinaraf.info>
 
-> Of course, if this is not the right procedure or the right place, please correct
-> me.
+Signed-off-by: Pierre Ducroquet <pinaraf@pinaraf.info>
+---
+ drivers/platform/x86/toshiba_acpi.c |  117 +++++++++++++++++++++++++++=
+++++++++
+ 1 files changed, 117 insertions(+), 0 deletions(-)
 
-Hi Pierre,
-Please read Documentation/SubmittingPatches.
-The quick version is to use git and do:
-$ git config user.name <name>
-$ git config user.mail <mail>
-$ git clone git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git
-$ <hack>
-$ git commit -sa
-$ git format-patch origin -o /tmp/patchs/
-$ ./scripts/get_maintainer.pl /tmp/patchs/*
-$ ./scripts/checkpatch.pl /tmp/patchs/*
-$ git send-email --to=<main mailing list> -cc=<maintainter0> -cc=<maintainer1>
-
-Thanks
--- 
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86=
+/toshiba_acpi.c
+index 37aa147..81b76a8 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -4,6 +4,7 @@
+  *
+  *  Copyright (C) 2002-2004 John Belmonte
+  *  Copyright (C) 2008 Philip Langdale
++ *  Copyright (C) 2010 Pierre Ducroquet
+  *
+  *  This program is free software; you can redistribute it and/or modi=
+fy
+  *  it under the terms of the GNU General Public License as published =
+by
+@@ -47,6 +48,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/rfkill.h>
+ #include <linux/input.h>
++#include <linux/leds.h>
+ #include <linux/slab.h>
+=20
+ #include <asm/uaccess.h>
+@@ -285,6 +287,7 @@ struct toshiba_acpi_dev {
+ 	struct platform_device *p_dev;
+ 	struct rfkill *bt_rfk;
+ 	struct input_dev *hotkey_dev;
++	int illumination_installed;
+ 	acpi_handle handle;
+=20
+ 	const char *bt_name;
+@@ -292,6 +295,110 @@ struct toshiba_acpi_dev {
+ 	struct mutex mutex;
+ };
+=20
++/* Illumination support */
++static int toshiba_illumination_available(void)
++{
++	u32 in[HCI_WORDS] =3D { 0, 0, 0, 0, 0, 0 };
++	u32 out[HCI_WORDS];
++	acpi_status status;
++
++	in[0] =3D 0xf100;
++	status =3D hci_raw(in, out);
++	if (ACPI_FAILURE(status)) {
++		printk(MY_INFO "Illumination device not available\n");
++		return 0;
++	}
++	in[0] =3D 0xf400;
++	status =3D hci_raw(in, out);
++	return 1;
++}
++
++static void toshiba_illumination_set(struct led_classdev *cdev,
++				     enum led_brightness brightness)
++{
++	u32 in[HCI_WORDS] =3D { 0, 0, 0, 0, 0, 0 };
++	u32 out[HCI_WORDS];
++	acpi_status status;
++
++	/* First request : initialize communication. */
++	in[0] =3D 0xf100;
++	status =3D hci_raw(in, out);
++	if (ACPI_FAILURE(status)) {
++		printk(MY_INFO "Illumination device not available\n");
++		return;
++	}
++
++	if (brightness) {
++		/* Switch the illumination on */
++		in[0] =3D 0xf400;
++		in[1] =3D 0x14e;
++		in[2] =3D 1;
++		status =3D hci_raw(in, out);
++		if (ACPI_FAILURE(status)) {
++			printk(MY_INFO "ACPI call for illumination failed.\n");
++			return;
++		}
++	} else {
++		/* Switch the illumination off */
++		in[0] =3D 0xf400;
++		in[1] =3D 0x14e;
++		in[2] =3D 0;
++		status =3D hci_raw(in, out);
++		if (ACPI_FAILURE(status)) {
++			printk(MY_INFO "ACPI call for illumination failed.\n");
++			return;
++		}
++	}
++
++	/* Last request : close communication. */
++	in[0] =3D 0xf200;
++	in[1] =3D 0;
++	in[2] =3D 0;
++	hci_raw(in, out);
++}
++
++static enum led_brightness toshiba_illumination_get(struct led_classde=
+v *cdev)
++{
++	u32 in[HCI_WORDS] =3D { 0, 0, 0, 0, 0, 0 };
++	u32 out[HCI_WORDS];
++	acpi_status status;
++	enum led_brightness result;
++
++	/*=C2=A0First request : initialize communication. */
++	in[0] =3D 0xf100;
++	status =3D hci_raw(in, out);
++	if (ACPI_FAILURE(status)) {
++		printk(MY_INFO "Illumination device not available\n");
++		return LED_OFF;
++	}
++
++	/* Check the illumination */
++	in[0] =3D 0xf300;
++	in[1] =3D 0x14e;
++	status =3D hci_raw(in, out);
++	if (ACPI_FAILURE(status)) {
++		printk(MY_INFO "ACPI call for illumination failed.\n");
++		return LED_OFF;
++	}
++
++	result =3D out[2] ? LED_FULL : LED_OFF;
++
++	/* Last request : close communication. */
++	in[0] =3D 0xf200;
++	in[1] =3D 0;
++	in[2] =3D 0;
++	hci_raw(in, out);
++
++	return result;
++}
++
++static struct led_classdev toshiba_led =3D {
++	.name           =3D "toshiba::illumination",
++	.max_brightness =3D 1,
++	.brightness_set =3D toshiba_illumination_set,
++	.brightness_get =3D toshiba_illumination_get,
++};
++
+ static struct toshiba_acpi_dev toshiba_acpi =3D {
+ 	.bt_name =3D "Toshiba Bluetooth",
+ };
+@@ -914,6 +1021,9 @@ static void toshiba_acpi_exit(void)
+ 	acpi_remove_notify_handler(toshiba_acpi.handle, ACPI_DEVICE_NOTIFY,
+ 				   toshiba_acpi_notify);
+=20
++	if (toshiba_acpi.illumination_installed)
++		led_classdev_unregister(&toshiba_led);
++
+ 	platform_device_unregister(toshiba_acpi.p_dev);
+=20
+ 	return;
+@@ -1013,6 +1123,13 @@ static int __init toshiba_acpi_init(void)
+ 		}
+ 	}
+=20
++	toshiba_acpi.illumination_installed =3D 0;
++	if (toshiba_illumination_available()) {
++		if (!led_classdev_register(&(toshiba_acpi.p_dev->dev),
++					   &toshiba_led))
++			toshiba_acpi.illumination_installed =3D 1;
++	}
++
+ 	return 0;
+ }
+=20
+--=20
+1.7.1
