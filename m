@@ -1,41 +1,40 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] acpi ec_sys: Export fields of all regions from the EC
- to debugfs readable
-Date: Fri, 30 Jul 2010 16:30:53 -0700
-Message-ID: <20100730163053.bff43f26.akpm@linux-foundation.org>
-References: <1280504824-8134-1-git-send-email-trenn@suse.de>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH] acpi ec_sys: Be more cautious about ec write access
+Date: Sun, 1 Aug 2010 02:13:55 +0200
+Message-ID: <201008010213.56501.trenn@suse.de>
+References: <201007292216.13568.trenn@suse.de> <1280435424-19656-1-git-send-email-trenn@suse.de> <20100730163717.GB32120@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1280504824-8134-1-git-send-email-trenn@suse.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thomas Renninger <trenn@suse.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor.suse.de ([195.135.220.2]:59011 "EHLO mx1.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751988Ab0HAANl (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 31 Jul 2010 20:13:41 -0400
+In-Reply-To: <20100730163717.GB32120@khazad-dum.debian.net>
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, astarikovskiy@suse.de
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 30 Jul 2010 17:47:04 +0200
-Thomas Renninger <trenn@suse.de> wrote:
+On Friday 30 July 2010 06:37:17 pm Henrique de Moraes Holschuh wrote:
+> On Thu, 29 Jul 2010, Thomas Renninger wrote:
+> > - Only allow root to read/write io file (sever bug!)
+>
+> I'd go further, and only allow CAP_SYS_RAWIO.
+I'll have a look and eventually come up with something on-top.
 
-> -static int acpi_ec_open_io(struct inode *i, struct file *f)
-> +static int acpi_ec_open(struct inode *i, struct file *f)
->  {
->  	f->private_data = i->i_private;
-> +	if (mutex_trylock(&ec_fs_lock))
-> +		return 0;
-> +	else
-> +		return -EBUSY;
-> +}
+> > +	  The kernel accesses the EC through ACPI parsed code provided by BIOS
+> > +	  tables. This option allows to access the EC directly without ACPI
+> > +	  code being involved.
+>
+> This is not really true.  Kernel drivers can, and do access the EC without
+> help from the AML firmware (DSDT, SSDT...).
+Yes, the native laptop driver hacks which should not exist...
+Generally the EC should only be accessed via ACPI interpreted code, is it 
+really worth to mention these exceptions at this point?
 
-Well that sucks - a userspace interface which is _designed_ to randomly
-and rarely fail?
-
-An application tries to open the thing and gets -EBUSY, what's it
-supposed to do?  Sleep and try again?  Crash and dump core?
-
-Also the code's uncommented, so the reader has no clue why a trylock
-was used.  There are very few circumstances where any trylock can
-acceptably be left uncommented.
-
-afacit we can use mutex_lock() here and the implementation would be
-heaps better.
+   Thomas
