@@ -1,28 +1,24 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 1/3] hp-wmi: Fix input buffer size of perform_query
-Date: Tue, 3 Aug 2010 14:34:13 +0100
-Message-ID: <20100803133413.GA24785@srcf.ucam.org>
-References: <1280399280-31219-1-git-send-email-trenn@suse.de> <1280399280-31219-2-git-send-email-trenn@suse.de>
+Subject: Re: [PATCH 00/11] Series short description
+Date: Tue, 3 Aug 2010 14:50:34 +0100
+Message-ID: <20100803135034.GA25369@srcf.ucam.org>
+References: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:38250 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:41903 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753991Ab0HCNeT (ORCPT
+	with ESMTP id S1756654Ab0HCNuj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 3 Aug 2010 09:34:19 -0400
+	Tue, 3 Aug 2010 09:50:39 -0400
 Content-Disposition: inline
-In-Reply-To: <1280399280-31219-2-git-send-email-trenn@suse.de>
+In-Reply-To: <20100726090031.12329.53555.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thomas Renninger <trenn@suse.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.or
+To: Alan Cox <alan@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+Thanks, applied.
 
-This one seems to depend on a patch I don't have. Can you recheck? I've 
-applied the others.
-
-Thanks,
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
