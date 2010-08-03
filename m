@@ -1,37 +1,28 @@
-From: Jan Engelhardt <jengelh@medozas.de>
-Subject: [PATCH] x86 plat: limit x86 platform driver menu to X86
-Date: Tue,  3 Aug 2010 00:40:10 +0200
-Message-ID: <1280788811-10348-1-git-send-email-jengelh@medozas.de>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 1/3] hp-wmi: Fix input buffer size of perform_query
+Date: Tue, 3 Aug 2010 14:34:13 +0100
+Message-ID: <20100803133413.GA24785@srcf.ucam.org>
+References: <1280399280-31219-1-git-send-email-trenn@suse.de> <1280399280-31219-2-git-send-email-trenn@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from borg.medozas.de ([188.40.89.202]:38317 "EHLO borg.medozas.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753586Ab0HBWkM (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:38250 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753991Ab0HCNeT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Aug 2010 18:40:12 -0400
+	Tue, 3 Aug 2010 09:34:19 -0400
+Content-Disposition: inline
+In-Reply-To: <1280399280-31219-2-git-send-email-trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: len.brown@intel.com
-Cc: platform-driver-x86@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.or
 
-My .config contains ACER_WMI=m. On SPARC. That does not make sense.
-Restrict the x86 platform driver menu to x86.
+Hi Thomas,
 
-Signed-off-by: Jan Engelhardt <jengelh@medozas.de>
----
- drivers/platform/x86/Kconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+This one seems to depend on a patch I don't have. Can you recheck? I've 
+applied the others.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 3e1b8a2..0f3d37a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -5,6 +5,7 @@
- menuconfig X86_PLATFORM_DEVICES
- 	bool "X86 Platform Specific Device Drivers"
- 	default y
-+	depends on X86
- 	---help---
- 	  Say Y here to get to see options for device drivers for various
- 	  x86 platforms, including vendor-specific laptop extension drivers.
+Thanks,
 -- 
-1.7.1
+Matthew Garrett | mjg59@srcf.ucam.org
