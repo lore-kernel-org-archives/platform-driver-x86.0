@@ -1,84 +1,39 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 24/42] drivers/platform/x86: Adjust confusing if indentation
-Date: Thu, 5 Aug 2010 22:24:12 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1008052223550.31692__17408.0350240276$1281039877$gmane$org@ask.diku.dk>
+From: Dan Carpenter <error27@gmail.com>
+Subject: [patch] intel_ips: potential null dereference
+Date: Sun, 8 Aug 2010 00:01:12 +0200
+Message-ID: <20100807215703.GA9031@bicker>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mgw2.diku.dk ([130.225.96.92]:57891 "EHLO mgw2.diku.dk"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S934211Ab0HEUYP (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:34167 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1761959Ab0HGWBh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 5 Aug 2010 16:24:15 -0400
+	Sat, 7 Aug 2010 18:01:37 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>, Karol Kozimor <sziwan@users.sourceforge.net>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Jiri Slaby <jslaby@suse.cz>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-From: Julia Lawall <julia@diku.dk>
+There is a potential NULL dereference of "limits."  We can just return
+NULL earlier to avoid it.  The caller already handles NULL returns.
 
-The assignment of ret to -EIO appears to only make sense if the branch that
-it is aligned with is executed, so move it into that branch.
+Signed-off-by: Dan Carpenter <error27@gmail.com>
 
-The semantic match that finds this problem is as follows:
-(http://coccinelle.lip6.fr/)
-
-// <smpl>
-@r disable braces4@
-position p1,p2;
-statement S1,S2;
-@@
-
-(
-if (...) { ... }
-|
-if (...) S1@p1 S2@p2
-)
-
-@script:python@
-p1 << r.p1;
-p2 << r.p2;
-@@
-
-if (p1[0].column == p2[0].column):
-  cocci.print_main("branch",p1)
-  cocci.print_secs("after",p2)
-// </smpl>
-
-Signed-off-by: Julia Lawall <julia@diku.dk>
-
----
-This patch changes the semantics and might not be what is intended.
-
- drivers/platform/x86/asus_acpi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/asus_acpi.c b/drivers/platform/x86/asus_acpi.c
-index e058c2b..ca05aef 100644
---- a/drivers/platform/x86/asus_acpi.c
-+++ b/drivers/platform/x86/asus_acpi.c
-@@ -938,10 +938,11 @@ static int set_brightness(int value)
- 	/* SPLV laptop */
- 	if (hotk->methods->brightness_set) {
- 		if (!write_acpi_int(hotk->handle, hotk->methods->brightness_set,
--				    value, NULL))
-+				    value, NULL)) {
- 			printk(KERN_WARNING
- 			       "Asus ACPI: Error changing brightness\n");
- 			ret = -EIO;
-+		}
- 		goto out;
- 	}
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index afe82e5..c908048 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1342,8 +1342,10 @@ static struct ips_mcp_limits *ips_detect_cpu(struct ips_driver *ips)
+ 		limits = &ips_lv_limits;
+ 	else if (strstr(boot_cpu_data.x86_model_id, "CPU       U"))
+ 		limits = &ips_ulv_limits;
+-	else
++	else {
+ 		dev_info(&ips->dev->dev, "No CPUID match found.\n");
++		goto out;
++	}
  
-@@ -953,10 +954,11 @@ static int set_brightness(int value)
- 					      hotk->methods->brightness_down,
- 					      NULL, NULL);
- 		(value > 0) ? value-- : value++;
--		if (ACPI_FAILURE(status))
-+		if (ACPI_FAILURE(status)) {
- 			printk(KERN_WARNING
- 			       "Asus ACPI: Error changing brightness\n");
- 			ret = -EIO;
-+		}
- 	}
- out:
- 	return ret;
+ 	rdmsrl(TURBO_POWER_CURRENT_LIMIT, turbo_power);
+ 	tdp = turbo_power & TURBO_TDP_MASK;
