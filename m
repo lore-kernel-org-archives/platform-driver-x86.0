@@ -1,51 +1,146 @@
-From: Jesse Barnes <jbarnes@virtuousgeek.org>
-Subject: Re: [patch] intel_ips: potential null dereference
-Date: Sat, 7 Aug 2010 16:48:53 -0700
-Message-ID: <20100807164853.4c3818c9@virtuousgeek.org>
-References: <20100807215703.GA9031@bicker>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: [PATCH 4/5] thinkpad-acpi: add support for model-specific keymaps
+Date: Mon,  9 Aug 2010 23:48:21 -0300
+Message-ID: <1281408502-7757-5-git-send-email-hmh@hmh.eng.br>
+References: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cpoproxy1-pub.bluehost.com ([69.89.21.11]:53714 "HELO
-	cpoproxy1-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1753531Ab0HGXs4 (ORCPT
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:53872 "EHLO
+	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755253Ab0HJCsa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 7 Aug 2010 19:48:56 -0400
-In-Reply-To: <20100807215703.GA9031@bicker>
+	Mon, 9 Aug 2010 22:48:30 -0400
+In-Reply-To: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <error27@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Jiri Slaby <jslaby@suse.cz>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-On Sun, 8 Aug 2010 00:01:12 +0200
-Dan Carpenter <error27@gmail.com> wrote:
+Use the quirks engine to select model-specific keymaps, which makes
+it much easier to extend should we need it.
 
-> There is a potential NULL dereference of "limits."  We can just return
-> NULL earlier to avoid it.  The caller already handles NULL returns.
-> 
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
-> 
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index afe82e5..c908048 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -1342,8 +1342,10 @@ static struct ips_mcp_limits *ips_detect_cpu(struct ips_driver *ips)
->  		limits = &ips_lv_limits;
->  	else if (strstr(boot_cpu_data.x86_model_id, "CPU       U"))
->  		limits = &ips_ulv_limits;
-> -	else
-> +	else {
->  		dev_info(&ips->dev->dev, "No CPUID match found.\n");
-> +		goto out;
-> +	}
->  
->  	rdmsrl(TURBO_POWER_CURRENT_LIMIT, turbo_power);
->  	tdp = turbo_power & TURBO_TDP_MASK;
+Keycodes are based on the tables at
+http://www.thinkwiki.org/wiki/Default_meanings_of_special_keys.
 
-Yep, good idea to catch this case.
+Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+---
+ drivers/platform/x86/thinkpad_acpi.c |   60 +++++++++++++++++++++++----------
+ 1 files changed, 42 insertions(+), 18 deletions(-)
 
-Reviewed-by: Jesse Barnes <jbarnes@virtuousgeek.org>
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 17da5c9..0c08f6f 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3093,6 +3093,8 @@ static const struct tpacpi_quirk tpacpi_hotkey_qtable[] __initconst = {
+ 	TPACPI_Q_IBM('1', 'D', TPACPI_HK_Q_INIMASK), /* X22, X23, X24 */
+ };
+ 
++typedef u16 tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
++
+ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ {
+ 	/* Requirements for changing the default keymaps:
+@@ -3124,9 +3126,17 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 	 * If the above is too much to ask, don't change the keymap.
+ 	 * Ask the thinkpad-acpi maintainer to do it, instead.
+ 	 */
+-	static u16 ibm_keycode_map[TPACPI_HOTKEY_MAP_LEN] __initdata = {
++
++	enum keymap_index {
++		TPACPI_KEYMAP_IBM_GENERIC = 0,
++		TPACPI_KEYMAP_LENOVO_GENERIC,
++	};
++
++	static const tpacpi_keymap_t tpacpi_keymaps[] __initconst = {
++	/* Generic keymap for IBM ThinkPads */
++	[TPACPI_KEYMAP_IBM_GENERIC] = {
+ 		/* Scan Codes 0x00 to 0x0B: ACPI HKEY FN+F1..F12 */
+-		KEY_FN_F1,	KEY_FN_F2,	KEY_COFFEE,	KEY_SLEEP,
++		KEY_FN_F1,	KEY_BATTERY,	KEY_COFFEE,	KEY_SLEEP,
+ 		KEY_WLAN,	KEY_FN_F6, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
+ 		KEY_FN_F9,	KEY_FN_F10,	KEY_FN_F11,	KEY_SUSPEND,
+ 
+@@ -3157,8 +3167,10 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		/* (assignments unknown, please report if found) */
+ 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
+ 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
+-	};
+-	static u16 lenovo_keycode_map[TPACPI_HOTKEY_MAP_LEN] __initdata = {
++		},
++
++	/* Generic keymap for Lenovo ThinkPads */
++	[TPACPI_KEYMAP_LENOVO_GENERIC] = {
+ 		/* Scan Codes 0x00 to 0x0B: ACPI HKEY FN+F1..F12 */
+ 		KEY_FN_F1,	KEY_COFFEE,	KEY_BATTERY,	KEY_SLEEP,
+ 		KEY_WLAN,	KEY_FN_F6, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
+@@ -3200,10 +3212,25 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		/* (assignments unknown, please report if found) */
+ 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
+ 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
++		},
+ 	};
+ 
+-#define TPACPI_HOTKEY_MAP_SIZE		sizeof(ibm_keycode_map)
+-#define TPACPI_HOTKEY_MAP_TYPESIZE	sizeof(ibm_keycode_map[0])
++	static const struct tpacpi_quirk tpacpi_keymap_qtable[] __initconst = {
++		/* Generic maps (fallback) */
++		{
++		  .vendor = PCI_VENDOR_ID_IBM,
++		  .bios = TPACPI_MATCH_ANY, .ec = TPACPI_MATCH_ANY,
++		  .quirks = TPACPI_KEYMAP_IBM_GENERIC,
++		},
++		{
++		  .vendor = PCI_VENDOR_ID_LENOVO,
++		  .bios = TPACPI_MATCH_ANY, .ec = TPACPI_MATCH_ANY,
++		  .quirks = TPACPI_KEYMAP_LENOVO_GENERIC,
++		},
++	};
++
++#define TPACPI_HOTKEY_MAP_SIZE		sizeof(tpacpi_keymap_t)
++#define TPACPI_HOTKEY_MAP_TYPESIZE	sizeof(tpacpi_keymap_t[0])
+ 
+ 	int res, i;
+ 	int status;
+@@ -3212,6 +3239,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 	bool tabletsw_state = false;
+ 
+ 	unsigned long quirks;
++	unsigned long keymap_id;
+ 
+ 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+ 			"initializing hotkey subdriver\n");
+@@ -3352,7 +3380,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		goto err_exit;
+ 
+ 	/* Set up key map */
+-
+ 	hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
+ 					GFP_KERNEL);
+ 	if (!hotkey_keycode_map) {
+@@ -3362,17 +3389,14 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		goto err_exit;
+ 	}
+ 
+-	if (tpacpi_is_lenovo()) {
+-		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+-			   "using Lenovo default hot key map\n");
+-		memcpy(hotkey_keycode_map, &lenovo_keycode_map,
+-			TPACPI_HOTKEY_MAP_SIZE);
+-	} else {
+-		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
+-			   "using IBM default hot key map\n");
+-		memcpy(hotkey_keycode_map, &ibm_keycode_map,
+-			TPACPI_HOTKEY_MAP_SIZE);
+-	}
++	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
++					ARRAY_SIZE(tpacpi_keymap_qtable));
++	BUG_ON(keymap_id >= ARRAY_SIZE(tpacpi_keymaps));
++	dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
++		   "using keymap number %lu\n", keymap_id);
++
++	memcpy(hotkey_keycode_map, &tpacpi_keymaps[keymap_id],
++		TPACPI_HOTKEY_MAP_SIZE);
+ 
+ 	input_set_capability(tpacpi_inputdev, EV_MSC, MSC_SCAN);
+ 	tpacpi_inputdev->keycodesize = TPACPI_HOTKEY_MAP_TYPESIZE;
 -- 
-Jesse Barnes, Intel Open Source Technology Center
+1.7.1
