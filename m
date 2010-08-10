@@ -1,44 +1,107 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 5/5] thinkpad-acpi: Add KEY_CAMERA (Fn-F6) for Lenovo keyboards
-Date: Mon,  9 Aug 2010 23:48:22 -0300
-Message-ID: <1281408502-7757-6-git-send-email-hmh@hmh.eng.br>
+Subject: [PATCH 2/5] thinkpad-acpi: untangle ACPI/vendor backlight selection
+Date: Mon,  9 Aug 2010 23:48:19 -0300
+Message-ID: <1281408502-7757-3-git-send-email-hmh@hmh.eng.br>
 References: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:60546 "EHLO
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:51091 "EHLO
 	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755267Ab0HJCsa (ORCPT
+	by vger.kernel.org with ESMTP id S1753674Ab0HJCs3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Aug 2010 22:48:30 -0400
+	Mon, 9 Aug 2010 22:48:29 -0400
 In-Reply-To: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Jens Taprogge <jens.taprogge@taprogge.org>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-From: Jens Taprogge <jens.taprogge@taprogge.org>
+acpi_video_backlight_support() already tells us if ACPI is handling
+backlight control through the generic ACPI handle.  It is better to just
+trust it.
 
-On the T410s and most likely other current models, Fn-F6 is labeled as
-Camera/Headphone key.  Report key presses as KEY_CAMERA.
+While at it, adjust down a printk priority, and test earlier for
+brightness_enable=0.
 
-Signed-off-by: Jens Taprogge <jens.taprogge@taprogge.org>
-Acked-by: Jerone Young <jerone.young@canonical.com>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 ---
- drivers/platform/x86/thinkpad_acpi.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ Documentation/laptops/thinkpad-acpi.txt |    4 +++
+ drivers/platform/x86/thinkpad_acpi.c    |   42 ++++++++++++++----------------
+ 2 files changed, 24 insertions(+), 22 deletions(-)
 
+diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
+index fc15538..720ba04 100644
+--- a/Documentation/laptops/thinkpad-acpi.txt
++++ b/Documentation/laptops/thinkpad-acpi.txt
+@@ -1073,6 +1073,10 @@ ThinkPad-specific interface.  The driver will disable its native
+ backlight brightness control interface if it detects that the standard
+ ACPI interface is available in the ThinkPad.
+ 
++If you want to use the thinkpad-acpi backlight brightness control
++instead of the generic ACPI video backlight brightness control for some
++reason, you should use the acpi_backlight=vendor kernel parameter.
++
+ The brightness_enable module parameter can be used to control whether
+ the LCD brightness control feature will be enabled when available.
+ brightness_enable=0 forces it to be disabled.  brightness_enable=1
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 0c08f6f..b4fe7c5 100644
+index eb44103..376a053 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3173,7 +3173,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	[TPACPI_KEYMAP_LENOVO_GENERIC] = {
- 		/* Scan Codes 0x00 to 0x0B: ACPI HKEY FN+F1..F12 */
- 		KEY_FN_F1,	KEY_COFFEE,	KEY_BATTERY,	KEY_SLEEP,
--		KEY_WLAN,	KEY_FN_F6, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
-+		KEY_WLAN,	KEY_CAMERA, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
- 		KEY_FN_F9,	KEY_FN_F10,	KEY_FN_F11,	KEY_SUSPEND,
+@@ -6285,28 +6285,6 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+ 	if (tp_features.bright_unkfw)
+ 		return 1;
  
- 		/* Scan codes 0x0C to 0x1F: Other ACPI HKEY hot keys */
+-	if (tp_features.bright_acpimode) {
+-		if (acpi_video_backlight_support()) {
+-			if (brightness_enable > 1) {
+-				printk(TPACPI_NOTICE
+-				       "Standard ACPI backlight interface "
+-				       "available, not loading native one.\n");
+-				return 1;
+-			} else if (brightness_enable == 1) {
+-				printk(TPACPI_NOTICE
+-				       "Backlight control force enabled, even if standard "
+-				       "ACPI backlight interface is available\n");
+-			}
+-		} else {
+-			if (brightness_enable > 1) {
+-				printk(TPACPI_NOTICE
+-				       "Standard ACPI backlight interface not "
+-				       "available, thinkpad_acpi native "
+-				       "brightness control enabled\n");
+-			}
+-		}
+-	}
+-
+ 	if (!brightness_enable) {
+ 		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_BRGHT,
+ 			   "brightness support disabled by "
+@@ -6314,6 +6292,26 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+ 		return 1;
+ 	}
+ 
++	if (acpi_video_backlight_support()) {
++		if (brightness_enable > 1) {
++			printk(TPACPI_INFO
++			       "Standard ACPI backlight interface "
++			       "available, not loading native one.\n");
++			return 1;
++		} else if (brightness_enable == 1) {
++			printk(TPACPI_WARN
++				"Cannot enable backlight brightness support, "
++				"ACPI is already handling it.  Refer to the "
++				"acpi_backlight kernel parameter\n");
++			return 1;
++		}
++	} else if (tp_features.bright_acpimode && brightness_enable > 1) {
++		printk(TPACPI_NOTICE
++			"Standard ACPI backlight interface not "
++			"available, thinkpad_acpi native "
++			"brightness control enabled\n");
++	}
++
+ 	/*
+ 	 * Check for module parameter bogosity, note that we
+ 	 * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
 -- 
 1.7.1
