@@ -1,146 +1,45 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 4/5] thinkpad-acpi: add support for model-specific keymaps
-Date: Mon,  9 Aug 2010 23:48:21 -0300
-Message-ID: <1281408502-7757-5-git-send-email-hmh@hmh.eng.br>
-References: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
+Subject: [GIT PATCH] thinkpad-acpi patches for merge window
+Date: Mon,  9 Aug 2010 23:48:17 -0300
+Message-ID: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:53872 "EHLO
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:45089 "EHLO
 	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755253Ab0HJCsa (ORCPT
+	by vger.kernel.org with ESMTP id S1755253Ab0HJCsb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Aug 2010 22:48:30 -0400
-In-Reply-To: <1281408502-7757-1-git-send-email-hmh@hmh.eng.br>
+	Mon, 9 Aug 2010 22:48:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-Use the quirks engine to select model-specific keymaps, which makes
-it much easier to extend should we need it.
+Matthew,
 
-Keycodes are based on the tables at
-http://www.thinkwiki.org/wiki/Default_meanings_of_special_keys.
+This is a bit late, I hope you will still consider pushing these to Linus while
+the merge window is still open.
 
-Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
----
- drivers/platform/x86/thinkpad_acpi.c |   60 +++++++++++++++++++++++----------
- 1 files changed, 42 insertions(+), 18 deletions(-)
+Please pull from:
+  git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git for-upstream/platform-x86_tpacpi
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 17da5c9..0c08f6f 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3093,6 +3093,8 @@ static const struct tpacpi_quirk tpacpi_hotkey_qtable[] __initconst = {
- 	TPACPI_Q_IBM('1', 'D', TPACPI_HK_Q_INIMASK), /* X22, X23, X24 */
- };
- 
-+typedef u16 tpacpi_keymap_t[TPACPI_HOTKEY_MAP_LEN];
-+
- static int __init hotkey_init(struct ibm_init_struct *iibm)
- {
- 	/* Requirements for changing the default keymaps:
-@@ -3124,9 +3126,17 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	 * If the above is too much to ask, don't change the keymap.
- 	 * Ask the thinkpad-acpi maintainer to do it, instead.
- 	 */
--	static u16 ibm_keycode_map[TPACPI_HOTKEY_MAP_LEN] __initdata = {
-+
-+	enum keymap_index {
-+		TPACPI_KEYMAP_IBM_GENERIC = 0,
-+		TPACPI_KEYMAP_LENOVO_GENERIC,
-+	};
-+
-+	static const tpacpi_keymap_t tpacpi_keymaps[] __initconst = {
-+	/* Generic keymap for IBM ThinkPads */
-+	[TPACPI_KEYMAP_IBM_GENERIC] = {
- 		/* Scan Codes 0x00 to 0x0B: ACPI HKEY FN+F1..F12 */
--		KEY_FN_F1,	KEY_FN_F2,	KEY_COFFEE,	KEY_SLEEP,
-+		KEY_FN_F1,	KEY_BATTERY,	KEY_COFFEE,	KEY_SLEEP,
- 		KEY_WLAN,	KEY_FN_F6, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
- 		KEY_FN_F9,	KEY_FN_F10,	KEY_FN_F11,	KEY_SUSPEND,
- 
-@@ -3157,8 +3167,10 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		/* (assignments unknown, please report if found) */
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
--	};
--	static u16 lenovo_keycode_map[TPACPI_HOTKEY_MAP_LEN] __initdata = {
-+		},
-+
-+	/* Generic keymap for Lenovo ThinkPads */
-+	[TPACPI_KEYMAP_LENOVO_GENERIC] = {
- 		/* Scan Codes 0x00 to 0x0B: ACPI HKEY FN+F1..F12 */
- 		KEY_FN_F1,	KEY_COFFEE,	KEY_BATTERY,	KEY_SLEEP,
- 		KEY_WLAN,	KEY_FN_F6, KEY_SWITCHVIDEOMODE, KEY_FN_F8,
-@@ -3200,10 +3212,25 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		/* (assignments unknown, please report if found) */
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		},
- 	};
- 
--#define TPACPI_HOTKEY_MAP_SIZE		sizeof(ibm_keycode_map)
--#define TPACPI_HOTKEY_MAP_TYPESIZE	sizeof(ibm_keycode_map[0])
-+	static const struct tpacpi_quirk tpacpi_keymap_qtable[] __initconst = {
-+		/* Generic maps (fallback) */
-+		{
-+		  .vendor = PCI_VENDOR_ID_IBM,
-+		  .bios = TPACPI_MATCH_ANY, .ec = TPACPI_MATCH_ANY,
-+		  .quirks = TPACPI_KEYMAP_IBM_GENERIC,
-+		},
-+		{
-+		  .vendor = PCI_VENDOR_ID_LENOVO,
-+		  .bios = TPACPI_MATCH_ANY, .ec = TPACPI_MATCH_ANY,
-+		  .quirks = TPACPI_KEYMAP_LENOVO_GENERIC,
-+		},
-+	};
-+
-+#define TPACPI_HOTKEY_MAP_SIZE		sizeof(tpacpi_keymap_t)
-+#define TPACPI_HOTKEY_MAP_TYPESIZE	sizeof(tpacpi_keymap_t[0])
- 
- 	int res, i;
- 	int status;
-@@ -3212,6 +3239,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	bool tabletsw_state = false;
- 
- 	unsigned long quirks;
-+	unsigned long keymap_id;
- 
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
- 			"initializing hotkey subdriver\n");
-@@ -3352,7 +3380,6 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		goto err_exit;
- 
- 	/* Set up key map */
--
- 	hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
- 					GFP_KERNEL);
- 	if (!hotkey_keycode_map) {
-@@ -3362,17 +3389,14 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		goto err_exit;
- 	}
- 
--	if (tpacpi_is_lenovo()) {
--		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
--			   "using Lenovo default hot key map\n");
--		memcpy(hotkey_keycode_map, &lenovo_keycode_map,
--			TPACPI_HOTKEY_MAP_SIZE);
--	} else {
--		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
--			   "using IBM default hot key map\n");
--		memcpy(hotkey_keycode_map, &ibm_keycode_map,
--			TPACPI_HOTKEY_MAP_SIZE);
--	}
-+	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
-+					ARRAY_SIZE(tpacpi_keymap_qtable));
-+	BUG_ON(keymap_id >= ARRAY_SIZE(tpacpi_keymaps));
-+	dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
-+		   "using keymap number %lu\n", keymap_id);
-+
-+	memcpy(hotkey_keycode_map, &tpacpi_keymaps[keymap_id],
-+		TPACPI_HOTKEY_MAP_SIZE);
- 
- 	input_set_capability(tpacpi_inputdev, EV_MSC, MSC_SCAN);
- 	tpacpi_inputdev->keycodesize = TPACPI_HOTKEY_MAP_TYPESIZE;
+To get the following changes:
+
+Henrique de Moraes Holschuh (4):
+      thinkpad-acpi: find ACPI video device by synthetic HID
+      thinkpad-acpi: untangle ACPI/vendor backlight selection
+      thinkpad-acpi: lock down size of hotkey keymap
+      thinkpad-acpi: add support for model-specific keymaps
+
+Jens Taprogge (1):
+      thinkpad-acpi: Add KEY_CAMERA (Fn-F6) for Lenovo keyboards
+
+ Documentation/laptops/thinkpad-acpi.txt |    4 
+ drivers/platform/x86/thinkpad_acpi.c    |  171 ++++++++++++++++----------------
+ 2 files changed, 92 insertions(+), 83 deletions(-)
+
+I will also send the patchset as replies to this email.
+
 -- 
-1.7.1
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
