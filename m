@@ -1,150 +1,475 @@
-From: David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH] Lenovo IdeaPAD ACPI driver
-Date: Thu, 12 Aug 2010 13:24:46 +0100
-Message-ID: <1281615886.12475.92.camel@localhost>
-References: <1281480758.5887.33.camel@localhost>
-	 <AANLkTin=Dwbe3gPDGd89Oc25mfOVVvc2_goP77sSVNeo@mail.gmail.com>
-	 <1281533999.3236.8.camel@localhost>
-	 <AANLkTinBqq+0rDE8DM0wz-FvUQqzH2Rf0F=YJgqVLHqM@mail.gmail.com>
-	 <1281606151.12475.57.camel@localhost>
-	 <AANLkTikC3_YgMabbDeJnFi66VvQQHp1CcyKgFUT_ji7h@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:42750 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751386Ab0HLMYv (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 12 Aug 2010 08:24:51 -0400
-In-Reply-To: <AANLkTikC3_YgMabbDeJnFi66VvQQHp1CcyKgFUT_ji7h@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] ideapad-laptop: add new driver
+Date: Fri, 13 Aug 2010 12:08:02 +0800
+Message-ID: <1281672482-10909-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Randy Dunlap <randy.dunlap@oracle.com>, Corentin Chary <corentincj@iksaif.net>, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@linux.intel.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2010-08-12 at 13:49 +0200, Corentin Chary wrote:
-> On Thu, Aug 12, 2010 at 11:42 AM, David Woodhouse <dwmw2@infradead.org> wrote:
-> > On Wed, 2010-08-11 at 15:51 +0200, Corentin Chary wrote:
-> >> And you should probably make it a platform driver (being the parent of
-> >> acpi, wmi, input, backlight, rfkill, etc..).
-> >>
-> >> Is there a lot of thing hidden in ACPI / WMI on these models (like
-> >> hotkeys, backlight, light sensors)  ?
-> >
-> > I hooked up something (below) to dump the AE or IO WMI blocks each time
-> > we get a notification on the VPC2004 device. Although the notification
-> > happens when we press a key, nothing ever changes in either of them.
-> 
-> They is probably something interesting in the u32 event var.
+ideapad-laptop is a new driver which enable hotkeys on Lenovo Ideapad laptops
 
-It's always 0x80.
+The driver will bind on ACPI HID:VPC2004. When hotkey pressed, the notify
+function will be called and query EC to tell which key pressed.
 
-> To get wmi events, you need to use wmi_install_notify_handler.
+Hotkeys enabled listed below:
+ * LCD backlight switch - reports KEY_DISPLAY_OFF
+ * One key restore - reports KEY_PROG1
+ * Brightness Up/down - reports KEY_BRIGHTNESS_CYCLE
+   Both up/down keys reports the same event. Need to find other way to detect
+ * Touchpad switch - reports KEY_F13
+ * Video output switch - reports KEY_SWITCHVIDEOMODE
+ * Camera switch - reports KEY_CAMERA
+ * Video resolution switch - reports KEY_VIDEO_NEXT
+ * S/W rfkill key - reports KEY_WLAN
 
-I didn't bother hooking that up -- according to the discussion back in
-April, the WMI is never triggered.
+The developing git tree as reference:
+  git://kernel.ubuntu.com/ikepanhc/ideapad-laptop.git
 
-http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg00034.html
+This patch made against current checkout of mainline kernel.
 
-> For example, the hardware rfkill state may change due to some keypress,
-> and an event may be sent via acpi or wmi, but if you don't catch it, the rfkill
-> class won't be updated.
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/Kconfig          |   11 +
+ drivers/platform/x86/Makefile         |    1 +
+ drivers/platform/x86/ideapad-laptop.c |  398 +++++++++++++++++++++++++++++++++
+ 3 files changed, 410 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/platform/x86/ideapad-laptop.c
 
-The notify gets called then too, and we resync the rfkill state.
-
-> Could you send the output of acpidump ?
-
-Attached to http://bugs.meego.com/show_bug.cgi?id=4086 --
-http://bugs.meego.com/attachment.cgi?id=1860
-
-It's much the same as what you were looking at before on the S10-3t, as
-far as I can tell.
-
-> > I *did* notice that we're actually getting proper keycodes for the
-> > hotkeys though, so for now I've lost what little interest I already had
-> > in doing anything with WMI. If anyone (Florian?) wants to do more, I'd
-> > be happy to do some testing.
-> 
-> keycodes are sent from the keyboard input device for all specials keys
-> ? (especially Fn+Fx keys) ?
-
-All but the external display hotkey.
-
-The brightness up/down (Fn-up, Fn-down) don't do anything but they do
-report:
-[10608.863641] atkbd.c: Unknown key pressed (translated set 2, code 0xb9 on isa0060/serio0).
-[10608.863655] atkbd.c: Use 'setkeycodes e039 <keycode>' to make it known.
-[10609.002143] atkbd.c: Unknown key released (translated set 2, code 0xb9 on isa0060/serio0).
-[10609.002157] atkbd.c: Use 'setkeycodes e039 <keycode>' to make it known.
-[10609.225721] atkbd.c: Unknown key pressed (translated set 2, code 0xba on isa0060/serio0).
-[10609.225735] atkbd.c: Use 'setkeycodes e03a <keycode>' to make it known.
-[10609.332264] atkbd.c: Unknown key released (translated set 2, code 0xba on isa0060/serio0).
-[10609.332278] atkbd.c: Use 'setkeycodes e03a <keycode>' to make it known.
-
-The camera enable/disable (Fn-Esc) toggles the camera power (which is
-also readable/writable through sysfs with my driver) and also reports:
-[10633.222832] atkbd.c: Unknown key pressed (translated set 2, code 0xf1 on isa0060/serio0).
-[10633.222846] atkbd.c: Use 'setkeycodes e071 <keycode>' to make it known.
-[10633.329105] atkbd.c: Unknown key released (translated set 2, code 0xf1 on isa0060/serio0).
-[10633.329119] atkbd.c: Use 'setkeycodes e071 <keycode>' to make it known.
-[10633.451208] usb 1-8: USB disconnect, address 5
-
-The sleep button (Fn-F1) just puts it to sleep; that'll be reported
-through a separate ACPI event. I haven't investigated but I assume
-that's working correctly.
-
-The 'display off' button (Fn-F2) works and:
-[10788.130877] atkbd.c: Unknown key pressed (translated set 2, code 0x83 on isa0060/serio0).
-[10788.130891] atkbd.c: Use 'setkeycodes e003 <keycode>' to make it known.
-[10788.269195] atkbd.c: Unknown key released (translated set 2, code 0x83 on isa0060/serio0).
-[10788.269209] atkbd.c: Use 'setkeycodes e003 <keycode>' to make it known.
-
-What I assume is the external display key (Fn-F3) seems to do nothing,
-whether I have an external display connected or not. If I connect an
-external display (even if it's powered off), X switches over to it
-automatically. That's probably just X under MeeGo doing that though.
-
-Fn-F4 has no special marking
-
-The rfkill hotkey (Fn-F5) which under Windows just brings up the Lenovo
-GUI tool, does nothing except:
-[10835.095618] atkbd.c: Unknown key pressed (translated set 2, code 0x81 on isa0060/serio0).
-[10835.095631] atkbd.c: Use 'setkeycodes e001 <keycode>' to make it known.
-[10835.233979] atkbd.c: Unknown key released (translated set 2, code 0x81 on isa0060/serio0).
-[10835.233994] atkbd.c: Use 'setkeycodes e001 <keycode>' to make it known.
-
-What looks like a 'trackpad kill' (Fn-F6) just does:
-[10910.931021] atkbd.c: Unknown key pressed (translated set 2, code 0xf2 on isa0060/serio0).
-[10910.931036] atkbd.c: Use 'setkeycodes e072 <keycode>' to make it known.
-[10911.048135] atkbd.c: Unknown key released (translated set 2, code 0xf2 on isa0060/serio0).
-[10911.048148] atkbd.c: Use 'setkeycodes e072 <keycode>' to make it known.
-
-The multimedia keys on Fn-F{7,8,9,10} seems to be generating 'known'
-keycodes which don't cause a complaint, although they don't seem to show
-up as anything useful in 'xev'.
-[11135.784840] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11135374]
-[11135.789916] drivers/input/serio/i8042.c: 22 <- i8042 (interrupt, 0, 1) [11135379]
-[11135.901911] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11135491]
-[11135.907035] drivers/input/serio/i8042.c: a2 <- i8042 (interrupt, 0, 1) [11135497]
-[11135.949906] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11135539]
-[11135.954976] drivers/input/serio/i8042.c: 24 <- i8042 (interrupt, 0, 1) [11135544]
-[11136.125383] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11135715]
-[11136.130516] drivers/input/serio/i8042.c: a4 <- i8042 (interrupt, 0, 1) [11135720]
-[11136.395678] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11135985]
-[11136.400910] drivers/input/serio/i8042.c: 10 <- i8042 (interrupt, 0, 1) [11135990]
-[11136.523555] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11136113]
-[11136.528676] drivers/input/serio/i8042.c: 90 <- i8042 (interrupt, 0, 1) [11136118]
-[11136.864389] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11136454]
-[11136.869477] drivers/input/serio/i8042.c: 19 <- i8042 (interrupt, 0, 1) [11136459]
-[11136.944201] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11136534]
-[11136.949322] drivers/input/serio/i8042.c: 99 <- i8042 (interrupt, 0, 1) [11136539]
-
-
-If I press and hold the Fn key, after a while I get a stream of
-[11231.859281] drivers/input/serio/i8042.c: e0 <- i8042 (interrupt, 0, 1) [11231449]
-[11231.864363] drivers/input/serio/i8042.c: 63 <- i8042 (interrupt, 0, 1) [11231454]
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 79baa63..e9a203d 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -581,4 +581,15 @@ config INTEL_IPS
+ 	  functionality.  If in doubt, say Y here; it will only load on
+ 	  supported platforms.
+ 
++config IDEAPAD_LAPTOP
++	tristate "Ideapad Laptop Extras"
++	depends on ACPI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	---help---
++	  This is the ACPI extra Linux driver for ideapad laptops which enable
++	  ACPI event based hotkey.
++
++	  If you have an Ideapad laptop, say Y or M here.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 4744c77..47ca2b9 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -29,4 +29,5 @@ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
+ obj-$(CONFIG_RAR_REGISTER)	+= intel_rar_register.o
+ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+ obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
++obj-$(CONFIG_IDEAPAD_LAPTOP)	+= ideapad-laptop.o
+ 
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+new file mode 100644
+index 0000000..d666d24
+--- /dev/null
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -0,0 +1,398 @@
++/*
++ *  ideapad-laptop.c: ACPI extra driver for ideapad series laptop
++ *
++ *  This driver is based on eeepc-laptop.c
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <acpi/acpi_drivers.h>
++#include <acpi/acpi_bus.h>
++#include <linux/uaccess.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++
++#define IDEAPAD_LAPTOP_NAME	"Ideapad ACPI extra driver"
++#define IDEAPAD_LAPTOP_FILE	"ideapad"
++
++#define IDEAPAD_ACPI_CLASS		"hotkey"
++#define IDEAPAD_ACPI_DEVICE_NAME	"Hotkey"
++#define IDEAPAD_ACPI_HID		"VPC2004"
++
++#define IDEAPAD_EC_TIMEOUT	(25)
++
++MODULE_AUTHOR("Ike Panhc");
++MODULE_DESCRIPTION(IDEAPAD_LAPTOP_NAME);
++MODULE_LICENSE("GPL");
++
++/*
++ * This is the main structure, we can use it to store useful information
++ */
++struct ideapad_laptop {
++	acpi_handle handle;		/* the handle of the acpi device */
++	u32 cm_supported;		/* the control methods supported
++					   by this BIOS */
++	u16 event_count[128];		/* count for each event */
++
++	struct platform_device *platform_device;
++	struct input_dev *inputdev;
++
++	int cfg;
++};
++
++/*
++ * ACPI Helpers
++ */
++static int read_method_int(acpi_handle handle, const char *method, int *val)
++{
++	acpi_status status;
++	unsigned long long result;
++
++	status = acpi_evaluate_integer(handle, (char *)method, NULL, &result);
++	if (ACPI_FAILURE(status)) {
++		*val = -1;
++		return -1;
++	} else {
++		*val = result;
++		return 0;
++	}
++}
++
++static int method_vpcr(acpi_handle handle, int cmd, int *ret)
++{
++	acpi_status status;
++	unsigned long long result;
++	struct acpi_object_list params;
++	union acpi_object in_obj;
++
++	params.count = 1;
++	params.pointer = &in_obj;
++	in_obj.type = ACPI_TYPE_INTEGER;
++	in_obj.integer.value = cmd;
++
++	status = acpi_evaluate_integer(handle, "VPCR", &params, &result);
++
++	if (ACPI_FAILURE(status)) {
++		*ret = -1;
++		return -1;
++	} else {
++		*ret = result;
++		return 0;
++	}
++}
++
++static int method_vpcw(acpi_handle handle, int cmd, int data)
++{
++	struct acpi_object_list params;
++	union acpi_object in_obj[2];
++	acpi_status status;
++
++	params.count = 2;
++	params.pointer = in_obj;
++	in_obj[0].type = ACPI_TYPE_INTEGER;
++	in_obj[0].integer.value = cmd;
++	in_obj[1].type = ACPI_TYPE_INTEGER;
++	in_obj[1].integer.value = data;
++	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
++	if (status != AE_OK)
++		return -1;
++	return 0;
++}
++
++static int read_ec_data(acpi_handle handle, int cmd, unsigned long *data)
++{
++	int val;
++	unsigned long int start_jiffies, now_jiffies;
++
++	if (method_vpcw(handle, 1, cmd))
++		return -1;
++
++	for (start_jiffies = jiffies;; ) {
++		if (method_vpcr(handle, 1, &val))
++			return -1;
++		if (val == 0) {
++			if (method_vpcr(handle, 0, &val))
++				return -1;
++			*data = val;
++			return 0;
++		}
++		now_jiffies = jiffies;
++		if ((now_jiffies-start_jiffies) > (HZ)/IDEAPAD_EC_TIMEOUT+1) {
++			pr_err("timeout in read_ec_cmd\n");
++			return -1;
++		}
++	}
++}
++
++/*
++ * Platform driver
++ */
++static struct platform_driver platform_driver = {
++	.driver = {
++		.name = IDEAPAD_LAPTOP_FILE,
++		.owner = THIS_MODULE,
++	}
++};
++
++static int ideapad_platform_init(struct ideapad_laptop *ideapad)
++{
++	int result;
++
++	ideapad->platform_device = platform_device_alloc(IDEAPAD_LAPTOP_FILE,
++							-1);
++	if (!ideapad->platform_device)
++		return -ENOMEM;
++	platform_set_drvdata(ideapad->platform_device, ideapad);
++
++	result = platform_device_add(ideapad->platform_device);
++	if (result)
++		goto fail_platform_device;
++
++	return 0;
++
++fail_platform_device:
++	platform_device_put(ideapad->platform_device);
++	return result;
++}
++
++static void ideapad_platform_exit(struct ideapad_laptop *ideapad)
++{
++	platform_device_unregister(ideapad->platform_device);
++}
++
++/*
++ * Input device
++ */
++static const struct key_entry ideapad_keymap[] = {
++	{ KE_KEY, 0x02, { KEY_DISPLAY_OFF } },
++	{ KE_KEY, 0x03, { KEY_PROG1 } },
++	{ KE_KEY, 0x04, { KEY_BRIGHTNESS_CYCLE } },
++	{ KE_KEY, 0x05, { KEY_F13 } },
++	{ KE_KEY, 0x06, { KEY_SWITCHVIDEOMODE } },
++	{ KE_KEY, 0x07, { KEY_CAMERA } },
++	{ KE_KEY, 0x0B, { KEY_VIDEO_NEXT } },
++	{ KE_KEY, 0x0D, { KEY_WLAN } },
++	{ KE_END, 0},
++};
++
++static int ideapad_input_init(struct ideapad_laptop *ideapad)
++{
++	struct input_dev *input;
++	int error;
++
++	input = input_allocate_device();
++	if (!input) {
++		pr_info("Unable to allocate input device\n");
++		return -ENOMEM;
++	}
++
++	input->name = "Lenovo Ideapad Hotkeys";
++	input->phys = IDEAPAD_LAPTOP_FILE "/input0";
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = &ideapad->platform_device->dev;
++
++	error = sparse_keymap_setup(input, ideapad_keymap, NULL);
++	if (error) {
++		pr_err("Unable to setup input device keymap\n");
++		goto err_free_dev;
++	}
++
++	error = input_register_device(input);
++	if (error) {
++		pr_err("Unable to register input device\n");
++		goto err_free_keymap;
++	}
++
++	ideapad->inputdev = input;
++	return 0;
++
++err_free_keymap:
++	sparse_keymap_free(input);
++err_free_dev:
++	input_free_device(input);
++	return error;
++}
++
++static void ideapad_input_exit(struct ideapad_laptop *ideapad)
++{
++	if (ideapad->inputdev)
++		input_unregister_device(ideapad->inputdev);
++}
++
++/*
++ * ACPI driver
++ */
++static void ideapad_acpi_notify(struct acpi_device *device, u32 event)
++{
++	struct ideapad_laptop *ideapad = device->driver_data;
++	acpi_handle handle = ideapad->handle;
++	unsigned long vpc1, vpc2, vpc_bit;
++
++	if (read_ec_data(handle, 0x10, &vpc1))
++		return;
++	if (read_ec_data(handle, 0x1A, &vpc2))
++		return;
++
++	vpc1 = (vpc2 << 8) | vpc1;
++	for (vpc_bit = 0; vpc_bit < 16; vpc_bit++) {
++		if (test_bit(vpc_bit, &vpc1)) {
++			if (vpc_bit == 9)
++				continue;
++			sparse_keymap_report_event(ideapad->inputdev, event, 1,
++						true);
++		}
++	}
++}
++
++static int ideapad_acpi_init(struct ideapad_laptop *ideapad,
++			   struct acpi_device *device)
++{
++	int result;
++	acpi_handle handle = ideapad->handle;
++
++	result = acpi_bus_get_status(device);
++	if (result)
++		return result;
++	if (!device->status.present) {
++		pr_err("Hotkey device not present, aborting\n");
++		return -ENODEV;
++	}
++
++	if (read_method_int(handle, "_STA", &result)) {
++		pr_err("Access _STA failed\n");
++		return -ENODEV;
++	}
++	if (result != 0x0F) {
++		pr_err("_STA return unknown value: 0x%X\n", result);
++		return -ENODEV;
++	}
++
++	if (read_method_int(handle, "_CFG", &result)) {
++		pr_err("Access _CFG failed\n");
++		return -ENODEV;
++	}
++	ideapad->cfg = result;
++
++	return 0;
++}
++
++static bool ideapad_device_present;
++
++static int __devinit ideapad_acpi_add(struct acpi_device *device)
++{
++	struct ideapad_laptop *ideapad;
++	int result;
++
++	ideapad = kzalloc(sizeof(struct ideapad_laptop), GFP_KERNEL);
++	if (!ideapad)
++		return -ENOMEM;
++	ideapad->handle = device->handle;
++	strcpy(acpi_device_name(device), IDEAPAD_ACPI_DEVICE_NAME);
++	strcpy(acpi_device_class(device), IDEAPAD_ACPI_CLASS);
++	device->driver_data = ideapad;
++
++	result = ideapad_acpi_init(ideapad, device);
++	if (result)
++		goto fail_platform;
++
++	result = ideapad_platform_init(ideapad);
++	if (result)
++		goto fail_platform;
++
++	result = ideapad_input_init(ideapad);
++	if (result)
++		goto fail_input;
++
++	ideapad_device_present = true;
++	return 0;
++
++fail_input:
++	ideapad_platform_exit(ideapad);
++fail_platform:
++	kfree(ideapad);
++
++	return result;
++}
++
++static int ideapad_acpi_remove(struct acpi_device *device, int type)
++{
++	struct ideapad_laptop *ideapad = acpi_driver_data(device);
++
++	ideapad_input_exit(ideapad);
++	ideapad_platform_exit(ideapad);
++
++	kfree(ideapad);
++	return 0;
++}
++
++
++static const struct acpi_device_id ideapad_device_ids[] = {
++	{IDEAPAD_ACPI_HID, 0},
++	{"", 0},
++};
++MODULE_DEVICE_TABLE(acpi, ideapad_device_ids);
++
++static struct acpi_driver ideapad_acpi_driver = {
++	.name = IDEAPAD_LAPTOP_NAME,
++	.class = IDEAPAD_ACPI_CLASS,
++	.owner = THIS_MODULE,
++	.ids = ideapad_device_ids,
++	.flags = ACPI_DRIVER_ALL_NOTIFY_EVENTS,
++	.ops = {
++		.add = ideapad_acpi_add,
++		.remove = ideapad_acpi_remove,
++		.notify = ideapad_acpi_notify,
++	},
++};
++
++
++static int __init ideapad_laptop_init(void)
++{
++	int result;
++
++	result = platform_driver_register(&platform_driver);
++	if (result < 0)
++		return result;
++
++	result = acpi_bus_register_driver(&ideapad_acpi_driver);
++	if (result < 0)
++		goto fail_acpi_driver;
++
++	if (!ideapad_device_present) {
++		result = -ENODEV;
++		goto fail_no_device;
++	}
++
++	return 0;
++
++fail_no_device:
++	acpi_bus_unregister_driver(&ideapad_acpi_driver);
++fail_acpi_driver:
++	platform_driver_unregister(&platform_driver);
++	return result;
++}
++
++static void __exit ideapad_laptop_exit(void)
++{
++	acpi_bus_unregister_driver(&ideapad_acpi_driver);
++	platform_driver_unregister(&platform_driver);
++}
++
++module_init(ideapad_laptop_init);
++module_exit(ideapad_laptop_exit);
 -- 
-David Woodhouse                            Open Source Technology Centre
-David.Woodhouse@intel.com                              Intel Corporation
+1.7.0.4
