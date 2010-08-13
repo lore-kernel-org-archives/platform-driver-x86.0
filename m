@@ -1,33 +1,116 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] ideapad-laptop: add new driver
-Date: Fri, 13 Aug 2010 15:15:30 +0800
-Message-ID: <4C64F112.8050504@canonical.com>
-References: <1281672482-10909-1-git-send-email-ike.pan@canonical.com>	<AANLkTikBZ2SmqWavZ8bw69yQ_A5GTTcB13RKEzUuUcx3@mail.gmail.com>	<4C64EC01.9040103@canonical.com> <AANLkTim9jcbRwZt7E0gwVwQyETAEhe-tKP3NvGSAPknX@mail.gmail.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH] Support MSI Poulsbo netbook U110/U115
+Date: Fri, 13 Aug 2010 03:05:58 -0600
+Message-ID: <4C659796020000230001EA4E@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <AANLkTim9jcbRwZt7E0gwVwQyETAEhe-tKP3NvGSAPknX@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Randy Dunlap <randy.dunlap@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@linux.intel.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: mjg59@srcf.ucam.org
+Cc: mjg@redhat.com, gregkh@suse.de, trenn@suse.de, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dennis.Jansen@web.de
 
-On 08/13/2010 03:01 PM, Corentin Chary wrote:
->> Could you point me where is the rfkill driver? Sorry I do not find it.
->>
->> I will see what I can do.
->>
->> Thanks.
->>
-> 
-> Here is the thread
-> http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/471
-> 
-Yes, I believe I can. will read patch from David and merge.
+Hi Matthew,=20
 
-But I think i will not use \_SB_.SECN as major interface. I know there is
-another command code of EC that can access HW switch status and shutdown
-the interface.
+Dennis help me to ported this patch to 2.6.35, and it works as expected=
+=2E
+Could you please give me any suggestions for this patch?
 
 
+Thank's a lot!
+Joey Lee
+
+=E6=96=BC =E4=BA=8C=EF=BC=8C2010-07-13 =E6=96=BC 15:54 +0800=EF=BC=8CLe=
+e, Chun-Yi =E6=8F=90=E5=88=B0=EF=BC=9A
+> The MSI U110/U115's DSDT have opregion declare, but i915 drm driver
+> does not support Poulsbo ship. It causes the acpi backlight control
+> interface not generate by i915 drm driver.
+> But, we are sure the MSI Poulsbo netbook U110/U115 have workable
+> _BCM,_BQC implementation in DSDT and it control brightness by using
+> EC but not opregion.
+>=20
+> So, put a dmi detection in msi-laptop driver and also add wlan/blueto=
+oth
+> rfkill support on U110/U115.
+>=20
+> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+> ---
+>  drivers/platform/x86/msi-laptop.c |   41 +++++++++++++++++++++++++++=
+++++++++++
+>  1 files changed, 41 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86=
+/msi-laptop.c
+> index afd762b..5f62ad8 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -60,6 +60,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/i8042.h>
+> +#include <acpi/video.h>
+> =20
+>  #define MSI_DRIVER_VERSION "0.5"
+> =20
+> @@ -524,6 +525,42 @@ static struct dmi_system_id __initdata msi_load_=
+scm_models_dmi_table[] =3D {
+>  		},
+>  		.callback =3D dmi_check_cb
+>  	},
+> +	{
+> +		.ident =3D "MSI U110",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "U110"),
+> +		},
+> +		.callback =3D dmi_check_cb
+> +	},
+> +	{
+> +		.ident =3D "MSI U115",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "U115"),
+> +		},
+> +		.callback =3D dmi_check_cb
+> +	},
+> +	{ }
+> +};
+> +
+> +static struct dmi_system_id __initdata msi_poulsbo_dmi_table[] =3D {
+> +	{
+> +		.ident =3D "MSI U110",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "U110"),
+> +		},
+> +		.callback =3D dmi_check_cb
+> +	},
+> +	{
+> +		.ident =3D "MSI U115",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "U115"),
+> +		},
+> +		.callback =3D dmi_check_cb
+> +	},
+>  	{ }
+>  };
+> =20
+> @@ -801,6 +838,8 @@ static int __init msi_init(void)
+>  	if (acpi_video_backlight_support()) {
+>  		printk(KERN_INFO "MSI: Brightness ignored, must be controlled "
+>  		       "by ACPI video driver\n");
+> +		if (dmi_check_system(msi_poulsbo_dmi_table))
+> +			acpi_video_register();
+>  	} else {
+>  		struct backlight_properties props;
+>  		memset(&props, 0, sizeof(struct backlight_properties));
+> @@ -919,3 +958,5 @@ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:p=
+nMS-N034:*");
+>  MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N051:*");
+>  MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N014:*");
+>  MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnCR620:*");
+> +MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnU110:*");
+> +MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnU115:*");
