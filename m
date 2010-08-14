@@ -1,33 +1,70 @@
-From: David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: add new driver
-Date: Sat, 14 Aug 2010 10:49:58 +0100
-Message-ID: <1281779398.25357.24.camel@localhost>
-References: <1281672482-10909-1-git-send-email-ike.pan@canonical.com>
-	 <1281690893.23680.475.camel@localhost>  <4C650FFB.7090602@canonical.com>
-	 <1281692078.23680.487.camel@localhost>  <4C6605DF.8080605@canonical.com>
+From: Victor van den Elzen <victor.vde@gmail.com>
+Subject: [PATCH] platform/x86: move rfkill for Dell Mini 1012 to
+ compal-laptop
+Date: Sun, 15 Aug 2010 01:19:33 +0200
+Message-ID: <20100814231933.GA4404@archmini>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:52408 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934653Ab0HNJuL (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Aug 2010 05:50:11 -0400
-In-Reply-To: <4C6605DF.8080605@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Randy Dunlap <randy.dunlap@oracle.com>, Corentin Chary <corentincj@iksaif.net>, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@linux.intel.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Mario Limonciello <superm1@ubuntu.com>, Matthew Garrett <mjg@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 2010-08-14 at 10:56 +0800, Ike Panhc wrote:
-> No, I received the ideapads without any OS preinstalled, and get the
-> design spec with NDA. I asked and got the approve to send the driver
-> to mainline kernel according to the spec. 
+Like others in the Mini series, the Dell Mini 1012 does not support
+the smbios hook required by dell-laptop.
 
-Cool. I'd like to have a copy of that spec. Please could you tell me who
-in Lenovo (presumably) I should contact?
+Signed-off-by: Victor van den Elzen <victor.vde@gmail.com>
+Cc: stable <stable@kernel.org>
+---
+ drivers/platform/x86/compal-laptop.c |    9 +++++++++
+ drivers/platform/x86/dell-laptop.c   |    7 +++++++
+ 2 files changed, 16 insertions(+), 0 deletions(-)
 
--- 
-David Woodhouse                            Open Source Technology Centre
-David.Woodhouse@intel.com                              Intel Corporation
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index 71ff154..90111d7 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -259,6 +259,14 @@ static struct dmi_system_id __initdata compal_dmi_table[] = {
+ 		.callback = dmi_check_cb
+ 	},
+ 	{
++		.ident = "Dell Mini 1012",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
++		},
++		.callback = dmi_check_cb
++	},
++	{
+ 		.ident = "Dell Inspiron 11z",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+@@ -375,5 +383,6 @@ MODULE_ALIAS("dmi:*:rnIFT00:rvrIFT00:*");
+ MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron910:*");
+ MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1010:*");
+ MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1011:*");
++MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1012:*");
+ MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1110:*");
+ MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1210:*");
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 661e3ac..6110601 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -116,6 +116,13 @@ static struct dmi_system_id __devinitdata dell_blacklist[] = {
+ 		},
+ 	},
+ 	{
++		.ident = "Dell Mini 1012",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
++		},
++	},
++	{
+ 		.ident = "Dell Inspiron 11z",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+--
+1.7.2.1
