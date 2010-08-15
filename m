@@ -1,70 +1,35 @@
-From: Victor van den Elzen <victor.vde@gmail.com>
-Subject: [PATCH] platform/x86: move rfkill for Dell Mini 1012 to
- compal-laptop
-Date: Sun, 15 Aug 2010 01:19:33 +0200
-Message-ID: <20100814231933.GA4404@archmini>
+From: Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH] ideapad-laptop: add new driver
+Date: Sat, 14 Aug 2010 22:33:31 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1008142229540.2294@localhost.localdomain>
+References: <1281672482-10909-1-git-send-email-ike.pan@canonical.com>
+ <1281690893.23680.475.camel@localhost>  <4C650FFB.7090602@canonical.com>
+ <1281692078.23680.487.camel@localhost> <4C6605DF.8080605@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Mario Limonciello <superm1@ubuntu.com>, Matthew Garrett <mjg@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from vms173001pub.verizon.net ([206.46.173.1]:43910 "EHLO
+	vms173001pub.verizon.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757864Ab0HOCdj (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 14 Aug 2010 22:33:39 -0400
+In-reply-to: <4C6605DF.8080605@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Randy Dunlap <randy.dunlap@oracle.com>, Corentin Chary <corentincj@iksaif.net>, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@linux.intel.com>, Thomas Renninger <trenn@suse.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-Like others in the Mini series, the Dell Mini 1012 does not support
-the smbios hook required by dell-laptop.
+If you merge the drivers, I'd sure prefer the name "ideapad-laptop"
+over "ideapad-acpi".
 
-Signed-off-by: Victor van den Elzen <victor.vde@gmail.com>
-Cc: stable <stable@kernel.org>
----
- drivers/platform/x86/compal-laptop.c |    9 +++++++++
- drivers/platform/x86/dell-laptop.c   |    7 +++++++
- 2 files changed, 16 insertions(+), 0 deletions(-)
+While the maintainerless "toshiba-acpi" driver was a pioneer,
+and thinkpad-acpi feared installed-base confusion when considering
+a name change, we tend to reserve the "acpi" in drivers for things
+that supply ACPI, rather than simply use ACPI.
 
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 71ff154..90111d7 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -259,6 +259,14 @@ static struct dmi_system_id __initdata compal_dmi_table[] = {
- 		.callback = dmi_check_cb
- 	},
- 	{
-+		.ident = "Dell Mini 1012",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+		.callback = dmi_check_cb
-+	},
-+	{
- 		.ident = "Dell Inspiron 11z",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-@@ -375,5 +383,6 @@ MODULE_ALIAS("dmi:*:rnIFT00:rvrIFT00:*");
- MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron910:*");
- MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1010:*");
- MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1011:*");
-+MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1012:*");
- MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1110:*");
- MODULE_ALIAS("dmi:*:svnDellInc.:pnInspiron1210:*");
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 661e3ac..6110601 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -116,6 +116,13 @@ static struct dmi_system_id __devinitdata dell_blacklist[] = {
- 		},
- 	},
- 	{
-+		.ident = "Dell Mini 1012",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+	},
-+	{
- 		.ident = "Dell Inspiron 11z",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
---
-1.7.2.1
+Also, you may find that the platform driver ends up doing
+more for the laptop than just using what is behind its
+platform-specific ACPI extension.
+
+thanks,
+Len Brown, Intel Open Source Technology Center
