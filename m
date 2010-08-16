@@ -1,23 +1,40 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 12/16] drivers/platform/x86: Use available error codes
-Date: Mon, 16 Aug 2010 18:28:03 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1008161827470.19313@ask.diku.dk>
+From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
+Subject: Re: [PATCH 15/16] drivers/platform/x86: Use available error codes
+Date: Tue, 17 Aug 2010 02:41:57 +0930 (CST)
+Message-ID: <201008161711.o7GHBw0x007457@mercury.physics.adelaide.edu.au>
+References: <Pine.LNX.4.64.1008161828350.19313@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mgw2.diku.dk ([130.225.96.92]:50861 "EHLO mgw2.diku.dk"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754722Ab0HPQ2F (ORCPT
+Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:52053 "EHLO
+	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752725Ab0HPRgd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 16 Aug 2010 12:28:05 -0400
+	Mon, 16 Aug 2010 13:36:33 -0400
+In-Reply-To: <Pine.LNX.4.64.1008161828350.19313@ask.diku.dk> from "Julia Lawall" at Aug 16, 2010 06:28:52 PM
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Julia Lawall <julia@diku.dk>
+Cc: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-From: Julia Lawall <julia@diku.dk>
+I've had a quick look at this and the idea behind it is sound.  While it
+does change the symantics as noted in the original post, the change is only
+in an error path and to my eye the error code should be returned in that
+case - as the code currently stands a 0 is returned even if ENOMEM has
+occurred.
 
-An error code is stored in ret, but the return value is always 0.  Return
-ret instead.
+It seems to me that error and result have been (wrongly) used interchangedly
+within these two functions (possibly be different authors).  I agree that
+one of them should be eliminated, and error seems the sensible choice.  So
+something like the following is probably in order.
+
+===
+
+An error code is stored in the variable error, but it is the variable result
+that is returned instead.  So store the error code in result and eliminate
+the unnecessary variable error.  Initial report and patch from Julia Lawall
+<julia@diku.dk>.
 
 The semantic match that finds this problem is as follows:
 (http://coccinelle.lip6.fr/)
@@ -44,23 +61,74 @@ if (...) { ...
 // </smpl>
 
 Signed-off-by: Julia Lawall <julia@diku.dk>
+Signed-off-by: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
 
----
-This changes the semantics of the function and has not been tested.
-
- drivers/platform/x86/dell-laptop.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index b41ed5c..d4d6c9d 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -441,7 +441,7 @@ static int dell_send_intensity(struct backlight_device *bd)
+--- a/drivers/platform/x86/fujitsu-laptop.c	2010-03-16 02:39:39.000000000 +1030
++++ b/drivers/platform/x86/fujitsu-laptop.c	2010-08-17 02:37:18.556779664 +0930
+@@ -655,7 +655,6 @@
+ 	int result = 0;
+ 	int state = 0;
+ 	struct input_dev *input;
+-	int error;
  
- out:
- 	release_buffer();
--	return 0;
-+	return ret;
- }
+ 	if (!device)
+ 		return -EINVAL;
+@@ -667,7 +666,7 @@
  
- static int dell_get_intensity(struct backlight_device *bd)
+ 	fujitsu->input = input = input_allocate_device();
+ 	if (!input) {
+-		error = -ENOMEM;
++		result = -ENOMEM;
+ 		goto err_stop;
+ 	}
+ 
+@@ -684,8 +683,8 @@
+ 	set_bit(KEY_BRIGHTNESSDOWN, input->keybit);
+ 	set_bit(KEY_UNKNOWN, input->keybit);
+ 
+-	error = input_register_device(input);
+-	if (error)
++	result = input_register_device(input);
++	if (result)
+ 		goto err_free_input_dev;
+ 
+ 	result = acpi_bus_get_power(fujitsu->acpi_handle, &state);
+@@ -810,7 +809,6 @@
+ 	int result = 0;
+ 	int state = 0;
+ 	struct input_dev *input;
+-	int error;
+ 	int i;
+ 
+ 	if (!device)
+@@ -824,16 +822,16 @@
+ 
+ 	/* kfifo */
+ 	spin_lock_init(&fujitsu_hotkey->fifo_lock);
+-	error = kfifo_alloc(&fujitsu_hotkey->fifo, RINGBUFFERSIZE * sizeof(int),
++	result = kfifo_alloc(&fujitsu_hotkey->fifo, RINGBUFFERSIZE * sizeof(int),
+ 			GFP_KERNEL);
+-	if (error) {
++	if (result) {
+ 		printk(KERN_ERR "kfifo_alloc failed\n");
+ 		goto err_stop;
+ 	}
+ 
+ 	fujitsu_hotkey->input = input = input_allocate_device();
+ 	if (!input) {
+-		error = -ENOMEM;
++		result = -ENOMEM;
+ 		goto err_free_fifo;
+ 	}
+ 
+@@ -853,8 +851,8 @@
+ 	set_bit(fujitsu->keycode4, input->keybit);
+ 	set_bit(KEY_UNKNOWN, input->keybit);
+ 
+-	error = input_register_device(input);
+-	if (error)
++	result = input_register_device(input);
++	if (result)
+ 		goto err_free_input_dev;
+ 
+ 	result = acpi_bus_get_power(fujitsu_hotkey->acpi_handle, &state);
