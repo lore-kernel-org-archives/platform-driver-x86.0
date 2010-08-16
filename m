@@ -1,64 +1,77 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PULL] Minor platform driver updates
-Date: Mon, 16 Aug 2010 17:16:21 +0100
-Message-ID: <20100816161621.GA3702@srcf.ucam.org>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 15/16] drivers/platform/x86: Use available error codes
+Date: Mon, 16 Aug 2010 18:28:52 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1008161828350.19313@ask.diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:37347 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751823Ab0HPQQY (ORCPT
+Received: from mgw2.diku.dk ([130.225.96.92]:50928 "EHLO mgw2.diku.dk"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754642Ab0HPQ2y (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 16 Aug 2010 12:16:24 -0400
-Content-Disposition: inline
+	Mon, 16 Aug 2010 12:28:54 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-Hi Linus,
+From: Julia Lawall <julia@diku.dk>
 
-I know it's post RC1, but these are a couple of potential (if unlikely) 
-crash fixers, patches to enable rfkill control on a single model of Dell 
-and some Thinkpad updates that are effectively noops on current hardware 
-but improve support for machines that aren't out yet. Nothing 
-heartbreaking if it has to wait for .37.
+An error code is stored in the variable error, but it is the variable
+result that is returned instead.  So store the error code in result.
 
-The following changes since commit da5cabf80e2433131bf0ed8993abc0f7ea618c73:
+The semantic match that finds this problem is as follows:
+(http://coccinelle.lip6.fr/)
 
-  Linux 2.6.36-rc1 (2010-08-15 17:41:37 -0700)
+// <smpl>
+@r@
+local idexpression x;
+constant C;
+@@
 
-are available in the git repository at:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+if (...) { ...
+  x = -C
+  ... when != x
+(
+  return <+...x...+>;
+|
+  return NULL;
+|
+  return;
+|
+* return ...;
+)
+}
+// </smpl>
 
-Dan Carpenter (1):
-      intel_ips: potential null dereference
+Signed-off-by: Julia Lawall <julia@diku.dk>
 
-Henrique de Moraes Holschuh (4):
-      thinkpad-acpi: find ACPI video device by synthetic HID
-      thinkpad-acpi: untangle ACPI/vendor backlight selection
-      thinkpad-acpi: lock down size of hotkey keymap
-      thinkpad-acpi: add support for model-specific keymaps
+---
+This changes the semantics and has not been tested.  In each case, error is
+also assigned to the result of a function call.  Perhpas that should be
+changed to result as well, and error should be eliminated.
 
-Jens Taprogge (1):
-      thinkpad-acpi: Add KEY_CAMERA (Fn-F6) for Lenovo keyboards
+ drivers/platform/x86/fujitsu-laptop.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Julia Lawall (1):
-      drivers/platform/x86: Adjust confusing if indentation
-
-Kulikov Vasiliy (1):
-      x86: intel_ips: do not use PCI resources before pci_enable_device()
-
-Victor van den Elzen (1):
-      platform/x86: move rfkill for Dell Mini 1012 to compal-laptop
-
- Documentation/laptops/thinkpad-acpi.txt |    4 +
- drivers/platform/x86/asus_acpi.c        |    6 +-
- drivers/platform/x86/compal-laptop.c    |    9 ++
- drivers/platform/x86/dell-laptop.c      |    7 ++
- drivers/platform/x86/intel_ips.c        |   15 ++-
- drivers/platform/x86/thinkpad_acpi.c    |  171 ++++++++++++++++---------------
- 6 files changed, 121 insertions(+), 91 deletions(-)
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index f44cd26..e7d2259 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -668,7 +668,7 @@ static int acpi_fujitsu_add(struct acpi_device *device)
+ 
+ 	fujitsu->input = input = input_allocate_device();
+ 	if (!input) {
+-		error = -ENOMEM;
++		result = -ENOMEM;
+ 		goto err_stop;
+ 	}
+ 
+@@ -833,7 +833,7 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+ 
+ 	fujitsu_hotkey->input = input = input_allocate_device();
+ 	if (!input) {
+-		error = -ENOMEM;
++		result = -ENOMEM;
+ 		goto err_free_fifo;
+ 	}
+ 
