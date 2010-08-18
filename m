@@ -1,50 +1,40 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] Support MSI Poulsbo netbook U110/U115
-Date: Tue, 17 Aug 2010 08:56:28 -0600
-Message-ID: <4C6B2FBC020000230001ED68@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org
-Cc: gregkh@suse.de, trenn@suse.de, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dennis.Jansen@web.de
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH 0/8] [Resend] ideapad: using EC command to control rf/camera power
+Date: Wed, 18 Aug 2010 16:36:04 +0800
+Message-ID: <1282120564-11324-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Thomas Renninger <trenn@suse.de>, Alan Cox <alan@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Corentin Chary <corentincj@iksaif.net>, David Woodhouse <David.Woodhouse@intel.com>, Randy Dunlap <randy.dunlap@oracle.com>, Len Brown <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Matthew,=20
+These patches are made against 2.6.36-rc1 and also available at
+  git://kernel.ubuntu.com/ikepanhc/ideapad-laptop.git for-upstream
 
-=46irst, thank's for your kindy suggestion, it's good to us.
+Once the rfkill of a laptop is set to block, it is no way to unblock with Linux
+without driver. Thanks for David Woodhouse wrote the first driver solving this.
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2010-08-16 =E6=96=BC 16:56 +0100=EF=BC=8CMa=
-tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Fri, Aug 13, 2010 at 03:05:58AM -0600, Joey Lee wrote:
-> > Hi Matthew,=20
-> >=20
-> > Dennis help me to ported this patch to 2.6.35, and it works as expe=
-cted.
-> > Could you please give me any suggestions for this patch?
->=20
-> I've thought about this a bit more and now lean towards thinking that=
-=20
-> putting the PCI IDs in the ACPI video driver is the best way to go. T=
-he=20
-> alternative is to only fix it for MSI, which isn't the best option. O=
-n=20
+But the \_SB_.GECN and \_SB_.DECN are only available on Lenovo ideapad S10-3.
+Using EC command to control rf/camera power is better because I believe every
+ideapads which has VPC2004 device in its DSDT has this common method.
 
-OK! Got it!
-I will try to put the PCI IDs in ACPI video driver then send out the
-patch for review ASAP.
+This driver is tested and work fine on Lenovo ideapad B550 and ideapad S10-3.
 
-> the other hand, I looked at adding support to the Poulsbo driver and =
-it=20
-> actually seems pretty easy, so to be honest I'd prefer it if that got=
-=20
-> done instead.
->=20
+Ike Panhc (8):
+  ideapad: add ACPI helpers
+  ideapad: check VPC bit before sync rfkill hw status
+  ideapad: make sure we bind on the correct device
+  ideapad: use return value of _CFG to tell if device exist or not
+  ideapad: use EC command to control camera
+  ideapad: rewrite the hw rfkill notify
+  ideapad: rewrite the sw rfkill set
+  ideapad: Change the driver name to ideapad_laptop
 
-I am not good for video driver, but will also try to look at it.
+ drivers/platform/x86/Kconfig          |    4 +-
+ drivers/platform/x86/Makefile         |    2 +-
+ drivers/platform/x86/ideapad_acpi.c   |  306 --------------------------
+ drivers/platform/x86/ideapad_laptop.c |  381 +++++++++++++++++++++++++++++++++
+ 4 files changed, 384 insertions(+), 309 deletions(-)
+ delete mode 100644 drivers/platform/x86/ideapad_acpi.c
+ create mode 100644 drivers/platform/x86/ideapad_laptop.c
 
-
-Thank's a lot!
-Joey Lee
