@@ -1,132 +1,89 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 07/10] WMI: use separate list head for storing wmi blocks
-Date: Thu, 26 Aug 2010 00:15:14 -0700
-Message-ID: <20100826071514.7976.77547.stgit@localhost.localdomain>
+Subject: [PATCH 06/10] WMI: simplify handling of returned WMI blocks in
+	parse_wdg()
+Date: Thu, 26 Aug 2010 00:15:09 -0700
+Message-ID: <20100826071509.7976.8827.stgit@localhost.localdomain>
 References: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:56836 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752946Ab0HZHPS (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:58101 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752856Ab0HZHPM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Aug 2010 03:15:18 -0400
-Received: by pwi7 with SMTP id 7so599247pwi.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:15:17 -0700 (PDT)
+	Thu, 26 Aug 2010 03:15:12 -0400
+Received: by mail-pv0-f174.google.com with SMTP id 2so528876pvg.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:15:12 -0700 (PDT)
 In-Reply-To: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
 
-Do not abuse wmi_block structure to hold the head of list
-of blocks, use separate list_head for that.
+There is no reason why we allocate memory and copy data into an
+intermediate buffer, it is not like we are working with data coming
+from userspace.
 
 Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
 ---
 
- drivers/platform/x86/wmi.c |   20 +++++++++-----------
- 1 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/platform/x86/wmi.c |   15 ++++-----------
+ 1 files changed, 4 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e9064fb..7b68dce 100644
+index 4032fa4..e9064fb 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -47,6 +47,7 @@ MODULE_LICENSE("GPL");
- #define PREFIX "ACPI: WMI: "
+@@ -487,7 +487,7 @@ const struct acpi_buffer *in)
+ }
+ EXPORT_SYMBOL_GPL(wmi_set_block);
  
- static DEFINE_MUTEX(wmi_data_lock);
-+static LIST_HEAD(wmi_block_list);
- 
- struct guid_block {
- 	char guid[16];
-@@ -70,7 +71,6 @@ struct wmi_block {
- 	struct device *dev;
- };
- 
--static struct wmi_block wmi_blocks;
- 
- /*
-  * If the GUID data block is marked as expensive, we must enable and
-@@ -246,7 +246,7 @@ static bool find_guid(const char *guid_string, struct wmi_block **out)
- 	wmi_parse_guid(guid_string, tmp);
- 	wmi_swap_bytes(tmp, guid_input);
- 
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		block = &wblock->gblock;
- 
-@@ -633,7 +633,7 @@ acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)
- 	params[0].type = ACPI_TYPE_INTEGER;
- 	params[0].integer.value = event;
- 
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		gblock = &wblock->gblock;
- 
-@@ -721,7 +721,7 @@ static int wmi_create_devs(void)
- 	struct device *guid_dev;
- 
- 	/* Create devices for all the GUIDs */
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 
- 		guid_dev = kzalloc(sizeof(struct device), GFP_KERNEL);
-@@ -758,7 +758,7 @@ static void wmi_remove_devs(void)
- 	struct device *guid_dev;
- 
- 	/* Delete devices for all the GUIDs */
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 
- 		guid_dev = wblock->dev;
-@@ -797,7 +797,7 @@ static bool guid_already_parsed(const char *guid_string)
- 	struct wmi_block *wblock;
- 	struct list_head *p;
- 
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		gblock = &wblock->gblock;
- 
-@@ -811,7 +811,7 @@ static void free_wmi_blocks(void)
+-static void wmi_dump_wdg(struct guid_block *g)
++static void wmi_dump_wdg(const struct guid_block *g)
  {
- 	struct wmi_block *wblock, *next;
- 
--	list_for_each_entry_safe(wblock, next, &wmi_blocks.list, list) {
-+	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
- 		list_del(&wblock->list);
- 		kfree(wblock);
- 	}
-@@ -876,7 +876,7 @@ static acpi_status parse_wdg(acpi_handle handle)
- 			wblock->handler = wmi_notify_debug;
- 			wmi_method_enable(wblock, 1);
- 		}
--		list_add_tail(&wblock->list, &wmi_blocks.list);
-+		list_add_tail(&wblock->list, &wmi_block_list);
- 	}
- 
- out_free_pointer:
-@@ -939,7 +939,7 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
- 	struct list_head *p;
  	char guid_string[37];
  
--	list_for_each(p, &wmi_blocks.list) {
-+	list_for_each(p, &wmi_block_list) {
- 		wblock = list_entry(p, struct wmi_block, list);
- 		block = &wblock->gblock;
- 
-@@ -999,8 +999,6 @@ static int __init acpi_wmi_init(void)
+@@ -824,7 +824,7 @@ static acpi_status parse_wdg(acpi_handle handle)
  {
- 	int result;
+ 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	union acpi_object *obj;
+-	struct guid_block *gblock;
++	const struct guid_block *gblock;
+ 	struct wmi_block *wblock;
+ 	char guid_string[37];
+ 	acpi_status status;
+@@ -844,14 +844,9 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 		goto out_free_pointer;
+ 	}
  
--	INIT_LIST_HEAD(&wmi_blocks.list);
++	gblock = (const struct guid_block *)obj->buffer.pointer;
+ 	total = obj->buffer.length / sizeof(struct guid_block);
+ 
+-	gblock = kmemdup(obj->buffer.pointer, obj->buffer.length, GFP_KERNEL);
+-	if (!gblock) {
+-		status = AE_NO_MEMORY;
+-		goto out_free_pointer;
+-	}
 -
- 	if (acpi_disabled)
- 		return -ENODEV;
+ 	for (i = 0; i < total; i++) {
+ 		/*
+ 		  Some WMI devices, like those for nVidia hooks, have a
+@@ -872,7 +867,7 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
+ 		if (!wblock) {
+ 			status = AE_NO_MEMORY;
+-			goto out_free_gblock;
++			goto out_free_pointer;
+ 		}
+ 
+ 		wblock->gblock = gblock[i];
+@@ -884,8 +879,6 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 		list_add_tail(&wblock->list, &wmi_blocks.list);
+ 	}
+ 
+-out_free_gblock:
+-	kfree(gblock);
+ out_free_pointer:
+ 	kfree(out.pointer);
  
