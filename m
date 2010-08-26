@@ -1,201 +1,346 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 08/10] WMI: use pr_err() and friends
-Date: Thu, 26 Aug 2010 00:15:19 -0700
-Message-ID: <20100826071519.7976.45146.stgit@localhost.localdomain>
+Subject: [PATCH 10/10] WMI: embed struct device directly into wmi_block
+Date: Thu, 26 Aug 2010 00:15:30 -0700
+Message-ID: <20100826071530.7976.85287.stgit@localhost.localdomain>
 References: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:60482 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752959Ab0HZHPX (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:38467 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753007Ab0HZHPe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Aug 2010 03:15:23 -0400
-Received: by mail-pz0-f46.google.com with SMTP id 9so501410pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:15:23 -0700 (PDT)
+	Thu, 26 Aug 2010 03:15:34 -0400
+Received: by pxi10 with SMTP id 10so511603pxi.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:15:33 -0700 (PDT)
 In-Reply-To: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
 
-This makes source more concise and easier to read.
+Instead of creating wmi_blocks and then register corresponding devices
+on a separate pass do it all in one shot, since lifetime rules for both
+objects are the same. This also takes care of leaking devices when
+device_create fails for one of them.
 
 Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
 ---
 
- drivers/platform/x86/wmi.c |   64 ++++++++++++++++++++------------------------
- 1 files changed, 29 insertions(+), 35 deletions(-)
+ drivers/platform/x86/wmi.c |  176 ++++++++++++++++----------------------------
+ 1 files changed, 65 insertions(+), 111 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 7b68dce..b4e5bea 100644
+index 781321b..f822ff0 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -27,6 +27,8 @@
-  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  */
+@@ -68,7 +68,7 @@ struct wmi_block {
+ 	acpi_handle handle;
+ 	wmi_notify_handler handler;
+ 	void *handler_data;
+-	struct device *dev;
++	struct device dev;
+ };
  
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+ 
+@@ -110,7 +110,7 @@ static struct acpi_driver acpi_wmi_driver = {
+ 		.add = acpi_wmi_add,
+ 		.remove = acpi_wmi_remove,
+ 		.notify = acpi_wmi_notify,
+-		},
++	},
+ };
+ 
+ /*
+@@ -705,7 +705,9 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 
+ static void wmi_dev_free(struct device *dev)
+ {
+-	kfree(dev);
++	struct wmi_block *wmi_block = container_of(dev, struct wmi_block, dev);
 +
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/types.h>
-@@ -44,8 +46,6 @@ MODULE_LICENSE("GPL");
++	kfree(wmi_block);
+ }
  
- #define ACPI_WMI_CLASS "wmi"
+ static struct class wmi_class = {
+@@ -715,104 +717,60 @@ static struct class wmi_class = {
+ 	.dev_attrs = wmi_dev_attrs,
+ };
  
--#define PREFIX "ACPI: WMI: "
+-static int wmi_create_devs(void)
++static struct wmi_block *wmi_create_device(const struct guid_block *gblock,
++					   acpi_handle handle)
+ {
+-	int result;
+-	char guid_string[37];
+-	struct guid_block *gblock;
+ 	struct wmi_block *wblock;
+-	struct list_head *p;
+-	struct device *guid_dev;
++	int error;
++	char guid_string[37];
+ 
+-	/* Create devices for all the GUIDs */
+-	list_for_each(p, &wmi_block_list) {
+-		wblock = list_entry(p, struct wmi_block, list);
++	wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
++	if (!wblock) {
++		error = -ENOMEM;
++		goto err_out;
++	}
+ 
+-		guid_dev = kzalloc(sizeof(struct device), GFP_KERNEL);
+-		if (!guid_dev)
+-			return -ENOMEM;
++	wblock->handle = handle;
++	wblock->gblock = *gblock;
+ 
+-		wblock->dev = guid_dev;
++	wblock->dev.class = &wmi_class;
+ 
+-		guid_dev->class = &wmi_class;
+-		dev_set_drvdata(guid_dev, wblock);
++	wmi_gtoa(gblock->guid, guid_string);
++	dev_set_name(&wblock->dev, guid_string);
+ 
+-		gblock = &wblock->gblock;
++	dev_set_drvdata(&wblock->dev, wblock);
+ 
+-		wmi_gtoa(gblock->guid, guid_string);
+-		dev_set_name(guid_dev, guid_string);
++	error = device_register(&wblock->dev);
++	if (error)
++		goto err_free;
+ 
+-		result = device_register(guid_dev);
+-		if (result)
+-			return result;
+-	}
++	list_add_tail(&wblock->list, &wmi_block_list);
++	return wblock;
+ 
+-	return 0;
++err_free:
++	kfree(wblock);
++err_out:
++	return ERR_PTR(error);
+ }
+ 
+-static void wmi_remove_devs(void)
++static void wmi_free_devices(void)
+ {
+-	struct guid_block *gblock;
+-	struct wmi_block *wblock;
+-	struct list_head *p;
+-	struct device *guid_dev;
++	struct wmi_block *wblock, *next;
+ 
+ 	/* Delete devices for all the GUIDs */
+-	list_for_each(p, &wmi_block_list) {
+-		wblock = list_entry(p, struct wmi_block, list);
 -
- static DEFINE_MUTEX(wmi_data_lock);
- static LIST_HEAD(wmi_block_list);
+-		guid_dev = wblock->dev;
+-		gblock = &wblock->gblock;
+-
+-		device_unregister(guid_dev);
+-	}
+-}
+-
+-static void wmi_class_exit(void)
+-{
+-	wmi_remove_devs();
+-	class_unregister(&wmi_class);
+-}
+-
+-static int wmi_class_init(void)
+-{
+-	int ret;
+-
+-	ret = class_register(&wmi_class);
+-	if (ret)
+-		return ret;
+-
+-	ret = wmi_create_devs();
+-	if (ret)
+-		wmi_class_exit();
+-
+-	return ret;
++	list_for_each_entry_safe(wblock, next, &wmi_block_list, list)
++		device_unregister(&wblock->dev);
+ }
  
-@@ -492,25 +492,24 @@ static void wmi_dump_wdg(const struct guid_block *g)
+ static bool guid_already_parsed(const char *guid_string)
+ {
+-	struct guid_block *gblock;
+ 	struct wmi_block *wblock;
+-	struct list_head *p;
+-
+-	list_for_each(p, &wmi_block_list) {
+-		wblock = list_entry(p, struct wmi_block, list);
+-		gblock = &wblock->gblock;
+ 
+-		if (strncmp(gblock->guid, guid_string, 16) == 0)
++	list_for_each_entry(wblock, &wmi_block_list, list)
++		if (strncmp(wblock->gblock.guid, guid_string, 16) == 0)
+ 			return true;
+-	}
+-	return false;
+-}
+ 
+-static void free_wmi_blocks(void)
+-{
+-	struct wmi_block *wblock, *next;
+-
+-	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
+-		list_del(&wblock->list);
+-		kfree(wblock);
+-	}
++	return false;
+ }
+ 
+ /*
+@@ -826,19 +784,19 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 	struct wmi_block *wblock;
  	char guid_string[37];
+ 	acpi_status status;
++	int retval;
+ 	u32 i, total;
  
- 	wmi_gtoa(g->guid, guid_string);
--	printk(KERN_INFO PREFIX "%s:\n", guid_string);
--	printk(KERN_INFO PREFIX "\tobject_id: %c%c\n",
--	       g->object_id[0], g->object_id[1]);
--	printk(KERN_INFO PREFIX "\tnotify_id: %02X\n", g->notify_id);
--	printk(KERN_INFO PREFIX "\treserved: %02X\n", g->reserved);
--	printk(KERN_INFO PREFIX "\tinstance_count: %d\n", g->instance_count);
--	printk(KERN_INFO PREFIX "\tflags: %#x", g->flags);
-+
-+	pr_info("%s:\n", guid_string);
-+	pr_info("\tobject_id: %c%c\n", g->object_id[0], g->object_id[1]);
-+	pr_info("\tnotify_id: %02X\n", g->notify_id);
-+	pr_info("\treserved: %02X\n", g->reserved);
-+	pr_info("\tinstance_count: %d\n", g->instance_count);
-+	pr_info("\tflags: %#x ", g->flags);
- 	if (g->flags) {
--		printk(" ");
- 		if (g->flags & ACPI_WMI_EXPENSIVE)
--			printk("ACPI_WMI_EXPENSIVE ");
-+			pr_cont("ACPI_WMI_EXPENSIVE ");
- 		if (g->flags & ACPI_WMI_METHOD)
--			printk("ACPI_WMI_METHOD ");
-+			pr_cont("ACPI_WMI_METHOD ");
- 		if (g->flags & ACPI_WMI_STRING)
--			printk("ACPI_WMI_STRING ");
-+			pr_cont("ACPI_WMI_STRING ");
- 		if (g->flags & ACPI_WMI_EVENT)
--			printk("ACPI_WMI_EVENT ");
-+			pr_cont("ACPI_WMI_EVENT ");
- 	}
--	printk("\n");
-+	pr_cont("\n");
+ 	status = acpi_evaluate_object(handle, "_WDG", NULL, &out);
+-
+ 	if (ACPI_FAILURE(status))
+-		return status;
++		return -ENXIO;
  
- }
- 
-@@ -522,7 +521,7 @@ static void wmi_notify_debug(u32 value, void *context)
- 
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
--		printk(KERN_INFO "wmi: bad event status 0x%x\n", status);
-+		pr_info("bad event status 0x%x\n", status);
- 		return;
- 	}
- 
-@@ -531,22 +530,22 @@ static void wmi_notify_debug(u32 value, void *context)
+ 	obj = (union acpi_object *) out.pointer;
  	if (!obj)
- 		return;
+-		return AE_ERROR;
++		return -ENXIO;
  
--	printk(KERN_INFO PREFIX "DEBUG Event ");
-+	pr_info("DEBUG Event ");
- 	switch(obj->type) {
- 	case ACPI_TYPE_BUFFER:
--		printk("BUFFER_TYPE - length %d\n", obj->buffer.length);
-+		pr_cont("BUFFER_TYPE - length %d\n", obj->buffer.length);
- 		break;
- 	case ACPI_TYPE_STRING:
--		printk("STRING_TYPE - %s\n", obj->string.pointer);
-+		pr_cont("STRING_TYPE - %s\n", obj->string.pointer);
- 		break;
- 	case ACPI_TYPE_INTEGER:
--		printk("INTEGER_TYPE - %llu\n", obj->integer.value);
-+		pr_cont("INTEGER_TYPE - %llu\n", obj->integer.value);
- 		break;
- 	case ACPI_TYPE_PACKAGE:
--		printk("PACKAGE_TYPE - %d elements\n", obj->package.count);
-+		pr_cont("PACKAGE_TYPE - %d elements\n", obj->package.count);
- 		break;
- 	default:
--		printk("object type 0x%X\n", obj->type);
-+		pr_cont("object type 0x%X\n", obj->type);
+ 	if (obj->type != ACPI_TYPE_BUFFER) {
+-		status = AE_ERROR;
++		retval = -ENXIO;
+ 		goto out_free_pointer;
  	}
- 	kfree(obj);
- }
-@@ -857,8 +856,7 @@ static acpi_status parse_wdg(acpi_handle handle)
- 		*/
- 		if (guid_already_parsed(gblock[i].guid) == true) {
- 			wmi_gtoa(gblock[i].guid, guid_string);
--			printk(KERN_INFO PREFIX "Skipping duplicate GUID %s\n",
--				guid_string);
-+			pr_info("Skipping duplicate GUID %s\n", guid_string);
+ 
+@@ -858,31 +816,29 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 			pr_info("Skipping duplicate GUID %s\n", guid_string);
  			continue;
  		}
++
  		if (debug_dump_wdg)
-@@ -949,8 +947,7 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
- 				wblock->handler(event, wblock->handler_data);
- 			if (debug_event) {
- 				wmi_gtoa(wblock->gblock.guid, guid_string);
--				printk(KERN_INFO PREFIX "DEBUG Event GUID:"
--				       " %s\n", guid_string);
-+				pr_info("DEBUG Event GUID: %s\n", guid_string);
- 			}
+ 			wmi_dump_wdg(&gblock[i]);
  
- 			acpi_bus_generate_netlink_event(
-@@ -979,7 +976,7 @@ static int acpi_wmi_add(struct acpi_device *device)
- 						    &acpi_wmi_ec_space_handler,
- 						    NULL, NULL);
- 	if (ACPI_FAILURE(status)) {
--		printk(KERN_ERR PREFIX "Error installing EC region handler\n");
-+		pr_err("Error installing EC region handler\n");
+-		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
+-		if (!wblock) {
+-			status = AE_NO_MEMORY;
+-			goto out_free_pointer;
++		wblock = wmi_create_device(&gblock[i], handle);
++		if (IS_ERR(wblock)) {
++			retval = PTR_ERR(wblock);
++			wmi_free_devices();
++			break;
+ 		}
+ 
+-		wblock->gblock = gblock[i];
+-		wblock->handle = handle;
+ 		if (debug_event) {
+ 			wblock->handler = wmi_notify_debug;
+ 			wmi_method_enable(wblock, 1);
+ 		}
+-		list_add_tail(&wblock->list, &wmi_block_list);
+ 	}
+ 
++	retval = 0;
++
+ out_free_pointer:
+ 	kfree(out.pointer);
+ 
+-	if (ACPI_FAILURE(status))
+-		free_wmi_blocks();
+-
+-	return status;
++	return retval;
+ }
+ 
+ /*
+@@ -961,6 +917,7 @@ static int acpi_wmi_remove(struct acpi_device *device, int type)
+ {
+ 	acpi_remove_address_space_handler(device->handle,
+ 				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
++	wmi_free_devices();
+ 
+ 	return 0;
+ }
+@@ -968,7 +925,7 @@ static int acpi_wmi_remove(struct acpi_device *device, int type)
+ static int acpi_wmi_add(struct acpi_device *device)
+ {
+ 	acpi_status status;
+-	int result = 0;
++	int error;
+ 
+ 	status = acpi_install_address_space_handler(device->handle,
+ 						    ACPI_ADR_SPACE_EC,
+@@ -979,47 +936,44 @@ static int acpi_wmi_add(struct acpi_device *device)
  		return -ENODEV;
  	}
  
-@@ -988,7 +985,7 @@ static int acpi_wmi_add(struct acpi_device *device)
+-	status = parse_wdg(device->handle);
+-	if (ACPI_FAILURE(status)) {
++	error = parse_wdg(device->handle);
++	if (error) {
  		acpi_remove_address_space_handler(device->handle,
  						  ACPI_ADR_SPACE_EC,
  						  &acpi_wmi_ec_space_handler);
--		printk(KERN_ERR PREFIX "Failed to parse WDG method\n");
-+		pr_err("Failed to parse WDG method\n");
- 		return -ENODEV;
+ 		pr_err("Failed to parse WDG method\n");
+-		return -ENODEV;
++		return error;
  	}
- 
-@@ -1003,9 +1000,8 @@ static int __init acpi_wmi_init(void)
- 		return -ENODEV;
- 
- 	result = acpi_bus_register_driver(&acpi_wmi_driver);
--
- 	if (result < 0) {
--		printk(KERN_INFO PREFIX "Error loading mapper\n");
-+		pr_err("Error loading mapper\n");
- 		return -ENODEV;
- 	}
- 
-@@ -1015,20 +1011,18 @@ static int __init acpi_wmi_init(void)
- 		return result;
- 	}
- 
--	printk(KERN_INFO PREFIX "Mapper loaded\n");
-+	pr_info("Mapper loaded\n");
  
 -	return result;
 +	return 0;
  }
  
- static void __exit acpi_wmi_exit(void)
+ static int __init acpi_wmi_init(void)
  {
- 	wmi_class_exit();
--
- 	acpi_bus_unregister_driver(&acpi_wmi_driver);
--
- 	free_wmi_blocks();
+-	int result;
++	int error;
  
--	printk(KERN_INFO PREFIX "Mapper unloaded\n");
-+	pr_info("Mapper unloaded\n");
+ 	if (acpi_disabled)
+ 		return -ENODEV;
+ 
+-	result = acpi_bus_register_driver(&acpi_wmi_driver);
+-	if (result < 0) {
+-		pr_err("Error loading mapper\n");
+-		return -ENODEV;
+-	}
++	error = class_register(&wmi_class);
++	if (error)
++		return error;
+ 
+-	result = wmi_class_init();
+-	if (result) {
+-		acpi_bus_unregister_driver(&acpi_wmi_driver);
+-		return result;
++	error = acpi_bus_register_driver(&acpi_wmi_driver);
++	if (error) {
++		pr_err("Error loading mapper\n");
++		class_unregister(&wmi_class);
++		return error;
+ 	}
+ 
+ 	pr_info("Mapper loaded\n");
+-
+ 	return 0;
  }
  
- subsys_initcall(acpi_wmi_init);
+ static void __exit acpi_wmi_exit(void)
+ {
+-	wmi_class_exit();
+ 	acpi_bus_unregister_driver(&acpi_wmi_driver);
+-	free_wmi_blocks();
++	class_unregister(&wmi_class);
+ 
+ 	pr_info("Mapper unloaded\n");
+ }
