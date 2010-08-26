@@ -1,49 +1,32 @@
-From: Cesar Eduardo Barros <cesarb@cesarb.net>
-Subject: [PATCH] intel_ips: quieten "power or thermal limit exceeded" messages
-Date: Thu, 26 Aug 2010 20:29:01 -0300
-Message-ID: <1282865341-17607-1-git-send-email-cesarb@cesarb.net>
-References: <4C74686D.8090707@cesarb.net>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] intel_ips: quieten "power or thermal limit exceeded"
+ messages
+Date: Thu, 26 Aug 2010 16:33:38 -0700 (PDT)
+Message-ID: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>
+References: <1282865341-17607-1-git-send-email-cesarb@cesarb.net>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp-03.mandic.com.br ([200.225.81.143]:50412 "EHLO
-	smtp-03.mandic.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752217Ab0HZX3g (ORCPT
+Received: from mail.perches.com ([173.55.12.10]:1444 "EHLO mail.perches.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752614Ab0HZXdn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Aug 2010 19:29:36 -0400
-In-Reply-To: <4C74686D.8090707@cesarb.net>
+	Thu, 26 Aug 2010 19:33:43 -0400
+In-Reply-To: <1282865341-17607-1-git-send-email-cesarb@cesarb.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jesse Barnes <jbarnes@virtuousgeek.org>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Cesar Eduardo Barros <cesarb@cesarb.net>
+To: Cesar Eduardo Barros <cesarb@cesarb.net>
+Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On my Dell Inspiron N4010, one of these messages is printed every five
-seconds. Change both to dev_dbg to quieten them even more.
+On Thu, 26 Aug 2010, Cesar Eduardo Barros wrote:
 
-Signed-off-by: Cesar Eduardo Barros <cesarb@cesarb.net>
----
- drivers/platform/x86/intel_ips.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+> On my Dell Inspiron N4010, one of these messages is printed every five
+> seconds. Change both to dev_dbg to quieten them even more.
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 9024480..7833adc 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -607,7 +607,7 @@ static bool mcp_exceeded(struct ips_driver *ips)
- 	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
- 	if (ret)
--		dev_info(&ips->dev->dev,
-+		dev_dbg(&ips->dev->dev,
- 			 "MCP power or thermal limit exceeded\n");
- 
- 	return ret;
-@@ -635,7 +635,7 @@ static bool cpu_exceeded(struct ips_driver *ips, int cpu)
- 	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
- 	if (ret)
--		dev_info(&ips->dev->dev,
-+		dev_dbg(&ips->dev->dev,
- 			 "CPU power or thermal limit exceeded\n");
- 
- 	return ret;
--- 
-1.7.2.2
+I think you should instead fix your hardware or maybe change
+your thermal throttling settings.
+
+> @@ -607,7 +607,7 @@ static bool mcp_exceeded(struct ips_driver *ips)
+> -		dev_info(&ips->dev->dev,
+> +		dev_dbg(&ips->dev->dev,
+>  			 "MCP power or thermal limit exceeded\n");
