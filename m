@@ -1,89 +1,85 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 02/10] WMI: free wmi blocks when parse_wdg() fails
-Date: Thu, 26 Aug 2010 00:14:48 -0700
-Message-ID: <20100826071447.7976.15612.stgit@localhost.localdomain>
+Subject: [PATCH 09/10] WMI: make use of class device's attributres
+Date: Thu, 26 Aug 2010 00:15:25 -0700
+Message-ID: <20100826071525.7976.28120.stgit@localhost.localdomain>
 References: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:58045 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753032Ab0HZHOv (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:56836 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752903Ab0HZHP2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Aug 2010 03:14:51 -0400
-Received: by pxi10 with SMTP id 10so511442pxi.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:14:51 -0700 (PDT)
+	Thu, 26 Aug 2010 03:15:28 -0400
+Received: by mail-pw0-f46.google.com with SMTP id 7so599247pwi.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2010 00:15:28 -0700 (PDT)
 In-Reply-To: <20100826071442.7976.93972.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
 
+Instead of adding modalias attribute manually set it up as class's
+device attribute so driver core will create and remove it for us.
+
 Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
 ---
 
- drivers/platform/x86/wmi.c |   25 +++++++++++++++----------
- 1 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/platform/x86/wmi.c |   15 +++++++--------
+ 1 files changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 7a77f03..030d5f2 100644
+index b4e5bea..781321b 100644
 --- a/drivers/platform/x86/wmi.c
 +++ b/drivers/platform/x86/wmi.c
-@@ -807,6 +807,16 @@ static bool guid_already_parsed(const char *guid_string)
- 	return false;
- }
- 
-+static void free_wmi_blocks(void)
-+{
-+	struct wmi_block *wblock, *next;
-+
-+	list_for_each_entry_safe(wblock, next, &wmi_blocks.list, list) {
-+		list_del(&wblock->list);
-+		kfree(wblock);
-+	}
-+}
-+
+@@ -661,7 +661,7 @@ EXPORT_SYMBOL_GPL(wmi_has_guid);
  /*
-  * Parse the _WDG method for the GUID data blocks
+  * sysfs interface
   */
-@@ -865,7 +875,7 @@ static acpi_status parse_wdg(acpi_handle handle)
- 		wblock->handle = handle;
- 		if (debug_event) {
- 			wblock->handler = wmi_notify_debug;
--			status = wmi_method_enable(wblock, 1);
-+			wmi_method_enable(wblock, 1);
- 		}
- 		list_add_tail(&wblock->list, &wmi_blocks.list);
- 	}
-@@ -875,6 +885,9 @@ out_free_gblock:
- out_free_pointer:
- 	kfree(out.pointer);
- 
-+	if (ACPI_FAILURE(status))
-+		free_wmi_blocks();
-+
- 	return status;
- }
- 
-@@ -1014,19 +1027,11 @@ static int __init acpi_wmi_init(void)
- 
- static void __exit acpi_wmi_exit(void)
+-static ssize_t show_modalias(struct device *dev, struct device_attribute *attr,
++static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
  {
--	struct list_head *p, *tmp;
--	struct wmi_block *wblock;
+ 	char guid_string[37];
+@@ -675,7 +675,11 @@ static ssize_t show_modalias(struct device *dev, struct device_attribute *attr,
+ 
+ 	return sprintf(buf, "wmi:%s\n", guid_string);
+ }
+-static DEVICE_ATTR(modalias, S_IRUGO, show_modalias, NULL);
++
++static struct device_attribute wmi_dev_attrs[] = {
++	__ATTR_RO(modalias),
++	__ATTR_NULL
++};
+ 
+ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+@@ -708,6 +712,7 @@ static struct class wmi_class = {
+ 	.name = "wmi",
+ 	.dev_release = wmi_dev_free,
+ 	.dev_uevent = wmi_dev_uevent,
++	.dev_attrs = wmi_dev_attrs,
+ };
+ 
+ static int wmi_create_devs(void)
+@@ -740,10 +745,6 @@ static int wmi_create_devs(void)
+ 		result = device_register(guid_dev);
+ 		if (result)
+ 			return result;
 -
- 	wmi_class_exit();
+-		result = device_create_file(guid_dev, &dev_attr_modalias);
+-		if (result)
+-			return result;
+ 	}
  
- 	acpi_bus_unregister_driver(&acpi_wmi_driver);
+ 	return 0;
+@@ -763,8 +764,6 @@ static void wmi_remove_devs(void)
+ 		guid_dev = wblock->dev;
+ 		gblock = &wblock->gblock;
  
--	list_for_each_safe(p, tmp, &wmi_blocks.list) {
--		wblock = list_entry(p, struct wmi_block, list);
+-		device_remove_file(guid_dev, &dev_attr_modalias);
 -
--		list_del(p);
--		kfree(wblock);
--	}
-+	free_wmi_blocks();
- 
- 	printk(KERN_INFO PREFIX "Mapper unloaded\n");
+ 		device_unregister(guid_dev);
+ 	}
  }
