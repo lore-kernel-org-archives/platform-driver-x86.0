@@ -1,211 +1,122 @@
-From: Joe Perches <joe@perches.com>
+From: Cesar Eduardo Barros <cesarb@cesarb.net>
 Subject: Re: [PATCH] intel_ips: quieten "power or thermal limit exceeded"
  messages
-Date: Fri, 27 Aug 2010 00:39:11 -0700
-Message-ID: <1282894751.1836.41.camel@Joe-Laptop>
-References: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>
-	 <4C770299.6000708@cesarb.net> <1282869660.1836.5.camel@Joe-Laptop>
-	 <4C77171E.6060008@cesarb.net>
+Date: Fri, 27 Aug 2010 20:12:16 -0300
+Message-ID: <4C784650.2030200@cesarb.net>
+References: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>	 <4C770299.6000708@cesarb.net> <1282869660.1836.5.camel@Joe-Laptop>	 <4C77171E.6060008@cesarb.net> <1282894751.1836.41.camel@Joe-Laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4C77171E.6060008@cesarb.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cesar Eduardo Barros <cesarb@cesarb.net>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp-04.mandic.com.br ([200.225.81.151]:46018 "EHLO
+	smtp-04.mandic.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751735Ab0H0XMV (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 27 Aug 2010 19:12:21 -0400
+In-Reply-To: <1282894751.1836.41.camel@Joe-Laptop>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joe Perches <joe@perches.com>
 Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2010-08-26 at 22:38 -0300, Cesar Eduardo Barros wrote:
-> intel ips 0000:00:1f.6: CPU power limit 3863 exceeded: 0
-> 
-> I think you put the parameters in the wrong order on the dev_info() call 
-> for the CPU power limit; it is the limit that is 0.
+Em 27-08-2010 04:39, Joe Perches escreveu:
+> On Thu, 2010-08-26 at 22:38 -0300, Cesar Eduardo Barros wrote:
+>> intel ips 0000:00:1f.6: CPU power limit 3863 exceeded: 0
+>>
+>> I think you put the parameters in the wrong order on the dev_info() call
+>> for the CPU power limit; it is the limit that is 0.
+>
+> Yes. Fixed.
+>
+>> Two bogus things I can see:
+>>
+>> - The first "MCP power limit exceeded" seems very bogus.
+>> - What do you mean, core_power_limit is zero?
+>
+> I added a logging message whenever the turbo limits change
+> and logging messages for power/temp on MCH for completeness.
+>
+> Maybe this will show something useful like when/how
+> CPU power limit gets set to 0.
 
-Yes. Fixed.
+Running with it right now, did not help much:
 
-> Two bogus things I can see:
-> 
-> - The first "MCP power limit exceeded" seems very bogus.
-> - What do you mean, core_power_limit is zero?
+$ dmesg | fgrep 'intel ips'
+intel ips 0000:00:1f.6: Warning: CPU TDP doesn't match expected value 
+(found 25, expected 35)
+intel ips 0000:00:1f.6: PCI INT C -> GSI 18 (level, low) -> IRQ 18
+intel ips 0000:00:1f.6: IPS driver initialized, MCP temp limit 65535
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:8058 + 
+mch:23392829
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5675
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6369
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:5095 + mch:65379
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 7387
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 8326
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5943
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6428
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5775
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 7061
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5153
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5098
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5208
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 7500
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 9144
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6722
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 7156
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:5693 + mch:64598
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5856
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4209
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4726
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5259
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5212
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4862
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5281
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4235
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4897
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5257
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:5111 + mch:64134
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4843
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4909
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5904
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6059
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5579
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5970
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5213
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6388
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4444
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6545
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4439
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4682
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4337
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4499
 
-I added a logging message whenever the turbo limits change
-and logging messages for power/temp on MCH for completeness.
+Just for fun, here is what debugfs has to say:
 
-Maybe this will show something useful like when/how
-CPU power limit gets set to 0.
+$ ls /sys/kernel/debug/ips/
+cpu_clamp  cpu_power  cpu_temp  mch_power  mch_temp
+$ cat /sys/kernel/debug/ips/*
+23.0W 21.0A
+4415mW
+46.99
+59670mW
+0.00
 
- drivers/platform/x86/intel_ips.c |  105 +++++++++++++++++++++++++++++++-------
- 1 files changed, 87 insertions(+), 18 deletions(-)
+All numbers except the last vary a lot. A few more examples:
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 9024480..9c65e66 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -598,17 +598,36 @@ static bool mcp_exceeded(struct ips_driver *ips)
- {
- 	unsigned long flags;
- 	bool ret = false;
-+	u16 mcp_avg_temp;
-+	u16 mcp_temp_limit;
-+	u16 mcp_power_limit;
-+	u32 cpu_avg_power;
-+	u32 mch_avg_power;
- 
- 	spin_lock_irqsave(&ips->turbo_status_lock, flags);
--	if (ips->mcp_avg_temp > (ips->mcp_temp_limit * 100))
--		ret = true;
--	if (ips->cpu_avg_power + ips->mch_avg_power > ips->mcp_power_limit)
--		ret = true;
-+
-+	mcp_avg_temp = ips->mcp_avg_temp;
-+	mcp_temp_limit = ips->mcp_temp_limit;
-+	mcp_power_limit = ips->mcp_power_limit;
-+	cpu_avg_power = ips->cpu_avg_power;
-+	mch_avg_power = ips->mch_avg_power;
-+
- 	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
--	if (ret)
-+	if ((cpu_avg_power + mch_avg_power) > mcp_power_limit) {
-+		dev_info(&ips->dev->dev,
-+			 "MCP power limit %u exceeded: cpu:%u + mch:%u\n",
-+			 mcp_power_limit,
-+			 cpu_avg_power, mch_avg_power);
-+		ret = true;
-+	}
-+	if (mcp_avg_temp > (mcp_temp_limit * 100)) {
- 		dev_info(&ips->dev->dev,
--			 "MCP power or thermal limit exceeded\n");
-+			 "MCP thermal limit %d exceeded: %d\n",
-+			 mcp_temp_limit * 100,
-+			 mcp_avg_temp);
-+		ret = true;
-+	}
- 
- 	return ret;
- }
-@@ -623,20 +642,33 @@ static bool mcp_exceeded(struct ips_driver *ips)
- static bool cpu_exceeded(struct ips_driver *ips, int cpu)
- {
- 	unsigned long flags;
--	int avg;
- 	bool ret = false;
-+	int avg;
-+	int core_temp_limit;
-+	u16 core_power_limit;
-+	u32 cpu_avg_power;
- 
- 	spin_lock_irqsave(&ips->turbo_status_lock, flags);
-+
- 	avg = cpu ? ips->ctv2_avg_temp : ips->ctv1_avg_temp;
--	if (avg > (ips->limits->core_temp_limit * 100))
--		ret = true;
--	if (ips->cpu_avg_power > ips->core_power_limit * 100)
--		ret = true;
-+	core_temp_limit = ips->limits->core_temp_limit;
-+	core_power_limit = ips->core_power_limit;
-+	cpu_avg_power = ips->cpu_avg_power;
-+
- 	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
--	if (ret)
-+	if (cpu_avg_power > (core_power_limit * 100)) {
-+		dev_info(&ips->dev->dev,
-+			 "CPU power limit %d exceeded: %d\n",
-+			 core_power_limit * 100, cpu_avg_power);
-+		ret = true;
-+	}
-+	if (avg > (core_temp_limit * 100)) {
- 		dev_info(&ips->dev->dev,
--			 "CPU power or thermal limit exceeded\n");
-+			 "CPU thermal limit %d exceeded: %d\n",
-+			 core_temp_limit * 100, avg);
-+		ret = true;
-+	}
- 
- 	return ret;
- }
-@@ -652,13 +684,32 @@ static bool mch_exceeded(struct ips_driver *ips)
- 	unsigned long flags;
- 	bool ret = false;
- 
-+	u16 mch_avg_temp;
-+	int mch_temp_limit;
-+	u32 mch_avg_power;
-+	u16 mch_power_limit;
-+
- 	spin_lock_irqsave(&ips->turbo_status_lock, flags);
--	if (ips->mch_avg_temp > (ips->limits->mch_temp_limit * 100))
--		ret = true;
--	if (ips->mch_avg_power > ips->mch_power_limit)
--		ret = true;
-+
-+	mch_avg_temp = ips->mch_avg_temp;
-+	mch_temp_limit = ips->limits->mch_temp_limit;
-+	mch_avg_power = ips->mch_avg_power;
-+	mch_power_limit = ips->mch_power_limit;
-+
- 	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
-+	if (mch_avg_power > mch_power_limit) {
-+		dev_info(&ips->dev->dev,
-+			 "MCH power limit %d exceeded: %d\n",
-+			 mch_power_limit, mch_avg_power);
-+		ret = true;
-+	}
-+	if (mch_avg_temp > (mch_temp_limit * 100)) {
-+		dev_info(&ips->dev->dev,
-+			 "MCH thermal limit %d exceeded: %d\n",
-+			 mch_temp_limit * 100, mch_avg_temp);
-+		ret = true;
-+	}
- 	return ret;
- }
- 
-@@ -689,6 +740,16 @@ static void update_turbo_limits(struct ips_driver *ips)
- 	/* Ignore BIOS CPU vs GPU pref */
- }
- 
-+static void show_turbo_limits(const struct ips_driver *ips, const char *caller)
-+{
-+	dev_info(&ips->dev->dev,
-+		 "%s:%s cte:%u gte:%u cpt:%u mpl:%u mtl:%u mpl:%u\n",
-+		 __func__, caller,
-+		 ips->cpu_turbo_enabled, ips->gpu_turbo_enabled,
-+		 ips->core_power_limit, ips->mch_power_limit,
-+		 ips->mcp_temp_limit, ips->mcp_power_limit);
-+}
-+
- /**
-  * ips_adjust - adjust power clamp based on thermal state
-  * @data: ips driver structure
-@@ -734,12 +795,18 @@ static int ips_adjust(void *data)
- 	do {
- 		bool cpu_busy = ips_cpu_busy(ips);
- 		bool gpu_busy = ips_gpu_busy(ips);
-+		bool updated = false;
- 
- 		spin_lock_irqsave(&ips->turbo_status_lock, flags);
--		if (ips->poll_turbo_status)
-+		if (ips->poll_turbo_status) {
- 			update_turbo_limits(ips);
-+			updated = true;
-+		}
- 		spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
-+		if (updated)
-+			show_turbo_limits(ips, __func__);
-+
- 		/* Update turbo status if necessary */
- 		if (ips->cpu_turbo_enabled)
- 			ips_enable_cpu_turbo(ips);
-@@ -1158,6 +1225,8 @@ static irqreturn_t ips_irq_handler(int irq, void *arg)
- 			spin_unlock(&ips->turbo_status_lock);
- 
- 			thm_writeb(THM_SEC, SEC_ACK);
-+
-+			show_turbo_limits(ips, __func__);
- 		}
- 		thm_writeb(THM_TES, tes);
- 	}
+21.0W 21.0A
+4379mW
+51.09
+6493mW
+0.00
+
+23.0W 21.0A
+4681mW
+45.13
+34062mW
+0.00
+
+-- 
+Cesar Eduardo Barros
+cesarb@cesarb.net
+cesar.barros@gmail.com
