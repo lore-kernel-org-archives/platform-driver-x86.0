@@ -1,44 +1,96 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: [PATCH -next] acpi_toshiba: fix kconfig error
-Date: Sat, 28 Aug 2010 10:10:50 -0700
-Message-ID: <20100828101050.7d4321fe.randy.dunlap@oracle.com>
+From: Cesar Eduardo Barros <cesarb@cesarb.net>
+Subject: Re: [PATCH] intel_ips: quieten "power or thermal limit exceeded"
+ messages
+Date: Sat, 28 Aug 2010 16:07:08 -0300
+Message-ID: <4C795E5C.1080506@cesarb.net>
+References: <1282869660.1836.5.camel@Joe-Laptop> <4C77171E.6060008@cesarb.net> <1282894751.1836.41.camel@Joe-Laptop> <4C784650.2030200@cesarb.net> <1282962104.1946.179.camel@Joe-Laptop> <4C78E8EF.1000009@cesarb.net> <1282994116.1946.226.camel@Joe-Laptop> <4C790693.1060908@cesarb.net> <1283002154.1946.268.camel@Joe-Laptop> <4C791ABA.9070005@cesarb.net> <20100828152335.GA2212@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet10.oracle.com ([148.87.113.121]:36255 "EHLO
-	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753351Ab0H1RLT (ORCPT
+Received: from smtp-02.mandic.com.br ([200.225.81.133]:42431 "EHLO
+	smtp-02.mandic.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752335Ab0H1THN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 Aug 2010 13:11:19 -0400
+	Sat, 28 Aug 2010 15:07:13 -0400
+In-Reply-To: <20100828152335.GA2212@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Joe Perches <joe@perches.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <randy.dunlap@oracle.com>
+Em 28-08-2010 12:23, Henrique de Moraes Holschuh escreveu:
+> On Sat, 28 Aug 2010, Cesar Eduardo Barros wrote:
+>> The solution here probably is not less logging. The best solution
+>> IMO would be to do some sanity checking when loading the module, and
+>> if the values do not make sense, print something to the log and
+>> return -ENODEV.
+>
+> As long as your sanity checking won't make the module fail to load in=
+ the
+> following scenario:
+>
+> 1. environment temperature control fails, room starts to heat up
+> 2. things go south, server reboots due to exceeded temperature limits
+> 3. OS boots in an overheat situation
+> 4. module refuse to load because it expects to never start in a overh=
+eating
+>     situation.
+>
+> If the sanity checks will cause (4), then don't add them.  rate-limit=
+ the
+> thermal alarms (issue them only once every T, and only if temperature=
+ has
+> increased more than, say, 5=C2=B0C from the last alarm).
 
-Fix kconfig recursive dependency error in ACPI_TOSHIBA:
-it uses both select and depends on for BACKLIGHT_CLASS_DEVICE.
+I have not read the datasheet (I do not even know if it is available to=
+=20
+the public; I have not looked), but I would not expect to see a power=20
+limit of 0 even if the CPU is on fire. Of course, you have to be more=20
+cautious when validating the current temperature (and even then, if it=20
+says the CPU is encased in a block of ice, something odd is going on).
 
-drivers/video/backlight/Kconfig:117:error: recursive dependency detected!
-drivers/video/backlight/Kconfig:117:    symbol BACKLIGHT_CLASS_DEVICE is selected by ACPI_TOSHIBA
-drivers/platform/x86/Kconfig:490:       symbol ACPI_TOSHIBA depends on LEDS_CLASS
-drivers/leds/Kconfig:12:        symbol LEDS_CLASS is selected by BACKLIGHT_ADP8860
-drivers/video/backlight/Kconfig:285:    symbol BACKLIGHT_ADP8860 depends on BACKLIGHT_CLASS_DEVICE
+> If a given platform is buggy crap (or just el-cheapo trash that overh=
+eats
+> all the time) to the point that the module is useless, blacklist it b=
+y DMI
+> and inform the user.
+>
+>> I expect that, when it works as it should, the first read while
+>> loading the module already returns sane values, so a sanity check
+>
+> well, as long as "sane" does include server-is-too-hot situations...
 
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
----
- drivers/platform/x86/Kconfig |    1 -
- 1 file changed, 1 deletion(-)
+Of course. (But you most probably will want to s/server/laptop/ here.)
 
---- linux-next-20100827.orig/drivers/platform/x86/Kconfig
-+++ linux-next-20100827/drivers/platform/x86/Kconfig
-@@ -497,7 +497,6 @@ config ACPI_TOSHIBA
- 	depends on RFKILL || RFKILL = n
- 	select INPUT_POLLDEV
- 	select INPUT_SPARSEKMAP
--	select BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This driver adds support for access to certain system settings
- 	  on "legacy free" Toshiba laptops.  These laptops can be recognized by
+>> there should not have many false positives. OTOH, it is best to not
+>> load the module when you think things are strange.
+>
+> What good is an alarm module that refuses to load when there is an al=
+arm
+> condition happening already?
+
+This is not an alarm module; AFAIK it is a module for the feature in=20
+recent Intel CPU/GPU chips which allow you to overclock it a bit as lon=
+g=20
+as the thermal and power limit has not been exceeded:
+
+config INTEL_IPS
+	tristate "Intel Intelligent Power Sharing"
+	depends on ACPI
+	---help---
+	  Intel Calpella platforms support dynamic power sharing between the
+	  CPU and GPU, maximizing performance in a given TDP.  This driver,
+	  along with the CPU frequency and i915 drivers, provides that
+	  functionality.  If in doubt, say Y here; it will only load on
+	  supported platforms.
+
+If the module is not loaded, it simply will not be able to go above its=
+=20
+nominal clock, so refusing to load it is not that much of a problem.
+
+--=20
+Cesar Eduardo Barros
+cesarb@cesarb.net
+cesar.barros@gmail.com
