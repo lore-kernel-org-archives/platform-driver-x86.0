@@ -1,89 +1,90 @@
 From: Cesar Eduardo Barros <cesarb@cesarb.net>
 Subject: Re: [PATCH] intel_ips: quieten "power or thermal limit exceeded"
  messages
-Date: Sat, 28 Aug 2010 07:46:07 -0300
-Message-ID: <4C78E8EF.1000009@cesarb.net>
-References: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>	 <4C770299.6000708@cesarb.net> <1282869660.1836.5.camel@Joe-Laptop>	 <4C77171E.6060008@cesarb.net> <1282894751.1836.41.camel@Joe-Laptop>	 <4C784650.2030200@cesarb.net> <1282962104.1946.179.camel@Joe-Laptop>
+Date: Sat, 28 Aug 2010 09:52:35 -0300
+Message-ID: <4C790693.1060908@cesarb.net>
+References: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>	 <4C770299.6000708@cesarb.net> <1282869660.1836.5.camel@Joe-Laptop>	 <4C77171E.6060008@cesarb.net> <1282894751.1836.41.camel@Joe-Laptop>	 <4C784650.2030200@cesarb.net> <1282962104.1946.179.camel@Joe-Laptop>	 <4C78E8EF.1000009@cesarb.net> <1282994116.1946.226.camel@Joe-Laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp-04.mandic.com.br ([200.225.81.151]:43659 "EHLO
+Received: from smtp-04.mandic.com.br ([200.225.81.151]:50215 "EHLO
 	smtp-04.mandic.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752444Ab0H1KqN (ORCPT
+	with ESMTP id S1753192Ab0H1Mwj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 Aug 2010 06:46:13 -0400
-In-Reply-To: <1282962104.1946.179.camel@Joe-Laptop>
+	Sat, 28 Aug 2010 08:52:39 -0400
+In-Reply-To: <1282994116.1946.226.camel@Joe-Laptop>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Joe Perches <joe@perches.com>
-Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jesse Barnes <jbarnes@virtuousgeek.org>, Matthew, mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Em 27-08-2010 23:21, Joe Perches escreveu:
-> On Fri, 2010-08-27 at 20:12 -0300, Cesar Eduardo Barros wrote:
->> Em 27-08-2010 04:39, Joe Perches escreveu:
->>> On Thu, 2010-08-26 at 22:38 -0300, Cesar Eduardo Barros wrote:
->>>> - The first "MCP power limit exceeded" seems very bogus.
->>>> - What do you mean, core_power_limit is zero?
->>> I added a logging message whenever the turbo limits change
->>> and logging messages for power/temp on MCH for completeness.
->>> Maybe this will show something useful like when/how
->>> CPU power limit gets set to 0.
->
->> Running with it right now, did not help much:
+You seem to have dropped the CC list by accident, adding it back.
+
+Em 28-08-2010 08:15, Joe Perches escreveu:
+> On Sat, 2010-08-28 at 07:46 -0300, Cesar Eduardo Barros wrote:
+>> If I read the code with your previous patch correctly, show_turbo_limits
+>> will never be called if poll_turbo_status is false but no interrupt
+>> happens. And we know no interrupt happened (at least not with nonzero
+>> register values), because the interrupt handler does two dev_info()
+>> right at the beginning. So the limits could still be the ones initially
+>> set at ips_probe().
 >>
->> $ dmesg | fgrep 'intel ips'
->> intel ips 0000:00:1f.6: Warning: CPU TDP doesn't match expected value
->> (found 25, expected 35)
->> intel ips 0000:00:1f.6: PCI INT C ->  GSI 18 (level, low) ->  IRQ 18
->> intel ips 0000:00:1f.6: IPS driver initialized, MCP temp limit 65535
->> intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:8058 +
->> mch:23392829
->> intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5675
->> intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6369
+>> I will try to enable dev_dbg() later and see what it prints.
 >
-> I believe all these limits should always have non-zero values.
-> So I still think you've hardware problems, but I suppose it
-> could be the driver not reading the right registers or some
-> such.  It seems odd that the driver never printed a logging
-> message for either of the polling or irq methods to read the
-> device cpu and thermal limits.
-
-Come on, no blaming the BIOS? ;-)
-
-If I read the code with your previous patch correctly, show_turbo_limits 
-will never be called if poll_turbo_status is false but no interrupt 
-happens. And we know no interrupt happened (at least not with nonzero 
-register values), because the interrupt handler does two dev_info() 
-right at the beginning. So the limits could still be the ones initially 
-set at ips_probe().
-
-I will try to enable dev_dbg() later and see what it prints.
-
+> or add:
 >
-> Jesse or any Intel folk, can you verify or suggest anything
-> better?
+> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+> index 9024480..450ea44 100644
+> --- a/drivers/platform/x86/intel_ips.c
+> +++ b/drivers/platform/x86/intel_ips.c
+> @@ -1600,6 +1600,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>   		ips->second_cpu = true;
 >
-> If cpu_power_limit, or any _limit, is not set perhaps changing
-> the test style to verify limit and adding a printed_once alert
-> for each 0 value limit.  At least that'd shut up the continuous
-> logging but at least give a notification message.
->
-> if (limit) {
-> 	if (measured_val>  limit)
-> 		dev_info(foo)
-> } else
-> 	dev_alert_once()
+>   	update_turbo_limits(ips);
+> +	show_turbo_limits(ips, __func__);
+>   	dev_dbg(&dev->dev, "max cpu power clamp: %dW\n",
+>   		ips->mcp_power_limit / 10);
+>   	dev_dbg(&dev->dev, "max core power clamp: %dW\n",
 
-Wouldn't it make more sense to do the alert when the limit is set, 
-instead of when it is used? Also, it should still treat it as limit 
-exceeded (better safe than sorry). Something like:
+Here it is:
 
-if (measured_val > limit) {
-     if (limit)
-         dev_info(...);
-     ret = true;
-}
+intel ips 0000:00:1f.6: Warning: CPU TDP doesn't match expected value 
+(found 25, expected 35)
+intel ips 0000:00:1f.6: PCI INT C -> GSI 18 (level, low) -> IRQ 18
+intel ips 0000:00:1f.6: show_turbo_limits:ips_probe cte:1 gte:1 cpt:0 
+mpl:65535 mtl:65535 mpl:65535
+intel ips 0000:00:1f.6: IPS driver initialized, MCP temp limit 65535
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:8004 + 
+mch:25353039
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4841
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5283
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5586
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6077
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:5871 + mch:64538
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5466
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 8589
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5744
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4859
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:4834 + mch:62385
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4874
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5356
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6557
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:7589 + mch:59343
+intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:5536 + mch:60020
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6676
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4401
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5634
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4038
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4700
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5086
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4930
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4697
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5034
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5381
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4417
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6839
+intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 4787
 
 -- 
 Cesar Eduardo Barros
