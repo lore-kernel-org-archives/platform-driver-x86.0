@@ -1,36 +1,50 @@
-From: Kyle McMartin <kyle@mcmartin.ca>
-Subject: Re: Dell Studio 1555 eject key does not work ( small patch to fix
- included )
-Date: Mon, 6 Sep 2010 15:12:04 -0400
-Message-ID: <20100906191204.GL2684@bombadil.infradead.org>
-References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: asus-laptop kill wifi when initital
+Date: Thu, 09 Sep 2010 15:41:27 +0800
+Message-ID: <4C888FA7.9090402@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([18.85.46.34]:36762 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750999Ab0IFTMF (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:47659 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751071Ab0IIHlf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 Sep 2010 15:12:05 -0400
-Content-Disposition: inline
-In-Reply-To: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
+	Thu, 9 Sep 2010 03:41:35 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Islam Amer <pharon@gmail.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, akpm@linux-foundation.org, stable@kernel.org
+To: acpi4asus-user@lists.sourceforge.net, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>
 
-On Thu, Jun 03, 2010 at 01:14:09AM +0400, Islam Amer wrote:
-> I had submitted this as
-> https://bugzilla.kernel.org/show_bug.cgi?id=16075 but repeating the
-> information and patch
-> here as per Andrew Morton's suggestion.
-> 
+Hi,
 
-Thanks for sending this fix in, Islam. Adding stable@ to the Cc.
+I have a report[1] that user has to blacklist the asus-laptop otherwise wifi
+can not work. I copied asus-laptop.c from 2.6.32 kernel and remove two
+lines[2] that set WLED/BLED on. The modified driver works fine.
 
-Greg, could you apply this to the stable tree as well? Should apply a
-few releases back. We applied it to .34 and .35 in Fedora, at least.
+User uses 2.6.32 based kernel and when 2.6.34, a module parameter
+"wifi_status" is added[3] to let user choose what he want to do on WLED/BLED
+when initial. So I guess there are some reports tells the parameter for
+WLED/BLED maybe changed. Since the default action is still on because some
+machine need to enable WLED/BLED when booting. Any idea for the future
+change? For example telling user add an options on /etc/modprobe.d, or try
+to have a list of machine that not to set WLED/BLED to 1 when booting?
 
-The upstream commit id was d5164dbf1f651d1e955b158fb70a9c844cc91cd1.
 
-regards, Kyle
+[1] http://launchpad.net/bugs/612454
+
+[2] Patch is shown below:
+
+@@ -1273,8 +1273,10 @@ static int asus_hotk_add(struct acpi_dev
+ 	asus_hotk_found = 1;
+ 
+ 	/* WLED and BLED are on by default */
++#if 0 /* Remove by Ike Panhc */
+ 	write_status(bt_switch_handle, 1, BT_ON);
+ 	write_status(wl_switch_handle, 1, WL_ON);
++#endif
+ 
+ 	/* If the h/w switch is off, we need to check the real status */
+ 	write_status(NULL, read_status(BT_ON), BT_ON);
+
+[3] https://patchwork.kernel.org/patch/76283/
