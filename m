@@ -1,86 +1,67 @@
-From: "Mario 'BitKoenig' Holbe" <Mario.Holbe@TU-Ilmenau.DE>
-Subject: Re: [PATCH 0/8] [Resend] ideapad: using EC command to control
- rf/camera power
-Date: Thu, 9 Sep 2010 20:17:15 +0200
-Message-ID: <20100909181714.GA14951@darkside.kls.lan>
-References: <20100818155128.GA24363@darkside.kls.lan>
- <4C6CA31D.6030407@canonical.com>
- <20100819193146.GB32665@darkside.kls.lan>
- <4C6E2833.6080407@canonical.com>
- <20100820090824.GA23186@darkside.kls.lan>
- <4C7505A2.3000402@canonical.com>
- <20100830181954.GE31068@darkside.kls.lan>
- <4C7E3DE0.7030209@canonical.com>
- <20100901195617.GD32589@darkside.kls.lan>
- <4C80BA81.20701@canonical.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 0/8] [Resend] ideapad: using EC command to control rf/camera
+ power
+Date: Fri, 10 Sep 2010 14:44:16 +0800
+Message-ID: <4C89D3C0.7040105@canonical.com>
+References: <20100818155128.GA24363@darkside.kls.lan> <4C6CA31D.6030407@canonical.com> <20100819193146.GB32665@darkside.kls.lan> <4C6E2833.6080407@canonical.com> <20100820090824.GA23186@darkside.kls.lan> <4C7505A2.3000402@canonical.com> <20100830181954.GE31068@darkside.kls.lan> <4C7E3DE0.7030209@canonical.com> <20100901195617.GD32589@darkside.kls.lan> <4C80BA81.20701@canonical.com> <20100909181714.GA14951@darkside.kls.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4C80BA81.20701@canonical.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Thomas Renninger <trenn@suse.de>, Alan Cox <alan@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <randy.dunlap@oracle.com>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from adelie.canonical.com ([91.189.90.139]:43549 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750956Ab0IJGo1 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 10 Sep 2010 02:44:27 -0400
+In-Reply-To: <20100909181714.GA14951@darkside.kls.lan>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mario 'BitKoenig' Holbe <Mario.Holbe@TU-Ilmenau.DE>, David Woodhouse <dwmw2@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kerne
 
+On 09/10/2010 02:17 AM, Mario 'BitKoenig' Holbe wrote:
+> On Fri, Sep 03, 2010 at 05:06:09PM +0800, Ike Panhc wrote:
+>> I look at the DSDT again and again but unfortunately can not find anything
+>> may cause the bluetooth device initial failed. BTEN looks like the switch
+>> for EC to turn on/off bluetooth, BTST records the status of BTEN and BTPS
+>> means bluetooth present. But no idea why initial failed after BTEN=1
+> 
+> Is there some way to trace ACPI calls under Windows (XP Home)?
+> I could then have a look at what happens when I Fn-F5 BT off.
+> 
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I heard that we can install the driver in virtual machine for study its behavior.
+But dont know the detail - it means we need to have a pseudo device there.
 
-On Fri, Sep 03, 2010 at 05:06:09PM +0800, Ike Panhc wrote:
-> I look at the DSDT again and again but unfortunately can not find anything
-> may cause the bluetooth device initial failed. BTEN looks like the switch
-> for EC to turn on/off bluetooth, BTST records the status of BTEN and BTPS
-> means bluetooth present. But no idea why initial failed after BTEN=3D1
+Sorry, I do not know much about Windows.
 
-Is there some way to trace ACPI calls under Windows (XP Home)?
-I could then have a look at what happens when I Fn-F5 BT off.
+>> So I fall back to your suggestion. Have a module parameter to tell module
+>> not to register rfkill for bluetooth.
+>> I prepare the driver and please spend some time testing. Driver is at
+>> http://kernel.ubuntu.com/git?p=ikepanhc/ideapad-laptop.git;a=blob;f=drivers/platform/x86/ideapad-laptop.c;h=c4cf46a363f3f72d6db5339ec326d282d7e58183;hb=26a58948693b7d25960299a8025e569e68f28937
+>> and you may use "insmod ideapad-laptop.ko no_bt_rfkill=1" for your S12.
+> 
+> Hmmm, with this version and no_bt_rfkill=1 I run into the same problem
+> as without the ideapad module: If I switch BT off in Windows and reboot
+> to Linux, the device remains invisible and I have no chance to switch it
+> back on again :/
 
-> So I fall back to your suggestion. Have a module parameter to tell module
-> not to register rfkill for bluetooth.
-> I prepare the driver and please spend some time testing. Driver is at
-> http://kernel.ubuntu.com/git?p=3Dikepanhc/ideapad-laptop.git;a=3Dblob;f=
-=3Ddrivers/platform/x86/ideapad-laptop.c;h=3Dc4cf46a363f3f72d6db5339ec326d2=
-82d7e58183;hb=3D26a58948693b7d25960299a8025e569e68f28937
-> and you may use "insmod ideapad-laptop.ko no_bt_rfkill=3D1" for your S12.
+The no_bt_rfkill is a stopgap for dual OS user. when BT is default on, user
+still have the BT sw rfkill registered as hci0. when BT is defualt off, user
+can re-insert module with no_bt_rfkill=0.
 
-Hmmm, with this version and no_bt_rfkill=3D1 I run into the same problem
-as without the ideapad module: If I switch BT off in Windows and reboot
-to Linux, the device remains invisible and I have no chance to switch it
-back on again :/
-I guess this is because the initial device activation does currently
-only happen in ideapad_register_rfkill() via rfkill_init_sw_state()
-which is not called if no_bt_rfkill=3D1.
-A manual call to ideapad_rfk_set() (or ideapad_sync_rfk_state()?) in the
-no_bt_rfkill=3D1 case would very likely solve this, but I don't know how
-to provide this call with the correct arguments.
+> I guess this is because the initial device activation does currently
+> only happen in ideapad_register_rfkill() via rfkill_init_sw_state()
+> which is not called if no_bt_rfkill=1.
+> A manual call to ideapad_rfk_set() (or ideapad_sync_rfk_state()?) in the
+> no_bt_rfkill=1 case would very likely solve this, but I don't know how
+> to provide this call with the correct arguments.
 
+Sorry I do not get the point of a manual call. Could you explain more on this?
 
-regards
-   Mario
---=20
-=2E.. aber nur deshalb blueht Autoritaet, weil die meisten Menschen
-Feiglinge und manche Menschen Diebe sind.
-                                              -- Robert A. Wilson
+ideapad_rfk_set is called when user update /sys/class/rfkill/rfkill?/state and
+ideapad_sync_rfk_state is called when user touch the hw rfkill switch.
 
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQEVAwUBTIkkqhS+e2HeSPbpAQKunwf+MvdUpXe+MG+Fr0U4YMnvy4R9LOKAZfxj
-Yh7G7LKcg5O+c3vPsXlTc49zp4soO/jkuxtN/ewrcbM/PzC1ifnNpv1e8UdYk/zN
-O/RD36NB9fhxhHKBEeET6ZRJ5d5jG+MbxkbQ3WttbeVscJGvWP50dYHaqRAka9Ym
-72qkGview7kp0jipxtyseJrOhtsbhowFUp8oC0YsySQGzN+med7MJ8XOdaLlgpis
-JFpOkfD5DtTTFgZQjz8SWhMSVMQgBlhrg0o9jvNDpR58fJivtGpp01HprRJ+t8O9
-OHMMjjCSemWsML3TVotCQOBMO65dBGZpq2+Qnu1dQYTQQE44R4Cq6w==
-=zHzK
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+> 
+> 
+> regards
+>    Mario
