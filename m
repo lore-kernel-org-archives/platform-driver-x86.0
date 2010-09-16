@@ -1,144 +1,56 @@
-From: Keng-Yu Lin <keng-yu.lin@canonical.com>
-Subject: [PATCH v2] dell-laptop: Add debugfs support
-Date: Thu, 16 Sep 2010 11:19:46 +0800
-Message-ID: <1284607186-13129-1-git-send-email-keng-yu.lin@canonical.com>
-References: <AANLkTime84o+hJWVDegQWHxcvUiftKW-2psW5tv4a-yR@mail.gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 0/8] [Resend] ideapad: using EC command to control rf/camera
+ power
+Date: Thu, 16 Sep 2010 19:59:00 +0800
+Message-ID: <4C920684.7080000@canonical.com>
+References: <20100820090824.GA23186@darkside.kls.lan> <4C7505A2.3000402@canonical.com> <20100830181954.GE31068@darkside.kls.lan> <4C7E3DE0.7030209@canonical.com> <20100901195617.GD32589@darkside.kls.lan> <4C80BA81.20701@canonical.com> <20100909181714.GA14951@darkside.kls.lan> <4C89D3C0.7040105@canonical.com> <20100910071155.GA1263@darkside.kls.lan> <4C909C57.5030107@canonical.com> <20100915114820.GA22415@darkside.kls.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:35165 "EHLO
+Received: from adelie.canonical.com ([91.189.90.139]:43362 "EHLO
 	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751694Ab0IPDUG (ORCPT
+	with ESMTP id S1753581Ab0IPL7Q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Sep 2010 23:20:06 -0400
-In-Reply-To: <AANLkTime84o+hJWVDegQWHxcvUiftKW-2psW5tv4a-yR@mail.gmail.com>
+	Thu, 16 Sep 2010 07:59:16 -0400
+In-Reply-To: <20100915114820.GA22415@darkside.kls.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, len.brown@intel.com, alan-jenkins@tuffmail.co.uk, superm1@ubuntu.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keng-Yu Lin <keng-yu.lin@canonical.com>
+To: Mario 'BitKoenig' Holbe <Mario.Holbe@TU-Ilmenau.DE>
+Cc: David Woodhouse <dwmw2@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Thomas Renninger <trenn@suse.de>, Alan Cox <alan@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <randy.dunlap@oracle.com>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
 
-Export the status of RF killswitch through debugfs.
+Hi Mario,
 
-The killswitch status is obtained by the SMI to BIOS. Exporting this status
-through debugfs can help identify the issue with the misbehaving firmware.
+I have modified the driver[1]. Please kindly have a test and see if it is ok for you.
 
-Signed-off-by: Keng-Yu Lin <keng-yu.lin@canonical.com>
----
- drivers/platform/x86/dell-laptop.c |   83 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 83 insertions(+), 0 deletions(-)
+[1] http://kernel.ubuntu.com/git?p=ikepanhc/ideapad-laptop.git;a=blob;f=drivers/platform/x86/ideapad-laptop.c;h=0e1f60bb53fd483bffb0e0f914254a589baa152a;hb=9dc37c9289c3edd2a171a6fd7872578107cf3063
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 4413975..1536dd5 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -25,6 +25,8 @@
- #include <linux/mm.h>
- #include <linux/i8042.h>
- #include <linux/slab.h>
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
- #include "../../firmware/dcdbas.h"
- 
- #define BRIGHTNESS_TOKEN 0x7d
-@@ -325,6 +327,77 @@ static const struct rfkill_ops dell_rfkill_ops = {
- 	.query = dell_rfkill_query,
- };
- 
-+#ifdef CONFIG_DEBUG_FS
-+static struct dentry *dell_laptop_dir;
-+
-+static int dell_debugfs_show(struct seq_file *s, void *data)
-+{
-+	int status;
-+
-+	get_buffer();
-+	dell_send_request(buffer, 17, 11);
-+	status = buffer->output[1];
-+	release_buffer();
-+
-+	seq_printf(s, "status:\t0x%X\n", status);
-+	seq_printf(s, "Hardware switch supported:   %lu\n",
-+		   status & BIT(0));
-+	seq_printf(s, "Wifi locator supported:      %lu\n",
-+		  (status & BIT(1)) >> 1);
-+	seq_printf(s, "Wifi is supported:           %lu\n",
-+		  (status & BIT(2)) >> 2);
-+	seq_printf(s, "Bluetooth is supported:      %lu\n",
-+		  (status & BIT(3)) >> 3);
-+	seq_printf(s, "WWAN is supported:           %lu\n",
-+		  (status & BIT(4)) >> 4);
-+	seq_printf(s, "Wireless keyboard supported: %lu\n",
-+		  (status & BIT(5)) >> 5);
-+	seq_printf(s, "Wifi is installed:           %lu\n",
-+		  (status & BIT(8)) >> 8);
-+	seq_printf(s, "Bluetooth is installed:      %lu\n",
-+		  (status & BIT(9)) >> 9);
-+	seq_printf(s, "WWAN is installed:           %lu\n",
-+		  (status & BIT(10)) >> 10);
-+	seq_printf(s, "Hardware switch is on:       %lu\n",
-+		  (status & BIT(16)) >> 16);
-+	seq_printf(s, "Wifi is blocked:             %lu\n",
-+		  (status & BIT(17)) >> 17);
-+	seq_printf(s, "Bluetooth is blocked:        %lu\n",
-+		  (status & BIT(18)) >> 18);
-+	seq_printf(s, "WWAN is blocked:             %lu\n",
-+		  (status & BIT(19)) >> 19);
-+
-+	seq_printf(s, "\nhwswitch_state:\t0x%X\n", hwswitch_state);
-+	seq_printf(s, "Wifi controlled by switch:      %lu\n",
-+		   hwswitch_state & BIT(0));
-+	seq_printf(s, "Bluetooth controlled by switch: %lu\n",
-+		   hwswitch_state & BIT(0) >> 1);
-+	seq_printf(s, "WWAN controlled by switch:      %lu\n",
-+		   hwswitch_state & BIT(0) >> 2);
-+	seq_printf(s, "Wireless switch config locked:  %lu\n",
-+		   hwswitch_state & BIT(0) >> 7);
-+	seq_printf(s, "Wifi locator enabled:           %lu\n",
-+		   hwswitch_state & BIT(0) >> 8);
-+	seq_printf(s, "Wifi locator setting locked:    %lu\n",
-+		   hwswitch_state & BIT(0) >> 15);
-+
-+	return 0;
-+}
-+
-+static int dell_debugfs_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, dell_debugfs_show, inode->i_private);
-+}
-+
-+static const struct file_operations dell_debugfs_fops = {
-+	.owner = THIS_MODULE,
-+	.open = dell_debugfs_open,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
-+};
-+#endif
-+
- static void dell_update_rfkill(struct work_struct *ignored)
- {
- 	if (wifi_rfkill)
-@@ -556,6 +629,13 @@ static int __init dell_init(void)
- 		goto fail_filter;
- 	}
- 
-+#ifdef CONFIG_DEBUG_FS
-+	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
-+	if (dell_laptop_dir != NULL)
-+		debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-+				    &dell_debugfs_fops);
-+#endif
-+
- #ifdef CONFIG_ACPI
- 	/* In the event of an ACPI backlight being available, don't
- 	 * register the platform controller.
-@@ -615,6 +695,9 @@ fail_platform_driver:
- 
- static void __exit dell_exit(void)
- {
-+#ifdef CONFIG_DEBUG_FS
-+	debugfs_remove_recursive(dell_laptop_dir);
-+#endif
- 	i8042_remove_filter(dell_laptop_i8042_filter);
- 	cancel_delayed_work_sync(&dell_rfkill_work);
- 	backlight_device_unregister(dell_backlight_device);
--- 
-1.7.1
+--
+Ike Panhc
+
+On 09/15/2010 07:48 PM, Mario 'BitKoenig' Holbe wrote:
+> On Wed, Sep 15, 2010 at 06:13:43PM +0800, Ike Panhc wrote:
+>> On 09/10/2010 03:11 PM, Mario 'BitKoenig' Holbe wrote:
+>>> 	rfkill_init_sw_state(priv->rfk[dev], 0);
+>> eh.. after review the code, the rfkill_init_sw_state shall not give 0 as the default
+>> value. I shall read the value from EC and set reasonable value.
+> 
+> Well - probably :)
+> The current behaviour results in each device becoming unblocked no
+> matter what state it had before.
+> 
+>>> 	if (no_bt_rfkill && (ideapad_rfk_data[dev].type == RFKILL_TYPE_BLUETOOTH))
+>>> 		ideapad_rfk_set(???, 0);
+>> Do you mean driver still setup the rfkill for bluetooth, but we can not block
+>> bluetooth when module parameter set to 1? This idea is better then no_bt_rfkill.
+>> Will modify the driver.
+> 
+> Well, not really... I mean: in the no_bt_rfkill=1 case the driver should
+> (try to) unblock the bluetooth device in order to activate it to make it
+> further manageable via it's own (hci) rfkill switch.
+> I don't think setting up the ideapad_bluetooth rfkill is necessary for
+> that. Not setting it up is IMHO the right direction. Just the device
+> activation is missing.
+> 
+> 
+> Mario
