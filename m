@@ -1,82 +1,43 @@
-From: minskey guo <chaohong.guo@linux.intel.com>
-Subject: [PATCH 4/4] [intel_ips] NULL pointer might be used in ips_monitor()
-Date: Fri, 17 Sep 2010 14:03:27 +0800
-Message-ID: <1284703407-7802-1-git-send-email-chaohong.guo@linux.intel.com>
+From: "Pascal de Bruijn | Unilogic Networks B.V."
+	<pascal@unilogicnetworks.net>
+Subject: [PATCH] Don't show error if Acer WMI is not found
+Date: Tue, 21 Sep 2010 14:48:52 +0200
+Message-ID: <1285073332.9470.5.camel@carnifex>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:35192 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752948Ab0IQGHG (ORCPT
+Received: from mail-out123.unilogicnetworks.net ([62.133.206.123]:57869 "EHLO
+	mail.unilogicnetworks.net" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1752811Ab0IUNUV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 17 Sep 2010 02:07:06 -0400
+	Tue, 21 Sep 2010 09:20:21 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, jbarnes@virtuousgeek.org, mjg@redhat.com
-Cc: chaohong.guo@intel.com, minskey guo <chaohong.guo@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, trivial@kernel.org, akpm@linux-foundation.org
 
- The patch is to create ips_adjust thread before ips_monitor begins
- to run  because the latter will kthread_stop() or wake up the former
- via ips->adjust pointer. Without this change, it is possible that
- ips->adjust is NULL when kthread_stop() or wake_up_process() is
- called in ips_monitor().
+From 6e5643d6b1c1e5250d29b8d6d82dae3ec6404055 Mon Sep 17 00:00:00 2001
+From: Pascal de Bruijn <pascal@unilogicnetworks.net>
+Date: Mon, 30 Aug 2010 09:09:53 +0200
+Subject: [PATCH] Don't show error if Acer WMI is not found
 
-Signed-off-by: minskey guo <chaohong.guo@intel.com>
-Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
 ---
- drivers/platform/x86/intel_ips.c |   22 +++++++++++++---------
- 1 files changed, 13 insertions(+), 9 deletions(-)
+ drivers/platform/x86/acer-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 71dcc41..cb59ebd 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -940,7 +940,6 @@ static int ips_monitor(void *data)
- 		kfree(mch_samples);
- 		kfree(cpu_samples);
- 		kfree(mchp_samples);
--		kthread_stop(ips->adjust);
- 		return -ENOMEM;
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 2badee2..c8c6537 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1314,7 +1314,7 @@ static int __init acer_wmi_init(void)
+ 		AMW0_find_mailled();
+ 
+ 	if (!interface) {
+-		printk(ACER_ERR "No or unsupported WMI interface, unable to "
++		printk(ACER_INFO "No or unsupported WMI interface, unable to "
+ 				"load\n");
+ 		return -ENODEV;
  	}
- 
-@@ -1535,19 +1534,24 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	ips_enable_cpu_turbo(ips);
- 	ips->cpu_turbo_enabled = true;
- 
--	/* Set up the work queue and monitor/adjust threads */
--	ips->monitor = kthread_run(ips_monitor, ips, "ips-monitor");
--	if (IS_ERR(ips->monitor)) {
-+	/* Create thermal adjust thread */
-+	ips->adjust = kthread_create(ips_adjust, ips, "ips-adjust");
-+	if (IS_ERR(ips->adjust)) {
- 		dev_err(&dev->dev,
--			"failed to create thermal monitor thread, aborting\n");
-+			"failed to create thermal adjust thread, aborting\n");
- 		ret = -ENOMEM;
- 		goto error_free_irq;
-+
- 	}
- 
--	ips->adjust = kthread_create(ips_adjust, ips, "ips-adjust");
--	if (IS_ERR(ips->adjust)) {
-+	/*
-+	 * Set up the work queue and monitor thread. The monitor thread
-+	 * will wake up ips_adjust thread.
-+	 */
-+	ips->monitor = kthread_run(ips_monitor, ips, "ips-monitor");
-+	if (IS_ERR(ips->monitor)) {
- 		dev_err(&dev->dev,
--			"failed to create thermal adjust thread, aborting\n");
-+			"failed to create thermal monitor thread, aborting\n");
- 		ret = -ENOMEM;
- 		goto error_thread_cleanup;
- 	}
-@@ -1566,7 +1570,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	return ret;
- 
- error_thread_cleanup:
--	kthread_stop(ips->monitor);
-+	kthread_stop(ips->adjust);
- error_free_irq:
- 	free_irq(ips->dev->irq, ips);
- error_unmap:
 -- 
-1.7.1
+1.7.0.4
