@@ -1,75 +1,74 @@
-From: Jesse Barnes <jbarnes@virtuousgeek.org>
-Subject: [PATCH 2/2] IPS driver: verify BIOS provided limits
-Date: Thu, 23 Sep 2010 23:49:29 +0200
-Message-ID: <1285278569-4368-2-git-send-email-jbarnes@virtuousgeek.org>
-References: <1285278569-4368-1-git-send-email-jbarnes@virtuousgeek.org>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [GIT] x86 platform driver update
+Date: Thu, 23 Sep 2010 23:51:39 +0200
+Message-ID: <AANLkTincMJ6ydnwM4+FMsd2FPkSUgN97hWtEOu+sn2OK@mail.gmail.com>
+References: <20100923195450.GA27852@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cpoproxy1-pub.bluehost.com ([69.89.21.11]:52878 "HELO
-	cpoproxy1-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1752461Ab0IWVtf (ORCPT
+Received: from mail-ww0-f42.google.com ([74.125.82.42]:34584 "EHLO
+	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754195Ab0IWVvk convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Sep 2010 17:49:35 -0400
-In-Reply-To: <1285278569-4368-1-git-send-email-jbarnes@virtuousgeek.org>
+	Thu, 23 Sep 2010 17:51:40 -0400
+In-Reply-To: <20100923195450.GA27852@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: mjg59@redhat.com, Jesse Barnes <jbarnes@virtuousgeek.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-They're optional.  If not present or sane, we should use the CPU
-defaults.
+On Thu, Sep 23, 2010 at 9:54 PM, Matthew Garrett <mjg59@srcf.ucam.org> =
+wrote:
+> Hi Linus,
+>
+> Just an update to MAINTAINERS and a fix for a regression in the Think=
+pad
+> hotkey handling.
+>
+> The following changes since commit 57aebd7739c8dbbf403876ee1e9673fafc=
+83d856:
+>
+> =C2=A0Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/=
+kernel/git/tj/percpu (2010-09-23 08:06:55 -0700)
+>
+> are available in the git repository at:
+>
+> =C2=A0git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-dr=
+ivers-x86.git for_linus
+>
+> Henrique de Moraes Holschuh (1):
+> =C2=A0 =C2=A0 =C2=A0thinkpad-acpi: avoid keymap pitfall
+>
+> Lee, Chun-Yi (1):
+> =C2=A0 =C2=A0 =C2=A0Change MSI LAPTOP driver maintainer to Lee, Chun-=
+Yi
+>
+> =C2=A0MAINTAINERS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| =C2=A0 =C2=A04 +---
+> =C2=A0drivers/platform/x86/thinkpad_acpi.c | =C2=A0 =C2=A05 +++--
+> =C2=A02 files changed, 4 insertions(+), 5 deletions(-)
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
+ml
+>
 
-Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
----
- drivers/platform/x86/intel_ips.c |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
+Hi Matthew,
+You didn't include "asus-laptop: fix gps rfkill", which fix a NULL
+dereference when there is a GPS device.
+I think this patch should really be merged (also sent it to
+stable@kernel.org, for previous version).
+Maybe we should open a patchwork for platform-x86 ml to tack patchs ?
+There was one on linux-acpi,
+and it was really helpful.
+Thanks,
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 71d04ef..c402cc4 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -665,6 +665,27 @@ static bool mch_exceeded(struct ips_driver *ips)
- }
- 
- /**
-+ * verify_limits - verify BIOS provided limits
-+ * @ips: IPS structure
-+ *
-+ * BIOS can optionally provide non-default limits for power and temp.  Check
-+ * them here and use the defaults if the BIOS values are not provided or
-+ * are otherwise unusable.
-+ */
-+static void verify_limits(struct ips_driver *ips)
-+{
-+	if (ips->mcp_power_limit < ips->limits->mcp_power_limit ||
-+	    ips->mcp_power_limit > 35000)
-+		ips->mcp_power_limit = ips->limits->mcp_power_limit;
-+
-+	if (ips->mcp_temp_limit < ips->limits->core_temp_limit ||
-+	    ips->mcp_temp_limit < ips->limits->mch_temp_limit ||
-+	    ips->mcp_temp_limit > 150)
-+		ips->mcp_temp_limit = min(ips->limits->core_temp_limit,
-+					  ips->limits->mch_temp_limit);
-+}
-+
-+/**
-  * update_turbo_limits - get various limits & settings from regs
-  * @ips: IPS driver struct
-  *
-@@ -688,6 +709,7 @@ static void update_turbo_limits(struct ips_driver *ips)
- 	ips->mcp_temp_limit = thm_readw(THM_PTL);
- 	ips->mcp_power_limit = thm_readw(THM_MPPC);
- 
-+	verify_limits(ips);
- 	/* Ignore BIOS CPU vs GPU pref */
- }
- 
-@@ -1156,6 +1178,7 @@ static irqreturn_t ips_irq_handler(int irq, void *arg)
- 				STS_PTL_SHIFT;
- 			ips->mcp_power_limit = (tc1 & STS_PPL_MASK) >>
- 				STS_PPL_SHIFT;
-+			verify_limits(ips);
- 			spin_unlock(&ips->turbo_status_lock);
- 
- 			thm_writeb(THM_SEC, SEC_ACK);
--- 
-1.7.2.3
+--=20
+Corentin Chary
+http://xf.iksaif.net
