@@ -1,38 +1,131 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver update
-Date: Thu, 23 Sep 2010 20:54:50 +0100
-Message-ID: <20100923195450.GA27852@srcf.ucam.org>
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Subject: Re: [PATCH] intel_ips: quieten "power or thermal limit exceeded"
+ messages
+Date: Thu, 23 Sep 2010 13:31:32 -0700
+Message-ID: <20100923133132.3faae5b3@jbarnes-desktop>
+References: <Pine.LNX.4.30.1008261631410.13713-100000@mail.perches.com>
+	<4C770299.6000708@cesarb.net>
+	<1282869660.1836.5.camel@Joe-Laptop>
+	<4C77171E.6060008@cesarb.net>
+	<1282894751.1836.41.camel@Joe-Laptop>
+	<4C784650.2030200@cesarb.net>
+	<1282962104.1946.179.camel@Joe-Laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cpoproxy1-pub.bluehost.com ([69.89.21.11]:40472 "HELO
+	cpoproxy1-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1754950Ab0IWUbe (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 23 Sep 2010 16:31:34 -0400
+In-Reply-To: <1282962104.1946.179.camel@Joe-Laptop>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Cesar Eduardo Barros <cesarb@cesarb.net>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 27 Aug 2010 19:21:44 -0700
+Joe Perches <joe@perches.com> wrote:
 
-Just an update to MAINTAINERS and a fix for a regression in the Thinkpad 
-hotkey handling.
+> On Fri, 2010-08-27 at 20:12 -0300, Cesar Eduardo Barros wrote:
+> > Em 27-08-2010 04:39, Joe Perches escreveu:
+> > > On Thu, 2010-08-26 at 22:38 -0300, Cesar Eduardo Barros wrote:
+> > >> - The first "MCP power limit exceeded" seems very bogus.
+> > >> - What do you mean, core_power_limit is zero?
+> > > I added a logging message whenever the turbo limits change
+> > > and logging messages for power/temp on MCH for completeness.
+> > > Maybe this will show something useful like when/how
+> > > CPU power limit gets set to 0.
+> 
+> > Running with it right now, did not help much:
+> > 
+> > $ dmesg | fgrep 'intel ips'
+> > intel ips 0000:00:1f.6: Warning: CPU TDP doesn't match expected value 
+> > (found 25, expected 35)
+> > intel ips 0000:00:1f.6: PCI INT C -> GSI 18 (level, low) -> IRQ 18
+> > intel ips 0000:00:1f.6: IPS driver initialized, MCP temp limit 65535
+> > intel ips 0000:00:1f.6: MCP power limit 65535 exceeded: cpu:8058 + 
+> > mch:23392829
+> > intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 5675
+> > intel ips 0000:00:1f.6: CPU power limit 0 exceeded: 6369
+> 
+> I believe all these limits should always have non-zero values.
+> So I still think you've hardware problems, but I suppose it
+> could be the driver not reading the right registers or some
+> such.  It seems odd that the driver never printed a logging
+> message for either of the polling or irq methods to read the
+> device cpu and thermal limits.
+> 
+> Jesse or any Intel folk, can you verify or suggest anything
+> better?
+> 
+> If cpu_power_limit, or any _limit, is not set perhaps changing
+> the test style to verify limit and adding a printed_once alert
+> for each 0 value limit.  At least that'd shut up the continuous
+> logging but at least give a notification message.
+> 
+> if (limit) {
+> 	if (measured_val > limit)
+> 		dev_info(foo)
+> } else
+> 	dev_alert_once()
+> 
+> Maybe something like this:
+> 
+>  drivers/platform/x86/intel_ips.c |  160 +++++++++++++++++++++++++++++++++-----
+>  1 files changed, 140 insertions(+), 20 deletions(-)
 
-The following changes since commit 57aebd7739c8dbbf403876ee1e9673fafc83d856:
+Yes, we do need something like this.  It turns out the BIOS can
+optionally program several of these values, and we need to sanity check
+them.  If they're not valid (e.g. a core power limit of 0 or MCP temp
+limit of 0xffff) we need to use the default values in the limit structs.
 
-  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/percpu (2010-09-23 08:06:55 -0700)
+I think the programmed limits are valid if they're nonzero and less
+than one of the available default limits.  If they're not valid, we
+should just use the default values.  I was thinking something like the
+below for MCP, but Joe you may want to just update your patch instead
+since it's more complete.
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
-
-Henrique de Moraes Holschuh (1):
-      thinkpad-acpi: avoid keymap pitfall
-
-Lee, Chun-Yi (1):
-      Change MSI LAPTOP driver maintainer to Lee, Chun-Yi
-
- MAINTAINERS                          |    4 +---
- drivers/platform/x86/thinkpad_acpi.c |    5 +++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
+Thanks,
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Jesse Barnes, Intel Open Source Technology Center
+
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 9024480..ec72e80 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -662,6 +662,17 @@ static bool mch_exceeded(struct ips_driver *ips)
+ 	return ret;
+ }
+ 
++static void clamp_mcp_temp_limit(struct ips_driver *ips)
++{
++	/*
++	 * BIOS may or may not program an MCP limit.  Clamp it to the
++	 * lowest available value.
++	 */
++	if (ips->mcp_temp_limit < ips->core_temp_limit ||
++	    ips->mcp_temp_limit < ips->mch_temp_limit)
++		ips->mcp_temp_limit = min(ips->core_temp_limit, ips->mch_temp_limit);
++}
++
+ /**
+  * update_turbo_limits - get various limits & settings from regs
+  * @ips: IPS driver struct
+@@ -686,6 +697,7 @@ static void update_turbo_limits(struct ips_driver *ips)
+ 	ips->mcp_temp_limit = thm_readw(THM_PTL);
+ 	ips->mcp_power_limit = thm_readw(THM_MPPC);
+ 
++	clamp_mcp_temp_limit(ips);
+ 	/* Ignore BIOS CPU vs GPU pref */
+ }
+ 
+@@ -1155,6 +1167,7 @@ static irqreturn_t ips_irq_handler(int irq, void *arg)
+ 				STS_PTL_SHIFT;
+ 			ips->mcp_power_limit = (tc1 & STS_PPL_MASK) >>
+ 				STS_PPL_SHIFT;
++			clamp_mcp_temp_limit(ips);
+ 			spin_unlock(&ips->turbo_status_lock);
+ 
+ 			thm_writeb(THM_SEC, SEC_ACK);
