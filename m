@@ -1,74 +1,42 @@
-From: "Mario 'BitKoenig' Holbe" <Mario.Holbe@TU-Ilmenau.DE>
-Subject: Re: [PATCH 0/8] [Resend] ideapad: using EC command to control
- rf/camera power
-Date: Tue, 21 Sep 2010 15:47:21 +0200
-Message-ID: <20100921134720.GA19078@darkside.kls.lan>
-References: <20100830181954.GE31068@darkside.kls.lan>
- <4C7E3DE0.7030209@canonical.com>
- <20100901195617.GD32589@darkside.kls.lan>
- <4C80BA81.20701@canonical.com>
- <20100909181714.GA14951@darkside.kls.lan>
- <4C89D3C0.7040105@canonical.com>
- <20100910071155.GA1263@darkside.kls.lan>
- <4C909C57.5030107@canonical.com>
- <20100915114820.GA22415@darkside.kls.lan>
- <4C920684.7080000@canonical.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [stable] Dell Studio 1555 eject key does not work ( small
+ patch to fix included )
+Date: Thu, 23 Sep 2010 11:43:29 -0700
+Message-ID: <20100923184329.GV23040@kroah.com>
+References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
+ <20100906191204.GL2684@bombadil.infradead.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from piggy.rz.tu-ilmenau.de ([141.24.4.8]:42377 "EHLO
-	piggy.rz.tu-ilmenau.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754154Ab0IUNsw (ORCPT
+Received: from kroah.org ([198.145.64.141]:51321 "EHLO coco.kroah.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756197Ab0IWTSd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Sep 2010 09:48:52 -0400
+	Thu, 23 Sep 2010 15:18:33 -0400
 Content-Disposition: inline
-In-Reply-To: <4C920684.7080000@canonical.com>
+In-Reply-To: <20100906191204.GL2684@bombadil.infradead.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Thomas Renninger <trenn@suse.de>, Alan Cox <alan@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <randy.dunlap@oracle.com>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
+To: Kyle McMartin <kyle@mcmartin.ca>
+Cc: Islam Amer <pharon@gmail.com>, stable@kernel.org, akpm@linux-foundation.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
+On Mon, Sep 06, 2010 at 03:12:04PM -0400, Kyle McMartin wrote:
+> On Thu, Jun 03, 2010 at 01:14:09AM +0400, Islam Amer wrote:
+> > I had submitted this as
+> > https://bugzilla.kernel.org/show_bug.cgi?id=16075 but repeating the
+> > information and patch
+> > here as per Andrew Morton's suggestion.
+> > 
+> 
+> Thanks for sending this fix in, Islam. Adding stable@ to the Cc.
+> 
+> Greg, could you apply this to the stable tree as well? Should apply a
+> few releases back. We applied it to .34 and .35 in Fedora, at least.
+> 
+> The upstream commit id was d5164dbf1f651d1e955b158fb70a9c844cc91cd1.
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Now queued up in the .35-stable tree.
 
-Hi Ike,
+thanks,
 
-On Thu, Sep 16, 2010 at 07:59:00PM +0800, Ike Panhc wrote:
-> I have modified the driver[1]. Please kindly have a test and see if it is=
- ok for you.
-
-This new driver works well for me. Forced enable works well with
-no_bt_rfkill=3D1 and keeping the state does also work well without
-no_bt_rfkill.
-
-Sorry for the delay and thanks for your work.
-
-
-best regards
-   Mario
---=20
-<Sique> Huch? 802.1q? Was sucht das denn hier? Wie kommt das ans TAGgeslich=
-t?
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iQEVAwUBTJi3aBS+e2HeSPbpAQIBFQgAhGV0556YTcTdhKebPhKZI1sYyj/eufOU
-3+Ph/7xhwfkrF+WT/dFSMkKHOwyG8LEqlmC4Qse+K7lurqA+UZ935uG0EtLBCXUz
-TNNKxjvUl+mClikciTgcei9cfkMLYs03HIm5L37u2aO723QByVxIJYnAn/bzI1ab
-7Whcq8wEEvX6FuyEcWo1ZgoTb9nXtNrevLccKRLeHX3v1Vo3xgn4JH7OBuaKeouf
-0orV4M11bRzlegJfiKVih5fmoEbbJgxjZQdbrNH9L/qc6rbiO/Q5ZFqqFAPcbbAi
-NQ7qicFSDbKoxho7cVUwkpmsV4azXo6NVAJIEqTBjAzySmbyExmVbg==
-=7uqS
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
+greg k-h
