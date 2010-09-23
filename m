@@ -1,42 +1,38 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [stable] Dell Studio 1555 eject key does not work ( small
- patch to fix included )
-Date: Thu, 23 Sep 2010 11:43:29 -0700
-Message-ID: <20100923184329.GV23040@kroah.com>
-References: <AANLkTinG3jv6o8T00mDTEP5uxf4tKqOwSPEDIUcv4kVG@mail.gmail.com>
- <20100906191204.GL2684@bombadil.infradead.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT] x86 platform driver update
+Date: Thu, 23 Sep 2010 20:54:50 +0100
+Message-ID: <20100923195450.GA27852@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from kroah.org ([198.145.64.141]:51321 "EHLO coco.kroah.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756197Ab0IWTSd (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Sep 2010 15:18:33 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20100906191204.GL2684@bombadil.infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle McMartin <kyle@mcmartin.ca>
-Cc: Islam Amer <pharon@gmail.com>, stable@kernel.org, akpm@linux-foundation.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 06, 2010 at 03:12:04PM -0400, Kyle McMartin wrote:
-> On Thu, Jun 03, 2010 at 01:14:09AM +0400, Islam Amer wrote:
-> > I had submitted this as
-> > https://bugzilla.kernel.org/show_bug.cgi?id=16075 but repeating the
-> > information and patch
-> > here as per Andrew Morton's suggestion.
-> > 
-> 
-> Thanks for sending this fix in, Islam. Adding stable@ to the Cc.
-> 
-> Greg, could you apply this to the stable tree as well? Should apply a
-> few releases back. We applied it to .34 and .35 in Fedora, at least.
-> 
-> The upstream commit id was d5164dbf1f651d1e955b158fb70a9c844cc91cd1.
+Hi Linus,
 
-Now queued up in the .35-stable tree.
+Just an update to MAINTAINERS and a fix for a regression in the Thinkpad 
+hotkey handling.
 
-thanks,
+The following changes since commit 57aebd7739c8dbbf403876ee1e9673fafc83d856:
 
-greg k-h
+  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/percpu (2010-09-23 08:06:55 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+
+Henrique de Moraes Holschuh (1):
+      thinkpad-acpi: avoid keymap pitfall
+
+Lee, Chun-Yi (1):
+      Change MSI LAPTOP driver maintainer to Lee, Chun-Yi
+
+ MAINTAINERS                          |    4 +---
+ drivers/platform/x86/thinkpad_acpi.c |    5 +++--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
