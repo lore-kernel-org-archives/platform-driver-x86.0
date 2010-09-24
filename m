@@ -1,124 +1,83 @@
-From: Greg KH <gregkh@suse.de>
-Subject: [49/80] x86 platform drivers: hp-wmi Reorder event id processing
-Date: Fri, 24 Sep 2010 09:24:37 -0700
-Message-ID: <20100924162619.137250221@clark.site>
-References: <20100924162706.GA7381@kroah.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20100924162706.GA7381@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@kernel.org
-Cc: stable-review@kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, alan@lxorguk.ukuu.org.uk, Thomas Renninger <trenn@suse.de>, Matthew Garrett <mjg@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Western Union <medioambiente@aytolarinconada.es>
+Subject: Good day
+Date: Fri, 24 Sep 2010 23:16:59 +0200
+Message-ID: <b45a37dec6efe2ae9c379c8f3c9b7f3e@localhost>
+Reply-To: western.union_department@w.cn
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mlwe840.servidoresdns.net ([82.223.136.151]:58874 "EHLO
+	mlwe840.servidoresdns.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757191Ab0IXVYr (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 24 Sep 2010 17:24:47 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-2.6.35-stable review patch.  If anyone has any objections, please let us know.
 
-------------------
 
-From: Thomas Renninger <trenn@suse.de>
 
-commit 751ae808f6b29803228609f51aa1ae057f5c576e upstream.
 
-Event id 0x4 defines the hotkey event.
-No need (or even wrong) to query HPWMI_HOTKEY_QUERY if event id is != 0x4.
 
-Reorder the eventcode conditionals and use switch case instead of if/else.
-Use an enum for the event ids cases.
+-- 
 
-Signed-off-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Matthew Garrett <mjg@redhat.com>
-CC: linux-acpi@vger.kernel.org
-CC: platform-driver-x86@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+Good day,
 
----
- drivers/platform/x86/hp-wmi.c |   51 ++++++++++++++++++++++++++----------------
- 1 file changed, 32 insertions(+), 19 deletions(-)
-
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -58,6 +58,12 @@ enum hp_wmi_radio {
- 	HPWMI_WWAN = 2,
- };
  
-+enum hp_wmi_event_ids {
-+	HPWMI_DOCK_EVENT = 1,
-+	HPWMI_BEZEL_BUTTON = 4,
-+	HPWMI_WIRELESS = 5,
-+};
-+
- static int __devinit hp_wmi_bios_setup(struct platform_device *device);
- static int __exit hp_wmi_bios_remove(struct platform_device *device);
- static int hp_wmi_resume_handler(struct device *device);
-@@ -338,7 +344,7 @@ static void hp_wmi_notify(u32 value, voi
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
- 	static struct key_entry *key;
- 	union acpi_object *obj;
--	int eventcode;
-+	int eventcode, key_code;
- 	acpi_status status;
+
+My working partner has helped me to send your
+
+first payment of US$7,500 to you as
+
+instructed by Mr. David Cameron and will
+
+keep sending you US$7,500 twice a week until
+
+the payment of (US$360,000) is completed
+
+within six months and here is the information
+
+below:
+
  
- 	status = wmi_get_event_data(value, &response);
-@@ -357,28 +363,32 @@ static void hp_wmi_notify(u32 value, voi
+
+MONEY TRANSFER CONTROL NUMBER (MTCN):
+
+522-905-9427
+
  
- 	eventcode = *((u8 *) obj->buffer.pointer);
- 	kfree(obj);
--	if (eventcode == 0x4)
--		eventcode = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
--						0);
--	key = hp_wmi_get_entry_by_scancode(eventcode);
--	if (key) {
--		switch (key->type) {
--		case KE_KEY:
--			input_report_key(hp_wmi_input_dev,
--					 key->keycode, 1);
--			input_sync(hp_wmi_input_dev);
--			input_report_key(hp_wmi_input_dev,
--					 key->keycode, 0);
--			input_sync(hp_wmi_input_dev);
--			break;
--		}
--	} else if (eventcode == 0x1) {
-+	switch (eventcode) {
-+	case HPWMI_DOCK_EVENT:
- 		input_report_switch(hp_wmi_input_dev, SW_DOCK,
- 				    hp_wmi_dock_state());
- 		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
- 				    hp_wmi_tablet_state());
- 		input_sync(hp_wmi_input_dev);
--	} else if (eventcode == 0x5) {
-+		break;
-+	case HPWMI_BEZEL_BUTTON:
-+		key_code = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
-+						 0);
-+		key = hp_wmi_get_entry_by_scancode(key_code);
-+		if (key) {
-+			switch (key->type) {
-+			case KE_KEY:
-+				input_report_key(hp_wmi_input_dev,
-+						 key->keycode, 1);
-+				input_sync(hp_wmi_input_dev);
-+				input_report_key(hp_wmi_input_dev,
-+						 key->keycode, 0);
-+				input_sync(hp_wmi_input_dev);
-+				break;
-+			}
-+		}
-+		break;
-+	case HPWMI_WIRELESS:
- 		if (wifi_rfkill)
- 			rfkill_set_states(wifi_rfkill,
- 					  hp_wmi_get_sw_state(HPWMI_WIFI),
-@@ -391,9 +401,12 @@ static void hp_wmi_notify(u32 value, voi
- 			rfkill_set_states(wwan_rfkill,
- 					  hp_wmi_get_sw_state(HPWMI_WWAN),
- 					  hp_wmi_get_hw_state(HPWMI_WWAN));
--	} else
-+		break;
-+	default:
- 		printk(KERN_INFO "HP WMI: Unknown key pressed - %x\n",
- 			eventcode);
-+		break;
-+	}
- }
+
+SENDER'S NAME: Mr. Mark Daniel
+
+AMOUNT: US$7,500
+
  
- static int __init hp_wmi_input_setup(void)
+
+To track your funds forward Western Union
+
+Money Transfer agent your Full Names and
+
+Mobile Number via Email to:
+
+ 
+
+Mr Gary Moore
+
+E-mail:western.union_department@w.cn
+
+D/L Number: +44 (0) 702 403 4679
+
+Fax Number: +44 (0) 844 774 1410
+
+ 
+
+Please direct all enquiring to:
+
+western.union_department@w.cn
+
+ 
+
+Best Regards,
+
+Mrs. Larisa Alexander.
