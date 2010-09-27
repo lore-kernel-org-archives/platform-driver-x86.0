@@ -1,95 +1,24 @@
-From: Minskey Guo <chaohong_guo@linux.intel.com>
-Subject: Re: [PATCH 4/4] [intel_ips] NULL pointer might be used in ips_monitor()
-Date: Sun, 26 Sep 2010 12:27:54 +0800
-Message-ID: <4C9ECBCA.3080809@linux.intel.com>
-References: <1284703407-7802-1-git-send-email-chaohong.guo@linux.intel.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH v4] dell-laptop: Add debugfs support
+Date: Mon, 27 Sep 2010 15:00:28 +0100
+Message-ID: <20100927140028.GB856@srcf.ucam.org>
+References: <1284702459-31646-1-git-send-email-keng-yu.lin@canonical.com> <1285325323-4528-1-git-send-email-keng-yu.lin@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:46779 "EHLO mga01.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750732Ab0IZEc0 (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:42048 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750996Ab0I0OAf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 26 Sep 2010 00:32:26 -0400
-In-Reply-To: <1284703407-7802-1-git-send-email-chaohong.guo@linux.intel.com>
+	Mon, 27 Sep 2010 10:00:35 -0400
+Content-Disposition: inline
+In-Reply-To: <1285325323-4528-1-git-send-email-keng-yu.lin@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, jbarnes@virtuousgeek.org, chaohong.guo@intel.com
+To: Keng-Yu Lin <keng-yu.lin@canonical.com>
+Cc: len.brown@intel.com, alan-jenkins@tuffmail.co.uk, superm1@ubuntu.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+What's the difference between this version and v3?
 
-         Ping,  any comment for the patches ?
-
-
-thanks,
--minskey
-
-On 09/17/2010 02:03 PM, minskey guo wrote:
->   The patch is to create ips_adjust thread before ips_monitor begins
->   to run  because the latter will kthread_stop() or wake up the former
->   via ips->adjust pointer. Without this change, it is possible that
->   ips->adjust is NULL when kthread_stop() or wake_up_process() is
->   called in ips_monitor().
->
-> Signed-off-by: minskey guo<chaohong.guo@intel.com>
-> Acked-by: Jesse Barnes<jbarnes@virtuousgeek.org>
-> ---
->   drivers/platform/x86/intel_ips.c |   22 +++++++++++++---------
->   1 files changed, 13 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index 71dcc41..cb59ebd 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -940,7 +940,6 @@ static int ips_monitor(void *data)
->   		kfree(mch_samples);
->   		kfree(cpu_samples);
->   		kfree(mchp_samples);
-> -		kthread_stop(ips->adjust);
->   		return -ENOMEM;
->   	}
->
-> @@ -1535,19 +1534,24 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
->   	ips_enable_cpu_turbo(ips);
->   	ips->cpu_turbo_enabled = true;
->
-> -	/* Set up the work queue and monitor/adjust threads */
-> -	ips->monitor = kthread_run(ips_monitor, ips, "ips-monitor");
-> -	if (IS_ERR(ips->monitor)) {
-> +	/* Create thermal adjust thread */
-> +	ips->adjust = kthread_create(ips_adjust, ips, "ips-adjust");
-> +	if (IS_ERR(ips->adjust)) {
->   		dev_err(&dev->dev,
-> -			"failed to create thermal monitor thread, aborting\n");
-> +			"failed to create thermal adjust thread, aborting\n");
->   		ret = -ENOMEM;
->   		goto error_free_irq;
-> +
->   	}
->
-> -	ips->adjust = kthread_create(ips_adjust, ips, "ips-adjust");
-> -	if (IS_ERR(ips->adjust)) {
-> +	/*
-> +	 * Set up the work queue and monitor thread. The monitor thread
-> +	 * will wake up ips_adjust thread.
-> +	 */
-> +	ips->monitor = kthread_run(ips_monitor, ips, "ips-monitor");
-> +	if (IS_ERR(ips->monitor)) {
->   		dev_err(&dev->dev,
-> -			"failed to create thermal adjust thread, aborting\n");
-> +			"failed to create thermal monitor thread, aborting\n");
->   		ret = -ENOMEM;
->   		goto error_thread_cleanup;
->   	}
-> @@ -1566,7 +1570,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
->   	return ret;
->
->   error_thread_cleanup:
-> -	kthread_stop(ips->monitor);
-> +	kthread_stop(ips->adjust);
->   error_free_irq:
->   	free_irq(ips->dev->irq, ips);
->   error_unmap:
->    
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
