@@ -1,66 +1,52 @@
-From: Tim Gardner <tim.gardner@canonical.com>
-Subject: [PATCH] intel_ips: Print MCP limit exceeded values.
-Date: Tue, 28 Sep 2010 14:58:15 -0600
-Message-ID: <1285707495-17407-1-git-send-email-tim.gardner@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.tpi.com ([70.99.223.143]:1950 "EHLO mail.tpi.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754015Ab0I1VYb (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Sep 2010 17:24:31 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Tim Gardner <tim.gardner@canonical.com>, Matthew Garrett <mjg@redhat.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [Resend] [PATCH 0/9] ideapad: using EC command to control rf/camera power
+Date: Fri,  1 Oct 2010 15:37:40 +0800
+Message-ID: <1285918660-12802-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Corentin Chary <corentincj@iksaif.net>, David Woodhouse <David.Woodhouse@intel.com>, Mario.Holbe@TU-Ilmenau.DE
+List-Id: platform-driver-x86.vger.kernel.org
 
-Print some interesting values when MCP limits
-are exceeded.
+These patches are made against current mainline kernel and also available at
+  git://kernel.ubuntu.com/ikepanhc/ideapad-laptop.git for-upstream
 
-Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>
----
- drivers/platform/x86/intel_ips.c |   24 ++++++++++++++++++------
- 1 files changed, 18 insertions(+), 6 deletions(-)
+Once the rfkill of a laptop is set to block, it is no way to unblock with Linux
+without driver. Thanks for David Woodhouse wrote the first driver solving this.
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 308c7f5..367cd03 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -600,17 +600,29 @@ static bool mcp_exceeded(struct ips_driver *ips)
- {
- 	unsigned long flags;
- 	bool ret = false;
-+	u32 temp_limit;
-+	u32 avg_power;
-+	const char *msg = "MCP limit exceeded: ";
- 
- 	spin_lock_irqsave(&ips->turbo_status_lock, flags);
--	if (ips->mcp_avg_temp > (ips->mcp_temp_limit * 100))
--		ret = true;
--	if (ips->cpu_avg_power + ips->mch_avg_power > ips->mcp_power_limit)
-+
-+	temp_limit = ips->mcp_temp_limit * 100;
-+	if (ips->mcp_avg_temp > temp_limit) {
-+		dev_info(&ips->dev->dev,
-+			"%sAvg temp %u, limit %u\n", msg, ips->mcp_avg_temp,
-+			temp_limit);
- 		ret = true;
--	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
-+	}
- 
--	if (ret)
-+	avg_power = ips->cpu_avg_power + ips->mch_avg_power;
-+	if (avg_power > ips->mcp_power_limit) {
- 		dev_info(&ips->dev->dev,
--			 "MCP power or thermal limit exceeded\n");
-+			"%sAvg power %u, limit %u\n", msg, avg_power,
-+			ips->mcp_power_limit);
-+		ret = true;
-+	}
-+
-+	spin_unlock_irqrestore(&ips->turbo_status_lock, flags);
- 
- 	return ret;
- }
--- 
-1.7.0.4
+But the \_SB_.GECN and \_SB_.DECN are only available on Lenovo ideapad S10-3.
+Using EC command to control rf/camera power is better because I believe every
+ideapads which has VPC2004 device in its DSDT has this common method.
+
+This driver is tested on Lenovo ideapad B550 and ideapad S10-3 and also tested
+by Mario 'BitKoenig' Holbe on Lenovo ideapad S12-VIA.
+
+Changes after last posted:
+ * Add schedule() to yield processor when waiting EC.
+ * Using time_before() to check timeout.
+ * Maximun waiting for EC execution increasing to 100ms in case that we have a
+   slow EC.
+ * Add parameter: no_bt_rfkill for not setup bluetooth rfkill.
+
+Next step for this driver:
+ * Hotkey enablement.
+
+Ike Panhc (9):
+  ideapad: add ACPI helpers
+  ideapad: check VPC bit before sync rfkill hw status
+  ideapad: make sure we bind on the correct device
+  ideapad: use return value of _CFG to tell if device exist or not
+  ideapad: use EC command to control camera
+  ideapad: rewrite the hw rfkill notify
+  ideapad: rewrite the sw rfkill set
+  ideapad: Change the driver name to ideapad-laptop
+  ideapad: Add param: no_bt_rfkill
+
+ drivers/platform/x86/Kconfig          |    4 +-
+ drivers/platform/x86/Makefile         |    2 +-
+ drivers/platform/x86/ideapad-laptop.c |  394 +++++++++++++++++++++++++++++++++
+ drivers/platform/x86/ideapad_acpi.c   |  306 -------------------------
+ 4 files changed, 397 insertions(+), 309 deletions(-)
+ create mode 100644 drivers/platform/x86/ideapad-laptop.c
+ delete mode 100644 drivers/platform/x86/ideapad_acpi.c
+
