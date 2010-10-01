@@ -1,104 +1,40 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] Add acer wmi hotkey events support
-Date: Fri, 1 Oct 2010 09:58:34 -0700
-Message-ID: <20101001165833.GA15390@core.coreip.homeip.net>
-References: <1285941088-31196-1-git-send-email-jlee@novell.com>
+Subject: Re: [PATCH 01/10] WMI: remove EC region handler when _WDG parsing
+ fails
+Date: Fri, 1 Oct 2010 10:00:12 -0700
+Message-ID: <20101001170012.GB15390@core.coreip.homeip.net>
+References: <20100826071442.7976.93972.stgit@localhost.localdomain>
+ <201009121814.37059.carlos@strangeworlds.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:49816 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752610Ab0JAQ6n (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:55856 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752025Ab0JARAZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Oct 2010 12:58:43 -0400
+	Fri, 1 Oct 2010 13:00:25 -0400
+Received: by pwj5 with SMTP id 5so608675pwj.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 01 Oct 2010 10:00:24 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <1285941088-31196-1-git-send-email-jlee@novell.com>
+In-Reply-To: <201009121814.37059.carlos@strangeworlds.co.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, linux-input@vger.kernel.org, tiwai@novell.com, trenn@novell.com, jbenc@suse.cz, "Lee, Chun-Yi" <jlee@novell.com>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, Carlos Corbacho <carlos@strangeworlds.co.uk>
 
-Hi Lee,
+On Sun, Sep 12, 2010 at 06:14:36PM +0100, Carlos Corbacho wrote:
+> On Thursday 26 August 2010 08:14:42 Dmitry Torokhov wrote:
+> > Driver initialization was forgetting to remove EC address space handler
+> > in cases when parse_wdg() method failed.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
+> 
+> Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+> 
 
-On Fri, Oct 01, 2010 at 09:51:27PM +0800, Lee, Chun-Yi wrote:
-> +
-> +struct key_entry {
-> +	char type;	/* See KE_* below */
-> +	u16 code;
-> +	u16 keycode;
-> +};
-> +
-> +enum { KE_KEY, KE_END };
-> +
+Matthew,
 
-Like Corentin said, please use sparse_keymap, it will cut the code in
-half.
-
-> +
-> +	set_bit(EV_SW, acer_wmi_input_dev->evbit);
-> +
-
-I do not see you sending SW_* events...
-
-> +	err = input_register_device(acer_wmi_input_dev);
-> +
-> +	if (err) {
-> +		input_free_device(acer_wmi_input_dev);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * debugfs functions
->   */
-> @@ -1327,6 +1518,18 @@ static int __init acer_wmi_init(void)
->  		       "generic video driver\n");
->  	}
->  
-> +	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
-> +		err = wmi_install_notify_handler(ACERWMID_EVENT_GUID,
-> +						acer_wmi_notify, NULL);
-> +		if (ACPI_FAILURE(err))
-> +			return -EINVAL;
-> +		err = acer_wmi_input_setup();
-
-You really want to set up the device first and install notify handler
-later. What will happen if event will fire up while input device has not
-been created yet?
-
-> +		if (err) {
-> +			wmi_remove_notify_handler(ACERWMID_EVENT_GUID);
-> +			return err;
-> +		}
-> +	}
-> +
->  	err = platform_driver_register(&acer_platform_driver);
->  	if (err) {
->  		printk(ACER_ERR "Unable to register platform driver.\n");
-> @@ -1368,11 +1571,21 @@ error_device_add:
->  error_device_alloc:
->  	platform_driver_unregister(&acer_platform_driver);
->  error_platform_register:
-> +	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
-> +		input_unregister_device(acer_wmi_input_dev);
-> +		wmi_remove_notify_handler(ACERWMID_EVENT_GUID);
-
-Same here, first shut off notified, then remove the device.
-
-> +	}
-> +
->  	return err;
->  }
->  
->  static void __exit acer_wmi_exit(void)
->  {
-> +	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
-> +		wmi_remove_notify_handler(ACERWMID_EVENT_GUID);
-> +		input_unregister_device(acer_wmi_input_dev);
-
-Same here.
+Do you need me to resend the series with Carlos's acks?
 
 Thanks.
 
