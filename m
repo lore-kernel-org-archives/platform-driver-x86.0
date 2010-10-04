@@ -1,45 +1,84 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 1/2] Add acer wmi hotkey events support
-Date: Fri, 01 Oct 2010 13:20:39 -0600
-Message-ID: <4CA6C12702000023000212DE@novprvlin0050.provo.novell.com>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [PATCH] intel_pmic_gpio: swap the bits and mask args for
+	intel_scu_ipc_update_register
+Date: Mon, 04 Oct 2010 16:40:35 +0100
+Message-ID: <20101004154020.13482.7855.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:32851 "EHLO
+	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756067Ab0JDQra (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 4 Oct 2010 12:47:30 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: dmitry.torokhov@gmail.com, Takashi Iwai <tiwai@novell.com>, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, jbenc@suse.cz, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, mjg@redhat.com
 
-Hi Carlos,=20
+From: Alek Du <alek.du@intel.com>
 
-=E6=96=BC =E4=BA=94=EF=BC=8C2010-10-01 =E6=96=BC 19:16 +0100=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Friday 01 October 2010 14:51:27 Lee, Chun-Yi wrote:
-> > Add acer wmi hotkey event support. Install a wmi notify handler to
-> > transfer wmi event key to key code, then send out keycode through a=
-cer
-> > wmi input device to userland.
->=20
-> What hardware is this for? Up to now, all Acer hardware I'm aware of =
-has=20
-> always sent key codes. This and the other patch seem to be for someth=
-ing=20
-> that's quite different to the current batch of hardware supported by =
-acer-wmi?
->=20
+The intel_scu_ipc_update_register 2nd paramter should the bits and 3rd
+paramter should be the mask.
 
-The hardware is Acer TravelMate 8572, the machine send out key code:
-volume up/down, mute, brightness up/down=20
-So, the above hotkeys work fine.
+This typo was introduced during IPC function changing...
 
-But, it send out wmi event for:=20
-wifi key (the same with communication key), P key (a special program
-key), touchpad, video mode switch.=20
+Reported-by: Ryan Zhou <ryan.zhou@intel.com>
+Signed-off-by: Alek Du <alek.du@intel.com>
+Signed-off-by: Alan Cox <alan@linux.intel.com>
+---
 
-My patch work for translate those wmi event to key code.
+ drivers/platform/x86/intel_pmic_gpio.c |   24 ++++++++++++------------
+ 1 files changed, 12 insertions(+), 12 deletions(-)
 
 
-Thank's
-Joey Lee
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+index 5cdcff6..c6e2a1d 100644
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ b/drivers/platform/x86/intel_pmic_gpio.c
+@@ -142,16 +142,16 @@ static int pmic_gpio_direction_output(struct gpio_chip *chip,
+ 
+ 	if (offset < 8)/* it is GPIO */
+ 		rc = intel_scu_ipc_update_register(GPIO0 + offset,
+-				GPIO_DRV | GPIO_DOU | GPIO_DIR,
+-				GPIO_DRV | (value ? GPIO_DOU : 0));
++				GPIO_DRV | (value ? GPIO_DOU : 0),
++				GPIO_DRV | GPIO_DOU | GPIO_DIR);
+ 	else if (offset < 16)/* it is GPOSW */
+ 		rc = intel_scu_ipc_update_register(GPOSWCTL0 + offset - 8,
+-				GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV,
+-				GPOSW_DRV | (value ? GPOSW_DOU : 0));
++				GPOSW_DRV | (value ? GPOSW_DOU : 0),
++				GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV);
+ 	else if (offset > 15 && offset < 24)/* it is GPO */
+ 		rc = intel_scu_ipc_update_register(GPO,
+-				1 << (offset - 16),
+-				value ? 1 << (offset - 16) : 0);
++				value ? 1 << (offset - 16) : 0,
++				1 << (offset - 16));
+ 	else {
+ 		printk(KERN_ERR
+ 			"%s: invalid PMIC GPIO pin %d!\n", __func__, offset);
+@@ -179,16 +179,16 @@ static void pmic_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ {
+ 	if (offset < 8)/* it is GPIO */
+ 		intel_scu_ipc_update_register(GPIO0 + offset,
+-			GPIO_DRV | GPIO_DOU,
+-			GPIO_DRV | (value ? GPIO_DOU : 0));
++			GPIO_DRV | (value ? GPIO_DOU : 0),
++			GPIO_DRV | GPIO_DOU);
+ 	else if (offset < 16)/* it is GPOSW */
+ 		intel_scu_ipc_update_register(GPOSWCTL0 + offset - 8,
+-			GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV,
+-			GPOSW_DRV | (value ? GPOSW_DOU : 0));
++			GPOSW_DRV | (value ? GPOSW_DOU : 0),
++			GPOSW_DRV | GPOSW_DOU | GPOSW_RDRV);
+ 	else if (offset > 15 && offset < 24) /* it is GPO */
+ 		intel_scu_ipc_update_register(GPO,
+-			1 << (offset - 16),
+-			value ? 1 << (offset - 16) : 0);
++			value ? 1 << (offset - 16) : 0,
++			1 << (offset - 16));
+ }
+ 
+ static int pmic_irq_type(unsigned irq, unsigned type)
