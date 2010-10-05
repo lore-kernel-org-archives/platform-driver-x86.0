@@ -1,32 +1,57 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] Add OLPC XO-1 rfkill driver
-Date: Mon, 4 Oct 2010 18:28:07 +0100
-Message-ID: <20101004172807.GA10189@srcf.ucam.org>
-References: <20101004171520.4B0189D401B@zog.reactivated.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andy Whitcroft <apw@canonical.com>
+Subject: [PATCH 1/1] intel_ips -- ensure we do not enable gpu turbo mode without driver linkage
+Date: Tue,  5 Oct 2010 09:48:42 +0100
+Message-ID: <1286268522-26337-1-git-send-email-apw@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:45054 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751324Ab0JDR2M (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:56606 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752381Ab0JEIsx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Oct 2010 13:28:12 -0400
-Content-Disposition: inline
-In-Reply-To: <20101004171520.4B0189D401B@zog.reactivated.net>
+	Tue, 5 Oct 2010 04:48:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Daniel Drake <dsd@laptop.org>
-Cc: dilinger@queued.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jesse Barnes <jbarnes@virtuousgeek.org>
+Cc: Matthew Garrett <mjg@redhat.com>, Jiri Slaby <jslaby@suse.cz>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Whitcroft <apw@canonical.com>
 
-On Mon, Oct 04, 2010 at 06:15:20PM +0100, Daniel Drake wrote:
-> +static int __devinit xo1_rfkill_probe(struct platform_device *pdev)
-> +{
-> +	struct rfkill *rfk;
-> +	int r;
-> +
-> +	printk(KERN_INFO "%s: loading\n", pdev->name);
+Both when polling the current turbo status (in poll_turbo_status mode)
+and when handling thermal events (in ips_irq_handler) the current status
+of GPU turbo is updated to match the hardware status.  However if during
+driver initialisation we were unable aquire linkage to the i915 driver
+enabling GPU turbo will lead to an oops on the first attempt to determine
+GPU busy status.
 
-Probably don't need this. Otherwise, looks fine.
+Ensure that we do not enable GPU turbo unless we have driver linkage.
 
+BugLink: http://bugs.launchpad.net/bugs/632430
+Cc: stable@kernel.org
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+---
+ drivers/platform/x86/intel_ips.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index afe82e5..3ca50b3 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -680,7 +680,8 @@ static void update_turbo_limits(struct ips_driver *ips)
+ 	u32 hts = thm_readl(THM_HTS);
+ 
+ 	ips->cpu_turbo_enabled = !(hts & HTS_PCTD_DIS);
+-	ips->gpu_turbo_enabled = !(hts & HTS_GTD_DIS);
++	if (ips->gpu_busy)
++		ips->gpu_turbo_enabled = !(hts & HTS_GTD_DIS);
+ 	ips->core_power_limit = thm_readw(THM_MPCPC);
+ 	ips->mch_power_limit = thm_readw(THM_MMGPC);
+ 	ips->mcp_temp_limit = thm_readw(THM_PTL);
+@@ -1150,7 +1151,8 @@ static irqreturn_t ips_irq_handler(int irq, void *arg)
+ 				STS_GPL_SHIFT;
+ 			/* ignore EC CPU vs GPU pref */
+ 			ips->cpu_turbo_enabled = !(sts & STS_PCTD_DIS);
+-			ips->gpu_turbo_enabled = !(sts & STS_GTD_DIS);
++			if (ips->gpu_busy)
++				ips->gpu_turbo_enabled = !(sts & STS_GTD_DIS);
+ 			ips->mcp_temp_limit = (sts & STS_PTL_MASK) >>
+ 				STS_PTL_SHIFT;
+ 			ips->mcp_power_limit = (tc1 & STS_PPL_MASK) >>
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.1
