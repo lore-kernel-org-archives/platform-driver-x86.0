@@ -1,163 +1,73 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: [PATCH v2] Add OLPC XO-1 rfkill driver
-Date: Tue,  5 Oct 2010 15:55:21 +0100 (BST)
-Message-ID: <20101005145521.D578A9D401B@zog.reactivated.net>
+From: Jesse Barnes <jbarnes@virtuousgeek.org>
+Subject: Re: [PATCH 1/1] intel_ips -- ensure we do not enable gpu turbo mode
+ without driver linkage
+Date: Tue, 5 Oct 2010 09:16:29 -0700
+Message-ID: <20101005091629.7a602f32@jbarnes-desktop>
+References: <1286268522-26337-1-git-send-email-apw@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mtaout02-winn.ispmail.ntl.com ([81.103.221.48]:35235 "EHLO
-	mtaout02-winn.ispmail.ntl.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751363Ab0JEOz0 (ORCPT
+Received: from cpoproxy3-pub.bluehost.com ([67.222.54.6]:35958 "HELO
+	cpoproxy3-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1755300Ab0JEQPa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Oct 2010 10:55:26 -0400
+	Tue, 5 Oct 2010 12:15:30 -0400
+In-Reply-To: <1286268522-26337-1-git-send-email-apw@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: dilinger@queued.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Whitcroft <apw@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Jiri Slaby <jslaby@suse.cz>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Add a software rfkill switch for the WLAN interface in the OLPC XO-1
-laptop. It uses the OLPC embedded controller to cut/restore power to
-the Marvell WLAN chip on the motherboard.
+On Tue,  5 Oct 2010 09:48:42 +0100
+Andy Whitcroft <apw@canonical.com> wrote:
 
-Signed-off-by: Daniel Drake <dsd@laptop.org>
----
- arch/x86/include/asm/olpc.h       |    2 +
- drivers/platform/x86/Kconfig      |    8 ++++
- drivers/platform/x86/Makefile     |    1 +
- drivers/platform/x86/xo1-rfkill.c |   85 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+), 0 deletions(-)
- create mode 100644 drivers/platform/x86/xo1-rfkill.c
+> Both when polling the current turbo status (in poll_turbo_status mode)
+> and when handling thermal events (in ips_irq_handler) the current status
+> of GPU turbo is updated to match the hardware status.  However if during
+> driver initialisation we were unable aquire linkage to the i915 driver
+> enabling GPU turbo will lead to an oops on the first attempt to determine
+> GPU busy status.
+> 
+> Ensure that we do not enable GPU turbo unless we have driver linkage.
+> 
+> BugLink: http://bugs.launchpad.net/bugs/632430
+> Cc: stable@kernel.org
+> Signed-off-by: Andy Whitcroft <apw@canonical.com>
+> ---
+>  drivers/platform/x86/intel_ips.c |    6 ++++--
+>  1 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+> index afe82e5..3ca50b3 100644
+> --- a/drivers/platform/x86/intel_ips.c
+> +++ b/drivers/platform/x86/intel_ips.c
+> @@ -680,7 +680,8 @@ static void update_turbo_limits(struct ips_driver *ips)
+>  	u32 hts = thm_readl(THM_HTS);
+>  
+>  	ips->cpu_turbo_enabled = !(hts & HTS_PCTD_DIS);
+> -	ips->gpu_turbo_enabled = !(hts & HTS_GTD_DIS);
+> +	if (ips->gpu_busy)
+> +		ips->gpu_turbo_enabled = !(hts & HTS_GTD_DIS);
+>  	ips->core_power_limit = thm_readw(THM_MPCPC);
+>  	ips->mch_power_limit = thm_readw(THM_MMGPC);
+>  	ips->mcp_temp_limit = thm_readw(THM_PTL);
+> @@ -1150,7 +1151,8 @@ static irqreturn_t ips_irq_handler(int irq, void *arg)
+>  				STS_GPL_SHIFT;
+>  			/* ignore EC CPU vs GPU pref */
+>  			ips->cpu_turbo_enabled = !(sts & STS_PCTD_DIS);
+> -			ips->gpu_turbo_enabled = !(sts & STS_GTD_DIS);
+> +			if (ips->gpu_busy)
+> +				ips->gpu_turbo_enabled = !(sts & STS_GTD_DIS);
+>  			ips->mcp_temp_limit = (sts & STS_PTL_MASK) >>
+>  				STS_PTL_SHIFT;
+>  			ips->mcp_power_limit = (tc1 & STS_PPL_MASK) >>
 
-v2: removed "loading" message
+Looks good, thanks.  Most of the performance upside is on the GPU, so
+running without i915 is a shame, but we definitely shouldn't oops, so
+this patch looks fine.
 
-diff --git a/arch/x86/include/asm/olpc.h b/arch/x86/include/asm/olpc.h
-index 101229b..42a978c 100644
---- a/arch/x86/include/asm/olpc.h
-+++ b/arch/x86/include/asm/olpc.h
-@@ -89,6 +89,8 @@ extern int olpc_ec_mask_unset(uint8_t bits);
- /* EC commands */
- 
- #define EC_FIRMWARE_REV		0x08
-+#define EC_WLAN_ENTER_RESET	0x35
-+#define EC_WLAN_LEAVE_RESET	0x25
- 
- /* SCI source values */
- 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b49f9b1..d7e56b3 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -595,4 +595,12 @@ config INTEL_IPS
- 	  functionality.  If in doubt, say Y here; it will only load on
- 	  supported platforms.
- 
-+config XO1_RFKILL
-+	tristate "OLPC XO-1 software RF kill switch"
-+	depends on OLPC
-+	depends on RFKILL
-+	---help---
-+	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
-+	  laptop.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b26df2e..cd87f83 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -30,4 +30,5 @@ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
- obj-$(CONFIG_RAR_REGISTER)	+= intel_rar_register.o
- obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
- obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
-+obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
- 
-diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
-new file mode 100644
-index 0000000..e549eee
---- /dev/null
-+++ b/drivers/platform/x86/xo1-rfkill.c
-@@ -0,0 +1,85 @@
-+/*
-+ * Support for rfkill through the OLPC XO-1 laptop embedded controller
-+ *
-+ * Copyright (C) 2010 One Laptop per Child
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/rfkill.h>
-+
-+#include <asm/olpc.h>
-+
-+static int rfkill_set_block(void *data, bool blocked)
-+{
-+	unsigned char cmd;
-+	if (blocked)
-+		cmd = EC_WLAN_ENTER_RESET;
-+	else
-+		cmd = EC_WLAN_LEAVE_RESET;
-+
-+	return olpc_ec_cmd(cmd, NULL, 0, NULL, 0);
-+}
-+
-+static const struct rfkill_ops rfkill_ops = {
-+	.set_block = rfkill_set_block,
-+};
-+
-+static int __devinit xo1_rfkill_probe(struct platform_device *pdev)
-+{
-+	struct rfkill *rfk;
-+	int r;
-+
-+	rfk = rfkill_alloc(pdev->name, &pdev->dev, RFKILL_TYPE_WLAN,
-+			   &rfkill_ops, NULL);
-+	if (!rfk)
-+		return -ENOMEM;
-+
-+	r = rfkill_register(rfk);
-+	if (r) {
-+		rfkill_destroy(rfk);
-+		return r;
-+	}
-+
-+	platform_set_drvdata(pdev, rfk);
-+	return 0;
-+}
-+
-+static int __devexit xo1_rfkill_remove(struct platform_device *pdev)
-+{
-+	struct rfkill *rfk = platform_get_drvdata(pdev);
-+	rfkill_unregister(rfk);
-+	rfkill_destroy(rfk);
-+	return 0;
-+}
-+
-+static struct platform_driver xo1_rfkill_driver = {
-+	.driver = {
-+		.name = "xo1-rfkill",
-+		.owner = THIS_MODULE,
-+	},
-+	.probe		= xo1_rfkill_probe,
-+	.remove		= __devexit_p(xo1_rfkill_remove),
-+};
-+
-+static int __init xo1_rfkill_init(void)
-+{
-+	return platform_driver_register(&xo1_rfkill_driver);
-+}
-+
-+static void __exit xo1_rfkill_exit(void)
-+{
-+	platform_driver_unregister(&xo1_rfkill_driver);
-+}
-+
-+MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:xo1-rfkill");
-+
-+module_init(xo1_rfkill_init);
-+module_exit(xo1_rfkill_exit);
+Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+
 -- 
-1.7.2.3
+Jesse Barnes, Intel Open Source Technology Center
