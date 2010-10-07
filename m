@@ -1,67 +1,36 @@
-From: Keng-Yu Lin <keng-yu.lin@canonical.com>
-Subject: [PATCH] dell-laptop: Add hwswitch_only module parameter
-Date: Thu,  7 Oct 2010 11:30:07 +0800
-Message-ID: <1286422207-14248-1-git-send-email-keng-yu.lin@canonical.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] dell-laptop: Add hwswitch_only module parameter
+Date: Thu, 7 Oct 2010 12:15:10 +0100
+Message-ID: <20101007111510.GA19624@srcf.ucam.org>
+References: <1286422207-14248-1-git-send-email-keng-yu.lin@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:58641 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751341Ab0JGDbQ (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:43744 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751495Ab0JGLPT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Oct 2010 23:31:16 -0400
+	Thu, 7 Oct 2010 07:15:19 -0400
+Content-Disposition: inline
+In-Reply-To: <1286422207-14248-1-git-send-email-keng-yu.lin@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, len.brown@intel.com, alan-jenkins@tuffmail.co.uk, superm1@ubuntu.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keng-Yu Lin <keng-yu.lin@canonical.com>
+To: Keng-Yu Lin <keng-yu.lin@canonical.com>
+Cc: len.brown@intel.com, alan-jenkins@tuffmail.co.uk, superm1@ubuntu.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Some BIOS does not report the correct state of the wireless killswitch
-in the return value of SMI Class 17, Select 11.
+On Thu, Oct 07, 2010 at 11:30:07AM +0800, Keng-Yu Lin wrote:
+> Some BIOS does not report the correct state of the wireless killswitch
+> in the return value of SMI Class 17, Select 11.
+> 
+> This causes the killswitch to always stay as soft-blocked once the rfkill
+> hotkey is pressed.
+> 
+> This patch adds a module parameter to work around this by disregarding
+> the software rfkill and using only Bit 16 in the return value of
+> SMI Class 17, Select 11 as the hardware killswitch.
 
-This causes the killswitch to always stay as soft-blocked once the rfkill
-hotkey is pressed.
+I don't like "Fix my hardware" options. Is there any way we can identify 
+this failure case?
 
-This patch adds a module parameter to work around this by disregarding
-the software rfkill and using only Bit 16 in the return value of
-SMI Class 17, Select 11 as the hardware killswitch.
-
-Signed-off-by: Keng-Yu Lin <keng-yu.lin@canonical.com>
----
- drivers/platform/x86/dell-laptop.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
- This patch is intended to work around the buggy BIOS.
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 4413975..a105d7e 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -74,6 +74,8 @@ static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
- static struct rfkill *wwan_rfkill;
- 
-+static bool hwswitch_only;
-+
- static const struct dmi_system_id __initdata dell_device_table[] = {
- 	{
- 		.ident = "Dell laptop",
-@@ -314,7 +316,8 @@ static void dell_rfkill_query(struct rfkill *rfkill, void *data)
- 	status = buffer->output[1];
- 	release_buffer();
- 
--	rfkill_set_sw_state(rfkill, !!(status & BIT(bit)));
-+	if (!hwswitch_only)
-+		rfkill_set_sw_state(rfkill, !!(status & BIT(bit)));
- 
- 	if (hwswitch_state & (BIT(hwswitch_bit)))
- 		rfkill_set_hw_state(rfkill, !(status & BIT(16)));
-@@ -630,6 +633,9 @@ static void __exit dell_exit(void)
- module_init(dell_init);
- module_exit(dell_exit);
- 
-+module_param(hwswitch_only, bool, 0644);
-+MODULE_PARM_DESC(hwswitch_only, "Use the hardware rfkill only");
-+
- MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
- MODULE_DESCRIPTION("Dell laptop driver");
- MODULE_LICENSE("GPL");
 -- 
-1.7.1
+Matthew Garrett | mjg59@srcf.ucam.org
