@@ -1,54 +1,41 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] dell-laptop: Add hwswitch_only module parameter
-Date: Thu, 7 Oct 2010 14:58:54 -0700
-Message-ID: <20101007215854.GC18628@core.coreip.homeip.net>
-References: <20101007111510.GA19624@srcf.ucam.org>
- <AANLkTinus8SxbXt14qabXgpbFXF4U+uNoKA-=eDuOjmp@mail.gmail.com>
- <20101007133529.GA21782@srcf.ucam.org>
- <AANLkTi=kTQpTkCF6-DE+LdNLH_aki9bD9NPF0L2qRr=Q@mail.gmail.com>
- <20101007205049.GB32726@srcf.ucam.org>
- <AANLkTi=bj3T5hcX9r3j5kyEQkNb7PAZK948kcrx4R8tC@mail.gmail.com>
- <20101007213027.GA18628@core.coreip.homeip.net>
- <20101007213754.GA1896@srcf.ucam.org>
- <20101007214628.GB18628@core.coreip.homeip.net>
- <20101007215028.GB2292@srcf.ucam.org>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] intel_pmic_gpio: fix off-by-one value range checking
+Date: Fri, 08 Oct 2010 17:54:31 +0800
+Message-ID: <1286531671.6060.1.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:34519 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750982Ab0JGV7E (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:49548 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752185Ab0JHJxj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Oct 2010 17:59:04 -0400
-Content-Disposition: inline
-In-Reply-To: <20101007215028.GB2292@srcf.ucam.org>
+	Fri, 8 Oct 2010 05:53:39 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Mario Limonciello <superm1@ubuntu.com>, Keng-Yu Lin <keng-yu.lin@canonical.com>, len.brown@intel.com, alan-jenkins@tuffmail.co.uk, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Matthew Garrett <mjg@redhat.com>, Alek Du <alek.du@intel.com>, Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 07, 2010 at 10:50:28PM +0100, Matthew Garrett wrote:
-> On Thu, Oct 07, 2010 at 02:46:28PM -0700, Dmitry Torokhov wrote:
-> > On Thu, Oct 07, 2010 at 10:37:54PM +0100, Matthew Garrett wrote:
-> > > Dell laptop driver is reasonable. All we need is a list of hardware, and 
-> > > I'd really hope that Dell know which BIOS versions contain this code!
-> > > 
-> > 
-> > Unfortunately this kind of crap tends to flow from one BIOS version to
-> > another.. How many DMI entries do we know about so far? Did Dell issue
-> > firmware updates correcting the issue so new boxes will not exhibit the
-> > problem?
-> 
-> Pushing this out to userspace doesn't help. If it's sufficiently 
-> prevelant that it's impossible to have a comprehensive list, then a 
-> module option makes it too easy for people to just post the fix on a 
-> forum somewhere and never actually get it upstream.
-> 
+In pmic_irq_type(), we use gpio as array index for trigger,
+thus the valid value range for gpio should be 0 .. NUM_GPIO - 1.
 
-Forcing users patching the kernel reduces chances that it will be fixed
-at all. Also there is load of patches that never make into distributions
-and even less in mainline. Or if they make it it takes looong time...
-so I do not think it is a valid argument here.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/intel_pmic_gpio.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+index c6e2a1d..f540ff9 100644
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ b/drivers/platform/x86/intel_pmic_gpio.c
+@@ -197,7 +197,7 @@ static int pmic_irq_type(unsigned irq, unsigned type)
+ 	u32 gpio = irq - pg->irq_base;
+ 	unsigned long flags;
+ 
+-	if (gpio > pg->chip.ngpio)
++	if (gpio >= pg->chip.ngpio)
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&pg->irqtypes.lock, flags);
 -- 
-Dmitry
+1.7.2
