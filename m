@@ -1,41 +1,127 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] intel_pmic_gpio: fix off-by-one value range checking
-Date: Fri, 08 Oct 2010 17:54:31 +0800
-Message-ID: <1286531671.6060.1.camel@mola>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+From: chris@cnpbagwell.com
+Subject: [PATCH 2/2] eeepc-wmi: Add cpufv sysfs interface
+Date: Sun, 10 Oct 2010 20:48:22 -0500
+Message-ID: <1286761702-4304-2-git-send-email-chris@cnpbagwell.com>
+References: <1286761702-4304-1-git-send-email-chris@cnpbagwell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:49548 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752185Ab0JHJxj (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:41582 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752024Ab0JKBtx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 8 Oct 2010 05:53:39 -0400
+	Sun, 10 Oct 2010 21:49:53 -0400
+Received: by yxm8 with SMTP id 8so40447yxm.19
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Oct 2010 18:49:52 -0700 (PDT)
+In-Reply-To: <1286761702-4304-1-git-send-email-chris@cnpbagwell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: Matthew Garrett <mjg@redhat.com>, Alek Du <alek.du@intel.com>, Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
+Cc: Chris Bagwell <chris@cnpbagwell.com>
 
-In pmic_irq_type(), we use gpio as array index for trigger,
-thus the valid value range for gpio should be 0 .. NUM_GPIO - 1.
+From: Chris Bagwell <chris@cnpbagwell.com>
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
+eeepc-laptop provides a sysfs interface to read and control what it
+calls cpufv.  When WMI is enabled, the ACPI interface changes slightly
+and becames a write-only control with only 3 valid values.
+
+Write-only is OK because same DSDT's will ignore duplicate values
+and even invalid values will be treated same as "0" value.
+
+Expose cpufv again to allow for user space utils that can extended battery
+life noticably and come a little closer to parity with eeepc-laptop.
+
+This was tested with EEE PC 1005PE by monitoring powertop output while
+writing values of "0", "1", and "2" and by reviewing the decompiled DSDT of
+an 1201NL and comparing it to 1005PE's DSDT.
+
+Signed-off-by: Chris Bagwell <chris@cnpbagwell.com>
 ---
- drivers/platform/x86/intel_pmic_gpio.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   51 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 51 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
-index c6e2a1d..f540ff9 100644
---- a/drivers/platform/x86/intel_pmic_gpio.c
-+++ b/drivers/platform/x86/intel_pmic_gpio.c
-@@ -197,7 +197,7 @@ static int pmic_irq_type(unsigned irq, unsigned type)
- 	u32 gpio = irq - pg->irq_base;
- 	unsigned long flags;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 441b000..988b16c 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -57,6 +57,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
  
--	if (gpio > pg->chip.ngpio)
-+	if (gpio >= pg->chip.ngpio)
- 		return -EINVAL;
+ #define EEEPC_WMI_METHODID_DEVS	0x53564544
+ #define EEEPC_WMI_METHODID_DSTS	0x53544344
++#define EEEPC_WMI_METHODID_CFVS	0x53564643
  
- 	spin_lock_irqsave(&pg->irqtypes.lock, flags);
+ #define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
+ 
+@@ -307,6 +308,49 @@ static void eeepc_wmi_notify(u32 value, void *context)
+ 	kfree(obj);
+ }
+ 
++static int store_cpufv(struct device *dev, struct device_attribute *attr,
++		       const char *buf, size_t count)
++{
++	int value;
++	struct acpi_buffer input = { (acpi_size)sizeof(value), &value };
++	acpi_status status;
++
++	if (!count || sscanf(buf, "%i", &value) != 1)
++		return -EINVAL;
++	if (value < 0 || value > 2)
++		return -EINVAL;
++
++	status = wmi_evaluate_method(EEEPC_WMI_MGMT_GUID,
++				     1, EEEPC_WMI_METHODID_CFVS, &input, NULL);
++
++	if (ACPI_FAILURE(status))
++		return -EIO;
++	else
++		return count;
++}
++
++static DEVICE_ATTR(cpufv, S_IRUGO | S_IWUSR, NULL, store_cpufv);
++
++static void eeepc_wmi_sysfs_exit(struct platform_device *device)
++{
++	device_remove_file(&device->dev, &dev_attr_cpufv);
++}
++
++static int eeepc_wmi_sysfs_init(struct platform_device *device)
++{
++	int retval = -ENOMEM;
++
++	retval = device_create_file(&device->dev, &dev_attr_cpufv);
++	if (retval)
++		goto error_sysfs;
++
++	return 0;
++
++error_sysfs:
++	eeepc_wmi_sysfs_exit(platform_device);
++	return retval;
++}
++
+ static int __devinit eeepc_wmi_platform_probe(struct platform_device *device)
+ {
+ 	struct eeepc_wmi *eeepc;
+@@ -402,8 +446,14 @@ static int __init eeepc_wmi_init(void)
+ 		goto del_dev;
+ 	}
+ 
++	err = eeepc_wmi_sysfs_init(platform_device);
++	if (err)
++		goto del_sysfs;
++
+ 	return 0;
+ 
++del_sysfs:
++	eeepc_wmi_sysfs_exit(platform_device);
+ del_dev:
+ 	platform_device_del(platform_device);
+ put_dev:
+@@ -418,6 +468,7 @@ static void __exit eeepc_wmi_exit(void)
+ {
+ 	struct eeepc_wmi *eeepc;
+ 
++	eeepc_wmi_sysfs_exit(platform_device);
+ 	eeepc = platform_get_drvdata(platform_device);
+ 	platform_driver_unregister(&platform_driver);
+ 	platform_device_unregister(platform_device);
 -- 
-1.7.2
+1.7.3.1
