@@ -1,20 +1,20 @@
 From: minskey guo <chaohong.guo@linux.intel.com>
-Subject: [PATCH 1/4 RESEND] [intel_ips] seqno mask of THM_ITV register is 8bit
-Date: Tue, 12 Oct 2010 14:40:49 +0800
-Message-ID: <1286865649-22899-1-git-send-email-chaohong.guo@linux.intel.com>
+Subject: [PATCH 2/4 RESEND] [intel_ips] old_cpu_power is wrongly divided by 65535 in ips_monitor()
+Date: Tue, 12 Oct 2010 14:41:19 +0800
+Message-ID: <1286865679-22941-1-git-send-email-chaohong.guo@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:13843 "EHLO mga01.intel.com"
+Received: from mga03.intel.com ([143.182.124.21]:18570 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752690Ab0JLGqU (ORCPT
+	id S1752690Ab0JLGqn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Oct 2010 02:46:20 -0400
+	Tue, 12 Oct 2010 02:46:43 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, jbarnes@virtuousgeek.org, mjg@redhat.com
 Cc: chaohong.guo@intel.com, minskey guo <chaohong.guo@linux.intel.com>
 
-The mask of sequence number in THM_ITV register is 8bit instead
-of 4bit.
+The variable old_cpu_power is used to save the value of THM_CEC
+register. In get_cpu_power(), it will be divided by 65535.
 
 Signed-off-by: minskey guo <chaohong.guo@intel.com>
 Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
@@ -23,17 +23,17 @@ Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 9024480..fb31700 100644
+index fb31700..3c7b25c 100644
 --- a/drivers/platform/x86/intel_ips.c
 +++ b/drivers/platform/x86/intel_ips.c
-@@ -230,7 +230,7 @@
- #define THM_TC2		0xac
- #define THM_DTV		0xb0
- #define THM_ITV		0xd8
--#define   ITV_ME_SEQNO_MASK 0x000f0000 /* ME should update every ~200ms */
-+#define   ITV_ME_SEQNO_MASK 0x00ff0000 /* ME should update every ~200ms */
- #define   ITV_ME_SEQNO_SHIFT (16)
- #define   ITV_MCH_TEMP_MASK 0x0000ff00
- #define   ITV_MCH_TEMP_SHIFT (8)
+@@ -948,7 +948,7 @@ static int ips_monitor(void *data)
+ 		ITV_ME_SEQNO_SHIFT;
+ 	seqno_timestamp = get_jiffies_64();
+ 
+-	old_cpu_power = thm_readl(THM_CEC) / 65535;
++	old_cpu_power = thm_readl(THM_CEC);
+ 	schedule_timeout_interruptible(msecs_to_jiffies(IPS_SAMPLE_PERIOD));
+ 
+ 	/* Collect an initial average */
 -- 
 1.7.1
