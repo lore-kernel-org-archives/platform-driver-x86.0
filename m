@@ -1,31 +1,33 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [PATCH] intel_pmic_gpio: fix off-by-one value range checking
-Date: Wed, 13 Oct 2010 10:11:58 +0100
-Message-ID: <20101013101158.1ae2a583@linux.intel.com>
-References: <1286531671.6060.1.camel@mola>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/3] Support enable Acer Launch Manager mode
+Date: Wed, 13 Oct 2010 11:26:15 -0700
+Message-ID: <20101013182614.GC13094@core.coreip.homeip.net>
+References: <1286941662-9774-1-git-send-email-jlee@novell.com>
+ <1286941662-9774-2-git-send-email-jlee@novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:45742 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752193Ab0JMKDh (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:36034 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750782Ab0JMS0X (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 13 Oct 2010 06:03:37 -0400
-In-Reply-To: <1286531671.6060.1.camel@mola>
+	Wed, 13 Oct 2010 14:26:23 -0400
+Content-Disposition: inline
+In-Reply-To: <1286941662-9774-2-git-send-email-jlee@novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Alek Du <alek.du@intel.com>, platform-driver-x86@vger.kernel.org
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, linux-input@vger.kernel.org, tiwai@novell.com, trenn@novell.com, jbenc@suse.cz, corentin.chary@gmail.com, "Lee, Chun-Yi" <jlee@novell.com>
 
-On Fri, 08 Oct 2010 17:54:31 +0800
-Axel Lin <axel.lin@gmail.com> wrote:
-
-> In pmic_irq_type(), we use gpio as array index for trigger,
-> thus the valid value range for gpio should be 0 .. NUM_GPIO - 1.
+On Wed, Oct 13, 2010 at 11:47:41AM +0800, Lee, Chun-Yi wrote:
+> Add a launch_manager parameter for support to enable Acer Launch Manager
+> mode. After enable it, the communication key will stop the default
+> behavior to control WLAN/Bluetooth/WWAN rfkill state. It leave usernland
+> application to handle the rfkill state changed.
 > 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
 
-Agreed - thanks for spotting this.
+Why would user chose one setup over another? I.e do we really need a
+module option or maybe we should pick up behavior and stick to it?
 
-Alan
+-- 
+Dmitry
