@@ -1,54 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/3] Add acer wmi hotkey events support
-Date: Wed, 13 Oct 2010 11:24:26 -0700
-Message-ID: <20101013182426.GB13094@core.coreip.homeip.net>
-References: <1286941662-9774-1-git-send-email-jlee@novell.com>
+From: Daniel Drake <dsd@laptop.org>
+Subject: Re: [PATCH] Add OLPC XO-1 rfkill driver
+Date: Thu, 14 Oct 2010 20:33:27 +0100
+Message-ID: <AANLkTik7iFTCkvoZfw3iy6BamhQG_6FzabpKuu4V0G7A@mail.gmail.com>
+References: <20101004171520.4B0189D401B@zog.reactivated.net>
+	<20101004172807.GA10189@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:34867 "EHLO
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:35019 "EHLO
 	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750782Ab0JMS2y (ORCPT
+	with ESMTP id S1755693Ab0JNTd2 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 13 Oct 2010 14:28:54 -0400
-Content-Disposition: inline
-In-Reply-To: <1286941662-9774-1-git-send-email-jlee@novell.com>
+	Thu, 14 Oct 2010 15:33:28 -0400
+In-Reply-To: <20101004172807.GA10189@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, linux-input@vger.kernel.org, tiwai@novell.com, trenn@novell.com, jbenc@suse.cz, corentin.chary@gmail.com, "Lee, Chun-Yi" <jlee@novell.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: dilinger@queued.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Joey,
+Hi Matthew,
 
-On Wed, Oct 13, 2010 at 11:47:40AM +0800, Lee, Chun-Yi wrote:
- +
-> +	status = wmi_install_notify_handler(ACERWMID_EVENT_GUID,
-> +						acer_wmi_notify, NULL);
-> +	if (ACPI_FAILURE(status)) {
-> +		err = -EIO;
-> +		goto err_unregister_input;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_unregister_input:
-> +	input_unregister_device(acer_wmi_input_dev);
-> +err_free_keymap:
-> +	sparse_keymap_free(acer_wmi_input_dev);
-> +err_free_dev:
-> +	input_free_device(acer_wmi_input_dev);
+On 4 October 2010 18:28, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+>> + =A0 =A0 printk(KERN_INFO "%s: loading\n", pdev->name);
+>
+> Probably don't need this. Otherwise, looks fine.
 
-If wmi_install_notify_handler() fails you'll end up doing
-input_unregister_device() + input_free_device() which is forbidden. To
-avoid this issue register the device after installing the handler. As
-long as input device is properly allocated (by calling
-input_allocate_device) it is safe to use it to send events (although
-they will not go anywhere).
+Thanks for reviewing.
+I posted an updated patch here:
+https://patchwork.kernel.org/patch/233031/
 
-BTW, I think it is high time we allocate a dedicated key for touchpad
-on/off....
+The supporting arch/x86 code has now been merged into the x86 tree, so
+can the rfkill driver now go into yours?
 
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Daniel
