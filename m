@@ -1,113 +1,100 @@
 From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 2/3] Support enable Acer Launch Manager mode
-Date: Tue, 19 Oct 2010 02:09:57 -0600
-Message-ID: <4CBDED050200002300022450@novprvlin0050.provo.novell.com>
+Subject: Re: [PATCH 1/3] Add acer wmi hotkey events support
+Date: Tue, 19 Oct 2010 03:31:16 -0600
+Message-ID: <4CBE0014020000230002247A@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, Takashi Iwai <tiwai@novell.com>, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, jbenc@suse.cz, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Sender: linux-input-owner@vger.kernel.org
+To: tiwai@suse.de
+Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, jbenc@suse.cz, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Carios,=20
+Hi all,=20
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2010-10-18 =E6=96=BC 08:19 +0100=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday 18 October 2010 03:32:22 Joey Lee wrote:
-> > So, we choice remove rfkill-input then put the logic in x86/platfor=
-m
-> > driver?
-> > A simple question:
-> > Userland policy daemon or kernel module, which one we want to put t=
-he
-> > wifi hotkey behavior implementation?
->=20
-> Pass. I really have no opinion on the above, as long as we pick somet=
-hing and=20
-> stick with it (i.e. not-another-rfkill-rewrite).
->=20
-> > > We don't have Launch Manager for Linux, and quite frankly, I hope=
- we
-> > > never see it - relying on random, vendor specific applications to=
- drive
-> > > this kind of functionality is just asking for trouble.
+=E6=96=BC =E4=B8=80=EF=BC=8C2010-10-18 =E6=96=BC 11:26 +0200=EF=BC=8CTa=
+kashi Iwai =E6=8F=90=E5=88=B0=EF=BC=9A
+> At Mon, 18 Oct 2010 10:47:31 +0200,
+> Corentin Chary wrote:
 > >=20
-> > Acer BIOS team provide the function to OS for disable the EC hehavi=
-or,
-> > it's available on window, why we hide it on Linux?
+> > On Mon, Oct 18, 2010 at 10:25 AM, Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > > On Mon, Oct 18, 2010 at 10:19:37AM +0200, Corentin Chary wrote:
+> > >> On Mon, Oct 18, 2010 at 10:12 AM, Dmitry Torokhov
+> > >> <dmitry.torokhov@gmail.com> wrote:
+> > >> > On Sun, Oct 17, 2010 at 10:53:04PM -0600, Joey Lee wrote:
+> > >> >> +static const struct key_entry acer_wmi_keymap[] =3D {
+> > >> >> +     {KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
+> > >> >> +     {KE_KEY, 0x12, {KEY_BLUETOOTH} },       /* BT */
+> > >> >> +     {KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
+> > >> >> +     {KE_KEY, 0x22, {KEY_PROG2} },    /* Aracade */
+> > >> >> +     {KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
+> > >> >> +     {KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_K=
+ey */
+> > >> >> +     {KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} }, /* Display Swit=
+ch */
+> > >> >> +     {KE_KEY, 0x82, {KEY_F22} },      /* Touch Pad On/Off */
+> > >> >
+> > >> > We need to standardize this. Some people use F13/F14, here we =
+have
+> > >> > F22...
+> > >> >
+> > >>
+> > >> The good thing with F* keys, is that they are already mapped in =
+X/Qt/SDL/etc..
+> > >>
+> > >> But if we do, we could add KEY_TOUCHPADTOGGLE 0x1b8
+> > >> Then bind it to XF86XK_TouchpadToggle (what's the right way to d=
+o that
+> > >> ? keymaps ?)
+> > >>
+> > >
+> > > I wonder who the main consumers of such events will be... X appli=
+cations
+> > > or daemons that listen turn this into some DBUS signal...
+> >=20
+> > I guess xbindkeys and tools like qsynaptics should be able to consu=
+me
+> > such events.
+> > HAL also handled some touchpads things, but now that it is deprecat=
+ed, who is in
+> > charge of doing that ?
 >=20
-> As an aside, just because Windows does something is not a good reason=
- to do it=20
-> or expose on on Linux if it doesn't make any sense.
->=20
-
-M... We all know the wmi spec is from Microsoft and OEM/ODM base on it
-to write their wmi function spec for develop their windows solution.
-So, I thought we still need to reference the behavior on windows then d=
-o
-our desicion on Linux.
-
-Especially Linux kernel response BIOS by _OSI said we are Windows OS.
-
-> > Either userland daemon or kernel module who want to implement the w=
-ifi
-> > hotkey behavior, it need enable the launch-manager mode to disable =
-the
-> > default EC behavior on wifi hotkey.
->=20
-> When did Acer laptops start doing this then? The behaviour they alway=
-s did in=20
-> the past was that pressing the wireless/ bluetooth/ 3G button sent ou=
-t a=20
-> scancode, and is was then the job of something else to catch that (be=
- it=20
-> rfkill-input or friends) and for that something else to then toggle t=
-he state.
->=20
-> Do the current batch of laptops then just 'magically' toggle the stat=
-e without=20
-> needing rfkill-input?
->=20
-
-I will check when they start to use wmi event to replace the scancode o=
-r
-maybe Acer ship wmi with different notebook family.
-My 0001 patch transfer the wmi event to keycode, so, rfkill-input can
-catch the keycode to work.
-
-I agreed Dmitry's suggestion, we just direct enable the launch manager
-mode to stop EC touch RF switch. Either use rfkill-input or userland
-daemon to control the RF switch, we all need disable the default EC
-behavior, it causes sometimes will enable/disalbe wifi/bluetooth switch
-twice.
-
-> (And do you actually have contact with someone on the Acer BIOS team?=
- Because=20
-> I've never managed to get through to anyone at Acer, so would be inte=
-rested to=20
-> know).
+> There seems no standardization forseen, but which daemon (as of local
+> user) is used depends on the desktop environment.  For example, it's
+> gnome-settings-daemon for GNOME.
 >=20
 
-Thank's for your suggestion, I will try to check your question.
+Yes, g-s-d have a plugin to show up touchpad OSD when touchpad toggled.
 
-> > If don't want provide the launch-manager mode parameter to userland=
-, can
-> > we just direct enable it?
->=20
-> Well, my point is more that we should figure out what we want, and th=
-en stick=20
-> with that. I don't want to add a pointless module paramater that all =
-of three=20
-> people are ever going to use, and then have to support it working bot=
-h ways.
->=20
+And, in xkeyboard-config
+currently, F22 mapped to XF86TouchpadToggle:
 
-Like the above, I thought we just direct enable the lanuch manager mode
-when acer-wmi driver detected the WMID3 available.
+http://cgit.freedesktop.org/xkeyboard-config/commit/?id=3D1d05eda8dfc70=
+6d6450cab5883120e0d5e1100c0
+
+
+diff --git a/symbols/inet b/symbols/inet
+index 7300e76..f6cd6ac 100644
+--- a/symbols/inet
++++ b/symbols/inet
+@@ -119,6 +119,7 @@ xkb_symbols "evdev" {
+
+key <HNGL> { [ Hangul ] };
+key <HJCV> { [ Hangul_Hanja ] };
++ key <FK22> { [ XF86TouchpadToggle ] };
+
+// key <I120> { [ ] }; // KEY_MACRO=20
+key <I126> { [ plusminus ] };
 
 
 Thank's
 Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
