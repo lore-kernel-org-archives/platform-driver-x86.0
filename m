@@ -1,107 +1,71 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 2/3] Support enable Acer Launch Manager mode
-Date: Wed, 20 Oct 2010 21:35:01 -0600
-Message-ID: <4CC04F95020000230002269F@novprvlin0050.provo.novell.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH v2 1/2] eeepc-wmi: add additional hotkeys
+Date: Thu, 21 Oct 2010 08:40:13 +0200
+Message-ID: <AANLkTinwJLKYeWq7YeSDO4_J8w8TQRCrb+wVuQ4kvZf2@mail.gmail.com>
+References: <1286840838-16844-1-git-send-email-chris@cnpbagwell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:33420 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752736Ab0JUGkS convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 21 Oct 2010 02:40:18 -0400
+Received: by eyx24 with SMTP id 24so1754430eyx.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Oct 2010 23:40:14 -0700 (PDT)
+In-Reply-To: <1286840838-16844-1-git-send-email-chris@cnpbagwell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, Takashi Iwai <tiwai@novell.com>, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, jbenc@suse.cz, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: chris@cnpbagwell.com, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
 
-Hi Carlos,=20
+On Tue, Oct 12, 2010 at 1:47 AM,  <chris@cnpbagwell.com> wrote:
+> From: Chris Bagwell <chris@cnpbagwell.com>
+>
+> Added 4 hotkeys using same keymap values as eeepc-latop.
+> These are mousepad toggle, resolution change, screen off,
+> and task manager. =C2=A0These were tested on 1005PE and are the
+> Fn-F3, F4, F7, and F9, respectively.
+>
+> Also, added a new hot key for power toggles (Fn-Space on 1005PE)
+> and is meant to drive cpufv interface from userspace.
+>
+> Signed-off-by: Chris Bagwell <chris@cnpbagwell.com>
+> ---
+> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 =C2=A05 +++++
+> =C2=A01 files changed, 5 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/=
+eeepc-wmi.c
+> index 9dc50fb..21df266 100644
+> --- a/drivers/platform/x86/eeepc-wmi.c
+> +++ b/drivers/platform/x86/eeepc-wmi.c
+> @@ -69,6 +69,11 @@ static const struct key_entry eeepc_wmi_keymap[] =3D=
+ {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_IGNORE, NOTIFY_BRNDOWN_MIN, { KEY_BRI=
+GHTNESSDOWN } },
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_IGNORE, NOTIFY_BRNUP_MIN, { KEY_BRIGH=
+TNESSUP } },
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_KEY, 0xcc, { KEY_SWITCHVIDEOMODE } },
+> + =C2=A0 =C2=A0 =C2=A0 { KE_KEY, 0x6b, { KEY_F13 } }, /* Disable Touc=
+hpad */
+> + =C2=A0 =C2=A0 =C2=A0 { KE_KEY, 0xe1, { KEY_F14 } },
+> + =C2=A0 =C2=A0 =C2=A0 { KE_KEY, 0xe9, { KEY_DISPLAY_OFF } },
+> + =C2=A0 =C2=A0 =C2=A0 { KE_KEY, 0xe0, { KEY_PROG1 } },
+> + =C2=A0 =C2=A0 =C2=A0 { KE_KEY, 0x5c, { KEY_F15 } },
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_END, 0},
+> =C2=A0};
+>
+> --
+> 1.7.3.1
+>
+>
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2010-10-19 =E6=96=BC 02:09 -0600=EF=BC=8CJo=
-ey Lee =E6=8F=90=E5=88=B0=EF=BC=9A=20
-> > As an aside, just because Windows does something is not a good reas=
-on to do it=20
-> > or expose on on Linux if it doesn't make any sense.
-> >=20
->=20
-> M... We all know the wmi spec is from Microsoft and OEM/ODM base on i=
-t
-> to write their wmi function spec for develop their windows solution.
-> So, I thought we still need to reference the behavior on windows then=
- do
-> our desicion on Linux.
->=20
-> Especially Linux kernel response BIOS by _OSI said we are Windows OS.
->=20
-> > > Either userland daemon or kernel module who want to implement the=
- wifi
-> > > hotkey behavior, it need enable the launch-manager mode to disabl=
-e the
-> > > default EC behavior on wifi hotkey.
-> >=20
-> > When did Acer laptops start doing this then? The behaviour they alw=
-ays did in=20
-> > the past was that pressing the wireless/ bluetooth/ 3G button sent =
-out a=20
-> > scancode, and is was then the job of something else to catch that (=
-be it=20
-> > rfkill-input or friends) and for that something else to then toggle=
- the state.
-> >=20
-> > Do the current batch of laptops then just 'magically' toggle the st=
-ate without=20
-> > needing rfkill-input?
-> >=20
->=20
-> I will check when they start to use wmi event to replace the scancode=
- or
-> maybe Acer ship wmi with different notebook family.
-> My 0001 patch transfer the wmi event to keycode, so, rfkill-input can
-> catch the keycode to work.
->=20
-> I agreed Dmitry's suggestion, we just direct enable the launch manage=
-r
-> mode to stop EC touch RF switch. Either use rfkill-input or userland
-> daemon to control the RF switch, we all need disable the default EC
-> behavior, it causes sometimes will enable/disalbe wifi/bluetooth swit=
-ch
-> twice.
->=20
-> > (And do you actually have contact with someone on the Acer BIOS tea=
-m? Because=20
-> > I've never managed to get through to anyone at Acer, so would be in=
-terested to=20
-> > know).
-> >=20
->=20
-> Thank's for your suggestion, I will try to check your question.
->=20
+Reviewed-by: Corentin Chary <corentincj@iksaif.net>
 
-After check.
-Acer moved to WMI for hotkey function on notebook/netbook from 2010.=20
+Matthew, could you add this patch for 2.6.37 ? Thanks.
 
-But if the hotkey have standard scan code (Ex. Volume up/down,
-Play/Pause, =C2=A1K), it will keep scan code.
-
-
-> > > If don't want provide the launch-manager mode parameter to userla=
-nd, can
-> > > we just direct enable it?
-> >=20
-> > Well, my point is more that we should figure out what we want, and =
-then stick=20
-> > with that. I don't want to add a pointless module paramater that al=
-l of three=20
-> > people are ever going to use, and then have to support it working b=
-oth ways.
-> >=20
->=20
-> Like the above, I thought we just direct enable the lanuch manager mo=
-de
-> when acer-wmi driver detected the WMID3 available.
->=20
-
-Also check why have default EC "raw" behavior in wifi hotkey before
-enable launch manager mode, That's because they want to cover end user
-install Windows 98 or other old Windows not support wmi.
-
-
-Thank's
-Joey Lee
+--=20
+Corentin Chary
+http://xf.iksaif.net
