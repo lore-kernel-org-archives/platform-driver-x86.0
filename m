@@ -1,56 +1,29 @@
-From: Vernon Mauery <vernux@us.ibm.com>
-Subject: Re: [Patch] IBM Real-Time "SMI Free" mode driver -v7
-Date: Thu, 21 Oct 2010 08:09:28 -0700
-Message-ID: <20101021150928.GC8754@lucy>
-References: <20101005224718.GC4046@lucy>
- <20101021135429.GC22133@srcf.ucam.org>
- <20101021142319.GA8754@lucy>
- <20101021142523.GA23171@srcf.ucam.org>
- <20101021143821.GB8754@lucy>
- <20101021144234.GA23552@srcf.ucam.org>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH] Move hdaps driver to platform/x86
+Date: Thu, 21 Oct 2010 17:48:41 +0200
+Message-ID: <20101021174841.73e81f4c@endymion.delvare>
+References: <20101005120857.2f4a60bd@endymion.delvare>
+	<20101021135258.GA22133@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20101021144234.GA23552@srcf.ucam.org>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from zone0.gcu-squad.org ([212.85.147.21]:4563 "EHLO
+	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750908Ab0JUPsy (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 21 Oct 2010 11:48:54 -0400
+In-Reply-To: <20101021135258.GA22133@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, Linux Documentation <linux-doc@vger.kernel.org>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: LM Sensors <lm-sensors@lm-sensors.org>, platform-driver-x86@vger.kernel.org, Guenter Roeck <guenter.roeck@ericsson.com>, Frank Seidel <frank@f-seidel.de>
 
-On 21-Oct-2010 03:42 PM, Matthew Garrett wrote:
->On Thu, Oct 21, 2010 at 07:38:21AM -0700, Vernon Mauery wrote:
->> On 21-Oct-2010 03:25 PM, Matthew Garrett wrote:
->>> Oops, sorry! I mean running on older kernels.
->>
->> Do older kernels not have DMI support?  I would think that if an
->> enterprise distribution wanted this driver they would likely already
->> have DMI support backported as well.
->
->I mean that they may run the current driver on newer hardware that isn't
->in the DMI table, and that may be the only thing preventing it from
->working.
->
->>> I'd suggest using DMI to verify that it's an IBM, and perhaps also using
->>> DMI to check that it's a server or blade rather than a laptop or
->>> desktop. After that you could just check the ebda rather than having to
->>> have an entry for every specific machine.
->>
->> I went for a better safe than sorry route.  Before I added the DMI
->> checking I had some reports of this getting loaded on non-IBM hardware
->> and it came up with some nasty error messages.  I figured since I knew
->> exactly which platforms have support, I could just limit the driver to
->> those.  Then there is the force parameter that allows a user to ignore
->> the DMI data and try to load the driver anyway.
->
->It's preferable to have the driver be able to support future hardware
->built to the same spec without having to add extra IDs. It's easy to
->make sure that you're loading on an IBM server - are there any of these
->that have the _RTL_ header but will break?
+On Thu, 21 Oct 2010 14:52:58 +0100, Matthew Garrett wrote:
+> Applied, thanks.
 
-No, if it has the _RTL_ header it should be fine.  I was more concerned 
-about the driver trying to map the EBDA and reading through it on 
-non-ibm platforms, so I guess just a check to see that it is IBM should 
-be sufficient.  Let me get a patch that does that.
+Great, thanks. I've just removed the patch from my own tree to avoid a
+collision.
 
---Vernon
+-- 
+Jean Delvare
