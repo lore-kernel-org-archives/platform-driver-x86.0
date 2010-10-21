@@ -1,133 +1,78 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: [PATCH 2/2] panasonic-laptop: Simplify calls to acpi_pcc_retrieve_biosdata
-Date: Thu, 21 Oct 2010 11:50:47 +0200
-Message-ID: <201010211150.47998.jdelvare@suse.de>
+From: Chris Bagwell <chris@cnpbagwell.com>
+Subject: Re: [PATCH v2 2/2] eeepc-wmi: Add cpufv sysfs interface
+Date: Thu, 21 Oct 2010 08:06:13 -0500
+Message-ID: <AANLkTi=yyBqAY+Lt9kRZv0===6ivyVg-FsMO2=6ATC0r@mail.gmail.com>
+References: <1286840838-16844-1-git-send-email-chris@cnpbagwell.com>
+	<1286840838-16844-2-git-send-email-chris@cnpbagwell.com>
+	<AANLkTik3agz60dxGvuHTFOr=4aUdg9t5jRgFjO6q-3mp@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:45244 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756177Ab0JUJut (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:50875 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756530Ab0JUNGO convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Oct 2010 05:50:49 -0400
+	Thu, 21 Oct 2010 09:06:14 -0400
+Received: by gyb13 with SMTP id 13so414184gyb.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Oct 2010 06:06:14 -0700 (PDT)
+In-Reply-To: <AANLkTik3agz60dxGvuHTFOr=4aUdg9t5jRgFjO6q-3mp@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Harald Welte <laforge@gnumonks.org>
-Cc: platform-driver-x86@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
 
-From: Jean Delvare <jdelvare@suse.de>
-Subject: panasonic-laptop: Simplify calls to acpi_pcc_retrieve_biosdata
+On Thu, Oct 21, 2010 at 1:45 AM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+> On Tue, Oct 12, 2010 at 1:47 AM, =A0<chris@cnpbagwell.com> wrote:
+>> From: Chris Bagwell <chris@cnpbagwell.com>
+>>
+>> eeepc-laptop provides a sysfs interface to read and control what it
+>> calls cpufv. =A0When WMI is enabled, the ACPI interface changes slig=
+htly
+>> and becames a write-only control with 3 valid values.
+>>
+>> Expose cpufv again to allow for user space utils that can extended b=
+attery
+>> life noticably and come a little closer to parity with eeepc-laptop.
+>>
+>> Write-only is OK for most user space apps because read status was
+>> mostly used to prevent unneeded mode changes. =A0Since this same che=
+ck
+>> to ignore changes to same mode also exists in the DSDT then it was
+>> wasted ACPI call.
+>>
+>> acpi_osi=3D"!Windows 2009" can be used for get back eeepc-laptop's
+>> read support of cpufv for debugging things such as behaviour
+>> during resume.
+>>
+>> This patch was tested with EEE PC 1005PE by monitoring powertop outp=
+ut while
+>> writing values of "0", "1", and "2" and by reviewing the decompiled =
+DSDT of
+>> an 1201NL and comparing it to 1005PE's DSDT.
+>>
+>> Signed-off-by: Chris Bagwell <chris@cnpbagwell.com>
+>> ---
 
-Function acpi_pcc_retrieve_biosdata is always called with parameters
-(pcc, pcc->sinf), so we can drop the second parameter. It was
-dangerous to pass the sinf array separately anyway, as its length is
-checked as pcc->num_sifr, which pretty much assumed it was pcc->sinf
-(or at least had the same size.)
+[ ... ]
 
-This change makes the code slightly more compact and thus marginally
-faster.
+>
+> Seems ok.
+> Matthew, could you add that one for inclusion in 2.6.37 ?
+>
+> Chris, could you document cpufv in
+> Documentation/ABI/testing/sysfs-platform-eeepc-wmi (see eeepc-laptop
+> example) ?
+> I don't think the lacking documentation should delay this patch becau=
+se:
+> - most of platform-x86 are not documented at all
+> - the merge window is open, and we should'nt miss that.
+>
+> Thanks,
+>
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: Harald Welte <laforge@gnumonks.org>
----
-Note: cleanup inspired by code inspection, I don't have the hardware so I
-can't test.
+Sure thing.  Are you OK as the contact for this interface?  I assume
+the intent is not for author of patches.
 
- drivers/platform/x86/panasonic-laptop.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
---- linux-2.6.36.orig/drivers/platform/x86/panasonic-laptop.c	2010-10-21 11:18:23.000000000 +0200
-+++ linux-2.6.36/drivers/platform/x86/panasonic-laptop.c	2010-10-21 11:35:52.000000000 +0200
-@@ -267,7 +267,7 @@ static inline int acpi_pcc_get_sqty(stru
- 	}
- }
- 
--static int acpi_pcc_retrieve_biosdata(struct pcc_acpi *pcc, u32 *sinf)
-+static int acpi_pcc_retrieve_biosdata(struct pcc_acpi *pcc)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
-@@ -299,12 +299,12 @@ static int acpi_pcc_retrieve_biosdata(st
- 	for (i = 0; i < hkey->package.count; i++) {
- 		union acpi_object *element = &(hkey->package.elements[i]);
- 		if (likely(element->type == ACPI_TYPE_INTEGER)) {
--			sinf[i] = element->integer.value;
-+			pcc->sinf[i] = element->integer.value;
- 		} else
- 			ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
- 					 "Invalid HKEY.SINF data\n"));
- 	}
--	sinf[hkey->package.count] = -1;
-+	pcc->sinf[hkey->package.count] = -1;
- 
- end:
- 	kfree(buffer.pointer);
-@@ -322,7 +322,7 @@ static int bl_get(struct backlight_devic
- {
- 	struct pcc_acpi *pcc = bl_get_data(bd);
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	return pcc->sinf[SINF_AC_CUR_BRIGHT];
-@@ -334,7 +334,7 @@ static int bl_set_status(struct backligh
- 	int bright = bd->props.brightness;
- 	int rc;
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	if (bright < pcc->sinf[SINF_AC_MIN_BRIGHT])
-@@ -368,7 +368,7 @@ static ssize_t show_numbatt(struct devic
- 	struct acpi_device *acpi = to_acpi_device(dev);
- 	struct pcc_acpi *pcc = acpi_driver_data(acpi);
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_NUM_BATTERIES]);
-@@ -380,7 +380,7 @@ static ssize_t show_lcdtype(struct devic
- 	struct acpi_device *acpi = to_acpi_device(dev);
- 	struct pcc_acpi *pcc = acpi_driver_data(acpi);
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_LCD_TYPE]);
-@@ -392,7 +392,7 @@ static ssize_t show_mute(struct device *
- 	struct acpi_device *acpi = to_acpi_device(dev);
- 	struct pcc_acpi *pcc = acpi_driver_data(acpi);
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_MUTE]);
-@@ -404,7 +404,7 @@ static ssize_t show_sticky(struct device
- 	struct acpi_device *acpi = to_acpi_device(dev);
- 	struct pcc_acpi *pcc = acpi_driver_data(acpi);
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf))
-+	if (!acpi_pcc_retrieve_biosdata(pcc))
- 		return -EIO;
- 
- 	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_STICKY_KEY]);
-@@ -640,7 +640,7 @@ static int acpi_pcc_hotkey_add(struct ac
- 		goto out_hotkey;
- 	}
- 
--	if (!acpi_pcc_retrieve_biosdata(pcc, pcc->sinf)) {
-+	if (!acpi_pcc_retrieve_biosdata(pcc)) {
- 		ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
- 				 "Couldn't retrieve BIOS data\n"));
- 		result = -EIO;
-
--- 
-Jean Delvare
-Suse L3
+Chris
