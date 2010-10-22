@@ -1,229 +1,86 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: [PATCH] intel_scu_ipc: Utility driver for intel scu ipc
-Date: Fri, 22 Oct 2010 15:43:55 +0100
-Message-ID: <20101022144318.30569.62307.stgit@localhost.localdomain>
+From: Vernon Mauery <vernux@us.ibm.com>
+Subject: [Patch 1/2] ibm_rtl: DMI match should include all IBM machines
+Date: Fri, 22 Oct 2010 14:13:05 -0700
+Message-ID: <20101022211305.GH8754@lucy>
+References: <20101005224718.GC4046@lucy>
+ <20101021135429.GC22133@srcf.ucam.org>
+ <20101021142319.GA8754@lucy>
+ <20101021142523.GA23171@srcf.ucam.org>
+ <20101021143821.GB8754@lucy>
+ <20101021144234.GA23552@srcf.ucam.org>
+ <20101021150928.GC8754@lucy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:34552 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756632Ab0JVPh5 (ORCPT
+Received: from e5.ny.us.ibm.com ([32.97.182.145]:53470 "EHLO e5.ny.us.ibm.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755783Ab0JVVN1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Oct 2010 11:37:57 -0400
+	Fri, 22 Oct 2010 17:13:27 -0400
+Content-Disposition: inline
+In-Reply-To: <20101021150928.GC8754@lucy>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
 
-From: Sreedhara DS <sreedhara.ds@intel.com>
+On 21-Oct-2010 08:09 AM, Vernon Mauery wrote:
+>No, if it has the _RTL_ header it should be fine.  I was more 
+>concerned about the driver trying to map the EBDA and reading through 
+>it on non-ibm platforms, so I guess just a check to see that it is 
+>IBM should be sufficient.  Let me get a patch that does that.
 
-This driver implements ioctl and interfaces with intel scu ipc driver. It
-is used to access pmic/msic registers from user space and firmware update
-utility.
+This patch should do just that:
 
-Signed-off-by: Sreedhara DS <sreedhara.ds@intel.com>
-[Extensive clean up and debug]
-Signed-off-by: Alan Cox <alan@linux.intel.com>
----
+--Vernon
 
- drivers/platform/x86/Kconfig             |    9 ++
- drivers/platform/x86/Makefile            |    1 
- drivers/platform/x86/intel_scu_ipc.c     |    4 -
- drivers/platform/x86/intel_scu_ipcutil.c |  133 ++++++++++++++++++++++++++++++
- 4 files changed, 145 insertions(+), 2 deletions(-)
- create mode 100644 drivers/platform/x86/intel_scu_ipcutil.c
+ibm_rtl: Loosen the DMI criteria to match all IBM machines
 
+Allow all IBM machines to pass the DMI check so that we
+don't have to add them one by one to the driver.  Any IBM
+machine that has the _RTL_ table in the EBDA will work.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index d2d1510..8bc44c3 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -576,6 +576,15 @@ config INTEL_SCU_IPC
- 	  some embedded Intel x86 platforms. This is not needed for PC-type
- 	  machines.
- 
-+config INTEL_SCU_IPC_UTIL
-+	tristate "Intel SCU IPC utility driver"
-+	depends on INTEL_SCU_IPC
-+	default y
-+	---help---
-+	  The IPC Util driver provides an interface with the SCU enabling
-+	  low level access for debug work and updating the firmware. Say
-+	  N unless you will be doing this on an Intel MID platform.
-+
- config GPIO_INTEL_PMIC
- 	bool "Intel PMIC GPIO support"
- 	depends on INTEL_SCU_IPC && GPIOLIB
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index c97ac2a..deefa4f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
- obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
-+obj-$(CONFIG_INTEL_SCU_IPC_UTIL)+= intel_scu_ipcutil.o
- obj-$(CONFIG_RAR_REGISTER)	+= intel_rar_register.o
- obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
- obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 41a9e34..37128c6 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -496,7 +496,7 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
- 			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
- 
- 		mutex_unlock(&ipclock);
--		return -1;
-+		return -EIO;
- 	}
- 	mutex_unlock(&ipclock);
- 	return 0;
-@@ -641,7 +641,7 @@ update_end:
- 
- 	if (status == IPC_FW_UPDATE_SUCCESS)
- 		return 0;
--	return -1;
-+	return -EIO;
- }
- EXPORT_SYMBOL(intel_scu_ipc_fw_update);
- 
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-new file mode 100644
-index 0000000..ba3231d
---- /dev/null
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -0,0 +1,133 @@
-+/*
-+ * intel_scu_ipc.c: Driver for the Intel SCU IPC mechanism
-+ *
-+ * (C) Copyright 2008-2010 Intel Corporation
-+ * Author: Sreedhara DS (sreedhara.ds@intel.com)
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; version 2
-+ * of the License.
-+ *
-+ * This driver provides ioctl interfaces to call intel scu ipc driver api
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/types.h>
-+#include <linux/fs.h>
-+#include <linux/fcntl.h>
-+#include <linux/sched.h>
-+#include <linux/uaccess.h>
-+#include <linux/slab.h>
-+#include <linux/init.h>
-+#include <asm/intel_scu_ipc.h>
-+
-+static u32 major;
-+
-+#define MAX_FW_SIZE 264192
-+
-+/* ioctl commnds */
-+#define	INTE_SCU_IPC_REGISTER_READ	0
-+#define INTE_SCU_IPC_REGISTER_WRITE	1
-+#define INTE_SCU_IPC_REGISTER_UPDATE	2
-+#define INTE_SCU_IPC_FW_UPDATE		0xA2
-+
-+struct scu_ipc_data {
-+	u32     count;  /* No. of registers */
-+	u16     addr[5]; /* Register addresses */
-+	u8      data[5]; /* Register data */
-+	u8      mask; /* Valid for read-modify-write */
-+};
-+
-+/**
-+ *	scu_reg_access		-	implement register access ioctls
-+ *	@cmd: command we are doing (read/write/update)
-+ *	@data: kernel copy of ioctl data
-+ *
-+ *	Allow the user to perform register accesses on the SCU via the
-+ *	kernel interface
-+ */
-+
-+static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
-+{
-+	int count = data->count;
-+
-+	if (count == 0 || count == 3 || count > 4)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case INTE_SCU_IPC_REGISTER_READ:
-+		return intel_scu_ipc_readv(data->addr, data->data, count);
-+	case INTE_SCU_IPC_REGISTER_WRITE:
-+		return intel_scu_ipc_writev(data->addr, data->data, count);
-+	case INTE_SCU_IPC_REGISTER_UPDATE:
-+		return intel_scu_ipc_update_register(data->addr[0],
-+						    data->data[0], data->mask);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+/**
-+ *	scu_ipc_ioctl		-	control ioctls for the SCU
-+ *	@fp: file handle of the SCU device
-+ *	@cmd: ioctl coce
-+ *	@arg: pointer to user passed structure
-+ *
-+ *	Support the I/O and firmware flashing interfaces of the SCU
-+ */
-+static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
-+							unsigned long arg)
-+{
-+	int ret;
-+	struct scu_ipc_data  data;
-+	void __user *argp = (void __user *)arg;
-+
-+	if (!capable(CAP_SYS_RAWIO))
-+		return -EPERM;
-+
-+	if (cmd == INTE_SCU_IPC_FW_UPDATE) {
-+			u8 *fwbuf = kmalloc(MAX_FW_SIZE, GFP_KERNEL);
-+			if (fwbuf == NULL)
-+				return -ENOMEM;
-+			if (copy_from_user(fwbuf, (u8 *)arg, MAX_FW_SIZE)) {
-+				kfree(fwbuf);
-+				return -EFAULT;
-+			}
-+			ret = intel_scu_ipc_fw_update(fwbuf, MAX_FW_SIZE);
-+			kfree(fwbuf);
-+			return ret;
-+	} else {
-+		if (copy_from_user(&data, argp, sizeof(struct scu_ipc_data)))
-+			return -EFAULT;
-+		ret = scu_reg_access(cmd, &data);
-+		if (ret < 0)
-+			return ret;
-+		if (copy_to_user(argp, &data, sizeof(struct scu_ipc_data)))
-+			return -EFAULT;
-+		return 0;
-+	}
-+}
-+
-+static const struct file_operations scu_ipc_fops = {
-+	.unlocked_ioctl = scu_ipc_ioctl,
-+};
-+
-+static int __init ipc_module_init(void)
-+{
-+	return register_chrdev(0, "intel_mid_scu", &scu_ipc_fops);
-+}
-+
-+static void __exit ipc_module_exit(void)
-+{
-+	unregister_chrdev(major, "intel_mid_scu");
-+}
-+
-+module_init(ipc_module_init);
-+module_exit(ipc_module_exit);
-+
-+MODULE_LICENSE("GPL V2");
-+MODULE_DESCRIPTION("Utility driver for intel scu ipc");
-+MODULE_AUTHOR("Sreedhara <sreedhara.ds@intel.com>");
+Signed-off-by: Vernon Mauery <vernux@us.ibm.com>
+
+diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
+index 3c2c6b9..c5a0061 100644
+--- a/drivers/platform/x86/ibm_rtl.c
++++ b/drivers/platform/x86/ibm_rtl.c
+@@ -220,32 +220,13 @@ static void rtl_teardown_sysfs(void) {
+  	sysdev_class_unregister(&class_rtl);
+  }
+  
+-static int dmi_check_cb(const struct dmi_system_id *id)
+-{
+-	RTL_DEBUG("found IBM server '%s'\n", id->ident);
+-	return 0;
+-}
+-
+-#define ibm_dmi_entry(NAME, TYPE)                  \
+-{                                                  \
+-	.ident = NAME,                             \
+-	.matches = {                               \
+-		DMI_MATCH(DMI_SYS_VENDOR, "IBM"),  \
+-		DMI_MATCH(DMI_PRODUCT_NAME, TYPE), \
+-	},                                         \
+-	.callback = dmi_check_cb                   \
+-}
+  
+  static struct dmi_system_id __initdata ibm_rtl_dmi_table[] = {
+-	ibm_dmi_entry("BladeCenter LS21", "7971"),
+-	ibm_dmi_entry("BladeCenter LS22", "7901"),
+-	ibm_dmi_entry("BladeCenter HS21 XM", "7995"),
+-	ibm_dmi_entry("BladeCenter HS22", "7870"),
+-	ibm_dmi_entry("BladeCenter HS22V", "7871"),
+-	ibm_dmi_entry("System x3550 M2", "7946"),
+-	ibm_dmi_entry("System x3650 M2", "7947"),
+-	ibm_dmi_entry("System x3550 M3", "7944"),
+-	ibm_dmi_entry("System x3650 M3", "7945"),
++	{                                                  \
++		.matches = {                               \
++			DMI_MATCH(DMI_SYS_VENDOR, "IBM"),  \
++		},                                         \
++	},
+  	{ }
+  };
+  
