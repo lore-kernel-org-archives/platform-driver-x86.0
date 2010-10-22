@@ -1,29 +1,229 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH] Move hdaps driver to platform/x86
-Date: Thu, 21 Oct 2010 17:48:41 +0200
-Message-ID: <20101021174841.73e81f4c@endymion.delvare>
-References: <20101005120857.2f4a60bd@endymion.delvare>
-	<20101021135258.GA22133@srcf.ucam.org>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [PATCH] intel_scu_ipc: Utility driver for intel scu ipc
+Date: Fri, 22 Oct 2010 15:43:55 +0100
+Message-ID: <20101022144318.30569.62307.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from zone0.gcu-squad.org ([212.85.147.21]:4563 "EHLO
-	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750908Ab0JUPsy (ORCPT
+Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:34552 "EHLO
+	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756632Ab0JVPh5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Oct 2010 11:48:54 -0400
-In-Reply-To: <20101021135258.GA22133@srcf.ucam.org>
+	Fri, 22 Oct 2010 11:37:57 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: LM Sensors <lm-sensors@lm-sensors.org>, platform-driver-x86@vger.kernel.org, Guenter Roeck <guenter.roeck@ericsson.com>, Frank Seidel <frank@f-seidel.de>
+To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On Thu, 21 Oct 2010 14:52:58 +0100, Matthew Garrett wrote:
-> Applied, thanks.
+From: Sreedhara DS <sreedhara.ds@intel.com>
 
-Great, thanks. I've just removed the patch from my own tree to avoid a
-collision.
+This driver implements ioctl and interfaces with intel scu ipc driver. It
+is used to access pmic/msic registers from user space and firmware update
+utility.
 
--- 
-Jean Delvare
+Signed-off-by: Sreedhara DS <sreedhara.ds@intel.com>
+[Extensive clean up and debug]
+Signed-off-by: Alan Cox <alan@linux.intel.com>
+---
+
+ drivers/platform/x86/Kconfig             |    9 ++
+ drivers/platform/x86/Makefile            |    1 
+ drivers/platform/x86/intel_scu_ipc.c     |    4 -
+ drivers/platform/x86/intel_scu_ipcutil.c |  133 ++++++++++++++++++++++++++++++
+ 4 files changed, 145 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_scu_ipcutil.c
+
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d2d1510..8bc44c3 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -576,6 +576,15 @@ config INTEL_SCU_IPC
+ 	  some embedded Intel x86 platforms. This is not needed for PC-type
+ 	  machines.
+ 
++config INTEL_SCU_IPC_UTIL
++	tristate "Intel SCU IPC utility driver"
++	depends on INTEL_SCU_IPC
++	default y
++	---help---
++	  The IPC Util driver provides an interface with the SCU enabling
++	  low level access for debug work and updating the firmware. Say
++	  N unless you will be doing this on an Intel MID platform.
++
+ config GPIO_INTEL_PMIC
+ 	bool "Intel PMIC GPIO support"
+ 	depends on INTEL_SCU_IPC && GPIOLIB
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index c97ac2a..deefa4f 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -28,6 +28,7 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
+ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
+ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
++obj-$(CONFIG_INTEL_SCU_IPC_UTIL)+= intel_scu_ipcutil.o
+ obj-$(CONFIG_RAR_REGISTER)	+= intel_rar_register.o
+ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+ obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 41a9e34..37128c6 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -496,7 +496,7 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
+ 			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
+ 
+ 		mutex_unlock(&ipclock);
+-		return -1;
++		return -EIO;
+ 	}
+ 	mutex_unlock(&ipclock);
+ 	return 0;
+@@ -641,7 +641,7 @@ update_end:
+ 
+ 	if (status == IPC_FW_UPDATE_SUCCESS)
+ 		return 0;
+-	return -1;
++	return -EIO;
+ }
+ EXPORT_SYMBOL(intel_scu_ipc_fw_update);
+ 
+diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
+new file mode 100644
+index 0000000..ba3231d
+--- /dev/null
++++ b/drivers/platform/x86/intel_scu_ipcutil.c
+@@ -0,0 +1,133 @@
++/*
++ * intel_scu_ipc.c: Driver for the Intel SCU IPC mechanism
++ *
++ * (C) Copyright 2008-2010 Intel Corporation
++ * Author: Sreedhara DS (sreedhara.ds@intel.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This driver provides ioctl interfaces to call intel scu ipc driver api
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/types.h>
++#include <linux/fs.h>
++#include <linux/fcntl.h>
++#include <linux/sched.h>
++#include <linux/uaccess.h>
++#include <linux/slab.h>
++#include <linux/init.h>
++#include <asm/intel_scu_ipc.h>
++
++static u32 major;
++
++#define MAX_FW_SIZE 264192
++
++/* ioctl commnds */
++#define	INTE_SCU_IPC_REGISTER_READ	0
++#define INTE_SCU_IPC_REGISTER_WRITE	1
++#define INTE_SCU_IPC_REGISTER_UPDATE	2
++#define INTE_SCU_IPC_FW_UPDATE		0xA2
++
++struct scu_ipc_data {
++	u32     count;  /* No. of registers */
++	u16     addr[5]; /* Register addresses */
++	u8      data[5]; /* Register data */
++	u8      mask; /* Valid for read-modify-write */
++};
++
++/**
++ *	scu_reg_access		-	implement register access ioctls
++ *	@cmd: command we are doing (read/write/update)
++ *	@data: kernel copy of ioctl data
++ *
++ *	Allow the user to perform register accesses on the SCU via the
++ *	kernel interface
++ */
++
++static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
++{
++	int count = data->count;
++
++	if (count == 0 || count == 3 || count > 4)
++		return -EINVAL;
++
++	switch (cmd) {
++	case INTE_SCU_IPC_REGISTER_READ:
++		return intel_scu_ipc_readv(data->addr, data->data, count);
++	case INTE_SCU_IPC_REGISTER_WRITE:
++		return intel_scu_ipc_writev(data->addr, data->data, count);
++	case INTE_SCU_IPC_REGISTER_UPDATE:
++		return intel_scu_ipc_update_register(data->addr[0],
++						    data->data[0], data->mask);
++	default:
++		return -ENOTTY;
++	}
++}
++
++/**
++ *	scu_ipc_ioctl		-	control ioctls for the SCU
++ *	@fp: file handle of the SCU device
++ *	@cmd: ioctl coce
++ *	@arg: pointer to user passed structure
++ *
++ *	Support the I/O and firmware flashing interfaces of the SCU
++ */
++static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
++							unsigned long arg)
++{
++	int ret;
++	struct scu_ipc_data  data;
++	void __user *argp = (void __user *)arg;
++
++	if (!capable(CAP_SYS_RAWIO))
++		return -EPERM;
++
++	if (cmd == INTE_SCU_IPC_FW_UPDATE) {
++			u8 *fwbuf = kmalloc(MAX_FW_SIZE, GFP_KERNEL);
++			if (fwbuf == NULL)
++				return -ENOMEM;
++			if (copy_from_user(fwbuf, (u8 *)arg, MAX_FW_SIZE)) {
++				kfree(fwbuf);
++				return -EFAULT;
++			}
++			ret = intel_scu_ipc_fw_update(fwbuf, MAX_FW_SIZE);
++			kfree(fwbuf);
++			return ret;
++	} else {
++		if (copy_from_user(&data, argp, sizeof(struct scu_ipc_data)))
++			return -EFAULT;
++		ret = scu_reg_access(cmd, &data);
++		if (ret < 0)
++			return ret;
++		if (copy_to_user(argp, &data, sizeof(struct scu_ipc_data)))
++			return -EFAULT;
++		return 0;
++	}
++}
++
++static const struct file_operations scu_ipc_fops = {
++	.unlocked_ioctl = scu_ipc_ioctl,
++};
++
++static int __init ipc_module_init(void)
++{
++	return register_chrdev(0, "intel_mid_scu", &scu_ipc_fops);
++}
++
++static void __exit ipc_module_exit(void)
++{
++	unregister_chrdev(major, "intel_mid_scu");
++}
++
++module_init(ipc_module_init);
++module_exit(ipc_module_exit);
++
++MODULE_LICENSE("GPL V2");
++MODULE_DESCRIPTION("Utility driver for intel scu ipc");
++MODULE_AUTHOR("Sreedhara <sreedhara.ds@intel.com>");
