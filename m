@@ -1,7 +1,7 @@
 From: Vernon Mauery <vernux@us.ibm.com>
-Subject: [Patch 1/2] ibm_rtl: DMI match should include all IBM machines
-Date: Fri, 22 Oct 2010 14:13:05 -0700
-Message-ID: <20101022211305.GH8754@lucy>
+Subject: [Patch 2/2] ibm_rtl: check for efi_enabled
+Date: Fri, 22 Oct 2010 14:17:13 -0700
+Message-ID: <20101022211713.GI8754@lucy>
 References: <20101005224718.GC4046@lucy>
  <20101021135429.GC22133@srcf.ucam.org>
  <20101021142319.GA8754@lucy>
@@ -12,11 +12,11 @@ References: <20101005224718.GC4046@lucy>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from e5.ny.us.ibm.com ([32.97.182.145]:53470 "EHLO e5.ny.us.ibm.com"
+Received: from e1.ny.us.ibm.com ([32.97.182.141]:53019 "EHLO e1.ny.us.ibm.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755783Ab0JVVN1 (ORCPT
+	id S1753444Ab0JVVRP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Oct 2010 17:13:27 -0400
+	Fri, 22 Oct 2010 17:17:15 -0400
 Content-Disposition: inline
 In-Reply-To: <20101021150928.GC8754@lucy>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -24,63 +24,43 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
 
-On 21-Oct-2010 08:09 AM, Vernon Mauery wrote:
->No, if it has the _RTL_ header it should be fine.  I was more 
->concerned about the driver trying to map the EBDA and reading through 
->it on non-ibm platforms, so I guess just a check to see that it is 
->IBM should be sufficient.  Let me get a patch that does that.
-
-This patch should do just that:
+I tested ibm_rtl on an IBM machine that is supported by this driver in 
+Legacy BIOS mode, but which was running in UEFI mode and the system 
+complained about remapping the EBDA because the EBDA should not have 
+been there to start with.  This patch fixes that:
 
 --Vernon
 
-ibm_rtl: Loosen the DMI criteria to match all IBM machines
+ibm_rtl: _RTL_ is not available in UEFI mode
 
-Allow all IBM machines to pass the DMI check so that we
-don't have to add them one by one to the driver.  Any IBM
-machine that has the _RTL_ table in the EBDA will work.
+Some of the IBM servers that are supported by ibm_rtl
+can run in both Legacy mode (BIOS) and in UEFI mode.
+When running in UEFI mode, it is possible that the
+EBDA table exists but cannot be mapped and reports
+errors.  We need to make sure that by default we don't
+try to probe the machines if they are running in UEFI
+mode.
 
 Signed-off-by: Vernon Mauery <vernux@us.ibm.com>
 
 diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index 3c2c6b9..c5a0061 100644
+index c5a0061..3cff0e5 100644
 --- a/drivers/platform/x86/ibm_rtl.c
 +++ b/drivers/platform/x86/ibm_rtl.c
-@@ -220,32 +220,13 @@ static void rtl_teardown_sysfs(void) {
-  	sysdev_class_unregister(&class_rtl);
-  }
+@@ -28,6 +28,7 @@
+  #include <linux/io.h>
+  #include <linux/sysdev.h>
+  #include <linux/dmi.h>
++#include <linux/efi.h>
+  #include <linux/mutex.h>
+  #include <asm/bios_ebda.h>
   
--static int dmi_check_cb(const struct dmi_system_id *id)
--{
--	RTL_DEBUG("found IBM server '%s'\n", id->ident);
--	return 0;
--}
--
--#define ibm_dmi_entry(NAME, TYPE)                  \
--{                                                  \
--	.ident = NAME,                             \
--	.matches = {                               \
--		DMI_MATCH(DMI_SYS_VENDOR, "IBM"),  \
--		DMI_MATCH(DMI_PRODUCT_NAME, TYPE), \
--	},                                         \
--	.callback = dmi_check_cb                   \
--}
+@@ -238,7 +239,7 @@ static int __init ibm_rtl_init(void) {
+  	if (force)
+  		pr_warning("ibm-rtl: module loaded by force\n");
+  	/* first ensure that we are running on IBM HW */
+-	else if (!dmi_check_system(ibm_rtl_dmi_table))
++	else if (efi_enabled || !dmi_check_system(ibm_rtl_dmi_table))
+  		return -ENODEV;
   
-  static struct dmi_system_id __initdata ibm_rtl_dmi_table[] = {
--	ibm_dmi_entry("BladeCenter LS21", "7971"),
--	ibm_dmi_entry("BladeCenter LS22", "7901"),
--	ibm_dmi_entry("BladeCenter HS21 XM", "7995"),
--	ibm_dmi_entry("BladeCenter HS22", "7870"),
--	ibm_dmi_entry("BladeCenter HS22V", "7871"),
--	ibm_dmi_entry("System x3550 M2", "7946"),
--	ibm_dmi_entry("System x3650 M2", "7947"),
--	ibm_dmi_entry("System x3550 M3", "7944"),
--	ibm_dmi_entry("System x3650 M3", "7945"),
-+	{                                                  \
-+		.matches = {                               \
-+			DMI_MATCH(DMI_SYS_VENDOR, "IBM"),  \
-+		},                                         \
-+	},
-  	{ }
-  };
-  
+  	/* Get the address for the Extended BIOS Data Area */
