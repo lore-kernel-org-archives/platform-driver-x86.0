@@ -1,46 +1,44 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: [PATCH -next] ibm_rtl: fix printk format warning
-Date: Fri, 22 Oct 2010 16:18:47 -0700
-Message-ID: <20101022161847.e70bf995.randy.dunlap@oracle.com>
-References: <20101022152350.fc79e2b9.sfr@canb.auug.org.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: chris@cnpbagwell.com
+Subject: [PATCH] eeepc-wmi: add cpufv sysfs documentation
+Date: Sat, 23 Oct 2010 16:30:50 -0500
+Message-ID: <1287869450-713-1-git-send-email-chris@cnpbagwell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet10.oracle.com ([148.87.113.121]:53586 "EHLO
-	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754123Ab0JVXVM (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:58327 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751935Ab0JWVbS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Oct 2010 19:21:12 -0400
-In-Reply-To: <20101022152350.fc79e2b9.sfr@canb.auug.org.au>
+	Sat, 23 Oct 2010 17:31:18 -0400
+Received: by gwj21 with SMTP id 21so1834753gwj.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Oct 2010 14:31:17 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Keith Mannthey <kmannth@us.ibm.com>, Vernon Mauery <vernux@us.ibm.com>, akpm <akpm@linux-foundation.org>
-Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+To: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
+Cc: Chris Bagwell <chris@cnpbagwell.com>
 
-From: Randy Dunlap <randy.dunlap@oracle.com>
+From: Chris Bagwell <chris@cnpbagwell.com>
 
-Fix printk format warning:
-
-drivers/platform/x86/ibm_rtl.c:305:warning: format '%#llx' expects type 'long long unsigned int', but argument 2 has type 'phys_addr_t'
-
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Keith Mannthey <kmannth@us.ibm.com>
-Cc: Vernon Mauery <vernux@us.ibm.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>
+Based on cpufv text from sysfs-platform-eeepc-laptop that
+has almost same behavior.
 ---
- drivers/platform/x86/ibm_rtl.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
 
---- linux-next-20101022.orig/drivers/platform/x86/ibm_rtl.c
-+++ linux-next-20101022/drivers/platform/x86/ibm_rtl.c
-@@ -302,7 +302,7 @@ static int __init ibm_rtl_init(void) {
- 			RTL_DEBUG("rtl_cmd_width = %u, rtl_cmd_type = %u\n",
- 			      rtl_cmd_width, rtl_cmd_type);
- 			addr = ioread32(&rtl_table->cmd_port_address);
--			RTL_DEBUG("addr = %#llx\n", addr);
-+			RTL_DEBUG("addr = %#llx\n", (unsigned long long)addr);
- 			plen = rtl_cmd_width/sizeof(char);
- 			rtl_cmd_addr = rtl_port_map(addr, plen);
- 			RTL_DEBUG("rtl_cmd_addr = %#llx\n", (u64)rtl_cmd_addr);
+diff --git a/Documentation/ABI/testing/sysfs-platform-eeepc-wmi b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+new file mode 100644
+index 0000000..5b0201b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+@@ -0,0 +1,10 @@
++What:		/sys/devices/platform/eeepc/cpufv
++Date:		Oct 2010
++KernelVersion:	2.6.37
++Contact:	"Corentin Chary" <corentincj@iksaif.net>
++Description:
++		Change CPU clock configuration (write-only).
++		There are three available clock configuration:
++		    * 0 -> Super Performance Mode
++		    * 1 -> High Performance Mode
++		    * 2 -> Power Saving Mode
+-- 
+1.7.3.1
