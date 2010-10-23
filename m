@@ -1,44 +1,64 @@
-From: chris@cnpbagwell.com
-Subject: [PATCH] eeepc-wmi: add cpufv sysfs documentation
-Date: Sat, 23 Oct 2010 16:30:50 -0500
-Message-ID: <1287869450-713-1-git-send-email-chris@cnpbagwell.com>
+From: Jon Dowland <jmtd@debian.org>
+Subject: [PATCH] toshiba_acpi.c: Add key_entry for a lone FN keypress
+Date: Sat, 23 Oct 2010 23:12:53 +0100
+Message-ID: <20101023221253.GA4829@hathor>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:58327 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751935Ab0JWVbS (ORCPT
+Received: from redmars.org ([92.243.31.175]:53695 "EHLO deckard.alcopop.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753406Ab0JWW5W (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Oct 2010 17:31:18 -0400
-Received: by gwj21 with SMTP id 21so1834753gwj.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Oct 2010 14:31:17 -0700 (PDT)
+	Sat, 23 Oct 2010 18:57:22 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
-Cc: Chris Bagwell <chris@cnpbagwell.com>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Chris Bagwell <chris@cnpbagwell.com>
 
-Based on cpufv text from sysfs-platform-eeepc-laptop that
-has almost same behavior.
----
- Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-eeepc-wmi b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
-new file mode 100644
-index 0000000..5b0201b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
-@@ -0,0 +1,10 @@
-+What:		/sys/devices/platform/eeepc/cpufv
-+Date:		Oct 2010
-+KernelVersion:	2.6.37
-+Contact:	"Corentin Chary" <corentincj@iksaif.net>
-+Description:
-+		Change CPU clock configuration (write-only).
-+		There are three available clock configuration:
-+		    * 0 -> Super Performance Mode
-+		    * 1 -> High Performance Mode
-+		    * 2 -> Power Saving Mode
--- 
-1.7.3.1
+A lone FN key press on a Toshiba Port=E9g=E9 R700 without another key in
+conjunction results in an ACPI event and a spurious error message on
+the console.
+
+Add a key entry to map this event to a KEY_UNKNOWN keypress silences
+this message.
+
+Signed-off-by: Jon Dowland <jmtd@debian.org>
+
+----
+
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/tos=
+hiba_acpi.c
+index a388bd6..954443e 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -142,6 +142,7 @@ static struct key_entry toshiba_acpi_keymap[]  =3D {
+ 	{KE_KEY, 0x141, KEY_BRIGHTNESSUP},
+ 	{KE_KEY, 0x142, KEY_WLAN},
+ 	{KE_KEY, 0x143, KEY_PROG1},
++	{KE_KEY, 0x17f, KEY_UNKNOWN}, /* FN key by itself */
+ 	{KE_KEY, 0xb05, KEY_PROG2},
+ 	{KE_KEY, 0xb06, KEY_WWW},
+ 	{KE_KEY, 0xb07, KEY_MAIL},
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAkzDXeUACgkQFotOcXAy8jjwlwCgqqtWItROnb0rbb17a58pcgC6
+B/AAoJEBDH/c76NCcFJZ6kFuDw0TUT73
+=VgLO
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
