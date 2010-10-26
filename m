@@ -1,57 +1,44 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi.c: Add key_entry for a lone FN keypress
-Date: Mon, 25 Oct 2010 12:42:41 -0600
-Message-ID: <AANLkTikcnJQnWYP+BTpUAvizU1iwwUo4=Nabe0L6xMXa@mail.gmail.com>
-References: <20101023221253.GA4829@hathor>
-	<201010251127.37374.dmitry.torokhov@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: chris@cnpbagwell.com
+Subject: [PATCH v2] eeepc-wmi: add cpufv sysfs documentation
+Date: Mon, 25 Oct 2010 21:08:39 -0500
+Message-ID: <1288058919-21216-1-git-send-email-chris@cnpbagwell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:57341 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750875Ab0JYSmm convert rfc822-to-8bit (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:44595 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756780Ab0JZCIr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Oct 2010 14:42:42 -0400
-In-Reply-To: <201010251127.37374.dmitry.torokhov@gmail.com>
+	Mon, 25 Oct 2010 22:08:47 -0400
+Received: by gwj21 with SMTP id 21so2988210gwj.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Oct 2010 19:08:46 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jon Dowland <jmtd@debian.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, yong.y.wang@intel.com
+Cc: Chris Bagwell <chris@cnpbagwell.com>
 
-Hi,
+From: Chris Bagwell <chris@cnpbagwell.com>
 
-It actually generates on key press/release with different key codes,
-0x17f and 0x100 respectively. So I think that both should be added.
+Based on cpufv text from sysfs-platform-eeepc-laptop that
+has almost same behavior.
+---
+ Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
 
-On Mon, Oct 25, 2010 at 12:27 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Saturday, October 23, 2010 03:12:53 pm Jon Dowland wrote:
->> A lone FN key press on a Toshiba Port=C3=A9g=C3=A9 R700 without anot=
-her key in
->> conjunction results in an ACPI event and a spurious error message on
->> the console.
->>
->> Add a key entry to map this event to a KEY_UNKNOWN keypress silences
->> this message.
->>
->
-> Well, if FN key can generate separate events then we should report
-> KEY_FN, not KEY_UNKNOWN.
->
-> Thanks.
->
-> --
-> Dmitry
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
-ml
->
-
-
-
---=20
--- El mundo apesta y vosotros apestais tambien --
+diff --git a/Documentation/ABI/testing/sysfs-platform-eeepc-wmi b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+new file mode 100644
+index 0000000..e4b5fef
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+@@ -0,0 +1,10 @@
++What:		/sys/devices/platform/eeepc-wmi/cpufv
++Date:		Oct 2010
++KernelVersion:	2.6.37
++Contact:	"Corentin Chary" <corentincj@iksaif.net>
++Description:
++		Change CPU clock configuration (write-only).
++		There are three available clock configuration:
++		    * 0 -> Super Performance Mode
++		    * 1 -> High Performance Mode
++		    * 2 -> Power Saving Mode
+-- 
+1.7.3.1
