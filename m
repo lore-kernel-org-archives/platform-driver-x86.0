@@ -1,53 +1,50 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: toshiba_acpi.c: Full TOS1900 device support
-Date: Wed, 27 Oct 2010 20:29:13 +0100
-Message-ID: <20101027192913.GA14828@srcf.ucam.org>
-References: <AANLkTikff5b9zhCLEmyoHZPTPaREuHE1qp21SLA0v=83@mail.gmail.com> <20101026192028.GA17880@srcf.ucam.org> <AANLkTinmsNzAkp_ZGcaNyVRVMu0Rc4-C+xPKuSOS5jRJ@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 8/14] drivers/platform/x86/thinkpad_acpi.c: delete
+ double assignment
+Date: Wed, 27 Oct 2010 19:42:37 -0200
+Message-ID: <20101027214237.GD27847@khazad-dum.debian.net>
+References: <1288088743-3725-1-git-send-email-julia@diku.dk>
+ <1288088743-3725-9-git-send-email-julia@diku.dk>
+ <20101027010908.GA29299@khazad-dum.debian.net>
+ <20101027035449.GB6062@bicker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:51005 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752654Ab0J0T3S (ORCPT
+Received: from out2.smtp.messagingengine.com ([66.111.4.26]:42499 "EHLO
+	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S932602Ab0J0Vmn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Oct 2010 15:29:18 -0400
+	Wed, 27 Oct 2010 17:42:43 -0400
 Content-Disposition: inline
-In-Reply-To: <AANLkTinmsNzAkp_ZGcaNyVRVMu0Rc4-C+xPKuSOS5jRJ@mail.gmail.com>
+In-Reply-To: <20101027035449.GB6062@bicker>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Carpenter <error27@gmail.com>, Julia Lawall <julia@diku.dk>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, kernel-janitors@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
 
-On Wed, Oct 27, 2010 at 01:24:15PM -0600, Azael Avalos wrote:
-> Yes, actually the ACPI video driver does a better job of detecting the
-> video device,
-> so perhaps something like the following would be better IMHO for at least the
-> backlight:
-
-Yeah, that looks better.
-
-> Is there an ACPI function that let's us query the display brightness?
-> Because TOS1900 devices lack the HCI method to query the LCD status,
-> and thus the proc interface will be useless, that is, if a userland (or any
-> other) application is using it.
-
-Ignore the proc interface. Everyone should be using sysfs now. _BQC is 
-the standardised ACPI function for this, but it's not always 
-implemented.
-
-> > Ugh. Use i8042_install_filter instead, and just look at the raw i8042
-> > stream. That'll avoid the ugly strncmp for the device names in order to
-> > find the right device.
-> >
+On Wed, 27 Oct 2010, Dan Carpenter wrote:
+> On Tue, Oct 26, 2010 at 11:09:08PM -0200, Henrique de Moraes Holschuh wrote:
+> > On Tue, 26 Oct 2010, Julia Lawall wrote:
+> > > From: Julia Lawall <julia@diku.dk>
+> > > 
+> > > Delete successive assignments to the same location.
+> > 
+> > There are often results of mismerges or other assorted screw ups, often
+> > done by the maintainer itself (e.g. me in thinkpad-acpi's case) during
+> > development.
+> > 
+> > The patch is correct, and I thank you for the head's up.  But let me
+> > track down what caused it first, hmm?  I also highly recommend that this
+> > should be done in all cases you find, instead of just blindly fixing the
+> > assignment.
 > 
-> Can you point me to some documents (if any) or even pieces of code
-> that I can look at.
-> 
-> I've tried using the i8042_install_filter function, but I haven't had
-> any luck so far,
-> or perhaps I'm using it in wrong, due to my limited kernel knowledge.
+> I've reviewed the entire patchset per your suggestion and Julia
+> obviously didn't do it blindly.  It all looks good.  The patcheset fixes
+> a number of bugs.
 
-Take a look at the dell-laptop driver in drivers/platform/x86.
+Thank you, Dan and Julia.
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
