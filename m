@@ -1,59 +1,31 @@
-From: Jon Dowland <jmtd@debian.org>
-Subject: Re: [PATCH] toshiba_acpi.c: Add key_entry for a lone FN keypress
-Date: Wed, 27 Oct 2010 00:24:59 +0100
-Message-ID: <20101026232459.GA1444@deckard.alcopop.org>
-References: <20101023221253.GA4829@hathor> <201010251127.37374.dmitry.torokhov@gmail.com> <20101026120026.GA27720@deckard.alcopop.org> <20101026155653.GC13097@core.coreip.homeip.net>
+From: "Dr. Robert William" <pascale.vial@noos.fr>
+Subject: Yours Faithfully
+Date: Wed, 27 Oct 2010 02:34:17 +0200 (CEST)
+Message-ID: <ea-mime-4cc77389-71b-20d7ee4b__47489.1980681152$1288140192$gmane$org@webmail.numericable.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from redmars.org ([92.243.31.175]:49942 "EHLO deckard.alcopop.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758225Ab0JZXZC (ORCPT
+Received: from fb2.tech.numericable.fr ([82.216.111.50]:48106 "EHLO
+	fb2.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760655Ab0J0Amv convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Oct 2010 19:25:02 -0400
-Content-Disposition: inline
-In-Reply-To: <20101026155653.GC13097@core.coreip.homeip.net>
+	Tue, 26 Oct 2010 20:42:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: pascale.vial@noos.fr
 
-On Tue, Oct 26, 2010 at 08:56:53AM -0700, Dmitry Torokhov wrote:
-> > Add a key entry to map this event to a KEY_UNKNOWN keypress silence=
-s
->=20
->                                          ^^^^^^
-> Better fix commit log message as well. Otherwise:
->=20
-> 	Acked-by: Dmitry Torokhov <dtor@mail.ru>
+Good News My Dear Friend,
+ 
+I'm happy to inform you about my success in getting those funds transferred under the co-operation of a new partner from Paraguay. Presently i'm in Paraguay for investment projects with my own share of the total sum. meanwhile,i didn't forget your past efforts and attempts to assist me in transferring those funds despite that it failed us some how.
+Now contact my secretary in Benin Republic
 
-Thanks.
-
-Signed-off-by: Jon Dowland <jmtd@debian.org>
-
-----
-
-A lone FN key press on a Toshiba Port=E9g=E9 R700 without another key i=
-n
-conjunction results in an ACPI event and a spurious error message on
-the console.
-
-Add a key entry to map this event to a KEY_FN keypress. This prevents
-the console message.
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86=
-/toshiba_acpi.c
-index 06f304f..e10747a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -135,6 +135,7 @@ static const struct key_entry toshiba_acpi_keymap[]=
- __initconst =3D {
- 	{ KE_KEY, 0x141, { KEY_BRIGHTNESSUP } },
- 	{ KE_KEY, 0x142, { KEY_WLAN } },
- 	{ KE_KEY, 0x143, { KEY_PROG1 } },
-+	{ KE_KEY, 0x17f, { KEY_FN } },                                       =
-  =20
- 	{ KE_KEY, 0xb05, { KEY_PROG2 } },
- 	{ KE_KEY, 0xb06, { KEY_WWW } },
- 	{ KE_KEY, 0xb07, { KEY_MAIL } },
+His name is Mr. Timothy Adams
+Phone Number: +229 97373889
+Email:  timothyadams90@gmail.com
+ 
+Please do let me know immediately you receive it so that we can share the joy after all the sufferings at that time. in the moment, I'm very busy here because of the investment projects which me and the new partner are having at hand, finally, remember that I had forwarded instruction to the secretary on your behalf to receive that money, so feel free to get in touch with Mr. Timothy Adams on timothyadams90@gmail.com, he will send the amount to you without any delay.
+ 
+Yours Faithfully
+Dr Robert William
