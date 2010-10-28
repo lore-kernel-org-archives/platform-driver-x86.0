@@ -1,50 +1,62 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 8/14] drivers/platform/x86/thinkpad_acpi.c: delete
- double assignment
-Date: Wed, 27 Oct 2010 19:42:37 -0200
-Message-ID: <20101027214237.GD27847@khazad-dum.debian.net>
-References: <1288088743-3725-1-git-send-email-julia@diku.dk>
- <1288088743-3725-9-git-send-email-julia@diku.dk>
- <20101027010908.GA29299@khazad-dum.debian.net>
- <20101027035449.GB6062@bicker>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] intel_scu_ipc: fix signedness bug
+Date: Thu, 28 Oct 2010 14:08:39 +0800
+Message-ID: <1288246119.5153.1.camel@mola>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:42499 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932602Ab0J0Vmn (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:49769 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754081Ab0J1GGA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Oct 2010 17:42:43 -0400
-Content-Disposition: inline
-In-Reply-To: <20101027035449.GB6062@bicker>
+	Thu, 28 Oct 2010 02:06:00 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <error27@gmail.com>, Julia Lawall <julia@diku.dk>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, kernel-janitors@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: Sreedhara DS <sreedhara.ds@intel.com>, Alan Cox <alan@linux.intel.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, 27 Oct 2010, Dan Carpenter wrote:
-> On Tue, Oct 26, 2010 at 11:09:08PM -0200, Henrique de Moraes Holschuh wrote:
-> > On Tue, 26 Oct 2010, Julia Lawall wrote:
-> > > From: Julia Lawall <julia@diku.dk>
-> > > 
-> > > Delete successive assignments to the same location.
-> > 
-> > There are often results of mismerges or other assorted screw ups, often
-> > done by the maintainer itself (e.g. me in thinkpad-acpi's case) during
-> > development.
-> > 
-> > The patch is correct, and I thank you for the head's up.  But let me
-> > track down what caused it first, hmm?  I also highly recommend that this
-> > should be done in all cases you find, instead of just blindly fixing the
-> > assignment.
-> 
-> I've reviewed the entire patchset per your suggestion and Julia
-> obviously didn't do it blindly.  It all looks good.  The patcheset fixes
-> a number of bugs.
+busy_loop() returns negative error code, thus change err variable
+from u32 to int to properly propagate correct error code.
 
-Thank you, Dan and Julia.
+Also remove unneeded initialization for err and i variables.
 
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/intel_scu_ipc.c |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 41a9e34..50f5cf3 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -160,7 +160,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+ {
+ 	int i, nc, bytes, d;
+ 	u32 offset = 0;
+-	u32 err = 0;
++	int err;
+ 	u8 cbuf[IPC_WWBUF_SIZE] = { };
+ 	u32 *wbuf = (u32 *)&cbuf;
+ 
+@@ -403,7 +403,7 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
+  */
+ int intel_scu_ipc_simple_command(int cmd, int sub)
+ {
+-	u32 err = 0;
++	int err;
+ 
+ 	mutex_lock(&ipclock);
+ 	if (ipcdev.pdev == NULL) {
+@@ -433,8 +433,7 @@ EXPORT_SYMBOL(intel_scu_ipc_simple_command);
+ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 							u32 *out, int outlen)
+ {
+-	u32 err = 0;
+-	int i = 0;
++	int err, i;
+ 
+ 	mutex_lock(&ipclock);
+ 	if (ipcdev.pdev == NULL) {
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+1.7.2
