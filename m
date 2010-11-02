@@ -1,34 +1,30 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/4] Add acer wmi hotkey events support
-Date: Sun, 31 Oct 2010 07:04:01 -0700
-Message-ID: <201010310704.02268.dmitry.torokhov@gmail.com>
-References: <1288456593-6868-1-git-send-email-jlee@novell.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+From: Vernon Mauery <vernux@us.ibm.com>
+Subject: [PATCH 0/2] ibm_rtl fixes
+Date: Tue,  2 Nov 2010 13:08:09 -0700
+Message-ID: <1288728491-2216-1-git-send-email-vernux@us.ibm.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:36739 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755850Ab0JaPVj (ORCPT
+Received: from e38.co.us.ibm.com ([32.97.110.159]:54132 "EHLO
+	e38.co.us.ibm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751326Ab0KBUIg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 31 Oct 2010 11:21:39 -0400
-In-Reply-To: <1288456593-6868-1-git-send-email-jlee@novell.com>
+	Tue, 2 Nov 2010 16:08:36 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, carlos@strangeworlds.co.uk, corentin.chary@gmail.com, tiwai@novell.com, trenn@novell.com, mjg59@srcf.ucam.org, jbenc@suse.cz, "Lee, Chun-Yi" <jlee@novell.com>
+To: linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Vernon Mauery <vernux@us.ibm.com>
 
-On Saturday, October 30, 2010 09:36:30 am Lee, Chun-Yi wrote:
-> Add acer wmi hotkey event support. Install a wmi notify handler to
-> transfer wmi event key to key code, then send out keycode through acer
-> wmi input device to userland.
-> 
-> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+This pair of patches address two issues that were brought
+to my attention.  The first is to remove the need for
+constantly updating the driver whenever a new machine
+with this capability is added.  The second fixes a bug
+when run on a machine in UEFI mode.
 
-Looks good to me, thansk for making changes.
+Signed-off-by: Vernon Mauery <vernux@us.ibm.com>
 
-Acked-by: Dmitry Torokhov <dtor@mail.ru>
+--Vernon
 
--- 
-Dmitry
+ibm_rtl: Loosen the DMI criteria to all IBM machines
+ibm_rtl: _RTL_ is not available in UEFI mode
+
+ ibm_rtl.c |   32 +++++++-------------------------
+ 1 file changed, 7 insertions(+), 25 deletions(-)
