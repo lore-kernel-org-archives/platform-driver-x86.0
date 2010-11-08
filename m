@@ -1,178 +1,153 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 4/4] Detect the WiFi/Bluetooth/3G devices available
-Date: Sun, 07 Nov 2010 21:54:22 -0700
-Message-ID: <4CD81D2E02000023000237A6@novprvlin0050.provo.novell.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] eeepc-wmi: add additional hotkeys
+Date: Sun, 7 Nov 2010 23:18:00 -0800
+Message-ID: <20101108071800.GA6977@core.coreip.homeip.net>
+References: <4CD7F3F20200002300023745@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:52456 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752035Ab0KHHSK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 8 Nov 2010 02:18:10 -0500
+Received: by gxk23 with SMTP id 23so3137228gxk.19
+        for <platform-driver-x86@vger.kernel.org>; Sun, 07 Nov 2010 23:18:09 -0800 (PST)
 Content-Disposition: inline
+In-Reply-To: <4CD7F3F20200002300023745@novprvlin0050.provo.novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jdelvare@suse.de
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, Takashi Iwai <tiwai@novell.com>, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, jbenc@suse.cz, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Joey Lee <jlee@novell.com>
+Cc: chris@cnpbagwell.com, corentin.chary@gmail.com, hadess@hadess.net, yong.y.wang@intel.com, acpi4asus-user@lists.sourceforge.net, Egbert Eich <eich@novell.com>, Stefan Dirsch <sndirsch@novell.com>, kay.sievers@suse.de, platform-driver-x86@vger.kernel.org
 
-Hi Jean,=20
+On Sun, Nov 07, 2010 at 06:58:26PM -0700, Joey Lee wrote:
+> Hi Dmitry,=20
+>=20
+> =E6=96=BC =E5=85=AD=EF=BC=8C2010-11-06 =E6=96=BC 02:39 -0700=EF=BC=8C=
+Dmitry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
+> > On Sat, Nov 06, 2010 at 08:42:52AM +0100, Corentin Chary wrote:
+> > > On Sat, Nov 6, 2010 at 4:02 AM, Chris Bagwell <chris@cnpbagwell.c=
+om> wrote:
+> > > > On Mon, Oct 11, 2010 at 12:10 PM, Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > >> On Sunday, October 10, 2010 11:26:22 pm Corentin Chary wrote:
+> > > >>> On Mon, Oct 11, 2010 at 3:48 AM,  <chris@cnpbagwell.com> wrot=
+e:
+> > > >>> > From: Chris Bagwell <chris@cnpbagwell.com>
+> > > >>> >
+> > > >>> > Added 4 hotkeys using same keymap values as eeepc-latop.
+> > > >>> > These are mousepad toggle, resolution change, screen off,
+> > > >>> > and task manager.  These were tested on 1005PE and are the
+> > > >>> > Fn-F3, F4, F7, and F9, respectively.
+> > > >>> >
+> > > >>> > Also, added a new hot key for power toggles (Fn-Space on 10=
+05PE)
+> > > >>> > and is meant to drive cpufv interface from userspace.
+> > > >>> >
+> > > >>> > Finally, added several keys to be ignored that are being em=
+itted
+> > > >>> > but do not mapped to any useful or documented hotkeys.  Thi=
+s is
+> > > >>> > purely cosmetic to prevent uknown key reports on console/lo=
+g files.
+> > > >>> > These keys are reported on 1005PE's.
+> > > >>>
+> > > >>> What are exactly these keys ? Since they are probably some ob=
+scure Fn+
+> > > >>> combo, and they are probably used on another model, I'm not s=
+ure we should
+> > > >>> hide them.
+> > > >>>
+> > > >>> I'm still not happy with F13 for "disable touchpad" but I did=
+ the same
+> > > >>> for other laptops,
+> > > >>> and we don't have a key for that ATM.
+> > > >>
+> > > >> The most sensible way would be to add one then. We just need t=
+o decide if
+> > > >> it should be a key or a switch.
+> > > >>
+> > > >
+> > > > Motivated by thread on linux-input "Touchpad toggle mess", I ch=
+anged
+> > > > Fn-F3(toggle touchpad) from KEY_F13 to KEY_F22  With Gnome 2.32
+> > > > (Fedora 14), now magically my touchpad toggle works automagical=
+ly.
+> > > >
+> > > > So I'd like to submit a patch to change both eeepc-laptop and
+> > > > eeepc-wmi to use KEY_F22 for toggle touchpad to get some immedi=
+ate
+> > > > benifit.  Any issues with this?  Is F13 doing anything useful b=
+y
+> > > > default?
+> > > >
+> > > > I know in this thread and in other thread Dmitry mentioned we s=
+hould
+> > > > make a KEY_TOUCHPAD_TOGGLE (or whatever name).  I'm probably ju=
+st
+> > > > smart enough to do that if preferred but don't think I'd be abl=
+e to
+> > > > take it to the next level and get it translated to
+> > > > XF86XK_TouchpadToggle.  Help appreciate in that area.
+> > > >
+> > > > Chris
+> > > >
+> > >=20
+> > > Hi Chris,
+> > > Since 2.6.38 merge window should be in a long time, I think we ha=
+ve
+> > > the time to ad new keys.
+> > >=20
+> > > Dimitry, what do you think of :
+> > >=20
+> > > KEY_TOUCHPAD_TOGGLE 248
+> > > KEY_TOUCHPAD_ON            249
+> > > KEY_TOUCHPAD_OFF           250
+> > >=20
+> > > Maybe we should keep these lower keycodes for other stuff, and us=
+e
+> > > some higher ones ?
+> > >=20
+> >=20
+> > I think we should move them up. Bastien mentioned that X already
+> > standardized on F21, 22 and 23 so they will need to remap anyways, =
+thus
+> > we'll be "wasting" valuable lower scancode estate if we do it this =
+way.
+> >=20
+>=20
+> If we move them up to higher keycode.
+> Does X-window already support keycode more then 255?
+>=20
 
-On =E6=97=A5, 2010-10-31 at 00:36 +0800, Lee, Chun-Yi wrote:
->  static acpi_status WMID_set_capabilities(void)
->  {
->  	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> @@ -844,16 +869,24 @@ static acpi_status WMID_set_capabilities(void)
->  		return AE_ERROR;
->  	}
-> =20
-> -	/* Not sure on the meaning of the relevant bits yet to detect these=
- */
-> -	interface->capability |=3D ACER_CAP_WIRELESS;
-> -	interface->capability |=3D ACER_CAP_THREEG;
-> +	dmi_walk(type_aa_dmi_decode, NULL);
-> +	if (type_aa) {
-> +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
-> +			interface->capability |=3D ACER_CAP_WIRELESS;
-> +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_THREEG)
-> +			interface->capability |=3D ACER_CAP_THREEG;
-> +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
-> +			interface->capability |=3D ACER_CAP_BLUETOOTH;
-> +	} else {
-> +		interface->capability |=3D ACER_CAP_WIRELESS;
-> +		interface->capability |=3D ACER_CAP_THREEG;
-> +		if (devices & 0x10)
-> +			interface->capability |=3D ACER_CAP_BLUETOOTH;
-> +	}
-> =20
+Not at the moment.
 
-Thank's for your review and found out cann't use a global pointer to a
-DMI record to keep track of what dmi_walk() found. I modified the patch
-like following:
+> Actually, I also got problem with our X-window not support
+> KEY_DOLLAR(0x1b2) and KEY_EURO(0x1b3).
+>=20
+> I need use udev or hal to remapping those key to lower keycodes.
+>=20
+> > The only thing that is left is to feed udev guys with keymaps till =
+X is
+> > able to take the full scancode trange.
+> >=20
+>=20
+> Sorry I am not clear understood.
+> Did you mean we put the key re-mapping to lower keycode in udev until=
+ X
+> ready for full scancode range?
 
+Yes.
 
-From c8f99f9856bc79aa8f525595e5ff115f3d6c3c69 Mon Sep 17 00:00:00 2001
-=46rom: Lee, Chun-Yi <jlee@novell.com>
-Date: Mon, 8 Nov 2010 16:40:55 +0800
-Subject: [PATCH 4/4] Detect the WiFi/Bluetooth/3G devices available
+>=20
+> Does there have any time line for X window support full scancode rang=
+e?
 
-Check the Acer OEM-specific Type AA to detect the WiFi/Bluetooth/3G
-devices available or not, and set the devices capability flag.
+Not that I know of, but this question is better asked on Xorg mailing
+lists.
 
-Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
- drivers/platform/x86/acer-wmi.c |   49 +++++++++++++++++++++++++++++++=
-++-----
- 1 files changed, 42 insertions(+), 7 deletions(-)
+Thanks.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 6ac4656..dc23140 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -39,6 +39,7 @@
- #include <linux/slab.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/dmi.h>
-=20
- #include <acpi/acpi_drivers.h>
-=20
-@@ -138,7 +139,9 @@ struct lm_return_value {
- /*
-  * GUID3 Get Device Status device flags
-  */
-+#define ACER_WMID3_GDS_WIRELESS		(1<<0)	/* WiFi */
- #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
-+#define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
-=20
- struct wmid3_gds_input_param {	/* Get Device Status input parameter */
- 	u8 function_num;	/* Function Number */
-@@ -153,6 +156,13 @@ struct wmid3_gds_return_value {	/* Get Device Stat=
-us return value*/
- 	u32 reserved;
- } __attribute__((packed));
-=20
-+struct hotkey_function_type_aa {
-+	u8 type;
-+	u8 length;
-+	u16 handle;
-+	u16 commun_func_bitmap;
-+} __attribute__((packed));
-+
- /*
-  * Interface capability flags
-  */
-@@ -184,6 +194,7 @@ static int brightness =3D -1;
- static int threeg =3D -1;
- static int force_series;
- static bool ec_raw_mode;
-+static bool has_type_aa;
-=20
- module_param(mailled, int, 0444);
- module_param(brightness, int, 0444);
-@@ -824,6 +835,28 @@ static acpi_status WMID_set_u32(u32 value, u32 cap=
-, struct wmi_interface *iface)
- 	return WMI_execute_u32(method_id, (u32)value, NULL);
- }
-=20
-+static void type_aa_dmi_decode(const struct dmi_header *header, void *=
-dummy)
-+{
-+	struct hotkey_function_type_aa *type_aa;
-+
-+	/* We are looking for OEM-specific Type AAh */
-+	if (header->type !=3D 0xAA)
-+		return;
-+
-+	has_type_aa =3D true;
-+	type_aa =3D (struct hotkey_function_type_aa *) header;
-+
-+	printk(ACER_INFO "Function bitmap for Communication Button: 0x%x\n",
-+		type_aa->commun_func_bitmap);
-+
-+	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
-+		interface->capability |=3D ACER_CAP_WIRELESS;
-+	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_THREEG)
-+		interface->capability |=3D ACER_CAP_THREEG;
-+	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
-+		interface->capability |=3D ACER_CAP_BLUETOOTH;
-+}
-+
- static acpi_status WMID_set_capabilities(void)
- {
- 	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
-@@ -844,16 +877,17 @@ static acpi_status WMID_set_capabilities(void)
- 		return AE_ERROR;
- 	}
-=20
--	/* Not sure on the meaning of the relevant bits yet to detect these *=
-/
--	interface->capability |=3D ACER_CAP_WIRELESS;
--	interface->capability |=3D ACER_CAP_THREEG;
-+	dmi_walk(type_aa_dmi_decode, NULL);
-+	if (!has_type_aa) {
-+		interface->capability |=3D ACER_CAP_WIRELESS;
-+		interface->capability |=3D ACER_CAP_THREEG;
-+		if (devices & 0x10)
-+			interface->capability |=3D ACER_CAP_BLUETOOTH;
-+	}
-=20
- 	/* WMID always provides brightness methods */
- 	interface->capability |=3D ACER_CAP_BRIGHTNESS;
-=20
--	if (devices & 0x10)
--		interface->capability |=3D ACER_CAP_BLUETOOTH;
--
- 	if (!(devices & 0x20))
- 		max_brightness =3D 0x9;
-=20
-@@ -932,7 +966,8 @@ static void __init acer_commandline_init(void)
- 	 * capability isn't available on the given interface
- 	 */
- 	set_u32(mailled, ACER_CAP_MAILLED);
--	set_u32(threeg, ACER_CAP_THREEG);
-+	if (!has_type_aa)
-+		set_u32(threeg, ACER_CAP_THREEG);
- 	set_u32(brightness, ACER_CAP_BRIGHTNESS);
- }
-=20
 --=20
-1.6.0.2
+Dmitry
