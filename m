@@ -1,34 +1,43 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH] intel_scu_ipc: fix signedness bug
-Date: Tue, 9 Nov 2010 13:40:50 +0000
-Message-ID: <20101109134050.1ad58680@lxorguk.ukuu.org.uk>
-References: <1288246119.5153.1.camel@mola>
+From: Peter Feuerer <peter@piie.net>
+Subject: Re: [PATCH] acerhdf: Add support for Aspire 1410 BIOS v1.3314
+Date: Tue, 09 Nov 2010 21:51:18 +0100
+Message-ID: <cone.1289335878.26640.3522.1000@deskpiie>
+References: <AANLkTinhev01i+hBH+FW_quLay1dOGFpFW52mONxmshB@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; format=flowed; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:47969 "EHLO
-	www.etchedpixels.co.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751959Ab0KINmc (ORCPT
+Received: from smtprelay01.ispgateway.de ([80.67.31.39]:54607 "EHLO
+	smtprelay01.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754617Ab0KIU4o (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Nov 2010 08:42:32 -0500
-In-Reply-To: <1288246119.5153.1.camel@mola>
+	Tue, 9 Nov 2010 15:56:44 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Sreedhara DS <sreedhara.ds@intel.com>, Alan Cox <alan@linux.intel.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Clay Carpenter <claycarpenter@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Thu, 28 Oct 2010 14:08:39 +0800
-Axel Lin <axel.lin@gmail.com> wrote:
+Hi Clay,
 
-> busy_loop() returns negative error code, thus change err variable
-> from u32 to int to properly propagate correct error code.
-> 
-> Also remove unneeded initialization for err and i variables.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Clay Carpenter writes:
 
-This was already partly fixed in my tree but added the other fixes.
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 60f9cfc..73df4c5 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -163,6 +163,7 @@ static const struct bios_settings_t bios_tbl[] = {
+>         {"Acer", "Aspire 1410", "v1.3303", 0x55, 0x58, {0x9e, 0x00} },
+>         {"Acer", "Aspire 1410", "v1.3308", 0x55, 0x58, {0x9e, 0x00} },
+>         {"Acer", "Aspire 1410", "v1.3310", 0x55, 0x58, {0x9e, 0x00} },
+> +       {"Acer", "Aspire 1410", "v1.3314", 0x55, 0x58, {0x9e, 0x00} },
+>         /* Acer 1810xx */
+>         {"Acer", "Aspire 1810TZ", "v0.3108", 0x55, 0x58, {0x9e, 0x00} },
+>         {"Acer", "Aspire 1810T",  "v0.3108", 0x55, 0x58, {0x9e, 0x00} },
 
-Thanks
-Alan
+I can't apply your patch, looks like there are spaces instead of one tab in 
+front of the lines?
+Maybe your Email program broke it?
+
+thanks and kind regards,
+--peter;
