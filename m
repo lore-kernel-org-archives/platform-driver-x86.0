@@ -1,193 +1,60 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 4/4] Detect the WiFi/Bluetooth/3G devices available
-Date: Fri, 12 Nov 2010 01:36:39 -0700
-Message-ID: <4CDD97470200002300023C85@novprvlin0050.provo.novell.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: dell-wmi -  question concerning battery charge key functionality
+Date: Fri, 12 Nov 2010 11:53:22 -0800
+Message-ID: <20101112195322.GB1299@core.coreip.homeip.net>
+References: <4CDD1603.808@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:54597 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755084Ab0KLTx3 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 12 Nov 2010 14:53:29 -0500
+Received: by iwn10 with SMTP id 10so3844827iwn.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Nov 2010 11:53:28 -0800 (PST)
 Content-Disposition: inline
+In-Reply-To: <4CDD1603.808@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, Takashi Iwai <tiwai@novell.com>, Thomas Renninger <trenn@novell.com>, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Dmitry Gubenko <gubenko.dmitry@googlemail.com>
+Cc: Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Platform Driver x86 <platform-driver-x86@vger.kernel.org>
 
-Hi Carlos,=20
+Hi Dmitry,
 
-=E6=96=BC =E6=97=A5=EF=BC=8C2010-11-07 =E6=96=BC 21:54 -0700=EF=BC=8CJo=
-ey Lee =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi Jean,=20
->=20
-> On =E6=97=A5, 2010-10-31 at 00:36 +0800, Lee, Chun-Yi wrote:
-> >  static acpi_status WMID_set_capabilities(void)
-> >  {
-> >  	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> > @@ -844,16 +869,24 @@ static acpi_status WMID_set_capabilities(void=
-)
-> >  		return AE_ERROR;
-> >  	}
-> > =20
-> > -	/* Not sure on the meaning of the relevant bits yet to detect the=
-se */
-> > -	interface->capability |=3D ACER_CAP_WIRELESS;
-> > -	interface->capability |=3D ACER_CAP_THREEG;
-> > +	dmi_walk(type_aa_dmi_decode, NULL);
-> > +	if (type_aa) {
-> > +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
-> > +			interface->capability |=3D ACER_CAP_WIRELESS;
-> > +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_THREEG)
-> > +			interface->capability |=3D ACER_CAP_THREEG;
-> > +		if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
-> > +			interface->capability |=3D ACER_CAP_BLUETOOTH;
-> > +	} else {
-> > +		interface->capability |=3D ACER_CAP_WIRELESS;
-> > +		interface->capability |=3D ACER_CAP_THREEG;
-> > +		if (devices & 0x10)
-> > +			interface->capability |=3D ACER_CAP_BLUETOOTH;
-> > +	}
-> > =20
->=20
-> Thank's for your review and found out cann't use a global pointer to =
-a
-> DMI record to keep track of what dmi_walk() found. I modified the pat=
-ch
-> like following:
->=20
->=20
-> >From c8f99f9856bc79aa8f525595e5ff115f3d6c3c69 Mon Sep 17 00:00:00 20=
-01
-> From: Lee, Chun-Yi <jlee@novell.com>
-> Date: Mon, 8 Nov 2010 16:40:55 +0800
-> Subject: [PATCH 4/4] Detect the WiFi/Bluetooth/3G devices available
->=20
-> Check the Acer OEM-specific Type AA to detect the WiFi/Bluetooth/3G
-> devices available or not, and set the devices capability flag.
->=20
-> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> ---
->  drivers/platform/x86/acer-wmi.c |   49 +++++++++++++++++++++++++++++=
-++++-----
->  1 files changed, 42 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index 6ac4656..dc23140 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -39,6 +39,7 @@
->  #include <linux/slab.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> +#include <linux/dmi.h>
-> =20
->  #include <acpi/acpi_drivers.h>
-> =20
-> @@ -138,7 +139,9 @@ struct lm_return_value {
->  /*
->   * GUID3 Get Device Status device flags
->   */
-> +#define ACER_WMID3_GDS_WIRELESS		(1<<0)	/* WiFi */
->  #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
-> +#define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
-> =20
->  struct wmid3_gds_input_param {	/* Get Device Status input parameter =
-*/
->  	u8 function_num;	/* Function Number */
-> @@ -153,6 +156,13 @@ struct wmid3_gds_return_value {	/* Get Device St=
-atus return value*/
->  	u32 reserved;
->  } __attribute__((packed));
-> =20
-> +struct hotkey_function_type_aa {
-> +	u8 type;
-> +	u8 length;
-> +	u16 handle;
-> +	u16 commun_func_bitmap;
-> +} __attribute__((packed));
-> +
->  /*
->   * Interface capability flags
->   */
-> @@ -184,6 +194,7 @@ static int brightness =3D -1;
->  static int threeg =3D -1;
->  static int force_series;
->  static bool ec_raw_mode;
-> +static bool has_type_aa;
-> =20
->  module_param(mailled, int, 0444);
->  module_param(brightness, int, 0444);
-> @@ -824,6 +835,28 @@ static acpi_status WMID_set_u32(u32 value, u32 c=
-ap, struct wmi_interface *iface)
->  	return WMI_execute_u32(method_id, (u32)value, NULL);
->  }
-> =20
-> +static void type_aa_dmi_decode(const struct dmi_header *header, void=
- *dummy)
-> +{
-> +	struct hotkey_function_type_aa *type_aa;
-> +
-> +	/* We are looking for OEM-specific Type AAh */
-> +	if (header->type !=3D 0xAA)
-> +		return;
-> +
-> +	has_type_aa =3D true;
-> +	type_aa =3D (struct hotkey_function_type_aa *) header;
-> +
-> +	printk(ACER_INFO "Function bitmap for Communication Button: 0x%x\n"=
-,
-> +		type_aa->commun_func_bitmap);
-> +
-> +	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
-> +		interface->capability |=3D ACER_CAP_WIRELESS;
-> +	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_THREEG)
-> +		interface->capability |=3D ACER_CAP_THREEG;
-> +	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
-> +		interface->capability |=3D ACER_CAP_BLUETOOTH;
-> +}
-> +
->  static acpi_status WMID_set_capabilities(void)
->  {
->  	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
-> @@ -844,16 +877,17 @@ static acpi_status WMID_set_capabilities(void)
->  		return AE_ERROR;
->  	}
-> =20
-> -	/* Not sure on the meaning of the relevant bits yet to detect these=
- */
-> -	interface->capability |=3D ACER_CAP_WIRELESS;
-> -	interface->capability |=3D ACER_CAP_THREEG;
-> +	dmi_walk(type_aa_dmi_decode, NULL);
-> +	if (!has_type_aa) {
-> +		interface->capability |=3D ACER_CAP_WIRELESS;
-> +		interface->capability |=3D ACER_CAP_THREEG;
-> +		if (devices & 0x10)
-> +			interface->capability |=3D ACER_CAP_BLUETOOTH;
-> +	}
-> =20
->  	/* WMID always provides brightness methods */
->  	interface->capability |=3D ACER_CAP_BRIGHTNESS;
-> =20
-> -	if (devices & 0x10)
-> -		interface->capability |=3D ACER_CAP_BLUETOOTH;
-> -
->  	if (!(devices & 0x20))
->  		max_brightness =3D 0x9;
-> =20
-> @@ -932,7 +966,8 @@ static void __init acer_commandline_init(void)
->  	 * capability isn't available on the given interface
->  	 */
->  	set_u32(mailled, ACER_CAP_MAILLED);
-> -	set_u32(threeg, ACER_CAP_THREEG);
-> +	if (!has_type_aa)
-> +		set_u32(threeg, ACER_CAP_THREEG);
->  	set_u32(brightness, ACER_CAP_BRIGHTNESS);
->  }
-> =20
+On Fri, Nov 12, 2010 at 11:25:07AM +0100, Dmitry Gubenko wrote:
+> Hello,
+> i hope this is the correct way of contacting you (i'm not really
+> familiar with communication internae of the linux kernel development
+> community).
+> 
+> I'm using  dell_wmi on my laptop (Dell Latitude e4300) which has
+> keybinds for toggling battery charging if AC adapter is available
+> (Fn+F2 and Fn+F3).
+> As far as i understand this functionality is not available as of now.
+> I get
+> dell-wmi: Received unknown WMI event (0x11)
 
-Could you please give me any suggestion for the acer-wmi patches 1/4 -
-4/4?
-Does those patches good enough for you to merge to mainline?
+Looking at the code we are only prepared to handle 0x10 events. Rezwanul
+Kabir added the code to handle newer Dells so he might have an idea what
+event 0x11 is (CCed).
 
+> when pressing Fn+F2 and no reaction when pressing Fn+F3.
+> 
 
-Thank's a lot!
-Joey Lee
+If you locate evtest utility and run it against the event device
+corresponding to dell-wmi, does it show any events? It might be that the
+driver is working but we missing userspace plumbing to react to the
+events.
+
+> My question is if there are plans to add this functionality at some point.
+> Also if there are any other information ressources about the status
+> of dell-wmi (apart from mentions in the kernel changelog) i'd be
+> grateful if you'd point me towards those.
+> 
+
+Generally such question is better asked on platform-driver-x86@vger.kernel.org
+mailing list (CCed) as they would have better idea.
+
+-- 
+Dmitry
