@@ -1,60 +1,78 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: dell-wmi -  question concerning battery charge key functionality
-Date: Fri, 12 Nov 2010 11:53:22 -0800
-Message-ID: <20101112195322.GB1299@core.coreip.homeip.net>
-References: <4CDD1603.808@googlemail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] eeepc-wmi: fix compiler warning
+Date: Sun, 14 Nov 2010 17:36:39 +0100
+Message-ID: <AANLkTin-K9jWjtM5qGPP_ZQXFJSAQFCQd9sG939nV033@mail.gmail.com>
+References: <20101103181400.GA12818@core.coreip.homeip.net>
+	<AANLkTi=4U_kE6+V13=wJM+_7=iZW3NGew=jWcddDMO+m@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:54597 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755084Ab0KLTx3 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Nov 2010 14:53:29 -0500
-Received: by iwn10 with SMTP id 10so3844827iwn.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Nov 2010 11:53:28 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <4CDD1603.808@googlemail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Gubenko <gubenko.dmitry@googlemail.com>
-Cc: Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Platform Driver x86 <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AANLkTi=4U_kE6+V13=wJM+_7=iZW3NGew=jWcddDMO+m@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Chris Bagwell <chris@cnpbagwell.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Dmitry,
+On Wed, Nov 3, 2010 at 7:43 PM, Chris Bagwell <chris@cnpbagwell.com> wr=
+ote:
+> On Wed, Nov 3, 2010 at 1:14 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> This fixes the following:
+>>
+>> =C2=A0CC [M] =C2=A0drivers/platform/x86/eeepc-wmi.o
+>> drivers/platform/x86/eeepc-wmi.c:322: warning: initialization from i=
+ncompatible pointer type
+>>
+>> Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
+>> ---
+>>
+>> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 =C2=A04 ++--
+>> =C2=A01 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>>
+>> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86=
+/eeepc-wmi.c
+>> index 462ceab..0d50fbb 100644
+>> --- a/drivers/platform/x86/eeepc-wmi.c
+>> +++ b/drivers/platform/x86/eeepc-wmi.c
+>> @@ -298,8 +298,8 @@ static void eeepc_wmi_notify(u32 value, void *co=
+ntext)
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0kfree(obj);
+>> =C2=A0}
+>>
+>> -static int store_cpufv(struct device *dev, struct device_attribute =
+*attr,
+>> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0const char *buf, size_t count)
+>> +static ssize_t store_cpufv(struct device *dev, struct device_attrib=
+ute *attr,
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0const char *buf, size_t count)
+>> =C2=A0{
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0int value;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct acpi_buffer input =3D { (acpi_size=
+)sizeof(value), &value };
+>> --
+>
+> Opps. =C2=A0Sorry, I missed that warning. =C2=A0ssize_t is obviously =
+correct return value.
+>
+> Reviewed-by: Chris Bagwell <chris@cnpbagwell.com>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
+ml
+>
 
-On Fri, Nov 12, 2010 at 11:25:07AM +0100, Dmitry Gubenko wrote:
-> Hello,
-> i hope this is the correct way of contacting you (i'm not really
-> familiar with communication internae of the linux kernel development
-> community).
-> 
-> I'm using  dell_wmi on my laptop (Dell Latitude e4300) which has
-> keybinds for toggling battery charging if AC adapter is available
-> (Fn+F2 and Fn+F3).
-> As far as i understand this functionality is not available as of now.
-> I get
-> dell-wmi: Received unknown WMI event (0x11)
+Just queued the same patch on my repo, I should have read the list firs=
+t.
 
-Looking at the code we are only prepared to handle 0x10 events. Rezwanul
-Kabir added the code to handle newer Dells so he might have an idea what
-event 0x11 is (CCed).
+Matthew can you queue this one for next batch ?
+Thanks,
 
-> when pressing Fn+F2 and no reaction when pressing Fn+F3.
-> 
-
-If you locate evtest utility and run it against the event device
-corresponding to dell-wmi, does it show any events? It might be that the
-driver is working but we missing userspace plumbing to react to the
-events.
-
-> My question is if there are plans to add this functionality at some point.
-> Also if there are any other information ressources about the status
-> of dell-wmi (apart from mentions in the kernel changelog) i'd be
-> grateful if you'd point me towards those.
-> 
-
-Generally such question is better asked on platform-driver-x86@vger.kernel.org
-mailing list (CCed) as they would have better idea.
-
--- 
-Dmitry
+--=20
+Corentin Chary
+http://xf.iksaif.net
