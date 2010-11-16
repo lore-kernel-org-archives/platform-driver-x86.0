@@ -1,31 +1,35 @@
-From: <amandasaleeby1@centrum.sk>
-Subject: hello
-Date: Mon, 15 Nov 2010 17:25:52 +0100
-Message-ID: <201011151725.24399@centrum.cz>
+From: "Jozef Ruud Roosevelt" <"jozef@"@admin.in.th>
+Subject: Re: Attention Please.
+Date: Tue, 16 Nov 2010 13:07:08 -0300 (BRT)
+Message-ID: <f7a929e38cb8a53d391e29910c91b983.squirrel@webmail.dfte.ufrn.br>
+Reply-To: jozef_rosevelt@admin.in.th
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from farizej.centrum.cz ([90.183.38.130]:40271 "EHLO
-	farizej.centrum.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757919Ab0KOQZ5 (ORCPT
+Received: from fisica.dfte.ufrn.br ([200.19.173.16]:36266 "EHLO
+	fisica.dfte.ufrn.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754759Ab0KPQUT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Nov 2010 11:25:57 -0500
-Received: by mail255.centrum.cz id S50334626Ab0KOQZw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Nov 2010 17:25:52 +0100
+	Tue, 16 Nov 2010 11:20:19 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: amandasaleeby1 <amandasaleeby1@centrum.sk>
 
-hello with love and trust
-my dearest friend compliment of the day to you.my name is Amanda favour a
-girl of 23years old honest trusting kind caring loving and fun with
-compassionate and generous nature viewing your email address which really interest
-me to know more about you that is having communication friendship with you
-if you will have the desire with me.so that we can get to know each other
-better sharing feelings and thought together .i will like you to write me
-through my email for easiest communication.i will be waiting to read from
-you.I will be waiting for your mail;please make sure you replied to me with the email address below,it is very confidential and private,thanks and have a nice day.
-here is my email address
-Amandasaleeby@she.com
+
+
+
+Attention Please,
+
+I am Jozef Ruud Roosevelt, a Dutch National presently residing in
+Newcastle United Kingdom, I have a proposition Involving an investment
+initiative in your country economy  to discuss with you, It will be of
+mutual benefit to both of us, and I believe we can handle it together,
+once we have a common understanding and mutual cooperation in the
+execution of the modalities. I work with Abn Amro Bank as an auditor.
+
+Should you be interested, please e-mail back to me through this email
+address: (jozef.rosevelt@yahoo.co.uk).
+I await your earliest response.
+
+Yours Sincerely,
+Jozef Ruud Roosevel.
