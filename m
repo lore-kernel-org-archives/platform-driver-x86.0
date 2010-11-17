@@ -1,35 +1,28 @@
-From: "Jozef Ruud Roosevelt" <"jozef@"@admin.in.th>
-Subject: Re: Attention Please.
-Date: Tue, 16 Nov 2010 13:07:08 -0300 (BRT)
-Message-ID: <f7a929e38cb8a53d391e29910c91b983.squirrel@webmail.dfte.ufrn.br>
-Reply-To: jozef_rosevelt@admin.in.th
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH 0/3] ideapad: hotkey enablement
+Date: Wed, 17 Nov 2010 14:59:25 +0800
+Message-ID: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fisica.dfte.ufrn.br ([200.19.173.16]:36266 "EHLO
-	fisica.dfte.ufrn.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754759Ab0KPQUT (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:55575 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756765Ab0KQG7c (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Nov 2010 11:20:19 -0500
+	Wed, 17 Nov 2010 01:59:32 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>
 
+Here are the enablement patches for hotkey events on ideapads and these patches
+are made against current checkout of mainline kernel.
 
+These patches are available in the git repository at:
+  git://kernel.ubuntu.com/ikepanhc/ideapad-laptop.git ideapad-laptop
 
+Ike Panhc (3):
+  ideapad: add platform driver for ideapad
+  ideapad: let camera power control entry under platform driver
+  ideapad: add hotkey support
 
-Attention Please,
-
-I am Jozef Ruud Roosevelt, a Dutch National presently residing in
-Newcastle United Kingdom, I have a proposition Involving an investment
-initiative in your country economy  to discuss with you, It will be of
-mutual benefit to both of us, and I believe we can handle it together,
-once we have a common understanding and mutual cooperation in the
-execution of the modalities. I work with Abn Amro Bank as an auditor.
-
-Should you be interested, please e-mail back to me through this email
-address: (jozef.rosevelt@yahoo.co.uk).
-I await your earliest response.
-
-Yours Sincerely,
-Jozef Ruud Roosevel.
+ drivers/platform/x86/ideapad-laptop.c |  174 ++++++++++++++++++++++++++-------
+ 1 files changed, 140 insertions(+), 34 deletions(-)
