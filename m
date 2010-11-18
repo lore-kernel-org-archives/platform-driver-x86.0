@@ -1,76 +1,42 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: [PATCH 2/2] msi-wmi: fix semantically incorrect use of keycode instead of scancode
-Date: Thu, 18 Nov 2010 13:00:54 +0100
-Message-ID: <1290081655-13945-2-git-send-email-anisse@astier.eu>
-References: <1290081655-13945-1-git-send-email-anisse@astier.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Zeng Zhaoming <zengzm.kernel@gmail.com>
+Subject: [PATCH] ACPI, hp-wmi: Fix memory leak in acpi query
+Date: Fri, 19 Nov 2010 00:46:19 +0800
+Message-ID: <1290098779-2145-1-git-send-email-zengzm.kernel@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp4-g21.free.fr ([212.27.42.4]:54895 "EHLO smtp4-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751332Ab0KRMGs (ORCPT
+Received: from mail-px0-f174.google.com ([209.85.212.174]:52128 "EHLO
+	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759903Ab0KRQqq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Nov 2010 07:06:48 -0500
-In-Reply-To: <1290081655-13945-1-git-send-email-anisse@astier.eu>
+	Thu, 18 Nov 2010 11:46:46 -0500
+Received: by pxi15 with SMTP id 15so794741pxi.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Nov 2010 08:46:45 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Anisse Astier <anisse@astier.eu>
+Cc: mjg@redhat.com, Zeng Zhaoming <zengzm.kernel@gmail.com>
 
-I didn't know the difference between the two when I=C2=A0wrote this cod=
-e in
-commit c30116c6f0d26cd6e46dfa578163d573ef4730b2.
+Free acpi return memory after query.
 
-Signed-off-by: Anisse Astier <anisse@astier.eu>
+Signed-off-by: Zeng Zhaoming <zengzm.kernel@gmail.com>
 ---
- drivers/platform/x86/msi-wmi.c |   16 ++++++++--------
- 1 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/platform/x86/hp-wmi.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 drivers/platform/x86/hp-wmi.c
 
-diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-=
-wmi.c
-index bde607d..35278ad 100644
---- a/drivers/platform/x86/msi-wmi.c
-+++ b/drivers/platform/x86/msi-wmi.c
-@@ -43,12 +43,12 @@ MODULE_ALIAS("wmi:B6F3EEF2-3D2F-49DC-9DE3-85BCE18C6=
-2F2");
-=20
- #define dprintk(msg...) pr_debug(DRV_PFX msg)
-=20
--#define KEYCODE_BASE 0xD0
--#define MSI_WMI_BRIGHTNESSUP   KEYCODE_BASE
--#define MSI_WMI_BRIGHTNESSDOWN (KEYCODE_BASE + 1)
--#define MSI_WMI_VOLUMEUP       (KEYCODE_BASE + 2)
--#define MSI_WMI_VOLUMEDOWN     (KEYCODE_BASE + 3)
--#define MSI_WMI_MUTE           (KEYCODE_BASE + 4)
-+#define SCANCODE_BASE 0xD0
-+#define MSI_WMI_BRIGHTNESSUP   SCANCODE_BASE
-+#define MSI_WMI_BRIGHTNESSDOWN (SCANCODE_BASE + 1)
-+#define MSI_WMI_VOLUMEUP       (SCANCODE_BASE + 2)
-+#define MSI_WMI_VOLUMEDOWN     (SCANCODE_BASE + 3)
-+#define MSI_WMI_MUTE           (SCANCODE_BASE + 4)
- static struct key_entry msi_wmi_keymap[] =3D {
- 	{ KE_KEY, MSI_WMI_BRIGHTNESSUP,   {KEY_BRIGHTNESSUP} },
- 	{ KE_KEY, MSI_WMI_BRIGHTNESSDOWN, {KEY_BRIGHTNESSDOWN} },
-@@ -171,7 +171,7 @@ static void msi_wmi_notify(u32 value, void *context=
-)
- 			ktime_t diff;
- 			cur =3D ktime_get_real();
- 			diff =3D ktime_sub(cur, last_pressed[key->code -
--					KEYCODE_BASE]);
-+					SCANCODE_BASE]);
- 			/* Ignore event if the same event happened in a 50 ms
- 			   timeframe -> Key press may result in 10-20 GPEs */
- 			if (ktime_to_us(diff) < 1000 * 50) {
-@@ -180,7 +180,7 @@ static void msi_wmi_notify(u32 value, void *context=
-)
- 					 key->code, ktime_to_us(diff));
- 				return;
- 			}
--			last_pressed[key->code - KEYCODE_BASE] =3D cur;
-+			last_pressed[key->code - SCANCODE_BASE] =3D cur;
-=20
- 			if (key->type =3D=3D KE_KEY &&
- 			/* Brightness is served via acpi video driver */
---=20
-1.7.0.6
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+old mode 100644
+new mode 100755
+index 1dac659..9e05af9
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -172,6 +172,8 @@ static int hp_wmi_perform_query(int query, int write, u32 *buffer,
+ 	bios_return = *((struct bios_return *)obj->buffer.pointer);
+ 
+ 	memcpy(buffer, &bios_return.value, sizeof(bios_return.value));
++
++	kfree(obj);
+ 	return 0;
+ }
+ 
+-- 
+1.7.0.4
