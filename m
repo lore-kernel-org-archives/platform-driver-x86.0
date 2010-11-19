@@ -1,42 +1,144 @@
-From: Zeng Zhaoming <zengzm.kernel@gmail.com>
-Subject: [PATCH] ACPI, hp-wmi: Fix memory leak in acpi query
-Date: Fri, 19 Nov 2010 00:46:19 +0800
-Message-ID: <1290098779-2145-1-git-send-email-zengzm.kernel@gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 3/3] ideapad: add hotkey support
+Date: Fri, 19 Nov 2010 15:09:47 +0800
+Message-ID: <4CE622BB.4070607@canonical.com>
+References: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>	<1289977238-15113-1-git-send-email-ike.pan@canonical.com>	<20101117212943.GA6661@core.coreip.homeip.net> <AANLkTim1DKZkCqB1mLg5=7UTd2szCoSS_DSO8v3jHTmy@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f174.google.com ([209.85.212.174]:52128 "EHLO
-	mail-px0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759903Ab0KRQqq (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:60464 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750899Ab0KSHJ4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Nov 2010 11:46:46 -0500
-Received: by pxi15 with SMTP id 15so794741pxi.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Nov 2010 08:46:45 -0800 (PST)
+	Fri, 19 Nov 2010 02:09:56 -0500
+In-Reply-To: <AANLkTim1DKZkCqB1mLg5=7UTd2szCoSS_DSO8v3jHTmy@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: mjg@redhat.com, Zeng Zhaoming <zengzm.kernel@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>
 
-Free acpi return memory after query.
+On 11/18/2010 03:35 PM, Corentin Chary wrote:
+> On Wed, Nov 17, 2010 at 10:29 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> On Wed, Nov 17, 2010 at 03:00:38PM +0800, Ike Panhc wrote:
+>>> Hotkey enabled by this patch:
+>>>   Fn+F3: Video mode switch
+>>>   Fn+F5: software rfkill for wifi
+>>>
+>>> For some ideapad when push Fn+F3, hardware generates Super-P keys, those key
+>>> will not be enabled by this patch.
+>>>
+>>> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+>>> ---
+>>>  drivers/platform/x86/ideapad-laptop.c |   74 +++++++++++++++++++++++++++++++++
+>>>  1 files changed, 74 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>> index d75c21f..d397034 100644
+>>> --- a/drivers/platform/x86/ideapad-laptop.c
+>>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> @@ -28,6 +28,8 @@
+>>>  #include <acpi/acpi_drivers.h>
+>>>  #include <linux/rfkill.h>
+>>>  #include <linux/platform_device.h>
+>>> +#include <linux/input.h>
+>>> +#include <linux/input/sparse-keymap.h>
+>>>
+>>>  #define IDEAPAD_DEV_CAMERA   0
+>>>  #define IDEAPAD_DEV_WLAN     1
+>>> @@ -39,6 +41,7 @@ struct ideapad_private {
+>>>       acpi_handle handle;
+>>>       struct rfkill *rfk[5];
+>>>       struct platform_device *platform_device;
+>>> +     struct input_dev *inputdev;
+>>>  } *ideapad_priv;
+>>>
+>>>  static struct {
+>>> @@ -325,6 +328,68 @@ static void ideapad_platform_exit(void)
+>>>  }
+>>>  /* the above is platform device */
+>>>
+>>> +/*
+>>> + * input device
+>>> + */
+>>> +static const struct key_entry ideapad_keymap[] = {
+>>> +     { KE_KEY, 0x06, { KEY_SWITCHVIDEOMODE } },
+>>> +     { KE_KEY, 0x0D, { KEY_WLAN } },
+>>> +     { KE_END, 0 },
+>>> +};
+>>> +
+>>> +static int ideapad_input_init(void)
+>>
+>> __devinit?
+>>
+>>> +{
+>>> +     struct input_dev *inputdev;
+>>> +     int error;
+>>> +
+>>> +     inputdev = input_allocate_device();
+>>> +     if (!inputdev) {
+>>> +             pr_info("Unable to allocate input device\n");
+>>> +             return -ENOMEM;
+>>> +     }
+>>> +
+>>> +     inputdev->name = "Ideapad extra buttons";
+>>> +     inputdev->phys = "ideapad/input0";
+>>> +     inputdev->id.bustype = BUS_HOST;
+>>> +     inputdev->dev.parent = &ideapad_priv->platform_device->dev;
+>>> +
+>>> +     error = sparse_keymap_setup(inputdev, ideapad_keymap, NULL);
+>>> +     if (error) {
+>>> +             pr_err("Unable to setup input device keymap\n");
+>>> +             goto err_free_dev;
+>>> +     }
+>>> +
+>>> +     error = input_register_device(inputdev);
+>>> +     if (error) {
+>>> +             pr_err("Unable to register input device\n");
+>>> +             goto err_free_keymap;
+>>> +     }
+>>> +
+>>> +     ideapad_priv->inputdev = inputdev;
+>>
+>> Why don't you pass ideapad_priv in as an argument instead of relying on
+>> global. I know that there can only be one, but then why do you have a
+>> structure?
+> 
+> That may allow to remove the global later, like we did on
+> eeepc-laptop/asus-laptop.
 
-Signed-off-by: Zeng Zhaoming <zengzm.kernel@gmail.com>
----
- drivers/platform/x86/hp-wmi.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
- mode change 100644 => 100755 drivers/platform/x86/hp-wmi.c
+I am ok to go though the driver and try to avoid using global variable.
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-old mode 100644
-new mode 100755
-index 1dac659..9e05af9
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -172,6 +172,8 @@ static int hp_wmi_perform_query(int query, int write, u32 *buffer,
- 	bios_return = *((struct bios_return *)obj->buffer.pointer);
- 
- 	memcpy(buffer, &bios_return.value, sizeof(bios_return.value));
-+
-+	kfree(obj);
- 	return 0;
- }
- 
--- 
-1.7.0.4
+Other feedbacks is easy done, so I will fix them first..
+
+> 
+>>> +     return 0;
+>>> +
+>>> +err_free_keymap:
+>>> +     sparse_keymap_free(inputdev);
+>>> +err_free_dev:
+>>> +     input_free_device(inputdev);
+>>> +     return error;
+>>> +}
+>>> +
+>>> +static void ideapad_input_exit(void)
+>>
+>> __devexit? The rest of the driver might user these markups as well.
+>>
+>>> +{
+>>> +     if (ideapad_priv->inputdev) {
+>>> +             sparse_keymap_free(ideapad_priv->inputdev);
+>>> +             input_unregister_device(ideapad_priv->inputdev);
+>>> +     }
+>>> +     ideapad_priv->inputdev = NULL;
+>>
+>> You fail driver initialization when ideapad_input_init() fails so there
+>> is no point in checking whether ideapad_priv->inputdev is null or not.
+>>
+>> Otherwise looks good from input POV.
+>>
+>> Thanks.
+> 
+> 
+> 
