@@ -1,241 +1,69 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] WMI: Cater for multiple events with same GUID
-Date: Fri, 19 Nov 2010 15:40:02 +0000
-Message-ID: <1290181202-9439-1-git-send-email-colin.king@canonical.com>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: eeepc: rfkill on 900A defunct
+Date: Wed, 24 Nov 2010 15:53:35 +0100
+Message-ID: <4CED26EF.5000109@suse.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:37414 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754831Ab0KSPkF (ORCPT
+Received: from mail-bw0-f46.google.com ([209.85.214.46]:56628 "EHLO
+	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753125Ab0KXOxo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 19 Nov 2010 10:40:05 -0500
+	Wed, 24 Nov 2010 09:53:44 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+To: mjg@redhat.com
+Cc: corentincj@iksaif.net, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-WMI data blocks can contain WMI events with the same GUID but with
-different notifiy_ids, for example volume up/down hotkeys.
-This patch enables a single event handler to be registered and
-unregistered against all events with same GUID but different
-notify_ids.  Since an event handler is passed the notify_id of
-an event it can can differentiate between the different events.
+Hi,
 
-The patch also ensures we only register and unregister a device per
-unique GUID.
+there is a 900A model out there with wifi at the 2nd bus:
+02:00.0 Ethernet controller [0200]: Atheros Communications Inc. AR5001
+Wireless Network Adapter [168c:001c] (rev 01)
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/platform/x86/wmi.c |  135 ++++++++++++++++++++++++--------------------
- 1 files changed, 73 insertions(+), 62 deletions(-)
+but without hotplug support (pciehp cannot be bound to it). However the
+eeepc-laptop driver expects the wifi on the 1st bus (pci_find_bus(0,
+1)), so it operates on a NIC on this machine instead of wifi.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 104b77c..67a21a2 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -549,21 +549,34 @@ acpi_status wmi_install_notify_handler(const char *guid,
- wmi_notify_handler handler, void *data)
+Changing the code to pci_find_bus(0, 2) indeed fixes the problem, but I
+see no way how to determine when to do this. model == "900A" seems to be
+wrong, because there are other 900A devices which work OK with bus == 1.
+
+Any ideas?
+
+lspci -vvnnxxx:
+https://bugzillafiles.novell.org/attachment.cgi?id=370529
+dmidecode:
+https://bugzillafiles.novell.org/attachment.cgi?id=401633
+dmesg:
+https://bugzillafiles.novell.org/attachment.cgi?id=370538
+
+The workaround for such machines:
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -588,7 +588,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop
+*eeepc)
+        mutex_lock(&eeepc->hotplug_lock);
+
+        if (eeepc->hotplug_slot) {
+-               bus = pci_find_bus(0, 1);
++               bus = pci_find_bus(0, 2);
+                if (!bus) {
+                        pr_warning("Unable to find PCI bus 1?\n");
+                        goto out_unlock;
+@@ -714,7 +714,7 @@ static struct hotplug_slot_ops
+eeepc_hotplug_slot_ops = {
+ static int eeepc_setup_pci_hotplug(struct eeepc_laptop *eeepc)
  {
- 	struct wmi_block *block;
--	acpi_status status;
-+	acpi_status status = AE_NOT_EXIST;
-+	char tmp[16], guid_input[16];
-+	struct list_head *p;
- 
- 	if (!guid || !handler)
- 		return AE_BAD_PARAMETER;
- 
--	if (!find_guid(guid, &block))
--		return AE_NOT_EXIST;
-+	wmi_parse_guid(guid, tmp);
-+	wmi_swap_bytes(tmp, guid_input);
- 
--	if (block->handler && block->handler != wmi_notify_debug)
--		return AE_ALREADY_ACQUIRED;
-+	list_for_each(p, &wmi_block_list) {
-+		acpi_status wmi_status;
-+		block = list_entry(p, struct wmi_block, list);
- 
--	block->handler = handler;
--	block->handler_data = data;
-+		if (memcmp(block->gblock.guid, guid_input, 16) == 0) {
-+			if (block->handler &&
-+			    block->handler != wmi_notify_debug)
-+				return AE_ALREADY_ACQUIRED;
- 
--	status = wmi_method_enable(block, 1);
-+			block->handler = handler;
-+			block->handler_data = data;
-+
-+			wmi_status = wmi_method_enable(block, 1);
-+			if ((wmi_status != AE_OK) ||
-+			    ((wmi_status == AE_OK) && (status == AE_NOT_EXIST)))
-+				status = wmi_status;
-+		}
-+	}
- 
- 	return status;
- }
-@@ -577,24 +590,40 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
- acpi_status wmi_remove_notify_handler(const char *guid)
- {
- 	struct wmi_block *block;
--	acpi_status status = AE_OK;
-+	acpi_status status = AE_NOT_EXIST;
-+	char tmp[16], guid_input[16];
-+	struct list_head *p;
- 
- 	if (!guid)
- 		return AE_BAD_PARAMETER;
- 
--	if (!find_guid(guid, &block))
--		return AE_NOT_EXIST;
-+	wmi_parse_guid(guid, tmp);
-+	wmi_swap_bytes(tmp, guid_input);
- 
--	if (!block->handler || block->handler == wmi_notify_debug)
--		return AE_NULL_ENTRY;
-+	list_for_each(p, &wmi_block_list) {
-+		acpi_status wmi_status;
-+		block = list_entry(p, struct wmi_block, list);
- 
--	if (debug_event) {
--		block->handler = wmi_notify_debug;
--	} else {
--		status = wmi_method_enable(block, 0);
--		block->handler = NULL;
--		block->handler_data = NULL;
-+		if (memcmp(block->gblock.guid, guid_input, 16) == 0) {
-+			if (!block->handler ||
-+			    block->handler == wmi_notify_debug)
-+				return AE_NULL_ENTRY;
-+
-+			if (debug_event) {
-+				block->handler = wmi_notify_debug;
-+				status = AE_OK;
-+			} else {
-+				wmi_status = wmi_method_enable(block, 0);
-+				block->handler = NULL;
-+				block->handler_data = NULL;
-+				if ((wmi_status != AE_OK) ||
-+				    ((wmi_status == AE_OK) &&
-+				     (status == AE_NOT_EXIST)))
-+					status = wmi_status;
-+			}
-+		}
- 	}
-+
- 	return status;
- }
- EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
-@@ -705,22 +734,11 @@ static struct class wmi_class = {
- 	.dev_attrs = wmi_dev_attrs,
- };
- 
--static struct wmi_block *wmi_create_device(const struct guid_block *gblock,
--					   acpi_handle handle)
-+static int wmi_create_device(const struct guid_block *gblock,
-+			     struct wmi_block *wblock, acpi_handle handle)
- {
--	struct wmi_block *wblock;
--	int error;
- 	char guid_string[37];
- 
--	wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
--	if (!wblock) {
--		error = -ENOMEM;
--		goto err_out;
--	}
--
--	wblock->handle = handle;
--	wblock->gblock = *gblock;
--
- 	wblock->dev.class = &wmi_class;
- 
- 	wmi_gtoa(gblock->guid, guid_string);
-@@ -728,17 +746,7 @@ static struct wmi_block *wmi_create_device(const struct guid_block *gblock,
- 
- 	dev_set_drvdata(&wblock->dev, wblock);
- 
--	error = device_register(&wblock->dev);
--	if (error)
--		goto err_free;
--
--	list_add_tail(&wblock->list, &wmi_block_list);
--	return wblock;
--
--err_free:
--	kfree(wblock);
--err_out:
--	return ERR_PTR(error);
-+	return device_register(&wblock->dev);
- }
- 
- static void wmi_free_devices(void)
-@@ -747,7 +755,8 @@ static void wmi_free_devices(void)
- 
- 	/* Delete devices for all the GUIDs */
- 	list_for_each_entry_safe(wblock, next, &wmi_block_list, list)
--		device_unregister(&wblock->dev);
-+		if (wblock->dev.class)
-+			device_unregister(&wblock->dev);
- }
- 
- static bool guid_already_parsed(const char *guid_string)
-@@ -770,7 +779,6 @@ static acpi_status parse_wdg(acpi_handle handle)
- 	union acpi_object *obj;
- 	const struct guid_block *gblock;
- 	struct wmi_block *wblock;
--	char guid_string[37];
- 	acpi_status status;
- 	int retval;
- 	u32 i, total;
-@@ -792,28 +800,31 @@ static acpi_status parse_wdg(acpi_handle handle)
- 	total = obj->buffer.length / sizeof(struct guid_block);
- 
- 	for (i = 0; i < total; i++) {
-+		if (debug_dump_wdg)
-+			wmi_dump_wdg(&gblock[i]);
-+
-+		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
-+		if (!wblock)
-+			return AE_NO_MEMORY;
-+
-+		wblock->handle = handle;
-+		wblock->gblock = gblock[i];
-+
- 		/*
- 		  Some WMI devices, like those for nVidia hooks, have a
- 		  duplicate GUID. It's not clear what we should do in this
--		  case yet, so for now, we'll just ignore the duplicate.
--		  Anyone who wants to add support for that device can come
--		  up with a better workaround for the mess then.
-+		  case yet, so for now, we'll just ignore the duplicate
-+		  for device creation.
- 		*/
--		if (guid_already_parsed(gblock[i].guid) == true) {
--			wmi_gtoa(gblock[i].guid, guid_string);
--			pr_info("Skipping duplicate GUID %s\n", guid_string);
--			continue;
-+		if (!guid_already_parsed(gblock[i].guid)) {
-+			retval = wmi_create_device(&gblock[i], wblock, handle);
-+			if (retval) {
-+				wmi_free_devices();
-+				break;
-+			}
- 		}
- 
--		if (debug_dump_wdg)
--			wmi_dump_wdg(&gblock[i]);
--
--		wblock = wmi_create_device(&gblock[i], handle);
--		if (IS_ERR(wblock)) {
--			retval = PTR_ERR(wblock);
--			wmi_free_devices();
--			break;
--		}
-+		list_add_tail(&wblock->list, &wmi_block_list);
- 
- 		if (debug_event) {
- 			wblock->handler = wmi_notify_debug;
+        int ret = -ENOMEM;
+-       struct pci_bus *bus = pci_find_bus(0, 1);
++       struct pci_bus *bus = pci_find_bus(0, 2);
+
+        if (!bus) {
+                pr_err("Unable to find wifi PCI bus\n");
+
+thanks,
 -- 
-1.7.0.4
+js
+suse labs
