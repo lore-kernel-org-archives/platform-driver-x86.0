@@ -1,24 +1,24 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] eeepc-wmi: fix compiler warning
-Date: Wed, 24 Nov 2010 16:52:23 +0000
-Message-ID: <20101124165223.GF2150@srcf.ucam.org>
-References: <20101103181400.GA12818@core.coreip.homeip.net>
+Subject: Re: [PATCH] asus-laptop: add wimax and wwan support
+Date: Wed, 24 Nov 2010 16:52:35 +0000
+Message-ID: <20101124165235.GG2150@srcf.ucam.org>
+References: <1289752812-8659-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:37311 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:37323 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755486Ab0KXQw2 (ORCPT
+	with ESMTP id S1754012Ab0KXQwi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 24 Nov 2010 11:52:28 -0500
+	Wed, 24 Nov 2010 11:52:38 -0500
 Content-Disposition: inline
-In-Reply-To: <20101103181400.GA12818@core.coreip.homeip.net>
+In-Reply-To: <1289752812-8659-1-git-send-email-corentincj@iksaif.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org
 
-Applied, thanks.
+Appled, thanks.
 
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
