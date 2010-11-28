@@ -1,62 +1,44 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: toshiba_acpi.c: Full TOS1900 device support
-Date: Sat, 27 Nov 2010 17:44:04 -0700
-Message-ID: <AANLkTinaR4MbArfs20xLZMUjTa32sSLZfzRrnApgiGqS@mail.gmail.com>
-References: <AANLkTikff5b9zhCLEmyoHZPTPaREuHE1qp21SLA0v=83@mail.gmail.com>
-	<20101026192028.GA17880@srcf.ucam.org>
-	<AANLkTinmsNzAkp_ZGcaNyVRVMu0Rc4-C+xPKuSOS5jRJ@mail.gmail.com>
-	<20101027192913.GA14828@srcf.ucam.org>
-	<AANLkTin94udpwFkH+yqH95fu9Q=WCu2u80_DaHHp+zyR@mail.gmail.com>
-	<20101124191711.GA6198@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Subject: [PATCH] wmi: use memcmp instead of strncmp to compare GUIDs
+Date: Sun, 28 Nov 2010 19:46:50 -0200
+Message-ID: <1290980810-5903-1-git-send-email-cascardo@holoscopio.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:61174 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753725Ab0K1AoG (ORCPT
+Received: from liberdade2.minaslivre.org ([74.50.53.203]:39536 "EHLO
+	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751772Ab0K1VyX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 27 Nov 2010 19:44:06 -0500
-In-Reply-To: <20101124191711.GA6198@srcf.ucam.org>
+	Sun, 28 Nov 2010 16:54:23 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mjg@redhat.com, carlos@strangeworlds.co.uk, stable@kernel.org, ceolin@ulevel.com, Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 
-Hi there,
+While looking for the duplicates in /sys/class/wmi/, I couldn't find
+them. The code that looks for duplicates uses strncmp in a binary GUID,
+which may contain zero bytes. The right function is memcmp, which is
+also used in another section of wmi code.
 
-Sorry for the late reply.
+It was finding 49142400-C6A3-40FA-BADB-8A2652834100 as a duplicate of
+39142400-C6A3-40FA-BADB-8A2652834100. Since the first byte is the fourth
+printed, they were found as equal by strncmp.
 
-On Wed, Nov 24, 2010 at 12:17 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> Can you try this (entirely untested) patch and see if it works on your
-> system? It's basically your code, but with some of the conditionals
-> cleaned up when we already know that information.
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+---
+ drivers/platform/x86/wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-The patch works, however, I added a couple lines in order to make it work
-on my laptop:
-
-In toshiba_acpi_query_event:
-       status = execute_acpi_method(toshiba_acpi.acpi_dev->handle, "INFO",
-				    NULL, hotkey);
-
-Here, the handle should be the ACPI device, not the EC
-
-In toshiba_acpi_add:
-	/* enable hotkey event */
-	hci_write1(HCI_HOTKEY_EVENT, 1, &hci_result);
-
-My model (and a couple others) the ENAB method is empty, and hotkey
-activation is done via HCI_HOTKEY_EVENT
-
-
-Another thing that I've noticed is that "device->device_type" is always zero
-for me, I thought that it was supposed to be 1, due to  {"TOS1900", 1}.
-So I changed the comparison value to 0 in order to get the hotkeys
-reported.
-
-
-Saludos
-Azael
-
-
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 104b77c..aecd9a9 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -755,7 +755,7 @@ static bool guid_already_parsed(const char *guid_string)
+ 	struct wmi_block *wblock;
+ 
+ 	list_for_each_entry(wblock, &wmi_block_list, list)
+-		if (strncmp(wblock->gblock.guid, guid_string, 16) == 0)
++		if (memcmp(wblock->gblock.guid, guid_string, 16) == 0)
+ 			return true;
+ 
+ 	return false;
 -- 
--- El mundo apesta y vosotros apestais tambien --
+1.7.2.3
