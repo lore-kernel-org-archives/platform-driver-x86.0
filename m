@@ -1,121 +1,101 @@
-From: Tim Gardner <tim.gardner@canonical.com>
-Subject: Sony Vaio wwan not powered by default
-Date: Mon, 29 Nov 2010 13:43:14 -0700
-Message-ID: <4CF41062.4090009@canonical.com>
-Reply-To: tim.gardner@canonical.com
+From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Subject: Re: Input event for blocking touchpad
+Date: Mon, 29 Nov 2010 23:56:40 -0200
+Message-ID: <20101130015639.GA3568@barata.holoscopio.com>
+References: <20101126211056.GD3819@barata.holoscopio.com>
+ <1291080853.3283.282.camel@rui>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------060102060008090002070304"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.tpi.com ([70.99.223.143]:3664 "EHLO mail.tpi.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752361Ab0K2VEh (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Nov 2010 16:04:37 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
-
-This is a multi-part message in MIME format.
---------------060102060008090002070304
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Ubuntu has been carrying the attached patch since 2.6.28. Shouldn't it 
-be upstream?
-
-rtg
--- 
-Tim Gardner tim.gardner@canonical.com
-
---------------060102060008090002070304
-Content-Type: text/x-patch;
- name="0001-UBUNTU-Sony-laptop-Some-Sony-Vaia-laptops-do-not-ena.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-UBUNTU-Sony-laptop-Some-Sony-Vaia-laptops-do-not-ena.pa";
- filename*1="tch"
-
-From eefc0ee441bced58ed07234008f5d82203ea2669 Mon Sep 17 00:00:00 2001
-From: Tim Gardner <tim.gardner@canonical.com>
-Date: Tue, 21 Apr 2009 11:09:10 -0600
-Subject: [PATCH] UBUNTU: Sony laptop: Some Sony Vaia laptops do not enable wwan power by default.
-
-Bug: https://bugs.launchpad.net/bugs/364678
-
-Added quirk to enable wwan power based on DMI information already present in the module.
-It appears that Vaio's do not enable power to wwan from a cold boot.
-
-Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
----
- drivers/platform/x86/sony-laptop.c |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index f200677..b185b6b 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1450,6 +1450,10 @@ struct sonypi_eventtypes {
- 	struct sonypi_event	*events;
- };
- 
-+struct sony_pic_quirk_entry {
-+	u8				set_wwan_power;
-+};
-+
- struct sony_pic_dev {
- 	struct acpi_device		*acpi_dev;
- 	struct sony_pic_irq		*cur_irq;
-@@ -1460,6 +1464,7 @@ struct sony_pic_dev {
- 	struct sonypi_eventtypes	*event_types;
- 	int                             (*handle_irq)(const u8, const u8);
- 	int				model;
-+	struct sony_pic_quirk_entry	*quirks;
- 	u16				evport_offset;
- 	u8				camera_power;
- 	u8				bluetooth_power;
-@@ -2891,6 +2896,12 @@ static int sony_pic_add(struct acpi_device *device)
- 	if (result)
- 		goto err_remove_pf;
- 
-+	if (spic_dev.quirks && spic_dev.quirks->set_wwan_power) {
-+		/*
-+		 * Power isn't enabled by default.
-+		 */
-+		__sony_pic_set_wwanpower(1);
-+	}
- 	return 0;
- 
- err_remove_pf:
-@@ -2961,6 +2972,16 @@ static struct acpi_driver sony_pic_driver = {
- 		},
- };
- 
-+static struct sony_pic_quirk_entry sony_pic_vaio_vgn = {
-+	.set_wwan_power = 1,
-+};
-+
-+static int dmi_matched(const struct dmi_system_id *dmi)
-+{
-+	spic_dev.quirks = dmi->driver_data;
-+	return 0;
-+}
-+
- static struct dmi_system_id __initdata sonypi_dmi_table[] = {
- 	{
- 		.ident = "Sony Vaio",
-@@ -2975,6 +2996,8 @@ static struct dmi_system_id __initdata sonypi_dmi_table[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "VGN-"),
- 		},
-+		.callback = dmi_matched,
-+		.driver_data = &sony_pic_vaio_vgn,
- 	},
- 	{ }
- };
--- 
-1.7.0.4
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1291080853.3283.282.camel@rui>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 
---------------060102060008090002070304--
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Nov 30, 2010 at 09:34:13AM +0800, Zhang Rui wrote:
+> On Sat, 2010-11-27 at 05:10 +0800, Thadeu Lima de Souza Cascardo wrote:
+> > Hello,
+> >=20
+> > I have a notebook with an ACPI system that notifies about the pressing
+> > of the key for blocking touchpad. However, it does not notify it by
+> > itself. I was considering sending the event to userspace and let it does
+> > the blocking.
+> >=20
+> how do you know the event is sent via ACPI?
+>=20
+> please try "cat /proc/interrupts > interrupt-1;
+> grep . /sys/firmware/acpi/interrupts/* > gpe-1; sleep 5;
+> cat /proc/interrupts > interrupt-2;
+> grep . /sys/firmware/acpi/interrupts/* > gpe-2", and press the block key
+> during the 5 seconds sleep.
+> Then please attach the 4 files here to see if there are ACPI interrupts
+> generated by the key pressing.
+>=20
+> thanks,
+> rui
+
+I know because I've already done some investigation and have even
+written a driver for it. It's WMI to be more precise. After calling a
+WMI method, it does start notification through the PNP0C14 object, using
+the notify_id of a GUID. Then, I can get the key calling a query block
+for a third GUID. I get values for all the keys whose functions were
+missing.
+
+I am about to send the driver soon. It requires the fix for WMI that
+I've sent yesterday to work at all, since the GUIDs I use were being
+wrongly considerated as duplicates.
+
+Thanks for the tip, though. I'll be sure to use it to lookup the source
+for key presses next time. In fact, I did end up looking at *gpe* at
+/sys/ while doing this investigation. Now, I'm sure that's one of the
+first places to look up while searching for ACPI notifications.
+
+Thanks Rui.
+
+Regards,
+Cascardo.
+
+> > Since other keys are also notified by this same ACPI object, it's even
+> > more natural that I use an input device to send this to userspace.
+> >=20
+> > The problem is: there seems to be no event to represent this. Any
+> > suggestions?
+> >=20
+> > Best regards,
+> > Cascardo.
+>=20
+>=20
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQIcBAEBAgAGBQJM9FnVAAoJEEWxSg7udFZI/V8QAIyP+ze/ntIUzLugmdxqhufc
+f52cpbfjej/mHHHzS3s+QHwF1uPASDTho3m4pmDlWQPOr3NOWyt3GMbeZjo11Per
+gc3ywet6jRv+Bl/xBPVL0iVBrhy2Y1QbbVd+3hEWpaQtmk68M/zKXxyQpvWhoE9F
+SFl5OxQb8c9jjDZYWHt6ZUKeu22+e29qgPmxizTcRSNPj7RuVvql1mLRu5j44m8j
+2rFbM+LB1SHB5g6EErmcMbQlnYauT1D+ou6P0EbZiQCcDJX/q4nxrBijmJ6cMQvU
+A8L3Bps/PMZT7C071tbbag8bpGCZaGSxeMTlwc3ubGGNbinrIOPHAg6bKN4JoeKN
+LynCBPpUwoh/I6ZuZiTsu5wdBcpPX9Yu9UhiUjRQ7CpS3kNJmc9vQcwEi2uNd0CI
+tAKx2XlyL5QtGrhEWbjweEDAPYQJZnUFt//7Xlm/FbjN600Pxc9VaTIDPHZ/mUFC
+nDgZJdlbqCOcdeeKjqRajUky+0Dh5j3uItFb/CJ95aY7BdkIddaMf2tdqMY4Uff+
+xtgRvErZZfO9bQQrTTmdMN17Txe5461vLDNHHVyhmSFV1SNw8KKCi6jpGUI3RjoR
+JMHnazmm5Pe/oGxRLhfGkbvWsnbmU+XDR5Zp9UO3pwfP3IG3AUoGOUvRyZ19f9gk
+SozxwcyIi8RKWV7bgVO0
+=TcFe
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
