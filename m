@@ -1,54 +1,46 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Looking for some pointers on WMI/EC access
-Date: Wed, 1 Dec 2010 20:19:39 +0000
-Message-ID: <20101201201939.GA13106@srcf.ucam.org>
-References: <AANLkTimfj1QEqXWOp-Rc2KJZ6XdstkB_ct+P0zuQxVCa@mail.gmail.com> <20101201013125.GA21225@srcf.ucam.org> <AANLkTinRS_3vjoWDYVtY3eKbOhFSPDpWJ5YgjGtByDQC@mail.gmail.com>
+From: Dave Hansen <dave@linux.vnet.ibm.com>
+Subject: Re: [PATCH 3/3] ideapad: add hotkey support
+Date: Thu, 02 Dec 2010 15:41:27 -0800
+Message-ID: <1291333287.10586.4698.camel@nimitz>
+References: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>
+	 <1289977238-15113-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:33186 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755632Ab0LAUTm (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 1 Dec 2010 15:19:42 -0500
-Content-Disposition: inline
-In-Reply-To: <AANLkTinRS_3vjoWDYVtY3eKbOhFSPDpWJ5YgjGtByDQC@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Javier S. Pedro" <maemo@javispedro.com>
-Cc: platform-driver-x86@vger.kernel.org, floe@butterbrot.org
+Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1289977238-15113-1-git-send-email-ike.pan@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 01, 2010 at 09:13:51PM +0100, Javier S. Pedro wrote:
-> 2010/12/1 Matthew Garrett <mjg59@srcf.ucam.org>:
-> > Excellent! Send a driver and I'll get it merged.
-> 
-> Note that I have read the iasl -d'd DSDT myself, so I ponder if that
-> forbids me from writing the module (due to unclean room and all that);
-> either way, here's the source of the test module I used [1].
+On Wed, 2010-11-17 at 15:00 +0800, Ike Panhc wrote:
+> +static void ideapad_input_report(unsigned long scancode)
+> +{
+> +       sparse_keymap_report_event(ideapad_priv->inputdev, scancode, 1, true);
+> +} 
 
-We've never really worried about tainting from ACPI - you're writing coe 
-that interfaces with that rather than copying any of their code, so it 
-should be fine.
+I got a little build error about some unresolved symbols in the module
+while compiling:
+        
+        ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+        ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+        ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+        
+You can get it to go away by setting CONFIG_INPUT_SPARSEKMAP=m or =y
+in .config.  But, I think your patches need this:
 
-> Only available are the front keys -- with the rotation one not being
-> fired when not in "tablet mode" (the EC event is not fired, seemingly)
-> --  and also "tablet mode" detection, mapped of course to
-> SW_TABLET_MODE.
-> There's also some kind of orientation detection events that I'm yet to
-> fully understand but seem nearly useless. I would very much prefer to
-> read the raw accelerometer values from EC or HDAPS.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index faec777..879d266 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -226,6 +226,7 @@ config IDEAPAD_LAPTOP
+ 	tristate "Lenovo IdeaPad Laptop Extras"
+ 	depends on ACPI
+ 	depends on RFKILL
++	select INPUT_SPARSEKMAP
+ 	help
+ 	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
+ 
 
-Ok.
-
-> Also: should this be a separate "lenovo-wmi" driver or integrated with
-> lenovo-laptop?
-
-I'd go with lenovo-wmi.
-
-> [1] http://gitorious.org/iaps/lsrot/blobs/master/lsrot.c
-
-Wonderful. I'll take a look.
-
-Thanks!
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Signed-off-by: Dave Hansen <dave@linux.vnet.ibm.com>
