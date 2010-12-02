@@ -1,46 +1,54 @@
-From: Dave Hansen <dave@linux.vnet.ibm.com>
+From: Ike Panhc <ike.pan@canonical.com>
 Subject: Re: [PATCH 3/3] ideapad: add hotkey support
-Date: Thu, 02 Dec 2010 15:41:27 -0800
-Message-ID: <1291333287.10586.4698.camel@nimitz>
-References: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>
-	 <1289977238-15113-1-git-send-email-ike.pan@canonical.com>
+Date: Fri, 03 Dec 2010 07:43:41 +0800
+Message-ID: <4CF82F2D.8040705@canonical.com>
+References: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>	 <1289977238-15113-1-git-send-email-ike.pan@canonical.com> <1291333287.10586.4698.camel@nimitz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1289977238-15113-1-git-send-email-ike.pan@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ike Panhc <ike.pan@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from adelie.canonical.com ([91.189.90.139]:35774 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758441Ab0LBXny (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 2 Dec 2010 18:43:54 -0500
+In-Reply-To: <1291333287.10586.4698.camel@nimitz>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dave Hansen <dave@linux.vnet.ibm.com>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2010-11-17 at 15:00 +0800, Ike Panhc wrote:
-> +static void ideapad_input_report(unsigned long scancode)
-> +{
-> +       sparse_keymap_report_event(ideapad_priv->inputdev, scancode, 1, true);
-> +} 
+On 12/03/2010 07:41 AM, Dave Hansen wrote:
+> On Wed, 2010-11-17 at 15:00 +0800, Ike Panhc wrote:
+>> +static void ideapad_input_report(unsigned long scancode)
+>> +{
+>> +       sparse_keymap_report_event(ideapad_priv->inputdev, scancode, 1, true);
+>> +} 
+> 
+> I got a little build error about some unresolved symbols in the module
+> while compiling:
+>         
+>         ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+>         ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+>         ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+>         
+> You can get it to go away by setting CONFIG_INPUT_SPARSEKMAP=m or =y
+> in .config.  But, I think your patches need this:
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index faec777..879d266 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -226,6 +226,7 @@ config IDEAPAD_LAPTOP
+>  	tristate "Lenovo IdeaPad Laptop Extras"
+>  	depends on ACPI
+>  	depends on RFKILL
+> +	select INPUT_SPARSEKMAP
+>  	help
+>  	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
+>  
+> 
+> Signed-off-by: Dave Hansen <dave@linux.vnet.ibm.com>
+> 
 
-I got a little build error about some unresolved symbols in the module
-while compiling:
-        
-        ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-        ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-        ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-        
-You can get it to go away by setting CONFIG_INPUT_SPARSEKMAP=m or =y
-in .config.  But, I think your patches need this:
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index faec777..879d266 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -226,6 +226,7 @@ config IDEAPAD_LAPTOP
- 	tristate "Lenovo IdeaPad Laptop Extras"
- 	depends on ACPI
- 	depends on RFKILL
-+	select INPUT_SPARSEKMAP
- 	help
- 	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
- 
-
-Signed-off-by: Dave Hansen <dave@linux.vnet.ibm.com>
+Thanks, you are right
