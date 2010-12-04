@@ -1,54 +1,45 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH 3/3] ideapad: add hotkey support
-Date: Fri, 03 Dec 2010 07:43:41 +0800
-Message-ID: <4CF82F2D.8040705@canonical.com>
-References: <1289977165-14802-1-git-send-email-ike.pan@canonical.com>	 <1289977238-15113-1-git-send-email-ike.pan@canonical.com> <1291333287.10586.4698.camel@nimitz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH 0/4] Add new wmi support to acer-wmi driver
+Date: Sat,  4 Dec 2010 09:03:22 +0800
+Message-ID: <1291424606-23383-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:35774 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758441Ab0LBXny (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:54022 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753451Ab0LDBFD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Dec 2010 18:43:54 -0500
-In-Reply-To: <1291333287.10586.4698.camel@nimitz>
+	Fri, 3 Dec 2010 20:05:03 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dave Hansen <dave@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+To: mjg@redhat.com
+Cc: carlos@strangeworlds.co.uk, corentin.chary@gmail.com, dmitry.torokhov@gmail.com, corentincj@iksaif.net, tiwai@novell.com, mjg59@srcf.ucam.org, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>
 
-On 12/03/2010 07:41 AM, Dave Hansen wrote:
-> On Wed, 2010-11-17 at 15:00 +0800, Ike Panhc wrote:
->> +static void ideapad_input_report(unsigned long scancode)
->> +{
->> +       sparse_keymap_report_event(ideapad_priv->inputdev, scancode, 1, true);
->> +} 
-> 
-> I got a little build error about some unresolved symbols in the module
-> while compiling:
->         
->         ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
->         ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
->         ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
->         
-> You can get it to go away by setting CONFIG_INPUT_SPARSEKMAP=m or =y
-> in .config.  But, I think your patches need this:
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index faec777..879d266 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -226,6 +226,7 @@ config IDEAPAD_LAPTOP
->  	tristate "Lenovo IdeaPad Laptop Extras"
->  	depends on ACPI
->  	depends on RFKILL
-> +	select INPUT_SPARSEKMAP
->  	help
->  	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
->  
-> 
-> Signed-off-by: Dave Hansen <dave@linux.vnet.ibm.com>
-> 
+Hi Matthew, 
 
-Thanks, you are right
+These patches add new wmi support to acer-wmi driver, included the following
+functions:
+
+- Acer wmi hotkey events:
+  Acer BIOS applied wmi hotkey events from 2010, this patch adds support.
+
+- Enabled Acer Launch Manager mode:
+  Directly enable it to avoid the raw EC behavior conflict with rfkill-input or
+  userland solution.
+
+- Add 3G rfkill sysfs file:
+  Provide interface to userland for enable/disable 3G function by wmi method.
+
+- Detect the WiFi/Bluetooth/3G devices available:
+  Look for OEM type AAh in dmi to get the WiFi/BT/3G devices available.
+
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+
+Lee, Chun-Yi (4):
+  Add acer wmi hotkey events support
+  Enabled Acer Launch Manager mode
+  Add 3G rfkill sysfs file
+  Detect the WiFi/Bluetooth/3G devices available
+
+ drivers/platform/x86/Kconfig    |    2 +
+ drivers/platform/x86/acer-wmi.c |  400 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 394 insertions(+), 8 deletions(-)
