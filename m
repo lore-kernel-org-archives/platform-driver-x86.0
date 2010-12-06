@@ -1,79 +1,68 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 0/4] Add new wmi support to acer-wmi driver
-Date: Sun, 05 Dec 2010 18:37:23 -0700
-Message-ID: <4CFCD9030200002300024FBA@novprvlin0050.provo.novell.com>
+From: Chris Bagwell <chris@cnpbagwell.com>
+Subject: Re: [PATCH 00/10] eeepc-wmi: updates for 2.6.38
+Date: Sun, 5 Dec 2010 20:55:59 -0600
+Message-ID: <AANLkTi=eangKVLf1sQsk-tL9GeFE4Mw3S9ZPk6YzsAU0@mail.gmail.com>
+References: <1291014854-17961-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:65238 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751468Ab0LFC4A convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 5 Dec 2010 21:56:00 -0500
+Received: by gyb11 with SMTP id 11so5752527gyb.19
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Dec 2010 18:55:59 -0800 (PST)
+In-Reply-To: <1291014854-17961-1-git-send-email-corentincj@iksaif.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: cascardo@holoscopio.com
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, corentincj@iksaif.net, Takashi Iwai <tiwai@novell.com>, mjg@redhat.com, mjg59@srcf.ucam.org, carlos@strangeworlds.co.uk, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, "David S. Miller" <davem@davemloft.net>, Yong Wang <yong.y.wang@intel.com>
 
-Hi Cascardo,=20
+=46or what its worth, applies cleanly to 2.6.37-rc3 and works with no
+regressions on my Eee pc 1005pe.
 
-=E6=96=BC =E5=85=AD=EF=BC=8C2010-12-04 =E6=96=BC 09:08 -0200=EF=BC=8CTh=
-adeu Lima de Souza Cascardo =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Sat, Dec 04, 2010 at 09:03:22AM +0800, Lee, Chun-Yi wrote:
-> > Hi Matthew,=20
-> >=20
-> > These patches add new wmi support to acer-wmi driver, included the =
-following
-> > functions:
-> >=20
-> > - Acer wmi hotkey events:
-> >   Acer BIOS applied wmi hotkey events from 2010, this patch adds su=
-pport.
-> >=20
-> > - Enabled Acer Launch Manager mode:
-> >   Directly enable it to avoid the raw EC behavior conflict with rfk=
-ill-input or
-> >   userland solution.
-> >=20
-> > - Add 3G rfkill sysfs file:
-> >   Provide interface to userland for enable/disable 3G function by w=
-mi method.
-> >=20
-> > - Detect the WiFi/Bluetooth/3G devices available:
-> >   Look for OEM type AAh in dmi to get the WiFi/BT/3G devices availa=
-ble.
-> >=20
->=20
-> Please, add a subsystem/driver prefix to the summary like:
->=20
-> acer-wmi: Add 3G rfkill sysfs file.
->=20
-> Otherwise, any person reading summaries will ask perself: adding such
-> file to what!?!
->=20
-> Regards,
-> Cascardo.
->=20
+Tested-by: Chris Bagwell <chris@cnpbagwell.com>
 
-Thank's for your suggestion, I will add driver prefix to the summary an=
-d
-send this serial again.
+Chris
 
-Joey Lee
-
-> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-> > Reviewed-by: Thomas Renninger <trenn@suse.de>
-> >=20
-> > Lee, Chun-Yi (4):
-> >   Add acer wmi hotkey events support
-> >   Enabled Acer Launch Manager mode
-> >   Add 3G rfkill sysfs file
-> >   Detect the WiFi/Bluetooth/3G devices available
-> >=20
-> >  drivers/platform/x86/Kconfig    |    2 +
-> >  drivers/platform/x86/acer-wmi.c |  400 +++++++++++++++++++++++++++=
-+++++++++++-
-> >  2 files changed, 394 insertions(+), 8 deletions(-)
-> >=20
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe platform-=
-driver-x86" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Nov 29, 2010 at 1:14 AM, Corentin Chary <corentincj@iksaif.net>=
+ wrote:
+> Hi,
+>
+> I finally got a WMI aware Eeepc on my desk, so I made a quick
+> series to add missing features to eeepc-wmi. Theses patchs were done
+> and tested on an Eeepc 1005PE with an updated BIOS.
+>
+> Thanks,
+>
+> Corentin Chary (10):
+> =A0eeepc-wmi: rework eeepc_wmi_init and eeepc_wmi_exit
+> =A0eeepc-wmi: add touchpad led support
+> =A0eeepc-wmi: add rfkill support for wlan, bluetooth and 3g
+> =A0eeepc-wmi: use attribute group to manage attributes
+> =A0eeepc-wmi: add debugfs entries
+> =A0eeepc-wmi: fix confusion between ctrl_param and retval
+> =A0eeepc-wmi: claim eeepc-wmi maintainership
+> =A0eeepc-wmi: remove unneeded static
+> =A0eeepc-laptop: add a getter for touchpad led
+> =A0eeepc-wmi: never load if legacy device is enabled
+>
+> =A0MAINTAINERS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =
+=A08 +
+> =A0drivers/platform/x86/Kconfig =A0 =A0 =A0 =A0| =A0 =A03 +
+> =A0drivers/platform/x86/eeepc-laptop.c | =A0 11 +
+> =A0drivers/platform/x86/eeepc-wmi.c =A0 =A0| =A0609 +++++++++++++++++=
++++++++++++++----
+> =A04 files changed, 559 insertions(+), 72 deletions(-)
+>
+> --
+> 1.7.3.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+>
