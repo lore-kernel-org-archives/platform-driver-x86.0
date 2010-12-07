@@ -1,48 +1,79 @@
-From: Namhyung Kim <namhyung@gmail.com>
-Subject: [PATCH] fujitsu-laptop: fix compiler warning on pnp_ids
-Date: Wed,  8 Dec 2010 00:04:14 +0900
-Message-ID: <1291734254-12250-1-git-send-email-namhyung@gmail.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT PULL] x86 platform driver tree
+Date: Tue, 7 Dec 2010 15:17:53 +0000
+Message-ID: <20101207151753.GA18490@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:49804 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750832Ab0LGPEX (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:52059 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753015Ab0LGPR7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Dec 2010 10:04:23 -0500
+	Tue, 7 Dec 2010 10:17:59 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Annotate pnp_ids as '__used' to fix following warning:
+Hi Linus,
 
-  CC      drivers/platform/x86/fujitsu-laptop.o
-drivers/platform/x86/fujitsu-laptop.c:1243: warning: =E2=80=98pnp_ids=E2=
-=80=99 defined but not used
+A few small fixes and one fairly significant one in WMI (strcmp/memcmp 
+confusion), along with relaxing the check in the IBM RTL driver so it 
+works on all the hardware that supports it:
 
-Signed-off-by: Namhyung Kim <namhyung@gmail.com>
----
- drivers/platform/x86/fujitsu-laptop.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+The following changes since commit 22a5b566c8c442b0b35b3b106795e2f2b3578096:
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x=
-86/fujitsu-laptop.c
-index f44cd26..ad88b2e 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -1240,7 +1240,7 @@ MODULE_ALIAS("dmi:*:svnFUJITSUSIEMENS:*:pvr:rvnFU=
-JITSU:rnFJNB1D3:*:cvrS6410:*");
- MODULE_ALIAS("dmi:*:svnFUJITSUSIEMENS:*:pvr:rvnFUJITSU:rnFJNB1E6:*:cvr=
-S6420:*");
- MODULE_ALIAS("dmi:*:svnFUJITSU:*:pvr:rvnFUJITSU:rnFJNB19C:*:cvrS7020:*=
-");
-=20
--static struct pnp_device_id pnp_ids[] =3D {
-+static struct pnp_device_id pnp_ids[] __used =3D {
- 	{.id =3D "FUJ02bf"},
- 	{.id =3D "FUJ02B1"},
- 	{.id =3D "FUJ02E3"},
---=20
-1.7.0.4
+  Merge branch 'for_linus' of git://github.com/at91linux/linux-2.6-at91 (2010-11-30 17:57:57 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+
+Anisse Astier (2):
+      msi-wmi: Add mute key support
+      msi-wmi: fix semantically incorrect use of keycode instead of scancode
+
+Chris Bagwell (1):
+      eeepc-wmi: add cpufv sysfs documentation
+
+Corentin Chary (1):
+      asus-laptop: add wimax and wwan support
+
+Dmitry Torokhov (1):
+      eeepc-wmi: fix compiler warning
+
+Jon Dowland (1):
+      toshiba_acpi.c: Add key_entry for a lone FN keypress
+
+Julia Lawall (1):
+      drivers/platform/x86/thinkpad_acpi.c: delete double assignment
+
+Randy Dunlap (1):
+      ibm_rtl: fix printk format warning
+
+Thadeu Lima de Souza Cascardo (1):
+      wmi: use memcmp instead of strncmp to compare GUIDs
+
+Vernon Mauery (2):
+      ibm_rtl: Loosen the DMI criteria to all IBM machines
+      ibm_rtl: _RTL_ is not available in UEFI mode
+
+Zeng Zhaoming (1):
+      ACPI, hp-wmi: Fix memory leak in acpi query
+
+ .../ABI/testing/sysfs-platform-asus-laptop         |   16 +++-
+ Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   10 ++
+ drivers/platform/x86/asus-laptop.c                 |   97 +++++++++++++++++++-
+ drivers/platform/x86/eeepc-wmi.c                   |    4 +-
+ drivers/platform/x86/hp-wmi.c                      |    2 +
+ drivers/platform/x86/ibm_rtl.c                     |   34 ++-----
+ drivers/platform/x86/msi-wmi.c                     |   16 ++--
+ drivers/platform/x86/thinkpad_acpi.c               |    1 -
+ drivers/platform/x86/toshiba_acpi.c                |    1 +
+ drivers/platform/x86/wmi.c                         |    2 +-
+ 10 files changed, 144 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
