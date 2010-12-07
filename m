@@ -1,32 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] wmi: use memcmp instead of strncmp to compare GUIDs
-Date: Mon, 6 Dec 2010 22:17:50 +0000
-Message-ID: <20101206221750.GA1885@srcf.ucam.org>
-References: <1290980810-5903-1-git-send-email-cascardo@holoscopio.com> <20101206220231.GB1139@srcf.ucam.org> <20101206221345.GG4187@barata.holoscopio.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20101206221345.GG4187@barata.holoscopio.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, carlos@strangeworlds.co.uk, stable@kernel.org, ceolin@ulevel.com
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH 0/4] acer-wmi: Add new wmi support to acer-wmi driver
+Date: Tue,  7 Dec 2010 10:29:19 +0800
+Message-ID: <1291688963-23232-1-git-send-email-jlee@novell.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: mjg59@srcf.ucam.org
+Cc: dmitry.torokhov@gmail.com, corentin.chary@gmail.com, corentincj@iksaif.net, tiwai@novell.com, carlos@strangeworlds.co.uk, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 06, 2010 at 08:13:46PM -0200, Thadeu Lima de Souza Cascardo wrote:
-> On Mon, Dec 06, 2010 at 10:02:31PM +0000, Matthew Garrett wrote:
-> > Applied to -next, thanks.
-> > 
-> > -- 
-> > Matthew Garrett | mjg59@srcf.ucam.org
-> 
-> Hello, Matthew.
-> 
-> I consider this one a serious bug and with a trivial fix that should go
-> to Linus, for the next release candidate. I also consider it should go
-> to stable releases, and that's why I'm copying stable.
+Hi Matthew, 
 
-Sure, I'll pull it back for .37 as well.
+These patches add new wmi support to acer-wmi driver, included the following
+functions. Please kindly review and accept it:
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+- Acer wmi hotkey events:
+  Acer BIOS applied wmi hotkey events from 2010, this patch adds support.
+
+- Enabled Acer Launch Manager mode:
+  Directly enable it to avoid the raw EC behavior conflict with rfkill-input or
+  userland solution.
+
+- Add 3G rfkill sysfs file:
+  Provide interface to userland for enable/disable 3G function by wmi method.
+
+- Detect the WiFi/Bluetooth/3G devices available:
+  Look for OEM type AAh in dmi to get the WiFi/BT/3G devices available.
+
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Reviewed-by: Thomas Renninger <trenn@suse.de>
+
+Lee, Chun-Yi (4):
+  Add acer wmi hotkey events support
+  Enabled Acer Launch Manager mode
+  Add 3G rfkill sysfs file
+  Detect the WiFi/Bluetooth/3G devices available
+
+ drivers/platform/x86/Kconfig    |    2 +
+ drivers/platform/x86/acer-wmi.c |  400 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 394 insertions(+), 8 deletions(-)
+
