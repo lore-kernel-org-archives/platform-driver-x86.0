@@ -1,44 +1,54 @@
-From: David Woodhouse <dwmw2@infradead.org>
-Subject: Re: linux-next: Tree for December 8
- (drivers/platform/x86/Kconfig:422:error: recursive dependency detected!)
-Date: Wed, 08 Dec 2010 23:08:39 +0000
-Message-ID: <1291849721.5992.145.camel@i7.infradead.org>
-References: <AANLkTim3FJjVpbjM10kJJhXbONpvGSGQFE+mfGX9pAS6@mail.gmail.com>
-	 <AANLkTimjVY-6OwRfFUzUbmyacM81M35wf5qDWqAouUYb@mail.gmail.com>
-	 <1291801990.5992.105.camel@i7.infradead.org>
-	 <20101208174603.GA7107@core.coreip.homeip.net>
-	 <20101208135105.a8482d46.randy.dunlap@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Peter Huewe <peterhuewe@gmx.de>
+Subject: [PATCH] platform/x86: Fix recursive Kconfig dependency
+Date: Thu,  9 Dec 2010 00:29:30 +0100
+Message-ID: <1291850970-7190-1-git-send-email-peterhuewe@gmx.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:37019 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756353Ab0LHXIq (ORCPT
+Received: from mailout-de.gmx.net ([213.165.64.23]:43975 "HELO mail.gmx.net"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
+	id S1754659Ab0LHX3h (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Dec 2010 18:08:46 -0500
-In-Reply-To: <20101208135105.a8482d46.randy.dunlap@oracle.com>
+	Wed, 8 Dec 2010 18:29:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, sedat.dilek@gmail.com, Matthew Garrett <mjg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>
 
-On Wed, 2010-12-08 at 13:51 -0800, Randy Dunlap wrote:
-> 
-> I dislike select, but reality is that modules do need to select/enable
-> library code and minor features sometimes.
-> 
-> OTOH, where drivers/platform/x86/Kconfig:ACPI_CMPC does "select INPUT"
-> to enable an entire subsystem is wrong and bad IMO. 
+This patch removes a recursive dependency which causes a build failure
+[1-3] by changing the ASUS_WMI from select ACPI_WMI to depend on
+ACPI_WMI as most other _WMI config options do.
 
-This is just a deficiency in the tools. The correct answer is to fix the
-damn tools, not invent this silly 'select' facility which means much the
-same thing as 'depends on' but is implemented differently.
+Signed-off-by: Peter Huewe <peterhuewe@gmx.de>
+---
+Error Message:
+drivers/platform/x86/Kconfig:422:error: recursive dependency detected!
+drivers/platform/x86/Kconfig:422:	symbol EEEPC_WMI depends on ACPI_WMI
+drivers/platform/x86/Kconfig:438:	symbol ACPI_WMI is selected by ACER_WMI
+drivers/platform/x86/Kconfig:18:	symbol ACER_WMI depends on LEDS_CLASS
+drivers/leds/Kconfig:10:	symbol LEDS_CLASS is selected by EEEPC_WMI
 
-As long ago as the mid-1990s, the Nemesis research OS was using a tcl
-xconfig tool based on the Linux one, but which would show you the
-dependencies for an option that was disabled, so you could enable them
-where you needed to. Rather than just hiding the option completely.
 
+References:
+[1] http://kisskb.ellerman.id.au/kisskb/buildresult/3607123/
+[2] http://kisskb.ellerman.id.au/kisskb/buildresult/3607218/
+[3] http://kisskb.ellerman.id.au/kisskb/buildresult/3607139/
+
+KernelVersion: linux-next-20101208
+
+ drivers/platform/x86/Kconfig |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 4c7f8b9..ddf384a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -23,7 +23,7 @@ config ACER_WMI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on SERIO_I8042
+ 	depends on RFKILL || RFKILL = n
+-	select ACPI_WMI
++	depends on ACPI_WMI
+ 	---help---
+ 	  This is a driver for newer Acer (and Wistron) laptops. It adds
+ 	  wireless radio and bluetooth control, and on some laptops,
 -- 
-dwmw2
+1.7.2.2
