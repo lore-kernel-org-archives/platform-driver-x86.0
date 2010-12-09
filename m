@@ -1,68 +1,39 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: Re: linux-next: Tree for December 8 (drivers/platform/x86/Kconfig:422:error:
- recursive dependency detected!)
-Date: Wed, 08 Dec 2010 15:58:44 -0800
-Message-ID: <4D001BB4.4040906@oracle.com>
-References: <AANLkTim3FJjVpbjM10kJJhXbONpvGSGQFE+mfGX9pAS6@mail.gmail.com> <AANLkTimjVY-6OwRfFUzUbmyacM81M35wf5qDWqAouUYb@mail.gmail.com> <1291801990.5992.105.camel@i7.infradead.org> <20101208174603.GA7107@core.coreip.homeip.net> <20101208135105.a8482d46.randy.dunlap@oracle.com> <1291849721.5992.145.camel@i7.infradead.org> <20101208233101.GA15294@core.coreip.homeip.net> <1291851309.5992.150.camel@i7.infradead.org> <20101208234950.GB15294@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet10.oracle.com ([148.87.113.121]:53109 "EHLO
-	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753767Ab0LIAf0 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Dec 2010 19:35:26 -0500
-In-Reply-To: <20101208234950.GB15294@core.coreip.homeip.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, sedat.dilek@gmail.com, Matthew Garrett <mjg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH v2 0/7] ideapad: hotkey enablement
+Date: Thu,  9 Dec 2010 15:56:16 +0800
+Message-ID: <1291881376-4729-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dave Hansen <dave@linux.vnet.ibm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/08/10 15:49, Dmitry Torokhov wrote:
-> On Wed, Dec 08, 2010 at 11:35:08PM +0000, David Woodhouse wrote:
->> On Wed, 2010-12-08 at 15:31 -0800, Dmitry Torokhov wrote:
->>> Even better tool would allow selecting the needed optios right there,
->>> without the need of moving away from teh current option.
->>
->> That's exactly what the Nemesis version of xconfig did, almost 15 years
->> ago.
->>
->>>  And yet better tool would not even ask user and enable them on its
->>> own. Hey, but we have it! It's called "select".
->>
->> The tools could do that with 'depends on' too. Why make a distinction?
-> 
-> To allow automatic/manual selection. Sometimes the only answer to
-> "shoudl it be enabled" is "Yes". I.e. drivers that need polling need
-> input-polldev support. There is no reason whatsoever to even ask user.
-> 
-> Same thing for platform drivers. "Don't you also want to enable option for
-> your keyboard and mouse to work? Go do that, you won't regret." "Well,
-> duh!"
-> 
->>
->>> Seriously, select is dangerous. I wonder if a rule like "One can only
->>> select a symbol whose dependencies are all satisfied by the current
->>> symbol and/or its parents and the symbols they select or depend on"
->>> would not make select safe enough. 
->>
->> "One can only select a symbol which isn't otherwise presented to the
->> user as a choice".
-> 
-> Input-polldev _is_ presented as a choice in case user or distro want to
-> use out of tree driver that depends on it. Does this mean we shoudl
-> disallow selects on it? I don't think so.
+Here are the enablement patches for hotkey events on ideapads and these patches
+are made against current checkout of mainline kernel.
 
-To me it means that we have too many config options, but I'm sure that some
-embedded people would disagree with that.
+After last time posting on LKML, there are several feedback and these patches
+are modified.
 
-| GUI tools have means of presenting this, menuconfig and oldconfig have
-| harder time...
+From Dmitry Torokhov, using markup on functions to let the compiler knows where
+to put and passing private variable instead of using global vairable. The
+acpi_handle is still a global variable becuase we need to pass handle pointer
+to rfk_set with its opcode but only one data argument available.
 
-Sure, I know that.
+From Dave Hansen, select INPUT_SPARSEKMAP to fill the dependency.
 
+These patches are available in the git repository at:
+  git://kernel.ubuntu.com/ikepanhc/ideapad-laptop.git ideapad-laptop
 
--- 
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your code ***
+Ike Panhc (7):
+  ideapad: add platform driver for ideapad
+  ideapad: let camera power control entry under platform driver
+  ideapad: add hotkey support
+  ideapad: select INPUT_SPARSEKMAP
+  ideapad: add markups, unify comments and return result when init
+  ideapad: pass ideapad_priv as argument (part 1)
+  ideapad: pass ideapad_priv as argument (part 2)
+
+ drivers/platform/x86/Kconfig          |    1 +
+ drivers/platform/x86/ideapad-laptop.c |  255 ++++++++++++++++++++++----------
+ 2 files changed, 176 insertions(+), 80 deletions(-)
+
