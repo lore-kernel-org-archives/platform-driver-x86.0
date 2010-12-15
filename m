@@ -1,63 +1,108 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: [PATCH] platform/x86: Consistently select LEDS Kconfig options
-Date: Wed, 15 Dec 2010 16:51:37 +0000
-Message-ID: <1292431897-13770-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Herton Ronaldo Krzesinski <herton@mandriva.com.br>
+Subject: [RFC/RFT][PATCH 2/2] ACPI video: add initial blacklist to use vendor drivers for backlight
+Date: Wed, 15 Dec 2010 16:58:25 -0200
+Message-ID: <1292439505-6884-2-git-send-email-herton@mandriva.com.br>
+References: <1292439505-6884-1-git-send-email-herton@mandriva.com.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from opensource.wolfsonmicro.com ([80.75.67.52]:46353 "EHLO
-	opensource2.wolfsonmicro.com" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1751541Ab0LOQvu (ORCPT
+Received: from perninha.conectiva.com.br ([187.115.55.249]:54760 "EHLO
+	perninha.conectiva.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753511Ab0LOS6g (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Dec 2010 11:51:50 -0500
+	Wed, 15 Dec 2010 13:58:36 -0500
+In-Reply-To: <1292439505-6884-1-git-send-email-herton@mandriva.com.br>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Corentin Chary <corentin.chary@gmail.com>, Herton Ronaldo Krzesinski <herton@mandriva.com.br>
 
-Currently the x86 platform devices are not consistent about selecting
-or depending on the LEDs Kconfig variables, and this inconsistency
-leads to Kconfig getting upset and refusing to offer LEDs (even on
-non-x86 platforms):
+While developing shuttle-wmi, I discovered some shuttle machines where
+its acpi video interface doesn't work properly. Changes to the
+brightness value don't reflect actual hardware changes. For these
+devices, a quirk is done in shuttle-wmi driver, where brightness values
+are then changed properly in the hardware too.
 
-drivers/platform/x86/Kconfig:422:error: recursive dependency detected!
-drivers/platform/x86/Kconfig:422:       symbol EEEPC_WMI depends on ACPI_WMI
-drivers/platform/x86/Kconfig:438:       symbol ACPI_WMI is selected by ACER_WMI
-drivers/platform/x86/Kconfig:18:        symbol ACER_WMI depends on LEDS_CLASS
-drivers/leds/Kconfig:10:        symbol LEDS_CLASS is selected by EEEPC_WMI
+This adds a list for shuttle devices I tested which doesn't have working
+backlight support in acpi video, but works with workaround done in
+shuttle-wmi driver, so for them, add dmi blacklist to use vendor driver.
 
-Fix this by always selecting rather than depending on the symbols as
-slightly more drivers use this approach already and it seems more
-user friendly.
-
-Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Signed-off-by: Herton Ronaldo Krzesinski <herton@mandriva.com.br>
 ---
- drivers/platform/x86/Kconfig |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/video_detect.c |   56 +++++++++++++++++++++++++++++++++++-------
+ 1 files changed, 46 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4c7f8b9..fa18c25 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -18,8 +18,8 @@ if X86_PLATFORM_DEVICES
- config ACER_WMI
- 	tristate "Acer WMI Laptop Extras"
- 	depends on ACPI
--	depends on LEDS_CLASS
--	depends on NEW_LEDS
-+	select LEDS_CLASS
-+	select NEW_LEDS
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on SERIO_I8042
- 	depends on RFKILL || RFKILL = n
-@@ -513,8 +513,8 @@ config TOPSTAR_LAPTOP
- config ACPI_TOSHIBA
- 	tristate "Toshiba Laptop Extras"
- 	depends on ACPI
--	depends on LEDS_CLASS
--	depends on NEW_LEDS
-+	select LEDS_CLASS
-+	select NEW_LEDS
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on INPUT
- 	depends on RFKILL || RFKILL = n
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index b836761..39814d2 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -132,6 +132,45 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 	return AE_OK;
+ }
+ 
++static struct dmi_system_id backlight_vendor_dmi_table[] = {
++	{
++		.ident = "Positivo M13",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "POSITIVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "M13"),
++		},
++	},
++	{
++		.ident = "Positivo M14",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "POSITIVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "M14"),
++		},
++	},
++	{
++		.ident = "Positivo A14IM01",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "POSITIVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "A14IM01"),
++		},
++	},
++	{
++		.ident = "Positivo J14IM21",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "POSITIVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "J14IM21"),
++		},
++	},
++	{
++		.ident = "Positivo SINM10BZ",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Positivo Informatica SA"),
++			DMI_MATCH(DMI_BOARD_NAME, "POS-SINM10BZ"),
++		},
++	},
++	{}
++};
++
+ /*
+  * Returns the video capabilities of a specific ACPI graphics device
+  *
+@@ -156,16 +195,13 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+ 		/* There might be boot param flags set already... */
+ 		acpi_video_support |= caps;
+ 		acpi_video_caps_checked = 1;
+-		/* Add blacklists here. Be careful to use the right *DMI* bits
+-		 * to still be able to override logic via boot params, e.g.:
+-		 *
+-		 *   if (dmi_name_in_vendors("XY")) {
+-		 *	acpi_video_support |=
+-		 *		ACPI_VIDEO_OUTPUT_SWITCHING_DMI_VENDOR;
+-		 *	acpi_video_support |=
+-		 *		ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+-		 *}
+-		 */
++		/* Add blacklists here (systems which don't work properly with
++		 * acpi video and needs a special platform driver) */
++		if (dmi_check_system(backlight_vendor_dmi_table))
++			acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++		/*if (dmi_check_system(output_switching_vendor_dmi_table))
++			acpi_video_support |=
++				ACPI_VIDEO_OUTPUT_SWITCHING_DMI_VENDOR;*/
+ 	} else {
+ 		status = acpi_bus_get_device(graphics_handle, &tmp_dev);
+ 		if (ACPI_FAILURE(status)) {
 -- 
-1.7.1
+1.7.3.3
