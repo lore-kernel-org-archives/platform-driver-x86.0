@@ -1,34 +1,33 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH] x86,mrst: Intel Medfield over-current detection patch
-Date: Mon, 20 Dec 2010 16:26:20 +0000
-Message-ID: <20101220162620.6488c276@lxorguk.ukuu.org.uk>
-References: <20101213112147.15213.12742.stgit@bob.linux.org.uk>
-	<20101220161033.GB25502@srcf.ucam.org>
+From: Sedat Dilek <sedat.dilek@googlemail.com>
+Subject: Re: [PATCH] platform/x86: Kconfig: Replace select by depends on ACPI_WMI
+Date: Mon, 20 Dec 2010 17:30:52 +0100
+Message-ID: <AANLkTikRq9MDLKNNyKKw+qRUJzfANWh2ZshVw8U0wtfc@mail.gmail.com>
+References: <AANLkTinbinQjvXo58hKDY4ZaMe1ZrGqWDbhoxdS+JLOG@mail.gmail.com>
+	<20101220161817.GE25502@srcf.ucam.org>
+Reply-To: sedat.dilek@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:43633 "EHLO
-	www.etchedpixels.co.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1752775Ab0LTQ1m (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 20 Dec 2010 11:27:42 -0500
-In-Reply-To: <20101220161033.GB25502@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20101220161817.GE25502@srcf.ucam.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Randy Dunlap <randy.dunlap@oracle.com>, David Woodhouse <dwmw2@infradead.org>, linux-next@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> Hm. Do you have a summary or a pointer to that discussion? This really 
-> does seem to be a hardware monitoring device, and so hwmon would seem 
-> the more natural home for it - I'd like some idea of what the 
-> justification was.
+On Mon, Dec 20, 2010 at 5:18 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> Applied, thanks. It's easier to handle these if you include the patch in
+> the email body, rather than as an attachment.
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+>
 
-Basically that it has no interface features in common with anything in
-the hwmon API, nor that looked likely to be generic or could be made to
-fit them.
+[ CC linux-next ]
 
-hwmon isn't "any hardware monitoring device", it's classes of devices
-that fit certain common interfaces - eg thermal reporting ones.
+Thanks :-)!
+I mostly use web-based Email, but it's time to setup and use
+git-send-email [1] on the working machine.
 
-Alan
+- Sedat -
+
+[1] http://www.kernel.org/pub/software/scm/git/docs/git-send-email.html
