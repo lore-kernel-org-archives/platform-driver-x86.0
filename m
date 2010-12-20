@@ -1,56 +1,45 @@
-From: Peter =?utf-8?q?H=C3=BCwe?= <PeterHuewe@gmx.de>
-Subject: Re: [PATCH] platform/x86: Fix recursive Kconfig dependency
-Date: Sun, 19 Dec 2010 20:00:14 +0100
-Message-ID: <201012192000.14969.PeterHuewe@gmx.de>
-References: <1291850970-7190-1-git-send-email-peterhuewe@gmx.de> <201012152214.29452.PeterHuewe@gmx.de> <AANLkTikPVqaZE8KBOCKWuwkqRpn3mHKQn+V3bUU5cW7=@mail.gmail.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH] toshiba_acpi: FULL TOS1900 device support
+Date: Sun, 19 Dec 2010 19:03:26 -0700
+Message-ID: <AANLkTi=gMYi8Dvv0V=if0e_c_YWYwFosZx-1h3JT0hSU@mail.gmail.com>
+References: <AANLkTimW5ro7EQBgoqMLSxnEsVrinL2S+USu207-Nbh=@mail.gmail.com>
+	<20101210213551.GE1630@core.coreip.homeip.net>
+	<AANLkTimhgLyx=Di2yBimFWm=Hg5-2CGOxHfuB+Gb-9_Q@mail.gmail.com>
+	<20101215081046.GB11920@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout-de.gmx.net ([213.165.64.22]:37660 "HELO mail.gmx.net"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with SMTP
-	id S932375Ab0LSTAW convert rfc822-to-8bit (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:54394 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753388Ab0LTCD1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 19 Dec 2010 14:00:22 -0500
-In-Reply-To: <AANLkTikPVqaZE8KBOCKWuwkqRpn3mHKQn+V3bUU5cW7=@mail.gmail.com>
+	Sun, 19 Dec 2010 21:03:27 -0500
+In-Reply-To: <20101215081046.GB11920@core.coreip.homeip.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: sedat.dilek@gmail.com, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, John Linville <linville@tuxdriver.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
 
-Am Freitag 17 Dezember 2010, 12:30:15 schrieb Sedat Dilek:
-> On Wed, Dec 15, 2010 at 10:14 PM, Peter H=C3=BCwe <PeterHuewe@gmx.de>=
- wrote:
-> > Am Mittwoch 15 Dezember 2010, 21:51:04 schrieb Randy Dunlap:
-> >> > Hi, another patch was posted before:
-> >> >=20
-> >> > http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/=
-970/ma
-> >> > tch =3Dacpi_wmi
-> >> >Acked-by: Randy Dunlap <randy.dunlap@oracle.com>
-> >=20
-> > Yeah, you're right - but as Sedat's patch is perfect (and fixes bot=
-h) -
-> > so for Sedats's patch:
-> > Acked-by: Peter Huewe <peterhuewe@gmx.de>
-> >=20
-> > Thanks,
-> > Peter
->=20
-> [ CC John Linville ]
->=20
-> It's a bit disappointing to see my fix is still not in
-> platform-drivers-x86/linux-next [1] (even it's only fixing "warnings"=
-,
-> 9 days past).
-> linux-next tree is for me a very high dynamic SCM tree, I am doing
-> mostly daily builds, at weekend I am testing/pulling other trees
-> before they go into Monday's linux-next.
-> As far as I have fun with "my process"... I will continue.
+Hi Dmitry,
+
+Sorry for the late reply.
+
+I'll resend the patch with the changes you suggested, however,
+I'll change the description since this patch does not add _FULL_
+support to TOS1900 devices.
+
+I recently got a new laptop (Qosmio X505-Q898), which turns out
+it had a TOS1900 device as well, however, none of the known
+methods activate hotkeys on this model.
+
+Searching in the DSDT, I found a WMI interface, so if someone
+is interested in having a look on the DSDT let me know so I
+can attach the file.
 
 
+Saludos
+Azael
 
-Added Stephen Rothwell on CC, maybe he can apply it directly to linux-n=
-ext ;)
 
-Peter
+-- 
+-- El mundo apesta y vosotros apestais tambien --
