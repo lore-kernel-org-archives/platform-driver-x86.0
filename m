@@ -1,52 +1,45 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: Re: [PATCH] platform/x86: Fix recursive Kconfig dependency
-Date: Mon, 20 Dec 2010 09:24:31 -0800
-Message-ID: <4D0F914F.2050908@oracle.com>
-References: <1291850970-7190-1-git-send-email-peterhuewe@gmx.de> <201012192000.14969.PeterHuewe@gmx.de> <AANLkTi=gqimS5n6J6GXcZA_W1JHZ8yHJHAKqP=dDmN0Z@mail.gmail.com> <201012201809.41269.PeterHuewe@gmx.de>
+From: Albert Astals Cid <aacid@kde.org>
+Subject: Re: Patch for drivers/platform/x86/compal-laptop.c
+Date: Mon, 20 Dec 2010 22:49:35 +0000
+Message-ID: <201012202249.36307.aacid@kde.org>
+References: <201012182009.57670.aacid@kde.org> <20101220161132.GC25502@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201012201809.41269.PeterHuewe@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UGV0ZXIgSMO8d2U=?= <PeterHuewe@gmx.de>
-Cc: sedat.dilek@gmail.com, Stephen Rothwell <sfr@canb.auug.org.au>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, John Linville <linville@tuxdriver.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ew0-f45.google.com ([209.85.215.45]:48994 "EHLO
+	mail-ew0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758086Ab0LTWti (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 20 Dec 2010 17:49:38 -0500
+Received: by ewy10 with SMTP id 10so1740834ewy.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Dec 2010 14:49:37 -0800 (PST)
+In-Reply-To: <20101220161132.GC25502@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org
 
-On 12/20/10 09:09, Peter H=C3=BCwe wrote:
-> Am Montag 20 Dezember 2010, 15:46:02 schrieb Sedat Dilek:
->>> Added Stephen Rothwell on CC, maybe he can apply it directly to
->>> linux-next ;)
->>>
->>> Peter
->>
->> I do not think this will happen for a "as-warning-classified" patch.
->=20
-> On arm and avr32 it is not only a warning but an error instead!
->=20
-> -> so the patch fixes an error / build failure which imho is quite an=
-=20
-> important issue.
->=20
-> You can see the errors in Ellerman's build farm.
->=20
-> http://kisskb.ellerman.id.au/kisskb/buildresult/3652816/
-> http://kisskb.ellerman.id.au/kisskb/buildresult/3664077/
-> http://kisskb.ellerman.id.au/kisskb/buildresult/3652972/
-> http://kisskb.ellerman.id.au/kisskb/buildresult/3664113/
->=20
-> As it is an error for arm and avr32 maybe it should go through their =
-trees=20
-> instead?
+A Dilluns, 20 de desembre de 2010, Matthew Garrett va escriure:
+> Patch looks fine, but could you submit it following the instructions in
+> Documentation/SubmittingPatches? I'll need a signed-off-by: line at
+> least.
 
+To be fair i don't know which subsystem this belongs to.
 
-It's a kconfig "error" on x86 also, but it does not stop the .config fi=
-le
-from being generated.  It needs to be fixed, but it's not deadly.
+I guess my summary phrase would be:
+Support KHLB2 in the compal laptop driver
 
+The explanation would be:
+Add the KHLB2 model identifier to the list of supported models
 
---=20
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your cod=
-e ***
-desserts:  http://www.xenotime.net/linux/recipes/
+Signed-off-by: Albert Astals Cid <aacid@kde.org>
+
+And you already have the patch.
+
+Not sure if this is really good enough. If it is not do not hesitat to tell me 
+again.
+
+Thanks,
+  Albert
