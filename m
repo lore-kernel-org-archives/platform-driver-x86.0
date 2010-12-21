@@ -1,46 +1,260 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Patch for drivers/platform/x86/compal-laptop.c
-Date: Mon, 20 Dec 2010 22:51:45 +0000
-Message-ID: <20101220225145.GA2488@srcf.ucam.org>
-References: <201012182009.57670.aacid@kde.org> <20101220161132.GC25502@srcf.ucam.org> <201012202249.36307.aacid@kde.org>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH 2/4] acer-wmi: Enabled Acer Launch Manager mode
+Date: Mon, 20 Dec 2010 20:30:58 -0700
+Message-ID: <4D10BA220200002300025D25@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:42418 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758079Ab0LTWvx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 20 Dec 2010 17:51:53 -0500
 Content-Disposition: inline
-In-Reply-To: <201012202249.36307.aacid@kde.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Albert Astals Cid <aacid@kde.org>
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org
+To: mjg59@srcf.ucam.org
+Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, corentincj@iksaif.net, Takashi Iwai <tiwai@novell.com>, carlos@strangeworlds.co.uk, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 20, 2010 at 10:49:35PM +0000, Albert Astals Cid wrote:
-> A Dilluns, 20 de desembre de 2010, Matthew Garrett va escriure:
-> > Patch looks fine, but could you submit it following the instructions in
-> > Documentation/SubmittingPatches? I'll need a signed-off-by: line at
-> > least.
-> 
-> To be fair i don't know which subsystem this belongs to.
+Hi Matthew,=20
 
-It's the x86 platform drivers. There's not really a terribly good way to 
-express that in a subject line :) 
+=E6=96=BC =E4=B8=80=EF=BC=8C2010-12-20 =E6=96=BC 16:06 +0000=EF=BC=8CMa=
+tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Tue, Dec 07, 2010 at 10:29:21AM +0800, Lee, Chun-Yi wrote:
+> > +	struct lm_return_value return_value;
+> > +	acpi_status status;
+> > +	struct lm_input_params params =3D {
+> > +		.function_num =3D 0x1,
+> > +		.commun_devices =3D 0x0041,	/* WiFi on, 3G on, BT off */
+>=20
+> Why this set of devices?
+>=20
 
-> I guess my summary phrase would be:
-> Support KHLB2 in the compal laptop driver
-> 
-> The explanation would be:
-> Add the KHLB2 model identifier to the list of supported models
-> 
-> Signed-off-by: Albert Astals Cid <aacid@kde.org>
+The default Acer's BIOS default config is WiFi on, 3G on, BT off.
+Originally, I want to set the default devices status for communication
+devices to sync with Acer's BIOS default config.
 
-That ought to be ok. In future it's easier if you include the patch as 
-part of the mail - git send-email is really the most straightforward way 
-to generate correct patches.
+But,=20
+current Acer BIOS still not support to set the default communication
+devices' state and it ignored my config when acer-wmi call wmi method t=
+o
+enable launch manager mode.=20
 
-Thanks,
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+I modified the patch to removed the non-used communication devices setu=
+p
+like following:
+
++static int acer_wmi_enable_lm(void)
++{
++       struct lm_return_value return_value;
++       acpi_status status;
++       struct lm_input_params params =3D {
++               .function_num =3D 0x1,
++               .commun_devices =3D 0xFFFF,
++               .devices =3D 0xFFFF,
++               .lm_status =3D 0x01,              /* Launch Manager Act=
+ive */
+
+
+> > +		printk(ACER_INFO "Enabled Launch Manager");
+>=20
+> This is the default behaviour, so I don't think you need to print=20
+> anything in this case.
+>=20
+
+OK, then me removed it.
+
+> The other patches in the series look fine - I'll apply those to -next=
+=20
+> now.
+>=20
+
+Thank's a lot for your take care, the following is new [PATCH 2/4] for
+review:
+
+Joey Lee
+
+
+From 79dea6e0d647f39f2a3b2837d992daab333fa577 Mon Sep 17 00:00:00 2001
+=46rom: Lee, Chun-Yi <jlee@novell.com>
+Date: Tue, 21 Dec 2010 11:15:02 +0800
+Subject: [PATCH 2/4] acer-wmi: Enabled Acer Launch Manager mode
+
+Enabled Acer Launch Manager mode to disable the EC raw behavior for
+communication devices when WMID3 method available. And, we also add a
+ec_raw_mode kernel module option for enable The EC raw behavior mode
+when anyone what reset it back.
+When Acer Launch Manager mode enabled, EC will stop to touch any
+communication devices' RF state or power state that causes conflict
+with rfkill_input or any userland daemon to charge the rfkill rules.
+
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Acked-by: Thomas Renninger <trenn@suse.de>
+Acked-by: Jiri Benc <jbenc@suse.cz>
+Acked-by: Dmitry Torokhov <dtor@mail.ru>
+Signed-off-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Corentin Chary <corentincj@iksaif.net>
+---
+ drivers/platform/x86/acer-wmi.c |  111 +++++++++++++++++++++++++++++++=
+++++++++
+ 1 files changed, 111 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index 94330d7..81c1808 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -85,6 +85,7 @@ MODULE_LICENSE("GPL");
+ #define AMW0_GUID2		"431F16ED-0C2B-444C-B267-27DEB140CF9C"
+ #define WMID_GUID1		"6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3"
+ #define WMID_GUID2		"95764E09-FB56-4e83-B31A-37761F60994A"
++#define WMID_GUID3		"61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+=20
+ /*
+  * Acer ACPI event GUIDs
+@@ -120,6 +121,20 @@ struct event_return_value {
+ 	u32 reserved;
+ } __attribute__((packed));
+=20
++struct lm_input_params {
++	u8 function_num;	/* Function Number */
++	u16 commun_devices;	/* Communication type devices default status */
++	u16 devices;		/* Other type devices default status */
++	u8 lm_status;		/* Launch Manager Status */
++	u16 reserved;
++} __attribute__((packed));
++
++struct lm_return_value {
++	u8 error_code;		/* Error Code */
++	u8 ec_return_value;	/* EC Return Value */
++	u16 reserved;
++} __attribute__((packed));
++
+ /*
+  * Interface capability flags
+  */
+@@ -150,15 +165,18 @@ static int mailled =3D -1;
+ static int brightness =3D -1;
+ static int threeg =3D -1;
+ static int force_series;
++static bool ec_raw_mode;
+=20
+ module_param(mailled, int, 0444);
+ module_param(brightness, int, 0444);
+ module_param(threeg, int, 0444);
+ module_param(force_series, int, 0444);
++module_param(ec_raw_mode, bool, 0444);
+ MODULE_PARM_DESC(mailled, "Set initial state of Mail LED");
+ MODULE_PARM_DESC(brightness, "Set initial LCD backlight brightness");
+ MODULE_PARM_DESC(threeg, "Set initial state of 3G hardware");
+ MODULE_PARM_DESC(force_series, "Force a different laptop series");
++MODULE_PARM_DESC(ec_raw_mode, "Enable EC raw mode");
+=20
+ struct acer_data {
+ 	int mailled;
+@@ -1393,6 +1411,85 @@ error_debugfs:
+ 	return -ENOMEM;
+ }
+=20
++static acpi_status
++wmid3_set_lm_mode(struct lm_input_params *params,
++			struct lm_return_value *return_value)
++{
++	acpi_status status;
++	union acpi_object *obj;
++
++	struct acpi_buffer input =3D { sizeof(struct lm_input_params), params=
+ };
++	struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
++
++	status =3D wmi_evaluate_method(WMID_GUID3, 0, 0x1, &input, &output);
++	if (ACPI_FAILURE(status))
++		return status;
++
++	obj =3D output.pointer;
++
++	if (!obj)
++		return AE_ERROR;
++	else if (obj->type !=3D ACPI_TYPE_BUFFER) {
++		kfree(obj);
++		return AE_ERROR;
++	}
++	if (obj->buffer.length !=3D 4) {
++		printk(ACER_WARNING "Unknown buffer length %d\n",
++			obj->buffer.length);
++		kfree(obj);
++		return AE_ERROR;
++	}
++
++	*return_value =3D *((struct lm_return_value *)obj->buffer.pointer);
++	kfree(obj);
++
++	return status;
++}
++
++static int acer_wmi_enable_ec_raw(void)
++{
++	struct lm_return_value return_value;
++	acpi_status status;
++	struct lm_input_params params =3D {
++		.function_num =3D 0x1,
++		.commun_devices =3D 0xFFFF,
++		.devices =3D 0xFFFF,
++		.lm_status =3D 0x00,		/* Launch Manager Deactive */
++	};
++
++	status =3D wmid3_set_lm_mode(&params, &return_value);
++
++	if (return_value.error_code || return_value.ec_return_value)
++		printk(ACER_WARNING "Enabling EC raw mode failed: "
++			"0x%x - 0x%x\n", return_value.error_code,
++			return_value.ec_return_value);
++	else
++		printk(ACER_INFO "Enabled EC raw mode");
++
++	return status;
++}
++
++static int acer_wmi_enable_lm(void)
++{
++	struct lm_return_value return_value;
++	acpi_status status;
++	struct lm_input_params params =3D {
++		.function_num =3D 0x1,
++		.commun_devices =3D 0xFFFF,
++		.devices =3D 0xFFFF,
++		.lm_status =3D 0x01,		/* Launch Manager Active */
++	};
++
++	status =3D wmid3_set_lm_mode(&params, &return_value);
++
++	if (return_value.error_code || return_value.ec_return_value)
++		printk(ACER_WARNING "Enabling Launch Manager failed: "
++			"0x%x - 0x%x\n", return_value.error_code,
++			return_value.ec_return_value);
++
++	return status;
++}
++
+ static int __init acer_wmi_init(void)
+ {
+ 	int err;
+@@ -1454,6 +1551,20 @@ static int __init acer_wmi_init(void)
+ 		       "generic video driver\n");
+ 	}
+=20
++	if (wmi_has_guid(WMID_GUID3)) {
++		if (ec_raw_mode) {
++			if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
++				printk(ACER_ERR "Cannot enable EC raw mode\n");
++				return -ENODEV;
++			}
++		} else if (ACPI_FAILURE(acer_wmi_enable_lm())) {
++			printk(ACER_ERR "Cannot enable Launch Manager mode\n");
++			return -ENODEV;
++		}
++	} else if (ec_raw_mode) {
++		printk(ACER_INFO "No WMID EC raw mode enable method\n");
++	}
++
+ 	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
+ 		err =3D acer_wmi_input_setup();
+ 		if (err)
+--=20
+1.6.0.2
