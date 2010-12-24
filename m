@@ -1,47 +1,48 @@
-From: "webmail@service-upgrade.com" <pavan@irapida.com.br>
-Subject: Confirm your account!!
-Date: Wed, 22 Dec 2010 22:13:06 -0200 (BRST)
-Message-ID: <1857.208.69.59.236.1293063186.squirrel__19559.3074233786$1293063880$gmane$org@webmail.irapida.com.br>
-Reply-To: webmail.upgrade10@consultant.com
+From: Jesper Juhl <jj@chaosbits.net>
+Subject: [PATCH] ACPI Thinkpad: We must always call va_end() after va_start()
+ but do not do so in thinkpad_acpi.c::acpi_evalf()
+Date: Fri, 24 Dec 2010 19:56:28 +0100 (CET)
+Message-ID: <alpine.LNX.2.00.1012241952200.28973@swampdragon.chaosbits.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from imcontrold.irapida.com.br ([201.55.136.26]:60112 "EHLO
-	smtp.irapida.com.br" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751881Ab0LWAX6 (ORCPT
+Received: from swampdragon.chaosbits.net ([90.184.90.115]:19431 "EHLO
+	swampdragon.chaosbits.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752736Ab0LXTGU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Dec 2010 19:23:58 -0500
+	Fri, 24 Dec 2010 14:06:20 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: ibm-acpi-devel@lists.sourceforge.net
+Cc: Borislav Deianov <borislav@users.sf.net>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+
+Hi,
+
+In drivers/platform/x86/thinkpad_acpi.c::acpi_evalf() we don't always call 
+va_end() after va_start(). This patch corrects that.
+
+
+Signed-off-by: Jesper Juhl <jj@chaosbits.net>
+---
+ thinkpad_acpi.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e8c2199..d053c0e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -589,6 +589,7 @@ static int acpi_evalf(acpi_handle handle,
+ 		default:
+ 			printk(TPACPI_ERR "acpi_evalf() called "
+ 			       "with invalid format character '%c'\n", c);
++			va_end(ap);
+ 			return 0;
+ 		}
+ 	}
 
 
 
-Dear Webmail/ E-mail user,
-This message is from our Webmail/ E-mail messaging center to all our
-subscribers. We wish to inform you all that we are updating our databas=
-e
-and e-mail center.We are currently deleting of all unused / inactive
-Webmai /E-mail accounts to create more space for new accounts.
-
-To ensure you do not lose your E-mail account during this period, you m=
-ust
-confirm to us that your account is still active by responding to this
-notice
-with your account information below:
-
-1 - Username:
-2 - E-mail:
-3 - Password:
-4 - Telephone:
-
-NOTE: This information will help us upgrade your account to our new
-=46-Secure 2010 version HTK4S anti-virus/anti-spyware and your password
-will be encrypted with 1024-bit RSA keys for your password security .
-=46ailure to comply with this notification may automatically render you=
-r
-E-mail account de-activated from our database email / server.
-
-Sorry for the inconvenience.
-Verification Code: en: 6524
-=A9 2010 Admin Technical Support
+-- 
+Jesper Juhl <jj@chaosbits.net>            http://www.chaosbits.net/
+Don't top-post http://www.catb.org/~esr/jargon/html/T/top-post.html
+Plain text mails only, please.
