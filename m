@@ -1,37 +1,33 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] ACPI Thinkpad: We must always call va_end() after
- va_start() but do not do so in thinkpad_acpi.c::acpi_evalf()
-Date: Sat, 25 Dec 2010 23:03:22 -0200
-Message-ID: <20101226010322.GB16593@khazad-dum.debian.net>
-References: <alpine.LNX.2.00.1012241952200.28973@swampdragon.chaosbits.net>
+From: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
+Subject: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
+Date: Tue, 28 Dec 2010 14:31:45 +0200
+Message-ID: <1293539505.1886.14.camel@lenovo-s12>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:37348 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751333Ab0LZBD2 (ORCPT
+Received: from courier.cs.helsinki.fi ([128.214.9.1]:50647 "EHLO
+	mail.cs.helsinki.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753405Ab0L1Mbr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 25 Dec 2010 20:03:28 -0500
-Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.00.1012241952200.28973@swampdragon.chaosbits.net>
+	Tue, 28 Dec 2010 07:31:47 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jesper Juhl <jj@chaosbits.net>
-Cc: ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Fri, 24 Dec 2010, Jesper Juhl wrote:
-> In drivers/platform/x86/thinkpad_acpi.c::acpi_evalf() we don't always call 
-> va_end() after va_start(). This patch corrects that.
+Hi,
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+I hope I'm on the right mailing list for this issue. The kernel (I'm
+using Fedora's 2.6.37rc7) loads the acer-wmi module on a Lenovo Ideapad
+S12 netbook and I think that's not necessary. Loading the module causes
+problems with NetworkManager, the wireless network can't be enabled at
+all. This seems to happen because acer-wmi adds a soft blocked wifi
+killswitch, which can't be unblocked with rfkill.
 
-Although that codepath is for a driver source bug, so arguably it would
-be better to just BUG().
-
-It has never been tested (or hit in practice), I think.
+Now that the kernel has the ideapad-laptop module, which seems to handle
+the killswitches better, acer-wmi could probably be disabled with this
+netbook. I know almost nothing about ACPI/WMI myself, which is why I'm
+writing on the list instead of just fixing this.
 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Ville-Pekka Vainio
