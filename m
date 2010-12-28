@@ -1,58 +1,62 @@
-From: "Joey Lee" <jlee@novell.com>
+From: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
 Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Tue, 28 Dec 2010 08:36:45 -0700
-Message-ID: <4D1A9EBD02000023000261D7@novprvlin0050.provo.novell.com>
+Date: Tue, 28 Dec 2010 19:28:53 +0200
+Message-ID: <1293557333.1887.5.camel@lenovo-s12>
+References: <4D1A9EBD02000023000261D7@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from courier.cs.helsinki.fi ([128.214.9.1]:38139 "EHLO
+	mail.cs.helsinki.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753447Ab0L1R24 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Dec 2010 12:28:56 -0500
+In-Reply-To: <4D1A9EBD02000023000261D7@novprvlin0050.provo.novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: vpivaini@cs.helsinki.fi
+To: Joey Lee <jlee@novell.com>
 Cc: platform-driver-x86@vger.kernel.org
 
-Hi Vainio,=20
+I decided to upload the files to the web instead of attaching them to
+the email since they are quite large.
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2010-12-28 =E6=96=BC 14:31 +0200=EF=BC=8CVi=
-lle-Pekka Vainio =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi,
->=20
-> I hope I'm on the right mailing list for this issue. The kernel (I'm
-> using Fedora's 2.6.37rc7) loads the acer-wmi module on a Lenovo Ideap=
-ad
-> S12 netbook and I think that's not necessary. Loading the module caus=
-es
-> problems with NetworkManager, the wireless network can't be enabled a=
-t
-> all. This seems to happen because acer-wmi adds a soft blocked wifi
-> killswitch, which can't be unblocked with rfkill.
->=20
-> Now that the kernel has the ideapad-laptop module, which seems to han=
-dle
-> the killswitches better, acer-wmi could probably be disabled with thi=
-s
-> netbook. I know almost nothing about ACPI/WMI myself, which is why I'=
-m
-> writing on the list instead of just fixing this.
->=20
+ti, 2010-12-28 kello 08:36 -0700, Joey Lee kirjoitti:
+> It's not make sense acer-wmi probe on Ideapad S12 netbook, could you
+> please help to attached the following information?
+> 
+> - modinfo acer-wmi > acer-wmi.log
 
-It's odd, because acer-wmi driver in 2.6.37rc7 only auto-probe when the
-it detected the following wmi GUIDs:
+http://vpv.kapsi.fi/ideapad-s12/modinfo-acer-wmi.txt
 
-86 MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");
-87 MODULE_ALIAS("wmi:6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3");
+> - dmesg > dmesg.log
 
-It's not make sense acer-wmi probe on Ideapad S12 netbook, could you
-please help to attached the following information?
+http://vpv.kapsi.fi/ideapad-s12/dmesg-acer-wmi.txt
 
-- modinfo acer-wmi > acer-wmi.log
-- dmesg > dmesg.log
+> - dmidecode > dmidecode.log
 
-better attached:
-- dmidecode > dmidecode.log
-- acpidump > acpidump.dat
+http://vpv.kapsi.fi/ideapad-s12/dmidecode-acer-wmi.txt
 
+> - acpidump > acpidump.dat
 
-Thank's a lot!
-Joey Lee
+http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
+
+The dmesg may not reveal much, but if I blacklist acer-wmi for booting
+and then load it later manually, this is what appears
+in /var/log/messages:
+
+kernel: [ 4795.867540] acer-wmi: Acer Laptop ACPI-WMI Extras
+NetworkManager[914]: <info> found WiFi radio killswitch rfkill7 (at /sys/devices/platform/acer-wmi/rfkill/rfkill7) (driver acer-wmi)
+NetworkManager[914]: <info> WiFi now disabled by radio killswitch
+
+Then, if I unload acer-wmi:
+
+kernel: [ 4852.875590] acer-wmi: Acer Laptop WMI Extras unloaded
+NetworkManager[914]: <info> radio
+killswitch /sys/devices/platform/acer-wmi/rfkill/rfkill7 disappeared
+NetworkManager[914]: <info> WiFi now enabled by radio killswitch
+NetworkManager[914]: <info> (wlan0): bringing up device.
+kernel: [ 4852.905625] wmi: Mapper unloaded
+
+-- 
+Ville-Pekka Vainio
