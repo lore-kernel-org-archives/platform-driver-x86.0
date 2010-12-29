@@ -1,124 +1,51 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Tue, 28 Dec 2010 21:30:03 -0700
-Message-ID: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com>
+From: Nicolas Limare <nicolas+debian@limare.net>
+Subject: Re: Bug#587014: screen brightness can't be modified on some
+ Panasonic laptops
+Date: Wed, 29 Dec 2010 16:24:28 +0100
+Message-ID: <20101229152428.GB4116@nashi.hw.39mm.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from yuzu.gnd.39mm.net ([92.243.5.154]:57125 "EHLO yuzu.gnd.39mm.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753283Ab0L2Pa5 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 29 Dec 2010 10:30:57 -0500
 Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: vpivaini@cs.helsinki.fi
-Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
-
-Hi Vainio,=20
-
-=E6=96=BC =E4=BA=8C=EF=BC=8C2010-12-28 =E6=96=BC 19:28 +0200=EF=BC=8CVi=
-lle-Pekka Vainio =E6=8F=90=E5=88=B0=EF=BC=9A
-> I decided to upload the files to the web instead of attaching them to
-> the email since they are quite large.
->=20
-> ti, 2010-12-28 kello 08:36 -0700, Joey Lee kirjoitti:
-> > It's not make sense acer-wmi probe on Ideapad S12 netbook, could yo=
-u
-> > please help to attached the following information?
-> >=20
-> > - modinfo acer-wmi > acer-wmi.log
->=20
-> http://vpv.kapsi.fi/ideapad-s12/modinfo-acer-wmi.txt
->=20
-> > - dmesg > dmesg.log
->=20
-> http://vpv.kapsi.fi/ideapad-s12/dmesg-acer-wmi.txt
->=20
-> > - dmidecode > dmidecode.log
->=20
-> http://vpv.kapsi.fi/ideapad-s12/dmidecode-acer-wmi.txt
->=20
-> > - acpidump > acpidump.dat
->=20
-> http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
->=20
-
-It's funny Lenovo S12's _WDG have GUID that matches with Acer AMW0.
-
-Dump from Lenovo Ideapad S12's _WDG:
-
-67C3371D-95A3-4C37-BB61-DD47B491DAAB:
-        object_id: AB
-        notify_id: 41
-        reserved: 42
-        instance_count: 1
-        flags: 0x2 ACPI_WMI_METHOD
+To: 587014@bugs.debian.org
+Cc: ben@decadent.org.uk, laforge@gnumonks.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, cristopher.camacho@gmail.com
 
 
-In acer-wmi code:
+--3lcZGd9BuhuYXNfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#define AMW0_GUID1              "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
+I also received a message reportin for this bug on a Panasonic CF-52.
 
-MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");	//match
+Can I in any way help this bug get more attention?
 
+Just in case, I am at 27C3 now, with my laptop, so if anyone there
+wants to directly investigate the issue just let me know.
 
-
-Maybe Wistron is the ODM (or OEM) to manufacture Lenovo Ideapad S12 ?
-Anyway,=20
-I added this Ideapad S12 to blacklist in acer-wmi driver because it mus=
-t
-supported by ideapad-laptop driver.
-
-I also added Cc. to Carlos Corbacho, need his review.
-
-Does is possible you help to test this patch?
-
-
-Thank's a lot!
-Joey Lee
-
-
-
-From 194a1b499c36db057319712220af8ec7400030d7 Mon Sep 17 00:00:00 2001
-=46rom: Lee, Chun-Yi <jlee@novell.com>
-Date: Wed, 29 Dec 2010 00:17:23 +0800
-Subject: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
-
-The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it caus=
-es
-acer-wmi driver auto-probe when system boot but there already have
-ideapad-laptop driver to support Ideapad serial.
-So, add Lenovo Ideapad S12 to acer blacklist to disable it.
-
-Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
----
- drivers/platform/x86/acer-wmi.c |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 28288ad..387ac7c 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -310,6 +310,17 @@ static struct dmi_system_id __devinitdata acer_bla=
-cklist[] =3D {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
- 		},
- 	},
-+	/*
-+	 * The Lenovo Ideapad S12 have GUID that matches with AMW0 - disable =
-it.
-+	 * There already have ideapad-laptop driver to support Ideapad serial=
-=2E
-+	 */
-+	{
-+		.ident =3D "Lenovo Ideapad S12",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "20021,2959"),
-+		},
-+	},
- 	{}
- };
-=20
 --=20
-1.6.0.2
+Nicolas LIMARE
+http://nicolas.limare.net/                         pgp:0xFA423F4F
+
+--3lcZGd9BuhuYXNfi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk0bUqwACgkQvviFAPpCP09LAQCfdGma/JAYm/wVXmzFdA9FMWlw
+J9QAn2WjSDkJRDqXVoS3L+Y1E8Q2EBdB
+=o/xK
+-----END PGP SIGNATURE-----
+
+--3lcZGd9BuhuYXNfi--
