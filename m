@@ -1,62 +1,124 @@
-From: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
+From: "Joey Lee" <jlee@novell.com>
 Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Tue, 28 Dec 2010 19:28:53 +0200
-Message-ID: <1293557333.1887.5.camel@lenovo-s12>
-References: <4D1A9EBD02000023000261D7@novprvlin0050.provo.novell.com>
+Date: Tue, 28 Dec 2010 21:30:03 -0700
+Message-ID: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from courier.cs.helsinki.fi ([128.214.9.1]:38139 "EHLO
-	mail.cs.helsinki.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753447Ab0L1R24 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Dec 2010 12:28:56 -0500
-In-Reply-To: <4D1A9EBD02000023000261D7@novprvlin0050.provo.novell.com>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: vpivaini@cs.helsinki.fi
+Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
 
-I decided to upload the files to the web instead of attaching them to
-the email since they are quite large.
+Hi Vainio,=20
 
-ti, 2010-12-28 kello 08:36 -0700, Joey Lee kirjoitti:
-> It's not make sense acer-wmi probe on Ideapad S12 netbook, could you
-> please help to attached the following information?
-> 
-> - modinfo acer-wmi > acer-wmi.log
+=E6=96=BC =E4=BA=8C=EF=BC=8C2010-12-28 =E6=96=BC 19:28 +0200=EF=BC=8CVi=
+lle-Pekka Vainio =E6=8F=90=E5=88=B0=EF=BC=9A
+> I decided to upload the files to the web instead of attaching them to
+> the email since they are quite large.
+>=20
+> ti, 2010-12-28 kello 08:36 -0700, Joey Lee kirjoitti:
+> > It's not make sense acer-wmi probe on Ideapad S12 netbook, could yo=
+u
+> > please help to attached the following information?
+> >=20
+> > - modinfo acer-wmi > acer-wmi.log
+>=20
+> http://vpv.kapsi.fi/ideapad-s12/modinfo-acer-wmi.txt
+>=20
+> > - dmesg > dmesg.log
+>=20
+> http://vpv.kapsi.fi/ideapad-s12/dmesg-acer-wmi.txt
+>=20
+> > - dmidecode > dmidecode.log
+>=20
+> http://vpv.kapsi.fi/ideapad-s12/dmidecode-acer-wmi.txt
+>=20
+> > - acpidump > acpidump.dat
+>=20
+> http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
+>=20
 
-http://vpv.kapsi.fi/ideapad-s12/modinfo-acer-wmi.txt
+It's funny Lenovo S12's _WDG have GUID that matches with Acer AMW0.
 
-> - dmesg > dmesg.log
+Dump from Lenovo Ideapad S12's _WDG:
 
-http://vpv.kapsi.fi/ideapad-s12/dmesg-acer-wmi.txt
+67C3371D-95A3-4C37-BB61-DD47B491DAAB:
+        object_id: AB
+        notify_id: 41
+        reserved: 42
+        instance_count: 1
+        flags: 0x2 ACPI_WMI_METHOD
 
-> - dmidecode > dmidecode.log
 
-http://vpv.kapsi.fi/ideapad-s12/dmidecode-acer-wmi.txt
+In acer-wmi code:
 
-> - acpidump > acpidump.dat
+#define AMW0_GUID1              "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
 
-http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
+MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");	//match
 
-The dmesg may not reveal much, but if I blacklist acer-wmi for booting
-and then load it later manually, this is what appears
-in /var/log/messages:
 
-kernel: [ 4795.867540] acer-wmi: Acer Laptop ACPI-WMI Extras
-NetworkManager[914]: <info> found WiFi radio killswitch rfkill7 (at /sys/devices/platform/acer-wmi/rfkill/rfkill7) (driver acer-wmi)
-NetworkManager[914]: <info> WiFi now disabled by radio killswitch
 
-Then, if I unload acer-wmi:
+Maybe Wistron is the ODM (or OEM) to manufacture Lenovo Ideapad S12 ?
+Anyway,=20
+I added this Ideapad S12 to blacklist in acer-wmi driver because it mus=
+t
+supported by ideapad-laptop driver.
 
-kernel: [ 4852.875590] acer-wmi: Acer Laptop WMI Extras unloaded
-NetworkManager[914]: <info> radio
-killswitch /sys/devices/platform/acer-wmi/rfkill/rfkill7 disappeared
-NetworkManager[914]: <info> WiFi now enabled by radio killswitch
-NetworkManager[914]: <info> (wlan0): bringing up device.
-kernel: [ 4852.905625] wmi: Mapper unloaded
+I also added Cc. to Carlos Corbacho, need his review.
 
--- 
-Ville-Pekka Vainio
+Does is possible you help to test this patch?
+
+
+Thank's a lot!
+Joey Lee
+
+
+
+From 194a1b499c36db057319712220af8ec7400030d7 Mon Sep 17 00:00:00 2001
+=46rom: Lee, Chun-Yi <jlee@novell.com>
+Date: Wed, 29 Dec 2010 00:17:23 +0800
+Subject: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
+
+The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it caus=
+es
+acer-wmi driver auto-probe when system boot but there already have
+ideapad-laptop driver to support Ideapad serial.
+So, add Lenovo Ideapad S12 to acer blacklist to disable it.
+
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+---
+ drivers/platform/x86/acer-wmi.c |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index 28288ad..387ac7c 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -310,6 +310,17 @@ static struct dmi_system_id __devinitdata acer_bla=
+cklist[] =3D {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
+ 		},
+ 	},
++	/*
++	 * The Lenovo Ideapad S12 have GUID that matches with AMW0 - disable =
+it.
++	 * There already have ideapad-laptop driver to support Ideapad serial=
+=2E
++	 */
++	{
++		.ident =3D "Lenovo Ideapad S12",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20021,2959"),
++		},
++	},
+ 	{}
+ };
+=20
+--=20
+1.6.0.2
