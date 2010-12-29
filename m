@@ -1,30 +1,31 @@
-From: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
+From: "Joey Lee" <jlee@novell.com>
 Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Thu, 30 Dec 2010 00:12:50 +0200
-Message-ID: <1293660770.2557.1.camel@lenovo-s12>
-References: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com>
+Date: Wed, 29 Dec 2010 16:41:15 -0700
+Message-ID: <4D1C61CB02000023000262C5@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from courier.cs.helsinki.fi ([128.214.9.1]:37756 "EHLO
-	mail.cs.helsinki.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753156Ab0L2WMw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Dec 2010 17:12:52 -0500
-In-Reply-To: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
+To: vpivaini@cs.helsinki.fi
 Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
 
-Hi Joey and others,
+Hi Vainio,=20
 
-ti, 2010-12-28 kello 21:30 -0700, Joey Lee kirjoitti:
-> Does is possible you help to test this patch?
+=E6=96=BC =E5=9B=9B=EF=BC=8C2010-12-30 =E6=96=BC 00:12 +0200=EF=BC=8CVi=
+lle-Pekka Vainio =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi Joey and others,
+>=20
+> ti, 2010-12-28 kello 21:30 -0700, Joey Lee kirjoitti:
+> > Does is possible you help to test this patch?
+>=20
+> The patch works, thanks! acer-wmi is no longer loaded on the Ideapad
+> S12.
+>=20
 
-The patch works, thanks! acer-wmi is no longer loaded on the Ideapad
-S12.
+Thank's for your help to test it, I will send out the patch again to
+Carlos Corbacho and other platform driver experts for review.
 
--- 
-Ville-Pekka Vainio
+Joey Lee
