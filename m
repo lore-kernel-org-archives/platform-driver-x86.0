@@ -1,31 +1,57 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Wed, 29 Dec 2010 16:41:15 -0700
-Message-ID: <4D1C61CB02000023000262C5@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
+Date: Thu, 30 Dec 2010 09:32:54 +0800
+Message-ID: <1293672774-13563-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:62292 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754182Ab0L3BfV (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 29 Dec 2010 20:35:21 -0500
+Received: by vws16 with SMTP id 16so4310813vws.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Dec 2010 17:35:20 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: vpivaini@cs.helsinki.fi
-Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Thomas Renninger <trenn@suse.de>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-Hi Vainio,=20
+The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it causes
+acer-wmi driver auto-probe when system boot but there already have
+ideapad-laptop driver to support Ideapad serial.
+So, add Lenovo Ideapad S12 to acer blacklist to disable it.
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2010-12-30 =E6=96=BC 00:12 +0200=EF=BC=8CVi=
-lle-Pekka Vainio =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi Joey and others,
->=20
-> ti, 2010-12-28 kello 21:30 -0700, Joey Lee kirjoitti:
-> > Does is possible you help to test this patch?
->=20
-> The patch works, thanks! acer-wmi is no longer loaded on the Ideapad
-> S12.
->=20
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Tested-by: Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Thomas Renninger <trenn@suse.de>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+---
+ drivers/platform/x86/acer-wmi.c |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
 
-Thank's for your help to test it, I will send out the patch again to
-Carlos Corbacho and other platform driver experts for review.
-
-Joey Lee
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 28288ad..387ac7c 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -310,6 +310,17 @@ static struct dmi_system_id __devinitdata acer_blacklist[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
+ 		},
+ 	},
++	/*
++	 * The Lenovo Ideapad S12 have GUID that matches with AMW0 - disable it.
++	 * There already have ideapad-laptop driver to support Ideapad serial.
++	 */
++	{
++		.ident = "Lenovo Ideapad S12",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20021,2959"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+1.6.0.2
