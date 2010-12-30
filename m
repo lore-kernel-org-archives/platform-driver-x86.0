@@ -1,77 +1,48 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
-Date: Wed, 29 Dec 2010 19:09:24 -0700
-Message-ID: <4D1C848402000023000262E8@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Feng Tang <feng.tang@intel.com>
+Subject: [PATCH] intel_pmic_gpio: modify EOI handling following change of kernel irq subsystem
+Date: Thu, 30 Dec 2010 17:32:54 +0800
+Message-ID: <1293701574-28378-1-git-send-email-feng.tang@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from mga02.intel.com ([134.134.136.20]:48055 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750914Ab0L3JeC (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 30 Dec 2010 04:34:02 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org
-Cc: vpivaini@cs.helsinki.fi, corentincj@iksaif.net, dtor@mail.ru, carlos@strangeworlds.co.uk, trenn@suse.de, platform-driver-x86@vger.kernel.org
+To: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
+Cc: alan@linux.intel.com, tglx@linutronix.de, Feng Tang <feng.tang@intel.com>, Alek Du <alek.du@intel.com>
 
-Add Cc. issue reporter Ville-Pekka Vainio <vpivaini@cs.helsinki.fi>
+Latest kernel has many changes in IRQ subsystem and its interfaces, like adding
+"irq_eoi" for struct irq_chip, this patch will make it support both the new
+and old interface.
 
-Hi Matthew,=20
+Cc: Alek Du <alek.du@intel.com>
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+---
+ drivers/platform/x86/intel_pmic_gpio.c |   10 +++++++++-
+ 1 files changed, 9 insertions(+), 1 deletions(-)
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2010-12-30 =E6=96=BC 01:41 +0000=EF=BC=8CMa=
-tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Thu, Dec 30, 2010 at 09:32:54AM +0800, Lee, Chun-Yi wrote:
-> > The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it =
-causes
-> > acer-wmi driver auto-probe when system boot but there already have
-> > ideapad-laptop driver to support Ideapad serial.
-> > So, add Lenovo Ideapad S12 to acer blacklist to disable it.
->=20
-> This seems like it could be handled better. Does the interface fail, =
-or=20
-> does it merely duplicate the functionality of the ideapad driver?
->=20
-
-Ville-Pekka Vainio reported this issue, acer-wmi adds a soft blocked
-wifi killswitch, which can't be unblocked with rfkill. It causes
-NetworkManager on Fedora have problem.
-
-Vainio said ideapad-laptop driver handle the killswitches better, there
-is mail loop for discuss this issue:
-
-http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg0102=
-7.html
-
-
-Thank's a lot!
-Joey Lee
-
-
-                                =E5=BE=9E:=20
-Ville-Pekka Vainio
-<vpivaini@cs.helsinki.fi>
-                                =E8=87=B3:=20
-platform-driver-x86@vger.kernel.org
-                              =E4=B8=BB=E6=97=A8:=20
-acer-wmi is unnecessarily loaded on
-a Lenovo Ideapad S12
-                              =E6=97=A5=E6=9C=9F:=20
-Tue, 28 Dec 2010 14:31:45 +0200
-(20:31 CST)
-
-
-Hi,
-
-I hope I'm on the right mailing list for this issue. The kernel (I'm
-using Fedora's 2.6.37rc7) loads the acer-wmi module on a Lenovo Ideapad
-S12 netbook and I think that's not necessary. Loading the module causes
-problems with NetworkManager, the wireless network can't be enabled at
-all. This seems to happen because acer-wmi adds a soft blocked wifi
-killswitch, which can't be unblocked with rfkill.
-
-Now that the kernel has the ideapad-laptop module, which seems to handl=
-e
-the killswitches better, acer-wmi could probably be disabled with this
-netbook. I know almost nothing about ACPI/WMI myself, which is why I'm
-writing on the list instead of just fixing this.
-
---=20
-Ville-Pekka Vainio
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+index e61db9d..4efb2c6 100644
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ b/drivers/platform/x86/intel_pmic_gpio.c
+@@ -244,7 +244,15 @@ static void pmic_irq_handler(unsigned irq, struct irq_desc *desc)
+ 			generic_handle_irq(pg->irq_base + gpio);
+ 		}
+ 	}
+-	desc->chip->eoi(irq);
++
++	if (desc->chip->irq_eoi)
++		desc->chip->irq_eoi(irq_get_irq_data(irq));
++#ifndef CONFIG_GENERIC_HARDIRQS_NO_DEPRECATED
++	else if (desc->chip->eoi)
++		desc->chip->eoi(irq);
++#endif
++	else
++		dev_warn(pg->chip.dev, "missing EOI handler for irq %d\n", irq);
+ }
+ 
+ static int __devinit platform_pmic_gpio_probe(struct platform_device *pdev)
+-- 
+1.7.0.4
