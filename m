@@ -1,69 +1,122 @@
-From: Feng Tang <feng.tang@intel.com>
-Subject: Re: [PATCH] intel_pmic_gpio: modify EOI handling following change
- of kernel irq subsystem
-Date: Fri, 31 Dec 2010 09:48:20 +0800
-Message-ID: <20101231094820.351dade9@feng-i7>
-References: <1293701574-28378-1-git-send-email-feng.tang@intel.com>
-	<20101230134117.GA12686@srcf.ucam.org>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
+Date: Fri, 31 Dec 2010 02:10:49 -0700
+Message-ID: <4D1E38C90200002300026390@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:65008 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751274Ab0LaBtj convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Dec 2010 20:49:39 -0500
-In-Reply-To: <20101230134117.GA12686@srcf.ucam.org>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alan@linux.intel.com" <alan@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Du, Alek" <alek.du@intel.com>
+To: carlos@strangeworlds.co.uk
+Cc: vpivaini@cs.helsinki.fi, dwmw2@infradead.org, platform-driver-x86@vger.kernel.org
 
-On Thu, 30 Dec 2010 21:41:17 +0800
-Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+Add Cc. David Woodhouse
 
-> On Thu, Dec 30, 2010 at 05:32:54PM +0800, Feng Tang wrote:
-> > Latest kernel has many changes in IRQ subsystem and its interfaces,
-> > like adding "irq_eoi" for struct irq_chip, this patch will make it
-> > support both the new and old interface.
-> 
-> There's no point in having compatibility stubs in the mainline
-> kernel. Just fix the driver up to match the new behaviour.
-> 
+Hi Carlos,=20
 
-Thanks for the comments, here is the revised one
+=E6=96=BC =E5=9B=9B=EF=BC=8C2010-12-30 =E6=96=BC 10:04 +0000=EF=BC=8CCa=
+rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Wednesday 29 December 2010 04:30:03 Joey Lee wrote:
+>=20
+> [..]
+>=20
+> > Maybe Wistron is the ODM (or OEM) to manufacture Lenovo Ideapad S12=
+ ?
+> > Anyway,
+> > I added this Ideapad S12 to blacklist in acer-wmi driver because it=
+ must
+> > supported by ideapad-laptop driver.
+> >=20
+> > I also added Cc. to Carlos Corbacho, need his review.
+>=20
+> I suspect this is the same as all the Acer netbooks - they provide a =
+dummy WMI=20
+> interface which doesn't actually do anything. It would be nicer if th=
+ere were=20
+> a more generic way to do this, but this will do for now (I may try to=
+ play=20
+> around with my Aspire One and see if I can figure out some way to det=
+ect the=20
+> dummy interface, without needing to resort to DMI).
+>=20
 
------
-From 834453fe4cb94cfcda4487ef68967037f2b5d2f2 Mon Sep 17 00:00:00 2001
-From: Feng Tang <feng.tang@intel.com>
-Date: Mon, 29 Nov 2010 13:39:40 +0800
-Subject: [PATCH] intel_pmic_gpio: modify EOI handling following change of kernel irq subsystem
+The issue reporter Vainio help to dump the acpi informatoin and put
+here:
+> - acpidump > acpidump.dat
+http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
 
-Latest kernel has many changes in IRQ subsystem and its interfaces, like adding
-"irq_eoi" for struct irq_chip, this patch will make it support both the new
-and old interface.
+There have AMW0 declare in DSDT:
 
-Cc: Alek Du <alek.du@intel.com>
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- drivers/platform/x86/intel_pmic_gpio.c |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+        Device (AMW0)
+        { =20
+            Name (_HID, "*pnp0c14")
+            Name (_UID, 0x00)
+            Name (WLMP, 0x00)
+            Name (WMID, 0x00)
+            Name (B0ED, Buffer (0x04)
 
-diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
-index e61db9d..930e627 100644
---- a/drivers/platform/x86/intel_pmic_gpio.c
-+++ b/drivers/platform/x86/intel_pmic_gpio.c
-@@ -244,7 +244,11 @@ static void pmic_irq_handler(unsigned irq, struct irq_desc *desc)
- 			generic_handle_irq(pg->irq_base + gpio);
- 		}
- 	}
--	desc->chip->eoi(irq);
-+
-+	if (desc->chip->irq_eoi)
-+		desc->chip->irq_eoi(irq_get_irq_data(irq));
-+	else
-+		dev_warn(pg->chip.dev, "missing EOI handler for irq %d\n", irq);
- }
- 
- static int __devinit platform_pmic_gpio_probe(struct platform_device *pdev)
+Per Vainio's report, the wlan rfkill cann't set to un-block when he use=
+d
+acer-wmi driver, but ideapad-laptop driver handle the killswitches
+better.
+
+Sorry,
+I have no ideapad S12 machine for double check. Need David Woodhouse or
+Ville-Pekka Vainio's confirm the ideapad-laptop driver supports Ideapad
+S12 netbook.
+
+I just simply checked the ideapad-laptop source code, it handle the
+killswitch state by access EC address, if it works, then acer-wmi don't
+need probe and touch the same function. So, I thought still need add
+S12's dmi information to blacklist in acer-wmi to avoid conflict.
+
+> [..]
+>=20
+> > From: Lee, Chun-Yi <jlee@novell.com>
+> > Date: Wed, 29 Dec 2010 00:17:23 +0800
+> > Subject: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
+> >=20
+> > The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it =
+causes
+> > acer-wmi driver auto-probe when system boot but there already have
+> > ideapad-laptop driver to support Ideapad serial.
+> > So, add Lenovo Ideapad S12 to acer blacklist to disable it.
+> >=20
+> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+> > Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+>=20
+> Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+
+Thank's a lot for your acked.
+
+Joey Lee
+
+> > ---
+> >  drivers/platform/x86/acer-wmi.c |   11 +++++++++++
+> >  1 files changed, 11 insertions(+), 0 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/acer-wmi.c
+> > b/drivers/platform/x86/acer-wmi.c index 28288ad..387ac7c 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -310,6 +310,17 @@ static struct dmi_system_id __devinitdata
+> > acer_blacklist[] =3D { DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
+> >  		},
+> >  	},
+> > +	/*
+> > +	 * The Lenovo Ideapad S12 have GUID that matches with AMW0 - disa=
+ble it.
+> > +	 * There already have ideapad-laptop driver to support Ideapad se=
+rial.
+> > +	 */
+> > +	{
+> > +		.ident =3D "Lenovo Ideapad S12",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "20021,2959"),
+> > +		},
+> > +	},
+> >  	{}
+> >  };
