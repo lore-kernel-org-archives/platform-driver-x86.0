@@ -1,53 +1,36 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: Bug#587014: screen brightness can't be modified on some Panasonic laptops
-Date: Mon, 3 Jan 2011 10:40:03 +0100
-Message-ID: <201101031040.03797.trenn@suse.de>
-References: <20101229152428.GB4116@nashi.hw.39mm.net>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] intel_scu_ipc: Utility driver for intel scu ipc
+Date: Mon, 3 Jan 2011 10:42:41 +0000
+Message-ID: <20110103104241.01db5e1d@lxorguk.ukuu.org.uk>
+References: <20101022144318.30569.62307.stgit@localhost.localdomain>
+	<201101031017.10481.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-6"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:35915 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752942Ab1ACJkG (ORCPT
+Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:34174 "EHLO
+	www.etchedpixels.co.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1750738Ab1ACKnU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Jan 2011 04:40:06 -0500
-In-Reply-To: <20101229152428.GB4116@nashi.hw.39mm.net>
+	Mon, 3 Jan 2011 05:43:20 -0500
+In-Reply-To: <201101031017.10481.trenn@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Nicolas Limare <nicolas+debian@limare.net>
-Cc: 587014@bugs.debian.org, ben@decadent.org.uk, laforge@gnumonks.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, cristopher.camacho@gmail.com
+To: Thomas Renninger <trenn@suse.de>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, sreedhara.ds@intel.com
 
-On Wednesday 29 December 2010 16:24:28 Nicolas Limare wrote:
-> I also received a message reportin for this bug on a Panasonic CF-52.
-> 
-> Can I in any way help this bug get more attention?
-> 
-What is Bug#587014? Do you have a link?
+> > This driver implements ioctl and interfaces with intel scu ipc driver. It
+> > is used to access pmic/msic registers from user space and firmware update
+> > utility.
+> Why is an ioctl used for updating the firmware?
+> Why isn't request_firmware(..) via:
+> /lib/firmware/...
+> used?
 
-Panasonic is the only driver which will always try to use
-native backlight switching (may conflict with video.ko?).
+Because you would then still need an ioctl to say "go do the upload"
 
-drivers/platform/x86/panasonic-laptop.c misses a line like:
-if (acpi_video_backlight_support()
+This firmware is flashed into the device, it isn't loaded into memory and
+then used by the device. It's not the kind of thing you want to get wrong
+or automate behind someone's back.
 
-The reason panasonic was not changed to differ acpi/native
-switching was because ACPI based switching resulted in 2 missing
-backlight states. But this was fixed by better (more Windows compatible) 
-parsing the backlight ACPI states and they should be all availeable
-with ACPI as well. Len Brown has/had such a machine.
-
-> Just in case, I am at 27C3 now, with my laptop, so if anyone there
-> wants to directly investigate the issue just let me know.
-No idea whether it's above, there is not much info about the issue,
-but you could try in this direction. Tell me if it helps or if
-you need assistance to try things out.
-
-Ah, and there is the "global methods execution is broken":
-https://bugzilla.kernel.org/show_bug.cgi?id=19462
-which very much affects Panasonics.
-Make sure your kernel has the git commit mentioned in the
-last comment.
-
-    Thomas
+Alan
