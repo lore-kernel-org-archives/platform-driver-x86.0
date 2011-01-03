@@ -1,122 +1,76 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Fri, 31 Dec 2010 02:10:49 -0700
-Message-ID: <4D1E38C90200002300026390@novprvlin0050.provo.novell.com>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH] intel_scu_ipc: Utility driver for intel scu ipc
+Date: Mon, 3 Jan 2011 10:17:10 +0100
+Message-ID: <201101031017.10481.trenn@suse.de>
+References: <20101022144318.30569.62307.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Content-Disposition: inline
+Received: from cantor2.suse.de ([195.135.220.15]:35315 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751460Ab1ACJRN (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 3 Jan 2011 04:17:13 -0500
+In-Reply-To: <20101022144318.30569.62307.stgit@localhost.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: vpivaini@cs.helsinki.fi, dwmw2@infradead.org, platform-driver-x86@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, sreedhara.ds@intel.com
 
-Add Cc. David Woodhouse
+Hi,
 
-Hi Carlos,=20
+seen this a bit late..., one question:
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2010-12-30 =E6=96=BC 10:04 +0000=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Wednesday 29 December 2010 04:30:03 Joey Lee wrote:
->=20
-> [..]
->=20
-> > Maybe Wistron is the ODM (or OEM) to manufacture Lenovo Ideapad S12=
- ?
-> > Anyway,
-> > I added this Ideapad S12 to blacklist in acer-wmi driver because it=
- must
-> > supported by ideapad-laptop driver.
-> >=20
-> > I also added Cc. to Carlos Corbacho, need his review.
->=20
-> I suspect this is the same as all the Acer netbooks - they provide a =
-dummy WMI=20
-> interface which doesn't actually do anything. It would be nicer if th=
-ere were=20
-> a more generic way to do this, but this will do for now (I may try to=
- play=20
-> around with my Aspire One and see if I can figure out some way to det=
-ect the=20
-> dummy interface, without needing to resort to DMI).
->=20
+On Friday 22 October 2010 16:43:55 Alan Cox wrote:
+> From: Sreedhara DS <sreedhara.ds@intel.com>
+> 
+> This driver implements ioctl and interfaces with intel scu ipc driver. It
+> is used to access pmic/msic registers from user space and firmware update
+> utility.
+Why is an ioctl used for updating the firmware?
+Why isn't request_firmware(..) via:
+/lib/firmware/...
+used?
+Then the firmware could be maintained here:
+http://git.kernel.org/?p=linux/kernel/git/dwmw2/linux-firmware.git;a=summary
+and no further userspace tools for firmware updating are needed.
 
-The issue reporter Vainio help to dump the acpi informatoin and put
-here:
-> - acpidump > acpidump.dat
-http://vpv.kapsi.fi/ideapad-s12/acpidump.dat
+Thanks,
 
-There have AMW0 declare in DSDT:
-
-        Device (AMW0)
-        { =20
-            Name (_HID, "*pnp0c14")
-            Name (_UID, 0x00)
-            Name (WLMP, 0x00)
-            Name (WMID, 0x00)
-            Name (B0ED, Buffer (0x04)
-
-Per Vainio's report, the wlan rfkill cann't set to un-block when he use=
-d
-acer-wmi driver, but ideapad-laptop driver handle the killswitches
-better.
-
-Sorry,
-I have no ideapad S12 machine for double check. Need David Woodhouse or
-Ville-Pekka Vainio's confirm the ideapad-laptop driver supports Ideapad
-S12 netbook.
-
-I just simply checked the ideapad-laptop source code, it handle the
-killswitch state by access EC address, if it works, then acer-wmi don't
-need probe and touch the same function. So, I thought still need add
-S12's dmi information to blacklist in acer-wmi to avoid conflict.
-
-> [..]
->=20
-> > From: Lee, Chun-Yi <jlee@novell.com>
-> > Date: Wed, 29 Dec 2010 00:17:23 +0800
-> > Subject: [PATCH] Add Lenovo Ideapad S12 to acer blacklist
-> >=20
-> > The Lenovo Ideapad S12's _WDG have GUID that matches with AMW0, it =
-causes
-> > acer-wmi driver auto-probe when system boot but there already have
-> > ideapad-laptop driver to support Ideapad serial.
-> > So, add Lenovo Ideapad S12 to acer blacklist to disable it.
-> >=20
-> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-> > Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
->=20
-> Acked-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
-
-Thank's a lot for your acked.
-
-Joey Lee
-
-> > ---
-> >  drivers/platform/x86/acer-wmi.c |   11 +++++++++++
-> >  1 files changed, 11 insertions(+), 0 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/acer-wmi.c
-> > b/drivers/platform/x86/acer-wmi.c index 28288ad..387ac7c 100644
-> > --- a/drivers/platform/x86/acer-wmi.c
-> > +++ b/drivers/platform/x86/acer-wmi.c
-> > @@ -310,6 +310,17 @@ static struct dmi_system_id __devinitdata
-> > acer_blacklist[] =3D { DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
-> >  		},
-> >  	},
-> > +	/*
-> > +	 * The Lenovo Ideapad S12 have GUID that matches with AMW0 - disa=
-ble it.
-> > +	 * There already have ideapad-laptop driver to support Ideapad se=
-rial.
-> > +	 */
-> > +	{
-> > +		.ident =3D "Lenovo Ideapad S12",
-> > +		.matches =3D {
-> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "20021,2959"),
-> > +		},
-> > +	},
-> >  	{}
-> >  };
+   Thomas
+> 
+> Signed-off-by: Sreedhara DS <sreedhara.ds@intel.com>
+> [Extensive clean up and debug]
+> Signed-off-by: Alan Cox <alan@linux.intel.com>
+...
+> +/**
+> + *	scu_ipc_ioctl		-	control ioctls for the SCU
+> + *	@fp: file handle of the SCU device
+> + *	@cmd: ioctl coce
+> + *	@arg: pointer to user passed structure
+> + *
+> + *	Support the I/O and firmware flashing interfaces of the SCU
+> + */
+> +static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
+> +							unsigned long arg)
+> +{
+> +	int ret;
+> +	struct scu_ipc_data  data;
+> +	void __user *argp = (void __user *)arg;
+> +
+> +	if (!capable(CAP_SYS_RAWIO))
+> +		return -EPERM;
+> +
+> +	if (cmd == INTE_SCU_IPC_FW_UPDATE) {
+> +			u8 *fwbuf = kmalloc(MAX_FW_SIZE, GFP_KERNEL);
+> +			if (fwbuf == NULL)
+> +				return -ENOMEM;
+> +			if (copy_from_user(fwbuf, (u8 *)arg, MAX_FW_SIZE)) {
+> +				kfree(fwbuf);
+> +				return -EFAULT;
+> +			}
+> +			ret = intel_scu_ipc_fw_update(fwbuf, MAX_FW_SIZE);
+> +			kfree(fwbuf);
+> +			return ret;
