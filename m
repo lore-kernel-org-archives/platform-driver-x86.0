@@ -1,17 +1,22 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 2/4] acer-wmi: Enabled Acer Launch Manager mode
-Date: Fri, 7 Jan 2011 22:27:58 +0000
-Message-ID: <20110107222758.GD32575@srcf.ucam.org>
-References: <4D10BA220200002300025D25@novprvlin0050.provo.novell.com>
+Subject: Re: Patch for drivers/platform/x86/compal-laptop.c
+Date: Fri, 7 Jan 2011 22:30:28 +0000
+Message-ID: <20110107223028.GE32575@srcf.ucam.org>
+References: <201012182009.57670.aacid@kde.org> <20101220161132.GC25502@srcf.ucam.org> <201012202249.36307.aacid@kde.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:37260 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753264Ab1AGWaf (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 7 Jan 2011 17:30:35 -0500
 Content-Disposition: inline
-In-Reply-To: <4D10BA220200002300025D25@novprvlin0050.provo.novell.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Joey Lee <jlee@novell.com>
-Cc: corentin.chary@gmail.com, dmitry.torokhov@gmail.com, corentincj@iksaif.net, Takashi Iwai <tiwai@novell.com>, carlos@strangeworlds.co.uk, jbenc@suse.cz, jdelvare@suse.de, trenn@suse.de, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <201012202249.36307.aacid@kde.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Albert Astals Cid <aacid@kde.org>
+Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org
 
 Applied, thanks.
 
