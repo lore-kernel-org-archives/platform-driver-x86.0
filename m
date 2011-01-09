@@ -1,24 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Patch for drivers/platform/x86/compal-laptop.c
-Date: Fri, 7 Jan 2011 22:30:28 +0000
-Message-ID: <20110107223028.GE32575@srcf.ucam.org>
-References: <201012182009.57670.aacid@kde.org> <20101220161132.GC25502@srcf.ucam.org> <201012202249.36307.aacid@kde.org>
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: [PATCH] intel_ips: fix sparse non-ANSI function warning
+Date: Sat, 8 Jan 2011 19:55:40 -0800
+Message-ID: <20110108195540.554e45e8.randy.dunlap@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:37260 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753264Ab1AGWaf (ORCPT
+Received: from rcsinet10.oracle.com ([148.87.113.121]:55001 "EHLO
+	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750911Ab1AIEA5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 7 Jan 2011 17:30:35 -0500
-Content-Disposition: inline
-In-Reply-To: <201012202249.36307.aacid@kde.org>
+	Sat, 8 Jan 2011 23:00:57 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Albert Astals Cid <aacid@kde.org>
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org
+To: platx86 <platform-driver-x86@vger.kernel.org>
+Cc: Matthew Garrett <mjg@redhat.com>
 
-Applied, thanks.
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Fix sparse warning for non-ANSI function declaration:
+
+drivers/platform/x86/intel_ips.c:1477:25: warning: non-ANSI function declaration of function 'ips_link_to_i915_driver'
+
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+Cc:	Matthew Garrett <mjg@redhat.com>
+---
+ drivers/platform/x86/intel_ips.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- lnx0107.orig/drivers/platform/x86/intel_ips.c
++++ lnx0107/drivers/platform/x86/intel_ips.c
+@@ -1474,7 +1474,7 @@ ips_gpu_turbo_enabled(struct ips_driver 
+ }
+ 
+ void
+-ips_link_to_i915_driver()
++ips_link_to_i915_driver(void)
+ {
+ 	/* We can't cleanly get at the various ips_driver structs from
+ 	 * this caller (the i915 driver), so just set a flag saying
