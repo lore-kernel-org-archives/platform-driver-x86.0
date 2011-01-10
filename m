@@ -1,51 +1,58 @@
-From: Thomas Renninger <trenn@suse.de>
-Subject: Re: [PATCH V2] platform-driver-x86: ACPI EC Extra driver for Oaktrail
-Date: Mon, 10 Jan 2011 10:16:50 +0100
-Message-ID: <201101101016.50662.trenn@suse.de>
-References: <20110106025949.GJ9496@kai-debian> <20110107220940.GA32575@srcf.ucam.org> <20110110071013.GJ30215@kai-debian>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:39016 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751908Ab1AJJQy (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 10 Jan 2011 04:16:54 -0500
-In-Reply-To: <20110110071013.GJ30215@kai-debian>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Yin Kangkai <kangkai.yin@linux.intel.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, "Wang, Yong Y" <yong.y.wang@intel.com>, "Liu, Bing Wei" <bing.wei.liu@intel.com>, Corentin Chary <corentin.chary@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: [PATCH] platform/x86: Consistently select LEDS Kconfig options
+Date: Mon, 10 Jan 2011 14:37:02 +0000
+Message-ID: <1294670222-25526-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-...
+Currently the x86 platform devices are not consistent about selecting
+or depending on the LEDs Kconfig variables, and this inconsistency
+leads to Kconfig getting upset and refusing to offer LEDs (even on
+non-x86 platforms):
 
-> > Is any hardware actually going to ship with this identifier, or will 
-> > vendors change the string?
-> 
-> 
-> I think vendors and OEMs will change this string. But we can add the
-> DMI_BOARD_NAME, DMI_BOARD_VERSION, etc. back later, can we?
+drivers/platform/x86/Kconfig:422:error: recursive dependency detected!
+drivers/platform/x86/Kconfig:422:       symbol EEEPC_WMI depends on ACPI_WMI
+drivers/platform/x86/Kconfig:438:       symbol ACPI_WMI is selected by ACER_WMI
+drivers/platform/x86/Kconfig:18:        symbol ACER_WMI depends on LEDS_CLASS
+drivers/leds/Kconfig:10:        symbol LEDS_CLASS is selected by EEEPC_WMI
 
-I could imagine vendors will also build a higher level WMI, ACPI or
-whatever interface on it (EC bits should not be accessed directly).
-Compare with acer-wmi, hp-wmi, platformXY-*, ...
-They have their userspace tools/drivers in place for Windows and I
-doubt they will add these EC bits there. Instead I expect they will
-use the same API which works for their other platforms and add some
-ACPI code to glue the EC bits with their (depending on vendor mostly
-ACPI based) their Windows laptop driver.
-We also have these drivers (re-engineered or implemented by the vendors)
-which would result in double HW access.
+Fix this by always selecting rather than depending on the symbols as
+slightly more drivers use this approach already and it seems more
+user friendly.
 
-If this driver can only be loaded on the Intel systems..., but what
-would happen if you try to load this one together with the platformXY-
-driver on a sold system which provides another mechanism to access this
-functionality?
+Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
+ drivers/platform/x86/Kconfig |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-Hm, googling for the oaktrail platform, it seem to be a bit special..,
-but as Windows7 runs on it, I do not see why above cannot/will not
-happen.
-
-   Thomas
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a122a0d..d163bc2 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -18,8 +18,8 @@ if X86_PLATFORM_DEVICES
+ config ACER_WMI
+ 	tristate "Acer WMI Laptop Extras"
+ 	depends on ACPI
+-	depends on LEDS_CLASS
+-	depends on NEW_LEDS
++	select LEDS_CLASS
++	select NEW_LEDS
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on SERIO_I8042
+ 	depends on INPUT
+@@ -516,8 +516,8 @@ config TOPSTAR_LAPTOP
+ config ACPI_TOSHIBA
+ 	tristate "Toshiba Laptop Extras"
+ 	depends on ACPI
+-	depends on LEDS_CLASS
+-	depends on NEW_LEDS
++	select LEDS_CLASS
++	select NEW_LEDS
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on INPUT
+ 	depends on RFKILL || RFKILL = n
+-- 
+1.7.2.3
