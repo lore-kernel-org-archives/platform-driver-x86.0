@@ -1,75 +1,85 @@
 From: Yin Kangkai <kangkai.yin@linux.intel.com>
 Subject: Re: [PATCH V2] platform-driver-x86: ACPI EC Extra driver for
  Oaktrail
-Date: Mon, 10 Jan 2011 14:57:10 +0800
-Message-ID: <20110110065710.GI30215@kai-debian>
+Date: Mon, 10 Jan 2011 15:10:13 +0800
+Message-ID: <20110110071013.GJ30215@kai-debian>
 References: <20110106025949.GJ9496@kai-debian>
  <20110107074115.GH30215@kai-debian>
- <AANLkTik=x-OTWGzRB2BgB1u748EDM=B3nsGpWbR8D-C5@mail.gmail.com>
- <20110107112409.GU9496@kai-debian>
+ <20110107220940.GA32575@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:35248 "EHLO mga01.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:58330 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751292Ab1AJG5d (ORCPT
+	id S1751593Ab1AJHKQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 10 Jan 2011 01:57:33 -0500
+	Mon, 10 Jan 2011 02:10:16 -0500
 Content-Disposition: inline
-In-Reply-To: <20110107112409.GU9496@kai-debian>
+In-Reply-To: <20110107220940.GA32575@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, "Wang, Yong Y" <yong.y.wang@intel.com>, "Liu, Bing Wei" <bing.wei.liu@intel.com>, Matthew Garrett <mjg@redhat.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, "Wang, Yong Y" <yong.y.wang@intel.com>, "Liu, Bing Wei" <bing.wei.liu@intel.com>, Corentin Chary <corentin.chary@gmail.com>
 
-On 2011-01-07, 19:24 +0800, Yin Kangkai wrote:
-> On 2011-01-07, 09:56 +0100, Corentin Chary wrote:
-> > > +static struct rfkill *oaktrail_rfkill_new(char *name, enum rfkil=
-l_type type,
-> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 unsigned long mask)
-> > > +{
-> > > + =A0 =A0 =A0 int err;
-> > > + =A0 =A0 =A0 struct rfkill *rfkill_dev;
-> > > +
-> > > + =A0 =A0 =A0 rfkill_dev =3D rfkill_alloc(name, &oaktrail_device-=
->dev, type,
-> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- &oaktrail_rfkill_ops, (void *)mask);
-> > > + =A0 =A0 =A0 if (!rfkill_dev)
-> > > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return ERR_PTR(-ENOMEM);
-> > > +
-> > > + =A0 =A0 =A0 err =3D rfkill_register(rfkill_dev);
-> >=20
-> > Maybe you should add a rfkill_init_sw_state() call here, to be sure
-> > that the rfkill initial state is right.
->=20
-> Yes, agree with you, and I'm trying to do that, add a
-> rfkill_init_sw_state between rfkill_alloc() and rfkill_register()...
->=20
-> +       ec_read(OT_EC_DEVICE_STATE_ADDRESS, &value);
-> +       rfkill_init_sw_state(rfkill_dev, (value & mask) !=3D 1);
->=20
->=20
-> However, test shows the EC seems not ready yet when booting runs here
-> (value =3D 0), and then all the radio set as "blocked". Hence the rad=
-io
-> state can't be persistent during reboot.. This is not we want.
->=20
-> Also tried to read out the EC address a little bit later, seems the E=
-C
-> won't be ready until very late.
->=20
-> Am I doing something wrong? or I need to check with HW guy about this=
-=2E
+On 2011-01-07, 22:09 +0000, Matthew Garrett wrote:
+> On Fri, Jan 07, 2011 at 03:41:15PM +0800, Yin Kangkai wrote:
+> 
+> > This driver implements an Extra ACPI EC driver for products based on Intel
+> > Oaktrail platform.  It is programming the EC space, through existing ACPI EC
+> > driver, to provide user space layer the sysfs and rfkill interfaces to
+> > enable/disable the Camera, Bluetooth, GPS, WiFi, 3G, and to show the status of
+> > Touchscreen.
+> 
+> As far as I can tell, the only ACPI aspect of this driver is that it 
+> makes use of the ACPI EC driver? In that case I think the name's 
+> misleading.
 
-It turns out that is because of a bug in driver itself and the way I'm
-doing "rebooting" is wrong..
+OK, am rename the driver "EC Extra driver...", 
 
-Yes, the rfkill_init_sw_state() is needed, otherwise,
-rfkill_register() will wrongly set the rfkill status.
+> > @@ -0,0 +1,13 @@
+> > +What:		/sys/devices/platform/intel_oaktrail/camera
+> > +Date:		Jan 2011
+> > +KernelVersion:	2.6.37
+> > +Contact:	"Yin Kangkai" <kangkai.yin@intel.com>
+> > +Description:
+> > +		Control the camera. 1 means on, 0 means off.
+> 
+> We really need a better approach for this kind of thing...
+> 
+> > +What:		/sys/devices/platform/intel_oaktrail/touchscreen
+> > +Date:		Jan 2011
+> > +KernelVersion:	2.6.37
+> > +Contact:	"Yin Kangkai" <kangkai.yin@intel.com>
+> > +Description:
+> > +		Show the status of the touch screen. 1 means on, 0 means off.
+> 
+> And this one, but we don't have one yet so I think this is ok.
+> 
+> > +	wwan_rfkill = oaktrail_rfkill_new("oaktrail-wwan",
+> > +					  RFKILL_TYPE_WWAN,
+> > +					  OT_EC_WWAN_MASK);
+> 
+> Do you have any way to identify whether the hardware has all these 
+> features before registering?
 
-Am sending the V3 patch right away.
+AFAIK, no, sorry.
 
-Kangkai
+> > +static struct dmi_system_id __initdata oaktrail_dmi_table[] = {
+> > +	{
+> > +		.ident = "OakTrail platform",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "OakTrail platform"),
+> > +		},
+> > +		.callback = dmi_check_cb
+> > +	},
+> > +	{ }
+> > +};
+> 
+> Is any hardware actually going to ship with this identifier, or will 
+> vendors change the string?
+
+
+I think vendors and OEMs will change this string. But we can add the
+DMI_BOARD_NAME, DMI_BOARD_VERSION, etc. back later, can we?
+
+Thanks.
