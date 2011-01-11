@@ -1,177 +1,250 @@
 From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH] OLPC XO-1.5 ebook switch driver
-Date: Tue, 11 Jan 2011 14:55:55 +0000
-Message-ID: <1294757755.2529.3.camel@polyethylene>
-References: <20101229185829.78A669D401D@zog.reactivated.net>
-	 <20110107013450.GA28842@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-PLHmOJlcefSSTWurm2bl"
+Subject: [PATCH v2] OLPC XO-1.5 ebook switch driver
+Date: Tue, 11 Jan 2011 20:25:55 +0000 (GMT)
+Message-ID: <20110111202555.D58CE9D401C@zog.reactivated.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:37405 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753799Ab1AKO4F (ORCPT
+Received: from mtaout02-winn.ispmail.ntl.com ([81.103.221.48]:53618 "EHLO
+	mtaout02-winn.ispmail.ntl.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753755Ab1AKU0M (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 11 Jan 2011 09:56:05 -0500
-Received: by wwa36 with SMTP id 36so1848623wwa.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Jan 2011 06:56:03 -0800 (PST)
-In-Reply-To: <20110107013450.GA28842@core.coreip.homeip.net>
+	Tue, 11 Jan 2011 15:26:12 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, pgf@laptop.org
+To: mjg@redhat.com
+Cc: dmitry.torokhov@gmail.com, platform-driver-x86@vger.kernel.org, pgf@laptop.org
 
+From: Paul Fox <pgf@laptop.org>
 
---=-PLHmOJlcefSSTWurm2bl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+The OLPC XO-1.5 has an ebook switch, triggered when the laptop
+screen is rotated then folding down, converting the device into ebook
+form.
 
-On Thu, 2011-01-06 at 17:34 -0800, Dmitry Torokhov wrote:
-> No, instead of adding yet another kernel attribute just use ioctl to get
-> current switch state. Or write a general purpose utility to query
-> switch/key state and contribute it to consoletools project - many people
-> have asked fr it ;)
+This switch is exposed through ACPI. Add a driver that exposes it
+to userspace as an input device.
 
-Thanks for the review.
+Signed-off-by: Daniel Drake <dsd@laptop.org>
+---
+ drivers/platform/x86/Kconfig      |    9 ++
+ drivers/platform/x86/Makefile     |    1 +
+ drivers/platform/x86/xo15-ebook.c |  181 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 191 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/platform/x86/xo15-ebook.c
 
-Did you mean consoletools as in http://lct.sourceforge.net/ ?
-It looks rather dead.
+v2: incorporates all feedback from Dmitry Torokhov
 
-Perhaps util-linux-ng would be a more appropriate target?
-
-I'm attaching the general purpose utility for your comments.
-
-Thanks,
-Daniel
-
-
---=-PLHmOJlcefSSTWurm2bl
-Content-Description: 
-Content-Disposition: inline; filename="evstate.c"
-Content-Type: text/x-csrc; name="evstate.c"; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-/*
- * evstate: query evdev key/led/sw/snd state
- * Returns exit code 1 if the state bit is set (key pressed, LED on, etc.),
- * and 0 if the state bit is unset.
- *
- * Copyright (C) 2011 One Laptop per Child
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
-#define _GNU_SOURCE
-
-#include <errno.h>
-#include <fcntl.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#include <linux/input.h>
-
-#define BITS_PER_LONG (sizeof(long) * 8)
-
-static int test_bit(unsigned int nr, void *addr)
-{
-	return ((1UL << (nr % BITS_PER_LONG)) &
-		(((unsigned long *) addr)[nr / BITS_PER_LONG])) != 0;
-}
-
-static void __attribute__((noreturn)) usage(void)
-{
-	printf("Usage:\n"
-	       "  %s <device> <mode> <key>\n"
-		   "Valid modes: key, led, snd, sw\n",
-	       program_invocation_short_name);
-	exit(2);
-}
-
-static const struct mode {
-	const char *name;
-	int max;
-	int rq;
-} requests[] = {
-	{ "key", KEY_MAX, EVIOCGKEY(KEY_MAX) },
-	{ "led", LED_MAX, EVIOCGLED(LED_MAX) },
-	{ "snd", SND_MAX, EVIOCGSND(SND_MAX) },
-	{ "sw",  SW_MAX, EVIOCGSW(SW_MAX) },
-};
-
-static const struct mode *find_mode(const char *name)
-{
-	int i;
-	for (i = 0; i < sizeof(requests) / sizeof(*requests); i++) {
-		const struct mode *mode = &requests[i];
-		if (strcmp(mode->name, name) == 0)
-			return mode;
-	}
-	return NULL;
-}
-
-static int query_state(const char *device, long int keyno,
-		       const struct mode *mode)
-{
-	uint8_t state[(mode->max / 8) + 1];
-	int fd;
-	int r;
-
-	if (keyno < 0 || keyno > mode->max) {
-		fprintf(stderr, "Unrecognised key %d\n", keyno);
-		exit(3);
-	}
-
-	fd = open(device, O_RDONLY);
-	if (fd == -1) {
-		perror("open");
-		exit(3);
-	}
-
-	memset(state, 0, sizeof(state));
-	r = ioctl(fd, mode->rq, state);
-	close(fd);
-
-	if (r == -1) {
-		perror("ioctl");
-		exit(3);
-	}
-
-	return test_bit(keyno, state);
-}
-
-int main(int argc, char **argv)
-{
-	const struct mode *mode;
-	long int keyno;
-
-	if (argc != 4)
-		usage();
-
-	mode = find_mode(argv[2]);
-	if (!mode) {
-		fprintf(stderr, "Unrecognised mode.\n");
-		usage();
-	}
-
-	keyno = strtol(argv[3], NULL, 10);
-	return query_state(argv[1], keyno, mode);
-}
-
-
---=-PLHmOJlcefSSTWurm2bl--
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d163bc2..d31084b 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -654,4 +654,13 @@ config XO1_RFKILL
+ 	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
+ 	  laptop.
+ 
++config XO15_EBOOK
++	tristate "OLPC XO-1.5 ebook switch"
++	depends on ACPI && INPUT
++	---help---
++	  Support for the ebook switch on the OLPC XO-1.5 laptop.
++
++	  This switch is triggered as the screen is rotated and folded down to
++	  convert the device into ebook form.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 4ec4ff8..130cf58 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -34,3 +34,4 @@ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+ obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
+ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
++obj-$(CONFIG_XO15_EBOOK)	+= xo15-ebook.o
+diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
+new file mode 100644
+index 0000000..8d3c3b1
+--- /dev/null
++++ b/drivers/platform/x86/xo15-ebook.c
+@@ -0,0 +1,181 @@
++/*
++ *  OLPC XO-1.5 ebook switch driver
++ *  (based on generic ACPI button driver)
++ *
++ *  Copyright (C) 2009 Paul Fox <pgf@laptop.org>
++ *  Copyright (C) 2010 One Laptop per Child
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or (at
++ *  your option) any later version.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/input.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++#define MODULE_NAME "xo15-ebook"
++#define PREFIX MODULE_NAME ": "
++
++#define XO15_EBOOK_CLASS		MODULE_NAME
++#define XO15_EBOOK_TYPE_UNKNOWN	0x00
++#define XO15_EBOOK_NOTIFY_STATUS	0x80
++
++#define XO15_EBOOK_SUBCLASS		"ebook"
++#define XO15_EBOOK_HID			"XO15EBK"
++#define XO15_EBOOK_DEVICE_NAME		"EBook Switch"
++
++ACPI_MODULE_NAME(MODULE_NAME);
++
++MODULE_DESCRIPTION("OLPC XO-1.5 ebook switch driver");
++MODULE_LICENSE("GPL");
++
++static const struct acpi_device_id ebook_device_ids[] = {
++	{ XO15_EBOOK_HID, 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, ebook_device_ids);
++
++struct ebook_switch {
++	struct input_dev *input;
++	char phys[32];			/* for input device */
++};
++
++static int ebook_send_state(struct acpi_device *device)
++{
++	struct ebook_switch *button = acpi_driver_data(device);
++	unsigned long long state;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(device->handle, "EBK", NULL, &state);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	/* input layer checks if event is redundant */
++	input_report_switch(button->input, SW_TABLET_MODE, !state);
++	input_sync(button->input);
++	return 0;
++}
++
++static void ebook_switch_notify(struct acpi_device *device, u32 event)
++{
++	switch (event) {
++	case ACPI_FIXED_HARDWARE_EVENT:
++	case XO15_EBOOK_NOTIFY_STATUS:
++		ebook_send_state(device);
++		break;
++	default:
++		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
++				  "Unsupported event [0x%x]\n", event));
++		break;
++	}
++}
++
++static int ebook_switch_resume(struct acpi_device *device)
++{
++	return ebook_send_state(device);
++}
++
++static int ebook_switch_add(struct acpi_device *device)
++{
++	struct ebook_switch *button;
++	struct input_dev *input;
++	const char *hid = acpi_device_hid(device);
++	char *name, *class;
++	int error;
++
++	button = kzalloc(sizeof(struct ebook_switch), GFP_KERNEL);
++	if (!button)
++		return -ENOMEM;
++
++	device->driver_data = button;
++
++	button->input = input = input_allocate_device();
++	if (!input) {
++		error = -ENOMEM;
++		goto err_free_button;
++	}
++
++	name = acpi_device_name(device);
++	class = acpi_device_class(device);
++
++	if (strcmp(hid, XO15_EBOOK_HID)) {
++		printk(KERN_ERR PREFIX "Unsupported hid [%s]\n", hid);
++		error = -ENODEV;
++		goto err_free_input;
++	}
++
++	strcpy(name, XO15_EBOOK_DEVICE_NAME);
++	sprintf(class, "%s/%s", XO15_EBOOK_CLASS, XO15_EBOOK_SUBCLASS);
++
++	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
++
++	input->name = name;
++	input->phys = button->phys;
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = &device->dev;
++
++	input->evbit[0] = BIT_MASK(EV_SW);
++	set_bit(SW_TABLET_MODE, input->swbit);
++
++	error = input_register_device(input);
++	if (error)
++		goto err_free_input;
++
++	ebook_send_state(device);
++
++	if (device->wakeup.flags.valid) {
++		/* Button's GPE is run-wake GPE */
++		acpi_enable_gpe(device->wakeup.gpe_device,
++				device->wakeup.gpe_number);
++		device->wakeup.run_wake_count++;
++		device->wakeup.state.enabled = 1;
++	}
++
++	return 0;
++
++ err_free_input:
++	input_free_device(input);
++ err_free_button:
++	kfree(button);
++	return error;
++}
++
++static int ebook_switch_remove(struct acpi_device *device, int type)
++{
++	struct ebook_switch *button = acpi_driver_data(device);
++
++	input_unregister_device(button->input);
++	kfree(button);
++	return 0;
++}
++
++static struct acpi_driver xo15_ebook_driver = {
++	.name = MODULE_NAME,
++	.class = XO15_EBOOK_CLASS,
++	.ids = ebook_device_ids,
++	.ops = {
++		.add = ebook_switch_add,
++		.resume = ebook_switch_resume,
++		.remove = ebook_switch_remove,
++		.notify = ebook_switch_notify,
++	},
++};
++
++static int __init xo15_ebook_init(void)
++{
++	return acpi_bus_register_driver(&xo15_ebook_driver);
++}
++
++static void __exit xo15_ebook_exit(void)
++{
++	acpi_bus_unregister_driver(&xo15_ebook_driver);
++}
++
++module_init(xo15_ebook_init);
++module_exit(xo15_ebook_exit);
+-- 
+1.7.3.4
