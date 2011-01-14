@@ -1,105 +1,51 @@
-From: Andy Ross <andy@windriver.com>
-Subject: [PATCH 2/2] asus-laptop: Support pega_accel driver
-Date: Fri, 14 Jan 2011 12:14:10 -0800
-Message-ID: <1295036050-10553-3-git-send-email-andy@windriver.com>
-References: <1295036050-10553-1-git-send-email-andy@windriver.com>
- <1295036050-10553-2-git-send-email-andy@windriver.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1295036050-10553-2-git-send-email-andy@windriver.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-input@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH] thinkpad_acpi: Always report scancodes for hotkeys
+Date: Fri, 14 Jan 2011 15:54:39 -0600
+Message-ID: <1295042079-4832-1-git-send-email-seth.forshee@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from adelie.canonical.com ([91.189.90.139]:39540 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752145Ab1ANVyv (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 14 Jan 2011 16:54:51 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-From: Andy Ross <andy.ross@windriver.com>
+Some thinkpad hotkeys report key codes like KEY_FN_F8 when something
+like KEY_VOLUMEDOWN is desired. Always provide the scan codes in
+addition to the key codes to assist with debugging these issues. Also
+send the scan code before the key code to match what other drivers do,
+as some userspace utilities expect this ordering.
 
-Add device detection for the ACPI accelerometer interface on Pegatron
-Lucid tablets.
-
-Signed-off-by: Andy Ross <andy.ross@windriver.com>
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 ---
- drivers/platform/x86/asus-laptop.c |   27 +++++++++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c |    8 ++------
+ 1 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index d235f44..4a6d647 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -4,6 +4,7 @@
-  *
-  *  Copyright (C) 2002-2005 Julien Lerouge, 2003-2006 Karol Kozimor
-  *  Copyright (C) 2006-2007 Corentin Chary
-+ *  Copyright (C) 2011 Wind River Systems
-  *
-  *  This program is free software; you can redistribute it and/or modify
-  *  it under the terms of the GNU General Public License as published by
-@@ -31,6 +32,7 @@
-  *  Josh Green     - Light Sens support
-  *  Thomas Tuttle  - His first patch for led support was very helpfull
-  *  Sam Lin        - GPS support
-+ *  Andy Ross      - Pegatron Lucid accelerometer
-  */
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index dd59958..eb99223 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -2275,16 +2275,12 @@ static void tpacpi_input_send_key(const unsigned int scancode)
+ 	if (keycode != KEY_RESERVED) {
+ 		mutex_lock(&tpacpi_inputdev_send_mutex);
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -246,6 +248,7 @@ struct asus_laptop {
++		input_event(tpacpi_inputdev, EV_MSC, MSC_SCAN, scancode);
+ 		input_report_key(tpacpi_inputdev, keycode, 1);
+-		if (keycode == KEY_UNKNOWN)
+-			input_event(tpacpi_inputdev, EV_MSC, MSC_SCAN,
+-				    scancode);
+ 		input_sync(tpacpi_inputdev);
  
- 	int wireless_status;
- 	bool have_rsts;
-+	bool have_pega_accel;
- 	int lcd_state;
++		input_event(tpacpi_inputdev, EV_MSC, MSC_SCAN, scancode);
+ 		input_report_key(tpacpi_inputdev, keycode, 0);
+-		if (keycode == KEY_UNKNOWN)
+-			input_event(tpacpi_inputdev, EV_MSC, MSC_SCAN,
+-				    scancode);
+ 		input_sync(tpacpi_inputdev);
  
- 	struct rfkill *gps_rfkill;
-@@ -1352,6 +1355,7 @@ static const struct attribute_group asus_attr_group = {
- 	.attrs		= asus_attributes,
- };
- 
-+
- static int asus_platform_init(struct asus_laptop *asus)
- {
- 	int result;
-@@ -1556,6 +1560,24 @@ static int __devinit asus_acpi_init(struct asus_laptop *asus)
- 	return result;
- }
- 
-+static struct platform_device pega_accel_dev = {
-+	.name = "pega_accel",
-+	.id   = -1,
-+};
-+
-+static void __devinit asus_pega_accel_init(struct asus_laptop *asus)
-+{
-+	/* Pegatron Lucid tablets expose their accelerometer through ACPI.
-+	 * Check for XLR{X,Y,Z} methods */
-+	if (acpi_check_handle(asus->handle, "XLRX", NULL) ||
-+	    acpi_check_handle(asus->handle, "XLRY", NULL) ||
-+	    acpi_check_handle(asus->handle, "XLRZ", NULL))
-+		return;
-+
-+	if (!platform_device_register(&pega_accel_dev))
-+		asus->have_pega_accel = true;
-+}
-+
- static bool asus_device_present;
- 
- static int __devinit asus_acpi_add(struct acpi_device *device)
-@@ -1605,6 +1627,8 @@ static int __devinit asus_acpi_add(struct acpi_device *device)
- 	if (result)
- 		goto fail_rfkill;
- 
-+	asus_pega_accel_init(asus);
-+
- 	asus_device_present = true;
- 	return 0;
- 
-@@ -1627,6 +1651,9 @@ static int asus_acpi_remove(struct acpi_device *device, int type)
- {
- 	struct asus_laptop *asus = acpi_driver_data(device);
- 
-+	if (asus->have_pega_accel)
-+		platform_device_unregister(&pega_accel_dev);
-+
- 	asus_backlight_exit(asus);
- 	asus_rfkill_exit(asus);
- 	asus_led_exit(asus);
+ 		mutex_unlock(&tpacpi_inputdev_send_mutex);
 -- 
 1.7.1
-
