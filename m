@@ -1,42 +1,37 @@
-From: "Axel G. Rossberg" <Axel@Rossberg.net>
-Subject: Re: Bug#587014: screen brightness can't be modified on some
-	Panasonic laptops
-Date: Sat, 15 Jan 2011 13:01:29 +0000 (GMT)
-Message-ID: <20110115.130129.315817196905527759.Axel@rossberg.net>
+From: Sedat Dilek <sedat.dilek@googlemail.com>
+Subject: Re: [PATCH 1/5] Backlight: Add backlight type
+Date: Sat, 15 Jan 2011 15:41:22 +0100
+Message-ID: <AANLkTin-GW6PgTNraPbrcoSTGX-cghCrdSh4SCJv=ecS@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay01.ispgateway.de ([80.67.18.43]:59643 "EHLO
-	smtprelay01.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752911Ab1AONKn (ORCPT
+Received: from mail-qy0-f174.google.com ([209.85.216.174]:41597 "EHLO
+	mail-qy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751090Ab1AOOlX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 15 Jan 2011 08:10:43 -0500
+	Sat, 15 Jan 2011 09:41:23 -0500
+Received: by qyj19 with SMTP id 19so492258qyj.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Jan 2011 06:41:22 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: 587014@bugs.debian.org
-Cc: Nicolas Limare <nicolas+debian@limare.net>, ben@decadent.org.uk, laforge@gnumonks.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: DRI <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org
 
-A solution for this problem that works for me (ubuntu 10.10,
-2.6.35-24 kernel) is described here
-http://ubuntuforums.org/showthread.php?t=1612560 
+[...]
++What:		/sys/class/backlight/<backlight>/type
++Date:		September 2010
++KernelVersion:	2.6.37
+[...]
 
-In a nutshell, add the boot option "acpi_osi=" to grub, by executing 
+2.6.37?
+Will this go into 2.6.38? 2.6.39?
 
-$ gksudo gedit /etc/default/grub
+Through which subsystem will these patches walk through? drm-2.6?
+platform-drivers-x86?
+Are you planning a GIT tree/branch for this patch-set?
 
-(which calls an editor) to replace in the file /etc/default/grub the line
+The patch-set from 14-Jan-2011 applies against linux-next (next-20110115).
+I will compile, test and report.
 
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
-
-with 
-
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash acpi_osi="
-
-Then execute 
-
-$ sudo update-grub
-
-and reboot.  Backlight-changing should now work seamlessly.
-
-Axel
+- Sedat -
