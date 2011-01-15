@@ -1,44 +1,42 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: Always report scancodes for hotkeys
-Date: Sat, 15 Jan 2011 00:13:05 -0200
-Message-ID: <20110115021305.GB26913@khazad-dum.debian.net>
-References: <1295042079-4832-1-git-send-email-seth.forshee@canonical.com>
- <20110114222517.GA11207@khazad-dum.debian.net>
- <20110114225638.GA2060@thinkpad-t410>
+From: "Axel G. Rossberg" <Axel@Rossberg.net>
+Subject: Re: Bug#587014: screen brightness can't be modified on some
+	Panasonic laptops
+Date: Sat, 15 Jan 2011 13:01:29 +0000 (GMT)
+Message-ID: <20110115.130129.315817196905527759.Axel@rossberg.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1.smtp.messagingengine.com ([66.111.4.25]:35096 "EHLO
-	out1.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751824Ab1AOCNJ (ORCPT
+Received: from smtprelay01.ispgateway.de ([80.67.18.43]:59643 "EHLO
+	smtprelay01.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752911Ab1AONKn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 14 Jan 2011 21:13:09 -0500
-Content-Disposition: inline
-In-Reply-To: <20110114225638.GA2060@thinkpad-t410>
+	Sat, 15 Jan 2011 08:10:43 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Seth Forshee <seth.forshee@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: 587014@bugs.debian.org
+Cc: Nicolas Limare <nicolas+debian@limare.net>, ben@decadent.org.uk, laforge@gnumonks.org, platform-driver-x86@vger.kernel.org
 
-On Fri, 14 Jan 2011, Seth Forshee wrote:
-> > Do I have your word of honour that canonical is not going to start using
-> > scancodes instead of keycodes in Ubuntu to trigger actions?
-> 
-> That would be silly. The reason for this change is to aid in collecting
+A solution for this problem that works for me (ubuntu 10.10,
+2.6.35-24 kernel) is described here
+http://ubuntuforums.org/showthread.php?t=1612560 
 
-...
+In a nutshell, add the boot option "acpi_osi=" to grub, by executing 
 
-> the data to update udev's keymaps for non-standard keys (see [1]). udev
-> uses the EVIOCSKEYCODE ioctl to associate the correct key code with the
-> scan codes. We don't intend to use scan codes instead of key codes.
+$ gksudo gedit /etc/default/grub
 
-Very well.  I *will* hold you to that.  I do not want a repeat of the
-KEY_VOLUMEUP/DOWN "active notification" fiasco.
+(which calls an editor) to replace in the file /etc/default/grub the line
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+with 
+
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash acpi_osi="
+
+Then execute 
+
+$ sudo update-grub
+
+and reboot.  Backlight-changing should now work seamlessly.
+
+Axel
