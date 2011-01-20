@@ -1,25 +1,53 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: ACPI notify handler and reentrancy of WMI device.
-Date: Thu, 20 Jan 2011 11:10:47 +0100
-Message-ID: <AANLkTim3MUik=DQZMvqYexaPwXORaTQ=NdRgC9wZ3x1E@mail.gmail.com>
-References: <AANLkTi=hBDt+Ej+hNcxxnw4ZjPZ930kR13DVjtt50zwD@mail.gmail.com>
-	<AANLkTim0auvcUeDSO7QGSVbj0A+g88FSon7-qT6KzBHd@mail.gmail.com>
-	<1295229942.28388.87.camel@minggr.sh.intel.com>
-	<AANLkTinfP+-L2T4oggiTpMwE74V6kxgcrStHumYGiH23@mail.gmail.com>
-	<1295517311.11852.7.camel@minggr.sh.intel.com>
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: [PATCH] platform/x86: ideapad-laptop depends on INPUT
+Date: Thu, 20 Jan 2011 12:48:36 -0800
+Message-ID: <20110120124836.b36a7c24.randy.dunlap@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1295517311.11852.7.camel@minggr.sh.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lin Ming <ming.m.lin@intel.com>
-Cc: linux acpi <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from rcsinet10.oracle.com ([148.87.113.121]:25354 "EHLO
+	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753838Ab1ATUto (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 20 Jan 2011 15:49:44 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: akpm <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Matthew Garrett <mjg@redhat.com>
 
-> What does this method do?
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
-It does ... *everything*, it's our only entry point in this driver.
+Most platform/x86 drivers that use INPUT_SPARSEKMAP also depend on INPUT,
+so do the same for ideapad-laptop.  This fixes a kconfig warning and
+subsequent build errors when CONFIG_INPUT is disabled.
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+warning: (ACER_WMI && ASUS_LAPTOP && DELL_WMI && HP_WMI && PANASONIC_LAPTOP && IDEAPAD_LAPTOP && EEEPC_LAPTOP && EEEPC_WMI && MSI_WMI && TOPSTAR_LAPTOP && ACPI_TOSHIBA) selects INPUT_SPARSEKMAP which has unmet direct dependencies (!S390 && INPUT)
+
+ERROR: "input_free_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "input_register_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "input_allocate_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "input_unregister_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
+
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- lnx-2638-rc1.orig/drivers/platform/x86/Kconfig
++++ lnx-2638-rc1/drivers/platform/x86/Kconfig
+@@ -227,7 +227,7 @@ config SONYPI_COMPAT
+ config IDEAPAD_LAPTOP
+ 	tristate "Lenovo IdeaPad Laptop Extras"
+ 	depends on ACPI
+-	depends on RFKILL
++	depends on RFKILL && INPUT
+ 	select INPUT_SPARSEKMAP
+ 	help
+ 	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
