@@ -1,40 +1,61 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Additional TOS1900 devices support
-Date: Wed, 19 Jan 2011 23:45:03 -0800
-Message-ID: <20110120074503.GD30522@core.coreip.homeip.net>
-References: <AANLkTi=fjL0yxXWrDddafdBs7biJ326sXjaagTseVEVg@mail.gmail.com>
- <20110117190849.GB27245@core.coreip.homeip.net>
- <AANLkTindwH2X79vZTBHU04oomxqV=RchRVEwrDEcntVX@mail.gmail.com>
+From: Lin Ming <ming.m.lin@intel.com>
+Subject: Re: ACPI notify handler and reentrancy of WMI device.
+Date: Thu, 20 Jan 2011 17:55:11 +0800
+Message-ID: <1295517311.11852.7.camel@minggr.sh.intel.com>
+References: <AANLkTi=hBDt+Ej+hNcxxnw4ZjPZ930kR13DVjtt50zwD@mail.gmail.com>
+	 <AANLkTim0auvcUeDSO7QGSVbj0A+g88FSon7-qT6KzBHd@mail.gmail.com>
+	 <1295229942.28388.87.camel@minggr.sh.intel.com>
+	 <AANLkTinfP+-L2T4oggiTpMwE74V6kxgcrStHumYGiH23@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:64019 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753404Ab1ATHpL (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:51660 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755242Ab1ATJyp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Jan 2011 02:45:11 -0500
-Content-Disposition: inline
-In-Reply-To: <AANLkTindwH2X79vZTBHU04oomxqV=RchRVEwrDEcntVX@mail.gmail.com>
+	Thu, 20 Jan 2011 04:54:45 -0500
+In-Reply-To: <AANLkTinfP+-L2T4oggiTpMwE74V6kxgcrStHumYGiH23@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: linux acpi <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
 
-On Wed, Jan 19, 2011 at 02:05:10PM -0700, Azael Avalos wrote:
+On Mon, 2011-01-17 at 14:51 +0800, Corentin Chary wrote:
+> >> I got an acpi notify handler. The notify is triggered when I call WMBC().
+> >> In this notify handler, I must re-call WMBC (with some other arguments, it won't
+> >> notify again this time).
+> >>
+> >> If I do that, I'll get:
+> >> [  176.920391] ACPI Error (dswload-0802): [_T_0] Namespace lookup
+> >> failure, AE_ALREADY_EXISTS
+> >> [  176.920416] ACPI Exception: AE_ALREADY_EXISTS, During name
+> >> lookup/catalog (20100428/psloop-231)
+> >> [  176.920439] ACPI Error (psparse-0537): Method parse/execution
+> >> failed [\AMW0.WMBC] (Node f7023b88), AE_ALREADY_EXISTS
+> >> [  176.920469] ACPI: Marking method WMBC as Serialized because of
+> >> AE_ALREADY_EXISTS error
+> >
+> > Could you attach the acpidump output?
 > 
-> Some TOS1900 devices send keycodes via KBD, a filter was added
-> along with a cleanup made by Matthew Garrett, also functions
-> and registers were added for the Toshiba Software
-> Configuration Interface (SCI) used by Illumination.
-> Bumping its version to 0.20
+> Here it is, and here is the patch I did (I used the workqueue solution
+> in this one):
 > 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> http://git.iksaif.net/?p=acpi4asus.git;a=blobdiff;f=drivers/platform/x86/eeepc-wmi.c;h=725239860bad8d97dabf8b3db4086d6df4b7820b;hp=0d8217d1478028071859ba1a503ba226b3cb33a0;hb=1eac4d6a6fb632314a464e7d52e1dcb1e4780931;hpb=5c5d1a036bb7d38153c6d2102767ef51e5d94ce3
+> 
+> (check eeepc_rfkill_notify, it's triggered when the wlan rfkill is
+> blocked: WMBC is called to disable the wlan card, it send a
+> notification, the handler is called, the handler want to check the
+> wlan card status, it calls WMBC again).
+> Thanks;
+> 
 
-Input parts look good to me.
+Sorry for late reply.
 
-Acked-by: Dmitry Torokhov <dtor@mail.ru>
+WMBC is not an ACPI spec defined method (which always start with "_",
+_ADR, _DSW etc), the driver should only call ACPI spec defined method.
+What does this method do?
 
-Thanks.
+And, I don't see any call to WMBC in eeepc-wmi.c or above patch.
 
--- 
-Dmitry
+Lin Ming
