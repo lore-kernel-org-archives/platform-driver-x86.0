@@ -1,53 +1,95 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: [PATCH] platform/x86: ideapad-laptop depends on INPUT
-Date: Thu, 20 Jan 2011 12:48:36 -0800
-Message-ID: <20110120124836.b36a7c24.randy.dunlap@oracle.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: ACPI notify handler and reentrancy of WMI device.
+Date: Fri, 21 Jan 2011 20:55:06 +0100
+Message-ID: <AANLkTiknFN1R-_HsoD6QEyEEJ6wb7v6_uCAPFh9DmzEr@mail.gmail.com>
+References: <AANLkTi=hBDt+Ej+hNcxxnw4ZjPZ930kR13DVjtt50zwD@mail.gmail.com>
+	<AANLkTim0auvcUeDSO7QGSVbj0A+g88FSon7-qT6KzBHd@mail.gmail.com>
+	<1295229942.28388.87.camel@minggr.sh.intel.com>
+	<AANLkTinfP+-L2T4oggiTpMwE74V6kxgcrStHumYGiH23@mail.gmail.com>
+	<1295517311.11852.7.camel@minggr.sh.intel.com>
+	<AANLkTi=o8U78t4zMY9t6=mLdBgFu4VSb_KGPk4xy98e9@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet10.oracle.com ([148.87.113.121]:25354 "EHLO
-	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753838Ab1ATUto (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Jan 2011 15:49:44 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Cc: akpm <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Matthew Garrett <mjg@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <AANLkTi=o8U78t4zMY9t6=mLdBgFu4VSb_KGPk4xy98e9@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lin Ming <ming.m.lin@intel.com>
+Cc: linux acpi <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Randy Dunlap <randy.dunlap@oracle.com>
+On Thu, Jan 20, 2011 at 11:00 AM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+> On Thu, Jan 20, 2011 at 10:55 AM, Lin Ming <ming.m.lin@intel.com> wro=
+te:
+>> On Mon, 2011-01-17 at 14:51 +0800, Corentin Chary wrote:
+>>> >> I got an acpi notify handler. The notify is triggered when I cal=
+l WMBC().
+>>> >> In this notify handler, I must re-call WMBC (with some other arg=
+uments, it won't
+>>> >> notify again this time).
+>>> >>
+>>> >> If I do that, I'll get:
+>>> >> [ =C2=A0176.920391] ACPI Error (dswload-0802): [_T_0] Namespace =
+lookup
+>>> >> failure, AE_ALREADY_EXISTS
+>>> >> [ =C2=A0176.920416] ACPI Exception: AE_ALREADY_EXISTS, During na=
+me
+>>> >> lookup/catalog (20100428/psloop-231)
+>>> >> [ =C2=A0176.920439] ACPI Error (psparse-0537): Method parse/exec=
+ution
+>>> >> failed [\AMW0.WMBC] (Node f7023b88), AE_ALREADY_EXISTS
+>>> >> [ =C2=A0176.920469] ACPI: Marking method WMBC as Serialized beca=
+use of
+>>> >> AE_ALREADY_EXISTS error
+>>> >
+>>> > Could you attach the acpidump output?
+>>>
+>>> Here it is, and here is the patch I did (I used the workqueue solut=
+ion
+>>> in this one):
+>>>
+>>> http://git.iksaif.net/?p=3Dacpi4asus.git;a=3Dblobdiff;f=3Ddrivers/p=
+latform/x86/eeepc-wmi.c;h=3D725239860bad8d97dabf8b3db4086d6df4b7820b;hp=
+=3D0d8217d1478028071859ba1a503ba226b3cb33a0;hb=3D1eac4d6a6fb632314a464e=
+7d52e1dcb1e4780931;hpb=3D5c5d1a036bb7d38153c6d2102767ef51e5d94ce3
+>>>
+>>> (check eeepc_rfkill_notify, it's triggered when the wlan rfkill is
+>>> blocked: WMBC is called to disable the wlan card, it send a
+>>> notification, the handler is called, the handler want to check the
+>>> wlan card status, it calls WMBC again).
+>>> Thanks;
+>>>
+>>
+>> Sorry for late reply.
+>>
+>> WMBC is not an ACPI spec defined method (which always start with "_"=
+,
+>> _ADR, _DSW etc), the driver should only call ACPI spec defined metho=
+d.
+>> What does this method do?
+>>
+>> And, I don't see any call to WMBC in eeepc-wmi.c or above patch.
+>
+> It's a wmi driver, so it calls wmi_evaluate_method, wich internally
+> will call \AMW0.WMBC for this GUID.
+> Sorry for the confusion.
+>
+> I finally found a solut^W^W workaround:
+> http://git.iksaif.net/?p=3Dacpi4asus.git;a=3Dcommitdiff;h=3Daa8ff8f23=
+b2f99da9371da9154d3e523b964f054;hp=3Dd13f17d9657d7161884e289cc2ac6efb41=
+4a6ff9
 
-Most platform/x86 drivers that use INPUT_SPARSEKMAP also depend on INPUT,
-so do the same for ideapad-laptop.  This fixes a kconfig warning and
-subsequent build errors when CONFIG_INPUT is disabled.
+As I thought, using a mutex here introduce a lot of potential deadlock =
+=2E..
+Any Idea ?
 
-warning: (ACER_WMI && ASUS_LAPTOP && DELL_WMI && HP_WMI && PANASONIC_LAPTOP && IDEAPAD_LAPTOP && EEEPC_LAPTOP && EEEPC_WMI && MSI_WMI && TOPSTAR_LAPTOP && ACPI_TOSHIBA) selects INPUT_SPARSEKMAP which has unmet direct dependencies (!S390 && INPUT)
 
-ERROR: "input_free_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "input_register_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "sparse_keymap_setup" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "input_allocate_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "input_unregister_device" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "sparse_keymap_free" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-ERROR: "sparse_keymap_report_event" [drivers/platform/x86/ideapad-laptop.ko] undefined!
-
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- lnx-2638-rc1.orig/drivers/platform/x86/Kconfig
-+++ lnx-2638-rc1/drivers/platform/x86/Kconfig
-@@ -227,7 +227,7 @@ config SONYPI_COMPAT
- config IDEAPAD_LAPTOP
- 	tristate "Lenovo IdeaPad Laptop Extras"
- 	depends on ACPI
--	depends on RFKILL
-+	depends on RFKILL && INPUT
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
+--=20
+Corentin Chary
+http://xf.iksaif.net
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
