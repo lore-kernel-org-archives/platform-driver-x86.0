@@ -1,95 +1,46 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: ACPI notify handler and reentrancy of WMI device.
-Date: Fri, 21 Jan 2011 20:55:06 +0100
-Message-ID: <AANLkTiknFN1R-_HsoD6QEyEEJ6wb7v6_uCAPFh9DmzEr@mail.gmail.com>
-References: <AANLkTi=hBDt+Ej+hNcxxnw4ZjPZ930kR13DVjtt50zwD@mail.gmail.com>
-	<AANLkTim0auvcUeDSO7QGSVbj0A+g88FSon7-qT6KzBHd@mail.gmail.com>
-	<1295229942.28388.87.camel@minggr.sh.intel.com>
-	<AANLkTinfP+-L2T4oggiTpMwE74V6kxgcrStHumYGiH23@mail.gmail.com>
-	<1295517311.11852.7.camel@minggr.sh.intel.com>
-	<AANLkTi=o8U78t4zMY9t6=mLdBgFu4VSb_KGPk4xy98e9@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps management
+Date: Sat, 22 Jan 2011 10:13:09 +0100
+Message-ID: <201101221013.10239.rjw@sisk.pl>
+References: <201101201226.41021.rjw@sisk.pl> <201101212206.37469.rjw@sisk.pl> <AANLkTimEoAhO9TRx4Aq7NnTTt6G-u+cHJRyAMjSAJgTm@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <AANLkTi=o8U78t4zMY9t6=mLdBgFu4VSb_KGPk4xy98e9@mail.gmail.com>
+In-Reply-To: <AANLkTimEoAhO9TRx4Aq7NnTTt6G-u+cHJRyAMjSAJgTm@mail.gmail.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Lin Ming <ming.m.lin@intel.com>
-Cc: linux acpi <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Brown, Len" <len.brown@intel.com>, Matthew Garrett <mjg@redhat.com>
+To: Jeff Chua <jeff.chua.linux@gmail.com>
+Cc: Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 20, 2011 at 11:00 AM, Corentin Chary
-<corentin.chary@gmail.com> wrote:
-> On Thu, Jan 20, 2011 at 10:55 AM, Lin Ming <ming.m.lin@intel.com> wro=
-te:
->> On Mon, 2011-01-17 at 14:51 +0800, Corentin Chary wrote:
->>> >> I got an acpi notify handler. The notify is triggered when I cal=
-l WMBC().
->>> >> In this notify handler, I must re-call WMBC (with some other arg=
-uments, it won't
->>> >> notify again this time).
->>> >>
->>> >> If I do that, I'll get:
->>> >> [ =C2=A0176.920391] ACPI Error (dswload-0802): [_T_0] Namespace =
-lookup
->>> >> failure, AE_ALREADY_EXISTS
->>> >> [ =C2=A0176.920416] ACPI Exception: AE_ALREADY_EXISTS, During na=
-me
->>> >> lookup/catalog (20100428/psloop-231)
->>> >> [ =C2=A0176.920439] ACPI Error (psparse-0537): Method parse/exec=
-ution
->>> >> failed [\AMW0.WMBC] (Node f7023b88), AE_ALREADY_EXISTS
->>> >> [ =C2=A0176.920469] ACPI: Marking method WMBC as Serialized beca=
-use of
->>> >> AE_ALREADY_EXISTS error
->>> >
->>> > Could you attach the acpidump output?
->>>
->>> Here it is, and here is the patch I did (I used the workqueue solut=
-ion
->>> in this one):
->>>
->>> http://git.iksaif.net/?p=3Dacpi4asus.git;a=3Dblobdiff;f=3Ddrivers/p=
-latform/x86/eeepc-wmi.c;h=3D725239860bad8d97dabf8b3db4086d6df4b7820b;hp=
-=3D0d8217d1478028071859ba1a503ba226b3cb33a0;hb=3D1eac4d6a6fb632314a464e=
-7d52e1dcb1e4780931;hpb=3D5c5d1a036bb7d38153c6d2102767ef51e5d94ce3
->>>
->>> (check eeepc_rfkill_notify, it's triggered when the wlan rfkill is
->>> blocked: WMBC is called to disable the wlan card, it send a
->>> notification, the handler is called, the handler want to check the
->>> wlan card status, it calls WMBC again).
->>> Thanks;
->>>
->>
->> Sorry for late reply.
->>
->> WMBC is not an ACPI spec defined method (which always start with "_"=
-,
->> _ADR, _DSW etc), the driver should only call ACPI spec defined metho=
-d.
->> What does this method do?
->>
->> And, I don't see any call to WMBC in eeepc-wmi.c or above patch.
->
-> It's a wmi driver, so it calls wmi_evaluate_method, wich internally
-> will call \AMW0.WMBC for this GUID.
-> Sorry for the confusion.
->
-> I finally found a solut^W^W workaround:
-> http://git.iksaif.net/?p=3Dacpi4asus.git;a=3Dcommitdiff;h=3Daa8ff8f23=
-b2f99da9371da9154d3e523b964f054;hp=3Dd13f17d9657d7161884e289cc2ac6efb41=
-4a6ff9
+On Saturday, January 22, 2011, Jeff Chua wrote:
+> 2011/1/22 Rafael J. Wysocki <rjw@sisk.pl>:
+> > On Friday, January 21, 2011, Jeff Chua wrote:
+> >> 2011/1/21 Rafael J. Wysocki <rjw@sisk.pl>:
+> >> > Thanks, but unfortunately this wasn't conclusive.  Please apply the patch below
+> >> > instead of the previous one (on top of [1/11] - [11/11]) and collect dmesg
+> > So, below is a replacement for [11/11].  Please test it on top of
+> > [1/11] - [10/11] (the current Linus' tree already contains [1/11] and [2/11])
+> > and let me know if it works for you (in either case, please attach dmesg
+> > output containing a suspend attempt).
+> >
+> > If it works, I'll remove the diagnostic messages and submit along with the
+> > rest of the patchset.
+> 
+> Rafael,
+> 
+> dmesg attached. This time, it worked!
 
-As I thought, using a mutex here introduce a lot of potential deadlock =
-=2E..
-Any Idea ?
+Great, thanks a lot!
 
+> I discovered CONFIG_THINKPAD_ACPI caused suspend-to-disk to hang. I
+> need the Thinkpad ACPI to control the fan and bluetooth. It looks like
+> the thinkpad acpi is trying acquire locks while suspending.  Disabling
+> cmos, light, led and hotkeys makes suspend-to-disk works again.
 
---=20
-Corentin Chary
-http://xf.iksaif.net
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Well, we should tell the thinkpad_acpi maintainer about that, then (CCed).
+
+It also would be good to file a Bugzilla report about that, if poss.
+
+Rafael
