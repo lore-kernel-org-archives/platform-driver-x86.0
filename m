@@ -1,35 +1,38 @@
-From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
- laptops)
-Date: Sun, 23 Jan 2011 18:56:44 +0200
-Message-ID: <4D3C5DCC.9010107@pardus.org.tr>
-References: <4D3C3B1E.1080500@pardus.org.tr>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps
+ management
+Date: Sun, 23 Jan 2011 16:20:37 -0200
+Message-ID: <20110123182037.GH24071@khazad-dum.debian.net>
+References: <201101201226.41021.rjw@sisk.pl>
+ <201101212206.37469.rjw@sisk.pl>
+ <AANLkTimEoAhO9TRx4Aq7NnTTt6G-u+cHJRyAMjSAJgTm@mail.gmail.com>
+ <201101221013.10239.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lider.pardus.org.tr ([193.140.100.216]:49541 "EHLO
-	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751054Ab1AWQ4l (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 23 Jan 2011 11:56:41 -0500
-In-Reply-To: <4D3C3B1E.1080500@pardus.org.tr>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201101221013.10239.rjw@sisk.pl>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Jeff Chua <jeff.chua.linux@gmail.com>, Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 23.01.2011 16:28, Ozan =C3=87a=C4=9Flayan wrote:
+On Sat, 22 Jan 2011, Rafael J. Wysocki wrote:
+> > I discovered CONFIG_THINKPAD_ACPI caused suspend-to-disk to hang. I
+> > need the Thinkpad ACPI to control the fan and bluetooth. It looks like
+> > the thinkpad acpi is trying acquire locks while suspending.  Disabling
+> > cmos, light, led and hotkeys makes suspend-to-disk works again.
+> 
+> Well, we should tell the thinkpad_acpi maintainer about that, then (CCed).
 
-> "Asus N61JQ hangs at shutdown unless lapic is passed"
-> (Not reported upstream yet, I've only downstream bug report which is
-> Turkish)
-> http://bugs.pardus.org.tr/show_bug.cgi?id=3D15969
+What are the requirements re. mutexes for sleep-to-disk versus sleep-to-ram?
 
-Asus N61JQ is reported upstream:
-https://bugzilla.kernel.org/show_bug.cgi?id=3D27412
+Did something change in that area that caused the driver to hang?  A pointer
+to the ML threads, documentation, or patchset/git commit with those changes
+would be enough answer, and I will pursue it from there.
 
-
---=20
-Pardus Linux
-http://www.pardus.org.tr/eng
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
