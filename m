@@ -1,46 +1,49 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps management
-Date: Sat, 22 Jan 2011 10:13:09 +0100
-Message-ID: <201101221013.10239.rjw@sisk.pl>
-References: <201101201226.41021.rjw@sisk.pl> <201101212206.37469.rjw@sisk.pl> <AANLkTimEoAhO9TRx4Aq7NnTTt6G-u+cHJRyAMjSAJgTm@mail.gmail.com>
+From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
+Subject: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Sun, 23 Jan 2011 16:28:46 +0200
+Message-ID: <4D3C3B1E.1080500@pardus.org.tr>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <AANLkTimEoAhO9TRx4Aq7NnTTt6G-u+cHJRyAMjSAJgTm@mail.gmail.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Jeff Chua <jeff.chua.linux@gmail.com>
-Cc: Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Saturday, January 22, 2011, Jeff Chua wrote:
-> 2011/1/22 Rafael J. Wysocki <rjw@sisk.pl>:
-> > On Friday, January 21, 2011, Jeff Chua wrote:
-> >> 2011/1/21 Rafael J. Wysocki <rjw@sisk.pl>:
-> >> > Thanks, but unfortunately this wasn't conclusive.  Please apply the patch below
-> >> > instead of the previous one (on top of [1/11] - [11/11]) and collect dmesg
-> > So, below is a replacement for [11/11].  Please test it on top of
-> > [1/11] - [10/11] (the current Linus' tree already contains [1/11] and [2/11])
-> > and let me know if it works for you (in either case, please attach dmesg
-> > output containing a suspend attempt).
-> >
-> > If it works, I'll remove the diagnostic messages and submit along with the
-> > rest of the patchset.
-> 
-> Rafael,
-> 
-> dmesg attached. This time, it worked!
+Hi,
 
-Great, thanks a lot!
+I'm getting a lot of bug reports about hanging boot/shutdowns on these days.
 
-> I discovered CONFIG_THINKPAD_ACPI caused suspend-to-disk to hang. I
-> need the Thinkpad ACPI to control the fan and bluetooth. It looks like
-> the thinkpad acpi is trying acquire locks while suspending.  Disabling
-> cmos, light, led and hotkeys makes suspend-to-disk works again.
+Most of the affected hardware are ASUS laptops. The problem is that I 
+don't have access to any of those problematic laptops and the users are 
+not able at all to debug/bisect what is going on. However, I have 
+collected dmesgs of good/bad boots, acpidump, etc.
 
-Well, we should tell the thinkpad_acpi maintainer about that, then (CCed).
+Here are the current status:
 
-It also would be good to file a Bugzilla report about that, if poss.
+"Asus F50SV does not boot unless lapic is passed"
+   https://bugzilla.kernel.org/show_bug.cgi?id=26502
 
-Rafael
+"Regression between 2.6.35-020635-rc1 and 2.6.35-020635 breaks acpi 
+support on Asus X71 laptop"
+   https://bugs.launchpad.net/ubuntu/+source/linux-meta/+bug/689796
+
+"Asus N61JQ hangs at shutdown unless lapic is passed"
+(Not reported upstream yet, I've only downstream bug report which is 
+Turkish)
+   http://bugs.pardus.org.tr/show_bug.cgi?id=15969
+
+"Asus X61S does not boot unless acpi=off is given"
+(Not reported upstream yet, I've only downstream bug report which is 
+Turkish)
+   http://bugs.pardus.org.tr/show_bug.cgi?id=16322
+(I've told the reporter to try with nolapic, it will probably fix the 
+issue but until confirmed acpi=off is the only solution. 2.6.36 was fine)
+
+I'll post more bugs in here as I've found them.
+
+Thanks,
+
+-- 
+Pardus Linux
+http://www.pardus.org.tr/eng
