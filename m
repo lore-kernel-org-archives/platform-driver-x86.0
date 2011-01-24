@@ -1,74 +1,161 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH] asus-laptop: let WLED alone on L1400B
-Date: Mon, 24 Jan 2011 10:21:59 +0100
-Message-ID: <1295860919-9248-1-git-send-email-corentincj@iksaif.net>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fb1.tech.numericable.fr ([82.216.111.51]:41085 "EHLO
-	fb1.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751351Ab1AXJbf (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Jan 2011 04:31:35 -0500
-Received: from smtp2.tech.numericable.fr (smtp2.nc.sdv.fr [10.0.0.36])
-	by fb1.tech.numericable.fr (Postfix) with ESMTP id 5B822ADEDA
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jan 2011 10:23:11 +0100 (CET)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, Corentin Chary <corentincj@iksaif.net>, stable@kernel.org
+From: Lionel Debroux <lionel_debroux@yahoo.fr>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Mon, 24 Jan 2011 09:47:16 +0000 (GMT)
+Message-ID: <556624.21214.qm@web28409.mail.ukl.yahoo.com>
+References: <201101241121.50658.ozan@pardus.org.tr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <201101241121.50658.ozan@pardus.org.tr>
+Sender: linux-acpi-owner@vger.kernel.org
+To: =?utf-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-Asus took the DSDT from another model (L84F), made some change
-to make it work, but forgot to remove WLED method (the laptop
-doesn't have a wireless card). They even didn't change the model
-name.
 
-Reference: https://bugzilla.kernel.org/show_bug.cgi?id=25712
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
-Cc: stable@kernel.org
----
- drivers/platform/x86/asus-laptop.c |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index d235f44..1909685 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -50,6 +50,7 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/rfkill.h>
- #include <linux/slab.h>
-+#include <linux/dmi.h>
- #include <acpi/acpi_drivers.h>
- #include <acpi/acpi_bus.h>
- 
-@@ -1556,6 +1557,20 @@ static int __devinit asus_acpi_init(struct asus_laptop *asus)
- 	return result;
- }
- 
-+static void __devinit asus_dmi_check(void)
-+{
-+	const char *model;
-+
-+	model = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	if (!model)
-+		return;
-+
-+	/* On L1400B WLED control the sound card, don't mess with it ... */
-+	if (strncmp(model, "L1400B", 6) == 0) {
-+		wlan_status = -1;
-+	}
-+}
-+
- static bool asus_device_present;
- 
- static int __devinit asus_acpi_add(struct acpi_device *device)
-@@ -1574,6 +1589,8 @@ static int __devinit asus_acpi_add(struct acpi_device *device)
- 	device->driver_data = asus;
- 	asus->device = device;
- 
-+	asus_dmi_check();
-+
- 	result = asus_acpi_init(asus);
- 	if (result)
- 		goto fail_platform;
--- 
-1.7.3.4
+--- En date de=C2=A0: Lun 24.1.11, Ozan =C3=87a=C4=9Flayan <ozan@pardus=
+=2Eorg.tr> a =C3=A9crit=C2=A0:
+
+> De: Ozan =C3=87a=C4=9Flayan <ozan@pardus.org.tr>
+> Objet: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly=
+ Asus laptops)
+> =C3=80: "Lionel Debroux" <lionel_debroux@yahoo.fr>
+> Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platfor=
+m-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
+> Date: Lundi 24 janvier 2011, 10h21
+> Pazartesi 24 Ocak 2011 g=C3=BCn=C3=BC (saat
+> 11:04:35) Lionel Debroux =C5=9Funlar=C4=B1 yazm=C4=B1=C5=9Ft=C4=B1:
+> >=20
+> > --- En date de : Dim 23.1.11, Ozan =C3=87a=C4=9Flayan <ozan@pardus.=
+org.tr>
+> > a =C3=A9crit :
+> >=20
+> > > De: Ozan =C3=87a=C4=9Flayan <ozan@pardus.org.tr>
+> > > Objet: Re: Common boot/shutdown issues with the
+> latest 2.6.37 (Mostly Asus laptops)
+> > > =C3=80: linux-acpi@vger.kernel.org,
+> linux-kernel@vger.kernel.org,
+> platform-driver-x86@vger.kernel.org,
+> rjw@sisk.pl, colin.king@canonical.com
+> > > Date: Dimanche 23 janvier 2011, 21h24
+> > > On 23.01.2011 16:28, Ozan =C3=87a=C4=9Flayan
+> > > wrote:
+> > > > Hi,
+> > > >
+> > > > I'm getting a lot of bug reports about
+> hanging
+> > > boot/shutdowns on these
+> > > > days.
+> > > >
+> > > > Most of the affected hardware are ASUS
+> laptops. The
+> > > problem is that I
+> > > > don't have access to any of those
+> problematic laptops
+> > > and the users are
+> > > > not able at all to debug/bisect what is
+> going on.
+> > > However, I have
+> > > > collected dmesgs of good/bad boots,
+> acpidump, etc.
+> > > >
+> > > > Here are the current status:
+> > > >
+> > > > "Asus F50SV does not boot unless lapic is
+> passed"
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D26502
+> > > >
+> > > > "Regression between 2.6.35-020635-rc1 and
+> > > 2.6.35-020635 breaks acpi
+> > > > support on Asus X71 laptop"
+> > > > https://bugs.launchpad.net/ubuntu/+source/linux-meta/+bug/68979=
+6
+> > > >
+> > > > "Asus N61JQ hangs at shutdown unless lapic
+> is passed"
+> > > > (Not reported upstream yet, I've only
+> downstream bug
+> > > report which is
+> > > > Turkish)
+> > > > http://bugs.pardus.org.tr/show_bug.cgi?id=3D15969
+> > > >
+> > > > "Asus X61S does not boot unless acpi=3Doff is
+> given"
+> > > > (Not reported upstream yet, I've only
+> downstream bug
+> > > report which is
+> > > > Turkish)
+> > > > http://bugs.pardus.org.tr/show_bug.cgi?id=3D16322
+> > > > (I've told the reporter to try with nolapic,
+> it will
+> > > probably fix the
+> > > > issue but until confirmed acpi=3Doff is the
+> only
+> > > solution. 2.6.36 was fine)
+> > > >
+> > > > I'll post more bugs in here as I've found
+> them.
+> > >=20
+> > > (CC'ing: Colin King from Canonical)
+> > >=20
+> > > Another one for Asus N90Sc which was booting fine
+> with
+> > > 10.04
+> > > but fails to boot with 10.10:
+> > >=C2=A0=C2=A0=C2=A0https://bugs.launchpad.net/ubuntu/+source/linux/=
++bug/653626
+> > >=20
+> > > Seen that the issue mostly happens on Asus boxes,
+> it's
+> > > possible
+> > > that their firmwares are buggy but they were
+> > > booting/shutting down
+> > > correctly until a recent change in kernel.
+> > My ASUS F3Jv-AS022P (Core 2 Duo T7200, 2 GB RAM, BIOS
+> version
+> > 207) has trouble (read: it reboots within one second
+> of the
+> > vmlinuz being loaded) with recent kernels as well.
+> >=20
+> > While I haven't performed a full bisection yet (which
+> is why=20
+> > I didn't try reporting the problem until I saw this
+> thread),
+> > I have narrowed down the problem by compiling several
+> tagged
+> > versions:
+> > * 2.6.35 series: .4 and .6 boot successfully, .8 and
+> .10 fail;
+> > * 2.6.36 series: -rc2 boots successfully, .1 fails;
+> > * 2.6.37 series: -rc4 fails.
+>=20
+> So it's probably a commit to the mainline tree which was
+> picked by 2.6.35
+> maintainer to the stable tree (probably it was CC'ed) cause
+> this.
+>=20
+> Does passing nolapic or acpi=3Doff cures the issue?
+IIRC, I tested at least one of these, without improvement.
+I'll test again tonight, when I can physically access the
+computer.
+
+> Maybe rebooting immediately while booting
+> is a sign of another problem, I don't know.
+>
+> ---
+> Ozan =C3=87a=C4=9Flayan
+> TUBITAK/UEKAE - Pardus Linux
+> http://www.pardus.org.tr/eng
+
+
+Lionel.
+
+
+     =20
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
