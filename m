@@ -1,8 +1,7 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 08/14] eeepc-wmi: switch to
-	platform_create_bundle()
-Date: Mon, 24 Jan 2011 17:23:52 +0100
-Message-ID: <1295886238-15961-9-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 12/14] eeepc-wmi: add wimax support
+Date: Mon, 24 Jan 2011 17:23:56 +0100
+Message-ID: <1295886238-15961-13-git-send-email-corentincj@iksaif.net>
 References: <1295886238-15961-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,174 +20,70 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This allow to remove ~30 lines of code.
-
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/eeepc-wmi.c |   75 +++++++++++---------------------------
- 1 files changed, 22 insertions(+), 53 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   20 +++++++++++++++++++-
+ 1 files changed, 19 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 583ba78..1fc191b 100644
+index 83415dd..0db7009 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -144,9 +144,6 @@ struct eeepc_wmi {
- 	struct eeepc_wmi_debug debug;
- };
+@@ -71,6 +71,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
  
--/* Only used in eeepc_wmi_init() and eeepc_wmi_exit() */
--static struct platform_device *platform_device;
--
- static int eeepc_wmi_input_init(struct eeepc_wmi *eeepc)
- {
- 	int err;
-@@ -932,33 +929,12 @@ static int eeepc_wmi_sysfs_init(struct platform_device *device)
-  */
- static int __init eeepc_wmi_platform_init(struct eeepc_wmi *eeepc)
- {
--	int err;
--
--	eeepc->platform_device = platform_device_alloc(EEEPC_WMI_FILE, -1);
--	if (!eeepc->platform_device)
--		return -ENOMEM;
--	platform_set_drvdata(eeepc->platform_device, eeepc);
--
--	err = platform_device_add(eeepc->platform_device);
--	if (err)
--		goto fail_platform_device;
--
--	err = eeepc_wmi_sysfs_init(eeepc->platform_device);
--	if (err)
--		goto fail_sysfs;
--	return 0;
--
--fail_sysfs:
--	platform_device_del(eeepc->platform_device);
--fail_platform_device:
--	platform_device_put(eeepc->platform_device);
--	return err;
-+	return eeepc_wmi_sysfs_init(eeepc->platform_device);
- }
+ #define EEEPC_WMI_DEVID_WLAN		0x00010011
+ #define EEEPC_WMI_DEVID_BLUETOOTH	0x00010013
++#define EEEPC_WMI_DEVID_WIMAX		0x00010017
+ #define EEEPC_WMI_DEVID_WWAN3G		0x00010019
+ #define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
+ #define EEEPC_WMI_DEVID_CAMERA		0x00060013
+@@ -138,6 +139,7 @@ struct eeepc_wmi {
  
- static void eeepc_wmi_platform_exit(struct eeepc_wmi *eeepc)
- {
- 	eeepc_wmi_sysfs_exit(eeepc->platform_device);
--	platform_device_unregister(eeepc->platform_device);
- }
+ 	struct rfkill *wlan_rfkill;
+ 	struct rfkill *bluetooth_rfkill;
++	struct rfkill *wimax_rfkill;
+ 	struct rfkill *wwan3g_rfkill;
  
- /*
-@@ -1094,7 +1070,7 @@ static void eeepc_dmi_check(struct eeepc_wmi *eeepc)
+ 	struct hotplug_slot *hotplug_slot;
+@@ -691,6 +693,11 @@ static void eeepc_wmi_rfkill_exit(struct eeepc_wmi *eeepc)
+ 		rfkill_destroy(eeepc->bluetooth_rfkill);
+ 		eeepc->bluetooth_rfkill = NULL;
  	}
- }
++	if (eeepc->wimax_rfkill) {
++		rfkill_unregister(eeepc->wimax_rfkill);
++		rfkill_destroy(eeepc->wimax_rfkill);
++		eeepc->wimax_rfkill = NULL;
++	}
+ 	if (eeepc->wwan3g_rfkill) {
+ 		rfkill_unregister(eeepc->wwan3g_rfkill);
+ 		rfkill_destroy(eeepc->wwan3g_rfkill);
+@@ -719,6 +726,13 @@ static int eeepc_wmi_rfkill_init(struct eeepc_wmi *eeepc)
+ 	if (result && result != -ENODEV)
+ 		goto exit;
  
--static struct platform_device * __init eeepc_wmi_add(void)
-+static int __init eeepc_wmi_add(struct platform_device *pdev)
- {
- 	struct eeepc_wmi *eeepc;
- 	acpi_status status;
-@@ -1102,15 +1078,14 @@ static struct platform_device * __init eeepc_wmi_add(void)
- 
- 	eeepc = kzalloc(sizeof(struct eeepc_wmi), GFP_KERNEL);
- 	if (!eeepc)
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
++	result = eeepc_new_rfkill(eeepc, &eeepc->wimax_rfkill,
++				  "eeepc-wimax", RFKILL_TYPE_WIMAX,
++				  EEEPC_WMI_DEVID_WIMAX);
 +
-+	eeepc->platform_device = pdev;
-+	platform_set_drvdata(eeepc->platform_device, eeepc);
- 
- 	eeepc->hotplug_wireless = hotplug_wireless;
- 	eeepc_dmi_check(eeepc);
- 
--	/*
--	 * Register the platform device first.  It is used as a parent for the
--	 * sub-devices below.
--	 */
- 	err = eeepc_wmi_platform_init(eeepc);
- 	if (err)
- 		goto fail_platform;
-@@ -1147,7 +1122,7 @@ static struct platform_device * __init eeepc_wmi_add(void)
- 	if (err)
- 		goto fail_debugfs;
- 
--	return eeepc->platform_device;
-+	return 0;
- 
- fail_debugfs:
- 	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
-@@ -1163,10 +1138,10 @@ fail_input:
- 	eeepc_wmi_platform_exit(eeepc);
- fail_platform:
- 	kfree(eeepc);
--	return ERR_PTR(err);
-+	return err;
- }
- 
--static int eeepc_wmi_remove(struct platform_device *device)
-+static int __exit eeepc_wmi_remove(struct platform_device *device)
- {
- 	struct eeepc_wmi *eeepc;
- 
-@@ -1232,6 +1207,7 @@ static const struct dev_pm_ops eeepc_pm_ops = {
- };
- 
- static struct platform_driver platform_driver = {
-+	.remove = __exit_p(eeepc_wmi_remove),
- 	.driver = {
- 		.name = EEEPC_WMI_FILE,
- 		.owner = THIS_MODULE,
-@@ -1260,10 +1236,8 @@ static int __init eeepc_wmi_check_atkd(void)
- 	return -1;
- }
- 
--static int __init eeepc_wmi_init(void)
-+static int __init eeepc_wmi_probe(struct platform_device *pdev)
- {
--	int err;
--
- 	if (!wmi_has_guid(EEEPC_WMI_EVENT_GUID) ||
- 	    !wmi_has_guid(EEEPC_WMI_MGMT_GUID)) {
- 		pr_warning("No known WMI GUID found\n");
-@@ -1280,29 +1254,24 @@ static int __init eeepc_wmi_init(void)
- 		return -ENODEV;
- 	}
- 
--	platform_device = eeepc_wmi_add();
--	if (IS_ERR(platform_device)) {
--		err = PTR_ERR(platform_device);
--		goto fail_eeepc_wmi;
--	}
-+	return eeepc_wmi_add(pdev);
-+}
- 
--	err = platform_driver_register(&platform_driver);
--	if (err) {
--		pr_warning("Unable to register platform driver\n");
--		goto fail_platform_driver;
--	}
-+static struct platform_device *platform_device;
- 
-+static int __init eeepc_wmi_init(void)
-+{
-+	platform_device = platform_create_bundle(&platform_driver,
-+						 eeepc_wmi_probe,
-+						 NULL, 0, NULL, 0);
-+	if (IS_ERR(platform_device))
-+		return PTR_ERR(platform_device);
- 	return 0;
--
--fail_platform_driver:
--	eeepc_wmi_remove(platform_device);
--fail_eeepc_wmi:
--	return err;
- }
- 
- static void __exit eeepc_wmi_exit(void)
- {
--	eeepc_wmi_remove(platform_device);
-+	platform_device_unregister(platform_device);
- 	platform_driver_unregister(&platform_driver);
- }
- 
++	if (result && result != -ENODEV)
++		goto exit;
++
+ 	result = eeepc_new_rfkill(eeepc, &eeepc->wwan3g_rfkill,
+ 				  "eeepc-wwan3g", RFKILL_TYPE_WWAN,
+ 				  EEEPC_WMI_DEVID_WWAN3G);
+@@ -1276,7 +1290,11 @@ static int eeepc_hotk_restore(struct device *device)
+ 	if (eeepc->bluetooth_rfkill) {
+ 		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_BLUETOOTH);
+ 		rfkill_set_sw_state(eeepc->bluetooth_rfkill, bl);
+-}
++	}
++	if (eeepc->wimax_rfkill) {
++		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WIMAX);
++		rfkill_set_sw_state(eeepc->wimax_rfkill, bl);
++	}
+ 	if (eeepc->wwan3g_rfkill) {
+ 		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WWAN3G);
+ 		rfkill_set_sw_state(eeepc->wwan3g_rfkill, bl);
 -- 
 1.7.3.4
 
