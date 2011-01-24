@@ -1,8 +1,7 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 05/14] eeepc-wmi: return proper error code
-	in eeepc_rfkill_set()
-Date: Mon, 24 Jan 2011 17:23:49 +0100
-Message-ID: <1295886238-15961-6-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 09/14] eeepc-wmi: reorder defines
+Date: Mon, 24 Jan 2011 17:23:53 +0100
+Message-ID: <1295886238-15961-10-git-send-email-corentincj@iksaif.net>
 References: <1295886238-15961-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,29 +22,43 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/eeepc-wmi.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   18 +++++++++---------
+ 1 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index eb4c0ce..d823458 100644
+index 1fc191b..aa9e1d1 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -588,8 +588,14 @@ static int eeepc_rfkill_set(void *data, bool blocked)
- {
- 	int dev_id = (unsigned long)data;
- 	u32 ctrl_param = !blocked;
-+	acpi_status status;
-+
-+	status = eeepc_wmi_set_devstate(dev_id, ctrl_param, NULL);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
+@@ -60,20 +60,20 @@ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("wmi:"EEEPC_WMI_EVENT_GUID);
+ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
  
--	return eeepc_wmi_set_devstate(dev_id, ctrl_param, NULL);
-+	return 0;
- }
+-#define NOTIFY_BRNUP_MIN	0x11
+-#define NOTIFY_BRNUP_MAX	0x1f
+-#define NOTIFY_BRNDOWN_MIN	0x20
+-#define NOTIFY_BRNDOWN_MAX	0x2e
++#define NOTIFY_BRNUP_MIN		0x11
++#define NOTIFY_BRNUP_MAX		0x1f
++#define NOTIFY_BRNDOWN_MIN		0x20
++#define NOTIFY_BRNDOWN_MAX		0x2e
  
- static void eeepc_rfkill_query(struct rfkill *rfkill, void *data)
+-#define EEEPC_WMI_METHODID_DEVS	0x53564544
+-#define EEEPC_WMI_METHODID_DSTS	0x53544344
+-#define EEEPC_WMI_METHODID_CFVS	0x53564643
++#define EEEPC_WMI_METHODID_DSTS		0x53544344
++#define EEEPC_WMI_METHODID_DEVS		0x53564544
++#define EEEPC_WMI_METHODID_CFVS		0x53564643
+ 
+-#define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
+-#define EEEPC_WMI_DEVID_TPDLED		0x00100011
+ #define EEEPC_WMI_DEVID_WLAN		0x00010011
+ #define EEEPC_WMI_DEVID_BLUETOOTH	0x00010013
+ #define EEEPC_WMI_DEVID_WWAN3G		0x00010019
++#define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
++#define EEEPC_WMI_DEVID_TPDLED		0x00100011
+ 
+ static bool hotplug_wireless;
+ 
 -- 
 1.7.3.4
 
