@@ -1,60 +1,108 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps
- management
-Date: Sun, 23 Jan 2011 21:15:12 -0200
-Message-ID: <20110123231512.GB11203@khazad-dum.debian.net>
-References: <201101201226.41021.rjw@sisk.pl>
- <201101221013.10239.rjw@sisk.pl>
- <20110123182037.GH24071@khazad-dum.debian.net>
- <201101232135.32510.rjw@sisk.pl>
+From: Lionel Debroux <lionel_debroux@yahoo.fr>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Mon, 24 Jan 2011 09:04:35 +0000 (GMT)
+Message-ID: <179044.7274.qm@web28416.mail.ukl.yahoo.com>
+References: <4D3C8E90.6010506@pardus.org.tr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201101232135.32510.rjw@sisk.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Jeff Chua <jeff.chua.linux@gmail.com>, Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4D3C8E90.6010506@pardus.org.tr>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com, =?utf-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 23 Jan 2011, Rafael J. Wysocki wrote:
-> On Sunday, January 23, 2011, Henrique de Moraes Holschuh wrote:
-> > On Sat, 22 Jan 2011, Rafael J. Wysocki wrote:
-> > > > I discovered CONFIG_THINKPAD_ACPI caused suspend-to-disk to hang. I
-> > > > need the Thinkpad ACPI to control the fan and bluetooth. It looks like
-> > > > the thinkpad acpi is trying acquire locks while suspending.  Disabling
-> > > > cmos, light, led and hotkeys makes suspend-to-disk works again.
-> > > 
-> > > Well, we should tell the thinkpad_acpi maintainer about that, then (CCed).
-> > 
-> > What are the requirements re. mutexes for sleep-to-disk versus sleep-to-ram?
-> 
-> No difference.  Basically, there are two differences between suspend and
-> hibernation, as far as drivers are concerned:
-> (1) It's better to use the ->freeze()/->thaw() and ->poweroff()/->restore()
->     callbacks for hibernation.
-> (2) It may be _much_ more difficult to get free memory during hibernation
->     (so theoretically attempts to get memory during hibernation are more likely
->     to block).
 
-So, if there is nothing wrong with mutex use by itself...
 
-Thinkpad-acpi calls the thinkpad firmware (using normal ACPI method calls),
-which does SMI traps into the SMBIOS to do whatever it wants done.  And that
-includes writing to the NVS (both the peecee RTC CMOS, and ACPI-backed
-"NVS").
+--- En date de=C2=A0: Dim 23.1.11, Ozan =C3=87a=C4=9Flayan <ozan@pardus=
+=2Eorg.tr>
+a =C3=A9crit=C2=A0:
 
-> Besides, the problem reported by Jeff seems to be caused by CPU hotplug.
+> De: Ozan =C3=87a=C4=9Flayan <ozan@pardus.org.tr>
+> Objet: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly=
+ Asus laptops)
+> =C3=80: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, pla=
+tform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
+> Date: Dimanche 23 janvier 2011, 21h24
+> On 23.01.2011 16:28, Ozan =C3=87a=C4=9Flayan
+> wrote:
+> > Hi,
+> >
+> > I'm getting a lot of bug reports about hanging
+> boot/shutdowns on these
+> > days.
+> >
+> > Most of the affected hardware are ASUS laptops. The
+> problem is that I
+> > don't have access to any of those problematic laptops
+> and the users are
+> > not able at all to debug/bisect what is going on.
+> However, I have
+> > collected dmesgs of good/bad boots, acpidump, etc.
+> >
+> > Here are the current status:
+> >
+> > "Asus F50SV does not boot unless lapic is passed"
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D26502
+> >
+> > "Regression between 2.6.35-020635-rc1 and
+> 2.6.35-020635 breaks acpi
+> > support on Asus X71 laptop"
+> > https://bugs.launchpad.net/ubuntu/+source/linux-meta/+bug/689796
+> >
+> > "Asus N61JQ hangs at shutdown unless lapic is passed"
+> > (Not reported upstream yet, I've only downstream bug
+> report which is
+> > Turkish)
+> > http://bugs.pardus.org.tr/show_bug.cgi?id=3D15969
+> >
+> > "Asus X61S does not boot unless acpi=3Doff is given"
+> > (Not reported upstream yet, I've only downstream bug
+> report which is
+> > Turkish)
+> > http://bugs.pardus.org.tr/show_bug.cgi?id=3D16322
+> > (I've told the reporter to try with nolapic, it will
+> probably fix the
+> > issue but until confirmed acpi=3Doff is the only
+> solution. 2.6.36 was fine)
+> >
+> > I'll post more bugs in here as I've found them.
+>=20
+> (CC'ing: Colin King from Canonical)
+>=20
+> Another one for Asus N90Sc which was booting fine with
+> 10.04
+> but fails to boot with 10.10:
+> =C2=A0 https://bugs.launchpad.net/ubuntu/+source/linux/+bug/653626
+>=20
+> Seen that the issue mostly happens on Asus boxes, it's
+> possible
+> that their firmwares are buggy but they were
+> booting/shutting down
+> correctly until a recent change in kernel.
+My ASUS F3Jv-AS022P (Core 2 Duo T7200, 2 GB RAM, BIOS version
+207) has trouble (read: it reboots within one second of the
+vmlinuz being loaded) with recent kernels as well.
 
-Something weird going on with CPU hotplug could throw Lenovo's
-way-too-complex-for-comfort SMM firmware out of wack alright.
+While I haven't performed a full bisection yet (which is why=20
+I didn't try reporting the problem until I saw this thread),
+I have narrowed down the problem by compiling several tagged
+versions:
+* 2.6.35 series: .4 and .6 boot successfully, .8 and .10 fail;
+* 2.6.36 series: -rc2 boots successfully, .1 fails;
+* 2.6.37 series: -rc4 fails.
 
-That can be checked.  Lobotomize the driver so that it does not do the acpi
-calls in the suspend path (but keep everything else).  If it still locks, it
-is not the firmware.
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+I can perform further testing if needed.
+
+
+Regards,
+Lionel.
+
+
+     =20
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
