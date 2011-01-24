@@ -1,8 +1,8 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 07/14] eeepc-wmi: add hibernate/resume
-	callbacks
-Date: Mon, 24 Jan 2011 17:23:51 +0100
-Message-ID: <1295886238-15961-8-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 10/14] eeepc-wmi: use the presence bit
+	correctly
+Date: Mon, 24 Jan 2011 17:23:54 +0100
+Message-ID: <1295886238-15961-11-git-send-email-corentincj@iksaif.net>
 References: <1295886238-15961-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,75 +21,49 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+I checked some more DSDT, and it seems that I wasn't
+totally right about the meaning of DSTS return value.
+Bit 0 is clearly the status of the device, and I discovered
+that bit 16 is set when the device is present.
+
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/eeepc-wmi.c |   49 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 49 insertions(+), 0 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   13 +++++--------
+ 1 files changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index de501fb..583ba78 100644
+index aa9e1d1..391c32b 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -1183,10 +1183,59 @@ static int eeepc_wmi_remove(struct platform_device *device)
- 	return 0;
+@@ -75,6 +75,9 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
+ #define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
+ #define EEEPC_WMI_DEVID_TPDLED		0x00100011
+ 
++#define EEEPC_WMI_DSTS_STATUS_BIT	0x00000001
++#define EEEPC_WMI_DSTS_PRESENCE_BIT	0x00010000
++
+ static bool hotplug_wireless;
+ 
+ module_param(hotplug_wireless, bool, 0444);
+@@ -265,16 +268,10 @@ static int eeepc_wmi_get_devstate_simple(u32 dev_id)
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+ 
+-	/* If the device is present, DSTS will always set some bits
+-	 * 0x00070000 - 1110000000000000000 - device supported
+-	 * 0x00060000 - 1100000000000000000 - not supported
+-	 * 0x00020000 - 0100000000000000000 - device supported
+-	 * 0x00010000 - 0010000000000000000 - not supported / special mode ?
+-	 */
+-	if (!retval || retval == 0x00060000)
++	if (!(retval & EEEPC_WMI_DSTS_PRESENCE_BIT))
+ 		return -ENODEV;
+ 
+-	return retval & 0x1;
++	return retval & EEEPC_WMI_DSTS_STATUS_BIT;
  }
  
-+/*
-+ * Platform driver - hibernate/resume callbacks
-+ */
-+static int eeepc_hotk_thaw(struct device *device)
-+{
-+	struct eeepc_wmi *eeepc = dev_get_drvdata(device);
-+
-+	if (eeepc->wlan_rfkill) {
-+		bool wlan;
-+
-+		/*
-+		 * Work around bios bug - acpi _PTS turns off the wireless led
-+		 * during suspend.  Normally it restores it on resume, but
-+		 * we should kick it ourselves in case hibernation is aborted.
-+		 */
-+		wlan = eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WLAN);
-+		eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_WLAN, wlan, NULL);
-+	}
-+
-+	return 0;
-+}
-+
-+static int eeepc_hotk_restore(struct device *device)
-+{
-+	struct eeepc_wmi *eeepc = dev_get_drvdata(device);
-+	int bl;
-+
-+	/* Refresh both wlan rfkill state and pci hotplug */
-+	if (eeepc->wlan_rfkill)
-+		eeepc_rfkill_hotplug(eeepc);
-+
-+	if (eeepc->bluetooth_rfkill) {
-+		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_BLUETOOTH);
-+		rfkill_set_sw_state(eeepc->bluetooth_rfkill, bl);
-+}
-+	if (eeepc->wwan3g_rfkill) {
-+		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WWAN3G);
-+		rfkill_set_sw_state(eeepc->wwan3g_rfkill, bl);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops eeepc_pm_ops = {
-+	.thaw = eeepc_hotk_thaw,
-+	.restore = eeepc_hotk_restore,
-+};
-+
- static struct platform_driver platform_driver = {
- 	.driver = {
- 		.name = EEEPC_WMI_FILE,
- 		.owner = THIS_MODULE,
-+		.pm = &eeepc_pm_ops,
- 	},
- };
- 
+ /*
 -- 
 1.7.3.4
 
