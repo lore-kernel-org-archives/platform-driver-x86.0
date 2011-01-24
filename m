@@ -1,205 +1,201 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 04/14] eeepc-wmi: serialize access to wmi method
-Date: Mon, 24 Jan 2011 17:23:48 +0100
-Message-ID: <1295886238-15961-5-git-send-email-corentincj@iksaif.net>
+From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 06/14] eeepc-wmi: add an helper using
+	simple return codes
+Date: Mon, 24 Jan 2011 17:23:50 +0100
+Message-ID: <1295886238-15961-7-git-send-email-corentincj@iksaif.net>
 References: <1295886238-15961-1-git-send-email-corentincj@iksaif.net>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp3.tech.numericable.fr ([82.216.111.39]:49860 "EHLO
-	smtp3.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752970Ab1AXQYa (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Jan 2011 11:24:30 -0500
-In-Reply-To: <1295886238-15961-1-git-send-email-corentincj@iksaif.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Chris Bagwell <chris@cnpbagwell.com>, Corentin Chary <corentincj@iksaif.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1295886238-15961-1-git-send-email-corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-\AMW0.WMBC, which is the main method that we use,
-is not reentrant. When wireless hotpluging is enabled,
-toggling the status of the wireless device using WMBC will
-trigger a notification and the notification handler need to
-call WMBC again to get the new status of the device, this
-will trigger the following error:
+eeepc_wmi_get_devstate returns an acpi_status, so each
+call need extra logic to handle the return code. This
+patch add a simple getter, returning a boolean (or a
+negative error code).
 
-ACPI Error (dswload-0802): [_T_0] Namespace lookup failure, AE_ALREADY_EXISTS
-ACPI Exception: AE_ALREADY_EXISTS, During name lookup/catalog (20100428/psloop-231)
-ACPI Error (psparse-0537): Method parse/execution failed [\AMW0.WMBC] (Node f7023b88), AE_ALREADY_EXISTS
-ACPI: Marking method WMBC as Serialized because of AE_ALREADY_EXISTS error
-
-Since there is currently no way to tell the acpi subsystem to mark
-a method as serialized, we do it in eeepc-wmi.
-
-Of course, we could let the first call fail, and then it would work,
-but it doesn't seems really clean, and it will make the first
-WMBC call return a random value.
-
-This patch was tested on EeePc 1000H with a RaLink RT2860
-wireless card using the rt2800pci driver. rt2860sta driver
-seems to deadlock when we remove the pci device...
-
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/eeepc-wmi.c |   78 +++++++++++++++++++++++++++++++++++---
- 1 files changed, 72 insertions(+), 6 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   96 +++++++++++++++----------------------
+ 1 files changed, 39 insertions(+), 57 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 01bc2b3..eb4c0ce 100644
+index d823458..de501fb 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -137,6 +137,9 @@ struct eeepc_wmi {
+@@ -257,6 +257,29 @@ static acpi_status eeepc_wmi_set_devstate(u32 dev_id, u32 ctrl_param,
+ 	return status;
+ }
  
- 	struct hotplug_slot *hotplug_slot;
- 	struct mutex hotplug_lock;
-+	struct mutex wmi_lock;
-+	struct workqueue_struct *hotplug_workqueue;
-+	struct work_struct hotplug_work;
- 
- 	struct eeepc_wmi_debug debug;
- };
-@@ -370,15 +373,19 @@ static void eeepc_rfkill_hotplug(struct eeepc_wmi *eeepc)
- {
- 	struct pci_dev *dev;
- 	struct pci_bus *bus;
--	bool blocked = eeepc_wlan_rfkill_blocked(eeepc);
-+	bool blocked;
- 	bool absent;
- 	u32 l;
- 
--	if (eeepc->wlan_rfkill)
--		rfkill_set_sw_state(eeepc->wlan_rfkill, blocked);
-+	mutex_lock(&eeepc->wmi_lock);
-+	blocked = eeepc_wlan_rfkill_blocked(eeepc);
-+	mutex_unlock(&eeepc->wmi_lock);
- 
- 	mutex_lock(&eeepc->hotplug_lock);
- 
-+	if (eeepc->wlan_rfkill)
-+		rfkill_set_sw_state(eeepc->wlan_rfkill, blocked);
++/* Helper for special devices with magic return codes */
++static int eeepc_wmi_get_devstate_simple(u32 dev_id)
++{
++	u32 retval = 0;
++	acpi_status status;
 +
- 	if (eeepc->hotplug_slot) {
- 		bus = pci_find_bus(0, 1);
- 		if (!bus) {
-@@ -435,7 +442,14 @@ static void eeepc_rfkill_notify(acpi_handle handle, u32 event, void *data)
- 	if (event != ACPI_NOTIFY_BUS_CHECK)
- 		return;
- 
--	eeepc_rfkill_hotplug(eeepc);
-+	/*
-+	 * We can't call directly eeepc_rfkill_hotplug because most
-+	 * of the time WMBC is still being executed and not reetrant.
-+	 * There is currently no way to tell ACPICA that  we want this
-+	 * method to be serialized, we schedule a eeepc_rfkill_hotplug
-+	 * call later, in a safer context.
++	status = eeepc_wmi_get_devstate(dev_id, &retval);
++
++	if (ACPI_FAILURE(status))
++		return -EINVAL;
++
++	/* If the device is present, DSTS will always set some bits
++	 * 0x00070000 - 1110000000000000000 - device supported
++	 * 0x00060000 - 1100000000000000000 - not supported
++	 * 0x00020000 - 0100000000000000000 - device supported
++	 * 0x00010000 - 0010000000000000000 - not supported / special mode ?
 +	 */
-+	queue_work(eeepc->hotplug_workqueue, &eeepc->hotplug_work);
- }
- 
- static int eeepc_register_rfkill_notifier(struct eeepc_wmi *eeepc,
-@@ -508,6 +522,14 @@ static struct hotplug_slot_ops eeepc_hotplug_slot_ops = {
- 	.get_power_status = eeepc_get_adapter_status,
- };
- 
-+static void eeepc_hotplug_work(struct work_struct *work)
-+{
-+	struct eeepc_wmi *eeepc;
++	if (!retval || retval == 0x00060000)
++		return -ENODEV;
 +
-+	eeepc = container_of(work, struct eeepc_wmi, hotplug_work);
-+	eeepc_rfkill_hotplug(eeepc);
++	return retval & 0x1;
 +}
 +
- static int eeepc_setup_pci_hotplug(struct eeepc_wmi *eeepc)
+ /*
+  * LEDs
+  */
+@@ -290,23 +313,7 @@ static void tpd_led_set(struct led_classdev *led_cdev,
+ 
+ static int read_tpd_state(struct eeepc_wmi *eeepc)
  {
- 	int ret = -ENOMEM;
-@@ -518,6 +540,13 @@ static int eeepc_setup_pci_hotplug(struct eeepc_wmi *eeepc)
- 		return -ENODEV;
- 	}
- 
-+	eeepc->hotplug_workqueue =
-+		create_singlethread_workqueue("hotplug_workqueue");
-+	if (!eeepc->hotplug_workqueue)
-+		goto error_workqueue;
-+
-+	INIT_WORK(&eeepc->hotplug_work, eeepc_hotplug_work);
-+
- 	eeepc->hotplug_slot = kzalloc(sizeof(struct hotplug_slot), GFP_KERNEL);
- 	if (!eeepc->hotplug_slot)
- 		goto error_slot;
-@@ -547,6 +576,8 @@ error_info:
- 	kfree(eeepc->hotplug_slot);
- 	eeepc->hotplug_slot = NULL;
- error_slot:
-+	destroy_workqueue(eeepc->hotplug_workqueue);
-+error_workqueue:
- 	return ret;
+-	u32 retval;
+-	acpi_status status;
+-
+-	status = eeepc_wmi_get_devstate(EEEPC_WMI_DEVID_TPDLED, &retval);
+-
+-	if (ACPI_FAILURE(status))
+-		return -1;
+-	else if (!retval || retval == 0x00060000)
+-		/*
+-		 * if touchpad led is present, DSTS will set some bits,
+-		 * usually 0x00020000.
+-		 * 0x00060000 means that the device is not supported
+-		 */
+-		return -ENODEV;
+-	else
+-		/* Status is stored in the first bit */
+-		return retval & 0x1;
++	return eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_TPDLED);
  }
  
-@@ -575,6 +606,34 @@ static void eeepc_rfkill_query(struct rfkill *rfkill, void *data)
- 	rfkill_set_sw_state(rfkill, !(retval & 0x1));
+ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+@@ -358,15 +365,11 @@ static void eeepc_wmi_led_exit(struct eeepc_wmi *eeepc)
+  */
+ static bool eeepc_wlan_rfkill_blocked(struct eeepc_wmi *eeepc)
+ {
+-	u32 retval;
+-	acpi_status status;
+-
+-	status = eeepc_wmi_get_devstate(EEEPC_WMI_DEVID_WLAN, &retval);
++	int result = eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WLAN);
+ 
+-	if (ACPI_FAILURE(status))
++	if (result < 0)
+ 		return false;
+-
+-	return !(retval & 0x1);
++	return !result;
  }
  
-+static int eeepc_rfkill_wlan_set(void *data, bool blocked)
-+{
-+	struct eeepc_wmi *eeepc = data;
-+	int ret;
-+
-+	/*
-+	 * This handler is enabled only if hotplug is enabled.
-+	 * In this case, the eeepc_wmi_set_devstate() will
-+	 * trigger a wmi notification and we need to wait
-+	 * this call to finish before being able to call
-+	 * any wmi method
-+	 */
-+	mutex_lock(&eeepc->wmi_lock);
-+	ret = eeepc_rfkill_set((void *)(long)EEEPC_WMI_DEVID_WLAN, blocked);
-+	mutex_unlock(&eeepc->wmi_lock);
-+	return ret;
-+}
-+
-+static void eeepc_rfkill_wlan_query(struct rfkill *rfkill, void *data)
-+{
-+	eeepc_rfkill_query(rfkill, (void *)(long)EEEPC_WMI_DEVID_WLAN);
-+}
-+
-+static const struct rfkill_ops eeepc_rfkill_wlan_ops = {
-+	.set_block = eeepc_rfkill_wlan_set,
-+	.query = eeepc_rfkill_wlan_query,
-+};
-+
- static const struct rfkill_ops eeepc_rfkill_ops = {
- 	.set_block = eeepc_rfkill_set,
- 	.query = eeepc_rfkill_query,
-@@ -603,8 +662,12 @@ static int eeepc_new_rfkill(struct eeepc_wmi *eeepc,
- 	if (!retval || retval == 0x00060000)
- 		return -ENODEV;
+ static void eeepc_rfkill_hotplug(struct eeepc_wmi *eeepc)
+@@ -494,19 +497,12 @@ static void eeepc_unregister_rfkill_notifier(struct eeepc_wmi *eeepc,
+ static int eeepc_get_adapter_status(struct hotplug_slot *hotplug_slot,
+ 				    u8 *value)
+ {
+-	u32 retval;
+-	acpi_status status;
+-
+-	status = eeepc_wmi_get_devstate(EEEPC_WMI_DEVID_WLAN, &retval);
+-
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
++	int result = eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WLAN);
  
--	*rfkill = rfkill_alloc(name, &eeepc->platform_device->dev, type,
--			       &eeepc_rfkill_ops, (void *)(long)dev_id);
-+	if (dev_id == EEEPC_WMI_DEVID_WLAN && eeepc->hotplug_wireless)
-+		*rfkill = rfkill_alloc(name, &eeepc->platform_device->dev, type,
-+				       &eeepc_rfkill_wlan_ops, eeepc);
-+	else
-+		*rfkill = rfkill_alloc(name, &eeepc->platform_device->dev, type,
-+				       &eeepc_rfkill_ops, (void *)(long)dev_id);
+-	if (!retval || retval == 0x00060000)
+-		return -ENODEV;
+-	else
+-		*value = (retval & 0x1);
++	if (result < 0)
++		return result;
  
++	*value = !!result;
+ 	return 0;
+ }
+ 
+@@ -601,15 +597,14 @@ static int eeepc_rfkill_set(void *data, bool blocked)
+ static void eeepc_rfkill_query(struct rfkill *rfkill, void *data)
+ {
+ 	int dev_id = (unsigned long)data;
+-	u32 retval;
+-	acpi_status status;
++	int result;
+ 
+-	status = eeepc_wmi_get_devstate(dev_id, &retval);
++	result = eeepc_wmi_get_devstate_simple(dev_id);
+ 
+-	if (ACPI_FAILURE(status))
++	if (result < 0)
+ 		return ;
+ 
+-	rfkill_set_sw_state(rfkill, !(retval & 0x1));
++	rfkill_set_sw_state(rfkill, !result);
+ }
+ 
+ static int eeepc_rfkill_wlan_set(void *data, bool blocked)
+@@ -650,23 +645,10 @@ static int eeepc_new_rfkill(struct eeepc_wmi *eeepc,
+ 			    const char *name,
+ 			    enum rfkill_type type, int dev_id)
+ {
+-	int result;
+-	u32 retval;
+-	acpi_status status;
+-
+-	status = eeepc_wmi_get_devstate(dev_id, &retval);
++	int result = eeepc_wmi_get_devstate_simple(dev_id);
+ 
+-	if (ACPI_FAILURE(status))
+-		return -1;
+-
+-	/* If the device is present, DSTS will always set some bits
+-	 * 0x00070000 - 1110000000000000000 - device supported
+-	 * 0x00060000 - 1100000000000000000 - not supported
+-	 * 0x00020000 - 0100000000000000000 - device supported
+-	 * 0x00010000 - 0010000000000000000 - not supported / special mode ?
+-	 */
+-	if (!retval || retval == 0x00060000)
+-		return -ENODEV;
++	if (result < 0)
++		return result;
+ 
+ 	if (dev_id == EEEPC_WMI_DEVID_WLAN && eeepc->hotplug_wireless)
+ 		*rfkill = rfkill_alloc(name, &eeepc->platform_device->dev, type,
+@@ -678,7 +660,7 @@ static int eeepc_new_rfkill(struct eeepc_wmi *eeepc,
  	if (!*rfkill)
  		return -EINVAL;
-@@ -636,6 +699,8 @@ static void eeepc_wmi_rfkill_exit(struct eeepc_wmi *eeepc)
- 	eeepc_rfkill_hotplug(eeepc);
- 	if (eeepc->hotplug_slot)
- 		pci_hp_deregister(eeepc->hotplug_slot);
-+	if (eeepc->hotplug_workqueue)
-+		destroy_workqueue(eeepc->hotplug_workqueue);
  
- 	if (eeepc->bluetooth_rfkill) {
- 		rfkill_unregister(eeepc->bluetooth_rfkill);
-@@ -654,6 +719,7 @@ static int eeepc_wmi_rfkill_init(struct eeepc_wmi *eeepc)
- 	int result = 0;
- 
- 	mutex_init(&eeepc->hotplug_lock);
-+	mutex_init(&eeepc->wmi_lock);
- 
- 	result = eeepc_new_rfkill(eeepc, &eeepc->wlan_rfkill,
- 				  "eeepc-wlan", RFKILL_TYPE_WLAN,
+-	rfkill_init_sw_state(*rfkill, !(retval & 0x1));
++	rfkill_init_sw_state(*rfkill, !result);
+ 	result = rfkill_register(*rfkill);
+ 	if (result) {
+ 		rfkill_destroy(*rfkill);
 -- 
 1.7.3.4
+
+
+------------------------------------------------------------------------------
+Special Offer-- Download ArcSight Logger for FREE (a $49 USD value)!
+Finally, a world-class log management solution at an even better price-free!
+Download using promo code Free_Logger_4_Dev2Dev. Offer expires 
+February 28th, so secure your free ArcSight Logger TODAY! 
+http://p.sf.net/sfu/arcsight-sfd2d
