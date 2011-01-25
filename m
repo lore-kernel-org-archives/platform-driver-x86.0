@@ -1,44 +1,41 @@
-From: Len Brown <lenb@kernel.org>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
- laptops)
-Date: Mon, 24 Jan 2011 21:56:02 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1101242154090.6097@x980>
-References: <556624.21214.qm@web28409.mail.ukl.yahoo.com>
- <4D3DDDA4.2080202@yahoo.fr>
+From: Ozan =?utf-8?q?=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Tue, 25 Jan 2011 08:22:48 +0200
+Message-ID: <201101250822.48287.ozan@pardus.org.tr>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <4D3DDDA4.2080202@yahoo.fr>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-reply-to: <4D3DDDA4.2080202@yahoo.fr>
-Sender: linux-acpi-owner@vger.kernel.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from lider.pardus.org.tr ([193.140.100.216]:52464 "EHLO
+	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751340Ab1AYG2e convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 25 Jan 2011 01:28:34 -0500
+In-Reply-To: <4D3DDDA4.2080202@yahoo.fr>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Lionel Debroux <lionel_debroux@yahoo.fr>
-Cc: =?UTF-8?Q?Ozan_=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
 
-> >>> * 2.6.35 series: .4 and .6 boot successfully, .8 and .10 fail;
-> >>> * 2.6.36 series: -rc2 boots successfully, .1 fails;
-> >>> * 2.6.37 series: -rc4 fails.
-> >>
-> >> So it's probably a commit to the mainline tree which was picked
-> >> by 2.6.35 maintainer to the stable tree (probably it was CC'ed)
-> >> cause this.
-> >>
-> >> Does passing nolapic or acpi=off cures the issue?
-> > IIRC, I tested at least one of these, without improvement.
-> > I'll test again tonight, when I can physically access the
-> > computer.
-> None of nolapic, acpi=off, nolapic acpi=off enables 2.6.35.8 to boot
+Pazartesi 24 Ocak 2011 g=C3=BCn=C3=BC (saat 22:14:28) Lionel Debroux =C5=
+=9Funlar=C4=B1 yazm=C4=B1=C5=9Ft=C4=B1:
+> On 24.01.2011 10:47, Lionel Debroux wrote:
+
+> None of nolapic, acpi=3Doff, nolapic acpi=3Doff enables 2.6.35.8 to b=
+oot
 > on my ASUS F3Jv-AS022P.
 > The kernel line is
-> kernel /boot/vmlinuz root=/dev/sda9 nomce vga=791 nomodeset
+> kernel /boot/vmlinuz root=3D/dev/sda9 nomce vga=3D791 nomodeset
 > I've attached the 2.6.35.6 config.
 
-looks like you've bisected as far as:
-2.6.35.6 good
-2.6.35.8 bad
+Yes one of my reporters also tells that on 2.6.35 the problem can't be =
+cured with nolapic
+but on 2.6.37 it helps.
 
-can you try 2.6.35.7 and continue on to find which specific patch
-in .stable broke your machine?
 
-thanks,
-Len Brown, Intel Open Source Technology Center
 
+---
+Ozan =C3=87a=C4=9Flayan
+TUBITAK/UEKAE - Pardus Linux
+http://www.pardus.org.tr/eng
