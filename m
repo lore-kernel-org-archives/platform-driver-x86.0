@@ -1,63 +1,41 @@
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Subject: Re: thinkpad-acpi: fn-f4 issues
-Date: Wed, 26 Jan 2011 06:26:53 +0800
-Message-ID: <AANLkTim9cN8KXx5DVrH_nBzVjnmuYsxOHwP4msBKs=gS@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] thinkpad-acpi: fn-f4 issues
+Date: Tue, 25 Jan 2011 21:16:51 -0200
+Message-ID: <20110125231651.GB25953@khazad-dum.debian.net>
 References: <Pine.LNX.4.64.1101251740380.3737@boston.corp.fedex.com>
-	<20110125151346.GB14803@khazad-dum.debian.net>
+ <20110125151346.GB14803@khazad-dum.debian.net>
+ <4D3F3AFF.7020407@kabelfunk.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:36022 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752548Ab1AYW0x convert rfc822-to-8bit (ORCPT
+Received: from out1.smtp.messagingengine.com ([66.111.4.25]:48358 "EHLO
+	out1.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753676Ab1AYXQy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Jan 2011 17:26:53 -0500
-In-Reply-To: <20110125151346.GB14803@khazad-dum.debian.net>
+	Tue, 25 Jan 2011 18:16:54 -0500
+Content-Disposition: inline
+In-Reply-To: <4D3F3AFF.7020407@kabelfunk.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Dominik Kopp <my@kabelfunk.de>
+To: Dominik Kopp <my@kabelfunk.de>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Jeff Chua <jeff.chua.linux@gmail.com>, ibm-acpi-devel@lists.sourceforge.net
 
-On Tue, Jan 25, 2011 at 11:13 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> That will basicaly lobotomize the driver, as the "hotkeys" are really=
- the
-> entire firmware event interface(!).
+On Tue, 25 Jan 2011, Dominik Kopp wrote:
+> I have also a X100e and the Fn-F4 (suspend-to-memory) and Fn-F12
+> (suspend-to-disk) are not working. (no effect at all)
 
-Didn't know that.
+> [   15.362664] thinkpad_acpi: asked for hotkey mask 0x040988fc, but
+> firmware forced it to 0x000988fc
 
-> Which thinkpad do you have that need CONFIG_THINKPAD_ACPI_HOTKEY_POLL=
- to
-> handle Fn+F4? =A0 I don't expect that to be needed on anything newer =
-than a
-> T32...
+The driver IS asking for Fn+F4 events.  Please send me the output of
+acpidump, gzipped.
 
-X201s which is quite new.
+In the meanwhile, check if the input device is producing events when
+you're pressing Fn+f4.  It could well be sending KEY_SUSPEND, but if
+there's nobody listening...
 
-
-> Can I have the full kernel log, please?
-
-thinkpad_acpi: ThinkPad ACPI Extras v0.24
-thinkpad_acpi: http://ibm-acpi.sf.net/
-thinkpad_acpi: ThinkPad BIOS 6QET62WW (1.32 ), EC 6QHT31WW-1.12
-thinkpad_acpi: Lenovo ThinkPad X201s, model 5413FGA
-thinkpad_acpi: detected a 8-level brightness capable ThinkPad
-thinkpad_acpi: radio switch found; radios are enabled
-thinkpad_acpi: possible tablet mode switch found; ThinkPad in laptop mo=
-de
-thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is blocked
-Registered led device: tpacpi::thinklight
-Registered led device: tpacpi::power
-Registered led device: tpacpi::standby
-Registered led device: tpacpi::thinkvantage
-thinkpad_acpi: volume: disabled as there is no ALSA support in this ker=
-nel
-input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/=
-input5
-
-And the volume up/down does not work either even with thinkpad ALSA
-support enabled.
-
-Thanks,
-Jeff.
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
