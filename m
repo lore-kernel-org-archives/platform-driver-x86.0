@@ -1,44 +1,57 @@
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps management
-Date: Tue, 25 Jan 2011 17:43:22 +0800 (SGT)
-Message-ID: <Pine.LNX.4.64.1101251740380.3737@boston.corp.fedex.com>
+From: Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH] X86, Acer, WMI: Do not double include linux/dmi.h in
+ acer-wmi.c
+Date: Tue, 25 Jan 2011 12:03:33 +0100 (CET)
+Message-ID: <alpine.LNX.2.00.1101251203260.5725@pobox.suse.cz>
+References: <4D3EC34A020000230002799D@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:45596 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750831Ab1AYLDf (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 25 Jan 2011 06:03:35 -0500
+In-Reply-To: <4D3EC34A020000230002799D@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: jj@chaosbits.net, mjg@redhat.com, carlos@strangeworlds.co.uk, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
+On Mon, 24 Jan 2011, Joey Lee wrote:
 
-On Tue, Jan 25, 2011 at 5:37 AM, Rafael J. Wysocki <rjw@sisk.pl> wrote:
-> On Monday, January 24, 2011, Henrique de Moraes Holschuh wrote:
-> It turns out there's a bug in intel_idle causing people a lot of pain 
-> with CPU hotplugging.  Should be fixed now it the Linus' tree.
+> Hi Jesper,=20
+>=20
+> =E6=96=BC =E4=B8=80=EF=BC=8C2011-01-24 =E6=96=BC 22:12 +0100=EF=BC=8C=
+Jesper Juhl =E6=8F=90=E5=88=B0=EF=BC=9A
+> > Including linux/dmi.h once in drivers/platform/x86/acer-wmi.c is en=
+ough.
+> >=20
+> > Signed-off-by: Jesper Juhl <jj@chaosbits.net>
+> > ---
+> >  acer-wmi.c |    1 -
+> >  1 file changed, 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86=
+/acer-wmi.c
+> > index c5c4b8c..f21eb53 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -39,7 +39,6 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/input.h>
+> >  #include <linux/input/sparse-keymap.h>
+> > -#include <linux/dmi.h>
+> > =20
+> >  #include <acpi/acpi_drivers.h>
+> > =20
+> >=20
+>=20
+> Reviewed-by: Lee, Chun-Yi <jlee@novell.com>
 
-Uh, I see the git fix now. Thanks. The workaround I did was to manually 
-offline all CPUs before suspend and that fixed it too.
+Applied, thanks.
 
-As for the thinkpad-acpi, here a little patch to disable all hotkeys so 
-that Fn-F4 works natively to suspend-to-memory when 
-CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set.
-
-Thanks,
-Jeff
-
---- lx/drivers/platform/x86/thinkpad_acpi.c.org	2011-01-22 21:48:05.000000000 +0800
-+++ lx/drivers/platform/x86/thinkpad_acpi.c	2011-01-22 21:55:14.000000000 +0800
-@@ -8776,10 +8776,12 @@
-  	{
-  		.data = &thinkpad_acpi_driver_data,
-  	},
-+#ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
-  	{
-  		.init = hotkey_init,
-  		.data = &hotkey_driver_data,
-  	},
-+#endif
-  	{
-  		.init = bluetooth_init,
-
-
+--=20
+Jiri Kosina
+SUSE Labs, Novell Inc.
