@@ -1,74 +1,42 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 0/4] Pegatron Lucid tablet acceleromter/ALS
-Date: Tue, 25 Jan 2011 09:12:38 -0800
-Message-ID: <20110125171238.GE19701@core.coreip.homeip.net>
-References: <1295909288-32650-1-git-send-email-andy.ross@windriver.com>
- <20110124230557.GA18135@core.coreip.homeip.net>
- <AANLkTinfDR4TnVC-NPLsCqXsc9nP+UWXKO6n8jXuT7ne@mail.gmail.com>
- <4D3EFDCF.7090308@windriver.com>
- <AANLkTi=tQpQ0wjfx-Cp13FuCSQNFitN7XAg-V2AcSHz2@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Tue, 25 Jan 2011 20:38:24 +0100
+Message-ID: <201101252038.25113.rjw@sisk.pl>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <4D3DDDA4.2080202@yahoo.fr> <201101250822.48287.ozan@pardus.org.tr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: Text/Plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=tQpQ0wjfx-Cp13FuCSQNFitN7XAg-V2AcSHz2@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Andy Ross <andy.ross@windriver.com>, linux-input@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <201101250822.48287.ozan@pardus.org.tr>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ozan =?utf-8?q?=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>
+Cc: Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, colin.king@canonical.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jan 25, 2011 at 05:05:05PM +0000, Corentin Chary wrote:
-> On Tue, Jan 25, 2011 at 4:43 PM, Andy Ross <andy.ross@windriver.com> =
-wrote:
-> > On 01/24/2011 11:30 PM, Corentin Chary wrote:
-> >> Dmitry Torokhov wrote:
-> >> > I am happy with the input part but I wonder if it really needs t=
-o be
-> >> > separate? If you roll it up into asus-laptop you would not need =
-a new
-> >> > platform device and then it would be what - 20 lines of code?
-> >> >
-> >> > Corentin, what do you think?
-> >>
-> >> I think that it should be consistent, if there is already some cod=
-e
-> >> for pegatron tablet in asus-laptop, then why a new platform device
-> >> only for the accelerometer ?
-> >
-> > No strong feelings here. =A0I made it a separate file because
-> > asus-laptop.c is already very large and this was something that cou=
-ld
-> > be fairly easily split out, but obviously it's a really trivial
-> > device.
-> >
-> >> Andy, what is shared with asus-laptop exactly ? What sysfs files a=
-re
-> >> working and enabled ? =A0Are backlight and led classes working ?
-> >
-> > Just the key device, which exports the single touch area in the cor=
-ner
-> > of the tablet as KEY_MEDIA. =A0Some of the other sysfs devices
-> > (bluetooth, display, leds) appear because the methods exist, but
-> > they're stubbed out in the ASL and thus noops.
-> >
-> > Andy
+On Tuesday, January 25, 2011, Ozan =C3=87a=C4=9Flayan wrote:
+> Pazartesi 24 Ocak 2011 g=C3=BCn=C3=BC (saat 22:14:28) Lionel Debroux =
+=C5=9Funlar=C4=B1 yazm=C4=B1=C5=9Ft=C4=B1:
+> > On 24.01.2011 10:47, Lionel Debroux wrote:
 >=20
-> If everybody is ok with that, I think you should move the code back
-> into asus-laptop.c. But if you do so, don't forget to modify the help
-> text of ASUS_LAPTOP section in KConfig.
+> > None of nolapic, acpi=3Doff, nolapic acpi=3Doff enables 2.6.35.8 to=
+ boot
+> > on my ASUS F3Jv-AS022P.
+> > The kernel line is
+> > kernel /boot/vmlinuz root=3D/dev/sda9 nomce vga=3D791 nomodeset
+> > I've attached the 2.6.35.6 config.
 >=20
-> Should we also change the description to
-> "Asus/Medion/JVC/Lenovo/Pegatron Extra" ? That seems really ugly
-> but....
+> Yes one of my reporters also tells that on 2.6.35 the problem can't b=
+e cured with nolapic
+> but on 2.6.37 it helps.
 
-"Kitchen sink" so we do not need to adjust the description going
-forward? ;P
+Does
+http://git.kernel.org/?p=3Dlinux/kernel/git/torvalds/linux-2.6.git;a=3D=
+commit;h=3Dec30f343d61391ab23705e50a525da1d55395780
+generally help?
 
---=20
-Dmitry
+Rafael
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
 the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
