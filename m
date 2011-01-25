@@ -1,41 +1,52 @@
-From: Ozan =?utf-8?q?=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
-Date: Tue, 25 Jan 2011 08:22:48 +0200
-Message-ID: <201101250822.48287.ozan@pardus.org.tr>
-References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <4D3DDDA4.2080202@yahoo.fr>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 0/4] Pegatron Lucid tablet acceleromter/ALS
+Date: Tue, 25 Jan 2011 08:30:00 +0100
+Message-ID: <AANLkTinfDR4TnVC-NPLsCqXsc9nP+UWXKO6n8jXuT7ne@mail.gmail.com>
+References: <1295909288-32650-1-git-send-email-andy.ross@windriver.com>
+	<20110124230557.GA18135@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lider.pardus.org.tr ([193.140.100.216]:52464 "EHLO
-	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751340Ab1AYG2e convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Jan 2011 01:28:34 -0500
-In-Reply-To: <4D3DDDA4.2080202@yahoo.fr>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lionel Debroux <lionel_debroux@yahoo.fr>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20110124230557.GA18135@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Ross <andy.ross@windriver.com>, linux-input@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Pazartesi 24 Ocak 2011 g=C3=BCn=C3=BC (saat 22:14:28) Lionel Debroux =C5=
-=9Funlar=C4=B1 yazm=C4=B1=C5=9Ft=C4=B1:
-> On 24.01.2011 10:47, Lionel Debroux wrote:
+On Tue, Jan 25, 2011 at 12:05 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Mon, Jan 24, 2011 at 02:48:04PM -0800, Andy Ross wrote:
+>> Resubmission and update of the Pegatron Lucid tablet accelerometer and
+>> ambient light sensor drivers.
+>>
+>> Patches 1-3 are against asus-laptop, and apply in order.
+>>
+>> Patch 4 is against input, and can be commited separately (obviously
+>> relies on the detection code in asus-laptop at runtime, but will build
+>> and load independently).
+>>
+>
+> I am happy with the input part but I wonder if it really needs to be
+> separate? If you roll it up into asus-laptop you would not need a new
+> platform device and then it would be what - 20 lines of code?
+>
+> Corentin, what do you think?
 
-> None of nolapic, acpi=3Doff, nolapic acpi=3Doff enables 2.6.35.8 to b=
-oot
-> on my ASUS F3Jv-AS022P.
-> The kernel line is
-> kernel /boot/vmlinuz root=3D/dev/sda9 nomce vga=3D791 nomodeset
-> I've attached the 2.6.35.6 config.
+I think that it should be consistent, if there is already some code
+for pegatron tablet in asus-laptop, then why a new platform device
+only for the accelerometer ?
 
-Yes one of my reporters also tells that on 2.6.35 the problem can't be =
-cured with nolapic
-but on 2.6.37 it helps.
+On the other side, having to load "asus-laptop" on a pegatron tablet
+(or on a lenovo laptop) isn't very intuitive.
 
+The real name of this module should be atk010x_acpi, but it's not
+really better, and it's probably too late for that.
 
+Andy, what is shared with asus-laptop exactly ? What sysfs files are
+working and enabled ?
+Are backlight and led classes working ?
 
----
-Ozan =C3=87a=C4=9Flayan
-TUBITAK/UEKAE - Pardus Linux
-http://www.pardus.org.tr/eng
+Thanks,
+-- 
+Corentin Chary
+http://xf.iksaif.net
