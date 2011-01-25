@@ -1,52 +1,44 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 0/4] Pegatron Lucid tablet acceleromter/ALS
-Date: Tue, 25 Jan 2011 08:30:00 +0100
-Message-ID: <AANLkTinfDR4TnVC-NPLsCqXsc9nP+UWXKO6n8jXuT7ne@mail.gmail.com>
-References: <1295909288-32650-1-git-send-email-andy.ross@windriver.com>
-	<20110124230557.GA18135@core.coreip.homeip.net>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Subject: Re: [PATCH 0/11] ACPI: Fixes and cleanups related to iomaps management
+Date: Tue, 25 Jan 2011 17:43:22 +0800 (SGT)
+Message-ID: <Pine.LNX.4.64.1101251740380.3737@boston.corp.fedex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20110124230557.GA18135@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andy Ross <andy.ross@windriver.com>, linux-input@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Len Brown <lenb@kernel.org>, LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux-pm mailing list <linux-pm@lists.linux-foundation.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jan 25, 2011 at 12:05 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Mon, Jan 24, 2011 at 02:48:04PM -0800, Andy Ross wrote:
->> Resubmission and update of the Pegatron Lucid tablet accelerometer and
->> ambient light sensor drivers.
->>
->> Patches 1-3 are against asus-laptop, and apply in order.
->>
->> Patch 4 is against input, and can be commited separately (obviously
->> relies on the detection code in asus-laptop at runtime, but will build
->> and load independently).
->>
->
-> I am happy with the input part but I wonder if it really needs to be
-> separate? If you roll it up into asus-laptop you would not need a new
-> platform device and then it would be what - 20 lines of code?
->
-> Corentin, what do you think?
 
-I think that it should be consistent, if there is already some code
-for pegatron tablet in asus-laptop, then why a new platform device
-only for the accelerometer ?
+On Tue, Jan 25, 2011 at 5:37 AM, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> On Monday, January 24, 2011, Henrique de Moraes Holschuh wrote:
+> It turns out there's a bug in intel_idle causing people a lot of pain 
+> with CPU hotplugging.  Should be fixed now it the Linus' tree.
 
-On the other side, having to load "asus-laptop" on a pegatron tablet
-(or on a lenovo laptop) isn't very intuitive.
+Uh, I see the git fix now. Thanks. The workaround I did was to manually 
+offline all CPUs before suspend and that fixed it too.
 
-The real name of this module should be atk010x_acpi, but it's not
-really better, and it's probably too late for that.
-
-Andy, what is shared with asus-laptop exactly ? What sysfs files are
-working and enabled ?
-Are backlight and led classes working ?
+As for the thinkpad-acpi, here a little patch to disable all hotkeys so 
+that Fn-F4 works natively to suspend-to-memory when 
+CONFIG_THINKPAD_ACPI_HOTKEY_POLL is not set.
 
 Thanks,
--- 
-Corentin Chary
-http://xf.iksaif.net
+Jeff
+
+--- lx/drivers/platform/x86/thinkpad_acpi.c.org	2011-01-22 21:48:05.000000000 +0800
++++ lx/drivers/platform/x86/thinkpad_acpi.c	2011-01-22 21:55:14.000000000 +0800
+@@ -8776,10 +8776,12 @@
+  	{
+  		.data = &thinkpad_acpi_driver_data,
+  	},
++#ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+  	{
+  		.init = hotkey_init,
+  		.data = &hotkey_driver_data,
+  	},
++#endif
+  	{
+  		.init = bluetooth_init,
+
+
