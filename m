@@ -1,52 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] Pegatron Lucid tablet
-	acceleromter/ALS
-Date: Mon, 24 Jan 2011 15:05:57 -0800
-Message-ID: <20110124230557.GA18135@core.coreip.homeip.net>
-References: <1295909288-32650-1-git-send-email-andy.ross@windriver.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH] X86, Acer, WMI: Do not double include linux/dmi.h
+ in acer-wmi.c
+Date: Mon, 24 Jan 2011 18:34:18 -0700
+Message-ID: <4D3EC34A020000230002799D@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1295909288-32650-1-git-send-email-andy.ross-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andy Ross <andy.ross-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: jj@chaosbits.net
+Cc: trivial@kernel.org, mjg@redhat.com, carlos@strangeworlds.co.uk, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 24, 2011 at 02:48:04PM -0800, Andy Ross wrote:
-> Resubmission and update of the Pegatron Lucid tablet accelerometer and
-> ambient light sensor drivers.
-> 
-> Patches 1-3 are against asus-laptop, and apply in order.
-> 
-> Patch 4 is against input, and can be commited separately (obviously
-> relies on the detection code in asus-laptop at runtime, but will build
-> and load independently).
-> 
+Hi Jesper,=20
 
-I am happy with the input part but I wonder if it really needs to be
-separate? If you roll it up into asus-laptop you would not need a new
-platform device and then it would be what - 20 lines of code?
+=E6=96=BC =E4=B8=80=EF=BC=8C2011-01-24 =E6=96=BC 22:12 +0100=EF=BC=8CJe=
+sper Juhl =E6=8F=90=E5=88=B0=EF=BC=9A
+> Including linux/dmi.h once in drivers/platform/x86/acer-wmi.c is enou=
+gh.
+>=20
+> Signed-off-by: Jesper Juhl <jj@chaosbits.net>
+> ---
+>  acer-wmi.c |    1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index c5c4b8c..f21eb53 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -39,7 +39,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+> -#include <linux/dmi.h>
+> =20
+>  #include <acpi/acpi_drivers.h>
+> =20
+>=20
 
-Corentin, what do you think?
+Reviewed-by: Lee, Chun-Yi <jlee@novell.com>
 
-Thanks.
+Thank's for your patch to fix my fail.
 
--- 
-Dmitry
-
-------------------------------------------------------------------------------
-Special Offer-- Download ArcSight Logger for FREE (a $49 USD value)!
-Finally, a world-class log management solution at an even better price-free!
-Download using promo code Free_Logger_4_Dev2Dev. Offer expires 
-February 28th, so secure your free ArcSight Logger TODAY! 
-http://p.sf.net/sfu/arcsight-sfd2d
+Joey Lee
