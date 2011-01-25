@@ -1,47 +1,44 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] X86, Acer, WMI: Do not double include linux/dmi.h
- in acer-wmi.c
-Date: Mon, 24 Jan 2011 18:34:18 -0700
-Message-ID: <4D3EC34A020000230002799D@novprvlin0050.provo.novell.com>
+From: Len Brown <lenb@kernel.org>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
+ laptops)
+Date: Mon, 24 Jan 2011 21:56:02 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1101242154090.6097@x980>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com>
+ <4D3DDDA4.2080202@yahoo.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jj@chaosbits.net
-Cc: trivial@kernel.org, mjg@redhat.com, carlos@strangeworlds.co.uk, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-reply-to: <4D3DDDA4.2080202@yahoo.fr>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lionel Debroux <lionel_debroux@yahoo.fr>
+Cc: =?UTF-8?Q?Ozan_=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rjw@sisk.pl, colin.king@canonical.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Jesper,=20
+> >>> * 2.6.35 series: .4 and .6 boot successfully, .8 and .10 fail;
+> >>> * 2.6.36 series: -rc2 boots successfully, .1 fails;
+> >>> * 2.6.37 series: -rc4 fails.
+> >>
+> >> So it's probably a commit to the mainline tree which was picked
+> >> by 2.6.35 maintainer to the stable tree (probably it was CC'ed)
+> >> cause this.
+> >>
+> >> Does passing nolapic or acpi=off cures the issue?
+> > IIRC, I tested at least one of these, without improvement.
+> > I'll test again tonight, when I can physically access the
+> > computer.
+> None of nolapic, acpi=off, nolapic acpi=off enables 2.6.35.8 to boot
+> on my ASUS F3Jv-AS022P.
+> The kernel line is
+> kernel /boot/vmlinuz root=/dev/sda9 nomce vga=791 nomodeset
+> I've attached the 2.6.35.6 config.
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-01-24 =E6=96=BC 22:12 +0100=EF=BC=8CJe=
-sper Juhl =E6=8F=90=E5=88=B0=EF=BC=9A
-> Including linux/dmi.h once in drivers/platform/x86/acer-wmi.c is enou=
-gh.
->=20
-> Signed-off-by: Jesper Juhl <jj@chaosbits.net>
-> ---
->  acer-wmi.c |    1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index c5c4b8c..f21eb53 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -39,7 +39,6 @@
->  #include <linux/slab.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> -#include <linux/dmi.h>
-> =20
->  #include <acpi/acpi_drivers.h>
-> =20
->=20
+looks like you've bisected as far as:
+2.6.35.6 good
+2.6.35.8 bad
 
-Reviewed-by: Lee, Chun-Yi <jlee@novell.com>
+can you try 2.6.35.7 and continue on to find which specific patch
+in .stable broke your machine?
 
-Thank's for your patch to fix my fail.
+thanks,
+Len Brown, Intel Open Source Technology Center
 
-Joey Lee
