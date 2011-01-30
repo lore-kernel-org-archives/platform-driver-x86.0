@@ -1,39 +1,36 @@
 From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
-Subject: Re: Rfkill always soft/hard blocked upon boot
-Date: Sun, 30 Jan 2011 21:09:42 +0200
-Message-ID: <4D45B776.4000403@pardus.org.tr>
-References: <4D455DC1.6010909@pardus.org.tr> <4D45B338.8010802@lwfinger.net>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
+ laptops)
+Date: Sun, 30 Jan 2011 22:30:39 +0200
+Message-ID: <4D45CA6F.8000002@pardus.org.tr>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <201101252038.25113.rjw@sisk.pl> <4D3F2869.3000406@pardus.org.tr> <201101252054.46647.rjw@sisk.pl> <4D445319.5020803@pardus.org.tr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lider.pardus.org.tr ([193.140.100.216]:57436 "EHLO
-	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751901Ab1A3TJo (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 30 Jan 2011 14:09:44 -0500
-In-Reply-To: <4D45B338.8010802@lwfinger.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4D445319.5020803@pardus.org.tr>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, colin.king@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 30.01.2011 20:51, Larry Finger wrote:
+On 29.01.2011 19:49, Ozan =C3=87a=C4=9Flayan wrote:
 
-> The nature of that Fn-F2 key depends on how the motherboard manufacturer coded
-> their BIOS. Most do it as a toggle and use some WMI (Windows Management
-> Interface) code to initialize it on boot up. As this no-name laptop is unlikely
-> to have a WMI driver the way that name brands do, it probably generates a
-> keystroke. That is easy to check - Use CTRL-ALT-F1 to switch to a console, log
-> in, and issue the command "showkey". Is a keycode returned when Fn-F2 is pressed?
+> intel_idle enabled and the patch above applied. Got 1 feedback for no=
+w
+> which tells that 1 out of 2 shutdown attempts failed. This is on Asus
+> N61JQ (https://bugzilla.kernel.org/show_bug.cgi?id=3D27412).
+>
+>
 
-Hmm I've got it. So maybe taking look at the ACPI tables/WMI block can 
-reveal a way to initialize the toggle? I'm not really experienced in 
-these things but I'll take a look out of curiosity.
+intel_idle + patch above doesn't help to the boot hang of Asus X61S.
 
-Thanks!
-
-
--- 
+--=20
 Pardus Linux
 http://www.pardus.org.tr/eng
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
