@@ -1,72 +1,56 @@
-From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
-Subject: Rfkill always soft/hard blocked upon boot
-Date: Sun, 30 Jan 2011 14:46:57 +0200
-Message-ID: <4D455DC1.6010909@pardus.org.tr>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Subject: Re: [ibm-acpi-devel] thinkpad-acpi: fn-f4 issues
+Date: Mon, 31 Jan 2011 01:22:31 +0800
+Message-ID: <AANLkTin-rO5Uge9y3JDAG5rBe=iuJ2qSb02myzTqVJ6c@mail.gmail.com>
+References: <Pine.LNX.4.64.1101251740380.3737@boston.corp.fedex.com>
+	<20110125151346.GB14803@khazad-dum.debian.net>
+	<AANLkTim9cN8KXx5DVrH_nBzVjnmuYsxOHwP4msBKs=gS@mail.gmail.com>
+	<20110126003034.GC25953@khazad-dum.debian.net>
+	<AANLkTinazKxNF27m_PkE097hnfZtOqBuAmLZYXydWCpL@mail.gmail.com>
+	<20110129175533.GB26442@khazad-dum.debian.net>
+	<AANLkTikjA=F7Q6zdZ8Gnq57NxBfr2vyU4eshmnZytw-m@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lider.pardus.org.tr ([193.140.100.216]:43287 "EHLO
-	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753427Ab1A3Mq6 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:54303 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751023Ab1A3RWc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 30 Jan 2011 07:46:58 -0500
+	Sun, 30 Jan 2011 12:22:32 -0500
+In-Reply-To: <AANLkTikjA=F7Q6zdZ8Gnq57NxBfr2vyU4eshmnZytw-m@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Dominik Kopp <my@kabelfunk.de>, ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-Hi,
+On Sun, Jan 30, 2011 at 1:55 AM, Henrique de Moraes Holschuh
+<hmh@hmh.eng.br> wrote:
+>
+> On Wed, 26 Jan 2011, Jeff Chua wrote:
+>
+> > xev reported both up/down. I'm using mplayer and it doesn't see those
+> > events.
+>
+> Now I am confused.  Did you get any xev events for Fn+F4?  Or do you mean
+> volume up/down?
 
-How to fix or debug the $subject? You always have to press Fn+F2 to hard 
-unblock the rfkill after every boot on a local brand laptop.
+No event for Fn+F4 with CONFIG_THINKPAD_ACPI_HOTKEY_POLL=y, and
+Suspend doesn't work.
 
-If the rfkill switch is really a switch which can be toggled on/off, 
-this makes sense. If you keep it Off, it will come as blocked. But it 
-seems that on this machine Fn+F2 controls the hard block state.
+With CONFIG_THINKPAD_ACPI_HOTKEY_POLL unset, Syspend works with Fn+F4.
 
-It should either be saved in somewhere (I've read that there is a 
-persistent knob for rfkill drivers in sysfs which tells whether the 
-state is kept in a non-volatile space across boots or not) or all soft 
-and this kind of Fn+Fx hard blocks should be explicitly disabled by 
-kernel during boots.
+xev reported events when volume up/down are pressed.
 
-I don't have direct access to the machine but the owner will help if you 
-need any output, etc.
+>
+> > Mute is working fine.  And on a separate topic, I simply couldn't get the
+> > "mic" to work. Alsamixer reported these ...
+>
+> I wouldn't know what to do about that, but I bet someone on the thinkpad-ml
+> does, so maybe you should ask there.  You did check that the mic-mute button
+> is not active, I assume?
 
-After booting:
+There's no option to unmute the mic. I've tried alsamixer, but
+couldn't find it there.
 
-0: hci0: Bluetooth
-         Soft blocked: no
-         Hard blocked: no
-1: phy0: Wireless LAN
-         Soft blocked: no
-         Hard blocked: yes
-
-After pressing Fn+F2:
-0: phy0: Wireless LAN
-         Soft blocked: no
-         Hard blocked: no
-1: hci0: Bluetooth
-         Soft blocked: no
-         Hard blocked: no
-
-03:00.0 Network controller: Atheros Communications Inc. AR9285 Wireless 
-Network Adapter (PCI-Express) (rev 01)
-         Subsystem: Device 1a3b:1089
-         Flags: bus master, fast devsel, latency 0, IRQ 17
-         Memory at f1d00000 (64-bit, non-prefetchable) [size=64K]
-         Capabilities: [40] Power Management version 3
-         Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit-
-         Capabilities: [60] Express Legacy Endpoint, MSI 00
-         Capabilities: [100] Advanced Error Reporting
-         Capabilities: [140] Virtual Channel
-         Capabilities: [160] Device Serial Number 00-15-17-ff-ff-24-14-12
-         Capabilities: [170] Power Budgeting <?>
-         Kernel driver in use: ath9k
-         Kernel modules: ath9k
-
-This is on 2.6.37. I'm waiting for the dmesg output.
-
--- 
-Pardus Linux
-http://www.pardus.org.tr/eng
+Thanks,
+Jeff
