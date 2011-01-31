@@ -1,35 +1,44 @@
 From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
- laptops)
-Date: Mon, 31 Jan 2011 10:53:22 +0200
-Message-ID: <4D467882.9060304@pardus.org.tr>
-References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <4D445319.5020803@pardus.org.tr> <4D45CA6F.8000002@pardus.org.tr> <201101302348.40509.rjw@sisk.pl>
+Subject: Re: Rfkill always soft/hard blocked upon boot
+Date: Mon, 31 Jan 2011 11:03:56 +0200
+Message-ID: <4D467AFC.7090503@pardus.org.tr>
+References: <4D455DC1.6010909@pardus.org.tr> <4D45B338.8010802@lwfinger.net> <4D45B776.4000403@pardus.org.tr> <4D46B4340200002300027E82@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <201101302348.40509.rjw@sisk.pl>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, colin.king@canonical.com
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from lider.pardus.org.tr ([193.140.100.216]:51821 "EHLO
+	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755301Ab1AaJD4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 31 Jan 2011 04:03:56 -0500
+In-Reply-To: <4D46B4340200002300027E82@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: Larry.Finger@lwfinger.net, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On 31.01.2011 00:48, Rafael J. Wysocki wrote:
+On 31.01.2011 04:08, Joey Lee wrote:
 
-> Does booting with "nolapic" help on all of the affected systems?
->
-> Also, does disabling the CPUidle during boot help?
->
-> Finally, is the problem reproducible with CONFIG_NO_HZ unset?
+> Does it possible share your machine's model name, dmidecode and
+> acpidump?
 
-Well on two machines, nolapic cures the boot hang and on one machine it 
-cures the random shutdown hangs.
+Yes of course. I have the acpidump and dmidecode outputs but I could not 
+extract the tables from the acpidump output. It gave an error about the 
+table headers and their lengths.
 
-I'll compile a kernel with CONFIG_NO_HZ to see what happens but how do I 
-disable cpuidle during boot? I've checked the kernel-parameters.txt but 
-there's no cpuidle related boot parameter there.
+This is a local (Turkish) brand laptop. The manufacturer is Casper. 
+Model is Nirvana i7 (Casper Nirvana i7 CNTKI-620A). It can be an exact 
+clone-copy of a popular laptop as it happens with these no-name stuff.
 
-Thanks
+acpidump:
+  http://bugs.pardus.org.tr/attachment.cgi?id=6673
+
+dmidecode:
+  http://bugs.pardus.org.tr/attachment.cgi?id=6674
+
+
+
 
 
 -- 
