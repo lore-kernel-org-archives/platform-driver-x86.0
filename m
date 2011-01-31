@@ -1,41 +1,38 @@
-From: =?UTF-8?B?UmljaGFyZCBTY2jDvHR6?= <r.schtz@t-online.de>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
- laptops)
-Date: Mon, 31 Jan 2011 11:29:51 +0100
-Message-ID: <4D468F1F.8030704@t-online.de>
-References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <201101311050.49722.rjw@sisk.pl> <4D468CF0.9040103@t-online.de> <201101311123.14704.rjw@sisk.pl>
+From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
+Subject: Re: Rfkill always soft/hard blocked upon boot
+Date: Mon, 31 Jan 2011 13:04:42 +0200
+Message-ID: <4D46974A.3080802@pardus.org.tr>
+References: <4D455DC1.6010909@pardus.org.tr> <4D45B338.8010802@lwfinger.net> <4D45B776.4000403@pardus.org.tr> <4D46B4340200002300027E82@novprvlin0050.provo.novell.com> <4D467AFC.7090503@pardus.org.tr> <4D4727E10200002300027EDF@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <201101311123.14704.rjw@sisk.pl>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>, Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, colin.king@canonical.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from lider.pardus.org.tr ([193.140.100.216]:35776 "EHLO
+	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752683Ab1AaLEm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 31 Jan 2011 06:04:42 -0500
+In-Reply-To: <4D4727E10200002300027EDF@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: Larry.Finger@lwfinger.net, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
->>>> I'll compile a kernel with CONFIG_NO_HZ to see what happens but ho=
-w do I
->>>> disable cpuidle during boot? I've checked the kernel-parameters.tx=
-t but
->>>> there's no cpuidle related boot parameter there.
->>>
->>> Booting with intel_idle.max_cstate=3D0 should do the trick.
->>
->> intel_idle.max_cstate=3D0 causes a fallback to the acpi_idle driver.=
- So it
->> does not disable the C-states directly.
+On 31.01.2011 12:21, Joey Lee wrote:
+> Hi Oza,
+
 >
-> What about not building the acpi_idle driver, then?
+> Sorry, I am not good for this platform, but will check your DSDT.
 
-Or just use the processor.max_cstate parameter then.
+I dumped the _WDG block and find out that the GUIDs are exactly same 
+with the following driver posted on Dec'2010 but not merged to upstream yet:
 
---=20
-Regards,
-Richard Sch=C3=BCtz
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://www.spinics.net/lists/platform-driver-x86/msg01075.html
+
+I don't know if that driver will help in anything. I've asked the user 
+if its other hotkeys are working or not.
+
+
+-- 
+Pardus Linux
+http://www.pardus.org.tr/eng
