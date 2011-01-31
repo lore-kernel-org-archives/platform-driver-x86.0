@@ -1,24 +1,41 @@
-From: PEPSI BOTTLING COMPANY PLC <info@pepsi.co.uk>
-Subject: YOU HAVE WON?!!!
-Date: Sun, 30 Jan 2011 21:00:19 -0700
-Message-ID: <20110130210019.10552f7tiy9a95ub@webmail.freedomnw.com>
-Reply-To: pepsibottlingplc@9.cn
+From: =?UTF-8?B?UmljaGFyZCBTY2jDvHR6?= <r.schtz@t-online.de>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
+ laptops)
+Date: Mon, 31 Jan 2011 11:29:51 +0100
+Message-ID: <4D468F1F.8030704@t-online.de>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <201101311050.49722.rjw@sisk.pl> <4D468CF0.9040103@t-online.de> <201101311123.14704.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	DelSp=Yes	format=flowed
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cp1ips.ipnshosting.com ([208.110.132.60]:56536 "EHLO
-	cp1.ipnshosting.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1755164Ab1AaKYI convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 31 Jan 2011 05:24:08 -0500
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <201101311123.14704.rjw@sisk.pl>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>, Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, colin.king@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-You have won =A3500,000.00POUNDS from Pepsi Company award 2011, Please =
-=20
-provide your Full name, Age, Sex, Country,Occupation,Phone and =20
-Address.and send them to: Mrs. FRANCESS DAVE, Phone# :+447011150911 =20
-+4407024015829 E MAIL: pepsibottlingplc@9.cn
+>>>> I'll compile a kernel with CONFIG_NO_HZ to see what happens but ho=
+w do I
+>>>> disable cpuidle during boot? I've checked the kernel-parameters.tx=
+t but
+>>>> there's no cpuidle related boot parameter there.
+>>>
+>>> Booting with intel_idle.max_cstate=3D0 should do the trick.
+>>
+>> intel_idle.max_cstate=3D0 causes a fallback to the acpi_idle driver.=
+ So it
+>> does not disable the C-states directly.
+>
+> What about not building the acpi_idle driver, then?
+
+Or just use the processor.max_cstate parameter then.
+
+--=20
+Regards,
+Richard Sch=C3=BCtz
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
