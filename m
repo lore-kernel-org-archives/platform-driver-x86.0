@@ -1,45 +1,44 @@
-From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
-Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus
- laptops)
-Date: Mon, 31 Jan 2011 22:42:49 +0200
-Message-ID: <4D471EC9.6030308@pardus.org.tr>
-References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <201101311933.38050.rjw@sisk.pl> <4D4701B7.8030004@pardus.org.tr> <201101312012.42393.rjw@sisk.pl> <4D471D2F.7010008@pardus.org.tr>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] intel_mid_powerbtn: add power button driver for
+ Medfield platform (#3)
+Date: Wed, 2 Feb 2011 10:17:45 +0000
+Message-ID: <20110202101745.647e9db2@lxorguk.ukuu.org.uk>
+References: <20110127134812.6753.22203.stgit@bob.linux.org.uk>
+	<20110130203950.GA20142@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <4D471D2F.7010008@pardus.org.tr>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: =?UTF-8?B?UmljaGFyZCBTY2jDvHR6?= <r.schtz@t-online.de>, Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:41512 "EHLO
+	localhost.localdomain" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1751677Ab1BBKPz (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 2 Feb 2011 05:15:55 -0500
+In-Reply-To: <20110130203950.GA20142@core.coreip.homeip.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On 31.01.2011 22:35, Ozan =C3=87a=C4=9Flayan wrote:
+On Sun, 30 Jan 2011 12:39:50 -0800
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-> Well the only-booting-with-nolapic one doesn't boot with maxcpus=3D0.=
- Pff,
-> are there any compile-time(Kconfig) or runtime parameters related to
-> debugging various subsystems that you'll suggest which will show wher=
-e
-> the boot hangs? That way we can maybe pinpoint the issue to a specifi=
-c
-> function call.
->
->
+> On Thu, Jan 27, 2011 at 01:52:13PM +0000, Alan Cox wrote:
+> > From: Hong Liu <hong.liu@intel.com>
+> > 
+> > The power button is connected to MSIC on Medfield, we will get two
+> > interrupts from IOAPIC when pressing or releasing the power button.
+> > 
+> > Signed-off-by: Hong Liu <hong.liu@intel.com>
+> > [Minor fixes as noted by Dmitry]
+> > Signed-off-by: Alan Cox <alan@linux.intel.com>
+> 
+> Acked-by: Dmitry Torokhov <dtor@mail.ru>
+> 
+> Input parts look good to me but you might want to fold in the following
+> patch.
 
-Well I've actually a screenshot of the boot hang with tons of debugging=
-=20
-parameters passed to kernel. Maybe it will give you a clue. It hangs=20
-right after printing e820 system memory map.
+Ok I wouldn't move the module_init/exit around like that but no big deal
+8)
 
-http://bugs.pardus.org.tr/attachment.cgi?id=3D6554
-
---=20
-Pardus Linux
-http://www.pardus.org.tr/eng
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Alan Cox <alan@linux.intel.com>
