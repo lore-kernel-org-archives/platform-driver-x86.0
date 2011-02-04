@@ -1,51 +1,55 @@
-From: Jesse Barnes <jbarnes@virtuousgeek.org>
-Subject: Re: [PATCH] embedded 1288 fcbga arrandale cpu not detected in ips
- module - no gpu turbo
-Date: Fri, 4 Feb 2011 09:11:56 -0800
-Message-ID: <20110204091156.1b8e76fb@jbarnes-desktop>
-References: <BBC019D537C16342B2754DEB36395C0C013AB5EA@BUDMLVEM06.e2k.ad.ge.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: Common boot/shutdown issues with the latest 2.6.37 (Mostly Asus laptops)
+Date: Fri, 4 Feb 2011 21:36:19 +0100
+Message-ID: <201102042136.20165.rjw@sisk.pl>
+References: <556624.21214.qm@web28409.mail.ukl.yahoo.com> <201102032351.31307.rjw@sisk.pl> <201102040844.05490.ozan@pardus.org.tr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cpoproxy2-pub.bluehost.com ([67.222.39.38]:56517 "HELO
-	cpoproxy2-pub.bluehost.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1751621Ab1BDRL7 (ORCPT
+Received: from ogre.sisk.pl ([217.79.144.158]:45527 "EHLO ogre.sisk.pl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751787Ab1BDUgu convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Feb 2011 12:11:59 -0500
-In-Reply-To: <BBC019D537C16342B2754DEB36395C0C013AB5EA@BUDMLVEM06.e2k.ad.ge.com>
+	Fri, 4 Feb 2011 15:36:50 -0500
+In-Reply-To: <201102040844.05490.ozan@pardus.org.tr>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Koerber, Philip (GE Intelligent Platforms)" <Philip.Koerber@ge.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Ozan =?utf-8?q?=C3=87a=C4=9Flayan?= <ozan@pardus.org.tr>
+Cc: Richard =?utf-8?q?Sch=C3=BCtz?= <r.schtz@t-online.de>, Lionel Debroux <lionel_debroux@yahoo.fr>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, 4 Feb 2011 15:55:30 +0100
-"Koerber, Philip (GE Intelligent Platforms)" <Philip.Koerber@ge.com>
-wrote:
+On Friday, February 04, 2011, Ozan =C3=87a=C4=9Flayan wrote:
+> Cuma 04 =C5=9Eubat 2011 g=C3=BCn=C3=BC (saat 00:51:31) Rafael J. Wyso=
+cki =C5=9Funlar=C4=B1 yazm=C4=B1=C5=9Ft=C4=B1:
+>=20
+> > Hmm.  Are those boxes uniprocessor running SMP kernels?
+>=20
+> The kernel is SMP.
+>=20
+> ASUS X61S is=20
+>  CPU0: Intel(R) Core(TM)2 Duo CPU     P8700  @ 2.53GHz stepping 0a
+>=20
+> F50SV has 2 CPU's too according to dmesg:
+> [    0.000000] Processor #0 (Bootup-CPU)
+> [    0.000000] Processor #1
+> [    0.000000] I/O APIC #2 Version 20 at 0xFEC00000.
+> [    0.000000] IOAPIC[0]: apic_id 2, version 20, address 0xfec00000, =
+GSI 0-23
+> [    0.000000] Processors: 2
+> [    0.000000] SMP: Allowing 2 CPUs, 0 hotplug CPUs
+>=20
+> ASUS N51JQ (occasional shutdown hang) has:
+> CPU0: Intel(R) Core(TM) i7 CPU       Q 740  @ 1.73GHz stepping 05
+> [    0.132435] Booting Node   0, Processors  #1 #2 #3 #4 #5 #6 #7 Ok.
+> [    0.768809] Brought up 8 CPUs
 
-> Dear Kernel Maintainers,
-> 
-> I have observed, that on our SBC's the GPU turbo mode doesn't work. This happens only to those with embedded Arrandale (1288 FCBGA package) standard voltage (35W) CPU's. These CPU's do not have there an letter whereas the Mobile CPU has an M. So there seems to be a need to update the intel_ips.c in order to recognize the CPU's with  brand strings 'Intel(R) Core(TM) i7 CPU         610  @ 2.53GHz' and  'Intel(R) Core(TM) i5 CPU         520  @ 2.40GHz'. I have prepared therefor following patch:
-> 
-> 
-> diff -urN linux-2.6.38-rc3/drivers/platform/x86/intel_ips.c linux/drivers/platform/x86/intel_ips.c
-> --- linux-2.6.38-rc3/drivers/platform/x86/intel_ips.c	2011-02-01 04:05:49.000000000 +0100
-> +++ linux/drivers/platform/x86/intel_ips.c	2011-02-04 15:25:40.205627688 +0100
-> @@ -1399,6 +1399,10 @@
->  		limits = &ips_lv_limits;
->  	else if (strstr(boot_cpu_data.x86_model_id, "CPU       U"))
->  		limits = &ips_ulv_limits;
-> +	else if (strstr(boot_cpu_data.x86_model_id, "CPU         610"))
-> +		limits = &ips_sv_limits;
-> +	else if (strstr(boot_cpu_data.x86_model_id, "CPU         520"))
-> +		limits = &ips_sv_limits;
->  	else {
->  		dev_info(&ips->dev->dev, "No CPUID match found.\n");
->  		goto out;
+OK, so it's not the case I was thinking of.  Ohwell.
 
-Yep, that's fine with me, thanks for the patch!
+At this point I guess it's best to open a bug entry in the kernel Bugzi=
+lla,
+against ACPI (although ACPI may be a red herring), and put some system
+information (ie. dmesg outputs from working kernels, if any, outputs of
+acpidump) -- or links to where it can be found.
 
-Acked-by: Jesse Barnes <jbarnes@virtuousgeek.org>
-
--- 
-Jesse Barnes, Intel Open Source Technology Center
+Thanks,
+Rafael
