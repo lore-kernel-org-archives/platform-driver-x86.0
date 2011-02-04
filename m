@@ -1,79 +1,93 @@
-From: Vasiliy Kulikov <segoon@openwall.com>
-Subject: [PATCH 00/20] world-writable files in sysfs and debugfs
-Date: Fri, 4 Feb 2011 17:00:33 +0300
-Message-ID: <20110204140033.GA31184@albatros>
+From: "Koerber, Philip (GE Intelligent Platforms)" <Philip.Koerber@ge.com>
+Subject: [PATCH] embedded 1288 fcbga arrandale cpu not detected in ips module - no gpu turbo
+Date: Fri, 4 Feb 2011 15:55:30 +0100
+Message-ID: <BBC019D537C16342B2754DEB36395C0C013AB5EA@BUDMLVEM06.e2k.ad.ge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_001_01CBC47B.B5D602F8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:46590 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752697Ab1BDOAm (ORCPT
+Received: from exprod5og113.obsmtp.com ([64.18.0.26]:40159 "EHLO
+	exprod5og113.obsmtp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751377Ab1BDPBj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Feb 2011 09:00:42 -0500
-Content-Disposition: inline
+	Fri, 4 Feb 2011 10:01:39 -0500
+Content-class: urn:content-classes:message
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, rtc-linux@googlegroups.com, linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com, linux-mtd@lists.infradead.org, security@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Jesse Barnes <jbarnes@virtuousgeek.org>
 
-The search was made with trivial shell commands:
+This is a multi-part message in MIME format.
 
-find | xargs grep S_IWUGO
-find | xargs grep S_IWOTH
+------_=_NextPart_001_01CBC47B.B5D602F8
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I didn't precisely investigate how exactly one may damage the
-system/hardware because of issues number, maybe the harm is very limited
-in case of some of these drivers.
+Dear Kernel Maintainers,
 
-One suspicious file is ./staging/speakup/speakup.h, but it explitly calls
-macros as world-writable.  I didn't check what speakup's world-writable
-files provide because it requires some knowledge about the hardware.
+I have observed, that on our SBC's the GPU turbo mode doesn't work. This =
+happens only to those with embedded Arrandale (1288 FCBGA package) =
+standard voltage (35W) CPU's. These CPU's do not have there an letter =
+whereas the Mobile CPU has an M. So there seems to be a need to update =
+the intel_ips.c in order to recognize the CPU's with  brand strings =
+'Intel(R) Core(TM) i7 CPU         610  @ 2.53GHz' and  'Intel(R) =
+Core(TM) i5 CPU         520  @ 2.40GHz'. I have prepared therefor =
+following patch:
 
 
-Vasiliy Kulikov (20):
-  mach-omap2: mux: world-writable debugfs files
-  mach-omap2: pm: world-writable debugfs timer files
-  mach-omap2: smartreflex: world-writable debugfs voltage files
-  mach-ux500: mbox-db5500: world-writable sysfs fifo file
-  leds: lp5521: world-writable sysfs engine* files
-  leds: lp5523: world-writable engine* sysfs files
-  video: sn9c102: world-wirtable sysfs files
-  mfd: ab3100: world-writable debugfs *_priv files
-  mfd: ab3500: world-writable debugfs register-* files
-  mfd: ab8500: world-writable debugfs register-* files
-  misc: ep93xx_pwm: world-writable sysfs files
-  net: can: at91_can: world-writable sysfs files
-  net: can: janz-ican3: world-writable sysfs termination file
-  platform: x86: acer-wmi: world-writable sysfs threeg file
-  platform: x86: asus_acpi: world-writable procfs files
-  platform: x86: tc1100-wmi: world-writable sysfs wireless and jogdial files
-  rtc: rtc-ds1511: world-writable sysfs nvram file
-  scsi: aic94xx: world-writable sysfs update_bios file
-  scsi: iscsi: world-writable sysfs priv_sess file
-  fs: ubifs: world-writable debugfs dump_* files
+diff -urN linux-2.6.38-rc3/drivers/platform/x86/intel_ips.c =
+linux/drivers/platform/x86/intel_ips.c
+--- linux-2.6.38-rc3/drivers/platform/x86/intel_ips.c	2011-02-01 =
+04:05:49.000000000 +0100
++++ linux/drivers/platform/x86/intel_ips.c	2011-02-04 15:25:40.205627688 =
++0100
+@@ -1399,6 +1399,10 @@
+ 		limits =3D &ips_lv_limits;
+ 	else if (strstr(boot_cpu_data.x86_model_id, "CPU       U"))
+ 		limits =3D &ips_ulv_limits;
++	else if (strstr(boot_cpu_data.x86_model_id, "CPU         610"))
++		limits =3D &ips_sv_limits;
++	else if (strstr(boot_cpu_data.x86_model_id, "CPU         520"))
++		limits =3D &ips_sv_limits;
+ 	else {
+ 		dev_info(&ips->dev->dev, "No CPUID match found.\n");
+ 		goto out;
 
- arch/arm/mach-omap2/mux.c                  |    2 +-
- arch/arm/mach-omap2/pm-debug.c             |    8 ++++----
- arch/arm/mach-omap2/smartreflex.c          |    4 ++--
- arch/arm/mach-ux500/mbox-db5500.c          |    2 +-
- drivers/leds/leds-lp5521.c                 |   14 +++++++-------
- drivers/leds/leds-lp5523.c                 |   20 ++++++++++----------
- drivers/media/video/sn9c102/sn9c102_core.c |    6 +++---
- drivers/mfd/ab3100-core.c                  |    4 ++--
- drivers/mfd/ab3550-core.c                  |    6 +++---
- drivers/mfd/ab8500-debugfs.c               |    6 +++---
- drivers/misc/ep93xx_pwm.c                  |    6 +++---
- drivers/net/can/at91_can.c                 |    2 +-
- drivers/net/can/janz-ican3.c               |    2 +-
- drivers/platform/x86/acer-wmi.c            |    2 +-
- drivers/platform/x86/asus_acpi.c           |    8 +-------
- drivers/platform/x86/tc1100-wmi.c          |    2 +-
- drivers/rtc/rtc-ds1511.c                   |    2 +-
- drivers/scsi/aic94xx/aic94xx_init.c        |    2 +-
- drivers/scsi/scsi_transport_iscsi.c        |    2 +-
- fs/ubifs/debug.c                           |    6 +++---
- 20 files changed, 50 insertions(+), 56 deletions(-)
 
---
-Vasiliy Kulikov
-http://www.openwall.com - bringing security into open computing environments
+With best Regards,
+Philip
+
+
+Philip Koerber
+Technical Support
+
++49 821 5034 178
+Memminger Stra=DFe 14
+86159 Augsburg
+Germany
+
+
+
+------_=_NextPart_001_01CBC47B.B5D602F8
+Content-Type: application/octet-stream;
+	name="embedded_arrandale_ips_patch"
+Content-Transfer-Encoding: base64
+Content-Description: embedded_arrandale_ips_patch
+Content-Disposition: attachment;
+	filename="embedded_arrandale_ips_patch"
+
+ZGlmZiAtdXJOIGxpbnV4LTIuNi4zOC1yYzMvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfaXBz
+LmMgbGludXgvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfaXBzLmMKLS0tIGxpbnV4LTIuNi4z
+OC1yYzMvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfaXBzLmMJMjAxMS0wMi0wMSAwNDowNTo0
+OS4wMDAwMDAwMDAgKzAxMDAKKysrIGxpbnV4L2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX2lw
+cy5jCTIwMTEtMDItMDQgMTU6MjU6NDAuMjA1NjI3Njg4ICswMTAwCkBAIC0xMzk5LDYgKzEzOTks
+MTAgQEAKIAkJbGltaXRzID0gJmlwc19sdl9saW1pdHM7CiAJZWxzZSBpZiAoc3Ryc3RyKGJvb3Rf
+Y3B1X2RhdGEueDg2X21vZGVsX2lkLCAiQ1BVICAgICAgIFUiKSkKIAkJbGltaXRzID0gJmlwc191
+bHZfbGltaXRzOworCWVsc2UgaWYgKHN0cnN0cihib290X2NwdV9kYXRhLng4Nl9tb2RlbF9pZCwg
+IkNQVSAgICAgICAgIDYxMCIpKQorCQlsaW1pdHMgPSAmaXBzX3N2X2xpbWl0czsKKwllbHNlIGlm
+IChzdHJzdHIoYm9vdF9jcHVfZGF0YS54ODZfbW9kZWxfaWQsICJDUFUgICAgICAgICA1MjAiKSkK
+KwkJbGltaXRzID0gJmlwc19zdl9saW1pdHM7CiAJZWxzZSB7CiAJCWRldl9pbmZvKCZpcHMtPmRl
+di0+ZGV2LCAiTm8gQ1BVSUQgbWF0Y2ggZm91bmQuXG4iKTsKIAkJZ290byBvdXQ7Cg==
+
+------_=_NextPart_001_01CBC47B.B5D602F8--
