@@ -1,39 +1,88 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 05/18] eeepc-wmi: return proper error code in eeepc_rfkill_set()
-Date: Sun,  6 Feb 2011 13:28:30 +0100
-Message-ID: <1296995324-5462-6-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 07/18] eeepc-wmi: add hibernate/resume callbacks
+Date: Sun,  6 Feb 2011 13:28:32 +0100
+Message-ID: <1296995324-5462-8-git-send-email-corentincj@iksaif.net>
 References: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:53978 "EHLO
+	relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752613Ab1BFM3l (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 6 Feb 2011 07:29:41 -0500
 In-Reply-To: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/eeepc-wmi.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   49 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 49 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index eb4c0ce..d823458 100644
+index de501fb..583ba78 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -588,8 +588,14 @@ static int eeepc_rfkill_set(void *data, bool blocked)
- {
- 	int dev_id = (unsigned long)data;
- 	u32 ctrl_param = !blocked;
-+	acpi_status status;
-+
-+	status = eeepc_wmi_set_devstate(dev_id, ctrl_param, NULL);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
- 
--	return eeepc_wmi_set_devstate(dev_id, ctrl_param, NULL);
-+	return 0;
+@@ -1183,10 +1183,59 @@ static int eeepc_wmi_remove(struct platform_device *device)
+ 	return 0;
  }
  
- static void eeepc_rfkill_query(struct rfkill *rfkill, void *data)
++/*
++ * Platform driver - hibernate/resume callbacks
++ */
++static int eeepc_hotk_thaw(struct device *device)
++{
++	struct eeepc_wmi *eeepc = dev_get_drvdata(device);
++
++	if (eeepc->wlan_rfkill) {
++		bool wlan;
++
++		/*
++		 * Work around bios bug - acpi _PTS turns off the wireless led
++		 * during suspend.  Normally it restores it on resume, but
++		 * we should kick it ourselves in case hibernation is aborted.
++		 */
++		wlan = eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WLAN);
++		eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_WLAN, wlan, NULL);
++	}
++
++	return 0;
++}
++
++static int eeepc_hotk_restore(struct device *device)
++{
++	struct eeepc_wmi *eeepc = dev_get_drvdata(device);
++	int bl;
++
++	/* Refresh both wlan rfkill state and pci hotplug */
++	if (eeepc->wlan_rfkill)
++		eeepc_rfkill_hotplug(eeepc);
++
++	if (eeepc->bluetooth_rfkill) {
++		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_BLUETOOTH);
++		rfkill_set_sw_state(eeepc->bluetooth_rfkill, bl);
++}
++	if (eeepc->wwan3g_rfkill) {
++		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WWAN3G);
++		rfkill_set_sw_state(eeepc->wwan3g_rfkill, bl);
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops eeepc_pm_ops = {
++	.thaw = eeepc_hotk_thaw,
++	.restore = eeepc_hotk_restore,
++};
++
+ static struct platform_driver platform_driver = {
+ 	.driver = {
+ 		.name = EEEPC_WMI_FILE,
+ 		.owner = THIS_MODULE,
++		.pm = &eeepc_pm_ops,
+ 	},
+ };
+ 
 -- 
 1.7.4.rc3
