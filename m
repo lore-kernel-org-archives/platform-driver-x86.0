@@ -1,7 +1,7 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 15/18] eeepc-wmi: respect wireless_hotplug setting
-Date: Sun,  6 Feb 2011 13:28:40 +0100
-Message-ID: <1296995324-5462-16-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 12/18] eeepc-wmi: add wimax support
+Date: Sun,  6 Feb 2011 13:28:37 +0100
+Message-ID: <1296995324-5462-13-git-send-email-corentincj@iksaif.net>
 References: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
@@ -12,22 +12,67 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/eeepc-wmi.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   20 +++++++++++++++++++-
+ 1 files changed, 19 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 910eb00..bc71333 100644
+index 83415dd..0db7009 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -748,6 +748,9 @@ static int eeepc_wmi_rfkill_init(struct eeepc_wmi *eeepc)
+@@ -71,6 +71,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
+ 
+ #define EEEPC_WMI_DEVID_WLAN		0x00010011
+ #define EEEPC_WMI_DEVID_BLUETOOTH	0x00010013
++#define EEEPC_WMI_DEVID_WIMAX		0x00010017
+ #define EEEPC_WMI_DEVID_WWAN3G		0x00010019
+ #define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
+ #define EEEPC_WMI_DEVID_CAMERA		0x00060013
+@@ -138,6 +139,7 @@ struct eeepc_wmi {
+ 
+ 	struct rfkill *wlan_rfkill;
+ 	struct rfkill *bluetooth_rfkill;
++	struct rfkill *wimax_rfkill;
+ 	struct rfkill *wwan3g_rfkill;
+ 
+ 	struct hotplug_slot *hotplug_slot;
+@@ -691,6 +693,11 @@ static void eeepc_wmi_rfkill_exit(struct eeepc_wmi *eeepc)
+ 		rfkill_destroy(eeepc->bluetooth_rfkill);
+ 		eeepc->bluetooth_rfkill = NULL;
+ 	}
++	if (eeepc->wimax_rfkill) {
++		rfkill_unregister(eeepc->wimax_rfkill);
++		rfkill_destroy(eeepc->wimax_rfkill);
++		eeepc->wimax_rfkill = NULL;
++	}
+ 	if (eeepc->wwan3g_rfkill) {
+ 		rfkill_unregister(eeepc->wwan3g_rfkill);
+ 		rfkill_destroy(eeepc->wwan3g_rfkill);
+@@ -719,6 +726,13 @@ static int eeepc_wmi_rfkill_init(struct eeepc_wmi *eeepc)
  	if (result && result != -ENODEV)
  		goto exit;
  
-+	if (!eeepc->hotplug_wireless)
++	result = eeepc_new_rfkill(eeepc, &eeepc->wimax_rfkill,
++				  "eeepc-wimax", RFKILL_TYPE_WIMAX,
++				  EEEPC_WMI_DEVID_WIMAX);
++
++	if (result && result != -ENODEV)
 +		goto exit;
 +
- 	result = eeepc_setup_pci_hotplug(eeepc);
- 	/*
- 	 * If we get -EBUSY then something else is handling the PCI hotplug -
+ 	result = eeepc_new_rfkill(eeepc, &eeepc->wwan3g_rfkill,
+ 				  "eeepc-wwan3g", RFKILL_TYPE_WWAN,
+ 				  EEEPC_WMI_DEVID_WWAN3G);
+@@ -1276,7 +1290,11 @@ static int eeepc_hotk_restore(struct device *device)
+ 	if (eeepc->bluetooth_rfkill) {
+ 		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_BLUETOOTH);
+ 		rfkill_set_sw_state(eeepc->bluetooth_rfkill, bl);
+-}
++	}
++	if (eeepc->wimax_rfkill) {
++		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WIMAX);
++		rfkill_set_sw_state(eeepc->wimax_rfkill, bl);
++	}
+ 	if (eeepc->wwan3g_rfkill) {
+ 		bl = !eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_WWAN3G);
+ 		rfkill_set_sw_state(eeepc->wwan3g_rfkill, bl);
 -- 
 1.7.4.rc3
