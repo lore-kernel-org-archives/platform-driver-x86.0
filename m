@@ -1,57 +1,75 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 10/18] eeepc-wmi: use the presence bit correctly
-Date: Sun,  6 Feb 2011 13:28:35 +0100
-Message-ID: <1296995324-5462-11-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 16/18] eeepc-wmi: real touchpad led device id is 0x001000012
+Date: Sun,  6 Feb 2011 13:28:41 +0100
+Message-ID: <1296995324-5462-17-git-send-email-corentincj@iksaif.net>
 References: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55108 "EHLO
+	relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752841Ab1BFMaS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 6 Feb 2011 07:30:18 -0500
 In-Reply-To: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
-
-I checked some more DSDT, and it seems that I wasn't
-totally right about the meaning of DSTS return value.
-Bit 0 is clearly the status of the device, and I discovered
-that bit 16 is set when the device is present.
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/eeepc-wmi.c |   13 +++++--------
- 1 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index aa9e1d1..391c32b 100644
+index bc71333..ffc5889 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -75,6 +75,9 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
- #define EEEPC_WMI_DEVID_BACKLIGHT	0x00050012
- #define EEEPC_WMI_DEVID_TPDLED		0x00100011
+@@ -77,7 +77,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
+ #define EEEPC_WMI_DEVID_BRIGHTNESS	0x00050012
+ #define EEEPC_WMI_DEVID_CAMERA		0x00060013
+ #define EEEPC_WMI_DEVID_CARDREADER	0x00080013
+-#define EEEPC_WMI_DEVID_TPDLED		0x00100011
++#define EEEPC_WMI_DEVID_TOUCHPAD_LED	0x00100012
  
-+#define EEEPC_WMI_DSTS_STATUS_BIT	0x00000001
-+#define EEEPC_WMI_DSTS_PRESENCE_BIT	0x00010000
-+
- static bool hotplug_wireless;
+ #define EEEPC_WMI_DSTS_STATUS_BIT	0x00000001
+ #define EEEPC_WMI_DSTS_PRESENCE_BIT	0x00010000
+@@ -303,7 +303,7 @@ static void tpd_led_update(struct work_struct *work)
+ 	eeepc = container_of(work, struct eeepc_wmi, tpd_led_work);
  
- module_param(hotplug_wireless, bool, 0444);
-@@ -265,16 +268,10 @@ static int eeepc_wmi_get_devstate_simple(u32 dev_id)
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
- 
--	/* If the device is present, DSTS will always set some bits
--	 * 0x00070000 - 1110000000000000000 - device supported
--	 * 0x00060000 - 1100000000000000000 - not supported
--	 * 0x00020000 - 0100000000000000000 - device supported
--	 * 0x00010000 - 0010000000000000000 - not supported / special mode ?
--	 */
--	if (!retval || retval == 0x00060000)
-+	if (!(retval & EEEPC_WMI_DSTS_PRESENCE_BIT))
- 		return -ENODEV;
- 
--	return retval & 0x1;
-+	return retval & EEEPC_WMI_DSTS_STATUS_BIT;
+ 	ctrl_param = eeepc->tpd_led_wk;
+-	eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_TPDLED, ctrl_param, NULL);
++	eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_TOUCHPAD_LED, ctrl_param, NULL);
  }
  
- /*
+ static void tpd_led_set(struct led_classdev *led_cdev,
+@@ -317,9 +317,9 @@ static void tpd_led_set(struct led_classdev *led_cdev,
+ 	queue_work(eeepc->led_workqueue, &eeepc->tpd_led_work);
+ }
+ 
+-static int read_tpd_state(struct eeepc_wmi *eeepc)
++static int read_tpd_led_state(struct eeepc_wmi *eeepc)
+ {
+-	return eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_TPDLED);
++	return eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_TOUCHPAD_LED);
+ }
+ 
+ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+@@ -328,14 +328,14 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+ 
+ 	eeepc = container_of(led_cdev, struct eeepc_wmi, tpd_led);
+ 
+-	return read_tpd_state(eeepc);
++	return read_tpd_led_state(eeepc);
+ }
+ 
+ static int eeepc_wmi_led_init(struct eeepc_wmi *eeepc)
+ {
+ 	int rv;
+ 
+-	if (read_tpd_state(eeepc) < 0)
++	if (read_tpd_led_state(eeepc) < 0)
+ 		return 0;
+ 
+ 	eeepc->led_workqueue = create_singlethread_workqueue("led_workqueue");
 -- 
 1.7.4.rc3
