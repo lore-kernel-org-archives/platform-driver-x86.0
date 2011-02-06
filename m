@@ -1,31 +1,44 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 0/2] eeepc-wmi input patchs
-Date: Sun,  6 Feb 2011 13:30:46 +0100
-Message-ID: <1296995448-5591-1-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 2/2] eeepc-wmi: comments keymap to clarify the meaning of some keys
+Date: Sun,  6 Feb 2011 13:30:48 +0100
+Message-ID: <1296995448-5591-3-git-send-email-corentincj@iksaif.net>
+References: <1296995448-5591-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1296995448-5591-1-git-send-email-corentincj@iksaif.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
-Cc: Corentin Chary <corentincj@iksaif.net>, Dmitry Torokhov <dtor@mail.ru>, Henrik Rydberg <rydberg@euromail.se>, Daniel Mack <daniel@caiaq.de>, Mauro Carvalho Chehab <mchehab@redhat.com>, Chase Douglas <chase.douglas@canonical.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-These two patchs are separated from the other batch because they
-may be delayed or re-worked.
+Found while checking PDF manuals...
 
-The first patch add some camera specific keys, we can probably
-use arrows and +/- to do the same thing, but then we loose some
-keyboard information (eg: no distinction between Fn+E and Arrow Up).
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+---
+ drivers/platform/x86/eeepc-wmi.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-The other patch only add some comments to some ambiguously mapped
-keys. We may want to define to new key codes for these...
-
-Corentin Chary (2):
-  eeepc-wmi: add camera keys
-  eeepc-wmi: comments keymap to clarify the meaning of some keys
-
- drivers/platform/x86/eeepc-wmi.c |   13 ++++++++++---
- include/linux/input.h            |    7 +++++++
- 2 files changed, 17 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index bbcbd0f..9445ec0 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -111,15 +111,15 @@ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+ 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+-	{ KE_KEY, 0x5c, { KEY_F15 } },
++	{ KE_KEY, 0x5c, { KEY_F15 } }, /* Power Gear key */
+ 	{ KE_KEY, 0x5d, { KEY_WLAN } },
+ 	{ KE_KEY, 0x6b, { KEY_F13 } }, /* Disable Touchpad */
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
+ 	{ KE_KEY, 0x83, { KEY_CAMERA_ZOOMIN } },
+ 	{ KE_KEY, 0x88, { KEY_WLAN } },
+ 	{ KE_KEY, 0xcc, { KEY_SWITCHVIDEOMODE } },
+-	{ KE_KEY, 0xe0, { KEY_PROG1 } },
+-	{ KE_KEY, 0xe1, { KEY_F14 } },
++	{ KE_KEY, 0xe0, { KEY_PROG1 } }, /* Task Manager */
++	{ KE_KEY, 0xe1, { KEY_F14 } }, /* Change Resolution */
+ 	{ KE_KEY, 0xe9, { KEY_BRIGHTNESS_ZERO } },
+ 	{ KE_KEY, 0xeb, { KEY_CAMERA_ZOOMOUT } },
+ 	{ KE_KEY, 0xec, { KEY_CAMERA_UP } },
 -- 
 1.7.4.rc3
