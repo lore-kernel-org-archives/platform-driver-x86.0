@@ -1,75 +1,73 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 16/18] eeepc-wmi: real touchpad led device id is 0x001000012
-Date: Sun,  6 Feb 2011 13:28:41 +0100
-Message-ID: <1296995324-5462-17-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 17/18] eeepc-wmi: add touchpad sysfs file
+Date: Sun,  6 Feb 2011 13:28:42 +0100
+Message-ID: <1296995324-5462-18-git-send-email-corentincj@iksaif.net>
 References: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55108 "EHLO
-	relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752841Ab1BFMaS (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 Feb 2011 07:30:18 -0500
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1296995324-5462-1-git-send-email-corentincj@iksaif.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
-Cc: Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, Chris Bagwell <chris@cnpbagwell.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/eeepc-wmi.c |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+ Documentation/ABI/testing/sysfs-platform-eeepc-wmi |    7 +++++++
+ drivers/platform/x86/eeepc-wmi.c                   |    5 +++++
+ 2 files changed, 12 insertions(+), 0 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-platform-eeepc-wmi b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+index 9fc8d33..26acb68 100644
+--- a/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+@@ -22,3 +22,10 @@ KernelVersion:	2.6.39
+ Contact:	"Corentin Chary" <corentincj@iksaif.net>
+ Description:
+ 		Control the card reader. 1 means on, 0 means off.
++
++What:		/sys/devices/platform/eeepc-wmi/touchpad
++Date:		Jan 2010
++KernelVersion:	2.6.39
++Contact:	"Corentin Chary" <corentincj@iksaif.net>
++Description:
++		Control the card touchpad. 1 means on, 0 means off.
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index bc71333..ffc5889 100644
+index ffc5889..26ed706 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -77,7 +77,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
+@@ -77,6 +77,7 @@ MODULE_ALIAS("wmi:"EEEPC_WMI_MGMT_GUID);
  #define EEEPC_WMI_DEVID_BRIGHTNESS	0x00050012
  #define EEEPC_WMI_DEVID_CAMERA		0x00060013
  #define EEEPC_WMI_DEVID_CARDREADER	0x00080013
--#define EEEPC_WMI_DEVID_TPDLED		0x00100011
-+#define EEEPC_WMI_DEVID_TOUCHPAD_LED	0x00100012
++#define EEEPC_WMI_DEVID_TOUCHPAD	0x00100011
+ #define EEEPC_WMI_DEVID_TOUCHPAD_LED	0x00100012
  
  #define EEEPC_WMI_DSTS_STATUS_BIT	0x00000001
- #define EEEPC_WMI_DSTS_PRESENCE_BIT	0x00010000
-@@ -303,7 +303,7 @@ static void tpd_led_update(struct work_struct *work)
- 	eeepc = container_of(work, struct eeepc_wmi, tpd_led_work);
+@@ -1006,6 +1007,7 @@ static ssize_t show_sys_wmi(int devid, char *buf)
+ 		.store  = store_##_name,				\
+ 	}
  
- 	ctrl_param = eeepc->tpd_led_wk;
--	eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_TPDLED, ctrl_param, NULL);
-+	eeepc_wmi_set_devstate(EEEPC_WMI_DEVID_TOUCHPAD_LED, ctrl_param, NULL);
- }
++EEEPC_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, EEEPC_WMI_DEVID_TOUCHPAD);
+ EEEPC_WMI_CREATE_DEVICE_ATTR(camera, 0644, EEEPC_WMI_DEVID_CAMERA);
+ EEEPC_WMI_CREATE_DEVICE_ATTR(cardr, 0644, EEEPC_WMI_DEVID_CARDREADER);
  
- static void tpd_led_set(struct led_classdev *led_cdev,
-@@ -317,9 +317,9 @@ static void tpd_led_set(struct led_classdev *led_cdev,
- 	queue_work(eeepc->led_workqueue, &eeepc->tpd_led_work);
- }
+@@ -1036,6 +1038,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_cpufv.attr,
+ 	&dev_attr_camera.attr,
+ 	&dev_attr_cardr.attr,
++	&dev_attr_touchpad.attr,
+ 	NULL
+ };
  
--static int read_tpd_state(struct eeepc_wmi *eeepc)
-+static int read_tpd_led_state(struct eeepc_wmi *eeepc)
- {
--	return eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_TPDLED);
-+	return eeepc_wmi_get_devstate_simple(EEEPC_WMI_DEVID_TOUCHPAD_LED);
- }
+@@ -1050,6 +1053,8 @@ static mode_t eeepc_sysfs_is_visible(struct kobject *kobj,
+ 		devid = EEEPC_WMI_DEVID_CAMERA;
+ 	else if (attr == &dev_attr_cardr.attr)
+ 		devid = EEEPC_WMI_DEVID_CARDREADER;
++	else if (attr == &dev_attr_touchpad.attr)
++		devid = EEEPC_WMI_DEVID_TOUCHPAD;
  
- static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
-@@ -328,14 +328,14 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
- 
- 	eeepc = container_of(led_cdev, struct eeepc_wmi, tpd_led);
- 
--	return read_tpd_state(eeepc);
-+	return read_tpd_led_state(eeepc);
- }
- 
- static int eeepc_wmi_led_init(struct eeepc_wmi *eeepc)
- {
- 	int rv;
- 
--	if (read_tpd_state(eeepc) < 0)
-+	if (read_tpd_led_state(eeepc) < 0)
- 		return 0;
- 
- 	eeepc->led_workqueue = create_singlethread_workqueue("led_workqueue");
+ 	if (devid != -1)
+ 		supported = eeepc_wmi_get_devstate_simple(devid) != -ENODEV;
 -- 
 1.7.4.rc3
+
