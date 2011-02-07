@@ -1,24 +1,35 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 00/20] world-writable files in sysfs and debugfs
-Date: Mon, 7 Feb 2011 19:38:28 +0000
-Message-ID: <20110207193828.GB19838@srcf.ucam.org>
-References: <20110204140033.GA31184@albatros>
+From: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] asus-laptop: let WLED alone on
+	L1400B
+Date: Mon, 7 Feb 2011 19:38:46 +0000
+Message-ID: <20110207193846.GC19838@srcf.ucam.org>
+References: <1296995251-5306-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:54384 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754526Ab1BGTim (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Feb 2011 14:38:42 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110204140033.GA31184@albatros>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vasiliy Kulikov <segoon@openwall.com>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, rtc-linux@googlegroups.com, linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com, linux-mtd@lists.infradead.org, security@kernel.org
+In-Reply-To: <1296995251-5306-1-git-send-email-corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Thanks, I've applied the x86 platform driver ones.
+Applied both of these, thanks!
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Matthew Garrett | mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org
+
+------------------------------------------------------------------------------
+The modern datacenter depends on network connectivity to access resources
+and provide services. The best practices for maximizing a physical server's
+connectivity to a physical network are well understood - see how these
+rules translate into the virtual world? 
+http://p.sf.net/sfu/oracle-sfdevnlfb
