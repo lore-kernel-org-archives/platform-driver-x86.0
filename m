@@ -1,39 +1,70 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] eeepc-wmi: add camera keys
-Date: Mon, 7 Feb 2011 16:54:42 -0800
-Message-ID: <20110208005442.GC24804@core.coreip.homeip.net>
-References: <1296995448-5591-1-git-send-email-corentincj@iksaif.net>
- <1296995448-5591-2-git-send-email-corentincj@iksaif.net>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: What's part of the ABI (breaking eeepc-wmi)
+Date: Tue, 8 Feb 2011 08:51:27 +0000
+Message-ID: <AANLkTim5kG-pZRpj+6ckOvuk5ZSJ_O7zbwBnC4JNQPtS@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:50239 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751200Ab1BHAyw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Feb 2011 19:54:52 -0500
-Content-Disposition: inline
-In-Reply-To: <1296995448-5591-2-git-send-email-corentincj@iksaif.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>
-Cc: Matthew Garrett <mjg@redhat.com>, Henrik Rydberg <rydberg@euromail.se>, Daniel Mack <daniel@caiaq.de>, Mauro Carvalho Chehab <mchehab@redhat.com>, Chase Douglas <chase.douglas@canonical.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Feb 06, 2011 at 01:30:47PM +0100, Corentin Chary wrote:
-> These keys are supposed to be handled by any software
-> using the camera (like webKam or cheese...). They can
-> also be used to actually move the camera when possible.
-> 
-> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Hi,
+I recently discovered that new Asus notebooks (eg: not Eeepc) are now
+shipped with an ACPI WMI device instead of the old ACPI Atkd device.
+Most of this device is similar to the Eeepc ACPI WMI device, except
+for keymap and event GUID.
 
-Acked-by: Dmitry Torokhov <dtor@mail.ru>
+I could add support for these notebooks in eeepc-wmi, but that seems
+really weird.
 
-Not sure if anyone is going to use these until X learns to handle > 255
-keycodes. Oh well...
+A first solution is to rename eeepc-wmi asus-wmi, and create an alias
+to make eeepc-wmi work. Then this driver would handle asus-wmi and
+eeepc-wmi platform drivers (it could also be splitted in 3
+files/modules, common/notebook/eeepc).
+But then, is it important to keep these strings ?
+- hotplug string ("eeepc-wifi")
+- rfkill names ("eeepc-xxxxx")
+- led names ("eeepc::xxxxxx")
+- input strings (.phys and .name)
 
-I also wonder if somethig like KEY_CAMERA_ZOOMRESET will be needed too.
+If these strings should really be keeped for backward compatibility, I
+was thinking of something like that:
 
-Thanks.
+----
+struct module;
+struct key_entry;
+
+static struct asus_wmi_driver {
+  const char                    *name;
+  struct module                 *owner;
+
+  const struct key_entry        *keymap;
+
+  int (*probe) (struct asus_wmi *asus);
+  int (*quirks) (struct asus_wmi *asus);
+
+  struct {
+    const char                  *input_name;
+    const char                  *input_phys;
+    const char                  *led_touchpad;
+    const char                  *hotplug_wlan;
+    const char                  *rfkill_wlan;
+    const char                  *rfkill_bluetooth;
+    const char                  *rfkill_wimax;
+    const char                  *rfkill_wwan3g;
+  } strings;
+
+  struct asus_wmi *device;
+};
+
+int asus_wmi_register_driver(struct asus_wmi_driver *driver);
+void asus_wmi_unregister_driver(struct asus_wmi_driver *driver);
+----
+
+Any thoughts on that ?
 
 -- 
-Dmitry
+Corentin Chary
+http://xf.iksaif.net
