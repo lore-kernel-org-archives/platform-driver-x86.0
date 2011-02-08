@@ -1,67 +1,64 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: What's part of the ABI (breaking eeepc-wmi)
-Date: Tue, 8 Feb 2011 15:17:35 +0000
-Message-ID: <AANLkTin5_jqEc3hxh02n7PU5C0BGXah=n_Bj9cN1Yar1@mail.gmail.com>
-References: <AANLkTim5kG-pZRpj+6ckOvuk5ZSJ_O7zbwBnC4JNQPtS@mail.gmail.com>
-	<20110208145301.GA12930@srcf.ucam.org>
+From: Guenter Roeck <guenter.roeck@ericsson.com>
+Subject: Re: [PATCH RESEND] x86,mrst: Intel Medfield over-current detection
+ patch
+Date: Tue, 8 Feb 2011 07:49:16 -0800
+Message-ID: <20110208154916.GB13436@ericsson.com>
+References: <20110125143454.10480.5156.stgit@bob.linux.org.uk>
+ <20110207195843.GA20970@srcf.ucam.org>
+ <20110208104535.71a4bb12@lxorguk.ukuu.org.uk>
+ <20110208135228.GA11302@srcf.ucam.org>
+ <20110208140800.5001fb0a@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20110208145301.GA12930@srcf.ucam.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from imr4.ericy.com ([198.24.6.8]:60043 "EHLO imr4.ericy.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754493Ab1BHPti (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 8 Feb 2011 10:49:38 -0500
+Content-Disposition: inline
+In-Reply-To: <20110208140800.5001fb0a@lxorguk.ukuu.org.uk>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Tue, Feb 8, 2011 at 2:53 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Tue, Feb 08, 2011 at 08:51:27AM +0000, Corentin Chary wrote:
->
->> A first solution is to rename eeepc-wmi asus-wmi, and create an alias
->> to make eeepc-wmi work. Then this driver would handle asus-wmi and
->> eeepc-wmi platform drivers (it could also be splitted in 3
->> files/modules, common/notebook/eeepc).
->> But then, is it important to keep these strings ?
->> - hotplug string ("eeepc-wifi")
->> - rfkill names ("eeepc-xxxxx")
->> - input strings (.phys and .name)
->
-> I think that, realistically, these changes should be fine but may break
-> some user code. We don't have a good way of enforcing proper sysfs
-> usage.
+On Tue, Feb 08, 2011 at 09:08:00AM -0500, Alan Cox wrote:
+> On Tue, 8 Feb 2011 13:52:28 +0000
+> Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> 
+> > On Tue, Feb 08, 2011 at 10:45:35AM +0000, Alan Cox wrote:
+> > > On Mon, 7 Feb 2011 19:58:43 +0000
+> > > Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> > > 
+> > > > hwmon includes support for exposing the instantaneous current draw. 
+> > > > hwmon includes support for triggering events if a parameter crosses a 
 
-Unfortunatly, it would break udev (well.. only the touchpad key, which
-probably never worked, does it really matters ?) ...
+Not explicitly, really. Sure, one can write a driver which triggers such an event,
+but afaik there is only one hwmon driver doing that right now, and doing so
+is not part of the hwmon infrastructure.
 
-http://git.kernel.org/?p=linux/hotplug/udev.git;a=blobdiff;f=extras/keymap/95-keymap.rules;h=9059a8c41e4505f0d8088a90fc0c3a64fe8d5f2d;hp=053838d803d7142dd80fbca361ef65565c6189f2;hb=0d8b6be5f5238360d2d8e220d6da280f842c5358;hpb=e99cc72398d1d5057cc6d1e4c065799f8daaf29e
+> > > > threshold. I still don't see why this isn't an hwmon driver, perhaps 
+> > > > with a small platform driver for the more estoric bits of the setup.
+> > > 
+> > > The hwmon maintainer says its not. Explicitly so. Been there, had that
+> > > discussion a while ago (in fact we had it as well in December if you
+> > > remember and I pointed you at the hwmon list discussion
+> > 
+> > The hwmon maintainer says that it's not an hwmon driver, not that it 
+> > shouldn't be an hwmon driver.
+> 
+> That's not how I interpret it, but he's Cc'd so I'll let him speak for
+> himself, failing that I'll stuff it in arch/x86/platform/mrst I guess
 
-But your probably right for rfkill and hotplug slot name.
+Seems to me there is some hair splitting going on here. Core element of
+hwmon drivers is that there are reported temperatures, voltages, current,
+power, humidity, etc. I don't see any of those here. All I see is various
+current limits. Those are secondary attributes from hwmon perspective.
+So I don't really see how this can be made a hwmon driver.
 
->> - led names ("eeepc::xxxxxx")
->
-> But I don't think there's any other way of identifying LEDs, so this
-> probably has to stay.
+Anyway, didn't you have this discussion before ? Does this all have to be
+repeated over and over again ? I agree with everything Alan has said
+in the previous exchange last December. Repeating it won't change anything.
 
-Yep .. but as this led probably never worked before the last patchset,
-this is probably not the most important string to keep. And users
-tends to use only the second part of the led name (*::touchpad,
-*::kbd_backlight, etc...).
-
->> Any thoughts on that ?
->
-> Seems less ugly than the alternatives!
-
-Ok, I'll try to do something like that.
-
-asus-wmi.ko - generic stuff
-asus-nb-wmi.ko - used only on notebooks (bweark, asus-nb-wmi is an
-horrible name :/)
-eeepc-wmi.ko  - used only on eeepcs
-
-And you'll be able to register only one asus_wmi_driver at a time,
-since asus-wmi will have some static stuff in it (hotplug_slot_ops,
-device_attribute, attribute, attribute_group, dev_pm_ops).
-
--- 
-Corentin Chary
-http://xf.iksaif.net
+Guenter
