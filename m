@@ -1,70 +1,53 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: What's part of the ABI (breaking eeepc-wmi)
-Date: Tue, 8 Feb 2011 08:51:27 +0000
-Message-ID: <AANLkTim5kG-pZRpj+6ckOvuk5ZSJ_O7zbwBnC4JNQPtS@mail.gmail.com>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH RESEND] x86,mrst: Intel Medfield over-current detection
+ patch
+Date: Tue, 8 Feb 2011 10:45:35 +0000
+Message-ID: <20110208104535.71a4bb12@lxorguk.ukuu.org.uk>
+References: <20110125143454.10480.5156.stgit@bob.linux.org.uk>
+	<20110207195843.GA20970@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:44908 "EHLO
+	localhost.localdomain" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1752681Ab1BHKm2 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 8 Feb 2011 05:42:28 -0500
+In-Reply-To: <20110207195843.GA20970@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Guenter Roeck <guenter.roeck@ericsson.com>
 
-Hi,
-I recently discovered that new Asus notebooks (eg: not Eeepc) are now
-shipped with an ACPI WMI device instead of the old ACPI Atkd device.
-Most of this device is similar to the Eeepc ACPI WMI device, except
-for keymap and event GUID.
+On Mon, 7 Feb 2011 19:58:43 +0000
+Matthew Garrett <mjg59@srcf.ucam.org> wrote:
 
-I could add support for these notebooks in eeepc-wmi, but that seems
-really weird.
+> hwmon includes support for exposing the instantaneous current draw. 
+> hwmon includes support for triggering events if a parameter crosses a 
+> threshold. I still don't see why this isn't an hwmon driver, perhaps 
+> with a small platform driver for the more estoric bits of the setup.
 
-A first solution is to rename eeepc-wmi asus-wmi, and create an alias
-to make eeepc-wmi work. Then this driver would handle asus-wmi and
-eeepc-wmi platform drivers (it could also be splitted in 3
-files/modules, common/notebook/eeepc).
-But then, is it important to keep these strings ?
-- hotplug string ("eeepc-wifi")
-- rfkill names ("eeepc-xxxxx")
-- led names ("eeepc::xxxxxx")
-- input strings (.phys and .name)
+The hwmon maintainer says its not. Explicitly so. Been there, had that
+discussion a while ago (in fact we had it as well in December if you
+remember and I pointed you at the hwmon list discussion
 
-If these strings should really be keeped for backward compatibility, I
-was thinking of something like that:
+Cc'd Guenter and quoting this time
 
-----
-struct module;
-struct key_entry;
+------------------------------
 
-static struct asus_wmi_driver {
-  const char                    *name;
-  struct module                 *owner;
+Seems to be a lot of chip specific stuff. Actually, you don't define a
+single hwmon ABI attribute right now. So moving it to the x86 platform
+code might be a better option.
 
-  const struct key_entry        *keymap;
+One possibility might be to move the driver to the x86 platform code,
+but add/use hwmon ABI attributes as much as possible, and register those
+attributes as hwmon device if CONFIG_HWMON is defined. Several other
+platform specific drivers already do the same.
 
-  int (*probe) (struct asus_wmi *asus);
-  int (*quirks) (struct asus_wmi *asus);
+------------------------------
 
-  struct {
-    const char                  *input_name;
-    const char                  *input_phys;
-    const char                  *led_touchpad;
-    const char                  *hotplug_wlan;
-    const char                  *rfkill_wlan;
-    const char                  *rfkill_bluetooth;
-    const char                  *rfkill_wimax;
-    const char                  *rfkill_wwan3g;
-  } strings;
+Hence trying to move it to drivers/platform/x86
 
-  struct asus_wmi *device;
-};
 
-int asus_wmi_register_driver(struct asus_wmi_driver *driver);
-void asus_wmi_unregister_driver(struct asus_wmi_driver *driver);
-----
-
-Any thoughts on that ?
-
--- 
-Corentin Chary
-http://xf.iksaif.net
+Alan
