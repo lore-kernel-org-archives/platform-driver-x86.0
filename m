@@ -1,50 +1,39 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: What's part of the ABI (breaking eeepc-wmi)
-Date: Tue, 8 Feb 2011 09:11:05 -0800
-Message-ID: <20110208171104.GC4476@core.coreip.homeip.net>
-References: <AANLkTim5kG-pZRpj+6ckOvuk5ZSJ_O7zbwBnC4JNQPtS@mail.gmail.com>
- <20110208145301.GA12930@srcf.ucam.org>
- <AANLkTin5_jqEc3hxh02n7PU5C0BGXah=n_Bj9cN1Yar1@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTin5_jqEc3hxh02n7PU5C0BGXah=n_Bj9cN1Yar1@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Matthew Garrett <mjg@redhat.com>
+Subject: [PATCH] acer-wmi: Fix capitalisation of GUID
+Date: Wed,  9 Feb 2011 16:41:52 -0500
+Message-ID: <1297287712-14708-1-git-send-email-mjg@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:46612 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754055Ab1BIVmI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 9 Feb 2011 16:42:08 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>
 
-On Tue, Feb 08, 2011 at 03:17:35PM +0000, Corentin Chary wrote:
-> On Tue, Feb 8, 2011 at 2:53 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> > On Tue, Feb 08, 2011 at 08:51:27AM +0000, Corentin Chary wrote:
-> >
-> >> A first solution is to rename eeepc-wmi asus-wmi, and create an alias
-> >> to make eeepc-wmi work. Then this driver would handle asus-wmi and
-> >> eeepc-wmi platform drivers (it could also be splitted in 3
-> >> files/modules, common/notebook/eeepc).
-> >> But then, is it important to keep these strings ?
-> >> - hotplug string ("eeepc-wifi")
-> >> - rfkill names ("eeepc-xxxxx")
-> >> - input strings (.phys and .name)
-> >
-> > I think that, realistically, these changes should be fine but may break
-> > some user code. We don't have a good way of enforcing proper sysfs
-> > usage.
-> 
-> Unfortunatly, it would break udev (well.. only the touchpad key, which
-> probably never worked, does it really matters ?) ...
-> 
-> http://git.kernel.org/?p=linux/hotplug/udev.git;a=blobdiff;f=extras/keymap/95-keymap.rules;h=9059a8c41e4505f0d8088a90fc0c3a64fe8d5f2d;hp=053838d803d7142dd80fbca361ef65565c6189f2;hb=0d8b6be5f5238360d2d8e220d6da280f842c5358;hpb=e99cc72398d1d5057cc6d1e4c065799f8daaf29e
-> 
-> But your probably right for rfkill and hotplug slot name.
-> 
+6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3 needs to be
+6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3 to match the hardware alias.
 
-As we can't be sure about individual user's set ups (they might very
-well use their own rules and maps) we should try to keep the existign
-setups intact, if at all possible.
+Signed-off-by: Matthew Garrett <mjg@redhat.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+---
+ drivers/platform/x86/acer-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index c5c4b8c..d82b0f0 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -84,7 +84,7 @@ MODULE_LICENSE("GPL");
+  */
+ #define AMW0_GUID1		"67C3371D-95A3-4C37-BB61-DD47B491DAAB"
+ #define AMW0_GUID2		"431F16ED-0C2B-444C-B267-27DEB140CF9C"
+-#define WMID_GUID1		"6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3"
++#define WMID_GUID1		"6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
+ #define WMID_GUID2		"95764E09-FB56-4e83-B31A-37761F60994A"
+ #define WMID_GUID3		"61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+ 
 -- 
-Dmitry
+1.7.4
