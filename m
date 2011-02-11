@@ -1,85 +1,54 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: =?ISO-8859-1?Q?Richard_Sch=FCtz?= <r.schtz@t-online.de>
 Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-Date: Fri, 11 Feb 2011 15:45:08 +0000
-Message-ID: <20110211154508.GA5435@srcf.ucam.org>
-References: <20110209224006.GA11202@kroah.com>
+Date: Fri, 11 Feb 2011 17:27:19 +0100
+Message-ID: <4D556367.5000202@t-online.de>
+References: <20110209224006.GA11202@kroah.com> <4D551F76.1070303@t-online.de> <20110211152231.GB13487@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:42295 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757555Ab1BKPpP (ORCPT
+Received: from mailout05.t-online.de ([194.25.134.82]:35386 "EHLO
+	mailout05.t-online.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757337Ab1BKQ1n (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Feb 2011 10:45:15 -0500
-Content-Disposition: inline
-In-Reply-To: <20110209224006.GA11202@kroah.com>
+	Fri, 11 Feb 2011 11:27:43 -0500
+In-Reply-To: <20110211152231.GB13487@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Greg KH <greg@kroah.com>
-Cc: Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 09, 2011 at 02:40:06PM -0800, Greg KH wrote:
+Add DMI data for Samsung N145P/N250P/N260P
 
-> +/* Structure to get data back to the calling function */
-> +struct sabi_retval {
-> +	u8 retval[20];
-> +};
+Signed-off-by: Richard Sch=FCtz <r.schtz@t-online.de>
+---
 
-20 bytes, but only 4 of them end up being used?
+> Yes I can, but do you want to send it to me in a format that I can ap=
+ply
+> so you can get the proper authorship credit?
 
-> +	if (readb(sabi_iface + SABI_IFACE_COMPLETE) == 0xaa &&
-> +	    readb(sabi_iface + SABI_IFACE_DATA) != 0xff) {
-> +		/*
-> +		 * It did!
-> +		 * Save off the data into a structure so the caller use it.
-> +		 * Right now we only care about the first 4 bytes,
-> +		 * I suppose there are commands that need more, but I don't
-> +		 * know about them.
-> +		 */
-> +		sretval->retval[0] = readb(sabi_iface + SABI_IFACE_DATA);
-> +		sretval->retval[1] = readb(sabi_iface + SABI_IFACE_DATA + 1);
-> +		sretval->retval[2] = readb(sabi_iface + SABI_IFACE_DATA + 2);
-> +		sretval->retval[3] = readb(sabi_iface + SABI_IFACE_DATA + 3);
-> +		goto exit;
-> +	}
+Of course, here it is.
 
-goto on success, continue failure? That's a pretty atypical pattern, and 
-the goto's not even really needed in this case.
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -592,6 +592,15 @@ static struct dmi_system_id __initdata s
+  		},
+  		.callback =3D dmi_check_cb,
+  	},
++	{
++		.ident =3D "N145P/N250P/N260P",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
++			DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
++		},
++		.callback =3D dmi_check_cb,
++	},
+  	{ },
+  };
+  MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
 
-> +	/* Something bad happened, so report it and error out */
-> +	printk(KERN_WARNING "SABI command 0x%02x failed with completion flag 0x%02x and output 0x%02x\n",
-> +		command, readb(sabi_iface + SABI_IFACE_COMPLETE),
-> +		readb(sabi_iface + SABI_IFACE_DATA));
-
-Is it guaranteed that further reads will still return the failure state?
-
-> +	/* see if the command actually succeeded */
-> +	if (readb(sabi_iface + SABI_IFACE_COMPLETE) == 0xaa &&
-> +	    readb(sabi_iface + SABI_IFACE_DATA) != 0xff) {
-> +		/* it did! */
-> +		goto exit;
-> +	}
-
-Ditto for this block.
-
-> +static struct dmi_system_id __initdata samsung_dmi_table[] = {
-
-This is kind of ugly. Are there any Samsung laptops where reading the 
-bios area is going to cause problems?
-
-> +	/* Get a pointer to the SABI Interface */
-> +	ifaceP = (readw(sabi + sabi_config->header_offsets.data_segment) & 0x0ffff) << 4;
-> +	ifaceP += readw(sabi + sabi_config->header_offsets.data_offset) & 0x0ffff;
-> +	sabi_iface = ioremap(ifaceP, 16);
-> +	if (!sabi_iface) {
-> +		printk(KERN_ERR "Can't remap %x\n", ifaceP);
-
-dev_err()? It'd be nice to have a prefix on the failure cases.
-
-> +	retval = init_wireless(sdev);
-
-No way to identify whether or not the hardware has wifi before 
-registering rfkill?
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+--=20
+Regards,
+Richard Sch=FCtz
