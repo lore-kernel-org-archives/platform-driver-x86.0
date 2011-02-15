@@ -1,41 +1,72 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Should asus-wmi provide a way to switch displays, and why
- video_output class is unused
-Date: Tue, 15 Feb 2011 07:53:09 +0100
-Message-ID: <AANLkTimf3SL+BpzjVK=F9y4_dGnDp6ghmMKq5k=4hs0x@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Keng-Yu Lin <keng-yu.lin@canonical.com>
+Subject: [PATCH] dell-laptop: Toggle the unsupported hardware killswitch
+Date: Tue, 15 Feb 2011 17:36:07 +0800
+Message-ID: <1297762567-4880-1-git-send-email-keng-yu.lin@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:46606 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750967Ab1BOGxL (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:54223 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753787Ab1BOJg2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Feb 2011 01:53:11 -0500
+	Tue, 15 Feb 2011 04:36:28 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Luming Yu <luming.yu@intel.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alessio Igor Bogani <abogani@texware.it>, superm1@ubuntu.com, Keng-Yu Lin <keng-yu.lin@canonical.com>
 
-Hi,
-In the ongoing effort to split eeepc-wmi, and add support for Asus WMI
-capable notebooks, I found that some of them are able to control
-dispay output.
-Currently, asus-laptop, asus_acpi and eeepc-laptop are also all able
-to do that, and they use a simple sysfs file with a bitmask to do
-that.
+It is found on Dell Inspiron 1018 that the firmware reports that the hardware
+killswitch is not supported. This makes the rfkill key not functional.
 
-Now, I was searching the right, generic way to do that, and I found
-video_output class. The issue is that nobody, even acpi/video.ko, use
-it.
+This patch forces the driver to toggle the firmware rfkill status in the case
+that the hardware killswitch is indicated as unsupported by the firmware.
 
-So, what's the right way to do that ?
+Signed-off-by: Keng-Yu Lin <keng-yu.lin@canonical.com>
+Tested-by: Alessio Igor Bogani <abogani@texware.it>
+---
+ drivers/platform/x86/dell-laptop.c |   24 ++++++++++++++++++++++--
+ 1 files changed, 22 insertions(+), 2 deletions(-)
 
-Note, that in my case, I can't know what output are available, so
-anyway, using video_output would be a little tricky. But still, I'm
-not really comfortable adding another cryptic sysfs file, even with
-proper documentation in Docuementation/ABI/.
-
-Thanks,
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 34657f9..ad24ef3 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -290,9 +290,12 @@ static int dell_rfkill_set(void *data, bool blocked)
+ 	dell_send_request(buffer, 17, 11);
+ 
+ 	/* If the hardware switch controls this radio, and the hardware
+-	   switch is disabled, don't allow changing the software state */
++	   switch is disabled, don't allow changing the software state.
++	   If the hardware switch is reported as not supported, always
++	   fire the SMI to toggle the killswitch. */
+ 	if ((hwswitch_state & BIT(hwswitch_bit)) &&
+-	    !(buffer->output[1] & BIT(16))) {
++	    !(buffer->output[1] & BIT(16)) &&
++	    (buffer->output[1] & BIT(0))) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -398,6 +401,23 @@ static const struct file_operations dell_debugfs_fops = {
+ 
+ static void dell_update_rfkill(struct work_struct *ignored)
+ {
++	int status;
++
++	get_buffer();
++	dell_send_request(buffer, 17, 11);
++	status = buffer->output[1];
++	release_buffer();
++
++	/* if hardware rfkill is not supported, set it explicitly */
++	if (!(status & BIT(0))) {
++		if (wifi_rfkill)
++			dell_rfkill_set((void *)1, !((status & BIT(17)) >> 17));
++		if (bluetooth_rfkill)
++			dell_rfkill_set((void *)2, !((status & BIT(18)) >> 18));
++		if (wwan_rfkill)
++			dell_rfkill_set((void *)3, !((status & BIT(19)) >> 19));
++	}
++
+ 	if (wifi_rfkill)
+ 		dell_rfkill_query(wifi_rfkill, (void *)1);
+ 	if (bluetooth_rfkill)
 -- 
-Corentin Chary
-http://xf.iksaif.net
+1.7.1
