@@ -1,275 +1,142 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Platform: Samsung Q10 backlight driver
-Date: Wed, 16 Feb 2011 23:42:59 -0800
-Message-ID: <20110217074258.GA19814@core.coreip.homeip.net>
-References: <20110216233029.GB17288@ntl>
+Subject: Re: [PATCH] Enable Dell All-In-One volume up/down keys
+Date: Wed, 16 Feb 2011 23:52:56 -0800
+Message-ID: <20110217075256.GB19814@core.coreip.homeip.net>
+References: <1297688524-26123-1-git-send-email-colin.king@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:43401 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752240Ab1BQHnH (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:44313 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753663Ab1BQHxF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 17 Feb 2011 02:43:07 -0500
+	Thu, 17 Feb 2011 02:53:05 -0500
 Content-Disposition: inline
-In-Reply-To: <20110216233029.GB17288@ntl>
+In-Reply-To: <1297688524-26123-1-git-send-email-colin.king@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frederick van der Wyck <fvanderwyck@gmail.com>
-Cc: mjg@redhat.com, gregkh@suse.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Colin King <colin.king@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, linux-kernel@vger.kernel.org
 
-Hi Frederick,
+Hi Colin,
 
-On Wed, Feb 16, 2011 at 11:30:29PM +0000, Frederick van der Wyck wrote:
-> This adds backlight control on the Samsung Q10 laptop, which does not support 
-> the SABI interface. Also tested successfully on the Dell Latitude X200.
+On Mon, Feb 14, 2011 at 01:02:04PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
-> ---
->  drivers/platform/x86/Kconfig       |    8 ++
->  drivers/platform/x86/Makefile      |    1 +
->  drivers/platform/x86/samsung-q10.c |  152 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 161 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/platform/x86/samsung-q10.c
+> Enable volume up and down hotkeys on WMI events
+> GUID 284A0E6B-380E-472A-921F-E52786257FB and
+> GUID 02314822-307C-4F66-bf0E-48AEAEB26CC8.
 > 
-> The Samsung Q10 is an old model, which does not support the SABI interface, so
-> the samsung-laptop driver does not work. Backlight control is not exposed via
-> ACPI either. This driver works in the same way as the SMI handler triggered by 
-> pressing the brightness function keys. Please let me know any feedback towards 
-> getting this driver included.
+> Also works around a firmware bug where the _WED method
+> should return an integer containing the key code and in fact
+> the method returns the key code in element zero of a buffer.
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index faec777..7432817 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -639,4 +639,12 @@ config XO1_RFKILL
->  	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
->  	  laptop.
->  
-> +config SAMSUNG_Q10
-> +	tristate "Samsung Q10 Extras"
-> +	select BACKLIGHT_CLASS_DEVICE
-> +	default n
+> BugLink: http://bugs.launchpad.net/bugs/701530
+> BugLink: http://bugs.launchpad.net/bugs/676997
 
-You do not need to specify "default n"
+Looks generally good, one question though - should't it be part of
+dell-wmi driver?
 
+> +config DELL_WMI_AIO
+> +       tristate "WMI Hotkeys for Dell All-In-One series"
+> +       depends on ACPI_WMI
+> +       depends on INPUT
 
-> +	---help---
-> +          This driver provides support for backlight control on Samsung Q10
-> +          and some other laptops, including Dell Latitude X200.
-> +
->  endif # X86_PLATFORM_DEVICES
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 9950ccc..2cd3e52 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -33,3 +33,4 @@ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
->  obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
->  obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
->  obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
-> +obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
-> diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
-> new file mode 100644
-> index 0000000..ec1e004
-> --- /dev/null
-> +++ b/drivers/platform/x86/samsung-q10.c
-> @@ -0,0 +1,152 @@
-> +/*
-> + *  Driver for Samsung Q10: controls the backlight
-> + *
-> + *  Also works on Dell Latitude X200
-> + *
-> + *  Copyright (c) 2011 Frederick van der Wyck <fvanderwyck@gmail.com>
-> + *
-> + *  This program is free software; you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License version 2 as
-> + *  published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/backlight.h>
-> +#include <linux/io.h>
-> +
-> +#define SAMSUNGQ10_BL_MAX_INTENSITY 255
-> +#define SAMSUNGQ10_BL_DEFAULT_INTENSITY 185
-> +
-> +static int samsungq10_suspended;
-
-bool?
+select INPUT_SPARSEKMAP
 
 > +
-> +static void samsungq10_bl_send_intensity(struct backlight_device *bd)
-> +{
-> +	int brightness = bd->props.brightness;
+> +#define AIO_PREFIX	"dell-wmi-aio: "
+
+Just use
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+and drop AIO_PREFIX from messages.
+
 > +
-> +	if (!samsungq10_suspended) {
-> +		while (inb(0x64)&2)
-> +			;
-> +		outb_p(0xbe, 0x64);
-> +		while (inb(0x64)&2)
-> +			;
-> +		outb_p(0x89, 0x60);
-> +		while (inb(0x64)&2)
-> +			;
-> +		outb_p(0x91, 0x60);
-> +		while (inb(0x64)&2)
-> +			;
-> +		outb_p((unsigned char)brightness, 0x60);
-
-As I mentioned, these registers are owned by i8042, you should not
-access them directly.
-
-> +	};
-
-Stray semicolon.
-
-
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int samsungq10_suspend(struct platform_device *pdev, pm_message_t state)
-> +{
-> +	samsungq10_suspended = 1;
-
-= true
-
-> +	return 0;
-> +}
-> +
-> +static int samsungq10_resume(struct platform_device *pdev)
-> +{
-> +	struct backlight_device *bd = platform_get_drvdata(pdev);
-
-Blank line before variable definition and code please.
-
-> +	samsungq10_suspended = 0;
-
-= false
-
-> +	samsungq10_bl_send_intensity(bd);
-> +	return 0;
-> +}
-> +#else
-> +#define samsungq10_suspend	NULL
-> +#define samsungq10_resume	NULL
-> +#endif
-> +
-> +static int samsungq10_bl_set_intensity(struct backlight_device *bd)
-> +{
-> +	samsungq10_bl_send_intensity(bd);
-
-Why do you need this? Just have samsungq10_bl_send_intensity() always
-return 0 (or result of i8042_command()) and use it directly.
-
-> +	return 0;
-> +}
-> +
-> +static int samsungq10_bl_get_intensity(struct backlight_device *bd)
-> +{
-
-I believe you should either store last brightness and return it or not
-provide this method.
-
-> +	return 0;
-> +}
-> +
-> +static const struct backlight_ops samsungq10_bl_ops = {
-> +	.get_brightness = samsungq10_bl_get_intensity,
-> +	.update_status	= samsungq10_bl_set_intensity,
-> +};
-> +
-> +static int __devinit samsungq10_probe(struct platform_device *pdev)
-> +{
-> +	struct backlight_properties props;
-> +	struct backlight_device *bd;
-> +
-> +	memset(&props, 0, sizeof(struct backlight_properties));
-> +	props.max_brightness = SAMSUNGQ10_BL_MAX_INTENSITY;
-> +	bd = backlight_device_register("samsungq10bl", &pdev->dev, NULL,
-> +				       &samsungq10_bl_ops, &props);
-> +	if (IS_ERR(bd))
-> +		return PTR_ERR(bd);
-> +
-> +	platform_set_drvdata(pdev, bd);
-> +
-> +	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
-> +	samsungq10_bl_send_intensity(bd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int samsungq10_remove(struct platform_device *pdev)
-
-__devexit
-
-> +{
-> +	struct backlight_device *bd = platform_get_drvdata(pdev);
-> +
-> +	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
-> +	samsungq10_bl_send_intensity(bd);
-> +
-> +	backlight_device_unregister(bd);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver samsungq10_driver = {
-> +	.probe		= samsungq10_probe,
-> +	.remove		= samsungq10_remove,
-
-__devexit_p()
-
-> +	.suspend	= samsungq10_suspend,
-> +	.resume		= samsungq10_resume,
-
-Should be converted to dev_pm_ops.
-
-> +	.driver		= {
-> +		.name	= "samsungq10",
-
-		.owner	= THIS_MODULE,
-> +	},
-> +};
-> +
-> +static struct platform_device *samsungq10_device;
-> +
-> +static int __init samsungq10_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = platform_driver_register(&samsungq10_driver);
-> +	if (ret)
-> +		return ret;
-> +	samsungq10_device = platform_device_register_simple("samsungq10", -1,
-> +							    NULL, 0);
-> +	if (IS_ERR(samsungq10_device)) {
-> +		platform_driver_unregister(&samsungq10_driver);
-> +		return PTR_ERR(samsungq10_device);
-> +	}
-
-Consider using platform_create_bundle().
-
-> +	return 0;
-> +}
-> +
-> +static void __exit samsungq10_exit(void)
-> +{
-> +	platform_device_unregister(samsungq10_device);
-> +	platform_driver_unregister(&samsungq10_driver);
-> +}
-> +
-> +module_init(samsungq10_init);
-> +module_exit(samsungq10_exit);
-> +
-> +MODULE_AUTHOR("Frederick van der Wyck <fvanderwyck@gmail.com>");
-> +MODULE_DESCRIPTION("Samsung Q10 Driver");
+> +MODULE_DESCRIPTION("WMI hotkeys driver for Dell All-In-One series");
 > +MODULE_LICENSE("GPL");
+> +
+> +#define EVENT_GUID1 "284A0E6B-380E-472A-921F-E52786257FB4"
+> +#define EVENT_GUID2 "02314822-307C-4F66-BF0E-48AEAEB26CC8"
+> +
+> +static char *dell_wmi_aio_guids[] = {
+> +	EVENT_GUID1,
+> +	EVENT_GUID2,
+> +	NULL
+> +};
+> +
+> +MODULE_ALIAS("wmi:"EVENT_GUID1);
+> +MODULE_ALIAS("wmi:"EVENT_GUID2);
+> +
+> +static struct key_entry dell_wmi_aio_keymap[] = {
 
-Thanks.
+const
+
+> +
+> +static char *dell_wmi_aio_find(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; dell_wmi_aio_guids[i] != NULL; i++)
+> +		if (wmi_has_guid(dell_wmi_aio_guids[i]))
+> +			return dell_wmi_aio_guids[i];
+> +
+> +	return NULL;
+> +}
+> +
+> +static int __init dell_wmi_aio_init(void)
+> +{
+> +	int err;
+> +	char *guid;
+> +
+> +	guid = dell_wmi_aio_find();
+> +	if (guid) {
+> +		err = dell_wmi_aio_input_setup();
+> +
+> +		if (err)
+> +			return err;
+> +
+> +		err = wmi_install_notify_handler(guid,
+> +			dell_wmi_aio_notify, NULL);
+> +		if (err) {
+> +			input_unregister_device(dell_wmi_aio_input_dev);
+> +			pr_err(AIO_PREFIX "Unable to register"
+> +			       " notify handler - %d\n", err);
+
+Do not break the strings - 80-columr rule does not apply to messages.
+
+> +			return err;
+> +		}
+> +	} else
+> +		pr_warning(AIO_PREFIX "No known WMI GUID found\n");
+> +
+> +	return 0;
+
+If you did not find known guid you shold return -ENXIO so that the
+driver aborts loading into memory (if it is compiled as a module -
+likely).
+
+> +}
+> +
+> +static void __exit dell_wmi_aio_exit(void)
+> +{
+> +	char *guid;
+> +
+> +	guid = dell_wmi_aio_find();
+
+And if you fail loading you do not need to check it here.
+
+> +	if (guid) {
+> +		wmi_remove_notify_handler(guid);
+> +		input_unregister_device(dell_wmi_aio_input_dev);
+> +	}
+> +}
+> +
+> +module_init(dell_wmi_aio_init);
+> +module_exit(dell_wmi_aio_exit);
+
+Thanks,
 
 -- 
 Dmitry
