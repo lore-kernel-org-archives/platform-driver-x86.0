@@ -1,24 +1,31 @@
-From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop depends on INPUT
-Date: Mon, 7 Feb 2011 19:40:36 +0000
-Message-ID: <20110207194036.GG19838@srcf.ucam.org>
-References: <20110120124836.b36a7c24.randy.dunlap@oracle.com>
+From: Thomas Klose <thomas.klose@hiperscan.com>
+Subject: Re: [PATCH 3/8] sony-laptop: ignore hard switch rfkill events
+ (SPIC)
+Date: Sat, 19 Feb 2011 13:52:42 +0100
+Message-ID: <1298119962.3534.2.camel@linuxbox>
+References: <1298083952-22493-1-git-send-email-malattia@linux.it>
+	 <1298083952-22493-4-git-send-email-malattia@linux.it>
+	 <20110219030618.GA28870@srcf.ucam.org> <20110219124654.GA1726@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:54494 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754848Ab1BGTko (ORCPT
+Received: from moutng.kundenserver.de ([212.227.126.171]:52488 "EHLO
+	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751740Ab1BSMwr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Feb 2011 14:40:44 -0500
-Content-Disposition: inline
-In-Reply-To: <20110120124836.b36a7c24.randy.dunlap@oracle.com>
+	Sat, 19 Feb 2011 07:52:47 -0500
+In-Reply-To: <20110219124654.GA1726@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, akpm <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Appled, thanks.
+Am Samstag, den 19.02.2011, 21:46 +0900 schrieb Mattia Dongili: 
+> Thomas,
+> do you still have that TX laptop that had the problem? would you be
+> available to test a couple of other patches?
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Yes the TX laptop is still around and is available for testing.
+
+Regards, Thomas
