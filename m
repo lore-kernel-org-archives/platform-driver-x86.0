@@ -1,12 +1,12 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 8/8] sony-laptop: implement new backlight control method
-Date: Sat, 19 Feb 2011 11:52:32 +0900
-Message-ID: <1298083952-22493-9-git-send-email-malattia@linux.it>
+Subject: [PATCH 6/8] sony-laptop: cache handles and report them via sysfs
+Date: Sat, 19 Feb 2011 11:52:30 +0900
+Message-ID: <1298083952-22493-7-git-send-email-malattia@linux.it>
 References: <1298083952-22493-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:60586
+Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:60589
 	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753504Ab1BSDAR (ORCPT
+	with ESMTP id S1753697Ab1BSDAR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Fri, 18 Feb 2011 22:00:17 -0500
 In-Reply-To: <1298083952-22493-1-git-send-email-malattia@linux.it>
@@ -15,173 +15,184 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-Reasonably recent Vaios have a 0x12f or 0x137 handler that exposes a
-fine lid backlight regulation with values ranging from 0 to 255.
-The patch is based on findings and code from Javier Achirica
-<achirica@gmail.com> and Marco Chiappero <marco@absence.it>
+Avoid calling into acpi each time we need to lookup a method handle
+and report the available handles to ease collection of information when
+debugging issues. Also move initialization of the platform driver
+earlier to allow adding files from other setup functions.
 
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c |  108 ++++++++++++++++++++++++++----------
- 1 files changed, 78 insertions(+), 30 deletions(-)
+ drivers/platform/x86/sony-laptop.c |   97 ++++++++++++++++++++++++++++++------
+ 1 files changed, 81 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index cff1b85..a097a27 100644
+index 22519a4..1585d37 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -938,11 +938,39 @@ static int sony_backlight_get_brightness(struct backlight_device *bd)
- 	return value - 1;
+@@ -727,20 +727,79 @@ static int acpi_callsetfunc(acpi_handle handle, char *name, int value,
+ 	return -1;
  }
  
--static struct backlight_device *sony_backlight_device;
-+static int sony_nc_get_brightness_ng(struct backlight_device *bd)
-+{
-+	int result;
-+	int *handle = (int *)bl_get_data(bd);
-+
-+	sony_call_snc_handle(*handle, 0x0200, &result);
-+
-+	return result & 0xff;
-+}
-+
-+static int sony_nc_update_status_ng(struct backlight_device *bd)
-+{
-+	int value, result;
-+	int *handle = (int *)bl_get_data(bd);
-+
-+	value = bd->props.brightness;
-+	sony_call_snc_handle(*handle, 0x0100 | (value << 16), &result);
-+
-+	return sony_nc_get_brightness_ng(bd);
-+}
-+
- static const struct backlight_ops sony_backlight_ops = {
-+	.options = BL_CORE_SUSPENDRESUME,
- 	.update_status = sony_backlight_update_status,
- 	.get_brightness = sony_backlight_get_brightness,
- };
-+static const struct backlight_ops sony_backlight_ng_ops = {
-+	.options = BL_CORE_SUSPENDRESUME,
-+	.update_status = sony_nc_update_status_ng,
-+	.get_brightness = sony_nc_get_brightness_ng,
+-static int sony_find_snc_handle(int handle)
++struct sony_nc_handles {
++	u16 cap[0x10];
++	struct device_attribute devattr;
 +};
-+static int backlight_ng_handle;
-+static struct backlight_device *sony_backlight_device;
++
++struct sony_nc_handles *handles;
++
++static ssize_t sony_nc_handles_show(struct device *dev,
++		struct device_attribute *attr, char *buffer)
++{
++	ssize_t len = 0;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++		len += snprintf(buffer + len, PAGE_SIZE - len, "0x%.4x ",
++				handles->cap[i]);
++	}
++	len += snprintf(buffer + len, PAGE_SIZE - len, "\n");
++
++	return len;
++}
++
++static int sony_nc_handles_setup(struct platform_device *pd)
+ {
+ 	int i;
+ 	int result;
  
- /*
-  * New SNC-only Vaios event mapping to driver known keys
-@@ -1135,11 +1163,6 @@ static int sony_nc_resume(struct acpi_device *device)
- 		sony_nc_function_setup(device);
+-	for (i = 0x20; i < 0x30; i++) {
+-		acpi_callsetfunc(sony_nc_acpi_handle, "SN00", i, &result);
+-		if (result == handle) {
+-			dprintk("found handle 0x%.4x (offset: 0x%.2x)\n",
+-					handle, i - 0x20);
+-			return i-0x20;
++	handles = kzalloc(sizeof(*handles), GFP_KERNEL);
++
++	sysfs_attr_init(handles->devattr);
++	handles->devattr.attr.name = "handles";
++	handles->devattr.attr.mode = S_IRUGO;
++	handles->devattr.show = sony_nc_handles_show;
++
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++		if (!acpi_callsetfunc(sony_nc_acpi_handle,
++					"SN00", i + 0x20, &result)) {
++			dprintk("caching handle 0x%.4x (offset: 0x%.2x)\n",
++					result, i);
++			handles->cap[i] = result;
+ 		}
  	}
  
--	/* set the last requested brightness level */
--	if (sony_backlight_device &&
--			sony_backlight_update_status(sony_backlight_device) < 0)
--		pr_warn(DRV_PFX "unable to restore brightness level\n");
--
- 	/* re-read rfkill state */
- 	sony_nc_rfkill_update();
- 
-@@ -1477,6 +1500,51 @@ static int sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
- 	return 0;
++	/* allow reading capabilities via sysfs */
++	if (device_create_file(&pd->dev, &handles->devattr)) {
++		kfree(handles);
++		handles = NULL;
++		return -1;
++	}
++
++	return 0;
++}
++
++static int sony_nc_handles_cleanup(struct platform_device *pd)
++{
++	if (handles) {
++		device_remove_file(&pd->dev, &handles->devattr);
++		kfree(handles);
++		handles = NULL;
++	}
++	return 0;
++}
++
++static int sony_find_snc_handle(int handle)
++{
++	int i;
++	for (i = 0; i < 0x10; i++) {
++		if (handles->cap[i] == handle) {
++			dprintk("found handle 0x%.4x (offset: 0x%.2x)\n",
++					handle, i);
++			return i;
++		}
++	}
+ 	dprintk("handle 0x%.4x not found\n", handle);
+ 	return -1;
  }
+@@ -1274,6 +1333,10 @@ static int sony_nc_add(struct acpi_device *device)
+ 		goto outwalk;
+ 	}
  
-+static void sony_nc_backlight_setup(void)
-+{
-+	acpi_handle unused;
-+	int max_brightness = 0;
-+	const struct backlight_ops *ops = NULL;
-+	struct backlight_properties props;
++	result = sony_pf_add();
++	if (result)
++		goto outpresent;
 +
-+	if (sony_find_snc_handle(0x12f) != -1) {
-+		backlight_ng_handle = 0x12f;
-+		ops = &sony_backlight_ng_ops;
-+		max_brightness = 0xff;
-+
-+	} else if (sony_find_snc_handle(0x137) != -1) {
-+		backlight_ng_handle = 0x137;
-+		ops = &sony_backlight_ng_ops;
-+		max_brightness = 0xff;
-+
-+	} else if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "GBRT",
-+						&unused))) {
-+		ops = &sony_backlight_ops;
-+		max_brightness = SONY_MAX_BRIGHTNESS - 1;
-+
-+	} else
-+		return;
-+
-+	memset(&props, 0, sizeof(struct backlight_properties));
-+	props.max_brightness = max_brightness;
-+	sony_backlight_device = backlight_device_register("sony", NULL,
-+							  &backlight_ng_handle,
-+							  ops, &props);
-+
-+	if (IS_ERR(sony_backlight_device)) {
-+		pr_warning(DRV_PFX "unable to register backlight device\n");
-+		sony_backlight_device = NULL;
-+	} else
-+		sony_backlight_device->props.brightness =
-+		    ops->get_brightness(sony_backlight_device);
-+}
-+
-+static void sony_nc_backlight_cleanup(void)
-+{
-+	if (sony_backlight_device)
-+		backlight_device_unregister(sony_backlight_device);
-+}
-+
- static int sony_nc_add(struct acpi_device *device)
- {
- 	acpi_status status;
-@@ -1543,26 +1611,8 @@ static int sony_nc_add(struct acpi_device *device)
+ 	if (debug) {
+ 		status = acpi_walk_namespace(ACPI_TYPE_METHOD,
+ 				sony_nc_acpi_handle, 1, sony_walk_callback,
+@@ -1281,7 +1344,7 @@ static int sony_nc_add(struct acpi_device *device)
+ 		if (ACPI_FAILURE(status)) {
+ 			pr_warn(DRV_PFX "unable to walk acpi resources\n");
+ 			result = -ENODEV;
+-			goto outwalk;
++			goto outpresent;
+ 		}
+ 	}
+ 
+@@ -1294,6 +1357,8 @@ static int sony_nc_add(struct acpi_device *device)
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+ 					 &handle))) {
+ 		dprintk("Doing SNC setup\n");
++		if (sony_nc_handles_setup(sony_pf_device))
++			goto outpresent;
+ 		sony_nc_function_setup(device);
+ 		sony_nc_rfkill_setup(device);
+ 	}
+@@ -1302,7 +1367,7 @@ static int sony_nc_add(struct acpi_device *device)
+ 	result = sony_laptop_setup_input(device);
+ 	if (result) {
+ 		pr_err(DRV_PFX "Unable to create input devices.\n");
+-		goto outwalk;
++		goto outsnc;
+ 	}
+ 
  	if (acpi_video_backlight_support()) {
- 		pr_info(DRV_PFX "brightness ignored, must be "
- 		       "controlled by ACPI video driver\n");
--	} else if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "GBRT",
--						&handle))) {
--		struct backlight_properties props;
--		memset(&props, 0, sizeof(struct backlight_properties));
--		props.max_brightness = SONY_MAX_BRIGHTNESS - 1;
--		sony_backlight_device = backlight_device_register("sony", NULL,
--								  NULL,
--								  &sony_backlight_ops,
--								  &props);
--
--		if (IS_ERR(sony_backlight_device)) {
--			pr_warning(DRV_PFX "unable to register backlight device\n");
--			sony_backlight_device = NULL;
--		} else {
--			sony_backlight_device->props.brightness =
--			    sony_backlight_get_brightness
--			    (sony_backlight_device);
--		}
--
--	}
-+	} else
-+		sony_nc_backlight_setup();
+@@ -1329,10 +1394,6 @@ static int sony_nc_add(struct acpi_device *device)
  
+ 	}
+ 
+-	result = sony_pf_add();
+-	if (result)
+-		goto outbacklight;
+-
  	/* create sony_pf sysfs attributes related to the SNC device */
  	for (item = sony_nc_values; item->name; ++item) {
-@@ -1609,8 +1659,7 @@ static int sony_nc_add(struct acpi_device *device)
+ 
+@@ -1378,14 +1439,17 @@ static int sony_nc_add(struct acpi_device *device)
  	for (item = sony_nc_values; item->name; ++item) {
  		device_remove_file(&sony_pf_device->dev, &item->devattr);
  	}
--	if (sony_backlight_device)
--		backlight_device_unregister(sony_backlight_device);
-+	sony_nc_backlight_cleanup();
+-	sony_pf_remove();
+-
+-      outbacklight:
+ 	if (sony_backlight_device)
+ 		backlight_device_unregister(sony_backlight_device);
  
  	sony_laptop_remove_input();
  
-@@ -1632,8 +1681,7 @@ static int sony_nc_remove(struct acpi_device *device, int type)
- {
- 	struct sony_nc_value *item;
++      outsnc:
++	sony_nc_handles_cleanup(sony_pf_device);
++
++      outpresent:
++	sony_pf_remove();
++
+       outwalk:
+ 	sony_nc_rfkill_cleanup();
+ 	return result;
+@@ -1404,6 +1468,7 @@ static int sony_nc_remove(struct acpi_device *device, int type)
+ 		device_remove_file(&sony_pf_device->dev, &item->devattr);
+ 	}
  
--	if (sony_backlight_device)
--		backlight_device_unregister(sony_backlight_device);
-+	sony_nc_backlight_cleanup();
- 
- 	sony_nc_acpi_device = NULL;
- 
++	sony_nc_handles_cleanup(sony_pf_device);
+ 	sony_pf_remove();
+ 	sony_laptop_remove_input();
+ 	sony_nc_rfkill_cleanup();
 -- 
 1.7.2.3
