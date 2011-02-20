@@ -1,50 +1,223 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 3/8] sony-laptop: ignore hard switch rfkill events
- (SPIC)
-Date: Sun, 20 Feb 2011 12:13:14 +0900
-Message-ID: <20110220031314.GC1726@kamineko.org>
-References: <1298083952-22493-1-git-send-email-malattia@linux.it>
- <1298083952-22493-4-git-send-email-malattia@linux.it>
- <20110219030618.GA28870@srcf.ucam.org>
- <20110219124654.GA1726@kamineko.org>
- <20110219160038.GA5751@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Anssi Hannula <anssi.hannula@iki.fi>
+Subject: [PATCH 3/7] hp-wmi: allow setting input and output buffer sizes separately
+Date: Sun, 20 Feb 2011 19:01:43 +0200
+Message-ID: <1298221307-29980-4-git-send-email-anssi.hannula@iki.fi>
+References: <1298221307-29980-1-git-send-email-anssi.hannula@iki.fi>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:55047
-	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752238Ab1BTDNQ (ORCPT
+Received: from sypressi.dnainternet.net ([83.102.40.135]:46938 "EHLO
+	sypressi.dnainternet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754150Ab1BTRCH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 19 Feb 2011 22:13:16 -0500
-Content-Disposition: inline
-In-Reply-To: <20110219160038.GA5751@srcf.ucam.org>
+	Sun, 20 Feb 2011 12:02:07 -0500
+In-Reply-To: <1298221307-29980-1-git-send-email-anssi.hannula@iki.fi>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, thomas.klose@hiperscan.com
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Sat, Feb 19, 2011 at 04:00:38PM +0000, Matthew Garrett wrote:
-> On Sat, Feb 19, 2011 at 09:46:54PM +0900, Mattia Dongili wrote:
-> > On Sat, Feb 19, 2011 at 03:06:18AM +0000, Matthew Garrett wrote:
-> > > Do you possibly want to catch these and make sure the kernel rfkill 
-> > > state matches the hardware?
-> > 
-> > hmmmm, to be honest I'm not entirely sure what the actual problem is.
-> > Maybe it's just a timing issue that is made better by avoiding the
-> > input/acpi event generation. For now drop this patch (there is a
-> > different workaround using the mask parameter).
-> 
-> Delivering it to userspace can be racy - rfkill-input will try to toggle 
-> the state as well. So I think this is the right thing to do, but you 
-> might also want to use it to check the current hardware state and update 
-> the state of the rfkill device.
+Split buffersize parameter of hp_wmi_perform_query to insize and
+outsize. Existing callers are changed to use the same value for insize
+and outsize to avoid any regressions, with the exception of
+hp_wmi_set_block where the output buffer is unused and therefore outsize
+is set to 0 (this change is not seen by BIOS code).
 
-Ah, alright. This makes a lot of sense with what was seen on Thomas'
-laptop.
-Then if you are ok to keep this patch as is, I'll work on
-matching/flipping the rfkill device state separately.
+The maximum input buffer size is kept at 4 bytes as per struct
+bios_args. Some commands exist that take longer buffers, but they
+haven't been implemented. The data portion of bios_args can be trivially
+made dynamically allocated when such larger buffers become needed.
+---
+ drivers/platform/x86/hp-wmi.c |   63 +++++++++++++++++++++++++---------------
+ 1 files changed, 39 insertions(+), 24 deletions(-)
 
-Thanks
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 8e27c27..5c8ae65 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -86,7 +86,6 @@ struct bios_args {
+ struct bios_return {
+ 	u32 sigpass;
+ 	u32 return_code;
+-	u32 value;
+ };
+ 
+ enum hp_return_value {
+@@ -136,7 +135,8 @@ static struct platform_driver hp_wmi_driver = {
+  * query:	The commandtype -> What should be queried
+  * write:	The command -> 0 read, 1 write, 3 ODM specific
+  * buffer:	Buffer used as input and/or output
+- * buffersize:	Size of buffer
++ * insize:	Size of input buffer
++ * outsize:	Size of output buffer
+  *
+  * returns zero on success
+  *         an HP WMI query specific error code (which is positive)
+@@ -147,23 +147,28 @@ static struct platform_driver hp_wmi_driver = {
+  *       size. E.g. Battery info query (0x7) is defined to have 1 byte input
+  *       and 128 byte output. The caller would do:
+  *       buffer = kzalloc(128, GFP_KERNEL);
+- *       ret = hp_wmi_perform_query(0x7, 0, buffer, 128)
++ *       ret = hp_wmi_perform_query(0x7, 0, buffer, 1, 128)
+  */
+-static int hp_wmi_perform_query(int query, int write, u32 *buffer,
+-				int buffersize)
++static int hp_wmi_perform_query(int query, int write, void *buffer,
++				int insize, int outsize)
+ {
+-	struct bios_return bios_return;
++	struct bios_return *bios_return;
++	int actual_outsize;
+ 	union acpi_object *obj;
+ 	struct bios_args args = {
+ 		.signature = 0x55434553,
+ 		.command = write ? 0x2 : 0x1,
+ 		.commandtype = query,
+-		.datasize = buffersize,
+-		.data = *buffer,
++		.datasize = insize,
++		.data = 0,
+ 	};
+ 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 
++	if (WARN_ON(insize > sizeof(args.data)))
++		return -EINVAL;
++	memcpy(&args.data, buffer, insize);
++
+ 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, 0x3, &input, &output);
+ 
+ 	obj = output.pointer;
+@@ -175,19 +180,26 @@ static int hp_wmi_perform_query(int query, int write, u32 *buffer,
+ 		return -EINVAL;
+ 	}
+ 
+-	bios_return = *((struct bios_return *)obj->buffer.pointer);
++	bios_return = (struct bios_return *)obj->buffer.pointer;
+ 
+-	if (bios_return.return_code) {
+-		if (bios_return.return_code != HPWMI_RET_UNKNOWN_CMDTYPE)
++	if (bios_return->return_code) {
++		if (bios_return->return_code != HPWMI_RET_UNKNOWN_CMDTYPE)
+ 			printk(KERN_WARNING PREFIX "query 0x%x returned "
+ 						   "error 0x%x\n",
+-			       query, bios_return.return_code);
++			       query, bios_return->return_code);
+ 		kfree(obj);
+-		return bios_return.return_code;
++		return bios_return->return_code;
+ 	}
+ 
+-	memcpy(buffer, &bios_return.value, sizeof(bios_return.value));
++	if (!outsize) {
++		/* ignore output data */
++		kfree(obj);
++		return 0;
++	}
+ 
++	actual_outsize = min(outsize, (int)(obj->buffer.length - sizeof(*bios_return)));
++	memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual_outsize);
++	memset(buffer + actual_outsize, 0, outsize - actual_outsize);
+ 	kfree(obj);
+ 	return 0;
+ }
+@@ -196,7 +208,7 @@ static int hp_wmi_display_state(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_DISPLAY_QUERY, 0, &state,
+-				       sizeof(state));
++				       sizeof(state), sizeof(state));
+ 	if (ret)
+ 		return -EINVAL;
+ 	return state;
+@@ -206,7 +218,7 @@ static int hp_wmi_hddtemp_state(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_HDDTEMP_QUERY, 0, &state,
+-				       sizeof(state));
++				       sizeof(state), sizeof(state));
+ 	if (ret)
+ 		return -EINVAL;
+ 	return state;
+@@ -216,7 +228,7 @@ static int hp_wmi_als_state(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 0, &state,
+-				       sizeof(state));
++				       sizeof(state), sizeof(state));
+ 	if (ret)
+ 		return -EINVAL;
+ 	return state;
+@@ -226,7 +238,7 @@ static int hp_wmi_dock_state(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
+-				       sizeof(state));
++				       sizeof(state), sizeof(state));
+ 
+ 	if (ret)
+ 		return -EINVAL;
+@@ -238,7 +250,7 @@ static int hp_wmi_tablet_state(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, 0, &state,
+-				       sizeof(state));
++				       sizeof(state), sizeof(state));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -252,7 +264,7 @@ static int hp_wmi_set_block(void *data, bool blocked)
+ 	int ret;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 1,
+-				   &query, sizeof(query));
++				   &query, sizeof(query), 0);
+ 	if (ret)
+ 		return -EINVAL;
+ 	return 0;
+@@ -267,7 +279,8 @@ static bool hp_wmi_get_sw_state(enum hp_wmi_radio r)
+ 	int wireless = 0;
+ 	int mask;
+ 	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0,
+-			     &wireless, sizeof(wireless));
++			     &wireless, sizeof(wireless),
++			     sizeof(wireless));
+ 	/* TBD: Pass error */
+ 
+ 	mask = 0x200 << (r * 8);
+@@ -283,7 +296,8 @@ static bool hp_wmi_get_hw_state(enum hp_wmi_radio r)
+ 	int wireless = 0;
+ 	int mask;
+ 	hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0,
+-			     &wireless, sizeof(wireless));
++			     &wireless, sizeof(wireless),
++			     sizeof(wireless));
+ 	/* TBD: Pass error */
+ 
+ 	mask = 0x800 << (r * 8);
+@@ -344,7 +358,7 @@ static ssize_t set_als(struct device *dev, struct device_attribute *attr,
+ {
+ 	u32 tmp = simple_strtoul(buf, NULL, 10);
+ 	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, 1, &tmp,
+-				       sizeof(tmp));
++				       sizeof(tmp), sizeof(tmp));
+ 	if (ret)
+ 		return -EINVAL;
+ 
+@@ -417,6 +431,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 	case HPWMI_BEZEL_BUTTON:
+ 		ret = hp_wmi_perform_query(HPWMI_HOTKEY_QUERY, 0,
+ 					   &key_code,
++					   sizeof(key_code),
+ 					   sizeof(key_code));
+ 		if (ret)
+ 			break;
+@@ -523,7 +538,7 @@ static int __devinit hp_wmi_bios_setup(struct platform_device *device)
+ 	int wireless = 0;
+ 
+ 	err = hp_wmi_perform_query(HPWMI_WIRELESS_QUERY, 0, &wireless,
+-				   sizeof(wireless));
++				   sizeof(wireless), sizeof(wireless));
+ 	if (err)
+ 		return err;
+ 
 -- 
-mattia
-:wq!
+1.7.3
