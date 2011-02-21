@@ -1,23 +1,24 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Should asus-wmi provide a way to switch displays, and why
-	video_output class is unused
-Date: Mon, 21 Feb 2011 20:24:02 +0000
-Message-ID: <20110221202402.GA22622@srcf.ucam.org>
-References: <AANLkTimf3SL+BpzjVK=F9y4_dGnDp6ghmMKq5k=4hs0x@mail.gmail.com>
+Subject: Re: [PATCH] thinkpad_acpi: Always report scancodes for hotkeys
+Date: Mon, 21 Feb 2011 20:46:48 +0000
+Message-ID: <20110221204648.GA23528@srcf.ucam.org>
+References: <1295042079-4832-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:52946 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751418Ab1BUUq4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 21 Feb 2011 15:46:56 -0500
 Content-Disposition: inline
-In-Reply-To: <AANLkTimf3SL+BpzjVK=F9y4_dGnDp6ghmMKq5k=4hs0x@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Luming Yu <luming.yu@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1295042079-4832-1-git-send-email-seth.forshee@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Thought I'd replied to this already, but: Unless it's impossible for X 
-and the kernel to handle enabling a display without this, don't bother. 
-There's no reason for us to care about the combinations of outputs the
-BIOS wants to support.
+Applied, thanks.
 
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
