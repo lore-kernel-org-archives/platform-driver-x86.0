@@ -1,65 +1,256 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PULL] x86 platform driver updates
-Date: Mon, 21 Feb 2011 22:11:10 +0000
-Message-ID: <20110221221110.GA25537@srcf.ucam.org>
+From: Frederick van der Wyck <fvanderwyck@gmail.com>
+Subject: [PATCH v2] Platform: Samsung Q10 backlight driver
+Date: Mon, 21 Feb 2011 22:37:43 +0000
+Message-ID: <20110221223743.GA8548@lat.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:55101 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751345Ab1BUWhz (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 21 Feb 2011 17:37:55 -0500
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: mjg59@srcf.ucam.org
+Cc: gregkh@suse.de, dmitry.torokhov@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Linus,
+This adds backlight control on the Samsung Q10 laptop, which does not support 
+the SABI interface. Also tested successfully on the Dell Latitude X200.
 
-Small updates to the x86 platform driver tree - fix a trivial bogosity 
-that led to acer-wmi failing to bind on some hardware, some build 
-fixups, some IRQ code rework on the (new for .38) Medfield interrupt 
-driver from Thomas and an attempt to fix up the Dell rfkill handling 
-that's breaking some newer machines. I'm still working on this last one, 
-and we may end up having to just pull the functionality from the driver 
-to make this work well.
+Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
+---
+ drivers/platform/x86/Kconfig       |    7 ++
+ drivers/platform/x86/Makefile      |    1 +
+ drivers/platform/x86/samsung-q10.c |  185 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 193 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/platform/x86/samsung-q10.c
 
-The following changes since commit 6f576d57f1fa0d6026b495d8746d56d949989161:
+I've made all the changes suggested by Greg and Dmitry in response to v1. 
+Main changes:
+(1) use i8042_command instead of port IO;
+(2) DMI detect to auto-load and to restrict to supported hardware.
+Description of v1:
+The Samsung Q10 is an old model, which does not support the SABI interface, so
+the samsung-laptop driver does not work. Backlight control is not exposed via
+ACPI either. This driver works in the same way as the SMI handler triggered by 
+pressing the brightness function keys.
 
-  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound-2.6 (2011-02-20 10:15:57 -0800)
-
-are available in the git repository at:
-
-  ssh://master.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
-
-Keng-Yu Lin (1):
-      dell-laptop: Toggle the unsupported hardware killswitch
-
-Matthew Garrett (1):
-      acer-wmi: Fix capitalisation of GUID
-
-Randy Dunlap (1):
-      platform/x86: ideapad-laptop depends on INPUT
-
-Seth Forshee (1):
-      thinkpad_acpi: Always report scancodes for hotkeys
-
-Thomas Gleixner (4):
-      platform-drivers: x86: pmic: Fix up bogus irq hackery
-      platform-drivers: x86: Convert pmic to new irq_chip functions
-      platform-drivers: x86: pmic: Use irq_chip buslock mechanism
-      platform-drivers: x86: pmic: Use request_irq instead of chained handler
-
-Vasiliy Kulikov (3):
-      platform: x86: tc1100-wmi: world-writable sysfs wireless and jogdial files
-      platform: x86: asus_acpi: world-writable procfs files
-      platform: x86: acer-wmi: world-writable sysfs threeg file
-
- drivers/platform/x86/Kconfig           |    2 +-
- drivers/platform/x86/acer-wmi.c        |    4 +-
- drivers/platform/x86/asus_acpi.c       |    8 +--
- drivers/platform/x86/dell-laptop.c     |   24 ++++++-
- drivers/platform/x86/intel_pmic_gpio.c |  116 +++++++++-----------------------
- drivers/platform/x86/tc1100-wmi.c      |    2 +-
- drivers/platform/x86/thinkpad_acpi.c   |    8 +--
- 7 files changed, 61 insertions(+), 103 deletions(-)
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index faec777..c390727 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -639,4 +639,11 @@ config XO1_RFKILL
+ 	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
+ 	  laptop.
+ 
++config SAMSUNG_Q10
++	tristate "Samsung Q10 Extras"
++	select BACKLIGHT_CLASS_DEVICE
++	---help---
++          This driver provides support for backlight control on Samsung Q10
++          and some other laptops, including Dell Latitude X200.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9950ccc..2cd3e52 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -33,3 +33,4 @@ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+ obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
+ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
++obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
+new file mode 100644
+index 0000000..c2b6647
+--- /dev/null
++++ b/drivers/platform/x86/samsung-q10.c
+@@ -0,0 +1,185 @@
++/*
++ *  Driver for Samsung Q10: controls the backlight
++ *
++ *  Copyright (c) 2011 Frederick van der Wyck <fvanderwyck@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/backlight.h>
++#include <linux/i8042.h>
++#include <linux/dmi.h>
++
++#define SAMSUNGQ10_BL_MAX_INTENSITY      255
++#define SAMSUNGQ10_BL_DEFAULT_INTENSITY  185
++
++#define SAMSUNGQ10_BL_8042_CMD           0xbe
++#define SAMSUNGQ10_BL_8042_DATA          { 0x89, 0x91 }
++
++static bool samsungq10_suspended;
++static int samsungq10_bl_brightness;
++
++static int force;
++module_param(force, bool, 0);
++MODULE_PARM_DESC(force,
++		"Disable the DMI check and force the driver to be loaded");
++
++static int samsungq10_bl_set_intensity(struct backlight_device *bd)
++{
++
++	int brightness = bd->props.brightness;
++	unsigned char c[3] = SAMSUNGQ10_BL_8042_DATA;
++
++	if (!samsungq10_suspended) {
++		c[2] = (unsigned char)brightness;
++		i8042_lock_chip();
++		i8042_command(c, (0x30 << 8) | SAMSUNGQ10_BL_8042_CMD);
++		i8042_unlock_chip();
++		samsungq10_bl_brightness = brightness;
++	}
++	return 0;
++}
++
++static int samsungq10_bl_get_intensity(struct backlight_device *bd)
++{
++	return samsungq10_bl_brightness;
++}
++
++static const struct backlight_ops samsungq10_bl_ops = {
++	.get_brightness = samsungq10_bl_get_intensity,
++	.update_status	= samsungq10_bl_set_intensity,
++};
++
++#ifdef CONFIG_PM
++static int samsungq10_suspend(struct device *dev)
++{
++	samsungq10_suspended = true;
++	return 0;
++}
++
++static int samsungq10_resume(struct device *dev)
++{
++
++	struct backlight_device *bd = dev_get_drvdata(dev);
++
++	samsungq10_suspended = false;
++	samsungq10_bl_set_intensity(bd);
++	return 0;
++}
++#else
++#define samsungq10_suspend NULL
++#define samsungq10_resume  NULL
++#endif
++
++static const struct dev_pm_ops samsungq10_pm_ops = {
++	.suspend	= samsungq10_suspend,
++	.resume		= samsungq10_resume,
++};
++
++static int __devinit samsungq10_probe(struct platform_device *pdev)
++{
++
++	struct backlight_properties props;
++	struct backlight_device *bd;
++
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.max_brightness = SAMSUNGQ10_BL_MAX_INTENSITY;
++	bd = backlight_device_register("samsung", &pdev->dev, NULL,
++				       &samsungq10_bl_ops, &props);
++	if (IS_ERR(bd))
++		return PTR_ERR(bd);
++
++	platform_set_drvdata(pdev, bd);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	return 0;
++}
++
++static int __devexit samsungq10_remove(struct platform_device *pdev)
++{
++
++	struct backlight_device *bd = platform_get_drvdata(pdev);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	backlight_device_unregister(bd);
++
++	return 0;
++}
++
++static struct platform_driver samsungq10_driver = {
++	.driver		= {
++		.name	= "samsung",
++		.owner	= THIS_MODULE,
++		.pm	= &samsungq10_pm_ops,
++	},
++	.probe		= samsungq10_probe,
++	.remove		= __devexit_p(samsungq10_remove),
++};
++
++static struct platform_device *samsungq10_device;
++
++static int __init dmi_check_callback(const struct dmi_system_id *id)
++{
++	printk(KERN_INFO KBUILD_MODNAME ": found model '%s'\n", id->ident);
++	return 0;
++}
++
++static struct dmi_system_id __initdata samsungq10_dmi_table[] = {
++	{
++		.ident = "Samsung Q10",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Samsung"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SQ10"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{
++		.ident = "Dell Latitude X200",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X200"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(dmi, samsungq10_dmi_table);
++
++static int __init samsungq10_init(void)
++{
++	if (!force && !dmi_check_system(samsungq10_dmi_table))
++		return -ENODEV;
++
++	samsungq10_device = platform_create_bundle(&samsungq10_driver,
++						   samsungq10_probe,
++						   NULL, 0, NULL, 0);
++
++	if (IS_ERR(samsungq10_device))
++		return PTR_ERR(samsungq10_device);
++
++	return 0;
++}
++
++static void __exit samsungq10_exit(void)
++{
++	platform_device_unregister(samsungq10_device);
++	platform_driver_unregister(&samsungq10_driver);
++}
++
++module_init(samsungq10_init);
++module_exit(samsungq10_exit);
++
++MODULE_AUTHOR("Frederick van der Wyck <fvanderwyck@gmail.com>");
++MODULE_DESCRIPTION("Samsung Q10 Driver");
++MODULE_LICENSE("GPL");
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
