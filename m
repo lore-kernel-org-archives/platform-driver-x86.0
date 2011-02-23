@@ -1,32 +1,26 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] ideapad: read brightness setting on brightness key
-	notify
-Date: Wed, 23 Feb 2011 13:47:48 +0000
-Message-ID: <20110223134748.GA6830@srcf.ucam.org>
-References: <1298468399-3642-1-git-send-email-ike.pan@canonical.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] ideapad: read brightness setting on brightness key	notify
+Date: Wed, 23 Feb 2011 22:07:12 +0800
+Message-ID: <4D651490.5070103@canonical.com>
+References: <1298468399-3642-1-git-send-email-ike.pan@canonical.com> <20110223134748.GA6830@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:35473 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752125Ab1BWNrw (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:35681 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755321Ab1BWOHT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Feb 2011 08:47:52 -0500
-Content-Disposition: inline
-In-Reply-To: <1298468399-3642-1-git-send-email-ike.pan@canonical.com>
+	Wed, 23 Feb 2011 09:07:19 -0500
+In-Reply-To: <20110223134748.GA6830@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Feb 23, 2011 at 09:39:59PM +0800, Ike Panhc wrote:
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=25922
+On 02/23/2011 09:47 PM, Matthew Garrett wrote:
 > 
-> On ideapad Y530, the brightness key notify will be blocked if the last notify
-> is not responsed by getting the brightness value. Read value when we get the
-> notify shall fix the problem and will not have any difference on other ideapads.
+> Which kernel versions does this hit?
+> 
 
-Which kernel versions does this hit?
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+This patch is made against current checkout of Linus's tree.
