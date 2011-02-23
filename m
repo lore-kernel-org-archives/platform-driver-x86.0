@@ -1,52 +1,41 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH -next] eeepc-wmi: kconfig changes to fix build errors
-Date: Wed, 23 Feb 2011 08:01:12 +0100
-Message-ID: <AANLkTinb4f5QLRQ8kfiSkjdx9YzZpdYk-=YD9Qmejz+g@mail.gmail.com>
-References: <20110222183437.ec2807bf.sfr@canb.auug.org.au>
-	<20110222134735.0bfbec8b.randy.dunlap@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20110222134735.0bfbec8b.randy.dunlap@oracle.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Matthew Garrett <mjg@redhat.com>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] ideapad: read brightness setting on brightness key notify
+Date: Wed, 23 Feb 2011 21:39:59 +0800
+Message-ID: <1298468399-3642-1-git-send-email-ike.pan@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from adelie.canonical.com ([91.189.90.139]:37622 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754644Ab1BWNkI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 23 Feb 2011 08:40:08 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Tue, Feb 22, 2011 at 10:47 PM, Randy Dunlap <randy.dunlap@oracle.com=
-> wrote:
-> From: Randy Dunlap <randy.dunlap@oracle.com>
->
-> Fix eeepc-wmi build when CONFIG_HOTPLUG_PCI is not enabled:
->
-> eeepc-wmi.c:(.text+0x3bc5e9): undefined reference to `pci_hp_deregist=
-er'
-> eeepc-wmi.c:(.text+0x3bcca4): undefined reference to `__pci_hp_regist=
-er'
->
-> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-> ---
-> =C2=A0drivers/platform/x86/Kconfig | =C2=A0 =C2=A01 +
-> =C2=A01 file changed, 1 insertion(+)
->
-> --- linux-next-20110222.orig/drivers/platform/x86/Kconfig
-> +++ linux-next-20110222/drivers/platform/x86/Kconfig
-> @@ -447,6 +447,7 @@ config EEEPC_WMI
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0depends on EXPERIMENTAL
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0depends on BACKLIGHT_CLASS_DEVICE
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0depends on RFKILL || RFKILL =3D n
-> + =C2=A0 =C2=A0 =C2=A0 depends on HOTPLUG_PCI
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0select INPUT_SPARSEKMAP
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0select LEDS_CLASS
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0select NEW_LEDS
->
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=25922
 
-Sorry for that...
+On ideapad Y530, the brightness key notify will be blocked if the last notify
+is not responsed by getting the brightness value. Read value when we get the
+notify shall fix the problem and will not have any difference on other ideapads.
 
-Acked-by: Corentin Chary <corentin.chary@gmail.com>
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 114d952..21b1018 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -459,6 +459,8 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+ 		if (test_bit(vpc_bit, &vpc1)) {
+ 			if (vpc_bit == 9)
+ 				ideapad_sync_rfk_state(adevice);
++			else if (vpc_bit == 4)
++				read_ec_data(handle, 0x12, &vpc2);
+ 			else
+ 				ideapad_input_report(priv, vpc_bit);
+ 		}
+-- 
+1.7.4.1
