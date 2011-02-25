@@ -1,70 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] eeepc-wmi: set the touchpad toggle key
-	code to F21
-Date: Fri, 25 Feb 2011 01:33:32 -0800
-Message-ID: <20110225093332.GC14053@core.coreip.homeip.net>
+From: Martin Pitt <martin.pitt@ubuntu.com>
+Subject: Re: [PATCH] eeepc-wmi: set the touchpad toggle key code to F21
+Date: Fri, 25 Feb 2011 10:53:56 +0100
+Message-ID: <20110225095356.GA2681@piware.de>
 References: <1298611140-21573-1-git-send-email-keng-yu.lin@canonical.com>
-	<AANLkTim_JKQU9J3OJ0FRQ_ZVPktAPbnzr2t8SvhL2Uzj@mail.gmail.com>
-	<20110225071827.GA14053@core.coreip.homeip.net>
-	<AANLkTim6pxadoTSsNqYV_gmRGOwyFRvfErSvcwRtaavy@mail.gmail.com>
+ <AANLkTim_JKQU9J3OJ0FRQ_ZVPktAPbnzr2t8SvhL2Uzj@mail.gmail.com>
+ <20110225071827.GA14053@core.coreip.homeip.net>
+ <AANLkTim6pxadoTSsNqYV_gmRGOwyFRvfErSvcwRtaavy@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from www.piware.de ([213.9.93.70]:44200 "EHLO mail.piware.de"
+	rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+	id S1754271Ab1BYKCR (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 Feb 2011 05:02:17 -0500
 Content-Disposition: inline
-In-Reply-To: <AANLkTim6pxadoTSsNqYV_gmRGOwyFRvfErSvcwRtaavy-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?iso-8859-1?Q?Keng-Y=FC?= Lin <keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Martin Pitt <martin.pitt-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tyson.chen-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <AANLkTim6pxadoTSsNqYV_gmRGOwyFRvfErSvcwRtaavy@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?iso-8859-1?Q?Keng-Y=FC?= Lin <keng-yu.lin@canonical.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, tyson.chen@canonical.com
 
-On Fri, Feb 25, 2011 at 05:22:43PM +0800, Keng-Y=FC Lin wrote:
-> On Fri, Feb 25, 2011 at 3:18 PM, Dmitry Torokhov
-> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > I believe that the kernel should use KEY_TOUCHPAD_TOGGLE and userspace
-> > should use udev's key re-mapping facilities while X is unable to process
-> > keycodes above 255 to adjust to the keycode du jour. If all kernel
-> > drivers were to use KEY_TOUCHPAD_TOGGLE then remapping would be much
-> > easier (the utility would simply check capabilities for
-> > KEY_TOUCHPAD_TOGGLE and do the remap).
-> =
-
+Keng-Y=FC Lin [2011-02-25 17:22 +0800]:
 > Can udev re-map a key code to another?
 
-Not directly.
+Not directly, as udev itself doesn't actually process the input
+events. It just pokes the scan code -> keycode map into the kernel.
 
-> =
+What it can do is to re-map an existing key (scan code) to a different
+key code, which provides the same effect in most cases.
 
-> Am I correct that udev can only re-map a scan code to a specified key cod=
-e.
-
-Right, so once you determined via capabilities that device emits
-KEY_TOUCHPAD_TOGGLE you query the keymap (using EVIOCGKEYCODE2; by
-index) and replace all entries that are mapped to KEY_TOUCHPAD_TOGGLE to
-whatever you want.
-
-Thanks.
-
--- =
-
-Dmitry
-
----------------------------------------------------------------------------=
----
-Free Software Download: Index, Search & Analyze Logs and other IT data in =
-
-Real-Time with Splunk. Collect, index and harness all the fast moving IT da=
-ta =
-
-generated by your applications, servers and devices whether physical, virtu=
-al
-or in the cloud. Deliver compliance at lower cost and gain new business =
-
-insights. http://p.sf.net/sfu/splunk-dev2dev =
+Martin
+--=20
+Martin Pitt                        | http://www.piware.de
+Ubuntu Developer (www.ubuntu.com)  | Debian Developer  (www.debian.org)
