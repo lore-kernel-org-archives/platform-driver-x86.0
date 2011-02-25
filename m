@@ -1,43 +1,71 @@
-From: Greg KH <greg@kroah.com>
+From: Nikolai Kondrashov <spbnick@gmail.com>
 Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-Date: Fri, 25 Feb 2011 13:03:34 -0800
-Message-ID: <20110225210334.GB16860@kroah.com>
-References: <20110209224006.GA11202@kroah.com>
- <AANLkTikrr6Gu_qoq73ASC95E0HQC1p6KzDPLxo=J_rva@mail.gmail.com>
+Date: Sat, 26 Feb 2011 00:49:17 +0300
+Message-ID: <4D6823DD.6040809@gmail.com>
+References: <20110209224006.GA11202@kroah.com> <AANLkTikrr6Gu_qoq73ASC95E0HQC1p6KzDPLxo=J_rva@mail.gmail.com> <20110225210334.GB16860@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTikrr6Gu_qoq73ASC95E0HQC1p6KzDPLxo=J_rva@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nikolai Kondrashov <spbnick@gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------080609060204050004020501"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:34408 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755554Ab1BYVtV (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 Feb 2011 16:49:21 -0500
+In-Reply-To: <20110225210334.GB16860@kroah.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Greg KH <greg@kroah.com>
 Cc: Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 16, 2011 at 01:06:00PM +0300, Nikolai Kondrashov wrote:
-> Hi Greg,
-> 
-> On 02/10/2011 01:40 AM, Greg KH wrote:
-> > This adds the samsung-laptop driver to the kernel.  It now supports
-> > all known Samsung laptops.
-> Thank you for this patch :)!
-> 
-> I've tried it with both 2.6.37 and 2.6.32 on my NP-N210-JA02RU and it fails
-> the insertion with ENODEV without "force" and with "This computer does not
-> support SABI" with "force".
-> 
-> I'm ready to provide any diagnostics information you may need and test the
-> patches.
-> 
-> Please find the dmidecode output attached.
+This is a multi-part message in MIME format.
+--------------080609060204050004020501
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This should work, as we support the N150/N210/N220 versions.
+On 02/26/2011 12:03 AM, Greg KH wrote:
+> This should work, as we support the N150/N210/N220 versions.
+>
+> Can you provide the output of:
+> 	grep ./sys/class/dmi/id/*
+>
+> so I can verify this?
+Sure. Please find it attached. It is taken on a stock Debian kernel, without
+your patch.
 
-Can you provide the output of:
-	grep . /sys/class/dmi/id/*
+Could I have configured the kernel incorrectly?
 
-so I can verify this?
+Thanks :)
 
-thanks,
+Sincerely,
+Nick
 
-greg k-h
+--------------080609060204050004020501
+Content-Type: text/plain;
+ name="dmi_id_grep.txt"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="dmi_id_grep.txt"
+
+/sys/class/dmi/id/bios_date:01/29/2010
+/sys/class/dmi/id/bios_vendor:Phoenix Technologies Ltd.
+/sys/class/dmi/id/bios_version:06JI.M053.20100129.JIP
+/sys/class/dmi/id/board_asset_tag:SAMSUNG
+/sys/class/dmi/id/board_name:N150/N210/N220             
+/sys/class/dmi/id/board_serial:123490EN400015
+/sys/class/dmi/id/board_vendor:SAMSUNG ELECTRONICS CO., LTD.
+/sys/class/dmi/id/board_version:Not Applicable
+/sys/class/dmi/id/chassis_asset_tag:No Asset Tag
+/sys/class/dmi/id/chassis_serial:None        
+/sys/class/dmi/id/chassis_type:10
+/sys/class/dmi/id/chassis_vendor:SAMSUNG ELECTRONICS CO., LTD.
+/sys/class/dmi/id/chassis_version:N/A         
+/sys/class/dmi/id/modalias:dmi:bvnPhoenixTechnologiesLtd.:bvr06JI.M053.20100129.JIP:bd01/29/2010:svnSAMSUNGELECTRONICSCO.,LTD.:pnN150/N210/N220:pvrNotApplicable:rvnSAMSUNGELECTRONICSCO.,LTD.:rnN150/N210/N220:rvrNotApplicable:cvnSAMSUNGELECTRONICSCO.,LTD.:ct10:cvrN/A:
+/sys/class/dmi/id/product_name:N150/N210/N220             
+/sys/class/dmi/id/product_serial:ZO1193HZ200860
+/sys/class/dmi/id/product_uuid:40B5E830-E81D-B211-8000-E54EB00EA058
+/sys/class/dmi/id/product_version:Not Applicable
+/sys/class/dmi/id/sys_vendor:SAMSUNG ELECTRONICS CO., LTD.
+/sys/class/dmi/id/uevent:MODALIAS=dmi:bvnPhoenixTechnologiesLtd.:bvr06JI.M053.20100129.JIP:bd01/29/2010:svnSAMSUNGELECTRONICSCO.,LTD.:pnN150/N210/N220:pvrNotApplicable:rvnSAMSUNGELECTRONICSCO.,LTD.:rnN150/N210/N220:rvrNotApplicable:cvnSAMSUNGELECTRONICSCO.,LTD.:ct10:cvrN/A:
+
+--------------080609060204050004020501--
