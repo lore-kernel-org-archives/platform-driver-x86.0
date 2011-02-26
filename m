@@ -1,63 +1,339 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 00/14] Support Asus WMI capable Notebooks (asus-wmi, asus-nb-wmi and eeepc-wmi)
-Date: Sat, 26 Feb 2011 10:20:29 +0100
-Message-ID: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from slow3-v.mail.gandi.net ([217.70.178.89]:51278 "EHLO
-	slow3-v.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751707Ab1BZJWT (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 26 Feb 2011 04:22:19 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "David S. Miller" <davem@davemloft.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>
+From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 06/14] asus-wmi: factorise
+	wmi_evaluate_method call
+Date: Sat, 26 Feb 2011 10:20:35 +0100
+Message-ID: <1298712045-17671-7-git-send-email-corentincj@iksaif.net>
+References: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1298712045-17671-1-git-send-email-corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Matthew,
+This patch create a single function to call the
+WMI methods. This function handle inexistent methods (when
+implemented by the WMI devices, and this is not the case on
+Eee PCs), ACPI errors, etc..
 
-I hope this series won't break anything, because there are a lot of change.
-Two new modules, asus-wmi.ko and asus-nb-wmi.ko, and almost all the code
-of eeepc-wmi.c is now in asus-wmi.c.
+Also pack struct bios_arg, and make sure that we always send
+a 64bit buffer when calling a WMI method, because this is
+needed on Asus notebooks.
 
-I was able to test asus-nb-wmi.ko on a very new G73 laptop over ssh, and it
-seems to work well.
+Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+---
+ drivers/platform/x86/asus-wmi.c |  162 ++++++++++++++++-----------------------
+ 1 files changed, 65 insertions(+), 97 deletions(-)
 
-More features are comming (keyboard backlight, more sensors, etc...), but
-I think it's important to merge the first step as soon as possible.
-
-Thanks,
-
-Corentin Chary (14):
-  asus-wmi: move generic code to asus-wmi
-  eeepc-wmi: asus generic asus-wmi.ko module
-  asus-wmi: minor cleanups
-  asus-wmi: introduce struct asus_rfkill
-  asus-wmi: handle "unknown status" bit
-  asus-wmi: factorise wmi_evaluate_method call
-  asus-wmi: try to guess the right DSTS methods
-  asus-wmi: fix and clean backlight code
-  asus-wmi: add calls to INIT, SPEC and SFUN on init
-  asus-wmi: allow debugfs interface to call arbitrary method
-  asus-nb-wmi: Asus Notebooks WMI Driver
-  asus-wmi: add some common device ids and method ids
-  asus-wmi: add hwmon interface and pwm1
-  eeepc-wmi: restore KEY_CAMERA_* keys lost in 190ca27
-
- Documentation/ABI/testing/sysfs-platform-asus-wmi  |   31 +
- Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   31 -
- MAINTAINERS                                        |   30 +-
- drivers/platform/x86/Kconfig                       |   39 +-
- drivers/platform/x86/Makefile                      |    2 +
- drivers/platform/x86/asus-nb-wmi.c                 |   98 ++
- drivers/platform/x86/asus-wmi.c                    | 1655 ++++++++++++++++++++
- drivers/platform/x86/asus-wmi.h                    |   58 +
- drivers/platform/x86/eeepc-wmi.c                   | 1372 +----------------
- 9 files changed, 1924 insertions(+), 1392 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-asus-wmi
- delete mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
- create mode 100644 drivers/platform/x86/asus-nb-wmi.c
- create mode 100644 drivers/platform/x86/asus-wmi.c
- create mode 100644 drivers/platform/x86/asus-wmi.h
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 39ce3c1..34e6b4d 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -70,6 +70,8 @@ MODULE_LICENSE("GPL");
+ #define ASUS_WMI_METHODID_DEVS		0x53564544
+ #define ASUS_WMI_METHODID_CFVS		0x53564643
+ 
++#define ASUS_WMI_UNSUPPORTED_METHOD	0xFFFFFFFE
++
+ /* Wireless */
+ #define ASUS_WMI_DEVID_WLAN		0x00010011
+ #define ASUS_WMI_DEVID_BLUETOOTH	0x00010013
+@@ -98,9 +100,9 @@ MODULE_LICENSE("GPL");
+ #define ASUS_WMI_DSTS_MAX_BRIGTH_MASK	0x0000FF00
+ 
+ struct bios_args {
+-	u32 dev_id;
+-	u32 ctrl_param;
+-};
++	u32 arg0;
++	u32 arg1;
++} __packed;
+ 
+ /*
+  * <platform>/    - debugfs root directory
+@@ -187,20 +189,24 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ 	asus->inputdev = NULL;
+ }
+ 
+-static acpi_status asus_wmi_get_devstate(u32 dev_id, u32 *retval)
++static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
++				    u32 *retval)
+ {
+-	struct acpi_buffer input = { (acpi_size) sizeof(u32), &dev_id };
++	struct bios_args args = {
++		.arg0 = arg0,
++		.arg1 = arg1,
++	};
++	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
+ 	acpi_status status;
++	union acpi_object *obj;
+ 	u32 tmp;
+ 
+-	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
+-				     1, ASUS_WMI_METHODID_DSTS,
++	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1, method_id,
+ 				     &input, &output);
+ 
+ 	if (ACPI_FAILURE(status))
+-		return status;
++		goto exit;
+ 
+ 	obj = (union acpi_object *)output.pointer;
+ 	if (obj && obj->type == ACPI_TYPE_INTEGER)
+@@ -213,60 +219,39 @@ static acpi_status asus_wmi_get_devstate(u32 dev_id, u32 *retval)
+ 
+ 	kfree(obj);
+ 
+-	return status;
++exit:
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	if (tmp == ASUS_WMI_UNSUPPORTED_METHOD)
++		return -ENODEV;
+ 
++	return 0;
+ }
+ 
+-static acpi_status asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param,
+-					 u32 *retval)
++static int asus_wmi_get_devstate(u32 dev_id, u32 *retval)
+ {
+-	struct bios_args args = {
+-		.dev_id = dev_id,
+-		.ctrl_param = ctrl_param,
+-	};
+-	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+-	acpi_status status;
+-
+-	if (!retval) {
+-		status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1,
+-					     ASUS_WMI_METHODID_DEVS,
+-					     &input, NULL);
+-	} else {
+-		struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+-		union acpi_object *obj;
+-		u32 tmp;
+-
+-		status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1,
+-					     ASUS_WMI_METHODID_DEVS,
+-					     &input, &output);
+-
+-		if (ACPI_FAILURE(status))
+-			return status;
+-
+-		obj = (union acpi_object *)output.pointer;
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			tmp = (u32) obj->integer.value;
+-		else
+-			tmp = 0;
+-
+-		*retval = tmp;
+-
+-		kfree(obj);
+-	}
++	return asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id,
++					0, retval);
++}
+ 
+-	return status;
++static int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param,
++					 u32 *retval)
++{
++	return asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, dev_id,
++					ctrl_param, retval);
+ }
+ 
+ /* Helper for special devices with magic return codes */
+ static int asus_wmi_get_devstate_bits(u32 dev_id, u32 mask)
+ {
+ 	u32 retval = 0;
+-	acpi_status status;
++	int err;
+ 
+-	status = asus_wmi_get_devstate(dev_id, &retval);
++	err = asus_wmi_get_devstate(dev_id, &retval);
+ 
+-	if (ACPI_FAILURE(status))
+-		return -EINVAL;
++	if (err < 0)
++		return err;
+ 
+ 	if (!(retval & ASUS_WMI_DSTS_PRESENCE_BIT))
+ 		return -ENODEV;
+@@ -584,14 +569,8 @@ static int asus_rfkill_set(void *data, bool blocked)
+ {
+ 	struct asus_rfkill *priv = data;
+ 	u32 ctrl_param = !blocked;
+-	acpi_status status;
+-
+-	status = asus_wmi_set_devstate(priv->dev_id, ctrl_param, NULL);
+-
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+ 
+-	return 0;
++	return asus_wmi_set_devstate(priv->dev_id, ctrl_param, NULL);
+ }
+ 
+ static void asus_rfkill_query(struct rfkill *rfkill, void *data)
+@@ -784,38 +763,34 @@ static int read_backlight_power(void)
+ static int read_brightness(struct backlight_device *bd)
+ {
+ 	u32 retval;
+-	acpi_status status;
++	int err;
+ 
+-	status = asus_wmi_get_devstate(ASUS_WMI_DEVID_BRIGHTNESS, &retval);
++	err = asus_wmi_get_devstate(ASUS_WMI_DEVID_BRIGHTNESS, &retval);
+ 
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+-	else
+-		return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
++	if (err < 0)
++		return err;
++
++	return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
+ }
+ 
+ static int update_bl_status(struct backlight_device *bd)
+ {
+ 	u32 ctrl_param;
+-	acpi_status status;
+-	int power;
++	int power, err;
+ 
+ 	ctrl_param = bd->props.brightness;
+ 
+-	status = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
+-				       ctrl_param, NULL);
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
++				    ctrl_param, NULL);
+ 
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
++	if (err < 0)
++		return err;
+ 
+ 	power = read_backlight_power();
+ 	if (power != -ENODEV && bd->props.power != power) {
+ 		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
+-		status = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
+-					       ctrl_param, NULL);
+-
+-		if (ACPI_FAILURE(status))
+-			return -EIO;
++		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
++					    ctrl_param, NULL);
+ 	}
+ 	return 0;
+ }
+@@ -948,19 +923,19 @@ static int parse_arg(const char *buf, unsigned long count, int *val)
+ 
+ static ssize_t store_sys_wmi(int devid, const char *buf, size_t count)
+ {
+-	acpi_status status;
+ 	u32 retval;
+-	int rv, value;
++	int rv, err, value;
+ 
+ 	value = asus_wmi_get_devstate_simple(devid);
+ 	if (value == -ENODEV)	/* Check device presence */
+ 		return value;
+ 
+ 	rv = parse_arg(buf, count, &value);
+-	status = asus_wmi_set_devstate(devid, value, &retval);
++	err = asus_wmi_set_devstate(devid, value, &retval);
++
++	if (err < 0)
++		return err;
+ 
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+ 	return rv;
+ }
+ 
+@@ -1003,21 +978,13 @@ static ssize_t store_cpufv(struct device *dev, struct device_attribute *attr,
+ 			   const char *buf, size_t count)
+ {
+ 	int value;
+-	struct acpi_buffer input = { (acpi_size) sizeof(value), &value };
+-	acpi_status status;
+ 
+ 	if (!count || sscanf(buf, "%i", &value) != 1)
+ 		return -EINVAL;
+ 	if (value < 0 || value > 2)
+ 		return -EINVAL;
+ 
+-	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
+-				     1, ASUS_WMI_METHODID_CFVS, &input, NULL);
+-
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
+-	else
+-		return count;
++	return asus_wmi_evaluate_method(ASUS_WMI_METHODID_CFVS, value, 0, NULL);
+ }
+ 
+ static DEVICE_ATTR(cpufv, S_IRUGO | S_IWUSR, NULL, store_cpufv);
+@@ -1089,13 +1056,13 @@ struct asus_wmi_debugfs_node {
+ static int show_dsts(struct seq_file *m, void *data)
+ {
+ 	struct asus_wmi *asus = m->private;
+-	acpi_status status;
++	int err;
+ 	u32 retval = -1;
+ 
+-	status = asus_wmi_get_devstate(asus->debug.dev_id, &retval);
++	err = asus_wmi_get_devstate(asus->debug.dev_id, &retval);
+ 
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
++	if (err < 0)
++		return err;
+ 
+ 	seq_printf(m, "DSTS(%x) = %x\n", asus->debug.dev_id, retval);
+ 
+@@ -1105,13 +1072,14 @@ static int show_dsts(struct seq_file *m, void *data)
+ static int show_devs(struct seq_file *m, void *data)
+ {
+ 	struct asus_wmi *asus = m->private;
+-	acpi_status status;
++	int err;
+ 	u32 retval = -1;
+ 
+-	status = asus_wmi_set_devstate(asus->debug.dev_id,
+-				       asus->debug.ctrl_param, &retval);
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
++	err = asus_wmi_set_devstate(asus->debug.dev_id, asus->debug.ctrl_param,
++				    &retval);
++
++	if (err < 0)
++		return err;
+ 
+ 	seq_printf(m, "DEVS(%x, %x) = %x\n", asus->debug.dev_id,
+ 		   asus->debug.ctrl_param, retval);
 -- 
 1.7.4
+
+
+------------------------------------------------------------------------------
+Free Software Download: Index, Search & Analyze Logs and other IT data in 
+Real-Time with Splunk. Collect, index and harness all the fast moving IT data 
+generated by your applications, servers and devices whether physical, virtual
+or in the cloud. Deliver compliance at lower cost and gain new business 
+insights. http://p.sf.net/sfu/splunk-dev2dev 
