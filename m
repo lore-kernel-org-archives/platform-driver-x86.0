@@ -1,61 +1,63 @@
-From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 05/14] asus-wmi: handle "unknown status" bit
-Date: Sat, 26 Feb 2011 10:20:34 +0100
-Message-ID: <1298712045-17671-6-git-send-email-corentincj@iksaif.net>
-References: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1298712045-17671-1-git-send-email-corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH 00/14] Support Asus WMI capable Notebooks (asus-wmi, asus-nb-wmi and eeepc-wmi)
+Date: Sat, 26 Feb 2011 10:20:29 +0100
+Message-ID: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from slow3-v.mail.gandi.net ([217.70.178.89]:51278 "EHLO
+	slow3-v.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751707Ab1BZJWT (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 26 Feb 2011 04:22:19 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "David S. Miller" <davem@davemloft.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>
 
-Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
----
- drivers/platform/x86/asus-wmi.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+Hi Matthew,
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d0f0931..39ce3c1 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -92,6 +92,7 @@ MODULE_LICENSE("GPL");
- 
- /* DSTS masks */
- #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
-+#define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
- #define ASUS_WMI_DSTS_PRESENCE_BIT	0x00010000
- #define ASUS_WMI_DSTS_BRIGHTNESS_MASK	0x000000FF
- #define ASUS_WMI_DSTS_MAX_BRIGTH_MASK	0x0000FF00
-@@ -270,6 +271,11 @@ static int asus_wmi_get_devstate_bits(u32 dev_id, u32 mask)
- 	if (!(retval & ASUS_WMI_DSTS_PRESENCE_BIT))
- 		return -ENODEV;
- 
-+	if (mask == ASUS_WMI_DSTS_STATUS_BIT) {
-+		if (retval & ASUS_WMI_DSTS_UNKNOWN_BIT)
-+			return -ENODEV;
-+	}
-+
- 	return retval & mask;
- }
- 
+I hope this series won't break anything, because there are a lot of change.
+Two new modules, asus-wmi.ko and asus-nb-wmi.ko, and almost all the code
+of eeepc-wmi.c is now in asus-wmi.c.
+
+I was able to test asus-nb-wmi.ko on a very new G73 laptop over ssh, and it
+seems to work well.
+
+More features are comming (keyboard backlight, more sensors, etc...), but
+I think it's important to merge the first step as soon as possible.
+
+Thanks,
+
+Corentin Chary (14):
+  asus-wmi: move generic code to asus-wmi
+  eeepc-wmi: asus generic asus-wmi.ko module
+  asus-wmi: minor cleanups
+  asus-wmi: introduce struct asus_rfkill
+  asus-wmi: handle "unknown status" bit
+  asus-wmi: factorise wmi_evaluate_method call
+  asus-wmi: try to guess the right DSTS methods
+  asus-wmi: fix and clean backlight code
+  asus-wmi: add calls to INIT, SPEC and SFUN on init
+  asus-wmi: allow debugfs interface to call arbitrary method
+  asus-nb-wmi: Asus Notebooks WMI Driver
+  asus-wmi: add some common device ids and method ids
+  asus-wmi: add hwmon interface and pwm1
+  eeepc-wmi: restore KEY_CAMERA_* keys lost in 190ca27
+
+ Documentation/ABI/testing/sysfs-platform-asus-wmi  |   31 +
+ Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   31 -
+ MAINTAINERS                                        |   30 +-
+ drivers/platform/x86/Kconfig                       |   39 +-
+ drivers/platform/x86/Makefile                      |    2 +
+ drivers/platform/x86/asus-nb-wmi.c                 |   98 ++
+ drivers/platform/x86/asus-wmi.c                    | 1655 ++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h                    |   58 +
+ drivers/platform/x86/eeepc-wmi.c                   | 1372 +----------------
+ 9 files changed, 1924 insertions(+), 1392 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-asus-wmi
+ delete mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
+ create mode 100644 drivers/platform/x86/asus-nb-wmi.c
+ create mode 100644 drivers/platform/x86/asus-wmi.c
+ create mode 100644 drivers/platform/x86/asus-wmi.h
+
 -- 
 1.7.4
-
-
-------------------------------------------------------------------------------
-Free Software Download: Index, Search & Analyze Logs and other IT data in 
-Real-Time with Splunk. Collect, index and harness all the fast moving IT data 
-generated by your applications, servers and devices whether physical, virtual
-or in the cloud. Deliver compliance at lower cost and gain new business 
-insights. http://p.sf.net/sfu/splunk-dev2dev 
