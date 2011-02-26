@@ -1,8 +1,8 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 10/14] asus-wmi: allow debugfs interface to
-	call arbitrary method
-Date: Sat, 26 Feb 2011 10:20:39 +0100
-Message-ID: <1298712045-17671-11-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 12/14] asus-wmi: add some common device ids
+	and method ids
+Date: Sat, 26 Feb 2011 10:20:41 +0100
+Message-ID: <1298712045-17671-13-git-send-email-corentincj@iksaif.net>
 References: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,105 +21,93 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Also add some # format flags to debugfs output.
+I also found some leds ids (0x00020011-0x00020016 and 0x00040015),
+but since they are not really present on the notebook,
+I can't guess their name .
 
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/asus-wmi.c |   47 +++++++++++++++++++++++++++++++++++++-
- 1 files changed, 45 insertions(+), 2 deletions(-)
+ drivers/platform/x86/asus-wmi.c |   44 ++++++++++++++++++++++++++++++++------
+ 1 files changed, 37 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 88596ea..9095c28 100644
+index 9095c28..05db6b2 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -112,11 +112,14 @@ struct bios_args {
-  * <platform>/    - debugfs root directory
-  *   dev_id      - current dev_id
-  *   ctrl_param  - current ctrl_param
-+ *   method_id   - current method_id
-  *   devs        - call DEVS(dev_id, ctrl_param) and print result
-  *   dsts        - call DSTS(dev_id)  and print result
-+ *   call        - call method_id(dev_id, ctrl_param) and print result
-  */
- struct asus_wmi_debug {
- 	struct dentry *root;
-+	u32 method_id;
- 	u32 dev_id;
- 	u32 ctrl_param;
- };
-@@ -1138,7 +1141,7 @@ static int show_dsts(struct seq_file *m, void *data)
- 	if (err < 0)
- 		return err;
+@@ -66,25 +66,46 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_BRNDOWN_MAX		0x2e
  
--	seq_printf(m, "DSTS(%x) = %x\n", asus->debug.dev_id, retval);
-+	seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id, retval);
+ /* WMI Methods */
+-#define ASUS_WMI_METHODID_SPEC	        0x43455053
+-#define ASUS_WMI_METHODID_SFUN		0x4E554653
+-#define ASUS_WMI_METHODID_DSTS		0x53544344
+-#define ASUS_WMI_METHODID_DSTS2		0x53545344
+-#define ASUS_WMI_METHODID_DEVS		0x53564544
+-#define ASUS_WMI_METHODID_CFVS		0x53564643
+-#define ASUS_WMI_METHODID_INIT		0x54494E49
++#define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
++#define ASUS_WMI_METHODID_SFBD		0x44424653 /* Set First Boot Device */
++#define ASUS_WMI_METHODID_GLCD		0x44434C47 /* Get LCD status */
++#define ASUS_WMI_METHODID_GPID		0x44495047 /* Get Panel ID?? (Resol) */
++#define ASUS_WMI_METHODID_QMOD		0x444F4D51 /* Quiet MODe */
++#define ASUS_WMI_METHODID_SPLV		0x4C425053 /* Set Panel Light Value */
++#define ASUS_WMI_METHODID_SFUN		0x4E554653 /* FUNCtionalities */
++#define ASUS_WMI_METHODID_SDSP		0x50534453 /* Set DiSPlay output */
++#define ASUS_WMI_METHODID_GDSP		0x50534447 /* Get DiSPlay output */
++#define ASUS_WMI_METHODID_DEVP		0x50564544 /* DEVice Policy */
++#define ASUS_WMI_METHODID_OSVR		0x5256534F /* OS VeRsion */
++#define ASUS_WMI_METHODID_DSTS		0x53544344 /* Device STatuS */
++#define ASUS_WMI_METHODID_DSTS2		0x53545344 /* Device STatuS #2*/
++#define ASUS_WMI_METHODID_BSTS		0x53545342 /* Bios STatuS ? */
++#define ASUS_WMI_METHODID_DEVS		0x53564544 /* DEVice Set */
++#define ASUS_WMI_METHODID_CFVS		0x53564643 /* CPU Frequency Volt Set */
++#define ASUS_WMI_METHODID_KBFT		0x5446424B /* KeyBoard FilTer */
++#define ASUS_WMI_METHODID_INIT		0x54494E49 /* INITialize */
++#define ASUS_WMI_METHODID_HKEY		0x59454B48 /* Hot KEY ?? */
  
- 	return 0;
- }
-@@ -1155,15 +1158,50 @@ static int show_devs(struct seq_file *m, void *data)
- 	if (err < 0)
- 		return err;
+ #define ASUS_WMI_UNSUPPORTED_METHOD	0xFFFFFFFE
  
--	seq_printf(m, "DEVS(%x, %x) = %x\n", asus->debug.dev_id,
-+	seq_printf(m, "DEVS(%#x, %#x) = %#x\n", asus->debug.dev_id,
- 		   asus->debug.ctrl_param, retval);
+ /* Wireless */
++#define ASUS_WMI_DEVID_HW_SWITCH	0x00010001
++#define ASUS_WMI_DEVID_WIRELESS_LED	0x00010002
+ #define ASUS_WMI_DEVID_WLAN		0x00010011
+ #define ASUS_WMI_DEVID_BLUETOOTH	0x00010013
++#define ASUS_WMI_DEVID_GPS		0x00010015
+ #define ASUS_WMI_DEVID_WIMAX		0x00010017
+ #define ASUS_WMI_DEVID_WWAN3G		0x00010019
++#define ASUS_WMI_DEVID_UWB		0x00010021
++
++/* Leds */
++/* 0x000200XX and 0x000400XX */
  
- 	return 0;
- }
+ /* Backlight and Brightness */
+ #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
+ #define ASUS_WMI_DEVID_BRIGHTNESS	0x00050012
++#define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
++#define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
  
-+static int show_call(struct seq_file *m, void *data)
-+{
-+	struct asus_wmi *asus = m->private;
-+	struct bios_args args = {
-+		.arg0 = asus->debug.dev_id,
-+		.arg1 = asus->debug.ctrl_param,
-+	};
-+	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+
-+	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
-+				     1, asus->debug.method_id,
-+				     &input, &output);
-+
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	obj = (union acpi_object *)output.pointer;
-+	if (obj && obj->type == ACPI_TYPE_INTEGER)
-+		seq_printf(m, "%#x(%#x, %#x) = %#x\n", asus->debug.method_id,
-+			   asus->debug.dev_id, asus->debug.ctrl_param,
-+			   (u32) obj->integer.value);
-+	else
-+		seq_printf(m, "%#x(%#x, %#x) = t:%d\n", asus->debug.method_id,
-+			   asus->debug.dev_id, asus->debug.ctrl_param,
-+			   obj->type);
-+
-+	kfree(obj);
-+
-+	return 0;
-+}
-+
- static struct asus_wmi_debugfs_node asus_wmi_debug_files[] = {
- 	{NULL, "devs", show_devs},
- 	{NULL, "dsts", show_dsts},
-+	{NULL, "call", show_call},
- };
+ /* Misc */
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+@@ -96,10 +117,19 @@ MODULE_LICENSE("GPL");
+ #define ASUS_WMI_DEVID_TOUCHPAD		0x00100011
+ #define ASUS_WMI_DEVID_TOUCHPAD_LED	0x00100012
  
- static int asus_wmi_debugfs_open(struct inode *inode, struct file *file)
-@@ -1197,6 +1235,11 @@ static int asus_wmi_debugfs_init(struct asus_wmi *asus)
- 		goto error_debugfs;
- 	}
- 
-+	dent = debugfs_create_x32("method_id", S_IRUGO | S_IWUSR,
-+				  asus->debug.root, &asus->debug.method_id);
-+	if (!dent)
-+		goto error_debugfs;
++/* Fan, Thermal */
++#define ASUS_WMI_DEVID_THERMAL_CTRL	0x00110011
++#define ASUS_WMI_DEVID_FAN_CTRL		0x00110012
 +
- 	dent = debugfs_create_x32("dev_id", S_IRUGO | S_IWUSR,
- 				  asus->debug.root, &asus->debug.dev_id);
- 	if (!dent)
++/* Power */
++#define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
++
+ /* DSTS masks */
+ #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+ #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+ #define ASUS_WMI_DSTS_PRESENCE_BIT	0x00010000
++#define ASUS_WMI_DSTS_USER_BIT		0x00020000
++#define ASUS_WMI_DSTS_BIOS_BIT		0x00040000
+ #define ASUS_WMI_DSTS_BRIGHTNESS_MASK	0x000000FF
+ #define ASUS_WMI_DSTS_MAX_BRIGTH_MASK	0x0000FF00
+ 
 -- 
 1.7.4
 
