@@ -1,8 +1,8 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 09/14] asus-wmi: add calls to INIT,
-	SPEC and SFUN on init
-Date: Sat, 26 Feb 2011 10:20:38 +0100
-Message-ID: <1298712045-17671-10-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 10/14] asus-wmi: allow debugfs interface to
+	call arbitrary method
+Date: Sat, 26 Feb 2011 10:20:39 +0100
+Message-ID: <1298712045-17671-11-git-send-email-corentincj@iksaif.net>
 References: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,72 +21,105 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-INIT() call is needed to enable hotkeys on G73
-SPEC() and SFUN() allow us to know more about
-available features.
+Also add some # format flags to debugfs output.
 
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/asus-wmi.c |   28 ++++++++++++++++++++++++++++
- 1 files changed, 28 insertions(+), 0 deletions(-)
+ drivers/platform/x86/asus-wmi.c |   47 +++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 45 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index adf7b05..88596ea 100644
+index 88596ea..9095c28 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -66,10 +66,13 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_BRNDOWN_MAX		0x2e
- 
- /* WMI Methods */
-+#define ASUS_WMI_METHODID_SPEC	        0x43455053
-+#define ASUS_WMI_METHODID_SFUN		0x4E554653
- #define ASUS_WMI_METHODID_DSTS		0x53544344
- #define ASUS_WMI_METHODID_DSTS2		0x53545344
- #define ASUS_WMI_METHODID_DEVS		0x53564544
- #define ASUS_WMI_METHODID_CFVS		0x53564643
-+#define ASUS_WMI_METHODID_INIT		0x54494E49
- 
- #define ASUS_WMI_UNSUPPORTED_METHOD	0xFFFFFFFE
- 
-@@ -126,6 +129,8 @@ struct asus_rfkill {
- 
- struct asus_wmi {
- 	int dsts_id;
-+	int spec;
-+	int sfun;
- 
- 	struct input_dev *inputdev;
- 	struct backlight_device *backlight_device;
-@@ -1065,6 +1070,29 @@ static int asus_wmi_sysfs_init(struct platform_device *device)
+@@ -112,11 +112,14 @@ struct bios_args {
+  * <platform>/    - debugfs root directory
+  *   dev_id      - current dev_id
+  *   ctrl_param  - current ctrl_param
++ *   method_id   - current method_id
+  *   devs        - call DEVS(dev_id, ctrl_param) and print result
+  *   dsts        - call DSTS(dev_id)  and print result
++ *   call        - call method_id(dev_id, ctrl_param) and print result
   */
- static int __init asus_wmi_platform_init(struct asus_wmi *asus)
- {
-+	int rv;
+ struct asus_wmi_debug {
+ 	struct dentry *root;
++	u32 method_id;
+ 	u32 dev_id;
+ 	u32 ctrl_param;
+ };
+@@ -1138,7 +1141,7 @@ static int show_dsts(struct seq_file *m, void *data)
+ 	if (err < 0)
+ 		return err;
+ 
+-	seq_printf(m, "DSTS(%x) = %x\n", asus->debug.dev_id, retval);
++	seq_printf(m, "DSTS(%#x) = %#x\n", asus->debug.dev_id, retval);
+ 
+ 	return 0;
+ }
+@@ -1155,15 +1158,50 @@ static int show_devs(struct seq_file *m, void *data)
+ 	if (err < 0)
+ 		return err;
+ 
+-	seq_printf(m, "DEVS(%x, %x) = %x\n", asus->debug.dev_id,
++	seq_printf(m, "DEVS(%#x, %#x) = %#x\n", asus->debug.dev_id,
+ 		   asus->debug.ctrl_param, retval);
+ 
+ 	return 0;
+ }
+ 
++static int show_call(struct seq_file *m, void *data)
++{
++	struct asus_wmi *asus = m->private;
++	struct bios_args args = {
++		.arg0 = asus->debug.dev_id,
++		.arg1 = asus->debug.ctrl_param,
++	};
++	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *obj;
++	acpi_status status;
 +
-+	/* INIT enable hotkeys on some models */
-+	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_INIT, 0, 0, &rv))
-+		pr_info("Initialization: %#x", rv);
++	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
++				     1, asus->debug.method_id,
++				     &input, &output);
 +
-+	/* We don't know yet what to do with this version... */
-+	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_SPEC, 0, 0x9, &rv)) {
-+		pr_info("BIOS WMI version: %d.%d", rv >> 8, rv & 0xFF);
-+		asus->spec = rv;
-+	}
++	if (ACPI_FAILURE(status))
++		return -EIO;
 +
-+	/*
-+	 * The SFUN method probably allows the original driver to get the list
-+	 * of features supported by a given model. For now, 0x0100 or 0x0800
-+	 * bit signifies that the laptop is equipped with a Wi-Fi MiniPCI card.
-+	 * The significance of others is yet to be found.
-+	 */
-+	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_SFUN, 0, 0, &rv)) {
-+		pr_info("SFUN value: %#x", rv);
-+		asus->sfun = rv;
-+	}
++	obj = (union acpi_object *)output.pointer;
++	if (obj && obj->type == ACPI_TYPE_INTEGER)
++		seq_printf(m, "%#x(%#x, %#x) = %#x\n", asus->debug.method_id,
++			   asus->debug.dev_id, asus->debug.ctrl_param,
++			   (u32) obj->integer.value);
++	else
++		seq_printf(m, "%#x(%#x, %#x) = t:%d\n", asus->debug.method_id,
++			   asus->debug.dev_id, asus->debug.ctrl_param,
++			   obj->type);
 +
- 	/*
- 	 * Eee PC and Notebooks seems to have different method_id for DSTS,
- 	 * but it may also be related to the BIOS's SPEC.
++	kfree(obj);
++
++	return 0;
++}
++
+ static struct asus_wmi_debugfs_node asus_wmi_debug_files[] = {
+ 	{NULL, "devs", show_devs},
+ 	{NULL, "dsts", show_dsts},
++	{NULL, "call", show_call},
+ };
+ 
+ static int asus_wmi_debugfs_open(struct inode *inode, struct file *file)
+@@ -1197,6 +1235,11 @@ static int asus_wmi_debugfs_init(struct asus_wmi *asus)
+ 		goto error_debugfs;
+ 	}
+ 
++	dent = debugfs_create_x32("method_id", S_IRUGO | S_IWUSR,
++				  asus->debug.root, &asus->debug.method_id);
++	if (!dent)
++		goto error_debugfs;
++
+ 	dent = debugfs_create_x32("dev_id", S_IRUGO | S_IWUSR,
+ 				  asus->debug.root, &asus->debug.dev_id);
+ 	if (!dent)
 -- 
 1.7.4
 
