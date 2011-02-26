@@ -1,40 +1,40 @@
-From: Dan Carpenter <error27@gmail.com>
-Subject: [patch 4/4] sony-laptop: potential null dereference
-Date: Sat, 26 Feb 2011 15:56:11 +0300
-Message-ID: <20110226125611.GL18043@bicker>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] platform-driver-x86: intel_mid_thermal: fix unterminated
+ platform_device_id table
+Date: Sat, 26 Feb 2011 23:03:34 +0800
+Message-ID: <1298732614.2762.6.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:51845 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752117Ab1BZM41 (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:55684 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751343Ab1BZPDq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 26 Feb 2011 07:56:27 -0500
-Content-Disposition: inline
+	Sat, 26 Feb 2011 10:03:46 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Durgadoss R <durgadoss.r@intel.com>, Alan Cox <alan@linux.intel.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-In the original code, if "device_enum" was NULL then it would
-dereference it when it printed the error message.
+The platform_device_id table is supposed to be zero-terminated.
 
-Signed-off-by: Dan Carpenter <error27@gmail.com>
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/intel_mid_thermal.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 0db9049..c24aa4a 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1311,7 +1311,11 @@ static void sony_nc_rfkill_setup(struct acpi_device *device)
- 	}
+diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
+index 1215c30..6c12db5 100644
+--- a/drivers/platform/x86/intel_mid_thermal.c
++++ b/drivers/platform/x86/intel_mid_thermal.c
+@@ -543,6 +543,7 @@ static int mid_thermal_remove(struct platform_device *pdev)
  
- 	device_enum = (union acpi_object *) buffer.pointer;
--	if (!device_enum || device_enum->type != ACPI_TYPE_BUFFER) {
-+	if (!device_enum) {
-+		pr_err(DRV_PFX "Invalid SN06 return object.");
-+		goto out_no_enum;
-+	}
-+	if (device_enum->type != ACPI_TYPE_BUFFER) {
- 		pr_err(DRV_PFX "Invalid SN06 return object 0x%.2x\n",
- 				device_enum->type);
- 		goto out_no_enum;
+ static const struct platform_device_id therm_id_table[] = {
+        { DRIVER_NAME, 1 },
++       { }
+ };
+ 
+ static struct platform_driver mid_thermal_driver = {
+-- 
+1.7.1
