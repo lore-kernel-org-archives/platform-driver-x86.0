@@ -1,7 +1,8 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 03/14] asus-wmi: minor cleanups
-Date: Sat, 26 Feb 2011 10:20:32 +0100
-Message-ID: <1298712045-17671-4-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 04/14] asus-wmi: introduce struct
+	asus_rfkill
+Date: Sat, 26 Feb 2011 10:20:33 +0100
+Message-ID: <1298712045-17671-5-git-send-email-corentincj@iksaif.net>
 References: <1298712045-17671-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,88 +21,271 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+First, this allow use to remove the custom asusrfkill_wlan_query,
+but this will also allow us to give struct asus_wmi * to
+get_devstate/set_devstate later.
+
 Signed-off-by: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
 ---
- drivers/platform/x86/asus-wmi.c  |   34 +++++++++++++++++-----------------
- drivers/platform/x86/eeepc-wmi.c |    2 +-
- 2 files changed, 18 insertions(+), 18 deletions(-)
+ drivers/platform/x86/asus-wmi.c |  115 ++++++++++++++++++++-------------------
+ 1 files changed, 59 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 35e6bb6..4c3f68a 100644
+index 4c3f68a..d0f0931 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -2,7 +2,7 @@
-  * Asus PC WMI hotkey driver
-  *
-  * Copyright(C) 2010 Intel Corporation.
-- * Copyright(C) 2010 Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright(C) 2010-2011 Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  *
-  * Portions based on wistron_btns.c:
-  * Copyright (C) 2005 Miloslav Trmac <mitr-VIXq6x/3rUk@public.gmane.org>
-@@ -87,7 +87,7 @@ MODULE_LICENSE("GPL");
- #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+@@ -114,6 +114,12 @@ struct asus_wmi_debug {
+ 	u32 ctrl_param;
+ };
  
- /* Input */
--#define ASUS_WMI_DEVID_TOUCHPAD	0x00100011
-+#define ASUS_WMI_DEVID_TOUCHPAD		0x00100011
- #define ASUS_WMI_DEVID_TOUCHPAD_LED	0x00100012
++struct asus_rfkill {
++	struct asus_wmi *asus;
++	struct rfkill *rfkill;
++	u32 dev_id;
++};
++
+ struct asus_wmi {
+ 	struct input_dev *inputdev;
+ 	struct backlight_device *backlight_device;
+@@ -124,10 +130,10 @@ struct asus_wmi {
+ 	struct workqueue_struct *led_workqueue;
+ 	struct work_struct tpd_led_work;
  
- /* DSTS masks */
-@@ -903,25 +903,25 @@ static void asus_wmi_notify(u32 value, void *context)
+-	struct rfkill *wlan_rfkill;
+-	struct rfkill *bluetooth_rfkill;
+-	struct rfkill *wimax_rfkill;
+-	struct rfkill *wwan3g_rfkill;
++	struct asus_rfkill wlan;
++	struct asus_rfkill bluetooth;
++	struct asus_rfkill wimax;
++	struct asus_rfkill wwan3g;
  
- 	obj = (union acpi_object *)response.pointer;
+ 	struct hotplug_slot *hotplug_slot;
+ 	struct mutex hotplug_lock;
+@@ -377,8 +383,8 @@ static void asus_rfkill_hotplug(struct asus_wmi *asus)
  
--	if (obj && obj->type == ACPI_TYPE_INTEGER) {
--		code = obj->integer.value;
--		orig_code = code;
-+	if (!obj || obj->type != ACPI_TYPE_INTEGER)
-+		goto exit;
+ 	mutex_lock(&asus->hotplug_lock);
  
--		if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
--			code = NOTIFY_BRNUP_MIN;
--		else if (code >= NOTIFY_BRNDOWN_MIN &&
--			 code <= NOTIFY_BRNDOWN_MAX)
--			code = NOTIFY_BRNDOWN_MIN;
-+	code = obj->integer.value;
-+	orig_code = code;
+-	if (asus->wlan_rfkill)
+-		rfkill_set_sw_state(asus->wlan_rfkill, blocked);
++	if (asus->wlan.rfkill)
++		rfkill_set_sw_state(asus->wlan.rfkill, blocked);
  
--		if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
--			if (!acpi_video_backlight_support())
--				asus_wmi_backlight_notify(asus, orig_code);
--		}
-+	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
-+		code = NOTIFY_BRNUP_MIN;
-+	else if (code >= NOTIFY_BRNDOWN_MIN &&
-+		 code <= NOTIFY_BRNDOWN_MAX)
-+		code = NOTIFY_BRNDOWN_MIN;
+ 	if (asus->hotplug_slot) {
+ 		bus = pci_find_bus(0, 1);
+@@ -570,11 +576,11 @@ error_workqueue:
+  */
+ static int asus_rfkill_set(void *data, bool blocked)
+ {
+-	int dev_id = (unsigned long)data;
++	struct asus_rfkill *priv = data;
+ 	u32 ctrl_param = !blocked;
+ 	acpi_status status;
  
--		if (!sparse_keymap_report_event(asus->inputdev, code, 1, true))
--			pr_info("Unknown key %x pressed\n", code);
--	}
-+	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
-+		if (!acpi_video_backlight_support())
-+			asus_wmi_backlight_notify(asus, orig_code);
-+	} else if (!sparse_keymap_report_event(asus->inputdev, code, 1, true))
-+		pr_info("Unknown key %x pressed\n", code);
+-	status = asus_wmi_set_devstate(dev_id, ctrl_param, NULL);
++	status = asus_wmi_set_devstate(priv->dev_id, ctrl_param, NULL);
  
-+exit:
- 	kfree(obj);
+ 	if (ACPI_FAILURE(status))
+ 		return -EIO;
+@@ -584,20 +590,21 @@ static int asus_rfkill_set(void *data, bool blocked)
+ 
+ static void asus_rfkill_query(struct rfkill *rfkill, void *data)
+ {
+-	int dev_id = (unsigned long)data;
++	struct asus_rfkill *priv = data;
+ 	int result;
+ 
+-	result = asus_wmi_get_devstate_simple(dev_id);
++	result = asus_wmi_get_devstate_simple(priv->dev_id);
+ 
+ 	if (result < 0)
+ 		return;
+ 
+-	rfkill_set_sw_state(rfkill, !result);
++	rfkill_set_sw_state(priv->rfkill, !result);
  }
  
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 3a060ae..e69701f 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -2,7 +2,7 @@
-  * Eee PC WMI hotkey driver
-  *
-  * Copyright(C) 2010 Intel Corporation.
-- * Copyright(C) 2010 Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright(C) 2010-2011 Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  *
-  * Portions based on wistron_btns.c:
-  * Copyright (C) 2005 Miloslav Trmac <mitr-VIXq6x/3rUk@public.gmane.org>
+ static int asus_rfkill_wlan_set(void *data, bool blocked)
+ {
+-	struct asus_wmi *asus = data;
++	struct asus_rfkill *priv = data;
++	struct asus_wmi *asus = priv->asus;
+ 	int ret;
+ 
+ 	/*
+@@ -608,19 +615,14 @@ static int asus_rfkill_wlan_set(void *data, bool blocked)
+ 	 * any wmi method
+ 	 */
+ 	mutex_lock(&asus->wmi_lock);
+-	ret = asus_rfkill_set((void *)(long)ASUS_WMI_DEVID_WLAN, blocked);
++	ret = asus_rfkill_set(data, blocked);
+ 	mutex_unlock(&asus->wmi_lock);
+ 	return ret;
+ }
+ 
+-static void asus_rfkill_wlan_query(struct rfkill *rfkill, void *data)
+-{
+-	asus_rfkill_query(rfkill, (void *)(long)ASUS_WMI_DEVID_WLAN);
+-}
+-
+ static const struct rfkill_ops asus_rfkill_wlan_ops = {
+ 	.set_block = asus_rfkill_wlan_set,
+-	.query = asus_rfkill_wlan_query,
++	.query = asus_rfkill_query,
+ };
+ 
+ static const struct rfkill_ops asus_rfkill_ops = {
+@@ -629,20 +631,24 @@ static const struct rfkill_ops asus_rfkill_ops = {
+ };
+ 
+ static int asus_new_rfkill(struct asus_wmi *asus,
+-			   struct rfkill **rfkill,
++			   struct asus_rfkill *arfkill,
+ 			   const char *name, enum rfkill_type type, int dev_id)
+ {
+ 	int result = asus_wmi_get_devstate_simple(dev_id);
++	struct rfkill **rfkill = &arfkill->rfkill;
+ 
+ 	if (result < 0)
+ 		return result;
+ 
++	arfkill->dev_id = dev_id;
++	arfkill->asus = asus;
++
+ 	if (dev_id == ASUS_WMI_DEVID_WLAN && asus->driver->hotplug_wireless)
+ 		*rfkill = rfkill_alloc(name, &asus->platform_device->dev, type,
+-				       &asus_rfkill_wlan_ops, asus);
++				       &asus_rfkill_wlan_ops, arfkill);
+ 	else
+ 		*rfkill = rfkill_alloc(name, &asus->platform_device->dev, type,
+-				       &asus_rfkill_ops, (void *)(long)dev_id);
++				       &asus_rfkill_ops, arfkill);
+ 
+ 	if (!*rfkill)
+ 		return -EINVAL;
+@@ -662,10 +668,10 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+ 	asus_unregister_rfkill_notifier(asus, "\\_SB.PCI0.P0P5");
+ 	asus_unregister_rfkill_notifier(asus, "\\_SB.PCI0.P0P6");
+ 	asus_unregister_rfkill_notifier(asus, "\\_SB.PCI0.P0P7");
+-	if (asus->wlan_rfkill) {
+-		rfkill_unregister(asus->wlan_rfkill);
+-		rfkill_destroy(asus->wlan_rfkill);
+-		asus->wlan_rfkill = NULL;
++	if (asus->wlan.rfkill) {
++		rfkill_unregister(asus->wlan.rfkill);
++		rfkill_destroy(asus->wlan.rfkill);
++		asus->wlan.rfkill = NULL;
+ 	}
+ 	/*
+ 	 * Refresh pci hotplug in case the rfkill state was changed after
+@@ -677,20 +683,20 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+ 	if (asus->hotplug_workqueue)
+ 		destroy_workqueue(asus->hotplug_workqueue);
+ 
+-	if (asus->bluetooth_rfkill) {
+-		rfkill_unregister(asus->bluetooth_rfkill);
+-		rfkill_destroy(asus->bluetooth_rfkill);
+-		asus->bluetooth_rfkill = NULL;
++	if (asus->bluetooth.rfkill) {
++		rfkill_unregister(asus->bluetooth.rfkill);
++		rfkill_destroy(asus->bluetooth.rfkill);
++		asus->bluetooth.rfkill = NULL;
+ 	}
+-	if (asus->wimax_rfkill) {
+-		rfkill_unregister(asus->wimax_rfkill);
+-		rfkill_destroy(asus->wimax_rfkill);
+-		asus->wimax_rfkill = NULL;
++	if (asus->wimax.rfkill) {
++		rfkill_unregister(asus->wimax.rfkill);
++		rfkill_destroy(asus->wimax.rfkill);
++		asus->wimax.rfkill = NULL;
+ 	}
+-	if (asus->wwan3g_rfkill) {
+-		rfkill_unregister(asus->wwan3g_rfkill);
+-		rfkill_destroy(asus->wwan3g_rfkill);
+-		asus->wwan3g_rfkill = NULL;
++	if (asus->wwan3g.rfkill) {
++		rfkill_unregister(asus->wwan3g.rfkill);
++		rfkill_destroy(asus->wwan3g.rfkill);
++		asus->wwan3g.rfkill = NULL;
+ 	}
+ }
+ 
+@@ -701,30 +707,27 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ 	mutex_init(&asus->hotplug_lock);
+ 	mutex_init(&asus->wmi_lock);
+ 
+-	result = asus_new_rfkill(asus, &asus->wlan_rfkill,
+-				 "asus-wlan", RFKILL_TYPE_WLAN,
+-				 ASUS_WMI_DEVID_WLAN);
++	result = asus_new_rfkill(asus, &asus->wlan, "asus-wlan",
++				 RFKILL_TYPE_WLAN, ASUS_WMI_DEVID_WLAN);
+ 
+ 	if (result && result != -ENODEV)
+ 		goto exit;
+ 
+-	result = asus_new_rfkill(asus, &asus->bluetooth_rfkill,
++	result = asus_new_rfkill(asus, &asus->bluetooth,
+ 				 "asus-bluetooth", RFKILL_TYPE_BLUETOOTH,
+ 				 ASUS_WMI_DEVID_BLUETOOTH);
+ 
+ 	if (result && result != -ENODEV)
+ 		goto exit;
+ 
+-	result = asus_new_rfkill(asus, &asus->wimax_rfkill,
+-				 "asus-wimax", RFKILL_TYPE_WIMAX,
+-				 ASUS_WMI_DEVID_WIMAX);
++	result = asus_new_rfkill(asus, &asus->wimax, "asus-wimax",
++				 RFKILL_TYPE_WIMAX, ASUS_WMI_DEVID_WIMAX);
+ 
+ 	if (result && result != -ENODEV)
+ 		goto exit;
+ 
+-	result = asus_new_rfkill(asus, &asus->wwan3g_rfkill,
+-				 "asus-wwan3g", RFKILL_TYPE_WWAN,
+-				 ASUS_WMI_DEVID_WWAN3G);
++	result = asus_new_rfkill(asus, &asus->wwan3g, "asus-wwan3g",
++				 RFKILL_TYPE_WWAN, ASUS_WMI_DEVID_WWAN3G);
+ 
+ 	if (result && result != -ENODEV)
+ 		goto exit;
+@@ -1277,7 +1280,7 @@ static int asus_hotk_thaw(struct device *device)
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(device);
+ 
+-	if (asus->wlan_rfkill) {
++	if (asus->wlan.rfkill) {
+ 		bool wlan;
+ 
+ 		/*
+@@ -1298,20 +1301,20 @@ static int asus_hotk_restore(struct device *device)
+ 	int bl;
+ 
+ 	/* Refresh both wlan rfkill state and pci hotplug */
+-	if (asus->wlan_rfkill)
++	if (asus->wlan.rfkill)
+ 		asus_rfkill_hotplug(asus);
+ 
+-	if (asus->bluetooth_rfkill) {
++	if (asus->bluetooth.rfkill) {
+ 		bl = !asus_wmi_get_devstate_simple(ASUS_WMI_DEVID_BLUETOOTH);
+-		rfkill_set_sw_state(asus->bluetooth_rfkill, bl);
++		rfkill_set_sw_state(asus->bluetooth.rfkill, bl);
+ 	}
+-	if (asus->wimax_rfkill) {
++	if (asus->wimax.rfkill) {
+ 		bl = !asus_wmi_get_devstate_simple(ASUS_WMI_DEVID_WIMAX);
+-		rfkill_set_sw_state(asus->wimax_rfkill, bl);
++		rfkill_set_sw_state(asus->wimax.rfkill, bl);
+ 	}
+-	if (asus->wwan3g_rfkill) {
++	if (asus->wwan3g.rfkill) {
+ 		bl = !asus_wmi_get_devstate_simple(ASUS_WMI_DEVID_WWAN3G);
+-		rfkill_set_sw_state(asus->wwan3g_rfkill, bl);
++		rfkill_set_sw_state(asus->wwan3g.rfkill, bl);
+ 	}
+ 
+ 	return 0;
 -- 
 1.7.4
 
