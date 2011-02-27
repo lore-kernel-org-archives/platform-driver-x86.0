@@ -1,57 +1,52 @@
-From: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] acer-wmi: Fix WMI ID
-Date: Sun, 27 Feb 2011 12:06:12 +0100
-Message-ID: <AANLkTikz1GqqqMOhp3L6=ExLb0GU+uAOaCgFsHm1s3EN@mail.gmail.com>
-References: <AANLkTimNT2s_fxsE_uwq=xJeJXTRh1ts_YTU1vk7Vq51@mail.gmail.com> <201102271031.06527.carlos@strangeworlds.co.uk>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [patch 1/4] sony-laptop: make a couple variables static
+Date: Sun, 27 Feb 2011 21:12:59 +0900
+Message-ID: <20110227121259.GB29319@kamineko.org>
+References: <20110226125427.GI18043@bicker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:38977 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752111Ab1B0LGw convert rfc822-to-8bit (ORCPT
+Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:56152
+	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751576Ab1B0MNC (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 27 Feb 2011 06:06:52 -0500
-Received: by iwn34 with SMTP id 34so2311668iwn.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 27 Feb 2011 03:06:52 -0800 (PST)
-In-Reply-To: <201102271031.06527.carlos@strangeworlds.co.uk>
+	Sun, 27 Feb 2011 07:13:02 -0500
+Content-Disposition: inline
+In-Reply-To: <20110226125427.GI18043@bicker>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: platform-driver-x86@vger.kernel.org
+To: Dan Carpenter <error27@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-This patch change WMI ID to upper characters. With this patch module
-acer-wmi is automatically loaded when WMI ID is detected.
+On Sat, Feb 26, 2011 at 03:54:27PM +0300, Dan Carpenter wrote:
+> Sparse complains that these variables should be static.
+> 
+> Signed-off-by: Dan Carpenter <error27@gmail.com>
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Acked-by: Mattia Dongili <malattia@linux.it>
 
---- a/drivers/platform/x86/acer-wmi.c	2011-02-27 11:53:50.000000000 +01=
-00
-+++ b/drivers/platform/x86/acer-wmi.c	2011-02-27 11:58:30.000000000 +01=
-00
-@@ -84,8 +84,8 @@ MODULE_LICENSE("GPL");
-  */
- #define AMW0_GUID1		"67C3371D-95A3-4C37-BB61-DD47B491DAAB"
- #define AMW0_GUID2		"431F16ED-0C2B-444C-B267-27DEB140CF9C"
--#define WMID_GUID1		"6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3"
--#define WMID_GUID2		"95764E09-FB56-4e83-B31A-37761F60994A"
-+#define WMID_GUID1		"6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
-+#define WMID_GUID2		"95764E09-FB56-4E83-B31A-37761F60994A"
- #define WMID_GUID3		"61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
-
- /*
-@@ -94,7 +94,7 @@ MODULE_LICENSE("GPL");
- #define ACERWMID_EVENT_GUID "676AA15E-6A47-4D9F-A2CC-1E6D18D14026"
-
- MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");
--MODULE_ALIAS("wmi:6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3");
-+MODULE_ALIAS("wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3");
- MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
-
- enum acer_wmi_event_ids {
-
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index a0ba0e7..a7b9c72 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -745,7 +745,7 @@ struct sony_nc_handles {
+>  	struct device_attribute devattr;
+>  };
+>  
+> -struct sony_nc_handles *handles;
+> +static struct sony_nc_handles *handles;
+>  
+>  static ssize_t sony_nc_handles_show(struct device *dev,
+>  		struct device_attribute *attr, char *buffer)
+> @@ -1358,7 +1358,7 @@ struct kbd_backlight {
+>  	struct device_attribute timeout_attr;
+>  };
+>  
+> -struct kbd_backlight *kbdbl_handle;
+> +static struct kbd_backlight *kbdbl_handle;
+>  
+>  static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
+>  {
+-- 
+mattia
+:wq!
