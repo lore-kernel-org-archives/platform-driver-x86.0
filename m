@@ -1,53 +1,45 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [patch 3/3] sony-laptop: handle allocation failures
-Date: Sun, 27 Feb 2011 21:14:42 +0900
-Message-ID: <20110227121442.GC29319@kamineko.org>
-References: <20110226125524.GK18043@bicker>
+Subject: Re: [patch 4/4] sony-laptop: potential null dereference
+Date: Sun, 27 Feb 2011 21:20:27 +0900
+Message-ID: <20110227122027.GD29319@kamineko.org>
+References: <20110226125611.GL18043@bicker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:56155
+Received: from static-220-247-10-204.b-man.svips.gol.ne.jp ([220.247.10.204]:32949
 	"EHLO smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751259Ab1B0MOn (ORCPT
+	with ESMTP id S1751576Ab1B0MU2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 27 Feb 2011 07:14:43 -0500
+	Sun, 27 Feb 2011 07:20:28 -0500
 Content-Disposition: inline
-In-Reply-To: <20110226125524.GK18043@bicker>
+In-Reply-To: <20110226125611.GL18043@bicker>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Dan Carpenter <error27@gmail.com>
 Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Sat, Feb 26, 2011 at 03:55:24PM +0300, Dan Carpenter wrote:
-> Return -ENOMEM if kzalloc() fails.  The callers already handle error
-> returns.
-> 
+On Sat, Feb 26, 2011 at 03:56:11PM +0300, Dan Carpenter wrote:
+> In the original code, if "device_enum" was NULL then it would
+> dereference it when it printed the error message.
+
+Yup, this and the others are actual bugs, thanks for reviewing the code.
+
 > Signed-off-by: Dan Carpenter <error27@gmail.com>
-
-Acked-by: Mattia Dongili <malattia@linux.it>
-
+> 
 > diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> index d0d0522..0db9049 100644
+> index 0db9049..c24aa4a 100644
 > --- a/drivers/platform/x86/sony-laptop.c
 > +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -768,6 +768,8 @@ static int sony_nc_handles_setup(struct platform_device *pd)
->  	int result;
+> @@ -1311,7 +1311,11 @@ static void sony_nc_rfkill_setup(struct acpi_device *device)
+>  	}
 >  
->  	handles = kzalloc(sizeof(*handles), GFP_KERNEL);
-> +	if (!handles)
-> +		return -ENOMEM;
->  
->  	sysfs_attr_init(&handles->devattr.attr);
->  	handles->devattr.attr.name = "handles";
-> @@ -1458,6 +1460,8 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
->  		return 0;
->  
->  	kbdbl_handle = kzalloc(sizeof(*kbdbl_handle), GFP_KERNEL);
-> +	if (!kbdbl_handle)
-> +		return -ENOMEM;
->  
->  	sysfs_attr_init(&kbdbl_handle->mode_attr.attr);
->  	kbdbl_handle->mode_attr.attr.name = "kbd_backlight";
+>  	device_enum = (union acpi_object *) buffer.pointer;
+> -	if (!device_enum || device_enum->type != ACPI_TYPE_BUFFER) {
+> +	if (!device_enum) {
+> +		pr_err(DRV_PFX "Invalid SN06 return object.");
+
+Just a nitpick but I'd say there was no return object at all. ;)
+
 -- 
 mattia
 :wq!
