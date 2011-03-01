@@ -1,40 +1,51 @@
-From: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <keng-yu.lin@canonical.com>
-Subject: Re: [PATCH] eeepc-wmi: set the touchpad toggle key code to F21
-Date: Tue, 1 Mar 2011 11:29:15 +0800
-Message-ID: <AANLkTi=GFz4i1Y7ok=2Zt9ApbeAc4zN4tbaKppqB_LGA@mail.gmail.com>
+From: Keng-Yu Lin <keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: [PATCH v2] eeepc-wmi: set the touchpad toggle key
+	code to KEY_TOUCHPAD_TOGGLE
+Date: Tue,  1 Mar 2011 12:56:13 +0800
+Message-ID: <1298955373-5645-1-git-send-email-keng-yu.lin@canonical.com>
 References: <1298611140-21573-1-git-send-email-keng-yu.lin@canonical.com>
- <AANLkTim_JKQU9J3OJ0FRQ_ZVPktAPbnzr2t8SvhL2Uzj@mail.gmail.com>
- <20110225071827.GA14053@core.coreip.homeip.net> <AANLkTinV+bnSBe+5CSuYYCU4gCq9Z2c9ELdy-LFAvdf0@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:43190 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752735Ab1CAD3f convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Feb 2011 22:29:35 -0500
-In-Reply-To: <AANLkTinV+bnSBe+5CSuYYCU4gCq9Z2c9ELdy-LFAvdf0@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Bagwell <chris@cnpbagwell.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, tyson.chen@canonical.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1298611140-21573-1-git-send-email-keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, tyson.chen-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Keng-Yu Lin <keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Martin Pitt <martin.pitt-GeWIH/nMZzLQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 25, 2011 at 11:14 PM, Chris Bagwell <chris@cnpbagwell.com> =
-wrote:
->
-> I submitted last month a patch to udev to do the scancode-to-F21
-> mapping. =C2=A0So that part should be covered for near term.
->
-> I also agree if we are going to change kernel side, we should change
-> to KEY_TOUCHPAD_TOGGLE in both eeepc-laptop and eeepc-wmi.
->
-> http://git.kernel.org/?p=3Dlinux/hotplug/udev.git;a=3Dcommit;h=3D0d8b=
-6be5f5238360d2d8e220d6da280f842c5358
->
-> Chris
->
+Signed-off-by: Keng-Yu Lin <keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+---
+ drivers/platform/x86/eeepc-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Thanks Chris for the information. I also tested; it works.
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index d399775..a9f75e2 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -113,7 +113,7 @@ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+ 	{ KE_KEY, 0x5c, { KEY_F15 } }, /* Power Gear key */
+ 	{ KE_KEY, 0x5d, { KEY_WLAN } },
+-	{ KE_KEY, 0x6b, { KEY_F13 } }, /* Disable Touchpad */
++	{ KE_KEY, 0x6b, { KEY_TOUCHPAD_TOGGLE } }, /* Toggle Touchpad */
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
+ 	{ KE_KEY, 0x83, { KEY_CAMERA_ZOOMIN } },
+ 	{ KE_KEY, 0x88, { KEY_WLAN } },
+-- 
+1.7.1
 
-I will re-send a eeepc-wmi patch with KEY_TOUCHPAD_TOGGLE.
+
+------------------------------------------------------------------------------
+Free Software Download: Index, Search & Analyze Logs and other IT data in 
+Real-Time with Splunk. Collect, index and harness all the fast moving IT data 
+generated by your applications, servers and devices whether physical, virtual
+or in the cloud. Deliver compliance at lower cost and gain new business 
+insights. http://p.sf.net/sfu/splunk-dev2dev 
