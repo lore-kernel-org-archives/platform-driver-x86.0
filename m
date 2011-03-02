@@ -1,58 +1,49 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/1] acer-wmi: set the touchpad toggle key code to
- KEY_TOUCHPAD_TOGGLE
-Date: Tue, 1 Mar 2011 09:13:44 -0800
-Message-ID: <20110301171344.GA27560@core.coreip.homeip.net>
-References: <1298999231-11304-1-git-send-email-jlee@novell.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
+Date: Wed, 02 Mar 2011 01:53:55 -0700
+Message-ID: <4D6EA053020000230002943D@novprvlin0050.provo.novell.com>
+References: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com>
+ <201012301004.29531.carlos@strangeworlds.co.uk>
+ <20110103204910.GA4223@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:60997 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752769Ab1CARNu (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 1 Mar 2011 12:13:50 -0500
-Received: by pzk35 with SMTP id 35so833830pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Mar 2011 09:13:49 -0800 (PST)
+In-Reply-To: <20110103204910.GA4223@srcf.ucam.org>
 Content-Disposition: inline
-In-Reply-To: <1298999231-11304-1-git-send-email-jlee@novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>
+To: carlos@strangeworlds.co.uk
+Cc: vpivaini@cs.helsinki.fi, dwmw2@infradead.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
 
-On Wed, Mar 02, 2011 at 01:07:11AM +0800, Lee, Chun-Yi wrote:
-> Set the touchpad toggle key code from F22 to KEY_TOUCHPAD_TOGGLE,
-> and userspace should use udev's key re-mapping facilities while X
-> is unable to process keycodes above 255 to adjust to the keycode.
-> 
-> Cc: Matthew Garrett <mjg@redhat.com>
-> Cc: Dmitry Torokhov <dtor@mail.ru>
-> Cc: Corentin Chary <corentincj@iksaif.net>
-> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+Hi Carlos,=20
 
-Acked-by: Dmitry Torokhov <dtor@mail.ru>
+Sorry bother you for this old issue.
 
-> ---
->  drivers/platform/x86/acer-wmi.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 38b34a7..d10b280 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -109,7 +109,7 @@ static const struct key_entry acer_wmi_keymap[] = {
->  	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
->  	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
->  	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
-> -	{KE_KEY, 0x82, {KEY_F22} },      /* Touch Pad On/Off */
-> +	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
->  	{KE_END, 0}
->  };
->  
-> -- 
-> 1.6.0.2
-> 
+=E6=96=BC =E4=B8=80=EF=BC=8C2011-01-03 =E6=96=BC 20:49 +0000=EF=BC=8CMa=
+tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
+> It looks like this GUID is present in a surprisingly wide range of=20
+> devices (eg, http://pastebin.com/8BY0Dg64 from a Vaio...), which mean=
+s=20
+> that it's probably not a safe assumption that reading from the EC wil=
+l=20
+> give us reasonable results. Do the Acer drivers definitely do that,=20
+> rather than there being some SMI that returns the data?
+>=20
 
--- 
-Dmitry
+The AMW0 in acer-wmi not just used by acer machines:
+
+#define AMW0_GUID1              "67C3371D-95A3-4C37-BB61-DD47B491DAAB"
+
+It was also included in Lenovo Ideapad S12 and Vaio machines' DSDT. For
+Lenovo Ideapad, that will be better handle by ideapad-laptop driver.=20
+
+Could we just direct add those model to the blacklist in acer-wmi
+driver? or we direct check dmi in acer-wmi for only support Acer
+machines that were included AMW0 in DSDT?
+
+Appreciate if you can give any suggestion.
+
+
+Thank's a lot!
+Joey Lee
