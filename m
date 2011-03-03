@@ -1,66 +1,86 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+From: Ike Panhc <ike.pan@canonical.com>
 Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
-Date: Wed, 2 Mar 2011 21:09:51 +0000
-Message-ID: <201103022109.51600.carlos@strangeworlds.co.uk>
-References: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com> <20110103204910.GA4223@srcf.ucam.org> <4D6EA053020000230002943D@novprvlin0050.provo.novell.com>
+Date: Thu, 03 Mar 2011 11:17:04 +0800
+Message-ID: <4D6F0830.1090905@canonical.com>
+References: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com> <20110103204910.GA4223@srcf.ucam.org> <4D6EA053020000230002943D@novprvlin0050.provo.novell.com> <201103022109.51600.carlos@strangeworlds.co.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:37269 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755799Ab1CBVKC convert rfc822-to-8bit (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:37100 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757245Ab1CCDRP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 2 Mar 2011 16:10:02 -0500
-Received: by wyg36 with SMTP id 36so435575wyg.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Mar 2011 13:10:00 -0800 (PST)
-In-Reply-To: <4D6EA053020000230002943D@novprvlin0050.provo.novell.com>
+	Wed, 2 Mar 2011 22:17:15 -0500
+In-Reply-To: <201103022109.51600.carlos@strangeworlds.co.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: vpivaini@cs.helsinki.fi, dwmw2@infradead.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
+To: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Joey Lee <jlee@novell.com>, vpivaini@cs.helsinki.fi, dwmw2@infradead.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
 
-On Wednesday 02 Mar 2011 08:53:55 Joey Lee wrote:
-> =E6=96=BC =E4=B8=80=EF=BC=8C2011-01-03 =E6=96=BC 20:49 +0000=EF=BC=8C=
+Hi,
+
+Here[1] is the output of wmidump for ideapad s10-3 and s12-via and ther=
+e is no
+WMI device of ideapad B550 and Y530.
+
+[1] http://pastebin.ubuntu.com/574793/
+
+=46or now, ideapad-laptop handles the VPC2004 devices that can be found=
+ in most of
+the ideapads (maybe all, but I can not sure). In my opinion, I do not t=
+hink to
+handle WMI in ideapad-laptop is reasonable unless we have an extra func=
+tion on
+ideapads and we can only control it with WMI driver.
+
+On 03/03/2011 05:09 AM, Carlos Corbacho wrote:
+> On Wednesday 02 Mar 2011 08:53:55 Joey Lee wrote:
+>> =E6=96=BC =E4=B8=80=EF=BC=8C2011-01-03 =E6=96=BC 20:49 +0000=EF=BC=8C=
 Matthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
->=20
-> > It looks like this GUID is present in a surprisingly wide range of
-> > devices (eg, http://pastebin.com/8BY0Dg64 from a Vaio...), which me=
+>>
+>>> It looks like this GUID is present in a surprisingly wide range of
+>>> devices (eg, http://pastebin.com/8BY0Dg64 from a Vaio...), which me=
 ans
-> > that it's probably not a safe assumption that reading from the EC w=
+>>> that it's probably not a safe assumption that reading from the EC w=
 ill
-> > give us reasonable results. Do the Acer drivers definitely do that,
-> > rather than there being some SMI that returns the data?
+>>> give us reasonable results. Do the Acer drivers definitely do that,
+>>> rather than there being some SMI that returns the data?
+>>
+>> The AMW0 in acer-wmi not just used by acer machines:
+>>
+>> #define AMW0_GUID1              "67C3371D-95A3-4C37-BB61-DD47B491DAA=
+B"
+>>
+>> It was also included in Lenovo Ideapad S12 and Vaio machines' DSDT. =
+=46or
+>> Lenovo Ideapad, that will be better handle by ideapad-laptop driver.
 >=20
-> The AMW0 in acer-wmi not just used by acer machines:
+> They might not be - Matthew's original question still stands. The old=
+ AMW0 was=20
+> just a funny wrapper for direct BIOS calls - maybe we just need a dif=
+ferent=20
+> call here?
 >=20
-> #define AMW0_GUID1              "67C3371D-95A3-4C37-BB61-DD47B491DAAB=
-"
+> What does Acer do - are they poking the EC directly, or is the call t=
+o AMW0=20
+> just different for these machines?
 >=20
-> It was also included in Lenovo Ideapad S12 and Vaio machines' DSDT. F=
-or
-> Lenovo Ideapad, that will be better handle by ideapad-laptop driver.
-
-They might not be - Matthew's original question still stands. The old A=
-MW0 was=20
-just a funny wrapper for direct BIOS calls - maybe we just need a diffe=
-rent=20
-call here?
-
-What does Acer do - are they poking the EC directly, or is the call to =
-AMW0=20
-just different for these machines?
-
-> Could we just direct add those model to the blacklist in acer-wmi
-> driver? or we direct check dmi in acer-wmi for only support Acer
-> machines that were included AMW0 in DSDT?
-
-Interesting. If we can't autodetect whether it's a dummy interface or n=
-ot,=20
-then, we should change acer-wmi to whitelist what it does support - Ace=
-r,=20
-=46ujistu Siemens and Medion - rather than trying to blacklist every ve=
+>> Could we just direct add those model to the blacklist in acer-wmi
+>> driver? or we direct check dmi in acer-wmi for only support Acer
+>> machines that were included AMW0 in DSDT?
+>=20
+> Interesting. If we can't autodetect whether it's a dummy interface or=
+ not,=20
+> then, we should change acer-wmi to whitelist what it does support - A=
+cer,=20
+> Fujistu Siemens and Medion - rather than trying to blacklist every ve=
 ndor that=20
-crops up.
-
--Carlos
+> crops up.
+>=20
+> -Carlos
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
