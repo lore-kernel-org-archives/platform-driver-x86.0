@@ -1,47 +1,40 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH] [stable-37] ideapad: read brightness setting when have brightness key notify
-Date: Mon,  7 Mar 2011 18:35:25 +0800
-Message-ID: <1299494125-9655-1-git-send-email-ike.pan@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:49788 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751330Ab1CGKfc (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Mar 2011 05:35:32 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: stable@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
+From: Greg KH <greg@kroah.com>
+Subject: Re: [stable] [PATCH] [stable-37] ideapad: read brightness setting
+ when have brightness key notify
+Date: Mon, 7 Mar 2011 08:18:05 -0800
+Message-ID: <20110307161805.GB9088@kroah.com>
+References: <1299494125-9655-1-git-send-email-ike.pan@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1299494125-9655-1-git-send-email-ike.pan@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: stable@kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=25922
+On Mon, Mar 07, 2011 at 06:35:25PM +0800, Ike Panhc wrote:
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=25922
+> 
+> On ideapad Y530, the brightness key notify will be blocked if the last notify
+> is not responsed by getting the brightness value. Read value when we get the
+> notify shall fix the problem and will not have any difference on other ideapads.
+> 
+> This patch is made against 2.6.37.y and this bug impacts kernel after 2.6.37.
+> 
+> The equivalent-fix patch is not in upstream yet. Since the policy of stable tree
+> is changed and .38 kernel is going to finalize.
 
-On ideapad Y530, the brightness key notify will be blocked if the last notify
-is not responsed by getting the brightness value. Read value when we get the
-notify shall fix the problem and will not have any difference on other ideapads.
+What "policy of the stable tree is changed"?  Huh?
 
-This patch is made against 2.6.37.y and this bug impacts kernel after 2.6.37.
+> I think to post this patch for stable kernel now should be a good
+> idea.
 
-The equivalent-fix patch is not in upstream yet. Since the policy of stable tree
-is changed and .38 kernel is going to finalize. I think to post this patch for
-stable kernel now should be a good idea.
+Have you not read the Documentation/stable_kernel_rules.txt and seen
+that this is totally and completly not allowed?  Why is it suddenly not
+true?
 
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/ideapad-laptop.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+confused,
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 5ff1220..e78398d 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -357,6 +357,8 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 		if (test_bit(vpc_bit, &vpc1)) {
- 			if (vpc_bit == 9)
- 				ideapad_sync_rfk_state(adevice);
-+			else if (vpc_bit == 4)
-+				read_ec_data(handle, 0x12, &vpc2);
- 		}
- 	}
- }
--- 
-1.7.4.1
+greg k-h
