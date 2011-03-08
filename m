@@ -1,65 +1,161 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [stable] [PATCH] [stable-37] ideapad: read brightness setting
- when have brightness key notify
-Date: Mon, 7 Mar 2011 21:07:59 -0800
-Message-ID: <20110308050759.GA12184@kroah.com>
-References: <1299494125-9655-1-git-send-email-ike.pan@canonical.com>
- <20110307161805.GB9088@kroah.com>
- <4D759675.8020600@canonical.com>
+From: Jiri Slaby <jirislaby@gmail.com>
+Subject: Re: eeepc: rfkill on 900A defunct
+Date: Tue, 08 Mar 2011 11:06:06 +0100
+Message-ID: <4D75FF8E.9010103@gmail.com>
+References: <4CED26EF.5000109@suse.cz> <20101124201834.GA7760@srcf.ucam.org> <4D6B6F9A.1020102@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4D759675.8020600@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, stable@kernel.org, Matthew Garrett <mjg@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:62193 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751513Ab1CHKGL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 8 Mar 2011 05:06:11 -0500
+In-Reply-To: <4D6B6F9A.1020102@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Jiri Slaby <jslaby@suse.cz>, corentincj@iksaif.net, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-On Tue, Mar 08, 2011 at 10:37:41AM +0800, Ike Panhc wrote:
-> On 03/08/2011 12:18 AM, Greg KH wrote:
-> > On Mon, Mar 07, 2011 at 06:35:25PM +0800, Ike Panhc wrote:
-> >> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=25922
-> >>
-> >> On ideapad Y530, the brightness key notify will be blocked if the last notify
-> >> is not responsed by getting the brightness value. Read value when we get the
-> >> notify shall fix the problem and will not have any difference on other ideapads.
-> >>
-> >> This patch is made against 2.6.37.y and this bug impacts kernel after 2.6.37.
-> >>
-> >> The equivalent-fix patch is not in upstream yet. Since the policy of stable tree
-> >> is changed and .38 kernel is going to finalize.
-> > 
-> > What "policy of the stable tree is changed"?  Huh?
+On 02/28/2011 10:49 AM, Jiri Slaby wrote:
+> On 11/24/2010 09:18 PM, Matthew Garrett wrote:
+>> Hm. As a shorter term fix, can you try this (entirely untested!) 
+>> approach?
 > 
-> I thought we will have stable release on lastest kernel only[1]. Since the .38 is
-> going to release soon. It seems I do not have much time for .37 stable release.
+> What is the status of this? Was there any alternative merged?
+
+Ping.
+
+>> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+>> index b2edfdc..8f817d6 100644
+>> --- a/drivers/platform/x86/eeepc-laptop.c
+>> +++ b/drivers/platform/x86/eeepc-laptop.c
+>> @@ -574,8 +574,9 @@ static bool eeepc_wlan_rfkill_blocked(struct eeepc_laptop *eeepc)
+>>  	return true;
+>>  }
+>>  
+>> -static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
+>> +static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+>>  {
+>> +	struct pci_dev *port;
+>>  	struct pci_dev *dev;
+>>  	struct pci_bus *bus;
+>>  	bool blocked = eeepc_wlan_rfkill_blocked(eeepc);
+>> @@ -588,9 +589,17 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
+>>  	mutex_lock(&eeepc->hotplug_lock);
+>>  
+>>  	if (eeepc->hotplug_slot) {
+>> -		bus = pci_find_bus(0, 1);
+>> +		port = acpi_get_pci_dev(handle);
+>> +
+>> +		if (!port) {
+>> +			pr_warning("Unable to find port\n");
+>> +			goto out_unlock;
+>> +		}
+>> +
+>> +		bus = port->subordinate;
+>> +
+>>  		if (!bus) {
+>> -			pr_warning("Unable to find PCI bus 1?\n");
+>> +			pr_warning("Unable to find PCI bus?\n");
+>>  			goto out_unlock;
+>>  		}
+>>  
+>> @@ -636,6 +645,17 @@ out_unlock:
+>>  	mutex_unlock(&eeepc->hotplug_lock);
+>>  }
+>>  
+>> +static void eeepc_rfkill_hotplug_update(struct eeepc_laptop *eeepc, char *node)
+>> +{
+>> +	acpi_status status = AE_OK;
+>> +	acpi_handle handle;
+>> +
+>> +	status = acpi_get_handle(NULL, node, &handle);
+>> +
+>> +	if (ACPI_SUCCESS(status))
+>> +		eeepc_rfkill_hotplug(eeepc, handle);
+>> +}
+>> +
+>>  static void eeepc_rfkill_notify(acpi_handle handle, u32 event, void *data)
+>>  {
+>>  	struct eeepc_laptop *eeepc = data;
+>> @@ -643,7 +663,7 @@ static void eeepc_rfkill_notify(acpi_handle handle, u32 event, void *data)
+>>  	if (event != ACPI_NOTIFY_BUS_CHECK)
+>>  		return;
+>>  
+>> -	eeepc_rfkill_hotplug(eeepc);
+>> +	eeepc_rfkill_hotplug(eeepc, handle);
+>>  }
+>>  
+>>  static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+>> @@ -661,6 +681,11 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+>>  						     eeepc);
+>>  		if (ACPI_FAILURE(status))
+>>  			pr_warning("Failed to register notify on %s\n", node);
+>> +		/*
+>> +		 * Refresh pci hotplug in case the rfkill state was
+>> +		 * changed during setup.
+>> +		 */
+>> +		eeepc_rfkill_hotplug(eeepc, handle);
+>>  	} else
+>>  		return -ENODEV;
+>>  
+>> @@ -682,6 +707,12 @@ static void eeepc_unregister_rfkill_notifier(struct eeepc_laptop *eeepc,
+>>  		if (ACPI_FAILURE(status))
+>>  			pr_err("Error removing rfkill notify handler %s\n",
+>>  				node);
+>> +			/*
+>> +			 * Refresh pci hotplug in case the rfkill
+>> +			 * state was changed after
+>> +			 * eeepc_unregister_rfkill_notifier()
+>> +			 */
+>> +		eeepc_rfkill_hotplug(eeepc, handle);
+>>  	}
+>>  }
+>>  
+>> @@ -805,11 +836,7 @@ static void eeepc_rfkill_exit(struct eeepc_laptop *eeepc)
+>>  		rfkill_destroy(eeepc->wlan_rfkill);
+>>  		eeepc->wlan_rfkill = NULL;
+>>  	}
+>> -	/*
+>> -	 * Refresh pci hotplug in case the rfkill state was changed after
+>> -	 * eeepc_unregister_rfkill_notifier()
+>> -	 */
+>> -	eeepc_rfkill_hotplug(eeepc);
+>> +
+>>  	if (eeepc->hotplug_slot)
+>>  		pci_hp_deregister(eeepc->hotplug_slot);
+>>  
+>> @@ -878,11 +905,6 @@ static int eeepc_rfkill_init(struct eeepc_laptop *eeepc)
+>>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P5");
+>>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P6");
+>>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P7");
+>> -	/*
+>> -	 * Refresh pci hotplug in case the rfkill state was changed during
+>> -	 * setup.
+>> -	 */
+>> -	eeepc_rfkill_hotplug(eeepc);
+>>  
+>>  exit:
+>>  	if (result && result != -ENODEV)
+>> @@ -917,8 +939,11 @@ static int eeepc_hotk_restore(struct device *device)
+>>  	struct eeepc_laptop *eeepc = dev_get_drvdata(device);
+>>  
+>>  	/* Refresh both wlan rfkill state and pci hotplug */
+>> -	if (eeepc->wlan_rfkill)
+>> -		eeepc_rfkill_hotplug(eeepc);
+>> +	if (eeepc->wlan_rfkill) {
+>> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P5");
+>> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P6");
+>> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P7");
+>> +	}
+>>  
+>>  	if (eeepc->bluetooth_rfkill)
+>>  		rfkill_set_sw_state(eeepc->bluetooth_rfkill,
 > 
-> I hope I do not miss something.
-> 
-> [1] https://lkml.org/lkml/2010/12/2/388
+> thanks,
 
-I think you miss the fact that if by the time your patch makes it into
-Linus's tree, and we have moved on to not supporting .37 anymore, then
-no one will care about .37 so it doesn't matter at all.
 
-> >> I think to post this patch for stable kernel now should be a good
-> >> idea.
-> > 
-> > Have you not read the Documentation/stable_kernel_rules.txt and seen
-> > that this is totally and completly not allowed?  Why is it suddenly not
-> > true?
-> > 
-> > confused,
-> 
-> Sorry about the confusing. The same patch for upstream is posted[2] but not merged
-> yet. It looks like a now-or-never situation to me. That's why I post and write the
-> concerns in comment.
-
-You need to follow the documented and well explained rules, they are
-there for a very good reason, please don't try to subvert them,
-otherwise you will just end up in my kill file.
-
-thanks,
-
-greg k-h
+-- 
+js
