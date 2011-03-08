@@ -1,161 +1,42 @@
-From: Jiri Slaby <jirislaby@gmail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
 Subject: Re: eeepc: rfkill on 900A defunct
-Date: Tue, 08 Mar 2011 11:06:06 +0100
-Message-ID: <4D75FF8E.9010103@gmail.com>
-References: <4CED26EF.5000109@suse.cz> <20101124201834.GA7760@srcf.ucam.org> <4D6B6F9A.1020102@gmail.com>
+Date: Tue, 8 Mar 2011 10:22:38 +0000
+Message-ID: <AANLkTinBRCdOa1QdvWJiihvBpmJyvmRvDoFYgp0yTMFc@mail.gmail.com>
+References: <4CED26EF.5000109@suse.cz>
+	<20101124201834.GA7760@srcf.ucam.org>
+	<4D6B6F9A.1020102@gmail.com>
+	<4D75FF8E.9010103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:62193 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751513Ab1CHKGL (ORCPT
+Received: from mail-ew0-f46.google.com ([209.85.215.46]:42611 "EHLO
+	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753135Ab1CHKWk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Mar 2011 05:06:11 -0500
-In-Reply-To: <4D6B6F9A.1020102@gmail.com>
+	Tue, 8 Mar 2011 05:22:40 -0500
+In-Reply-To: <4D75FF8E.9010103@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Jiri Slaby <jslaby@suse.cz>, corentincj@iksaif.net, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Cc: Jiri Slaby <jirislaby@gmail.com>, Jiri Slaby <jslaby@suse.cz>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-On 02/28/2011 10:49 AM, Jiri Slaby wrote:
-> On 11/24/2010 09:18 PM, Matthew Garrett wrote:
->> Hm. As a shorter term fix, can you try this (entirely untested!) 
->> approach?
-> 
-> What is the status of this? Was there any alternative merged?
+On Tue, Mar 8, 2011 at 10:06 AM, Jiri Slaby <jirislaby@gmail.com> wrote:
+> On 02/28/2011 10:49 AM, Jiri Slaby wrote:
+>> On 11/24/2010 09:18 PM, Matthew Garrett wrote:
+>>> Hm. As a shorter term fix, can you try this (entirely untested!)
+>>> approach?
+>>
+>> What is the status of this? Was there any alternative merged?
+>
+> Ping.
 
-Ping.
+Because this is Matthew's patch, and I have no hardware to test that
+patch, I'm not touching it.
 
->> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
->> index b2edfdc..8f817d6 100644
->> --- a/drivers/platform/x86/eeepc-laptop.c
->> +++ b/drivers/platform/x86/eeepc-laptop.c
->> @@ -574,8 +574,9 @@ static bool eeepc_wlan_rfkill_blocked(struct eeepc_laptop *eeepc)
->>  	return true;
->>  }
->>  
->> -static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
->> +static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
->>  {
->> +	struct pci_dev *port;
->>  	struct pci_dev *dev;
->>  	struct pci_bus *bus;
->>  	bool blocked = eeepc_wlan_rfkill_blocked(eeepc);
->> @@ -588,9 +589,17 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
->>  	mutex_lock(&eeepc->hotplug_lock);
->>  
->>  	if (eeepc->hotplug_slot) {
->> -		bus = pci_find_bus(0, 1);
->> +		port = acpi_get_pci_dev(handle);
->> +
->> +		if (!port) {
->> +			pr_warning("Unable to find port\n");
->> +			goto out_unlock;
->> +		}
->> +
->> +		bus = port->subordinate;
->> +
->>  		if (!bus) {
->> -			pr_warning("Unable to find PCI bus 1?\n");
->> +			pr_warning("Unable to find PCI bus?\n");
->>  			goto out_unlock;
->>  		}
->>  
->> @@ -636,6 +645,17 @@ out_unlock:
->>  	mutex_unlock(&eeepc->hotplug_lock);
->>  }
->>  
->> +static void eeepc_rfkill_hotplug_update(struct eeepc_laptop *eeepc, char *node)
->> +{
->> +	acpi_status status = AE_OK;
->> +	acpi_handle handle;
->> +
->> +	status = acpi_get_handle(NULL, node, &handle);
->> +
->> +	if (ACPI_SUCCESS(status))
->> +		eeepc_rfkill_hotplug(eeepc, handle);
->> +}
->> +
->>  static void eeepc_rfkill_notify(acpi_handle handle, u32 event, void *data)
->>  {
->>  	struct eeepc_laptop *eeepc = data;
->> @@ -643,7 +663,7 @@ static void eeepc_rfkill_notify(acpi_handle handle, u32 event, void *data)
->>  	if (event != ACPI_NOTIFY_BUS_CHECK)
->>  		return;
->>  
->> -	eeepc_rfkill_hotplug(eeepc);
->> +	eeepc_rfkill_hotplug(eeepc, handle);
->>  }
->>  
->>  static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
->> @@ -661,6 +681,11 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
->>  						     eeepc);
->>  		if (ACPI_FAILURE(status))
->>  			pr_warning("Failed to register notify on %s\n", node);
->> +		/*
->> +		 * Refresh pci hotplug in case the rfkill state was
->> +		 * changed during setup.
->> +		 */
->> +		eeepc_rfkill_hotplug(eeepc, handle);
->>  	} else
->>  		return -ENODEV;
->>  
->> @@ -682,6 +707,12 @@ static void eeepc_unregister_rfkill_notifier(struct eeepc_laptop *eeepc,
->>  		if (ACPI_FAILURE(status))
->>  			pr_err("Error removing rfkill notify handler %s\n",
->>  				node);
->> +			/*
->> +			 * Refresh pci hotplug in case the rfkill
->> +			 * state was changed after
->> +			 * eeepc_unregister_rfkill_notifier()
->> +			 */
->> +		eeepc_rfkill_hotplug(eeepc, handle);
->>  	}
->>  }
->>  
->> @@ -805,11 +836,7 @@ static void eeepc_rfkill_exit(struct eeepc_laptop *eeepc)
->>  		rfkill_destroy(eeepc->wlan_rfkill);
->>  		eeepc->wlan_rfkill = NULL;
->>  	}
->> -	/*
->> -	 * Refresh pci hotplug in case the rfkill state was changed after
->> -	 * eeepc_unregister_rfkill_notifier()
->> -	 */
->> -	eeepc_rfkill_hotplug(eeepc);
->> +
->>  	if (eeepc->hotplug_slot)
->>  		pci_hp_deregister(eeepc->hotplug_slot);
->>  
->> @@ -878,11 +905,6 @@ static int eeepc_rfkill_init(struct eeepc_laptop *eeepc)
->>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P5");
->>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P6");
->>  	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P7");
->> -	/*
->> -	 * Refresh pci hotplug in case the rfkill state was changed during
->> -	 * setup.
->> -	 */
->> -	eeepc_rfkill_hotplug(eeepc);
->>  
->>  exit:
->>  	if (result && result != -ENODEV)
->> @@ -917,8 +939,11 @@ static int eeepc_hotk_restore(struct device *device)
->>  	struct eeepc_laptop *eeepc = dev_get_drvdata(device);
->>  
->>  	/* Refresh both wlan rfkill state and pci hotplug */
->> -	if (eeepc->wlan_rfkill)
->> -		eeepc_rfkill_hotplug(eeepc);
->> +	if (eeepc->wlan_rfkill) {
->> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P5");
->> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P6");
->> +		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P7");
->> +	}
->>  
->>  	if (eeepc->bluetooth_rfkill)
->>  		rfkill_set_sw_state(eeepc->bluetooth_rfkill,
-> 
-> thanks,
+Jiri, on what models was this patch tested (only got 701 and 901 here) ?
+Matthew, will you merge this patch in your tree ?
 
-
+Thanks,
 -- 
-js
+Corentin Chary
+http://xf.iksaif.net
