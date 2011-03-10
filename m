@@ -1,50 +1,40 @@
-From: Woody Suwalski <terraluna977@gmail.com>
-Subject: Re: eeepc: rfkill on 900A defunct
-Date: Wed, 09 Mar 2011 07:50:30 -0500
-Message-ID: <4D777796.9030608@gmail.com>
-References: <4CED26EF.5000109@suse.cz>	<20101124201834.GA7760@srcf.ucam.org>	<4D6B6F9A.1020102@gmail.com>	<4D75FF8E.9010103@gmail.com> <AANLkTinBRCdOa1QdvWJiihvBpmJyvmRvDoFYgp0yTMFc@mail.gmail.com> <4D760A36.5040206@gmail.com>
+From: =?UTF-8?B?T3phbiDDh2HEn2xheWFu?= <ozan@pardus.org.tr>
+Subject: Re: acer-wmi is unnecessarily loaded on a Lenovo Ideapad S12
+Date: Thu, 10 Mar 2011 08:23:35 +0200
+Message-ID: <4D786E67.5050100@pardus.org.tr>
+References: <4D1B53FB020000230002621B@novprvlin0050.provo.novell.com> <20110103204910.GA4223@srcf.ucam.org> <4D6EA053020000230002943D@novprvlin0050.provo.novell.com> <201103022109.51600.carlos@strangeworlds.co.uk> <4D6FDCA0020000230002951C@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ironport2-out.teksavvy.com ([206.248.154.183]:18551 "EHLO
-	ironport2-out.pppoe.ca" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S932349Ab1CIMuf (ORCPT
+Received: from lider.pardus.org.tr ([193.140.100.216]:41627 "EHLO
+	lider.pardus.org.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751228Ab1CJG0l (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Mar 2011 07:50:35 -0500
-In-Reply-To: <4D760A36.5040206@gmail.com>
+	Thu, 10 Mar 2011 01:26:41 -0500
+In-Reply-To: <4D6FDCA0020000230002951C@novprvlin0050.provo.novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jiri Slaby <jirislaby@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Jiri Slaby <jslaby@suse.cz>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: carlos@strangeworlds.co.uk, ike.pan@canonical.com, vpivaini@cs.helsinki.fi, dwmw2@infradead.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
 
-Jiri Slaby wrote:
-> On 03/08/2011 11:22 AM, Corentin Chary wrote:
->    
->> On Tue, Mar 8, 2011 at 10:06 AM, Jiri Slaby<jirislaby@gmail.com>  wrote:
->>      
->>> On 02/28/2011 10:49 AM, Jiri Slaby wrote:
->>>        
->>>> On 11/24/2010 09:18 PM, Matthew Garrett wrote:
->>>>          
->>>>> Hm. As a shorter term fix, can you try this (entirely untested!)
->>>>> approach?
->>>>>            
->>>> What is the status of this? Was there any alternative merged?
->>>>          
->>> Ping.
->>>        
->> Because this is Matthew's patch, and I have no hardware to test that
->> patch, I'm not touching it.
->>
->> Jiri, on what models was this patch tested (only got 701 and 901 here) ?
->>      
-> It was 900A.
->
-> thanks,
->    
-I have tested it on 900A and it does the trick.
-wlan can now be turned off/on (did not notice the problem before Jiri 
-posted the patch ;-) ). So it should go in...
+03-03-2011 09:23 tarihinde, Joey Lee yazd=C4=B1:
+> The original issue was reported by Ville-Pekka Vaino, acer-wmi driver
+> auto-probe on Ideapad S12 machine by detection AWM0. But, acer-wmi ad=
+ds
+> a soft blocked wifi killswitch, which can't be unblocked with rfkill,=
+ it
+> causes problems with NetworkManager wireless network can't be enabled=
+ at
+> all.
 
-Woody
+This also happens with Lenovo 3000 V200 and Lenovo b560. I'm adding the=
+m=20
+to blacklist with the Ideapad S12
+to fix users' no-wlan-at-all complains. Maybe you can just blacklist=20
+them for stable kernel releases and try to find a proper solution after=
+=2E
+
+Thanks,
+Ozan Caglayan
