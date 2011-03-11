@@ -1,50 +1,30 @@
 From: Greg KH <greg@kroah.com>
 Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-Date: Fri, 11 Mar 2011 11:34:33 -0800
-Message-ID: <20110311193433.GB14204@kroah.com>
-References: <20110310170143.GA24559@kroah.com>
- <AANLkTinyqJx76=nzepa9fe5VDzqiXRGCQ=E1SsKm2npE@mail.gmail.com>
- <20110310171940.GA24972@kroah.com>
- <4D790A20.3050105@gmail.com>
- <20110310180959.GA26927@kroah.com>
- <4D793D05.3070908@gmail.com>
- <20110310211519.GA11862@kroah.com>
- <4D79CB47.2030405@gmail.com>
- <20110311170313.GA10202@kroah.com>
- <4D7A72E3.1050407@gmail.com>
+Date: Fri, 11 Mar 2011 11:35:12 -0800
+Message-ID: <20110311193512.GC14204@kroah.com>
+References: <20110305042431.GA22840@kroah.com>
+ <20110311174339.GJ16652@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from kroah.org ([198.145.64.141]:46968 "EHLO coco.kroah.org"
+Received: from kroah.org ([198.145.64.141]:46970 "EHLO coco.kroah.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752256Ab1CKTi4 (ORCPT
+	id S1752074Ab1CKTi5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Mar 2011 14:38:56 -0500
+	Fri, 11 Mar 2011 14:38:57 -0500
 Content-Disposition: inline
-In-Reply-To: <4D7A72E3.1050407@gmail.com>
+In-Reply-To: <20110311174339.GJ16652@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Nikolai Kondrashov <spbnick@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 11, 2011 at 09:07:15PM +0200, Nikolai Kondrashov wrote:
-> On 03/11/2011 07:03 PM, Greg KH wrote:
-> >Are you sure this was the driver you just built that I sent you?  Can
-> >you send the output of 'modinfo samsung-laptop'?
-> Yes, I'm pretty sure. Here is the modinfo output:
-> 
-> filename: /lib/modules/2.6.37+/kernel/drivers/staging/samsung-laptop/samsung-laptop.ko
-> license:        GPL
-> description:    Samsung Backlight driver
-> author:         Greg Kroah-Hartman <gregkh@suse.de>
-> alias:          dmi*:svn*SAMSUNGELECTRONICSCO.,LTD.*:pn*N130*:rn*N130*:
-> alias:          dmi*:svn*SAMSUNGELECTRONICSCO.,LTD.*:pn*N128*:rn*N128*:
-> depends:        rfkill
+On Fri, Mar 11, 2011 at 05:43:39PM +0000, Matthew Garrett wrote:
+> Applied, thanks.
 
-Ok, this shows you are not loading the driver I sent to you, this is the
-"original" one I sent, which will fail for your machine.
-
-You need to build and install the one I sent you.
+Great, any pointers to where it was applied?  I think I need to send you
+a few more 'add a new device id' patches and I want to make sure I get
+the right version to patch against.
 
 thanks,
 
