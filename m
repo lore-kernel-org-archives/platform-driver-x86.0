@@ -1,282 +1,240 @@
-From: =?utf-8?q?Old=C5=99ich_Jedli=C4=8Dka?= <oldium.pro@seznam.cz>
-Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in 2.6.37
-Date: Fri, 11 Mar 2011 23:00:08 +0100
-Message-ID: <201103112300.09291.oldium.pro@seznam.cz>
-References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com> <4D7B2E010200002300029B57@novprvlin0050.provo.novell.com> <201103112234.42885.oldium.pro@seznam.cz>
+From: Frederick van der Wyck <fvanderwyck@gmail.com>
+Subject: Re: [PATCH v2] Platform: Samsung Q10 backlight driver
+Date: Sat, 12 Mar 2011 00:39:30 +0000
+Message-ID: <20110312003930.GA32496@ntl>
+References: <20110221223743.GA8548@lat.lan>
+ <20110222052709.GA11681@core.coreip.homeip.net>
+ <20110222212703.GA7292@lat.lan>
+ <20110311174329.GI16652@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <201103112234.42885.oldium.pro@seznam.cz>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Joey Lee <jlee@novell.com>
-Cc: Al Cho <ACho@novell.com>, mjg59@srcf.ucam.org, linux-acpi@vger.kernel.org, linux-bluetooth@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:36010 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754456Ab1CLAdT (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 11 Mar 2011 19:33:19 -0500
+Content-Disposition: inline
+In-Reply-To: <20110311174329.GI16652@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: dmitry.torokhov@gmail.com, gregkh@suse.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Friday 11 March 2011 22:34:42 Old=C5=99ich Jedli=C4=8Dka wrote:
-> Hi Joey Lee,
->=20
-> On Friday 11 March 2011 22:25:37 Joey Lee wrote:
-> > Hi Old=C5=99ich,
-> >=20
-> > =E6=96=BC =E4=BA=94=EF=BC=8C2011-03-11 =E6=96=BC 21:54 +0100=EF=BC=8C=
-Old=C5=99ich Jedli=C4=8Dka =E6=8F=90=E5=88=B0=EF=BC=9A
-> >=20
-> > > Hi again,
-> > >=20
-> > > On Friday 11 March 2011 21:34:24 Joey Lee wrote:
-> > > > =E6=96=BC =E4=BA=94=EF=BC=8C2011-03-11 =E6=96=BC 21:21 +0100=EF=
-=BC=8COld=C5=99ich Jedli=C4=8Dka =E6=8F=90=E5=88=B0=EF=BC=9A
-> > > >=20
-> > > > > Hi Joey Lee,
-> > > > >=20
-> > > > > On Thursday 10 March 2011 23:02:27 Joey Lee wrote:
-> > > > > > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-10 =E6=96=BC 19:37 +010=
-0=EF=BC=8COld=C5=99ich Jedli=C4=8Dka =E6=8F=90=E5=88=B0=EF=BC=9A
-> > > > > >=20
-> > > > > > > Hi all,
-> > > > > > >=20
-> > > > > > > This is about Acer WMI driver and bluetooth support. I ho=
-pe I'm
-> > > > > > > at the right place with my question :-)
-> > > > > > >=20
-> > > > > > > I tried to use bluetooth again on my Acer TravelMate 5730=
-G and
-> > > > > > > discovered a usability problem. I've checked 2.6.38-rc7:
-> > > > > > >=20
-> > > > > > > 0. On startup, the bluetooth LED is off, acer-bluetooth S=
-W
-> > > > > > > rfkill is blocked.
-> > > > > >=20
-> > > > > > Yes, this is right behavior.
-> > > > > >=20
-> > > > > > Because have a acer-wmi patch in 2.6.38 to sync the connect=
-ion
-> > > > > > devices (wlan, bluetooth, 3G) status with BIOS.
-> > > > > > Acer BIOS fills-in the device initial states in SMBIOS when
-> > > > > > system boot, then acer-wmi dirver sync this states with
-> > > > > > killswitch. By default, Acer BIOS set the bluetooth to off.
-> > > > > >=20
-> > > > > > > 1. I have to enable the HW bluetooth switch to get the
-> > > > > > > bluetooth LED running (USB device appears in lsusb). The
-> > > > > > > acer-bluetooth SW rfkill is unblocked, the SW rfkill of h=
-ci0
-> > > > > > > is blocked.
-> > > > > >=20
-> > > > > > Yes, this is also right behavior, because acer-wmi driver w=
-ill
-> > > > > > maintain the killswitch status with BIOS.
-> > > > > >=20
-> > > > > > > 2. Next I have to unblock SW rfkill on hci0 by a call to
-> > > > > > > `rfkill unblock <number of hci0>`.
-> > > > > > > 3. Last I have to enable the HCI by the call to `hciconfi=
-g hci0
-> > > > > > > up`.
-> > > > > >=20
-> > > > > > About 2. - 3.
-> > > > > > I thought the above behavior causes by rfkill-input reverse=
- the
-> > > > > > hci0's killswitch when you pressed HW bluetooth, the HW blu=
-etooth
-> > > > > > send out a KEY_BLUETHOOTH keycode then rfkill-input capture=
- it to
-> > > > > > do hci0's status reverse.
-> > > > > > I suggest leave userland application to do killswitch, don'=
-t use
-> > > > > > rfkill-input.
-> > > > > >=20
-> > > > > > You can do:
-> > > > > > 	- Use rfkill unblock acer-bluetooth SW killswitch, don't u=
-se HW
-> > > > > > 	bluetooth
-> > > > > >=20
-> > > > > > switch. - If you still want to use HW bluetooth switch, the=
-n I
-> > > > > > suggest
-> > > > > >=20
-> > > > > > disable your rfkill-input. Have 2 way:
-> > > > > > 		+ Use urfkill daemon:
-> > > > > http://www.freedesktop.org/wiki/Software/urfkill
-> > > > >=20
-> > > > > > 		  This is a userland daemon can lock the rfkill-input to
-> > >=20
-> > > disable it
-> >=20
-> > Did you mean you direct set CONFIG_RFKILL_INPUT=3DN in kernel and r=
-ebuild
-> > kernel? or you used userland app like urfkill to send out ioctl to
-> > disable rfkill-input?
-> >=20
-> > > > > > temporarily. + Direct set CONFIG_RFKILL_INPUT=3DN in kernel=
-, but
-> > > > > > you will need to rebuild kernel. After set rfkill-input dis=
-able,
-> > > > > > you need control killswitch from userland. You can control =
-it by
-> > > > > > rfkill tool or also try urfkill daemon.
-> > > > >=20
-> > > > > Actually this doesn't work. When I unblock the SW switch by
-> > > > > calling `rfkill unblock <number of acer-bluetooth>`, it unblo=
-cks
-> > > > > the SW killswitch, the bluetooth LED goes up, the hci0 shows-=
-up
-> > > > > (USB device and killswitch), but initial state of hci0's
-> > > > > killswitch is "blocked". So I still need to unblock it manual=
-ly. I
-> > > > > would preffer to don't be forced to do step 2, also for the H=
-W
-> > > > > switch (which should do the same job I think).
-> > > > >=20
-> > > > > Cheers,
-> > > > > Old=C5=99ich.
-> > > >=20
-> > > > That's weird!
-> > > > Because acer-wmi driver only maintain the killswitch on by itse=
-lf and
-> > > > will not touch hci driver's killswitch. I don't know why hci's
-> > > > killswitch initial state is 0, need to check hci driver and rfk=
-ill
-> > > > staff.
-> > > >=20
-> > > > Could you please share your bluetooth device to us?
-> > > > Please send out "lsusb" result when bluetooth device available.
-> > >=20
-> > > Bus 008 Device 002: ID 0a5c:2101 Broadcom Corp. Bluetooth Control=
-ler
-> > >=20
-> > > dmesg shows the following:
-> > >=20
-> > > [ 2422.322067] usb 8-2: new full speed USB device using uhci_hcd =
-and
-> > > address 3 [ 2422.528212] usb 8-2: New USB device found, idVendor=3D=
-0a5c,
-> > > idProduct=3D2101 [ 2422.528223] usb 8-2: New USB device strings: =
-Mfr=3D1,
-> > > Product=3D2, SerialNumber=3D0
-> > > [ 2422.528231] usb 8-2: Product: Acer Module
-> > > [ 2422.528238] usb 8-2: Manufacturer: Broadcom Corp
-> > >=20
-> > > `rfkill list` shows the following
-> > >=20
-> > > 1) Before I enable the SW killswitch:
-> > >=20
-> > > 0: acer-wireless: Wireless LAN
-> > >=20
-> > >         Soft blocked: no
-> > >         Hard blocked: no
-> > >=20
-> > > 1: acer-bluetooth: Bluetooth
-> > >=20
-> > >         Soft blocked: yes
-> > >         Hard blocked: no
-> > >=20
-> > > 2: acer-threeg: Wireless WAN
-> > >=20
-> > >         Soft blocked: yes
-> > >         Hard blocked: no
-> > >=20
-> > > 3: phy0: Wireless LAN
-> > >=20
-> > >         Soft blocked: no
-> > >         Hard blocked: no
-> > >=20
-> > > 2) After I run `rfkill unblock 1`:
-> > >=20
-> > > 0: acer-wireless: Wireless LAN
-> > >=20
-> > >         Soft blocked: no
-> > >         Hard blocked: no
-> > >=20
-> > > 1: acer-bluetooth: Bluetooth
-> > >=20
-> > >         Soft blocked: no
-> > >         Hard blocked: no
-> > >=20
-> > > 2: acer-threeg: Wireless WAN
-> > >=20
-> > >         Soft blocked: yes
-> > >         Hard blocked: no
-> > >=20
-> > > 3: phy0: Wireless LAN
-> > >=20
-> > >         Soft blocked: no
-> > >         Hard blocked: no
-> > >=20
-> > > 6: hci0: Bluetooth
-> > >=20
-> > >         Soft blocked: yes
-> > >         Hard blocked: no
-> > >=20
-> > > I've repeated it several times, so hci0 has number 6 now.
-> > >=20
-> > > Thanks for help,
-> > > Old=C5=99ich.
-> >=20
-> > Thank's for your test result.
-> > Want to double confirm with you...
-> > The above result is base on CONFIG_RFKILL_INPUT=3DN ?
->=20
-> No, that was just a formatting problem of a "reply" to a mail. That w=
-asn't
-> my reaction, it was just a word from the previous line. I'm still usi=
-ng
-> CONFIG_RFKILL_INPUT=3DY.
->=20
-> Old=C5=99ich.
->=20
-> > I just simply check the rfkill stuff,
-> > I found when CONFIG_RFKILL_INPUT set to enable and there have any d=
-river
-> > call rfkill_init_sw_state before register rfkill object, then rfkil=
-l
-> > will sync this state to all killswitch that have the same type and =
-also
-> > will set the same initial state to new killswitch have the same typ=
-e.
-> >=20
-> > Looks like rfkill will sync the state for the same type killswitch =
-if
-> > used rfkill_init_sw_state, I will do more detail debug and trace fo=
-r
-> > rfkill stuff, then find out solution.
+Hi Matthew,
 
-I've added dump_trace() into hci_rfkill_set_block and the result is thi=
-s:
+> Hm. This patch makes both git-am and patch very unhappy, in that they 
+> fail to create samsung-q10.c despite it not already existing. How did 
+> you generate it?
 
-[   85.180724] hci_rfkill_set_block: f36bb800 name hci0 blocked 1
-[   85.180734] Pid: 8, comm: kworker/1:0 Not tainted 2.6.38-drm+ #106
-[   85.180740] Call Trace:
-[   85.180758]  [<c080ae7b>] ? hci_rfkill_set_block+0x3b/0x60
-[   85.180769]  [<c08a9b58>] ? rfkill_set_block+0x68/0xe0
-[   85.180778]  [<c08a9e36>] ? rfkill_sync_work+0x26/0x40
-[   85.180791]  [<c027e851>] ? process_one_work+0x121/0x370
-[   85.180802]  [<c0263a0b>] ? get_parent_ip+0xb/0x40
-[   85.180810]  [<c08a9e10>] ? rfkill_sync_work+0x0/0x40
-[   85.180820]  [<c027ee3c>] ? worker_thread+0x11c/0x3b0
-[   85.180831]  [<c027ed20>] ? worker_thread+0x0/0x3b0
-[   85.180840]  [<c0282144>] ? kthread+0x74/0x80
-[   85.180849]  [<c02820d0>] ? kthread+0x0/0x80
-[   85.180859]  [<c022f1f6>] ? kernel_thread_helper+0x6/0x10
+I used git format-patch. I guess I must have done something wrong
+- I'm sorry about that. Here's a version made using diff.
 
-It goes from rfkill_sync_work. That is all I can do now, I guess you wi=
-ll be=20
-faster than me in finding the solution :-)
+Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
 
-Cheers,
-Old=C5=99ich.
-
-> >=20
-> >=20
-> > Thank's a lot!
-> > Joey Lee
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-acpi"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff -uprN -X platform-drivers-x86/Documentation/dontdiff platform-drivers-x86-vanilla/drivers/platform/x86/Kconfig platform-drivers-x86/drivers/platform/x86/Kconfig
+--- platform-drivers-x86-vanilla/drivers/platform/x86/Kconfig	2011-03-11 23:56:46.000000000 +0000
++++ platform-drivers-x86/drivers/platform/x86/Kconfig	2011-03-12 00:08:03.000000000 +0000
+@@ -654,4 +654,11 @@ config XO1_RFKILL
+ 	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
+ 	  laptop.
+ 
++config SAMSUNG_Q10
++	tristate "Samsung Q10 Extras"
++	select BACKLIGHT_CLASS_DEVICE
++	---help---
++          This driver provides support for backlight control on Samsung Q10
++          and some other laptops, including Dell Latitude X200.
++
+ endif # X86_PLATFORM_DEVICES
+diff -uprN -X platform-drivers-x86/Documentation/dontdiff platform-drivers-x86-vanilla/drivers/platform/x86/Makefile platform-drivers-x86/drivers/platform/x86/Makefile
+--- platform-drivers-x86-vanilla/drivers/platform/x86/Makefile	2011-03-11 23:56:46.000000000 +0000
++++ platform-drivers-x86/drivers/platform/x86/Makefile	2011-03-12 00:07:13.000000000 +0000
+@@ -34,3 +34,4 @@ obj-$(CONFIG_INTEL_IPS)		+= intel_ips.o
+ obj-$(CONFIG_GPIO_INTEL_PMIC)	+= intel_pmic_gpio.o
+ obj-$(CONFIG_XO1_RFKILL)	+= xo1-rfkill.o
+ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
++obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+diff -uprN -X platform-drivers-x86/Documentation/dontdiff platform-drivers-x86-vanilla/drivers/platform/x86/samsung-q10.c platform-drivers-x86/drivers/platform/x86/samsung-q10.c
+--- platform-drivers-x86-vanilla/drivers/platform/x86/samsung-q10.c	1970-01-01 01:00:00.000000000 +0100
++++ platform-drivers-x86/drivers/platform/x86/samsung-q10.c	2011-03-12 00:00:03.000000000 +0000
+@@ -0,0 +1,179 @@
++/*
++ *  Driver for Samsung Q10: controls the backlight
++ *
++ *  Copyright (c) 2011 Frederick van der Wyck <fvanderwyck@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/backlight.h>
++#include <linux/i8042.h>
++#include <linux/dmi.h>
++
++#define SAMSUNGQ10_BL_MAX_INTENSITY      255
++#define SAMSUNGQ10_BL_DEFAULT_INTENSITY  185
++
++#define SAMSUNGQ10_BL_8042_CMD           0xbe
++#define SAMSUNGQ10_BL_8042_DATA          { 0x89, 0x91 }
++
++static int samsungq10_bl_brightness;
++
++static bool force;
++module_param(force, bool, 0);
++MODULE_PARM_DESC(force,
++		"Disable the DMI check and force the driver to be loaded");
++
++static int samsungq10_bl_set_intensity(struct backlight_device *bd)
++{
++
++	int brightness = bd->props.brightness;
++	unsigned char c[3] = SAMSUNGQ10_BL_8042_DATA;
++
++	c[2] = (unsigned char)brightness;
++	i8042_lock_chip();
++	i8042_command(c, (0x30 << 8) | SAMSUNGQ10_BL_8042_CMD);
++	i8042_unlock_chip();
++	samsungq10_bl_brightness = brightness;
++
++	return 0;
++}
++
++static int samsungq10_bl_get_intensity(struct backlight_device *bd)
++{
++	return samsungq10_bl_brightness;
++}
++
++static const struct backlight_ops samsungq10_bl_ops = {
++	.get_brightness = samsungq10_bl_get_intensity,
++	.update_status	= samsungq10_bl_set_intensity,
++};
++
++#ifdef CONFIG_PM_SLEEP
++static int samsungq10_suspend(struct device *dev)
++{
++	return 0;
++}
++
++static int samsungq10_resume(struct device *dev)
++{
++
++	struct backlight_device *bd = dev_get_drvdata(dev);
++
++	samsungq10_bl_set_intensity(bd);
++	return 0;
++}
++#else
++#define samsungq10_suspend NULL
++#define samsungq10_resume  NULL
++#endif
++
++static SIMPLE_DEV_PM_OPS(samsungq10_pm_ops,
++			  samsungq10_suspend, samsungq10_resume);
++
++static int __devinit samsungq10_probe(struct platform_device *pdev)
++{
++
++	struct backlight_properties props;
++	struct backlight_device *bd;
++
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.max_brightness = SAMSUNGQ10_BL_MAX_INTENSITY;
++	bd = backlight_device_register("samsung", &pdev->dev, NULL,
++				       &samsungq10_bl_ops, &props);
++	if (IS_ERR(bd))
++		return PTR_ERR(bd);
++
++	platform_set_drvdata(pdev, bd);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	return 0;
++}
++
++static int __devexit samsungq10_remove(struct platform_device *pdev)
++{
++
++	struct backlight_device *bd = platform_get_drvdata(pdev);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	backlight_device_unregister(bd);
++
++	return 0;
++}
++
++static struct platform_driver samsungq10_driver = {
++	.driver		= {
++		.name	= KBUILD_MODNAME,
++		.owner	= THIS_MODULE,
++		.pm	= &samsungq10_pm_ops,
++	},
++	.probe		= samsungq10_probe,
++	.remove		= __devexit_p(samsungq10_remove),
++};
++
++static struct platform_device *samsungq10_device;
++
++static int __init dmi_check_callback(const struct dmi_system_id *id)
++{
++	printk(KERN_INFO KBUILD_MODNAME ": found model '%s'\n", id->ident);
++	return 0;
++}
++
++static struct dmi_system_id __initdata samsungq10_dmi_table[] = {
++	{
++		.ident = "Samsung Q10",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Samsung"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SQ10"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{
++		.ident = "Dell Latitude X200",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X200"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(dmi, samsungq10_dmi_table);
++
++static int __init samsungq10_init(void)
++{
++	if (!force && !dmi_check_system(samsungq10_dmi_table))
++		return -ENODEV;
++
++	samsungq10_device = platform_create_bundle(&samsungq10_driver,
++						   samsungq10_probe,
++						   NULL, 0, NULL, 0);
++
++	if (IS_ERR(samsungq10_device))
++		return PTR_ERR(samsungq10_device);
++
++	return 0;
++}
++
++static void __exit samsungq10_exit(void)
++{
++	platform_device_unregister(samsungq10_device);
++	platform_driver_unregister(&samsungq10_driver);
++}
++
++module_init(samsungq10_init);
++module_exit(samsungq10_exit);
++
++MODULE_AUTHOR("Frederick van der Wyck <fvanderwyck@gmail.com>");
++MODULE_DESCRIPTION("Samsung Q10 Driver");
++MODULE_LICENSE("GPL");
