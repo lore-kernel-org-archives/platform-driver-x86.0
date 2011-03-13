@@ -1,29 +1,60 @@
-From: Vasiliy Kulikov <segoon@openwall.com>
-Subject: Re: [PATCH 00/20] world-writable files in sysfs and debugfs
-Date: Sat, 12 Mar 2011 23:23:06 +0300
-Message-ID: <AANLkTikE-A=Fe-yRrN0opWwJGQ0f4uOzkyB3XCcEUrFE__40767.940603155$1299961417$gmane$org@mail.gmail.com>
-References: <cover.1296818921.git.segoon@openwall.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] msi-laptop: use pr_<level> for messages
+Date: Sat, 12 Mar 2011 22:31:01 -0800
+Message-ID: <20110313063101.GE31566@core.coreip.homeip.net>
+References: <1299754954-27787-1-git-send-email-jlee@novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:41357 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754717Ab1CLUXI convert rfc822-to-8bit (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:37437 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754222Ab1CMGbG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 12 Mar 2011 15:23:08 -0500
-In-Reply-To: <cover.1296818921.git.segoon@openwall.com>
+	Sun, 13 Mar 2011 01:31:06 -0500
+Received: by pvg12 with SMTP id 12so678618pvg.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 12 Mar 2011 22:31:05 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <1299754954-27787-1-git-send-email-jlee@novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Corentin Chary <corentincj@iksaif.net>
 
-> Vasiliy Kulikov (20):
-> =A0mach-ux500: mbox-db5500: world-writable sysfs fifo file
-> =A0leds: lp5521: world-writable sysfs engine* files
-> =A0leds: lp5523: world-writable engine* sysfs files
-> =A0misc: ep93xx_pwm: world-writable sysfs files
-> =A0rtc: rtc-ds1511: world-writable sysfs nvram file
-> =A0scsi: aic94xx: world-writable sysfs update_bios file
-> =A0scsi: iscsi: world-writable sysfs priv_sess file
+On Thu, Mar 10, 2011 at 07:02:34PM +0800, Lee, Chun-Yi wrote:
+> msi-laptop: use pr_<level> for messages
+> 
+> Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+> Cc: Matthew Garrett <mjg@redhat.com>
+> Cc: Dmitry Torokhov <dtor@mail.ru>
+> Cc: Corentin Chary <corentincj@iksaif.net>
+> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+> ---
+>  drivers/platform/x86/msi-laptop.c |   13 ++++++-------
+>  1 files changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index 028d2c6..77a6c3b 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -445,8 +445,7 @@ static struct platform_device *msipf_device;
+>  
+>  static int dmi_check_cb(const struct dmi_system_id *id)
+>  {
+> -	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
+> -	       id->ident);
+> +	pr_info("msi-laptop: Identified laptop model '%s'.\n", id->ident);
 
-These are still not merged :(
+No, you need to add:
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+at the very beginning of your driver (before includes) and then just do
+
+	pr_info("Identified laptop model '%s'.\n", id->ident);
+
+and pr_fmt() will ensure that alll your messages use consistent prefix.
+
+Thanks.
+
+-- 
+Dmitry
