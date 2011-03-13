@@ -1,33 +1,39 @@
-From: Nikolai Kondrashov <spbnick@gmail.com>
+From: Greg KH <greg@kroah.com>
 Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-Date: Sun, 13 Mar 2011 19:51:52 +0200
-Message-ID: <4D7D0438.9060607@gmail.com>
-References: <4D793D05.3070908@gmail.com> <20110310211519.GA11862@kroah.com> <4D79CB47.2030405@gmail.com> <20110311170313.GA10202@kroah.com> <4D7A72E3.1050407@gmail.com> <20110311193433.GB14204@kroah.com> <4D7A8419.6080107@gmail.com> <20110311203032.GA14384@kroah.com> <4D7C9668.3000902@gmail.com> <20110313161752.GC10718@kroah.com> <20110313162812.GA25369@srcf.ucam.org>
+Date: Sun, 13 Mar 2011 10:58:13 -0700
+Message-ID: <20110313175813.GA11702@kroah.com>
+References: <20110311170313.GA10202@kroah.com>
+ <4D7A72E3.1050407@gmail.com>
+ <20110311193433.GB14204@kroah.com>
+ <4D7A8419.6080107@gmail.com>
+ <20110311203032.GA14384@kroah.com>
+ <4D7C9668.3000902@gmail.com>
+ <4D7CA2A8.4010700@t-online.de>
+ <4D7CC048.805@gmail.com>
+ <20110313161823.GD10718@kroah.com>
+ <4D7D0390.3000108@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:61428 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753784Ab1CMRvz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 13 Mar 2011 13:51:55 -0400
-In-Reply-To: <20110313162812.GA25369@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Greg KH <greg@kroah.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4D7D0390.3000108@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikolai Kondrashov <spbnick@gmail.com>
+Cc: Richard =?iso-8859-1?Q?Sch=FCtz?= <r.schtz@t-online.de>, Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 03/13/2011 06:28 PM, Matthew Garrett wrote:
-> It's also modifying configuration that belongs to a device being managed
-> by another driver, so it's the kind of thing we frown upon.
-Sure, then I guessed right.
+On Sun, Mar 13, 2011 at 07:49:04PM +0200, Nikolai Kondrashov wrote:
+> On 03/13/2011 06:18 PM, Greg KH wrote:
+> >I really don't know, sorry.  Try messing with the actual_brightness file
+> >instead, that's the one to use.
+> Sure, thank you :)
+> 
+> Still, what about the wireless on/off button? Is Gnome support required, or
+> it should work as is? Because mine doesn't seem to do anything.
 
-> Having said that, the Intel driver should gain native backlight support in
-> .39.
-Great news!
+It should "just work", as it does on my machine, but I'm running a very
+new Gnome, so it might have hooks to look at the rfkill stuff built in.
 
-Thank you :)
+thanks,
 
-Sincerely,
-Nick
+greg k-h
