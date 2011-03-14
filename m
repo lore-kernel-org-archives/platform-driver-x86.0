@@ -1,39 +1,37 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-Date: Sun, 13 Mar 2011 10:58:13 -0700
-Message-ID: <20110313175813.GA11702@kroah.com>
-References: <20110311170313.GA10202@kroah.com>
- <4D7A72E3.1050407@gmail.com>
- <20110311193433.GB14204@kroah.com>
- <4D7A8419.6080107@gmail.com>
- <20110311203032.GA14384@kroah.com>
- <4D7C9668.3000902@gmail.com>
- <4D7CA2A8.4010700@t-online.de>
- <4D7CC048.805@gmail.com>
- <20110313161823.GD10718@kroah.com>
- <4D7D0390.3000108@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Keith Packard <keithp@keithp.com>
+Subject: [PATCH] thinkpad-acpi: Some BIOS versions don't end in WW, remove check
+Date: Sun, 13 Mar 2011 23:52:35 -0700
+Message-ID: <1300085555-31022-1-git-send-email-keithp@keithp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4D7D0390.3000108@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nikolai Kondrashov <spbnick@gmail.com>
-Cc: Richard =?iso-8859-1?Q?Sch=FCtz?= <r.schtz@t-online.de>, Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Keith Packard <keithp@keithp.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 13, 2011 at 07:49:04PM +0200, Nikolai Kondrashov wrote:
-> On 03/13/2011 06:18 PM, Greg KH wrote:
-> >I really don't know, sorry.  Try messing with the actual_brightness file
-> >instead, that's the one to use.
-> Sure, thank you :)
-> 
-> Still, what about the wireless on/off button? Is Gnome support required, or
-> it should work as is? Because mine doesn't seem to do anything.
+My X201s BIOS version string is 6QET46V1 (1.16 ). The
+EC version string is 6QHT28WW-1.09. The driver was requiring that both
+of these have 'WW' in positions 6 and 7. I don't know what the
+significance of having 'V1' there instead is, but removing the test
+makes the driver load on my machine.
 
-It should "just work", as it does on my machine, but I'm running a very
-new Gnome, so it might have hooks to look at the rfkill stuff built in.
+Signed-off-by: Keith Packard <keithp@keithp.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
 
-thanks,
-
-greg k-h
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index eb99223..32f602e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8617,8 +8617,7 @@ static bool __pure __init tpacpi_is_valid_fw_id(const char* const s,
+ 		tpacpi_is_fw_digit(s[1]) &&
+ 		s[2] == t && s[3] == 'T' &&
+ 		tpacpi_is_fw_digit(s[4]) &&
+-		tpacpi_is_fw_digit(s[5]) &&
+-		s[6] == 'W' && s[7] == 'W';
++		tpacpi_is_fw_digit(s[5]);
+ }
+ 
+ /* returns 0 - probe ok, or < 0 - probe error.
+-- 
+1.7.4.1
