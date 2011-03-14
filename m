@@ -1,59 +1,45 @@
 From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] platform-driver-x86: fix wrong merge for compal-laptop.c
-Date: Mon, 14 Mar 2011 18:53:14 +0800
-Message-ID: <1300099994.3761.2.camel@phoenix>
+Subject: [PATCH] platform-driver-x86: samsung-laptop: make dmi_check_cb to
+ return 1 instead of 0
+Date: Mon, 14 Mar 2011 18:56:18 +0800
+Message-ID: <1300100178.3761.4.camel@phoenix>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:33408 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753006Ab1CNK4W (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 14 Mar 2011 06:56:22 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel@vger.kernel.org
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-I found the commit 80183a4b
-"compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb to return 1 instead of 0"
-has wrong patch merge.
+dmi_check_system() walks the table running matching functions until
+someone returns non zero or we hit the end.
 
-The original patch change the return value for dmi_check_cb():
-https://lkml.org/lkml/2010/7/2/88
-But commit 80183a4b changed the return value for set_backlight_level.
+This patch makes dmi_check_cb to return 1 so dmi_check_system() return
+immediately when a match is found.
 
 Signed-off-by: Axel Lin <axel.lin@gmail.com>
 ---
- drivers/platform/x86/compal-laptop.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 034572b..f90bdf7 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -275,7 +275,7 @@ static int set_backlight_level(int level)
- 
- 	ec_write(BACKLIGHT_LEVEL_ADDR, level);
- 
--	return 1;
-+	return 0;
- }
- 
- static int get_backlight_level(void)
-@@ -763,7 +763,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
- 	printk(KERN_INFO DRIVER_NAME": Identified laptop model '%s'\n",
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index e0b390d..de434c6 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -496,7 +496,7 @@ static int __init dmi_check_cb(const struct dmi_system_id *id)
+ {
+ 	pr_info("found laptop model '%s'\n",
  		id->ident);
- 	extra_features = false;
 -	return 0;
 +	return 1;
  }
  
- static int dmi_check_cb_extra(const struct dmi_system_id *id)
-@@ -772,7 +772,7 @@ static int dmi_check_cb_extra(const struct dmi_system_id *id)
- 		"enabling extra features\n",
- 		id->ident);
- 	extra_features = true;
--	return 0;
-+	return 1;
- }
- 
- static struct dmi_system_id __initdata compal_dmi_table[] = {
+ static struct dmi_system_id __initdata samsung_dmi_table[] = {
 -- 
 1.7.1
