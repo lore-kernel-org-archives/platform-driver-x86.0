@@ -1,37 +1,59 @@
-From: Keith Packard <keithp@keithp.com>
-Subject: [PATCH] thinkpad-acpi: Some BIOS versions don't end in WW, remove check
-Date: Sun, 13 Mar 2011 23:52:35 -0700
-Message-ID: <1300085555-31022-1-git-send-email-keithp@keithp.com>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] platform-driver-x86: fix wrong merge for compal-laptop.c
+Date: Mon, 14 Mar 2011 18:53:14 +0800
+Message-ID: <1300099994.3761.2.camel@phoenix>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Keith Packard <keithp@keithp.com>
+To: linux-kernel@vger.kernel.org
+Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-My X201s BIOS version string is 6QET46V1 (1.16 ). The
-EC version string is 6QHT28WW-1.09. The driver was requiring that both
-of these have 'WW' in positions 6 and 7. I don't know what the
-significance of having 'V1' there instead is, but removing the test
-makes the driver load on my machine.
+I found the commit 80183a4b
+"compal-laptop/fujitsu-laptop/msi-laptop: make dmi_check_cb to return 1 instead of 0"
+has wrong patch merge.
 
-Signed-off-by: Keith Packard <keithp@keithp.com>
+The original patch change the return value for dmi_check_cb():
+https://lkml.org/lkml/2010/7/2/88
+But commit 80183a4b changed the return value for set_backlight_level.
+
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c |    3 +--
- 1 files changed, 1 insertions(+), 2 deletions(-)
+ drivers/platform/x86/compal-laptop.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index eb99223..32f602e 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8617,8 +8617,7 @@ static bool __pure __init tpacpi_is_valid_fw_id(const char* const s,
- 		tpacpi_is_fw_digit(s[1]) &&
- 		s[2] == t && s[3] == 'T' &&
- 		tpacpi_is_fw_digit(s[4]) &&
--		tpacpi_is_fw_digit(s[5]) &&
--		s[6] == 'W' && s[7] == 'W';
-+		tpacpi_is_fw_digit(s[5]);
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index 034572b..f90bdf7 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -275,7 +275,7 @@ static int set_backlight_level(int level)
+ 
+ 	ec_write(BACKLIGHT_LEVEL_ADDR, level);
+ 
+-	return 1;
++	return 0;
  }
  
- /* returns 0 - probe ok, or < 0 - probe error.
+ static int get_backlight_level(void)
+@@ -763,7 +763,7 @@ static int dmi_check_cb(const struct dmi_system_id *id)
+ 	printk(KERN_INFO DRIVER_NAME": Identified laptop model '%s'\n",
+ 		id->ident);
+ 	extra_features = false;
+-	return 0;
++	return 1;
+ }
+ 
+ static int dmi_check_cb_extra(const struct dmi_system_id *id)
+@@ -772,7 +772,7 @@ static int dmi_check_cb_extra(const struct dmi_system_id *id)
+ 		"enabling extra features\n",
+ 		id->ident);
+ 	extra_features = true;
+-	return 0;
++	return 1;
+ }
+ 
+ static struct dmi_system_id __initdata compal_dmi_table[] = {
 -- 
-1.7.4.1
+1.7.1
