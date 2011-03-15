@@ -1,50 +1,75 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [patch 1/2] asus-wmi: signedness bug in read_brightness()
-Date: Tue, 15 Mar 2011 08:27:19 +0100
-Message-ID: <AANLkTikEQdjPBKbGAB_mVqSVqx0_Ba6hw0rQh400KPZM@mail.gmail.com>
-References: <20110315070623.GS2008@bicker>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Keng-Yu Lin <keng-yu.lin@canonical.com>
+Subject: [PATCH] thinkpad-acpi: disable alsa volume mixer for SL410/SL510
+Date: Tue, 15 Mar 2011 17:25:06 +0800
+Message-ID: <1300181106-20219-1-git-send-email-keng-yu.lin@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:51523 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754573Ab1COH1i convert rfc822-to-8bit (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:50409 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753188Ab1COJZb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Mar 2011 03:27:38 -0400
-In-Reply-To: <20110315070623.GS2008@bicker>
+	Tue, 15 Mar 2011 05:25:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <error27@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Keng-Yu Lin <keng-yu.lin@canonical.com>
 
-On Tue, Mar 15, 2011 at 8:06 AM, Dan Carpenter <error27@gmail.com> wrot=
-e:
-> "err" needs to be signed for the error handling to work.
->
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
-sus-wmi.c
-> index 5b779a9..a038595 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -946,7 +946,8 @@ static int read_brightness_max(struct asus_wmi *a=
-sus)
-> =C2=A0static int read_brightness(struct backlight_device *bd)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_wmi *asus =3D bl_get_data(bd);
-> - =C2=A0 =C2=A0 =C2=A0 u32 retval, err;
-> + =C2=A0 =C2=A0 =C2=A0 u32 retval;
-> + =C2=A0 =C2=A0 =C2=A0 int err;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D asus_wmi_get_devstate(asus, ASUS_W=
-MI_DEVID_BRIGHTNESS, &retval);
+The mute key on SL410/SL510 only works when the alsa volume mixer
+is not enabled. This patch makes the alsa volume mixer disabled
+on the matched SL410/SL510 EC versions.
 
-Hm, Thanks,
+Signed-off-by: Keng-Yu Lin <keng-yu.lin@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c |   12 ++++++++----
+ 1 files changed, 8 insertions(+), 4 deletions(-)
 
-Acked-by: Corentin Chary <corentin.chary@gmail.com>
+BugLink: https://launchpad.net/bugs/595896
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index eb99223..d4ee8f2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6870,6 +6870,7 @@ err_exit:
+ 
+ #define TPACPI_VOL_Q_MUTEONLY	0x0001	/* Mute-only control available */
+ #define TPACPI_VOL_Q_LEVEL	0x0002  /* Volume control available */
++#define TPACPI_VOL_Q_IGNORE	0x0003  /* No Volume control available */
+ 
+ static const struct tpacpi_quirk volume_quirk_table[] __initconst = {
+ 	/* Whitelist volume level on all IBM by default */
+@@ -6886,6 +6887,8 @@ static const struct tpacpi_quirk volume_quirk_table[] __initconst = {
+ 	TPACPI_QEC_LNV('7', 'J', TPACPI_VOL_Q_LEVEL), /* X60t */
+ 	TPACPI_QEC_LNV('7', '7', TPACPI_VOL_Q_LEVEL), /* Z60 */
+ 	TPACPI_QEC_LNV('7', 'F', TPACPI_VOL_Q_LEVEL), /* Z61 */
++	TPACPI_QEC_LNV('6', 'J', TPACPI_VOL_Q_IGNORE), /* SL410/SL510 */
++	TPACPI_QEC_LNV('7', 'X', TPACPI_VOL_Q_IGNORE), /* SL410/SL510 */
+ 
+ 	/* Whitelist mute-only on all Lenovo by default */
+ 	{ .vendor = PCI_VENDOR_ID_LENOVO,
+@@ -6921,20 +6924,21 @@ static int __init volume_init(struct ibm_init_struct *iibm)
+ 	if (volume_capabilities >= TPACPI_VOL_CAP_MAX)
+ 		return -EINVAL;
+ 
++	quirks = tpacpi_check_quirks(volume_quirk_table,
++				     ARRAY_SIZE(volume_quirk_table));
++
+ 	/*
+ 	 * The ALSA mixer is our primary interface.
+ 	 * When disabled, don't install the subdriver at all
+ 	 */
+-	if (!alsa_enable) {
++	if (!alsa_enable || quirks & TPACPI_VOL_Q_IGNORE) {
+ 		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_MIXER,
+ 			    "ALSA mixer disabled by parameter, "
+ 			    "not loading volume subdriver...\n");
++		alsa_enable = 0; /* reflect the quirk status in sysfs */
+ 		return 1;
+ 	}
+ 
+-	quirks = tpacpi_check_quirks(volume_quirk_table,
+-				     ARRAY_SIZE(volume_quirk_table));
+-
+ 	switch (volume_capabilities) {
+ 	case TPACPI_VOL_CAP_AUTO:
+ 		if (quirks & TPACPI_VOL_Q_MUTEONLY)
+-- 
+1.7.1
