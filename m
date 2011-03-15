@@ -1,75 +1,155 @@
-From: Keng-Yu Lin <keng-yu.lin@canonical.com>
-Subject: [PATCH] thinkpad-acpi: disable alsa volume mixer for SL410/SL510
-Date: Tue, 15 Mar 2011 17:25:06 +0800
-Message-ID: <1300181106-20219-1-git-send-email-keng-yu.lin@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:50409 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753188Ab1COJZb (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Mar 2011 05:25:31 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keng-Yu Lin <keng-yu.lin@canonical.com>
+From: "Joey Lee" <jlee-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
+ 2.6.37
+Date: Tue, 15 Mar 2011 05:11:50 -0600
+Message-ID: <4D7FE4260200002300029D70@novprvlin0050.provo.novell.com>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
+ <201103112154.09729.oldium.pro@seznam.cz>
+ <4D7B2E010200002300029B57@novprvlin0050.provo.novell.com>
+ <201103112234.42885.oldium.pro@seznam.cz>
+ <4D7B32B10200002300029B5E@novprvlin0050.provo.novell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4D7B32B10200002300029B5E-jb/6P8Q/KsjOKUPnnb0SpZ/xhEQF/MHJojBamW5iJbs@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: oldium.pro-9Vj9tDbzfuSlVyrhU4qvOw@public.gmane.org
+Cc: Al Cho <ACho-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>, mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-The mute key on SL410/SL510 only works when the alsa volume mixer
-is not enabled. This patch makes the alsa volume mixer disabled
-on the matched SL410/SL510 EC versions.
+Hi Old=C5=99ich,
 
-Signed-off-by: Keng-Yu Lin <keng-yu.lin@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c |   12 ++++++++----
- 1 files changed, 8 insertions(+), 4 deletions(-)
+=E6=96=BC =E4=BA=94=EF=BC=8C2011-03-11 =E6=96=BC 14:45 -0700=EF=BC=8CJo=
+ey Lee =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi Old=C5=99ich,
+> > > > > > >=20
+> > > > > > > > 1. I have to enable the HW bluetooth switch to get the =
+bluetooth
+> > > > > > > > LED running (USB device appears in lsusb). The acer-blu=
+etooth SW
+> > > > > > > > rfkill is unblocked, the SW rfkill of hci0 is blocked.
+> > > > > > >=20
+> > > > > > > Yes, this is also right behavior, because acer-wmi driver=
+ will
+> > > > > > > maintain the killswitch status with BIOS.
+> > > > > > >=20
+> > > > > > > > 2. Next I have to unblock SW rfkill on hci0 by a call t=
+o `rfkill
+> > > > > > > > unblock <number of hci0>`.
+> > > > > > > > 3. Last I have to enable the HCI by the call to `hcicon=
+fig hci0
+> > > > > > > > up`.
+> > > > >
+> > > > `rfkill list` shows the following
+> > > >=20
+> > > > 1) Before I enable the SW killswitch:
+> > > >=20
+> > > > 0: acer-wireless: Wireless LAN
+> > > >=20
+> > > >         Soft blocked: no
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 1: acer-bluetooth: Bluetooth
+> > > >=20
+> > > >         Soft blocked: yes
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 2: acer-threeg: Wireless WAN
+> > > >=20
+> > > >         Soft blocked: yes
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 3: phy0: Wireless LAN
+> > > >=20
+> > > >         Soft blocked: no
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 2) After I run `rfkill unblock 1`:
+> > > >=20
+> > > > 0: acer-wireless: Wireless LAN
+> > > >=20
+> > > >         Soft blocked: no
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 1: acer-bluetooth: Bluetooth
+> > > >=20
+> > > >         Soft blocked: no
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 2: acer-threeg: Wireless WAN
+> > > >=20
+> > > >         Soft blocked: yes
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 3: phy0: Wireless LAN
+> > > >=20
+> > > >         Soft blocked: no
+> > > >         Hard blocked: no
+> > > >=20
+> > > > 6: hci0: Bluetooth
+> > > >=20
+> > > >         Soft blocked: yes
+> > > >         Hard blocked: no
+> > > >=20
+> > > > I've repeated it several times, so hci0 has number 6 now.
+> > > >=20
+> > > > Thanks for help,
+> > > > Old=C5=99ich.
+> > >=20
+> > > Thank's for your test result.
+> > > Want to double confirm with you...
+> > > The above result is base on CONFIG_RFKILL_INPUT=3DN ?
+> >=20
+> > No, that was just a formatting problem of a "reply" to a mail. That=
+ wasn't my=20
+> > reaction, it was just a word from the previous line. I'm still usin=
+g=20
+> > CONFIG_RFKILL_INPUT=3DY.
+> >=20
+> > Old=C5=99ich.
+> >=20
+>=20
+> That's make sense now!
+>=20
+> Thank's for your bug report, I am tracing and try to find out solutio=
+n.
+> Joey Lee
+>=20
 
-BugLink: https://launchpad.net/bugs/595896
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index eb99223..d4ee8f2 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -6870,6 +6870,7 @@ err_exit:
- 
- #define TPACPI_VOL_Q_MUTEONLY	0x0001	/* Mute-only control available */
- #define TPACPI_VOL_Q_LEVEL	0x0002  /* Volume control available */
-+#define TPACPI_VOL_Q_IGNORE	0x0003  /* No Volume control available */
- 
- static const struct tpacpi_quirk volume_quirk_table[] __initconst = {
- 	/* Whitelist volume level on all IBM by default */
-@@ -6886,6 +6887,8 @@ static const struct tpacpi_quirk volume_quirk_table[] __initconst = {
- 	TPACPI_QEC_LNV('7', 'J', TPACPI_VOL_Q_LEVEL), /* X60t */
- 	TPACPI_QEC_LNV('7', '7', TPACPI_VOL_Q_LEVEL), /* Z60 */
- 	TPACPI_QEC_LNV('7', 'F', TPACPI_VOL_Q_LEVEL), /* Z61 */
-+	TPACPI_QEC_LNV('6', 'J', TPACPI_VOL_Q_IGNORE), /* SL410/SL510 */
-+	TPACPI_QEC_LNV('7', 'X', TPACPI_VOL_Q_IGNORE), /* SL410/SL510 */
- 
- 	/* Whitelist mute-only on all Lenovo by default */
- 	{ .vendor = PCI_VENDOR_ID_LENOVO,
-@@ -6921,20 +6924,21 @@ static int __init volume_init(struct ibm_init_struct *iibm)
- 	if (volume_capabilities >= TPACPI_VOL_CAP_MAX)
- 		return -EINVAL;
- 
-+	quirks = tpacpi_check_quirks(volume_quirk_table,
-+				     ARRAY_SIZE(volume_quirk_table));
-+
- 	/*
- 	 * The ALSA mixer is our primary interface.
- 	 * When disabled, don't install the subdriver at all
- 	 */
--	if (!alsa_enable) {
-+	if (!alsa_enable || quirks & TPACPI_VOL_Q_IGNORE) {
- 		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_MIXER,
- 			    "ALSA mixer disabled by parameter, "
- 			    "not loading volume subdriver...\n");
-+		alsa_enable = 0; /* reflect the quirk status in sysfs */
- 		return 1;
- 	}
- 
--	quirks = tpacpi_check_quirks(volume_quirk_table,
--				     ARRAY_SIZE(volume_quirk_table));
--
- 	switch (volume_capabilities) {
- 	case TPACPI_VOL_CAP_AUTO:
- 		if (quirks & TPACPI_VOL_Q_MUTEONLY)
--- 
-1.7.1
+After trace rfkill-input stuff, I thought this is rfkill-input's normal
+behavior but not a bug.
+
+Unfortunately, I didn't find any workaround way when a driver need to
+call rfkill_init_sw_state, e.g. acer-wmi driver.
+
+The rfkill-input will sync the rfkill state to all killswitchs that hav=
+e
+the same type. For example, acer-wmi set the initial software switch to
+_BLOCK_ when driver initial, then rfkill-input will also set any new
+bluetooth killswitch state to _BLOCK_ .
+
+Acer's BIOS default setup bluetooth's state is disable when system cold
+boot, and BIOS also can save the connection devices' state when system
+reboot. Currently, acer-wmi driver have right behavior to sync the stat=
+e
+with BIOS.
+
+=46ace to your situation, my suggestion is:=20
+
+- Use userland application to correct killswitch state.
+  highly suggest You can try urfkill daemon: http://www.freedesktop.org=
+/wiki/Software/urfkill
+  or
+  write a startup script to enable bluetooth when system boot.
+
+- Disable rfkill-input module if you didn't real use it.
+  The TravelMate 5730G have wifi hotkey that only emit KEY_WLAN, but=20
+  doesn't emit KEY_BLUETOOTH, that means rfkill-input cann't help you=20
+  enable bluetooth killswitch.
+
+
+Thank's a lot!
+Joey Lee
