@@ -1,154 +1,269 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] msi-laptop: use pr_<level> for messages
-Date: Wed, 16 Mar 2011 03:59:47 -0600
-Message-ID: <4D8124C30200002300029EBB@novprvlin0050.provo.novell.com>
-References: <1299754954-27787-1-git-send-email-jlee@novell.com>
- <20110313063101.GE31566@core.coreip.homeip.net>
- <4D8107970200002300029E69@novprvlin0050.provo.novell.com>
- <20110316082211.GC25912@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: use pr_<level> for messages
+Date: Wed, 16 Mar 2011 18:52:36 +0800
+Message-ID: <1300272756-32576-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <20110316082211.GC25912@core.coreip.homeip.net>
-Content-Disposition: inline
+Received: from mail-yi0-f46.google.com ([209.85.218.46]:47845 "EHLO
+	mail-yi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751825Ab1CPKzA (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 16 Mar 2011 06:55:00 -0400
+Received: by yia27 with SMTP id 27so601035yia.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Mar 2011 03:54:59 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dmitry.torokhov@gmail.com
-Cc: corentincj@iksaif.net, mjg@redhat.com, carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, Dmitry Torokhov <dtor@mail.ru>
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2011-03-16 =E6=96=BC 01:22 -0700=EF=BC=8CDm=
-itry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi Joey,
->=20
-> On Wed, Mar 16, 2011 at 01:55:19AM -0600, Joey Lee wrote:
-> > Hi Dmitry,=20
-> >=20
-> > =E6=96=BC =E5=85=AD=EF=BC=8C2011-03-12 =E6=96=BC 22:31 -0800=EF=BC=8C=
-Dmitry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
-> > > > =20
-> > > >  static int dmi_check_cb(const struct dmi_system_id *id)
-> > > >  {
-> > > > -	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n=
-",
-> > > > -	       id->ident);
-> > > > +	pr_info("msi-laptop: Identified laptop model '%s'.\n", id->id=
-ent);
-> > >=20
-> > > No, you need to add:
-> > >=20
-> > > #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > >=20
-> > > at the very beginning of your driver (before includes) and then j=
-ust do
-> > >=20
-> > > 	pr_info("Identified laptop model '%s'.\n", id->ident);
-> > >=20
-> > > and pr_fmt() will ensure that alll your messages use consistent p=
-refix.
-> > >=20
-> > > Thanks.
-> > >=20
-> >=20
-> > Thank's for your teach, it works fine to me. Follow your suggestion=
-, I
-> > fixed my patch like the following, please kindly review it again:
-> >=20
-> >=20
-> > >From 31123fcc91b073b329a970b075041eaec523b106 Mon Sep 17 00:00:00 =
-2001
-> > From: Lee, Chun-Yi <jlee@novell.com>
-> > Date: Wed, 16 Mar 2011 15:44:40 +0800
-> > Subject: [PATCH] msi-laptop: use pr_<level> for messages
-> >=20
-> > msi-laptop: use pr_<level> for messages
-> >=20
-> > Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-> > Cc: Matthew Garrett <mjg@redhat.com>
-> > Cc: Dmitry Torokhov <dtor@mail.ru>
-> > Cc: Corentin Chary <corentincj@iksaif.net>
-> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
->=20
-> Looks good to me.
->=20
-> Reviewed-by: Dmitry Torokhov <dtor@mail.ru>
->=20
+acer-wmi: use pr_<level> for messages
 
-Thank's for your kindly review. :-)
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ drivers/platform/x86/acer-wmi.c |   68 ++++++++++++++++-----------------------
+ 1 files changed, 28 insertions(+), 40 deletions(-)
 
-Joey Lee
-
-> > ---
-> >  drivers/platform/x86/msi-laptop.c |   14 +++++++-------
-> >  1 files changed, 7 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x=
-86/msi-laptop.c
-> > index 028d2c6..0de6d43 100644
-> > --- a/drivers/platform/x86/msi-laptop.c
-> > +++ b/drivers/platform/x86/msi-laptop.c
-> > @@ -51,6 +51,8 @@
-> >   * laptop as MSI S270. YMMV.
-> >   */
-> > =20
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> >  #include <linux/module.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/init.h>
-> > @@ -445,8 +447,7 @@ static struct platform_device *msipf_device;
-> > =20
-> >  static int dmi_check_cb(const struct dmi_system_id *id)
-> >  {
-> > -	printk(KERN_INFO "msi-laptop: Identified laptop model '%s'.\n",
-> > -	       id->ident);
-> > +	pr_info("Identified laptop model '%s'.\n", id->ident);
-> >  	return 1;
-> >  }
-> > =20
-> > @@ -834,8 +835,7 @@ static int load_scm_model_init(struct platform_=
-device *sdev)
-> > =20
-> >  	result =3D i8042_install_filter(msi_laptop_i8042_filter);
-> >  	if (result) {
-> > -		printk(KERN_ERR
-> > -			"msi-laptop: Unable to install key filter\n");
-> > +		pr_err("Unable to install key filter\n");
-> >  		goto fail_filter;
-> >  	}
-> > =20
-> > @@ -875,7 +875,7 @@ static int __init msi_init(void)
-> >  	/* Register backlight stuff */
-> > =20
-> >  	if (acpi_video_backlight_support()) {
-> > -		printk(KERN_INFO "MSI: Brightness ignored, must be controlled "
-> > +		pr_info("Brightness ignored, must be controlled "
-> >  		       "by ACPI video driver\n");
-> >  	} else {
-> >  		struct backlight_properties props;
-> > @@ -929,7 +929,7 @@ static int __init msi_init(void)
-> >  	if (auto_brightness !=3D 2)
-> >  		set_auto_brightness(auto_brightness);
-> > =20
-> > -	printk(KERN_INFO "msi-laptop: driver "MSI_DRIVER_VERSION" success=
-fully loaded.\n");
-> > +	pr_info("driver "MSI_DRIVER_VERSION" successfully loaded.\n");
-> > =20
-> >  	return 0;
-> > =20
-> > @@ -977,7 +977,7 @@ static void __exit msi_cleanup(void)
-> >  	if (auto_brightness !=3D 2)
-> >  		set_auto_brightness(1);
-> > =20
-> > -	printk(KERN_INFO "msi-laptop: driver unloaded.\n");
-> > +	pr_info("driver unloaded.\n");
-> >  }
-> > =20
-> >  module_init(msi_init);
-> > --=20
-> > 1.6.0.2
-> >=20
-> >=20
-> >=20
-> >=20
->=20
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index d10b280..1953c70 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -22,6 +22,8 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -47,12 +49,6 @@ MODULE_AUTHOR("Carlos Corbacho");
+ MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+ MODULE_LICENSE("GPL");
+ 
+-#define ACER_LOGPREFIX "acer-wmi: "
+-#define ACER_ERR KERN_ERR ACER_LOGPREFIX
+-#define ACER_NOTICE KERN_NOTICE ACER_LOGPREFIX
+-#define ACER_INFO KERN_INFO ACER_LOGPREFIX
+-#define ACER_WARNING KERN_WARNING ACER_LOGPREFIX
+-
+ /*
+  * Magic Number
+  * Meaning is unknown - this number is required for writing to ACPI for AMW0
+@@ -846,7 +842,7 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
+ 	has_type_aa = true;
+ 	type_aa = (struct hotkey_function_type_aa *) header;
+ 
+-	printk(ACER_INFO "Function bitmap for Communication Button: 0x%x\n",
++	pr_info("Function bitmap for Communication Button: 0x%x\n",
+ 		type_aa->commun_func_bitmap);
+ 
+ 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
+@@ -1036,7 +1032,7 @@ static int __devinit acer_backlight_init(struct device *dev)
+ 	bd = backlight_device_register("acer-wmi", dev, NULL, &acer_bl_ops,
+ 				       &props);
+ 	if (IS_ERR(bd)) {
+-		printk(ACER_ERR "Could not register Acer backlight device\n");
++		pr_err("Could not register Acer backlight device\n");
+ 		acer_backlight_device = NULL;
+ 		return PTR_ERR(bd);
+ 	}
+@@ -1083,8 +1079,7 @@ static acpi_status wmid3_get_device_status(u32 *value, u16 device)
+ 		return AE_ERROR;
+ 	}
+ 	if (obj->buffer.length != 8) {
+-		printk(ACER_WARNING "Unknown buffer length %d\n",
+-			obj->buffer.length);
++		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return AE_ERROR;
+ 	}
+@@ -1093,7 +1088,7 @@ static acpi_status wmid3_get_device_status(u32 *value, u16 device)
+ 	kfree(obj);
+ 
+ 	if (return_value.error_code || return_value.ec_return_value)
+-		printk(ACER_WARNING "Get Device Status failed: "
++		pr_warning("Get Device Status failed: "
+ 			"0x%x - 0x%x\n", return_value.error_code,
+ 			return_value.ec_return_value);
+ 	else
+@@ -1309,7 +1304,7 @@ static void acer_wmi_notify(u32 value, void *context)
+ 
+ 	status = wmi_get_event_data(value, &response);
+ 	if (status != AE_OK) {
+-		printk(ACER_WARNING "bad event status 0x%x\n", status);
++		pr_warning("bad event status 0x%x\n", status);
+ 		return;
+ 	}
+ 
+@@ -1318,14 +1313,12 @@ static void acer_wmi_notify(u32 value, void *context)
+ 	if (!obj)
+ 		return;
+ 	if (obj->type != ACPI_TYPE_BUFFER) {
+-		printk(ACER_WARNING "Unknown response received %d\n",
+-			obj->type);
++		pr_warning("Unknown response received %d\n", obj->type);
+ 		kfree(obj);
+ 		return;
+ 	}
+ 	if (obj->buffer.length != 8) {
+-		printk(ACER_WARNING "Unknown buffer length %d\n",
+-			obj->buffer.length);
++		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return;
+ 	}
+@@ -1337,11 +1330,11 @@ static void acer_wmi_notify(u32 value, void *context)
+ 	case WMID_HOTKEY_EVENT:
+ 		if (!sparse_keymap_report_event(acer_wmi_input_dev,
+ 				return_value.key_num, 1, true))
+-			printk(ACER_WARNING "Unknown key number - 0x%x\n",
++			pr_warning("Unknown key number - 0x%x\n",
+ 				return_value.key_num);
+ 		break;
+ 	default:
+-		printk(ACER_WARNING "Unknown function number - %d - %d\n",
++		pr_warning("Unknown function number - %d - %d\n",
+ 			return_value.function, return_value.key_num);
+ 		break;
+ 	}
+@@ -1370,8 +1363,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+ 		return AE_ERROR;
+ 	}
+ 	if (obj->buffer.length != 4) {
+-		printk(ACER_WARNING "Unknown buffer length %d\n",
+-		       obj->buffer.length);
++		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return AE_ERROR;
+ 	}
+@@ -1396,11 +1388,11 @@ static int acer_wmi_enable_ec_raw(void)
+ 	status = wmid3_set_lm_mode(&params, &return_value);
+ 
+ 	if (return_value.error_code || return_value.ec_return_value)
+-		printk(ACER_WARNING "Enabling EC raw mode failed: "
++		pr_warning("Enabling EC raw mode failed: "
+ 		       "0x%x - 0x%x\n", return_value.error_code,
+ 		       return_value.ec_return_value);
+ 	else
+-		printk(ACER_INFO "Enabled EC raw mode");
++		pr_info("Enabled EC raw mode");
+ 
+ 	return status;
+ }
+@@ -1419,7 +1411,7 @@ static int acer_wmi_enable_lm(void)
+ 	status = wmid3_set_lm_mode(&params, &return_value);
+ 
+ 	if (return_value.error_code || return_value.ec_return_value)
+-		printk(ACER_WARNING "Enabling Launch Manager failed: "
++		pr_warning("Enabling Launch Manager failed: "
+ 		       "0x%x - 0x%x\n", return_value.error_code,
+ 		       return_value.ec_return_value);
+ 
+@@ -1636,7 +1628,7 @@ static int create_debugfs(void)
+ {
+ 	interface->debug.root = debugfs_create_dir("acer-wmi", NULL);
+ 	if (!interface->debug.root) {
+-		printk(ACER_ERR "Failed to create debugfs directory");
++		pr_err("Failed to create debugfs directory");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -1657,11 +1649,10 @@ static int __init acer_wmi_init(void)
+ {
+ 	int err;
+ 
+-	printk(ACER_INFO "Acer Laptop ACPI-WMI Extras\n");
++	pr_info("Acer Laptop ACPI-WMI Extras\n");
+ 
+ 	if (dmi_check_system(acer_blacklist)) {
+-		printk(ACER_INFO "Blacklisted hardware detected - "
+-				"not loading\n");
++		pr_info("Blacklisted hardware detected - not loading\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1678,12 +1669,11 @@ static int __init acer_wmi_init(void)
+ 
+ 	if (wmi_has_guid(WMID_GUID2) && interface) {
+ 		if (ACPI_FAILURE(WMID_set_capabilities())) {
+-			printk(ACER_ERR "Unable to detect available WMID "
+-					"devices\n");
++			pr_err("Unable to detect available WMID devices\n");
+ 			return -ENODEV;
+ 		}
+ 	} else if (!wmi_has_guid(WMID_GUID2) && interface) {
+-		printk(ACER_ERR "No WMID device detection method found\n");
++		pr_err("No WMID device detection method found\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1691,8 +1681,7 @@ static int __init acer_wmi_init(void)
+ 		interface = &AMW0_interface;
+ 
+ 		if (ACPI_FAILURE(AMW0_set_capabilities())) {
+-			printk(ACER_ERR "Unable to detect available AMW0 "
+-					"devices\n");
++			pr_err("Unable to detect available AMW0 devices\n");
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -1701,8 +1690,7 @@ static int __init acer_wmi_init(void)
+ 		AMW0_find_mailled();
+ 
+ 	if (!interface) {
+-		printk(ACER_INFO "No or unsupported WMI interface, unable to "
+-				"load\n");
++		pr_err("No or unsupported WMI interface, unable to load\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1710,22 +1698,22 @@ static int __init acer_wmi_init(void)
+ 
+ 	if (acpi_video_backlight_support() && has_cap(ACER_CAP_BRIGHTNESS)) {
+ 		interface->capability &= ~ACER_CAP_BRIGHTNESS;
+-		printk(ACER_INFO "Brightness must be controlled by "
++		pr_info("Brightness must be controlled by "
+ 		       "generic video driver\n");
+ 	}
+ 
+ 	if (wmi_has_guid(WMID_GUID3)) {
+ 		if (ec_raw_mode) {
+ 			if (ACPI_FAILURE(acer_wmi_enable_ec_raw())) {
+-				printk(ACER_ERR "Cannot enable EC raw mode\n");
++				pr_err("Cannot enable EC raw mode\n");
+ 				return -ENODEV;
+ 			}
+ 		} else if (ACPI_FAILURE(acer_wmi_enable_lm())) {
+-			printk(ACER_ERR "Cannot enable Launch Manager mode\n");
++			pr_err("Cannot enable Launch Manager mode\n");
+ 			return -ENODEV;
+ 		}
+ 	} else if (ec_raw_mode) {
+-		printk(ACER_INFO "No WMID EC raw mode enable method\n");
++		pr_info("No WMID EC raw mode enable method\n");
+ 	}
+ 
+ 	if (wmi_has_guid(ACERWMID_EVENT_GUID)) {
+@@ -1736,7 +1724,7 @@ static int __init acer_wmi_init(void)
+ 
+ 	err = platform_driver_register(&acer_platform_driver);
+ 	if (err) {
+-		printk(ACER_ERR "Unable to register platform driver.\n");
++		pr_err("Unable to register platform driver.\n");
+ 		goto error_platform_register;
+ 	}
+ 
+@@ -1791,7 +1779,7 @@ static void __exit acer_wmi_exit(void)
+ 	platform_device_unregister(acer_platform_device);
+ 	platform_driver_unregister(&acer_platform_driver);
+ 
+-	printk(ACER_INFO "Acer Laptop WMI Extras unloaded\n");
++	pr_info("Acer Laptop WMI Extras unloaded\n");
+ 	return;
+ }
+ 
+-- 
+1.6.0.2
