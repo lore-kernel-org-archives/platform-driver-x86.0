@@ -1,57 +1,227 @@
-From: James Bottomley <James.Bottomley-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [Security] [PATCH 00/20] world-writable files in sysfs and
- debugfs
-Date: Tue, 15 Mar 2011 12:32:31 -0400
-Message-ID: <1300206751.11313.3.camel@mulgrave.site>
-References: <cover.1296818921.git.segoon@openwall.com>
-	 <AANLkTikE-A=Fe-yRrN0opWwJGQ0f4uOzkyB3XCcEUrFE@mail.gmail.com>
-	 <1300155965.5665.15.camel@mulgrave.site> <20110315030956.GA2234@kroah.com>
-	 <1300189828.4017.2.camel@mulgrave.site>  <20110315160804.GA3380@albatros>
+From: =?utf-8?q?Old=C5=99ich_Jedli=C4=8Dka?= <oldium.pro-9Vj9tDbzfuSlVyrhU4qvOw@public.gmane.org>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in 2.6.37
+Date: Wed, 16 Mar 2011 07:32:15 +0100
+Message-ID: <201103160732.15488.oldium.pro@seznam.cz>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com> <4D7B32B10200002300029B5E@novprvlin0050.provo.novell.com> <4D7FE4260200002300029D70@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110315160804.GA3380@albatros>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vasiliy Kulikov <segoon-cxoSlKxDwOJWk0Htik3J/w@public.gmane.org>
-Cc: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, security-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, open-iscsi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4D7FE4260200002300029D70-jb/6P8Q/KsjOKUPnnb0SpZ/xhEQF/MHJojBamW5iJbs@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joey Lee <jlee-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>
+Cc: Al Cho <ACho-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>, mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2011-03-15 at 19:08 +0300, Vasiliy Kulikov wrote:
-> On Tue, Mar 15, 2011 at 07:50 -0400, James Bottomley wrote:
-> >      1. Did anyone actually check for capabilities before assuming world
-> >         writeable files were wrong?
-> 
-> I didn't check all these files as I haven't got these hardware :-)
+Hi Joey Lee,
 
-You don't need the hardware to check ... the question becomes is a
-capabilities test sitting in the implementation or not.
+On Tuesday 15 March 2011 12:11:50 Joey Lee wrote:
+> Hi Old=C5=99ich,
+>=20
+> =E6=96=BC =E4=BA=94=EF=BC=8C2011-03-11 =E6=96=BC 14:45 -0700=EF=BC=8C=
+Joey Lee =E6=8F=90=E5=88=B0=EF=BC=9A
+>=20
+> > Hi Old=C5=99ich,
+> >=20
+> > > > > > > > > 1. I have to enable the HW bluetooth switch to get th=
+e
+> > > > > > > > > bluetooth LED running (USB device appears in lsusb). =
+The
+> > > > > > > > > acer-bluetooth SW rfkill is unblocked, the SW rfkill =
+of
+> > > > > > > > > hci0 is blocked.
+> > > > > > > >=20
+> > > > > > > > Yes, this is also right behavior, because acer-wmi driv=
+er
+> > > > > > > > will maintain the killswitch status with BIOS.
+> > > > > > > >=20
+> > > > > > > > > 2. Next I have to unblock SW rfkill on hci0 by a call=
+ to
+> > > > > > > > > `rfkill unblock <number of hci0>`.
+> > > > > > > > > 3. Last I have to enable the HCI by the call to `hcic=
+onfig
+> > > > > > > > > hci0 up`.
+> > > > >=20
+> > > > > `rfkill list` shows the following
+> > > > >=20
+> > > > > 1) Before I enable the SW killswitch:
+> > > > >=20
+> > > > > 0: acer-wireless: Wireless LAN
+> > > > >=20
+> > > > >         Soft blocked: no
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 1: acer-bluetooth: Bluetooth
+> > > > >=20
+> > > > >         Soft blocked: yes
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 2: acer-threeg: Wireless WAN
+> > > > >=20
+> > > > >         Soft blocked: yes
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 3: phy0: Wireless LAN
+> > > > >=20
+> > > > >         Soft blocked: no
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 2) After I run `rfkill unblock 1`:
+> > > > >=20
+> > > > > 0: acer-wireless: Wireless LAN
+> > > > >=20
+> > > > >         Soft blocked: no
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 1: acer-bluetooth: Bluetooth
+> > > > >=20
+> > > > >         Soft blocked: no
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 2: acer-threeg: Wireless WAN
+> > > > >=20
+> > > > >         Soft blocked: yes
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 3: phy0: Wireless LAN
+> > > > >=20
+> > > > >         Soft blocked: no
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > 6: hci0: Bluetooth
+> > > > >=20
+> > > > >         Soft blocked: yes
+> > > > >         Hard blocked: no
+> > > > >=20
+> > > > > I've repeated it several times, so hci0 has number 6 now.
+> > > > >=20
+> > > > > Thanks for help,
+> > > > > Old=C5=99ich.
+> > > >=20
+> > > > Thank's for your test result.
+> > > > Want to double confirm with you...
+> > > > The above result is base on CONFIG_RFKILL_INPUT=3DN ?
+> > >=20
+> > > No, that was just a formatting problem of a "reply" to a mail. Th=
+at
+> > > wasn't my reaction, it was just a word from the previous line. I'=
+m
+> > > still using CONFIG_RFKILL_INPUT=3DY.
+> > >=20
+> > > Old=C5=99ich.
+> >=20
+> > That's make sense now!
+> >=20
+> > Thank's for your bug report, I am tracing and try to find out solut=
+ion.
+> > Joey Lee
+>=20
+> After trace rfkill-input stuff, I thought this is rfkill-input's norm=
+al
+> behavior but not a bug.
+>=20
+> Unfortunately, I didn't find any workaround way when a driver need to
+> call rfkill_init_sw_state, e.g. acer-wmi driver.
+>=20
+> The rfkill-input will sync the rfkill state to all killswitchs that h=
+ave
+> the same type. For example, acer-wmi set the initial software switch =
+to
+> _BLOCK_ when driver initial, then rfkill-input will also set any new
+> bluetooth killswitch state to _BLOCK_ .
 
->   But
-> as I can "chmod a+w" all sysfs files on my machine and they all become
-> sensible to nonroot writes, I suppose there is nothing preventing
-> nonroot users from writing to these buggy sysfs files.  As you can see,
-> there are no capable() checks in these drivers in open() or write().
-> 
-> >      2. Even if there aren't any capabilities checks in the implementing
-> >         routines, should there be (are we going the separated
-> >         capabilities route vs the monolithic root route)?
-> 
-> IMO, In any case old good DAC security model must not be obsoleted just
-> because someone thinks that MAC or anything else is more convenient for
-> him.  If sysfs is implemented via filesystem then it must support POSIX
-> permissions semantic.  MAC is very good in _some_ cases, but not instead
-> of DAC.
+The rfkill_sync_work syncs with rfkill_global_states, which is set duri=
+ng=20
+intitialization or by rfkill_switch_all, if I read it correctly. This s=
+hould=20
+be independent to acer-bluetooth state. The rfkill_global_states[BLUETO=
+OTH]=20
+should be unblocked initially, I need to verify it.
 
-Um, I'm not sure that's even an issue.  capabilities have CAP_ADMIN
-which is precisely the same check as owner == root.  We use this a lot
-because ioctls ignore the standard unix DAC model.
+There is some magic in rfkill/input.c that plays with global states, bu=
+t I=20
+don't know if or how that one is used in my case.
 
-James
+> Acer's BIOS default setup bluetooth's state is disable when system co=
+ld
+> boot, and BIOS also can save the connection devices' state when syste=
+m
+> reboot. Currently, acer-wmi driver have right behavior to sync the st=
+ate
+> with BIOS.
+>
+> Face to your situation, my suggestion is:
+>=20
+> - Use userland application to correct killswitch state.
+>   highly suggest You can try urfkill daemon:
+> http://www.freedesktop.org/wiki/Software/urfkill or
+>   write a startup script to enable bluetooth when system boot.
+>=20
+> - Disable rfkill-input module if you didn't real use it.
+>   The TravelMate 5730G have wifi hotkey that only emit KEY_WLAN, but
+>   doesn't emit KEY_BLUETOOTH, that means rfkill-input cann't help you
+>   enable bluetooth killswitch.
 
+I didn't have time to look at the problem more deeply to identify who i=
+s=20
+setting the global state to "blocked" or what really happens. Anyway, I=
+ did=20
+some testing with pressing the HW bluetooth switch and I saw the follow=
+ing=20
+immediately _after_ pressing the HW switch to enable bluetooth:
 
+oldium ~ # rfkill list
+0: acer-wireless: Wireless LAN
+        Soft blocked: no
+        Hard blocked: no
+1: acer-bluetooth: Bluetooth
+        Soft blocked: no
+        Hard blocked: no
+2: acer-threeg: Wireless WAN
+        Soft blocked: yes
+        Hard blocked: no
+3: phy0: Wireless LAN
+        Soft blocked: no
+        Hard blocked: no
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I had this output 3 times immediately after each other. I'm using keybo=
+ard=20
+"up" and "enter" to repeat the last shell command, so this is a relativ=
+ely=20
+slow operation. So the state when the acer-bluetooth was unblocked stay=
+ed for=20
+relatively long time before hci0 appeared in rfkill. Afterwards I saw:
+
+oldium ~ # rfkill list
+0: acer-wireless: Wireless LAN
+        Soft blocked: no
+        Hard blocked: no
+1: acer-bluetooth: Bluetooth
+        Soft blocked: no
+        Hard blocked: no
+2: acer-threeg: Wireless WAN
+        Soft blocked: yes
+        Hard blocked: no
+3: phy0: Wireless LAN
+        Soft blocked: no
+        Hard blocked: no
+5: hci0: Bluetooth
+        Soft blocked: yes
+        Hard blocked: no
+
+So it looks like the hci0 went blocked even when the acer-bluetooth swi=
+tch was=20
+unblocked. So it looks like the hci0 state is independent on the initia=
+l acer-
+bluetooth state.
+
+Hopefully I have some time this evening (CET timezone) to add some stac=
+k=20
+traces and logs to see what really happens on my system.
+
+Cheers,
+Old=C5=99ich.
+
+>=20
+> Thank's a lot!
+> Joey Lee
