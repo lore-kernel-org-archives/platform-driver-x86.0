@@ -1,61 +1,84 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [PATCH 1/2] input: Pegatron Lucid accelerometer
-Date: Fri, 18 Mar 2011 16:39:38 +0100
-Message-ID: <20110318163938.3cb91027@destiny.ordissimo>
-References: <1295287011-12849-1-git-send-email-andy.ross@windriver.com>
-	<1295287011-12849-2-git-send-email-andy.ross@windriver.com>
-	<4D3529A1.1030804@ti.com>
-	<4D35CC1B.3020808@windriver.com>
-	<20110131213057.GA9259@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20110131213057.GA9259@srcf.ucam.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Andy Ross <andy.ross@windriver.com>, Shubhrajyoti <shubhrajyoti@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-input@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: does not poll device status when WMI event is available
+Date: Sat, 19 Mar 2011 07:46:45 +0800
+Message-ID: <1300492005-29932-1-git-send-email-jlee@novell.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:38401 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757596Ab1CRXtN (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 18 Mar 2011 19:49:13 -0400
+Received: by wya21 with SMTP id 21so4332461wya.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Mar 2011 16:49:12 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-On Mon, 31 Jan 2011 21:30:57 +0000, Matthew Garrett <mjg59@srcf.ucam.org> wrote :
+Acer WMI hotkey event's result include current device status, just
+need sync the status to killswitch after acer-wmi driver receive
+hotkey event but not always poll device status. This is good for
+performance.
 
-> On Tue, Jan 18, 2011 at 09:21:31AM -0800, Andy Ross wrote:
-> 
-> > It's just an ACPI method interface, so no dedicated IRQ certainly.
-> > The firmware does issue ACPI events on coarse orientation changes
-> > (i.e. which edge is up) that we're catching with acpid, so there's no
-> > reason this needs to poll all the time in typical usage.
-> 
-> It'd be good to provide those via some more generally-usable mechanism 
-> than raw ACPI events.
-> 
-Something like that ?
+But, if use EC raw mode, Acer BIOS will not emit wmi event and
+leave EC to control device status. So, still startup polling job
+when doesn't detect WMI event GUID or user choice to use ec_raw_mode.
 
+Tested on Acer TravelMate 8572 notebook.
 
-From: Anisse Astier <anisse@astier.eu>
-Subject: [PATCH] asus-laptop: Send input event when orientation changes on Pegatron Lucid
-
-Pegatron Lucid tablet sends an ACPI event on coarse orientation changes.
-Translate this into KEY_DIRECTION input event.
-
-Signed-off-by: Anisse Astier <anisse@astier.eu>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
 ---
- drivers/platform/x86/asus-laptop.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++--
+ 1 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 75c84f8..d32395c 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -312,6 +312,8 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0xc4, { KEY_KBDILLUMUP } },
- 	{KE_KEY, 0xc5, { KEY_KBDILLUMDOWN } },
- 	{KE_KEY, 0xb5, { KEY_CALC } },
-+	/* Pegatron Lucid tablet specific */
-+	{KE_KEY, 0xEA, { KEY_DIRECTION } }, /* Orientation changed */
- 	{KE_END, 0},
- };
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 1953c70..9764ddc 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1224,14 +1224,17 @@ static int acer_rfkill_init(struct device *dev)
+ 		}
+ 	}
  
+-	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
++	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
++		schedule_delayed_work(&acer_rfkill_work,
++			round_jiffies_relative(HZ));
+ 
+ 	return 0;
+ }
+ 
+ static void acer_rfkill_exit(void)
+ {
+-	cancel_delayed_work_sync(&acer_rfkill_work);
++	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
++		cancel_delayed_work_sync(&acer_rfkill_work);
+ 
+ 	rfkill_unregister(wireless_rfkill);
+ 	rfkill_destroy(wireless_rfkill);
+@@ -1332,6 +1335,19 @@ static void acer_wmi_notify(u32 value, void *context)
+ 				return_value.key_num, 1, true))
+ 			pr_warning("Unknown key number - 0x%x\n",
+ 				return_value.key_num);
++		if (return_value.device_state) {
++			u16 device_state = return_value.device_state;
++			pr_debug("deivces states: 0x%x\n", device_state);
++			if (has_cap(ACER_CAP_WIRELESS))
++				rfkill_set_sw_state(wireless_rfkill,
++				!(device_state & ACER_WMID3_GDS_WIRELESS));
++			if (has_cap(ACER_CAP_BLUETOOTH))
++				rfkill_set_sw_state(bluetooth_rfkill,
++				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
++			if (has_cap(ACER_CAP_THREEG))
++				rfkill_set_sw_state(threeg_rfkill,
++				!(device_state & ACER_WMID3_GDS_THREEG));
++		}
+ 		break;
+ 	default:
+ 		pr_warning("Unknown function number - %d - %d\n",
 -- 
-1.7.3.2
-
+1.6.0.2
