@@ -1,98 +1,45 @@
-From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT
-	"Express Gate" key
-Date: Thu, 24 Mar 2011 08:37:52 -0500
-Message-ID: <20110324133752.GB20612@thinkpad-t410>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
+Date: Thu, 24 Mar 2011 13:40:51 +0000
+Message-ID: <AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
 References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
 	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
 	<20110324131414.GA20612@thinkpad-t410>
 	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>
-Cc: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:46938 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752353Ab1CXNkx convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 24 Mar 2011 09:40:53 -0400
+In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Chris Bagwell <chris@cnpbagwell.com>
+Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-T24gVGh1LCBNYXIgMjQsIDIwMTEgYXQgMDg6Mjc6NDFBTSAtMDUwMCwgQ2hyaXMgQmFnd2VsbCB3
-cm90ZToKPiBPbiBUaHUsIE1hciAyNCwgMjAxMSBhdCA4OjE0IEFNLCBTZXRoIEZvcnNoZWUKPiA8
-c2V0aC5mb3JzaGVlQGNhbm9uaWNhbC5jb20+IHdyb3RlOgo+ID4gT24gVGh1LCBNYXIgMjQsIDIw
-MTEgYXQgMDg6MzM6MzNBTSArMDEwMCwgQ29yZW50aW4gQ2hhcnkgd3JvdGU6Cj4gPj4gT24gV2Vk
-LCBNYXIgMjMsIDIwMTEgYXQgODozOSBQTSwgU2V0aCBGb3JzaGVlCj4gPj4gPHNldGguZm9yc2hl
-ZUBjYW5vbmljYWwuY29tPiB3cm90ZToKPiA+PiA+IFNpZ25lZC1vZmYtYnk6IFNldGggRm9yc2hl
-ZSA8c2V0aC5mb3JzaGVlQGNhbm9uaWNhbC5jb20+Cj4gPj4gPiAtLS0KPiA+PiA+Cj4gPj4gPiBU
-aGlzIGJ1dHRvbiBpcyB1bnVzdWFsLiBPbiBwcmVzcyBpdCBlbWl0cyBzY2Fub2NkZSAweGU0LCBv
-biByZWxlYXNlCj4gPj4gPiAweGU1LCBhbmQgd2hlbiBoZWxkIGZvciBhIGZldyBzZWNvbmRzIGl0
-IGJlZ2lucyBlbWl0dGluZyAweGVhIGFib3V0Cj4gPj4gPiB0d2ljZSBwZXIgc2Vjb25kLiBJIGNo
-b3NlIHRvIGhhbmRsZSBvbmx5IHRoZSBwcmVzcyBldmVudCBpbiBvcmRlciB0bwo+ID4+ID4gbWFr
-ZSBpdCBiZWhhdmUgbGlrZSB0aGUgb3RoZXIgaG90a2V5cy4KPiA+PiA+Cj4gPj4gPiBQcm9iYWJs
-eSB0aGUgY2xvc2VzdCB0aGluZyB0byB0aGUgaW50ZW5kZWQgZnVuY3Rpb24gb2YgdGhpcyBidXR0
-b24KPiA+PiA+IHdvdWxkIGJlIHRvIGFsdGVybmF0ZSB0aGUgZGlzcGxheSBvcmllbnRhdGlvbiBi
-ZXR3ZWVuIHBvcnRyYWl0IGFuZAo+ID4+ID4gbGFuZHNjYXBlLCBidXQgc2luY2UgdGhlcmUgZG9l
-c24ndCBhcHBlYXIgdG8gYmUgYSBrZXljb2RlIGRlZmluZWQgZm9yCj4gPj4gPiB0aGF0IGZ1bmN0
-aW9uIEkgd2VudCB3aXRoIEtFWV9QUk9HMi4gSSdtIG9wZW4gdG8gb3RoZXIgc3VnZ2VzdGlvbnMK
-PiA+PiA+IGhvd2V2ZXIuCj4gPj4KPiA+PiBIaSwKPiA+PiBUaGUgbWFudWFsIHNheXMgdGhhdCB1
-bmRlciBXaW5kb3dzLCB0aGlzIGlzIHRoZSAiSG9tZSBLZXkiLCBzbwo+ID4+IEtFWV9IT01FIHdv
-dWxkIGJlIG1vcmUgYXBwcm9wcmlhdGUuCj4gPgo+ID4gVGhlIG1hbnVhbCBkb2VzIGNhbGwgaXQg
-dGhlIEhvbWUgS2V5IChJIG1pc3NlZCBwcmV2aW91c2x5IHRoYXQgdGhlCj4gPiBFeHByZXNzIEdh
-dGUgZGVzY3JpcHRpb24gcmVmZXJyZWQgb25seSB0byB0aGUgcXVpY2sgYm9vdCBtb2RlKSwgYnV0
-IHRoZQo+ID4gZGVzY3JpcHRpb24gb2YgdGhlIGtleSBvcGVyYXRpb24gcmVhZHM6Cj4gPgo+ID4g
-wqBTaG9ydGx5IHByZXNzIHRoaXMga2V5IHRvIGxhdW5jaCB0aGUgVG91Y2ggR2F0ZSB0b3VjaCBz
-Y3JlZW4KPiA+IMKgaW50ZXJmYWNlLiBQcmVzcyBhbmQgaG9sZCB0aGlzIGtleSB0byBwcmV2aWV3
-IGRlc2t0b3Agcm90YXRpb24sIGFuZAo+ID4gwqB0aGVuIHJlbGVhc2UgdGhlIGtleSB0byBmaW5p
-c2ggZGVza3RvcCByb3RhdGlvbi4KPiA+Cj4gPiBXaGljaCBkb2Vzbid0IHJlYWxseSBzb3VuZCBs
-aWtlIGEgaG9tZSBrZXkgdG8gbWUsIGFuZCB0aGUgaWNvbiBhYm92ZSB0aGUKPiA+IGJ1dHRvbiBh
-bHNvIHN1Z2dlc3RzIGRpc3BsYXkgcm90YXRpb24uIEJ1dCB0aGVuIHdlIGRvbid0IHNlZW0gdG8g
-aGF2ZSBhCj4gPiBjb2RlIGZvciB0aGF0IGZ1bmN0aW9uLCBzbyBLRVlfUFJPRzIgbWF5IGJlIG5v
-IGJldHRlciB0aGFuIEtFWV9IT01FLi4uCj4gPgo+ID4+IEFsc28sIGl0IHdvdWxkIGJlIGdyZWF0
-IHRvIHByZXNlcnZlIGtleSB1cCBhbmQga2V5IGRvd24gaW5mb3JtYXRpb25zCj4gPj4gKHNwYXJz
-ZSBrZXltYXAgaGF2ZSBhbiAiYXV0b3JlbGVhc2UiIHBhcmFtZXRlciB0byBjb250cm9sIHRoYXQp
-Lgo+ID4KPiA+IE9rYXksIEknbGwgYWRkIHNvbWUgc3BlY2lhbCBjYXNpbmcgZm9yIHRoaXMga2V5
-IHRvIHN1cHBvcnQgdGhhdC4gRG8geW91Cj4gPiBzdWdnZXN0IGlnbm9yaW5nIHRoZSAweGVhIHNj
-YW4gY29kZXM/Cj4gPgo+IAo+IEkgaGF2ZSBvbmUgb2YgdGhlc2UgaW4gdGhlIG1haWwgc28gSSdt
-IGludGVyZXN0ZWQgaW4gb3V0Y29tZS4KPiAKPiBJIHN1Z2dlc3QgaW1wbGVtZW50aW5nIGFzIG1h
-bnVhbCBkZXNjcmliZXMgYW5kIGNhbiBiZSBoYW5kbGVkIHNpbWlsYXIKPiB0byBicmlnaHRuZXNz
-IGNvbnRyb2wgbG9naWMuCj4gCj4gSSB3b3VsZCBzdWdnZXN0IHNlbmRpbmcgQlROX0hPTUUgdXBv
-biBidXR0b24gcmVsZWFzZSAweGU1IChub3QgcHJlc3MKPiAweGU0IGFuZCBkbyB0aGUgYXV0b3Jl
-bGVhc2UgYmVjYXVzZSBvZiBpdCkgYW5kIEJUTl9QUk9HMiBvbgo+IHByZXNzLWFuZC1ob2xkIDB4
-ZWEuCj4gCj4gSWYgeW91IHByZXNzLWFuZC1ob2xkLCBkb2VzIGl0IHN0aWxsIHNlbmQgdGhlIDB4
-ZTUgdXBvbiByZWxlYXNlPyAgVGhhdAo+IGNvdWxkIGNvbXBsaWNhdGUgdGhpbmdzIHNvIHRoYXQg
-Ym90aCBidXR0b24gZXZlbnRzIGRvIG5vdCBnZXQgc2VudC4KClllcywgb24gcHJlc3MtYW5kLWhv
-bGQgeW91IGdldCBhIHNlcXVlbmNlIGxpa2UKCiAgZTQgZWEgZWEgLi4uIGVhIGU1CgpTbyB0aGVy
-ZSdkIGhhdmUgdG8gYmUgc29tZSBzaW1wbGUgc3RhdGUgbWFjaGluZSB0aGVyZSB0byBiZSBzdXJl
-IHRoZQpyZWxlYXNlIGV2ZW50IHdhcyBzZW50IGZvciBLRVlfUFJPRzIuCgo+IEknbSBub3Qgc3Vy
-ZSB3aGF0IEJUTl9IT01FIGlzIGNvbW1vbmx5IHVzZWQgZm9yLiAgVGhpcyBidXR0b24gZG9lcwo+
-IHNvdW5kIGxpa2UgYSBIT01FIGJ1dHRvbiBpbiBpUGFkIHNlbnNlIGJ1dCBub3QgaW4gd2ViIGJy
-b3dzZXIgc2Vuc2UuCgpJIGhhdmVuJ3QgdXNlZCBhbiBpUGFkLCBidXQgSSB3YXMgYXNzdW1pbmcg
-b24gdGhhdCB0aGUgaG9tZSBidXR0b24gdG9vawp5b3UsIHdlbGwsIHRvIHRoZSBob21lIHNjcmVl
-biwgd2hpY2ggaXMgd2hhdCBpdCBkb2VzIG9uIEFuZHJvaWQgZGV2aWNlcy4KSW4gbXkgbWluZCB0
-aGF0IHdvdWxkIGVxdWF0ZSB0byBzb21ldGhpbmcgbGlrZSAic2hvdyBkZXNrdG9wIiBvbiBhCmRl
-c2t0b3AgT1MsIGJ1dCBJIGd1ZXNzIHRoYXQncyBmb3IgdGhlIGRlc2t0b3AgZGVzaWduZXJzIHRv
-IGRlY2lkZS4gSW4KV2luZG93cyB0aGlzIG9uZSBzZWVtcyB0byB0YWtlIHlvdSB0byBzb21lIHNl
-dCB1cCBzY3JlZW4sIHVubGVzcyB5b3UKaG9sZCBpdCwgaW4gd2hpY2ggY2FzZSBpdCByb3RhdGVz
-IHRoZSBzY3JlZW4gb3JpZW50YXRpb24uIEFuZCBJJ20KYXNzdW1pbmcgb24gdGhlIHByZXNzLWFu
-ZC1ob2xkIHlvdSBkb24ndCBzZWUgdGhlIHNldHVwIHNjcmVlbiBiZWZvcmUgdGhlCnJvdGF0aW9u
-LCBidXQgSSBuZXZlciBnb3QgYSBjaGFuY2UgdG8gZXhwZXJpbWVudCB3aXRoIHRoZSBidXR0b24g
-dW5kZXIKV2luZG93cyBzbyBJIGNhbid0IHNheSBmb3Igc3VyZS4KCgotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0KRW5hYmxlIHlvdXIgc29mdHdhcmUgZm9yIEludGVsKFIpIEFjdGl2ZSBNYW5hZ2VtZW50
-IFRlY2hub2xvZ3kgdG8gbWVldCB0aGUKZ3Jvd2luZyBtYW5hZ2VhYmlsaXR5IGFuZCBzZWN1cml0
-eSBkZW1hbmRzIG9mIHlvdXIgY3VzdG9tZXJzLiBCdXNpbmVzc2VzCmFyZSB0YWtpbmcgYWR2YW50
-YWdlIG9mIEludGVsKFIpIHZQcm8gKFRNKSB0ZWNobm9sb2d5IC0gd2lsbCB5b3VyIHNvZnR3YXJl
-IApiZSBhIHBhcnQgb2YgdGhlIHNvbHV0aW9uPyBEb3dubG9hZCB0aGUgSW50ZWwoUikgTWFuYWdl
-YWJpbGl0eSBDaGVja2VyIAp0b2RheSEgaHR0cDovL3Auc2YubmV0L3NmdS9pbnRlbC1kZXYyZGV2
-bWFyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFjcGk0
-YXN1cy11c2VyIG1haWxpbmcgbGlzdApBY3BpNGFzdXMtdXNlckBsaXN0cy5zb3VyY2Vmb3JnZS5u
-ZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vYWNwaTRhc3Vz
-LXVzZXIK
+> I would suggest sending BTN_HOME upon button release 0xe5 (not press
+> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
+> press-and-hold 0xea.
+>
+> If you press-and-hold, does it still send the 0xe5 upon release? =C2=A0=
+That
+> could complicate things so that both button events do not get sent.
+>
+> I'm not sure what BTN_HOME is commonly used for. =C2=A0This button do=
+es
+> sound like a HOME button in iPad sense but not in web browser sense.
+
+Except the fact that I don't find BTN_HOME in inpout.h, that's seems a
+better idea, forget what I've said earlier.
+
+0xe4 -> KEY_IGNORE
+0xe5 -> KEY_HOME
+0xea -> KEY_PROG2, (or BTN_TASK to copy android/iOS ?)
+
+--=20
+Corentin Chary
+http://xf.iksaif.net
