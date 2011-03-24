@@ -1,105 +1,88 @@
-From: Chris Bagwell <chris@cnpbagwell.com>
-Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
-Date: Thu, 24 Mar 2011 08:32:25 -0500
-Message-ID: <AANLkTi=WreRS0+K4JmojRW261T1KDr-Q8idLG38xNWiR@mail.gmail.com>
-References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
-	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
-	<20110324131414.GA20612@thinkpad-t410>
-	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
+ 2.6.37
+Date: Thu, 24 Mar 2011 07:36:58 -0600
+Message-ID: <4D8BE3AA020000230002A590@novprvlin0050.provo.novell.com>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
+ <201103160732.15488.oldium.pro@seznam.cz>
+ <4D8116940200002300029EB1@novprvlin0050.provo.novell.com>
+ <201103202109.53484.oldium.pro@seznam.cz>
+ <4D87D082020000230002A29F@novprvlin0050.provo.novell.com>
+ <1300707796.4052.7.camel@jlt3.sipsolutions.net>
+ <4D87F3F9020000230002A2CA@novprvlin0050.provo.novell.com>
+ <1300718135.4052.14.camel@jlt3.sipsolutions.net>
+ <4D881693020000230002A2FC@novprvlin0050.provo.novell.com>
+ <1300882647.3790.17.camel@jlt3.sipsolutions.net>
+ <4D8B86FC020000230002A543@novprvlin0050.provo.novell.com>
+ <1300955725.3807.5.camel@jlt3.sipsolutions.net>
+ <4D8BD9E4020000230002A575@novprvlin0050.provo.novell.com>
+ <1300971517.3807.17.camel@jlt3.sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:59180 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752717Ab1CXNc1 convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Mar 2011 09:32:27 -0400
-In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+In-Reply-To: <1300971517.3807.17.camel@jlt3.sipsolutions.net>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>
+To: johannes@sipsolutions.net
+Cc: davem@davemloft.net, marcel@holtmann.org, Al Cho <ACho@novell.com>, Gary Lin <GLin@novell.com>, oldium.pro@seznam.cz, mjg59@srcf.ucam.org, linux-acpi@vger.kernel.org, linux-bluetooth@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Thu, Mar 24, 2011 at 8:27 AM, Chris Bagwell <chris@cnpbagwell.com> w=
-rote:
-> On Thu, Mar 24, 2011 at 8:14 AM, Seth Forshee
-> <seth.forshee@canonical.com> wrote:
->> On Thu, Mar 24, 2011 at 08:33:33AM +0100, Corentin Chary wrote:
->>> On Wed, Mar 23, 2011 at 8:39 PM, Seth Forshee
->>> <seth.forshee@canonical.com> wrote:
->>> > Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
->>> > ---
->>> >
->>> > This button is unusual. On press it emits scanocde 0xe4, on relea=
-se
->>> > 0xe5, and when held for a few seconds it begins emitting 0xea abo=
-ut
->>> > twice per second. I chose to handle only the press event in order=
- to
->>> > make it behave like the other hotkeys.
->>> >
->>> > Probably the closest thing to the intended function of this butto=
-n
->>> > would be to alternate the display orientation between portrait an=
-d
->>> > landscape, but since there doesn't appear to be a keycode defined=
+=E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-24 =E6=96=BC 13:58 +0100=EF=BC=8CJo=
+hannes Berg =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi,
+>=20
+>=20
+> > > So it _does_ store the state? I thought you earlier said it didn'=
+t store
+> > > it, and when you cold rebooted it was always disabled?
+> > >=20
+> >=20
+> > There have 2 different behavior on Acer BIOS:
+> >  - cold boot (shutdown then power on): BIOS will reset to raw state=
+ (WLAN on, BT off, WWAN on)
+> >  - warm boot (reboot): BIOS will keep last time's state
+>=20
+> Yeah but in that case I don't really see the point in making it
+> persistent. It's not really persistent anyway, warm reboot just means=
+ it
+
+OK, thank's, now I understand the definition to _persistent_.
+
+> was stuck somewhere in memory I guess... I'd not call this persistent=
+,
+> and making it not persistent also solves the problem, right?
+>=20
+> johannes
+>=20
+>=20
+
+Yes, if we don't set the default initial state to persistent, then can
+workaround this issue, and it also can fix the issue when user only
+control acer-wmi's state by userland application.=20
+
+Just hope Old=C5=99ich can help to double check does his BT HW key also=
+ emit
+scancode? I thought the success logic like the following:
+
+
+After applied my solution + rfkill-input
+(already confirm works fine by Old=C5=99ich):
+
+		initial		scancode from EC	from wmi event
+-----------------------------------------------------------------------=
+-------------------------------------------------------------------
+acer-wmi	BLOCK		BLOCK(base on global) UNBLOCK
+global		UNBLOCK		BLOCK			UNBLOCK
+
+
+Then it make sense for why Old=C5=99ich saw the hci0's killswitch is UN=
+BLOCK.
+
+After confirm that, I will send out patch to mainline and 2.6.38 kernel=
  for
->>> > that function I went with KEY_PROG2. I'm open to other suggestion=
-s
->>> > however.
->>>
->>> Hi,
->>> The manual says that under Windows, this is the "Home Key", so
->>> KEY_HOME would be more appropriate.
->>
->> The manual does call it the Home Key (I missed previously that the
->> Express Gate description referred only to the quick boot mode), but =
-the
->> description of the key operation reads:
->>
->> =A0Shortly press this key to launch the Touch Gate touch screen
->> =A0interface. Press and hold this key to preview desktop rotation, a=
-nd
->> =A0then release the key to finish desktop rotation.
->>
->> Which doesn't really sound like a home key to me, and the icon above=
- the
->> button also suggests display rotation. But then we don't seem to hav=
-e a
->> code for that function, so KEY_PROG2 may be no better than KEY_HOME.=
-=2E.
->>
->>> Also, it would be great to preserve key up and key down information=
-s
->>> (sparse keymap have an "autorelease" parameter to control that).
->>
->> Okay, I'll add some special casing for this key to support that. Do =
-you
->> suggest ignoring the 0xea scan codes?
->>
->
-> I have one of these in the mail so I'm interested in outcome.
->
-> I suggest implementing as manual describes and can be handled similar
-> to brightness control logic.
->
-> I would suggest sending BTN_HOME upon button release 0xe5 (not press
-> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
-> press-and-hold 0xea.
->
-> If you press-and-hold, does it still send the 0xe5 upon release? =A0T=
-hat
-> could complicate things so that both button events do not get sent.
->
-> I'm not sure what BTN_HOME is commonly used for. =A0This button does
-> sound like a HOME button in iPad sense but not in web browser sense.
->
-> Chris
->
+fix BKO#31002.
 
-When I mentioned similar to brightness control logic, I meant the
-logic in eeepc-laptop and not eeepc-wmi.  It appears to use sparse
-keys logic but with some event filtering.
 
-Chris
+Thank's a lot!
+Joey Lee
