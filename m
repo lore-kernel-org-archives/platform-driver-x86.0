@@ -1,88 +1,98 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
- 2.6.37
-Date: Thu, 24 Mar 2011 07:36:58 -0600
-Message-ID: <4D8BE3AA020000230002A590@novprvlin0050.provo.novell.com>
-References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
- <201103160732.15488.oldium.pro@seznam.cz>
- <4D8116940200002300029EB1@novprvlin0050.provo.novell.com>
- <201103202109.53484.oldium.pro@seznam.cz>
- <4D87D082020000230002A29F@novprvlin0050.provo.novell.com>
- <1300707796.4052.7.camel@jlt3.sipsolutions.net>
- <4D87F3F9020000230002A2CA@novprvlin0050.provo.novell.com>
- <1300718135.4052.14.camel@jlt3.sipsolutions.net>
- <4D881693020000230002A2FC@novprvlin0050.provo.novell.com>
- <1300882647.3790.17.camel@jlt3.sipsolutions.net>
- <4D8B86FC020000230002A543@novprvlin0050.provo.novell.com>
- <1300955725.3807.5.camel@jlt3.sipsolutions.net>
- <4D8BD9E4020000230002A575@novprvlin0050.provo.novell.com>
- <1300971517.3807.17.camel@jlt3.sipsolutions.net>
+From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT
+	"Express Gate" key
+Date: Thu, 24 Mar 2011 08:37:52 -0500
+Message-ID: <20110324133752.GB20612@thinkpad-t410>
+References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
+	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
+	<20110324131414.GA20612@thinkpad-t410>
+	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <1300971517.3807.17.camel@jlt3.sipsolutions.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: johannes@sipsolutions.net
-Cc: davem@davemloft.net, marcel@holtmann.org, Al Cho <ACho@novell.com>, Gary Lin <GLin@novell.com>, oldium.pro@seznam.cz, mjg59@srcf.ucam.org, linux-acpi@vger.kernel.org, linux-bluetooth@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>
+Cc: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-24 =E6=96=BC 13:58 +0100=EF=BC=8CJo=
-hannes Berg =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi,
->=20
->=20
-> > > So it _does_ store the state? I thought you earlier said it didn'=
-t store
-> > > it, and when you cold rebooted it was always disabled?
-> > >=20
-> >=20
-> > There have 2 different behavior on Acer BIOS:
-> >  - cold boot (shutdown then power on): BIOS will reset to raw state=
- (WLAN on, BT off, WWAN on)
-> >  - warm boot (reboot): BIOS will keep last time's state
->=20
-> Yeah but in that case I don't really see the point in making it
-> persistent. It's not really persistent anyway, warm reboot just means=
- it
-
-OK, thank's, now I understand the definition to _persistent_.
-
-> was stuck somewhere in memory I guess... I'd not call this persistent=
-,
-> and making it not persistent also solves the problem, right?
->=20
-> johannes
->=20
->=20
-
-Yes, if we don't set the default initial state to persistent, then can
-workaround this issue, and it also can fix the issue when user only
-control acer-wmi's state by userland application.=20
-
-Just hope Old=C5=99ich can help to double check does his BT HW key also=
- emit
-scancode? I thought the success logic like the following:
-
-
-After applied my solution + rfkill-input
-(already confirm works fine by Old=C5=99ich):
-
-		initial		scancode from EC	from wmi event
------------------------------------------------------------------------=
--------------------------------------------------------------------
-acer-wmi	BLOCK		BLOCK(base on global) UNBLOCK
-global		UNBLOCK		BLOCK			UNBLOCK
-
-
-Then it make sense for why Old=C5=99ich saw the hci0's killswitch is UN=
-BLOCK.
-
-After confirm that, I will send out patch to mainline and 2.6.38 kernel=
- for
-fix BKO#31002.
-
-
-Thank's a lot!
-Joey Lee
+T24gVGh1LCBNYXIgMjQsIDIwMTEgYXQgMDg6Mjc6NDFBTSAtMDUwMCwgQ2hyaXMgQmFnd2VsbCB3
+cm90ZToKPiBPbiBUaHUsIE1hciAyNCwgMjAxMSBhdCA4OjE0IEFNLCBTZXRoIEZvcnNoZWUKPiA8
+c2V0aC5mb3JzaGVlQGNhbm9uaWNhbC5jb20+IHdyb3RlOgo+ID4gT24gVGh1LCBNYXIgMjQsIDIw
+MTEgYXQgMDg6MzM6MzNBTSArMDEwMCwgQ29yZW50aW4gQ2hhcnkgd3JvdGU6Cj4gPj4gT24gV2Vk
+LCBNYXIgMjMsIDIwMTEgYXQgODozOSBQTSwgU2V0aCBGb3JzaGVlCj4gPj4gPHNldGguZm9yc2hl
+ZUBjYW5vbmljYWwuY29tPiB3cm90ZToKPiA+PiA+IFNpZ25lZC1vZmYtYnk6IFNldGggRm9yc2hl
+ZSA8c2V0aC5mb3JzaGVlQGNhbm9uaWNhbC5jb20+Cj4gPj4gPiAtLS0KPiA+PiA+Cj4gPj4gPiBU
+aGlzIGJ1dHRvbiBpcyB1bnVzdWFsLiBPbiBwcmVzcyBpdCBlbWl0cyBzY2Fub2NkZSAweGU0LCBv
+biByZWxlYXNlCj4gPj4gPiAweGU1LCBhbmQgd2hlbiBoZWxkIGZvciBhIGZldyBzZWNvbmRzIGl0
+IGJlZ2lucyBlbWl0dGluZyAweGVhIGFib3V0Cj4gPj4gPiB0d2ljZSBwZXIgc2Vjb25kLiBJIGNo
+b3NlIHRvIGhhbmRsZSBvbmx5IHRoZSBwcmVzcyBldmVudCBpbiBvcmRlciB0bwo+ID4+ID4gbWFr
+ZSBpdCBiZWhhdmUgbGlrZSB0aGUgb3RoZXIgaG90a2V5cy4KPiA+PiA+Cj4gPj4gPiBQcm9iYWJs
+eSB0aGUgY2xvc2VzdCB0aGluZyB0byB0aGUgaW50ZW5kZWQgZnVuY3Rpb24gb2YgdGhpcyBidXR0
+b24KPiA+PiA+IHdvdWxkIGJlIHRvIGFsdGVybmF0ZSB0aGUgZGlzcGxheSBvcmllbnRhdGlvbiBi
+ZXR3ZWVuIHBvcnRyYWl0IGFuZAo+ID4+ID4gbGFuZHNjYXBlLCBidXQgc2luY2UgdGhlcmUgZG9l
+c24ndCBhcHBlYXIgdG8gYmUgYSBrZXljb2RlIGRlZmluZWQgZm9yCj4gPj4gPiB0aGF0IGZ1bmN0
+aW9uIEkgd2VudCB3aXRoIEtFWV9QUk9HMi4gSSdtIG9wZW4gdG8gb3RoZXIgc3VnZ2VzdGlvbnMK
+PiA+PiA+IGhvd2V2ZXIuCj4gPj4KPiA+PiBIaSwKPiA+PiBUaGUgbWFudWFsIHNheXMgdGhhdCB1
+bmRlciBXaW5kb3dzLCB0aGlzIGlzIHRoZSAiSG9tZSBLZXkiLCBzbwo+ID4+IEtFWV9IT01FIHdv
+dWxkIGJlIG1vcmUgYXBwcm9wcmlhdGUuCj4gPgo+ID4gVGhlIG1hbnVhbCBkb2VzIGNhbGwgaXQg
+dGhlIEhvbWUgS2V5IChJIG1pc3NlZCBwcmV2aW91c2x5IHRoYXQgdGhlCj4gPiBFeHByZXNzIEdh
+dGUgZGVzY3JpcHRpb24gcmVmZXJyZWQgb25seSB0byB0aGUgcXVpY2sgYm9vdCBtb2RlKSwgYnV0
+IHRoZQo+ID4gZGVzY3JpcHRpb24gb2YgdGhlIGtleSBvcGVyYXRpb24gcmVhZHM6Cj4gPgo+ID4g
+wqBTaG9ydGx5IHByZXNzIHRoaXMga2V5IHRvIGxhdW5jaCB0aGUgVG91Y2ggR2F0ZSB0b3VjaCBz
+Y3JlZW4KPiA+IMKgaW50ZXJmYWNlLiBQcmVzcyBhbmQgaG9sZCB0aGlzIGtleSB0byBwcmV2aWV3
+IGRlc2t0b3Agcm90YXRpb24sIGFuZAo+ID4gwqB0aGVuIHJlbGVhc2UgdGhlIGtleSB0byBmaW5p
+c2ggZGVza3RvcCByb3RhdGlvbi4KPiA+Cj4gPiBXaGljaCBkb2Vzbid0IHJlYWxseSBzb3VuZCBs
+aWtlIGEgaG9tZSBrZXkgdG8gbWUsIGFuZCB0aGUgaWNvbiBhYm92ZSB0aGUKPiA+IGJ1dHRvbiBh
+bHNvIHN1Z2dlc3RzIGRpc3BsYXkgcm90YXRpb24uIEJ1dCB0aGVuIHdlIGRvbid0IHNlZW0gdG8g
+aGF2ZSBhCj4gPiBjb2RlIGZvciB0aGF0IGZ1bmN0aW9uLCBzbyBLRVlfUFJPRzIgbWF5IGJlIG5v
+IGJldHRlciB0aGFuIEtFWV9IT01FLi4uCj4gPgo+ID4+IEFsc28sIGl0IHdvdWxkIGJlIGdyZWF0
+IHRvIHByZXNlcnZlIGtleSB1cCBhbmQga2V5IGRvd24gaW5mb3JtYXRpb25zCj4gPj4gKHNwYXJz
+ZSBrZXltYXAgaGF2ZSBhbiAiYXV0b3JlbGVhc2UiIHBhcmFtZXRlciB0byBjb250cm9sIHRoYXQp
+Lgo+ID4KPiA+IE9rYXksIEknbGwgYWRkIHNvbWUgc3BlY2lhbCBjYXNpbmcgZm9yIHRoaXMga2V5
+IHRvIHN1cHBvcnQgdGhhdC4gRG8geW91Cj4gPiBzdWdnZXN0IGlnbm9yaW5nIHRoZSAweGVhIHNj
+YW4gY29kZXM/Cj4gPgo+IAo+IEkgaGF2ZSBvbmUgb2YgdGhlc2UgaW4gdGhlIG1haWwgc28gSSdt
+IGludGVyZXN0ZWQgaW4gb3V0Y29tZS4KPiAKPiBJIHN1Z2dlc3QgaW1wbGVtZW50aW5nIGFzIG1h
+bnVhbCBkZXNjcmliZXMgYW5kIGNhbiBiZSBoYW5kbGVkIHNpbWlsYXIKPiB0byBicmlnaHRuZXNz
+IGNvbnRyb2wgbG9naWMuCj4gCj4gSSB3b3VsZCBzdWdnZXN0IHNlbmRpbmcgQlROX0hPTUUgdXBv
+biBidXR0b24gcmVsZWFzZSAweGU1IChub3QgcHJlc3MKPiAweGU0IGFuZCBkbyB0aGUgYXV0b3Jl
+bGVhc2UgYmVjYXVzZSBvZiBpdCkgYW5kIEJUTl9QUk9HMiBvbgo+IHByZXNzLWFuZC1ob2xkIDB4
+ZWEuCj4gCj4gSWYgeW91IHByZXNzLWFuZC1ob2xkLCBkb2VzIGl0IHN0aWxsIHNlbmQgdGhlIDB4
+ZTUgdXBvbiByZWxlYXNlPyAgVGhhdAo+IGNvdWxkIGNvbXBsaWNhdGUgdGhpbmdzIHNvIHRoYXQg
+Ym90aCBidXR0b24gZXZlbnRzIGRvIG5vdCBnZXQgc2VudC4KClllcywgb24gcHJlc3MtYW5kLWhv
+bGQgeW91IGdldCBhIHNlcXVlbmNlIGxpa2UKCiAgZTQgZWEgZWEgLi4uIGVhIGU1CgpTbyB0aGVy
+ZSdkIGhhdmUgdG8gYmUgc29tZSBzaW1wbGUgc3RhdGUgbWFjaGluZSB0aGVyZSB0byBiZSBzdXJl
+IHRoZQpyZWxlYXNlIGV2ZW50IHdhcyBzZW50IGZvciBLRVlfUFJPRzIuCgo+IEknbSBub3Qgc3Vy
+ZSB3aGF0IEJUTl9IT01FIGlzIGNvbW1vbmx5IHVzZWQgZm9yLiAgVGhpcyBidXR0b24gZG9lcwo+
+IHNvdW5kIGxpa2UgYSBIT01FIGJ1dHRvbiBpbiBpUGFkIHNlbnNlIGJ1dCBub3QgaW4gd2ViIGJy
+b3dzZXIgc2Vuc2UuCgpJIGhhdmVuJ3QgdXNlZCBhbiBpUGFkLCBidXQgSSB3YXMgYXNzdW1pbmcg
+b24gdGhhdCB0aGUgaG9tZSBidXR0b24gdG9vawp5b3UsIHdlbGwsIHRvIHRoZSBob21lIHNjcmVl
+biwgd2hpY2ggaXMgd2hhdCBpdCBkb2VzIG9uIEFuZHJvaWQgZGV2aWNlcy4KSW4gbXkgbWluZCB0
+aGF0IHdvdWxkIGVxdWF0ZSB0byBzb21ldGhpbmcgbGlrZSAic2hvdyBkZXNrdG9wIiBvbiBhCmRl
+c2t0b3AgT1MsIGJ1dCBJIGd1ZXNzIHRoYXQncyBmb3IgdGhlIGRlc2t0b3AgZGVzaWduZXJzIHRv
+IGRlY2lkZS4gSW4KV2luZG93cyB0aGlzIG9uZSBzZWVtcyB0byB0YWtlIHlvdSB0byBzb21lIHNl
+dCB1cCBzY3JlZW4sIHVubGVzcyB5b3UKaG9sZCBpdCwgaW4gd2hpY2ggY2FzZSBpdCByb3RhdGVz
+IHRoZSBzY3JlZW4gb3JpZW50YXRpb24uIEFuZCBJJ20KYXNzdW1pbmcgb24gdGhlIHByZXNzLWFu
+ZC1ob2xkIHlvdSBkb24ndCBzZWUgdGhlIHNldHVwIHNjcmVlbiBiZWZvcmUgdGhlCnJvdGF0aW9u
+LCBidXQgSSBuZXZlciBnb3QgYSBjaGFuY2UgdG8gZXhwZXJpbWVudCB3aXRoIHRoZSBidXR0b24g
+dW5kZXIKV2luZG93cyBzbyBJIGNhbid0IHNheSBmb3Igc3VyZS4KCgotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0KRW5hYmxlIHlvdXIgc29mdHdhcmUgZm9yIEludGVsKFIpIEFjdGl2ZSBNYW5hZ2VtZW50
+IFRlY2hub2xvZ3kgdG8gbWVldCB0aGUKZ3Jvd2luZyBtYW5hZ2VhYmlsaXR5IGFuZCBzZWN1cml0
+eSBkZW1hbmRzIG9mIHlvdXIgY3VzdG9tZXJzLiBCdXNpbmVzc2VzCmFyZSB0YWtpbmcgYWR2YW50
+YWdlIG9mIEludGVsKFIpIHZQcm8gKFRNKSB0ZWNobm9sb2d5IC0gd2lsbCB5b3VyIHNvZnR3YXJl
+IApiZSBhIHBhcnQgb2YgdGhlIHNvbHV0aW9uPyBEb3dubG9hZCB0aGUgSW50ZWwoUikgTWFuYWdl
+YWJpbGl0eSBDaGVja2VyIAp0b2RheSEgaHR0cDovL3Auc2YubmV0L3NmdS9pbnRlbC1kZXYyZGV2
+bWFyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFjcGk0
+YXN1cy11c2VyIG1haWxpbmcgbGlzdApBY3BpNGFzdXMtdXNlckBsaXN0cy5zb3VyY2Vmb3JnZS5u
+ZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vYWNwaTRhc3Vz
+LXVzZXIK
