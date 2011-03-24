@@ -1,72 +1,89 @@
 From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
-Date: Thu, 24 Mar 2011 14:57:20 -0500
-Message-ID: <20110324195720.GB31713@thinkpad-t410>
-References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
- <AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
- <20110324131414.GA20612@thinkpad-t410>
- <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
- <AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
- <AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH 1/2] asus-wmi: Add callback for hotkey filtering
+Date: Thu, 24 Mar 2011 15:03:54 -0500
+Message-ID: <1300997035-14104-1-git-send-email-seth.forshee@canonical.com>
+References: <20110324195720.GB31713@thinkpad-t410>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:50222 "EHLO
+Received: from adelie.canonical.com ([91.189.90.139]:34527 "EHLO
 	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933832Ab1CXT50 (ORCPT
+	with ESMTP id S933847Ab1CXUEG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Mar 2011 15:57:26 -0400
-Content-Disposition: inline
-In-Reply-To: <AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
+	Thu, 24 Mar 2011 16:04:06 -0400
+In-Reply-To: <20110324195720.GB31713@thinkpad-t410>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Bagwell <chris@cnpbagwell.com>, Corentin Chary <corentin.chary@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Chris Bagwell <chris@cnpbagwell.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Mar 24, 2011 at 09:00:14AM -0500, Chris Bagwell wrote:
-> On Thu, Mar 24, 2011 at 8:40 AM, Corentin Chary
-> <corentin.chary@gmail.com> wrote:
-> >> I would suggest sending BTN_HOME upon button release 0xe5 (not pre=
-ss
-> >> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
-> >> press-and-hold 0xea.
-> >>
-> >> If you press-and-hold, does it still send the 0xe5 upon release? =C2=
-=A0That
-> >> could complicate things so that both button events do not get sent=
-=2E
-> >>
-> >> I'm not sure what BTN_HOME is commonly used for. =C2=A0This button=
- does
-> >> sound like a HOME button in iPad sense but not in web browser sens=
-e.
-> >
-> > Except the fact that I don't find BTN_HOME in inpout.h, that's seem=
-s a
-> > better idea, forget what I've said earlier.
->=20
-> Ha... Sorry, I had buttons on my brain.  I meant KEY_HOME as you sugg=
-ested.
+This is required for the T101MT home key, which behaves differently
+than other hotkeys.
 
-Really? Isn't KEY_HOME the home key on a standard keyboard?
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c |   12 +++++++++++-
+ drivers/platform/x86/asus-wmi.h |    6 ++++++
+ 2 files changed, 17 insertions(+), 1 deletions(-)
 
-> > 0xe4 -> KEY_IGNORE
-> > 0xe5 -> KEY_HOME
-> > 0xea -> KEY_PROG2, (or BTN_TASK to copy android/iOS ?)
->=20
-> From a quick google, I couldn't finding any specific meaning of
-> BTN_TASK but it looks like xf86-input-evdev turns it into a button
-> press so we may not want that one.
->=20
-> I've no idea of best values but those are pretty close.
-
-I'm still not sure what key codes are best either. I've implemented thi=
-s
-approach, and I went with BTN_TASK and KEY_PROG2, but I'm getting the
-idea that BTN_TASK was intended for a mouse button so I'm not really
-sure if it's a good choice or not. I'll follow up with the patches.
-
-Thanks for the feedback so far.
-
-Seth
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 5b779a9..c98b787 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1058,6 +1058,8 @@ static void asus_wmi_notify(u32 value, void *context)
+ 	acpi_status status;
+ 	int code;
+ 	int orig_code;
++	int key_value = 1;
++	int autorelease = 1;
+ 
+ 	status = wmi_get_event_data(value, &response);
+ 	if (status != AE_OK) {
+@@ -1073,6 +1075,13 @@ static void asus_wmi_notify(u32 value, void *context)
+ 	code = obj->integer.value;
+ 	orig_code = code;
+ 
++	if (asus->driver->key_filter) {
++		asus->driver->key_filter(asus->driver, &code, &key_value,
++					 &autorelease);
++		if (code == ASUS_WMI_KEY_IGNORE)
++			goto exit;
++	}
++
+ 	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
+ 		code = NOTIFY_BRNUP_MIN;
+ 	else if (code >= NOTIFY_BRNDOWN_MIN &&
+@@ -1082,7 +1091,8 @@ static void asus_wmi_notify(u32 value, void *context)
+ 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
+ 		if (!acpi_video_backlight_support())
+ 			asus_wmi_backlight_notify(asus, orig_code);
+-	} else if (!sparse_keymap_report_event(asus->inputdev, code, 1, true))
++	} else if (!sparse_keymap_report_event(asus->inputdev, code,
++					       key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
+ 
+ exit:
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index c044522..58dd019 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -29,6 +29,8 @@
+ 
+ #include <linux/platform_device.h>
+ 
++#define ASUS_WMI_KEY_IGNORE (-1)
++
+ struct module;
+ struct key_entry;
+ struct asus_wmi;
+@@ -44,6 +46,10 @@ struct asus_wmi_driver {
+ 	const struct key_entry	*keymap;
+ 	const char		*input_name;
+ 	const char		*input_phys;
++	/* Returns new code, value, and autorelease values in arguments.
++	 * Return ASUS_WMI_KEY_IGNORE in code if event should be ignored. */
++	void (*key_filter) (struct asus_wmi_driver *driver, int *code,
++			    int *value, int *autorelease);
+ 
+ 	int (*probe) (struct platform_device *device);
+ 	void (*quirks) (struct asus_wmi_driver *driver);
+-- 
+1.7.4.1
