@@ -1,45 +1,56 @@
-From: Corentin Chary <corentin.chary@gmail.com>
+From: Chris Bagwell <chris@cnpbagwell.com>
 Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
-Date: Thu, 24 Mar 2011 13:40:51 +0000
-Message-ID: <AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
+Date: Thu, 24 Mar 2011 09:00:14 -0500
+Message-ID: <AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
 References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
 	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
 	<20110324131414.GA20612@thinkpad-t410>
 	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+	<AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:46938 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752353Ab1CXNkx convert rfc822-to-8bit (ORCPT
+Received: from mail-ew0-f46.google.com ([209.85.215.46]:50815 "EHLO
+	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752353Ab1CXOAP convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Mar 2011 09:40:53 -0400
-In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+	Thu, 24 Mar 2011 10:00:15 -0400
+In-Reply-To: <AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Bagwell <chris@cnpbagwell.com>
+To: Corentin Chary <corentin.chary@gmail.com>
 Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-> I would suggest sending BTN_HOME upon button release 0xe5 (not press
-> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
-> press-and-hold 0xea.
->
-> If you press-and-hold, does it still send the 0xe5 upon release? =C2=A0=
+On Thu, Mar 24, 2011 at 8:40 AM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+>> I would suggest sending BTN_HOME upon button release 0xe5 (not press
+>> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
+>> press-and-hold 0xea.
+>>
+>> If you press-and-hold, does it still send the 0xe5 upon release? =A0=
 That
-> could complicate things so that both button events do not get sent.
+>> could complicate things so that both button events do not get sent.
+>>
+>> I'm not sure what BTN_HOME is commonly used for. =A0This button does
+>> sound like a HOME button in iPad sense but not in web browser sense.
 >
-> I'm not sure what BTN_HOME is commonly used for. =C2=A0This button do=
-es
-> sound like a HOME button in iPad sense but not in web browser sense.
+> Except the fact that I don't find BTN_HOME in inpout.h, that's seems =
+a
+> better idea, forget what I've said earlier.
 
-Except the fact that I don't find BTN_HOME in inpout.h, that's seems a
-better idea, forget what I've said earlier.
+Ha... Sorry, I had buttons on my brain.  I meant KEY_HOME as you sugges=
+ted.
 
-0xe4 -> KEY_IGNORE
-0xe5 -> KEY_HOME
-0xea -> KEY_PROG2, (or BTN_TASK to copy android/iOS ?)
+>
+> 0xe4 -> KEY_IGNORE
+> 0xe5 -> KEY_HOME
+> 0xea -> KEY_PROG2, (or BTN_TASK to copy android/iOS ?)
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+=46rom a quick google, I couldn't finding any specific meaning of
+BTN_TASK but it looks like xf86-input-evdev turns it into a button
+press so we may not want that one.
+
+I've no idea of best values but those are pretty close.
+
+Chris
