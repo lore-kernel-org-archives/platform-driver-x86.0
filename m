@@ -1,65 +1,65 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
-Date: Fri, 25 Mar 2011 09:07:02 -0700
-Message-ID: <20110325160702.GB5099@core.coreip.homeip.net>
+From: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT
+	"Express Gate" key
+Date: Fri, 25 Mar 2011 16:08:41 +0000
+Message-ID: <AANLkTinPAwWOONsD=DTM0go1_kb_DKaCeUk4dJ1Nvftz@mail.gmail.com>
 References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
- <AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
- <20110324131414.GA20612@thinkpad-t410>
- <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
- <AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
- <AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
+	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
+	<20110324131414.GA20612@thinkpad-t410>
+	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
+	<AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
+	<AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
+	<20110325160702.GB5099@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:33933 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753973Ab1CYQHH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Mar 2011 12:07:07 -0400
-Content-Disposition: inline
-In-Reply-To: <AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Bagwell <chris@cnpbagwell.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20110325160702.GB5099-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Mar 24, 2011 at 09:00:14AM -0500, Chris Bagwell wrote:
-> On Thu, Mar 24, 2011 at 8:40 AM, Corentin Chary
-> <corentin.chary@gmail.com> wrote:
-> >> I would suggest sending BTN_HOME upon button release 0xe5 (not pre=
-ss
-> >> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
-> >> press-and-hold 0xea.
-> >>
-> >> If you press-and-hold, does it still send the 0xe5 upon release? =A0=
-That
-> >> could complicate things so that both button events do not get sent=
-=2E
-> >>
-> >> I'm not sure what BTN_HOME is commonly used for. =A0This button do=
-es
-> >> sound like a HOME button in iPad sense but not in web browser sens=
-e.
-> >
-> > Except the fact that I don't find BTN_HOME in inpout.h, that's seem=
-s a
-> > better idea, forget what I've said earlier.
->=20
-> Ha... Sorry, I had buttons on my brain.  I meant KEY_HOME as you sugg=
-ested.
->=20
-> >
-> > 0xe4 -> KEY_IGNORE
-> > 0xe5 -> KEY_HOME
-> > 0xea -> KEY_PROG2, (or BTN_TASK to copy android/iOS ?)
->=20
-> From a quick google, I couldn't finding any specific meaning of
-> BTN_TASK but it looks like xf86-input-evdev turns it into a button
-> press so we may not want that one.
->=20
-
-It was one of additional keys on Logitech mice IIRC.
-
---=20
-Dmitry
+T24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgNDowNyBQTSwgRG1pdHJ5IFRvcm9raG92CjxkbWl0cnku
+dG9yb2tob3ZAZ21haWwuY29tPiB3cm90ZToKPiBPbiBUaHUsIE1hciAyNCwgMjAxMSBhdCAwOTow
+MDoxNEFNIC0wNTAwLCBDaHJpcyBCYWd3ZWxsIHdyb3RlOgo+PiBPbiBUaHUsIE1hciAyNCwgMjAx
+MSBhdCA4OjQwIEFNLCBDb3JlbnRpbiBDaGFyeQo+PiA8Y29yZW50aW4uY2hhcnlAZ21haWwuY29t
+PiB3cm90ZToKPj4gPj4gSSB3b3VsZCBzdWdnZXN0IHNlbmRpbmcgQlROX0hPTUUgdXBvbiBidXR0
+b24gcmVsZWFzZSAweGU1IChub3QgcHJlc3MKPj4gPj4gMHhlNCBhbmQgZG8gdGhlIGF1dG9yZWxl
+YXNlIGJlY2F1c2Ugb2YgaXQpIGFuZCBCVE5fUFJPRzIgb24KPj4gPj4gcHJlc3MtYW5kLWhvbGQg
+MHhlYS4KPj4gPj4KPj4gPj4gSWYgeW91IHByZXNzLWFuZC1ob2xkLCBkb2VzIGl0IHN0aWxsIHNl
+bmQgdGhlIDB4ZTUgdXBvbiByZWxlYXNlPyDCoFRoYXQKPj4gPj4gY291bGQgY29tcGxpY2F0ZSB0
+aGluZ3Mgc28gdGhhdCBib3RoIGJ1dHRvbiBldmVudHMgZG8gbm90IGdldCBzZW50Lgo+PiA+Pgo+
+PiA+PiBJJ20gbm90IHN1cmUgd2hhdCBCVE5fSE9NRSBpcyBjb21tb25seSB1c2VkIGZvci4gwqBU
+aGlzIGJ1dHRvbiBkb2VzCj4+ID4+IHNvdW5kIGxpa2UgYSBIT01FIGJ1dHRvbiBpbiBpUGFkIHNl
+bnNlIGJ1dCBub3QgaW4gd2ViIGJyb3dzZXIgc2Vuc2UuCj4+ID4KPj4gPiBFeGNlcHQgdGhlIGZh
+Y3QgdGhhdCBJIGRvbid0IGZpbmQgQlROX0hPTUUgaW4gaW5wb3V0LmgsIHRoYXQncyBzZWVtcyBh
+Cj4+ID4gYmV0dGVyIGlkZWEsIGZvcmdldCB3aGF0IEkndmUgc2FpZCBlYXJsaWVyLgo+Pgo+PiBI
+YS4uLiBTb3JyeSwgSSBoYWQgYnV0dG9ucyBvbiBteSBicmFpbi4gwqBJIG1lYW50IEtFWV9IT01F
+IGFzIHlvdSBzdWdnZXN0ZWQuCj4+Cj4+ID4KPj4gPiAweGU0IC0+IEtFWV9JR05PUkUKPj4gPiAw
+eGU1IC0+IEtFWV9IT01FCj4+ID4gMHhlYSAtPiBLRVlfUFJPRzIsIChvciBCVE5fVEFTSyB0byBj
+b3B5IGFuZHJvaWQvaU9TID8pCj4+Cj4+IEZyb20gYSBxdWljayBnb29nbGUsIEkgY291bGRuJ3Qg
+ZmluZGluZyBhbnkgc3BlY2lmaWMgbWVhbmluZyBvZgo+PiBCVE5fVEFTSyBidXQgaXQgbG9va3Mg
+bGlrZSB4Zjg2LWlucHV0LWV2ZGV2IHR1cm5zIGl0IGludG8gYSBidXR0b24KPj4gcHJlc3Mgc28g
+d2UgbWF5IG5vdCB3YW50IHRoYXQgb25lLgo+Pgo+Cj4gSXQgd2FzIG9uZSBvZiBhZGRpdGlvbmFs
+IGtleXMgb24gTG9naXRlY2ggbWljZSBJSVJDLgoKSSB0aGlua3MgaXQncyB0aGUgc2FtZSBhcyBL
+RVlfQ1lDTEVXSU5ET1dTICh0aGVyZSBhcmUgbGl0dGxlIHdpbmRvd3MKb24gdGhlIGJ1dHRvbiku
+CgotLSAKQ29yZW50aW4gQ2hhcnkKaHR0cDovL3hmLmlrc2FpZi5uZXQKCi0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQpFbmFibGUgeW91ciBzb2Z0d2FyZSBmb3IgSW50ZWwoUikgQWN0aXZlIE1hbmFnZW1l
+bnQgVGVjaG5vbG9neSB0byBtZWV0IHRoZQpncm93aW5nIG1hbmFnZWFiaWxpdHkgYW5kIHNlY3Vy
+aXR5IGRlbWFuZHMgb2YgeW91ciBjdXN0b21lcnMuIEJ1c2luZXNzZXMKYXJlIHRha2luZyBhZHZh
+bnRhZ2Ugb2YgSW50ZWwoUikgdlBybyAoVE0pIHRlY2hub2xvZ3kgLSB3aWxsIHlvdXIgc29mdHdh
+cmUgCmJlIGEgcGFydCBvZiB0aGUgc29sdXRpb24/IERvd25sb2FkIHRoZSBJbnRlbChSKSBNYW5h
+Z2VhYmlsaXR5IENoZWNrZXIgCnRvZGF5ISBodHRwOi8vcC5zZi5uZXQvc2Z1L2ludGVsLWRldjJk
+ZXZtYXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWNw
+aTRhc3VzLXVzZXIgbWFpbGluZyBsaXN0CkFjcGk0YXN1cy11c2VyQGxpc3RzLnNvdXJjZWZvcmdl
+Lm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9hY3BpNGFz
+dXMtdXNlcgo=
