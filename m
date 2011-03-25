@@ -1,181 +1,71 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 3/4] asus-laptop: Pegatron Lucid accelerometer
-Date: Fri, 25 Mar 2011 12:21:20 +0100
-Message-ID: <AANLkTin849Cr2UUv4astP860=_f5xMMoPAhFhA4K+rzZ@mail.gmail.com>
-References: <1301004130-3294-1-git-send-email-andy.ross@windriver.com>
-	<1301004130-3294-4-git-send-email-andy.ross@windriver.com>
+Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT Home/Express Gate key
+Date: Fri, 25 Mar 2011 13:28:30 +0000
+Message-ID: <AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
+References: <20110324195720.GB31713@thinkpad-t410>
+	<1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:48935 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750820Ab1CYLVW convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Mar 2011 07:21:22 -0400
-Received: by eyx24 with SMTP id 24so451784eyx.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Mar 2011 04:21:20 -0700 (PDT)
-In-Reply-To: <1301004130-3294-4-git-send-email-andy.ross@windriver.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Ross <andy.ross@windriver.com>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthew Garrett <mjg@redhat.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Chris Bagwell <chris@cnpbagwell.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Ccing Dmitry and Matthew, they may want to comment that one.
-
-On Thu, Mar 24, 2011 at 11:02 PM, Andy Ross <andy.ross@windriver.com> w=
-rote:
-> Support the built-in accelerometer on the Lucid tablets as a standard
-> 3-axis input device.
->
-> Signed-off-by: Andy Ross <andy.ross@windriver.com>
-> ---
-> =C2=A0drivers/platform/x86/Kconfig =C2=A0 =C2=A0 =C2=A0 | =C2=A0 =C2=A0=
-9 ++-
-> =C2=A0drivers/platform/x86/asus-laptop.c | =C2=A0137 ++++++++++++++++=
-+++++++++++++++++++-
-> =C2=A02 files changed, 141 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
-> index b6f983e..43906f5 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -67,10 +67,11 @@ config ASUS_LAPTOP
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0This is a driver for Asus laptops a=
-nd the Pegatron Lucid
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0tablet. It may also support some ME=
-DION, JVC or VICTOR
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0laptops. It makes all the extra but=
-tons generate standard
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 ACPI events and input events. It also a=
-dds support for video
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 output switching, LCD backlight control=
-, Bluetooth and Wlan
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 control, and most importantly, allows y=
-ou to blink those
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 fancy LEDs.
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 ACPI events and input events, and on th=
-e Lucid the built-in
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 accelerometer appears as an input devic=
-e. =C2=A0It also adds
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 support for video output switching, LCD=
- backlight control,
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 Bluetooth and Wlan control, and most im=
-portantly, allows you
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 to blink those fancy LEDs.
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0For more information and a userspac=
-e daemon for handling the extra
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0buttons see <http://acpi4asus.sf.ne=
-t>.
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
-6/asus-laptop.c
-> index 6651d8c..9b07368 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -224,6 +224,14 @@ static char *display_get_paths[] =3D {
-> =C2=A0#define PEGA_READ_ALS_H =C2=A0 =C2=A0 =C2=A0 =C2=A00x02
-> =C2=A0#define PEGA_READ_ALS_L =C2=A0 =C2=A0 =C2=A0 =C2=A00x03
->
-> +#define PEGA_ACCEL_NAME "pega_accel"
-> +#define PEGA_ACCEL_DESC "Pegatron Lucid Tablet Accelerometer"
-> +#define METHOD_XLRX "XLRX"
-> +#define METHOD_XLRY "XLRY"
-> +#define METHOD_XLRZ "XLRZ"
-> +#define PEGA_ACC_CLAMP 512 /* 1G accel is reported as ~256, so clamp=
- to 2G */
-> +#define PEGA_ACC_RETRIES 3
-> +
-> =C2=A0/*
-> =C2=A0* Define a specific led structure to keep the main structure cl=
-ean
-> =C2=A0*/
-> @@ -249,6 +257,7 @@ struct asus_laptop {
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct input_dev *inputdev;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct key_entry *keymap;
-> + =C2=A0 =C2=A0 =C2=A0 struct input_polled_dev *pega_accel_poll;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_led mled;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_led tled;
-> @@ -262,6 +271,10 @@ struct asus_laptop {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool have_rsts;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool have_pega_lucid;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0int lcd_state;
-> + =C2=A0 =C2=A0 =C2=A0 bool pega_acc_live;
-> + =C2=A0 =C2=A0 =C2=A0 int pega_acc_x;
-> + =C2=A0 =C2=A0 =C2=A0 int pega_acc_y;
-> + =C2=A0 =C2=A0 =C2=A0 int pega_acc_z;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct rfkill *gps_rfkill;
->
-> @@ -390,6 +403,99 @@ static int asus_pega_lucid_set(struct asus_lapto=
-p *asus, int unit, bool enable)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return write_acpi_int(asus->handle, method=
-, unit);
-> =C2=A0}
->
-> +static int pega_acc_axis(struct asus_laptop *asus, int curr, char *m=
-ethod)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 int i, delta;
-> + =C2=A0 =C2=A0 =C2=A0 unsigned long long val;
-> + =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i < PEGA_ACC_RETRIES; i++) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 acpi_evaluate_inte=
-ger(asus->handle, method, NULL, &val);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* The output is n=
-oisy. =C2=A0From reading the ASL
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* dissassemb=
-ly, timeout errors are returned with 1's
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* in the hig=
-h word, and the lack of locking around
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* thei hi/lo=
- byte reads means that a transition
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* between (f=
-or example) -1 and 0 could be read as
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0* 0xff00 or =
-0x00ff. */
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 delta =3D abs(curr=
- - (short)val);
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (delta < 128 &&=
- !(val & ~0xffff))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 break;
-> + =C2=A0 =C2=A0 =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 return clamp_val((short)val, -PEGA_ACC_CLAMP, =
-PEGA_ACC_CLAMP);
-> +}
-
-Wow :/ How long is an acpi_evaluate_integer call here ?
-
-> +static int asus_platform_probe(struct platform_device *pd)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 struct asus_laptop *asus =3D dev_get_drvdata(&=
-pd->dev);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 /* This is instantiated during platform driver=
- initialization
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* becuase if it's done from underneath a=
-sus_acpi_add(), the
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* resulting input device can be grabbed =
-by an early userspace
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* reader before ACPI initialization is f=
-inished and something
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* oopses underneath the acpi_evaluate_in=
-teger() call out of
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* pega_accel_poll(). =C2=A0Firmware bug?=
- */
-> + =C2=A0 =C2=A0 =C2=A0 pega_accel_probe(asus);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return 0;
-> +}
-
-When is asus_platform_probe called exactly ? Because I'd say it's
-called during asus_platform_probe(), and that doesn't fix your issue
-right ?
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+PiArc3RhdGljIHZvaWQgZWVlcGNfd21pX2tleV9maWx0ZXIoc3RydWN0IGFzdXNfd21pX2RyaXZl
+ciAqYXN1c193bWksIGludCAqY29kZSwKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgaW50ICp2YWx1ZSwgaW50ICphdXRvcmVsZWFzZSkKPiArewo+ICsg
+wqAgwqAgwqAgc3RydWN0IGVlZXBjX3dtaV9kcml2ZXIgKmVlZXBjID0gdG9fZWVlcGNfd21pX2Ry
+aXZlcihhc3VzX3dtaSk7Cj4gKyDCoCDCoCDCoCBpbnQgaXNfcHJlc3M7Cj4gKwo+ICsgwqAgwqAg
+wqAgLyoKPiArIMKgIMKgIMKgIMKgKiBUaGUgZm9sbG93aW5nIGJlaGF2aW9yIGlzIHVzZWQgZm9y
+IFQxMDFNVCAiSG9tZSIga2V5Ogo+ICsgwqAgwqAgwqAgwqAqCj4gKyDCoCDCoCDCoCDCoCogwqAg
+T24gcHJlc3M6IMKgIE5vIGV2ZW50IHNldAo+ICsgwqAgwqAgwqAgwqAqIMKgIE9uIGhvbGQ6IMKg
+IMKgS0VZX1BST0cyIHByZXNzIHNlbnQgb25jZSB3L28gYXV0b3JlbGVhc2UKPiArIMKgIMKgIMKg
+IMKgKiDCoCBPbiByZWxlYXNlOiBJZiBrZXkgd2FzIGhlbGQsIEtFWV9QUk9HMiByZWxlYXNlIHNl
+bnQuCj4gKyDCoCDCoCDCoCDCoCogwqAgwqAgwqAgwqAgwqAgwqAgwqAgT3RoZXJ3aXNlIEtFWV9I
+T01FIHByZXNzIHNlbnQgdy8gYXV0b3JlbGVhc2UuCj4gKyDCoCDCoCDCoCDCoCoKPiArIMKgIMKg
+IMKgIMKgKiBUaGUgc2ltcGxlIHN0YXRlIG1hY2hpbmUgYmVsb3cgaW1wbGVtZW50cyB0aGlzIGJl
+aGF2aW9yLgo+ICsgwqAgwqAgwqAgwqAqLwo+ICsgwqAgwqAgwqAgc3dpdGNoICgqY29kZSkgewo+
+ICsgwqAgwqAgwqAgY2FzZSBIT01FX1BSRVNTOgo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZWVl
+cGMtPmhvbWVfa2V5X3N0YXRlID0gSE9NRV9QUkVTUzsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+ICpjb2RlID0gQVNVU19XTUlfS0VZX0lHTk9SRTsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGJy
+ZWFrOwo+ICsgwqAgwqAgwqAgY2FzZSBIT01FX0hPTEQ6Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCBpZiAoZWVlcGMtPmhvbWVfa2V5X3N0YXRlID09IEhPTUVfSE9MRCkgewo+ICsgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKmNvZGUgPSBBU1VTX1dNSV9LRVlfSUdOT1JFOwo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgfSBlbHNlIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIGVlZXBjLT5ob21lX2tleV9zdGF0ZSA9IEhPTUVfSE9MRDsKPiArIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICp2YWx1ZSA9IDE7Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCAqYXV0b3JlbGVhc2UgPSAwOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgfQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgYnJlYWs7Cj4gKyDCoCDCoCDCoCBjYXNlIEhP
+TUVfUkVMRUFTRToKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGlmIChlZWVwYy0+aG9tZV9rZXlf
+c3RhdGUgPT0gSE9NRV9SRUxFQVNFKSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCBkZXZfd2FybigmYXN1c193bWktPnBsYXRmb3JtX2RldmljZS0+ZGV2LAo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAiVW5leHBlY3RlZCBob21l
+IGtleSByZWxlYXNlIGV2ZW50XG4iKTsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgICpjb2RlID0gQVNVU19XTUlfS0VZX0lHTk9SRTsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IH0gZWxzZSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqY29kZSA9IGVl
+ZXBjLT5ob21lX2tleV9zdGF0ZTsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IGVlZXBjLT5ob21lX2tleV9zdGF0ZSA9IEhPTUVfUkVMRUFTRTsKPiArIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIGlzX3ByZXNzID0gKCpjb2RlID09IEhPTUVfUFJFU1MpOwo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKnZhbHVlID0gaXNfcHJlc3M7Cj4gKyDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV0b3JlbGVhc2UgPSBpc19wcmVzczsK
+PiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIH0KPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGJyZWFr
+Owo+ICsgwqAgwqAgwqAgfQo+ICt9Cj4gKwoKV2h5IG5vdCBzb21ldGhpbmcgc2ltcGxlciBsaWtl
+IHRoaXMgPwoKc3RhdGljIHZvaWQgZWVlcGNfd21pX2tleV9maWx0ZXIoc3RydWN0IGFzdXNfd21p
+X2RyaXZlciAqYXN1c193bWksIGludCBjb2RlLAogICAgICAgICAgICAgICAgICDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGludCAqdmFsdWUsIGludCAqYXV0
+b3JlbGVhc2UpCnsKICAgICAgICBpZiAoY29kZSA9PSAweGU0KSB7CiAgICAgICAgICAgICAgICAq
+dmFsdWUgPSAxOwogICAgICAgICAgICAgICAgKmF1dG9yZWxlYXNlID0gMDsKICAgICAgICB9IGVs
+c2UgaWYgKGNvZGUgPT0gMHhlNSkgewogICAgICAgICAgICAgICAgKnZhbHVlID0gMDsKICAgICAg
+ICAgICAgICAgICphdXRvcmVsZWFzZSA9IDA7CiAgICAgICB9Cn0KCndpdGggdGhpcyBrZXltYXAg
+OgoKICAgICAgIHsgS0VfS0VZLCAweGU0LCB7IEtFWV9IT01FIH0gfSwgLyogSG9tZSBLZXkgRG93
+biAqLwogICAgICAgeyBLRV9LRVksIDB4ZTUsIHsgS0VZX0hPTUUgfSB9LCAvKiBIb21lIEtleSBV
+cCAqLwogICAgICAgeyBLRV9LRVksIDB4ZWEsIHsgS0VZX1BST0cyIH0gfSwgLyogSG9tZSBLZXkg
+aG9sZCBtb3JlIHRoYW4gb25lIHNlY29uZCAqLwoKClRoaXMgc291bmRzIHNpbXBsZXIgYW5kIHdl
+IGRvbid0IGxvb3NlIGluZm9ybWF0aW9uIChrZXkgZG93biBhbmQga2V5CnVwIGJvdGggZXZlbnQg
+cmVwb3J0ZWQgYXQgdGhlIHJpZ2h0IHRpbWUpLgoweGU1IGlzICphbHdheXMqIHNlbnQgYWZ0ZXIg
+MHhlNCByaWdodCA/CgpBbHNvLCBmb3IgdGhlIGNhbGxiYWNrLCAidmFsdWUiIHNob3VsZCBiZSBh
+biB1bnNpZ25lZCBpbnQsIGFuZAoiYXV0b3JlbGVhc2UiIGEgYm9vbC4KClRoYW5rcywKLS0gCkNv
+cmVudGluIENoYXJ5Cmh0dHA6Ly94Zi5pa3NhaWYubmV0Cg==
