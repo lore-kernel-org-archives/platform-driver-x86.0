@@ -1,21 +1,20 @@
 From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT
  Home/Express Gate key
-Date: Fri, 25 Mar 2011 11:17:24 -0500
-Message-ID: <20110325161724.GC14328@thinkpad-t410>
+Date: Fri, 25 Mar 2011 11:28:50 -0500
+Message-ID: <20110325162850.GD14328@thinkpad-t410>
 References: <20110324195720.GB31713@thinkpad-t410>
 	<1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
 	<AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
 	<20110325135311.GA14328@thinkpad-t410>
 	<AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
-	<AANLkTi=iWeKVww_XPm0PQa09NLtPCo4wvz7ZYkk1ajhQ@mail.gmail.com>
-	<AANLkTinr2FJA2H3CJWx-wZ_g-hCZ3DT7PR6QsXqi5Rkw@mail.gmail.com>
+	<20110325161405.GC5099@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AANLkTinr2FJA2H3CJWx-wZ_g-hCZ3DT7PR6QsXqi5Rkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110325161405.GC5099-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
 List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
 	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
@@ -24,76 +23,70 @@ List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
 	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgMDM6NDM6MTFQTSArMDAwMCwgQ29yZW50aW4gQ2hhcnkg
-d3JvdGU6Cj4gPiBIZXJlIGlzIGhvdyBJIGVudmlzaW9uIHVzaW5nIHRoZXNlIGtleXMuIMKgSSB3
-YW50ZWQgdG8gbWFwIHF1aWNrIHByZXNzCj4gPiB0byBHTk9NRTMvS0RFNC9Vbml0eSdzIEFjdGl2
-aXRpZXMgbWVudSBhbmQgbWFwIHByZXNzLWFuZC1ob2xkIHRvCj4gPiBzY3JpcHQgdGhhdCByb3Rh
-dGVzIHNjcmVlbi4gwqBJIGxpa2UgdGhlIHJlcGVhdGluZyBvZiByb3RhdGVzIGJ1dCBJCj4gPiBk
-aWRuJ3QgcmVhbGx5IHdhbnQgYSByb3RhdGUgdG8gYWxzbyBmb3JjZSBhIHBvcCB1cCBvZiB0aGUg
-YWN0aXZpdGllcwo+ID4gbWVudS4KPiAKPiBNYWtlcyBzZW5zZS4KPiAKPiA+Pgo+ID4+PiBBbmQg
-YmFjayB0byB0aGUgcXVlc3Rpb24gb2YgS0VZX0hPTUUgLS0gdGhhdCdzIG5vdCByZWFsbHkgd2hh
-dCB5b3Ugd2FudCwKPiA+Pj4gaXMgaXQ/IEFzIGluICJtb3ZlIGN1cnNvciB0byBzdGFydCBvZiBs
-aW5lIj8KPiA+Pgo+ID4+IEhvIC4uIHJpZ2h0LCB0aGF0J3Mgd2hhdCBtZWFuIEtFWV9IT01FIDov
-LiBTbyBubywgSSBkb24ndCB3YW50IHRoYXQuLi4KPiA+PiBXaGF0IGFib3V0Ogo+ID4+IC0gS0VZ
-X0NZQ0xFV0lORE9XUwo+ID4+IC0gS0VZX0NPTVBVVEVSCj4gPj4gLSBLRVlfSE9NRVBBR0UKPiA+
-PiAtIEtFWV9EQVNIQk9BUkQKPiA+Pgo+ID4+IEkgdGhpbmsgS0VZX0hPTUVQQUdFIGlzIHRoZSBi
-ZXN0IGNob2ljZS4KPiA+Cj4gPiBJJ3ZlIG9ubHkgaGFkIGxpbWl0ZWQgdGltZSB0byBsb29rIG1v
-cmUuIMKgU28gZmFyLCBJIGZvdW5kIHVuZGVyIHVkZXYgYQo+ID4gdG9zaGliYSB0YWJsZXQgdGhh
-dCBtYXBzIHdoYXQgaXMgcHJvYmFibHkgYSByb3RhdGUgYnV0dG9uIHRvCj4gPiBLRVlfRElSRUNU
-SU9OIHNvIHRoYXRzIG9uZSBvcHRpb24gZm9yIGl0IGluc3RlYWQgb2YgS0VZX1BST0cyLiDCoEkK
-PiA+IGNvdWxkbid0IGZpbmQgYW55Ym9keSB1c2luZyB0aGF0IHRob3VnaC4KPiA+Cj4gPiBJIHNl
-ZSBpbiAvdXNyL3NoYXJlL1gxMS9zeW1ib2xzL2luZXQ6Cj4gPgo+ID4gwqAgwqBrZXkgPEkxNjI+
-IMKgIHsgwqAgwqAgwqBbIFhGODZSb3RhdGVXaW5kb3dzIMKgIMKgIF0gwqAgwqAgwqAgfTsKPiA+
-Cj4gPiBhbmQgaW4gL3Vzci9zaGFyZS9YMTEveGtiL3N5bWJvbHMvZXZkZXY6Cj4gPgo+ID4geGti
-L2tleWNvZGVzL2V2ZGV2OiDCoCDCoCA8STE2Mj4gPSAxNjI7IMKgIC8vICNkZWZpbmUgS0VZX0NZ
-Q0xFV0lORE9XUyDCoCDCoCDCoCDCoDE1NAo+ID4KPiA+IExvb2tzIGxpa2UgS0VZX0NZQ0xFV0lO
-RE9XUyBpcyBhbHJlYWR5IGhvb2tlZCB1cCB0bwo+ID4gZ25vbWUtc2V0dGluZ3MtZGFlbW9uIHRv
-IGF1dG8tcm90YXRlIHNjcmVlbj8KPiAKPiBYRjg2Um90YXRlV2luZG93cyBpcyBwcm9iYWJseSBt
-b3JlICJhbHQtdGFiIiB0aGFuICJyb3RhdGUgc2NyZWVuIi4KCkdub21lIGF0IGxlYXN0IHNlZW1z
-IHRvIGhhbmRsZSBpdCBieSBkb2luZyBhIHNjcmVlbiByb3RhdGlvbi4KCj4gPiBJIHJhbiBpbnRv
-IHRvdGFsIGRlYWQgZW5kIGZvciBmaW5kaW5nIGEgcHJlLWV4aXN0aW5nIGV4YW1wbGUgb2YgaG9t
-ZQo+ID4gYnV0dG9uIHVzYWdlLiDCoEknbSByZWFsbHkgc3VycHJpc2VkIHdlIGRvIG5vdCB5ZXQg
-aGF2ZSBhIEtFWV9MQVVOQ0hFUgo+ID4gb3Igc2ltaWxhciBiZWNhdXNlIHNvIG1hbnkgdGFibGV0
-IFBDcy9zbWFydHBob25lcy9wYWRzIGRvIGhhdmUgYQo+ID4gYnV0dG9uIHdpdGggdGhpcyBzcGVj
-aWZpYyBjb25jZXB0IG9mICJicmluZyB1cCB5b3VyIGljb24gYmFzZWQKPiA+IGFwcGxpY2F0aW9u
-IGxhdW5jaGVyIi4KPiAKPiBLRVlfTEFVTkNIRVIgc291bmRzIGxpa2UgIkFsdC1GMiIgKHRoYXQg
-bWVhbnMga3J1bm5lciBvbiBLREUpLgo+IFRoZSBhZHZhbnRhZ2Ugb3ZlciBLRVlfSE9NRVBBR0Ug
-aXMgdGhhdCBpdCB3b3VsZCB3b3JrIGV2ZW4gd2hlbiBhCj4gYnJvd3NlciBoYXZlIHRoZSBmb2N1
-cy4KPiAKPiA+IC0gS0VZX01FTlUKPiA+IC0gS0VZX0VYSVQgKHNtYXJ0cGhvbmVzIHNvbWV0aW1l
-IG1lYW4gdGhpcykKPiA+IC0gS0VZX1BST0czIChiYXNpY2FsbHkgYWxsIHRoYXQgV2luZG93cyBp
-cyBkb2luZykKPiA+IC0gS0VZX0xBVU5DSEVSICh3aHkgbm90IGJlIHRoZSBmaXJzdCB0byBmaW5h
-bGx5IGNyZWF0ZSBpdCEpCj4gPgo+ID4gSSB2b3RlIGZvciBlaXRoZXIgS0VZX1BST0czIG9yIEtF
-WV9IT01FUEFHRSBmb3IgYXQgbGVhc3Qgc2hvcnQgdGVybS4KPiAKPiBTbyBub3csIEkgdm90ZSAo
-aW4gb3JkZXIpOgo+IC0gS0VZX0xBVU5DSEVSCj4gLSBLRVlfREFTSEJPQVJECj4gLSBLRVlfUFJP
-RzMKPiAKPiBXaXRoIHRoaXMgYmVoYXZpb3IgKEknbGwgdXNlIEtFWV9MQVVDSEVSIGFuZCBLRVlf
-UFJPRzIpCj4gCj4gLSBPbiBwcmVzcywgZG8gbm90aGluZwo+IC0gT24gcmVsZWFzZSwgZW1pdCBL
-RVlfTEFVTkNIRVIgaWYgS0VZX1BST0cyIHdhc24ndCBlbWl0ZWQKPiAtIE9uIHByZXNzLCBlbWl0
-IG9ubHkgb25lICBLRVlfUFJPRzIgKEknZCBsaWtlIHRvIGVtaXQgcmVwZWF0ZWQKCkRvIHlvdSBt
-ZWFuIG9uIGhvbGQ/Cgo+IEtFWV9QUk9HMiwgYnV0IEkgdW5kZXJzdGFuZCB0aGF0IGl0IG1ha2Vz
-IHRoaW5ncyBoYXJkZXIgZm9yCj4gdXNlcnNwYWNlKS4KCkkgaGF2ZSBhIGtleWJvYXJkIHRoYXQg
-ZW1pdCByZXBlYXRlZCBwcmVzcyBldmVudHMgZm9yIGhvdGtleXMsIHNvIEkKdGhpbmsgdXNlcnNw
-YWNlIGNhbiBoYW5kbGUgdGhpcy4gSXQganVzdCB3YWl0cyBmb3IgdGhlIHJlbGVhc2UgYmVmb3Jl
-CmRvaW5nIGFueXRoaW5nLCBzbyBhcyBsb25nIGFzIGl0J3MgbXVsdGlwbGUgcHJlc3MgZXZlbnRz
-IGFuZCBhIHNpbmdsZQpyZWxlYXNlIEkgdGhpbmsgd2UncmUgb2theS4KClNpbmNlIGl0IHNlZW1z
-IEtFWV9DWUNMRVdJTkRPV1MgbWlnaHQgYWN0dWFsbHkgYWNjb21wbGlzaCB3aGF0IGEgaG9sZCBp
-cwppbnRlbmRlZCB0byBkbywgSSB0aGluayBJJ2xsIHByb2NlZWQgd2l0aCB0aGUgZm9sbG93aW5n
-IHNsaWdodGx5IGFtZW5kZWQKdmVyc2lvbiBvZiB5b3VyIHBsYW4uCgogLSBPbiBwcmVzcywgZG8g
-bm90aGluZwogLSBPbiBob2xkLCBlbWl0IEtFWV9DWUNMRVdJTkRPV1MgcmVwZWF0ZWRseQogLSBP
-biByZWxlYXNlLCBlbWl0IEtFWV9MQVVOQ0hFUiB3LyBhdXRvcmVsZWFzZSBpZiBLRVlfQ1lDTEVX
-SU5ET1dTCiAgIHdhc24ndCByZWxlYXNlZCwgZWxzZSBlbWl0IEtFWV9DWUNMRVdJTkRPV1MgcmVs
-ZWFzZQoKQXNzdW1pbmcgb2YgY291cnNlIHRoYXQgRG1pdHJ5IGFncmVlcyB0aGF0IGFkZGluZyBL
-RVlfTEFVTkNIRVIgbWFrZXMKc2Vuc2UuCgpTZXRoCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkVu
-YWJsZSB5b3VyIHNvZnR3YXJlIGZvciBJbnRlbChSKSBBY3RpdmUgTWFuYWdlbWVudCBUZWNobm9s
-b2d5IHRvIG1lZXQgdGhlCmdyb3dpbmcgbWFuYWdlYWJpbGl0eSBhbmQgc2VjdXJpdHkgZGVtYW5k
-cyBvZiB5b3VyIGN1c3RvbWVycy4gQnVzaW5lc3NlcwphcmUgdGFraW5nIGFkdmFudGFnZSBvZiBJ
-bnRlbChSKSB2UHJvIChUTSkgdGVjaG5vbG9neSAtIHdpbGwgeW91ciBzb2Z0d2FyZSAKYmUgYSBw
-YXJ0IG9mIHRoZSBzb2x1dGlvbj8gRG93bmxvYWQgdGhlIEludGVsKFIpIE1hbmFnZWFiaWxpdHkg
-Q2hlY2tlciAKdG9kYXkhIGh0dHA6Ly9wLnNmLm5ldC9zZnUvaW50ZWwtZGV2MmRldm1hcgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBY3BpNGFzdXMtdXNl
-ciBtYWlsaW5nIGxpc3QKQWNwaTRhc3VzLXVzZXJAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBz
-Oi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL2FjcGk0YXN1cy11c2VyCg==
+On Fri, Mar 25, 2011 at 09:14:05AM -0700, Dmitry Torokhov wrote:
+> > If you keep a keyboard key pressed, you want multiple events, not one right ?
+> > I think it's important not to loose informations. If someone keep this
+> > key pressed more than 1.5 second, I think it's good idea to send
+> > multiple KEY_PROG2.
+> 
+> You can have input autorepeat facilities do that for you. If you want to
+> do this yourself then the proper value for repeated events is _2_, not
+> 1, or they will be dropped as duplicates.
+> 
+> > 
+> > About KEY_HOME press / release, and filtering KEY_HOME after
+> > KEY_PROG2, I'm not sure. So if you really want it, and nobody
+> > complains, I'll be happy to accept your patch.
+> > 
+> > > And back to the question of KEY_HOME -- that's not really what you want,
+> > > is it? As in "move cursor to start of line"?
+> > 
+> > Ho .. right, that's what mean KEY_HOME :/. So no, I don't want that...
+> > What about:
+> > - KEY_CYCLEWINDOWS
+> > - KEY_COMPUTER
+> > - KEY_HOMEPAGE
+> > - KEY_DASHBOARD
+> > 
+> > I think KEY_HOMEPAGE is the best choice.
+> 
+> No, KEY_HOMEPAGE should cause your browser to go to your home page. What
+> you want is either:
+> 
+> #define KEY_CONFIG         171     /* AL Consumer Control Configuration */
+> #define KEY_DASHBOARD      204     /* AL Dashboard */
+> 
+> ("AL" stands for "Application Launcher", "AC" for 'Application Control",
+> matched loosely to HUT tables).
+
+Dmitry,
+
+I didn't see you responses before my last response, so you can ignore
+it. Let me make sure I understand correctly. For reference, the button
+in question sends an 0xe4 scancode on press, repeated 0xea scancodes on
+hold, and 0xe5 on release.
+
+So, would the following make sense (KEY_TBD is may abbreviation for "key
+to be determinded"):
+
+ - On press (0xe4), send KEY_TBD, value = 1
+ - On hold (0xea), send KEY_TBD, value = 2
+ - On release (0xe5), send KEY_TBD, value = 0
+
+Also, is KEY_CYCLEWINDOWS intended to imply screen rotation, or
+something else?
+
+Thanks,
+Seth
+
+
+------------------------------------------------------------------------------
+Enable your software for Intel(R) Active Management Technology to meet the
+growing manageability and security demands of your customers. Businesses
+are taking advantage of Intel(R) vPro (TM) technology - will your software 
+be a part of the solution? Download the Intel(R) Manageability Checker 
+today! http://p.sf.net/sfu/intel-dev2devmar
