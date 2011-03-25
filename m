@@ -1,106 +1,112 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT Home/Express Gate key
-Date: Fri, 25 Mar 2011 15:43:11 +0000
-Message-ID: <AANLkTinr2FJA2H3CJWx-wZ_g-hCZ3DT7PR6QsXqi5Rkw@mail.gmail.com>
-References: <20110324195720.GB31713@thinkpad-t410>
-	<1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
-	<AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
-	<20110325135311.GA14328@thinkpad-t410>
-	<AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
-	<AANLkTi=iWeKVww_XPm0PQa09NLtPCo4wvz7ZYkk1ajhQ@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT "Express Gate" key
+Date: Fri, 25 Mar 2011 09:05:21 -0700
+Message-ID: <20110325160521.GA5099@core.coreip.homeip.net>
+References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
+ <AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
+ <20110324131414.GA20612@thinkpad-t410>
+ <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:54795 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752576Ab1CYPnO convert rfc822-to-8bit (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:40113 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754067Ab1CYQF1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Mar 2011 11:43:14 -0400
-In-Reply-To: <AANLkTi=iWeKVww_XPm0PQa09NLtPCo4wvz7ZYkk1ajhQ@mail.gmail.com>
+	Fri, 25 Mar 2011 12:05:27 -0400
+Content-Disposition: inline
+In-Reply-To: <AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Chris Bagwell <chris@cnpbagwell.com>
-Cc: Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Seth Forshee <seth.forshee@canonical.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-> Here is how I envision using these keys. =C2=A0I wanted to map quick =
-press
-> to GNOME3/KDE4/Unity's Activities menu and map press-and-hold to
-> script that rotates screen. =C2=A0I like the repeating of rotates but=
- I
-> didn't really want a rotate to also force a pop up of the activities
-> menu.
+On Thu, Mar 24, 2011 at 08:27:41AM -0500, Chris Bagwell wrote:
+> On Thu, Mar 24, 2011 at 8:14 AM, Seth Forshee
+> <seth.forshee@canonical.com> wrote:
+> > On Thu, Mar 24, 2011 at 08:33:33AM +0100, Corentin Chary wrote:
+> >> On Wed, Mar 23, 2011 at 8:39 PM, Seth Forshee
+> >> <seth.forshee@canonical.com> wrote:
+> >> > Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> >> > ---
+> >> >
+> >> > This button is unusual. On press it emits scanocde 0xe4, on rele=
+ase
+> >> > 0xe5, and when held for a few seconds it begins emitting 0xea ab=
+out
+> >> > twice per second. I chose to handle only the press event in orde=
+r to
+> >> > make it behave like the other hotkeys.
+> >> >
+> >> > Probably the closest thing to the intended function of this butt=
+on
+> >> > would be to alternate the display orientation between portrait a=
+nd
+> >> > landscape, but since there doesn't appear to be a keycode define=
+d for
+> >> > that function I went with KEY_PROG2. I'm open to other suggestio=
+ns
+> >> > however.
+> >>
+> >> Hi,
+> >> The manual says that under Windows, this is the "Home Key", so
+> >> KEY_HOME would be more appropriate.
+> >
+> > The manual does call it the Home Key (I missed previously that the
+> > Express Gate description referred only to the quick boot mode), but=
+ the
+> > description of the key operation reads:
+> >
+> > =A0Shortly press this key to launch the Touch Gate touch screen
+> > =A0interface. Press and hold this key to preview desktop rotation, =
+and
+> > =A0then release the key to finish desktop rotation.
+> >
+> > Which doesn't really sound like a home key to me, and the icon abov=
+e the
+> > button also suggests display rotation. But then we don't seem to ha=
+ve a
+> > code for that function, so KEY_PROG2 may be no better than KEY_HOME=
+=2E..
+> >
+> >> Also, it would be great to preserve key up and key down informatio=
+ns
+> >> (sparse keymap have an "autorelease" parameter to control that).
+> >
+> > Okay, I'll add some special casing for this key to support that. Do=
+ you
+> > suggest ignoring the 0xea scan codes?
+> >
+>=20
+> I have one of these in the mail so I'm interested in outcome.
+>=20
+> I suggest implementing as manual describes and can be handled similar
+> to brightness control logic.
+>=20
+> I would suggest sending BTN_HOME upon button release 0xe5 (not press
+> 0xe4 and do the autorelease because of it) and BTN_PROG2 on
+> press-and-hold 0xea.
+>=20
+> If you press-and-hold, does it still send the 0xe5 upon release?  Tha=
+t
+> could complicate things so that both button events do not get sent.
 
-Makes sense.
+Not in the kernel. It is a single button and should generate single
+event. Have userspace decipher that pressing it once causes application
+launcher to appear, holding it longer causes screen rotation, and if yo=
+u
+still keep it pressed for 10 minutes fireworks will start.
 
->>
->>> And back to the question of KEY_HOME -- that's not really what you =
-want,
->>> is it? As in "move cursor to start of line"?
->>
->> Ho .. right, that's what mean KEY_HOME :/. So no, I don't want that.=
-=2E.
->> What about:
->> - KEY_CYCLEWINDOWS
->> - KEY_COMPUTER
->> - KEY_HOMEPAGE
->> - KEY_DASHBOARD
->>
->> I think KEY_HOMEPAGE is the best choice.
->
-> I've only had limited time to look more. =C2=A0So far, I found under =
-udev a
-> toshiba tablet that maps what is probably a rotate button to
-> KEY_DIRECTION so thats one option for it instead of KEY_PROG2. =C2=A0=
-I
-> couldn't find anybody using that though.
->
-> I see in /usr/share/X11/symbols/inet:
->
-> =C2=A0 =C2=A0key <I162> =C2=A0 { =C2=A0 =C2=A0 =C2=A0[ XF86RotateWind=
-ows =C2=A0 =C2=A0 ] =C2=A0 =C2=A0 =C2=A0 };
->
-> and in /usr/share/X11/xkb/symbols/evdev:
->
-> xkb/keycodes/evdev: =C2=A0 =C2=A0 <I162> =3D 162; =C2=A0 // #define K=
-EY_CYCLEWINDOWS =C2=A0 =C2=A0 =C2=A0 =C2=A0154
->
-> Looks like KEY_CYCLEWINDOWS is already hooked up to
-> gnome-settings-daemon to auto-rotate screen?
+>=20
+> I'm not sure what BTN_HOME is commonly used for.  This button does
+> sound like a HOME button in iPad sense but not in web browser sense.
+>=20
 
-XF86RotateWindows is probably more "alt-tab" than "rotate screen".
+It is 'Home' key on your full AT keyboard, normally making cursor to
+move to the very first column on the line.
 
-> I ran into total dead end for finding a pre-existing example of home
-> button usage. =C2=A0I'm really surprised we do not yet have a KEY_LAU=
-NCHER
-> or similar because so many tablet PCs/smartphones/pads do have a
-> button with this specific concept of "bring up your icon based
-> application launcher".
-
-KEY_LAUNCHER sounds like "Alt-F2" (that means krunner on KDE).
-The advantage over KEY_HOMEPAGE is that it would work even when a
-browser have the focus.
-
-> - KEY_MENU
-> - KEY_EXIT (smartphones sometime mean this)
-> - KEY_PROG3 (basically all that Windows is doing)
-> - KEY_LAUNCHER (why not be the first to finally create it!)
->
-> I vote for either KEY_PROG3 or KEY_HOMEPAGE for at least short term.
-
-So now, I vote (in order):
-- KEY_LAUNCHER
-- KEY_DASHBOARD
-- KEY_PROG3
-
-With this behavior (I'll use KEY_LAUCHER and KEY_PROG2)
-
-- On press, do nothing
-- On release, emit KEY_LAUNCHER if KEY_PROG2 wasn't emited
-- On press, emit only one  KEY_PROG2 (I'd like to emit repeated
-KEY_PROG2, but I understand that it makes things harder for
-userspace).
+Thanks.
 
 --=20
-Corentin Chary
-http://xf.iksaif.net
+Dmitry
