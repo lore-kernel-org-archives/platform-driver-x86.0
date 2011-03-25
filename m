@@ -1,161 +1,173 @@
-From: Andy Ross <andy.ross@windriver.com>
-Subject: [PATCH 2/4] asus-laptop: Pegatron Lucid ALS sensor
-Date: Thu, 24 Mar 2011 15:02:08 -0700
-Message-ID: <1301004130-3294-3-git-send-email-andy.ross@windriver.com>
-References: <1301004130-3294-1-git-send-email-andy.ross@windriver.com>
+From: =?utf-8?q?Old=C5=99ich_Jedli=C4=8Dka?= <oldium.pro@seznam.cz>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in 2.6.37
+Date: Fri, 25 Mar 2011 07:29:12 +0100
+Message-ID: <201103250729.13550.oldium.pro@seznam.cz>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com> <4D8BDE29020000230002A585@novprvlin0050.provo.novell.com> <201103242234.03598.oldium.pro@seznam.cz>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from li44-10.members.linode.com ([72.14.181.10]:44869 "EHLO
-	plausible.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757300Ab1CXWIj (ORCPT
+Received: from mail-bw0-f46.google.com ([209.85.214.46]:64545 "EHLO
+	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753366Ab1CYG3V convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Mar 2011 18:08:39 -0400
-In-Reply-To: <1301004130-3294-1-git-send-email-andy.ross@windriver.com>
+	Fri, 25 Mar 2011 02:29:21 -0400
+In-Reply-To: <201103242234.03598.oldium.pro@seznam.cz>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Joey Lee <jlee@novell.com>
+Cc: davem@davemloft.net, marcel@holtmann.org, Al Cho <ACho@novell.com>, Gary Lin <GLin@novell.com>, johannes@sipsolutions.net, mjg59@srcf.ucam.org, alan-jenkins@tuffmail.co.uk, linux-acpi@vger.kernel.org, linux-bluetooth@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Ambient light sensor for Pegatron Lucid.  Supports pre-existing
-ls_switch sysfs interface to en/disable automatic control, and exports
-the brightness from the device as "ls_value".
+My yesterday's e-mail probably didn't pass through the spam checks of m=
+ail=20
+server. If anybody needs to look at the missing attachments, I've place=
+d them=20
+at=20
 
-Signed-off-by: Andy Ross <andy.ross@windriver.com>
----
- drivers/platform/x86/asus-laptop.c |   70 +++++++++++++++++++++++++++++++++---
- 1 files changed, 65 insertions(+), 5 deletions(-)
+  http://others-misc.oldium.net/attachments.tar.gz
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index ec46d71..6651d8c 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -214,9 +214,15 @@ static char *display_get_paths[] = {
- 
- /* For Pegatron Lucid tablet */
- #define DEVICE_NAME_PEGA	"Lucid"
-+
- #define METHOD_PEGA_ENABLE	"ENPR"
- #define METHOD_PEGA_DISABLE	"DAPR"
-+#define PEGA_ALS	0x04
-+#define PEGA_ALS_POWER	0x05
-+
- #define METHOD_PEGA_READ	"RDLN"
-+#define PEGA_READ_ALS_H	0x02
-+#define PEGA_READ_ALS_L	0x03
- 
- /*
-  * Define a specific led structure to keep the main structure clean
-@@ -378,6 +384,12 @@ static bool asus_check_pega_lucid(struct asus_laptop *asus)
- 	   !acpi_check_handle(asus->handle, METHOD_PEGA_READ, NULL);
- }
- 
-+static int asus_pega_lucid_set(struct asus_laptop *asus, int unit, bool enable)
-+{
-+	char *method = enable ? METHOD_PEGA_ENABLE : METHOD_PEGA_DISABLE;
-+	return write_acpi_int(asus->handle, method, unit);
-+}
-+
- /* Generic LED function */
- static int asus_led_set(struct asus_laptop *asus, const char *method,
- 			 int value)
-@@ -1046,7 +1058,15 @@ static ssize_t store_disp(struct device *dev, struct device_attribute *attr,
-  */
- static void asus_als_switch(struct asus_laptop *asus, int value)
- {
--	if (write_acpi_int(asus->handle, METHOD_ALS_CONTROL, value))
-+	int ret;
-+	if (asus->have_pega_lucid) {
-+		ret = asus_pega_lucid_set(asus, PEGA_ALS, value);
-+		if (!ret)
-+			ret = asus_pega_lucid_set(asus, PEGA_ALS_POWER, value);
-+	} else {
-+		ret = write_acpi_int(asus->handle, METHOD_ALS_CONTROL, value);
-+	}
-+	if (ret)
- 		pr_warning("Error setting light sensor switch\n");
- 	asus->light_switch = value;
- }
-@@ -1103,6 +1123,35 @@ static ssize_t store_lslvl(struct device *dev, struct device_attribute *attr,
- 	return rv;
- }
- 
-+static int pega_int_read(struct asus_laptop *asus, int arg, int *result)
-+{
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	int err = write_acpi_int_ret(asus->handle, METHOD_PEGA_READ, arg,
-+				     &buffer);
-+	if (!err) {
-+		union acpi_object *obj = buffer.pointer;
-+		if (obj && obj->type == ACPI_TYPE_INTEGER)
-+			*result = obj->integer.value;
-+		else
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
-+static ssize_t show_lsvalue(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct asus_laptop *asus = dev_get_drvdata(dev);
-+	int err, hi, lo;
-+
-+	err = pega_int_read(asus, PEGA_READ_ALS_H, &hi);
-+	if (!err)
-+		err = pega_int_read(asus, PEGA_READ_ALS_L, &lo);
-+	if (!err)
-+		return sprintf(buf, "%d\n", 10 * hi + lo);
-+	return err;
-+}
-+
- /*
-  * GPS
-  */
-@@ -1300,6 +1349,7 @@ static DEVICE_ATTR(wimax, S_IRUGO | S_IWUSR, show_wimax, store_wimax);
- static DEVICE_ATTR(wwan, S_IRUGO | S_IWUSR, show_wwan, store_wwan);
- static DEVICE_ATTR(display, S_IRUGO | S_IWUSR, show_disp, store_disp);
- static DEVICE_ATTR(ledd, S_IRUGO | S_IWUSR, show_ledd, store_ledd);
-+static DEVICE_ATTR(ls_value, S_IRUGO, show_lsvalue, NULL);
- static DEVICE_ATTR(ls_level, S_IRUGO | S_IWUSR, show_lslvl, store_lslvl);
- static DEVICE_ATTR(ls_switch, S_IRUGO | S_IWUSR, show_lssw, store_lssw);
- static DEVICE_ATTR(gps, S_IRUGO | S_IWUSR, show_gps, store_gps);
-@@ -1312,6 +1362,7 @@ static struct attribute *asus_attributes[] = {
- 	&dev_attr_wwan.attr,
- 	&dev_attr_display.attr,
- 	&dev_attr_ledd.attr,
-+	&dev_attr_ls_value.attr,
- 	&dev_attr_ls_level.attr,
- 	&dev_attr_ls_switch.attr,
- 	&dev_attr_gps.attr,
-@@ -1349,8 +1400,15 @@ static mode_t asus_sysfs_is_visible(struct kobject *kobj,
- 
- 	} else if (attr == &dev_attr_ls_switch.attr ||
- 		   attr == &dev_attr_ls_level.attr) {
--		supported = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
--			    !acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
-+		if (asus->have_pega_lucid) {
-+			/* no ls_level interface on the Lucid */
-+			supported = attr == &dev_attr_ls_switch.attr;
-+		} else {
-+			supported = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
-+				    !acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
-+		}
-+	} else if (attr == &dev_attr_ls_value.attr) {
-+		supported = asus->have_pega_lucid;
- 	} else if (attr == &dev_attr_gps.attr) {
- 		supported = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
- 			    !acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
-@@ -1562,8 +1620,10 @@ static int __devinit asus_acpi_init(struct asus_laptop *asus)
- 	asus->light_switch = 0;	/* Default to light sensor disabled */
- 	asus->light_level = 5;	/* level 5 for sensor sensitivity */
- 
--	if (!acpi_check_handle(asus->handle, METHOD_ALS_CONTROL, NULL) &&
--	    !acpi_check_handle(asus->handle, METHOD_ALS_LEVEL, NULL)) {
-+	if (asus->have_pega_lucid) {
-+		asus_als_switch(asus, asus->light_switch);
-+	} else if (!acpi_check_handle(asus->handle, METHOD_ALS_CONTROL, NULL) &&
-+		   !acpi_check_handle(asus->handle, METHOD_ALS_LEVEL, NULL)) {
- 		asus_als_switch(asus, asus->light_switch);
- 		asus_als_level(asus, asus->light_level);
- 	}
--- 
-1.7.1
+Cheers,
+Old=C5=99ich.
+
+On Thursday 24 March 2011 22:34:03 Old=C5=99ich Jedli=C4=8Dka wrote:
+> Hi Joey Lee,
+>=20
+> I've done some experiments, here are the results.
+>=20
+> On Thursday 24 March 2011 14:13:29 Joey Lee wrote:
+> > Hi Old=C5=99ich,
+> >=20
+> > Sorry bother you again, but after discuss with Johannes, he remind =
+me
+> > one import thing: maybe your BT HW key emit scancode and wmi event =
+at
+> > the same time.
+> >=20
+> > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-24 =E6=96=BC 09:36 +0100=EF=BC=8C=
+Johannes Berg =E6=8F=90=E5=88=B0=EF=BC=9A
+> >=20
+> > > Hi Old=C5=99ich,
+> > >=20
+> > > > > Ah. So I guess when hci0 gets registered, the acer rfkill sta=
+te
+> > > > > hasn't been updated yet, hence registering hci0 as blocked.
+> > > >=20
+> > > > No, that is not the case. I can play with `rfkill list` immedia=
+tely
+> > > > after I press the HW bluetooth switch and show that hci0 is not=
+ there
+> > > > (still unregistered) while acer-bluetooth is already "unblocked=
+" -
+> > > > I've tried to run `rfkill list` repeatedly manually from consol=
+e
+> > > > immediately after I pressed the HW BT switch and acer-bluetooth=
+ was
+> > > > "unblocked" several runs while the hci0 wasn't there. When hci0
+> > > > appeared, it was "blocked".
+> > > >=20
+> > > > As I wrote, I didn't find anything changing the global state, w=
+hich
+> > > > is actually used to "block" the newly appearing hci0 (in the
+> > > > rfkill_sync_work method). It looks like the global state is jus=
+t
+> > > > "blocked" forever - and it is "blocked" as a side-effect of the=
+ call
+> > > > to rfkill_init_sw_state (changes permanent=3Dtrue) and then cal=
+l to
+> > > > rfkill_register from the acer-wmi driver. I can verify this in =
+the
+> > > > following days (that the global state stays the same all the ti=
+me).
+> > >=20
+> > > Well the global state would be changed by the KEY_BLUETOOTH input
+> > > event.
+> > >=20
+> > > But like I said, it's tricky in this case because multiple events=
+ come
+> > > from the same event source and race against each other.
+> > >=20
+> > > johannes
+> >=20
+> > My Acer TravelMate 8572 is commercial notebook, it only emit wmi ev=
+ent
+> > when press wifi key. But, as I remember, there have some acer consu=
+mer
+> > notebook emit both scancode and wmi event.
+> >=20
+> > New acer-wmi driver will transfer wmi event to keycode (e.g.
+> > KEY_BLUETOOTH), if EC also emit KEY_BLUETOOTH, the rfkill-input wil=
+l
+> >=20
+> > receive the key events twice, that means:
+> > 	global BT block (when system boot) -> BT unblock (from EC scancode=
+) ->
+> > 	BT
+> >=20
+> > block (from acer-wmi)
+> >=20
+> > Could you please help me to check?
+> >=20
+> > 	- If your distro still have HAL, please run:
+> > 		+ lshal -l -m
+> > 		+ press BT HW key 1 time
+> > 		then check does HAL receive KEY_BLUETOOTH twice?
+>=20
+> I didn't uninstall hal yet, so the output of `lshal -l -m` (only the
+> monitoring part) when I press once BT HW key is attached. I've also p=
+atched
+> the kernel to have more debug logging (see the attached diff and log)=
+ and
+> the result is that the handler method from rfkill/input.c is not call=
+ed,
+> the global state is once set to "blocked" and it keeps like that. I d=
+on't
+> know why the rfkill_event isn't called when I press the HW BT switch,=
+ it
+> could be part of my investigations in the following days.
+>=20
+> I've attached .config too, if you want to check that I missed somethi=
+ng
+> that is needed by Acer WMI.
+>=20
+> Cheers,
+> Old=C5=99ich.
+>=20
+> > 	- Or, please try the following patch, it removed
+> > =09
+> > 	  KEY_BLUETOOTH support in acer-wmi. If removed it but the BT kill=
+switch
+> > 	  still can reserve when you press BT HW key, that means not just
+> >=20
+> > 	  acer-wmi emit KEY_BLUETOOTH:
+> > Thank's a lot!
+> > Joey Lee
+> >=20
+> > >From 20b3b8ba26cb37c8a44d11645c2d8d1f5344cfd7 Mon Sep 17 00:00:00 =
+2001
+> >=20
+> > From: Lee, Chun-Yi <jlee@novell.com>
+> > Date: Thu, 24 Mar 2011 21:07:43 +0800
+> > Subject: [PATCH] remove KEY_BLUETOOTH for testing
+> >=20
+> >=20
+> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+> > ---
+> >=20
+> >  drivers/platform/x86/acer-wmi.c |    1 -
+> >  1 files changed, 0 insertions(+), 1 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/acer-wmi.c
+> > b/drivers/platform/x86/acer-wmi.c index c978470..554ee12 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -102,7 +102,6 @@ enum acer_wmi_event_ids {
+> >=20
+> >  static const struct key_entry acer_wmi_keymap[] =3D {
+> > =20
+> >  	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
+> >=20
+> > -	{KE_KEY, 0x12, {KEY_BLUETOOTH} },	/* BT */
+> >=20
+> >  	{KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
+> >  	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
+> >  	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
