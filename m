@@ -1,108 +1,184 @@
-From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT
- Home/Express Gate key
-Date: Fri, 25 Mar 2011 08:53:11 -0500
-Message-ID: <20110325135311.GA14328@thinkpad-t410>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT Home/Express Gate key
+Date: Fri, 25 Mar 2011 14:05:18 +0000
+Message-ID: <AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR__15139.0143939809$1301061964$gmane$org@mail.gmail.com>
 References: <20110324195720.GB31713@thinkpad-t410>
 	<1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
 	<AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
+	<20110325135311.GA14328@thinkpad-t410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:56577 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753160Ab1CYOFU convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 Mar 2011 10:05:20 -0400
+In-Reply-To: <20110325135311.GA14328@thinkpad-t410>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Chris Bagwell <chris@cnpbagwell.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kern
+Cc: Seth Forshee <seth.forshee@canonical.com>
 
-T24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgMDE6Mjg6MzBQTSArMDAwMCwgQ29yZW50aW4gQ2hhcnkg
-d3JvdGU6Cj4gPiArc3RhdGljIHZvaWQgZWVlcGNfd21pX2tleV9maWx0ZXIoc3RydWN0IGFzdXNf
-d21pX2RyaXZlciAqYXN1c193bWksIGludCAqY29kZSwKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnQgKnZhbHVlLCBpbnQgKmF1dG9yZWxlYXNl
-KQo+ID4gK3sKPiA+ICsgwqAgwqAgwqAgc3RydWN0IGVlZXBjX3dtaV9kcml2ZXIgKmVlZXBjID0g
-dG9fZWVlcGNfd21pX2RyaXZlcihhc3VzX3dtaSk7Cj4gPiArIMKgIMKgIMKgIGludCBpc19wcmVz
-czsKPiA+ICsKPiA+ICsgwqAgwqAgwqAgLyoKPiA+ICsgwqAgwqAgwqAgwqAqIFRoZSBmb2xsb3dp
-bmcgYmVoYXZpb3IgaXMgdXNlZCBmb3IgVDEwMU1UICJIb21lIiBrZXk6Cj4gPiArIMKgIMKgIMKg
-IMKgKgo+ID4gKyDCoCDCoCDCoCDCoCogwqAgT24gcHJlc3M6IMKgIE5vIGV2ZW50IHNldAo+ID4g
-KyDCoCDCoCDCoCDCoCogwqAgT24gaG9sZDogwqAgwqBLRVlfUFJPRzIgcHJlc3Mgc2VudCBvbmNl
-IHcvbyBhdXRvcmVsZWFzZQo+ID4gKyDCoCDCoCDCoCDCoCogwqAgT24gcmVsZWFzZTogSWYga2V5
-IHdhcyBoZWxkLCBLRVlfUFJPRzIgcmVsZWFzZSBzZW50Lgo+ID4gKyDCoCDCoCDCoCDCoCogwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgT3RoZXJ3aXNlIEtFWV9IT01FIHByZXNzIHNlbnQgdy8gYXV0b3Jl
-bGVhc2UuCj4gPiArIMKgIMKgIMKgIMKgKgo+ID4gKyDCoCDCoCDCoCDCoCogVGhlIHNpbXBsZSBz
-dGF0ZSBtYWNoaW5lIGJlbG93IGltcGxlbWVudHMgdGhpcyBiZWhhdmlvci4KPiA+ICsgwqAgwqAg
-wqAgwqAqLwo+ID4gKyDCoCDCoCDCoCBzd2l0Y2ggKCpjb2RlKSB7Cj4gPiArIMKgIMKgIMKgIGNh
-c2UgSE9NRV9QUkVTUzoKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZWVlcGMtPmhvbWVfa2V5
-X3N0YXRlID0gSE9NRV9QUkVTUzsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKmNvZGUgPSBB
-U1VTX1dNSV9LRVlfSUdOT1JFOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBicmVhazsKPiA+
-ICsgwqAgwqAgwqAgY2FzZSBIT01FX0hPTEQ6Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGlm
-IChlZWVwYy0+aG9tZV9rZXlfc3RhdGUgPT0gSE9NRV9IT0xEKSB7Cj4gPiArIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgICpjb2RlID0gQVNVU19XTUlfS0VZX0lHTk9SRTsKPiA+ICsg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgfSBlbHNlIHsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgZWVlcGMtPmhvbWVfa2V5X3N0YXRlID0gSE9NRV9IT0xEOwo+ID4gKyDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqdmFsdWUgPSAxOwo+ID4gKyDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAqYXV0b3JlbGVhc2UgPSAwOwo+ID4gKyDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCB9Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGJyZWFrOwo+ID4gKyDCoCDC
-oCDCoCBjYXNlIEhPTUVfUkVMRUFTRToKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaWYgKGVl
-ZXBjLT5ob21lX2tleV9zdGF0ZSA9PSBIT01FX1JFTEVBU0UpIHsKPiA+ICsgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgZGV2X3dhcm4oJmFzdXNfd21pLT5wbGF0Zm9ybV9kZXZpY2Ut
-PmRldiwKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAiVW5leHBlY3RlZCBob21lIGtleSByZWxlYXNlIGV2ZW50XG4iKTsKPiA+ICsgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKmNvZGUgPSBBU1VTX1dNSV9LRVlfSUdOT1JFOwo+ID4g
-KyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB9IGVsc2Ugewo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCAqY29kZSA9IGVlZXBjLT5ob21lX2tleV9zdGF0ZTsKPiA+ICsgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZWVlcGMtPmhvbWVfa2V5X3N0YXRlID0gSE9NRV9S
-RUxFQVNFOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBpc19wcmVzcyA9
-ICgqY29kZSA9PSBIT01FX1BSRVNTKTsKPiA+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgKnZhbHVlID0gaXNfcHJlc3M7Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgICphdXRvcmVsZWFzZSA9IGlzX3ByZXNzOwo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCB9Cj4gPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGJyZWFrOwo+ID4gKyDCoCDCoCDCoCB9Cj4g
-PiArfQo+ID4gKwo+IAo+IFdoeSBub3Qgc29tZXRoaW5nIHNpbXBsZXIgbGlrZSB0aGlzID8KPiAK
-PiBzdGF0aWMgdm9pZCBlZWVwY193bWlfa2V5X2ZpbHRlcihzdHJ1Y3QgYXN1c193bWlfZHJpdmVy
-ICphc3VzX3dtaSwgaW50IGNvZGUsCj4gICAgICAgICAgICAgICAgICAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpbnQgKnZhbHVlLCBpbnQgKmF1dG9yZWxl
-YXNlKQo+IHsKPiAgICAgICAgIGlmIChjb2RlID09IDB4ZTQpIHsKPiAgICAgICAgICAgICAgICAg
-KnZhbHVlID0gMTsKPiAgICAgICAgICAgICAgICAgKmF1dG9yZWxlYXNlID0gMDsKPiAgICAgICAg
-IH0gZWxzZSBpZiAoY29kZSA9PSAweGU1KSB7Cj4gICAgICAgICAgICAgICAgICp2YWx1ZSA9IDA7
-Cj4gICAgICAgICAgICAgICAgICphdXRvcmVsZWFzZSA9IDA7Cj4gICAgICAgIH0KPiB9Cj4gCj4g
-d2l0aCB0aGlzIGtleW1hcCA6Cj4gCj4gICAgICAgIHsgS0VfS0VZLCAweGU0LCB7IEtFWV9IT01F
-IH0gfSwgLyogSG9tZSBLZXkgRG93biAqLwo+ICAgICAgICB7IEtFX0tFWSwgMHhlNSwgeyBLRVlf
-SE9NRSB9IH0sIC8qIEhvbWUgS2V5IFVwICovCj4gICAgICAgIHsgS0VfS0VZLCAweGVhLCB7IEtF
-WV9QUk9HMiB9IH0sIC8qIEhvbWUgS2V5IGhvbGQgbW9yZSB0aGFuIG9uZSBzZWNvbmQgKi8KPiAK
-PiAKPiBUaGlzIHNvdW5kcyBzaW1wbGVyIGFuZCB3ZSBkb24ndCBsb29zZSBpbmZvcm1hdGlvbiAo
-a2V5IGRvd24gYW5kIGtleQo+IHVwIGJvdGggZXZlbnQgcmVwb3J0ZWQgYXQgdGhlIHJpZ2h0IHRp
-bWUpLgo+IDB4ZTUgaXMgKmFsd2F5cyogc2VudCBhZnRlciAweGU0IHJpZ2h0ID8KCkkgZ3Vlc3Mg
-aXQgZGVwZW5kcyBvbiB3aGF0IGtleSBldmVudHMgd2Ugd2FudCBvbiBhIHByZXNzLWFuZC1ob2xk
-LgpSZW1lbWJlciB0aGF0IHlvdSdyZSBnb2luZyB0byBnZXQgYSBzY2FuIGNvZGUgc2VxdWVuY2Ug
-bGlrZSAiMHhlNCAweGVhCjB4ZWEgLi4uIDB4ZWEgMHhlNSIsIHNvIHdpdGggbXkgaW1wbGVtZW50
-YXRpb24geW91IGdldAoKICBLRVlfUFJPRzIgcHJlc3MKICBLRVlfUFJPRzIgcmVsZWFzZQoKV2l0
-aCB5b3VycwoKICBLRVlfSE9NRSBwcmVzcwogIEtFWV9QUk9HMiBwcmVzcwogIEtFWV9QUk9HMiBy
-ZWxlYXNlCiAgLy8gS0VZX1BST0cyIHByZXNzL3JlbGVhc2UgcmVwZWF0cyBldmVyeSAwLjUgc2Vj
-cyB3aGlsZSBidXR0b24gaGVsZAogIEtFWV9IT01FIHJlbGVhc2UKCkF0IG1pbmltdW0gSSdkIHRo
-aW5rIHdlJ2Qgd2FudCB0byBvbmx5IHNlbmQgYSBzaW5nbGUgUFJPRzIgcHJlc3MvcmVsZWFzZQpm
-b3IgYnV0dG9uIGhvbGQuIE15IHRob3VnaHQgd2FzIHRoYXQgeW91J2Qgb25seSB3YW50IHRvIGdl
-dCB0aGUgY29kZSBmb3IKMHhlNCBvciAweGVhLCBub3QgYm90aCwgYnV0IEkgc3VwcG9zZSB0aGF0
-J3MgZGViYXRhYmxlLgoKQW5kIGJhY2sgdG8gdGhlIHF1ZXN0aW9uIG9mIEtFWV9IT01FIC0tIHRo
-YXQncyBub3QgcmVhbGx5IHdoYXQgeW91IHdhbnQsCmlzIGl0PyBBcyBpbiAibW92ZSBjdXJzb3Ig
-dG8gc3RhcnQgb2YgbGluZSI/Cgo+IEFsc28sIGZvciB0aGUgY2FsbGJhY2ssICJ2YWx1ZSIgc2hv
-dWxkIGJlIGFuIHVuc2lnbmVkIGludCwgYW5kCj4gImF1dG9yZWxlYXNlIiBhIGJvb2wuCgpSaWdo
-dCwgc2lsbHkgbWlzdGFrZS4gVGhhbmtzIGZvciBjYXRjaGluZyBpdC4KCgotLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0KRW5hYmxlIHlvdXIgc29mdHdhcmUgZm9yIEludGVsKFIpIEFjdGl2ZSBNYW5hZ2Vt
-ZW50IFRlY2hub2xvZ3kgdG8gbWVldCB0aGUKZ3Jvd2luZyBtYW5hZ2VhYmlsaXR5IGFuZCBzZWN1
-cml0eSBkZW1hbmRzIG9mIHlvdXIgY3VzdG9tZXJzLiBCdXNpbmVzc2VzCmFyZSB0YWtpbmcgYWR2
-YW50YWdlIG9mIEludGVsKFIpIHZQcm8gKFRNKSB0ZWNobm9sb2d5IC0gd2lsbCB5b3VyIHNvZnR3
-YXJlIApiZSBhIHBhcnQgb2YgdGhlIHNvbHV0aW9uPyBEb3dubG9hZCB0aGUgSW50ZWwoUikgTWFu
-YWdlYWJpbGl0eSBDaGVja2VyIAp0b2RheSEgaHR0cDovL3Auc2YubmV0L3NmdS9pbnRlbC1kZXYy
-ZGV2bWFyCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFj
-cGk0YXN1cy11c2VyIG1haWxpbmcgbGlzdApBY3BpNGFzdXMtdXNlckBsaXN0cy5zb3VyY2Vmb3Jn
-ZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vYWNwaTRh
-c3VzLXVzZXIK
+On Fri, Mar 25, 2011 at 1:53 PM, Seth Forshee
+<seth.forshee@canonical.com> wrote:
+> On Fri, Mar 25, 2011 at 01:28:30PM +0000, Corentin Chary wrote:
+>> > +static void eeepc_wmi_key_filter(struct asus_wmi_driver *asus_wmi=
+, int *code,
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0int *value, int *autorelea=
+se)
+>> > +{
+>> > + =C2=A0 =C2=A0 =C2=A0 struct eeepc_wmi_driver *eeepc =3D to_eeepc=
+_wmi_driver(asus_wmi);
+>> > + =C2=A0 =C2=A0 =C2=A0 int is_press;
+>> > +
+>> > + =C2=A0 =C2=A0 =C2=A0 /*
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* The following behavior is used for =
+T101MT "Home" key:
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0*
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* =C2=A0 On press: =C2=A0 No event se=
+t
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* =C2=A0 On hold: =C2=A0 =C2=A0KEY_PR=
+OG2 press sent once w/o autorelease
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* =C2=A0 On release: If key was held,=
+ KEY_PROG2 release sent.
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 Otherwise KEY_HOME press sent w/ autorelease.
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0*
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0* The simple state machine below impl=
+ements this behavior.
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
+>> > + =C2=A0 =C2=A0 =C2=A0 switch (*code) {
+>> > + =C2=A0 =C2=A0 =C2=A0 case HOME_PRESS:
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 eeepc->home_key=
+_state =3D HOME_PRESS;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *code =3D ASUS_=
+WMI_KEY_IGNORE;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
+>> > + =C2=A0 =C2=A0 =C2=A0 case HOME_HOLD:
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (eeepc->home=
+_key_state =3D=3D HOME_HOLD) {
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *code =3D ASUS_WMI_KEY_IGNORE;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 eeepc->home_key_state =3D HOME_HOLD;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *value =3D 1;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *autorelease =3D 0;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
+>> > + =C2=A0 =C2=A0 =C2=A0 case HOME_RELEASE:
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (eeepc->home=
+_key_state =3D=3D HOME_RELEASE) {
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 dev_warn(&asus_wmi->platform_device->dev,
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0"Unexpected home key relea=
+se event\n");
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *code =3D ASUS_WMI_KEY_IGNORE;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *code =3D eeepc->home_key_state;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 eeepc->home_key_state =3D HOME_RELEASE;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 is_press =3D (*code =3D=3D HOME_PRESS);
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *value =3D is_press;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 *autorelease =3D is_press;
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
+>> > + =C2=A0 =C2=A0 =C2=A0 }
+>> > +}
+>> > +
+>>
+>> Why not something simpler like this ?
+>>
+>> static void eeepc_wmi_key_filter(struct asus_wmi_driver *asus_wmi, i=
+nt code,
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0int *value, int *autorelease)
+>> {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (code =3D=3D 0xe4) {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *value =3D 1=
+;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *autorelease=
+ =3D 0;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else if (code =3D=3D 0xe5) {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *value =3D 0=
+;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *autorelease=
+ =3D 0;
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
+>> }
+>>
+>> with this keymap :
+>>
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_KEY, 0xe4, { KEY_HOME } }, /* Home K=
+ey Down */
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_KEY, 0xe5, { KEY_HOME } }, /* Home K=
+ey Up */
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_KEY, 0xea, { KEY_PROG2 } }, /* Home =
+Key hold more than one second */
+>>
+>>
+>> This sounds simpler and we don't loose information (key down and key
+>> up both event reported at the right time).
+>> 0xe5 is *always* sent after 0xe4 right ?
+>
+> I guess it depends on what key events we want on a press-and-hold.
+> Remember that you're going to get a scan code sequence like "0xe4 0xe=
+a
+> 0xea ... 0xea 0xe5", so with my implementation you get
+>
+> =C2=A0KEY_PROG2 press
+> =C2=A0KEY_PROG2 release
+>
+> With yours
+>
+> =C2=A0KEY_HOME press
+> =C2=A0KEY_PROG2 press
+> =C2=A0KEY_PROG2 release
+> =C2=A0// KEY_PROG2 press/release repeats every 0.5 secs while button =
+held
+> =C2=A0KEY_HOME release
+>
+> At minimum I'd think we'd want to only send a single PROG2 press/rele=
+ase
+> for button hold. My thought was that you'd only want to get the code =
+for
+> 0xe4 or 0xea, not both, but I suppose that's debatable.
+
+If you keep a keyboard key pressed, you want multiple events, not one r=
+ight ?
+I think it's important not to loose informations. If someone keep this
+key pressed more than 1.5 second, I think it's good idea to send
+multiple KEY_PROG2.
+
+About KEY_HOME press / release, and filtering KEY_HOME after
+KEY_PROG2, I'm not sure. So if you really want it, and nobody
+complains, I'll be happy to accept your patch.
+
+> And back to the question of KEY_HOME -- that's not really what you wa=
+nt,
+> is it? As in "move cursor to start of line"?
+
+Ho .. right, that's what mean KEY_HOME :/. So no, I don't want that...
+What about:
+- KEY_CYCLEWINDOWS
+- KEY_COMPUTER
+- KEY_HOMEPAGE
+- KEY_DASHBOARD
+
+I think KEY_HOMEPAGE is the best choice.
+
+--=20
+Corentin Chary
+http://xf.iksaif.net
