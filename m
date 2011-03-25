@@ -1,65 +1,100 @@
-From: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] eeepc-wmi: Add support for T101MT
-	"Express Gate" key
-Date: Fri, 25 Mar 2011 16:08:41 +0000
-Message-ID: <AANLkTinPAwWOONsD=DTM0go1_kb_DKaCeUk4dJ1Nvftz@mail.gmail.com>
-References: <1300909189-4135-1-git-send-email-seth.forshee@canonical.com>
-	<AANLkTinZpt8qmHzhe4WyteMt-C-nkVNwEGQVvq3Nk9Lx@mail.gmail.com>
-	<20110324131414.GA20612@thinkpad-t410>
-	<AANLkTikrX_wypmrd-PbST603jsHqkuwtA6t5X65Lg1+O@mail.gmail.com>
-	<AANLkTi=2OKxvHN75PO4RGb9rtpnA0iGHNb9JPZwb0z9J@mail.gmail.com>
-	<AANLkTik7D0j=JOhzPk6Y2NrTA89-vS28wPDSS=j0VW4_@mail.gmail.com>
-	<20110325160702.GB5099@core.coreip.homeip.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT Home/Express Gate
+ key
+Date: Fri, 25 Mar 2011 09:14:05 -0700
+Message-ID: <20110325161405.GC5099@core.coreip.homeip.net>
+References: <20110324195720.GB31713@thinkpad-t410>
+ <1300997035-14104-2-git-send-email-seth.forshee@canonical.com>
+ <AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
+ <20110325135311.GA14328@thinkpad-t410>
+ <AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20110325160702.GB5099-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:35579 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750853Ab1CYQOL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 Mar 2011 12:14:11 -0400
+Content-Disposition: inline
+In-Reply-To: <AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Chris Bagwell <chris@cnpbagwell.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-T24gRnJpLCBNYXIgMjUsIDIwMTEgYXQgNDowNyBQTSwgRG1pdHJ5IFRvcm9raG92CjxkbWl0cnku
-dG9yb2tob3ZAZ21haWwuY29tPiB3cm90ZToKPiBPbiBUaHUsIE1hciAyNCwgMjAxMSBhdCAwOTow
-MDoxNEFNIC0wNTAwLCBDaHJpcyBCYWd3ZWxsIHdyb3RlOgo+PiBPbiBUaHUsIE1hciAyNCwgMjAx
-MSBhdCA4OjQwIEFNLCBDb3JlbnRpbiBDaGFyeQo+PiA8Y29yZW50aW4uY2hhcnlAZ21haWwuY29t
-PiB3cm90ZToKPj4gPj4gSSB3b3VsZCBzdWdnZXN0IHNlbmRpbmcgQlROX0hPTUUgdXBvbiBidXR0
-b24gcmVsZWFzZSAweGU1IChub3QgcHJlc3MKPj4gPj4gMHhlNCBhbmQgZG8gdGhlIGF1dG9yZWxl
-YXNlIGJlY2F1c2Ugb2YgaXQpIGFuZCBCVE5fUFJPRzIgb24KPj4gPj4gcHJlc3MtYW5kLWhvbGQg
-MHhlYS4KPj4gPj4KPj4gPj4gSWYgeW91IHByZXNzLWFuZC1ob2xkLCBkb2VzIGl0IHN0aWxsIHNl
-bmQgdGhlIDB4ZTUgdXBvbiByZWxlYXNlPyDCoFRoYXQKPj4gPj4gY291bGQgY29tcGxpY2F0ZSB0
-aGluZ3Mgc28gdGhhdCBib3RoIGJ1dHRvbiBldmVudHMgZG8gbm90IGdldCBzZW50Lgo+PiA+Pgo+
-PiA+PiBJJ20gbm90IHN1cmUgd2hhdCBCVE5fSE9NRSBpcyBjb21tb25seSB1c2VkIGZvci4gwqBU
-aGlzIGJ1dHRvbiBkb2VzCj4+ID4+IHNvdW5kIGxpa2UgYSBIT01FIGJ1dHRvbiBpbiBpUGFkIHNl
-bnNlIGJ1dCBub3QgaW4gd2ViIGJyb3dzZXIgc2Vuc2UuCj4+ID4KPj4gPiBFeGNlcHQgdGhlIGZh
-Y3QgdGhhdCBJIGRvbid0IGZpbmQgQlROX0hPTUUgaW4gaW5wb3V0LmgsIHRoYXQncyBzZWVtcyBh
-Cj4+ID4gYmV0dGVyIGlkZWEsIGZvcmdldCB3aGF0IEkndmUgc2FpZCBlYXJsaWVyLgo+Pgo+PiBI
-YS4uLiBTb3JyeSwgSSBoYWQgYnV0dG9ucyBvbiBteSBicmFpbi4gwqBJIG1lYW50IEtFWV9IT01F
-IGFzIHlvdSBzdWdnZXN0ZWQuCj4+Cj4+ID4KPj4gPiAweGU0IC0+IEtFWV9JR05PUkUKPj4gPiAw
-eGU1IC0+IEtFWV9IT01FCj4+ID4gMHhlYSAtPiBLRVlfUFJPRzIsIChvciBCVE5fVEFTSyB0byBj
-b3B5IGFuZHJvaWQvaU9TID8pCj4+Cj4+IEZyb20gYSBxdWljayBnb29nbGUsIEkgY291bGRuJ3Qg
-ZmluZGluZyBhbnkgc3BlY2lmaWMgbWVhbmluZyBvZgo+PiBCVE5fVEFTSyBidXQgaXQgbG9va3Mg
-bGlrZSB4Zjg2LWlucHV0LWV2ZGV2IHR1cm5zIGl0IGludG8gYSBidXR0b24KPj4gcHJlc3Mgc28g
-d2UgbWF5IG5vdCB3YW50IHRoYXQgb25lLgo+Pgo+Cj4gSXQgd2FzIG9uZSBvZiBhZGRpdGlvbmFs
-IGtleXMgb24gTG9naXRlY2ggbWljZSBJSVJDLgoKSSB0aGlua3MgaXQncyB0aGUgc2FtZSBhcyBL
-RVlfQ1lDTEVXSU5ET1dTICh0aGVyZSBhcmUgbGl0dGxlIHdpbmRvd3MKb24gdGhlIGJ1dHRvbiku
-CgotLSAKQ29yZW50aW4gQ2hhcnkKaHR0cDovL3hmLmlrc2FpZi5uZXQKCi0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQpFbmFibGUgeW91ciBzb2Z0d2FyZSBmb3IgSW50ZWwoUikgQWN0aXZlIE1hbmFnZW1l
-bnQgVGVjaG5vbG9neSB0byBtZWV0IHRoZQpncm93aW5nIG1hbmFnZWFiaWxpdHkgYW5kIHNlY3Vy
-aXR5IGRlbWFuZHMgb2YgeW91ciBjdXN0b21lcnMuIEJ1c2luZXNzZXMKYXJlIHRha2luZyBhZHZh
-bnRhZ2Ugb2YgSW50ZWwoUikgdlBybyAoVE0pIHRlY2hub2xvZ3kgLSB3aWxsIHlvdXIgc29mdHdh
-cmUgCmJlIGEgcGFydCBvZiB0aGUgc29sdXRpb24/IERvd25sb2FkIHRoZSBJbnRlbChSKSBNYW5h
-Z2VhYmlsaXR5IENoZWNrZXIgCnRvZGF5ISBodHRwOi8vcC5zZi5uZXQvc2Z1L2ludGVsLWRldjJk
-ZXZtYXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWNw
-aTRhc3VzLXVzZXIgbWFpbGluZyBsaXN0CkFjcGk0YXN1cy11c2VyQGxpc3RzLnNvdXJjZWZvcmdl
-Lm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9hY3BpNGFz
-dXMtdXNlcgo=
+On Fri, Mar 25, 2011 at 02:05:18PM +0000, Corentin Chary wrote:
+> On Fri, Mar 25, 2011 at 1:53 PM, Seth Forshee
+> <seth.forshee@canonical.com> wrote:
+> >
+> > I guess it depends on what key events we want on a press-and-hold.
+> > Remember that you're going to get a scan code sequence like "0xe4 0=
+xea
+> > 0xea ... 0xea 0xe5", so with my implementation you get
+> >
+> > =A0KEY_PROG2 press
+> > =A0KEY_PROG2 release
+> >
+> > With yours
+> >
+> > =A0KEY_HOME press
+> > =A0KEY_PROG2 press
+> > =A0KEY_PROG2 release
+> > =A0// KEY_PROG2 press/release repeats every 0.5 secs while button h=
+eld
+> > =A0KEY_HOME release
+> >
+> > At minimum I'd think we'd want to only send a single PROG2 press/re=
+lease
+> > for button hold. My thought was that you'd only want to get the cod=
+e for
+> > 0xe4 or 0xea, not both, but I suppose that's debatable.
+>=20
+> If you keep a keyboard key pressed, you want multiple events, not one=
+ right ?
+> I think it's important not to loose informations. If someone keep thi=
+s
+> key pressed more than 1.5 second, I think it's good idea to send
+> multiple KEY_PROG2.
+
+You can have input autorepeat facilities do that for you. If you want t=
+o
+do this yourself then the proper value for repeated events is _2_, not
+1, or they will be dropped as duplicates.
+
+>=20
+> About KEY_HOME press / release, and filtering KEY_HOME after
+> KEY_PROG2, I'm not sure. So if you really want it, and nobody
+> complains, I'll be happy to accept your patch.
+>=20
+> > And back to the question of KEY_HOME -- that's not really what you =
+want,
+> > is it? As in "move cursor to start of line"?
+>=20
+> Ho .. right, that's what mean KEY_HOME :/. So no, I don't want that..=
+=2E
+> What about:
+> - KEY_CYCLEWINDOWS
+> - KEY_COMPUTER
+> - KEY_HOMEPAGE
+> - KEY_DASHBOARD
+>=20
+> I think KEY_HOMEPAGE is the best choice.
+
+No, KEY_HOMEPAGE should cause your browser to go to your home page. Wha=
+t
+you want is either:
+
+#define KEY_CONFIG         171     /* AL Consumer Control Configuration=
+ */
+#define KEY_DASHBOARD      204     /* AL Dashboard */
+
+("AL" stands for "Application Launcher", "AC" for 'Application Control"=
+,
+matched loosely to HUT tables).
+
+Thanks.
+
+--=20
+Dmitry
