@@ -1,208 +1,71 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT REQUEST] X86 platform driver updates for 2.6.39
-Date: Mon, 28 Mar 2011 13:17:02 +0100
-Message-ID: <20110328121702.GA28056@srcf.ucam.org>
+From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT
+ Home/Express Gate key
+Date: Mon, 28 Mar 2011 08:46:06 -0500
+Message-ID: <20110328134606.GA16374@thinkpad-t410>
+References: <AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
+	<20110325135311.GA14328@thinkpad-t410>
+	<AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
+	<20110325161405.GC5099@core.coreip.homeip.net>
+	<20110325162850.GD14328@thinkpad-t410>
+	<20110325170333.GD5099@core.coreip.homeip.net>
+	<20110325185824.GE14328@thinkpad-t410>
+	<20110327171304.GD30244@core.coreip.homeip.net>
+	<AANLkTikBnAdXHR4iqzq9Zd6D-OYe4yp-zELPh6iLr6sj@mail.gmail.com>
+	<20110327191116.GB31692@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:46489 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751331Ab1C1MRI (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2011 08:17:08 -0400
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20110327191116.GB31692-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vojtech-Y4LbUc7mvzI@public.gmane.org, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Linus,
+On Sun, Mar 27, 2011 at 12:11:16PM -0700, Dmitry Torokhov wrote:
+> > If we do set up auto-repeat and increase REP_DELAY, I'm guessing this
+> > would enable auto-repeat for all other keys defined in driver?  That
+> > needs to have some thought on if could have negative impact (any other
+> > keys not using auto-release?).
+> 
+> Right. Right now there are 4 autoreprat options (in general):
+> 
+> - hardware autorepeat (if hardware supports it);
+> - input core software autorepeat (one delay and rate per input device);
+> - driver-implemented software autorepeat - in cases when different
+>   repeat rate is needed;
+> - userspace autorepeat (like X does nowadays);
+> 
+> Well, 4th option is not mutually exclusive with the other 3...
 
-Nothing overly exciting - a few minor bugfixes and some driver updates,
-plus the driver for Samsung machines. There's some churn from the acer=20
-code being refactored.
+Currently all the other keys are using autorelease, so the autorepeat
+setting shouldn't be affecting them at all. So the concern is whether
+enabling autorepeat could become a problem the next time some oddball
+key shows up on a machine.
 
-The following changes since commit 18bcd0c8cb7d85a9063b88ec810dc1cdc097=
-4518:
+Corentin, you were concerned about the loss of information to userspace,
+but it seems the only way to maintain the hardware events is to drop the
+use of sparse-keymap altogether. Do you have an opinion on how to
+proceed?
 
-  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel=
-/git/lrg/voltage-2.6 (2011-03-27 20:37:50 -0700)
+I'm leaning towards using the input core autorepeat, since it seems to
+get the closest to typical key behavior.
 
-are available in the git repository at:
+Seth
 
-  ssh://master.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drive=
-rs-x86.git for_linus
 
-Anssi Hannula (7):
-      hp-wmi: check query return value in hp_wmi_perform_query
-      hp-wmi: remove a variable that is never read
-      hp-wmi: allow setting input and output buffer sizes separately
-      hp-wmi: split rfkill initialization out of hp_wmi_bios_setup
-      hp-wmi: clear rfkill device pointers when appropriate
-      hp-wmi: make rfkill initialization failure non-fatal
-      hp-wmi: add rfkill support for wireless query 0x1b
-
-Axel Lin (3):
-      platform-driver-x86: intel_mid_thermal: fix unterminated platform=
-_device_id table
-      platform-driver-x86: fix wrong merge for compal-laptop.c
-      platform-driver-x86: samsung-laptop: make dmi_check_cb to return =
-1 instead of 0
-
-Colin Ian King (1):
-      Enable Dell All-In-One volume up/down keys
-
-Corentin Chary (36):
-      eeepc-wmi: reorder keymap
-      eeepc-wmi: add wlan key found on 1015P
-      eeepc-wmi: add hotplug code for Eeepc 1000H
-      eeepc-wmi: serialize access to wmi method
-      eeepc-wmi: return proper error code in eeepc_rfkill_set()
-      eeepc-wmi: add an helper using simple return codes
-      eeepc-wmi: add hibernate/resume callbacks
-      eeepc-wmi: switch to platform_create_bundle()
-      eeepc-wmi: reorder defines
-      eeepc-wmi: use the presence bit correctly
-      eeepc-wmi: add camera and card reader support
-      eeepc-wmi: add wimax support
-      eeepc-wmi: set the right key code for 0xe9
-      eeepc-wmi: support backlight power (bl_power) attribute
-      eeepc-wmi: respect wireless_hotplug setting
-      eeepc-wmi: real touchpad led device id is 0x001000012
-      eeepc-wmi: comments keymap to clarify the meaning of some keys
-      asus-laptop: let WLED alone on L1400B
-      asus-laptop: remove deprecated interfaces (lcd_switch and display=
-_get)
-      eeepc-wmi: add touchpad sysfs file
-      eeepc-wmi: reorder device ids
-      eeepc-wmi: add camera keys
-      asus-wmi: move generic code to asus-wmi
-      eeepc-wmi: asus generic asus-wmi.ko module
-      asus-wmi: minor cleanups
-      asus-wmi: introduce struct asus_rfkill
-      asus-wmi: handle "unknown status" bit
-      asus-wmi: factorise wmi_evaluate_method call
-      asus-wmi: try to guess the right DSTS methods
-      asus-wmi: fix and clean backlight code
-      asus-wmi: add calls to INIT, SPEC and SFUN on init
-      asus-wmi: allow debugfs interface to call arbitrary method
-      asus-nb-wmi: Asus Notebooks WMI Driver
-      asus-wmi: add some common device ids and method ids
-      asus-wmi: add hwmon interface and pwm1
-      eeepc-wmi: restore KEY_CAMERA_* keys lost in 190ca27
-
-Dan Carpenter (6):
-      sony-laptop: make a couple variables static
-      sony-laptop: return negative on failure in sony_nc_add()
-      sony-laptop: handle allocation failures
-      sony-laptop: potential null dereference
-      asus-wmi: signedness bug in read_brightness()
-      asus-wmi: potential NULL dereference in show_call()
-
-Durgadoss R (1):
-      medfield: Add Thermal Driver
-
-Greg Kroah-Hartman (1):
-      Platform: add Samsung Laptop platform driver
-
-Hong Liu (1):
-      intel_mid_powerbtn: add power button driver for Medfield platform=
- (#3)
-
-Ike Panhc (2):
-      ideapad: read brightness setting on brightness key notify
-      ideapad: read brightness setting on brightness key notify
-
-Jesse Barnes (1):
-      ips: use interruptible waits in ips-monitor
-
-Joey Lee (1):
-      msi-laptop: use pr_<level> for messages
-
-Keng-Yu Lin (1):
-      eeepc-wmi: set the touchpad toggle key code to KEY_TOUCHPAD_TOGGL=
-E
-
-Lee, Chun-Yi (5):
-      acer-wmi: set the touchpad toggle key code to KEY_TOUCHPAD_TOGGLE
-      msi-laptop: send out touchpad on/off key
-      acer-wmi: use pr_<level> for messages
-      acer-wmi: does not set persistence state by rfkill_init_sw_state
-      acer-wmi: does not poll device status when WMI event is available
-
-Lucas De Marchi (1):
-      platform-drivers: x86: fix common misspellings
-
-Matthew Garrett (2):
-      xo15-ebook: Remove device.wakeup_count
-      Merge branch 'x86-platform-next' into x86-platform
-
-Mattia Dongili (8):
-      sony-laptop: add some debug printk useful for bug reports
-      sony-laptop: documentation updates
-      sony-laptop: ignore hard switch rfkill events (SPIC)
-      sony-laptop: use pr_<level> for messages
-      sony-laptop: remove unused Type4 define
-      sony-laptop: cache handles and report them via sysfs
-      sony-laptop: implement keyboard backlight support
-      sony-laptop: implement new backlight control method
-
-Pali Roh=E1r (2):
-      acer-wmi: deactive mail led when power off
-      acer-wmi: Fix WMI ID
-
-Paul Fox (1):
-      OLPC XO-1.5 ebook switch driver
-
-Randy Dunlap (2):
-      platform/x86: intel_mid_powerbutton needs INPUT
-      eeepc-wmi: kconfig changes to fix build errors
-
- .../ABI/testing/sysfs-driver-samsung-laptop        |   19 +
- Documentation/ABI/testing/sysfs-platform-asus-wmi  |   31 +
- Documentation/ABI/testing/sysfs-platform-eeepc-wmi |   10 -
- Documentation/laptops/sony-laptop.txt              |   37 +-
- MAINTAINERS                                        |   30 +-
- drivers/platform/x86/Kconfig                       |   90 +-
- drivers/platform/x86/Makefile                      |    9 +-
- drivers/platform/x86/acer-wmi.c                    |  127 +-
- drivers/platform/x86/asus-laptop.c                 |  182 +--
- drivers/platform/x86/asus-nb-wmi.c                 |   98 ++
- drivers/platform/x86/asus-wmi.c                    | 1656 ++++++++++++=
-++++++++
- drivers/platform/x86/asus-wmi.h                    |   58 +
- drivers/platform/x86/compal-laptop.c               |    8 +-
- drivers/platform/x86/dell-wmi-aio.c                |  171 ++
- drivers/platform/x86/eeepc-laptop.c                |    2 +-
- drivers/platform/x86/eeepc-wmi.c                   |  912 +----------
- drivers/platform/x86/hp-wmi.c                      |  312 ++++-
- drivers/platform/x86/ideapad-laptop.c              |    2 +
- drivers/platform/x86/intel_ips.c                   |    2 +-
- drivers/platform/x86/intel_mid_powerbtn.c          |  148 ++
- drivers/platform/x86/intel_mid_thermal.c           |  576 +++++++
- drivers/platform/x86/intel_rar_register.c          |    2 +-
- drivers/platform/x86/intel_scu_ipc.c               |    2 +-
- drivers/platform/x86/msi-laptop.c                  |   95 +-
- drivers/platform/x86/samsung-laptop.c              |  832 ++++++++++
- drivers/platform/x86/sony-laptop.c                 |  501 +++++--
- drivers/platform/x86/thinkpad_acpi.c               |    4 +-
- drivers/platform/x86/xo15-ebook.c                  |  180 +++
- include/linux/input.h                              |    7 +
- include/linux/sonypi.h                             |    1 +
- 30 files changed, 4845 insertions(+), 1259 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-samsung-lapt=
-op
- create mode 100644 Documentation/ABI/testing/sysfs-platform-asus-wmi
- delete mode 100644 Documentation/ABI/testing/sysfs-platform-eeepc-wmi
- create mode 100644 drivers/platform/x86/asus-nb-wmi.c
- create mode 100644 drivers/platform/x86/asus-wmi.c
- create mode 100644 drivers/platform/x86/asus-wmi.h
- create mode 100644 drivers/platform/x86/dell-wmi-aio.c
- create mode 100644 drivers/platform/x86/intel_mid_powerbtn.c
- create mode 100644 drivers/platform/x86/intel_mid_thermal.c
- create mode 100644 drivers/platform/x86/samsung-laptop.c
- create mode 100644 drivers/platform/x86/xo15-ebook.c
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
+------------------------------------------------------------------------------
+Enable your software for Intel(R) Active Management Technology to meet the
+growing manageability and security demands of your customers. Businesses
+are taking advantage of Intel(R) vPro (TM) technology - will your software 
+be a part of the solution? Download the Intel(R) Manageability Checker 
+today! http://p.sf.net/sfu/intel-dev2devmar
