@@ -1,84 +1,232 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH v2] acer-wmi: does not poll device status when WMI event is available
-Date: Mon, 28 Mar 2011 16:53:05 +0800
-Message-ID: <1301302385-5298-1-git-send-email-jlee@novell.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:46963 "EHLO
-	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753485Ab1C1Izy (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2011 04:55:54 -0400
-Received: by gwaa18 with SMTP id a18so1090551gwa.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Mar 2011 01:55:54 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+From: "Joey Lee" <jlee-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
+ 2.6.37
+Date: Mon, 28 Mar 2011 03:04:32 -0600
+Message-ID: <4D90E9D0020000230002A7EC@novprvlin0050.provo.novell.com>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
+ <201103242234.03598.oldium.pro@seznam.cz>
+ <4D8CE950020000230002A5DA@novprvlin0050.provo.novell.com>
+ <201103252022.26766.oldium.pro@seznam.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201103252022.26766.oldium.pro-9Vj9tDbzfuSlVyrhU4qvOw@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: oldium.pro-9Vj9tDbzfuSlVyrhU4qvOw@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, Al Cho <ACho-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>, Gary Lin <GLin-Et1tbQHTxzrQT0dZR+AlfA@public.gmane.org>, johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org, mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org, alan-jenkins-cCz0Lq7MMjm9FHfhHBbuYA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Acer WMI hotkey event's result include current device status, just
-need sync the status to killswitch after acer-wmi driver receive
-hotkey event but not always poll device status. This is good for
-performance.
+Hi Old=C5=99ic,
 
-But, if use EC raw mode, Acer BIOS will not emit wmi event and
-leave EC to control device status. So, still startup polling job
-when doesn't detect WMI event GUID or user choice to use ec_raw_mode.
+=E6=96=BC =E4=BA=94=EF=BC=8C2011-03-25 =E6=96=BC 20:22 +0100=EF=BC=8COl=
+d=C5=99ich Jedli=C4=8Dka =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi Joey Lee,
+>=20
+> On Friday 25 March 2011 09:13:20 Joey Lee wrote:
+> > Hi Old=C5=99ich,
+> >=20
+> > Per our log.
+> > It's a interesting and weird situation.
+> >=20
+> > Your log subvert my assumption, the BT HW key only emit one
+> > KEY_BLUETOOTH from ec but not from acer-wmi.
+> >=20
+> > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-24 =E6=96=BC 22:34 +0100=EF=BC=8C=
+Old=C5=99ich Jedli=C4=8Dka =E6=8F=90=E5=88=B0=EF=BC=9A
+> >=20
+> > > Hi Joey Lee,
+> > >=20
+> > > I've done some experiments, here are the results.
+> > >=20
+> > > On Thursday 24 March 2011 14:13:29 Joey Lee wrote:
+> > > > Hi Old=C5=99ich,
+> > > >=20
+> > > > Sorry bother you again, but after discuss with Johannes, he rem=
+ind me
+> > > > one import thing: maybe your BT HW key emit scancode and wmi ev=
+ent at
+> > > > the same time.
+> > > >=20
+> > > > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-24 =E6=96=BC 09:36 +0100=EF=
+=BC=8CJohannes Berg =E6=8F=90=E5=88=B0=EF=BC=9A
+> > > >=20
+> > > > > Hi Old=C5=99ich,
+> > > > >=20
+> > > > > > > Ah. So I guess when hci0 gets registered, the acer rfkill=
+ state
+> > > > > > > hasn't been updated yet, hence registering hci0 as blocke=
+d.
+> > > > > >=20
+> > > > > > No, that is not the case. I can play with `rfkill list` imm=
+ediately
+> > > > > > after I press the HW bluetooth switch and show that hci0 is=
+ not
+> > > > > > there (still unregistered) while acer-bluetooth is already
+> > > > > > "unblocked" - I've tried to run `rfkill list` repeatedly ma=
+nually
+> > > > > > from console immediately after I pressed the HW BT switch a=
+nd
+> > > > > > acer-bluetooth was "unblocked" several runs while the hci0 =
+wasn't
+> > > > > > there. When hci0 appeared, it was "blocked".
+> > > > > >=20
+> > > > > > As I wrote, I didn't find anything changing the global stat=
+e, which
+> > > > > > is actually used to "block" the newly appearing hci0 (in th=
+e
+> > > > > > rfkill_sync_work method). It looks like the global state is=
+ just
+> > > > > > "blocked" forever - and it is "blocked" as a side-effect of=
+ the
+> > > > > > call to rfkill_init_sw_state (changes permanent=3Dtrue) and=
+ then
+> > > > > > call to rfkill_register from the acer-wmi driver. I can ver=
+ify
+> > > > > > this in the following days (that the global state stays the=
+ same
+> > > > > > all the time).
+> > > > >=20
+> > > > > Well the global state would be changed by the KEY_BLUETOOTH i=
+nput
+> > > > > event.
+> > > > >=20
+> > > > > But like I said, it's tricky in this case because multiple ev=
+ents
+> > > > > come from the same event source and race against each other.
+> > > > >=20
+> > > > > johannes
+> > > >=20
+> > > > My Acer TravelMate 8572 is commercial notebook, it only emit wm=
+i event
+> > > > when press wifi key. But, as I remember, there have some acer c=
+onsumer
+> > > > notebook emit both scancode and wmi event.
+> > > >=20
+> > > > New acer-wmi driver will transfer wmi event to keycode (e.g.
+> > > > KEY_BLUETOOTH), if EC also emit KEY_BLUETOOTH, the rfkill-input=
+ will
+> > > >=20
+> > > > receive the key events twice, that means:
+> > > > 	global BT block (when system boot) -> BT unblock (from EC scan=
+code)=20
+> ->
+> > > > 	BT
+> > > >=20
+> > > > block (from acer-wmi)
+> > > >=20
+> > > > Could you please help me to check?
+> > > >=20
+> > > > 	- If your distro still have HAL, please run:
+> > > > 		+ lshal -l -m
+> > > > 		+ press BT HW key 1 time
+> > > > 		then check does HAL receive KEY_BLUETOOTH twice?
+> > >=20
+> > > I didn't uninstall hal yet, so the output of `lshal -l -m` (only =
+the
+> > > monitoring part) when I press once BT HW key is attached. I've al=
+so
+> > > patched the kernel to have more debug logging (see the attached d=
+iff and
+> > > log) and the result is that the handler method from rfkill/input.=
+c is
+> > > not called, the global state is once set to "blocked" and it keep=
+s like
+> > > that. I don't know why the rfkill_event isn't called when I press=
+ the HW
+> > > BT switch, it could be part of my investigations in the following=
+ days.
+> > >=20
+> > > I've attached .config too, if you want to check that I missed som=
+ething
+> > > that is needed by Acer WMI.
+> > >=20
+> > > Cheers,
+> > > Old=C5=99ich.
+> >=20
+> > Per your lshal log, looks like HAL only receive the key event from =
+EC
+> > but didn't have key event from acer-wmi:
+> >=20
+> > *** 22:21:01.310: lshal: device_condition,
+> > udi=3D/org/freedesktop/Hal/devices/platform_i8042_i8042_KBD_port_lo=
+gicaldev_i
+> > nput condition_name=3DButtonPressed
+> >            condition_details=3Dbluetooth			//it's from standard=20
+> input
+> >=20
+> > *** 22:21:02.076: lshal: property_modified,
+> > udi=3D/org/freedesktop/Hal/devices/platform_acer_wmi_rfkill_acer_bl=
+uetooth_bl
+> > uetooth, key=3Dkillswitch.state is_removed=3Dfalse, is_added=3Dfals=
+e
+> > *** new value: 1 (0x1)  (int)				//UNBLOCK when you press BT HW=20
+> key
+> >=20
+> >=20
+> > So, there have only one KEY_BLUETOOTH from ec, acer-wmi didn't emit=
+ it. I
+> > thought your machine didn't support Acer ACPI event GUIDs. Please d=
+ump the
+> > dsdt to me, thank's: acpidump > acpidump.dat
+> >=20
+> > Then, if there only have one KEY_BLUETOOTH, why the global BT state=
+ didn't
+> > change by rfill-input? Technically, rfkill-input must receive this =
+key
+> > then change global state:
+> >=20
+> > your situation:
+> > 		initial		press HW key
+> > acer-wmi	BLOCK		UNBLOCK (changed by acer-wmi polling)
+> > global		BLOCK		 BLOCK (why didn't changed by rfkill-input?)
+> > hci0		none		 BLOCK (replicate from global)
+> >=20
+> > Like you said, the odd thing is:
+> > 	"Why rfkill-input didn't receive KEY_BLUEOOTH from ec on your mach=
+ine?"
+> >=20
+> > We need find out root cause, but I thought my last patch still work=
+s to fix
+> > your situation and it make sense for Acer BIOS didn't really persis=
+tence
+> > devices state.
+> >=20
+> > applied my patch:
+> > 		initial		press HW key
+> > acer-wmi	BLOCK		UNBLOCK (changed by acer-wmi polling)
+> > global		UNBLOCK		UNBLOCK (didn't changed by rfkill-input?)
+> > hci0		none		 UNBLOCK (replicate from global)
+> >=20
+> >=20
+> > Conclusion...
+> > please kindly help to provide the following information:
+> >=20
+> >  - Please provide DSDT to me
+> >  	+ I want to double check your BIOS didn't support acer wmi event.
+> >=20
+> >  - Why rfkill-input didn't call by BT HW key?
+> > 	+ please remember disable urfkill daemon, it might disabled rfkill=
+-input!
+> > 	+ please provide dmesg and messages log to me
+>=20
+> Here you are (dmesg, /var/log/messages, acpidump):
+>=20
+>   http://others-misc.oldium.net/dump.tar.gz
+>=20
+> I hope this finally helps to find something :-)
+>=20
+> Cheers,
+> Old=C5=99ich.
+>=20
 
-Tested on Acer TravelMate 8572 notebook.
+I sand out patch to platform driver group for review:
+0001-acer-wmi-does-not-set-persistence-state-by-rfkill_i.patch
 
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
----
- drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++--
- 1 files changed, 18 insertions(+), 2 deletions(-)
+And added comment on bugzilla:
+	https://bugzilla.kernel.org/show_bug.cgi?id=3D31002#c12
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index ca8ec50..52e8170 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1234,14 +1234,17 @@ static int acer_rfkill_init(struct device *dev)
- 
- 	rfkill_inited = 1;
- 
--	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
-+	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
-+		schedule_delayed_work(&acer_rfkill_work,
-+			round_jiffies_relative(HZ));
- 
- 	return 0;
- }
- 
- static void acer_rfkill_exit(void)
- {
--	cancel_delayed_work_sync(&acer_rfkill_work);
-+	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
-+		cancel_delayed_work_sync(&acer_rfkill_work);
- 
- 	rfkill_unregister(wireless_rfkill);
- 	rfkill_destroy(wireless_rfkill);
-@@ -1338,6 +1341,19 @@ static void acer_wmi_notify(u32 value, void *context)
- 
- 	switch (return_value.function) {
- 	case WMID_HOTKEY_EVENT:
-+		if (return_value.device_state) {
-+			u16 device_state = return_value.device_state;
-+			pr_debug("deivces states: 0x%x\n", device_state);
-+			if (has_cap(ACER_CAP_WIRELESS))
-+				rfkill_set_sw_state(wireless_rfkill,
-+				!(device_state & ACER_WMID3_GDS_WIRELESS));
-+			if (has_cap(ACER_CAP_BLUETOOTH))
-+				rfkill_set_sw_state(bluetooth_rfkill,
-+				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-+			if (has_cap(ACER_CAP_THREEG))
-+				rfkill_set_sw_state(threeg_rfkill,
-+				!(device_state & ACER_WMID3_GDS_THREEG));
-+		}
- 		if (!sparse_keymap_report_event(acer_wmi_input_dev,
- 				return_value.key_num, 1, true))
- 			pr_warning("Unknown key number - 0x%x\n",
--- 
-1.6.0.2
+
+Thank's
+Joey Lee
