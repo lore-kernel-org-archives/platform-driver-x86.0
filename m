@@ -1,8 +1,8 @@
 From: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH v3 1/3] asus-wmi: Add callback for hotkey
-	filtering
-Date: Mon, 28 Mar 2011 13:33:42 -0500
-Message-ID: <1301337224-3293-2-git-send-email-seth.forshee@canonical.com>
+Subject: [PATCH v3 2/3] eeepc-wmi: Add support for T101MT
+	Home/Express Gate key
+Date: Mon, 28 Mar 2011 13:33:43 -0500
+Message-ID: <1301337224-3293-3-git-send-email-seth.forshee@canonical.com>
 References: <AANLkTi=U2Qkqv7FKfe18f0a=8Xg0QwRX_cxFj-j7ZPC=@mail.gmail.com>
 	<1301337224-3293-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
@@ -22,76 +22,82 @@ To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is required for the T101MT home key, which behaves differently
-than other hotkeys.
+This key is different than other hotkeys, having seperate scan
+codes for press, release, and hold, so it requires some special
+filtering. Press and release events are passed on, and hold events
+are ignored since sparse-keymap does not support hardware
+autorepeat.
+
+Note that "Home" in the context of this button doesn't mean the
+same thing as the usual Home key, and it really isn't clear at
+all what is meant by "Home". The manufacurer's description of the
+button indicates that it should launch some sort of touch screen
+settings interface on short press and apply a desktop rotation on
+long press.
 
 Signed-off-by: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 ---
- drivers/platform/x86/asus-wmi.c |   12 +++++++++++-
- drivers/platform/x86/asus-wmi.h |    6 ++++++
- 2 files changed, 17 insertions(+), 1 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   26 ++++++++++++++++++++++++++
+ 1 files changed, 26 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 5b779a9..b14d992 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1058,6 +1058,8 @@ static void asus_wmi_notify(u32 value, void *context)
- 	acpi_status status;
- 	int code;
- 	int orig_code;
-+	unsigned int key_value = 1;
-+	bool autorelease = 1;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 0ddc434..8f3112d5 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -56,6 +56,11 @@ MODULE_PARM_DESC(hotplug_wireless,
+ 		 "If your laptop needs that, please report to "
+ 		 "acpi4asus-user-5NWGOfrQmneRv+LV9MX5uti2KpX7p8Fi@public.gmane.org");
  
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
-@@ -1073,6 +1075,13 @@ static void asus_wmi_notify(u32 value, void *context)
- 	code = obj->integer.value;
- 	orig_code = code;
++/* Values for T101MT "Home" key */
++#define HOME_PRESS	0xe4
++#define HOME_HOLD	0xea
++#define HOME_RELEASE	0xe5
++
+ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	/* Sleep already handled via generic ACPI code */
+ 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+@@ -70,6 +75,7 @@ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	{ KE_KEY, 0xcc, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0xe0, { KEY_PROG1 } }, /* Task Manager */
+ 	{ KE_KEY, 0xe1, { KEY_F14 } }, /* Change Resolution */
++	{ KE_KEY, HOME_PRESS, { KEY_CONFIG } },
+ 	{ KE_KEY, 0xe9, { KEY_BRIGHTNESS_ZERO } },
+ 	{ KE_KEY, 0xeb, { KEY_CAMERA_ZOOMOUT } },
+ 	{ KE_KEY, 0xec, { KEY_CAMERA_UP } },
+@@ -79,6 +85,25 @@ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	{ KE_END, 0},
+ };
  
-+	if (asus->driver->key_filter) {
-+		asus->driver->key_filter(asus->driver, &code, &key_value,
-+					 &autorelease);
-+		if (code == ASUS_WMI_KEY_IGNORE)
-+			goto exit;
++static void eeepc_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
++				 unsigned int *value, bool *autorelease)
++{
++	switch (*code) {
++	case HOME_PRESS:
++		*value = 1;
++		*autorelease = 0;
++		break;
++	case HOME_HOLD:
++		*code = ASUS_WMI_KEY_IGNORE;
++		break;
++	case HOME_RELEASE:
++		*code = HOME_PRESS;
++		*value = 0;
++		*autorelease = 0;
++		break;
 +	}
++}
 +
- 	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
- 		code = NOTIFY_BRNUP_MIN;
- 	else if (code >= NOTIFY_BRNDOWN_MIN &&
-@@ -1082,7 +1091,8 @@ static void asus_wmi_notify(u32 value, void *context)
- 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
- 		if (!acpi_video_backlight_support())
- 			asus_wmi_backlight_notify(asus, orig_code);
--	} else if (!sparse_keymap_report_event(asus->inputdev, code, 1, true))
-+	} else if (!sparse_keymap_report_event(asus->inputdev, code,
-+					       key_value, autorelease))
- 		pr_info("Unknown key %x pressed\n", code);
- 
- exit:
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index c044522..4da6103 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -29,6 +29,8 @@
- 
- #include <linux/platform_device.h>
- 
-+#define ASUS_WMI_KEY_IGNORE (-1)
-+
- struct module;
- struct key_entry;
- struct asus_wmi;
-@@ -44,6 +46,10 @@ struct asus_wmi_driver {
- 	const struct key_entry	*keymap;
- 	const char		*input_name;
- 	const char		*input_phys;
-+	/* Returns new code, value, and autorelease values in arguments.
-+	 * Return ASUS_WMI_KEY_IGNORE in code if event should be ignored. */
-+	void (*key_filter) (struct asus_wmi_driver *driver, int *code,
-+			    unsigned int *value, bool *autorelease);
- 
- 	int (*probe) (struct platform_device *device);
- 	void (*quirks) (struct asus_wmi_driver *driver);
+ static acpi_status eeepc_wmi_parse_device(acpi_handle handle, u32 level,
+ 						 void *context, void **retval)
+ {
+@@ -149,6 +174,7 @@ static struct asus_wmi_driver asus_wmi_driver = {
+ 	.keymap = eeepc_wmi_keymap,
+ 	.input_name = "Eee PC WMI hotkeys",
+ 	.input_phys = EEEPC_WMI_FILE "/input0",
++	.key_filter = eeepc_wmi_key_filter,
+ 	.probe = eeepc_wmi_probe,
+ 	.quirks = eeepc_wmi_quirks,
+ };
 -- 
 1.7.4.1
 
