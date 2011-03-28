@@ -1,121 +1,161 @@
 From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] acer-wmi: does not poll device status when WMI
- event is available
-Date: Mon, 28 Mar 2011 02:43:36 -0600
-Message-ID: <4D90E4E8020000230002A7D8@novprvlin0050.provo.novell.com>
+Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
+ 2.6.37
+Date: Mon, 28 Mar 2011 02:51:52 -0600
+Message-ID: <4D90E6D8020000230002A7E1@novprvlin0050.provo.novell.com>
+References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
+ <201103242234.03598.oldium.pro@seznam.cz>
+ <4D8CE950020000230002A5DA@novprvlin0050.provo.novell.com>
+ <201103252022.26766.oldium.pro@seznam.cz>
+ <4D8DB372020000230002A653@novprvlin0050.provo.novell.com>
+ <20110327170928.GB30244@core.coreip.homeip.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20110327170928.GB30244@core.coreip.homeip.net>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: corentincj@iksaif.net, dtor@mail.ru, mjg@redhat.com, carlos@strangeworlds.co.uk, trenn@suse.de
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: davem@davemloft.net, marcel@holtmann.org, Al Cho <ACho@novell.com>, Gary Lin <GLin@novell.com>, oldium.pro@seznam.cz, johannes@sipsolutions.net, mjg59@srcf.ucam.org, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E5=85=AD=EF=BC=8C2011-03-19 =E6=96=BC 07:46 +0800=EF=BC=8CLe=
-e, Chun-Yi =E6=8F=90=E5=88=B0=EF=BC=9A
-> Acer WMI hotkey event's result include current device status, just
-> need sync the status to killswitch after acer-wmi driver receive
-> hotkey event but not always poll device status. This is good for
-> performance.
->=20
-> But, if use EC raw mode, Acer BIOS will not emit wmi event and
-> leave EC to control device status. So, still startup polling job
-> when doesn't detect WMI event GUID or user choice to use ec_raw_mode.
->=20
-> Tested on Acer TravelMate 8572 notebook.
->=20
-> Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-> Cc: Matthew Garrett <mjg@redhat.com>
-> Cc: Dmitry Torokhov <dtor@mail.ru>
-> Cc: Corentin Chary <corentincj@iksaif.net>
-> Cc: Thomas Renninger <trenn@suse.de>
-> Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
-> ---
->  drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++--
->  1 files changed, 18 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index 1953c70..9764ddc 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1224,14 +1224,17 @@ static int acer_rfkill_init(struct device *de=
-v)
->  		}
->  	}
-> =20
-> -	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ)=
-);
-> +	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
-> +		schedule_delayed_work(&acer_rfkill_work,
-> +			round_jiffies_relative(HZ));
-> =20
->  	return 0;
->  }
-> =20
->  static void acer_rfkill_exit(void)
->  {
-> -	cancel_delayed_work_sync(&acer_rfkill_work);
-> +	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
-> +		cancel_delayed_work_sync(&acer_rfkill_work);
-> =20
->  	rfkill_unregister(wireless_rfkill);
->  	rfkill_destroy(wireless_rfkill);
-> @@ -1332,6 +1335,19 @@ static void acer_wmi_notify(u32 value, void *c=
-ontext)
->  				return_value.key_num, 1, true))
->  			pr_warning("Unknown key number - 0x%x\n",
->  				return_value.key_num);
-> +		if (return_value.device_state) {
-> +			u16 device_state =3D return_value.device_state;
-> +			pr_debug("deivces states: 0x%x\n", device_state);
-> +			if (has_cap(ACER_CAP_WIRELESS))
-> +				rfkill_set_sw_state(wireless_rfkill,
-> +				!(device_state & ACER_WMID3_GDS_WIRELESS));
-> +			if (has_cap(ACER_CAP_BLUETOOTH))
-> +				rfkill_set_sw_state(bluetooth_rfkill,
-> +				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-> +			if (has_cap(ACER_CAP_THREEG))
-> +				rfkill_set_sw_state(threeg_rfkill,
-> +				!(device_state & ACER_WMID3_GDS_THREEG));
-> +		}
->  		break;
->  	default:
->  		pr_warning("Unknown function number - %d - %d\n",
+Hi Dmitry,
 
-That will be better move the set devices state to before send out key
-event when rfkill-input enabled:
+=E6=96=BC =E6=97=A5=EF=BC=8C2011-03-27 =E6=96=BC 10:09 -0700=EF=BC=8CDm=
+itry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Fri, Mar 25, 2011 at 04:35:46PM -0600, Joey Lee wrote:
+> >=20
+> > Thank's for your information, I will look at it.
+> >=20
+> > Finally,
+> > I borrow a Acer Aspire one ZG8 from Gary, it can reproduce your
+> > situation.
+> >=20
+> > The BAD thing is you are right,=20
+> > I CAN REPRODUCE rfkill-input didn't receive any input, it not make =
+sense
+> > because rfkill-input registered input handler.
+> >=20
+> > The BT HW key still works because acer-wmi have polling to sync the
+> > state with EC and killswitch, and EC also take care the BT device p=
+ower
+> > off job.
+> >=20
+> > But, I also found SOMETIMES after system reboot, rfkill-input can
+> > capture the key event.
+> > We need find out why input handle didn't receive KEY_* event.
+> >=20
+> >=20
+> > Hi, Dmitry=20
+> >=20
+> > Appreciate if you can give us any good suggestions!
+> > Why keyboard emit KEY_BLUETOOTH, but rfkill-input, registered input
+> > handler, can't capture it?
+> >=20
+> > *** 06:32:42.972: lshal: device_condition,
+> > udi=3D/org/freedesktop/Hal/devices/platform_i8042_i8042_KBD_port_lo=
+gicaldev_input
+> >            condition_name=3DButtonPressed
+> >            condition_details=3Dbluetooth
+> >=20
+> > But, SOMETIMES after reboot system, rfkill-input can capture the ke=
+y.
+> > We are working on 2.6.38 kernel, and Acer notebook.
+>=20
+> Hi Joey,
+>=20
+> If you look in /proc/bus/input/devices do you see rfkill-input as
+> actually bound to the device that has KEY_BLUETOOTH?
+>=20
 
-@@ -1338,6 +1341,19 @@ static void acer_wmi_notify(u32 value, void *con=
-text)
-=20
-        switch (return_value.function) {
-        case WMID_HOTKEY_EVENT:
-+               if (return_value.device_state) {
-+                       u16 device_state =3D return_value.device_state;
-+                       pr_debug("deivces states: 0x%x\n", device_state=
-);
-+                       if (has_cap(ACER_CAP_WIRELESS))
-+                               rfkill_set_sw_state(wireless_rfkill,
-+                               !(device_state & ACER_WMID3_GDS_WIRELES=
-S));
-+                       if (has_cap(ACER_CAP_BLUETOOTH))
-+                               rfkill_set_sw_state(bluetooth_rfkill,
-+                               !(device_state & ACER_WMID3_GDS_BLUETOO=
-TH));
-+                       if (has_cap(ACER_CAP_THREEG))
-+                               rfkill_set_sw_state(threeg_rfkill,
-+                               !(device_state & ACER_WMID3_GDS_THREEG)=
-);
-+               }
-                if (!sparse_keymap_report_event(acer_wmi_input_dev,
-                                return_value.key_num, 1, true))
-                        pr_warning("Unknown key number - 0x%x\n",
+Like you said, we fell into the trap:
 
-Will send out v2 patch for review.
+=46ail case:
+
+linux-uy92:/proc/bus/input # vi devices
+
+I: Bus=3D0011 Vendor=3D0001 Product=3D0001 Version=3Dab41
+N: Name=3D"AT Translated Set 2 keyboard"
+P: Phys=3Disa0060/serio0/input0
+S: Sysfs=3D/devices/platform/i8042/serio0/input/input0
+U: Uniq=3D
+H: Handlers=3Dsysrq kbd event0
+B: PROP=3D0
+B: EV=3D120013
+B: KEY=3D10000 c0200 0 0 0 0 0 700f 2000003 3803078 f830f401 febfffdf f=
+fefffff ffffffff fffffffe
+B: MSC=3D10
+B: LED=3D7
+
+
+Success case:
+
+linux-uy92:/proc/bus/input # vi devices=20
+
+I: Bus=3D0011 Vendor=3D0001 Product=3D0001 Version=3Dab41
+N: Name=3D"AT Translated Set 2 keyboard"
+P: Phys=3Disa0060/serio0/input0
+S: Sysfs=3D/devices/platform/i8042/serio0/input/input0
+U: Uniq=3D
+H: Handlers=3Dsysrq kbd event0 rfkill
+B: PROP=3D0
+B: EV=3D120013
+B: KEY=3D10000 c0200 0 0 0 0 0 700f 2000003 3803078 f830f401 febfffdf f=
+fefffff ffffffff fffffffe
+B: MSC=3D10
+B: LED=3D7
+
+
+In fail case, rfkill didn't register to keyboard's Handlers. And, I als=
+o
+checked the rfkill-input's .connect didn't call by input when system
+boot:
+
+=46ail case:
+
+[    7.144252] rfkill: rfkill_handler_init
+[    7.144277] rfkill: rfkill_handler_init, start input_register_handle=
+r
+
+
+Success case:
+
+[    7.580683] rfkill: rfkill_handler_init
+[    7.580714] rfkill: rfkill_handler_init, start input_register_handle=
+r
+[    7.580737] rfkill: doing input_register_handle
+
+> Since it is atkbd that is emitting KEY_BLUETOOTH and this key is not =
+in
+> the default keymap I think you must be loading Acer-specific keymap v=
+ia
+> udev or some other mechanism, and I guess stumbling upon a deficiency=
+ in
+> input layer: we do not re-match devices after changing keymap. So if
+> rfkill-input was loaded before keymap was altered, then it will not b=
+ind
+> to the keyboard even if you add KE_BLUETOOTH at a later time. Fixing
+> this is something that was on my TODO list for a while now...
+>=20
+> Thaks.
+>=20
+
+Yes,
+this a race condition for rfkill-input register before udev set
+Acer-specific keymap.=20
+
+We didn't find it just because old acer-wmi driver hide the BIOS defaul=
+t
+devices states and always set bluetooth state to enabled when system
+boot.
 
 
 Thank's
 Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
