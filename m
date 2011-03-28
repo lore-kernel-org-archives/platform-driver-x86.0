@@ -1,88 +1,65 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT Home/Express Gate key
-Date: Mon, 28 Mar 2011 14:14:33 +0000
-Message-ID: <AANLkTi=U2Qkqv7FKfe18f0a=8Xg0QwRX_cxFj-j7ZPC=__49490.0809404955$1301321723$gmane$org@mail.gmail.com>
-References: <AANLkTimF2UR8BVQW-3YJaGFEz39q8ydESAiMOjmdM1X7@mail.gmail.com>
-	<20110325135311.GA14328@thinkpad-t410>
-	<AANLkTin3MDYdL6x1Qs8Q9oMMgDMfsoO2GjWMJO_65GAR@mail.gmail.com>
-	<20110325161405.GC5099@core.coreip.homeip.net>
-	<20110325162850.GD14328@thinkpad-t410>
-	<20110325170333.GD5099@core.coreip.homeip.net>
-	<20110325185824.GE14328@thinkpad-t410>
-	<20110327171304.GD30244@core.coreip.homeip.net>
-	<AANLkTikBnAdXHR4iqzq9Zd6D-OYe4yp-zELPh6iLr6sj@mail.gmail.com>
-	<20110327191116.GB31692@core.coreip.homeip.net>
-	<20110328134606.GA16374@thinkpad-t410>
+From: Andy Ross <andy.ross@windriver.com>
+Subject: Re: [PATCH 3/4] asus-laptop: Pegatron Lucid accelerometer
+Date: Mon, 28 Mar 2011 08:36:32 -0700
+Message-ID: <4D90AB00.5080800@windriver.com>
+References: <1301004130-3294-1-git-send-email-andy.ross@windriver.com> <1301004130-3294-4-git-send-email-andy.ross@windriver.com> <AANLkTin849Cr2UUv4astP860=_f5xMMoPAhFhA4K+rzZ@mail.gmail.com> <20110328054314.GC31692@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:34936 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753981Ab1C1OOe convert rfc822-to-8bit (ORCPT
+Received: from li44-10.members.linode.com ([72.14.181.10]:38729 "EHLO
+	plausible.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751237Ab1C1Pgg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2011 10:14:34 -0400
-In-Reply-To: <20110328134606.GA16374@thinkpad-t410>
+	Mon, 28 Mar 2011 11:36:36 -0400
+In-Reply-To: <20110328054314.GC31692@core.coreip.homeip.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Chris Bagwell <chris@cnpbagwell.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.s
-Cc: Seth Forshee <seth.forshee@canonical.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
 
-On Mon, Mar 28, 2011 at 1:46 PM, Seth Forshee
-<seth.forshee@canonical.com> wrote:
-> On Sun, Mar 27, 2011 at 12:11:16PM -0700, Dmitry Torokhov wrote:
->> > If we do set up auto-repeat and increase REP_DELAY, I'm guessing t=
-his
->> > would enable auto-repeat for all other keys defined in driver? =C2=
-=A0That
->> > needs to have some thought on if could have negative impact (any o=
-ther
->> > keys not using auto-release?).
->>
->> Right. Right now there are 4 autoreprat options (in general):
->>
->> - hardware autorepeat (if hardware supports it);
->> - input core software autorepeat (one delay and rate per input devic=
-e);
->> - driver-implemented software autorepeat - in cases when different
->> =C2=A0 repeat rate is needed;
->> - userspace autorepeat (like X does nowadays);
->>
->> Well, 4th option is not mutually exclusive with the other 3...
->
-> Currently all the other keys are using autorelease, so the autorepeat
-> setting shouldn't be affecting them at all. So the concern is whether
-> enabling autorepeat could become a problem the next time some oddball
-> key shows up on a machine.
+[combined responses for clarity]
 
-As far as I know, the only key that could be like that (not yet
-mapped, but I've seen it somewhere) is a "Camera Autofocus Key". For
-this key we don't really care about "repeating", we just need to send
-"press" and "release" events correctly, and userspace will keep
-adjusting the autofocus while the key is pressed.
+Corentin Chary wrote:
+> Wow :/ How long is an acpi_evaluate_integer call here ?
 
-> Corentin, you were concerned about the loss of information to userspa=
-ce,
-> but it seems the only way to maintain the hardware events is to drop =
-the
-> use of sparse-keymap altogether. Do you have an opinion on how to
-> proceed?
+Early on I benchmarked the per-axis ACPI calls about about 50us, which
+is shockingly high to me.  But honestly that note there is just
+pedantry: the hi/lo race (and the fact that "errors" live in the same
+space with valid data values) is a real condition that lets me justify
+the "retry on large deltas" behavior, which most definitely improves
+data quality.
 
-I really don't think dropping sparse-keymap for a single key on a
-single model is a good idea.
+> When is asus_platform_probe called exactly ? Because I'd say it's
+> called during asus_platform_probe(), and that doesn't fix your issue
+> right ?
 
-On my side I'd have used another keycode for 0xea events, and reported
-press and release events as they come, since it's more a "two-in-one"
-key than a key with hardware autorepeat.
+Admittedly this is voodoo.  Moving the input_polldev device
+initialization to asus_laptop (originally in asus_acpi_add(), which is
+called out of the ACPI framwwork) caused reliable panics on boot.  I
+moved it to asus_platform_probe() to restore the structure of the
+original pega_accel module, which did it in a platform probe.
 
-But since Dmitry and Chris seems to prefer the autorepeat approach
-with a single key code, if it works then it's ok, we just need to set
-REP_DELAY, report press and release events, and drop 0xea events.
+I don't know enough about the platform driver model to say exactly,
+but I strongly suspect that platform probe calls are not done
+synchronously underneath the platform_{device|driver}_register()
+calls.
 
-> I'm leaning towards using the input core autorepeat, since it seems t=
-o
-> get the closest to typical key behavior.
+Dmitry Torokhov wrote:
+> This I do not quite understand... Do we bind acpi drivers to devices
+> before ACPI initialization is done? Then this should be fixed in
+> ACPI layer, but I doubt even early userspace is active at the time
+> ACPI core is being initialized. Also, input polling is done in a
+> separate thread so you not moving the poll out of ACPI binding
+> thread but delay poll execution by a few microseconds...
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+See comments above.  The current model in asus-laptop is to register
+its keyboard input device underneat the .add callback in the acpi
+driver.  That was crashing with the accelerometer.
+
+And there's definitely a userspace interaction: disabling the sensor
+daemon (the distro in question is a MeeGo tablet image) at startup
+avoided the crash (and in fact worked fine when started up manually
+later).
+
+Andy
