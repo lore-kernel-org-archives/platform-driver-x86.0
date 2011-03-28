@@ -1,107 +1,84 @@
 From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: does not set persistence state by rfkill_init_sw_state
-Date: Mon, 28 Mar 2011 16:52:02 +0800
-Message-ID: <1301302322-5233-1-git-send-email-jlee@novell.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH v2] acer-wmi: does not poll device status when WMI event is available
+Date: Mon, 28 Mar 2011 16:53:05 +0800
+Message-ID: <1301302385-5298-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gw0-f46.google.com ([74.125.83.46]:56806 "EHLO
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:46963 "EHLO
 	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753210Ab1C1Iyx (ORCPT
+	with ESMTP id S1753485Ab1C1Izy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2011 04:54:53 -0400
-Received: by gwaa18 with SMTP id a18so1090391gwa.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Mar 2011 01:54:53 -0700 (PDT)
+	Mon, 28 Mar 2011 04:55:54 -0400
+Received: by gwaa18 with SMTP id a18so1090551gwa.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Mar 2011 01:55:54 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: carlos@strangeworlds.co.uk
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, =?utf-8?q?Old=C5=99ich=20Jedli=C4=8Dka?= <oldium.pro@seznam.cz>, Johannes Berg <johannes@sipsolutions.net>
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-Acer BIOS keeps devices state when system reboot, but reset to default
-device states (Wlan on, Bluetooth off, wwan on) if system cold boot.
-That means BIOS's initial state is not always real persistence.
+Acer WMI hotkey event's result include current device status, just
+need sync the status to killswitch after acer-wmi driver receive
+hotkey event but not always poll device status. This is good for
+performance.
 
-So, removed rfkill_init_sw_state because it sets initial state to
-persistence then replicate to other new killswitch when rfkill-input
-enabled.
-After removed it, acer-wmi set initial soft-block state after rfkill
-register, and doesn't allow set_block until rfkill initial finished.
+But, if use EC raw mode, Acer BIOS will not emit wmi event and
+leave EC to control device status. So, still startup polling job
+when doesn't detect WMI event GUID or user choice to use ec_raw_mode.
 
-Reference: bko#31002
-	https://bugzilla.kernel.org/show_bug.cgi?id=3D31002
+Tested on Acer TravelMate 8572 notebook.
 
 Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
 Cc: Matthew Garrett <mjg@redhat.com>
 Cc: Dmitry Torokhov <dtor@mail.ru>
 Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Old=C5=99ich Jedli=C4=8Dka <oldium.pro@seznam.cz>
-Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Thomas Renninger <trenn@suse.de>
 Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
 ---
- drivers/platform/x86/acer-wmi.c |   19 ++++++++++++++-----
- 1 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++--
+ 1 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 5839fac..5b38ae4 100644
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index ca8ec50..52e8170 100644
 --- a/drivers/platform/x86/acer-wmi.c
 +++ b/drivers/platform/x86/acer-wmi.c
-@@ -222,6 +222,7 @@ struct acer_debug {
- static struct rfkill *wireless_rfkill;
- static struct rfkill *bluetooth_rfkill;
- static struct rfkill *threeg_rfkill;
-+static bool rfkill_inited;
-=20
- /* Each low-level interface must define at least some of the following=
- */
- struct wmi_interface {
-@@ -1162,9 +1163,13 @@ static int acer_rfkill_set(void *data, bool bloc=
-ked)
+@@ -1234,14 +1234,17 @@ static int acer_rfkill_init(struct device *dev)
+ 
+ 	rfkill_inited = 1;
+ 
+-	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
++	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
++		schedule_delayed_work(&acer_rfkill_work,
++			round_jiffies_relative(HZ));
+ 
+ 	return 0;
+ }
+ 
+ static void acer_rfkill_exit(void)
  {
- 	acpi_status status;
- 	u32 cap =3D (unsigned long)data;
--	status =3D set_u32(!blocked, cap);
--	if (ACPI_FAILURE(status))
--		return -ENODEV;
-+
-+	if (rfkill_inited) {
-+		status =3D set_u32(!blocked, cap);
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+	}
-+
- 	return 0;
- }
-=20
-@@ -1188,14 +1193,16 @@ static struct rfkill *acer_rfkill_register(stru=
-ct device *dev,
- 		return ERR_PTR(-ENOMEM);
-=20
- 	status =3D get_device_status(&state, cap);
--	if (ACPI_SUCCESS(status))
--		rfkill_init_sw_state(rfkill_dev, !state);
-=20
- 	err =3D rfkill_register(rfkill_dev);
- 	if (err) {
- 		rfkill_destroy(rfkill_dev);
- 		return ERR_PTR(err);
- 	}
-+
-+	if (ACPI_SUCCESS(status))
-+		rfkill_set_sw_state(rfkill_dev, !state);
-+
- 	return rfkill_dev;
- }
-=20
-@@ -1230,6 +1237,8 @@ static int acer_rfkill_init(struct device *dev)
- 		}
- 	}
-=20
-+	rfkill_inited =3D true;
-+
- 	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
-=20
- 	return 0;
---=20
+-	cancel_delayed_work_sync(&acer_rfkill_work);
++	if (ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID))
++		cancel_delayed_work_sync(&acer_rfkill_work);
+ 
+ 	rfkill_unregister(wireless_rfkill);
+ 	rfkill_destroy(wireless_rfkill);
+@@ -1338,6 +1341,19 @@ static void acer_wmi_notify(u32 value, void *context)
+ 
+ 	switch (return_value.function) {
+ 	case WMID_HOTKEY_EVENT:
++		if (return_value.device_state) {
++			u16 device_state = return_value.device_state;
++			pr_debug("deivces states: 0x%x\n", device_state);
++			if (has_cap(ACER_CAP_WIRELESS))
++				rfkill_set_sw_state(wireless_rfkill,
++				!(device_state & ACER_WMID3_GDS_WIRELESS));
++			if (has_cap(ACER_CAP_BLUETOOTH))
++				rfkill_set_sw_state(bluetooth_rfkill,
++				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
++			if (has_cap(ACER_CAP_THREEG))
++				rfkill_set_sw_state(threeg_rfkill,
++				!(device_state & ACER_WMID3_GDS_THREEG));
++		}
+ 		if (!sparse_keymap_report_event(acer_wmi_input_dev,
+ 				return_value.key_num, 1, true))
+ 			pr_warning("Unknown key number - 0x%x\n",
+-- 
 1.6.0.2
