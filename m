@@ -1,161 +1,107 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi: rfkill and bluetooth enabling doesn't work as in
- 2.6.37
-Date: Mon, 28 Mar 2011 02:51:52 -0600
-Message-ID: <4D90E6D8020000230002A7E1@novprvlin0050.provo.novell.com>
-References: <4D79E5230200002300029ADA@novprvlin0050.provo.novell.com>
- <201103242234.03598.oldium.pro@seznam.cz>
- <4D8CE950020000230002A5DA@novprvlin0050.provo.novell.com>
- <201103252022.26766.oldium.pro@seznam.cz>
- <4D8DB372020000230002A653@novprvlin0050.provo.novell.com>
- <20110327170928.GB30244@core.coreip.homeip.net>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: does not set persistence state by rfkill_init_sw_state
+Date: Mon, 28 Mar 2011 16:52:02 +0800
+Message-ID: <1301302322-5233-1-git-send-email-jlee@novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20110327170928.GB30244@core.coreip.homeip.net>
-Content-Disposition: inline
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: davem@davemloft.net, marcel@holtmann.org, Al Cho <ACho@novell.com>, Gary Lin <GLin@novell.com>, oldium.pro@seznam.cz, johannes@sipsolutions.net, mjg59@srcf.ucam.org, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:56806 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753210Ab1C1Iyx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 28 Mar 2011 04:54:53 -0400
+Received: by gwaa18 with SMTP id a18so1090391gwa.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Mar 2011 01:54:53 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: carlos@strangeworlds.co.uk
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, =?utf-8?q?Old=C5=99ich=20Jedli=C4=8Dka?= <oldium.pro@seznam.cz>, Johannes Berg <johannes@sipsolutions.net>
 
-Hi Dmitry,
+Acer BIOS keeps devices state when system reboot, but reset to default
+device states (Wlan on, Bluetooth off, wwan on) if system cold boot.
+That means BIOS's initial state is not always real persistence.
 
-=E6=96=BC =E6=97=A5=EF=BC=8C2011-03-27 =E6=96=BC 10:09 -0700=EF=BC=8CDm=
-itry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Fri, Mar 25, 2011 at 04:35:46PM -0600, Joey Lee wrote:
-> >=20
-> > Thank's for your information, I will look at it.
-> >=20
-> > Finally,
-> > I borrow a Acer Aspire one ZG8 from Gary, it can reproduce your
-> > situation.
-> >=20
-> > The BAD thing is you are right,=20
-> > I CAN REPRODUCE rfkill-input didn't receive any input, it not make =
-sense
-> > because rfkill-input registered input handler.
-> >=20
-> > The BT HW key still works because acer-wmi have polling to sync the
-> > state with EC and killswitch, and EC also take care the BT device p=
-ower
-> > off job.
-> >=20
-> > But, I also found SOMETIMES after system reboot, rfkill-input can
-> > capture the key event.
-> > We need find out why input handle didn't receive KEY_* event.
-> >=20
-> >=20
-> > Hi, Dmitry=20
-> >=20
-> > Appreciate if you can give us any good suggestions!
-> > Why keyboard emit KEY_BLUETOOTH, but rfkill-input, registered input
-> > handler, can't capture it?
-> >=20
-> > *** 06:32:42.972: lshal: device_condition,
-> > udi=3D/org/freedesktop/Hal/devices/platform_i8042_i8042_KBD_port_lo=
-gicaldev_input
-> >            condition_name=3DButtonPressed
-> >            condition_details=3Dbluetooth
-> >=20
-> > But, SOMETIMES after reboot system, rfkill-input can capture the ke=
-y.
-> > We are working on 2.6.38 kernel, and Acer notebook.
->=20
-> Hi Joey,
->=20
-> If you look in /proc/bus/input/devices do you see rfkill-input as
-> actually bound to the device that has KEY_BLUETOOTH?
->=20
+So, removed rfkill_init_sw_state because it sets initial state to
+persistence then replicate to other new killswitch when rfkill-input
+enabled.
+After removed it, acer-wmi set initial soft-block state after rfkill
+register, and doesn't allow set_block until rfkill initial finished.
 
-Like you said, we fell into the trap:
+Reference: bko#31002
+	https://bugzilla.kernel.org/show_bug.cgi?id=3D31002
 
-=46ail case:
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Old=C5=99ich Jedli=C4=8Dka <oldium.pro@seznam.cz>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ drivers/platform/x86/acer-wmi.c |   19 ++++++++++++++-----
+ 1 files changed, 14 insertions(+), 5 deletions(-)
 
-linux-uy92:/proc/bus/input # vi devices
-
-I: Bus=3D0011 Vendor=3D0001 Product=3D0001 Version=3Dab41
-N: Name=3D"AT Translated Set 2 keyboard"
-P: Phys=3Disa0060/serio0/input0
-S: Sysfs=3D/devices/platform/i8042/serio0/input/input0
-U: Uniq=3D
-H: Handlers=3Dsysrq kbd event0
-B: PROP=3D0
-B: EV=3D120013
-B: KEY=3D10000 c0200 0 0 0 0 0 700f 2000003 3803078 f830f401 febfffdf f=
-fefffff ffffffff fffffffe
-B: MSC=3D10
-B: LED=3D7
-
-
-Success case:
-
-linux-uy92:/proc/bus/input # vi devices=20
-
-I: Bus=3D0011 Vendor=3D0001 Product=3D0001 Version=3Dab41
-N: Name=3D"AT Translated Set 2 keyboard"
-P: Phys=3Disa0060/serio0/input0
-S: Sysfs=3D/devices/platform/i8042/serio0/input/input0
-U: Uniq=3D
-H: Handlers=3Dsysrq kbd event0 rfkill
-B: PROP=3D0
-B: EV=3D120013
-B: KEY=3D10000 c0200 0 0 0 0 0 700f 2000003 3803078 f830f401 febfffdf f=
-fefffff ffffffff fffffffe
-B: MSC=3D10
-B: LED=3D7
-
-
-In fail case, rfkill didn't register to keyboard's Handlers. And, I als=
-o
-checked the rfkill-input's .connect didn't call by input when system
-boot:
-
-=46ail case:
-
-[    7.144252] rfkill: rfkill_handler_init
-[    7.144277] rfkill: rfkill_handler_init, start input_register_handle=
-r
-
-
-Success case:
-
-[    7.580683] rfkill: rfkill_handler_init
-[    7.580714] rfkill: rfkill_handler_init, start input_register_handle=
-r
-[    7.580737] rfkill: doing input_register_handle
-
-> Since it is atkbd that is emitting KEY_BLUETOOTH and this key is not =
-in
-> the default keymap I think you must be loading Acer-specific keymap v=
-ia
-> udev or some other mechanism, and I guess stumbling upon a deficiency=
- in
-> input layer: we do not re-match devices after changing keymap. So if
-> rfkill-input was loaded before keymap was altered, then it will not b=
-ind
-> to the keyboard even if you add KE_BLUETOOTH at a later time. Fixing
-> this is something that was on my TODO list for a while now...
->=20
-> Thaks.
->=20
-
-Yes,
-this a race condition for rfkill-input register before udev set
-Acer-specific keymap.=20
-
-We didn't find it just because old acer-wmi driver hide the BIOS defaul=
-t
-devices states and always set bluetooth state to enabled when system
-boot.
-
-
-Thank's
-Joey Lee
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index 5839fac..5b38ae4 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -222,6 +222,7 @@ struct acer_debug {
+ static struct rfkill *wireless_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *threeg_rfkill;
++static bool rfkill_inited;
+=20
+ /* Each low-level interface must define at least some of the following=
+ */
+ struct wmi_interface {
+@@ -1162,9 +1163,13 @@ static int acer_rfkill_set(void *data, bool bloc=
+ked)
+ {
+ 	acpi_status status;
+ 	u32 cap =3D (unsigned long)data;
+-	status =3D set_u32(!blocked, cap);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
++
++	if (rfkill_inited) {
++		status =3D set_u32(!blocked, cap);
++		if (ACPI_FAILURE(status))
++			return -ENODEV;
++	}
++
+ 	return 0;
+ }
+=20
+@@ -1188,14 +1193,16 @@ static struct rfkill *acer_rfkill_register(stru=
+ct device *dev,
+ 		return ERR_PTR(-ENOMEM);
+=20
+ 	status =3D get_device_status(&state, cap);
+-	if (ACPI_SUCCESS(status))
+-		rfkill_init_sw_state(rfkill_dev, !state);
+=20
+ 	err =3D rfkill_register(rfkill_dev);
+ 	if (err) {
+ 		rfkill_destroy(rfkill_dev);
+ 		return ERR_PTR(err);
+ 	}
++
++	if (ACPI_SUCCESS(status))
++		rfkill_set_sw_state(rfkill_dev, !state);
++
+ 	return rfkill_dev;
+ }
+=20
+@@ -1230,6 +1237,8 @@ static int acer_rfkill_init(struct device *dev)
+ 		}
+ 	}
+=20
++	rfkill_inited =3D true;
++
+ 	schedule_delayed_work(&acer_rfkill_work, round_jiffies_relative(HZ));
+=20
+ 	return 0;
+--=20
+1.6.0.2
