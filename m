@@ -1,60 +1,52 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 23/23] xo15-ebook: Use pr_<level>
-Date: Tue, 29 Mar 2011 15:21:54 -0700
-Message-ID: <d3586f0c0089c42d06f13a0f52ea2800325477cf.1301436234.git.joe@perches.com>
+Subject: [PATCH 22/23] wmi: Removed trailing whitespace from logging message.
+Date: Tue, 29 Mar 2011 15:21:53 -0700
+Message-ID: <65eb74f915743adc72e19204524a513ff2cd1b44.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.perches.com ([173.55.12.10]:4395 "EHLO mail.perches.com"
+Received: from mail.perches.com ([173.55.12.10]:4392 "EHLO mail.perches.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755039Ab1C2WWo (ORCPT
+	id S1754789Ab1C2WWn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Mar 2011 18:22:44 -0400
+	Tue, 29 Mar 2011 18:22:43 -0400
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
+To: Matthew Garrett <mjg@redhat.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Use the current logging styles.
-
-Remove local #define PREFIX.
-Add pr_fmt.
-Convert printk to pr_<level>.
+Just neatening.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/xo15-ebook.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/wmi.c |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
-index c1372ed..fad153d 100644
---- a/drivers/platform/x86/xo15-ebook.c
-+++ b/drivers/platform/x86/xo15-ebook.c
-@@ -11,6 +11,8 @@
-  *  your option) any later version.
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -20,7 +22,6 @@
- #include <acpi/acpi_drivers.h>
- 
- #define MODULE_NAME "xo15-ebook"
--#define PREFIX MODULE_NAME ": "
- 
- #define XO15_EBOOK_CLASS		MODULE_NAME
- #define XO15_EBOOK_TYPE_UNKNOWN	0x00
-@@ -105,7 +106,7 @@ static int ebook_switch_add(struct acpi_device *device)
- 	class = acpi_device_class(device);
- 
- 	if (strcmp(hid, XO15_EBOOK_HID)) {
--		printk(KERN_ERR PREFIX "Unsupported hid [%s]\n", hid);
-+		pr_err("Unsupported hid [%s]\n", hid);
- 		error = -ENODEV;
- 		goto err_free_input;
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 05cc796..f23d5a8 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -486,16 +486,16 @@ static void wmi_dump_wdg(const struct guid_block *g)
+ 	pr_info("\tnotify_id: %02X\n", g->notify_id);
+ 	pr_info("\treserved: %02X\n", g->reserved);
+ 	pr_info("\tinstance_count: %d\n", g->instance_count);
+-	pr_info("\tflags: %#x ", g->flags);
++	pr_info("\tflags: %#x", g->flags);
+ 	if (g->flags) {
+ 		if (g->flags & ACPI_WMI_EXPENSIVE)
+-			pr_cont("ACPI_WMI_EXPENSIVE ");
++			pr_cont(" ACPI_WMI_EXPENSIVE");
+ 		if (g->flags & ACPI_WMI_METHOD)
+-			pr_cont("ACPI_WMI_METHOD ");
++			pr_cont(" ACPI_WMI_METHOD");
+ 		if (g->flags & ACPI_WMI_STRING)
+-			pr_cont("ACPI_WMI_STRING ");
++			pr_cont(" ACPI_WMI_STRING");
+ 		if (g->flags & ACPI_WMI_EVENT)
+-			pr_cont("ACPI_WMI_EVENT ");
++			pr_cont(" ACPI_WMI_EVENT");
  	}
+ 	pr_cont("\n");
+ 
 -- 
 1.7.4.2.g597a6.dirty
