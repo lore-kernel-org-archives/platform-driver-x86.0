@@ -1,44 +1,52 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 08/23] fujitsu-laptop: Convert printks to pr_<level>
-Date: Tue, 29 Mar 2011 15:50:13 -0700
-Message-ID: <1301439013.4113.12.camel@Joe-Laptop>
-References: <201103292242.p2TMgAET020124@turbo.physics.adelaide.edu.au>
+From: Herton Ronaldo Krzesinski <herton.krzesinski@canonical.com>
+Subject: Re: [PATCH 20/23] topstar-laptop: Convert remaining printk to
+ pr_info
+Date: Tue, 29 Mar 2011 20:44:22 -0300
+Message-ID: <20110329234421.GC1910@herton-IdeaPad-Y430>
+References: <cover.1301436234.git.joe@perches.com>
+ <a96da1fe175d7dc123f12433e30df14c60a67ce2.1301436234.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.perches.com ([173.55.12.10]:4408 "EHLO mail.perches.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752169Ab1C2WuQ (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:59727 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751360Ab1C2Xo3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Mar 2011 18:50:16 -0400
-In-Reply-To: <201103292242.p2TMgAET020124@turbo.physics.adelaide.edu.au>
+	Tue, 29 Mar 2011 19:44:29 -0400
+Content-Disposition: inline
+In-Reply-To: <a96da1fe175d7dc123f12433e30df14c60a67ce2.1301436234.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Herton Ronaldo Krzesinski <herton@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, 2011-03-30 at 08:12 +0930, Jonathan Woithe wrote:
-> what does pr_*() give us over printk()?
- 
-Consistency in use of prefix.
+On Tue, Mar 29, 2011 at 03:21:51PM -0700, Joe Perches wrote:
+> To be similar to all other uses.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/platform/x86/topstar-laptop.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
+> index 1d07d6d..4c20447 100644
+> --- a/drivers/platform/x86/topstar-laptop.c
+> +++ b/drivers/platform/x86/topstar-laptop.c
+> @@ -194,7 +194,7 @@ static int __init topstar_laptop_init(void)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	printk(KERN_INFO "Topstar Laptop ACPI extras driver loaded\n");
+> +	pr_info("ACPI extras driver loaded\n");
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.7.4.2.g597a6.dirty
+> 
 
-> I presume it makes it easier to selectively remove certain
-> printk levels from the kernel image in the
-> name of size reduction.
+Acked-by: Herton Ronaldo Krzesinski <herton.krzesinski@canonical.com>
 
-That's the goal, but there's no support in the
-standard kernel for that yet.
-
-It should also in the future make the prefix a
-singleton and remove it from the format string
-making the image text a bit smaller.
-
-> Some people *may* insist that these long (>80 character) pr_err() lines be
-> split so they remain <80 in length.  This was the reason why the original
-> printk() call was split like it was.
-
-I don't.
-It makes grepping source for strings easier.
-
-cheers, Joe
+-- 
+[]'s
+Herton
