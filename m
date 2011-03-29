@@ -1,166 +1,113 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 10/23] hp-wmi: Convert printks to pr_<level>
-Date: Tue, 29 Mar 2011 15:21:41 -0700
-Message-ID: <a4062d14ef6deec739f881c73e703b9256f37a8f.1301436234.git.joe@perches.com>
+Subject: [PATCH 09/23] hdaps: Convert printks to pr_<level>
+Date: Tue, 29 Mar 2011 15:21:40 -0700
+Message-ID: <f4fbd2191533fd96fa59ba19c9917ed679920e1b.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.perches.com ([173.55.12.10]:4369 "EHLO mail.perches.com"
+Received: from mail.perches.com ([173.55.12.10]:4366 "EHLO mail.perches.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754799Ab1C2WW2 (ORCPT
+	id S1754789Ab1C2WW0 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Mar 2011 18:22:28 -0400
+	Tue, 29 Mar 2011 18:22:26 -0400
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
+To: Matthew Garrett <mjg@redhat.com>, Frank Seidel <frank@f-seidel.de>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Added pr_fmt and converted printks to pr_<level>.
-Removed now unused PREFIX and UNIMPL #defines.
+Added pr_fmt, converted printks and removed
+hard coded prefixes.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/hp-wmi.c |   43 ++++++++++++++++------------------------
- 1 files changed, 17 insertions(+), 26 deletions(-)
+ drivers/platform/x86/hdaps.c |   19 ++++++++++---------
+ 1 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 1bc4a75..f94017b 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -24,6 +24,8 @@
-  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
+index 067bf36..5a34973 100644
+--- a/drivers/platform/x86/hdaps.c
++++ b/drivers/platform/x86/hdaps.c
+@@ -26,6 +26,8 @@
+  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
   */
  
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -54,9 +56,6 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
- #define HPWMI_HOTKEY_QUERY 0xc
- #define HPWMI_WIRELESS2_QUERY 0x1b
+ #include <linux/delay.h>
+ #include <linux/platform_device.h>
+ #include <linux/input-polldev.h>
+@@ -238,7 +240,7 @@ static int hdaps_device_init(void)
+ 		     __check_latch(0x1611, 0x01))
+ 		goto out;
  
--#define PREFIX "HP WMI: "
--#define UNIMP "Unimplemented "
--
- enum hp_wmi_radio {
- 	HPWMI_WIFI = 0,
- 	HPWMI_BLUETOOTH = 1,
-@@ -228,9 +227,8 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
+-	printk(KERN_DEBUG "hdaps: initial latch check good (0x%02x).\n",
++	printk(KERN_DEBUG "hdaps: initial latch check good (0x%02x)\n",
+ 	       __get_latch(0x1611));
  
- 	if (bios_return->return_code) {
- 		if (bios_return->return_code != HPWMI_RET_UNKNOWN_CMDTYPE)
--			printk(KERN_WARNING PREFIX "query 0x%x returned "
--						   "error 0x%x\n",
--			       query, bios_return->return_code);
-+			pr_warn("query 0x%x returned error 0x%x\n",
-+				query, bios_return->return_code);
- 		kfree(obj);
- 		return bios_return->return_code;
- 	}
-@@ -384,8 +382,7 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	outb(0x17, 0x1610);
+@@ -299,7 +301,7 @@ static int hdaps_probe(struct platform_device *dev)
+ 	if (ret)
+ 		return ret;
  
- 		if (num >= state.count ||
- 		    devstate->rfkill_id != rfkill2[i].id) {
--			printk(KERN_WARNING PREFIX "power configuration of "
--			       "the wireless devices unexpectedly changed\n");
-+			pr_warn("power configuration of the wireless devices unexpectedly changed\n");
- 			continue;
- 		}
- 
-@@ -471,7 +468,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
--		printk(KERN_INFO PREFIX "bad event status 0x%x\n", status);
-+		pr_info("bad event status 0x%x\n", status);
- 		return;
- 	}
- 
-@@ -480,8 +477,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 	if (!obj)
- 		return;
- 	if (obj->type != ACPI_TYPE_BUFFER) {
--		printk(KERN_INFO "hp-wmi: Unknown response received %d\n",
--		       obj->type);
-+		pr_info("Unknown response received %d\n", obj->type);
- 		kfree(obj);
- 		return;
- 	}
-@@ -498,8 +494,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 		event_id = *location;
- 		event_data = *(location + 2);
- 	} else {
--		printk(KERN_INFO "hp-wmi: Unknown buffer length %d\n",
--		       obj->buffer.length);
-+		pr_info("Unknown buffer length %d\n", obj->buffer.length);
- 		kfree(obj);
- 		return;
- 	}
-@@ -527,8 +522,7 @@ static void hp_wmi_notify(u32 value, void *context)
- 
- 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
- 						key_code, 1, true))
--			printk(KERN_INFO PREFIX "Unknown key code - 0x%x\n",
--			       key_code);
-+			pr_info("Unknown key code - 0x%x\n", key_code);
- 		break;
- 	case HPWMI_WIRELESS:
- 		if (rfkill2_count) {
-@@ -550,14 +544,12 @@ static void hp_wmi_notify(u32 value, void *context)
- 					  hp_wmi_get_hw_state(HPWMI_WWAN));
- 		break;
- 	case HPWMI_CPU_BATTERY_THROTTLE:
--		printk(KERN_INFO PREFIX UNIMP "CPU throttle because of 3 Cell"
--		       " battery event detected\n");
-+		pr_info("Unimplemented CPU throttle because of 3 Cell battery event detected\n");
- 		break;
- 	case HPWMI_LOCK_SWITCH:
- 		break;
- 	default:
--		printk(KERN_INFO PREFIX "Unknown event_id - %d - 0x%x\n",
--		       event_id, event_data);
-+		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
- 		break;
- 	}
+-	printk(KERN_INFO "hdaps: device successfully initialized.\n");
++	pr_info("device successfully initialized\n");
+ 	return 0;
  }
-@@ -705,7 +697,7 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
- 		return err;
  
- 	if (state.count > HPWMI_MAX_RFKILL2_DEVICES) {
--		printk(KERN_WARNING PREFIX "unable to parse 0x1b query output\n");
-+		pr_warn("unable to parse 0x1b query output\n");
- 		return -EINVAL;
+@@ -480,7 +482,7 @@ static struct attribute_group hdaps_attribute_group = {
+ /* hdaps_dmi_match - found a match.  return one, short-circuiting the hunt. */
+ static int __init hdaps_dmi_match(const struct dmi_system_id *id)
+ {
+-	printk(KERN_INFO "hdaps: %s detected.\n", id->ident);
++	pr_info("%s detected\n", id->ident);
+ 	return 1;
+ }
+ 
+@@ -488,8 +490,7 @@ static int __init hdaps_dmi_match(const struct dmi_system_id *id)
+ static int __init hdaps_dmi_match_invert(const struct dmi_system_id *id)
+ {
+ 	hdaps_invert = (unsigned long)id->driver_data;
+-	printk(KERN_INFO "hdaps: inverting axis (%u) readings.\n",
+-	       hdaps_invert);
++	pr_info("inverting axis (%u) readings\n", hdaps_invert);
+ 	return hdaps_dmi_match(id);
+ }
+ 
+@@ -543,7 +544,7 @@ static int __init hdaps_init(void)
+ 	int ret;
+ 
+ 	if (!dmi_check_system(hdaps_whitelist)) {
+-		printk(KERN_WARNING "hdaps: supported laptop not found!\n");
++		pr_warn("supported laptop not found!\n");
+ 		ret = -ENODEV;
+ 		goto out;
  	}
+@@ -595,7 +596,7 @@ static int __init hdaps_init(void)
+ 	if (ret)
+ 		goto out_idev;
  
-@@ -727,14 +719,14 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
- 			name = "hp-wwan";
- 			break;
- 		default:
--			printk(KERN_WARNING PREFIX "unknown device type 0x%x\n",
--				 state.device[i].radio_type);
-+			pr_warn("unknown device type 0x%x\n",
-+				state.device[i].radio_type);
- 			continue;
- 		}
+-	printk(KERN_INFO "hdaps: driver successfully loaded.\n");
++	pr_info("driver successfully loaded\n");
+ 	return 0;
  
- 		if (!state.device[i].vendor_id) {
--			printk(KERN_WARNING PREFIX "zero device %d while %d "
--			       "reported\n", i, state.count);
-+			pr_warn("zero device %d while %d reported\n",
-+				i, state.count);
- 			continue;
- 		}
+ out_idev:
+@@ -609,7 +610,7 @@ out_driver:
+ out_region:
+ 	release_region(HDAPS_LOW_PORT, HDAPS_NR_PORTS);
+ out:
+-	printk(KERN_WARNING "hdaps: driver init failed (ret=%d)!\n", ret);
++	pr_warn("driver init failed (ret=%d)!\n", ret);
+ 	return ret;
+ }
  
-@@ -755,8 +747,7 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
- 				    IS_HWBLOCKED(state.device[i].power));
+@@ -622,7 +623,7 @@ static void __exit hdaps_exit(void)
+ 	platform_driver_unregister(&hdaps_driver);
+ 	release_region(HDAPS_LOW_PORT, HDAPS_NR_PORTS);
  
- 		if (!(state.device[i].power & HPWMI_POWER_BIOS))
--			printk(KERN_INFO PREFIX "device %s blocked by BIOS\n",
--			       name);
-+			pr_info("device %s blocked by BIOS\n", name);
+-	printk(KERN_INFO "hdaps: driver unloaded.\n");
++	pr_info("driver unloaded\n");
+ }
  
- 		err = rfkill_register(rfkill);
- 		if (err) {
+ module_init(hdaps_init);
 -- 
 1.7.4.2.g597a6.dirty
