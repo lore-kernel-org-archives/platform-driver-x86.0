@@ -1,130 +1,166 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 07/23] eeepc: Use pr_warn
-Date: Tue, 29 Mar 2011 15:21:38 -0700
-Message-ID: <50c96cbf511199e7a42d178028d513623bc4ba3d.1301436234.git.joe@perches.com>
+Subject: [PATCH 10/23] hp-wmi: Convert printks to pr_<level>
+Date: Tue, 29 Mar 2011 15:21:41 -0700
+Message-ID: <a4062d14ef6deec739f881c73e703b9256f37a8f.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.perches.com ([173.55.12.10]:4369 "EHLO mail.perches.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754799Ab1C2WW2 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 29 Mar 2011 18:22:28 -0400
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Just a trivial pr_warning to pr_warn conversion
-while adding a few missing newlines.
+Added pr_fmt and converted printks to pr_<level>.
+Removed now unused PREFIX and UNIMPL #defines.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/eeepc-laptop.c |   20 ++++++++++----------
- drivers/platform/x86/eeepc-wmi.c    |   14 +++++++-------
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ drivers/platform/x86/hp-wmi.c |   43 ++++++++++++++++------------------------
+ 1 files changed, 17 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index 5f2dd38..e5feadd 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -228,7 +228,7 @@ static int set_acpi(struct eeepc_laptop *eeepc, int cm, int value)
- 		return -ENODEV;
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 1bc4a75..f94017b 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -24,6 +24,8 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
  
- 	if (write_acpi_int(eeepc->handle, method, value))
--		pr_warning("Error writing %s\n", method);
-+		pr_warn("Error writing %s\n", method);
- 	return 0;
- }
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -54,9 +56,6 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+ #define HPWMI_HOTKEY_QUERY 0xc
+ #define HPWMI_WIRELESS2_QUERY 0x1b
  
-@@ -243,7 +243,7 @@ static int get_acpi(struct eeepc_laptop *eeepc, int cm)
- 		return -ENODEV;
+-#define PREFIX "HP WMI: "
+-#define UNIMP "Unimplemented "
+-
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI = 0,
+ 	HPWMI_BLUETOOTH = 1,
+@@ -228,9 +227,8 @@ static int hp_wmi_perform_query(int query, int write, void *buffer,
  
- 	if (read_acpi_int(eeepc->handle, method, &value))
--		pr_warning("Error reading %s\n", method);
-+		pr_warn("Error reading %s\n", method);
- 	return value;
- }
+ 	if (bios_return->return_code) {
+ 		if (bios_return->return_code != HPWMI_RET_UNKNOWN_CMDTYPE)
+-			printk(KERN_WARNING PREFIX "query 0x%x returned "
+-						   "error 0x%x\n",
+-			       query, bios_return->return_code);
++			pr_warn("query 0x%x returned error 0x%x\n",
++				query, bios_return->return_code);
+ 		kfree(obj);
+ 		return bios_return->return_code;
+ 	}
+@@ -384,8 +382,7 @@ static int hp_wmi_rfkill2_refresh(void)
  
-@@ -261,7 +261,7 @@ static int acpi_setter_handle(struct eeepc_laptop *eeepc, int cm,
- 	status = acpi_get_handle(eeepc->handle, (char *)method,
- 				 handle);
+ 		if (num >= state.count ||
+ 		    devstate->rfkill_id != rfkill2[i].id) {
+-			printk(KERN_WARNING PREFIX "power configuration of "
+-			       "the wireless devices unexpectedly changed\n");
++			pr_warn("power configuration of the wireless devices unexpectedly changed\n");
+ 			continue;
+ 		}
+ 
+@@ -471,7 +468,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 
+ 	status = wmi_get_event_data(value, &response);
  	if (status != AE_OK) {
--		pr_warning("Error finding %s\n", method);
-+		pr_warn("Error finding %s\n", method);
- 		return -ENODEV;
+-		printk(KERN_INFO PREFIX "bad event status 0x%x\n", status);
++		pr_info("bad event status 0x%x\n", status);
+ 		return;
  	}
- 	return 0;
-@@ -417,7 +417,7 @@ static ssize_t store_cpufv_disabled(struct device *dev,
- 	switch (value) {
- 	case 0:
- 		if (eeepc->cpufv_disabled)
--			pr_warning("cpufv enabled (not officially supported "
-+			pr_warn("cpufv enabled (not officially supported "
- 				"on this model)\n");
- 		eeepc->cpufv_disabled = false;
- 		return rv;
-@@ -601,7 +601,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
- 	if (eeepc->hotplug_slot) {
- 		bus = pci_find_bus(0, 1);
- 		if (!bus) {
--			pr_warning("Unable to find PCI bus 1?\n");
-+			pr_warn("Unable to find PCI bus 1?\n");
- 			goto out_unlock;
- 		}
  
-@@ -612,12 +612,12 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
- 		absent = (l == 0xffffffff);
+@@ -480,8 +477,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 	if (!obj)
+ 		return;
+ 	if (obj->type != ACPI_TYPE_BUFFER) {
+-		printk(KERN_INFO "hp-wmi: Unknown response received %d\n",
+-		       obj->type);
++		pr_info("Unknown response received %d\n", obj->type);
+ 		kfree(obj);
+ 		return;
+ 	}
+@@ -498,8 +494,7 @@ static void hp_wmi_notify(u32 value, void *context)
+ 		event_id = *location;
+ 		event_data = *(location + 2);
+ 	} else {
+-		printk(KERN_INFO "hp-wmi: Unknown buffer length %d\n",
+-		       obj->buffer.length);
++		pr_info("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return;
+ 	}
+@@ -527,8 +522,7 @@ static void hp_wmi_notify(u32 value, void *context)
  
- 		if (blocked != absent) {
--			pr_warning("BIOS says wireless lan is %s, "
--					"but the pci device is %s\n",
-+			pr_warn("BIOS says wireless lan is %s, "
-+				"but the pci device is %s\n",
- 				blocked ? "blocked" : "unblocked",
- 				absent ? "absent" : "present");
--			pr_warning("skipped wireless hotplug as probably "
--					"inappropriate for this model\n");
-+			pr_warn("skipped wireless hotplug as probably "
-+				"inappropriate for this model\n");
- 			goto out_unlock;
- 		}
- 
-@@ -671,7 +671,7 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
- 						     eeepc_rfkill_notify,
- 						     eeepc);
- 		if (ACPI_FAILURE(status))
--			pr_warning("Failed to register notify on %s\n", node);
-+			pr_warn("Failed to register notify on %s\n", node);
- 	} else
- 		return -ENODEV;
- 
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 0ddc434..4155884 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -82,7 +82,7 @@ static const struct key_entry eeepc_wmi_keymap[] = {
- static acpi_status eeepc_wmi_parse_device(acpi_handle handle, u32 level,
- 						 void *context, void **retval)
- {
--	pr_warning("Found legacy ATKD device (%s)", EEEPC_ACPI_HID);
-+	pr_warn("Found legacy ATKD device (%s)\n", EEEPC_ACPI_HID);
- 	*(bool *)context = true;
- 	return AE_CTRL_TERMINATE;
+ 		if (!sparse_keymap_report_event(hp_wmi_input_dev,
+ 						key_code, 1, true))
+-			printk(KERN_INFO PREFIX "Unknown key code - 0x%x\n",
+-			       key_code);
++			pr_info("Unknown key code - 0x%x\n", key_code);
+ 		break;
+ 	case HPWMI_WIRELESS:
+ 		if (rfkill2_count) {
+@@ -550,14 +544,12 @@ static void hp_wmi_notify(u32 value, void *context)
+ 					  hp_wmi_get_hw_state(HPWMI_WWAN));
+ 		break;
+ 	case HPWMI_CPU_BATTERY_THROTTLE:
+-		printk(KERN_INFO PREFIX UNIMP "CPU throttle because of 3 Cell"
+-		       " battery event detected\n");
++		pr_info("Unimplemented CPU throttle because of 3 Cell battery event detected\n");
+ 		break;
+ 	case HPWMI_LOCK_SWITCH:
+ 		break;
+ 	default:
+-		printk(KERN_INFO PREFIX "Unknown event_id - %d - 0x%x\n",
+-		       event_id, event_data);
++		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
+ 		break;
+ 	}
  }
-@@ -103,12 +103,12 @@ static int eeepc_wmi_check_atkd(void)
- static int eeepc_wmi_probe(struct platform_device *pdev)
- {
- 	if (eeepc_wmi_check_atkd()) {
--		pr_warning("WMI device present, but legacy ATKD device is also "
--			   "present and enabled.");
--		pr_warning("You probably booted with acpi_osi=\"Linux\" or "
--			   "acpi_osi=\"!Windows 2009\"");
--		pr_warning("Can't load eeepc-wmi, use default acpi_osi "
--			   "(preferred) or eeepc-laptop");
-+		pr_warn("WMI device present, but legacy ATKD device is also "
-+			"present and enabled\n");
-+		pr_warn("You probably booted with acpi_osi=\"Linux\" or "
-+			"acpi_osi=\"!Windows 2009\"\n");
-+		pr_warn("Can't load eeepc-wmi, use default acpi_osi "
-+			"(preferred) or eeepc-laptop\n");
- 		return -EBUSY;
+@@ -705,7 +697,7 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
+ 		return err;
+ 
+ 	if (state.count > HPWMI_MAX_RFKILL2_DEVICES) {
+-		printk(KERN_WARNING PREFIX "unable to parse 0x1b query output\n");
++		pr_warn("unable to parse 0x1b query output\n");
+ 		return -EINVAL;
  	}
- 	return 0;
+ 
+@@ -727,14 +719,14 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
+ 			name = "hp-wwan";
+ 			break;
+ 		default:
+-			printk(KERN_WARNING PREFIX "unknown device type 0x%x\n",
+-				 state.device[i].radio_type);
++			pr_warn("unknown device type 0x%x\n",
++				state.device[i].radio_type);
+ 			continue;
+ 		}
+ 
+ 		if (!state.device[i].vendor_id) {
+-			printk(KERN_WARNING PREFIX "zero device %d while %d "
+-			       "reported\n", i, state.count);
++			pr_warn("zero device %d while %d reported\n",
++				i, state.count);
+ 			continue;
+ 		}
+ 
+@@ -755,8 +747,7 @@ static int __devinit hp_wmi_rfkill2_setup(struct platform_device *device)
+ 				    IS_HWBLOCKED(state.device[i].power));
+ 
+ 		if (!(state.device[i].power & HPWMI_POWER_BIOS))
+-			printk(KERN_INFO PREFIX "device %s blocked by BIOS\n",
+-			       name);
++			pr_info("device %s blocked by BIOS\n", name);
+ 
+ 		err = rfkill_register(rfkill);
+ 		if (err) {
 -- 
 1.7.4.2.g597a6.dirty
