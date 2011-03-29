@@ -1,38 +1,50 @@
-From: Frederick van der Wyck <fvanderwyck@gmail.com>
-Subject: Re: [PATCH v2] Platform: Samsung Q10 backlight driver
-Date: Mon, 28 Mar 2011 23:14:13 +0100
-Message-ID: <20110328221413.GA7620@ntl>
-References: <20110221223743.GA8548@lat.lan>
- <20110222052709.GA11681@core.coreip.homeip.net>
- <20110222212703.GA7292@lat.lan>
- <20110311174329.GI16652@srcf.ucam.org>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] eeepc-wmi: Add support for T101MT
+ Home/Express Gate key
+Date: Mon, 28 Mar 2011 23:33:41 -0700
+Message-ID: <20110329063341.GA26490@core.coreip.homeip.net>
+References: <AANLkTi=U2Qkqv7FKfe18f0a=8Xg0QwRX_cxFj-j7ZPC=@mail.gmail.com>
+	<1301337224-3293-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:40680 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753979Ab1C1WN6 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Mar 2011 18:13:58 -0400
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110311174329.GI16652@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1301337224-3293-1-git-send-email-seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
+List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
+	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Seth Forshee <seth.forshee-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Chris Bagwell <chris-ZCD0YumhXB+iMFqZbmIluw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Matthew,
+On Mon, Mar 28, 2011 at 01:33:41PM -0500, Seth Forshee wrote:
+> On Mon, Mar 28, 2011 at 02:14:33PM +0000, Corentin Chary wrote:
+> > But since Dmitry and Chris seems to prefer the autorepeat approach
+> > with a single key code, if it works then it's ok, we just need to set
+> > REP_DELAY, report press and release events, and drop 0xea events.
+> 
+> New patches follow. I didn't set REP_DELAY (or REP_PERIOD) because the
+> input core interprets this to mean that the driver will handle the
+> autorepeat itself. There's always EVIOCSREP to change the delay and
+> repeat period from userspace.
 
-On Fri, Mar 11, 2011 at 05:43:29PM +0000, Matthew Garrett wrote:
-> Hm. This patch makes both git-am and patch very unhappy, in that they 
-> fail to create samsung-q10.c despite it not already existing. How did 
-> you generate it?
+Just an FYI: it is perfectly fine to set custom REP_DELAY and REP_PERIOD
+after registering an input device.
 
-Did you get the chance to try applying the new copy of the Samsung
-Q10 patch I sent in response to your message above? I guess you're
-waiting to do it along with the next round of patches, but please
-let me know if you tried and it still caused problems, so I can
-fix it for next time.
+Thanks.
 
-Thanks,
-Frederick
+-- 
+Dmitry
+
+------------------------------------------------------------------------------
+Enable your software for Intel(R) Active Management Technology to meet the
+growing manageability and security demands of your customers. Businesses
+are taking advantage of Intel(R) vPro (TM) technology - will your software 
+be a part of the solution? Download the Intel(R) Manageability Checker 
+today! http://p.sf.net/sfu/intel-dev2devmar
