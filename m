@@ -1,157 +1,130 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 06/23] dell: Convert printks to pr_<level>
-Date: Tue, 29 Mar 2011 15:21:37 -0700
-Message-ID: <0d6e50d5caa832a8a9bf20996991ab56c576b894.1301436234.git.joe@perches.com>
+Subject: [PATCH 07/23] eeepc: Use pr_warn
+Date: Tue, 29 Mar 2011 15:21:38 -0700
+Message-ID: <50c96cbf511199e7a42d178028d513623bc4ba3d.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add pr_fmt.
-Remove hard coded prefixes and use pr_<level>.
+Just a trivial pr_warning to pr_warn conversion
+while adding a few missing newlines.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/dell-laptop.c  |   12 ++++++------
- drivers/platform/x86/dell-wmi-aio.c |    3 ++-
- drivers/platform/x86/dell-wmi.c     |   17 ++++++++---------
- 3 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c |   20 ++++++++++----------
+ drivers/platform/x86/eeepc-wmi.c    |   14 +++++++-------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index de301aa..d3841de 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -11,6 +11,8 @@
-  *  published by the Free Software Foundation.
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-@@ -434,8 +436,7 @@ static int __init dell_setup_rfkill(void)
- 	int ret;
- 
- 	if (dmi_check_system(dell_blacklist)) {
--		printk(KERN_INFO "dell-laptop: Blacklisted hardware detected - "
--				"not enabling rfkill\n");
-+		pr_info("Blacklisted hardware detected - not enabling rfkill\n");
- 		return 0;
- 	}
- 
-@@ -606,7 +607,7 @@ static int __init dell_init(void)
- 	dmi_walk(find_tokens, NULL);
- 
- 	if (!da_tokens)  {
--		printk(KERN_INFO "dell-laptop: Unable to find dmi tokens\n");
-+		pr_info("Unable to find dmi tokens\n");
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index 5f2dd38..e5feadd 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -228,7 +228,7 @@ static int set_acpi(struct eeepc_laptop *eeepc, int cm, int value)
  		return -ENODEV;
- 	}
  
-@@ -636,14 +637,13 @@ static int __init dell_init(void)
- 	ret = dell_setup_rfkill();
+ 	if (write_acpi_int(eeepc->handle, method, value))
+-		pr_warning("Error writing %s\n", method);
++		pr_warn("Error writing %s\n", method);
+ 	return 0;
+ }
  
- 	if (ret) {
--		printk(KERN_WARNING "dell-laptop: Unable to setup rfkill\n");
-+		pr_warn("Unable to setup rfkill\n");
- 		goto fail_rfkill;
- 	}
+@@ -243,7 +243,7 @@ static int get_acpi(struct eeepc_laptop *eeepc, int cm)
+ 		return -ENODEV;
  
- 	ret = i8042_install_filter(dell_laptop_i8042_filter);
- 	if (ret) {
--		printk(KERN_WARNING
--		       "dell-laptop: Unable to install key filter\n");
-+		pr_warn("Unable to install key filter\n");
- 		goto fail_filter;
- 	}
+ 	if (read_acpi_int(eeepc->handle, method, &value))
+-		pr_warning("Error reading %s\n", method);
++		pr_warn("Error reading %s\n", method);
+ 	return value;
+ }
  
-diff --git a/drivers/platform/x86/dell-wmi-aio.c b/drivers/platform/x86/dell-wmi-aio.c
-index 0ed8457..3f94545 100644
---- a/drivers/platform/x86/dell-wmi-aio.c
-+++ b/drivers/platform/x86/dell-wmi-aio.c
-@@ -15,6 +15,7 @@
-  *  along with this program; if not, write to the Free Software
-  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  */
-+
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/kernel.h>
-@@ -138,7 +139,7 @@ static int __init dell_wmi_aio_init(void)
- 
- 	guid = dell_wmi_aio_find();
- 	if (!guid) {
--		pr_warning("No known WMI GUID found\n");
-+		pr_warn("No known WMI GUID found\n");
- 		return -ENXIO;
- 	}
- 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 77f1d55..ce79082 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -23,6 +23,8 @@
-  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -141,7 +143,7 @@ static void dell_wmi_notify(u32 value, void *context)
- 
- 	status = wmi_get_event_data(value, &response);
+@@ -261,7 +261,7 @@ static int acpi_setter_handle(struct eeepc_laptop *eeepc, int cm,
+ 	status = acpi_get_handle(eeepc->handle, (char *)method,
+ 				 handle);
  	if (status != AE_OK) {
--		printk(KERN_INFO "dell-wmi: bad event status 0x%x\n", status);
-+		pr_info("bad event status 0x%x\n", status);
- 		return;
+-		pr_warning("Error finding %s\n", method);
++		pr_warn("Error finding %s\n", method);
+ 		return -ENODEV;
  	}
- 
-@@ -153,8 +155,8 @@ static void dell_wmi_notify(u32 value, void *context)
- 		u16 *buffer_entry = (u16 *)obj->buffer.pointer;
- 
- 		if (dell_new_hk_type && (buffer_entry[1] != 0x10)) {
--			printk(KERN_INFO "dell-wmi: Received unknown WMI event"
--					 " (0x%x)\n", buffer_entry[1]);
-+			pr_info("Received unknown WMI event (0x%x)\n",
-+				buffer_entry[1]);
- 			kfree(obj);
- 			return;
+ 	return 0;
+@@ -417,7 +417,7 @@ static ssize_t store_cpufv_disabled(struct device *dev,
+ 	switch (value) {
+ 	case 0:
+ 		if (eeepc->cpufv_disabled)
+-			pr_warning("cpufv enabled (not officially supported "
++			pr_warn("cpufv enabled (not officially supported "
+ 				"on this model)\n");
+ 		eeepc->cpufv_disabled = false;
+ 		return rv;
+@@ -601,7 +601,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
+ 	if (eeepc->hotplug_slot) {
+ 		bus = pci_find_bus(0, 1);
+ 		if (!bus) {
+-			pr_warning("Unable to find PCI bus 1?\n");
++			pr_warn("Unable to find PCI bus 1?\n");
+ 			goto out_unlock;
  		}
-@@ -167,8 +169,7 @@ static void dell_wmi_notify(u32 value, void *context)
- 		key = sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
- 							reported_key);
- 		if (!key) {
--			printk(KERN_INFO "dell-wmi: Unknown key %x pressed\n",
--				reported_key);
-+			pr_info("Unknown key %x pressed\n", reported_key);
- 		} else if ((key->keycode == KEY_BRIGHTNESSUP ||
- 			    key->keycode == KEY_BRIGHTNESSDOWN) && acpi_video) {
- 			/* Don't report brightness notifications that will also
-@@ -275,7 +276,7 @@ static int __init dell_wmi_init(void)
- 	acpi_status status;
  
- 	if (!wmi_has_guid(DELL_EVENT_GUID)) {
--		printk(KERN_WARNING "dell-wmi: No known WMI GUID found\n");
-+		pr_warn("No known WMI GUID found\n");
+@@ -612,12 +612,12 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc)
+ 		absent = (l == 0xffffffff);
+ 
+ 		if (blocked != absent) {
+-			pr_warning("BIOS says wireless lan is %s, "
+-					"but the pci device is %s\n",
++			pr_warn("BIOS says wireless lan is %s, "
++				"but the pci device is %s\n",
+ 				blocked ? "blocked" : "unblocked",
+ 				absent ? "absent" : "present");
+-			pr_warning("skipped wireless hotplug as probably "
+-					"inappropriate for this model\n");
++			pr_warn("skipped wireless hotplug as probably "
++				"inappropriate for this model\n");
+ 			goto out_unlock;
+ 		}
+ 
+@@ -671,7 +671,7 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+ 						     eeepc_rfkill_notify,
+ 						     eeepc);
+ 		if (ACPI_FAILURE(status))
+-			pr_warning("Failed to register notify on %s\n", node);
++			pr_warn("Failed to register notify on %s\n", node);
+ 	} else
  		return -ENODEV;
- 	}
  
-@@ -290,9 +291,7 @@ static int __init dell_wmi_init(void)
- 					 dell_wmi_notify, NULL);
- 	if (ACPI_FAILURE(status)) {
- 		dell_wmi_input_destroy();
--		printk(KERN_ERR
--			"dell-wmi: Unable to register notify handler - %d\n",
--			status);
-+		pr_err("Unable to register notify handler - %d\n", status);
- 		return -ENODEV;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 0ddc434..4155884 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -82,7 +82,7 @@ static const struct key_entry eeepc_wmi_keymap[] = {
+ static acpi_status eeepc_wmi_parse_device(acpi_handle handle, u32 level,
+ 						 void *context, void **retval)
+ {
+-	pr_warning("Found legacy ATKD device (%s)", EEEPC_ACPI_HID);
++	pr_warn("Found legacy ATKD device (%s)\n", EEEPC_ACPI_HID);
+ 	*(bool *)context = true;
+ 	return AE_CTRL_TERMINATE;
+ }
+@@ -103,12 +103,12 @@ static int eeepc_wmi_check_atkd(void)
+ static int eeepc_wmi_probe(struct platform_device *pdev)
+ {
+ 	if (eeepc_wmi_check_atkd()) {
+-		pr_warning("WMI device present, but legacy ATKD device is also "
+-			   "present and enabled.");
+-		pr_warning("You probably booted with acpi_osi=\"Linux\" or "
+-			   "acpi_osi=\"!Windows 2009\"");
+-		pr_warning("Can't load eeepc-wmi, use default acpi_osi "
+-			   "(preferred) or eeepc-laptop");
++		pr_warn("WMI device present, but legacy ATKD device is also "
++			"present and enabled\n");
++		pr_warn("You probably booted with acpi_osi=\"Linux\" or "
++			"acpi_osi=\"!Windows 2009\"\n");
++		pr_warn("Can't load eeepc-wmi, use default acpi_osi "
++			"(preferred) or eeepc-laptop\n");
+ 		return -EBUSY;
  	}
- 
+ 	return 0;
 -- 
 1.7.4.2.g597a6.dirty
