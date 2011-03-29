@@ -1,45 +1,62 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 13/23] intel_menlow: Add pr_fmt and use pr_<level>
-Date: Tue, 29 Mar 2011 15:21:44 -0700
-Message-ID: <5ded04772957a76cc84832130be36f368035557d.1301436234.git.joe@perches.com>
+Subject: [PATCH 15/23] msi-laptop: pr_<level> neatening
+Date: Tue, 29 Mar 2011 15:21:46 -0700
+Message-ID: <d4a53369c7b28b2c673661325b75c6eb23f61505.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, Sujith Thomas <sujith.thomas@intel.com>
+To: Matthew Garrett <mjg@redhat.com>, "Lee, Chun-Yi" <jlee@novell.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add pr_fmt to prefix the logging messages.
-Convert printk to pr_<level>.
+Just making it a bit more like other logging message uses.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/intel_menlow.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/msi-laptop.c |    9 ++++-----
+ 1 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-index eacd5da..809adea 100644
---- a/drivers/platform/x86/intel_menlow.c
-+++ b/drivers/platform/x86/intel_menlow.c
-@@ -27,6 +27,8 @@
-  *  to get/set bandwidth.
-  */
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index 23fb2af..f89c0b6 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -447,7 +447,7 @@ static struct platform_device *msipf_device;
  
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -135,8 +137,7 @@ static int memory_set_cur_bandwidth(struct thermal_cooling_device *cdev,
- 	    acpi_evaluate_integer(handle, MEMORY_SET_BANDWIDTH, &arg_list,
- 				  &temp);
+ static int dmi_check_cb(const struct dmi_system_id *id)
+ {
+-	pr_info("Identified laptop model '%s'.\n", id->ident);
++	pr_info("Identified laptop model '%s'\n", id->ident);
+ 	return 1;
+ }
  
--	printk(KERN_INFO
--	       "Bandwidth value was %ld: status is %d\n", state, status);
-+	pr_info("Bandwidth value was %ld: status is %d\n", state, status);
- 	if (ACPI_FAILURE(status))
- 		return -EFAULT;
+@@ -875,8 +875,7 @@ static int __init msi_init(void)
+ 	/* Register backlight stuff */
  
+ 	if (acpi_video_backlight_support()) {
+-		pr_info("Brightness ignored, must be controlled "
+-		       "by ACPI video driver\n");
++		pr_info("Brightness ignored, must be controlled by ACPI video driver\n");
+ 	} else {
+ 		struct backlight_properties props;
+ 		memset(&props, 0, sizeof(struct backlight_properties));
+@@ -930,7 +929,7 @@ static int __init msi_init(void)
+ 	if (auto_brightness != 2)
+ 		set_auto_brightness(auto_brightness);
+ 
+-	pr_info("driver "MSI_DRIVER_VERSION" successfully loaded.\n");
++	pr_info("driver " MSI_DRIVER_VERSION " successfully loaded\n");
+ 
+ 	return 0;
+ 
+@@ -978,7 +977,7 @@ static void __exit msi_cleanup(void)
+ 	if (auto_brightness != 2)
+ 		set_auto_brightness(1);
+ 
+-	pr_info("driver unloaded.\n");
++	pr_info("driver unloaded\n");
+ }
+ 
+ module_init(msi_init);
 -- 
 1.7.4.2.g597a6.dirty
