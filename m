@@ -1,43 +1,66 @@
-From: Joe Perches <joe@perches.com>
-Subject: [PATCH 02/23] ibm_rtl: Remove warnings from casts of pointer to int
-Date: Tue, 29 Mar 2011 15:21:33 -0700
-Message-ID: <eb6d14b87417ac78c65dde4997f8ccb842391732.1301436234.git.joe@perches.com>
-References: <cover.1301436234.git.joe@perches.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1301436234.git.joe@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
+Subject: Re: [PATCH 08/23] fujitsu-laptop: Convert printks to pr_<level>
+Date: Wed, 30 Mar 2011 08:12:10 +0930 (CST)
+Message-ID: <201103292242.p2TMgAET020124@turbo.physics.adelaide.edu.au>
+References: <20baaa2f09235d33f2cf751eaf6ad6f1bbb24d64.1301436234.git.joe@perches.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from adelphi.physics.adelaide.edu.au ([129.127.102.1]:34580 "EHLO
+	adelphi.physics.adelaide.edu.au" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751698Ab1C2Wra (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 29 Mar 2011 18:47:30 -0400
+In-Reply-To: <20baaa2f09235d33f2cf751eaf6ad6f1bbb24d64.1301436234.git.joe@perches.com> from "Joe Perches" at Mar 29, 2011 03:21:39 PM
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Just print them as %p.
+> Added pr_fmt, converted printks and removed hard coded prefixes.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/platform/x86/ibm_rtl.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
 
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index 94a114a..f0b0683 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -275,7 +275,7 @@ static int __init ibm_rtl_init(void) {
- 		if ((readq(&tmp->signature) & RTL_MASK) == RTL_SIGNATURE) {
- 			phys_addr_t addr;
- 			unsigned int plen;
--			RTL_DEBUG("found RTL_SIGNATURE at %#llx\n", (u64)tmp);
-+			RTL_DEBUG("found RTL_SIGNATURE at %p\n", tmp);
- 			rtl_table = tmp;
- 			/* The address, value, width and offset are platform
- 			 * dependent and found in the ibm_rtl_table */
-@@ -287,7 +287,7 @@ static int __init ibm_rtl_init(void) {
- 			RTL_DEBUG("addr = %#llx\n", (unsigned long long)addr);
- 			plen = rtl_cmd_width/sizeof(char);
- 			rtl_cmd_addr = rtl_port_map(addr, plen);
--			RTL_DEBUG("rtl_cmd_addr = %#llx\n", (u64)rtl_cmd_addr);
-+			RTL_DEBUG("rtl_cmd_addr = %p\n", rtl_cmd_addr);
- 			if (!rtl_cmd_addr) {
- 				ret = -ENOMEM;
- 				break;
--- 
-1.7.4.2.g597a6.dirty
+But see comment below.
+
+OOI, what does pr_*() give us over printk()?  I presume it makes it easier
+to selectively remove certain printk levels from the kernel image in the
+name of size reduction.
+
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 493054c..6b26666 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> :
+> @@ -907,8 +907,8 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+>  		if (result == 0) {
+>  			fujitsu_hotkey->logolamp_registered = 1;
+>  		} else {
+> -			printk(KERN_ERR "fujitsu-laptop: Could not register "
+> -			"LED handler for logo lamp, error %i\n", result);
+> +			pr_err("Could not register LED handler for logo lamp, error %i\n",
+> +			       result);
+>  		}
+>  	}
+>  
+> @@ -919,8 +919,8 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+>  		if (result == 0) {
+>  			fujitsu_hotkey->kblamps_registered = 1;
+>  		} else {
+> -			printk(KERN_ERR "fujitsu-laptop: Could not register "
+> -			"LED handler for keyboard lamps, error %i\n", result);
+> +			pr_err("Could not register LED handler for keyboard lamps, error %i\n",
+> +			       result);
+>  		}
+>  	}
+>  #endif
+
+Some people *may* insist that these long (>80 character) pr_err() lines be
+split so they remain <80 in length.  This was the reason why the original
+printk() call was split like it was.
+
+Regards
+  jonathan
