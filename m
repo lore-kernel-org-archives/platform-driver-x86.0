@@ -1,122 +1,100 @@
 From: Joe Perches <joe@perches.com>
-Subject: [PATCH 03/23] acer-wmi: pr_<level> cleanups
-Date: Tue, 29 Mar 2011 15:21:34 -0700
-Message-ID: <4c2d34198b3331f0df654f2e75e4e85d6d1b50cb.1301436234.git.joe@perches.com>
+Subject: [PATCH 05/23] compal-laptop: Convert printks to pr_<level>
+Date: Tue, 29 Mar 2011 15:21:36 -0700
+Message-ID: <884fbb2e33c99f00d795a9c360fef46da6ddfcb7.1301436234.git.joe@perches.com>
 References: <cover.1301436234.git.joe@perches.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1301436234.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>
+To: Matthew Garrett <mjg@redhat.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert pr_warning to pr_warn.
-Add some missing newlines to pr_<level> uses.
+Add pr_fmt.
+Convert printks to pr_<level> removing DRIVER_NAME prefix.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/acer-wmi.c |   32 ++++++++++++++++----------------
- 1 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/platform/x86/compal-laptop.c |   22 +++++++++-------------
+ 1 files changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 5ea6c34..0b23b75 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1081,7 +1081,7 @@ static acpi_status wmid3_get_device_status(u32 *value, u16 device)
- 		return AE_ERROR;
- 	}
- 	if (obj->buffer.length != 8) {
--		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
-+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
- 		kfree(obj);
- 		return AE_ERROR;
- 	}
-@@ -1090,8 +1090,8 @@ static acpi_status wmid3_get_device_status(u32 *value, u16 device)
- 	kfree(obj);
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index c16a276..4c4a742 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -68,6 +68,8 @@
+  * only enabled on a JHL90 board until it is verified that they work on the
+  * other boards too.  See the extra_features variable. */
  
- 	if (return_value.error_code || return_value.ec_return_value)
--		pr_warning("Get Device Status failed: "
--			"0x%x - 0x%x\n", return_value.error_code,
-+		pr_warn("Get Device Status failed: 0x%x - 0x%x\n",
-+			return_value.error_code,
- 			return_value.ec_return_value);
- 	else
- 		*value = !!(return_value.devices & device);
-@@ -1317,7 +1317,7 @@ static void acer_wmi_notify(u32 value, void *context)
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -760,16 +762,14 @@ static struct rfkill *bt_rfkill;
  
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
--		pr_warning("bad event status 0x%x\n", status);
-+		pr_warn("bad event status 0x%x\n", status);
- 		return;
- 	}
- 
-@@ -1326,12 +1326,12 @@ static void acer_wmi_notify(u32 value, void *context)
- 	if (!obj)
- 		return;
- 	if (obj->type != ACPI_TYPE_BUFFER) {
--		pr_warning("Unknown response received %d\n", obj->type);
-+		pr_warn("Unknown response received %d\n", obj->type);
- 		kfree(obj);
- 		return;
- 	}
- 	if (obj->buffer.length != 8) {
--		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
-+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
- 		kfree(obj);
- 		return;
- 	}
-@@ -1356,11 +1356,11 @@ static void acer_wmi_notify(u32 value, void *context)
- 		}
- 		if (!sparse_keymap_report_event(acer_wmi_input_dev,
- 				return_value.key_num, 1, true))
--			pr_warning("Unknown key number - 0x%x\n",
-+			pr_warn("Unknown key number - 0x%x\n",
- 				return_value.key_num);
- 		break;
- 	default:
--		pr_warning("Unknown function number - %d - %d\n",
-+		pr_warn("Unknown function number - %d - %d\n",
- 			return_value.function, return_value.key_num);
- 		break;
- 	}
-@@ -1389,7 +1389,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
- 		return AE_ERROR;
- 	}
- 	if (obj->buffer.length != 4) {
--		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
-+		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
- 		kfree(obj);
- 		return AE_ERROR;
- 	}
-@@ -1414,11 +1414,11 @@ static int acer_wmi_enable_ec_raw(void)
- 	status = wmid3_set_lm_mode(&params, &return_value);
- 
- 	if (return_value.error_code || return_value.ec_return_value)
--		pr_warning("Enabling EC raw mode failed: "
--		       "0x%x - 0x%x\n", return_value.error_code,
--		       return_value.ec_return_value);
-+		pr_warn("Enabling EC raw mode failed: 0x%x - 0x%x\n",
-+			return_value.error_code,
-+			return_value.ec_return_value);
- 	else
--		pr_info("Enabled EC raw mode");
-+		pr_info("Enabled EC raw mode\n");
- 
- 	return status;
+ static int dmi_check_cb(const struct dmi_system_id *id)
+ {
+-	printk(KERN_INFO DRIVER_NAME": Identified laptop model '%s'\n",
+-		id->ident);
++	pr_info("Identified laptop model '%s'\n", id->ident);
+ 	extra_features = false;
+ 	return 1;
  }
-@@ -1437,9 +1437,9 @@ static int acer_wmi_enable_lm(void)
- 	status = wmid3_set_lm_mode(&params, &return_value);
  
- 	if (return_value.error_code || return_value.ec_return_value)
--		pr_warning("Enabling Launch Manager failed: "
--		       "0x%x - 0x%x\n", return_value.error_code,
--		       return_value.ec_return_value);
-+		pr_warn("Enabling Launch Manager failed: 0x%x - 0x%x\n",
-+			return_value.error_code,
-+			return_value.ec_return_value);
+ static int dmi_check_cb_extra(const struct dmi_system_id *id)
+ {
+-	printk(KERN_INFO DRIVER_NAME": Identified laptop model '%s', "
+-		"enabling extra features\n",
++	pr_info("Identified laptop model '%s', enabling extra features\n",
+ 		id->ident);
+ 	extra_features = true;
+ 	return 1;
+@@ -956,14 +956,12 @@ static int __init compal_init(void)
+ 	int ret;
  
- 	return status;
+ 	if (acpi_disabled) {
+-		printk(KERN_ERR DRIVER_NAME": ACPI needs to be enabled for "
+-						"this driver to work!\n");
++		pr_err("ACPI needs to be enabled for this driver to work!\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	if (!force && !dmi_check_system(compal_dmi_table)) {
+-		printk(KERN_ERR DRIVER_NAME": Motherboard not recognized (You "
+-				"could try the module's force-parameter)");
++		pr_err("Motherboard not recognized (You could try the module's force-parameter)\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -998,8 +996,7 @@ static int __init compal_init(void)
+ 	if (ret)
+ 		goto err_rfkill;
+ 
+-	printk(KERN_INFO DRIVER_NAME": Driver "DRIVER_VERSION
+-						" successfully loaded\n");
++	pr_info("Driver " DRIVER_VERSION " successfully loaded\n");
+ 	return 0;
+ 
+ err_rfkill:
+@@ -1064,7 +1061,7 @@ static void __exit compal_cleanup(void)
+ 	rfkill_destroy(wifi_rfkill);
+ 	rfkill_destroy(bt_rfkill);
+ 
+-	printk(KERN_INFO DRIVER_NAME": Driver unloaded\n");
++	pr_info("Driver unloaded\n");
  }
+ 
+ static int __devexit compal_remove(struct platform_device *pdev)
+@@ -1074,8 +1071,7 @@ static int __devexit compal_remove(struct platform_device *pdev)
+ 	if (!extra_features)
+ 		return 0;
+ 
+-	printk(KERN_INFO DRIVER_NAME": Unloading: resetting fan control "
+-							"to motherboard\n");
++	pr_info("Unloading: resetting fan control to motherboard\n");
+ 	pwm_disable_control();
+ 
+ 	data = platform_get_drvdata(pdev);
 -- 
 1.7.4.2.g597a6.dirty
