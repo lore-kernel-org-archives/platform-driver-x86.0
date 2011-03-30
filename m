@@ -1,48 +1,53 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH] [256/275] classmate-laptop: depends on RFKILL or RFKILL=n
-Date: Wed, 30 Mar 2011 14:08:23 -0700 (PDT)
-Message-ID: <20110330210823.3951A3E1A05@tassilo.jf.intel.com>
-References: <20110330203.501921634@firstfloor.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110330203.501921634@firstfloor.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cascardo@holoscopio.com, mjg@redhat.com, ak@linux.intel.com, randy.dunlap@oracle.com, platform-driver-x86@vger.kernel.org, don@syst.com.br, linux-kernel@vger.kernel.org, stable@kernel.
-List-Id: platform-driver-x86.vger.kernel.org
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: [PATCH -rc1] msi-laptop: fix config-dependent build error
+Date: Wed, 30 Mar 2011 15:20:22 -0700
+Message-ID: <20110330152022.9b3e6942.randy.dunlap@oracle.com>
+References: <AANLkTikwbY5mm10ZWg7B6XeSBkZXFqKcYVZfJCi2QGx_@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from rcsinet10.oracle.com ([148.87.113.121]:59574 "EHLO
+	rcsinet10.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933018Ab1C3WUg (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 30 Mar 2011 18:20:36 -0400
+In-Reply-To: <AANLkTikwbY5mm10ZWg7B6XeSBkZXFqKcYVZfJCi2QGx_@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, "Lee, Chun-Yi" <jlee@novell.com>
 
-2.6.35-longterm review patch.  If anyone has any objections, please let me know.
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
-------------------
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+The msi-laptop driver uses input_*() and sparse_keymap_*() interfaces.
+It should depend on the INPUT subsystem being present and select
+INPUT_SPARSEKMAP so that those interfaces are present.
 
-[ upstream commit f35843ed8d17562f7c5da4b34a4a81b0cc450e9e ]
+ERROR: "input_free_device" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "input_register_device" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "sparse_keymap_setup" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "input_allocate_device" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "sparse_keymap_report_event" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "input_unregister_device" [drivers/platform/x86/msi-laptop.ko] undefined!
+ERROR: "sparse_keymap_free" [drivers/platform/x86/msi-laptop.ko] undefined!
 
-Randy Dunlap has reported that building classmate-laptop fails when
-CONFIG_RFKILL=m and CONFIG_ACPI_CMPC=y. He suggested depending on
-RFKILL, but, then, it will not be possible to select classmate-laptop
-when RFKILL is off. There's no known problem with building and using
-classmate-laptop with RFKILL off. So depend on RFKILL or RFKILL=n.
-
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Signed-off-by: Matthew Garrett <mjg@redhat.com>
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Reported-by: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Daniel Oliveira Nascimento <don@syst.com.br>
-
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: "Lee, Chun-Yi" <jlee@novell.com>
 ---
- drivers/platform/x86/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Index: linux-2.6.35.y/drivers/platform/x86/Kconfig
-===================================================================
---- linux-2.6.35.y.orig/drivers/platform/x86/Kconfig	2011-03-29 23:03:58.646799545 -0700
-+++ linux-2.6.35.y/drivers/platform/x86/Kconfig	2011-03-29 23:04:02.297706128 -0700
-@@ -520,6 +520,7 @@
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on X86 && ACPI
-+	depends on RFKILL || RFKILL=n
- 	select INPUT
- 	select BACKLIGHT_CLASS_DEVICE
- 	default n
+--- lnx-2639-rc1.orig/drivers/platform/x86/Kconfig
++++ lnx-2639-rc1/drivers/platform/x86/Kconfig
+@@ -187,7 +187,8 @@ config MSI_LAPTOP
+ 	depends on ACPI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on RFKILL
+-	depends on SERIO_I8042
++	depends on INPUT && SERIO_I8042
++	select INPUT_SPARSEKMAP
+ 	---help---
+ 	  This is a driver for laptops built by MSI (MICRO-STAR
+ 	  INTERNATIONAL):
