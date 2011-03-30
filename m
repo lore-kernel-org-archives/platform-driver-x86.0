@@ -1,42 +1,30 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 09/23] hdaps: Convert printks to pr_<level>
-Date: Tue, 29 Mar 2011 19:00:30 -0700
-Message-ID: <1301450430.4113.24.camel@Joe-Laptop>
-References: <cover.1301436234.git.joe@perches.com>
-	 <f4fbd2191533fd96fa59ba19c9917ed679920e1b.1301436234.git.joe@perches.com>
-	 <AANLkTikWbHSPaCTStEz5v=gEvm-nG6MU2eSCq9G8eZtD@mail.gmail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Adding platform-driver-x86 on patchwork.kernel.org
+Date: Wed, 30 Mar 2011 07:26:06 +0000
+Message-ID: <AANLkTinFtATb=Cbsp0Kxxizm5h3Hg9mVFvKaw=gzt+g1@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.perches.com ([173.55.12.10]:4411 "EHLO mail.perches.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755348Ab1C3CAc (ORCPT
+Received: from mail-ew0-f46.google.com ([209.85.215.46]:58483 "EHLO
+	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751852Ab1C3H0I (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Mar 2011 22:00:32 -0400
-In-Reply-To: <AANLkTikWbHSPaCTStEz5v=gEvm-nG6MU2eSCq9G8eZtD@mail.gmail.com>
+	Wed, 30 Mar 2011 03:26:08 -0400
+Received: by ewy4 with SMTP id 4so303360ewy.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Mar 2011 00:26:06 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lucas De Marchi <lucas.de.marchi@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Frank Seidel <frank@f-seidel.de>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Tue, 2011-03-29 at 22:54 -0300, Lucas De Marchi wrote:
-> > diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
-> > @@ -238,7 +240,7 @@ static int hdaps_device_init(void)
-> >                     __check_latch(0x1611, 0x01))
-> >                goto out;
-> >
-> > -       printk(KERN_DEBUG "hdaps: initial latch check good (0x%02x).\n",
-> > +       printk(KERN_DEBUG "hdaps: initial latch check good (0x%02x)\n",
-> 
-> Shouldn't this be pr_debug() or pr_devel() ?
+Hi,
+I think it would be a good idea to add platform-driver-x86 on
+patchwork.kernel.org. What do you think about it ?
+Does anywone know who to contact to do that (webmaster@kernel.org is
+the closest thing I found) ?
+The goal is not really to track applied/not-applied patchs, but more
+to get a good overview of the patchs, without the discussion overhead.
 
-Hi Lucas.
-
-Using pr_debug changes behavior unless
-CONFIG_DYNAMIC_DEBUG or #define DEBUG is used.
-
-I prefer not to change those unless there's
-agreement.
-
-cheers, Joe
+-- 
+Corentin Chary
+http://xf.iksaif.net
