@@ -1,39 +1,46 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH v3 2/3] eeepc-wmi: Add support for T101MT Home/Express
- Gate key
-Date: Wed, 30 Mar 2011 07:46:50 +0000
-Message-ID: <AANLkTinkVF2moqDHVmH4Wb+Frtg=qGs1-Y0w3X6CCtWN@mail.gmail.com>
-References: <AANLkTi=U2Qkqv7FKfe18f0a=8Xg0QwRX_cxFj-j7ZPC=@mail.gmail.com>
-	<1301337224-3293-1-git-send-email-seth.forshee@canonical.com>
-	<1301337224-3293-3-git-send-email-seth.forshee@canonical.com>
-	<AANLkTi=QJzVt=tR2mUmaRwvhNz5eeV0BE1LB0-pCybNV@mail.gmail.com>
-	<20110329134702.GA13630@srcf.ucam.org>
+From: Anisse Astier <anisse@astier.eu>
+Subject: Re: [PATCH 16/23] msi-wmi: Use pr_fmt and pr_<level>
+Date: Wed, 30 Mar 2011 16:16:46 +0200
+Message-ID: <20110330161646.59743cb2@destiny.ordissimo>
+References: <cover.1301436234.git.joe@perches.com>
+	<03d9dcf405e4a12d137f1fea83bc920f0b8de923.1301436234.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:58655 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754527Ab1C3Hqw (ORCPT
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:52790 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755959Ab1C3OUV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Mar 2011 03:46:52 -0400
-In-Reply-To: <20110329134702.GA13630@srcf.ucam.org>
+	Wed, 30 Mar 2011 10:20:21 -0400
+In-Reply-To: <03d9dcf405e4a12d137f1fea83bc920f0b8de923.1301436234.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Seth Forshee <seth.forshee@canonical.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chris Bagwell <chris@cnpbagwell.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
->> I think this version is ok,
->>
->> Matthew, do you think this should be delayed for 2.6.40 (merge window
->> will close soon, so now it's probably time for fix only) ?
->
-> Yeah, I'd lean towards this being .40 material.
+Hi Joe,
 
-Seth, I've added your (rebased) patch to my tree, I'll re-send them
-with others for .40.
-Thanks !
+On Tue, 29 Mar 2011 15:21:47 -0700, Joe Perches <joe@perches.com> wrote :
 
+> Added pr_fmt.
+> Removed now unused #define DRV_PFX
+> Convert dprintk to pr_debug.
+> Convert printks to pr_<level>.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+Acked-by: Anisse Astier <anisse@astier.eu>
+
+I've been wanting to do that since I replaced original dprintk
+implementation with pr_debug. I just didn't know you could use the
+pr_fmt() macro to manipulate prefixes.
+
+Regards,
+
+Anisse
+
+> ---
+>  drivers/platform/x86/msi-wmi.c |   45 +++++++++++++++++----------------------
+>  1 files changed, 20 insertions(+), 25 deletions(-)
+> 
