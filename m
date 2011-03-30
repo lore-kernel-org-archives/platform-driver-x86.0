@@ -1,35 +1,36 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 0/3] acpi4asus's patchs for 2.6.39-rc1
-Date: Wed, 30 Mar 2011 16:32:30 +0200
-Message-ID: <1301495553-22468-1-git-send-email-corentin.chary@gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 00/23] drivers/platform/x86: Remove warnings and use
+ pr_<level>
+Date: Wed, 30 Mar 2011 08:02:44 -0700
+Message-ID: <1301497364.4113.34.camel@Joe-Laptop>
+References: <cover.1301436234.git.joe@perches.com>
+	 <AANLkTik9KH_oU-u8gik12J7WEQTAm4tB+6R5kWFWikgx@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fb2.tech.numericable.fr ([82.216.111.50]:40920 "EHLO
-	fb2.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754163Ab1C3Onw (ORCPT
+Received: from mail.perches.com ([173.55.12.10]:4423 "EHLO mail.perches.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754922Ab1C3PCq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Mar 2011 10:43:52 -0400
-Received: from smtp1.tech.numericable.fr (smtp1.nc.sdv.fr [10.0.0.24])
-	by fb2.tech.numericable.fr (Postfix) with ESMTP id 9A9011BCDB1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Mar 2011 16:33:40 +0200 (CEST)
+	Wed, 30 Mar 2011 11:02:46 -0400
+In-Reply-To: <AANLkTik9KH_oU-u8gik12J7WEQTAm4tB+6R5kWFWikgx@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-Hi Matthew,
-Some small and clean fixes for 2.6.39.
-Thanks,
+On Wed, 2011-03-30 at 14:30 +0000, Corentin Chary wrote:
+> On Tue, Mar 29, 2011 at 10:21 PM, Joe Perches <joe@perches.com> wrote:
+> > Removed a couple of compilation warnings.
+> > Use pr_<level> consistently.
+> Did you do that using coccinelle or by hand ?
+> If you used coccinelle, is the .cocci file available ?
+> If not, you should try it :).
 
-Corentin Chary (3):
-  asus-laptop: remove removed features from
-    feature-removal-schedule.txt
-  asus-wmi: swap input name and phys
-  eeepc-wmi: add keys found on EeePC 1215T
+Coccinelle is a fine tool, not appropriate for everything.
 
- Documentation/feature-removal-schedule.txt |   20 --------------------
- drivers/platform/x86/asus-wmi.c            |    4 ++--
- drivers/platform/x86/eeepc-wmi.c           |    2 ++
- 3 files changed, 4 insertions(+), 22 deletions(-)
+I used a newer version of a different script, posted a couple of times.
+http://lwn.net/Articles/380161/
 
--- 
-1.7.3.4
+$ cvt_style.pl -o --convert=printk_to_pr_level drivers/platform/x86/*.c
