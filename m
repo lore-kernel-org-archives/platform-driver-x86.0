@@ -1,69 +1,73 @@
 From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH -rc1] msi-laptop: fix config-dependent build error
-Date: Thu, 31 Mar 2011 00:41:27 -0600
-Message-ID: <4D94BCC7020000230002AA34@novprvlin0050.provo.novell.com>
-References: <AANLkTikwbY5mm10ZWg7B6XeSBkZXFqKcYVZfJCi2QGx_@mail.gmail.com>
- <20110330152022.9b3e6942.randy.dunlap@oracle.com>
+Subject: Re: [PATCH 15/23] msi-laptop: pr_<level> neatening
+Date: Thu, 31 Mar 2011 00:41:32 -0600
+Message-ID: <4D94BCCC020000230002AA37@novprvlin0050.provo.novell.com>
+References: <cover.1301436234.git.joe@perches.com>
+ <d4a53369c7b28b2c673661325b75c6eb23f61505.1301436234.git.joe@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <20110330152022.9b3e6942.randy.dunlap@oracle.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d4a53369c7b28b2c673661325b75c6eb23f61505.1301436234.git.joe@perches.com>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: randy.dunlap@oracle.com
-Cc: torvalds@linux-foundation.org, mjg@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: joe@perches.com
+Cc: mjg@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2011-03-30 =E6=96=BC 15:20 -0700=EF=BC=8CRa=
-ndy Dunlap =E6=8F=90=E5=88=B0=EF=BC=9A
-> From: Randy Dunlap <randy.dunlap@oracle.com>
+=E6=96=BC =E4=BA=8C=EF=BC=8C2011-03-29 =E6=96=BC 15:21 -0700=EF=BC=8CJo=
+e Perches =E6=8F=90=E5=88=B0=EF=BC=9A
+> Just making it a bit more like other logging message uses.
 >=20
-> The msi-laptop driver uses input_*() and sparse_keymap_*() interfaces=
-=2E
-> It should depend on the INPUT subsystem being present and select
-> INPUT_SPARSEKMAP so that those interfaces are present.
->=20
-> ERROR: "input_free_device" [drivers/platform/x86/msi-laptop.ko] undef=
-ined!
-> ERROR: "input_register_device" [drivers/platform/x86/msi-laptop.ko] u=
-ndefined!
-> ERROR: "sparse_keymap_setup" [drivers/platform/x86/msi-laptop.ko] und=
-efined!
-> ERROR: "input_allocate_device" [drivers/platform/x86/msi-laptop.ko] u=
-ndefined!
-> ERROR: "sparse_keymap_report_event" [drivers/platform/x86/msi-laptop.=
-ko] undefined!
-> ERROR: "input_unregister_device" [drivers/platform/x86/msi-laptop.ko]=
- undefined!
-> ERROR: "sparse_keymap_free" [drivers/platform/x86/msi-laptop.ko] unde=
-fined!
->=20
-> Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
-> Cc: Matthew Garrett <mjg@redhat.com>
-> Cc: "Lee, Chun-Yi" <jlee@novell.com>
+> Signed-off-by: Joe Perches <joe@perches.com>
 > ---
->  drivers/platform/x86/Kconfig |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/msi-laptop.c |    9 ++++-----
+>  1 files changed, 4 insertions(+), 5 deletions(-)
 >=20
-> --- lnx-2639-rc1.orig/drivers/platform/x86/Kconfig
-> +++ lnx-2639-rc1/drivers/platform/x86/Kconfig
-> @@ -187,7 +187,8 @@ config MSI_LAPTOP
->  	depends on ACPI
->  	depends on BACKLIGHT_CLASS_DEVICE
->  	depends on RFKILL
-> -	depends on SERIO_I8042
-> +	depends on INPUT && SERIO_I8042
-> +	select INPUT_SPARSEKMAP
->  	---help---
->  	  This is a driver for laptops built by MSI (MICRO-STAR
->  	  INTERNATIONAL):
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86=
+/msi-laptop.c
+> index 23fb2af..f89c0b6 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -447,7 +447,7 @@ static struct platform_device *msipf_device;
+> =20
+>  static int dmi_check_cb(const struct dmi_system_id *id)
+>  {
+> -	pr_info("Identified laptop model '%s'.\n", id->ident);
+> +	pr_info("Identified laptop model '%s'\n", id->ident);
+>  	return 1;
+>  }
+> =20
+> @@ -875,8 +875,7 @@ static int __init msi_init(void)
+>  	/* Register backlight stuff */
+> =20
+>  	if (acpi_video_backlight_support()) {
+> -		pr_info("Brightness ignored, must be controlled "
+> -		       "by ACPI video driver\n");
+> +		pr_info("Brightness ignored, must be controlled by ACPI video driv=
+er\n");
+>  	} else {
+>  		struct backlight_properties props;
+>  		memset(&props, 0, sizeof(struct backlight_properties));
+> @@ -930,7 +929,7 @@ static int __init msi_init(void)
+>  	if (auto_brightness !=3D 2)
+>  		set_auto_brightness(auto_brightness);
+> =20
+> -	pr_info("driver "MSI_DRIVER_VERSION" successfully loaded.\n");
+> +	pr_info("driver " MSI_DRIVER_VERSION " successfully loaded\n");
+> =20
+>  	return 0;
+> =20
+> @@ -978,7 +977,7 @@ static void __exit msi_cleanup(void)
+>  	if (auto_brightness !=3D 2)
+>  		set_auto_brightness(1);
+> =20
+> -	pr_info("driver unloaded.\n");
+> +	pr_info("driver unloaded\n");
+>  }
+> =20
+>  module_init(msi_init);
 
-Thank's, it's good to me!
+Thank's, it's ok to me.
 
-Acked-by: "Lee, Chun-Yi" <jlee@novell.com>
+Acked-by: Lee, Chun-Yi <jlee@novell.com>
