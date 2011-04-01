@@ -1,33 +1,25 @@
-From: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
-Subject: Re: [PATCH 0/3] acpi4asus's patchs for 2.6.39-rc1
-Date: Fri, 1 Apr 2011 19:21:38 +0100
-Message-ID: <20110401182138.GC27762@srcf.ucam.org>
-References: <1301495553-22468-1-git-send-email-corentin.chary@gmail.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 00/23] drivers/platform/x86: Remove warnings and use
+ pr_<level>
+Date: Fri, 1 Apr 2011 19:21:50 +0100
+Message-ID: <20110401182150.GD27762@srcf.ucam.org>
+References: <cover.1301436234.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:60792 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758039Ab1DASVy (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 1 Apr 2011 14:21:54 -0400
 Content-Disposition: inline
-In-Reply-To: <1301495553-22468-1-git-send-email-corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <cover.1301436234.git.joe@perches.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-Applied the set, thanks.
+Applied to -next, thanks.
 
 -- 
-Matthew Garrett | mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org
-
-------------------------------------------------------------------------------
-Create and publish websites with WebMatrix
-Use the most popular FREE web apps or write code yourself; 
-WebMatrix provides all the features you need to develop and 
-publish your website. http://p.sf.net/sfu/ms-webmatrix-sf
+Matthew Garrett | mjg59@srcf.ucam.org
