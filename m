@@ -1,29 +1,26 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [Meego-kernel] [PATCH] platform-x86: intel_mid_thermal: Fix
- coding style
-Date: Mon, 4 Apr 2011 11:30:19 +0100
-Message-ID: <20110404113019.0ff0afc2@bob.linux.org.uk>
-References: <1301666051-27021-1-git-send-email-ameya.palande@nokia.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: linux-next: Tree for April 4 [BROKEN thinkpad_acpi]
+Date: Mon, 4 Apr 2011 13:22:25 +0100
+Message-ID: <20110404122225.GA15883@srcf.ucam.org>
+References: <BANLkTikr62YPeDnkL3DKA1Nts5aRFxsO6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:59098 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754487Ab1DDKse (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Apr 2011 06:48:34 -0400
-In-Reply-To: <1301666051-27021-1-git-send-email-ameya.palande@nokia.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ameya Palande <ameya.palande@nokia.com>
-Cc: platform-driver-x86@vger.kernel.org, meego-kernel@lists.meego.com, durgadoss.r@intel.com, mjg@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <BANLkTikr62YPeDnkL3DKA1Nts5aRFxsO6Q@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: sedat.dilek@gmail.com
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Joe Perches <joe@perches.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri,  1 Apr 2011 16:54:11 +0300
-Ameya Palande <ameya.palande@nokia.com> wrote:
+On Mon, Apr 04, 2011 at 11:21:43AM +0200, Sedat Dilek wrote:
+> My build breaked today.
+> Looks like the issue was introduced by commit
+> 2af915b1eda9a671973256540035f8a6da1d57b4:
+> "thinkpad_acpi: Convert printks to pr_<level>"
 
-> Before fixing checkpatch.pl reported 74 errors and 234 warnings
-> 
-> Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
+Yes, this seems to break the non-debug case. Joe, can you take a look? 
+I'll drop this for the moment.
 
-Acked-by: Alan Cox <alan@linux.intel.com>
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
