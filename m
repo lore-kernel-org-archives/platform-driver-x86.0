@@ -1,105 +1,121 @@
-From: Mihai =?UTF-8?B?RG9uyJt1?= <mihai.dontu@gmail.com>
-Subject: Re: [b43] usb device disconnects automatically after 1s
-Date: Sat, 2 Apr 2011 18:44:50 +0300
-Message-ID: <20110402184450.2ef19d7b@mdontu-dell>
-References: <201103170018.32061.mihai.dontu@gmail.com>
- <201103170022.24290.mihai.dontu@gmail.com>
- <AANLkTi=-B0e4VT_v+F23Q+hG_zn=JnVbmVHnFpETVrZu@mail.gmail.com>
- <201103170106.58746.mihai.dontu@gmail.com>
- <4D81FA730200002300029F0F@novprvlin0050.provo.novell.com>
+From: Sedat Dilek <sedat.dilek@googlemail.com>
+Subject: Re: linux-next: Tree for April 4 [BROKEN thinkpad_acpi]
+Date: Mon, 4 Apr 2011 11:21:43 +0200
+Message-ID: <BANLkTikr62YPeDnkL3DKA1Nts5aRFxsO6Q@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4D81FA730200002300029F0F@novprvlin0050.provo.novell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joey Lee <jlee@novell.com>
-Cc: zajec5@gmail.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qy0-f174.google.com ([209.85.216.174]:57999 "EHLO
+	mail-qy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751548Ab1DDJVo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 4 Apr 2011 05:21:44 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Joe Perches <joe@perches.com>
 
-On Wed, 16 Mar 2011 19:11:31 -0600
-"Joey Lee" <jlee@novell.com> wrote:
+On Mon, Apr 4, 2011 at 6:35 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Hi all,
+>
+> Changes since 20110401:
+>
+> Dropped tree: xen
+>
+> The net tree gained a build failure so I used the version from
+> next-20110401.
+>
 
-> Add Cc. to platform driver guys.
->=20
-> =E6=96=BC =E5=9B=9B=EF=BC=8C2011-03-17 =E6=96=BC 01:06 +0200=EF=BC=8C=
-Mihai Don=C8=9Bu =E6=8F=90=E5=88=B0=EF=BC=9A
-> > On Thursday 17 March 2011 00:35:02 Rafa=C5=82 Mi=C5=82ecki wrote:
-> > > 2011/3/16 Mihai Don=C8=9Bu <mihai.dontu@gmail.com>:
-> > > > Added linux-usb and linux-wireless to CC.
-> > > >=20
-> > > > On Thursday 17 March 2011 00:18:31 Mihai Don=C8=9Bu wrote:
-> > > >> Hi,
-> > > >>=20
-> > > >> I have just upgraded to 2.6.38 and discovered that I can't use
-> > > >> my wireless device (BCM4312 802.11a/b/g). I press Fn + F2, the
-> > > >> bluetooth led lights and after a second it turns off by
-> > > >> itself. In dmesg I'm seeing the following:
-> > > >>=20
-> > > >> [   88.167212] usb 1-2.2: new full speed USB device using
-> > > >> ehci_hcd and address 5
-> > > >> [   88.782330] usb 1-2.2: USB disconnect, address 5
-> > > >>=20
-> > > >> I switched to 2.6.37 until I'll have some time to bisect this.
-> > > >> In the mean time I have attached the output of lspci,
-> > > >> interrupts and dmesg.
-> > >=20
-> > > I suspect it's WMI related. What is your machine?
-> >=20
-> > It's a Dell Latitude D520 but I can't find a link with full specs
-> > (in English).
-> >=20
-> > > Please check:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D31002
-> > > http://comments.gmane.org/gmane.linux.acpi.devel/49577
-> > >=20
-> > > I can't help you more, I just noticed such a issue reported on
-> > > ACPI ML, you have to dig into this yourself (or someone else may
-> > > help you).
-> >=20
-> > Thanks for the links. I'll see if I can get anywhere from there.
+Hi,
 
-Today I had some time on my hands and decided to get this working.
-Which I did. So the difference between 2.6.37 and 2.6.38 is that now I
-have to invoke rfkill to enable my wireless device, because pressing
-=46n + F2 toggles the hard and soft lock states of the device _but_ onl=
-y
-to 'yes'. Pressing the key combination again will only remove the hard
-lock. On 2.6.37 it would remove both. For example:
+My build breaked today.
+Looks like the issue was introduced by commit
+2af915b1eda9a671973256540035f8a6da1d57b4:
+"thinkpad_acpi: Convert printks to pr_<level>"
 
-On 2.6.37:
-# rfkill list 0               # wifi disabled
-0: dell-wifi: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: yes
+- Sedat -
 
-# rfkill list 0               # wifi enabled (via Fn + F2)
-0: dell-wifi: Wireless LAN
-        Soft blocked: no
-        Hard blocked: no
+P.S.: Attached excerpt from my build.log
 
-(rfkill events)
-1301758599.537508: idx 0 type 1 op 2 soft 0 hard 0
-1301758600.561087: idx 2 type 1 op 2 soft 0 hard 0
+[...]
+  CC [M]  drivers/platform/x86/thinkpad_acpi.o
+[...]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'hotkey_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:3233:2:
+error: implicit declaration of function 'str_supported'
+[-Werror=implicit-function-declaration]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:3233:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:3289:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'bluetooth_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:3991:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'wan_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4179:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'uwb_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4319:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'video_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4419:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'light_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4803:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4803:2:
+warning: format '%s' expects argument of type 'char *', but argument 3
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'cmos_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:4910:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'led_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:5281:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'beep_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:5404:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'thermal_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:5737:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'volume_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:6901:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+  CC [M]  net/sched/sch_sfb.o
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:
+In function 'fan_init':
+/home/sd/src/linux-2.6/linux-2.6.39-rc1/debian/build/source_i386_none/drivers/platform/x86/thinkpad_acpi.c:8001:2:
+warning: format '%s' expects argument of type 'char *', but argument 2
+has type 'int' [-Wformat]
+  CC [M]  drivers/media/dvb/ttusb-dec/ttusbdecfe.o
+cc1: some warnings being treated as errors
 
-On 2.6.38:
-# rfkill list 0               # wifi disabled
-0: dell-wifi: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: yes
+make[7]: *** [drivers/platform/x86/thinkpad_acpi.o] Error 1
+make[6]: *** [drivers/platform/x86] Error 2
+make[5]: *** [drivers/platform] Error 2
 
-# rfkill list 0               # wifi enabled (via Fn + F2)
-0: dell-wifi: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: no
-
-(rfkill events)
-1301758830.251541: idx 0 type 1 op 2 soft 1 hard 0
-
-Is there supposed to be a piece of software that listens for these
-events and toggles the soft state whenever the hard state changes?
-
-Thanks,
-
---=20
-Mihai Don=C8=9Bu
+- Sedat -
