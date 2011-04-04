@@ -1,33 +1,58 @@
-From: Sedat Dilek <sedat.dilek@googlemail.com>
-Subject: Re: [PATCH V2 2/2] thinkpad_acpi: Convert printks to pr_<level>
-Date: Mon, 4 Apr 2011 22:53:01 +0200
-Message-ID: <BANLkTikCRLX61JUkbbo-g8CeNRf2=RK08Q@mail.gmail.com>
-References: <664bf5e5585f3d959d6c57524d09353dd8d49f3f.1301936559.git.joe@perches.com>
-	<20110404130036.GB16669@srcf.ucam.org>
-	<c428cc13a1a5953be3310237e4f404ec65968d5a.1301936559.git.joe@perches.com>
-Reply-To: sedat.dilek@gmail.com
+From: Mattia Dongili <malattia@linux.it>
+Subject: sony-laptop: fix early NULL pointer dereference
+Date: Tue, 5 Apr 2011 08:44:49 +0900
+Message-ID: <20110404234448.GA24957@kamineko.org>
+References: <AANLkTi=1xtjEZc2C1=W-v2oYbvvcGH9k_DGGXvJ8=swq@mail.gmail.com>
+ <20110401172241.GA26851@srcf.ucam.org>
+ <BANLkTikPjwowBge82viT+Ma5UnP0fA-pew@mail.gmail.com>
+ <20110402100043.GA5890@kamineko.org>
+ <BANLkTikVGWM3T1y2XvwkHB+Yub5EhG1RPA@mail.gmail.com>
+ <20110402155549.GA6724@kamineko.org>
+ <BANLkTimJa3CSWouTMJD5V0ZuMa67YXy88Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qy0-f174.google.com ([209.85.216.174]:38969 "EHLO
-	mail-qy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755649Ab1DDUxD (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Apr 2011 16:53:03 -0400
-In-Reply-To: <c428cc13a1a5953be3310237e4f404ec65968d5a.1301936559.git.joe@perches.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <BANLkTimJa3CSWouTMJD5V0ZuMa67YXy88Q@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+Cc: Andrea Gelmini <andrea.gelmini@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, anssi.hannula@iki.fi, linux-acpi@vger.kernel.org, axel.lin@gmail.com, trenn@suse.de, len.brown@intel.com, linux-kernel@vger.kernel.org, Dan Carpenter <error27@gmail.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 4, 2011 at 7:06 PM, Joe Perches <joe@perches.com> wrote:
-> Add pr_fmt.
-> Removed local TPACPI_<level> #defines, convert to pr_<level>.
-> Neaten dbg_<foo> macros.
-> Added a few missing newlines to logging messages.
-> Added static inline str_supported for !CONFIG_THINKPAD_ACPI_DEBUG vdbg_printk
-> defect reported by Sedat Dilek <sedat.dilek@googlemail.com>.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
+Author: Mattia Dongili <malattia@linux.it>
+Date:   Fri Apr 1 10:01:41 2011 +0900
 
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+    sony-laptop: fix early NULL pointer dereference
+    
+    The SNC acpi driver could get early notifications before it fully
+    initializes and that could lead to dereferencing the sony_nc_handles
+    structure pointer that is still NULL at that stage.
+    Make sure we return early from the handle lookup function in these
+    cases.
+    
+    Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+
+Hi Matthew,
+if it's not too late, can you pick this one up instead of the previous
+one (89ec2feafaedd759e53346d641f60863a14cfb9e)?
+If it's too late I'll try and do a round of return value fixes later.
+
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index b2ce172..de79c18 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -810,6 +810,11 @@ static int sony_nc_handles_cleanup(struct platform_device *pd)
+ static int sony_find_snc_handle(int handle)
+ {
+ 	int i;
++
++	/* not initialized yet, return early */
++	if (!handles)
++		return -EINVAL;
++
+ 	for (i = 0; i < 0x10; i++) {
+ 		if (handles->cap[i] == handle) {
+ 			dprintk("found handle 0x%.4x (offset: 0x%.2x)\n",
+-- 
+mattia
+:wq!
