@@ -1,87 +1,124 @@
-From: Dan Carpenter <error27@gmail.com>
-Subject: Re: sony-laptop: fix early NULL pointer dereference
-Date: Tue, 5 Apr 2011 15:50:56 +0300
-Message-ID: <BANLkTin43y37DDWo9hCLVi9Gua1C3O=Law@mail.gmail.com>
-References: <AANLkTi=1xtjEZc2C1=W-v2oYbvvcGH9k_DGGXvJ8=swq@mail.gmail.com>
-	<20110401172241.GA26851@srcf.ucam.org>
-	<BANLkTikPjwowBge82viT+Ma5UnP0fA-pew@mail.gmail.com>
-	<20110402100043.GA5890@kamineko.org>
-	<BANLkTikVGWM3T1y2XvwkHB+Yub5EhG1RPA@mail.gmail.com>
-	<20110402155549.GA6724@kamineko.org>
-	<BANLkTimJa3CSWouTMJD5V0ZuMa67YXy88Q@mail.gmail.com>
-	<20110404234448.GA24957@kamineko.org>
-	<BANLkTinYJHxO4KL6xEzQB1Q-YAdggNL9Wg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <BANLkTinYJHxO4KL6xEzQB1Q-YAdggNL9Wg@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thiago Farina <tfransosi@gmail.com>
-Cc: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg59@srcf.ucam.org>, Andrea Gelmini <andrea.gelmini@gmail.com>, anssi.hannula@iki.fi, linux-acpi@vger.kernel.org, axel.lin@gmail.com, trenn@suse.de, len.brown@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mattia Dongili <malattia@linux.it>
+Subject: [PATCH 1/3] sony-laptop: keyboard backlight fixes
+Date: Tue,  5 Apr 2011 23:38:34 +0900
+Message-ID: <1302014316-1094-2-git-send-email-malattia@linux.it>
+References: <1302014316-1094-1-git-send-email-malattia@linux.it>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:43439 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752077Ab1DEOi6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 5 Apr 2011 10:38:58 -0400
+Received: by mail-iy0-f174.google.com with SMTP id 14so437551iyb.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Apr 2011 07:38:58 -0700 (PDT)
+In-Reply-To: <1302014316-1094-1-git-send-email-malattia@linux.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, Marco Chiappero <marco@absence.it>, Mattia Dongili <malattia@linux.it>
 
-On 4/5/11, Thiago Farina <tfransosi@gmail.com> wrote:
-> On Mon, Apr 4, 2011 at 8:44 PM, Mattia Dongili <malattia@linux.it> wrote:
->> Author: Mattia Dongili <malattia@linux.it>
->> Date:   Fri Apr 1 10:01:41 2011 +0900
->>
-> I think most of the patches doesn't include these above lines nor the
-> subject line in the description.
+From: Marco Chiappero <marco@absence.it>
 
-Just ignore those lines.  It's a git thing.
+Restore the original state on module removal, set the latest values on
+resume.
+When setting the keyboard backlight mode try to turn on/off backlight
+immediately.
 
-> Also when submitting a patch to the
-> list, please don't forget to put [PATCH] on the subject line.
->
+[malattia@linux.it: patch taken from a largely modified sony-laptop.c,
+ported and slightly modified to use defines already available.]
 
-Yeah.  [patch v2].  But it's too late to fix that so don't worry about it.
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+ drivers/platform/x86/sony-laptop.c |   35 ++++++++++++++++++++++++++++++++++-
+ 1 files changed, 34 insertions(+), 1 deletions(-)
 
-> git format-patch should output the right format.
->
->>    sony-laptop: fix early NULL pointer dereference
->>
->>    The SNC acpi driver could get early notifications before it fully
->>    initializes and that could lead to dereferencing the sony_nc_handles
->>    structure pointer that is still NULL at that stage.
->>    Make sure we return early from the handle lookup function in these
->>    cases.
->>
->>    Signed-off-by: Mattia Dongili <malattia@linux.it>
->> ---
->>
->> Hi Matthew,
->> if it's not too late, can you pick this one up instead of the previous
->> one (89ec2feafaedd759e53346d641f60863a14cfb9e)?
->> If it's too late I'll try and do a round of return value fixes later.
-
-Don't worry about it.  Probably the real fix is to make checkpatch.pl
-complain if you return -1 instead of a proper error code.
-
->>
->> diff --git a/drivers/platform/x86/sony-laptop.c
->> b/drivers/platform/x86/sony-laptop.c
->> index b2ce172..de79c18 100644
->> --- a/drivers/platform/x86/sony-laptop.c
->> +++ b/drivers/platform/x86/sony-laptop.c
->> @@ -810,6 +810,11 @@ static int sony_nc_handles_cleanup(struct
->> platform_device *pd)
->>  static int sony_find_snc_handle(int handle)
->>  {
->>        int i;
->> +
->> +       /* not initialized yet, return early */
-> This comment is useless, it is just repeating what the codes does ;) I
-> think you can just remove it.
-
-Whatever...  Let's just merge this fix and let's move on.
-
-regards,
-dan carpenter
-
->
->> +       if (!handles)
->> +               return -EINVAL;
->> +
->>        for (i = 0; i < 0x10; i++) {
->>                if (handles->cap[i] == handle) {
->>                        dprintk("found handle 0x%.4x (offset: 0x%.2x)\n",
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index e642f5f..77646fc 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -138,6 +138,8 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
+ 		 "1 for 30 seconds, 2 for 60 seconds and 3 to disable timeout "
+ 		 "(default: 0)");
+ 
++static void sony_nc_kbd_backlight_resume(void);
++
+ enum sony_nc_rfkill {
+ 	SONY_WIFI,
+ 	SONY_BLUETOOTH,
+@@ -1168,6 +1170,9 @@ static int sony_nc_resume(struct acpi_device *device)
+ 	/* re-read rfkill state */
+ 	sony_nc_rfkill_update();
+ 
++	/* restore kbd backlight states */
++	sony_nc_kbd_backlight_resume();
++
+ 	return 0;
+ }
+ 
+@@ -1355,6 +1360,7 @@ out_no_enum:
+ #define KBDBL_HANDLER	0x137
+ #define KBDBL_PRESENT	0xB00
+ #define	SET_MODE	0xC00
++#define SET_STATE	0xD00
+ #define SET_TIMEOUT	0xE00
+ 
+ struct kbd_backlight {
+@@ -1377,6 +1383,10 @@ static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
+ 				(value << 0x10) | SET_MODE, &result))
+ 		return -EIO;
+ 
++	/* Try to turn the light on/off immediately */
++	sony_call_snc_handle(KBDBL_HANDLER, (value << 0x10) | SET_STATE,
++			&result);
++
+ 	kbdbl_handle->mode = value;
+ 
+ 	return 0;
+@@ -1458,7 +1468,7 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
+ {
+ 	int result;
+ 
+-	if (sony_call_snc_handle(0x137, KBDBL_PRESENT, &result))
++	if (sony_call_snc_handle(KBDBL_HANDLER, KBDBL_PRESENT, &result))
+ 		return 0;
+ 	if (!(result & 0x02))
+ 		return 0;
+@@ -1501,13 +1511,36 @@ outkzalloc:
+ static int sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
+ {
+ 	if (kbdbl_handle) {
++		int result;
++
+ 		device_remove_file(&pd->dev, &kbdbl_handle->mode_attr);
+ 		device_remove_file(&pd->dev, &kbdbl_handle->timeout_attr);
++
++		/* restore the default hw behaviour */
++		sony_call_snc_handle(KBDBL_HANDLER, 0x1000 | SET_MODE, &result);
++		sony_call_snc_handle(KBDBL_HANDLER, SET_TIMEOUT, &result);
++
+ 		kfree(kbdbl_handle);
+ 	}
+ 	return 0;
+ }
+ 
++static void sony_nc_kbd_backlight_resume(void)
++{
++	int ignore = 0;
++
++	if (!kbdbl_handle)
++		return;
++
++	if (kbdbl_handle->mode == 0)
++		sony_call_snc_handle(KBDBL_HANDLER, SET_MODE, &ignore);
++
++	if (kbdbl_handle->timeout != 0)
++		sony_call_snc_handle(KBDBL_HANDLER,
++				(kbdbl_handle->timeout << 0x10) | SET_TIMEOUT,
++				&ignore);
++}
++
+ static void sony_nc_backlight_setup(void)
+ {
+ 	acpi_handle unused;
+-- 
+1.7.4.1
