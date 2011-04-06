@@ -1,94 +1,163 @@
-From: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] acer-wmi: Fix WMI ID
-Date: Wed, 6 Apr 2011 13:07:17 +0200
-Message-ID: <BANLkTikotynqMi30CRvX-t2cLCp2qOaxVg@mail.gmail.com>
-References: <4D802D570200002300029DA0@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Ameya Palande <2ameya@gmail.com>
+Subject: [PATCH] platform/x86: Simplify intel_mid_powerbtn
+Date: Wed,  6 Apr 2011 17:44:37 +0300
+Message-ID: <1302101077-16865-1-git-send-email-2ameya@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yi0-f46.google.com ([209.85.218.46]:39933 "EHLO
-	mail-yi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750807Ab1DFLH6 convert rfc822-to-8bit (ORCPT
+Received: from smtp.nokia.com ([147.243.128.24]:24657 "EHLO mgw-da01.nokia.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756159Ab1DFOom (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Apr 2011 07:07:58 -0400
-Received: by yia27 with SMTP id 27so533206yia.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Apr 2011 04:07:57 -0700 (PDT)
-In-Reply-To: <4D802D570200002300029DA0@novprvlin0050.provo.novell.com>
+	Wed, 6 Apr 2011 10:44:42 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: hong.liu@intel.com
 
-2011/3/15 Joey Lee <jlee@novell.com>:
-> Hi Pali,
->
-> =E6=96=BC =E6=97=A5=EF=BC=8C2011-02-27 =E6=96=BC 12:06 +0100=EF=BC=8C=
-Pali Roh=C3=A1r =E6=8F=90=E5=88=B0=EF=BC=9A
->> This patch change WMI ID to upper characters. With this patch module
->> acer-wmi is automatically loaded when WMI ID is detected.
->>
->> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->>
->> --- a/drivers/platform/x86/acer-wmi.c 2011-02-27 11:53:50.000000000 =
-+0100
->> +++ b/drivers/platform/x86/acer-wmi.c 2011-02-27 11:58:30.000000000 =
-+0100
->> @@ -84,8 +84,8 @@ MODULE_LICENSE("GPL");
->> =C2=A0 */
->> =C2=A0#define AMW0_GUID1 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "67C3371=
-D-95A3-4C37-BB61-DD47B491DAAB"
->> =C2=A0#define AMW0_GUID2 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "431F16E=
-D-0C2B-444C-B267-27DEB140CF9C"
->> -#define WMID_GUID1 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "6AF4F258-B40=
-1-42fd-BE91-3D4AC2D7C0D3"
->> -#define WMID_GUID2 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "95764E09-FB5=
-6-4e83-B31A-37761F60994A"
->> +#define WMID_GUID1 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "6AF4F258-B40=
-1-42FD-BE91-3D4AC2D7C0D3"
->
-> WMID_GUID1 already fixed by Matthew's patch, don't need fix again.
->
->
->> +#define WMID_GUID2 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "95764E09-FB5=
-6-4E83-B31A-37761F60994A"
->> =C2=A0#define WMID_GUID3 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 "61EF69E=
-A-865C-4BC3-A502-A0DEBA0CB531"
->>
->> =C2=A0/*
->> @@ -94,7 +94,7 @@ MODULE_LICENSE("GPL");
->> =C2=A0#define ACERWMID_EVENT_GUID "676AA15E-6A47-4D9F-A2CC-1E6D18D14=
-026"
->>
->> =C2=A0MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");
->> -MODULE_ALIAS("wmi:6AF4F258-B401-42fd-BE91-3D4AC2D7C0D3");
->> +MODULE_ALIAS("wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3");
->
-> The same, here.
->
->> =C2=A0MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
->>
->> =C2=A0enum acer_wmi_event_ids {
->>
->>
->
-> I am not sure miss your any patch, but looks like you still send out =
-the
-> same change.
-> Please git pull your platform-drivers-x86/master repo, you will look =
-the
-> newest acer-wmi source code.
->
->
-> Thank's a lot!
-> Joey Lee
->
->
+This patch:
+1. Removes unnecessay #defines
+2. Removes 'mfld_pb_priv' data structure which results in simpler error
+   handling and less memory allocations.
 
-Yes. I had bad git repo, so I generated bad diffs. I see that all
-patches are commited now. Thanks.
+Signed-off-by: Ameya Palande <2ameya@gmail.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c |   72 ++++++++++++-----------------
+ 1 files changed, 30 insertions(+), 42 deletions(-)
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 213e79b..f1ae507 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -23,58 +23,48 @@
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
+ #include <linux/input.h>
++
+ #include <asm/intel_scu_ipc.h>
+ 
+ #define DRIVER_NAME "msic_power_btn"
+ 
+-#define MSIC_IRQ_STAT	0x02
+-  #define MSIC_IRQ_PB	(1 << 0)
+-#define MSIC_PB_CONFIG	0x3e
+ #define MSIC_PB_STATUS	0x3f
+-  #define MSIC_PB_LEVEL (1 << 3) /* 1 - release, 0 - press */
+-
+-struct mfld_pb_priv {
+-	struct input_dev *input;
+-	unsigned int irq;
+-};
++#define MSIC_PB_LEVEL	(1 << 3) /* 1 - release, 0 - press */
+ 
+ static irqreturn_t mfld_pb_isr(int irq, void *dev_id)
+ {
+-	struct mfld_pb_priv *priv = dev_id;
++	struct input_dev *input = dev_id;
+ 	int ret;
+ 	u8 pbstat;
+ 
+ 	ret = intel_scu_ipc_ioread8(MSIC_PB_STATUS, &pbstat);
+-	if (ret < 0)
+-		return IRQ_HANDLED;
+-
+-	input_event(priv->input, EV_KEY, KEY_POWER, !(pbstat & MSIC_PB_LEVEL));
+-	input_sync(priv->input);
++	if (ret < 0) {
++		dev_err(input->dev.parent, "Read error %d while reading"
++			       " MSIC_PB_STATUS\n", ret);
++	} else {
++		input_event(input, EV_KEY, KEY_POWER,
++			       !(pbstat & MSIC_PB_LEVEL));
++		input_sync(input);
++	}
+ 
+ 	return IRQ_HANDLED;
+ }
+ 
+ static int __devinit mfld_pb_probe(struct platform_device *pdev)
+ {
+-	struct mfld_pb_priv *priv;
+ 	struct input_dev *input;
+-	int irq;
++	int irq = platform_get_irq(pdev, 0);
+ 	int error;
+ 
+-	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+ 		return -EINVAL;
+ 
+-	priv = kzalloc(sizeof(struct mfld_pb_priv), GFP_KERNEL);
+ 	input = input_allocate_device();
+-	if (!priv || !input) {
+-		error = -ENOMEM;
+-		goto err_free_mem;
++	if (!input) {
++		dev_err(&pdev->dev, "Input device allocation error\n");
++		return -ENOMEM;
+ 	}
+ 
+-	priv->input = input;
+-	priv->irq = irq;
+-
+ 	input->name = pdev->name;
+ 	input->phys = "power-button/input0";
+ 	input->id.bustype = BUS_HOST;
+@@ -82,42 +72,40 @@ static int __devinit mfld_pb_probe(struct platform_device *pdev)
+ 
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	error = request_threaded_irq(priv->irq, NULL, mfld_pb_isr,
+-				     0, DRIVER_NAME, priv);
++	error = request_threaded_irq(irq, NULL, mfld_pb_isr, 0,
++			DRIVER_NAME, input);
+ 	if (error) {
+-		dev_err(&pdev->dev,
+-			"unable to request irq %d for mfld power button\n",
+-			irq);
+-		goto err_free_mem;
++		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
++				"button\n", irq);
++		goto err_free_input;
+ 	}
+ 
+ 	error = input_register_device(input);
+ 	if (error) {
+-		dev_err(&pdev->dev,
+-			"unable to register input dev, error %d\n", error);
++		dev_err(&pdev->dev, "Unable to register input dev, error "
++				"%d\n", error);
+ 		goto err_free_irq;
+ 	}
+ 
+-	platform_set_drvdata(pdev, priv);
++	platform_set_drvdata(pdev, input);
+ 	return 0;
+ 
+ err_free_irq:
+-	free_irq(priv->irq, priv);
+-err_free_mem:
++	free_irq(irq, input);
++err_free_input:
+ 	input_free_device(input);
+-	kfree(priv);
+ 	return error;
+ }
+ 
+ static int __devexit mfld_pb_remove(struct platform_device *pdev)
+ {
+-	struct mfld_pb_priv *priv = platform_get_drvdata(pdev);
+-
+-	free_irq(priv->irq, priv);
+-	input_unregister_device(priv->input);
+-	kfree(priv);
++	struct input_dev *input = platform_get_drvdata(pdev);
++	int irq = platform_get_irq(pdev, 0);
+ 
++	free_irq(irq, input);
++	input_unregister_device(input);
+ 	platform_set_drvdata(pdev, NULL);
++
+ 	return 0;
+ }
+ 
+-- 
+1.7.1
