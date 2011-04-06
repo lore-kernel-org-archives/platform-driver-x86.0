@@ -1,36 +1,49 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Commit 7751ab8e600f26e10c2ba12a92d48a4852a51da8
-Date: Tue, 05 Apr 2011 18:17:24 +0200
-Message-ID: <4D9B4094.4010609@absence.it>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: Fix capitalisation of GUID in module alias
+Date: Wed,  6 Apr 2011 17:40:06 +0800
+Message-ID: <1302082806-11807-1-git-send-email-jlee@novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:33470 "EHLO
-	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753793Ab1DEQRd (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:47247 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754152Ab1DFJnO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Apr 2011 12:17:33 -0400
+	Wed, 6 Apr 2011 05:43:14 -0400
+Received: by ywj3 with SMTP id 3so513620ywj.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Apr 2011 02:43:13 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Marco Chiappero <marco@absence.it>, Javier Achirica <achirica@gmail.com>, Mattia Dongili <malattia@linux.it>
+To: carlos@strangeworlds.co.uk
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, =?utf-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg@redhat.com>
 
-Hello,
+wmi:6AF4F258-B401-42Fd-BE91-3D4AC2D7C0D3 needs to be
+wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3 in module alias for acer-wmi i=
+s
+automatically loaded.
 
-I just wanted to report possible issues related to the new backlight 
-control implemented in commit 7751ab8e600f26e10c2ba12a92d48a4852a51da8 
-[sony-laptop: implement new backlight control method]. I and Javier 
-Achirica have been using it for a while on different notebook models and 
-agree that values close to 0 are far too dark to be useful, while 0 
-means totally off for both. Moreover flickering has been reported with 
-CCFL LCDs (still present on a few models, such as the Vaio F) by another 
-tester.
-In fact, with these Vaios, Windows never goes below a certain model 
-specific backlight lower bound, provided along with the ALS capability. 
-However, this requires further code not yet implemented (or the ALS 
-support already available but not yet included). Please consider 
-correcting or delaying that patch.
-Thanks.
+Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ drivers/platform/x86/acer-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Marco Chiappero
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index 0b23b75..fa8fa73 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -89,7 +89,7 @@ MODULE_LICENSE("GPL");
+ #define ACERWMID_EVENT_GUID "676AA15E-6A47-4D9F-A2CC-1E6D18D14026"
+=20
+ MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");
+-MODULE_ALIAS("wmi:6AF4F258-B401-42Fd-BE91-3D4AC2D7C0D3");
++MODULE_ALIAS("wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3");
+ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+=20
+ enum acer_wmi_event_ids {
+--=20
+1.6.0.2
