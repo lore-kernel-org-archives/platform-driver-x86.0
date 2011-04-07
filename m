@@ -1,76 +1,59 @@
-From: Ilkka Koskinen <ikoskine@nokia.com>
-Subject: Re: [RFC PATCHv2 4/5] hwmon: lis3: Remove the referencies to the
- global variable in core driver
-Date: Thu, 7 Apr 2011 14:59:48 +0300 (EEST)
-Message-ID: <alpine.DEB.2.00.1104071448290.9511@tumpelo.nmp.nokia.com>
-References: <1302014714-7334-1-git-send-email-ilkka.koskinen@nokia.com> <1302014714-7334-5-git-send-email-ilkka.koskinen@nokia.com> <20110405155007.GB2454@nautilus.holoscopio.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH] acer-wmi: Fix capitalisation of GUID in module
+ alias
+Date: Thu, 07 Apr 2011 07:09:47 -0600
+Message-ID: <4D9E443B020000230002AFE6@novprvlin0050.provo.novell.com>
+References: <1302082806-11807-1-git-send-email-jlee@novell.com>
+ <BANLkTinCdB8YVus2VBO4VX_ccSN5UWV1SA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nokia.com ([147.243.128.26]:45473 "EHLO mgw-da02.nokia.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755832Ab1DGMCq (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Apr 2011 08:02:46 -0400
-In-Reply-To: <20110405155007.GB2454@nautilus.holoscopio.com>
+In-Reply-To: <BANLkTinCdB8YVus2VBO4VX_ccSN5UWV1SA@mail.gmail.com>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ext Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Cc: Ilkka Koskinen <ilkka.koskinen@nokia.com>, eric.piel@tremplin-utc.net, mjg@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, samu.p.onkalo@nokia.com
+To: pali.rohar@gmail.com
+Cc: mjg@redhat.com, carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
 
+=E6=96=BC =E5=9B=9B=EF=BC=8C2011-04-07 =E6=96=BC 13:10 +0200=EF=BC=8CPa=
+li Roh=C3=A1r =E6=8F=90=E5=88=B0=EF=BC=9A
+> 2011/4/6 Lee, Chun-Yi <joeyli.kernel@gmail.com>:
+> > wmi:6AF4F258-B401-42Fd-BE91-3D4AC2D7C0D3 needs to be
+> > wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3 in module alias for acer-w=
+mi is
+> > automatically loaded.
+> >
+> > Cc: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+> > Cc: Matthew Garrett <mjg@redhat.com>
+> > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+> > ---
+> >  drivers/platform/x86/acer-wmi.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86=
+/acer-wmi.c
+> > index 0b23b75..fa8fa73 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -89,7 +89,7 @@ MODULE_LICENSE("GPL");
+> >  #define ACERWMID_EVENT_GUID "676AA15E-6A47-4D9F-A2CC-1E6D18D14026"
+> >
+> >  MODULE_ALIAS("wmi:67C3371D-95A3-4C37-BB61-DD47B491DAAB");
+> > -MODULE_ALIAS("wmi:6AF4F258-B401-42Fd-BE91-3D4AC2D7C0D3");
+> > +MODULE_ALIAS("wmi:6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3");
+> >  MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+> >
+> >  enum acer_wmi_event_ids {
+> > --
+> > 1.6.0.2
+> >
+> >
+>=20
+> Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+>=20
 
-Hi,
+Thank's for Pali's testing. :-)
 
-Thanks for the comments!
-
-On Tue, 5 Apr 2011, ext Thadeu Lima de Souza Cascardo wrote:
-> On Tue, Apr 05, 2011 at 05:45:13PM +0300, Ilkka Koskinen wrote:
->> Signed-off-by: Ilkka Koskinen <ilkka.koskinen@nokia.com>
->> ---
->>  drivers/misc/lis3lv02d/lis3lv02d.c |  237 ++++++++++++++++++++----------------
->>  drivers/misc/lis3lv02d/lis3lv02d.h |    3 +
->>  2 files changed, 135 insertions(+), 105 deletions(-)
-
->> @@ -980,14 +1003,18 @@ int lis3lv02d_init_device(struct lis3lv02d *lis3)
->>  				thread_fn,
->>  				IRQF_TRIGGER_RISING | IRQF_ONESHOT |
->>  				irq_flags,
->> -				DRIVER_NAME, &lis3_dev);
->> +				DRIVER_NAME, lis3);
->>
->>  	if (err < 0) {
->>  		pr_err("Cannot get IRQ\n");
->>  		goto out;
->>  	}
->>
->> -	if (misc_register(&lis3lv02d_misc_device))
->> +	lis3->miscdev.minor	= MISC_DYNAMIC_MINOR;
->> +	lis3->miscdev.name	= "freefall";
->> +	lis3->miscdev.fops	= &lis3lv02d_misc_fops;
->> +
->> +	if (misc_register(&lis3->miscdev))
->>  		pr_err("misc_register failed\n");
->
-> You should not use miscdevice in case there will be multiple devices.
-> First, it will fail. There cannot be more than one device with the same
-> name. Second, current dynamic minor devices is restricted to 64 devices.
-> Since this is reserved to one-shot devices, freefall was OK as a misc
-> device until you fixed it to allow multiple freefall devices.  :-)
-
-Ah, true :)
-
-> So, I'd recommend switching to a new device class, and have freefall0,
-> freefall1, etc.
-
-I wonder if introducing a new class makes sense. I mean, I can figure out 
-use cases for several accelerometers but for several free fall sensors? :/
-
-Would it be better to add a mechanism to tell to the core module if the 
-particular device is used for free fall detection or not?
-
-Cheers, Ilkka
-
-> Anyway, good job on this.
->
-> Regards,
-> Cascardo.
+Joey Lee
