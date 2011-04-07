@@ -1,52 +1,76 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 3/4] asus-laptop: Pegatron Lucid accelerometer
-Date: Thu, 7 Apr 2011 18:09:38 +0200
-Message-ID: <BANLkTimizXbH4GBgcCSbNA1AsZ3SejTabw@mail.gmail.com>
-References: <1301004130-3294-1-git-send-email-andy.ross@windriver.com>
-	<1301004130-3294-4-git-send-email-andy.ross@windriver.com>
-	<AANLkTin849Cr2UUv4astP860=_f5xMMoPAhFhA4K+rzZ@mail.gmail.com>
-	<20110328054314.GC31692@core.coreip.homeip.net>
-	<4D90AB00.5080800@windriver.com>
-	<AANLkTikK0FTAj0MeMk4n3_V6=yDYBL4cVROWSOHDm+XG@mail.gmail.com>
-	<BANLkTimUsoc=uJbNAQvaiyfb2vYRnun2Dg@mail.gmail.com>
-	<20110407175659.48d04f16@destiny.ordissimo>
+From: Anisse Astier <anisse@astier.eu>
+Subject: [RFC] Reporting "orientation changed" event
+Date: Thu, 7 Apr 2011 18:18:00 +0200
+Message-ID: <20110407181800.27b441b1@destiny.ordissimo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:59118 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751827Ab1DGQJk (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:54462 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754932Ab1DGQSW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Apr 2011 12:09:40 -0400
-Received: by ewy4 with SMTP id 4so839271ewy.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Apr 2011 09:09:39 -0700 (PDT)
-In-Reply-To: <20110407175659.48d04f16@destiny.ordissimo>
+	Thu, 7 Apr 2011 12:18:22 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Anisse Astier <anisse@astier.eu>
-Cc: Andy Ross <andy.ross@windriver.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
-
-On Thu, Apr 7, 2011 at 5:56 PM, Anisse Astier <anisse@astier.eu> wrote:
-> On Mon, 4 Apr 2011 17:16:05 +0000, Corentin Chary <corentin.chary@gmail.com> wrote :
->
->> On Thu, Mar 31, 2011 at 7:23 AM, Corentin Chary
->> <corentin.chary@gmail.com> wrote:
-> <snip>
->> > Just to try to fix the crash in a more cleaner way, can you (re-)tell
->> > us more about it ? It's a kernel crash, or the hardware just start
->> > doing stupid things ? Any traces ? Does it also happens when you load
->> > the model *after* boot (blacklist it, then modprobe) ? Could you also
->> > re-send me the dsdt ? I think I lost it.
->>
->> ping ?
->
-> I have a Pegatron Lucid. Please find the DSDT attached.
-
-Thanks for the DSDT. After a quick read I didn't find anything in it
-that could produce the crash.
-I'll wait for Andy's answers.
+To: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Dmitry Torokhov <dtor@mail.ru>, Matthew Garrett <mjg@redhat.com>, Andy Ross <andy.ross@windriver.com>, Corentin Chary <corentin.chary@gmail.com>
 
 
+Pegatron Lucid tablet sends an ACPI hotkey event(0xEA) when the
+accelerometer detects coarse orientation change. My initial thought was
+to just translate this event into KEY_DIRECTION, which seems to be the
+norm from what we can see in hp-wmi driver. (See patch below for an
+implementation.)
+
+But this isn't just a key per se like on the HP touchsmart tablet, this
+is an event that is triggered when the device is rotated.
+
+This could be defined as a new Misc (EV_MSC) event:
+MSC_ORIENTATION_CHANGED ?
+
+Or we could use the upcoming IIO subsystem which is supposed to be for
+sensors, but then we'd have a mismatch between the device based on ACPI
+with firmware in the middle (driver submitted by Andy Ross) and the
+purpose of IIO ("SPI or I2C device").
+
+
+Maybe I'm over-thinking this and this might be just right:
+
+From: Anisse Astier <anisse@astier.eu>
+Subject: [PATCH RFC] asus-laptop: Send input key for tablet rotation on Pegatron Lucid Tablet
+
+Pegatron Lucid tablet sends ACPI event on coarse orientation changes.
+Translate this into KEY_DIRECTION input event.
+
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Andy Ross <andy.ross@windriver.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>
+Signed-off-by: Anisse Astier <anisse@astier.eu>
+---
+Please note that this patch depends on Andy Ross's first patch in order for
+asus-laptop to bind with the tablet.
+
+Regards,
+
+Anisse
+---
+ drivers/platform/x86/asus-laptop.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 5c23b20..decb958 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -312,6 +312,8 @@ static const struct key_entry asus_keymap[] = {
+ 	{KE_KEY, 0xc4, { KEY_KBDILLUMUP } },
+ 	{KE_KEY, 0xc5, { KEY_KBDILLUMDOWN } },
+ 	{KE_KEY, 0xb5, { KEY_CALC } },
++	/* Pegatron Lucid tablet specific */
++	{KE_KEY, 0xEA, { KEY_DIRECTION } }, /* Orientation changed */
+ 	{KE_END, 0},
+ };
+ 
 -- 
-Corentin Chary
-http://xf.iksaif.net
+1.7.3.2
