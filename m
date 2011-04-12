@@ -1,62 +1,30 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: asus-wmi for Asus G73SW
-Date: Mon, 11 Apr 2011 11:11:39 +0200
-Message-ID: <BANLkTik36UznNKUWHQNBcMBvQa96BsVGgg@mail.gmail.com>
-References: <4D99038A.8080105@gmx.net>
-	<BANLkTimNYTFmywWsUJNfo3XtGcVwc8jBbA@mail.gmail.com>
-	<4D9A58BD.1030401@gmx.net>
-	<BANLkTinMbinPt9qL630+NwuCxGXrxehK+A@mail.gmail.com>
-	<BANLkTikUUVW=AmAXUsirxj7hVQWkjoFbBw@mail.gmail.com>
-	<4D9E4F65.8050307@gmx.net>
-	<BANLkTik9PXsEehunFEkVK2LtOxZdagbd+g@mail.gmail.com>
-	<4DA1D998.9090501@gmx.net>
+From: Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH 2/2] ACPI video: add initial blacklist to use vendor
+ drivers for backlight
+Date: Mon, 11 Apr 2011 23:40:31 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1104112338350.2439@x980>
+References: <1295376114-5685-1-git-send-email-herton@mandriva.com.br>
+ <1295376114-5685-2-git-send-email-herton@mandriva.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:39620 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752326Ab1DKJLk (ORCPT
+Received: from vms173019pub.verizon.net ([206.46.173.19]:63881 "EHLO
+	vms173019pub.verizon.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756386Ab1DLDkh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Apr 2011 05:11:40 -0400
-In-Reply-To: <4DA1D998.9090501@gmx.net>
+	Mon, 11 Apr 2011 23:40:37 -0400
+In-reply-to: <1295376114-5685-2-git-send-email-herton@mandriva.com.br>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carsten Juttner <carjay@gmx.net>
-Cc: Zhang Rui <rui.zhang@intel.com>, linux acpi <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Herton Ronaldo Krzesinski <herton@mandriva.com.br>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
 
-> By default the brightness values are set to 10 (max_brightness) but changing any of them does not do anything (display stays at maximum brightness level).
->
-> Do you have an idea what could be missing?
-[...]
-> I used acpi_backlight=vendor and /sys/class/backlight/asus-nb-wmi shows up
-> as expected.
->
-> Also the kernel code that sets the brightness value in the asus-nb-wmi
-> driver works (no error is returned, also the changed values show up in
-> sysfs).
-> It just does not seem to get applied.
->
-> I found out that if after I switch to the console (alt+F1) changing the
-> brightness in sysfs suddenly does have an effect.
->
-> Since I use the proprietary nvidia driver (for full OpenGL 3D support) I
-> suspect that it has something to do with it.
-> I tried the Kubuntu Live installer CD which uses nouveau and changing the
-> brightness works for Xorg there, too (even using the generic acpi_backlight
-> code and the brightness value in acpi_video1).
->
-> I guess the Nvidia driver or something related to it is doing something
-> nasty here which keeps the brightness from being applied.
-> Switching back to Xorg from the console resets the value to 10 (I added some
-> debug output to update_bl_status) so that's not a workaround unfortunately.
->
-> Since I have no idea what actual piece of hardware controls the backlight I
-> wonder if it is part of the NVidia hardware and as soon as the nvidia driver
-> takes over it will no longer accept updates from the BIOS?
 
-Unfortunatly I didn't found anything in the DSDT.
-CCing Zhang Rui, maybe he can help us here.
+> +		/*if (dmi_check_system(output_switching_vendor_dmi_table))
+> +			acpi_video_support |=
+> +				ACPI_VIDEO_OUTPUT_SWITCHING_DMI_VENDOR;*/
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+please exclude this comment.
+
+thanks,
+-Len
