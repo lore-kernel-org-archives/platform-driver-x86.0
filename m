@@ -1,41 +1,38 @@
-From: Ameya Palande <2ameya@gmail.com>
-Subject: Re: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
-Date: Tue, 12 Apr 2011 10:13:51 +0300
-Message-ID: <BANLkTik00CfgnGW-+3T6=ZuNHz+5_stXVg@mail.gmail.com>
-References: <1302183002-3900-1-git-send-email-2ameya@gmail.com>
-	<D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: 2.6.39-rc3: sony-laptop regression
+Date: Tue, 12 Apr 2011 23:07:06 +0900
+Message-ID: <20110412140705.GA32119@kamineko.org>
+References: <BANLkTimXEDriJ7wNX25Ko0iu=dnuCXNQww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vx0-f174.google.com ([209.85.220.174]:52175 "EHLO
-	mail-vx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756734Ab1DLHNw (ORCPT
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:49665 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755258Ab1DLOHL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Apr 2011 03:13:52 -0400
-Received: by vxi39 with SMTP id 39so4669307vxi.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Apr 2011 00:13:51 -0700 (PDT)
-In-Reply-To: <D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
+	Tue, 12 Apr 2011 10:07:11 -0400
+Received: by iwn34 with SMTP id 34so6671943iwn.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Apr 2011 07:07:11 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <BANLkTimXEDriJ7wNX25Ko0iu=dnuCXNQww@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "mjg@redhat.com" <mjg@redhat.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "R, Durgadoss" <durgadoss.r@intel.com>
+To: Manuel Lauss <manuel.lauss@googlemail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Matthew,
+On Tue, Apr 12, 2011 at 08:47:36AM +0200, Manuel Lauss wrote:
+> Hello Mattia,
 
-On Thu, Apr 7, 2011 at 4:49 PM, R, Durgadoss <durgadoss.r@intel.com> wrote:
->> -----Original Message-----
->> From: Ameya Palande [mailto:2ameya@gmail.com]
->> Sent: Thursday, April 07, 2011 7:00 PM
->> To: platform-driver-x86@vger.kernel.org
->> Cc: mjg@redhat.com; R, Durgadoss
->> Subject: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
->>
->> Signed-off-by: Ameya Palande <2ameya@gmail.com>
->> ---
->
-> Acked-by: Durgadoss R <durgadoss.r@linux.intel.com>
+Hi!
 
-Can this patch go in for 2.6.39-rc4?
+> sony-laptop bugs out with a null ptr dereference on my VGN-A197 (see below).
+> A temporary fix is to check if handles is NULL in sony_find_snc_handle:
 
-Cheers,
-Ameya.
+Thanks!
+The same fix is already in the platform-driver tree but apparently
+didn't make it to Linus's tree yet. It should get there soon.
+
+Cheers
+-- 
+mattia
+:wq!
