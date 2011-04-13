@@ -1,63 +1,36 @@
-From: Lukasz Majewski <majess1982@gmail.com>
-Subject: Re: [Vortex86] Vortex86DX SoC - HIGH_RESOLUTION_TIMER
-Date: Tue, 12 Apr 2011 22:14:03 +0200
-Message-ID: <20110412221403.1cc3f5c8@mig>
-References: <20110412212739.5658f030@mig>
-	<BANLkTikFFL1tPgBVwYBA3ocziNfGpW=ycQ@mail.gmail.com>
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [GIT PULL] X86 platform drivers updates
+Date: Wed, 13 Apr 2011 08:52:32 +0200
+Message-ID: <20110413065232.GA26072@elte.hu>
+References: <20110412153130.GA32247@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:45544 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755739Ab1DLUOO (ORCPT
+Received: from mx3.mail.elte.hu ([157.181.1.138]:39280 "EHLO mx3.mail.elte.hu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753320Ab1DMGwr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Apr 2011 16:14:14 -0400
-In-Reply-To: <BANLkTikFFL1tPgBVwYBA3ocziNfGpW=ycQ@mail.gmail.com>
+	Wed, 13 Apr 2011 02:52:47 -0400
+Content-Disposition: inline
+In-Reply-To: <20110412153130.GA32247@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Carvalho de Assis <acassis@gmail.com>
-Cc: linux-embedded@vger.kernel.org, linux-8086@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: torvalds@linux-foundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, 12 Apr 2011 17:59:47 -0200
-Alan Carvalho de Assis <acassis@gmail.com> wrote:
 
-> Hi Lukasz,
-> 
-> On 4/12/11, Lukasz Majewski <majess1982@gmail.com> wrote:
-> > Hi all,
-> >
-> > I'd like to kindly ask for some help with my embedded system.
-> >
-> > I'm using the Vortex86DX SoC (it's a x86 32 clone) on my PC104
-> > board.
-> >
-> > I've managed to apply and run the 2.6.33.7.2-rt30 RT linux.
-> >
-> > It supports the full preemption (PREEMPT_RT enabled).
-> >
-> 
-> I think you didn't send this email to right mailing list.
-> 
-> Please take a look here:
-> 
-> https://rt.wiki.kernel.org/index.php/Mailinglists
-> 
-> I suggest you to send your question to linux-rt-users@vger.kernel.org
-> 
-> Best Regards,
-> 
-> Alan
+* Matthew Garrett <mjg59@srcf.ucam.org> wrote:
 
-Hi Alan,
+>       platform-drivers: x86: pmic: Restore the dropped buslock/unlock
 
-Thank you for the response.
+>  drivers/platform/x86/intel_pmic_gpio.c          |   43 +-
 
-I've already sent this mail to PREEMPT-RT list.
+This commit (now upstream) does not build at all on allyes64:
 
-After that I've realized, that the problem with High Resolution Timer
-sources is more broad, and maybe developers from various x86 related
-mailing lists can help me a bit.
+  drivers/platform/x86/intel_pmic_gpio.c:212:19: error: =E2=80=98pmic_i=
+rq_buslock=E2=80=99 undeclared here
 
-Best regards,
-Lukasz
+Thanks,
+
+	Ingo
