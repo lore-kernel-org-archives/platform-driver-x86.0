@@ -1,44 +1,53 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: Commit 7751ab8e600f26e10c2ba12a92d48a4852a51da8
-Date: Fri, 15 Apr 2011 07:42:11 +0900
-Message-ID: <20110414224210.GA9459@kamineko.org>
-References: <4D9B4094.4010609@absence.it>
- <20110412152009.GA32032@srcf.ucam.org>
- <4DA5D45A.9070901@absence.it>
- <20110413165344.GA739@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: does not allow negative number set to initial device state
+Date: Fri, 15 Apr 2011 18:42:47 +0800
+Message-ID: <1302864167-9186-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:51444 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754158Ab1DNWmN (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:40889 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755631Ab1DOKnF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Apr 2011 18:42:13 -0400
-Received: by pwi15 with SMTP id 15so804388pwi.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Apr 2011 15:42:12 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20110413165344.GA739@srcf.ucam.org>
+	Fri, 15 Apr 2011 06:43:05 -0400
+Received: by pxi2 with SMTP id 2so1521910pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 15 Apr 2011 03:43:04 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Marco Chiappero <marco@absence.it>, platform-driver-x86@vger.kernel.org, Javier Achirica <achirica@gmail.com>
+To: carlos@strangeworlds.co.uk
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>
 
-On Wed, Apr 13, 2011 at 05:53:44PM +0100, Matthew Garrett wrote:
-> On Wed, Apr 13, 2011 at 06:50:34PM +0200, Marco Chiappero wrote:
-> 
-> > I agree. The DSDT of any ALS equipped Vaio provides us 9 backlight
-> > levels (that are LCD/model specific), so the first and the last ones
-> > define our useful operating range, which is always different from
-> > 0-255 (eg. 13-255 for the Vaio S, 52-255 for the Vaio F, 7-182 for
-> > the Vaio Z, 7-213 for the Vaio TT and so on). However the code to
-> > retrieve and use those lower and upper bounds is still lacking
-> > upstream (I, Javier Achirica and many other people are testing a
-...
-> Can this code be merged within the next week? If not I agree that it'd 
+The driver set module parameter value: mailled, threeg and brightness
+to BIOS by evaluate wmi method when driver was initialed. The default
+values for those parameters are -1, so, that will be better don't set
+negative value to BIOS.
 
-yes, I'll try to get it ready over the weekend. The patch itself should
-be relatively innocuous.
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ drivers/platform/x86/acer-wmi.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index ac4e7f8..c3cb603 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -961,10 +961,12 @@ static void __init acer_commandline_init(void)
+ 	 * These will all fail silently if the value given is invalid, or the
+ 	 * capability isn't available on the given interface
+ 	 */
+-	set_u32(mailled, ACER_CAP_MAILLED);
+-	if (!has_type_aa)
++	if (mailled >= 0)
++		set_u32(mailled, ACER_CAP_MAILLED);
++	if (!has_type_aa && threeg >= 0)
+ 		set_u32(threeg, ACER_CAP_THREEG);
+-	set_u32(brightness, ACER_CAP_BRIGHTNESS);
++	if (brightness >= 0)
++		set_u32(brightness, ACER_CAP_BRIGHTNESS);
+ }
+ 
+ /*
 -- 
-mattia
-:wq!
+1.6.0.2
