@@ -1,34 +1,41 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: What's the state of "i915: Add native backlight controllogin register
- about" ?
-Date: Fri, 22 Apr 2011 07:50:57 +0200
-Message-ID: <BANLkTind6Bbq3=9S418QtcO59do_dOU+xg@mail.gmail.com>
+From: Toralf =?utf-8?q?F=C3=B6rster?= <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
+Subject: =?utf-8?q?thinkpad=5Facpi=2Ec=3A537=3A_warning?=
+ =?utf-8?b?OiDigJh2aWRfWFhY4oCZIGRlZmluZWQgYnV0IG5vdCB1c2Vk?=
+Date: Fri, 15 Apr 2011 10:26:24 +0200
+Message-ID: <201104151026.26159.toralf.foerster@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:54225 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751142Ab1DVFvA (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Apr 2011 01:51:00 -0400
-Received: by wwa36 with SMTP id 36so399060wwa.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Apr 2011 22:50:58 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Matthew,
-Recently I got a lot of complaint from people that wanted to use the
-backlight to be as dim as on windows or their EeePC.
-It seems that "setpci -s 00:02.0 f4.b=ff" do the trick, but I don't
-really want to advertise this method.
-
-I believe that https://patchwork.kernel.org/patch/480141/ (and the
-rest the the series) would fix the issue in a more cleaner way.
-I didn't found any re-send or new version., what's the current status
-of this series ?
-
-Thanks,
--- 
-Corentin Chary
-http://xf.iksaif.net
+SGVsbG8sCgp3aGlsZSBjb21waWxpbmcgdmFuaWxsYSBrZXJuZWwgMi42LjM4LjMgdG9kYXkgSSBz
+YXcgdGhpcyB3YXJuaW5ncwphdCBteSBUaGlua1BhZCBUNDAwIDoKCmRyaXZlcnMvcGxhdGZvcm0v
+eDg2L3RoaW5rcGFkX2FjcGkuYzo1Mzc6IHdhcm5pbmc6IOKAmHZpZF9oYW5kbGXigJkgZGVmaW5l
+ZCBidXQgbm90IHVzZWQKZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jOjUzNzog
+d2FybmluZzog4oCYdmlkX3BhcmVudOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZApkcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmM6NTM3OiB3YXJuaW5nOiDigJh2aWRfcGF0aHPigJkg
+ZGVmaW5lZCBidXQgbm90IHVzZWQKCklmIHRoZXNlIGFyZSBleHBlY3RlZCBwbGVhc2UgaWdub3Jl
+IHRoaXMgbWFpbC4KT3RoZXJ3aXNlIGl0IG1pZ2h0IGhlbHAgdG8gaW1wcm92ZSB0aGUgZHJpdmVy
+LgoKLS0gCk1mRy9TaW5jZXJlbHkKVG9yYWxmIEbDtnJzdGVyCnBncCBmaW5nZXIgcHJpbnQ6IDdC
+MUEgMDdGNCBFQzgyIDBGOTAgRDRDMiA4OTM2IDg3MkEgRTUwOCA3REI2IDlEQTMKCi0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQpGdWxmaWxsaW5nIHRoZSBMZWFuIFNvZnR3YXJlIFByb21pc2UKTGVhbiBz
+b2Z0d2FyZSBwbGF0Zm9ybXMgYXJlIG5vdyB3aWRlbHkgYWRvcHRlZCBhbmQgdGhlIGJlbmVmaXRz
+IGhhdmUgYmVlbiAKZGVtb25zdHJhdGVkIGJleW9uZCBxdWVzdGlvbi4gTGVhcm4gd2h5IHlvdXIg
+cGVlcnMgYXJlIHJlcGxhY2luZyBKRUUgCmNvbnRhaW5lcnMgd2l0aCBsaWdodHdlaWdodCBhcHBs
+aWNhdGlvbiBzZXJ2ZXJzIC0gYW5kIHdoYXQgeW91IGNhbiBnYWluIApmcm9tIHRoZSBtb3ZlLiBo
+dHRwOi8vcC5zZi5uZXQvc2Z1L3Ztd2FyZS1zZmVtYWlscwpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwppYm0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJt
+LWFjcGktZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9y
+Z2UubmV0L2xpc3RzL2xpc3RpbmZvL2libS1hY3BpLWRldmVsCg==
