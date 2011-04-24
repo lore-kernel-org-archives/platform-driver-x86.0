@@ -1,44 +1,50 @@
 From: Jean Delvare <khali@linux-fr.org>
-Subject: [PATCH] acerhdf: Drop pointless dependency on THERMAL_HWMON
-Date: Sun, 24 Apr 2011 11:00:08 +0200
-Message-ID: <20110424110008.439dd333@endymion.delvare>
+Subject: [PATCH] acerhdf: Clean up includes
+Date: Sun, 24 Apr 2011 18:07:55 +0200
+Message-ID: <20110424180755.7c1759ff@endymion.delvare>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from zone0.gcu-squad.org ([212.85.147.21]:15099 "EHLO
+Received: from zone0.gcu-squad.org ([212.85.147.21]:32250 "EHLO
 	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755834Ab1DXJAU (ORCPT
+	with ESMTP id S1757563Ab1DXQII (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 24 Apr 2011 05:00:20 -0400
+	Sun, 24 Apr 2011 12:08:08 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Peter Feuerer <peter@piie.net>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Guenter Roeck <guenter.roeck@ericsson.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-The THERMAL_HWMON config option simply exposes the thermal zone
-temperature values and limits to user-space. It makes no sense for a
-kernel driver to depend on this.
+* The acerhdf driver isn't an ACPI driver, so it needs not include
+  <acpi/acpi_drivers.h>. All it uses is ec_read() and ec_write(), for
+  which <linux/acpi.h> is sufficient.
+* I couldn't find any reason why <linux/fs.h> and <linux/sched.h> were
+  included.
+
+This should avoid unneeded rebuilds of the acerhdf driver.
 
 Signed-off-by: Jean Delvare <khali@linux-fr.org>
 Cc: Peter Feuerer <peter@piie.net>
 Cc: Matthew Garrett <mjg@redhat.com>
 ---
- drivers/platform/x86/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/acerhdf.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- linux-2.6.39-rc4.orig/drivers/platform/x86/Kconfig	2011-04-22 18:53:05.000000000 +0200
-+++ linux-2.6.39-rc4/drivers/platform/x86/Kconfig	2011-04-24 10:46:59.000000000 +0200
-@@ -39,7 +39,7 @@ config ACER_WMI
+--- linux-2.6.39-rc4.orig/drivers/platform/x86/acerhdf.c	2011-04-24 14:06:32.000000000 +0200
++++ linux-2.6.39-rc4/drivers/platform/x86/acerhdf.c	2011-04-24 17:56:28.000000000 +0200
+@@ -35,10 +35,8 @@
  
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
--	depends on THERMAL && THERMAL_HWMON && ACPI
-+	depends on THERMAL && ACPI
- 	---help---
- 	  This is a driver for Acer Aspire One netbooks. It allows to access
- 	  the temperature sensor and to control the fan.
-
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/fs.h>
+ #include <linux/dmi.h>
+-#include <acpi/acpi_drivers.h>
+-#include <linux/sched.h>
++#include <linux/acpi.h>
+ #include <linux/thermal.h>
+ #include <linux/platform_device.h>
+ 
 
 -- 
 Jean Delvare
