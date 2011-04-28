@@ -1,33 +1,68 @@
-From: Peter Feuerer <peter@piie.net>
-Subject: Re: [PATCH] acerhdf: Clean up includes
-Date: Tue, 26 Apr 2011 16:12:29 +0200
-Message-ID: <cone.1303827149.155725.4025.1000@deskpiie>
-References: <20110424180755.7c1759ff@endymion.delvare>
+From: Florian Heyer <heyho@flanto.de>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Thu, 28 Apr 2011 10:42:14 +0200
+Message-ID: <4DB92866.4000008@flanto.de>
+References: <4DAB18C3.7010106@flanto.de> <4DAB9566.7010601@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="US-ASCII"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay06.ispgateway.de ([80.67.31.101]:49964 "EHLO
-	smtprelay06.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756006Ab1DZOVG (ORCPT
+Received: from melmac.flanto.de ([78.46.67.50]:51817 "EHLO melmac.flanto.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932124Ab1D1ImR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Apr 2011 10:21:06 -0400
-Content-Disposition: inline
+	Thu, 28 Apr 2011 04:42:17 -0400
+In-Reply-To: <4DAB9566.7010601@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <khali@linux-fr.org>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Jean Delvare writes:
-
-> * The acerhdf driver isn't an ACPI driver, so it needs not include
->   <acpi/acpi_drivers.h>. All it uses is ec_read() and ec_write(), for
->   which <linux/acpi.h> is sufficient.
-> * I couldn't find any reason why <linux/fs.h> and <linux/sched.h> were
->   included.
+On 18.04.2011 03:35, Ike Panhc wrote:
+> In the mean time. Some test is suggested.
 > 
-> This should avoid unneeded rebuilds of the acerhdf driver.
+[...]
+>  * Insert a printk in notify function like this
 > 
-> Signed-off-by: Jean Delvare <khali@linux-fr.org>
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -449,6 +449,7 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+>         acpi_handle handle = adevice->handle;
+>         unsigned long vpc1, vpc2, vpc_bit;
+>  
+> +       pr_info("notified. event: 0x%X.\n", event);
+>         if (read_ec_data(handle, 0x10, &vpc1))
+>                 return;
+>         if (read_ec_data(handle, 0x1A, &vpc2))
+> 
+>    and see if we have the acpi event on switch event.
 
-Acked-by: Peter Feuerer <peter@piie.net>
+Hello Ike,
+
+i'm back at this problem.
+I have loaded module ideapad_laptop with modification as above.
+
+On triggering the hardware wifi button on->off->on i get the following
+messages:
+
+[  730.712030] usb 3-5: USB disconnect, device number 4
+[  730.713156] btusb_bulk_complete: hci0 urb ffff8801178d7b40 failed to
+resubmit (19)
+[  730.713183] btusb_intr_complete: hci0 urb ffff880115e6c780 failed to
+resubmit (19)
+[  730.713983] btusb_bulk_complete: hci0 urb ffff8801178d7000 failed to
+resubmit (19)
+[  730.714236] btusb_send_frame: hci0 urb ffff880114055600 submission failed
+[  730.715438] notified. event: 0x80.
+[  731.710317] hci_cmd_timer: hci0 command tx timeout
+[  732.008870] notified. event: 0x80.
+[  732.650384] usb 3-5: new full speed USB device number 5 using ohci_hcd
+
+
+Other function buttons (e.g. screen brightness adjustment) also produce
+messages as above "notified. event: 0x80."
+
+
+Regards
+-- 
+Florian Heyer - heyho@flanto.de
