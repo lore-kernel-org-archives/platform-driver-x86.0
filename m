@@ -1,19 +1,14 @@
 From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 Subject: [RFC 5/5] hwmon: add support for Technologic Systems TS-5500 A-D converter
 Date: Fri, 29 Apr 2011 18:21:52 -0400
-Message-ID: <1304115712-5299-6-git-send-email-vivien.didelot__20137.8119564199$1304116421$gmane$org@savoirfairelinux.com>
+Message-ID: <1304115712-5299-6-git-send-email-vivien.didelot__19578.4260322855$1304116421$gmane$org@savoirfairelinux.com>
 References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.savoirfairelinux.com ([209.172.62.77]:47070 "EHLO
-	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752370Ab1D2WdP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 Apr 2011 18:33:15 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 Cc: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, lm-sensors@lm-sensors.org
+List-Id: platform-driver-x86.vger.kernel.org
 
 From: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>
 
