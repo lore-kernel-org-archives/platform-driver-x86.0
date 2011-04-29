@@ -1,11 +1,11 @@
 From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 Subject: [RFC 4/5] leds: add support for Technologic Systems TS-5500 leds
 Date: Fri, 29 Apr 2011 18:21:51 -0400
-Message-ID: <1304115712-5299-5-git-send-email-vivien.didelot__16301.1359320537$1304116403$gmane$org@savoirfairelinux.com>
+Message-ID: <1304115712-5299-5-git-send-email-vivien.didelot__5817.50107598982$1304116411$gmane$org@savoirfairelinux.com>
 References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Sender: linux-serial-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 Cc: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, lm-sensors@lm-sensors.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -288,4 +288,3 @@ index 0000000..aec6d71
 +MODULE_AUTHOR("Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>");
 -- 
 1.7.1
-
