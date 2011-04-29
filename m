@@ -1,14 +1,19 @@
 From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 Subject: [RFC 1/5] platform-drivers-x86: add support for Technologic Systems TS-5xxx detection
 Date: Fri, 29 Apr 2011 18:21:48 -0400
-Message-ID: <1304115712-5299-2-git-send-email-vivien.didelot__4665.34688971496$1304116104$gmane$org@savoirfairelinux.com>
+Message-ID: <1304115712-5299-2-git-send-email-vivien.didelot__21140.1469693103$1304116104$gmane$org@savoirfairelinux.com>
 References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.savoirfairelinux.com ([209.172.62.77]:49368 "EHLO
+	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751733Ab1D2W2P (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 29 Apr 2011 18:28:15 -0400
 In-Reply-To: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Sender: linux-serial-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 Cc: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, lm-sensors@lm-sensors.org
-List-Id: platform-driver-x86.vger.kernel.org
 
 From: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>
 
@@ -435,4 +440,3 @@ index 0000000..0240e5c
 +#endif
 -- 
 1.7.1
-
