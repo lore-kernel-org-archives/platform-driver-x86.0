@@ -1,221 +1,76 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Subject: [PATCH 4/4] acer-wmi: Delete out-of-date documentation
-Date: Mon, 02 May 2011 09:57:23 +0100
-Message-ID: <20110502085723.3581.45841.stgit@localhost>
-References: <20110502085707.3581.6671.stgit@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic Systems TS-5xxx detection
+Date: Mon, 02 May 2011 17:07:29 -0400
+Message-ID: <1304368433-sup-4264@sfl>
+References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com> <20110429233230.GB24864@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 5ac7707e.bb.sky.com ([90.199.112.126]:41992 "EHLO valkyrie."
-	rhost-flags-OK-OK-FAIL-FAIL) by vger.kernel.org with ESMTP
-	id S1756910Ab1EBJRj (ORCPT
+Received: from mail.savoirfairelinux.com ([209.172.62.77]:60178 "EHLO
+	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753881Ab1EBVHc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 May 2011 05:17:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by valkyrie. (8.14.4/8.14.3) with ESMTP id p428vNcL003643
-	for <platform-driver-x86@vger.kernel.org>; Mon, 2 May 2011 09:57:23 +0100
-In-Reply-To: <20110502085707.3581.6671.stgit@localhost>
+	Mon, 2 May 2011 17:07:32 -0400
+In-reply-to: <20110429233230.GB24864@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
 
-The documentation file for acer-wmi is long out of date, and there's not
-much point in keeping it around either.
+Hi,
 
-Signed-off-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
----
- Documentation/laptops/acer-wmi.txt |  184 ------------------------------------
- 1 files changed, 0 insertions(+), 184 deletions(-)
- delete mode 100644 Documentation/laptops/acer-wmi.txt
+Thanks you all for your comments, I'll consider them carefully.
 
-diff --git a/Documentation/laptops/acer-wmi.txt b/Documentation/laptops/acer-wmi.txt
-deleted file mode 100644
-index 4beafa6..0000000
---- a/Documentation/laptops/acer-wmi.txt
-+++ /dev/null
-@@ -1,184 +0,0 @@
--Acer Laptop WMI Extras Driver
--http://code.google.com/p/aceracpi
--Version 0.3
--4th April 2009
--
--Copyright 2007-2009 Carlos Corbacho <carlos@strangeworlds.co.uk>
--
--acer-wmi is a driver to allow you to control various parts of your Acer laptop
--hardware under Linux which are exposed via ACPI-WMI.
--
--This driver completely replaces the old out-of-tree acer_acpi, which I am
--currently maintaining for bug fixes only on pre-2.6.25 kernels. All development
--work is now focused solely on acer-wmi.
--
--Disclaimer
--**********
--
--Acer and Wistron have provided nothing towards the development acer_acpi or
--acer-wmi. All information we have has been through the efforts of the developers
--and the users to discover as much as possible about the hardware.
--
--As such, I do warn that this could break your hardware - this is extremely
--unlikely of course, but please bear this in mind.
--
--Background
--**********
--
--acer-wmi is derived from acer_acpi, originally developed by Mark
--Smith in 2005, then taken over by Carlos Corbacho in 2007, in order to activate
--the wireless LAN card under a 64-bit version of Linux, as acerhk[1] (the
--previous solution to the problem) relied on making 32 bit BIOS calls which are
--not possible in kernel space from a 64 bit OS.
--
--[1] acerhk: http://www.cakey.de/acerhk/
--
--Supported Hardware
--******************
--
--NOTE: The Acer Aspire One is not supported hardware. It cannot work with
--acer-wmi until Acer fix their ACPI-WMI implementation on them, so has been
--blacklisted until that happens.
--
--Please see the website for the current list of known working hardware:
--
--http://code.google.com/p/aceracpi/wiki/SupportedHardware
--
--If your laptop is not listed, or listed as unknown, and works with acer-wmi,
--please contact me with a copy of the DSDT.
--
--If your Acer laptop doesn't work with acer-wmi, I would also like to see the
--DSDT.
--
--To send me the DSDT, as root/sudo:
--
--cat /sys/firmware/acpi/tables/DSDT > dsdt
--
--And send me the resulting 'dsdt' file.
--
--Usage
--*****
--
--On Acer laptops, acer-wmi should already be autoloaded based on DMI matching.
--For non-Acer laptops, until WMI based autoloading support is added, you will
--need to manually load acer-wmi.
--
--acer-wmi creates /sys/devices/platform/acer-wmi, and fills it with various
--files whose usage is detailed below, which enables you to control some of the
--following (varies between models):
--
--* the wireless LAN card radio
--* inbuilt Bluetooth adapter
--* inbuilt 3G card
--* mail LED of your laptop
--* brightness of the LCD panel
--
--Wireless
--********
--
--With regards to wireless, all acer-wmi does is enable the radio on the card. It
--is not responsible for the wireless LED - once the radio is enabled, this is
--down to the wireless driver for your card. So the behaviour of the wireless LED,
--once you enable the radio, will depend on your hardware and driver combination.
--
--e.g. With the BCM4318 on the Acer Aspire 5020 series:
--
--ndiswrapper: Light blinks on when transmitting
--b43: Solid light, blinks off when transmitting
--
--Wireless radio control is unconditionally enabled - all Acer laptops that support
--acer-wmi come with built-in wireless. However, should you feel so inclined to
--ever wish to remove the card, or swap it out at some point, please get in touch
--with me, as we may well be able to gain some data on wireless card detection.
--
--The wireless radio is exposed through rfkill.
--
--Bluetooth
--*********
--
--For bluetooth, this is an internal USB dongle, so once enabled, you will get
--a USB device connection event, and a new USB device appears. When you disable
--bluetooth, you get the reverse - a USB device disconnect event, followed by the
--device disappearing again.
--
--Bluetooth is autodetected by acer-wmi, so if you do not have a bluetooth module
--installed in your laptop, this file won't exist (please be aware that it is
--quite common for Acer not to fit bluetooth to their laptops - so just because
--you have a bluetooth button on the laptop, doesn't mean that bluetooth is
--installed).
--
--For the adventurously minded - if you want to buy an internal bluetooth
--module off the internet that is compatible with your laptop and fit it, then
--it will work just fine with acer-wmi.
--
--Bluetooth is exposed through rfkill.
--
--3G
--**
--
--3G is currently not autodetected, so the 'threeg' file is always created under
--sysfs. So far, no-one in possession of an Acer laptop with 3G built-in appears to
--have tried Linux, or reported back, so we don't have any information on this.
--
--If you have an Acer laptop that does have a 3G card in, please contact me so we
--can properly detect these, and find out a bit more about them.
--
--To read the status of the 3G card (0=off, 1=on):
--cat /sys/devices/platform/acer-wmi/threeg
--
--To enable the 3G card:
--echo 1 > /sys/devices/platform/acer-wmi/threeg
--
--To disable the 3G card:
--echo 0 > /sys/devices/platform/acer-wmi/threeg
--
--To set the state of the 3G card when loading acer-wmi, pass:
--threeg=X (where X is 0 or 1)
--
--Mail LED
--********
--
--This can be found in most older Acer laptops supported by acer-wmi, and many
--newer ones - it is built into the 'mail' button, and blinks when active.
--
--On newer (WMID) laptops though, we have no way of detecting the mail LED. If
--your laptop identifies itself in dmesg as a WMID model, then please try loading
--acer_acpi with:
--
--force_series=2490
--
--This will use a known alternative method of reading/ writing the mail LED. If
--it works, please report back to me with the DMI data from your laptop so this
--can be added to acer-wmi.
--
--The LED is exposed through the LED subsystem, and can be found in:
--
--/sys/devices/platform/acer-wmi/leds/acer-wmi::mail/
--
--The mail LED is autodetected, so if you don't have one, the LED device won't
--be registered.
--
--Backlight
--*********
--
--The backlight brightness control is available on all acer-wmi supported
--hardware. The maximum brightness level is usually 15, but on some newer laptops
--it's 10 (this is again autodetected).
--
--The backlight is exposed through the backlight subsystem, and can be found in:
--
--/sys/devices/platform/acer-wmi/backlight/acer-wmi/
--
--Credits
--*******
--
--Olaf Tauber, who did the real hard work when he developed acerhk
--http://www.cakey.de/acerhk/
--All the authors of laptop ACPI modules in the kernel, whose work
--was an inspiration in the early days of acer_acpi
--Mathieu Segaud, who solved the problem with having to modprobe the driver
--twice in acer_acpi 0.2.
--Jim Ramsay, who added support for the WMID interface
--Mark Smith, who started the original acer_acpi
--
--And the many people who have used both acer_acpi and acer-wmi.
+Excerpts from Greg KH's message of 2011-04-29 19:32:30 -0400:
+> On Fri, Apr 29, 2011 at 06:21:48PM -0400, Vivien Didelot wrote:
+> > +/proc filesystem
+> > +----------------
+> > +
+> > +Information about the TS board is available through the /proc/ts-sbcinfo.
+> 
+> Really?  Why?
+> 
+> As you now have added a new kernel/user ABI, it must be documented in
+> Documentation/ABI/
+> 
+> Please include that in your next patch.
+> 
+> But first off, why a new proc file?  What is it used for?
+
+I think it could be useful for the user to know what option is available
+or not on the board.
+
+> 
+> > +static int ts_sbcinfo_init_buffer(char *buf, struct ts5xxx_sbcinfo *sbcinfo)
+> > +{
+> > +    char *pos = buf;
+> > +
+> > +    pos += ts_addbuf(pos, "Board ID", "TS-%d", sbcinfo->board_id);
+> > +    pos += ts_addbuf(pos, "RS485", "%s", sbcinfo->rs485 ? "yes" : "no");
+> > +    pos += ts_addbuf(pos, "AnalogToDigital", "%s",
+> > +             sbcinfo->adc ? "yes" : "no");
+> > +    pos += ts_addbuf(pos, "Auto485", "%s", sbcinfo->auto485 ? "yes" : "no");
+> > +    pos += ts_addbuf(pos, "SRAM", "%s", sbcinfo->sram ? "yes" : "no");
+> > +    pos += ts_addbuf(pos, "External Reset", "%s",
+> > +             sbcinfo->external_reset ? "yes" : "no");
+> 
+> Most of these look like they should be simple "one value per file" sysfs
+> files for your system.  That would make things much easier on your
+> userspace tools to handle parsing them properly, right?
+> 
+> Why not do that instead?
+
+I had a look at other drivers, and /sys/devices/platform/ts/ seems to be
+a good place to hold those entries (one per options as you suggested).
+Do you agree with that?
+
+By the way, as they would be sysfs attributes, is Documentation/ABI the
+best place to add the documentation file?
+
+> 
+> thanks,
+> 
+> greg k-h
+
+Regards,
+Vivien.
