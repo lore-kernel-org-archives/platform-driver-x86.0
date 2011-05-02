@@ -1,30 +1,43 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [RFC 5/5] hwmon: add support for Technologic Systems TS-5500
- A-D converter
-Date: Sat, 30 Apr 2011 11:20:36 +0100
-Message-ID: <20110430112036.1715b351@lxorguk.ukuu.org.uk>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<1304115712-5299-6-git-send-email-vivien.didelot@savoirfairelinux.com>
+From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Subject: [PATCH 1/4] tc1100-wmi: Orphan driver
+Date: Mon, 02 May 2011 09:57:08 +0100
+Message-ID: <20110502085707.3581.6671.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:36900 "EHLO
-	www.etchedpixels.co.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1755164Ab1D3KUF (ORCPT
+Received: from 5ac7707e.bb.sky.com ([90.199.112.126]:41992 "EHLO valkyrie."
+	rhost-flags-OK-OK-FAIL-FAIL) by vger.kernel.org with ESMTP
+	id S1756910Ab1EBJRf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 30 Apr 2011 06:20:05 -0400
-In-Reply-To: <1304115712-5299-6-git-send-email-vivien.didelot@savoirfairelinux.com>
+	Mon, 2 May 2011 05:17:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by valkyrie. (8.14.4/8.14.3) with ESMTP id p428v8qP003616
+	for <platform-driver-x86@vger.kernel.org>; Mon, 2 May 2011 09:57:08 +0100
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: linux-kernel@vger.kernel.org, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, lm-sensors@lm-sensors.org
+To: platform-driver-x86@vger.kernel.org
 
-> +	ts5xxx_sbcinfo_set(&sbcinfo);
-> +	if (5500 != sbcinfo.board_id && !sbcinfo.adc) {
-> +		printk(MODULE_NAME ": Incompatible TS Board.\n");
-> +		return -ENODEV
+I've never owned the hardware, this was a port of an existing driver to prove
+that the ACPI-WMI code was useful to more than just acer-wmi.
 
-This is a symptom of creating the devices in the wrong place. If you put
-all the ident/creation of boards in one place with the device creation
-the drivers will cleanup and these ugly export things will go away
+Signed-off-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+---
+ MAINTAINERS |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 649600c..5bf19e9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3014,9 +3014,8 @@ S:	Maintained
+ F:	drivers/net/wireless/hostap/
+ 
+ HP COMPAQ TC1100 TABLET WMI EXTRAS DRIVER
+-M:	Carlos Corbacho <carlos@strangeworlds.co.uk>
+ L:	platform-driver-x86@vger.kernel.org
+-S:	Odd Fixes
++S:	Orphan
+ F:	drivers/platform/x86/tc1100-wmi.c
+ 
+ HP100:	Driver for HP 10/100 Mbit/s Voice Grade Network Adapter Series
