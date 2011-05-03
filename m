@@ -1,83 +1,62 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic
- Systems TS-5xxx detection
-Date: Mon, 2 May 2011 14:55:35 -0700
-Message-ID: <20110502215535.GA30373@kroah.com>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
- <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com>
- <20110429233230.GB24864@kroah.com>
- <1304368433-sup-4264@sfl>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH 3/4] acer-wmi: Update MAINTAINERS
+Date: Mon, 02 May 2011 22:57:01 -0600
+Message-ID: <4DC017BD020000230002C134@novprvlin0050.provo.novell.com>
+References: <20110502085707.3581.6671.stgit@localhost>
+ <20110502085718.3581.27358.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+In-Reply-To: <20110502085718.3581.27358.stgit@localhost>
 Content-Disposition: inline
-In-Reply-To: <1304368433-sup-4264@sfl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: carlos@strangeworlds.co.uk
+Cc: platform-driver-x86@vger.kernel.org
 
-On Mon, May 02, 2011 at 05:07:29PM -0400, Vivien Didelot wrote:
-> Hi,
-> 
-> Thanks you all for your comments, I'll consider them carefully.
-> 
-> Excerpts from Greg KH's message of 2011-04-29 19:32:30 -0400:
-> > On Fri, Apr 29, 2011 at 06:21:48PM -0400, Vivien Didelot wrote:
-> > > +/proc filesystem
-> > > +----------------
-> > > +
-> > > +Information about the TS board is available through the /proc/ts-sbcinfo.
-> > 
-> > Really?  Why?
-> > 
-> > As you now have added a new kernel/user ABI, it must be documented in
-> > Documentation/ABI/
-> > 
-> > Please include that in your next patch.
-> > 
-> > But first off, why a new proc file?  What is it used for?
-> 
-> I think it could be useful for the user to know what option is available
-> or not on the board.
+=E6=96=BC =E4=B8=80=EF=BC=8C2011-05-02 =E6=96=BC 09:57 +0100=EF=BC=8CCa=
+rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
+> I don't have the time or much interest these days in maintaining acer=
+-wmi, as I
+> don't have access to newer Acer hardware. As he's been doing most of =
+the work
+> these days anyway, Joey Lee has kindly agreed to take over.
+>=20
 
-But that's not how we export data to userspace anymore, sorry.  We try
-to learn from our past mistakes.
+Thank's for Carlos give me this chance for contribute kernel upstream,
+will do my best.
 
-Almost all of this data can be gotten from other methods anyway, you
-need to justify why you wish to repeat this here.
+Acked-by: Joey Lee <jlee@novell.com>
 
-> > > +static int ts_sbcinfo_init_buffer(char *buf, struct ts5xxx_sbcinfo *sbcinfo)
-> > > +{
-> > > +    char *pos = buf;
-> > > +
-> > > +    pos += ts_addbuf(pos, "Board ID", "TS-%d", sbcinfo->board_id);
-> > > +    pos += ts_addbuf(pos, "RS485", "%s", sbcinfo->rs485 ? "yes" : "no");
-> > > +    pos += ts_addbuf(pos, "AnalogToDigital", "%s",
-> > > +             sbcinfo->adc ? "yes" : "no");
-> > > +    pos += ts_addbuf(pos, "Auto485", "%s", sbcinfo->auto485 ? "yes" : "no");
-> > > +    pos += ts_addbuf(pos, "SRAM", "%s", sbcinfo->sram ? "yes" : "no");
-> > > +    pos += ts_addbuf(pos, "External Reset", "%s",
-> > > +             sbcinfo->external_reset ? "yes" : "no");
-> > 
-> > Most of these look like they should be simple "one value per file" sysfs
-> > files for your system.  That would make things much easier on your
-> > userspace tools to handle parsing them properly, right?
-> > 
-> > Why not do that instead?
-> 
-> I had a look at other drivers, and /sys/devices/platform/ts/ seems to be
-> a good place to hold those entries (one per options as you suggested).
-> Do you agree with that?
+Thank's
+Joey Lee
 
-No, this is not a platform device, is it?  Only platform devices go
-there, and I really doubt you have many of them for this board.
-
-> By the way, as they would be sysfs attributes, is Documentation/ABI the
-> best place to add the documentation file?
-
-Yes.
-
-thanks,
-
-greg k-h
+> Signed-off-by: Carlos Corbacho <carlos@strangeworlds.co.uk>
+> Cc: Joey Lee <jlee@novell.com>
+> ---
+>  MAINTAINERS |    4 +---
+>  1 files changed, 1 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 833eb28..a49c15d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -223,10 +223,8 @@ S:	Maintained
+>  F:	drivers/platform/x86/acerhdf.c
+> =20
+>  ACER WMI LAPTOP EXTRAS
+> -M:	Carlos Corbacho <carlos@strangeworlds.co.uk>
+> -L:	aceracpi@googlegroups.com (subscribers-only)
+> +M:	Joey Lee <jlee@novell.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> -W:	http://code.google.com/p/aceracpi
+>  S:	Maintained
+>  F:	drivers/platform/x86/acer-wmi.c
+> =20
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
