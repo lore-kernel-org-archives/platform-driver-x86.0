@@ -1,68 +1,54 @@
-From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [lm-sensors] [RFC 5/5] hwmon: add support for Technologic Systems
- TS-5500 A-D converter
-Date: Wed, 04 May 2011 10:03:24 +0100
-Message-ID: <4DC1165C.4000103@cam.ac.uk>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-6-git-send-email-vivien.didelot@savoirfairelinux.com> <20110430033938.GA14397@ericsson.com> <1304434162-sup-3877@sfl>
-Mime-Version: 1.0
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic Systems TS-5xxx detection
+Date: Wed, 04 May 2011 11:15:50 -0400
+Message-ID: <1304520382-sup-3361@sfl>
+References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com> <20110430110705.5ca3376b@lxorguk.ukuu.org.uk>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1304434162-sup-3877@sfl>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonas Fonseca <jonas.fonseca-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.savoirfairelinux.com ([209.172.62.77]:56667 "EHLO
+	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754070Ab1EDPPx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 4 May 2011 11:15:53 -0400
+In-reply-to: <20110430110705.5ca3376b@lxorguk.ukuu.org.uk>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
 
-On 05/03/11 16:55, Vivien Didelot wrote:
-> Hi Guenter,
+Excerpts from Alan Cox's message of 2011-04-30 06:07:05 -0400:
+> > +
+> > +/**
+> > + * ts_sbcinfo_detect() - detect the TS board
+> > + * @sbcinfo:        structure where to store the detected board's info.
+> > + */
+> > +static int ts_sbcinfo_detect(struct ts5xxx_sbcinfo *sbcinfo)
+> > +{
+> > +    u8 temp;
+> > +    struct ts_sbc_config *sbc;
+> > +    int ret = 0;
+> > +
+> > +    memset(sbcinfo, 0, sizeof(*sbcinfo));
+> > +
+> > +    if (!request_region(IOADDR_SBCID, 4, "TS-SBC"))
+> > +        return -EBUSY;
+> > +
+> > +    temp = inb(IOADDR_SBCID);
+> > +    /* If it is a 3x00 SBC only match against the first 3 bits */
+> > +    if (temp & 0x07)
+> > +        temp &= 0x07;
 > 
-> Excerpts from Guenter Roeck's message of 2011-04-29 23:39:38 -0400:
->> Hi Vivien,
->>
->> The headline and file name are a bit misleading, since the driver is really
->> for MAX197 on a TS-5500 board.
->>
->> You should split the driver into two parts, a generic driver
->> for the MAX197 and a platform driver (residing somewhere in arch/
->> or possibly drivers/platform/) to instantiate it.
->>
->> There should be a platform data include file, probably in
->> include/linux/platform_data/.
->>
->> .ioaddr in platform data should not be necessary. The driver's probe
->> function should get the values using platform_get_resource().
->>
->> Having said that, from reading the code it looks like the chip is not really
->> used for hardware monitoring, but for generic ADC functionality. A quick look
->> into the TS-5500 user manual confirms this. So this should not be a hwmon
->> driver in the first place, but a generic ADC driver. Given the ADC conversion rate
->> of the MAX197, the hwmon ABI is not optimal anyway. You should move this driver
->> into the iio subsystem, probably to drivers/staging/iio/adc. Copying the iio
->> mailing list for input.
->>
->> Thanks,
->> Guenter
+> So if this is compiled into a kernel we blindly inb this address and some
+> platform just crashed on boot. Is this board like other embedded ones in
+> that there is some safe way to check if its such a board first ?
 > 
-> I've took a closer look to the manual and that's right, in fact the
-> driver doesn't talk to the MAX197 directly. The board uses a CPLD to
-> abstract the interface to the MAX197. So all the MAX197 logic is hidden
-> by the CPLD.  Therefore, the driver files should probably not have
-> function and structure names with a "max197_" prefix. I'll make the code
-> a bit clearer. What do you think?
-> 
-> Ok for iio subsystem, several ADC drivers are in drivers/hwmon/ but
-> drivers/staging/iio/adc seems to be the good place now.
-Just as a heads up, beware there are a few abi changes (and a lot of core
-ones) working their way through review /already in staging-next.
-I only mention it because merges against that tree will go through staging-next
-and as it's name suggests is sometimes a fast moving target!
 
-Jonathan
-> Regards,
-> Vivien.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-serial" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+It is possible to make a BIOS call (Int 15h / Function B000h) to get
+board information, like the manufacturer ("TS"). It should be a safer
+way to check if we are on a Technologic Systems board. a intcall(0x15,
+&ireg, &oreg) should do the trick to check the platform, before checking
+the SBC ID. What do you think?
+
+Thanks,
+Vivien.
