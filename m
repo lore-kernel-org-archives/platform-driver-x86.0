@@ -1,28 +1,39 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic
- Systems TS-5xxx detection
-Date: Thu, 5 May 2011 14:38:37 +0100
-Message-ID: <20110505143837.7790edd5@lxorguk.ukuu.org.uk>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<20110430110705.5ca3376b@lxorguk.ukuu.org.uk>
-	<1304520382-sup-3361@sfl>
-	<20110504162954.7ecf5b5e@lxorguk.ukuu.org.uk>
-	<1304537667-sup-2171@sfl>
+From: Ameya Palande <2ameya@gmail.com>
+Subject: Re: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
+Date: Fri, 6 May 2011 14:16:35 +0300
+Message-ID: <BANLkTimZuamu0T3-94zy1B=c4d4cH_adoA@mail.gmail.com>
+References: <1302183002-3900-1-git-send-email-2ameya@gmail.com>
+	<D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1304537667-sup-2171@sfl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-vx0-f174.google.com ([209.85.220.174]:44219 "EHLO
+	mail-vx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754488Ab1EFLQg (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 6 May 2011 07:16:36 -0400
+Received: by vxi39 with SMTP id 39so3319459vxi.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 06 May 2011 04:16:35 -0700 (PDT)
+In-Reply-To: <D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "mjg@redhat.com" <mjg@redhat.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "R, Durgadoss" <durgadoss.r@intel.com>
 
-> I've looked at that, and the board doesn't support DMI. Elements we have
-> are the processor (i.e. AMD ElanSC520), the BIOS, maybe the memory and
-> PCI bus layouts...
+On Thu, Apr 7, 2011 at 4:49 PM, R, Durgadoss <durgadoss.r@intel.com> wrote:
+>> -----Original Message-----
+>> From: Ameya Palande [mailto:2ameya@gmail.com]
+>> Sent: Thursday, April 07, 2011 7:00 PM
+>> To: platform-driver-x86@vger.kernel.org
+>> Cc: mjg@redhat.com; R, Durgadoss
+>> Subject: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
+>>
+>> Signed-off-by: Ameya Palande <2ameya@gmail.com>
+>> ---
+>
+> Acked-by: Durgadoss R <durgadoss.r@linux.intel.com>
 
-Well the CPU is a big help that cuts it down a lot. PCI bridge
-subvendor/dev can be a good way to identify boards as well if they
-manufacturers have actually bothered to set them properly.
+Is this patch already queued for 2.6.40 release?
+
+Cheers,
+Ameya.
