@@ -1,39 +1,48 @@
-From: Ameya Palande <2ameya@gmail.com>
-Subject: Re: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
-Date: Fri, 6 May 2011 14:16:35 +0300
-Message-ID: <BANLkTimZuamu0T3-94zy1B=c4d4cH_adoA@mail.gmail.com>
-References: <1302183002-3900-1-git-send-email-2ameya@gmail.com>
-	<D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Andy Lutomirski <luto@MIT.EDU>
+Subject: [PATCH] thinkpad_acpi: Add ACPI HID for ThinkPad X220
+Date: Sat,  7 May 2011 19:41:14 -0400
+Message-ID: <5b395b26bb6325a484fc1f6ea935a66822fa232a.1304811242.git.luto@mit.edu>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vx0-f174.google.com ([209.85.220.174]:44219 "EHLO
-	mail-vx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754488Ab1EFLQg (ORCPT
+Received: from DMZ-MAILSEC-SCANNER-3.MIT.EDU ([18.9.25.14]:60583 "EHLO
+	dmz-mailsec-scanner-3.mit.edu" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756336Ab1EGXqX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 May 2011 07:16:36 -0400
-Received: by vxi39 with SMTP id 39so3319459vxi.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 May 2011 04:16:35 -0700 (PDT)
-In-Reply-To: <D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
+	Sat, 7 May 2011 19:46:23 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "mjg@redhat.com" <mjg@redhat.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "R, Durgadoss" <durgadoss.r@intel.com>
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@mit.edu>
 
-On Thu, Apr 7, 2011 at 4:49 PM, R, Durgadoss <durgadoss.r@intel.com> wrote:
->> -----Original Message-----
->> From: Ameya Palande [mailto:2ameya@gmail.com]
->> Sent: Thursday, April 07, 2011 7:00 PM
->> To: platform-driver-x86@vger.kernel.org
->> Cc: mjg@redhat.com; R, Durgadoss
->> Subject: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
->>
->> Signed-off-by: Ameya Palande <2ameya@gmail.com>
->> ---
->
-> Acked-by: Durgadoss R <durgadoss.r@linux.intel.com>
+It looks like Lenovo is starting to remove old IBM references.
 
-Is this patch already queued for 2.6.40 release?
+Signed-off-by: Andy Lutomirski <luto@mit.edu>
+---
 
-Cheers,
-Ameya.
+This patch is needed for thinkpad_acpi to load automatically on my
+ThinkPad X220.  (It seems to *work* without the patch, though.)
+
+ drivers/platform/x86/thinkpad_acpi.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index eb99223..4025d84 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -129,6 +129,7 @@ enum {
+ 
+ /* ACPI HIDs */
+ #define TPACPI_ACPI_HKEY_HID		"IBM0068"
++#define TPACPI_ACPI_HKEY_HID_LEN	"LEN0068"
+ #define TPACPI_ACPI_EC_HID		"PNP0C09"
+ 
+ /* Input IDs */
+@@ -3880,6 +3881,7 @@ errexit:
+ 
+ static const struct acpi_device_id ibm_htk_device_ids[] = {
+ 	{TPACPI_ACPI_HKEY_HID, 0},
++	{TPACPI_ACPI_HKEY_HID_LEN, 0},
+ 	{"", 0},
+ };
+ 
+-- 
+1.7.4.4
