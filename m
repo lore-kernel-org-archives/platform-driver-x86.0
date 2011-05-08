@@ -1,43 +1,74 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: Add ACPI HID for ThinkPad X220
-Date: Sun, 8 May 2011 12:04:38 -0300
-Message-ID: <20110508150438.GA30536@khazad-dum.debian.net>
-References: <5b395b26bb6325a484fc1f6ea935a66822fa232a.1304811242.git.luto@mit.edu>
- <BANLkTikVQvuHMbKKdE+cqwog7MHB2p2xPA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andy Lutomirski <luto@MIT.EDU>
+Subject: [PATCH] thinkpad-acpi: module autoloading for newer Lenovo ThinkPads.
+Date: Sun,  8 May 2011 17:58:49 -0400
+Message-ID: <8d66d95c39ba6e68e2acb53ddafabcb3e401635e.1304890969.git.luto@mit.edu>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:53979 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753194Ab1EHPEn (ORCPT
+Received: from DMZ-MAILSEC-SCANNER-6.MIT.EDU ([18.7.68.35]:50336 "EHLO
+	dmz-mailsec-scanner-6.mit.edu" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754246Ab1EHV70 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 8 May 2011 11:04:43 -0400
-Content-Disposition: inline
-In-Reply-To: <BANLkTikVQvuHMbKKdE+cqwog7MHB2p2xPA@mail.gmail.com>
+	Sun, 8 May 2011 17:59:26 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Lutomirski <luto@mit.edu>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andrew Lutomirski <luto@mit.edu>, Manoj Iyer <manoj.iyer@canonical.com>
 
-On Sun, 08 May 2011, Andrew Lutomirski wrote:
-> With this patch, everything except thermal seems to work.  Thermal
-> isn't detected.
+From: Andrew Lutomirski <luto@mit.edu>
 
-It would be detected, if it worked.  The driver got only zeros back when it
-tried to read the temperature, so it correctly assumed that measurement
-system simply isn't supported on your model (it isn't, AFAIK).
+From: Manoj Iyer <manoj.iyer@canonical.com>
+Date: Mon, 7 Mar 2011 17:26:47 -0600
 
-I am OK with this patch (or the older patch which I had already acked) being
-added to linux-next.
-
-Andrew, fell free to add my acked-by, and cc the patch to both stable and
-the subsystem maintainer for merging.  My setup is kind of a mess right now,
-so I've not been forwarding the patches myself.  Should be fixed soon.
+The newer Lenovo ThinkPads have HKEY HID of LEN0068 instead
+of IBM0068. Added new HID so that thinkpad_acpi module will
+auto load on these newer Lenovo ThinkPads.
 
 Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: stable@kernel.org
+Signed-off-by: Manoj Iyer <manoj.iyer@canonical.com>
+Signed-off-by: Andy Lutomirski <luto@mit.edu>
+---
 
+Hi, mjg-
+
+Can you add this to your tree for 2.6.39 (or 2.6.40 if you think it's
+too late for a missing device ID)?  This is needed on a bunch of new
+ThinkPad laptops (including mine).  Henrique asked me to forward my patch
+or this one, and I think this one is slightly prettier.
+
+hmh's email:
+
+http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg01817.html
+
+original patch from Manoj Iyer:
+
+https://lkml.org/lkml/2011/3/8/125
+
+ drivers/platform/x86/thinkpad_acpi.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index eb99223..125d891 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -128,7 +128,8 @@ enum {
+ };
+ 
+ /* ACPI HIDs */
+-#define TPACPI_ACPI_HKEY_HID		"IBM0068"
++#define TPACPI_ACPI_IBM_HKEY_HID	"IBM0068"
++#define TPACPI_ACPI_LENOVO_HKEY_HID	"LEN0068"
+ #define TPACPI_ACPI_EC_HID		"PNP0C09"
+ 
+ /* Input IDs */
+@@ -3879,7 +3880,8 @@ errexit:
+ }
+ 
+ static const struct acpi_device_id ibm_htk_device_ids[] = {
+-	{TPACPI_ACPI_HKEY_HID, 0},
++	{TPACPI_ACPI_IBM_HKEY_HID, 0},
++	{TPACPI_ACPI_LENOVO_HKEY_HID, 0},
+ 	{"", 0},
+ };
+ 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+1.7.5.1
