@@ -1,48 +1,56 @@
-From: Andy Lutomirski <luto@MIT.EDU>
-Subject: [PATCH] thinkpad_acpi: Add ACPI HID for ThinkPad X220
-Date: Sat,  7 May 2011 19:41:14 -0400
-Message-ID: <5b395b26bb6325a484fc1f6ea935a66822fa232a.1304811242.git.luto@mit.edu>
+From: Andrew Lutomirski <luto@mit.edu>
+Subject: [RFC] Controlling the ThinkPad battery charger
+Date: Sun, 8 May 2011 08:35:32 -0400
+Message-ID: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from DMZ-MAILSEC-SCANNER-3.MIT.EDU ([18.9.25.14]:60583 "EHLO
-	dmz-mailsec-scanner-3.mit.edu" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756336Ab1EGXqX (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:35457 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753297Ab1EHMfw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 7 May 2011 19:46:23 -0400
+	Sun, 8 May 2011 08:35:52 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@mit.edu>
+To: linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>
 
-It looks like Lenovo is starting to remove old IBM references.
+I've figured out how the ThinkPad SMAPI charge control works (at least
+well enough to program thresholds on some models), and I'd like to get
+this functionality into mainline.  (This is inspired by, and borrows
+magic numbers from, tp_smapi, but it has no code at all from tp_smapi
+and therefore shouldn't have the lack-of-authorship issue.)  My
+question is: what's the best way to expose this functionality?
 
-Signed-off-by: Andy Lutomirski <luto@mit.edu>
----
+Currently, I have a little driver (not yet in mergeable shape) that
+creates a platform device and sticks some sysfs attributes in it
+depending on which thresholds it can figure out how to program.  It's
+here:
 
-This patch is needed for thinkpad_acpi to load automatically on my
-ThinkPad X220.  (It seems to *work* without the patch, though.)
+https://gitorious.org/linux-test-utils/tp_charge/blobs/master/kmod/tp_charge.c
 
- drivers/platform/x86/thinkpad_acpi.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+I'd like to find a better way, though.  Some quick Googling suggests
+that some Vaio laptops can do this, but I'm afraid that all my laptops
+are ThinkPads.  Two ideas:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index eb99223..4025d84 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -129,6 +129,7 @@ enum {
- 
- /* ACPI HIDs */
- #define TPACPI_ACPI_HKEY_HID		"IBM0068"
-+#define TPACPI_ACPI_HKEY_HID_LEN	"LEN0068"
- #define TPACPI_ACPI_EC_HID		"PNP0C09"
- 
- /* Input IDs */
-@@ -3880,6 +3881,7 @@ errexit:
- 
- static const struct acpi_device_id ibm_htk_device_ids[] = {
- 	{TPACPI_ACPI_HKEY_HID, 0},
-+	{TPACPI_ACPI_HKEY_HID_LEN, 0},
- 	{"", 0},
- };
- 
--- 
-1.7.4.4
+1. Integrate this with thinkpad_acpi and keep exposing it as a
+thinkpad-specific thing (device?  new class_device?) in sysfs.
+
+2. Integrate it with power_supply.
+
+I like option 2 better, since it means that a userspace tool (like
+GNOME) could learn how to operate a battery charge controller once and
+then other laptops and devices could reuse the same interface.  The
+problem is that the ACPI battery driver can't see the charge control.
+So either it would need a hook to allow per-vendor control like this
+or the power_supply class would need to recognize separate charge
+controllers.
+
+I have no intention of creating a kitchen sink like tp_smapi.  But I
+might want to add things like forced discharge or outright disabling
+of charging.  On possible added complication: on ThinkPads, the charge
+thresholds stay in effect until reprogrammed or until the battery is
+removed, even if the computer is off.
+
+Any thoughts?  I've never touched the driver model before.
+
+--Andy
