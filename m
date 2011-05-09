@@ -1,26 +1,97 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] platform-x86: intel_mid_thermal: Fix memory leak
-Date: Mon, 9 May 2011 15:40:52 +0100
-Message-ID: <20110509144052.GB2632@srcf.ucam.org>
-References: <1302183002-3900-1-git-send-email-2ameya@gmail.com>
- <D6D887BA8C9DFF48B5233887EF04654109516F23CC@bgsmsx502.gar.corp.intel.com>
- <BANLkTimZuamu0T3-94zy1B=c4d4cH_adoA@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [RFC] Controlling the ThinkPad battery charger
+Date: Mon, 9 May 2011 11:45:46 -0300
+Message-ID: <20110509144546.GB13275@khazad-dum.debian.net>
+References: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:41177 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753916Ab1EIOk7 (ORCPT
+Received: from out2.smtp.messagingengine.com ([66.111.4.26]:54323 "EHLO
+	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751881Ab1EIOpz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2011 10:40:59 -0400
+	Mon, 9 May 2011 10:45:55 -0400
 Content-Disposition: inline
-In-Reply-To: <BANLkTimZuamu0T3-94zy1B=c4d4cH_adoA@mail.gmail.com>
+In-Reply-To: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ameya Palande <2ameya@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "R, Durgadoss" <durgadoss.r@intel.com>
+To: Andrew Lutomirski <luto@mit.edu>
+Cc: linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>
 
-Sorry, yes, these are all applied for .40 now.
+On Sun, 08 May 2011, Andrew Lutomirski wrote:
+> I've figured out how the ThinkPad SMAPI charge control works (at least
+> well enough to program thresholds on some models), and I'd like to get
+
+Yeah, there's a little protocol to talk to the EC, otherwise it simply
+ignores writes to the battery threshold registers.  I think you had to set
+bit 7 before you write the threshold to the relevant EC register, or
+something.  Found it by trial-and-error a long time ago, I documented it
+somewhere but never took it forward.  I never bothered to hunt down the
+force-drain/battery-select commands, though.
+
+Anyway, since SMAPI works, and is *stable* (the fact that it works from the
+A21 to the latest Lenovos tells you just how stable), which is a lot more
+than what I can say about the ACPI stuff, I didn't see any reason to mess
+with this.
+
+> Currently, I have a little driver (not yet in mergeable shape) that
+> creates a platform device and sticks some sysfs attributes in it
+> depending on which thresholds it can figure out how to program.  It's
+> here:
+> 
+> https://gitorious.org/linux-test-utils/tp_charge/blobs/master/kmod/tp_charge.c
+
+I apologise, but I will not read that code until it is clear I need not be
+available for any possible clean-room attempts.
+
+> 2. Integrate it with power_supply.
+
+Only if we can make it generic enough, but yes, THIS is the better way.
+
+However, I'd prefer if you went all the way and actually hooked to the SBS
+subsystem and exposed all the battery information.  There is a way to do
+that through the ACPI DSDT (but you will have to do the rev. engineering
+yourself, as I said, smapi works just fine across so many models, that I
+never bothered with it -- it is far better supported than ACPI).
+
+It is not even difficult, just look at the methods used to expose the
+standard ACPI battery interface, then read the Smart Battery System (SBS)
+standard, and you will find out by fast trial-and-error how to map one to
+the other.  Or you can look at tp_smapi to speed things up (only, tp_smapi
+talks directly to the EC instead of doing it over ACPI).
+
+The SBS interface exposes more data about the battery, including
+per-cell-group voltage and pack microcontroller aging counters, alarms, and
+the "needs to get through the fuel-gaugue reset procedure" semasphore.
+
+> then other laptops and devices could reuse the same interface.  The
+> problem is that the ACPI battery driver can't see the charge control.
+> So either it would need a hook to allow per-vendor control like this
+> or the power_supply class would need to recognize separate charge
+> controllers.
+> 
+> I have no intention of creating a kitchen sink like tp_smapi.  But I
+> might want to add things like forced discharge or outright disabling
+> of charging.  On possible added complication: on ThinkPads, the charge
+> thresholds stay in effect until reprogrammed or until the battery is
+> removed, even if the computer is off.
+
+This is not a complication.  You must never assume you are the one in charge
+of the ThinkPad firmware (you're not, it does its own thing).  You can
+respectfully ask it to do something else, but you have to keep an eye on it,
+because it might change its mind as soon as an external event is detected.
+
+If the kernel power_supply subsystem cannot work that way, you will have to
+fix that limitation first.  You need to read the thresholds when you need
+that information, etc.
+
+The SBS parameters stay in effect until the EC is power-cycled.  IBMs will
+shut it down when turned off if the AC feed is removed.  Lenovos will only
+shut it down when there is no power at all (i.e. no AC feed, and no SBS
+batteries connected to the box).
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
