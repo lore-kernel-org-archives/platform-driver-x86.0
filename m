@@ -1,52 +1,54 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [RFC] Controlling the ThinkPad battery charger
-Date: Mon, 9 May 2011 12:29:41 -0300
-Message-ID: <20110509152941.GD13275@khazad-dum.debian.net>
-References: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
- <20110509144546.GB13275@khazad-dum.debian.net>
- <BANLkTikB2TFF12vdwLqV9NRw4meEyDjvdA@mail.gmail.com>
+From: Andy Ross <andy.ross@windriver.com>
+Subject: Re: [RFC] Reporting "orientation changed" event
+Date: Mon, 09 May 2011 08:37:55 -0700
+Message-ID: <4DC80A53.7050609@windriver.com>
+References: <20110407181800.27b441b1@destiny.ordissimo> <20110509143828.GA2632@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:54027 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751272Ab1EIP3p (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2011 11:29:45 -0400
-Content-Disposition: inline
-In-Reply-To: <BANLkTikB2TFF12vdwLqV9NRw4meEyDjvdA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Lutomirski <luto@mit.edu>
-Cc: ibm-acpi-devel@lists.sourceforge.net, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20110509143828.GA2632@srcf.ucam.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Anisse Astier <anisse@astier.eu>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentin.chary@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 09 May 2011, Andrew Lutomirski wrote:
-> > The SBS interface exposes more data about the battery, including
-> > per-cell-group voltage and pack microcontroller aging counters, alarms, and
-> > the "needs to get through the fuel-gaugue reset procedure" semasphore.
-> 
-> If I'm feeling really motivated, I'll look at that.  I'm currently
-> more interested in the charging thresholds, though, which I think is
-> independent of the choice of SBS vs ACPI to access the battery state.
-> (From a quick glance at the SBS spec, you can inhibit charging
-> entirely but you can't ask for thresholds.  I assume that the EC takes
-> care of that.  If I'm wrong, please tell me, but SMAPI seems like a
-> fine way to access the thresholds.)
+On 05/09/2011 07:38 AM, Matthew Garrett wrote:
+> On Thu, Apr 07, 2011 at 06:18:00PM +0200, Anisse Astier wrote:
+> > Pegatron Lucid tablet sends an ACPI hotkey event(0xEA) when the
+> > accelerometer detects coarse orientation change
+>
+> I'd say that it ought to be hooked into the accelerometer driver and
+> that should indicate that the orientation has changed.
 
-Yeah, SMAPI is the safest way to deal with all this.  It is an interface
-layer that Lenovo is not fond of breaking (or touches very rarely.  Amounts
-to the same in the end).
+How would that work?  If it's an extra sysfs node, it would require an
+extra file descriptor in the reader.  And if it's an event inside the
+input stream, that would require the reader implement handling to throttle
+the polling rate.  The point here was to avoid having to poll the
+(noisy) accelerometer stream just for gross orientation changes.
 
-SBS does not take care of thresholds, indeed.  The EC does (and I know how
-to program the threshold in a few models, if you do want to test it in your
-X220, I can send you the information.  It is safe to test if you use it
-together with SMAPI to cross-check).
+Just to add a little iconoclasm, is this really something that needs
+to be designed?  Right now, it's limited to one device.  And the only
+reason we care about this event is that the accelerometer device* is
+noisy and very slow.  If it worked like "regular" accelerometers we'd
+just use the standard code path for polling an accelerometer device
+and do it all in userspace.
 
-The SBS ACPI interface would be useful to provide a single driver that can
-replace the ACPI battery one to deliver full functionality in one place.
+The specific use case here is the MeGo integration for the
+ExoPC/WeTab.  You can see the code here:
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+http://build.meego.com/package/files?package=sensorfw-pegatron&project=Trunk
+
+It's just a one-liner acpid hook which uses dbus-send to tickle a
+method in the sensor daemon plugin.  It's clean, works well, and owing
+to acpid's configuration scheme is trivial to package.
+
+Does it really need to be "fixed"?  If this were a whole class of
+hardware, then I guess I'd agree.  But right now it's one quirky
+device.
+
+Andy
+
+* The upstreaming of which is still waiting on me to get back to the
+  panics I saw and triage them.  I haven't forgotten Corentin, I just
+  haven't been able to find the time.
