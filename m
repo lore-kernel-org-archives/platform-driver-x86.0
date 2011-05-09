@@ -1,36 +1,41 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [RFC] Controlling the ThinkPad battery charger
-Date: Mon, 9 May 2011 14:56:12 +0100
-Message-ID: <20110509135612.GA1873@srcf.ucam.org>
-References: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
+Subject: Re: [RFC] Reporting "orientation changed" event
+Date: Mon, 9 May 2011 15:38:28 +0100
+Message-ID: <20110509143828.GA2632@srcf.ucam.org>
+References: <20110407181800.27b441b1@destiny.ordissimo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:53075 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:33353 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752676Ab1EIN4X (ORCPT
+	with ESMTP id S1753780Ab1EIOil (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2011 09:56:23 -0400
+	Mon, 9 May 2011 10:38:41 -0400
 Content-Disposition: inline
-In-Reply-To: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
+In-Reply-To: <20110407181800.27b441b1@destiny.ordissimo>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Lutomirski <luto@mit.edu>
-Cc: linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>
+To: Anisse Astier <anisse@astier.eu>
+Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Andy Ross <andy.ross@windriver.com>, Corentin Chary <corentin.chary@gmail.com>
 
-On Sun, May 08, 2011 at 08:35:32AM -0400, Andrew Lutomirski wrote:
+(Sorry for taking so long to respond)
 
-> I like option 2 better, since it means that a userspace tool (like
-> GNOME) could learn how to operate a battery charge controller once and
-> then other laptops and devices could reuse the same interface.  The
-> problem is that the ACPI battery driver can't see the charge control.
-> So either it would need a hook to allow per-vendor control like this
-> or the power_supply class would need to recognize separate charge
-> controllers.
+On Thu, Apr 07, 2011 at 06:18:00PM +0200, Anisse Astier wrote:
 
-I agree that this is preferable. One option would be to just use smapi 
-and provide a hook to detach the ACPI driver, but that would potentially 
-mean a certain amount of code duplication.
+> Pegatron Lucid tablet sends an ACPI hotkey event(0xEA) when the
+> accelerometer detects coarse orientation change. My initial thought was
+> to just translate this event into KEY_DIRECTION, which seems to be the
+> norm from what we can see in hp-wmi driver. (See patch below for an
+> implementation.)
+> 
+> But this isn't just a key per se like on the HP touchsmart tablet, this
+> is an event that is triggered when the device is rotated.
+> 
+> This could be defined as a new Misc (EV_MSC) event:
+> MSC_ORIENTATION_CHANGED ?
+
+I'd say that it ought to be hooked into the accelerometer driver and 
+that should indicate that the orientation has changed.
 
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
