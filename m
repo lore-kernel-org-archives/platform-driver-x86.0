@@ -1,69 +1,58 @@
-From: Colin Guthrie <gmane@colin.guthr.ie>
-Subject: Re: [Regression] Problem with rfkill on 2.6.38
-Date: Mon, 09 May 2011 17:30:20 +0100
-Message-ID: <4DC8169C.3020601@colin.guthr.ie>
-References: <ip6j66$o5f$1@dough.gmane.org>	 (sfid-20110426_170016_050429_A6E2C01A) <1304930195.3475.17.camel@jlt3.sipsolutions.net>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [RFC] Reporting "orientation changed" event
+Date: Mon, 9 May 2011 17:40:06 +0100
+Message-ID: <20110509164006.GA6570@srcf.ucam.org>
+References: <20110407181800.27b441b1@destiny.ordissimo>
+ <20110509143828.GA2632@srcf.ucam.org>
+ <4DC80A53.7050609@windriver.com>
+ <20110509154729.GA5043@srcf.ucam.org>
+ <4DC80F45.2040508@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from brent.tribalogic.net ([78.86.109.144]:40578 "EHLO
-	summit.brent.tribalogic.net" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1751837Ab1EIQhQ (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:45668 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752112Ab1EIQkT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2011 12:37:16 -0400
-In-Reply-To: <1304930195.3475.17.camel@jlt3.sipsolutions.net>
+	Mon, 9 May 2011 12:40:19 -0400
+Content-Disposition: inline
+In-Reply-To: <4DC80F45.2040508@windriver.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: Andy Ross <andy.ross@windriver.com>
+Cc: Anisse Astier <anisse@astier.eu>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentin.chary@gmail.com>
 
-Hiya,
+On Mon, May 09, 2011 at 08:59:01AM -0700, Andy Ross wrote:
+> On 05/09/2011 08:47 AM, Matthew Garrett wrote:
+> > Yes, so the accelerometer driver should (in-kernel) know that a coarse 
+> > orientation event has occured and then send an appropriate uevent to 
+> > userspace indiciating that it has new data.
+> 
+> OK, so substituting udev for acpid, but otherwise leaving the
+> input-polldev device alone.  That certainly sounds nice to me, though
+> I'm not sure where the "dreadful / don't do that" advice is directed
+> as the handling in userspace will be virtual identical (moving the
+> dbus-send from the acpid event file into a udev rule).
 
+It shouldn't even be a dbus send - something in userspace should just be 
+listening for event notifications on the accelerometer. Use udev 
+directly.
 
-No worries about the late reply... was running around for the last
-couple weeks at various events so haven't had a chance to test any other
-suggestions yet anyway.
+> > I'm going to NAK anything that reports "Coarse orientation change"
+> > to userspace without providing any context.
+> 
+> Just to be clear: there's no kernel code to NAK here.  The acpid hook
+> is raw, and in userspace.  It's not clean, but it's also a single-device
+> fixup: seems to me to be pretty much exactly what apcid is for, no?
 
-'Twas brillig, and Johannes Berg at 09/05/11 09:36 did gyre and gimble:
->> > [root@jimmy ~]# rmmod dell_laptop
-> I'm pretty sure this one's at fault, see below.
-
-Looking at the only commit available for this module on this cycle I see:
-
-http://git.kernel.org/?p=linux/kernel/git/stable/linux-2.6.38.y.git;a=commit;h=a3d77411e8b2ad661958c1fbee65beb476ec6d70
-
-dell-laptop: Toggle the unsupported hardware killswitch
-
-It is found on Dell Inspiron 1018 that the firmware reports that the
-hardware killswitch is not supported. This makes the rfkill key not
-functional.
-
-This patch forces the driver to toggle the firmware rfkill status in the
-case that the hardware killswitch is indicated as unsupported by the
-firmware.
-
-
-
-
-
-This looks pretty suspicious to me (from the description) and sounds
-like this could be an unintended consequence of the changes here.
-
-I'll see if reverting this one fixes the issue. Thanks for the insights!
-
-Col
-
+acpid is for dealing with cases where the kernel doesn't provide 
+functionality that the kernel should provide. Arbitrary APCI events 
+shouldn't be being delivered to userspace - they should be handled 
+in-kernel and delivered through a meaningful mechanism in order to avoid 
+cases where userspace needs to know about a platform implementation. In 
+this case the right way for the event to hit userspace is as a generic 
+message from the accelerometer, not as a device-specific ACPI event 
+through a deprecated interface.
 
 -- 
-
-Colin Guthrie
-gmane(at)colin.guthr.ie
-http://colin.guthr.ie/
-
-Day Job:
-  Tribalogic Limited [http://www.tribalogic.net/]
-Open Source:
-  Mageia Contributor [http://www.mageia.org/]
-  PulseAudio Hacker [http://www.pulseaudio.org/]
-  Trac Hacker [http://trac.edgewall.org/]
+Matthew Garrett | mjg59@srcf.ucam.org
