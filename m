@@ -1,59 +1,69 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [RFC] Reporting "orientation changed" event
-Date: Mon, 9 May 2011 18:30:34 +0200
-Message-ID: <20110509183034.592ad732@destiny.ordissimo>
-References: <20110407181800.27b441b1@destiny.ordissimo>
-	<20110509143828.GA2632@srcf.ucam.org>
-	<4DC80A53.7050609@windriver.com>
-	<20110509154729.GA5043@srcf.ucam.org>
-	<4DC80F45.2040508@windriver.com>
+From: Colin Guthrie <gmane@colin.guthr.ie>
+Subject: Re: [Regression] Problem with rfkill on 2.6.38
+Date: Mon, 09 May 2011 17:30:20 +0100
+Message-ID: <4DC8169C.3020601@colin.guthr.ie>
+References: <ip6j66$o5f$1@dough.gmane.org>	 (sfid-20110426_170016_050429_A6E2C01A) <1304930195.3475.17.camel@jlt3.sipsolutions.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:55282 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752050Ab1EIQaq (ORCPT
+Received: from brent.tribalogic.net ([78.86.109.144]:40578 "EHLO
+	summit.brent.tribalogic.net" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751837Ab1EIQhQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 May 2011 12:30:46 -0400
-In-Reply-To: <4DC80F45.2040508@windriver.com>
+	Mon, 9 May 2011 12:37:16 -0400
+In-Reply-To: <1304930195.3475.17.camel@jlt3.sipsolutions.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Ross <andy.ross@windriver.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentin.chary@gmail.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Mon, 09 May 2011 08:59:01 -0700, Andy Ross <andy.ross@windriver.com> wrote :
+Hiya,
 
-> On 05/09/2011 08:47 AM, Matthew Garrett wrote:
-> > Yes, so the accelerometer driver should (in-kernel) know that a coarse 
-> > orientation event has occured and then send an appropriate uevent to 
-> > userspace indiciating that it has new data.
-> 
-> OK, so substituting udev for acpid, but otherwise leaving the
-> input-polldev device alone.  That certainly sounds nice to me, though
-> I'm not sure where the "dreadful / don't do that" advice is directed
-> as the handling in userspace will be virtual identical (moving the
-> dbus-send from the acpid event file into a udev rule).
-> 
-> > I'm going to NAK anything that reports "Coarse orientation change"
-> > to userspace without providing any context.
-> 
-> Just to be clear: there's no kernel code to NAK here.  The acpid hook
-> is raw, and in userspace.  It's not clean, but it's also a single-device
-> fixup: seems to me to be pretty much exactly what apcid is for, no?
 
-I think this was aimed at my proposal to send an input event
-KEY_DIRECTION from within asus_laptop driver, which wouldn't provide
-context with regard to which accelerometer device triggered it (although
-in our setup there's only one device, and the ACPI event doesn't provide
-any context either, but at least we know it's an ACPI accelerometer).
+No worries about the late reply... was running around for the last
+couple weeks at various events so haven't had a chance to test any other
+suggestions yet anyway.
 
-An udev event(e.g "change") works for me, it would provide context, and
-wouldn't disturb the handling of the polled-input device which we'd like
-to open as little as possible.
+'Twas brillig, and Johannes Berg at 09/05/11 09:36 did gyre and gimble:
+>> > [root@jimmy ~]# rmmod dell_laptop
+> I'm pretty sure this one's at fault, see below.
 
-Anyway, whatever solution we choose, the priority is to get this driver
-included, even if we don't support the "Coarse Orientation Changed" event
-in kernel yet.
+Looking at the only commit available for this module on this cycle I see:
 
-Anisse
+http://git.kernel.org/?p=linux/kernel/git/stable/linux-2.6.38.y.git;a=commit;h=a3d77411e8b2ad661958c1fbee65beb476ec6d70
+
+dell-laptop: Toggle the unsupported hardware killswitch
+
+It is found on Dell Inspiron 1018 that the firmware reports that the
+hardware killswitch is not supported. This makes the rfkill key not
+functional.
+
+This patch forces the driver to toggle the firmware rfkill status in the
+case that the hardware killswitch is indicated as unsupported by the
+firmware.
+
+
+
+
+
+This looks pretty suspicious to me (from the description) and sounds
+like this could be an unintended consequence of the changes here.
+
+I'll see if reverting this one fixes the issue. Thanks for the insights!
+
+Col
+
+
+-- 
+
+Colin Guthrie
+gmane(at)colin.guthr.ie
+http://colin.guthr.ie/
+
+Day Job:
+  Tribalogic Limited [http://www.tribalogic.net/]
+Open Source:
+  Mageia Contributor [http://www.mageia.org/]
+  PulseAudio Hacker [http://www.pulseaudio.org/]
+  Trac Hacker [http://trac.edgewall.org/]
