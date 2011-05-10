@@ -1,39 +1,54 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [GIT PULL] x86 platform driver updates
-Date: Tue, 10 May 2011 08:40:32 +0200
-Message-ID: <BANLkTim-momwpCCwZtL8sQyCmUvQ_Fz8Gw@mail.gmail.com>
-References: <20110509185727.GA9811@srcf.ucam.org>
+From: Colin Guthrie <mageia-D409yXkIzt2rnn0nCzrM/w@public.gmane.org>
+Subject: Re: [Regression] Problem with rfkill on 2.6.38
+Date: Tue, 10 May 2011 10:36:45 +0100
+Message-ID: <4DC9072D.4030103@colin.guthr.ie>
+References: <ip6j66$o5f$1@dough.gmane.org> <1304930195.3475.17.camel@jlt3.sipsolutions.net> <4DC81FC7.9040503@colin.guthr.ie> <20110509171144.GA7194@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ew0-f46.google.com ([209.85.215.46]:34821 "EHLO
-	mail-ew0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751867Ab1EJGke convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 10 May 2011 02:40:34 -0400
-In-Reply-To: <20110509185727.GA9811@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110509171144.GA7194-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Backlund <tmb-odJJhXpcy38dnm+yROfE0A@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> the rfkill code on
-> the Eee is currently completely broken for PCIe systems that don't pu=
-t
-> devices on bus 0.
+'Twas brillig, and Matthew Garrett at 09/05/11 18:11 did gyre and gimble:
+> On Mon, May 09, 2011 at 06:09:27PM +0100, Colin Guthrie wrote:
+> 
+>> Just a quick (non-compile) followup from my last email... blacklisting
+>> the dell-laptop module works around the issue, so I think the commit
+>> previously mentioned is indeed the culprit (as it's the only recent
+>> commit and does fiddle with the rfkill stuff).
+>>
+>> Not sure what the best track forward is, but it's certainly a
+>> regression, so should probably be fixed or reverted until a more
+>> complete fix is found.
+> 
+> If you can confirm that with a build then I'll do that.
 
-> Matthew Garrett (1):
-> =C2=A0 =C2=A0 =C2=A0eeepc-laptop: Use ACPI handle to identify rfkill =
-port
+ACK. Reverting that commit and unblacklisting the dell_laptop module
+restores the previous, working functionality. I've flipped rfkill a few
+times and it's always worked fine.
 
-Hi Matthew,
-Thanks for fixing that.
-Should this also go to stable ?
-If you have the hardware, could you also fix asus-wmi (1000H is the
-only eeepc known to use both hotplug and eeepc) ?
-Thanks,
+Many thanks.
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+Col
+
+
+-- 
+
+Colin Guthrie
+mageia(at)colin.guthr.ie
+http://colin.guthr.ie/
+
+Day Job:
+  Tribalogic Limited [http://www.tribalogic.net/]
+Open Source:
+  Mageia Contributor [http://www.mageia.org/]
+  PulseAudio Hacker [http://www.pulseaudio.org/]
+  Trac Hacker [http://trac.edgewall.org/]
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
