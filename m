@@ -1,57 +1,55 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] asus-laptop: Remove historic reminder of the pre
- sparse-keymap era
-Date: Tue, 10 May 2011 12:56:09 +0200
-Message-ID: <BANLkTikoG8Bs9P=pTfyZyVieOTRFz1h0qQ@mail.gmail.com>
-References: <1304959675-19147-1-git-send-email-anisse@astier.eu>
+From: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <keng-yu.lin-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [Regression] Problem with rfkill on 2.6.38
+Date: Tue, 10 May 2011 16:48:57 +0200
+Message-ID: <BANLkTinVwnSei_VobfKtgzrwSP+cJSvxaQ@mail.gmail.com>
+References: <ip6j66$o5f$1@dough.gmane.org> <1304930195.3475.17.camel@jlt3.sipsolutions.net>
+ <4DC81FC7.9040503@colin.guthr.ie> <20110509171144.GA7194@srcf.ucam.org> <4DC9072D.4030103@colin.guthr.ie>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:63291 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751963Ab1EJK4L convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 10 May 2011 06:56:11 -0400
-Received: by eyx24 with SMTP id 24so1788726eyx.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 May 2011 03:56:09 -0700 (PDT)
-In-Reply-To: <1304959675-19147-1-git-send-email-anisse@astier.eu>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Anisse Astier <anisse@astier.eu>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4DC9072D.4030103-D409yXkIzt2rnn0nCzrM/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Colin Guthrie <mageia-D409yXkIzt2rnn0nCzrM/w@public.gmane.org>
+Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Backlund <tmb-odJJhXpcy38dnm+yROfE0A@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 9, 2011 at 6:47 PM, Anisse Astier <anisse@astier.eu> wrote:
-> Back when every driver managed it's own sparse keymap directly,
-> asus_laptop needed to keep track of its keymap. Not anymore.
+On Tue, May 10, 2011 at 11:36 AM, Colin Guthrie <mageia-D409yXkIzt2rnn0nCzrM/w@public.gmane.org> wrote:
+> 'Twas brillig, and Matthew Garrett at 09/05/11 18:11 did gyre and gimble:
+>> On Mon, May 09, 2011 at 06:09:27PM +0100, Colin Guthrie wrote:
+>>
+>>> Just a quick (non-compile) followup from my last email... blacklisting
+>>> the dell-laptop module works around the issue, so I think the commit
+>>> previously mentioned is indeed the culprit (as it's the only recent
+>>> commit and does fiddle with the rfkill stuff).
+>>>
+>>> Not sure what the best track forward is, but it's certainly a
+>>> regression, so should probably be fixed or reverted until a more
+>>> complete fix is found.
+>>
+>> If you can confirm that with a build then I'll do that.
 >
-> Signed-off-by: Anisse Astier <anisse@astier.eu>
-> ---
-> =C2=A0drivers/platform/x86/asus-laptop.c | =C2=A0 =C2=A01 -
-> =C2=A01 files changed, 0 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
-6/asus-laptop.c
-> index c53b3ff..0379798 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -198,7 +198,6 @@ struct asus_laptop {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct backlight_device *backlight_device;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct input_dev *inputdev;
-> - =C2=A0 =C2=A0 =C2=A0 struct key_entry *keymap;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_led mled;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_led tled;
-> --
-> 1.7.4.3
->
+> ACK. Reverting that commit and unblacklisting the dell_laptop module
+> restores the previous, working functionality. I've flipped rfkill a few
+> times and it's always worked fine.
 >
 
-I remember writing the exact same patch, but it seems that it was lost.
+May I have the model of your Dell laptop?
 
-Acked-by: Corentin Chary <corentincj@iksaif.net>
+dell_latop has a debugfs node in /sys/kernel/debug/dell_latop/rfkill,
+can you attach the logs at both the moment when the radio devices are
+enabled and disabled? the output of the command `rfkill list` at both
+moments will helpful too.
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+In my experience that different models of Dell laptop may have
+different reaction/behaviour on the rfkill handling. Reverting the
+patch may make your laptop working, but can cause others non-working.
+
+It should make sense and be appreciated that you attach more debug
+information for investigation on the bug.
+
+  Thanks,
+-kengyu
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
