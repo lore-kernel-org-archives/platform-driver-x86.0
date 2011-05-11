@@ -1,66 +1,32 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [ibm-acpi-devel] [RFC] Controlling the ThinkPad battery charger
-Date: Tue, 10 May 2011 22:58:32 +0200
-Message-ID: <20110510205832.GC7485@elf.ucw.cz>
-References: <BANLkTinWna2sDDjbNC5xyGX3ELROs=Wd0w@mail.gmail.com>
- <20110509144546.GB13275@khazad-dum.debian.net>
- <BANLkTikB2TFF12vdwLqV9NRw4meEyDjvdA@mail.gmail.com>
- <20110509152941.GD13275@khazad-dum.debian.net>
- <20110510184302.GA15631@localhost.ucw.cz>
- <20110510195753.GA5850@khazad-dum.debian.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ksp.mff.cuni.cz ([195.113.26.206]:40864 "EHLO
-	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1750750Ab1EJU6g (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 10 May 2011 16:58:36 -0400
-Content-Disposition: inline
-In-Reply-To: <20110510195753.GA5850@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Andrew Lutomirski <luto@mit.edu>, Anton Vorontsov <cbou@mail.ru>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, David Woodhouse <dwmw2@infradead.org>
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic Systems TS-5xxx detection
+Date: Wed, 11 May 2011 18:24:44 -0400
+Message-ID: <1305150634-sup-4695@v0nbox>
+References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com> <20110430110705.5ca3376b@lxorguk.ukuu.org.uk> <1304520382-sup-3361@sfl> <20110504162954.7ecf5b5e@lxorguk.ukuu.org.uk> <1304537667-sup-2171@sfl> <20110505143837.7790edd5@lxorguk.ukuu.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-reply-to: <20110505143837.7790edd5@lxorguk.ukuu.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi!
+Excerpts from Alan Cox's message of jeu mai 05 09:38:37 -0400 2011:
+> > I've looked at that, and the board doesn't support DMI. Elements we have
+> > are the processor (i.e. AMD ElanSC520), the BIOS, maybe the memory and
+> > PCI bus layouts...
+> 
+> Well the CPU is a big help that cuts it down a lot. PCI bridge
+> subvendor/dev can be a good way to identify boards as well if they
+> manufacturers have actually bothered to set them properly.
 
-> > Hmm, I jave a battery pack with reasonably good cells, but firmware killed
-> > it. IOW available for testing.
-> 
-> That is likely a problem with the battery pack uC, we cannot override that
-> using any know firmware path in the ThinkPad.
-> 
-> Does the thinkpad recognizes the presence of the battery pack?  If it
-> doesn't, the pack uC is probably dead or in safe mode, and you'd need to
-> hardware-hack it.
+In a first step, I now check the CPU and the Ethernet chip which are
+relevant devices of TS-5xxx boards. The only problem comes from the
+TS-5300 board which has a different Ethernet chip, using the ISA bus.
+I can't find other relevant device information about this board. So, is
+the CPU detection (AMD Elan SC520) enough? Or should I add a module
+parameter to specify the board model and avoid this pre-detection?
 
-Yes, it does, and it reports everything ok... (Battery 100% full
-IIRC). Its just that machine dies immediately when AC is removed.
-
-> > (And who know, perhaps recalibrate command would bring it back to life?)
-> 
-> AFAIK, the recalibrate command really just does this:
-> 
-> 1. sets 'force discharge' flag on EC so that it starts discharging the
->    battery pack.  Discharging stops when cell voltage drops close to the
->    minimum safety level.
-> 
-> 2. sets stop threshold to 0 (100%) for that battery pack.
-> 
-> That way, the box will fully-drain the pack, and then charge it to full. At
-> that point, the recalibration is complete (the battery pack uC will
-> auto-calibrate itself when it notices it has hit the fully-drained and
-> fully-charged points).
-> 
-> You can monitor per-cell-group voltages through tp_smapi on a original IBM
-> battery pack, that functionality should still be around on the Lenovos.
-> Since this is not standard SBS functionality, it might not work on
-> non-original battery packs.
-
-IIRC I tried playing with tp_smapi and did not get anything
-useful. The pack should be original, and I guess I should try again.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Thanks,
+Vivien.
