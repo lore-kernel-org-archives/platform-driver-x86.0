@@ -1,39 +1,37 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [RFC PATCH] thinkpad-acpi: Improve hardware volume controls
-Date: Thu, 12 May 2011 18:43:14 -0300
-Message-ID: <20110512214314.GA9336@khazad-dum.debian.net>
-References: <bf402af225e7005f052a8ccf92962efa48cbe703.1304979290.git.luto@mit.edu>
- <20110512134827.GA26159@srcf.ucam.org>
- <BANLkTimmrM4HMATSbsYzz6kh=e9hrfAZmg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Subject: Re: [RFC 2/5] gpio: add support for Technologic Systems TS-5500 GPIOs
+Date: Fri, 13 May 2011 17:33:52 -0400
+Message-ID: <1305322106-sup-3383@v0nbox>
+References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-3-git-send-email-vivien.didelot@savoirfairelinux.com> <20110430111536.5cb49d59@lxorguk.ukuu.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:37797 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932814Ab1ELVnR (ORCPT
+Received: from mail.savoirfairelinux.com ([209.172.62.77]:48760 "EHLO
+	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756496Ab1EMVdz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 12 May 2011 17:43:17 -0400
-Content-Disposition: inline
-In-Reply-To: <BANLkTimmrM4HMATSbsYzz6kh=e9hrfAZmg@mail.gmail.com>
+	Fri, 13 May 2011 17:33:55 -0400
+In-reply-to: <20110430111536.5cb49d59@lxorguk.ukuu.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Lutomirski <luto@mit.edu>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jerome Oufella <jerome.oufella@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>, lm-sensors <lm-sensors@lm-sensors.org>
 
-On Thu, 12 May 2011, Andrew Lutomirski wrote:
-> Still, someone who has an older laptop should test it, because all I
-> can do is pretend I carefully inspected all the possible code paths.
+Excerpts from Alan Cox's message of sam avr 30 06:15:36 -0400 2011:
+> > +    /* Enable IRQ generation */
+> > +    mutex_lock(&drvdata->gpio_lock);
+> > +    PORT_BIT_SET(0x7A, 7); /* DIO1_13 on IRQ7 */
+> > +    PORT_BIT_SET(0x7D, 7); /* DIO2_13 on IRQ6 */
+> > +    if (use_lcdio) {
+> > +        PORT_BIT_CLEAR(0x7D, 4); /* Enable LCD header usage as DIO */
+> > +        PORT_BIT_SET(0x7D, 6);   /* LCD_RS on IRQ1 */
+> > +    }
+> 
+> What happens if an IRQ occurs at this point, you have no handler for it ?
 
-Will do, will do.  Please be patient.  I will have thinkpad-acpi time this
-weekend :-)
+The IRQ is just not handled. What would be the proper way to handle
+that? Would it be possible to write those registers when the IRQ is
+requested?
 
-As you all noticed by now, you really must know what you're doing when
-messing with the thinkpad volume stuff.  I will carefully review the patch,
-and we should be able to massage it into something that can be merged during
-the weekend and next week.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Thanks,
+Vivien.
