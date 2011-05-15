@@ -1,98 +1,261 @@
-From: Andrew Lutomirski <luto@mit.edu>
-Subject: Re: [PATCH v3] thinkpad-acpi: Improve hardware volume controls
-Date: Sun, 15 May 2011 15:22:38 -0400
-Message-ID: <BANLkTimsr_tw8o2VmF5PdrMHm=M6SoOTBA@mail.gmail.com>
-References: <20110512204213.GA8776@core.coreip.homeip.net> <75329ac2644b3832911882e23e9308c3dc88518c.1305386829.git.luto@mit.edu>
- <20110514154744.GB15681@srcf.ucam.org> <BANLkTinb2dOLsmbZ7HwK_gQTkX_+eo5jpQ@mail.gmail.com>
- <20110514184151.GD7171@khazad-dum.debian.net>
+From: Frederick van der Wyck <fvanderwyck@gmail.com>
+Subject: Re: [PATCH v2] Platform: Samsung Q10 backlight driver
+Date: Sun, 15 May 2011 22:31:54 +0100
+Message-ID: <20110515213154.GA7935@ntl>
+References: <20110221223743.GA8548@lat.lan>
+ <20110222052709.GA11681@core.coreip.homeip.net>
+ <20110222212703.GA7292@lat.lan>
+ <20110311174329.GI16652@srcf.ucam.org>
+ <20110312003930.GA32496@ntl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pw0-f46.google.com ([209.85.160.46]:64408 "EHLO
-	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751388Ab1EOTW6 convert rfc822-to-8bit (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:59054 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752061Ab1EOV16 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 15 May 2011 15:22:58 -0400
-Received: by pwi15 with SMTP id 15so1838590pwi.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 15 May 2011 12:22:58 -0700 (PDT)
-In-Reply-To: <20110514184151.GD7171@khazad-dum.debian.net>
+	Sun, 15 May 2011 17:27:58 -0400
+Content-Disposition: inline
+In-Reply-To: <20110312003930.GA32496@ntl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bruce Hill <bruce@slackwarebox.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, May 14, 2011 at 2:41 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> On Sat, 14 May 2011, Andrew Lutomirski wrote:
->> I think that on Windows on everything older than X220, pressing mute
->> unconditionally mutes the sound, so it's a nice way to tell the syst=
-em
->> "don't make noise, regardless of what current settings are."
->
-> Yay, so the thinkpads have been un-dumbeddown. =A0I love uplifting!
->
->> The behavior I implemented reads the default from BIOS so that we do
->> the right thing (or at least the thing that Lenovo intended) on all =
-of
->
-> Does the BIOS have a setup "control" for the user to chose MUTE behav=
-iour?
+Hi Matthew,
 
-Not that I can find.
+On Sat, Mar 12, 2011 at 12:39:30AM +0000, Frederick van der Wyck wrote:
+> Hi Matthew,
+> 
+> > Hm. This patch makes both git-am and patch very unhappy, in that they 
+> > fail to create samsung-q10.c despite it not already existing. How did 
+> > you generate it?
+> 
+> I used git format-patch. I guess I must have done something wrong
+> - I'm sorry about that. Here's a version made using diff.
 
-Bad news, though: the SAUM control is different on the X200.  The setti=
-ngs are:
+Has this patch been queued for 2.6.40 release? It missed out in
+2.6.39 because there was a problem with it which meant it wouldn't
+apply, but the new version I sent fixed that. Here it is again.
 
-0: latching mode.  (mute unconditionally mutes but does not send any ke=
-ystroke)
-1: same as 3?
-2: software mode.  (mute sends e020, which is standard for a mute butto=
-n)
-3: weird. (mute sends e060 and does not seem to affect the mute state)
+Thanks,
+Frederick
 
-So, two differences from x220.  First, toggle is screwy and there
-seems to be no point in using it.  Second, latching mode does not send
-any keystroke.
+Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
+---
+ drivers/platform/x86/Kconfig       |    7 ++
+ drivers/platform/x86/Makefile      |    1 +
+ drivers/platform/x86/samsung-q10.c |  179 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 187 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/platform/x86/samsung-q10.c
 
-I suspect that 0 was always the default and 2 was the value that got
-programmed if OSI=3DLinux, and 1 and 3 were just some random garbage.
-Then, when the X220 was designed with a light, the designers wanted
-toggle mode and repurposed an unused value.  So it's probably safe to
-assume that 0 and 2 will remain at least similarly-behaving in future
-models.
-
-There are a few possible things to do:
-
-1. Read HAUM at startup.  If it's 0, assume that only latching mode
-and software mute are valid.  If it's 2 (as it is on the X220), then
-assume that toggle is valid as well.
-
-2. On some or all models that have SAUM, read the initial state to
-figure out what the default should be, then call SAUM(2) and just
-emulate the mute button in software.
-
-Benefits of the former:
- - It's easy
- - No regressions :)
-
-Benefits of the latter:
- - X200 gets ALSA notifications when the volume changes.
- - Toggle is available on all recent models.
- - We can emulate toggle a little better than the EC does: holding
-down the mute button really shouldn't flip it back and forth rapidly.
-
-Downsides of the latter:  if the kernel dies in such a way that it's
-making noise, the mute button won't shut it up.
-
-In either case, I think we should write the initial value back to
-hardware on module unload so we don't get confused if we get loaded
-again.
-
-
-I'll email the pulseaudio list and ask what they want to do about the
-mixer.  Ignoring it is fine, if slightly confusing on models without a
-light.  (But then we've behaved that way on everything except the
-three models in the OSI=3DLinux list forever.)
-
---Andy
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 446f723..532a604 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -762,4 +762,11 @@ config INTEL_OAKTRAIL
+ 	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+ 	  here; it will only load on supported platforms.
+ 
++config SAMSUNG_Q10
++	tristate "Samsung Q10 Extras"
++	select BACKLIGHT_CLASS_DEVICE
++	---help---
++          This driver provides support for backlight control on Samsung Q10
++          and some other laptops, including Dell Latitude X200.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9058c72..fe577de 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -43,3 +43,4 @@ obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
+ obj-$(CONFIG_SAMSUNG_LAPTOP)	+= samsung-laptop.o
+ obj-$(CONFIG_INTEL_MFLD_THERMAL)	+= intel_mid_thermal.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
++obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
+new file mode 100644
+index 0000000..7b60c67
+--- /dev/null
++++ b/drivers/platform/x86/samsung-q10.c
+@@ -0,0 +1,179 @@
++/*
++ *  Driver for Samsung Q10: controls the backlight
++ *
++ *  Copyright (c) 2011 Frederick van der Wyck <fvanderwyck@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/backlight.h>
++#include <linux/i8042.h>
++#include <linux/dmi.h>
++
++#define SAMSUNGQ10_BL_MAX_INTENSITY      255
++#define SAMSUNGQ10_BL_DEFAULT_INTENSITY  185
++
++#define SAMSUNGQ10_BL_8042_CMD           0xbe
++#define SAMSUNGQ10_BL_8042_DATA          { 0x89, 0x91 }
++
++static int samsungq10_bl_brightness;
++
++static bool force;
++module_param(force, bool, 0);
++MODULE_PARM_DESC(force,
++		"Disable the DMI check and force the driver to be loaded");
++
++static int samsungq10_bl_set_intensity(struct backlight_device *bd)
++{
++
++	int brightness = bd->props.brightness;
++	unsigned char c[3] = SAMSUNGQ10_BL_8042_DATA;
++
++	c[2] = (unsigned char)brightness;
++	i8042_lock_chip();
++	i8042_command(c, (0x30 << 8) | SAMSUNGQ10_BL_8042_CMD);
++	i8042_unlock_chip();
++	samsungq10_bl_brightness = brightness;
++
++	return 0;
++}
++
++static int samsungq10_bl_get_intensity(struct backlight_device *bd)
++{
++	return samsungq10_bl_brightness;
++}
++
++static const struct backlight_ops samsungq10_bl_ops = {
++	.get_brightness = samsungq10_bl_get_intensity,
++	.update_status	= samsungq10_bl_set_intensity,
++};
++
++#ifdef CONFIG_PM_SLEEP
++static int samsungq10_suspend(struct device *dev)
++{
++	return 0;
++}
++
++static int samsungq10_resume(struct device *dev)
++{
++
++	struct backlight_device *bd = dev_get_drvdata(dev);
++
++	samsungq10_bl_set_intensity(bd);
++	return 0;
++}
++#else
++#define samsungq10_suspend NULL
++#define samsungq10_resume  NULL
++#endif
++
++static SIMPLE_DEV_PM_OPS(samsungq10_pm_ops,
++			  samsungq10_suspend, samsungq10_resume);
++
++static int __devinit samsungq10_probe(struct platform_device *pdev)
++{
++
++	struct backlight_properties props;
++	struct backlight_device *bd;
++
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.max_brightness = SAMSUNGQ10_BL_MAX_INTENSITY;
++	bd = backlight_device_register("samsung", &pdev->dev, NULL,
++				       &samsungq10_bl_ops, &props);
++	if (IS_ERR(bd))
++		return PTR_ERR(bd);
++
++	platform_set_drvdata(pdev, bd);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	return 0;
++}
++
++static int __devexit samsungq10_remove(struct platform_device *pdev)
++{
++
++	struct backlight_device *bd = platform_get_drvdata(pdev);
++
++	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
++	samsungq10_bl_set_intensity(bd);
++
++	backlight_device_unregister(bd);
++
++	return 0;
++}
++
++static struct platform_driver samsungq10_driver = {
++	.driver		= {
++		.name	= KBUILD_MODNAME,
++		.owner	= THIS_MODULE,
++		.pm	= &samsungq10_pm_ops,
++	},
++	.probe		= samsungq10_probe,
++	.remove		= __devexit_p(samsungq10_remove),
++};
++
++static struct platform_device *samsungq10_device;
++
++static int __init dmi_check_callback(const struct dmi_system_id *id)
++{
++	printk(KERN_INFO KBUILD_MODNAME ": found model '%s'\n", id->ident);
++	return 0;
++}
++
++static struct dmi_system_id __initdata samsungq10_dmi_table[] = {
++	{
++		.ident = "Samsung Q10",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Samsung"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SQ10"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{
++		.ident = "Dell Latitude X200",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X200"),
++		},
++		.callback = dmi_check_callback,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(dmi, samsungq10_dmi_table);
++
++static int __init samsungq10_init(void)
++{
++	if (!force && !dmi_check_system(samsungq10_dmi_table))
++		return -ENODEV;
++
++	samsungq10_device = platform_create_bundle(&samsungq10_driver,
++						   samsungq10_probe,
++						   NULL, 0, NULL, 0);
++
++	if (IS_ERR(samsungq10_device))
++		return PTR_ERR(samsungq10_device);
++
++	return 0;
++}
++
++static void __exit samsungq10_exit(void)
++{
++	platform_device_unregister(samsungq10_device);
++	platform_driver_unregister(&samsungq10_driver);
++}
++
++module_init(samsungq10_init);
++module_exit(samsungq10_exit);
++
++MODULE_AUTHOR("Frederick van der Wyck <fvanderwyck@gmail.com>");
++MODULE_DESCRIPTION("Samsung Q10 Driver");
++MODULE_LICENSE("GPL");
