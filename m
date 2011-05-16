@@ -1,35 +1,44 @@
-From: Rafi Rubin <rafi@seas.upenn.edu>
-Subject: [PATCH] Trivial: dell-wmi-aio Kconfig typo
-Date: Sun, 15 May 2011 23:33:23 -0400
-Message-ID: <1305516803-10271-1-git-send-email-rafi@seas.upenn.edu>
+From: Weiping Pan <panweiping3@gmail.com>
+Subject: [PATCH] platform/x86:delete two unused variables
+Date: Mon, 16 May 2011 14:49:47 +0800
+Message-ID: <1305528587-19686-1-git-send-email-panweiping3@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from talbot.seas.upenn.edu ([158.130.67.217]:58045 "EHLO
-	talbot.seas.upenn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756011Ab1EPDmY (ORCPT
+Received: from mail-qy0-f174.google.com ([209.85.216.174]:47383 "EHLO
+	mail-qy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751321Ab1EPGtN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 15 May 2011 23:42:24 -0400
+	Mon, 16 May 2011 02:49:13 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: colin.king@canonical.com, platform-driver-x86@vger.kernel.org
-Cc: trivial@kernel.org, Rafi Rubin <rafi@seas.upenn.edu>
+Cc: Weiping Pan <panweiping3@gmail.com>, Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, "open list:SONY VAIO CONTROL..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-Signed-off-by: Rafi Rubin <rafi@seas.upenn.edu>
+variable handle is not used in these two functions,
+just delete them.
+
+Signed-off-by: Weiping Pan <panweiping3@gmail.com>
 ---
- drivers/platform/x86/Kconfig |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ drivers/platform/x86/sony-laptop.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0485e39..485c09e 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -111,7 +111,7 @@ config DELL_WMI_AIO
- 	  All-In-One machines.
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 6fe8cd6..9a2c319 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -961,7 +961,6 @@ static int sony_backlight_get_brightness(struct backlight_device *bd)
+ static int sony_nc_get_brightness_ng(struct backlight_device *bd)
+ {
+ 	int result;
+-	int *handle = (int *)bl_get_data(bd);
+ 	struct sony_backlight_props *sdev =
+ 		(struct sony_backlight_props *)bl_get_data(bd);
  
- 	  To compile this driver as a module, choose M here: the module will
--	  be called dell-wmi.
-+	  be called dell-wmi-aio.
+@@ -973,7 +972,6 @@ static int sony_nc_get_brightness_ng(struct backlight_device *bd)
+ static int sony_nc_update_status_ng(struct backlight_device *bd)
+ {
+ 	int value, result;
+-	int *handle = (int *)bl_get_data(bd);
+ 	struct sony_backlight_props *sdev =
+ 		(struct sony_backlight_props *)bl_get_data(bd);
  
- 
- config FUJITSU_LAPTOP
 -- 
-1.7.5.1
+1.7.4.4
