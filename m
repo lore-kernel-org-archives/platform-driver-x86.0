@@ -1,43 +1,54 @@
-From: Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [PATCH] Trivial: dell-wmi-aio Kconfig typo
-Date: Tue, 17 May 2011 11:13:38 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1105171113310.28291@pobox.suse.cz>
-References: <1305516803-10271-1-git-send-email-rafi@seas.upenn.edu>
+From: Sean Young <sean@mess.org>
+Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic
+ Systems TS-5xxx detection
+Date: Tue, 17 May 2011 13:37:19 +0100
+Message-ID: <BANLkTikPxfq4hcSLB+xkk-oJAtouNxEoyA@mail.gmail.com>
+References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
+	<1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor.suse.de ([195.135.220.2]:56816 "EHLO mx1.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752162Ab1EQJNk (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:33028 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754247Ab1EQMhV convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 17 May 2011 05:13:40 -0400
-In-Reply-To: <1305516803-10271-1-git-send-email-rafi@seas.upenn.edu>
+	Tue, 17 May 2011 08:37:21 -0400
+In-Reply-To: <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rafi Rubin <rafi@seas.upenn.edu>
-Cc: colin.king@canonical.com, platform-driver-x86@vger.kernel.org
+To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86@vger.kernel.org
 
-On Sun, 15 May 2011, Rafi Rubin wrote:
-
-> Signed-off-by: Rafi Rubin <rafi@seas.upenn.edu>
+On 29 April 2011 23:21, Vivien Didelot
+<vivien.didelot@savoirfairelinux.com> wrote:
+> From: Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>
+>
+>
+> Signed-off-by: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 > ---
->  drivers/platform/x86/Kconfig |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0485e39..485c09e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -111,7 +111,7 @@ config DELL_WMI_AIO
->  	  All-In-One machines.
->  
->  	  To compile this driver as a module, choose M here: the module will
-> -	  be called dell-wmi.
-> +	  be called dell-wmi-aio.
->  
+> =A0Documentation/ts5xxx-sbcinfo.txt =A0 =A0 =A0| =A0 47 ++++++
+> =A0MAINTAINERS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
+=A0 =A06 +
+> =A0drivers/platform/x86/Kconfig =A0 =A0 =A0 =A0 =A0| =A0 11 ++
+> =A0drivers/platform/x86/Makefile =A0 =A0 =A0 =A0 | =A0 =A01 +
+> =A0drivers/platform/x86/ts5xxx-sbcinfo.c | =A0254 +++++++++++++++++++=
+++++++++++++++
+> =A0include/linux/ts5xxx-sbcinfo.h =A0 =A0 =A0 =A0| =A0 42 ++++++
+> =A06 files changed, 361 insertions(+), 0 deletions(-)
+> =A0create mode 100644 Documentation/ts5xxx-sbcinfo.txt
+> =A0create mode 100644 drivers/platform/x86/ts5xxx-sbcinfo.c
+> =A0create mode 100644 include/linux/ts5xxx-sbcinfo.h
 
-Applied, thanks.
+Please note that the 2MiB on board flash is not supported by your
+platform driver, which is handled by drivers/mtd/maps/ts5500_flash.c. I
+guess it would be best to either merge that file into
+drivers/platform/x86/ts5xxx-sbcinfo.c or select CONFIG_MTD_TS5500 in th=
+e
+Kconfig.
 
--- 
-Jiri Kosina
-SUSE Labs
+In addition, the flash is used by the BIOS as RFD FTL, so possibly
+CONFIG_RFD_FTL should be selected too.
+
+Thanks,
+Sean
