@@ -1,37 +1,56 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: Re: [RFC 1/5] platform-drivers-x86: add support for Technologic Systems TS-5xxx detection
-Date: Wed, 18 May 2011 11:03:05 -0400
-Message-ID: <1305730587-sup-4689@v0nbox>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com> <1304115712-5299-2-git-send-email-vivien.didelot@savoirfairelinux.com> <BANLkTikPxfq4hcSLB+xkk-oJAtouNxEoyA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Jean Delvare <khali@linux-fr.org>
+Subject: [PATCH] x86: Don't enable EEEPC_LAPTOP in default configs
+Date: Thu, 19 May 2011 13:47:01 +0200
+Message-ID: <20110519134701.1d3a8d55@endymion.delvare>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.savoirfairelinux.com ([209.172.62.77]:39654 "EHLO
-	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932559Ab1ERPDF (ORCPT
+Received: from zone0.gcu-squad.org ([212.85.147.21]:41011 "EHLO
+	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754061Ab1ESLsc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 18 May 2011 11:03:05 -0400
-In-reply-to: <BANLkTikPxfq4hcSLB+xkk-oJAtouNxEoyA@mail.gmail.com>
+	Thu, 19 May 2011 07:48:32 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sean Young <sean@mess.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Jonas Fonseca <jonas.fonseca@savoirfairelinux.com>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: x86@kernel.org, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Sean,
-Excerpts from Sean Young's message of mar mai 17 08:37:19 -0400 2011:
-> Please note that the 2MiB on board flash is not supported by your
-> platform driver, which is handled by drivers/mtd/maps/ts5500_flash.c. I
-> guess it would be best to either merge that file into
-> drivers/platform/x86/ts5xxx-sbcinfo.c or select CONFIG_MTD_TS5500 in the
-> Kconfig.
-> 
-> In addition, the flash is used by the BIOS as RFD FTL, so possibly
-> CONFIG_RFD_FTL should be selected too.
-> 
-> Thanks,
-> Sean
-Good point. That's what I've noticed a few days ago, I'm actually
-working on.
+Can someone explain why CONFIG_EEEPC_LAPTOP=y in x86/configs/*_defconfig
+when all other laptop support is off by default?
 
-Thanks,
-Vivien.
+Signed-off-by: Jean Delvare <khali@linux-fr.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Matthew Garrett <mjg@redhat.com>
+---
+Already sent on: 2011-04-26. Comments anyone?
+
+ arch/x86/configs/i386_defconfig   |    1 -
+ arch/x86/configs/x86_64_defconfig |    1 -
+ 2 files changed, 2 deletions(-)
+
+--- linux-2.6.39-rc4.orig/arch/x86/configs/i386_defconfig	2011-03-15 19:43:58.000000000 +0100
++++ linux-2.6.39-rc4/arch/x86/configs/i386_defconfig	2011-04-26 18:15:20.000000000 +0200
+@@ -267,7 +267,6 @@ CONFIG_EDAC=y
+ CONFIG_RTC_CLASS=y
+ # CONFIG_RTC_HCTOSYS is not set
+ CONFIG_DMADEVICES=y
+-CONFIG_EEEPC_LAPTOP=y
+ CONFIG_EFI_VARS=y
+ CONFIG_EXT3_FS=y
+ # CONFIG_EXT3_DEFAULTS_TO_ORDERED is not set
+--- linux-2.6.39-rc4.orig/arch/x86/configs/x86_64_defconfig	2011-03-15 19:43:58.000000000 +0100
++++ linux-2.6.39-rc4/arch/x86/configs/x86_64_defconfig	2011-04-26 18:15:14.000000000 +0200
+@@ -268,7 +268,6 @@ CONFIG_EDAC=y
+ CONFIG_RTC_CLASS=y
+ # CONFIG_RTC_HCTOSYS is not set
+ CONFIG_DMADEVICES=y
+-CONFIG_EEEPC_LAPTOP=y
+ CONFIG_EFI_VARS=y
+ CONFIG_EXT3_FS=y
+ # CONFIG_EXT3_DEFAULTS_TO_ORDERED is not set
+
+-- 
+Jean Delvare
