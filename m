@@ -1,53 +1,104 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 2/4] acer-wmi: check the existence of internal 3G
- device when set capability
-Date: Mon, 23 May 2011 01:33:10 -0600
-Message-ID: <4DDA9A56020000230002CF5E@novprvlin0050.provo.novell.com>
-References: <1306020834-5186-1-git-send-email-jlee@novell.com>
- <BANLkTimLV6kujMT8j5vkhmR0OFKH+q6SMw@mail.gmail.com>
- <4DDA8DC8020000230002CF41@novprvlin0050.provo.novell.com>
- <201105230741.44906.carlos@strangeworlds.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Andy Lutomirski <luto@MIT.EDU>
+Subject: [PATCH] Remove ThinkPads from _OSI(Linux) blacklist
+Date: Mon, 23 May 2011 09:15:16 -0400
+Message-ID: <2ef7d4696f9eeb60d9dfb85a7bc2efef132f3e96.1306156342.git.luto@mit.edu>
+References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <201105230741.44906.carlos@strangeworlds.co.uk>
-Content-Disposition: inline
+Received: from DMZ-MAILSEC-SCANNER-2.MIT.EDU ([18.9.25.13]:49153 "EHLO
+	dmz-mailsec-scanner-2.mit.edu" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752209Ab1EWNPc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 23 May 2011 09:15:32 -0400
+In-Reply-To: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: corentin.chary@gmail.com, dtor@mail.ru, Joey Lee <JLee@novell.com>, mjg@redhat.com, trenn@suse.de, platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Andy Lutomirski <luto@mit.edu>, Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Hi Carlos,=20
+Now that thinkpad-acpi knows how to program the hardware mute button
+on recent ThinkPads, the _OSI(Linux) hack is unnecessary.
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-05-23 =E6=96=BC 07:41 +0100=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday 23 May 2011 07:39:36 Joey Lee wrote:
-> > > I'm not sure you can drop sysfs files like that, as it will break=
- the
-> > > ABI.
-> >>
-> > > Could you document acer-wmi in
-> > > Documentation/ABI/testing/sysfs-platform-acer-wmi.txt ?
-> > > This allows to check when a sysfs file was added, who use it, etc=
-=2E..
->=20
-> I don't agree, the 3G sysfs interface should just be dropped as it's =
-the only=20
-> remaining sysfs stuff for this driver - it's not worth documenting as=
- it's=20
-> already exposed as an rfkill device, and we've already dropped all th=
-e=20
-> remaining sysfs interfaces a long time ago without going through any =
-of this.
->=20
+Signed-off-by: Andy Lutomirski <luto@mit.edu>
+---
 
-After removed threeg sysfs file, there still have the latest one sysfs
-file the name is "interface". It provide a interface to know which WMI
-interface was used currently.
+I don't have all of these machines to test, but at least the X220 and
+X200s don't need the blacklist anymore if the thinkpad-acpi volume
+control patch is applied.
 
-Should we also direct drop it from acer-wmi or move to debugfs?
+(I was one of the people who argued for the X61 blacklist entry, and
+the X61 almost certainly doesn't need the blacklist anymore, but I
+can't test because I don't have that box any more.)
 
+I didn't remove the blacklist infrastructure because something else
+might need it some day.
 
-Thank's a lot!
-Joey Lee
+ drivers/acpi/blacklist.c |   54 ----------------------------------------------
+ 1 files changed, 0 insertions(+), 54 deletions(-)
+
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index af308d0..de0943d 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -274,60 +274,6 @@ static struct dmi_system_id acpi_osi_dmi_table[] __initdata = {
+ 	 * Linux ignores it, except for the machines enumerated below.
+ 	 */
+ 
+-	/*
+-	 * Lenovo has a mix of systems OSI(Linux) situations
+-	 * and thus we can not wildcard the vendor.
+-	 *
+-	 * _OSI(Linux) helps sound
+-	 * DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad R61"),
+-	 * DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T61"),
+-	 * T400, T500
+-	 * _OSI(Linux) has Linux specific hooks
+-	 * DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X61"),
+-	 * _OSI(Linux) is a NOP:
+-	 * DMI_MATCH(DMI_PRODUCT_VERSION, "3000 N100"),
+-	 * DMI_MATCH(DMI_PRODUCT_VERSION, "LENOVO3000 V100"),
+-	 */
+-	{
+-	.callback = dmi_enable_osi_linux,
+-	.ident = "Lenovo ThinkPad R61",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		     DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad R61"),
+-		},
+-	},
+-	{
+-	.callback = dmi_enable_osi_linux,
+-	.ident = "Lenovo ThinkPad T61",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		     DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T61"),
+-		},
+-	},
+-	{
+-	.callback = dmi_enable_osi_linux,
+-	.ident = "Lenovo ThinkPad X61",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		     DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X61"),
+-		},
+-	},
+-	{
+-	.callback = dmi_enable_osi_linux,
+-	.ident = "Lenovo ThinkPad T400",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		     DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T400"),
+-		},
+-	},
+-	{
+-	.callback = dmi_enable_osi_linux,
+-	.ident = "Lenovo ThinkPad T500",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		     DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T500"),
+-		},
+-	},
+ 	{}
+ };
+ 
+-- 
+1.7.5.1
