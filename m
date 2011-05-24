@@ -1,34 +1,71 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Subject: Re: [PATCH 2/4] acer-wmi: check the existence of internal 3G device when set capability
-Date: Mon, 23 May 2011 19:54:19 +0100
-Message-ID: <201105231954.19779.carlos@strangeworlds.co.uk>
-References: <1306020834-5186-1-git-send-email-jlee@novell.com> <201105230741.44906.carlos@strangeworlds.co.uk> <4DDA9A56020000230002CF5E@novprvlin0050.provo.novell.com>
+From: Melchior FRANZ <melchior.franz@gmail.com>
+Subject: [PATCH] support wlan hotkey on Acer Travelmate 5735Z
+Date: Tue, 24 May 2011 10:35:55 +0200
+Message-ID: <201105241035.55877@rk-nord.at>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="utf-8"
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:47116 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756801Ab1EWSyw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 May 2011 14:54:52 -0400
-Received: by wya21 with SMTP id 21so4438904wya.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 May 2011 11:54:51 -0700 (PDT)
-In-Reply-To: <4DDA9A56020000230002CF5E@novprvlin0050.provo.novell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: corentin.chary@gmail.com, dtor@mail.ru, mjg@redhat.com, trenn@suse.de, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Joey Lee <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 23 May 2011 08:33:10 Joey Lee wrote:
-> After removed threeg sysfs file, there still have the latest one sysfs
-> file the name is "interface". It provide a interface to know which WMI
-> interface was used currently.
-> 
-> Should we also direct drop it from acer-wmi or move to debugfs?
+From: Melchior FRANZ <mfranz@aon.at>
+    
+On an Acer Travelmate 5735Z-452G32Mnss the WLAN-enable/disable key
+doesn't send 0x1 as acpi event key code, but 0x3. This patch also
+makes the module ignore hotkey acpi events for functions that are
+already handled without. This avoids warning message "keyboard:
+can't emulate rawmode for keycode 240".
 
-I'd say drop it, the logs are more useful anyway and I doubt it's been updated 
-to be useful with your recent work either.
+Signed-off-by: Melchior FRANZ <mfranz@aon.at>
+---
 
--Carlos
+This patch requires that Joey LEE's 64 bit fix be applied,
+otherwise the whole acer-wmi module fails to load on this
+machine. See https://bugzilla.kernel.org/show_bug.cgi?id=34142#c21
+(0001-acer-wmi-allow-64-bits-return-buffer-from-WMI-metho.patch)
+
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 6cb55a6..fb4ee5f 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -98,13 +98,26 @@ enum acer_wmi_event_ids {
+ 
+ static const struct key_entry acer_wmi_keymap[] = {
+ 	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
++	{KE_KEY, 0x03, {KEY_WLAN} },     /* WiFi */
+ 	{KE_KEY, 0x12, {KEY_BLUETOOTH} },	/* BT */
+ 	{KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
+ 	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
+ 	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
+ 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
++	{KE_IGNORE, 0x41, {KEY_MUTE} },
++	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
++	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
++	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
++	{KE_IGNORE, 0x45, {KEY_STOP} },
++	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
++	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
++	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
++	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
++	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
+ 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
++	{KE_IGNORE, 0x81, {KEY_SLEEP} },
+ 	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
++	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+ 	{KE_END, 0}
+ };
+ 
+@@ -1345,7 +1358,7 @@ static void acer_wmi_notify(u32 value, void *context)
+ 	case WMID_HOTKEY_EVENT:
+ 		if (return_value.device_state) {
+ 			u16 device_state = return_value.device_state;
+-			pr_debug("deivces states: 0x%x\n", device_state);
++			pr_debug("device state: 0x%x\n", device_state);
+ 			if (has_cap(ACER_CAP_WIRELESS))
+ 				rfkill_set_sw_state(wireless_rfkill,
+ 				!(device_state & ACER_WMID3_GDS_WIRELESS));
