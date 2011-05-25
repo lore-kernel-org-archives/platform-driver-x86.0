@@ -1,46 +1,30 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 2/4] acer-wmi: check the existence of internal 3G
- device when set capability
-Date: Wed, 25 May 2011 01:07:00 -0600
-Message-ID: <4DDD3734020000230002D0BB@novprvlin0050.provo.novell.com>
-References: <1306020834-5186-1-git-send-email-jlee@novell.com>
- <201105230741.44906.carlos@strangeworlds.co.uk>
- <4DDA9A56020000230002CF5E@novprvlin0050.provo.novell.com>
- <201105231954.19779.carlos@strangeworlds.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH 0/2] acer-wmi: remove threeg and interface sysfs files
+Date: Wed, 25 May 2011 17:58:25 +0800
+Message-ID: <1306317507-11743-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <201105231954.19779.carlos@strangeworlds.co.uk>
-Content-Disposition: inline
+Received: from mail-vx0-f174.google.com ([209.85.220.174]:33377 "EHLO
+	mail-vx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751397Ab1EYKAH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 25 May 2011 06:00:07 -0400
+Received: by vxi39 with SMTP id 39so5617069vxi.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 May 2011 03:00:05 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: carlos@strangeworlds.co.uk
-Cc: corentin.chary@gmail.com, dtor@mail.ru, Joey Lee <JLee@novell.com>, mjg@redhat.com, trenn@suse.de, platform-driver-x86@vger.kernel.org
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>
 
-Hi Carlos,=20
+Remove threeg sysfs because we can autodetect internal 3G device and already
+have the threeg rfkill now. And, We also remove interface sysfs and replaced
+by information log.
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-05-23 =E6=96=BC 19:54 +0100=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday 23 May 2011 08:33:10 Joey Lee wrote:
-> > After removed threeg sysfs file, there still have the latest one sy=
-sfs
-> > file the name is "interface". It provide a interface to know which =
-WMI
-> > interface was used currently.
-> >=20
-> > Should we also direct drop it from acer-wmi or move to debugfs?
->=20
-> I'd say drop it, the logs are more useful anyway and I doubt it's bee=
-n updated=20
-> to be useful with your recent work either.
->=20
-> -Carlos
+The above 2 files are the last two sysfs interfaces that were provided by
+acer-wmi.
 
-You are right, just need add a log when acer-wmi probed but don't need
-maintain a sysfs file.
-I will send out patch to drop it and add log.
+Lee, Chun-Yi (2):
+  acer-wmi: remove threeg sysfs support
+  acer-wmi: remove interface sysfs file
 
-
-Thank's
-Joey Lee
+ drivers/platform/x86/acer-wmi.c |   96 +++------------------------------------
+ 1 files changed, 7 insertions(+), 89 deletions(-)
