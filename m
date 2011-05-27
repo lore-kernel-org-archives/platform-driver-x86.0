@@ -1,53 +1,70 @@
-From: Alberto Mardegan <mardy@users.sourceforge.net>
-Subject: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
-Date: Thu, 26 May 2011 21:27:30 +0300
-Message-ID: <4DDE9B92.3090504@users.sourceforge.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: support integer return type from WMI methods
+Date: Fri, 27 May 2011 14:52:14 +0800
+Message-ID: <1306479134-7936-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:39114 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753892Ab1EZS1e (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:62074 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751537Ab1E0Gxw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 May 2011 14:27:34 -0400
-Received: by eyx24 with SMTP id 24so387355eyx.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 May 2011 11:27:33 -0700 (PDT)
+	Fri, 27 May 2011 02:53:52 -0400
+Received: by vws1 with SMTP id 1so1133249vws.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 May 2011 23:53:51 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: "Javier S. Pedro" <maemo@javispedro.com>, Ike Panhc <ike.pan@canonical.com>
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-Hi all,
-  I'd like to add support for the accelerometer sensor which is found in
-the Lenovo Ideapad S10-3t.
+Acer WMID_GUID1/2 method's return value was declared to integer
+type on Gateway notebook.
+So, add this patch for support integer return type.
 
-I would use this code as a starting point (kudos to Javier):
-http://gitorious.org/iaps/lsrot/blobs/master/lsrot.c
-The code uses the WMI interfaces to get notified of coarse orientation
-changes.
-But how should these changes be reported to userspace? Should they go
-through the input subsystem (I didn't find any suitable key codes to
-report these events), or via the /sys filesystem? In the latter case, is
-there a convention on naming and reporting data from devices of this kind?
+Reference: bko#33032
+	https://bugzilla.kernel.org/show_bug.cgi?id=33032
 
+Tested on Gateway NV5909H laptop
 
-Secondly, I'd like to add support for reading the accelerometer values,
-as it's done here (again, kudos to Javier):
-http://gitorious.org/iaps/iaps/blobs/master/iaps.c
-I know that no one is happy of directly accessing the raw I/O ports, but
-all my attempts of reading these values through the ACPI interfaces or
-the EC fields have failed: the fields are always set to 0.
-So, what I plan to do is to check the DMI information, and if the
-machine is a S10-3t I would you the code linked above to read and report
-the accelerometer values. Would that be acceptable?
+Tested-by: Filipus Klutiero <chealer@gmail.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ drivers/platform/x86/acer-wmi.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-
-And finally: should the changes above be made to the existing
-ideapad-laptop.c file, or should they go to a separate file/module?
-
-TIA,
-  Alberto
-
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 64b7e20..36e6ab4 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -754,6 +754,8 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
+ 		(obj->buffer.length == sizeof(u32) ||
+ 		obj->buffer.length == sizeof(u64))) {
+ 		tmp = *((u32 *) obj->buffer.pointer);
++	} else if (obj->type == ACPI_TYPE_INTEGER) {
++		tmp = (u32) obj->integer.value;
+ 	} else {
+ 		tmp = 0;
+ 	}
+@@ -884,6 +886,8 @@ static acpi_status WMID_set_capabilities(void)
+ 		(obj->buffer.length == sizeof(u32) ||
+ 		obj->buffer.length == sizeof(u64))) {
+ 		devices = *((u32 *) obj->buffer.pointer);
++	} else if (obj->type == ACPI_TYPE_INTEGER) {
++		devices = (u32) obj->integer.value;
+ 	} else {
+ 		kfree(out.pointer);
+ 		return AE_ERROR;
+@@ -1589,6 +1593,8 @@ static u32 get_wmid_devices(void)
+ 		(obj->buffer.length == sizeof(u32) ||
+ 		obj->buffer.length == sizeof(u64))) {
+ 		devices = *((u32 *) obj->buffer.pointer);
++	} else if (obj->type == ACPI_TYPE_INTEGER) {
++		devices = (u32) obj->integer.value;
+ 	}
+ 
+ 	kfree(out.pointer);
 -- 
-http://blog.mardy.it <- geek in un lingua international!
+1.6.0.2
