@@ -1,54 +1,47 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
-Date: Fri, 27 May 2011 17:33:46 +0100
-Message-ID: <20110527163346.GD16769@srcf.ucam.org>
-References: <4DDE9B92.3090504@users.sourceforge.net>
+From: Andrew Lutomirski <luto@mit.edu>
+Subject: Re: [PATCH] thinkpad-acpi: Enable microphone mute LED
+Date: Fri, 27 May 2011 12:39:10 -0400
+Message-ID: <BANLkTint5_Vcm5rWKHL_j5XsVmcAu8X7pw@mail.gmail.com>
+References: <8dc2b2140c2794291811cd38f51f9dc7596f482c.1306266017.git.luto@mit.edu>
+ <20110527162844.GA16769@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:40037 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750774Ab1E0Qdw (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:55584 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752078Ab1E0Qja (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 May 2011 12:33:52 -0400
-Content-Disposition: inline
-In-Reply-To: <4DDE9B92.3090504@users.sourceforge.net>
+	Fri, 27 May 2011 12:39:30 -0400
+Received: by pxi2 with SMTP id 2so1355853pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 May 2011 09:39:30 -0700 (PDT)
+In-Reply-To: <20110527162844.GA16769@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alberto Mardegan <mardy@users.sourceforge.net>
-Cc: platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>, Ike Panhc <ike.pan@canonical.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Thu, May 26, 2011 at 09:27:30PM +0300, Alberto Mardegan wrote:
+On Fri, May 27, 2011 at 12:28 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> On Tue, May 24, 2011 at 03:41:02PM -0400, Andy Lutomirski wrote:
+>> I don't know exactly which models have this LED or how to identify
+>> them in the quirk table, so I just enabled it for all unquirked
+>> Lenovo models.
+>
+> Is there any chance that this is meant to be controlled via ALSA, in a
+> similar way to the mute LED?
 
-> I would use this code as a starting point (kudos to Javier):
-> http://gitorious.org/iaps/lsrot/blobs/master/lsrot.c
-> The code uses the WMI interfaces to get notified of coarse orientation
-> changes.
-> But how should these changes be reported to userspace? Should they go
-> through the input subsystem (I didn't find any suitable key codes to
-> report these events), or via the /sys filesystem? In the latter case, is
-> there a convention on naming and reporting data from devices of this kind?
+I don't have docs so I don't really know.  But the mute LED does not
+appear to be controllable from the LED interface and when mute is lit
+there's no sound regardless of what ALSA thinks.  When I light the
+micmute light, I can still record sound just fine.
 
-If we're not interested in providing continual fine-grained data then 
-the easiest approach may be to present as an input device and then just 
-send updated values whenever you receive the coarse udpate signal. But 
-you probably want to bring this up on LKML so we can make sure 
-everyone's exposing this in the same way.
+The mic mute button does nothing on Windows unless the special driver
+is installed, and that driver seems to mute the Windows mixer, so I
+think there's nothing special other than a little userspace helper
+going on.
 
-> Secondly, I'd like to add support for reading the accelerometer values,
-> as it's done here (again, kudos to Javier):
-> http://gitorious.org/iaps/iaps/blobs/master/iaps.c
-> I know that no one is happy of directly accessing the raw I/O ports, but
-> all my attempts of reading these values through the ACPI interfaces or
-> the EC fields have failed: the fields are always set to 0.
+--Andy
 
-Does the accelerometer appear as an ACPI device?
-
-> And finally: should the changes above be made to the existing
-> ideapad-laptop.c file, or should they go to a separate file/module?
-
-ideapad-laptop seems appropriate, unless the accelerometer is its own 
-ACPI device that appears in other hardware as well.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+>
