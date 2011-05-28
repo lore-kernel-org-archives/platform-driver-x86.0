@@ -1,47 +1,50 @@
-From: Alberto Mardegan <mardy@users.sourceforge.net>
+From: =?ISO-8859-1?Q?Richard_Sch=FCtz?= <r.schtz@t-online.de>
 Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
-Date: Sat, 28 May 2011 10:15:28 +0300
-Message-ID: <4DE0A110.4010102@users.sourceforge.net>
-References: <4DDE9B92.3090504@users.sourceforge.net> <20110527163346.GD16769@srcf.ucam.org>
+Date: Sat, 28 May 2011 14:03:20 +0200
+Message-ID: <4DE0E488.8040108@t-online.de>
+References: <4DDE9B92.3090504@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:33591 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752021Ab1E1HPg (ORCPT
+Received: from mailout08.t-online.de ([194.25.134.20]:44978 "EHLO
+	mailout08.t-online.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753006Ab1E1MUA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 May 2011 03:15:36 -0400
-Received: by eyx24 with SMTP id 24so893473eyx.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 May 2011 00:15:35 -0700 (PDT)
-In-Reply-To: <20110527163346.GD16769@srcf.ucam.org>
+	Sat, 28 May 2011 08:20:00 -0400
+In-Reply-To: <4DDE9B92.3090504@users.sourceforge.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
+To: Alberto Mardegan <mardy@users.sourceforge.net>
 Cc: platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>, Ike Panhc <ike.pan@canonical.com>
 
-On 05/27/2011 07:33 PM, Matthew Garrett wrote:
-> If we're not interested in providing continual fine-grained data then 
-> the easiest approach may be to present as an input device and then just 
-> send updated values whenever you receive the coarse udpate signal. But 
-> you probably want to bring this up on LKML so we can make sure 
-> everyone's exposing this in the same way.
+On 05/26/11 20:27, Alberto Mardegan wrote:
+> Secondly, I'd like to add support for reading the accelerometer value=
+s,
+> as it's done here (again, kudos to Javier):
+> http://gitorious.org/iaps/iaps/blobs/master/iaps.c
+> I know that no one is happy of directly accessing the raw I/O ports, =
+but
+> all my attempts of reading these values through the ACPI interfaces o=
+r
+> the EC fields have failed: the fields are always set to 0.
+> So, what I plan to do is to check the DMI information, and if the
+> machine is a S10-3t I would you the code linked above to read and rep=
+ort
+> the accelerometer values. Would that be acceptable?
 
-OK, I will.
+I'm wondering if the accelerometer driver is also compatible with the=20
+ThinkPad SL laptops. It is said that their firmwares are quite similar=20
+to the IdeaPad ones. As they have quasi nothing in common with the=20
+normal ThinkPad series there's no support for them in=20
+thinkpad-acpi/hdaps/tp_smapi.
 
->> I know that no one is happy of directly accessing the raw I/O ports, but
->> all my attempts of reading these values through the ACPI interfaces or
->> the EC fields have failed: the fields are always set to 0.
-> 
-> Does the accelerometer appear as an ACPI device?
+I compiled the iaps module and loaded it successfully on my ThinkPad SL=
+=2E=20
+There is also data passed by the driver to the input subsystem, when I=20
+move the laptop. Is there a way to validate this data?
 
-No, I think it doesn't. There are some fields in the EC device which
-might be related to it, but I tried to read them without luck.
-Here's the DSDT, anyway:
-http://www.mardy.it/archivos/DSDT.dsl
-
-Ciao,
-  Alberto
-
--- 
-http://blog.mardy.it <- geek in un lingua international!
+--=20
+Regards,
+Richard Sch=FCtz
