@@ -1,129 +1,83 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver pull request
-Date: Sun, 29 May 2011 19:30:22 +0100
-Message-ID: <20110529183022.GA28339@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: schedule threeg and interface sysfs for feature removal
+Date: Mon, 30 May 2011 08:21:40 +0800
+Message-ID: <1306714900-26916-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:41975 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755759Ab1E2Sa2 (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:42445 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751251Ab1E3AXS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 29 May 2011 14:30:28 -0400
-Content-Disposition: inline
+	Sun, 29 May 2011 20:23:18 -0400
+Received: by pxi2 with SMTP id 2so2130706pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 May 2011 17:23:18 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-The following changes since commit 139f37f5e14cd883eee2a8a36289f544b5390a44:
+we can now autodetect internal 3G device and already have the threeg
+rfkill device. So, we plan to remove threeg sysfs support for it's no
+longer necessary.
 
-  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/vapier/blackfin (2011-05-28 23:12:28 -0700)
+We also plan to remove interface sysfs file that exposed which ACPI-WMI
+interface that was used by acer-wmi driver. It will replaced by information
+log when acer-wmi initial.
 
-are available in the git repository at:
+We keep it around for userspace compatibility reasons, schedule removal
+in 2012.
 
-  ssh://master.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ Documentation/feature-removal-schedule.txt |   13 +++++++++++++
+ drivers/platform/x86/acer-wmi.c            |    3 +++
+ 2 files changed, 16 insertions(+), 0 deletions(-)
 
-Ameya Palande (4):
-      platform-x86: intel_mid_thermal: Fix coding style
-      platform/x86: Simplify intel_mid_powerbtn
-      platform/x86: Fix Makefile for intel_mid_powerbtn
-      platform-x86: intel_mid_thermal: Fix memory leak
-
-Carlos Corbacho (4):
-      tc1100-wmi: Orphan driver
-      wmi: Orphan ACPI-WMI driver
-      acer-wmi: Update MAINTAINERS
-      acer-wmi: Delete out-of-date documentation
-
-Jean Delvare (2):
-      acerhdf: Drop pointless dependency on THERMAL_HWMON
-      acerhdf: Clean up includes
-
-Joe Perches (24):
-      asus-wmi: Remove __init from asus_wmi_platform_init
-      ibm_rtl: Remove warnings from casts of pointer to int
-      acer-wmi: pr_<level> cleanups
-      asus: Add pr_fmt and convert printks to pr_<level>
-      compal-laptop: Convert printks to pr_<level>
-      dell: Convert printks to pr_<level>
-      eeepc: Use pr_warn
-      fujitsu-laptop: Convert printks to pr_<level>
-      hdaps: Convert printks to pr_<level>
-      hp-wmi: Convert printks to pr_<level>
-      ibm_rtl: Use pr_fmt and pr_<level>
-      ideapad-laptop: Add pr_fmt
-      intel_menlow: Add pr_fmt and use pr_<level>
-      intel_pmic_gpio: Convert printks to pr_<level>
-      msi-laptop: pr_<level> neatening
-      msi-wmi: Use pr_fmt and pr_<level>
-      sony-laptop: Add and use #define pr_fmt
-      tc1100-wmi: Add pr_fmt, use pr_<level>
-      topstar-laptop: Convert remaining printk to pr_info
-      toshiba: Convert printks to pr_<level>
-      wmi: Removed trailing whitespace from logging message.
-      xo15-ebook: Use pr_<level>
-      thinkpad_acpi: Correct !CONFIG_THINKPAD_ACPI_VIDEO warning
-      thinkpad_acpi: Convert printks to pr_<level>
-
-Lee, Chun-Yi (6):
-      acer-wmi: does not allow negative number set to initial device state
-      acer-wmi: check the existence of internal 3G device when set capability
-      acer-wmi: allow 64-bits return buffer from WMI methods
-      acer-wmi: support to set communication device state by new wmid method
-      msi-laptop: fix section mismatch in reference from the function load_scm_model_init
-      acer-wmi: support integer return type from WMI methods
-
-Matthew Garrett (1):
-      Merge branch 'x86-platform-next' into x86-platform
-
-Melchior FRANZ (1):
-      support wlan hotkey on Acer Travelmate 5735Z
-
-Weiping Pan (1):
-      platform/x86:delete two unused variables
-
-Yin Kangkai (1):
-      platform/oaktrail: ACPI EC Extra driver for Oaktrail
-
- Documentation/laptops/acer-wmi.txt        |  184 ---------
- MAINTAINERS                               |   11 +-
- drivers/platform/x86/Kconfig              |   11 +-
- drivers/platform/x86/Makefile             |    3 +-
- drivers/platform/x86/acer-wmi.c           |  184 ++++++++--
- drivers/platform/x86/acerhdf.c            |    4 +-
- drivers/platform/x86/asus-laptop.c        |   34 +-
- drivers/platform/x86/asus-wmi.c           |   22 +-
- drivers/platform/x86/asus_acpi.c          |   77 ++---
- drivers/platform/x86/compal-laptop.c      |   22 +-
- drivers/platform/x86/dell-laptop.c        |   12 +-
- drivers/platform/x86/dell-wmi-aio.c       |    3 +-
- drivers/platform/x86/dell-wmi.c           |   17 +-
- drivers/platform/x86/eeepc-laptop.c       |   21 +-
- drivers/platform/x86/eeepc-wmi.c          |   14 +-
- drivers/platform/x86/fujitsu-laptop.c     |   39 +-
- drivers/platform/x86/hdaps.c              |   19 +-
- drivers/platform/x86/hp-wmi.c             |   43 +--
- drivers/platform/x86/ibm_rtl.c            |   23 +-
- drivers/platform/x86/ideapad-laptop.c     |    2 +
- drivers/platform/x86/intel_menlow.c       |    5 +-
- drivers/platform/x86/intel_mid_powerbtn.c |   72 ++--
- drivers/platform/x86/intel_mid_thermal.c  |  607 ++++++++++++++---------------
- drivers/platform/x86/intel_oaktrail.c     |  396 +++++++++++++++++++
- drivers/platform/x86/intel_pmic_gpio.c    |   14 +-
- drivers/platform/x86/msi-laptop.c         |   11 +-
- drivers/platform/x86/msi-wmi.c            |   45 +--
- drivers/platform/x86/sony-laptop.c        |  106 +++---
- drivers/platform/x86/tc1100-wmi.c         |    7 +-
- drivers/platform/x86/thinkpad_acpi.c      |  490 ++++++++++--------------
- drivers/platform/x86/topstar-laptop.c     |    2 +-
- drivers/platform/x86/toshiba_acpi.c       |   59 ++--
- drivers/platform/x86/toshiba_bluetooth.c  |   11 +-
- drivers/platform/x86/wmi.c                |   10 +-
- drivers/platform/x86/xo15-ebook.c         |    5 +-
- 35 files changed, 1393 insertions(+), 1192 deletions(-)
- delete mode 100644 Documentation/laptops/acer-wmi.txt
- create mode 100644 drivers/platform/x86/intel_oaktrail.c
-
+diff --git a/Documentation/feature-removal-schedule.txt b/Documentation/feature-removal-schedule.txt
+index 492e81d..8427ad0 100644
+--- a/Documentation/feature-removal-schedule.txt
++++ b/Documentation/feature-removal-schedule.txt
+@@ -580,3 +580,16 @@ Why:	These legacy callbacks should no longer be used as i2c-core offers
+ Who:	Jean Delvare <khali@linux-fr.org>
+ 
+ ----------------------------
++
++What:   threeg and interface sysfs files in /sys/devices/platform/acer-wmi
++When:   2012
++Why:    In 2.6.40, we can now autodetect internal 3G device and already have
++	the threeg rfkill device. So, we plan to remove threeg sysfs support
++	for it's no longer necessary.
++
++	We also plan to remove interface sysfs file that exposed which ACPI-WMI
++	interface that was used by acer-wmi driver. It will replaced by
++	information log when acer-wmi initial.
++Who:    Lee, Chun-Yi <jlee@novell.com>
++
++----------------------------
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 1495539..7e7e668 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1396,6 +1396,8 @@ static ssize_t show_bool_threeg(struct device *dev,
+ {
+ 	u32 result; \
+ 	acpi_status status;
++
++	pr_info("This threeg sysfs will be removed in 2012.");
+ 	if (wmi_has_guid(WMID_GUID3))
+ 		status = wmid3_get_device_status(&result,
+ 				ACER_WMID3_GDS_THREEG);
+@@ -1421,6 +1423,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
+ 	char *buf)
+ {
++	pr_info("This interface sysfs will be removed in 2012.");
+ 	switch (interface->type) {
+ 	case ACER_AMW0:
+ 		return sprintf(buf, "AMW0\n");
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.6.0.2
