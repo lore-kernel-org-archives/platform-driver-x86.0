@@ -1,175 +1,82 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH] acer-wmi: schedule threeg and interface sysfs for
- feature removal
-Date: Mon, 30 May 2011 03:05:14 -0600
-Message-ID: <4DE3EA6A020000230002D3A1@novprvlin0050.provo.novell.com>
-References: <1306714900-26916-1-git-send-email-jlee@novell.com>
- <201105300947.01009.trenn@suse.de>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Tue, 31 May 2011 14:02:46 +0800
+Message-ID: <4DE48486.1050702@canonical.com>
+References: <4DAB18C3.7010106@flanto.de> <4DAB9566.7010601@canonical.com> <4DB92866.4000008@flanto.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <201105300947.01009.trenn@suse.de>
-Content-Disposition: inline
+Received: from adelie.canonical.com ([91.189.90.139]:35085 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751150Ab1EaGCx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 31 May 2011 02:02:53 -0400
+In-Reply-To: <4DB92866.4000008@flanto.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: trenn@suse.de
-Cc: corentincj@iksaif.net, dtor@mail.ru, Joey Lee <JLee@novell.com>, mjg@redhat.com, carlos@strangeworlds.co.uk, platform-driver-x86@vger.kernel.org
+To: Florian Heyer <heyho@flanto.de>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,=20
+Hi Florian,
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-05-30 =E6=96=BC 09:47 +0200=EF=BC=8CTh=
-omas Renninger =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday, May 30, 2011 02:21:40 AM Lee, Chun-Yi wrote:
-> > we can now autodetect internal 3G device and already have the three=
-g
-> > rfkill device. So, we plan to remove threeg sysfs support for it's =
-no
-> > longer necessary.
-> >=20
-> > We also plan to remove interface sysfs file that exposed which ACPI=
--WMI
-> > interface that was used by acer-wmi driver. It will replaced by inf=
-ormation
-> > log when acer-wmi initial.
-> >=20
-> > We keep it around for userspace compatibility reasons, schedule rem=
-oval
-> > in 2012.
->=20
-> ...
->=20
-> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86=
-/acer-wmi.c
-> > index 1495539..7e7e668 100644
-> > --- a/drivers/platform/x86/acer-wmi.c
-> > +++ b/drivers/platform/x86/acer-wmi.c
-> > @@ -1396,6 +1396,8 @@ static ssize_t show_bool_threeg(struct device=
- *dev,
-> >  {
-> >  	u32 result; \
-> >  	acpi_status status;
-> > +
-> > +	pr_info("This threeg sysfs will be removed in 2012.");
-> You could also add:
->             " - used by: %s\n", current->comm);
-> then it's easier to identify and fix the app still making use of it.
->=20
->=20
-> >  	if (wmi_has_guid(WMID_GUID3))
-> >  		status =3D wmid3_get_device_status(&result,
-> >  				ACER_WMID3_GDS_THREEG);
-> > @@ -1421,6 +1423,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR,=
- show_bool_threeg,
-> >  static ssize_t show_interface(struct device *dev, struct device_at=
-tribute *attr,
-> >  	char *buf)
-> >  {
-> > +	pr_info("This interface sysfs will be removed in 2012.");
-> Same.
-> >  	switch (interface->type) {
-> >  	case ACER_AMW0:
-> >  		return sprintf(buf, "AMW0\n");
->=20
->    Thomas
+Sorry its being awhile. Thanks for your reply, the notify looks fine but after
+reading the DSDT I find no hint how to fix it. :(
 
-Thank's for your review and suggestion, I modified patch like the
-following:
+It looks like we need acer_wmi to unseal the wifi switch. I am thinking of
+two solutions. The first one is to have a module parameter to avoid reading
+switch status. The second one is to find out how to unseal the switch function
+with wmi (maybe a worse idea).
 
-From 0dc691b3f99794a6b91728413919720454a9be44 Mon Sep 17 00:00:00 2001
-=46rom: Lee, Chun-Yi <jlee@novell.com>
-Date: Mon, 30 May 2011 16:58:27 +0800
-Subject: [PATCH v2] acer-wmi: schedule threeg and interface sysfs for f=
-eature removal
+First thing I need to ask is there any side effect to load acer-wmi on your
+ideapad?
 
-we can now autodetect internal 3G device and already have the threeg
-rfkill device. So, we plan to remove threeg sysfs support for it's no
-longer necessary.
 
-We also plan to remove interface sysfs file that exposed which ACPI-WMI
-interface that was used by acer-wmi driver. It will replaced by informa=
-tion
-log when acer-wmi initial.
 
-We keep it around for userspace compatibility reasons, schedule removal
-in 2012.
-
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
----
- Documentation/feature-removal-schedule.txt |   13 +++++++++++++
- drivers/platform/x86/acer-wmi.c            |   11 +++++++++--
- 2 files changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/feature-removal-schedule.txt b/Documentation=
-/feature-removal-schedule.txt
-index ff31b1c..c8c18d7 100644
---- a/Documentation/feature-removal-schedule.txt
-+++ b/Documentation/feature-removal-schedule.txt
-@@ -564,3 +564,16 @@ Why:	Superseded by the UVCIOC_CTRL_QUERY ioctl.
- Who:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-=20
- ----------------------------
-+
-+What:   threeg and interface sysfs files in /sys/devices/platform/acer=
--wmi
-+When:   2012
-+Why:    In 2.6.40, we can now autodetect internal 3G device and alread=
-y have
-+	the threeg rfkill device. So, we plan to remove threeg sysfs support
-+	for it's no longer necessary.
-+
-+	We also plan to remove interface sysfs file that exposed which ACPI-W=
-MI
-+	interface that was used by acer-wmi driver. It will replaced by
-+	information log when acer-wmi initial.
-+Who:    Lee, Chun-Yi <jlee@novell.com>
-+
-+----------------------------
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 005417b..9408cd5 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1400,6 +1400,9 @@ static ssize_t show_bool_threeg(struct device *de=
-v,
- {
- 	u32 result; \
- 	acpi_status status;
-+
-+	pr_info("This threeg sysfs will be removed in 2012"
-+		" - used by: %s\n", current->comm);
- 	if (wmi_has_guid(WMID_GUID3))
- 		status =3D wmid3_get_device_status(&result,
- 				ACER_WMID3_GDS_THREEG);
-@@ -1415,8 +1418,10 @@ static ssize_t set_bool_threeg(struct device *de=
-v,
- {
- 	u32 tmp =3D simple_strtoul(buf, NULL, 10);
- 	acpi_status status =3D set_u32(tmp, ACER_CAP_THREEG);
--		if (ACPI_FAILURE(status))
--			return -EINVAL;
-+	pr_info("This threeg sysfs will be removed in 2012"
-+		" - used by: %s\n", current->comm);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
- 	return count;
- }
- static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
-@@ -1425,6 +1430,8 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, sho=
-w_bool_threeg,
- static ssize_t show_interface(struct device *dev, struct device_attrib=
-ute *attr,
- 	char *buf)
- {
-+	pr_info("This interface sysfs will be removed in 2012"
-+		" - used by: %s\n", current->comm);
- 	switch (interface->type) {
- 	case ACER_AMW0:
- 		return sprintf(buf, "AMW0\n");
---=20
-1.6.0.2
+On 04/28/2011 04:42 PM, Florian Heyer wrote:
+> On 18.04.2011 03:35, Ike Panhc wrote:
+>> In the mean time. Some test is suggested.
+>>
+> [...]
+>>  * Insert a printk in notify function like this
+>>
+>> --- a/drivers/platform/x86/ideapad-laptop.c
+>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>> @@ -449,6 +449,7 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+>>         acpi_handle handle = adevice->handle;
+>>         unsigned long vpc1, vpc2, vpc_bit;
+>>  
+>> +       pr_info("notified. event: 0x%X.\n", event);
+>>         if (read_ec_data(handle, 0x10, &vpc1))
+>>                 return;
+>>         if (read_ec_data(handle, 0x1A, &vpc2))
+>>
+>>    and see if we have the acpi event on switch event.
+> 
+> Hello Ike,
+> 
+> i'm back at this problem.
+> I have loaded module ideapad_laptop with modification as above.
+> 
+> On triggering the hardware wifi button on->off->on i get the following
+> messages:
+> 
+> [  730.712030] usb 3-5: USB disconnect, device number 4
+> [  730.713156] btusb_bulk_complete: hci0 urb ffff8801178d7b40 failed to
+> resubmit (19)
+> [  730.713183] btusb_intr_complete: hci0 urb ffff880115e6c780 failed to
+> resubmit (19)
+> [  730.713983] btusb_bulk_complete: hci0 urb ffff8801178d7000 failed to
+> resubmit (19)
+> [  730.714236] btusb_send_frame: hci0 urb ffff880114055600 submission failed
+> [  730.715438] notified. event: 0x80.
+> [  731.710317] hci_cmd_timer: hci0 command tx timeout
+> [  732.008870] notified. event: 0x80.
+> [  732.650384] usb 3-5: new full speed USB device number 5 using ohci_hcd
+> 
+> 
+> Other function buttons (e.g. screen brightness adjustment) also produce
+> messages as above "notified. event: 0x80."
+> 
+> 
+> Regards
