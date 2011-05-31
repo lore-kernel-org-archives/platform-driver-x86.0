@@ -1,124 +1,98 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: Wifi switch not working, linux on IdeaPad S205
-Date: Tue, 31 May 2011 14:38:13 +0800
-Message-ID: <4DE48CD5.1080008@canonical.com>
-References: <4DAB18C3.7010106@flanto.de> <4DAB9566.7010601@canonical.com> <4DB92866.4000008@flanto.de> <4DE48486.1050702@canonical.com> <4DE51718020000230002D4CF@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH v2] acer-wmi: schedule threeg and interface sysfs for feature removal
+Date: Tue, 31 May 2011 14:52:22 +0800
+Message-ID: <1306824742-26952-1-git-send-email-jlee@novell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:50888 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751037Ab1EaGiU (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:33391 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757971Ab1EaHFO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 31 May 2011 02:38:20 -0400
-In-Reply-To: <4DE51718020000230002D4CF@novprvlin0050.provo.novell.com>
+	Tue, 31 May 2011 03:05:14 -0400
+Received: by vws1 with SMTP id 1so3049595vws.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 31 May 2011 00:05:13 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: heyho@flanto.de, platform-driver-x86@vger.kernel.org
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@novell.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>
 
-Hi Joey,
+we can now autodetect internal 3G device and already have the threeg
+rfkill device. So, we plan to remove threeg sysfs support for it's no
+longer necessary.
 
-I put it at http://people.canonical.com/~ikepanhc/DSDTs/acpidump-ideapa=
-d-s10-3t.dat
+We also plan to remove interface sysfs file that exposed which ACPI-WMI
+interface that was used by acer-wmi driver. It will replaced by information
+log when acer-wmi initial.
 
-Thanks a lot.
+We keep it around for userspace compatibility reasons, schedule removal
+in 2012.
 
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Acked-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
+---
+ Documentation/feature-removal-schedule.txt |   13 +++++++++++++
+ drivers/platform/x86/acer-wmi.c            |   11 +++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-On 05/31/2011 02:28 PM, Joey Lee wrote:
-> Hi Ike,=20
->=20
-> Does there have any acpidump attached on any bug, then I can download
-> it?
-> Need my help to look at maybe acer-wmi can support this machine?
->=20
->=20
-> Thank's a lot!
-> Joey Lee
->=20
-> =E6=96=BC =E4=BA=8C=EF=BC=8C2011-05-31 =E6=96=BC 14:02 +0800=EF=BC=8C=
-Ike Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
->> Hi Florian,
->>
->> Sorry its being awhile. Thanks for your reply, the notify looks fine=
- but after
->> reading the DSDT I find no hint how to fix it. :(
->>
->> It looks like we need acer_wmi to unseal the wifi switch. I am think=
-ing of
->> two solutions. The first one is to have a module parameter to avoid =
-reading
->> switch status. The second one is to find out how to unseal the switc=
-h function
->> with wmi (maybe a worse idea).
->>
->> First thing I need to ask is there any side effect to load acer-wmi =
-on your
->> ideapad?
->>
->>
->>
->> On 04/28/2011 04:42 PM, Florian Heyer wrote:
->>> On 18.04.2011 03:35, Ike Panhc wrote:
->>>> In the mean time. Some test is suggested.
->>>>
->>> [...]
->>>>  * Insert a printk in notify function like this
->>>>
->>>> --- a/drivers/platform/x86/ideapad-laptop.c
->>>> +++ b/drivers/platform/x86/ideapad-laptop.c
->>>> @@ -449,6 +449,7 @@ static void ideapad_acpi_notify(struct acpi_de=
-vice *adevice, u32 event)
->>>>         acpi_handle handle =3D adevice->handle;
->>>>         unsigned long vpc1, vpc2, vpc_bit;
->>>> =20
->>>> +       pr_info("notified. event: 0x%X.\n", event);
->>>>         if (read_ec_data(handle, 0x10, &vpc1))
->>>>                 return;
->>>>         if (read_ec_data(handle, 0x1A, &vpc2))
->>>>
->>>>    and see if we have the acpi event on switch event.
->>>
->>> Hello Ike,
->>>
->>> i'm back at this problem.
->>> I have loaded module ideapad_laptop with modification as above.
->>>
->>> On triggering the hardware wifi button on->off->on i get the follow=
-ing
->>> messages:
->>>
->>> [  730.712030] usb 3-5: USB disconnect, device number 4
->>> [  730.713156] btusb_bulk_complete: hci0 urb ffff8801178d7b40 faile=
-d to
->>> resubmit (19)
->>> [  730.713183] btusb_intr_complete: hci0 urb ffff880115e6c780 faile=
-d to
->>> resubmit (19)
->>> [  730.713983] btusb_bulk_complete: hci0 urb ffff8801178d7000 faile=
-d to
->>> resubmit (19)
->>> [  730.714236] btusb_send_frame: hci0 urb ffff880114055600 submissi=
-on failed
->>> [  730.715438] notified. event: 0x80.
->>> [  731.710317] hci_cmd_timer: hci0 command tx timeout
->>> [  732.008870] notified. event: 0x80.
->>> [  732.650384] usb 3-5: new full speed USB device number 5 using oh=
-ci_hcd
->>>
->>>
->>> Other function buttons (e.g. screen brightness adjustment) also pro=
-duce
->>> messages as above "notified. event: 0x80."
->>>
->>>
->>> Regards
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe platform-d=
-river-x86" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
+diff --git a/Documentation/feature-removal-schedule.txt b/Documentation/feature-removal-schedule.txt
+index ff31b1c..c8c18d7 100644
+--- a/Documentation/feature-removal-schedule.txt
++++ b/Documentation/feature-removal-schedule.txt
+@@ -564,3 +564,16 @@ Why:	Superseded by the UVCIOC_CTRL_QUERY ioctl.
+ Who:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+ 
+ ----------------------------
++
++What:   threeg and interface sysfs files in /sys/devices/platform/acer-wmi
++When:   2012
++Why:    In 2.6.40, we can now autodetect internal 3G device and already have
++	the threeg rfkill device. So, we plan to remove threeg sysfs support
++	for it's no longer necessary.
++
++	We also plan to remove interface sysfs file that exposed which ACPI-WMI
++	interface that was used by acer-wmi driver. It will replaced by
++	information log when acer-wmi initial.
++Who:    Lee, Chun-Yi <jlee@novell.com>
++
++----------------------------
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 005417b..9408cd5 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1400,6 +1400,9 @@ static ssize_t show_bool_threeg(struct device *dev,
+ {
+ 	u32 result; \
+ 	acpi_status status;
++
++	pr_info("This threeg sysfs will be removed in 2012"
++		" - used by: %s\n", current->comm);
+ 	if (wmi_has_guid(WMID_GUID3))
+ 		status = wmid3_get_device_status(&result,
+ 				ACER_WMID3_GDS_THREEG);
+@@ -1415,8 +1418,10 @@ static ssize_t set_bool_threeg(struct device *dev,
+ {
+ 	u32 tmp = simple_strtoul(buf, NULL, 10);
+ 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
+-		if (ACPI_FAILURE(status))
+-			return -EINVAL;
++	pr_info("This threeg sysfs will be removed in 2012"
++		" - used by: %s\n", current->comm);
++	if (ACPI_FAILURE(status))
++		return -EINVAL;
+ 	return count;
+ }
+ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+@@ -1425,6 +1430,8 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
+ 	char *buf)
+ {
++	pr_info("This interface sysfs will be removed in 2012"
++		" - used by: %s\n", current->comm);
+ 	switch (interface->type) {
+ 	case ACER_AMW0:
+ 		return sprintf(buf, "AMW0\n");
+-- 
+1.6.0.2
