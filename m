@@ -1,59 +1,56 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: Wifi switch not working, linux on IdeaPad S205
-Date: Tue, 31 May 2011 20:08:02 -0600
-Message-ID: <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com>
-References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com>
- <4DE57CD6.5030609@flanto.de>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
+Date: Wed, 01 Jun 2011 15:23:26 +0800
+Message-ID: <4DE5E8EE.3000204@canonical.com>
+References: <4DDE9B92.3090504@users.sourceforge.net> <4DE0E488.8040108@t-online.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-In-Reply-To: <4DE57CD6.5030609@flanto.de>
-Content-Disposition: inline
+Received: from adelie.canonical.com ([91.189.90.139]:33001 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752192Ab1FAHXn (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 1 Jun 2011 03:23:43 -0400
+In-Reply-To: <4DE0E488.8040108@t-online.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: heyho@flanto.de
-Cc: ike.pan@canonical.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
+To: =?UTF-8?B?UmljaGFyZCBTY2jDvHR6?= <r.schtz@t-online.de>
+Cc: Alberto Mardegan <mardy@users.sourceforge.net>, platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2011-06-01 =E6=96=BC 01:42 +0200=EF=BC=8CFl=
-orian Heyer =E6=8F=90=E5=88=B0=EF=BC=9A
-> On 06/01/2011 12:50 AM, Joey Lee wrote:
-> >
-> > After traced S205 DSDT, I thought you will got a result is 0x71, pl=
-ease
-> > help to use acer_ec.pl to confirm this register changed. Please giv=
-e me
-> > the value when wireless on/off.
+On 05/28/2011 08:03 PM, Richard Sch=C3=BCtz wrote:
+> On 05/26/11 20:27, Alberto Mardegan wrote:
+>> Secondly, I'd like to add support for reading the accelerometer valu=
+es,
+>> as it's done here (again, kudos to Javier):
+>> http://gitorious.org/iaps/iaps/blobs/master/iaps.c
+>> I know that no one is happy of directly accessing the raw I/O ports,=
+ but
+>> all my attempts of reading these values through the ACPI interfaces =
+or
+>> the EC fields have failed: the fields are always set to 0.
+>> So, what I plan to do is to check the DMI information, and if the
+>> machine is a S10-3t I would you the code linked above to read and re=
+port
+>> the accelerometer values. Would that be acceptable?
 >=20
-> Hello Joey,
+> I'm wondering if the accelerometer driver is also compatible with the=
+ ThinkPad SL laptops. It is said that their firmwares are quite similar=
+ to the IdeaPad ones. As they have quasi nothing in common with the nor=
+mal ThinkPad series there's no support for them in thinkpad-acpi/hdaps/=
+tp_smapi.
+
+So far what I know is SL400 has similar firmware with asus-laptops, and=
+ other SL are using thinkpad-acpi.
+
+I have a SL400 and tried to examine the DSDT but found nothing about ac=
+celerometer sensor.
+
 >=20
-> just short testing: the hardware wifi switch (not the wifi key=20
-> combination fn+f5) toggles register 0x0C from 0 (off) to 64 (on). Wif=
-i=20
-> goes on/off (after having first loaded/unloaded acer_wmi).
+> I compiled the iaps module and loaded it successfully on my ThinkPad =
+SL. There is also data passed by the driver to the input subsystem, whe=
+n I move the laptop. Is there a way to validate this data?
 >=20
 
-It's also ok for acer-wmi can capture 0x0C then set to wireless
-killswitch.
-
-> The wifi key combination fn+f5 doesn't seem to change anything (i hav=
-e=20
-> to look again to be sure).
->=20
-
-So, does that mean Fn+F5 cann't on/off wireless? or Not?
-Could you please help to check the value on 0x51 and 0x52?
-
-
-Thakn's
-Joey Lee
-
-> >
-> > And,
-> > Please attached on dmidecode, just need:
-> > 	dmidecode>  dmidecode.log
->=20
-> ok, i'll provide that tomorrow.
->=20
->=20
-> regards
+Which SL you have? If we can find out a standard interface, that will b=
+e good.
