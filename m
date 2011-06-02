@@ -1,83 +1,70 @@
-From: =?UTF-8?B?UmljaGFyZCBTY2jDvHR6?= <r.schtz@t-online.de>
-Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
-Date: Wed, 01 Jun 2011 21:29:46 +0200
-Message-ID: <4DE6932A.90808@t-online.de>
-References: <4DDE9B92.3090504@users.sourceforge.net> <4DE0E488.8040108@t-online.de> <4DE5E8EE.3000204@canonical.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH] dell-laptop: support synaptics touchpad led
+Date: Thu, 2 Jun 2011 09:30:56 +0800
+Message-ID: <BANLkTi=LByUkAL6WKCMYtY2dDJ8xi0xk7g@mail.gmail.com>
+References: <1306917288-8531-1-git-send-email-acelan.kao@canonical.com>
+	<20110601133155.GA5215@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout11.t-online.de ([194.25.134.85]:51523 "EHLO
-	mailout11.t-online.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758490Ab1FAT3u (ORCPT
+Received: from mail-qw0-f46.google.com ([209.85.216.46]:64312 "EHLO
+	mail-qw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753328Ab1FBBa5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 1 Jun 2011 15:29:50 -0400
-In-Reply-To: <4DE5E8EE.3000204@canonical.com>
+	Wed, 1 Jun 2011 21:30:57 -0400
+Received: by qwk3 with SMTP id 3so173540qwk.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Jun 2011 18:30:56 -0700 (PDT)
+In-Reply-To: <20110601133155.GA5215@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Alberto Mardegan <mardy@users.sourceforge.net>, platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org
 
-On 06/01/2011 09:23, Ike Panhc wrote:
-> On 05/28/2011 08:03 PM, Richard Sch=C3=BCtz wrote:
->> On 05/26/11 20:27, Alberto Mardegan wrote:
->>> Secondly, I'd like to add support for reading the accelerometer val=
-ues,
->>> as it's done here (again, kudos to Javier):
->>> http://gitorious.org/iaps/iaps/blobs/master/iaps.c
->>> I know that no one is happy of directly accessing the raw I/O ports=
-, but
->>> all my attempts of reading these values through the ACPI interfaces=
- or
->>> the EC fields have failed: the fields are always set to 0.
->>> So, what I plan to do is to check the DMI information, and if the
->>> machine is a S10-3t I would you the code linked above to read and r=
-eport
->>> the accelerometer values. Would that be acceptable?
+Mattew,
+
+Dell tells us that they will use the same touchpad chip for their products,
+with the same touchpad LED layout, so I place the code in the dell-laptop.
+And F22 already map to enable/disable touchpad in X, BIOS and synaptics driver
+do nothing for this event, and my code only turns on/off the touchpad LED,
+not enable/disable the touchpad.
+
+BIOS should manage this kind of action to enable/disable touchpad and the LED,
+but Dell doesn't want to modify their BIOS to do that, since the
+touchpad driver of
+MS Windows manages to enable/disable touchpad and the LED by themselves,
+so Linux should do the same thing as Windows does.
+
+That's why we need those code and why I think dell-laptop is a good
+place for them.
+
+Best regards,
+AceLan Kao.
+
+2011/6/1 Matthew Garrett <mjg59@srcf.ucam.org>:
+> On Wed, Jun 01, 2011 at 04:34:48PM +0800, AceLan Kao wrote:
+>> The TP-LOCK-LED would bright while TP-disablement.
+>> You can implement 97 command services routing of P/S2 device.
+>> Code like below:
+>> out 0x64,0x97 ;set 0x97 to command port;0x64 is command port
+>> out 0x60,0x01 ;set 0x01 to data port then make LED bright;0x60 is data port
+>> out 0x60,0x02 ;set 0x02 to data port then make LED dark
 >>
->> I'm wondering if the accelerometer driver is also compatible with th=
-e ThinkPad SL laptops. It is said that their firmwares are quite simila=
-r to the IdeaPad ones. As they have quasi nothing in common with the no=
-rmal ThinkPad series there's no support for them in thinkpad-acpi/hdaps=
-/tp_smapi.
+>> Before you send the action to the port, you must make sure the Input buffer
+>> is empty (port 0x64).
 >
-> So far what I know is SL400 has similar firmware with asus-laptops, a=
-nd other SL are using thinkpad-acpi.
-
-The EC of the ThinkPad SL laptops is from ASUSTeK as far as I know. At=20
-least it looks like that in the DSDT. So asus-laptop handles some=20
-hotkeys. No ThinkPad SL can be handled by thinkpad-acpi, because they=20
-are totally different.
-
-=46eatures like bluetooth rfkill and accessing the blue LED in the Leno=
-vo=20
-Care button are still not supported ([1] can do that, but never was=20
-accepted for the kernel).
-
-> I have a SL400 and tried to examine the DSDT but found nothing about =
-accelerometer sensor.
-
-There should be an accelerometer in your SL400. Try the driver mentione=
-d=20
-in this thread.
-
->>
->> I compiled the iaps module and loaded it successfully on my ThinkPad=
- SL. There is also data passed by the driver to the input subsystem, wh=
-en I move the laptop. Is there a way to validate this data?
->>
+> NAK - you're sending commands to the touchpad. The code for that needs
+> to live in the touchpad driver, not dell-laptop (what happens if these
+> commands are sent to different types of touchpad?). The scancode needs
+> to be mapped to an appropriate keycode and userspace needs to tie them
+> together.
 >
-> Which SL you have? If we can find out a standard interface, that will=
- be good.
-
-I have a SL500. It looks like the mailing list disliked my attached=20
-DSDT. What are the limitations on this? It is available under [2] now.
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+>
 
 
-[1] https://github.com/tetromino/lenovo-sl-laptop
-[2] http://richard.qasl.de/DSDT.dsl
 
---=20
-Regards,
-Richard Sch=C3=BCtz
+-- 
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
