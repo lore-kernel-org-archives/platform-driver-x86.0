@@ -1,33 +1,34 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/3] ideapad: Add nodes in sysfs
-Date: Fri, 3 Jun 2011 13:21:41 -0700
-Message-ID: <201106031321.42168.dmitry.torokhov@gmail.com>
-References: <1307006553-12667-1-git-send-email-ike.pan@canonical.com> <1307006645-12702-1-git-send-email-ike.pan@canonical.com>
+Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control file
+Date: Fri, 3 Jun 2011 13:23:55 -0700
+Message-ID: <201106031323.55763.dmitry.torokhov@gmail.com>
+References: <4DE8FC4A.9010401@absence.it> <4DE92514.8080405@absence.it>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1307006645-12702-1-git-send-email-ike.pan@canonical.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-px0-f179.google.com ([209.85.212.179]:45777 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750965Ab1FCUYB (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 3 Jun 2011 16:24:01 -0400
+Received: by pxi2 with SMTP id 2so1438713pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jun 2011 13:24:01 -0700 (PDT)
+In-Reply-To: <4DE92514.8080405@absence.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Marco Chiappero <marco@absence.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-On Thursday, June 02, 2011 02:24:05 AM Ike Panhc wrote:
-> +What:          /sys/devices/platform/ideapad/touchpad
-> +Date:          Jun 2011
-> +KernelVersion: 3.0.1
-> +Contact:       "Ike Panhc <ike.pan@canonical.com>"
-> +Description:
-> +               Control the power of touchpad. 1 means on, 0 means off.
+On Friday, June 03, 2011 11:16:52 AM Marco Chiappero wrote:
+> Handle 0x0105 allows to change (and store persistently) the touchpad
+> state, while notebooks with handle 0x0148 also provides the Fn-F1 combo
+> to change the touchpad state, but the key driven change is not handled
+> by this patch.
 
-I do not think that we should be adding attributes like this one.
-Is there any way to pug it into device core/PM infrastructure?
-
-Also, what is the driver for having this attribute? Is it power savings
-or is it because some people prefer to turn off the touchpad because
-it interferes with typing?
+Why do we want to do this? X allows to ignore certain pointing devices 
+IIRC.
 
 Thanks.
 
