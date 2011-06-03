@@ -1,49 +1,70 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control file
-Date: Fri, 3 Jun 2011 14:00:35 -0700
-Message-ID: <201106031400.36141.dmitry.torokhov@gmail.com>
-References: <4DE8FC4A.9010401@absence.it> <201106031323.55763.dmitry.torokhov@gmail.com> <4DE94501.1080905@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control
+ file
+Date: Fri, 03 Jun 2011 23:46:39 +0200
+Message-ID: <4DE9563F.9010503@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <201106031323.55763.dmitry.torokhov@gmail.com> <4DE94501.1080905@absence.it> <201106031400.36141.dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:56020 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753630Ab1FCVAm (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:40264 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751084Ab1FCVqp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 17:00:42 -0400
-Received: by pvg12 with SMTP id 12so1044375pvg.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jun 2011 14:00:41 -0700 (PDT)
-In-Reply-To: <4DE94501.1080905@absence.it>
+	Fri, 3 Jun 2011 17:46:45 -0400
+In-Reply-To: <201106031400.36141.dmitry.torokhov@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-On Friday, June 03, 2011 01:33:05 PM Marco Chiappero wrote:
-> Il 03/06/2011 22:23, Dmitry Torokhov ha scritto:
-> > Why do we want to do this? X allows to ignore certain pointing devices
-> > IIRC.
-> 
-> Because I believe it turns off the device, the power state is also
-> stored and preserved across reboots and shutdowns. Telling X to ignore
-> the input is, IMHO, a workaround if we have the hardware capability for
-> that
+Il 03/06/2011 23:00, Dmitry Torokhov ha scritto:
+> The issue with that that we are breeding myriad of quirks
 
-The issue with that that we are breeding myriad of quirks that nobody
-knows about and nobody ever uses. X provides standardized way of
-ignoring input devices. It is also more transparent than "I once wrote
-something to some sysfs file and I completely forgot about this but
-now my touchpad does not work". There were quite a few bugs filed just
-because users pressed key that cuts power to touchpad and stores the
-state across reboots.
+Where is the quirk? If many vendors provide the same feature let's 
+create a common interface for that.
 
-> (and why should we suppose that X will be used always and
-> forever?).
+> that nobody
+> knows  about
 
-We should not but replacement should have at least the same functionality
-if not better.
+This is false, especially for (so many) people using Windows too, where 
+the feature is clearly visible by the OEM software.
 
--- 
-Dmitry
+> and nobody ever uses.
+
+Again, this is false, and I don't think you can speak for everybody.
+
+> X provides standardized way of
+> ignoring input devices.
+
+Let's create a standardized solution, instead of using a standardized hack.
+
+> It is also more transparent than "I once wrote
+> something to some sysfs file and I completely forgot about this but
+> now my touchpad does not work".
+
+The problem does not lie in the sysfs file, lies in the lack of 
+userspace software for it (BTW, about this case someone already created 
+a Vaio specific GUI for an easy control of these features).
+
+> There were quite a few bugs filed just
+> because users pressed key that cuts power to touchpad and stores the
+> state across reboots.
+
+It's very much like saying that we should not produce cars because some 
+people use them improperly and crash. People doing wrong things will 
+always be present, we can improve userspace software to help them 
+instead, not just delete features they payed for (and they wanted to 
+use, at least once as you say).
+
+>> (and why should we suppose that X will be used always and
+>> forever?).
+>
+> We should not but replacement should have at least the same functionality
+> if not better.
+
+I agree, but this doesn't necessarily mean it will use an hack again.
+
+It's a common and widespread feature, let's support it better instead of 
+just removing it.
