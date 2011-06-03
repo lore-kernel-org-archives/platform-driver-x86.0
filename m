@@ -1,49 +1,41 @@
-From: Greg Dietsche <gregory.dietsche@cuw.edu>
-Subject: Re: [PATCH] sony-laptop: remove unused local variables
-Date: Thu, 02 Jun 2011 21:46:00 -0500
-Message-ID: <4DE84AE8.60109@cuw.edu>
-References: <1307068040-2918-1-git-send-email-Gregory.Dietsche@cuw.edu>
+From: Florian Heyer <heyho@flanto.de>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Fri, 03 Jun 2011 14:49:58 +0200
+Message-ID: <4DE8D876.7060304@flanto.de>
+References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com> <4DE57CD6.5030609@flanto.de> <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com> <4DE74CEF.3020608@flanto.de> <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1307068040-2918-1-git-send-email-Gregory.Dietsche@cuw.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Dietsche <Gregory.Dietsche@cuw.edu>
-Cc: malattia@linux.it, mjg@redhat.com, kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from melmac.flanto.de ([78.46.67.50]:50780 "EHLO melmac.flanto.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754701Ab1FCMt6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 3 Jun 2011 08:49:58 -0400
+In-Reply-To: <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org
 
-please disregard... i neglected to rebase before sending. this patch no 
-longer applies to the mainline.
+On 02.06.2011 21:16, Joey Lee wrote:
+> This is a problem on "Fn+F5" and "wireless hardware switch", does "Fn
+> +F5" also can control wireless state? If yes, then it's a problem it
+> have conflict with "wirelss hardware switch".
+> 
+> I mean, even 0x0C is "64", the Fn+F5 still can turn-off wireless, does
+> it right?
+> If the answer is yes, then we cann't use 0x0C to be killswitch state.
 
-Greg
+fn+f5 doesn't do anything no matter what state the wifi switch is.
+Personally i wouldn't mind if only the wifi switch is supported, i mean,
+you don't need a key combination if you have a real switch for wifi
+(de)activation.
 
-On 06/02/2011 09:27 PM, Greg Dietsche wrote:
-> Removed two unused instances of "handle" local variable.
->
-> Signed-off-by: Greg Dietsche<Gregory.Dietsche@cuw.edu>
-> ---
->   drivers/platform/x86/sony-laptop.c |    2 --
->   1 files changed, 0 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> index 6fe8cd6..9a2c319 100644
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -961,7 +961,6 @@ static int sony_backlight_get_brightness(struct backlight_device *bd)
->   static int sony_nc_get_brightness_ng(struct backlight_device *bd)
->   {
->   	int result;
-> -	int *handle = (int *)bl_get_data(bd);
->   	struct sony_backlight_props *sdev =
->   		(struct sony_backlight_props *)bl_get_data(bd);
->
-> @@ -973,7 +972,6 @@ static int sony_nc_get_brightness_ng(struct backlight_device *bd)
->   static int sony_nc_update_status_ng(struct backlight_device *bd)
->   {
->   	int value, result;
-> -	int *handle = (int *)bl_get_data(bd);
->   	struct sony_backlight_props *sdev =
->   		(struct sony_backlight_props *)bl_get_data(bd);
->
->    
+> What the value in 0x51 and 0x52? is 0, 1 or?
+
+It's 0!
+
+regards
+-- 
+Florian Heyer - heyho@flanto.de
