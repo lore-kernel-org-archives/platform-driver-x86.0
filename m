@@ -1,78 +1,240 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH 9/25] sony-laptop: sony_walk_callback moved for better readability
-Date: Fri, 03 Jun 2011 17:39:41 +0200
-Message-ID: <4DE9003D.4030002@absence.it>
+Subject: [PATCH 10/25] sony-laptop: keyboard backlight support extended to
+ newer Vaios
+Date: Fri, 03 Jun 2011 17:41:01 +0200
+Message-ID: <4DE9008D.7040504@absence.it>
 References: <4DE8FC4A.9010401@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:56255 "EHLO
+Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:40158 "EHLO
 	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756093Ab1FCPjo (ORCPT
+	with ESMTP id S1755302Ab1FCPlF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 11:39:44 -0400
+	Fri, 3 Jun 2011 11:41:05 -0400
 In-Reply-To: <4DE8FC4A.9010401@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-sony_walk_callback moved to stay close to the other ACPI callbacks for 
-better code readability.
+Added support for handle 0x0143 (Vaio SA/SB/SC, CA/CB). Minor 
+corrections included.
 
 Signed-off-by: Marco Chiappero <marco@absence.it>
 ---
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -1149,24 +1149,6 @@ static struct sony_nc_event sony_127_eve
-  };
+@@ -127,7 +127,7 @@ MODULE_PARM_DESC(minor,
+  		 "default is -1 (automatic)");
+  #endif
 
-  /*
-- * ACPI callbacks
-- */
--static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
--				      void *context, void **return_value)
--{
--	struct acpi_device_info *info;
+-static int kbd_backlight;	/* = 1 */
++static int kbd_backlight;	/* = 0 */
+  module_param(kbd_backlight, int, 0444);
+  MODULE_PARM_DESC(kbd_backlight,
+  		 "set this to 0 to disable keyboard backlight, "
+@@ -140,15 +140,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
+  		 "1 for 30 seconds, 2 for 60 seconds and 3 to disable timeout "
+  		 "(default: 0)");
+
+-static void sony_nc_kbd_backlight_resume(void);
 -
--	if (ACPI_SUCCESS(acpi_get_object_info(handle, &info))) {
--		pr_warn("method: name: %4.4s, args %X\n",
--			(char *)&info->name, info->param_count);
+-enum sony_nc_rfkill {
+-	SONY_WIFI,
+-	SONY_BLUETOOTH,
+-	SONY_WWAN,
+-	SONY_WIMAX,
+-	N_SONY_RFKILL,
+-};
+
+  static int sony_rfkill_handle;
+  static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
+@@ -1356,38 +1347,33 @@ static int sony_nc_rfkill_setup(struct a
+  }
+
+  /* Keyboard backlight feature */
+-#define KBDBL_HANDLER	0x137
+-#define KBDBL_PRESENT	0xB00
+-#define	SET_MODE	0xC00
+-#define SET_STATE	0xD00
+-#define SET_TIMEOUT	0xE00
 -
--		kfree(info);
--	}
+  struct kbd_backlight {
+-	int mode;
+-	int timeout;
++	unsigned int base;
++	unsigned int mode;
++	unsigned int timeout;
+  	struct device_attribute mode_attr;
+  	struct device_attribute timeout_attr;
+  };
 -
--	return AE_OK;
--}
+  static struct kbd_backlight *kbdbl_handle;
++static int sony_kbd_handle = -1;
+
+-static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
++static int __sony_nc_kbd_backlight_mode_set(u8 value)
+  {
+  	unsigned int result;
+
+  	if (value > 1)
+  		return -EINVAL;
+
+-	if (sony_call_snc_handle(KBDBL_HANDLER,
+-				(value << 0x10) | SET_MODE, &result))
++	if (sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
++				(kbdbl_handle->base), &result))
+  		return -EIO;
+
+-	/* Try to turn the light on/off immediately */
+-	sony_call_snc_handle(KBDBL_HANDLER, (value << 0x10) | SET_STATE,
+-			&result);
 -
--/*
-   * ACPI device
-   */
-  static int sony_nc_function_setup(unsigned int handle)
-@@ -1844,6 +1826,24 @@ static int sony_nc_snc_resume(void)
+  	kbdbl_handle->mode = value;
+
++	/* Try to turn the light on/off immediately */
++	sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
++				(kbdbl_handle->base + 0x100), &result);
++
   	return 0;
   }
 
-+/*
-+ * ACPI callbacks
-+ */
-+static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
-+				      void *context, void **return_value)
-+{
-+	struct acpi_device_info *info;
+@@ -1415,7 +1401,9 @@ static ssize_t sony_nc_kbd_backlight_mod
+  		struct device_attribute *attr, char *buffer)
+  {
+  	ssize_t count = 0;
 +
-+	if (ACPI_SUCCESS(acpi_get_object_info(handle, &info))) {
-+		pr_warn("method: name: %4.4s, args %X\n",
-+			(char *)&info->name, info->param_count);
+  	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->mode);
 +
-+		kfree(info);
+  	return count;
+  }
+
+@@ -1426,8 +1414,8 @@ static int __sony_nc_kbd_backlight_timeo
+  	if (value > 3)
+  		return -EINVAL;
+
+-	if (sony_call_snc_handle(KBDBL_HANDLER,
+-				(value << 0x10) | SET_TIMEOUT, &result))
++	if (sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
++				(kbdbl_handle->base + 0x200), &result))
+  		return -EIO;
+
+  	kbdbl_handle->timeout = value;
+@@ -1459,18 +1447,36 @@ static ssize_t sony_nc_kbd_backlight_tim
+  		struct device_attribute *attr, char *buffer)
+  {
+  	ssize_t count = 0;
++
+  	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->timeout);
++
+  	return count;
+  }
+
+  static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
+  {
+-	unsigned int result;
++	unsigned int result, base_cmd;
++	bool found = false;
+
+-	if (sony_call_snc_handle(KBDBL_HANDLER, KBDBL_PRESENT, &result))
+-		return 0;
+-	if (!(result & 0x02))
++	/* verify the kbd backlight presence, some models do not have it */
++	if (sony_kbd_handle == 0x0137) {
++		if (sony_call_snc_handle(sony_kbd_handle, 0x0B00, &result))
++			return -EIO;
++
++		found = !!(result & 0x02);
++		base_cmd = 0x0C00;
++	} else {
++		if (sony_call_snc_handle(sony_kbd_handle, 0x0100, &result))
++			return -EIO;
++
++		found = result & 0x01;
++		base_cmd = 0x4000;
 +	}
 +
-+	return AE_OK;
-+}
++	if (!found) {
++		dprintk("no backlight keyboard found\n");
+  		return 0;
++	}
+
+  	kbdbl_handle = kzalloc(sizeof(*kbdbl_handle), GFP_KERNEL);
+  	if (!kbdbl_handle)
+@@ -1494,6 +1500,8 @@ static int sony_nc_kbd_backlight_setup(s
+  	if (device_create_file(&pd->dev, &kbdbl_handle->timeout_attr))
+  		goto outmode;
+
++	kbdbl_handle->base = base_cmd;
 +
-  static void sony_nc_notify(struct acpi_device *device, u32 event)
+  	__sony_nc_kbd_backlight_mode_set(kbd_backlight);
+  	__sony_nc_kbd_backlight_timeout_set(kbd_backlight_timeout);
+
+@@ -1516,28 +1524,32 @@ static int sony_nc_kbd_backlight_cleanup
+  		device_remove_file(&pd->dev, &kbdbl_handle->timeout_attr);
+
+  		/* restore the default hw behaviour */
+-		sony_call_snc_handle(KBDBL_HANDLER, 0x1000 | SET_MODE, &result);
+-		sony_call_snc_handle(KBDBL_HANDLER, SET_TIMEOUT, &result);
++		sony_call_snc_handle(sony_kbd_handle,
++				kbdbl_handle->base | 0x10000, &result);
++		sony_call_snc_handle(sony_kbd_handle,
++				kbdbl_handle->base + 0x200, &result);
+
+  		kfree(kbdbl_handle);
++		kbdbl_handle = NULL;
+  	}
+  	return 0;
+  }
+
+  static void sony_nc_kbd_backlight_resume(void)
   {
-  	u8 ev = 0;
+-	unsigned int ignore = 0;
++	unsigned int result;
+
+  	if (!kbdbl_handle)
+  		return;
+
+  	if (kbdbl_handle->mode == 0)
+-		sony_call_snc_handle(KBDBL_HANDLER, SET_MODE, &ignore);
++		sony_call_snc_handle(sony_kbd_handle,
++				kbdbl_handle->base, &result);
+
+  	if (kbdbl_handle->timeout != 0)
+-		sony_call_snc_handle(KBDBL_HANDLER,
+-				(kbdbl_handle->timeout << 0x10) | SET_TIMEOUT,
+-				&ignore);
++		sony_call_snc_handle(sony_kbd_handle,
++				(kbdbl_handle->base + 0x200) |
++				(kbdbl_handle->timeout << 0x10), &result);
+  }
+
+  static void sony_nc_backlight_ng_read_limits(int handle,
+@@ -1676,6 +1688,8 @@ static void sony_nc_snc_setup_handles(st
+  			ret = sony_nc_function_setup(handle);
+  			break;
+  		case 0x0137:
++		case 0x0143:
++			sony_kbd_handle = handle;
+  			ret = sony_nc_kbd_backlight_setup(pd);
+  			break;
+  		case 0x0124:
+@@ -1710,6 +1724,7 @@ static void sony_nc_snc_cleanup_handles(
+
+  		switch (handle) {
+  		case 0x0137:
++		case 0x0143:
+  			sony_nc_kbd_backlight_cleanup(pd);
+  			break;
+  		case 0x0124:
+@@ -1814,6 +1829,7 @@ static int sony_nc_snc_resume(void)
+  			sony_nc_rfkill_update();
+  			break;
+  		case 0x0137: /* kbd + als */
++		case 0x0143:
+  			sony_nc_kbd_backlight_resume();
+  			break;
+  		default:
