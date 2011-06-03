@@ -1,41 +1,50 @@
-From: Florian Heyer <heyho@flanto.de>
-Subject: Re: Wifi switch not working, linux on IdeaPad S205
-Date: Fri, 03 Jun 2011 14:49:58 +0200
-Message-ID: <4DE8D876.7060304@flanto.de>
-References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com> <4DE57CD6.5030609@flanto.de> <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com> <4DE74CEF.3020608@flanto.de> <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
+From: Marco Chiappero <marco@absence.it>
+Subject: [PATCH 0/25] sony-laptop: code improvements and support extension
+ for newer Vaios
+Date: Fri, 03 Jun 2011 17:22:50 +0200
+Message-ID: <4DE8FC4A.9010401@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from melmac.flanto.de ([78.46.67.50]:50780 "EHLO melmac.flanto.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754701Ab1FCMt6 (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:46013 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752910Ab1FCPWz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 08:49:58 -0400
-In-Reply-To: <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
+	Fri, 3 Jun 2011 11:22:55 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, Javier Achirica <jachirica@gmail.com>, Marco Chiappero <marco@absence.it>
 
-On 02.06.2011 21:16, Joey Lee wrote:
-> This is a problem on "Fn+F5" and "wireless hardware switch", does "Fn
-> +F5" also can control wireless state? If yes, then it's a problem it
-> have conflict with "wirelss hardware switch".
-> 
-> I mean, even 0x0C is "64", the Fn+F5 still can turn-off wireless, does
-> it right?
-> If the answer is yes, then we cann't use 0x0C to be killswitch state.
+Hello,
 
-fn+f5 doesn't do anything no matter what state the wifi switch is.
-Personally i wouldn't mind if only the wifi switch is supported, i mean,
-you don't need a key combination if you have a real switch for wifi
-(de)activation.
+this set of patches aims to reorganize and clean the driver code where 
+necessary [patches 1-9, 13], improve some functionalities [patches 
+10-12] and add some others present on recent Vaios (TT, Y1, Z1, F1, S1, 
+SA/SB/SC, CA/SB and possibly others), such as ALS driven backlight 
+control, HDD shock protection control and Battery charge control.
 
-> What the value in 0x51 and 0x52? is 0, 1 or?
+During the development of these patches a long list of new handles has 
+been found and analyzed (the list can be read here: 
+http://absence.it/vaio-acpi/handles_list.txt), many of them are now well 
+known and mostly implemented by patches from 14 to 24.
 
-It's 0!
+During the development, this code has been made publicly available for a 
+few months at http://code.google.com/p/vaio-f11-linux/issues/detail?id=6 
+and http://www.absence.it/vaio-acpi/source/ where many people 
+contributed with feedback and testing. The coded is now stable and well 
+tested, even though improvements are still possible (and can be 
+introduced later).
 
-regards
--- 
-Florian Heyer - heyho@flanto.de
+Some functionalities may require a userspace Vaio specific daemon (for 
+ALS based backlight control, visual notifications, etc.), which is under 
+development at http://git.zx2c4.com/sony-acpid/
+
+All the code is written by me, with the exception of patch #23, written 
+by me and Javier Achirica. Javier Achirica has been also a major 
+contributor in the analysis of the ALS part (patch #23) and the 
+"HighSpeed Charging" functionality (patch #18).
+
+The patches are also available here: 
+http://www.absence.it/vaio-acpi/source/patches/patchset/
