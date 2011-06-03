@@ -1,49 +1,51 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH 20/25] sony-laptop: add fan related controls
-Date: Fri, 03 Jun 2011 20:28:33 +0200
-Message-ID: <4DE927D1.6000007@absence.it>
+Subject: [PATCH 21/25] sony-laptop: add optical device power control
+Date: Fri, 03 Jun 2011 20:50:54 +0200
+Message-ID: <4DE92D0E.2060605@absence.it>
 References: <4DE8FC4A.9010401@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:40900 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751409Ab1FCS2g (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:54055 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752308Ab1FCSu6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 14:28:36 -0400
+	Fri, 3 Jun 2011 14:50:58 -0400
 In-Reply-To: <4DE8FC4A.9010401@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-This patch exposes fan speed reading and speed selection when possible: 
-a list of fan speeds is provided by the DSDT and exposed, a particular 
-speed can be selected using its sequence number, while 0 corresponds to 
-auto fan control.
+Vaio S and Z Series allow to turn off the optical device to save battery 
+power, this patch exposes a control file to power on and off the device.
+
+
+On Windows OS this feature is well integrated with the power management 
+system, how to do the same on Linux? Moreover no media presence control 
+and bus disconnection is performed (the DSDT provides the SATA 
+controller the drive is connected to), should we do this in the driver 
+or inside a userspace daemon?
+
 
 Signed-off-by: Marco Chiappero <marco@absence.it>
 ---
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -2484,6 +2484,149 @@ static int sony_nc_touchpad_cleanup(stru
+@@ -2627,6 +2627,118 @@ static int sony_nc_fan_cleanup(struct pl
   	return 0;
   }
 
-+#define SONY_FAN_HANDLE 0x0149
-+#define FAN_SPEEDS_NUM	4	/* leave some more room */
-+#define FAN_ATTRS_NUM	3
-+
-+struct fan_control {
-+	unsigned int speeds_num;
-+	unsigned int speeds[4];
-+	struct device_attribute	attrs[3];
++struct odd {
++	unsigned int vendor_id;
++	unsigned int model_id;
++	struct device_attribute status_attr;
 +};
-+static struct fan_control *fan_handle;
++static struct odd *odd_handle;
 +
-+static ssize_t sony_nc_fan_control_store(struct device *dev,
++static ssize_t sony_nc_odd_status_store(struct device *dev,
 +		struct device_attribute *attr,
 +		const char *buffer, size_t count)
 +{
@@ -52,124 +54,97 @@ Signed-off-by: Marco Chiappero <marco@absence.it>
 +
 +	if (count > 31)
 +		return -EINVAL;
-+	if (strict_strtoul(buffer, 10, &value)
-+		|| value > fan_handle->speeds_num)
++	if (strict_strtoul(buffer, 10, &value) || value > 1)
 +		return -EINVAL;
 +
-+	if (sony_call_snc_handle(SONY_FAN_HANDLE,
-+				(value << 0x10) | 0x0200, &result))
++	/* 0x200 turn on (sysfs: 1), 0x300 turn off (sysfs: 0) */
++	value = (!value << 0x08) + 0x200;
++
++	/* the MSB have to be high */
++	if (sony_call_snc_handle(0x126, (1 << 0x10) | value, &result))
 +		return -EIO;
 +
 +	return count;
 +}
 +
-+static ssize_t sony_nc_fan_control_show(struct device *dev,
++static ssize_t sony_nc_odd_status_show(struct device *dev,
 +		struct device_attribute *attr, char *buffer)
 +{
 +	ssize_t count = 0;
 +	unsigned int result;
 +
-+	if (sony_call_snc_handle(SONY_FAN_HANDLE, 0x0100, &result))
++	if (sony_call_snc_handle(0x126, 0x100, &result))
 +		return -EINVAL;
 +
-+	count = snprintf(buffer, PAGE_SIZE, "%d\n", result & 0xff);
++	count = snprintf(buffer, PAGE_SIZE, "%d\n", result & 0x01);
 +	return count;
 +}
 +
-+static ssize_t sony_nc_fan_profiles_show(struct device *dev,
-+		struct device_attribute *attr, char *buffer)
++static int sony_nc_odd_setup(struct platform_device *pd)
 +{
-+	ssize_t count = 0;
-+	unsigned int i;
++#define ODD_TAB_SIZE 32
++	u8 list[ODD_TAB_SIZE] = { 0 };
++	int ret = 0;
++	int found = 0;
++	int i = 0;
++	unsigned int vendor = 0;
++	unsigned int model = 0;
++	u16 word = 0;
 +
-+	for (i = 0; i < fan_handle->speeds_num; i++)
-+		count += snprintf(buffer + count, PAGE_SIZE - count,
-+				"%.4u ", fan_handle->speeds[i] * 100);
++	ret = sony_call_snc_handle_buffer(0x126, 0x0000, list, ODD_TAB_SIZE);
++	if (ret < 0) {
++		pr_info("unable to retrieve the odd table\n");
++		return -EIO;
++	}
 +
-+	count += snprintf(buffer + count, PAGE_SIZE - count, "\n");
++	/* parse the table looking for optical devices */
++	do {
++		word = (list[i+1] << 8) | list[i];
 +
-+	return count;
-+}
++		if (word == 1) { /* 1 DWord device data following */
++			vendor = (list[i+3] << 8) | list[i+2];
++			model = (list[i+5] << 8) | list[i+4];
++			found++;
++			i += 6;
++		} else {
++			i += 2;
++		}
++	} while (word != 0xff00);
 +
-+static ssize_t sony_nc_fan_speed_show(struct device *dev,
-+		struct device_attribute *attr, char *buffer)
-+{
-+	ssize_t count = 0;
-+	unsigned int result;
++	if (found)
++		dprintk("one optical device found, connected to: %x:%x\n",
++				vendor, model);
++	else
++		return 0;
 +
-+	if (sony_call_snc_handle(SONY_FAN_HANDLE, 0x0300, &result))
-+		return -EINVAL;
-+
-+	count = snprintf(buffer, PAGE_SIZE, "%d\n",
-+				(result & 0xff) * 100);
-+	return count;
-+}
-+
-+static int sony_nc_fan_setup(struct platform_device *pd)
-+{
-+	int ret;
-+	unsigned int i, found;
-+	u8 list[FAN_SPEEDS_NUM * 2] = { 0 };
-+
-+	fan_handle = kzalloc(sizeof(struct fan_control), GFP_KERNEL);
-+	if (!fan_handle)
++	odd_handle = kzalloc(sizeof(*odd_handle), GFP_KERNEL);
++	if (!odd_handle)
 +		return -ENOMEM;
 +
-+	ret = sony_call_snc_handle_buffer(SONY_FAN_HANDLE, 0x0000,
-+					list, FAN_SPEEDS_NUM * 2);
-+	if (ret < 0)
-+		pr_info("unable to retrieve fan profiles table\n");
++	odd_handle->vendor_id = vendor;
++	odd_handle->model_id = model;
 +
-+	for (i = 0, found = 0;
-+		list[i] != 0 && found < FAN_SPEEDS_NUM; i += 2, found++) {
++	sysfs_attr_init(&odd_handle->status_attr.attr);
++	odd_handle->status_attr.attr.name = "odd_power";
++	odd_handle->status_attr.attr.mode = S_IRUGO | S_IWUSR;
++	odd_handle->status_attr.show = sony_nc_odd_status_show;
++	odd_handle->status_attr.store = sony_nc_odd_status_store;
 +
-+		fan_handle->speeds[found] = list[i+1];
-+	}
-+	fan_handle->speeds_num = found;
-+
-+	sysfs_attr_init(&fan_handle->attrs[0].attr);
-+	fan_handle->attrs[0].attr.name = "fan_speed";
-+	fan_handle->attrs[0].attr.mode = S_IRUGO;
-+	fan_handle->attrs[0].show = sony_nc_fan_speed_show;
-+
-+	sysfs_attr_init(&fan_handle->attrs[1].attr);
-+	fan_handle->attrs[1].attr.name = "fan_profiles";
-+	fan_handle->attrs[1].attr.mode = S_IRUGO;
-+	fan_handle->attrs[1].show = sony_nc_fan_profiles_show;
-+
-+	sysfs_attr_init(&fan_handle->attrs[2].attr);
-+	fan_handle->attrs[2].attr.name = "fan_control";
-+	fan_handle->attrs[2].attr.mode = S_IRUGO | S_IWUSR;
-+	fan_handle->attrs[2].show = sony_nc_fan_control_show;
-+	fan_handle->attrs[2].store = sony_nc_fan_control_store;
-+
-+	for (i = 0; i < FAN_ATTRS_NUM; i++) {
-+		if (device_create_file(&pd->dev, &fan_handle->attrs[i]))
-+			goto attrserror;
++	if (device_create_file(&pd->dev, &odd_handle->status_attr)) {
++		kfree(odd_handle);
++		odd_handle = NULL;
++		return -1;
 +	}
 +
 +	return 0;
-+
-+attrserror:
-+	for (; i > 0; i--)
-+		device_remove_file(&pd->dev, &fan_handle->attrs[i]);
-+
-+	kfree(fan_handle);
-+	fan_handle = NULL;
-+
-+	return -1;
 +}
 +
-+static int sony_nc_fan_cleanup(struct platform_device *pd)
++static int sony_nc_odd_cleanup(struct platform_device *pd)
 +{
-+	if (fan_handle) {
-+		int i;
-+
-+		for (i = 0; i < FAN_ATTRS_NUM; i++)
-+			device_remove_file(&pd->dev, &fan_handle->attrs[i]);
-+
-+		kfree(fan_handle);
-+		fan_handle = NULL;
++	if (odd_handle) {
++		device_remove_file(&pd->dev, &odd_handle->status_attr);
++		kfree(odd_handle);
++		odd_handle = NULL;
 +	}
 +
 +	return 0;
@@ -178,23 +153,23 @@ Signed-off-by: Marco Chiappero <marco@absence.it>
 
   static void sony_nc_backlight_ng_read_limits(int handle,
   		struct sony_backlight_props *props)
-@@ -2650,6 +2793,9 @@ static void sony_nc_snc_setup_handles(st
-  			sony_gs_handle = handle;
-  			ret = sony_nc_gsensor_setup(pd);
+@@ -2780,6 +2892,9 @@ static void sony_nc_snc_setup_handles(st
+  		case 0x0122:
+  			ret = sony_nc_thermal_setup(pd);
   			break;
-+		case 0x0149:
-+			ret = sony_nc_fan_setup(pd);
++		case 0x0126:
++			ret = sony_nc_odd_setup(pd);
 +			break;
-  		case 0x0124:
-  		case 0x0135:
-  			sony_rfkill_handle = handle;
-@@ -2708,6 +2854,9 @@ static void sony_nc_snc_cleanup_handles(
-  		case 0x0147:
-  			sony_nc_gsensor_cleanup(pd);
+  		case 0x0137:
+  		case 0x0143:
+  			sony_kbd_handle = handle;
+@@ -2843,6 +2958,9 @@ static void sony_nc_snc_cleanup_handles(
+  		case 0x0122:
+  			sony_nc_thermal_cleanup(pd);
   			break;
-+		case 0x0149:
-+			sony_nc_fan_cleanup(pd);
++		case 0x0126:
++			sony_nc_odd_cleanup(pd);
 +			break;
-  		case 0x0124:
-  		case 0x0135:
-  			sony_nc_rfkill_cleanup();
+  		case 0x0137:
+  		case 0x0143:
+  			sony_nc_kbd_backlight_cleanup(pd);
