@@ -1,41 +1,69 @@
-From: Andre Bartke <andre.bartke@googlemail.com>
-Subject: [PATCH] drivers/platform/x86: Fix memory leak
-Date: Fri,  3 Jun 2011 20:55:43 +0200
-Message-ID: <1307127343-14290-1-git-send-email-andre.bartke@gmail.com>
+From: Marco Chiappero <marco@absence.it>
+Subject: [PATCH 22/25] sony-laptop: forward Hybrid GFX notifications to userspace
+Date: Fri, 03 Jun 2011 21:27:00 +0200
+Message-ID: <4DE93584.3070205@absence.it>
+References: <4DE8FC4A.9010401@absence.it>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:37039 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754290Ab1FCS5f (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:54149 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752096Ab1FCT1E (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 14:57:35 -0400
+	Fri, 3 Jun 2011 15:27:04 -0400
+In-Reply-To: <4DE8FC4A.9010401@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: cezary.jackiewicz@gmail.com
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andre Bartke <andre.bartke@gmail.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-data is not freed in the error case of
-compal_probe().
+Some Vaios come with both integrated and discrete graphics, plus a 
+switch for choosing one of the two. When the switch position is changed, 
+a notification is generated, now forwarded to userspace for example for 
+visual notifications, user scripts, and so on.
 
-Signed-off-by: Andre Bartke <andre.bartke@gmail.com>
+Signed-off-by: Marco Chiappero <marco@absence.it>
 ---
- drivers/platform/x86/compal-laptop.c |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 3f204fd..8877b83 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -1030,8 +1030,10 @@ static int __devinit compal_probe(struct platform_device *pdev)
- 	initialize_fan_control_data(data);
- 
- 	err = sysfs_create_group(&pdev->dev.kobj, &compal_attribute_group);
--	if (err)
-+	if (err) {
-+		kfree(data);
- 		return err;
-+	}
- 
- 	data->hwmon_dev = hwmon_device_register(&pdev->dev);
- 	if (IS_ERR(data->hwmon_dev)) {
--- 
-1.7.5.2
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -3118,6 +3118,14 @@ static void sony_nc_notify(struct acpi_d
+
+  	dprintk("sony_nc_notify, event: 0x%.2x\n", event);
+
++	/* events codes list
++	 * 1    Hotkeys
++	 * 2    RFKILL
++	 * 3    ALS
++	 * 4    HDD protection
++	 * 5	Hybrid GFX
++	 */
++
+  	/* handles related events */
+  	if (event >= 0x90) {
+  		unsigned int result = 0, handle = 0;
+@@ -3169,6 +3177,23 @@ static void sony_nc_notify(struct acpi_d
+  			/* hdd protection event, notify userspace */
+  			break;
+
++		case 0x0128:
++		case 0x0146:
++			/* Hybrid GFX switching, 1 */
++			sony_call_snc_handle(handle, 0x0000, &result);
++			dprintk("sony_nc_notify, Hybrid GFX event received "
++					"(reason: %s)\n", (result & 0x01) ?
++					"switch position change" : "unknown");
++
++			/* verify the switch state
++			   (1: discrete GFX, 0: integrated GFX)*/
++			result = 0;
++			sony_call_snc_handle(handle, 0x0100, &result);
++
++			ev = 5;
++			value = result & 0xff;
++			break;
++
+  		default:
+  			value = event;
+  			dprintk("Unknowk event for handle: 0x%x\n", handle);
