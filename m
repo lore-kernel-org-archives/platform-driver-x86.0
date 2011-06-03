@@ -1,222 +1,127 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH 11/25] sony-laptop:  rfkill improvements
-Date: Fri, 03 Jun 2011 17:42:22 +0200
-Message-ID: <4DE900DE.9010006@absence.it>
+Subject: [PATCH 12/25] sony-laptop: input core improvements improvements
+Date: Fri, 03 Jun 2011 17:43:42 +0200
+Message-ID: <4DE9012E.5040207@absence.it>
 References: <4DE8FC4A.9010401@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:58670 "EHLO
-	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751246Ab1FCPmZ (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:41632 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755302Ab1FCPnp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 11:42:25 -0400
+	Fri, 3 Jun 2011 11:43:45 -0400
 In-Reply-To: <4DE8FC4A.9010401@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-- added sony_nc_get_rfkill_hwblock helper function
-- rfkill type now persistent, using the hardware stored device power state
-- added support for newer WWAN modules
-- handle detection removed because no longer necessary
-- now notifying rfkill events to the acpi bus
+The code is now forwarding the SW_RFKILL_ALL event; added a couple of Fn 
+combos too.
 
 Signed-off-by: Marco Chiappero <marco@absence.it>
 ---
 
+--- a/include/linux/sonypi.h
++++ b/include/linux/sonypi.h
+@@ -114,6 +114,7 @@
+  #define SONYPI_EVENT_BRIGHTNESS_PRESSED		71
+  #define SONYPI_EVENT_MEDIA_PRESSED		72
+  #define SONYPI_EVENT_VENDOR_PRESSED		73
++#define SONYPI_EVENT_RFKILL_ALL			74
+
+  /* get/set brightness */
+  #define SONYPI_IOCGBRT		_IOR('v', 0, __u8)
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -141,10 +141,7 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
-  		 "(default: 0)");
+@@ -142,6 +142,7 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
 
 
--static int sony_rfkill_handle;
--static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
--static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700, 
-0x900};
--static void sony_nc_rfkill_update(void);
-+static int sony_rfkill_handle = -1;
+  static int sony_rfkill_handle = -1;
++static int sony_nc_get_rfkill_hwblock(void);
 
   /*********** Input Devices ***********/
 
-@@ -1190,6 +1187,26 @@ static int sony_nc_hotkeys_decode(unsign
-  	return ret;
-  }
+@@ -241,7 +242,8 @@ static int sony_laptop_input_index[] = {
+  	57,	/* 70 SONYPI_EVENT_VOLUME_DEC_PRESSED */
+  	-1,	/* 71 SONYPI_EVENT_BRIGHTNESS_PRESSED */
+  	58,	/* 72 SONYPI_EVENT_MEDIA_PRESSED */
+-	59,	/* 72 SONYPI_EVENT_VENDOR_PRESSED */
++	59,	/* 73 SONYPI_EVENT_VENDOR_PRESSED */
++	-1,	/* 74 SONYPI_EVENT_RFKILL_ALL */
+  };
 
-+enum sony_nc_rfkill {
-+	SONY_WIFI,
-+	SONY_BLUETOOTH,
-+	SONY_WWAN,
-+	SONY_WIMAX,
-+	N_SONY_RFKILL,
-+};
-+static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
-+static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700, 
-0x900};
+  static int sony_laptop_input_keycode_map[] = {
+@@ -335,6 +337,7 @@ static void sony_laptop_report_input_eve
+  	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
+  	struct input_dev *key_dev = sony_laptop_input.key_dev;
+  	struct sony_laptop_keypress kp = { NULL };
++	int rfk_switch;
+
+  	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
+  			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
+@@ -363,6 +366,14 @@ static void sony_laptop_report_input_eve
+  		kp.dev = jog_dev;
+  		break;
+
++	case SONYPI_EVENT_RFKILL_ALL:
++		rfk_switch = sony_nc_get_rfkill_hwblock();
++		if (!(rfk_switch < 0)) {
++			input_report_switch(key_dev, SW_RFKILL_ALL, rfk_switch);
++			input_sync(key_dev);
++		}
++		return;
 +
-+static int sony_nc_get_rfkill_hwblock(void)
-+{
-+	unsigned int result;
+  	default:
+  		if (event >= ARRAY_SIZE(sony_laptop_input_index)) {
+  			dprintk("sony_laptop_report_input_event, event not known: %d\n", 
+event);
+@@ -438,6 +449,14 @@ static int sony_laptop_setup_input(struc
+  		__set_bit(sony_laptop_input_keycode_map[i], key_dev->keybit);
+  	__clear_bit(KEY_RESERVED, key_dev->keybit);
+
++	if (sony_rfkill_handle != -1) {
++		int rfk_switch;
 +
-+	if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result))
-+		return -1;
++		rfk_switch = sony_nc_get_rfkill_hwblock();
++		input_set_capability(key_dev, EV_SW, SW_RFKILL_ALL);
++		input_report_switch(key_dev, SW_RFKILL_ALL, rfk_switch);
++	}
 +
-+	return result & 0x1;
-+}
-+
-  static void sony_nc_rfkill_cleanup(void)
-  {
-  	int i;
-@@ -1204,9 +1221,14 @@ static void sony_nc_rfkill_cleanup(void)
+  	error = input_register_device(key_dev);
+  	if (error)
+  		goto err_free_keydev;
+@@ -1079,10 +1098,6 @@ struct sony_nc_event {
+  };
 
-  static int sony_nc_rfkill_set(void *data, bool blocked)
-  {
--	unsigned int result;
--	unsigned int argument = sony_rfkill_address[(long) data] + 0x100;
-+	unsigned int result, argument = sony_rfkill_address[(long) data];
-
-+	/* do not force an already set state */
-+	sony_call_snc_handle(sony_rfkill_handle, argument, &result);
-+	if ((result & 0x1) == !blocked)
-+		return 0;
-+
-+	argument += 0x100;
-  	if (!blocked)
-  		argument |= 0xff0000;
-
-@@ -1225,7 +1247,7 @@ static int sony_nc_setup_rfkill(struct a
-  	enum rfkill_type type;
-  	const char *name;
-  	unsigned int result;
--	bool hwblock;
-+	bool hwblock, swblock;
-
-  	switch (nc_type) {
-  	case SONY_WIFI:
-@@ -1255,6 +1277,13 @@ static int sony_nc_setup_rfkill(struct a
-
-  	sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
-  	hwblock = !(result & 0x1);
-+
-+	result = 0;
-+	sony_call_snc_handle(sony_rfkill_handle, sony_rfkill_address[nc_type],
-+				&result);
-+	swblock = !(result & 0x2);
-+
-+	rfkill_init_sw_state(rfk, swblock);
-  	rfkill_set_hw_state(rfk, hwblock);
-
-  	err = rfkill_register(rfk);
-@@ -1281,16 +1310,9 @@ static void sony_nc_rfkill_update(void)
-  		if (!sony_rfkill_devices[i])
-  			continue;
-
--		if (hwblock) {
--			if (rfkill_set_hw_state(sony_rfkill_devices[i], true)) {
--				/* we already know we're blocked */
--			}
--			continue;
--		}
--
-  		sony_call_snc_handle(sony_rfkill_handle, argument, &result);
-  		rfkill_set_states(sony_rfkill_devices[i],
--				  !(result & 0xf), false);
-+				  !(result & 0x2), hwblock);
-  	}
-  }
-
-@@ -1298,17 +1320,7 @@ static int sony_nc_rfkill_setup(struct a
-  {
-  #define	RFKILL_BUFF_SIZE 8
-  	u8 dev_code, i, buff[RFKILL_BUFF_SIZE] = { 0 };
--	int offset;
-
--	offset = sony_find_snc_handle(0x124);
--	if (offset == -1) {
--		offset = sony_find_snc_handle(0x135);
--		if (offset == -1)
--			return 0;
--		else
--			sony_rfkill_handle = 0x135;
--	} else
--		sony_rfkill_handle = 0x124;
-  	dprintk("Found rkfill handle: 0x%.4x\n", sony_rfkill_handle);
-
-  	/* need to read the whole buffer returned by the acpi call to SN06
-@@ -1327,6 +1339,25 @@ static int sony_nc_rfkill_setup(struct a
-  		if (dev_code == 0xff)
-  			break;
-
-+		/*
-+		   known codes:
-+
-+		   0x00	WLAN
-+		   0x10 BLUETOOTH
-+		   0x20 WWAN GPRS-EDGE
-+		   0x21 WWAN HSDPA
-+		   0x22 WWAN EV-DO
-+		   0x23 WWAN GPS
-+		   0x25	Gobi WWAN no GPS
-+		   0x26 Gobi WWAN + GPS
-+		   0x28	Gobi WWAN no GPS
-+		   0x29 Gobi WWAN + GPS
-+		   0x50	Gobi WWAN no GPS
-+		   0x51 Gobi WWAN + GPS
-+		   0x30	WIMAX
-+		   0x70 no SIM card slot
-+		   0x71 SIM card slot
-+		*/
-  		dprintk("Radio devices, looking at 0x%.2x\n", dev_code);
-
-  		if (dev_code == 0 && !sony_rfkill_devices[SONY_WIFI])
-@@ -1335,7 +1366,7 @@ static int sony_nc_rfkill_setup(struct a
-  		if (dev_code == 0x10 && !sony_rfkill_devices[SONY_BLUETOOTH])
-  			sony_nc_setup_rfkill(device, SONY_BLUETOOTH);
-
--		if ((0xf0 & dev_code) == 0x20 &&
-+		if (((0xf0 & dev_code) == 0x20 || (0xf0 & dev_code) == 0x50) &&
-  				!sony_rfkill_devices[SONY_WWAN])
-  			sony_nc_setup_rfkill(device, SONY_WWAN);
-
-@@ -1694,6 +1725,7 @@ static void sony_nc_snc_setup_handles(st
-  			break;
-  		case 0x0124:
-  		case 0x0135:
-+			sony_rfkill_handle = handle;
-  			ret = sony_nc_rfkill_setup(sony_nc_acpi_device);
-  			break;
-  		default:
-@@ -1887,6 +1919,30 @@ static void sony_nc_notify(struct acpi_d
-  			ev = 1;
-  			break;
-
-+		case 0x0124:
-+		case 0x0135:
-+			sony_call_snc_handle(sony_rfkill_handle, 0x0100,
-+						&result);
-+			result &= 0x03;
-+			dprintk("sony_nc_notify, RFKILL event received "
-+					"(reason: %s)\n", result == 1 ?
-+					"switch state changed" : "battery");
-+
-+			if (result == 1) { /* hw swtich event */
-+				sony_nc_rfkill_update();
-+				sony_laptop_report_input_event(
-+						SONYPI_EVENT_RFKILL_ALL);
-+				value = sony_nc_get_rfkill_hwblock();
-+			} else if (result == 2) { /* battery event */
-+				/*  we should change the WWAN rfkill
-+				    state when the battery state changes
-+				 */
-+				return;
-+			}
-+
-+			ev = 2;
-+			break;
-+
-  		default:
-  			value = event;
-  			dprintk("Unknowk event for handle: 0x%x\n", handle);
+  static struct sony_nc_event sony_100_events[] = {
+-	{ 0x90, SONYPI_EVENT_PKEY_P1 },
+-	{ 0x10, SONYPI_EVENT_ANYBUTTON_RELEASED },
+-	{ 0x91, SONYPI_EVENT_PKEY_P2 },
+-	{ 0x11, SONYPI_EVENT_ANYBUTTON_RELEASED },
+  	{ 0x81, SONYPI_EVENT_FNKEY_F1 },
+  	{ 0x01, SONYPI_EVENT_FNKEY_RELEASED },
+  	{ 0x82, SONYPI_EVENT_FNKEY_F2 },
+@@ -1097,12 +1112,20 @@ static struct sony_nc_event sony_100_eve
+  	{ 0x06, SONYPI_EVENT_FNKEY_RELEASED },
+  	{ 0x87, SONYPI_EVENT_FNKEY_F7 },
+  	{ 0x07, SONYPI_EVENT_FNKEY_RELEASED },
++	{ 0x88, SONYPI_EVENT_FNKEY_F8 },
++	{ 0x08, SONYPI_EVENT_FNKEY_RELEASED },
+  	{ 0x89, SONYPI_EVENT_FNKEY_F9 },
+  	{ 0x09, SONYPI_EVENT_FNKEY_RELEASED },
+  	{ 0x8A, SONYPI_EVENT_FNKEY_F10 },
+  	{ 0x0A, SONYPI_EVENT_FNKEY_RELEASED },
++	{ 0x8B, SONYPI_EVENT_FNKEY_F11 },
++	{ 0x0B, SONYPI_EVENT_FNKEY_RELEASED },
+  	{ 0x8C, SONYPI_EVENT_FNKEY_F12 },
+  	{ 0x0C, SONYPI_EVENT_FNKEY_RELEASED },
++	{ 0x90, SONYPI_EVENT_PKEY_P1 },
++	{ 0x10, SONYPI_EVENT_ANYBUTTON_RELEASED },
++	{ 0x91, SONYPI_EVENT_PKEY_P2 },
++	{ 0x11, SONYPI_EVENT_ANYBUTTON_RELEASED },
+  	{ 0x9d, SONYPI_EVENT_ZOOM_PRESSED },
+  	{ 0x1d, SONYPI_EVENT_ANYBUTTON_RELEASED },
+  	{ 0x9f, SONYPI_EVENT_CD_EJECT_PRESSED },
