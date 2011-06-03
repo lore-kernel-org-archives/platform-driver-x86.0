@@ -1,37 +1,35 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH 25/25] sony-laptop: update copyright owners
-Date: Fri, 03 Jun 2011 22:10:28 +0200
-Message-ID: <4DE93FB4.4030401@absence.it>
-References: <4DE8FC4A.9010401@absence.it>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/3] ideapad: Add nodes in sysfs
+Date: Fri, 3 Jun 2011 13:21:41 -0700
+Message-ID: <201106031321.42168.dmitry.torokhov@gmail.com>
+References: <1307006553-12667-1-git-send-email-ike.pan@canonical.com> <1307006645-12702-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:51702 "EHLO
-	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755546Ab1FCUKa (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 16:10:30 -0400
-In-Reply-To: <4DE8FC4A.9010401@absence.it>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, Javier Achirica <jachirica@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1307006645-12702-1-git-send-email-ike.pan@canonical.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Marco Chiappero and Javier Achirica added.
+On Thursday, June 02, 2011 02:24:05 AM Ike Panhc wrote:
+> +What:          /sys/devices/platform/ideapad/touchpad
+> +Date:          Jun 2011
+> +KernelVersion: 3.0.1
+> +Contact:       "Ike Panhc <ike.pan@canonical.com>"
+> +Description:
+> +               Control the power of touchpad. 1 means on, 0 means off.
 
+I do not think that we should be adding attributes like this one.
+Is there any way to pug it into device core/PM infrastructure?
 
-Signed-off-by: Marco Chiappero <marco@absence.it>
----
+Also, what is the driver for having this attribute? Is it power savings
+or is it because some people prefer to turn off the touchpad because
+it interferes with typing?
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3,6 +3,8 @@
-   *
-   * Copyright (C) 2004-2005 Stelian Pop <stelian@popies.net>
-   * Copyright (C) 2007-2009 Mattia Dongili <malattia@linux.it>
-+ * Copyright (C) 2011 Marco Chiappero <marco@absence.it>
-+ * Copyright (C) 2011 Javier Achirica <jachirica@gmail.com>
-   *
-   * Parts of this driver inspired from asus_acpi.c and ibm_acpi.c
-   * which are copyrighted by their respective authors.
+Thanks.
+
+-- 
+Dmitry
