@@ -1,55 +1,31 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Sat, 04 Jun 2011 12:30:44 +0200
-Message-ID: <4DEA0954.6030709@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE9008D.7040504@absence.it> <20110604075815.GA7194@kamineko.org>
+Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
+Date: Sat, 04 Jun 2011 12:42:47 +0200
+Message-ID: <4DEA0C27.1000508@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it> <20110604080717.GC7194@kamineko.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:50495 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755047Ab1FDKat (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:49961 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753054Ab1FDKmv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 4 Jun 2011 06:30:49 -0400
-In-Reply-To: <20110604075815.GA7194@kamineko.org>
+	Sat, 4 Jun 2011 06:42:51 -0400
+In-Reply-To: <20110604080717.GC7194@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-wireless@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Il 04/06/2011 09:58, Mattia Dongili wrote:
-
->> -static void sony_nc_kbd_backlight_resume(void);
->> -
->> -enum sony_nc_rfkill {
->> -	SONY_WIFI,
->> -	SONY_BLUETOOTH,
->> -	SONY_WWAN,
->> -	SONY_WIMAX,
->> -	N_SONY_RFKILL,
->> -};
+Il 04/06/2011 10:07, Mattia Dongili ha scritto:
+> On Fri, Jun 03, 2011 at 05:43:42PM +0200, Marco Chiappero wrote:
+>> The code is now forwarding the SW_RFKILL_ALL event; added a couple
 >
-> removing this enum seems superfluous (it's re-added some patches later)
-> and breaks compilation at this point.
+> I don't think we should do this.
 
-Sorry, I made a mistake, I'm going to fix and resend patches #10 and #11.
-
->>   static struct kbd_backlight *kbdbl_handle;
->> +static int sony_kbd_handle = -1;
->
-> there seems to be no real point initializing this to -1.
-
-Just for safety, since handle 0x0000 is a valid handle [1] it would be 
-better to initialize it to an invalid value.
-
-> Also, can it be
-> made part of the struct above?
-
-Sure
-
-
-[1]
-sony_laptop: found handle 0x0000 (offset: 0x0d)
-sony_laptop: called SN07 with 0x000d (result: 0x0000)
+As far as I know this event should be forwarded and the rfkill-input 
+code removed as soon as there is enough userspace support. Another 
+platform driver (thinkpad_acpi) is using it.
+What is right and what is wrong? Should it be removed from thinkpad_acpi 
+too?
