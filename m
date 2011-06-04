@@ -1,108 +1,63 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control file
-Date: Fri, 3 Jun 2011 15:12:38 -0700
-Message-ID: <201106031512.38349.dmitry.torokhov@gmail.com>
-References: <4DE8FC4A.9010401@absence.it> <201106031400.36141.dmitry.torokhov@gmail.com> <4DE9563F.9010503@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control
+ file
+Date: Sat, 04 Jun 2011 03:54:22 +0200
+Message-ID: <4DE9904E.7050805@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <201106031400.36141.dmitry.torokhov@gmail.com> <4DE9563F.9010503@absence.it> <201106031512.38349.dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-px0-f179.google.com ([209.85.212.179]:53539 "EHLO
-	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752759Ab1FCWMo (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:43909 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752308Ab1FDBy3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jun 2011 18:12:44 -0400
-Received: by pxi2 with SMTP id 2so1474504pxi.10
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jun 2011 15:12:44 -0700 (PDT)
-In-Reply-To: <4DE9563F.9010503@absence.it>
+	Fri, 3 Jun 2011 21:54:29 -0400
+In-Reply-To: <201106031512.38349.dmitry.torokhov@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-On Friday, June 03, 2011 02:46:39 PM Marco Chiappero wrote:
-> Il 03/06/2011 23:00, Dmitry Torokhov ha scritto:
-> > The issue with that that we are breeding myriad of quirks
-> 
-> Where is the quirk?
+Il 04/06/2011 00:12, Dmitry Torokhov ha scritto:
+> The quirk is that for given device there is a sysfs attribute somewhere
+> that one can write something into to turn the touchpad off.
 
-The quirk is that for given device there is a sysfs attribute somewhere
-that one can write something into to turn the touchpad off. 
+Once again, let's have a single unified interface. Are you saying that 
+the GNU world is not able to do that?
 
-> If many vendors provide the same feature let's
-> create a common interface for that.
-> 
-> > that nobody
-> > knows  about
-> 
-> This is false, especially for (so many) people using Windows too, where
-> the feature is clearly visible by the OEM software.
+>> This is false, especially for (so many) people using Windows too, where
+>> the feature is clearly visible by the OEM software.
+>
+> Thankfully OEM software either does not exist or is not widespread on
+> Linux.
 
-Thankfully OEM software either does not exist or is not widespread on
-Linux. 
+But the point is not to clone the OEM software (but we need to do it 
+when there is nothing else), we do want to clone the functionality only, 
+people just want to make that (well, every) hardware feature available 
+under linux. Saying that X offers a workaround is, IMHO, a fail. Once 
+again: the feature is known, OEM software has nothing to do with it.
 
-> 
-> > and nobody ever uses.
-> 
-> Again, this is false, and I don't think you can speak for everybody.
+> No, I indeed can not speak for everybody, but it is my belief that this
+> feature in the form it is implemented will not be widely used.
 
-No, I indeed can not speak for everybody, but it is my belief that this
-feature in the form it is implemented will not be widely used.
+That's your belief... sorry, but after paying 1300 Eur for a laptop I 
+don't care about your belief, I'd like to see my laptop fully supported, 
+since we can do it.
 
-> 
-> > X provides standardized way of
-> > ignoring input devices.
-> 
-> Let's create a standardized solution, instead of using a standardized
-> hack.
-> 
-> > It is also more transparent than "I once wrote
-> > something to some sysfs file and I completely forgot about this but
-> > now my touchpad does not work".
-> 
-> The problem does not lie in the sysfs file, lies in the lack of
-> userspace software for it (BTW, about this case someone already created
-> a Vaio specific GUI for an easy control of these features).
+> No, it's like saying railroad tracks should be unified instead of every
+> country inventing their own size. We all know how helpful it was.
 
-Gah... Vaio-specific, Dell-specific, HP-specific... I'd rather we do not
-go down this road. The kernel needs to abstract away this data and present
-unified interface to the userspace. For bonus points... No, scratch that.
-The interface should behave consistently for all input devices, including
-keyboards, keypads, etc. 
+No, at all, that is what I was saying. Again, let's create a common 
+interface.
 
-> 
-> > There were quite a few bugs filed just
-> > because users pressed key that cuts power to touchpad and stores the
-> > state across reboots.
-> 
-> It's very much like saying that we should not produce cars because some
-> people use them improperly and crash. People doing wrong things will
-> always be present, we can improve userspace software to help them
-> instead, not just delete features they payed for (and they wanted to
-> use, at least once as you say).
+>> It's a common and widespread feature, let's support it better instead of
+>> just removing it.
+>
+> What is the feature again? What do users really want to do here?
 
-No, it's like saying railroad tracks should be unified instead of every
-country inventing their own size. We all know how helpful it was.
-
-> 
-> >> (and why should we suppose that X will be used always and
-> >> forever?).
-> > 
-> > We should not but replacement should have at least the same
-> > functionality if not better.
-> 
-> I agree, but this doesn't necessarily mean it will use an hack again.
-> 
-> It's a common and widespread feature, let's support it better instead of
-> just removing it.
-
-What is the feature again? What do users really want to do here?
-Do they turn off the touchpad because in interferes when they type?
-Do they hate touchpads? Do they believe they will save power if the
-touchpad is off?
-
-Thanks.
-
--- 
-Dmitry
+Have their touchpad disabled, and have it disabled when using either 
+windows or linux. That's what the user payed for.
+Discussing what the user should be interested in, whether a real power 
+saving is achievable or not, is a totally wrong starting point, it's not 
+your own business.
