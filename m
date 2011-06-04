@@ -1,49 +1,55 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 0/25] sony-laptop: code improvements and support
- extension for newer Vaios
-Date: Sat, 4 Jun 2011 17:54:31 +0900
-Message-ID: <20110604085431.GF7194@kamineko.org>
-References: <4DE8FC4A.9010401@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
+ to newer Vaios
+Date: Sat, 04 Jun 2011 12:30:44 +0200
+Message-ID: <4DEA0954.6030709@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE9008D.7040504@absence.it> <20110604075815.GA7194@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:52778 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753335Ab1FDIy3 (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:50495 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755047Ab1FDKat (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 4 Jun 2011 04:54:29 -0400
-Received: by pzk9 with SMTP id 9so1136482pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jun 2011 01:54:28 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <4DE8FC4A.9010401@absence.it>
+	Sat, 4 Jun 2011 06:30:49 -0400
+In-Reply-To: <20110604075815.GA7194@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Javier Achirica <jachirica@gmail.com>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 03, 2011 at 05:22:50PM +0200, Marco Chiappero wrote:
-> Hello,
-> 
-> this set of patches aims to reorganize and clean the driver code
-> where necessary [patches 1-9, 13], improve some functionalities
-> [patches 10-12] and add some others present on recent Vaios (TT, Y1,
-> Z1, F1, S1, SA/SB/SC, CA/SB and possibly others), such as ALS driven
-> backlight control, HDD shock protection control and Battery charge
-> control.
-> 
-> During the development of these patches a long list of new handles
-> has been found and analyzed (the list can be read here:
-> http://absence.it/vaio-acpi/handles_list.txt), many of them are now
-> well known and mostly implemented by patches from 14 to 24.
+Il 04/06/2011 09:58, Mattia Dongili wrote:
 
-Thanks for this. Note though that some of the clean-up code is
-conflicting with other patches I have yet to submit, I'll see if it's
-easier to adapt your code to mine or viceversa.
+>> -static void sony_nc_kbd_backlight_resume(void);
+>> -
+>> -enum sony_nc_rfkill {
+>> -	SONY_WIFI,
+>> -	SONY_BLUETOOTH,
+>> -	SONY_WWAN,
+>> -	SONY_WIMAX,
+>> -	N_SONY_RFKILL,
+>> -};
+>
+> removing this enum seems superfluous (it's re-added some patches later)
+> and breaks compilation at this point.
 
-I tried to comment on some of the patchese that you submitted, those I
-have yet to comment on I'll get back to later.
+Sorry, I made a mistake, I'm going to fix and resend patches #10 and #11.
 
-Regards,
--- 
-mattia
-:wq!
+>>   static struct kbd_backlight *kbdbl_handle;
+>> +static int sony_kbd_handle = -1;
+>
+> there seems to be no real point initializing this to -1.
+
+Just for safety, since handle 0x0000 is a valid handle [1] it would be 
+better to initialize it to an invalid value.
+
+> Also, can it be
+> made part of the struct above?
+
+Sure
+
+
+[1]
+sony_laptop: found handle 0x0000 (offset: 0x0d)
+sony_laptop: called SN07 with 0x000d (result: 0x0000)
