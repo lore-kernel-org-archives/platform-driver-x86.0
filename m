@@ -1,79 +1,49 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 22/25] sony-laptop: forward Hybrid GFX notifications to
- userspace
-Date: Sat, 4 Jun 2011 17:48:20 +0900
-Message-ID: <20110604084820.GE7194@kamineko.org>
+Subject: Re: [PATCH 0/25] sony-laptop: code improvements and support
+ extension for newer Vaios
+Date: Sat, 4 Jun 2011 17:54:31 +0900
+Message-ID: <20110604085431.GF7194@kamineko.org>
 References: <4DE8FC4A.9010401@absence.it>
- <4DE93584.3070205@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:52778 "EHLO
+	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753335Ab1FDIy3 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 4 Jun 2011 04:54:29 -0400
+Received: by pzk9 with SMTP id 9so1136482pzk.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jun 2011 01:54:28 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <4DE93584.3070205@absence.it>
-Sender: linux-input-owner@vger.kernel.org
+In-Reply-To: <4DE8FC4A.9010401@absence.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Marco Chiappero <marco@absence.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Javier Achirica <jachirica@gmail.com>
 
-On Fri, Jun 03, 2011 at 09:27:00PM +0200, Marco Chiappero wrote:
-> Some Vaios come with both integrated and discrete graphics, plus a
-> switch for choosing one of the two. When the switch position is
-> changed, a notification is generated, now forwarded to userspace for
-> example for visual notifications, user scripts, and so on.
+On Fri, Jun 03, 2011 at 05:22:50PM +0200, Marco Chiappero wrote:
+> Hello,
 > 
-> Signed-off-by: Marco Chiappero <marco@absence.it>
-> ---
+> this set of patches aims to reorganize and clean the driver code
+> where necessary [patches 1-9, 13], improve some functionalities
+> [patches 10-12] and add some others present on recent Vaios (TT, Y1,
+> Z1, F1, S1, SA/SB/SC, CA/SB and possibly others), such as ALS driven
+> backlight control, HDD shock protection control and Battery charge
+> control.
 > 
-> --- a/drivers/platform/x86/sony-laptop.c
-> +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -3118,6 +3118,14 @@ static void sony_nc_notify(struct acpi_d
-> 
->  	dprintk("sony_nc_notify, event: 0x%.2x\n", event);
-> 
-> +	/* events codes list
-> +	 * 1    Hotkeys
-> +	 * 2    RFKILL
-> +	 * 3    ALS
-> +	 * 4    HDD protection
-> +	 * 5	Hybrid GFX
-> +	 */
+> During the development of these patches a long list of new handles
+> has been found and analyzed (the list can be read here:
+> http://absence.it/vaio-acpi/handles_list.txt), many of them are now
+> well known and mostly implemented by patches from 14 to 24.
 
-how about some #defines instead of a comment?
+Thanks for this. Note though that some of the clean-up code is
+conflicting with other patches I have yet to submit, I'll see if it's
+easier to adapt your code to mine or viceversa.
 
->  	/* handles related events */
->  	if (event >= 0x90) {
->  		unsigned int result = 0, handle = 0;
-> @@ -3169,6 +3177,23 @@ static void sony_nc_notify(struct acpi_d
->  			/* hdd protection event, notify userspace */
->  			break;
-> 
-> +		case 0x0128:
-> +		case 0x0146:
-> +			/* Hybrid GFX switching, 1 */
-> +			sony_call_snc_handle(handle, 0x0000, &result);
-> +			dprintk("sony_nc_notify, Hybrid GFX event received "
-> +					"(reason: %s)\n", (result & 0x01) ?
-> +					"switch position change" : "unknown");
-> +
-> +			/* verify the switch state
-> +			   (1: discrete GFX, 0: integrated GFX)*/
-> +			result = 0;
-> +			sony_call_snc_handle(handle, 0x0100, &result);
-> +
-> +			ev = 5;
-> +			value = result & 0xff;
-> +			break;
+I tried to comment on some of the patchese that you submitted, those I
+have yet to comment on I'll get back to later.
 
-shouldn't this be reported as an input event rather than just an acpi
-one?
-also, I am trying to recall how the speed/stamina switch was handled in
-older SZ and other models. I think we are already notifying the
-switching event as an input key (PROG4? PROG5?)
-I didn't see a better option in input.h, maybe time to add one?
-
->  		default:
->  			value = event;
->  			dprintk("Unknowk event for handle: 0x%x\n", handle);
+Regards,
 -- 
 mattia
 :wq!
