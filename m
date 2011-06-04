@@ -1,41 +1,41 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 8/25] sony-laptop: sony_nc_notify rewritten and improved
-Date: Sat, 4 Jun 2011 17:04:48 +0200
-Message-ID: <BANLkTinu=AU4ro6HjF1JZnomsXwNkoz2hg@mail.gmail.com>
-References: <4DE8FC4A.9010401@absence.it>
-	<4DE8FFE0.5070506@absence.it>
-	<20110604084338.GD7194@kamineko.org>
-	<20110604124219.GA14809@srcf.ucam.org>
-	<4DEA3FBD.8020602@absence.it>
-	<20110604143012.GA16615@srcf.ucam.org>
-	<4DEA4283.103@absence.it>
-	<20110604143638.GA16747@srcf.ucam.org>
-	<4DEA4450.80702@absence.it>
-	<20110604144527.GA16911@srcf.ucam.org>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
+Date: Sat, 04 Jun 2011 17:21:11 +0200
+Message-ID: <4DEA4D67.8000009@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it> <20110604080717.GC7194@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20110604144527.GA16911@srcf.ucam.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Marco Chiappero <marco@absence.it>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:45737 "EHLO
+	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755721Ab1FDPVP (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 4 Jun 2011 11:21:15 -0400
+In-Reply-To: <20110604080717.GC7194@kamineko.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-wireless@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Sat, Jun 4, 2011 at 4:45 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Sat, Jun 04, 2011 at 04:42:24PM +0200, Marco Chiappero wrote:
+Il 04/06/2011 10:07, Mattia Dongili ha scritto:
+>> of Fn combos too.
 >
->> More precisely? As far as I know there is no ALS device class; and I
->> know nothing about the other.
->
-> Where there's no generic implementation of a hardware class that's
-> present in multiple pieces of hardware, the first step is to define a
-> generic implementation :)
+> the additional key codes are fine though.
 
-The last ALS device class attempt didn't went so well, what's the
-current status for this one ?
+There is one thing (IIRC you already heard of) I'd like to discuss here.
+It seems that on recent models the hotkeys layout hasn't changed for 
+some time now, and it's likely to stay the same for a long time. However 
+it is different from the one mapped in the driver, and some changes are 
+required. For example:
 
+- Fn-F1 (Touchpad togle enable) to KEY_TOUCHPAD_TOGGLE instead of KEY_FN_F1
+- Fn-F5 (bright. down) to KEY_BRIGHTNESSDOWN instead of KEY_FN_F5
+- Fn-F9 (zoom out) to KEY_ZOOMOUT instead of KEY_FN_F9
+and so on.
 
-
--- 
-Corentin Chary
-http://xf.iksaif.net
+To preserve support for older models we can use udev keymaps or a 
+fallback map for any notebook not starting with the "VPC" model prefix 
+(since a couple of years this is the starting model string). Is this 
+solution acceptable? Having a correct mapping at the source instead of 
+remapping for every model is better, is it possible?
