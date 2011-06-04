@@ -1,253 +1,245 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Sat, 4 Jun 2011 16:58:17 +0900
-Message-ID: <20110604075815.GA7194@kamineko.org>
+Subject: Re: [PATCH 11/25] sony-laptop:  rfkill improvements
+Date: Sat, 4 Jun 2011 16:59:12 +0900
+Message-ID: <20110604075911.GB7194@kamineko.org>
 References: <4DE8FC4A.9010401@absence.it>
- <4DE9008D.7040504@absence.it>
+ <4DE900DE.9010006@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:35995 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753072Ab1FDH6N (ORCPT
+Received: from mail-px0-f179.google.com ([209.85.212.179]:41755 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753072Ab1FDH7I (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 4 Jun 2011 03:58:13 -0400
-Received: by pzk9 with SMTP id 9so1123772pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jun 2011 00:58:12 -0700 (PDT)
+	Sat, 4 Jun 2011 03:59:08 -0400
+Received: by pxi2 with SMTP id 2so1685493pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jun 2011 00:59:07 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <4DE9008D.7040504@absence.it>
+In-Reply-To: <4DE900DE.9010006@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Marco Chiappero <marco@absence.it>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 03, 2011 at 05:41:01PM +0200, Marco Chiappero wrote:
-> Added support for handle 0x0143 (Vaio SA/SB/SC, CA/CB). Minor
-> corrections included.
+On Fri, Jun 03, 2011 at 05:42:22PM +0200, Marco Chiappero wrote:
+> - added sony_nc_get_rfkill_hwblock helper function
+> - rfkill type now persistent, using the hardware stored device power state
+> - added support for newer WWAN modules
+> - handle detection removed because no longer necessary
+> - now notifying rfkill events to the acpi bus
 > 
 > Signed-off-by: Marco Chiappero <marco@absence.it>
 > ---
 > 
 > --- a/drivers/platform/x86/sony-laptop.c
 > +++ b/drivers/platform/x86/sony-laptop.c
-> @@ -127,7 +127,7 @@ MODULE_PARM_DESC(minor,
->  		 "default is -1 (automatic)");
->  #endif
-> 
-> -static int kbd_backlight;	/* = 1 */
-> +static int kbd_backlight;	/* = 0 */
->  module_param(kbd_backlight, int, 0444);
->  MODULE_PARM_DESC(kbd_backlight,
->  		 "set this to 0 to disable keyboard backlight, "
-> @@ -140,15 +140,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
->  		 "1 for 30 seconds, 2 for 60 seconds and 3 to disable timeout "
+> @@ -141,10 +141,7 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
 >  		 "(default: 0)");
 > 
-> -static void sony_nc_kbd_backlight_resume(void);
-> -
-> -enum sony_nc_rfkill {
-> -	SONY_WIFI,
-> -	SONY_BLUETOOTH,
-> -	SONY_WWAN,
-> -	SONY_WIMAX,
-> -	N_SONY_RFKILL,
-> -};
+> 
+> -static int sony_rfkill_handle;
+> -static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
+> -static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500,
+> 0x700, 0x900};
 
-removing this enum seems superfluous (it's re-added some patches later)
-and breaks compilation at this point.
+your mail client is wrapping lines in your patches (it happened to other
+patches too), can you please fix it before resending?
+Documentation/email-clients.txt has suggestions on how to do it.
 
->  static int sony_rfkill_handle;
->  static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
-> @@ -1356,38 +1347,33 @@ static int sony_nc_rfkill_setup(struct a
+> -static void sony_nc_rfkill_update(void);
+> +static int sony_rfkill_handle = -1;
+> 
+>  /*********** Input Devices ***********/
+> 
+> @@ -1190,6 +1187,26 @@ static int sony_nc_hotkeys_decode(unsign
+>  	return ret;
 >  }
 > 
->  /* Keyboard backlight feature */
-> -#define KBDBL_HANDLER	0x137
-> -#define KBDBL_PRESENT	0xB00
-> -#define	SET_MODE	0xC00
-> -#define SET_STATE	0xD00
-> -#define SET_TIMEOUT	0xE00
-> -
->  struct kbd_backlight {
-> -	int mode;
-> -	int timeout;
-> +	unsigned int base;
-> +	unsigned int mode;
-> +	unsigned int timeout;
->  	struct device_attribute mode_attr;
->  	struct device_attribute timeout_attr;
->  };
-> -
->  static struct kbd_backlight *kbdbl_handle;
-> +static int sony_kbd_handle = -1;
-
-there seems to be no real point initializing this to -1. Also, can it be
-made part of the struct above?
-
-> -static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
-> +static int __sony_nc_kbd_backlight_mode_set(u8 value)
+> +enum sony_nc_rfkill {
+> +	SONY_WIFI,
+> +	SONY_BLUETOOTH,
+> +	SONY_WWAN,
+> +	SONY_WIMAX,
+> +	N_SONY_RFKILL,
+> +};
+> +static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
+> +static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500,
+> 0x700, 0x900};
+> +
+> +static int sony_nc_get_rfkill_hwblock(void)
+> +{
+> +	unsigned int result;
+> +
+> +	if (sony_call_snc_handle(sony_rfkill_handle, 0x200, &result))
+> +		return -1;
+> +
+> +	return result & 0x1;
+> +}
+> +
+>  static void sony_nc_rfkill_cleanup(void)
 >  {
->  	unsigned int result;
+>  	int i;
+> @@ -1204,9 +1221,14 @@ static void sony_nc_rfkill_cleanup(void)
 > 
->  	if (value > 1)
->  		return -EINVAL;
-> 
-> -	if (sony_call_snc_handle(KBDBL_HANDLER,
-> -				(value << 0x10) | SET_MODE, &result))
-> +	if (sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
-> +				(kbdbl_handle->base), &result))
->  		return -EIO;
-> 
-> -	/* Try to turn the light on/off immediately */
-> -	sony_call_snc_handle(KBDBL_HANDLER, (value << 0x10) | SET_STATE,
-> -			&result);
-> -
->  	kbdbl_handle->mode = value;
-> 
-> +	/* Try to turn the light on/off immediately */
-> +	sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
-> +				(kbdbl_handle->base + 0x100), &result);
-> +
->  	return 0;
->  }
-> 
-> @@ -1415,7 +1401,9 @@ static ssize_t sony_nc_kbd_backlight_mod
->  		struct device_attribute *attr, char *buffer)
->  {
->  	ssize_t count = 0;
-> +
->  	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->mode);
-> +
->  	return count;
->  }
-> 
-> @@ -1426,8 +1414,8 @@ static int __sony_nc_kbd_backlight_timeo
->  	if (value > 3)
->  		return -EINVAL;
-> 
-> -	if (sony_call_snc_handle(KBDBL_HANDLER,
-> -				(value << 0x10) | SET_TIMEOUT, &result))
-> +	if (sony_call_snc_handle(sony_kbd_handle, (value << 0x10) |
-> +				(kbdbl_handle->base + 0x200), &result))
->  		return -EIO;
-> 
->  	kbdbl_handle->timeout = value;
-> @@ -1459,18 +1447,36 @@ static ssize_t sony_nc_kbd_backlight_tim
->  		struct device_attribute *attr, char *buffer)
->  {
->  	ssize_t count = 0;
-> +
->  	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->timeout);
-> +
->  	return count;
->  }
-> 
->  static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
+>  static int sony_nc_rfkill_set(void *data, bool blocked)
 >  {
 > -	unsigned int result;
-> +	unsigned int result, base_cmd;
-> +	bool found = false;
+> -	unsigned int argument = sony_rfkill_address[(long) data] + 0x100;
+> +	unsigned int result, argument = sony_rfkill_address[(long) data];
 > 
-> -	if (sony_call_snc_handle(KBDBL_HANDLER, KBDBL_PRESENT, &result))
-> -		return 0;
-> -	if (!(result & 0x02))
-> +	/* verify the kbd backlight presence, some models do not have it */
-> +	if (sony_kbd_handle == 0x0137) {
-> +		if (sony_call_snc_handle(sony_kbd_handle, 0x0B00, &result))
-> +			return -EIO;
+> +	/* do not force an already set state */
+> +	sony_call_snc_handle(sony_rfkill_handle, argument, &result);
+> +	if ((result & 0x1) == !blocked)
+> +		return 0;
 > +
-> +		found = !!(result & 0x02);
-> +		base_cmd = 0x0C00;
-> +	} else {
-> +		if (sony_call_snc_handle(sony_kbd_handle, 0x0100, &result))
-> +			return -EIO;
+> +	argument += 0x100;
+>  	if (!blocked)
+>  		argument |= 0xff0000;
+> 
+> @@ -1225,7 +1247,7 @@ static int sony_nc_setup_rfkill(struct a
+>  	enum rfkill_type type;
+>  	const char *name;
+>  	unsigned int result;
+> -	bool hwblock;
+> +	bool hwblock, swblock;
+> 
+>  	switch (nc_type) {
+>  	case SONY_WIFI:
+> @@ -1255,6 +1277,13 @@ static int sony_nc_setup_rfkill(struct a
+> 
+>  	sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
+>  	hwblock = !(result & 0x1);
 > +
-> +		found = result & 0x01;
-> +		base_cmd = 0x4000;
-> +	}
+> +	result = 0;
+> +	sony_call_snc_handle(sony_rfkill_handle, sony_rfkill_address[nc_type],
+> +				&result);
+> +	swblock = !(result & 0x2);
 > +
-> +	if (!found) {
-> +		dprintk("no backlight keyboard found\n");
->  		return 0;
-> +	}
+> +	rfkill_init_sw_state(rfk, swblock);
+>  	rfkill_set_hw_state(rfk, hwblock);
 > 
->  	kbdbl_handle = kzalloc(sizeof(*kbdbl_handle), GFP_KERNEL);
->  	if (!kbdbl_handle)
-> @@ -1494,6 +1500,8 @@ static int sony_nc_kbd_backlight_setup(s
->  	if (device_create_file(&pd->dev, &kbdbl_handle->timeout_attr))
->  		goto outmode;
+>  	err = rfkill_register(rfk);
+> @@ -1281,16 +1310,9 @@ static void sony_nc_rfkill_update(void)
+>  		if (!sony_rfkill_devices[i])
+>  			continue;
 > 
-> +	kbdbl_handle->base = base_cmd;
-> +
->  	__sony_nc_kbd_backlight_mode_set(kbd_backlight);
->  	__sony_nc_kbd_backlight_timeout_set(kbd_backlight_timeout);
-> 
-> @@ -1516,28 +1524,32 @@ static int sony_nc_kbd_backlight_cleanup
->  		device_remove_file(&pd->dev, &kbdbl_handle->timeout_attr);
-> 
->  		/* restore the default hw behaviour */
-> -		sony_call_snc_handle(KBDBL_HANDLER, 0x1000 | SET_MODE, &result);
-> -		sony_call_snc_handle(KBDBL_HANDLER, SET_TIMEOUT, &result);
-> +		sony_call_snc_handle(sony_kbd_handle,
-> +				kbdbl_handle->base | 0x10000, &result);
-> +		sony_call_snc_handle(sony_kbd_handle,
-> +				kbdbl_handle->base + 0x200, &result);
-> 
->  		kfree(kbdbl_handle);
-> +		kbdbl_handle = NULL;
+> -		if (hwblock) {
+> -			if (rfkill_set_hw_state(sony_rfkill_devices[i], true)) {
+> -				/* we already know we're blocked */
+> -			}
+> -			continue;
+> -		}
+> -
+>  		sony_call_snc_handle(sony_rfkill_handle, argument, &result);
+>  		rfkill_set_states(sony_rfkill_devices[i],
+> -				  !(result & 0xf), false);
+> +				  !(result & 0x2), hwblock);
 >  	}
->  	return 0;
 >  }
 > 
->  static void sony_nc_kbd_backlight_resume(void)
+> @@ -1298,17 +1320,7 @@ static int sony_nc_rfkill_setup(struct a
 >  {
-> -	unsigned int ignore = 0;
-> +	unsigned int result;
+>  #define	RFKILL_BUFF_SIZE 8
+>  	u8 dev_code, i, buff[RFKILL_BUFF_SIZE] = { 0 };
+> -	int offset;
 > 
->  	if (!kbdbl_handle)
->  		return;
+> -	offset = sony_find_snc_handle(0x124);
+> -	if (offset == -1) {
+> -		offset = sony_find_snc_handle(0x135);
+> -		if (offset == -1)
+> -			return 0;
+> -		else
+> -			sony_rfkill_handle = 0x135;
+> -	} else
+> -		sony_rfkill_handle = 0x124;
+>  	dprintk("Found rkfill handle: 0x%.4x\n", sony_rfkill_handle);
 > 
->  	if (kbdbl_handle->mode == 0)
-> -		sony_call_snc_handle(KBDBL_HANDLER, SET_MODE, &ignore);
-> +		sony_call_snc_handle(sony_kbd_handle,
-> +				kbdbl_handle->base, &result);
-> 
->  	if (kbdbl_handle->timeout != 0)
-> -		sony_call_snc_handle(KBDBL_HANDLER,
-> -				(kbdbl_handle->timeout << 0x10) | SET_TIMEOUT,
-> -				&ignore);
-> +		sony_call_snc_handle(sony_kbd_handle,
-> +				(kbdbl_handle->base + 0x200) |
-> +				(kbdbl_handle->timeout << 0x10), &result);
->  }
-> 
->  static void sony_nc_backlight_ng_read_limits(int handle,
-> @@ -1676,6 +1688,8 @@ static void sony_nc_snc_setup_handles(st
->  			ret = sony_nc_function_setup(handle);
+>  	/* need to read the whole buffer returned by the acpi call to SN06
+> @@ -1327,6 +1339,25 @@ static int sony_nc_rfkill_setup(struct a
+>  		if (dev_code == 0xff)
 >  			break;
->  		case 0x0137:
-> +		case 0x0143:
-> +			sony_kbd_handle = handle;
->  			ret = sony_nc_kbd_backlight_setup(pd);
+> 
+> +		/*
+> +		   known codes:
+> +
+> +		   0x00	WLAN
+> +		   0x10 BLUETOOTH
+> +		   0x20 WWAN GPRS-EDGE
+> +		   0x21 WWAN HSDPA
+> +		   0x22 WWAN EV-DO
+> +		   0x23 WWAN GPS
+> +		   0x25	Gobi WWAN no GPS
+> +		   0x26 Gobi WWAN + GPS
+> +		   0x28	Gobi WWAN no GPS
+> +		   0x29 Gobi WWAN + GPS
+> +		   0x50	Gobi WWAN no GPS
+> +		   0x51 Gobi WWAN + GPS
+> +		   0x30	WIMAX
+> +		   0x70 no SIM card slot
+> +		   0x71 SIM card slot
+> +		*/
+>  		dprintk("Radio devices, looking at 0x%.2x\n", dev_code);
+> 
+>  		if (dev_code == 0 && !sony_rfkill_devices[SONY_WIFI])
+> @@ -1335,7 +1366,7 @@ static int sony_nc_rfkill_setup(struct a
+>  		if (dev_code == 0x10 && !sony_rfkill_devices[SONY_BLUETOOTH])
+>  			sony_nc_setup_rfkill(device, SONY_BLUETOOTH);
+> 
+> -		if ((0xf0 & dev_code) == 0x20 &&
+> +		if (((0xf0 & dev_code) == 0x20 || (0xf0 & dev_code) == 0x50) &&
+>  				!sony_rfkill_devices[SONY_WWAN])
+>  			sony_nc_setup_rfkill(device, SONY_WWAN);
+> 
+> @@ -1694,6 +1725,7 @@ static void sony_nc_snc_setup_handles(st
 >  			break;
 >  		case 0x0124:
-> @@ -1710,6 +1724,7 @@ static void sony_nc_snc_cleanup_handles(
-> 
->  		switch (handle) {
->  		case 0x0137:
-> +		case 0x0143:
->  			sony_nc_kbd_backlight_cleanup(pd);
->  			break;
->  		case 0x0124:
-> @@ -1814,6 +1829,7 @@ static int sony_nc_snc_resume(void)
->  			sony_nc_rfkill_update();
->  			break;
->  		case 0x0137: /* kbd + als */
-> +		case 0x0143:
->  			sony_nc_kbd_backlight_resume();
+>  		case 0x0135:
+> +			sony_rfkill_handle = handle;
+>  			ret = sony_nc_rfkill_setup(sony_nc_acpi_device);
 >  			break;
 >  		default:
+> @@ -1887,6 +1919,30 @@ static void sony_nc_notify(struct acpi_d
+>  			ev = 1;
+>  			break;
+> 
+> +		case 0x0124:
+> +		case 0x0135:
+> +			sony_call_snc_handle(sony_rfkill_handle, 0x0100,
+> +						&result);
+> +			result &= 0x03;
+> +			dprintk("sony_nc_notify, RFKILL event received "
+> +					"(reason: %s)\n", result == 1 ?
+> +					"switch state changed" : "battery");
+> +
+> +			if (result == 1) { /* hw swtich event */
+> +				sony_nc_rfkill_update();
+> +				sony_laptop_report_input_event(
+> +						SONYPI_EVENT_RFKILL_ALL);
+
+the SONYPI_EVENT_RFKILL_ALL constant is defined in the next patch, this
+call should be part of the same patch to avoid breaking building of the
+module in the middle of the series.
+See the comment to the other email about reporting rfkill events through
+the input layer though.
+
+> +				value = sony_nc_get_rfkill_hwblock();
+> +			} else if (result == 2) { /* battery event */
+> +				/*  we should change the WWAN rfkill
+> +				    state when the battery state changes
+> +				 */
+> +				return;
+> +			}
+> +
+> +			ev = 2;
+> +			break;
+> +
+>  		default:
+>  			value = event;
+>  			dprintk("Unknowk event for handle: 0x%x\n", handle);
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 -- 
 mattia
 :wq!
