@@ -1,35 +1,51 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 19/25] sony-laptop: add touchpad enable/disable control
- file
-Date: Sat, 04 Jun 2011 13:15:32 +0200
-Message-ID: <4DEA13D4.1000100@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <201106031400.36141.dmitry.torokhov@gmail.com> <4DE9563F.9010503@absence.it> <201106031512.38349.dmitry.torokhov@gmail.com> <4DE9904E.7050805@absence.it> <20110604070921.GA5132@kamineko.org>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
+ to newer Vaios
+Date: Sat, 4 Jun 2011 20:23:59 +0900
+Message-ID: <20110604112358.GA11241@kamineko.org>
+References: <4DE8FC4A.9010401@absence.it>
+ <4DE9008D.7040504@absence.it>
+ <20110604075815.GA7194@kamineko.org>
+ <4DEA0954.6030709@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:35070 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754724Ab1FDLPf (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:53377 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754724Ab1FDLX5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 4 Jun 2011 07:15:35 -0400
-In-Reply-To: <20110604070921.GA5132@kamineko.org>
+	Sat, 4 Jun 2011 07:23:57 -0400
+Received: by pwi15 with SMTP id 15so1370883pwi.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jun 2011 04:23:56 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <4DEA0954.6030709@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: Marco Chiappero <marco@absence.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Il 04/06/2011 09:09, Mattia Dongili ha scritto:
-> the point is that disabling the touchpad is already possible via a
-> common interface already,
+On Sat, Jun 04, 2011 at 12:30:44PM +0200, Marco Chiappero wrote:
+> Il 04/06/2011 09:58, Mattia Dongili wrote:
+...
+> >>  static struct kbd_backlight *kbdbl_handle;
+> >>+static int sony_kbd_handle = -1;
+> >
+> >there seems to be no real point initializing this to -1.
+> 
+> Just for safety, since handle 0x0000 is a valid handle [1] it would
+> be better to initialize it to an invalid value.
 
-Well, disabling/powering off and ignoring are not synonyms. It would be 
-better to have userspace disabling the touchpad when this feature is 
-present and ignoring it when not.
+0x0 is not valid, it's just the lack of a value. For sure it's not a
+valid value for the keyboard backlight handle.
 
-> if there is any additional win in implementing
-> the switch in sony-laptop then it's worth using this sony-specific
-> quirks otherwise it's totally pointless.
+...
+> [1]
+> sony_laptop: found handle 0x0000 (offset: 0x0d)
+> sony_laptop: called SN07 with 0x000d (result: 0x0000)
 
-I cannot see how such small code and file will harm, people that don't 
-care can ignore it.
+this is only going through the handles buffer and telling you that at
+0x0d there is nothing.
+
+-- 
+mattia
+:wq!
