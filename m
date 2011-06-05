@@ -1,42 +1,46 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 8/25] sony-laptop: sony_nc_notify rewritten and improved
-Date: Sun, 5 Jun 2011 20:14:17 +0100
-Message-ID: <20110605201417.5acfab3e@lxorguk.ukuu.org.uk>
-References: <4DE8FC4A.9010401@absence.it>
-	<4DE8FFE0.5070506@absence.it>
-	<20110604084338.GD7194@kamineko.org>
-	<20110604124219.GA14809@srcf.ucam.org>
-	<4DEA3FBD.8020602@absence.it>
-	<20110604143012.GA16615@srcf.ucam.org>
-	<4DEA4283.103@absence.it>
-	<20110604143638.GA16747@srcf.ucam.org>
-	<4DEA4450.80702@absence.it>
-	<20110604212249.568e76b6@lxorguk.ukuu.org.uk>
-	<4DEBC156.1030503@absence.it>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: [GIT PATCH] thinkpad-acpi patches for 3.0-rc
+Date: Sun,  5 Jun 2011 16:22:33 -0300
+Message-ID: <1307301755-13742-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from earthlight.etchedpixels.co.uk ([81.2.110.250]:53408 "EHLO
-	www.etchedpixels.co.uk" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1756478Ab1FETMu (ORCPT
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:59367 "EHLO
+	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753715Ab1FETWo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Jun 2011 15:12:50 -0400
-In-Reply-To: <4DEBC156.1030503@absence.it>
+	Sun, 5 Jun 2011 15:22:44 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-> that many different implementation are present across different models 
-> or brands. We need a solution, now,
 
-We needed a solution last year nothing has changed there other than there
-are now a bazillion more out of tree drivers.
+Matthew,
 
-I don't have a solution I just wanted to make sure you understood the
-problem space. Personally I think the right solution is for someone who
-has infinite time to point out the mess and cluebat Linus, I don't have
-time for that.
+Please consider sending these two patches to Linus for 3.0-rc, as they
+cause the driver to be a lot less annoying for many users.
 
-Alan
+I have not included the LED/MIC mute patches, because they are not
+low-impact, *and* I am trying to get some answers from Lenovo first.
+Please hold them for a while, I am back to a more active maintenance of
+thinkpad-acpi.
+
+Please pull from:
+  git://repo.or.cz/linux-2.6/linux-acpi-2.6/ibm-acpi-2.6.git for-upstream/platform-x86
+
+To get the following changes:
+
+Henrique de Moraes Holschuh (2):
+      thinkpad-acpi: handle some new HKEY 0x60xx events
+      thinkpad-acpi: handle HKEY 0x4010, 0x4011 events
+
+I will also send the patchset as replies to this email.
+
+I will handle requesting that they get added to -stable/-longterm (plus an
+extra detail required for 2.6.32) after they'be been in mainline for a
+small while.
+
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
