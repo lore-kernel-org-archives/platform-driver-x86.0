@@ -1,145 +1,36 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 2/2] thinkpad-acpi: handle HKEY 0x4010, 0x4011 events
-Date: Sun,  5 Jun 2011 16:22:35 -0300
-Message-ID: <1307301755-13742-3-git-send-email-hmh@hmh.eng.br>
-References: <1307301755-13742-1-git-send-email-hmh@hmh.eng.br>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 8/25] sony-laptop: sony_nc_notify rewritten and improved
+Date: Sun, 05 Jun 2011 22:13:03 +0200
+Message-ID: <4DEBE34F.7030705@absence.it>
+References: <4DE8FC4A.9010401@absence.it>	<4DE8FFE0.5070506@absence.it>	<20110604084338.GD7194@kamineko.org>	<20110604124219.GA14809@srcf.ucam.org>	<4DEA3FBD.8020602@absence.it>	<20110604143012.GA16615@srcf.ucam.org>	<4DEA4283.103@absence.it>	<20110604143638.GA16747@srcf.ucam.org>	<4DEA4450.80702@absence.it>	<20110604212249.568e76b6@lxorguk.ukuu.org.uk>	<4DEBC156.1030503@absence.it> <20110605201417.5acfab3e@lxorguk.ukuu.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:52877 "EHLO
-	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753715Ab1FETWs (ORCPT
+Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:45335 "EHLO
+	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753788Ab1FEUNN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Jun 2011 15:22:48 -0400
-In-Reply-To: <1307301755-13742-1-git-send-email-hmh@hmh.eng.br>
+	Sun, 5 Jun 2011 16:13:13 -0400
+In-Reply-To: <20110605201417.5acfab3e@lxorguk.ukuu.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
 
-Handle events 0x4010 and 0x4011 so that we do not pester users about them.
+Il 05/06/2011 21:14, Alan Cox ha scritto:
+>> that many different implementation are present across different models
+>> or brands. We need a solution, now,
+>
+> We needed a solution last year nothing has changed there other than there
+> are now a bazillion more out of tree drivers.
+>
+> I don't have a solution I just wanted to make sure you understood the
+> problem space.
 
-These events report when the thinkpad is docked/undocked to a native
-hotplug dock (i.e. one that does not need ACPI handling, nor is represented
-in the ACPI device tree).  Such docks are based on USB 2.0/3.0, and also
-work as port replicators.
+Sure, I was rather expecting a reply from Matthew about what to do now, 
+since there is no "rule" to follow regarding the ALS support and it's a 
+pity not to support hardware we can make 100% working. But at this point 
+perhaps we'd better discuss only on the platform driver mailing list.
 
-We really want a proper dock class to report these, or at least new input
-EV_SW events.  Since it is not clear which one to use yet, keep reporting
-them as vendor-specific ThinkPad events.
-
-WARNING: As defined by the thinkpad-acpi sysfs ABI rules of engagement, the
-vendor-specific events will be REMOVED as soon as generic events are made
-available (duplicate events are a big problem), with an appropriate update
-to the thinkpad-acpi sysfs/event ABI versioning.  Userspace is already
-prepared to provide easy backwards compatibility for such changes when
-convenient to the distro (see acpi-fakekey).
-
-* Event 0x4010: docking to hotplug dock/port replicator
-* Event 0x4011: undocking from hotplug dock/port replicator
-
-Typical usecase would be to trigger display reconfiguration.
-
-Reports mention T410, T510, and series 3 docks/port replicators.  Special
-thanks to Robert de Rooy for his extensive report and analysis of the
-situation.
-
-http://www.thinkwiki.org/wiki/ThinkPad_Port_Replicator_Series_3
-http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Series_3
-http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Plus_Series_3
-http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Plus_Series_3_for_Mobile_Workstations
-http://lenovoblogs.com/insidethebox/?p=290
-
-Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Reported-by: Claudius Hubig <claudiushubig@chubig.net>
-Reported-by: Doctor Bill <docbill@gmail.com>
-Reported-by: Korte Noack <gbk.noack@gmx.de>
-Reported-by: Robert de Rooy <robert.de.rooy@gmail.com>
-Reported-by: Sebastian Will <swill@csail.mit.edu>
----
- Documentation/laptops/thinkpad-acpi.txt |    2 +
- drivers/platform/x86/thinkpad_acpi.c    |   44 ++++++++++++++++++++++++------
- 2 files changed, 37 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 4bc92ea..6181548 100644
---- a/Documentation/laptops/thinkpad-acpi.txt
-+++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -547,6 +547,8 @@ Events that are propagated by the driver to userspace:
- 0x3006		Bay hotplug request (hint to power up SATA link when
- 		the optical drive tray is ejected)
- 0x4003		Undocked (see 0x2x04), can sleep again
-+0x4010		Docked into hotplug port replicator (non-ACPI dock)
-+0x4011		Undocked from hotplug port replicator (non-ACPI dock)
- 0x500B		Tablet pen inserted into its storage bay
- 0x500C		Tablet pen removed from its storage bay
- 0x6011		ALARM: battery is too hot
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cdcd238..26c5b11 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -184,6 +184,10 @@ enum tpacpi_hkey_event_t {
- 
- 	/* Misc bay events */
- 	TP_HKEY_EV_OPTDRV_EJ		= 0x3006, /* opt. drive tray ejected */
-+	TP_HKEY_EV_HOTPLUG_DOCK		= 0x4010, /* docked into hotplug dock
-+						     or port replicator */
-+	TP_HKEY_EV_HOTPLUG_UNDOCK	= 0x4011, /* undocked from hotplug
-+						     dock or port replicator */
- 
- 	/* User-interface events */
- 	TP_HKEY_EV_LID_CLOSE		= 0x5001, /* laptop lid closed */
-@@ -3521,6 +3525,34 @@ static bool hotkey_notify_wakeup(const u32 hkey,
- 	return true;
- }
- 
-+static bool hotkey_notify_dockevent(const u32 hkey,
-+				 bool *send_acpi_ev,
-+				 bool *ignore_acpi_ev)
-+{
-+	/* 0x4000-0x4FFF: dock-related events */
-+	*send_acpi_ev = true;
-+	*ignore_acpi_ev = false;
-+
-+	switch (hkey) {
-+	case TP_HKEY_EV_UNDOCK_ACK:
-+		/* ACPI undock operation completed after wakeup */
-+		hotkey_autosleep_ack = 1;
-+		pr_info("undocked\n");
-+		hotkey_wakeup_hotunplug_complete_notify_change();
-+		return true;
-+
-+	case TP_HKEY_EV_HOTPLUG_DOCK: /* docked to port replicator */
-+		pr_info("docked into hotplug port replicator\n");
-+		return true;
-+	case TP_HKEY_EV_HOTPLUG_UNDOCK: /* undocked from port replicator */
-+		pr_info("undocked from hotplug port replicator\n");
-+		return true;
-+
-+	default:
-+		return false;
-+	}
-+}
-+
- static bool hotkey_notify_usrevent(const u32 hkey,
- 				 bool *send_acpi_ev,
- 				 bool *ignore_acpi_ev)
-@@ -3669,15 +3701,9 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 			}
- 			break;
- 		case 4:
--			/* 0x4000-0x4FFF: dock-related wakeups */
--			if (hkey == TP_HKEY_EV_UNDOCK_ACK) {
--				hotkey_autosleep_ack = 1;
--				pr_info("undocked\n");
--				hotkey_wakeup_hotunplug_complete_notify_change();
--				known_ev = true;
--			} else {
--				known_ev = false;
--			}
-+			/* 0x4000-0x4FFF: dock-related events */
-+			known_ev = hotkey_notify_dockevent(hkey, &send_acpi_ev,
-+						&ignore_acpi_ev);
- 			break;
- 		case 5:
- 			/* 0x5000-0x5FFF: human interface helpers */
--- 
-1.7.2.5
+Marco
