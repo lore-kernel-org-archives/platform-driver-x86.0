@@ -1,144 +1,145 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH 1/2] thinkpad-acpi: handle some new HKEY 0x60xx events
-Date: Sun,  5 Jun 2011 16:22:34 -0300
-Message-ID: <1307301755-13742-2-git-send-email-hmh@hmh.eng.br>
+Subject: [PATCH 2/2] thinkpad-acpi: handle HKEY 0x4010, 0x4011 events
+Date: Sun,  5 Jun 2011 16:22:35 -0300
+Message-ID: <1307301755-13742-3-git-send-email-hmh@hmh.eng.br>
 References: <1307301755-13742-1-git-send-email-hmh@hmh.eng.br>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27]:48015 "EHLO
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:52877 "EHLO
 	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753715Ab1FETWp (ORCPT
+	by vger.kernel.org with ESMTP id S1753715Ab1FETWs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Jun 2011 15:22:45 -0400
+	Sun, 5 Jun 2011 15:22:48 -0400
 In-Reply-To: <1307301755-13742-1-git-send-email-hmh@hmh.eng.br>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-Handle some user interface events from the newer Lenovo models.  We are likely
-to do something smart with these events in the future, for now, hide the ones
-we are already certain about from the user and userspace both.
+Handle events 0x4010 and 0x4011 so that we do not pester users about them.
 
-* Events 0x6000 and 0x6005 are key-related.  0x6005 is not properly identified
-  yet.  Ignore these events, and do not report them.
+These events report when the thinkpad is docked/undocked to a native
+hotplug dock (i.e. one that does not need ACPI handling, nor is represented
+in the ACPI device tree).  Such docks are based on USB 2.0/3.0, and also
+work as port replicators.
 
-* Event 0x6040 has not been properly identified yet, and we don't know if it
-  is important (looks like it isn't, but still...).  Keep reporting it.
+We really want a proper dock class to report these, or at least new input
+EV_SW events.  Since it is not clear which one to use yet, keep reporting
+them as vendor-specific ThinkPad events.
 
-* Change the message the driver outputs on unknown 0x6xxx events, as all
-  recent events are not related to thermal alarms.  Degrade log level from
-  ALERT to WARNING.
+WARNING: As defined by the thinkpad-acpi sysfs ABI rules of engagement, the
+vendor-specific events will be REMOVED as soon as generic events are made
+available (duplicate events are a big problem), with an appropriate update
+to the thinkpad-acpi sysfs/event ABI versioning.  Userspace is already
+prepared to provide easy backwards compatibility for such changes when
+convenient to the distro (see acpi-fakekey).
 
-Thanks to all users who reported these events or asked about them in a number
-of mailing lists.  Your help is highly appreciated, even if I did took a lot of
-time to act on them.  For that I apologise.
+* Event 0x4010: docking to hotplug dock/port replicator
+* Event 0x4011: undocking from hotplug dock/port replicator
 
-I will list those that identified the reasons for the events as "reported-by",
-and I apologise in advance if I leave anyone out: it was not done on purpose, I
-made the mistake of not properly tagging all event report emails separately,
-and might have missed some.
+Typical usecase would be to trigger display reconfiguration.
+
+Reports mention T410, T510, and series 3 docks/port replicators.  Special
+thanks to Robert de Rooy for his extensive report and analysis of the
+situation.
+
+http://www.thinkwiki.org/wiki/ThinkPad_Port_Replicator_Series_3
+http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Series_3
+http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Plus_Series_3
+http://www.thinkwiki.org/wiki/ThinkPad_Mini_Dock_Plus_Series_3_for_Mobile_Workstations
+http://lenovoblogs.com/insidethebox/?p=290
 
 Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Reported-by: Markus Malkusch <markus@malkusch.de>
-Reported-by: Peter Giles <g1l3sp@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+Reported-by: Claudius Hubig <claudiushubig@chubig.net>
+Reported-by: Doctor Bill <docbill@gmail.com>
+Reported-by: Korte Noack <gbk.noack@gmx.de>
+Reported-by: Robert de Rooy <robert.de.rooy@gmail.com>
+Reported-by: Sebastian Will <swill@csail.mit.edu>
 ---
- Documentation/laptops/thinkpad-acpi.txt |    3 +++
- drivers/platform/x86/thinkpad_acpi.c    |   28 +++++++++++++++++++++++-----
- 2 files changed, 26 insertions(+), 5 deletions(-)
+ Documentation/laptops/thinkpad-acpi.txt |    2 +
+ drivers/platform/x86/thinkpad_acpi.c    |   44 ++++++++++++++++++++++++------
+ 2 files changed, 37 insertions(+), 9 deletions(-)
 
 diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 1565eef..4bc92ea 100644
+index 4bc92ea..6181548 100644
 --- a/Documentation/laptops/thinkpad-acpi.txt
 +++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -534,6 +534,8 @@ Events that are never propagated by the driver:
- 0x2404		System is waking up from hibernation to undock
- 0x2405		System is waking up from hibernation to eject bay
- 0x5010		Brightness level changed/control event
-+0x6000		KEYBOARD: Numlock key pressed
-+0x6005		KEYBOARD: Fn key pressed (TO BE VERIFIED)
- 
- Events that are propagated by the driver to userspace:
- 
-@@ -552,6 +554,7 @@ Events that are propagated by the driver to userspace:
- 0x6021		ALARM: a sensor is too hot
- 0x6022		ALARM: a sensor is extremely hot
- 0x6030		System thermal table changed
-+0x6040		Nvidia Optimus/AC adapter related (TO BE VERIFIED)
- 
- Battery nearly empty alarms are a last resort attempt to get the
- operating system to hibernate or shutdown cleanly (0x2313), or shutdown
+@@ -547,6 +547,8 @@ Events that are propagated by the driver to userspace:
+ 0x3006		Bay hotplug request (hint to power up SATA link when
+ 		the optical drive tray is ejected)
+ 0x4003		Undocked (see 0x2x04), can sleep again
++0x4010		Docked into hotplug port replicator (non-ACPI dock)
++0x4011		Undocked from hotplug port replicator (non-ACPI dock)
+ 0x500B		Tablet pen inserted into its storage bay
+ 0x500C		Tablet pen removed from its storage bay
+ 0x6011		ALARM: battery is too hot
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 77f6e70..cdcd238 100644
+index cdcd238..26c5b11 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -194,6 +194,10 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
- 	TP_HKEY_EV_BRGHT_CHANGED	= 0x5010, /* backlight control event */
+@@ -184,6 +184,10 @@ enum tpacpi_hkey_event_t {
  
-+	/* Key-related user-interface events */
-+	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
-+	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
+ 	/* Misc bay events */
+ 	TP_HKEY_EV_OPTDRV_EJ		= 0x3006, /* opt. drive tray ejected */
++	TP_HKEY_EV_HOTPLUG_DOCK		= 0x4010, /* docked into hotplug dock
++						     or port replicator */
++	TP_HKEY_EV_HOTPLUG_UNDOCK	= 0x4011, /* undocked from hotplug
++						     dock or port replicator */
+ 
+ 	/* User-interface events */
+ 	TP_HKEY_EV_LID_CLOSE		= 0x5001, /* laptop lid closed */
+@@ -3521,6 +3525,34 @@ static bool hotkey_notify_wakeup(const u32 hkey,
+ 	return true;
+ }
+ 
++static bool hotkey_notify_dockevent(const u32 hkey,
++				 bool *send_acpi_ev,
++				 bool *ignore_acpi_ev)
++{
++	/* 0x4000-0x4FFF: dock-related events */
++	*send_acpi_ev = true;
++	*ignore_acpi_ev = false;
 +
- 	/* Thermal events */
- 	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
- 	TP_HKEY_EV_ALARM_BAT_XHOT	= 0x6012, /* battery critically hot */
-@@ -201,6 +205,10 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_ALARM_SENSOR_XHOT	= 0x6022, /* sensor critically hot */
- 	TP_HKEY_EV_THM_TABLE_CHANGED	= 0x6030, /* thermal table changed */
- 
-+	TP_HKEY_EV_UNK_6040		= 0x6040, /* Related to AC change?
-+						     some sort of APM hint,
-+						     W520 */
-+
- 	/* Misc */
- 	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
- };
-@@ -3547,13 +3555,13 @@ static bool hotkey_notify_usrevent(const u32 hkey,
- 
- static void thermal_dump_all_sensors(void);
- 
--static bool hotkey_notify_thermal(const u32 hkey,
-+static bool hotkey_notify_6xxx(const u32 hkey,
- 				 bool *send_acpi_ev,
- 				 bool *ignore_acpi_ev)
- {
- 	bool known = true;
- 
--	/* 0x6000-0x6FFF: thermal alarms */
-+	/* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
- 	*send_acpi_ev = true;
- 	*ignore_acpi_ev = false;
- 
-@@ -3582,8 +3590,17 @@ static bool hotkey_notify_thermal(const u32 hkey,
- 			 "a sensor reports something is extremely hot!\n");
- 		/* recommended action: immediate sleep/hibernate */
- 		break;
-+
-+	case TP_HKEY_EV_KEY_NUMLOCK:
-+	case TP_HKEY_EV_KEY_FN:
-+		/* key press events, we just ignore them as long as the EC
-+		 * is still reporting them in the normal keyboard stream */
-+		*send_acpi_ev = false;
-+		*ignore_acpi_ev = true;
++	switch (hkey) {
++	case TP_HKEY_EV_UNDOCK_ACK:
++		/* ACPI undock operation completed after wakeup */
++		hotkey_autosleep_ack = 1;
++		pr_info("undocked\n");
++		hotkey_wakeup_hotunplug_complete_notify_change();
 +		return true;
 +
- 	default:
--		pr_alert("THERMAL ALERT: unknown thermal alarm received\n");
-+		pr_warn("unknown possible thermal alarm or keyboard event received\n");
- 		known = false;
- 	}
- 
-@@ -3668,8 +3685,9 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 						 &ignore_acpi_ev);
++	case TP_HKEY_EV_HOTPLUG_DOCK: /* docked to port replicator */
++		pr_info("docked into hotplug port replicator\n");
++		return true;
++	case TP_HKEY_EV_HOTPLUG_UNDOCK: /* undocked from port replicator */
++		pr_info("undocked from hotplug port replicator\n");
++		return true;
++
++	default:
++		return false;
++	}
++}
++
+ static bool hotkey_notify_usrevent(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+@@ -3669,15 +3701,9 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+ 			}
  			break;
- 		case 6:
--			/* 0x6000-0x6FFF: thermal alarms */
--			known_ev = hotkey_notify_thermal(hkey, &send_acpi_ev,
-+			/* 0x6000-0x6FFF: thermal alarms/notices and
-+			 *                keyboard events */
-+			known_ev = hotkey_notify_6xxx(hkey, &send_acpi_ev,
- 						 &ignore_acpi_ev);
+ 		case 4:
+-			/* 0x4000-0x4FFF: dock-related wakeups */
+-			if (hkey == TP_HKEY_EV_UNDOCK_ACK) {
+-				hotkey_autosleep_ack = 1;
+-				pr_info("undocked\n");
+-				hotkey_wakeup_hotunplug_complete_notify_change();
+-				known_ev = true;
+-			} else {
+-				known_ev = false;
+-			}
++			/* 0x4000-0x4FFF: dock-related events */
++			known_ev = hotkey_notify_dockevent(hkey, &send_acpi_ev,
++						&ignore_acpi_ev);
  			break;
- 		case 7:
+ 		case 5:
+ 			/* 0x5000-0x5FFF: human interface helpers */
 -- 
 1.7.2.5
