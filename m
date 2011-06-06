@@ -1,99 +1,80 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: Re: [RFC 3/5] serial: add support for Technologic Systems TS-5500
- RS-485 serial port
-Date: Mon, 6 Jun 2011 16:48:34 -0400
-Message-ID: <20110606164834.5894deda@v0nbox>
-References: <1304115712-5299-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<1304115712-5299-4-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<20110430111753.69466ae5@lxorguk.ukuu.org.uk>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH 23/25] sony-laptop: add ALS support
+Date: Tue, 7 Jun 2011 07:24:06 +0900
+Message-ID: <20110606222405.GA32602@kamineko.org>
+References: <4DE8FC4A.9010401@absence.it>
+ <4DE93AC0.3000506@absence.it>
+ <20110605053110.GA21142@kamineko.org>
+ <4DEC0186.5010209@absence.it>
+ <BANLkTi=szZifnDJcfkDJpxcEuL+FY2B5iA@mail.gmail.com>
+ <20110606130802.GB30602@kamineko.org>
+ <4DECDB72.9050909@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20110430111753.69466ae5@lxorguk.ukuu.org.uk>
-Sender: linux-serial-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, lm-sensors@lm-sensors.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:65495 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751912Ab1FFWYM (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 6 Jun 2011 18:24:12 -0400
+Received: by pwi15 with SMTP id 15so2361186pwi.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jun 2011 15:24:12 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <4DECDB72.9050909@absence.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Marco Chiappero <marco@absence.it>
+Cc: Javier Achirica <achirica@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Hi,
-Sorry for the late reply to this comment.
+On Mon, Jun 06, 2011 at 03:51:46PM +0200, Marco Chiappero wrote:
+> Il 06/06/2011 15:08, Mattia Dongili ha scritto:
+> >i.e. would it work if you always enable managed mode to receive the
+> >ambient light events and just let userpace react for automatic dimming?
+> >Also, userspace will intercept key-presses and scale the user
+> >requested brightness change to an appropriate value using the current
+> >lux values.
+> 
+> sony-acpid is already doing this without listening for key events
+> (we can do that but we miss any other different backlight correction
+> otherwise).
 
-On Sat, 30 Apr 2011 11:17:53
-+0100, Alan Cox <alan@lxorguk.ukuu.org.uk> wrote :
-> > --- a/drivers/tty/serial/8250.c
-> > +++ b/drivers/tty/serial/8250.c
-> > @@ -109,6 +109,13 @@ static unsigned int skip_txen_test; /* force
-> > skip of txen test at init time */
-> >  #define CONFIG_HUB6 1
-> >
-> >  #include <asm/serial.h>
-> > +
-> > +/* TS-5500 related stuff */
-> > +#ifdef CONFIG_SERIAL_8250_TS5500_485_TIMER
-> > +#define TS5500_TIMER2_SPEED_ADDR        0x42
-> > +#define TS5500_485_SERIAL_PORT                0x02
-> > +#endif
-> > +
-> >  /*
-> >   * SERIAL_PORT_DFNS tells us about built-in ports that have no
-> >   * standard enumeration mechanism.   Platforms that can find all
-> > @@ -437,6 +444,25 @@ static void au_serial_out(struct uart_port *p,
-> > int offset, int value)
-> >          __raw_writel(value, p->membase + offset);
-> >  }
-> >
-> > +#ifdef CONFIG_SERIAL_8250_TS5500_485_TIMER
-> > +void serial8250_ts5500_set_termios(struct uart_port *port,
-> > +                                   struct ktermios *new,
-> > +                                   struct ktermios *old)
-> > +{
-> > +        u16 speed;
-> > +
-> > +        if (new->c_ospeed >= 9600 && port->line ==
-> > TS5500_485_SERIAL_PORT) {
-> > +                speed = ((115200 * 2) / new->c_ospeed);
-> > +
-> > +                /* This should be written by low byte followed by
-> > high byte */
-> > +                spin_lock_irq(&port->lock);
-> > +                outb((speed & 0x0F), TS5500_TIMER2_SPEED_ADDR);
-> > +                outb((speed >> 8), TS5500_TIMER2_SPEED_ADDR);
-> > +                spin_unlock_irq(&port->lock);
-> > +        }
-> > +}
-> > +#endif
->
-> Please don't put board specific magic in this file, we are desperately
-> trying to get rid of it.
->
-> > +
-> >  static unsigned int tsi_serial_in(struct uart_port *p, int offset)
-> >  {
-> >          unsigned int tmp;
-> > @@ -2464,6 +2490,10 @@ serial8250_do_set_termios(struct uart_port
-> > *port, struct ktermios *termios,
-> >          /* Don't rewrite B0 */
-> >          if (tty_termios_baud_rate(termios))
-> >                  tty_termios_encode_baud_rate(termios, baud, baud);
-> > +
-> > +#ifdef CONFIG_SERIAL_8250_TS5500_485_TIMER
-> > +        serial8250_ts5500_set_termios(port, termios, old);
-> > +#endif
-> >  }
-> >  EXPORT_SYMBOL(serial8250_do_set_termios);
->
-> Provide your own set_termios method and then call into this one (which
-> is why it is exported)
+how many sources of backlight changes do you have? A system should have
+only one application trying to control the backlight, having more than
+one is asking for trouble in the first place.
+Also, if I echo a number to /sys/... directly I would expect that to be
+applied no matter what and without any magic correction going on.
 
-I don't really understand how to do this. I've written my own
-ts5500_serial8250_set_termios() function, which first makes a call to
-serial8250_do_set_termios(), but I don't know how to make the platform
-uses this one now. I've seen the plat_serial8250_port structure which
-has a set_termios field, but I didn't find an example of usage of this
-structure with this field. Maybe that's not the good way to "hook" the
-serial8250_do_set_termios() function.
-Could you please explain how to do this?
+> >At this point you could have a generic software (modulo the not yet
+> >standardized als interface) handling any laptop that has these simpler
+> >features.
+> 
+> The small big issue is that not every notebook use the same LCD
+> panel, so, in theory, different calculations are required (and this
+> also the reason why a model specific parameter list is also provided
+> by every Vaio notebook too). A single suboptimal formula for
+> everybody is not likely to provide satisfactory results.
 
-Regards,
-Vivien.
+this is something else that should be thought of presenting in a unified
+way to userspace. The entire idea of platform drivers is to enable and
+unify how platform specific features are handled. Having each one of
+them diverge to its own custom interface defeats the whole purpose.
+
+> >the question was why sending a "user requested to change
+> >brightness"-event instead of setting the brightness. The calculation
+> >should be done in userspace
+> 
+> ...taking into account both the current
+> user/power_saving_sofware/etc. backlight correction level and the
+> ambient light level. We need to forward both informations to
+> userspace otherwise no calculation is possible.
+
+the backlight change request is initiated in userspace already, why do
+you need to tell userspace that it generated a backlight change request?
+
+So again, can you split the patch in two so that we have the driver in
+one patch and the interaction/integration part in another?
+
+Thanks
+-- 
+mattia
+:wq!
