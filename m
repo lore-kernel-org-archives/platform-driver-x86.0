@@ -1,44 +1,47 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
-Date: Mon, 06 Jun 2011 15:26:42 +0200
-Message-ID: <4DECD592.6000707@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it> <20110604080717.GC7194@kamineko.org> <4DEA4D67.8000009@absence.it> <20110604164021.GA12552@kamineko.org> <4DEA644D.3030109@absence.it> <20110605222401.GA26835@kamineko.org>
+Subject: Re: [PATCH 23/25] sony-laptop: add ALS support
+Date: Mon, 06 Jun 2011 15:51:46 +0200
+Message-ID: <4DECDB72.9050909@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE93AC0.3000506@absence.it> <20110605053110.GA21142@kamineko.org> <4DEC0186.5010209@absence.it> <BANLkTi=szZifnDJcfkDJpxcEuL+FY2B5iA@mail.gmail.com> <20110606130802.GB30602@kamineko.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:41207 "EHLO
-	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757187Ab1FFN0q (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:59303 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751164Ab1FFNvt (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 Jun 2011 09:26:46 -0400
-In-Reply-To: <20110605222401.GA26835@kamineko.org>
+	Mon, 6 Jun 2011 09:51:49 -0400
+In-Reply-To: <20110606130802.GB30602@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Javier Achirica <achirica@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Il 06/06/2011 00:24, Mattia Dongili ha scritto:
->> Sure and I consider to be a good alternative, but it looks to me
->> like being another workaround, it is fine for particular exceptions
->> that need a few remappings, but it should not be the rule, the
->> driver extension. That's why I was asking about this change.
->
-> what is a better solution? having keymaps for every different layout
-> that Sony implemented throught the years
+Il 06/06/2011 15:08, Mattia Dongili ha scritto:
+> i.e. would it work if you always enable managed mode to receive the
+> ambient light events and just let userpace react for automatic dimming?
+> Also, userspace will intercept key-presses and scale the user
+> requested brightness change to an appropriate value using the current
+> lux values.
 
-This is a wrong assumption: the layout never really changed "recently" 
-(I mean, at least 4-5 years, or even more), is still the same since a 
-long time (and it's very likely to stay the same), Sony is just adding 
-keys. For example, there are models with the Zoom In key (Fn-F10), but 
-no Zoom Out (Fn-F9), but on those models Fn-F9 do not generate 
-"scancodes". The same goes, for example, for newer models where the 
-Fn-F1 key (Touchpad toggle) is now present. The hotkeys layout is now 
-stable enough to be used as the default one for every model, causing no 
-problems at all (very old models will continue to work through the udev 
-keymaps already in place - well, just one, because module-sony would no 
-longer be necessary -).
-To answer your question: to me, it looks much better having a single 
-real input driver mapping the right keys for everybody instead of having 
-a fake layout plus a userspace keymap (because just a single keymap is 
-needed).
+sony-acpid is already doing this without listening for key events (we 
+can do that but we miss any other different backlight correction otherwise).
+
+> At this point you could have a generic software (modulo the not yet
+> standardized als interface) handling any laptop that has these simpler
+> features.
+
+The small big issue is that not every notebook use the same LCD panel, 
+so, in theory, different calculations are required (and this also the 
+reason why a model specific parameter list is also provided by every 
+Vaio notebook too). A single suboptimal formula for everybody is not 
+likely to provide satisfactory results.
+
+> the question was why sending a "user requested to change
+> brightness"-event instead of setting the brightness. The calculation
+> should be done in userspace
+
+...taking into account both the current user/power_saving_sofware/etc. 
+backlight correction level and the ambient light level. We need to 
+forward both informations to userspace otherwise no calculation is possible.
