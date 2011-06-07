@@ -1,83 +1,87 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 23/25] sony-laptop: add ALS support
-Date: Tue, 07 Jun 2011 01:26:06 +0200
-Message-ID: <4DED620E.60209@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE93AC0.3000506@absence.it> <20110605053110.GA21142@kamineko.org> <4DEC0186.5010209@absence.it> <BANLkTi=szZifnDJcfkDJpxcEuL+FY2B5iA@mail.gmail.com> <20110606130802.GB30602@kamineko.org> <4DECDB72.9050909@absence.it> <20110606222405.GA32602@kamineko.org>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Tue, 07 Jun 2011 07:48:59 -0600
+Message-ID: <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com>
+References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com>
+ <4DE57CD6.5030609@flanto.de>
+ <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com>
+ <4DE74CEF.3020608@flanto.de>
+ <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
+ <4DE8D876.7060304@flanto.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:36350 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751780Ab1FFX0M (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 Jun 2011 19:26:12 -0400
-In-Reply-To: <20110606222405.GA32602@kamineko.org>
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:52802 "EHLO
+	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753023Ab1FGNtI (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:4:1>);
+	Tue, 7 Jun 2011 09:49:08 -0400
+In-Reply-To: <4DE8D876.7060304@flanto.de>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Javier Achirica <achirica@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: ike.pan@canonical.com, heyho@flanto.de
+Cc: Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
 
-Il 07/06/2011 00:24, Mattia Dongili ha scritto:
->> sony-acpid is already doing this without listening for key events
->> (we can do that but we miss any other different backlight correction
->> otherwise).
->
-> how many sources of backlight changes do you have?
+=E6=96=BC =E4=BA=94=EF=BC=8C2011-06-03 =E6=96=BC 14:49 +0200=EF=BC=8CFl=
+orian Heyer =E6=8F=90=E5=88=B0=EF=BC=9A
+> On 02.06.2011 21:16, Joey Lee wrote:
+> > This is a problem on "Fn+F5" and "wireless hardware switch", does "=
+=46n
+> > +F5" also can control wireless state? If yes, then it's a problem i=
+t
+> > have conflict with "wirelss hardware switch".
+> >=20
+> > I mean, even 0x0C is "64", the Fn+F5 still can turn-off wireless, d=
+oes
+> > it right?
+> > If the answer is yes, then we cann't use 0x0C to be killswitch stat=
+e.
+>=20
+> fn+f5 doesn't do anything no matter what state the wifi switch is.
+> Personally i wouldn't mind if only the wifi switch is supported, i me=
+an,
+> you don't need a key combination if you have a real switch for wifi
+> (de)activation.
+>=20
 
-Potentially many, user keys, power saving options, proximity sensors, 
-als, etc. and any other user defined (eg. low backlight setting when 
-compiling software).
+I thought need to check with Ike for more detail why the Fn+F5 key not
+work on S205.
+As I know on Thinkpad machine, the hardware switch causes killswitch se=
+t
+to hard-block, and Fn+F5 causes killswitch set to soft-block.
 
-> A system should have
-> only one application trying to control the backlight, having more than
-> one is asking for trouble in the first place.
+Ike,=20
+need your comments for Fn+F5 key and wireless hardware switch on
+ideapad. How does it implement on ideapad?
+  	- press Fn+F5: soft-block wireless killswitch?
+	- wireless hardware switch: hard-block wireless killswitch?
 
-But it is not when using sony-acpid.
+> > What the value in 0x51 and 0x52? is 0, 1 or?
+>=20
+> It's 0!
+>=20
+> regards
 
-> Also, if I echo a number to /sys/... directly I would expect that to be
-> applied no matter what and without any magic correction going on.
+0x52 is zero maybe means the Fn+F5 will not do anything.
+Could you please help to double check it by the following ways?
 
-Again another wrong assumption, IMO: if the user enables the autodimming 
-feature everything should follow this rule. You are saying is that if 
-you echo to sysfs, you really want to mess things up... really hard to 
-believe.
+ a. Please make sure CONFIG_ACPI_DEBUG=3Dy then run the following comma=
+nd
+by root:
 
->> The small big issue is that not every notebook use the same LCD
->> panel, so, in theory, different calculations are required (and this
->> also the reason why a model specific parameter list is also provided
->> by every Vaio notebook too). A single suboptimal formula for
->> everybody is not likely to provide satisfactory results.
->
-> this is something else that should be thought of presenting in a unified
-> way to userspace.
+echo 0xFFFFFFFF >/sys/module/acpi/parameters/debug_layer; echo 0xF >/sy=
+s/module/acpi/parameters/debug_level=20
 
-Frankly, I cannot see how, especially right now... We have some hardware 
-designed in a certain way that allows to be used only in that way, small 
-changes are possible, but I really doubt that what you are asking for is 
-possible.
+	Then please press Fn+F5 key and attached dmesg on mail, we can know
+find out which _Q method mapping to this key.
 
-> The entire idea of platform drivers is to enable and
-> unify how platform specific features are handled.
+ b. Please run this command by root:
+	perl acer_ec.pl :=3D 0x52 1
+  =20
+    Then press Fn+F5 key, does it have anything changed?
 
-Sure, whenever possible.
 
-> Having each one of
-> them diverge to its own custom interface defeats the whole purpose.
-
-I know, it depends on whether the "hardware support" purpose come first 
-or not. If it doesn't, the patch have to be rejected, but I think that a 
-poor hardware support will take users away from linux on these devices.
-
-> the backlight change request is initiated in userspace already,
-
-Right, but how can you be sure when you have a backlight device that can 
-be accessed by anything?
-
-> So again, can you split the patch in two so that we have the driver in
-> one patch and the interaction/integration part in another?
-
-Please specify "interaction/integration part". There is almost nothing 
-to be removed if you want code that makes sense and something working, 
-if you specify a particular function I'll try to remove it, if it is 
-feasible, otherwise be more specific, please.
+Thank's
+Joey Lee
