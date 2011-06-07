@@ -1,38 +1,118 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
-Date: Tue, 07 Jun 2011 19:59:17 +0200
-Message-ID: <4DEE66F5.1020406@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it> <20110604080717.GC7194@kamineko.org> <4DEA4D67.8000009@absence.it> <20110604164021.GA12552@kamineko.org> <4DEA644D.3030109@absence.it> <20110605222401.GA26835@kamineko.org> <4DECD592.6000707@absence.it> <20110607142332.GA4087@kamineko.org> <4DEE4094.8040300@absence.it> <20110607162413.GC4087@kamineko.org>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH 23/25] sony-laptop: add ALS support
+Date: Wed, 8 Jun 2011 07:39:14 +0900
+Message-ID: <20110607223912.GB10612@kamineko.org>
+References: <4DE93AC0.3000506@absence.it>
+ <20110605053110.GA21142@kamineko.org>
+ <4DEC0186.5010209@absence.it>
+ <BANLkTi=szZifnDJcfkDJpxcEuL+FY2B5iA@mail.gmail.com>
+ <20110606130802.GB30602@kamineko.org>
+ <4DECDB72.9050909@absence.it>
+ <20110606222405.GA32602@kamineko.org>
+ <4DED620E.60209@absence.it>
+ <20110607160738.GB4087@kamineko.org>
+ <4DEE64EB.8010309@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:54539 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754070Ab1FGR7Z (ORCPT
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:55354 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750899Ab1FGWjU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 Jun 2011 13:59:25 -0400
-In-Reply-To: <20110607162413.GC4087@kamineko.org>
+	Tue, 7 Jun 2011 18:39:20 -0400
+Received: by pvg12 with SMTP id 12so1093595pvg.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jun 2011 15:39:19 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <4DEE64EB.8010309@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Marco Chiappero <marco@absence.it>
+Cc: Javier Achirica <achirica@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Il 07/06/2011 18:24, Mattia Dongili ha scritto:
-> On Tue, Jun 07, 2011 at 05:15:32PM +0200, Marco Chiappero wrote:
->> Il 07/06/2011 16:23, Mattia Dongili ha scritto:
-> ...
->>> lovely, does it make any difference if udev maps those keys and the
->>> driver instead just sends FN_F* making old and new models send the same
->>> keycodes and scancodes?
->>
->> Models equipped with the SNC device are already using the same
->> scancodes, there is no need to translate them twice.
->
-> having the translation layer makes them consistent with all the other
-> hotkeys on all vaios.
+On Tue, Jun 07, 2011 at 07:50:35PM +0200, Marco Chiappero wrote:
+> Il 07/06/2011 18:07, Mattia Dongili ha scritto:
+> >How do you coordinate different policies, one trying to increase and one
+> >trying to decrease brightness?
+> 
+> It depends on the purpose, if I just want to lower the brightness
+> when I'm not in front of the notebook, I just do it, it doesn't
+> conflict with the power saving options or the ambient light level.
+> If I just want to write a shortcut that rises a bit the backlight
+> level before calling my favorite video player I can do it, nothing
+> is broken.
+> 
+> >Or even, say you have two sony-acpid-like applications working with
+> >different policies,
+> 
+> This makes no sense at all.
+> 
+> >Do you see where I'm going?
+> 
+> To a perfect design it's not there, with other side effects, that is
 
-In this case I can't see how consistency is relevant (especially if we 
-think that it's a nonexistent layout!). Moreover every SNC equipped 
-notebooks use the same map while SPIC related code is going to be 
-deprecated.
+not really. You're stripping my mails a lot...
+I'm trying to demonstrate that the way you solved the multiple
+brightness writers problem would not work or at least that your solution
+as the same problem as the original issue.
+Making the acpi_video sysfs nodes ineffective and creating an alternate
+custom backlight regulation entry makes no sense and is a workaround
+that is not needed.
+
+[reshuffling the discussion a bit to bring pieces together]
+> >>Right, but how can you be sure when you have a backlight device that
+> >>can be accessed by anything?
+> >
+> >I'm not following you here. Sure about what? Also, is als_backlight only
+> >accessible to a few privileged ones?
+> 
+> No, but what is supposed to use it?
+
+anything can use it. The fact that for now there is only your deamon
+using it doesn't mean that nothing else can use it. It's exactly the
+same situation you have with the standard acpi video backlight
+regulation where you say above you cannot be sure.
+
+> >I don't see how presenting illumination data and correction factors and
+> >giving a way to change lid backlight is such an unreasonable request.
+> 
+> This is not an unreasonable request, and sony-acpid is exactly doing that.
+> Your request is to clone sony-acpid and merge it into every
+> available DE (which still means that the "unification" or
+> "interface" purpose is broken, because userspace have to know
+> hardware/model specific details).
+
+like what? if correction factors are provided what else is missing?
+Do you also really think that DEs would not try to integrate the
+function that sony-acpid is providing in their own framework?
+
+...
+> >>Please specify "interaction/integration part". There is almost
+> >>nothing to be removed if you want code that makes sense and
+> >>something working, if you specify a particular function I'll try to
+> >>remove it, if it is feasible, otherwise be more specific, please.
+> >
+> >I'd just like to see just the ALS driver in one patch, all the
+> >managed/backlight stuff in another.
+> 
+> Conceptually there are two drivers... that said, do you mean any
+> attribute with "all" and "stuff"? Splitting the patch will require a
+> certain amount of work and will result in a broken patch. I'll try
+> to do it, but I don't have much free time at the moment and I prefer
+> to work on patches that have a chance to be included soon.
+
+actually having the two separate would make merging at least some of the
+patch easier. I'm fine with the ALS driver (i.e. all the als_device_ops
+and als_lux/power/kelvin) part. The whole als_backlight/managed mode I
+wouldn't want to see merged as is. As I said before, I think we should
+always set managed mode and intercept the GPE notifications sending an
+(u?)event to userspace backlight changes and just chainging the
+backlight when the user writes to
+/sys/class/backlight/acpi_video/brightness.
+A fine grained control is already provided with acpi_backlight=vendor,
+potentially we could ask the acpi people to not take the device for
+specific models or anyway a way to force the vendor driver to take over
+backlight regulation without the need for a kernel parameter.
+
+-- 
+mattia
+:wq!
