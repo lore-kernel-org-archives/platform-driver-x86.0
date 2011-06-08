@@ -1,47 +1,55 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 12/25] sony-laptop: input core improvements
- improvements
-Date: Wed, 08 Jun 2011 02:26:26 -0600
-Message-ID: <4DEFBED2020000230002DFA4@novprvlin0050.provo.novell.com>
-References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it>
- <20110604080717.GC7194@kamineko.org> <4DEA0C27.1000508@absence.it>
+From: Anisse Astier <anisse@astier.eu>
+Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
+Date: Wed, 8 Jun 2011 10:52:18 +0200
+Message-ID: <20110608105218.29a7e776@destiny.ordissimo>
+References: <4DDE9B92.3090504@users.sourceforge.net>
+	<20110527163346.GD16769@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:41555 "EHLO
-	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754217Ab1FHI0a (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:6:2>);
-	Wed, 8 Jun 2011 04:26:30 -0400
-In-Reply-To: <4DEA0C27.1000508@absence.it>
-Content-Disposition: inline
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:57051 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752429Ab1FHIwf (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 8 Jun 2011 04:52:35 -0400
+Received: by wwa36 with SMTP id 36so324436wwa.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2011 01:52:34 -0700 (PDT)
+In-Reply-To: <20110527163346.GD16769@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: marco@absence.it
-Cc: dmitry.torokhov@gmail.com, malattia@linux.it, johannes@sipsolutions.net, mjg59@srcf.ucam.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Alberto Mardegan <mardy@users.sourceforge.net>, platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>, Ike Panhc <ike.pan@canonical.com>
 
-=E6=96=BC =E5=85=AD=EF=BC=8C2011-06-04 =E6=96=BC 12:42 +0200=EF=BC=8CMa=
-rco Chiappero =E6=8F=90=E5=88=B0=EF=BC=9A
-> Il 04/06/2011 10:07, Mattia Dongili ha scritto:
-> > On Fri, Jun 03, 2011 at 05:43:42PM +0200, Marco Chiappero wrote:
-> >> The code is now forwarding the SW_RFKILL_ALL event; added a couple
-> >
-> > I don't think we should do this.
->=20
-> As far as I know this event should be forwarded and the rfkill-input=20
-> code removed as soon as there is enough userspace support. Another=20
+On Fri, 27 May 2011 17:33:46 +0100, Matthew Garrett <mjg59@srcf.ucam.org> wrote :
 
-There already have a urfkill daemon on userland has good support
-killswitch:
-http://www.freedesktop.org/wiki/Software/urfkill
+> On Thu, May 26, 2011 at 09:27:30PM +0300, Alberto Mardegan wrote:
+> 
+> > I would use this code as a starting point (kudos to Javier):
+> > http://gitorious.org/iaps/lsrot/blobs/master/lsrot.c
+> > The code uses the WMI interfaces to get notified of coarse orientation
+> > changes.
+> > But how should these changes be reported to userspace? Should they go
+> > through the input subsystem (I didn't find any suitable key codes to
+> > report these events), or via the /sys filesystem? In the latter case, is
+> > there a convention on naming and reporting data from devices of this kind?
+> 
+> If we're not interested in providing continual fine-grained data then 
+> the easiest approach may be to present as an input device and then just 
+> send updated values whenever you receive the coarse udpate signal. But 
+> you probably want to bring this up on LKML so we can make sure 
+> everyone's exposing this in the same way.
+> 
+We already had this discussion here:
+http://www.spinics.net/lists/platform-driver-x86/msg01850.html
+and the conclusion was that if you need to poll the device to get the
+fined grain data, and you have a separate event(was ACPI hotkey, not
+WMI) for coarse orientation changes, you should send a KOBJ_CHANGE uevent
+for that.
 
-But,=20
-rfkill-input will not removed:
-http://www.spinics.net/lists/linux-acpi/msg32465.html
-
-The above information for you reference.
+IMHO, deciding if we need or not "continual fine-grained data" is policy
+and up to userspace.
 
 
-Thank's a lot!
-Joey Lee
+--
+Anisse
