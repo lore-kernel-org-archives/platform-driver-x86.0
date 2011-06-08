@@ -1,37 +1,45 @@
-From: Alberto Mardegan <mardy@users.sourceforge.net>
-Subject: Re: Accelerometer and orientation sensor on Lenovo Ideapad S10-3t
-Date: Wed, 08 Jun 2011 13:49:09 +0300
-Message-ID: <4DEF53A5.2040903@users.sourceforge.net>
-References: <4DDE9B92.3090504@users.sourceforge.net>	<20110527163346.GD16769@srcf.ucam.org> <20110608105218.29a7e776@destiny.ordissimo>
+From: Marco Chiappero <marco@absence.it>
+Subject: [PATCH] sony-laptop: fix potential improper handle usage
+Date: Wed, 08 Jun 2011 20:49:04 +0200
+Message-ID: <4DEFC420.4040201@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f42.google.com ([74.125.82.42]:62834 "EHLO
-	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754238Ab1FHKtN (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:34490 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751538Ab1FHStH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2011 06:49:13 -0400
-Received: by wwk4 with SMTP id 4so3332934wwk.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jun 2011 03:49:12 -0700 (PDT)
-In-Reply-To: <20110608105218.29a7e776@destiny.ordissimo>
+	Wed, 8 Jun 2011 14:49:07 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Anisse Astier <anisse@astier.eu>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, "Javier S. Pedro" <maemo@javispedro.com>, Ike Panhc <ike.pan@canonical.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-On 06/08/2011 11:52 AM, Anisse Astier wrote:
-> We already had this discussion here:
-> http://www.spinics.net/lists/platform-driver-x86/msg01850.html
-> and the conclusion was that if you need to poll the device to get the
-> fined grain data, and you have a separate event(was ACPI hotkey, not
-> WMI) for coarse orientation changes, you should send a KOBJ_CHANGE uevent
-> for that.
+SNC handles are positive numbers, all handles are valid with the sole 
+exception of handle 0x0. This patch fixes sony_find_snc_handle, now 
+using unsigned int for the handle variable and returning -1 when 
+argument its value is 0x0.
 
-Thanks Anisse for pointing that thread out.
 
-Ciao,
-   Alberto
+Signed-off-by: Marco Chiappero <marco@absence.it>
+---
 
--- 
-http://blog.mardy.it <-- geek in un lingua international!
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -811,12 +811,12 @@ static int sony_nc_handles_cleanup(struc
+  	return 0;
+  }
+
+-static int sony_find_snc_handle(int handle)
++static int sony_find_snc_handle(unsigned int handle)
+  {
+  	int i;
+
+-	/* not initialized yet, return early */
+-	if (!handles)
++	/* not initialized yet or invalid handle, return early */
++	if (!handles || !handle)
+  		return -1;
+
+  	for (i = 0; i < 0x10; i++) {
