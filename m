@@ -1,41 +1,47 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] platform-drivers-x86: dell-laptop: Remove unneeded
- mutex_init() for buffer_mutex
-Date: Wed, 08 Jun 2011 14:56:42 +0800
-Message-ID: <1307516202.8028.2.camel@phoenix>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH 12/25] sony-laptop: input core improvements
+ improvements
+Date: Wed, 08 Jun 2011 02:26:26 -0600
+Message-ID: <4DEFBED2020000230002DFA4@novprvlin0050.provo.novell.com>
+References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it>
+ <20110604080717.GC7194@kamineko.org> <4DEA0C27.1000508@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:37847 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753344Ab1FHG4u (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jun 2011 02:56:50 -0400
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:41555 "EHLO
+	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754217Ab1FHI0a (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:6:2>);
+	Wed, 8 Jun 2011 04:26:30 -0400
+In-Reply-To: <4DEA0C27.1000508@absence.it>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: marco@absence.it
+Cc: dmitry.torokhov@gmail.com, malattia@linux.it, johannes@sipsolutions.net, mjg59@srcf.ucam.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-DEFINE_MUTEX() will automatically initialize buffer_mutex,
-no need to call mutex_init() in dell_init().
+=E6=96=BC =E5=85=AD=EF=BC=8C2011-06-04 =E6=96=BC 12:42 +0200=EF=BC=8CMa=
+rco Chiappero =E6=8F=90=E5=88=B0=EF=BC=9A
+> Il 04/06/2011 10:07, Mattia Dongili ha scritto:
+> > On Fri, Jun 03, 2011 at 05:43:42PM +0200, Marco Chiappero wrote:
+> >> The code is now forwarding the SW_RFKILL_ALL event; added a couple
+> >
+> > I don't think we should do this.
+>=20
+> As far as I know this event should be forwarded and the rfkill-input=20
+> code removed as soon as there is enough userspace support. Another=20
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/dell-laptop.c |    1 -
- 1 files changed, 0 insertions(+), 1 deletions(-)
+There already have a urfkill daemon on userland has good support
+killswitch:
+http://www.freedesktop.org/wiki/Software/urfkill
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index d3841de..dbe336e 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -632,7 +632,6 @@ static int __init dell_init(void)
- 	if (!bufferpage)
- 		goto fail_buffer;
- 	buffer = page_address(bufferpage);
--	mutex_init(&buffer_mutex);
- 
- 	ret = dell_setup_rfkill();
- 
--- 
-1.7.4.1
+But,=20
+rfkill-input will not removed:
+http://www.spinics.net/lists/linux-acpi/msg32465.html
+
+The above information for you reference.
+
+
+Thank's a lot!
+Joey Lee
