@@ -1,51 +1,41 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Fri, 10 Jun 2011 14:31:50 +0200
-Message-ID: <4DF20EB6.2080803@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE9008D.7040504@absence.it> <20110604075815.GA7194@kamineko.org>
+From: Jesper Juhl <jj@chaosbits.net>
+Subject: Re: Reproducible general protection fault: 0000 - hdapsd exited with
+ preempt_count 1 - kernel 2.6.38.8
+Date: Sat, 11 Jun 2011 17:02:30 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1106111701240.23835@swampdragon.chaosbits.net>
+References: <alpine.LNX.2.00.1106101001360.19998@swampdragon.chaosbits.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:37342 "EHLO
-	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755770Ab1FJMb4 (ORCPT
+Received: from swampdragon.chaosbits.net ([90.184.90.115]:10760 "EHLO
+	swampdragon.chaosbits.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758552Ab1FKPKx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 10 Jun 2011 08:31:56 -0400
-In-Reply-To: <20110604075815.GA7194@kamineko.org>
+	Sat, 11 Jun 2011 11:10:53 -0400
+In-Reply-To: <alpine.LNX.2.00.1106101001360.19998@swampdragon.chaosbits.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Frank Seidel <frank@f-seidel.de>, linux-input@vger.kernel.org
 
-Il 04/06/2011 09:58, Mattia Dongili ha scritto:
+On Fri, 10 Jun 2011, Jesper Juhl wrote:
 
->>   struct kbd_backlight {
->> -	int mode;
->> -	int timeout;
->> +	unsigned int base;
->> +	unsigned int mode;
->> +	unsigned int timeout;
->>   	struct device_attribute mode_attr;
->>   	struct device_attribute timeout_attr;
->>   };
->> -
->>   static struct kbd_backlight *kbdbl_handle;
->> +static int sony_kbd_handle = -1;
->
-> there seems to be no real point initializing this to -1. Also, can it be
-> made part of the struct above?
+> Hi
+> 
+> I just noticed a GPF during bootup of my laptop :
+> 
+> [   18.944171] general protection fault: 0000 [#1] PREEMPT SMP 
+> [   18.944243] last sysfs file: /sys/devices/virtual/input/input13/event13/uevent
+> [   18.944295] CPU 0 
+> [   18.944307] Modules linked in: joydev hdaps uvcvideo btusb bluetooth usbhid hid videodev v4l2_compat_ioctl32 snd_hda_codec_hdmi snd_hda_codec_conexant vboxnetadp vboxnetflt vboxdrv snd_hda_intel snd_hda_codec cpufreq_ondemand snd_hwdep arc4 sg ecb iwlagn msr acpi_cpufreq freq_table mperf i915 tp_smapi thinkpad_ec ehci_hcd thinkpad_acpi drm_kms_helper i2c_i801 snd_pcm iwlcore snd_timer mac80211 e1000e snd_page_alloc drm cfg80211 firewire_ohci i2c_algo_bit snd i2c_core usbcore rfkill pcspkr firewire_core serio_raw sdhci_pci evdev iTCO_wdt sdhci tpm_tis soundcore tpm mmc_core wmi intel_ips intel_agp nvram crc_itu_t iTCO_vendor_support battery intel_gtt tpm_bios ac video psmouse thermal processor button ext4 mbcache jbd2 crc16 sr_mod cdrom sd_mod ahci libahci libata scsi_mod
+> [   18.944928] 
+> [   18.946142] Pid: 978, comm: hdapsd Not tainted 2.6.38-ARCH #1 LENOVO 4384GJG/4384GJG
+<...>
 
-I'm including these two changes in every patch that provides a new 
-capability using different handles.
-I need some more time to prepare the new patches, but before resending 
-I'd like to hear some more feedbacks: removing any acpi notification in 
-patch #8, do patches from 1 to 9 look fine? Is it possible to merge 
-them, as they are, as soon as I repost them? If some changes are 
-required please let me know. I've also posted a patch fixing the "0x0" 
-handle issue ("fix potential improper handle usage"), I suppose it to be 
-okay, can I include it in my original source file before creating the 
-patches? Or should I include that patch in the patchset instead?
+Just tested 2.6.39.1 and I cannot reproduce the GPF with that kernel, so 
+it seems this has been fixed already.
 
-Thanks
+-- 
+Jesper Juhl <jj@chaosbits.net>       http://www.chaosbits.net/
+Don't top-post http://www.catb.org/jargon/html/T/top-post.html
+Plain text mails only, please.
