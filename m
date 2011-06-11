@@ -1,39 +1,44 @@
 From: Jesper Juhl <jj@chaosbits.net>
-Subject: Re: Reproducible general protection fault: 0000 - hdapsd exited with
- preempt_count 1 - kernel 2.6.38.8
-Date: Sat, 11 Jun 2011 17:02:30 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1106111701240.23835@swampdragon.chaosbits.net>
-References: <alpine.LNX.2.00.1106101001360.19998@swampdragon.chaosbits.net>
+Subject: [PATCH] platform, compal: Fix mem leak in compal_probe()
+Date: Sat, 11 Jun 2011 19:02:42 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1106111858490.23835@swampdragon.chaosbits.net>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from swampdragon.chaosbits.net ([90.184.90.115]:10760 "EHLO
-	swampdragon.chaosbits.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758552Ab1FKPKx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 11 Jun 2011 11:10:53 -0400
-In-Reply-To: <alpine.LNX.2.00.1106101001360.19998@swampdragon.chaosbits.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Frank Seidel <frank@f-seidel.de>, linux-input@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Lennart Poettering <mzxreary@0pointer.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 10 Jun 2011, Jesper Juhl wrote:
+We'll leak the memory allocated to 'data' in 
+drivers/platform/x86/compal-laptop.c::compal_probe() if 
+sysfs_create_group() doesn't return 0.
+Fix the leak by freeing the memory in that case.
 
-> Hi
-> 
-> I just noticed a GPF during bootup of my laptop :
-> 
-> [   18.944171] general protection fault: 0000 [#1] PREEMPT SMP 
-> [   18.944243] last sysfs file: /sys/devices/virtual/input/input13/event13/uevent
-> [   18.944295] CPU 0 
-> [   18.944307] Modules linked in: joydev hdaps uvcvideo btusb bluetooth usbhid hid videodev v4l2_compat_ioctl32 snd_hda_codec_hdmi snd_hda_codec_conexant vboxnetadp vboxnetflt vboxdrv snd_hda_intel snd_hda_codec cpufreq_ondemand snd_hwdep arc4 sg ecb iwlagn msr acpi_cpufreq freq_table mperf i915 tp_smapi thinkpad_ec ehci_hcd thinkpad_acpi drm_kms_helper i2c_i801 snd_pcm iwlcore snd_timer mac80211 e1000e snd_page_alloc drm cfg80211 firewire_ohci i2c_algo_bit snd i2c_core usbcore rfkill pcspkr firewire_core serio_raw sdhci_pci evdev iTCO_wdt sdhci tpm_tis soundcore tpm mmc_core wmi intel_ips intel_agp nvram crc_itu_t iTCO_vendor_support battery intel_gtt tpm_bios ac video psmouse thermal processor button ext4 mbcache jbd2 crc16 sr_mod cdrom sd_mod ahci libahci libata scsi_mod
-> [   18.944928] 
-> [   18.946142] Pid: 978, comm: hdapsd Not tainted 2.6.38-ARCH #1 LENOVO 4384GJG/4384GJG
-<...>
+Signed-off-by: Jesper Juhl <jj@chaosbits.net>
+---
+ compal-laptop.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Just tested 2.6.39.1 and I cannot reproduce the GPF with that kernel, so 
-it seems this has been fixed already.
+	Compile tested only.
+
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index 3f204fd..8877b83 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -1030,8 +1030,10 @@ static int __devinit compal_probe(struct platform_device *pdev)
+ 	initialize_fan_control_data(data);
+ 
+ 	err = sysfs_create_group(&pdev->dev.kobj, &compal_attribute_group);
+-	if (err)
++	if (err) {
++		kfree(data);
+ 		return err;
++	}
+ 
+ 	data->hwmon_dev = hwmon_device_register(&pdev->dev);
+ 	if (IS_ERR(data->hwmon_dev)) {
+
 
 -- 
 Jesper Juhl <jj@chaosbits.net>       http://www.chaosbits.net/
