@@ -1,46 +1,84 @@
-From: Jesper Juhl <jj@chaosbits.net>
-Subject: [PATCH] platform, compal: Fix mem leak in compal_probe()
-Date: Sat, 11 Jun 2011 19:02:42 +0200 (CEST)
-Message-ID: <alpine.LNX.2.00.1106111858490.23835@swampdragon.chaosbits.net>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH 2/25] sony-laptop: simple_strtoul replaced by
+ strict_strtoul
+Date: Mon, 13 Jun 2011 06:56:58 +0900
+Message-ID: <20110612215657.GA31095@kamineko.org>
+References: <4DE8FC4A.9010401@absence.it>
+ <4DE8FD88.9050302@absence.it>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Lennart Poettering <mzxreary@0pointer.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-px0-f179.google.com ([209.85.212.179]:52818 "EHLO
+	mail-px0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754233Ab1FLV5A (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 12 Jun 2011 17:57:00 -0400
+Received: by pxi2 with SMTP id 2so2578602pxi.10
+        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2011 14:56:59 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <4DE8FD88.9050302@absence.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Marco Chiappero <marco@absence.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-We'll leak the memory allocated to 'data' in 
-drivers/platform/x86/compal-laptop.c::compal_probe() if 
-sysfs_create_group() doesn't return 0.
-Fix the leak by freeing the memory in that case.
+On Fri, Jun 03, 2011 at 05:28:08PM +0200, Marco Chiappero wrote:
+> Any occurrence of simple_strtoul has been replaced with the better
+> strict_strtoul.
 
-Signed-off-by: Jesper Juhl <jj@chaosbits.net>
----
- compal-laptop.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+you should probably say why it's better.
 
-	Compile tested only.
-
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 3f204fd..8877b83 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -1030,8 +1030,10 @@ static int __devinit compal_probe(struct platform_device *pdev)
- 	initialize_fan_control_data(data);
- 
- 	err = sysfs_create_group(&pdev->dev.kobj, &compal_attribute_group);
--	if (err)
-+	if (err) {
-+		kfree(data);
- 		return err;
-+	}
- 
- 	data->hwmon_dev = hwmon_device_register(&pdev->dev);
- 	if (IS_ERR(data->hwmon_dev)) {
-
-
+> Signed-off-by: Marco Chiappero <marco@absence.it>
+> ---
+> 
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -919,7 +919,8 @@ static ssize_t sony_nc_sysfs_store(struc
+>  	if (count > 31)
+>  		return -EINVAL;
+> 
+> -	value = simple_strtoul(buffer, NULL, 10);
+> +	if (strict_strtoul(buffer, 10, &value))
+> +		return -EINVAL;
+> 
+>  	if (item->validate)
+>  		value = item->validate(SNC_VALIDATE_IN, value);
+> @@ -2437,7 +2438,9 @@ static ssize_t sony_pic_wwanpower_store(
+>  	if (count > 31)
+>  		return -EINVAL;
+> 
+> -	value = simple_strtoul(buffer, NULL, 10);
+> +	if (strict_strtoul(buffer, 10, &value))
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&spic_dev.lock);
+>  	__sony_pic_set_wwanpower(value);
+>  	mutex_unlock(&spic_dev.lock);
+> @@ -2474,7 +2477,9 @@ static ssize_t sony_pic_bluetoothpower_s
+>  	if (count > 31)
+>  		return -EINVAL;
+> 
+> -	value = simple_strtoul(buffer, NULL, 10);
+> +	if (strict_strtoul(buffer, 10, &value))
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&spic_dev.lock);
+>  	__sony_pic_set_bluetoothpower(value);
+>  	mutex_unlock(&spic_dev.lock);
+> @@ -2513,7 +2518,9 @@ static ssize_t sony_pic_fanspeed_store(s
+>  	if (count > 31)
+>  		return -EINVAL;
+> 
+> -	value = simple_strtoul(buffer, NULL, 10);
+> +	if (strict_strtoul(buffer, 10, &value))
+> +		return -EINVAL;
+> +
+>  	if (sony_pic_set_fanspeed(value))
+>  		return -EIO;
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 -- 
-Jesper Juhl <jj@chaosbits.net>       http://www.chaosbits.net/
-Don't top-post http://www.catb.org/jargon/html/T/top-post.html
-Plain text mails only, please.
+mattia
+:wq!
