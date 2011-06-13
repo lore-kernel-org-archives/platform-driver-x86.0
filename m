@@ -1,68 +1,78 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Mon, 13 Jun 2011 07:24:45 +0900
-Message-ID: <20110612222444.GC31095@kamineko.org>
-References: <4DE8FC4A.9010401@absence.it>
- <4DE9008D.7040504@absence.it>
- <20110604075815.GA7194@kamineko.org>
- <4DF20EB6.2080803@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
+Date: Mon, 13 Jun 2011 02:01:26 +0200
+Message-ID: <4DF55356.9020405@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:45801 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753779Ab1FLWYr (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:43480 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754234Ab1FMABv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 12 Jun 2011 18:24:47 -0400
-Received: by pzk9 with SMTP id 9so1885701pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 Jun 2011 15:24:47 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <4DF20EB6.2080803@absence.it>
+	Sun, 12 Jun 2011 20:01:51 -0400
+In-Reply-To: <20110612222123.GB31095@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
+To: Mattia Dongili <malattia@linux.it>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 10, 2011 at 02:31:50PM +0200, Marco Chiappero wrote:
-> Il 04/06/2011 09:58, Mattia Dongili ha scritto:
-> 
-> >>  struct kbd_backlight {
-> >>-	int mode;
-> >>-	int timeout;
-> >>+	unsigned int base;
-> >>+	unsigned int mode;
-> >>+	unsigned int timeout;
-> >>  	struct device_attribute mode_attr;
-> >>  	struct device_attribute timeout_attr;
-> >>  };
-> >>-
-> >>  static struct kbd_backlight *kbdbl_handle;
-> >>+static int sony_kbd_handle = -1;
-> >
-> >there seems to be no real point initializing this to -1. Also, can it be
-> >made part of the struct above?
-> 
-> I'm including these two changes in every patch that provides a new
-> capability using different handles.
-> I need some more time to prepare the new patches, but before
-> resending I'd like to hear some more feedbacks: removing any acpi
-> notification in patch #8, do patches from 1 to 9 look fine? Is it
-> possible to merge them, as they are, as soon as I repost them? If
+Il 13/06/2011 00:21, Mattia Dongili ha scritto:
+>> +static int sony_nc_snc_setup(struct platform_device *pd)
+>
+> To be honest these sony_nc_snc_* functions are a bit poorly named.
+> sony_nc_ was already supposed to be a partial expansion of SNC so this
+> whole thing is a bit redundant now. what about
+> sony_nc_setup/sony_nc_cleanup?
 
-potentially, if they seem safe yes. I'd rather review what you have than
-a stale version that you're already changing so please send the patches
-over and then we'll see.
+Yes I know but in the hurry I forgot to think about that, I will use 
+this new naming schema.
 
-> some changes are required please let me know. I've also posted a
-> patch fixing the "0x0" handle issue ("fix potential improper handle
-> usage"), I suppose it to be okay, can I include it in my original
-> source file before creating the patches? Or should I include that
-> patch in the patchset instead?
+>> +{
+>> +	unsigned int i, string[4], bitmask, result;
+>> +
+>> +	for (i = 0; i<  4; i++) {
+>> +		if (acpi_callsetfunc(sony_nc_acpi_handle,
+>> +				"SN00", i,&string[i]))
+>> +			return -EIO;
+>> +	}
+>> +	if (strncmp("SncSupported", (char *) string, 0x10)) {
+>> +		pr_info("SNC device present but not supported by hardware");
+>> +		return -1;
+>> +	}
+>
+> oh lord.
 
-either way, that patch is not compulsory for any of the functionalities
-you posted.
+Could you please avoid pointless comments like the one above?
 
--- 
-mattia
-:wq!
+> For the record, this is:
+> 	 Store (0x53636E53, Index (CFGI, Zero))
+> 	 Store (0x6F707075, Index (CFGI, One))
+> 	 Store (0x64657472, Index (CFGI, 0x02))
+
+and Store (0x0100, Index (CFGI, 0x03))
+It's a 16 bytes string.
+
+> But does it ever happen that it's not supported?
+
+Well, who knows, but I think it's there for a reason. I suppose that in 
+the future the SNC can be removed or improved (eg. using more SN methods 
+or more offsets), it might happen to see strings like "SncDeprecated" or 
+"SncRevision2". Probably the error string I wrote is misleading.
+
+> Also, not all models
+> seem to have those fields with exactly that string.
+
+For example? Let's find out their meaning (maybe "sncsupported" instead 
+of "SncSupported"?) and have a better understanding, instead.
+
+> I'd rather not have
+> this check here.
+
+Avoiding this check here seems a logical error to me: it's basically the 
+entry point (and the first thing to look at when calling the setup 
+method SN00), maybe revealing info about the device and the action to be 
+taken about this device, I can't see why we'd better skip this step, 
+that doesn't hurt, just because at the moment almost every notebook 
+won't fail.
