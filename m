@@ -1,42 +1,32 @@
-From: Ike Panhc <ike.pan@canonical.com>
+From: David Woodhouse <dwmw2@infradead.org>
 Subject: Re: [PATCH] ideapad: let Fn+F5 also trigger KEY_BLUETOOTH
-Date: Tue, 14 Jun 2011 16:29:53 +0800
-Message-ID: <4DF71C01.6080504@canonical.com>
+Date: Tue, 14 Jun 2011 10:08:20 +0100
+Message-ID: <1308042502.3450.3.camel@i7.infradead.org>
 References: <1308040109-12038-1-git-send-email-ike.pan@canonical.com>
+	 <4DF71C01.6080504@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1308040109-12038-1-git-send-email-ike.pan@canonical.com>
-Sender: linux-input-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>, Dmitry Torohov <dmitry.torokhov@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from casper.infradead.org ([85.118.1.10]:60280 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754651Ab1FNJIX (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 14 Jun 2011 05:08:23 -0400
+In-Reply-To: <4DF71C01.6080504@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Dmitry Torohov <dmitry.torokhov@gmail.com>
 
-On 06/14/2011 04:28 PM, Ike Panhc wrote:
-> The design for ideapad Fn-F5 key is not only for wifi but for all
-> radio device including wifi, bluetooth and wwan. Idealy it shall
-> acts like this:
-> 
->     wifi on          wifi off         wifi on         wifi off
->      bt on   ----->   bt on   ----->   bt off  ----->  bt off
-> 
-> This patch will switch wifi mode every key-push and switch
-> bluetooth mode every two key-push.
+On Tue, 2011-06-14 at 16:29 +0800, Ike Panhc wrote:
+> I think it is better to solve this in driver not in user space application 
+> because on some other platforms, the KEY_WLAN and KEY_BLUETOOTH are separate.
 
-This maybe is disputed. 
+I think it's better to do it in userspace. It's not as if it's hard to
+define another KEY_ and just tell the truth about what happened. Let
+userspace work out what to do with it.
 
-The problem is that now Fn+F5 only turns on/off wifi and leave bluetooth alone.
-According to the design this hotkey shall change the status of all radio
-devices, including wifi, bluetooth and wwan.
-
-On machine with wifi and bluetooth, it will turn on/off wifi and bluetooth in
-order. On machine with wifi, it will switch wifi mode on every event.
-
-I think it is better to solve this in driver not in user space application 
-because on some other platforms, the KEY_WLAN and KEY_BLUETOOTH are separate.
-
-I do not have a clear idea how to deal with wwan interface such as it shall be
-exclusive or inclusive with wifi.
-
-Please reply for any opinion.
+-- 
+David Woodhouse                            Open Source Technology Centre
+David.Woodhouse@intel.com                              Intel Corporation
