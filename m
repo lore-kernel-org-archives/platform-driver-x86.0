@@ -1,38 +1,64 @@
-From: Andrew Lutomirski <luto@mit.edu>
-Subject: Re: [PATCH v5] thinkpad-acpi: Improve hardware volume controls
-Date: Mon, 13 Jun 2011 21:59:35 -0400
-Message-ID: <BANLkTimwQavNth_+hemY8F6D0_feUTEqGg@mail.gmail.com>
-References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
- <20110614015808.GB27997@khazad-dum.debian.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:54488 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753042Ab1FNB74 convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 Jun 2011 21:59:56 -0400
-Received: by pzk9 with SMTP id 9so2395883pzk.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jun 2011 18:59:56 -0700 (PDT)
-In-Reply-To: <20110614015808.GB27997@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] ideapad: let Fn+F5 also trigger KEY_BLUETOOTH
+Date: Tue, 14 Jun 2011 16:28:29 +0800
+Message-ID: <1308040109-12038-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Dmitry Torohov <dmitry.torokhov@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 13, 2011 at 9:58 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> Andy,
->
-> I have not been ignoring you. =A0My thinkpad broke down, and it is
-> currently in the ICU waiting for a fan+heatsink repair, so I have not
-> been able to make good on my promise of a faster answer.
->
-> I hope to have it repaired in the next 10 days, but it looks like I w=
-ill
-> have to refurbish its fan myself (it is a T43p).
+The design for ideapad Fn-F5 key is not only for wifi but for all
+radio device including wifi, bluetooth and wwan. Idealy it shall
+acts like this:
 
-No problem.  Keep me posted.  And enjoy the fan surgery :)
+    wifi on          wifi off         wifi on         wifi off
+     bt on   ----->   bt on   ----->   bt off  ----->  bt off
 
---Andy
+This patch will switch wifi mode every key-push and switch
+bluetooth mode every two key-push.
+
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c |   18 +++++++++++++++++-
+ 1 files changed, 17 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index bfdda33..e92ab14 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -328,6 +328,7 @@ static void ideapad_platform_exit(struct ideapad_private *priv)
+ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY, 0x06, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0x0D, { KEY_WLAN } },
++	{ KE_KEY, 0x0D, { KEY_BLUETOOTH } },
+ 	{ KE_END, 0 },
+ };
+ 
+@@ -379,7 +380,22 @@ static void __devexit ideapad_input_exit(struct ideapad_private *priv)
+ static void ideapad_input_report(struct ideapad_private *priv,
+ 				 unsigned long scancode)
+ {
+-	sparse_keymap_report_event(priv->inputdev, scancode, 1, true);
++	static int bt_event_round;
++
++	if (scancode == 0x0D) {
++		bt_event_round++;
++		if (bt_event_round & 1) {
++			input_report_key(priv->inputdev, KEY_BLUETOOTH, 1);
++			input_sync(priv->inputdev);
++			input_report_key(priv->inputdev, KEY_BLUETOOTH, 0);
++			input_sync(priv->inputdev);
++		}
++		input_report_key(priv->inputdev, KEY_WLAN, 1);
++		input_sync(priv->inputdev);
++		input_report_key(priv->inputdev, KEY_WLAN, 0);
++		input_sync(priv->inputdev);
++	} else
++		sparse_keymap_report_event(priv->inputdev, scancode, 1, true);
+ }
+ 
+ /*
+-- 
+1.7.4.1
+
