@@ -1,100 +1,52 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 10/25] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Sat, 18 Jun 2011 13:15:39 +0900
-Message-ID: <20110618041538.GA23770@kamineko.org>
-References: <4DE8FC4A.9010401@absence.it>
- <4DE9008D.7040504@absence.it>
- <20110604075815.GA7194@kamineko.org>
- <4DF20EB6.2080803@absence.it>
- <20110612222444.GC31095@kamineko.org>
- <4DF61E7F.7070406@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
+Date: Sun, 19 Jun 2011 00:50:48 +0200
+Message-ID: <4DFD2BC8.6060206@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org> <4DF55356.9020405@absence.it> <09bbad4b23cc0747ac2ab6dcd232c3d4.squirrel@picard.linux.it> <4DF5DABD.50505@absence.it> <20110613134251.GA6119@kamineko.org> <4DF61A65.3000804@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:63253 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750790Ab1FREPV (ORCPT
+Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:45136 "EHLO
+	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752891Ab1FRWux (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 18 Jun 2011 00:15:21 -0400
-Received: by iwn34 with SMTP id 34so2501206iwn.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jun 2011 21:15:20 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <4DF61E7F.7070406@absence.it>
+	Sat, 18 Jun 2011 18:50:53 -0400
+In-Reply-To: <4DF61A65.3000804@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
+To: Mattia Dongili <malattia@linux.it>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 13, 2011 at 04:28:15PM +0200, Marco Chiappero wrote:
-> Il 13/06/2011 00:24, Mattia Dongili ha scritto:
-> >On Fri, Jun 10, 2011 at 02:31:50PM +0200, Marco Chiappero wrote:
-> >>Il 04/06/2011 09:58, Mattia Dongili ha scritto:
-> >>
-> >>>>  struct kbd_backlight {
-> >>>>-	int mode;
-> >>>>-	int timeout;
-> >>>>+	unsigned int base;
-> >>>>+	unsigned int mode;
-> >>>>+	unsigned int timeout;
-> >>>>  	struct device_attribute mode_attr;
-> >>>>  	struct device_attribute timeout_attr;
-> >>>>  };
-> >>>>-
-> >>>>  static struct kbd_backlight *kbdbl_handle;
-> >>>>+static int sony_kbd_handle = -1;
-> >>>
-> >>>there seems to be no real point initializing this to -1. Also, can it be
-> >>>made part of the struct above?
-> >>
-> >>I'm including these two changes in every patch that provides a new
-> >>capability using different handles.
-> >>I need some more time to prepare the new patches, but before
-> >>resending I'd like to hear some more feedbacks: removing any acpi
-> >>notification in patch #8, do patches from 1 to 9 look fine? Is it
-> >>possible to merge them, as they are, as soon as I repost them? If
-> >
-> >potentially, if they seem safe yes. I'd rather review what you have than
-> >a stale version that you're already changing so please send the patches
-> >over and then we'll see.
-> 
-> Ok, to avoid multiple resends, does this new naming schema look fine to you?
+Il 13/06/2011 16:10, Marco Chiappero ha scritto:
+> Il 13/06/2011 15:42, Mattia Dongili ha scritto:
+>
+>>>>>> I'd rather not have
+>>>>>> this check here.
+>>>>>
+>>>>> Avoiding this check here seems a logical error to me: it's
+>>>>> basically the
+>>>>> entry point (and the first thing to look at when calling the setup
+>>>>> method SN00), maybe revealing info about the device and the action
+>>>>> to be
+>>>>> taken about this device, I can't see why we'd better skip this step,
+>>>>> that doesn't hurt, just because at the moment almost every notebook
+>>>>> won't fail.
+>>>>
+>>>> the string never changes and there seems to be no logic associated
+>>>> to it
+>>>> in the DSDT.
+>>>
+>>> Well, maybe. Or maybe not. Every year lots of new models are
+>>> launched, and every model comes with it... why should they bring a
+>>
+>> Apparently not. Vaio Y doesn't have that string hardcoded in the DSDT.
+>
+> Interesting, may I see such DSDT file?
 
-I'd recommend sending what you have when you think it is reviewable. I
-have the time I have to review all this and having some finished work is
-easier to review.
-
-> /* Keyboard backlight feature */
-> static struct sony_kbdbl_data {
-> 	unsigned int handle;
-> 	unsigned int base;
-> 	unsigned int mode;
-> 	unsigned int timeout;
-> 	struct device_attribute mode_attr;
-> 	struct device_attribute timeout_attr;
-> } *sony_kbdbl;
-> 
-> 
-> Another example:
-> 
-> static struct sony_battcare_data {
-> 	unsigned int handle;
-> 	struct device_attribute attrs[2];
-> } *sony_battcare;
-> 
-> 
-> I think that we might use the sony_FEATURE_device namining when we
-> have multiple data regarding a physical device rather than just a
-> collection of data related to a feature, so sony_kbdbl_data could be
-> named sony_kbdbl_device. If you don't like the "sony" prefix, which
-> is not much informative, we can change to "snc", which specifies
-> that it's a SNC related feature, even though it's already clear
-> enough.
-
-I'd prefer the snc prefix to distinguish it from the spic related
-features.
-
-Thanks
--- 
-mattia
-:wq!
+I've seen the DSDT file, and I can say that almost surely (well, I'd say 
+surely) this model comes with the same string, even though it's 
+hardcoded in some hw register instead (the first bytes of CIM more 
+precisely). My idea hasn't changed, I strongly suggest to maintain this 
+check, if the string changes we will have the chance to immediately 
+determine what changed, otherwise it won't harm.
