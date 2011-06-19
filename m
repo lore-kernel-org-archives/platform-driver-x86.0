@@ -1,40 +1,70 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
-Date: Sun, 19 Jun 2011 01:06:43 +0200
-Message-ID: <4DFD2F83.40803@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org> <4DF55356.9020405@absence.it>
+From: Florian Heyer <heyho@flanto.de>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Sun, 19 Jun 2011 17:23:07 +0200
+Message-ID: <4DFE145B.4060405@flanto.de>
+References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com> <4DE57CD6.5030609@flanto.de> <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com> <4DE74CEF.3020608@flanto.de> <4DE86E36020000230002D768@novprvlin0050.provo.novell.com> <4DE8D876.7060304@flanto.de> <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com> <4DF08626.3050802@canonical.com> <4DF908DA020000230002E497@novprvlin0050.provo.novell.com> <4DF87EA2.3050204@flanto.de> <4DFBDE91020000230002E620@novprvlin0050.provo.novell.com> <4DFB6CDE.4020003@flanto.de> <4DFC8014020000230002E662@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:50622 "EHLO
-	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753207Ab1FRXGq (ORCPT
+Received: from melmac.flanto.de ([78.46.67.50]:53092 "EHLO melmac.flanto.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754168Ab1FSPXR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 18 Jun 2011 19:06:46 -0400
-In-Reply-To: <4DF55356.9020405@absence.it>
+	Sun, 19 Jun 2011 11:23:17 -0400
+In-Reply-To: <4DFC8014020000230002E662@novprvlin0050.provo.novell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: Joey Lee <jlee@novell.com>
+Cc: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org
 
-Il 13/06/2011 02:01, Marco Chiappero ha scritto:
-> Il 13/06/2011 00:21, Mattia Dongili ha scritto:
->>> +static int sony_nc_snc_setup(struct platform_device *pd)
->>
->> To be honest these sony_nc_snc_* functions are a bit poorly named.
->> sony_nc_ was already supposed to be a partial expansion of SNC so this
->> whole thing is a bit redundant now. what about
->> sony_nc_setup/sony_nc_cleanup?
+On 06/18/2011 02:38 AM, Joey Lee wrote:
 >
-> Yes I know but in the hurry I forgot to think about that, I will use
-> this new naming schema.
+> Could you please help to test this patch? This is just a test patch, and
+> I didn't evaluation AWM0 in update rfkill state polling because I didn't
+> think evaluate AWM0 per second is a good idea.
+>
+> Please probe acer-wmi driver then report rfkill state. That's see what
+> the situation, then we add AWM0 part in next patch.
 
-I've been rethinking about this, I was rather unhappy with the 
-sony_nc_snc_setup_handles and sony_nc_handles_setup names. I think that 
-the best solution is:
-- to rename sony_nc_handles_setup to sony_nc_handles_list_setup
-- to include the sony_nc_setup_handles code back to sony_nc_snc_setup 
-and to rename this last one sony_nc_handles_setup, that should now deal 
-with the sole handles (and handles events) setup. The same goes for the 
-sony_nc_snc_resume and sony_nc_snc_cleanup functions.
+Hello Joey,
+
+just tested your patch. It works, after inserting the patched module i 
+can use wifi!
+
+After booting with hardware switch = on i inserted patched acer-wmi. 
+This is "rfkill list" state after inserting:
+
+0: hci0: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+1: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+2: acer-wireless: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+
+After switching to off:
+1: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+2: acer-wireless: Wireless LAN
+	Soft blocked: no
+	Hard blocked: yes
+
+Switching back to on:
+1: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+2: acer-wireless: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+3: hci0: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+
+
+regards
+-- 
+Florian Heyer - heyho@flanto.de
