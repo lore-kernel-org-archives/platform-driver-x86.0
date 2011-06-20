@@ -1,100 +1,51 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: acer-wmi problem handling device states from WMI events
-Date: Mon, 20 Jun 2011 14:06:49 -0500
-Message-ID: <20110620190649.GA6414@thinkpad-t410>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 22/25] sony-laptop: forward Hybrid GFX notifications to
+ userspace
+Date: Mon, 20 Jun 2011 23:12:50 +0200
+Message-ID: <4DFFB7D2.3080400@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE93584.3070205@absence.it> <20110604084820.GE7194@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:55340 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755730Ab1FTTGx (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:57933 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751478Ab1FTVMz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 20 Jun 2011 15:06:53 -0400
-Content-Disposition: inline
+	Mon, 20 Jun 2011 17:12:55 -0400
+In-Reply-To: <20110604084820.GE7194@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
 
-Hi Joey,
+Il 04/06/2011 10:48, Mattia Dongili ha scritto:
+> On Fri, Jun 03, 2011 at 09:27:00PM +0200, Marco Chiappero wrote:
+>> Some Vaios come with both integrated and discrete graphics, plus a
+>> switch for choosing one of the two. When the switch position is
+>> changed, a notification is generated, now forwarded to userspace for
+>> example for visual notifications, user scripts, and so on.
 
-acer-wmi is indiscriminately using the device state from hotkey events
-to update the various rfkill states. On the Aspire 1830 this can result
-in a soft block on the wlan when the touchpad hotkey is pressed, as it
-is reporting a non-zero device state that does not reflect the wireless
-status.
+[...]
 
-I beleive the following (untested) patch is a roughly correct fix for
-this issue.  It changes acer-wmi to only update the rfkill states when
-the appropriate hotkeys are pressed, but I'm a little unsure about the
-way I've split out the rfkill updates acording to the hotkeys. I don't
-see any support in the driver for a 3G hotkey, so I've grouped it with
-the wlan key, and I have split out bluetooth to be handled separately
-from these. Does this patch look correct?
+>> +		case 0x0128:
+>> +		case 0x0146:
+>> +			/* Hybrid GFX switching, 1 */
+>> +			sony_call_snc_handle(handle, 0x0000,&result);
+>> +			dprintk("sony_nc_notify, Hybrid GFX event received "
+>> +					"(reason: %s)\n", (result&  0x01) ?
+>> +					"switch position change" : "unknown");
+>> +
+>> +			/* verify the switch state
+>> +			   (1: discrete GFX, 0: integrated GFX)*/
+>> +			result = 0;
+>> +			sony_call_snc_handle(handle, 0x0100,&result);
+>> +
+>> +			ev = 5;
+>> +			value = result&  0xff;
+>> +			break;
+>
+> shouldn't this be reported as an input event rather than just an acpi
+> one?
 
-Thanks,
-Seth
-
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 005417b..592328d 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1445,6 +1445,8 @@ static void acer_wmi_notify(u32 value, void *context)
- 	union acpi_object *obj;
- 	struct event_return_value return_value;
- 	acpi_status status;
-+	u16 device_state;
-+	const struct key_entry *key;
- 
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
-@@ -1472,23 +1474,33 @@ static void acer_wmi_notify(u32 value, void *context)
- 
- 	switch (return_value.function) {
- 	case WMID_HOTKEY_EVENT:
--		if (return_value.device_state) {
--			u16 device_state = return_value.device_state;
--			pr_debug("device state: 0x%x\n", device_state);
--			if (has_cap(ACER_CAP_WIRELESS))
--				rfkill_set_sw_state(wireless_rfkill,
--				!(device_state & ACER_WMID3_GDS_WIRELESS));
--			if (has_cap(ACER_CAP_BLUETOOTH))
--				rfkill_set_sw_state(bluetooth_rfkill,
--				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
--			if (has_cap(ACER_CAP_THREEG))
--				rfkill_set_sw_state(threeg_rfkill,
--				!(device_state & ACER_WMID3_GDS_THREEG));
--		}
--		if (!sparse_keymap_report_event(acer_wmi_input_dev,
--				return_value.key_num, 1, true))
-+		device_state = return_value.device_state;
-+		pr_debug("device state: 0x%x\n", device_state);
-+
-+		key = sparse_keymap_entry_from_scancode(acer_wmi_input_dev,
-+							return_value.key_num);
-+		if (!key) {
- 			pr_warn("Unknown key number - 0x%x\n",
- 				return_value.key_num);
-+		} else {
-+			switch (key->keycode) {
-+			case KEY_WLAN:
-+				if (has_cap(ACER_CAP_WIRELESS))
-+					rfkill_set_sw_state(wireless_rfkill,
-+						!(device_state & ACER_WMID3_GDS_WIRELESS));
-+				if (has_cap(ACER_CAP_THREEG))
-+					rfkill_set_sw_state(threeg_rfkill,
-+						!(device_state & ACER_WMID3_GDS_THREEG));
-+				break;
-+			case KEY_BLUETOOTH:
-+				if (has_cap(ACER_CAP_BLUETOOTH))
-+					rfkill_set_sw_state(bluetooth_rfkill,
-+						!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-+				break;
-+			}
-+			sparse_keymap_report_entry(acer_wmi_input_dev, key,
-+						   1, true);
-+		}
- 		break;
- 	default:
- 		pr_warn("Unknown function number - %d - %d\n",
+If so, please someone let me know which keys to use.
