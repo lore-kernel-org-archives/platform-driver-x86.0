@@ -1,36 +1,60 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH 1/2] acer-wmi: Add support for Aspire 1830 wlan hotkey
-Date: Tue, 21 Jun 2011 12:00:32 -0500
-Message-ID: <1308675633-10384-1-git-send-email-seth.forshee@canonical.com>
-References: <20110621165859.GB25609@thinkpad-t410>
+From: Carlos Alberto Lopez Perez <clopez@igalia.com>
+Subject: [PATCH 1/1] x86/platform: classmate-laptop: Add cmpc_keys support for new classmate laptops
+Date: Tue, 21 Jun 2011 21:40:01 +0200
+Message-ID: <1308685201-15541-1-git-send-email-clopez@igalia.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:41268 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756834Ab1FURAg (ORCPT
+Received: from smtp4.mundo-r.com ([212.51.32.151]:48672 "EHLO
+	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757008Ab1FUTtZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2011 13:00:36 -0400
-In-Reply-To: <20110621165859.GB25609@thinkpad-t410>
+	Tue, 21 Jun 2011 15:49:25 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Daniel Oliveira Nascimento <don@syst.com.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+The cmpc_keys ACPI driver from the classmate-laptop module fails to
+recognize the device on the 4th generation of classmate laptops (Atom N450)
+because the device ID is named "FNBT0000" (uppercase N) on this laptops.
+
+MODALIAS=acpi:FNBT0000:
+
+This patch makes the driver cmpc_keys recognize it:
+
+input: cmpc_keys as /devices/LNXSYSTM:00/device:00/FNBT0000:00/input/input18
+
+Signed-off-by: Carlos Alberto Lopez Perez <clopez@igalia.com>
 ---
- drivers/platform/x86/acer-wmi.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ drivers/platform/x86/classmate-laptop.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 005417b..0dd6986 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -99,6 +99,7 @@ enum acer_wmi_event_ids {
- static const struct key_entry acer_wmi_keymap[] = {
- 	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
- 	{KE_KEY, 0x03, {KEY_WLAN} },     /* WiFi */
-+	{KE_KEY, 0x04, {KEY_WLAN} },     /* WiFi */
- 	{KE_KEY, 0x12, {KEY_BLUETOOTH} },	/* BT */
- 	{KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
- 	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
+diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
+index 94f93b6..03896cd 100644
+--- a/drivers/platform/x86/classmate-laptop.c
++++ b/drivers/platform/x86/classmate-laptop.c
+@@ -40,6 +40,7 @@ struct cmpc_accel {
+ #define CMPC_TABLET_HID		"TBLT0000"
+ #define CMPC_IPML_HID	"IPML200"
+ #define CMPC_KEYS_HID		"FnBT0000"
++#define CMPC_KEYS_4GEN_HID	"FNBT0000"
+ 
+ /*
+  * Generic input device code.
+@@ -683,6 +684,7 @@ static int cmpc_keys_remove(struct acpi_device *acpi, int type)
+ 
+ static const struct acpi_device_id cmpc_keys_device_ids[] = {
+ 	{CMPC_KEYS_HID, 0},
++	{CMPC_KEYS_4GEN_HID, 0},
+ 	{"", 0}
+ };
+ 
+@@ -754,6 +756,7 @@ static const struct acpi_device_id cmpc_device_ids[] = {
+ 	{CMPC_TABLET_HID, 0},
+ 	{CMPC_IPML_HID, 0},
+ 	{CMPC_KEYS_HID, 0},
++	{CMPC_KEYS_4GEN_HID, 0},
+ 	{"", 0}
+ };
+ 
 -- 
-1.7.4.1
+1.7.5.3
