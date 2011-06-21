@@ -1,120 +1,151 @@
-From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Subject: Re: [PATCH 1/1] x86/platform: classmate-laptop: Add cmpc_keys
- support for new classmate laptops
-Date: Tue, 21 Jun 2011 16:50:39 -0300
-Message-ID: <20110621195038.GC2724@nautilus.holoscopio.com>
-References: <1308685201-15541-1-git-send-email-clopez@igalia.com>
+From: Carlos Alberto Lopez Perez <clopez@igalia.com>
+Subject: Re: [PATCH 1/1] x86/platform: classmate-laptop: Add cmpc_keys support
+ for new classmate laptops
+Date: Tue, 21 Jun 2011 22:24:57 +0200
+Message-ID: <4E00FE19.9000606@igalia.com>
+References: <1308685201-15541-1-git-send-email-clopez@igalia.com> <20110621195038.GC2724@nautilus.holoscopio.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HG+GLK89HZ1zG0kk"
+ protocol="application/pgp-signature";
+ boundary="------------enig22AF3FACC26E6FE9ABDB57CB"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from liberdade2.minaslivre.org ([74.50.53.203]:41423 "EHLO
-	liberdade.minaslivre.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753487Ab1FUT6D (ORCPT
+Received: from smtp4.mundo-r.com ([212.51.32.151]:33513 "EHLO
+	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756679Ab1FUUYj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jun 2011 15:58:03 -0400
-Content-Disposition: inline
-In-Reply-To: <1308685201-15541-1-git-send-email-clopez@igalia.com>
+	Tue, 21 Jun 2011 16:24:39 -0400
+In-Reply-To: <20110621195038.GC2724@nautilus.holoscopio.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Alberto Lopez Perez <clopez@igalia.com>
+To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 Cc: Daniel Oliveira Nascimento <don@syst.com.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-
---HG+GLK89HZ1zG0kk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig22AF3FACC26E6FE9ABDB57CB
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 21, 2011 at 09:40:01PM +0200, Carlos Alberto Lopez Perez wrote:
-> The cmpc_keys ACPI driver from the classmate-laptop module fails to
-> recognize the device on the 4th generation of classmate laptops (Atom N45=
-0)
-> because the device ID is named "FNBT0000" (uppercase N) on this laptops.
+On 06/21/2011 09:50 PM, Thadeu Lima de Souza Cascardo wrote:
+> On Tue, Jun 21, 2011 at 09:40:01PM +0200, Carlos Alberto Lopez Perez wr=
+ote:
+>> The cmpc_keys ACPI driver from the classmate-laptop module fails to
+>> recognize the device on the 4th generation of classmate laptops (Atom =
+N450)
+>> because the device ID is named "FNBT0000" (uppercase N) on this laptop=
+s.
+>>
+>> MODALIAS=3Dacpi:FNBT0000:
+>>
+>> This patch makes the driver cmpc_keys recognize it:
+>>
+>> input: cmpc_keys as /devices/LNXSYSTM:00/device:00/FNBT0000:00/input/i=
+nput18
+>>
+>> Signed-off-by: Carlos Alberto Lopez Perez <clopez@igalia.com>
+>> ---
+>>  drivers/platform/x86/classmate-laptop.c |    3 +++
+>>  1 files changed, 3 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platfor=
+m/x86/classmate-laptop.c
+>> index 94f93b6..03896cd 100644
+>> --- a/drivers/platform/x86/classmate-laptop.c
+>> +++ b/drivers/platform/x86/classmate-laptop.c
+>> @@ -40,6 +40,7 @@ struct cmpc_accel {
+>>  #define CMPC_TABLET_HID		"TBLT0000"
+>>  #define CMPC_IPML_HID	"IPML200"
+>>  #define CMPC_KEYS_HID		"FnBT0000"
+>> +#define CMPC_KEYS_4GEN_HID	"FNBT0000"
+>> =20
+>>  /*
+>>   * Generic input device code.
+>> @@ -683,6 +684,7 @@ static int cmpc_keys_remove(struct acpi_device *ac=
+pi, int type)
+>> =20
+>>  static const struct acpi_device_id cmpc_keys_device_ids[] =3D {
+>>  	{CMPC_KEYS_HID, 0},
+>> +	{CMPC_KEYS_4GEN_HID, 0},
+>>  	{"", 0}
+>>  };
+>> =20
+>> @@ -754,6 +756,7 @@ static const struct acpi_device_id cmpc_device_ids=
+[] =3D {
+>>  	{CMPC_TABLET_HID, 0},
+>>  	{CMPC_IPML_HID, 0},
+>>  	{CMPC_KEYS_HID, 0},
+>> +	{CMPC_KEYS_4GEN_HID, 0},
+>>  	{"", 0}
+>>  };
+>> =20
+>> --=20
+>> 1.7.5.3
+>>
 >=20
-> MODALIAS=3Dacpi:FNBT0000:
+> Not-Acked-By: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 >=20
-> This patch makes the driver cmpc_keys recognize it:
->=20
-> input: cmpc_keys as /devices/LNXSYSTM:00/device:00/FNBT0000:00/input/inpu=
-t18
->=20
-> Signed-off-by: Carlos Alberto Lopez Perez <clopez@igalia.com>
-> ---
->  drivers/platform/x86/classmate-laptop.c |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x=
-86/classmate-laptop.c
-> index 94f93b6..03896cd 100644
-> --- a/drivers/platform/x86/classmate-laptop.c
-> +++ b/drivers/platform/x86/classmate-laptop.c
-> @@ -40,6 +40,7 @@ struct cmpc_accel {
->  #define CMPC_TABLET_HID		"TBLT0000"
->  #define CMPC_IPML_HID	"IPML200"
->  #define CMPC_KEYS_HID		"FnBT0000"
-> +#define CMPC_KEYS_4GEN_HID	"FNBT0000"
-> =20
->  /*
->   * Generic input device code.
-> @@ -683,6 +684,7 @@ static int cmpc_keys_remove(struct acpi_device *acpi,=
- int type)
-> =20
->  static const struct acpi_device_id cmpc_keys_device_ids[] =3D {
->  	{CMPC_KEYS_HID, 0},
-> +	{CMPC_KEYS_4GEN_HID, 0},
->  	{"", 0}
->  };
-> =20
-> @@ -754,6 +756,7 @@ static const struct acpi_device_id cmpc_device_ids[] =
-=3D {
->  	{CMPC_TABLET_HID, 0},
->  	{CMPC_IPML_HID, 0},
->  	{CMPC_KEYS_HID, 0},
-> +	{CMPC_KEYS_4GEN_HID, 0},
->  	{"", 0}
->  };
-> =20
-> --=20
-> 1.7.5.3
->=20
+> Recent Linux versions have "upper-cased" the device names, because ACPI=
 
-Not-Acked-By: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+> spec says devices must have upper-case letters. This is probably relate=
+d
+> to this change, not because the device name has changed in recent
+> versions of the device. So the correct fix would be to either revert
+> this change in Linux or use only a single uppercase name for the device=
+=2E
+>=20
+> Thanks anyway for this report. I have received one report in private a
+> while back, but was too lazy to discuss this on the list. Any pointers
+> on that? Easist way to go is to simply replace FnBT for FNBT.
+>=20
+> Regards,
+> Cascardo.
 
-Recent Linux versions have "upper-cased" the device names, because ACPI
-spec says devices must have upper-case letters. This is probably related
-to this change, not because the device name has changed in recent
-versions of the device. So the correct fix would be to either revert
-this change in Linux or use only a single uppercase name for the device.
+The ACPI specification [1] says the following:
 
-Thanks anyway for this report. I have received one report in private a
-while back, but was too lazy to discuss this on the list. Any pointers
-on that? Easist way to go is to simply replace FnBT for FNBT.
+"""
+A valid PNP ID must be of the form =93AAA####=94 where A is an uppercase =
+letter
+and # is a hex digit.
+A valid ACPI ID must be of the form =93ACPI####=94 where # is a hex digit=
+=2E
+"""
 
-Regards,
-Cascardo.
+It don't says that the ACPI ID must be uppercase.
 
---HG+GLK89HZ1zG0kk
+I don't have an older generation of the classmate laptop to test if the
+ACPI ID is FnBT or FNBT, but I guess that if it was working until now, is=
+
+because the older generations have FnBT instead of FNBT.
+
+However I just found a previous discussion about this issue on LKML [2] a=
+nd
+seems that the patch is included (commit: 72638f5).
+
+So... this means that the cmpc_keys module was not working for any
+classmate laptop since ~2.6.29 ?
+
+If that is the case then replacing FnBT with FNBT will be fine.
+
+Thanks!
+
+Best regards!
+
+-------
+[1] http://www.acpi.info/DOWNLOADS/ACPIspec40a.pdf
+[2] https://lkml.org/lkml/2009/1/21/238
+
+
+--------------enig22AF3FACC26E6FE9ABDB57CB
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
 
-iQIcBAEBAgAGBQJOAPYOAAoJEEWxSg7udFZI5HgP/jqkclsnpxAZwoZsleELdJ8h
-Cyv2762dpKlIfUzGJ+SE4zTKDFFIQJgvJgjo1l0YQlu4+oZgu4B0MCQPCHltWURe
-I052QogSd+f/EGrsce87xBbGpK1eiB8ME+INvJlQDM2u4nOlx3Pvjj0+q11y5kz8
-gtfk9RK1UIIStD9VQBTm0yJsI0ZwMA1MH0CsPxnyeN0rgg4Ad4Il3WqQI3yZe0ua
-yvb4R7IiYgKujOPcrioM1yz7FE71m87SKt3/YBLdAUtmxLkojmWo5n6noSIrNt1q
-jPU+m9qAj5L3bcVhCjkFDWthgAF19yFQwKAoLPAQjwDrUdstx0MBUYDllfmDpSgR
-113KL8ssP5qKT51htxnKIvUwH2u+tDMw2M9Eynr3gcybLHVyAEk4oH54wrRWDkYc
-yf/Dz2tErWMH9oBf9MDziH4ME0GCgo0dRT/MudixOOVvAMLwYzrAjD38ZutmPM11
-Y45rxMOT+dZnrZmW5DG+KUJ+W2zb4rnRzBUAjIIKK7jkb9n6+B6crnUCiRNvuFCZ
-rYVft6YwWDyzPJFwgwduybhynR9aLtoKEbs91D6NmanZsGcGoLIecAjItYBO1ALJ
-YinXWuhUuf+2SLUyEpgC8zl5zj9gsNs289iq8gQkGS1fSF+g+oJyds6Meu+k7oBt
-NCrHCslnK1a4siJ3q+MS
-=2p7q
+iEYEARECAAYFAk4A/hkACgkQPH2MlObsr3gUSACfbFWLKWVRxLNp3XFL6FZRQFX1
+4HMAn1sjxWDFpIrsY4PUsaQ2JY+0obZ8
+=N8n4
 -----END PGP SIGNATURE-----
 
---HG+GLK89HZ1zG0kk--
+--------------enig22AF3FACC26E6FE9ABDB57CB--
