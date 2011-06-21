@@ -1,156 +1,138 @@
 From: "Joey Lee" <jlee@novell.com>
-Subject: Re: acer-wmi problem handling device states from WMI events
-Date: Tue, 21 Jun 2011 04:16:38 -0600
-Message-ID: <4E00FC26020000230002E847@novprvlin0050.provo.novell.com>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Tue, 21 Jun 2011 04:16:36 -0600
+Message-ID: <4E00FC24020000230002E843@novprvlin0050.provo.novell.com>
+References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com>
+ <4DE57CD6.5030609@flanto.de>
+ <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com>
+ <4DE74CEF.3020608@flanto.de>
+ <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
+ <4DE8D876.7060304@flanto.de>
+ <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com>
+ <4DF08626.3050802@canonical.com>
+ <4DF908DA020000230002E497@novprvlin0050.provo.novell.com>
+ <4DF87EA2.3050204@flanto.de>
+ <4DFBDE91020000230002E620@novprvlin0050.provo.novell.com>
+ <4DFB6CDE.4020003@flanto.de>
+ <4DFC8014020000230002E662@novprvlin0050.provo.novell.com>
+ <4DFE145B.4060405@flanto.de>
+ <4DFFA92F020000230002E786@novprvlin0050.provo.novell.com>
+ <4DFF27EC.9080804@flanto.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:34218 "EHLO
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:34221 "EHLO
 	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751401Ab1FUKQl (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:3:1>);
-	Tue, 21 Jun 2011 06:16:41 -0400
+	by vger.kernel.org with ESMTP id S1751200Ab1FUKQq (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:4:1>);
+	Tue, 21 Jun 2011 06:16:46 -0400
+In-Reply-To: <4DFF27EC.9080804@flanto.de>
 Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: seth.forshee@canonical.com
-Cc: Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
+To: heyho@flanto.de
+Cc: ike.pan@canonical.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
 
-Hi Seth,=20
-
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-06-20 =E6=96=BC 14:06 -0500=EF=BC=8CSe=
-th Forshee =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi Joey,
+=E6=96=BC =E4=B8=80=EF=BC=8C2011-06-20 =E6=96=BC 12:58 +0200=EF=BC=8CFl=
+orian Heyer =E6=8F=90=E5=88=B0=EF=BC=9A
+> On 06/20/2011 12:10 PM, Joey Lee wrote:
+> > But,
+> > here have a question:
+> >
+> > The phy0 killswitch didn't set to hard blocked, did wireless LAN st=
+ill
+> > can be used at this moment? even hardware switch is off?
 >=20
-> acer-wmi is indiscriminately using the device state from hotkey event=
-s
-> to update the various rfkill states. On the Aspire 1830 this can resu=
-lt
-> in a soft block on the wlan when the touchpad hotkey is pressed, as i=
-t
-> is reporting a non-zero device state that does not reflect the wirele=
-ss
-> status.
+> Hello Joey,
+>=20
+> i tested again:
+>=20
+> First with acer-wmi inserted (as always boot-state of wifi button is =
+on):
+>=20
+> switching to off "rfkill list" is:
+>=20
+> 1: phy0: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: yes
+> 6: acer-wireless: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: yes
+>=20
+> (phy0-hard blocked goes to "yes" after 1 or 2 seconds, maybe yesterda=
+y i=20
+> didn't wait long enough). Wifi doesn't work in this state, i checked.
+>=20
+> Switching to on "rfkill list" is:
+>=20
+> 1: phy0: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 6: acer-wireless: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 7: hci0: Bluetooth
+> 	Soft blocked: no
+> 	Hard blocked: no
+>=20
+> Wifi now works!
 >=20
 
-Thank's for you found out this issue, I didn't meet it because touchpad
-hotkey didn't emit any wmi event on my Acer TravelMate 8572.=20
+Looks good!
 
-I will double check it.
+We need 100% make sure acer-wireless's block state mapping to REAL
+wireless RF state.
 
-> I beleive the following (untested) patch is a roughly correct fix for
-> this issue.  It changes acer-wmi to only update the rfkill states whe=
-n
-> the appropriate hotkeys are pressed, but I'm a little unsure about th=
+> After removing acer-wmi (so i loaded it only for initialisation),=20
+> switching to off "rfkill list" is:
+>=20
+> 1: phy0: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: yes
+>=20
+> Back to on:
+>=20
+> 1: phy0: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 5: hci0: Bluetooth
+> 	Soft blocked: no
+> 	Hard blocked: no
+>=20
+>=20
+> wifi works in state "on"- so acer-wmi is really needed only for=20
+> initialisation.
+
+=46or a normal user, he will not un-probe acer-wmi driver after system.
+Could you please help to confirm? I mean please switch your hardware
+wifi switch a couple of cycles with acer-wmi loaded.=20
+
+Just want to 100% make sure acer-wmi will not crash after switch
+wireless state by hardware a lot of times.
+
+> ideapad-laptop is _not_ loaded, the wifi switch works correctly nonet=
+heless.
+>=20
+
+It's the same, if you wan to use ideapad-laptop at the same time. Pleas=
 e
-> way I've split out the rfkill updates acording to the hotkeys. I don'=
-t
-> see any support in the driver for a 3G hotkey, so I've grouped it wit=
-h
-> the wlan key, and I have split out bluetooth to be handled separately
-> from these. Does this patch look correct?
+load ideapad-laptop and acer-wmi then switch wireless button many times=
+,
+make sure there have not thing crash.=20
+
+> > I thought the real situation back to BT on, Wireless on, right?
 >=20
-> Thanks,
-> Seth
->=20
+> yes, after switching to on everything is back to state after=20
+> initialisation (wifi works).
 
-Yes, I thought your patch can avoid acer-wmi update killswitch state
-base on the result from non-Communication button.
+Currently, looks like we don't need evaluate AMW0 method every time we
+press hardware wireless switch. It's similar with other AMW0 machines
+just change to maintain hard-block.
 
-On some Acer machines only have one wireless key, the key only emit
-KEY_WIRELESS but EC updates 3 communication devices' states, I thought
-we can direct update 3 killswitch state when received KEY_WLAN or
-KEY_BLUETOOTH. maybe like this:
-
-+			switch (key->keycode) {
-+			case KEY_WLAN:
-+			case KEY_BLUETOOTH:
-+				if (has_cap(ACER_CAP_WIRELESS))
-+					rfkill_set_sw_state(wireless_rfkill,
-+						!(device_state & ACER_WMID3_GDS_WIRELESS));
-+				if (has_cap(ACER_CAP_THREEG))
-+					rfkill_set_sw_state(threeg_rfkill,
-+						!(device_state & ACER_WMID3_GDS_THREEG));
-+				if (has_cap(ACER_CAP_BLUETOOTH))
-+					rfkill_set_sw_state(bluetooth_rfkill,
-+						!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-+				break;
-+			}
-+			sparse_keymap_report_entry(acer_wmi_input_dev, key,
-+						   1, true);
-
-Of course need more testing on my and your Acer machines.
-I will double check this patch on my TravelMate 8572 then reply result
-on this mail tomorrow.
+Please help to confirm acer-wmi strong enough works with hardware
+switch, then we can support it in acer-wmi or ideapad-laptop.
 
 
 Thank's a lot!
 Joey Lee
-
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index 005417b..592328d 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1445,6 +1445,8 @@ static void acer_wmi_notify(u32 value, void *co=
-ntext)
->  	union acpi_object *obj;
->  	struct event_return_value return_value;
->  	acpi_status status;
-> +	u16 device_state;
-> +	const struct key_entry *key;
-> =20
->  	status =3D wmi_get_event_data(value, &response);
->  	if (status !=3D AE_OK) {
-> @@ -1472,23 +1474,33 @@ static void acer_wmi_notify(u32 value, void *=
-context)
-> =20
->  	switch (return_value.function) {
->  	case WMID_HOTKEY_EVENT:
-> -		if (return_value.device_state) {
-> -			u16 device_state =3D return_value.device_state;
-> -			pr_debug("device state: 0x%x\n", device_state);
-> -			if (has_cap(ACER_CAP_WIRELESS))
-> -				rfkill_set_sw_state(wireless_rfkill,
-> -				!(device_state & ACER_WMID3_GDS_WIRELESS));
-> -			if (has_cap(ACER_CAP_BLUETOOTH))
-> -				rfkill_set_sw_state(bluetooth_rfkill,
-> -				!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-> -			if (has_cap(ACER_CAP_THREEG))
-> -				rfkill_set_sw_state(threeg_rfkill,
-> -				!(device_state & ACER_WMID3_GDS_THREEG));
-> -		}
-> -		if (!sparse_keymap_report_event(acer_wmi_input_dev,
-> -				return_value.key_num, 1, true))
-> +		device_state =3D return_value.device_state;
-> +		pr_debug("device state: 0x%x\n", device_state);
-> +
-> +		key =3D sparse_keymap_entry_from_scancode(acer_wmi_input_dev,
-> +							return_value.key_num);
-> +		if (!key) {
->  			pr_warn("Unknown key number - 0x%x\n",
->  				return_value.key_num);
-> +		} else {
-> +			switch (key->keycode) {
-> +			case KEY_WLAN:
-> +				if (has_cap(ACER_CAP_WIRELESS))
-> +					rfkill_set_sw_state(wireless_rfkill,
-> +						!(device_state & ACER_WMID3_GDS_WIRELESS));
-> +				if (has_cap(ACER_CAP_THREEG))
-> +					rfkill_set_sw_state(threeg_rfkill,
-> +						!(device_state & ACER_WMID3_GDS_THREEG));
-> +				break;
-> +			case KEY_BLUETOOTH:
-> +				if (has_cap(ACER_CAP_BLUETOOTH))
-> +					rfkill_set_sw_state(bluetooth_rfkill,
-> +						!(device_state & ACER_WMID3_GDS_BLUETOOTH));
-> +				break;
-> +			}
-> +			sparse_keymap_report_entry(acer_wmi_input_dev, key,
-> +						   1, true);
-> +		}
->  		break;
->  	default:
->  		pr_warn("Unknown function number - %d - %d\n",
