@@ -1,74 +1,48 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: Wifi switch not working, linux on IdeaPad S205
-Date: Wed, 22 Jun 2011 17:28:33 +0800
-Message-ID: <4E01B5C1.1010500@canonical.com>
-References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com> <4DE57CD6.5030609@flanto.de> <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com> <4DE74CEF.3020608@flanto.de> <4DE86E36020000230002D768@novprvlin0050.provo.novell.com> <4DE8D876.7060304@flanto.de> <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com> <4DF08626.3050802@canonical.com> <4DF908DA020000230002E497@novprvlin0050.provo.novell.com> <4DF87EA2.3050204@flanto.de> <4DFBDE91020000230002E620@novprvlin0050.provo.novell.com> <4DFB6CDE.4020003@flanto.de> <4DFC8014020000230002E662@novprvlin0050.provo.novell.com> <4DFE145B.4060405@flanto.de>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [PATCH 1/2] acer-wmi: Add support for Aspire 1830 wlan
+ hotkey
+Date: Wed, 22 Jun 2011 04:14:17 -0600
+Message-ID: <4E024D19020000230002E936@novprvlin0050.provo.novell.com>
+References: <20110621165859.GB25609@thinkpad-t410>
+ <1308675633-10384-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:35441 "EHLO
-	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755200Ab1FVJ2n (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jun 2011 05:28:43 -0400
-In-Reply-To: <4DFE145B.4060405@flanto.de>
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:40035 "EHLO
+	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752552Ab1FVKOZ (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:3:1>);
+	Wed, 22 Jun 2011 06:14:25 -0400
+In-Reply-To: <1308675633-10384-1-git-send-email-seth.forshee@canonical.com>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Florian Heyer <heyho@flanto.de>
-Cc: Joey Lee <jlee@novell.com>, platform-driver-x86@vger.kernel.org
+To: seth.forshee@canonical.com
+Cc: Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
 
-Hi Florian,
+=E6=96=BC =E4=BA=8C=EF=BC=8C2011-06-21 =E6=96=BC 12:00 -0500=EF=BC=8CSe=
+th Forshee =E6=8F=90=E5=88=B0=EF=BC=9A
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index 005417b..0dd6986 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -99,6 +99,7 @@ enum acer_wmi_event_ids {
+>  static const struct key_entry acer_wmi_keymap[] =3D {
+>  	{KE_KEY, 0x01, {KEY_WLAN} },     /* WiFi */
+>  	{KE_KEY, 0x03, {KEY_WLAN} },     /* WiFi */
+> +	{KE_KEY, 0x04, {KEY_WLAN} },     /* WiFi */
+>  	{KE_KEY, 0x12, {KEY_BLUETOOTH} },	/* BT */
+>  	{KE_KEY, 0x21, {KEY_PROG1} },    /* Backup */
+>  	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
 
-Could you have the same test with ideapad-laptop loaded? I need to make
-sure ideapad-laptop have the correct rfkill information.
+Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
 
-Thanks a lot.
-
-On 06/19/2011 11:23 PM, Florian Heyer wrote:
-> On 06/18/2011 02:38 AM, Joey Lee wrote:
->>
->> Could you please help to test this patch? This is just a test patch, and
->> I didn't evaluation AWM0 in update rfkill state polling because I didn't
->> think evaluate AWM0 per second is a good idea.
->>
->> Please probe acer-wmi driver then report rfkill state. That's see what
->> the situation, then we add AWM0 part in next patch.
-> 
-> Hello Joey,
-> 
-> just tested your patch. It works, after inserting the patched module i can use wifi!
-> 
-> After booting with hardware switch = on i inserted patched acer-wmi. This is "rfkill list" state after inserting:
-> 
-> 0: hci0: Bluetooth
->     Soft blocked: no
->     Hard blocked: no
-> 1: phy0: Wireless LAN
->     Soft blocked: no
->     Hard blocked: no
-> 2: acer-wireless: Wireless LAN
->     Soft blocked: no
->     Hard blocked: no
-> 
-> After switching to off:
-> 1: phy0: Wireless LAN
->     Soft blocked: no
->     Hard blocked: no
-> 2: acer-wireless: Wireless LAN
->     Soft blocked: no
->     Hard blocked: yes
-> 
-> Switching back to on:
-> 1: phy0: Wireless LAN
->     Soft blocked: no
->     Hard blocked: no
-> 2: acer-wireless: Wireless LAN
->     Soft blocked: no
->     Hard blocked: no
-> 3: hci0: Bluetooth
->     Soft blocked: no
->     Hard blocked: no
-> 
-> 
-> regards
+Thank's for your patch!
+Joey Lee
