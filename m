@@ -1,98 +1,91 @@
-From: Julien Valroff <julien@kirya.net>
-Subject: [PATCH] acerhdf: add support for Aspire 1810TZ BIOS v1.3314
-Date: Thu, 23 Jun 2011 20:50:08 +0200
-Message-ID: <20110623185007.GA2889@kirya.net>
+From: Colin Guthrie <gmane@colin.guthr.ie>
+Subject: Re: [Regression] Problem with rfkill on 2.6.38
+Date: Fri, 24 Jun 2011 11:54:13 +0100
+Message-ID: <4E046CD5.2070709@colin.guthr.ie>
+References: <ip6j66$o5f$1@dough.gmane.org> <1304930195.3475.17.camel@jlt3.sipsolutions.net> <4DC81FC7.9040503@colin.guthr.ie> <20110509171144.GA7194@srcf.ucam.org> <4DC9072D.4030103@colin.guthr.ie> <BANLkTinVwnSei_VobfKtgzrwSP+cJSvxaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nix.kirya.net ([109.74.192.127]:35838 "EHLO nix.kirya.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1759898Ab1FWSzq (ORCPT
+Received: from brent.tribalogic.net ([78.86.109.144]:50905 "EHLO
+	summit.brent.tribalogic.net" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751584Ab1FXLEh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Jun 2011 14:55:46 -0400
-Content-Disposition: inline
+	Fri, 24 Jun 2011 07:04:37 -0400
+In-Reply-To: <BANLkTinVwnSei_VobfKtgzrwSP+cJSvxaQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Peter Feuerer <peter@piie.net>
+To: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <keng-yu.lin@canonical.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, Thomas Backlund <tmb@mageia.org>
+
+'Twas brillig, and Keng-Y=C3=BC Lin at 10/05/11 15:48 did gyre and gimb=
+le:
+> On Tue, May 10, 2011 at 11:36 AM, Colin Guthrie <mageia@colin.guthr.i=
+e> wrote:
+>> 'Twas brillig, and Matthew Garrett at 09/05/11 18:11 did gyre and gi=
+mble:
+>>> On Mon, May 09, 2011 at 06:09:27PM +0100, Colin Guthrie wrote:
+>>>
+>>>> Just a quick (non-compile) followup from my last email... blacklis=
+ting
+>>>> the dell-laptop module works around the issue, so I think the comm=
+it
+>>>> previously mentioned is indeed the culprit (as it's the only recen=
+t
+>>>> commit and does fiddle with the rfkill stuff).
+>>>>
+>>>> Not sure what the best track forward is, but it's certainly a
+>>>> regression, so should probably be fixed or reverted until a more
+>>>> complete fix is found.
+>>>
+>>> If you can confirm that with a build then I'll do that.
+>>
+>> ACK. Reverting that commit and unblacklisting the dell_laptop module
+>> restores the previous, working functionality. I've flipped rfkill a =
+few
+>> times and it's always worked fine.
+
+Just wondering if there was any progress on this. I ACKed a regression
+but it was not reverted.... I thought the standard practice was to
+revert until a fuller fix was found.
+
+I appreciate some other users will not get their fix but I was still
+under the impression that this was the policy?
+
+I don't see any relevant changes in the 2.6.39 kernel:
+
+http://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-2.6.39.y.git;a=
+=3Dhistory;f=3Ddrivers/platform/x86/dell-laptop.c;h=3Dde301aa8e5c379962=
+0ff5a06372b5e1942c2dab2;hb=3DHEAD
+
+nor in Linus' 2.6 tree (which I presume is actually for 3.0 these days?=
+):
+http://git.kernel.org/?p=3Dlinux/kernel/git/torvalds/linux-2.6.git;a=3D=
+history;f=3Ddrivers/platform/x86/dell-laptop.c;h=3Dd3841de6a8cf199ec08b=
+24bd85f50a0af0490d37;hb=3DHEAD
 
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> May I have the model of your Dell laptop?
+snip....
 
-[ please CC me in all your replies, I am not subscribed to the list ]
+I supplied all this info before here:
+http://thread.gmane.org/gmane.linux.kernel.wireless.general/68758
 
-Hi,
+Anything else I can do to move this forward?
 
-Would you please consider applying the following patch adding support for
-the Aspire 1810TZ BIOS v.1.3314 version to the acerhdf module and avoids the
-following error:
-
-acerhdf: unknown (unsupported) BIOS version Acer/Aspire 1810TZ/v1.3314, ple=
-ase report, aborting!
-
-Not sure about the other Aspire models, but it seems at least 1810T should
-also be updated.
-
-A similar patch was also proposed last year for 1410 [0] but wasn't yet
-applied.
-
-Thanks in advance
-Julien
+Col
 
 
-Signed-off-by: Julien Valroff <julien@kirya.net>
----
- drivers/platform/x86/acerhdf.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index fca3489..d339756 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -182,6 +182,7 @@ static const struct bios_settings_t bios_tbl[] =3D {
-        {"Acer", "Aspire 1810T",  "v1.3308", 0x55, 0x58, {0x9e, 0x00} },
-        {"Acer", "Aspire 1810TZ", "v1.3310", 0x55, 0x58, {0x9e, 0x00} },
-        {"Acer", "Aspire 1810T",  "v1.3310", 0x55, 0x58, {0x9e, 0x00} },
-+       {"Acer", "Aspire 1810TZ", "v1.3314", 0x55, 0x58, {0x9e, 0x00} },
-        /* Acer 531 */
-        {"Acer", "AO531h", "v0.3201", 0x55, 0x58, {0x20, 0x00} },
-        /* Gateway */
 --=20
-1.7.5.4
 
+Colin Guthrie
+gmane(at)colin.guthr.ie
+http://colin.guthr.ie/
 
-[0] http://kerneltrap.org/mailarchive/linux-kernel/2010/11/13/4645119
-
---=20
-  .''`.   Julien Valroff ~ <julien@kirya.net> ~ <julien@debian.org>   =20
- : :'  :  Debian Developer & Free software contributor
- `. `'`   http://www.kirya.net/
-   `-     4096R/ E1D8 5796 8214 4687 E416  948C 859F EF67 258E 26B1
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBCAAGBQJOA4rbAAoJEIWf72cljiaxfHcP/3ZHYbwq0cOsBsLsVUN5L6S3
-e8mk8EJEVegSuioi49rD0s/5a9Y++p7mXpaT/tgWXSl2ylND2DoKjYcMJIlEfvWA
-wr8oK3iUYsfL5FS8Boq1byfUtgdr5XEv9Azw5JFvuElM9jIZq3foh2X4oXJ0H46l
-rKlwYWj/g6E3Yd0uCICYx2joB888Pbtqx6Oj1FC65R8Hpnhhi8GnSYl5QCTPcOBC
-K475S31mNh6AsHtA7A5s9vxyVnHOwTrQ18jBoy9ppzgAVRVkqXun2kxyalTMtT/w
-lX5BuBi3WhF++fB00tyTzh1K1F+xDQ7l6DjXLdwB/BeadGyxvjKLg+txJb+1m4K9
-MJPjEpNCKzt6LP8zkIGKQlPBa/dQhlZ2c+JLDFPpMhZY7O1vZ0gR35hP9bskn/1n
-AEYytjznWg2U8VH7tFAvKqytekhE56LjXdt8cxnmOssoyi9Cs8oxtASFRUEDHDyp
-rWumx7Sze1HC4aoJvZTmv48s1CLP9yWRPNIkM7Esgb9RjVqw0LqpLPZY/gzG84rA
-aW9DGa6SRXTqE+gaiSlGY1GlEQLravVfdNTFVUTrjhHgsPs7CKCcbxJjKn9efhuN
-2R/Ur8VHRheffGp0FEc9NXp8mLHWMnTBKIiwzVH9AZGoXj0JMT7Hg/oozivLtuuQ
-VbGwyeZwLOUwesuAJdZY
-=OZcn
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Day Job:
+  Tribalogic Limited [http://www.tribalogic.net/]
+Open Source:
+  Mageia Contributor [http://www.mageia.org/]
+  PulseAudio Hacker [http://www.pulseaudio.org/]
+  Trac Hacker [http://trac.edgewall.org/]
