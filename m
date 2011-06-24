@@ -1,33 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 00/35]: System Firmware and SMBIOS Support
-Date: Fri, 24 Jun 2011 15:40:57 +0200
-Message-ID: <201106241540.57952.arnd@arndb.de>
-References: <20110623172206.27602.34306.sendpatchset@prarit.bos.redhat.com>
+From: Florian Heyer <heyho@flanto.de>
+Subject: Re: Wifi switch not working, linux on IdeaPad S205
+Date: Fri, 24 Jun 2011 23:03:45 +0200
+Message-ID: <4E04FBB1.6090304@flanto.de>
+References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com> <4DE57CD6.5030609@flanto.de> <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com> <4DE74CEF.3020608@flanto.de> <4DE86E36020000230002D768@novprvlin0050.provo.novell.com> <4DE8D876.7060304@flanto.de> <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com> <4DF08626.3050802@canonical.com> <4DF908DA020000230002E497@novprvlin0050.provo.novell.com> <4DF87EA2.3050204@flanto.de> <4DFBDE91020000230002E620@novprvlin0050.provo.novell.com> <4DFB6CDE.4020003@flanto.de> <4DFC8014020000230002E662@novprvlin0050.provo.novell.com> <4DFE145B.4060405@flanto.de> <4DFFA92F020000230002E786@novprvlin0050.provo.novell.com> <4DFF27EC.9080804@flanto.de> <4E00FC24020000230002E843@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20110623172206.27602.34306.sendpatchset@prarit.bos.redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Prarit Bhargava <prarit@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org, lm-sensors@lm-sensors.org, linux-i2c@vger.kernel.org, linux-input@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, rtc-linux@googlegroups.com, evel@driverdev.osuosl.org, linux-usb@vger.kernel.org, device-drivers-devel@blackfin.uclinux.org, linux-watchdog@vger.kernel.org, grant.likely@secretlab.ca, dz@debian.org, rpurdie@rpsys.net, eric.piel@tremplin-utc.net, abelay@mit.edu, johnpol@2ka.mipt.ru
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from melmac.flanto.de ([78.46.67.50]:37443 "EHLO melmac.flanto.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753130Ab1FXVDy (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 24 Jun 2011 17:03:54 -0400
+In-Reply-To: <4E00FC24020000230002E843@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: ike.pan@canonical.com, platform-driver-x86@vger.kernel.org
 
-On Thursday 23 June 2011 19:22:06 Prarit Bhargava wrote:
-> This new patchset reworks the existing DMI code into two separate layers.  It is
-> based off of the feedback I received previously when discussing the SMBIOS
-> version patch on LKML.
+Hello Joey,
 
-Hi Prarit,
+> For a normal user, he will not un-probe acer-wmi driver after system.
+> Could you please help to confirm? I mean please switch your hardware
+> wifi switch a couple of cycles with acer-wmi loaded.
+>
+> Just want to 100% make sure acer-wmi will not crash after switch
+> wireless state by hardware a lot of times.
 
-No objections to the patches, but when you send out a series as long as
-this one, please ensure that all patches are sent as replies to the
-introductory mail. Also, do not repeat the one-line patch summary in the
-body of the email.
+Ok, with only acer-wmi loaded (wifi is connected) i toggled the wifi 
+switch a couple of times. Trying as fast as possible...no problem, 
+system didn't crash. After finally switching to "on" wifi connected again.
 
-When using "git send-email --thread --no-chain-reply", this works
-automatically. It will also let you put the Cc list into the
-patch description and work out where to send each patch.
+> It's the same, if you wan to use ideapad-laptop at the same time. Please
+> load ideapad-laptop and acer-wmi then switch wireless button many times,
+> make sure there have not thing crash.
+>
 
-	Arnd
+With acer-wmi AND idepad-laptop loaded i tried the same as above. Again, 
+no crash. After switching finally to "on" wifi connected again.
+
+I noticed a message from acer-wmi (has nothing to do with the tests 
+above): acer-wmi prints a message to kernel message log about every second:
+
+[28907.045046] acer_wmi: acer_rfkill_update state: 1
+
+Is this debugging output? For the final version it should be disabled.
+
+
+regards
+-- 
+Florian Heyer - heyho@flanto.de
