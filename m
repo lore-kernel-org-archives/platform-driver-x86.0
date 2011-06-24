@@ -1,51 +1,33 @@
-From: "John W. Linville" <linville@tuxdriver.com>
-Subject: Re: [Regression] Problem with rfkill on 2.6.38
-Date: Fri, 24 Jun 2011 09:23:28 -0400
-Message-ID: <20110624132327.GA4793@tuxdriver.com>
-References: <ip6j66$o5f$1@dough.gmane.org>
- <1304930195.3475.17.camel@jlt3.sipsolutions.net>
- <4DC81FC7.9040503@colin.guthr.ie>
- <20110509171144.GA7194@srcf.ucam.org>
- <4DC9072D.4030103@colin.guthr.ie>
- <BANLkTinVwnSei_VobfKtgzrwSP+cJSvxaQ@mail.gmail.com>
- <4E046CD5.2070709@colin.guthr.ie>
- <BANLkTimxgk=8S4bEsXgNjMj-2FsNjzauCg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 00/35]: System Firmware and SMBIOS Support
+Date: Fri, 24 Jun 2011 15:40:57 +0200
+Message-ID: <201106241540.57952.arnd@arndb.de>
+References: <20110623172206.27602.34306.sendpatchset@prarit.bos.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:33883 "EHLO
-	smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756607Ab1FXNbn (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 24 Jun 2011 09:31:43 -0400
-Content-Disposition: inline
-In-Reply-To: <BANLkTimxgk=8S4bEsXgNjMj-2FsNjzauCg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?Q?Keng-Y=FC?= Lin <kengyu@canonical.com>
-Cc: Colin Guthrie <gmane@colin.guthr.ie>, Matthew Garrett <mjg59@srcf.ucam.org>, Johannes Berg <johannes@sipsolutions.net>, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, Thomas Backlund <tmb@mageia.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20110623172206.27602.34306.sendpatchset@prarit.bos.redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org, lm-sensors@lm-sensors.org, linux-i2c@vger.kernel.org, linux-input@vger.kernel.org, linux-media@vger.kernel.org, linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, rtc-linux@googlegroups.com, evel@driverdev.osuosl.org, linux-usb@vger.kernel.org, device-drivers-devel@blackfin.uclinux.org, linux-watchdog@vger.kernel.org, grant.likely@secretlab.ca, dz@debian.org, rpurdie@rpsys.net, eric.piel@tremplin-utc.net, abelay@mit.edu, johnpol@2ka.mipt.ru
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 24, 2011 at 08:29:33PM +0800, Keng-Y=FC Lin wrote:
-> Sorry for the late reply.
->=20
-> After looking into this a bit I agree with you the patch should be re=
-verted.
->=20
-> On Fri, Jun 24, 2011 at 6:54 PM, Colin Guthrie <gmane@colin.guthr.ie>=
- wrote:
+On Thursday 23 June 2011 19:22:06 Prarit Bhargava wrote:
+> This new patchset reworks the existing DMI code into two separate layers.  It is
+> based off of the feedback I received previously when discussing the SMBIOS
+> version patch on LKML.
 
-> > I supplied all this info before here:
-> > http://thread.gmane.org/gmane.linux.kernel.wireless.general/68758
-> >
-> > Anything else I can do to move this forward?
-> >
->=20
-> I am happy to form the revert patch if necessary.
+Hi Prarit,
 
-Please do so -- I'm sure Matthew would appreciate it. :-)
+No objections to the patches, but when you send out a series as long as
+this one, please ensure that all patches are sent as replies to the
+introductory mail. Also, do not repeat the one-line patch summary in the
+body of the email.
 
-John
---=20
-John W. Linville		Someday the world will need a hero, and you
-linville@tuxdriver.com			might be all we have.  Be ready.
+When using "git send-email --thread --no-chain-reply", this works
+automatically. It will also let you put the Cc list into the
+patch description and work out where to send each patch.
+
+	Arnd
