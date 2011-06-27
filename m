@@ -1,117 +1,66 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: Wifi switch not working, linux on IdeaPad S205
-Date: Mon, 27 Jun 2011 02:17:48 -0600
-Message-ID: <4E08C94C020000230002EB22@novprvlin0050.provo.novell.com>
-References: <4DE5FD4D020000230002D5D4@novprvlin0050.provo.novell.com>
- <4DE57CD6.5030609@flanto.de>
- <4DE62BA2020000230002D603@novprvlin0050.provo.novell.com>
- <4DE74CEF.3020608@flanto.de>
- <4DE86E36020000230002D768@novprvlin0050.provo.novell.com>
- <4DE8D876.7060304@flanto.de>
- <4DEEB8EB020000230002DF1A@novprvlin0050.provo.novell.com>
- <4DF08626.3050802@canonical.com>
- <4DF908DA020000230002E497@novprvlin0050.provo.novell.com>
- <4DF87EA2.3050204@flanto.de>
- <4DFBDE91020000230002E620@novprvlin0050.provo.novell.com>
- <4DFB6CDE.4020003@flanto.de>
- <4DFC8014020000230002E662@novprvlin0050.provo.novell.com>
- <4DFE145B.4060405@flanto.de> <4E01B5C1.1010500@canonical.com>
- <4E050172.7050604@flanto.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:59655 "EHLO
-	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1757108Ab1F0IRv (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:4:1>);
-	Mon, 27 Jun 2011 04:17:51 -0400
-In-Reply-To: <4E050172.7050604@flanto.de>
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: heyho@flanto.de
-Cc: ike.pan@canonical.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
+From: Keng-Yu Lin <kengyu@canonical.com>
+Subject: [PATCH] Revert: "dell-laptop: Toggle the unsupported hardware killswitch"
+Date: Mon, 27 Jun 2011 11:19:03 +0100
+Message-ID: <1309169943-3786-1-git-send-email-kengyu@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: gmane@colin.guthr.ie
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E4=BA=94=EF=BC=8C2011-06-24 =E6=96=BC 23:28 +0200=EF=BC=8CFl=
-orian Heyer =E6=8F=90=E5=88=B0=EF=BC=9A
-> On 22.06.2011 11:28, Ike Panhc wrote:
-> > Hi Florian,
-> >
-> > Could you have the same test with ideapad-laptop loaded? I need to =
-make
-> > sure ideapad-laptop have the correct rfkill information.
-> >
->=20
-> Hello Ike,
->=20
-> no problem:
->=20
-> After booting, wifi switch is on:
->=20
-> after loading acer-wmi and idepad-laptop "rfkill list" shows
-> 0: hci0: Bluetooth
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 1: phy0: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 2: acer-wireless: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 3: ideapad_bluetooth: Bluetooth
-> 	Soft blocked: no
-> 	Hard blocked: no
->=20
-> wifi doesn't work this time (this seems to vary, sometimes wifi works=
-=20
-> directly after loading acer-wmi).
->=20
+This reverts commit a3d77411e8b2ad661958c1fbee65beb476ec6d70,
 
-If only loading acer-wmi, did it have the same problem? Wifi doesn't
-work but killswitch is unblock? Sound like SOMETIMES it fail?
+as it causes a mess in the wireless rfkill status on some models.
+It is probably a bad idea to toggle the rfkill for all dell models
+without the respect to the claim that it is hardware-controlled.
 
+Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
+---
+ drivers/platform/x86/dell-laptop.c |   24 ++----------------------
+ 1 files changed, 2 insertions(+), 22 deletions(-)
 
-
-Thank's
-Joey Lee
-
-
-> after switching to off:
-> 1: phy0: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 2: acer-wireless: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: yes
-> 3: ideapad_bluetooth: Bluetooth
-> 	Soft blocked: no
-> 	Hard blocked: yes
->=20
-> after switching back to on:
-> 1: phy0: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 2: acer-wireless: Wireless LAN
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 3: ideapad_bluetooth: Bluetooth
-> 	Soft blocked: no
-> 	Hard blocked: no
-> 4: hci0: Bluetooth
-> 	Soft blocked: no
-> 	Hard blocked: no
->=20
-> wifi runs and is trying to connect...but no connection. I toggled wif=
-i=20
-> on/off again and it gets enabled/disabled correctly every time but i=20
-> don't get a stable wifi connection this time. This might be a differe=
-nt=20
-> issue with the wifi driver as this one is under development too. I've=
-=20
-> had this behaviour some times (i have used the ideapad about 20 hours=
-=20
-> this week).
->=20
->=20
-> regards
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index d3841de..04c34f1 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -292,12 +292,9 @@ static int dell_rfkill_set(void *data, bool blocked)
+ 	dell_send_request(buffer, 17, 11);
+ 
+ 	/* If the hardware switch controls this radio, and the hardware
+-	   switch is disabled, don't allow changing the software state.
+-	   If the hardware switch is reported as not supported, always
+-	   fire the SMI to toggle the killswitch. */
++	   switch is disabled, don't allow changing the software state */
+ 	if ((hwswitch_state & BIT(hwswitch_bit)) &&
+-	    !(buffer->output[1] & BIT(16)) &&
+-	    (buffer->output[1] & BIT(0))) {
++	    !(buffer->output[1] & BIT(16))) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -403,23 +400,6 @@ static const struct file_operations dell_debugfs_fops = {
+ 
+ static void dell_update_rfkill(struct work_struct *ignored)
+ {
+-	int status;
+-
+-	get_buffer();
+-	dell_send_request(buffer, 17, 11);
+-	status = buffer->output[1];
+-	release_buffer();
+-
+-	/* if hardware rfkill is not supported, set it explicitly */
+-	if (!(status & BIT(0))) {
+-		if (wifi_rfkill)
+-			dell_rfkill_set((void *)1, !((status & BIT(17)) >> 17));
+-		if (bluetooth_rfkill)
+-			dell_rfkill_set((void *)2, !((status & BIT(18)) >> 18));
+-		if (wwan_rfkill)
+-			dell_rfkill_set((void *)3, !((status & BIT(19)) >> 19));
+-	}
+-
+ 	if (wifi_rfkill)
+ 		dell_rfkill_query(wifi_rfkill, (void *)1);
+ 	if (bluetooth_rfkill)
+-- 
+1.7.4.1
