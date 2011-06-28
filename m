@@ -1,68 +1,46 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
-Date: Tue, 28 Jun 2011 12:04:30 +0200
-Message-ID: <4E09A72E.5050903@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org> <4DF55356.9020405@absence.it> <4DFD2F83.40803@absence.it> <cc703738-d0d7-4a07-8111-50bb7a1e1f24@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Keng-Yu Lin <kengyu@canonical.com>
+Subject: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
+Date: Tue, 28 Jun 2011 14:35:53 +0100
+Message-ID: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa011-1msr.fastwebnet.it ([62.101.93.131]:44490 "EHLO
-	aa011-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756526Ab1F1KEg (ORCPT
+Received: from mail-wy0-f174.google.com ([74.125.82.174]:58239 "EHLO
+	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757982Ab1F1NgR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2011 06:04:36 -0400
-In-Reply-To: <cc703738-d0d7-4a07-8111-50bb7a1e1f24@email.android.com>
+	Tue, 28 Jun 2011 09:36:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ike.pan@canonical.com, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com, Keng-Yu Lin <kengyu@canonical.com>
 
-Il 28/06/2011 11:27, Mattia Dongili ha scritto:
->
->
-> Marco Chiappero<marco@absence.it>  wrote:
->
->> Il 13/06/2011 02:01, Marco Chiappero ha scritto:
->>> Il 13/06/2011 00:21, Mattia Dongili ha scritto:
->>>>> +static int sony_nc_snc_setup(struct platform_device *pd)
->>>>
->>>> To be honest these sony_nc_snc_* functions are a bit poorly named.
->>>> sony_nc_ was already supposed to be a partial expansion of SNC so
->> this
->>>> whole thing is a bit redundant now. what about
->>>> sony_nc_setup/sony_nc_cleanup?
->>>
->>> Yes I know but in the hurry I forgot to think about that, I will use
->>> this new naming schema.
->>
->> I've been rethinking about this, I was rather unhappy with the
->> sony_nc_snc_setup_handles and sony_nc_handles_setup names. I think that
->>
->> the best solution is:
->> - to rename sony_nc_handles_setup to sony_nc_handles_list_setup
->
-> This:
->> - to include the sony_nc_setup_handles code back to sony_nc_snc_setup
->
-> should be enough to disambiguate without gratuitously renaming all the other functions.
+BIOS fires notifications in a constant period with VPC bit 1 set when the
+power cord is unplugged.
 
-Yeah, but there are two issues:
-1) sony_nc_add/resume/remove/notify are the ACPI callbacks that deal 
-with the whole SNC stuff, while the sony_nc_setup/cleanup functions deal 
-with the sole handles init and cleanup stuff. IMHO, this adds confusion.
-2) we need an handles resume function but sony_nc_resume is already present.
+This event is not known yet to have any effect, but it makes the
+call to sparse_keymap_report_event() and generates many KEY_UNKNOWNs.
 
-Moreover the sony_nc_handles_list_* schema is much better and meaningful 
-since those functions are related to the handles list.
+This causes the userspace (Gnome Power Manager in my case) unable
+to enter the idle mode. As the result there is no screensaver showing up,
+no dim backlight, etc.
 
-so:
-1) sony_nc_handles_* to sony_nc_handles_list_* --> handles list stuff
-2) sony_nc_handles_* --> functions dealing with the handles 
-setup/cleanup/resume stuff called from sony_nc_add/remove/resume (ACPI 
-callbacks)
+Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-To get a better idea, have a look at this modified source, using the 
-naming schema I'm proposing: 
-http://www.absence.it/vaio-acpi/source/sony-laptop_dev_28062011.c
-Hope this helps.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index bfdda33..820f013 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -463,7 +463,8 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+ 				ideapad_sync_rfk_state(adevice);
+ 			else if (vpc_bit == 4)
+ 				read_ec_data(handle, 0x12, &vpc2);
+-			else
++			else if (vpc_bit == 1) {
++			} else
+ 				ideapad_input_report(priv, vpc_bit);
+ 		}
+ 	}
+-- 
+1.7.4.1
