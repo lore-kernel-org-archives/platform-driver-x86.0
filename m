@@ -1,55 +1,59 @@
 From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF event
-Date: Wed, 29 Jun 2011 21:56:22 +0800
-Message-ID: <4E0B2F06.3060706@canonical.com>
-References: <1309268154-6872-1-git-send-email-kengyu@canonical.com> <1309268154-6872-2-git-send-email-kengyu@canonical.com>
+Subject: Re: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
+Date: Wed, 29 Jun 2011 22:26:19 +0800
+Message-ID: <4E0B360B.5050600@canonical.com>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from adelie.canonical.com ([91.189.90.139]:59557 "EHLO
+Received: from adelie.canonical.com ([91.189.90.139]:54590 "EHLO
 	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752461Ab1F2N42 (ORCPT
+	with ESMTP id S1756383Ab1F2O0X (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jun 2011 09:56:28 -0400
-In-Reply-To: <1309268154-6872-2-git-send-email-kengyu@canonical.com>
+	Wed, 29 Jun 2011 10:26:23 -0400
+In-Reply-To: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Keng-Yu Lin <kengyu@canonical.com>
 Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 
 On 06/28/2011 09:35 PM, Keng-Yu Lin wrote:
-> Notification with VPC2 bit 5 set is generated when the wireless
-> hotkey is pressed. BIOS fires this to notify a Windows
-> application to handle the RF switch.
+> BIOS fires notifications in a constant period with VPC bit 1 set when the
+> power cord is unplugged.
 > 
-> On Linux, there is no such application. This patch implements
-> a toggle for all RF devices through accessing the EC I/O ports.
+> This event is not known yet to have any effect, but it makes the
+> call to sparse_keymap_report_event() and generates many KEY_UNKNOWNs.
 > 
-> Without the explicit EC commands, the wifi LED is always on.
+> This causes the userspace (Gnome Power Manager in my case) unable
+> to enter the idle mode. As the result there is no screensaver showing up,
+> no dim backlight, etc.
 > 
 > Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
 > ---
->  drivers/platform/x86/ideapad-laptop.c |    6 +++++-
->  1 files changed, 5 insertions(+), 1 deletions(-)
+>  drivers/platform/x86/ideapad-laptop.c |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 820f013..5e1e971 100644
+> index bfdda33..820f013 100644
 > --- a/drivers/platform/x86/ideapad-laptop.c
 > +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -461,7 +461,11 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
->  		if (test_bit(vpc_bit, &vpc1)) {
->  			if (vpc_bit == 9)
+> @@ -463,7 +463,8 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
 >  				ideapad_sync_rfk_state(adevice);
-> -			else if (vpc_bit == 4)
-> +			else if (vpc_bit == 13) {
-> +				read_ec_data(handle, 0x23, &vpc2);
-> +				write_ec_cmd(handle, 0x24, !vpc2);
-> +				ideapad_sync_rfk_state(adevice);
-> +			} else if (vpc_bit == 4)
+>  			else if (vpc_bit == 4)
 >  				read_ec_data(handle, 0x12, &vpc2);
->  			else if (vpc_bit == 1) {
->  			} else
+> -			else
+> +			else if (vpc_bit == 1) {
+> +			} else
+>  				ideapad_input_report(priv, vpc_bit);
+>  		}
+>  	}
 
-I think its better to implement the changes in ideapad_sync_rfk_state() because we have
-read switch status there. It is not necessary to read the same data twice in an event.
+So far I know this event (coming with vpc_bit=1) is for Lenovo PM utility
+on Windows. For most of the machine this event is not implemented in BIOS.
+
+Its ok that we just ignore the event.
+
+I think it will be better if we can let sparse-keymap or any upper level
+application to ignore all unknown scancode or KEY_UNKNOWN but so far I do
+not know a better way then this patch.
