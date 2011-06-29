@@ -1,50 +1,56 @@
-From: Keng-Yu Lin <kengyu@canonical.com>
-Subject: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF event
-Date: Tue, 28 Jun 2011 14:35:54 +0100
-Message-ID: <1309268154-6872-2-git-send-email-kengyu@canonical.com>
-References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] platform-drivers-x86: set backlight type to
+ BACKLIGHT_PLATFORM
+Date: Wed, 29 Jun 2011 11:43:30 +0800
+Message-ID: <1309319010.17370.1.camel@phoenix>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:58885 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757517Ab1F1NgV (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:41169 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751711Ab1F2Dnk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Jun 2011 09:36:21 -0400
-In-Reply-To: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
+	Tue, 28 Jun 2011 23:43:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ike.pan@canonical.com, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com, Keng-Yu Lin <kengyu@canonical.com>
+To: linux-kernel@vger.kernel.org
+Cc: Corentin Chary <corentincj@iksaif.net>, Yin Kangkai <kangkai.yin@intel.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Notification with VPC2 bit 5 set is generated when the wireless
-hotkey is pressed. BIOS fires this to notify a Windows
-application to handle the RF switch.
+Some newly added drivers do not set backlight type, as a result
+/sys/class/backlight/<backlight>/type shows incorrect backlight type.
 
-On Linux, there is no such application. This patch implements
-a toggle for all RF devices through accessing the EC I/O ports.
-
-Without the explicit EC commands, the wifi LED is always on.
-
-Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>
+Cc: Yin Kangkai <kangkai.yin@intel.com>
 ---
- drivers/platform/x86/ideapad-laptop.c |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+ drivers/platform/x86/asus-wmi.c       |    1 +
+ drivers/platform/x86/intel_oaktrail.c |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 820f013..5e1e971 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -461,7 +461,11 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 		if (test_bit(vpc_bit, &vpc1)) {
- 			if (vpc_bit == 9)
- 				ideapad_sync_rfk_state(adevice);
--			else if (vpc_bit == 4)
-+			else if (vpc_bit == 13) {
-+				read_ec_data(handle, 0x23, &vpc2);
-+				write_ec_cmd(handle, 0x24, !vpc2);
-+				ideapad_sync_rfk_state(adevice);
-+			} else if (vpc_bit == 4)
- 				read_ec_data(handle, 0x12, &vpc2);
- 			else if (vpc_bit == 1) {
- 			} else
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 00460cb..3c7857c7 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1025,6 +1025,7 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
+ 		return power;
+ 
+ 	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = max;
+ 	bd = backlight_device_register(asus->driver->name,
+ 				       &asus->platform_device->dev, asus,
+diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
+index e936364..7f88c79 100644
+--- a/drivers/platform/x86/intel_oaktrail.c
++++ b/drivers/platform/x86/intel_oaktrail.c
+@@ -250,6 +250,7 @@ static int oaktrail_backlight_init(void)
+ 	struct backlight_properties props;
+ 
+ 	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = OT_EC_BL_BRIGHTNESS_MAX;
+ 	bd = backlight_device_register(DRIVER_NAME,
+ 				       &oaktrail_device->dev, NULL,
 -- 
 1.7.4.1
