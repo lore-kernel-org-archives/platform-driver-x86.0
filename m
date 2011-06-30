@@ -1,203 +1,46 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH 3/3] ideapad: add backlight driver
-Date: Thu, 30 Jun 2011 19:50:52 +0800
-Message-ID: <1309434652-4734-1-git-send-email-ike.pan@canonical.com>
-References: <1309434584-4636-1-git-send-email-ike.pan@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1309434584-4636-1-git-send-email-ike.pan@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentin.chary@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: sony-laptop on VAIO TT help request
+Date: Thu, 30 Jun 2011 22:55:09 +0900
+Message-ID: <20110630135507.GA24186@kamineko.org>
+References: <4E0C4AE2.2050706@fnarfbargle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-iw0-f174.google.com ([209.85.214.174]:63004 "EHLO
+	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751097Ab1F3Nyq (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 30 Jun 2011 09:54:46 -0400
+Content-Disposition: inline
+In-Reply-To: <4E0C4AE2.2050706@fnarfbargle.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Brad Campbell <lists2009@fnarfbargle.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-When acpi_backlight=vendor in cmdline or no backlight support in acpi video
-device, ideapad-laptop will register backlight device and control brightness
-and backlight power via the command in VPC2004.
+On Thu, Jun 30, 2011 at 06:07:30PM +0800, Brad Campbell wrote:
+> G'day all,
+> 
+> I have a sony Vaio TT notebook. It works reasonably well with the
+> sony-laptop kernel module excepting the following items
+> 
+> - No control over the optical drive power state
+> - No control over the "battery care" function in the embedded controller
+> - No control over the "quick charge" function
+> 
+> All three of these functions are sub-functions of the SNY6001 method
+> call, just the same as the rfkill functions.
+> 
+> I've reverse engineered all three of them with the assistance of
+> some damaged windows drivers and software. I'd like to add these
+> functions into the sony-laptop module, but I've absolutely no idea
+> where to start.
 
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/ideapad-laptop.c |  123 +++++++++++++++++++++++++++++++--
- 1 files changed, 117 insertions(+), 6 deletions(-)
+there are patches already floating around, you can take a look here
+http://www.absence.it/vaio-acpi/source/patches/
+the code is making its way into the kernel.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 1612abd..8811c68 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -32,6 +32,8 @@
- #include <linux/platform_device.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/backlight.h>
-+#include <linux/fb.h>
- 
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
-@@ -44,6 +46,7 @@ struct ideapad_private {
- 	struct rfkill *rfk[IDEAPAD_RFKILL_DEV_NUM];
- 	struct platform_device *platform_device;
- 	struct input_dev *inputdev;
-+	struct backlight_device *blightdev;
- 	unsigned long cfg;
- };
- 
-@@ -309,8 +312,7 @@ static int __devinit ideapad_register_rfkill(struct acpi_device *adevice,
- 	return 0;
- }
- 
--static void __devexit ideapad_unregister_rfkill(struct acpi_device *adevice,
--						int dev)
-+static void ideapad_unregister_rfkill(struct acpi_device *adevice, int dev)
- {
- 	struct ideapad_private *priv = dev_get_drvdata(&adevice->dev);
- 
-@@ -418,6 +420,98 @@ static void ideapad_input_report(struct ideapad_private *priv,
- }
- 
- /*
-+ * backlight
-+ */
-+static int ideapad_backlight_get_brightness(struct backlight_device *blightdev)
-+{
-+	unsigned long now;
-+
-+	if (read_ec_data(ideapad_handle, 0x12, &now))
-+		return -EIO;
-+	return now;
-+}
-+
-+static int ideapad_backlight_update_status(struct backlight_device *blightdev)
-+{
-+	if (write_ec_cmd(ideapad_handle, 0x13, blightdev->props.brightness))
-+		return -EIO;
-+	if (write_ec_cmd(ideapad_handle, 0x33,
-+			 blightdev->props.power == FB_BLANK_POWERDOWN ? 0 : 1))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops ideapad_backlight_ops = {
-+	.get_brightness = ideapad_backlight_get_brightness,
-+	.update_status = ideapad_backlight_update_status,
-+};
-+
-+static int ideapad_backlight_init(struct ideapad_private *priv)
-+{
-+	struct backlight_device *blightdev;
-+	struct backlight_properties props;
-+	unsigned long max, now, power;
-+
-+	if (read_ec_data(ideapad_handle, 0x11, &max))
-+		return -EIO;
-+	if (read_ec_data(ideapad_handle, 0x12, &now))
-+		return -EIO;
-+	if (read_ec_data(ideapad_handle, 0x18, &power))
-+		return -EIO;
-+
-+	memset(&props, 0, sizeof(struct backlight_properties));
-+	props.max_brightness = max;
-+	props.type = BACKLIGHT_PLATFORM;
-+	blightdev = backlight_device_register("ideapad",
-+					      &priv->platform_device->dev,
-+					      priv,
-+					      &ideapad_backlight_ops,
-+					      &props);
-+	if (IS_ERR(blightdev)) {
-+		pr_err("Could not register backlight device\n");
-+		return PTR_ERR(blightdev);
-+	}
-+
-+	priv->blightdev = blightdev;
-+	blightdev->props.brightness = now;
-+	blightdev->props.power = power ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+	backlight_update_status(blightdev);
-+
-+	return 0;
-+}
-+
-+static void ideapad_backlight_exit(struct ideapad_private *priv)
-+{
-+	if (priv->blightdev)
-+		backlight_device_unregister(priv->blightdev);
-+	priv->blightdev = NULL;
-+}
-+
-+static void ideapad_backlight_notify_power(struct ideapad_private *priv)
-+{
-+	unsigned long power;
-+	struct backlight_device *blightdev = priv->blightdev;
-+
-+	if (read_ec_data(ideapad_handle, 0x18, &power))
-+		return;
-+	blightdev->props.power = power ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+}
-+
-+static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
-+{
-+	unsigned long now;
-+
-+	/* if we control brightness via acpi video driver */
-+	if (priv->blightdev == NULL) {
-+		read_ec_data(ideapad_handle, 0x12, &now);
-+		return;
-+	}
-+
-+	backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
-+}
-+
-+/*
-  * module init/exit
-  */
- static const struct acpi_device_id ideapad_device_ids[] = {
-@@ -458,8 +552,17 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
- 	}
- 	ideapad_sync_rfk_state(adevice);
- 
-+	if (!acpi_video_backlight_support()) {
-+		ret = ideapad_backlight_init(priv);
-+		if (ret && ret != -ENODEV)
-+			goto backlight_failed;
-+	}
-+
- 	return 0;
- 
-+backlight_failed:
-+	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
-+		ideapad_unregister_rfkill(adevice, i);
- input_failed:
- 	ideapad_platform_exit(priv);
- platform_failed:
-@@ -472,6 +575,7 @@ static int __devexit ideapad_acpi_remove(struct acpi_device *adevice, int type)
- 	struct ideapad_private *priv = dev_get_drvdata(&adevice->dev);
- 	int i;
- 
-+	ideapad_backlight_exit(priv);
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		ideapad_unregister_rfkill(adevice, i);
- 	ideapad_input_exit(priv);
-@@ -496,12 +600,19 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 	vpc1 = (vpc2 << 8) | vpc1;
- 	for (vpc_bit = 0; vpc_bit < 16; vpc_bit++) {
- 		if (test_bit(vpc_bit, &vpc1)) {
--			if (vpc_bit == 9)
-+			switch (vpc_bit) {
-+			case 9:
- 				ideapad_sync_rfk_state(adevice);
--			else if (vpc_bit == 4)
--				read_ec_data(handle, 0x12, &vpc2);
--			else
-+				break;
-+			case 4:
-+				ideapad_backlight_notify_brightness(priv);
-+				break;
-+			case 2:
-+				ideapad_backlight_notify_power(priv);
-+				break;
-+			default:
- 				ideapad_input_report(priv, vpc_bit);
-+			}
- 		}
- 	}
- }
+ciao
 -- 
-1.7.4.1
+mattia
+:wq!
