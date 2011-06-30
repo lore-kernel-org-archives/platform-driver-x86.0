@@ -1,87 +1,94 @@
 From: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <kengyu@canonical.com>
-Subject: Re: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
-Date: Thu, 30 Jun 2011 11:17:52 +0100
-Message-ID: <BANLkTinwSHoV+BBG_jvLdg3c4o_uODNJvQ@mail.gmail.com>
-References: <1309268154-6872-1-git-send-email-kengyu@canonical.com> <4E0B360B.5050600@canonical.com>
+Subject: Re: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF event
+Date: Thu, 30 Jun 2011 11:34:55 +0100
+Message-ID: <BANLkTimXyoC74XhZSG7jOngYdrx7yZ7nDg@mail.gmail.com>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
+ <1309268154-6872-2-git-send-email-kengyu@canonical.com> <4E0B2F06.3060706@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:48280 "EHLO
+Received: from mail-bw0-f46.google.com ([209.85.214.46]:54079 "EHLO
 	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752118Ab1F3KSe convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1751469Ab1F3Kfg convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Jun 2011 06:18:34 -0400
-In-Reply-To: <4E0B360B.5050600@canonical.com>
+	Thu, 30 Jun 2011 06:35:36 -0400
+In-Reply-To: <4E0B2F06.3060706@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Ike Panhc <ike.pan@canonical.com>
 Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 
-On Wed, Jun 29, 2011 at 3:26 PM, Ike Panhc <ike.pan@canonical.com> wrot=
+On Wed, Jun 29, 2011 at 2:56 PM, Ike Panhc <ike.pan@canonical.com> wrot=
 e:
 > On 06/28/2011 09:35 PM, Keng-Yu Lin wrote:
->> BIOS fires notifications in a constant period with VPC bit 1 set whe=
-n the
->> power cord is unplugged.
+>> Notification with VPC2 bit 5 set is generated when the wireless
+>> hotkey is pressed. BIOS fires this to notify a Windows
+>> application to handle the RF switch.
 >>
->> This event is not known yet to have any effect, but it makes the
->> call to sparse_keymap_report_event() and generates many KEY_UNKNOWNs=
-=2E
+>> On Linux, there is no such application. This patch implements
+>> a toggle for all RF devices through accessing the EC I/O ports.
 >>
->> This causes the userspace (Gnome Power Manager in my case) unable
->> to enter the idle mode. As the result there is no screensaver showin=
-g up,
->> no dim backlight, etc.
+>> Without the explicit EC commands, the wifi LED is always on.
 >>
 >> Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
 >> ---
->> =C2=A0drivers/platform/x86/ideapad-laptop.c | =C2=A0 =C2=A03 ++-
->> =C2=A01 files changed, 2 insertions(+), 1 deletions(-)
+>> =C2=A0drivers/platform/x86/ideapad-laptop.c | =C2=A0 =C2=A06 +++++-
+>> =C2=A01 files changed, 5 insertions(+), 1 deletions(-)
 >>
 >> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfor=
 m/x86/ideapad-laptop.c
->> index bfdda33..820f013 100644
+>> index 820f013..5e1e971 100644
 >> --- a/drivers/platform/x86/ideapad-laptop.c
 >> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -463,7 +463,8 @@ static void ideapad_acpi_notify(struct acpi_devi=
-ce *adevice, u32 event)
+>> @@ -461,7 +461,11 @@ static void ideapad_acpi_notify(struct acpi_dev=
+ice *adevice, u32 event)
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (test_bit(vpc_bi=
+t, &vpc1)) {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 if (vpc_bit =3D=3D 9)
 >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ideapad_sync_rfk_state(adevice);
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 else if (vpc_bit =3D=3D 4)
+>> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 else if (vpc_bit =3D=3D 4)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 else if (vpc_bit =3D=3D 13) {
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_ec_data(handle, 0x23, &vpc2);
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 write_ec_cmd(handle, 0x24, !vpc2);
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ideapad_sync_rfk_state(adevice);
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 } else if (vpc_bit =3D=3D 4)
 >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_ec_data(handle, 0x12, &vpc2);
->> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 else
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 else if (vpc_bit =3D=3D 1) {
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 } else
 >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ideapad_input_report(priv, vpc_bit)=
-;
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
->> =C2=A0 =C2=A0 =C2=A0 }
+ =C2=A0 else if (vpc_bit =3D=3D 1) {
+>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 } else
 >
-> So far I know this event (coming with vpc_bit=3D1) is for Lenovo PM u=
-tility
-> on Windows. For most of the machine this event is not implemented in =
-BIOS.
+> I think its better to implement the changes in ideapad_sync_rfk_state=
+() because we have
+> read switch status there. It is not necessary to read the same data t=
+wice in an event.
 >
-> Its ok that we just ignore the event.
 >
-> I think it will be better if we can let sparse-keymap or any upper le=
-vel
-> application to ignore all unknown scancode or KEY_UNKNOWN but so far =
-I do
-> not know a better way then this patch.
 
-I think sparse_keymap_report_event() sends the KEY_UNKNOWN on purpose
-as a debugging aid.
+Current ideapad_sync_rfk_state() code does not really toggle the
+hardware swtich (I mean to write_ec_cmd with 0x24 command). It just
+assumes that the BIOS or EC is responsible for the wifi switch-on/-off
+and reports the state via rfkill_set_hw_state().
 
-We should prevent the call to it in ideapad-laptop. I think the patch
-is probably the simplest way.
+In my case, without explicit sending the 0x24 command to turn off the
+radio device, the wifi LED is always on.
+
+Though it might not be true or applicable on ideapads,  in my last
+experience on Dell laptops that to switch off the RF radio in the
+driver while the hardware claims to control it can cause some mess-up.
+
+So to be safe I prefer not to move the toggle code in ideapad_sync_rfk_=
+state().
 
   Thanks,
 -kengyu
