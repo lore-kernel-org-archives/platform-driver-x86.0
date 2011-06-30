@@ -1,94 +1,45 @@
-From: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <kengyu@canonical.com>
-Subject: Re: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF event
-Date: Thu, 30 Jun 2011 11:34:55 +0100
-Message-ID: <BANLkTimXyoC74XhZSG7jOngYdrx7yZ7nDg@mail.gmail.com>
-References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
- <1309268154-6872-2-git-send-email-kengyu@canonical.com> <4E0B2F06.3060706@canonical.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 1/3] ideapad: define cfg bits and create sysfs node for
+ cfg
+Date: Thu, 30 Jun 2011 18:59:56 +0800
+Message-ID: <4E0C572C.8000409@canonical.com>
+References: <1308729781-2590-1-git-send-email-ike.pan@canonical.com> <1308729943-2624-1-git-send-email-ike.pan@canonical.com> <20110622193523.GA8861@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:54079 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751469Ab1F3Kfg convert rfc822-to-8bit (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:54384 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751470Ab1F3K76 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Jun 2011 06:35:36 -0400
-In-Reply-To: <4E0B2F06.3060706@canonical.com>
+	Thu, 30 Jun 2011 06:59:58 -0400
+In-Reply-To: <20110622193523.GA8861@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 29, 2011 at 2:56 PM, Ike Panhc <ike.pan@canonical.com> wrot=
-e:
-> On 06/28/2011 09:35 PM, Keng-Yu Lin wrote:
->> Notification with VPC2 bit 5 set is generated when the wireless
->> hotkey is pressed. BIOS fires this to notify a Windows
->> application to handle the RF switch.
->>
->> On Linux, there is no such application. This patch implements
->> a toggle for all RF devices through accessing the EC I/O ports.
->>
->> Without the explicit EC commands, the wifi LED is always on.
->>
->> Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
->> ---
->> =C2=A0drivers/platform/x86/ideapad-laptop.c | =C2=A0 =C2=A06 +++++-
->> =C2=A01 files changed, 5 insertions(+), 1 deletions(-)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfor=
-m/x86/ideapad-laptop.c
->> index 820f013..5e1e971 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -461,7 +461,11 @@ static void ideapad_acpi_notify(struct acpi_dev=
-ice *adevice, u32 event)
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (test_bit(vpc_bi=
-t, &vpc1)) {
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 if (vpc_bit =3D=3D 9)
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ideapad_sync_rfk_state(adevice);
->> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 else if (vpc_bit =3D=3D 4)
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 else if (vpc_bit =3D=3D 13) {
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_ec_data(handle, 0x23, &vpc2);
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 write_ec_cmd(handle, 0x24, !vpc2);
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ideapad_sync_rfk_state(adevice);
->> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 } else if (vpc_bit =3D=3D 4)
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 read_ec_data(handle, 0x12, &vpc2);
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 else if (vpc_bit =3D=3D 1) {
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 } else
->
-> I think its better to implement the changes in ideapad_sync_rfk_state=
-() because we have
-> read switch status there. It is not necessary to read the same data t=
-wice in an event.
->
->
+On 06/23/2011 03:35 AM, Matthew Garrett wrote:
+> On Wed, Jun 22, 2011 at 04:05:43PM +0800, Ike Panhc wrote:
+>>  static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
+>>  {
+>> -	int ret, i, cfg;
+>> +	int ret, i;
+>> +	unsigned long cfg;
+> 
+> You change this to an unsigned long, but you cast it to an int in 
+> several places. Is that just to avoid casting to a long here?
+> 
+>> -		if (test_bit(ideapad_rfk_data[i].cfgbit, (unsigned long *)&cfg))
+>> +		if (test_bit(ideapad_rfk_data[i].cfgbit, &cfg))
+> 
+> I think it seems neater the other way around, but don't have terribly 
+> strong opinions.
+> 
 
-Current ideapad_sync_rfk_state() code does not really toggle the
-hardware swtich (I mean to write_ec_cmd with 0x24 command). It just
-assumes that the BIOS or EC is responsible for the wifi switch-on/-off
-and reports the state via rfkill_set_hw_state().
+I read again how cfg is used. They are 2 test_bit, one sprintf and
+read_method_int.
 
-In my case, without explicit sending the 0x24 command to turn off the
-radio device, the wifi LED is always on.
-
-Though it might not be true or applicable on ideapads,  in my last
-experience on Dell laptops that to switch off the RF radio in the
-driver while the hardware claims to control it can cause some mess-up.
-
-So to be safe I prefer not to move the toggle code in ideapad_sync_rfk_=
-state().
-
-  Thanks,
--kengyu
+test_bit is the major reason of changing from int to unsigned long. I will
+change the format string in sprintf from %X to %lX. After the change there
+will be only one cast left.
