@@ -1,34 +1,36 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 09/16] asus-wmi: fix keyboard backlight detection
-Date: Fri,  1 Jul 2011 11:34:34 +0200
-Message-ID: <1309512881-2901-10-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 08/16] asus-wmi: set backlight type
+Date: Fri,  1 Jul 2011 11:34:33 +0200
+Message-ID: <1309512881-2901-9-git-send-email-corentin.chary@gmail.com>
 References: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from fb1.tech.numericable.fr ([82.216.111.51]:45662 "EHLO
+	fb1.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755520Ab1GAJf3 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 1 Jul 2011 05:35:29 -0400
 In-Reply-To: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, open list <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
+ drivers/platform/x86/asus-wmi.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 2ab83d1..332103b 100644
+index fa6982a..2ab83d1 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -395,8 +395,9 @@ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
- 	retval = asus_wmi_get_devstate_bits(asus, ASUS_WMI_DEVID_KBD_BACKLIGHT,
- 					    0xFFFF);
+@@ -1123,6 +1123,7 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
+ 		return power;
  
-+	/* Unknown status is considered as off */
- 	if (retval == 0x8000)
--		retval = -ENODEV;
-+		retval = 0;
- 
- 	if (retval >= 0) {
- 		if (level)
+ 	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = max;
+ 	bd = backlight_device_register(asus->driver->name,
+ 				       &asus->platform_device->dev, asus,
 -- 
 1.7.3.4
