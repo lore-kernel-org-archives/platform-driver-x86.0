@@ -1,7 +1,7 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 11/16] asus-wmi: add thermal sensor
-Date: Fri,  1 Jul 2011 11:34:36 +0200
-Message-ID: <1309512881-2901-12-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 12/16] asus-wmi: check for temp1 presence
+Date: Fri,  1 Jul 2011 11:34:37 +0200
+Message-ID: <1309512881-2901-13-git-send-email-corentin.chary@gmail.com>
 References: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
@@ -12,55 +12,41 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+ drivers/platform/x86/asus-wmi.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a972d8e..cc947cc 100644
+index cc947cc..be9e89a 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -44,6 +44,7 @@
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
- #include <linux/platform_device.h>
-+#include <linux/thermal.h>
- #include <acpi/acpi_bus.h>
- #include <acpi/acpi_drivers.h>
- 
-@@ -930,7 +931,26 @@ static ssize_t asus_hwmon_pwm1(struct device *dev,
- 	return sprintf(buf, "%d\n", value);
- }
- 
-+static ssize_t asus_hwmon_temp1(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	u32 value;
-+	int err;
-+
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_THERMAL_CTRL, &value);
-+
-+	if (err < 0)
-+		return err;
-+
-+	value = KELVIN_TO_CELSIUS((value & 0xFFFF)) * 1000;
-+
-+	return sprintf(buf, "%d\n", value);
-+}
-+
- static SENSOR_DEVICE_ATTR(pwm1, S_IRUGO, asus_hwmon_pwm1, NULL, 0);
-+static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL, 0);
- 
- static ssize_t
- show_name(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -941,6 +961,7 @@ static SENSOR_DEVICE_ATTR(name, S_IRUGO, show_name, NULL, 0);
- 
- static struct attribute *hwmon_attributes[] = {
- 	&sensor_dev_attr_pwm1.dev_attr.attr,
-+	&sensor_dev_attr_temp1_input.dev_attr.attr,
- 	&sensor_dev_attr_name.dev_attr.attr,
- 	NULL
+@@ -967,7 +967,7 @@ static struct attribute *hwmon_attributes[] = {
  };
+ 
+ static mode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+-				    struct attribute *attr, int idx)
++					  struct attribute *attr, int idx)
+ {
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+ 	struct platform_device *pdev = to_platform_device(dev->parent);
+@@ -978,6 +978,8 @@ static mode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 
+ 	if (attr == &sensor_dev_attr_pwm1.dev_attr.attr)
+ 		dev_id = ASUS_WMI_DEVID_FAN_CTRL;
++	else if (attr == &sensor_dev_attr_temp1_input.dev_attr.attr)
++		dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
+ 
+ 	if (dev_id != -1) {
+ 		int err = asus_wmi_get_devstate(asus, dev_id, &value);
+@@ -998,6 +1000,10 @@ static mode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
+ 		if (value == ASUS_WMI_UNSUPPORTED_METHOD || value & 0xFFF80000
+ 		    || (!asus->sfun && !(value & ASUS_WMI_DSTS_PRESENCE_BIT)))
+ 			ok = false;
++	} else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
++		/* If value is zero, something is clearly wrong */
++		if (value == 0)
++			ok = false;
+ 	}
+ 
+ 	return ok ? attr->mode : 0;
 -- 
 1.7.3.4
