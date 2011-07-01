@@ -1,40 +1,28 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 04/16] asus-wmi: Enable autorepeat for hotkey input device
-Date: Fri,  1 Jul 2011 11:34:29 +0200
-Message-ID: <1309512881-2901-5-git-send-email-corentin.chary@gmail.com>
-References: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, open list <linux-kernel@vger.kernel.org>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: sony-laptop on VAIO TT help request
+Date: Fri, 01 Jul 2011 11:46:13 +0200
+Message-ID: <4E0D9765.7060700@absence.it>
+References: <4E0C4AE2.2050706@fnarfbargle.com> <20110630135507.GA24186@kamineko.org> <4E0C9BC6.4020603@fnarfbargle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4E0C9BC6.4020603@fnarfbargle.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Brad Campbell <lists2009@fnarfbargle.com>
+Cc: Mattia Dongili <malattia@linux.it>, linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Seth Forshee <seth.forshee@canonical.com>
+Il 30/06/2011 17:52, Brad Campbell ha scritto:
+> On 30/06/11 21:55, Mattia Dongili wrote:
+>
+>> there are patches already floating around, you can take a look here
+>> http://www.absence.it/vaio-acpi/source/patches/
+>> the code is making its way into the kernel.
+>
+> Hrm.. next time I guess I'll ask before breaking out the debugger!
 
-The T101MT Home/Express Gate key autorepeats in hardware, but
-sparse-keymap does not support hardware autorepeat. Enable the
-input core's software autorepeat to emulate the hardware behavior.
-Normal hotkeys are autoreleased, so the behavior of these keys
-will not be affected.
+Hello,
+could you please provide us your DSDT and the exact model string of your TT?
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
----
- drivers/platform/x86/asus-wmi.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a09271d..35eeb69 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -205,6 +205,7 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
- 	asus->inputdev->phys = asus->driver->input_phys;
- 	asus->inputdev->id.bustype = BUS_HOST;
- 	asus->inputdev->dev.parent = &asus->platform_device->dev;
-+	__set_bit(EV_REP, asus->inputdev->evbit);
- 
- 	err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
- 	if (err)
--- 
-1.7.3.4
+Thanks
