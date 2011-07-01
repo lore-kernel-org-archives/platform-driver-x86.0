@@ -1,53 +1,69 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
-Date: Fri, 1 Jul 2011 13:50:20 +0100
-Message-ID: <20110701125020.GA31697@srcf.ucam.org>
-References: <20110604164021.GA12552@kamineko.org>
- <4DEA644D.3030109@absence.it>
- <20110605222401.GA26835@kamineko.org>
- <4DECD592.6000707@absence.it>
- <20110607142332.GA4087@kamineko.org>
- <4DEE4094.8040300@absence.it>
- <20110607162413.GC4087@kamineko.org>
- <4DEE66F5.1020406@absence.it>
- <4DFF50DB.30100@absence.it>
- <4E0DAB83.3070406@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: sony-laptop on VAIO TT help request
+Date: Fri, 01 Jul 2011 15:55:28 +0200
+Message-ID: <4E0DD1D0.7020605@absence.it>
+References: <4E0C4AE2.2050706@fnarfbargle.com> <20110630135507.GA24186@kamineko.org> <4E0C9BC6.4020603@fnarfbargle.com> <4E0D9765.7060700@absence.it> <20110701095049.GE11959@gamma.logic.tuwien.ac.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:57032 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755080Ab1GAMu1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2011 08:50:27 -0400
-Content-Disposition: inline
-In-Reply-To: <4E0DAB83.3070406@absence.it>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
-Cc: Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20110701095049.GE11959@gamma.logic.tuwien.ac.at>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Norbert Preining <preining@logic.at>
+Cc: Brad Campbell <lists2009@fnarfbargle.com>, Mattia Dongili <malattia@linux.it>, linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jul 01, 2011 at 01:12:03PM +0200, Marco Chiappero wrote:
-> Il 20/06/2011 15:53, Marco Chiappero ha scritto:
-> 
-> >>In this case I can't see how consistency is relevant (especially if we
-> >>think that it's a nonexistent layout!). Moreover every SNC equipped
-> >>notebooks use the same map while SPIC related code is going to be
-> >>deprecated.
-> >
-> >Mattia, what is your final decision about this topic? Would you like to
-> >maintain the KEY_FN_F* mapping?
-> 
-> About the hotkeys, there is one more thing to deal with: the
-> touchpad enable Fn-F1 combo. Now, the easy solution (I don't like)
-> is to let acpid run some script that writes to the touchpad
-> attribute to enable/disable the touchpad when the combo is pressed.
-> Of course this requires acpid and the acpi bus notifications we are
-> about to remove. I think that the driver should perform this change,
-> when that combo is pressed and handle 0x0148 is present. Any
-> thoughts on this? I think we can't avoid providing this feature.
+Il 01/07/2011 11:50, Norbert Preining ha scritto:
+> Hi Marco,
+>
+> On Fr, 01 Jul 2011, Marco Chiappero wrote:
+>>>> http://www.absence.it/vaio-acpi/source/patches/
+>>
+>> could you please provide us your DSDT and the exact model string of your TT?
+>
+> I looked a bit through the patch and I see that it is restricted
+> to MM and (forgotten the model number).
 
-We've standardised on doing this via the input layer.
+MM? What does it stand for?
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+> I have a VGN-Z11 which has
+> also a turn on/off optical drive, a shock sensor etc.
+
+This last one is interesting because, from the other DSTDs I have seen, 
+I suspect your notebook to have handle 0x0113, an handle that allows to 
+enable/disable an unknown feature, is it the HDD protection?
+
+> (btw, I also take care for the sony-laptop-zseries variant of the
+> kernel module where you can turn off and on the nvidia card,
+> and also the led of the speed-stamina switch is controlled.
+
+This is interesting too. Ok, let's not speak about the multiplexer 
+methods, let us speak about handle 0x0128, related to the Hybrid GFX 
+feature. I have never done a deep analysis, maybe you can help here.
+First of all, newer VPCZ1 models come with a few more methods, dealing 
+with the screen brightness level, HSC5, HSC6, HSC7. Then:
+- HSC0 returns the event reason (1 switch position change? what about 
+2,3,4?)
+- HSC1 returns some state bits (what about their meaning?)
+- HSC2, HSC3, HSC4?
+
+Moreover:
+
+  Field (ECF2, ByteAcc, Lock, Preserve)
+         {
+                     Offset (0xF1),
+             HPWR,   1, 			<-- ?
+             HLMX,   1, 			<-- ?
+             HCMM,   1, 			<-- ?
+             DLED,   1, 			<-- discrete GFX led
+             ILED,   1, 			<-- integr. GFX led
+             ALED,   1, 			<-- auto GFX led
+                     Offset (0xF2),
+             SWPS,   1, 			<-- ?
+             HPOK,   1, 			<-- ?
+             HHPD,   1, 			<-- HDMI related
+             DHPD,   1, 			<-- DVI related
+             ATSW,   1			<-- auto switching related
+         }
+
+What does handle 0x0128 aim to provide?
