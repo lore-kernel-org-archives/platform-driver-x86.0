@@ -1,31 +1,38 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
-Date: Fri, 01 Jul 2011 12:54:21 +0200
-Message-ID: <4E0DA75D.2090801@absence.it>
-References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org> <4DF55356.9020405@absence.it> <4DFD2F83.40803@absence.it> <cc703738-d0d7-4a07-8111-50bb7a1e1f24@email.android.com> <4E09A72E.5050903@absence.it>
+Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
+Date: Fri, 01 Jul 2011 13:12:03 +0200
+Message-ID: <4E0DAB83.3070406@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE9012E.5040207@absence.it> <20110604080717.GC7194@kamineko.org> <4DEA4D67.8000009@absence.it> <20110604164021.GA12552@kamineko.org> <4DEA644D.3030109@absence.it> <20110605222401.GA26835@kamineko.org> <4DECD592.6000707@absence.it> <20110607142332.GA4087@kamineko.org> <4DEE4094.8040300@absence.it> <20110607162413.GC4087@kamineko.org> <4DEE66F5.1020406@absence.it> <4DFF50DB.30100@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:33332 "EHLO
+Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:38984 "EHLO
 	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754854Ab1GAKyZ (ORCPT
+	with ESMTP id S1754793Ab1GALMG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2011 06:54:25 -0400
-In-Reply-To: <4E09A72E.5050903@absence.it>
+	Fri, 1 Jul 2011 07:12:06 -0400
+In-Reply-To: <4DFF50DB.30100@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mattia Dongili <malattia@linux.it>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Il 28/06/2011 12:04, Marco Chiappero ha scritto:
-> To get a better idea, have a look at this modified source, using the
-> naming schema I'm proposing:
-> http://www.absence.it/vaio-acpi/source/sony-laptop_dev_28062011.c
+Il 20/06/2011 15:53, Marco Chiappero ha scritto:
 
-I recently uploaded the first part (new features excluded) of my v2 
-patches at http://www.absence.it/vaio-acpi/source/patches/patchset-v2/ 
-to help you and receive new feedbacks. There is no description but the 
-patches should be self explanatory to you. I'm still waiting for a few 
-clarifications before sending them to the mailing list, so if something 
-doesn't look good let me know.
+>> In this case I can't see how consistency is relevant (especially if we
+>> think that it's a nonexistent layout!). Moreover every SNC equipped
+>> notebooks use the same map while SPIC related code is going to be
+>> deprecated.
+>
+> Mattia, what is your final decision about this topic? Would you like to
+> maintain the KEY_FN_F* mapping?
+
+About the hotkeys, there is one more thing to deal with: the touchpad 
+enable Fn-F1 combo. Now, the easy solution (I don't like) is to let 
+acpid run some script that writes to the touchpad attribute to 
+enable/disable the touchpad when the combo is pressed. Of course this 
+requires acpid and the acpi bus notifications we are about to remove. I 
+think that the driver should perform this change, when that combo is 
+pressed and handle 0x0148 is present. Any thoughts on this? I think we 
+can't avoid providing this feature.
