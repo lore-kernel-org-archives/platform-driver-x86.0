@@ -1,32 +1,72 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 07/16] asus-wmi: fix section mismatch
-Date: Fri,  1 Jul 2011 11:34:32 +0200
-Message-ID: <1309512881-2901-8-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 15/16] asus-wmi: add gps rfkill support
+Date: Fri,  1 Jul 2011 11:34:40 +0200
+Message-ID: <1309512881-2901-16-git-send-email-corentin.chary@gmail.com>
 References: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from fb1.tech.numericable.fr ([82.216.111.51]:43286 "EHLO
+	fb1.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755685Ab1GAJfb (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 1 Jul 2011 05:35:31 -0400
 In-Reply-To: <1309512881-2901-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, open list <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ drivers/platform/x86/asus-wmi.c |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 619e3e3..fa6982a 100644
+index db4413a..83d4d26 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1711,7 +1711,7 @@ static int asus_wmi_probe(struct platform_device *pdev)
+@@ -194,6 +194,7 @@ struct asus_wmi {
+ 	struct asus_rfkill bluetooth;
+ 	struct asus_rfkill wimax;
+ 	struct asus_rfkill wwan3g;
++	struct asus_rfkill gps;
  
- static bool used;
+ 	struct hotplug_slot *hotplug_slot;
+ 	struct mutex hotplug_lock;
+@@ -835,6 +836,11 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+ 		rfkill_destroy(asus->wwan3g.rfkill);
+ 		asus->wwan3g.rfkill = NULL;
+ 	}
++	if (asus->gps.rfkill) {
++		rfkill_unregister(asus->gps.rfkill);
++		rfkill_destroy(asus->gps.rfkill);
++		asus->gps.rfkill = NULL;
++	}
+ }
  
--int asus_wmi_register_driver(struct asus_wmi_driver *driver)
-+int __init_or_module asus_wmi_register_driver(struct asus_wmi_driver *driver)
- {
- 	struct platform_driver *platform_driver;
- 	struct platform_device *platform_device;
+ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+@@ -869,6 +875,12 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ 	if (result && result != -ENODEV)
+ 		goto exit;
+ 
++	result = asus_new_rfkill(asus, &asus->gps, "asus-gps",
++				 RFKILL_TYPE_GPS, ASUS_WMI_DEVID_GPS);
++
++	if (result && result != -ENODEV)
++		goto exit;
++
+ 	if (!asus->driver->hotplug_wireless)
+ 		goto exit;
+ 
+@@ -1721,6 +1733,10 @@ static int asus_hotk_restore(struct device *device)
+ 		bl = !asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_WWAN3G);
+ 		rfkill_set_sw_state(asus->wwan3g.rfkill, bl);
+ 	}
++	if (asus->gps.rfkill) {
++		bl = !asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPS);
++		rfkill_set_sw_state(asus->gps.rfkill, bl);
++	}
+ 
+ 	return 0;
+ }
 -- 
 1.7.3.4
