@@ -1,51 +1,31 @@
-From: Norbert Preining <preining@logic.at>
-Subject: Re: sony-laptop on VAIO TT help request
-Date: Fri, 1 Jul 2011 18:50:49 +0900
-Message-ID: <20110701095049.GE11959@gamma.logic.tuwien.ac.at>
-References: <4E0C4AE2.2050706@fnarfbargle.com> <20110630135507.GA24186@kamineko.org> <4E0C9BC6.4020603@fnarfbargle.com> <4E0D9765.7060700@absence.it>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
+Date: Fri, 01 Jul 2011 12:54:21 +0200
+Message-ID: <4E0DA75D.2090801@absence.it>
+References: <4DE8FC4A.9010401@absence.it> <4DE8FE7B.6090602@absence.it> <20110612222123.GB31095@kamineko.org> <4DF55356.9020405@absence.it> <4DFD2F83.40803@absence.it> <cc703738-d0d7-4a07-8111-50bb7a1e1f24@email.android.com> <4E09A72E.5050903@absence.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.logic.tuwien.ac.at ([128.130.175.19]:44219 "EHLO
-	mx.logic.tuwien.ac.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755785Ab1GAKWM (ORCPT
+Received: from aa012-1msr.fastwebnet.it ([62.101.93.132]:33332 "EHLO
+	aa012-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754854Ab1GAKyZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2011 06:22:12 -0400
-Content-Disposition: inline
-In-Reply-To: <4E0D9765.7060700@absence.it>
+	Fri, 1 Jul 2011 06:54:25 -0400
+In-Reply-To: <4E09A72E.5050903@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
-Cc: Brad Campbell <lists2009@fnarfbargle.com>, Mattia Dongili <malattia@linux.it>, linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Hi Marco,
+Il 28/06/2011 12:04, Marco Chiappero ha scritto:
+> To get a better idea, have a look at this modified source, using the
+> naming schema I'm proposing:
+> http://www.absence.it/vaio-acpi/source/sony-laptop_dev_28062011.c
 
-On Fr, 01 Jul 2011, Marco Chiappero wrote:
->>> http://www.absence.it/vaio-acpi/source/patches/
->
-> could you please provide us your DSDT and the exact model string of your TT?
-
-I looked a bit through the patch and I see that it is restricted
-to MM and (forgotten the model number). I have a VGN-Z11 which has
-also a turn on/off optical drive, a shock sensor etc.
-
-I would be interested in trying out some of these new things and see if
-they can work in the Z11, too.
-
-(btw, I also take care for the sony-laptop-zseries variant of the
-kernel module where you can turn off and on the nvidia card,
-and also the led of the speed-stamina switch is controlled. After
-I have tried your patches I will try to merge my patches back into
-yours.)
-
-Best wishes
-
-Norbert
-------------------------------------------------------------------------
-Norbert Preining            preining@{jaist.ac.jp, logic.at, debian.org}
-JAIST, Japan                                 TeX Live & Debian Developer
-DSA: 0x09C5B094   fp: 14DF 2E6C 0307 BE6D AD76  A9C0 D2BF 4AA3 09C5 B094
-------------------------------------------------------------------------
-OK, so ten out of ten for style, but minus several million
-for good thinking, yeah?
-                 --- Douglas Adams, The Hitchhikers Guide to the Galaxy
+I recently uploaded the first part (new features excluded) of my v2 
+patches at http://www.absence.it/vaio-acpi/source/patches/patchset-v2/ 
+to help you and receive new feedbacks. There is no description but the 
+patches should be self explanatory to you. I'm still waiting for a few 
+clarifications before sending them to the mailing list, so if something 
+doesn't look good let me know.
