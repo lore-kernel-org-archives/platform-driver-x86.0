@@ -1,70 +1,87 @@
-From: Marco Chiappero <marco@absence.it>
-Subject: Re: Need help debugging Sony Vaio VPCY2 backlight control problem
-Date: Sat, 02 Jul 2011 00:12:07 +0200
-Message-ID: <4E0E4637.7000902@absence.it>
-References: <4E0E2155.4070508@fedoraproject.org>
+From: J Witteveen <jwitteve@liacs.nl>
+Subject: [PATCH] Samsung Laptop platform driver: support N510
+Date: Sun, 3 Jul 2011 13:15:44 +0200
+Message-ID: <20110703111544.GA21626@liacs.nl>
+Reply-To: j.witteveen@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:34748 "EHLO
-	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756130Ab1GAWMO (ORCPT
+Received: from platinum.liacs.nl ([132.229.131.22]:50059 "EHLO
+	platinum.liacs.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750845Ab1GCLUg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jul 2011 18:12:14 -0400
-In-Reply-To: <4E0E2155.4070508@fedoraproject.org>
+	Sun, 3 Jul 2011 07:20:36 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Michel Alexandre Salim <salimma@fedoraproject.org>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Mattia Dongili <malattia@linux.it>
+To: linux-kernel@vger.kernel.org
+Cc: mjg@redhat.com, gregkh@suse.de, platform-driver-x86@vger.kernel.org
 
-Il 01/07/2011 21:34, Michel Alexandre Salim ha scritto:
-> Dear all,
+Dear all,
 
-Hello Michel,
+It appears my previous message has gone unnoticed.
+This is my second shot. The patch below adds the N510 netbook to the li=
+st of supported hardware.
 
-I'm not neither experienced nor the maintainer but I'll give my two cents.
+Regards,
+- Jouke
 
-> I have a Sony Vaio VPCY2 with a backlight control problem -- both with
-> acpi_backlight=video and acpi_backlight=vendor.
+
+----- Forwarded message from J Witteveen <jwitteve@liacs.nl> -----
+
+Date: Sun, 26 Jun 2011 17:08:55 +0200
+=46rom: J Witteveen <jwitteve@liacs.nl>
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Bcc: j.witteveen@gmail.com
+Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
+User-Agent: Mutt/1.5.17 (2007-11-01)
+
+On Fri, Feb 11, 2011 at 10:17, Jouke Witteveen <j.witteveen@gmail.com> =
+wrote:
+> On Wed, Feb 9, 2011 at 23:40, Greg KH <greg@kroah.com> wrote:
+>> From: Greg Kroah-Hartman <gregkh@suse.de>
+>>
+>> This adds the samsung-laptop driver to the kernel. =A0It now support=
+s
+>> all known Samsung laptops.
+>>
 >
-> With the former, setting the backlight (with Fn-F5/6) gave the
-> appearance, as far as
-> /sys/class/backlight/acpi_video0/{actual_,}brightness is concerned, that
-> the change took place, however, the screen brightness remained
-> unchanged.
-
-Here there is something I don't understand, since the _BCM method stores 
-the brightness level into an EC register (apparently which one depends 
-whether the notebook is on battery or not, if BNCM is enabled), but no 
-GFX related methods are then called. The fact that _BQC returns an 
-updated value proves that it works, but looking at your DSDT I'd say 
-that no change is indeed applied. Are you experiencing the same issue 
-under Windows?
-
-> Kernel bug report here: https://bugzilla.kernel.org/show_bug.cgi?id=38342
+> I don't see the N510, is this intentional? The netbook does not diffe=
+r
+> that much from some that are included.
 >
-> Fedora bug report: https://bugzilla.redhat.com/show_bug.cgi?id=689962
->
-> Is the Vaio Y's backlight supposed to be controlled by sony-laptop
-> instead of by video.ko?
 
-Not necessarily.
+The N510 benefits from this code as well. Below is a patch to include s=
+upport.
 
-> Right now with sony-laptop, actual_brightness
-> always reads -1 no matter what value is written to brightness.
+Signed-off-by: Jouke Witteveen <j.witteveen@gmail.com>
 
-In your laptop SBRT/GBRT methods use zero based values, so -1 is a 
-reasonable value. But why are you always getting -1 (especially if the 
-LCD brightness is maximized)? Maybe the if statement "If (^^EC0.BNEN)" 
-is false, but why?
+Thanks,
+- Jouke
 
-> If there's any information not currently attached to those bug reports
-> that is needed, please let me know.
+--- a/drivers/platform/x86/samsung-laptop.c	2011-06-26 16:18:06.5178404=
+68 +0200
++++ b/drivers/platform/x86/samsung-laptop.c	2011-06-26 16:19:14.6775746=
+44 +0200
+@@ -521,6 +521,16 @@ static struct dmi_system_id __initdata s
+ 		.callback =3D dmi_check_cb,
+ 	},
+ 	{
++		.ident =3D "N510",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR,
++					"SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "N510"),
++			DMI_MATCH(DMI_BOARD_NAME, "N510"),
++		},
++		.callback =3D dmi_check_cb,
++	},
++	{
+ 		.ident =3D "X125",
+ 		.matches =3D {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
 
-Using the sony-laptop provided backlight device, try to dump the EC 
-registers before and after changing the brightness value. You can use 
-"ectool" or sysfs (depending on your kernel configuration).
 
-
-Regards
+----- End forwarded message -----
