@@ -1,87 +1,45 @@
-From: J Witteveen <jwitteve@liacs.nl>
-Subject: [PATCH] Samsung Laptop platform driver: support N510
-Date: Sun, 3 Jul 2011 13:15:44 +0200
-Message-ID: <20110703111544.GA21626@liacs.nl>
-Reply-To: j.witteveen@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: [PATCH 04/16] asus-wmi: Enable autorepeat for hotkey input device
+Date: Mon,  4 Jul 2011 09:49:20 +0200
+Message-ID: <1309765760-22045-1-git-send-email-corentin.chary@gmail.com>
+References: <20110701141558.GB1363@srcf.ucam.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from platinum.liacs.nl ([132.229.131.22]:50059 "EHLO
-	platinum.liacs.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750845Ab1GCLUg (ORCPT
+Received: from fb2.tech.numericable.fr ([82.216.111.50]:44431 "EHLO
+	fb2.tech.numericable.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753812Ab1GDHuJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 3 Jul 2011 07:20:36 -0400
-Content-Disposition: inline
+	Mon, 4 Jul 2011 03:50:09 -0400
+In-Reply-To: <20110701141558.GB1363@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: mjg@redhat.com, gregkh@suse.de, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Seth Forshee <seth.forshee@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, open list <linux-kernel@vger.kernel.org>
 
-Dear all,
+From: Seth Forshee <seth.forshee@canonical.com>
 
-It appears my previous message has gone unnoticed.
-This is my second shot. The patch below adds the N510 netbook to the li=
-st of supported hardware.
+The T101MT Home/Express Gate key autorepeats in hardware, but
+sparse-keymap does not support hardware autorepeat. Enable the
+input core's software autorepeat to emulate the hardware behavior.
+Normal hotkeys are autoreleased, so the behavior of these keys
+will not be affected.
 
-Regards,
-- Jouke
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-
------ Forwarded message from J Witteveen <jwitteve@liacs.nl> -----
-
-Date: Sun, 26 Jun 2011 17:08:55 +0200
-=46rom: J Witteveen <jwitteve@liacs.nl>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Bcc: j.witteveen@gmail.com
-Subject: Re: [PATCH] Platform: add Samsung Laptop platform driver
-User-Agent: Mutt/1.5.17 (2007-11-01)
-
-On Fri, Feb 11, 2011 at 10:17, Jouke Witteveen <j.witteveen@gmail.com> =
-wrote:
-> On Wed, Feb 9, 2011 at 23:40, Greg KH <greg@kroah.com> wrote:
->> From: Greg Kroah-Hartman <gregkh@suse.de>
->>
->> This adds the samsung-laptop driver to the kernel. =A0It now support=
-s
->> all known Samsung laptops.
->>
->
-> I don't see the N510, is this intentional? The netbook does not diffe=
-r
-> that much from some that are included.
->
-
-The N510 benefits from this code as well. Below is a patch to include s=
-upport.
-
-Signed-off-by: Jouke Witteveen <j.witteveen@gmail.com>
-
-Thanks,
-- Jouke
-
---- a/drivers/platform/x86/samsung-laptop.c	2011-06-26 16:18:06.5178404=
-68 +0200
-+++ b/drivers/platform/x86/samsung-laptop.c	2011-06-26 16:19:14.6775746=
-44 +0200
-@@ -521,6 +521,16 @@ static struct dmi_system_id __initdata s
- 		.callback =3D dmi_check_cb,
- 	},
- 	{
-+		.ident =3D "N510",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+					"SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "N510"),
-+			DMI_MATCH(DMI_BOARD_NAME, "N510"),
-+		},
-+		.callback =3D dmi_check_cb,
-+	},
-+	{
- 		.ident =3D "X125",
- 		.matches =3D {
- 			DMI_MATCH(DMI_SYS_VENDOR,
-
-
------ End forwarded message -----
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index a09271d..35eeb69 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -205,6 +205,7 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+ 	asus->inputdev->phys = asus->driver->input_phys;
+ 	asus->inputdev->id.bustype = BUS_HOST;
+ 	asus->inputdev->dev.parent = &asus->platform_device->dev;
++	set_bit(EV_REP, asus->inputdev->evbit);
+ 
+ 	err = sparse_keymap_setup(asus->inputdev, asus->driver->keymap, NULL);
+ 	if (err)
+-- 
+1.7.3.4
