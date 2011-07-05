@@ -1,270 +1,93 @@
-From: Frederick van der Wyck <fvanderwyck@gmail.com>
-Subject: [PATCH v3] Platform: Samsung Q10 backlight driver
-Date: Mon, 4 Jul 2011 22:43:57 +0100
-Message-ID: <20110704214357.GA17428@ntl>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF event
+Date: Tue, 05 Jul 2011 15:26:08 +0800
+Message-ID: <4E12BC90.2030702@canonical.com>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com> <1309268154-6872-2-git-send-email-kengyu@canonical.com> <4E0B2F06.3060706@canonical.com> <BANLkTimXyoC74XhZSG7jOngYdrx7yZ7nDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:45817 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752055Ab1GDVhh (ORCPT
+Received: from adelie.canonical.com ([91.189.90.139]:39387 "EHLO
+	adelie.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753635Ab1GEH0T (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jul 2011 17:37:37 -0400
-Content-Disposition: inline
+	Tue, 5 Jul 2011 03:26:19 -0400
+In-Reply-To: <BANLkTimXyoC74XhZSG7jOngYdrx7yZ7nDg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org
-Cc: gregkh@suse.de, dmitry.torokhov@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <kengyu@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 
-This driver adds backlight control on the Samsung Q10 laptop,
-which does not support the SABI interface. Also tested
-successfully on Samsung Q20, Samsung Q25 and Dell Latitude X200.
+On 06/30/2011 06:34 PM, Keng-Y=C3=BC Lin wrote:
+> On Wed, Jun 29, 2011 at 2:56 PM, Ike Panhc <ike.pan@canonical.com> wr=
+ote:
+>> On 06/28/2011 09:35 PM, Keng-Yu Lin wrote:
+>>> Notification with VPC2 bit 5 set is generated when the wireless
+>>> hotkey is pressed. BIOS fires this to notify a Windows
+>>> application to handle the RF switch.
+>>>
+>>> On Linux, there is no such application. This patch implements
+>>> a toggle for all RF devices through accessing the EC I/O ports.
+>>>
+>>> Without the explicit EC commands, the wifi LED is always on.
+>>>
+>>> Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
+>>> ---
+>>>  drivers/platform/x86/ideapad-laptop.c |    6 +++++-
+>>>  1 files changed, 5 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platfo=
+rm/x86/ideapad-laptop.c
+>>> index 820f013..5e1e971 100644
+>>> --- a/drivers/platform/x86/ideapad-laptop.c
+>>> +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> @@ -461,7 +461,11 @@ static void ideapad_acpi_notify(struct acpi_de=
+vice *adevice, u32 event)
+>>>               if (test_bit(vpc_bit, &vpc1)) {
+>>>                       if (vpc_bit =3D=3D 9)
+>>>                               ideapad_sync_rfk_state(adevice);
+>>> -                     else if (vpc_bit =3D=3D 4)
+>>> +                     else if (vpc_bit =3D=3D 13) {
+>>> +                             read_ec_data(handle, 0x23, &vpc2);
+>>> +                             write_ec_cmd(handle, 0x24, !vpc2);
+>>> +                             ideapad_sync_rfk_state(adevice);
+>>> +                     } else if (vpc_bit =3D=3D 4)
+>>>                               read_ec_data(handle, 0x12, &vpc2);
+>>>                       else if (vpc_bit =3D=3D 1) {
+>>>                       } else
+>>
+>> I think its better to implement the changes in ideapad_sync_rfk_stat=
+e() because we have
+>> read switch status there. It is not necessary to read the same data =
+twice in an event.
+>>
+>>
+>=20
+> Current ideapad_sync_rfk_state() code does not really toggle the
+> hardware swtich (I mean to write_ec_cmd with 0x24 command). It just
+> assumes that the BIOS or EC is responsible for the wifi switch-on/-of=
+f
+> and reports the state via rfkill_set_hw_state().
+>=20
+> In my case, without explicit sending the 0x24 command to turn off the
+> radio device, the wifi LED is always on.
+>=20
+> Though it might not be true or applicable on ideapads,  in my last
+> experience on Dell laptops that to switch off the RF radio in the
+> driver while the hardware claims to control it can cause some mess-up=
+=2E
+>=20
+> So to be safe I prefer not to move the toggle code in ideapad_sync_rf=
+k_state().
+>=20
+>   Thanks,
+> -kengyu
+>=20
 
-v3: Add Samsung Q20 and Samsung Q25 to dmi check.
+Look twice and I do not think this patch is acceptable.
 
-v2: Changes suggested by Greg and Dmitry, in particular use i8042 instead 
-of port IO and add DMI detection.
-
-v1: The Samsung Q10 does not support the SABI interface, so the
-samsung-laptop driver cannot be used to control the
-backlight. Backlight control is not exposed via ACPI either. This
-driver works in the same way as the SMI handler triggered by
-pressing the brightness function keys.
-
-
-Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
----
- drivers/platform/x86/Kconfig       |    7 ++
- drivers/platform/x86/Makefile      |    1 +
- drivers/platform/x86/samsung-q10.c |  196 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 204 insertions(+), 0 deletions(-)
- create mode 100644 drivers/platform/x86/samsung-q10.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 45e0191..d52968f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -769,4 +769,11 @@ config INTEL_OAKTRAIL
- 	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
- 	  here; it will only load on supported platforms.
- 
-+config SAMSUNG_Q10
-+	tristate "Samsung Q10 Extras"
-+	select BACKLIGHT_CLASS_DEVICE
-+	---help---
-+	  This driver provides support for backlight control on Samsung Q10
-+	  and related laptops, including Dell Latitude X200.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index afc1f83..293a320 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_SAMSUNG_LAPTOP)	+= samsung-laptop.o
- obj-$(CONFIG_MXM_WMI)		+= mxm-wmi.o
- obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
- obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
-+obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
-diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
-new file mode 100644
-index 0000000..54cf3d6
---- /dev/null
-+++ b/drivers/platform/x86/samsung-q10.c
-@@ -0,0 +1,196 @@
-+/*
-+ *  Driver for Samsung Q10 and related laptops: controls the backlight
-+ *
-+ *  Copyright (c) 2011 Frederick van der Wyck <fvanderwyck@gmail.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/backlight.h>
-+#include <linux/i8042.h>
-+#include <linux/dmi.h>
-+
-+#define SAMSUNGQ10_BL_MAX_INTENSITY      255
-+#define SAMSUNGQ10_BL_DEFAULT_INTENSITY  185
-+
-+#define SAMSUNGQ10_BL_8042_CMD           0xbe
-+#define SAMSUNGQ10_BL_8042_DATA          { 0x89, 0x91 }
-+
-+static int samsungq10_bl_brightness;
-+
-+static bool force;
-+module_param(force, bool, 0);
-+MODULE_PARM_DESC(force,
-+		"Disable the DMI check and force the driver to be loaded");
-+
-+static int samsungq10_bl_set_intensity(struct backlight_device *bd)
-+{
-+
-+	int brightness = bd->props.brightness;
-+	unsigned char c[3] = SAMSUNGQ10_BL_8042_DATA;
-+
-+	c[2] = (unsigned char)brightness;
-+	i8042_lock_chip();
-+	i8042_command(c, (0x30 << 8) | SAMSUNGQ10_BL_8042_CMD);
-+	i8042_unlock_chip();
-+	samsungq10_bl_brightness = brightness;
-+
-+	return 0;
-+}
-+
-+static int samsungq10_bl_get_intensity(struct backlight_device *bd)
-+{
-+	return samsungq10_bl_brightness;
-+}
-+
-+static const struct backlight_ops samsungq10_bl_ops = {
-+	.get_brightness = samsungq10_bl_get_intensity,
-+	.update_status	= samsungq10_bl_set_intensity,
-+};
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int samsungq10_suspend(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static int samsungq10_resume(struct device *dev)
-+{
-+
-+	struct backlight_device *bd = dev_get_drvdata(dev);
-+
-+	samsungq10_bl_set_intensity(bd);
-+	return 0;
-+}
-+#else
-+#define samsungq10_suspend NULL
-+#define samsungq10_resume  NULL
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(samsungq10_pm_ops,
-+			  samsungq10_suspend, samsungq10_resume);
-+
-+static int __devinit samsungq10_probe(struct platform_device *pdev)
-+{
-+
-+	struct backlight_properties props;
-+	struct backlight_device *bd;
-+
-+	memset(&props, 0, sizeof(struct backlight_properties));
-+	props.type = BACKLIGHT_PLATFORM;
-+	props.max_brightness = SAMSUNGQ10_BL_MAX_INTENSITY;
-+	bd = backlight_device_register("samsung", &pdev->dev, NULL,
-+				       &samsungq10_bl_ops, &props);
-+	if (IS_ERR(bd))
-+		return PTR_ERR(bd);
-+
-+	platform_set_drvdata(pdev, bd);
-+
-+	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
-+	samsungq10_bl_set_intensity(bd);
-+
-+	return 0;
-+}
-+
-+static int __devexit samsungq10_remove(struct platform_device *pdev)
-+{
-+
-+	struct backlight_device *bd = platform_get_drvdata(pdev);
-+
-+	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
-+	samsungq10_bl_set_intensity(bd);
-+
-+	backlight_device_unregister(bd);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver samsungq10_driver = {
-+	.driver		= {
-+		.name	= KBUILD_MODNAME,
-+		.owner	= THIS_MODULE,
-+		.pm	= &samsungq10_pm_ops,
-+	},
-+	.probe		= samsungq10_probe,
-+	.remove		= __devexit_p(samsungq10_remove),
-+};
-+
-+static struct platform_device *samsungq10_device;
-+
-+static int __init dmi_check_callback(const struct dmi_system_id *id)
-+{
-+	printk(KERN_INFO KBUILD_MODNAME ": found model '%s'\n", id->ident);
-+	return 0;
-+}
-+
-+static struct dmi_system_id __initdata samsungq10_dmi_table[] = {
-+	{
-+		.ident = "Samsung Q10",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Samsung"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "SQ10"),
-+		},
-+		.callback = dmi_check_callback,
-+	},
-+	{
-+		.ident = "Samsung Q20",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG Electronics"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "SENS Q20"),
-+		},
-+		.callback = dmi_check_callback,
-+	},
-+	{
-+		.ident = "Samsung Q25",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG Electronics"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "NQ25"),
-+		},
-+		.callback = dmi_check_callback,
-+	},
-+	{
-+		.ident = "Dell Latitude X200",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X200"),
-+		},
-+		.callback = dmi_check_callback,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(dmi, samsungq10_dmi_table);
-+
-+static int __init samsungq10_init(void)
-+{
-+	if (!force && !dmi_check_system(samsungq10_dmi_table))
-+		return -ENODEV;
-+
-+	samsungq10_device = platform_create_bundle(&samsungq10_driver,
-+						   samsungq10_probe,
-+						   NULL, 0, NULL, 0);
-+
-+	if (IS_ERR(samsungq10_device))
-+		return PTR_ERR(samsungq10_device);
-+
-+	return 0;
-+}
-+
-+static void __exit samsungq10_exit(void)
-+{
-+	platform_device_unregister(samsungq10_device);
-+	platform_driver_unregister(&samsungq10_driver);
-+}
-+
-+module_init(samsungq10_init);
-+module_exit(samsungq10_exit);
-+
-+MODULE_AUTHOR("Frederick van der Wyck <fvanderwyck@gmail.com>");
-+MODULE_DESCRIPTION("Samsung Q10 Driver");
-+MODULE_LICENSE("GPL");
--- 
+vpc_bit 13 is soft block key event (Fn+F5) and read_ec_data from 0x23 i=
+s
+hardware switch status. This patch will mask the key report of inputdev
+and to force update switch status in EC (0x24) is not a reasonable solu=
+tion.
