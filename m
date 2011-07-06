@@ -1,82 +1,50 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] platform-drivers-x86: intel_mid_thermal: fix memory leak
-Date: Wed, 06 Jul 2011 23:40:51 +0800
-Message-ID: <1309966851.6398.1.camel@phoenix>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform-drivers-x86: msi-wmi: add missing
+ sparse_keymap_free in msi_wmi_init error path
+Date: Wed, 6 Jul 2011 13:04:31 -0700
+Message-ID: <20110706200430.GD6086@core.coreip.homeip.net>
+References: <1309921520.26847.3.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vw0-f46.google.com ([209.85.212.46]:61955 "EHLO
-	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752979Ab1GFPlC (ORCPT
+Received: from mail-pw0-f46.google.com ([209.85.160.46]:44313 "EHLO
+	mail-pw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755435Ab1GFUEf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Jul 2011 11:41:02 -0400
+	Wed, 6 Jul 2011 16:04:35 -0400
+Content-Disposition: inline
+In-Reply-To: <1309921520.26847.3.camel@phoenix>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Durgadoss R <durgadoss.r@intel.com>, Alan Cox <alan@linux.intel.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Renninger <trenn@suse.de>, Anisse Astier <anisse@astier.eu>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-The memory for td_info which is allocated in initialize_sensor()
-should be properly kfreed in mid_thermal_probe() error patch and
-mid_thermal_remove().
+On Wed, Jul 06, 2011 at 11:05:20AM +0800, Axel Lin wrote:
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/intel_mid_thermal.c |   26 +++++++++++++++++++-------
- 1 files changed, 19 insertions(+), 7 deletions(-)
+Acked-by: Dmitry Torokhov <dtor@mail.ru>
 
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index 3a57832..ccd7b1f 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -493,20 +493,30 @@ static int mid_thermal_probe(struct platform_device *pdev)
- 
- 	/* Register each sensor with the generic thermal framework*/
- 	for (i = 0; i < MSIC_THERMAL_SENSORS; i++) {
-+		struct thermal_device_info *td_info = initialize_sensor(i);
-+
-+		if (!td_info) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
- 		pinfo->tzd[i] = thermal_zone_device_register(name[i],
--				0, initialize_sensor(i), &tzd_ops, 0, 0, 0, 0);
--		if (IS_ERR(pinfo->tzd[i]))
--			goto reg_fail;
-+				0, td_info, &tzd_ops, 0, 0, 0, 0);
-+		if (IS_ERR(pinfo->tzd[i])) {
-+			kfree(td_info);
-+			ret = PTR_ERR(pinfo->tzd[i]);
-+			goto err;
-+		}
- 	}
- 
- 	pinfo->pdev = pdev;
- 	platform_set_drvdata(pdev, pinfo);
- 	return 0;
- 
--reg_fail:
--	ret = PTR_ERR(pinfo->tzd[i]);
--	while (--i >= 0)
-+err:
-+	while (--i >= 0) {
-+		kfree(pinfo->tzd[i]->devdata);
- 		thermal_zone_device_unregister(pinfo->tzd[i]);
-+	}
- 	configure_adc(0);
- 	kfree(pinfo);
- 	return ret;
-@@ -524,8 +534,10 @@ static int mid_thermal_remove(struct platform_device *pdev)
- 	int i;
- 	struct platform_info *pinfo = platform_get_drvdata(pdev);
- 
--	for (i = 0; i < MSIC_THERMAL_SENSORS; i++)
-+	for (i = 0; i < MSIC_THERMAL_SENSORS; i++) {
-+		kfree(pinfo->tzd[i]->devdata);
- 		thermal_zone_device_unregister(pinfo->tzd[i]);
-+	}
- 
- 	kfree(pinfo);
- 	platform_set_drvdata(pdev, NULL);
+> ---
+>  drivers/platform/x86/msi-wmi.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+> index c832e33..6f40bf2 100644
+> --- a/drivers/platform/x86/msi-wmi.c
+> +++ b/drivers/platform/x86/msi-wmi.c
+> @@ -272,6 +272,7 @@ static int __init msi_wmi_init(void)
+>  err_free_backlight:
+>  	backlight_device_unregister(backlight);
+>  err_free_input:
+> +	sparse_keymap_free(msi_wmi_input_dev);
+>  	input_unregister_device(msi_wmi_input_dev);
+>  err_uninstall_notifier:
+>  	wmi_remove_notify_handler(MSIWMI_EVENT_GUID);
+> -- 
+> 1.7.4.1
+> 
+> 
+> 
+
 -- 
-1.7.4.1
+Dmitry
