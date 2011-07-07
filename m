@@ -1,36 +1,29 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] Platform: Samsung Q10 backlight driver
-Date: Thu, 7 Jul 2011 07:50:36 -0700
-Message-ID: <20110707145036.GK7658@core.coreip.homeip.net>
-References: <20110704214357.GA17428@ntl>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
+Date: Thu, 7 Jul 2011 16:10:24 +0100
+Message-ID: <20110707151023.GA15366@srcf.ucam.org>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pv0-f174.google.com ([74.125.83.174]:63983 "EHLO
-	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756647Ab1GGOuo (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:48131 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751565Ab1GGPKa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Jul 2011 10:50:44 -0400
+	Thu, 7 Jul 2011 11:10:30 -0400
 Content-Disposition: inline
-In-Reply-To: <20110704214357.GA17428@ntl>
+In-Reply-To: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frederick van der Wyck <fvanderwyck@gmail.com>
-Cc: mjg59@srcf.ucam.org, gregkh@suse.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Keng-Yu Lin <kengyu@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, ike.pan@canonical.com, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 
-Hi Frederick,
+On Tue, Jun 28, 2011 at 02:35:53PM +0100, Keng-Yu Lin wrote:
+> BIOS fires notifications in a constant period with VPC bit 1 set when the
+> power cord is unplugged.
 
-On Mon, Jul 04, 2011 at 10:43:57PM +0100, Frederick van der Wyck wrote:
->  
-> +config SAMSUNG_Q10
-> +	tristate "Samsung Q10 Extras"
-> +	select BACKLIGHT_CLASS_DEVICE
-
-Since the driver will not function without full i8042 code being present
-I think you should add 'depends on SERIO_I8042' even though it compiles
-without it being enabled.
-
-Thanks.
+How frequently? That's going to do bad things to power management. It'd 
+be nice to find a way to just make it stop doing that.
 
 -- 
-Dmitry
+Matthew Garrett | mjg59@srcf.ucam.org
