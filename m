@@ -1,26 +1,36 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [PATCH 1/2] platform-drivers-x86: intel_rar_register: convert
- to DEFINE_PCI_DEVICE_TABLE
-Date: Thu, 7 Jul 2011 11:00:15 +0100
-Message-ID: <20110707110015.083a17ed@bob.linux.org.uk>
-References: <1310005275.2481.3.camel@phoenix>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] Platform: Samsung Q10 backlight driver
+Date: Thu, 7 Jul 2011 07:50:36 -0700
+Message-ID: <20110707145036.GK7658@core.coreip.homeip.net>
+References: <20110704214357.GA17428@ntl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1310005275.2481.3.camel@phoenix>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Axel Lin <axel.lin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pv0-f174.google.com ([74.125.83.174]:63983 "EHLO
+	mail-pv0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756647Ab1GGOuo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 7 Jul 2011 10:50:44 -0400
+Content-Disposition: inline
+In-Reply-To: <20110704214357.GA17428@ntl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Frederick van der Wyck <fvanderwyck@gmail.com>
+Cc: mjg59@srcf.ucam.org, gregkh@suse.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, 07 Jul 2011 10:21:15 +0800
-Axel Lin <axel.lin@gmail.com> wrote:
+Hi Frederick,
 
-> And also remove unused variable 'my_id_table'.
-> 
-> Signed-off-by: Axel Lin <axel.lin@gmail.com>
+On Mon, Jul 04, 2011 at 10:43:57PM +0100, Frederick van der Wyck wrote:
+>  
+> +config SAMSUNG_Q10
+> +	tristate "Samsung Q10 Extras"
+> +	select BACKLIGHT_CLASS_DEVICE
 
-Applied to mid tree looks fine to me
+Since the driver will not function without full i8042 code being present
+I think you should add 'depends on SERIO_I8042' even though it compiles
+without it being enabled.
 
-Signed-off-by: Alan Cox <alan@linux.intel.com>
+Thanks.
+
+-- 
+Dmitry
