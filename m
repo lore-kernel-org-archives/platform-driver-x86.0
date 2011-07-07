@@ -1,41 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] Revert: "dell-laptop: Toggle the unsupported hardware
- killswitch"
-Date: Thu, 7 Jul 2011 00:01:35 +0100
-Message-ID: <20110706230135.GA31589@srcf.ucam.org>
-References: <1309169943-3786-1-git-send-email-kengyu@canonical.com>
- <20110706155003.17090951.akpm@linux-foundation.org>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] platform-drivers-x86: intel_menlow: add missing return
+ AE_OK for intel_menlow_register_sensor()
+Date: Thu, 07 Jul 2011 10:05:49 +0800
+Message-ID: <1310004349.2481.1.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:59436 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753344Ab1GFXBo (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:47349 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752115Ab1GGCF7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Jul 2011 19:01:44 -0400
-Content-Disposition: inline
-In-Reply-To: <20110706155003.17090951.akpm@linux-foundation.org>
+	Wed, 6 Jul 2011 22:05:59 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Keng-Yu Lin <kengyu@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, gmane@colin.guthr.ie, Alessio Igor Bogani <abogani@texware.it>, stable@kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Sujith Thomas <sujith.thomas@intel.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 06, 2011 at 03:50:03PM -0700, Andrew Morton wrote:
-> On Mon, 27 Jun 2011 11:19:03 +0100
-> Keng-Yu Lin <kengyu@canonical.com> wrote:
-> 
-> > This reverts commit a3d77411e8b2ad661958c1fbee65beb476ec6d70,
-> > 
-> > as it causes a mess in the wireless rfkill status on some models.
-> > It is probably a bad idea to toggle the rfkill for all dell models
-> > without the respect to the claim that it is hardware-controlled.
-> > 
-> 
-> If we're reverting this from mainline then we should also revert it
-> from 2.6.38.x and 2.6.39.x, no?
+Otherwise, the error path will always be executed.
 
-Yeah, this is stable material. I'll be dealing with the backlog 
-tomorrow.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/intel_menlow.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
+index 809adea..abddc83 100644
+--- a/drivers/platform/x86/intel_menlow.c
++++ b/drivers/platform/x86/intel_menlow.c
+@@ -477,6 +477,8 @@ static acpi_status intel_menlow_register_sensor(acpi_handle handle, u32 lvl,
+ 		return AE_ERROR;
+ 	}
+ 
++	return AE_OK;
++
+  aux1_not_found:
+ 	if (status == AE_NOT_FOUND)
+ 		return AE_OK;
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.4.1
