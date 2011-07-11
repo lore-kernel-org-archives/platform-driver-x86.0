@@ -1,64 +1,37 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver fixes for 3.0
-Date: Mon, 11 Jul 2011 14:55:10 +0100
-Message-ID: <20110711135510.GA11129@srcf.ucam.org>
+Subject: Re: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
+Date: Mon, 11 Jul 2011 16:50:06 +0100
+Message-ID: <20110711155006.GA14245@srcf.ucam.org>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
+ <20110707151023.GA15366@srcf.ucam.org>
+ <CADXHx7bnQ49yrL2Uoq=945V1UWMPq-FamCOT81t7Jn4mtEHpkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <CADXHx7bnQ49yrL2Uoq=945V1UWMPq-FamCOT81t7Jn4mtEHpkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?iso-8859-1?Q?Keng-Y=FC?= Lin <kengyu@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, ike.pan@canonical.com, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Linus,
+On Mon, Jul 11, 2011 at 03:29:09PM +0800, Keng-Y=FC Lin wrote:
+> On Thu, Jul 7, 2011 at 11:10 PM, Matthew Garrett <mjg59@srcf.ucam.org=
+> wrote:
+> > On Tue, Jun 28, 2011 at 02:35:53PM +0100, Keng-Yu Lin wrote:
+> >> BIOS fires notifications in a constant period with VPC bit 1 set w=
+hen the
+> >> power cord is unplugged.
+> >
+> > How frequently? That's going to do bad things to power management. =
+It'd
+> > be nice to find a way to just make it stop doing that.
+> >
+>=20
+> About every 22 seconds.
 
-Some small fixes for 3.0 - reversion of a commit that broke some Dells, 
-a fix for a regression in acer-wmi and some trivial fixups for a couple 
-of other drivers.
+Ok, this seems fair then.
 
-The following changes since commit e3bbfa78bab125f58b831b5f7f45b5a305091d72:
-
-  Merge branch 'hwmon-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/staging (2011-07-10 10:24:47 -0700)
-
-are available in the git repository at:
-
-  ssh://master.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git for_linus
-
-Andre Bartke (1):
-      drivers/platform/x86: Fix memory leak
-
-Axel Lin (1):
-      platform-drivers-x86: set backlight type to BACKLIGHT_PLATFORM
-
-Eric Dumazet (1):
-      hp-wmi: fix use after free
-
-Henrique de Moraes Holschuh (2):
-      thinkpad-acpi: handle some new HKEY 0x60xx events
-      thinkpad-acpi: handle HKEY 0x4010, 0x4011 events
-
-Jose Alonso (1):
-      dell-laptop - using buffer without mutex_lock
-
-Keng-Yu Lin (1):
-      Revert: "dell-laptop: Toggle the unsupported hardware killswitch"
-
-Lee, Chun-Yi (1):
-      acer-wmi: fix bitwise bug when set device state
-
-Seth Forshee (1):
-      acer-wmi: Only update rfkill status for associated hotkey events
-
- Documentation/laptops/thinkpad-acpi.txt |    5 ++
- drivers/platform/x86/acer-wmi.c         |   47 ++++++++++++--------
- drivers/platform/x86/asus-wmi.c         |    1 +
- drivers/platform/x86/compal-laptop.c    |    4 +-
- drivers/platform/x86/dell-laptop.c      |   30 ++-----------
- drivers/platform/x86/hp-wmi.c           |   11 +++--
- drivers/platform/x86/intel_oaktrail.c   |    1 +
- drivers/platform/x86/thinkpad_acpi.c    |   72 +++++++++++++++++++++++++------
- 8 files changed, 108 insertions(+), 63 deletions(-)
-
--- 
+--=20
 Matthew Garrett | mjg59@srcf.ucam.org
