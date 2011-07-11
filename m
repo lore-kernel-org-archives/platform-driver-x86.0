@@ -1,43 +1,70 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [PATCH 2/2] ideapad-laptop: Handle the App-controlled RF
- event
-Date: Fri, 08 Jul 2011 03:52:46 -0600
-Message-ID: <4E17600E020000230002F274@novprvlin0050.provo.novell.com>
-References: <1309268154-6872-1-git-send-email-kengyu@canonical.com>
- <1309268154-6872-2-git-send-email-kengyu@canonical.com>
- <20110707151118.GB15366@srcf.ucam.org>
+From: =?UTF-8?B?S2VuZy1Zw7wgTGlu?= <kengyu@canonical.com>
+Subject: Re: [PATCH 1/2] ideapad-laptop: Ignore an unused VPC notification
+Date: Mon, 11 Jul 2011 15:29:09 +0800
+Message-ID: <CADXHx7bnQ49yrL2Uoq=945V1UWMPq-FamCOT81t7Jn4mtEHpkQ@mail.gmail.com>
+References: <1309268154-6872-1-git-send-email-kengyu@canonical.com> <20110707151023.GA15366@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:55786 "EHLO
-	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750746Ab1GHJwu (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:3:2>);
-	Fri, 8 Jul 2011 05:52:50 -0400
-In-Reply-To: <20110707151118.GB15366@srcf.ucam.org>
-Content-Disposition: inline
+Received: from mail-bw0-f46.google.com ([209.85.214.46]:63214 "EHLO
+	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757204Ab1GKH3u (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jul 2011 03:29:50 -0400
+In-Reply-To: <20110707151023.GA15366@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: kengyu@canonical.com
-Cc: ike.pan@canonical.com, kent.lin@canonical.com, sylee@canonical.com, vanhoof@canonical.com, mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, ike.pan@canonical.com, vanhoof@canonical.com, kent.lin@canonical.com, sylee@canonical.com
 
-Hi Keng-Yu,=20
+On Thu, Jul 7, 2011 at 11:10 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> On Tue, Jun 28, 2011 at 02:35:53PM +0100, Keng-Yu Lin wrote:
+>> BIOS fires notifications in a constant period with VPC bit 1 set when the
+>> power cord is unplugged.
+>
+> How frequently? That's going to do bad things to power management. It'd
+> be nice to find a way to just make it stop doing that.
+>
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2011-07-07 =E6=96=BC 16:11 +0100=EF=BC=8CMa=
-tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Tue, Jun 28, 2011 at 02:35:54PM +0100, Keng-Yu Lin wrote:
->=20
-> > On Linux, there is no such application. This patch implements
-> > a toggle for all RF devices through accessing the EC I/O ports.
->=20
-> Sure there is. Either the kernel can handle it via rfkill-input, or=20
-> rfkilld can look after it. Please don't add your own implementation.
->=20
+About every 22 seconds.
 
-Welcome to use urfkill deaemon:
-http://www.freedesktop.org/wiki/Software/urfkill
+May 18 13:46:36 ubuntu-Rev-1-0 kernel: [ 1359.734293] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:46:36 ubuntu-Rev-1-0 kernel: [ 1359.734324] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:46:58 ubuntu-Rev-1-0 kernel: [ 1382.195371] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:46:58 ubuntu-Rev-1-0 kernel: [ 1382.195388] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:47:21 ubuntu-Rev-1-0 kernel: [ 1404.650451] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:47:21 ubuntu-Rev-1-0 kernel: [ 1404.650470] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:47:43 ubuntu-Rev-1-0 kernel: [ 1427.103195] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:47:43 ubuntu-Rev-1-0 kernel: [ 1427.103214] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:48:06 ubuntu-Rev-1-0 kernel: [ 1449.568874] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:48:06 ubuntu-Rev-1-0 kernel: [ 1449.568884] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:48:28 ubuntu-Rev-1-0 kernel: [ 1472.103599] keyboard: can't
+emulate rawmode for keycode 240
+May 18 13:48:28 ubuntu-Rev-1-0 kernel: [ 1472.103612] keyboard: can't
+emulate rawmode for keycode 240
+
+(skip)
 
 
-Thank's a lot!
-Joey
+It'd be ideal if we can find the real use of the notification and
+assign it a corresponding keycode, but now I am not able to find any.
+
+Since it occurs in a period when AC cord unplugged, I suspect it is
+just a notification to the Windows App, probably due to that the App
+is badly written and the App does not want to poll the battery
+information. In Linux the userspace can access the battery information
+in an easier way through the ACPI proc/sysfs and it is probably not
+true in Windows. It could be the reason/purpose why this notification
+is sent in a period.
+
+If so, it should be safe to filter out.
