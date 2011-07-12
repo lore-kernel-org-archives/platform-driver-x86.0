@@ -1,91 +1,123 @@
-From: Norbert Preining <preining@logic.at>
-Subject: Re: sony-laptop on VAIO TT help request
-Date: Tue, 12 Jul 2011 15:21:57 +0900
-Message-ID: <20110712062157.GA15096@gamma.logic.tuwien.ac.at>
-References: <4E0C4AE2.2050706@fnarfbargle.com> <20110630135507.GA24186@kamineko.org> <4E0C9BC6.4020603@fnarfbargle.com> <4E0D9765.7060700@absence.it> <20110701095049.GE11959@gamma.logic.tuwien.ac.at> <4E0DD1D0.7020605@absence.it>
+From: Tim Gardner <tim.gardner@canonical.com>
+Subject: [PATCH] Sony laptop: Some Sony Vaia laptops do not enable wwan power
+ by default.
+Date: Tue, 12 Jul 2011 09:55:38 -0600
+Message-ID: <4E1C6E7A.3030705@canonical.com>
+Reply-To: tim.gardner@canonical.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E0DD1D0.7020605@absence.it>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Marco Chiappero <marco@absence.it>
-Cc: Brad Campbell <lists2009@fnarfbargle.com>, Mattia Dongili <malattia@linux.it>, linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/mixed;
+ boundary="------------000000080202010000040609"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.tpi.com ([70.99.223.143]:4600 "EHLO mail.tpi.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753855Ab1GLP4E (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 12 Jul 2011 11:56:04 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Marc,
+This is a multi-part message in MIME format.
+--------------000000080202010000040609
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-sorry for the silence, I was overly busy with a state exam on Japanese
-and some presentations.
+Ubuntu has been carrying this patch for a couple of years because I keep 
+forgetting to upstream it. Does anyone think it still makes sense, or 
+should setting WWAN power be done in user space ?
 
-On Fr, 01 Jul 2011, Marco Chiappero wrote:
->> I looked a bit through the patch and I see that it is restricted
->> to MM and (forgotten the model number).
->
-> MM? What does it stand for?
+rtg
+-- 
+Tim Gardner tim.gardner@canonical.com
 
-TT I meant. But patching the kernel and running your module I see at least
-that there is support for battery_care_limiter and some others.
-On my VGN-Z11 I get:
-battery_care_limiter  lid_resume_control  subsystem@	    uevent
-bluetoothpower	      modalias		  thermal_control   wwanpower
-driver@		      odd_power		  thermal_profiles
-fanspeed	      power/		  touchpad
-in /sys/devices/platform/sony-laptop.
+--------------000000080202010000040609
+Content-Type: text/x-patch;
+ name="0001-UBUNTU-Sony-laptop-Some-Sony-Vaia-laptops-do-not-ena.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-UBUNTU-Sony-laptop-Some-Sony-Vaia-laptops-do-not-ena.pa";
+ filename*1="tch"
 
-What I am missing is the shock protector, there is a sensor built in.
+From 87db59448467783076b7468a8f8ae3650d08d3a0 Mon Sep 17 00:00:00 2001
+From: Tim Gardner <tim.gardner@canonical.com>
+Date: Tue, 21 Apr 2009 11:09:10 -0600
+Subject: [PATCH] Sony laptop: Some Sony Vaia laptops do not enable wwan power by default.
 
-> This last one is interesting because, from the other DSTDs I have seen,  
-> I suspect your notebook to have handle 0x0113, an handle that allows to  
-> enable/disable an unknown feature, is it the HDD protection?
+Bug: https://bugs.launchpad.net/bugs/364678
 
-How can I check that?
+Added quirk to enable wwan power based on DMI information already present in the module.
+It appears that Vaio's do not enable power to wwan from a cold boot.
 
-> This is interesting too. Ok, let's not speak about the multiplexer  
-> methods, let us speak about handle 0x0128, related to the Hybrid GFX  
-> feature. I have never done a deep analysis, maybe you can help here.
-> First of all, newer VPCZ1 models come with a few more methods, dealing  
-> with the screen brightness level, HSC5, HSC6, HSC7. Then:
-> - HSC0 returns the event reason (1 switch position change? what about  
-> 2,3,4?)
+Signed-off-by: Tim Gardner <tim.gardner@canonical.com>
+---
+ drivers/platform/x86/sony-laptop.c |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-Currently we are not evaluating HSC0 at all, I am not sure about its
-function. only HSC1 is used to query the speed/stamina switch.
-Furthermore, the path of HSC1 is different on different modules
-	_SB.PCI0.LPC.SNC.HSC1	(VGN)
-and
-	_SB.PCI0.LPCB.SNC.HSC1	(VPC)
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index bbd182e..02265fd 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -1879,6 +1879,10 @@ struct sonypi_eventtypes {
+ 	struct sonypi_event	*events;
+ };
+ 
++struct sony_pic_quirk_entry {
++	u8				set_wwan_power;
++};
++
+ struct sony_pic_dev {
+ 	struct acpi_device		*acpi_dev;
+ 	struct sony_pic_irq		*cur_irq;
+@@ -1889,6 +1893,7 @@ struct sony_pic_dev {
+ 	struct sonypi_eventtypes	*event_types;
+ 	int                             (*handle_irq)(const u8, const u8);
+ 	int				model;
++	struct sony_pic_quirk_entry	*quirks;
+ 	u16				evport_offset;
+ 	u8				camera_power;
+ 	u8				bluetooth_power;
+@@ -3315,6 +3320,12 @@ static int sony_pic_add(struct acpi_device *device)
+ 	if (result)
+ 		goto err_remove_pf;
+ 
++	if (spic_dev.quirks && spic_dev.quirks->set_wwan_power) {
++		/*
++		 * Power isn't enabled by default.
++		 */
++		__sony_pic_set_wwanpower(1);
++	}
+ 	return 0;
+ 
+ err_remove_pf:
+@@ -3385,6 +3396,16 @@ static struct acpi_driver sony_pic_driver = {
+ 		},
+ };
+ 
++static struct sony_pic_quirk_entry sony_pic_vaio_vgn = {
++	.set_wwan_power = 1,
++};
++
++static int dmi_matched(const struct dmi_system_id *dmi)
++{
++	spic_dev.quirks = dmi->driver_data;
++	return 0;
++}
++
+ static struct dmi_system_id __initdata sonypi_dmi_table[] = {
+ 	{
+ 		.ident = "Sony Vaio",
+@@ -3399,6 +3420,8 @@ static struct dmi_system_id __initdata sonypi_dmi_table[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Sony Corporation"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "VGN-"),
+ 		},
++		.callback = dmi_matched,
++		.driver_data = &sony_pic_vaio_vgn,
+ 	},
+ 	{ }
+ };
+-- 
+1.7.0.4
 
 
-Not much more is used actually, but turning on/off the nvidia (secondary
-gpu) and the speed/stamina led by hooking into
-	_SB.PCI0.OVGA._DSM (VGN)
-and
-	_SB.PCI0.P0P2.DGPU._DSM (VPC)
-with various function indices (2 -> led, 3 -> gpu off).
-
-> What does handle 0x0128 aim to provide?
-
-No idea..
-
-If anything what I said makes sense to you and you need more information,
-please let me know. I can hack the module code and dump acpi etc
-whatever might be useful for you.
-
-Best wishes
-
-Norbert
-------------------------------------------------------------------------
-Norbert Preining            preining@{jaist.ac.jp, logic.at, debian.org}
-JAIST, Japan                                 TeX Live & Debian Developer
-DSA: 0x09C5B094   fp: 14DF 2E6C 0307 BE6D AD76  A9C0 D2BF 4AA3 09C5 B094
-------------------------------------------------------------------------
-it's at times like this, when
-I'm trapped in a Vogon airlock with a man from Betelgeuse,
-and about to die from asphyxiation in deep space that I
-really wish I'd listened to what my mother told me when I
-was young.'
-`Why, what did she tell you?'
-`I don't know, I didn't listen.'
-                 --- Arthur coping with certain death as best as he could.
-                 --- Douglas Adams, The Hitchhikers Guide to the Galaxy
+--------------000000080202010000040609--
