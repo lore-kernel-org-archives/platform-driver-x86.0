@@ -1,77 +1,111 @@
-From: Michel Alexandre Salim <salimma@fedoraproject.org>
-Subject: Re: Need help debugging Sony Vaio VPCY2 backlight control problem
-Date: Wed, 13 Jul 2011 14:51:55 +0200
-Message-ID: <4E1D94EB.9040301@fedoraproject.org>
-References: <4E0E2155.4070508@fedoraproject.org> <4E0E4637.7000902@absence.it> <4E117DF7.2000602@fedoraproject.org> <4E117E61.2050808@sylvestre.me> <1309769864.1896.113.camel@rui>
+From: Marco Chiappero <marco@absence.it>
+Subject: Re: sony-laptop on VAIO TT help request
+Date: Thu, 14 Jul 2011 00:11:41 +0200
+Message-ID: <4E1E181D.1030301@absence.it>
+References: <4E0C4AE2.2050706@fnarfbargle.com> <20110630135507.GA24186@kamineko.org> <4E0C9BC6.4020603@fnarfbargle.com> <4E0D9765.7060700@absence.it> <20110701095049.GE11959@gamma.logic.tuwien.ac.at> <4E0DD1D0.7020605@absence.it> <20110712062157.GA15096@gamma.logic.tuwien.ac.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:42969 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751783Ab1GMMwA (ORCPT
+Received: from aa013-1msr.fastwebnet.it ([62.101.93.133]:43408 "EHLO
+	aa013-1msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752416Ab1GMWMD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 13 Jul 2011 08:52:00 -0400
-In-Reply-To: <1309769864.1896.113.camel@rui>
+	Wed, 13 Jul 2011 18:12:03 -0400
+In-Reply-To: <20110712062157.GA15096@gamma.logic.tuwien.ac.at>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: Michel Alexandre Salim <michel@sylvestre.me>, Marco Chiappero <marco@absence.it>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Mattia Dongili <malattia@linux.it>
+To: Norbert Preining <preining@logic.at>
+Cc: Brad Campbell <lists2009@fnarfbargle.com>, Mattia Dongili <malattia@linux.it>, linux-acpi@vger.kernel.org, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-The patches don't apply, but looks like the native backlight control
-patch is now in Linus' 3.0 tree, and I could cherry-pick Matthew's last
-iteration of the i915 patch (from July 7th) from linux-next onto 3.0-rc=
-7.
+Il 12/07/2011 08:21, Norbert Preining ha scritto:
+> Hi Marc,
+>
+> sorry for the silence, I was overly busy with a state exam on Japanese
+> and some presentations.
 
-Going to update my bug report to reflect this. Now the only problem is =
-I
-have both acpi_video0 and intel_backlight, and GNOME Power Manager uses
-the former rather than the latter. Manually setting the brightness
-through the intel_backlight interface works.
+Hi Norbert,
+there is no problem at all.
 
-Thanks, everyone.
+> What I am missing is the shock protector, there is a sensor built in.
 
---=20
-Michel
+Yes I know, and it seems that a device driver is used under Windows... 
+can you confirm this? Can you see this sensor under the device listing 
+of Windows? Handle 0x0113 might allow to turn on/off this sensor, but 
+then it should controlled by another driver, I'm afraid.
 
-On 07/04/2011 10:57 AM, Zhang Rui wrote:
-> Hi, Michael,
->=20
-> please check if the two patches attached help.
->=20
-> thanks,
-> rui
->=20
-> On Mon, 2011-07-04 at 16:48 +0800, Michel Alexandre Salim wrote:
->> On 07/04/2011 10:46 AM, Michel Alexandre Salim wrote:
->>> Here are the ectool dumps, before setting any brightness (backlight=
-=3D0),
->>> after setting it to 5, and after setting it to 3, plus the typescri=
-pt
->>> log of the commands issued and the sysfs readings.
->>>
->>> I then set brightness back to 0 (ec-after3.txt) -- didn't log the
->>> keyboard interactions because it's the same (value for brightness
->>> concurs with what is set, but actual_brightness is still -1)
->>>
->>> Let me know if you need anything else. Once we can at least pinpoin=
-t the
->>> problem to the right subsystem, I'll add these attachments to the
->>> correct bug report.
->>>
->>> Thanks,
->>>
->> And here's the last dump file, forgot to attach it earlier.
->>
->> Thanks,
->>
+>> This last one is interesting because, from the other DSTDs I have seen,
+>> I suspect your notebook to have handle 0x0113, an handle that allows to
+>> enable/disable an unknown feature, is it the HDD protection?
+>
+> How can I check that?
 
+I can provide you a patch for testing this feature.
 
---=20
-Michel Alexandre Salim
-=C2=B5blog:      http://identi.ca/hircus
-            http://twitter.com/hircus
-GPG key ID: 78884778
+>> This is interesting too. Ok, let's not speak about the multiplexer
+>> methods, let us speak about handle 0x0128, related to the Hybrid GFX
+>> feature. I have never done a deep analysis, maybe you can help here.
+>> First of all, newer VPCZ1 models come with a few more methods, dealing
+>> with the screen brightness level, HSC5, HSC6, HSC7. Then:
+>> - HSC0 returns the event reason (1 switch position change? what about
+>> 2,3,4?)
+>
+> Currently we are not evaluating HSC0 at all, I am not sure about its
+> function.
 
-()  ascii ribbon campaign - against html e-mail
-/\  www.asciiribbon.org   - against proprietary attachments
+HSC0 returns HGER (Hybrid GFX Event Reason), a number that can be read 
+when an Hybrid GFX event is notified (for example when the physical 
+switch change its position), telling userspace what triggered that event.
+
+> only HSC1 is used to query the speed/stamina switch.
+
+It also provides other informations, do you know their meaning?
+
+Method (HSC1, 0, Serialized)
+{
+     Store (Zero, Local0)
+     If (AVIL)			<-- ??
+     { ... }
+
+     If (^^H8EC.SWPS)		<-- switch position
+     { ... }
+
+     If (LEqual (HGAP, One))	<-- Hyb GFX A? Presence?
+     { ... }
+
+     If (LEqual (HGAP, 0x02))	<-- Hyb GFX A? Presence?
+     { ... }
+
+     If (HDME)		<-- HDMI Exit? HDMI routing capability?
+     { ... }
+
+     If (DVIE)
+     { ... }
+
+     If (^^H8EC.ATSW)		<-- switch set to auto
+     { ... }
+
+     ...
+}
+
+> Furthermore, the path of HSC1 is different on different modules
+> 	_SB.PCI0.LPC.SNC.HSC1	(VGN)
+> and
+> 	_SB.PCI0.LPCB.SNC.HSC1	(VPC)
+
+This is not relevant, we just call the SN07 method from the SNC device, 
+so don't care about it.
+
+> Not much more is used actually, but turning on/off the nvidia (secondary
+> gpu) and the speed/stamina led by hooking into
+> 	_SB.PCI0.OVGA._DSM (VGN)
+> and
+> 	_SB.PCI0.P0P2.DGPU._DSM (VPC)
+> with various function indices (2 ->  led, 3 ->  gpu off).
+
+If I'm not wrong the video driver should take care of calling _DSM and 
+other multiplexing methods (MXDS, MXMX and so on), is it right?
+We need to find out more about methods HSC1, HSC2, HSC3, HSC4, but I 
+don't own the hardware.
+Then we can start changing the code to be more compliant to the kernel 
+guidelines.
