@@ -1,41 +1,77 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH] Sony laptop: Some Sony Vaia laptops do not enable wwan
- power by default.
-Date: Wed, 13 Jul 2011 07:29:16 +0900
-Message-ID: <20110712222914.GA3016@kamineko.org>
-References: <4E1C6E7A.3030705@canonical.com>
- <20110712160156.GA8388@srcf.ucam.org>
+From: Michel Alexandre Salim <salimma@fedoraproject.org>
+Subject: Re: Need help debugging Sony Vaio VPCY2 backlight control problem
+Date: Wed, 13 Jul 2011 14:51:55 +0200
+Message-ID: <4E1D94EB.9040301@fedoraproject.org>
+References: <4E0E2155.4070508@fedoraproject.org> <4E0E4637.7000902@absence.it> <4E117DF7.2000602@fedoraproject.org> <4E117E61.2050808@sylvestre.me> <1309769864.1896.113.camel@rui>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iw0-f174.google.com ([209.85.214.174]:61809 "EHLO
-	mail-iw0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756025Ab1GLW2d (ORCPT
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:42969 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751783Ab1GMMwA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jul 2011 18:28:33 -0400
-Received: by iwn6 with SMTP id 6so5038874iwn.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Jul 2011 15:28:33 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20110712160156.GA8388@srcf.ucam.org>
+	Wed, 13 Jul 2011 08:52:00 -0400
+In-Reply-To: <1309769864.1896.113.camel@rui>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Tim Gardner <tim.gardner@canonical.com>, platform-driver-x86@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Michel Alexandre Salim <michel@sylvestre.me>, Marco Chiappero <marco@absence.it>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Mattia Dongili <malattia@linux.it>
 
-On Tue, Jul 12, 2011 at 05:01:56PM +0100, Matthew Garrett wrote:
-> On Tue, Jul 12, 2011 at 09:55:38AM -0600, Tim Gardner wrote:
-> > Ubuntu has been carrying this patch for a couple of years because I
-> > keep forgetting to upstream it. Does anyone think it still makes
-> > sense, or should setting WWAN power be done in user space ?
-> 
-> Userspace, but also somebody needs to figure out how to identify whether 
-> old-style Vaios support each of these features and expose them as proper 
-> rfkill devices.
+The patches don't apply, but looks like the native backlight control
+patch is now in Linus' 3.0 tree, and I could cherry-pick Matthew's last
+iteration of the i915 patch (from July 7th) from linux-next onto 3.0-rc=
+7.
 
-the problem with that has always been that we don't know how to probe
-the SPIC device. We also don't know how to read the state of the rfkill
-switch. I imagine we could guess but I'm not sure how useful that is.
+Going to update my bug report to reflect this. Now the only problem is =
+I
+have both acpi_video0 and intel_backlight, and GNOME Power Manager uses
+the former rather than the latter. Manually setting the brightness
+through the intel_backlight interface works.
 
--- 
-mattia
-:wq!
+Thanks, everyone.
+
+--=20
+Michel
+
+On 07/04/2011 10:57 AM, Zhang Rui wrote:
+> Hi, Michael,
+>=20
+> please check if the two patches attached help.
+>=20
+> thanks,
+> rui
+>=20
+> On Mon, 2011-07-04 at 16:48 +0800, Michel Alexandre Salim wrote:
+>> On 07/04/2011 10:46 AM, Michel Alexandre Salim wrote:
+>>> Here are the ectool dumps, before setting any brightness (backlight=
+=3D0),
+>>> after setting it to 5, and after setting it to 3, plus the typescri=
+pt
+>>> log of the commands issued and the sysfs readings.
+>>>
+>>> I then set brightness back to 0 (ec-after3.txt) -- didn't log the
+>>> keyboard interactions because it's the same (value for brightness
+>>> concurs with what is set, but actual_brightness is still -1)
+>>>
+>>> Let me know if you need anything else. Once we can at least pinpoin=
+t the
+>>> problem to the right subsystem, I'll add these attachments to the
+>>> correct bug report.
+>>>
+>>> Thanks,
+>>>
+>> And here's the last dump file, forgot to attach it earlier.
+>>
+>> Thanks,
+>>
+
+
+--=20
+Michel Alexandre Salim
+=C2=B5blog:      http://identi.ca/hircus
+            http://twitter.com/hircus
+GPG key ID: 78884778
+
+()  ascii ribbon campaign - against html e-mail
+/\  www.asciiribbon.org   - against proprietary attachments
