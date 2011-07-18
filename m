@@ -1,54 +1,43 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 4/25] sony-laptop: new SNC setup and cleanup functions
-Date: Fri, 15 Jul 2011 07:05:16 +0900
-Message-ID: <20110714220515.GB7586@kamineko.org>
-References: <4DE8FC4A.9010401@absence.it>
- <4DE8FE7B.6090602@absence.it>
- <20110612222123.GB31095@kamineko.org>
- <4DF55356.9020405@absence.it>
- <4DFD2F83.40803@absence.it>
- <cc703738-d0d7-4a07-8111-50bb7a1e1f24@email.android.com>
- <4E09A72E.5050903@absence.it>
- <4E0DA75D.2090801@absence.it>
- <4E1E19DD.6050401@absence.it>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH] platform-drivers-x86: samsung-q10: make dmi_check_callback
+ return 1
+Date: Mon, 18 Jul 2011 16:08:21 +0800
+Message-ID: <1310976501.20944.1.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:43461 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932119Ab1GNWEa (ORCPT
+Received: from mail-gw0-f46.google.com ([74.125.83.46]:40501 "EHLO
+	mail-gw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750745Ab1GRII3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Jul 2011 18:04:30 -0400
-Received: by iyb12 with SMTP id 12so623989iyb.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jul 2011 15:04:30 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <4E1E19DD.6050401@absence.it>
+	Mon, 18 Jul 2011 04:08:29 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marco Chiappero <marco@absence.it>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Frederick van der Wyck <fvanderwyck@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 14, 2011 at 12:19:09AM +0200, Marco Chiappero wrote:
-> Il 01/07/2011 12:54, Marco Chiappero ha scritto:
-> >Il 28/06/2011 12:04, Marco Chiappero ha scritto:
-> >>To get a better idea, have a look at this modified source, using the
-> >>naming schema I'm proposing:
-> >>http://www.absence.it/vaio-acpi/source/sony-laptop_dev_28062011.c
-> >
-> >I recently uploaded the first part (new features excluded) of my v2
-> >patches at http://www.absence.it/vaio-acpi/source/patches/patchset-v2/
-> >to help you and receive new feedbacks.
-> 
-> Still no feedbacks...
+We only care about if there is any successful match from the dmi table
+or no match at all, we can make dmi_check_system return immediately if
+we have a successful match instead of iterate thorough the whole table.
 
-still not much time. what I noticed so far:
-- patches are 14 instead of 25, any reason?
-- still stopping handlers evaluation if the magi SncSupported string is
-  not present
-- the function naming in patch 5 looks ok.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/samsung-q10.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Once again, post the patches here with proper description, it's easier
-for everyone to review and comment the changes.
+diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
+index 54cf3d6..1e54ae7 100644
+--- a/drivers/platform/x86/samsung-q10.c
++++ b/drivers/platform/x86/samsung-q10.c
+@@ -127,7 +127,7 @@ static struct platform_device *samsungq10_device;
+ static int __init dmi_check_callback(const struct dmi_system_id *id)
+ {
+ 	printk(KERN_INFO KBUILD_MODNAME ": found model '%s'\n", id->ident);
+-	return 0;
++	return 1;
+ }
+ 
+ static struct dmi_system_id __initdata samsungq10_dmi_table[] = {
 -- 
-mattia
-:wq!
+1.7.4.1
