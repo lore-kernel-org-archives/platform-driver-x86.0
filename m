@@ -1,59 +1,61 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 12/25] sony-laptop: input core improvements improvements
-Date: Wed, 20 Jul 2011 06:26:02 +0900
-Message-ID: <20110719212601.GA16532@kamineko.org>
-References: <4DEA4D67.8000009@absence.it>
- <20110604164021.GA12552@kamineko.org>
- <4DEA644D.3030109@absence.it>
- <20110605222401.GA26835@kamineko.org>
- <4DECD592.6000707@absence.it>
- <20110607142332.GA4087@kamineko.org>
- <4DEE4094.8040300@absence.it>
- <20110607162413.GC4087@kamineko.org>
- <4DEE66F5.1020406@absence.it>
- <4DFF50DB.30100@absence.it>
+Subject: Re: [PATCH 8/25] sony-laptop: sony_nc_notify rewritten and improved
+Date: Wed, 20 Jul 2011 06:30:28 +0900
+Message-ID: <20110719213027.GB16532@kamineko.org>
+References: <4DE8FC4A.9010401@absence.it>
+ <4DE8FFE0.5070506@absence.it>
+ <20110604084338.GD7194@kamineko.org>
+ <4DEA1664.4090409@absence.it>
+ <20110605223815.GC26835@kamineko.org>
+ <4DFF5270.7050404@absence.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:53207 "EHLO
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:41073 "EHLO
 	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751073Ab1GSVZd (ORCPT
+	with ESMTP id S1750980Ab1GSV37 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Jul 2011 17:25:33 -0400
-Received: by pzk3 with SMTP id 3so5464366pzk.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jul 2011 14:25:33 -0700 (PDT)
+	Tue, 19 Jul 2011 17:29:59 -0400
+Received: by pzk3 with SMTP id 3so5467352pzk.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jul 2011 14:29:59 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <4DFF50DB.30100@absence.it>
+In-Reply-To: <4DFF5270.7050404@absence.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Marco Chiappero <marco@absence.it>
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 20, 2011 at 03:53:31PM +0200, Marco Chiappero wrote:
-> Il 07/06/2011 19:59, Marco Chiappero ha scritto:
-> >Il 07/06/2011 18:24, Mattia Dongili ha scritto:
-> >>On Tue, Jun 07, 2011 at 05:15:32PM +0200, Marco Chiappero wrote:
-> >>>Il 07/06/2011 16:23, Mattia Dongili ha scritto:
-> >>...
-> >>>>lovely, does it make any difference if udev maps those keys and the
-> >>>>driver instead just sends FN_F* making old and new models send the same
-> >>>>keycodes and scancodes?
-> >>>
-> >>>Models equipped with the SNC device are already using the same
-> >>>scancodes, there is no need to translate them twice.
+On Mon, Jun 20, 2011 at 04:00:16PM +0200, Marco Chiappero wrote:
+> Il 06/06/2011 00:38, Mattia Dongili ha scritto:
+> >On Sat, Jun 04, 2011 at 01:26:28PM +0200, Marco Chiappero wrote:
+> >>Il 04/06/2011 10:43, Mattia Dongili ha scritto:
+> >>>when sony_call_snc_handle(handle, 0x200,&result) fails above you will
+> >>>be reporting -1 via the acpi bus. The old code restored the event and
+> >>>reported the raw number instead.
 > >>
-> >>having the translation layer makes them consistent with all the other
-> >>hotkeys on all vaios.
+> >>You are right, does the following sony_nc_notify modification look
+> >>fine to you?
+> >>
+> >>/* hotkey event, a key has been pressed, retrieve it */
+> >>value = sony_nc_hotkeys_decode(handle);
+> >>if (value>  0) /* known event */
+> >>	sony_laptop_report_input_event(value);
+> >>else /* restore the original event */
+> >>	value = event;
 > >
-> >In this case I can't see how consistency is relevant (especially if we
-> >think that it's a nonexistent layout!). Moreover every SNC equipped
-> >notebooks use the same map while SPIC related code is going to be
-> >deprecated.
+> >it's a bit out of context but I guess it should work.
 > 
-> Mattia, what is your final decision about this topic? Would you like
-> to maintain the KEY_FN_F* mapping?
+> Two things I'd like to ask:
+> 1) can I remove any acpi bus notification from this patch?
 
-yes, there is no need to change them now.
+no. Just leave the current ones and don't add any new one.
+
+> 2) if so, do you prefer sony_nc_hotkeys_decode to forward decoded
+> keys to the input core directly instead of returning the decoded
+> value back to sony_nc_notify?
+
+feel free to propose your solution.
+
 -- 
 mattia
 :wq!
