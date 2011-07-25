@@ -1,49 +1,36 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH v5] thinkpad-acpi: Improve hardware volume controls
-Date: Sat, 23 Jul 2011 16:40:24 -0300
-Message-ID: <20110723194024.GA29866@khazad-dum.debian.net>
-References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
- <20110614015808.GB27997@khazad-dum.debian.net>
- <BANLkTimwQavNth_+hemY8F6D0_feUTEqGg@mail.gmail.com>
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>
+Subject: [PATCH 00/10] lis3: various fixes and enhancements
+Date: Mon, 25 Jul 2011 17:14:32 +0200
+Message-ID: <4E2D8858.8000900@tremplin-utc.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out5.smtp.messagingengine.com ([66.111.4.29]:49525 "EHLO
-	out5.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750730Ab1GWTkw (ORCPT
+Received: from mailservice.tudelft.nl ([130.161.131.5]:38358 "EHLO
+	mailservice.tudelft.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751379Ab1GYPYl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Jul 2011 15:40:52 -0400
-Content-Disposition: inline
-In-Reply-To: <BANLkTimwQavNth_+hemY8F6D0_feUTEqGg@mail.gmail.com>
+	Mon, 25 Jul 2011 11:24:41 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Lutomirski <luto@mit.edu>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>, Matthew Garrett <mjg@redhat.com>
+Cc: Christian Lamparter <chunkeey@googlemail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Malte Starostik <m-starostik@versanet.de>, Ilkka Koskinen <ilkka.koskinen@nokia.com>, Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
 
-On Mon, 13 Jun 2011, Andrew Lutomirski wrote:
-> On Mon, Jun 13, 2011 at 9:58 PM, Henrique de Moraes Holschuh
-> <hmh@hmh.eng.br> wrote:
-> > I have not been ignoring you. =A0My thinkpad broke down, and it is
-> > currently in the ICU waiting for a fan+heatsink repair, so I have n=
-ot
-> > been able to make good on my promise of a faster answer.
-> >
-> > I hope to have it repaired in the next 10 days, but it looks like I=
- will
-> > have to refurbish its fan myself (it is a T43p).
->=20
-> No problem.  Keep me posted.  And enjoy the fan surgery :)
+Hello,
 
-That thing proved to be very hard to refurbish without proper tools
-(which I don't have), so I had to wait for the replacement parts to
-arrive.
+Here are a couple of patches from my backlog for the lis3. Since the=20
+move out of hwmon, I'm not entirely sure to who I should send the=20
+patches for the part which lies in driver/misc. Maybe Andrew can pick=20
+them, or should I send them directly to Linus?
 
-They're now installed, and apparently working well, so I am back to
-business.  I should be able to get back to you by next week.
+Patch 1 avoids crashes with a buggy hardware (which is actually seen in=
+=20
+the wild). Patch 7 fixes a missing free(). The rest of the patches are=20
+more enhancements. Iilka had actually sent another patch, coming as=20
+number 11, to allow multiple devices at the same time. But Cascardo=20
+noticed that it can cause problems with the misc device, so I'm not=20
+including it. Iilka, maybe have you found a solution since then?
 
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Cheers,
+=C3=89ric
