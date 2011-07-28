@@ -1,53 +1,54 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] platform-drivers-x86: ideapad-laptop: add missing
- ideapad_input_exit in ideapad_acpi_add error path
-Date: Wed, 27 Jul 2011 15:27:34 +0800
-Message-ID: <1311751654.4818.2.camel@phoenix>
+From: "Anton V. Boyarshinov" <boyarsh@altlinux.org>
+Subject: [PATCH] acerhdf.c: spaces in aliased changed to *
+Date: Thu, 28 Jul 2011 18:05:35 +0400
+Message-ID: <20110728180535.51dce58d@boyarsh.office.altlinux.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:42965 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751862Ab1G0H1q (ORCPT
+Received: from vint.altlinux.org ([194.107.17.35]:52310 "EHLO
+	vint.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751007Ab1G1OMl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Jul 2011 03:27:46 -0400
+	Thu, 28 Jul 2011 10:12:41 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Peter Feuerer <peter@piie.net>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-In the case of ideapad_backlight_init() failure,
-we need to free the resources allocated by ideapad_input_init().
+It seems that aliases shouldn't contain spaces, as 
+module-init-tools uses them as delimeters in module.alias file
 
-Aslo drop __devexit annotation for ideapad_input_exit() because
-we also call it in ideapad_acpi_add() error path.
-
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Signed-off-by: Anton V. Boyarshinov <boyarsh@altlinux.org>
 ---
- drivers/platform/x86/ideapad-laptop.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
+ drivers/platform/x86/acerhdf.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 8811c68..0c59541 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -406,7 +406,7 @@ err_free_dev:
- 	return error;
- }
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index fca3489..7a8568b 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -703,15 +703,15 @@ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Peter Feuerer");
+ MODULE_DESCRIPTION("Aspire One temperature and fan driver");
+ MODULE_ALIAS("dmi:*:*Acer*:pnAOA*:");
+-MODULE_ALIAS("dmi:*:*Acer*:pnAspire 1410*:");
+-MODULE_ALIAS("dmi:*:*Acer*:pnAspire 1810*:");
++MODULE_ALIAS("dmi:*:*Acer*:pnAspire*1410*:");
++MODULE_ALIAS("dmi:*:*Acer*:pnAspire*1810*:");
+ MODULE_ALIAS("dmi:*:*Acer*:pnAO531*:");
+ MODULE_ALIAS("dmi:*:*Gateway*:pnAOA*:");
+ MODULE_ALIAS("dmi:*:*Gateway*:pnLT31*:");
+-MODULE_ALIAS("dmi:*:*Packard Bell*:pnAOA*:");
+-MODULE_ALIAS("dmi:*:*Packard Bell*:pnDOA*:");
+-MODULE_ALIAS("dmi:*:*Packard Bell*:pnDOTMU*:");
+-MODULE_ALIAS("dmi:*:*Packard Bell*:pnDOTMA*:");
++MODULE_ALIAS("dmi:*:*Packard*Bell*:pnAOA*:");
++MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOA*:");
++MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOTMU*:");
++MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOTMA*:");
  
--static void __devexit ideapad_input_exit(struct ideapad_private *priv)
-+static void ideapad_input_exit(struct ideapad_private *priv)
- {
- 	sparse_keymap_free(priv->inputdev);
- 	input_unregister_device(priv->inputdev);
-@@ -563,6 +563,7 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
- backlight_failed:
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		ideapad_unregister_rfkill(adevice, i);
-+	ideapad_input_exit(priv);
- input_failed:
- 	ideapad_platform_exit(priv);
- platform_failed:
+ module_init(acerhdf_init);
+ module_exit(acerhdf_exit);
 -- 
-1.7.4.1
+1.7.2.2
