@@ -1,38 +1,40 @@
-From: Peter Feuerer <peter@piie.net>
-Subject: Re: [PATCH] acerhdf: add support for Aspire 1810TZ BIOS v1.3314
-Date: Sat, 30 Jul 2011 00:54:55 +0200
-Message-ID: <cone.1311980095.345454.3703.1000@deskpiie>
-References: <20110623185007.GA2889@kirya.net>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: [PATCH -next] x86/platform: mrst/pmu.c needs module.h
+Date: Fri, 29 Jul 2011 21:14:59 -0700
+Message-ID: <20110729211459.148eb8cc.rdunlap@xenotime.net>
+References: <20110729173827.716f57ff6e00095a3efc6449@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay03.ispgateway.de ([80.67.29.28]:53047 "EHLO
-	smtprelay03.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752651Ab1G2Wy4 (ORCPT
+Received: from oproxy1-pub.bluehost.com ([66.147.249.253]:33427 "HELO
+	oproxy1-pub.bluehost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1752964Ab1G3EP2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 Jul 2011 18:54:56 -0400
-Content-Disposition: inline
+	Sat, 30 Jul 2011 00:15:28 -0400
+In-Reply-To: <20110729173827.716f57ff6e00095a3efc6449@canb.auug.org.au>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julien Valroff <julien@kirya.net>
-Cc: platform-driver-x86@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Len Brown <len.brown@intel.com>, linux-pm@lists.linux-foundation.org
+Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, akpm <akpm@linux-foundation.org>
 
-Hi Julien,
+From: Randy Dunlap <rdunlap@xenotime.net>
 
-Julien Valroff writes:
-> Would you please consider applying the following patch adding support for
-> the Aspire 1810TZ BIOS v.1.3314 version to the acerhdf module and avoids the
-> following error:
+mrst/pmu.c uses interfaces from linux/module.h, so it should
+include that file.  This fixes build errors.
 
-This BIOS version is included in following patch:
-http://lkml.org/lkml/2011/7/29/395
- 
-> A similar patch was also proposed last year for 1410 [0] but wasn't yet
-> applied.
+Signed-off-by: Randy Dunlap <rdunlap@xenotime.net>
+---
+ arch/x86/platform/mrst/pmu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-I also resent this patch:
-http://lkml.org/lkml/2011/7/29/394
-
-Thanks and kind regards,
---peter;
+--- linux-next-20110729.orig/arch/x86/platform/mrst/pmu.c
++++ linux-next-20110729/arch/x86/platform/mrst/pmu.c
+@@ -21,6 +21,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/seq_file.h>
+ #include <linux/sfi.h>
