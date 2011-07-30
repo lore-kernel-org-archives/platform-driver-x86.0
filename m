@@ -1,35 +1,100 @@
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: [PATCH -next] x86/platform: geode/alix.c needs module.h
-Date: Fri, 29 Jul 2011 21:14:51 -0700
-Message-ID: <20110729211451.b3dd3bfa.rdunlap@xenotime.net>
-References: <20110729173827.716f57ff6e00095a3efc6449@canb.auug.org.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20110729173827.716f57ff6e00095a3efc6449@canb.auug.org.au>
-Sender: linux-next-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Andres Salomon <dilinger@queued.net>, linux-geode@lists.infradead.org
-Cc: linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, akpm <akpm@linux-foundation.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: support Lenovo ideapad S205 wifi switch
+Date: Sat, 30 Jul 2011 17:00:45 +0800
+Message-ID: <1312016445-19472-1-git-send-email-jlee@suse.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:61743 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750816Ab1G3JDs (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 30 Jul 2011 05:03:48 -0400
+Received: by fxh19 with SMTP id 19so2962979fxh.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 30 Jul 2011 02:03:47 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-From: Randy Dunlap <rdunlap@xenotime.net>
+The AMW0 function in acer-wmi works on Lenovo ideapad S205 for control
+the wifi hardware state. We also found there have a 0x78 EC register
+exposes the state of wifi hardware switch on the machine.
 
-geode/alix.c uses interfaces from linux/module.h, so it should
-include that file.  This fixes build errors.
+So, add this patch to support Lenovo ideapad S205 wifi hardware switch
+in acer-wmi driver.
 
-Signed-off-by: Randy Dunlap <rdunlap@xenotime.net>
+Reference: bko#37892
+	https://bugzilla.kernel.org/show_bug.cgi?id=37892
+
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Tested-by: Florian Heyer <heyho@flanto.de>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 ---
- arch/x86/platform/geode/alix.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/acer-wmi.c |   28 ++++++++++++++++++++++++++--
+ 1 files changed, 26 insertions(+), 2 deletions(-)
 
---- linux-next-20110729.orig/arch/x86/platform/geode/alix.c
-+++ linux-next-20110729/arch/x86/platform/geode/alix.c
-@@ -19,6 +19,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/module.h>
- #include <linux/string.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index fa71530..af2bb20 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -305,6 +305,10 @@ static struct quirk_entry quirk_fujitsu_amilo_li_1718 = {
+ 	.wireless = 2,
+ };
+ 
++static struct quirk_entry quirk_lenovo_ideapad_s205 = {
++	.wireless = 3,
++};
++
+ /* The Aspire One has a dummy ACPI-WMI interface - disable it */
+ static struct dmi_system_id __devinitdata acer_blacklist[] = {
+ 	{
+@@ -451,6 +455,15 @@ static struct dmi_system_id acer_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_medion_md_98300,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Lenovo Ideapad S205",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
++		},
++		.driver_data = &quirk_lenovo_ideapad_s205,
++	},
+ 	{}
+ };
+ 
+@@ -543,6 +556,12 @@ struct wmi_interface *iface)
+ 				return AE_ERROR;
+ 			*value = result & 0x1;
+ 			return AE_OK;
++		case 3:
++			err = ec_read(0x78, &result);
++			if (err)
++				return AE_ERROR;
++			*value = result & 0x1;
++			return AE_OK;
+ 		default:
+ 			err = ec_read(0xA, &result);
+ 			if (err)
+@@ -1267,8 +1286,13 @@ static void acer_rfkill_update(struct work_struct *ignored)
+ 	acpi_status status;
+ 
+ 	status = get_u32(&state, ACER_CAP_WIRELESS);
+-	if (ACPI_SUCCESS(status))
+-		rfkill_set_sw_state(wireless_rfkill, !state);
++	if (ACPI_SUCCESS(status)) {
++		if (quirks->wireless == 3) {
++			rfkill_set_hw_state(wireless_rfkill, !state);
++		} else {
++			rfkill_set_sw_state(wireless_rfkill, !state);
++		}
++	}
+ 
+ 	if (has_cap(ACER_CAP_BLUETOOTH)) {
+ 		status = get_u32(&state, ACER_CAP_BLUETOOTH);
+-- 
+1.6.0.2
