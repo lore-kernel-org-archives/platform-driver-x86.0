@@ -1,56 +1,34 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 01/10] lis3lv02d: avoid divide by zero due to unchecked
-Date: Mon, 1 Aug 2011 14:29:46 -0700
-Message-ID: <20110801142946.94542ff3.akpm@linux-foundation.org>
-References: <4E2D8858.8000900@tremplin-utc.net>
-	<4E2D88C7.30409@tremplin-utc.net>
-	<20110801132906.2d4cd28e.akpm@linux-foundation.org>
-	<201108012311.17881.chunkeey@googlemail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH v5] thinkpad-acpi: Improve hardware volume controls
+Date: Wed, 3 Aug 2011 00:30:40 -0300
+Message-ID: <20110803033040.GA17685@khazad-dum.debian.net>
+References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
+ <20110614015808.GB27997@khazad-dum.debian.net>
+ <BANLkTimwQavNth_+hemY8F6D0_feUTEqGg@mail.gmail.com>
+ <20110723194024.GA29866@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13]:40497 "EHLO
-	smtp1.linux-foundation.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752243Ab1HAV3w (ORCPT
+Received: from out2.smtp.messagingengine.com ([66.111.4.26]:42644 "EHLO
+	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752918Ab1HCDan (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 1 Aug 2011 17:29:52 -0400
-In-Reply-To: <201108012311.17881.chunkeey@googlemail.com>
+	Tue, 2 Aug 2011 23:30:43 -0400
+Content-Disposition: inline
+In-Reply-To: <20110723194024.GA29866@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: =?ISO-8859-1?Q?=C9ric?= Piel <eric.piel@tremplin-utc.net>, Matthew Garrett <mjg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Andrew Lutomirski <luto@mit.edu>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Mon, 1 Aug 2011 23:11:17 +0200
-Christian Lamparter <chunkeey@googlemail.com> wrote:
+The patch breaks the driver on IBM thinkpads.  I have updated it for the
+pr_foo macros, and I will fix it to do the right thing on older thinkpads so
+that it won't cause the driver to abort probing :-)
 
-> On Monday, August 01, 2011 10:29:06 PM Andrew Morton wrote:
-> > On Mon, 25 Jul 2011 17:16:23 +0200
-> > __ric Piel <eric.piel@tremplin-utc.net> wrote:
-> > 
-> > > +static int lis3lv02d_get_pwron_wait(struct lis3lv02d *lis3)
-> > > +{
-> > > +	int div = lis3lv02d_get_odr();
-> > > +
-> > > +	if (WARN_ONCE(div == 0, "device returned spurious data"))
-> > > +		return -ENXIO;
-> > > +
-> > > +	/* LIS3 power on delay is quite long */
-> > > +	msleep(lis3->pwron_delay / div);
-> > > +	return 0;
-> > > +}
-> > 
-> > The WARN_ONCE may not be very useful.  The user gets worried, might
-> > report it (often to a distro, not to you!).  But we won't actually *do*
-> > anything with the information?
-> The sensor is used to park the hdd in case of an "accident". However,
-> if the sensors is not working, the user should at least get a WARN
-> that something is very wrong, right?
+Then, I will test it further.
 
-Well if we're doing this for the user's benefit (most WARNs are for developers)
-then the message should be user-useful.  That one isn't, really.
-
-Can we come up with some text which is more useful to the user/operator and
-won't require him/her/it to send emails and raise bug reports?
-
-Also, the stack trace which WARN emits is not useful in this application?
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
