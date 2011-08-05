@@ -1,22 +1,22 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] acer-wmi: support Lenovo ideapad S205 wifi switch
-Date: Fri, 5 Aug 2011 20:22:47 +0100
-Message-ID: <20110805192247.GF23750@srcf.ucam.org>
-References: <1312016445-19472-1-git-send-email-jlee@suse.com>
+Subject: Re: [PATCH] acerhdf.c: spaces in aliased changed to *
+Date: Fri, 5 Aug 2011 20:22:35 +0100
+Message-ID: <20110805192235.GE23750@srcf.ucam.org>
+References: <20110728180535.51dce58d@boyarsh.office.altlinux.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:41200 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:41191 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756346Ab1HETWt (ORCPT
+	with ESMTP id S1756279Ab1HETWh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Aug 2011 15:22:49 -0400
+	Fri, 5 Aug 2011 15:22:37 -0400
 Content-Disposition: inline
-In-Reply-To: <1312016445-19472-1-git-send-email-jlee@suse.com>
+In-Reply-To: <20110728180535.51dce58d@boyarsh.office.altlinux.ru>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: "Anton V. Boyarshinov" <boyarsh@altlinux.org>
+Cc: Peter Feuerer <peter@piie.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Applied, thanks.
 
