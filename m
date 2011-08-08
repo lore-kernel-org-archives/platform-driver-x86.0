@@ -1,47 +1,49 @@
-From: Ocean Finance & Mortgages Loan <Bruno.Sopko@fs.cvut.cz>
-Subject: APPLY LOAN!! Ocean Finance & Mortgages Leading Loan UK!
-Date: Sun, 07 Aug 2011 01:18:48 +0200
-Message-ID: <20110807011848.97904gcphwu7sc7s__3402.66953357986$1312702017$gmane$org@my.fs.cvut.cz>
-Reply-To: ocean_financeloans@live.com
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH 1/3] platform-drivers-x86: eeepc-laptop: fix wrong test for
+ successful registered led_classdev
+Date: Mon, 08 Aug 2011 17:14:19 +0800
+Message-ID: <1312794859.21052.2.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=ISO-8859-1;
- DelSp="Yes";
- format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ns.fsid.cvut.cz ([147.32.160.4]:51375 "EHLO ns.fsid.cvut.cz"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751215Ab1HGH0Y (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:63873 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750899Ab1HHJO2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 7 Aug 2011 03:26:24 -0400
-Content-Disposition: inline
+	Mon, 8 Aug 2011 05:14:28 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Dear Sir/Madam.
+device_create returns &struct device pointer on success, or ERR_PTR() on error.
+Thus if led_classdev_register fails, led_cdev->dev is always not NULL.
 
-Are you a business man or woman? Are you in any financial mess or do you
-need funds to start up your own business? Do you need loan to settle? Your
-debt or pay off your bills or start a nice business?
+If IS_ERR(eeepc->tpd_led.dev) is ture, it means led_classdev_register fails.
+If (asus->tpd_led.dev) is NULL, it means we call eeepc_led_exit before
+calling led_classdev_register for &eeepc->tpd_led.
 
-Interested Applicants on Loan should get back to us
-via email below for more Informations about our loan:
+We only want to call led_classdev_unregister for sucessfully registered
+led_classdev, then we should check (!IS_ERR_OR_NULL(eeepc->tpd_led.dev)).
 
-BORROWERS INFORMATION.
-Full Name:
-Address:
-Occupation:
-Country:
-Telephone:
-Fax Number:
-Sex:
-Age:
-Monthly Income:
-Amount Needed:
-Loan duration:
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+---
+ drivers/platform/x86/eeepc-laptop.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Thank You.
-Mr. Debelgeonne Jacques
-Mrs Cindy Clackson
-e-Mail: ocean_financeloan@live.com
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index 1c45d92..29a216a 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -568,7 +568,7 @@ static int eeepc_led_init(struct eeepc_laptop *eeepc)
+ 
+ static void eeepc_led_exit(struct eeepc_laptop *eeepc)
+ {
+-	if (eeepc->tpd_led.dev)
++	if (!IS_ERR_OR_NULL(eeepc->tpd_led.dev))
+ 		led_classdev_unregister(&eeepc->tpd_led);
+ 	if (eeepc->led_workqueue)
+ 		destroy_workqueue(eeepc->led_workqueue);
+-- 
+1.7.4.1
