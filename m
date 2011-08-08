@@ -1,66 +1,84 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH 3/3] platform-drivers-x86: asus-laptop: fix wrong test for
- successful registered led_classdev
-Date: Mon, 08 Aug 2011 17:17:18 +0800
-Message-ID: <1312795038.21052.6.camel@phoenix>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 1/3] platform-drivers-x86: eeepc-laptop: fix wrong test
+ for successful registered led_classdev
+Date: Mon, 8 Aug 2011 14:17:58 +0200
+Message-ID: <CAHR064ggiMvUm1m6g9fpxV-5Bk2PShZQiwjPRrukj0w_EwskWA@mail.gmail.com>
 References: <1312794859.21052.2.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:63749 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751023Ab1HHJRY (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:61945 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751982Ab1HHMR7 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Aug 2011 05:17:24 -0400
+	Mon, 8 Aug 2011 08:17:59 -0400
 In-Reply-To: <1312794859.21052.2.camel@phoenix>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-device_create returns &struct device pointer on success, or ERR_PTR() on error.
-Thus if led_classdev_register fails, led_cdev->dev is always not NULL.
+Good catch ! It would be great to have a coccinel script to check that
+in scripts/coccinelle/null/.
 
-Thus to unregister a successful registered led_classdev, we should check
-IS_ERR_OR_NULL macro for led_cdev->dev instead of checking if led_cdev->dev
-is NULL or not.
+On Mon, Aug 8, 2011 at 11:14 AM, Axel Lin <axel.lin@gmail.com> wrote:
+> device_create returns &struct device pointer on success, or ERR_PTR()=
+ on error.
+> Thus if led_classdev_register fails, led_cdev->dev is always not NULL=
+=2E
+>
+> If IS_ERR(eeepc->tpd_led.dev) is ture, it means led_classdev_register=
+ fails.
+> If (asus->tpd_led.dev) is NULL, it means we call eeepc_led_exit befor=
+e
+> calling led_classdev_register for &eeepc->tpd_led.
+>
+> We only want to call led_classdev_unregister for sucessfully register=
+ed
+> led_classdev, then we should check (!IS_ERR_OR_NULL(eeepc->tpd_led.de=
+v)).
+>
+> Signed-off-by: Axel Lin <axel.lin@gmail.com>
 
-we use IS_ERR_OR_NULL instead of IS_ERR because if we havn't call
-led_classdev_register, the led_cdev->dev is NULL.
+Acked-by: Corentin Chary <corentin.chary@gmail.com>
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/asus-laptop.c |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+> ---
+> =C2=A0drivers/platform/x86/eeepc-laptop.c | =C2=A0 =C2=A02 +-
+> =C2=A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x=
+86/eeepc-laptop.c
+> index 1c45d92..29a216a 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -568,7 +568,7 @@ static int eeepc_led_init(struct eeepc_laptop *ee=
+epc)
+>
+> =C2=A0static void eeepc_led_exit(struct eeepc_laptop *eeepc)
+> =C2=A0{
+> - =C2=A0 =C2=A0 =C2=A0 if (eeepc->tpd_led.dev)
+> + =C2=A0 =C2=A0 =C2=A0 if (!IS_ERR_OR_NULL(eeepc->tpd_led.dev))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0led_classdev_u=
+nregister(&eeepc->tpd_led);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (eeepc->led_workqueue)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0destroy_workqu=
+eue(eeepc->led_workqueue);
+> --
+> 1.7.4.1
+>
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
+ml
+>
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index fa6d7ec..0e071fa 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -430,17 +430,17 @@ static enum led_brightness asus_kled_cdev_get(struct led_classdev *led_cdev)
- 
- static void asus_led_exit(struct asus_laptop *asus)
- {
--	if (asus->mled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->mled.led.dev))
- 		led_classdev_unregister(&asus->mled.led);
--	if (asus->tled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->tled.led.dev))
- 		led_classdev_unregister(&asus->tled.led);
--	if (asus->pled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->pled.led.dev))
- 		led_classdev_unregister(&asus->pled.led);
--	if (asus->rled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->rled.led.dev))
- 		led_classdev_unregister(&asus->rled.led);
--	if (asus->gled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->gled.led.dev))
- 		led_classdev_unregister(&asus->gled.led);
--	if (asus->kled.led.dev)
-+	if (!IS_ERR_OR_NULL(asus->kled.led.dev))
- 		led_classdev_unregister(&asus->kled.led);
- 	if (asus->led_workqueue) {
- 		destroy_workqueue(asus->led_workqueue);
--- 
-1.7.4.1
+
+
+--=20
+Corentin Chary
+http://xf.iksaif.net
