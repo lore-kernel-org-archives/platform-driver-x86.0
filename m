@@ -1,178 +1,143 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [Fwd: Re: A problem about acer-wmi]
-Date: Tue, 09 Aug 2011 10:14:56 +0800
-Message-ID: <1312856096.24471.127.camel@linux-s257.site>
-References: <4E25AFC7020000230002F7D1@novprvlin0050.provo.novell.com>
-	 <CAMz9Wg9ZZvcb+USmPMqXZ3zFRct8qme=7C2UwxKThaANZ=PB6A@mail.gmail.com>
+From: "Oflr" <uh_nks48_5787@yahoo.com.hk>
+Subject: pkasting@chromium.org
+Date: Tue, 9 Aug 2011 11:09:54 +0800
+Message-ID: <201108091109543127914@yahoo.com.hk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/mixed; boundary="----=zekqvb412_4900_199745879.538528"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:47884 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751611Ab1HICSO (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Mon, 8 Aug 2011 22:18:14 -0400
-In-Reply-To: <CAMz9Wg9ZZvcb+USmPMqXZ3zFRct8qme=7C2UwxKThaANZ=PB6A@mail.gmail.com>
+Received: from nm10-vm0.bullet.mail.bf1.yahoo.com ([98.139.213.147]:34716 "HELO
+	nm10-vm0.bullet.mail.bf1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1751714Ab1HIDRb (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 8 Aug 2011 23:17:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: Joey Lee <jlee@novell.com>, platform-driver-x86@vger.kernel.org
+To: pkasting <pkasting@chromium.org>
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2011-08-09 =E6=96=BC 10:05 +0800=EF=BC=8CAc=
-eLan Kao =E6=8F=90=E5=88=B0=EF=BC=9A
-> Dear Joey,
->=20
-> Is there any progress of the acer-wmi patch?
->=20
+This is a multi-part message in MIME format.
 
-Sorry for I am busy from last 2 weeks until now.
+------=zekqvb412_4900_199745879.538528
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
 
-> I read the Acer WMI/SMBIOS Spec. and think we might need to create a
-> new acer-wmi driver for the new machines and leave the original
-> acer-wmi driver for the old ones.
-> The GUID is changed and there are more functions be added in the spec=
-=2E
-> that the acer-wmi driver is hard to handle now.
-> And I'm not sure if I can implement a open source wmi driver from the=
- spec.
-> Please input more idea about this, thanks.
->=20
-> Best regards,
-> AceLan Kao.
->=20
+MTI2LmNvbQ0KNzYuMTkzLjE4MS4zMw==
 
-I don't think we need a new acer-wmi driver to handle new machine,
-because acer-wmi driver already support the following WMI methods:
+------=zekqvb412_4900_199745879.538528
+Content-Type: image/gif;
+	name="Ouag_5149.gif"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="Ouag_5149.gif"
 
-#define WMID_GUID3              "61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
-#define ACERWMID_EVENT_GUID 	"676AA15E-6A47-4D9F-A2CC-1E6D18D14026"
+R0lGODdh2gH8AHcAACwAAAAA2gH8AIcAAAAAADMAAGYAAJkAAMwAAP8AMwAAMzMAM2YAM5kAM8wA
+M/8AZgAAZjMAZmYAZpkAZswAZv8AmQAAmTMAmWYAmZkAmcwAmf8AzAAAzDMAzGYAzJkAzMwAzP8A
+/wAA/zMA/2YA/5kA/8wA//8zAAAzADMzAGYzAJkzAMwzAP8zMwAzMzMzM2YzM5kzM8wzM/8zZgAz
+ZjMzZmYzZpkzZswzZv8zmQAzmTMzmWYzmZkzmcwzmf8zzAAzzDMzzGYzzJkzzMwzzP8z/wAz/zMz
+/2Yz/5kz/8wz//9mAABmADNmAGZmAJlmAMxmAP9mMwBmMzNmM2ZmM5lmM8xmM/9mZgBmZjNmZmZm
+ZplmZsxmZv9mmQBmmTNmmWZmmZlmmcxmmf9mzABmzDNmzGZmzJlmzMxmzP9m/wBm/zNm/2Zm/5lm
+/8xm//+ZAACZADOZAGaZAJmZAMyZAP+ZMwCZMzOZM2aZM5mZM8yZM/+ZZgCZZjOZZmaZZpmZZsyZ
+Zv+ZmQCZmTOZmWaZmZmZmcyZmf+ZzACZzDOZzGaZzJmZzMyZzP+Z/wCZ/zOZ/2aZ/5mZ/8yZ///M
+AADMADPMAGbMAJnMAMzMAP/MMwDMMzPMM2bMM5nMM8zMM//MZgDMZjPMZmbMZpnMZszMZv/MmQDM
+mTPMmWbMmZnMmczMmf/MzADMzDPMzGbMzJnMzMzMzP/M/wDM/zPM/2bM/5nM/8zM////AAD/ADP/
+AGb/AJn/AMz/AP//MwD/MzP/M2b/M5n/M8z/M///ZgD/ZjP/Zmb/Zpn/Zsz/Zv//mQD/mTP/mWb/
+mZn/mcz/mf//zAD/zDP/zGb/zJn/zMz/zP///wD//zP//2b//5n//8z///8AAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAABaCg1aek1aellaemtaendtejhtekFtek1telltemttend6ejh6ekF6
+ek16ell6emt6encvejgvekENek1ZMi9rNS93OC85Ly9CQUFOREFaR0FsSkF4TUE5UEEI/wAbCRxI
+sKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJ8yWA
+mzdr6tzJs6fPn0AhAiA4NKjRo0iTKl06sahAp0yjSp1KtapKqFazat3KtetCrF7Dih1L9mfOsmjT
+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
 
-I will find a bit time at this week to clear up acer-wmi driver.
-
-Did you see any function key or new function didn't handle by current
-acer-wmi driver?
-
-
-Thank's
-Joey Lee
-
-> 2011/7/19 Joey Lee <jlee@novell.com>:
-> > Cc. to platform driver mail
-> >
-> > Hi AceLan,
-> >
-> > In old acer machine supports both old WMI_GUID1 and new WMI_WMID3, =
-but
-> > more and more machines removed old WMI_GUID1 method and just suppor=
-t new
-> > one.
-> >
-> > I will spend a bit time to clear up acer-wmi driver, add support to
-> > those new machines.
-> > I will send out patches for review.
-> >
-> >
-> >
-> > Thank's a lot!
-> > Joey Lee
-> >
-> >
-> > -------- =E8=BD=89=E9=81=9E=E7=9A=84=E9=83=B5=E4=BB=B6 --------
-> >> =E8=87=AA: AceLan Kao <acelan.kao@canonical.com>
-> >> =E8=87=B3: Joey Lee <jlee@novell.com>
-> >> =E4=B8=BB=E6=97=A8: Re: A problem about acer-wmi
-> >> =E6=97=A5=E6=9C=9F: Tue, 19 Jul 2011 11:37:28 +0800
-> >>
-> >> Dear Joey,
-> >>
-> >> Thanks for your quick response.
-> >> Here are the logs and it's good to discuss this issue on platform =
-driver list.
-> >> Thanks.
-> >>
-> >> Best regards,
-> >> AceLan Kao.
-> >>
-> >> 2011/7/19 Joey Lee <jlee@novell.com>:
-> >> > =E6=96=BC =E4=BA=8C=EF=BC=8C2011-07-19 =E6=96=BC 02:57 +0000=EF=BC=
-=8Cjoeyli(Joey Lee) =E6=8F=90=E5=88=B0=EF=BC=9A
-> >> >> Hi Kao,
-> >> >>
-> >> >> =E6=96=BC =E4=BA=8C=EF=BC=8C2011-07-19 =E6=96=BC 09:43 +0800=EF=
-=BC=8CAceLan Kao =E6=8F=90=E5=88=B0=EF=BC=9A
-> >> >> > Dear Joey,
-> >> >> >
-> >> >> > We have a new machine the model is Acer Aspire 4739Z
-> >> >> > I tried to add it's model in acer_quirks struct, but in
-> >> >> > acer_wmi_init(), it can't find it's interface.
-> >> >> >        {
-> >> >> >                .callback =3D dmi_matched,
-> >> >> >                .ident =3D "Acer Aspire 4739Z",
-> >> >> >                .matches =3D {
-> >> >> >                        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> >> >> >                        DMI_MATCH(DMI_PRODUCT_NAME, "AS4739Z")=
-,
-> >> >> >                },
-> >> >> >                .driver_data =3D &quirk_acer_travelmate_2490,
-> >> >> >        },
-> >> >> >
-> >> >> > wmi_has_guid(AMW0_GUID1), wmi_has_guid(WMID_GUID1), and
-> >> >> > wmi_has_guid(WMID_GUID2) all return 0.
-> >> >> > And, wmi_has_guid(WMID_GUID3) and wmi_has_guid(ACERWMID_EVENT=
-_GUID) return 1.
-> >> >> >
-> >> >> > I don't understand the logic of those wmi_has_guid(), so I do=
-n't know
-> >> >> > how to modify them, I just assigned the interface as
-> >> >> >   interface =3D &wmid_interface;
-> >> >> > and that would make us capture the KEY_F22(Touch Pad On/Off) =
-event and
-> >> >> > get the OSD appeared.
-> >> >> >
-> >> >> > Please direct me how to add this h/w correctly into acer_wmi.=
-c and
-> >> >> > please let me know if I should provide any info you need.
-> >> >> > Thanks.
-> >> >> >
-> >> >> > Best regards,
-> >> >> > AceLan Kao.
-> >> >> >
-> >> >>
-> >> >> Thank's for you pay attention to acer-wmi driver. Please attach=
-ed the
-> >> >> dmidecode log and acpidump on this mail to me.
-> >> >> Then, I can trace the DSDT to find out good way.
-> >> >>
-> >> >
-> >> > Forgot tell how to capture the log and DSDT:
-> >> >  + dmidecode > dmidecode.log
-> >> >  + acpidump > acpidump.dat
-> >> >
-> >> >
-> >> > Thank's a lot!
-> >> > Joey Lee
-> >> >
-> >> >> And,
-> >> >> Do you mind if I forward this mail to platform driver group on =
-kernel
-> >> >> upstream?
-> >> >> Then we can discuss on upstream, maybe have more experts can pr=
-ovide
-> >> >> commants to us.
-> >> >>
-> >> >>
-> >> >> Thank's a lot!
-> >> >> Joey Lee
-> >> >
-> >> >
-> >> >
-> >>
-> >>
-> >>
-> >
-> >
-> >
->=20
->=20
->=20
+------=zekqvb412_4900_199745879.538528--
