@@ -1,73 +1,160 @@
-From: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] platform-drivers-x86: asus-laptop:
- fix wrong test for successful registered led_classdev
-Date: Mon, 8 Aug 2011 14:18:27 +0200
-Message-ID: <CAHR064ix9i3-j8T_B53YzLrgFp+Ms4DmnPW8FWdN-Q2J99Fk2w@mail.gmail.com>
-References: <1312794859.21052.2.camel@phoenix>
-	<1312795038.21052.6.camel@phoenix>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [Fwd: Re: A problem about acer-wmi]
+Date: Tue, 9 Aug 2011 10:05:28 +0800
+Message-ID: <CAMz9Wg9ZZvcb+USmPMqXZ3zFRct8qme=7C2UwxKThaANZ=PB6A@mail.gmail.com>
+References: <4E25AFC7020000230002F7D1@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1312795038.21052.6.camel@phoenix>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=Big5
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qy0-f181.google.com ([209.85.216.181]:53879 "EHLO
+	mail-qy0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750953Ab1HICFb convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 8 Aug 2011 22:05:31 -0400
+Received: by qyk34 with SMTP id 34so2050210qyk.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Aug 2011 19:05:31 -0700 (PDT)
+In-Reply-To: <4E25AFC7020000230002F7D1@novprvlin0050.provo.novell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Joey Lee <jlee@novell.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-T24gTW9uLCBBdWcgOCwgMjAxMSBhdCAxMToxNyBBTSwgQXhlbCBMaW4gPGF4ZWwubGluQGdtYWls
-LmNvbT4gd3JvdGU6Cj4gZGV2aWNlX2NyZWF0ZSByZXR1cm5zICZzdHJ1Y3QgZGV2aWNlIHBvaW50
-ZXIgb24gc3VjY2Vzcywgb3IgRVJSX1BUUigpIG9uIGVycm9yLgo+IFRodXMgaWYgbGVkX2NsYXNz
-ZGV2X3JlZ2lzdGVyIGZhaWxzLCBsZWRfY2Rldi0+ZGV2IGlzIGFsd2F5cyBub3QgTlVMTC4KPgo+
-IFRodXMgdG8gdW5yZWdpc3RlciBhIHN1Y2Nlc3NmdWwgcmVnaXN0ZXJlZCBsZWRfY2xhc3NkZXYs
-IHdlIHNob3VsZCBjaGVjawo+IElTX0VSUl9PUl9OVUxMIG1hY3JvIGZvciBsZWRfY2Rldi0+ZGV2
-IGluc3RlYWQgb2YgY2hlY2tpbmcgaWYgbGVkX2NkZXYtPmRldgo+IGlzIE5VTEwgb3Igbm90Lgo+
-Cj4gd2UgdXNlIElTX0VSUl9PUl9OVUxMIGluc3RlYWQgb2YgSVNfRVJSIGJlY2F1c2UgaWYgd2Ug
-aGF2bid0IGNhbGwKPiBsZWRfY2xhc3NkZXZfcmVnaXN0ZXIsIHRoZSBsZWRfY2Rldi0+ZGV2IGlz
-IE5VTEwuCj4KPiBTaWduZWQtb2ZmLWJ5OiBBeGVsIExpbiA8YXhlbC5saW5AZ21haWwuY29tPgoK
-QWNrZWQtYnk6IENvcmVudGluIENoYXJ5IDxjb3JlbnRpbi5jaGFyeUBnbWFpbC5jb20+CgoKPiAt
-LS0KPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbGFwdG9wLmMgfCDCoCAxMiArKysrKyst
-LS0tLS0KPiDCoDEgZmlsZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygt
-KQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbGFwdG9wLmMgYi9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLWxhcHRvcC5jCj4gaW5kZXggZmE2ZDdlYy4uMGUwNzFm
-YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLWxhcHRvcC5jCj4gKysr
-IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy1sYXB0b3AuYwo+IEBAIC00MzAsMTcgKzQzMCwx
-NyBAQCBzdGF0aWMgZW51bSBsZWRfYnJpZ2h0bmVzcyBhc3VzX2tsZWRfY2Rldl9nZXQoc3RydWN0
-IGxlZF9jbGFzc2RldiAqbGVkX2NkZXYpCj4KPiDCoHN0YXRpYyB2b2lkIGFzdXNfbGVkX2V4aXQo
-c3RydWN0IGFzdXNfbGFwdG9wICphc3VzKQo+IMKgewo+IC0gwqAgwqAgwqAgaWYgKGFzdXMtPm1s
-ZWQubGVkLmRldikKPiArIMKgIMKgIMKgIGlmICghSVNfRVJSX09SX05VTEwoYXN1cy0+bWxlZC5s
-ZWQuZGV2KSkKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGxlZF9jbGFzc2Rldl91bnJlZ2lzdGVy
-KCZhc3VzLT5tbGVkLmxlZCk7Cj4gLSDCoCDCoCDCoCBpZiAoYXN1cy0+dGxlZC5sZWQuZGV2KQo+
-ICsgwqAgwqAgwqAgaWYgKCFJU19FUlJfT1JfTlVMTChhc3VzLT50bGVkLmxlZC5kZXYpKQo+IMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgbGVkX2NsYXNzZGV2X3VucmVnaXN0ZXIoJmFzdXMtPnRsZWQu
-bGVkKTsKPiAtIMKgIMKgIMKgIGlmIChhc3VzLT5wbGVkLmxlZC5kZXYpCj4gKyDCoCDCoCDCoCBp
-ZiAoIUlTX0VSUl9PUl9OVUxMKGFzdXMtPnBsZWQubGVkLmRldikpCj4gwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqBsZWRfY2xhc3NkZXZfdW5yZWdpc3RlcigmYXN1cy0+cGxlZC5sZWQpOwo+IC0gwqAg
-wqAgwqAgaWYgKGFzdXMtPnJsZWQubGVkLmRldikKPiArIMKgIMKgIMKgIGlmICghSVNfRVJSX09S
-X05VTEwoYXN1cy0+cmxlZC5sZWQuZGV2KSkKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGxlZF9j
-bGFzc2Rldl91bnJlZ2lzdGVyKCZhc3VzLT5ybGVkLmxlZCk7Cj4gLSDCoCDCoCDCoCBpZiAoYXN1
-cy0+Z2xlZC5sZWQuZGV2KQo+ICsgwqAgwqAgwqAgaWYgKCFJU19FUlJfT1JfTlVMTChhc3VzLT5n
-bGVkLmxlZC5kZXYpKQo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbGVkX2NsYXNzZGV2X3VucmVn
-aXN0ZXIoJmFzdXMtPmdsZWQubGVkKTsKPiAtIMKgIMKgIMKgIGlmIChhc3VzLT5rbGVkLmxlZC5k
-ZXYpCj4gKyDCoCDCoCDCoCBpZiAoIUlTX0VSUl9PUl9OVUxMKGFzdXMtPmtsZWQubGVkLmRldikp
-Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBsZWRfY2xhc3NkZXZfdW5yZWdpc3RlcigmYXN1cy0+
-a2xlZC5sZWQpOwo+IMKgIMKgIMKgIMKgaWYgKGFzdXMtPmxlZF93b3JrcXVldWUpIHsKPiDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoGRlc3Ryb3lfd29ya3F1ZXVlKGFzdXMtPmxlZF93b3JrcXVldWUp
-Owo+IC0tCj4gMS43LjQuMQo+Cj4KPgo+CgoKCi0tIApDb3JlbnRpbiBDaGFyeQpodHRwOi8veGYu
-aWtzYWlmLm5ldAoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkJsYWNrQmVycnkmcmVnOyBEZXZDb24g
-QW1lcmljYXMsIE9jdC4gMTgtMjAsIFNhbiBGcmFuY2lzY28sIENBClRoZSBtdXN0LWF0dGVuZCBl
-dmVudCBmb3IgbW9iaWxlIGRldmVsb3BlcnMuIENvbm5lY3Qgd2l0aCBleHBlcnRzLiAKR2V0IHRv
-b2xzIGZvciBjcmVhdGluZyBTdXBlciBBcHBzLiBTZWUgdGhlIGxhdGVzdCB0ZWNobm9sb2dpZXMu
-ClNlc3Npb25zLCBoYW5kcy1vbiBsYWJzLCBkZW1vcyAmIG11Y2ggbW9yZS4gUmVnaXN0ZXIgZWFy
-bHkgJiBzYXZlIQpodHRwOi8vcC5zZi5uZXQvc2Z1L3JpbS1ibGFja2JlcnJ5LTEKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWNwaTRhc3VzLXVzZXIgbWFp
-bGluZyBsaXN0CkFjcGk0YXN1cy11c2VyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xp
-c3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9hY3BpNGFzdXMtdXNlcgo=
+Dear Joey,
+
+Is there any progress of the acer-wmi patch?
+
+I read the Acer WMI/SMBIOS Spec. and think we might need to create a
+new acer-wmi driver for the new machines and leave the original
+acer-wmi driver for the old ones.
+The GUID is changed and there are more functions be added in the spec.
+that the acer-wmi driver is hard to handle now.
+And I'm not sure if I can implement a open source wmi driver from the s=
+pec.
+Please input more idea about this, thanks.
+
+Best regards,
+AceLan Kao.
+
+2011/7/19 Joey Lee <jlee@novell.com>:
+> Cc. to platform driver mail
+>
+> Hi AceLan,
+>
+> In old acer machine supports both old WMI_GUID1 and new WMI_WMID3, bu=
+t
+> more and more machines removed old WMI_GUID1 method and just support =
+new
+> one.
+>
+> I will spend a bit time to clear up acer-wmi driver, add support to
+> those new machines.
+> I will send out patches for review.
+>
+>
+>
+> Thank's a lot!
+> Joey Lee
+>
+>
+> -------- =C2=E0=BB=BC=AA=BA=B6l=A5=F3 --------
+>> =A6=DB: AceLan Kao <acelan.kao@canonical.com>
+>> =A6=DC: Joey Lee <jlee@novell.com>
+>> =A5D=A6=AE: Re: A problem about acer-wmi
+>> =A4=E9=B4=C1: Tue, 19 Jul 2011 11:37:28 +0800
+>>
+>> Dear Joey,
+>>
+>> Thanks for your quick response.
+>> Here are the logs and it's good to discuss this issue on platform dr=
+iver list.
+>> Thanks.
+>>
+>> Best regards,
+>> AceLan Kao.
+>>
+>> 2011/7/19 Joey Lee <jlee@novell.com>:
+>> > =A9=F3 =A4G=A1A2011-07-19 =A9=F3 02:57 +0000=A1Ajoeyli(Joey Lee) =B4=
+=A3=A8=EC=A1G
+>> >> Hi Kao,
+>> >>
+>> >> =A9=F3 =A4G=A1A2011-07-19 =A9=F3 09:43 +0800=A1AAceLan Kao =B4=A3=
+=A8=EC=A1G
+>> >> > Dear Joey,
+>> >> >
+>> >> > We have a new machine the model is Acer Aspire 4739Z
+>> >> > I tried to add it's model in acer_quirks struct, but in
+>> >> > acer_wmi_init(), it can't find it's interface.
+>> >> >        {
+>> >> >                .callback =3D dmi_matched,
+>> >> >                .ident =3D "Acer Aspire 4739Z",
+>> >> >                .matches =3D {
+>> >> >                        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+>> >> >                        DMI_MATCH(DMI_PRODUCT_NAME, "AS4739Z"),
+>> >> >                },
+>> >> >                .driver_data =3D &quirk_acer_travelmate_2490,
+>> >> >        },
+>> >> >
+>> >> > wmi_has_guid(AMW0_GUID1), wmi_has_guid(WMID_GUID1), and
+>> >> > wmi_has_guid(WMID_GUID2) all return 0.
+>> >> > And, wmi_has_guid(WMID_GUID3) and wmi_has_guid(ACERWMID_EVENT_G=
+UID) return 1.
+>> >> >
+>> >> > I don't understand the logic of those wmi_has_guid(), so I don'=
+t know
+>> >> > how to modify them, I just assigned the interface as
+>> >> >   interface =3D &wmid_interface;
+>> >> > and that would make us capture the KEY_F22(Touch Pad On/Off) ev=
+ent and
+>> >> > get the OSD appeared.
+>> >> >
+>> >> > Please direct me how to add this h/w correctly into acer_wmi.c =
+and
+>> >> > please let me know if I should provide any info you need.
+>> >> > Thanks.
+>> >> >
+>> >> > Best regards,
+>> >> > AceLan Kao.
+>> >> >
+>> >>
+>> >> Thank's for you pay attention to acer-wmi driver. Please attached=
+ the
+>> >> dmidecode log and acpidump on this mail to me.
+>> >> Then, I can trace the DSDT to find out good way.
+>> >>
+>> >
+>> > Forgot tell how to capture the log and DSDT:
+>> >  + dmidecode > dmidecode.log
+>> >  + acpidump > acpidump.dat
+>> >
+>> >
+>> > Thank's a lot!
+>> > Joey Lee
+>> >
+>> >> And,
+>> >> Do you mind if I forward this mail to platform driver group on ke=
+rnel
+>> >> upstream?
+>> >> Then we can discuss on upstream, maybe have more experts can prov=
+ide
+>> >> commants to us.
+>> >>
+>> >>
+>> >> Thank's a lot!
+>> >> Joey Lee
+>> >
+>> >
+>> >
+>>
+>>
+>>
+>
+>
+>
+
+
+
+--=20
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
