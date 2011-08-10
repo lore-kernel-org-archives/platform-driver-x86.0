@@ -1,26 +1,21 @@
-From: joeyli <jlee@suse.com>
+From: "Joey Lee" <jlee@novell.com>
 Subject: Re: [Fwd: Re: A problem about acer-wmi]
-Date: Wed, 10 Aug 2011 16:49:09 +0800
-Message-ID: <1312966149.24471.152.camel@linux-s257.site>
-References: <4E25AFC7020000230002F7D1@novprvlin0050.provo.novell.com>
-	 <CAMz9Wg9ZZvcb+USmPMqXZ3zFRct8qme=7C2UwxKThaANZ=PB6A@mail.gmail.com>
-	 <1312856096.24471.127.camel@linux-s257.site>
-	 <CAMz9Wg_RKGBYo+2ogamoVWscaXLx1=jX1ic+3uDqAYeovWx1tQ@mail.gmail.com>
-	 <1312942428.24471.139.camel@linux-s257.site>
+Date: Wed, 10 Aug 2011 03:17:36 -0600
+Message-ID: <4E42D950020000230003048A@novprvlin0050.provo.novell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:46449 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751436Ab1HJIwc (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Wed, 10 Aug 2011 04:52:32 -0400
-In-Reply-To: <1312942428.24471.139.camel@linux-s257.site>
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:41896 "EHLO
+	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752257Ab1HJJRj (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:2:1>);
+	Wed, 10 Aug 2011 05:17:39 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan@gmail.com>
-Cc: Joey Lee <jlee@novell.com>, platform-driver-x86@vger.kernel.org
+To: acelan@gmail.com
+Cc: platform-driver-x86@vger.kernel.org
 
 Hi AceLan,
 
@@ -33,8 +28,8 @@ AceLan Kao =E6=8F=90=E5=88=B0=EF=BC=9A
 > > The current project we have right now have to follow the Acer WMI t=
 o
 > > handle the key events, that means no EC key event.
-> > And we have 3 keys that are not working now, they are touchpad togg=
-le,
+> > And we have 3 keys that are not working now, they are touchpad
+toggle,
 > > brightness up, and brightness down.
 > > The touchpad toggle function is a Hotkey Break Event(function numbe=
 r
@@ -47,8 +42,8 @@ n
 > Yes, current acer-wmi only capture the event function number 0x1, you
 > can add those new function to acer_wmi_notify().
 >=20
-> > I just implemented those 3 key events, so I think maybe we don't ha=
-ve
+> > I just implemented those 3 key events, so I think maybe we don't
+have
 > > to create a new acer-wmi driver.
 >=20
 > Great! Welcome for you patches, I will also test it.
@@ -80,6 +75,7 @@ Please kindly test this patch:
 
 Thank's
 Joey Lee
+
 
 From 28b2e2ebaa230d339d5749b581c667ed074bb7ea Mon Sep 17 00:00:00 2001
 =46rom: Lee, Chun-Yi <jlee@suse.com>
