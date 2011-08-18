@@ -1,54 +1,58 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH 3/3] acer-wmi: check the existence of internal wireless device when set capability
-Date: Thu, 18 Aug 2011 18:47:34 +0800
-Message-ID: <1313664454-2762-3-git-send-email-jlee@suse.com>
-References: <1313664454-2762-1-git-send-email-jlee@suse.com>
- <1313664454-2762-2-git-send-email-jlee@suse.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] dell-laptop: support Synaptics/Alps touchpad led
+Date: Thu, 18 Aug 2011 20:36:27 +0100
+Message-ID: <20110818193626.GA12449@srcf.ucam.org>
+References: <1313658248-6964-1-git-send-email-acelan.kao@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yi0-f46.google.com ([209.85.218.46]:45457 "EHLO
-	mail-yi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750785Ab1HRKv0 (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:41266 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751295Ab1HRTga (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Aug 2011 06:51:26 -0400
-Received: by yie30 with SMTP id 30so1373823yie.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Aug 2011 03:51:25 -0700 (PDT)
-In-Reply-To: <1313664454-2762-2-git-send-email-jlee@suse.com>
+	Thu, 18 Aug 2011 15:36:30 -0400
+Content-Disposition: inline
+In-Reply-To: <1313658248-6964-1-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-That will be better to check the existence of internal wireless device
-when we set wireless capability and generate killswitch for it. It can
-avoid userland access wireless rfkill but the machine doesn't have internal
-wireless device.
+On Thu, Aug 18, 2011 at 05:04:08PM +0800, AceLan Kao wrote:
 
-Tested on Acer Travelmate 8572
+> +static void dell_touchpadled_on()
+> +{
+> +	while (inb(0x64) & 0x02)
+> +		msleep(20);
+> +	outb(0x97, 0x64);
+> +
+> +	while (inb(0x64) & 0x02)
+> +		msleep(20);
+> +	outb(1, 0x60);
+> +
+> +	touchpad_led_status = 1;
+> +}
 
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
+No. You're hitting the keyboard controller without any coordination with 
+the i8042 driver. What happens if the user hits a key while you're in 
+the middle of this?
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index b663334..5130c63 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1085,7 +1085,9 @@ static acpi_status WMID_set_capabilities(void)
- 		return AE_ERROR;
- 	}
- 
--	interface->capability |= ACER_CAP_WIRELESS;
-+	pr_info("Function bitmap for Communication Device: 0x%x\n", devices);
-+	if (devices & 0x07)
-+		interface->capability |= ACER_CAP_WIRELESS;
- 	if (devices & 0x40)
- 		interface->capability |= ACER_CAP_THREEG;
- 	if (devices & 0x10)
+> + * Called for each KEY_F22 key press event.
+> + */
+> +static void dell_touchpadled_update(struct work_struct *work)
+> +{
+> +	touchpad_led_status = 1 - touchpad_led_status;
+> +
+> +	if (touchpad_led_status == 1)
+> +		dell_touchpadled_on();
+> +	else
+> +		dell_touchpadled_off();
+> +}
+
+No, this should be handled in userspace. Expose the LED via the LED 
+class and have gnome-settings-daemon (or equivalent) coordinate the 
+policy - otherwise you'll end up with situations where userspace and the 
+LED state are out of sync.
+
 -- 
-1.6.0.2
+Matthew Garrett | mjg59@srcf.ucam.org
