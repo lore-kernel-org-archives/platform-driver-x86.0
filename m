@@ -1,58 +1,48 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] dell-laptop: support Synaptics/Alps touchpad led
-Date: Thu, 18 Aug 2011 20:36:27 +0100
-Message-ID: <20110818193626.GA12449@srcf.ucam.org>
-References: <1313658248-6964-1-git-send-email-acelan.kao@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: David Herrmann <dh.herrmann@googlemail.com>
+Subject: [PATCH] Platform: Fix error path in samsung-laptop init
+Date: Tue, 23 Aug 2011 13:03:07 +0200
+Message-ID: <1314097387-3665-1-git-send-email-dh.herrmann@googlemail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:41266 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751295Ab1HRTga (ORCPT
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:63796 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751428Ab1HWLDR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Aug 2011 15:36:30 -0400
-Content-Disposition: inline
-In-Reply-To: <1313658248-6964-1-git-send-email-acelan.kao@canonical.com>
+	Tue, 23 Aug 2011 07:03:17 -0400
+Received: by fxh19 with SMTP id 19so156508fxh.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Aug 2011 04:03:16 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: gregkh@suse.de, dh.herrmann@googlemail.com, mjg@redhat.com
 
-On Thu, Aug 18, 2011 at 05:04:08PM +0800, AceLan Kao wrote:
+samsung_init() should not return success if not all devices are initialized.
+Otherwise, samsung_exit() will dereference sdev NULL pointers and others.
 
-> +static void dell_touchpadled_on()
-> +{
-> +	while (inb(0x64) & 0x02)
-> +		msleep(20);
-> +	outb(0x97, 0x64);
-> +
-> +	while (inb(0x64) & 0x02)
-> +		msleep(20);
-> +	outb(1, 0x60);
-> +
-> +	touchpad_led_status = 1;
-> +}
+Signed-off-by: David Herrmann <dh.herrmann@googlemail.com>
+---
+ drivers/platform/x86/samsung-laptop.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
 
-No. You're hitting the keyboard controller without any coordination with 
-the i8042 driver. What happens if the user hits a key while you're in 
-the middle of this?
-
-> + * Called for each KEY_F22 key press event.
-> + */
-> +static void dell_touchpadled_update(struct work_struct *work)
-> +{
-> +	touchpad_led_status = 1 - touchpad_led_status;
-> +
-> +	if (touchpad_led_status == 1)
-> +		dell_touchpadled_on();
-> +	else
-> +		dell_touchpadled_off();
-> +}
-
-No, this should be handled in userspace. Expose the LED via the LED 
-class and have gnome-settings-daemon (or equivalent) coordinate the 
-policy - otherwise you'll end up with situations where userspace and the 
-LED state are out of sync.
-
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 3591630..376ca89 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -770,7 +770,7 @@ static int __init samsung_init(void)
+ 	sabi_iface = ioremap_nocache(ifaceP, 16);
+ 	if (!sabi_iface) {
+ 		pr_err("Can't remap %x\n", ifaceP);
+-		goto exit;
++		goto error_no_signature;
+ 	}
+ 	if (debug) {
+ 		printk(KERN_DEBUG "ifaceP = 0x%08x\n", ifaceP);
+@@ -821,7 +821,6 @@ static int __init samsung_init(void)
+ 	if (retval)
+ 		goto error_file_create;
+ 
+-exit:
+ 	return 0;
+ 
+ error_file_create:
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.6
