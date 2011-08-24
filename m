@@ -1,62 +1,45 @@
-From: "Joey Lee" <jlee@novell.com>
-Subject: Re: [Bugme-new] [Bug 40582] New: acer_wmi kernel module is
- prevent of correct work of Acer AO 721
-Date: Wed, 24 Aug 2011 02:24:56 -0600
-Message-ID: <4E5541F80200002300030C4B@novprvlin0050.provo.novell.com>
-References: <bug-40582-10286@https.bugzilla.kernel.org/>
- <20110823142934.fc47eb32.akpm@linux-foundation.org>
- <4E54F3B40200002300030C17@novprvlin0050.provo.novell.com>
- <20110823195752.18aa497e.akpm@linux-foundation.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [RESEND][PATCH 0/5] Support for the TS-5500 board
+Date: Wed, 24 Aug 2011 14:42:41 +0100
+Message-ID: <20110824134241.GA12982@srcf.ucam.org>
+References: <1311887450-22235-1-git-send-email-vivien.didelot@savoirfairelinux.com>
+ <20110809233208.1a71122e@lenov0n>
+ <4E421CD8.3090606@canonical.com>
+ <CAHR064hamS0gHqQR5a5UAanN89CzzW94sjW6SB3=8MAcf6pkMg@mail.gmail.com>
+ <20110810100629.715c3bb7@v0nbox>
+ <1312986047.2989.47.camel@i7.infradead.org>
+ <20110810150919.39519e62@v0nbox>
+ <20110812102627.1281eb11@v0nbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:60013 "EHLO
-	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751354Ab1HXIZF (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:5:1>);
-	Wed, 24 Aug 2011 04:25:05 -0400
-In-Reply-To: <20110823195752.18aa497e.akpm@linux-foundation.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:44890 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751055Ab1HXNms (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 24 Aug 2011 09:42:48 -0400
 Content-Disposition: inline
+In-Reply-To: <20110812102627.1281eb11@v0nbox>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: akpm@linux-foundation.org
-Cc: bugme-daemon@bugzilla.kernel.org, runetmember@gmail.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
+To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2011-08-23 =E6=96=BC 19:57 -0700=EF=BC=8CAn=
-drew Morton =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Tue, 23 Aug 2011 20:51:00 -0600 "Joey Lee" <jlee@novell.com> wrote=
-:
->=20
-> > ___ ______2011-08-23 ___ 14:29 -0700___Andrew Morton _________
-> > > (switched to email.  Please respond via emailed reply-to-all, not=
- via the
-> > > bugzilla web interface).
-> > > On Fri, 5 Aug 2011 09:02:45 GMT
-> > > bugzilla-daemon@bugzilla.kernel.org wrote:
-> > >=20
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D40582
-> > > >=20
-> > > >            Summary: acer_wmi kernel module is prevent of correc=
-t work of
-> > > >                     Acer AO 721
-> > > >            Product: ACPI
-> >=20
-> > I always ask them file bug on kernel bugzilla when anyone sent the =
-mail
-> > to me for acer-wmi issue.
-> >=20
-> > So, I am wrong? When should we use email bug not bugzilla?
->=20
-> I usually assume that nobody's looking at the bugzilla reports :(
->=20
-> I think this one was originally miscategorised - nobody had done
-> anything with it in 2-3 weeks.
->=20
+On Fri, Aug 12, 2011 at 10:26:27AM -0400, Vivien Didelot wrote:
+> On Wed, 10 Aug 2011 15:09:19 -0400,
+> Vivien Didelot <vivien.didelot@savoirfairelinux.com> wrote:
+> > I'm a bit confused with what should be done for the support for an
+> > embedded platform (X86-based) like this TS-5500. Is the actual code
+> > hierarchy OK? What is the impact of adding a device-tree to this code?
+> > 
+> > Thanks,
+> > Vivien.
+> 
+> Can I get the maintainer's view on this?
 
-I always search acer-wmi bugs by "acer-wmi" keyword, I add "acer_wmi"
-keyword to my search list in the future.
+You'd probably want to Cc: the x86 architecture maintainers - you've 
+only got the one for x86-specific drivers that don't fall into other 
+categories at the moment.
 
-
-Thank's
-Joey Lee
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
