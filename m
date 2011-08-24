@@ -1,41 +1,53 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: Re: [RESEND][PATCH 0/5] Support for the TS-5500 board
-Date: Wed, 24 Aug 2011 11:16:19 -0400
-Message-ID: <20110824111619.1b9f8fbd@v0nbox>
-References: <1311887450-22235-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-	<20110809233208.1a71122e@lenov0n>
-	<4E421CD8.3090606@canonical.com>
-	<CAHR064hamS0gHqQR5a5UAanN89CzzW94sjW6SB3=8MAcf6pkMg@mail.gmail.com>
-	<20110810100629.715c3bb7@v0nbox>
-	<1312986047.2989.47.camel@i7.infradead.org>
-	<20110810150919.39519e62@v0nbox>
-	<20110812102627.1281eb11@v0nbox>
-	<20110824134241.GA12982@srcf.ucam.org>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH] Platform: Brightness quirk for samsung laptop driver
+Date: Wed, 24 Aug 2011 16:10:53 -0700
+Message-ID: <20110824231053.GA7697@kroah.com>
+References: <1314115527-6063-1-git-send-email-dh.herrmann@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.savoirfairelinux.com ([209.172.62.77]:49160 "EHLO
-	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751194Ab1HXPQW (ORCPT
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:50329 "EHLO
+	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751948Ab1HXXNe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 24 Aug 2011 11:16:22 -0400
-In-Reply-To: <20110824134241.GA12982@srcf.ucam.org>
+	Wed, 24 Aug 2011 19:13:34 -0400
+Content-Disposition: inline
+In-Reply-To: <1314115527-6063-1-git-send-email-dh.herrmann@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: David Herrmann <dh.herrmann@googlemail.com>
+Cc: platform-driver-x86@vger.kernel.org, mjg@redhat.com, jasonbstubbs@gmail.com
 
-On Wed, 24 Aug 2011 14:42:41 +0100,
-Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Fri, Aug 12, 2011 at 10:26:27AM -0400, Vivien Didelot wrote:
-> > Can I get the maintainer's view on this?
+On Tue, Aug 23, 2011 at 06:05:27PM +0200, David Herrmann wrote:
+> From: Jason Stubbs <jasonbstubbs@gmail.com>
 > 
-> You'd probably want to Cc: the x86 architecture maintainers - you've 
-> only got the one for x86-specific drivers that don't fall into other 
-> categories at the moment.
+> On some samsung laptops the brightness regulation works slightly different.
+> All SABI commands except for set_brightness work as expected. The behaviour
+> of set_brightness is as follows:
+> 
+> - Setting a new brightness will only step one level toward the new brightness
+>   level. For example, setting a level of 5 when the current level is 2 will
+>   result in a brightness level of 3.
+> - A spurious KEY_BRIGHTNESS_UP or KEY_BRIGHTNESS_DOWN event is also generated
+>   along with the change in brightness.
+> - Neither of the above two issues occur when changing from/to brightness level 0.
+> 
+> This patch adds detection and a non-intrusive workaround for the above issues.
+> 
+> Signed-off-by: David Herrmann <dh.herrmann@googlemail.com>
+> ---
+> Hi
+> 
+> This patch is originally from Jason Stubbs. See here:
+> http://git.kernel.org/?p=linux/kernel/git/gregkh/patches.git;a=blob;f=platform-samsung_laptop-add-support-for-samsung-nc210-nc110.patch;hb=HEAD
+> 
+> I just wanted to ask whether there is some work going on here? My laptop model
+> needs this fix and I reviewed and tested it and it works fine. It would be nice
+> to see this upstream.
 
-Ok I see, thanks for your comment.
+I have a different patch from Jason that should fix this properly, I'll
+send it to Matthew later today.
 
-Regards,
-Vivien.
+thanks,
+
+greg k-h
