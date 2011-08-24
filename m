@@ -1,45 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 Subject: Re: [RESEND][PATCH 0/5] Support for the TS-5500 board
-Date: Wed, 24 Aug 2011 14:42:41 +0100
-Message-ID: <20110824134241.GA12982@srcf.ucam.org>
+Date: Wed, 24 Aug 2011 11:16:19 -0400
+Message-ID: <20110824111619.1b9f8fbd@v0nbox>
 References: <1311887450-22235-1-git-send-email-vivien.didelot@savoirfairelinux.com>
- <20110809233208.1a71122e@lenov0n>
- <4E421CD8.3090606@canonical.com>
- <CAHR064hamS0gHqQR5a5UAanN89CzzW94sjW6SB3=8MAcf6pkMg@mail.gmail.com>
- <20110810100629.715c3bb7@v0nbox>
- <1312986047.2989.47.camel@i7.infradead.org>
- <20110810150919.39519e62@v0nbox>
- <20110812102627.1281eb11@v0nbox>
+	<20110809233208.1a71122e@lenov0n>
+	<4E421CD8.3090606@canonical.com>
+	<CAHR064hamS0gHqQR5a5UAanN89CzzW94sjW6SB3=8MAcf6pkMg@mail.gmail.com>
+	<20110810100629.715c3bb7@v0nbox>
+	<1312986047.2989.47.camel@i7.infradead.org>
+	<20110810150919.39519e62@v0nbox>
+	<20110812102627.1281eb11@v0nbox>
+	<20110824134241.GA12982@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:44890 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751055Ab1HXNms (ORCPT
+Received: from mail.savoirfairelinux.com ([209.172.62.77]:49160 "EHLO
+	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751194Ab1HXPQW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 24 Aug 2011 09:42:48 -0400
-Content-Disposition: inline
-In-Reply-To: <20110812102627.1281eb11@v0nbox>
+	Wed, 24 Aug 2011 11:16:22 -0400
+In-Reply-To: <20110824134241.GA12982@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: David Woodhouse <dwmw2@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Ike Panhc <ike.pan@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 12, 2011 at 10:26:27AM -0400, Vivien Didelot wrote:
-> On Wed, 10 Aug 2011 15:09:19 -0400,
-> Vivien Didelot <vivien.didelot@savoirfairelinux.com> wrote:
-> > I'm a bit confused with what should be done for the support for an
-> > embedded platform (X86-based) like this TS-5500. Is the actual code
-> > hierarchy OK? What is the impact of adding a device-tree to this code?
-> > 
-> > Thanks,
-> > Vivien.
+On Wed, 24 Aug 2011 14:42:41 +0100,
+Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> On Fri, Aug 12, 2011 at 10:26:27AM -0400, Vivien Didelot wrote:
+> > Can I get the maintainer's view on this?
 > 
-> Can I get the maintainer's view on this?
+> You'd probably want to Cc: the x86 architecture maintainers - you've 
+> only got the one for x86-specific drivers that don't fall into other 
+> categories at the moment.
 
-You'd probably want to Cc: the x86 architecture maintainers - you've 
-only got the one for x86-specific drivers that don't fall into other 
-categories at the moment.
+Ok I see, thanks for your comment.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Regards,
+Vivien.
