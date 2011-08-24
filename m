@@ -1,150 +1,118 @@
-From: "Wqyj" <mip_ul42_2_781@yahoo.com>
-Subject: preining@logic.at
-Date: Thu, 8 Jan 2004 04:37:07 +0800
-Message-ID: <200401080437076716231@yahoo.com>
+From: =?UTF-8?Q?Ren=C3=A9_Bolldorf?= <xsecute@googlemail.com>
+Subject: Re: Hi Rene,
+Date: Wed, 24 Aug 2011 09:10:52 +0200
+Message-ID: <CAEWqx5_U8wZhLFdkk2Qn-2sCE0LWXgzMjZwCqPvNG6g=HmG4gw@mail.gmail.com>
+References: <CAEWqx59Hr=HBUGyDOstVbr7VEXc2JEaByCJfDZAcce5D3XiF5A@mail.gmail.com>
+	<1314155562-4499-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="----=dgtw121_6659_253003327.523856"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nm9-vm6.bullet.mail.ne1.yahoo.com ([98.138.91.102]:31619 "HELO
-	nm9-vm6.bullet.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with SMTP id S1756144Ab1HXG1j (ORCPT
+Received: from mail-qy0-f181.google.com ([209.85.216.181]:49464 "EHLO
+	mail-qy0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750988Ab1HXHKx convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 24 Aug 2011 02:27:39 -0400
+	Wed, 24 Aug 2011 03:10:53 -0400
+Received: by qyk34 with SMTP id 34so605689qyk.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Aug 2011 00:10:52 -0700 (PDT)
+In-Reply-To: <1314155562-4499-1-git-send-email-ike.pan@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: preining <preining@logic.at>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-This is a multi-part message in MIME format.
+I agree with your approach, below is a new patch which apply clean on
+top of v3.1-rc3.
 
-------=dgtw121_6659_253003327.523856
-Content-Type: text/plain;
-	charset="GB2312"
-Content-Transfer-Encoding: base64
+Best regards
 
-cHJlaW5pbmdAbG9naWMuYXQNCjPE47rDo98vRElWPiANCmHH67LO1MS4vbz+o6zQu9C7MjINCjE1
-OC4yMjUuMTIwLjg0
+Ren=C3=A9
 
-------=dgtw121_6659_253003327.523856
-Content-Type: image/gif;
-	name="Tiwa_2065.gif"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename="Tiwa_2065.gif"
+---
+diff --git a/drivers/platform/x86/ideapad-laptop.c
+b/drivers/platform/x86/ideapad-laptop.c
+index 0c59541..0d94eec 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -493,6 +493,8 @@ static void ideapad_backlight_notify_power(struct
+ideapad_private *priv)
+       unsigned long power;
+       struct backlight_device *blightdev =3D priv->blightdev;
 
-R0lGODdh2gHYAHcAACwAAAAA2gHYAIcAAAAAADMAAGYAAJkAAMwAAP8AMwAAMzMAM2YAM5kAM8wA
-M/8AZgAAZjMAZmYAZpkAZswAZv8AmQAAmTMAmWYAmZkAmcwAmf8AzAAAzDMAzGYAzJkAzMwAzP8A
-/wAA/zMA/2YA/5kA/8wA//8zAAAzADMzAGYzAJkzAMwzAP8zMwAzMzMzM2YzM5kzM8wzM/8zZgAz
-ZjMzZmYzZpkzZswzZv8zmQAzmTMzmWYzmZkzmcwzmf8zzAAzzDMzzGYzzJkzzMwzzP8z/wAz/zMz
-/2Yz/5kz/8wz//9mAABmADNmAGZmAJlmAMxmAP9mMwBmMzNmM2ZmM5lmM8xmM/9mZgBmZjNmZmZm
-ZplmZsxmZv9mmQBmmTNmmWZmmZlmmcxmmf9mzABmzDNmzGZmzJlmzMxmzP9m/wBm/zNm/2Zm/5lm
-/8xm//+ZAACZADOZAGaZAJmZAMyZAP+ZMwCZMzOZM2aZM5mZM8yZM/+ZZgCZZjOZZmaZZpmZZsyZ
-Zv+ZmQCZmTOZmWaZmZmZmcyZmf+ZzACZzDOZzGaZzJmZzMyZzP+Z/wCZ/zOZ/2aZ/5mZ/8yZ///M
-AADMADPMAGbMAJnMAMzMAP/MMwDMMzPMM2bMM5nMM8zMM//MZgDMZjPMZmbMZpnMZszMZv/MmQDM
-mTPMmWbMmZnMmczMmf/MzADMzDPMzGbMzJnMzMzMzP/M/wDM/zPM/2bM/5nM/8zM////AAD/ADP/
-AGb/AJn/AMz/AP//MwD/MzP/M2b/M5n/M8z/M///ZgD/ZjP/Zmb/Zpn/Zsz/Zv//mQD/mTP/mWb/
-mZn/mcz/mf//zAD/zDP/zGb/zJn/zMz/zP///wD//zP//2b//5n//8z///8AAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAB6QU16QVl6QWt6QXcNQThBdy9Nei9ZMi9rNS93OC84Ly9BQUFNREFZ
-R0FrSkF3TUE4UEFBd01Nek1ZMk1rNU13OE04L01BZ1paCg1aek1aellaemtaendtejgI/wATCRxI
-sKDBgwgTKlzIsKHDhxAjSpxIsaLFixgzatzIsaPHjyBDihxJsqTJkyhTqlzJsqXLlzBjypxJs6ZN
-ggByLtT5kedNgwAO5gw6cCjRn0iTKl0a8+hRhE85+kw6FKhApziZat3KtWvGoDqjFhTr9etYoVnL
-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
-3/59/Pn17+ffX39AADs=
++     if (!blightdev)
++             return;
+       if (read_ec_data(ideapad_handle, 0x18, &power))
+               return;
+       blightdev->props.power =3D power ? FB_BLANK_UNBLANK : FB_BLANK_P=
+OWERDOWN;
+--
 
-------=dgtw121_6659_253003327.523856--
+On Wed, Aug 24, 2011 at 5:12 AM, Ike Panhc <ike.pan@canonical.com> wrot=
+e:
+> Nice done. Thanks for finding the bug. I write most part of ideapad-l=
+aptop.c
+> though the maintainer is still Matthew.
+>
+> I think the patch attached below is much simple and we can avoid unne=
+cessary
+> read_ec_data if blightdev is not set. Since you are the one who find =
+the bug
+> and have the first patch, I would like to keep you as author and your=
+ sign
+> off. Of course I need your agree. (Hoping I do not break the sign-off=
+ rule)
+>
+> Please review the patch below and reply if you agree with this or dis=
+agree.
+>
+>
+> Hi Matthew,
+>
+> When acpi_backlight=3Dvideo, priv->blightdev will be NULL and use it =
+without
+> checking will cause kernel oops. I suggest we shall have the fix in v=
+3.1
+> cycle.
+>
+>
+> =3D=3D=3D=3D=3D=3D 8< =3D=3D=3D=3D=3D=3D
+>
+> From 8bd37cd5da31abaca4b906bc84eb45a0834678ea Mon Sep 17 00:00:00 200=
+1
+> From: Rene Bolldorf <xsecute@googlemail.com>
+> Date: Wed, 24 Aug 2011 09:56:24 +0800
+> Subject: [PATCH] ideapad: Check if acpi already handle backlight powe=
+r in
+> =C2=A0'ideapad_backlight_notify_power' to avoid a page fault
+>
+> This patch avoid a page fault in the ideapad-laptop extras when
+> turning the backlight power on or off.
+>
+> Signed-off-by: Rene Bolldorf <xsecute@googlemail.com>
+> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+> ---
+> =C2=A0drivers/platform/x86/ideapad-laptop.c | =C2=A0 =C2=A02 ++
+> =C2=A01 files changed, 2 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform=
+/x86/ideapad-laptop.c
+> index 0c59541..0d94eec 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -493,6 +493,8 @@ static void ideapad_backlight_notify_power(struct=
+ ideapad_private *priv)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned long power;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct backlight_device *blightdev =3D pri=
+v->blightdev;
+>
+> + =C2=A0 =C2=A0 =C2=A0 if (!blightdev)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (read_ec_data(ideapad_handle, 0x18, &po=
+wer))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0blightdev->props.power =3D power ? FB_BLAN=
+K_UNBLANK : FB_BLANK_POWERDOWN;
+> --
+> 1.7.5.4
+>
+>
