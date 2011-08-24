@@ -1,52 +1,46 @@
-From: =?UTF-8?Q?Ren=C3=A9_Bolldorf?= <xsecute@googlemail.com>
-Subject: [PATCH]: Check if acpi already handle backlight power in
- 'ideapad_backlight_notify_power' to avoid a page fault
-Date: Wed, 24 Aug 2011 00:10:58 +0200
-Message-ID: <CAEWqx59Hr=HBUGyDOstVbr7VEXc2JEaByCJfDZAcce5D3XiF5A@mail.gmail.com>
+From: "Joey Lee" <jlee@novell.com>
+Subject: Re: [Bugme-new] [Bug 40582] New: acer_wmi kernel module is
+ prevent of correct work of Acer AO 721
+Date: Tue, 23 Aug 2011 20:51:00 -0600
+Message-ID: <4E54F3B40200002300030C17@novprvlin0050.provo.novell.com>
+References: <bug-40582-10286@https.bugzilla.kernel.org/>
+ <20110823142934.fc47eb32.akpm@linux-foundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qw0-f46.google.com ([209.85.216.46]:34517 "EHLO
-	mail-qw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752730Ab1HWWK7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Aug 2011 18:10:59 -0400
-Received: by qwk3 with SMTP id 3so394177qwk.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Aug 2011 15:10:58 -0700 (PDT)
+Received: from novprvlin0050.provo.novell.com ([137.65.248.33]:56308 "EHLO
+	novprvlin0050.provo.novell.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752028Ab1HXCvJ (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:5:1>);
+	Tue, 23 Aug 2011 22:51:09 -0400
+In-Reply-To: <20110823142934.fc47eb32.akpm@linux-foundation.org>
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: akpm@linux-foundation.org
+Cc: bugme-daemon@bugzilla.kernel.org, runetmember@gmail.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
 
-Hi Matthew,
+=E6=96=BC =E4=BA=8C=EF=BC=8C2011-08-23 =E6=96=BC 14:29 -0700=EF=BC=8CAn=
+drew Morton =E6=8F=90=E5=88=B0=EF=BC=9A
+> (switched to email.  Please respond via emailed reply-to-all, not via=
+ the
+> bugzilla web interface).
+> On Fri, 5 Aug 2011 09:02:45 GMT
+> bugzilla-daemon@bugzilla.kernel.org wrote:
+>=20
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D40582
+> >=20
+> >            Summary: acer_wmi kernel module is prevent of correct wo=
+rk of
+> >                     Acer AO 721
+> >            Product: ACPI
 
-this patch avoid a page fault in the ideapad-laptop extras when
-turning the backlight power on or off.
+I always ask them file bug on kernel bugzilla when anyone sent the mail
+to me for acer-wmi issue.
 
-Signed-off-by: Rene Bolldorf <xsecute@googlemail.com>
----
-diff --git a/drivers/platform/x86/ideapad-laptop.c
-b/drivers/platform/x86/ideapad-laptop.c
-index 0c59541..0766a9f 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -491,11 +491,13 @@ static void ideapad_backlight_exit(struct
-ideapad_private *priv)
- static void ideapad_backlight_notify_power(struct ideapad_private *priv)
- {
-        unsigned long power;
--       struct backlight_device *blightdev = priv->blightdev;
+So, I am wrong? When should we use email bug not bugzilla?
 
--       if (read_ec_data(ideapad_handle, 0x18, &power))
-+       if (priv->blightdev == NULL) {
-+               read_ec_data(ideapad_handle, 0x18, &power);
-                return;
--       blightdev->props.power = power ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+       }
-+
-+       priv->blightdev->props.power = power ? FB_BLANK_UNBLANK :
-FB_BLANK_POWERDOWN;
- }
 
- static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
---
+Thank's
+Joey Lee
