@@ -1,46 +1,67 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [Bugme-new] [Bug 40582] New: acer_wmi kernel module is prevent
- of correct work of Acer AO 721
-Date: Tue, 23 Aug 2011 19:57:52 -0700
-Message-ID: <20110823195752.18aa497e.akpm@linux-foundation.org>
-References: <bug-40582-10286@https.bugzilla.kernel.org/>
-	<20110823142934.fc47eb32.akpm@linux-foundation.org>
-	<4E54F3B40200002300030C17@novprvlin0050.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Hi Rene,
+Date: Wed, 24 Aug 2011 11:12:42 +0800
+Message-ID: <1314155562-4499-1-git-send-email-ike.pan@canonical.com>
+References: <CAEWqx59Hr=HBUGyDOstVbr7VEXc2JEaByCJfDZAcce5D3XiF5A@mail.gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13]:44517 "EHLO
-	smtp1.linux-foundation.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752028Ab1HXCyy (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:50042 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752296Ab1HXDMt (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Aug 2011 22:54:54 -0400
-In-Reply-To: <4E54F3B40200002300030C17@novprvlin0050.provo.novell.com>
+	Tue, 23 Aug 2011 23:12:49 -0400
+In-Reply-To: <CAEWqx59Hr=HBUGyDOstVbr7VEXc2JEaByCJfDZAcce5D3XiF5A@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: bugme-daemon@bugzilla.kernel.org, runetmember@gmail.com, Joey Lee <JLee@novell.com>, platform-driver-x86@vger.kernel.org
+To: mjg@redhat.com, xsecute@googlemail.com
+Cc: platform-driver-x86@vger.kernel.org
 
-On Tue, 23 Aug 2011 20:51:00 -0600 "Joey Lee" <jlee@novell.com> wrote:
+Nice done. Thanks for finding the bug. I write most part of ideapad-laptop.c
+though the maintainer is still Matthew.
 
-> ___ ______2011-08-23 ___ 14:29 -0700___Andrew Morton _________
-> > (switched to email.  Please respond via emailed reply-to-all, not via the
-> > bugzilla web interface).
-> > On Fri, 5 Aug 2011 09:02:45 GMT
-> > bugzilla-daemon@bugzilla.kernel.org wrote:
-> > 
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=40582
-> > > 
-> > >            Summary: acer_wmi kernel module is prevent of correct work of
-> > >                     Acer AO 721
-> > >            Product: ACPI
-> 
-> I always ask them file bug on kernel bugzilla when anyone sent the mail
-> to me for acer-wmi issue.
-> 
-> So, I am wrong? When should we use email bug not bugzilla?
+I think the patch attached below is much simple and we can avoid unnecessary
+read_ec_data if blightdev is not set. Since you are the one who find the bug
+and have the first patch, I would like to keep you as author and your sign
+off. Of course I need your agree. (Hoping I do not break the sign-off rule)
 
-I usually assume that nobody's looking at the bugzilla reports :(
+Please review the patch below and reply if you agree with this or disagree.
 
-I think this one was originally miscategorised - nobody had done
-anything with it in 2-3 weeks.
+
+Hi Matthew,
+
+When acpi_backlight=video, priv->blightdev will be NULL and use it without
+checking will cause kernel oops. I suggest we shall have the fix in v3.1
+cycle.
+
+
+====== 8< ======
+
+From 8bd37cd5da31abaca4b906bc84eb45a0834678ea Mon Sep 17 00:00:00 2001
+From: Rene Bolldorf <xsecute@googlemail.com>
+Date: Wed, 24 Aug 2011 09:56:24 +0800
+Subject: [PATCH] ideapad: Check if acpi already handle backlight power in
+ 'ideapad_backlight_notify_power' to avoid a page fault
+
+This patch avoid a page fault in the ideapad-laptop extras when
+turning the backlight power on or off.
+
+Signed-off-by: Rene Bolldorf <xsecute@googlemail.com>
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 0c59541..0d94eec 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -493,6 +493,8 @@ static void ideapad_backlight_notify_power(struct ideapad_private *priv)
+ 	unsigned long power;
+ 	struct backlight_device *blightdev = priv->blightdev;
+ 
++	if (!blightdev)
++		return;
+ 	if (read_ec_data(ideapad_handle, 0x18, &power))
+ 		return;
+ 	blightdev->props.power = power ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
+-- 
+1.7.5.4
