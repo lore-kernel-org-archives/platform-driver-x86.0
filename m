@@ -1,84 +1,171 @@
 From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [RFC PATCH 4/5] toshiba_acpi: Support SPFC as an HCI method
-Date: Mon, 29 Aug 2011 16:04:54 -0500
-Message-ID: <1314651895-24345-5-git-send-email-seth.forshee@canonical.com>
+Subject: [RFC PATCH 2/5] toshiba_acpi: Fix up return codes
+Date: Mon, 29 Aug 2011 16:04:52 -0500
+Message-ID: <1314651895-24345-3-git-send-email-seth.forshee@canonical.com>
 References: <1314651895-24345-1-git-send-email-seth.forshee@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:59521 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754583Ab1H2VFK (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Aug 2011 17:05:10 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1314651895-24345-1-git-send-email-seth.forshee@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
 Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Some Toshiba models, notably those with the TOS1900 device, use
-the SPFC method for HCI calls instead of GHCI. Test for this method
-if GHCI isn't found, and if it exists use it for all HCI calls.
+Many routines are returning success on failure, and those that are
+indicating failure frequently return incorrect error codes. Fix
+these up throughout the driver.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 ---
- drivers/platform/x86/toshiba_acpi.c |   28 ++++++++++++++++++++++------
- 1 files changed, 22 insertions(+), 6 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c |   45 +++++++++++++++-------------------
+ 1 files changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 90018cf..2772e0e 100644
+index 604c666..bb142e9 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -892,11 +892,26 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev, int type)
+@@ -191,7 +191,7 @@ static int write_acpi_int(const char *methodName, int val)
+ 	in_objs[0].integer.value = val;
+ 
+ 	status = acpi_evaluate_object(NULL, (char *)methodName, &params, NULL);
+-	return (status == AE_OK);
++	return (status == AE_OK) ? 0 : -EIO;
+ }
+ 
+ /* Perform a raw HCI call.  Here we don't care about input or output buffer
+@@ -419,7 +419,7 @@ static int bt_rfkill_set_block(void *data, bool blocked)
+ 
+ 	mutex_lock(&dev->mutex);
+ 	if (hci_get_radio_state(dev, &radio_state) != HCI_SUCCESS) {
+-		err = -EBUSY;
++		err = -EIO;
+ 		goto out;
+ 	}
+ 
+@@ -432,7 +432,7 @@ static int bt_rfkill_set_block(void *data, bool blocked)
+ 	hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_ATTACH, &result2);
+ 
+ 	if (result1 != HCI_SUCCESS || result2 != HCI_SUCCESS)
+-		err = -EBUSY;
++		err = -EIO;
+ 	else
+ 		err = 0;
+  out:
+@@ -478,10 +478,10 @@ static int get_lcd(struct backlight_device *bd)
+ 	u32 value;
+ 
+ 	hci_read1(dev, HCI_LCD_BRIGHTNESS, &value, &hci_result);
+-	if (hci_result == HCI_SUCCESS) {
++	if (hci_result == HCI_SUCCESS)
+ 		return (value >> HCI_LCD_BRIGHTNESS_SHIFT);
+-	} else
+-		return -EFAULT;
++
++	return -EIO;
+ }
+ 
+ static int lcd_proc_show(struct seq_file *m, void *v)
+@@ -497,11 +497,11 @@ static int lcd_proc_show(struct seq_file *m, void *v)
+ 		seq_printf(m, "brightness:              %d\n", value);
+ 		seq_printf(m, "brightness_levels:       %d\n",
+ 			     HCI_LCD_BRIGHTNESS_LEVELS);
+-	} else {
+-		pr_err("Error reading LCD brightness\n");
++		return 0;
+ 	}
+ 
+-	return 0;
++	pr_err("Error reading LCD brightness\n");
++	return -EIO;
+ }
+ 
+ static int lcd_proc_open(struct inode *inode, struct file *file)
+@@ -515,10 +515,7 @@ static int set_lcd(struct toshiba_acpi_dev *dev, int value)
+ 
+ 	value = value << HCI_LCD_BRIGHTNESS_SHIFT;
+ 	hci_write1(dev, HCI_LCD_BRIGHTNESS, value, &hci_result);
+-	if (hci_result != HCI_SUCCESS)
+-		return -EFAULT;
+-
+-	return 0;
++	return hci_result == HCI_SUCCESS ? 0 : -EIO;
+ }
+ 
+ static int set_lcd_status(struct backlight_device *bd)
+@@ -575,11 +572,10 @@ static int video_proc_show(struct seq_file *m, void *v)
+ 		seq_printf(m, "lcd_out:                 %d\n", is_lcd);
+ 		seq_printf(m, "crt_out:                 %d\n", is_crt);
+ 		seq_printf(m, "tv_out:                  %d\n", is_tv);
+-	} else {
+-		pr_err("Error reading video out status\n");
++		return 0;
+ 	}
+ 
+-	return 0;
++	return -EIO;
+ }
+ 
+ static int video_proc_open(struct inode *inode, struct file *file)
+@@ -592,6 +588,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ {
+ 	struct toshiba_acpi_dev *dev = PDE(file->f_path.dentry->d_inode)->data;
+ 	char *cmd, *buffer;
++	int ret = 0;
+ 	int value;
+ 	int remain = count;
+ 	int lcd_out = -1;
+@@ -644,12 +641,12 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 		/* To avoid unnecessary video disruption, only write the new
+ 		 * video setting if something changed. */
+ 		if (new_video_out != video_out)
+-			write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
++			ret = write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
+ 	} else {
+-		return -EFAULT;
++		ret = -EIO;
+ 	}
+ 
+-	return count;
++	return ret ? ret : count;
+ }
+ 
+ static const struct file_operations video_proc_fops = {
+@@ -671,11 +668,10 @@ static int fan_proc_show(struct seq_file *m, void *v)
+ 	if (hci_result == HCI_SUCCESS) {
+ 		seq_printf(m, "running:                 %d\n", (value > 0));
+ 		seq_printf(m, "force_on:                %d\n", dev->force_fan);
+-	} else {
+-		pr_err("Error reading fan status\n");
++		return 0;
+ 	}
+ 
+-	return 0;
++	return -EIO;
+ }
+ 
+ static int fan_proc_open(struct inode *inode, struct file *file)
+@@ -701,7 +697,7 @@ static ssize_t fan_proc_write(struct file *file, const char __user *buf,
+ 	    value >= 0 && value <= 1) {
+ 		hci_write1(dev, HCI_FAN, value, &hci_result);
+ 		if (hci_result != HCI_SUCCESS)
+-			return -EFAULT;
++			return -EIO;
+ 		else
+ 			dev->force_fan = value;
+ 	} else {
+@@ -741,13 +737,12 @@ static int keys_proc_show(struct seq_file *m, void *v)
+ 			pr_notice("Re-enabled hotkeys\n");
+ 		} else {
+ 			pr_err("Error reading hotkey status\n");
+-			goto end;
++			return -EIO;
+ 		}
+ 	}
+ 
+ 	seq_printf(m, "hotkey_ready:            %d\n", dev->key_event_valid);
+ 	seq_printf(m, "hotkey:                  0x%04x\n", dev->last_key_event);
+-end:
  	return 0;
  }
  
-+static const char * __devinit find_hci_method(acpi_handle handle)
-+{
-+	acpi_status status;
-+	acpi_handle hci_handle;
-+
-+	status = acpi_get_handle(handle, "GHCI", &hci_handle);
-+	if (ACPI_SUCCESS(status))
-+		return "GHCI";
-+
-+	status = acpi_get_handle(handle, "SPFC", &hci_handle);
-+	if (ACPI_SUCCESS(status))
-+		return "SPFC";
-+
-+	return NULL;
-+}
-+
- static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
- {
- 	struct toshiba_acpi_dev *dev;
--	acpi_status status;
--	acpi_handle handle;
-+	const char *hci_method;
- 	u32 hci_result;
- 	bool bt_present;
- 	int ret = 0;
-@@ -905,16 +920,17 @@ static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	pr_info("Toshiba Laptop ACPI Extras version %s\n",
- 	       TOSHIBA_ACPI_VERSION);
- 
--	/* simple device detection: look for HCI method */
--	status = acpi_get_handle(acpi_dev->handle, "GHCI", &handle);
--	if (ACPI_FAILURE(status))
-+	hci_method = find_hci_method(acpi_dev->handle);
-+	if (!hci_method) {
-+		pr_err("HCI interface not found\n");
- 		return -ENODEV;
-+	}
- 
- 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
- 	dev->acpi_dev = acpi_dev;
--	dev->method_hci = "GHCI";
-+	dev->method_hci = hci_method;
- 	acpi_dev->driver_data = dev;
- 
- 	if (toshiba_acpi_setup_keyboard(dev))
 -- 
 1.7.4.1
