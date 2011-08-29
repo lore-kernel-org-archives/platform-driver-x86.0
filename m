@@ -1,51 +1,33 @@
-From: Jason Stubbs <jasonbstubbs@gmail.com>
-Subject: [PATCH] Platform: Samsung laptop DMI info for NC210/NC110
-Date: Fri, 26 Aug 2011 21:57:54 +1000
-Message-ID: <4E578A42.4080809@gmail.com>
-References: <1314115527-6063-1-git-send-email-dh.herrmann@googlemail.com> <20110824231053.GA7697@kroah.com> <4E55C11E.8000704@gmail.com> <20110826000348.GB1314@kroah.com>
+From: francis <franciskabore12@gmail.com>
+Subject: REPLY VERY URGENTLY.
+Date: Mon, 29 Aug 2011 17:45:49 +0530 (IST)
+Message-ID: <1314620149.45204.YahooMailClassic@web137915.mail.in.yahoo.com>
+Reply-To: franciskabore.10@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f42.google.com ([209.85.210.42]:57143 "EHLO
-	mail-pz0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751213Ab1HZLxm (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 26 Aug 2011 07:53:42 -0400
-Received: by pzk37 with SMTP id 37so4149878pzk.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Aug 2011 04:53:41 -0700 (PDT)
-In-Reply-To: <20110826000348.GB1314@kroah.com>
+Received: from nm1-vm1.bullet.mail.in.yahoo.com ([121.101.151.242]:38627 "HELO
+	nm1-vm1.bullet.mail.in.yahoo.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with SMTP id S1752758Ab1H2MPw convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 29 Aug 2011 08:15:52 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <greg@kroah.com>
-Cc: David Herrmann <dh.herrmann@googlemail.com>, platform-driver-x86@vger.kernel.org, mjg@redhat.com
 
-From: Jason Stubbs <jasonbstubbs@gmail.com>
 
-This patch just adds the DMI info for the samsung laptop driver to work with
-the NC210/NC110. It needs the brightness quirk patch for proper support.
+Dear Friend,
 
-Signed-off-by: Jason Stubbs <jasonbstubbs@gmail.com>
+I know that this message will come to you as a surprise. I am the Auditing and Accounting section manager with African Development Bank, Ouagadougou Burkina faso. I Hope that you will not expose or betray this trust and confident that I am about to repose on you for the mutual benefit of our both families.
 
----
+I need your urgent assistance in transferring the sum of($39.5)million to your account within 10 or 14 banking days. This money has been dormant for years in our Bank without claim.I want the bank to release the money to you as the nearest person to our deceased customer late George small. who died along with his supposed next of kin in an air crash since 31st October 1999.
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index b193bf0..bae1a97 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -728,6 +728,15 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
- 		},
- 		.callback = dmi_check_cb,
- 	},
-+	{
-+		.ident = "NC210/NC110",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
-+			DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
-+		},
-+		.callback = dmi_check_cb,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
+I don't want the money to go into government treasury as an abandoned fund. So this is the reason why I am contacting you so that the bank can release the money to you as the next of kin to the deceased customer. Please I would like you to keep this proposal as atop secret and delete it if you are not interested.
+
+Upon receipt of your reply, I will give you full details on how the business will be executed and also note that you will have 40% of the above mentioned sum if you agree to handle this business with me.
+
+I am expecting your urgent response as soon as you receive my message.
+
+Best Regard,
+
+Mr Francis Kabore
