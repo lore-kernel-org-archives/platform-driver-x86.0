@@ -1,22 +1,28 @@
 From: gregkh@suse.de
-Subject: [patch 2/8] Platform: samsung_laptop: add support for X520 machines.
-Date: Thu, 01 Sep 2011 15:50:04 -0700
-Message-ID: <20110901225330.784324727@clark.kroah.org>
+Subject: [patch 3/8] Platform: samsung_laptop: samsung backlight for R528/R728
+Date: Thu, 01 Sep 2011 15:50:05 -0700
+Message-ID: <20110901225330.889550640@clark.kroah.org>
 References: <20110901225401.GA26870@kroah.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:49201 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932518Ab1IAW4O (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 1 Sep 2011 18:56:14 -0400
 In-Reply-To: <20110901225401.GA26870@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, stable <stable@kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, Smelov Andrey <xor29a@bk.ru>, stable <stable@kernel.org>
 
-From: Tommaso Massimi <tmassimi@gmail.com>
 
-my samsung laptop would be very happy if you add
-these lines to the file drivers/platform/x86/samsung-laptop.c
+patch works for me, but I need to add "acpi_backlight=vendor" to kernel
+params
 
+Signed-off-by: Smelov Andrey <xor29a@bk.ru>
 Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+
 
 ---
  drivers/platform/x86/samsung-laptop.c |    9 +++++++++
@@ -24,16 +30,16 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -695,6 +695,15 @@ static struct dmi_system_id __initdata s
+@@ -704,6 +704,15 @@ static struct dmi_system_id __initdata s
  		},
  		.callback = dmi_check_cb,
  	},
-+		{
-+		.ident = "X520",
++	{
++		.ident = "R528/R728",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X520"),
-+			DMI_MATCH(DMI_BOARD_NAME, "X520"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "R528/R728"),
++			DMI_MATCH(DMI_BOARD_NAME, "R528/R728"),
 +		},
 +		.callback = dmi_check_cb,
 +	},
