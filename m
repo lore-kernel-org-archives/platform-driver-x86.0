@@ -1,34 +1,42 @@
 From: gregkh@suse.de
-Subject: [patch 0/8] Samsung Laptop driver patches
-Date: Thu, 1 Sep 2011 15:54:01 -0700
-Message-ID: <20110901225401.GA26870@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4.smtp.messagingengine.com ([66.111.4.28]:43136 "EHLO
-	out4.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932384Ab1IAW4E (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Sep 2011 18:56:04 -0400
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [patch 2/8] Platform: samsung_laptop: add support for X520 machines.
+Date: Thu, 01 Sep 2011 15:50:04 -0700
+Message-ID: <20110901225330.784324727@clark.kroah.org>
+References: <20110901225401.GA26870@kroah.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110901225401.GA26870@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, stable <stable@kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Matthew,
+From: Tommaso Massimi <tmassimi@gmail.com>
 
-Sorry for holding on to these for so long, but here are 8 patches for
-the samsung-laptop driver.  The patches are against Linus's current
-tree, but should apply just fine to linux-next as well.
+my samsung laptop would be very happy if you add
+these lines to the file drivers/platform/x86/samsung-laptop.c
 
-If there are any problems with them, please let me know.
+Cc: stable <stable@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
-Oh, and if anyone wants to take over maintainership of this driver,
-please let me know.  I no longer have the hardware to be able to test
-any changes for it, which is why this took so long to get pushed out to
-you.
+---
+ drivers/platform/x86/samsung-laptop.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-thanks,
-
-greg k-h
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -695,6 +695,15 @@ static struct dmi_system_id __initdata s
+ 		},
+ 		.callback = dmi_check_cb,
+ 	},
++		{
++		.ident = "X520",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X520"),
++			DMI_MATCH(DMI_BOARD_NAME, "X520"),
++		},
++		.callback = dmi_check_cb,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
