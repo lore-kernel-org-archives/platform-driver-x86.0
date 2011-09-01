@@ -1,114 +1,48 @@
 From: gregkh@suse.de
-Subject: [patch 6/8] Platform: Brightness quirk for samsung laptop driver
-Date: Thu, 01 Sep 2011 15:50:08 -0700
-Message-ID: <20110901225331.226413240@clark.kroah.org>
+Subject: [patch 8/8] Platform: fix samsung-laptop DMI identification for N220 model
+Date: Thu, 01 Sep 2011 15:50:10 -0700
+Message-ID: <20110901225331.430431479@clark.kroah.org>
 References: <20110901225401.GA26870@kroah.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:49225 "EHLO mx2.suse.de"
+Received: from cantor2.suse.de ([195.135.220.15]:49235 "EHLO mx2.suse.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932660Ab1IAW4Y (ORCPT
+	id S932675Ab1IAW4b (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Sep 2011 18:56:24 -0400
+	Thu, 1 Sep 2011 18:56:31 -0400
 In-Reply-To: <20110901225401.GA26870@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, Greg KH <greg@kroah.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Herrmann <dh.herrmann@googlemail.com>, Jason Stubbs <jasonbstubbs@gmail.com>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, Raul Gutierrez Segales <rgs@collabora.co.uk>
 
-From: Jason Stubbs <jasonbstubbs@gmail.com>
+This is a follow-up for commit 78a7539b, which didn't cover the
+Samsung N220 laptop. With this backlight brightness works nicely
+on the N220 netbook.
 
-On some Samsung laptops the brightness regulation works slightly different.
-All SABI commands except for set_brightness work as expected. The behaviour
-of set_brightness is as follows:
-
-- Setting a new brightness will only step one level toward the new brightness
-  level. For example, setting a level of 5 when the current level is 2 will
-  result in a brightness level of 3.
-- A spurious KEY_BRIGHTNESS_UP or KEY_BRIGHTNESS_DOWN event is also generated
-  along with the change in brightness.
-- Neither of the above two issues occur when changing from/to brightness
-  level 0.
-
-This patch adds detection and a non-intrusive workaround for the above issues.
-
-Signed-off-by: Jason Stubbs <jasonbstubbs@gmail.com>
-Tested-by: David Herrmann <dh.herrmann@googlemail.com>
+Signed-off-by: Raul Gutierrez Segales <rgs@collabora.co.uk>
+Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
 ---
- drivers/platform/x86/samsung-laptop.c |   43 ++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/platform/x86/samsung-laptop.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -226,6 +226,7 @@ static struct backlight_device *backligh
- static struct mutex sabi_mutex;
- static struct platform_device *sdev;
- static struct rfkill *rfk;
-+static bool has_stepping_quirk;
- 
- static int force;
- module_param(force, bool, 0);
-@@ -382,6 +383,17 @@ static void set_brightness(u8 user_brigh
- {
- 	u8 user_level = user_brightness + sabi_config->min_brightness;
- 
-+	if (has_stepping_quirk && user_level != 0) {
-+		/*
-+		 * short circuit if the specified level is what's already set
-+		 * to prevent the screen from flickering needlessly
-+		 */
-+		if (user_brightness == read_brightness())
-+			return;
-+
-+		sabi_set_command(sabi_config->commands.set_brightness, 0);
-+	}
-+
- 	sabi_set_command(sabi_config->commands.set_brightness, user_level);
- }
- 
-@@ -390,6 +402,34 @@ static int get_brightness(struct backlig
- 	return (int)read_brightness();
- }
- 
-+static void check_for_stepping_quirk(void)
-+{
-+	u8 initial_level = read_brightness();
-+	u8 check_level;
-+
-+	/*
-+	 * Some laptops exhibit the strange behaviour of stepping toward
-+	 * (rather than setting) the brightness except when changing to/from
-+	 * brightness level 0. This behaviour is checked for here and worked
-+	 * around in set_brightness.
-+	 */
-+
-+	if (initial_level <= 2)
-+		check_level = initial_level + 2;
-+	else
-+		check_level = initial_level - 2;
-+
-+	has_stepping_quirk = false;
-+	set_brightness(check_level);
-+
-+	if (read_brightness() != check_level) {
-+		has_stepping_quirk = true;
-+		pr_info("enabled workaround for brightness stepping quirk\n");
-+	}
-+
-+	set_brightness(initial_level);
-+}
-+
- static int update_status(struct backlight_device *bd)
- {
- 	set_brightness(bd->props.brightness);
-@@ -823,6 +863,9 @@ static int __init samsung_init(void)
- 		}
- 	}
- 
-+	/* Check for stepping quirk */
-+	check_for_stepping_quirk();
-+
- 	/* knock up a platform device to hang stuff off of */
- 	sdev = platform_device_register_simple("samsung", -1, NULL, 0);
- 	if (IS_ERR(sdev))
+@@ -663,6 +663,16 @@ static struct dmi_system_id __initdata s
+ 		.callback = dmi_check_cb,
+ 	},
+ 	{
++		.ident = "N220",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR,
++					"SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "N220"),
++			DMI_MATCH(DMI_BOARD_NAME, "N220"),
++		},
++		.callback = dmi_check_cb,
++	},
++	{
+ 		.ident = "N150/N210/N220/N230",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
