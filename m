@@ -1,48 +1,35 @@
-From: gregkh@suse.de
-Subject: [patch 8/8] Platform: fix samsung-laptop DMI identification for N220 model
-Date: Thu, 01 Sep 2011 15:50:10 -0700
-Message-ID: <20110901225331.430431479@clark.kroah.org>
-References: <20110901225401.GA26870@kroah.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH 0/5] ideapad: patches for v3.2 kernel
+Date: Tue,  6 Sep 2011 02:31:07 +0800
+Message-ID: <1315247467-8812-1-git-send-email-ike.pan@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:49235 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932675Ab1IAW4b (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:39936 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753372Ab1IESbK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Sep 2011 18:56:31 -0400
-In-Reply-To: <20110901225401.GA26870@kroah.com>
+	Mon, 5 Sep 2011 14:31:10 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, Raul Gutierrez Segales <rgs@collabora.co.uk>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>
 
-This is a follow-up for commit 78a7539b, which didn't cover the
-Samsung N220 laptop. With this backlight brightness works nicely
-on the N220 netbook.
+No function changed with first two patches.
 
-Signed-off-by: Raul Gutierrez Segales <rgs@collabora.co.uk>
-Cc: stable <stable@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+Adding event for Novo key, two nodes in debugfs and removing cfg
+from sysfs.
 
----
- drivers/platform/x86/samsung-laptop.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Ike Panhc (5):
+  ideapad: define vpc commands
+  ideapad: change parameter of ideapad_sync_rfk_state
+  ideapad: add event for Novo key
+  ideapad: add debugfs support
+  ideapad: remove sysfs node for cfg
 
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -663,6 +663,16 @@ static struct dmi_system_id __initdata s
- 		.callback = dmi_check_cb,
- 	},
- 	{
-+		.ident = "N220",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,
-+					"SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "N220"),
-+			DMI_MATCH(DMI_BOARD_NAME, "N220"),
-+		},
-+		.callback = dmi_check_cb,
-+	},
-+	{
- 		.ident = "N150/N210/N220/N230",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR,
+ Documentation/ABI/testing/debugfs-ideapad          |   19 ++
+ .../ABI/testing/sysfs-platform-ideapad-laptop      |   15 --
+ drivers/platform/x86/ideapad-laptop.c              |  249 +++++++++++++++++---
+ 3 files changed, 234 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-ideapad
+
+-- 
+1.7.5.4
