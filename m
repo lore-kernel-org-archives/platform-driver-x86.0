@@ -1,199 +1,79 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 8/14] sony-laptop: sony_nc_notify rewritten and improved
-Date: Fri, 09 Sep 2011 18:53:30 +0200
-Message-ID: <1315587210.3613.94.camel@vesuvio>
+Subject: [PATCH V2 9/14] sony-laptop: sony_walk_callback moved for better
+ readability
+Date: Fri, 09 Sep 2011 18:54:55 +0200
+Message-ID: <1315587295.3613.96.camel@vesuvio>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:37528 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:37653 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758887Ab1IIQxc (ORCPT
+	with ESMTP id S1758887Ab1IIQy5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Sep 2011 12:53:32 -0400
+	Fri, 9 Sep 2011 12:54:57 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-sony_nc_notify rewritten (and placed near the other acpi callbacks), the
-hotkey decoding code moved to a new function sony_nc_hotkeys_decode.
+sony_walk_callback moved to stay close to the other ACPI callbacks for
+better code readability.
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
 --- 
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -1151,62 +1151,6 @@ static struct sony_nc_event sony_127_eve
+@@ -1149,24 +1149,6 @@ static struct sony_nc_event sony_127_eve
+ };
+ 
  /*
-  * ACPI callbacks
-  */
--static void sony_nc_notify(struct acpi_device *device, u32 event)
+- * ACPI callbacks
+- */
+-static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
+-				      void *context, void **return_value)
 -{
--	u32 ev = event;
+-	struct acpi_device_info *info;
 -
--	if (ev >= 0x90) {
--		/* New-style event */
--		unsigned int result;
--		int key_handle = 0;
--		ev -= 0x90;
+-	if (ACPI_SUCCESS(acpi_get_object_info(handle, &info))) {
+-		pr_warn("method: name: %4.4s, args %X\n",
+-			(char *)&info->name, info->param_count);
 -
--		if (sony_find_snc_handle(0x100) == ev)
--			key_handle = 0x100;
--		if (sony_find_snc_handle(0x127) == ev)
--			key_handle = 0x127;
+-		kfree(info);
+-	}
 -
--		if (key_handle) {
--			struct sony_nc_event *key_event;
--
--			if (sony_call_snc_handle(key_handle, 0x200, &result)) {
--				dprintk("sony_nc_notify, unable to decode"
--					" event 0x%.2x 0x%.2x\n", key_handle,
--					ev);
--				/* restore the original event */
--				ev = event;
--			} else {
--				ev = result & 0xFF;
--
--				if (key_handle == 0x100)
--					key_event = sony_100_events;
--				else
--					key_event = sony_127_events;
--
--				for (; key_event->data; key_event++) {
--					if (key_event->data == ev) {
--						ev = key_event->event;
--						break;
--					}
--				}
--
--				if (!key_event->data)
--					pr_info("Unknown event: 0x%x 0x%x\n",
--						key_handle, ev);
--				else
--					sony_laptop_report_input_event(ev);
--			}
--		} else if (sony_find_snc_handle(sony_rfkill_handle) == ev) {
--			sony_nc_rfkill_update();
--			return;
--		}
--	} else
--		sony_laptop_report_input_event(ev);
--
--	dprintk("sony_nc_notify, event: 0x%.2x\n", ev);
--	acpi_bus_generate_proc_event(sony_nc_acpi_device, 1, ev);
+-	return AE_OK;
 -}
 -
- static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
- 				      void *context, void **return_value)
- {
-@@ -1237,6 +1181,41 @@ static int sony_nc_function_setup(unsign
+-/*
+  * ACPI device
+  */
+ static int sony_nc_function_setup(unsigned int handle)
+@@ -1811,6 +1793,24 @@ static int sony_nc_handles_resume(void)
  	return 0;
  }
  
-+static int sony_nc_hotkeys_decode(unsigned int handle)
++/*
++ * ACPI callbacks
++ */
++static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
++				      void *context, void **return_value)
 +{
-+	int ret = -EINVAL;
-+	unsigned int result = 0;
-+	struct sony_nc_event *key_event;
++	struct acpi_device_info *info;
 +
-+	if (sony_call_snc_handle(handle, 0x200, &result)) {
-+		dprintk("sony_nc_hotkeys_decode,"
-+				" unable to retrieve the hotkey\n");
-+	} else {
-+		result &= 0xff;
++	if (ACPI_SUCCESS(acpi_get_object_info(handle, &info))) {
++		pr_warn("method: name: %4.4s, args %X\n",
++			(char *)&info->name, info->param_count);
 +
-+		if (handle == 0x100)
-+			key_event = sony_100_events;
-+		else
-+			key_event = sony_127_events;
-+
-+		for (; key_event->data; key_event++) {
-+			if (key_event->data == result) {
-+				ret = key_event->event;
-+				break;
-+			}
-+		}
-+
-+		if (!key_event->data)
-+			pr_info("Unknown hotkey 0x%.2x (handle 0x%.2x)\n",
-+							result, handle);
-+		else
-+			dprintk("sony_nc_hotkeys_decode, hotkey 0x%.2x decoded "
-+					"to event 0x%.2x\n", result, ret);
++		kfree(info);
 +	}
 +
-+	return ret;
++	return AE_OK;
 +}
 +
- static void sony_nc_rfkill_cleanup(void)
+ static void sony_nc_notify(struct acpi_device *device, u32 event)
  {
- 	int i;
-@@ -1832,6 +1811,65 @@ static int sony_nc_handles_resume(void)
- 	return 0;
- }
- 
-+static void sony_nc_notify(struct acpi_device *device, u32 event)
-+{
-+	dprintk("sony_nc_notify, event: 0x%.2x\n", event);
-+
-+	/* handles related events */
-+	if (event >= 0x90) {
-+		unsigned int result = 0, handle = 0, value = 0;
-+
-+		/* the event should corrispond to the offset of the method */
-+		unsigned int offset = event - 0x90;
-+
-+		handle = handles->cap[offset];
-+		switch (handle) {
-+		/* list of handles known for generating events */
-+		case 0x0100:
-+		case 0x0127:
-+			/* hotkey event, a key has been pressed, retrieve it */
-+			value = sony_nc_hotkeys_decode(handle);
-+			if (value > 0) { /* known event */
-+				sony_laptop_report_input_event(value);
-+			} else {
-+				/* restore the original event for
-+				   the acpi bus notification */
-+				value = event;
-+			}
-+
-+			acpi_bus_generate_proc_event(sony_nc_acpi_device, 1,
-+									value);
-+
-+			break;
-+
-+		case 0x0124:
-+		case 0x0135:
-+			sony_call_snc_handle(handle, 0x0100, &result);
-+			result &= 0x03;
-+			dprintk("sony_nc_notify, RFKILL event received "
-+					"(reason: %s)\n", result == 1 ?
-+					"switch state changed" : "battery");
-+
-+			if (result == 1) { /* hw swtich event */
-+				sony_nc_rfkill_update();
-+			}
-+
-+			break;
-+
-+		default:
-+			dprintk("Unknowk event for handle: 0x%x\n", handle);
-+			break;
-+		}
-+
-+		/* clear the event (and the event reason when present) */
-+		acpi_callsetfunc(sony_nc_acpi_handle, "SN05", 1 << offset,
-+				&result);
-+	} else {
-+		sony_laptop_report_input_event(event);
-+		acpi_bus_generate_proc_event(sony_nc_acpi_device, 1, event);
-+	}
-+}
-+
- static int sony_nc_add(struct acpi_device *device)
- {
- 	acpi_status status;
+ 	dprintk("sony_nc_notify, event: 0x%.2x\n", event);
