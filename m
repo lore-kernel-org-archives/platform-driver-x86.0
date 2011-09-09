@@ -1,302 +1,274 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 11/14] sony-laptop: keyboard backlight support extended
- to newer Vaios
-Date: Fri, 09 Sep 2011 18:58:51 +0200
-Message-ID: <1315587531.3613.100.camel@vesuvio>
+Subject: [PATCH V2 12/14] sony-laptop: rfkill improvements
+Date: Fri, 09 Sep 2011 19:01:15 +0200
+Message-ID: <1315587675.3613.103.camel@vesuvio>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:48859 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:49069 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755282Ab1IIQ6y (ORCPT
+	with ESMTP id S1758560Ab1IIRBS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Sep 2011 12:58:54 -0400
+	Fri, 9 Sep 2011 13:01:18 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-Added support for handle 0x0143 (Vaio SA/SB/SC, CA/CB) and improved the
-keyboard backlight code, removing the struct "kbd_backlight" in favor of
-"struct snc_kbdbl_device". Minor corrections are also included. 
+This patch introduces some rfkill improvements in terms of both code
+cleaning and support extension. More precisely:
+
+- removed any handle autodetection inside the setup function as it's now
+provided by the caller
+- rfkill type now persistent, using the hardware capability of storing
+the wireless devices power state
+- added support for newer WWAN modules
+- removed some global variables now included in a few struct for a
+cleaner code. These structs have been placed close to the rfkill
+functions for better readability
+- minor code improvements
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
 --- 
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -127,7 +127,7 @@ MODULE_PARM_DESC(minor,
- 		 "default is -1 (automatic)");
- #endif
- 
--static int kbd_backlight;	/* = 1 */
-+static int kbd_backlight;	/* = 0 */
- module_param(kbd_backlight, int, 0444);
- MODULE_PARM_DESC(kbd_backlight,
- 		 "set this to 0 to disable keyboard backlight, "
-@@ -140,7 +140,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
- 		 "1 for 30 seconds, 2 for 60 seconds and 3 to disable timeout "
+@@ -141,19 +141,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
  		 "(default: 0)");
  
--static void sony_nc_kbd_backlight_resume(void);
  
- enum sony_nc_rfkill {
- 	SONY_WIFI,
-@@ -1362,37 +1361,31 @@ static int sony_nc_rfkill_setup(struct a
- }
- 
- /* Keyboard backlight feature */
--#define KBDBL_HANDLER	0x137
--#define KBDBL_PRESENT	0xB00
--#define	SET_MODE	0xC00
--#define SET_STATE	0xD00
--#define SET_TIMEOUT	0xE00
--
--struct kbd_backlight {
--	int mode;
--	int timeout;
-+static struct snc_kbdbl_device {
-+	unsigned int handle;
-+	unsigned int base;
-+	unsigned int mode;
-+	unsigned int timeout;
- 	struct device_attribute mode_attr;
- 	struct device_attribute timeout_attr;
+-enum sony_nc_rfkill {
+-	SONY_WIFI,
+-	SONY_BLUETOOTH,
+-	SONY_WWAN,
+-	SONY_WIMAX,
+-	N_SONY_RFKILL,
 -};
 -
--static struct kbd_backlight *kbdbl_handle;
-+} *snc_kbdbl;
+-static unsigned int sony_rfkill_handle;
+-static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
+-static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700,
+0x900};
+-static void sony_nc_rfkill_update(void);
+-
+ /*********** Input Devices ***********/
  
--static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
-+static int __sony_nc_kbd_backlight_mode_set(u8 value)
+ #define SONY_LAPTOP_BUF_SIZE	128
+@@ -1204,30 +1191,51 @@ static int sony_nc_hotkeys_decode(unsign
+ 	return ret;
+ }
+ 
++enum sony_nc_rfkill {
++	SONY_WIFI,
++	SONY_BLUETOOTH,
++	SONY_WWAN,
++	SONY_WIMAX,
++	N_SONY_RFKILL,
++};
++struct snc_rfkill_data {
++	unsigned int handle;
++	struct rfkill *devices[N_SONY_RFKILL];
++	const unsigned int address[N_SONY_RFKILL];
++};
++static struct snc_rfkill_data snc_rfkill = {
++	0, {NULL}, {0x300, 0x500, 0x700, 0x900}
++};
++
+ static void sony_nc_rfkill_cleanup(void)
  {
- 	unsigned int result;
+ 	int i;
  
- 	if (value > 1)
- 		return -EINVAL;
- 
--	if (sony_call_snc_handle(KBDBL_HANDLER,
--				(value << 0x10) | SET_MODE, &result))
-+	if (sony_call_snc_handle(snc_kbdbl->handle, (value << 0x10) |
-+				(snc_kbdbl->base), &result))
- 		return -EIO;
- 
--	/* Try to turn the light on/off immediately */
--	sony_call_snc_handle(KBDBL_HANDLER, (value << 0x10) | SET_STATE,
--			&result);
-+	snc_kbdbl->mode = value;
- 
--	kbdbl_handle->mode = value;
-+	/* Try to turn the light on/off immediately */
-+	sony_call_snc_handle(snc_kbdbl->handle, (value << 0x10) |
-+				(snc_kbdbl->base + 0x100), &result);
- 
- 	return 0;
- }
-@@ -1421,7 +1414,9 @@ static ssize_t sony_nc_kbd_backlight_mod
- 		struct device_attribute *attr, char *buffer)
- {
- 	ssize_t count = 0;
--	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->mode);
-+
-+	count = snprintf(buffer, PAGE_SIZE, "%d\n", snc_kbdbl->mode);
-+
- 	return count;
+ 	for (i = 0; i < N_SONY_RFKILL; i++) {
+-		if (sony_rfkill_devices[i]) {
+-			rfkill_unregister(sony_rfkill_devices[i]);
+-			rfkill_destroy(sony_rfkill_devices[i]);
++		if (snc_rfkill.devices[i]) {
++			rfkill_unregister(snc_rfkill.devices[i]);
++			rfkill_destroy(snc_rfkill.devices[i]);
+ 		}
+ 	}
  }
  
-@@ -1432,11 +1427,11 @@ static int __sony_nc_kbd_backlight_timeo
- 	if (value > 3)
- 		return -EINVAL;
- 
--	if (sony_call_snc_handle(KBDBL_HANDLER,
--				(value << 0x10) | SET_TIMEOUT, &result))
-+	if (sony_call_snc_handle(snc_kbdbl->handle, (value << 0x10) |
-+				(snc_kbdbl->base + 0x200), &result))
- 		return -EIO;
- 
--	kbdbl_handle->timeout = value;
-+	snc_kbdbl->timeout = value;
- 
- 	return 0;
- }
-@@ -1465,85 +1460,111 @@ static ssize_t sony_nc_kbd_backlight_tim
- 		struct device_attribute *attr, char *buffer)
- {
- 	ssize_t count = 0;
--	count = snprintf(buffer, PAGE_SIZE, "%d\n", kbdbl_handle->timeout);
-+
-+	count = snprintf(buffer, PAGE_SIZE, "%d\n", snc_kbdbl->timeout);
-+
- 	return count;
- }
- 
--static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
-+static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
-+					unsigned int handle)
+ static int sony_nc_rfkill_set(void *data, bool blocked)
  {
 -	unsigned int result;
-+	unsigned int result, base_cmd;
-+	bool found = false;
+-	unsigned int argument = sony_rfkill_address[(long) data] + 0x100;
++	unsigned int result, argument = snc_rfkill.address[(long) data];
  
--	if (sony_call_snc_handle(KBDBL_HANDLER, KBDBL_PRESENT, &result))
--		return 0;
--	if (!(result & 0x02))
-+	/* verify the kbd backlight presence, some models do not have it */
-+	if (handle == 0x0137) {
-+		if (sony_call_snc_handle(handle, 0x0B00, &result))
-+			return -EIO;
++	/* do not force an already set state */
++	sony_call_snc_handle(snc_rfkill.handle, argument, &result);
++	if ((result & 0x1) == !blocked)
++		return 0;
 +
-+		found = !!(result & 0x02);
-+		base_cmd = 0x0C00;
-+	} else {
-+		if (sony_call_snc_handle(handle, 0x0100, &result))
-+			return -EIO;
-+
-+		found = result & 0x01;
-+		base_cmd = 0x4000;
-+	}
-+
-+	if (!found) {
-+		dprintk("no backlight keyboard found\n");
- 		return 0;
-+	}
++	argument += 0x100;
+ 	if (!blocked)
+ 		argument |= 0xff0000;
  
--	kbdbl_handle = kzalloc(sizeof(*kbdbl_handle), GFP_KERNEL);
--	if (!kbdbl_handle)
-+	snc_kbdbl = kzalloc(sizeof(*snc_kbdbl), GFP_KERNEL);
-+	if (!snc_kbdbl)
+-	return sony_call_snc_handle(sony_rfkill_handle, argument, &result);
++	return sony_call_snc_handle(snc_rfkill.handle, argument, &result);
+ }
+ 
+-static const struct rfkill_ops sony_rfkill_ops = {
++static const struct rfkill_ops snc_rfkill_ops = {
+ 	.set_block = sony_nc_rfkill_set,
+ };
+ 
+@@ -1239,7 +1247,7 @@ static int sony_nc_setup_rfkill(struct a
+ 	enum rfkill_type type;
+ 	const char *name;
+ 	unsigned int result;
+-	bool hwblock;
++	bool hwblock, swblock;
+ 
+ 	switch (nc_type) {
+ 	case SONY_WIFI:
+@@ -1263,12 +1271,19 @@ static int sony_nc_setup_rfkill(struct a
+ 	}
+ 
+ 	rfk = rfkill_alloc(name, &device->dev, type,
+-			   &sony_rfkill_ops, (void *)nc_type);
++			   &snc_rfkill_ops, (void *)nc_type);
+ 	if (!rfk)
  		return -ENOMEM;
  
--	sysfs_attr_init(&kbdbl_handle->mode_attr.attr);
--	kbdbl_handle->mode_attr.attr.name = "kbd_backlight";
--	kbdbl_handle->mode_attr.attr.mode = S_IRUGO | S_IWUSR;
--	kbdbl_handle->mode_attr.show = sony_nc_kbd_backlight_mode_show;
--	kbdbl_handle->mode_attr.store = sony_nc_kbd_backlight_mode_store;
--
--	sysfs_attr_init(&kbdbl_handle->timeout_attr.attr);
--	kbdbl_handle->timeout_attr.attr.name = "kbd_backlight_timeout";
--	kbdbl_handle->timeout_attr.attr.mode = S_IRUGO | S_IWUSR;
--	kbdbl_handle->timeout_attr.show = sony_nc_kbd_backlight_timeout_show;
--	kbdbl_handle->timeout_attr.store =
-sony_nc_kbd_backlight_timeout_store;
-+	sysfs_attr_init(&snc_kbdbl->mode_attr.attr);
-+	snc_kbdbl->mode_attr.attr.name = "kbd_backlight";
-+	snc_kbdbl->mode_attr.attr.mode = S_IRUGO | S_IWUSR;
-+	snc_kbdbl->mode_attr.show = sony_nc_kbd_backlight_mode_show;
-+	snc_kbdbl->mode_attr.store = sony_nc_kbd_backlight_mode_store;
+-	sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
++	sony_call_snc_handle(snc_rfkill.handle, 0x200, &result);
+ 	hwblock = !(result & 0x1);
 +
-+	sysfs_attr_init(&snc_kbdbl->timeout_attr.attr);
-+	snc_kbdbl->timeout_attr.attr.name = "kbd_backlight_timeout";
-+	snc_kbdbl->timeout_attr.attr.mode = S_IRUGO | S_IWUSR;
-+	snc_kbdbl->timeout_attr.show = sony_nc_kbd_backlight_timeout_show;
-+	snc_kbdbl->timeout_attr.store = sony_nc_kbd_backlight_timeout_store;
- 
--	if (device_create_file(&pd->dev, &kbdbl_handle->mode_attr))
-+	if (device_create_file(&pd->dev, &snc_kbdbl->mode_attr))
- 		goto outkzalloc;
- 
--	if (device_create_file(&pd->dev, &kbdbl_handle->timeout_attr))
-+	if (device_create_file(&pd->dev, &snc_kbdbl->timeout_attr))
- 		goto outmode;
- 
-+	snc_kbdbl->handle = handle;
-+	snc_kbdbl->base = base_cmd;
++	result = 0;
++	sony_call_snc_handle(snc_rfkill.handle, snc_rfkill.address[nc_type],
++				&result);
++	swblock = !(result & 0x2);
 +
- 	__sony_nc_kbd_backlight_mode_set(kbd_backlight);
- 	__sony_nc_kbd_backlight_timeout_set(kbd_backlight_timeout);
++	rfkill_init_sw_state(rfk, swblock);
+ 	rfkill_set_hw_state(rfk, hwblock);
  
- 	return 0;
- 
- outmode:
--	device_remove_file(&pd->dev, &kbdbl_handle->mode_attr);
-+	device_remove_file(&pd->dev, &snc_kbdbl->mode_attr);
- outkzalloc:
--	kfree(kbdbl_handle);
--	kbdbl_handle = NULL;
-+	kfree(snc_kbdbl);
-+	snc_kbdbl = NULL;
- 	return -1;
- }
- 
- static int sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
- {
--	if (kbdbl_handle) {
-+	if (snc_kbdbl) {
- 		unsigned int result;
- 
--		device_remove_file(&pd->dev, &kbdbl_handle->mode_attr);
--		device_remove_file(&pd->dev, &kbdbl_handle->timeout_attr);
-+		device_remove_file(&pd->dev, &snc_kbdbl->mode_attr);
-+		device_remove_file(&pd->dev, &snc_kbdbl->timeout_attr);
- 
- 		/* restore the default hw behaviour */
--		sony_call_snc_handle(KBDBL_HANDLER, 0x1000 | SET_MODE, &result);
--		sony_call_snc_handle(KBDBL_HANDLER, SET_TIMEOUT, &result);
-+		sony_call_snc_handle(snc_kbdbl->handle,
-+				snc_kbdbl->base | 0x10000, &result);
-+		sony_call_snc_handle(snc_kbdbl->handle,
-+				snc_kbdbl->base + 0x200, &result);
- 
--		kfree(kbdbl_handle);
-+		kfree(snc_kbdbl);
-+		snc_kbdbl = NULL;
+ 	err = rfkill_register(rfk);
+@@ -1276,7 +1291,7 @@ static int sony_nc_setup_rfkill(struct a
+ 		rfkill_destroy(rfk);
+ 		return err;
  	}
- 	return 0;
+-	sony_rfkill_devices[nc_type] = rfk;
++	snc_rfkill.devices[nc_type] = rfk;
+ 	return err;
  }
  
- static void sony_nc_kbd_backlight_resume(void)
+@@ -1284,51 +1299,35 @@ static void sony_nc_rfkill_update(void)
  {
--	unsigned int ignore = 0;
-+	unsigned int result;
+ 	enum sony_nc_rfkill i;
+ 	unsigned int result;
+-	bool hwblock;
++	bool hwblock, swblock;
  
--	if (!kbdbl_handle)
-+	if (!snc_kbdbl)
- 		return;
+-	sony_call_snc_handle(sony_rfkill_handle, 0x200, &result);
++	sony_call_snc_handle(snc_rfkill.handle, 0x200, &result);
+ 	hwblock = !(result & 0x1);
  
--	if (kbdbl_handle->mode == 0)
--		sony_call_snc_handle(KBDBL_HANDLER, SET_MODE, &ignore);
+ 	for (i = 0; i < N_SONY_RFKILL; i++) {
+-		unsigned int argument = sony_rfkill_address[i];
++		unsigned int argument = snc_rfkill.address[i];
+ 
+-		if (!sony_rfkill_devices[i])
++		if (!snc_rfkill.devices[i])
+ 			continue;
+ 
+-		if (hwblock) {
+-			if (rfkill_set_hw_state(sony_rfkill_devices[i], true))
+-				/* we already know we're blocked */ ;
 -
--	if (kbdbl_handle->timeout != 0)
--		sony_call_snc_handle(KBDBL_HANDLER,
--				(kbdbl_handle->timeout << 0x10) | SET_TIMEOUT,
--				&ignore);
-+	if (snc_kbdbl->mode == 0)
-+		sony_call_snc_handle(snc_kbdbl->handle,
-+				snc_kbdbl->base, &result);
-+
-+	if (snc_kbdbl->timeout != 0)
-+		sony_call_snc_handle(snc_kbdbl->handle,
-+				(snc_kbdbl->base + 0x200) |
-+				(snc_kbdbl->timeout << 0x10), &result);
+-			continue;
+-		}
++		sony_call_snc_handle(snc_rfkill.handle, argument, &result);
++		swblock = !(result & 0x2);
+ 
+-		sony_call_snc_handle(sony_rfkill_handle, argument, &result);
+-		rfkill_set_states(sony_rfkill_devices[i],
+-				  !(result & 0xf), false);
++		rfkill_set_states(snc_rfkill.devices[i], swblock, hwblock);
+ 	}
  }
  
- static void sony_nc_backlight_ng_read_limits(unsigned int handle,
-@@ -1692,7 +1713,8 @@ static int sony_nc_handles_setup(struct 
- 			ret = sony_nc_function_setup(handle);
- 			break;
- 		case 0x0137:
--			ret = sony_nc_kbd_backlight_setup(pd);
-+		case 0x0143:
-+			ret = sony_nc_kbd_backlight_setup(pd, handle);
- 		case 0x0124:
- 		case 0x0135:
- 			ret = sony_nc_rfkill_setup(sony_nc_acpi_device);
-@@ -1737,6 +1759,7 @@ static int sony_nc_handles_cleanup(struc
+-static int sony_nc_rfkill_setup(struct acpi_device *device)
++static int sony_nc_rfkill_setup(struct acpi_device *device, unsigned
+int handle)
+ {
+ #define	RFKILL_BUFF_SIZE 8
+ 	u8 dev_code, i, buff[RFKILL_BUFF_SIZE] = { 0 };
+-	int offset;
  
- 		switch (handle) {
- 		case 0x0137:
-+		case 0x0143:
- 			sony_nc_kbd_backlight_cleanup(pd);
+-	offset = sony_find_snc_handle(0x124);
+-	if (offset == -1) {
+-		offset = sony_find_snc_handle(0x135);
+-		if (offset == -1)
+-			return 0;
+-		else
+-			sony_rfkill_handle = 0x135;
+-	} else
+-		sony_rfkill_handle = 0x124;
+-	dprintk("Found rkfill handle: 0x%.4x\n", sony_rfkill_handle);
++	snc_rfkill.handle = handle;
+ 
+ 	/* need to read the whole buffer returned by the acpi call to SN06
+ 	 * here otherwise we may miss some features
+ 	 */
+-	if (sony_call_snc_handle_buffer(sony_rfkill_handle, 0x000,
++	if (sony_call_snc_handle_buffer(snc_rfkill.handle, 0x000,
+ 					buff, RFKILL_BUFF_SIZE) < 0)
+ 		return -EIO;
+ 
+@@ -1341,19 +1340,38 @@ static int sony_nc_rfkill_setup(struct a
+ 		if (dev_code == 0xff)
+ 			break;
+ 
++		/*
++		   known codes:
++
++		   0x00	WLAN
++		   0x10 BLUETOOTH
++		   0x20 WWAN GPRS-EDGE
++		   0x21 WWAN HSDPA
++		   0x22 WWAN EV-DO
++		   0x23 WWAN GPS
++		   0x25	Gobi WWAN no GPS
++		   0x26 Gobi WWAN + GPS
++		   0x28	Gobi WWAN no GPS
++		   0x29 Gobi WWAN + GPS
++		   0x50	Gobi WWAN no GPS
++		   0x51 Gobi WWAN + GPS
++		   0x30	WIMAX
++		   0x70 no SIM card slot
++		   0x71 SIM card slot
++		*/
+ 		dprintk("Radio devices, looking at 0x%.2x\n", dev_code);
+ 
+-		if (dev_code == 0 && !sony_rfkill_devices[SONY_WIFI])
++		if (dev_code == 0 && !snc_rfkill.devices[SONY_WIFI])
+ 			sony_nc_setup_rfkill(device, SONY_WIFI);
+ 
+-		if (dev_code == 0x10 && !sony_rfkill_devices[SONY_BLUETOOTH])
++		if (dev_code == 0x10 && !snc_rfkill.devices[SONY_BLUETOOTH])
+ 			sony_nc_setup_rfkill(device, SONY_BLUETOOTH);
+ 
+-		if ((0xf0 & dev_code) == 0x20 &&
+-				!sony_rfkill_devices[SONY_WWAN])
++		if (((0xf0 & dev_code) == 0x20 || (0xf0 & dev_code) == 0x50) &&
++				!snc_rfkill.devices[SONY_WWAN])
+ 			sony_nc_setup_rfkill(device, SONY_WWAN);
+ 
+-		if (dev_code == 0x30 && !sony_rfkill_devices[SONY_WIMAX])
++		if (dev_code == 0x30 && !snc_rfkill.devices[SONY_WIMAX])
+ 			sony_nc_setup_rfkill(device, SONY_WIMAX);
+ 	}
+ 
+@@ -1717,7 +1735,7 @@ static int sony_nc_handles_setup(struct 
+ 			ret = sony_nc_kbd_backlight_setup(pd, handle);
  		case 0x0124:
  		case 0x0135:
-@@ -1783,6 +1806,7 @@ static int sony_nc_handles_resume(void)
- 			sony_nc_function_setup(handle);
+-			ret = sony_nc_rfkill_setup(sony_nc_acpi_device);
++			ret = sony_nc_rfkill_setup(sony_nc_acpi_device, handle);
  			break;
- 		case 0x0137: /* kbd + als */
-+		case 0x0143:
- 			sony_nc_kbd_backlight_resume();
- 			break;
- 		case 0x0124:
+ 		default:
+ 			continue;
