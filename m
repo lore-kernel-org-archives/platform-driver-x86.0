@@ -1,69 +1,91 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 13/14] sony-laptop: input core improvements
-Date: Fri, 09 Sep 2011 19:02:44 +0200
-Message-ID: <1315587764.3613.105.camel@vesuvio>
+Subject: [PATCH V2 14/14] sony-laptop: Documentation changes
+Date: Fri, 09 Sep 2011 19:04:26 +0200
+Message-ID: <1315587866.3613.107.camel@vesuvio>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:49272 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:52367 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758560Ab1IIRCq (ORCPT
+	with ESMTP id S1759162Ab1IIRE3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Sep 2011 13:02:46 -0400
+	Fri, 9 Sep 2011 13:04:29 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-Added a couple of Fn combos and sorted keys by "scancode" number. Fixed
-a small error in a comment too.
+Since new findings occurred and we have a better understanding of the
+SNC device, the development documentation is updated.
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
 --- 
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -239,7 +239,7 @@ static int sony_laptop_input_index[] = {
- 	57,	/* 70 SONYPI_EVENT_VOLUME_DEC_PRESSED */
- 	-1,	/* 71 SONYPI_EVENT_BRIGHTNESS_PRESSED */
- 	58,	/* 72 SONYPI_EVENT_MEDIA_PRESSED */
--	59,	/* 72 SONYPI_EVENT_VENDOR_PRESSED */
-+	59,	/* 73 SONYPI_EVENT_VENDOR_PRESSED */
- };
+--- a/Documentation/laptops/sony-laptop.txt
++++ b/Documentation/laptops/sony-laptop.txt
+@@ -88,15 +88,36 @@ REPEAT: DON'T DO THIS IF YOU DON'T LIKE 
+ In your kernel logs you will find the list of all ACPI methods
+ the SNC device has on your laptop.
  
- static int sony_laptop_input_keycode_map[] = {
-@@ -1084,10 +1084,6 @@ struct sony_nc_event {
- };
+-* For new models you will see a long list of meaningless method names,
+-reading the DSDT table source should reveal that:
+-(1) the SNC device uses an internal capability lookup table
+-(2) SN00 is used to find values in the lookup table
+-(3) SN06 and SN07 are used to call into the real methods based on
+-    offsets you can obtain iterating the table using SN00
+-(4) SN02 used to enable events.
+-Some values in the capability lookup table are more or less known, see
+-the code for all sony_call_snc_handle calls, others are more obscure.
++* For new models you may see a long list of meaningless method names,
++but a small subset of methods starting with "SN" is always present.
+These
++methods define a common interface for acting with the SNC device. In
++particular:
++
++- SN00 can be used to retrieve some informations about the SNC device;
+among
++  them, an internal capability lookup table reporting model specific
+features,
++  identified by a number called "handle", associated to an offset, to
+be
++  later used by methods SN06 and SN07. Some handles are now well known,
+while
++  some others are still a bit obscure or totally unknown. A list of
+known
++  handles can be found at
+http://www.absence.it/vaio-acpi/handles_list.txt
++
++- SN01, SN02, SN03 can be used to query, enable and disable
+(respectively)
++  the event generation for every handle, as they might trigger ACPI
++  notifications
++
++- SN04, SN05 can be used to query and clear the "event raised" flag for
+every
++  handle
++
++- SN06 and SN07 are used to call into the real methods, providing the
+handles
++  specific features, based on offsets you can obtain iterating the
+table
++  via SN00. They should provide the same info (or almost the same), but
+while
++  SN07 uses 32bit integers for both input and output parameters SN06
+returns a
++  wide buffer (for both input and output values), useful for reading a
+few info
++  tables or long input parameters.
++
++You can have a look at a decoded, analyzed and fully explained DSDT
+taken from
++a Sony Vaio VPCS1 model at
+http://www.absence.it/vaio-acpi/VPCS-findings.txt.
++It should significantly help you in understanding how to use
+handles/offsets,
++in decoding other DSDTs and in discovering new unknown features.
  
- static struct sony_nc_event sony_100_events[] = {
--	{ 0x90, SONYPI_EVENT_PKEY_P1 },
--	{ 0x10, SONYPI_EVENT_ANYBUTTON_RELEASED },
--	{ 0x91, SONYPI_EVENT_PKEY_P2 },
--	{ 0x11, SONYPI_EVENT_ANYBUTTON_RELEASED },
- 	{ 0x81, SONYPI_EVENT_FNKEY_F1 },
- 	{ 0x01, SONYPI_EVENT_FNKEY_RELEASED },
- 	{ 0x82, SONYPI_EVENT_FNKEY_F2 },
-@@ -1102,12 +1098,20 @@ static struct sony_nc_event sony_100_eve
- 	{ 0x06, SONYPI_EVENT_FNKEY_RELEASED },
- 	{ 0x87, SONYPI_EVENT_FNKEY_F7 },
- 	{ 0x07, SONYPI_EVENT_FNKEY_RELEASED },
-+	{ 0x88, SONYPI_EVENT_FNKEY_F8 },
-+	{ 0x08, SONYPI_EVENT_FNKEY_RELEASED },
- 	{ 0x89, SONYPI_EVENT_FNKEY_F9 },
- 	{ 0x09, SONYPI_EVENT_FNKEY_RELEASED },
- 	{ 0x8A, SONYPI_EVENT_FNKEY_F10 },
- 	{ 0x0A, SONYPI_EVENT_FNKEY_RELEASED },
-+	{ 0x8B, SONYPI_EVENT_FNKEY_F11 },
-+	{ 0x0B, SONYPI_EVENT_FNKEY_RELEASED },
- 	{ 0x8C, SONYPI_EVENT_FNKEY_F12 },
- 	{ 0x0C, SONYPI_EVENT_FNKEY_RELEASED },
-+	{ 0x90, SONYPI_EVENT_PKEY_P1 },
-+	{ 0x10, SONYPI_EVENT_ANYBUTTON_RELEASED },
-+	{ 0x91, SONYPI_EVENT_PKEY_P2 },
-+	{ 0x11, SONYPI_EVENT_ANYBUTTON_RELEASED },
- 	{ 0x9d, SONYPI_EVENT_ZOOM_PRESSED },
- 	{ 0x1d, SONYPI_EVENT_ANYBUTTON_RELEASED },
- 	{ 0x9f, SONYPI_EVENT_CD_EJECT_PRESSED },
+ * For old models you can see the GCDP/GCDP methods used to pwer on/off
+ the CD drive, but there are others and they are usually different from
