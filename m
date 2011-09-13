@@ -1,28 +1,30 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 RESEND 4/14] sony-laptop: add new ACPI SN06 method
- helper functions
-Date: Tue, 13 Sep 2011 22:45:40 +0200
-Message-ID: <1315946740.14415.129.camel@air.vesuvio.absence.it>
+Subject: [PATCH V2 RESEND 5/14] sony-laptop: new SNC setup and cleanup
+ functions
+Date: Tue, 13 Sep 2011 22:46:00 +0200
+Message-ID: <1315946760.14415.130.camel@air.vesuvio.absence.it>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:38209 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:38227 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756195Ab1IMUpo (ORCPT
+	with ESMTP id S1756140Ab1IMUqD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Sep 2011 16:45:44 -0400
+	Tue, 13 Sep 2011 16:46:03 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-SN06 method related code moved from sony_nc_rfkill_setup to
-acpi_callsetfunc_buffer; a new helper sony_call_snc_handle_buffer is
-added too, to be used by different handles that need it and not just the
-rfkill handles.
+New SNC handles setup and cleanup functions, sony_nc_handles_setup and
+sony_nc_handles_cleanup. They avoid eccessive tainting of sony_nc_add
+and sony_nc_remove, with cleaner and easier to read code, better event
+initialization and better error handling. Due to name collision, the
+previously defined functions related to the handle list has been renamed
+sony_nc_handles_list_setup and sony_nc_handles_list_show.
 
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
@@ -30,178 +32,205 @@ Signed-off-by: Marco Chiappero <marco@absence.it>
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -744,6 +744,72 @@ static int acpi_callsetfunc(acpi_handle 
- 	return -1;
+@@ -810,14 +810,14 @@ error:
+ 	return length;
  }
  
-+static int acpi_callsetfunc_buffer(acpi_handle handle, u64 value,
-+					u8 array[], unsigned int size)
-+{
-+	u8 buffer[sizeof(value)];
-+	int length = -1;
-+	struct acpi_object_list params;
-+	union acpi_object in_obj;
-+	union acpi_object *values;
-+	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-+	acpi_status status;
-+
-+	if (!array || !size)
-+		return length;
-+
-+	/* use a buffer type as parameter to overcome any 32 bits ACPI limit */
-+	memcpy(buffer, &value, sizeof(buffer));
-+
-+	params.count = 1;
-+	params.pointer = &in_obj;
-+	in_obj.type = ACPI_TYPE_BUFFER;
-+	in_obj.buffer.length = sizeof(buffer);
-+	in_obj.buffer.pointer = buffer;
-+
-+	/* since SN06 is the only known method returning a buffer we
-+	 * can hard code it, it is not necessary to have a parameter
-+	 */
-+	status = acpi_evaluate_object(sony_nc_acpi_handle, "SN06", &params,
-+			&output);
-+	values = (union acpi_object *) output.pointer;
-+	if (ACPI_FAILURE(status) || !values) {
-+		dprintk("acpi_evaluate_object failed\n");
-+		goto error;
-+	}
-+
-+	/* some buggy DSDTs return integer when the output does
-+	   not execede the 4 bytes size
-+	*/
-+	if (values->type == ACPI_TYPE_BUFFER) {
-+		if (values->buffer.length <= 0)
-+			goto error;
-+
-+		length = size > values->buffer.length ?
-+			values->buffer.length : size;
-+
-+		memcpy(array, values->buffer.pointer, length);
-+	} else if (values->type == ACPI_TYPE_INTEGER) {
-+		u32 result = values->integer.value;
-+		if (size < 4)
-+			goto error;
-+
-+		length = 0;
-+		while (length != 4) {
-+			array[length] = result & 0xff;
-+			result >>= 8;
-+			length++;
-+		}
-+	} else {
-+		pr_err("Invalid return object 0x%.2x\n", values->type);
-+		goto error;
-+	}
-+
-+error:
-+	kfree(output.pointer);
-+	return length;
-+}
-+
- struct sony_nc_handles {
+-struct sony_nc_handles {
++struct sony_nc_handles_list {
  	u16 cap[0x10];
  	struct device_attribute devattr;
-@@ -848,6 +914,24 @@ static int sony_call_snc_handle(unsigned
- 	return ret;
+ };
+ 
+-static struct sony_nc_handles *handles;
++static struct sony_nc_handles_list *handles;
+ 
+-static ssize_t sony_nc_handles_show(struct device *dev,
++static ssize_t sony_nc_handles_list_show(struct device *dev,
+ 		struct device_attribute *attr, char *buffer)
+ {
+ 	ssize_t len = 0;
+@@ -832,7 +832,7 @@ static ssize_t sony_nc_handles_show(stru
+ 	return len;
  }
  
-+/* call command method SN06, accepts a wide input buffer, returns a buffer */
-+static int sony_call_snc_handle_buffer(unsigned int handle, u64 argument,
-+					u8 result[], unsigned int size)
+-static int sony_nc_handles_setup(struct platform_device *pd)
++static int sony_nc_handles_list_setup(struct platform_device *pd)
+ {
+ 	unsigned int i, result;
+ 
+@@ -853,7 +853,7 @@ static int sony_nc_handles_setup(struct 
+ 		sysfs_attr_init(&handles->devattr.attr);
+ 		handles->devattr.attr.name = "handles";
+ 		handles->devattr.attr.mode = S_IRUGO;
+-		handles->devattr.show = sony_nc_handles_show;
++		handles->devattr.show = sony_nc_handles_list_show;
+ 
+ 		/* allow reading capabilities via sysfs */
+ 		if (device_create_file(&pd->dev, &handles->devattr)) {
+@@ -866,7 +866,7 @@ static int sony_nc_handles_setup(struct 
+ 	return 0;
+ }
+ 
+-static int sony_nc_handles_cleanup(struct platform_device *pd)
++static int sony_nc_handles_list_cleanup(struct platform_device *pd)
+ {
+ 	if (handles) {
+ 		if (debug)
+@@ -1736,6 +1736,94 @@ static void sony_nc_backlight_cleanup(vo
+ 		backlight_device_unregister(sony_bl_props.dev);
+ }
+ 
++static int sony_nc_handles_setup(struct platform_device *pd)
 +{
-+	int ret = 0;
-+	int offset = sony_find_snc_handle(handle);
++	unsigned int i, bitmask, result;
++	int ret;
 +
-+	if (offset < 0)
-+		return -1;
++	/* retrieve the implemented offsets mask */
++	if (acpi_callsetfunc(sony_nc_acpi_handle, "SN00", 0x10, &bitmask))
++		return -EIO;
 +
-+	ret = acpi_callsetfunc_buffer(sony_nc_acpi_handle,
-+			offset | argument, result, size);
-+	dprintk("called SN06 with 0x%.4llx (%u bytes read)\n",
-+			offset | argument, ret);
++	/* retrieve the available handles, otherwise return */
++	ret = sony_nc_handles_list_setup(pd);
++	if (ret)
++		return ret;
 +
-+	return ret;
++	/* setup found handles here */
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++		int unsigned handle = handles->cap[i];
++
++		if (!handle)
++			continue;
++
++		dprintk("looking at handle 0x%.4x\n", handle);
++
++		switch (handle) {
++		case 0x0137:
++			ret = sony_nc_kbd_backlight_setup(pd);
++		case 0x0124:
++		case 0x0135:
++			ret = sony_nc_rfkill_setup(sony_nc_acpi_device);
++			break;
++		default:
++			continue;
++		}
++
++		if (ret < 0)
++			pr_warn("handle 0x%.4x setup failed (ret: %i)",
++								handle, ret);
++		else
++			dprintk("handle 0x%.4x setup completed\n", handle);
++	}
++
++	/* Enable all events for the found handles, otherwise return */
++	if (acpi_callsetfunc(sony_nc_acpi_handle, "SN02", bitmask, &result))
++		return -EIO;
++
++	return 0;
 +}
 +
- /*
-  * sony_nc_values input/output validate functions
-  */
-@@ -1300,21 +1384,17 @@ static void sony_nc_rfkill_update(void)
- 	}
- }
- 
--static void sony_nc_rfkill_setup(struct acpi_device *device)
-+static int sony_nc_rfkill_setup(struct acpi_device *device)
- {
-+#define	RFKILL_BUFF_SIZE 8
-+	u8 dev_code, i, buff[RFKILL_BUFF_SIZE] = { 0 };
- 	int offset;
--	u8 dev_code, i;
--	acpi_status status;
--	struct acpi_object_list params;
--	union acpi_object in_obj;
--	union acpi_object *device_enum;
--	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 
- 	offset = sony_find_snc_handle(0x124);
- 	if (offset == -1) {
- 		offset = sony_find_snc_handle(0x135);
- 		if (offset == -1)
--			return;
-+			return 0;
- 		else
- 			sony_rfkill_handle = 0x135;
- 	} else
-@@ -1324,34 +1404,16 @@ static void sony_nc_rfkill_setup(struct 
- 	/* need to read the whole buffer returned by the acpi call to SN06
- 	 * here otherwise we may miss some features
- 	 */
--	params.count = 1;
--	params.pointer = &in_obj;
--	in_obj.type = ACPI_TYPE_INTEGER;
--	in_obj.integer.value = offset;
--	status = acpi_evaluate_object(sony_nc_acpi_handle, "SN06", &params,
--			&buffer);
--	if (ACPI_FAILURE(status)) {
--		dprintk("Radio device enumeration failed\n");
--		return;
--	}
--
--	device_enum = (union acpi_object *) buffer.pointer;
--	if (!device_enum) {
--		pr_err("No SN06 return object\n");
--		goto out_no_enum;
--	}
--	if (device_enum->type != ACPI_TYPE_BUFFER) {
--		pr_err("Invalid SN06 return object 0x%.2x\n",
--		       device_enum->type);
--		goto out_no_enum;
--	}
-+	if (sony_call_snc_handle_buffer(sony_rfkill_handle, 0x000,
-+					buff, RFKILL_BUFF_SIZE) < 0)
-+		return -EIO;
- 
- 	/* the buffer is filled with magic numbers describing the devices
- 	 * available, 0xff terminates the enumeration
- 	 */
--	for (i = 0; i < device_enum->buffer.length; i++) {
-+	for (i = 0; i < RFKILL_BUFF_SIZE; i++) {
- 
--		dev_code = *(device_enum->buffer.pointer + i);
-+		dev_code = buff[i];
- 		if (dev_code == 0xff)
- 			break;
- 
-@@ -1371,9 +1433,7 @@ static void sony_nc_rfkill_setup(struct 
- 			sony_nc_setup_rfkill(device, SONY_WIMAX);
- 	}
- 
--out_no_enum:
--	kfree(buffer.pointer);
--	return;
++static int sony_nc_handles_cleanup(struct platform_device *pd)
++{
++	unsigned int i, result, bitmask;
++
++	/* retrieve the event enabled handles */
++	acpi_callgetfunc(sony_nc_acpi_handle, "SN01", &bitmask);
++
++	/* disable the event generation	for every handle */
++	acpi_callsetfunc(sony_nc_acpi_handle, "SN03", bitmask, &result);
++
++	/* cleanup handles here */
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++
++		int unsigned handle = handles->cap[i];
++
++		if (!handle)
++			continue;
++
++		dprintk("looking at handle 0x%.4x\n", handle);
++
++		switch (handle) {
++		case 0x0137:
++			sony_nc_kbd_backlight_cleanup(pd);
++		case 0x0124:
++		case 0x0135:
++			sony_nc_rfkill_cleanup();
++			break;
++		default:
++			continue;
++		}
++
++		dprintk("handle 0x%.4x deconfigured\n", handle);
++	}
++
++	/* finally cleanup the handles list */
++	sony_nc_handles_list_cleanup(pd);
++
 +	return 0;
++}
++
+ static int sony_nc_add(struct acpi_device *device)
+ {
+ 	acpi_status status;
+@@ -1783,21 +1871,17 @@ static int sony_nc_add(struct acpi_devic
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+ 					 &handle))) {
+ 		dprintk("Doing SNC setup\n");
++		sony_nc_function_setup(device);
+ 		result = sony_nc_handles_setup(sony_pf_device);
+ 		if (result)
+-			goto outpresent;
+-		result = sony_nc_kbd_backlight_setup(sony_pf_device);
+-		if (result)
+ 			goto outsnc;
+-		sony_nc_function_setup(device);
+-		sony_nc_rfkill_setup(device);
+ 	}
+ 
+ 	/* setup input devices and helper fifo */
+ 	result = sony_laptop_setup_input(device);
+ 	if (result) {
+ 		pr_err("Unable to create input devices\n");
+-		goto outkbdbacklight;
++		goto outsnc;
+ 	}
+ 
+ 	if (acpi_video_backlight_support()) {
+@@ -1855,9 +1939,6 @@ static int sony_nc_add(struct acpi_devic
+ 
+ 	sony_laptop_remove_input();
+ 
+-      outkbdbacklight:
+-	sony_nc_kbd_backlight_cleanup(sony_pf_device);
+-
+       outsnc:
+ 	sony_nc_handles_cleanup(sony_pf_device);
+ 
+@@ -1865,7 +1946,6 @@ static int sony_nc_add(struct acpi_devic
+ 	sony_pf_remove();
+ 
+       outwalk:
+-	sony_nc_rfkill_cleanup();
+ 	return result;
  }
  
- /* Keyboard backlight feature */
+@@ -1874,6 +1954,7 @@ static int sony_nc_remove(struct acpi_de
+ 	struct sony_nc_value *item;
+ 
+ 	sony_nc_backlight_cleanup();
++	sony_nc_handles_cleanup(sony_pf_device);
+ 
+ 	sony_nc_acpi_device = NULL;
+ 
+@@ -1881,11 +1962,8 @@ static int sony_nc_remove(struct acpi_de
+ 		device_remove_file(&sony_pf_device->dev, &item->devattr);
+ 	}
+ 
+-	sony_nc_kbd_backlight_cleanup(sony_pf_device);
+-	sony_nc_handles_cleanup(sony_pf_device);
+ 	sony_pf_remove();
+ 	sony_laptop_remove_input();
+-	sony_nc_rfkill_cleanup();
+ 	dprintk(SONY_NC_DRIVER_NAME " removed.\n");
+ 
+ 	return 0;
