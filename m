@@ -1,28 +1,27 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 RESEND 6/14] sony-laptop: new sony_nc_handles_resume
- function
-Date: Tue, 13 Sep 2011 22:47:06 +0200
-Message-ID: <1315946826.14415.136.camel@air.vesuvio.absence.it>
+Subject: [PATCH V2 RESEND 7/14] sony-laptop: sony_nc_function_setup
+ modifications
+Date: Tue, 13 Sep 2011 22:47:10 +0200
+Message-ID: <1315946830.14415.137.camel@air.vesuvio.absence.it>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:33788 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:33800 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756122Ab1IMUrI (ORCPT
+	with ESMTP id S1756122Ab1IMUrM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Sep 2011 16:47:08 -0400
+	Tue, 13 Sep 2011 16:47:12 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-New SNC resume function (sony_nc_handles_resume) for better event and
-handle re-initialization called by sony_nc_resume, now pushed downwards
-near sony_nc_add and sony_nc_cleanup for better readability and fewer
-function prototypes.
+Removed every init code, already present in sony_nc_snc_setup and
+sony_nc_snc_resume. Now calling only the handles present on the device,
+using the new setup and resume code.
 
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
@@ -30,136 +29,71 @@ Signed-off-by: Marco Chiappero <marco@absence.it>
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -1241,45 +1241,6 @@ static int sony_nc_function_setup(struct
+@@ -1225,18 +1225,14 @@ static acpi_status sony_walk_callback(ac
+ /*
+  * ACPI device
+  */
+-static int sony_nc_function_setup(struct acpi_device *device)
++static int sony_nc_function_setup(unsigned int handle)
+ {
+ 	unsigned int result;
+ 
+-	/* Enable all events */
+-	acpi_callsetfunc(sony_nc_acpi_handle, "SN02", 0xffff, &result);
+-
+-	/* Setup hotkeys */
+-	sony_call_snc_handle(0x0100, 0, &result);
+-	sony_call_snc_handle(0x0101, 0, &result);
+-	sony_call_snc_handle(0x0102, 0x100, &result);
+-	sony_call_snc_handle(0x0127, 0, &result);
++	if (handle == 0x0102)
++		sony_call_snc_handle(0x0102, 0x100, &result);
++	else
++		sony_call_snc_handle(handle, 0, &result);
+ 
  	return 0;
  }
+@@ -1721,6 +1717,12 @@ static int sony_nc_handles_setup(struct 
+ 		dprintk("looking at handle 0x%.4x\n", handle);
  
--static int sony_nc_resume(struct acpi_device *device)
--{
--	struct sony_nc_value *item;
--	acpi_handle handle;
--
--	for (item = sony_nc_values; item->name; item++) {
--		int ret;
--
--		if (!item->valid)
--			continue;
--		ret = acpi_callsetfunc(sony_nc_acpi_handle, *item->acpiset,
--				       item->value, NULL);
--		if (ret < 0) {
--			pr_err("%s: %d\n", __func__, ret);
--			break;
--		}
--	}
--
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "ECON",
--					 &handle))) {
--		if (acpi_callsetfunc(sony_nc_acpi_handle, "ECON", 1, NULL))
--			dprintk("ECON Method failed\n");
--	}
--
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
--					 &handle))) {
--		dprintk("Doing SNC setup\n");
+ 		switch (handle) {
++		case 0x0100:
++		case 0x0127:
++		case 0x0101:
++		case 0x0102:
++			ret = sony_nc_function_setup(handle);
++			break;
+ 		case 0x0137:
+ 			ret = sony_nc_kbd_backlight_setup(pd);
+ 		case 0x0124:
+@@ -1806,6 +1808,12 @@ static int sony_nc_handles_resume(void)
+ 		dprintk("looking at handle 0x%.4x\n", handle);
+ 
+ 		switch (handle) {
++		case 0x0100:
++		case 0x0127:
++		case 0x0101:
++		case 0x0102:
++			sony_nc_function_setup(handle);
++			break;
+ 		case 0x0137: /* kbd + als */
+ 			sony_nc_kbd_backlight_resume();
+ 			break;
+@@ -1871,7 +1879,7 @@ static int sony_nc_add(struct acpi_devic
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+ 					 &handle))) {
+ 		dprintk("Doing SNC setup\n");
 -		sony_nc_function_setup(device);
--	}
--
--	/* re-read rfkill state */
--	sony_nc_rfkill_update();
--
--	/* restore kbd backlight states */
--	sony_nc_kbd_backlight_resume();
--
--	return 0;
--}
--
- static void sony_nc_rfkill_cleanup(void)
- {
- 	int i;
-@@ -1824,6 +1785,45 @@ static int sony_nc_handles_cleanup(struc
- 	return 0;
- }
++
+ 		result = sony_nc_handles_setup(sony_pf_device);
+ 		if (result)
+ 			goto outsnc;
+@@ -1996,7 +2004,7 @@ static int sony_nc_resume(struct acpi_de
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+ 					 &handle))) {
+ 		dprintk("Doing SNC setup\n");
+-		sony_nc_function_setup(device);
++
+ 		sony_nc_handles_resume();
+ 	}
  
-+static int sony_nc_handles_resume(void)
-+{
-+	unsigned int i, result, bitmask;
-+
-+	/* retrieve the implemented offsets mask */
-+	if (acpi_callsetfunc(sony_nc_acpi_handle, "SN00", 0x10, &bitmask))
-+		return -EIO;
-+
-+	/* Enable all events, otherwise return */
-+	if (acpi_callsetfunc(sony_nc_acpi_handle, "SN02", bitmask, &result))
-+		return -EIO;
-+
-+	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
-+		int unsigned handle = handles->cap[i];
-+
-+		if (!handle)
-+			continue;
-+
-+		dprintk("looking at handle 0x%.4x\n", handle);
-+
-+		switch (handle) {
-+		case 0x0137: /* kbd + als */
-+			sony_nc_kbd_backlight_resume();
-+			break;
-+		case 0x0124:
-+		case 0x0135:
-+			/* re-read rfkill state */
-+			sony_nc_rfkill_update();
-+			break;
-+		default:
-+			continue;
-+		}
-+
-+		dprintk("handle 0x%.4x updated\n", handle);
-+	}
-+
-+	return 0;
-+}
-+
- static int sony_nc_add(struct acpi_device *device)
- {
- 	acpi_status status;
-@@ -1969,6 +1969,40 @@ static int sony_nc_remove(struct acpi_de
- 	return 0;
- }
- 
-+static int sony_nc_resume(struct acpi_device *device)
-+{
-+	struct sony_nc_value *item;
-+	acpi_handle handle;
-+
-+	for (item = sony_nc_values; item->name; item++) {
-+		int ret;
-+
-+		if (!item->valid)
-+			continue;
-+		ret = acpi_callsetfunc(sony_nc_acpi_handle, *item->acpiset,
-+				       item->value, NULL);
-+		if (ret < 0) {
-+			pr_err("%s: %d\n", __func__, ret);
-+			break;
-+		}
-+	}
-+
-+	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "ECON",
-+					 &handle))) {
-+		if (acpi_callsetfunc(sony_nc_acpi_handle, "ECON", 1, NULL))
-+			dprintk("ECON Method failed\n");
-+	}
-+
-+	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
-+					 &handle))) {
-+		dprintk("Doing SNC setup\n");
-+		sony_nc_function_setup(device);
-+		sony_nc_handles_resume();
-+	}
-+
-+	return 0;
-+}
-+
- static const struct acpi_device_id sony_device_ids[] = {
- 	{SONY_NC_HID, 0},
- 	{SONY_PIC_HID, 0},
