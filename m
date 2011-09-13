@@ -1,28 +1,28 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 RESEND 1/14] sony-laptop: fix potential improper handle
- usage
-Date: Tue, 13 Sep 2011 22:43:31 +0200
-Message-ID: <1315946611.14415.108.camel@air.vesuvio.absence.it>
+Subject: [PATCH V2 RESEND 3/14] sony-laptop: replace simple_strtoul with
+ strict_strtoul
+Date: Tue, 13 Sep 2011 22:45:28 +0200
+Message-ID: <1315946728.14415.128.camel@air.vesuvio.absence.it>
 References: <1315585214.3613.51.camel@vesuvio>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:38097 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:38187 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754034Ab1IMUnf (ORCPT
+	with ESMTP id S1755981Ab1IMUpa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Sep 2011 16:43:35 -0400
+	Tue, 13 Sep 2011 16:45:30 -0400
 In-Reply-To: <1315585214.3613.51.camel@vesuvio>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-SNC handles are positive numbers, all handles are valid with the sole
-exception of handle 0x0. This patch replaces int type with unsigned int
-when dealing with handles while sony_find_snc_handle now returns -1 when
-its value is 0x0.
+Any occurrence of simple_strtoul has been replaced with the better
+strict_strtoul, because the former accepts and ignores any char at the
+tail while the latter only accepts a new line character following the
+number (and -EINVAL is returned otherwise).
 
 
 Signed-off-by: Marco Chiappero <marco@absence.it> 
@@ -30,55 +30,46 @@ Signed-off-by: Marco Chiappero <marco@absence.it>
 
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -150,7 +150,7 @@ enum sony_nc_rfkill {
- 	N_SONY_RFKILL,
- };
+@@ -919,7 +919,8 @@ static ssize_t sony_nc_sysfs_store(struc
+ 	if (count > 31)
+ 		return -EINVAL;
  
--static int sony_rfkill_handle;
-+static unsigned int sony_rfkill_handle;
- static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
- static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700, 0x900};
- static void sony_nc_rfkill_update(void);
-@@ -811,12 +811,12 @@ static int sony_nc_handles_cleanup(struc
- 	return 0;
- }
+-	value = simple_strtoul(buffer, NULL, 10);
++	if (strict_strtoul(buffer, 10, &value))
++		return -EINVAL;
  
--static int sony_find_snc_handle(int handle)
-+static int sony_find_snc_handle(unsigned int handle)
- {
- 	int i;
+ 	if (item->validate)
+ 		value = item->validate(SNC_VALIDATE_IN, value);
+@@ -2437,7 +2438,9 @@ static ssize_t sony_pic_wwanpower_store(
+ 	if (count > 31)
+ 		return -EINVAL;
  
--	/* not initialized yet, return early */
--	if (!handles)
-+	/* not initialized yet or invalid handle, return early */
-+	if (!handles || !handle)
- 		return -1;
+-	value = simple_strtoul(buffer, NULL, 10);
++	if (strict_strtoul(buffer, 10, &value))
++		return -EINVAL;
++
+ 	mutex_lock(&spic_dev.lock);
+ 	__sony_pic_set_wwanpower(value);
+ 	mutex_unlock(&spic_dev.lock);
+@@ -2474,7 +2477,9 @@ static ssize_t sony_pic_bluetoothpower_s
+ 	if (count > 31)
+ 		return -EINVAL;
  
- 	for (i = 0; i < 0x10; i++) {
-@@ -830,7 +830,7 @@ static int sony_find_snc_handle(int hand
- 	return -1;
- }
+-	value = simple_strtoul(buffer, NULL, 10);
++	if (strict_strtoul(buffer, 10, &value))
++		return -EINVAL;
++
+ 	mutex_lock(&spic_dev.lock);
+ 	__sony_pic_set_bluetoothpower(value);
+ 	mutex_unlock(&spic_dev.lock);
+@@ -2513,7 +2518,9 @@ static ssize_t sony_pic_fanspeed_store(s
+ 	if (count > 31)
+ 		return -EINVAL;
  
--static int sony_call_snc_handle(int handle, int argument, int *result)
-+static int sony_call_snc_handle(unsigned int handle, int argument, int *result)
- {
- 	int ret = 0;
- 	int offset = sony_find_snc_handle(handle);
-@@ -937,7 +937,7 @@ static ssize_t sony_nc_sysfs_store(struc
-  */
- struct sony_backlight_props {
- 	struct backlight_device *dev;
--	int			handle;
-+	unsigned int		handle;
- 	u8			offset;
- 	u8			maxlvl;
- };
-@@ -1557,7 +1557,7 @@ static void sony_nc_kbd_backlight_resume
- 				&ignore);
- }
+-	value = simple_strtoul(buffer, NULL, 10);
++	if (strict_strtoul(buffer, 10, &value))
++		return -EINVAL;
++
+ 	if (sony_pic_set_fanspeed(value))
+ 		return -EIO;
  
--static void sony_nc_backlight_ng_read_limits(int handle,
-+static void sony_nc_backlight_ng_read_limits(unsigned int handle,
- 		struct sony_backlight_props *props)
- {
- 	int offset;
