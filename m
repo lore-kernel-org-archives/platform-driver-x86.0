@@ -1,75 +1,28 @@
 From: Marco Chiappero <marco@absence.it>
-Subject: [PATCH V2 RESEND 14/14] sony-laptop: documentation changes
-Date: Tue, 13 Sep 2011 22:53:57 +0200
-Message-ID: <1315947237.14415.163.camel@air.vesuvio.absence.it>
-References: <1315585214.3613.51.camel@vesuvio>
+Subject: Re: [PATCH V2 0/14] miscellaneous code improvements for sony-laptop
+Date: Tue, 13 Sep 2011 22:58:20 +0200
+Message-ID: <4E6FC3EC.7080406@absence.it>
+References: <1315585214.3613.51.camel@vesuvio> <20110910040312.GA12386@kamineko.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s1.powermailhost.com ([93.95.221.60]:34056 "EHLO
+Received: from s1.powermailhost.com ([93.95.221.60]:58258 "EHLO
 	s1.powermailhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932446Ab1IMUx7 (ORCPT
+	with ESMTP id S932646Ab1IMU6W (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Sep 2011 16:53:59 -0400
-In-Reply-To: <1315585214.3613.51.camel@vesuvio>
+	Tue, 13 Sep 2011 16:58:22 -0400
+In-Reply-To: <20110910040312.GA12386@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Since new findings occurred and we have a better understanding of the
-SNC device, the development documentation is updated.
+Il 10/09/2011 06:03, Mattia Dongili ha scritto:
+>
+> a number of patches got line wrapped by your MUA, would you mind
+> re-sending them fixing it?
 
-
-Signed-off-by: Marco Chiappero <marco@absence.it> 
---- 
-
---- a/Documentation/laptops/sony-laptop.txt
-+++ b/Documentation/laptops/sony-laptop.txt
-@@ -88,15 +88,36 @@ REPEAT: DON'T DO THIS IF YOU DON'T LIKE 
- In your kernel logs you will find the list of all ACPI methods
- the SNC device has on your laptop.
- 
--* For new models you will see a long list of meaningless method names,
--reading the DSDT table source should reveal that:
--(1) the SNC device uses an internal capability lookup table
--(2) SN00 is used to find values in the lookup table
--(3) SN06 and SN07 are used to call into the real methods based on
--    offsets you can obtain iterating the table using SN00
--(4) SN02 used to enable events.
--Some values in the capability lookup table are more or less known, see
--the code for all sony_call_snc_handle calls, others are more obscure.
-+* For new models you may see a long list of meaningless method names,
-+but a small subset of methods starting with "SN" is always present. These
-+methods define a common interface for acting with the SNC device. In
-+particular:
-+
-+- SN00 can be used to retrieve some informations about the SNC device; among
-+  them, an internal capability lookup table reporting model specific features,
-+  identified by a number called "handle", associated to an offset, to be
-+  later used by methods SN06 and SN07. Some handles are now well known, while
-+  some others are still a bit obscure or totally unknown. A list of known
-+  handles can be found at http://www.absence.it/vaio-acpi/handles_list.txt
-+
-+- SN01, SN02, SN03 can be used to query, enable and disable (respectively)
-+  the event generation for every handle, as they might trigger ACPI
-+  notifications
-+
-+- SN04, SN05 can be used to query and clear the "event raised" flag for every
-+  handle
-+
-+- SN06 and SN07 are used to call into the real methods, providing the handles
-+  specific features, based on offsets you can obtain iterating the table
-+  via SN00. They should provide the same info (or almost the same), but while
-+  SN07 uses 32bit integers for both input and output parameters SN06 returns a
-+  wide buffer (for both input and output values), useful for reading a few info
-+  tables or long input parameters.
-+
-+You can have a look at a decoded, analyzed and fully explained DSDT taken from
-+a Sony Vaio VPCS1 model at http://www.absence.it/vaio-acpi/VPCS-findings.txt.
-+It should significantly help you in understanding how to use handles/offsets,
-+in decoding other DSDTs and in discovering new unknown features.
- 
- * For old models you can see the GCDP/GCDP methods used to pwer on/off
- the CD drive, but there are others and they are usually different from
+I'm sorry, I though it was already set up correctly, wrong assumption...
+To avoid confusion, I've sent again every single patch even though not 
+necessary. I hope everything to be fine now.
