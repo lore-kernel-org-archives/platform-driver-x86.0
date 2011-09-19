@@ -1,24 +1,120 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Alternate platform-x86 git tree ?
-Date: Fri, 16 Sep 2011 16:45:52 +0100
-Message-ID: <20110916154552.GA1424@srcf.ucam.org>
-References: <CAHR064gvnsJ+-DUfzjs4buUB3x6L9nLWmR=gEZ6UGO-t=KvJyA@mail.gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 4/5] ideapad: add debugfs support
+Date: Mon, 19 Sep 2011 16:38:55 +0800
+Message-ID: <4E76FF9F.4020505@canonical.com>
+References: <1315247467-8812-1-git-send-email-ike.pan@canonical.com> <1315247572-9131-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:33679 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752811Ab1IPPpy (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:38679 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753365Ab1ISIjD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 16 Sep 2011 11:45:54 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHR064gvnsJ+-DUfzjs4buUB3x6L9nLWmR=gEZ6UGO-t=KvJyA@mail.gmail.com>
+	Mon, 19 Sep 2011 04:39:03 -0400
+In-Reply-To: <1315247572-9131-1-git-send-email-ike.pan@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Anisse Astier <anisse@astier.eu>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Randy Dunlap <rdunlap@xenotime.net>
 
-Not yet. I'll try to push one somewhere this weekend.
+Some modification.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+On 09/06/2011 02:32 AM, Ike Panhc wrote:
+>  
+>  static acpi_handle ideapad_handle;
+> +static struct ideapad_private *ideapad_priv;
+
+This is not necessary.
+
+>  static bool no_bt_rfkill;
+>  module_param(no_bt_rfkill, bool, 0444);
+>  MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
+> @@ -188,6 +192,146 @@ static int write_ec_cmd(acpi_handle handle, int cmd, unsigned long data)
+>  }
+>  
+>  /*
+> + * debugfs
+> + */
+> +#define DEBUGFS_EVENT_LEN (4096)
+
+No one use this.
+
+> +static int debugfs_cfg_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, debugfs_cfg_show, NULL);
+
+priv structure can be the third argument, so global variable is not necessary.
+
+> +}
+> +
+> +static const struct file_operations debugfs_cfg_fops = {
+> +	.owner = THIS_MODULE,
+> +	.open = debugfs_cfg_open,
+> +	.read = seq_read,
+> +	.llseek = seq_lseek,
+> +	.release = single_release,
+> +};
+> +
+> +static int __devinit ideapad_debugfs_init(struct ideapad_private *priv)
+> +{
+> +	struct dentry *node;
+> +
+> +	priv->debug = debugfs_create_dir("ideapad", NULL);
+> +	if (priv->debug == NULL) {
+
+Use IS_ERR_OR_NULL instead.
+When CONFIG_DEBUG_FS is not set, debugfs_create_dir will return ERR_PTR(-ENODEV)
+
+> +		pr_err("failed to create debugfs directory");
+> +		goto errout;
+> +	}
+> +
+> +	node = debugfs_create_file("cfg", S_IRUGO, priv->debug, NULL,
+> +				   &debugfs_cfg_fops);
+
+priv structure can be the third argument.
+
+> +	if (!node) {
+> +		pr_err("failed to create cfg in debugfs");
+> +		goto errout;
+> +	}
+> +
+> +	node = debugfs_create_file("status", S_IRUGO, priv->debug, NULL,
+> +				   &debugfs_status_fops);
+> +	if (!node) {
+> +		pr_err("failed to create event in debugfs");
+> +		goto errout;
+> +	}
+> +
+> +	return 0;
+> +
+> +errout:
+
+call ideapad_debugfs_exit when failed.
+
+> +	return -ENOMEM;
+> +}
+> +
+
+> @@ -573,6 +717,7 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  	dev_set_drvdata(&adevice->dev, priv);
+> +	ideapad_priv = priv;
+
+Removed
+
+>  	ideapad_handle = adevice->handle;
+>  	priv->cfg = cfg;
+>  
+> @@ -580,6 +725,10 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
+>  	if (ret)
+>  		goto platform_failed;
+>  
+> +	ret = ideapad_debugfs_init(priv);
+> +	if (ret)
+> +		goto debugfs_failed;
+> +
+
+Not to fail out when debugfs init failed. debugfs is for developers, not for users.
