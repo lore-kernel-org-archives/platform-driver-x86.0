@@ -1,42 +1,43 @@
 From: Greg KH <gregkh@suse.de>
-Subject: [patch 2/8] Platform: samsung_laptop: add support for X520 machines.
-Date: Tue, 20 Sep 2011 09:16:09 -0700
-Message-ID: <20110920161735.583514409@clark.kroah.org>
+Subject: [patch 5/8] Platform: Fix error path in samsung-laptop init
+Date: Tue, 20 Sep 2011 09:16:12 -0700
+Message-ID: <20110920161735.910037116@clark.kroah.org>
 References: <20110920161743.GA32737@kroah.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20110920161743.GA32737@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, stable <stable@kernel.org>
+To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, greg@kroah.com, David Herrmann <dh.herrmann@googlemail.com>, stable <stable@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Tommaso Massimi <tmassimi@gmail.com>
+From: David Herrmann <dh.herrmann@googlemail.com>
 
-my samsung laptop would be very happy if you add
-these lines to the file drivers/platform/x86/samsung-laptop.c
+samsung_init() should not return success if not all devices are initialized.
+Otherwise, samsung_exit() will dereference sdev NULL pointers and others.
 
+Signed-off-by: David Herrmann <dh.herrmann@googlemail.com>
 Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
-
 ---
- drivers/platform/x86/samsung-laptop.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/samsung-laptop.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -695,6 +695,15 @@ static struct dmi_system_id __initdata s
- 		},
- 		.callback = dmi_check_cb,
- 	},
-+		{
-+		.ident = "X520",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X520"),
-+			DMI_MATCH(DMI_BOARD_NAME, "X520"),
-+		},
-+		.callback = dmi_check_cb,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
+@@ -799,7 +799,7 @@ static int __init samsung_init(void)
+ 	sabi_iface = ioremap_nocache(ifaceP, 16);
+ 	if (!sabi_iface) {
+ 		pr_err("Can't remap %x\n", ifaceP);
+-		goto exit;
++		goto error_no_signature;
+ 	}
+ 	if (debug) {
+ 		printk(KERN_DEBUG "ifaceP = 0x%08x\n", ifaceP);
+@@ -851,7 +851,6 @@ static int __init samsung_init(void)
+ 	if (retval)
+ 		goto error_file_create;
+ 
+-exit:
+ 	return 0;
+ 
+ error_file_create:
