@@ -1,44 +1,38 @@
 From: Greg KH <gregkh@suse.de>
-Subject: [patch 3/8] Platform: samsung_laptop: samsung backlight for R528/R728
-Date: Tue, 20 Sep 2011 09:16:10 -0700
-Message-ID: <20110920161735.691912980@clark.kroah.org>
-References: <20110920161743.GA32737@kroah.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110920161743.GA32737@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [patch 0/8] Samsung Laptop driver patches - resend
+Date: Tue, 20 Sep 2011 09:17:43 -0700
+Message-ID: <20110920161743.GA32737@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out3.smtp.messagingengine.com ([66.111.4.27]:51661 "EHLO
+	out3.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752588Ab1ITQVy (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 20 Sep 2011 12:21:54 -0400
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com, Smelov Andrey <xor29a@bk.ru>, stable <stable@kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com
 
-From: Smelov Andrey <xor29a@bk.ru>
+Hi Matthew,
 
-patch works for me, but I need to add "acpi_backlight=vendor" to kernel
-params
+Here is a resend of the samsung-laptop patches, with the correct
+authorship info in it.  Sorry about the last batch, 'quilt mail' strips
+them off when sending them out, despite the information being in the
+original patch.
 
-Signed-off-by: Smelov Andrey <xor29a@bk.ru>
-Cc: stable <stable@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+The patches are against Linus's current tree, but should apply just fine
+to linux-next as well.
 
+If there are any problems with them, please let me know.
 
----
- drivers/platform/x86/samsung-laptop.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+Oh, and if anyone wants to take over maintainership of this driver,
+please let me know.  I no longer have the hardware to be able to test
+any changes for it, which is why this took so long to get pushed out to
+you.
 
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -704,6 +704,15 @@ static struct dmi_system_id __initdata s
- 		},
- 		.callback = dmi_check_cb,
- 	},
-+	{
-+		.ident = "R528/R728",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "R528/R728"),
-+			DMI_MATCH(DMI_BOARD_NAME, "R528/R728"),
-+		},
-+		.callback = dmi_check_cb,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
+thanks,
+
+greg k-h
