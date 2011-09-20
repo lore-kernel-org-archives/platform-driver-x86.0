@@ -1,63 +1,42 @@
 From: Greg KH <gregkh@suse.de>
-Subject: [patch 4/8] platform: samsung_laptop: fix samsung brightness min/max calculations
-Date: Tue, 20 Sep 2011 09:16:11 -0700
-Message-ID: <20110920161735.789648948@clark.kroah.org>
+Subject: [patch 7/8] Platform: Samsung laptop DMI info for NC210/NC110
+Date: Tue, 20 Sep 2011 09:16:14 -0700
+Message-ID: <20110920161736.117201305@clark.kroah.org>
 References: <20110920161743.GA32737@kroah.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20110920161743.GA32737@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>, Greg KH <greg@kroah.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Stubbs <jasonbstubbs@gmail.com>, stable <stable@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Herrmann <dh.herrmann@googlemail.com>, Jason Stubbs <jasonbstubbs@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Jason Stubbs <jasonbstubbs@gmail.com>
 
-The min_brightness value of the sabi_config is incorrectly used in brightness
-calculations. For the config where min_brightness = 1 and max_brightness = 8,
-the user visible range should be 0 to 7 with hardware being set in the range
-of 1 to 8. What is actually happening is that the user visible range is 0 to
-8 with hardware being set in the range of -1 to 7.
-
-This patch fixes the above issue as well as a miscalculation that would occur
-in the case of min_brightness > 1.
+This patch just adds the DMI info for the samsung laptop driver to work with
+the NC210/NC110. It needs the brightness quirk patch for proper support.
 
 Signed-off-by: Jason Stubbs <jasonbstubbs@gmail.com>
-Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
 ---
- drivers/platform/x86/samsung-laptop.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -370,15 +370,17 @@ static u8 read_brightness(void)
- 				  &sretval);
- 	if (!retval) {
- 		user_brightness = sretval.retval[0];
--		if (user_brightness != 0)
-+		if (user_brightness > sabi_config->min_brightness)
- 			user_brightness -= sabi_config->min_brightness;
-+		else
-+			user_brightness = 0;
- 	}
- 	return user_brightness;
- }
- 
- static void set_brightness(u8 user_brightness)
- {
--	u8 user_level = user_brightness - sabi_config->min_brightness;
-+	u8 user_level = user_brightness + sabi_config->min_brightness;
- 
- 	sabi_set_command(sabi_config->commands.set_brightness, user_level);
- }
-@@ -829,7 +831,8 @@ static int __init samsung_init(void)
- 	/* create a backlight device to talk to this one */
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_PLATFORM;
--	props.max_brightness = sabi_config->max_brightness;
-+	props.max_brightness = sabi_config->max_brightness -
-+				sabi_config->min_brightness;
- 	backlight_device = backlight_device_register("samsung", &sdev->dev,
- 						     NULL, &backlight_ops,
- 						     &props);
+@@ -755,6 +755,15 @@ static struct dmi_system_id __initdata s
+ 		},
+ 		.callback = dmi_check_cb,
+ 	},
++	{
++		.ident = "NC210/NC110",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
++			DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
++		},
++		.callback = dmi_check_cb,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
