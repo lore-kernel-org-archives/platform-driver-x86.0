@@ -1,43 +1,109 @@
 From: Greg KH <gregkh@suse.de>
-Subject: [patch 5/8] Platform: Fix error path in samsung-laptop init
-Date: Tue, 20 Sep 2011 09:16:12 -0700
-Message-ID: <20110920161735.910037116@clark.kroah.org>
+Subject: [patch 6/8] Platform: Brightness quirk for samsung laptop driver
+Date: Tue, 20 Sep 2011 09:16:13 -0700
+Message-ID: <20110920161736.016670749@clark.kroah.org>
 References: <20110920161743.GA32737@kroah.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20110920161743.GA32737@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, greg@kroah.com, David Herrmann <dh.herrmann@googlemail.com>, stable <stable@kernel.org>
+To: Matthew Garrett <mjg@redhat.com>, Greg KH <greg@kroah.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Herrmann <dh.herrmann@googlemail.com>, Jason Stubbs <jasonbstubbs@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: David Herrmann <dh.herrmann@googlemail.com>
+From: Jason Stubbs <jasonbstubbs@gmail.com>
 
-samsung_init() should not return success if not all devices are initialized.
-Otherwise, samsung_exit() will dereference sdev NULL pointers and others.
+On some Samsung laptops the brightness regulation works slightly different.
+All SABI commands except for set_brightness work as expected. The behaviour
+of set_brightness is as follows:
 
-Signed-off-by: David Herrmann <dh.herrmann@googlemail.com>
-Cc: stable <stable@kernel.org>
+- Setting a new brightness will only step one level toward the new brightness
+  level. For example, setting a level of 5 when the current level is 2 will
+  result in a brightness level of 3.
+- A spurious KEY_BRIGHTNESS_UP or KEY_BRIGHTNESS_DOWN event is also generated
+  along with the change in brightness.
+- Neither of the above two issues occur when changing from/to brightness
+  level 0.
+
+This patch adds detection and a non-intrusive workaround for the above issues.
+
+Signed-off-by: Jason Stubbs <jasonbstubbs@gmail.com>
+Tested-by: David Herrmann <dh.herrmann@googlemail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+
 ---
- drivers/platform/x86/samsung-laptop.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |   43 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -799,7 +799,7 @@ static int __init samsung_init(void)
- 	sabi_iface = ioremap_nocache(ifaceP, 16);
- 	if (!sabi_iface) {
- 		pr_err("Can't remap %x\n", ifaceP);
--		goto exit;
-+		goto error_no_signature;
+@@ -226,6 +226,7 @@ static struct backlight_device *backligh
+ static struct mutex sabi_mutex;
+ static struct platform_device *sdev;
+ static struct rfkill *rfk;
++static bool has_stepping_quirk;
+ 
+ static int force;
+ module_param(force, bool, 0);
+@@ -382,6 +383,17 @@ static void set_brightness(u8 user_brigh
+ {
+ 	u8 user_level = user_brightness + sabi_config->min_brightness;
+ 
++	if (has_stepping_quirk && user_level != 0) {
++		/*
++		 * short circuit if the specified level is what's already set
++		 * to prevent the screen from flickering needlessly
++		 */
++		if (user_brightness == read_brightness())
++			return;
++
++		sabi_set_command(sabi_config->commands.set_brightness, 0);
++	}
++
+ 	sabi_set_command(sabi_config->commands.set_brightness, user_level);
+ }
+ 
+@@ -390,6 +402,34 @@ static int get_brightness(struct backlig
+ 	return (int)read_brightness();
+ }
+ 
++static void check_for_stepping_quirk(void)
++{
++	u8 initial_level = read_brightness();
++	u8 check_level;
++
++	/*
++	 * Some laptops exhibit the strange behaviour of stepping toward
++	 * (rather than setting) the brightness except when changing to/from
++	 * brightness level 0. This behaviour is checked for here and worked
++	 * around in set_brightness.
++	 */
++
++	if (initial_level <= 2)
++		check_level = initial_level + 2;
++	else
++		check_level = initial_level - 2;
++
++	has_stepping_quirk = false;
++	set_brightness(check_level);
++
++	if (read_brightness() != check_level) {
++		has_stepping_quirk = true;
++		pr_info("enabled workaround for brightness stepping quirk\n");
++	}
++
++	set_brightness(initial_level);
++}
++
+ static int update_status(struct backlight_device *bd)
+ {
+ 	set_brightness(bd->props.brightness);
+@@ -823,6 +863,9 @@ static int __init samsung_init(void)
+ 		}
  	}
- 	if (debug) {
- 		printk(KERN_DEBUG "ifaceP = 0x%08x\n", ifaceP);
-@@ -851,7 +851,6 @@ static int __init samsung_init(void)
- 	if (retval)
- 		goto error_file_create;
  
--exit:
- 	return 0;
- 
- error_file_create:
++	/* Check for stepping quirk */
++	check_for_stepping_quirk();
++
+ 	/* knock up a platform device to hang stuff off of */
+ 	sdev = platform_device_register_simple("samsung", -1, NULL, 0);
+ 	if (IS_ERR(sdev))
