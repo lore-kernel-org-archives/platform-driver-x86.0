@@ -1,41 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 1/6] toshiba_acpi: Convert to use acpi_driver
-Date: Wed, 21 Sep 2011 16:35:07 +0100
-Message-ID: <20110921153507.GB26436@srcf.ucam.org>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH 0/6] toshiba_acpi: Cleanup and TOS1900 device support
+Date: Wed, 21 Sep 2011 11:10:44 -0500
+Message-ID: <20110921161043.GC29983@thinkpad-t410>
 References: <1316555754-25949-1-git-send-email-seth.forshee@canonical.com>
- <1316555754-25949-2-git-send-email-seth.forshee@canonical.com>
- <CAHR064iA1877cF1rmUhX_41U_yjRGs6siswpoMPjs=WEYEm8cQ@mail.gmail.com>
+ <20110921153137.GA26436@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:38312 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751797Ab1IUPfI (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:37880 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752436Ab1IUQKr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Sep 2011 11:35:08 -0400
+	Wed, 21 Sep 2011 12:10:47 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHR064iA1877cF1rmUhX_41U_yjRGs6siswpoMPjs=WEYEm8cQ@mail.gmail.com>
+In-Reply-To: <20110921153137.GA26436@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Seth Forshee <seth.forshee@canonical.com>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 09:28:30AM +0200, Corentin Chary wrote:
-> On Tue, Sep 20, 2011 at 11:55 PM, Seth Forshee
-> <seth.forshee@canonical.com> wrote:
-> > Changes toshiba_acpi to register an acpi driver and eliminates the
-> > platform device it was using.
+On Wed, Sep 21, 2011 at 04:31:37PM +0100, Matthew Garrett wrote:
+> On Tue, Sep 20, 2011 at 04:55:48PM -0500, Seth Forshee wrote:
+> > Hi Matthew,
+> > 
+> > Please consider merging the following patches. They represent a
+> > signficant cleanup of toshiba_acpi as well as adding support for SPFC as
+> > an HCI method. The latter provides basic but functional support for the
+> > TOS1900 devices found on newer Toshiba models, which will serve as a
+> > good starting point for further enhancements. I've tried to leave the
+> > details of the hardware interaction unchanged to reduce the risk of
+> > regression for machines already supported by the driver.
 > 
-> Why to you want to remove the platform device ? If you want to create
-> a sysfs interface later, you'll probably need it. Most of the platform
-> driver I know only use the acpi_device to send proc/netlink events and
-> the platform_device is used everywhere else. (And anyway, it's an x86
-> *platform* driver, not a pure acpi driver).
+> Great. Has this been tested on any older hardware? I'd think that the 
+> risk of regression is pretty low, but it'd be a nice sanity check. I've 
+> only got one TOS1800 type around here, and it's a 1.2GHz Pentium M, so 
+> I'd prefer to have got someone else to do it :)
 
-There's no hard requirement for a platform device, and given that it's 
-purely using ACPI methods it arguably *is* a pure ACPI driver - Toshiba 
-could use the same interface on an ARM device, if they were feeling 
-excessively enthusiastic. But I've no strong feelings either way.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+No, I don't have any older hardware to test on, and I'm pretty sure
+Azael doesn't either. Not that I want to afflict any additional pain
+beyond what you already have from dealing with firmware all day ;)
