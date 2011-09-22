@@ -1,41 +1,40 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH 0/6] toshiba_acpi: Cleanup and TOS1900 device support
-Date: Wed, 21 Sep 2011 11:10:44 -0500
-Message-ID: <20110921161043.GC29983@thinkpad-t410>
-References: <1316555754-25949-1-git-send-email-seth.forshee@canonical.com>
- <20110921153137.GA26436@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:37880 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752436Ab1IUQKr (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Sep 2011 12:10:47 -0400
-Content-Disposition: inline
-In-Reply-To: <20110921153137.GA26436@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Yong Zhang <yong.zhang0@gmail.com>
+Subject: [PATCH 42/55] sony-laptop:irq: Remove IRQF_DISABLED
+Date: Thu, 22 Sep 2011 16:59:09 +0800
+Message-ID: <1316681962-8217-43-git-send-email-yong.zhang0@gmail.com>
+References: <1316681962-8217-1-git-send-email-yong.zhang0@gmail.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1316681962-8217-1-git-send-email-yong.zhang0@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Cc: tglx@linutronix.de, yong.zhang0@gmail.com, Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 21, 2011 at 04:31:37PM +0100, Matthew Garrett wrote:
-> On Tue, Sep 20, 2011 at 04:55:48PM -0500, Seth Forshee wrote:
-> > Hi Matthew,
-> > 
-> > Please consider merging the following patches. They represent a
-> > signficant cleanup of toshiba_acpi as well as adding support for SPFC as
-> > an HCI method. The latter provides basic but functional support for the
-> > TOS1900 devices found on newer Toshiba models, which will serve as a
-> > good starting point for further enhancements. I've tried to leave the
-> > details of the hardware interaction unchanged to reduce the risk of
-> > regression for machines already supported by the driver.
-> 
-> Great. Has this been tested on any older hardware? I'd think that the 
-> risk of regression is pretty low, but it'd be a nice sanity check. I've 
-> only got one TOS1800 type around here, and it's a 1.2GHz Pentium M, so 
-> I'd prefer to have got someone else to do it :)
+Since commit [e58aa3d2: genirq: Run irq handlers with interrupts disabled],
+We run all interrupt handlers with interrupts disabled
+and we even check and yell when an interrupt handler
+returns with interrupts enabled (see commit [b738a50a:
+genirq: Warn when handler enables interrupts]).
 
-No, I don't have any older hardware to test on, and I'm pretty sure
-Azael doesn't either. Not that I want to afflict any additional pain
-beyond what you already have from dealing with firmware all day ;)
+So now this flag is a NOOP and can be removed.
+
+Signed-off-by: Yong Zhang <yong.zhang0@gmail.com>
+---
+ drivers/platform/x86/sony-laptop.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index bbd182e..c006dee 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -3281,7 +3281,7 @@ static int sony_pic_add(struct acpi_device *device)
+ 	/* request IRQ */
+ 	list_for_each_entry_reverse(irq, &spic_dev.interrupts, list) {
+ 		if (!request_irq(irq->irq.interrupts[0], sony_pic_irq,
+-					IRQF_DISABLED, "sony-laptop", &spic_dev)) {
++					0, "sony-laptop", &spic_dev)) {
+ 			dprintk("IRQ: %d - triggering: %d - "
+ 					"polarity: %d - shr: %d\n",
+ 					irq->irq.interrupts[0],
+-- 
+1.7.4.1
