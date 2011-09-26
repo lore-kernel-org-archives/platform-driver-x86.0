@@ -1,40 +1,44 @@
-From: Yong Zhang <yong.zhang0@gmail.com>
-Subject: [PATCH 42/55] sony-laptop:irq: Remove IRQF_DISABLED
-Date: Thu, 22 Sep 2011 16:59:09 +0800
-Message-ID: <1316681962-8217-43-git-send-email-yong.zhang0@gmail.com>
-References: <1316681962-8217-1-git-send-email-yong.zhang0@gmail.com>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1316681962-8217-1-git-send-email-yong.zhang0@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc: tglx@linutronix.de, yong.zhang0@gmail.com, Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Manuel Lauss <manuel.lauss@googlemail.com>
+Subject: [PATCH] topstar-latop: ignore 0x82 event
+Date: Mon, 26 Sep 2011 15:04:54 +0200
+Message-ID: <1317042294-18251-1-git-send-email-manuel.lauss@googlemail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:51894 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750949Ab1IZNFC (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 26 Sep 2011 09:05:02 -0400
+Received: by eya28 with SMTP id 28so3560504eya.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Sep 2011 06:05:01 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Herton Ronaldo Krzesinski <herton@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, Manuel Lauss <manuel.lauss@googlemail.com>
 
-Since commit [e58aa3d2: genirq: Run irq handlers with interrupts disabled],
-We run all interrupt handlers with interrupts disabled
-and we even check and yell when an interrupt handler
-returns with interrupts enabled (see commit [b738a50a:
-genirq: Warn when handler enables interrupts]).
+Event 0x82 is emitted whenever a backlight event happens (brightness
+change, backlight on/off).  For instance, when display is switched
+off after a timeout, event 0x82 is emitted, and along with it a keypress
+which switches the display back on again.
 
-So now this flag is a NOOP and can be removed.
+This patch adds 0x82 to the event ignore list so that the display stays
+off when it is automatically switched off.
 
-Signed-off-by: Yong Zhang <yong.zhang0@gmail.com>
+Signed-off-by: Manuel Lauss <manuel.lauss@googlemail.com>
 ---
- drivers/platform/x86/sony-laptop.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ drivers/platform/x86/topstar-laptop.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index bbd182e..c006dee 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3281,7 +3281,7 @@ static int sony_pic_add(struct acpi_device *device)
- 	/* request IRQ */
- 	list_for_each_entry_reverse(irq, &spic_dev.interrupts, list) {
- 		if (!request_irq(irq->irq.interrupts[0], sony_pic_irq,
--					IRQF_DISABLED, "sony-laptop", &spic_dev)) {
-+					0, "sony-laptop", &spic_dev)) {
- 			dprintk("IRQ: %d - triggering: %d - "
- 					"polarity: %d - shr: %d\n",
- 					irq->irq.interrupts[0],
+diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
+index 4c20447..d528daa 100644
+--- a/drivers/platform/x86/topstar-laptop.c
++++ b/drivers/platform/x86/topstar-laptop.c
+@@ -41,6 +41,7 @@ static const struct key_entry topstar_keymap[] = {
+ 	{ KE_KEY, 0x8c, { KEY_MEDIA } },
+ 
+ 	/* Known non hotkey events don't handled or that we don't care yet */
++	{ KE_IGNORE, 0x82, }, /* backlight event */
+ 	{ KE_IGNORE, 0x8e, },
+ 	{ KE_IGNORE, 0x8f, },
+ 	{ KE_IGNORE, 0x90, },
 -- 
-1.7.4.1
+1.7.6.1
