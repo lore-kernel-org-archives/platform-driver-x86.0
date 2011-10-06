@@ -1,108 +1,61 @@
-From: Keng-Yu Lin <kengyu@canonical.com>
-Subject: [PATCH 2/2] thinkpad-acpi: add force_volume module parameter
-Date: Thu,  6 Oct 2011 11:52:37 +0800
-Message-ID: <1317873157-20381-2-git-send-email-kengyu@canonical.com>
-References: <1317873157-20381-1-git-send-email-kengyu@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1317873157-20381-1-git-send-email-kengyu@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keng-Yu Lin <kengyu@canonical.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: Add wireless quirk for Lenovo 3000 N200
+Date: Thu, 06 Oct 2011 16:38:34 +0800
+Message-ID: <1317890314.11626.115.camel@linux-s257.site>
+References: <1317756778-11822-1-git-send-email-seth.forshee@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from victor.provo.novell.com ([137.65.250.26]:42110 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932384Ab1JFIi6 (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Thu, 6 Oct 2011 04:38:58 -0400
+In-Reply-To: <1317756778-11822-1-git-send-email-seth.forshee@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-The force_volume module parameter forces to create the ALSA
-mixer for the blacklisted models.
+Hi Seth,=20
 
-Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
----
- Documentation/laptops/thinkpad-acpi.txt |    4 ++++
- drivers/platform/x86/thinkpad_acpi.c    |   25 +++++++++++++++++++------
- 2 files changed, 23 insertions(+), 6 deletions(-)
+=E6=96=BC =E4=BA=8C=EF=BC=8C2011-10-04 =E6=96=BC 14:32 -0500=EF=BC=8CSe=
+th Forshee =E6=8F=90=E5=88=B0=EF=BC=9A
+> This quirk fixes the wlan rfkill status on this machine. Without
+> it, wlan is permanently soft blocked whenever acer-wmi is loaded.
+>=20
+> BugLink: https://bugs.launchpad.net/bugs/865807
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c |    9 +++++++++
+>  1 files changed, 9 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index af2bb20..dac286a 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -464,6 +464,15 @@ static struct dmi_system_id acer_quirks[] =3D {
+>  		},
+>  		.driver_data =3D &quirk_lenovo_ideapad_s205,
+>  	},
+> +	{
+> +		.callback =3D dmi_matched,
+> +		.ident =3D "Lenovo 3000 N200",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "0687A31"),
+> +		},
+> +		.driver_data =3D &quirk_fujitsu_amilo_li_1718,
+> +	},
+>  	{}
+>  };
+> =20
 
-diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 6181548..8f4adce 100644
---- a/Documentation/laptops/thinkpad-acpi.txt
-+++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -1186,6 +1186,10 @@ ibm-acpi-devel@lists.sourceforge.net.
- The driver supports the standard ALSA module parameters.  If the ALSA
- mixer is disabled, the driver will disable all volume functionality.
- 
-+Some models are blacklisted from creating the ALSA interface for
-+making the mute key behave properly. To enable the ALSA interface,
-+use the module parameter "force_volume=1".
-+
- 
- Fan control and monitoring: fan speed, fan enable/disable
- ---------------------------------------------------------
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 19f0e3d..4c53e8d 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -476,9 +476,14 @@ struct tpacpi_quirk {
-  *
-  * The match criteria is: vendor, ec and bios much match.
-  */
--static unsigned long __init tpacpi_check_quirks(
-+
-+#define tpacpi_check_quirks(__qlist, __qlist_size) \
-+	_tpacpi_check_quirks(__qlist, __qlist_size, 0)
-+
-+static unsigned long __init _tpacpi_check_quirks(
- 			const struct tpacpi_quirk *qlist,
--			unsigned int qlist_size)
-+			unsigned int qlist_size,
-+			unsigned int skip_quirk)
- {
- 	while (qlist_size) {
- 		if ((qlist->vendor == thinkpad_id.vendor ||
-@@ -486,9 +491,9 @@ static unsigned long __init tpacpi_check_quirks(
- 		    (qlist->bios == thinkpad_id.bios_model ||
- 				qlist->bios == TPACPI_MATCH_ANY) &&
- 		    (qlist->ec == thinkpad_id.ec_model ||
--				qlist->ec == TPACPI_MATCH_ANY))
-+				qlist->ec == TPACPI_MATCH_ANY) &&
-+		    (qlist->quirks != skip_quirk))
- 			return qlist->quirks;
--
- 		qlist_size--;
- 		qlist++;
- 	}
-@@ -6879,6 +6884,8 @@ static const struct tpacpi_quirk volume_quirk_table[] __initconst = {
- 	  .quirks = TPACPI_VOL_Q_MUTEONLY }
- };
- 
-+static uint alsa_force_volume;
-+
- static int __init volume_init(struct ibm_init_struct *iibm)
- {
- 	unsigned long quirks;
-@@ -6908,12 +6915,15 @@ static int __init volume_init(struct ibm_init_struct *iibm)
- 	quirks = tpacpi_check_quirks(volume_quirk_table,
- 				     ARRAY_SIZE(volume_quirk_table));
- 
--	if (quirks & TPACPI_VOL_Q_BLACKLIST) {
-+	if (!alsa_force_volume && (quirks & TPACPI_VOL_Q_BLACKLIST)) {
- 		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_MIXER,
- 			"ALSA mixer blacklisted for this model, "
- 			"not loading volume subdriver...\n");
- 		return 1;
--	}
-+	} else
-+		quirks = _tpacpi_check_quirks(volume_quirk_table,
-+					     ARRAY_SIZE(volume_quirk_table),
-+					     TPACPI_VOL_Q_BLACKLIST);
- 
- 	/*
- 	 * The ALSA mixer is our primary interface.
-@@ -8884,6 +8894,9 @@ module_param_named(id, alsa_id, charp, 0444);
- MODULE_PARM_DESC(id, "ALSA id for the ACPI EC Mixer");
- module_param_named(enable, alsa_enable, bool, 0444);
- MODULE_PARM_DESC(enable, "Enable the ALSA interface for the ACPI EC Mixer");
-+module_param_named(force_volume, alsa_force_volume, uint, 0444);
-+MODULE_PARM_DESC(force_volume, "Force to enable the ALSA interface "
-+				"on the blacklisted machines");
- #endif /* CONFIG_THINKPAD_ACPI_ALSA_SUPPORT */
- 
- #define TPACPI_PARAM(feature) \
--- 
-1.7.5.4
+Simple applied and tested on my acer machine, no problem!
+
+Reviewed-by: Lee, Chun-Yi <jlee@novell.com>
+
+Thank's for your patch!
+Joey Lee
