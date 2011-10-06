@@ -1,61 +1,67 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: Add wireless quirk for Lenovo 3000 N200
-Date: Thu, 06 Oct 2011 16:38:34 +0800
-Message-ID: <1317890314.11626.115.camel@linux-s257.site>
-References: <1317756778-11822-1-git-send-email-seth.forshee@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH] acer-wmi: replaced the hard coded bitmap by the communication devices bitmap from SMBIOS
+Date: Thu,  6 Oct 2011 19:06:13 +0800
+Message-ID: <1317899173-8536-1-git-send-email-jlee@suse.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:42110 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932384Ab1JFIi6 (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Thu, 6 Oct 2011 04:38:58 -0400
-In-Reply-To: <1317756778-11822-1-git-send-email-seth.forshee@canonical.com>
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:57923 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S935288Ab1JFLG0 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 6 Oct 2011 07:06:26 -0400
+Received: by ywb5 with SMTP id 5so2447241ywb.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Oct 2011 04:06:26 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Seth Forshee <seth.forshee@canonical.com>
-Cc: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-Hi Seth,=20
+Before set communication devices state, we need query out all devices state to set
+the states bitmap. That will be better use the devices bitmap in SMBIOS type Aah
+instead of hardcode in driver.
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2011-10-04 =E6=96=BC 14:32 -0500=EF=BC=8CSe=
-th Forshee =E6=8F=90=E5=88=B0=EF=BC=9A
-> This quirk fixes the wlan rfkill status on this machine. Without
-> it, wlan is permanently soft blocked whenever acer-wmi is loaded.
->=20
-> BugLink: https://bugs.launchpad.net/bugs/865807
-> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-> ---
->  drivers/platform/x86/acer-wmi.c |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index af2bb20..dac286a 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -464,6 +464,15 @@ static struct dmi_system_id acer_quirks[] =3D {
->  		},
->  		.driver_data =3D &quirk_lenovo_ideapad_s205,
->  	},
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Lenovo 3000 N200",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "0687A31"),
-> +		},
-> +		.driver_data =3D &quirk_fujitsu_amilo_li_1718,
-> +	},
->  	{}
->  };
-> =20
+Tested on Acer Travelmate 8572.
 
-Simple applied and tested on my acer machine, no problem!
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
 
-Reviewed-by: Lee, Chun-Yi <jlee@novell.com>
-
-Thank's for your patch!
-Joey Lee
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 5130c63..9fb9486 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -206,6 +206,7 @@ static int threeg = -1;
+ static int force_series;
+ static bool ec_raw_mode;
+ static bool has_type_aa;
++static u16 commun_func_bitmap;
+ 
+ module_param(mailled, int, 0444);
+ module_param(brightness, int, 0444);
+@@ -946,10 +947,7 @@ static acpi_status wmid3_set_device_status(u32 value, u16 device)
+ 	struct wmid3_gds_input_param params = {
+ 		.function_num = 0x1,
+ 		.hotkey_number = 0x01,
+-		.devices = ACER_WMID3_GDS_WIRELESS |
+-				ACER_WMID3_GDS_THREEG |
+-				ACER_WMID3_GDS_WIMAX |
+-				ACER_WMID3_GDS_BLUETOOTH,
++		.devices = commun_func_bitmap,
+ 	};
+ 	struct acpi_buffer input = {
+ 		sizeof(struct wmid3_gds_input_param),
+@@ -1053,6 +1051,7 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
+ 
+ 	pr_info("Function bitmap for Communication Button: 0x%x\n",
+ 		type_aa->commun_func_bitmap);
++	commun_func_bitmap = type_aa->commun_func_bitmap;
+ 
+ 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_WIRELESS)
+ 		interface->capability |= ACER_CAP_WIRELESS;
+-- 
+1.6.0.2
