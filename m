@@ -1,62 +1,30 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] WMI: properly cleanup devices to avoid crashes
-Date: Thu, 6 Oct 2011 15:40:44 -0700
-Message-ID: <20111006224044.GB30738@core.coreip.homeip.net>
-References: <20110907220002.GB7104@core.coreip.homeip.net>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: Alternate platform-x86 git tree ?
+Date: Fri, 7 Oct 2011 07:53:17 +0200
+Message-ID: <CAHR064hwE+jSpdmiR10Xuv2X6YTkhPchNUXV7ogqZFuEGA_jhA@mail.gmail.com>
+References: <CAHR064gvnsJ+-DUfzjs4buUB3x6L9nLWmR=gEZ6UGO-t=KvJyA@mail.gmail.com>
+	<20110916154552.GA1424@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:62295 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752290Ab1JFWku (ORCPT
+Received: from mail-pz0-f42.google.com ([209.85.210.42]:35612 "EHLO
+	mail-pz0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757245Ab1JGFxS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 6 Oct 2011 18:40:50 -0400
-Received: by iakk32 with SMTP id k32so3455578iak.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Oct 2011 15:40:50 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20110907220002.GB7104@core.coreip.homeip.net>
+	Fri, 7 Oct 2011 01:53:18 -0400
+Received: by pzk1 with SMTP id 1so8802218pzk.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Oct 2011 22:53:18 -0700 (PDT)
+In-Reply-To: <20110916154552.GA1424@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Colin Ian King <colin.king@canonical.com>, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Anisse Astier <anisse@astier.eu>
 
-On Wed, Sep 07, 2011 at 03:00:02PM -0700, Dmitry Torokhov wrote:
-> We need to remove devices that we destroy from the list, otherwise
-> we'll crash if there are more than one "_WDG" methods in DSDT.
-> 
-> This fixes https://bugzilla.kernel.org/show_bug.cgi?id=32052
-> 
-> Tested-by: Ilya Tumaykin <librarian_rus@yahoo.com>
-> Cc: stable@kernel.org
-> Signed-off-by: Dmitry Torokhov <dtor@mail.ru>
-> ---
+On Fri, Sep 16, 2011 at 5:45 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> Not yet. I'll try to push one somewhere this weekend.
 
-* ping *
-
-> 
->  drivers/platform/x86/wmi.c |    6 +++++-
->  1 files changed, 5 insertions(+), 1 deletions(-)
-> 
-> 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index f23d5a8..9b88be4 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -754,9 +754,13 @@ static void wmi_free_devices(void)
->  	struct wmi_block *wblock, *next;
->  
->  	/* Delete devices for all the GUIDs */
-> -	list_for_each_entry_safe(wblock, next, &wmi_block_list, list)
-> +	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
-> +		list_del(&wblock->list);
->  		if (wblock->dev.class)
->  			device_unregister(&wblock->dev);
-> +		else
-> +			kfree(wblock);
-> +	}
->  }
->  
->  static bool guid_already_parsed(const char *guid_string)
+git.kernel.org is back online we don't really need an alternate tree anymore.
 
 -- 
-Dmitry
+Corentin Chary
+http://xf.iksaif.net
