@@ -1,82 +1,68 @@
-From: Jason Stubbs <jasonbstubbs@gmail.com>
-Subject: Re: [PATCH] Platform: Detect samsung laptop quirk when initial level
- is zero
-Date: Thu, 13 Oct 2011 21:59:47 +1100
-Message-ID: <4E96C4A3.4070504@gmail.com>
-References: <CAPjEYUJ6YtJGdhgxZioDaUbBm0-GWe4j1D5viE3S1zY+Pp+fjA@mail.gmail.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: blacklist Thinkpad edge E520
+Date: Fri, 14 Oct 2011 00:35:59 +0800
+Message-ID: <1318523759.1913.68.camel@linux-s257.site>
+References: <1318488718-4744-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:43499 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754277Ab1JMK7x (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Oct 2011 06:59:53 -0400
-In-Reply-To: <CAPjEYUJ6YtJGdhgxZioDaUbBm0-GWe4j1D5viE3S1zY+Pp+fjA@mail.gmail.com>
+Received: from victor.provo.novell.com ([137.65.250.26]:34991 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753538Ab1JMQgj (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Thu, 13 Oct 2011 12:36:39 -0400
+In-Reply-To: <1318488718-4744-1-git-send-email-ike.pan@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: John Serock <john.serock@gmail.com>
-Cc: gregkh@suse.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Joey Lee <jlee@novell.com>
 
-On 13/10/11 9:42 PM, John Serock wrote:
-> From: John Serock <john.serock@gmail.com>
-> 
-> This patch depends on the "Platform: Brightness quirk for samsung
-> laptop driver" patch from Jason Stubbs. This patch adds a check for an
-> initial brightness level of 0; if the level is 0, this patch changes
-> the brightness level to 1 before the driver attempts to detect the
-> brightness quirk.
-> 
-> The Samsung N150 netbook experiences the brightness quirk. Without
-> Jason's patch, the only brightness levels available on the N150 are 0,
-> 1, and 8. This patch ensures that, when the initial brightness level
-> is 0, the samsang-laptop driver detects the brightness quirk on the
-> N150, thereby making brightness levels 0 through 8 available.
-> 
-> Signed-off-by: John Serock <john.serock@gmail.com>
-> 
+Hi Ike,=20
+
+=E6=96=BC =E5=9B=9B=EF=BC=8C2011-10-13 =E6=96=BC 14:51 +0800=EF=BC=8CIk=
+e Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
+> BugLink: http://launchpad.net/bugs/836865
+> BugLink: http://launchpad.net/bugs/826784
+>=20
+> There are reports say that acer-wmi is loaded on Thinkpad E520 which
+> cause wireless connection hard blocked and we can not unblock it. It
+> will be better not to load acer-wmi on this machine.
+>=20
+> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
 > ---
-> diff -uprN a/drivers/platform/x86/samsung-laptop.c
-> b/drivers/platform/x86/samsung-laptop.c
-> --- a/drivers/platform/x86/samsung-laptop.c	2011-10-12 13:51:15.030779179 -0400
-> +++ b/drivers/platform/x86/samsung-laptop.c	2011-10-12 13:51:32.746867045 -0400
-> @@ -404,8 +404,9 @@ static int get_brightness(struct backlig
-> 
->  static void check_for_stepping_quirk(void)
->  {
-> -	u8 initial_level = read_brightness();
-> +	u8 initial_level;
->  	u8 check_level;
-> +	u8 orig_level = read_brightness();
-> 
->  	/*
->  	 * Some laptops exhibit the strange behaviour of stepping toward
-> @@ -414,6 +415,11 @@ static void check_for_stepping_quirk(voi
->  	 * around in set_brightness.
->  	 */
-> 
-> +	if (orig_level == 0)
-> +		set_brightness(1);
-> +
-> +	initial_level = read_brightness();
-> +
->  	if (initial_level <= 2)
->  		check_level = initial_level + 2;
->  	else
-> @@ -427,7 +433,7 @@ static void check_for_stepping_quirk(voi
->  		pr_info("enabled workaround for brightness stepping quirk\n");
->  	}
-> 
-> -	set_brightness(initial_level);
-> +	set_brightness(orig_level);
->  }
-> 
->  static int update_status(struct backlight_device *bd)
+>  drivers/platform/x86/acer-wmi.c |    7 +++++++
+>  1 files changed, 7 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index af2bb20..dc9a116 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -325,6 +325,13 @@ static struct dmi_system_id __devinitdata acer_b=
+lacklist[] =3D {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
+>  		},
+>  	},
+> +	{
+> +		.ident =3D "Lenovo Thinkpad Edge E520",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "114320U"),
+> +		},
+> +	},
+>  	{}
+>  };
+> =20
 
-Acked-by: Jason Stubbs <jasonbstubbs@gmail.com>
+Could you please share Thinkpad edge E520's acpidump and dmidecode log
+to me?=20
+Maybe we can capture how does it works with EC register like we support
+Ideapad S205 in acer-wmi driver.
 
-Thanks!
+Add a machine to blacklist is a last resort, I don't want to accept it
+before we try.
 
-Regards,
-Jason Stubbs
+
+Thank's a lot!
+Joey Lee
