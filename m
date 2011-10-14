@@ -1,88 +1,41 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] acer-wmi: blacklist Thinkpad edge E520
-Date: Fri, 14 Oct 2011 10:48:39 +0800
-Message-ID: <4E97A307.20208@canonical.com>
-References: <1318488718-4744-1-git-send-email-ike.pan@canonical.com> <1318523759.1913.68.camel@linux-s257.site>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH 0/8] Pegatron Lucid series for asus-laptop
+Date: Fri, 14 Oct 2011 11:13:34 +0200
+Message-ID: <1318583622-23518-1-git-send-email-corentincj@iksaif.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:34093 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751849Ab1JNCsr (ORCPT
+Received: from smtp5-g21.free.fr ([212.27.42.5]:51012 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752667Ab1JNJIZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Oct 2011 22:48:47 -0400
-In-Reply-To: <1318523759.1913.68.camel@linux-s257.site>
+	Fri, 14 Oct 2011 05:08:25 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Joey Lee <jlee@novell.com>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Anisse Astier <anisse@astier.eu>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Ross <andy.ross@windriver.com>, Corentin Chary <corentincj@iksaif.net>
 
-Hi Joey,
+Hi,
+This is a series of patch that were staging in my tree for
+way too long. I hope they will make it to the next merge window.
+Thanks,
 
-Here you are.
+Andy Ross (4):
+  asus-laptop: Platform detection for Pegatron Lucid
+  asus-laptop: Pegatron Lucid ALS sensor
+  asus-laptop: allow boot time control of Pegatron ALS sensor
+  asus-laptop: Pegatron Lucid accelerometer
 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/836865/+attachment=
-/2330828/+files/AcpiTables.txt
+Anisse Astier (2):
+  asus-laptop: pega_accel - Report accelerometer orientation change
+    through udev
+  asus-laptop: Add rfkill support for Pegatron Lucid tablet
 
+Corentin Chary (2):
+  asus-laptop: hide leds on Pegatron Lucid
+  asus-laptop: fix module description
 
-On 10/14/2011 12:35 AM, joeyli wrote:
-> Hi Ike,=20
->=20
-> =E6=96=BC =E5=9B=9B=EF=BC=8C2011-10-13 =E6=96=BC 14:51 +0800=EF=BC=8C=
-Ike Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
->> BugLink: http://launchpad.net/bugs/836865
->> BugLink: http://launchpad.net/bugs/826784
->>
->> There are reports say that acer-wmi is loaded on Thinkpad E520 which
->> cause wireless connection hard blocked and we can not unblock it. It
->> will be better not to load acer-wmi on this machine.
->>
->> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
->> ---
->>  drivers/platform/x86/acer-wmi.c |    7 +++++++
->>  1 files changed, 7 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/=
-acer-wmi.c
->> index af2bb20..dc9a116 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -325,6 +325,13 @@ static struct dmi_system_id __devinitdata acer_=
-blacklist[] =3D {
->>  			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
->>  		},
->>  	},
->> +	{
->> +		.ident =3D "Lenovo Thinkpad Edge E520",
->> +		.matches =3D {
->> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> +			DMI_MATCH(DMI_PRODUCT_NAME, "114320U"),
->> +		},
->> +	},
->>  	{}
->>  };
->> =20
->=20
-> Could you please share Thinkpad edge E520's acpidump and dmidecode lo=
-g
-> to me?=20
-> Maybe we can capture how does it works with EC register like we suppo=
-rt
-> Ideapad S205 in acer-wmi driver.
->=20
-> Add a machine to blacklist is a last resort, I don't want to accept i=
-t
-> before we try.
->=20
->=20
-> Thank's a lot!
-> Joey Lee
->=20
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+ drivers/platform/x86/Kconfig       |   19 +-
+ drivers/platform/x86/asus-laptop.c |  366 ++++++++++++++++++++++++++++++++++--
+ 2 files changed, 363 insertions(+), 22 deletions(-)
+
+-- 
+1.7.3.4
