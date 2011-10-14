@@ -1,7 +1,8 @@
 From: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 6/8] asus-laptop: fix module description
-Date: Fri, 14 Oct 2011 11:13:40 +0200
-Message-ID: <1318583622-23518-7-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 7/8] asus-laptop: pega_accel - Report
+	accelerometer orientation change through udev
+Date: Fri, 14 Oct 2011 11:13:41 +0200
+Message-ID: <1318583622-23518-8-git-send-email-corentincj@iksaif.net>
 References: <1318583622-23518-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,44 +21,33 @@ To: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anisse Astier <anisse-fwwRqrJYcP2HXe+LvDLADg@public.gmane.org>, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Ross <andy.ross-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Anisse Astier <anisse-fwwRqrJYcP2HXe+LvDLADg@public.gmane.org>
 
+Signed-off-by: Anisse Astier <anisse-fwwRqrJYcP2HXe+LvDLADg@public.gmane.org>
 Signed-off-by: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/platform/x86/asus-laptop.c |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/asus-laptop.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 168084e..d67b7b5 100644
+index d67b7b5..0dfd162 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -90,22 +90,22 @@ static int als_status;
- module_param(wlan_status, int, 0444);
- MODULE_PARM_DESC(wlan_status, "Set the wireless status on boot "
- 		 "(0 = disabled, 1 = enabled, -1 = don't do anything). "
--		 "default is 1");
-+		 "default is -1");
+@@ -1342,6 +1342,14 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
+ 		}
+ 		return ;
+ 	}
++
++	/* Accelerometer "coarse orientation change" event */
++	if (asus->pega_accel_poll && event == 0xEA) {
++		kobject_uevent(&asus->pega_accel_poll->input->dev.kobj,
++			       KOBJ_CHANGE);
++		return ;
++	}
++
+ 	asus_input_notify(asus, event);
+ }
  
- module_param(bluetooth_status, int, 0444);
- MODULE_PARM_DESC(bluetooth_status, "Set the wireless status on boot "
- 		 "(0 = disabled, 1 = enabled, -1 = don't do anything). "
--		 "default is 1");
-+		 "default is -1");
- 
- module_param(wimax_status, int, 0444);
- MODULE_PARM_DESC(wimax_status, "Set the wireless status on boot "
- 		 "(0 = disabled, 1 = enabled, -1 = don't do anything). "
--		 "default is 1");
-+		 "default is -1");
- 
- module_param(wwan_status, int, 0444);
- MODULE_PARM_DESC(wwan_status, "Set the wireless status on boot "
- 		 "(0 = disabled, 1 = enabled, -1 = don't do anything). "
--		 "default is 1");
-+		 "default is -1");
- 
- module_param(als_status, int, 0444);
- MODULE_PARM_DESC(als_status, "Set the ALS status on boot "
 -- 
 1.7.3.4
 
