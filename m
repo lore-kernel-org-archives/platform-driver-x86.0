@@ -1,22 +1,50 @@
-From: John Hughes <john@calvaedi.com>
+From: Mattia Dongili <malattia@linux.it>
 Subject: Re: sony-laptop driver: Volume keys on Sony Vaio TX3 don't work
-Date: Mon, 17 Oct 2011 01:17:00 +0200
-Message-ID: <4E9B65EC.7020303@calvaedi.com>
-References: <4E9ABBF6.3000504@calvaedi.com> <4E9ADBD3.4070404@calvaedi.com> <4E9B182A.3020101@calvaedi.com> <74494.1318789218@turing-police.cc.vt.edu>            <20111016213800.GA12703@kamineko.org> <81436.1318801813@turing-police.cc.vt.edu>
+Date: Tue, 18 Oct 2011 06:43:27 +0900
+Message-ID: <20111017214326.GA1311@kamineko.org>
+References: <4E9ABBF6.3000504@calvaedi.com>
+ <4E9ADBD3.4070404@calvaedi.com>
+ <4E9B182A.3020101@calvaedi.com>
+ <74494.1318789218@turing-police.cc.vt.edu>
+ <20111016213800.GA12703@kamineko.org>
+ <81436.1318801813@turing-police.cc.vt.edu>
+ <4E9B65EC.7020303@calvaedi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <81436.1318801813@turing-police.cc.vt.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Valdis.Kletnieks@vt.edu
-Cc: Mattia Dongili <malattia@linux.it>, John Hughes <john@Calva.COM>, linux-kernel@vger.kernel.org, Stelian Pop <stelian@popies.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:43334 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754371Ab1JQVnb (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 17 Oct 2011 17:43:31 -0400
+Content-Disposition: inline
+In-Reply-To: <4E9B65EC.7020303@calvaedi.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: John Hughes <john@calvaedi.com>
+Cc: Valdis.Kletnieks@vt.edu, John Hughes <john@Calva.COM>, linux-kernel@vger.kernel.org, Stelian Pop <stelian@popies.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-On 10/16/2011 11:50 PM, Valdis.Kletnieks@vt.edu wrote:
->
-> And let me guess - two phase hotkey decoding is sufficiently weird that
-> nobody wants to actually fix *that* code, right? (Rhetorical question, I
-> already know the answer to that one).
->    
-Ok, what is "two phase hotkey decoding?"
+On Mon, Oct 17, 2011 at 01:17:00AM +0200, John Hughes wrote:
+> On 10/16/2011 11:50 PM, Valdis.Kletnieks@vt.edu wrote:
+> >
+> >And let me guess - two phase hotkey decoding is sufficiently weird that
+> >nobody wants to actually fix *that* code, right? (Rhetorical question, I
+> >already know the answer to that one).
+> Ok, what is "two phase hotkey decoding?"
+
+basically the driver receives in IRQ, reads from the IO port a value
+that turns out to be a generic value that means "got a hotkey" and needs
+to write one more command to the IO port and wait for another IRQ that
+potentially has the information about what hotkey was pressed.
+
+The part we're currently missing is what to write to the IO port for
+some models.
+
+See type3_handle_irq in the source and type3_events: most of those with
+data=0x05 require extra handling that we are not doing. 
+On the second IRQ you get some data=0x31 and the actual event.
+
+Hope it's clearer.
+-- 
+mattia
+:wq!
