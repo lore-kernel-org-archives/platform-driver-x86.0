@@ -1,38 +1,41 @@
 From: John Hughes <john@Calva.COM>
 Subject: Re: sony-laptop driver: Volume keys on Sony Vaio TX3 don't work
-Date: Tue, 18 Oct 2011 11:02:35 +0200
-Message-ID: <4E9D40AB.2060009@Calva.COM>
-References: <4E9ABBF6.3000504@calvaedi.com> <4E9ADBD3.4070404@calvaedi.com> <4E9B182A.3020101@calvaedi.com> <74494.1318789218@turing-police.cc.vt.edu> <20111016213800.GA12703@kamineko.org> <81436.1318801813@turing-police.cc.vt.edu> <4E9B65EC.7020303@calvaedi.com> <20111017214326.GA1311@kamineko.org>
+Date: Tue, 18 Oct 2011 11:07:17 +0200
+Message-ID: <4E9D41C5.70902@Calva.COM>
+References: <4E9ABBF6.3000504@calvaedi.com> <4E9ADBD3.4070404@calvaedi.com> <4E9B182A.3020101@calvaedi.com> <74494.1318789218@turing-police.cc.vt.edu> <20111016213800.GA12703@kamineko.org> <81436.1318801813@turing-police.cc.vt.edu> <20111017214543.GB1311@kamineko.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20111017214326.GA1311@kamineko.org>
+In-Reply-To: <20111017214543.GB1311@kamineko.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mattia Dongili <malattia@linux.it>
 Cc: Valdis.Kletnieks@vt.edu, linux-kernel@vger.kernel.org, Stelian Pop <stelian@popies.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 17/10/11 23:43, Mattia Dongili wrote:
-> On Mon, Oct 17, 2011 at 01:17:00AM +0200, John Hughes wrote:
+On 17/10/11 23:45, Mattia Dongili wrote:
+> On Sun, Oct 16, 2011 at 05:50:13PM -0400, Valdis.Kletnieks@vt.edu wrote:
 >    
->> Ok, what is "two phase hotkey decoding?"
+>> On Mon, 17 Oct 2011 06:38:01 +0900, Mattia Dongili said:
 >>      
-> basically the driver receives in IRQ, reads from the IO port a value
-> that turns out to be a generic value that means "got a hotkey" and needs
-> to write one more command to the IO port and wait for another IRQ that
-> potentially has the information about what hotkey was pressed.
->
-> The part we're currently missing is what to write to the IO port for
-> some models.
->
-> See type3_handle_irq in the source and type3_events: most of those with
-> data=0x05 require extra handling that we are not doing.
-> On the second IRQ you get some data=0x31 and the actual event.
+>> If that's not an option, perhaps we need a per-model quirk that patches up the
+>> tables at boot time?  If we do that, we may want to re-arrange the table so the
+>> affected entries are at the front or something to help insure we don't patch
+>> the wrong entries if somebody else inserts new lines.
+>>      
+> Wouldn't udev do that already?
+> We may actually want to remove those events that never get looked up in
+> the tables instead.
 >
 >    
-Oh, I see.
+udev does have some per-model stuff for the Vaio's.
 
-Poking around in the dark.  What fun.
+Doesn't work right because the scancodes reported the sony-laptop driver 
+are not the right ones.
 
-I'll see if I can think of any useful experiments.
+(sony-laptop sends its "event" code as the scancode, but to change the 
+keymap you have to use the index in the sony_laptop_input_keycode_map 
+table.  I have posted one patch for this which makes the scancodes at 
+least consistent but I think I'll do another that makes them be the same 
+as what current udev thinks they should be.  I'll have that ready this 
+evening I thing - have to work now :-( )
