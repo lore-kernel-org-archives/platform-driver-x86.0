@@ -1,45 +1,95 @@
-From: Yong Zhang <yong.zhang0@gmail.com>
-Subject: [PATCH 38/49] sony-laptop:irq: Remove IRQF_DISABLED
-Date: Sat, 22 Oct 2011 17:56:50 +0800
-Message-ID: <1319277421-9203-39-git-send-email-yong.zhang0@gmail.com>
-References: <1319277421-9203-1-git-send-email-yong.zhang0@gmail.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: blacklist Thinkpad edge E520
+Date: Tue, 25 Oct 2011 06:20:31 +0800
+Message-ID: <1319494831.17773.153.camel@linux-s257.site>
+References: <1318488718-4744-1-git-send-email-ike.pan@canonical.com>
+	 <1318523759.1913.68.camel@linux-s257.site>  <4E97A307.20208@canonical.com>
+	 <1318902491.1913.348.camel@linux-s257.site>  <4E9CE262.60601@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:47030 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751918Ab1JVKOw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 22 Oct 2011 06:14:52 -0400
-In-Reply-To: <1319277421-9203-1-git-send-email-yong.zhang0@gmail.com>
+Received: from victor.provo.novell.com ([137.65.250.26]:60553 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752094Ab1JXWVh (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Mon, 24 Oct 2011 18:21:37 -0400
+In-Reply-To: <4E9CE262.60601@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Joey Lee <jlee@novell.com>
 
-Since commit [e58aa3d2: genirq: Run irq handlers with interrupts disabled],
-We run all interrupt handlers with interrupts disabled
-and we even check and yell when an interrupt handler
-returns with interrupts enabled (see commit [b738a50a:
-genirq: Warn when handler enables interrupts]).
+Hi Ike,=20
 
-So now this flag is a NOOP and can be removed.
+=E6=96=BC =E4=BA=8C=EF=BC=8C2011-10-18 =E6=96=BC 10:20 +0800=EF=BC=8CIk=
+e Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi Joey,
+>=20
+> On 10/18/2011 09:48 AM, joeyli wrote:
+> > Hi Ike,=20
+> >=20
+> > Could you please attached on the "rfkill list" output when press Fn=
+ key?
+> > Then we can check the rfkill status change.
+>=20
+> The output of rfkill list is at
+>   https://launchpadlibrarian.net/78485925/RfKill.txt
+>=20
+> .. and bug reporter tells me that he can not unblock wireless.
+>   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/836865/comment=
+s/0
+>=20
+> >=20
+> > And,=20
+> > Thinkpad E520 have AMW0 method and I thought acer-wmi query wrong E=
+C
+> > register address so your acer-wireless was always soft-blocked.
+> >=20
+> > Does it possible kindly help me to find out which register on E520 =
+is
+> > mapping to wireless status? Please reference to Carlos's acer_ec.pl
+> > tool:
+> >=20
+> > http://code.google.com/p/aceracpi/wiki/EmbeddedController
+> >=20
+> > Simple use:
+> >         watch -n 1 perl acer_ec.pl regs
+> >=20
+> > Then press your wireless Fn key to monitor which register changed w=
+hen
+> > you press Fn key:
+> >=20
+> > e.g. the register at row B0 and column 0A is register 0xBA (0x is u=
+sed
+> > to indicate this is a hexadecimal number).
+> >=20
+> > There maybe have other EC register changing when you press key, ple=
+ase
+> > do a couple of times and make sure you find out the right one.
+> >=20
+> > If we are lucky, we can find out one EC register mapping to your
+> > wireless state.
+>=20
+> I've asked bug reporter to do so. Unfortunately nothing useful found.
+>=20
+> Please refer to the link below:
+>   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/836865/comment=
+s/13
+>   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/836865/comment=
+s/14
+>=20
+> The full discussion is at
+>   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/836865
+>=20
 
-Signed-off-by: Yong Zhang <yong.zhang0@gmail.com>
----
- drivers/platform/x86/sony-laptop.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Bad!=20
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index bbd182e..c006dee 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -3281,7 +3281,7 @@ static int sony_pic_add(struct acpi_device *device)
- 	/* request IRQ */
- 	list_for_each_entry_reverse(irq, &spic_dev.interrupts, list) {
- 		if (!request_irq(irq->irq.interrupts[0], sony_pic_irq,
--					IRQF_DISABLED, "sony-laptop", &spic_dev)) {
-+					0, "sony-laptop", &spic_dev)) {
- 			dprintk("IRQ: %d - triggering: %d - "
- 					"polarity: %d - shr: %d\n",
- 					irq->irq.interrupts[0],
--- 
-1.7.1
+I also didn't see useful things from DSDT, looks like the control
+doesn't through EC.
+
+Let's add this device to blacklist!
+
+
+Thank's
+Joey Lee
