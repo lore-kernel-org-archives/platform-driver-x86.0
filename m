@@ -1,82 +1,57 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] acer-wmi: blacklist Thinkpad edge E520
-Date: Tue, 25 Oct 2011 10:57:36 +0800
-Message-ID: <4EA625A0.6090909@canonical.com>
-References: <1318488718-4744-1-git-send-email-ike.pan@canonical.com> <1319494967.17773.156.camel@linux-s257.site> <20111024231329.GA25993@redhat.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH 0/6] toshiba_acpi: Cleanup and TOS1900 device support
+Date: Wed, 26 Oct 2011 08:54:32 -0500
+Message-ID: <20111026135432.GA31917@thinkpad-t410>
+References: <1316555754-25949-1-git-send-email-seth.forshee@canonical.com>
+ <20110921153137.GA26436@srcf.ucam.org>
+ <20110921161043.GC29983@thinkpad-t410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:48183 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:52013 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754068Ab1JYC5p (ORCPT
+	with ESMTP id S932680Ab1JZNyg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Oct 2011 22:57:45 -0400
-In-Reply-To: <20111024231329.GA25993@redhat.com>
+	Wed, 26 Oct 2011 09:54:36 -0400
+Content-Disposition: inline
+In-Reply-To: <20110921161043.GC29983@thinkpad-t410>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dave Jones <davej@redhat.com>, joeyli <jlee@suse.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Joey Lee <jlee@novell.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 10/25/2011 07:13 AM, Dave Jones wrote:
-> On Tue, Oct 25, 2011 at 06:22:47AM +0800, joeyli wrote:
->  > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-10-13 =E6=96=BC 14:51 +0800=EF=BC=
-=8CIke Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
->  > > BugLink: http://launchpad.net/bugs/836865
->  > > BugLink: http://launchpad.net/bugs/826784
->  > >=20
->  > > There are reports say that acer-wmi is loaded on Thinkpad E520 w=
-hich
->  > > cause wireless connection hard blocked and we can not unblock it=
-=2E It
->  > > will be better not to load acer-wmi on this machine.
->  > >=20
->  > > Signed-off-by: Ike Panhc <ike.pan@canonical.com>
->  > > ---
->  > >  drivers/platform/x86/acer-wmi.c |    7 +++++++
->  > >  1 files changed, 7 insertions(+), 0 deletions(-)
->  > >=20
->  > > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/=
-x86/acer-wmi.c
->  > > index af2bb20..dc9a116 100644
->  > > --- a/drivers/platform/x86/acer-wmi.c
->  > > +++ b/drivers/platform/x86/acer-wmi.c
->  > > @@ -325,6 +325,13 @@ static struct dmi_system_id __devinitdata a=
-cer_blacklist[] =3D {
->  > >  			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
->  > >  		},
->  > >  	},
->  > > +	{
->  > > +		.ident =3D "Lenovo Thinkpad Edge E520",
->  > > +		.matches =3D {
->  > > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->  > > +			DMI_MATCH(DMI_PRODUCT_NAME, "114320U"),
->  > > +		},
->  > > +	},
->  > >  	{}
->  > >  };
->  > > =20
->  >=20
->  > Unfortunately didn't see any useful EC register for unblock wifi r=
-fkill in acer-wmi, let's=20
->  > add this device to blacklist.
->  >=20
->  > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
->=20
-> We've seen similar reports from other Lenovo machines & acer-wmi in F=
-edora bugzilla.
-> https://bugzilla.redhat.com/show_bug.cgi?id=3D674353 for example has =
-people reporting
-> the b450 and V460 also suffer the same issue.
->=20
-> (There are also a bunch of bug reports from the other *-wmi modules o=
-n various hardware.
-> It seems these modules really upset rfkill).
->=20
-> 	Dave
->=20
+On Wed, Sep 21, 2011 at 11:10:44AM -0500, Seth Forshee wrote:
+> On Wed, Sep 21, 2011 at 04:31:37PM +0100, Matthew Garrett wrote:
+> > On Tue, Sep 20, 2011 at 04:55:48PM -0500, Seth Forshee wrote:
+> > > Hi Matthew,
+> > > 
+> > > Please consider merging the following patches. They represent a
+> > > signficant cleanup of toshiba_acpi as well as adding support for SPFC as
+> > > an HCI method. The latter provides basic but functional support for the
+> > > TOS1900 devices found on newer Toshiba models, which will serve as a
+> > > good starting point for further enhancements. I've tried to leave the
+> > > details of the hardware interaction unchanged to reduce the risk of
+> > > regression for machines already supported by the driver.
+> > 
+> > Great. Has this been tested on any older hardware? I'd think that the 
+> > risk of regression is pretty low, but it'd be a nice sanity check. I've 
+> > only got one TOS1800 type around here, and it's a 1.2GHz Pentium M, so 
+> > I'd prefer to have got someone else to do it :)
+> 
+> No, I don't have any older hardware to test on, and I'm pretty sure
+> Azael doesn't either. Not that I want to afflict any additional pain
+> beyond what you already have from dealing with firmware all day ;)
 
-I've tried to find a way to prevent acer-wmi loaded if VPC2004 found in=
- DSDT. Thinking twice, seems to do this in kernel is not a good idea be=
-cause if acer-wmi is necessary in one model of ideapads then we need to=
- re-compile kernel for testing. I think it will be better to do this in=
- udev if possible.
+I managed to find some volunteers with machines that use the GHCI
+interface to do some regression testing for me. They aren't exactly
+older hardware, all of them with TOS6208 and being made within the last
+2 or 3 years. But it's the best I could do.
+
+None of the machines tested showed any regressions as a result of these
+patches. I also got testing of using the INFO method to read hotkey
+scancodes, and that's working on those machines as well. (I did however
+find that I had to reintroduce the global toshiba_acpi pointer for the
+i8042 filter, since it doesn't have any mechanism for passing private
+data to the callback.)
+
+Any chance of seeing these patches in 3.2?
