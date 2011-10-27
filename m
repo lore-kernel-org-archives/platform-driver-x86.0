@@ -1,47 +1,29 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 0/6] toshiba_acpi: Cleanup and TOS1900 device support
-Date: Wed, 26 Oct 2011 10:58:58 -0600
-Message-ID: <CAGdLNWGwXGxJmOd8sKtDps2WpgGUGYvuriHjTQqY7kH_v5DtsA@mail.gmail.com>
-References: <1316555754-25949-1-git-send-email-seth.forshee@canonical.com>
-	<20110921153137.GA26436@srcf.ucam.org>
-	<20110921161043.GC29983@thinkpad-t410>
-	<20111026135432.GA31917@thinkpad-t410>
+From: Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Fix for acer-wmi incorrectly loading on Thinkpad E520
+Date: Thu, 27 Oct 2011 10:32:51 -0500
+Message-ID: <4EA979A3.9030605@lwfinger.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:43334 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932889Ab1JZQ7A (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:36800 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752480Ab1J0Pce (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Oct 2011 12:59:00 -0400
-In-Reply-To: <20111026135432.GA31917@thinkpad-t410>
+	Thu, 27 Oct 2011 11:32:34 -0400
+Received: by ywm3 with SMTP id 3so2744938ywm.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Oct 2011 08:32:33 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joey Lee <jlee@novell.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-> I managed to find some volunteers with machines that use the GHCI
-> interface to do some regression testing for me. They aren't exactly
-> older hardware, all of them with TOS6208 and being made within the last
-> 2 or 3 years. But it's the best I could do.
+Joey,
 
-Great, I was planing on buying an older laptop from eBay, so I could test
-my changes on "older" hardware, I might still get it, "to eat my own
-cookies".
+Is the patch to blacklist the loading of acer-wmi on Thinkpad E520 queued up for 
+3.2? It is affecting at least one openSUSE 12.1 user (bnc#725955) and I would 
+like to get the patch into the openSUSE kernel before 12.1 is released.
 
->
-> None of the machines tested showed any regressions as a result of these
-> patches. I also got testing of using the INFO method to read hotkey
-> scancodes, and that's working on those machines as well. (I did however
-> find that I had to reintroduce the global toshiba_acpi pointer for the
-> i8042 filter, since it doesn't have any mechanism for passing private
-> data to the callback.)
+Thanks,
 
-Great news, hope to see your changes merged Seth
-
-
-Saludos
-Azael
-
-
--- 
--- El mundo apesta y vosotros apestais tambien --
+Larry
