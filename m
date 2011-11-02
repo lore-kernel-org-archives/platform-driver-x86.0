@@ -1,31 +1,52 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT] pull request for x86 platform drivers tree
-Date: Mon, 31 Oct 2011 16:09:56 -0700
-Message-ID: <CA+55aFzbXbffrf055UvpBwGBpiL_KgjVs=nqbFmXXsh6TBiTMw@mail.gmail.com>
-References: <20111031132438.GA2824@srcf.ucam.org> <CA+55aFwKz+-FeoZQB_Y1Oj1dEBo8LxjgLPUP=Nz0TXSTcdN2Ng@mail.gmail.com>
- <20111031225748.GA13356@srcf.ucam.org>
+From: Josh Boyer <jwboyer@redhat.com>
+Subject: [PATCH] sony-laptop: Enable keyboard backlight by default
+Date: Wed, 2 Nov 2011 14:32:00 -0400
+Message-ID: <20111102183159.GD19809@zod.bos.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wy0-f174.google.com ([74.125.82.174]:45090 "EHLO
-	mail-wy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753395Ab1JaXKS (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:7401 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753039Ab1KBScH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 31 Oct 2011 19:10:18 -0400
-Received: by wyg36 with SMTP id 36so6349534wyg.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Oct 2011 16:10:17 -0700 (PDT)
-In-Reply-To: <20111031225748.GA13356@srcf.ucam.org>
+	Wed, 2 Nov 2011 14:32:07 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@cavan.codon.org.uk>
-Cc: platform-driver-x86@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Oct 31, 2011 at 3:57 PM, Matthew Garrett
-<mjg59@cavan.codon.org.uk> wrote:
->
-> Is this any help?
+When the keyboard backlight support was originally added, the commit said
+to default it to on with a 10 second timeout.  That actually wasn't the
+case, as the default value is commented out for the kbd_backlight parameter.
+Because it is a static variable, it gets set to 0 by default without some
+other form of initialization.
 
-Ok, mutt seems to like that key, and it's signed by at least Jesse
-Barnes who is in my keyring, so.. Yes.
+However, it seems the function to set the value wasn't actually called
+immediately, so whatever state the keyboard was in initially would remain. 
+Then commit df410d522410e67660 was introduced during the 2.6.39 timeframe to
+immediately set whatever value was present (as well as attempt to
+restore/reset the state on module removal or resume).  That seems to have
+now forced the light off immediately when the module is loaded unless
+the option kbd_backlight=1 is specified.
 
-                     Linus
+Let's enable it by default again (for the first time).  This should solve
+https://bugzilla.redhat.com/show_bug.cgi?id=728478
+
+Signed-off-by: Josh Boyer <jwboyer@redhat.com>
+
+---
+
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index c006dee..40c4705 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -127,7 +127,7 @@ MODULE_PARM_DESC(minor,
+ 		 "default is -1 (automatic)");
+ #endif
+ 
+-static int kbd_backlight;	/* = 1 */
++static int kbd_backlight = 1;
+ module_param(kbd_backlight, int, 0444);
+ MODULE_PARM_DESC(kbd_backlight,
+ 		 "set this to 0 to disable keyboard backlight, "
