@@ -1,96 +1,105 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: blacklist Thinkpad edge E520
-Date: Sun, 06 Nov 2011 17:29:15 +0800
-Message-ID: <1320571755.14890.10.camel@linux-s257.site>
-References: <1318488718-4744-1-git-send-email-ike.pan@canonical.com>
-	 <1319494967.17773.156.camel@linux-s257.site>
-	 <20111024231329.GA25993@redhat.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [lm-sensors] A new Subsystem for Current Management
+Date: Sun, 6 Nov 2011 14:05:56 +0100
+Message-ID: <20111106140556.569a1b21@endymion.delvare>
+References: <D6D887BA8C9DFF48B5233887EF04654109F102E3BC@bgsmsx502.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:56360 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750942Ab1KFJal (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Sun, 6 Nov 2011 04:30:41 -0500
-In-Reply-To: <20111024231329.GA25993@redhat.com>
+Received: from zone0.gcu-squad.org ([212.85.147.21]:5337 "EHLO
+	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752252Ab1KFNGM (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 6 Nov 2011 08:06:12 -0500
+In-Reply-To: <D6D887BA8C9DFF48B5233887EF04654109F102E3BC@bgsmsx502.gar.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dave Jones <davej@redhat.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Joey Lee <jlee@novell.com>
+To: "R, Durgadoss" <durgadoss.r@intel.com>
+Cc: lm-sensors@lm-sensors.org, platform-driver-x86@vger.kernel.org, Alan Cox <alan@linux.intel.com>
 
-Hi Dave,=20
+Hi Durga,
 
-Sorry for I am late to reply you!
+On Sat, 5 Nov 2011 12:43:14 +0530, R, Durgadoss wrote:
+> Hi All,
+> 
+> [Very Sorry for the big e-mail]
+> 
+> As we all know, Linux is increasingly being used in handhelds.
+> The Hardware that supports the handhelds is also becoming
+> Performance-centric. With this, we need a way to efficiently
+> monitor the current consumption of the platform and take actions
+> when the platform draws more current, than it should.
+> 
+> Where does this happen ?
+> ------------------------
+> In a handheld, there are many components that demand high
+> Current. For example, Camera Flash, Video Streaming, 3G Voice
+> Call etc. Typically, two or more of these components are used
+> simultaneously in a real-time scenario. When this happens, the
+> current draw of the platform surges. If this surge lasts for
+> more than a specific time, it could crash the platform irrecoverably.
+> 
+> How do we tackle this ?
+> -----------------------
+> In Intel Medfield (Atom based) platform we had a driver that
+> Configures the current limits. When the platform current draws
+> more current than the programmed limit, the hardware generates
+> interrupt. The driver receives this interrupt and notifies the
+> user space to take appropriate actions.
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2011-10-24 =E6=96=BC 19:13 -0400=EF=BC=8CDa=
-ve Jones =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Tue, Oct 25, 2011 at 06:22:47AM +0800, joeyli wrote:
->  > =E6=96=BC =E5=9B=9B=EF=BC=8C2011-10-13 =E6=96=BC 14:51 +0800=EF=BC=
-=8CIke Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
->  > > BugLink: http://launchpad.net/bugs/836865
->  > > BugLink: http://launchpad.net/bugs/826784
->  > >=20
->  > > There are reports say that acer-wmi is loaded on Thinkpad E520 w=
-hich
->  > > cause wireless connection hard blocked and we can not unblock it=
-=2E It
->  > > will be better not to load acer-wmi on this machine.
->  > >=20
->  > > Signed-off-by: Ike Panhc <ike.pan@canonical.com>
->  > > ---
->  > >  drivers/platform/x86/acer-wmi.c |    7 +++++++
->  > >  1 files changed, 7 insertions(+), 0 deletions(-)
->  > >=20
->  > > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/=
-x86/acer-wmi.c
->  > > index af2bb20..dc9a116 100644
->  > > --- a/drivers/platform/x86/acer-wmi.c
->  > > +++ b/drivers/platform/x86/acer-wmi.c
->  > > @@ -325,6 +325,13 @@ static struct dmi_system_id __devinitdata a=
-cer_blacklist[] =3D {
->  > >  			DMI_MATCH(DMI_PRODUCT_NAME, "AOA150"),
->  > >  		},
->  > >  	},
->  > > +	{
->  > > +		.ident =3D "Lenovo Thinkpad Edge E520",
->  > > +		.matches =3D {
->  > > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->  > > +			DMI_MATCH(DMI_PRODUCT_NAME, "114320U"),
->  > > +		},
->  > > +	},
->  > >  	{}
->  > >  };
->  > > =20
->  >=20
->  > Unfortunately didn't see any useful EC register for unblock wifi r=
-fkill in acer-wmi, let's=20
->  > add this device to blacklist.
->  >=20
->  > Signed-off-by: Lee, Chun-Yi <jlee@novell.com>
->=20
-> We've seen similar reports from other Lenovo machines & acer-wmi in F=
-edora bugzilla.
-> https://bugzilla.redhat.com/show_bug.cgi?id=3D674353 for example has =
-people reporting
-> the b450 and V460 also suffer the same issue.
->=20
-> (There are also a bunch of bug reports from the other *-wmi modules o=
-n various hardware.
-> It seems these modules really upset rfkill).
->=20
-> 	Dave
->=20
+I would argue that leaving the actions to user-space is wrong by
+design. For something as critical as hardware integrity, ideally the
+hardware and BIOS would be enough to guarantee it under any
+circumstances. If that is not possible then I would hope that the kernel
+alone can handle it. User-space may not always be there (think of the
+boot sequence, or missing/broken package on the system.) Furthermore,
+user-space will inevitably need to ask kernel drivers to do the job, so
+you do kernel -> user-space -> kernel, which is certainly not the way
+to go if you care about response times to critical events.
 
-I just go to brc#674353 to check the DSDT from B450, I thought we can
-try the wireless quirk type 2 (offset 0x71 in EC OperationRegion), I
-will attach a patch to redhat bugzilla, let's talk on bugzilla.
+If user-space notification is in addition to actions already taken
+directly by the kernel, then it's OK. But I admit I'm not quite sure
+what extra actions user-space could take.
 
-And,=20
-I didn't see the DSDT from Lenovo V640, maybe we also can find out a
-useful EC register reflect to wireless status.
+> The patch and the subsequent discussions can be found here:
+> http://comments.gmane.org/gmane.linux.drivers.platform.x86.devel/1197
+> 
+> To Generalize:
+> --------------
+> With many more platforms to come, having a separate driver for each
+> results in heavy code duplication. Also, there arises a problem of
+> where to put these kind of drivers ? Hence I propose the idea of having
+> a Current Management subsystem.
+> 
+> This will provide a generic ABI, API, so that the platform specific
+> drivers can register with this framework (and thus avail the basic
+> needs) and handle the events in their own way.
+> 
+> In simple terms, this framework will offer something like this:
+> 	Current[1-N]_limit - set of current limits
+> 	Voltage[1-X]_limit - set of voltage limits
+> 	Controllers[1-Y]_enable - These are the components by throttling/
+>       disabling which the current consumption can be brought down.
+> 
+> With the Controllers we can follow two approaches:
+> A) Each component driver registers with the current framework and gets
+> notified when the current surge happens. On receiving the notification,
+> it throttles its performance. There will be a follow-up notification,
+> indicating that 'we are out of the high current' situation; so that
+> the component resumes to operation at its full performance.
+> 
+> B) The Current framework forwards the notification to the upper
+> layers and lets them decide what to do.
+> 
+> I agree that A) bloats the size of all the component drivers a bit,
+> but considering the fact that the surge has to be brought down as
+> soon as possible (and the delay in reacting to the event if we
+> pass it to the upper layers) I am inclined towards A).
 
+It really depends on how much A) adds to individual drivers and how
+much extra time B) takes in practice. Each option has a downside, so
+it's very hard to decide without real-world numbers.
 
-Thank's a lot!
-Joey Lee
+-- 
+Jean Delvare
