@@ -1,62 +1,36 @@
-From: =?utf-8?B?5LuFMTDlhYPmr4/lpKk=?= <guest@dyndns-home.com>
-Subject: =?utf-8?B?576k5Y+R6L2v5Lu2K+S5sOWutuaQnOe0ouacuivmnIDmlrDlub/kuqTkvJrkubDlrrbjgIHmtbc=?=
-	=?utf-8?B?5YWz5pWw5o2uLEIyQuivouebmOS5sOWutjUwMOS4h+OAgg==?=
-Date: Mon, 7 Nov 2011 03:41:19 +0000 (UTC)
-Message-ID: <20131107113543045288@dyndns-home.com>
-Reply-To: <1339625218@qq.com>
+From: Greg KH <gregkh@suse.de>
+Subject: Re: [patch 0/8] Samsung Laptop driver patches - resend
+Date: Mon, 7 Nov 2011 10:12:09 -0800
+Message-ID: <20111107181209.GB5474@suse.de>
+References: <20110920161743.GA32737@kroah.com>
+ <CAHR064gzgKtLSNQ-NuoKWW9-Nv_S0myOusQT+-CxVVeyO5fMKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from 114-32-112-172.HINET-IP.hinet.net ([114.32.112.172]:33725 "EHLO
-	phantomx.dyndns-home.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752417Ab1KGDlP (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:33327 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756016Ab1KGSMs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 Nov 2011 22:41:15 -0500
-Date: Thu, 7 Nov 2013 11:35:29 +0800
+	Mon, 7 Nov 2011 13:12:48 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHR064gzgKtLSNQ-NuoKWW9-Nv_S0myOusQT+-CxVVeyO5fMKA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: lollcw@msn.com, mansoor99@gmail.com, donbartholomew@comcast.net, solara755@aol.com, lindagodwin1@live.com, captjim506@msn.com, 2thelim8@gmail.com, platform-driver-x86@v
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com
 
-576k5Y+R6L2v5Lu2K+S5sOWutuaQnOe0ouacuivmnIDmlrDlub/kuqTkvJrkubDlrrbjgIHlsZXk
-vJrkubDlrrbjgIHmtbflhbPmlbDmja4sQjJC6K+i55uY5Lmw5a62NTAw5LiH44CCDQoNCuS4gOWF
-sTjkuKrljIUo5pWw5o2u5piv5YWo6KGM5Lia55qE77yM5oyJ54Wn6KGM5Lia5YiG5aW957G777yM
-5bm25LiU5Y+v5Lul5oyJ54Wn5YWz6ZSu6K+N5p+l6K+i55qEKe+8miANCjHvvIwyMDEx5pyA5paw
-5bm/5Lqk5Lya5Lmw5a625pWw5o2u5bqT5paw6bKc5Ye654KJ77yM6LaF57qn5paw6bKc5Lmw5a62
-77yM5paw6bKc5pWw5o2u77yM5a655piT5oiQ5Y2V77yBIA0KMu+8jOacgOaWsOWFqOeQg+S5sOWu
-tuW6kyzlhbE0NTE2NjDmnaHmlbDmja7jgIIgDQoz77yMMjAwOOW5tCwyMDA55bm0LDIwMTDlubQg
-5pil5a2jK+eni+Wto+W5v+S6pOS8muS5sOWutuWQjeW9le+8jDEwMyAxMDQgMTA1IDEwNiAxMDcg
-MTA4IOWFseWFreWxiiDlhbExMjAuNuS4h+aVsOaNruOAgg0KNO+8jDIwMTDlubTlm73pmYXkv4Pp
-lIDljY/kvJrvvIhQUEFJ77yJ5oiQ5ZGY5ZCN5Y2VIFBQQUkgTWVtYmVycyBEaXJlY3RvcnnvvIzp
-nZ7luLjph43opoHnmoTlpKfkubDlrrbjgIINCjXvvIwyMDEw5bm05Yiw6aaZ5riv6YeH6LSt55qE
-5Zu95aSW5a6i5Lq65ZCN5b2VKOmmmea4r+i0uOWPkeWxgOaPkOS+mynvvIzlhbE3LjLkuIfmlbDm
-ja7vvIzotoXnuqfph43opoHnmoTkubDlrrbjgIINCjbvvIw2MC445LiH5p2h5pyA5paw5Zu95aSW
-QjJC5Lmw5a626K+i55uY44CCDQo377yMMjAwOeW5tOa1t+WFs+aPkOWNleaVsOaNrnBpZXJz54mI
-5pWw5o2uIDHljYPkuIfjgIINCjjvvIznvqTlj5Hova/ku7bvvIznvqTlj5Hova/ku7bnmoTpg6jn
-vbLkuI7lronoo4XjgIINCg0K5YWxIDUwMOS4h+S4quS5sOWutu+8jOavj+S4quWdh+aciUVtYWls
-LiANCg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue5aSN44CCDQrkv53or4Hmr4/lpKnpg73m
-nInkubDlrrblm57lpI3jgIINCg0K6KaB55qE5oqT57Sn6IGU57O7UVE6IDc2ODMyMDMwNSAgIOaI
-luiAheeri+WNs+WbnuWkjemCrueusTogNzY4MzIwMzA1QHFxLmNvbQ0K6KaB55qE5oqT57Sn6IGU
-57O7UVE6IDc2ODMyMDMwNSAgIOaIluiAheeri+WNs+WbnuWkjemCrueusTogNzY4MzIwMzA1QHFx
-LmNvbQ0K6KaB55qE5oqT57Sn6IGU57O7UVE6IDc2ODMyMDMwNSAgIOaIluiAheeri+WNs+WbnuWk
-jemCrueusTogNzY4MzIwMzA1QHFxLmNvbQ0KDQror5rkv6HkuLrmnKzvvIzlpoLmnpzkuI3kv6Hk
-u7vmnKzkuros5Y+v5Lul6LWw5reY5a6d5Lqk5piTLOaUtui0p+mqjOivgeWQjuWGjeS7mOasvizo
-v5nmmK/lr7nmgqjmnIDlpb3nmoTkv53pmpzkuobjgIIgDQoNCuS/neivgeavj+WkqemDveacieS5
-sOWutuWbnuWkjeOAgg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue5aSN44CCDQrkv53or4Hm
-r4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCg0KDQoNCg0K5bm/5Lqk5Lya5Lmw5a625oyJ5Lqn
-5ZOB57G75Yir5YiG57G777yM5YiG5Li65Lul5LiL5Yeg57G777yaDQoxIOWKnuWFrOiuvuWkhw0K
-MiDnvJbnu4flj4rol6Tpk4Hlt6Xoibrlk4ENCjMg546755KDDQo0IOmkkOWOqOeUqOWFtw0KNSDo
-vabovoYNCjYg5aSn5Z6L5py65qKw5Y+K6K6+5aSHDQo3IOeUteWtkOeUteawlA0KOCDnlLXlrZDm
-tojotLnlk4ENCjkg57q657uHDQoxMCDmnI3oo4UNCjExIOS4quS6uuaKpOeQhg0KMTIg5bel56iL
-5py65qKwDQoxMyDlt6XlhbcNCjE0IOWMluW3pQ0KMTUg6K6h566X5py65Y+K6YCa6K6vDQoxNiDl
-rrblsYXnlKjlk4ENCjE3IOWutuWxheijhemlsA0KMTgg5a625YW3DQoxOSDlrrbnlKjnlLXlmagN
-CjIwIOW7uuetkeWPiuijhemlsOadkOaWmQ0KMjEg6IqC5pel55So5ZOBDQoyMiDnpLzlk4Hlj4ro
-taDlk4ENCjIzIOaRqeaJmOi9pg0KMjQg5rG96L2m6YWN5Lu2DQoyNSDpo5/lk4ENCjI2IOmZtueT
-tw0KMjcg6ZOB55+zDQoyOCDnjqnlhbcNCjI5IOWNq+a1tA0KMzAg5LqU6YeRDQozMSDlsI/lnovm
-nLrmorANCjMyIOmeiw0KMzMg5LyR6Zey55So5ZOBDQozNCDljLvnlpcNCjM1IOa1tOWupOS6p+WT
-gQ0KMzYg5Zut5p6XDQozNyDnhafmmI7kuqflk4ENCjM4IOmSn+ihqOecvOmVnA0KMzkg6Ieq6KGM
-6L2mDQo0MCDljIUNCg0KDQrkv53or4Hmr4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCuS/neiv
-geavj+WkqemDveacieS5sOWutuWbnuWkjeOAgg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue
-5aSN44CCDQrkv53or4Hmr4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCuS/neivgeavj+WkqemD
-veacieS5sOWutuWbnuWkjeOAgg0K
+On Sun, Nov 06, 2011 at 11:54:39PM +0100, Corentin Chary wrote:
+> Just got a 90X3A from Intel and I'll try to take a look at samsung-laptop
+> since some features are missing (keyboard backlight for example).
+
+Try adding your device to this driver.  Or, watch out, as newer Samsung
+devices support backlight control "properly" through acpi, which is
+good, and this driver is not needed by them at all.
+
+> Do you have any doc on the vendor "interface" (other than just reading
+> the code :) ) ?
+
+I do not have any documentation for the interface, sorry.  The code
+should be self-explanatory.
+
+greg k-h
