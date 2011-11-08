@@ -1,63 +1,35 @@
-From: =?utf-8?B?MjAxMeeni+Wto+W5v+S6pOS8muS5sOWutg==?=
-	<admin@traveler.com.cn>
-Subject: =?utf-8?B?576k5Y+R6L2v5Lu2K+S5sOWutuaQnOe0ouacuisyMDEx56eL5a2j5bm/5Lqk5Lya?=
-	=?utf-8?B?5Lmw5a6244CB5rW35YWz5pWw5o2uLEIyQuivouebmOS5sOWutjUwMOS4h+OAgg==?=
-Date: Tue, 8 Nov 2011 09:22:28 +0000 (UTC)
-Message-ID: <20131107175217208764@traveler.com.cn>
-Reply-To: <1339625218@qq.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [lm-sensors] A new Subsystem for Current Management
+Date: Tue, 8 Nov 2011 16:54:26 +0000
+Message-ID: <20111108165426.GB21630@sirena.org.uk>
+References: <D6D887BA8C9DFF48B5233887EF04654109F102E3BC@bgsmsx502.gar.corp.intel.com>
+ <CADkCAuv16KY4B-A-Oym-1pX+7WmP2WWzRZMsKeB_1=7-DfDASw@mail.gmail.com>
+ <D6D887BA8C9DFF48B5233887EF04654109F102E436@bgsmsx502.gar.corp.intel.com>
+ <20111106141302.40365383@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [121.101.215.35] ([121.101.215.35]:2985 "HELO traveler.com.cn"
-	rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with SMTP
-	id S1751111Ab1KHJWY (ORCPT
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:52898 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752984Ab1KHQyc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Nov 2011 04:22:24 -0500
-Date: Thu, 7 Nov 2013 17:52:05 +0800
+	Tue, 8 Nov 2011 11:54:32 -0500
+Content-Disposition: inline
+In-Reply-To: <20111106141302.40365383@endymion.delvare>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: kaushikc@yahoo.com, platform-driver-x86@vger.kernel.org, vesitianlight@hotmail.com, jamieandabbysamwell@hotmail.com, du-tourisme@wanadoo.fr, cleavon.x@gmail.com, beegle@us
+To: Jean Delvare <khali@linux-fr.org>
+Cc: "R, Durgadoss" <durgadoss.r@intel.com>, lm-sensors@lm-sensors.org, Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-576k5Y+R6L2v5Lu2KzIwMTHnp4vlraPlub/kuqTkvJrkubDlrrbjgIHmtbflhbPmlbDmja7jgIHm
-kJzntKLlvJXmk47kubDlrrYsQjJC6K+i55uY5Lmw5a625YWxNTAw5LiHLOS7hTEw5YWD5q+P5aSp
-44CCIA0K576k5Y+R6L2v5Lu2KzIwMTHnp4vlraPlub/kuqTkvJrkubDlrrbjgIHmtbflhbPmlbDm
-ja7jgIHmkJzntKLlvJXmk47kubDlrrYsQjJC6K+i55uY5Lmw5a625YWxNTAw5LiHLOS7hTEw5YWD
-5q+P5aSp44CCIA0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue5aSN44CCDQrkv53or4Hmr4/l
-pKnpg73mnInkubDlrrblm57lpI3jgIINCuS/neivgeavj+WkqemDveacieS5sOWutuWbnuWkjeOA
-gg0KDQox44CB576k5Y+R6L2v5Lu277yaIOaTjeS9nOeugOWNle+8jOWKn+iDveW8uuWkp++8jOao
-oeS7v+S6uuW3peaTjeS9nOaooeW8j++8jOWIsOi+vueOh+mrmO+8jOaXpeWPkemAgTXkuIflsIHk
-u6XkuIrjgIIgDQoy44CBNTAw5LiH5Lmw5a626LWE5rqQ77yaIOi1oOmAgeeahDUwMOS4h+S5sOWu
-tui1hOa6kOW6k++8jOabtOaWsCAo5Y+v5Lul5oyJ54Wn5oKo55qE5Lqn5ZOB5o+Q5Y+W5Ye65p2l
-77yM5pu057K+5YeG5byA5Y+RKeOAgiANCjPjgIHotoXnuqfmtbflpJbkubDlrrZFbWFpbOaQnOe0
-ouacuu+8miDlhoXnva7kuoY2MDDkuIfooYzkuJrlhbPplK7or43vvIzmoLnmja7plb/lsL7or43m
-kJzntKLvvIznu5Pmnpzmm7Tnsr7noa7ljLnphY3vvJvmr4/lpKnog73mkJzntKIxLTLkuIfku6Xk
-uIrkubDlrrbnnJ/lrp5FTUFJTO+8jOaIkOWNleeOh+mrmOOAgiANCiANCg0K6KaB55qE5oqT57Sn
-6IGU57O7UVE6IDEzMzk2MjUyMTggICDmiJbogIXnq4vljbPlm57lpI3pgq7nrrE6IDEzMzk2MjUy
-MThAcXEuY29tDQropoHnmoTmipPntKfogZTns7tRUTogMTMzOTYyNTIxOCAgIOaIluiAheeri+WN
-s+WbnuWkjemCrueusTogMTMzOTYyNTIxOEBxcS5jb20NCuimgeeahOaKk+e0p+iBlOezu1FROiAx
-MzM5NjI1MjE4ICAg5oiW6ICF56uL5Y2z5Zue5aSN6YKu566xOiAxMzM5NjI1MjE4QHFxLmNvbQ0K
-IA0K5YWN6LS56LWg6YCBOg0K5LiA5YWxOOS4quWMhSjmlbDmja7mmK/lhajooYzkuJrnmoTvvIzm
-jInnhafooYzkuJrliIblpb3nsbvvvIzlubbkuJTlj6/ku6XmjInnhaflhbPplK7or43mn6Xor6Ln
-moQp77yaIA0KMe+8jDIwMTHmmKXlraMxMDnlsYrlub/kuqTkvJrkubDlrrbnjrDlnLror6Lnm5jm
-lbDmja7lupPmlrDpspzlh7rngonvvIzotoXnuqfmlrDpspzkubDlrrbvvIzmlrDpspzmlbDmja7v
-vIzlrrnmmJPmiJDljZXvvIEgDQoy77yM6LSt5Lmw5ZCO5Y+v5Lul5YWN6LS55pu05pawMjAxMeen
-i+Wto+W5v+S6pOS8misyMDEy5pil5a2j5bm/5Lqk5Lya5Lmw5a625pWw5o2u44CC5aSq6LaF5YC8
-5LqG44CCDQoz77yM5pyA5paw5YWo55CD5Lmw5a625bqTLOWFsTQ1MTY2MOadoeaVsOaNruOAgiAo
-5pyA5paw5pu05paw5pel5pyfIDIwMTEtMDUtMTbml6UpDQo077yMMjAwOOW5tCwyMDA55bm0LDIw
-MTDlubQg5pil5a2jK+eni+Wto+W5v+S6pOS8muS5sOWutuWQjeW9le+8jDEwMyAxMDQgMTA1IDEw
-NiAxMDcgMTA4IOWFseWFreWxiiDlhbExMjAuNuS4h+aVsOaNruOAgg0KNe+8jDIwMTDlubTlm73p
-mYXkv4PplIDljY/kvJrvvIhQUEFJ77yJ5oiQ5ZGY5ZCN5Y2VIFBQQUkgTWVtYmVycyBEaXJlY3Rv
-cnnvvIzpnZ7luLjph43opoHnmoTlpKfkubDlrrbjgIINCjbvvIwyMDEw5bm05Yiw6aaZ5riv6YeH
-6LSt55qE5Zu95aSW5a6i5Lq65ZCN5b2VKOmmmea4r+i0uOWPkeWxgOaPkOS+mynvvIzlhbE3LjLk
-uIfmlbDmja7vvIzotoXnuqfph43opoHnmoTkubDlrrbjgIINCjfvvIw0OC42OOS4h+adoeacgOaW
-sOS5sOWutuivouebmO+8jOi0reS5sOWQjuavj+aciOabtOaWsCAxLTLkuIfmnaHvvIzljIXmi6wy
-6YOo5YiG77yMMe+8jOacgOaWsOeahOivouebmCAy77yM5pyA5paw55qE5bGV5Lya5Lmw5a6244CC
-5YWN6LS55pu05pawMzbkuKrmnIjjgIINCjjvvIwyMDA55bm05rW35YWz5o+Q5Y2V5pWw5o2ucGll
-cnPniYjmlbDmja4gMeWNg+S4h+OAgg0KDQoNCuivmuS/oeS4uuacrO+8jOaUr+aMgeaUr+S7mOWu
-neaLheS/neS6pOaYkyAo5YWI5Y+R6LSn5bm25a6J6KOF6K6+572u576k5Y+R6L2v5Lu277yM54S2
-5ZCO5LuY5qy+KSDlvbvlupXmiZPmtojmgqjnmoQg6aG+6JmR44CCDQoNCiANCg0KDQogDQoNCuey
-vuWHhuaVsOaNri3miJDljZXnjofmnoHpq5gNCueyvuWHhuaVsOaNri3miJDljZXnjofmnoHpq5gN
-CueyvuWHhuaVsOaNri3miJDljZXnjofmnoHpq5gNCueyvuWHhuaVsOaNri3miJDljZXnjofmnoHp
-q5gNCueyvuWHhuaVsOaNri3miJDljZXnjofmnoHpq5gNCg==
+On Sun, Nov 06, 2011 at 02:13:02PM +0100, Jean Delvare wrote:
+
+> While the regulator subsystem presents itself as aiming at power
+> savings to improve battery life, it doesn't seem fundamentally
+> different from the need you described. Whether you lower current draw
+> to save battery life or to prevent the hardware from dying, makes
+> little difference, the underlying mechanisms should be pretty similar.
+
+Actually the regulator API isn't really about power savings - it's about
+voltage and current regulation.  Higher layers can use these features to
+save power but it's not somethnig the regulator API cares about.  If the
+documentation suggests it is we might want to fix that up.
