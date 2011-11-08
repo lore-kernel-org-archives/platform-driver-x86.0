@@ -1,55 +1,62 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [patch 0/8] Samsung Laptop driver patches - resend
-Date: Mon, 7 Nov 2011 23:57:58 +0100
-Message-ID: <CAHR064jx4jWdLHRaKECEz-1Wauhm1xR+pGNLXsPPn7jYKJ81Uw@mail.gmail.com>
-References: <20110920161743.GA32737@kroah.com>
-	<CAHR064gzgKtLSNQ-NuoKWW9-Nv_S0myOusQT+-CxVVeyO5fMKA@mail.gmail.com>
-	<20111107181209.GB5474@suse.de>
+From: =?utf-8?B?5LuFMTDlhYPmr4/lpKk=?= <admin@traveler.com.cn>
+Subject: =?utf-8?B?576k5Y+R6L2v5Lu2K+S5sOWutuaQnOe0ouacuivmnIDmlrDlub/kuqTkvJrkubDlrrbjgIHmtbc=?=
+	=?utf-8?B?5YWz5pWw5o2uLEIyQuivouebmOS5sOWutjUwMOS4h+OAgg==?=
+Date: Tue, 8 Nov 2011 05:54:16 +0000 (UTC)
+Message-ID: <20131107144205055876@traveler.com.cn>
+Reply-To: <1339625218@qq.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:58689 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751137Ab1KGW6B convert rfc822-to-8bit (ORCPT
+Received: from [121.101.215.35] ([121.101.215.35]:2647 "HELO traveler.com.cn"
+	rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with SMTP
+	id S1751234Ab1KHFyL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Nov 2011 17:58:01 -0500
-In-Reply-To: <20111107181209.GB5474@suse.de>
+	Tue, 8 Nov 2011 00:54:11 -0500
+Date: Thu, 7 Nov 2013 14:41:58 +0800
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@suse.de>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, greg@kroah.com
+To: platform-driver-x86@vger.kernel.org, ellen_fish@sohu.com, artbyrimjhim@yahoo.com, oshc@mail.tajen.edu.tw, holub775@ymail.com, mobiletelephoneshop@hotmail.com, rebecca82pu
 
-On Mon, Nov 7, 2011 at 7:12 PM, Greg KH <gregkh@suse.de> wrote:
-> On Sun, Nov 06, 2011 at 11:54:39PM +0100, Corentin Chary wrote:
->> Just got a 90X3A from Intel and I'll try to take a look at samsung-l=
-aptop
->> since some features are missing (keyboard backlight for example).
->
-> Try adding your device to this driver. =C2=A0Or, watch out, as newer =
-Samsung
-> devices support backlight control "properly" through acpi, which is
-> good, and this driver is not needed by them at all.
-
-I'm speaking about *keyboard* backlight here, not screen backlight
-(which is already available using both the acpi driver and the intel
-graphic driver). There is also a setting to enable USB power while
-sleeping without having to change it in the BIOS, and it's probably
-possible to control the sound and wlan led.
-
->> Do you have any doc on the vendor "interface" (other than just readi=
-ng
->> the code :) ) ?
->
-> I do not have any documentation for the interface, sorry. =C2=A0The c=
-ode
-> should be self-explanatory.
-
-Arg... I can understand the code, I can easilly write ACPI and WMI
-drivers, but the "SABI" thing will be harder to reverse engineer :).
-
-Thanks,
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+576k5Y+R6L2v5Lu2K+S5sOWutuaQnOe0ouacuivmnIDmlrDlub/kuqTkvJrkubDlrrbjgIHlsZXk
+vJrkubDlrrbjgIHmtbflhbPmlbDmja4sQjJC6K+i55uY5Lmw5a62NTAw5LiH44CCDQoNCuS4gOWF
+sTjkuKrljIUo5pWw5o2u5piv5YWo6KGM5Lia55qE77yM5oyJ54Wn6KGM5Lia5YiG5aW957G777yM
+5bm25LiU5Y+v5Lul5oyJ54Wn5YWz6ZSu6K+N5p+l6K+i55qEKe+8miANCjHvvIwyMDEx5pyA5paw
+5bm/5Lqk5Lya5Lmw5a625pWw5o2u5bqT5paw6bKc5Ye654KJ77yM6LaF57qn5paw6bKc5Lmw5a62
+77yM5paw6bKc5pWw5o2u77yM5a655piT5oiQ5Y2V77yBIA0KMu+8jOacgOaWsOWFqOeQg+S5sOWu
+tuW6kyzlhbE0NTE2NjDmnaHmlbDmja7jgIIgDQoz77yMMjAwOOW5tCwyMDA55bm0LDIwMTDlubQg
+5pil5a2jK+eni+Wto+W5v+S6pOS8muS5sOWutuWQjeW9le+8jDEwMyAxMDQgMTA1IDEwNiAxMDcg
+MTA4IOWFseWFreWxiiDlhbExMjAuNuS4h+aVsOaNruOAgg0KNO+8jDIwMTDlubTlm73pmYXkv4Pp
+lIDljY/kvJrvvIhQUEFJ77yJ5oiQ5ZGY5ZCN5Y2VIFBQQUkgTWVtYmVycyBEaXJlY3RvcnnvvIzp
+nZ7luLjph43opoHnmoTlpKfkubDlrrbjgIINCjXvvIwyMDEw5bm05Yiw6aaZ5riv6YeH6LSt55qE
+5Zu95aSW5a6i5Lq65ZCN5b2VKOmmmea4r+i0uOWPkeWxgOaPkOS+mynvvIzlhbE3LjLkuIfmlbDm
+ja7vvIzotoXnuqfph43opoHnmoTkubDlrrbjgIINCjbvvIw2MC445LiH5p2h5pyA5paw5Zu95aSW
+QjJC5Lmw5a626K+i55uY44CCDQo377yMMjAwOeW5tOa1t+WFs+aPkOWNleaVsOaNrnBpZXJz54mI
+5pWw5o2uIDHljYPkuIfjgIINCjjvvIznvqTlj5Hova/ku7bvvIznvqTlj5Hova/ku7bnmoTpg6jn
+vbLkuI7lronoo4XjgIINCg0K5YWxIDUwMOS4h+S4quS5sOWutu+8jOavj+S4quWdh+aciUVtYWls
+LiANCg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue5aSN44CCDQrkv53or4Hmr4/lpKnpg73m
+nInkubDlrrblm57lpI3jgIINCg0K6KaB55qE5oqT57Sn6IGU57O7UVE6IDc2ODMyMDMwNSAgIOaI
+luiAheeri+WNs+WbnuWkjemCrueusTogNzY4MzIwMzA1QHFxLmNvbQ0K6KaB55qE5oqT57Sn6IGU
+57O7UVE6IDc2ODMyMDMwNSAgIOaIluiAheeri+WNs+WbnuWkjemCrueusTogNzY4MzIwMzA1QHFx
+LmNvbQ0K6KaB55qE5oqT57Sn6IGU57O7UVE6IDc2ODMyMDMwNSAgIOaIluiAheeri+WNs+WbnuWk
+jemCrueusTogNzY4MzIwMzA1QHFxLmNvbQ0KDQror5rkv6HkuLrmnKzvvIzlpoLmnpzkuI3kv6Hk
+u7vmnKzkuros5Y+v5Lul6LWw5reY5a6d5Lqk5piTLOaUtui0p+mqjOivgeWQjuWGjeS7mOasvizo
+v5nmmK/lr7nmgqjmnIDlpb3nmoTkv53pmpzkuobjgIIgDQoNCuS/neivgeavj+WkqemDveacieS5
+sOWutuWbnuWkjeOAgg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue5aSN44CCDQrkv53or4Hm
+r4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCg0KDQoNCg0K5bm/5Lqk5Lya5Lmw5a625oyJ5Lqn
+5ZOB57G75Yir5YiG57G777yM5YiG5Li65Lul5LiL5Yeg57G777yaDQoxIOWKnuWFrOiuvuWkhw0K
+MiDnvJbnu4flj4rol6Tpk4Hlt6Xoibrlk4ENCjMg546755KDDQo0IOmkkOWOqOeUqOWFtw0KNSDo
+vabovoYNCjYg5aSn5Z6L5py65qKw5Y+K6K6+5aSHDQo3IOeUteWtkOeUteawlA0KOCDnlLXlrZDm
+tojotLnlk4ENCjkg57q657uHDQoxMCDmnI3oo4UNCjExIOS4quS6uuaKpOeQhg0KMTIg5bel56iL
+5py65qKwDQoxMyDlt6XlhbcNCjE0IOWMluW3pQ0KMTUg6K6h566X5py65Y+K6YCa6K6vDQoxNiDl
+rrblsYXnlKjlk4ENCjE3IOWutuWxheijhemlsA0KMTgg5a625YW3DQoxOSDlrrbnlKjnlLXlmagN
+CjIwIOW7uuetkeWPiuijhemlsOadkOaWmQ0KMjEg6IqC5pel55So5ZOBDQoyMiDnpLzlk4Hlj4ro
+taDlk4ENCjIzIOaRqeaJmOi9pg0KMjQg5rG96L2m6YWN5Lu2DQoyNSDpo5/lk4ENCjI2IOmZtueT
+tw0KMjcg6ZOB55+zDQoyOCDnjqnlhbcNCjI5IOWNq+a1tA0KMzAg5LqU6YeRDQozMSDlsI/lnovm
+nLrmorANCjMyIOmeiw0KMzMg5LyR6Zey55So5ZOBDQozNCDljLvnlpcNCjM1IOa1tOWupOS6p+WT
+gQ0KMzYg5Zut5p6XDQozNyDnhafmmI7kuqflk4ENCjM4IOmSn+ihqOecvOmVnA0KMzkg6Ieq6KGM
+6L2mDQo0MCDljIUNCg0KDQrkv53or4Hmr4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCuS/neiv
+geavj+WkqemDveacieS5sOWutuWbnuWkjeOAgg0K5L+d6K+B5q+P5aSp6YO95pyJ5Lmw5a625Zue
+5aSN44CCDQrkv53or4Hmr4/lpKnpg73mnInkubDlrrblm57lpI3jgIINCuS/neivgeavj+WkqemD
+veacieS5sOWutuWbnuWkjeOAgg0K
