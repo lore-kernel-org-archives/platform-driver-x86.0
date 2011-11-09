@@ -1,35 +1,39 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [PATCH] x86: Add amilo-rfkill driver for some Fujitsu-Siemens
- Amilo laptops
-Date: Wed, 09 Nov 2011 09:30:58 +0100
-Message-ID: <1320827458.3845.2.camel@jlt3.sipsolutions.net>
-References: <1320817459.18929.50.camel@deadeye>
-	 (sfid-20111109_064459_718264_1D22260D)
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [lm-sensors] A new Subsystem for Current Management
+Date: Wed, 9 Nov 2011 12:09:20 +0000
+Message-ID: <20111109120919.GB31441@opensource.wolfsonmicro.com>
+References: <D6D887BA8C9DFF48B5233887EF04654109F102E3BC@bgsmsx502.gar.corp.intel.com>
+ <CADkCAuv16KY4B-A-Oym-1pX+7WmP2WWzRZMsKeB_1=7-DfDASw@mail.gmail.com>
+ <D6D887BA8C9DFF48B5233887EF04654109F102E436@bgsmsx502.gar.corp.intel.com>
+ <20111106141302.40365383@endymion.delvare>
+ <20111108165426.GB21630@sirena.org.uk>
+ <20111108175749.2ef50f93@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1320817459.18929.50.camel@deadeye> (sfid-20111109_064459_718264_1D22260D)
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
-Cc: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin =?UTF-8?Q?Ve=C4=8De=C5=99a?= <ja-nfDFWhP/j+Adnm+yROfE0A@public.gmane.org>, Alejandro Vidal Mata <alex14-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Vidal Mata <javitu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tino Schmidt <mailtinoshomepage-hi6Y0CQ0nG0@public.gmane.org>, 631664-61a8vm9lEZVf4u+23C9RwQ@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from opensource.wolfsonmicro.com ([80.75.67.52]:33738 "EHLO
+	opensource.wolfsonmicro.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754285Ab1KIMJW (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 9 Nov 2011 07:09:22 -0500
+Content-Disposition: inline
+In-Reply-To: <20111108175749.2ef50f93@endymion.delvare>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jean Delvare <khali@linux-fr.org>
+Cc: "R, Durgadoss" <durgadoss.r@intel.com>, lm-sensors@lm-sensors.org, Alan Cox <alan@linux.intel.com>, platform-driver-x86@vger.kernel.org
 
-On Wed, 2011-11-09 at 05:44 +0000, Ben Hutchings wrote:
+On Tue, Nov 08, 2011 at 05:57:49PM +0100, Jean Delvare wrote:
+> On Tue, 8 Nov 2011 16:54:26 +0000, Mark Brown wrote:
 
-> +static bool init_blocked = false;
-> +
-> +/* Initial state set by 'radio' parameter, as in the fsaa1655g driver */
-> +module_param_named(radio, init_blocked, invbool, 0);
+> > Actually the regulator API isn't really about power savings - it's about
+> > voltage and current regulation.  Higher layers can use these features to
+> > save power but it's not somethnig the regulator API cares about.  If the
+> > documentation suggests it is we might want to fix that up.
 
-I wonder what you need this for -- it shouldn't be necessary and the way
-rfkill_init_sw_state() works might cause unexpected behaviour. I
-recommend leaving that out, if you do leave it out rfkill will set the
-desired state of the device as soon as the device is registered.
+> I came up to this conclusion after reading the CONFIG_REGULATOR help
+> text in Kconfig. I'll let you decide if this should get improved in any
+> way.
 
-johannes
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think the current text is OK, it's saying that it allows other
+subsystems do things which save power which is what's happening.
