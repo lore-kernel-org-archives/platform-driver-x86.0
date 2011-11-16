@@ -1,100 +1,100 @@
-From: John Hughes <john@calvaedi.com>
-Subject: [PATCH] to fix scancodes returned by sony-laptop driver
-Date: Wed, 16 Nov 2011 19:51:57 +0100
-Message-ID: <4EC4064D.6010706@calvaedi.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------030509090309030601060508"
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH] toshiba_acpi: Fix machines that don't support HCI_SYSTEM_EVENT
+Date: Wed, 16 Nov 2011 17:37:45 -0600
+Message-ID: <1321486665-12929-1-git-send-email-seth.forshee@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from oceanic.CalvaEDI.COM ([89.202.194.168]:38476 "EHLO
-	oceanic.CalvaEDI.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751907Ab1KPSvK (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:44989 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751674Ab1KPXhv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Nov 2011 13:51:10 -0500
+	Wed, 16 Nov 2011 18:37:51 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------030509090309030601060508
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+The Satellite C670-10V generates notifications for hotkeys but does
+not support HCI_SYSTEM_EVENT. As a result when a hotkey is pressed
+it gets stuck in an infinite loop in toshiba_acpi_notify. To fix
+this, detect whether or not HCI_SYSTEM_EVENT is supported up-front
+and don't try to read system events if it isn't supported. In
+addition, limit the number of retries when reading HCI_SYSTEM_EVENT
+fails so that this loop cannot run unbounded.
 
-Fix scancodes returned by driver to match scancodes used to remap keys.
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ drivers/platform/x86/toshiba_acpi.c |   21 ++++++++++++++++-----
+ 1 files changed, 16 insertions(+), 5 deletions(-)
 
-(Before the patch FN/E returned scancode 0x1B, but to remap scancode 
-0x14 had to be used).
-
-
---------------030509090309030601060508
-Content-Type: text/x-patch;
- name="sony-scancode.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="sony-scancode.patch"
-
-The scancodes returned by the sony-laptop driver for function keys did not
-match the scancodes used to remap keys.  Also, since the scancode was sent
-to the input subsystem after the mapped keysym the /lib/udev/keymap
-utility was confused about which scancode to report for which keysym.
-
-This patch fixes the driver so the correct scancode is shown for each
-key.  It also adds to the documentation a description of where to find
-the scancodes.
-
-Signed-off-by: John Hughes <john@calva.com>
-
-diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.txt
-index 2bd4e82..0d5ac7f 100644
---- a/Documentation/laptops/sony-laptop.txt
-+++ b/Documentation/laptops/sony-laptop.txt
-@@ -17,6 +17,11 @@ subsystem. See the logs of acpid or /proc/acpi/event and
- devices are created by the driver. Additionally, loading the driver with the
- debug option will report all events in the kernel log.
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 13ef8c3..dcdc1f4 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -121,6 +121,7 @@ struct toshiba_acpi_dev {
+ 	int illumination_supported:1;
+ 	int video_supported:1;
+ 	int fan_supported:1;
++	int system_event_supported:1;
  
-+The "scancodes" passed to the input system (that can be remapped with udev)
-+are indexes to the table "sony_laptop_input_keycode_map" in the sony-laptop.c
-+module.  For example the "FN/E" key combination (EJECTCD on some models)
-+generates the scancode 20 (0x14).
+ 	struct mutex mutex;
+ };
+@@ -724,7 +725,7 @@ static int keys_proc_show(struct seq_file *m, void *v)
+ 	u32 hci_result;
+ 	u32 value;
+ 
+-	if (!dev->key_event_valid) {
++	if (!dev->key_event_valid && dev->system_event_supported) {
+ 		hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
+ 		if (hci_result == HCI_SUCCESS) {
+ 			dev->key_event_valid = 1;
+@@ -964,6 +965,8 @@ static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 	/* enable event fifo */
+ 	hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
++	if (hci_result == HCI_SUCCESS)
++		dev->system_event_supported = 1;
+ 
+ 	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
+@@ -1032,12 +1035,15 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ {
+ 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
+ 	u32 hci_result, value;
++	int retries = 3;
+ 
+-	if (event != 0x80)
++	if (!dev->system_event_supported || event != 0x80)
+ 		return;
 +
- Backlight control:
- ------------------
- If your laptop model supports it, you will find sysfs files in the
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index bbd182e..f148459 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -347,6 +347,7 @@ static void sony_laptop_report_input_event(u8 event)
- 	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
- 	struct input_dev *key_dev = sony_laptop_input.key_dev;
- 	struct sony_laptop_keypress kp = { NULL };
-+	int scancode;
- 
- 	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
- 			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
-@@ -380,8 +381,8 @@ static void sony_laptop_report_input_event(u8 event)
- 			dprintk("sony_laptop_report_input_event, event not known: %d\n", event);
- 			break;
+ 	do {
+ 		hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
+-		if (hci_result == HCI_SUCCESS) {
++		switch (hci_result) {
++		case HCI_SUCCESS:
+ 			if (value == 0x100)
+ 				continue;
+ 			/* act on key press; ignore key release */
+@@ -1049,14 +1055,19 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 				pr_info("Unknown key %x\n",
+ 				       value);
+ 			}
+-		} else if (hci_result == HCI_NOT_SUPPORTED) {
++			break;
++		case HCI_NOT_SUPPORTED:
+ 			/* This is a workaround for an unresolved issue on
+ 			 * some machines where system events sporadically
+ 			 * become disabled. */
+ 			hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
+ 			pr_notice("Re-enabled hotkeys\n");
++			/* fall through */
++		default:
++			retries--;
++			break;
  		}
--		if (sony_laptop_input_index[event] != -1) {
--			kp.key = sony_laptop_input_keycode_map[sony_laptop_input_index[event]];
-+		if ((scancode = sony_laptop_input_index[event]) != -1) {
-+			kp.key = sony_laptop_input_keycode_map[scancode];
- 			if (kp.key != KEY_UNKNOWN)
- 				kp.dev = key_dev;
- 		}
-@@ -389,9 +390,9 @@ static void sony_laptop_report_input_event(u8 event)
- 	}
+-	} while (hci_result != HCI_EMPTY);
++	} while (retries && hci_result != HCI_EMPTY);
+ }
  
- 	if (kp.dev) {
--		input_report_key(kp.dev, kp.key, 1);
- 		/* we emit the scancode so we can always remap the key */
--		input_event(kp.dev, EV_MSC, MSC_SCAN, event);
-+		input_event(kp.dev, EV_MSC, MSC_SCAN, scancode);
-+		input_report_key(kp.dev, kp.key, 1);
- 		input_sync(kp.dev);
  
- 		/* schedule key release */
-
---------------030509090309030601060508--
+-- 
+1.7.5.4
