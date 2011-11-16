@@ -1,19 +1,21 @@
 From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: [PATCH] intel_scu_ipc: Remove Moorestown support
-Date: Wed, 16 Nov 2011 16:41:39 +0000
-Message-ID: <20111116164111.12314.16141.stgit@bob.linux.org.uk>
+Subject: [PATCHv2] intel_scu_ipc: Remove Moorestown support
+Date: Wed, 16 Nov 2011 16:43:03 +0000
+Message-ID: <20111116164248.12423.41952.stgit@bob.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:55077 "EHLO
 	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757084Ab1KPRUe (ORCPT
+	with ESMTP id S1757084Ab1KPRUf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Nov 2011 12:20:34 -0500
+	Wed, 16 Nov 2011 12:20:35 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+
+"I must remember to refresh before posting, I must remember to ...."
 
 From: Alan Cox <alan@linux.intel.com>
 
@@ -25,15 +27,24 @@ Delete lots of code and conditional paths
 Signed-off-by: Alan Cox <alan@linux.intel.com>
 ---
 
- drivers/platform/x86/intel_scu_ipc.c     |  206 +++---------------------------
+ drivers/platform/x86/intel_scu_ipc.c     |  208 +++---------------------------
  drivers/platform/x86/intel_scu_ipcutil.c |   32 +----
- 2 files changed, 29 insertions(+), 209 deletions(-)
+ 2 files changed, 30 insertions(+), 210 deletions(-)
 
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 48870e5..14a2fa3 100644
+index 48870e5..86b1862 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -159,7 +159,7 @@ static inline int busy_loop(void) /* Wait till scu status is busy */
+ /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
+ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+ {
+-	int i, nc, bytes, d;
++	int nc;
+ 	u32 offset = 0;
+ 	int err;
+ 	u8 cbuf[IPC_WWBUF_SIZE] = { };
 @@ -174,55 +174,34 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
  		return -ENODEV;
  	}
