@@ -1,335 +1,100 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: [PATCHv2] intel_scu_ipc: Remove Moorestown support
-Date: Wed, 16 Nov 2011 16:43:03 +0000
-Message-ID: <20111116164248.12423.41952.stgit@bob.linux.org.uk>
+From: John Hughes <john@calvaedi.com>
+Subject: [PATCH] to fix scancodes returned by sony-laptop driver
+Date: Wed, 16 Nov 2011 19:51:57 +0100
+Message-ID: <4EC4064D.6010706@calvaedi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="------------030509090309030601060508"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:55077 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757084Ab1KPRUf (ORCPT
+Received: from oceanic.CalvaEDI.COM ([89.202.194.168]:38476 "EHLO
+	oceanic.CalvaEDI.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751907Ab1KPSvK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Nov 2011 12:20:35 -0500
+	Wed, 16 Nov 2011 13:51:10 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-"I must remember to refresh before posting, I must remember to ...."
+This is a multi-part message in MIME format.
+--------------030509090309030601060508
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Alan Cox <alan@linux.intel.com>
+Fix scancodes returned by driver to match scancodes used to remap keys.
 
-All the production devices use the PC compatible version of this device so
-don't use the SCU interfaces or the SCU firmware interfaces.
-
-Delete lots of code and conditional paths
-
-Signed-off-by: Alan Cox <alan@linux.intel.com>
----
-
- drivers/platform/x86/intel_scu_ipc.c     |  208 +++---------------------------
- drivers/platform/x86/intel_scu_ipcutil.c |   32 +----
- 2 files changed, 30 insertions(+), 210 deletions(-)
+(Before the patch FN/E returned scancode 0x1B, but to remap scancode 
+0x14 had to be used).
 
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 48870e5..86b1862 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -159,7 +159,7 @@ static inline int busy_loop(void) /* Wait till scu status is busy */
- /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
- static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- {
--	int i, nc, bytes, d;
-+	int nc;
- 	u32 offset = 0;
- 	int err;
- 	u8 cbuf[IPC_WWBUF_SIZE] = { };
-@@ -174,55 +174,34 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- 		return -ENODEV;
+--------------030509090309030601060508
+Content-Type: text/x-patch;
+ name="sony-scancode.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="sony-scancode.patch"
+
+The scancodes returned by the sony-laptop driver for function keys did not
+match the scancodes used to remap keys.  Also, since the scancode was sent
+to the input subsystem after the mapped keysym the /lib/udev/keymap
+utility was confused about which scancode to report for which keysym.
+
+This patch fixes the driver so the correct scancode is shown for each
+key.  It also adds to the documentation a description of where to find
+the scancodes.
+
+Signed-off-by: John Hughes <john@calva.com>
+
+diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.txt
+index 2bd4e82..0d5ac7f 100644
+--- a/Documentation/laptops/sony-laptop.txt
++++ b/Documentation/laptops/sony-laptop.txt
+@@ -17,6 +17,11 @@ subsystem. See the logs of acpid or /proc/acpi/event and
+ devices are created by the driver. Additionally, loading the driver with the
+ debug option will report all events in the kernel log.
+ 
++The "scancodes" passed to the input system (that can be remapped with udev)
++are indexes to the table "sony_laptop_input_keycode_map" in the sony-laptop.c
++module.  For example the "FN/E" key combination (EJECTCD on some models)
++generates the scancode 20 (0x14).
++
+ Backlight control:
+ ------------------
+ If your laptop model supports it, you will find sysfs files in the
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index bbd182e..f148459 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -347,6 +347,7 @@ static void sony_laptop_report_input_event(u8 event)
+ 	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
+ 	struct input_dev *key_dev = sony_laptop_input.key_dev;
+ 	struct sony_laptop_keypress kp = { NULL };
++	int scancode;
+ 
+ 	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
+ 			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
+@@ -380,8 +381,8 @@ static void sony_laptop_report_input_event(u8 event)
+ 			dprintk("sony_laptop_report_input_event, event not known: %d\n", event);
+ 			break;
+ 		}
+-		if (sony_laptop_input_index[event] != -1) {
+-			kp.key = sony_laptop_input_keycode_map[sony_laptop_input_index[event]];
++		if ((scancode = sony_laptop_input_index[event]) != -1) {
++			kp.key = sony_laptop_input_keycode_map[scancode];
+ 			if (kp.key != KEY_UNKNOWN)
+ 				kp.dev = key_dev;
+ 		}
+@@ -389,9 +390,9 @@ static void sony_laptop_report_input_event(u8 event)
  	}
  
--	if (platform != MRST_CPU_CHIP_PENWELL) {
--		bytes = 0;
--		d = 0;
--		for (i = 0; i < count; i++) {
--			cbuf[bytes++] = addr[i];
--			cbuf[bytes++] = addr[i] >> 8;
--			if (id != IPC_CMD_PCNTRL_R)
--				cbuf[bytes++] = data[d++];
--			if (id == IPC_CMD_PCNTRL_M)
--				cbuf[bytes++] = data[d++];
--		}
--		for (i = 0; i < bytes; i += 4)
--			ipc_data_writel(wbuf[i/4], i);
--		ipc_command(bytes << 16 |  id << 12 | 0 << 8 | op);
--	} else {
--		for (nc = 0; nc < count; nc++, offset += 2) {
--			cbuf[offset] = addr[nc];
--			cbuf[offset + 1] = addr[nc] >> 8;
--		}
-+	for (nc = 0; nc < count; nc++, offset += 2) {
-+		cbuf[offset] = addr[nc];
-+		cbuf[offset + 1] = addr[nc] >> 8;
-+	}
+ 	if (kp.dev) {
+-		input_report_key(kp.dev, kp.key, 1);
+ 		/* we emit the scancode so we can always remap the key */
+-		input_event(kp.dev, EV_MSC, MSC_SCAN, event);
++		input_event(kp.dev, EV_MSC, MSC_SCAN, scancode);
++		input_report_key(kp.dev, kp.key, 1);
+ 		input_sync(kp.dev);
  
--		if (id == IPC_CMD_PCNTRL_R) {
--			for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
--				ipc_data_writel(wbuf[nc], offset);
--			ipc_command((count*2) << 16 |  id << 12 | 0 << 8 | op);
--		} else if (id == IPC_CMD_PCNTRL_W) {
--			for (nc = 0; nc < count; nc++, offset += 1)
--				cbuf[offset] = data[nc];
--			for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
--				ipc_data_writel(wbuf[nc], offset);
--			ipc_command((count*3) << 16 |  id << 12 | 0 << 8 | op);
--		} else if (id == IPC_CMD_PCNTRL_M) {
--			cbuf[offset] = data[0];
--			cbuf[offset + 1] = data[1];
--			ipc_data_writel(wbuf[0], 0); /* Write wbuff */
--			ipc_command(4 << 16 |  id << 12 | 0 << 8 | op);
--		}
-+	if (id == IPC_CMD_PCNTRL_R) {
-+		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
-+			ipc_data_writel(wbuf[nc], offset);
-+		ipc_command((count*2) << 16 |  id << 12 | 0 << 8 | op);
-+	} else if (id == IPC_CMD_PCNTRL_W) {
-+		for (nc = 0; nc < count; nc++, offset += 1)
-+			cbuf[offset] = data[nc];
-+		for (nc = 0, offset = 0; nc < count; nc++, offset += 4)
-+			ipc_data_writel(wbuf[nc], offset);
-+		ipc_command((count*3) << 16 |  id << 12 | 0 << 8 | op);
-+	} else if (id == IPC_CMD_PCNTRL_M) {
-+		cbuf[offset] = data[0];
-+		cbuf[offset + 1] = data[1];
-+		ipc_data_writel(wbuf[0], 0); /* Write wbuff */
-+		ipc_command(4 << 16 |  id << 12 | 0 << 8 | op);
- 	}
- 
- 	err = busy_loop();
- 	if (id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
- 		/* Workaround: values are read as 0 without memcpy_fromio */
- 		memcpy_fromio(cbuf, ipcdev.ipc_base + 0x90, 16);
--		if (platform != MRST_CPU_CHIP_PENWELL) {
--			for (nc = 0, offset = 2; nc < count; nc++, offset += 3)
--				data[nc] = ipc_data_readb(offset);
--		} else {
--			for (nc = 0; nc < count; nc++)
--				data[nc] = ipc_data_readb(nc);
--		}
-+		for (nc = 0; nc < count; nc++)
-+			data[nc] = ipc_data_readb(nc);
- 	}
- 	mutex_unlock(&ipclock);
- 	return err;
-@@ -503,148 +482,6 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
- }
- EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
- 
--#define IPC_FW_LOAD_ADDR 0xFFFC0000 /* Storage location for FW image */
--#define IPC_FW_UPDATE_MBOX_ADDR 0xFFFFDFF4 /* Mailbox between ipc and scu */
--#define IPC_MAX_FW_SIZE 262144 /* 256K storage size for loading the FW image */
--#define IPC_FW_MIP_HEADER_SIZE 2048 /* Firmware MIP header size */
--/* IPC inform SCU to get ready for update process */
--#define IPC_CMD_FW_UPDATE_READY  0x10FE
--/* IPC inform SCU to go for update process */
--#define IPC_CMD_FW_UPDATE_GO     0x20FE
--/* Status code for fw update */
--#define IPC_FW_UPDATE_SUCCESS	0x444f4e45 /* Status code 'DONE' */
--#define IPC_FW_UPDATE_BADN	0x4241444E /* Status code 'BADN' */
--#define IPC_FW_TXHIGH		0x54784849 /* Status code 'IPC_FW_TXHIGH' */
--#define IPC_FW_TXLOW		0x54784c4f /* Status code 'IPC_FW_TXLOW' */
--
--struct fw_update_mailbox {
--	u32    status;
--	u32    scu_flag;
--	u32    driver_flag;
--};
--
--
--/**
-- *	intel_scu_ipc_fw_update	-	 Firmware update utility
-- *	@buffer: firmware buffer
-- *	@length: size of firmware buffer
-- *
-- *	This function provides an interface to load the firmware into
-- *	the SCU. Returns 0 on success or -1 on failure
-- */
--int intel_scu_ipc_fw_update(u8 *buffer, u32 length)
--{
--	void __iomem *fw_update_base;
--	struct fw_update_mailbox __iomem *mailbox = NULL;
--	int retry_cnt = 0;
--	u32 status;
--
--	mutex_lock(&ipclock);
--	fw_update_base = ioremap_nocache(IPC_FW_LOAD_ADDR, (128*1024));
--	if (fw_update_base == NULL) {
--		mutex_unlock(&ipclock);
--		return -ENOMEM;
--	}
--	mailbox = ioremap_nocache(IPC_FW_UPDATE_MBOX_ADDR,
--					sizeof(struct fw_update_mailbox));
--	if (mailbox == NULL) {
--		iounmap(fw_update_base);
--		mutex_unlock(&ipclock);
--		return -ENOMEM;
--	}
--
--	ipc_command(IPC_CMD_FW_UPDATE_READY);
--
--	/* Intitialize mailbox */
--	writel(0, &mailbox->status);
--	writel(0, &mailbox->scu_flag);
--	writel(0, &mailbox->driver_flag);
--
--	/* Driver copies the 2KB MIP header to SRAM at 0xFFFC0000*/
--	memcpy_toio(fw_update_base, buffer, 0x800);
--
--	/* Driver sends "FW Update" IPC command (CMD_ID 0xFE; MSG_ID 0x02).
--	* Upon receiving this command, SCU will write the 2K MIP header
--	* from 0xFFFC0000 into NAND.
--	* SCU will write a status code into the Mailbox, and then set scu_flag.
--	*/
--
--	ipc_command(IPC_CMD_FW_UPDATE_GO);
--
--	/*Driver stalls until scu_flag is set */
--	while (readl(&mailbox->scu_flag) != 1) {
--		rmb();
--		mdelay(1);
--	}
--
--	/* Driver checks Mailbox status.
--	 * If the status is 'BADN', then abort (bad NAND).
--	 * If the status is 'IPC_FW_TXLOW', then continue.
--	 */
--	while (readl(&mailbox->status) != IPC_FW_TXLOW) {
--		rmb();
--		mdelay(10);
--	}
--	mdelay(10);
--
--update_retry:
--	if (retry_cnt > 5)
--		goto update_end;
--
--	if (readl(&mailbox->status) != IPC_FW_TXLOW)
--		goto update_end;
--	buffer = buffer + 0x800;
--	memcpy_toio(fw_update_base, buffer, 0x20000);
--	writel(1, &mailbox->driver_flag);
--	while (readl(&mailbox->scu_flag) == 1) {
--		rmb();
--		mdelay(1);
--	}
--
--	/* check for 'BADN' */
--	if (readl(&mailbox->status) == IPC_FW_UPDATE_BADN)
--		goto update_end;
--
--	while (readl(&mailbox->status) != IPC_FW_TXHIGH) {
--		rmb();
--		mdelay(10);
--	}
--	mdelay(10);
--
--	if (readl(&mailbox->status) != IPC_FW_TXHIGH)
--		goto update_end;
--
--	buffer = buffer + 0x20000;
--	memcpy_toio(fw_update_base, buffer, 0x20000);
--	writel(0, &mailbox->driver_flag);
--
--	while (mailbox->scu_flag == 0) {
--		rmb();
--		mdelay(1);
--	}
--
--	/* check for 'BADN' */
--	if (readl(&mailbox->status) == IPC_FW_UPDATE_BADN)
--		goto update_end;
--
--	if (readl(&mailbox->status) == IPC_FW_TXLOW) {
--		++retry_cnt;
--		goto update_retry;
--	}
--
--update_end:
--	status = readl(&mailbox->status);
--
--	iounmap(fw_update_base);
--	iounmap(mailbox);
--	mutex_unlock(&ipclock);
--
--	if (status == IPC_FW_UPDATE_SUCCESS)
--		return 0;
--	return -EIO;
--}
--EXPORT_SYMBOL(intel_scu_ipc_fw_update);
--
- /*
-  * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
-  * When ioc bit is set to 1, caller api must wait for interrupt handler called
-@@ -727,7 +564,6 @@ static void ipc_remove(struct pci_dev *pdev)
- }
- 
- static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
--	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x080e)},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x082a)},
- 	{ 0,}
- };
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-index 2d0f913..02bc5a6 100644
---- a/drivers/platform/x86/intel_scu_ipcutil.c
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -26,13 +26,10 @@
- 
- static int major;
- 
--#define MAX_FW_SIZE 264192
--
- /* ioctl commnds */
- #define	INTE_SCU_IPC_REGISTER_READ	0
- #define INTE_SCU_IPC_REGISTER_WRITE	1
- #define INTE_SCU_IPC_REGISTER_UPDATE	2
--#define INTE_SCU_IPC_FW_UPDATE		0xA2
- 
- struct scu_ipc_data {
- 	u32     count;  /* No. of registers */
-@@ -88,27 +85,14 @@ static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
- 
--	if (cmd == INTE_SCU_IPC_FW_UPDATE) {
--			u8 *fwbuf = kmalloc(MAX_FW_SIZE, GFP_KERNEL);
--			if (fwbuf == NULL)
--				return -ENOMEM;
--			if (copy_from_user(fwbuf, (u8 *)arg, MAX_FW_SIZE)) {
--				kfree(fwbuf);
--				return -EFAULT;
--			}
--			ret = intel_scu_ipc_fw_update(fwbuf, MAX_FW_SIZE);
--			kfree(fwbuf);
--			return ret;
--	} else {
--		if (copy_from_user(&data, argp, sizeof(struct scu_ipc_data)))
--			return -EFAULT;
--		ret = scu_reg_access(cmd, &data);
--		if (ret < 0)
--			return ret;
--		if (copy_to_user(argp, &data, sizeof(struct scu_ipc_data)))
--			return -EFAULT;
--		return 0;
--	}
-+	if (copy_from_user(&data, argp, sizeof(struct scu_ipc_data)))
-+		return -EFAULT;
-+	ret = scu_reg_access(cmd, &data);
-+	if (ret < 0)
-+		return ret;
-+	if (copy_to_user(argp, &data, sizeof(struct scu_ipc_data)))
-+		return -EFAULT;
-+	return 0;
- }
- 
- static const struct file_operations scu_ipc_fops = {
+ 		/* schedule key release */
+
+--------------030509090309030601060508--
