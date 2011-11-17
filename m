@@ -1,49 +1,64 @@
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: [PATCH] platform/x86: fix dell-laptop function prototypes
-Date: Wed, 16 Nov 2011 18:20:51 -0800
-Message-ID: <4EC46F83.2030901@xenotime.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] dell-laptop: add 3 machines that has touchpad LED
+Date: Thu, 17 Nov 2011 15:30:42 +0800
+Message-ID: <1321515042-17089-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from oproxy8-pub.bluehost.com ([69.89.22.20]:59916 "HELO
-	oproxy8-pub.bluehost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1755193Ab1KQCWo (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:42450 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752032Ab1KQHat (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Nov 2011 21:22:44 -0500
+	Thu, 17 Nov 2011 02:30:49 -0500
+Received: by yenq3 with SMTP id q3so687318yen.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2011 23:30:48 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-From: Randy Dunlap <rdunlap@xenotime.net>
+Add "Vostro 3555", "Inspiron N311z", and "Inspiron M5110" into quirks,
+so that they could have touchpad LED function work.
 
-Fix build warnings:
-drivers/platform/x86/dell-laptop.c:592:13: warning: function declaration isn't a prototype
-drivers/platform/x86/dell-laptop.c:599:13: warning: function declaration isn't a prototype
-
-Signed-off-by: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Matthew Garrett <mjg@redhat.com>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/platform/x86/dell-laptop.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/dell-laptop.c |   27 +++++++++++++++++++++++++++
+ 1 files changed, 27 insertions(+), 0 deletions(-)
 
---- lnx-32-rc2.orig/drivers/platform/x86/dell-laptop.c
-+++ lnx-32-rc2/drivers/platform/x86/dell-laptop.c
-@@ -589,14 +589,14 @@ static const struct backlight_ops dell_o
- 	.update_status  = dell_send_intensity,
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index a43cfd9..71025ea 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -184,6 +184,33 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_dell_vostro_v130,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Vostro 3555",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3555"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron N311z",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron N311z"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron M5110",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron M5110"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
  };
  
--static void touchpad_led_on()
-+static void touchpad_led_on(void)
- {
- 	int command = 0x97;
- 	char data = 1;
- 	i8042_command(&data, command | 1 << 12);
- }
- 
--static void touchpad_led_off()
-+static void touchpad_led_off(void)
- {
- 	int command = 0x97;
- 	char data = 2;
+ static struct calling_interface_buffer *buffer;
+-- 
+1.7.5.4
