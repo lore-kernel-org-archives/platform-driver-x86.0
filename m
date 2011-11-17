@@ -1,64 +1,95 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] dell-laptop: add 3 machines that has touchpad LED
-Date: Thu, 17 Nov 2011 15:30:42 +0800
-Message-ID: <1321515042-17089-1-git-send-email-acelan.kao@canonical.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] to fix scancodes returned by sony-laptop driver
+Date: Thu, 17 Nov 2011 11:16:50 -0800
+Message-ID: <20111117191650.GA31479@core.coreip.homeip.net>
+References: <4EC4064D.6010706@calvaedi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:42450 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752032Ab1KQHat (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:33730 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754465Ab1KQTRD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 17 Nov 2011 02:30:49 -0500
-Received: by yenq3 with SMTP id q3so687318yen.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Nov 2011 23:30:48 -0800 (PST)
+	Thu, 17 Nov 2011 14:17:03 -0500
+Content-Disposition: inline
+In-Reply-To: <4EC4064D.6010706@calvaedi.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: John Hughes <john@calvaedi.com>
+Cc: Mattia Dongili <malattia@linux.it>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-Add "Vostro 3555", "Inspiron N311z", and "Inspiron M5110" into quirks,
-so that they could have touchpad LED function work.
+On Wed, Nov 16, 2011 at 07:51:57PM +0100, John Hughes wrote:
+> Fix scancodes returned by driver to match scancodes used to remap keys.
+> 
+> (Before the patch FN/E returned scancode 0x1B, but to remap scancode
+> 0x14 had to be used).
+> 
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- drivers/platform/x86/dell-laptop.c |   27 +++++++++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
+> The scancodes returned by the sony-laptop driver for function keys did not
+> match the scancodes used to remap keys.  Also, since the scancode was sent
+> to the input subsystem after the mapped keysym the /lib/udev/keymap
+> utility was confused about which scancode to report for which keysym.
+> 
+> This patch fixes the driver so the correct scancode is shown for each
+> key.  It also adds to the documentation a description of where to find
+> the scancodes.
+> 
+> Signed-off-by: John Hughes <john@calva.com>
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index a43cfd9..71025ea 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -184,6 +184,33 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
- 		},
- 		.driver_data = &quirk_dell_vostro_v130,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Vostro 3555",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3555"),
-+		},
-+		.driver_data = &quirk_dell_vostro_v130,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron N311z",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron N311z"),
-+		},
-+		.driver_data = &quirk_dell_vostro_v130,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron M5110",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron M5110"),
-+		},
-+		.driver_data = &quirk_dell_vostro_v130,
-+	},
- };
- 
- static struct calling_interface_buffer *buffer;
+Acked-by: Dmitry Torokhov <dtor@mail.ru>
+
+> 
+> diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.txt
+> index 2bd4e82..0d5ac7f 100644
+> --- a/Documentation/laptops/sony-laptop.txt
+> +++ b/Documentation/laptops/sony-laptop.txt
+> @@ -17,6 +17,11 @@ subsystem. See the logs of acpid or /proc/acpi/event and
+>  devices are created by the driver. Additionally, loading the driver with the
+>  debug option will report all events in the kernel log.
+>  
+> +The "scancodes" passed to the input system (that can be remapped with udev)
+> +are indexes to the table "sony_laptop_input_keycode_map" in the sony-laptop.c
+> +module.  For example the "FN/E" key combination (EJECTCD on some models)
+> +generates the scancode 20 (0x14).
+> +
+>  Backlight control:
+>  ------------------
+>  If your laptop model supports it, you will find sysfs files in the
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index bbd182e..f148459 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -347,6 +347,7 @@ static void sony_laptop_report_input_event(u8 event)
+>  	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
+>  	struct input_dev *key_dev = sony_laptop_input.key_dev;
+>  	struct sony_laptop_keypress kp = { NULL };
+> +	int scancode;
+>  
+>  	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
+>  			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
+> @@ -380,8 +381,8 @@ static void sony_laptop_report_input_event(u8 event)
+>  			dprintk("sony_laptop_report_input_event, event not known: %d\n", event);
+>  			break;
+>  		}
+> -		if (sony_laptop_input_index[event] != -1) {
+> -			kp.key = sony_laptop_input_keycode_map[sony_laptop_input_index[event]];
+> +		if ((scancode = sony_laptop_input_index[event]) != -1) {
+> +			kp.key = sony_laptop_input_keycode_map[scancode];
+>  			if (kp.key != KEY_UNKNOWN)
+>  				kp.dev = key_dev;
+>  		}
+> @@ -389,9 +390,9 @@ static void sony_laptop_report_input_event(u8 event)
+>  	}
+>  
+>  	if (kp.dev) {
+> -		input_report_key(kp.dev, kp.key, 1);
+>  		/* we emit the scancode so we can always remap the key */
+> -		input_event(kp.dev, EV_MSC, MSC_SCAN, event);
+> +		input_event(kp.dev, EV_MSC, MSC_SCAN, scancode);
+> +		input_report_key(kp.dev, kp.key, 1);
+>  		input_sync(kp.dev);
+>  
+>  		/* schedule key release */
+
 -- 
-1.7.5.4
+Dmitry
