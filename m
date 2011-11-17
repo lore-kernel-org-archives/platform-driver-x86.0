@@ -1,100 +1,49 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH] toshiba_acpi: Fix machines that don't support HCI_SYSTEM_EVENT
-Date: Wed, 16 Nov 2011 17:37:45 -0600
-Message-ID: <1321486665-12929-1-git-send-email-seth.forshee@canonical.com>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: [PATCH] platform/x86: fix dell-laptop function prototypes
+Date: Wed, 16 Nov 2011 18:20:51 -0800
+Message-ID: <4EC46F83.2030901@xenotime.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:44989 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751674Ab1KPXhv (ORCPT
+Received: from oproxy8-pub.bluehost.com ([69.89.22.20]:59916 "HELO
+	oproxy8-pub.bluehost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1755193Ab1KQCWo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Nov 2011 18:37:51 -0500
+	Wed, 16 Nov 2011 21:22:44 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
 
-The Satellite C670-10V generates notifications for hotkeys but does
-not support HCI_SYSTEM_EVENT. As a result when a hotkey is pressed
-it gets stuck in an infinite loop in toshiba_acpi_notify. To fix
-this, detect whether or not HCI_SYSTEM_EVENT is supported up-front
-and don't try to read system events if it isn't supported. In
-addition, limit the number of retries when reading HCI_SYSTEM_EVENT
-fails so that this loop cannot run unbounded.
+From: Randy Dunlap <rdunlap@xenotime.net>
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Fix build warnings:
+drivers/platform/x86/dell-laptop.c:592:13: warning: function declaration isn't a prototype
+drivers/platform/x86/dell-laptop.c:599:13: warning: function declaration isn't a prototype
+
+Signed-off-by: Randy Dunlap <rdunlap@xenotime.net>
+Cc: Matthew Garrett <mjg@redhat.com>
 ---
- drivers/platform/x86/toshiba_acpi.c |   21 ++++++++++++++++-----
- 1 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/platform/x86/dell-laptop.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 13ef8c3..dcdc1f4 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -121,6 +121,7 @@ struct toshiba_acpi_dev {
- 	int illumination_supported:1;
- 	int video_supported:1;
- 	int fan_supported:1;
-+	int system_event_supported:1;
- 
- 	struct mutex mutex;
+--- lnx-32-rc2.orig/drivers/platform/x86/dell-laptop.c
++++ lnx-32-rc2/drivers/platform/x86/dell-laptop.c
+@@ -589,14 +589,14 @@ static const struct backlight_ops dell_o
+ 	.update_status  = dell_send_intensity,
  };
-@@ -724,7 +725,7 @@ static int keys_proc_show(struct seq_file *m, void *v)
- 	u32 hci_result;
- 	u32 value;
  
--	if (!dev->key_event_valid) {
-+	if (!dev->key_event_valid && dev->system_event_supported) {
- 		hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
- 		if (hci_result == HCI_SUCCESS) {
- 			dev->key_event_valid = 1;
-@@ -964,6 +965,8 @@ static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
- 
- 	/* enable event fifo */
- 	hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
-+	if (hci_result == HCI_SUCCESS)
-+		dev->system_event_supported = 1;
- 
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
-@@ -1032,12 +1035,15 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+-static void touchpad_led_on()
++static void touchpad_led_on(void)
  {
- 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
- 	u32 hci_result, value;
-+	int retries = 3;
- 
--	if (event != 0x80)
-+	if (!dev->system_event_supported || event != 0x80)
- 		return;
-+
- 	do {
- 		hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
--		if (hci_result == HCI_SUCCESS) {
-+		switch (hci_result) {
-+		case HCI_SUCCESS:
- 			if (value == 0x100)
- 				continue;
- 			/* act on key press; ignore key release */
-@@ -1049,14 +1055,19 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
- 				pr_info("Unknown key %x\n",
- 				       value);
- 			}
--		} else if (hci_result == HCI_NOT_SUPPORTED) {
-+			break;
-+		case HCI_NOT_SUPPORTED:
- 			/* This is a workaround for an unresolved issue on
- 			 * some machines where system events sporadically
- 			 * become disabled. */
- 			hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
- 			pr_notice("Re-enabled hotkeys\n");
-+			/* fall through */
-+		default:
-+			retries--;
-+			break;
- 		}
--	} while (hci_result != HCI_EMPTY);
-+	} while (retries && hci_result != HCI_EMPTY);
+ 	int command = 0x97;
+ 	char data = 1;
+ 	i8042_command(&data, command | 1 << 12);
  }
  
- 
--- 
-1.7.5.4
+-static void touchpad_led_off()
++static void touchpad_led_off(void)
+ {
+ 	int command = 0x97;
+ 	char data = 2;
