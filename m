@@ -1,24 +1,26 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Fix machines that don't support HCI_SYSTEM_EVENT
-Date: Fri, 18 Nov 2011 14:20:12 -0700
-Message-ID: <CAGdLNWEKLk7BBaFkLiWTngG=b9rEm9QPCmMusLcTUdUM=AeLHw@mail.gmail.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] toshiba_acpi: Fix machines that don't support
+ HCI_SYSTEM_EVENT
+Date: Fri, 18 Nov 2011 21:28:11 +0000
+Message-ID: <20111118212811.GA8893@srcf.ucam.org>
 References: <1321486665-12929-1-git-send-email-seth.forshee@canonical.com>
+ <CAGdLNWEKLk7BBaFkLiWTngG=b9rEm9QPCmMusLcTUdUM=AeLHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bw0-f46.google.com ([209.85.214.46]:59853 "EHLO
-	mail-bw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751280Ab1KRVUO (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:42780 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751444Ab1KRV2O (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 Nov 2011 16:20:14 -0500
-In-Reply-To: <1321486665-12929-1-git-send-email-seth.forshee@canonical.com>
+	Fri, 18 Nov 2011 16:28:14 -0500
+Content-Disposition: inline
+In-Reply-To: <CAGdLNWEKLk7BBaFkLiWTngG=b9rEm9QPCmMusLcTUdUM=AeLHw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Seth Forshee <seth.forshee@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: Seth Forshee <seth.forshee@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Qosmio X500-X505 series are also affected by this
-"infinite loop", this patch fixes the problem on these
-laptops.
+Cool. I'll merge this for 3.2.
 
-Tested-by: Azael Avalos <coproscefalo@gmail.com>
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
