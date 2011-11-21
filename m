@@ -1,31 +1,34 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] dell-wmi: Change debug statements from pr_info to pr_debug
-Date: Mon, 21 Nov 2011 22:10:18 +0100
-Message-ID: <CAHR064h0=tmY6-=PCHKfOa=w_38yVzGoV1XSCNDGimzjn7vydQ@mail.gmail.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] dell-wmi: Change debug statements from pr_info to
+ pr_debug
+Date: Mon, 21 Nov 2011 15:14:38 -0600
+Message-ID: <20111121211438.GH6736@thinkpad-t410>
 References: <1321908536-5163-1-git-send-email-seth.forshee@canonical.com>
-	<20111121205230.GA14467@srcf.ucam.org>
+ <20111121205230.GA14467@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:39435 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751103Ab1KUVKU (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:37235 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752121Ab1KUVOl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 21 Nov 2011 16:10:20 -0500
+	Mon, 21 Nov 2011 16:14:41 -0500
+Content-Disposition: inline
 In-Reply-To: <20111121205230.GA14467@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Seth Forshee <seth.forshee@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Nov 21, 2011 at 9:52 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> They're intended to be there, in the same way that the keyboard code
-> generates unknown scancode errors. We want to know when users have keys
+On Mon, Nov 21, 2011 at 08:52:30PM +0000, Matthew Garrett wrote:
+> They're intended to be there, in the same way that the keyboard code 
+> generates unknown scancode errors. We want to know when users have keys 
 > that don't work.
 
-Agree, and if specific known key should be ignored, they should be
-present in the keymap.
+All right, but what about the unknown WMI events? Those are the bigger
+problem anyway, as at least one machine (the Latitude XT2) can generate
+a lot of these messages for unknown reasons. It doesn't appear that
+anyone has been making use of these messages since we still only support
+one event. Would you object to demoting that one?
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+Seth
