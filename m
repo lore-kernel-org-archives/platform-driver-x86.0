@@ -1,236 +1,335 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 11/15] samsung-laptop: add keyboard backlight support
-Date: Tue, 22 Nov 2011 23:02:42 +0100
-Message-ID: <1321999366-23784-12-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 13/15] samsung-laptop: make the dmi check less strict
+Date: Tue, 22 Nov 2011 23:02:44 +0100
+Message-ID: <1321999366-23784-14-git-send-email-corentincj@iksaif.net>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp5-g21.free.fr ([212.27.42.5]:34417 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1758850Ab1KVWEH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 22 Nov 2011 17:04:07 -0500
 In-Reply-To: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@suse.de>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+
+This enable the driver for everything that look like
+a laptop and is from vendor "SAMSUNG ELECTRONICS CO., LTD.".
+Note that laptop supported by samsung-q10 seem to have a different
+vendor strict.
+
+Also remove every log output until we know that we have a SABI interface
+(except if the driver is forced to load, or debug is enabled).
+
+Keeping a whitelist of laptop with a model granularity is something that can't
+work without close vendor cooperation (and we don't have that).
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/Kconfig          |    2 +
- drivers/platform/x86/samsung-laptop.c |  136 +++++++++++++++++++++++++++++++++
- 2 files changed, 138 insertions(+), 0 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |  235 ++------------------------------
+ 1 files changed, 15 insertions(+), 220 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2f7a9a7..7e594e5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -747,6 +747,8 @@ config SAMSUNG_LAPTOP
- 	depends on X86
- 	depends on RFKILL || RFKILL = n
- 	depends on BACKLIGHT_CLASS_DEVICE
-+	select LEDS_CLASS
-+	select NEW_LEDS
- 	---help---
- 	  This module implements a driver for a wide range of different
- 	  Samsung laptops.  It offers control over the different
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 88acec9..17afb13 100644
+index c9f574c..9940525 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -17,6 +17,7 @@
- #include <linux/delay.h>
- #include <linux/pci.h>
- #include <linux/backlight.h>
-+#include <linux/leds.h>
- #include <linux/fb.h>
- #include <linux/dmi.h>
- #include <linux/platform_device.h>
-@@ -112,6 +113,9 @@ struct sabi_commands {
- 	u16 get_usb_charge;
- 	u16 set_usb_charge;
+@@ -1250,7 +1250,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
  
-+	/* 0x81 to read, (0x82 | level << 8) to set, 0xaabb to enable */
-+	u16 kbd_backlight;
-+
- 	/*
- 	 * Tell the BIOS that Linux is running on this machine.
- 	 * 81 is on, 80 is off
-@@ -171,6 +175,8 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_usb_charge = 0xFFFF,
- 			.set_usb_charge = 0xFFFF,
+ 	samsung->f0000_segment = ioremap_nocache(0xf0000, 0xffff);
+ 	if (!samsung->f0000_segment) {
+-		pr_err("Can't map the segment at 0xf0000\n");
++		if (debug || force)
++			pr_err("Can't map the segment at 0xf0000\n");
+ 		ret = -EINVAL;
+ 		goto exit;
+ 	}
+@@ -1265,7 +1266,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
+ 	}
  
-+			.kbd_backlight = 0xFFFF,
-+
- 			.set_linux = 0x0a,
- 		},
- 
-@@ -224,6 +230,8 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_usb_charge = 0x67,
- 			.set_usb_charge = 0x68,
- 
-+			.kbd_backlight = 0x78,
-+
- 			.set_linux = 0xff,
- 		},
- 
-@@ -279,6 +287,11 @@ struct samsung_laptop {
- 	struct backlight_device *backlight_device;
- 	struct rfkill *rfk;
- 
-+	struct led_classdev kbd_led;
-+	int kbd_led_wk;
-+	struct workqueue_struct *led_workqueue;
-+	struct work_struct kbd_led_work;
-+
- 	struct samsung_laptop_debug debug;
- 
- 	bool handle_backlight;
-@@ -745,6 +758,122 @@ static int __init samsung_rfkill_init(struct samsung_laptop *samsung)
+ 	if (loca == 0xffff) {
+-		pr_err("This computer does not support SABI\n");
++		if (debug || force)
++			pr_err("This computer does not support SABI\n");
+ 		ret = -ENODEV;
+ 		goto exit;
+ 	}
+@@ -1334,244 +1336,34 @@ static int __init samsung_platform_init(struct samsung_laptop *samsung)
  	return 0;
  }
  
-+static int kbd_backlight_enable(struct samsung_laptop *samsung)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+	int retval;
-+
-+	if (commands->kbd_backlight == 0xFFFF)
-+		return -ENODEV;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.d0 = 0xaabb;
-+	retval = sabi_command(samsung, commands->kbd_backlight,
-+			      &data, &data);
-+
-+	if (retval)
-+		return retval;
-+
-+	if (data.d0 != 0xccdd)
-+		return -ENODEV;
-+	return 0;
-+}
-+
-+static int kbd_backlight_read(struct samsung_laptop *samsung)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+	int retval;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.data[0] = 0x81;
-+	retval = sabi_command(samsung, commands->kbd_backlight,
-+			      &data, &data);
-+
-+	if (retval)
-+		return retval;
-+
-+	return data.data[0];
-+}
-+
-+static int kbd_backlight_write(struct samsung_laptop *samsung, int brightness)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.d0 = 0x82 | ((brightness & 0xFF) << 8);
-+	return sabi_command(samsung, commands->kbd_backlight,
-+			    &data, NULL);
-+}
-+
-+static void kbd_led_update(struct work_struct *work)
-+{
-+	struct samsung_laptop *samsung;
-+
-+	samsung = container_of(work, struct samsung_laptop, kbd_led_work);
-+	kbd_backlight_write(samsung, samsung->kbd_led_wk);
-+}
-+
-+static void kbd_led_set(struct led_classdev *led_cdev,
-+			enum led_brightness value)
-+{
-+	struct samsung_laptop *samsung;
-+
-+	samsung = container_of(led_cdev, struct samsung_laptop, kbd_led);
-+
-+	if (value > samsung->kbd_led.max_brightness)
-+		value = samsung->kbd_led.max_brightness;
-+	else if (value < 0)
-+		value = 0;
-+
-+	samsung->kbd_led_wk = value;
-+	queue_work(samsung->led_workqueue, &samsung->kbd_led_work);
-+}
-+
-+static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
-+{
-+	struct samsung_laptop *samsung;
-+
-+	samsung = container_of(led_cdev, struct samsung_laptop, kbd_led);
-+	return kbd_backlight_read(samsung);
-+}
-+
-+static void samsung_leds_exit(struct samsung_laptop *samsung)
-+{
-+	if (!IS_ERR_OR_NULL(samsung->kbd_led.dev))
-+		led_classdev_unregister(&samsung->kbd_led);
-+	if (samsung->led_workqueue)
-+		destroy_workqueue(samsung->led_workqueue);
-+}
-+
-+static int __init samsung_leds_init(struct samsung_laptop *samsung)
-+{
-+	int ret = 0;
-+
-+	samsung->led_workqueue = create_singlethread_workqueue("led_workqueue");
-+	if (!samsung->led_workqueue)
-+		return -ENOMEM;
-+
-+	if (kbd_backlight_enable(samsung) >= 0) {
-+		INIT_WORK(&samsung->kbd_led_work, kbd_led_update);
-+
-+		samsung->kbd_led.name = "samsung::kbd_backlight";
-+		samsung->kbd_led.brightness_set = kbd_led_set;
-+		samsung->kbd_led.brightness_get = kbd_led_get;
-+		samsung->kbd_led.max_brightness = 8;
-+
-+		ret = led_classdev_register(&samsung->platform_device->dev,
-+					   &samsung->kbd_led);
-+	}
-+
-+	if (ret)
-+		samsung_leds_exit(samsung);
-+
-+	return ret;
-+}
-+
- static void samsung_backlight_exit(struct samsung_laptop *samsung)
- {
- 	if (samsung->backlight_device) {
-@@ -1354,6 +1483,10 @@ static int __init samsung_init(void)
+-static int __init dmi_check_cb(const struct dmi_system_id *id)
+-{
+-	pr_info("found laptop model '%s'\n", id->ident);
+-	return 1;
+-}
+-
+ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 	{
+-		.ident = "N128",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N128"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N128"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "N130",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N130"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N130"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "N510",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N510"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N510"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "X125",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "X125"),
+-			DMI_MATCH(DMI_BOARD_NAME, "X125"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "X120/X170",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "X120/X170"),
+-			DMI_MATCH(DMI_BOARD_NAME, "X120/X170"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "NC10",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "NC10"),
+-			DMI_MATCH(DMI_BOARD_NAME, "NC10"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-		{
+-		.ident = "NP-Q45",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "SQ45S70S"),
+-			DMI_MATCH(DMI_BOARD_NAME, "SQ45S70S"),
+-		},
+-		.callback = dmi_check_cb,
+-		},
+-	{
+-		.ident = "X360",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "X360"),
+-			DMI_MATCH(DMI_BOARD_NAME, "X360"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R410 Plus",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "R410P"),
+-			DMI_MATCH(DMI_BOARD_NAME, "R460"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R518",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
+ 					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "R518"),
+-			DMI_MATCH(DMI_BOARD_NAME, "R518"),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "8"), /* Portable */
+ 		},
+-		.callback = dmi_check_cb,
+ 	},
+ 	{
+-		.ident = "R519/R719",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
+ 					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "R519/R719"),
+-			DMI_MATCH(DMI_BOARD_NAME, "R519/R719"),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "9"), /* Laptop */
+ 		},
+-		.callback = dmi_check_cb,
+ 	},
+ 	{
+-		.ident = "N150/N210/N220",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
+ 					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "10"), /* Notebook */
+ 		},
+-		.callback = dmi_check_cb,
+ 	},
+ 	{
+-		.ident = "N220",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR,
+ 					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N220"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N220"),
++			DMI_MATCH(DMI_CHASSIS_TYPE, "14"), /* Sub-Notebook */
+ 		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "N150/N210/N220/N230",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220/N230"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220/N230"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "N150P/N210P/N220P",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N150P/N210P/N220P"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N150P/N210P/N220P"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R700",
+-		.matches = {
+-		      DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-		      DMI_MATCH(DMI_PRODUCT_NAME, "SR700"),
+-		      DMI_MATCH(DMI_BOARD_NAME, "SR700"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R530/R730",
+-		.matches = {
+-		      DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-		      DMI_MATCH(DMI_PRODUCT_NAME, "R530/R730"),
+-		      DMI_MATCH(DMI_BOARD_NAME, "R530/R730"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "NF110/NF210/NF310",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
+-			DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "N145P/N250P/N260P",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
+-			DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R70/R71",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR,
+-					"SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "R70/R71"),
+-			DMI_MATCH(DMI_BOARD_NAME, "R70/R71"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "P460",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "P460"),
+-			DMI_MATCH(DMI_BOARD_NAME, "P460"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "R528/R728",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "R528/R728"),
+-			DMI_MATCH(DMI_BOARD_NAME, "R528/R728"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-	{
+-		.ident = "NC210/NC110",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
+-			DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
+-		},
+-		.callback = dmi_check_cb,
+-	},
+-		{
+-		.ident = "X520",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "X520"),
+-			DMI_MATCH(DMI_BOARD_NAME, "X520"),
+-		},
+-		.callback = dmi_check_cb,
+ 	},
+ 	{ },
+ };
+@@ -1596,12 +1388,9 @@ static int __init samsung_init(void)
+ 
+ #ifdef CONFIG_ACPI
+ 	/* Don't handle backlight here if the acpi video already handle it */
+-	if (acpi_video_backlight_support()) {
+-		pr_info("Backlight controlled by ACPI video driver\n");
++	if (acpi_video_backlight_support())
+ 		samsung->handle_backlight = false;
+-	}
+ #endif
+-
+ 	ret = samsung_platform_init(samsung);
  	if (ret)
- 		goto error_rfkill;
- 
-+	ret = samsung_leds_init(samsung);
-+	if (ret)
-+		goto error_leds;
-+
- 	ret = samsung_debugfs_init(samsung);
+ 		goto error_platform;
+@@ -1610,6 +1399,12 @@ static int __init samsung_init(void)
  	if (ret)
- 		goto error_debugfs;
-@@ -1362,6 +1495,8 @@ static int __init samsung_init(void)
- 	return ret;
+ 		goto error_sabi;
  
- error_debugfs:
-+	samsung_leds_exit(samsung);
-+error_leds:
- 	samsung_rfkill_exit(samsung);
- error_rfkill:
- 	samsung_backlight_exit(samsung);
-@@ -1383,6 +1518,7 @@ static void __exit samsung_exit(void)
- 	samsung = platform_get_drvdata(samsung_platform_device);
- 
- 	samsung_debugfs_exit(samsung);
-+	samsung_leds_exit(samsung);
- 	samsung_rfkill_exit(samsung);
- 	samsung_backlight_exit(samsung);
- 	samsung_sysfs_exit(samsung);
++#ifdef CONFIG_ACPI
++	/* Only log that if we are really on a sabi platform */
++	if (acpi_video_backlight_support())
++		pr_info("Backlight controlled by ACPI video driver\n");
++#endif
++
+ 	ret = samsung_sysfs_init(samsung);
+ 	if (ret)
+ 		goto error_sysfs;
 -- 
 1.7.5.4
