@@ -1,36 +1,39 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 15/15] samsung-laptop: promote myself as maintainer of samsung-laptop
-Date: Tue, 22 Nov 2011 23:02:46 +0100
-Message-ID: <1321999366-23784-16-git-send-email-corentincj@iksaif.net>
+From: Greg KH <gregkh@suse.de>
+Subject: Re: [PATCH 03/15] samsung-laptop: don't handle backlight if handled
+ by acpi/video
+Date: Tue, 22 Nov 2011 14:16:33 -0800
+Message-ID: <20111122221633.GA24283@suse.de>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Corentin Chary <corentincj@iksaif.net>, Andrew Morton <akpm@linux-foundation.org>, Jeff Kirsher <jeffrey.t.kirsher@intel.com>, Joe Perches <joe@perches.com>, "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+ <1321999366-23784-4-git-send-email-corentincj@iksaif.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:33383 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1758827Ab1KVWgT (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 22 Nov 2011 17:36:19 -0500
+Content-Disposition: inline
+In-Reply-To: <1321999366-23784-4-git-send-email-corentincj@iksaif.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
----
- MAINTAINERS |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+On Tue, Nov 22, 2011 at 11:02:34PM +0100, Corentin Chary wrote:
+> samsung-laptop is not at all related to ACPI, but since this interface
+> is not documented at all, and the driver has to use it at load to
+> understand how it works on the laptop, I think it's a good idea to
+> disable it if a better solution is available.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3523ab0..bdde26f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5666,6 +5666,12 @@ F:	drivers/media/common/saa7146*
- F:	drivers/media/video/*7146*
- F:	include/media/*7146*
- 
-+SAMSUNG LAPTOP DRIVER
-+M:	Corentin Chary <corentincj@iksaif.net>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/samsung-laptop.c
-+
- SAMSUNG AUDIO (ASoC) DRIVERS
- M:	Jassi Brar <jassisinghbrar@gmail.com>
- M:	Sangbeom Kim <sbkim73@samsung.com>
--- 
-1.7.5.4
+I wish this would work, but on the machine that I had, there was a valid
+ACPI table for the video device, yet I was told to "ignore it, it
+doesn't work and use the sabi interface instead", so this patch would
+break that machine :(
+
+We might want to trigger off of the machine type for this kind of
+thing, that's the only way I can see this working properly.
+
+So, sorry, I can't approve this patch.
+
+greg k-h
