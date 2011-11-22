@@ -1,160 +1,315 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 09/15] samsung-laptop: add usb charge support
-Date: Tue, 22 Nov 2011 23:02:40 +0100
-Message-ID: <1321999366-23784-10-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 12/15] samsung-laptop: add true rfkill support for swsmi
+Date: Tue, 22 Nov 2011 23:02:43 +0100
+Message-ID: <1321999366-23784-13-git-send-email-corentincj@iksaif.net>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, Matthew Garrett <mjg@redhat.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- .../ABI/testing/sysfs-driver-samsung-laptop        |    8 ++
- drivers/platform/x86/samsung-laptop.c              |   82 ++++++++++++++++++++
- 2 files changed, 90 insertions(+), 0 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |  201 ++++++++++++++++++++++++++++-----
+ 1 files changed, 170 insertions(+), 31 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-index a6a56e1..f05b897 100644
---- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-@@ -27,3 +27,11 @@ Description:	Max battery charge level can be modified, battery cycle
- 		level.
- 		0 means normal battery mode (100% charge)
- 		1 means battery life extender mode (80% charge)
-+
-+What:		/sys/devices/platform/samsung/usb_charge
-+Date:		December 1, 2011
-+KernelVersion:	3.3
-+Contact:	Corentin Chary <corentin.chary@gmail.com>
-+Description:	Use your USB ports to charge devices, even
-+		when your laptop is powered off.
-+		1 means enabled, 0 means disabled.
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 16f45da..88acec9 100644
+index 17afb13..c9f574c 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -108,6 +108,10 @@ struct sabi_commands {
- 	u16 get_battery_life_extender;
- 	u16 set_battery_life_extender;
+@@ -45,6 +45,9 @@
+ #define SABI_IFACE_COMPLETE		0x04
+ #define SABI_IFACE_DATA			0x05
  
-+	/* 0x80 is off, 0x81 is on */
-+	u16 get_usb_charge;
-+	u16 set_usb_charge;
++#define WL_STATUS_WLAN			0x0
++#define WL_STATUS_BT			0x2
 +
- 	/*
- 	 * Tell the BIOS that Linux is running on this machine.
- 	 * 81 is on, 80 is off
-@@ -164,6 +168,9 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_battery_life_extender = 0xFFFF,
- 			.set_battery_life_extender = 0xFFFF,
+ /* Structure get/set data using sabi */
+ struct sabi_data {
+ 	union {
+@@ -113,6 +116,10 @@ struct sabi_commands {
+ 	u16 get_usb_charge;
+ 	u16 set_usb_charge;
  
-+			.get_usb_charge = 0xFFFF,
-+			.set_usb_charge = 0xFFFF,
++	/* the first byte is for bluetooth and the third one is for wlan */
++	u16 get_wireless_status;
++	u16 set_wireless_status;
 +
- 			.set_linux = 0x0a,
- 		},
+ 	/* 0x81 to read, (0x82 | level << 8) to set, 0xaabb to enable */
+ 	u16 kbd_backlight;
  
-@@ -214,6 +221,9 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_battery_life_extender = 0x65,
- 			.set_battery_life_extender = 0x66,
- 
-+			.get_usb_charge = 0x67,
-+			.set_usb_charge = 0x68,
-+
- 			.set_linux = 0xff,
- 		},
- 
-@@ -610,9 +620,79 @@ static ssize_t set_battery_life_extender(struct device *dev,
- static DEVICE_ATTR(battery_life_extender, S_IWUSR | S_IRUGO,
- 		   get_battery_life_extender, set_battery_life_extender);
- 
-+static int read_usb_charge(struct samsung_laptop *samsung)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+	int retval;
-+
-+	if (commands->get_usb_charge == 0xFFFF)
-+		return -ENODEV;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.data[0] = 0x80;
-+	retval = sabi_command(samsung, commands->get_usb_charge,
-+			      &data, &data);
-+
-+	if (retval)
-+		return retval;
-+
-+	if (data.data[0] != 0 && data.data[0] != 1)
-+		return -ENODEV;
-+
-+	return data.data[0];
-+}
-+
-+static int write_usb_charge(struct samsung_laptop *samsung,
-+			    int enabled)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.data[0] = 0x80 | enabled;
-+	return sabi_command(samsung, commands->set_usb_charge,
-+			    &data, NULL);
-+}
-+
-+static ssize_t get_usb_charge(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct samsung_laptop *samsung = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = read_usb_charge(samsung);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", ret);
-+}
-+
-+static ssize_t set_usb_charge(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct samsung_laptop *samsung = dev_get_drvdata(dev);
-+	int ret, value;
-+
-+	if (!count || sscanf(buf, "%i", &value) != 1)
-+		return -EINVAL;
-+
-+	ret = write_usb_charge(samsung, !!value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(usb_charge, S_IWUSR | S_IRUGO,
-+		   get_usb_charge, set_usb_charge);
-+
- static struct attribute *platform_attributes[] = {
- 	&dev_attr_performance_level.attr,
- 	&dev_attr_battery_life_extender.attr,
-+	&dev_attr_usb_charge.attr,
- 	NULL
+@@ -129,6 +136,7 @@ struct sabi_performance_level {
  };
  
-@@ -713,6 +793,8 @@ static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
- 		ok = !!samsung->config->performance_levels[0].name;
- 	if (attr == &dev_attr_battery_life_extender.attr)
- 		ok = !!(read_battery_life_extender(samsung) >= 0);
-+	if (attr == &dev_attr_usb_charge.attr)
-+		ok = !!(read_usb_charge(samsung) >= 0);
+ struct sabi_config {
++	int sabi_version;
+ 	const char *test_string;
+ 	u16 main_function;
+ 	const struct sabi_header_offsets header_offsets;
+@@ -140,6 +148,10 @@ struct sabi_config {
  
- 	return ok ? attr->mode : 0;
+ static const struct sabi_config sabi_configs[] = {
+ 	{
++		/* I don't know if it is really 2, but it it is
++		 * less than 3 anyway */
++		.sabi_version = 2,
++
+ 		.test_string = "SECLINUX",
+ 
+ 		.main_function = 0x4c49,
+@@ -175,6 +187,9 @@ static const struct sabi_config sabi_configs[] = {
+ 			.get_usb_charge = 0xFFFF,
+ 			.set_usb_charge = 0xFFFF,
+ 
++			.get_wireless_status = 0xFFFF,
++			.set_wireless_status = 0xFFFF,
++
+ 			.kbd_backlight = 0xFFFF,
+ 
+ 			.set_linux = 0x0a,
+@@ -195,6 +210,8 @@ static const struct sabi_config sabi_configs[] = {
+ 		.max_brightness = 8,
+ 	},
+ 	{
++		.sabi_version = 3,
++
+ 		.test_string = "SwSmi@",
+ 
+ 		.main_function = 0x5843,
+@@ -230,6 +247,9 @@ static const struct sabi_config sabi_configs[] = {
+ 			.get_usb_charge = 0x67,
+ 			.set_usb_charge = 0x68,
+ 
++			.get_wireless_status = 0x69,
++			.set_wireless_status = 0x6a,
++
+ 			.kbd_backlight = 0x78,
+ 
+ 			.set_linux = 0xff,
+@@ -274,6 +294,14 @@ struct samsung_laptop_debug {
+ 	struct debugfs_blob_wrapper data_wrapper;
+ };
+ 
++struct samsung_laptop;
++
++struct samsung_rfkill {
++	struct samsung_laptop *samsung;
++	struct rfkill *rfkill;
++	enum rfkill_type type;
++};
++
+ struct samsung_laptop {
+ 	const struct sabi_config *config;
+ 
+@@ -285,7 +313,9 @@ struct samsung_laptop {
+ 
+ 	struct platform_device *platform_device;
+ 	struct backlight_device *backlight_device;
+-	struct rfkill *rfk;
++
++	struct samsung_rfkill wlan;
++	struct samsung_rfkill bluetooth;
+ 
+ 	struct led_classdev kbd_led;
+ 	int kbd_led_wk;
+@@ -486,26 +516,74 @@ static const struct backlight_ops backlight_ops = {
+ 	.update_status	= update_status,
+ };
+ 
+-static int rfkill_set(void *data, bool blocked)
++static int seclinux_rfkill_set(void *data, bool blocked)
+ {
+ 	struct samsung_laptop *samsung = data;
+ 	const struct sabi_commands *commands = &samsung->config->commands;
+ 
+-	/* Do something with blocked...*/
+-	/*
+-	 * blocked == false is on
+-	 * blocked == true is off
+-	 */
+-	if (blocked)
+-		sabi_set_commandb(samsung, commands->set_wireless_button, 0);
++	return sabi_set_commandb(samsung, commands->set_wireless_button,
++				 !blocked);
++}
++
++static struct rfkill_ops seclinux_rfkill_ops = {
++	.set_block = seclinux_rfkill_set,
++};
++
++static int swsmi_wireless_status(struct samsung_laptop *samsung,
++				 struct sabi_data *data)
++{
++	const struct sabi_commands *commands = &samsung->config->commands;
++
++	return sabi_command(samsung, commands->get_wireless_status,
++			    NULL, data);
++}
++
++static int swsmi_rfkill_set(void *priv, bool blocked)
++{
++	struct samsung_rfkill *srfkill = priv;
++	struct samsung_laptop *samsung = srfkill->samsung;
++	const struct sabi_commands *commands = &samsung->config->commands;
++	struct sabi_data data;
++	int ret;
++
++	ret = swsmi_wireless_status(samsung, &data);
++	if (ret)
++		return ret;
++
++	data.data[1] = 0;
++	if (srfkill->type == RFKILL_TYPE_WLAN)
++		data.data[WL_STATUS_WLAN] = !blocked;
++	else if (srfkill->type == RFKILL_TYPE_BLUETOOTH)
++		data.data[WL_STATUS_BT] = !blocked;
++
++	return sabi_command(samsung, commands->set_wireless_status,
++			    &data, &data);
++}
++
++static void swsmi_rfkill_query(struct rfkill *rfkill, void *priv)
++{
++	struct samsung_rfkill *srfkill = priv;
++	struct samsung_laptop *samsung = srfkill->samsung;
++	struct sabi_data data;
++	int ret;
++
++	ret = swsmi_wireless_status(samsung, &data);
++	if (ret)
++		return ;
++
++	if (srfkill->type == RFKILL_TYPE_WLAN)
++		ret = data.data[WL_STATUS_WLAN];
++	else if (srfkill->type == RFKILL_TYPE_BLUETOOTH)
++		ret = data.data[WL_STATUS_BT];
+ 	else
+-		sabi_set_commandb(samsung, commands->set_wireless_button, 1);
++		return ;
+ 
+-	return 0;
++	rfkill_set_sw_state(rfkill, !ret);
  }
+ 
+-static struct rfkill_ops rfkill_ops = {
+-	.set_block = rfkill_set,
++static struct rfkill_ops swsmi_rfkill_ops = {
++	.set_block = swsmi_rfkill_set,
++	.query = swsmi_rfkill_query,
+ };
+ 
+ static ssize_t get_performance_level(struct device *dev,
+@@ -730,31 +808,92 @@ static int find_signature(void __iomem *memcheck, const char *testStr)
+ 
+ static void samsung_rfkill_exit(struct samsung_laptop *samsung)
+ {
+-	if (samsung->rfk) {
+-		rfkill_unregister(samsung->rfk);
+-		rfkill_destroy(samsung->rfk);
+-		samsung->rfk = NULL;
++	if (samsung->wlan.rfkill) {
++		rfkill_unregister(samsung->wlan.rfkill);
++		rfkill_destroy(samsung->wlan.rfkill);
++		samsung->wlan.rfkill = NULL;
++	}
++	if (samsung->bluetooth.rfkill) {
++		rfkill_unregister(samsung->bluetooth.rfkill);
++		rfkill_destroy(samsung->bluetooth.rfkill);
++		samsung->bluetooth.rfkill = NULL;
+ 	}
+ }
+ 
+-static int __init samsung_rfkill_init(struct samsung_laptop *samsung)
++static int samsung_new_rfkill(struct samsung_laptop *samsung,
++			      struct samsung_rfkill *arfkill,
++			      const char *name, enum rfkill_type type,
++			      const struct rfkill_ops *ops,
++			      int blocked)
+ {
+-	int retval;
++	struct rfkill **rfkill = &arfkill->rfkill;
++	int ret;
+ 
+-	samsung->rfk = rfkill_alloc("samsung-wifi",
+-				    &samsung->platform_device->dev,
+-				    RFKILL_TYPE_WLAN,
+-				    &rfkill_ops, samsung);
+-	if (!samsung->rfk)
+-		return -ENOMEM;
++	arfkill->type = type;
++	arfkill->samsung = samsung;
+ 
+-	retval = rfkill_register(samsung->rfk);
+-	if (retval) {
+-		rfkill_destroy(samsung->rfk);
+-		samsung->rfk = NULL;
+-		return -ENODEV;
++	*rfkill = rfkill_alloc(name, &samsung->platform_device->dev,
++			       type, ops, arfkill);
++
++	if (!*rfkill)
++		return -EINVAL;
++
++	if (blocked != -1)
++		rfkill_init_sw_state(*rfkill, blocked);
++
++	ret = rfkill_register(*rfkill);
++	if (ret) {
++		rfkill_destroy(*rfkill);
++		*rfkill = NULL;
++		return ret;
+ 	}
++	return 0;
++}
+ 
++static int __init samsung_rfkill_init_seclinux(struct samsung_laptop *samsung)
++{
++	return samsung_new_rfkill(samsung, &samsung->wlan, "samsung-wlan",
++				  RFKILL_TYPE_WLAN, &seclinux_rfkill_ops, -1);
++}
++
++static int __init samsung_rfkill_init_swsmi(struct samsung_laptop *samsung)
++{
++	struct sabi_data data;
++	int ret;
++
++	ret = swsmi_wireless_status(samsung, &data);
++	if (ret)
++		return ret;
++
++	ret = samsung_new_rfkill(samsung, &samsung->wlan,
++				 "samsung-wlan",
++				 RFKILL_TYPE_WLAN,
++				 &swsmi_rfkill_ops,
++				 !data.data[WL_STATUS_WLAN]);
++	if (ret)
++		goto exit;
++
++	ret = samsung_new_rfkill(samsung, &samsung->bluetooth,
++				 "samsung-bluetooth",
++				 RFKILL_TYPE_BLUETOOTH,
++				 &swsmi_rfkill_ops,
++				 !data.data[WL_STATUS_BT]);
++	if (ret)
++		goto exit;
++
++exit:
++	if (ret)
++		samsung_rfkill_exit(samsung);
++
++	return ret;
++}
++
++static int __init samsung_rfkill_init(struct samsung_laptop *samsung)
++{
++	if (samsung->config->sabi_version == 2)
++		return samsung_rfkill_init_seclinux(samsung);
++	if (samsung->config->sabi_version == 3)
++		return samsung_rfkill_init_swsmi(samsung);
+ 	return 0;
+ }
+ 
 -- 
 1.7.5.4
