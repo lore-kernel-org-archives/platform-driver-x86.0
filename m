@@ -1,42 +1,57 @@
-From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [PATCH v2] x86: Add amilo-rfkill driver for some
- Fujitsu-Siemens Amilo laptops
-Date: Tue, 22 Nov 2011 19:30:44 +0000
-Message-ID: <20111122193044.GE5163@srcf.ucam.org>
-References: <1321211202.18929.295.camel@deadeye>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH 00/15] samsung-laptop updates
+Date: Tue, 22 Nov 2011 23:02:31 +0100
+Message-ID: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:36670 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750884Ab1KVTaq (ORCPT
+Received: from smtp5-g21.free.fr ([212.27.42.5]:60862 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757742Ab1KVWDI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Nov 2011 14:30:46 -0500
-Content-Disposition: inline
-In-Reply-To: <1321211202.18929.295.camel@deadeye>
+	Tue, 22 Nov 2011 17:03:08 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: platform-driver-x86@vger.kernel.org, linux-wireless <linux-wireless@vger.kernel.org>, Martin =?utf-8?B?VmXEjWXFmWE=?= <ja@marvec.org>, Alejandro Vidal Mata <alex14@gmail.com>, Javier Vidal Mata <javitu@gmail.com>, Tino Schmidt <mailtinoshomepage@gmx.net>, Johannes Berg <johannes@sipsolutions.net>, 631664@bugs.debian.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Corentin Chary <corentincj@iksaif.net>
 
-On Sun, Nov 13, 2011 at 07:06:42PM +0000, Ben Hutchings wrote:
+Hi Matthew, Greg
 
-> +#define A1655_STATE_PORT	0x64
-> +#define A1655_COMMAND_PORT	0x64
-> +#define A1655_DATA_PORT		0x60
+I recently got a Samsung Series 9 from Intel, so I took some
+time to add support for some features.
 
-You'll need to synchronise with the i8042 driver here, otherwise things 
-could go horribly wrong.
+In this series, I moved a lot of code, tried to follow more
+closely the SABI interface, added some features, and did
+some cleanup.
 
-> +#define M7440_PORT1		0x118f
-> +#define M7440_PORT2		0x118e
+The patchs were only tested it on my laptop, so I'd greatly
+appreciate any feedback.
 
-These ports are defined in the DSDT for one of these systems, but not 
-referenced. I think a hardware-banging driver like this is probably the 
-only interface.
+I also propose myself as a maintainer for this driver, since
+this laptop is now my primary system.
 
-Should be fine as long as you make sure you're not racing with the 
-keyboard controller.
+Thanks,
+
+Corentin Chary (15):
+  samsung-laptop: put all local variables in a single structure
+  samsung-laptop: move code into init/exit functions
+  samsung-laptop: don't handle backlight if handled by acpi/video
+  samsung-laptop: use a sysfs group
+  samsung-laptop: ehance SABI support
+  samsung-laptop: add small debugfs interface
+  samsung-laptop: remove selftest
+  samsung-laptop: add battery life extender support
+  samsung-laptop: add usb charge support
+  samsung-laptop: cleanup KConfig
+  samsung-laptop: add keyboard backlight support
+  samsung-laptop: add true rfkill support for swsmi
+  samsung-laptop: make the dmi check less strict
+  samsung-laptop: dump model and version informations
+  samsung-laptop: promote myself as maintainer of samsung-laptop
+
+ .../ABI/testing/sysfs-driver-samsung-laptop        |   18 +
+ MAINTAINERS                                        |    6 +
+ drivers/platform/x86/Kconfig                       |   13 +-
+ drivers/platform/x86/samsung-laptop.c              | 1645 +++++++++++++-------
+ 4 files changed, 1127 insertions(+), 555 deletions(-)
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.5.4
