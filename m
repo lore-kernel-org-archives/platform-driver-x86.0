@@ -1,111 +1,38 @@
-From: David Herrmann <dh.herrmann@googlemail.com>
-Subject: Re: [PATCH 08/15] samsung-laptop: add battery life extender support
-Date: Wed, 23 Nov 2011 21:14:55 +0100
-Message-ID: <CANq1E4T+JeQbB0zTtpAo3Qyz3Yj3H0EwccvM44nJjCQmDkJPOQ@mail.gmail.com>
+From: Greg KH <gregkh@suse.de>
+Subject: Re: [PATCH 12/15] samsung-laptop: add true rfkill support for swsmi
+Date: Wed, 23 Nov 2011 12:29:12 -0800
+Message-ID: <20111123202912.GA1355@suse.de>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-9-git-send-email-corentincj@iksaif.net>
-	<CANq1E4TPKrig6SUT6OWXFoi=K_Q+3KNd6eZD693zfoJSWGNmGg@mail.gmail.com>
-	<CAHR064jzbGKyHbBvO7H9tyEbamQT9-E4bpQAhJvfNiHX9JT0zg@mail.gmail.com>
-	<CANq1E4T6Ow2fqq_vc=Py-9rCLYnTGQiBWA0xT6R764GxdXDNvA@mail.gmail.com>
-	<CAHR064h0=PgKs_yNYVBruuWULEda=PPsVoCbgNwtBgJTcDm=mg@mail.gmail.com>
+ <1321999366-23784-13-git-send-email-corentincj@iksaif.net>
+ <20111122222457.GL24283@suse.de>
+ <CAHR064hUBJWpJL-jeqAEANnd-fZgBQCHrczwAbV0Tsy-0tUTXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAHR064h0=PgKs_yNYVBruuWULEda=PPsVoCbgNwtBgJTcDm=mg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:59123 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753104Ab1KWW2e (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 23 Nov 2011 17:28:34 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHR064hUBJWpJL-jeqAEANnd-fZgBQCHrczwAbV0Tsy-0tUTXA@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Randy Dunlap <rdunlap@xenotime.net>, Matthew Garrett <mjg@redhat.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Wed, Nov 23, 2011 at 7:11 PM, Corentin Chary
-<corentin.chary@gmail.com> wrote:
-> On Wed, Nov 23, 2011 at 6:10 PM, David Herrmann
-> <dh.herrmann@googlemail.com> wrote:
->> On Wed, Nov 23, 2011 at 5:54 PM, Corentin Chary
->> <corentin.chary@gmail.com> wrote:
->>>> My BIOS provides this option, too. However, this driver does not
->>>> detect it on my machine. During initialization I get:
->>>> samsung_laptop: SABI command 0x0078 failed with completion flag 0x=
-aa
->>>>
->>>> Maybe you can help debugging this. If there is something I can tes=
-t
->>>> via debugfs, just tell me.
->>>
->>> Could you try to load the module with debug=3D1, type these command=
-s
->>>
->>> $ cd /sys/kernel/debug/
->>> $ echo 0x65 > command
->>> $ for i in d0 d1 d2 d3; echo 0 > $i; done
->>> $ echo 0x80 > d0
->>> $ cat call
->>
->> Would be great if you could add a short comment, what it does, next =
-time ;)
->
-> Hum sorry, basically it calls the SABI command 0x65 with 0x80 as the
-> first argument byte.
->
->> SABI 0x0065 {0x00000080, 0x00000000, 0x0000, 0x00}
->> SABI {0x00000000, 0x00000000, 0x0000, 0x00}
->>
->> dmesg:
->> [ 4988.985360] This computer supports SABI=3D=3Df518a
->> [ 4988.985374] SABI header:
->> [ 4988.985384] =A0SMI Port Number =3D 0x00b2
->> [ 4988.985393] =A0SMI Interface Function =3D 0xc0
->> [ 4988.985402] =A0SMI enable memory buffer =3D 0xc1
->> [ 4988.985412] =A0SMI restore memory buffer =3D 0xc2
->> [ 4988.985421] =A0SABI data offset =3D 0x0f00
->> [ 4988.985429] =A0SABI data segment =3D 0xdf01
->> [ 4988.985438] =A0SABI pointer =3D 0x000dff10
->> [ 4988.985448] samsung_laptop: Backlight controlled by ACPI video dr=
-iver
->> [ 4988.985478] samsung_laptop: SABI 0x0065 {0x00000080, 0x00000000,
->> 0x0000, 0x00}
->> [ 4988.991847] samsung_laptop: SABI {0x00000000, 0x00000000, 0x0000,=
- 0x00}
->> [ 4988.991886] samsung_laptop: SABI 0x0067 {0x00000080, 0x00000000,
->> 0x0000, 0x00}
->> [ 4988.993298] samsung_laptop: SABI {0x00000000, 0x00000000, 0x0000,=
- 0x00}
->> [ 4988.993332] samsung_laptop: SABI 0x0069
->> [ 4988.994856] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4988.998294] samsung_laptop: SABI 0x0069
->> [ 4988.999780] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4988.999801] samsung_laptop: SABI 0x0069
->> [ 4989.001247] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4989.001269] samsung_laptop: SABI 0x006a {0x00010001, 0x00000000,
->> 0x0001, 0x02}
->> [ 4989.002847] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4989.007453] samsung_laptop: SABI 0x0069
->> [ 4989.008914] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4989.008936] samsung_laptop: SABI 0x0069
->> [ 4989.010409] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4989.010430] samsung_laptop: SABI 0x006a {0x00010001, 0x00000000,
->> 0x0001, 0x02}
->> [ 4989.011998] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001,=
- 0x02}
->> [ 4989.012589] samsung_laptop: SABI 0x0078 {0x0000aabb, 0x00000000,
->> 0x0000, 0x00}
->> [ 4989.013996] samsung_laptop: SABI command 0x0078 failed with
->> completion flag 0xaa
->
-> Something is very strange here, the 0x65 didn't fail so you should
-> really have /sys/devices/platform/samsung/battery_life_extender .
-> Are you really sure it's not there ?
+On Wed, Nov 23, 2011 at 07:37:17AM +0100, Corentin Chary wrote:
+> On Tue, Nov 22, 2011 at 11:24 PM, Greg KH <gregkh@suse.de> wrote:
+> > On Tue, Nov 22, 2011 at 11:02:43PM +0100, Corentin Chary wrote:
+> >> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> >
+> > What happens on machines that don't support this?
+> 
+> As I understand things, SwSMI == SABI3, and it looks a very clear and
+> stable interface. My guess is that all SABI3 machines support this
+> command. If it is not the case, swsmi_wireless_status() will fail, and
+> rfkill won't be created.
 
-Argh. I did see the usb_charge but somehow missed the
-battery_life_extender. I am sorry. Works both on my machine and sets
-the BIOS flags correctly.
+Ok, that sounds good.
 
-Thanks
-David
+greg k-h
