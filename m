@@ -1,41 +1,53 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 02/15] samsung-laptop: move code into init/exit functions
-Date: Wed, 23 Nov 2011 07:24:03 +0100
-Message-ID: <CAHR064j9MNvfikxfOud7_u3nemye5LbkFxF_SXaCgJmV5quxQA@mail.gmail.com>
+Subject: Re: [PATCH 06/15] samsung-laptop: add small debugfs interface
+Date: Wed, 23 Nov 2011 07:27:35 +0100
+Message-ID: <CAHR064i7sVOyGdhbSAj8gCeTqpYeGuJUd_q_=On+K8j32R9vEw@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-3-git-send-email-corentincj@iksaif.net>
-	<20111122221916.GD24283@suse.de>
+	<1321999366-23784-7-git-send-email-corentincj@iksaif.net>
+	<20111122222048.GF24283@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:50402 "EHLO
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:38212 "EHLO
 	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758337Ab1KWGYF (ORCPT
+	with ESMTP id S1758516Ab1KWG1h convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Nov 2011 01:24:05 -0500
-In-Reply-To: <20111122221916.GD24283@suse.de>
+	Wed, 23 Nov 2011 01:27:37 -0500
+In-Reply-To: <20111122222048.GF24283@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Greg KH <gregkh@suse.de>
 Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 11:19 PM, Greg KH <gregkh@suse.de> wrote:
-> On Tue, Nov 22, 2011 at 11:02:33PM +0100, Corentin Chary wrote:
->> Create _init()/_exit() function for each subsystem, remove
->> the local struct samsung_laptop * and only keep a
->> struct platform_device * that can only be used in samsung_init()
->> and samsung_exit().
->>
+On Tue, Nov 22, 2011 at 11:20 PM, Greg KH <gregkh@suse.de> wrote:
+> On Tue, Nov 22, 2011 at 11:02:37PM +0100, Corentin Chary wrote:
 >> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 >
-> It seems a little gratitous, but hey, if you want to maintain this
-> driver, I have no objection to you rewriting the thing :)
+> You should describe what the debugfs interface does please.
+>
+> I have an idea, and I like it a lot, but still, it would be nice to l=
+et
+> the others know :)
 >
 > Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
+>
 
-Well, doing that seems to help with error paths, and make it easy
-separate functionalities, in my opinion.
+It's in the code:
 
--- 
++/*+ * samsung-laptop/ =C2=A0 =C2=A0- debugfs root directory+ * =C2=A0 =
+f0000_segment
+ =C2=A0- dump f0000 segment+ * =C2=A0 command =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0- current command+ *
+data =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 - current data+ * =C2=A0=
+ d0, d1, d2, d3 =C2=A0 - data fields+ *
+=C2=A0 call =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 - call SABI using=
+ command and data+ */
+But maybe I should add it to the changelog and add an example on how to=
+ use it.
+
+But yeah, it was very useful for experimentation.
+
+--=20
 Corentin Chary
 http://xf.iksaif.net
