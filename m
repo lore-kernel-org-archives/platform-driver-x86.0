@@ -1,61 +1,41 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 05/15] samsung-laptop: ehance SABI support
-Date: Wed, 23 Nov 2011 07:22:08 +0100
-Message-ID: <CAHR064iYA+370fnoqzAMzcXMKga+x0XmkcR2Zoc+hvqHe_5CgA@mail.gmail.com>
+Subject: Re: [PATCH 02/15] samsung-laptop: move code into init/exit functions
+Date: Wed, 23 Nov 2011 07:24:03 +0100
+Message-ID: <CAHR064j9MNvfikxfOud7_u3nemye5LbkFxF_SXaCgJmV5quxQA@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-6-git-send-email-corentincj@iksaif.net>
-	<20111122221829.GB24283@suse.de>
+	<1321999366-23784-3-git-send-email-corentincj@iksaif.net>
+	<20111122221916.GD24283@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:52410 "EHLO
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:50402 "EHLO
 	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752438Ab1KWGWL convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1758337Ab1KWGYF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Nov 2011 01:22:11 -0500
-In-Reply-To: <20111122221829.GB24283@suse.de>
+	Wed, 23 Nov 2011 01:24:05 -0500
+In-Reply-To: <20111122221916.GD24283@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Greg KH <gregkh@suse.de>
 Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 11:18 PM, Greg KH <gregkh@suse.de> wrote:
-> On Tue, Nov 22, 2011 at 11:02:36PM +0100, Corentin Chary wrote:
->> * SABI command are on 16 bits, not 8
->
-> Are you sure about that? =C2=A0I guess this would work, and we rely o=
-n the
-> bits being in the right order so everything works properly?
-
-Yep, I'm pretty sure this is the case, but I've not yet found a
-command using more than 8 bits. Anyway the 16 bit code works
-flawlessly here since we were already using "writew(command, ...);"
-since the beginning.
-
-Regarding the bits order, the driver depends on X86, so I don't see
-this as a real issue.
-
->> * SABI can read/write up to 11 byte of data
->
-> It can?
-
-That's how it seems to work, but I didn't see any command using more
-that 24 bits yet.
-
->> * There is not real difference between "get" and "set"
->> =C2=A0 commands, so refactorise the code of both functions
->
-> Ah, nice, I always wanted to do that.
->
+On Tue, Nov 22, 2011 at 11:19 PM, Greg KH <gregkh@suse.de> wrote:
+> On Tue, Nov 22, 2011 at 11:02:33PM +0100, Corentin Chary wrote:
+>> Create _init()/_exit() function for each subsystem, remove
+>> the local struct samsung_laptop * and only keep a
+>> struct platform_device * that can only be used in samsung_init()
+>> and samsung_exit().
+>>
 >> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 >
+> It seems a little gratitous, but hey, if you want to maintain this
+> driver, I have no objection to you rewriting the thing :)
+>
 > Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
->
->
 
+Well, doing that seems to help with error paths, and make it easy
+separate functionalities, in my opinion.
 
-
---=20
+-- 
 Corentin Chary
 http://xf.iksaif.net
