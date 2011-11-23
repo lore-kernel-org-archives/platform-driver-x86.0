@@ -1,52 +1,84 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 03/15] samsung-laptop: don't handle backlight if handled
- by acpi/video
-Date: Wed, 23 Nov 2011 07:58:20 +0100
-Message-ID: <CAHR064jucMdu3KKctTTE=peNjhZ8TNvh6WecUrGc+HQp9BFpvg@mail.gmail.com>
+Subject: Re: [PATCH 13/15] samsung-laptop: make the dmi check less strict
+Date: Wed, 23 Nov 2011 08:17:08 +0100
+Message-ID: <CAHR064igjTPmeeXrnO2BxNn_U0RXiw9fVJnERYj6f_Y1tChM0w@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-4-git-send-email-corentincj@iksaif.net>
-	<20111122221633.GA24283@suse.de>
+	<1321999366-23784-14-git-send-email-corentincj@iksaif.net>
+	<20111122222730.GM24283@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-fx0-f46.google.com ([209.85.161.46]:47710 "EHLO
-	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758600Ab1KWG6W (ORCPT
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:42366 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753162Ab1KWHRJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Nov 2011 01:58:22 -0500
-In-Reply-To: <20111122221633.GA24283@suse.de>
+	Wed, 23 Nov 2011 02:17:09 -0500
+In-Reply-To: <20111122222730.GM24283@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Greg KH <gregkh@suse.de>
 Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 11:16 PM, Greg KH <gregkh@suse.de> wrote:
-> On Tue, Nov 22, 2011 at 11:02:34PM +0100, Corentin Chary wrote:
->> samsung-laptop is not at all related to ACPI, but since this interface
->> is not documented at all, and the driver has to use it at load to
->> understand how it works on the laptop, I think it's a good idea to
->> disable it if a better solution is available.
+On Tue, Nov 22, 2011 at 11:27 PM, Greg KH <gregkh@suse.de> wrote:
+> On Tue, Nov 22, 2011 at 11:02:44PM +0100, Corentin Chary wrote:
+>> This enable the driver for everything that look like
+>> a laptop and is from vendor "SAMSUNG ELECTRONICS CO., LTD.".
+>> Note that laptop supported by samsung-q10 seem to have a different
+>> vendor strict.
+>>
+>> Also remove every log output until we know that we have a SABI interface
+>> (except if the driver is forced to load, or debug is enabled).
+>>
+>> Keeping a whitelist of laptop with a model granularity is something that can't
+>> work without close vendor cooperation (and we don't have that).
+>>
+>> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 >
-> I wish this would work, but on the machine that I had, there was a valid
-> ACPI table for the video device, yet I was told to "ignore it, it
-> doesn't work and use the sabi interface instead", so this patch would
-> break that machine :(
+> Oh, this is bold.
+>
+> I would like to see this work, but I would need to see it tested on a
+> bunch of machines before I trust it.
+>
+> I guess you now have the acpi video backlight check, which is good, but
+> again, doesn't work for all devices.
+>
+> And yeah, a whitelist is tough, especially as the vendor isn't working
+> with us at all, but I don't want to break machines that don't need this
+> driver (and there are some, although I thought the newest ones would not
+> need it, but that might be true.)
 
-Well, it's why acpi_backlight=vendor is here: to enable and use the
-vendor backlight instead of using the standard ACPI interface.
-And nowadays, even gpu drivers provide a backlight class (at least for
-intel, nvidia/nouveau, and maybe radeon.
+Here is what the driver does with the patch:
+- automatically load the driver and each machine with vendor =
+"SAMSUNG ELECTRONICS CO., LTD." and type looks like a laptop or
+netbook
+- map the f0000 segment (or exit gracefully)
+- find SwSMI or SECLINUX in this segment (or exit gracefully)
 
-> We might want to trigger off of the machine type for this kind of
-> thing, that's the only way I can see this working properly.
+At this point, if the driver is still loaded, but the laptop doesn't
+support SABI, then it really looks like a model that should be
+blacklisted.
+I'm ok to use dmi for quirks, or blacklist, but honestly if a *samsung
+laptop* advertise SABI support, the driver should be loaded.
+We can't prevent samsung to built a laptop that will burn if we use
+SABI, but if samsung does that, they can also add some fake DMI
+strings too ! And has I said in the changelog, all models supported by
+samsung-q10 are not affected because they don't use the same vendor
+string, and even if they were, I doubt we would found a valid
+signature.
 
-But, yes, this is a "regression". Maybe we should do that:
-- enable the backlight by default for all SECLINUX models
-- disable it by default for swsmi, but let the user be able to enable
-it with acpi_backlight=vendor (this is what is done with this patch).
+But yes, it needs testing, so if you know a samsung laptop user,
+please ask him to test this patch.
 
+I set up a git repo that can help to build the driver more easilly:
+https://github.com/iksaif/samsung-laptop-dkms (yeah, it's named dkms,
+but there is no dkms.conf yet, that will come later).
 
+> Hm, if you can figure out how to get the acpi-video thing working for
+> some machines properly, I'll support this kind of change.
 
+For those, boot with acpi_backlight=vendor  :)
+
+Thanks,
 
 -- 
 Corentin Chary
