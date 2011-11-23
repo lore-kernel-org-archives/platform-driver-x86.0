@@ -1,37 +1,90 @@
-From: Corentin Chary <corentin.chary@gmail.com>
+From: David Herrmann <dh.herrmann@googlemail.com>
 Subject: Re: [PATCH 08/15] samsung-laptop: add battery life extender support
-Date: Wed, 23 Nov 2011 17:54:55 +0100
-Message-ID: <CAHR064jzbGKyHbBvO7H9tyEbamQT9-E4bpQAhJvfNiHX9JT0zg@mail.gmail.com>
+Date: Wed, 23 Nov 2011 18:10:11 +0100
+Message-ID: <CANq1E4T6Ow2fqq_vc=Py-9rCLYnTGQiBWA0xT6R764GxdXDNvA@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
 	<1321999366-23784-9-git-send-email-corentincj@iksaif.net>
 	<CANq1E4TPKrig6SUT6OWXFoi=K_Q+3KNd6eZD693zfoJSWGNmGg@mail.gmail.com>
+	<CAHR064jzbGKyHbBvO7H9tyEbamQT9-E4bpQAhJvfNiHX9JT0zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CANq1E4TPKrig6SUT6OWXFoi=K_Q+3KNd6eZD693zfoJSWGNmGg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: David Herrmann <dh.herrmann@googlemail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:61019 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753921Ab1KWRKP (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 23 Nov 2011 12:10:15 -0500
+In-Reply-To: <CAHR064jzbGKyHbBvO7H9tyEbamQT9-E4bpQAhJvfNiHX9JT0zg@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Randy Dunlap <rdunlap@xenotime.net>, Matthew Garrett <mjg@redhat.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-> My BIOS provides this option, too. However, this driver does not
-> detect it on my machine. During initialization I get:
-> samsung_laptop: SABI command 0x0078 failed with completion flag 0xaa
+On Wed, Nov 23, 2011 at 5:54 PM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+>> My BIOS provides this option, too. However, this driver does not
+>> detect it on my machine. During initialization I get:
+>> samsung_laptop: SABI command 0x0078 failed with completion flag 0xaa
+>>
+>> Maybe you can help debugging this. If there is something I can test
+>> via debugfs, just tell me.
 >
-> Maybe you can help debugging this. If there is something I can test
-> via debugfs, just tell me.
+> Could you try to load the module with debug=1, type these commands
+>
+> $ cd /sys/kernel/debug/
+> $ echo 0x65 > command
+> $ for i in d0 d1 d2 d3; echo 0 > $i; done
+> $ echo 0x80 > d0
+> $ cat call
 
-Could you try to load the module with debug=1, type these commands
+Would be great if you could add a short comment, what it does, next time ;)
 
-$ cd /sys/kernel/debug/
-$ echo 0x65 > command
-$ for i in d0 d1 d2 d3; echo 0 > $i; done
-$ echo 0x80 > d0
-$ cat call
+SABI 0x0065 {0x00000080, 0x00000000, 0x0000, 0x00}
+SABI {0x00000000, 0x00000000, 0x0000, 0x00}
 
-and then show me the output of dmesg ?
+dmesg:
+[ 4988.985360] This computer supports SABI==f518a
+[ 4988.985374] SABI header:
+[ 4988.985384]  SMI Port Number = 0x00b2
+[ 4988.985393]  SMI Interface Function = 0xc0
+[ 4988.985402]  SMI enable memory buffer = 0xc1
+[ 4988.985412]  SMI restore memory buffer = 0xc2
+[ 4988.985421]  SABI data offset = 0x0f00
+[ 4988.985429]  SABI data segment = 0xdf01
+[ 4988.985438]  SABI pointer = 0x000dff10
+[ 4988.985448] samsung_laptop: Backlight controlled by ACPI video driver
+[ 4988.985478] samsung_laptop: SABI 0x0065 {0x00000080, 0x00000000,
+0x0000, 0x00}
+[ 4988.991847] samsung_laptop: SABI {0x00000000, 0x00000000, 0x0000, 0x00}
+[ 4988.991886] samsung_laptop: SABI 0x0067 {0x00000080, 0x00000000,
+0x0000, 0x00}
+[ 4988.993298] samsung_laptop: SABI {0x00000000, 0x00000000, 0x0000, 0x00}
+[ 4988.993332] samsung_laptop: SABI 0x0069
+[ 4988.994856] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4988.998294] samsung_laptop: SABI 0x0069
+[ 4988.999780] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4988.999801] samsung_laptop: SABI 0x0069
+[ 4989.001247] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4989.001269] samsung_laptop: SABI 0x006a {0x00010001, 0x00000000,
+0x0001, 0x02}
+[ 4989.002847] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4989.007453] samsung_laptop: SABI 0x0069
+[ 4989.008914] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4989.008936] samsung_laptop: SABI 0x0069
+[ 4989.010409] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4989.010430] samsung_laptop: SABI 0x006a {0x00010001, 0x00000000,
+0x0001, 0x02}
+[ 4989.011998] samsung_laptop: SABI {0x00010201, 0x00000000, 0x0001, 0x02}
+[ 4989.012589] samsung_laptop: SABI 0x0078 {0x0000aabb, 0x00000000,
+0x0000, 0x00}
+[ 4989.013996] samsung_laptop: SABI command 0x0078 failed with
+completion flag 0xaa
 
-Thanks,
--- 
-Corentin Chary
-http://xf.iksaif.net
+
+> and then show me the output of dmesg ?
+>
+> Thanks,
+> --
+> Corentin Chary
+> http://xf.iksaif.net
+>
