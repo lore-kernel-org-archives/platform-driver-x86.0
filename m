@@ -1,72 +1,64 @@
 From: David Herrmann <dh.herrmann@googlemail.com>
-Subject: Re: [PATCH 10/15] samsung-laptop: cleanup KConfig
-Date: Wed, 23 Nov 2011 17:19:40 +0100
-Message-ID: <CANq1E4TwHt8RhW2nn_7W0MqiLd5d6VEw1c7QUP7JYniA2yZK=Q@mail.gmail.com>
+Subject: Re: [PATCH 11/15] samsung-laptop: add keyboard backlight support
+Date: Wed, 23 Nov 2011 17:41:55 +0100
+Message-ID: <CANq1E4QHhYqz0R+g9fj-iAd8QZpfAAgZoz_iA5FjHLHSFDJzCg@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-11-git-send-email-corentincj@iksaif.net>
+	<1321999366-23784-12-git-send-email-corentincj@iksaif.net>
+	<20111122222354.GK24283@suse.de>
+	<CAHR064iYVHhWgte1vE4xTaS5K4xhVUFHnYkVB1JA_PD8tPFGkQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1321999366-23784-11-git-send-email-corentincj@iksaif.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Chary <corentincj@iksaif.net>
-Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-fx0-f46.google.com ([209.85.161.46]:35639 "EHLO
+	mail-fx0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751755Ab1KWQl5 convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 23 Nov 2011 11:41:57 -0500
+In-Reply-To: <CAHR064iYVHhWgte1vE4xTaS5K4xhVUFHnYkVB1JA_PD8tPFGkQ@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Greg KH <gregkh@suse.de>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 11:02 PM, Corentin Chary <corentincj@iksaif.net=
-> wrote:
-> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
-> ---
-> =A0drivers/platform/x86/Kconfig | =A0 11 +++++++----
-> =A01 files changed, 7 insertions(+), 4 deletions(-)
+On Wed, Nov 23, 2011 at 7:35 AM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+> On Tue, Nov 22, 2011 at 11:23 PM, Greg KH <gregkh@suse.de> wrote:
+>> On Tue, Nov 22, 2011 at 11:02:42PM +0100, Corentin Chary wrote:
+>>> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+>>
+>> What happens on boxes that don't have this type of hardware? =A0Will=
+ the
+>> LED device still show up, yet it will not work?
+>>
+>> You should be able to trigger this off of the model type somehow, mu=
+ch
+>> like the video backlight should work.
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
-> index 7f43cf8..2f7a9a7 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -744,13 +744,16 @@ config XO15_EBOOK
+> kbd_backlight_enable(samsung) will be called, it will fire a {0x78,
+> 0xaabb} command on machines using swsmi and this command will fail if
+> the feature is not available. I did some test, and unknown commands
+> seems to fail gracefully, and that makes sabi_command() (and callers)
+> return -EINVAL).
 >
-> =A0config SAMSUNG_LAPTOP
-> =A0 =A0 =A0 =A0tristate "Samsung Laptop driver"
-> - =A0 =A0 =A0 depends on RFKILL && BACKLIGHT_CLASS_DEVICE && X86
-> + =A0 =A0 =A0 depends on X86
-> + =A0 =A0 =A0 depends on RFKILL || RFKILL =3D n
-> + =A0 =A0 =A0 depends on BACKLIGHT_CLASS_DEVICE
-> =A0 =A0 =A0 =A0---help---
-> =A0 =A0 =A0 =A0 =A0This module implements a driver for a wide range o=
-f different
-> =A0 =A0 =A0 =A0 =A0Samsung laptops. =A0It offers control over the dif=
-ferent
-> - =A0 =A0 =A0 =A0 function keys, wireless LED, LCD backlight level, a=
-nd
-> - =A0 =A0 =A0 =A0 sometimes provides a "performance_control" sysfs fi=
-le to allow
-> - =A0 =A0 =A0 =A0 the performance level of the laptop to be changed.
-> + =A0 =A0 =A0 =A0 function keys, wireless LED, LCD backlight level.
-> +
-> + =A0 =A0 =A0 =A0 It may also provides some sysfs files described in
+> It think {0x78, 0x80} is also here to tell if the backlight is
+> available or not, but I can't test it, since it always returns 1 here=
+=2E
 
-If you are resending this anyway:
-"provide"
+I do not have a keyboard backlight and hence always get an error
+message on boot up. It would be great to suppress this error message
+as this is not really an error (for me):
+samsung_laptop: SABI command 0x0078 failed with completion flag 0xaa
 
-> + =A0 =A0 =A0 =A0 <file:Documentation/ABI/testing/sysfs-platform-sams=
-ung-laptop>
->
-> =A0 =A0 =A0 =A0 =A0To compile this driver as a module, choose M here:=
- the module
-> =A0 =A0 =A0 =A0 =A0will be called samsung-laptop.
+> So yeah, if someone could test that on a swsmi laptop without keyboar=
+d
+> backlight, that would be great.
 > --
-> 1.7.5.4
->
+> Corentin Chary
+> http://xf.iksaif.net
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
 >
-
-Cheers
-David
