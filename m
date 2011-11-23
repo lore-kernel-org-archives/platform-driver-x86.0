@@ -1,85 +1,129 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 13/15] samsung-laptop: make the dmi check less strict
-Date: Wed, 23 Nov 2011 08:17:08 +0100
-Message-ID: <CAHR064igjTPmeeXrnO2BxNn_U0RXiw9fVJnERYj6f_Y1tChM0w@mail.gmail.com>
+From: David Herrmann <dh.herrmann@googlemail.com>
+Subject: Re: [PATCH 03/15] samsung-laptop: don't handle backlight if handled
+ by acpi/video
+Date: Wed, 23 Nov 2011 17:01:26 +0100
+Message-ID: <CANq1E4QoBk1oPT8z2-2hHeXkKa8K34hhwZrMqXOknmtEY1ghBw@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-14-git-send-email-corentincj@iksaif.net>
-	<20111122222730.GM24283@suse.de>
+	<1321999366-23784-4-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:42366 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753162Ab1KWHRJ (ORCPT
+Received: from mail-ww0-f42.google.com ([74.125.82.42]:39829 "EHLO
+	mail-ww0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750900Ab1KWQB2 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Nov 2011 02:17:09 -0500
-In-Reply-To: <20111122222730.GM24283@suse.de>
+	Wed, 23 Nov 2011 11:01:28 -0500
+In-Reply-To: <1321999366-23784-4-git-send-email-corentincj@iksaif.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@suse.de>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 11:27 PM, Greg KH <gregkh@suse.de> wrote:
-> On Tue, Nov 22, 2011 at 11:02:44PM +0100, Corentin Chary wrote:
->> This enable the driver for everything that look like
->> a laptop and is from vendor "SAMSUNG ELECTRONICS CO., LTD.".
->> Note that laptop supported by samsung-q10 seem to have a different
->> vendor strict.
->>
->> Also remove every log output until we know that we have a SABI interface
->> (except if the driver is forced to load, or debug is enabled).
->>
->> Keeping a whitelist of laptop with a model granularity is something that can't
->> work without close vendor cooperation (and we don't have that).
->>
->> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Hi Corentin
+
+On Tue, Nov 22, 2011 at 11:02 PM, Corentin Chary <corentincj@iksaif.net=
+> wrote:
+> samsung-laptop is not at all related to ACPI, but since this interfac=
+e
+> is not documented at all, and the driver has to use it at load to
+> understand how it works on the laptop, I think it's a good idea to
+> disable it if a better solution is available.
 >
-> Oh, this is bold.
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> ---
+> =A0drivers/platform/x86/samsung-laptop.c | =A0 20 ++++++++++++++++++-=
+-
+> =A01 files changed, 18 insertions(+), 2 deletions(-)
 >
-> I would like to see this work, but I would need to see it tested on a
-> bunch of machines before I trust it.
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform=
+/x86/samsung-laptop.c
+> index be96910..49933d2 100644
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -21,6 +21,7 @@
+> =A0#include <linux/dmi.h>
+> =A0#include <linux/platform_device.h>
+> =A0#include <linux/rfkill.h>
+> +#include <linux/acpi.h>
 >
-> I guess you now have the acpi video backlight check, which is good, but
-> again, doesn't work for all devices.
+> =A0/*
+> =A0* This driver is needed because a number of Samsung laptops do not=
+ hook
+> @@ -230,6 +231,7 @@ struct samsung_laptop {
+> =A0 =A0 =A0 =A0struct backlight_device *backlight_device;
+> =A0 =A0 =A0 =A0struct rfkill *rfk;
 >
-> And yeah, a whitelist is tough, especially as the vendor isn't working
-> with us at all, but I don't want to break machines that don't need this
-> driver (and there are some, although I thought the newest ones would not
-> need it, but that might be true.)
+> + =A0 =A0 =A0 bool handle_backlight;
+> =A0 =A0 =A0 =A0bool has_stepping_quirk;
+> =A0};
+>
+> @@ -616,6 +618,9 @@ static int __init samsung_backlight_init(struct s=
+amsung_laptop *samsung)
+> =A0 =A0 =A0 =A0struct backlight_device *bd;
+> =A0 =A0 =A0 =A0struct backlight_properties props;
+>
+> + =A0 =A0 =A0 if (!samsung->handle_backlight)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+> +
+> =A0 =A0 =A0 =A0memset(&props, 0, sizeof(struct backlight_properties))=
+;
+> =A0 =A0 =A0 =A0props.type =3D BACKLIGHT_PLATFORM;
+> =A0 =A0 =A0 =A0props.max_brightness =3D samsung->config->max_brightne=
+ss -
+> @@ -698,7 +703,8 @@ static void __init samsung_sabi_selftest(struct s=
+amsung_laptop *samsung,
+> =A0 =A0 =A0 =A0printk(KERN_DEBUG "ifaceP =3D 0x%08x\n", ifaceP);
+> =A0 =A0 =A0 =A0printk(KERN_DEBUG "sabi_iface =3D %p\n", samsung->sabi=
+_iface);
+>
+> - =A0 =A0 =A0 test_backlight(samsung);
+> + =A0 =A0 =A0 if (samsung->handle_backlight)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 test_backlight(samsung);
+> =A0 =A0 =A0 =A0test_wireless(samsung);
+>
+> =A0 =A0 =A0 =A0sabi_get_command(samsung, config->commands.get_brightn=
+ess, &sretval);
+> @@ -771,7 +777,8 @@ static int __init samsung_sabi_init(struct samsun=
+g_laptop *samsung)
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0/* Check for stepping quirk */
+> - =A0 =A0 =A0 check_for_stepping_quirk(samsung);
+> + =A0 =A0 =A0 if (samsung->handle_backlight)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 check_for_stepping_quirk(samsung);
+>
+> =A0exit:
+> =A0 =A0 =A0 =A0if (ret)
+> @@ -1059,6 +1066,15 @@ static int __init samsung_init(void)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -ENOMEM;
+>
+> =A0 =A0 =A0 =A0mutex_init(&samsung->sabi_mutex);
+> + =A0 =A0 =A0 samsung->handle_backlight =3D true;
+> +
+> +#ifdef CONFIG_ACPI
+> + =A0 =A0 =A0 /* Don't handle backlight here if the acpi video alread=
+y handle it */
+> + =A0 =A0 =A0 if (acpi_video_backlight_support()) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pr_info("Backlight controlled by ACPI v=
+ideo driver\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung->handle_backlight =3D false;
+> + =A0 =A0 =A0 }
+> +#endif
+>
+> =A0 =A0 =A0 =A0ret =3D samsung_platform_init(samsung);
+> =A0 =A0 =A0 =A0if (ret)
+> --
+> 1.7.5.4
 
-Here is what the driver does with the patch:
-- automatically load the driver and each machine with vendor =
-"SAMSUNG ELECTRONICS CO., LTD." and type looks like a laptop or
-netbook
-- map the f0000 segment (or exit gracefully)
-- find SwSMI or SECLINUX in this segment (or exit gracefully)
+My Samsung model has an intel card which previously did not support
+the acpi video backlight so I needed the samsung driver.
+However, with this patch I couldn't find the samsung backlight and so
+I tried the intel back light again and now it works.
+So:
+Tested-by: David Herrmann <dh.herrmann@googlemail.com>
 
-At this point, if the driver is still loaded, but the laptop doesn't
-support SABI, then it really looks like a model that should be
-blacklisted.
-I'm ok to use dmi for quirks, or blacklist, but honestly if a *samsung
-laptop* advertise SABI support, the driver should be loaded.
-We can't prevent samsung to built a laptop that will burn if we use
-SABI, but if samsung does that, they can also add some fake DMI
-strings too ! And has I said in the changelog, all models supported by
-samsung-q10 are not affected because they don't use the same vendor
-string, and even if they were, I doubt we would found a valid
-signature.
+My model is Samsung N210 btw.
 
-But yes, it needs testing, so if you know a samsung laptop user,
-please ask him to test this patch.
-
-I set up a git repo that can help to build the driver more easilly:
-https://github.com/iksaif/samsung-laptop-dkms (yeah, it's named dkms,
-but there is no dkms.conf yet, that will come later).
-
-> Hm, if you can figure out how to get the acpi-video thing working for
-> some machines properly, I'll support this kind of change.
-
-For those, boot with acpi_backlight=vendor  :)
-
-Thanks,
-
--- 
-Corentin Chary
-http://xf.iksaif.net
+Regards
+David
