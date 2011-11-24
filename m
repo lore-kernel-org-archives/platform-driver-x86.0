@@ -1,55 +1,29 @@
-From: Greg KH <gregkh@suse.de>
-Subject: Re: [PATCH 03/15] samsung-laptop: don't handle backlight if handled
- by acpi/video
-Date: Wed, 23 Nov 2011 12:30:12 -0800
-Message-ID: <20111123203012.GB1355@suse.de>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 11/15] samsung-laptop: add keyboard backlight support
+Date: Thu, 24 Nov 2011 08:07:59 +0100
+Message-ID: <CAHR064g-oig9=+ofpsUGERrRz1x0J3HbjKx5DG2uAP_E1+zcAw@mail.gmail.com>
 References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
- <1321999366-23784-4-git-send-email-corentincj@iksaif.net>
- <20111122221633.GA24283@suse.de>
- <CAHR064jucMdu3KKctTTE=peNjhZ8TNvh6WecUrGc+HQp9BFpvg@mail.gmail.com>
+	<1321999366-23784-12-git-send-email-corentincj@iksaif.net>
+	<20111122222354.GK24283@suse.de>
+	<CAHR064iYVHhWgte1vE4xTaS5K4xhVUFHnYkVB1JA_PD8tPFGkQ@mail.gmail.com>
+	<CANq1E4QHhYqz0R+g9fj-iAd8QZpfAAgZoz_iA5FjHLHSFDJzCg@mail.gmail.com>
+	<CAHR064hKKXfnnwj9mc+ZKwqXw2yyu0sOokdo8KqpMnM5Ju_5Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:59126 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756338Ab1KWW2h (ORCPT
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:45091 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752296Ab1KXHIB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 23 Nov 2011 17:28:37 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHR064jucMdu3KKctTTE=peNjhZ8TNvh6WecUrGc+HQp9BFpvg@mail.gmail.com>
+	Thu, 24 Nov 2011 02:08:01 -0500
+In-Reply-To: <CAHR064hKKXfnnwj9mc+ZKwqXw2yyu0sOokdo8KqpMnM5Ju_5Dw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
+To: David Herrmann <dh.herrmann@googlemail.com>
+Cc: Greg KH <gregkh@suse.de>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-On Wed, Nov 23, 2011 at 07:58:20AM +0100, Corentin Chary wrote:
-> On Tue, Nov 22, 2011 at 11:16 PM, Greg KH <gregkh@suse.de> wrote:
-> > On Tue, Nov 22, 2011 at 11:02:34PM +0100, Corentin Chary wrote:
-> >> samsung-laptop is not at all related to ACPI, but since this interface
-> >> is not documented at all, and the driver has to use it at load to
-> >> understand how it works on the laptop, I think it's a good idea to
-> >> disable it if a better solution is available.
-> >
-> > I wish this would work, but on the machine that I had, there was a valid
-> > ACPI table for the video device, yet I was told to "ignore it, it
-> > doesn't work and use the sabi interface instead", so this patch would
-> > break that machine :(
-> 
-> Well, it's why acpi_backlight=vendor is here: to enable and use the
-> vendor backlight instead of using the standard ACPI interface.
-> And nowadays, even gpu drivers provide a backlight class (at least for
-> intel, nvidia/nouveau, and maybe radeon.
-> 
-> > We might want to trigger off of the machine type for this kind of
-> > thing, that's the only way I can see this working properly.
-> 
-> But, yes, this is a "regression". Maybe we should do that:
-> - enable the backlight by default for all SECLINUX models
-> - disable it by default for swsmi, but let the user be able to enable
-> it with acpi_backlight=vendor (this is what is done with this patch).
-
-That sounds reasonable.
-
-thanks,
-
-greg k-h
+Hi David,I refreshed the patches on the github repo, could you re-try
+them ?Thanks
+-- 
+Corentin Chary
+http://xf.iksaif.net
