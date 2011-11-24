@@ -1,16 +1,16 @@
 From: Borislav Petkov <bp@alien8.de>
 Subject: [PATCH] hdaps: Shut up gcc uninitialized variable warnings
-Date: Thu, 24 Nov 2011 14:59:55 +0100
-Message-ID: <1322143195-5153-1-git-send-email-bp@alien8.de>
+Date: Thu, 24 Nov 2011 15:01:31 +0100
+Message-ID: <1322143291-5286-1-git-send-email-bp@alien8.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s15228384.onlinehome-server.info ([87.106.30.177]:37958 "EHLO
-	mail.x86-64.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750777Ab1KXN76 (ORCPT
+Received: from mail.skyhub.de ([78.46.96.112]:41760 "EHLO mail.skyhub.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750777Ab1KXOBe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Nov 2011 08:59:58 -0500
+	Thu, 24 Nov 2011 09:01:34 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
