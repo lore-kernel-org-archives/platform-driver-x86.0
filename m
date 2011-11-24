@@ -1,29 +1,63 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 11/15] samsung-laptop: add keyboard backlight support
-Date: Thu, 24 Nov 2011 08:07:59 +0100
-Message-ID: <CAHR064g-oig9=+ofpsUGERrRz1x0J3HbjKx5DG2uAP_E1+zcAw@mail.gmail.com>
-References: <1321999366-23784-1-git-send-email-corentincj@iksaif.net>
-	<1321999366-23784-12-git-send-email-corentincj@iksaif.net>
-	<20111122222354.GK24283@suse.de>
-	<CAHR064iYVHhWgte1vE4xTaS5K4xhVUFHnYkVB1JA_PD8tPFGkQ@mail.gmail.com>
-	<CANq1E4QHhYqz0R+g9fj-iAd8QZpfAAgZoz_iA5FjHLHSFDJzCg@mail.gmail.com>
-	<CAHR064hKKXfnnwj9mc+ZKwqXw2yyu0sOokdo8KqpMnM5Ju_5Dw@mail.gmail.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] hdaps: Shut up gcc uninitialized variable warnings
+Date: Thu, 24 Nov 2011 14:59:55 +0100
+Message-ID: <1322143195-5153-1-git-send-email-bp@alien8.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:45091 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752296Ab1KXHIB (ORCPT
+Received: from s15228384.onlinehome-server.info ([87.106.30.177]:37958 "EHLO
+	mail.x86-64.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750777Ab1KXN76 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Nov 2011 02:08:01 -0500
-In-Reply-To: <CAHR064hKKXfnnwj9mc+ZKwqXw2yyu0sOokdo8KqpMnM5Ju_5Dw@mail.gmail.com>
+	Thu, 24 Nov 2011 08:59:58 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Herrmann <dh.herrmann@googlemail.com>
-Cc: Greg KH <gregkh@suse.de>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Frank Seidel <frank@f-seidel.de>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-Hi David,I refreshed the patches on the github repo, could you re-try
-them ?Thanks
--- 
-Corentin Chary
-http://xf.iksaif.net
+Turn off the following triggered with gcc 4.6.1 on Debian testing:
+
+drivers/platform/x86/hdaps.c: In function =E2=80=98hdaps_temp2_show=E2=80=
+=99:
+drivers/platform/x86/hdaps.c:398:16: warning: =E2=80=98temp=E2=80=99 ma=
+y be used uninitialized in this function [-Wuninitialized]
+drivers/platform/x86/hdaps.c: In function =E2=80=98hdaps_temp1_show=E2=80=
+=99:
+drivers/platform/x86/hdaps.c:385:16: warning: =E2=80=98temp=E2=80=99 ma=
+y be used uninitialized in this function [-Wuninitialized]
+
+Cc: Frank Seidel <frank@f-seidel.de>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Borislav Petkov <bp@alien8.de>
+---
+ drivers/platform/x86/hdaps.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.=
+c
+index 5a34973..2fdacc2 100644
+--- a/drivers/platform/x86/hdaps.c
++++ b/drivers/platform/x86/hdaps.c
+@@ -375,7 +375,7 @@ static ssize_t hdaps_variance_show(struct device *d=
+ev,
+ static ssize_t hdaps_temp1_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+-	u8 temp;
++	u8 uninitialized_var(temp);
+ 	int ret;
+=20
+ 	ret =3D hdaps_readb_one(HDAPS_PORT_TEMP1, &temp);
+@@ -388,7 +388,7 @@ static ssize_t hdaps_temp1_show(struct device *dev,
+ static ssize_t hdaps_temp2_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+-	u8 temp;
++	u8 uninitialized_var(temp);
+ 	int ret;
+=20
+ 	ret =3D hdaps_readb_one(HDAPS_PORT_TEMP2, &temp);
+--=20
+1.7.8.rc0.35.gee6df
