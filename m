@@ -1,7 +1,7 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 13/16] samsung-laptop: make the dmi check less strict
-Date: Sat, 26 Nov 2011 11:00:10 +0100
-Message-ID: <1322301613-8801-14-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 05/16] samsung-laptop: ehance SABI support
+Date: Sat, 26 Nov 2011 11:00:02 +0100
+Message-ID: <1322301613-8801-6-git-send-email-corentincj@iksaif.net>
 References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
@@ -10,321 +10,437 @@ To: platform-driver-x86@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This enable the driver for everything that look like
-a laptop and is from vendor "SAMSUNG ELECTRONICS CO., LTD.".
-Note that laptop supported by samsung-q10 seem to have a different
-vendor strict.
-
-Also remove every log output until we know that we have a SABI interface
-(except if the driver is forced to load, or debug is enabled).
-
-Keeping a whitelist of laptop with a model granularity is something that can't
-work without close vendor cooperation (and we don't have that).
+* SABI command are on 16 bits, not 8
+* SABI can read/write up to 11 byte of data
+* There is not real difference between "get" and "set"
+  commands, so refactorise the code of both functions
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
 ---
- drivers/platform/x86/samsung-laptop.c |  235 ++------------------------------
- 1 files changed, 15 insertions(+), 220 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |  225 +++++++++++++++++----------------
+ 1 files changed, 113 insertions(+), 112 deletions(-)
 
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 931b964..5e8bca1 100644
+index a21e0c3..cd638c4 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1270,7 +1270,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
+@@ -42,9 +42,17 @@
+ #define SABI_IFACE_COMPLETE		0x04
+ #define SABI_IFACE_DATA			0x05
  
- 	samsung->f0000_segment = ioremap_nocache(0xf0000, 0xffff);
- 	if (!samsung->f0000_segment) {
--		pr_err("Can't map the segment at 0xf0000\n");
-+		if (debug || force)
-+			pr_err("Can't map the segment at 0xf0000\n");
- 		ret = -EINVAL;
+-/* Structure to get data back to the calling function */
+-struct sabi_retval {
+-	u8 retval[20];
++/* Structure get/set data using sabi */
++struct sabi_data {
++	union {
++		struct {
++			u32 d0;
++			u32 d1;
++			u16 d2;
++			u8  d3;
++		};
++		u8 data[11];
++	};
+ };
+ 
+ struct sabi_header_offsets {
+@@ -61,8 +69,8 @@ struct sabi_commands {
+ 	 * Brightness is 0 - 8, as described above.
+ 	 * Value 0 is for the BIOS to use
+ 	 */
+-	u8 get_brightness;
+-	u8 set_brightness;
++	u16 get_brightness;
++	u16 set_brightness;
+ 
+ 	/*
+ 	 * first byte:
+@@ -73,37 +81,37 @@ struct sabi_commands {
+ 	 * 0x03 - 3G is on
+ 	 * TODO, verify 3G is correct, that doesn't seem right...
+ 	 */
+-	u8 get_wireless_button;
+-	u8 set_wireless_button;
++	u16 get_wireless_button;
++	u16 set_wireless_button;
+ 
+ 	/* 0 is off, 1 is on */
+-	u8 get_backlight;
+-	u8 set_backlight;
++	u16 get_backlight;
++	u16 set_backlight;
+ 
+ 	/*
+ 	 * 0x80 or 0x00 - no action
+ 	 * 0x81 - recovery key pressed
+ 	 */
+-	u8 get_recovery_mode;
+-	u8 set_recovery_mode;
++	u16 get_recovery_mode;
++	u16 set_recovery_mode;
+ 
+ 	/*
+ 	 * on seclinux: 0 is low, 1 is high,
+ 	 * on swsmi: 0 is normal, 1 is silent, 2 is turbo
+ 	 */
+-	u8 get_performance_level;
+-	u8 set_performance_level;
++	u16 get_performance_level;
++	u16 set_performance_level;
+ 
+ 	/*
+ 	 * Tell the BIOS that Linux is running on this machine.
+ 	 * 81 is on, 80 is off
+ 	 */
+-	u8 set_linux;
++	u16 set_linux;
+ };
+ 
+ struct sabi_performance_level {
+ 	const char *name;
+-	u8 value;
++	u16 value;
+ };
+ 
+ struct sabi_config {
+@@ -246,16 +254,25 @@ static int debug;
+ module_param(debug, bool, S_IRUGO | S_IWUSR);
+ MODULE_PARM_DESC(debug, "Debug enabled or not");
+ 
+-static int sabi_get_command(struct samsung_laptop *samsung,
+-			    u8 command, struct sabi_retval *sretval)
++static int sabi_command(struct samsung_laptop *samsung, u16 command,
++			struct sabi_data *in,
++			struct sabi_data *out)
+ {
+ 	const struct sabi_config *config = samsung->config;
+-	int retval = 0;
++	int ret = 0;
+ 	u16 port = readw(samsung->sabi + config->header_offsets.port);
+ 	u8 complete, iface_data;
+ 
+ 	mutex_lock(&samsung->sabi_mutex);
+ 
++	if (debug) {
++		if (in)
++			pr_info("SABI 0x%04x {0x%08x, 0x%08x, 0x%04x, 0x%02x}",
++				command, in->d0, in->d1, in->d2, in->d3);
++		else
++			pr_info("SABI 0x%04x", command);
++	}
++
+ 	/* enable memory to be able to write to it */
+ 	outb(readb(samsung->sabi + config->header_offsets.en_mem), port);
+ 
+@@ -263,6 +280,12 @@ static int sabi_get_command(struct samsung_laptop *samsung,
+ 	writew(config->main_function, samsung->sabi_iface + SABI_IFACE_MAIN);
+ 	writew(command, samsung->sabi_iface + SABI_IFACE_SUB);
+ 	writeb(0, samsung->sabi_iface + SABI_IFACE_COMPLETE);
++	if (in) {
++		writel(in->d0, samsung->sabi_iface + SABI_IFACE_DATA);
++		writel(in->d1, samsung->sabi_iface + SABI_IFACE_DATA + 4);
++		writew(in->d2, samsung->sabi_iface + SABI_IFACE_DATA + 8);
++		writeb(in->d3, samsung->sabi_iface + SABI_IFACE_DATA + 10);
++	}
+ 	outb(readb(samsung->sabi + config->header_offsets.iface_func), port);
+ 
+ 	/* write protect memory to make it safe */
+@@ -272,127 +295,105 @@ static int sabi_get_command(struct samsung_laptop *samsung,
+ 	complete = readb(samsung->sabi_iface + SABI_IFACE_COMPLETE);
+ 	iface_data = readb(samsung->sabi_iface + SABI_IFACE_DATA);
+ 	if (complete != 0xaa || iface_data == 0xff) {
+-		pr_warn("SABI get command 0x%02x failed with completion flag 0x%02x and data 0x%02x\n",
+-		        command, complete, iface_data);
+-		retval = -EINVAL;
++		pr_warn("SABI command 0x%04x failed with"
++			" completion flag 0x%02x and interface data 0x%02x",
++			command, complete, iface_data);
++		ret = -EINVAL;
  		goto exit;
  	}
-@@ -1285,7 +1286,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
- 	}
+-	/*
+-	 * Save off the data into a structure so the caller use it.
+-	 * Right now we only want the first 4 bytes,
+-	 * There are commands that need more, but not for the ones we
+-	 * currently care about.
+-	 */
+-	sretval->retval[0] = readb(samsung->sabi_iface + SABI_IFACE_DATA);
+-	sretval->retval[1] = readb(samsung->sabi_iface + SABI_IFACE_DATA + 1);
+-	sretval->retval[2] = readb(samsung->sabi_iface + SABI_IFACE_DATA + 2);
+-	sretval->retval[3] = readb(samsung->sabi_iface + SABI_IFACE_DATA + 3);
++
++	if (out) {
++		out->d0 = readl(samsung->sabi_iface + SABI_IFACE_DATA);
++		out->d1 = readl(samsung->sabi_iface + SABI_IFACE_DATA + 4);
++		out->d2 = readw(samsung->sabi_iface + SABI_IFACE_DATA + 2);
++		out->d3 = readb(samsung->sabi_iface + SABI_IFACE_DATA + 1);
++	}
++
++	if (debug && out) {
++		pr_info("SABI {0x%08x, 0x%08x, 0x%04x, 0x%02x}",
++			out->d0, out->d1, out->d2, out->d3);
++	}
  
- 	if (loca == 0xffff) {
--		pr_err("This computer does not support SABI\n");
-+		if (debug || force)
-+			pr_err("This computer does not support SABI\n");
- 		ret = -ENODEV;
- 		goto exit;
- 	}
-@@ -1354,244 +1356,34 @@ static int __init samsung_platform_init(struct samsung_laptop *samsung)
- 	return 0;
+ exit:
+ 	mutex_unlock(&samsung->sabi_mutex);
+-	return retval;
+-
++	return ret;
  }
  
--static int __init dmi_check_cb(const struct dmi_system_id *id)
--{
--	pr_info("found laptop model '%s'\n", id->ident);
--	return 1;
--}
--
- static struct dmi_system_id __initdata samsung_dmi_table[] = {
- 	{
--		.ident = "N128",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N128"),
--			DMI_MATCH(DMI_BOARD_NAME, "N128"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "N130",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N130"),
--			DMI_MATCH(DMI_BOARD_NAME, "N130"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "N510",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N510"),
--			DMI_MATCH(DMI_BOARD_NAME, "N510"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "X125",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "X125"),
--			DMI_MATCH(DMI_BOARD_NAME, "X125"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "X120/X170",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "X120/X170"),
--			DMI_MATCH(DMI_BOARD_NAME, "X120/X170"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "NC10",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "NC10"),
--			DMI_MATCH(DMI_BOARD_NAME, "NC10"),
--		},
--		.callback = dmi_check_cb,
--	},
--		{
--		.ident = "NP-Q45",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "SQ45S70S"),
--			DMI_MATCH(DMI_BOARD_NAME, "SQ45S70S"),
--		},
--		.callback = dmi_check_cb,
--		},
--	{
--		.ident = "X360",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "X360"),
--			DMI_MATCH(DMI_BOARD_NAME, "X360"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R410 Plus",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "R410P"),
--			DMI_MATCH(DMI_BOARD_NAME, "R460"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R518",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR,
- 					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "R518"),
--			DMI_MATCH(DMI_BOARD_NAME, "R518"),
-+			DMI_MATCH(DMI_CHASSIS_TYPE, "8"), /* Portable */
- 		},
--		.callback = dmi_check_cb,
- 	},
- 	{
--		.ident = "R519/R719",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR,
- 					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "R519/R719"),
--			DMI_MATCH(DMI_BOARD_NAME, "R519/R719"),
-+			DMI_MATCH(DMI_CHASSIS_TYPE, "9"), /* Laptop */
- 		},
--		.callback = dmi_check_cb,
- 	},
- 	{
--		.ident = "N150/N210/N220",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR,
- 					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
--			DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
-+			DMI_MATCH(DMI_CHASSIS_TYPE, "10"), /* Notebook */
- 		},
--		.callback = dmi_check_cb,
- 	},
- 	{
--		.ident = "N220",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR,
- 					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N220"),
--			DMI_MATCH(DMI_BOARD_NAME, "N220"),
-+			DMI_MATCH(DMI_CHASSIS_TYPE, "14"), /* Sub-Notebook */
- 		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "N150/N210/N220/N230",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220/N230"),
--			DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220/N230"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "N150P/N210P/N220P",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N150P/N210P/N220P"),
--			DMI_MATCH(DMI_BOARD_NAME, "N150P/N210P/N220P"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R700",
--		.matches = {
--		      DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		      DMI_MATCH(DMI_PRODUCT_NAME, "SR700"),
--		      DMI_MATCH(DMI_BOARD_NAME, "SR700"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R530/R730",
--		.matches = {
--		      DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--		      DMI_MATCH(DMI_PRODUCT_NAME, "R530/R730"),
--		      DMI_MATCH(DMI_BOARD_NAME, "R530/R730"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "NF110/NF210/NF310",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
--			DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "N145P/N250P/N260P",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
--			DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R70/R71",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR,
--					"SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "R70/R71"),
--			DMI_MATCH(DMI_BOARD_NAME, "R70/R71"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "P460",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "P460"),
--			DMI_MATCH(DMI_BOARD_NAME, "P460"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "R528/R728",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "R528/R728"),
--			DMI_MATCH(DMI_BOARD_NAME, "R528/R728"),
--		},
--		.callback = dmi_check_cb,
--	},
--	{
--		.ident = "NC210/NC110",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
--			DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
--		},
--		.callback = dmi_check_cb,
--	},
--		{
--		.ident = "X520",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "X520"),
--			DMI_MATCH(DMI_BOARD_NAME, "X520"),
--		},
--		.callback = dmi_check_cb,
- 	},
- 	{ },
- };
-@@ -1616,12 +1408,9 @@ static int __init samsung_init(void)
+-static int sabi_set_command(struct samsung_laptop *samsung,
+-			    u8 command, u8 data)
++/* simple wrappers usable with most commands */
++static int sabi_set_commandb(struct samsung_laptop *samsung,
++			     u16 command, u8 data)
+ {
+-	const struct sabi_config *config = samsung->config;
+-	int retval = 0;
+-	u16 port = readw(samsung->sabi + config->header_offsets.port);
+-	u8 complete, iface_data;
++	struct sabi_data in = { .d0 = 0, .d1 = 0, .d2 = 0, .d3 = 0 };
  
- #ifdef CONFIG_ACPI
- 	/* Don't handle backlight here if the acpi video already handle it */
--	if (acpi_video_backlight_support()) {
--		pr_info("Backlight controlled by ACPI video driver\n");
-+	if (acpi_video_backlight_support())
- 		samsung->handle_backlight = false;
+-	mutex_lock(&samsung->sabi_mutex);
+-
+-	/* enable memory to be able to write to it */
+-	outb(readb(samsung->sabi + config->header_offsets.en_mem), port);
+-
+-	/* write out the command */
+-	writew(config->main_function, samsung->sabi_iface + SABI_IFACE_MAIN);
+-	writew(command, samsung->sabi_iface + SABI_IFACE_SUB);
+-	writeb(0, samsung->sabi_iface + SABI_IFACE_COMPLETE);
+-	writeb(data, samsung->sabi_iface + SABI_IFACE_DATA);
+-	outb(readb(samsung->sabi + config->header_offsets.iface_func), port);
+-
+-	/* write protect memory to make it safe */
+-	outb(readb(samsung->sabi + config->header_offsets.re_mem), port);
+-
+-	/* see if the command actually succeeded */
+-	complete = readb(samsung->sabi_iface + SABI_IFACE_COMPLETE);
+-	iface_data = readb(samsung->sabi_iface + SABI_IFACE_DATA);
+-	if (complete != 0xaa || iface_data == 0xff) {
+-		pr_warn("SABI set command 0x%02x failed with completion flag 0x%02x and data 0x%02x\n",
+-		       command, complete, iface_data);
+-		retval = -EINVAL;
 -	}
- #endif
 -
- 	ret = samsung_platform_init(samsung);
- 	if (ret)
- 		goto error_platform;
-@@ -1630,6 +1419,12 @@ static int __init samsung_init(void)
- 	if (ret)
- 		goto error_sabi;
+-	mutex_unlock(&samsung->sabi_mutex);
+-	return retval;
++	in.data[0] = data;
++	return sabi_command(samsung, command, &in, NULL);
+ }
  
-+#ifdef CONFIG_ACPI
-+	/* Only log that if we are really on a sabi platform */
-+	if (acpi_video_backlight_support())
-+		pr_info("Backlight controlled by ACPI video driver\n");
-+#endif
+ static void test_backlight(struct samsung_laptop *samsung)
+ {
+ 	const struct sabi_commands *commands = &samsung->config->commands;
+-	struct sabi_retval sretval;
++	struct sabi_data sretval;
+ 
+-	sabi_get_command(samsung, commands->get_backlight, &sretval);
+-	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_backlight, NULL, &sretval);
++	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.data[0]);
+ 
+-	sabi_set_command(samsung, commands->set_backlight, 0);
++	sabi_set_commandb(samsung, commands->set_backlight, 0);
+ 	printk(KERN_DEBUG "backlight should be off\n");
+ 
+-	sabi_get_command(samsung, commands->get_backlight, &sretval);
+-	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_backlight, NULL, &sretval);
++	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.data[0]);
+ 
+ 	msleep(1000);
+ 
+-	sabi_set_command(samsung, commands->set_backlight, 1);
++	sabi_set_commandb(samsung, commands->set_backlight, 1);
+ 	printk(KERN_DEBUG "backlight should be on\n");
+ 
+-	sabi_get_command(samsung, commands->get_backlight, &sretval);
+-	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_backlight, NULL, &sretval);
++	printk(KERN_DEBUG "backlight = 0x%02x\n", sretval.data[0]);
+ }
+ 
+ static void test_wireless(struct samsung_laptop *samsung)
+ {
+ 	const struct sabi_commands *commands = &samsung->config->commands;
+-	struct sabi_retval sretval;
++	struct sabi_data sretval;
+ 
+-	sabi_get_command(samsung, commands->get_wireless_button, &sretval);
+-	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_wireless_button, NULL, &sretval);
++	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.data[0]);
+ 
+-	sabi_set_command(samsung, commands->set_wireless_button, 0);
++	sabi_set_commandb(samsung, commands->set_wireless_button, 0);
+ 	printk(KERN_DEBUG "wireless led should be off\n");
+ 
+-	sabi_get_command(samsung, commands->get_wireless_button, &sretval);
+-	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_wireless_button, NULL, &sretval);
++	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.data[0]);
+ 
+ 	msleep(1000);
+ 
+-	sabi_set_command(samsung, commands->set_wireless_button, 1);
++	sabi_set_commandb(samsung, commands->set_wireless_button, 1);
+ 	printk(KERN_DEBUG "wireless led should be on\n");
+ 
+-	sabi_get_command(samsung, commands->get_wireless_button, &sretval);
+-	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, commands->get_wireless_button, NULL, &sretval);
++	printk(KERN_DEBUG "wireless led = 0x%02x\n", sretval.data[0]);
+ }
+ 
+ static int read_brightness(struct samsung_laptop *samsung)
+ {
+ 	const struct sabi_config *config = samsung->config;
+ 	const struct sabi_commands *commands = &samsung->config->commands;
+-	struct sabi_retval sretval;
++	struct sabi_data sretval;
+ 	int user_brightness = 0;
+ 	int retval;
+ 
+-	retval = sabi_get_command(samsung, commands->get_brightness,
+-				  &sretval);
+-	if (!retval) {
+-		user_brightness = sretval.retval[0];
+-		if (user_brightness > config->min_brightness)
+-			user_brightness -= config->min_brightness;
+-		else
+-			user_brightness = 0;
+-	}
++	retval = sabi_command(samsung, commands->get_brightness,
++			      NULL, &sretval);
++	if (retval)
++		return retval;
 +
- 	ret = samsung_sysfs_init(samsung);
- 	if (ret)
- 		goto error_sysfs;
++	user_brightness = sretval.data[0];
++	if (user_brightness > config->min_brightness)
++		user_brightness -= config->min_brightness;
++	else
++		user_brightness = 0;
++
+ 	return user_brightness;
+ }
+ 
+@@ -410,10 +411,10 @@ static void set_brightness(struct samsung_laptop *samsung, u8 user_brightness)
+ 		if (user_brightness == read_brightness(samsung))
+ 			return;
+ 
+-		sabi_set_command(samsung, commands->set_brightness, 0);
++		sabi_set_commandb(samsung, commands->set_brightness, 0);
+ 	}
+ 
+-	sabi_set_command(samsung, commands->set_brightness, user_level);
++	sabi_set_commandb(samsung, commands->set_brightness, user_level);
+ }
+ 
+ static int get_brightness(struct backlight_device *bd)
+@@ -465,9 +466,9 @@ static int update_status(struct backlight_device *bd)
+ 	set_brightness(samsung, bd->props.brightness);
+ 
+ 	if (bd->props.power == FB_BLANK_UNBLANK)
+-		sabi_set_command(samsung, commands->set_backlight, 1);
++		sabi_set_commandb(samsung, commands->set_backlight, 1);
+ 	else
+-		sabi_set_command(samsung, commands->set_backlight, 0);
++		sabi_set_commandb(samsung, commands->set_backlight, 0);
+ 
+ 	return 0;
+ }
+@@ -488,9 +489,9 @@ static int rfkill_set(void *data, bool blocked)
+ 	 * blocked == true is off
+ 	 */
+ 	if (blocked)
+-		sabi_set_command(samsung, commands->set_wireless_button, 0);
++		sabi_set_commandb(samsung, commands->set_wireless_button, 0);
+ 	else
+-		sabi_set_command(samsung, commands->set_wireless_button, 1);
++		sabi_set_commandb(samsung, commands->set_wireless_button, 1);
+ 
+ 	return 0;
+ }
+@@ -505,19 +506,19 @@ static ssize_t get_performance_level(struct device *dev,
+ 	struct samsung_laptop *samsung = dev_get_drvdata(dev);
+ 	const struct sabi_config *config = samsung->config;
+ 	const struct sabi_commands *commands = &config->commands;
+-	struct sabi_retval sretval;
++	struct sabi_data sretval;
+ 	int retval;
+ 	int i;
+ 
+ 	/* Read the state */
+-	retval = sabi_get_command(samsung, commands->get_performance_level,
+-				  &sretval);
++	retval = sabi_command(samsung, commands->get_performance_level,
++			      NULL, &sretval);
+ 	if (retval)
+ 		return retval;
+ 
+ 	/* The logic is backwards, yeah, lots of fun... */
+ 	for (i = 0; config->performance_levels[i].name; ++i) {
+-		if (sretval.retval[0] == config->performance_levels[i].value)
++		if (sretval.data[0] == config->performance_levels[i].value)
+ 			return sprintf(buf, "%s\n", config->performance_levels[i].name);
+ 	}
+ 	return sprintf(buf, "%s\n", "unknown");
+@@ -539,9 +540,9 @@ static ssize_t set_performance_level(struct device *dev,
+ 		const struct sabi_performance_level *level =
+ 			&config->performance_levels[i];
+ 		if (!strncasecmp(level->name, buf, strlen(level->name))) {
+-			sabi_set_command(samsung,
+-					 commands->set_performance_level,
+-					 level->value);
++			sabi_set_commandb(samsung,
++					  commands->set_performance_level,
++					  level->value);
+ 			break;
+ 		}
+ 	}
+@@ -685,7 +686,7 @@ static void samsung_sabi_exit(struct samsung_laptop *samsung)
+ 
+ 	/* Turn off "Linux" mode in the BIOS */
+ 	if (config && config->commands.set_linux != 0xff)
+-		sabi_set_command(samsung, config->commands.set_linux, 0x80);
++		sabi_set_commandb(samsung, config->commands.set_linux, 0x80);
+ 
+ 	if (samsung->sabi_iface) {
+ 		iounmap(samsung->sabi_iface);
+@@ -724,7 +725,7 @@ static void __init samsung_sabi_selftest(struct samsung_laptop *samsung,
+ 					unsigned int ifaceP)
+ {
+ 	const struct sabi_config *config = samsung->config;
+-	struct sabi_retval sretval;
++	struct sabi_data sretval;
+ 
+ 	printk(KERN_DEBUG "ifaceP = 0x%08x\n", ifaceP);
+ 	printk(KERN_DEBUG "sabi_iface = %p\n", samsung->sabi_iface);
+@@ -733,8 +734,8 @@ static void __init samsung_sabi_selftest(struct samsung_laptop *samsung,
+ 		test_backlight(samsung);
+ 	test_wireless(samsung);
+ 
+-	sabi_get_command(samsung, config->commands.get_brightness, &sretval);
+-	printk(KERN_DEBUG "brightness = 0x%02x\n", sretval.retval[0]);
++	sabi_command(samsung, config->commands.get_brightness, NULL, &sretval);
++	printk(KERN_DEBUG "brightness = 0x%02x\n", sretval.data[0]);
+ }
+ 
+ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
+@@ -793,8 +794,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
+ 
+ 	/* Turn on "Linux" mode in the BIOS */
+ 	if (commands->set_linux != 0xff) {
+-		int retval = sabi_set_command(samsung,
+-					      commands->set_linux, 0x81);
++		int retval = sabi_set_commandb(samsung,
++					       commands->set_linux, 0x81);
+ 		if (retval) {
+ 			pr_warn("Linux mode was not set!\n");
+ 			ret = -ENODEV;
 -- 
 1.7.5.4
