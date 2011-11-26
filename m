@@ -1,161 +1,232 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 09/16] samsung-laptop: add usb charge support
-Date: Sat, 26 Nov 2011 11:00:06 +0100
-Message-ID: <1322301613-8801-10-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 06/16] samsung-laptop: add a small debugfs interface
+Date: Sat, 26 Nov 2011 11:00:03 +0100
+Message-ID: <1322301613-8801-7-git-send-email-corentincj@iksaif.net>
 References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
+
+This allow to call arbitrary sabi commands wihout
+modifying the driver at all. For example, setting
+the keyboard backlight brightness to 5 using debugfs
+interface can be done like that:
+
+ ; Set the command
+ echo 0x78 > command
+ ; Set the data
+ echo 0x0582 > d0
+ ; Fill the rest with 0
+ echo 0 > d1
+ echo 0 > d2
+ echo 0 > d3
+ ; And issue the command
+ cat call
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
 ---
- .../ABI/testing/sysfs-driver-samsung-laptop        |    8 ++
- drivers/platform/x86/samsung-laptop.c              |   82 ++++++++++++++++++++
- 2 files changed, 90 insertions(+), 0 deletions(-)
+ drivers/platform/x86/samsung-laptop.c |  147 +++++++++++++++++++++++++++++++++
+ 1 files changed, 147 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-index a6a56e1..f05b897 100644
---- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-+++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
-@@ -27,3 +27,11 @@ Description:	Max battery charge level can be modified, battery cycle
- 		level.
- 		0 means normal battery mode (100% charge)
- 		1 means battery life extender mode (80% charge)
-+
-+What:		/sys/devices/platform/samsung/usb_charge
-+Date:		December 1, 2011
-+KernelVersion:	3.3
-+Contact:	Corentin Chary <corentin.chary@gmail.com>
-+Description:	Use your USB ports to charge devices, even
-+		when your laptop is powered off.
-+		1 means enabled, 0 means disabled.
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 74c34ce..d7cbee9 100644
+index cd638c4..6cbf2ed 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -108,6 +108,10 @@ struct sabi_commands {
- 	u16 get_battery_life_extender;
- 	u16 set_battery_life_extender;
+@@ -22,6 +22,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/rfkill.h>
+ #include <linux/acpi.h>
++#include <linux/seq_file.h>
++#include <linux/debugfs.h>
  
-+	/* 0x80 is off, 0x81 is on */
-+	u16 get_usb_charge;
-+	u16 set_usb_charge;
-+
- 	/*
- 	 * Tell the BIOS that Linux is running on this machine.
- 	 * 81 is on, 80 is off
-@@ -164,6 +168,9 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_battery_life_extender = 0xFFFF,
- 			.set_battery_life_extender = 0xFFFF,
- 
-+			.get_usb_charge = 0xFFFF,
-+			.set_usb_charge = 0xFFFF,
-+
- 			.set_linux = 0x0a,
- 		},
- 
-@@ -214,6 +221,9 @@ static const struct sabi_config sabi_configs[] = {
- 			.get_battery_life_extender = 0x65,
- 			.set_battery_life_extender = 0x66,
- 
-+			.get_usb_charge = 0x67,
-+			.set_usb_charge = 0x68,
-+
- 			.set_linux = 0xff,
- 		},
- 
-@@ -622,9 +632,79 @@ static ssize_t set_battery_life_extender(struct device *dev,
- static DEVICE_ATTR(battery_life_extender, S_IWUSR | S_IRUGO,
- 		   get_battery_life_extender, set_battery_life_extender);
- 
-+static int read_usb_charge(struct samsung_laptop *samsung)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+	int retval;
-+
-+	if (commands->get_usb_charge == 0xFFFF)
-+		return -ENODEV;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.data[0] = 0x80;
-+	retval = sabi_command(samsung, commands->get_usb_charge,
-+			      &data, &data);
-+
-+	if (retval)
-+		return retval;
-+
-+	if (data.data[0] != 0 && data.data[0] != 1)
-+		return -ENODEV;
-+
-+	return data.data[0];
-+}
-+
-+static int write_usb_charge(struct samsung_laptop *samsung,
-+			    int enabled)
-+{
-+	const struct sabi_commands *commands = &samsung->config->commands;
-+	struct sabi_data data;
-+
-+	memset(&data, 0, sizeof(data));
-+	data.data[0] = 0x80 | enabled;
-+	return sabi_command(samsung, commands->set_usb_charge,
-+			    &data, NULL);
-+}
-+
-+static ssize_t get_usb_charge(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct samsung_laptop *samsung = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = read_usb_charge(samsung);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", ret);
-+}
-+
-+static ssize_t set_usb_charge(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	struct samsung_laptop *samsung = dev_get_drvdata(dev);
-+	int ret, value;
-+
-+	if (!count || sscanf(buf, "%i", &value) != 1)
-+		return -EINVAL;
-+
-+	ret = write_usb_charge(samsung, !!value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR(usb_charge, S_IWUSR | S_IRUGO,
-+		   get_usb_charge, set_usb_charge);
-+
- static struct attribute *platform_attributes[] = {
- 	&dev_attr_performance_level.attr,
- 	&dev_attr_battery_life_extender.attr,
-+	&dev_attr_usb_charge.attr,
- 	NULL
+ /*
+  * This driver is needed because a number of Samsung laptops do not hook
+@@ -226,6 +228,35 @@ static const struct sabi_config sabi_configs[] = {
+ 	{ },
  };
  
-@@ -725,6 +805,8 @@ static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
- 		ok = !!samsung->config->performance_levels[0].name;
- 	if (attr == &dev_attr_battery_life_extender.attr)
- 		ok = !!(read_battery_life_extender(samsung) >= 0);
-+	if (attr == &dev_attr_usb_charge.attr)
-+		ok = !!(read_usb_charge(samsung) >= 0);
++/*
++ * samsung-laptop/    - debugfs root directory
++ *   f0000_segment    - dump f0000 segment
++ *   command          - current command
++ *   data             - current data
++ *   d0, d1, d2, d3   - data fields
++ *   call             - call SABI using command and data
++ *
++ * This allow to call arbitrary sabi commands wihout
++ * modifying the driver at all.
++ * For example, setting the keyboard backlight brightness to 5
++ *
++ *  echo 0x78 > command
++ *  echo 0x0582 > d0
++ *  echo 0 > d1
++ *  echo 0 > d2
++ *  echo 0 > d3
++ *  cat call
++ */
++
++struct samsung_laptop_debug {
++	struct dentry *root;
++	struct sabi_data data;
++	u16 command;
++
++	struct debugfs_blob_wrapper f0000_wrapper;
++	struct debugfs_blob_wrapper data_wrapper;
++};
++
+ struct samsung_laptop {
+ 	const struct sabi_config *config;
  
- 	return ok ? attr->mode : 0;
+@@ -239,6 +270,8 @@ struct samsung_laptop {
+ 	struct backlight_device *backlight_device;
+ 	struct rfkill *rfk;
+ 
++	struct samsung_laptop_debug debug;
++
+ 	bool handle_backlight;
+ 	bool has_stepping_quirk;
+ };
+@@ -680,6 +713,113 @@ static int __init samsung_sysfs_init(struct samsung_laptop *samsung)
+ 
  }
+ 
++static int show_call(struct seq_file *m, void *data)
++{
++	struct samsung_laptop *samsung = m->private;
++	struct sabi_data *sdata = &samsung->debug.data;
++	int ret;
++
++	seq_printf(m, "SABI 0x%04x {0x%08x, 0x%08x, 0x%04x, 0x%02x}\n",
++		   samsung->debug.command,
++		   sdata->d0, sdata->d1, sdata->d2, sdata->d3);
++
++	ret = sabi_command(samsung, samsung->debug.command, sdata, sdata);
++
++	if (ret) {
++		seq_printf(m, "SABI command 0x%04x failed\n",
++			   samsung->debug.command);
++		return ret;
++	}
++
++	seq_printf(m, "SABI {0x%08x, 0x%08x, 0x%04x, 0x%02x}\n",
++		   sdata->d0, sdata->d1, sdata->d2, sdata->d3);
++	return 0;
++}
++
++static int samsung_debugfs_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, show_call, inode->i_private);
++}
++
++static const struct file_operations samsung_laptop_call_io_ops = {
++	.owner = THIS_MODULE,
++	.open = samsung_debugfs_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static void samsung_debugfs_exit(struct samsung_laptop *samsung)
++{
++	debugfs_remove_recursive(samsung->debug.root);
++}
++
++static int samsung_debugfs_init(struct samsung_laptop *samsung)
++{
++	struct dentry *dent;
++
++	samsung->debug.root = debugfs_create_dir("samsung-laptop", NULL);
++	if (!samsung->debug.root) {
++		pr_err("failed to create debugfs directory");
++		goto error_debugfs;
++	}
++
++	samsung->debug.f0000_wrapper.data = samsung->f0000_segment;
++	samsung->debug.f0000_wrapper.size = 0xffff;
++
++	samsung->debug.data_wrapper.data = &samsung->debug.data;
++	samsung->debug.data_wrapper.size = sizeof(samsung->debug.data);
++
++	dent = debugfs_create_u16("command", S_IRUGO | S_IWUSR,
++				  samsung->debug.root, &samsung->debug.command);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_u32("d0", S_IRUGO | S_IWUSR, samsung->debug.root,
++				  &samsung->debug.data.d0);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_u32("d1", S_IRUGO | S_IWUSR, samsung->debug.root,
++				  &samsung->debug.data.d1);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_u16("d2", S_IRUGO | S_IWUSR, samsung->debug.root,
++				  &samsung->debug.data.d2);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_u8("d3", S_IRUGO | S_IWUSR, samsung->debug.root,
++				 &samsung->debug.data.d3);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_blob("data", S_IRUGO | S_IWUSR,
++				   samsung->debug.root,
++				   &samsung->debug.data_wrapper);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_blob("f0000_segment", S_IRUSR | S_IWUSR,
++				   samsung->debug.root,
++				   &samsung->debug.f0000_wrapper);
++	if (!dent)
++		goto error_debugfs;
++
++	dent = debugfs_create_file("call", S_IFREG | S_IRUGO,
++				   samsung->debug.root, samsung,
++				   &samsung_laptop_call_io_ops);
++	if (!dent)
++		goto error_debugfs;
++
++	return 0;
++
++error_debugfs:
++	samsung_debugfs_exit(samsung);
++	return -ENOMEM;
++}
++
+ static void samsung_sabi_exit(struct samsung_laptop *samsung)
+ {
+ 	const struct sabi_config *config = samsung->config;
+@@ -1123,9 +1263,15 @@ static int __init samsung_init(void)
+ 	if (ret)
+ 		goto error_rfkill;
+ 
++	ret = samsung_debugfs_init(samsung);
++	if (ret)
++		goto error_debugfs;
++
+ 	samsung_platform_device = samsung->platform_device;
+ 	return ret;
+ 
++error_debugfs:
++	samsung_rfkill_exit(samsung);
+ error_rfkill:
+ 	samsung_backlight_exit(samsung);
+ error_backlight:
+@@ -1145,6 +1291,7 @@ static void __exit samsung_exit(void)
+ 
+ 	samsung = platform_get_drvdata(samsung_platform_device);
+ 
++	samsung_debugfs_exit(samsung);
+ 	samsung_rfkill_exit(samsung);
+ 	samsung_backlight_exit(samsung);
+ 	samsung_sysfs_exit(samsung);
 -- 
 1.7.5.4
