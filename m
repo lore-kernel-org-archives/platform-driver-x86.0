@@ -1,107 +1,66 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH] platform-drivers-x86: convert drivers/platform/x86/* to use
- module_platform_driver()
-Date: Sat, 26 Nov 2011 12:14:37 +0800
-Message-ID: <1322280877.6458.3.camel@phoenix>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH v2 00/16] samsung-laptop updates
+Date: Sat, 26 Nov 2011 10:59:57 +0100
+Message-ID: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:44232 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752267Ab1KZEOo (ORCPT
+Received: from smtp5-g21.free.fr ([212.27.42.5]:41497 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751053Ab1KZKAZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Nov 2011 23:14:44 -0500
+	Sat, 26 Nov 2011 05:00:25 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Hong Liu <hong.liu@intel.com>, Durgadoss R <durgadoss.r@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>
 
-This patch converts the drivers in drivers/platform/x86/* to use the
-module_platform_driver() macro which makes the code smaller and a bit
-simpler.
+Hi Matthew, Greg
 
-Cc: Hong Liu <hong.liu@intel.com>
-Cc: Durgadoss R <durgadoss.r@intel.com>
-Cc: Daniel Drake <dsd@laptop.org>
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c |   12 +-----------
- drivers/platform/x86/intel_mid_thermal.c  |   13 +------------
- drivers/platform/x86/xo1-rfkill.c         |   13 +------------
- 3 files changed, 3 insertions(+), 35 deletions(-)
+I recently got a Samsung Series 9 from Intel, so I took some
+time to add support for some features.
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index f1ae507..ff3de34 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -118,17 +118,7 @@ static struct platform_driver mfld_pb_driver = {
- 	.remove	= __devexit_p(mfld_pb_remove),
- };
- 
--static int __init mfld_pb_init(void)
--{
--	return platform_driver_register(&mfld_pb_driver);
--}
--module_init(mfld_pb_init);
--
--static void __exit mfld_pb_exit(void)
--{
--	platform_driver_unregister(&mfld_pb_driver);
--}
--module_exit(mfld_pb_exit);
-+module_platform_driver(mfld_pb_driver);
- 
- MODULE_AUTHOR("Hong Liu <hong.liu@intel.com>");
- MODULE_DESCRIPTION("Intel Medfield Power Button Driver");
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index ccd7b1f..e4cc992 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -565,18 +565,7 @@ static struct platform_driver mid_thermal_driver = {
- 	.id_table = therm_id_table,
- };
- 
--static int __init mid_thermal_module_init(void)
--{
--	return platform_driver_register(&mid_thermal_driver);
--}
--
--static void __exit mid_thermal_module_exit(void)
--{
--	platform_driver_unregister(&mid_thermal_driver);
--}
--
--module_init(mid_thermal_module_init);
--module_exit(mid_thermal_module_exit);
-+module_platform_driver(mid_thermal_driver);
- 
- MODULE_AUTHOR("Durgadoss R <durgadoss.r@intel.com>");
- MODULE_DESCRIPTION("Intel Medfield Platform Thermal Driver");
-diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
-index e549eee..41781ed 100644
---- a/drivers/platform/x86/xo1-rfkill.c
-+++ b/drivers/platform/x86/xo1-rfkill.c
-@@ -67,19 +67,8 @@ static struct platform_driver xo1_rfkill_driver = {
- 	.remove		= __devexit_p(xo1_rfkill_remove),
- };
- 
--static int __init xo1_rfkill_init(void)
--{
--	return platform_driver_register(&xo1_rfkill_driver);
--}
--
--static void __exit xo1_rfkill_exit(void)
--{
--	platform_driver_unregister(&xo1_rfkill_driver);
--}
-+module_platform_driver(xo1_rfkill_driver);
- 
- MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:xo1-rfkill");
--
--module_init(xo1_rfkill_init);
--module_exit(xo1_rfkill_exit);
+In this series, I moved a lot of code, tried to follow more
+closely the SABI interface, added some features, and did
+some cleanups.
+
+Patches were tested on my laptop, N210 and N150. I'd greatly
+appreciateany feedback from other models.
+
+I also propose myself as a maintainer for this driver, since
+thislaptop is now my primary system.
+
+Thanks,
+
+Since v1:
+ - Added bluetooth/wlan detection
+ - Added some informations about the debugfs interface
+ - Added a sdiag file in debugfs
+ - Removed errors when trying to detect features
+ - Fixed some typos
+ - Tested on N210 and N150 without any regression
+
+Corentin Chary (16):
+  samsung-laptop: put all local variables in a single structure
+  samsung-laptop: move code into init/exit functions
+  samsung-laptop: don't handle backlight if handled by acpi/video
+  samsung-laptop: use a sysfs group
+  samsung-laptop: ehance SABI support
+  samsung-laptop: add a small debugfs interface
+  samsung-laptop: remove selftest
+  samsung-laptop: add battery life extender support
+  samsung-laptop: add usb charge support
+  samsung-laptop: cleanup KConfig
+  samsung-laptop: add keyboard backlight support
+  samsung-laptop: add true rfkill support for swsmi
+  samsung-laptop: make the dmi check less strict
+  samsung-laptop: dump model and version informations
+  samsung-laptop: tweak traces
+  samsung-laptop: promote myself as maintainer of samsung-laptop
+
+ .../ABI/testing/sysfs-driver-samsung-laptop        |   18 +
+ MAINTAINERS                                        |    6 +
+ drivers/platform/x86/Kconfig                       |   13 +-
+ drivers/platform/x86/samsung-laptop.c              | 1680 +++++++++++++-------
+ 4 files changed, 1165 insertions(+), 552 deletions(-)
+
 -- 
 1.7.5.4
