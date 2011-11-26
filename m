@@ -1,81 +1,161 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 04/16] samsung-laptop: use a sysfs group
-Date: Sat, 26 Nov 2011 11:00:01 +0100
-Message-ID: <1322301613-8801-5-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH v2 09/16] samsung-laptop: add usb charge support
+Date: Sat, 26 Nov 2011 11:00:06 +0100
+Message-ID: <1322301613-8801-10-git-send-email-corentincj@iksaif.net>
 References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, Randy Dunlap <rdunlap@xenotime.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
-
-Will be usefull later when we will have more platform sysfs files
-like battery_life_extender or usb_charge.
 
 Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
 ---
- drivers/platform/x86/samsung-laptop.c |   34 +++++++++++++++++++++++++++++---
- 1 files changed, 30 insertions(+), 4 deletions(-)
+ .../ABI/testing/sysfs-driver-samsung-laptop        |    8 ++
+ drivers/platform/x86/samsung-laptop.c              |   82 ++++++++++++++++++++
+ 2 files changed, 90 insertions(+), 0 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-driver-samsung-laptop b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+index a6a56e1..f05b897 100644
+--- a/Documentation/ABI/testing/sysfs-driver-samsung-laptop
++++ b/Documentation/ABI/testing/sysfs-driver-samsung-laptop
+@@ -27,3 +27,11 @@ Description:	Max battery charge level can be modified, battery cycle
+ 		level.
+ 		0 means normal battery mode (100% charge)
+ 		1 means battery life extender mode (80% charge)
++
++What:		/sys/devices/platform/samsung/usb_charge
++Date:		December 1, 2011
++KernelVersion:	3.3
++Contact:	Corentin Chary <corentin.chary@gmail.com>
++Description:	Use your USB ports to charge devices, even
++		when your laptop is powered off.
++		1 means enabled, 0 means disabled.
 diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 49933d2..a21e0c3 100644
+index 74c34ce..d7cbee9 100644
 --- a/drivers/platform/x86/samsung-laptop.c
 +++ b/drivers/platform/x86/samsung-laptop.c
-@@ -555,6 +555,10 @@ static ssize_t set_performance_level(struct device *dev,
- static DEVICE_ATTR(performance_level, S_IWUSR | S_IRUGO,
- 		   get_performance_level, set_performance_level);
+@@ -108,6 +108,10 @@ struct sabi_commands {
+ 	u16 get_battery_life_extender;
+ 	u16 set_battery_life_extender;
  
-+static struct attribute *platform_attributes[] = {
-+	&dev_attr_performance_level.attr,
-+	NULL
-+};
++	/* 0x80 is off, 0x81 is on */
++	u16 get_usb_charge;
++	u16 set_usb_charge;
++
+ 	/*
+ 	 * Tell the BIOS that Linux is running on this machine.
+ 	 * 81 is on, 80 is off
+@@ -164,6 +168,9 @@ static const struct sabi_config sabi_configs[] = {
+ 			.get_battery_life_extender = 0xFFFF,
+ 			.set_battery_life_extender = 0xFFFF,
  
- static int find_signature(void __iomem *memcheck, const char *testStr)
- {
-@@ -641,16 +645,38 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
- 	return 0;
- }
++			.get_usb_charge = 0xFFFF,
++			.set_usb_charge = 0xFFFF,
++
+ 			.set_linux = 0x0a,
+ 		},
  
-+static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
-+				       struct attribute *attr, int idx)
+@@ -214,6 +221,9 @@ static const struct sabi_config sabi_configs[] = {
+ 			.get_battery_life_extender = 0x65,
+ 			.set_battery_life_extender = 0x66,
+ 
++			.get_usb_charge = 0x67,
++			.set_usb_charge = 0x68,
++
+ 			.set_linux = 0xff,
+ 		},
+ 
+@@ -622,9 +632,79 @@ static ssize_t set_battery_life_extender(struct device *dev,
+ static DEVICE_ATTR(battery_life_extender, S_IWUSR | S_IRUGO,
+ 		   get_battery_life_extender, set_battery_life_extender);
+ 
++static int read_usb_charge(struct samsung_laptop *samsung)
 +{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct samsung_laptop *samsung = platform_get_drvdata(pdev);
-+	bool ok = true;
++	const struct sabi_commands *commands = &samsung->config->commands;
++	struct sabi_data data;
++	int retval;
 +
-+	if (attr == &dev_attr_performance_level.attr)
-+		ok = !!samsung->config->performance_levels[0].name;
++	if (commands->get_usb_charge == 0xFFFF)
++		return -ENODEV;
 +
-+	return ok ? attr->mode : 0;
++	memset(&data, 0, sizeof(data));
++	data.data[0] = 0x80;
++	retval = sabi_command(samsung, commands->get_usb_charge,
++			      &data, &data);
++
++	if (retval)
++		return retval;
++
++	if (data.data[0] != 0 && data.data[0] != 1)
++		return -ENODEV;
++
++	return data.data[0];
 +}
 +
-+static struct attribute_group platform_attribute_group = {
-+	.is_visible = samsung_sysfs_is_visible,
-+	.attrs = platform_attributes
-+};
++static int write_usb_charge(struct samsung_laptop *samsung,
++			    int enabled)
++{
++	const struct sabi_commands *commands = &samsung->config->commands;
++	struct sabi_data data;
 +
- static void samsung_sysfs_exit(struct samsung_laptop *samsung)
- {
--	device_remove_file(&samsung->platform_device->dev,
--			   &dev_attr_performance_level);
-+	struct platform_device *device = samsung->platform_device;
++	memset(&data, 0, sizeof(data));
++	data.data[0] = 0x80 | enabled;
++	return sabi_command(samsung, commands->set_usb_charge,
++			    &data, NULL);
++}
 +
-+	sysfs_remove_group(&device->dev.kobj, &platform_attribute_group);
- }
++static ssize_t get_usb_charge(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf)
++{
++	struct samsung_laptop *samsung = dev_get_drvdata(dev);
++	int ret;
++
++	ret = read_usb_charge(samsung);
++	if (ret < 0)
++		return ret;
++
++	return sprintf(buf, "%d\n", ret);
++}
++
++static ssize_t set_usb_charge(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct samsung_laptop *samsung = dev_get_drvdata(dev);
++	int ret, value;
++
++	if (!count || sscanf(buf, "%i", &value) != 1)
++		return -EINVAL;
++
++	ret = write_usb_charge(samsung, !!value);
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
++static DEVICE_ATTR(usb_charge, S_IWUSR | S_IRUGO,
++		   get_usb_charge, set_usb_charge);
++
+ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_performance_level.attr,
+ 	&dev_attr_battery_life_extender.attr,
++	&dev_attr_usb_charge.attr,
+ 	NULL
+ };
  
- static int __init samsung_sysfs_init(struct samsung_laptop *samsung)
- {
--	return device_create_file(&samsung->platform_device->dev,
--				  &dev_attr_performance_level);
-+	struct platform_device *device = samsung->platform_device;
-+
-+	return sysfs_create_group(&device->dev.kobj, &platform_attribute_group);
-+
- }
+@@ -725,6 +805,8 @@ static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
+ 		ok = !!samsung->config->performance_levels[0].name;
+ 	if (attr == &dev_attr_battery_life_extender.attr)
+ 		ok = !!(read_battery_life_extender(samsung) >= 0);
++	if (attr == &dev_attr_usb_charge.attr)
++		ok = !!(read_usb_charge(samsung) >= 0);
  
- static void samsung_sabi_exit(struct samsung_laptop *samsung)
+ 	return ok ? attr->mode : 0;
+ }
 -- 
 1.7.5.4
