@@ -1,95 +1,34 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 03/16] samsung-laptop: don't handle backlight if handled by acpi/video
-Date: Sat, 26 Nov 2011 11:00:00 +0100
-Message-ID: <1322301613-8801-4-git-send-email-corentincj@iksaif.net>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH v2 03/16] samsung-laptop: don't handle backlight if
+ handled by acpi/video
+Date: Sat, 26 Nov 2011 20:20:30 -0800
+Message-ID: <20111127042030.GA17802@kroah.com>
 References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
+ <1322301613-8801-4-git-send-email-corentincj@iksaif.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:42009 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751053Ab1KZKAi (ORCPT
+Received: from out2.smtp.messagingengine.com ([66.111.4.26]:41056 "EHLO
+	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752148Ab1K0KUY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 26 Nov 2011 05:00:38 -0500
-In-Reply-To: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
+	Sun, 27 Nov 2011 05:20:24 -0500
+Received: from compute3.internal (compute3.nyi.mail.srv.osa [10.202.2.43])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 8386021A84
+	for <platform-driver-x86@vger.kernel.org>; Sun, 27 Nov 2011 05:20:24 -0500 (EST)
+Content-Disposition: inline
+In-Reply-To: <1322301613-8801-4-git-send-email-corentincj@iksaif.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
 
-samsung-laptop is not at all related to ACPI, but since this interface
-is not documented at all, and the driver has to use it at load to
-understand how it works on the laptop, I think it's a good idea to
-disable it if a better solution is available.
+On Sat, Nov 26, 2011 at 11:00:00AM +0100, Corentin Chary wrote:
+> samsung-laptop is not at all related to ACPI, but since this interface
+> is not documented at all, and the driver has to use it at load to
+> understand how it works on the laptop, I think it's a good idea to
+> disable it if a better solution is available.
+> 
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
----
- drivers/platform/x86/samsung-laptop.c |   20 ++++++++++++++++++--
- 1 files changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index be96910..49933d2 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -21,6 +21,7 @@
- #include <linux/dmi.h>
- #include <linux/platform_device.h>
- #include <linux/rfkill.h>
-+#include <linux/acpi.h>
- 
- /*
-  * This driver is needed because a number of Samsung laptops do not hook
-@@ -230,6 +231,7 @@ struct samsung_laptop {
- 	struct backlight_device *backlight_device;
- 	struct rfkill *rfk;
- 
-+	bool handle_backlight;
- 	bool has_stepping_quirk;
- };
- 
-@@ -616,6 +618,9 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
- 	struct backlight_device *bd;
- 	struct backlight_properties props;
- 
-+	if (!samsung->handle_backlight)
-+		return 0;
-+
- 	memset(&props, 0, sizeof(struct backlight_properties));
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = samsung->config->max_brightness -
-@@ -698,7 +703,8 @@ static void __init samsung_sabi_selftest(struct samsung_laptop *samsung,
- 	printk(KERN_DEBUG "ifaceP = 0x%08x\n", ifaceP);
- 	printk(KERN_DEBUG "sabi_iface = %p\n", samsung->sabi_iface);
- 
--	test_backlight(samsung);
-+	if (samsung->handle_backlight)
-+		test_backlight(samsung);
- 	test_wireless(samsung);
- 
- 	sabi_get_command(samsung, config->commands.get_brightness, &sretval);
-@@ -771,7 +777,8 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
- 	}
- 
- 	/* Check for stepping quirk */
--	check_for_stepping_quirk(samsung);
-+	if (samsung->handle_backlight)
-+		check_for_stepping_quirk(samsung);
- 
- exit:
- 	if (ret)
-@@ -1059,6 +1066,15 @@ static int __init samsung_init(void)
- 		return -ENOMEM;
- 
- 	mutex_init(&samsung->sabi_mutex);
-+	samsung->handle_backlight = true;
-+
-+#ifdef CONFIG_ACPI
-+	/* Don't handle backlight here if the acpi video already handle it */
-+	if (acpi_video_backlight_support()) {
-+		pr_info("Backlight controlled by ACPI video driver\n");
-+		samsung->handle_backlight = false;
-+	}
-+#endif
- 
- 	ret = samsung_platform_init(samsung);
- 	if (ret)
--- 
-1.7.5.4
+Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
