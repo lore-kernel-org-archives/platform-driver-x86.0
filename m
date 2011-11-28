@@ -1,51 +1,26 @@
-From: "R, Durgadoss" <durgadoss.r@intel.com>
-Subject: RE: [PATCH] platform-drivers-x86: convert drivers/platform/x86/* to
+From: Axel Lin <axel.lin@gmail.com>
+Subject: Re: [PATCH] platform-drivers-x86: convert drivers/platform/x86/* to
  use module_platform_driver()
-Date: Mon, 28 Nov 2011 11:10:30 +0530
-Message-ID: <D6D887BA8C9DFF48B5233887EF04654109F12EC332@bgsmsx502.gar.corp.intel.com>
-References: <1322280877.6458.3.camel@phoenix>
+Date: Mon, 28 Nov 2011 13:44:43 +0800
+Message-ID: <CAF+7xWnmce=F97Txc+SENzQxzdQdLKHyf619W46Yg1j9HAj_aw@mail.gmail.com>
+References: <1322280877.6458.3.camel@phoenix> <D6D887BA8C9DFF48B5233887EF04654109F12EC332@bgsmsx502.gar.corp.intel.com>
+Reply-To: axel.lin@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:3359 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751494Ab1K1FlQ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Nov 2011 00:41:16 -0500
-In-Reply-To: <1322280877.6458.3.camel@phoenix>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "Liu, Hong" <hong.liu@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <D6D887BA8C9DFF48B5233887EF04654109F12EC332@bgsmsx502.gar.corp.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "R, Durgadoss" <durgadoss.r@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Liu, Hong" <hong.liu@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-SGksDQoNClRoYW5rcyBmb3IgdGhlIG5pY2UgY2xlYW4gdXAgZm9yIGludGVsX21pZF90aGVybWFs
-LmMNCg0KRnJvbSB3aGljaCBrZXJuZWwgdmVyc2lvbiBpcyB0aGlzIG5ldyBtYWNybyBzdXBwb3J0
-ZWQgPw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEF4ZWwgTGluIFtt
-YWlsdG86YXhlbC5saW5AZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgTm92ZW1iZXIgMjYs
-IDIwMTEgOTo0NSBBTQ0KPiBUbzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzog
-TGl1LCBIb25nOyBSLCBEdXJnYWRvc3M7IERhbmllbCBEcmFrZTsgTWF0dGhldyBHYXJyZXR0OyBw
-bGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENI
-XSBwbGF0Zm9ybS1kcml2ZXJzLXg4NjogY29udmVydCBkcml2ZXJzL3BsYXRmb3JtL3g4Ni8qIHRv
-IHVzZQ0KPiBtb2R1bGVfcGxhdGZvcm1fZHJpdmVyKCkNCj4gDQo+IFRoaXMgcGF0Y2ggY29udmVy
-dHMgdGhlIGRyaXZlcnMgaW4gZHJpdmVycy9wbGF0Zm9ybS94ODYvKiB0byB1c2UgdGhlDQo+IG1v
-ZHVsZV9wbGF0Zm9ybV9kcml2ZXIoKSBtYWNybyB3aGljaCBtYWtlcyB0aGUgY29kZSBzbWFsbGVy
-IGFuZCBhIGJpdA0KPiBzaW1wbGVyLg0KPiANCj4gQ2M6IEhvbmcgTGl1IDxob25nLmxpdUBpbnRl
-bC5jb20+DQo+IENjOiBEdXJnYWRvc3MgUiA8ZHVyZ2Fkb3NzLnJAaW50ZWwuY29tPg0KPiBDYzog
-RGFuaWVsIERyYWtlIDxkc2RAbGFwdG9wLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogQXhlbCBMaW4g
-PGF4ZWwubGluQGdtYWlsLmNvbT4NCj4gLS0tDQoNCg0KQWNrZWQtYnk6IER1cmdhZG9zcyBSIDxE
-dXJnYWRvc3MuckBpbnRlbC5jb20+DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
-eDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9t
-aWRfdGhlcm1hbC5jDQo+IGluZGV4IGNjZDdiMWYuLmU0Y2M5OTIgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gKysrIGIvZHJpdmVycy9w
-bGF0Zm9ybS94ODYvaW50ZWxfbWlkX3RoZXJtYWwuYw0KPiBAQCAtNTY1LDE4ICs1NjUsNyBAQCBz
-dGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtaWRfdGhlcm1hbF9kcml2ZXIgPSB7DQo+ICAJ
-LmlkX3RhYmxlID0gdGhlcm1faWRfdGFibGUsDQo+ICB9Ow0KPiANCj4gLXN0YXRpYyBpbnQgX19p
-bml0IG1pZF90aGVybWFsX21vZHVsZV9pbml0KHZvaWQpDQo+IC17DQo+IC0JcmV0dXJuIHBsYXRm
-b3JtX2RyaXZlcl9yZWdpc3RlcigmbWlkX3RoZXJtYWxfZHJpdmVyKTsNCj4gLX0NCj4gLQ0KPiAt
-c3RhdGljIHZvaWQgX19leGl0IG1pZF90aGVybWFsX21vZHVsZV9leGl0KHZvaWQpDQo+IC17DQo+
-IC0JcGxhdGZvcm1fZHJpdmVyX3VucmVnaXN0ZXIoJm1pZF90aGVybWFsX2RyaXZlcik7DQo+IC19
-DQo+IC0NCj4gLW1vZHVsZV9pbml0KG1pZF90aGVybWFsX21vZHVsZV9pbml0KTsNCj4gLW1vZHVs
-ZV9leGl0KG1pZF90aGVybWFsX21vZHVsZV9leGl0KTsNCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2
-ZXIobWlkX3RoZXJtYWxfZHJpdmVyKTsNCg0KVGhhbmtzLA0KRHVyZ2ENCg==
+2011/11/28 R, Durgadoss <durgadoss.r@intel.com>:
+> Hi,
+>
+> Thanks for the nice clean up for intel_mid_thermal.c
+>
+> From which kernel version is this new macro supported ?
+>
+module_platform_driver() is already in current Linus's tree ( linux-3.2 rcX)
+Regards,
+Axel
