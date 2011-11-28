@@ -1,45 +1,51 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH v2 00/16] samsung-laptop updates
-Date: Sat, 26 Nov 2011 20:23:21 -0800
-Message-ID: <20111127042321.GH17802@kroah.com>
-References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
+From: "R, Durgadoss" <durgadoss.r@intel.com>
+Subject: RE: [PATCH] platform-drivers-x86: convert drivers/platform/x86/* to
+ use module_platform_driver()
+Date: Mon, 28 Nov 2011 11:10:30 +0530
+Message-ID: <D6D887BA8C9DFF48B5233887EF04654109F12EC332@bgsmsx502.gar.corp.intel.com>
+References: <1322280877.6458.3.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out2.smtp.messagingengine.com ([66.111.4.26]:53953 "EHLO
-	out2.smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751241Ab1K0KW6 (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:3359 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751494Ab1K1FlQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 27 Nov 2011 05:22:58 -0500
-Received: from compute4.internal (compute4.nyi.mail.srv.osa [10.202.2.44])
-	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 269C521868
-	for <platform-driver-x86@vger.kernel.org>; Sun, 27 Nov 2011 05:22:58 -0500 (EST)
-Content-Disposition: inline
-In-Reply-To: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
+	Mon, 28 Nov 2011 00:41:16 -0500
+In-Reply-To: <1322280877.6458.3.camel@phoenix>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>
-Cc: platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>
+To: Axel Lin <axel.lin@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "Liu, Hong" <hong.liu@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Sat, Nov 26, 2011 at 10:59:57AM +0100, Corentin Chary wrote:
-> Hi Matthew, Greg
-> 
-> I recently got a Samsung Series 9 from Intel, so I took some
-> time to add support for some features.
-> 
-> In this series, I moved a lot of code, tried to follow more
-> closely the SABI interface, added some features, and did
-> some cleanups.
-> 
-> Patches were tested on my laptop, N210 and N150. I'd greatly
-> appreciateany feedback from other models.
-> 
-> I also propose myself as a maintainer for this driver, since
-> thislaptop is now my primary system.
-
-Very nice fixes, thanks for making the requested changes.
-
-I've now acked all of these patches, Matthew, please queue them up for
-the 3.3 kernel.
-
-greg k-h
+SGksDQoNClRoYW5rcyBmb3IgdGhlIG5pY2UgY2xlYW4gdXAgZm9yIGludGVsX21pZF90aGVybWFs
+LmMNCg0KRnJvbSB3aGljaCBrZXJuZWwgdmVyc2lvbiBpcyB0aGlzIG5ldyBtYWNybyBzdXBwb3J0
+ZWQgPw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEF4ZWwgTGluIFtt
+YWlsdG86YXhlbC5saW5AZ21haWwuY29tXQ0KPiBTZW50OiBTYXR1cmRheSwgTm92ZW1iZXIgMjYs
+IDIwMTEgOTo0NSBBTQ0KPiBUbzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzog
+TGl1LCBIb25nOyBSLCBEdXJnYWRvc3M7IERhbmllbCBEcmFrZTsgTWF0dGhldyBHYXJyZXR0OyBw
+bGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENI
+XSBwbGF0Zm9ybS1kcml2ZXJzLXg4NjogY29udmVydCBkcml2ZXJzL3BsYXRmb3JtL3g4Ni8qIHRv
+IHVzZQ0KPiBtb2R1bGVfcGxhdGZvcm1fZHJpdmVyKCkNCj4gDQo+IFRoaXMgcGF0Y2ggY29udmVy
+dHMgdGhlIGRyaXZlcnMgaW4gZHJpdmVycy9wbGF0Zm9ybS94ODYvKiB0byB1c2UgdGhlDQo+IG1v
+ZHVsZV9wbGF0Zm9ybV9kcml2ZXIoKSBtYWNybyB3aGljaCBtYWtlcyB0aGUgY29kZSBzbWFsbGVy
+IGFuZCBhIGJpdA0KPiBzaW1wbGVyLg0KPiANCj4gQ2M6IEhvbmcgTGl1IDxob25nLmxpdUBpbnRl
+bC5jb20+DQo+IENjOiBEdXJnYWRvc3MgUiA8ZHVyZ2Fkb3NzLnJAaW50ZWwuY29tPg0KPiBDYzog
+RGFuaWVsIERyYWtlIDxkc2RAbGFwdG9wLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogQXhlbCBMaW4g
+PGF4ZWwubGluQGdtYWlsLmNvbT4NCj4gLS0tDQoNCg0KQWNrZWQtYnk6IER1cmdhZG9zcyBSIDxE
+dXJnYWRvc3MuckBpbnRlbC5jb20+DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0v
+eDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9t
+aWRfdGhlcm1hbC5jDQo+IGluZGV4IGNjZDdiMWYuLmU0Y2M5OTIgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gKysrIGIvZHJpdmVycy9w
+bGF0Zm9ybS94ODYvaW50ZWxfbWlkX3RoZXJtYWwuYw0KPiBAQCAtNTY1LDE4ICs1NjUsNyBAQCBz
+dGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBtaWRfdGhlcm1hbF9kcml2ZXIgPSB7DQo+ICAJ
+LmlkX3RhYmxlID0gdGhlcm1faWRfdGFibGUsDQo+ICB9Ow0KPiANCj4gLXN0YXRpYyBpbnQgX19p
+bml0IG1pZF90aGVybWFsX21vZHVsZV9pbml0KHZvaWQpDQo+IC17DQo+IC0JcmV0dXJuIHBsYXRm
+b3JtX2RyaXZlcl9yZWdpc3RlcigmbWlkX3RoZXJtYWxfZHJpdmVyKTsNCj4gLX0NCj4gLQ0KPiAt
+c3RhdGljIHZvaWQgX19leGl0IG1pZF90aGVybWFsX21vZHVsZV9leGl0KHZvaWQpDQo+IC17DQo+
+IC0JcGxhdGZvcm1fZHJpdmVyX3VucmVnaXN0ZXIoJm1pZF90aGVybWFsX2RyaXZlcik7DQo+IC19
+DQo+IC0NCj4gLW1vZHVsZV9pbml0KG1pZF90aGVybWFsX21vZHVsZV9pbml0KTsNCj4gLW1vZHVs
+ZV9leGl0KG1pZF90aGVybWFsX21vZHVsZV9leGl0KTsNCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2
+ZXIobWlkX3RoZXJtYWxfZHJpdmVyKTsNCg0KVGhhbmtzLA0KRHVyZ2ENCg==
