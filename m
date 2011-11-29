@@ -1,49 +1,121 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH v2 10/16] samsung-laptop: cleanup KConfig
-Date: Mon, 28 Nov 2011 22:05:29 +0100
-Message-ID: <1322514329-22360-1-git-send-email-corentincj@iksaif.net>
-References: <20111128160115.GC21912@thinkpad-t410>
+From: Joe Perches <joe@perches.com>
+Subject: [PATCH 1/2] acer-wmi: Message logging neatening
+Date: Tue, 29 Nov 2011 11:04:05 -0800
+Message-ID: <9be2717594eec36bdcc072a90d81b044500270e4.1322593277.git.joe@perches.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:48411 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751494Ab1K1VFm (ORCPT
+Received: from perches-mx.perches.com ([206.117.179.246]:43595 "EHLO
+	labridge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1753699Ab1K2TEK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Nov 2011 16:05:42 -0500
-In-Reply-To: <20111128160115.GC21912@thinkpad-t410>
+	Tue, 29 Nov 2011 14:04:10 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@suse.de>, Matthew Garrett <mjg@redhat.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
+To: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Use pr_warn not pr_warning.
+Coalesce formats.
+
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/platform/x86/Kconfig |   11 +++++++----
- 1 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/platform/x86/acer-wmi.c |   29 ++++++++++++++---------------
+ 1 files changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7f43cf8..ec13bc5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -744,13 +744,16 @@ config XO15_EBOOK
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index b848277..ea48346 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -978,7 +978,7 @@ static acpi_status wmid3_set_device_status(u32 value, u16 device)
+ 		return AE_ERROR;
+ 	}
+ 	if (obj->buffer.length != 8) {
+-		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
++		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return AE_ERROR;
+ 	}
+@@ -987,8 +987,8 @@ static acpi_status wmid3_set_device_status(u32 value, u16 device)
+ 	kfree(obj);
  
- config SAMSUNG_LAPTOP
- 	tristate "Samsung Laptop driver"
--	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && X86
-+	depends on X86
-+	depends on RFKILL || RFKILL = n
-+	depends on BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This module implements a driver for a wide range of different
- 	  Samsung laptops.  It offers control over the different
--	  function keys, wireless LED, LCD backlight level, and
--	  sometimes provides a "performance_control" sysfs file to allow
--	  the performance level of the laptop to be changed.
-+	  function keys, wireless LED, LCD backlight level.
-+
-+	  It may also provide some sysfs files described in
-+	  <file:Documentation/ABI/testing/sysfs-platform-samsung-laptop>
+ 	if (return_value.error_code || return_value.ec_return_value) {
+-		pr_warning("Get Current Device Status failed: "
+-			"0x%x - 0x%x\n", return_value.error_code,
++		pr_warn("Get Current Device Status failed: 0x%x - 0x%x\n",
++			return_value.error_code,
+ 			return_value.ec_return_value);
+ 		return status;
+ 	}
+@@ -1011,7 +1011,7 @@ static acpi_status wmid3_set_device_status(u32 value, u16 device)
+ 		return AE_ERROR;
+ 	}
+ 	if (obj->buffer.length != 4) {
+-		pr_warning("Unknown buffer length %d\n", obj->buffer.length);
++		pr_warn("Unknown buffer length %d\n", obj->buffer.length);
+ 		kfree(obj);
+ 		return AE_ERROR;
+ 	}
+@@ -1020,8 +1020,8 @@ static acpi_status wmid3_set_device_status(u32 value, u16 device)
+ 	kfree(obj);
  
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called samsung-laptop.
+ 	if (return_value.error_code || return_value.ec_return_value)
+-		pr_warning("Set Device Status failed: "
+-			"0x%x - 0x%x\n", return_value.error_code,
++		pr_warn("Set Device Status failed: 0x%x - 0x%x\n",
++			return_value.error_code,
+ 			return_value.ec_return_value);
+ 
+ 	return status;
+@@ -1460,8 +1460,8 @@ static ssize_t show_bool_threeg(struct device *dev,
+ 	u32 result; \
+ 	acpi_status status;
+ 
+-	pr_info("This threeg sysfs will be removed in 2012"
+-		" - used by: %s\n", current->comm);
++	pr_info("This threeg sysfs will be removed in 2012 - used by: %s\n",
++		current->comm);
+ 	status = get_u32(&result, ACER_CAP_THREEG);
+ 	if (ACPI_SUCCESS(status))
+ 		return sprintf(buf, "%u\n", result);
+@@ -1473,8 +1473,8 @@ static ssize_t set_bool_threeg(struct device *dev,
+ {
+ 	u32 tmp = simple_strtoul(buf, NULL, 10);
+ 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
+-	pr_info("This threeg sysfs will be removed in 2012"
+-		" - used by: %s\n", current->comm);
++	pr_info("This threeg sysfs will be removed in 2012 - used by: %s\n",
++		current->comm);
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+ 	return count;
+@@ -1485,8 +1485,8 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
+ 	char *buf)
+ {
+-	pr_info("This interface sysfs will be removed in 2012"
+-		" - used by: %s\n", current->comm);
++	pr_info("This interface sysfs will be removed in 2012 - used by: %s\n",
++		current->comm);
+ 	switch (interface->type) {
+ 	case ACER_AMW0:
+ 		return sprintf(buf, "AMW0\n");
+@@ -1954,8 +1954,7 @@ static int __init acer_wmi_init(void)
+ 
+ 	if (acpi_video_backlight_support()) {
+ 		interface->capability &= ~ACER_CAP_BRIGHTNESS;
+-		pr_info("Brightness must be controlled by "
+-		       "generic video driver\n");
++		pr_info("Brightness must be controlled by generic video driver\n");
+ 	}
+ 
+ 	if (wmi_has_guid(WMID_GUID3)) {
+@@ -1980,7 +1979,7 @@ static int __init acer_wmi_init(void)
+ 
+ 	err = platform_driver_register(&acer_platform_driver);
+ 	if (err) {
+-		pr_err("Unable to register platform driver.\n");
++		pr_err("Unable to register platform driver\n");
+ 		goto error_platform_register;
+ 	}
+ 
 -- 
-1.7.5.4
+1.7.6.405.gc1be0
