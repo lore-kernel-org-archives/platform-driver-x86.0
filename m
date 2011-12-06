@@ -1,37 +1,54 @@
-From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: Dual-LVDS Acer Iconia laptop
-Date: Tue, 06 Dec 2011 18:48:17 +0100
-Message-ID: <4EDE5561.5050005@gmail.com>
+From: Baptiste Jonglez <baptiste@jonglez.org>
+Subject: Re: Dual-LVDS Acer Iconia laptop
+Date: Tue, 6 Dec 2011 20:30:45 +0100
+Message-ID: <20111206193044.GA13499@archminux>
+References: <4EDE5561.5050005@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:56320 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751796Ab1LFRsU (ORCPT
+Received: from lvps80-90-199-152.vps.webfusion.co.uk ([80.90.199.152]:47657
+	"EHLO lvps80-90-199-152.vps.webfusion.co.uk" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752622Ab1LFTbX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Dec 2011 12:48:20 -0500
-Received: by eaak14 with SMTP id k14so5386021eaa.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Dec 2011 09:48:19 -0800 (PST)
+	Tue, 6 Dec 2011 14:31:23 -0500
+Content-Disposition: inline
+In-Reply-To: <4EDE5561.5050005@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@suse.com, mjg59@srcf.ucam.org, mathieu.magnaudet@enac.fr, baptiste@jonglez.org, platform-driver-x86@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Cc: jlee@suse.com, mjg59@srcf.ucam.org, mathieu.magnaudet@enac.fr, baptiste@jonglez.org, platform-driver-x86@vger.kernel.org, intel-gfx@lists.freedesktop.org
 
-Hi Guys,
+Cc-ing to intel-gfx@
 
-I've seen on the list that some of you (as we were) have troubles with
-the second screen on the iconia laptop.
+On Tue, Dec 06, 2011 at 06:48:17PM +0100, Benjamin Tissoires wrote:
+> Hi Guys,
+> 
+> I've seen on the list that some of you (as we were) have troubles with
+> the second screen on the iconia laptop.
+> 
+> In our lab, we managed to make it work by using two patches:
+> * http://web.archiveorange.com/archive/v/rNRcWX4nB2U5uRmbLm9h (LVDS are
+> digital as well), this solved the "xrandr disconnected" issue
+> * a small patch we are finalizing to call the right DMI function to
+> light up the second LCD.
 
-In our lab, we managed to make it work by using two patches:
-* http://web.archiveorange.com/archive/v/rNRcWX4nB2U5uRmbLm9h (LVDS are
-digital as well), this solved the "xrandr disconnected" issue
-* a small patch we are finalizing to call the right DMI function to
-light up the second LCD.
+Awesome, thank you! It's quite frustrating to see that this patch was written
+almost 6 months ago then forgotten...
 
-So, as soon as we have clean this code, this bug will be solved.
+It's already compiling, let's see if it works :)
 
-Cheers,
-Benjamin
+> So, as soon as we have clean this code, this bug will be solved.
 
-PS: I'm sorry to start a new thread as I just registered myself on the
-list and was not able to get the previous Message-ID.
+This first patch seems indeed based on an old tree, it requires some
+small changes to apply.
+
+> Cheers,
+> Benjamin
+> 
+> PS: I'm sorry to start a new thread as I just registered myself on the
+> list and was not able to get the previous Message-ID.
+
+No problem, I'll post on the original thread for the record.
+
+Thank you again,
+Baptiste
