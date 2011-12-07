@@ -1,38 +1,62 @@
-From: Keng-Yu Lin <kengyu@canonical.com>
-Subject: [PATCH] asus-wmi: explicitly set the wireless LED
-Date: Wed,  7 Dec 2011 16:02:02 +0800
-Message-ID: <1323244922-2673-1-git-send-email-kengyu@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:43761 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751607Ab1LGICU (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 Dec 2011 03:02:20 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Keng-Yu Lin <kengyu@canonical.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] dell-wmi: Change debug statements from pr_info to
+ pr_debug
+Date: Wed, 7 Dec 2011 10:43:15 -0600
+Message-ID: <20111207164315.GE15875@thinkpad-t410>
+References: <1321908536-5163-1-git-send-email-seth.forshee@canonical.com>
+ <20111121205230.GA14467@srcf.ucam.org>
+ <20111121211438.GH6736@thinkpad-t410>
+ <20111121211809.GA14950@srcf.ucam.org>
+ <20111121222945.GA14306@thinkpad-t410>
+ <20111121223209.GA16955@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111121223209.GA16955@srcf.ucam.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Asus K54C, the wireless LED is always off without setting explicitly.
+On Mon, Nov 21, 2011 at 10:32:09PM +0000, Matthew Garrett wrote:
+> > > On Mon, Nov 21, 2011 at 03:14:38PM -0600, Seth Forshee wrote:
+> > > > On Mon, Nov 21, 2011 at 08:52:30PM +0000, Matthew Garrett wrote:
+> > > > > They're intended to be there, in the same way that the keyboard code
+> > > > > generates unknown scancode errors. We want to know when users have keys
+> > > > > that don't work.
+> > > >
+> > > > All right, but what about the unknown WMI events? Those are the bigger
+> > > > problem anyway, as at least one machine (the Latitude XT2) can generate
+> > > > a lot of these messages for unknown reasons. It doesn't appear that
+> > > > anyone has been making use of these messages since we still only support
+> > > > one event. Would you object to demoting that one?
+> > >
+> > > Those can probably be ignored, but again it would be nice to find out
+> > > what they actually mean so we know whether we can do anything with them.
+> > > Any chance of you being able to work with Dell on that?
+> > 
+> > I'll see what I can do.
+> 
+> Great, thanks. If we don't work out what they are then we can certainly 
+> drop the error - I agree that telling the user about something that just 
+> confuses us isn't helpful.
 
-Signed-off-by: Keng-Yu Lin <kengyu@canonical.com>
----
- drivers/platform/x86/asus-wmi.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+I've tried a few different avenues trying to get this informatin out of
+Dell, but so far I've gotten very little. 0x11 is a status change event
+notification, apparently sent when there are changes to things like
+battery charge status, ALS level, etc. I haven't received any
+information about how to interpret the payload, and what little Dell kit
+I have doesn't seem to send this event.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d1049ee..db514c4 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -726,6 +726,9 @@ static int asus_rfkill_set(void *data, bool blocked)
- 	struct asus_rfkill *priv = data;
- 	u32 ctrl_param = !blocked;
- 
-+	if (priv->dev_id == ASUS_WMI_DEVID_WLAN)
-+		asus_wmi_set_devstate(ASUS_WMI_DEVID_WIRELESS_LED, ctrl_param, NULL);
-+
- 	return asus_wmi_set_devstate(priv->dev_id, ctrl_param, NULL);
- }
- 
--- 
-1.7.5.4
+I've received no informtion at all on the 0xf event. The only thing I
+really know about is from a user report stating that it's seen on the
+XT2 when opening and closing the lid in notebook orientation.
+
+I can take further action if Dell becomes more forthcoming, but I'm not
+holding out much hope at this point. So I can send a new patch demoting
+only the WMI event message to debug, or I can silence it only for these
+specific events. Do you have a preference?
+
+Thanks,
+Seth
