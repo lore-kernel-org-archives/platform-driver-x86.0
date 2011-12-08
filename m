@@ -1,76 +1,114 @@
-From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: Re: [Dual-LVDS Acer Iconia laptop] i915/DRM issue: one screen stays
- off [3.2-rc4+]
-Date: Thu, 8 Dec 2011 11:11:22 +0100
-Message-ID: <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
-References: <20111204160728.GA27292@archminux>
-	<1323054041.6046.79.camel@linux-s257.site>
-	<20111206215137.GA20907@archminux>
-	<CAN+gG=EaG1h=seuKQa_SF2O033WWn52USh=tjO9F9O55DgH17Q@mail.gmail.com>
-	<20111206223109.GA1867@archminux>
+From: John Hughes <john@calvaedi.com>
+Subject: [PATCH] Fix scancodes emitted by sony-laptop driver (Version 3 with
+ spaces fixed)
+Date: Thu, 08 Dec 2011 21:03:13 +0100
+Message-ID: <4EE11801.6000709@calvaedi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/mixed;
+ boundary="------------090809050906050102060600"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ww0-f44.google.com ([74.125.82.44]:53139 "EHLO
-	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751833Ab1LHKLY (ORCPT
+Received: from oceanic.CalvaEDI.COM ([89.202.194.168]:36992 "EHLO
+	oceanic.CalvaEDI.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750804Ab1LHUCT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Dec 2011 05:11:24 -0500
-In-Reply-To: <20111206223109.GA1867@archminux>
+	Thu, 8 Dec 2011 15:02:19 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benjamin Tissoires <benjamin.tissoires@gmail.com>, joeyli <jlee@suse.com>, Baptiste Jonglez <baptiste@jonglez.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>, intel-gfx@lists.freedesktop.org, Mathieu Magnaudet <mathieu.magnaudet@enac.fr>
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+Cc: Mattia Dongili <malattia@linux.it>, Dan Carpenter <dan.carpenter@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
 
-Hi,
+This is a multi-part message in MIME format.
+--------------090809050906050102060600
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 6, 2011 at 23:31, Baptiste Jonglez <baptiste@jonglez.org> wrote:
-> On Tue, Dec 06, 2011 at 11:12:26PM +0100, Benjamin Tissoires wrote:
->> Hi Baptiste,
->
-> Hi,
->
->> On Tue, Dec 6, 2011 at 22:51, Baptiste Jonglez <baptiste@jonglez.org> wrote:
->> > The second screen works fine with the attached patch. It actually is
->> > 6 months old but seems to have been lost in the wild...
->>
->> You don't have the problem of the second backlight still off?
->> On our Iconia, we need to trigger a special DMI command to set it up
->> (SDSS, IIRC).
->
-> No, with the patch, it worked out-of-the-box.
+Drat.  Here we go again.  This time with whitespace as tabs.
 
-mmm, this is weird. We must not have the same bios or device version.
-We need to explicitly set the LCD2 up.
+Passes checkpatch.pl  Even took out assignment in condition to keep the 
+quiche eaters happy.  :-(
 
->
-> I can even control the brightness in
-> `/sys/class/backlight/acpi_video0/brightness' (it affects both
-> displays at the same time though). But even at 0, it's still perfectly
-> readable.
 
-Yes, the acpi can control both brightness. But WMI can control each
-brightness. However, we are not sure this is what people want. So we
-do not plan to introduce a second brightness control.
+--------------090809050906050102060600
+Content-Type: text/x-patch;
+ name="sony-scancode.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="sony-scancode.patch"
 
->
-> Maybe this a bug that got fixed recently? I've actually tried the 3.1
-> kernel (and then the 3.2-rc4) because I noticed a lot of commits and
-> improvements in the i915 driver recently.
+The scancodes returned by the sony-laptop driver for function keys did not
+match the scancodes used to remap keys.  Also, since the scancode was sent
+to the input subsystem after the mapped keysym the /lib/udev/keymap
+utility was confused about which scancode to report for which keysym.
 
-We doubled-checked on 3.2-rc4, and we still need our patch. This is
-definitively a bios/hardware configuration problem.
+This patch fixes the driver so the correct scancode is shown for each
+key.  It also adds to the documentation a description of where to find
+the scancodes.
 
-Cheers,
-Benjamin
+Signed-off-by: John Hughes <john@calva.com>
 
->
->> > Thanks Benjamin!
->>
->> All the credits are from Ajax and somebody else on IRC I don't recall,
->> really sorry. Thanks to them.
->>
->> Cheers,
->> Benjamin.
->
-> Regards,
-> Baptiste
+diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.txt
+index 2bd4e82..0d5ac7f 100644
+--- a/Documentation/laptops/sony-laptop.txt
++++ b/Documentation/laptops/sony-laptop.txt
+@@ -17,6 +17,11 @@ subsystem. See the logs of acpid or /proc/acpi/event and
+ devices are created by the driver. Additionally, loading the driver with the
+ debug option will report all events in the kernel log.
+ 
++The "scancodes" passed to the input system (that can be remapped with udev)
++are indexes to the table "sony_laptop_input_keycode_map" in the sony-laptop.c
++module.  For example the "FN/E" key combination (EJECTCD on some models)
++generates the scancode 20 (0x14).
++
+ Backlight control:
+ ------------------
+ If your laptop model supports it, you will find sysfs files in the
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index c006dee..35768cd 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -347,6 +347,7 @@ static void sony_laptop_report_input_event(u8 event)
+ 	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
+ 	struct input_dev *key_dev = sony_laptop_input.key_dev;
+ 	struct sony_laptop_keypress kp = { NULL };
++	int scancode = -1;
+ 
+ 	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
+ 			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
+@@ -380,8 +381,9 @@ static void sony_laptop_report_input_event(u8 event)
+ 			dprintk("sony_laptop_report_input_event, event not known: %d\n", event);
+ 			break;
+ 		}
+-		if (sony_laptop_input_index[event] != -1) {
+-			kp.key = sony_laptop_input_keycode_map[sony_laptop_input_index[event]];
++		scancode = sony_laptop_input_index[event];
++		if (scancode != -1) {
++			kp.key = sony_laptop_input_keycode_map[scancode];
+ 			if (kp.key != KEY_UNKNOWN)
+ 				kp.dev = key_dev;
+ 		}
+@@ -389,9 +391,11 @@ static void sony_laptop_report_input_event(u8 event)
+ 	}
+ 
+ 	if (kp.dev) {
++		/* if we have a scancode we emit it so we can always
++		   remap the key */
++		if (scancode != -1)
++			input_event(kp.dev, EV_MSC, MSC_SCAN, scancode);
+ 		input_report_key(kp.dev, kp.key, 1);
+-		/* we emit the scancode so we can always remap the key */
+-		input_event(kp.dev, EV_MSC, MSC_SCAN, event);
+ 		input_sync(kp.dev);
+ 
+ 		/* schedule key release */
+@@ -466,7 +470,7 @@ static int sony_laptop_setup_input(struct acpi_device *acpi_device)
+ 	jog_dev->name = "Sony Vaio Jogdial";
+ 	jog_dev->id.bustype = BUS_ISA;
+ 	jog_dev->id.vendor = PCI_VENDOR_ID_SONY;
+-	key_dev->dev.parent = &acpi_device->dev;
++	jog_dev->dev.parent = &acpi_device->dev;
+ 
+ 	input_set_capability(jog_dev, EV_KEY, BTN_MIDDLE);
+ 	input_set_capability(jog_dev, EV_REL, REL_WHEEL);
+
+
+--------------090809050906050102060600--
