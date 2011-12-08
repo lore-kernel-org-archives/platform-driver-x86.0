@@ -1,91 +1,76 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] dell-wmi: Change debug statements from pr_info to
- pr_debug
-Date: Wed, 7 Dec 2011 15:15:45 -0600
-Message-ID: <20111207211545.GH15875@thinkpad-t410>
-References: <1321908536-5163-1-git-send-email-seth.forshee@canonical.com>
- <20111121205230.GA14467@srcf.ucam.org>
- <20111121211438.GH6736@thinkpad-t410>
- <20111121211809.GA14950@srcf.ucam.org>
- <20111121222945.GA14306@thinkpad-t410>
- <20111121223209.GA16955@srcf.ucam.org>
- <20111207164315.GE15875@thinkpad-t410>
- <8E5FE4ED189EB4469AF9D819A96C8D4A01EA4AC95F@AUSX7MCPC108.AMER.DELL.COM>
+From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: Re: [Dual-LVDS Acer Iconia laptop] i915/DRM issue: one screen stays
+ off [3.2-rc4+]
+Date: Thu, 8 Dec 2011 11:11:22 +0100
+Message-ID: <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
+References: <20111204160728.GA27292@archminux>
+	<1323054041.6046.79.camel@linux-s257.site>
+	<20111206215137.GA20907@archminux>
+	<CAN+gG=EaG1h=seuKQa_SF2O033WWn52USh=tjO9F9O55DgH17Q@mail.gmail.com>
+	<20111206223109.GA1867@archminux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:50451 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757835Ab1LGVPv (ORCPT
+Received: from mail-ww0-f44.google.com ([74.125.82.44]:53139 "EHLO
+	mail-ww0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751833Ab1LHKLY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 Dec 2011 16:15:51 -0500
-Content-Disposition: inline
-In-Reply-To: <8E5FE4ED189EB4469AF9D819A96C8D4A01EA4AC95F@AUSX7MCPC108.AMER.DELL.COM>
+	Thu, 8 Dec 2011 05:11:24 -0500
+In-Reply-To: <20111206223109.GA1867@archminux>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rezwanul_Kabir@Dell.com
-Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@gmail.com>, joeyli <jlee@suse.com>, Baptiste Jonglez <baptiste@jonglez.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>, intel-gfx@lists.freedesktop.org, Mathieu Magnaudet <mathieu.magnaudet@enac.fr>
 
-On Wed, Dec 07, 2011 at 02:22:31PM -0600, Rezwanul_Kabir@Dell.com wrote:
-> 
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
-> > x86-owner@vger.kernel.org] On Behalf Of Seth Forshee
-> > Sent: Wednesday, December 07, 2011 10:43 AM
-> > To: Matthew Garrett
-> > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH] dell-wmi: Change debug statements from pr_info to
-> > pr_debug
-> > 
-> > On Mon, Nov 21, 2011 at 10:32:09PM +0000, Matthew Garrett wrote:
-> > > > > On Mon, Nov 21, 2011 at 03:14:38PM -0600, Seth Forshee wrote:
-> > > > > > On Mon, Nov 21, 2011 at 08:52:30PM +0000, Matthew Garrett wrote:
-> > > > > > > They're intended to be there, in the same way that the
-> > > > > > > keyboard code generates unknown scancode errors. We want to
-> > > > > > > know when users have keys that don't work.
-> > > > > >
-> > > > > > All right, but what about the unknown WMI events? Those are the
-> > > > > > bigger problem anyway, as at least one machine (the Latitude
-> > > > > > XT2) can generate a lot of these messages for unknown reasons.
-> > > > > > It doesn't appear that anyone has been making use of these
-> > > > > > messages since we still only support one event. Would you object to
-> > demoting that one?
-> > > > >
-> > > > > Those can probably be ignored, but again it would be nice to find
-> > > > > out what they actually mean so we know whether we can do anything
-> > with them.
-> > > > > Any chance of you being able to work with Dell on that?
-> > > >
-> > > > I'll see what I can do.
-> > >
-> > > Great, thanks. If we don't work out what they are then we can
-> > > certainly drop the error - I agree that telling the user about
-> > > something that just confuses us isn't helpful.
-> > 
-> > I've tried a few different avenues trying to get this informatin out of Dell, but
-> > so far I've gotten very little. 0x11 is a status change event notification,
-> > apparently sent when there are changes to things like battery charge status,
-> > ALS level, etc. I haven't received any information about how to interpret the
-> > payload, and what little Dell kit I have doesn't seem to send this event.
-> > 
-> > I've received no informtion at all on the 0xf event. The only thing I really
-> > know about is from a user report stating that it's seen on the
-> > XT2 when opening and closing the lid in notebook orientation.
-> > 
-> > I can take further action if Dell becomes more forthcoming, but I'm not
-> > holding out much hope at this point. So I can send a new patch demoting only
-> > the WMI event message to debug, or I can silence it only for these specific
-> > events. Do you have a preference?
-> > 
-> 
-> My opinion would be to deprioritize the log level for now, if necessary. I am working on gathering more information on unhandled events and will submit a patch in the next few weeks to handle them.
+Hi,
 
-Thanks for the response, Rez. It will be nice to have those events
-supported.
+On Tue, Dec 6, 2011 at 23:31, Baptiste Jonglez <baptiste@jonglez.org> wrote:
+> On Tue, Dec 06, 2011 at 11:12:26PM +0100, Benjamin Tissoires wrote:
+>> Hi Baptiste,
+>
+> Hi,
+>
+>> On Tue, Dec 6, 2011 at 22:51, Baptiste Jonglez <baptiste@jonglez.org> wrote:
+>> > The second screen works fine with the attached patch. It actually is
+>> > 6 months old but seems to have been lost in the wild...
+>>
+>> You don't have the problem of the second backlight still off?
+>> On our Iconia, we need to trigger a special DMI command to set it up
+>> (SDSS, IIRC).
+>
+> No, with the patch, it worked out-of-the-box.
 
-I was only advocating dropping the priority of the message because it
-looked like nothing would ever be done about them. If you'll be seending
-a patch soon-ish then we can just demote it in Ubuntu to stop the bug
-reports while we wait for the patch.
+mmm, this is weird. We must not have the same bios or device version.
+We need to explicitly set the LCD2 up.
 
-Seth
+>
+> I can even control the brightness in
+> `/sys/class/backlight/acpi_video0/brightness' (it affects both
+> displays at the same time though). But even at 0, it's still perfectly
+> readable.
+
+Yes, the acpi can control both brightness. But WMI can control each
+brightness. However, we are not sure this is what people want. So we
+do not plan to introduce a second brightness control.
+
+>
+> Maybe this a bug that got fixed recently? I've actually tried the 3.1
+> kernel (and then the 3.2-rc4) because I noticed a lot of commits and
+> improvements in the i915 driver recently.
+
+We doubled-checked on 3.2-rc4, and we still need our patch. This is
+definitively a bios/hardware configuration problem.
+
+Cheers,
+Benjamin
+
+>
+>> > Thanks Benjamin!
+>>
+>> All the credits are from Ajax and somebody else on IRC I don't recall,
+>> really sorry. Thanks to them.
+>>
+>> Cheers,
+>> Benjamin.
+>
+> Regards,
+> Baptiste
