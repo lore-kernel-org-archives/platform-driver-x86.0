@@ -1,114 +1,86 @@
-From: John Hughes <john@calvaedi.com>
-Subject: [PATCH] Fix scancodes emitted by sony-laptop driver (Version 3 with
- spaces fixed)
-Date: Thu, 08 Dec 2011 21:03:13 +0100
-Message-ID: <4EE11801.6000709@calvaedi.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: Fwd: Brightness on HP EliteBook 8460p
+Date: Fri, 09 Dec 2011 22:49:09 +0800
+Message-ID: <1323442149.20114.93.camel@linux-s257.site>
+References: <3123346.jTQFjj4kVk@pali-elitebook>
+	 <CAGB3EUSiZ+DqTwVQ4CMhT=LNAAWhj-VriiArmoibm0t+x5jLXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------090809050906050102060600"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from oceanic.CalvaEDI.COM ([89.202.194.168]:36992 "EHLO
-	oceanic.CalvaEDI.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750804Ab1LHUCT (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Dec 2011 15:02:19 -0500
+Received: from victor.provo.novell.com ([137.65.250.26]:59295 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752158Ab1LIOvw (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Fri, 9 Dec 2011 09:51:52 -0500
+In-Reply-To: <CAGB3EUSiZ+DqTwVQ4CMhT=LNAAWhj-VriiArmoibm0t+x5jLXw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-Cc: Mattia Dongili <malattia@linux.it>, Dan Carpenter <dan.carpenter@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------090809050906050102060600
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Pali,
 
-Drat.  Here we go again.  This time with whitespace as tabs.
+=E6=96=BC =E4=BA=94=EF=BC=8C2011-12-09 =E6=96=BC 22:36 +0800=EF=BC=8CLi=
+ Joey =E6=8F=90=E5=88=B0=EF=BC=9A
+>=20
+>=20
+> ---------- Forwarded message ----------
+> From: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> Date: 2011/7/15
+> Subject: Brightness on HP EliteBook 8460p
+> To: linux-acpi@vger.kernel.org
+>=20
+>=20
+> Hello,
+>=20
+> on my HP EliteBook 8460p is not possible to set display brightness
+> when ACPI
+> is enabled in kernel. Entries in sysfs is properly created without
+> errors. But
+> when I try write any value
+> to /sys/class/backlight/acpi_video0/brightness
+> nothing happened (and no error is in dmesg). When I press Fn key for
+> chaining
+> display brightness kernel send correct key event (tested with xev) bu=
+t
+> nothing
+> happened too.
+>=20
+> When I disabled ACPI (acpi=3Doff in kernel command line) all Fn keys =
+are
+> broken
+> and not working (no events in xev). But brightness keys working (I
+> think on HW
+> level, because xev does not see it) - increase and decrease display
+> brightness.
+>=20
+> So what can I do with my notebook? I think that there is error/bug in
+> BIOS or
+> ACPI because with disabled ACPI brightness working. But with disabled
+> ACPI is
+> notebook unuseable (no battery info, no Fn keys, no WIFI rfkill, ...)=
+=2E
+> Can
+> somebody help me with this problem?
+>=20
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+>=20
 
-Passes checkpatch.pl  Even took out assignment in condition to keep the 
-quiche eaters happy.  :-(
+You can try to put kernel parameter:
 
+	acpi_osi=3D"!Windows 2009"
 
---------------090809050906050102060600
-Content-Type: text/x-patch;
- name="sony-scancode.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="sony-scancode.patch"
+to /boot/grub/menu.lst, then reboot look at maybe better.
 
-The scancodes returned by the sony-laptop driver for function keys did not
-match the scancodes used to remap keys.  Also, since the scancode was sent
-to the input subsystem after the mapped keysym the /lib/udev/keymap
-utility was confused about which scancode to report for which keysym.
-
-This patch fixes the driver so the correct scancode is shown for each
-key.  It also adds to the documentation a description of where to find
-the scancodes.
-
-Signed-off-by: John Hughes <john@calva.com>
-
-diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.txt
-index 2bd4e82..0d5ac7f 100644
---- a/Documentation/laptops/sony-laptop.txt
-+++ b/Documentation/laptops/sony-laptop.txt
-@@ -17,6 +17,11 @@ subsystem. See the logs of acpid or /proc/acpi/event and
- devices are created by the driver. Additionally, loading the driver with the
- debug option will report all events in the kernel log.
- 
-+The "scancodes" passed to the input system (that can be remapped with udev)
-+are indexes to the table "sony_laptop_input_keycode_map" in the sony-laptop.c
-+module.  For example the "FN/E" key combination (EJECTCD on some models)
-+generates the scancode 20 (0x14).
-+
- Backlight control:
- ------------------
- If your laptop model supports it, you will find sysfs files in the
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index c006dee..35768cd 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -347,6 +347,7 @@ static void sony_laptop_report_input_event(u8 event)
- 	struct input_dev *jog_dev = sony_laptop_input.jog_dev;
- 	struct input_dev *key_dev = sony_laptop_input.key_dev;
- 	struct sony_laptop_keypress kp = { NULL };
-+	int scancode = -1;
- 
- 	if (event == SONYPI_EVENT_FNKEY_RELEASED ||
- 			event == SONYPI_EVENT_ANYBUTTON_RELEASED) {
-@@ -380,8 +381,9 @@ static void sony_laptop_report_input_event(u8 event)
- 			dprintk("sony_laptop_report_input_event, event not known: %d\n", event);
- 			break;
- 		}
--		if (sony_laptop_input_index[event] != -1) {
--			kp.key = sony_laptop_input_keycode_map[sony_laptop_input_index[event]];
-+		scancode = sony_laptop_input_index[event];
-+		if (scancode != -1) {
-+			kp.key = sony_laptop_input_keycode_map[scancode];
- 			if (kp.key != KEY_UNKNOWN)
- 				kp.dev = key_dev;
- 		}
-@@ -389,9 +391,11 @@ static void sony_laptop_report_input_event(u8 event)
- 	}
- 
- 	if (kp.dev) {
-+		/* if we have a scancode we emit it so we can always
-+		   remap the key */
-+		if (scancode != -1)
-+			input_event(kp.dev, EV_MSC, MSC_SCAN, scancode);
- 		input_report_key(kp.dev, kp.key, 1);
--		/* we emit the scancode so we can always remap the key */
--		input_event(kp.dev, EV_MSC, MSC_SCAN, event);
- 		input_sync(kp.dev);
- 
- 		/* schedule key release */
-@@ -466,7 +470,7 @@ static int sony_laptop_setup_input(struct acpi_device *acpi_device)
- 	jog_dev->name = "Sony Vaio Jogdial";
- 	jog_dev->id.bustype = BUS_ISA;
- 	jog_dev->id.vendor = PCI_VENDOR_ID_SONY;
--	key_dev->dev.parent = &acpi_device->dev;
-+	jog_dev->dev.parent = &acpi_device->dev;
- 
- 	input_set_capability(jog_dev, EV_KEY, BTN_MIDDLE);
- 	input_set_capability(jog_dev, EV_REL, REL_WHEEL);
+And,=20
+could you please kindly share DSDT and dmidecode to me?
+Plesae login by root then:
+	% acpidump > acpidump.dat
+	% dmidecode > dmidecode.log
 
 
---------------090809050906050102060600--
+Thanks a lot!
+Joey Lee=20
