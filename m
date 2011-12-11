@@ -1,78 +1,56 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
- EliteBook 8560w)
-Date: Fri, 09 Dec 2011 22:54:20 +0800
-Message-ID: <1323442460.20114.95.camel@linux-s257.site>
-References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
-	 <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
+From: Baptiste Jonglez <baptiste@jonglez.org>
+Subject: Re: [Dual-LVDS Acer Iconia laptop] i915/DRM issue: one screen stays
+ off [3.2-rc4+]
+Date: Sun, 11 Dec 2011 17:30:37 +0100
+Message-ID: <20111211163037.GA11920@archminux>
+References: <20111204160728.GA27292@archminux>
+ <1323054041.6046.79.camel@linux-s257.site>
+ <20111206215137.GA20907@archminux>
+ <CAN+gG=EaG1h=seuKQa_SF2O033WWn52USh=tjO9F9O55DgH17Q@mail.gmail.com>
+ <20111206223109.GA1867@archminux>
+ <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:54252 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754126Ab1LIO5I (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Fri, 9 Dec 2011 09:57:08 -0500
-In-Reply-To: <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
+Received: from lvps80-90-199-152.vps.webfusion.co.uk ([80.90.199.152]:50709
+	"EHLO lvps80-90-199-152.vps.webfusion.co.uk" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752066Ab1LKQbS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 11 Dec 2011 11:31:18 -0500
+Content-Disposition: inline
+In-Reply-To: <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: aflinta@gmail.com
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Cc: joeyli <jlee@suse.com>, Baptiste Jonglez <baptiste@jonglez.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>, intel-gfx@lists.freedesktop.org, Mathieu Magnaudet <mathieu.magnaudet@enac.fr>
 
-Hi Artur,=20
+On Thu, Dec 08, 2011 at 11:11:22AM +0100, Benjamin Tissoires wrote:
+> Hi,
+> 
+> On Tue, Dec 6, 2011 at 23:31, Baptiste Jonglez <baptiste@jonglez.org> wrote:
+> > On Tue, Dec 06, 2011 at 11:12:26PM +0100, Benjamin Tissoires wrote:
+> >> Hi Baptiste,
+> >
+> > Hi,
+> >
+> >> On Tue, Dec 6, 2011 at 22:51, Baptiste Jonglez <baptiste@jonglez.org> wrote:
+> >> > The second screen works fine with the attached patch. It actually is
+> >> > 6 months old but seems to have been lost in the wild...
+> >>
+> >> You don't have the problem of the second backlight still off?
+> >> On our Iconia, we need to trigger a special DMI command to set it up
+> >> (SDSS, IIRC).
+> >
+> > No, with the patch, it worked out-of-the-box.
+> 
+> mmm, this is weird. We must not have the same bios or device version.
+> We need to explicitly set the LCD2 up.
 
-=E6=96=BC =E4=BA=94=EF=BC=8C2011-12-09 =E6=96=BC 22:41 +0800=EF=BC=8CLi=
- Joey =E6=8F=90=E5=88=B0=EF=BC=9A
->=20
->=20
-> ---------- Forwarded message ----------
-> From: Artur Flinta <aflinta@gmail.com>
-> Date: 2011/11/24
-> Subject: [Bugreport] Screen backllight issues on FirePro M5950 (HP
-> EliteBook 8560w)
-> To: linux-acpi@vger.kernel.org
->=20
->=20
-> Hi!
-> I have HP Elitebook 8560w with FirePro M5950, Fedora 16, kernel
-> 3.1.1,xorg ati driver 6.14.3 and issues with screen backlight - can't
-> dimit.I can write to /sys/class/backlight/acpi_video0/brightness
-> valuesfrom 0 to 20 (as stated in max_brightness), but it have no
-> effect onthe screen, values in brightness as well as in
-> actual_brightnessreflects written number.Before system boot, I can
-> change brightness of the screen, and itpersist in operating system.
-> Value of the/sys/class/backlight/acpi_video0/brightness indicates
-> maximumbrightness (20) even if minimal was set before boot. Kernel
-> radeon driver maintainers said, that backlight is driven by APCI
-> drivers, so I'm here to ask for help :)
-> How can I help to debug this issue? I'm able to recompile kernel and
-> apply patches, as well as do some tests. Unfortunately I'm unable to
-> write or correct driver code.
-> RegardsArtur
-> --
-> Ka=C5=BCdy problem ma swoje rozwi=C4=85zanie, zatem
-> je=C5=BCeli nie ma rozwi=C4=85zania to nie ma problemu.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-acpi"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
-
-You can try to put kernel parameter:
-
-        acpi_osi=3D"!Windows 2009"
-
-to /boot/grub/menu.lst, then reboot look at maybe better.
-
-And,=20
-could you please kindly share DSDT and dmidecode to me?
-Plesae login by root then:
-        % acpidump > acpidump.dat
-        % dmidecode > dmidecode.log
+The version of our BIOS is 1.01, dated from 12/23/2010.
 
 
-Thanks a lot!
-Joey Lee=20
+Do you think there's any chance these patches will make it to the 3.2
+kernel? I guess you want to make sure your second patch works fine
+before...
+
+Baptiste
