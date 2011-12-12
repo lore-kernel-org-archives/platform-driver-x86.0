@@ -1,56 +1,149 @@
-From: Baptiste Jonglez <baptiste@jonglez.org>
-Subject: Re: [Dual-LVDS Acer Iconia laptop] i915/DRM issue: one screen stays
- off [3.2-rc4+]
-Date: Sun, 11 Dec 2011 17:30:37 +0100
-Message-ID: <20111211163037.GA11920@archminux>
-References: <20111204160728.GA27292@archminux>
- <1323054041.6046.79.camel@linux-s257.site>
- <20111206215137.GA20907@archminux>
- <CAN+gG=EaG1h=seuKQa_SF2O033WWn52USh=tjO9F9O55DgH17Q@mail.gmail.com>
- <20111206223109.GA1867@archminux>
- <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
+From: Peter Feuerer <peter@piie.net>
+Subject: Re: [PATCH 2/2] acerhdf: Message logging neatening
+Date: Mon, 12 Dec 2011 19:26:50 +0100
+Message-ID: <cone.1323714410.432860.1894.1000@zopiie>
+References: <9be2717594eec36bdcc072a90d81b044500270e4.1322593277.git.joe@perches.com> <96a258354ce375bf80259f783506bbd7191b520d.1322593277.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lvps80-90-199-152.vps.webfusion.co.uk ([80.90.199.152]:50709
-	"EHLO lvps80-90-199-152.vps.webfusion.co.uk" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752066Ab1LKQbS (ORCPT
+Received: from smtprelay02.ispgateway.de ([80.67.18.14]:33101 "EHLO
+	smtprelay02.ispgateway.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753418Ab1LLScT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 11 Dec 2011 11:31:18 -0500
+	Mon, 12 Dec 2011 13:32:19 -0500
 Content-Disposition: inline
-In-Reply-To: <CAN+gG=FoxDg3O5VSVkZEPGn4cVE=SJ4MUfvCgnYiB8vJGTLKmQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Cc: joeyli <jlee@suse.com>, Baptiste Jonglez <baptiste@jonglez.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>, intel-gfx@lists.freedesktop.org, Mathieu Magnaudet <mathieu.magnaudet@enac.fr>
+To: Joe Perches <joe@perches.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Dec 08, 2011 at 11:11:22AM +0100, Benjamin Tissoires wrote:
-> Hi,
-> 
-> On Tue, Dec 6, 2011 at 23:31, Baptiste Jonglez <baptiste@jonglez.org> wrote:
-> > On Tue, Dec 06, 2011 at 11:12:26PM +0100, Benjamin Tissoires wrote:
-> >> Hi Baptiste,
-> >
-> > Hi,
-> >
-> >> On Tue, Dec 6, 2011 at 22:51, Baptiste Jonglez <baptiste@jonglez.org> wrote:
-> >> > The second screen works fine with the attached patch. It actually is
-> >> > 6 months old but seems to have been lost in the wild...
-> >>
-> >> You don't have the problem of the second backlight still off?
-> >> On our Iconia, we need to trigger a special DMI command to set it up
-> >> (SDSS, IIRC).
-> >
-> > No, with the patch, it worked out-of-the-box.
-> 
-> mmm, this is weird. We must not have the same bios or device version.
-> We need to explicitly set the LCD2 up.
+Hi Joe,
 
-The version of our BIOS is 1.01, dated from 12/23/2010.
+thanks for sending this patch, I've got some comments on it.
 
 
-Do you think there's any chance these patches will make it to the 3.2
-kernel? I guess you want to make sure your second patch works fine
-before...
+Joe Perches writes:
+> Use pr_warn not pr_warning.
 
-Baptiste
+Don't see any line, where you changed this=E2=80=A6
+
+
+> Coalesce formats.
+> Argument aligning.
+> Remove superfluous parentheses.
+
+Discussed inline.
+
+
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/platform/x86/acerhdf.c |   19 ++++++++-----------
+>  1 files changed, 8 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/ac=
+erhdf.c
+> index 833c0ec..639db4d 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -262,12 +262,11 @@ static void acerhdf_change_fanstate(int state)
+>  	unsigned char cmd;
+> =20
+>  	if (verbose)
+> -		pr_notice("fan %s\n", (state =3D=3D ACERHDF_FAN_OFF) ?
+> -				"OFF" : "ON");
+> +		pr_notice("fan %s\n", state =3D=3D ACERHDF_FAN_OFF ? "OFF" : "ON")=
+;
+
+In my opinion the one with brackets is easier to read.
+
+
+>  	if ((state !=3D ACERHDF_FAN_OFF) && (state !=3D ACERHDF_FAN_AUTO)) =
+{
+>  		pr_err("invalid fan state %d requested, setting to auto!\n",
+> -			state);
+> +		       state);
+
+Is it written somewhere to use spaces instead of a tab in such cases? I=
+ like=20
+tab more. (1)
+
+
+>  		state =3D ACERHDF_FAN_AUTO;
+>  	}
+> =20
+> @@ -282,19 +281,18 @@ static void acerhdf_check_param(struct thermal_=
+zone_device *thermal)
+>  {
+>  	if (fanon > ACERHDF_MAX_FANON) {
+>  		pr_err("fanon temperature too high, set to %d\n",
+> -				ACERHDF_MAX_FANON);
+> +		       ACERHDF_MAX_FANON);
+
+see (1). - but maybe one tab shall be removed.
+
+
+>  		fanon =3D ACERHDF_MAX_FANON;
+>  	}
+> =20
+>  	if (kernelmode && prev_interval !=3D interval) {
+>  		if (interval > ACERHDF_MAX_INTERVAL) {
+>  			pr_err("interval too high, set to %d\n",
+> -				ACERHDF_MAX_INTERVAL);
+> +			       ACERHDF_MAX_INTERVAL);
+
+see (1).
+
+
+>  			interval =3D ACERHDF_MAX_INTERVAL;
+>  		}
+>  		if (verbose)
+> -			pr_notice("interval changed to: %d\n",
+> -					interval);
+> +			pr_notice("interval changed to: %d\n", interval);
+
+I agree on this.
+
+
+>  		thermal->polling_delay =3D interval*1000;
+>  		prev_interval =3D interval;
+>  	}
+> @@ -605,8 +603,8 @@ static int acerhdf_check_hardware(void)
+>  	}
+> =20
+>  	if (!bios_cfg) {
+> -		pr_err("unknown (unsupported) BIOS version %s/%s/%s, "
+> -			"please report, aborting!\n", vendor, product, version);
+> +		pr_err("unknown (unsupported) BIOS version %s/%s/%s, please report=
+, aborting!\n",
+> +		       vendor, product, version);
+
+disagree, as it exceeds 80 chars.
+
+
+>  		return -EINVAL;
+>  	}
+> =20
+> @@ -616,8 +614,7 @@ static int acerhdf_check_hardware(void)
+>  	 */
+>  	if (!kernelmode) {
+>  		pr_notice("Fan control off, to enable do:\n");
+> -		pr_notice("echo -n \"enabled\" > "
+> -			"/sys/class/thermal/thermal_zone0/mode\n");
+> +		pr_notice("echo -n \"enabled\" > /sys/class/thermal/thermal_zone0/=
+mode\n");
+
+disagree, as it exceeds 80 chars when using tabstop=3D8.
+
+
+>  	}
+> =20
+>  	return 0;
+> --=20
+> 1.7.6.405.gc1be0
+>=20
+
+--
+kind regards,
+--peter;
