@@ -1,57 +1,66 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH v2 00/16] samsung-laptop updates
-Date: Thu, 15 Dec 2011 07:50:22 +0100
-Message-ID: <CAHR064h=ooX4hj5Ycvw2=gSOYCcyw=W3Ffj6zh2TPUPfw--apw@mail.gmail.com>
-References: <1322301613-8801-1-git-send-email-corentincj@iksaif.net>
-	<20111127042321.GH17802@kroah.com>
+From: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] asus-wmi: explicitly set the wireless LED
+Date: Thu, 15 Dec 2011 08:07:15 +0100
+Message-ID: <CAHR064iBtSTv79BhXt9_mMWugD4U_xLCM4i1wE7PLnZM8pL57g@mail.gmail.com>
+References: <1323244922-2673-1-git-send-email-kengyu@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:46483 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932251Ab1LOGuZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Dec 2011 01:50:25 -0500
-Received: by eaaj10 with SMTP id j10so1575808eaa.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Dec 2011 22:50:24 -0800 (PST)
-In-Reply-To: <20111127042321.GH17802@kroah.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@suse.de>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1323244922-2673-1-git-send-email-kengyu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keng-Yu Lin <kengyu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Nov 27, 2011 at 5:23 AM, Greg KH <greg@kroah.com> wrote:
-> On Sat, Nov 26, 2011 at 10:59:57AM +0100, Corentin Chary wrote:
->> Hi Matthew, Greg
->>
->> I recently got a Samsung Series 9 from Intel, so I took some
->> time to add support for some features.
->>
->> In this series, I moved a lot of code, tried to follow more
->> closely the SABI interface, added some features, and did
->> some cleanups.
->>
->> Patches were tested on my laptop, N210 and N150. I'd greatly
->> appreciateany feedback from other models.
->>
->> I also propose myself as a maintainer for this driver, since
->> thislaptop is now my primary system.
+On Wed, Dec 7, 2011 at 9:02 AM, Keng-Yu Lin <kengyu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrot=
+e:
+> On Asus K54C, the wireless LED is always off without setting explicit=
+ly.
 >
-> Very nice fixes, thanks for making the requested changes.
+> Signed-off-by: Keng-Yu Lin <kengyu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> ---
+> =C2=A0drivers/platform/x86/asus-wmi.c | =C2=A0 =C2=A03 +++
+> =C2=A01 files changed, 3 insertions(+), 0 deletions(-)
 >
-> I've now acked all of these patches, Matthew, please queue them up for
-> the 3.3 kernel.
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
+sus-wmi.c
+> index d1049ee..db514c4 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -726,6 +726,9 @@ static int asus_rfkill_set(void *data, bool block=
+ed)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_rfkill *priv =3D data;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0u32 ctrl_param =3D !blocked;
 >
-> greg k-h
+> + =C2=A0 =C2=A0 =C2=A0 if (priv->dev_id =3D=3D ASUS_WMI_DEVID_WLAN)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 asus_wmi_set_devst=
+ate(ASUS_WMI_DEVID_WIRELESS_LED, ctrl_param, NULL);
+> +
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return asus_wmi_set_devstate(priv->dev_id,=
+ ctrl_param, NULL);
+> =C2=A0}
+>
+> --
+> 1.7.5.4
+>
 
-Seems to be on Matthew's tree
-(git://cavan.codon.org.uk/platform-drivers-x86.git).
+NACK
 
-Matthew, do you plan to moving back to kernel.org someday ? Or is this
-a permanent tree ?
+If this is only for K54C (works fine on my G73 anyway) then you must
+do some kind of DMI matching right ? Or at least check that this led
+is present. Do you have any list of laptops that export this LED and
+how it behave ?
 
-Thanks
-
--- 
+Anyway, you should use a led trigger for that, ideally the rfkill%d
+led trigger, but for that you need the rfkill idx, which is not
+exported, so you may need a new rfkill_idx() function. CCing rfkill
+and led guys, they may have a better advice on that.
+--=20
 Corentin Chary
 http://xf.iksaif.net
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
