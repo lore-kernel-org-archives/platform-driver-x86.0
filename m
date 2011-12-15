@@ -1,7 +1,7 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH 4/9] asus-laptop: control how BLED and WLED should be exposed
-Date: Thu, 15 Dec 2011 08:27:34 +0100
-Message-ID: <1323934059-1221-5-git-send-email-corentincj@iksaif.net>
+Subject: [PATCH 5/9] asus-laptop: add rfkill interfaces for wlan and wwan
+Date: Thu, 15 Dec 2011 08:27:35 +0100
+Message-ID: <1323934059-1221-6-git-send-email-corentincj@iksaif.net>
 References: <1323934059-1221-1-git-send-email-corentincj@iksaif.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1323934059-1221-1-git-send-email-corentincj@iksaif.net>
@@ -12,279 +12,76 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Corentin Chary <corentin.chary@gmail.com>
 
-Let the user tells if BLED and WLED should be exposed as led or
-rfkill (the old sysfs are still here, but this adds a standard
-interface to control the device).
-
-For example on my A6JC, with WAPF=1, I would do:
-
-$ modprobe asus-laptop wled_type=led bluetooth_type=rfkill
-
-There is still no known way to automatically guess what BLED
-and WLED methods will control, it's why user information is needed.
-
-A userspace database could do that automatically, and maybe some DMI
-matching in the driver.
+But don't try to do than on pegatron tablets to avoid any
+conflict.
 
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-laptop.c |  149 ++++++++++++++++++++++++++++--------
- 1 files changed, 116 insertions(+), 33 deletions(-)
+ drivers/platform/x86/asus-laptop.c |   24 +++++++++++++++++++++++-
+ 1 files changed, 23 insertions(+), 1 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 3c07013..43c74ed 100644
+index 43c74ed..0bdd966 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -81,6 +81,19 @@ static uint wapf = 1;
- module_param(wapf, uint, 0444);
- MODULE_PARM_DESC(wapf, "WAPF value");
+@@ -282,6 +282,7 @@ struct asus_laptop {
+ 	struct asus_rfkill wlan;
+ 	struct asus_rfkill bluetooth;
+ 	struct asus_rfkill wwan;
++	struct asus_rfkill wimax;
+ 	struct asus_rfkill gps;
  
-+static char *wled_type = "unknown";
-+static char *bled_type = "unknown";
-+
-+module_param(wled_type, charp, 0444);
-+MODULE_PARM_DESC(wlan_status, "Set the wled type on boot "
-+		 "(unknown, led or rfkill). "
-+		 "default is unknown");
-+
-+module_param(bled_type, charp, 0444);
-+MODULE_PARM_DESC(bled_type, "Set the bled type on boot "
-+		 "(unknown, led or rfkill). "
-+		 "default is unknown");
-+
- static int wlan_status = 1;
- static int bluetooth_status = 1;
- static int wimax_status = -1;
-@@ -137,6 +150,11 @@ MODULE_PARM_DESC(als_status, "Set the ALS status on boot "
- #define WM_RSTS		0x08    /* internal wimax */
- #define WW_RSTS		0x20    /* internal wwan */
+ 	acpi_handle handle;	/* the handle of the hotk device */
+@@ -1291,6 +1292,10 @@ static int asus_rfkill_set(void *data, bool blocked)
+ 		return asus_wlan_set(asus, !blocked);
+ 	else if (rfk->control_id == BT_RSTS)
+ 		return asus_bluetooth_set(asus, !blocked);
++	else if (rfk->control_id == WM_RSTS)
++		return asus_wimax_set(asus, !blocked);
++	else if (rfk->control_id == WW_RSTS)
++		return asus_wwan_set(asus, !blocked);
  
-+/* WLED and BLED type */
-+#define TYPE_UNKNOWN	0
-+#define TYPE_LED	1
-+#define TYPE_RFKILL	2
-+
- /* LED */
- #define METHOD_MLED		"MLED"
- #define METHOD_TLED		"TLED"
-@@ -219,7 +237,8 @@ struct asus_led {
-  * Same thing for rfkill
-  */
- struct asus_rfkill {
--	int control_id;		/* type of control. Maps to PEGA_* values */
-+	/* type of control. Maps to PEGA_* values or *_RSTS  */
-+	int control_id;
- 	struct rfkill *rfkill;
- 	struct asus_laptop *asus;
- };
-@@ -240,6 +259,8 @@ struct asus_laptop {
- 	struct key_entry *keymap;
- 	struct input_polled_dev *pega_accel_poll;
- 
-+	struct asus_led wled;
-+	struct asus_led bled;
- 	struct asus_led mled;
- 	struct asus_led tled;
- 	struct asus_led rled;
-@@ -248,6 +269,8 @@ struct asus_laptop {
- 	struct asus_led kled;
- 	struct workqueue_struct *led_workqueue;
- 
-+	int wled_type;
-+	int bled_type;
- 	int wireless_status;
- 	bool have_rsts;
- 	bool is_pega_lucid;
-@@ -600,6 +623,10 @@ static enum led_brightness asus_kled_cdev_get(struct led_classdev *led_cdev)
- 
- static void asus_led_exit(struct asus_laptop *asus)
- {
-+	if (!IS_ERR_OR_NULL(asus->wled.led.dev))
-+		led_classdev_unregister(&asus->wled.led);
-+	if (!IS_ERR_OR_NULL(asus->bled.led.dev))
-+		led_classdev_unregister(&asus->bled.led);
- 	if (!IS_ERR_OR_NULL(asus->mled.led.dev))
- 		led_classdev_unregister(&asus->mled.led);
- 	if (!IS_ERR_OR_NULL(asus->tled.led.dev))
-@@ -641,7 +668,7 @@ static int asus_led_register(struct asus_laptop *asus,
- 
- static int asus_led_init(struct asus_laptop *asus)
- {
--	int r;
-+	int r = 0;
- 
- 	/*
- 	 * The Pegatron Lucid has no physical leds, but all methods are
-@@ -660,6 +687,16 @@ static int asus_led_init(struct asus_laptop *asus)
- 	if (!asus->led_workqueue)
- 		return -ENOMEM;
- 
-+	if (asus->wled_type == TYPE_LED)
-+		r = asus_led_register(asus, &asus->wled, "asus::wlan",
-+				      METHOD_WLAN);
-+	if (r)
-+		goto error;
-+	if (asus->bled_type == TYPE_LED)
-+		r = asus_led_register(asus, &asus->bled, "asus::bluetooth",
-+				      METHOD_BLUETOOTH);
-+	if (r)
-+		goto error;
- 	r = asus_led_register(asus, &asus->mled, "asus::mail", METHOD_MLED);
- 	if (r)
- 		goto error;
-@@ -962,7 +999,7 @@ static ssize_t store_wlan(struct device *dev, struct device_attribute *attr,
- 	return sysfs_acpi_set(asus, buf, count, METHOD_WLAN);
+ 	return -EINVAL;
  }
- 
--/*
-+/*e
-  * Bluetooth
-  */
- static int asus_bluetooth_set(struct asus_laptop *asus, int status)
-@@ -1245,6 +1282,23 @@ static const struct rfkill_ops asus_gps_rfkill_ops = {
- 	.set_block = asus_gps_rfkill_set,
- };
- 
-+static int asus_rfkill_set(void *data, bool blocked)
-+{
-+	struct asus_rfkill *rfk = data;
-+	struct asus_laptop *asus = rfk->asus;
-+
-+	if (rfk->control_id == WL_RSTS)
-+		return asus_wlan_set(asus, !blocked);
-+	else if (rfk->control_id == BT_RSTS)
-+		return asus_bluetooth_set(asus, !blocked);
-+
-+	return -EINVAL;
-+}
-+
-+static const struct rfkill_ops asus_rfkill_ops = {
-+	.set_block = asus_rfkill_set,
-+};
-+
- static void asus_rfkill_terminate(struct asus_rfkill *rfk)
+@@ -1343,6 +1348,9 @@ static int asus_rfkill_init(struct asus_laptop *asus)
  {
- 	if (!rfk->rfkill)
-@@ -1263,30 +1317,64 @@ static void asus_rfkill_exit(struct asus_laptop *asus)
- 	asus_rfkill_terminate(&asus->gps);
- }
+ 	int result = 0;
  
--static int asus_rfkill_init(struct asus_laptop *asus)
-+static int asus_rfkill_setup(struct asus_laptop *asus, struct asus_rfkill *rfk,
-+			     const char *name, int control_id, int type,
-+			     const struct rfkill_ops *ops)
- {
- 	int result;
- 
--	if (acpi_check_handle(asus->handle, METHOD_GPS_ON, NULL) ||
--	    acpi_check_handle(asus->handle, METHOD_GPS_OFF, NULL) ||
--	    acpi_check_handle(asus->handle, METHOD_GPS_STATUS, NULL))
--		return 0;
--
--	asus->gps.rfkill = rfkill_alloc("asus-gps", &asus->platform_device->dev,
--					RFKILL_TYPE_GPS,
--					&asus_gps_rfkill_ops, asus);
--	if (!asus->gps.rfkill)
-+	rfk->control_id = control_id;
-+	rfk->asus = asus;
-+	rfk->rfkill = rfkill_alloc(name, &asus->platform_device->dev,
-+				   type, ops, rfk);
-+	if (!rfk->rfkill)
- 		return -EINVAL;
- 
--	result = rfkill_register(asus->gps.rfkill);
-+	result = rfkill_register(rfk->rfkill);
- 	if (result) {
--		rfkill_destroy(asus->gps.rfkill);
--		asus->gps.rfkill = NULL;
-+		rfkill_destroy(rfk->rfkill);
-+		rfk->rfkill = NULL;
- 	}
- 
- 	return result;
- }
- 
-+static int asus_rfkill_init(struct asus_laptop *asus)
-+{
-+	int result = 0;
++	if (asus->is_pega_lucid)
++		return -ENODEV;
 +
-+	if (!acpi_check_handle(asus->handle, METHOD_GPS_ON, NULL) &&
-+	    !acpi_check_handle(asus->handle, METHOD_GPS_OFF, NULL) &&
-+	    !acpi_check_handle(asus->handle, METHOD_GPS_STATUS, NULL))
-+		result = asus_rfkill_setup(asus, &asus->gps, "asus-gps",
-+					   -1, RFKILL_TYPE_GPS,
-+					   &asus_gps_rfkill_ops);
-+	if (result)
-+		goto exit;
-+
-+
-+	if (asus->wled_type == TYPE_RFKILL)
-+		result = asus_rfkill_setup(asus, &asus->wlan, "asus-wlan",
-+					   WL_RSTS, RFKILL_TYPE_WLAN,
-+					   &asus_rfkill_ops);
-+	if (result)
-+		goto exit;
-+
-+	if (asus->bled_type == TYPE_RFKILL)
-+		result = asus_rfkill_setup(asus, &asus->bluetooth,
-+					   "asus-bluetooth", BT_RSTS,
-+					   RFKILL_TYPE_BLUETOOTH,
-+					   &asus_rfkill_ops);
-+	if (result)
-+		goto exit;
-+
-+exit:
-+	if (result)
-+		asus_rfkill_exit(asus);
-+
-+	return result;
-+}
-+
- static int pega_rfkill_set(void *data, bool blocked)
- {
- 	struct asus_rfkill *rfk = data;
-@@ -1302,22 +1390,8 @@ static const struct rfkill_ops pega_rfkill_ops = {
- static int pega_rfkill_setup(struct asus_laptop *asus, struct asus_rfkill *rfk,
- 			     const char *name, int controlid, int rfkill_type)
- {
--	int result;
--
--	rfk->control_id = controlid;
--	rfk->asus = asus;
--	rfk->rfkill = rfkill_alloc(name, &asus->platform_device->dev,
--				   rfkill_type, &pega_rfkill_ops, rfk);
--	if (!rfk->rfkill)
--		return -EINVAL;
--
--	result = rfkill_register(rfk->rfkill);
--	if (result) {
--		rfkill_destroy(rfk->rfkill);
--		rfk->rfkill = NULL;
--	}
--
--	return result;
-+	return asus_rfkill_setup(asus, rfk, name, controlid, rfkill_type,
-+				 &pega_rfkill_ops);
- }
- 
- static int pega_rfkill_init(struct asus_laptop *asus)
-@@ -1678,7 +1752,16 @@ static int __devinit asus_acpi_init(struct asus_laptop *asus)
+ 	if (!acpi_check_handle(asus->handle, METHOD_GPS_ON, NULL) &&
+ 	    !acpi_check_handle(asus->handle, METHOD_GPS_OFF, NULL) &&
+ 	    !acpi_check_handle(asus->handle, METHOD_GPS_STATUS, NULL))
+@@ -1368,6 +1376,20 @@ static int asus_rfkill_init(struct asus_laptop *asus)
  	if (result)
- 		return result;
+ 		goto exit;
  
--	/* WLED and BLED are on by default */
-+	if (!strcmp(bled_type, "led"))
-+		asus->bled_type = TYPE_LED;
-+	else if (!strcmp(bled_type, "rfkill"))
-+		asus->bled_type = TYPE_RFKILL;
++	if (!acpi_check_handle(asus->handle, METHOD_WWAN, NULL))
++		result = asus_rfkill_setup(asus, &asus->wwan, "asus-wwan",
++					   WW_RSTS, RFKILL_TYPE_WWAN,
++					   &asus_rfkill_ops);
++	if (result)
++		goto exit;
 +
-+	if (!strcmp(wled_type, "led"))
-+		asus->wled_type = TYPE_LED;
-+	else if (!strcmp(wled_type, "rfkill"))
-+		asus->wled_type = TYPE_RFKILL;
++	if (!acpi_check_handle(asus->handle, METHOD_WIMAX, NULL))
++		result = asus_rfkill_setup(asus, &asus->wimax, "asus-wimax",
++					   WM_RSTS, RFKILL_TYPE_WIMAX,
++					   &asus_rfkill_ops);
++	if (result)
++		goto exit;
 +
- 	if (bluetooth_status >= 0)
- 		asus_bluetooth_set(asus, !!bluetooth_status);
+ exit:
+ 	if (result)
+ 		asus_rfkill_exit(asus);
+@@ -1859,7 +1881,7 @@ static int __devinit asus_acpi_add(struct acpi_device *device)
+ 		goto fail_led;
  
+ 	result = asus_rfkill_init(asus);
+-	if (result)
++	if (result && result != -ENODEV)
+ 		goto fail_rfkill;
+ 
+ 	result = pega_accel_init(asus);
 -- 
 1.7.5.4
