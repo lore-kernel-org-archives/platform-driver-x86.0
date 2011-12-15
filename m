@@ -1,55 +1,41 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH 3/4] toshiba_acpi: Support additional hotkey scancodes
-Date: Thu, 15 Dec 2011 12:06:10 -0600
-Message-ID: <1323972371-13189-4-git-send-email-seth.forshee@canonical.com>
-References: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [PATCH] intel_scu_ipc: Match the changes in the x86 configuration
+Date: Thu, 15 Dec 2011 22:25:54 +0000
+Message-ID: <20111215222549.9560.14901.stgit@bob.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:56302 "EHLO
+	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756377Ab1LOWNm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 15 Dec 2011 17:13:42 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-From: Azael Avalos <coproscefalo@gmail.com>
+From: Alan Cox <alan@linux.intel.com>
 
-These scancodes are used by many of the models now supported with
-the addition of TOS1900 device support.
+We need to depend on INTEL_MID because the SCU is Moorestown and Medfield.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: Alan Cox <alan@linux.intel.com>
 ---
- drivers/platform/x86/toshiba_acpi.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 1d83884..6824bf7 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -150,6 +150,8 @@ static const struct key_entry toshiba_acpi_keymap[] __devinitconst = {
- 	{ KE_KEY, 0x101, { KEY_MUTE } },
- 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
- 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
-+	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
-+	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
- 	{ KE_KEY, 0x13b, { KEY_COFFEE } },
- 	{ KE_KEY, 0x13c, { KEY_BATTERY } },
- 	{ KE_KEY, 0x13d, { KEY_SLEEP } },
-@@ -158,7 +160,7 @@ static const struct key_entry toshiba_acpi_keymap[] __devinitconst = {
- 	{ KE_KEY, 0x140, { KEY_BRIGHTNESSDOWN } },
- 	{ KE_KEY, 0x141, { KEY_BRIGHTNESSUP } },
- 	{ KE_KEY, 0x142, { KEY_WLAN } },
--	{ KE_KEY, 0x143, { KEY_PROG1 } },
-+	{ KE_KEY, 0x143, { KEY_TOUCHPAD_TOGGLE } },
- 	{ KE_KEY, 0x17f, { KEY_FN } },
- 	{ KE_KEY, 0xb05, { KEY_PROG2 } },
- 	{ KE_KEY, 0xb06, { KEY_WWW } },
-@@ -168,6 +170,7 @@ static const struct key_entry toshiba_acpi_keymap[] __devinitconst = {
- 	{ KE_KEY, 0xb32, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0xb33, { KEY_PLAYPAUSE } },
- 	{ KE_KEY, 0xb5a, { KEY_MEDIA } },
-+	{ KE_IGNORE, 0x1430, { KEY_RESERVED } },
- 	{ KE_END, 0 },
- };
+ drivers/platform/x86/Kconfig |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 7f43cf8..f995e6e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -639,7 +639,7 @@ config ACPI_CMPC
  
--- 
-1.7.5.4
+ config INTEL_SCU_IPC
+ 	bool "Intel SCU IPC Support"
+-	depends on X86_MRST
++	depends on X86_INTEL_MID
+ 	default y
+ 	---help---
+ 	  IPC is used to bridge the communications between kernel and SCU on
