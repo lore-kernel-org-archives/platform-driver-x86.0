@@ -1,54 +1,51 @@
-From: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-Subject: Re: [PATCH] asus-wmi: explicitly set the wireless
-	LED
-Date: Thu, 15 Dec 2011 09:26:47 +0100
-Message-ID: <1323937607.3337.6.camel@jlt3.sipsolutions.net>
-References: <1323244922-2673-1-git-send-email-kengyu@canonical.com>
-	<CAHR064iBtSTv79BhXt9_mMWugD4U_xLCM4i1wE7PLnZM8pL57g@mail.gmail.com>
-	<1323937340.3337.3.camel@jlt3.sipsolutions.net>
-	<CAHR064ivFUeGwNAfB1MZO0mrvo+sAcM-cZTjR9wZTaPyWRhzAA@mail.gmail.com>
-	(sfid-20111215_092552_215332_009CBEB1)
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAHR064ivFUeGwNAfB1MZO0mrvo+sAcM-cZTjR9wZTaPyWRhzAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(sfid-20111215_092552_215332_009CBEB1)
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=acpi4asus-user>
-List-Post: <mailto:acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/acpi4asus-user>,
-	<mailto:acpi4asus-user-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: acpi4asus-user-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard, Keng-Yu Lin <kengyu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH 0/4] toshiba_acpi: Expanded hotkey support
+Date: Thu, 15 Dec 2011 12:06:07 -0600
+Message-ID: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:34918 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751257Ab1LOSG6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 15 Dec 2011 13:06:58 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-On Thu, 2011-12-15 at 09:25 +0100, Corentin Chary wrote:
+Hi Matthew,
 
-> > static const char *rfkill_ledtrigname(struct rfkill *rfkill)
-> > {
-> > #ifdef CONFIG_RFKILL_LEDS
-> >        return rfkill->ledtrigname;
-> > #endif
-> >        return NULL;
-> > }
+The following patches expand toshiba_acpi's hotkey support to include
+many additional models. Here's the high-level summary:
 
-> Right, but is rfkill->ledtrigname really set somewhere ?
-> 
-> rfkill->led_trigger.name seems safer to use.
+ * Add support for reading scancodes using the INFO method when
+   avaialable and for generating hotkey notifications by filtering Fn
+   key presses from the keyboard
+ * Adds a new EC interface allowing toshiba_acpi to get a handle to the
+   EC, which is needed because the NTFY method used to generate the
+   hotkey notifications is in the EC namespace
+ * Support some additional hotkey scancodes
+ * Blacklist hotkey support for the Satellite C670-10V due to a buggy
+   implementation of the INFO method on this model
 
-Hm, indeed -- looks like we can get rid of ledtrigname completely since
-nothing ever touches it.
+More details can be found in the individual patch descriptions.
 
-johannes
+Cc-ing the ACPI folks on the full series to provide context regarding
+how toshiba_acpi will use the new EC interface.
+
+Thanks,
+Seth
 
 
-------------------------------------------------------------------------------
-10 Tips for Better Server Consolidation
-Server virtualization is being driven by many needs.  
-But none more important than the need to reduce IT complexity 
-while improving strategic productivity.  Learn More! 
-http://www.accelacomm.com/jaw/sdnl/114/51507609/
+Azael Avalos (1):
+  toshiba_acpi: Support additional hotkey scancodes
+
+Seth Forshee (3):
+  ACPI: EC: Add ec_get_handle()
+  toshiba_acpi: Support alternate hotkey interfaces
+  toshiba_acpi: Add blacklist for devices with hotkey problems
+
+ drivers/acpi/ec.c                   |   10 ++
+ drivers/platform/x86/toshiba_acpi.c |  254 ++++++++++++++++++++++++++++++-----
+ include/linux/acpi.h                |    1 +
+ 3 files changed, 228 insertions(+), 37 deletions(-)
