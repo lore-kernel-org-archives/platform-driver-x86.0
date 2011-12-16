@@ -1,57 +1,80 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: [PATCH 4/4] x86, mrst: add msic_thermal platform support
-Date: Thu, 15 Dec 2011 22:28:37 +0000
-Message-ID: <20111215222834.9670.16010.stgit@bob.linux.org.uk>
-References: <20111215222702.9670.63670.stgit@bob.linux.org.uk>
+From: Thomas Renninger <trenn@suse.de>
+Subject: Re: [PATCH 1/4] ACPI: EC: Add ec_get_handle()
+Date: Fri, 16 Dec 2011 01:22:35 +0100
+Message-ID: <201112160122.36100.trenn@suse.de>
+References: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com> <1323972371-13189-2-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: Text/Plain;
+  charset="iso-8859-6"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:60681 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759376Ab1LOWQW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Dec 2011 17:16:22 -0500
-In-Reply-To: <20111215222702.9670.63670.stgit@bob.linux.org.uk>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1323972371-13189-2-git-send-email-seth.forshee@canonical.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Thursday 15 December 2011 19:06:08 Seth Forshee wrote:
+> toshiba_acpi needs to execute an AML method within the EC namespace
+> to make hotkeys work on some platforms. Provide an interface to
+> allow it to easily get a handle to the EC namespace for this purpose.
+I first liked the idea of making the ec device more global for others
+to access.
+But thinkpad_acpi is doing the same already in another way.
 
-This will let the MSIC driver to create platform device for the thermal
-driver.
+I think best is to move the thinkpad implementation of getting
+ACPI handles based on HIDs to osl.c and make it global.
+I'll send patches.
+Please review them carefully, they are only compile tested.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Alan Cox <alan@linux.intel.com>
----
+      Thomas
 
- arch/x86/platform/mrst/mrst.c |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+> 
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> ---
+>  drivers/acpi/ec.c    |   10 ++++++++++
+>  include/linux/acpi.h |    1 +
+>  2 files changed, 11 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index b19a18d..e37615f 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -445,6 +445,16 @@ int ec_transaction(u8 command,
+>  
+>  EXPORT_SYMBOL(ec_transaction);
+>  
+> +/* Get the handle to the EC device */
+> +acpi_handle ec_get_handle(void)
+> +{
+> +	if (!first_ec)
+> +		return NULL;
+> +	return first_ec->handle;
+> +}
+> +
+> +EXPORT_SYMBOL(ec_get_handle);
+> +
+>  void acpi_ec_block_transactions(void)
+>  {
+>  	struct acpi_ec *ec = first_ec;
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 6001b4da..ecccbb7 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -151,6 +151,7 @@ extern int ec_write(u8 addr, u8 val);
+>  extern int ec_transaction(u8 command,
+>                            const u8 *wdata, unsigned wdata_len,
+>                            u8 *rdata, unsigned rdata_len);
+> +extern acpi_handle ec_get_handle(void);
+>  
+>  #if defined(CONFIG_ACPI_WMI) || defined(CONFIG_ACPI_WMI_MODULE)
+>  
+> -- 
+> 1.7.5.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-
-diff --git a/arch/x86/platform/mrst/mrst.c b/arch/x86/platform/mrst/mrst.c
-index 4c2235d..a9a4732 100644
---- a/arch/x86/platform/mrst/mrst.c
-+++ b/arch/x86/platform/mrst/mrst.c
-@@ -686,6 +686,11 @@ static void *msic_ocd_platform_data(void *info)
- 	return msic_generic_platform_data(info, INTEL_MSIC_BLOCK_OCD);
- }
- 
-+static void *msic_thermal_platform_data(void *info)
-+{
-+	return msic_generic_platform_data(info, INTEL_MSIC_BLOCK_THERMAL);
-+}
-+
- static const struct devs_id __initconst device_ids[] = {
- 	{"bma023", SFI_DEV_TYPE_I2C, 1, &no_platform_data},
- 	{"pmic_gpio", SFI_DEV_TYPE_SPI, 1, &pmic_gpio_platform_data},
-@@ -705,6 +710,7 @@ static const struct devs_id __initconst device_ids[] = {
- 	{"msic_audio", SFI_DEV_TYPE_IPC, 1, &msic_audio_platform_data},
- 	{"msic_power_btn", SFI_DEV_TYPE_IPC, 1, &msic_power_btn_platform_data},
- 	{"msic_ocd", SFI_DEV_TYPE_IPC, 1, &msic_ocd_platform_data},
-+	{"msic_thermal", SFI_DEV_TYPE_IPC, 1, &msic_thermal_platform_data},
- 
- 	{},
- };
