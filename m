@@ -1,84 +1,154 @@
-From: Thomas Renninger <trenn@suse.de>
+From: Azael Avalos <coproscefalo@gmail.com>
 Subject: Re: [PATCH 2/4] toshiba_acpi: Support alternate hotkey interfaces
-Date: Sat, 17 Dec 2011 09:31:43 +0100
-Message-ID: <201112170931.44171.trenn@suse.de>
-References: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com> <1323972371-13189-3-git-send-email-seth.forshee@canonical.com>
+Date: Sat, 17 Dec 2011 04:32:14 -0700
+Message-ID: <CAGdLNWFeRD=K0YWwr=r2Rznr1N4B6HMPOUF4vWv1aOZbDy+rEQ@mail.gmail.com>
+References: <1323972371-13189-1-git-send-email-seth.forshee@canonical.com>
+	<1323972371-13189-3-git-send-email-seth.forshee@canonical.com>
+	<201112170931.44171.trenn@suse.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-6"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1323972371-13189-3-git-send-email-seth.forshee@canonical.com>
+In-Reply-To: <201112170931.44171.trenn@suse.de>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Seth Forshee <seth.forshee@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thomas Renninger <trenn@suse.de>
+Cc: Seth Forshee <seth.forshee@canonical.com>, Matthew Garrett <mjg@redhat.com>, Len Brown <lenb@kernel.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 15 December 2011 19:06:09 Seth Forshee wrote:
-...  
-> +static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned char str,
-> +				      struct serio *port)
-> +{
-> +	if (str & 0x20)
-> +		return false;
-> +
-> +	if (unlikely(data == 0xe0))
-> +		return false;
-> +
-> +	if ((data & 0x7f) == TOS1900_FN_SCAN) {
-> +		schedule_work(&toshiba_acpi->hotkey_work);
-> +		return true;
-> +	}
-What have you tried to check whether some other kind of ACPI event
-is happening?
-Do any acpi/SCI interrupts happen?:
-watch -n1 "cat /proc/interrupts |grep acpi"
+2011/12/17 Thomas Renninger <trenn@suse.de>:
+> On Thursday 15 December 2011 19:06:09 Seth Forshee wrote:
+> ...
+>> +static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned =
+char str,
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct serio *port=
+)
+>> +{
+>> + =C2=A0 =C2=A0 if (str & 0x20)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return false;
+>> +
+>> + =C2=A0 =C2=A0 if (unlikely(data =3D=3D 0xe0))
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return false;
+>> +
+>> + =C2=A0 =C2=A0 if ((data & 0x7f) =3D=3D TOS1900_FN_SCAN) {
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 schedule_work(&toshiba_a=
+cpi->hotkey_work);
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return true;
+>> + =C2=A0 =C2=A0 }
+> What have you tried to check whether some other kind of ACPI event
+> is happening?
+> Do any acpi/SCI interrupts happen?:
+> watch -n1 "cat /proc/interrupts |grep acpi"
 
-Could it by chance be an EC or other device GPE/SCI?
+I already did this, no events whatsoever, I was using a Satellite X205
+at the time
 
-> +
-> +	return false;
-> +}
-> +
-> +static void toshiba_acpi_hotkey_work(struct work_struct *work)
-> +{
-> +	acpi_handle ec_handle = ec_get_handle();
-> +	acpi_status status;
-> +
-> +	if (!ec_handle)
-> +		return;
-> +
-> +	status = acpi_evaluate_object(ec_handle, "NTFY", NULL, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		pr_err("ACPI NTFY method execution failed\n");
-Why is calling NTFY needed?
+>
+> Could it by chance be an EC or other device GPE/SCI?
+>
 
-...
+Seth mentioned me something about this, but w/o proper docs from
+Toshiba, we are blindly shooting.
 
-> +static int toshiba_acpi_suspend(struct acpi_device *acpi_dev,
-> +				pm_message_t state)
-> +{
-> +	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
-> +	u32 result;
-> +
-> +	if (dev->hotkey_dev)
-> +		hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE, &result);
-> +
-> +	return 0;
-> +}
-> +
-> +static int toshiba_acpi_resume(struct acpi_device *acpi_dev)
-> +{
-> +	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
-> +	u32 result;
-> +
-> +	if (dev->hotkey_dev)
-> +		hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE, &result);
-> +
-> +	return 0;
-> +}
-What are the suspend/resume funcs for?
-What bad things happen without them?
+Seth?
+
+>> +
+>> + =C2=A0 =C2=A0 return false;
+>> +}
+>> +
+>> +static void toshiba_acpi_hotkey_work(struct work_struct *work)
+>> +{
+>> + =C2=A0 =C2=A0 acpi_handle ec_handle =3D ec_get_handle();
+>> + =C2=A0 =C2=A0 acpi_status status;
+>> +
+>> + =C2=A0 =C2=A0 if (!ec_handle)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
+>> +
+>> + =C2=A0 =C2=A0 status =3D acpi_evaluate_object(ec_handle, "NTFY", N=
+ULL, NULL);
+>> + =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err("ACPI NTFY method=
+ execution failed\n");
+> Why is calling NTFY needed?
+
+The NTFY method triggers a 0x80 notify event on TOS1900 device,
+and thus being trapped by toshiba_acpi_notify, here are the methods
+
+Method (NTFY, 0, NotSerialized)
+{
+  Store (One, ^^^^VALZ.TECF)
+  Notify (VALZ, 0x80)
+  Return (0xAA)
+}
+
+And then
+
+Method (INFO, 0, NotSerialized)
+{
+  If (TECF)
+  {
+    Store (Zero, TECF)
+    Store (^^PCI0.LPCB.EC0.TOHK, Local0)
+    Store (Zero, ^^PCI0.LPCB.EC0.TOHK)
+  }
+  Else
+  {
+    Store (Zero, Local0)
+  }
+
+  Return (Local0)
+}
 
 
-     Thomas
+>
+> ...
+>
+>> +static int toshiba_acpi_suspend(struct acpi_device *acpi_dev,
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pm_message_t state)
+>> +{
+>> + =C2=A0 =C2=A0 struct toshiba_acpi_dev *dev =3D acpi_driver_data(ac=
+pi_dev);
+>> + =C2=A0 =C2=A0 u32 result;
+>> +
+>> + =C2=A0 =C2=A0 if (dev->hotkey_dev)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 hci_write1(dev, HCI_HOTK=
+EY_EVENT, HCI_HOTKEY_DISABLE, &result);
+>> +
+>> + =C2=A0 =C2=A0 return 0;
+>> +}
+>> +
+>> +static int toshiba_acpi_resume(struct acpi_device *acpi_dev)
+>> +{
+>> + =C2=A0 =C2=A0 struct toshiba_acpi_dev *dev =3D acpi_driver_data(ac=
+pi_dev);
+>> + =C2=A0 =C2=A0 u32 result;
+>> +
+>> + =C2=A0 =C2=A0 if (dev->hotkey_dev)
+>> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 hci_write1(dev, HCI_HOTK=
+EY_EVENT, HCI_HOTKEY_ENABLE, &result);
+>> +
+>> + =C2=A0 =C2=A0 return 0;
+>> +}
+> What are the suspend/resume funcs for?
+> What bad things happen without them?
+
+Some models (NB500 among others) stop sending hotkey events
+when resumed, and even activating the hotkeys again don't work,
+the suspend/resume functions do the trick ;)
+
+>
+>
+> =C2=A0 =C2=A0 Thomas
+
+Saludos
+Azael
+
+
+--=20
+-- El mundo apesta y vosotros apestais tambien --
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
