@@ -1,36 +1,44 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] Platform: samsung-laptop: add DMI information for
- Samsung N150 Plus
-Date: Mon, 26 Dec 2011 12:33:08 +0000
-Message-ID: <20111226123308.GA11817@srcf.ucam.org>
-References: <87ty4ss0z4.fsf@prochyra.name>
- <CAHR064h7a=RQq=p1J+gKpC5_6ow8ChUFFkC39HwtmerHaMksjw@mail.gmail.com>
- <87ty4qdpna.fsf@prochyra.name>
- <CAHR064gZdnmsMjhr3Vp3BumrkZ07FWgEADLLqqkxP_aCca5ZuQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Xi Wang <xi.wang@gmail.com>
+Subject: [PATCH] panasonic-laptop: avoid overflow in acpi_pcc_hotkey_add()
+Date: Wed, 28 Dec 2011 23:49:06 -0500
+Message-ID: <1325134146-20461-1-git-send-email-xi.wang@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:44718 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754121Ab1LZMdM (ORCPT
+Received: from mail-qw0-f46.google.com ([209.85.216.46]:40515 "EHLO
+	mail-qw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750829Ab1L2Euw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 26 Dec 2011 07:33:12 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHR064gZdnmsMjhr3Vp3BumrkZ07FWgEADLLqqkxP_aCca5ZuQ@mail.gmail.com>
+	Wed, 28 Dec 2011 23:50:52 -0500
+Received: by qadc12 with SMTP id c12so7587121qad.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Dec 2011 20:50:51 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Andrzej Prochyra <andrzej@prochyra.name>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>, Harald Welte <laforge@gnumonks.org>
+Cc: platform-driver-x86@vger.kernel.org, Xi Wang <xi.wang@gmail.com>
 
-On Mon, Dec 26, 2011 at 10:51:36AM +0100, Corentin Chary wrote:
-> > (The MAINTAINERS file gives the git tree
-> > git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git
-> > in the X86 PLATFORM DRIVERS section but this does not seem to exist.)
-> 
-> Matthew, should MAINTAINERS be updated with your new tree, or will you
-> re-create the kernel.org tree in the future ?
+num_sifr could go negative since acpi_pcc_get_sqty() returns -EINVAL
+on error.  Then it could bypass the sanity check (num_sifr > 255).
+The subsequent call to kzalloc() would allocate a small buffer, leading
+to a memory corruption.
 
-Should be updated. My mistake. I'll send a patch next week.
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+---
+ drivers/platform/x86/panasonic-laptop.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 05be30e..ffff8b4 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -562,8 +562,8 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 
+ 	num_sifr = acpi_pcc_get_sqty(device);
+ 
+-	if (num_sifr > 255) {
+-		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "num_sifr too large"));
++	if (num_sifr < 0 || num_sifr > 255) {
++		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "num_sifr out of range"));
+ 		return -ENODEV;
+ 	}
+ 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.5.4
