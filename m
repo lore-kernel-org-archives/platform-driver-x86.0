@@ -1,120 +1,45 @@
-From: David Herrmann <dh.herrmann@googlemail.com>
-Subject: Re: [PATCH] Platform: samsung-laptop: add DMI information for Samsung
- N150 Plus
-Date: Thu, 29 Dec 2011 15:02:30 +0100
-Message-ID: <CANq1E4Sxt7cnOBdP7ggBYjp-OVzub1nPOZ_PEnhOp242EEeNSg@mail.gmail.com>
-References: <87ty4ss0z4.fsf@prochyra.name>
-	<CAHR064h7a=RQq=p1J+gKpC5_6ow8ChUFFkC39HwtmerHaMksjw@mail.gmail.com>
-	<87ty4qdpna.fsf@prochyra.name>
-	<20111224142028.GA32171@srcf.ucam.org>
-	<CANq1E4S+Sa1BERtR6aNH-ypRo+oJ1fRXkuVa+tREy5qVodv2pw@mail.gmail.com>
-	<CAHR064jyubYf5d_KekB8+wqmGXcm8v4Gg9jVt3W9Kx_Ljh++GA@mail.gmail.com>
-	<CANq1E4T9LtrBgAxhZAcZZc_gN5yuBm0Yn1ukYiWFvH84hKavBA@mail.gmail.com>
-	<4EFC3FA8.6020401@gmail.com>
-	<4EFC52F0.1010709@t-online.de>
-	<CAHR064hwKj7TvEb=+HWWYYCAwkQ976MQid1PKhJgPqafpPBhwQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f174.google.com ([74.125.82.174]:42381 "EHLO
-	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750785Ab1L2OCc convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Dec 2011 09:02:32 -0500
-In-Reply-To: <CAHR064hwKj7TvEb=+HWWYYCAwkQ976MQid1PKhJgPqafpPBhwQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: =?ISO-8859-1?Q?Richard_Sch=FCtz?= <r.schtz@t-online.de>, Matthew Garrett <mjg59@srcf.ucam.org>, Andrzej Prochyra <andrzej@prochyra.name>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Zhang, Rui" <rui.zhang@intel.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH v2 0/4] toshiba_acpi: Expanded hotkey support
+Date: Tue,  3 Jan 2012 13:02:34 -0600
+Message-ID: <1325617358-8286-1-git-send-email-seth.forshee@canonical.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 29, 2011 at 12:49 PM, Corentin Chary
-<corentin.chary@gmail.com> wrote:
-> On Thu, Dec 29, 2011 at 12:45 PM, Richard Sch=FCtz <r.schtz@t-online.=
-de> wrote:
->> Am 29.12.2011 11:23, schrieb Corentin Chary:
->>>
->>> On 12/26/2011 11:22 AM, David Herrmann wrote:
->>>
->>>> On Mon, Dec 26, 2011 at 10:49 AM, Corentin Chary
->>>> <corentin.chary@gmail.com> wrote:
->>>>>
->>>>> On Sat, Dec 24, 2011 at 3:28 PM, David Herrmann
->>>>> <dh.herrmann@googlemail.com> wrote:
->>>>>>
->>>>>> On Sat, Dec 24, 2011 at 3:20 PM, Matthew
->>>>>> Garrett<mjg59@srcf.ucam.org> wrote:
->>>>>>>
->>>>>>> On Sat, Dec 24, 2011 at 02:12:57PM +0000, Andrzej Prochyra wrot=
-e:
->>>>>>>>
->>>>>>>> 'acpi_video0' not functional. Brightness can be controlled thr=
-ough
->>>>>>>> intel_backlight interface. There are 21 brightness levels and =
-the
->>>>>>>> backlight can be turned off.
->>>>>>>
->>>>>>>
->>>>>>> If acpi_video0 doesn't work then we either need to work out why
->>>>>>> it's not
->>>>>>> working or make it vanish completely, so this patch isn't the c=
-orrect
->>>>>>> approach.
->>>>>>
->>>>>>
->>>>>> Just to make clear, intel_backlight isn't working properly eithe=
-r. If
->>>>>> my laptop boots with backlight at 50% then intel_backlight will =
-only
->>>>>> work in the range 0%-50% on my machine. If I use the samsung mod=
-ule to
->>>>>> set it to 100% then intel_backlight works correctly in the range
->>>>>> 0-100% until next reboot/suspend.
->>
->>
->> The same problem exists on my N145 Plus, too.
->>
->>>>>> So I'd recommend staying with the samsung module and disabling t=
-he
->>>>>> acpi_backlight entirely. The samsung module is the only backligh=
-t
->>>>>> control which works properly.
->>>>>
->>>>>
->>>>> Can I take a look at the DSDT to see how it's broken ?
->>>>> If it's really not functional, then it should be added to the
->>>>> blacklist in video_detect.c
->>>>
->>>>
->>>> Raw and disassembled dsdt is attached.
->>>
->>>
->>> Took a quick look but didn't find anything obvious. What happens ex=
-actly
->>> with acpi_video0 ?
->>
->>
->> Either Samsung's ACPI is totally broken [ACPI Warning: _BQC returned=
- an
->> invalid level (20110623/video-472)] or they just don't support backl=
-ight
->> setting via ACPI at all. Therefore it's implemented in the SABI stuf=
-f. So
->> every device that needs SABI should be blacklisted in video_detect.
->
-> And that's ? Because new laptops that use SABI seems to have a workin=
-g
-> acpi_video0.
-> Currently, N1{4,5}* seems to be affected.
+This is an update to the patches I sent previously to enable hotkeys on
+many Toshiba models that aren't supported by the code currently in
+toshiba_acpi. Once agains, here's the high-level summary:
 
-the acpi_video0 on my machine does nothing. The intel_backlight has
-the described bug and the samsung SABI backlight needs the fix that
-setting the backlight only works from/to 0 and 7 (this fix is already
-upstream).
+ * Add support for reading scancodes using the INFO method when
+   avaialable and for generating hotkey notifications by filtering Fn
+   key presses from the keyboard
+ * Adds a new EC interface allowing toshiba_acpi to get a handle to the
+   EC, which is needed because the NTFY method used to generate the
+   hotkey notifications is in the EC namespace
+ * Support some additional hotkey scancodes
+ * Blacklist hotkey support for some Satellite models due to a buggy
+   implementation of the INFO method on this model
 
-The SABI thing is working for me so I'd prefer it. I have a N210P
-which is detected as: N150P/N210P/N220P
+The only change since v1 is to add additional machines to the hotkey
+blacklist. These machines were identified by scraping bug reports to
+identify machines with the same INFO method implementation in their
+DSDTs.
 
-I hope that helps
-Regards
-David
+Thanks,
+Seth
+
+
+Azael Avalos (1):
+  toshiba_acpi: Support additional hotkey scancodes
+
+Seth Forshee (3):
+  ACPI: EC: Add ec_get_handle()
+  toshiba_acpi: Support alternate hotkey interfaces
+  toshiba_acpi: Add blacklist for models with hotkey problems
+
+ drivers/acpi/ec.c                   |   10 ++
+ drivers/platform/x86/toshiba_acpi.c |  275 ++++++++++++++++++++++++++++++-----
+ include/linux/acpi.h                |    1 +
+ 3 files changed, 249 insertions(+), 37 deletions(-)
