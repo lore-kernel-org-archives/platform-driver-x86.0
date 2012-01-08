@@ -1,33 +1,81 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH v2 1/4] ACPI: EC: Add ec_get_handle()
-Date: Sat, 7 Jan 2012 21:26:14 +0000
-Message-ID: <20120107212614.GA24097@srcf.ucam.org>
-References: <1325617358-8286-1-git-send-email-seth.forshee@canonical.com>
- <1325617358-8286-2-git-send-email-seth.forshee@canonical.com>
- <CAPbh3ruqMQ8UFSehm7vX5i8YWzRFwF5=TX_f4n4dVkvmQa9Njw@mail.gmail.com>
- <20120105193436.GC25386@ubuntu-macmini>
- <CAPbh3rv86E9zqUbF4vrA2G=FaXyNHqD7+NZXRkzrzYAsHL8a_Q@mail.gmail.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Sun, 8 Jan 2012 11:46:30 +0100
+Message-ID: <20120108104630.GA4354@ubuntu-mba>
+References: <20120105150832.GA25386@ubuntu-macmini>
+ <1325945558-4661-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPbh3rv86E9zqUbF4vrA2G=FaXyNHqD7+NZXRkzrzYAsHL8a_Q@mail.gmail.com>
+In-Reply-To: <1325945558-4661-1-git-send-email-corentincj@iksaif.net>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Konrad Rzeszutek Wilk <konrad@darnok.org>
-Cc: Thomas Renninger <trenn@suse.de>, linux-acpi@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, David Herrmann <dh.herrmann@googlemail.com>, Richard =?utf-8?Q?Sch=C3=BCtz?= <r.schtz@t-online.de>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jan 07, 2012 at 03:55:35PM -0500, Konrad Rzeszutek Wilk wrote:
+On Sat, Jan 07, 2012 at 03:12:38PM +0100, Corentin Chary wrote:
+> On these laptops, the ACPI video is not functional, and very unlikely
+> to be fixed by the vendor. Note that intel_backlight works for some
+> of these laptops, and the backlight from samsung-laptop always work.
+> 
+> The good news is that newer laptops have functional ACPI video device
+> and won't end up growing this list.
+> 
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> ---
+> 
+> Could the concerned people test this patch and check that it correctly
+> disable the acpi_video backlight ?
+> 
+>  drivers/acpi/video_detect.c |   40 ++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 40 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+> index 45d8097..376bce2 100644
+> --- a/drivers/acpi/video_detect.c
+> +++ b/drivers/acpi/video_detect.c
+> @@ -132,6 +132,44 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+>  	return AE_OK;
+>  }
+>  
+> +/* Force to use vendor driver when the ACPI device is known to be
+> + * buggy */
+> +static int video_detect_force_vendor(const struct dmi_system_id *d)
+> +{
+> +	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+> +	return 0;
+> +}
+> +
+> +static struct dmi_system_id video_detect_dmi_table[] = {
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N150P",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
+> +		},
+> +	},
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N145P/N250P/N260P",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
+> +		},
+> +	},
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N150/N210/N220",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
+> +		},
+> +	},
+> +};
+> +
 
-> My understanding (and this is from reading Greg KH's patches) is that
-> any new interface should use _GPL variant unless there is an absolute
-> need for it. Say, a binary driver that uses this function and there is
-> no other way around it.
-
-A binary driver could implement the same functionality using exported 
-interfaces from the ACPI core, so I don't see any benefit in insisting 
-on _GPL here. _GPL is intended to be a hint that use of the interface is 
-definitely an indication that you're creating a derived work.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+I don't see NF110/NF210/NF310 in this list. Was that an oversight?
