@@ -1,49 +1,49 @@
-From: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2 machines
-Date: Mon, 09 Jan 2012 22:15:45 +0000
-Message-ID: <4607313.aZXtt4raMe@valkyrie>
-References: <1326090677-25942-1-git-send-email-jlee@suse.com> <3474148.WRXZ4siLlh@valkyrie> <1326103224.24116.282.camel@linux-s257.site>
+From: Andrzej Prochyra <andrzej@prochyra.name>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Mon, 09 Jan 2012 22:34:06 +0000
+Message-ID: <878vlgjyjl.fsf@prochyra.name>
+References: <20120105150832.GA25386@ubuntu-macmini>
+	<1325945558-4661-1-git-send-email-corentincj@iksaif.net>
+	<CANq1E4QGahjrxm5B59HGnrfO3LP4kV6bc27BKQDvnJ4HBKAFMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:55331 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933152Ab2AIWPv (ORCPT
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54636 "EHLO
+	relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755880Ab2AIWeO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jan 2012 17:15:51 -0500
-Received: by wibhm6 with SMTP id hm6so2956217wib.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Jan 2012 14:15:50 -0800 (PST)
-In-Reply-To: <1326103224.24116.282.camel@linux-s257.site>
+	Mon, 9 Jan 2012 17:34:14 -0500
+In-Reply-To: <CANq1E4QGahjrxm5B59HGnrfO3LP4kV6bc27BKQDvnJ4HBKAFMg@mail.gmail.com>
+	(David Herrmann's message of "Mon, 9 Jan 2012 17:39:43 +0100")
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: David Herrmann <dh.herrmann@googlemail.com>
+Cc: Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Richard =?utf-8?Q?Sch=C3=BCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
 
-On Monday 09 Jan 2012 18:00:24 joeyli wrote:
-> I just checked and found I also have no AMW0_GUID2 machines on my hand,
-> now.
-> I have some questions about AMW0_GUID2:
-> 
->   + Why we enabled wireless capability in acer-wim if a non-acer machine has
-> AMW0_GUID2 ?
+David Herrmann <dh.herrmann@googlemail.com> writes:
+> On Sat, Jan 7, 2012 at 3:12 PM, Corentin Chary <corentincj@iksaif.net> wrote:
+>> On these laptops, the ACPI video is not functional, and very unlikely
+>> to be fixed by the vendor. Note that intel_backlight works for some
+>> of these laptops, and the backlight from samsung-laptop always work.
+>>
+>> The good news is that newer laptops have functional ACPI video device
+>> and won't end up growing this list.
+>>
+>> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+>> ---
+>>
+>> Could the concerned people test this patch and check that it correctly
+>> disable the acpi_video backlight ?
+>
+> Works like a charm on my N210 with linux-3.2. Feel free to add a:
+> Tested-by: David Herrmann <dh.herrmann@googlemail.com>
+>
+> I will talk to the intel drm developers about the intel_backlight
+> issues as they don't seem related to this driver.
 
-IIRC, there were some bug reports on non-Acer hardware (I don't think this 
-involved Acer hardware, but this was some time ago...) where the wireless 
-detection wasn't working with this, but if we forced it on, it worked fine.
+I can confirm on my N150 Plus.  Now only 'intel_backlight' is created
+and exhibits the aforementioned issues.
 
->   + I saw there have some magic number when you access AMW0_GUID1 (e.g.
-> 0x9610, eax, ebx, ecx) Could you please kindly teach me how can grab those
-> value for AMW0_GUID2? Does there have any useful dump or report log can
-> provide by hardware owner?
-
-Probably not. For AMW0_GUID1, I got the stuff by using the Windows Kernel 
-Debugger remotely to see what my laptop was doing when changing things in 
-Windows - unfortunately that relied on a firewire port on the laptop, which I 
-suspect most people don't have.
-
-The real problem is that I know almost nothing about AMW0_GUID2 - either what 
-it's used for or what it actually does, nor how hardware detection works with 
-it present (if at all).
-
--Carlos
+-- 
+Andrzej Prochyra
+<andrzej@prochyra.name>
