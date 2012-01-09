@@ -1,79 +1,39 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2
- machines
-Date: Mon, 09 Jan 2012 18:00:24 +0800
-Message-ID: <1326103224.24116.282.camel@linux-s257.site>
-References: <1326090677-25942-1-git-send-email-jlee@suse.com>
-	 <3474148.WRXZ4siLlh@valkyrie>
+From: David Herrmann <dh.herrmann@googlemail.com>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Mon, 9 Jan 2012 17:39:43 +0100
+Message-ID: <CANq1E4QGahjrxm5B59HGnrfO3LP4kV6bc27BKQDvnJ4HBKAFMg@mail.gmail.com>
+References: <20120105150832.GA25386@ubuntu-macmini>
+	<1325945558-4661-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:49327 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751427Ab2AIKEM (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Mon, 9 Jan 2012 05:04:12 -0500
-In-Reply-To: <3474148.WRXZ4siLlh@valkyrie>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1325945558-4661-1-git-send-email-corentincj@iksaif.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, =?ISO-8859-1?Q?Richard_Sch=FCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Carios,=20
+Hi Corentin
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2012-01-09 =E6=96=BC 08:01 +0000=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday 09 Jan 2012 14:31:17 Lee, Chun-Yi wrote:
-> > From: "Lee, Chun-Yi" <jlee@suse.com>
-> >=20
-> > Have many non-acer machines have AMW0_GUID2 method in DSDT, in
-> > original acer-wmi design, driver direct set ACER_CAP_WIRELESS flag
-> > for those machines but didn't check the functionality for set/get
-> > wireless state.
-> > It causes acer-wmi driver create a broken wireless rfkill and it
-> > already set to soft blocked.
-> >=20
-> > So, this patch add a wireless capability check before we set
-> > ACER_CAP_WIRELESS flag to the machines that were included AMW0_GUID=
-2.
-> > It avoid acer-wmi create a broken wireless rfkill.
-> >=20
-> > Thank's for Matthew Garrett give the idea.
-> >=20
-> > Reference: brc#674353
-> >         https://bugzilla.redhat.com/show_bug.cgi?id=3D674353
-> >=20
-> > Tested on Lenovo E520.
-> > Tested on Acer TravelMate 4750.
->=20
-> Is there really no other way to detect the availability of wireless o=
-n=20
-> hardware with that GUID without resorting to poking stuff to see if i=
-t sticks?
->=20
-> My assumption has always been that there must be of finding out, but =
-I've never=20
-> had the hardware to check that with.
->=20
-> -Carlos
->=20
->=20
+On Sat, Jan 7, 2012 at 3:12 PM, Corentin Chary <corentincj@iksaif.net> wrote:
+> On these laptops, the ACPI video is not functional, and very unlikely
+> to be fixed by the vendor. Note that intel_backlight works for some
+> of these laptops, and the backlight from samsung-laptop always work.
+>
+> The good news is that newer laptops have functional ACPI video device
+> and won't end up growing this list.
+>
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> ---
+>
+> Could the concerned people test this patch and check that it correctly
+> disable the acpi_video backlight ?
 
-I just checked and found I also have no AMW0_GUID2 machines on my hand,
-now.
-I have some questions about AMW0_GUID2:
+Works like a charm on my N210 with linux-3.2. Feel free to add a:
+Tested-by: David Herrmann <dh.herrmann@googlemail.com>
 
-  + Why we enabled wireless capability in acer-wim if a non-acer machin=
-e has AMW0_GUID2 ?
+I will talk to the intel drm developers about the intel_backlight
+issues as they don't seem related to this driver.
 
-  + I saw there have some magic number when you access AMW0_GUID1 (e.g.=
- 0x9610, eax, ebx, ecx)
-    Could you please kindly teach me how can grab those value for AMW0_=
-GUID2?
-    Does there have any useful dump or report log can provide by hardwa=
-re owner?
-
-
-Thanks a lot!
-Joey Lee
+Thanks
+David
