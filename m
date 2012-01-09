@@ -1,109 +1,51 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: Handling special keys in platform drivers
-Date: Mon, 9 Jan 2012 08:34:26 +0100
-Message-ID: <CAHR064juCt90x_4bqSE2FqRxO+4759Sh4_L54eKopP_UJpap9Q@mail.gmail.com>
-References: <CAHR064jAJkQCd_Tsrx7NHe_RbaBbNcX4sMwy=zkZCZNUNo=fAw@mail.gmail.com>
-	<1326092955.24116.131.camel@linux-s257.site>
+From: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2 machines
+Date: Mon, 09 Jan 2012 08:01:25 +0000
+Message-ID: <3474148.WRXZ4siLlh@valkyrie>
+References: <1326090677-25942-1-git-send-email-jlee@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:47381 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755512Ab2AIHe2 convert rfc822-to-8bit (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:52742 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751135Ab2AIIBa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jan 2012 02:34:28 -0500
-In-Reply-To: <1326092955.24116.131.camel@linux-s257.site>
+	Mon, 9 Jan 2012 03:01:30 -0500
+Received: by werm1 with SMTP id m1so2397159wer.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Jan 2012 00:01:29 -0800 (PST)
+In-Reply-To: <1326090677-25942-1-git-send-email-jlee@suse.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, linux-input@vger.kernel.org, GLin@suse.com
+To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-On Mon, Jan 9, 2012 at 8:09 AM, joeyli <jlee@suse.com> wrote:
-> Hi Corentin,
->
-> =E6=96=BC =E4=B8=80=EF=BC=8C2012-01-09 =E6=96=BC 07:24 +0100=EF=BC=8C=
-Corentin Chary =E6=8F=90=E5=88=B0=EF=BC=9A
->> Hi,
->>
->> Some of the platform drivers in platform/x86/ (and probably other) a=
-re
->> relaying keys to userspace and are also controlling the device
->> associated to these key. A simple example is screen brightness,
->> keyboard backlight or rfkill.
->>
->> In this case the driver send a key to userspace, userspace has to
->> handle this key and control the right device.
->>
->> Most of the time, this job is done by:
->> - ACPI scripts (legacy)
->> - DE (gnome-power-manager, kde's solid)
->>
->> The real problem is that for keyboard backlight to work, it needs DE
->> cooperation, and only gnome as implemented that right now, and other
->> (except KDE) will probably neither have the resources to handle all
->> the possible keys correctly. And of course, who should handle the ke=
-ys
->> when there is no DE running at all ?
->>
->> So I was wondering if we could introduce an "auto" mode for this
->> drivers. For example, with this mode enabled, asus-wmi would filter
->> the keys and control keyboard backlight directly (and rfkill/screen
->> brightness ?).
->>
->> What do you think about it ?
->>
->> Thanks,
->>
->
-> For backlight,
-> I think control backlight in platform driver is generally no problem,
-> but need careful don't keep/change brightness level if BIOS also keep=
- a
-> variable reflect to brightness level.
+On Monday 09 Jan 2012 14:31:17 Lee, Chun-Yi wrote:
+> From: "Lee, Chun-Yi" <jlee@suse.com>
+> 
+> Have many non-acer machines have AMW0_GUID2 method in DSDT, in
+> original acer-wmi design, driver direct set ACER_CAP_WIRELESS flag
+> for those machines but didn't check the functionality for set/get
+> wireless state.
+> It causes acer-wmi driver create a broken wireless rfkill and it
+> already set to soft blocked.
+> 
+> So, this patch add a wireless capability check before we set
+> ACER_CAP_WIRELESS flag to the machines that were included AMW0_GUID2.
+> It avoid acer-wmi create a broken wireless rfkill.
+> 
+> Thank's for Matthew Garrett give the idea.
+> 
+> Reference: brc#674353
+>         https://bugzilla.redhat.com/show_bug.cgi?id=674353
+> 
+> Tested on Lenovo E520.
+> Tested on Acer TravelMate 4750.
 
-Hum, for screen brightness, try to start without any desktop
-environment on a laptop where the keys don't control the BIOS and only
-send input events, and you won't be able to change the screen
-brightness.
+Is there really no other way to detect the availability of wireless on 
+hardware with that GUID without resorting to poking stuff to see if it sticks?
 
-This is actually worse for keyboard backlight since only gnome support =
-it.
+My assumption has always been that there must be of finding out, but I've never 
+had the hardware to check that with.
 
-> Another question is when the "auto" mode disable? Does it possible
-> disable it from user space?
-
-Probably only a module parameter. And disabled by default.
-
-> Currently, like rfkill-input can disabled by ioctl from user space, e=
-=2Eg.
-> urfkill daemon will disable rfkill-input by ioctl when it launched.
->
->
-> For rfkill,
-> I am not prefer allow platform driver direct control rfkill.
-
-Yeah rfkill was just an example, of such interaction, but your right
-rfkill support is currently pretty good.
-
-> that might more complex because already have the follow components
-> involve to it when function key pressed:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0BIOS/EC (ODM backup behavior)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0rfkill-input
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0wireless/bluetooth drivers
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0user space daemon/applications (e.g. Netwo=
-rkManager, urfkill...)
->
-> Then, will platform driver also involve to rfkill control?
->
-> We already have rfkill-input in kernel to control rfkill state, if ne=
-ed
-> more flexible policy control on rfkill key, put policy logic in user
-> space will be better.
-> e.g. User can setup rfkill policy by account.
-
-
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+-Carlos
