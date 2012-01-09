@@ -1,102 +1,83 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2 machines
-Date: Mon,  9 Jan 2012 14:31:17 +0800
-Message-ID: <1326090677-25942-1-git-send-email-jlee@suse.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-tul01m020-f174.google.com ([209.85.214.174]:40050 "EHLO
-	mail-tul01m020-f174.google.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751282Ab2AIGex (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jan 2012 01:34:53 -0500
-Received: by obcwo16 with SMTP id wo16so3641451obc.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Jan 2012 22:34:53 -0800 (PST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+From: joeyli <jlee@suse.com>
+Subject: Re: Handling special keys in platform drivers
+Date: Mon, 09 Jan 2012 15:09:15 +0800
+Message-ID: <1326092955.24116.131.camel@linux-s257.site>
+References: <CAHR064jAJkQCd_Tsrx7NHe_RbaBbNcX4sMwy=zkZCZNUNo=fAw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHR064jAJkQCd_Tsrx7NHe_RbaBbNcX4sMwy=zkZCZNUNo=fAw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>, linux-input@vger.kernel.org, GLin@suse.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: "Lee, Chun-Yi" <jlee@suse.com>
+Hi Corentin,=20
 
-Have many non-acer machines have AMW0_GUID2 method in DSDT, in
-original acer-wmi design, driver direct set ACER_CAP_WIRELESS flag
-for those machines but didn't check the functionality for set/get
-wireless state.
-It causes acer-wmi driver create a broken wireless rfkill and it
-already set to soft blocked.
+=E6=96=BC =E4=B8=80=EF=BC=8C2012-01-09 =E6=96=BC 07:24 +0100=EF=BC=8CCo=
+rentin Chary =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi,
+>=20
+> Some of the platform drivers in platform/x86/ (and probably other) ar=
+e
+> relaying keys to userspace and are also controlling the device
+> associated to these key. A simple example is screen brightness,
+> keyboard backlight or rfkill.
+>=20
+> In this case the driver send a key to userspace, userspace has to
+> handle this key and control the right device.
+>=20
+> Most of the time, this job is done by:
+> - ACPI scripts (legacy)
+> - DE (gnome-power-manager, kde's solid)
+>=20
+> The real problem is that for keyboard backlight to work, it needs DE
+> cooperation, and only gnome as implemented that right now, and other
+> (except KDE) will probably neither have the resources to handle all
+> the possible keys correctly. And of course, who should handle the key=
+s
+> when there is no DE running at all ?
+>=20
+> So I was wondering if we could introduce an "auto" mode for this
+> drivers. For example, with this mode enabled, asus-wmi would filter
+> the keys and control keyboard backlight directly (and rfkill/screen
+> brightness ?).
+>=20
+> What do you think about it ?
+>=20
+> Thanks,
+>=20
 
-So, this patch add a wireless capability check before we set
-ACER_CAP_WIRELESS flag to the machines that were included AMW0_GUID2.
-It avoid acer-wmi create a broken wireless rfkill.
+=46or backlight,=20
+I think control backlight in platform driver is generally no problem,
+but need careful don't keep/change brightness level if BIOS also keep a
+variable reflect to brightness level.
 
-Thank's for Matthew Garrett give the idea.
+Another question is when the "auto" mode disable? Does it possible
+disable it from user space?
+Currently, like rfkill-input can disabled by ioctl from user space, e.g=
+=2E
+urfkill daemon will disable rfkill-input by ioctl when it launched.
 
-Reference: brc#674353
-        https://bugzilla.redhat.com/show_bug.cgi?id=674353
 
-Tested on Lenovo E520.
-Tested on Acer TravelMate 4750.
+=46or rfkill,
+I am not prefer allow platform driver direct control rfkill.
 
-Tested-by: mr.kobzar <mr.kobzar@gmail.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |   33 ++++++++++++++++++++++++++++++++-
- 1 files changed, 32 insertions(+), 1 deletions(-)
+that might more complex because already have the follow components
+involve to it when function key pressed:
+	BIOS/EC (ODM backup behavior)
+	rfkill-input
+	wireless/bluetooth drivers
+	user space daemon/applications (e.g. NetworkManager, urfkill...)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 88dfecf..5dfa46a 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -678,6 +678,37 @@ static acpi_status AMW0_find_mailled(void)
- 	return AE_OK;
- }
- 
-+static void AMW0_GUID2_set_capabilities(void)
-+{
-+	acpi_status status;
-+	u32 original_state, new_state;
-+
-+	/* set wireless capability when detected has quirk */
-+	if (quirks->wireless > 0) {
-+		interface->capability |= ACER_CAP_WIRELESS;
-+		return;
-+	}
-+
-+	status = AMW0_get_u32(&original_state, ACER_CAP_WIRELESS);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	status = AMW0_set_u32(!original_state, ACER_CAP_WIRELESS);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	status = AMW0_get_u32(&new_state, ACER_CAP_WIRELESS);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	status = AMW0_set_u32(original_state, ACER_CAP_WIRELESS);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	if (new_state != original_state)
-+		interface->capability |= ACER_CAP_WIRELESS;
-+}
-+
- static acpi_status AMW0_set_capabilities(void)
- {
- 	struct wmab_args args;
-@@ -691,7 +722,7 @@ static acpi_status AMW0_set_capabilities(void)
- 	 * work.
- 	 */
- 	if (wmi_has_guid(AMW0_GUID2)) {
--		interface->capability |= ACER_CAP_WIRELESS;
-+		AMW0_GUID2_set_capabilities();
- 		return AE_OK;
- 	}
- 
--- 
-1.7.7
+Then, will platform driver also involve to rfkill control?
+
+We already have rfkill-input in kernel to control rfkill state, if need
+more flexible policy control on rfkill key, put policy logic in user
+space will be better.
+e.g. User can setup rfkill policy by account.
+
+
+Thanks a lot!
+Joey Lee
