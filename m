@@ -1,49 +1,73 @@
-From: Andrzej Prochyra <andrzej@prochyra.name>
-Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
-Date: Mon, 09 Jan 2012 22:34:06 +0000
-Message-ID: <878vlgjyjl.fsf@prochyra.name>
-References: <20120105150832.GA25386@ubuntu-macmini>
-	<1325945558-4661-1-git-send-email-corentincj@iksaif.net>
-	<CANq1E4QGahjrxm5B59HGnrfO3LP4kV6bc27BKQDvnJ4HBKAFMg@mail.gmail.com>
+From: Jonathan Nieder <jrnieder@gmail.com>
+Subject: [PATCH linux-3.1.y] ideapad: Check if acpi already handle backlight
+ power to avoid a page fault
+Date: Tue, 10 Jan 2012 18:42:56 -0600
+Message-ID: <20120111004256.GS22184@burratino>
+References: <CAFVLVSOp750X4L+qgR16Qc53V+jOKsxA-ujskx3K0BX9kQOzTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54636 "EHLO
-	relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755880Ab2AIWeO (ORCPT
+Received: from mail-gy0-f174.google.com ([209.85.160.174]:36551 "EHLO
+	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756710Ab2AKAh7 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jan 2012 17:34:14 -0500
-In-Reply-To: <CANq1E4QGahjrxm5B59HGnrfO3LP4kV6bc27BKQDvnJ4HBKAFMg@mail.gmail.com>
-	(David Herrmann's message of "Mon, 9 Jan 2012 17:39:43 +0100")
+	Tue, 10 Jan 2012 19:37:59 -0500
+Content-Disposition: inline
+In-Reply-To: <CAFVLVSOp750X4L+qgR16Qc53V+jOKsxA-ujskx3K0BX9kQOzTw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Herrmann <dh.herrmann@googlemail.com>
-Cc: Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Richard =?utf-8?Q?Sch=C3=BCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+To: stable@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Artem X <artem.brz@gmail.com>, Rene Bolldorf <xsecute@googlemail.com>, Matthew Garrett <mjg@redhat.com>, Ike Panhc <ike.pan@canonical.com>, Corentin Chary <corentin.chary@gmail.com>
 
-David Herrmann <dh.herrmann@googlemail.com> writes:
-> On Sat, Jan 7, 2012 at 3:12 PM, Corentin Chary <corentincj@iksaif.net> wrote:
->> On these laptops, the ACPI video is not functional, and very unlikely
->> to be fixed by the vendor. Note that intel_backlight works for some
->> of these laptops, and the backlight from samsung-laptop always work.
->>
->> The good news is that newer laptops have functional ACPI video device
->> and won't end up growing this list.
->>
->> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
->> ---
->>
->> Could the concerned people test this patch and check that it correctly
->> disable the acpi_video backlight ?
->
-> Works like a charm on my N210 with linux-3.2. Feel free to add a:
-> Tested-by: David Herrmann <dh.herrmann@googlemail.com>
->
-> I will talk to the intel drm developers about the intel_backlight
-> issues as they don't seem related to this driver.
+=46rom: Ren=C3=A9 Bollford <xsecute@googlemail.com>
+Date: Sun, 23 Oct 2011 09:56:42 +0200
 
-I can confirm on my N150 Plus.  Now only 'intel_backlight' is created
-and exhibits the aforementioned issues.
+commit d4afc7754a60b885b63ef23fd194984e2d53a4e6 upstream.
 
--- 
-Andrzej Prochyra
-<andrzej@prochyra.name>
+This patch avoid a page fault in the ideapad-laptop extras when
+turning the backlight power on or off.
+
+Signed-off-by: Rene Bolldorf <xsecute@googlemail.com>
+Signed-off-by: Matthew Garrett <mjg@redhat.com>
+Signed-off-by: Jonathan Nieder <jrnieder@gmail.com>
+Tested-by: Artem X <artem.brz@gmail.com>
+---
+Artem X wrote:
+
+> I've compiled vanilla 3.1.6 with that patch and turning off blackligh=
+t
+> was working.
+
+This fixes an oops reported by a few people in the new ideapad-laptop
+backlight driver.  See:
+
+ - http://thread.gmane.org/gmane.linux.kernel/1205259
+ - http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/2405
+ - http://bugs.debian.org/655377
+
+Luckily the ideapad-laptop backlight driver was introduced in
+v3.1-rc1~14^2~29, so older kernels do not have this bug.  Fix is
+already included in v3.2.
+
+ drivers/platform/x86/ideapad-laptop.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
+86/ideapad-laptop.c
+index 0c595410e788..0d94eec00f4d 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -493,6 +493,8 @@ static void ideapad_backlight_notify_power(struct i=
+deapad_private *priv)
+ 	unsigned long power;
+ 	struct backlight_device *blightdev =3D priv->blightdev;
+=20
++	if (!blightdev)
++		return;
+ 	if (read_ec_data(ideapad_handle, 0x18, &power))
+ 		return;
+ 	blightdev->props.power =3D power ? FB_BLANK_UNBLANK : FB_BLANK_POWERD=
+OWN;
+--=20
+1.7.8.3
