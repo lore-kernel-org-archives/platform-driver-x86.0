@@ -1,100 +1,173 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2
- machines
-Date: Wed, 11 Jan 2012 12:26:39 +0800
-Message-ID: <1326255999.16788.40.camel@linux-s257.site>
-References: <1326090677-25942-1-git-send-email-jlee@suse.com>
-	 <3474148.WRXZ4siLlh@valkyrie> <1326103224.24116.282.camel@linux-s257.site>
-	 <4607313.aZXtt4raMe@valkyrie>
+From: Andres Salomon <dilinger@queued.net>
+Subject: Re: [PATCH 1/1] alix2: supplement driver to include GPIO button
+ support
+Date: Wed, 11 Jan 2012 02:39:07 -0800
+Message-ID: <20120111023907.6665c72d@debxo>
+References: <1325896470-31094-1-git-send-email-philipp@redfish-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:50841 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932520Ab2AKEa0 (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Tue, 10 Jan 2012 23:30:26 -0500
-In-Reply-To: <4607313.aZXtt4raMe@valkyrie>
+Received: from lunge.queued.net ([173.255.254.236]:44009 "EHLO
+	lunge.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756905Ab2AKLUT (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 11 Jan 2012 06:20:19 -0500
+In-Reply-To: <1325896470-31094-1-git-send-email-philipp@redfish-solutions.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: Philip Prindeville <philipp@redfish-solutions.com>
+Cc: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2012-01-09 =E6=96=BC 22:15 +0000=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Monday 09 Jan 2012 18:00:24 joeyli wrote:
-> > I just checked and found I also have no AMW0_GUID2 machines on my h=
-and,
-> > now.
-> > I have some questions about AMW0_GUID2:
-> >=20
-> >   + Why we enabled wireless capability in acer-wim if a non-acer ma=
-chine has
-> > AMW0_GUID2 ?
->=20
-> IIRC, there were some bug reports on non-Acer hardware (I don't think=
- this=20
-> involved Acer hardware, but this was some time ago...) where the wire=
-less=20
-> detection wasn't working with this, but if we forced it on, it worked=
- fine.
->=20
+On Fri,  6 Jan 2012 17:34:30 -0700
+Philip Prindeville <philipp@redfish-solutions.com> wrote:
 
-Yes, in acer-wmi supported some non-acer machine by quirk and read EC
-register. That means we need find out EC register reflect to wifi RF
-state if we are lucky.
+> From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
+> 
+> GPIO 24 is used in reference designs as a soft-reset button, and
+> the alix2 is no exception. Add it as a gpio-button.
+> 
+> Use symbolic values to describe BIOS addresses.
+> 
+> Record the model number.
+> 
+> Signed-off-by: Philip A. Prindeville <philipp@redfish-solutions.com>
+> Acked-by: Ed Wildgoose <kernel@wildgooses.com>
+> ---
+>  arch/x86/platform/geode/alix.c |   53
+> ++++++++++++++++++++++++++++++++++++---- 1 files changed, 48
+> insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/platform/geode/alix.c
+> b/arch/x86/platform/geode/alix.c index dc5f1d3..a10476d42 100644
+> --- a/arch/x86/platform/geode/alix.c
+> +++ b/arch/x86/platform/geode/alix.c
+> @@ -6,6 +6,7 @@
+>   *
+>   * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
+>   * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
+> + *                and Philip Prindeville
+> <philipp@redfish-solutions.com> *
+>   * TODO: There are large similarities with leds-net5501.c
+>   * by Alessandro Zummo <a.zummo@towertech.it>
+> @@ -24,14 +25,49 @@
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
+> +#include <linux/input.h>
+> +#include <linux/gpio_keys.h>
+>  
+>  #include <asm/geode.h>
+>  
+> +#define BIOS_SIGNATURE_TINYBIOS		0x000f0000
+> +#define BIOS_SIGNATURE_COREBOOT		0x00000050
+> +#define BIOS_REGION_SIZE		0x00010000
 
-Unfortunately, direct enable wireless capability causes some non-acer
-machines' wireless rfkill always disabled. e.g. Lenovo E520
+No sense keeping the preceding 0s in those definitions; they just add
+noise.
 
-https://bugzilla.redhat.com/show_bug.cgi?id=3D674353=20
+> +
+> +static int model = 0;
 
-If we don't check the wireless capability, then they need manually add
-acer-wmi to backlist. On some lenovo machines, ideapad-laptop driver
-should support by lenovo's ACPI method.
+The 0 assignment is unnecessary; 0 is the default.
 
-> >   + I saw there have some magic number when you access AMW0_GUID1 (=
-e.g.
-> > 0x9610, eax, ebx, ecx) Could you please kindly teach me how can gra=
-b those
-> > value for AMW0_GUID2? Does there have any useful dump or report log=
- can
-> > provide by hardware owner?
->=20
-> Probably not. For AMW0_GUID1, I got the stuff by using the Windows Ke=
-rnel=20
-> Debugger remotely to see what my laptop was doing when changing thing=
-s in=20
-> Windows - unfortunately that relied on a firewire port on the laptop,=
- which I=20
-> suspect most people don't have.
->=20
+> +
+>  static bool force = 0;
+>  module_param(force, bool, 0444);
+>  /* FIXME: Award bios is not automatically detected as Alix platform
+> */ MODULE_PARM_DESC(force, "Force detection as ALIX.2/ALIX.3
+> platform"); 
+> +static struct gpio_keys_button alix_gpio_buttons[] = {
+> +	{
+> +		.code = KEY_RESTART,
+> +		.gpio = 24,
+> +		.active_low = 1,
+> +		.desc = "Reset button",
+> +		.type = EV_KEY,
+> +		.wakeup = 0,
+> +		.debounce_interval = 100,
+> +		.can_disable = 0,
+> +	}
+> +};
+> +
+> +static struct gpio_keys_platform_data alix_buttons_data = {
+> +	.buttons = alix_gpio_buttons,
+> +	.nbuttons = ARRAY_SIZE(alix_gpio_buttons),
+> +	.poll_interval = 20,
+> +};
+> +
+> +static struct platform_device alix_buttons_dev = {
+> +	.name = "gpio-keys-polled",
+> +	.id = 1,
+> +	.dev = {
+> +		.platform_data = &alix_buttons_data,
+> +	}
+> +};
+> +
+>  static struct gpio_led alix_leds[] = {
+>  	{
+>  		.name = "alix:1",
+> @@ -64,17 +100,22 @@ static struct platform_device alix_leds_dev = {
+>  	.dev.platform_data = &alix_leds_data,
+>  };
+>  
+> +static struct __initdata platform_device *alix_devs[] = {
+> +	&alix_buttons_dev,
+> +	&alix_leds_dev,
+> +};
+> +
+>  static void __init register_alix(void)
+>  {
+>  	/* Setup LED control through leds-gpio driver */
+> -	platform_device_register(&alix_leds_dev);
+> +	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
+>  }
+>  
+>  static int __init alix_present(unsigned long bios_phys,
+>  				const char *alix_sig,
+>  				size_t alix_sig_len)
+>  {
+> -	const size_t bios_len = 0x00010000;
+> +	const size_t bios_len = BIOS_REGION_SIZE;
+>  	const char *bios_virt;
+>  	const char *scan_end;
+>  	const char *p;
+> @@ -109,7 +150,9 @@ static int __init alix_present(unsigned long
+> bios_phys, *a = '\0';
+>  
+>  		tail = p + alix_sig_len;
+> -		if ((tail[0] == '2' || tail[0] == '3')) {
+> +		if ((tail[0] == '2' || tail[0] == '3' || tail[0] ==
+> '6')) {
+> +			model = tail[0] - '0';
 
-Thanks for your teach, but I never used Windows Kernel Debugger, if hav=
-e
-good chance, I will try.
+'model' is set here, but not used anywhere?
 
-Most of the state, bug reporter already removed OEM(Acer/Lenovo...)
-specific Windows and hard to remote debug the machine.
+> +
+>  			printk(KERN_INFO
+>  			       "%s: system is recognized as
+> \"%s\"\n", KBUILD_MODNAME, name);
+> @@ -128,8 +171,8 @@ static int __init alix_init(void)
+>  	if (!is_geode())
+>  		return 0;
+>  
+> -	if (alix_present(0xf0000, tinybios_sig, sizeof(tinybios_sig)
+> - 1) ||
+> -	    alix_present(0x500, coreboot_sig, sizeof(coreboot_sig) -
+> 1))
 
-> The real problem is that I know almost nothing about AMW0_GUID2 - eit=
-her what=20
-> it's used for or what it actually does, nor how hardware detection wo=
-rks with=20
-> it present (if at all).
->=20
-> -Carlos
->=20
-
-I also don't have any information about AMW0_GUID2, almost all modern
-Acer machine already removed AMW0_GUID2.
-
-My humbly request is:
-Please kindly accept this patch to acer-wmi, it can leave the wireless
-rfkill state control by BIOS or other platform driver, and don't need
-manually add acer-wmi to blacklist.
+Hm, this is 0x500 here...
 
 
-Thanks a lot!
-Joey Lee
+> +	if (alix_present(BIOS_SIGNATURE_TINYBIOS, tinybios_sig,
+> sizeof(tinybios_sig) - 1) ||
+> +	    alix_present(BIOS_SIGNATURE_COREBOOT, coreboot_sig,
+
+But the definition above for SIGNATURE_COREBOOT is 0x50.  Is that a
+typo?
+
+
+
+> sizeof(coreboot_sig) - 1)) register_alix();
+>  
+>  	return 0;
