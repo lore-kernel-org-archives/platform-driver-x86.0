@@ -1,198 +1,46 @@
-From: Philip Prindeville <philipp@redfish-solutions.com>
-Subject: [PATCH v2 1/1] geos: Platform driver for Geos and Geos2 single-board computers.
-Date: Sat, 14 Jan 2012 01:45:39 -0700
-Message-ID: <1326530739-5868-1-git-send-email-philipp@redfish-solutions.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: Handling special keys in platform drivers
+Date: Sat, 14 Jan 2012 09:58:58 +0100
+Message-ID: <CAHR064gU8MA9SuBFnGf47qH=AmKEeXA=NfsJAZ=YR9hWZxXAuA@mail.gmail.com>
+References: <CAHR064jAJkQCd_Tsrx7NHe_RbaBbNcX4sMwy=zkZCZNUNo=fAw@mail.gmail.com>
+	<20120113224211.GB29022@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.redfish-solutions.com ([66.232.79.143]:50185 "EHLO
-	mail.redfish-solutions.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753200Ab2ANIp7 (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:42010 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752634Ab2ANI7A (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Jan 2012 03:45:59 -0500
+	Sat, 14 Jan 2012 03:59:00 -0500
+In-Reply-To: <20120113224211.GB29022@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Andres Salomon <dilinger@queued.net>
-Cc: Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org
 
-From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
+On Fri, Jan 13, 2012 at 11:42 PM, Matthew Garrett <mjg@redhat.com> wrote:
+> On Mon, Jan 09, 2012 at 07:24:14AM +0100, Corentin Chary wrote:
+>
+>> The real problem is that for keyboard backlight to work, it needs DE
+>> cooperation, and only gnome as implemented that right now, and other
+>> (except KDE) will probably neither have the resources to handle all
+>> the possible keys correctly. And of course, who should handle the keys
+>> when there is no DE running at all ?
+>
+> The problem with handling this in kernel is that there isn't an
+> obviously correct policy. ACPI will typically only expose 16 or so
+> backlight levels so the behaviour is easy enough, but (depending on how
+> the hardware is wired up) i915 may expose around 20,000. Further, one
+> machine may expose different backlight controls for different displays,
+> and in that situation you need to know which one the input event is
+> expected to correspond to.
+>
+> Doing backlight control properly involves a lot of policy work, and I'm
+> reluctant to argue that that ought to be in the kernel.
 
-Trivial platform driver for Traverse Technologies Geos and Geos2
-single-board computers. Uses SMBIOS to identify platform.
-Based on progressive revisions of the leds-net5501 driver that
-was rewritten by Ed Wildgoose as a platform driver.
+But in the case of asus-wmi, that handle both the keys and the
+keyboard_backlight, could such handling be done in the kernel ?
 
-Supports GPIO-based LEDs (3) and 1 polled button which is
-typically used for a soft reset.
-
-Signed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
-Reviewed-by: Ed Wildgoose <ed@wildgooses.com>
-Acked-by: Andres Salomon <dilinger@queued.net>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- arch/x86/Kconfig                 |    7 ++
- arch/x86/platform/geode/Makefile |    1 +
- arch/x86/platform/geode/geos.c   |  128 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 136 insertions(+), 0 deletions(-)
- create mode 100644 arch/x86/platform/geode/geos.c
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 07c3f15..4ee921b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2168,6 +2168,13 @@ config ALIX
- 
- 	  Note: You have to set alix.force=1 for boards with Award BIOS.
- 
-+config GEOS
-+	bool "Traverse Technologies GEOS System Support (LEDS, GPIO, etc)"
-+	select GPIOLIB
-+	depends on DMI
-+	---help---
-+	  This option enables system support for the Traverse Technologies GEOS.
-+
- endif # X86_32
- 
- config AMD_NB
-diff --git a/arch/x86/platform/geode/Makefile b/arch/x86/platform/geode/Makefile
-index 07c9cd0..d8ba564 100644
---- a/arch/x86/platform/geode/Makefile
-+++ b/arch/x86/platform/geode/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ALIX)		+= alix.o
-+obj-$(CONFIG_GEOS)		+= geos.o
-diff --git a/arch/x86/platform/geode/geos.c b/arch/x86/platform/geode/geos.c
-new file mode 100644
-index 0000000..c2e6d53
---- /dev/null
-+++ b/arch/x86/platform/geode/geos.c
-@@ -0,0 +1,128 @@
-+/*
-+ * System Specific setup for Traverse Technologies GEOS.
-+ * At the moment this means setup of GPIO control of LEDs.
-+ *
-+ * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
-+ * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
-+ *                and Philip Prindeville <philipp@redfish-solutions.com>
-+ *
-+ * TODO: There are large similarities with leds-net5501.c
-+ * by Alessandro Zummo <a.zummo@towertech.it>
-+ * In the future leds-net5501.c should be migrated over to platform
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/string.h>
-+#include <linux/module.h>
-+#include <linux/leds.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/input.h>
-+#include <linux/gpio_keys.h>
-+#include <linux/dmi.h>
-+
-+#include <asm/geode.h>
-+
-+static struct gpio_keys_button geos_gpio_buttons[] = {
-+	{
-+		.code = KEY_RESTART,
-+		.gpio = 3,
-+		.active_low = 1,
-+		.desc = "Reset button",
-+		.type = EV_KEY,
-+		.wakeup = 0,
-+		.debounce_interval = 100,
-+		.can_disable = 0,
-+	}
-+};
-+static struct gpio_keys_platform_data geos_buttons_data = {
-+	.buttons = geos_gpio_buttons,
-+	.nbuttons = ARRAY_SIZE(geos_gpio_buttons),
-+	.poll_interval = 20,
-+};
-+
-+static struct platform_device geos_buttons_dev = {
-+	.name = "gpio-keys-polled",
-+	.id = 1,
-+	.dev = {
-+		.platform_data = &geos_buttons_data,
-+	}
-+};
-+
-+static struct gpio_led geos_leds[] = {
-+	{
-+		.name = "geos:1",
-+		.gpio = 6,
-+		.default_trigger = "default-on",
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "geos:2",
-+		.gpio = 25,
-+		.default_trigger = "default-off",
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "geos:3",
-+		.gpio = 27,
-+		.default_trigger = "default-off",
-+		.active_low = 1,
-+	},
-+};
-+
-+static struct gpio_led_platform_data geos_leds_data = {
-+	.num_leds = ARRAY_SIZE(geos_leds),
-+	.leds = geos_leds,
-+};
-+
-+static struct platform_device geos_leds_dev = {
-+	.name = "leds-gpio",
-+	.id = -1,
-+	.dev.platform_data = &geos_leds_data,
-+};
-+
-+static struct __initdata platform_device *geos_devs[] = {
-+	&geos_buttons_dev,
-+	&geos_leds_dev,
-+};
-+
-+static void __init register_geos(void)
-+{
-+	/* Setup LED control through leds-gpio driver */
-+	platform_add_devices(geos_devs, ARRAY_SIZE(geos_devs));
-+}
-+
-+static int __init geos_init(void)
-+{
-+	const char *vendor, *product;
-+
-+	if (!is_geode())
-+		return 0;
-+
-+	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-+	if (!vendor || strcmp(vendor, "Traverse Technologies"))
-+		return 0;
-+
-+	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	if (!product || strcmp(product, "Geos"))
-+		return 0;
-+
-+	printk(KERN_INFO "%s: system is recognized as \"%s %s\"\n",
-+	       KBUILD_MODNAME, vendor, product);
-+
-+	register_geos();
-+
-+	return 0;
-+}
-+
-+module_init(geos_init);
-+
-+MODULE_AUTHOR("Philip Prindeville <philipp@redfish-solutions.com>");
-+MODULE_DESCRIPTION("Traverse Technologies Geos System Setup");
-+MODULE_LICENSE("GPL");
 -- 
-1.7.7.4
+Corentin Chary
+http://xf.iksaif.net
