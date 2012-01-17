@@ -1,43 +1,91 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] toshiba_acpi: make one-bit bitfields unsigned
-Date: Sun, 15 Jan 2012 14:28:20 +0300
-Message-ID: <20120115112819.GC20463@elgon.mountain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from acsinet15.oracle.com ([141.146.126.227]:38854 "EHLO
-	acsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751707Ab2AOL2V (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 15 Jan 2012 06:28:21 -0500
-Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Tue, 17 Jan 2012 08:08:18 +0100
+Message-ID: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, David Herrmann <dh.herrmann@googlemail.com>, =?UTF-8?q?Richard=20Sch=C3=BCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This doesn't change how the code works, but it silences a Sparse
-complaint:
-drivers/platform/x86/toshiba_acpi.c:121:37: error: dubious one-bit signed bitfield
+On these laptops, the ACPI video is not functional, and very unlikely
+to be fixed by the vendor. Note that intel_backlight works for some
+of these laptops, and the backlight from samsung-laptop always work.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+The good news is that newer laptops have functional ACPI video device
+and won't end up growing this list.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index dcdc1f4..eab5e11 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -118,10 +118,10 @@ struct toshiba_acpi_dev {
- 	int last_key_event;
- 	int key_event_valid;
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+---
+ drivers/acpi/video_detect.c |   49 +++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 49 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 45d8097..66be45e 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 	return AE_OK;
+ }
  
--	int illumination_supported:1;
--	int video_supported:1;
--	int fan_supported:1;
--	int system_event_supported:1;
-+	unsigned int illumination_supported:1;
-+	unsigned int video_supported:1;
-+	unsigned int fan_supported:1;
-+	unsigned int system_event_supported:1;
- 
- 	struct mutex mutex;
- };
++/* Force to use vendor driver when the ACPI device is known to be
++ * buggy */
++static int video_detect_force_vendor(const struct dmi_system_id *d)
++{
++	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++	return 0;
++}
++
++static struct dmi_system_id video_detect_dmi_table[] = {
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "N150P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
++		},
++	},
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "N145P/N250P/N260P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
++		},
++	},
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "N150/N210/N220",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
++		},
++	},
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "NF110/NF210/NF310",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
++		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
++		},
++	},
++};
++
+ /*
+  * Returns the video capabilities of a specific ACPI graphics device
+  *
+@@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+ 		 *		ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+ 		 *}
+ 		 */
++
++		dmi_check_system(video_detect_dmi_table);
+ 	} else {
+ 		status = acpi_bus_get_device(graphics_handle, &tmp_dev);
+ 		if (ACPI_FAILURE(status)) {
+-- 
+1.7.5.4
