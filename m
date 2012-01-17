@@ -1,39 +1,52 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] dell-laptop: touchpad LED should persist its status after S3
-Date: Tue, 17 Jan 2012 16:18:06 +0800
-Message-ID: <1326788286-14531-1-git-send-email-acelan.kao@canonical.com>
+From: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Subject: Re: Fwd: Brightness on HP EliteBook 8460p
+Date: Tue, 17 Jan 2012 19:10:55 +0100
+Message-ID: <2185391.v0fsgiUWSx@pali>
+References: <3123346.jTQFjj4kVk@pali-elitebook> <1324440344.10394.444.camel@linux-s257.site> <9136713.SR1vWBOW6T@pali-elitebook>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart3845021.OxilRKdmFm"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:34432 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751939Ab2AQISM (ORCPT
+Received: from mail-ey0-f174.google.com ([209.85.215.174]:38157 "EHLO
+	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751159Ab2AQSLB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 17 Jan 2012 03:18:12 -0500
-Received: by ggdk6 with SMTP id k6so3009142ggd.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2012 00:18:11 -0800 (PST)
+	Tue, 17 Jan 2012 13:11:01 -0500
+In-Reply-To: <9136713.SR1vWBOW6T@pali-elitebook>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: joeyli <jlee@suse.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Touchpad LED will not turn on after S3, it will make the touchpad status
-doesn't consist with the LED.
-By adding one flag to let the LED device restore it's status.
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- drivers/platform/x86/dell-laptop.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+--nextPart3845021.OxilRKdmFm
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 7621ac2..92e42d4 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -642,6 +642,7 @@ static void touchpad_led_set(struct led_classdev *led_cdev,
- static struct led_classdev touchpad_led = {
- 	.name = "dell-laptop::touchpad",
- 	.brightness_set = touchpad_led_set,
-+	.flags = LED_CORE_SUSPENDRESUME,
- };
- 
- static int __devinit touchpad_led_init(struct device *dev)
--- 
-1.7.8.3
+On Wednesday 21 December 2011 12:45:07 Pali Roh=E1r wrote:
+> Hello,
+>=20
+> I tried to boot with all 3 strings in acpi_os_name, but nothing was c=
+hanged.
+> I'm attaching dmesg outputs, one from BIOS mode, one from UEFI mode. =
+Both
+> are with "Microsoft Windows NT".
+
+Did you looked at my logs?
+
+--=20
+Pali Roh=E1r
+pali.rohar@gmail.com
+--nextPart3845021.OxilRKdmFm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAk8Vua8ACgkQi/DJPQPkQ1KIQgCguRrnhDzqBdgFHDHA4l6Q/DLQ
+ViMAoJuA6thCy6Mms/tqo3Ve3sItMl1w
+=n66p
+-----END PGP SIGNATURE-----
+
+--nextPart3845021.OxilRKdmFm--
