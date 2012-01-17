@@ -1,91 +1,39 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: [PATCH] ACPI / Video: blacklist some samsung laptops
-Date: Tue, 17 Jan 2012 08:08:18 +0100
-Message-ID: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, David Herrmann <dh.herrmann@googlemail.com>, =?UTF-8?q?Richard=20Sch=C3=BCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
-List-Id: platform-driver-x86.vger.kernel.org
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] dell-laptop: touchpad LED should persist its status after S3
+Date: Tue, 17 Jan 2012 16:18:06 +0800
+Message-ID: <1326788286-14531-1-git-send-email-acelan.kao@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-gx0-f174.google.com ([209.85.161.174]:34432 "EHLO
+	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751939Ab2AQISM (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 17 Jan 2012 03:18:12 -0500
+Received: by ggdk6 with SMTP id k6so3009142ggd.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Jan 2012 00:18:11 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On these laptops, the ACPI video is not functional, and very unlikely
-to be fixed by the vendor. Note that intel_backlight works for some
-of these laptops, and the backlight from samsung-laptop always work.
+Touchpad LED will not turn on after S3, it will make the touchpad status
+doesn't consist with the LED.
+By adding one flag to let the LED device restore it's status.
 
-The good news is that newer laptops have functional ACPI video device
-and won't end up growing this list.
-
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/acpi/video_detect.c |   49 +++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 49 insertions(+), 0 deletions(-)
+ drivers/platform/x86/dell-laptop.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 45d8097..66be45e 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
- 	return AE_OK;
- }
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 7621ac2..92e42d4 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -642,6 +642,7 @@ static void touchpad_led_set(struct led_classdev *led_cdev,
+ static struct led_classdev touchpad_led = {
+ 	.name = "dell-laptop::touchpad",
+ 	.brightness_set = touchpad_led_set,
++	.flags = LED_CORE_SUSPENDRESUME,
+ };
  
-+/* Force to use vendor driver when the ACPI device is known to be
-+ * buggy */
-+static int video_detect_force_vendor(const struct dmi_system_id *d)
-+{
-+	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
-+	return 0;
-+}
-+
-+static struct dmi_system_id video_detect_dmi_table[] = {
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 .ident = "N150P",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 .ident = "N145P/N250P/N260P",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 .ident = "N150/N210/N220",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
-+		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
-+		},
-+	},
-+	{
-+	 .callback = video_detect_force_vendor,
-+	 .ident = "NF110/NF210/NF310",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
-+		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
-+		},
-+	},
-+};
-+
- /*
-  * Returns the video capabilities of a specific ACPI graphics device
-  *
-@@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
- 		 *		ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
- 		 *}
- 		 */
-+
-+		dmi_check_system(video_detect_dmi_table);
- 	} else {
- 		status = acpi_bus_get_device(graphics_handle, &tmp_dev);
- 		if (ACPI_FAILURE(status)) {
+ static int __devinit touchpad_led_init(struct device *dev)
 -- 
-1.7.5.4
+1.7.8.3
