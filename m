@@ -1,52 +1,101 @@
-From: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Subject: Re: Fwd: Brightness on HP EliteBook 8460p
-Date: Tue, 17 Jan 2012 19:10:55 +0100
-Message-ID: <2185391.v0fsgiUWSx@pali>
-References: <3123346.jTQFjj4kVk@pali-elitebook> <1324440344.10394.444.camel@linux-s257.site> <9136713.SR1vWBOW6T@pali-elitebook>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Tue, 17 Jan 2012 14:19:54 -0600
+Message-ID: <20120117201954.GC2257@ubuntu-macmini>
+References: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3845021.OxilRKdmFm"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ey0-f174.google.com ([209.85.215.174]:38157 "EHLO
-	mail-ey0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751159Ab2AQSLB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 17 Jan 2012 13:11:01 -0500
-In-Reply-To: <9136713.SR1vWBOW6T@pali-elitebook>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, David Herrmann <dh.herrmann@googlemail.com>, Richard =?utf-8?Q?Sch=C3=BCtz?= <r.schtz@t-online.de>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Tue, Jan 17, 2012 at 08:08:18AM +0100, Corentin Chary wrote:
+> On these laptops, the ACPI video is not functional, and very unlikely
+> to be fixed by the vendor. Note that intel_backlight works for some
+> of these laptops, and the backlight from samsung-laptop always work.
+> 
+> The good news is that newer laptops have functional ACPI video device
+> and won't end up growing this list.
+> 
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> ---
+>  drivers/acpi/video_detect.c |   49 +++++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 49 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+> index 45d8097..66be45e 100644
+> --- a/drivers/acpi/video_detect.c
+> +++ b/drivers/acpi/video_detect.c
+> @@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+>  	return AE_OK;
+>  }
+>  
+> +/* Force to use vendor driver when the ACPI device is known to be
+> + * buggy */
+> +static int video_detect_force_vendor(const struct dmi_system_id *d)
+> +{
+> +	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+> +	return 0;
+> +}
+> +
+> +static struct dmi_system_id video_detect_dmi_table[] = {
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N150P",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
+> +		},
+> +	},
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N145P/N250P/N260P",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
+> +		},
+> +	},
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "N150/N210/N220",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
+> +		},
+> +	},
+> +	{
+> +	 .callback = video_detect_force_vendor,
+> +	 .ident = "NF110/NF210/NF310",
+> +	 .matches = {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
+> +		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
+> +		},
+> +	},
+> +};
+> +
+>  /*
+>   * Returns the video capabilities of a specific ACPI graphics device
+>   *
+> @@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+>  		 *		ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+>  		 *}
+>  		 */
+> +
+> +		dmi_check_system(video_detect_dmi_table);
+>  	} else {
+>  		status = acpi_bus_get_device(graphics_handle, &tmp_dev);
+>  		if (ACPI_FAILURE(status)) {
+> -- 
+> 1.7.5.4
+> 
 
---nextPart3845021.OxilRKdmFm
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+This is working great on the NF310. Thanks!
 
-On Wednesday 21 December 2011 12:45:07 Pali Roh=E1r wrote:
-> Hello,
->=20
-> I tried to boot with all 3 strings in acpi_os_name, but nothing was c=
-hanged.
-> I'm attaching dmesg outputs, one from BIOS mode, one from UEFI mode. =
-Both
-> are with "Microsoft Windows NT".
-
-Did you looked at my logs?
-
---=20
-Pali Roh=E1r
-pali.rohar@gmail.com
---nextPart3845021.OxilRKdmFm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAk8Vua8ACgkQi/DJPQPkQ1KIQgCguRrnhDzqBdgFHDHA4l6Q/DLQ
-ViMAoJuA6thCy6Mms/tqo3Ve3sItMl1w
-=n66p
------END PGP SIGNATURE-----
-
---nextPart3845021.OxilRKdmFm--
