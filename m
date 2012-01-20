@@ -1,83 +1,109 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
- EliteBook 8560w)
-Date: Fri, 20 Jan 2012 11:35:53 +0800
-Message-ID: <1327030553.15960.92.camel@linux-s257.site>
-References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
-	 <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
-	 <1323442460.20114.95.camel@linux-s257.site>
-	 <CAEPe-G+iooX_BOD=5m1nMgn+t63XGsLR+4JCfvHKOyTx98qydg@mail.gmail.com>
-	 <1324443308.10394.456.camel@linux-s257.site>
-	 <CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
+From: Axel Lin <axel.lin@gmail.com>
+Subject: [PATCH RESEND] platform-drivers-x86: convert drivers/platform/x86/*
+ to use module_platform_driver()
+Date: Fri, 20 Jan 2012 21:12:22 +0800
+Message-ID: <1327065142.15205.4.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from victor.provo.novell.com ([137.65.250.26]:47197 "EHLO
-	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750752Ab2ATDj4 (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Thu, 19 Jan 2012 22:39:56 -0500
-In-Reply-To: <CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:47661 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751808Ab2ATNMa (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 20 Jan 2012 08:12:30 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Artur Flinta <aflinta@gmail.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Hong Liu <hong.liu@intel.com>, Durgadoss R <durgadoss.r@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
 
-Hi Artur,=20
+This patch converts the drivers in drivers/platform/x86/* to use the
+module_platform_driver() macro which makes the code smaller and a bit
+simpler.
 
-Sorry for I am late to reply you.
+Signed-off-by: Axel Lin <axel.lin@gmail.com>
+Cc: Hong Liu <hong.liu@intel.com>
+Cc: Durgadoss R <durgadoss.r@intel.com>
+Cc: Daniel Drake <dsd@laptop.org>
+Cc: Matthew Garrett <mjg@redhat.com>
+Acked-by: Durgadoss R <Durgadoss.r@intel.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c |   12 +-----------
+ drivers/platform/x86/intel_mid_thermal.c  |   13 +------------
+ drivers/platform/x86/xo1-rfkill.c         |   13 +------------
+ 3 files changed, 3 insertions(+), 35 deletions(-)
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2011-12-21 =E6=96=BC 10:42 +0100=EF=BC=8CAr=
-tur Flinta =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi Joey!
->=20
-> On Wed, Dec 21, 2011 at 5:55 AM, joeyli <jlee@suse.com> wrote:
-> > Could you please help to enable acpi debug log?
-> >        acpi.debug_level=3D0x2 acpi.debug_layer=3D0xFFFFFFFF
-> >
-> > Please attached dmesg and messages log that cover system boot and
-> > pressed brightness key a couple of times.
->=20
-> Added debug parameters, restarted, after GNOME loaded pressed dozen o=
-f
-> times brightness shortcuts... logs in attachment.
->=20
-
-Looks like the acpi debug level not enough, please kindly change acpi
-debug parameter to:
-	acpi.debug_level=3D0xF acpi.debug_layer=3D0xFFFFFFFF log_buf_len=3D5M
-
-And, please remember press brightness function key a couple of times
-before you dump the dmesg and messages log.
-
-> > And,
-> > Please also monitor does there have any value of gpe was increased =
-when
-> > you press brightness keys:
-> >
-> > watch -n 1 cat /sys/firmware/acpi/interrupts/gpe[012][0123456789ABC=
-DEF]
-> >
-> > Please tell me which gpe's value increased if you found.
->=20
-> Unfortunately none of values have changed (almost all stated 0, one 5=
-04).
->=20
-
-hmm..... that mean the brightness function key does not emit acpi/wmi
-event.
-
-Please help to check the raw scan code from the function key:
-
-	+ please add kernel parameter atkbd.softraw=3D0 to /boot/grub/menu.lis=
-t
-	+ please switch to console 1, then run:=20
-		showkey -s
-
-Press backlight function key and look at maybe have scan code capture b=
-y showkey.=20
-
-
-Thanks a lot!
-Joey lee
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index f1ae507..ff3de34 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -118,17 +118,7 @@ static struct platform_driver mfld_pb_driver = {
+ 	.remove	= __devexit_p(mfld_pb_remove),
+ };
+ 
+-static int __init mfld_pb_init(void)
+-{
+-	return platform_driver_register(&mfld_pb_driver);
+-}
+-module_init(mfld_pb_init);
+-
+-static void __exit mfld_pb_exit(void)
+-{
+-	platform_driver_unregister(&mfld_pb_driver);
+-}
+-module_exit(mfld_pb_exit);
++module_platform_driver(mfld_pb_driver);
+ 
+ MODULE_AUTHOR("Hong Liu <hong.liu@intel.com>");
+ MODULE_DESCRIPTION("Intel Medfield Power Button Driver");
+diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
+index ccd7b1f..e4cc992 100644
+--- a/drivers/platform/x86/intel_mid_thermal.c
++++ b/drivers/platform/x86/intel_mid_thermal.c
+@@ -565,18 +565,7 @@ static struct platform_driver mid_thermal_driver = {
+ 	.id_table = therm_id_table,
+ };
+ 
+-static int __init mid_thermal_module_init(void)
+-{
+-	return platform_driver_register(&mid_thermal_driver);
+-}
+-
+-static void __exit mid_thermal_module_exit(void)
+-{
+-	platform_driver_unregister(&mid_thermal_driver);
+-}
+-
+-module_init(mid_thermal_module_init);
+-module_exit(mid_thermal_module_exit);
++module_platform_driver(mid_thermal_driver);
+ 
+ MODULE_AUTHOR("Durgadoss R <durgadoss.r@intel.com>");
+ MODULE_DESCRIPTION("Intel Medfield Platform Thermal Driver");
+diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
+index e549eee..41781ed 100644
+--- a/drivers/platform/x86/xo1-rfkill.c
++++ b/drivers/platform/x86/xo1-rfkill.c
+@@ -67,19 +67,8 @@ static struct platform_driver xo1_rfkill_driver = {
+ 	.remove		= __devexit_p(xo1_rfkill_remove),
+ };
+ 
+-static int __init xo1_rfkill_init(void)
+-{
+-	return platform_driver_register(&xo1_rfkill_driver);
+-}
+-
+-static void __exit xo1_rfkill_exit(void)
+-{
+-	platform_driver_unregister(&xo1_rfkill_driver);
+-}
++module_platform_driver(xo1_rfkill_driver);
+ 
+ MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:xo1-rfkill");
+-
+-module_init(xo1_rfkill_init);
+-module_exit(xo1_rfkill_exit);
+-- 
+1.7.5.4
