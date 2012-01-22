@@ -1,109 +1,83 @@
-From: Axel Lin <axel.lin@gmail.com>
-Subject: [PATCH RESEND] platform-drivers-x86: convert drivers/platform/x86/*
- to use module_platform_driver()
-Date: Fri, 20 Jan 2012 21:12:22 +0800
-Message-ID: <1327065142.15205.4.camel@phoenix>
+From: joeyli <jlee@suse.com>
+Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
+ EliteBook 8560w)
+Date: Sun, 22 Jan 2012 09:45:27 +0800
+Message-ID: <1327196727.15960.118.camel@linux-s257.site>
+References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
+	 <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
+	 <1323442460.20114.95.camel@linux-s257.site>
+	 <CAEPe-G+iooX_BOD=5m1nMgn+t63XGsLR+4JCfvHKOyTx98qydg@mail.gmail.com>
+	 <1324443308.10394.456.camel@linux-s257.site>
+	 <CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
+	 <1327030553.15960.92.camel@linux-s257.site>
+	 <CAEPe-G+H6CDDzg9-fXZK4MJbKw_-MJFSMheCL9=yN4Gt=fmaTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:47661 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751808Ab2ATNMa (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Jan 2012 08:12:30 -0500
+Received: from victor.provo.novell.com ([137.65.250.26]:44802 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751052Ab2AVBtb (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Sat, 21 Jan 2012 20:49:31 -0500
+In-Reply-To: <CAEPe-G+H6CDDzg9-fXZK4MJbKw_-MJFSMheCL9=yN4Gt=fmaTQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Hong Liu <hong.liu@intel.com>, Durgadoss R <durgadoss.r@intel.com>, Daniel Drake <dsd@laptop.org>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org
+To: Artur Flinta <aflinta@gmail.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-This patch converts the drivers in drivers/platform/x86/* to use the
-module_platform_driver() macro which makes the code smaller and a bit
-simpler.
+=E6=96=BC =E4=BA=94=EF=BC=8C2012-01-20 =E6=96=BC 22:38 +0100=EF=BC=8CAr=
+tur Flinta =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi Joey!
+>=20
+> On Fri, Jan 20, 2012 at 4:35 AM, joeyli <jlee@suse.com> wrote:
+> > Sorry for I am late to reply you.
+>=20
+> No problem :)
+>=20
+> > Looks like the acpi debug level not enough, please kindly change ac=
+pi
+> > debug parameter to:
+> >        acpi.debug_level=3D0xF acpi.debug_layer=3D0xFFFFFFFF log_buf=
+_len=3D5M
+> >
+> > And, please remember press brightness function key a couple of time=
+s
+> > before you dump the dmesg and messages log.
+>=20
+> Cause the brightness function key does not emit acpi/wmi event I'll
+> skip this step.
+>=20
 
-Signed-off-by: Axel Lin <axel.lin@gmail.com>
-Cc: Hong Liu <hong.liu@intel.com>
-Cc: Durgadoss R <durgadoss.r@intel.com>
-Cc: Daniel Drake <dsd@laptop.org>
-Cc: Matthew Garrett <mjg@redhat.com>
-Acked-by: Durgadoss R <Durgadoss.r@intel.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c |   12 +-----------
- drivers/platform/x86/intel_mid_thermal.c  |   13 +------------
- drivers/platform/x86/xo1-rfkill.c         |   13 +------------
- 3 files changed, 3 insertions(+), 35 deletions(-)
+OK
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index f1ae507..ff3de34 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -118,17 +118,7 @@ static struct platform_driver mfld_pb_driver = {
- 	.remove	= __devexit_p(mfld_pb_remove),
- };
- 
--static int __init mfld_pb_init(void)
--{
--	return platform_driver_register(&mfld_pb_driver);
--}
--module_init(mfld_pb_init);
--
--static void __exit mfld_pb_exit(void)
--{
--	platform_driver_unregister(&mfld_pb_driver);
--}
--module_exit(mfld_pb_exit);
-+module_platform_driver(mfld_pb_driver);
- 
- MODULE_AUTHOR("Hong Liu <hong.liu@intel.com>");
- MODULE_DESCRIPTION("Intel Medfield Power Button Driver");
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index ccd7b1f..e4cc992 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -565,18 +565,7 @@ static struct platform_driver mid_thermal_driver = {
- 	.id_table = therm_id_table,
- };
- 
--static int __init mid_thermal_module_init(void)
--{
--	return platform_driver_register(&mid_thermal_driver);
--}
--
--static void __exit mid_thermal_module_exit(void)
--{
--	platform_driver_unregister(&mid_thermal_driver);
--}
--
--module_init(mid_thermal_module_init);
--module_exit(mid_thermal_module_exit);
-+module_platform_driver(mid_thermal_driver);
- 
- MODULE_AUTHOR("Durgadoss R <durgadoss.r@intel.com>");
- MODULE_DESCRIPTION("Intel Medfield Platform Thermal Driver");
-diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
-index e549eee..41781ed 100644
---- a/drivers/platform/x86/xo1-rfkill.c
-+++ b/drivers/platform/x86/xo1-rfkill.c
-@@ -67,19 +67,8 @@ static struct platform_driver xo1_rfkill_driver = {
- 	.remove		= __devexit_p(xo1_rfkill_remove),
- };
- 
--static int __init xo1_rfkill_init(void)
--{
--	return platform_driver_register(&xo1_rfkill_driver);
--}
--
--static void __exit xo1_rfkill_exit(void)
--{
--	platform_driver_unregister(&xo1_rfkill_driver);
--}
-+module_platform_driver(xo1_rfkill_driver);
- 
- MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:xo1-rfkill");
--
--module_init(xo1_rfkill_init);
--module_exit(xo1_rfkill_exit);
--- 
-1.7.5.4
+> > Please help to check the raw scan code from the function key:
+> >
+> >        + please add kernel parameter atkbd.softraw=3D0 to /boot/gru=
+b/menu.list
+> >        + please switch to console 1, then run:
+> >                showkey -s
+> >
+> > Press backlight function key and look at maybe have scan code captu=
+re by showkey.
+>=20
+> Brightness increase: 0xe0 0x54 0xe0 0xd4
+> Brightness decrease: 0xe0 0x4c 0xe0 0xcc
+>=20
+> Regards
+> Artur
+>=20
+
+#define KEY_BRIGHTNESSDOWN      224
+#define KEY_BRIGHTNESSUP        225
+
+Suggest you can try to run the following command before run X-windows:
+
+setkeycodes e054 224
+setkeycodes e04c 225
+
+If it works, then we can add the above rules to udev keymaps.
+
+
+Thanks a lot!
+Joey Lee
