@@ -1,126 +1,100 @@
 From: Andres Salomon <dilinger@queued.net>
-Subject: Re: [PATCH v2 1/1] geos: Platform driver for Geos and Geos2
- single-board computers.
-Date: Mon, 23 Jan 2012 03:13:30 -0800
-Message-ID: <20120123031330.441c7751@debxo>
-References: <1326530739-5868-1-git-send-email-philipp@redfish-solutions.com>
+Subject: Re: [PATCH v2 1/1] alix2: supplement driver to include GPIO button
+ support
+Date: Mon, 23 Jan 2012 03:09:39 -0800
+Message-ID: <20120123030939.2e8582e6@debxo>
+References: <1325896470-31094-1-git-send-email-philipp@redfish-solutions.com>
+	<1326524710-5024-1-git-send-email-philipp@redfish-solutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lunge.queued.net ([173.255.254.236]:60350 "EHLO
+Received: from lunge.queued.net ([173.255.254.236]:60342 "EHLO
 	lunge.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752946Ab2AWLQh (ORCPT
+	with ESMTP id S1752773Ab2AWLQh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Mon, 23 Jan 2012 06:16:37 -0500
-In-Reply-To: <1326530739-5868-1-git-send-email-philipp@redfish-solutions.com>
+In-Reply-To: <1326524710-5024-1-git-send-email-philipp@redfish-solutions.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Philip Prindeville <philipp@redfish-solutions.com>
-Cc: platform-driver-x86@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 
-On Sat, 14 Jan 2012 01:45:39 -0700
+On Sat, 14 Jan 2012 00:05:10 -0700
 Philip Prindeville <philipp@redfish-solutions.com> wrote:
 
 > From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
 > 
-> Trivial platform driver for Traverse Technologies Geos and Geos2
-> single-board computers. Uses SMBIOS to identify platform.
-> Based on progressive revisions of the leds-net5501 driver that
-> was rewritten by Ed Wildgoose as a platform driver.
+> GPIO 24 is used in reference designs as a soft-reset button, and
+> the alix2 is no exception. Add it as a gpio-button.
 > 
-> Supports GPIO-based LEDs (3) and 1 polled button which is
-> typically used for a soft reset.
+> Use symbolic values to describe BIOS addresses.
 > 
-> Signed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
-> Reviewed-by: Ed Wildgoose <ed@wildgooses.com>
+> Record the model number.
+> 
+> Redux: address Andres' review comments; make the model number
+> exported; add support for DMI detection of the board and manufacturer.
+> 
+> Signed-off-by: Philip A. Prindeville <philipp@redfish-solutions.com>
+> Acked-by: Ed Wildgoose <kernel@wildgooses.com>
 > Acked-by: Andres Salomon <dilinger@queued.net>
 
-Again, I hadn't Acked this..  However, it does look fine, so:
+I didn't Ack this.  I acked your other patch (the net5501 one).  Please
+don't add people's Acked-by unless they've responded to your specific
+patch with an "Acked-by: ...". 
 
-Acked-by: Andres Salomon <dilinger@queued.net>
 
 
 
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
 > ---
->  arch/x86/Kconfig                 |    7 ++
->  arch/x86/platform/geode/Makefile |    1 +
->  arch/x86/platform/geode/geos.c   |  128
-> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 136
-> insertions(+), 0 deletions(-) create mode 100644
-> arch/x86/platform/geode/geos.c
+>  arch/x86/platform/geode/alix.c |   80
+> +++++++++++++++++++++++++++++++++++++-- 1 files changed, 75
+> insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 07c3f15..4ee921b 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2168,6 +2168,13 @@ config ALIX
->  
->  	  Note: You have to set alix.force=1 for boards with Award
-> BIOS. 
-> +config GEOS
-> +	bool "Traverse Technologies GEOS System Support (LEDS, GPIO,
-> etc)"
-> +	select GPIOLIB
-> +	depends on DMI
-> +	---help---
-> +	  This option enables system support for the Traverse
-> Technologies GEOS. +
->  endif # X86_32
->  
->  config AMD_NB
-> diff --git a/arch/x86/platform/geode/Makefile
-> b/arch/x86/platform/geode/Makefile index 07c9cd0..d8ba564 100644
-> --- a/arch/x86/platform/geode/Makefile
-> +++ b/arch/x86/platform/geode/Makefile
-> @@ -1 +1,2 @@
->  obj-$(CONFIG_ALIX)		+= alix.o
-> +obj-$(CONFIG_GEOS)		+= geos.o
-> diff --git a/arch/x86/platform/geode/geos.c
-> b/arch/x86/platform/geode/geos.c new file mode 100644
-> index 0000000..c2e6d53
-> --- /dev/null
-> +++ b/arch/x86/platform/geode/geos.c
-> @@ -0,0 +1,128 @@
-> +/*
-> + * System Specific setup for Traverse Technologies GEOS.
-> + * At the moment this means setup of GPIO control of LEDs.
-> + *
-> + * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
-> + * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
+> diff --git a/arch/x86/platform/geode/alix.c
+> b/arch/x86/platform/geode/alix.c index dc5f1d3..e01f58b 100644
+> --- a/arch/x86/platform/geode/alix.c
+> +++ b/arch/x86/platform/geode/alix.c
+> @@ -6,6 +6,7 @@
+>   *
+>   * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
+>   * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
 > + *                and Philip Prindeville
-> <philipp@redfish-solutions.com>
-> + *
-> + * TODO: There are large similarities with leds-net5501.c
-> + * by Alessandro Zummo <a.zummo@towertech.it>
-> + * In the future leds-net5501.c should be migrated over to platform
-> + *
-> + * This program is free software; you can redistribute it and/or
-> modify
-> + * it under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/string.h>
-> +#include <linux/module.h>
-> +#include <linux/leds.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio.h>
+> <philipp@redfish-solutions.com> *
+>   * TODO: There are large similarities with leds-net5501.c
+>   * by Alessandro Zummo <a.zummo@towertech.it>
+> @@ -24,14 +25,52 @@
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
 > +#include <linux/input.h>
 > +#include <linux/gpio_keys.h>
+> +#ifdef CONFIG_DMI
 > +#include <linux/dmi.h>
+> +#endif
+
+The #ifdef is unnecessary, please drop it.
+
+
+>  
+>  #include <asm/geode.h>
+>  
+> +#define BIOS_SIGNATURE_TINYBIOS		0xf0000
+> +#define BIOS_SIGNATURE_COREBOOT		0x500
+> +#define BIOS_REGION_SIZE		0x10000
 > +
-> +#include <asm/geode.h>
+> +int alix_model;
+> +EXPORT_SYMBOL(alix_model);
 > +
-> +static struct gpio_keys_button geos_gpio_buttons[] = {
+>  static bool force = 0;
+>  module_param(force, bool, 0444);
+>  /* FIXME: Award bios is not automatically detected as Alix platform
+> */ MODULE_PARM_DESC(force, "Force detection as ALIX.2/ALIX.3
+> platform"); 
+> +static struct gpio_keys_button alix_gpio_buttons[] = {
 > +	{
 > +		.code = KEY_RESTART,
-> +		.gpio = 3,
+> +		.gpio = 24,
 > +		.active_low = 1,
 > +		.desc = "Reset button",
 > +		.type = EV_KEY,
@@ -129,88 +103,120 @@ Acked-by: Andres Salomon <dilinger@queued.net>
 > +		.can_disable = 0,
 > +	}
 > +};
-> +static struct gpio_keys_platform_data geos_buttons_data = {
-> +	.buttons = geos_gpio_buttons,
-> +	.nbuttons = ARRAY_SIZE(geos_gpio_buttons),
+> +static struct gpio_keys_platform_data alix_buttons_data = {
+> +	.buttons = alix_gpio_buttons,
+> +	.nbuttons = ARRAY_SIZE(alix_gpio_buttons),
 > +	.poll_interval = 20,
 > +};
 > +
-> +static struct platform_device geos_buttons_dev = {
+> +static struct platform_device alix_buttons_dev = {
 > +	.name = "gpio-keys-polled",
 > +	.id = 1,
 > +	.dev = {
-> +		.platform_data = &geos_buttons_data,
+> +		.platform_data = &alix_buttons_data,
 > +	}
 > +};
 > +
-> +static struct gpio_led geos_leds[] = {
-> +	{
-> +		.name = "geos:1",
-> +		.gpio = 6,
-> +		.default_trigger = "default-on",
-> +		.active_low = 1,
-> +	},
-> +	{
-> +		.name = "geos:2",
-> +		.gpio = 25,
-> +		.default_trigger = "default-off",
-> +		.active_low = 1,
-> +	},
-> +	{
-> +		.name = "geos:3",
-> +		.gpio = 27,
-> +		.default_trigger = "default-off",
-> +		.active_low = 1,
-> +	},
+>  static struct gpio_led alix_leds[] = {
+>  	{
+>  		.name = "alix:1",
+> @@ -64,17 +103,22 @@ static struct platform_device alix_leds_dev = {
+>  	.dev.platform_data = &alix_leds_data,
+>  };
+>  
+> +static struct __initdata platform_device *alix_devs[] = {
+> +	&alix_buttons_dev,
+> +	&alix_leds_dev,
 > +};
 > +
-> +static struct gpio_led_platform_data geos_leds_data = {
-> +	.num_leds = ARRAY_SIZE(geos_leds),
-> +	.leds = geos_leds,
-> +};
+>  static void __init register_alix(void)
+>  {
+>  	/* Setup LED control through leds-gpio driver */
+> -	platform_device_register(&alix_leds_dev);
+> +	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
+>  }
+>  
+>  static int __init alix_present(unsigned long bios_phys,
+>  				const char *alix_sig,
+>  				size_t alix_sig_len)
+>  {
+> -	const size_t bios_len = 0x00010000;
+> +	const size_t bios_len = BIOS_REGION_SIZE;
+>  	const char *bios_virt;
+>  	const char *scan_end;
+>  	const char *p;
+> @@ -109,7 +153,9 @@ static int __init alix_present(unsigned long
+> bios_phys, *a = '\0';
+>  
+>  		tail = p + alix_sig_len;
+> -		if ((tail[0] == '2' || tail[0] == '3')) {
+> +		if ((tail[0] == '2' || tail[0] == '3' || tail[0] ==
+> '6')) {
+> +			alix_model = tail[0] - '0';
 > +
-> +static struct platform_device geos_leds_dev = {
-> +	.name = "leds-gpio",
-> +	.id = -1,
-> +	.dev.platform_data = &geos_leds_data,
-> +};
-> +
-> +static struct __initdata platform_device *geos_devs[] = {
-> +	&geos_buttons_dev,
-> +	&geos_leds_dev,
-> +};
-> +
-> +static void __init register_geos(void)
+
+You never explained the point of this 'alix_model' (previously just
+'model') stuff.  It gets set by the driver, but is never used
+anywhere.  Does something actually make use of it?  If not, please
+remove unnecessary code.
+
+
+>  			printk(KERN_INFO
+>  			       "%s: system is recognized as
+> \"%s\"\n", KBUILD_MODNAME, name);
+> @@ -120,6 +166,29 @@ static int __init alix_present(unsigned long
+> bios_phys, return 0;
+>  }
+>  
+> +static int __init alix_present_dmi(void)
 > +{
-> +	/* Setup LED control through leds-gpio driver */
-> +	platform_add_devices(geos_devs, ARRAY_SIZE(geos_devs));
-> +}
+> +	char *vendor, *product;
 > +
-> +static int __init geos_init(void)
-> +{
-> +	const char *vendor, *product;
-> +
-> +	if (!is_geode())
-> +		return 0;
-> +
+> +#ifdef CONFIG_DMI
 > +	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-> +	if (!vendor || strcmp(vendor, "Traverse Technologies"))
-> +		return 0;
+> +	if (vendor && !strcmp(vendor, "PC Engines")) {
+
+This #ifdef should also be unnecessary.  If CONFIG_DMI is unset,
+dmi_get_system_info will be defined to return NULL.
+
+
+> +		product = dmi_get_system_info(DMI_PRODUCT_NAME);
+> +		if (product && (!strcmp(product, "ALIX.2D")
+> +			     || !strcmp(product, "ALIX.6"))) {
+> +			alix_model = product[5] - '0';
 > +
-> +	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-> +	if (!product || strcmp(product, "Geos"))
-> +		return 0;
+> +			printk(KERN_INFO "%s: system is recognized
+> as \"%s %s\"\n",
+> +			       KBUILD_MODNAME, vendor, product);
 > +
-> +	printk(KERN_INFO "%s: system is recognized as \"%s %s\"\n",
-> +	       KBUILD_MODNAME, vendor, product);
-> +
-> +	register_geos();
+> +			return 1;
+
+Perhaps return true here?  And change the type to 'bool' instead of
+'int'.
+
+> +		}
+> +	}
+> +#endif
 > +
 > +	return 0;
 > +}
 > +
-> +module_init(geos_init);
-> +
-> +MODULE_AUTHOR("Philip Prindeville <philipp@redfish-solutions.com>");
-> +MODULE_DESCRIPTION("Traverse Technologies Geos System Setup");
-> +MODULE_LICENSE("GPL");
+>  static int __init alix_init(void)
+>  {
+>  	const char tinybios_sig[] = "PC Engines ALIX.";
+> @@ -128,8 +197,9 @@ static int __init alix_init(void)
+>  	if (!is_geode())
+>  		return 0;
+>  
+> -	if (alix_present(0xf0000, tinybios_sig, sizeof(tinybios_sig)
+> - 1) ||
+> -	    alix_present(0x500, coreboot_sig, sizeof(coreboot_sig) -
+> 1))
+> +	if (alix_present(BIOS_SIGNATURE_TINYBIOS, tinybios_sig,
+> sizeof(tinybios_sig) - 1) ||
+> +	    alix_present(BIOS_SIGNATURE_COREBOOT, coreboot_sig,
+> sizeof(coreboot_sig) - 1) ||
+> +	    alix_present_dmi())
+>  		register_alix();
+>  
+>  	return 0;
