@@ -1,49 +1,216 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] Platform: samsung-laptop: add DMI information for Samsung
- N150 Plus
-Date: Mon, 23 Jan 2012 11:41:29 +0100
-Message-ID: <CAHR064iRcwwgwXkGYdcX_0z8b2cVuDj8JG8rb8_Hk3X9geBcNQ@mail.gmail.com>
-References: <87ty4ss0z4.fsf@prochyra.name>
-	<CAHR064h7a=RQq=p1J+gKpC5_6ow8ChUFFkC39HwtmerHaMksjw@mail.gmail.com>
-	<87ty4qdpna.fsf@prochyra.name>
-	<CAHR064gZdnmsMjhr3Vp3BumrkZ07FWgEADLLqqkxP_aCca5ZuQ@mail.gmail.com>
-	<20111226123308.GA11817@srcf.ucam.org>
+From: Andres Salomon <dilinger@queued.net>
+Subject: Re: [PATCH v2 1/1] geos: Platform driver for Geos and Geos2
+ single-board computers.
+Date: Mon, 23 Jan 2012 03:13:30 -0800
+Message-ID: <20120123031330.441c7751@debxo>
+References: <1326530739-5868-1-git-send-email-philipp@redfish-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:40233 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752057Ab2AWKlb (ORCPT
+Received: from lunge.queued.net ([173.255.254.236]:60350 "EHLO
+	lunge.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752946Ab2AWLQh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jan 2012 05:41:31 -0500
-In-Reply-To: <20111226123308.GA11817@srcf.ucam.org>
+	Mon, 23 Jan 2012 06:16:37 -0500
+In-Reply-To: <1326530739-5868-1-git-send-email-philipp@redfish-solutions.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Andrzej Prochyra <andrzej@prochyra.name>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Philip Prindeville <philipp@redfish-solutions.com>
+Cc: platform-driver-x86@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 
-On Mon, Dec 26, 2011 at 1:33 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Mon, Dec 26, 2011 at 10:51:36AM +0100, Corentin Chary wrote:
->> > (The MAINTAINERS file gives the git tree
->> > git://git.kernel.org/pub/scm/linux/kernel/git/mjg59/platform-drivers-x86.git
->> > in the X86 PLATFORM DRIVERS section but this does not seem to exist.)
->>
->> Matthew, should MAINTAINERS be updated with your new tree, or will you
->> re-create the kernel.org tree in the future ?
->
-> Should be updated. My mistake. I'll send a patch next week.
->
-> --
-> Matthew Garrett | mjg59@srcf.ucam.org
+On Sat, 14 Jan 2012 01:45:39 -0700
+Philip Prindeville <philipp@redfish-solutions.com> wrote:
 
-Ping ?
+> From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
+> 
+> Trivial platform driver for Traverse Technologies Geos and Geos2
+> single-board computers. Uses SMBIOS to identify platform.
+> Based on progressive revisions of the leds-net5501 driver that
+> was rewritten by Ed Wildgoose as a platform driver.
+> 
+> Supports GPIO-based LEDs (3) and 1 polled button which is
+> typically used for a soft reset.
+> 
+> Signed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
+> Reviewed-by: Ed Wildgoose <ed@wildgooses.com>
+> Acked-by: Andres Salomon <dilinger@queued.net>
 
-Also, do you think you'll send the current queue for 3.3-rcX or 3.4 ?
-(Some samsung-laptop users are asking me if it will be available in
-3.3)
+Again, I hadn't Acked this..  However, it does look fine, so:
 
-Thanks,
+Acked-by: Andres Salomon <dilinger@queued.net>
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+
+
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  arch/x86/Kconfig                 |    7 ++
+>  arch/x86/platform/geode/Makefile |    1 +
+>  arch/x86/platform/geode/geos.c   |  128
+> ++++++++++++++++++++++++++++++++++++++ 3 files changed, 136
+> insertions(+), 0 deletions(-) create mode 100644
+> arch/x86/platform/geode/geos.c
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 07c3f15..4ee921b 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2168,6 +2168,13 @@ config ALIX
+>  
+>  	  Note: You have to set alix.force=1 for boards with Award
+> BIOS. 
+> +config GEOS
+> +	bool "Traverse Technologies GEOS System Support (LEDS, GPIO,
+> etc)"
+> +	select GPIOLIB
+> +	depends on DMI
+> +	---help---
+> +	  This option enables system support for the Traverse
+> Technologies GEOS. +
+>  endif # X86_32
+>  
+>  config AMD_NB
+> diff --git a/arch/x86/platform/geode/Makefile
+> b/arch/x86/platform/geode/Makefile index 07c9cd0..d8ba564 100644
+> --- a/arch/x86/platform/geode/Makefile
+> +++ b/arch/x86/platform/geode/Makefile
+> @@ -1 +1,2 @@
+>  obj-$(CONFIG_ALIX)		+= alix.o
+> +obj-$(CONFIG_GEOS)		+= geos.o
+> diff --git a/arch/x86/platform/geode/geos.c
+> b/arch/x86/platform/geode/geos.c new file mode 100644
+> index 0000000..c2e6d53
+> --- /dev/null
+> +++ b/arch/x86/platform/geode/geos.c
+> @@ -0,0 +1,128 @@
+> +/*
+> + * System Specific setup for Traverse Technologies GEOS.
+> + * At the moment this means setup of GPIO control of LEDs.
+> + *
+> + * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
+> + * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
+> + *                and Philip Prindeville
+> <philipp@redfish-solutions.com>
+> + *
+> + * TODO: There are large similarities with leds-net5501.c
+> + * by Alessandro Zummo <a.zummo@towertech.it>
+> + * In the future leds-net5501.c should be migrated over to platform
+> + *
+> + * This program is free software; you can redistribute it and/or
+> modify
+> + * it under the terms of the GNU General Public License version 2
+> + * as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/string.h>
+> +#include <linux/module.h>
+> +#include <linux/leds.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/input.h>
+> +#include <linux/gpio_keys.h>
+> +#include <linux/dmi.h>
+> +
+> +#include <asm/geode.h>
+> +
+> +static struct gpio_keys_button geos_gpio_buttons[] = {
+> +	{
+> +		.code = KEY_RESTART,
+> +		.gpio = 3,
+> +		.active_low = 1,
+> +		.desc = "Reset button",
+> +		.type = EV_KEY,
+> +		.wakeup = 0,
+> +		.debounce_interval = 100,
+> +		.can_disable = 0,
+> +	}
+> +};
+> +static struct gpio_keys_platform_data geos_buttons_data = {
+> +	.buttons = geos_gpio_buttons,
+> +	.nbuttons = ARRAY_SIZE(geos_gpio_buttons),
+> +	.poll_interval = 20,
+> +};
+> +
+> +static struct platform_device geos_buttons_dev = {
+> +	.name = "gpio-keys-polled",
+> +	.id = 1,
+> +	.dev = {
+> +		.platform_data = &geos_buttons_data,
+> +	}
+> +};
+> +
+> +static struct gpio_led geos_leds[] = {
+> +	{
+> +		.name = "geos:1",
+> +		.gpio = 6,
+> +		.default_trigger = "default-on",
+> +		.active_low = 1,
+> +	},
+> +	{
+> +		.name = "geos:2",
+> +		.gpio = 25,
+> +		.default_trigger = "default-off",
+> +		.active_low = 1,
+> +	},
+> +	{
+> +		.name = "geos:3",
+> +		.gpio = 27,
+> +		.default_trigger = "default-off",
+> +		.active_low = 1,
+> +	},
+> +};
+> +
+> +static struct gpio_led_platform_data geos_leds_data = {
+> +	.num_leds = ARRAY_SIZE(geos_leds),
+> +	.leds = geos_leds,
+> +};
+> +
+> +static struct platform_device geos_leds_dev = {
+> +	.name = "leds-gpio",
+> +	.id = -1,
+> +	.dev.platform_data = &geos_leds_data,
+> +};
+> +
+> +static struct __initdata platform_device *geos_devs[] = {
+> +	&geos_buttons_dev,
+> +	&geos_leds_dev,
+> +};
+> +
+> +static void __init register_geos(void)
+> +{
+> +	/* Setup LED control through leds-gpio driver */
+> +	platform_add_devices(geos_devs, ARRAY_SIZE(geos_devs));
+> +}
+> +
+> +static int __init geos_init(void)
+> +{
+> +	const char *vendor, *product;
+> +
+> +	if (!is_geode())
+> +		return 0;
+> +
+> +	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
+> +	if (!vendor || strcmp(vendor, "Traverse Technologies"))
+> +		return 0;
+> +
+> +	product = dmi_get_system_info(DMI_PRODUCT_NAME);
+> +	if (!product || strcmp(product, "Geos"))
+> +		return 0;
+> +
+> +	printk(KERN_INFO "%s: system is recognized as \"%s %s\"\n",
+> +	       KBUILD_MODNAME, vendor, product);
+> +
+> +	register_geos();
+> +
+> +	return 0;
+> +}
+> +
+> +module_init(geos_init);
+> +
+> +MODULE_AUTHOR("Philip Prindeville <philipp@redfish-solutions.com>");
+> +MODULE_DESCRIPTION("Traverse Technologies Geos System Setup");
+> +MODULE_LICENSE("GPL");
