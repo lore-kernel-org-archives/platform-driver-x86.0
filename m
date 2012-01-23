@@ -1,42 +1,201 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH] acer-wmi: support for P key on TM8372
-Date: Tue, 24 Jan 2012 04:35:35 +0800
-Message-ID: <1327350935-19145-1-git-send-email-ike.pan@canonical.com>
+From: Andres Salomon <dilinger@queued.net>
+Subject: Re: [PATCH v3 1/1] alix2: supplement driver to include GPIO button
+ support
+Date: Mon, 23 Jan 2012 14:56:41 -0800
+Message-ID: <20120123145641.55a4bcf3@queued.net>
+References: <1327348589-9601-1-git-send-email-philipp@redfish-solutions.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:41971 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752564Ab2AWUfs (ORCPT
+Received: from lunge.queued.net ([173.255.254.236]:52474 "EHLO
+	lunge.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753871Ab2AWW4m (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jan 2012 15:35:48 -0500
+	Mon, 23 Jan 2012 17:56:42 -0500
+In-Reply-To: <1327348589-9601-1-git-send-email-philipp@redfish-solutions.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Merlin Schumacher <merlin.schumacher@gmail.com>, Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
+To: Philip Prindeville <philipp@redfish-solutions.com>
+Cc: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 
-From: Merlin Schumacher <merlin.schumacher@gmail.com>
+Thanks, looks good.
 
-BugLink: http://launchpad.net/bugs/865807
+Acked-by: Andres Salomon <dilinger@queued.net>
 
-There is no entry for P key on TM8372, so when P key is pressed, only
-"acer_wmi: Unknown key number - 0x29" in dmesg.
 
-Signed-off-by: Merlin Schumacher <merlin.schumacher@gmail.com>
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/acer-wmi.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On Mon, 23 Jan 2012 12:56:29 -0700
+Philip Prindeville <philipp@redfish-solutions.com> wrote:
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index b848277..d48262c 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -105,6 +105,7 @@ static const struct key_entry acer_wmi_keymap[] = {
- 	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
- 	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
- 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
-+	{KE_KEY, 0x29, {KEY_PROG3} },    /* P_Key for TM8372 */
- 	{KE_IGNORE, 0x41, {KEY_MUTE} },
- 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
- 	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
--- 
-1.7.5.4
+> From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
+> 
+> GPIO 24 is used in reference designs as a soft-reset button, and
+> the alix2 is no exception. Add it as a gpio-button.
+> 
+> Use symbolic values to describe BIOS addresses.
+> 
+> Record the model number.
+> 
+> Redux: address Andres' review comments; make the model number
+> exported; add support for DMI detection of the board and
+> manufacturer; change detection return type to bool; add comment
+> explaining that the model number is used by downstream drivers to
+> detect if we have RFKILL GPIO line to mini-PCIe slots (alix 6 only).
+> 
+> Signed-off-by: Philip A. Prindeville <philipp@redfish-solutions.com>
+> Acked-by: Ed Wildgoose <kernel@wildgooses.com>
+> Cc: Andres Salomon <dilinger@queued.net>
+> ---
+>  arch/x86/platform/geode/alix.c |   80
+> +++++++++++++++++++++++++++++++++++++-- 1 files changed, 75
+> insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/platform/geode/alix.c
+> b/arch/x86/platform/geode/alix.c index dc5f1d3..cb97c13 100644
+> --- a/arch/x86/platform/geode/alix.c
+> +++ b/arch/x86/platform/geode/alix.c
+> @@ -6,6 +6,7 @@
+>   *
+>   * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
+>   * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
+> + *                and Philip Prindeville
+> <philipp@redfish-solutions.com> *
+>   * TODO: There are large similarities with leds-net5501.c
+>   * by Alessandro Zummo <a.zummo@towertech.it>
+> @@ -24,14 +25,55 @@
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
+> +#include <linux/input.h>
+> +#include <linux/gpio_keys.h>
+> +#include <linux/dmi.h>
+>  
+>  #include <asm/geode.h>
+>  
+> +#define BIOS_SIGNATURE_TINYBIOS		0xf0000
+> +#define BIOS_SIGNATURE_COREBOOT		0x500
+> +#define BIOS_REGION_SIZE		0x10000
+> +
+> +/*
+> + * the 6F2 has an RFKILL GPIO line to the mini-PCIe slots that isn't
+> + * present on other Alix boards. Wifi drivers can use this symbol to
+> + * detect if it's available.
+> + */
+> +int alix_model;
+> +EXPORT_SYMBOL(alix_model);
+> +
+>  static bool force = 0;
+>  module_param(force, bool, 0444);
+>  /* FIXME: Award bios is not automatically detected as Alix platform
+> */ MODULE_PARM_DESC(force, "Force detection as ALIX.2/ALIX.3
+> platform"); 
+> +static struct gpio_keys_button alix_gpio_buttons[] = {
+> +	{
+> +		.code = KEY_RESTART,
+> +		.gpio = 24,
+> +		.active_low = 1,
+> +		.desc = "Reset button",
+> +		.type = EV_KEY,
+> +		.wakeup = 0,
+> +		.debounce_interval = 100,
+> +		.can_disable = 0,
+> +	}
+> +};
+> +static struct gpio_keys_platform_data alix_buttons_data = {
+> +	.buttons = alix_gpio_buttons,
+> +	.nbuttons = ARRAY_SIZE(alix_gpio_buttons),
+> +	.poll_interval = 20,
+> +};
+> +
+> +static struct platform_device alix_buttons_dev = {
+> +	.name = "gpio-keys-polled",
+> +	.id = 1,
+> +	.dev = {
+> +		.platform_data = &alix_buttons_data,
+> +	}
+> +};
+> +
+>  static struct gpio_led alix_leds[] = {
+>  	{
+>  		.name = "alix:1",
+> @@ -64,17 +106,22 @@ static struct platform_device alix_leds_dev = {
+>  	.dev.platform_data = &alix_leds_data,
+>  };
+>  
+> +static struct __initdata platform_device *alix_devs[] = {
+> +	&alix_buttons_dev,
+> +	&alix_leds_dev,
+> +};
+> +
+>  static void __init register_alix(void)
+>  {
+>  	/* Setup LED control through leds-gpio driver */
+> -	platform_device_register(&alix_leds_dev);
+> +	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
+>  }
+>  
+>  static int __init alix_present(unsigned long bios_phys,
+>  				const char *alix_sig,
+>  				size_t alix_sig_len)
+>  {
+> -	const size_t bios_len = 0x00010000;
+> +	const size_t bios_len = BIOS_REGION_SIZE;
+>  	const char *bios_virt;
+>  	const char *scan_end;
+>  	const char *p;
+> @@ -109,7 +156,9 @@ static int __init alix_present(unsigned long
+> bios_phys, *a = '\0';
+>  
+>  		tail = p + alix_sig_len;
+> -		if ((tail[0] == '2' || tail[0] == '3')) {
+> +		if ((tail[0] == '2' || tail[0] == '3' || tail[0] ==
+> '6')) {
+> +			alix_model = tail[0] - '0';
+> +
+>  			printk(KERN_INFO
+>  			       "%s: system is recognized as
+> \"%s\"\n", KBUILD_MODNAME, name);
+> @@ -120,6 +169,26 @@ static int __init alix_present(unsigned long
+> bios_phys, return 0;
+>  }
+>  
+> +static bool __init alix_present_dmi(void)
+> +{
+> +	char *vendor, *product;
+> +
+> +	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
+> +	if (!vendor || strcmp(vendor, "PC Engines"))
+> +		return false;
+> +
+> +	product = dmi_get_system_info(DMI_PRODUCT_NAME);
+> +	if (!product || (strcmp(product, "ALIX.2D") &&
+> strcmp(product, "ALIX.6")))
+> +		return false;
+> +
+> +	alix_model = product[5] - '0';
+> +
+> +	printk(KERN_INFO "%s: system is recognized as \"%s %s\"\n",
+> +	       KBUILD_MODNAME, vendor, product);
+> +
+> +	return true;
+> +}
+> +
+>  static int __init alix_init(void)
+>  {
+>  	const char tinybios_sig[] = "PC Engines ALIX.";
+> @@ -128,8 +197,9 @@ static int __init alix_init(void)
+>  	if (!is_geode())
+>  		return 0;
+>  
+> -	if (alix_present(0xf0000, tinybios_sig, sizeof(tinybios_sig)
+> - 1) ||
+> -	    alix_present(0x500, coreboot_sig, sizeof(coreboot_sig) -
+> 1))
+> +	if (alix_present(BIOS_SIGNATURE_TINYBIOS, tinybios_sig,
+> sizeof(tinybios_sig) - 1) ||
+> +	    alix_present(BIOS_SIGNATURE_COREBOOT, coreboot_sig,
+> sizeof(coreboot_sig) - 1) ||
+> +	    alix_present_dmi())
+>  		register_alix();
+>  
+>  	return 0;
