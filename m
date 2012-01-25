@@ -1,18 +1,18 @@
 From: Ike Panhc <ike.pan@canonical.com>
 Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2 machines
-Date: Wed, 25 Jan 2012 09:18:51 +0800
-Message-ID: <4F1F587B.4070500@canonical.com>
-References: <1326090677-25942-1-git-send-email-jlee@suse.com>  <3474148.WRXZ4siLlh@valkyrie> <1326103224.24116.282.camel@linux-s257.site>  <4607313.aZXtt4raMe@valkyrie> <1326255999.16788.40.camel@linux-s257.site>  <4F0DBEAE.4010707@canonical.com> <1326327709.18391.12.camel@linux-s257.site>
+Date: Wed, 25 Jan 2012 09:29:15 +0800
+Message-ID: <4F1F5AEB.9080602@canonical.com>
+References: <1326090677-25942-1-git-send-email-jlee@suse.com>  <3474148.WRXZ4siLlh@valkyrie> <1326103224.24116.282.camel@linux-s257.site>  <4607313.aZXtt4raMe@valkyrie> <1326255999.16788.40.camel@linux-s257.site>  <4F0DBEAE.4010707@canonical.com> <1327027494.15960.73.camel@linux-s257.site>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:46990 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:47013 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754957Ab2AYBTJ (ORCPT
+	with ESMTP id S1755293Ab2AYB30 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Jan 2012 20:19:09 -0500
-In-Reply-To: <1326327709.18391.12.camel@linux-s257.site>
+	Tue, 24 Jan 2012 20:29:26 -0500
+In-Reply-To: <1327027494.15960.73.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: joeyli <jlee@suse.com>
@@ -20,59 +20,9 @@ Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, mjg@redhat.com, platform-drive
 
 Hi Joey,
 
-sorry for replying late..
-
-
-=46or ideapad s205, I work with bug reporter at
-
-  http://launchpad.net/bugs/875659
-
-The bug reporter do not attach the DSDT, but I have a copy of acpidump =
-of s205 at
-
-  http://people.canonical.com/~ikepanhc/DSDTs/acpidump-ideapad-s205.dat
-
-and I backport this patch to 3.0 kernel and also cherry-pick=20
-  acer-wmi: check wireless capability flag before register
-
-and get the report which says the rfkill:phy0 is hard blocked by mistak=
-e
-
-  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/875659/comments/=
-33
-
-so that I have another kernel built without touching ec register, just =
-dont set ACER_CAP_WIRELESS
-and user reports everything looks fine.
-
-  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/875659/comments/=
-43
-
-
-=46or ideapad s12, I work with bug reporter at
-
-  http://launchpad.net/bugs/668234
-
-You can find acpi tables at
-
-  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/668234/+attachme=
-nt/1715424/+files/AcpiTables.txt
-
-With patched kernel, rfkill:phy0 is also hard blocked by mistake and it=
- can be unblocked by toggling the hardware radio switch
-
-   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/668234/comments=
-/12
-
-Again, I need to confirm its because we touch the ec register, so I ask=
- them to blacklist acer-wmi. User reports it looks fine, but rfkill:phy=
-0 hard blocked after couple of seconds and no idea why.
-
-   https://bugs.launchpad.net/ubuntu/+source/linux/+bug/668234/comments=
-/16
-
-
-On 01/12/2012 08:21 AM, joeyli wrote:
+On 01/20/2012 10:44 AM, joeyli wrote:
+> Hi Ike
+>=20
 > =E6=96=BC =E5=9B=9B=EF=BC=8C2012-01-12 =E6=96=BC 00:54 +0800=EF=BC=8C=
 Ike Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
 >> On 01/11/2012 12:26 PM, joeyli wrote:
@@ -120,13 +70,18 @@ y0 rfkill reports hard blocked by mistake. And few hours ago I get the =
 third report says the similar issue. I will summary the report.
 >>
 >=20
-> Please give more detail information (DSDT, EC register dump...), if
-> poking the ec register can block rfkill, means the AMW0_GUID1 works o=
-n
-> this machine, maybe we can try to find out which EC register reflect =
-to
-> wireless.
+> Do you mean the above 2 reports is use this patch? or actually it's
+> other problem?
+> Could you please kindly test this patch on issue machines?
 >=20
+
+Yes, I ask them to blacklist patched acer-wmi to confirm the problem.
+
+I am afraid that after we change the value of ec register, ec firmware =
+might do something unexpectedly. Since acer-wmi is loaded on lots of ma=
+chine with different EC, it might cause unexpected and different regres=
+sion on each machine.
+
 >> I am thinking about alternative way
 >>
 >> Since we have thinkpad_acpi and ideapad_laptop, both of them have rf=
@@ -136,14 +91,10 @@ ill be fine if we do not register rfkill in acer-wmi.
 >> Any thought?
 >>
 >=20
-> Yes, it's possible a solution. If you can make sure lenovo machines h=
-ave
-> VPC2004/IBM0068/LEN0068 in DSDT, then I will generate a patch to
-> acer-wmi.
+> It's also another idea.
 >=20
 >=20
-> Thanks
+> Thanks a lot!
 > Joey Lee
->=20
 >=20
 >=20
