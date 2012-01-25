@@ -1,49 +1,78 @@
-From: Philip Prindeville <philipp@redfish-solutions.com>
-Subject: Re: [PATCH v3 1/1] alix2: supplement driver to include GPIO button
- support
-Date: Wed, 25 Jan 2012 18:37:17 -0700
-Message-ID: <4F20AE4D.2040906@redfish-solutions.com>
-References: <1327348589-9601-1-git-send-email-philipp@redfish-solutions.com> <20120125145742.338086b8.akpm@linux-foundation.org> <4F208A70.1050709@redfish-solutions.com> <20120125151622.6621f6ce.akpm@linux-foundation.org> <4F20949F.1000602@redfish-solutions.com> <20120125170859.49cbf10b.akpm@linux-foundation.org>
+From: joeyli <jlee@suse.com>
+Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
+ EliteBook 8560w)
+Date: Wed, 25 Jan 2012 09:52:34 +0800
+Message-ID: <1327456354.15260.1.camel@linux-s257.site>
+References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
+	 <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
+	 <1323442460.20114.95.camel@linux-s257.site>
+	 <CAEPe-G+iooX_BOD=5m1nMgn+t63XGsLR+4JCfvHKOyTx98qydg@mail.gmail.com>
+	 <1324443308.10394.456.camel@linux-s257.site>
+	 <CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
+	 <1327030553.15960.92.camel@linux-s257.site>
+	 <CAEPe-G+H6CDDzg9-fXZK4MJbKw_-MJFSMheCL9=yN4Gt=fmaTQ@mail.gmail.com>
+	 <1327196727.15960.118.camel@linux-s257.site>
+	 <CAEPe-GKff7y1g4qc5gSz4vuhz5P0XpGgPTO570YzkjO6AZNV4A@mail.gmail.com>
+	 <1327276502.15960.150.camel@linux-s257.site>
+	 <CAEPe-G+jNsa5VScrk-Nii2e=0U5bVWtcCT5apOy0BAJrjKri4Q@mail.gmail.com>
+	 <1327366720.7090.7.camel@linux-s257.site>
+	 <CAEPe-GLe9d7V9YLq+gGpb8N+a-9ELzeuvLbr=gKFbWU4JJxV-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.redfish-solutions.com ([66.232.79.143]:53632 "EHLO
-	mail.redfish-solutions.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751863Ab2AZBhz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 25 Jan 2012 20:37:55 -0500
-In-Reply-To: <20120125170859.49cbf10b.akpm@linux-foundation.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Andres Salomon <dilinger@queued.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAEPe-GLe9d7V9YLq+gGpb8N+a-9ELzeuvLbr=gKFbWU4JJxV-Q@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Artur Flinta <aflinta@gmail.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 1/25/12 6:08 PM, Andrew Morton wrote:
->>> Out-of-tree drivers are unpopular.  Where is this driver, what is its
->>> license and what are the prospects of making it in-tree?
->>
->> It's complicated. Generic GPIO supports polled-keys for input, and LEDs for outputs as you know.
->>
->> There's no generic output mechanism for (say) an RFKILL line on the bus. If/when this materialized, I'll modify the alix driver to register that device in addition to the soft-reset button and the output LEDs (for the alix.6 device only).
->>
->> There's also a certain amount of churn going on right now in coreboot about supporting the 'alix.6' as a variant of the 'alix.2' (the coreboot build machinery doesn't support this, and we need to hack kconfig to make this happen, i.e. have kconfig be queryable from shell scripts like coreboot's abuild)... so for now most people burn an alix.2 coreboot image onto their alix.6.
->>
->> So there's a chain of dependencies that need to be resolved to get the ideal solution in place... but not wanting the perfect be the enemy of the good, I wanted to get what's available today out there with the caveat that something better is in the pipeline.
-> 
-> That didn't really answer my question about the whereabouts of the
-> mystery wireless driver.  Oh well, it doesn't matter much.
+=E6=96=BC =E4=BA=8C=EF=BC=8C2012-01-24 =E6=96=BC 16:25 +0100=EF=BC=8CAr=
+tur Flinta =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hi!
+>=20
+> > Thanks, but looks like your kernel didn't enable
+> >        CONFIG_ACPI_DEBUG=3Dy
+> >
+> > So, doesn't show up any acpi debug log in messages.
+>=20
+> Fixed, now using kernel-debug package ;) Quite huge in attachment.
+>=20
 
-Oh, yeah, sorry.  The driver is currently only in my tree, though I had wanted to get it into OpenWRT but after having even linux-atm upstream patches not get retrofitted into the OpenWRT sources, I've given up on submitting additional patches.
+I just found the _BCM in your SSDT3 table, I am tracing it:
 
-The short answer was that in a perfect world, I won't need the out-of-tree driver and will be able to do everything in the alix2.c platform driver when GPIO support for non-button-or-LED-thingies gets added... at which point alix_model can be deprecated.
+            Method (_BCM, 1, Serialized)
+            {
+                Store (\_SB.BCM, Arg0)
+                Local0
+                If (Local0)
+                {
+                    Store (BRID, Local1)
+                    If (LEqual (SBRV (), 0x00))
+                    {
+                        \_SB.SSMI (0xEA74, 0x04, Local1, 0x00, 0x00)
+                    }
 
->>> I don't personally have problems with helping out-of-tree drivers but
->>> making it EXPORT_SYMBOL_GPL() would set minds at rest.
->>
->> Ok.  I'll make that patch and resubmit...
-> 
-> Add a comment there too, otherwise someone will come along and zap it.
-> 
+                    Signal (\_SB.BEVT)
+                }
+            }
 
-Ok, will do.
+> > Does it work set backlight level by sysfs?
+> >        echo 9 > /sys/class/backlight/acpi_video0/brightness
+>=20
+> if kernel is booted with acpi_backlight=3Dvendor parameter, then ther=
+e
+> are no entries in  /sys/class/backlight directory.
+>=20
+
+OH! you are right, sorry I forgot it.
+
+
+Thanks a lot!
+Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
