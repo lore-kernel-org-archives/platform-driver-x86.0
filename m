@@ -1,100 +1,82 @@
 From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] acer-wmi: check wireless capability on AMW0_GUID2 machines
-Date: Wed, 25 Jan 2012 09:29:15 +0800
-Message-ID: <4F1F5AEB.9080602@canonical.com>
-References: <1326090677-25942-1-git-send-email-jlee@suse.com>  <3474148.WRXZ4siLlh@valkyrie> <1326103224.24116.282.camel@linux-s257.site>  <4607313.aZXtt4raMe@valkyrie> <1326255999.16788.40.camel@linux-s257.site>  <4F0DBEAE.4010707@canonical.com> <1327027494.15960.73.camel@linux-s257.site>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH] acer-wmi: No wifi rfkill on Lenovo machines
+Date: Wed, 25 Jan 2012 09:57:07 +0800
+Message-ID: <1327456627-10369-1-git-send-email-ike.pan@canonical.com>
+References: <1327027494.15960.73.camel@linux-s257.site>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:47013 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:47061 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755293Ab2AYB30 (ORCPT
+	with ESMTP id S1755776Ab2AYB51 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Jan 2012 20:29:26 -0500
+	Tue, 24 Jan 2012 20:57:27 -0500
 In-Reply-To: <1327027494.15960.73.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: joeyli <jlee@suse.com>
 Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-Hi Joey,
+We have several reports which says acer-wmi is loaded on ideapads
+and register rfkill for wifi which can not be unblocked.
 
-On 01/20/2012 10:44 AM, joeyli wrote:
-> Hi Ike
->=20
-> =E6=96=BC =E5=9B=9B=EF=BC=8C2012-01-12 =E6=96=BC 00:54 +0800=EF=BC=8C=
-Ike Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
->> On 01/11/2012 12:26 PM, joeyli wrote:
->>> =E6=96=BC =E4=B8=80=EF=BC=8C2012-01-09 =E6=96=BC 22:15 +0000=EF=BC=8C=
-Carlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
->>>> On Monday 09 Jan 2012 18:00:24 joeyli wrote:
->>>>> I just checked and found I also have no AMW0_GUID2 machines on my=
- hand,
->>>>> now.
->>>>> I have some questions about AMW0_GUID2:
->>>>>
->>>>>   + Why we enabled wireless capability in acer-wim if a non-acer =
-machine has
->>>>> AMW0_GUID2 ?
->>>>
->>>> IIRC, there were some bug reports on non-Acer hardware (I don't th=
-ink this=20
->>>> involved Acer hardware, but this was some time ago...) where the w=
-ireless=20
->>>> detection wasn't working with this, but if we forced it on, it wor=
-ked fine.
->>>>
->>>
->>> Yes, in acer-wmi supported some non-acer machine by quirk and read =
-EC
->>> register. That means we need find out EC register reflect to wifi R=
-=46
->>> state if we are lucky.
->>>
->>> Unfortunately, direct enable wireless capability causes some non-ac=
-er
->>> machines' wireless rfkill always disabled. e.g. Lenovo E520
->>>
->>> https://bugzilla.redhat.com/show_bug.cgi?id=3D674353=20
->>>
->>> If we don't check the wireless capability, then they need manually =
-add
->>> acer-wmi to backlist. On some lenovo machines, ideapad-laptop drive=
-r
->>> should support by lenovo's ACPI method.
->>>
->>
->> I've got two reports which says after poking the ec register, the ph=
-y0 rfkill reports hard blocked by mistake. And few hours ago I get the =
-third report says the similar issue. I will summary the report.
->>
->=20
-> Do you mean the above 2 reports is use this patch? or actually it's
-> other problem?
-> Could you please kindly test this patch on issue machines?
->=20
+Since ideapad-laptop also register rfkill for wifi and it works
+reliably, it will be fine acer-wmi is not going to register rfkill
+for wifi once VPC2004 is found.
 
-Yes, I ask them to blacklist patched acer-wmi to confirm the problem.
+Also put IBM0068/LEN0068 in the list. Though thinkpad_acpi has no
+wifi rfkill capability, there are reports which says acer-wmi also
+block wireless on Thinkpad E520/E420.
 
-I am afraid that after we change the value of ec register, ec firmware =
-might do something unexpectedly. Since acer-wmi is loaded on lots of ma=
-chine with different EC, it might cause unexpected and different regres=
-sion on each machine.
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/acer-wmi.c |   29 ++++++++++++++++++++++++++++-
+ 1 files changed, 28 insertions(+), 1 deletions(-)
 
->> I am thinking about alternative way
->>
->> Since we have thinkpad_acpi and ideapad_laptop, both of them have rf=
-kill capability. If there is VPC2004/IBM0068/LEN0068 in DSDT, then it w=
-ill be fine if we do not register rfkill in acer-wmi.
->>
->> Any thought?
->>
->=20
-> It's also another idea.
->=20
->=20
-> Thanks a lot!
-> Joey Lee
->=20
->=20
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index b848277..aaef8f8 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -679,6 +679,32 @@ static acpi_status AMW0_find_mailled(void)
+ 	return AE_OK;
+ }
+ 
++static int AMW0_set_cap_acpi_check_device_found = 0;
++
++static acpi_status AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
++	u32 level, void *context, void **retval)
++{
++	AMW0_set_cap_acpi_check_device_found = 1;
++	return AE_OK;
++}
++
++static const struct acpi_device_id norfkill_ids[] = {
++	{ "VPC2004", 0},
++	{ "IBM0068", 0},
++	{ "LEN0068", 0},
++	{ "", 0},
++};
++
++static int AMW0_set_cap_acpi_check_device(void)
++{
++	const struct acpi_device_id *id;
++
++	for (id = norfkill_ids; id->id[0]; id++)
++		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
++				NULL, NULL);
++	return AMW0_set_cap_acpi_check_device_found;
++}
++
+ static acpi_status AMW0_set_capabilities(void)
+ {
+ 	struct wmab_args args;
+@@ -692,7 +718,8 @@ static acpi_status AMW0_set_capabilities(void)
+ 	 * work.
+ 	 */
+ 	if (wmi_has_guid(AMW0_GUID2)) {
+-		interface->capability |= ACER_CAP_WIRELESS;
++		if (!AMW0_set_cap_acpi_check_device())
++			interface->capability |= ACER_CAP_WIRELESS;
+ 		return AE_OK;
+ 	}
+ 
+-- 
+1.7.5.4
