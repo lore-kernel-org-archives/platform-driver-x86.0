@@ -1,78 +1,61 @@
 From: joeyli <jlee@suse.com>
-Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
- EliteBook 8560w)
-Date: Wed, 25 Jan 2012 09:52:34 +0800
-Message-ID: <1327456354.15260.1.camel@linux-s257.site>
-References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
-	 <CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
-	 <1323442460.20114.95.camel@linux-s257.site>
-	 <CAEPe-G+iooX_BOD=5m1nMgn+t63XGsLR+4JCfvHKOyTx98qydg@mail.gmail.com>
-	 <1324443308.10394.456.camel@linux-s257.site>
-	 <CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
-	 <1327030553.15960.92.camel@linux-s257.site>
-	 <CAEPe-G+H6CDDzg9-fXZK4MJbKw_-MJFSMheCL9=yN4Gt=fmaTQ@mail.gmail.com>
-	 <1327196727.15960.118.camel@linux-s257.site>
-	 <CAEPe-GKff7y1g4qc5gSz4vuhz5P0XpGgPTO570YzkjO6AZNV4A@mail.gmail.com>
-	 <1327276502.15960.150.camel@linux-s257.site>
-	 <CAEPe-G+jNsa5VScrk-Nii2e=0U5bVWtcCT5apOy0BAJrjKri4Q@mail.gmail.com>
-	 <1327366720.7090.7.camel@linux-s257.site>
-	 <CAEPe-GLe9d7V9YLq+gGpb8N+a-9ELzeuvLbr=gKFbWU4JJxV-Q@mail.gmail.com>
+Subject: Re: [PATCH] acer-wmi: support for P key on TM8372
+Date: Thu, 26 Jan 2012 10:28:41 +0800
+Message-ID: <1327544921.15260.7.camel@linux-s257.site>
+References: <1327350935-19145-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAEPe-GLe9d7V9YLq+gGpb8N+a-9ELzeuvLbr=gKFbWU4JJxV-Q@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Artur Flinta <aflinta@gmail.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from victor.provo.novell.com ([137.65.250.26]:46248 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751597Ab2AZCdP (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Wed, 25 Jan 2012 21:33:15 -0500
+In-Reply-To: <1327350935-19145-1-git-send-email-ike.pan@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Merlin Schumacher <merlin.schumacher@gmail.com>, Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
 
-=E6=96=BC =E4=BA=8C=EF=BC=8C2012-01-24 =E6=96=BC 16:25 +0100=EF=BC=8CAr=
-tur Flinta =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hi!
+Hi Ike,
+
+=E6=96=BC =E4=BA=8C=EF=BC=8C2012-01-24 =E6=96=BC 04:35 +0800=EF=BC=8CIk=
+e Panhc =E6=8F=90=E5=88=B0=EF=BC=9A
+> From: Merlin Schumacher <merlin.schumacher@gmail.com>
 >=20
-> > Thanks, but looks like your kernel didn't enable
-> >        CONFIG_ACPI_DEBUG=3Dy
-> >
-> > So, doesn't show up any acpi debug log in messages.
+> BugLink: http://launchpad.net/bugs/865807
 >=20
-> Fixed, now using kernel-debug package ;) Quite huge in attachment.
+> There is no entry for P key on TM8372, so when P key is pressed, only
+> "acer_wmi: Unknown key number - 0x29" in dmesg.
 >=20
+> Signed-off-by: Merlin Schumacher <merlin.schumacher@gmail.com>
+> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
 
-I just found the _BCM in your SSDT3 table, I am tracing it:
+Reviewed-by: Lee, Chun-Yi <jlee@suse.com>
 
-            Method (_BCM, 1, Serialized)
-            {
-                Store (\_SB.BCM, Arg0)
-                Local0
-                If (Local0)
-                {
-                    Store (BRID, Local1)
-                    If (LEqual (SBRV (), 0x00))
-                    {
-                        \_SB.SSMI (0xEA74, 0x04, Local1, 0x00, 0x00)
-                    }
-
-                    Signal (\_SB.BEVT)
-                }
-            }
-
-> > Does it work set backlight level by sysfs?
-> >        echo 9 > /sys/class/backlight/acpi_video0/brightness
+> ---
+>  drivers/platform/x86/acer-wmi.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 >=20
-> if kernel is booted with acpi_backlight=3Dvendor parameter, then ther=
-e
-> are no entries in  /sys/class/backlight directory.
->=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index b848277..d48262c 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -105,6 +105,7 @@ static const struct key_entry acer_wmi_keymap[] =3D=
+ {
+>  	{KE_KEY, 0x22, {KEY_PROG2} },    /* Arcade */
+>  	{KE_KEY, 0x23, {KEY_PROG3} },    /* P_Key */
+>  	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
+> +	{KE_KEY, 0x29, {KEY_PROG3} },    /* P_Key for TM8372 */
+>  	{KE_IGNORE, 0x41, {KEY_MUTE} },
+>  	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
+>  	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
 
-OH! you are right, sorry I forgot it.
+This patch has no problem, but could you please provide the dmidecode
+result to me for reference?
 
 
 Thanks a lot!
 Joey Lee
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
