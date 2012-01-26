@@ -1,48 +1,36 @@
-From: Artur Flinta <aflinta@gmail.com>
-Subject: Re: Fwd: [Bugreport] Screen backllight issues on FirePro M5950 (HP
- EliteBook 8560w)
-Date: Thu, 26 Jan 2012 07:43:45 +0100
-Message-ID: <CAEPe-GKHvm+6vG=PJxLg1-cDD8HF-8rMnrmhg-eTEXaTfsQUmw@mail.gmail.com>
-References: <CAEPe-G+b9U-vdDmU29=GjyABab=5-MzWm4U6pBj1upRgLjH1OQ@mail.gmail.com>
-	<CAGB3EUR750VpHdvrZ25mn9bcS-4ZT+BSJ_zD4-sRncyYNT=0Zg@mail.gmail.com>
-	<1323442460.20114.95.camel@linux-s257.site>
-	<CAEPe-G+iooX_BOD=5m1nMgn+t63XGsLR+4JCfvHKOyTx98qydg@mail.gmail.com>
-	<1324443308.10394.456.camel@linux-s257.site>
-	<CAEPe-GLzak+SG3-H4Sw8KsQmpsh-v0UJWfHQb7hXoycO0GoWTA@mail.gmail.com>
-	<1327030553.15960.92.camel@linux-s257.site>
-	<CAEPe-G+H6CDDzg9-fXZK4MJbKw_-MJFSMheCL9=yN4Gt=fmaTQ@mail.gmail.com>
-	<1327196727.15960.118.camel@linux-s257.site>
-	<CAEPe-GKff7y1g4qc5gSz4vuhz5P0XpGgPTO570YzkjO6AZNV4A@mail.gmail.com>
-	<1327276502.15960.150.camel@linux-s257.site>
-	<CAEPe-G+jNsa5VScrk-Nii2e=0U5bVWtcCT5apOy0BAJrjKri4Q@mail.gmail.com>
-	<1327366720.7090.7.camel@linux-s257.site>
-	<CAEPe-GLe9d7V9YLq+gGpb8N+a-9ELzeuvLbr=gKFbWU4JJxV-Q@mail.gmail.com>
-	<1327456354.15260.1.camel@linux-s257.site>
+From: Ed Wildgoose <ed@wildgooses.com>
+Subject: Re: [PATCH v3 1/1] alix2: supplement driver to include GPIO button
+ support
+Date: Thu, 26 Jan 2012 10:15:08 +0000
+Message-ID: <4F2127AC.8060407@wildgooses.com>
+References: <1327348589-9601-1-git-send-email-philipp@redfish-solutions.com> <20120125145742.338086b8.akpm@linux-foundation.org> <4F208A70.1050709@redfish-solutions.com> <20120125151622.6621f6ce.akpm@linux-foundation.org> <4F20949F.1000602@redfish-solutions.com> <20120125170859.49cbf10b.akpm@linux-foundation.org> <4F20AE4D.2040906@redfish-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1327456354.15260.1.camel@linux-s257.site>
-Sender: linux-acpi-owner@vger.kernel.org
-To: joeyli <jlee@suse.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail1.nippynetworks.com ([91.220.24.129]:34564 "EHLO
+	mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751650Ab2AZKPL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 26 Jan 2012 05:15:11 -0500
+In-Reply-To: <4F20AE4D.2040906@redfish-solutions.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Philip Prindeville <philipp@redfish-solutions.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Andres Salomon <dilinger@queued.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>
 
-Hi!
+On 26/01/2012 01:37, Philip Prindeville wrote:
+> On 1/25/12 6:08 PM, Andrew Morton wrote:
+>
+>> That didn't really answer my question about the whereabouts of the
+>> mystery wireless driver.  Oh well, it doesn't matter much.
+> Oh, yeah, sorry.  The driver is currently only in my tree, though I had wanted to get it into OpenWRT but after having even linux-atm upstream patches not get retrofitted into the OpenWRT sources, I've given up on submitting additional patches.
+>
 
-> I just found the _BCM in your SSDT3 table, I am tracing it:
+Any chance you would post the driver somewhere public so it's archived 
+for other hackers to play with?
 
-How can I help now?
-Or I have to just wait for patch? ;)
+Cheers for all your work on the Alix stuff - it still seems to have a 
+lot of life left, so thanks for working on it
 
-Regards
-Artur
-
---=20
-Ka=C5=BCdy problem ma swoje rozwi=C4=85zanie, zatem
-je=C5=BCeli nie ma rozwi=C4=85zania to nie ma problemu.
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ed W
