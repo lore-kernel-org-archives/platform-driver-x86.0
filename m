@@ -1,99 +1,193 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: [PATCH] intel_mid_powerbtn: use MSIC read/write instead of ipc_scu
-Date: Thu, 26 Jan 2012 17:40:27 +0000
-Message-ID: <20120126174021.16810.63743.stgit@bob.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Philip Prindeville <philipp@redfish-solutions.com>
+Subject: [PATCH v4 1/1] alix2: supplement driver to include GPIO button support
+Date: Thu, 26 Jan 2012 18:31:42 -0700
+Message-ID: <1327627902-18417-1-git-send-email-philipp@redfish-solutions.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:55303 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752614Ab2AZR0z (ORCPT
+Received: from mail.redfish-solutions.com ([66.232.79.143]:54261 "EHLO
+	mail.redfish-solutions.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751301Ab2A0Bc1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Jan 2012 12:26:55 -0500
+	Thu, 26 Jan 2012 20:32:27 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Andres Salomon <dilinger@queued.net>
+Cc: Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
 
-From: Michael Demeter <michael.demeter@intel.com>
+From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
 
-In the 2.6.36 kernel we did not have the MSIC driver. Changed
-all ipc_scu_reads/writes to use the MSIC driver and defines.
-Added a fix from the 2.6.36 kernel where the SCU FW could send
-a power button interrupt to the IA32 FW and the kernel was not
-running yet. This resulted in the interrupt not getting cleared
-and the power button was ignored. this fix just clears the
-interrupt on start-up.
+GPIO 24 is used in reference designs as a soft-reset button, and
+the alix2 is no exception. Add it as a gpio-button.
 
-Signed-off-by: Michael Demeter <michael.demeter@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Revert style-only changes. Remove unused variable. Fix comment style.]
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Alan Cox <alan@linux.intel.com>
+Use symbolic values to describe BIOS addresses.
+
+Record the model number.
+
+Changes v2 and v3 per Andres:
+Use DMI to detect the board instead of proposed coreboot library;
+Don't make including <linux/dmi.h> conditional on CONFIG_DMI;
+Ditto for calling dmi_get_system_info() in alix_present_dmi();
+Make alix_present() and alix_present_dmi() return bool;
+
+Changes v4 per Andrew:
+Remove alix_model as this can be patched downstream where it's needed
+  anyway (ultimately, RFFILL will be supported by a new generic gpio
+  class);
+
+Signed-off-by: Philip A. Prindeville <philipp@redfish-solutions.com>
+Acked-by: Ed Wildgoose <kernel@wildgooses.com>
+Acked-by: Andres Salomon <dilinger@queued.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
+ arch/x86/platform/geode/alix.c |   78 ++++++++++++++++++++++++++++++++++-----
+ 1 files changed, 68 insertions(+), 10 deletions(-)
 
- drivers/platform/x86/intel_mid_powerbtn.c |   32 +++++++++++++++++++++++++----
- 1 files changed, 28 insertions(+), 4 deletions(-)
-
-
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index f1ae507..0903a88 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -23,21 +23,27 @@
- #include <linux/slab.h>
+diff --git a/arch/x86/platform/geode/alix.c b/arch/x86/platform/geode/alix.c
+index dc5f1d3..b0bc9a1 100644
+--- a/arch/x86/platform/geode/alix.c
++++ b/arch/x86/platform/geode/alix.c
+@@ -6,6 +6,7 @@
+  *
+  * Copyright (C) 2008 Constantin Baranov <const@mimas.ru>
+  * Copyright (C) 2011 Ed Wildgoose <kernel@wildgooses.com>
++ *                and Philip Prindeville <philipp@redfish-solutions.com>
+  *
+  * TODO: There are large similarities with leds-net5501.c
+  * by Alessandro Zummo <a.zummo@towertech.it>
+@@ -24,14 +25,47 @@
+ #include <linux/leds.h>
  #include <linux/platform_device.h>
- #include <linux/input.h>
--
--#include <asm/intel_scu_ipc.h>
-+#include <linux/mfd/intel_msic.h>
+ #include <linux/gpio.h>
++#include <linux/input.h>
++#include <linux/gpio_keys.h>
++#include <linux/dmi.h>
  
- #define DRIVER_NAME "msic_power_btn"
+ #include <asm/geode.h>
  
--#define MSIC_PB_STATUS	0x3f
- #define MSIC_PB_LEVEL	(1 << 3) /* 1 - release, 0 - press */
- 
-+/*
-+ * MSIC document ti_datasheet defines the 1st bit reg 0x21 is used to mask
-+ * power button interrupt
-+ */
-+#define MSIC_PWRBTNM    (1 << 0)
++#define BIOS_SIGNATURE_TINYBIOS		0xf0000
++#define BIOS_SIGNATURE_COREBOOT		0x500
++#define BIOS_REGION_SIZE		0x10000
 +
- static irqreturn_t mfld_pb_isr(int irq, void *dev_id)
+ static bool force = 0;
+ module_param(force, bool, 0444);
+ /* FIXME: Award bios is not automatically detected as Alix platform */
+ MODULE_PARM_DESC(force, "Force detection as ALIX.2/ALIX.3 platform");
+ 
++static struct gpio_keys_button alix_gpio_buttons[] = {
++	{
++		.code = KEY_RESTART,
++		.gpio = 24,
++		.active_low = 1,
++		.desc = "Reset button",
++		.type = EV_KEY,
++		.wakeup = 0,
++		.debounce_interval = 100,
++		.can_disable = 0,
++	}
++};
++static struct gpio_keys_platform_data alix_buttons_data = {
++	.buttons = alix_gpio_buttons,
++	.nbuttons = ARRAY_SIZE(alix_gpio_buttons),
++	.poll_interval = 20,
++};
++
++static struct platform_device alix_buttons_dev = {
++	.name = "gpio-keys-polled",
++	.id = 1,
++	.dev = {
++		.platform_data = &alix_buttons_data,
++	}
++};
++
+ static struct gpio_led alix_leds[] = {
+ 	{
+ 		.name = "alix:1",
+@@ -64,17 +98,22 @@ static struct platform_device alix_leds_dev = {
+ 	.dev.platform_data = &alix_leds_data,
+ };
+ 
++static struct __initdata platform_device *alix_devs[] = {
++	&alix_buttons_dev,
++	&alix_leds_dev,
++};
++
+ static void __init register_alix(void)
  {
- 	struct input_dev *input = dev_id;
- 	int ret;
- 	u8 pbstat;
+ 	/* Setup LED control through leds-gpio driver */
+-	platform_device_register(&alix_leds_dev);
++	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
+ }
  
--	ret = intel_scu_ipc_ioread8(MSIC_PB_STATUS, &pbstat);
-+	ret = intel_msic_reg_read(INTEL_MSIC_PBSTATUS, &pbstat);
-+	dev_dbg(input->dev.parent, "PB_INT status= %d\n", pbstat);
-+
- 	if (ret < 0) {
- 		dev_err(input->dev.parent, "Read error %d while reading"
- 			       " MSIC_PB_STATUS\n", ret);
-@@ -88,6 +94,24 @@ static int __devinit mfld_pb_probe(struct platform_device *pdev)
+-static int __init alix_present(unsigned long bios_phys,
++static bool __init alix_present(unsigned long bios_phys,
+ 				const char *alix_sig,
+ 				size_t alix_sig_len)
+ {
+-	const size_t bios_len = 0x00010000;
++	const size_t bios_len = BIOS_REGION_SIZE;
+ 	const char *bios_virt;
+ 	const char *scan_end;
+ 	const char *p;
+@@ -84,7 +123,7 @@ static int __init alix_present(unsigned long bios_phys,
+ 		printk(KERN_NOTICE "%s: forced to skip BIOS test, "
+ 		       "assume system is ALIX.2/ALIX.3\n",
+ 		       KBUILD_MODNAME);
+-		return 1;
++		return true;
  	}
  
- 	platform_set_drvdata(pdev, input);
-+
-+	/*
-+	 * SCU firmware might send power button interrupts to IA core before
-+	 * kernel boots and doesn't get EOI from IA core. The first bit of
-+	 * MSIC reg 0x21 is kept masked, and SCU firmware doesn't send new
-+	 * power interrupt to Android kernel. Unmask the bit when probing
-+	 * power button in kernel.
-+	 * There is a very narrow race between irq handler and power button
-+	 * initialization. The race happens rarely. So we needn't worry
-+	 * about it.
-+	 */
-+	error = intel_msic_reg_update(INTEL_MSIC_IRQLVL1MSK, 0, MSIC_PWRBTNM);
-+	if (error) {
-+		dev_err(&pdev->dev, "Unable to clear power button interrupt, "
-+				"error: %d\n", error);
-+		goto err_free_irq;
-+	}
-+
- 	return 0;
+ 	bios_virt = phys_to_virt(bios_phys);
+@@ -109,18 +148,36 @@ static int __init alix_present(unsigned long bios_phys,
+ 			*a = '\0';
  
- err_free_irq:
+ 		tail = p + alix_sig_len;
+-		if ((tail[0] == '2' || tail[0] == '3')) {
++		if ((tail[0] == '2' || tail[0] == '3' || tail[0] == '6')) {
+ 			printk(KERN_INFO
+ 			       "%s: system is recognized as \"%s\"\n",
+ 			       KBUILD_MODNAME, name);
+-			return 1;
++			return true;
+ 		}
+ 	}
+ 
+-	return 0;
++	return false;
++}
++
++static bool __init alix_present_dmi(void)
++{
++	char *vendor, *product;
++
++	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
++	if (!vendor || strcmp(vendor, "PC Engines"))
++		return false;
++
++	product = dmi_get_system_info(DMI_PRODUCT_NAME);
++	if (!product || (strcmp(product, "ALIX.2D") && strcmp(product, "ALIX.6")))
++		return false;
++
++	printk(KERN_INFO "%s: system is recognized as \"%s %s\"\n",
++	       KBUILD_MODNAME, vendor, product);
++
++	return true;
+ }
+ 
+-static int __init alix_init(void)
++static int  __init alix_init(void)
+ {
+ 	const char tinybios_sig[] = "PC Engines ALIX.";
+ 	const char coreboot_sig[] = "PC Engines\0ALIX.";
+@@ -128,8 +185,9 @@ static int __init alix_init(void)
+ 	if (!is_geode())
+ 		return 0;
+ 
+-	if (alix_present(0xf0000, tinybios_sig, sizeof(tinybios_sig) - 1) ||
+-	    alix_present(0x500, coreboot_sig, sizeof(coreboot_sig) - 1))
++	if (alix_present(BIOS_SIGNATURE_TINYBIOS, tinybios_sig, sizeof(tinybios_sig) - 1) ||
++	    alix_present(BIOS_SIGNATURE_COREBOOT, coreboot_sig, sizeof(coreboot_sig) - 1) ||
++	    alix_present_dmi())
+ 		register_alix();
+ 
+ 	return 0;
+-- 
+1.7.7.5
