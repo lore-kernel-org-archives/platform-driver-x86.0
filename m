@@ -1,55 +1,57 @@
-From: Andres Salomon <dilinger@queued.net>
-Subject: Re: [PATCH v4 1/1] alix2: supplement driver to include GPIO button
- support
-Date: Thu, 26 Jan 2012 17:57:41 -0800
-Message-ID: <20120126175741.6aa4a9cd@queued.net>
-References: <1327627902-18417-1-git-send-email-philipp@redfish-solutions.com>
+From: "R, Durgadoss" <durgadoss.r@intel.com>
+Subject: RE: [PATCH 5/5] platform-x86: intel_mid_thermal: turn off
+ thermistor voltage by default
+Date: Fri, 27 Jan 2012 16:27:47 +0000
+Message-ID: <4D68720C2E767A4AA6A8796D42C8EB5902FDBA@BGSMSX101.gar.corp.intel.com>
+References: <20120126173729.16719.15431.stgit@bob.linux.org.uk>
+ <20120126173943.16719.16596.stgit@bob.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lunge.queued.net ([173.255.254.236]:56876 "EHLO
-	lunge.queued.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751645Ab2A0B5o (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:15481 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751534Ab2A0Q1w (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Jan 2012 20:57:44 -0500
-In-Reply-To: <1327627902-18417-1-git-send-email-philipp@redfish-solutions.com>
+	Fri, 27 Jan 2012 11:27:52 -0500
+In-Reply-To: <20120126173943.16719.16596.stgit@bob.linux.org.uk>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Philip Prindeville <philipp@redfish-solutions.com>
-Cc: platform-driver-x86@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Richard Purdie <rpurdie@rpsys.net>, Ed Wildgoose <kernel@wildgooses.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>, "mjg@redhat.com" <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, 26 Jan 2012 18:31:42 -0700
-Philip Prindeville <philipp@redfish-solutions.com> wrote:
-
-> From: "Philip A. Prindeville" <philipp@redfish-solutions.com>
-> 
-> GPIO 24 is used in reference designs as a soft-reset button, and
-> the alix2 is no exception. Add it as a gpio-button.
-> 
-> Use symbolic values to describe BIOS addresses.
-> 
-> Record the model number.
-> 
-> Changes v2 and v3 per Andres:
-> Use DMI to detect the board instead of proposed coreboot library;
-> Don't make including <linux/dmi.h> conditional on CONFIG_DMI;
-> Ditto for calling dmi_get_system_info() in alix_present_dmi();
-> Make alix_present() and alix_present_dmi() return bool;
-> 
-> Changes v4 per Andrew:
-> Remove alix_model as this can be patched downstream where it's needed
->   anyway (ultimately, RFFILL will be supported by a new generic gpio
->   class);
-> 
-> Signed-off-by: Philip A. Prindeville <philipp@redfish-solutions.com>
-> Acked-by: Ed Wildgoose <kernel@wildgooses.com>
-> Acked-by: Andres Salomon <dilinger@queued.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-[...]
->  }
->  
-> -static int __init alix_init(void)
-> +static int  __init alix_init(void)
-
-What's this about?
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFsYW4gQ294DQo+IFNlbnQ6IFRodXJz
+ZGF5LCBKYW51YXJ5IDI2LCAyMDEyIDExOjEwIFBNDQo+IFRvOiBtamdAcmVkaGF0LmNvbTsgcGxh
+dGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCA1LzVdIHBsYXRmb3JtLXg4NjogaW50ZWxfbWlk
+X3RoZXJtYWw6IHR1cm4gb2ZmIHRoZXJtaXN0b3INCj4gdm9sdGFnZSBieSBkZWZhdWx0DQo+IA0K
+PiBGcm9tOiBNaWthIFdlc3RlcmJlcmcgPG1pa2Eud2VzdGVyYmVyZ0BsaW51eC5pbnRlbC5jb20+
+DQo+IA0KPiBJbnN0ZWFkIG9mIGNvbXBsYWluaW5nIHRoYXQgdGhlIHZvbHRhZ2UgaXMgb24sIHdl
+IGNhbiBqdXN0IGFzayB0aGUgTVNJQyB0bw0KPiB0dXJuIHRoZSB2b2x0YWdlIG9mZi4gVGhpcyBz
+aG91bGQgc2F2ZSBzb21lIHBvd2VyLg0KPiANCj4gVm9sdGFnZSBmb3IgdGhlcm1pc3RvcnMgaXMg
+dHVybmVkIG9uIHdoZW4gQURDIGNvbnZlcnNpb24gaXMgaW5pdGlhdGVkLg0KDQpBY2tlZC1ieTog
+RHVyZ2Fkb3NzIFIgPGR1cmdhZG9zcy5yQGludGVsLmNvbT4NCg0KVGhhbmtzLA0KRHVyZ2ENCg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogTWlrYSBXZXN0ZXJiZXJnIDxtaWthLndlc3RlcmJlcmdAbGlu
+dXguaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBLaXJpbGwgQS4gU2h1dGVtb3YgPGtpcmls
+bC5zaHV0ZW1vdkBsaW51eC5pbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEFsYW4gQ294IDxh
+bGFuQGxpbnV4LmludGVsLmNvbT4NCj4gLS0tDQo+IA0KPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWxfbWlkX3RoZXJtYWwuYyB8ICAgIDYgKysrKy0tDQo+ICAxIGZpbGVzIGNoYW5nZWQsIDQg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfbWlkX3RoZXJtYWwuYw0KPiBiL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gaW5kZXggYWVmNDk3OS4uYTRlNTZiZSAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfbWlkX3RoZXJtYWwuYw0KPiAr
+KysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9taWRfdGhlcm1hbC5jDQo+IEBAIC0zNjAs
+OCArMzYwLDEwIEBAIHN0YXRpYyBpbnQgbWlkX2luaXRpYWxpemVfYWRjKHN0cnVjdCBkZXZpY2Ug
+KmRldikNCj4gIAlpZiAocmV0KQ0KPiAgCQlyZXR1cm4gcmV0Ow0KPiANCj4gLQlpZiAoZGF0YSAm
+IE1TSUNfQURDVEhFUk1fTUFTSykNCj4gLQkJZGV2X3dhcm4oZGV2LCAiQURDVEhFUk0gYWxyZWFk
+eSBzZXQiKTsNCj4gKwlkYXRhICY9IH5NU0lDX0FEQ1RIRVJNX01BU0s7DQo+ICsJcmV0ID0gaW50
+ZWxfbXNpY19yZWdfd3JpdGUoSU5URUxfTVNJQ19BREMxQ05UTDMsIGRhdGEpOw0KPiArCWlmIChy
+ZXQpDQo+ICsJCXJldHVybiByZXQ7DQo+IA0KPiAgCS8qIEluZGV4IG9mIHRoZSBmaXJzdCBjaGFu
+bmVsIGluIHdoaWNoIHRoZSBzdG9wIGJpdCBpcyBzZXQgKi8NCj4gIAljaGFubmVsX2luZGV4ID0g
+ZmluZF9mcmVlX2NoYW5uZWwoKTsNCj4gDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhp
+cyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBwbGF0Zm9ybS1kcml2ZXIteDg2Ig0K
+PiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9y
+Zw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9y
+ZG9tby1pbmZvLmh0bWwNCg==
