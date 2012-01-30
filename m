@@ -1,55 +1,137 @@
-From: "R, Durgadoss" <durgadoss.r@intel.com>
-Subject: RE: [PATCH 3/5] platform-x86: intel_mid_thermal: add msic_thermal
- alias
-Date: Fri, 27 Jan 2012 16:33:21 +0000
-Message-ID: <4D68720C2E767A4AA6A8796D42C8EB5902FDDD@BGSMSX101.gar.corp.intel.com>
-References: <20120126173729.16719.15431.stgit@bob.linux.org.uk>
- <20120126173912.16719.51752.stgit@bob.linux.org.uk>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Mon, 30 Jan 2012 09:26:45 +0100
+Message-ID: <CAHR064jyOYaRUjZp370ewLGQSKAhhB7gZ4PS7Feb_AzBLGi1tA@mail.gmail.com>
+References: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:2263 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754352Ab2A0Qd0 (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:34193 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753776Ab2A3I0r convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 Jan 2012 11:33:26 -0500
-In-Reply-To: <20120126173912.16719.51752.stgit@bob.linux.org.uk>
-Content-Language: en-US
+	Mon, 30 Jan 2012 03:26:47 -0500
+In-Reply-To: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>, "mjg@redhat.com" <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Len Brown <lenb@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, David Herrmann <dh.herrmann@googlemail.com>, =?UTF-8?Q?Richard_Sch=C3=BCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, linux-acpi@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org
 
-SGkgQWxhbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9y
-bS1kcml2ZXIteDg2LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZl
-ci14ODYtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFsYW4gQ294DQo+
-IFNlbnQ6IFRodXJzZGF5LCBKYW51YXJ5IDI2LCAyMDEyIDExOjA5IFBNDQo+IFRvOiBtamdAcmVk
-aGF0LmNvbTsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCAzLzVdIHBsYXRmb3JtLXg4
-NjogaW50ZWxfbWlkX3RoZXJtYWw6IGFkZCBtc2ljX3RoZXJtYWwgYWxpYXMNCj4gDQo+IEZyb206
-IE1pa2EgV2VzdGVyYmVyZyA8bWlrYS53ZXN0ZXJiZXJnQGxpbnV4LmludGVsLmNvbT4NCj4gDQo+
-IEluIG5ld2VyIGJvYXJkcyB0aGlzIGRldmljZSBpcyBjYWxsZWQgIm1zaWNfdGhlcm1hbCIgaW5z
-dGVhZCBvZg0KPiAibXNpY19zZW5zb3IiLiBUbyBzdXBwb3J0IGJvdGggd2UgYWRkIHN1aXRhYmxl
-IGFsaWFzIGZvciB0aGUgZHJpdmVyLg0KDQpJbiBhbGwgdGhlIG1lZGZpZWxkIGJvYXJkcywgdGhh
-dCB3ZSB1c2UgaGVyZSwgdGhpcyBpcyBuYW1lZCAnbXNpY190aGVybWFsJy4NClNvLCBtYXliZSB3
-ZSBzaG91bGQgcmVtb3ZlIG1zaWNfc2Vuc29yIGFuZCBqdXN0IHVzZSBtc2ljX3RoZXJtYWwuDQpP
-ciwgRG8geW91IGhhdmUgYW55IG1lZGZpZWxkIGJvYXJkcyB0aGF0IGhhdmUgdGhpcyBlbnRyeSBh
-cyAnbXNpY19zZW5zb3InID8NCg0KVGhhbmtzLA0KRHVyZ2ENCg0KPiANCj4gU2lnbmVkLW9mZi1i
-eTogTWlrYSBXZXN0ZXJiZXJnIDxtaWthLndlc3RlcmJlcmdAbGludXguaW50ZWwuY29tPg0KPiBT
-aWduZWQtb2ZmLWJ5OiBLaXJpbGwgQS4gU2h1dGVtb3YgPGtpcmlsbC5zaHV0ZW1vdkBsaW51eC5p
-bnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IEFsYW4gQ294IDxhbGFuQGxpbnV4LmludGVsLmNv
-bT4NCj4gLS0tDQo+IA0KPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfbWlkX3RoZXJtYWwu
-YyB8ICAgIDEgKw0KPiAgMSBmaWxlcyBjaGFuZ2VkLCAxIGluc2VydGlvbnMoKyksIDAgZGVsZXRp
-b25zKC0pDQo+IA0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVs
-X21pZF90aGVybWFsLmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9taWRfdGhlcm1h
-bC5jDQo+IGluZGV4IGNjZDdiMWYuLmRlMmU2MmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxh
-dGZvcm0veDg2L2ludGVsX21pZF90aGVybWFsLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94
-ODYvaW50ZWxfbWlkX3RoZXJtYWwuYw0KPiBAQCAtNTUwLDYgKzU1MCw3IEBAIHN0YXRpYyBpbnQg
-bWlkX3RoZXJtYWxfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+IA0KPiAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQgdGhlcm1faWRfdGFibGVbXSA9
-IHsNCj4gIAl7IERSSVZFUl9OQU1FLCAxIH0sDQo+ICsJeyAibXNpY190aGVybWFsIiwgMSB9LA0K
-PiAgCXsgfQ0KPiAgfTsNCj4gDQo+IA0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMg
-bGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgcGxhdGZvcm0tZHJpdmVyLXg4NiINCj4g
-aW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcN
-Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sDQo=
+On Tue, Jan 17, 2012 at 8:08 AM, Corentin Chary <corentincj@iksaif.net>=
+ wrote:
+> On these laptops, the ACPI video is not functional, and very unlikely
+> to be fixed by the vendor. Note that intel_backlight works for some
+> of these laptops, and the backlight from samsung-laptop always work.
+>
+> The good news is that newer laptops have functional ACPI video device
+> and won't end up growing this list.
+>
+> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+> ---
+> =C2=A0drivers/acpi/video_detect.c | =C2=A0 49 +++++++++++++++++++++++=
+++++++++++++++++++++
+> =C2=A01 files changed, 49 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.=
+c
+> index 45d8097..66be45e 100644
+> --- a/drivers/acpi/video_detect.c
+> +++ b/drivers/acpi/video_detect.c
+> @@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *co=
+ntext, void **rv)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return AE_OK;
+> =C2=A0}
+>
+> +/* Force to use vendor driver when the ACPI device is known to be
+> + * buggy */
+> +static int video_detect_force_vendor(const struct dmi_system_id *d)
+> +{
+> + =C2=A0 =C2=A0 =C2=A0 acpi_video_support |=3D ACPI_VIDEO_BACKLIGHT_D=
+MI_VENDOR;
+> + =C2=A0 =C2=A0 =C2=A0 return 0;
+> +}
+> +
+> +static struct dmi_system_id video_detect_dmi_table[] =3D {
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.callback =3D video_detect_force_vendor,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.ident =3D "N150P",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_SYS_=
+VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_PROD=
+UCT_NAME, "N150P"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_BOAR=
+D_NAME, "N150P"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.callback =3D video_detect_force_vendor,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.ident =3D "N145P/N250P/N260P",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_SYS_=
+VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_PROD=
+UCT_NAME, "N145P/N250P/N260P"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_BOAR=
+D_NAME, "N145P/N250P/N260P"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.callback =3D video_detect_force_vendor,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.ident =3D "N150/N210/N220",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_SYS_=
+VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_PROD=
+UCT_NAME, "N150/N210/N220"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_BOAR=
+D_NAME, "N150/N210/N220"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.callback =3D video_detect_force_vendor,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.ident =3D "NF110/NF210/NF310",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0.matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_SYS_=
+VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_PROD=
+UCT_NAME, "NF110/NF210/NF310"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DMI_MATCH(DMI_BOAR=
+D_NAME, "NF110/NF210/NF310"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 },
+> +};
+> +
+> =C2=A0/*
+> =C2=A0* Returns the video capabilities of a specific ACPI graphics de=
+vice
+> =C2=A0*
+> @@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle grap=
+hics_handle)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 * =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *}
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 */
+> +
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dmi_check_system(v=
+ideo_detect_dmi_table);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0} else {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0status =3D acp=
+i_bus_get_device(graphics_handle, &tmp_dev);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ACPI_FAILU=
+RE(status)) {
+> --
+> 1.7.5.4
+>
+
+Hi Len,
+
+Maybe this patch should go through your tree and not platform-drivers-x=
+86 ?
+
+Thanks,
+
+--=20
+Corentin Chary
+http://xf.iksaif.net
