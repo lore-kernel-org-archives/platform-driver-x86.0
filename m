@@ -1,30 +1,43 @@
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 3/5] platform-x86: intel_mid_thermal: add msic_thermal
- alias
-Date: Mon, 30 Jan 2012 10:59:05 +0000
-Message-ID: <20120130105905.34e44578@pyramind.ukuu.org.uk>
-References: <20120126173729.16719.15431.stgit@bob.linux.org.uk>
-	<20120126173912.16719.51752.stgit@bob.linux.org.uk>
-	<4D68720C2E767A4AA6A8796D42C8EB5902FDDD@BGSMSX101.gar.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:46852 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751794Ab2A3K5o (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Jan 2012 05:57:44 -0500
-In-Reply-To: <4D68720C2E767A4AA6A8796D42C8EB5902FDDD@BGSMSX101.gar.corp.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "R, Durgadoss" <durgadoss.r@intel.com>
-Cc: "mjg@redhat.com" <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Danny Kukawka <danny.kukawka@bisect.de>
+Subject: [PATCH v2 07/16] hdaps: trivial fix for -Wuninitialized
+Date: Mon, 30 Jan 2012 23:00:11 +0100
+Message-ID: <1327960820-11867-8-git-send-email-danny.kukawka@bisect.de>
+References: <1327960820-11867-1-git-send-email-danny.kukawka@bisect.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1327960820-11867-1-git-send-email-danny.kukawka@bisect.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Seidel <frank@f-seidel.de>
+Cc: Matthew Garrett <mjg@redhat.com>, Jiri Kosina <trivial@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> In all the medfield boards, that we use here, this is named 'msic_thermal'.
-> So, maybe we should remove msic_sensor and just use msic_thermal.
-> Or, Do you have any medfield boards that have this entry as 'msic_sensor' ?
+Trivial fix for some -Wuninitialized compiler warnings.
 
-I will check if we do.
+Signed-off-by: Danny Kukawka <danny.kukawka@bisect.de>
+---
+ drivers/platform/x86/hdaps.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Alan
+diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
+index 5a34973..ba68d4e 100644
+--- a/drivers/platform/x86/hdaps.c
++++ b/drivers/platform/x86/hdaps.c
+@@ -379,7 +379,7 @@ static ssize_t hdaps_temp1_show(struct device *dev,
+ 	int ret;
+ 
+ 	ret = hdaps_readb_one(HDAPS_PORT_TEMP1, &temp);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 
+ 	return sprintf(buf, "%u\n", temp);
+@@ -392,7 +392,7 @@ static ssize_t hdaps_temp2_show(struct device *dev,
+ 	int ret;
+ 
+ 	ret = hdaps_readb_one(HDAPS_PORT_TEMP2, &temp);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 
+ 	return sprintf(buf, "%u\n", temp);
+-- 
+1.7.7.3
