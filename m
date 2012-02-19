@@ -1,121 +1,40 @@
-From: Akio Idehara <zbe64533@gmail.com>
-Subject: [PATCH] toshiba_acpi: Add support for transflective LCD
-Date: Sat, 18 Feb 2012 07:04:29 +0900
-Message-ID: <4F3ECEED.9000206@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Charles@schwieters.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Michael Thalmeier <michael@thalmeier.at>
+Subject: [PATCH] acerhdf: add support for Acer Aspire 1810T BIOS v1.3314
+Date: Sun, 19 Feb 2012 16:43:04 +0100
+Message-ID: <1329666184-7336-1-git-send-email-michael@thalmeier.at>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from eq4.michisoft.net ([178.63.1.138]:45886 "EHLO
+	mail.michisoft.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1754232Ab2BSPt6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 19 Feb 2012 10:49:58 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Peter Feuerer <peter@piie.net>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Thalmeier <michael@thalmeier.at>
 
-Some Toshiba laptops have the transflective LCD and toshset
-can control its backlight state.  I brought this feature to the
-mainline.  It was tested on a Toshiba Portege R500.
+As mentioned in commit
 
-Signed-off-by: Akio Idehara <zbe64533@gmail.com>
+b06862b: acerhdf: add support for Aspire 1810TZ BIOS v1.3314
+
+Acer Aspire 1810T also supports Bios v1.3314.
+
+Signed-off-by: Michael Thalmeier <michael@thalmeier.at>
 ---
-  drivers/platform/x86/toshiba_acpi.c |   43 ++++++++++++++++++++++++++++++++++-
-  1 files changed, 42 insertions(+), 1 deletions(-)
+ drivers/platform/x86/acerhdf.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index dcdc1f4..af3979c 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -51,6 +51,7 @@
-  #include <linux/input.h>
-  #include <linux/input/sparse-keymap.h>
-  #include <linux/leds.h>
-+#include <linux/fb.h>
-  #include <linux/slab.h>
-
-  #include <asm/uaccess.h>
-@@ -88,6 +89,7 @@ MODULE_LICENSE("GPL");
-
-  /* registers */
-  #define HCI_FAN				0x0004
-+#define HCI_TR_BACKLIGHT		0x0005
-  #define HCI_SYSTEM_EVENT		0x0016
-  #define HCI_VIDEO_OUT			0x001c
-  #define HCI_HOTKEY_EVENT		0x001e
-@@ -122,6 +124,7 @@ struct toshiba_acpi_dev {
-  	int video_supported:1;
-  	int fan_supported:1;
-  	int system_event_supported:1;
-+	int tr_backlight_supported:1;
-
-  	struct mutex mutex;
-  };
-@@ -461,6 +464,22 @@ static const struct rfkill_ops toshiba_rfk_ops = {
-  	.poll = bt_rfkill_poll,
-  };
-
-+static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
-+{
-+	u32 hci_result;
-+
-+	hci_read1(dev, HCI_TR_BACKLIGHT, status, &hci_result);
-+	return hci_result == HCI_SUCCESS ? 0 : -EIO;
-+}
-+
-+static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, int value)
-+{
-+	u32 hci_result;
-+
-+	hci_write1(dev, HCI_TR_BACKLIGHT, value, &hci_result);
-+	return hci_result == HCI_SUCCESS ? 0 : -EIO;
-+}
-+
-  static struct proc_dir_entry *toshiba_proc_dir /*= 0*/ ;
-
-  static int get_lcd(struct backlight_device *bd)
-@@ -512,8 +531,19 @@ static int set_lcd(struct toshiba_acpi_dev *dev, int value)
-
-  static int set_lcd_status(struct backlight_device *bd)
-  {
-+	int ret;
-  	struct toshiba_acpi_dev *dev = bl_get_data(bd);
--	return set_lcd(dev, bd->props.brightness);
-+
-+	ret = set_lcd(dev, bd->props.brightness);
-+	if (ret)
-+		return ret;
-+
-+	if (dev->tr_backlight_supported) {
-+		int value = (bd->props.power == FB_BLANK_UNBLANK) ? 1 : 0;
-+		ret = set_tr_backlight_status(dev, value);
-+	}
-+
-+	return ret;
-  }
-
-  static ssize_t lcd_proc_write(struct file *file, const char __user *buf,
-@@ -938,6 +968,7 @@ static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
-  	const char *hci_method;
-  	u32 hci_result;
-  	u32 dummy;
-+	u32 value;
-  	bool bt_present;
-  	int ret = 0;
-  	struct backlight_properties props;
-@@ -984,6 +1015,16 @@ static int __devinit toshiba_acpi_add(struct acpi_device *acpi_dev)
-  	}
-  	dev->backlight_dev->props.brightness = get_lcd(dev->backlight_dev);
-
-+	/* Determine whether or not BIOS supports transflective backlight */
-+	ret = get_tr_backlight_status(dev, &value) ? false : true;
-+	dev->tr_backlight_supported = ret;
-+	if (ret) {
-+		int power = value ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+		dev->backlight_dev->props.power = power;
-+	} else {
-+		dev->backlight_dev->props.power = FB_BLANK_UNBLANK;
-+	}
-+
-  	/* Register rfkill switch for Bluetooth */
-  	if (hci_get_bt_present(dev, &bt_present) == HCI_SUCCESS && bt_present) {
-  		dev->bt_rfk = rfkill_alloc("Toshiba Bluetooth",
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 760c6d7..e8df42f 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -183,6 +183,7 @@ static const struct bios_settings_t bios_tbl[] = {
+ 	{"Acer", "Aspire 1810TZ", "v1.3310", 0x55, 0x58, {0x9e, 0x00} },
+ 	{"Acer", "Aspire 1810T",  "v1.3310", 0x55, 0x58, {0x9e, 0x00} },
+ 	{"Acer", "Aspire 1810TZ", "v1.3314", 0x55, 0x58, {0x9e, 0x00} },
++	{"Acer", "Aspire 1810T",  "v1.3314", 0x55, 0x58, {0x9e, 0x00} },
+ 	/* Acer 531 */
+ 	{"Acer", "AO531h", "v0.3201", 0x55, 0x58, {0x20, 0x00} },
+ 	/* Gateway */
 -- 
-1.7.7.6
+1.7.9
