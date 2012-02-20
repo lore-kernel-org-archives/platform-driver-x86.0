@@ -1,106 +1,153 @@
-From: Lukasz Majewski <majess1982@gmail.com>
-Subject: [Vortex86] External SPI
-Date: Sun, 19 Feb 2012 23:17:47 +0100
-Message-ID: <20120219231747.12c66365@jawa>
+From: David Herrmann <dh.herrmann@googlemail.com>
+Subject: Re: [PATCH] ACPI / Video: blacklist some samsung laptops
+Date: Mon, 20 Feb 2012 12:06:15 +0100
+Message-ID: <CANq1E4TQ0qUrOTNQOmC2K+3zC2_7Om3TcRH=w78VReHat=36+w@mail.gmail.com>
+References: <1326784098-3244-1-git-send-email-corentincj@iksaif.net>
+	<CAHR064jyOYaRUjZp370ewLGQSKAhhB7gZ4PS7Feb_AzBLGi1tA@mail.gmail.com>
+	<CAHR064iXr5Z1WNdD=rjn_ACDEX8EaRgrCg0hj1U=c=Lz9rN__A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-8086-owner@vger.kernel.org>
-Sender: linux-8086-owner@vger.kernel.org
-To: linux-rt-users@vger.kernel.org
-Cc: Andy O'Brien <aobrien@greenseainc.com>, platform-driver-x86@vger.kernel.org, linux-8086@vger.kernel.org, linux-iio@vger.kernel.org, Lukasz Majewski <majess1982@gmail.com>, linux-embedded@vger.kernel.org, soc@dmp.com.tw
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHR064iXr5Z1WNdD=rjn_ACDEX8EaRgrCg0hj1U=c=Lz9rN__A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Len Brown <lenb@kernel.org>, Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, Andrzej Prochyra <andrzej@prochyra.name>, Matthew Garrett <mjg59@srcf.ucam.org>, =?ISO-8859-1?Q?Richard_Sch=FCtz?= <r.schtz@t-online.de>, Seth Forshee <seth.forshee@canonical.com>, linux-acpi@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi all,
+Hi Len
 
-I posses a Vortex86DX SoC based computer.
+On Sun, Feb 19, 2012 at 8:56 PM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+> On Mon, Jan 30, 2012 at 9:26 AM, Corentin Chary
+> <corentin.chary@gmail.com> wrote:
+>> On Tue, Jan 17, 2012 at 8:08 AM, Corentin Chary <corentincj@iksaif.n=
+et> wrote:
+>>> On these laptops, the ACPI video is not functional, and very unlike=
+ly
+>>> to be fixed by the vendor. Note that intel_backlight works for some
+>>> of these laptops, and the backlight from samsung-laptop always work=
+=2E
+>>>
+>>> The good news is that newer laptops have functional ACPI video devi=
+ce
+>>> and won't end up growing this list.
+>>>
+>>> Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+>>> ---
+>>> =A0drivers/acpi/video_detect.c | =A0 49 +++++++++++++++++++++++++++=
+++++++++++++++++
+>>> =A01 files changed, 49 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detec=
+t.c
+>>> index 45d8097..66be45e 100644
+>>> --- a/drivers/acpi/video_detect.c
+>>> +++ b/drivers/acpi/video_detect.c
+>>> @@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *=
+context, void **rv)
+>>> =A0 =A0 =A0 =A0return AE_OK;
+>>> =A0}
+>>>
+>>> +/* Force to use vendor driver when the ACPI device is known to be
+>>> + * buggy */
+>>> +static int video_detect_force_vendor(const struct dmi_system_id *d=
+)
+>>> +{
+>>> + =A0 =A0 =A0 acpi_video_support |=3D ACPI_VIDEO_BACKLIGHT_DMI_VEND=
+OR;
+>>> + =A0 =A0 =A0 return 0;
+>>> +}
+>>> +
+>>> +static struct dmi_system_id video_detect_dmi_table[] =3D {
+>>> + =A0 =A0 =A0 {
+>>> + =A0 =A0 =A0 =A0.callback =3D video_detect_force_vendor,
+>>> + =A0 =A0 =A0 =A0.ident =3D "N150P",
+>>> + =A0 =A0 =A0 =A0.matches =3D {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG EL=
+ECTRONICS CO., LTD."),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_BOARD_NAME, "N150P"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 {
+>>> + =A0 =A0 =A0 =A0.callback =3D video_detect_force_vendor,
+>>> + =A0 =A0 =A0 =A0.ident =3D "N145P/N250P/N260P",
+>>> + =A0 =A0 =A0 =A0.matches =3D {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG EL=
+ECTRONICS CO., LTD."),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N2=
+50P/N260P"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_BOARD_NAME, "N145P/N250=
+P/N260P"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 {
+>>> + =A0 =A0 =A0 =A0.callback =3D video_detect_force_vendor,
+>>> + =A0 =A0 =A0 =A0.ident =3D "N150/N210/N220",
+>>> + =A0 =A0 =A0 =A0.matches =3D {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG EL=
+ECTRONICS CO., LTD."),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_PRODUCT_NAME, "N150/N21=
+0/N220"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_BOARD_NAME, "N150/N210/=
+N220"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 {
+>>> + =A0 =A0 =A0 =A0.callback =3D video_detect_force_vendor,
+>>> + =A0 =A0 =A0 =A0.ident =3D "NF110/NF210/NF310",
+>>> + =A0 =A0 =A0 =A0.matches =3D {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG EL=
+ECTRONICS CO., LTD."),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF=
+210/NF310"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_BOARD_NAME, "NF110/NF21=
+0/NF310"),
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },
+>>> + =A0 =A0 =A0 },
+>>> +};
+>>> +
+>>> =A0/*
+>>> =A0* Returns the video capabilities of a specific ACPI graphics dev=
+ice
+>>> =A0*
+>>> @@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle gr=
+aphics_handle)
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 * =A0 =A0 =A0 =A0 =A0 =A0 =A0ACPI_V=
+IDEO_BACKLIGHT_DMI_VENDOR;
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 *}
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 */
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dmi_check_system(video_detect_dmi_tab=
+le);
+>>> =A0 =A0 =A0 =A0} else {
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0status =3D acpi_bus_get_device(graph=
+ics_handle, &tmp_dev);
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (ACPI_FAILURE(status)) {
+>>> --
+>>> 1.7.5.4
+>>>
+>>
+>> Hi Len,
+>>
+>> Maybe this patch should go through your tree and not platform-driver=
+s-x86 ?
+>
+> Ping ?
 
-According to the spec it has two SPI interfaces - namely: internal -
-access to BIOS and external, which is connected to serial memory
-(MX25L3205 [1])
+This is actually a regression on Samsung notebooks as the backlight is
+no longer working with linux-3.2. It would be really nice to see this
+in the stable branch or at least in linux-3.3.
 
-My application requires reading data from SPI sensor. I've given a shot
-for a bitbang SPI driver. It worked, but slow access to
-GPIOs caused a very slow transmission. 
+The samsung driver disables its own backlight driver if ACPI core
+handles the backlight since linux-3.2. If you don't want to pickup
+this patch it would be nice to see the samsung driver fixing this
+issue.
 
-For speed up I've decided to unsolder the memory [1] and solder the
-sensor (via 8cm cables).
+Regards
+David
 
-Unfortunately, documents provided from DM&P[2]:  [3] , [4] give some
-hints on setting up a base address to get access to the SPI memory
-region, and proper GPIO configuration.
-
-What they DO NOT tell is how to perform the SPI transmission.
-
-SPI controller address map:
-BA is the Base Address
-
-BA + 08h External SPI Output Data Register (8 bit transfer)
-BA + 09h External SPI Input Register
-BA + 0Ah External SPI Control Register
-BA + 0Bh External SPI Status Register
-BA + 0Ch External SPI Chip Select Register
-BA + 0Dh External SPI Error Status Register
-
-I've discovered that:
- - Access (read/write) to control register (CS) is not causing the clock
-   generation
- - The Chip Select line is directly controlled by bit 0 (1 << 0) in the
-   "Chip Select Regsiter". It must be explicitly changed (by writing
-   data to the register) to toggle CS line state. After that the WCTE
-   bit at "Error Status Register" is set to 1 (which means "controller
-   busy")
- - To send data via SPI, one needs to write the data to the 8 bit
-   "Output Data Register". It seems, that writing data starts clock
-   generation. For correct transmission one needs to wait until the ODC
-   bit at "Status Register" is set to 1.
-
-The _problem_ is with reading data (with full or half duplex):
-
-Inserting:
-rx = inb(addr + 0x09); // "SPI Input Register" is not causing
-reading data.
-
-However:
-Writing data to the "SPI Input Register":
-   outb(0x00, addr + 0x09) // the CLK generation starts
-   and waiting for IDR bit at "Status Register" set to 1, causes
-   operation:
-   rx = inb(addr + 0x09); 
-   to read correct data.
-
-
-The above only works when FIFO is enabled (bit FIEN - 4 at "Control
-Register")
-
-The problem is, that the sent data seems to be
-somewhat random (e.g. the first/last send data) and
-I don't have a feeling that I'm fully controlling the operation of SPI.
-
-Conclusion:
- - outb is needed to force SPI block to start generating SCLK (also
-   when one wants to read data).
- - FIFO is involved in reading data from SPI - I don't know how to
-   control it.
- - It seems, that the controller is half-duplex.
-
-I suspect, that this simple type of controller has been also used at
-other SoC's. Maybe it is an FPGA based design, or some standard Intel's
-chip (like 8255). I was asking "uncle google" but with no satisfactory
-results.
-
-
-Has someone dealt with a similar controller? Any advice? Hint?
-
-
-links:
-[1] MX25L3205 - SPI flash memory
-http://www.mxic.com.tw/QuickPlace/hq/Main.nsf/h_Toc/5c179475fbb1d010482574440028bdf4/?OpenDocument
-[2] http://www.dmp.com.tw/tech/vortex86dx/
-[3] "DM&P Vortex86 Series (SX/DX/MX) Software Programming Reference"
-[4] "Vortex86DX Fact Sheet 32-BIT x86 SoC"
-
-
-Best regards,
-Lukasz Majewski
-
+> --
+> Corentin Chary
+> http://xf.iksaif.net
