@@ -1,74 +1,45 @@
-From: Josh Boyer <jwboyer@gmail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
 Subject: Re: [PATCH 1/1] samsung-laptop: add N230 to supported models
-Date: Fri, 2 Mar 2012 14:06:33 -0500
-Message-ID: <CA+5PVA7=rMwMdvL+jY6nXS-RD8CCTTug6XZ6fmdzwHeksi79aw@mail.gmail.com>
+Date: Sun, 4 Mar 2012 11:52:47 +0100
+Message-ID: <CAHR064gbNSwHc=GVfm1R7LAmswJg_o7eW33cQ=JZHMJ8PMoVNw@mail.gmail.com>
 References: <1330714505-13170-1-git-send-email-jslaby@suse.cz>
+	<CA+5PVA7=rMwMdvL+jY6nXS-RD8CCTTug6XZ6fmdzwHeksi79aw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1330714505-13170-1-git-send-email-jslaby@suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Slaby <jslaby@suse.cz>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:52922 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752216Ab2CDKwt convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 4 Mar 2012 05:52:49 -0500
+In-Reply-To: <CA+5PVA7=rMwMdvL+jY6nXS-RD8CCTTug6XZ6fmdzwHeksi79aw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Josh Boyer <jwboyer@gmail.com>
+Cc: Jiri Slaby <jslaby@suse.cz>, mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Mar 2, 2012 at 1:55 PM, Jiri Slaby <jslaby@suse.cz> wrote:
-> There is a version of N230 which has only this in product and board
-> names. See dmidecode in the bugzilla entry.
+On Fri, Mar 2, 2012 at 8:06 PM, Josh Boyer <jwboyer@gmail.com> wrote:
+> On Fri, Mar 2, 2012 at 1:55 PM, Jiri Slaby <jslaby@suse.cz> wrote:
+>> There is a version of N230 which has only this in product and board
+>> names. See dmidecode in the bugzilla entry.
+>>
+>> Without this patch, one has to pass the force module parameter to ha=
+ve
+>> rfkill working.
+>>
+>> References: https://bugzilla.novell.com/show_bug.cgi?id=3D746695
+>> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 >
-> Without this patch, one has to pass the force module parameter to hav=
-e
-> rfkill working.
->
-> References: https://bugzilla.novell.com/show_bug.cgi?id=3D746695
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> I think Corey has patches queued up in Matthew's git tree that drop t=
+he DMI
+> checks in this driver entirely. =C2=A0If so, this probably isn't need=
+ed.
 
-I think Corey has patches queued up in Matthew's git tree that drop the=
- DMI
-checks in this driver entirely.  If so, this probably isn't needed.
+Right. You can try the out-of-tree module using this repository
+https://github.com/iksaif/samsung-laptop-dkms . The patchs are in
+Matthew queue and they should be merged in 3.4.
 
-josh
-
-> ---
-> =A0drivers/platform/x86/samsung-laptop.c | =A0 10 ++++++++++
-> =A01 file changed, 10 insertions(+)
->
-> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform=
-/x86/samsung-laptop.c
-> index fd73ea8..7765929 100644
-> --- a/drivers/platform/x86/samsung-laptop.c
-> +++ b/drivers/platform/x86/samsung-laptop.c
-> @@ -679,6 +679,16 @@ static struct dmi_system_id __initdata samsung_d=
-mi_table[] =3D {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.callback =3D dmi_check_cb,
-> =A0 =A0 =A0 =A0},
-> =A0 =A0 =A0 =A0{
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .ident =3D "N230",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .matches =3D {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_SYS_VENDO=
-R,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 "SAMSUNG ELECTRONICS CO., LTD."),
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_PRODUCT_N=
-AME, "N230"),
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 DMI_MATCH(DMI_BOARD_NAM=
-E, "N230"),
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 },
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .callback =3D dmi_check_cb,
-> + =A0 =A0 =A0 },
-> + =A0 =A0 =A0 {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.ident =3D "N150/N210/N220/N230",
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.matches =3D {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0DMI_MATCH(DMI_SYS_VEND=
-OR,
-> --
-> 1.7.9.2
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
+--=20
+Corentin Chary
+http://xf.iksaif.net
