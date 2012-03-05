@@ -1,57 +1,32 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 1/1] samsung-laptop: add N230 to supported models
-Date: Mon, 5 Mar 2012 07:35:07 +0100
-Message-ID: <CAHR064i0m_4=BntT-vpvdtM5MiuEku3jnYE1mB4BTUiSiztRMg@mail.gmail.com>
-References: <1330714505-13170-1-git-send-email-jslaby@suse.cz>
-	<CA+5PVA7=rMwMdvL+jY6nXS-RD8CCTTug6XZ6fmdzwHeksi79aw@mail.gmail.com>
-	<CAHR064gbNSwHc=GVfm1R7LAmswJg_o7eW33cQ=JZHMJ8PMoVNw@mail.gmail.com>
-	<4F5370CD.3000501@suse.cz>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH v3 0/4] toshiba_acpi: Expanded hotkey support
+Date: Mon, 5 Mar 2012 16:04:07 -0600
+Message-ID: <20120305220407.GA16312@ubuntu-macmini>
+References: <1326915852-19896-1-git-send-email-seth.forshee@canonical.com>
+ <20120206150658.GE6414@ubuntu-macmini>
+ <20120206151548.GA30255@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:35949 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750795Ab2CEGfJ convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 Mar 2012 01:35:09 -0500
-In-Reply-To: <4F5370CD.3000501@suse.cz>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, mjg@redhat.com
-Cc: Josh Boyer <jwboyer@gmail.com>, Jiri Slaby <jirislaby@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120206151548.GA30255@srcf.ucam.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Len Brown <lenb@kernel.org>, Azael Avalos <coproscefalo@gmail.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 4, 2012 at 2:40 PM, Jiri Slaby <jslaby@suse.cz> wrote:
-> On 03/04/2012 11:52 AM, Corentin Chary wrote:
->> On Fri, Mar 2, 2012 at 8:06 PM, Josh Boyer <jwboyer@gmail.com> wrote=
-:
->>> On Fri, Mar 2, 2012 at 1:55 PM, Jiri Slaby <jslaby@suse.cz> wrote:
->>>> There is a version of N230 which has only this in product and boar=
-d
->>>> names. See dmidecode in the bugzilla entry.
->>>>
->>>> Without this patch, one has to pass the force module parameter to =
-have
->>>> rfkill working.
->>>>
->>>> References: https://bugzilla.novell.com/show_bug.cgi?id=3D746695
->>>> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
->>>
->>> I think Corey has patches queued up in Matthew's git tree that drop=
- the DMI
->>> checks in this driver entirely. =C2=A0If so, this probably isn't ne=
-eded.
->>
->> Right. You can try the out-of-tree module using this repository
->> https://github.com/iksaif/samsung-laptop-dkms . The patchs are in
->> Matthew queue and they should be merged in 3.4.
->
-> Ok, thanks. Then please merge with -next ASAP.
+On Mon, Feb 06, 2012 at 03:15:48PM +0000, Matthew Garrett wrote:
+> On Mon, Feb 06, 2012 at 09:06:58AM -0600, Seth Forshee wrote:
+> 
+> > Matthew: Just wondering if there are more issues that need to be
+> > addressed with this round of patches, or if they're looking okay at this
+> > point.
+> 
+> I'm fine with them at this point, just waiting on Len to give feedback 
+> on the ACPI patch.
 
-Matthew, is your new tree
-(git://cavan.codon.org.uk/platform-drivers-x86.git) merged in -next ?
+Well, I've been trying to get some comment on the ACPI patch, to no
+avail. Unless there's some other option, I guess I'll just resend the
+patches using an alternative method for getting the EC handle.
 
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+Seth
