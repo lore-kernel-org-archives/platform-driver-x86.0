@@ -1,55 +1,78 @@
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH] acer-wmi: ignore missing Aspire 5741G keys
-Date: Tue, 6 Mar 2012 15:33:55 +0300
-Message-ID: <20120306123355.GA3904@swordfish.minsk.epam.com>
+From: Josh Boyer <jwboyer@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: Add driver for Apple gmux device
+Date: Tue, 6 Mar 2012 07:52:39 -0500
+Message-ID: <CA+5PVA6kaf3Hwyy5twtfcry6oEQA29J4o8X_1ear7N+d0GQPEw@mail.gmail.com>
+References: <1329424465-1211-1-git-send-email-seth.forshee@canonical.com>
+	<1329921457-26887-1-git-send-email-seth.forshee@canonical.com>
+	<20120305220651.GB16312@ubuntu-macmini>
+	<CA+5PVA5nRvtDPXgen5=10=Yt2YdQAUo-K+OK8MXENiQ7wEQCYg@mail.gmail.com>
+	<20120305223745.GC16312@ubuntu-macmini>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ee0-f46.google.com ([74.125.83.46]:36131 "EHLO
-	mail-ee0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030531Ab2CFMfH (ORCPT
+Received: from mail-vw0-f46.google.com ([209.85.212.46]:45757 "EHLO
+	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750703Ab2CFMwk convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Mar 2012 07:35:07 -0500
-Content-Disposition: inline
+	Tue, 6 Mar 2012 07:52:40 -0500
+In-Reply-To: <20120305223745.GC16312@ubuntu-macmini>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joey Lee <jlee@novell.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Josh Boyer <jwboyer@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
- acer-wmi: ignore missing Aspire 5741G keys
+On Mon, Mar 5, 2012 at 5:37 PM, Seth Forshee <seth.forshee@canonical.co=
+m> wrote:
+> On Mon, Mar 05, 2012 at 05:10:50PM -0500, Josh Boyer wrote:
+>> On Mon, Mar 5, 2012 at 5:06 PM, Seth Forshee <seth.forshee@canonical=
+=2Ecom> wrote:
+>> > On Wed, Feb 22, 2012 at 08:37:37AM -0600, Seth Forshee wrote:
+>> >> Apple laptops with hybrid graphics have a device named gmux that
+>> >> controls the muxing of the LVDS panel between the GPUs as well as=
+ screen
+>> >> brightness. This driver adds support for the gmux device. Only ba=
+cklight
+>> >> control is supported initially.
+>> >>
+>> >> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+>> >
+>> > Ping. Is there anything that would prevent getting this into 3.4?
+>>
+>> I sent a list of patches that seemed ready for 3.4 to Matthew last w=
+eek. =A0This
+>> was on the list and he seemed to agree. =A0I would guess he just eit=
+her needs
+>> a minion, a clone, or a time machine. =A0Or maybe all three.
+>
+> Huh, guess I missed that, and even now I can't seem to find it. Any
+> chance you could point me to the list?
 
-Ignore Aspire's 5741G:
- KEY_PREVIOUSSONG
- KEY_NEXTSONG
- KEY_PLAYPAUSE
- KEY_STOP
- KEY_VOLUMEDOWN
+Oh, sorry.  It was a direct mail to Matthew, not on a list.  My mistake=
+=2E
 
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Basically, it consisted of this:
 
----
+"OK, so digging through the platform list, here are the patches that se=
+em
+to be bugfixes that should probably go into 3.3:
 
- drivers/platform/x86/acer-wmi.c |    5 +++++
- 1 file changed, 5 insertions(+)
+http://article.gmane.org/gmane.linux.acpi.devel/51594
+http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2908
+http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2943
+(replaces 3aa4634c0f23593c5be7e819e02dd6ace671820a in your
+linux-next/for_linus branches)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index b848277..d8a67cc 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -107,11 +107,16 @@ static const struct key_entry acer_wmi_keymap[] = {
- 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
- 	{KE_IGNORE, 0x41, {KEY_MUTE} },
- 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
-+	{KE_IGNORE, 0x4d, {KEY_PREVIOUSSONG} },	
- 	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
-+	{KE_IGNORE, 0x4e, {KEY_NEXTSONG} },
- 	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
-+	{KE_IGNORE, 0x4f, {KEY_PLAYPAUSE} },
- 	{KE_IGNORE, 0x45, {KEY_STOP} },
-+	{KE_IGNORE, 0x50, {KEY_STOP} },
- 	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
- 	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
-+	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
- 	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
- 	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
- 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
+
+=46or 3.4, these seem ready (in addition to what you have in linux-next=
+):
+http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2968
+http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2888
+http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2934
+http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/2929
+"
+
+I might spend some time today creating a fixed up git tree with that se=
+t of
+changes/patches and see what comes of it.
+
+josh
