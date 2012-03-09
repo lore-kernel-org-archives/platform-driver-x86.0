@@ -1,118 +1,92 @@
 From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH 1/3] asus-wmi: add scalar board brightness adj. support
-Date: Fri,  9 Mar 2012 10:17:07 +0800
-Message-ID: <1331259429-6216-2-git-send-email-acelan.kao@canonical.com>
+Subject: [PATCH 2/3] asus-wmi: report brightness key events
+Date: Fri,  9 Mar 2012 10:17:08 +0800
+Message-ID: <1331259429-6216-3-git-send-email-acelan.kao@canonical.com>
 References: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from mail-yw0-f46.google.com ([209.85.213.46]:62787 "EHLO
 	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757812Ab2CICRU (ORCPT
+	with ESMTP id S1757812Ab2CICRY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Mar 2012 21:17:20 -0500
-Received: by yhmm54 with SMTP id m54so650244yhm.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Mar 2012 18:17:19 -0800 (PST)
+	Thu, 8 Mar 2012 21:17:24 -0500
+Received: by mail-yw0-f46.google.com with SMTP id m54so650244yhm.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Mar 2012 18:17:24 -0800 (PST)
 In-Reply-To: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-Some of the ASUS ET2012 All-in-One machines that use a scalar board
-to control the brightness, and it only accepts brightness up or down
-comm. So, I introduced a get_scalar_command() function to pass the
-command to the scalar board through WMI.
-
-Besides, we have to store the brightness value locally, for we need the
-old value to know the brightness is increasing or decreasing.
-
-BTW, since there is no way to retrieve the actual brightness(it would be
-a fixed value), and the max brightness value would be fixed to 1, so we
-have to keep passing the brightness up/down command when we reached the
-max brightness value or 0.
+Some ASUS ET2012 All-in-One machines will handle the brightness events
+from BIOS, but we still need the key events to inform X to draw the
+brightness OSD.
 
 Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/platform/x86/asus-wmi.c  |   21 +++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.c  |    8 +++++++-
  drivers/platform/x86/asus-wmi.h  |    1 +
- drivers/platform/x86/eeepc-wmi.c |   13 +++++++++++++
- 3 files changed, 35 insertions(+), 0 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |    7 ++++++-
+ 3 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 72d731c..48e96f3 100644
+index 48e96f3..80c05ff 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1116,6 +1116,25 @@ static int read_brightness(struct backlight_device *bd)
- 	return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
- }
+@@ -1272,7 +1272,13 @@ static void asus_wmi_notify(u32 value, void *context)
  
-+static u32 get_scalar_command(struct backlight_device *bd)
-+{
-+	struct asus_wmi *asus = bl_get_data(bd);
-+	u32 ctrl_param = 0;
-+	static int brightness_old = -1;
-+
-+	if (brightness_old == -1)
-+		brightness_old = bd->props.brightness;
-+
-+	if ((brightness_old < bd->props.brightness) || bd->props.brightness == read_brightness_max(asus))
-+		ctrl_param = 0x00008001;
-+	else if ((brightness_old > bd->props.brightness) || bd->props.brightness == 0)
-+		ctrl_param = 0x00008000;
-+
-+	brightness_old = bd->props.brightness;
-+
-+	return ctrl_param;
-+}
-+
- static int update_bl_status(struct backlight_device *bd)
- {
- 	struct asus_wmi *asus = bl_get_data(bd);
-@@ -1123,6 +1142,8 @@ static int update_bl_status(struct backlight_device *bd)
- 	int power, err;
- 
- 	ctrl_param = bd->props.brightness;
-+	if (unlikely(asus->driver->scalar_panel_brightness))
-+		ctrl_param = get_scalar_command (bd);
- 
- 	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
- 				    ctrl_param, NULL);
+ 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
+ 		if (!acpi_video_backlight_support())
+-			asus_wmi_backlight_notify(asus, orig_code);
++		{
++			if (unlikely(asus->driver->need_brightness_event))
++				sparse_keymap_report_event(asus->inputdev,
++					code, key_value, autorelease);
++			else
++				asus_wmi_backlight_notify(asus, orig_code);
++		}
+ 	} else if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					       key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
 diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 8147c10..45fb62c 100644
+index 45fb62c..d6683ba 100644
 --- a/drivers/platform/x86/asus-wmi.h
 +++ b/drivers/platform/x86/asus-wmi.h
-@@ -37,6 +37,7 @@ struct asus_wmi;
- 
+@@ -38,6 +38,7 @@ struct asus_wmi;
  struct asus_wmi_driver {
  	bool			hotplug_wireless;
-+	bool			scalar_panel_brightness;
+ 	bool			scalar_panel_brightness;
++	bool			need_brightness_event;
  	int			wapf;
  
  	const char		*name;
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 9f6e643..c5f4c64 100644
+index c5f4c64..311f317 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -161,11 +161,24 @@ static void eeepc_dmi_check(struct asus_wmi_driver *driver)
- 		driver->hotplug_wireless = true;
- 		pr_info("wlan hotplug enabled\n");
- 	}
-+
-+	if (strncmp(model, "ET2012", 6) == 0) {
-+		const struct dmi_device *dev = NULL;
-+		char oemstring[30];
-+		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
-+			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
-+				if (oemstring[18] == '3')
-+					driver->scalar_panel_brightness = true;
-+				break;
-+			}
-+		}
-+	}
- }
+@@ -63,6 +63,8 @@ MODULE_PARM_DESC(hotplug_wireless,
  
- static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
+ static const struct key_entry eeepc_wmi_keymap[] = {
+ 	/* Sleep already handled via generic ACPI code */
++	{ KE_KEY, 0x11, { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 0x20, { KEY_BRIGHTNESSDOWN } },
+ 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+ 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+@@ -167,7 +169,9 @@ static void eeepc_dmi_check(struct asus_wmi_driver *driver)
+ 		char oemstring[30];
+ 		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
+ 			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
+-				if (oemstring[18] == '3')
++				if (oemstring[18] == '1')
++					driver->need_brightness_event = true;
++				else if (oemstring[18] == '3')
+ 					driver->scalar_panel_brightness = true;
+ 				break;
+ 			}
+@@ -179,6 +183,7 @@ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
  {
  	driver->hotplug_wireless = hotplug_wireless;
-+	driver->scalar_panel_brightness = false;
+ 	driver->scalar_panel_brightness = false;
++	driver->need_brightness_event = false;
  	driver->wapf = -1;
  	eeepc_dmi_check(driver);
  }
