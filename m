@@ -1,186 +1,101 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 1/3] asus-wmi: add scalar board brightness adj. support
-Date: Fri, 9 Mar 2012 11:58:49 +0100
-Message-ID: <CAHR064gjubUS-4OXLW9a2tfM72VNEOhmjbZdvT+2ZK1e=rcc2g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] asus-wmi: report brightness key events
+Date: Fri, 9 Mar 2012 12:02:22 +0100
+Message-ID: <CAHR064jnpNcoL3XnounWq=iV0ZPrUGeuzxw6Dzfksj5unS_PTQ@mail.gmail.com>
 References: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
-	<1331259429-6216-2-git-send-email-acelan.kao@canonical.com>
+	<1331259429-6216-3-git-send-email-acelan.kao@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:57908 "EHLO
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:61470 "EHLO
 	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751244Ab2CIK6y convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1752387Ab2CILCX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Mar 2012 05:58:54 -0500
-Received: by bkcik5 with SMTP id ik5so1054324bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Mar 2012 02:58:52 -0800 (PST)
-In-Reply-To: <1331259429-6216-2-git-send-email-acelan.kao@canonical.com>
+	Fri, 9 Mar 2012 06:02:23 -0500
+Received: by bkcik5 with SMTP id ik5so1056609bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Mar 2012 03:02:22 -0800 (PST)
+In-Reply-To: <1331259429-6216-3-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: AceLan Kao <acelan.kao@canonical.com>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Mar 9, 2012 at 3:17 AM, AceLan Kao <acelan.kao@canonical.com> w=
-rote:
-> Some of the ASUS ET2012 All-in-One machines that use a scalar board
-> to control the brightness, and it only accepts brightness up or down
-> comm. So, I introduced a get_scalar_command() function to pass the
-> command to the scalar board through WMI.
->
-> Besides, we have to store the brightness value locally, for we need t=
-he
-> old value to know the brightness is increasing or decreasing.
->
-> BTW, since there is no way to retrieve the actual brightness(it would=
- be
-> a fixed value), and the max brightness value would be fixed to 1, so =
-we
-> have to keep passing the brightness up/down command when we reached t=
-he
-> max brightness value or 0.
->
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-> ---
-> =C2=A0drivers/platform/x86/asus-wmi.c =C2=A0| =C2=A0 21 +++++++++++++=
-++++++++
-> =C2=A0drivers/platform/x86/asus-wmi.h =C2=A0| =C2=A0 =C2=A01 +
-> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 13 +++++++++++++
-> =C2=A03 files changed, 35 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
-sus-wmi.c
-> index 72d731c..48e96f3 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1116,6 +1116,25 @@ static int read_brightness(struct backlight_de=
-vice *bd)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return retval & ASUS_WMI_DSTS_BRIGHTNESS_M=
-ASK;
-> =C2=A0}
->
-> +static u32 get_scalar_command(struct backlight_device *bd)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 struct asus_wmi *asus =3D bl_get_data(bd);
-> + =C2=A0 =C2=A0 =C2=A0 u32 ctrl_param =3D 0;
-> + =C2=A0 =C2=A0 =C2=A0 static int brightness_old =3D -1;
-
-Please add brightness_old to "struct asus_wmi" instead of using a stati=
-c.
-
-> +
-> + =C2=A0 =C2=A0 =C2=A0 if (brightness_old =3D=3D -1)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 brightness_old =3D=
- bd->props.brightness;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 if ((brightness_old < bd->props.brightness) ||=
- bd->props.brightness =3D=3D read_brightness_max(asus))
-
-Use bd->props.max_brightness instead of read_brightness_max()
-
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D 0x0=
-0008001;
-> + =C2=A0 =C2=A0 =C2=A0 else if ((brightness_old > bd->props.brightnes=
-s) || bd->props.brightness =3D=3D 0)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D 0x0=
-0008000;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 brightness_old =3D bd->props.brightness;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return ctrl_param;
-> +}
-> +
-> =C2=A0static int update_bl_status(struct backlight_device *bd)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_wmi *asus =3D bl_get_data(bd);
-> @@ -1123,6 +1142,8 @@ static int update_bl_status(struct backlight_de=
-vice *bd)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0int power, err;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl_param =3D bd->props.brightness;
-> + =C2=A0 =C2=A0 =C2=A0 if (unlikely(asus->driver->scalar_panel_bright=
-ness))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D get=
-_scalar_command (bd);
-
-I think I prefer a if (scala) ctrl_param =3D ; else ctrl_param =3D ; co=
-nstruct here.
-
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D asus_wmi_set_devstate(ASUS_WMI_DEV=
-ID_BRIGHTNESS,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl_param, NUL=
-L);
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/a=
-sus-wmi.h
-> index 8147c10..45fb62c 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -37,6 +37,7 @@ struct asus_wmi;
->
-> =C2=A0struct asus_wmi_driver {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0hotplug_wireless;
-> + =C2=A0 =C2=A0 =C2=A0 bool =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0scalar_panel_brightness;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0int =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 wapf;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0const char =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0*name;
-> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/=
-eeepc-wmi.c
-> index 9f6e643..c5f4c64 100644
-> --- a/drivers/platform/x86/eeepc-wmi.c
-> +++ b/drivers/platform/x86/eeepc-wmi.c
-> @@ -161,11 +161,24 @@ static void eeepc_dmi_check(struct asus_wmi_dri=
-ver *driver)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->hotplu=
-g_wireless =3D true;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_info("wlan =
-hotplug enabled\n");
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
-> +
-> + =C2=A0 =C2=A0 =C2=A0 if (strncmp(model, "ET2012", 6) =3D=3D 0) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 const struct dmi_d=
-evice *dev =3D NULL;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 char oemstring[30]=
-;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 while ((dev =3D dm=
-i_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 if (sscanf(dev->name, "AEMS%24c", oemstring) =3D=3D 1) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (oemstring[18] =3D=3D '3')
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 driver-=
->scalar_panel_brightness =3D true;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 }
-> =C2=A0}
-
-Can't this be done using real DMI matching functions ? Like
-dmi_check_system() + a DMI table ? Could be used to clean the current
-eeepc_dmi_check() too.
-
-> =C2=A0static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->hotplug_wireless =3D hotplug_wirel=
-ess;
-> + =C2=A0 =C2=A0 =C2=A0 driver->scalar_panel_brightness =3D false;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->wapf =3D -1;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0eeepc_dmi_check(driver);
-> =C2=A0}
-> --
-> 1.7.9
->
-
-Thanks !
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+T24gRnJpLCBNYXIgOSwgMjAxMiBhdCAzOjE3IEFNLCBBY2VMYW4gS2FvIDxhY2VsYW4ua2FvQGNh
+bm9uaWNhbC5jb20+IHdyb3RlOgo+IFNvbWUgQVNVUyBFVDIwMTIgQWxsLWluLU9uZSBtYWNoaW5l
+cyB3aWxsIGhhbmRsZSB0aGUgYnJpZ2h0bmVzcyBldmVudHMKPiBmcm9tIEJJT1MsIGJ1dCB3ZSBz
+dGlsbCBuZWVkIHRoZSBrZXkgZXZlbnRzIHRvIGluZm9ybSBYIHRvIGRyYXcgdGhlCj4gYnJpZ2h0
+bmVzcyBPU0QuCj4KPiBTaWduZWQtb2ZmLWJ5OiBBY2VMYW4gS2FvIDxhY2VsYW4ua2FvQGNhbm9u
+aWNhbC5jb20+Cj4gLS0tCj4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jIMKgfCDC
+oCDCoDggKysrKysrKy0KPiDCoGRyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmggwqB8IMKg
+IMKgMSArCj4gwqBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9lZWVwYy13bWkuYyB8IMKgIMKgNyArKysr
+KystCj4gwqAzIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+Cj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy13bWkuYyBiL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmMKPiBpbmRleCA0OGU5NmYzLi44MGMwNWZmIDEwMDY0
+NAo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmMKPiArKysgYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5jCj4gQEAgLTEyNzIsNyArMTI3MiwxMyBAQCBzdGF0aWMg
+dm9pZCBhc3VzX3dtaV9ub3RpZnkodTMyIHZhbHVlLCB2b2lkICpjb250ZXh0KQo+Cj4gwqAgwqAg
+wqAgwqBpZiAoY29kZSA9PSBOT1RJRllfQlJOVVBfTUlOIHx8IGNvZGUgPT0gTk9USUZZX0JSTkRP
+V05fTUlOKSB7Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBpZiAoIWFjcGlfdmlkZW9fYmFja2xp
+Z2h0X3N1cHBvcnQoKSkKPiAtIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGFzdXNf
+d21pX2JhY2tsaWdodF9ub3RpZnkoYXN1cywgb3JpZ19jb2RlKTsKPiArIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGlmICh1bmxpa2Vs
+eShhc3VzLT5kcml2ZXItPm5lZWRfYnJpZ2h0bmVzc19ldmVudCkpCj4gKyDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBzcGFyc2Vfa2V5bWFwX3JlcG9ydF9ldmVu
+dChhc3VzLT5pbnB1dGRldiwKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvZGUsIGtleV92YWx1ZSwgYXV0b3JlbGVhc2UpOwo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZWxzZQo+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgYXN1c193bWlfYmFja2xpZ2h0X25vdGlmeShh
+c3VzLCBvcmlnX2NvZGUpOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgfQoKSWYgZXZlbnRzIGFy
+ZSBhbHJlYWR5IGhhbmRsZWQgYnkgdGhlIEJJT1MgeW91IG5lZWQgdG8gdXNlCmJhY2tsaWdodF9u
+b3RpZnkuIEtleXMgYXJlIG9ubHkgc2VudCB3aGVuIHVzZXJzcGFjZSBuZWVkIHRvIHVwZGF0ZSB0
+aGUKYmFja2xpZ2h0IGJ5IGl0c2VsZi4gVGhlIEdVSSBzaG91bGQgb25seSB1c2UgdWV2ZW50cyBz
+ZW50IGJ5IHRoZQpiYWNrbGlnaHQgZGV2aWNlLgpJcyB0aGUgZ2VuZXJpYyBBQ1BJIGJhY2tsaWdo
+dCBmdW5jdGlvbmFsID8gRG8geW91IGhhdmUgdG8gdXNlCmFjcGlfYmFja2xpZ2h0PXZlbmRvciA/
+Cgo+IMKgIMKgIMKgIMKgfSBlbHNlIGlmICghc3BhcnNlX2tleW1hcF9yZXBvcnRfZXZlbnQoYXN1
+cy0+aW5wdXRkZXYsIGNvZGUsCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAga2V5X3ZhbHVlLCBhdXRvcmVsZWFzZSkp
+Cj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBwcl9pbmZvKCJVbmtub3duIGtleSAleCBwcmVzc2Vk
+XG4iLCBjb2RlKTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy13bWku
+aCBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmgKPiBpbmRleCA0NWZiNjJjLi5kNjY4
+M2JhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtd21pLmgKPiArKysg
+Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLXdtaS5oCj4gQEAgLTM4LDYgKzM4LDcgQEAgc3Ry
+dWN0IGFzdXNfd21pOwo+IMKgc3RydWN0IGFzdXNfd21pX2RyaXZlciB7Cj4gwqAgwqAgwqAgwqBi
+b29sIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaG90cGx1Z193aXJlbGVzczsKPiDCoCDC
+oCDCoCDCoGJvb2wgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBzY2FsYXJfcGFuZWxfYnJp
+Z2h0bmVzczsKPiArIMKgIMKgIMKgIGJvb2wgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBu
+ZWVkX2JyaWdodG5lc3NfZXZlbnQ7Cj4gwqAgwqAgwqAgwqBpbnQgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgd2FwZjsKPgo+IMKgIMKgIMKgIMKgY29uc3QgY2hhciDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCpuYW1lOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9lZWVwYy13
+bWkuYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2VlZXBjLXdtaS5jCj4gaW5kZXggYzVmNGM2NC4u
+MzExZjMxNyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9lZWVwYy13bWkuYwo+
+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2VlZXBjLXdtaS5jCj4gQEAgLTYzLDYgKzYzLDgg
+QEAgTU9EVUxFX1BBUk1fREVTQyhob3RwbHVnX3dpcmVsZXNzLAo+Cj4gwqBzdGF0aWMgY29uc3Qg
+c3RydWN0IGtleV9lbnRyeSBlZWVwY193bWlfa2V5bWFwW10gPSB7Cj4gwqAgwqAgwqAgwqAvKiBT
+bGVlcCBhbHJlYWR5IGhhbmRsZWQgdmlhIGdlbmVyaWMgQUNQSSBjb2RlICovCj4gKyDCoCDCoCDC
+oCB7IEtFX0tFWSwgMHgxMSwgeyBLRVlfQlJJR0hUTkVTU1VQIH0gfSwKPiArIMKgIMKgIMKgIHsg
+S0VfS0VZLCAweDIwLCB7IEtFWV9CUklHSFRORVNTRE9XTiB9IH0sCj4gwqAgwqAgwqAgwqB7IEtF
+X0tFWSwgMHgzMCwgeyBLRVlfVk9MVU1FVVAgfSB9LAo+IMKgIMKgIMKgIMKgeyBLRV9LRVksIDB4
+MzEsIHsgS0VZX1ZPTFVNRURPV04gfSB9LAo+IMKgIMKgIMKgIMKgeyBLRV9LRVksIDB4MzIsIHsg
+S0VZX01VVEUgfSB9LAo+IEBAIC0xNjcsNyArMTY5LDkgQEAgc3RhdGljIHZvaWQgZWVlcGNfZG1p
+X2NoZWNrKHN0cnVjdCBhc3VzX3dtaV9kcml2ZXIgKmRyaXZlcikKPiDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoGNoYXIgb2Vtc3RyaW5nWzMwXTsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHdoaWxl
+ICgoZGV2ID0gZG1pX2ZpbmRfZGV2aWNlKERNSV9ERVZfVFlQRV9PRU1fU1RSSU5HLCBOVUxMLCBk
+ZXYpKSkgewo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgaWYgKHNzY2FuZihk
+ZXYtPm5hbWUsICJBRU1TJTI0YyIsIG9lbXN0cmluZykgPT0gMSkgewo+IC0gwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaWYgKG9lbXN0cmluZ1sxOF0gPT0gJzMn
+KQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaWYgKG9l
+bXN0cmluZ1sxOF0gPT0gJzEnKQo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZHJpdmVyLT5uZWVkX2JyaWdodG5lc3NfZXZlbnQgPSB0
+cnVlOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZWxz
+ZSBpZiAob2Vtc3RyaW5nWzE4XSA9PSAnMycpCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBkcml2ZXItPnNjYWxhcl9wYW5lbF9icmln
+aHRuZXNzID0gdHJ1ZTsKPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoGJyZWFrOwo+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfQo+IEBA
+IC0xNzksNiArMTgzLDcgQEAgc3RhdGljIHZvaWQgZWVlcGNfd21pX3F1aXJrcyhzdHJ1Y3QgYXN1
+c193bWlfZHJpdmVyICpkcml2ZXIpCj4gwqB7Cj4gwqAgwqAgwqAgwqBkcml2ZXItPmhvdHBsdWdf
+d2lyZWxlc3MgPSBob3RwbHVnX3dpcmVsZXNzOwo+IMKgIMKgIMKgIMKgZHJpdmVyLT5zY2FsYXJf
+cGFuZWxfYnJpZ2h0bmVzcyA9IGZhbHNlOwo+ICsgwqAgwqAgwqAgZHJpdmVyLT5uZWVkX2JyaWdo
+dG5lc3NfZXZlbnQgPSBmYWxzZTsKPiDCoCDCoCDCoCDCoGRyaXZlci0+d2FwZiA9IC0xOwo+IMKg
+IMKgIMKgIMKgZWVlcGNfZG1pX2NoZWNrKGRyaXZlcik7Cj4gwqB9Cj4gLS0KPiAxLjcuOQo+CgoK
+Ci0tIApDb3JlbnRpbiBDaGFyeQpodHRwOi8veGYuaWtzYWlmLm5ldAo=
