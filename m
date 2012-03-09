@@ -1,158 +1,80 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH 3/3] asus-wmi: store backlight power status for AIO machine
-Date: Fri,  9 Mar 2012 10:17:09 +0800
-Message-ID: <1331259429-6216-4-git-send-email-acelan.kao@canonical.com>
-References: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: ignore missing Aspire 5741G keys
+Date: Fri, 09 Mar 2012 12:17:49 +0800
+Message-ID: <1331266669.10557.107.camel@linux-s257.site>
+References: <20120306123355.GA3904@swordfish.minsk.epam.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gx0-f174.google.com ([209.85.161.174]:63089 "EHLO
-	mail-gx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757812Ab2CICRa (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Mar 2012 21:17:30 -0500
-Received: by gghe5 with SMTP id e5so656902ggh.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Mar 2012 18:17:29 -0800 (PST)
-In-Reply-To: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
+Received: from victor.provo.novell.com ([137.65.250.26]:38497 "EHLO
+	victor.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756927Ab2CIETb (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Thu, 8 Mar 2012 23:19:31 -0500
+In-Reply-To: <20120306123355.GA3904@swordfish.minsk.epam.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Due to some implementation reasons, ASUS ET2012 All-in-One machines
-can't report the correct backlight power status, it will always return
-1. To track the backlight power status correctly, we have to store the
-status by ourselves.
+Hi Sergey,=20
 
-BTW, by the BIOS design, the backlight power will be turn on/off
-sequently, no matter what the value of the parameter will be.
-More over, the brightness adjustment command will turn on the backlight
-power. Those behaviors will make us fail to track the backlight power
-status.
-For example, While we are trying to turn on the backlight power,
-we will send out the brightness adjustment command and then trying to
-figure out if we have to turn on the backlight power, then send out
-the command. But, the real case is that, the backlight power turns on
-while sending the brightness adjustment command, and then we send out
-the command to turn on the backlight power, it actually will turn off
-the backlight power and the backlight power status we recorded becomes
-wrong. So, we have to seperate these two commands by a if statement.
+=E6=96=BC =E4=BA=8C=EF=BC=8C2012-03-06 =E6=96=BC 15:33 +0300=EF=BC=8CSe=
+rgey Senozhatsky =E6=8F=90=E5=88=B0=EF=BC=9A
+> acer-wmi: ignore missing Aspire 5741G keys
+>=20
+> Ignore Aspire's 5741G:
+>  KEY_PREVIOUSSONG
+>  KEY_NEXTSONG
+>  KEY_PLAYPAUSE
+>  KEY_STOP
+>  KEY_VOLUMEDOWN
+>=20
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+>=20
+> ---
+>=20
+>  drivers/platform/x86/acer-wmi.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index b848277..d8a67cc 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -107,11 +107,16 @@ static const struct key_entry acer_wmi_keymap[]=
+ =3D {
+>  	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
+>  	{KE_IGNORE, 0x41, {KEY_MUTE} },
+>  	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
+> +	{KE_IGNORE, 0x4d, {KEY_PREVIOUSSONG} },=09
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- drivers/platform/x86/asus-wmi.c  |   32 +++++++++++++++++++-------------
- drivers/platform/x86/asus-wmi.h  |    2 ++
- drivers/platform/x86/eeepc-wmi.c |   10 ++++++++--
- 3 files changed, 29 insertions(+), 15 deletions(-)
+Here have trailing whitespace.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 80c05ff..35e1a96 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1075,7 +1075,11 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
-  */
- static int read_backlight_power(struct asus_wmi *asus)
- {
--	int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
-+	int ret;
-+	if (unlikely(asus->driver->store_backlight_power))
-+		ret = !asus->driver->panel_power;
-+	else
-+		ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
- 
- 	if (ret < 0)
- 		return ret;
-@@ -1139,23 +1143,22 @@ static int update_bl_status(struct backlight_device *bd)
- {
- 	struct asus_wmi *asus = bl_get_data(bd);
- 	u32 ctrl_param;
--	int power, err;
--
--	ctrl_param = bd->props.brightness;
--	if (unlikely(asus->driver->scalar_panel_brightness))
--		ctrl_param = get_scalar_command (bd);
--
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
--				    ctrl_param, NULL);
--
--	if (err < 0)
--		return err;
-+	int power, err = 0;
- 
- 	power = read_backlight_power(asus);
--	if (power != -ENODEV && bd->props.power != power) {
-+	if (unlikely(power != -ENODEV && bd->props.power != power)) {
- 		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
- 					    ctrl_param, NULL);
-+		if (asus->driver->store_backlight_power)
-+			asus->driver->panel_power = bd->props.power;
-+	} else {
-+		ctrl_param = bd->props.brightness;
-+		if (unlikely(asus->driver->scalar_panel_brightness))
-+			ctrl_param = get_scalar_command (bd);
-+
-+		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
-+					    ctrl_param, NULL);
- 	}
- 	return err;
- }
-@@ -1217,6 +1220,9 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
- 
- 	asus->backlight_device = bd;
- 
-+	if (asus->driver->store_backlight_power)
-+		asus->driver->panel_power = power;
-+
- 	bd->props.brightness = read_brightness(bd);
- 	bd->props.power = power;
- 	backlight_update_status(bd);
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index d6683ba..0203b9f 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -39,6 +39,8 @@ struct asus_wmi_driver {
- 	bool			hotplug_wireless;
- 	bool			scalar_panel_brightness;
- 	bool			need_brightness_event;
-+	bool			store_backlight_power;
-+	int			panel_power;
- 	int			wapf;
- 
- 	const char		*name;
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 311f317..568c293 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -32,6 +32,7 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/dmi.h>
-+#include <linux/fb.h>
- #include <acpi/acpi_bus.h>
- 
- #include "asus-wmi.h"
-@@ -169,10 +170,13 @@ static void eeepc_dmi_check(struct asus_wmi_driver *driver)
- 		char oemstring[30];
- 		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
- 			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
--				if (oemstring[18] == '1')
-+				if (oemstring[18] == '1') {
- 					driver->need_brightness_event = true;
--				else if (oemstring[18] == '3')
-+					driver->store_backlight_power = true;
-+				} else if (oemstring[18] == '3') {
- 					driver->scalar_panel_brightness = true;
-+					driver->store_backlight_power = true;
-+				}
- 				break;
- 			}
- 		}
-@@ -184,6 +188,8 @@ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
- 	driver->hotplug_wireless = hotplug_wireless;
- 	driver->scalar_panel_brightness = false;
- 	driver->need_brightness_event = false;
-+	driver->store_backlight_power = false;
-+	driver->panel_power = FB_BLANK_UNBLANK;
- 	driver->wapf = -1;
- 	eeepc_dmi_check(driver);
- }
--- 
-1.7.9
+Please kindly use script/checkpatch.pl to check your patch before send
+to upstream.
+Please re-send after you fix.
+
+>  	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
+> +	{KE_IGNORE, 0x4e, {KEY_NEXTSONG} },
+>  	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
+> +	{KE_IGNORE, 0x4f, {KEY_PLAYPAUSE} },
+>  	{KE_IGNORE, 0x45, {KEY_STOP} },
+> +	{KE_IGNORE, 0x50, {KEY_STOP} },
+>  	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
+>  	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
+> +	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
+>  	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
+>  	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
+>  	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
+>=20
+>=20
+
+And,=20
+Please kindly send acpidump and dmidecode log to me for regression test
+reference.
+
+
+Thanks a lot!
+Joey Lee
