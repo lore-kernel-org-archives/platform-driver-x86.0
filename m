@@ -1,78 +1,30 @@
-From: Josh Boyer <jwboyer@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: Add driver for Apple gmux device
-Date: Tue, 6 Mar 2012 07:52:39 -0500
-Message-ID: <CA+5PVA6kaf3Hwyy5twtfcry6oEQA29J4o8X_1ear7N+d0GQPEw@mail.gmail.com>
-References: <1329424465-1211-1-git-send-email-seth.forshee@canonical.com>
-	<1329921457-26887-1-git-send-email-seth.forshee@canonical.com>
-	<20120305220651.GB16312@ubuntu-macmini>
-	<CA+5PVA5nRvtDPXgen5=10=Yt2YdQAUo-K+OK8MXENiQ7wEQCYg@mail.gmail.com>
-	<20120305223745.GC16312@ubuntu-macmini>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH 0/3] Enable ASUS ET2012 All-in-One platform
+Date: Fri,  9 Mar 2012 10:17:06 +0800
+Message-ID: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vw0-f46.google.com ([209.85.212.46]:45757 "EHLO
-	mail-vw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750703Ab2CFMwk convert rfc822-to-8bit (ORCPT
+Received: from mail-yx0-f174.google.com ([209.85.213.174]:38248 "EHLO
+	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757812Ab2CICRP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Mar 2012 07:52:40 -0500
-In-Reply-To: <20120305223745.GC16312@ubuntu-macmini>
+	Thu, 8 Mar 2012 21:17:15 -0500
+Received: by yenl12 with SMTP id l12so658108yen.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Mar 2012 18:17:14 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Josh Boyer <jwboyer@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-On Mon, Mar 5, 2012 at 5:37 PM, Seth Forshee <seth.forshee@canonical.co=
-m> wrote:
-> On Mon, Mar 05, 2012 at 05:10:50PM -0500, Josh Boyer wrote:
->> On Mon, Mar 5, 2012 at 5:06 PM, Seth Forshee <seth.forshee@canonical=
-=2Ecom> wrote:
->> > On Wed, Feb 22, 2012 at 08:37:37AM -0600, Seth Forshee wrote:
->> >> Apple laptops with hybrid graphics have a device named gmux that
->> >> controls the muxing of the LVDS panel between the GPUs as well as=
- screen
->> >> brightness. This driver adds support for the gmux device. Only ba=
-cklight
->> >> control is supported initially.
->> >>
->> >> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
->> >
->> > Ping. Is there anything that would prevent getting this into 3.4?
->>
->> I sent a list of patches that seemed ready for 3.4 to Matthew last w=
-eek. =A0This
->> was on the list and he seemed to agree. =A0I would guess he just eit=
-her needs
->> a minion, a clone, or a time machine. =A0Or maybe all three.
->
-> Huh, guess I missed that, and even now I can't seem to find it. Any
-> chance you could point me to the list?
+Enable ASUS ET2012 all-in-one series PCs.
 
-Oh, sorry.  It was a direct mail to Matthew, not on a list.  My mistake=
-=2E
+AceLan Kao (3):
+  asus-wmi: add scalar board brightness adj. support
+  asus-wmi: report brightness key events
+  asus-wmi: store backlight power status for AIO machine
 
-Basically, it consisted of this:
+ drivers/platform/x86/asus-wmi.c  |   55 ++++++++++++++++++++++++++++++-------
+ drivers/platform/x86/asus-wmi.h  |    4 +++
+ drivers/platform/x86/eeepc-wmi.c |   24 ++++++++++++++++
+ 3 files changed, 72 insertions(+), 11 deletions(-)
 
-"OK, so digging through the platform list, here are the patches that se=
-em
-to be bugfixes that should probably go into 3.3:
-
-http://article.gmane.org/gmane.linux.acpi.devel/51594
-http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2908
-http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2943
-(replaces 3aa4634c0f23593c5be7e819e02dd6ace671820a in your
-linux-next/for_linus branches)
-
-
-=46or 3.4, these seem ready (in addition to what you have in linux-next=
-):
-http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2968
-http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2888
-http://article.gmane.org/gmane.linux.drivers.platform.x86.devel/2934
-http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/2929
-"
-
-I might spend some time today creating a fixed up git tree with that se=
-t of
-changes/patches and see what comes of it.
-
-josh
+-- 
+1.7.9
