@@ -1,54 +1,45 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: Seth Forshee <seth.forshee@canonical.com>
 Subject: Re: [PATCH v2] platform/x86: Add driver for Apple gmux device
-Date: Mon, 12 Mar 2012 15:07:17 +0000
-Message-ID: <20120312150717.GA13211@srcf.ucam.org>
+Date: Mon, 12 Mar 2012 10:18:52 -0500
+Message-ID: <20120312151852.GB12322@ubuntu-macmini>
 References: <1329424465-1211-1-git-send-email-seth.forshee@canonical.com>
  <1329921457-26887-1-git-send-email-seth.forshee@canonical.com>
  <20120312142126.GA11969@srcf.ucam.org>
  <20120312145701.GA12322@ubuntu-macmini>
+ <20120312150717.GA13211@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:49083 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754115Ab2CLPHV (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:38093 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755789Ab2CLPSz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Mar 2012 11:07:21 -0400
+	Mon, 12 Mar 2012 11:18:55 -0400
 Content-Disposition: inline
-In-Reply-To: <20120312145701.GA12322@ubuntu-macmini>
+In-Reply-To: <20120312150717.GA13211@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 12, 2012 at 09:57:01AM -0500, Seth Forshee wrote:
-> On Mon, Mar 12, 2012 at 02:21:26PM +0000, Matthew Garrett wrote:
-> > apple_bl probably needs some matching work to disable itself if there's 
-> > a gmux present? Otherwise, this looks good.
+On Mon, Mar 12, 2012 at 03:07:17PM +0000, Matthew Garrett wrote:
+> > We also have the problem of gmux_backlight versus acpi_video. On most
+> > machines with a gmux the acpi_video backlight interface is present but
+> > just doesn't work. This problem isn't just limited to Apples. I'm of the
+> > opinion that we need a more generalized solution for arbitrating between
+> > the backlight interfaces present on a given machine, but I haven't had a
+> > chance to really think about what that would look like.
 > 
-> How do you suggest doing this? The tricky point is that the gmux object
-> can be present in ACPI when the gmux hardware isn't really present
-> (which is what the version check really does, verifies the hardware is
-> actually there). So apple_bl can't just look for the ACPI object; it
-> needs to either communicate with apple-gmux or duplicate some of its
-> logic.
+> The ACPI code appears to be trapping into system management mode, so 
+> figuring out what it's meant to do is going to be awkward. I think 
+> having a hook in the ACPI video driver to deregister it in cases where 
+> we know it doesn't work is legitimate, but since it presumably works 
+> under Windows it'd be nice to figure out what's broken about it.
 
-The alternative is for apple_bl to export its unregister function and 
-have gmux call that - downside is obviously that that results in gmux 
-depending on apple_bl. Maybe some sort of notification list in the 
-backlight core?
+Why do you presume it works under Windows? Boot camp installs a pile of
+drivers for Windows, one of those could be a driver for the backlight. I
+don't know either way. But it's pretty clear that MacOS is using the
+gmux for the backlight when it is present from the reverse engineering
+work done by others.
 
-> We also have the problem of gmux_backlight versus acpi_video. On most
-> machines with a gmux the acpi_video backlight interface is present but
-> just doesn't work. This problem isn't just limited to Apples. I'm of the
-> opinion that we need a more generalized solution for arbitrating between
-> the backlight interfaces present on a given machine, but I haven't had a
-> chance to really think about what that would look like.
-
-The ACPI code appears to be trapping into system management mode, so 
-figuring out what it's meant to do is going to be awkward. I think 
-having a hook in the ACPI video driver to deregister it in cases where 
-we know it doesn't work is legitimate, but since it presumably works 
-under Windows it'd be nice to figure out what's broken about it.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Seth
