@@ -1,63 +1,58 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 2/3] asus-wmi: report brightness key events
-Date: Mon, 12 Mar 2012 09:57:29 +0100
-Message-ID: <CAHR064iPLgxVsxNNWLKEQb9rt-=5oJ+deXXDx1DCicc02zYHbw@mail.gmail.com>
-References: <1331259429-6216-1-git-send-email-acelan.kao@canonical.com>
-	<1331259429-6216-3-git-send-email-acelan.kao@canonical.com>
-	<CAHR064jnpNcoL3XnounWq=iV0ZPrUGeuzxw6Dzfksj5unS_PTQ@mail.gmail.com>
-	<CAMz9Wg9g=ifbNKnAjubfHzos7aOwTd7RV7DsgAnPu5R=dvTrXw@mail.gmail.com>
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] acer-wmi: ignore missing Aspire 5741G keys (checkpatched)
+Date: Mon, 12 Mar 2012 13:07:13 +0300
+Message-ID: <20120312100643.GA24726@swordfish.minsk.epam.com>
+References: <20120306123355.GA3904@swordfish.minsk.epam.com>
+ <1331266669.10557.107.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:58148 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752691Ab2CLI5a (ORCPT
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:47814 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751389Ab2CLKHY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Mar 2012 04:57:30 -0400
-Received: by bkcik5 with SMTP id ik5so2372058bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Mar 2012 01:57:29 -0700 (PDT)
-In-Reply-To: <CAMz9Wg9g=ifbNKnAjubfHzos7aOwTd7RV7DsgAnPu5R=dvTrXw@mail.gmail.com>
+	Mon, 12 Mar 2012 06:07:24 -0400
+Content-Disposition: inline
+In-Reply-To: <1331266669.10557.107.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Joey Lee <jlee@novell.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 12, 2012 at 2:34 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
-> Dear Corentin,
->
-> No, I don't use acpi_backlight=vendor or something like that.
-> And there is no ACPI backlight functions in the BIOS.
+acer-wmi: ignore missing Aspire 5741G keys
 
-Hum ok, I see. I would be curious to take a look at the DSDT, is this possible ?
+Ignore Aspire's 5741G:
+ KEY_PREVIOUSSONG
+ KEY_NEXTSONG
+ KEY_PLAYPAUSE
+ KEY_STOP
+ KEY_VOLUMEDOWN
+ 
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-> Yes, we just need to inform the userspace to update the backlight
-> brightness status, and I found that using backlight_notify doesn't work, so I let it send
-> the key event directly.
+---
 
-Here is how backlight notification work these days:
+ drivers/platform/x86/acer-wmi.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-When a backlight related hotkey is received:
-- The BIOS already have handled it and changed the brightness: we have
-to call backlight_force_update(bd, BACKLIGHT_UPDATE_HOTKEY) to tell
-userspace that the brightness have changed in response to an hotkey
-- The BIOS haven't handled it: we should only send an input event
-(KEY_BRIGHTNESSDOWN or KEY_BRIGHTNESSUP) and userspace will deal with
-it (setting the appropriate sysfs file, and displaying an OSD).
-
-When we call backlight_force_update(bd, BACKLIGHT_UPDATE_HOTKEY), it
-do two things:
-- send a change notification on  the actual_brightness file (userspace
-can monitor it using inotify or related).
-- send a uevent which can be catched by udev or others (with SOURCE
-being an env variable containing the source of this change).
-
-It's possible that some desktop components don't handle that correctly
-yet (gnome-power-daemon, gnome-settings-daemon, powerdevil, xrandr,
-etc..). But in this case you should send them a bug report.
-
-ref: backlight: Allow drivers to update the core, and generate events
-on changes - https://lwn.net/Articles/341289/
-
--- 
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index b848277..e45b9ad 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -107,11 +107,16 @@ static const struct key_entry acer_wmi_keymap[] = {
+ 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
+ 	{KE_IGNORE, 0x41, {KEY_MUTE} },
+ 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
++	{KE_IGNORE, 0x4d, {KEY_PREVIOUSSONG} },
+ 	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
++	{KE_IGNORE, 0x4e, {KEY_NEXTSONG} },
+ 	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
++	{KE_IGNORE, 0x4f, {KEY_PLAYPAUSE} },
+ 	{KE_IGNORE, 0x45, {KEY_STOP} },
++	{KE_IGNORE, 0x50, {KEY_STOP} },
+ 	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
+ 	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
++	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
+ 	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
+ 	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
+ 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
