@@ -1,58 +1,48 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: Re-add x86 platform driver tree
-Date: Tue, 13 Mar 2012 10:45:55 +1100
-Message-ID: <20120313104555.000cb1d2791b11cf6161fc1d@canb.auug.org.au>
-References: <20120312140247.GA10096@srcf.ucam.org>
-	<20120313100124.bd2fca4ca2170276d6018651@canb.auug.org.au>
-	<20120312231410.GB26344@srcf.ucam.org>
+From: Manoj Iyer <manoj.iyer@canonical.com>
+Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad-acpi: recognize Lenovo as
+ version string in newer V-series BIOS
+Date: Mon, 12 Mar 2012 18:57:52 -0500 (CDT)
+Message-ID: <alpine.DEB.2.02.1203121852500.6421@lazy>
+References: <1331335944-4662-1-git-send-email-manoj.iyer@canonical.com> <1331335944-4662-2-git-send-email-manoj.iyer@canonical.com> <20120310042844.GA14972@khazad-dum.debian.net> <1331387907.2833.33.camel@scapa> <20120310160609.GA6254@khazad-dum.debian.net>
+ <alpine.DEB.2.02.1203121558340.3458@lazy> <20120312230213.GA20690@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA256";
- boundary="Signature=_Tue__13_Mar_2012_10_45_55_+1100_ls.U7oh0Q3RdK1Sy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120312231410.GB26344@srcf.ucam.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:40174 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751400Ab2CLX6D (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 12 Mar 2012 19:58:03 -0400
+In-Reply-To: <20120312230213.GA20690@khazad-dum.debian.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Manoj Iyer <manoj.iyer@canonical.com>, Yves-Alexis Perez <corsac@debian.org>, ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
---Signature=_Tue__13_Mar_2012_10_45_55_+1100_ls.U7oh0Q3RdK1Sy
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Matthew,
-
-On Mon, 12 Mar 2012 23:14:10 +0000 Matthew Garrett <mjg@redhat.com> wrote:
+>>
+>> I am trying to get this patched module tested on other thinkpad and
+>> ideapads that we have to see if there are any regression or other
+>> issues. So, please let me know if this something worth supporting.
 >
-> Could you please re-add the x86 platform driver tree? It's at=20
-> git://cavan.codon.org.uk/platform-drivers-x86.git linux-next .
+> Yes, it looks like it is worth supporting alright.
 
-Re0added from today.
+ok great. So, as I said earlier I will try and get this patched module 
+tested on other ideapads to make sure we are not breaking existing 
+systems. Unfortunately the systems are with our Taiwan engineers and will 
+take a couple of days for them to get back with results.
 
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
+>
+> --
+>  "One disk to rule them all, One disk to find them. One disk to bring
+>  them all and in the darkness grind them. In the Land of Redmond
+>  where the shadows lie." -- The Silicon Valley Tarot
+>  Henrique Holschuh
+>
+>
 
---Signature=_Tue__13_Mar_2012_10_45_55_+1100_ls.U7oh0Q3RdK1Sy
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBCAAGBQJPXoqzAAoJEECxmPOUX5FE+/UP/RiOmUbxC/6xVDYVIPuexCy5
-gM0rpA4b4e+UDeEsBeZ8xdWh3SYfDOOtLoZJDy7xjwIOipHjT5Pb4i14a7EpeAqu
-szKj0f+2DN2EwZPNUg6uW8nXgUe1vSt49epWbGuBu725ck2qD5llhOAlEBAe5iAy
-Rfm03wpYXznVr6pAbS7NBEBwc9JmLNWbKxkiQD6qjXHmMbfmHShccGpAa++4JnQk
-2FNWdnvzR35iQUW17ehi29EKclEQeDR/nFcOzJRgXFeZyt0LvldzQaJzKT/3EzSU
-4TLERNQOgba0KZBEpJ0894CkIrdZTMF+iEA7KHG2vPXokXePD75SIxFAXFthGPw0
-KqYH1ltkO026X8kUtyIqm8FQ+h5d7E/9PVpdex90SB3pQDUtLxbZI39zMsLccg1A
-+v1juaC8nZ/6FgujEexOSeGf3ETn+9WPr86KRIhleTbdi2hEbFvXLTpW1gnl7vlc
-8SnBwpMvJc/KR5zq8bwpn142IRJbX41L6CSeUa2bOk2aU03TpWkr2Ttcs8yYfXLX
-ahGBtqRUAy3vm/XZZQKoYSkn06pdhQPxUr8ltphRGGjoi/a5HkxIeZhQIwzv1DfC
-Aq70QEHQJFhEYpJTY4KiyiD2gb2tsrHTmLtSTiJFYyzBOBaIbVbexDIbI1B6xL9e
-RFLkCOIolHvJkXhEDf66
-=FCRF
------END PGP SIGNATURE-----
-
---Signature=_Tue__13_Mar_2012_10_45_55_+1100_ls.U7oh0Q3RdK1Sy--
+--
+====================
+Manoj Iyer
+Ubuntu/Canonical
+Hardware Enablement
+====================
