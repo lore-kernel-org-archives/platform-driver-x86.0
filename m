@@ -1,17 +1,17 @@
 From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: [PATCH] acer-wmi: ignore missing Aspire 5741G keys (checkpatched)
-Date: Mon, 12 Mar 2012 13:07:13 +0300
-Message-ID: <20120312100643.GA24726@swordfish.minsk.epam.com>
+Subject: Re: [PATCH] acer-wmi: ignore missing Aspire 5741G keys
+Date: Mon, 12 Mar 2012 13:14:39 +0300
+Message-ID: <20120312101438.GB24726@swordfish.minsk.epam.com>
 References: <20120306123355.GA3904@swordfish.minsk.epam.com>
  <1331266669.10557.107.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="wRRV7LY7NUeQGEoC"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:47814 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751389Ab2CLKHY (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:38869 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751212Ab2CLKOu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Mar 2012 06:07:24 -0400
+	Mon, 12 Mar 2012 06:14:50 -0400
 Content-Disposition: inline
 In-Reply-To: <1331266669.10557.107.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -19,40 +19,618 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: Joey Lee <jlee@novell.com>
 Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-acer-wmi: ignore missing Aspire 5741G keys
 
-Ignore Aspire's 5741G:
- KEY_PREVIOUSSONG
- KEY_NEXTSONG
- KEY_PLAYPAUSE
- KEY_STOP
- KEY_VOLUMEDOWN
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hello,
+
+On (03/09/12 12:17), joeyli wrote:
+> [..] 
+> Here have trailing whitespace.
+> 
+> Please kindly use script/checkpatch.pl to check your patch before send
+> to upstream.
+> Please re-send after you fix.
+>
+
+My bad, really sorry. Re-sent.
  
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 
+> And, 
+> Please kindly send acpidump and dmidecode log to me for regression test
+> reference.
+> 
 
----
+Sure, please find dmidecode output attached.
 
- drivers/platform/x86/acer-wmi.c |    5 +++++
- 1 file changed, 5 insertions(+)
+Best, 
+	Sergey
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index b848277..e45b9ad 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -107,11 +107,16 @@ static const struct key_entry acer_wmi_keymap[] = {
- 	{KE_KEY, 0x24, {KEY_PROG4} },    /* Social networking_Key */
- 	{KE_IGNORE, 0x41, {KEY_MUTE} },
- 	{KE_IGNORE, 0x42, {KEY_PREVIOUSSONG} },
-+	{KE_IGNORE, 0x4d, {KEY_PREVIOUSSONG} },
- 	{KE_IGNORE, 0x43, {KEY_NEXTSONG} },
-+	{KE_IGNORE, 0x4e, {KEY_NEXTSONG} },
- 	{KE_IGNORE, 0x44, {KEY_PLAYPAUSE} },
-+	{KE_IGNORE, 0x4f, {KEY_PLAYPAUSE} },
- 	{KE_IGNORE, 0x45, {KEY_STOP} },
-+	{KE_IGNORE, 0x50, {KEY_STOP} },
- 	{KE_IGNORE, 0x48, {KEY_VOLUMEUP} },
- 	{KE_IGNORE, 0x49, {KEY_VOLUMEDOWN} },
-+	{KE_IGNORE, 0x4a, {KEY_VOLUMEDOWN} },
- 	{KE_IGNORE, 0x61, {KEY_SWITCHVIDEOMODE} },
- 	{KE_IGNORE, 0x62, {KEY_BRIGHTNESSUP} },
- 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=dmidecode-log
+
+# dmidecode 2.11
+SMBIOS 2.6 present.
+47 structures occupying 1982 bytes.
+Table at 0x000EA260.
+
+Handle 0x0000, DMI type 0, 24 bytes
+BIOS Information
+	Vendor: Acer            
+	Version: V1.20
+	Release Date: 02/08/2011
+	ROM Size: 1536 kB
+	Characteristics:
+		PCI is supported
+		BIOS is upgradeable
+		BIOS shadowing is allowed
+		Boot from CD is supported
+		Selectable boot is supported
+		EDD is supported
+		Japanese floppy for NEC 9800 1.2 MB is supported (int 13h)
+		Japanese floppy for Toshiba 1.2 MB is supported (int 13h)
+		5.25"/360 kB floppy services are supported (int 13h)
+		5.25"/1.2 MB floppy services are supported (int 13h)
+		3.5"/720 kB floppy services are supported (int 13h)
+		3.5"/2.88 MB floppy services are supported (int 13h)
+		8042 keyboard services are supported (int 9h)
+		CGA/mono video services are supported (int 10h)
+		ACPI is supported
+		USB legacy is supported
+		BIOS boot specification is supported
+		Targeted content distribution is supported
+	BIOS Revision: 20.240
+
+Handle 0x0001, DMI type 1, 27 bytes
+System Information
+	Manufacturer: Acer            
+	Product Name: Aspire 5741G    
+	Version: V1.20
+	Serial Number: LXPSZ02105012567DD1601
+	UUID: 87861940-A4F9-9920-05F2-705AB6D376E2
+	Wake-up Type: Power Switch
+	SKU Number: Calpella_CRB
+	Family: Intel_Mobile
+
+Handle 0x0002, DMI type 2, 16 bytes
+Base Board Information
+	Manufacturer: Acer            
+	Product Name: Aspire 5741G    
+	Version: V1.20
+	Serial Number: Base Board Serial Number
+	Asset Tag: Base Board Asset Tag
+	Features:
+		Board is a hosting board
+		Board is replaceable
+	Location In Chassis: Base Board Chassis Location
+	Chassis Handle: 0x0003
+	Type: Motherboard
+	Contained Object Handles: 0
+
+Handle 0x0003, DMI type 3, 22 bytes
+Chassis Information
+	Manufacturer: Acer            
+	Type: Notebook
+	Lock: Not Present
+	Version: V1.20
+	Serial Number: Chassis Serial Number
+	Asset Tag:                  
+	Boot-up State: Safe
+	Power Supply State: Safe
+	Thermal State: Safe
+	Security Status: None
+	OEM Information: 0x00000000
+	Height: Unspecified
+	Number Of Power Cords: 1
+	Contained Elements: 0
+	SKU Number: Not Specified
+
+Handle 0x0004, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J5C1
+	Type: x16 PCI Express x16
+	Current Usage: Available
+	Length: Other
+	ID: 0
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x0005, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J6C1
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 0
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x0006, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J6C2
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 1
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x0007, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J6D2
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 2
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x0008, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J7C1
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 3
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x0009, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J7D2
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 4
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x000A, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J8C2
+	Type: x16 PCI Express x16
+	Current Usage: Available
+	Length: Other
+	ID: 1
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x000B, DMI type 9, 17 bytes
+System Slot Information
+	Designation: J8C1
+	Type: x1 PCI Express x1
+	Current Usage: Available
+	Length: Other
+	ID: 5
+	Characteristics:
+		PME signal is supported
+		Hot-plug devices are supported
+	Bus Address: 0000:00:1f.7
+
+Handle 0x000C, DMI type 10, 6 bytes
+On Board Device Information
+	Type: Video
+	Status: Enabled
+	Description: Intel Video Graphics Controller
+
+Handle 0x000D, DMI type 10, 6 bytes
+On Board Device Information
+	Type: Ethernet
+	Status: Enabled
+	Description: Realtek Lan Controller
+
+Handle 0x000E, DMI type 11, 5 bytes
+OEM Strings
+	String 1: Acer
+	String 2: zB-xne9zlRXGO
+	String 3: XHaEJI7gJn+MZ
+	String 4: DN-1RUDylKlj1
+
+Handle 0x000F, DMI type 12, 5 bytes
+System Configuration Options
+	Option 1: SMI:00B2C102
+	Option 2: DSN:                               
+	Option 3: DSN:                               
+	Option 4: DSN:                               
+	Option 5: TIM:            
+
+Handle 0x0010, DMI type 21, 7 bytes
+Built-in Pointing Device
+	Type: Touch Pad
+	Interface: PS/2
+	Buttons: 4
+
+Handle 0x0011, DMI type 22, 26 bytes
+Portable Battery
+	Location: Fake
+	Manufacturer: -Virtual Battery 0-
+	Manufacture Date: 10/12/2007
+	Serial Number: Battery 0
+	Name: Li-lon Battery
+	Chemistry: Lithium Ion
+	Design Capacity: Unknown
+	Design Voltage: Unknown
+	SBDS Version: Not Specified
+	Maximum Error: Unknown
+	OEM-specific Information: 0x00000000
+
+Handle 0x0012, DMI type 27, 14 bytes
+Cooling Device
+	Type: Fan
+	Status: OK
+	OEM-specific Information: 0x00000000
+	Nominal Speed: 2000 rpm
+
+Handle 0x0013, DMI type 32, 20 bytes
+System Boot Information
+	Status: No errors detected
+
+Handle 0x0014, DMI type 39, 22 bytes
+System Power Supply
+	Location: OEM_Define0
+	Name: OEM_Define1
+	Manufacturer: OEM_Define2
+	Serial Number: OEM_Define3
+	Asset Tag: OEM_Define4
+	Model Part Number: OEM_Define5
+	Revision: OEM_Define6
+	Max Power Capacity: 75 W
+	Status: Present, OK
+	Type: Regulator
+	Input Voltage Range Switching: Auto-switch
+	Plugged: No
+	Hot Replaceable: No
+	Cooling Device Handle: 0x0012
+
+Handle 0x0015, DMI type 40, 18 bytes
+Additional Information 1
+	Referenced Handle: 0x0004
+	Referenced Offset: 0x05
+	String: PCIExpressx16
+	Value: 0xaa
+Additional Information 2
+	Referenced Handle: 0x0000
+	Referenced Offset: 0x05
+	String: Compiler Version: VC 9.0
+	Value: 0x05dc
+
+Handle 0x0016, DMI type 41, 11 bytes
+Onboard Device
+	Reference Designation: Hanksville Gbe Lan Connection
+	Type: Ethernet
+	Status: Enabled
+	Type Instance: 1
+	Bus Address: 0000:00:00.1
+
+Handle 0x0017, DMI type 136, 6 bytes
+OEM-specific Type
+	Header and Data:
+		88 06 17 00 5A 5A
+
+Handle 0x0018, DMI type 129, 8 bytes
+OEM-specific Type
+	Header and Data:
+		81 08 18 00 01 01 02 01
+	Strings:
+		Intel_ASF
+		Intel_ASF_001
+
+Handle 0x0019, DMI type 130, 20 bytes
+OEM-specific Type
+	Header and Data:
+		82 14 19 00 24 41 4D 54 01 01 01 01 01 A5 1F 02
+		00 00 00 00
+
+Handle 0x001A, DMI type 16, 15 bytes
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: None
+	Maximum Capacity: 16 GB
+	Error Information Handle: No Error
+	Number Of Devices: 2
+
+Handle 0x001B, DMI type 17, 28 bytes
+Memory Device
+	Array Handle: 0x001A
+	Error Information Handle: 0x001D
+	Total Width: 64 bits
+	Data Width: 64 bits
+	Size: 2048 MB
+	Form Factor: SODIMM
+	Set: None
+	Locator: DIMM0
+	Bank Locator: BANK 0
+	Type: DDR3
+	Type Detail: Synchronous
+	Speed: 1067 MHz
+	Manufacturer: Not Specified
+	Serial Number: 84074923
+	Asset Tag: Unknown
+	Part Number: M471B5673EH1-CF8  
+	Rank: Unknown
+
+Handle 0x001C, DMI type 6, 12 bytes
+Memory Module Information
+	Socket Designation: DIMM0
+	Bank Connections: None
+	Current Speed: Unknown
+	Type: DIMM
+	Installed Size: 2048 MB (Single-bank Connection)
+	Enabled Size: 2048 MB (Single-bank Connection)
+	Error Status: OK
+
+Handle 0x001D, DMI type 18, 23 bytes
+32-bit Memory Error Information
+	Type: OK
+	Granularity: Unknown
+	Operation: Unknown
+	Vendor Syndrome: Unknown
+	Memory Array Address: Unknown
+	Device Address: Unknown
+	Resolution: Unknown
+
+Handle 0x001E, DMI type 20, 19 bytes
+Memory Device Mapped Address
+	Starting Address: 0x00000000000
+	Ending Address: 0x0007FFFFFFF
+	Range Size: 2 GB
+	Physical Device Handle: 0x001B
+	Memory Array Mapped Address Handle: 0x0024
+	Partition Row Position: Unknown
+	Interleave Position: 1
+	Interleaved Data Depth: 1
+
+Handle 0x001F, DMI type 17, 28 bytes
+Memory Device
+	Array Handle: 0x001A
+	Error Information Handle: 0x0021
+	Total Width: 64 bits
+	Data Width: 64 bits
+	Size: 2048 MB
+	Form Factor: SODIMM
+	Set: None
+	Locator: DIMM1
+	Bank Locator: BANK 2
+	Type: DDR3
+	Type Detail: Synchronous
+	Speed: 1067 MHz
+	Manufacturer: Not Specified
+	Serial Number: 84074927
+	Asset Tag: Unknown
+	Part Number: M471B5673EH1-CF8  
+	Rank: Unknown
+
+Handle 0x0020, DMI type 6, 12 bytes
+Memory Module Information
+	Socket Designation: DIMM1
+	Bank Connections: None
+	Current Speed: Unknown
+	Type: DIMM
+	Installed Size: 2048 MB (Single-bank Connection)
+	Enabled Size: 2048 MB (Single-bank Connection)
+	Error Status: OK
+
+Handle 0x0021, DMI type 18, 23 bytes
+32-bit Memory Error Information
+	Type: OK
+	Granularity: Unknown
+	Operation: Unknown
+	Vendor Syndrome: Unknown
+	Memory Array Address: Unknown
+	Device Address: Unknown
+	Resolution: Unknown
+
+Handle 0x0022, DMI type 20, 19 bytes
+Memory Device Mapped Address
+	Starting Address: 0x00000000000
+	Ending Address: 0x0007FFFFFFF
+	Range Size: 2 GB
+	Physical Device Handle: 0x001F
+	Memory Array Mapped Address Handle: 0x0024
+	Partition Row Position: Unknown
+	Interleave Position: 2
+	Interleaved Data Depth: 1
+
+Handle 0x0023, DMI type 18, 23 bytes
+32-bit Memory Error Information
+	Type: OK
+	Granularity: Unknown
+	Operation: Unknown
+	Vendor Syndrome: Unknown
+	Memory Array Address: Unknown
+	Device Address: Unknown
+	Resolution: Unknown
+
+Handle 0x0024, DMI type 19, 15 bytes
+Memory Array Mapped Address
+	Starting Address: 0x00000000000
+	Ending Address: 0x000FFFFFFFF
+	Range Size: 4 GB
+	Physical Array Handle: 0x001A
+	Partition Width: 2
+
+Handle 0x0025, DMI type 5, 20 bytes
+Memory Controller Information
+	Error Detecting Method: None
+	Error Correcting Capabilities:
+		Unknown
+		None
+	Supported Interleave: One-way Interleave
+	Current Interleave: One-way Interleave
+	Maximum Memory Module Size: 8192 MB
+	Maximum Total Memory Size: 16384 MB
+	Supported Speeds:
+		Other
+	Supported Memory Types:
+		Other
+	Memory Module Voltage: Unknown
+	Associated Memory Slots: 2
+		0x001C
+		0x0020
+	Enabled Error Correcting Capabilities:
+		None
+
+Handle 0x0026, DMI type 170, 78 bytes
+OEM-specific Type
+	Header and Data:
+		AA 4E 26 00 01 08 08 00 7B 00 0F 00 06 00 03 02
+		01 08 24 02 01 00 23 02 08 00 41 02 04 00 49 02
+		01 00 4A 02 02 00 4D 02 20 00 4E 02 40 00 4F 02
+		08 00 50 02 10 00 61 02 08 00 62 02 04 00 63 02
+		01 00 64 02 02 00 81 02 04 00 85 02 02 00
+
+Handle 0x0027, DMI type 171, 34 bytes
+OEM-specific Type
+	Header and Data:
+		AB 22 27 00 01 02 10 E0 68 02 E4 14 92 16 05 86
+		80 56 3B 07 E4 14 57 43 04 02 04 65 96 08 89 04
+		11 E0
+
+Handle 0x0028, DMI type 172, 6 bytes
+OEM-specific Type
+	Header and Data:
+		AC 06 28 00 01 00
+
+Handle 0x0029, DMI type 4, 42 bytes
+Processor Information
+	Socket Designation: CPU
+	Type: Central Processor
+	Family: Core 2 Duo
+	Manufacturer: Intel(R) Corporation
+	ID: 52 06 02 00 FF FB EB BF
+	Signature: Type 0, Family 6, Model 37, Stepping 2
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		DS (Debug store)
+		ACPI (ACPI supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		SS (Self-snoop)
+		HTT (Multi-threading)
+		TM (Thermal monitor supported)
+		PBE (Pending break enabled)
+	Version: Intel(R) Core(TM) i5 CPU       M 430  @ 2.27GHz
+	Voltage: 0.0 V
+	External Clock: 1066 MHz
+	Max Speed: 2266 MHz
+	Current Speed: 2268 MHz
+	Status: Populated, Enabled
+	Upgrade: ZIF Socket
+	L1 Cache Handle: 0x002D
+	L2 Cache Handle: 0x002C
+	L3 Cache Handle: 0x002A
+	Serial Number: Not Specified
+	Asset Tag: FFFF
+	Part Number: Not Specified
+	Core Count: 2
+	Core Enabled: 2
+	Thread Count: 4
+	Characteristics:
+		64-bit capable
+
+Handle 0x002A, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: L3 Cache
+	Configuration: Enabled, Not Socketed, Level 3
+	Operational Mode: Write Through
+	Location: Internal
+	Installed Size: 3072 kB
+	Maximum Size: 3072 kB
+	Supported SRAM Types:
+		Synchronous
+	Installed SRAM Type: Synchronous
+	Speed: Unknown
+	Error Correction Type: Single-bit ECC
+	System Type: Unified
+	Associativity: Other
+
+Handle 0x002B, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: L1 Cache
+	Configuration: Enabled, Not Socketed, Level 1
+	Operational Mode: Write Through
+	Location: Internal
+	Installed Size: 32 kB
+	Maximum Size: 32 kB
+	Supported SRAM Types:
+		Synchronous
+	Installed SRAM Type: Synchronous
+	Speed: Unknown
+	Error Correction Type: Single-bit ECC
+	System Type: Data
+	Associativity: 8-way Set-associative
+
+Handle 0x002C, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: L2 Cache
+	Configuration: Enabled, Not Socketed, Level 2
+	Operational Mode: Write Through
+	Location: Internal
+	Installed Size: 256 kB
+	Maximum Size: 256 kB
+	Supported SRAM Types:
+		Synchronous
+	Installed SRAM Type: Synchronous
+	Speed: Unknown
+	Error Correction Type: Single-bit ECC
+	System Type: Unified
+	Associativity: 8-way Set-associative
+
+Handle 0x002D, DMI type 7, 19 bytes
+Cache Information
+	Socket Designation: L1 Cache
+	Configuration: Enabled, Not Socketed, Level 1
+	Operational Mode: Write Through
+	Location: Internal
+	Installed Size: 32 kB
+	Maximum Size: 32 kB
+	Supported SRAM Types:
+		Synchronous
+	Installed SRAM Type: Synchronous
+	Speed: Unknown
+	Error Correction Type: Single-bit ECC
+	System Type: Instruction
+	Associativity: 4-way Set-associative
+
+Handle 0x002E, DMI type 127, 4 bytes
+End Of Table
+
+
+--wRRV7LY7NUeQGEoC--
