@@ -1,80 +1,41 @@
-From: Matthew Garrett <mjg@redhat.com>
-Subject: [GIT] X86 platform driver updates for 3.3
-Date: Mon, 12 Mar 2012 14:28:41 +0000
-Message-ID: <20120312142841.GA12245@srcf.ucam.org>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH v2] platform/x86: Add driver for Apple gmux device
+Date: Mon, 12 Mar 2012 09:57:01 -0500
+Message-ID: <20120312145701.GA12322@ubuntu-macmini>
+References: <1329424465-1211-1-git-send-email-seth.forshee@canonical.com>
+ <1329921457-26887-1-git-send-email-seth.forshee@canonical.com>
+ <20120312142126.GA11969@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:48095 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752395Ab2CLO2n (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:37979 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752673Ab2CLO5F (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Mar 2012 10:28:43 -0400
+	Mon, 12 Mar 2012 10:57:05 -0400
 Content-Disposition: inline
+In-Reply-To: <20120312142126.GA11969@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On Mon, Mar 12, 2012 at 02:21:26PM +0000, Matthew Garrett wrote:
+> apple_bl probably needs some matching work to disable itself if there's 
+> a gmux present? Otherwise, this looks good.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+How do you suggest doing this? The tricky point is that the gmux object
+can be present in ACPI when the gmux hardware isn't really present
+(which is what the version check really does, verifies the hardware is
+actually there). So apple_bl can't just look for the ACPI object; it
+needs to either communicate with apple-gmux or duplicate some of its
+logic.
 
-Hi Linus,
+We also have the problem of gmux_backlight versus acpi_video. On most
+machines with a gmux the acpi_video backlight interface is present but
+just doesn't work. This problem isn't just limited to Apples. I'm of the
+opinion that we need a more generalized solution for arbitrating between
+the backlight interfaces present on a given machine, but I haven't had a
+chance to really think about what that would look like.
 
-Some trivial patches that fix wifi on some Lenovos and avoid a potential=20
-memory corruption issue on some Panasonics, plus two straightforward new=20
-drivers that touch no existing code.
-
-The following changes since commit fde7d9049e55ab85a390be7f415d74c9f62dd0f9:
-
-  Linux 3.3-rc7 (2012-03-10 13:49:52 -0800)
-
-are available in the git repository at:
-  ssh://cavan.codon.org.uk/srv/git/platform-drivers-x86.git for_linus
-
-Ben Hutchings (1):
-      x86: Add amilo-rfkill driver for some Fujitsu-Siemens Amilo laptops
-
-Ike Panhc (1):
-      acer-wmi: No wifi rfkill on Lenovo machines
-
-Robert Gerlach (1):
-      Fujitsu tablet extras driver
-
-Xi Wang (1):
-      panasonic-laptop: avoid overflow in acpi_pcc_hotkey_add()
-
- MAINTAINERS                             |    6 +
- drivers/platform/x86/Kconfig            |   24 ++
- drivers/platform/x86/Makefile           |    2 +
- drivers/platform/x86/acer-wmi.c         |   30 ++-
- drivers/platform/x86/amilo-rfkill.c     |  173 +++++++++++
- drivers/platform/x86/fujitsu-tablet.c   |  478 +++++++++++++++++++++++++++=
-++++
- drivers/platform/x86/panasonic-laptop.c |    4 +-
- 7 files changed, 714 insertions(+), 3 deletions(-)
- create mode 100644 drivers/platform/x86/amilo-rfkill.c
- create mode 100644 drivers/platform/x86/fujitsu-tablet.c
-
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
-
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk9eCBkACgkQ7Hkv8l1YiTu+QwCglHiEbTOm5CrA82dUZNbYCzjt
-7bwAn2lGVdX1naI39NePokwDdgHCj2fu
-=yj9P
------END PGP SIGNATURE-----
-
---r5Pyd7+fXNt84Ff3--
+Seth
