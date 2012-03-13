@@ -1,71 +1,34 @@
-From: Manoj Iyer <manoj.iyer@canonical.com>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad-acpi: recognize Lenovo as
- version string in newer V-series BIOS
-Date: Tue, 13 Mar 2012 10:53:07 -0500 (CDT)
-Message-ID: <alpine.DEB.2.02.1203131046540.4292@lazy>
-References: <1331335944-4662-1-git-send-email-manoj.iyer@canonical.com> <1331335944-4662-2-git-send-email-manoj.iyer@canonical.com> <20120310042844.GA14972@khazad-dum.debian.net> <1331387907.2833.33.camel@scapa> <20120310160609.GA6254@khazad-dum.debian.net>
- <alpine.DEB.2.02.1203121558340.3458@lazy> <20120312230213.GA20690@khazad-dum.debian.net> <alpine.DEB.2.02.1203121852500.6421@lazy>
+From: Akio Idehara <zbe64533@gmail.com>
+Subject: Re: [PATCH] toshiba_acpi: Add support for transflective LCD
+Date: Wed, 14 Mar 2012 02:04:47 +0900
+Message-ID: <4F5F7E2F.30305@gmail.com>
+References: <4F3ECEED.9000206@gmail.com> <20120312141118.GB11375@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:43378 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753927Ab2CMPxV (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Mar 2012 11:53:21 -0400
-In-Reply-To: <alpine.DEB.2.02.1203121852500.6421@lazy>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Yves-Alexis Perez <corsac@debian.org>, ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, James Ferguson <james.ferguson@canonical.com>, Dennis Chua <dennis.chua@canonical.com>, Ike Pan <ike.pan@canonical.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120312141118.GB11375@srcf.ucam.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mjg59@srcf.ucam.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Charles@schwieters.org, corentin.chary@gmail.com, seth.forshee@canonical.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 12 Mar 2012, Manoj Iyer wrote:
+I also think it seems a good idea.  I'll try to make a new patch using your suggestion.
 
->>> 
->>> I am trying to get this patched module tested on other thinkpad and
->>> ideapads that we have to see if there are any regression or other
->>> issues. So, please let me know if this something worth supporting.
->> 
->> Yes, it looks like it is worth supporting alright.
->
-> ok great. So, as I said earlier I will try and get this patched module tested 
-> on other ideapads to make sure we are not breaking existing systems. 
-> Unfortunately the systems are with our Taiwan engineers and will take a 
-> couple of days for them to get back with results.
+BTW, I have one question about disabling backlight interface.
+My toshiba laptop has three sysfs backlight interfaces,
+"acpi_video0", "intel_backlight" and "toshiba".
+Fedora16 is always using "acpi_video0" interface.
+If I add acpi_backlight=vendor in boot param,
+then Fedora16 uses "intel_backlight".
+# "toshiba" is lowest priority.
+So I want to know how to disable "intel_backlight" interface.
+Or enable "toshiba" interface only.
 
-The patch was tested by the following people on ThinkPads, V480, and 
-ideapads, and found to work as expected. I am informed that it does not 
-break existing thinkpads, and it fixes issues mentioned on the V480. Can 
-you please add the following tested-by when you apply the patch to your 
-tree?
+Matthew Garrett wrote:
 
-Tested-by: James Ferguson <james.ferguson@canonical.com>
-Tested-by: Dennis Chua <dennis.chua@canonical.com>
-Tested-by: Ike Pan <ike.pan@canonical.com>
-
-
->
->> 
->> --
->>  "One disk to rule them all, One disk to find them. One disk to bring
->>  them all and in the darkness grind them. In the Land of Redmond
->>  where the shadows lie." -- The Silicon Valley Tarot
->>  Henrique Holschuh
->> 
->> 
->
-> --
-> ====================
-> Manoj Iyer
-> Ubuntu/Canonical
-> Hardware Enablement
-> ====================
->
->
-
---
-====================
-Manoj Iyer
-Ubuntu/Canonical
-Hardware Enablement
-====================
+> Is there any userspace that currently manipulates the bl_power field? 
+> I'm wondering whether this should actually just be implemented by adding 
+> an extra level to the backlight and having 0 change to transflective 
+> mode.
+> 
