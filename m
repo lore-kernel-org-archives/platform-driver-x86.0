@@ -1,76 +1,78 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
- S205
-Date: Wed, 14 Mar 2012 14:16:15 +0800
-Message-ID: <4F6037AF.3050002@canonical.com>
-References: <4F600A1D.5060002@gmail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [patch -next 1/2] drivers, samsung-laptop: fix initialization of
+ sabi_data in sabi_set_commandb
+Date: Wed, 14 Mar 2012 08:12:19 +0100
+Message-ID: <CAHR064gzke5o4C8cg2qH1d4VuXTMmqV-sAaiOv5O650qjc01sw@mail.gmail.com>
+References: <alpine.DEB.2.00.1203132258160.5229@chino.kir.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:46114 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965222Ab2CNGQZ (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:40928 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752229Ab2CNHMV convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Mar 2012 02:16:25 -0400
-In-Reply-To: <4F600A1D.5060002@gmail.com>
+	Wed, 14 Mar 2012 03:12:21 -0400
+In-Reply-To: <alpine.DEB.2.00.1203132258160.5229@chino.kir.corp.google.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vaclav Mocek <vmocek@gmail.com>
-Cc: jlee@novell.com, mjg@redhat.com, platform-driver-x86@vger.kernel.org
+To: David Rientjes <rientjes@google.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Vaclav,
+On Wed, Mar 14, 2012 at 6:59 AM, David Rientjes <rientjes@google.com> w=
+rote:
+> Fields d0, d1, d2, and d3 are members of an anonymous struct inside a=
+n
+> anonymous union inside struct sabi_data. =C2=A0Initialization must be=
+ done by
+> wrapping the anonymous union and structs with brackets to avoid a bui=
+ld
+> error:
+>
+> drivers/platform/x86/samsung-laptop.c: In function =E2=80=98sabi_set_=
+commandb=E2=80=99:
+> drivers/platform/x86/samsung-laptop.c:433: error: unknown field =E2=80=
+=98d0=E2=80=99 specified in initializer
+> drivers/platform/x86/samsung-laptop.c:433: warning: missing braces ar=
+ound initializer
+> drivers/platform/x86/samsung-laptop.c:433: warning: (near initializat=
+ion for =E2=80=98in.<anonymous>=E2=80=99)
+> ...
+>
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> ---
+> =C2=A0drivers/platform/x86/samsung-laptop.c | =C2=A0 =C2=A02 +-
+> =C2=A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform=
+/x86/samsung-laptop.c
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -430,7 +430,7 @@ exit:
+> =C2=A0static int sabi_set_commandb(struct samsung_laptop *samsung,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 u16 command, u8 data)
+> =C2=A0{
+> - =C2=A0 =C2=A0 =C2=A0 struct sabi_data in =3D { .d0 =3D 0, .d1 =3D 0=
+, .d2 =3D 0, .d3 =3D 0 };
+> + =C2=A0 =C2=A0 =C2=A0 struct sabi_data in =3D { { { .d0 =3D 0, .d1 =3D=
+ 0, .d2 =3D 0, .d3 =3D 0 } } };
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0in.data[0] =3D data;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return sabi_command(samsung, command, &in,=
+ NULL);
 
-Could you try this just-merged patch and see if it fix your problem?
 
-http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=461e74377cfcfc2c0d6bbdfa8fc5fbc21b052c2a
+Acked-by: Corentin Chary <corentincj@iksaif.net>
 
-On 03/14/2012 11:01 AM, Vaclav Mocek wrote:
-> Hi all,
-> 
-> I am an unhappy owner of Lenovo Ideapad S205 and the drivers in the current development kernel (2f1c2b8) soft-blocks its Wi-Fi. S205 loads two kernel modules - ideapad-laptop.c and acer-wmi.c. The rfkill is controlled by acer-wmi.c and there is already a support for S205:
-> 
->     {
->         .callback = dmi_matched,
->         .ident = "Lenovo Ideapad S205",
->         .matches = {
->             DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->             DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
->         },
->         .driver_data = &quirk_lenovo_ideapad_s205,
->     },
-> 
-> Unfortunately, my netbook has a different DMI_PRODUCT_NAME - "Brazos" instead of "10382LG" and there are at least eighteen possibilities [1]. I spent some time Googling, comparing Smolt profiles, reading S205 Hardware Maintenance Manual [2]  and analysing the BIOS updates. It seems, that all S205 are based on AMD platform called "Inagua" (E300, E350, E450), use two types of Wi-Fi cards (RaLink RT3090 and AR9285), various combination of SO DIMMs (2 x 1GB, 1 x 2GB, 2 x 2GB), different sizes of hardrives and different keyboard layouts; so overall there are pretty much the same.
-> 
-> There is a rare netbook called Lenovo Ideapad S205s ("s" at the end), but this one is based on Intel's processors [3].
-> 
-> My proposal is very simple:
-> 
->     {
->          .callback = dmi_matched,
->          .ident = "Lenovo Ideapad S205",
->          .matches = {
->              DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -            DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
-> +            DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad S205"),
->          },
->          .driver_data = &quirk_lenovo_ideapad_s205,
->      },
-> 
-> It works. We are not able to test all product names and if the checking of DMI_PRODUCT_NAME is really required, it should be done in an additional step. The current situation is pretty bad - problems with UEFI booting (the only possibility)[4], impossibility to switch the power off, failing brightness control - and without a functional network connection for a start, it is better to throw it out of the window.
-> 
-> [1] http://smolt.fedoraproject.org/reports/view_profiles?profile=Ideapad+S205&search=Submit+Query
-> [2] http://www.manualowl.com/m/Lenovo/IdeaPad-S205/Manual/192357
-> [3] http://www.manualowl.com/m/Lenovo/IdeaPad-S205s/Manual/227621
-> [4] http://fedoraproject.org/wiki/Common_F16_bugs#UEFI_install_to_Lenovo_Ideapad_S205_fails_to_boot
-> 
-> 
-> Best Regards
-> 
-> Vaclav Mocek
-> 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+David, just in case, I found this mail in my spam folder, probably
+because your smtp server is not allowed to send @google.com mails.
+
+Also, with which version of gcc is this necessary ? Old version worked
+with 4.5 and 4.6.
+
+Matthew, could you merge that one and the other directly in your tree ?=
+ Thanks
+--=20
+Corentin Chary
+http://xf.iksaif.net
