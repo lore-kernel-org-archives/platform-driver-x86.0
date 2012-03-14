@@ -1,40 +1,115 @@
-From: Vaclav Mocek <vmocek@gmail.com>
-Subject: Re: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
- S205
-Date: Wed, 14 Mar 2012 21:49:37 +0000
-Message-ID: <4F611271.70301@gmail.com>
-References: <4F600A1D.5060002@gmail.com> <4F6037AF.3050002@canonical.com>
+From: Jonathan Nieder <jrnieder@gmail.com>
+Subject: [PATCH 3.0.y] acer-wmi: No wifi rfkill on Lenovo machines
+Date: Wed, 14 Mar 2012 16:53:27 -0500
+Message-ID: <20120314215327.GA1510@burratino>
+References: <1327546404.15260.18.camel@linux-s257.site>
+ <1328258799-19665-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:64784 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1761437Ab2CNVuJ (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:38066 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031069Ab2CNVxe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Mar 2012 17:50:09 -0400
-Received: by wibhj6 with SMTP id hj6so7882382wib.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Mar 2012 14:50:07 -0700 (PDT)
-In-Reply-To: <4F6037AF.3050002@canonical.com>
+	Wed, 14 Mar 2012 17:53:34 -0400
+Content-Disposition: inline
+In-Reply-To: <1328258799-19665-1-git-send-email-ike.pan@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: jlee@novell.com, mjg@redhat.com, platform-driver-x86@vger.kernel.org
+To: stable@vger.kernel.org
+Cc: Ike Panhc <ike.pan@canonical.com>, joeyli <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>, Andrey <andrey.k.p@gmail.com>
 
-On 03/14/2012 06:16 AM, Ike Panhc wrote:
-> Hi Vaclav,
+Hi Greg,
+
+Please consider applying 461e74377cfc (acer-wmi: No wifi rfkill on
+Lenovo machines, 2012-02-03) to the 3.2.y and 3.0.y trees.
+
+Ike Panhc wrote:
+
+> We have several reports which says acer-wmi is loaded on ideapads
+> and register rfkill for wifi which can not be unblocked.
 >
-> Could you try this just-merged patch and see if it fix your problem?
+> Since ideapad-laptop also register rfkill for wifi and it works
+> reliably, it will be fine acer-wmi is not going to register rfkill
+> for wifi once VPC2004 is found.
 >
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=461e74377cfcfc2c0d6bbdfa8fc5fbc21b052c2a
+> Also put IBM0068/LEN0068 in the list. Though thinkpad_acpi has no
+> wifi rfkill capability, there are reports which says acer-wmi also
+> block wireless on Thinkpad E520/E420.
+>
+> Signed-off-by: Ike Panhc <ike.pan@canonical.com>
 
-Hi Ike,
+The symptom was that that wifi just doesn't work on these machines
+until the acer-wmi driver is unloaded.  Bug was present in
+3.1.8 and Ubuntu's 3.0.0-12, possibly on some older kernels, too.
 
-It looks like your patch effectively removes rfkill for all Lenovo's 
-machines, except few hardcoded in acer_quirks[]. When I used F16 kernel 
-and blacklisted acer-wmi module, it  didn't work; I am going to patch it 
-and I will let you know.
+Andrey (cc-ed) confirmed that applying the patch against 3.2.y gets
+wifi working again on his Ideapad Z570, so
 
-Thanks.
+  Tested-by: Andrey <andrey.k.p@gmail.com> # Ideapad Z570
 
-Vaclav Mocek
+References:
+  http://bugs.debian.org/655941
+  http://launchpad.net/bugs/875659
+  https://bugzilla.redhat.com/show_bug.cgi?id=674353
+
+Patch left unsnipped for reference.
+
+Thanks,
+Jonathan
+
+> ---
+>  drivers/platform/x86/acer-wmi.c |   30 +++++++++++++++++++++++++++++-
+>  1 files changed, 29 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index b848277..1e5290b 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -679,6 +679,32 @@ static acpi_status AMW0_find_mailled(void)
+>  	return AE_OK;
+>  }
+>  
+> +static int AMW0_set_cap_acpi_check_device_found;
+> +
+> +static acpi_status AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
+> +	u32 level, void *context, void **retval)
+> +{
+> +	AMW0_set_cap_acpi_check_device_found = 1;
+> +	return AE_OK;
+> +}
+> +
+> +static const struct acpi_device_id norfkill_ids[] = {
+> +	{ "VPC2004", 0},
+> +	{ "IBM0068", 0},
+> +	{ "LEN0068", 0},
+> +	{ "", 0},
+> +};
+> +
+> +static int AMW0_set_cap_acpi_check_device(void)
+> +{
+> +	const struct acpi_device_id *id;
+> +
+> +	for (id = norfkill_ids; id->id[0]; id++)
+> +		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
+> +				NULL, NULL);
+> +	return AMW0_set_cap_acpi_check_device_found;
+> +}
+> +
+>  static acpi_status AMW0_set_capabilities(void)
+>  {
+>  	struct wmab_args args;
+> @@ -692,7 +718,9 @@ static acpi_status AMW0_set_capabilities(void)
+>  	 * work.
+>  	 */
+>  	if (wmi_has_guid(AMW0_GUID2)) {
+> -		interface->capability |= ACER_CAP_WIRELESS;
+> +		if ((quirks != &quirk_unknown) ||
+> +		    !AMW0_set_cap_acpi_check_device())
+> +			interface->capability |= ACER_CAP_WIRELESS;
+>  		return AE_OK;
+>  	}
+>  
+> -- 
+> 1.7.5.4
+>
