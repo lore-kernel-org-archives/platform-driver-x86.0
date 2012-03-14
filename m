@@ -1,70 +1,82 @@
-From: Manoj Iyer <manoj.iyer@canonical.com>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad-acpi: recognize Lenovo as
- version string in newer V-series BIOS
-Date: Tue, 13 Mar 2012 15:19:53 -0500 (CDT)
-Message-ID: <alpine.DEB.2.02.1203131518260.4292@lazy>
-References: <1331335944-4662-1-git-send-email-manoj.iyer@canonical.com> <1331335944-4662-2-git-send-email-manoj.iyer@canonical.com> <20120310042844.GA14972@khazad-dum.debian.net> <1331387907.2833.33.camel@scapa> <20120310160609.GA6254@khazad-dum.debian.net>
- <alpine.DEB.2.02.1203121558340.3458@lazy> <20120312230213.GA20690@khazad-dum.debian.net> <alpine.DEB.2.02.1203121852500.6421@lazy> <alpine.DEB.2.02.1203131046540.4292@lazy> <20120313200744.GA3260@khazad-dum.debian.net>
+From: Vaclav Mocek <vmocek@gmail.com>
+Subject: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
+ S205
+Date: Wed, 14 Mar 2012 03:01:49 +0000
+Message-ID: <4F600A1D.5060002@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:44661 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751635Ab2CMUUI (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:44835 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1030539Ab2CNDCN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Mar 2012 16:20:08 -0400
-In-Reply-To: <20120313200744.GA3260@khazad-dum.debian.net>
+	Tue, 13 Mar 2012 23:02:13 -0400
+Received: by wejx9 with SMTP id x9so1222324wej.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Mar 2012 20:02:12 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>
-Cc: Manoj Iyer <manoj.iyer@canonical.com>, Ike Pan <ike.pan@canonical.com>, Yves-Alexis Perez <corsac@debian.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dennis Chua <dennis.chua@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, James Ferguson <james.ferguson@canonical.com>
+To: jlee@novell.com
+Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On Tue, 13 Mar 2012, Henrique de Moraes Holschuh wrote:
+Hi all,
 
-> On Tue, 13 Mar 2012, Manoj Iyer wrote:
->> On Mon, 12 Mar 2012, Manoj Iyer wrote:
->>>>> I am trying to get this patched module tested on other thinkpad and
->>>>> ideapads that we have to see if there are any regression or other
->>>>> issues. So, please let me know if this something worth supporting.
->>>>
->>>> Yes, it looks like it is worth supporting alright.
->>>
->>> ok great. So, as I said earlier I will try and get this patched module tested
->>> on other ideapads to make sure we are not breaking existing systems.
->>> Unfortunately the systems are with our Taiwan engineers and will take a
->>> couple of days for them to get back with results.
->>
->> The patch was tested by the following people on ThinkPads, V480, and
->> ideapads, and found to work as expected. I am informed that it does not
->> break existing thinkpads, and it fixes issues mentioned on the V480. Can
->> you please add the following tested-by when you apply the patch to your
->> tree?
->>
->> Tested-by: James Ferguson <james.ferguson@canonical.com>
->> Tested-by: Dennis Chua <dennis.chua@canonical.com>
->> Tested-by: Ike Pan <ike.pan@canonical.com>
->
-> Very well,
->
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
->
-> Matthew, can you please pick it?
+I am an unhappy owner of Lenovo Ideapad S205 and the drivers in the 
+current development kernel (2f1c2b8) soft-blocks its Wi-Fi. S205 loads 
+two kernel modules - ideapad-laptop.c and acer-wmi.c. The rfkill is 
+controlled by acer-wmi.c and there is already a support for S205:
 
-Looks like I fat fingered the list, Matthew got dropped from the cc list 
-when I pasted @canonical.com addresses. Sorry Matthew.
+     {
+         .callback = dmi_matched,
+         .ident = "Lenovo Ideapad S205",
+         .matches = {
+             DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+             DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
+         },
+         .driver_data = &quirk_lenovo_ideapad_s205,
+     },
 
->
-> --
->  "One disk to rule them all, One disk to find them. One disk to bring
->  them all and in the darkness grind them. In the Land of Redmond
->  where the shadows lie." -- The Silicon Valley Tarot
->  Henrique Holschuh
->
->
+Unfortunately, my netbook has a different DMI_PRODUCT_NAME - "Brazos" 
+instead of "10382LG" and there are at least eighteen possibilities [1]. 
+I spent some time Googling, comparing Smolt profiles, reading S205 
+Hardware Maintenance Manual [2]  and analysing the BIOS updates. It 
+seems, that all S205 are based on AMD platform called "Inagua" (E300, 
+E350, E450), use two types of Wi-Fi cards (RaLink RT3090 and AR9285), 
+various combination of SO DIMMs (2 x 1GB, 1 x 2GB, 2 x 2GB), different 
+sizes of hardrives and different keyboard layouts; so overall there are 
+pretty much the same.
 
---
-====================
-Manoj Iyer
-Ubuntu/Canonical
-Hardware Enablement
-====================
+There is a rare netbook called Lenovo Ideapad S205s ("s" at the end), 
+but this one is based on Intel's processors [3].
+
+My proposal is very simple:
+
+     {
+          .callback = dmi_matched,
+          .ident = "Lenovo Ideapad S205",
+          .matches = {
+              DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-            DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
++            DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad S205"),
+          },
+          .driver_data = &quirk_lenovo_ideapad_s205,
+      },
+
+It works. We are not able to test all product names and if the checking 
+of DMI_PRODUCT_NAME is really required, it should be done in an 
+additional step. The current situation is pretty bad - problems with 
+UEFI booting (the only possibility)[4], impossibility to switch the 
+power off, failing brightness control - and without a functional network 
+connection for a start, it is better to throw it out of the window.
+
+[1] 
+http://smolt.fedoraproject.org/reports/view_profiles?profile=Ideapad+S205&search=Submit+Query
+[2] http://www.manualowl.com/m/Lenovo/IdeaPad-S205/Manual/192357
+[3] http://www.manualowl.com/m/Lenovo/IdeaPad-S205s/Manual/227621
+[4] 
+http://fedoraproject.org/wiki/Common_F16_bugs#UEFI_install_to_Lenovo_Ideapad_S205_fails_to_boot
+
+
+Best Regards
+
+Vaclav Mocek
