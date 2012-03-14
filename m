@@ -1,35 +1,61 @@
-From: David Rientjes <rientjes@google.com>
-Subject: Re: [patch -next 1/2] drivers, samsung-laptop: fix initialization
- of sabi_data in sabi_set_commandb
-Date: Wed, 14 Mar 2012 00:17:29 -0700 (PDT)
-Message-ID: <alpine.DEB.2.00.1203140016070.21777@chino.kir.corp.google.com>
-References: <alpine.DEB.2.00.1203132258160.5229@chino.kir.corp.google.com> <CAHR064gzke5o4C8cg2qH1d4VuXTMmqV-sAaiOv5O650qjc01sw@mail.gmail.com>
+From: Akio Idehara <zbe64533@gmail.com>
+Subject: [PATCH] xf86-video-intel: Add support for toshiba
+	backlight interface
+Date: Wed, 14 Mar 2012 23:37:39 +0900
+Message-ID: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:65196 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752288Ab2CNHRb (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Mar 2012 03:17:31 -0400
-Received: by iagz16 with SMTP id z16so1939685iag.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Mar 2012 00:17:31 -0700 (PDT)
-In-Reply-To: <CAHR064gzke5o4C8cg2qH1d4VuXTMmqV-sAaiOv5O650qjc01sw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
+Errors-To: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
+To: chris@chris-wilson.co.uk
+Cc: seth.forshee@canonical.com, intel-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 14 Mar 2012, Corentin Chary wrote:
+xfce4-power-manager cannot control backlight brightness via
+toshiba backlight sysfs interface.
+The reason is that xf86-video-intel doesn't treat it.
+This patch adds support for toshiba backlight sysfs interface.
 
-> David, just in case, I found this mail in my spam folder, probably
-> because your smtp server is not allowed to send @google.com mails.
-> 
+This was tested on a Toshiba Portege R500.
 
-Known gmail issue for people sending emails to LKML from google.com :)
+Signed-off-by: Akio Idehara <zbe64533@gmail.com>
+---
+ src/intel_display.c   |    1 +
+ src/sna/sna_display.c |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
 
-> Also, with which version of gcc is this necessary ? Old version worked
-> with 4.5 and 4.6.
-> 
-
-I'm using 4.4.3.
+diff --git a/src/intel_display.c b/src/intel_display.c
+index 11d0e2b..8eb8df8 100644
+--- a/src/intel_display.c
++++ b/src/intel_display.c
+@@ -131,6 +131,7 @@ static const char *backlight_interfaces[] = {
+ 	"fujitsu-laptop",
+ 	"sony",
+ 	"samsung",
++	"toshiba",
+ 	"acpi_video1", /* finally fallback to the generic acpi drivers */
+ 	"acpi_video0",
+ 	"intel_backlight",
+diff --git a/src/sna/sna_display.c b/src/sna/sna_display.c
+index 9401ca4..10c67f7 100644
+--- a/src/sna/sna_display.c
++++ b/src/sna/sna_display.c
+@@ -109,6 +109,7 @@ static const char *backlight_interfaces[] = {
+ 	"fujitsu-laptop",
+ 	"sony",
+ 	"samsung",
++	"toshiba",
+ 	"acpi_video1", /* finally fallback to the generic acpi drivers */
+ 	"acpi_video0",
+ 	NULL,
+-- 
+1.7.7.6
