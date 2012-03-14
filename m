@@ -1,43 +1,40 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] xf86-video-intel: Add support for toshiba backlight
- interface
-Date: Wed, 14 Mar 2012 09:57:40 -0500
-Message-ID: <20120314145740.GA8693@ubuntu-macmini>
-References: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
+From: Vaclav Mocek <vmocek@gmail.com>
+Subject: Re: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
+ S205
+Date: Wed, 14 Mar 2012 21:49:37 +0000
+Message-ID: <4F611271.70301@gmail.com>
+References: <4F600A1D.5060002@gmail.com> <4F6037AF.3050002@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:48452 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750857Ab2CNO5r (ORCPT
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:64784 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1761437Ab2CNVuJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Mar 2012 10:57:47 -0400
-Content-Disposition: inline
-In-Reply-To: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
+	Wed, 14 Mar 2012 17:50:09 -0400
+Received: by wibhj6 with SMTP id hj6so7882382wib.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Mar 2012 14:50:07 -0700 (PDT)
+In-Reply-To: <4F6037AF.3050002@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Akio Idehara <zbe64533@gmail.com>
-Cc: chris@chris-wilson.co.uk, intel-gfx@lists.freedesktop.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: jlee@novell.com, mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On Wed, Mar 14, 2012 at 11:37:39PM +0900, Akio Idehara wrote:
-> xfce4-power-manager cannot control backlight brightness via
-> toshiba backlight sysfs interface.
-> The reason is that xf86-video-intel doesn't treat it.
-> This patch adds support for toshiba backlight sysfs interface.
-> 
-> This was tested on a Toshiba Portege R500.
-> 
-> Signed-off-by: Akio Idehara <zbe64533@gmail.com>
+On 03/14/2012 06:16 AM, Ike Panhc wrote:
+> Hi Vaclav,
+>
+> Could you try this just-merged patch and see if it fix your problem?
+>
+> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=461e74377cfcfc2c0d6bbdfa8fc5fbc21b052c2a
 
-This isn't a good idea. On many (probably most) Toshibas the platform
-backlight interface is read-only. I think this patch will break more
-machines than it fixes.
+Hi Ike,
 
-I have a patch for toshiba_acpi that (among other things) makes it only
-register the backlight device if it can be written. I've just been
-sitting on it though because I haven't been able to get anyone with a
-read/write backlight interface to test it. If you'd be willing to help
-with testing then I can work on getting that patch into the kernel, then
-I wouldn't object to your patch.
+It looks like your patch effectively removes rfkill for all Lenovo's 
+machines, except few hardcoded in acer_quirks[]. When I used F16 kernel 
+and blacklisted acer-wmi module, it  didn't work; I am going to patch it 
+and I will let you know.
 
-Seth
+Thanks.
+
+Vaclav Mocek
