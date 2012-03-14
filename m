@@ -1,61 +1,43 @@
-From: Akio Idehara <zbe64533@gmail.com>
-Subject: [PATCH] xf86-video-intel: Add support for toshiba
-	backlight interface
-Date: Wed, 14 Mar 2012 23:37:39 +0900
-Message-ID: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] xf86-video-intel: Add support for toshiba backlight
+ interface
+Date: Wed, 14 Mar 2012 09:57:40 -0500
+Message-ID: <20120314145740.GA8693@ubuntu-macmini>
+References: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
-Errors-To: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
-To: chris@chris-wilson.co.uk
-Cc: seth.forshee@canonical.com, intel-gfx@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:48452 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750857Ab2CNO5r (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 14 Mar 2012 10:57:47 -0400
+Content-Disposition: inline
+In-Reply-To: <1331735859-6337-1-git-send-email-zbe64533@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Akio Idehara <zbe64533@gmail.com>
+Cc: chris@chris-wilson.co.uk, intel-gfx@lists.freedesktop.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org
 
-xfce4-power-manager cannot control backlight brightness via
-toshiba backlight sysfs interface.
-The reason is that xf86-video-intel doesn't treat it.
-This patch adds support for toshiba backlight sysfs interface.
+On Wed, Mar 14, 2012 at 11:37:39PM +0900, Akio Idehara wrote:
+> xfce4-power-manager cannot control backlight brightness via
+> toshiba backlight sysfs interface.
+> The reason is that xf86-video-intel doesn't treat it.
+> This patch adds support for toshiba backlight sysfs interface.
+> 
+> This was tested on a Toshiba Portege R500.
+> 
+> Signed-off-by: Akio Idehara <zbe64533@gmail.com>
 
-This was tested on a Toshiba Portege R500.
+This isn't a good idea. On many (probably most) Toshibas the platform
+backlight interface is read-only. I think this patch will break more
+machines than it fixes.
 
-Signed-off-by: Akio Idehara <zbe64533@gmail.com>
----
- src/intel_display.c   |    1 +
- src/sna/sna_display.c |    1 +
- 2 files changed, 2 insertions(+), 0 deletions(-)
+I have a patch for toshiba_acpi that (among other things) makes it only
+register the backlight device if it can be written. I've just been
+sitting on it though because I haven't been able to get anyone with a
+read/write backlight interface to test it. If you'd be willing to help
+with testing then I can work on getting that patch into the kernel, then
+I wouldn't object to your patch.
 
-diff --git a/src/intel_display.c b/src/intel_display.c
-index 11d0e2b..8eb8df8 100644
---- a/src/intel_display.c
-+++ b/src/intel_display.c
-@@ -131,6 +131,7 @@ static const char *backlight_interfaces[] = {
- 	"fujitsu-laptop",
- 	"sony",
- 	"samsung",
-+	"toshiba",
- 	"acpi_video1", /* finally fallback to the generic acpi drivers */
- 	"acpi_video0",
- 	"intel_backlight",
-diff --git a/src/sna/sna_display.c b/src/sna/sna_display.c
-index 9401ca4..10c67f7 100644
---- a/src/sna/sna_display.c
-+++ b/src/sna/sna_display.c
-@@ -109,6 +109,7 @@ static const char *backlight_interfaces[] = {
- 	"fujitsu-laptop",
- 	"sony",
- 	"samsung",
-+	"toshiba",
- 	"acpi_video1", /* finally fallback to the generic acpi drivers */
- 	"acpi_video0",
- 	NULL,
--- 
-1.7.7.6
+Seth
