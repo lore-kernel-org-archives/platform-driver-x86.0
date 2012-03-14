@@ -1,82 +1,51 @@
-From: Vaclav Mocek <vmocek@gmail.com>
-Subject: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
- S205
-Date: Wed, 14 Mar 2012 03:01:49 +0000
-Message-ID: <4F600A1D.5060002@gmail.com>
+From: David Rientjes <rientjes@google.com>
+Subject: [patch -next 1/2] drivers, samsung-laptop: fix initialization of
+ sabi_data in sabi_set_commandb
+Date: Tue, 13 Mar 2012 22:59:06 -0700 (PDT)
+Message-ID: <alpine.DEB.2.00.1203132258160.5229@chino.kir.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f174.google.com ([74.125.82.174]:44835 "EHLO
-	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030539Ab2CNDCN (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 13 Mar 2012 23:02:13 -0400
-Received: by wejx9 with SMTP id x9so1222324wej.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Mar 2012 20:02:12 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@novell.com
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org
+Content-Type: MULTIPART/MIXED; BOUNDARY="397155492-357468266-1331704722=:5229"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-ID: <alpine.DEB.2.00.1203132259050.5229@chino.kir.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi all,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I am an unhappy owner of Lenovo Ideapad S205 and the drivers in the 
-current development kernel (2f1c2b8) soft-blocks its Wi-Fi. S205 loads 
-two kernel modules - ideapad-laptop.c and acer-wmi.c. The rfkill is 
-controlled by acer-wmi.c and there is already a support for S205:
+--397155492-357468266-1331704722=:5229
+Content-Type: TEXT/PLAIN; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.DEB.2.00.1203132259051.5229@chino.kir.corp.google.com>
 
-     {
-         .callback = dmi_matched,
-         .ident = "Lenovo Ideapad S205",
-         .matches = {
-             DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-             DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
-         },
-         .driver_data = &quirk_lenovo_ideapad_s205,
-     },
+Fields d0, d1, d2, and d3 are members of an anonymous struct inside an
+anonymous union inside struct sabi_data.  Initialization must be done by
+wrapping the anonymous union and structs with brackets to avoid a build
+error:
 
-Unfortunately, my netbook has a different DMI_PRODUCT_NAME - "Brazos" 
-instead of "10382LG" and there are at least eighteen possibilities [1]. 
-I spent some time Googling, comparing Smolt profiles, reading S205 
-Hardware Maintenance Manual [2]  and analysing the BIOS updates. It 
-seems, that all S205 are based on AMD platform called "Inagua" (E300, 
-E350, E450), use two types of Wi-Fi cards (RaLink RT3090 and AR9285), 
-various combination of SO DIMMs (2 x 1GB, 1 x 2GB, 2 x 2GB), different 
-sizes of hardrives and different keyboard layouts; so overall there are 
-pretty much the same.
+drivers/platform/x86/samsung-laptop.c: In function ‘sabi_set_commandb’:
+drivers/platform/x86/samsung-laptop.c:433: error: unknown field ‘d0’ specified in initializer
+drivers/platform/x86/samsung-laptop.c:433: warning: missing braces around initializer
+drivers/platform/x86/samsung-laptop.c:433: warning: (near initialization for ‘in.<anonymous>’)
+...
 
-There is a rare netbook called Lenovo Ideapad S205s ("s" at the end), 
-but this one is based on Intel's processors [3].
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ drivers/platform/x86/samsung-laptop.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-My proposal is very simple:
-
-     {
-          .callback = dmi_matched,
-          .ident = "Lenovo Ideapad S205",
-          .matches = {
-              DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--            DMI_MATCH(DMI_PRODUCT_NAME, "10382LG"),
-+            DMI_MATCH(DMI_PRODUCT_VERSION, "Ideapad S205"),
-          },
-          .driver_data = &quirk_lenovo_ideapad_s205,
-      },
-
-It works. We are not able to test all product names and if the checking 
-of DMI_PRODUCT_NAME is really required, it should be done in an 
-additional step. The current situation is pretty bad - problems with 
-UEFI booting (the only possibility)[4], impossibility to switch the 
-power off, failing brightness control - and without a functional network 
-connection for a start, it is better to throw it out of the window.
-
-[1] 
-http://smolt.fedoraproject.org/reports/view_profiles?profile=Ideapad+S205&search=Submit+Query
-[2] http://www.manualowl.com/m/Lenovo/IdeaPad-S205/Manual/192357
-[3] http://www.manualowl.com/m/Lenovo/IdeaPad-S205s/Manual/227621
-[4] 
-http://fedoraproject.org/wiki/Common_F16_bugs#UEFI_install_to_Lenovo_Ideapad_S205_fails_to_boot
-
-
-Best Regards
-
-Vaclav Mocek
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -430,7 +430,7 @@ exit:
+ static int sabi_set_commandb(struct samsung_laptop *samsung,
+ 			     u16 command, u8 data)
+ {
+-	struct sabi_data in = { .d0 = 0, .d1 = 0, .d2 = 0, .d3 = 0 };
++	struct sabi_data in = { { { .d0 = 0, .d1 = 0, .d2 = 0, .d3 = 0 } } };
+ 
+ 	in.data[0] = data;
+ 	return sabi_command(samsung, command, &in, NULL);
+--397155492-357468266-1331704722=:5229--
