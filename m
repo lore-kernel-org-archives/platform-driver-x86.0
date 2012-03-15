@@ -1,41 +1,42 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH v4 0/3] Expanded hotkey support
-Date: Thu, 15 Mar 2012 10:51:05 -0500
-Message-ID: <20120315155105.GF9673@ubuntu-macmini>
-References: <20120305220407.GA16312@ubuntu-macmini>
- <1331004633-11862-1-git-send-email-seth.forshee@canonical.com>
- <20120312140652.GA11375@srcf.ucam.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH v2] platform/x86: Add driver for Apple gmux device
+Date: Thu, 15 Mar 2012 16:09:03 +0000
+Message-ID: <20120315160903.GA7502@srcf.ucam.org>
+References: <1329424465-1211-1-git-send-email-seth.forshee@canonical.com>
+ <1329921457-26887-1-git-send-email-seth.forshee@canonical.com>
+ <20120312142126.GA11969@srcf.ucam.org>
+ <20120312145701.GA12322@ubuntu-macmini>
+ <20120312150717.GA13211@srcf.ucam.org>
+ <20120315154756.GE9673@ubuntu-macmini>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:53884 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030550Ab2COPvH (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:55136 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031252Ab2COQJG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Mar 2012 11:51:07 -0400
+	Thu, 15 Mar 2012 12:09:06 -0400
 Content-Disposition: inline
-In-Reply-To: <20120312140652.GA11375@srcf.ucam.org>
+In-Reply-To: <20120315154756.GE9673@ubuntu-macmini>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org, lenb@kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Mar 12, 2012 at 02:06:52PM +0000, Matthew Garrett wrote:
-> On Mon, Mar 05, 2012 at 09:30:30PM -0600, Seth Forshee wrote:
-> > New version of the patches which remove the need to modify the EC
-> > driver.
-> > 
-> > Changes since v3:
-> > 
-> >  * Drop patch to add ec_get_handle()
-> >  * Use acpi_get_devices() to get EC handle
+On Thu, Mar 15, 2012 at 10:47:56AM -0500, Seth Forshee wrote:
+
+> Turns out that acpi_video0 does work under Windows, and it also works
+> under Linux depending on how the OS is booted. Doing a boot camp style
+> boot gives us working acpi_video0 and apple_bl backlights. acpi_video1
+> doesn't show up in a legacy boot situation, as evaluating _BCM gives an
+> error.
 > 
-> I'm not thrilled by this. I think making the change in the ec driver is 
-> the appropriate thing to do rather than duplicating this code elsewhere 
-> - Len, what's the holdup in merging that?
+> Under EFI boot, both acpi_video backlights show up but neither works.
+> The readback verify in apple_bl's probe fails, so that one doesn't show
+> up. Only gmux_backlight actually works.
 
-Still no response. Do we have any other options? I'd like to get these
-changes in 3.4 if at all possible so I'm not working with a forked
-version of the driver.
+Ok, that's consistent. You can probably handle that case by just calling 
+acpi_video_unregister() in gmux. Something like your patch looks fine 
+for the apple_bl case.
 
-Seth
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
