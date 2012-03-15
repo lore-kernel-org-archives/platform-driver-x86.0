@@ -1,64 +1,175 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [patch] samsung-laptop: cleanup return type: mode_t vs umode_t
-Date: Thu, 15 Mar 2012 09:14:42 +0100
-Message-ID: <CAHR064i9nWy+qagj9bcAR8h_HUTcVWBMWavWaz0BCmha=XzqTg@mail.gmail.com>
-References: <20120315071020.GA3567@elgon.mountain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH 2/2] asus-wmi: store backlight power status for AIO machine
+Date: Thu, 15 Mar 2012 16:51:20 +0800
+Message-ID: <1331801480-20664-2-git-send-email-acelan.kao@canonical.com>
+References: <1331801480-20664-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:57598 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755610Ab2COIOo convert rfc822-to-8bit (ORCPT
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:62664 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760700Ab2COIvc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Mar 2012 04:14:44 -0400
-In-Reply-To: <20120315071020.GA3567@elgon.mountain>
+	Thu, 15 Mar 2012 04:51:32 -0400
+Received: by yhmm54 with SMTP id m54so2842800yhm.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 01:51:31 -0700 (PDT)
+In-Reply-To: <1331801480-20664-1-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-On Thu, Mar 15, 2012 at 8:10 AM, Dan Carpenter <dan.carpenter@oracle.co=
-m> wrote:
-> This function returns a umode_t (unsigned short) instead of mode_t wh=
-ich
-> is an unsigned int on some architectures. =C2=A0Cleaning this up sile=
-nces a
-> compile warning:
->
-> drivers/platform/x86/samsung-laptop.c:1108:2: warning: initialization
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0from incompatible pointer type [enabled by=
- default]
->
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
->
-> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform=
-/x86/samsung-laptop.c
-> index 7d7109f..0550bc5 100644
-> --- a/drivers/platform/x86/samsung-laptop.c
-> +++ b/drivers/platform/x86/samsung-laptop.c
-> @@ -1086,7 +1086,7 @@ static int __init samsung_backlight_init(struct=
- samsung_laptop *samsung)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
-> =C2=A0}
->
-> -static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
-> +static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct =
-attribute *attr, int idx)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0struct device *dev =3D container_of(kobj, =
-struct device, kobj);
+Due to some implementation reasons, ASUS ET2012 All-in-One machines
+can't report the correct backlight power status, it will always return
+1. To track the backlight power status correctly, we have to store the
+status by ourselves.
 
-Thanks for the patch.
+BTW, by the BIOS design, the backlight power will be turn on/off
+sequently, no matter what the value of the parameter will be.
+More over, the brightness adjustment command will turn on the backlight
+power. Those behaviors will make us fail to track the backlight power
+status.
+For example, While we are trying to turn on the backlight power,
+we will send out the brightness adjustment command and then trying to
+figure out if we have to turn on the backlight power, then send out
+the command. But, the real case is that, the backlight power turns on
+while sending the brightness adjustment command, and then we send out
+the command to turn on the backlight power, it actually will turn off
+the backlight power and the backlight power status we recorded becomes
+wrong. So, we have to seperate these two commands by a if statement.
 
-Acked-by: Corentin Chary <corentincj@iksaif.net>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c  |   34 ++++++++++++++++++++--------------
+ drivers/platform/x86/asus-wmi.h  |    2 ++
+ drivers/platform/x86/eeepc-wmi.c |   12 +++++++++++-
+ 3 files changed, 33 insertions(+), 15 deletions(-)
 
-Matthew, could you grab that one too ?
-Thanks,
-
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 584db8a..0ec1b13 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1075,7 +1075,11 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
+  */
+ static int read_backlight_power(struct asus_wmi *asus)
+ {
+-	int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
++	int ret;
++	if (unlikely(asus->driver->asus_quirks->store_backlight_power))
++		ret = !asus->driver->panel_power;
++	else
++		ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
+ 
+ 	if (ret < 0)
+ 		return ret;
+@@ -1135,24 +1139,23 @@ static int update_bl_status(struct backlight_device *bd)
+ {
+ 	struct asus_wmi *asus = bl_get_data(bd);
+ 	u32 ctrl_param;
+-	int power, err;
+-
+-	if (unlikely(asus->driver->asus_quirks->scalar_panel_brightness))
+-		ctrl_param = get_scalar_command (bd);
+-	else
+-		ctrl_param = bd->props.brightness;
+-
+-	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
+-				    ctrl_param, NULL);
+-
+-	if (err < 0)
+-		return err;
++	int power, err = 0;
+ 
+ 	power = read_backlight_power(asus);
+-	if (power != -ENODEV && bd->props.power != power) {
++	if (unlikely(power != -ENODEV && bd->props.power != power)) {
+ 		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
+ 					    ctrl_param, NULL);
++		if (asus->driver->asus_quirks->store_backlight_power)
++			asus->driver->panel_power = bd->props.power;
++	} else {
++		if (unlikely(asus->driver->asus_quirks->scalar_panel_brightness))
++			ctrl_param = get_scalar_command (bd);
++		else
++			ctrl_param = bd->props.brightness;
++
++		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
++					    ctrl_param, NULL);
+ 	}
+ 	return err;
+ }
+@@ -1214,6 +1217,9 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
+ 
+ 	asus->backlight_device = bd;
+ 
++	if (asus->driver->asus_quirks->store_backlight_power)
++		asus->driver->panel_power = power;
++
+ 	bd->props.brightness = read_brightness(bd);
+ 	bd->props.power = power;
+ 	backlight_update_status(bd);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index c593d05..7d499b1 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -38,11 +38,13 @@ struct asus_wmi;
+ struct quirk_entry {
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
++	bool store_backlight_power;
+ };
+ 
+ struct asus_wmi_driver {
+ 	int			wapf;
+ 	int			brightness_old;
++	int			panel_power;
+ 
+ 	const char		*name;
+ 	struct module		*owner;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 83c33a6..64b0c10 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -32,6 +32,7 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/dmi.h>
++#include <linux/fb.h>
+ #include <acpi/acpi_bus.h>
+ 
+ #include "asus-wmi.h"
+@@ -95,8 +96,13 @@ static struct quirk_entry quirk_asus_1000h = {
+ 	.hotplug_wireless = true,
+ };
+ 
++static struct quirk_entry quirk_asus_et2012_type1 = {
++	.store_backlight_power = true,
++};
++
+ static struct quirk_entry quirk_asus_et2012_type3 = {
+ 	.scalar_panel_brightness = true,
++	.store_backlight_power = true,
+ };
+ 
+ static int dmi_matched(const struct dmi_system_id *dmi)
+@@ -110,8 +116,11 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ 		char oemstring[30];
+ 		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
+ 			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
+-				if (oemstring[18] == '3')
++				if (oemstring[18] == '1') {
++					asus_wmi->asus_quirks = &quirk_asus_et2012_type1;
++				} else if (oemstring[18] == '3') {
+ 					asus_wmi->asus_quirks = &quirk_asus_et2012_type3;
++				}
+ 				break;
+ 			}
+ 		}
+@@ -198,6 +207,7 @@ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
+ {
+ 	asus_wmi = driver;
+ 	driver->wapf = -1;
++	driver->panel_power = FB_BLANK_UNBLANK;
+ 	driver->asus_quirks = &quirk_asus_unknown;
+ 	driver->asus_quirks->hotplug_wireless = hotplug_wireless;
+ 	dmi_check_system(asus_quirks);
+-- 
+1.7.9.1
