@@ -1,37 +1,37 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH v4 0/3] Expanded hotkey support
-Date: Thu, 15 Mar 2012 16:10:03 +0000
-Message-ID: <20120315161003.GB7502@srcf.ucam.org>
-References: <20120305220407.GA16312@ubuntu-macmini>
- <1331004633-11862-1-git-send-email-seth.forshee@canonical.com>
- <20120312140652.GA11375@srcf.ucam.org>
- <20120315155105.GF9673@ubuntu-macmini>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Martin Nyhus <martin.nyhus@gmx.com>
+Subject: [PATCH] dell-laptop: Terminate quirks list properly
+Date: Thu, 15 Mar 2012 18:25:48 +0100
+Message-ID: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:37442 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1031530Ab2COQKI (ORCPT
+Received: from mailout-eu.gmx.com ([213.165.64.42]:55923 "HELO
+	mailout-eu.gmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S964869Ab2COR2Q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Mar 2012 12:10:08 -0400
-Content-Disposition: inline
-In-Reply-To: <20120315155105.GF9673@ubuntu-macmini>
+	Thu, 15 Mar 2012 13:28:16 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, Thomas Renninger <trenn@suse.de>, linux-kernel@vger.kernel.org, lenb@kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Martin Nyhus <martin.nyhus@gmx.com>
 
-On Thu, Mar 15, 2012 at 10:51:05AM -0500, Seth Forshee wrote:
-> On Mon, Mar 12, 2012 at 02:06:52PM +0000, Matthew Garrett wrote:
-> > I'm not thrilled by this. I think making the change in the ec driver is 
-> > the appropriate thing to do rather than duplicating this code elsewhere 
-> > - Len, what's the holdup in merging that?
-> 
-> Still no response. Do we have any other options? I'd like to get these
-> changes in 3.4 if at all possible so I'm not working with a forked
-> version of the driver.
+Add missing DMI_NONE entry to end of the quirks list so
+dmi_check_system() won't read past the end of the list.
 
-If I don't hear back from Len soon I'll just take this through the x86 
-platform driver tree.
+Signed-off-by: Martin Nyhus <martin.nyhus@gmx.com>
+---
+ drivers/platform/x86/dell-laptop.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index a05fc9c..e6c08ee 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -212,6 +212,7 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_dell_vostro_v130,
+ 	},
++	{ }
+ };
+ 
+ static struct calling_interface_buffer *buffer;
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.7.6
