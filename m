@@ -1,20 +1,21 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 1/2] asus-wmi: add scalar board brightness adj. support
-Date: Thu, 15 Mar 2012 10:59:36 +0100
-Message-ID: <CAHR064g9kK+xaUajS2vDdZKZ3GNhCr3HbZjD=imi-YOWb-SFvA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] asus-wmi: store backlight power status for AIO machine
+Date: Thu, 15 Mar 2012 11:01:53 +0100
+Message-ID: <CAHR064itHdch6MEFxyHqQYv2Wpo3HQ2RU8BRH0Xfa-GBvWSM5A@mail.gmail.com>
 References: <1331801480-20664-1-git-send-email-acelan.kao@canonical.com>
+	<1331801480-20664-2-git-send-email-acelan.kao@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:37775 "EHLO
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:44577 "EHLO
 	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754886Ab2COJ7j convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1752649Ab2COKBz convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Mar 2012 05:59:39 -0400
-Received: by bkcik5 with SMTP id ik5so1950955bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 02:59:36 -0700 (PDT)
-In-Reply-To: <1331801480-20664-1-git-send-email-acelan.kao@canonical.com>
+	Thu, 15 Mar 2012 06:01:55 -0400
+Received: by bkcik5 with SMTP id ik5so1952962bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 03:01:53 -0700 (PDT)
+In-Reply-To: <1331801480-20664-2-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: AceLan Kao <acelan.kao@canonical.com>
@@ -22,331 +23,234 @@ Cc: platform-driver-x86@vger.kernel.org
 
 Hello,
 
-Your patches have several style issues, you can run "checkpatch.pl" on
-them to help you fix them.
 
 On Thu, Mar 15, 2012 at 9:51 AM, AceLan Kao <acelan.kao@canonical.com> =
 wrote:
-> Some ASUS ET2012E/I All-in-One machines that use a scalar board
-> to control the brightness, and they only accept brightness up and dow=
+> Due to some implementation reasons, ASUS ET2012 All-in-One machines
+> can't report the correct backlight power status, it will always retur=
 n
-> command. So, I introduced a get_scalar_command() function to pass the
-> command to the scalar board through WMI.
+> 1. To track the backlight power status correctly, we have to store th=
+e
+> status by ourselves.
 >
-> Besides, we have to store the brightness value locally, for we need t=
-he
-> old value to know the brightness value is increasing or decreasing.
->
-> BTW, since there is no way to retrieve the actual brightness(it would=
- be
-> a fixed value), and the max brightness value would be fixed to 1, so =
-we
-> have to keep passing the brightness up/down command when we reached t=
-he
-> max brightness value or 0.
+> BTW, by the BIOS design, the backlight power will be turn on/off
+> sequently, no matter what the value of the parameter will be.
+> More over, the brightness adjustment command will turn on the backlig=
+ht
+> power. Those behaviors will make us fail to track the backlight power
+> status.
+> For example, While we are trying to turn on the backlight power,
+> we will send out the brightness adjustment command and then trying to
+> figure out if we have to turn on the backlight power, then send out
+> the command. But, the real case is that, the backlight power turns on
+> while sending the brightness adjustment command, and then we send out
+> the command to turn on the backlight power, it actually will turn off
+> the backlight power and the backlight power status we recorded become=
+s
+> wrong. So, we have to seperate these two commands by a if statement.
 >
 > Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 > ---
-> =C2=A0drivers/platform/x86/asus-wmi.c =C2=A0| =C2=A0 26 +++++++++++-
-> =C2=A0drivers/platform/x86/asus-wmi.h =C2=A0| =C2=A0 =C2=A08 +++-
-> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 81 ++++++++++++++++++=
-++++++++-----------
-> =C2=A03 files changed, 87 insertions(+), 28 deletions(-)
+> =C2=A0drivers/platform/x86/asus-wmi.c =C2=A0| =C2=A0 34 +++++++++++++=
++++++++--------------
+> =C2=A0drivers/platform/x86/asus-wmi.h =C2=A0| =C2=A0 =C2=A02 ++
+> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 12 +++++++++++-
+> =C2=A03 files changed, 33 insertions(+), 15 deletions(-)
 >
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
 sus-wmi.c
-> index 72d731c..584db8a 100644
+> index 584db8a..0ec1b13 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -784,7 +784,7 @@ static int asus_new_rfkill(struct asus_wmi *asus,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0arfkill->dev_id =3D dev_id;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0arfkill->asus =3D asus;
+> @@ -1075,7 +1075,11 @@ static int asus_wmi_hwmon_init(struct asus_wmi=
+ *asus)
+> =C2=A0*/
+> =C2=A0static int read_backlight_power(struct asus_wmi *asus)
+> =C2=A0{
+> - =C2=A0 =C2=A0 =C2=A0 int ret =3D asus_wmi_get_devstate_simple(asus,=
+ ASUS_WMI_DEVID_BACKLIGHT);
+> + =C2=A0 =C2=A0 =C2=A0 int ret;
+> + =C2=A0 =C2=A0 =C2=A0 if (unlikely(asus->driver->asus_quirks->store_=
+backlight_power))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D !asus->dri=
+ver->panel_power;
+> + =C2=A0 =C2=A0 =C2=A0 else
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D asus_wmi_g=
+et_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
 >
-> - =C2=A0 =C2=A0 =C2=A0 if (dev_id =3D=3D ASUS_WMI_DEVID_WLAN && asus-=
->driver->hotplug_wireless)
-> + =C2=A0 =C2=A0 =C2=A0 if (dev_id =3D=3D ASUS_WMI_DEVID_WLAN && asus-=
->driver->asus_quirks->hotplug_wireless)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*rfkill =3D rf=
-kill_alloc(name, &asus->platform_device->dev, type,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 &asus_r=
-fkill_wlan_ops, arfkill);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0else
-> @@ -895,7 +895,7 @@ static int asus_wmi_rfkill_init(struct asus_wmi *=
-asus)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (result && result !=3D -ENODEV)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;
->
-> - =C2=A0 =C2=A0 =C2=A0 if (!asus->driver->hotplug_wireless)
-> + =C2=A0 =C2=A0 =C2=A0 if (!asus->driver->asus_quirks->hotplug_wirele=
-ss)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto exit;
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0result =3D asus_setup_pci_hotplug(asus);
-> @@ -1116,13 +1116,31 @@ static int read_brightness(struct backlight_d=
-evice *bd)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return retval & ASUS_WMI_DSTS_BRIGHTNESS_M=
-ASK;
-> =C2=A0}
->
-> +static u32 get_scalar_command(struct backlight_device *bd)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 struct asus_wmi *asus =3D bl_get_data(bd);
-> + =C2=A0 =C2=A0 =C2=A0 u32 ctrl_param =3D 0;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 if ((asus->driver->brightness_old < bd->props.=
-brightness) || bd->props.brightness =3D=3D bd->props.max_brightness)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D 0x0=
-0008001;
-> + =C2=A0 =C2=A0 =C2=A0 else if ((asus->driver->brightness_old > bd->p=
-rops.brightness) || bd->props.brightness =3D=3D 0)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D 0x0=
-0008000;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 asus->driver->brightness_old =3D bd->props.bri=
-ghtness;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return ctrl_param;
-> +}
-> +
-> =C2=A0static int update_bl_status(struct backlight_device *bd)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret < 0)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;
+> @@ -1135,24 +1139,23 @@ static int update_bl_status(struct backlight_=
+device *bd)
 > =C2=A0{
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0struct asus_wmi *asus =3D bl_get_data(bd);
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0u32 ctrl_param;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0int power, err;
->
-> - =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D bd->props.brightness;
-> + =C2=A0 =C2=A0 =C2=A0 if (unlikely(asus->driver->asus_quirks->scalar=
+> - =C2=A0 =C2=A0 =C2=A0 int power, err;
+> -
+> - =C2=A0 =C2=A0 =C2=A0 if (unlikely(asus->driver->asus_quirks->scalar=
 _panel_brightness))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D get=
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D get=
 _scalar_command (bd);
-> + =C2=A0 =C2=A0 =C2=A0 else
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D bd-=
+> - =C2=A0 =C2=A0 =C2=A0 else
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param =3D bd-=
 >props.brightness;
+> -
+> - =C2=A0 =C2=A0 =C2=A0 err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_B=
+RIGHTNESS,
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ctrl_param, NULL);
+> -
+> - =C2=A0 =C2=A0 =C2=A0 if (err < 0)
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return err;
+> + =C2=A0 =C2=A0 =C2=A0 int power, err =3D 0;
 >
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D asus_wmi_set_devstate(ASUS_WMI_DEV=
-ID_BRIGHTNESS,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0power =3D read_backlight_power(asus);
+> - =C2=A0 =C2=A0 =C2=A0 if (power !=3D -ENODEV && bd->props.power !=3D=
+ power) {
+> + =C2=A0 =C2=A0 =C2=A0 if (unlikely(power !=3D -ENODEV && bd->props.p=
+ower !=3D power)) {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl_param =3D=
+ !!(bd->props.power =3D=3D FB_BLANK_UNBLANK);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D asus_w=
+mi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ctrl_param, NUL=
-L);
-> @@ -1200,6 +1218,8 @@ static int asus_wmi_backlight_init(struct asus_=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0ctrl_param, NULL);
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (asus->driver->=
+asus_quirks->store_backlight_power)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 asus->driver->panel_power =3D bd->props.power;
+> + =C2=A0 =C2=A0 =C2=A0 } else {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(asus-=
+>driver->asus_quirks->scalar_panel_brightness))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 ctrl_param =3D get_scalar_command (bd);
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 ctrl_param =3D bd->props.brightness;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 err =3D asus_wmi_s=
+et_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 ctrl_param, NULL);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;
+> =C2=A0}
+> @@ -1214,6 +1217,9 @@ static int asus_wmi_backlight_init(struct asus_=
 wmi *asus)
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0asus->backlight_device =3D bd;
+>
+> + =C2=A0 =C2=A0 =C2=A0 if (asus->driver->asus_quirks->store_backlight=
+_power)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 asus->driver->pane=
+l_power =3D power;
+> +
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bd->props.brightness =3D read_brightness(b=
+d);
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0bd->props.power =3D power;
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0backlight_update_status(bd);
->
-> + =C2=A0 =C2=A0 =C2=A0 asus->driver->brightness_old =3D bd->props.bri=
-ghtness;
-> +
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
-> =C2=A0}
->
 > diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/a=
 sus-wmi.h
-> index 8147c10..c593d05 100644
+> index c593d05..7d499b1 100644
 > --- a/drivers/platform/x86/asus-wmi.h
 > +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -35,9 +35,14 @@ struct module;
-> =C2=A0struct key_entry;
-> =C2=A0struct asus_wmi;
+> @@ -38,11 +38,13 @@ struct asus_wmi;
+> =C2=A0struct quirk_entry {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool hotplug_wireless;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool scalar_panel_brightness;
+> + =C2=A0 =C2=A0 =C2=A0 bool store_backlight_power;
+> =C2=A0};
 >
-> +struct quirk_entry {
-> + =C2=A0 =C2=A0 =C2=A0 bool hotplug_wireless;
-> + =C2=A0 =C2=A0 =C2=A0 bool scalar_panel_brightness;
-> +};
-> +
 > =C2=A0struct asus_wmi_driver {
-> - =C2=A0 =C2=A0 =C2=A0 bool =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0hotplug_wireless;
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0int =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 wapf;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0int =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 brightness_old;
 > + =C2=A0 =C2=A0 =C2=A0 int =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 brightness_old;
-
-Name that "brightness", it should be enought.
-
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 panel_power;
 >
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0const char =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0*name;
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0struct module =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 *owner;
-> @@ -47,6 +52,7 @@ struct asus_wmi_driver {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0const struct key_entry =C2=A0*keymap;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0const char =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0*input_name;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0const char =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0*input_phys;
-> + =C2=A0 =C2=A0 =C2=A0 struct quirk_entry =C2=A0 =C2=A0 =C2=A0*asus_q=
-uirks;
-
-Could this field be name "quirks" instead ? No need to add asus everywh=
-ere :).
-
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0/* Returns new code, value, and autoreleas=
-e values in arguments.
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 * Return ASUS_WMI_KEY_IGNORE in code if e=
-vent should be ignored. */
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0void (*key_filter) (struct asus_wmi_driver=
- *driver, int *code,
 > diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/=
 eeepc-wmi.c
-> index 9f6e643..83c33a6 100644
+> index 83c33a6..64b0c10 100644
 > --- a/drivers/platform/x86/eeepc-wmi.c
 > +++ b/drivers/platform/x86/eeepc-wmi.c
-> @@ -48,6 +48,7 @@ MODULE_LICENSE("GPL");
+> @@ -32,6 +32,7 @@
+> =C2=A0#include <linux/input.h>
+> =C2=A0#include <linux/input/sparse-keymap.h>
+> =C2=A0#include <linux/dmi.h>
+> +#include <linux/fb.h>
+> =C2=A0#include <acpi/acpi_bus.h>
 >
-> =C2=A0MODULE_ALIAS("wmi:"EEEPC_WMI_EVENT_GUID);
->
-> +static struct asus_wmi_driver *asus_wmi;
-
-Please don't do that. Put a "static struct quirk_entry *quirks" instead=
-=2E
-
-> =C2=A0static bool hotplug_wireless;
->
-> =C2=A0module_param(hotplug_wireless, bool, 0444);
-> @@ -87,6 +88,58 @@ static const struct key_entry eeepc_wmi_keymap[] =3D=
- {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_END, 0},
+> =C2=A0#include "asus-wmi.h"
+> @@ -95,8 +96,13 @@ static struct quirk_entry quirk_asus_1000h =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.hotplug_wireless =3D true,
 > =C2=A0};
 >
-> +static struct quirk_entry quirk_asus_unknown =3D {
+> +static struct quirk_entry quirk_asus_et2012_type1 =3D {
+> + =C2=A0 =C2=A0 =C2=A0 .store_backlight_power =3D true,
 > +};
 > +
-> +static struct quirk_entry quirk_asus_1000h =3D {
-> + =C2=A0 =C2=A0 =C2=A0 .hotplug_wireless =3D true,
-> +};
-> +
-> +static struct quirk_entry quirk_asus_et2012_type3 =3D {
-> + =C2=A0 =C2=A0 =C2=A0 .scalar_panel_brightness =3D true,
-> +};
-> +
-> +static int dmi_matched(const struct dmi_system_id *dmi)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 char *model;
-> + =C2=A0 =C2=A0 =C2=A0 asus_wmi->asus_quirks =3D dmi->driver_data;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 model =3D (char *)dmi->matches[1].substr;
-> + =C2=A0 =C2=A0 =C2=A0 if (unlikely(strncmp(model, "ET2012", 6) =3D=3D=
- 0)) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 const struct dmi_d=
-evice *dev =3D NULL;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 char oemstring[30]=
-;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 while ((dev =3D dm=
-i_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 if (sscanf(dev->name, "AEMS%24c", oemstring) =3D=3D 1) {
-
-Just to check, is there any other way to get this information ? Like
-DMI_BOARD_NAME or DMI_BOARD_VERSION ?
-Do you have some dmidecode output for some et2012 ?
-
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+> =C2=A0static struct quirk_entry quirk_asus_et2012_type3 =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.scalar_panel_brightness =3D true,
+> + =C2=A0 =C2=A0 =C2=A0 .store_backlight_power =3D true,
+> =C2=A0};
+>
+> =C2=A0static int dmi_matched(const struct dmi_system_id *dmi)
+> @@ -110,8 +116,11 @@ static int dmi_matched(const struct dmi_system_i=
+d *dmi)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0char oemstring=
+[30];
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0while ((dev =3D=
+ dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0if (sscanf(dev->name, "AEMS%24c", oemstring) =3D=3D 1) {
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (oemstring[18] =3D=3D '3')
 > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (oemstring[18] =3D=3D '1') {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 asus_wm=
-i->asus_quirks =3D &quirk_asus_et2012_type3;
+i->asus_quirks =3D &quirk_asus_et2012_type1;
 > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 break;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 }
-> + =C2=A0 =C2=A0 =C2=A0 return 1;
-> +}
-> +
-> +static struct dmi_system_id __devinitdata asus_quirks[] =3D {
-
-Please remove __devinitdata, this is used by functions like
-eeepc_wmi_quirks() which are not __devinitdata tagged.
-
-> + =C2=A0 =C2=A0 =C2=A0 {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .callback =3D dmi_=
-matched,
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .ident =3D "ASUSTe=
-K Computer INC. 1000H",
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .matches =3D {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer INC."),
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 DMI_MATCH(DMI_PRODUCT_NAME, "1000H"),
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .driver_data =3D &=
-quirk_asus_1000h,
-> + =C2=A0 =C2=A0 =C2=A0 },
-> + =C2=A0 =C2=A0 =C2=A0 {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .callback =3D dmi_=
-matched,
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .ident =3D "ASUSTe=
-K Computer INC. ET2012E/I",
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .matches =3D {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer INC."),
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 DMI_MATCH(DMI_PRODUCT_NAME, "ET2012"),
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .driver_data =3D &=
-quirk_asus_unknown,
-> + =C2=A0 =C2=A0 =C2=A0 },
-> +};
-> +
-> =C2=A0static void eeepc_wmi_key_filter(struct asus_wmi_driver *asus_w=
-mi, int *code,
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else if (oemstring[18] =3D=3D '3'=
+) {
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int *value, bool *a=
-utorelease)
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0a=
+sus_wmi->asus_quirks =3D &quirk_asus_et2012_type3;
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0break;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0}
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}
+> @@ -198,6 +207,7 @@ static void eeepc_wmi_quirks(struct asus_wmi_driv=
+er *driver)
 > =C2=A0{
-> @@ -141,33 +194,13 @@ static int eeepc_wmi_probe(struct platform_devi=
-ce *pdev)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
-> =C2=A0}
->
-> -static void eeepc_dmi_check(struct asus_wmi_driver *driver)
-> -{
-> - =C2=A0 =C2=A0 =C2=A0 const char *model;
-> -
-> - =C2=A0 =C2=A0 =C2=A0 model =3D dmi_get_system_info(DMI_PRODUCT_NAME=
-);
-> - =C2=A0 =C2=A0 =C2=A0 if (!model)
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
-> -
-> - =C2=A0 =C2=A0 =C2=A0 /*
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0* Whitelist for wlan hotplug
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0*
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0* Asus 1000H needs the current hotplug c=
-ode to handle
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0* Fn+F2 correctly. We may add other Asus=
- here later, but
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0* it seems that most of the laptops supp=
-orted by asus-wmi
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0* don't need to be on this list
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
-> - =C2=A0 =C2=A0 =C2=A0 if (strcmp(model, "1000H") =3D=3D 0) {
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 driver->hotplug_wi=
-reless =3D true;
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_info("wlan hotp=
-lug enabled\n");
-> - =C2=A0 =C2=A0 =C2=A0 }
-> -}
-> -
-> =C2=A0static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
-> =C2=A0{
-> - =C2=A0 =C2=A0 =C2=A0 driver->hotplug_wireless =3D hotplug_wireless;
-> + =C2=A0 =C2=A0 =C2=A0 asus_wmi =3D driver;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0asus_wmi =3D driver;
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->wapf =3D -1;
-> - =C2=A0 =C2=A0 =C2=A0 eeepc_dmi_check(driver);
-> + =C2=A0 =C2=A0 =C2=A0 driver->asus_quirks =3D &quirk_asus_unknown;
-> + =C2=A0 =C2=A0 =C2=A0 driver->asus_quirks->hotplug_wireless =3D hotp=
-lug_wireless;
-> + =C2=A0 =C2=A0 =C2=A0 dmi_check_system(asus_quirks);
-> =C2=A0}
->
-> =C2=A0static struct asus_wmi_driver asus_wmi_driver =3D {
+> + =C2=A0 =C2=A0 =C2=A0 driver->panel_power =3D FB_BLANK_UNBLANK;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->asus_quirks =3D &quirk_asus_unknow=
+n;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0driver->asus_quirks->hotplug_wireless =3D =
+hotplug_wireless;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0dmi_check_system(asus_quirks);
 > --
 > 1.7.9.1
 >
 
+I'm not sure "unlikely" is really needed here, since the code path is
+clearly not performance critical.
+Except from that, this patch looks ok (if you fix issues pointed in
+the first patch).
 
+Thanks !
 
 --=20
 Corentin Chary
