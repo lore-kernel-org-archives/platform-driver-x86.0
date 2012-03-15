@@ -1,32 +1,40 @@
-From: Jonathan Nieder <jrnieder@gmail.com>
-Subject: Re: [PATCH 3.0.y] acer-wmi: No wifi rfkill on Lenovo machines
-Date: Wed, 14 Mar 2012 17:17:49 -0500
-Message-ID: <20120314221749.GF31686@burratino>
-References: <1327546404.15260.18.camel@linux-s257.site>
- <1328258799-19665-1-git-send-email-ike.pan@canonical.com>
- <20120314215327.GA1510@burratino>
- <20120314220251.GB14166@kroah.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] samsung-laptop: cleanup return type: mode_t vs umode_t
+Date: Thu, 15 Mar 2012 10:10:20 +0300
+Message-ID: <20120315071020.GA3567@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-iy0-f174.google.com ([209.85.210.174]:63415 "EHLO
-	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1761165Ab2CNWRx (ORCPT
+Received: from rcsinet15.oracle.com ([148.87.113.117]:49888 "EHLO
+	rcsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756294Ab2COHKs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Mar 2012 18:17:53 -0400
+	Thu, 15 Mar 2012 03:10:48 -0400
 Content-Disposition: inline
-In-Reply-To: <20120314220251.GB14166@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, joeyli <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, mjg@redhat.com, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>, Andrey <andrey.k.p@gmail.com>
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-Greg KH wrote:
-> On Wed, Mar 14, 2012 at 04:53:27PM -0500, Jonathan Nieder wrote:
+This function returns a umode_t (unsigned short) instead of mode_t which
+is an unsigned int on some architectures.  Cleaning this up silences a
+compile warning:
 
->> Please consider applying 461e74377cfc (acer-wmi: No wifi rfkill on
->> Lenovo machines, 2012-02-03) to the 3.2.y and 3.0.y trees.
->
-> Now applied.
+drivers/platform/x86/samsung-laptop.c:1108:2: warning: initialization
+	from incompatible pointer type [enabled by default]
 
-Thanks!  That was fast.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 7d7109f..0550bc5 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1086,7 +1086,7 @@ static int __init samsung_backlight_init(struct samsung_laptop *samsung)
+ 	return 0;
+ }
+ 
+-static mode_t samsung_sysfs_is_visible(struct kobject *kobj,
++static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
+ 				       struct attribute *attr, int idx)
+ {
+ 	struct device *dev = container_of(kobj, struct device, kobj);
