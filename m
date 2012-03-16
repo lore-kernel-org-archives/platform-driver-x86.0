@@ -1,271 +1,186 @@
 From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH 1/2 v2] asus-wmi: add scalar board brightness adj. support
-Date: Fri, 16 Mar 2012 14:20:37 +0800
-Message-ID: <1331878839-6657-1-git-send-email-acelan.kao@canonical.com>
+Subject: [PATCH 2/2 v2] asus-wmi: store backlight power status for AIO machine
+Date: Fri, 16 Mar 2012 14:20:38 +0800
+Message-ID: <1331878839-6657-2-git-send-email-acelan.kao@canonical.com>
+References: <1331878839-6657-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:62741 "EHLO
-	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754792Ab2CPGUp (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:51919 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754792Ab2CPGUw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 16 Mar 2012 02:20:45 -0400
-Received: by dajr28 with SMTP id r28so5679823daj.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 23:20:45 -0700 (PDT)
+	Fri, 16 Mar 2012 02:20:52 -0400
+Received: by iagz16 with SMTP id z16so4987723iag.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 23:20:51 -0700 (PDT)
+In-Reply-To: <1331878839-6657-1-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-Some ASUS ET2012E/I All-in-One machines that use a scalar board
-to control the brightness, and they only accept brightness up and down
-command. So, I introduced a get_scalar_command() function to pass the
-command to the scalar board through WMI.
+Due to some implementation reasons, ASUS ET2012 All-in-One machines
+can't report the correct backlight power status, it will always return
+1. To track the backlight power status correctly, we have to store the
+status by ourselves.
 
-Besides, we have to store the brightness value locally, for we need the
-old value to know the brightness value is increasing or decreasing.
-
-BTW, since there is no way to retrieve the actual brightness(it would be
-a fixed value), and the max brightness value would be fixed to 1, so we
-have to keep passing the brightness up/down command when we reached the
-max brightness value or 0.
+BTW, by the BIOS design, the backlight power will be turn on/off
+sequently, no matter what the value of the parameter will be.
+More over, the brightness adjustment command will turn on the backlight
+power. Those behaviors will make us fail to track the backlight power
+status.
+For example, While we are trying to turn on the backlight power,
+we will send out the brightness adjustment command and then trying to
+figure out if we have to turn on the backlight power, then send out
+the command. But, the real case is that, the backlight power turns on
+while sending the brightness adjustment command, and then we send out
+the command to turn on the backlight power, it actually will turn off
+the backlight power and the backlight power status we recorded becomes
+wrong. So, we have to seperate these two commands by a if statement.
 
 Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/platform/x86/asus-wmi.c  |   33 +++++++++++++--
- drivers/platform/x86/asus-wmi.h  |   10 ++++-
- drivers/platform/x86/eeepc-wmi.c |   84 ++++++++++++++++++++++++++-----------
- 3 files changed, 95 insertions(+), 32 deletions(-)
+ drivers/platform/x86/asus-wmi.c  |   33 ++++++++++++++++++++-------------
+ drivers/platform/x86/asus-wmi.h  |    2 ++
+ drivers/platform/x86/eeepc-wmi.c |   16 +++++++++++++---
+ 3 files changed, 35 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 72d731c..538a886 100644
+index 538a886..08c8bce 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -784,7 +784,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
- 	arfkill->dev_id = dev_id;
- 	arfkill->asus = asus;
+@@ -1076,7 +1076,12 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
+  */
+ static int read_backlight_power(struct asus_wmi *asus)
+ {
+-	int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
++	int ret;
++	if (asus->driver->quirks->store_backlight_power)
++		ret = !asus->driver->panel_power;
++	else
++		ret = asus_wmi_get_devstate_simple(asus,
++						   ASUS_WMI_DEVID_BACKLIGHT);
  
--	if (dev_id == ASUS_WMI_DEVID_WLAN && asus->driver->hotplug_wireless)
-+	if (dev_id == ASUS_WMI_DEVID_WLAN &&
-+	    asus->driver->quirks->hotplug_wireless)
- 		*rfkill = rfkill_alloc(name, &asus->platform_device->dev, type,
- 				       &asus_rfkill_wlan_ops, arfkill);
- 	else
-@@ -895,7 +896,7 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
- 	if (result && result != -ENODEV)
- 		goto exit;
- 
--	if (!asus->driver->hotplug_wireless)
-+	if (!asus->driver->quirks->hotplug_wireless)
- 		goto exit;
- 
- 	result = asus_setup_pci_hotplug(asus);
-@@ -1116,13 +1117,33 @@ static int read_brightness(struct backlight_device *bd)
- 	return retval & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
- }
- 
-+static u32 get_scalar_command(struct backlight_device *bd)
-+{
-+	struct asus_wmi *asus = bl_get_data(bd);
-+	u32 ctrl_param = 0;
-+
-+	if ((asus->driver->brightness < bd->props.brightness) ||
-+	    bd->props.brightness == bd->props.max_brightness)
-+		ctrl_param = 0x00008001;
-+	else if ((asus->driver->brightness > bd->props.brightness) ||
-+		 bd->props.brightness == 0)
-+		ctrl_param = 0x00008000;
-+
-+	asus->driver->brightness = bd->props.brightness;
-+
-+	return ctrl_param;
-+}
-+
- static int update_bl_status(struct backlight_device *bd)
+ 	if (ret < 0)
+ 		return ret;
+@@ -1138,24 +1143,23 @@ static int update_bl_status(struct backlight_device *bd)
  {
  	struct asus_wmi *asus = bl_get_data(bd);
  	u32 ctrl_param;
- 	int power, err;
+-	int power, err;
+-
+-	if (asus->driver->quirks->scalar_panel_brightness)
+-		ctrl_param = get_scalar_command(bd);
+-	else
+-		ctrl_param = bd->props.brightness;
+-
+-	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
+-				    ctrl_param, NULL);
+-
+-	if (err < 0)
+-		return err;
++	int power, err = 0;
  
--	ctrl_param = bd->props.brightness;
-+	if (asus->driver->quirks->scalar_panel_brightness)
-+		ctrl_param = get_scalar_command(bd);
-+	else
-+		ctrl_param = bd->props.brightness;
+ 	power = read_backlight_power(asus);
+ 	if (power != -ENODEV && bd->props.power != power) {
+ 		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
+ 					    ctrl_param, NULL);
++		if (asus->driver->quirks->store_backlight_power)
++			asus->driver->panel_power = bd->props.power;
++	} else {
++		if (asus->driver->quirks->scalar_panel_brightness)
++			ctrl_param = get_scalar_command(bd);
++		else
++			ctrl_param = bd->props.brightness;
++
++		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
++					    ctrl_param, NULL);
+ 	}
+ 	return err;
+ }
+@@ -1217,6 +1221,9 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
  
- 	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
- 				    ctrl_param, NULL);
-@@ -1200,6 +1221,8 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
+ 	asus->backlight_device = bd;
+ 
++	if (asus->driver->quirks->store_backlight_power)
++		asus->driver->panel_power = power;
++
+ 	bd->props.brightness = read_brightness(bd);
  	bd->props.power = power;
  	backlight_update_status(bd);
- 
-+	asus->driver->brightness = bd->props.brightness;
-+
- 	return 0;
- }
- 
-@@ -1622,8 +1645,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	wdrv->platform_device = pdev;
- 	platform_set_drvdata(asus->platform_device, asus);
- 
--	if (wdrv->quirks)
--		wdrv->quirks(asus->driver);
-+	if (wdrv->asus_quirks)
-+		wdrv->asus_quirks(asus->driver);
- 
- 	err = asus_wmi_platform_init(asus);
- 	if (err)
 diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 8147c10..6c344ef 100644
+index 6c344ef..e27063a 100644
 --- a/drivers/platform/x86/asus-wmi.h
 +++ b/drivers/platform/x86/asus-wmi.h
-@@ -35,9 +35,14 @@ struct module;
- struct key_entry;
- struct asus_wmi;
+@@ -38,11 +38,13 @@ struct asus_wmi;
+ struct quirk_entry {
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
++	bool store_backlight_power;
+ };
  
-+struct quirk_entry {
-+	bool hotplug_wireless;
-+	bool scalar_panel_brightness;
-+};
-+
  struct asus_wmi_driver {
--	bool			hotplug_wireless;
  	int			wapf;
-+	int			brightness;
+ 	int			brightness;
++	int			panel_power;
  
  	const char		*name;
  	struct module		*owner;
-@@ -47,13 +52,14 @@ struct asus_wmi_driver {
- 	const struct key_entry	*keymap;
- 	const char		*input_name;
- 	const char		*input_phys;
-+	struct quirk_entry	*quirks;
- 	/* Returns new code, value, and autorelease values in arguments.
- 	 * Return ASUS_WMI_KEY_IGNORE in code if event should be ignored. */
- 	void (*key_filter) (struct asus_wmi_driver *driver, int *code,
- 			    unsigned int *value, bool *autorelease);
- 
- 	int (*probe) (struct platform_device *device);
--	void (*quirks) (struct asus_wmi_driver *driver);
-+	void (*asus_quirks) (struct asus_wmi_driver *driver);
- 
- 	struct platform_driver	platform_driver;
- 	struct platform_device *platform_device;
 diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 9f6e643..6de69ab 100644
+index 6de69ab..b37b634 100644
 --- a/drivers/platform/x86/eeepc-wmi.c
 +++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -48,6 +48,7 @@ MODULE_LICENSE("GPL");
+@@ -32,6 +32,7 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/dmi.h>
++#include <linux/fb.h>
+ #include <acpi/acpi_bus.h>
  
- MODULE_ALIAS("wmi:"EEEPC_WMI_EVENT_GUID);
- 
-+static struct quirk_entry *quirks;
- static bool hotplug_wireless;
- 
- module_param(hotplug_wireless, bool, 0444);
-@@ -87,6 +88,59 @@ static const struct key_entry eeepc_wmi_keymap[] = {
- 	{ KE_END, 0},
+ #include "asus-wmi.h"
+@@ -95,8 +96,13 @@ static struct quirk_entry quirk_asus_1000h = {
+ 	.hotplug_wireless = true,
  };
  
-+static struct quirk_entry quirk_asus_unknown = {
++static struct quirk_entry quirk_asus_et2012_type1 = {
++	.store_backlight_power = true,
 +};
 +
-+static struct quirk_entry quirk_asus_1000h = {
-+	.hotplug_wireless = true,
-+};
-+
-+static struct quirk_entry quirk_asus_et2012_type3 = {
-+	.scalar_panel_brightness = true,
-+};
-+
-+static int dmi_matched(const struct dmi_system_id *dmi)
-+{
-+	char *model;
-+	quirks = dmi->driver_data;
-+
-+	model = (char *)dmi->matches[1].substr;
-+	if (unlikely(strncmp(model, "ET2012", 6) == 0)) {
-+		const struct dmi_device *dev = NULL;
-+		char oemstring[30];
-+		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL,
-+					      dev))) {
-+			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
-+				if (oemstring[18] == '3')
-+					quirks = &quirk_asus_et2012_type3;
-+				break;
-+			}
-+		}
-+	}
-+	return 1;
-+}
-+
-+static struct dmi_system_id asus_quirks[] = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK Computer INC. 1000H",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "1000H"),
-+		},
-+		.driver_data = &quirk_asus_1000h,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK Computer INC. ET2012E/I",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ET2012"),
-+		},
-+		.driver_data = &quirk_asus_unknown,
-+	},
-+};
-+
+ static struct quirk_entry quirk_asus_et2012_type3 = {
+ 	.scalar_panel_brightness = true,
++	.store_backlight_power = true,
+ };
+ 
+ static int dmi_matched(const struct dmi_system_id *dmi)
+@@ -108,10 +114,12 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ 	if (unlikely(strncmp(model, "ET2012", 6) == 0)) {
+ 		const struct dmi_device *dev = NULL;
+ 		char oemstring[30];
+-		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL,
+-					      dev))) {
++		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING,
++					      NULL, dev))) {
+ 			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
+-				if (oemstring[18] == '3')
++				if (oemstring[18] == '1')
++					quirks = &quirk_asus_et2012_type1;
++				else if (oemstring[18] == '3')
+ 					quirks = &quirk_asus_et2012_type3;
+ 				break;
+ 			}
+@@ -139,6 +147,7 @@ static struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_unknown,
+ 	},
++	{},
+ };
+ 
  static void eeepc_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
- 				 unsigned int *value, bool *autorelease)
+@@ -199,6 +208,7 @@ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
  {
-@@ -141,33 +195,13 @@ static int eeepc_wmi_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void eeepc_dmi_check(struct asus_wmi_driver *driver)
--{
--	const char *model;
--
--	model = dmi_get_system_info(DMI_PRODUCT_NAME);
--	if (!model)
--		return;
--
--	/*
--	 * Whitelist for wlan hotplug
--	 *
--	 * Asus 1000H needs the current hotplug code to handle
--	 * Fn+F2 correctly. We may add other Asus here later, but
--	 * it seems that most of the laptops supported by asus-wmi
--	 * don't need to be on this list
--	 */
--	if (strcmp(model, "1000H") == 0) {
--		driver->hotplug_wireless = true;
--		pr_info("wlan hotplug enabled\n");
--	}
--}
--
- static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
- {
--	driver->hotplug_wireless = hotplug_wireless;
-+	quirks = driver->quirks;
+ 	quirks = driver->quirks;
  	driver->wapf = -1;
--	eeepc_dmi_check(driver);
-+	driver->quirks = &quirk_asus_unknown;
-+	driver->quirks->hotplug_wireless = hotplug_wireless;
-+	dmi_check_system(asus_quirks);
- }
- 
- static struct asus_wmi_driver asus_wmi_driver = {
-@@ -179,7 +213,7 @@ static struct asus_wmi_driver asus_wmi_driver = {
- 	.input_phys = EEEPC_WMI_FILE "/input0",
- 	.key_filter = eeepc_wmi_key_filter,
- 	.probe = eeepc_wmi_probe,
--	.quirks = eeepc_wmi_quirks,
-+	.asus_quirks = eeepc_wmi_quirks,
- };
- 
- 
++	driver->panel_power = FB_BLANK_UNBLANK;
+ 	driver->quirks = &quirk_asus_unknown;
+ 	driver->quirks->hotplug_wireless = hotplug_wireless;
+ 	dmi_check_system(asus_quirks);
 -- 
 1.7.9.1
