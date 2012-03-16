@@ -1,41 +1,48 @@
-From: Vaclav Mocek <vmocek@gmail.com>
+From: Ike Panhc <ike.pan@canonical.com>
 Subject: Re: drivers/platform/x86/acer-wmi.c: Support for another Lenovo Ideapad
  S205
-Date: Thu, 15 Mar 2012 23:09:07 +0000
-Message-ID: <4F627693.2000606@gmail.com>
-References: <4F600A1D.5060002@gmail.com> <4F6037AF.3050002@canonical.com>
+Date: Fri, 16 Mar 2012 11:46:27 +0800
+Message-ID: <4F62B793.4080405@canonical.com>
+References: <4F600A1D.5060002@gmail.com> <4F6037AF.3050002@canonical.com> <4F627693.2000606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:57182 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965430Ab2COXJa (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:56422 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965275Ab2CPDqh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Mar 2012 19:09:30 -0400
-Received: by wibhq7 with SMTP id hq7so6117wib.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Mar 2012 16:09:29 -0700 (PDT)
-In-Reply-To: <4F6037AF.3050002@canonical.com>
+	Thu, 15 Mar 2012 23:46:37 -0400
+In-Reply-To: <4F627693.2000606@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
+To: Vaclav Mocek <vmocek@gmail.com>
 Cc: jlee@novell.com, mjg@redhat.com, platform-driver-x86@vger.kernel.org
 
-On 03/14/2012 06:16 AM, Ike Panhc wrote:
-> Hi Vaclav,
->
-> Could you try this just-merged patch and see if it fix your problem?
->
-> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=461e74377cfcfc2c0d6bbdfa8fc5fbc21b052c2a
-Hi Ike,
+On 03/16/2012 07:09 AM, Vaclav Mocek wrote:
+> On 03/14/2012 06:16 AM, Ike Panhc wrote:
+>> Hi Vaclav,
+>>
+>> Could you try this just-merged patch and see if it fix your problem?
+>>
+>> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=461e74377cfcfc2c0d6bbdfa8fc5fbc21b052c2a
+> Hi Ike,
+> 
+> tested, it doesn't work, basically it behaves as without your patch; my simple patch still works. If I understand correctly, you want to offload handling of rfkill to ideapad-laptop module. I will look into it during the weekend, any hint, what should I focus on? I am fairly new to this subsystem, it is quite complex and most of time I am spending studying how things work, which is nice, but it doesn't lead to immediate results.
+> 
+> BR
+> 
+> Vaclav M.
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-tested, it doesn't work, basically it behaves as without your patch; my 
-simple patch still works. If I understand correctly, you want to offload 
-handling of rfkill to ideapad-laptop module. I will look into it during 
-the weekend, any hint, what should I focus on? I am fairly new to this 
-subsystem, it is quite complex and most of time I am spending studying 
-how things work, which is nice, but it doesn't lead to immediate results.
+What kernel version you use? Checked wiki and it might be 3.1 or 3.2.6. For 3.1 based kernel, you shall also backport this commit
 
-BR
+  http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=commit;h=1709adab0773616da7a8190f2762e599afb0a295
 
-Vaclav M.
+If this patch works properly, you shall see no 'acer-wireless' in `rfkill list` and you can unblock other rfkill for wifi. Then you shall be able to use your wireless.
+
+If all rfkill is unblocked but you still can not use your wifi. Please post dmidecode here, I think, then, a possible approach is to consider to use DMI_PRODUCT_VERSION or add another DMI_PRODUCT_NAME in quirk.
