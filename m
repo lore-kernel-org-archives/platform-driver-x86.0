@@ -1,150 +1,158 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH 3/3] acer-wmi: remove useless input argument for internal wmi
-Date: Mon, 19 Mar 2012 17:37:34 +0800
-Message-ID: <1332149854-2576-3-git-send-email-jlee@suse.com>
-References: <1332149854-2576-1-git-send-email-jlee@suse.com>
- <1332149854-2576-2-git-send-email-jlee@suse.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH 3/3 v3] asus-nb-wmi: move WAPF variable into quirks_entry
+Date: Mon, 19 Mar 2012 17:46:32 +0800
+Message-ID: <CAMz9Wg9e6GVYi9THaKywzYK4_2gzWaCscH7f=yzwawBVOkE8zw@mail.gmail.com>
+References: <1332138824-9673-1-git-send-email-acelan.kao@canonical.com>
+	<1332138824-9673-3-git-send-email-acelan.kao@canonical.com>
+	<CAHR064jE6auZFvkQYJ0hELcBaWNWDCv=CkOt2W4QZODDmpLowQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gy0-f174.google.com ([209.85.160.174]:34050 "EHLO
-	mail-gy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754173Ab2CSJj3 (ORCPT
+Received: from mail-wg0-f44.google.com ([74.125.82.44]:42538 "EHLO
+	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752585Ab2CSJqe convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 19 Mar 2012 05:39:29 -0400
-Received: by ghrr11 with SMTP id r11so5231083ghr.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Mar 2012 02:39:29 -0700 (PDT)
-In-Reply-To: <1332149854-2576-2-git-send-email-jlee@suse.com>
+	Mon, 19 Mar 2012 05:46:34 -0400
+Received: by wgbdr13 with SMTP id dr13so797081wgb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Mar 2012 02:46:32 -0700 (PDT)
+In-Reply-To: <CAHR064jE6auZFvkQYJ0hELcBaWNWDCv=CkOt2W4QZODDmpLowQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-From: "Lee, Chun-Yi" <jlee@suse.com>
+Dear Corentin,
 
-The "wmi_interface *iface" is a useless input argument for internal wmi get/set
-functions, remove it to clear up source code.
+2012/3/19 Corentin Chary <corentin.chary@gmail.com>:
+> On Mon, Mar 19, 2012 at 7:33 AM, AceLan Kao <acelan.kao@canonical.com=
+> wrote:
+>> Some models work better with different values of wapf, so move the
+>> variable into quriks_entry to make it more easy to give a specific
+>> value to different models.
+>>
+>> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+>> ---
+>> =A0drivers/platform/x86/asus-nb-wmi.c | =A0 =A02 +-
+>> =A0drivers/platform/x86/asus-wmi.c =A0 =A0| =A0 =A04 ++--
+>> =A0drivers/platform/x86/asus-wmi.h =A0 =A0| =A0 =A02 +-
+>> =A0drivers/platform/x86/eeepc-wmi.c =A0 | =A0 =A02 +-
+>> =A04 files changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x=
+86/asus-nb-wmi.c
+>> index 396dafc..9dd7b93 100644
+>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>> @@ -53,7 +53,7 @@ MODULE_PARM_DESC(wapf, "WAPF value");
+>>
+>> =A0static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+>> =A0{
+>
+> Missing "driver->quirks =3D asus_unknown_quriks" (or similar). quirks=
+ is
+> NULL here, and the module will segfault (unfortunatly I tried without
+> reading the code and it did :p).
 
-Tested on Lenovo E520.
-Tested on Acer TravelMate 4750.
+So sorry about that, I'm not aware of the loading sequence of the
+asus-nb-wmi module,
+I thought it can see drivers->quirks which assigned from eeepc-wmi modu=
+le.
+If I allocate a new asus_unknown_quirks here, then it might be
+overwriten by eeepc-wmi later,
+if both of the modules will be loaded.
+Moreover, asus-nb-wmi should have the ability to access the
+asus_quirks defined in eeepc-wmi,
+so, the better way to do this is the detect_quirks function pointer
+should point to the same function
+in the eeepc-wmi.
+Do you have any good idea of this?
 
-Tested-by: mr.kobzar <mr.kobzar@gmail.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |   30 ++++++++++++++----------------
- 1 files changed, 14 insertions(+), 16 deletions(-)
+>
+>> - =A0 =A0 =A0 driver->wapf =3D wapf;
+>> + =A0 =A0 =A0 driver->quirks->wapf =3D wapf;
+>> =A0}
+>>
+>> =A0static const struct key_entry asus_nb_wmi_keymap[] =3D {
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
+asus-wmi.c
+>> index 9cd459a..1d2047d 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -1471,9 +1471,9 @@ static int asus_wmi_platform_init(struct asus_=
+wmi *asus)
+>>
+>> =A0 =A0 =A0 =A0/* CWAP allow to define the behavior of the Fn+F2 key=
+,
+>> =A0 =A0 =A0 =A0 * this method doesn't seems to be present on Eee PCs=
+ */
+>> - =A0 =A0 =A0 if (asus->driver->wapf >=3D 0)
+>> + =A0 =A0 =A0 if (asus->driver->quirks->wapf >=3D 0)
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0asus_wmi_set_devstate(ASUS_WMI_DEVID_=
+CWAP,
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 asus->driver->wapf, NULL);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 asus->driver->quirks->wapf, NULL);
+>>
+>> =A0 =A0 =A0 =A0return asus_wmi_sysfs_init(asus->platform_device);
+>> =A0}
+>> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/=
+asus-wmi.h
+>> index 35003e4..d43b667 100644
+>> --- a/drivers/platform/x86/asus-wmi.h
+>> +++ b/drivers/platform/x86/asus-wmi.h
+>> @@ -39,10 +39,10 @@ struct quirk_entry {
+>> =A0 =A0 =A0 =A0bool hotplug_wireless;
+>> =A0 =A0 =A0 =A0bool scalar_panel_brightness;
+>> =A0 =A0 =A0 =A0bool store_backlight_power;
+>> + =A0 =A0 =A0 int wapf;
+>> =A0};
+>>
+>> =A0struct asus_wmi_driver {
+>> - =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 wapf;
+>> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 brightnes=
+s;
+>> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 panel_pow=
+er;
+>>
+>> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86=
+/eeepc-wmi.c
+>> index c1a0ac0..7e15d54 100644
+>> --- a/drivers/platform/x86/eeepc-wmi.c
+>> +++ b/drivers/platform/x86/eeepc-wmi.c
+>> @@ -207,10 +207,10 @@ static int eeepc_wmi_probe(struct platform_dev=
+ice *pdev)
+>> =A0static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
+>> =A0{
+>> =A0 =A0 =A0 =A0quirks =3D driver->quirks;
+>> - =A0 =A0 =A0 driver->wapf =3D -1;
+>> =A0 =A0 =A0 =A0driver->panel_power =3D FB_BLANK_UNBLANK;
+>> =A0 =A0 =A0 =A0driver->quirks =3D &quirk_asus_unknown;
+>> =A0 =A0 =A0 =A0driver->quirks->hotplug_wireless =3D hotplug_wireless=
+;
+>> + =A0 =A0 =A0 driver->quirks->wapf =3D -1;
+>> =A0 =A0 =A0 =A0dmi_check_system(asus_quirks);
+>> =A0}
+>>
+>> --
+>> 1.7.9.1
+>>
+>
+>
+>
+> --
+> Corentin Chary
+> http://xf.iksaif.net
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 904ad65..9668312 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -549,8 +549,7 @@ struct acpi_buffer *result)
- 	return status;
- }
- 
--static acpi_status AMW0_get_u32(u32 *value, u32 cap,
--struct wmi_interface *iface)
-+static acpi_status AMW0_get_u32(u32 *value, u32 cap)
- {
- 	int err;
- 	u8 result;
-@@ -620,7 +619,7 @@ struct wmi_interface *iface)
- 	return AE_OK;
- }
- 
--static acpi_status AMW0_set_u32(u32 value, u32 cap, struct wmi_interface *iface)
-+static acpi_status AMW0_set_u32(u32 value, u32 cap)
- {
- 	struct wmab_args args;
- 
-@@ -840,8 +839,7 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
- 	return status;
- }
- 
--static acpi_status WMID_get_u32(u32 *value, u32 cap,
--struct wmi_interface *iface)
-+static acpi_status WMID_get_u32(u32 *value, u32 cap)
- {
- 	acpi_status status;
- 	u8 tmp;
-@@ -877,7 +875,7 @@ struct wmi_interface *iface)
- 	return status;
- }
- 
--static acpi_status WMID_set_u32(u32 value, u32 cap, struct wmi_interface *iface)
-+static acpi_status WMID_set_u32(u32 value, u32 cap)
- {
- 	u32 method_id = 0;
- 	char param;
-@@ -1176,15 +1174,15 @@ static acpi_status get_u32(u32 *value, u32 cap)
- 
- 	switch (interface->type) {
- 	case ACER_AMW0:
--		status = AMW0_get_u32(value, cap, interface);
-+		status = AMW0_get_u32(value, cap);
- 		break;
- 	case ACER_AMW0_V2:
- 		if (cap == ACER_CAP_MAILLED) {
--			status = AMW0_get_u32(value, cap, interface);
-+			status = AMW0_get_u32(value, cap);
- 			break;
- 		}
- 	case ACER_WMID:
--		status = WMID_get_u32(value, cap, interface);
-+		status = WMID_get_u32(value, cap);
- 		break;
- 	case ACER_WMID_v2:
- 		if (cap & (ACER_CAP_WIRELESS |
-@@ -1192,7 +1190,7 @@ static acpi_status get_u32(u32 *value, u32 cap)
- 			   ACER_CAP_THREEG))
- 			status = wmid_v2_get_u32(value, cap);
- 		else if (wmi_has_guid(WMID_GUID2))
--			status = WMID_get_u32(value, cap, interface);
-+			status = WMID_get_u32(value, cap);
- 		break;
- 	}
- 
-@@ -1206,10 +1204,10 @@ static acpi_status set_u32(u32 value, u32 cap)
- 	if (interface->capability & cap) {
- 		switch (interface->type) {
- 		case ACER_AMW0:
--			return AMW0_set_u32(value, cap, interface);
-+			return AMW0_set_u32(value, cap);
- 		case ACER_AMW0_V2:
- 			if (cap == ACER_CAP_MAILLED)
--				return AMW0_set_u32(value, cap, interface);
-+				return AMW0_set_u32(value, cap);
- 
- 			/*
- 			 * On some models, some WMID methods don't toggle
-@@ -1219,21 +1217,21 @@ static acpi_status set_u32(u32 value, u32 cap)
- 			 */
- 			if (cap == ACER_CAP_WIRELESS ||
- 				cap == ACER_CAP_BLUETOOTH) {
--				status = WMID_set_u32(value, cap, interface);
-+				status = WMID_set_u32(value, cap);
- 				if (ACPI_FAILURE(status))
- 					return status;
- 
--				return AMW0_set_u32(value, cap, interface);
-+				return AMW0_set_u32(value, cap);
- 			}
- 		case ACER_WMID:
--			return WMID_set_u32(value, cap, interface);
-+			return WMID_set_u32(value, cap);
- 		case ACER_WMID_v2:
- 			if (cap & (ACER_CAP_WIRELESS |
- 				   ACER_CAP_BLUETOOTH |
- 				   ACER_CAP_THREEG))
- 				return wmid_v2_set_u32(value, cap);
- 			else if (wmi_has_guid(WMID_GUID2))
--				return WMID_set_u32(value, cap, interface);
-+				return WMID_set_u32(value, cap);
- 		default:
- 			return AE_BAD_PARAMETER;
- 		}
--- 
-1.7.7
+
+
+--=20
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
