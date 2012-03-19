@@ -1,178 +1,88 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH 2/2 v4] asus-wmi: store backlight power status for AIO machine
-Date: Mon, 19 Mar 2012 17:46:35 +0800
-Message-ID: <1332150395-14126-2-git-send-email-acelan.kao@canonical.com>
-References: <1332150395-14126-1-git-send-email-acelan.kao@canonical.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 3/3 v3] asus-nb-wmi: move WAPF variable into quirks_entry
+Date: Mon, 19 Mar 2012 11:19:03 +0100
+Message-ID: <CAHR064i9zeiDL=4ZbSf0aFpMzn+T4_h41m-ZBntBcoYTZScoVA@mail.gmail.com>
+References: <1332138824-9673-1-git-send-email-acelan.kao@canonical.com>
+	<1332138824-9673-3-git-send-email-acelan.kao@canonical.com>
+	<CAHR064jE6auZFvkQYJ0hELcBaWNWDCv=CkOt2W4QZODDmpLowQ@mail.gmail.com>
+	<CAMz9Wg9e6GVYi9THaKywzYK4_2gzWaCscH7f=yzwawBVOkE8zw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:61200 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758521Ab2CSJqr (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:44908 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750881Ab2CSKTF convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 19 Mar 2012 05:46:47 -0400
-Received: by yenl12 with SMTP id l12so5222092yen.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Mar 2012 02:46:46 -0700 (PDT)
-In-Reply-To: <1332150395-14126-1-git-send-email-acelan.kao@canonical.com>
+	Mon, 19 Mar 2012 06:19:05 -0400
+Received: by bkcik5 with SMTP id ik5so4122473bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Mar 2012 03:19:03 -0700 (PDT)
+In-Reply-To: <CAMz9Wg9e6GVYi9THaKywzYK4_2gzWaCscH7f=yzwawBVOkE8zw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Due to some implementation reasons, ASUS ET2012 All-in-One machines
-can't report the correct backlight power status, it will always return
-1. To track the backlight power status correctly, we have to store the
-status by ourselves.
+On Mon, Mar 19, 2012 at 10:46 AM, AceLan Kao <acelan.kao@canonical.com>=
+ wrote:
+> Dear Corentin,
+>
+> 2012/3/19 Corentin Chary <corentin.chary@gmail.com>:
+>> On Mon, Mar 19, 2012 at 7:33 AM, AceLan Kao <acelan.kao@canonical.co=
+m> wrote:
+>>> Some models work better with different values of wapf, so move the
+>>> variable into quriks_entry to make it more easy to give a specific
+>>> value to different models.
+>>>
+>>> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+>>> ---
+>>> =C2=A0drivers/platform/x86/asus-nb-wmi.c | =C2=A0 =C2=A02 +-
+>>> =C2=A0drivers/platform/x86/asus-wmi.c =C2=A0 =C2=A0| =C2=A0 =C2=A04=
+ ++--
+>>> =C2=A0drivers/platform/x86/asus-wmi.h =C2=A0 =C2=A0| =C2=A0 =C2=A02=
+ +-
+>>> =C2=A0drivers/platform/x86/eeepc-wmi.c =C2=A0 | =C2=A0 =C2=A02 +-
+>>> =C2=A04 files changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/=
+x86/asus-nb-wmi.c
+>>> index 396dafc..9dd7b93 100644
+>>> --- a/drivers/platform/x86/asus-nb-wmi.c
+>>> +++ b/drivers/platform/x86/asus-nb-wmi.c
+>>> @@ -53,7 +53,7 @@ MODULE_PARM_DESC(wapf, "WAPF value");
+>>>
+>>> =C2=A0static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver=
+)
+>>> =C2=A0{
+>>
+>> Missing "driver->quirks =3D asus_unknown_quriks" (or similar). quirk=
+s is
+>> NULL here, and the module will segfault (unfortunatly I tried withou=
+t
+>> reading the code and it did :p).
+>
+> So sorry about that, I'm not aware of the loading sequence of the
+> asus-nb-wmi module,
 
-BTW, by the BIOS design, the backlight power will be turn on/off
-sequently, no matter what the value of the parameter will be.
-More over, the brightness adjustment command will turn on the backlight
-power. Those behaviors will make us fail to track the backlight power
-status.
-For example, While we are trying to turn on the backlight power,
-we will send out the brightness adjustment command and then trying to
-figure out if we have to turn on the backlight power, then send out
-the command. But, the real case is that, the backlight power turns on
-while sending the brightness adjustment command, and then we send out
-the command to turn on the backlight power, it actually will turn off
-the backlight power and the backlight power status we recorded becomes
-wrong. So, we have to seperate these two commands by a if statement.
+Of course, always harder without the hardware :).
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- drivers/platform/x86/asus-wmi.c  |   33 ++++++++++++++++++++-------------
- drivers/platform/x86/asus-wmi.h  |    2 ++
- drivers/platform/x86/eeepc-wmi.c |   15 ++++++++++++---
- 3 files changed, 34 insertions(+), 16 deletions(-)
+> I thought it can see drivers->quirks which assigned from eeepc-wmi mo=
+dule.
+> If I allocate a new asus_unknown_quirks here, then it might be
+> overwriten by eeepc-wmi later,
+> if both of the modules will be loaded.
+> Moreover, asus-nb-wmi should have the ability to access the
+> asus_quirks defined in eeepc-wmi,
+> so, the better way to do this is the detect_quirks function pointer
+> should point to the same function
+> in the eeepc-wmi.
+> Do you have any good idea of this?
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ea80fbe..9cd459a 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1076,7 +1076,12 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
-  */
- static int read_backlight_power(struct asus_wmi *asus)
- {
--	int ret = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BACKLIGHT);
-+	int ret;
-+	if (asus->driver->quirks->store_backlight_power)
-+		ret = !asus->driver->panel_power;
-+	else
-+		ret = asus_wmi_get_devstate_simple(asus,
-+						   ASUS_WMI_DEVID_BACKLIGHT);
- 
- 	if (ret < 0)
- 		return ret;
-@@ -1138,24 +1143,23 @@ static int update_bl_status(struct backlight_device *bd)
- {
- 	struct asus_wmi *asus = bl_get_data(bd);
- 	u32 ctrl_param;
--	int power, err;
--
--	if (asus->driver->quirks->scalar_panel_brightness)
--		ctrl_param = get_scalar_command(bd);
--	else
--		ctrl_param = bd->props.brightness;
--
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
--				    ctrl_param, NULL);
--
--	if (err < 0)
--		return err;
-+	int power, err = 0;
- 
- 	power = read_backlight_power(asus);
- 	if (power != -ENODEV && bd->props.power != power) {
- 		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
- 					    ctrl_param, NULL);
-+		if (asus->driver->quirks->store_backlight_power)
-+			asus->driver->panel_power = bd->props.power;
-+	} else {
-+		if (asus->driver->quirks->scalar_panel_brightness)
-+			ctrl_param = get_scalar_command(bd);
-+		else
-+			ctrl_param = bd->props.brightness;
-+
-+		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
-+					    ctrl_param, NULL);
- 	}
- 	return err;
- }
-@@ -1217,6 +1221,9 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
- 
- 	asus->backlight_device = bd;
- 
-+	if (asus->driver->quirks->store_backlight_power)
-+		asus->driver->panel_power = power;
-+
- 	bd->props.brightness = read_brightness(bd);
- 	bd->props.power = power;
- 	backlight_update_status(bd);
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index ac7dd4e..35003e4 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -38,11 +38,13 @@ struct asus_wmi;
- struct quirk_entry {
- 	bool hotplug_wireless;
- 	bool scalar_panel_brightness;
-+	bool store_backlight_power;
- };
- 
- struct asus_wmi_driver {
- 	int			wapf;
- 	int			brightness;
-+	int			panel_power;
- 
- 	const char		*name;
- 	struct module		*owner;
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 6f60ef0..d3742c2 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -32,6 +32,7 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/dmi.h>
-+#include <linux/fb.h>
- #include <acpi/acpi_bus.h>
- 
- #include "asus-wmi.h"
-@@ -95,8 +96,13 @@ static struct quirk_entry quirk_asus_1000h = {
- 	.hotplug_wireless = true,
- };
- 
-+static struct quirk_entry quirk_asus_et2012_type1 = {
-+	.store_backlight_power = true,
-+};
-+
- static struct quirk_entry quirk_asus_et2012_type3 = {
- 	.scalar_panel_brightness = true,
-+	.store_backlight_power = true,
- };
- 
- static int dmi_matched(const struct dmi_system_id *dmi)
-@@ -108,10 +114,12 @@ static int dmi_matched(const struct dmi_system_id *dmi)
- 	if (unlikely(strncmp(model, "ET2012", 6) == 0)) {
- 		const struct dmi_device *dev = NULL;
- 		char oemstring[30];
--		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL,
--					      dev))) {
-+		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING,
-+					      NULL, dev))) {
- 			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
--				if (oemstring[18] == '3')
-+				if (oemstring[18] == '1')
-+					quirks = &quirk_asus_et2012_type1;
-+				else if (oemstring[18] == '3')
- 					quirks = &quirk_asus_et2012_type3;
- 				break;
- 			}
-@@ -199,6 +207,7 @@ static int eeepc_wmi_probe(struct platform_device *pdev)
- static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
- {
- 	driver->wapf = -1;
-+	driver->panel_power = FB_BLANK_UNBLANK;
- 	driver->quirks = &quirk_asus_unknown;
- 	driver->quirks->hotplug_wireless = hotplug_wireless;
- 	dmi_check_system(asus_quirks);
--- 
-1.7.9.1
+I think since I can test on both platforms and this should be done
+ASAP, I should try to write the patch instead, I'll CC you when done.
+
+
+
+--=20
+Corentin Chary
+http://xf.iksaif.net
