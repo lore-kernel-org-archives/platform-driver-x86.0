@@ -1,7 +1,7 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 14/14] asus-wmi: don't update power and brightness when using scalar
-Date: Tue, 20 Mar 2012 09:53:14 +0100
-Message-ID: <1332233594-13099-15-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 13/14] eeepc-wmi: split et2012 specific hacks
+Date: Tue, 20 Mar 2012 09:53:13 +0100
+Message-ID: <1332233594-13099-14-git-send-email-corentin.chary@gmail.com>
 References: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
@@ -10,45 +10,60 @@ To: Matthew Garrett <mjg@redhat.com>
 Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-But we can still do it on other boards, as this might happen
-if the backlight driver change when update_bl is called.
-
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c |   20 +++++++++++++-------
- 1 files changed, 13 insertions(+), 7 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c |   34 ++++++++++++++++++++--------------
+ 1 files changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ff9cfd8..7d1684b 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1152,15 +1152,21 @@ static int update_bl_status(struct backlight_device *bd)
- 					    ctrl_param, NULL);
- 		if (asus->driver->quirks->store_backlight_power)
- 			asus->driver->panel_power = bd->props.power;
--	} else {
--		if (asus->driver->quirks->scalar_panel_brightness)
--			ctrl_param = get_scalar_command(bd);
--		else
--			ctrl_param = bd->props.brightness;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 0bb0aaf..6567613 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -109,26 +109,32 @@ static struct quirk_entry quirk_asus_et2012_type3 = {
  
--		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
--					    ctrl_param, NULL);
-+		/* When using scalar brightness, updating the brightness
-+		 * will mess with the backlight power */
-+		if (asus->driver->quirks->scalar_panel_brightness)
-+			return err;
- 	}
+ static struct quirk_entry *quirks;
+ 
++static void et2012_quirks(void)
++{
++	const struct dmi_device *dev = NULL;
++	char oemstring[30];
 +
-+	if (asus->driver->quirks->scalar_panel_brightness)
-+		ctrl_param = get_scalar_command(bd);
-+	else
-+		ctrl_param = bd->props.brightness;
++	while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
++		if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
++			if (oemstring[18] == '1')
++				quirks = &quirk_asus_et2012_type1;
++			else if (oemstring[18] == '3')
++				quirks = &quirk_asus_et2012_type3;
++			break;
++		}
++	}
++}
 +
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BRIGHTNESS,
-+				    ctrl_param, NULL);
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	char *model;
 +
- 	return err;
+ 	quirks = dmi->driver_data;
+ 
+ 	model = (char *)dmi->matches[1].substr;
+-	if (unlikely(strncmp(model, "ET2012", 6) == 0)) {
+-		const struct dmi_device *dev = NULL;
+-		char oemstring[30];
+-		while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING,
+-					      NULL, dev))) {
+-			if (sscanf(dev->name, "AEMS%24c", oemstring) == 1) {
+-				if (oemstring[18] == '1')
+-					quirks = &quirk_asus_et2012_type1;
+-				else if (oemstring[18] == '3')
+-					quirks = &quirk_asus_et2012_type3;
+-				break;
+-			}
+-		}
+-	}
++	if (unlikely(strncmp(model, "ET2012", 6) == 0))
++		et2012_quirks();
++
+ 	return 1;
  }
  
 -- 
