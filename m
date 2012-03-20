@@ -1,61 +1,96 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: support Lenovo ideapad S205 Brazos wifi switch
-Date: Tue, 20 Mar 2012 11:32:49 +0800
-Message-ID: <1332214369-13691-1-git-send-email-jlee@suse.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yx0-f174.google.com ([209.85.213.174]:49425 "EHLO
-	mail-yx0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758285Ab2CTDee (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 19 Mar 2012 23:34:34 -0400
-Received: by yenl12 with SMTP id l12so6003880yen.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Mar 2012 20:34:34 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: [PATCH 01/14] ACPI / Video: blacklist some samsung laptops
+Date: Tue, 20 Mar 2012 09:53:01 +0100
+Message-ID: <1332233594-13099-2-git-send-email-corentin.chary@gmail.com>
+References: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: "Lee, Chun-Yi" <jlee@suse.com>
+From: Corentin Chary <corentincj@iksaif.net>
 
-Vaclav found a new ideapad S205 Brazos machine that used the same
-EC register of wireless with S205 but has different product name.
+On these laptops, the ACPI video is not functional, and very unlikely
+to be fixed by the vendor. Note that intel_backlight works for some
+of these laptops, and the backlight from samsung-laptop always work.
 
-So, add this machine to quirk for support wireless rfkill.
+The good news is that newer laptops have functional ACPI video device
+and won't end up growing this list.
 
-Tested on Lenovo ideapad S205 Brazos
-
-
-Tested-by: Vaclav Mocek <vmocek@gmail.com>
-Acked-by: Ike Panhc <ike.pan@canonical.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 ---
- drivers/platform/x86/acer-wmi.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+ drivers/acpi/video_detect.c |   49 +++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 49 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1e5290b..7822e33 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -468,6 +468,15 @@ static struct dmi_system_id acer_quirks[] = {
- 	},
- 	{
- 		.callback = dmi_matched,
-+		.ident = "Lenovo Ideapad S205 (Brazos)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Brazos"),
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 45d8097..66be45e 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -132,6 +132,53 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 	return AE_OK;
+ }
+ 
++/* Force to use vendor driver when the ACPI device is known to be
++ * buggy */
++static int video_detect_force_vendor(const struct dmi_system_id *d)
++{
++	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++	return 0;
++}
++
++static struct dmi_system_id video_detect_dmi_table[] = {
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "N150P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
 +		},
-+		.driver_data = &quirk_lenovo_ideapad_s205,
 +	},
 +	{
-+		.callback = dmi_matched,
- 		.ident = "Lenovo 3000 N200",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++	 .callback = video_detect_force_vendor,
++	 .ident = "N145P/N250P/N260P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
++		},
++	},
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "N150/N210/N220",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
++		},
++	},
++	{
++	 .callback = video_detect_force_vendor,
++	 .ident = "NF110/NF210/NF310",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
++		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
++		},
++	},
++};
++
+ /*
+  * Returns the video capabilities of a specific ACPI graphics device
+  *
+@@ -164,6 +211,8 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+ 		 *		ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+ 		 *}
+ 		 */
++
++		dmi_check_system(video_detect_dmi_table);
+ 	} else {
+ 		status = acpi_bus_get_device(graphics_handle, &tmp_dev);
+ 		if (ACPI_FAILURE(status)) {
 -- 
-1.7.7
+1.7.3.4
+
