@@ -1,59 +1,46 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 12/14] eeepc-wmi: refine quirks handling
-Date: Tue, 20 Mar 2012 09:53:12 +0100
-Message-ID: <1332233594-13099-13-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 06/14] drivers, samsung-laptop: fix usage of isalnum
+Date: Tue, 20 Mar 2012 09:53:06 +0100
+Message-ID: <1332233594-13099-7-git-send-email-corentin.chary@gmail.com>
 References: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, David Rientjes <rientjes@google.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
----
- drivers/platform/x86/eeepc-wmi.c |   13 ++++++++-----
- 1 files changed, 8 insertions(+), 5 deletions(-)
+=46rom: David Rientjes <rientjes@google.com>
 
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 389ff88..0bb0aaf 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -49,7 +49,6 @@ MODULE_LICENSE("GPL");
- 
- MODULE_ALIAS("wmi:"EEEPC_WMI_EVENT_GUID);
- 
--static struct quirk_entry *quirks;
- static bool hotplug_wireless;
- 
- module_param(hotplug_wireless, bool, 0444);
-@@ -108,6 +107,8 @@ static struct quirk_entry quirk_asus_et2012_type3 = {
- 	.store_backlight_power = true,
- };
- 
-+static struct quirk_entry *quirks;
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	char *model;
-@@ -209,12 +210,14 @@ static int eeepc_wmi_probe(struct platform_device *pdev)
- 
- static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
- {
--	driver->panel_power = FB_BLANK_UNBLANK;
--	driver->quirks = &quirk_asus_unknown;
--	driver->quirks->hotplug_wireless = hotplug_wireless;
--	driver->quirks->wapf = -1;
-+	quirks = &quirk_asus_unknown;
-+	quirks->hotplug_wireless = hotplug_wireless;
-+
- 	dmi_check_system(asus_quirks);
-+
- 	driver->quirks = quirks;
-+	driver->quirks->wapf = -1;
-+	driver->panel_power = FB_BLANK_UNBLANK;
- }
- 
- static struct asus_wmi_driver asus_wmi_driver = {
--- 
+linux/ctype.h is needed for isalnum() to avoid a build error:
+
+drivers/platform/x86/samsung-laptop.c: In function =E2=80=98samsung_sab=
+i_diag=E2=80=99:
+drivers/platform/x86/samsung-laptop.c:1306: error: implicit declaration=
+ of function =E2=80=98isalnum=E2=80=99
+
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+---
+ drivers/platform/x86/samsung-laptop.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x=
+86/samsung-laptop.c
+index b7c67c8..d1142e3 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -25,6 +25,7 @@
+ #include <linux/acpi.h>
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
++#include <linux/ctype.h>
+=20
+ /*
+  * This driver is needed because a number of Samsung laptops do not ho=
+ok
+--=20
 1.7.3.4
