@@ -1,38 +1,32 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad-acpi: recognize Lenovo as
- version string in newer V-series BIOS
-Date: Tue, 20 Mar 2012 16:03:03 +0000
-Message-ID: <20120320160303.GA6192@srcf.ucam.org>
-References: <1331335944-4662-1-git-send-email-manoj.iyer@canonical.com>
- <1331335944-4662-2-git-send-email-manoj.iyer@canonical.com>
- <20120310042844.GA14972@khazad-dum.debian.net>
- <1331387907.2833.33.camel@scapa>
- <20120310160609.GA6254@khazad-dum.debian.net>
- <alpine.DEB.2.02.1203121558340.3458@lazy>
- <20120312230213.GA20690@khazad-dum.debian.net>
- <alpine.DEB.2.02.1203121852500.6421@lazy>
- <alpine.DEB.2.02.1203131046540.4292@lazy>
- <20120313200744.GA3260@khazad-dum.debian.net>
+Subject: Re: [PATCH 01/14] ACPI / Video: blacklist some samsung laptops
+Date: Tue, 20 Mar 2012 16:05:37 +0000
+Message-ID: <20120320160537.GB6192@srcf.ucam.org>
+References: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
+ <1332233594-13099-2-git-send-email-corentin.chary@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:41708 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932110Ab2CTQDI (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 20 Mar 2012 12:03:08 -0400
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120313200744.GA3260@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Manoj Iyer <manoj.iyer@canonical.com>, Ike Pan <ike.pan@canonical.com>, Yves-Alexis Perez <corsac@debian.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dennis Chua <dennis.chua@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, James Ferguson <james.ferguson@canonical.com>
+In-Reply-To: <1332233594-13099-2-git-send-email-corentin.chary@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 13, 2012 at 05:07:45PM -0300, Henrique de Moraes Holschuh wrote:
+On Tue, Mar 20, 2012 at 09:53:01AM +0100, Corentin Chary wrote:
+> From: Corentin Chary <corentincj@iksaif.net>
+> 
+> On these laptops, the ACPI video is not functional, and very unlikely
+> to be fixed by the vendor. Note that intel_backlight works for some
+> of these laptops, and the backlight from samsung-laptop always work.
+> 
+> The good news is that newer laptops have functional ACPI video device
+> and won't end up growing this list.
 
-> Matthew, can you please pick it?
-
-Done.
+Are the hotkeys delivered via ACPI or via the Samsung device? If the 
+latter, you can just do unregister_acpi_video() instead in the samsung 
+driver and avoid having more machine-specific quirks in the ACPi code.
 
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
