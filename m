@@ -1,46 +1,96 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 06/14] drivers, samsung-laptop: fix usage of isalnum
-Date: Tue, 20 Mar 2012 09:53:06 +0100
-Message-ID: <1332233594-13099-7-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 10/14] asus-wmi: move WAPF variable into quirks_entry
+Date: Tue, 20 Mar 2012 09:53:10 +0100
+Message-ID: <1332233594-13099-11-git-send-email-corentin.chary@gmail.com>
 References: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1332233594-13099-1-git-send-email-corentin.chary@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, David Rientjes <rientjes@google.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentincj@iksaif.net>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-=46rom: David Rientjes <rientjes@google.com>
+Some models work better with different values of wapf, so move the
+variable into quriks_entry to make it more easy to give a specific
+value to different models.
 
-linux/ctype.h is needed for isalnum() to avoid a build error:
+Based on original patch from AceLan Kao <acelan.kao@canonical.com>
 
-drivers/platform/x86/samsung-laptop.c: In function =E2=80=98samsung_sab=
-i_diag=E2=80=99:
-drivers/platform/x86/samsung-laptop.c:1306: error: implicit declaration=
- of function =E2=80=98isalnum=E2=80=99
-
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+Cc: AceLan Kao <acelan.kao@canonical.com>
+Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/samsung-laptop.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c |    6 +++++-
+ drivers/platform/x86/asus-wmi.c    |    4 ++--
+ drivers/platform/x86/asus-wmi.h    |    2 +-
+ drivers/platform/x86/eeepc-wmi.c   |    2 +-
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x=
-86/samsung-laptop.c
-index b7c67c8..d1142e3 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -25,6 +25,7 @@
- #include <linux/acpi.h>
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
-+#include <linux/ctype.h>
-=20
- /*
-  * This driver is needed because a number of Samsung laptops do not ho=
-ok
---=20
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 1aea6b8..b12038c 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -51,9 +51,13 @@ static uint wapf;
+ module_param(wapf, uint, 0444);
+ MODULE_PARM_DESC(wapf, "WAPF value");
+ 
++static struct quirk_entry quirk_asus_unknown = {
++};
++
+ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ {
+-	driver->wapf = wapf;
++	driver->quirks = &quirk_asus_unknown;
++	driver->quirks->wapf = wapf;
+ }
+ 
+ static const struct key_entry asus_nb_wmi_keymap[] = {
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index c4ad76e..ff9cfd8 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1471,9 +1471,9 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 
+ 	/* CWAP allow to define the behavior of the Fn+F2 key,
+ 	 * this method doesn't seems to be present on Eee PCs */
+-	if (asus->driver->wapf >= 0)
++	if (asus->driver->quirks->wapf >= 0)
+ 		asus_wmi_set_devstate(ASUS_WMI_DEVID_CWAP,
+-				      asus->driver->wapf, NULL);
++				      asus->driver->quirks->wapf, NULL);
+ 
+ 	return asus_wmi_sysfs_init(asus->platform_device);
+ }
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 35003e4..d43b667 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -39,10 +39,10 @@ struct quirk_entry {
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
++	int wapf;
+ };
+ 
+ struct asus_wmi_driver {
+-	int			wapf;
+ 	int			brightness;
+ 	int			panel_power;
+ 
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 9f8ccf9..389ff88 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -209,10 +209,10 @@ static int eeepc_wmi_probe(struct platform_device *pdev)
+ 
+ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
+ {
+-	driver->wapf = -1;
+ 	driver->panel_power = FB_BLANK_UNBLANK;
+ 	driver->quirks = &quirk_asus_unknown;
+ 	driver->quirks->hotplug_wireless = hotplug_wireless;
++	driver->quirks->wapf = -1;
+ 	dmi_check_system(asus_quirks);
+ 	driver->quirks = quirks;
+ }
+-- 
 1.7.3.4
