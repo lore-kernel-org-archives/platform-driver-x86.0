@@ -1,7 +1,7 @@
 From: Shea Levy <shea@shealevy.com>
 Subject: Re: [PATCH v4 0/2] Add driver for Apple gmux device
-Date: Wed, 21 Mar 2012 08:36:47 -0400
-Message-ID: <4F69CB5F.70002@shealevy.com>
+Date: Wed, 21 Mar 2012 08:39:02 -0400
+Message-ID: <4F69CBE6.5010604@shealevy.com>
 References: <1331926882-22979-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
@@ -39,8 +39,8 @@ A few questions:
      * I'm using nouveau, and with the gmux I have both gmux_backlight 
 and nv_backlight (which never worked) in /sys/class/backlight, is this 
 expected?
-     * Is there anything I can do to test the backlight interface in 
-addition to setting brightness levels?
+     * Is there anything I can do to test the sysfs backlight interface 
+besides setting the levels?
      * Besides the sysfs backlight interface, are there any other 
 userspace-visible changes your driver makes that I should test?
 
