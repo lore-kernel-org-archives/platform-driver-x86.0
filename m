@@ -1,69 +1,175 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH v4 0/2] Add driver for Apple gmux device
-Date: Wed, 21 Mar 2012 09:38:42 -0500
-Message-ID: <20120321143842.GB23643@thinkpad-t410>
-References: <1331926882-22979-1-git-send-email-seth.forshee@canonical.com>
- <4F69CB5F.70002@shealevy.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Corentin Chary <corentincj@iksaif.net>
+Subject: [PATCH] samsung-laptop: unregister ACPI video module for some well known laptops
+Date: Thu, 22 Mar 2012 14:08:19 +0100
+Message-ID: <1332421699-5315-1-git-send-email-corentincj@iksaif.net>
+References: <20120320163002.GB6811@srcf.ucam.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:49184 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757676Ab2CUOir (ORCPT
+Received: from smtp5-g21.free.fr ([212.27.42.5]:55477 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754453Ab2CVNDS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Mar 2012 10:38:47 -0400
-Content-Disposition: inline
-In-Reply-To: <4F69CB5F.70002@shealevy.com>
+	Thu, 22 Mar 2012 09:03:18 -0400
+In-Reply-To: <20120320163002.GB6811@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Shea Levy <shea@shealevy.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Mar 21, 2012 at 08:36:47AM -0400, Shea Levy wrote:
-> Hi Seth,
-> 
-> On 03/16/2012 03:41 PM, Seth Forshee wrote:
-> >Apple laptops with hybrid graphics have a device named gmux that is used
-> >for switching between GPUs and backlight control. On many models this is
-> >the only reliable method for controlling the backlight.
-> >
-> >This series adds initial support for the gmux device, along with
-> >anciallary support for disabling apple_bl when the gmux device is
-> >detected. Initially only backlight control is supported.
-> >
-> >
-> 
-> I've done some basic testing on my MBP 5,3 (just setting a few
-> brightness levels, nothing fancy), and it all works, so feel free to
-> add my basic
-> 
-> Tested-by: Shea Levy <shea@shealevy.com>
-> 
-> if you wish. Please let me know if you need testing for future gmux
-> features.
+On these laptops, the ACPI video is not functional, and very unlikely
+to be fixed by the vendor. Note that intel_backlight works for some
+of these laptops, and the backlight from samsung-laptop always work.
 
-Thanks for testing! Matthew has already merged the patch to his tree
-though, so I won't be able to add your tag.
+The good news is that newer laptops have functional ACPI video device
+and won't end up growing this list.
 
-> A few questions:
->     * I'm using nouveau, and with the gmux I have both
-> gmux_backlight and nv_backlight (which never worked) in
-> /sys/class/backlight, is this expected?
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
+---
+ drivers/platform/x86/samsung-laptop.c |   80 +++++++++++++++++++++++++++++++--
+ 1 files changed, 76 insertions(+), 4 deletions(-)
 
-That's a better question for the nouveau developers. nouveau has some
-criteria it uses to determine whether or not it should supply a
-backlight device, and apparently that's all passing even though the
-backlight control doesn't work.
-
->     * Is there anything I can do to test the backlight interface in
-> addition to setting brightness levels?
-
-The testing you've already done is sufficient.
-
->     * Besides the sysfs backlight interface, are there any other
-> userspace-visible changes your driver makes that I should test?
-
-Not at this time, no.
-
-Thanks,
-Seth
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 4787afd..e2a34b4 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -26,6 +26,9 @@
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
+ #include <linux/ctype.h>
++#if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
++#include <acpi/video.h>
++#endif
+ 
+ /*
+  * This driver is needed because a number of Samsung laptops do not hook
+@@ -336,6 +339,7 @@ struct samsung_laptop {
+ 	struct work_struct kbd_led_work;
+ 
+ 	struct samsung_laptop_debug debug;
++	struct samsung_quirks *quirks;
+ 
+ 	bool handle_backlight;
+ 	bool has_stepping_quirk;
+@@ -343,7 +347,15 @@ struct samsung_laptop {
+ 	char sdiag[64];
+ };
+ 
++struct samsung_quirks {
++	bool broken_acpi_video;
++};
++
++static struct samsung_quirks samsung_unknown = {};
+ 
++static struct samsung_quirks samsung_broken_acpi_video = {
++	.broken_acpi_video = true,
++};
+ 
+ static bool force;
+ module_param(force, bool, 0);
+@@ -1416,6 +1428,14 @@ static int __init samsung_platform_init(struct samsung_laptop *samsung)
+ 	return 0;
+ }
+ 
++static struct samsung_quirks *quirks;
++
++static int __init samsung_dmi_matched(const struct dmi_system_id *d)
++{
++	quirks = d->driver_data;
++	return 0;
++}
++
+ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 	{
+ 		.matches = {
+@@ -1445,6 +1465,47 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 			DMI_MATCH(DMI_CHASSIS_TYPE, "14"), /* Sub-Notebook */
+ 		},
+ 	},
++	/* Specific DMI ids for laptop with quirks */
++	{
++	 .callback = samsung_dmi_matched,
++	 .ident = "N150P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
++		},
++	 .driver_data = &samsung_broken_acpi_video,
++	},
++	{
++	 .callback = samsung_dmi_matched,
++	 .ident = "N145P/N250P/N260P",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
++		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
++		},
++	 .driver_data = &samsung_broken_acpi_video,
++	},
++	{
++	 .callback = samsung_dmi_matched,
++	 .ident = "N150/N210/N220",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "N150/N210/N220"),
++		DMI_MATCH(DMI_BOARD_NAME, "N150/N210/N220"),
++		},
++	 .driver_data = &samsung_broken_acpi_video,
++	},
++	{
++	 .callback = samsung_dmi_matched,
++	 .ident = "NF110/NF210/NF310",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "NF110/NF210/NF310"),
++		DMI_MATCH(DMI_BOARD_NAME, "NF110/NF210/NF310"),
++		},
++	 .driver_data = &samsung_broken_acpi_video,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
+@@ -1456,6 +1517,7 @@ static int __init samsung_init(void)
+ 	struct samsung_laptop *samsung;
+ 	int ret;
+ 
++	quirks = &samsung_unknown;
+ 	if (!force && !dmi_check_system(samsung_dmi_table))
+ 		return -ENODEV;
+ 
+@@ -1465,12 +1527,21 @@ static int __init samsung_init(void)
+ 
+ 	mutex_init(&samsung->sabi_mutex);
+ 	samsung->handle_backlight = true;
++	samsung->quirks = quirks;
+ 
+-#ifdef CONFIG_ACPI
++
++#if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
+ 	/* Don't handle backlight here if the acpi video already handle it */
+-	if (acpi_video_backlight_support())
+-		samsung->handle_backlight = false;
++	if (acpi_video_backlight_support()) {
++		if (samsung->quirks->broken_acpi_video) {
++			pr_info("Disabling ACPI video driver\n");
++			acpi_video_unregister();
++		} else {
++			samsung->handle_backlight = false;
++		}
++	}
+ #endif
++
+ 	ret = samsung_platform_init(samsung);
+ 	if (ret)
+ 		goto error_platform;
+@@ -1481,7 +1552,8 @@ static int __init samsung_init(void)
+ 
+ #ifdef CONFIG_ACPI
+ 	/* Only log that if we are really on a sabi platform */
+-	if (acpi_video_backlight_support())
++	if (acpi_video_backlight_support() &&
++	    !samsung->quirks->broken_acpi_video)
+ 		pr_info("Backlight controlled by ACPI video driver\n");
+ #endif
+ 
+-- 
+1.7.3.4
