@@ -1,50 +1,87 @@
 From: Jens Taprogge <jens.taprogge@taprogge.org>
-Subject: [PATCH] [thinkpad_acpi] Correctly inform userspace about max
- brightness.
-Date: Sat, 24 Mar 2012 16:04:57 +0100
-Message-ID: <20120324150457.GA27321@endeavour.taprogge.org>
+Subject: Re: [PATCH] [thinkpad-acpi] Add T410s and T420s LED support
+Date: Sat, 24 Mar 2012 16:44:43 +0100
+Message-ID: <20120324154443.GA1405@endeavour.taprogge.org>
+References: <20120322234934.GA8338@endeavour.taprogge.org>
+ <20120323193951.GA24054@khazad-dum.debian.net>
+ <20120323194355.GA27877@srcf.ucam.org>
+ <20120323233807.GA12072@khazad-dum.debian.net>
+ <20120324000510.GB5722@endeavour.taprogge.org>
+ <20120324025038.GA23662@khazad-dum.debian.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from shamrock.taprogge.org ([213.146.117.139]:36639 "EHLO
+Received: from shamrock.taprogge.org ([213.146.117.139]:36695 "EHLO
 	shamrock.taprogge.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753000Ab2CXPFF (ORCPT
+	with ESMTP id S1753130Ab2CXPov (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 24 Mar 2012 11:05:05 -0400
+	Sat, 24 Mar 2012 11:44:51 -0400
 Content-Disposition: inline
+In-Reply-To: <20120324025038.GA23662@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
 
-Since thinkpad_acpi (currently?) only supports switching the leds on or
-off, we should inform userspace about that.  Currently 256 brightness
-levels are reported by userspace.
+On Fri, Mar 23, 2012 at 11:50:38PM -0300, Henrique de Moraes Holschuh wrote:
+> On Sat, 24 Mar 2012, Jens Taprogge wrote:
+> > I am not sure thinkpad_acpi needs to provide a mixer.  I think what is
+> 
+> It does, but not on all thinkpads.  AFAIK, even the newer ones that are not
+> OEM junk with a thin layer of thinkpad IP added still have a FET mute-gating
+> the speakers, controlled by the EC.
 
-Please apply.
----
- drivers/platform/x86/thinkpad_acpi.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+Sorry, I have been imprecise.  I am not questioning the need for the
+output mixer.  The models I have looked at all feature the EC controlled
+hardware muting.  What I was trying to say was that there does not
+necessarily need to be a mixer for the mic to properly report the muting
+state.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index a0bc79f..cb549d0 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4827,6 +4827,7 @@ static enum led_brightness light_sysfs_get(struct led_classdev *led_cdev)
- static struct tpacpi_led_classdev tpacpi_led_thinklight = {
- 	.led_classdev = {
- 		.name		= "tpacpi::thinklight",
-+		.max_brightness = 1,
- 		.brightness_set	= &light_sysfs_set,
- 		.brightness_get	= &light_sysfs_get,
- 	}
-@@ -5232,6 +5233,7 @@ static int __init tpacpi_init_led(unsigned int led)
- 	if (!tpacpi_led_names[led])
- 		return 0;
- 
-+	tpacpi_leds[led].led_classdev.max_brightness = 1;
- 	tpacpi_leds[led].led_classdev.brightness_set = &led_sysfs_set;
- 	tpacpi_leds[led].led_classdev.blink_set = &led_sysfs_blink_set;
- 	if (led_supported == TPACPI_LED_570)
--- 
-1.7.5.4
+> 
+> > important is that the user can rely on the LED to be only on if the mic
+> > is muted.  The mute key can be handled by userspace as long as the led
+> > always gives the correct information.
+> 
+> And as long as it is not in control of the firmware.  Otherwise, bad things
+> happen.
+Agreed. 
+
+> > The modern laptops are all based on HDA audio.  In the BIOS the
+> > different functions of the respective connections are stored.  So the
+> > sound layer knows which connection is the internal mic.  (An after
+> > analyzing the information provided on the Thinkpads seems to be correct
+> > in this regard.)
+> 
+> Have you tested and made sure Lenovo did not mute-gate the MIC through the
+> EC on the better thinkpad lines?
+
+I have tested pressing the mute key as well as switching the LED on the
+T410s and T420s.  The mic stays open.  
+
+> 
+> > So to make sure the LED presents the actual state of the muting it would
+> > be sufficient for ALSA to expose the mixer state to thinkpad_acpi or
+> > better call a callback on changes.  To make it applicable to a wider
+> > range of devices one could come up with a design like this:
+> > 
+> >    #define SND_ENABLED_INTMIC      1 << 0
+> >    #define SND_ENABLED_INT_SPEAKER 1 << 16
+> >    #define SND_ENABLED_ALLINPUTS   0x0000ffff
+> >    #define SND_ENABLED_ALLOUTPUTS  0xffff0000
+> > 
+> >    /* returns current state or -1 for error */
+> >    int snd_register_mute_cb(void (*callback)(int muted, void *private), void *private);
+> >    int snd_unregister_mute_cb(void (*callback)(int muted, void *private));
+> > 
+> > This would give any other module the ability to receive a notification
+> > when a device is muted.  The internal mic is special since the user can
+> > not unplug it.  So it gets a defined position in the array.  Apart from
+> > that one could use the LED to display if any mic is open.
+> 
+> If you're going to do it that way, why not provide LED triggers?
+
+I just did not know about them.  Is there a way to prevent userspace
+from changing the trigger -> led association?
+
+Takashi:  where would we need to add the LED triggers? In
+core/control.c?  Would such a change be acceptable to ALSA?
