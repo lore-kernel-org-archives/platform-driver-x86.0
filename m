@@ -1,21 +1,46 @@
-From: laurarey111@hotmail.com
-Subject: Hello
-Date: Thu, 29 Mar 2012 07:04:57 GMT
-Message-ID: <4f740999.3e2.566e.15314@econetmobile.co.zw>
-Reply-To: laurarey111@hotmail.com
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] acer-wmi: add Aspire 5741G touchpad toggle key
+Date: Thu, 29 Mar 2012 12:53:22 +0300
+Message-ID: <20120329095322.GA3576@swordfish.minsk.epam.com>
+References: <20120306123355.GA3904@swordfish.minsk.epam.com>
+ <1331266669.10557.107.camel@linux-s257.site>
+ <20120312101956.GA8522@swordfish.minsk.epam.com>
+ <1331607878.10557.145.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from comms.econetmobile.co.zw ([217.74.236.106]:47859 "EHLO
-	econetmobile.co.zw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750738Ab2C2HmI (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:57143 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752734Ab2C2Jx2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Mar 2012 03:42:08 -0400
+	Thu, 29 Mar 2012 05:53:28 -0400
+Content-Disposition: inline
+In-Reply-To: <1331607878.10557.145.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: joeyli <jlee@suse.com>
+Cc: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello xxxxx,
- How are you doing over there? My name is Laura, Please let
-me know if i got the right address so we can open
-communication, here is my email address I am waiting for
-your confirmation with care Laura...
+acer-wmi: add Aspire 5741G touchpad toggle key
+
+add Aspire 5741G KEY_TOUCHPAD_TOGGLE to wmi keymap.
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+
+---
+
+ drivers/platform/x86/acer-wmi.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index c1a3fd8..94a6747 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -125,6 +125,7 @@ static const struct key_entry acer_wmi_keymap[] = {
+ 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
+ 	{KE_IGNORE, 0x81, {KEY_SLEEP} },
+ 	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
++	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
+ 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+ 	{KE_END, 0}
+ };
