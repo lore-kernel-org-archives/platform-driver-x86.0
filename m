@@ -1,55 +1,63 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 00/17] mark const init data with __initconst instead of
- __initdata
-Date: Fri, 30 Mar 2012 11:59:00 +0200
-Message-ID: <20120330095859.GT15647@pengutronix.de>
-References: <20120329211131.GA31250@pengutronix.de>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: add Aspire 5741G touchpad toggle key
+Date: Fri, 30 Mar 2012 18:25:36 +0800
+Message-ID: <1333103136.7293.18.camel@linux-s257.site>
+References: <20120306123355.GA3904@swordfish.minsk.epam.com>
+	 <1331266669.10557.107.camel@linux-s257.site>
+	 <20120312101956.GA8522@swordfish.minsk.epam.com>
+	 <1331607878.10557.145.camel@linux-s257.site>
+	 <20120329095322.GA3576@swordfish.minsk.epam.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <20120329211131.GA31250@pengutronix.de>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>, Anatolij Gustschin <agust@denx.de>, Andreas Koensgen <ajk@comnets.uni-bremen.de>, Andrew Lunn <andrew@lunn.ch>, Andrew Victor <linux@maxim.org.za>, Arnd Bergmann <arnd@arndb.de>, Barry Song <baohua.song@csr.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bryan Huntsman <bryanh@codeaurora.org>, cbe-oss-dev@lists.ozlabs.org, Christoph Lameter <cl@linux-foundation.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, David Howells <dhowells@redhat.com>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, davinci-linux-open-source@linux.davincidsp.com, Eric Miao <eric.y.miao@gmail.com>, Fenghua Yu <fenghua.yu@intel.com>, Grant Likely <gran>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from charybdis-ext.suse.de ([195.135.221.2]:49342 "EHLO
+	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933663Ab2C3K1l (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 30 Mar 2012 06:27:41 -0400
+In-Reply-To: <20120329095322.GA3576@swordfish.minsk.epam.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Mar 29, 2012 at 11:11:31PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello,
+Hi Sergey,=20
+
+=E6=96=BC =E5=9B=9B=EF=BC=8C2012-03-29 =E6=96=BC 12:53 +0300=EF=BC=8CSe=
+rgey Senozhatsky =E6=8F=90=E5=88=B0=EF=BC=9A
+> acer-wmi: add Aspire 5741G touchpad toggle key
 >=20
-> this series fixes a common error to use __initdata to mark const
-> variables. Most of the time this works well enough to go unnoticed
-> (though I wonder why the linker doesn't warn about that).
-> Just try adding something like
+> add Aspire 5741G KEY_TOUCHPAD_TOGGLE to wmi keymap.
 >=20
-> 	int something __initdata;
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 >=20
-> to one of the patched files and compile to see the error.
+> ---
 >=20
-> While touching these annotations I also corrected the position where =
-it
-> was wrong to go between the variable name and the =3D.
+>  drivers/platform/x86/acer-wmi.c |    1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> Note this series is not compile tested.
-After a question by Shawn Guo I noticed that my command to do the chang=
-es
-was to lax and changed things that must not be changed (at least not
-with further care). Affected are lines like:
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index c1a3fd8..94a6747 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -125,6 +125,7 @@ static const struct key_entry acer_wmi_keymap[] =3D=
+ {
+>  	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
+>  	{KE_IGNORE, 0x81, {KEY_SLEEP} },
+>  	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
+> +	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
+>  	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+>  	{KE_END, 0}
+>  };
+>=20
 
-	static const char *at91_dt_board_compat[] __initconst =3D {
+Acked-by: Lee, Chun-Yi <jlee@suse.com>
 
-While at91_dt_board_compat[0] is const, at91_dt_board_compat is not.
 
-I will send a fixed series later today.
+This patch is OK to me!
 
-Best regards
-Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Thanks for your patch!
+Joey Lee
