@@ -1,72 +1,55 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH 16/17] drivers/x86: mark const init data with __initconst instead of __initdata
-Date: Thu, 29 Mar 2012 23:12:33 +0200
-Message-ID: <1333055554-31300-16-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 00/17] mark const init data with __initconst instead of
+ __initdata
+Date: Fri, 30 Mar 2012 11:59:00 +0200
+Message-ID: <20120330095859.GT15647@pengutronix.de>
 References: <20120329211131.GA31250@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from metis.ext.pengutronix.de ([92.198.50.35]:33799 "EHLO
-	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933924Ab2C2VM6 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Mar 2012 17:12:58 -0400
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
 In-Reply-To: <20120329211131.GA31250@pengutronix.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
 To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Cc: kernel@pengutronix.de, Matthew Garrett <mjg59@srcf.ucam.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+Cc: Alexey Dobriyan <adobriyan@gmail.com>, Anatolij Gustschin <agust@denx.de>, Andreas Koensgen <ajk@comnets.uni-bremen.de>, Andrew Lunn <andrew@lunn.ch>, Andrew Victor <linux@maxim.org.za>, Arnd Bergmann <arnd@arndb.de>, Barry Song <baohua.song@csr.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bryan Huntsman <bryanh@codeaurora.org>, cbe-oss-dev@lists.ozlabs.org, Christoph Lameter <cl@linux-foundation.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, David Howells <dhowells@redhat.com>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw2@infradead.org>, davinci-linux-open-source@linux.davincidsp.com, Eric Miao <eric.y.miao@gmail.com>, Fenghua Yu <fenghua.yu@intel.com>, Grant Likely <gran>
+List-Id: platform-driver-x86.vger.kernel.org
 
-As long as there is no other non-const variable marked __initdata in th=
-e
-same compilation unit it doesn't hurt. If there were one however
-compilation would fail with
+On Thu, Mar 29, 2012 at 11:11:31PM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> this series fixes a common error to use __initdata to mark const
+> variables. Most of the time this works well enough to go unnoticed
+> (though I wonder why the linker doesn't warn about that).
+> Just try adding something like
+>=20
+> 	int something __initdata;
+>=20
+> to one of the patched files and compile to see the error.
+>=20
+> While touching these annotations I also corrected the position where =
+it
+> was wrong to go between the variable name and the =3D.
+>=20
+> Note this series is not compile tested.
+After a question by Shawn Guo I noticed that my command to do the chang=
+es
+was to lax and changed things that must not be changed (at least not
+with further care). Affected are lines like:
 
-	error: $variablename causes a section type conflict
+	static const char *at91_dt_board_compat[] __initconst =3D {
 
-because a section containing const variables is marked read only and so
-cannot contain non-const variables.
+While at91_dt_board_compat[0] is const, at91_dt_board_compat is not.
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: ibm-acpi-devel@lists.sourceforge.net
----
- drivers/platform/x86/dell-laptop.c   |    2 +-
- drivers/platform/x86/thinkpad_acpi.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I will send a fixed series later today.
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index a05fc9c..882bfa4 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -94,7 +94,7 @@ static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
- static struct rfkill *wwan_rfkill;
-=20
--static const struct dmi_system_id __initdata dell_device_table[] =3D {
-+static const struct dmi_system_id dell_device_table[] __initconst =3D =
-{
- 	{
- 		.ident =3D "Dell laptop",
- 		.matches =3D {
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
-6/thinkpad_acpi.c
-index d68c000..dc1900c 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -522,7 +522,7 @@ static acpi_handle ec_handle;
-=20
- #define TPACPI_HANDLE(object, parent, paths...)			\
- 	static acpi_handle  object##_handle;			\
--	static const acpi_handle *object##_parent __initdata =3D	\
-+	static const acpi_handle *object##_parent __initconst =3D	\
- 						&parent##_handle; \
- 	static char *object##_paths[] __initdata =3D { paths }
-=20
+Best regards
+Uwe
+
 --=20
-1.7.9.1
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
