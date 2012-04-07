@@ -1,62 +1,19 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] samsung-laptop: unregister ACPI video module for some
- well known laptops
-Date: Fri, 6 Apr 2012 09:34:55 -0500
-Message-ID: <20120406143455.GC8666@thinkpad-t410>
-References: <20120320163002.GB6811@srcf.ucam.org>
- <1332421699-5315-1-git-send-email-corentincj@iksaif.net>
- <CAHR064hc4AdFUeoO8Szg0FG6CwLK+xauGn9VMJntWV1Gik=ACQ@mail.gmail.com>
- <20120327112105.GA2845@srcf.ucam.org>
- <CAHR064hBVJjmEd=GeGuG-xTg5ONfJTxwqzP88=JABaXFrfiehA@mail.gmail.com>
+From: =?iso-8859-1?b?qQ==?= 2012 Microsoft <micro.soft11@w.cn>
+Subject: 012/03/ZYO12
+Date: Sat, 07 Apr 2012 23:48:55 +0200
+Message-ID: <20120407234855.70xky5wdwkcc0s4g@webmail.versatel.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:32863 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757172Ab2DFOe7 (ORCPT
+Received: from smtp1.versatel.nl ([62.58.50.88]:56927 "EHLO smtp1.versatel.nl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751324Ab2DGVzh convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Apr 2012 10:34:59 -0400
+	Sat, 7 Apr 2012 17:55:37 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHR064hBVJjmEd=GeGuG-xTg5ONfJTxwqzP88=JABaXFrfiehA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, Len Brown <len.brown@intel.com>
 
-On Fri, Apr 06, 2012 at 11:42:18AM +0200, Corentin Chary wrote:
-> On Tue, Mar 27, 2012 at 1:21 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> > On Tue, Mar 27, 2012 at 11:11:18AM +0200, Corentin Chary wrote:
-> >> Matthew, is this one ok ? I really hope this patch can go in 3.4 so we
-> >> don't introduce a regression for old laptops.
-> >
-> > Yes, I've got this now.
-> >
-> > Thanks,
-> 
-> 
-> A user just found a DSDT which is broken by this way of doing things
-> (this is not really a regression since it was also broken before).
-> 
-> _BCL contains a wierd "Or (VDRV, 0x02, VDRV)".
-> So if you call _BLC once (video.ko will), it set a flag that affect
-> the behavior of all backlight related stuff, and it breaks
-> samsung-laptop's backlight even if samsung-laptop unload the acpi
-> backlight.
-> Using acpi_backlight=vendor solves that since it prevents the module
-> from being loaded. My previous patch also fix that since it use
-> acpi_backlight= mechanism.
-> 
-> Do you think using acpi_backlight=vendor is a good enought solution
-> here ? Should we use my first patch instead ?
-
-I've recently noticed another problem with using acpi_video_unregister()
-to disable known broken backlights -- another module might call
-acpi_video_register() and make it reappear. i915 does this, so when I
-EFI boot the MacBook Pro 8,2 the acpi backlights reappear (under a BIOS
-compatible boot the Intel GPU doesn't show up on the bus).
-
-So Corentin's solution does seem like a better way to go, or else
-something similar that forces the ACPI video driver to behave as with
-acpi_video=vendor.
-
-Seth
+Tu email ha ganado =A3375.000
