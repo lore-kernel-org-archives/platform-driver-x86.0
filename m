@@ -1,45 +1,44 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] TPACPI: Make W510 microphone LED working
-Date: Mon, 9 Apr 2012 20:54:51 +0200
-Message-ID: <201204092054.51555.marek.vasut@gmail.com>
-References: <1333854430-12997-1-git-send-email-marek.vasut@gmail.com> <20120409141506.GA4835@khazad-dum.debian.net>
+From: Martin Nyhus <martin.nyhus@gmx.com>
+Subject: Re: [PATCH] dell-laptop: Terminate quirks list properly
+Date: Mon, 9 Apr 2012 21:49:43 +0200
+Message-ID: <201204092149.43908.martin.nyhus@gmx.com>
+References: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="us-ascii"
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f42.google.com ([74.125.82.42]:56325 "EHLO
-	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754151Ab2DISyz (ORCPT
+Received: from mailout-eu.gmx.com ([213.165.64.42]:59140 "HELO
+	mailout-eu.gmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1755246Ab2DITt7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Apr 2012 14:54:55 -0400
-Received: by wgbds11 with SMTP id ds11so2430063wgb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Apr 2012 11:54:54 -0700 (PDT)
-In-Reply-To: <20120409141506.GA4835@khazad-dum.debian.net>
+	Mon, 9 Apr 2012 15:49:59 -0400
+In-Reply-To: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org
 
-Dear Henrique de Moraes Holschuh,
+Matthew, did you see this?
 
-> On Sun, 08 Apr 2012, Marek Vasut wrote:
-> > Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+On Thursday 15. March 2012 18:25:48 Martin Nyhus wrote:
+> Add missing DMI_NONE entry to end of the quirks list so
+> dmi_check_system() won't read past the end of the list.
 > 
-> NAK (but noted that the W510 supports the MIC led).
-
-Well, at least some value was in this patch.
-
-> Please look at the recent thread about the same issue on the T410/T420 on
-> the list archives.  I am still waiting for some direction from that thread.
+> Signed-off-by: Martin Nyhus <martin.nyhus@gmx.com>
+> ---
+>  drivers/platform/x86/dell-laptop.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-> > -#define TPACPI_SAFE_LEDS	0x1081U
-> > +#define TPACPI_SAFE_LEDS	0x5081U
+> diff --git a/drivers/platform/x86/dell-laptop.c
+> b/drivers/platform/x86/dell-laptop.c index a05fc9c..e6c08ee 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -212,6 +212,7 @@ static struct dmi_system_id __devinitdata dell_quirks[]
+> = { },
+>  		.driver_data = &quirk_dell_vostro_v130,
+>  	},
+> +	{ }
+>  };
 > 
-> This, I really don't want.
-
-Ok, honestly, I'm pretty new to acpi hacking, this is my first try. I'll check 
-the thread and hopefully get back to this.
-
-Best regards,
-Marek Vasut
+>  static struct calling_interface_buffer *buffer;
