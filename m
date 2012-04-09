@@ -1,41 +1,45 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+From: Marek Vasut <marek.vasut@gmail.com>
 Subject: Re: [PATCH] TPACPI: Make W510 microphone LED working
-Date: Mon, 9 Apr 2012 11:15:06 -0300
-Message-ID: <20120409141506.GA4835@khazad-dum.debian.net>
-References: <1333854430-12997-1-git-send-email-marek.vasut@gmail.com>
+Date: Mon, 9 Apr 2012 20:54:51 +0200
+Message-ID: <201204092054.51555.marek.vasut@gmail.com>
+References: <1333854430-12997-1-git-send-email-marek.vasut@gmail.com> <20120409141506.GA4835@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49075 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755570Ab2DIOPO (ORCPT
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:56325 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754151Ab2DISyz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Apr 2012 10:15:14 -0400
-Received: from compute2.internal (compute2.nyi.mail.srv.osa [10.202.2.42])
-	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 535F621715
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Apr 2012 10:15:14 -0400 (EDT)
-Content-Disposition: inline
-In-Reply-To: <1333854430-12997-1-git-send-email-marek.vasut@gmail.com>
+	Mon, 9 Apr 2012 14:54:55 -0400
+Received: by wgbds11 with SMTP id ds11so2430063wgb.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Apr 2012 11:54:54 -0700 (PDT)
+In-Reply-To: <20120409141506.GA4835@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marek Vasut <marek.vasut@gmail.com>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 Cc: ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br, platform-driver-x86@vger.kernel.org
 
-On Sun, 08 Apr 2012, Marek Vasut wrote:
-> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+Dear Henrique de Moraes Holschuh,
 
-NAK (but noted that the W510 supports the MIC led).
+> On Sun, 08 Apr 2012, Marek Vasut wrote:
+> > Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+> 
+> NAK (but noted that the W510 supports the MIC led).
 
-Please look at the recent thread about the same issue on the T410/T420 on
-the list archives.  I am still waiting for some direction from that thread.
+Well, at least some value was in this patch.
 
-> -#define TPACPI_SAFE_LEDS	0x1081U
-> +#define TPACPI_SAFE_LEDS	0x5081U
+> Please look at the recent thread about the same issue on the T410/T420 on
+> the list archives.  I am still waiting for some direction from that thread.
+> 
+> > -#define TPACPI_SAFE_LEDS	0x1081U
+> > +#define TPACPI_SAFE_LEDS	0x5081U
+> 
+> This, I really don't want.
 
-This, I really don't want.
+Ok, honestly, I'm pretty new to acpi hacking, this is my first try. I'll check 
+the thread and hopefully get back to this.
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Best regards,
+Marek Vasut
