@@ -1,44 +1,52 @@
-From: Martin Nyhus <martin.nyhus@gmx.com>
-Subject: Re: [PATCH] dell-laptop: Terminate quirks list properly
-Date: Mon, 9 Apr 2012 21:49:43 +0200
-Message-ID: <201204092149.43908.martin.nyhus@gmx.com>
-References: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 3.0.y] acer-wmi: No wifi rfkill on Sony machines
+Date: Tue, 10 Apr 2012 16:09:24 -0700
+Message-ID: <20120410230924.GC6140@kroah.com>
+References: <1332477404-13632-1-git-send-email-jlee@suse.com>
+ <20120401184007.GA20556@burratino>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout-eu.gmx.com ([213.165.64.42]:59140 "HELO
-	mailout-eu.gmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1755246Ab2DITt7 (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:56292 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755241Ab2DJXJ0 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Apr 2012 15:49:59 -0400
-In-Reply-To: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
+	Tue, 10 Apr 2012 19:09:26 -0400
+Received: from compute5.internal (compute5.nyi.mail.srv.osa [10.202.2.45])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 1AB4D215EA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Apr 2012 19:09:26 -0400 (EDT)
+Content-Disposition: inline
+In-Reply-To: <20120401184007.GA20556@burratino>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+To: Jonathan Nieder <jrnieder@gmail.com>
+Cc: stable@vger.kernel.org, "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, stable@kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Mattia Dongili <malattia@linux.it>, Dimitris N <ddarlac@gmail.com>, Kalle Olavi Niemitalo <kon@iki.fi>
 
-Matthew, did you see this?
-
-On Thursday 15. March 2012 18:25:48 Martin Nyhus wrote:
-> Add missing DMI_NONE entry to end of the quirks list so
-> dmi_check_system() won't read past the end of the list.
+On Sun, Apr 01, 2012 at 01:40:07PM -0500, Jonathan Nieder wrote:
+> From: Lee, Chun-Yi <joeyli.kernel@gmail.com>
+> Date: Fri, 23 Mar 2012 12:36:44 +0800
 > 
-> Signed-off-by: Martin Nyhus <martin.nyhus@gmx.com>
+> commit 5719b81988f3c24ff694dc3a37e35b35630a3966 upstream.
+> 
+> The wireless rfkill should charged by sony-laptop but not acer-wmi.
+> So, add Sony's SNY5001 acpi device to blacklist in acer-wmi.
+> 
+> Tested on Sony Vaio
+> 
+> Addresses http://bugs.debian.org/666568
+> 
+> Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+> Cc: Mattia Dongili <malattia@linux.it>
+> Tested-by: Dimitris N <ddarlac@gmail.com>
+> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+> Signed-off-by: Matthew Garrett <mjg@redhat.com>
+> Tested-by: Kalle Olavi Niemitalo <kon@iki.fi> (on v3.2.13)
+> Signed-off-by: Jonathan Nieder <jrnieder@gmail.com>
 > ---
->  drivers/platform/x86/dell-laptop.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+> Hi Greg,
 > 
-> diff --git a/drivers/platform/x86/dell-laptop.c
-> b/drivers/platform/x86/dell-laptop.c index a05fc9c..e6c08ee 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -212,6 +212,7 @@ static struct dmi_system_id __devinitdata dell_quirks[]
-> = { },
->  		.driver_data = &quirk_dell_vostro_v130,
->  	},
-> +	{ }
->  };
-> 
->  static struct calling_interface_buffer *buffer;
+> Please consider this patch for the 3.0, 3.2, and 3.3-stable series.
+
+Now applied, thanks for letting me know.
+
+greg k-h
