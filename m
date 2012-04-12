@@ -1,33 +1,44 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: added BIOS mute interfaces for volume
-Date: Wed, 11 Apr 2012 08:42:11 -0300
-Message-ID: <20120411114211.GA11445@khazad-dum.debian.net>
-References: <1334139302-7152-1-git-send-email-alex.hung@canonical.com>
- <4F855A2B.6070402@canonical.com>
+From: Ang Way Chuang <wcang79@gmail.com>
+Subject: [PATCH]: Dell Vostro 3350 touchpad LED
+Date: Thu, 12 Apr 2012 13:11:27 +0800
+Message-ID: <4F8663FF.8020302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F855A2B.6070402@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Hung <alex.hung@canonical.com>
-Cc: ibm-acpi@hmh.eng.br, mjg@redhat.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:60509 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755165Ab2DLFLo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 12 Apr 2012 01:11:44 -0400
+Received: by pbcun15 with SMTP id un15so1941330pbc.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Apr 2012 22:11:43 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Wed, 11 Apr 2012, Alex Hung wrote:
-> I am modifying thinkpad_acpi so it can support the mute led, and I
-> am looking for suggestions and feedbacks.
-> 
-> For newer BIOS, it includes three aml methods that can be used to
-> get, set and enable the mute led.
+Add Vostro 3350 into quirks so that the touchpad LED works.
 
-Aha!  THANK YOU.
-
-I will look at the patches this week.  Please send me (directly) a full
-dmidecode and ACPI table dump.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Signed-off-by: Ang Way Chuang <wcang79@gmail.com>
+---
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index a05fc9c..a25d8d9 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -187,6 +187,15 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "Dell Vostro 3350",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3350"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "Dell Vostro 3555",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
