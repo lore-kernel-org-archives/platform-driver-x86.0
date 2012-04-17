@@ -1,67 +1,25 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] samsung-laptop: unregister ACPI video module for some
- well known laptops
-Date: Tue, 17 Apr 2012 10:31:44 +0200
-Message-ID: <CAHR064hagc7s19fn=bF90WXvnrdT=yh_vTDcMmf3aKdaL66HnQ@mail.gmail.com>
-References: <20120320163002.GB6811@srcf.ucam.org>
-	<1332421699-5315-1-git-send-email-corentincj@iksaif.net>
-	<CAHR064hc4AdFUeoO8Szg0FG6CwLK+xauGn9VMJntWV1Gik=ACQ@mail.gmail.com>
-	<20120327112105.GA2845@srcf.ucam.org>
-	<CAHR064hBVJjmEd=GeGuG-xTg5ONfJTxwqzP88=JABaXFrfiehA@mail.gmail.com>
-	<20120406143455.GC8666@thinkpad-t410>
+From: Matthew Garrett <mjg@redhat.com>
+Subject: Re: [PATCH] dell-laptop: Terminate quirks list properly
+Date: Tue, 17 Apr 2012 14:29:06 +0100
+Message-ID: <20120417132906.GC31392@srcf.ucam.org>
+References: <1331832348-7082-1-git-send-email-martin.nyhus@gmx.com>
+ <201204092149.43908.martin.nyhus@gmx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20120406143455.GC8666@thinkpad-t410>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, Len Brown <len.brown@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:59403 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932175Ab2DQN3J (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 17 Apr 2012 09:29:09 -0400
+Content-Disposition: inline
+In-Reply-To: <201204092149.43908.martin.nyhus@gmx.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Martin Nyhus <martin.nyhus@gmx.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 6, 2012 at 4:34 PM, Seth Forshee <seth.forshee@canonical.com> wrote:
-> On Fri, Apr 06, 2012 at 11:42:18AM +0200, Corentin Chary wrote:
->> On Tue, Mar 27, 2012 at 1:21 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
->> > On Tue, Mar 27, 2012 at 11:11:18AM +0200, Corentin Chary wrote:
->> >> Matthew, is this one ok ? I really hope this patch can go in 3.4 so we
->> >> don't introduce a regression for old laptops.
->> >
->> > Yes, I've got this now.
->> >
->> > Thanks,
->>
->>
->> A user just found a DSDT which is broken by this way of doing things
->> (this is not really a regression since it was also broken before).
->>
->> _BCL contains a wierd "Or (VDRV, 0x02, VDRV)".
->> So if you call _BLC once (video.ko will), it set a flag that affect
->> the behavior of all backlight related stuff, and it breaks
->> samsung-laptop's backlight even if samsung-laptop unload the acpi
->> backlight.
->> Using acpi_backlight=vendor solves that since it prevents the module
->> from being loaded. My previous patch also fix that since it use
->> acpi_backlight= mechanism.
->>
->> Do you think using acpi_backlight=vendor is a good enought solution
->> here ? Should we use my first patch instead ?
->
-> I've recently noticed another problem with using acpi_video_unregister()
-> to disable known broken backlights -- another module might call
-> acpi_video_register() and make it reappear. i915 does this, so when I
-> EFI boot the MacBook Pro 8,2 the acpi backlights reappear (under a BIOS
-> compatible boot the Intel GPU doesn't show up on the bus).
->
-> So Corentin's solution does seem like a better way to go, or else
-> something similar that forces the ACPI video driver to behave as with
-> acpi_video=vendor.
->
-> Seth
->
-
-Matthew, Len, any input on that ? Should we keep the current code even
-if broken with some (also broken) hardware or should we move the
-blacklist in acpi/video.c ?
-
+Sorry for the hold-up Martin - I've merged this now. Thanks!
 
 -- 
-Corentin Chary
-http://xf.iksaif.net
+Matthew Garrett | mjg59@srcf.ucam.org
