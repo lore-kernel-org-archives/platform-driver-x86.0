@@ -1,49 +1,67 @@
-From: Bjarke Istrup Pedersen <gurligebis@gentoo.org>
-Subject: [PATCH] NET5501: Change active_low to 0 for LED driver.
-Date: Sat, 14 Apr 2012 17:42:17 +0000
-Message-ID: <1334425337-24343-1-git-send-email-gurligebis@gentoo.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:51278 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753440Ab2DNRnZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Apr 2012 13:43:25 -0400
-Received: by wibhj6 with SMTP id hj6so7426359wib.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Apr 2012 10:43:24 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Bjarke Istrup Pedersen <gurligebis@gentoo.org>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] samsung-laptop: unregister ACPI video module for some
+ well known laptops
+Date: Tue, 17 Apr 2012 10:31:44 +0200
+Message-ID: <CAHR064hagc7s19fn=bF90WXvnrdT=yh_vTDcMmf3aKdaL66HnQ@mail.gmail.com>
+References: <20120320163002.GB6811@srcf.ucam.org>
+	<1332421699-5315-1-git-send-email-corentincj@iksaif.net>
+	<CAHR064hc4AdFUeoO8Szg0FG6CwLK+xauGn9VMJntWV1Gik=ACQ@mail.gmail.com>
+	<20120327112105.GA2845@srcf.ucam.org>
+	<CAHR064hBVJjmEd=GeGuG-xTg5ONfJTxwqzP88=JABaXFrfiehA@mail.gmail.com>
+	<20120406143455.GC8666@thinkpad-t410>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20120406143455.GC8666@thinkpad-t410>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux acpi <linux-acpi@vger.kernel.org>, Len Brown <len.brown@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-It seems that there was an error with the active_low = 1 for the
-LED, since it should be set to 0 (meaning that active is high,
-since 0 is false, hence the confusion.
+On Fri, Apr 6, 2012 at 4:34 PM, Seth Forshee <seth.forshee@canonical.com> wrote:
+> On Fri, Apr 06, 2012 at 11:42:18AM +0200, Corentin Chary wrote:
+>> On Tue, Mar 27, 2012 at 1:21 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+>> > On Tue, Mar 27, 2012 at 11:11:18AM +0200, Corentin Chary wrote:
+>> >> Matthew, is this one ok ? I really hope this patch can go in 3.4 so we
+>> >> don't introduce a regression for old laptops.
+>> >
+>> > Yes, I've got this now.
+>> >
+>> > Thanks,
+>>
+>>
+>> A user just found a DSDT which is broken by this way of doing things
+>> (this is not really a regression since it was also broken before).
+>>
+>> _BCL contains a wierd "Or (VDRV, 0x02, VDRV)".
+>> So if you call _BLC once (video.ko will), it set a flag that affect
+>> the behavior of all backlight related stuff, and it breaks
+>> samsung-laptop's backlight even if samsung-laptop unload the acpi
+>> backlight.
+>> Using acpi_backlight=vendor solves that since it prevents the module
+>> from being loaded. My previous patch also fix that since it use
+>> acpi_backlight= mechanism.
+>>
+>> Do you think using acpi_backlight=vendor is a good enought solution
+>> here ? Should we use my first patch instead ?
+>
+> I've recently noticed another problem with using acpi_video_unregister()
+> to disable known broken backlights -- another module might call
+> acpi_video_register() and make it reappear. i915 does this, so when I
+> EFI boot the MacBook Pro 8,2 the acpi backlights reappear (under a BIOS
+> compatible boot the Intel GPU doesn't show up on the bus).
+>
+> So Corentin's solution does seem like a better way to go, or else
+> something similar that forces the ACPI video driver to behave as with
+> acpi_video=vendor.
+>
+> Seth
+>
 
-The wiki article about it confuses it, since it contradicts
-itself, regarding what turns on the LED.
+Matthew, Len, any input on that ? Should we keep the current code even
+if broken with some (also broken) hardware or should we move the
+blacklist in acpi/video.c ?
 
-I have tested 3.4-rc2 on my net5501 with this patch, and it
-makes the LED behave correctly, where "none" turns it off, and
-"default-on" turns it on, when echoed onto the trigger "file"
-in /sys/class/leds.
 
-Signed-off-by: Bjarke Istrup Pedersen <gurligebis@gentoo.org>
----
- arch/x86/platform/geode/net5501.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
-index 66d377e..646e3b5 100644
---- a/arch/x86/platform/geode/net5501.c
-+++ b/arch/x86/platform/geode/net5501.c
-@@ -63,7 +63,7 @@ static struct gpio_led net5501_leds[] = {
- 		.name = "net5501:1",
- 		.gpio = 6,
- 		.default_trigger = "default-on",
--		.active_low = 1,
-+		.active_low = 0,
- 	},
- };
- 
 -- 
-1.7.8.5
+Corentin Chary
+http://xf.iksaif.net
