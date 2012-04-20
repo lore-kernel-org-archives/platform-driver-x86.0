@@ -1,31 +1,64 @@
-From: Martin Mokrejs <mmokrejs@fold.natur.cuni.cz>
-Subject: Dell Vostro 3550: Fn+F1 does not *always* work
-Date: Fri, 20 Apr 2012 00:54:30 +0200
-Message-ID: <4F9097A6.60701@fold.natur.cuni.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] dell-laptop: add 3 quirks for supporting touchpad LED
+Date: Fri, 20 Apr 2012 11:47:26 +0800
+Message-ID: <1334893646-8904-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fold.natur.cuni.cz ([195.113.57.32]:45750 "HELO
-	fold.natur.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1756259Ab2DSUyg (ORCPT
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:37910 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932268Ab2DTDrc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 19 Apr 2012 16:54:36 -0400
+	Thu, 19 Apr 2012 23:47:32 -0400
+Received: by iagz16 with SMTP id z16so12811719iag.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Apr 2012 20:47:31 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-Hi,
-  it is weird that the Fn+F1 key combination should turn on the LCD display of the laptop
-or the signal into external D-SUB or HDMI connector. However, it somehow does not work ideally.
+Add "Vostro 3360", "Vostro 3460", and "Vostro 3560" into quirks,
+so that they could have touchpad LED function work.
 
-1. If I go to virtual console VT2 to VT6, I can disable the LCD using the Fn+F1 fine. The LCD backlight
-is still on but that is probably another issue.
-2. But, I am in VT1 and press the Fn+F1 key, letter `p' gets printed on the screen. Ooops, actually
-first it switches into VT12, and on another attempts starts to write `p' characters.
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/dell-laptop.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-
-Anybody experiencing same behavior?
-Thanks,
-Martin
-kernels 3.2.12 to 3.4.-rc3
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index e6c08ee..a45775f 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -212,6 +212,33 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_dell_vostro_v130,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Vostro 3360",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3360"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Vostro 3460",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3460"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Vostro 3560",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro 3560"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
+ 	{ }
+ };
+ 
+-- 
+1.7.9.5
