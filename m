@@ -1,33 +1,39 @@
-From: Jonathan Nieder <jrnieder@gmail.com>
-Subject: Re: [3.2.y][PATCH 1/2] dell-laptop: add 3 machines that has touchpad
- LED
-Date: Mon, 23 Apr 2012 21:52:30 -0500
-Message-ID: <20120424025230.GB22927@burratino>
-References: <1335235504-11054-1-git-send-email-acelan.kao@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] thinkpad-acpi: fix issuing duplicated key events for brightness up/down
+Date: Tue, 24 Apr 2012 16:40:52 +0800
+Message-ID: <1335256852-19146-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f174.google.com ([209.85.214.174]:41421 "EHLO
-	mail-ob0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756285Ab2DXCwf (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:44545 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756469Ab2DXIlE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Apr 2012 22:52:35 -0400
-Content-Disposition: inline
-In-Reply-To: <1335235504-11054-1-git-send-email-acelan.kao@canonical.com>
+	Tue, 24 Apr 2012 04:41:04 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: stable@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: alex.hung@canonical.com, ibm-acpi@hmh.eng.br, mjg@redhat.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+The tp_features.bright_acpimode will not be set correctly for brightness
+control because ACPI_VIDEO_HID will not be located in ACPI. As a result,
+a duplicated key event will always be sent. acpi_video_backlight_support()
+is sufficient to detect standard ACPI brightness control.
 
-AceLan Kao wrote:
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-> [Subject: [3.2.y][PATCH 1/2] dell-laptop: add 3 machines that has touchpad LED]
->
-> commit 2a748853ca395c48ea75baa250f7cea6f0f23dbf upstream.
-
-Thanks.  Should 3.0.y and 3.3.y get this, too?
-
-Curious,
-Jonathan
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 7b82868..7d032d5 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3405,7 +3405,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 	/* Do not issue duplicate brightness change events to
+ 	 * userspace. tpacpi_detect_brightness_capabilities() must have
+ 	 * been called before this point  */
+-	if (tp_features.bright_acpimode && acpi_video_backlight_support()) {
++	if (acpi_video_backlight_support()) {
+ 		pr_info("This ThinkPad has standard ACPI backlight "
+ 			"brightness control, supported by the ACPI "
+ 			"video driver\n");
+-- 
+1.7.0.4
