@@ -1,52 +1,61 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH 2/2] ideapad: generate valid key event only
-Date: Thu,  3 May 2012 17:38:46 +0800
-Message-ID: <1336037926-9987-1-git-send-email-ike.pan@canonical.com>
-References: <1336037865-9918-1-git-send-email-ike.pan@canonical.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] apple-gmux: Add suspend/resume support for the backlight
+Date: Thu, 3 May 2012 14:36:53 -0500
+Message-ID: <20120503193653.GC23573@thinkpad-t410>
+References: <1334850935-6659-1-git-send-email-seth.forshee@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:54268 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:56567 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756056Ab2ECJiv (ORCPT
+	with ESMTP id S1758525Ab2ECTg5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 May 2012 05:38:51 -0400
-In-Reply-To: <1336037865-9918-1-git-send-email-ike.pan@canonical.com>
+	Thu, 3 May 2012 15:36:57 -0400
+Content-Disposition: inline
+In-Reply-To: <1334850935-6659-1-git-send-email-seth.forshee@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg@redhat.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Otherwise will generate KEY_UNKNOWN on un-listed vpc event,
-which means nothing and is hard for user to report the detail
-of the event.
+Ping. Any chance of getting this into 3.4?
 
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/ideapad-laptop.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 00d82f1..4f20f8d 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -784,6 +784,10 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 			case 9:
- 				ideapad_sync_rfk_state(priv);
- 				break;
-+			case 13:
-+			case 6:
-+				ideapad_input_report(priv, vpc_bit);
-+				break;
- 			case 4:
- 				ideapad_backlight_notify_brightness(priv);
- 				break;
-@@ -794,7 +798,7 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 				ideapad_backlight_notify_power(priv);
- 				break;
- 			default:
--				ideapad_input_report(priv, vpc_bit);
-+				pr_info("Unknown event: %lu\n", vpc_bit);
- 			}
- 		}
- 	}
--- 
-1.7.9.5
+On Thu, Apr 19, 2012 at 10:55:35AM -0500, Seth Forshee wrote:
+> After S3, the brightness might not be restored to the pre-suspend value.
+> Request status update calls from the backlight core on suspend/resume to
+> ensure the brightness value is restored.
+> 
+> Reported-and-tested-by: Austin Lund <austin.lund@gmail.com>
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> ---
+>  drivers/platform/x86/apple-gmux.c |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 8a582bd..6dcef4f 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -87,6 +87,9 @@ static int gmux_update_status(struct backlight_device *bd)
+>  	struct apple_gmux_data *gmux_data = bl_get_data(bd);
+>  	u32 brightness = bd->props.brightness;
+>  
+> +	if (bd->props.state & BL_CORE_SUSPENDED)
+> +		brightness = 0;
+> +
+>  	/*
+>  	 * Older gmux versions require writing out lower bytes first then
+>  	 * setting the upper byte to 0 to flush the values. Newer versions
+> @@ -102,6 +105,7 @@ static int gmux_update_status(struct backlight_device *bd)
+>  }
+>  
+>  static const struct backlight_ops gmux_bl_ops = {
+> +	.options = BL_CORE_SUSPENDRESUME,
+>  	.get_brightness = gmux_get_brightness,
+>  	.update_status = gmux_update_status,
+>  };
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
