@@ -1,89 +1,64 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: add 3 laptops to video backlight vendor mode
- quirk table
-Date: Sun, 06 May 2012 17:45:04 +0800
-Message-ID: <1336297504.5272.4450.camel@linux-s257.site>
-References: <1336220335-7004-1-git-send-email-jlee@suse.com>
-	 <1419557.QLNuvvmj4y@valkyrie>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: thinkpad_acpi fan stop working problem (was after resume)
+ (speed becomes 65535)
+Date: Sun, 6 May 2012 23:06:26 -0300
+Message-ID: <20120507020626.GA28214@khazad-dum.debian.net>
+References: <CAH5vBdJUpdHbMNC7ro0jvhOPy128Y0hc6ygzsLH=NbZubksWkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nat.nue.novell.com ([195.135.221.2]:35208 "EHLO
-	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752053Ab2EFJsP (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58400 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754984Ab2EGCGb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 May 2012 05:48:15 -0400
-In-Reply-To: <1419557.QLNuvvmj4y@valkyrie>
+	Sun, 6 May 2012 22:06:31 -0400
+Content-Disposition: inline
+In-Reply-To: <CAH5vBdJUpdHbMNC7ro0jvhOPy128Y0hc6ygzsLH=NbZubksWkQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: mjg@redhat.com, platform-driver-x86@vger.kernel.org, stable@kernel.org, "Christopher M. Penalver" <christopher.penalver@gmx.com>, Bence Lukacs <lukacs.bence1@gmail.com>, Joern Heissler <kernelbugs2012@joern.heissler.de>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: r ll <crquan@gmail.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Borislav Deianov <borislav@users.sf.net>
 
-=E6=96=BC =E6=97=A5=EF=BC=8C2012-05-06 =E6=96=BC 00:09 +0100=EF=BC=8CCa=
-rlos Corbacho =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Saturday 05 May 2012 20:18:55 Lee, Chun-Yi wrote:
-> > Acer Extensa 5235, TravelMate 5760 and Aspire 5750 laptop have brok=
-en _BCM
-> > implemenation, the AML code wrote value to EC register but firmware=
- didn't
-> > change brighenss.
-> >=20
-> > Fortunately, the brightness control works on those machines with ve=
-ndor
-> > mode. So, add this machine to video backlight vendor mode quirk tab=
-le.
+On Wed, 02 May 2012, r ll wrote:
+> most of time the fan is working well, but usually every night I close=
+ the laptop
+> let the Linux suspend; then resume on next morning, occasionally the =
+laptop
+> could become very hot, usually above 90=E2=84=83 for long time, if I =
+compile something
+> or do some heavy work, it may go up over 128=E2=84=83 then machine
+> automatically shutdown,
 >=20
-> Is there no way we can auto-detect this somehow? Is there something p=
-eculiar=20
-> about the broken implementation that we can use to do this detection =
-instead?
->=20
-> -Carlos
->=20
+> # cat /sys/devices/platform/thinkpad_hwmon/temp1_input
+> 97000
+> # cat /sys/devices/platform/thinkpad_hwmon/fan1_input
+> 65535
 
-Unfortunately, I didn't see anyway can auto-detect the broken _BCM
-implementation.
-On those machines, the _BCM method write the brightness value to a EC
-register, and, we make sure the value write success but EC didn't chang=
-e
-the brightness level.
+"-1" (reported as 65535) *is* the standard ThinkPad EC lingo for "not
+available".  Getting this in the tachometer is really weird, but
+actually useful :p  It is also the first time I've ever heard of this.
 
-_BCM like this:
-        Method (_BCM, 1, NotSerialized)
-        { =20
-            Divide (Arg0, 0x0A, Local0, Local1)
-            Decrement (Local1)
-            Store (Local1, ^^^LPCB.EC0.BRTS)     <=3D=3D=3D write to BR=
-TS register
+Change your kernel to disable thinkpad-acpi fan control, i.e. make
+*sure* thinkpad_acpi is always loaded with fan_control=3D0, even at the
+first time it is loaded.  You might need to mess with /etc/modprobe.d,
+and maybe even update your initramfs.
 
+Run it like that for a while, so that you can access whether the proble=
+m
+went away or not.  Let's find out whether it is thinkpad-acpi or
+something else that is getting the EC pissed off :-)
 
-Currently, didn't find good way to know EC doesn't really change the
-brightness level.
+> I tried unload & reload the kernel module but it still doesn't work;
+> I tried manually set a speed level but it's still 65535, the machine
+> is still hot
 
-I think Acer's ODM don't know this issue because on Vista and Windows 7
-platform, they changed brightness through WDDM video driver but not
-standard acpi method like _BCM. Some ODM only test brightness by human
-eyes and they didn't check acpi method should also works.
+So, whatever it is, it makes the EC ignore fan control commands.
 
-Microsoft WDDM spec:
- http://msdn.microsoft.com/en-us/windows/hardware/gg487382.aspx
+Are you using the "fan" ACPI module?
 
-Actually, per WDDM spec, they should keep the standard acpi method work=
-s
-for backward compatibility to XP or any OS doesn't support WDDM.=20
-
-I face to face told to Acer's PM at last year for this issue, and also
-told them should keep the standard acpi methods works fine, he said wil=
-l
-check with ODM. But, finally, I didn't get further response from Acer.
-
-
-Use a quirk table to set those machines to 'acpi_backlight=3Dvendor' mo=
-de
-is better then use 'acpi_osi=3DLinux', so, I hope experts can kindly
-accept this patch to acer-wmi driver for those _BCM broken machines.
-
-
-Thanks a lot!
-Joey Lee
+--=20
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
