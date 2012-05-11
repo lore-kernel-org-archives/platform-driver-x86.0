@@ -1,54 +1,42 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH v2] apple-gmux: Add suspend/resume support for the backlight
-Date: Thu, 10 May 2012 11:06:24 -0700
-Message-ID: <1336673184-5048-1-git-send-email-seth.forshee@canonical.com>
+From: Peter Meiser <meiser@gmx-topmail.de>
+Subject: Re: Dell Vostro V131: special hotkey not working
+Date: Fri, 11 May 2012 07:28:28 +0200
+Message-ID: <4FACA37C.1050901@gmx-topmail.de>
+References: <4F97FA4C.9040201@gmx-topmail.de> <20120425135328.GA13385@srcf.ucam.org> <4F980807.6000705@gmx-topmail.de> <20120425142205.GA14322@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:53687 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756327Ab2EJSGa (ORCPT
+Received: from mailout-de.gmx.net ([213.165.64.23]:40705 "HELO
+	mailout-de.gmx.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1751025Ab2EKF2b (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 10 May 2012 14:06:30 -0400
+	Fri, 11 May 2012 01:28:31 -0400
+In-Reply-To: <20120425142205.GA14322@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
-Cc: David Woodhouse <dwmw2@infradead.org>
+To: Rezwanul_Kabir@dell.com
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-After S3, the brightness might not be restored to the pre-suspend value.
-Request status update calls from the backlight core on suspend/resume to
-ensure the brightness value is restored.
+Hi Rez,
 
-Reported-and-tested-by: Austin Lund <austin.lund@gmail.com>
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
----
-Matthew: This is a replacement for the patch in linux-next, updated
-based on David's suggestion to leave the backlight level unchanged when
-suspended rather than setting it to 0. If possible I'd still like to see
-it land in 3.4.
+any news on this topic?
 
- drivers/platform/x86/apple-gmux.c |    4 ++++
- 1 file changed, 4 insertions(+)
+Thanks a lot in advance,
+Peter
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 8a582bd..694a15a 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -87,6 +87,9 @@ static int gmux_update_status(struct backlight_device *bd)
- 	struct apple_gmux_data *gmux_data = bl_get_data(bd);
- 	u32 brightness = bd->props.brightness;
- 
-+	if (bd->props.state & BL_CORE_SUSPENDED)
-+		return 0;
-+
- 	/*
- 	 * Older gmux versions require writing out lower bytes first then
- 	 * setting the upper byte to 0 to flush the values. Newer versions
-@@ -102,6 +105,7 @@ static int gmux_update_status(struct backlight_device *bd)
- }
- 
- static const struct backlight_ops gmux_bl_ops = {
-+	.options = BL_CORE_SUSPENDRESUME,
- 	.get_brightness = gmux_get_brightness,
- 	.update_status = gmux_update_status,
- };
--- 
-1.7.9.5
+Am 25.04.2012 16:22, schrieb Matthew Garrett:
+> On Wed, Apr 25, 2012 at 04:19:51PM +0200, Peter Meiser wrote:
+>> Hello Matthew,
+>>
+>> Am 25.04.2012 15:53, schrieb Matthew Garrett:
+>>> watch -n 0.1 cat /proc/interrupts
+>>
+>> When running "watch -n 0,1 cat /proc/interrupts" (watch -n 0.1 errors out, maybe because of German environment???), the following row increases after each press:
+>>
+>>   9:          5          0          0          0   IO-APIC-fasteoi   acpi
+> 
+> Ok, so it's definitely being handled by ACPI somehow - probably via WMI, 
+> but unsure. Rez, any chance you can look at the original message and let 
+> us know if this is expected to work with the current driver?
+> 
