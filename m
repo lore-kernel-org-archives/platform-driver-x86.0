@@ -1,42 +1,22 @@
-From: Peter Meiser <meiser@gmx-topmail.de>
-Subject: Re: Dell Vostro V131: special hotkey not working
-Date: Fri, 11 May 2012 07:28:28 +0200
-Message-ID: <4FACA37C.1050901@gmx-topmail.de>
-References: <4F97FA4C.9040201@gmx-topmail.de> <20120425135328.GA13385@srcf.ucam.org> <4F980807.6000705@gmx-topmail.de> <20120425142205.GA14322@srcf.ucam.org>
+From: abi <abiokom88@yahoo.com>
+Subject: haalloo,
+Date: Sat, 12 May 2012 18:54:45 +0200 (CEST)
+Message-ID: <9970802.8670301336841685289.JavaMail.defaultUser__25788.2439684638$1336841760$gmane$org@defaultHost>
+Reply-To: abi <abiokom88@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain;charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout-de.gmx.net ([213.165.64.23]:40705 "HELO
-	mailout-de.gmx.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1751025Ab2EKF2b (ORCPT
+Received: from outrelay02.libero.it ([212.52.84.102]:34302 "EHLO
+	outrelay02.libero.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752521Ab2ELQz4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 May 2012 01:28:31 -0400
-In-Reply-To: <20120425142205.GA14322@srcf.ucam.org>
+	Sat, 12 May 2012 12:55:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rezwanul_Kabir@dell.com
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-Hi Rez,
-
-any news on this topic?
-
-Thanks a lot in advance,
-Peter
-
-Am 25.04.2012 16:22, schrieb Matthew Garrett:
-> On Wed, Apr 25, 2012 at 04:19:51PM +0200, Peter Meiser wrote:
->> Hello Matthew,
->>
->> Am 25.04.2012 15:53, schrieb Matthew Garrett:
->>> watch -n 0.1 cat /proc/interrupts
->>
->> When running "watch -n 0,1 cat /proc/interrupts" (watch -n 0.1 errors out, maybe because of German environment???), the following row increases after each press:
->>
->>   9:          5          0          0          0   IO-APIC-fasteoi   acpi
-> 
-> Ok, so it's definitely being handled by ACPI somehow - probably via WMI, 
-> but unsure. Rez, any chance you can look at the original message and let 
-> us know if this is expected to work with the current driver?
-> 
+haalloo,
+how are you doing,i hope you are fine,my name is miss abi okom i got your
+contact and want us to be a good friend,
+please try and write back to me so that i will give you my pictures and tell
+you more about me,
