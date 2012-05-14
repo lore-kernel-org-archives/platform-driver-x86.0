@@ -1,32 +1,44 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 Subject: Re: [PATCH] dell-laptop: rfkill blacklist Dell XPS 13z, 15z
-Date: Mon, 14 May 2012 22:19:59 +0100
-Message-ID: <20120514211959.GA9394@srcf.ucam.org>
+Date: Mon, 14 May 2012 22:28:42 +0100
+Message-ID: <20120514212842.GA9561@srcf.ucam.org>
 References: <1337023652-11661-1-git-send-email-kamal@canonical.com>
  <20120514193718.GA6438@srcf.ucam.org>
  <4FB16659.6040704@dell.com>
+ <20120514211959.GA9394@srcf.ucam.org>
+ <4FB1774D.4080106@dell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:55833 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758055Ab2ENV2p (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 14 May 2012 17:28:45 -0400
 Content-Disposition: inline
-In-Reply-To: <4FB16659.6040704@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <4FB1774D.4080106@dell.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mario Limonciello <mario_limonciello@dell.com>
 Cc: Kamal Mostafa <kamal@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 14, 2012 at 03:08:57PM -0500, Mario Limonciello wrote:
-> 
-> On 05/14/2012 02:37 PM, Matthew Garrett wrote:
-> >What does "Improper BIOS interaction" mean? What's the proper BIOS interaction?
-> These platforms are not obeying the smbios interface specs for turning on and off radios.  It's not currently expected that the interaction will improve during the lifetime of these platforms.  If it does, then this can be adjusted to only apply to the BIOS versions before the fix.
+On Mon, May 14, 2012 at 04:21:17PM -0500, Mario Limonciello wrote:
 
-Ok, pretty bored of this at this point. If the bios interface is 
-unreliable then I'll just remove the rfkill support. I'm not going to 
-continue adding machines to a blacklist some time after users find 
-things are broken.
+> The outliers of Inspiron and XPS don't seem to follow the interface as 
+> explicitly.  It is not broken on Windows.  I don't have an 
+> understanding why it's not, but conjecture that it's a different 
+> interface being used on these that I don't have information on yet.
 
-Is this just as broken under Windows?
+If we're using a different interface to Windows then we're still doing 
+it wrong. I'll take patches that port us to the interface that's 
+actually being used, but I won't take patches that just try to cover up 
+a broken interface that the vendor doesn't test.
 
+> You would be better to only match on Latitude and Vostro and anything 
+> else that people want to opt in via a paramater than to remove the 
+> interface entirely IMO.
+
+If Windows uses this interface on Latitude and Vostro then I'll do that, 
+but otherwise no.
 -- 
 Matthew Garrett | mjg59@srcf.ucam.org
