@@ -1,66 +1,42 @@
-From: Jean-Louis Dupond <jean-louis@dupond.be>
+From: Martin Mokrejs <mmokrejs@fold.natur.cuni.cz>
 Subject: Re: [PATCH] dell-laptop: rfkill blacklist Dell XPS 13z, 15z
-Date: Tue, 15 May 2012 00:10:03 +0200
-Message-ID: <4FB182BB.6090303@dupond.be>
-References: <1337023652-11661-1-git-send-email-kamal@canonical.com> <20120514193718.GA6438@srcf.ucam.org> <4FB16659.6040704@dell.com> <20120514211959.GA9394@srcf.ucam.org> <4FB1774D.4080106@dell.com> <20120514212842.GA9561@srcf.ucam.org> <4FB17DA8.1040808@dell.com> <20120514215533.GA10378@srcf.ucam.org>
+Date: Tue, 15 May 2012 17:05:54 +0200
+Message-ID: <4FB270D2.8030705@fold.natur.cuni.cz>
+References: <1337023652-11661-1-git-send-email-kamal@canonical.com> <20120514193718.GA6438@srcf.ucam.org> <4FB16659.6040704@dell.com> <20120514211959.GA9394@srcf.ucam.org> <4FB1774D.4080106@dell.com> <20120514212842.GA9561@srcf.ucam.org> <4FB17DA8.1040808@dell.com> <20120514215533.GA10378@srcf.ucam.org> <4FB182BB.6090303@dupond.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from apollo.dupie.be ([94.75.207.143]:46996 "EHLO apollo.dupie.be"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757900Ab2ENWQ2 (ORCPT
+Received: from fold.natur.cuni.cz ([195.113.57.32]:47827 "HELO
+	fold.natur.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S932317Ab2EOPGA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 May 2012 18:16:28 -0400
-In-Reply-To: <20120514215533.GA10378@srcf.ucam.org>
+	Tue, 15 May 2012 11:06:00 -0400
+In-Reply-To: <4FB182BB.6090303@dupond.be>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Mario Limonciello <mario_limonciello@dell.com>, Kamal Mostafa <kamal@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jean-Louis Dupond <jean-louis@dupond.be>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario_limonciello@dell.com>, Kamal Mostafa <kamal@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi
+Jean-Louis Dupond wrote:
+> Hi
+> 
+> I'm the owner of a XPS 15, which has this issue.
+> The best solution would indeed be to solve the real bug, and not work
+> around it in Linux.
+> 
+> But still, if we can fix it with rather small impact/code on linux, I
+> think we should just do it.
+> It makes linux more user friendly this way.
+> 
+> A small remark also:
+> Is it really possible to disable bluetooth without killing wifi in
+> Windows on the XPS?
 
-I'm the owner of a XPS 15, which has this issue.
-The best solution would indeed be to solve the real bug, and not work
-around it in Linux.
+I rebooted into Win7. You are right, on this Dell Vostro 3550 the Fn+F2 has
+only two states: turn on both BT+WiFi or turn both off. My old ASUS laptop
+had 3 states and I could turn off independently BT while not WiFi. ;) 
+So, rfkill application on Linux behaves in the same way as the Fn+F2 in Linux
+and in Win 7.
 
-But still, if we can fix it with rather small impact/code on linux, I
-think we should just do it.
-It makes linux more user friendly this way.
-
-A small remark also:
-Is it really possible to disable bluetooth without killing wifi in
-Windows on the XPS?
-Not that I use windows alot, but it doesn't seem to work perfectly in
-windows neither.
-This bug is prolly not very common, as default XPS doesn't have a
-bluetooth chip.
-
-
-Thanks
-Jean-Louis
-
-Op 14-05-12 23:55, Matthew Garrett schreef:
-> On Mon, May 14, 2012 at 04:48:24PM -0500, Mario Limonciello wrote:
->
->> The problems were exposed on newer XPS laptops because those platforms 
->> were not tested during platform development.  There really isn't a 
->> scalable way to represent whether a platform was or wasn't tested 
->> during development.  In a lot of situation things just work.  I would 
->> like to do the right thing for the users with what information and 
->> resources are available right now to put them in a better state.  An 
->> aggressive approach of not taking patches to cover a broken interface 
->> won't fix the problem of not testing machines already in the market, 
->> it will just put end users of the kernel module at a disadvantage.
-> That's why it's better to just remove the interface. Providing a feature 
-> when we know it's broken on some unknown subset of hardware doesn't 
-> benefit anyone. If even Dell don't have any idea which set of machines 
-> it works on then how are we ever expected to make sure it's correct?
->
->> 1) Don't blacklist any Latitude or Vostro.  These are tested during platform development.
->> 2) Leave those compal_laptop supported ones blacklisted.
->> 3) Blacklist 2010-2012 XPS.  These are currently not tested during platform development.
->> 4) If problems start to show up on Inspiron, blacklist them invidually.  These platforms are currently tested during platform development though, so hopefully issues don't crop up.
-> Is this the set of criteria that the Windows tools use? If so, I'll 
-> implement it. If not, then either provide the set of criteria that the 
-> Windows tools use or I'll remove the interface.
+Martin
