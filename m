@@ -1,42 +1,40 @@
-From: Martin Mokrejs <mmokrejs@fold.natur.cuni.cz>
-Subject: Re: [PATCH] dell-laptop: rfkill blacklist Dell XPS 13z, 15z
-Date: Tue, 15 May 2012 17:05:54 +0200
-Message-ID: <4FB270D2.8030705@fold.natur.cuni.cz>
-References: <1337023652-11661-1-git-send-email-kamal@canonical.com> <20120514193718.GA6438@srcf.ucam.org> <4FB16659.6040704@dell.com> <20120514211959.GA9394@srcf.ucam.org> <4FB1774D.4080106@dell.com> <20120514212842.GA9561@srcf.ucam.org> <4FB17DA8.1040808@dell.com> <20120514215533.GA10378@srcf.ucam.org> <4FB182BB.6090303@dupond.be>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: thinkpad x60: critical thermal shutdown does not work (and ethernet
+ overheats)
+Date: Tue, 15 May 2012 20:10:04 +0200
+Message-ID: <20120515181004.GA2499@elf.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from fold.natur.cuni.cz ([195.113.57.32]:47827 "HELO
-	fold.natur.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S932317Ab2EOPGA (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 May 2012 11:06:00 -0400
-In-Reply-To: <4FB182BB.6090303@dupond.be>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean-Louis Dupond <jean-louis@dupond.be>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario_limonciello@dell.com>, Kamal Mostafa <kamal@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-acpi-owner@vger.kernel.org
+To: lenb@kernel.org, linux-acpi@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Jean-Louis Dupond wrote:
-> Hi
-> 
-> I'm the owner of a XPS 15, which has this issue.
-> The best solution would indeed be to solve the real bug, and not work
-> around it in Linux.
-> 
-> But still, if we can fix it with rather small impact/code on linux, I
-> think we should just do it.
-> It makes linux more user friendly this way.
-> 
-> A small remark also:
-> Is it really possible to disable bluetooth without killing wifi in
-> Windows on the XPS?
+Hi!
 
-I rebooted into Win7. You are right, on this Dell Vostro 3550 the Fn+F2 has
-only two states: turn on both BT+WiFi or turn both off. My old ASUS laptop
-had 3 states and I could turn off independently BT while not WiFi. ;) 
-So, rfkill application on Linux behaves in the same way as the Fn+F2 in Linux
-and in Win 7.
+I have rather old thinkpad x60 here. Long time ago, I noticed that on
+high continuous ethernet load, it shuts itself down in regular
+way. I traced it down to overheat, followed by ACPI signaling system
+to go down.
 
-Martin
+This no longer works in recent kernels. (3.4-rc7 tested, but probably
+it does not work correctly in 3.2 either). Now machine just hangs when
+it should start /sbin/poweroff. If I then turn it on, it hangs during
+ACPI init. I have to let it cool down, then it can boot.
+
+Now:
+
+a) Any ideas how to solve the overheating problem? Is it hw or sw? Are
+there workarounds... like should I go to 10mbit? (It overheats even
+under 2MB/sec continuous load...). Is it common thinkpad fault?
+
+b) Why did it stop shutting down correctly? Can you reproduce it by
+overheating machine artifically?
+
+Ideas?
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
