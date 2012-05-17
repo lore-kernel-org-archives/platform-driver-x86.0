@@ -1,117 +1,58 @@
 From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
-Date: Wed, 16 May 2012 17:39:22 +0800
-Message-ID: <1337161162-27792-1-git-send-email-acelan.kao@canonical.com>
+Subject: [PATCH] asus-wmi: enable resume on lid open
+Date: Thu, 17 May 2012 13:48:04 +0800
+Message-ID: <1337233684-9370-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pz0-f46.google.com ([209.85.210.46]:61911 "EHLO
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:34874 "EHLO
 	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S966479Ab2EPJja (ORCPT
+	with ESMTP id S1754246Ab2EQFsK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 May 2012 05:39:30 -0400
-Received: by dady13 with SMTP id y13so744407dad.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 May 2012 02:39:29 -0700 (PDT)
+	Thu, 17 May 2012 01:48:10 -0400
+Received: by dady13 with SMTP id y13so1966812dad.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 May 2012 22:48:09 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-BugLink: https://bugs.launchpad.net/bugs/1000146
+According to the ASUS WMI spec., to enable resume on lid open should
+use the device ID(0x00120032), but it doesn't work indeed.
 
-Some h/w that can adjust screen brightness through ACPI functions, but
-can't turn on/off the backlight power correctly. So, we list those h/w in
-quirks and try to turn on/off the backlight power through WMI.
+After discussing with ASUS' BIOS engineer, they say wake on lid open
+doesn't have a uniq device ID(0x00120032) in the BIOS. It shares the same
+device ID with deep S3(0x00120031), and the deep S3(resume on lid open)
+is disable by default.
+
+It's reasonable to resume the system while opening the lid, so add it
+in the asus-wmi driver and tested the code on ASUS X100CH and ASUS 1015CX.
+
 Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/platform/x86/asus-wmi.c  |    9 ++++++++-
- drivers/platform/x86/asus-wmi.h  |    1 +
- drivers/platform/x86/eeepc-wmi.c |   23 +++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 1 deletion(-)
+ drivers/platform/x86/asus-wmi.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 77aadde..beda7fc 100644
+index beda7fc..30e978d 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_BRNDOWN_MAX		0x2e
- #define NOTIFY_KBD_BRTUP		0xc4
- #define NOTIFY_KBD_BRTDWN		0xc5
-+#define NOTIFY_BACKLIGHT_POWER		0xe9
+@@ -137,6 +137,9 @@ MODULE_LICENSE("GPL");
+ /* Power */
+ #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
  
- /* WMI Methods */
- #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
-@@ -1288,6 +1289,11 @@ static void asus_wmi_notify(u32 value, void *context)
- 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
- 		if (!acpi_video_backlight_support())
- 			asus_wmi_backlight_notify(asus, orig_code);
-+	} else if (asus->driver->quirks->wmi_backlight_power &&
-+		   code == NOTIFY_BACKLIGHT_POWER) {
-+		struct backlight_device *bd = asus->backlight_device;
-+		bd->props.power = !bd->props.power;
-+		backlight_update_status(bd);
- 	} else if (!sparse_keymap_report_event(asus->inputdev, code,
- 					       key_value, autorelease))
- 		pr_info("Unknown key %x pressed\n", code);
-@@ -1681,7 +1687,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_rfkill;
- 
--	if (!acpi_video_backlight_support()) {
-+	if (!acpi_video_backlight_support() ||
-+	    asus->driver->quirks->wmi_backlight_power) {
- 		err = asus_wmi_backlight_init(asus);
- 		if (err && err != -ENODEV)
- 			goto fail_backlight;
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index d43b667..9c1da8b 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -39,6 +39,7 @@ struct quirk_entry {
- 	bool hotplug_wireless;
- 	bool scalar_panel_brightness;
- 	bool store_backlight_power;
-+	bool wmi_backlight_power;
- 	int wapf;
- };
- 
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 6567613..8d31f4e 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -107,6 +107,11 @@ static struct quirk_entry quirk_asus_et2012_type3 = {
- 	.store_backlight_power = true,
- };
- 
-+static struct quirk_entry quirk_asus_x101ch = {
-+	/* We need this when ACPI function doesn't do this well */
-+	.wmi_backlight_power = true,
-+};
++/* Deep S3 / Resume on LID open */
++#define ASUS_WMI_DEVID_LID		0x00120031
 +
- static struct quirk_entry *quirks;
+ /* DSTS masks */
+ #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+ #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+@@ -1487,6 +1490,9 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 		asus_wmi_set_devstate(ASUS_WMI_DEVID_CWAP,
+ 				      asus->driver->quirks->wapf, NULL);
  
- static void et2012_quirks(void)
-@@ -157,6 +162,24 @@ static struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_unknown,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK Computer INC. X101CH",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X101CH"),
-+		},
-+		.driver_data = &quirk_asus_x101ch,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK Computer INC. 1015CX",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "1015CX"),
-+		},
-+		.driver_data = &quirk_asus_x101ch,
-+	},
- 	{},
- };
++	/* Enable resume on lid open */
++	asus_wmi_set_devstate(ASUS_WMI_DEVID_LID, 1, &rv);
++
+ 	return asus_wmi_sysfs_init(asus->platform_device);
+ }
  
 -- 
 1.7.9.5
