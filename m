@@ -1,73 +1,109 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
-Date: Fri, 18 May 2012 09:53:09 +0200
-Message-ID: <CAHR064jg9_L-hduKtdmTxzJzcSXAdw_K2bUPTUqp=uWd92Df3A@mail.gmail.com>
-References: <1337161162-27792-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064jGFxZtOYJDNu1qOsyxrxBJ-ckqzotgKrZvLLyQvJ81Rg@mail.gmail.com>
-	<CAMz9Wg8pibKD0GfaAXUbRLxAkGu=j-0WOKzTqvNBrFSmQVnXnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
+Date: Fri, 18 May 2012 16:10:36 +0800
+Message-ID: <1337328636-4196-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:40142 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1761196Ab2ERHxK convert rfc822-to-8bit (ORCPT
+Received: from mail-pz0-f46.google.com ([209.85.210.46]:39196 "EHLO
+	mail-pz0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1761378Ab2ERIKm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 May 2012 03:53:10 -0400
-Received: by mail-bk0-f46.google.com with SMTP id ji2so2120045bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 May 2012 00:53:09 -0700 (PDT)
-In-Reply-To: <CAMz9Wg8pibKD0GfaAXUbRLxAkGu=j-0WOKzTqvNBrFSmQVnXnw@mail.gmail.com>
+	Fri, 18 May 2012 04:10:42 -0400
+Received: by dady13 with SMTP id y13so3523881dad.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 May 2012 01:10:41 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>
+To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-Len, Zhang, you may have an advice on that:
-- vendor backlight interface provides a working "power" file
-- generic backlight interface does not
-- hardware send a notification when the user press the LCD toogle key
+BugLink: https://bugs.launchpad.net/bugs/1000146
 
-Solutions:
-- Use acpi_video=3Dvendor by default (adding a blacklist in ACPI code)
-- Handle the key in the driver instead of letting userspace do it
-- Another idea ?
+Some h/w that can adjust screen brightness through ACPI functions, but
+can't turn on/off the backlight power correctly. So, we list those h/w in
+quirks and try to turn on/off the backlight power through WMI.
 
-> Userspace app, such as gnome-settings-daemon, will use
-> /sys/class/backlight/acpi_video0
-> as it's first choice if there is one.
-> But ACPI function to toggle the backlight power is not working, and
-> from our BIOS engineer,
-> ACPI doesn't define the backlight power section, but ASUS WMI does.
-> So, I think it would have less problem to turn on/off backlight power
-> through WMI.
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c  |    7 +++++++
+ drivers/platform/x86/asus-wmi.h  |    1 +
+ drivers/platform/x86/eeepc-wmi.c |   23 +++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-Ok. So the vendor backlight provides features that the generic
-backlight does not.
-
-
-> And, yes, calling asus_wmi_backlight_init() is not a good idea here.
-> We have to record the backlight power status by ourselves if we didn'=
-t call it.
-> Let me show you another version of patch later.
-
-That's a solution yes. Another one could be to force
-acpi_backlight=3Dvendor for these well known laptop, but I don't know i=
-f
-this will be accepted by ACPI maintainers. So let's start with a
-simpler patch as you proposed (handling via backlight if registered,
-or recording the status ourselve if it's not the case, but please add
-a comment explaining why it's done this way).
-
->> What does the key do exactly without driver ? Does it just send a
->> notification or does it also poke the hardware ?
-> It's a WMI event notify, and will be mapped to the key shown below
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0{ KE_KEY, 0xe9, { KEY_BRIGHTNESS_ZERO } },
-> Just a notification.
-
-KEY_DISPLAY_TOGGLE is the key to power up/down an LCD screen. Looks
-better than KEY_BRIGHTNESS_ZERO that may only put the brughtness to
-zero. But I'm not sure how these keys are handled by userspace.
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 77aadde..b1b8b0b 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_BRNDOWN_MAX		0x2e
+ #define NOTIFY_KBD_BRTUP		0xc4
+ #define NOTIFY_KBD_BRTDWN		0xc5
++#define NOTIFY_BACKLIGHT_POWER		0xe9
+ 
+ /* WMI Methods */
+ #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
+@@ -1288,6 +1289,12 @@ static void asus_wmi_notify(u32 value, void *context)
+ 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
+ 		if (!acpi_video_backlight_support())
+ 			asus_wmi_backlight_notify(asus, orig_code);
++	} else if (asus->driver->quirks->wmi_backlight_power &&
++		   code == NOTIFY_BACKLIGHT_POWER) {
++		static int backlight_power = 1;
++		backlight_power = !backlight_power;
++		asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
++				      backlight_power, NULL);
+ 	} else if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					       key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index d43b667..9c1da8b 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -39,6 +39,7 @@ struct quirk_entry {
+ 	bool hotplug_wireless;
+ 	bool scalar_panel_brightness;
+ 	bool store_backlight_power;
++	bool wmi_backlight_power;
+ 	int wapf;
+ };
+ 
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 6567613..8d31f4e 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -107,6 +107,11 @@ static struct quirk_entry quirk_asus_et2012_type3 = {
+ 	.store_backlight_power = true,
+ };
+ 
++static struct quirk_entry quirk_asus_x101ch = {
++	/* We need this when ACPI function doesn't do this well */
++	.wmi_backlight_power = true,
++};
++
+ static struct quirk_entry *quirks;
+ 
+ static void et2012_quirks(void)
+@@ -157,6 +162,24 @@ static struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_unknown,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK Computer INC. X101CH",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X101CH"),
++		},
++		.driver_data = &quirk_asus_x101ch,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK Computer INC. 1015CX",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "1015CX"),
++		},
++		.driver_data = &quirk_asus_x101ch,
++	},
+ 	{},
+ };
+ 
+-- 
+1.7.9.5
