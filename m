@@ -1,121 +1,165 @@
 From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-wmi: enable resume on lid open
-Date: Fri, 18 May 2012 12:36:36 +0200
-Message-ID: <CAHR064hpeteKkwjkbHc9FOTbSVhX9MRYgx2dYHtPYLVN-UkzqQ@mail.gmail.com>
-References: <1337331418-6616-1-git-send-email-acelan.kao@canonical.com>
+Subject: Re: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
+Date: Sat, 19 May 2012 09:31:27 +0200
+Message-ID: <CAHR064jipUpkysfd_oQwBG9gcuViBjpHVffwo81HOUOYFLeURg@mail.gmail.com>
+References: <1337328636-4196-1-git-send-email-acelan.kao@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:45999 "EHLO
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:61973 "EHLO
 	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1762700Ab2ERKgi convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1752613Ab2ESHb3 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 May 2012 06:36:38 -0400
-Received: by bkcji2 with SMTP id ji2so2229988bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 May 2012 03:36:36 -0700 (PDT)
-In-Reply-To: <1337331418-6616-1-git-send-email-acelan.kao@canonical.com>
+	Sat, 19 May 2012 03:31:29 -0400
+Received: by bkcji2 with SMTP id ji2so2869945bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 19 May 2012 00:31:27 -0700 (PDT)
+In-Reply-To: <1337328636-4196-1-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: AceLan Kao <acelan.kao@canonical.com>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, May 18, 2012 at 10:56 AM, AceLan Kao <acelan.kao@canonical.com>=
+The patch is almost ok, I won't merge it as-is because I want a
+cleaner mechanism to inform the kernel that the vendor backlight
+should be prefered. If I can't do it before the end of the next merge
+windows I'll merge it in the current form.
+
+On Fri, May 18, 2012 at 10:10 AM, AceLan Kao <acelan.kao@canonical.com>=
  wrote:
-> According to the ASUS WMI spec., to enable resume on lid open should
-> use the device ID(0x00120032), but it doesn't work indeed.
+> BugLink: https://bugs.launchpad.net/bugs/1000146
 >
-> After discussing with ASUS' BIOS engineer, they say wake on lid open
-> doesn't have a uniq device ID(0x00120032) in the BIOS. It shares the =
-same
-> device ID with deep S3(0x00120031), and the deep S3(resume on lid ope=
-n)
-> is disable by default.
->
-> It's reasonable to resume the system while opening the lid, so add it
-> in the asus-wmi driver and tested the code on ASUS X100CH and ASUS 10=
-15CX.
+> Some h/w that can adjust screen brightness through ACPI functions, bu=
+t
+> can't turn on/off the backlight power correctly. So, we list those h/=
+w in
+> quirks and try to turn on/off the backlight power through WMI.
 >
 > Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 > ---
-> =C2=A0drivers/platform/x86/asus-wmi.c | =C2=A0 10 ++++++++++
-
-Please also update Documentation/ABI/testing/sysfs-platform-asus-wmi
-
-> =C2=A01 file changed, 10 insertions(+)
+> =C2=A0drivers/platform/x86/asus-wmi.c =C2=A0| =C2=A0 =C2=A07 +++++++
+> =C2=A0drivers/platform/x86/asus-wmi.h =C2=A0| =C2=A0 =C2=A01 +
+> =C2=A0drivers/platform/x86/eeepc-wmi.c | =C2=A0 23 ++++++++++++++++++=
++++++
+> =C2=A03 files changed, 31 insertions(+)
 >
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
 sus-wmi.c
-> index b1b8b0b..7f31f44 100644
+> index 77aadde..b1b8b0b 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -137,6 +137,9 @@ MODULE_LICENSE("GPL");
-> =C2=A0/* Power */
-> =C2=A0#define ASUS_WMI_DEVID_PROCESSOR_STATE 0x00120012
+> @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+> =C2=A0#define NOTIFY_BRNDOWN_MAX =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 0x2e
+> =C2=A0#define NOTIFY_KBD_BRTUP =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 0xc4
+> =C2=A0#define NOTIFY_KBD_BRTDWN =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A00xc5
+> +#define NOTIFY_BACKLIGHT_POWER =C2=A0 =C2=A0 =C2=A0 =C2=A0 0xe9
 >
-> +/* Deep S3 / Resume on LID open */
-> +#define ASUS_WMI_DEVID_LID_RESUME =C2=A0 =C2=A0 =C2=A00x00120031
-> +
-> =C2=A0/* DSTS masks */
-> =C2=A0#define ASUS_WMI_DSTS_STATUS_BIT =C2=A0 =C2=A0 =C2=A0 0x0000000=
-1
-> =C2=A0#define ASUS_WMI_DSTS_UNKNOWN_BIT =C2=A0 =C2=A0 =C2=A00x0000000=
-2
-> @@ -1372,6 +1375,7 @@ static ssize_t show_sys_wmi(struct asus_wmi *as=
-us, int devid, char *buf)
-> =C2=A0ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS_WMI_DEVID_TOUC=
-HPAD);
-> =C2=A0ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA=
-);
-> =C2=A0ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREA=
-DER);
-> +ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RES=
-UME);
->
-> =C2=A0static ssize_t store_cpufv(struct device *dev, struct device_at=
-tribute *attr,
+> =C2=A0/* WMI Methods */
+> =C2=A0#define ASUS_WMI_METHODID_SPEC =C2=A0 =C2=A0 =C2=A0 =C2=A0 0x43=
+455053 /* BIOS SPECification */
+> @@ -1288,6 +1289,12 @@ static void asus_wmi_notify(u32 value, void *c=
+ontext)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (code =3D=3D NOTIFY_BRNUP_MIN || code =3D=
+=3D NOTIFY_BRNDOWN_MIN) {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (!acpi_vide=
+o_backlight_support())
 > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 const char *buf, size_t count)
-> @@ -1397,6 +1401,7 @@ static struct attribute *platform_attributes[] =
-=3D {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0&dev_attr_camera.attr,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0&dev_attr_cardr.attr,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0&dev_attr_touchpad.attr,
-> + =C2=A0 =C2=A0 =C2=A0 &dev_attr_lid_resume.attr,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0NULL
+ =C2=A0 =C2=A0asus_wmi_backlight_notify(asus, orig_code);
+> + =C2=A0 =C2=A0 =C2=A0 } else if (asus->driver->quirks->wmi_backlight=
+_power &&
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0code =
+=3D=3D NOTIFY_BACKLIGHT_POWER) {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 static int backlig=
+ht_power =3D 1;
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 backlight_power =3D=
+ !backlight_power;
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 asus_wmi_set_devst=
+ate(ASUS_WMI_DEVID_BACKLIGHT,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 backlight_powe=
+r, NULL);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0} else if (!sparse_keymap_report_event(asu=
+s->inputdev, code,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 key_value, autorelease))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_info("Unkno=
+wn key %x pressed\n", code);
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/a=
+sus-wmi.h
+> index d43b667..9c1da8b 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -39,6 +39,7 @@ struct quirk_entry {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool hotplug_wireless;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool scalar_panel_brightness;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0bool store_backlight_power;
+> + =C2=A0 =C2=A0 =C2=A0 bool wmi_backlight_power;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0int wapf;
 > =C2=A0};
 >
-> @@ -1415,6 +1420,8 @@ static umode_t asus_sysfs_is_visible(struct kob=
-ject *kobj,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0devid =3D ASUS=
-_WMI_DEVID_CARDREADER;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0else if (attr =3D=3D &dev_attr_touchpad.at=
-tr)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0devid =3D ASUS=
-_WMI_DEVID_TOUCHPAD;
-> + =C2=A0 =C2=A0 =C2=A0 else if (attr =3D=3D &dev_attr_lid_resume.attr=
-)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 devid =3D ASUS_WMI=
-_DEVID_LID_RESUME;
+> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/=
+eeepc-wmi.c
+> index 6567613..8d31f4e 100644
+> --- a/drivers/platform/x86/eeepc-wmi.c
+> +++ b/drivers/platform/x86/eeepc-wmi.c
+> @@ -107,6 +107,11 @@ static struct quirk_entry quirk_asus_et2012_type=
+3 =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0.store_backlight_power =3D true,
+> =C2=A0};
 >
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (devid !=3D -1)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ok =3D !(asus_=
-wmi_get_devstate_simple(asus, devid) < 0);
-> @@ -1488,6 +1495,9 @@ static int asus_wmi_platform_init(struct asus_w=
-mi *asus)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0asus_wmi_set_d=
-evstate(ASUS_WMI_DEVID_CWAP,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0asus->dr=
-iver->quirks->wapf, NULL);
+> +static struct quirk_entry quirk_asus_x101ch =3D {
+> + =C2=A0 =C2=A0 =C2=A0 /* We need this when ACPI function doesn't do =
+this well */
+> + =C2=A0 =C2=A0 =C2=A0 .wmi_backlight_power =3D true,
+> +};
+> +
+> =C2=A0static struct quirk_entry *quirks;
 >
-> + =C2=A0 =C2=A0 =C2=A0 /* Enable resume on lid open */
-> + =C2=A0 =C2=A0 =C2=A0 asus_wmi_set_devstate(ASUS_WMI_DEVID_LID_RESUM=
-E, 1, &rv);
+> =C2=A0static void et2012_quirks(void)
+> @@ -157,6 +162,24 @@ static struct dmi_system_id asus_quirks[] =3D {
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0},
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.driver_data =3D=
+ &quirk_asus_unknown,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0},
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .callback =3D dmi_=
+matched,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .ident =3D "ASUSTe=
+K Computer INC. X101CH",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 DMI_MATCH(DMI_PRODUCT_NAME, "X101CH"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .driver_data =3D &=
+quirk_asus_x101ch,
+> + =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .callback =3D dmi_=
+matched,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .ident =3D "ASUSTe=
+K Computer INC. 1015CX",
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .matches =3D {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 DMI_MATCH(DMI_PRODUCT_NAME, "1015CX"),
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 },
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .driver_data =3D &=
+quirk_asus_x101ch,
+> + =C2=A0 =C2=A0 =C2=A0 },
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0{},
+> =C2=A0};
+>
+> --
+> 1.7.9.5
+>
 
-Is this setting persistant on accross re-boot ? Is the setting exposed
-in the bios ?
-What is the default value (off I guess ?) ?
 
 
 --=20
