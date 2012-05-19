@@ -1,113 +1,472 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 04/19] sony-laptop: use kstrtoul to parse sysfs values
-Date: Sat, 19 May 2012 22:35:47 +0900
-Message-ID: <1337434562-12283-5-git-send-email-malattia@linux.it>
+Subject: [PATCH 05/19] sony-laptop: improve SNC initialization and acpi notify callback code
+Date: Sat, 19 May 2012 22:35:48 +0900
+Message-ID: <1337434562-12283-6-git-send-email-malattia@linux.it>
 References: <1337434562-12283-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:47654 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:47652 "EHLO
 	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758043Ab2ESNpP (ORCPT
+	with ESMTP id S1757685Ab2ESNpO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 19 May 2012 09:45:15 -0400
+	Sat, 19 May 2012 09:45:14 -0400
 In-Reply-To: <1337434562-12283-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86@vger.kernel.org, Marco Chiappero <marco@absence.it>, Mattia Dongili <malattia@linux.it>
 
-This avoids surprises like echoing "enable" into a sysfs file and
-finding that the feature was actually disabled.
+From: Marco Chiappero <marco@absence.it>
 
+Loop through the list of SNC handles and run the proper initialization
+function for each of the known handles. Also return void in function
+where we are not checking the return value anyway.
+For notifications we also know which handle is linked to the event and
+the code becomes simpler to read with a switch rather than using
+convoluted ifs.
+
+[malattia@linux.it: Code reworked to merge the initialization code
+improvements and the notify callback changes. Modified the code paths to
+allow easier error exit paths.  Also fixed some missing break statements
+and spelling mistakes.]
+
+Signed-off-by: Marco Chiappero <marco@absence.it>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ drivers/platform/x86/sony-laptop.c |  319 ++++++++++++++++++++++++++----------
+ 1 file changed, 233 insertions(+), 86 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 6aefd35..d6c53c6 100644
+index d6c53c6..4420353 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -944,7 +944,8 @@ static ssize_t sony_nc_sysfs_store(struct device *dev,
- 			       struct device_attribute *attr,
- 			       const char *buffer, size_t count)
+@@ -141,6 +141,8 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
+ 		 "(default: 0)");
+ 
+ static void sony_nc_kbd_backlight_resume(void);
++static void sony_nc_kbd_backlight_setup(struct platform_device *pd);
++static int sony_nc_kbd_backlight_cleanup(struct platform_device *pd);
+ 
+ enum sony_nc_rfkill {
+ 	SONY_WIFI,
+@@ -153,6 +155,8 @@ enum sony_nc_rfkill {
+ static int sony_rfkill_handle;
+ static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
+ static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700, 0x900};
++static void sony_nc_rfkill_setup(struct acpi_device *device);
++static void sony_nc_rfkill_cleanup(void);
+ static void sony_nc_rfkill_update(void);
+ 
+ /*********** Input Devices ***********/
+@@ -1103,63 +1107,116 @@ static struct sony_nc_event sony_127_events[] = {
+ 	{ 0, 0 },
+ };
+ 
++static int sony_nc_hotkeys_decode(u32 event, unsigned int handle)
++{
++	int ret = -EINVAL;
++	unsigned int result = 0;
++	struct sony_nc_event *key_event;
++
++	if (sony_call_snc_handle(handle, 0x200, &result)) {
++		dprintk("Unable to decode event 0x%.2x 0x%.2x\n", handle,
++				event);
++		return -EINVAL;
++	}
++
++	result &= 0xFF;
++
++	if (handle == 0x0100)
++		key_event = sony_100_events;
++	else
++		key_event = sony_127_events;
++
++	for (; key_event->data; key_event++) {
++		if (key_event->data == result) {
++			ret = key_event->event;
++			break;
++		}
++	}
++
++	if (!key_event->data)
++		pr_info("Unknown hotkey 0x%.2x/0x%.2x (handle 0x%.2x)\n",
++				event, result, handle);
++
++	return ret;
++}
++
+ /*
+  * ACPI callbacks
+  */
+ static void sony_nc_notify(struct acpi_device *device, u32 event)
  {
--	int value, ret = 0;
-+	unsigned long value = 0;
-+	int ret = 0;
- 	struct sony_nc_value *item =
- 	    container_of(attr, struct sony_nc_value, devattr);
+-	u32 ev = event;
++	u32 real_ev = event;
++	u8 ev_type = 0;
++	dprintk("sony_nc_notify, event: 0x%.2x\n", event);
  
-@@ -954,7 +955,8 @@ static ssize_t sony_nc_sysfs_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
+-	if (ev >= 0x90) {
+-		/* New-style event */
+-		int result;
+-		int key_handle = 0;
+-		ev -= 0x90;
+-
+-		if (sony_find_snc_handle(0x100) == ev)
+-			key_handle = 0x100;
+-		if (sony_find_snc_handle(0x127) == ev)
+-			key_handle = 0x127;
+-
+-		if (key_handle) {
+-			struct sony_nc_event *key_event;
+-
+-			if (sony_call_snc_handle(key_handle, 0x200, &result)) {
+-				dprintk("sony_nc_notify, unable to decode"
+-					" event 0x%.2x 0x%.2x\n", key_handle,
+-					ev);
+-				/* restore the original event */
+-				ev = event;
+-			} else {
+-				ev = result & 0xFF;
+-
+-				if (key_handle == 0x100)
+-					key_event = sony_100_events;
+-				else
+-					key_event = sony_127_events;
+-
+-				for (; key_event->data; key_event++) {
+-					if (key_event->data == ev) {
+-						ev = key_event->event;
+-						break;
+-					}
+-				}
++	if (event >= 0x90) {
++		unsigned int result = 0;
++		unsigned int arg = 0;
++		unsigned int handle = 0;
++		unsigned int offset = event - 0x90;
  
--	value = simple_strtoul(buffer, NULL, 10);
-+	if (kstrtoul(buffer, 10, &value))
-+		return -EINVAL;
- 
- 	if (item->validate)
- 		value = item->validate(SNC_VALIDATE_IN, value);
-@@ -962,8 +964,8 @@ static ssize_t sony_nc_sysfs_store(struct device *dev,
- 	if (value < 0)
- 		return value;
- 
--	ret = sony_nc_int_call(sony_nc_acpi_handle, *item->acpiset, &value,
--			NULL);
-+	ret = sony_nc_int_call(sony_nc_acpi_handle, *item->acpiset,
-+			(int *)&value, NULL);
- 	if (ret < 0)
- 		return -EIO;
- 
-@@ -1445,7 +1447,7 @@ static ssize_t sony_nc_kbd_backlight_mode_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
- 
--	if (strict_strtoul(buffer, 10, &value))
-+	if (kstrtoul(buffer, 10, &value))
- 		return -EINVAL;
- 
- 	ret = __sony_nc_kbd_backlight_mode_set(value);
-@@ -1489,7 +1491,7 @@ static ssize_t sony_nc_kbd_backlight_timeout_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
- 
--	if (strict_strtoul(buffer, 10, &value))
-+	if (kstrtoul(buffer, 10, &value))
- 		return -EINVAL;
- 
- 	ret = __sony_nc_kbd_backlight_timeout_set(value);
-@@ -2439,7 +2441,9 @@ static ssize_t sony_pic_wwanpower_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
- 
--	value = simple_strtoul(buffer, NULL, 10);
-+	if (kstrtoul(buffer, 10, &value))
-+		return -EINVAL;
+-				if (!key_event->data)
+-					pr_info("Unknown event: 0x%x 0x%x\n",
+-						key_handle, ev);
+-				else
+-					sony_laptop_report_input_event(ev);
+-			}
+-		} else if (sony_find_snc_handle(sony_rfkill_handle) == ev) {
+-			sony_nc_rfkill_update();
++		if (offset >= ARRAY_SIZE(handles->cap)) {
++			pr_err("Event 0x%x outside of capabilities list\n",
++					event);
+ 			return;
+ 		}
+-	} else
+-		sony_laptop_report_input_event(ev);
++		handle = handles->cap[offset];
 +
- 	mutex_lock(&spic_dev.lock);
- 	__sony_pic_set_wwanpower(value);
- 	mutex_unlock(&spic_dev.lock);
-@@ -2476,7 +2480,9 @@ static ssize_t sony_pic_bluetoothpower_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
- 
--	value = simple_strtoul(buffer, NULL, 10);
-+	if (kstrtoul(buffer, 10, &value))
-+		return -EINVAL;
++		/* list of handles known for generating events */
++		switch (handle) {
++		/* hotkey event */
++		case 0x0100:
++		case 0x0127:
++			ev_type = 1;
++			real_ev = sony_nc_hotkeys_decode(event, handle);
 +
- 	mutex_lock(&spic_dev.lock);
- 	__sony_pic_set_bluetoothpower(value);
- 	mutex_unlock(&spic_dev.lock);
-@@ -2515,7 +2521,9 @@ static ssize_t sony_pic_fanspeed_store(struct device *dev,
- 	if (count > 31)
- 		return -EINVAL;
- 
--	value = simple_strtoul(buffer, NULL, 10);
-+	if (kstrtoul(buffer, 10, &value))
-+		return -EINVAL;
++			if (real_ev > 0)
++				sony_laptop_report_input_event(real_ev);
++			else
++				/* restore the original event for reporting */
++				real_ev = event;
 +
- 	if (sony_pic_set_fanspeed(value))
- 		return -EIO;
++			break;
++
++		/* wlan switch */
++		case 0x0124:
++		case 0x0135:
++			/* events on this handle are reported when the
++			 * switch changes position or for battery
++			 * events. We'll notify both of them but only
++			 * update the rfkill device status when the
++			 * switch is moved.
++			 */
++			ev_type = 2;
++			sony_call_snc_handle(handle, 0x0100, &result);
++			real_ev = result & 0x03;
++
++			/* hw switch event */
++			if (real_ev == 1)
++				sony_nc_rfkill_update();
++
++			break;
++
++		default:
++			dprintk("Unknown event 0x%x for handle 0x%x\n",
++					event, handle);
++			break;
++		}
  
+-	dprintk("sony_nc_notify, event: 0x%.2x\n", ev);
+-	acpi_bus_generate_proc_event(sony_nc_acpi_device, 1, ev);
++		/* clear the event (and the event reason when present) */
++		arg = 1 << offset;
++		sony_nc_int_call(sony_nc_acpi_handle, "SN05", &arg, &result);
++
++	} else {
++		/* old style event */
++		ev_type = 1;
++		sony_laptop_report_input_event(real_ev);
++	}
++
++	acpi_bus_generate_proc_event(sony_nc_acpi_device, ev_type, real_ev);
++
++	acpi_bus_generate_netlink_event(sony_nc_acpi_device->pnp.device_class,
++			dev_name(&sony_nc_acpi_device->dev), ev_type, real_ev);
+ }
+ 
+ static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
+@@ -1180,21 +1237,126 @@ static acpi_status sony_walk_callback(acpi_handle handle, u32 level,
+ /*
+  * ACPI device
+  */
+-static int sony_nc_function_setup(struct acpi_device *device)
++static void sony_nc_function_setup(struct acpi_device *device,
++		struct platform_device *pf_device)
+ {
+-	int result, arg;
++	unsigned int i, result, bitmask, arg;
++
++	if (!handles)
++		return;
++
++	/* setup found handles here */
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++		unsigned int handle = handles->cap[i];
++
++		if (!handle)
++			continue;
++
++		dprintk("setting up handle 0x%.4x\n", handle);
++
++		switch (handle) {
++		case 0x0100:
++		case 0x0101:
++		case 0x0127:
++			/* setup hotkeys */
++			sony_call_snc_handle(handle, 0, &result);
++			break;
++		case 0x0102:
++			/* setup hotkeys */
++			sony_call_snc_handle(handle, 0x100, &result);
++			break;
++		case 0x0124:
++		case 0x0135:
++			sony_nc_rfkill_setup(device);
++			break;
++		case 0x0137:
++			sony_nc_kbd_backlight_setup(pf_device);
++			break;
++		default:
++			continue;
++		}
++	}
+ 
+ 	/* Enable all events */
+-	arg = 0xffff;
+-	sony_nc_int_call(sony_nc_acpi_handle, "SN02", &arg, &result);
++	arg = 0x10;
++	if (!sony_nc_int_call(sony_nc_acpi_handle, "SN00", &arg, &bitmask))
++		sony_nc_int_call(sony_nc_acpi_handle, "SN02", &bitmask,
++				&result);
++}
++
++static void sony_nc_function_cleanup(struct platform_device *pd)
++{
++	unsigned int i, result, bitmask, handle;
+ 
+-	/* Setup hotkeys */
+-	sony_call_snc_handle(0x0100, 0, &result);
+-	sony_call_snc_handle(0x0101, 0, &result);
+-	sony_call_snc_handle(0x0102, 0x100, &result);
+-	sony_call_snc_handle(0x0127, 0, &result);
++	/* get enabled events and disable them */
++	sony_nc_int_call(sony_nc_acpi_handle, "SN01", NULL, &bitmask);
++	sony_nc_int_call(sony_nc_acpi_handle, "SN03", &bitmask, &result);
+ 
+-	return 0;
++	/* cleanup handles here */
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++
++		handle = handles->cap[i];
++
++		if (!handle)
++			continue;
++
++		switch (handle) {
++		case 0x0124:
++		case 0x0135:
++			sony_nc_rfkill_cleanup();
++			break;
++		case 0x0137:
++			sony_nc_kbd_backlight_cleanup(pd);
++			break;
++		default:
++			continue;
++		}
++	}
++
++	/* finally cleanup the handles list */
++	sony_nc_handles_cleanup(pd);
++}
++
++static void sony_nc_function_resume(void)
++{
++	unsigned int i, result, bitmask, arg;
++
++	dprintk("Resuming SNC device\n");
++
++	for (i = 0; i < ARRAY_SIZE(handles->cap); i++) {
++		unsigned int handle = handles->cap[i];
++
++		if (!handle)
++			continue;
++
++		switch (handle) {
++		case 0x0100:
++		case 0x0101:
++		case 0x0127:
++			/* re-enable hotkeys */
++			sony_call_snc_handle(handle, 0, &result);
++			break;
++		case 0x0102:
++			/* re-enable hotkeys */
++			sony_call_snc_handle(handle, 0x100, &result);
++			break;
++		case 0x0124:
++		case 0x0135:
++			sony_nc_rfkill_update();
++			break;
++		case 0x0137:
++			sony_nc_kbd_backlight_resume();
++			break;
++		default:
++			continue;
++		}
++	}
++
++	/* Enable all events */
++	arg = 0x10;
++	if (!sony_nc_int_call(sony_nc_acpi_handle, "SN00", &arg, &bitmask))
++		sony_nc_int_call(sony_nc_acpi_handle, "SN02", &bitmask,
++				&result);
+ }
+ 
+ static int sony_nc_resume(struct acpi_device *device)
+@@ -1223,16 +1385,8 @@ static int sony_nc_resume(struct acpi_device *device)
+ 	}
+ 
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+-					 &handle))) {
+-		dprintk("Doing SNC setup\n");
+-		sony_nc_function_setup(device);
+-	}
+-
+-	/* re-read rfkill state */
+-	sony_nc_rfkill_update();
+-
+-	/* restore kbd backlight states */
+-	sony_nc_kbd_backlight_resume();
++					 &handle)))
++		sony_nc_function_resume();
+ 
+ 	return 0;
+ }
+@@ -1509,18 +1663,18 @@ static ssize_t sony_nc_kbd_backlight_timeout_show(struct device *dev,
+ 	return count;
+ }
+ 
+-static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
++static void sony_nc_kbd_backlight_setup(struct platform_device *pd)
+ {
+ 	int result;
+ 
+ 	if (sony_call_snc_handle(KBDBL_HANDLER, KBDBL_PRESENT, &result))
+-		return 0;
++		return;
+ 	if (!(result & 0x02))
+-		return 0;
++		return;
+ 
+ 	kbdbl_handle = kzalloc(sizeof(*kbdbl_handle), GFP_KERNEL);
+ 	if (!kbdbl_handle)
+-		return -ENOMEM;
++		return;
+ 
+ 	sysfs_attr_init(&kbdbl_handle->mode_attr.attr);
+ 	kbdbl_handle->mode_attr.attr.name = "kbd_backlight";
+@@ -1543,14 +1697,14 @@ static int sony_nc_kbd_backlight_setup(struct platform_device *pd)
+ 	__sony_nc_kbd_backlight_mode_set(kbd_backlight);
+ 	__sony_nc_kbd_backlight_timeout_set(kbd_backlight_timeout);
+ 
+-	return 0;
++	return;
+ 
+ outmode:
+ 	device_remove_file(&pd->dev, &kbdbl_handle->mode_attr);
+ outkzalloc:
+ 	kfree(kbdbl_handle);
+ 	kbdbl_handle = NULL;
+-	return -1;
++	return;
+ }
+ 
+ static int sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
+@@ -1726,21 +1880,17 @@ static int sony_nc_add(struct acpi_device *device)
+ 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
+ 					 &handle))) {
+ 		dprintk("Doing SNC setup\n");
++		/* retrieve the available handles */
+ 		result = sony_nc_handles_setup(sony_pf_device);
+-		if (result)
+-			goto outpresent;
+-		result = sony_nc_kbd_backlight_setup(sony_pf_device);
+-		if (result)
+-			goto outsnc;
+-		sony_nc_function_setup(device);
+-		sony_nc_rfkill_setup(device);
++		if (!result)
++			sony_nc_function_setup(device, sony_pf_device);
+ 	}
+ 
+ 	/* setup input devices and helper fifo */
+ 	result = sony_laptop_setup_input(device);
+ 	if (result) {
+ 		pr_err("Unable to create input devices\n");
+-		goto outkbdbacklight;
++		goto outsnc;
+ 	}
+ 
+ 	if (acpi_video_backlight_support()) {
+@@ -1798,10 +1948,8 @@ static int sony_nc_add(struct acpi_device *device)
+ 
+ 	sony_laptop_remove_input();
+ 
+-      outkbdbacklight:
+-	sony_nc_kbd_backlight_cleanup(sony_pf_device);
+-
+       outsnc:
++	sony_nc_function_cleanup(sony_pf_device);
+ 	sony_nc_handles_cleanup(sony_pf_device);
+ 
+       outpresent:
+@@ -1824,11 +1972,10 @@ static int sony_nc_remove(struct acpi_device *device, int type)
+ 		device_remove_file(&sony_pf_device->dev, &item->devattr);
+ 	}
+ 
+-	sony_nc_kbd_backlight_cleanup(sony_pf_device);
++	sony_nc_function_cleanup(sony_pf_device);
+ 	sony_nc_handles_cleanup(sony_pf_device);
+ 	sony_pf_remove();
+ 	sony_laptop_remove_input();
+-	sony_nc_rfkill_cleanup();
+ 	dprintk(SONY_NC_DRIVER_NAME " removed.\n");
+ 
+ 	return 0;
 -- 
 1.7.10
