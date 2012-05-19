@@ -1,57 +1,60 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 00/19] sony-laptop: support for new functions
-Date: Sat, 19 May 2012 22:35:43 +0900
-Message-ID: <1337434562-12283-1-git-send-email-malattia@linux.it>
+Subject: [PATCH 09/19] sony-laptop: adjust error handling in finding SNC handles
+Date: Sat, 19 May 2012 22:35:52 +0900
+Message-ID: <1337434562-12283-10-git-send-email-malattia@linux.it>
+References: <1337434562-12283-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:47651 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:47648 "EHLO
 	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757639Ab2ESNpO (ORCPT
+	with ESMTP id S1757349Ab2ESNpN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 19 May 2012 09:45:14 -0400
+	Sat, 19 May 2012 09:45:13 -0400
+In-Reply-To: <1337434562-12283-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-Hi Matthew,
+All handles must be greater than 0, also return more meaningful error
+codes on invalid conditions.
 
-here's the old series from Marco Chiappero adjusted for inclusion. Most of the
-patches are more or less the same as he sent with the notable exception of the
-ALS code for the "managed" backlight regulation (the original code was creating
-a backlight interface within the platform sysfs tree to provide a different way
-of setting lid brightness).
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+ drivers/platform/x86/sony-laptop.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I tried to note the changes that I did to the original code in the commit
-messages but left the author as it was. Hopefully that is fine.
-
-Javier Achirica (1):
-      sony-laptop: add the ALS interface via SNC
-
-Marco Chiappero (12):
-      sony-laptop: use soft rfkill status stored in hw
-      sony-laptop: improve SNC initialization and acpi notify callback code
-      sony-laptop: support battery care functions
-      sony-laptop: add thermal profiles support
-      sony-laptop: g-shock HD protection function
-      sony-laptop: support automatic resume on lid open
-      sony-laptop: add high speed battery charging function
-      sony-laptop: new keyboard backlight handle
-      sony-laptop: add support for more WWAN modems
-      sony-laptop: add missing Fn key combos for 0x100 handlers
-      sony-laptop: add touchpad enable/disable function
-      sony-laptop: notify userspace of GFX switch position changes
-
-Mattia Dongili (6):
-      sony-laptop: fix return path when no ACPI buffer is allocated
-      sony-laptop: generalise ACPI calls into SNC functions
-      sony-laptop: use kstrtoul to parse sysfs values
-      sony-laptop: additional debug statements
-      sony-laptop: adjust error handling in finding SNC handles
-      sony-laptop: use an enum for SNC event types
-
- drivers/platform/x86/sony-laptop.c | 2901 +++++++++++++++++++++++++++++++-----
- 1 file changed, 2552 insertions(+), 349 deletions(-)
-
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index c3f54ad..2b72e47 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -870,8 +870,8 @@ static int sony_find_snc_handle(int handle)
+ 	int i;
+ 
+ 	/* not initialized yet, return early */
+-	if (!handles)
+-		return -1;
++	if (!handles || !handle)
++		return -EINVAL;
+ 
+ 	for (i = 0; i < 0x10; i++) {
+ 		if (handles->cap[i] == handle) {
+@@ -881,7 +881,7 @@ static int sony_find_snc_handle(int handle)
+ 		}
+ 	}
+ 	dprintk("handle 0x%.4x not found\n", handle);
+-	return -1;
++	return -EINVAL;
+ }
+ 
+ static int sony_call_snc_handle(int handle, int argument, int *result)
+@@ -890,7 +890,7 @@ static int sony_call_snc_handle(int handle, int argument, int *result)
+ 	int offset = sony_find_snc_handle(handle);
+ 
+ 	if (offset < 0)
+-		return -1;
++		return offset;
+ 
+ 	arg = offset | argument;
+ 	ret = sony_nc_int_call(sony_nc_acpi_handle, "SN07", &arg, result);
 -- 
-mattia
-:wq
+1.7.10
