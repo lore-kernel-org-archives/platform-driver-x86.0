@@ -1,136 +1,84 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 14/19] sony-laptop: add support for more WWAN modems
-Date: Sat, 19 May 2012 22:35:57 +0900
-Message-ID: <1337434562-12283-15-git-send-email-malattia@linux.it>
-References: <1337434562-12283-1-git-send-email-malattia@linux.it>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
+Date: Mon, 21 May 2012 08:56:21 +0800
+Message-ID: <1337561781.1503.7.camel@rui.sh.intel.com>
+References: <1337161162-27792-1-git-send-email-acelan.kao@canonical.com>
+	 <CAHR064jGFxZtOYJDNu1qOsyxrxBJ-ckqzotgKrZvLLyQvJ81Rg@mail.gmail.com>
+	 <CAMz9Wg8pibKD0GfaAXUbRLxAkGu=j-0WOKzTqvNBrFSmQVnXnw@mail.gmail.com>
+	 <CAHR064jg9_L-hduKtdmTxzJzcSXAdw_K2bUPTUqp=uWd92Df3A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:47647 "EHLO
-	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758706Ab2ESNpQ (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:32359 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752848Ab2EUAzD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 19 May 2012 09:45:16 -0400
-In-Reply-To: <1337434562-12283-1-git-send-email-malattia@linux.it>
+	Sun, 20 May 2012 20:55:03 -0400
+In-Reply-To: <CAHR064jg9_L-hduKtdmTxzJzcSXAdw_K2bUPTUqp=uWd92Df3A@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Marco Chiappero <marco@absence.it>, Mattia Dongili <malattia@linux.it>
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: AceLan Kao <acelan.kao@canonical.com>, platform-driver-x86@vger.kernel.org, Len Brown <len.brown@intel.com>
 
-From: Marco Chiappero <marco@absence.it>
+On =E4=BA=94, 2012-05-18 at 09:53 +0200, Corentin Chary wrote:
+> Len, Zhang, you may have an advice on that:
+> - vendor backlight interface provides a working "power" file
+> - generic backlight interface does not
+> - hardware send a notification when the user press the LCD toogle key
+>=20
+> Solutions:
+> - Use acpi_video=3Dvendor by default (adding a blacklist in ACPI code=
+)
 
-Also make the initialization function return a value for consistency
-with all the other setup functions.
+yes, I agree.
 
-Signed-off-by: Marco Chiappero <marco@absence.it>
-Signed-off-by: Mattia Dongili <malattia@linux.it>
----
- drivers/platform/x86/sony-laptop.c |   53 +++++++++++++++++++++++-------------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+> - Handle the key in the driver instead of letting userspace do it
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index f2d296a..7f8de3f 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -181,7 +181,8 @@ enum sony_nc_rfkill {
- static int sony_rfkill_handle;
- static struct rfkill *sony_rfkill_devices[N_SONY_RFKILL];
- static int sony_rfkill_address[N_SONY_RFKILL] = {0x300, 0x500, 0x700, 0x900};
--static void sony_nc_rfkill_setup(struct acpi_device *device);
-+static int sony_nc_rfkill_setup(struct acpi_device *device,
-+		unsigned int handle);
- static void sony_nc_rfkill_cleanup(void);
- static void sony_nc_rfkill_update(void);
- 
-@@ -1337,7 +1338,10 @@ static void sony_nc_function_setup(struct acpi_device *device,
- 			break;
- 		case 0x0124:
- 		case 0x0135:
--			sony_nc_rfkill_setup(device);
-+			result = sony_nc_rfkill_setup(device, handle);
-+			if (result)
-+				pr_err("couldn't set up rfkill support (%d)\n",
-+						result);
- 			break;
- 		case 0x0137:
- 		case 0x0143:
-@@ -1605,37 +1609,46 @@ static void sony_nc_rfkill_update(void)
- 	}
- }
- 
--static void sony_nc_rfkill_setup(struct acpi_device *device)
-+static int sony_nc_rfkill_setup(struct acpi_device *device,
-+		unsigned int handle)
- {
- 	u64 offset;
- 	int i;
- 	unsigned char buffer[32] = { 0 };
- 
--	offset = sony_find_snc_handle(0x124);
--	if (offset == -1) {
--		offset = sony_find_snc_handle(0x135);
--		if (offset == -1)
--			return;
--		else
--			sony_rfkill_handle = 0x135;
--	} else
--		sony_rfkill_handle = 0x124;
--	dprintk("Found rkfill handle: 0x%.4x\n", sony_rfkill_handle);
-+	offset = sony_find_snc_handle(handle);
-+	sony_rfkill_handle = handle;
- 
- 	i = sony_nc_buffer_call(sony_nc_acpi_handle, "SN06", &offset, buffer,
- 			32);
- 	if (i < 0)
--		return;
--
--	/* the buffer is filled with magic numbers describing the devices
--	 * available, 0xff terminates the enumeration
-+		return i;
-+
-+	/* The buffer is filled with magic numbers describing the devices
-+	 * available, 0xff terminates the enumeration.
-+	 * Known codes:
-+	 *	0x00 WLAN
-+	 *	0x10 BLUETOOTH
-+	 *	0x20 WWAN GPRS-EDGE
-+	 *	0x21 WWAN HSDPA
-+	 *	0x22 WWAN EV-DO
-+	 *	0x23 WWAN GPS
-+	 *	0x25 Gobi WWAN no GPS
-+	 *	0x26 Gobi WWAN + GPS
-+	 *	0x28 Gobi WWAN no GPS
-+	 *	0x29 Gobi WWAN + GPS
-+	 *	0x30 WIMAX
-+	 *	0x50 Gobi WWAN no GPS
-+	 *	0x51 Gobi WWAN + GPS
-+	 *	0x70 no SIM card slot
-+	 *	0x71 SIM card slot
- 	 */
- 	for (i = 0; i < ARRAY_SIZE(buffer); i++) {
- 
- 		if (buffer[i] == 0xff)
- 			break;
- 
--		dprintk("Radio devices, looking at 0x%.2x\n", buffer[i]);
-+		dprintk("Radio devices, found 0x%.2x\n", buffer[i]);
- 
- 		if (buffer[i] == 0 && !sony_rfkill_devices[SONY_WIFI])
- 			sony_nc_setup_rfkill(device, SONY_WIFI);
-@@ -1643,13 +1656,15 @@ static void sony_nc_rfkill_setup(struct acpi_device *device)
- 		if (buffer[i] == 0x10 && !sony_rfkill_devices[SONY_BLUETOOTH])
- 			sony_nc_setup_rfkill(device, SONY_BLUETOOTH);
- 
--		if ((0xf0 & buffer[i]) == 0x20 &&
-+		if (((0xf0 & buffer[i]) == 0x20 ||
-+					(0xf0 & buffer[i]) == 0x50) &&
- 				!sony_rfkill_devices[SONY_WWAN])
- 			sony_nc_setup_rfkill(device, SONY_WWAN);
- 
- 		if (buffer[i] == 0x30 && !sony_rfkill_devices[SONY_WIMAX])
- 			sony_nc_setup_rfkill(device, SONY_WIMAX);
- 	}
-+	return 0;
- }
- 
- /* Keyboard backlight feature */
--- 
-1.7.10
+well, I don't know.
+when using acpi_video=3Dvendor, what action is taken in userspace after
+pressing the key?
+
+thanks,
+rui
+
+> - Another idea ?
+>=20
+> > Userspace app, such as gnome-settings-daemon, will use
+> > /sys/class/backlight/acpi_video0
+> > as it's first choice if there is one.
+> > But ACPI function to toggle the backlight power is not working, and
+> > from our BIOS engineer,
+> > ACPI doesn't define the backlight power section, but ASUS WMI does.
+> > So, I think it would have less problem to turn on/off backlight pow=
+er
+> > through WMI.
+>=20
+> Ok. So the vendor backlight provides features that the generic
+> backlight does not.
+>=20
+>=20
+> > And, yes, calling asus_wmi_backlight_init() is not a good idea here=
+=2E
+> > We have to record the backlight power status by ourselves if we did=
+n't call it.
+> > Let me show you another version of patch later.
+>=20
+> That's a solution yes. Another one could be to force
+> acpi_backlight=3Dvendor for these well known laptop, but I don't know=
+ if
+> this will be accepted by ACPI maintainers. So let's start with a
+> simpler patch as you proposed (handling via backlight if registered,
+> or recording the status ourselve if it's not the case, but please add
+> a comment explaining why it's done this way).
+>=20
+> >> What does the key do exactly without driver ? Does it just send a
+> >> notification or does it also poke the hardware ?
+> > It's a WMI event notify, and will be mapped to the key shown below
+> >        { KE_KEY, 0xe9, { KEY_BRIGHTNESS_ZERO } },
+> > Just a notification.
+>=20
+> KEY_DISPLAY_TOGGLE is the key to power up/down an LCD screen. Looks
+> better than KEY_BRIGHTNESS_ZERO that may only put the brughtness to
+> zero. But I'm not sure how these keys are handled by userspace.
+>=20
