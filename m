@@ -1,60 +1,110 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-wmi: control backlight power through WMI, not ACPI
-Date: Mon, 21 May 2012 09:02:20 +0200
-Message-ID: <CAHR064hftZpN2q5nGbW4jkrgeB5fmeU2rxWbAGJrzr3ManHYKg@mail.gmail.com>
-References: <1337161162-27792-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064jGFxZtOYJDNu1qOsyxrxBJ-ckqzotgKrZvLLyQvJ81Rg@mail.gmail.com>
-	<CAMz9Wg8pibKD0GfaAXUbRLxAkGu=j-0WOKzTqvNBrFSmQVnXnw@mail.gmail.com>
-	<CAHR064jg9_L-hduKtdmTxzJzcSXAdw_K2bUPTUqp=uWd92Df3A@mail.gmail.com>
-	<1337561781.1503.7.camel@rui.sh.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:42919 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752284Ab2EUHCV convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 21 May 2012 03:02:21 -0400
-Received: by bkcji2 with SMTP id ji2so3627131bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 May 2012 00:02:20 -0700 (PDT)
-In-Reply-To: <1337561781.1503.7.camel@rui.sh.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: AceLan Kao <acelan.kao@canonical.com>, platform-driver-x86@vger.kernel.org, Len Brown <len.brown@intel.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: [PATCH 1/2] acpi: add a way to promote/demote vendor backlight drivers
+Date: Mon, 21 May 2012 09:23:46 +0200
+Message-ID: <1337585027-4828-1-git-send-email-corentin.chary@gmail.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Len Brown <lenb@kernel.org>
+Cc: Richard Purdie <rpurdie@rpsys.net>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Corentin Chary <corentin.chary@gmail.com>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 21, 2012 at 2:56 AM, Zhang Rui <rui.zhang@intel.com> wrote:
-> On =E4=BA=94, 2012-05-18 at 09:53 +0200, Corentin Chary wrote:
->> Len, Zhang, you may have an advice on that:
->> - vendor backlight interface provides a working "power" file
->> - generic backlight interface does not
->> - hardware send a notification when the user press the LCD toogle ke=
-y
->>
->> Solutions:
->> - Use acpi_video=3Dvendor by default (adding a blacklist in ACPI cod=
-e)
->
-> yes, I agree.
+Instead of adding a big blacklist in video_detect.c to set
+ACPI_VIDEO_BACKLIGHT_DMI_VENDOR correctly, let external modules
+promote or demote themselves when they know the generic video
+module won't work.
 
-Got a patch comming for that, will let drivers tell video_detect.c
-that vendor backlights should be prioritized, thus making
-acpi_video_register() works correctly when called later, and allowing
-to put the blacklist outside of video_detect.c.
+Currently drivers where using acpi_video_unregister() directly
+but:
+- That didn't respect any acpi_backlight=[video|vendor] parameter
+  provided by the user.
+- Any later call to acpi_video_register() would still re-load the
+  generic video module (and some gpu drivers are doing that).
 
->
->> - Handle the key in the driver instead of letting userspace do it
->
-> well, I don't know.
-> when using acpi_video=3Dvendor, what action is taken in userspace aft=
-er
-> pressing the key?
+This patch fix those two issues.
 
-Currently probably nothing in most case (except by gnome maybe ?). But
-what should be done is updating the
-/sys/class/backlight/asus-wmi/power file.
+Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
+---
+ drivers/acpi/video_detect.c |   31 +++++++++++++++++++++++++++++--
+ include/linux/acpi.h        |   10 ++++++++++
+ 2 files changed, 39 insertions(+), 2 deletions(-)
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 45d8097..942fa2a 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -182,8 +182,7 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+ }
+ EXPORT_SYMBOL(acpi_video_get_capabilities);
+ 
+-/* Returns true if video.ko can do backlight switching */
+-int acpi_video_backlight_support(void)
++static void acpi_video_caps_check(void)
+ {
+ 	/*
+ 	 * We must check whether the ACPI graphics device is physically plugged
+@@ -191,6 +190,34 @@ int acpi_video_backlight_support(void)
+ 	 */
+ 	if (!acpi_video_caps_checked)
+ 		acpi_video_get_capabilities(NULL);
++}
++
++/* Promote the vendor interface instead of the generic video module.
++ * This function allow DMI blacklists to be implemented by externals
++ * platform drivers instead of putting a big blacklist in video_detect.c
++ * After calling this function you will probably want to call
++ * acpi_video_unregister() to make sure the video module is not loaded
++ */
++void acpi_video_dmi_promote_vendor(void)
++{
++	acpi_video_caps_check();
++	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++}
++EXPORT_SYMBOL(acpi_video_dmi_promote_vendor);
++
++/* To be called when a driver who previously promoted the vendor
++ * interface */
++void acpi_video_dmi_demote_vendor(void)
++{
++	acpi_video_caps_check();
++	acpi_video_support &= ~ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++}
++EXPORT_SYMBOL(acpi_video_dmi_demote_vendor);
++
++/* Returns true if video.ko can do backlight switching */
++int acpi_video_backlight_support(void)
++{
++	acpi_video_caps_check();
+ 
+ 	/* First check for boot param -> highest prio */
+ 	if (acpi_video_support & ACPI_VIDEO_BACKLIGHT_FORCE_VENDOR)
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index f421dd8..27ab201 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -190,6 +190,8 @@ extern bool wmi_has_guid(const char *guid);
+ 
+ extern long acpi_video_get_capabilities(acpi_handle graphics_dev_handle);
+ extern long acpi_is_video_device(struct acpi_device *device);
++extern void acpi_video_dmi_promote_vendor(void);
++extern void acpi_video_dmi_demote_vendor(void);
+ extern int acpi_video_backlight_support(void);
+ extern int acpi_video_display_switch_support(void);
+ 
+@@ -205,6 +207,14 @@ static inline long acpi_is_video_device(struct acpi_device *device)
+ 	return 0;
+ }
+ 
++static inline void acpi_video_dmi_promote_vendor(void)
++{
++}
++
++static inline void acpi_video_dmi_demote_vendor(void)
++{
++}
++
+ static inline int acpi_video_backlight_support(void)
+ {
+ 	return 0;
+-- 
+1.7.9.5
+
