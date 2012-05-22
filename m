@@ -1,90 +1,228 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] asus-wmi: enable resume on lid open
-Date: Tue, 22 May 2012 11:14:08 +0800
-Message-ID: <1337656448-30200-1-git-send-email-acelan.kao@canonical.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
+Date: Tue, 22 May 2012 12:04:39 +0800
+Message-ID: <4FBB1057.1050108@canonical.com>
+References: <CAKErNvpb==5=__rxjPeP24Oo1SxTBKPdR3TKLmGmHrr3e+xhDQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:36747 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753970Ab2EVDOQ (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:51776 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750738Ab2EVEEq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 21 May 2012 23:14:16 -0400
-Received: by yhmm54 with SMTP id m54so5066688yhm.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 May 2012 20:14:15 -0700 (PDT)
+	Tue, 22 May 2012 00:04:46 -0400
+In-Reply-To: <CAKErNvpb==5=__rxjPeP24Oo1SxTBKPdR3TKLmGmHrr3e+xhDQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+To: =?UTF-8?B?0JzQsNC60YHQuNC8INCc0LjQutC40YLRj9C90YHQutC40Lk=?= <maxtram95@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-According to the ASUS WMI spec., to enable resume on lid open should
-use the device ID(0x00120032), but it doesn't work indeed.
+This is a quick reply. Will make fully review later.
 
-After discussing with ASUS' BIOS engineer, they say wake on lid open
-doesn't have a uniq device ID(0x00120032) in the BIOS. It shares the same
-device ID with deep S3(0x00120031), and the deep S3(resume on lid open)
-is disable by default.
+On 05/21/2012 11:50 PM, =D0=9C=D0=B0=D0=BA=D1=81=D0=B8=D0=BC =D0=9C=D0=B8=
+=D0=BA=D0=B8=D1=82=D1=8F=D0=BD=D1=81=D0=BA=D0=B8=D0=B9 wrote:
+> From: Maxim Mikityanskiy <maxtram95@gmail.com>
+>=20
+> The patch adds support for Lenovo IdeaPad Z570 laptop. It makes all s=
+pecial
+> keys working, adds possibility to control fan like Windows does and c=
+ontrols
+> Touchpad Disabled LED.
+> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> ---
+> --- linux-source-3.2.0/drivers/platform/x86/ideapad-laptop.c.orig	201=
+2-01-05
+> 01:55:44.000000000 +0200
+> +++ linux-source-3.2.0/drivers/platform/x86/ideapad-laptop.c	2012-05-=
+20
+> 14:59:45.192052303 +0300
+> @@ -62,9 +62,12 @@ enum {
+>  	VPCCMD_W_CAMERA,
+>  	VPCCMD_R_3G,
+>  	VPCCMD_W_3G,
+> -	VPCCMD_R_ODD, /* 0x21 */
+> -	VPCCMD_R_RF =3D 0x23,
+> -	VPCCMD_W_RF,
+> +	VPCCMD_R_ODD,
+> +	VPCCMD_W_FAN,
+> +	VPCCMD_R_RF,
+> +	VPCCMD_W_RF, /* 0x24 */
+> +	VPCCMD_R_FAN =3D 0x2B,
+> +	VPCCMD_R_SPECIAL_BUTTONS =3D 0x31,
+>  	VPCCMD_W_BL_POWER =3D 0x33,
+>  };
+>=20
+> @@ -363,8 +366,47 @@ static ssize_t store_ideapad_cam(struct
+>=20
+>  static DEVICE_ATTR(camera_power, 0644, show_ideapad_cam, store_ideap=
+ad_cam);
+>=20
+> +static ssize_t show_ideapad_fan(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	unsigned long result;
+> +
+> +	if (read_ec_data(ideapad_handle, VPCCMD_R_FAN, &result))
+> +		return sprintf(buf, "-1\n");
+> +	return sprintf(buf, "%lu\n", result);
+> +}
+> +
+> +static ssize_t store_ideapad_fan(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf, size_t count)
+> +{
+> +	int ret, state;
+> +
+> +	if (!count)
+> +		return 0;
+> +	if (sscanf(buf, "%i", &state) !=3D 1)
+> +		return -EINVAL;
+> +	/* WARNING: these fan states are not speed
+> +	 * so it isn't cooling_device interface
+> +	 * 0 =3D super silent mode
+> +	 * 1 =3D standard mode
+> +	 * 2 =3D dust cleaning
+> +	 * 4 =3D efficient thermal dissipation mode
+> +	 */
+> +	if (state < 0 || state > 4 || state =3D=3D 3)
+> +		return -EINVAL;
 
-Adding this option in asus wmi sysfs
-   /sys/devices/platform/<platform>/lid_resume
-so that userspace apps can enable/disable this feature by themselves.
+IIRC 3 is also a valid number.
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- Documentation/ABI/testing/sysfs-platform-asus-wmi |    7 +++++++
- drivers/platform/x86/asus-wmi.c                   |    7 +++++++
- 2 files changed, 14 insertions(+)
+On your ideapad, what is the response after 3 is written?
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 2e7df91..019e1e2 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -29,3 +29,10 @@ KernelVersion:	2.6.39
- Contact:	"Corentin Chary" <corentincj@iksaif.net>
- Description:
- 		Control the card touchpad. 1 means on, 0 means off.
-+
-+What:		/sys/devices/platform/<platform>/lid_resume
-+Date:		May 2012
-+KernelVersion:	3.5
-+Contact:	"AceLan Kao" <acelan.kao@canonical.com>
-+Description:
-+		Resume on lid open. 1 means on, 0 means off.
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index b1b8b0b..f0c273f 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -137,6 +137,9 @@ MODULE_LICENSE("GPL");
- /* Power */
- #define ASUS_WMI_DEVID_PROCESSOR_STATE	0x00120012
- 
-+/* Deep S3 / Resume on LID open */
-+#define ASUS_WMI_DEVID_LID_RESUME	0x00120031
-+
- /* DSTS masks */
- #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
- #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
-@@ -1372,6 +1375,7 @@ static ssize_t show_sys_wmi(struct asus_wmi *asus, int devid, char *buf)
- ASUS_WMI_CREATE_DEVICE_ATTR(touchpad, 0644, ASUS_WMI_DEVID_TOUCHPAD);
- ASUS_WMI_CREATE_DEVICE_ATTR(camera, 0644, ASUS_WMI_DEVID_CAMERA);
- ASUS_WMI_CREATE_DEVICE_ATTR(cardr, 0644, ASUS_WMI_DEVID_CARDREADER);
-+ASUS_WMI_CREATE_DEVICE_ATTR(lid_resume, 0644, ASUS_WMI_DEVID_LID_RESUME);
- 
- static ssize_t store_cpufv(struct device *dev, struct device_attribute *attr,
- 			   const char *buf, size_t count)
-@@ -1397,6 +1401,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_camera.attr,
- 	&dev_attr_cardr.attr,
- 	&dev_attr_touchpad.attr,
-+	&dev_attr_lid_resume.attr,
- 	NULL
- };
- 
-@@ -1415,6 +1420,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_CARDREADER;
- 	else if (attr == &dev_attr_touchpad.attr)
- 		devid = ASUS_WMI_DEVID_TOUCHPAD;
-+	else if (attr == &dev_attr_lid_resume.attr)
-+		devid = ASUS_WMI_DEVID_LID_RESUME;
- 
- 	if (devid != -1)
- 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
--- 
-1.7.9.5
+> +	ret =3D write_ec_cmd(ideapad_handle, VPCCMD_W_FAN, state);
+> +	if (ret < 0)
+> +		return ret;
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_f=
+an);
+> +
+>  static struct attribute *ideapad_attributes[] =3D {
+>  	&dev_attr_camera_power.attr,
+> +	&dev_attr_fan_mode.attr,
+
+Please also update Documentation/ABI/testing/sysfs-platform-ideapad-lap=
+top
+
+>  	NULL
+>  };
+>=20
+> @@ -379,6 +421,12 @@ static mode_t ideapad_is_visible(struct
+>  	if (attr =3D=3D &dev_attr_camera_power.attr)
+>  		supported =3D test_bit(CFG_CAMERA_BIT, &(priv->cfg));
+>  	else
+> +	if (attr =3D=3D &dev_attr_fan_mode.attr)
+> +		/* I don't know a way to determine is there fan control
+> +		 * on the device or not. For now suppose it is always
+> +		 */
+> +		supported =3D true;
+> +	else
+
+Use VPCCMD_R_FAN maybe a good idea
+
+>  		supported =3D true;
+>=20
+>  	return supported ? attr->mode : 0;
+> @@ -519,9 +567,15 @@ static void ideapad_platform_exit(struct
+>   */
+>  static const struct key_entry ideapad_keymap[] =3D {
+>  	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
+> +	{ KE_KEY, 7,  { KEY_CAMERA } },
+> +	{ KE_KEY, 11, { KEY_SWITCHVIDEOMODE } },
+
+Actually this is resolution change, I am not 100% comfortable with SWIT=
+CHVIDEOMODE.
+I do not write it because I dont think we have keycode for resolution c=
+hange.
+
+>  	{ KE_KEY, 13, { KEY_WLAN } },
+>  	{ KE_KEY, 16, { KEY_PROG1 } },
+>  	{ KE_KEY, 17, { KEY_PROG2 } },
+> +	{ KE_KEY, 64, { KEY_PROG3 } },
+> +	{ KE_KEY, 65, { KEY_PROG4 } },
+> +	{ KE_KEY, 66, { KEY_TOUCHPAD_OFF } },
+> +	{ KE_KEY, 67, { KEY_TOUCHPAD_ON } },
+>  	{ KE_END, 0 },
+>  };
+>=20
+> @@ -767,6 +821,25 @@ static int __devexit ideapad_acpi_remove
+>  	return 0;
+>  }
+>=20
+> +static void ideapad_check_special_buttons(struct ideapad_private
+> *priv, unsigned long state)
+
+line over 80 characters. There are same 9 warnings from checkpatch.pl
+
+> +{
+> +	unsigned long bit;
+> +	for (bit =3D 0; bit < 16; bit++) {
+> +		if (test_bit(bit, &state)) {
+> +			switch (bit) {
+> +			case 6:
+> +				/* Thermal Management button */
+> +				ideapad_input_report(priv, 65);
+> +				break;
+> +			case 1:
+> +				/* OneKey Theater button */
+> +				ideapad_input_report(priv, 64);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  static void ideapad_acpi_notify(struct acpi_device *adevice, u32 eve=
+nt)
+>  {
+>  	struct ideapad_private *priv =3D dev_get_drvdata(&adevice->dev);
+> @@ -785,6 +858,19 @@ static void ideapad_acpi_notify(struct a
+>  			case 9:
+>  				ideapad_sync_rfk_state(priv);
+>  				break;
+> +			case 5:
+> +				{
+> +				unsigned long value;
+> +				/* DO NOT DELETE: Without reading from EC touchpad LED doesn't
+> switch state */
+> +				if (!read_ec_data(handle, VPCCMD_R_TOUCHPAD, &value)) {
+> +					/* WARNING: IdeaPad doesn't really turn off touchpad -
+> +					 * it only switches the LED state. Userspace should
+> +					 * turn touchpad off and on. We send KEY_TOUCHPAD_OFF and
+> +					 * KEY_TOUCHPAD_ON to not to get out of sync with LED */
+> +					ideapad_input_report(priv, value ? 67 : 66);
+> +				}
+> +				}
+
+On the ideapad I have, its EC to turn off the touchpad and camera, so I=
+ choose not
+to report the event. How's the situation on your ideapad?
+
+> +				break;
+>  			case 4:
+>  				ideapad_backlight_notify_brightness(priv);
+>  				break;
+> @@ -794,6 +880,13 @@ static void ideapad_acpi_notify(struct a
+>  			case 2:
+>  				ideapad_backlight_notify_power(priv);
+>  				break;
+> +			case 0:
+> +				{
+> +				unsigned long value;
+> +				read_ec_data(handle, VPCCMD_R_SPECIAL_BUTTONS, &value);
+> +				ideapad_check_special_buttons(priv, value);
+> +				}
+> +				break;
+>  			default:
+>  				ideapad_input_report(priv, vpc_bit);
+>  			}
+>=20
+
+And could you also put the acpidump somewhere I can reach?
+
+Many thanks.
