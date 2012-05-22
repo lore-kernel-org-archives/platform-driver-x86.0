@@ -1,185 +1,132 @@
-From: =?KOI8-U?B?7cHL08nNIO3Jy8nU0c7Ty8nK?= <maxtram95@gmail.com>
-Subject: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
-Date: Mon, 21 May 2012 18:50:53 +0300
-Message-ID: <CAKErNvpb==5=__rxjPeP24Oo1SxTBKPdR3TKLmGmHrr3e+xhDQ@mail.gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH] backlight: initialize  struct backlight_properties properly
+Date: Tue, 22 May 2012 09:07:31 +0900
+Message-ID: <000601cd37ae$e1ae8300$a50b8900$%han@samsung.com>
+References: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yw0-f46.google.com ([209.85.213.46]:53205 "EHLO
-	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752020Ab2EUPvO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 21 May 2012 11:51:14 -0400
-Received: by yhmm54 with SMTP id m54so4504235yhm.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 May 2012 08:51:14 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: ike.pan@canonical.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
+Content-language: ko
+Sender: linux-omap-owner@vger.kernel.org
+To: 'Corentin Chary' <corentin.chary@gmail.com>, 'Richard Purdie' <rpurdie@rpsys.net>, 'Andrew Morton' <akpm@linux-foundation.org>
+Cc: 'Keith Packard' <keithp@keithp.com>, 'David Airlie' <airlied@linux.ie>, 'Matthew Garrett' <mjg@redhat.com>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, 'Mark Brown' <broonie@opensource.wolfsonmicro.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Mathieu Poirier' <mathieu.poirier@linaro.org>, 'Dave Airlie' <airlied@redhat.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Lars-Peter Clausen' <lars@metafoo.de>, 'Axel Lin' <axel.lin@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-fbdev@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-omap@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
+On Mon, May 21, 2012 at 04:25 PM +0000, Corentin Chary wrote:
 
-The patch adds support for Lenovo IdeaPad Z570 laptop. It makes all special
-keys working, adds possibility to control fan like Windows does and controls
-Touchpad Disabled LED.
-Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
----
---- linux-source-3.2.0/drivers/platform/x86/ideapad-laptop.c.orig	2012-01-05
-01:55:44.000000000 +0200
-+++ linux-source-3.2.0/drivers/platform/x86/ideapad-laptop.c	2012-05-20
-14:59:45.192052303 +0300
-@@ -62,9 +62,12 @@ enum {
- 	VPCCMD_W_CAMERA,
- 	VPCCMD_R_3G,
- 	VPCCMD_W_3G,
--	VPCCMD_R_ODD, /* 0x21 */
--	VPCCMD_R_RF = 0x23,
--	VPCCMD_W_RF,
-+	VPCCMD_R_ODD,
-+	VPCCMD_W_FAN,
-+	VPCCMD_R_RF,
-+	VPCCMD_W_RF, /* 0x24 */
-+	VPCCMD_R_FAN = 0x2B,
-+	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
- 	VPCCMD_W_BL_POWER = 0x33,
- };
+> 
+> In all these files, the .power field was never correctly initialized.
+> 
+> Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 
-@@ -363,8 +366,47 @@ static ssize_t store_ideapad_cam(struct
+It looks good.
 
- static DEVICE_ATTR(camera_power, 0644, show_ideapad_cam, store_ideapad_cam);
+Best regards,
+Jingoo Han
 
-+static ssize_t show_ideapad_fan(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	unsigned long result;
-+
-+	if (read_ec_data(ideapad_handle, VPCCMD_R_FAN, &result))
-+		return sprintf(buf, "-1\n");
-+	return sprintf(buf, "%lu\n", result);
-+}
-+
-+static ssize_t store_ideapad_fan(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	int ret, state;
-+
-+	if (!count)
-+		return 0;
-+	if (sscanf(buf, "%i", &state) != 1)
-+		return -EINVAL;
-+	/* WARNING: these fan states are not speed
-+	 * so it isn't cooling_device interface
-+	 * 0 = super silent mode
-+	 * 1 = standard mode
-+	 * 2 = dust cleaning
-+	 * 4 = efficient thermal dissipation mode
-+	 */
-+	if (state < 0 || state > 4 || state == 3)
-+		return -EINVAL;
-+	ret = write_ec_cmd(ideapad_handle, VPCCMD_W_FAN, state);
-+	if (ret < 0)
-+		return ret;
-+	return count;
-+}
-+
-+static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
-+
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
-+	&dev_attr_fan_mode.attr,
- 	NULL
- };
+> ---
+>  drivers/gpu/drm/i915/intel_panel.c              |    1 +
+>  drivers/gpu/drm/radeon/radeon_legacy_encoders.c |    1 +
+>  drivers/platform/x86/toshiba_acpi.c             |    1 +
+>  drivers/video/backlight/da903x_bl.c             |    1 +
+>  drivers/video/backlight/pcf50633-backlight.c    |    1 +
+>  drivers/video/backlight/wm831x_bl.c             |    1 +
+>  drivers/video/omap2/displays/panel-acx565akm.c  |    1 +
+>  7 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/i915/intel_panel.c b/drivers/gpu/drm/i915/intel_panel.c
+> index 48177ec..ec4a1e0 100644
+> --- a/drivers/gpu/drm/i915/intel_panel.c
+> +++ b/drivers/gpu/drm/i915/intel_panel.c
+> @@ -342,6 +342,7 @@ int intel_panel_setup_backlight(struct drm_device *dev)
+>  	else
+>  		return -ENODEV;
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.type = BACKLIGHT_RAW;
+>  	props.max_brightness = intel_panel_get_max_backlight(dev);
+>  	dev_priv->backlight =
+> diff --git a/drivers/gpu/drm/radeon/radeon_legacy_encoders.c
+> b/drivers/gpu/drm/radeon/radeon_legacy_encoders.c
+> index 42db254..a0c8222 100644
+> --- a/drivers/gpu/drm/radeon/radeon_legacy_encoders.c
+> +++ b/drivers/gpu/drm/radeon/radeon_legacy_encoders.c
+> @@ -369,6 +369,7 @@ void radeon_legacy_backlight_init(struct radeon_encoder *radeon_encoder,
+>  		goto error;
+>  	}
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.max_brightness = MAX_RADEON_LEVEL;
+>  	props.type = BACKLIGHT_RAW;
+>  	bd = backlight_device_register("radeon_bl", &drm_connector->kdev,
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index bde32de..d680bb2 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -1095,6 +1095,7 @@ static int __devinit toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>  	ret = get_tr_backlight_status(dev, &enabled);
+>  	dev->tr_backlight_supported = !ret;
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.type = BACKLIGHT_PLATFORM;
+>  	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
+> 
+> diff --git a/drivers/video/backlight/da903x_bl.c b/drivers/video/backlight/da903x_bl.c
+> index 30e1968..573c7ec 100644
+> --- a/drivers/video/backlight/da903x_bl.c
+> +++ b/drivers/video/backlight/da903x_bl.c
+> @@ -136,6 +136,7 @@ static int da903x_backlight_probe(struct platform_device *pdev)
+>  		da903x_write(data->da903x_dev, DA9034_WLED_CONTROL2,
+>  				DA9034_WLED_ISET(pdata->output_current));
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.type = BACKLIGHT_RAW;
+>  	props.max_brightness = max_brightness;
+>  	bl = backlight_device_register(pdev->name, data->da903x_dev, data,
+> diff --git a/drivers/video/backlight/pcf50633-backlight.c b/drivers/video/backlight/pcf50633-backlight.c
+> index c65853c..c092159 100644
+> --- a/drivers/video/backlight/pcf50633-backlight.c
+> +++ b/drivers/video/backlight/pcf50633-backlight.c
+> @@ -111,6 +111,7 @@ static int __devinit pcf50633_bl_probe(struct platform_device *pdev)
+>  	if (!pcf_bl)
+>  		return -ENOMEM;
+> 
+> +	memset(&bl_props, 0, sizeof(bl_props));
+>  	bl_props.type = BACKLIGHT_RAW;
+>  	bl_props.max_brightness = 0x3f;
+>  	bl_props.power = FB_BLANK_UNBLANK;
+> diff --git a/drivers/video/backlight/wm831x_bl.c b/drivers/video/backlight/wm831x_bl.c
+> index 5d365de..9e5517a 100644
+> --- a/drivers/video/backlight/wm831x_bl.c
+> +++ b/drivers/video/backlight/wm831x_bl.c
+> @@ -194,6 +194,7 @@ static int wm831x_backlight_probe(struct platform_device *pdev)
+>  	data->current_brightness = 0;
+>  	data->isink_reg = isink_reg;
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.type = BACKLIGHT_RAW;
+>  	props.max_brightness = max_isel;
+>  	bl = backlight_device_register("wm831x", &pdev->dev, data,
+> diff --git a/drivers/video/omap2/displays/panel-acx565akm.c b/drivers/video/omap2/displays/panel-
+> acx565akm.c
+> index d26f37a..74e7cf0 100644
+> --- a/drivers/video/omap2/displays/panel-acx565akm.c
+> +++ b/drivers/video/omap2/displays/panel-acx565akm.c
+> @@ -532,6 +532,7 @@ static int acx_panel_probe(struct omap_dss_device *dssdev)
+> 
+>  	/*------- Backlight control --------*/
+> 
+> +	memset(&props, 0, sizeof(props));
+>  	props.fb_blank = FB_BLANK_UNBLANK;
+>  	props.power = FB_BLANK_UNBLANK;
+>  	props.type = BACKLIGHT_RAW;
+> --
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-@@ -379,6 +421,12 @@ static mode_t ideapad_is_visible(struct
- 	if (attr == &dev_attr_camera_power.attr)
- 		supported = test_bit(CFG_CAMERA_BIT, &(priv->cfg));
- 	else
-+	if (attr == &dev_attr_fan_mode.attr)
-+		/* I don't know a way to determine is there fan control
-+		 * on the device or not. For now suppose it is always
-+		 */
-+		supported = true;
-+	else
- 		supported = true;
-
- 	return supported ? attr->mode : 0;
-@@ -519,9 +567,15 @@ static void ideapad_platform_exit(struct
-  */
- static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
-+	{ KE_KEY, 7,  { KEY_CAMERA } },
-+	{ KE_KEY, 11, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 13, { KEY_WLAN } },
- 	{ KE_KEY, 16, { KEY_PROG1 } },
- 	{ KE_KEY, 17, { KEY_PROG2 } },
-+	{ KE_KEY, 64, { KEY_PROG3 } },
-+	{ KE_KEY, 65, { KEY_PROG4 } },
-+	{ KE_KEY, 66, { KEY_TOUCHPAD_OFF } },
-+	{ KE_KEY, 67, { KEY_TOUCHPAD_ON } },
- 	{ KE_END, 0 },
- };
-
-@@ -767,6 +821,25 @@ static int __devexit ideapad_acpi_remove
- 	return 0;
- }
-
-+static void ideapad_check_special_buttons(struct ideapad_private
-*priv, unsigned long state)
-+{
-+	unsigned long bit;
-+	for (bit = 0; bit < 16; bit++) {
-+		if (test_bit(bit, &state)) {
-+			switch (bit) {
-+			case 6:
-+				/* Thermal Management button */
-+				ideapad_input_report(priv, 65);
-+				break;
-+			case 1:
-+				/* OneKey Theater button */
-+				ideapad_input_report(priv, 64);
-+				break;
-+			}
-+		}
-+	}
-+}
-+
- static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- {
- 	struct ideapad_private *priv = dev_get_drvdata(&adevice->dev);
-@@ -785,6 +858,19 @@ static void ideapad_acpi_notify(struct a
- 			case 9:
- 				ideapad_sync_rfk_state(priv);
- 				break;
-+			case 5:
-+				{
-+				unsigned long value;
-+				/* DO NOT DELETE: Without reading from EC touchpad LED doesn't
-switch state */
-+				if (!read_ec_data(handle, VPCCMD_R_TOUCHPAD, &value)) {
-+					/* WARNING: IdeaPad doesn't really turn off touchpad -
-+					 * it only switches the LED state. Userspace should
-+					 * turn touchpad off and on. We send KEY_TOUCHPAD_OFF and
-+					 * KEY_TOUCHPAD_ON to not to get out of sync with LED */
-+					ideapad_input_report(priv, value ? 67 : 66);
-+				}
-+				}
-+				break;
- 			case 4:
- 				ideapad_backlight_notify_brightness(priv);
- 				break;
-@@ -794,6 +880,13 @@ static void ideapad_acpi_notify(struct a
- 			case 2:
- 				ideapad_backlight_notify_power(priv);
- 				break;
-+			case 0:
-+				{
-+				unsigned long value;
-+				read_ec_data(handle, VPCCMD_R_SPECIAL_BUTTONS, &value);
-+				ideapad_check_special_buttons(priv, value);
-+				}
-+				break;
- 			default:
- 				ideapad_input_report(priv, vpc_bit);
- 			}
