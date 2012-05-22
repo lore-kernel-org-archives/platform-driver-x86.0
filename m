@@ -1,33 +1,64 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH] backlight: initialize struct backlight_properties properly
-Date: Tue, 22 May 2012 10:25:31 +0100
-Message-ID: <CAPM=9tzbMM09jENTZqDcnwEsA+G8y1A_orR8EgREePpxDzr0nQ@mail.gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] backlight: initialize  struct backlight_properties
+	properly
+Date: Tue, 22 May 2012 13:59:02 -0700
+Message-ID: <20120522135902.90253d07.akpm@linux-foundation.org>
 References: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gg0-f174.google.com ([209.85.161.174]:51997 "EHLO
-	mail-gg0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757034Ab2EVJZc convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 May 2012 05:25:32 -0400
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
 In-Reply-To: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
 To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Keith Packard <keithp@keithp.com>, David Airlie <airlied@linux.ie>, Matthew Garrett <mjg@redhat.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Lars-Peter Clausen <lars@metafoo.de>, Axel Lin <axel.lin@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-fbdev@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-omap@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Mathieu Poirier <mathieu.poirier@linaro.org>, Tobias Schandinat <FlorianSchandinat@gmx.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, Florian@freedesktop.org, Dave@freedesktop.org, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Lars-Peter@freedesktop.org, Airlie <airlied@redhat.com>, Axel Lin <axel.lin@gmail.com>, linux-omap@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 21, 2012 at 8:24 AM, Corentin Chary
-<corentin.chary@gmail.com> wrote:
+On Mon, 21 May 2012 09:24:35 +0200
+Corentin Chary <corentin.chary@gmail.com> wrote:
+
 > In all these files, the .power field was never correctly initialized.
+> 
+> ...
 >
-> Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
-> ---
-> =A0drivers/gpu/drm/i915/intel_panel.c =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- =A01 +
-> =A0drivers/gpu/drm/radeon/radeon_legacy_encoders.c | =A0 =A01 +
+> --- a/drivers/gpu/drm/i915/intel_panel.c
+> +++ b/drivers/gpu/drm/i915/intel_panel.c
+> @@ -342,6 +342,7 @@ int intel_panel_setup_backlight(struct drm_device *dev)
+>  	else
+>  		return -ENODEV;
+>  
+> +	memset(&props, 0, sizeof(props));
 
-I've taken these two hunks into drm-next.
+This code is all still quite fragile.  What happens if we add a new
+field to backlight_properties?  We need to go edit a zillion drivers?
 
-Dave.
+There are two ways of fixing this:
+
+a) write and use
+
+void backlight_properties_init(struct backlight_properties *props,
+				int type, int max_brightness, etc);
+
+   or
+
+b) edit all sites to do
+
+	struct backlight_properties bl_props = {
+		.type = BACKLIGHT_RAW,
+		.max_brighness = intel_panel_get_max_backlight(dev),
+		.power = FB_BLANK_UNBLANK,
+	};
+
+they're largely equivalent - the struct will be zeroed out and
+then certain fields will be initialised.  a) is a bit better because
+some future field may not want the all-zeroes pattern (eg, a spinlock).
+
+But they're both better than what we have now!
