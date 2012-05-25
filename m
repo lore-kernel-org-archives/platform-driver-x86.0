@@ -1,64 +1,32 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] backlight: initialize  struct backlight_properties
-	properly
-Date: Tue, 22 May 2012 13:59:02 -0700
-Message-ID: <20120522135902.90253d07.akpm@linux-foundation.org>
-References: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
+From: =?KOI8-U?B?7cHL08nNIO3Jy8nU0c7Ty8nK?= <maxtram95@gmail.com>
+Subject: Re: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
+Date: Fri, 25 May 2012 13:19:21 +0300
+Message-ID: <CAKErNvo4CnhRx8ZAOL5cUrDJ33r6cpuYq1jd2QC5v0GmyJ=nig@mail.gmail.com>
+References: <CAKErNvpb==5=__rxjPeP24Oo1SxTBKPdR3TKLmGmHrr3e+xhDQ@mail.gmail.com>
+ <4FBB1057.1050108@canonical.com> <CAKErNvpwASnFkMBJ-y_p73t5uS6gaWGCqy4Qbem3OSY8Lrfnrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <1337585085-4891-1-git-send-email-corentin.chary@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mathieu Poirier <mathieu.poirier@linaro.org>, Tobias Schandinat <FlorianSchandinat@gmx.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, Florian@freedesktop.org, Dave@freedesktop.org, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Lars-Peter@freedesktop.org, Airlie <airlied@redhat.com>, Axel Lin <axel.lin@gmail.com>, linux-omap@vger.kernel.org, Matthew Garrett <mjg@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-gg0-f174.google.com ([209.85.161.174]:42664 "EHLO
+	mail-gg0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752904Ab2EYKTm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 May 2012 06:19:42 -0400
+Received: by gglu4 with SMTP id u4so676157ggl.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 May 2012 03:19:42 -0700 (PDT)
+In-Reply-To: <CAKErNvpwASnFkMBJ-y_p73t5uS6gaWGCqy4Qbem3OSY8Lrfnrg@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Mon, 21 May 2012 09:24:35 +0200
-Corentin Chary <corentin.chary@gmail.com> wrote:
+>+               supported = !read_ec_cmd(ideapad_handle, VPCCMD_R_FAN, &value);
 
-> In all these files, the .power field was never correctly initialized.
-> 
-> ...
->
-> --- a/drivers/gpu/drm/i915/intel_panel.c
-> +++ b/drivers/gpu/drm/i915/intel_panel.c
-> @@ -342,6 +342,7 @@ int intel_panel_setup_backlight(struct drm_device *dev)
->  	else
->  		return -ENODEV;
->  
-> +	memset(&props, 0, sizeof(props));
+I'm sorry, there is a typo, this line should look like this:
 
-This code is all still quite fragile.  What happens if we add a new
-field to backlight_properties?  We need to go edit a zillion drivers?
++               supported = !read_ec_data(ideapad_handle, VPCCMD_R_FAN, &value);
 
-There are two ways of fixing this:
+Here is the latest version of the patch: http://paste.ubuntu.com/1006185/
+Didn't send it in letter body, because it's mostly the same as previous.
 
-a) write and use
-
-void backlight_properties_init(struct backlight_properties *props,
-				int type, int max_brightness, etc);
-
-   or
-
-b) edit all sites to do
-
-	struct backlight_properties bl_props = {
-		.type = BACKLIGHT_RAW,
-		.max_brighness = intel_panel_get_max_backlight(dev),
-		.power = FB_BLANK_UNBLANK,
-	};
-
-they're largely equivalent - the struct will be zeroed out and
-then certain fields will be initialised.  a) is a bit better because
-some future field may not want the all-zeroes pattern (eg, a spinlock).
-
-But they're both better than what we have now!
+So what about the patch?
