@@ -1,243 +1,216 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: Acer-WMI: Iconia TAB W500 gyrosensor
-Date: Mon, 28 May 2012 00:47:27 +0200
-Message-ID: <201205280047.27466.marek.vasut@gmail.com>
-References: <201205011731.24642.marek.vasut@gmail.com> <1338135667.9751.3872.camel@linux-s257.site> <201205272358.14249.marek.vasut@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Marek Vasut <marex@denx.de>
+Subject: [PATCH] ACER: Add support for accelerometer sensor
+Date: Mon, 28 May 2012 01:44:51 +0200
+Message-ID: <1338162291-21343-1-git-send-email-marex@denx.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:44766 "EHLO
-	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751014Ab2E0Wrb convert rfc822-to-8bit (ORCPT
+Received: from mail-out.m-online.net ([212.18.0.10]:35374 "EHLO
+	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751256Ab2E0XpD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 27 May 2012 18:47:31 -0400
-Received: by wgbdr13 with SMTP id dr13so2413075wgb.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 27 May 2012 15:47:30 -0700 (PDT)
-In-Reply-To: <201205272358.14249.marek.vasut@gmail.com>
+	Sun, 27 May 2012 19:45:03 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Marek Vasut <marex@denx.de>, joeyli <jlee@suse.com>
 
-Dear joeyli,
+This device is present on Iconia Tab W500.
 
-> > =E6=96=BC =E6=97=A5=EF=BC=8C2012-05-27 =E6=96=BC 23:45 +0800=EF=BC=8C=
-joeyli =E6=8F=90=E5=88=B0=EF=BC=9A
-> >=20
-> > > =E6=96=BC =E6=97=A5=EF=BC=8C2012-05-27 =E6=96=BC 10:28 +0200=EF=BC=
-=8CMarek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
-> > >=20
-> > > > Dear joeyli,
-> > > >=20
-> > > > > > Hi Marek,
-> > > > > >=20
-> > > > > > =E6=96=BC =E4=B8=80=EF=BC=8C2012-05-07 =E6=96=BC 21:38 +020=
-0=EF=BC=8CMarek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
-> > > > > >=20
-> > > > > > > > > > Now it gets interesting ;-)
-> > > > > > > > > >=20
-> > > > > > > > > > The obj->buffer.pointer contains the following:
-> > > > > > > > > > 0x05 0x01 0x00 0x00 0x00 0x00 0x00 0x00
-> > > > > > > > > >=20
-> > > > > > > > > > That means, return_value.function is 0x05, instead =
-of
-> > > > > > > > > > 0x01 (WMID_HOTKEY_EVENT).
-> > > > > > > > >=20
-> > > > > > > > > Yes, the 0x05 event is a event reflect to g-sensor, b=
-ut I
-> > > > > > > > > don't have any hardware can test it.
-> > > > > > > > >=20
-> > > > > > > > > Did you see any other value but not just "0x05 0x01 0=
-x00
-> > > > > > > > > 0x00 0x00 0x00 0x00 0x00" ?
-> > > > > > > >=20
-> > > > > > > > Nope, nothing at all. I flipped it back and forth, no r=
-esult
-> > > > > > > > :(
-> > > > > > > >=20
-> > > > > > > > > I mean if you invert your table, did you see other re=
-turn
-> > > > > > > > > value? The return data must point to Portrait or Land=
-scape
-> > > > > > > > > view.
-> > > > > > > >=20
-> > > > > > > > Nope, still zeroes. This is only some interrupt-like ev=
-ent I
-> > > > > > > > believe. My opinion is, I need to call some WMI method =
-to
-> > > > > > > > actually read-back the data.
-> >=20
-> > ...
-> >=20
-> > > > > > Sorry! I am sticking on another critical issue. I will find=
- a
-> > > > > > time to trace TAB's DSDT at this week.
-> > > > >=20
-> > > > > No need to be sorry, I know exactly what you mean :) No need =
-to
-> > > > > rush, I'm stuck with a few bugs at work too.
-> > > >=20
-> > > > Hi, I'm starting to get curious again. Did you had time to look=
- into
-> > > > it? Thanks in advance!
-> > >=20
-> > > Sorry for I am late to reply you!
-> >=20
-> > ...
-> >=20
-> > > I checked your DSDT, unfortunately I found the logic is empty for
-> > > G-sesor in W500's DSDT.
-> > >=20
-> > > I mean, that's right we got only g-sensor event but didn't have s=
-ensor
-> > > state data, because they didn't put the return value in DSDT!
-> > >=20
-> > > On you TAB W500, the _Q7C method should run by EC when G-sensor
-> > > detected
-> > >=20
-> > > state change:
-> > >         Method (_Q7C, 0, NotSerialized)
-> > >         {
-> > >        =20
-> > >             If (LEqual (^^SENR.GSLC, Zero))                     /=
-* G
-> > >             sensor enabled? */ {
-> > >            =20
-> > >                 Store (0x05, Index (^^^WMID.FEBC, Zero))        /=
-* 0x05
-> > >                 is Sensor Event */ Store (One, Index (^^^WMID.FEB=
-C,
-> > >                 One))          /* 0x01 is G-Sensor */ Notify (WMI=
-D,
-> > >                 0xBC)
-> > >            =20
-> > >             }
-> > >            =20
-> > >             If (LMST)
-> > >             {
-> > >            =20
-> > >                 Return (Zero)
-> > >            =20
-> > >             }
-> > >        =20
-> > >         }
-> > >=20
-> > > You can enable ACPI debug message to verify _Q7C method run when =
-you
-> > > reverse TAB, add the
-> > >=20
-> > > following kernel parameter and reboot:
-> > >  acpi.debug_level=3D0x0000000F acpi.debug_layer=3D0xffffffff log_=
-buf_len=3D5M
-> > >=20
-> > > The WMI event code in DSDT like this:
-> > >             Method (EVBC, 0, NotSerialized)             /* call b=
-y _WED
-> > >             */ {
-> > >=20
-> > > ...
-> > >=20
-> > >                 If (LEqual (Local0, One))               /* hotkey=
- event
-> > >                 */ {
-> > >=20
-> > > ...
-> > >=20
-> > >                         If (LEqual (Local0, 0x05)) {}
-> > >                         /* 0x05 is Sensor Event, why empty? */
-> > >=20
-> > > ...
-> > >=20
-> > >                 Store (Zero, Index (FEBC, 0x04))		/* all set to
->=20
-> zero */
->=20
-> > >                 Store (Zero, Index (FEBC, 0x05))
-> > >                 Store (Zero, Index (FEBC, 0x06))
-> > >                 Store (Zero, Index (FEBC, 0x07))
-> > >=20
-> > > ...
-> > >=20
-> > >                 Return (FEBC)
-> > >            =20
-> > >             }
-> > >=20
-> > > That's why we receive a G-sensor event but didn't have orientatio=
-n
-> > > information of TAB. On windows platform, I believe there have ano=
-ther
-> > > driver listen and handle this g-sensor event when tab turned.
-> >=20
-> > OK, there havse a "BST0001" acpi device should handle by a g-sensor
-> >=20
-> > driver or a special acpi driver:
-> >     Scope (_SB.PCI0.LPC0)
-> >     {
-> >    =20
-> >         Device (SENR)
-> >         {
-> >        =20
-> >             Name (_HID, "BST0001")
-> >             Name (_UID, Zero)
-> >             Name (_STA, 0x0F)
-> >             Name (GSLC, Zero)           /* G-sensor lock? */
-> >             Name (GSLX, Zero)		/* X */
-> >             Name (GSLY, Zero)		/* Y */
-> >             Name (GSLZ, Zero)		/* Z */
-> >=20
-> > ...
-> >=20
-> >             Method (_INI, 0, NotSerialized)
-> >=20
-> > ...
-> >=20
-> >             Method (RDST, 0, NotSerialized)
-> >             {
-> >=20
-> > ...
-> >=20
-> >             Method (RDVL, 0, NotSerialized)
-> >             {
-> >=20
-> > ...
-> >=20
-> >             Method (WRVL, 1, NotSerialized)
-> >             {
-> >=20
-> > ...
-> >=20
-> >=20
-> > There have 3 methods "RDST", "RDVL" and "WRVL", currently, no idea =
-for
-> > what functions provided by those 3 methods.
-> >=20
-> > my _GUESS_:
-> > 	"RDST" is read state?
-> > 	"RDVL" is read value(what!?)
-> > 	"WRVL" is write value?
-> >=20
-> > My idea is just find out which method is for read the orientation o=
-f
-> > G-sensor then we can use a driver raise it to userland.
->=20
-> Well, I'm getting somewhere, thanks for all your hints, they really b=
-lasted
-> me forward!
->=20
-> So, calling the _INI function, I get value of the G-Sensor kill switc=
-h
-> (there's a toggle on the bottom of the tablet to enable/disable input=
- from
-> the accelerometer). So _INI returns integer, 0 for GS enabled, 1 for =
-GS
-> disabled. I didn't get further (yet). Will keep you in loop!
->=20
-> Thanks!
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: joeyli <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c |  110 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-Ok, I'm even getting values from RDVL now. I hope to come up with a pat=
-ch soon.
-
->=20
-> > Thanks a lot!
-> > Joey Lee
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index c1a3fd8..2df0673 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -95,6 +95,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+ 
+ enum acer_wmi_event_ids {
+ 	WMID_HOTKEY_EVENT = 0x1,
++	WMID_ACCEL_EVENT = 0x5,
+ };
+ 
+ static const struct key_entry acer_wmi_keymap[] = {
+@@ -130,6 +131,7 @@ static const struct key_entry acer_wmi_keymap[] = {
+ };
+ 
+ static struct input_dev *acer_wmi_input_dev;
++static struct input_dev *acer_wmi_accel_dev;
+ 
+ struct event_return_value {
+ 	u8 function;
+@@ -145,6 +147,7 @@ struct event_return_value {
+ #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
+ #define ACER_WMID3_GDS_WIMAX		(1<<7)	/* WiMAX */
+ #define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
++#define ACER_WMID3_GDS_ACCEL		(1<<2)	/* Accelerometer */
+ 
+ struct lm_input_params {
+ 	u8 function_num;        /* Function Number */
+@@ -200,6 +203,7 @@ struct hotkey_function_type_aa {
+ #define ACER_CAP_BLUETOOTH		(1<<2)
+ #define ACER_CAP_BRIGHTNESS		(1<<3)
+ #define ACER_CAP_THREEG			(1<<4)
++#define ACER_CAP_ACCEL			(1<<5)
+ #define ACER_CAP_ANY			(0xFFFFFFFF)
+ 
+ /*
+@@ -1150,6 +1154,8 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
+ 		interface->capability |= ACER_CAP_THREEG;
+ 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
+ 		interface->capability |= ACER_CAP_BLUETOOTH;
++	if (type_aa->others_func_bitmap & ACER_WMID3_GDS_ACCEL)
++		interface->capability |= ACER_CAP_ACCEL;
+ 
+ 	commun_fn_key_number = type_aa->commun_fn_key_number;
+ }
+@@ -1375,6 +1381,61 @@ static void acer_backlight_exit(void)
+ }
+ 
+ /*
++ * Accelerometer device
++ */
++#define ACER_GSENSOR_HANDLE	"\\_SB.PCI0.LPC0.SENR"
++#define ACER_GSENSOR_INIT	"\\_SB.PCI0.LPC0.SENR._INI"
++#define ACER_GSENSOR_RDVL	"\\_SB.PCI0.LPC0.SENR.RDVL"
++static int __devinit acer_gsensor_open(struct input_dev *input)
++{
++	acpi_handle handle;
++	acpi_status status;
++	struct acpi_buffer output;
++	union acpi_object out_obj;
++
++	status = acpi_get_handle(NULL, ACER_GSENSOR_HANDLE, &handle);
++	if (ACPI_FAILURE(status))
++		return -1;
++
++	output.length = sizeof(out_obj);
++	output.pointer = &out_obj;
++	status = acpi_evaluate_object(NULL, ACER_GSENSOR_INIT, NULL, &output);
++	if (ACPI_FAILURE(status))
++		return -1;
++
++	return 0;
++}
++
++static int acer_gsensor_event(void)
++{
++	acpi_status status;
++	struct acpi_buffer output;
++	union acpi_object out_obj[5];
++
++	if (!has_cap(ACER_CAP_ACCEL))
++		return -1;
++
++	output.length = sizeof(out_obj);
++	output.pointer = out_obj;
++
++	status = acpi_evaluate_object(NULL, ACER_GSENSOR_RDVL, NULL, &output);
++	if (ACPI_FAILURE(status))
++		return -1;
++
++	if (out_obj->package.count != 4)
++		return -1;
++
++	input_report_abs(acer_wmi_accel_dev, ABS_X,
++		(s16)out_obj->package.elements[0].integer.value);
++	input_report_abs(acer_wmi_accel_dev, ABS_Y,
++		(s16)out_obj->package.elements[1].integer.value);
++	input_report_abs(acer_wmi_accel_dev, ABS_Z,
++		(s16)out_obj->package.elements[2].integer.value);
++	input_sync(acer_wmi_accel_dev);
++	return 0;
++}
++
++/*
+  * Rfkill devices
+  */
+ static void acer_rfkill_update(struct work_struct *ignored);
+@@ -1649,6 +1710,9 @@ static void acer_wmi_notify(u32 value, void *context)
+ 						   1, true);
+ 		}
+ 		break;
++	case WMID_ACCEL_EVENT:
++		acer_gsensor_event();
++		break;
+ 	default:
+ 		pr_warn("Unknown function number - %d - %d\n",
+ 			return_value.function, return_value.key_num);
+@@ -1734,6 +1798,41 @@ static int acer_wmi_enable_lm(void)
+ 	return status;
+ }
+ 
++static int __init acer_wmi_accel_setup(void)
++{
++	int err;
++
++	acer_wmi_accel_dev = input_allocate_device();
++	if (!acer_wmi_accel_dev)
++		return -ENOMEM;
++
++	acer_wmi_accel_dev->open = acer_gsensor_open;
++
++	acer_wmi_accel_dev->name = "Acer BMA150 accelerometer";
++	acer_wmi_accel_dev->phys = "wmi/input1";
++	acer_wmi_accel_dev->id.bustype = BUS_HOST;
++	acer_wmi_accel_dev->evbit[0] = BIT_MASK(EV_ABS);
++	input_set_abs_params(acer_wmi_accel_dev, ABS_X, -16384, 16384, 0, 0);
++	input_set_abs_params(acer_wmi_accel_dev, ABS_Y, -16384, 16384, 0, 0);
++	input_set_abs_params(acer_wmi_accel_dev, ABS_Z, -16384, 16384, 0, 0);
++
++	err = input_register_device(acer_wmi_accel_dev);
++	if (err)
++		goto err_free_dev;
++
++	return 0;
++
++err_free_dev:
++	input_free_device(acer_wmi_accel_dev);
++	return err;
++}
++
++static void acer_wmi_accel_destroy(void)
++{
++	input_unregister_device(acer_wmi_accel_dev);
++	input_free_device(acer_wmi_accel_dev);
++}
++
+ static int __init acer_wmi_input_setup(void)
+ {
+ 	acpi_status status;
+@@ -2066,6 +2165,12 @@ static int __init acer_wmi_init(void)
+ 			return err;
+ 	}
+ 
++	if (has_cap(ACER_CAP_ACCEL)) {
++		err = acer_wmi_accel_setup();
++		if (err)
++			goto error_platform_register;
++	}
++
+ 	err = platform_driver_register(&acer_platform_driver);
+ 	if (err) {
+ 		pr_err("Unable to register platform driver\n");
+@@ -2109,6 +2214,8 @@ error_device_alloc:
+ error_platform_register:
+ 	if (wmi_has_guid(ACERWMID_EVENT_GUID))
+ 		acer_wmi_input_destroy();
++	if (has_cap(ACER_CAP_ACCEL))
++		acer_wmi_accel_destroy();
+ 
+ 	return err;
+ }
+@@ -2118,6 +2225,9 @@ static void __exit acer_wmi_exit(void)
+ 	if (wmi_has_guid(ACERWMID_EVENT_GUID))
+ 		acer_wmi_input_destroy();
+ 
++	if (has_cap(ACER_CAP_ACCEL))
++		acer_wmi_accel_destroy();
++
+ 	remove_sysfs(acer_platform_device);
+ 	remove_debugfs();
+ 	platform_device_unregister(acer_platform_device);
+-- 
+1.7.10
