@@ -1,166 +1,145 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH 2/2] ACER: Add support for ambient light sensor
-Date: Fri,  1 Jun 2012 19:11:23 +0200
-Message-ID: <1338570683-16491-2-git-send-email-marex@denx.de>
-References: <1338570683-16491-1-git-send-email-marex@denx.de>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT] x86 platform drivers tree
+Date: Fri, 1 Jun 2012 20:03:39 +0100
+Message-ID: <20120601190339.GA13930@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-out.m-online.net ([212.18.0.9]:36026 "EHLO
-	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759212Ab2FARLf (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:57680 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965696Ab2FATDn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jun 2012 13:11:35 -0400
-In-Reply-To: <1338570683-16491-1-git-send-email-marex@denx.de>
+	Fri, 1 Jun 2012 15:03:43 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, joeyli <jlee@suse.com>
+To: linus@linux-foundatio.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-This is the ambient light sensor found on Iconia W500.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: joeyli <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |   86 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index edb6bad..a58c415 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -203,6 +203,7 @@ struct hotkey_function_type_aa {
- #define ACER_CAP_BRIGHTNESS		(1<<3)
- #define ACER_CAP_THREEG			(1<<4)
- #define ACER_CAP_ACCEL			(1<<5)
-+#define ACER_CAP_ALS			(1<<6)
- #define ACER_CAP_ANY			(0xFFFFFFFF)
- 
- /*
-@@ -1378,6 +1379,63 @@ static void acer_backlight_exit(void)
- }
- 
- /*
-+ * Ambient light sensor device
-+ */
-+static acpi_handle alsd_handle;
-+
-+static int acer_als_init(void)
-+{
-+	union acpi_object in_obj;
-+	struct acpi_object_list params;
-+	struct acpi_buffer out;
-+	union acpi_object out_obj;
-+	acpi_status status;
-+
-+	status = acpi_evaluate_object(alsd_handle, "_INI", NULL, NULL);
-+	if (ACPI_FAILURE(status))
-+		return -1;
-+
-+	params.count = 1;
-+	params.pointer = &in_obj;
-+	in_obj.type = ACPI_TYPE_INTEGER;
-+	/*
-+	 * Unknown argument of both GLOV and GUPV, set to 5.
-+	 * GLOV - G? Lower Value ?
-+	 * GUPV - G? Upper Value ?
-+	 */
-+	in_obj.integer.value = 5;
-+	out.length = sizeof(out_obj);
-+	out.pointer = &out_obj;
-+
-+	acpi_evaluate_object(alsd_handle, "GLOV", &params, &out);
-+	acpi_evaluate_object(alsd_handle, "GUPV", &params, &out);
-+
-+	return 0;
-+}
-+
-+static ssize_t acer_als_show(struct device *dev, struct device_attribute *attr,
-+			char *buf)
-+{
-+	acpi_status status;
-+	struct acpi_buffer output;
-+	union acpi_object out_obj;
-+
-+	status = acpi_evaluate_object(alsd_handle, "S3WK", NULL, NULL);
-+	if (ACPI_FAILURE(status))
-+		return -1;
-+
-+	output.length = sizeof(out_obj);
-+	output.pointer = &out_obj;
-+	status = acpi_evaluate_object(alsd_handle, "_ALI", NULL, &output);
-+	if (ACPI_FAILURE(status))
-+		return -1;
-+
-+	return sprintf(buf, "%d\n", (u16)out_obj.integer.value);
-+}
-+
-+static DEVICE_ATTR(ls_switch, S_IRUGO, acer_als_show, NULL);
-+
-+/*
-  * Accelerometer device
-  */
- static acpi_handle gsensor_handle;
-@@ -1856,6 +1914,21 @@ err_free_dev:
- 	return err;
- }
- 
-+static int __init acer_wmi_alsd_setup(void)
-+{
-+	int err;
-+
-+	err = acer_wmi_get_handle("ALSD", "ACPI0008", &alsd_handle);
-+	if (err)
-+		return err;
-+
-+	interface->capability |= ACER_CAP_ALS;
-+
-+	acer_als_init();
-+
-+	return 0;
-+}
-+
- static void acer_wmi_accel_destroy(void)
- {
- 	input_unregister_device(acer_wmi_accel_dev);
-@@ -2020,6 +2093,9 @@ static int acer_platform_resume(struct platform_device *device)
- 	if (has_cap(ACER_CAP_ACCEL))
- 		acer_gsensor_init();
- 
-+	if (has_cap(ACER_CAP_ALS))
-+		acer_als_init();
-+
- 	return 0;
- }
- 
-@@ -2052,6 +2128,8 @@ static int remove_sysfs(struct platform_device *device)
- {
- 	if (has_cap(ACER_CAP_THREEG))
- 		device_remove_file(&device->dev, &dev_attr_threeg);
-+	if (has_cap(ACER_CAP_ALS))
-+		device_remove_file(&device->dev, &dev_attr_ls_switch);
- 
- 	device_remove_file(&device->dev, &dev_attr_interface);
- 
-@@ -2069,6 +2147,13 @@ static int create_sysfs(void)
- 			goto error_sysfs;
- 	}
- 
-+	if (has_cap(ACER_CAP_ALS)) {
-+		retval = device_create_file(&acer_platform_device->dev,
-+			&dev_attr_ls_switch);
-+		if (retval)
-+			goto error_sysfs;
-+	}
-+
- 	retval = device_create_file(&acer_platform_device->dev,
- 		&dev_attr_interface);
- 	if (retval)
-@@ -2198,6 +2283,7 @@ static int __init acer_wmi_init(void)
- 	}
- 
- 	acer_wmi_accel_setup();
-+	acer_wmi_alsd_setup();
- 
- 	err = platform_driver_register(&acer_platform_driver);
- 	if (err) {
--- 
-1.7.10
+Hi Linus,
+
+Some significant improvements for the Sony driver on newer machines, but=20
+other than that mostly just minor fixes and a patch to remove the broken=20
+rfkill code from the Dell driver.
+
+The following changes since commit 2d117403b30cd7301af60d7d54b279a9f566d10d:
+
+  Merge tag 'please-pull-mce' of git://git.kernel.org/pub/scm/linux/kernel/=
+git/ras/ras (2012-05-31 10:53:37 -0700)
+
+are available in the git repository at:
+
+
+  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
+
+for you to fetch changes up to a6c2390cd6d2083d27a2359658e08f2d3df375ac:
+
+  dell-laptop: Remove rfkill code (2012-06-01 12:46:56 -0400)
+
+----------------------------------------------------------------
+AceLan Kao (2):
+      dell-laptop: add 3 quirks for supporting touchpad LED
+      dell-laptop: Add touchpad led support for Dell V3450
+
+Akio Idehara (1):
+      toshiba_acpi: Add support for transflective LCD
+
+Alex Hung (1):
+      thinkpad-acpi: fix issuing duplicated key events for brightness up/do=
+wn
+
+Ang Way Chuang (1):
+      Dell Vostro 3350 touchpad LED
+
+Dan Carpenter (1):
+      hp-wmi: check for allocation failures
+
+Daniel Drake (1):
+      xo1-rfkill: only act when blocked state is changed
+
+Ike Panhc (2):
+      ideapad: remove unused define and fix a typo
+      ideapad: generate valid key event only
+
+Jesper Juhl (1):
+      hdaps: Jesper Juhl: Fix outdated email address
+
+Lee, Chun-Yi (1):
+      acer-wmi: add 3 laptops to video backlight vendor mode quirk table
+
+Marco Chiappero (10):
+      sony-laptop: use soft rfkill status stored in hw
+      sony-laptop: improve SNC initialization and acpi notify callback code
+      sony-laptop: support battery care functions
+      sony-laptop: add thermal profiles support
+      sony-laptop: support automatic resume on lid open
+      sony-laptop: add high speed battery charging function
+      sony-laptop: new keyboard backlight handle
+      sony-laptop: add support for more WWAN modems
+      sony-laptop: add missing Fn key combos for 0x100 handlers
+      sony-laptop: add touchpad enable/disable function
+
+Matthew Garrett (2):
+      toshiba_acpi: Fix mis-merge
+      dell-laptop: Remove rfkill code
+
+Mattia Dongili (5):
+      sony-laptop: fix return path when no ACPI buffer is allocated
+      sony-laptop: generalise ACPI calls into SNC functions
+      sony-laptop: use kstrtoul to parse sysfs values
+      sony-laptop: additional debug statements
+      sony-laptop: adjust error handling in finding SNC handles
+
+Robert Gerlach (3):
+      fujitsu-tablet: remove duplicated code
+      fujitsu-tablet: convert printk to pr_*
+      fujitsu-tablet: correct quirks for Lifebook and Stylistic tablets
+
+Seth Forshee (2):
+      apple-gmux: Add suspend/resume support for the backlight
+      toshiba_acpi: Only register backlight device when interface is read/w=
+rite
+
+Uwe Kleine-K=F6nig (1):
+      drivers/x86: mark const init data with __initconst instead of __initd=
+ata
+
+ drivers/platform/x86/acer-wmi.c       |   24 +
+ drivers/platform/x86/apple-gmux.c     |    4 +
+ drivers/platform/x86/dell-laptop.c    |  308 +------
+ drivers/platform/x86/fujitsu-tablet.c |   34 +-
+ drivers/platform/x86/hdaps.c          |    2 +-
+ drivers/platform/x86/hp-wmi.c         |   10 +
+ drivers/platform/x86/ideapad-laptop.c |    9 +-
+ drivers/platform/x86/sony-laptop.c    | 1560 ++++++++++++++++++++++++++---=
+----
+ drivers/platform/x86/thinkpad_acpi.c  |    2 +-
+ drivers/platform/x86/toshiba_acpi.c   |  141 ++-
+ drivers/platform/x86/xo1-rfkill.c     |   13 +-
+ 11 files changed, 1447 insertions(+), 660 deletions(-)
+
+
+--=20
+Matthew Garrett | mjg59@srcf.ucam.org
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk/JEgsACgkQ7Hkv8l1YiTs3wwCgjohOuZYiIhrXglgbrV7Nri1e
+uQoAnAr6bPhNIFAxRyVNS6sWbQenx4AZ
+=jBAr
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
