@@ -1,24 +1,26 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform drivers tree
-Date: Fri, 1 Jun 2012 20:03:39 +0100
-Message-ID: <20120601190339.GA13930@srcf.ucam.org>
+Subject: Re: [GIT] x86 platform drivers tree
+Date: Fri, 1 Jun 2012 20:11:43 +0100
+Message-ID: <20120601191143.GA14184@srcf.ucam.org>
+References: <20120601190339.GA13930@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:57680 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:43510 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965696Ab2FATDn (ORCPT
+	with ESMTP id S932994Ab2FATLp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Jun 2012 15:03:43 -0400
+	Fri, 1 Jun 2012 15:11:45 -0400
 Content-Disposition: inline
+In-Reply-To: <20120601190339.GA13930@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linus@linux-foundatio.org
+To: linus@linux-foundation.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
 
---fUYQa+Pmc3FrFX/N
+--n8g4imXOkfNTN/H1
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -125,11 +127,10 @@ ata
  drivers/platform/x86/xo1-rfkill.c     |   13 +-
  11 files changed, 1447 insertions(+), 660 deletions(-)
 
-
 --=20
 Matthew Garrett | mjg59@srcf.ucam.org
 
---fUYQa+Pmc3FrFX/N
+--n8g4imXOkfNTN/H1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 Content-Disposition: inline
@@ -137,9 +138,9 @@ Content-Disposition: inline
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEARECAAYFAk/JEgsACgkQ7Hkv8l1YiTs3wwCgjohOuZYiIhrXglgbrV7Nri1e
-uQoAnAr6bPhNIFAxRyVNS6sWbQenx4AZ
-=jBAr
+iEYEARECAAYFAk/JE+8ACgkQ7Hkv8l1YiTuwdQCfXLECwgX2eKPV5hs5SFATpb2t
+c/IAn2NSfaYexXrK1Fybxy+1k8V5UywS
+=uI6u
 -----END PGP SIGNATURE-----
 
---fUYQa+Pmc3FrFX/N--
+--n8g4imXOkfNTN/H1--
