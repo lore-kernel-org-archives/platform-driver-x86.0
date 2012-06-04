@@ -1,220 +1,202 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH 2/2] ACER: Add support for ambient light sensor
-Date: Mon, 4 Jun 2012 13:13:27 +0200
-Message-ID: <CAHR064hJquR4AF6iZNyJTpK5f9GOBHfMq33Y=XpD7ZtFVW1E4A@mail.gmail.com>
-References: <1338570683-16491-1-git-send-email-marex@denx.de>
-	<1338570683-16491-2-git-send-email-marex@denx.de>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
+Date: Mon, 04 Jun 2012 14:56:46 +0300
+Message-ID: <1338811006.17357.3.camel@lenovo-ideapad-z570.gentooroot.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:36978 "EHLO
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:49692 "EHLO
 	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752035Ab2FDLN3 convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1752492Ab2FDL45 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jun 2012 07:13:29 -0400
-Received: by bkcji2 with SMTP id ji2so3459386bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jun 2012 04:13:27 -0700 (PDT)
-In-Reply-To: <1338570683-16491-2-git-send-email-marex@denx.de>
+	Mon, 4 Jun 2012 07:56:57 -0400
+Received: by bkcji2 with SMTP id ji2so3491781bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jun 2012 04:56:56 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marek Vasut <marex@denx.de>
-Cc: platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>, "Zhang, Rui" <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ike.pan@canonical.com
 
-On Fri, Jun 1, 2012 at 7:11 PM, Marek Vasut <marex@denx.de> wrote:
-> This is the ambient light sensor found on Iconia W500.
->
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: joeyli <jlee@suse.com>
-> ---
-> =C2=A0drivers/platform/x86/acer-wmi.c | =C2=A0 86 +++++++++++++++++++=
-++++++++++++++++++++
-> =C2=A01 file changed, 86 insertions(+)
->
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index edb6bad..a58c415 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -203,6 +203,7 @@ struct hotkey_function_type_aa {
-> =C2=A0#define ACER_CAP_BRIGHTNESS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0(1<<3)
-> =C2=A0#define ACER_CAP_THREEG =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(1<<4)
-> =C2=A0#define ACER_CAP_ACCEL =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 (1<<5)
-> +#define ACER_CAP_ALS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 (1<<6)
-> =C2=A0#define ACER_CAP_ANY =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 (0xFFFFFFFF)
->
-> =C2=A0/*
-> @@ -1378,6 +1379,63 @@ static void acer_backlight_exit(void)
-> =C2=A0}
->
-> =C2=A0/*
-> + * Ambient light sensor device
-> + */
-> +static acpi_handle alsd_handle;
-> +
-> +static int acer_als_init(void)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 union acpi_object in_obj;
-> + =C2=A0 =C2=A0 =C2=A0 struct acpi_object_list params;
-> + =C2=A0 =C2=A0 =C2=A0 struct acpi_buffer out;
-> + =C2=A0 =C2=A0 =C2=A0 union acpi_object out_obj;
-> + =C2=A0 =C2=A0 =C2=A0 acpi_status status;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
-_INI", NULL, NULL);
-> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 params.count =3D 1;
-> + =C2=A0 =C2=A0 =C2=A0 params.pointer =3D &in_obj;
-> + =C2=A0 =C2=A0 =C2=A0 in_obj.type =3D ACPI_TYPE_INTEGER;
-> + =C2=A0 =C2=A0 =C2=A0 /*
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* Unknown argument of both GLOV and GUPV=
-, set to 5.
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* GLOV - G? Lower Value ?
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* GUPV - G? Upper Value ?
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
-> + =C2=A0 =C2=A0 =C2=A0 in_obj.integer.value =3D 5;
-> + =C2=A0 =C2=A0 =C2=A0 out.length =3D sizeof(out_obj);
-> + =C2=A0 =C2=A0 =C2=A0 out.pointer =3D &out_obj;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 acpi_evaluate_object(alsd_handle, "GLOV", &par=
-ams, &out);
-> + =C2=A0 =C2=A0 =C2=A0 acpi_evaluate_object(alsd_handle, "GUPV", &par=
-ams, &out);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return 0;
-> +}
-> +
-> +static ssize_t acer_als_show(struct device *dev, struct device_attri=
-bute *attr,
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 char *buf)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 acpi_status status;
-> + =C2=A0 =C2=A0 =C2=A0 struct acpi_buffer output;
-> + =C2=A0 =C2=A0 =C2=A0 union acpi_object out_obj;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
-S3WK", NULL, NULL);
-> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 output.length =3D sizeof(out_obj);
-> + =C2=A0 =C2=A0 =C2=A0 output.pointer =3D &out_obj;
-> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
-_ALI", NULL, &output);
-> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return sprintf(buf, "%d\n", (u16)out_obj.integ=
-er.value);
-> +}
-> +
-> +static DEVICE_ATTR(ls_switch, S_IRUGO, acer_als_show, NULL);
-> +
-> +/*
-> =C2=A0* Accelerometer device
-> =C2=A0*/
-> =C2=A0static acpi_handle gsensor_handle;
-> @@ -1856,6 +1914,21 @@ err_free_dev:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;
-> =C2=A0}
->
-> +static int __init acer_wmi_alsd_setup(void)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 int err;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 err =3D acer_wmi_get_handle("ALSD", "ACPI0008"=
-, &alsd_handle);
-> + =C2=A0 =C2=A0 =C2=A0 if (err)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return err;
-
-NACK ! This is a generic device, and should be handled by ACPI core
-(Samsung laptop have this too). See "ACPI ALS" on linux-acpi.
-
-> + =C2=A0 =C2=A0 =C2=A0 interface->capability |=3D ACER_CAP_ALS;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 acer_als_init();
-> +
-> + =C2=A0 =C2=A0 =C2=A0 return 0;
-> +}
-> +
-> =C2=A0static void acer_wmi_accel_destroy(void)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0input_unregister_device(acer_wmi_accel_dev=
-);
-> @@ -2020,6 +2093,9 @@ static int acer_platform_resume(struct platform=
-_device *device)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (has_cap(ACER_CAP_ACCEL))
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0acer_gsensor_i=
-nit();
->
-> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 acer_als_init();
-> +
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
-> =C2=A0}
->
-> @@ -2052,6 +2128,8 @@ static int remove_sysfs(struct platform_device =
-*device)
-> =C2=A0{
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (has_cap(ACER_CAP_THREEG))
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0device_remove_=
-file(&device->dev, &dev_attr_threeg);
-> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 device_remove_file=
-(&device->dev, &dev_attr_ls_switch);
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0device_remove_file(&device->dev, &dev_attr=
-_interface);
->
-> @@ -2069,6 +2147,13 @@ static int create_sysfs(void)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0goto error_sysfs;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
->
-> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS)) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 retval =3D device_=
-create_file(&acer_platform_device->dev,
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 &dev_attr_ls_switch);
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (retval)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 goto error_sysfs;
-> + =C2=A0 =C2=A0 =C2=A0 }
-> +
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0retval =3D device_create_file(&acer_platfo=
-rm_device->dev,
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&dev_attr_inte=
-rface);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (retval)
-> @@ -2198,6 +2283,7 @@ static int __init acer_wmi_init(void)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0acer_wmi_accel_setup();
-> + =C2=A0 =C2=A0 =C2=A0 acer_wmi_alsd_setup();
->
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D platform_driver_register(&acer_pla=
-tform_driver);
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (err) {
-> --
-> 1.7.10
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
-ml
-
-
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+The patch adds support for Lenovo IdeaPad Z570 laptop. It makes all special
+keys working, adds possibility to control fan like Windows does and controls
+Touchpad Disabled LED.
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+--- linux/drivers/platform/x86/ideapad-laptop.c
++++ linux/drivers/platform/x86/ideapad-laptop.c
+@@ -62,9 +62,12 @@ enum {
+ 	VPCCMD_W_CAMERA,
+ 	VPCCMD_R_3G,
+ 	VPCCMD_W_3G,
+-	VPCCMD_R_ODD, /* 0x21 */
+-	VPCCMD_R_RF = 0x23,
+-	VPCCMD_W_RF,
++	VPCCMD_R_ODD,
++	VPCCMD_W_FAN,
++	VPCCMD_R_RF,
++	VPCCMD_W_RF, /* 0x24 */
++	VPCCMD_R_FAN = 0x2B,
++	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
+ 	VPCCMD_W_BL_POWER = 0x33,
+ };
+ 
+@@ -363,8 +366,47 @@ static ssize_t store_ideapad_cam(struct
+ 
+ static DEVICE_ATTR(camera_power, 0644, show_ideapad_cam, store_ideapad_cam);
+ 
++static ssize_t show_ideapad_fan(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	unsigned long result;
++
++	if (read_ec_data(ideapad_handle, VPCCMD_R_FAN, &result))
++		return sprintf(buf, "-1\n");
++	return sprintf(buf, "%lu\n", result);
++}
++
++static ssize_t store_ideapad_fan(struct device *dev,
++				 struct device_attribute *attr,
++				 const char *buf, size_t count)
++{
++	int ret, state;
++
++	if (!count)
++		return 0;
++	if (sscanf(buf, "%i", &state) != 1)
++		return -EINVAL;
++	/* WARNING: these fan states are not speed
++	 * so it isn't cooling_device interface
++	 * 0 = super silent mode
++	 * 1 = standard mode
++	 * 2 = dust cleaning
++	 * 4 = efficient thermal dissipation mode
++	 */
++	if (state < 0 || state > 4 || state == 3)
++		return -EINVAL;
++	ret = write_ec_cmd(ideapad_handle, VPCCMD_W_FAN, state);
++	if (ret < 0)
++		return ret;
++	return count;
++}
++
++static DEVICE_ATTR(fan_mode, 0644, show_ideapad_fan, store_ideapad_fan);
++
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
++	&dev_attr_fan_mode.attr,
+ 	NULL
+ };
+ 
+@@ -379,6 +421,10 @@ static mode_t ideapad_is_visible(struct
+ 	if (attr == &dev_attr_camera_power.attr)
+ 		supported = test_bit(CFG_CAMERA_BIT, &(priv->cfg));
+ 	else
++	if (attr == &dev_attr_fan_mode.attr) {
++		unsigned long value;
++		supported = !read_ec_data(ideapad_handle, VPCCMD_R_FAN, &value);
++	} else
+ 		supported = true;
+ 
+ 	return supported ? attr->mode : 0;
+@@ -519,9 +565,15 @@ static void ideapad_platform_exit(struct
+  */
+ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY, 6,  { KEY_SWITCHVIDEOMODE } },
++	{ KE_KEY, 7,  { KEY_CAMERA } },
++	{ KE_KEY, 11, { KEY_F16 } },
+ 	{ KE_KEY, 13, { KEY_WLAN } },
+ 	{ KE_KEY, 16, { KEY_PROG1 } },
+ 	{ KE_KEY, 17, { KEY_PROG2 } },
++	{ KE_KEY, 64, { KEY_PROG3 } },
++	{ KE_KEY, 65, { KEY_PROG4 } },
++	{ KE_KEY, 66, { KEY_TOUCHPAD_OFF } },
++	{ KE_KEY, 67, { KEY_TOUCHPAD_ON } },
+ 	{ KE_END, 0 },
+ };
+ 
+@@ -767,6 +819,26 @@ static int __devexit ideapad_acpi_remove
+ 	return 0;
+ }
+ 
++static void ideapad_check_special_buttons(struct ideapad_private *priv,
++					  unsigned long state)
++{
++	unsigned long bit;
++	for (bit = 0; bit < 16; bit++) {
++		if (test_bit(bit, &state)) {
++			switch (bit) {
++			case 6:
++				/* Thermal Management button */
++				ideapad_input_report(priv, 65);
++				break;
++			case 1:
++				/* OneKey Theater button */
++				ideapad_input_report(priv, 64);
++				break;
++			}
++		}
++	}
++}
++
+ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+ {
+ 	struct ideapad_private *priv = dev_get_drvdata(&adevice->dev);
+@@ -785,6 +857,24 @@ static void ideapad_acpi_notify(struct a
+ 			case 9:
+ 				ideapad_sync_rfk_state(priv);
+ 				break;
++			case 5:
++				{
++				unsigned long value;
++				/* DO NOT DELETE: Without reading from EC
++				 * touchpad LED doesn't switch state */
++				if (!read_ec_data(handle, VPCCMD_R_TOUCHPAD,
++						  &value)) {
++					/* WARNING: IdeaPad doesn't really turn
++					 * off touchpad - it only switches the
++					 * LED state. Userspace should turn
++					 * touchpad off and on. We send
++					 * KEY_TOUCHPAD_OFF and KEY_TOUCHPAD_ON
++					 * to not to get out of sync with LED */
++					ideapad_input_report(priv,
++							     value ? 67 : 66);
++				}
++				}
++				break;
+ 			case 4:
+ 				ideapad_backlight_notify_brightness(priv);
+ 				break;
+@@ -794,6 +884,14 @@ static void ideapad_acpi_notify(struct a
+ 			case 2:
+ 				ideapad_backlight_notify_power(priv);
+ 				break;
++			case 0:
++				{
++				unsigned long value;
++				read_ec_data(handle, VPCCMD_R_SPECIAL_BUTTONS,
++					     &value);
++				ideapad_check_special_buttons(priv, value);
++				}
++				break;
+ 			default:
+ 				ideapad_input_report(priv, vpc_bit);
+ 			}
+--- linux/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
++++ linux/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+@@ -5,4 +5,14 @@ Contact:	"Ike Panhc <ike.pan@canonical.c
+ Description:
+ 		Control the power of camera module. 1 means on, 0 means off.
+ 
+-
++What:		/sys/devices/platform/ideapad/fan_mode
++Date:		June 2012
++KernelVersion:	3.5
++Contact:	"Ike Panhc <ike.pan@canonical.com>"
++Description:
++		Change fan mode
++		There are four available modes:
++		    * 0 -> Super Silent Mode
++		    * 1 -> Standard Mode
++		    * 2 -> Dust Cleaning
++		    * 4 -> Efficient Thermal Dissipation Mode
