@@ -1,184 +1,220 @@
-From: Marek Vasut <marex@denx.de>
+From: Corentin Chary <corentin.chary@gmail.com>
 Subject: Re: [PATCH 2/2] ACER: Add support for ambient light sensor
-Date: Mon, 4 Jun 2012 11:29:43 +0200
-Message-ID: <201206041129.43676.marex@denx.de>
-References: <1338570683-16491-1-git-send-email-marex@denx.de> <1338570683-16491-2-git-send-email-marex@denx.de> <1338800893.6374.71.camel@linux-s257.site>
+Date: Mon, 4 Jun 2012 13:13:27 +0200
+Message-ID: <CAHR064hJquR4AF6iZNyJTpK5f9GOBHfMq33Y=XpD7ZtFVW1E4A@mail.gmail.com>
+References: <1338570683-16491-1-git-send-email-marex@denx.de>
+	<1338570683-16491-2-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-out.m-online.net ([212.18.0.10]:32894 "EHLO
-	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754066Ab2FDJ3t convert rfc822-to-8bit (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:36978 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752035Ab2FDLN3 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jun 2012 05:29:49 -0400
-In-Reply-To: <1338800893.6374.71.camel@linux-s257.site>
+	Mon, 4 Jun 2012 07:13:29 -0400
+Received: by bkcji2 with SMTP id ji2so3459386bkc.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jun 2012 04:13:27 -0700 (PDT)
+In-Reply-To: <1338570683-16491-2-git-send-email-marex@denx.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: platform-driver-x86@vger.kernel.org, rui.zhang@intel.com
+To: Marek Vasut <marex@denx.de>
+Cc: platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>, "Zhang, Rui" <rui.zhang@intel.com>, Len Brown <len.brown@intel.com>
 
-Dear joeyli,
+On Fri, Jun 1, 2012 at 7:11 PM, Marek Vasut <marex@denx.de> wrote:
+> This is the ambient light sensor found on Iconia W500.
+>
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: joeyli <jlee@suse.com>
+> ---
+> =C2=A0drivers/platform/x86/acer-wmi.c | =C2=A0 86 +++++++++++++++++++=
+++++++++++++++++++++
+> =C2=A01 file changed, 86 insertions(+)
+>
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index edb6bad..a58c415 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -203,6 +203,7 @@ struct hotkey_function_type_aa {
+> =C2=A0#define ACER_CAP_BRIGHTNESS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0(1<<3)
+> =C2=A0#define ACER_CAP_THREEG =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(1<<4)
+> =C2=A0#define ACER_CAP_ACCEL =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 (1<<5)
+> +#define ACER_CAP_ALS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 (1<<6)
+> =C2=A0#define ACER_CAP_ANY =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 (0xFFFFFFFF)
+>
+> =C2=A0/*
+> @@ -1378,6 +1379,63 @@ static void acer_backlight_exit(void)
+> =C2=A0}
+>
+> =C2=A0/*
+> + * Ambient light sensor device
+> + */
+> +static acpi_handle alsd_handle;
+> +
+> +static int acer_als_init(void)
+> +{
+> + =C2=A0 =C2=A0 =C2=A0 union acpi_object in_obj;
+> + =C2=A0 =C2=A0 =C2=A0 struct acpi_object_list params;
+> + =C2=A0 =C2=A0 =C2=A0 struct acpi_buffer out;
+> + =C2=A0 =C2=A0 =C2=A0 union acpi_object out_obj;
+> + =C2=A0 =C2=A0 =C2=A0 acpi_status status;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
+_INI", NULL, NULL);
+> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 params.count =3D 1;
+> + =C2=A0 =C2=A0 =C2=A0 params.pointer =3D &in_obj;
+> + =C2=A0 =C2=A0 =C2=A0 in_obj.type =3D ACPI_TYPE_INTEGER;
+> + =C2=A0 =C2=A0 =C2=A0 /*
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* Unknown argument of both GLOV and GUPV=
+, set to 5.
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* GLOV - G? Lower Value ?
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* GUPV - G? Upper Value ?
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
+> + =C2=A0 =C2=A0 =C2=A0 in_obj.integer.value =3D 5;
+> + =C2=A0 =C2=A0 =C2=A0 out.length =3D sizeof(out_obj);
+> + =C2=A0 =C2=A0 =C2=A0 out.pointer =3D &out_obj;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 acpi_evaluate_object(alsd_handle, "GLOV", &par=
+ams, &out);
+> + =C2=A0 =C2=A0 =C2=A0 acpi_evaluate_object(alsd_handle, "GUPV", &par=
+ams, &out);
+> +
+> + =C2=A0 =C2=A0 =C2=A0 return 0;
+> +}
+> +
+> +static ssize_t acer_als_show(struct device *dev, struct device_attri=
+bute *attr,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 char *buf)
+> +{
+> + =C2=A0 =C2=A0 =C2=A0 acpi_status status;
+> + =C2=A0 =C2=A0 =C2=A0 struct acpi_buffer output;
+> + =C2=A0 =C2=A0 =C2=A0 union acpi_object out_obj;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
+S3WK", NULL, NULL);
+> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 output.length =3D sizeof(out_obj);
+> + =C2=A0 =C2=A0 =C2=A0 output.pointer =3D &out_obj;
+> + =C2=A0 =C2=A0 =C2=A0 status =3D acpi_evaluate_object(alsd_handle, "=
+_ALI", NULL, &output);
+> + =C2=A0 =C2=A0 =C2=A0 if (ACPI_FAILURE(status))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -1;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 return sprintf(buf, "%d\n", (u16)out_obj.integ=
+er.value);
+> +}
+> +
+> +static DEVICE_ATTR(ls_switch, S_IRUGO, acer_als_show, NULL);
+> +
+> +/*
+> =C2=A0* Accelerometer device
+> =C2=A0*/
+> =C2=A0static acpi_handle gsensor_handle;
+> @@ -1856,6 +1914,21 @@ err_free_dev:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;
+> =C2=A0}
+>
+> +static int __init acer_wmi_alsd_setup(void)
+> +{
+> + =C2=A0 =C2=A0 =C2=A0 int err;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 err =3D acer_wmi_get_handle("ALSD", "ACPI0008"=
+, &alsd_handle);
+> + =C2=A0 =C2=A0 =C2=A0 if (err)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return err;
 
-> Hi Marek,
->=20
-> =E6=96=BC =E4=BA=94=EF=BC=8C2012-06-01 =E6=96=BC 19:11 +0200=EF=BC=8C=
-Marek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
->=20
-> > This is the ambient light sensor found on Iconia W500.
-> >=20
-> > Signed-off-by: Marek Vasut <marex@denx.de>
-> > Cc: joeyli <jlee@suse.com>
-> > ---
-> >=20
-> >  drivers/platform/x86/acer-wmi.c |   86
-> >  +++++++++++++++++++++++++++++++++++++++ 1 file changed, 86
-> >  insertions(+)
-> >=20
-> > diff --git a/drivers/platform/x86/acer-wmi.c
-> > b/drivers/platform/x86/acer-wmi.c index edb6bad..a58c415 100644
-> > --- a/drivers/platform/x86/acer-wmi.c
-> > +++ b/drivers/platform/x86/acer-wmi.c
-> > @@ -203,6 +203,7 @@ struct hotkey_function_type_aa {
-> >=20
-> >  #define ACER_CAP_BRIGHTNESS		(1<<3)
-> >  #define ACER_CAP_THREEG			(1<<4)
-> >  #define ACER_CAP_ACCEL			(1<<5)
-> >=20
-> > +#define ACER_CAP_ALS			(1<<6)
-> >=20
-> >  #define ACER_CAP_ANY			(0xFFFFFFFF)
-> > =20
-> >  /*
-> >=20
-> > @@ -1378,6 +1379,63 @@ static void acer_backlight_exit(void)
-> >=20
-> >  }
-> > =20
-> >  /*
-> >=20
-> > + * Ambient light sensor device
-> > + */
-> > +static acpi_handle alsd_handle;
-> > +
-> > +static int acer_als_init(void)
-> > +{
-> > +	union acpi_object in_obj;
-> > +	struct acpi_object_list params;
-> > +	struct acpi_buffer out;
-> > +	union acpi_object out_obj;
-> > +	acpi_status status;
-> > +
-> > +	status =3D acpi_evaluate_object(alsd_handle, "_INI", NULL, NULL);
-> > +	if (ACPI_FAILURE(status))
-> > +		return -1;
-> > +
-> > +	params.count =3D 1;
-> > +	params.pointer =3D &in_obj;
-> > +	in_obj.type =3D ACPI_TYPE_INTEGER;
-> > +	/*
-> > +	 * Unknown argument of both GLOV and GUPV, set to 5.
-> > +	 * GLOV - G? Lower Value ?
-> > +	 * GUPV - G? Upper Value ?
-> > +	 */
-> > +	in_obj.integer.value =3D 5;
-> > +	out.length =3D sizeof(out_obj);
-> > +	out.pointer =3D &out_obj;
-> > +
-> > +	acpi_evaluate_object(alsd_handle, "GLOV", &params, &out);
-> > +	acpi_evaluate_object(alsd_handle, "GUPV", &params, &out);
-> > +
->=20
-> GUPV/GLOV also call by _INI, why need evaluate it again?
+NACK ! This is a generic device, and should be handled by ACPI core
+(Samsung laptop have this too). See "ACPI ALS" on linux-acpi.
 
-What does _INI set them to though?
+> + =C2=A0 =C2=A0 =C2=A0 interface->capability |=3D ACER_CAP_ALS;
+> +
+> + =C2=A0 =C2=A0 =C2=A0 acer_als_init();
+> +
+> + =C2=A0 =C2=A0 =C2=A0 return 0;
+> +}
+> +
+> =C2=A0static void acer_wmi_accel_destroy(void)
+> =C2=A0{
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0input_unregister_device(acer_wmi_accel_dev=
+);
+> @@ -2020,6 +2093,9 @@ static int acer_platform_resume(struct platform=
+_device *device)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (has_cap(ACER_CAP_ACCEL))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0acer_gsensor_i=
+nit();
+>
+> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 acer_als_init();
+> +
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+> =C2=A0}
+>
+> @@ -2052,6 +2128,8 @@ static int remove_sysfs(struct platform_device =
+*device)
+> =C2=A0{
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (has_cap(ACER_CAP_THREEG))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0device_remove_=
+file(&device->dev, &dev_attr_threeg);
+> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 device_remove_file=
+(&device->dev, &dev_attr_ls_switch);
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0device_remove_file(&device->dev, &dev_attr=
+_interface);
+>
+> @@ -2069,6 +2147,13 @@ static int create_sysfs(void)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0goto error_sysfs;
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
+>
+> + =C2=A0 =C2=A0 =C2=A0 if (has_cap(ACER_CAP_ALS)) {
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 retval =3D device_=
+create_file(&acer_platform_device->dev,
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 &dev_attr_ls_switch);
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (retval)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 goto error_sysfs;
+> + =C2=A0 =C2=A0 =C2=A0 }
+> +
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0retval =3D device_create_file(&acer_platfo=
+rm_device->dev,
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&dev_attr_inte=
+rface);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (retval)
+> @@ -2198,6 +2283,7 @@ static int __init acer_wmi_init(void)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0}
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0acer_wmi_accel_setup();
+> + =C2=A0 =C2=A0 =C2=A0 acer_wmi_alsd_setup();
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D platform_driver_register(&acer_pla=
+tform_driver);
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0if (err) {
+> --
+> 1.7.10
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-dr=
+iver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =C2=A0http://vger.kernel.org/majordomo-info.ht=
+ml
 
->             Method (_INI, 0, NotSerialized)
->             {
-> ...
->                 Store (GUPV (Local1), Local2)
->                 Store (GLOV (Local1), Local3)
->=20
-> And, why use '5' to evaluate GUPV/GLOV?
 
-It seemed like the value that worked the best. I think those packages d=
-efined at=20
-the begining of the ALSD section define some kind of profiles (maybe, c=
-loudy,=20
-bright light etc). And this selects the profile.
 
->=20
-> > +	return 0;
-> > +}
-> > +
-> > +static ssize_t acer_als_show(struct device *dev, struct device_att=
-ribute
-> > *attr, +			char *buf)
-> > +{
-> > +	acpi_status status;
-> > +	struct acpi_buffer output;
-> > +	union acpi_object out_obj;
-> > +
-> > +	status =3D acpi_evaluate_object(alsd_handle, "S3WK", NULL, NULL);
-> > +	if (ACPI_FAILURE(status))
-> > +		return -1;
-> > +
->=20
-> Why need evaluate S3WK before _ALI ? Looks like this method call in S=
-3
-> resume path:
-
-It makes the sensor re-read the data and it's faster than calling _INI.
-
->  _WAK -> OEMW -> PRJW -> S3WK
->=20
-> > +	output.length =3D sizeof(out_obj);
-> > +	output.pointer =3D &out_obj;
-> > +	status =3D acpi_evaluate_object(alsd_handle, "_ALI", NULL, &outpu=
-t);
-> > +	if (ACPI_FAILURE(status))
-> > +		return -1;
-> > +
-> > +	return sprintf(buf, "%d\n", (u16)out_obj.integer.value);
-> > +}
-> > +
-> > +static DEVICE_ATTR(ls_switch, S_IRUGO, acer_als_show, NULL);
-> > +
-> > +/*
-> >=20
-> >   * Accelerometer device
-> >   */
-> > =20
-> >  static acpi_handle gsensor_handle;
-> >=20
-> > @@ -1856,6 +1914,21 @@ err_free_dev:
-> >  	return err;
-> > =20
-> >  }
-> >=20
-> > +static int __init acer_wmi_alsd_setup(void)
-> > +{
-> > +	int err;
-> > +
-> > +	err =3D acer_wmi_get_handle("ALSD", "ACPI0008", &alsd_handle);
-> > +	if (err)
-> > +		return err;
-> > +
->=20
-> Does anybody know why "introduce ACPI ALS device driver" patches from
-> Zhang Rui didn't include in acpi code base?
->=20
-> http://comments.gmane.org/gmane.linux.kernel/884328
->=20
->=20
-> There have V6 patches, but didn't see those patches show up in acpi g=
-it.
-
-Now this would be much cooler to have than this crappy hack of mine :-)
-
-> Thanks a lot!
-> Joey Lee
->=20
-
-Best regards,
-Marek Vasut
+--=20
+Corentin Chary
+http://xf.iksaif.net
