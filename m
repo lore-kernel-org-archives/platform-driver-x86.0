@@ -1,334 +1,62 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 1/2] ACER: Add support for accelerometer sensor
-Date: Wed, 06 Jun 2012 08:15:22 +0800
-Message-ID: <1338941722.6374.154.camel@linux-s257.site>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH 2/2] ACER: Add support for ambient light sensor
+Date: Wed, 06 Jun 2012 09:22:35 +0800
+Message-ID: <1338945755.1492.20.camel@rui.sh.intel.com>
 References: <1338570683-16491-1-git-send-email-marex@denx.de>
-	 <1338798193.6374.51.camel@linux-s257.site>
-	 <201206060052.38133.marex@denx.de>
+	 <201206041914.00536.marex@denx.de>
+	 <CAHR064jYAFd06VYZvi90xZCyJCKEmEdKkmrim9mEn584CqRmzw@mail.gmail.com>
+	 <201206060055.59421.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nat.nue.novell.com ([195.135.221.2]:36156 "EHLO
-	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754036Ab2FFAUO (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:14744 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752203Ab2FFBVE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Jun 2012 20:20:14 -0400
-In-Reply-To: <201206060052.38133.marex@denx.de>
+	Tue, 5 Jun 2012 21:21:04 -0400
+In-Reply-To: <201206060055.59421.marex@denx.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Marek Vasut <marex@denx.de>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>, Len Brown <len.brown@intel.com>, pavel@denx.de
 
-Hi Marek,=20
-
-=E6=96=BC =E4=B8=89=EF=BC=8C2012-06-06 =E6=96=BC 00:52 +0200=EF=BC=8CMa=
-rek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
-> Dear joeyli,
+On =E4=B8=89, 2012-06-06 at 00:55 +0200, Marek Vasut wrote:
+> Dear Corentin Chary,
 >=20
-> > =E6=96=BC =E4=BA=94=EF=BC=8C2012-06-01 =E6=96=BC 19:11 +0200=EF=BC=8C=
-Marek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
-> >=20
-> > > This device is present on Iconia Tab W500.
-> > >=20
-> > > Signed-off-by: Marek Vasut <marex@denx.de>
-> > > Cc: joeyli <jlee@suse.com>
-> >=20
-> > This patch is good to me!
+> [...]
 >=20
-> Thanks for your help and guidance throughout the process. Now who'll =
-apply it=20
-> and when can I expect it in -next or somewhere (where?)?
+> > >> This is a generic device, and should be handled by ACPI core
+> > >> (Samsung laptop have this too). See "ACPI ALS" on linux-acpi.
+> > >=20
+> > > Saying this would be enough. Lee explained to me what this ACPI00=
+08
+> > > means, I'm quite new to the ACPI land so pardon my ignorance here=
+=2E But
+> > > it then boils down to Lee's question, why wasn't the patch for AC=
+PI ALS
+> > > that was already proposed accepted? And what can be done to get i=
+t in?
+> >=20
+> > Yep, I've seen Lee's message latter. Regarding ACPI ALS status, it =
+was
+> > forgotten for a long time, and recently Zhang Rui told that he will
+> > take another look at it, but nothing sure. If you want to know more
+> > about the status, you can do a quick search on gmane using "ACPI AL=
+S"
+> > query on linux.acpi
 >=20
-> > Acked-by: Lee, Chun-Yi <jlee@suse.com>
-> >=20
-
-Wait Matthew apply patch to platform driver git.
-
-He already sent merge request to Linus and merged to v3.5-rc1 kernel.
-I think need wait v3.6.
-
-
-Thanks
-Joey Lee
-
-> >=20
-> > Thanks a lot!
-> > Joey Lee
-> >=20
-> > > ---
-> > >=20
-> > >  drivers/platform/x86/acer-wmi.c |  138
-> > >  +++++++++++++++++++++++++++++++++++++++ 1 file changed, 138
-> > >  insertions(+)
-> > >=20
-> > > diff --git a/drivers/platform/x86/acer-wmi.c
-> > > b/drivers/platform/x86/acer-wmi.c index c1a3fd8..edb6bad 100644
-> > > --- a/drivers/platform/x86/acer-wmi.c
-> > > +++ b/drivers/platform/x86/acer-wmi.c
-> > > @@ -95,6 +95,7 @@
-> > > MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
-> > >=20
-> > >  enum acer_wmi_event_ids {
-> > > =20
-> > >  	WMID_HOTKEY_EVENT =3D 0x1,
-> > >=20
-> > > +	WMID_ACCEL_EVENT =3D 0x5,
-> > >=20
-> > >  };
-> > > =20
-> > >  static const struct key_entry acer_wmi_keymap[] =3D {
-> > >=20
-> > > @@ -130,6 +131,7 @@ static const struct key_entry acer_wmi_keymap=
-[] =3D {
-> > >=20
-> > >  };
-> > > =20
-> > >  static struct input_dev *acer_wmi_input_dev;
-> > >=20
-> > > +static struct input_dev *acer_wmi_accel_dev;
-> > >=20
-> > >  struct event_return_value {
-> > > =20
-> > >  	u8 function;
-> > >=20
-> > > @@ -200,6 +202,7 @@ struct hotkey_function_type_aa {
-> > >=20
-> > >  #define ACER_CAP_BLUETOOTH		(1<<2)
-> > >  #define ACER_CAP_BRIGHTNESS		(1<<3)
-> > >  #define ACER_CAP_THREEG			(1<<4)
-> > >=20
-> > > +#define ACER_CAP_ACCEL			(1<<5)
-> > >=20
-> > >  #define ACER_CAP_ANY			(0xFFFFFFFF)
-> > > =20
-> > >  /*
-> > >=20
-> > > @@ -1375,6 +1378,60 @@ static void acer_backlight_exit(void)
-> > >=20
-> > >  }
-> > > =20
-> > >  /*
-> > >=20
-> > > + * Accelerometer device
-> > > + */
-> > > +static acpi_handle gsensor_handle;
-> > > +
-> > > +static int acer_gsensor_init(void)
-> > > +{
-> > > +	acpi_status status;
-> > > +	struct acpi_buffer output;
-> > > +	union acpi_object out_obj;
-> > > +
-> > > +	output.length =3D sizeof(out_obj);
-> > > +	output.pointer =3D &out_obj;
-> > > +	status =3D acpi_evaluate_object(gsensor_handle, "_INI", NULL, &=
-output);
-> > > +	if (ACPI_FAILURE(status))
-> > > +		return -1;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int acer_gsensor_open(struct input_dev *input)
-> > > +{
-> > > +	return acer_gsensor_init();
-> > > +}
-> > > +
-> > > +static int acer_gsensor_event(void)
-> > > +{
-> > > +	acpi_status status;
-> > > +	struct acpi_buffer output;
-> > > +	union acpi_object out_obj[5];
-> > > +
-> > > +	if (!has_cap(ACER_CAP_ACCEL))
-> > > +		return -1;
-> > > +
-> > > +	output.length =3D sizeof(out_obj);
-> > > +	output.pointer =3D out_obj;
-> > > +
-> > > +	status =3D acpi_evaluate_object(gsensor_handle, "RDVL", NULL, &=
-output);
-> > > +	if (ACPI_FAILURE(status))
-> > > +		return -1;
-> > > +
-> > > +	if (out_obj->package.count !=3D 4)
-> > > +		return -1;
-> > > +
-> > > +	input_report_abs(acer_wmi_accel_dev, ABS_X,
-> > > +		(s16)out_obj->package.elements[0].integer.value);
-> > > +	input_report_abs(acer_wmi_accel_dev, ABS_Y,
-> > > +		(s16)out_obj->package.elements[1].integer.value);
-> > > +	input_report_abs(acer_wmi_accel_dev, ABS_Z,
-> > > +		(s16)out_obj->package.elements[2].integer.value);
-> > > +	input_sync(acer_wmi_accel_dev);
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/*
-> > >=20
-> > >   * Rfkill devices
-> > >   */
-> > > =20
-> > >  static void acer_rfkill_update(struct work_struct *ignored);
-> > >=20
-> > > @@ -1649,6 +1706,9 @@ static void acer_wmi_notify(u32 value, void
-> > > *context)
-> > >=20
-> > >  						   1, true);
-> > >  	=09
-> > >  		}
-> > >  		break;
-> > >=20
-> > > +	case WMID_ACCEL_EVENT:
-> > > +		acer_gsensor_event();
-> > > +		break;
-> > >=20
-> > >  	default:
-> > >  		pr_warn("Unknown function number - %d - %d\n",
-> > >  	=09
-> > >  			return_value.function, return_value.key_num);
-> > >=20
-> > > @@ -1734,6 +1794,74 @@ static int acer_wmi_enable_lm(void)
-> > >=20
-> > >  	return status;
-> > > =20
-> > >  }
-> > >=20
-> > > +static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah,=
- u32
-> > > level, +						void *ctx, void=20
-> **retval)
-> > > +{
-> > > +	*(acpi_handle *)retval =3D ah;
-> > > +	return AE_OK;
-> > > +}
-> > > +
-> > > +static int __init acer_wmi_get_handle(const char *name, const ch=
-ar
-> > > *prop, +					acpi_handle *ah)
-> > > +{
-> > > +	acpi_status status;
-> > > +	acpi_handle handle;
-> > > +
-> > > +	BUG_ON(!name || !ah);
-> > > +
-> > > +	handle =3D 0;
-> > > +	status =3D acpi_get_devices(prop, acer_wmi_get_handle_cb,
-> > > +					(void *)name, &handle);
-> > > +
-> > > +	if (ACPI_SUCCESS(status)) {
-> > > +		*ah =3D handle;
-> > > +		return 0;
-> > > +	} else {
-> > > +		return -ENODEV;
-> > > +	}
-> > > +}
-> > > +
-> > > +static int __init acer_wmi_accel_setup(void)
-> > > +{
-> > > +	int err;
-> > > +
-> > > +	err =3D acer_wmi_get_handle("SENR", "BST0001", &gsensor_handle)=
-;
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	interface->capability |=3D ACER_CAP_ACCEL;
-> > > +
-> > > +	acer_wmi_accel_dev =3D input_allocate_device();
-> > > +	if (!acer_wmi_accel_dev)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	acer_wmi_accel_dev->open =3D acer_gsensor_open;
-> > > +
-> > > +	acer_wmi_accel_dev->name =3D "Acer BMA150 accelerometer";
-> > > +	acer_wmi_accel_dev->phys =3D "wmi/input1";
-> > > +	acer_wmi_accel_dev->id.bustype =3D BUS_HOST;
-> > > +	acer_wmi_accel_dev->evbit[0] =3D BIT_MASK(EV_ABS);
-> > > +	input_set_abs_params(acer_wmi_accel_dev, ABS_X, -16384, 16384, =
-0, 0);
-> > > +	input_set_abs_params(acer_wmi_accel_dev, ABS_Y, -16384, 16384, =
-0, 0);
-> > > +	input_set_abs_params(acer_wmi_accel_dev, ABS_Z, -16384, 16384, =
-0, 0);
-> > > +
-> > > +	err =3D input_register_device(acer_wmi_accel_dev);
-> > > +	if (err)
-> > > +		goto err_free_dev;
-> > > +
-> > > +	return 0;
-> > > +
-> > > +err_free_dev:
-> > > +	input_free_device(acer_wmi_accel_dev);
-> > > +	return err;
-> > > +}
-> > > +
-> > > +static void acer_wmi_accel_destroy(void)
-> > > +{
-> > > +	input_unregister_device(acer_wmi_accel_dev);
-> > > +	input_free_device(acer_wmi_accel_dev);
-> > > +}
-> > > +
-> > >=20
-> > >  static int __init acer_wmi_input_setup(void)
-> > >  {
-> > > =20
-> > >  	acpi_status status;
-> > >=20
-> > > @@ -1889,6 +2017,9 @@ static int acer_platform_resume(struct
-> > > platform_device *device)
-> > >=20
-> > >  	if (has_cap(ACER_CAP_BRIGHTNESS))
-> > >  =09
-> > >  		set_u32(data->brightness, ACER_CAP_BRIGHTNESS);
-> > >=20
-> > > +	if (has_cap(ACER_CAP_ACCEL))
-> > > +		acer_gsensor_init();
-> > > +
-> > >=20
-> > >  	return 0;
-> > > =20
-> > >  }
-> > >=20
-> > > @@ -2066,6 +2197,8 @@ static int __init acer_wmi_init(void)
-> > >=20
-> > >  			return err;
-> > >  =09
-> > >  	}
-> > >=20
-> > > +	acer_wmi_accel_setup();
-> > > +
-> > >=20
-> > >  	err =3D platform_driver_register(&acer_platform_driver);
-> > >  	if (err) {
-> > >  =09
-> > >  		pr_err("Unable to register platform driver\n");
-> > >=20
-> > > @@ -2109,6 +2242,8 @@ error_device_alloc:
-> > >  error_platform_register:
-> > >  	if (wmi_has_guid(ACERWMID_EVENT_GUID))
-> > >  =09
-> > >  		acer_wmi_input_destroy();
-> > >=20
-> > > +	if (has_cap(ACER_CAP_ACCEL))
-> > > +		acer_wmi_accel_destroy();
-> > >=20
-> > >  	return err;
-> > > =20
-> > >  }
-> > >=20
-> > > @@ -2118,6 +2253,9 @@ static void __exit acer_wmi_exit(void)
-> > >=20
-> > >  	if (wmi_has_guid(ACERWMID_EVENT_GUID))
-> > >  =09
-> > >  		acer_wmi_input_destroy();
-> > >=20
-> > > +	if (has_cap(ACER_CAP_ACCEL))
-> > > +		acer_wmi_accel_destroy();
-> > > +
-> > >=20
-> > >  	remove_sysfs(acer_platform_device);
-> > >  	remove_debugfs();
-> > >  	platform_device_unregister(acer_platform_device);
+> Actually, going through the ACPI0008 patch, I see it introduced new s=
+ysfs class.=20
+> Maybe we should rather integrate it with Linux-IIO these days?
 >=20
+yes.
+please refer to this thread
+http://marc.info/?l=3Dlinux-acpi&m=3D132060809120911&w=3D2
+
+I do not have time to do this right now, and it will be great if you ar=
+e
+interested in introducing the ACPI ALS driver.
+
+thanks,
+rui
