@@ -1,87 +1,86 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 5/7] sony-laptop: input initialization should be done before SNC
-Date: Sat,  9 Jun 2012 13:18:12 +0900
-Message-ID: <1339215494-4020-6-git-send-email-malattia@linux.it>
+Subject: [PATCH 3/7] sony-laptop: store battery care limits on batteries
+Date: Sat,  9 Jun 2012 13:18:10 +0900
+Message-ID: <1339215494-4020-4-git-send-email-malattia@linux.it>
 References: <20120531220257.GA3986@kamineko.org>
  <1339215494-4020-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:33919 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:33917 "EHLO
 	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750823Ab2FIESh (ORCPT
+	with ESMTP id S1750708Ab2FIESg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 9 Jun 2012 00:18:37 -0400
+	Sat, 9 Jun 2012 00:18:36 -0400
 In-Reply-To: <1339215494-4020-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
 Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-SNC needs input devices so better have those ready before starting
-handle events.
+Some models offer the option to store the limits on the battery
+(firmware?).
 
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c |   25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ drivers/platform/x86/sony-laptop.c |   41 ++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index ec7f4e0..534c295 100644
+index 4f42e56..5d8f3fa 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -2642,6 +2642,12 @@ static int sony_nc_add(struct acpi_device *device)
- 		}
- 	}
+@@ -1916,32 +1916,33 @@ static ssize_t sony_nc_battery_care_limit_store(struct device *dev,
+ 	 *  bits 4,5: store the limit into the EC
+ 	 *  bits 6,7: store the limit into the battery
+ 	 */
++	cmd = 0;
  
-+	result = sony_laptop_setup_input(device);
-+	if (result) {
-+		pr_err("Unable to create input devices\n");
-+		goto outplatform;
+-	/*
+-	 * handle 0x0115 should allow storing on battery too;
+-	 * handle 0x0136 same as 0x0115 + health status;
+-	 * handle 0x013f, same as 0x0136 but no storing on the battery
+-	 *
+-	 * Store only inside the EC for now, regardless the handle number
+-	 */
+-	if (value == 0)
+-		/* disable limits */
+-		cmd = 0x0;
++	if (value > 0) {
++		if (value <= 50)
++			cmd = 0x20;
+ 
+-	else if (value <= 50)
+-		cmd = 0x21;
++		else if (value <= 80)
++			cmd = 0x10;
+ 
+-	else if (value <= 80)
+-		cmd = 0x11;
++		else if (value <= 100)
++			cmd = 0x30;
++
++		else
++			return -EINVAL;
+ 
+-	else if (value <= 100)
+-		cmd = 0x31;
++		/*
++		 * handle 0x0115 should allow storing on battery too;
++		 * handle 0x0136 same as 0x0115 + health status;
++		 * handle 0x013f, same as 0x0136 but no storing on the battery
++		 */
++		if (bcare_ctl->handle != 0x013f)
++			cmd = cmd | (cmd << 2);
+ 
+-	else
+-		return -EINVAL;
++		cmd = (cmd << 0x10) | 1;
 +	}
-+
- 	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "ECON",
- 					 &handle))) {
- 		int arg = 1;
-@@ -2659,12 +2665,6 @@ static int sony_nc_add(struct acpi_device *device)
- 	}
  
- 	/* setup input devices and helper fifo */
--	result = sony_laptop_setup_input(device);
--	if (result) {
--		pr_err("Unable to create input devices\n");
--		goto outsnc;
--	}
--
- 	if (acpi_video_backlight_support()) {
- 		pr_info("brightness ignored, must be controlled by ACPI video driver\n");
- 	} else {
-@@ -2712,22 +2712,21 @@ static int sony_nc_add(struct acpi_device *device)
+-	if (sony_call_snc_handle(bcare_ctl->handle, (cmd << 0x10) | 0x0100,
+-				&result))
++	if (sony_call_snc_handle(bcare_ctl->handle, cmd | 0x0100, &result))
+ 		return -EIO;
  
- 	return 0;
- 
--      out_sysfs:
-+out_sysfs:
- 	for (item = sony_nc_values; item->name; ++item) {
- 		device_remove_file(&sony_pf_device->dev, &item->devattr);
- 	}
- 	sony_nc_backlight_cleanup();
--
--	sony_laptop_remove_input();
--
--      outsnc:
- 	sony_nc_function_cleanup(sony_pf_device);
- 	sony_nc_handles_cleanup(sony_pf_device);
- 
--      outpresent:
-+outplatform:
-+	sony_laptop_remove_input();
-+
-+outpresent:
- 	sony_pf_remove();
- 
--      outwalk:
-+outwalk:
- 	sony_nc_rfkill_cleanup();
- 	return result;
- }
+ 	return count;
 -- 
 1.7.10
