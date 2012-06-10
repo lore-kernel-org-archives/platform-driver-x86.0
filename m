@@ -1,54 +1,91 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 7/7] sony-laptop: fix a couple signedness bugs
-Date: Sat,  9 Jun 2012 13:18:14 +0900
-Message-ID: <1339215494-4020-8-git-send-email-malattia@linux.it>
-References: <20120531220257.GA3986@kamineko.org>
- <1339215494-4020-1-git-send-email-malattia@linux.it>
+Subject: [PATCH 3/7 v2] sony-laptop: store battery care limits on batteries
+Date: Mon, 11 Jun 2012 07:18:31 +0900
+Message-ID: <1339366711-5773-1-git-send-email-malattia@linux.it>
+References: <1339215494-4020-4-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:33920 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:40232 "EHLO
 	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750837Ab2FIESi (ORCPT
+	with ESMTP id S1752803Ab2FJWSn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 9 Jun 2012 00:18:38 -0400
-In-Reply-To: <1339215494-4020-1-git-send-email-malattia@linux.it>
+	Sun, 10 Jun 2012 18:18:43 -0400
+In-Reply-To: <1339215494-4020-4-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>, Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+Some models offer the option to store the limits on the battery
+(firmware?).
 
-This needs to be signed to handle negative error codes.
-Remove a redundant check, read_limits is always called with a valid
-handle.
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+
+Hi Matthew,
+please ignore the previous one as it had a bug, this one is good.
+Thanks!
+
+---
+ drivers/platform/x86/sony-laptop.c |   41 ++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 6123987..3fc92fa 100644
+index 4f42e56..f045e3e 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -2139,7 +2139,7 @@ static ssize_t sony_nc_thermal_mode_show(struct device *dev,
- 		struct device_attribute *attr, char *buffer)
- {
- 	ssize_t count = 0;
--	unsigned int mode = sony_nc_thermal_mode_get();
-+	int mode = sony_nc_thermal_mode_get();
+@@ -1916,32 +1916,33 @@ static ssize_t sony_nc_battery_care_limit_store(struct device *dev,
+ 	 *  bits 4,5: store the limit into the EC
+ 	 *  bits 6,7: store the limit into the battery
+ 	 */
++	cmd = 0;
  
- 	if (mode < 0)
- 		return mode;
-@@ -2507,8 +2507,6 @@ static void sony_nc_backlight_ng_read_limits(int handle,
- 	props->maxlvl = 0xff;
+-	/*
+-	 * handle 0x0115 should allow storing on battery too;
+-	 * handle 0x0136 same as 0x0115 + health status;
+-	 * handle 0x013f, same as 0x0136 but no storing on the battery
+-	 *
+-	 * Store only inside the EC for now, regardless the handle number
+-	 */
+-	if (value == 0)
+-		/* disable limits */
+-		cmd = 0x0;
++	if (value > 0) {
++		if (value <= 50)
++			cmd = 0x20;
  
- 	offset = sony_find_snc_handle(handle);
--	if (offset < 0)
--		return;
+-	else if (value <= 50)
+-		cmd = 0x21;
++		else if (value <= 80)
++			cmd = 0x10;
  
- 	/* try to read the boundaries from ACPI tables, if we fail the above
- 	 * defaults should be reasonable
+-	else if (value <= 80)
+-		cmd = 0x11;
++		else if (value <= 100)
++			cmd = 0x30;
++
++		else
++			return -EINVAL;
+ 
+-	else if (value <= 100)
+-		cmd = 0x31;
++		/*
++		 * handle 0x0115 should allow storing on battery too;
++		 * handle 0x0136 same as 0x0115 + health status;
++		 * handle 0x013f, same as 0x0136 but no storing on the battery
++		 */
++		if (bcare_ctl->handle != 0x013f)
++			cmd = cmd | (cmd << 2);
+ 
+-	else
+-		return -EINVAL;
++		cmd = (cmd | 0x1) << 0x10;
++	}
+ 
+-	if (sony_call_snc_handle(bcare_ctl->handle, (cmd << 0x10) | 0x0100,
+-				&result))
++	if (sony_call_snc_handle(bcare_ctl->handle, cmd | 0x0100, &result))
+ 		return -EIO;
+ 
+ 	return count;
 -- 
 1.7.10
