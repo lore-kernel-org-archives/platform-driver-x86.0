@@ -1,91 +1,47 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 3/7 v2] sony-laptop: store battery care limits on batteries
-Date: Mon, 11 Jun 2012 07:18:31 +0900
-Message-ID: <1339366711-5773-1-git-send-email-malattia@linux.it>
-References: <1339215494-4020-4-git-send-email-malattia@linux.it>
+From: Jesper Juhl <jj@chaosbits.net>
+Subject: Re: drivers/platform/x86/amilo-rfkill.c::amilo_rfkill_probe() avoid
+ NULL deref
+Date: Mon, 11 Jun 2012 22:36:24 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1206112231280.32000@swampdragon.chaosbits.net>
+References: <1337654855.11796.8.camel@deadeye>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:40232 "EHLO
-	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752803Ab2FJWSn (ORCPT
+Received: from swampdragon.chaosbits.net ([90.184.90.115]:26847 "EHLO
+	swampdragon.chaosbits.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752138Ab2FKUg0 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 10 Jun 2012 18:18:43 -0400
-In-Reply-To: <1339215494-4020-4-git-send-email-malattia@linux.it>
+	Mon, 11 Jun 2012 16:36:26 -0400
+In-Reply-To: <1337654855.11796.8.camel@deadeye>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: platform-driver-x86@vger.kernel.org
 
-Some models offer the option to store the limits on the battery
-(firmware?).
+On Tue, 22 May 2012, Ben Hutchings wrote:
 
-Signed-off-by: Mattia Dongili <malattia@linux.it>
----
+> I don't understand this change:
+> 
+> commit 41603e9783a24c8c7cce548c0819bdc9e46a585b
+> Author: Jesper Juhl <jj@chaosbits.net>
+> Date:   Fri Mar 23 01:08:34 2012 +0100
+> 
+>     drivers/platform/x86/amilo-rfkill.c::amilo_rfkill_probe() avoid NULL deref
+> 
+> amilo_rfkill_init() checks that dmi_first_match() does not return NULL,
+> before registering the platform driver.  So why would it return NULL
+> when called by amilo_rfkill_probe()?
+> 
+To be completely honest - I don't (currently) know.
+When I did the patch I was convinced that it made sense and that I could 
+prove that - now I can't.  So I must either have been drunk or delusional 
+at the time...
 
-Hi Matthew,
-please ignore the previous one as it had a bug, this one is good.
-Thanks!
+Seriously; I really don't know. I remember crafting the patch after 
+reading some coverity reports and reading the source and thinking "this 
+makes sense"... Now, when I read it again, it does not..
 
----
- drivers/platform/x86/sony-laptop.c |   41 ++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 4f42e56..f045e3e 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1916,32 +1916,33 @@ static ssize_t sony_nc_battery_care_limit_store(struct device *dev,
- 	 *  bits 4,5: store the limit into the EC
- 	 *  bits 6,7: store the limit into the battery
- 	 */
-+	cmd = 0;
- 
--	/*
--	 * handle 0x0115 should allow storing on battery too;
--	 * handle 0x0136 same as 0x0115 + health status;
--	 * handle 0x013f, same as 0x0136 but no storing on the battery
--	 *
--	 * Store only inside the EC for now, regardless the handle number
--	 */
--	if (value == 0)
--		/* disable limits */
--		cmd = 0x0;
-+	if (value > 0) {
-+		if (value <= 50)
-+			cmd = 0x20;
- 
--	else if (value <= 50)
--		cmd = 0x21;
-+		else if (value <= 80)
-+			cmd = 0x10;
- 
--	else if (value <= 80)
--		cmd = 0x11;
-+		else if (value <= 100)
-+			cmd = 0x30;
-+
-+		else
-+			return -EINVAL;
- 
--	else if (value <= 100)
--		cmd = 0x31;
-+		/*
-+		 * handle 0x0115 should allow storing on battery too;
-+		 * handle 0x0136 same as 0x0115 + health status;
-+		 * handle 0x013f, same as 0x0136 but no storing on the battery
-+		 */
-+		if (bcare_ctl->handle != 0x013f)
-+			cmd = cmd | (cmd << 2);
- 
--	else
--		return -EINVAL;
-+		cmd = (cmd | 0x1) << 0x10;
-+	}
- 
--	if (sony_call_snc_handle(bcare_ctl->handle, (cmd << 0x10) | 0x0100,
--				&result))
-+	if (sony_call_snc_handle(bcare_ctl->handle, cmd | 0x0100, &result))
- 		return -EIO;
- 
- 	return count;
 -- 
-1.7.10
+Jesper Juhl <jj@chaosbits.net>       http://www.chaosbits.net/
+Don't top-post http://www.catb.org/jargon/html/T/top-post.html
+Plain text mails only, please.
