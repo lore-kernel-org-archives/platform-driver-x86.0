@@ -1,52 +1,116 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] ideapad: uninitialized data in ideapad_acpi_add()
-Date: Tue, 12 Jun 2012 19:28:50 +0300
-Message-ID: <20120612162850.GB11077@elgon.mountain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: [PATCH 1/7] acpi: add a way to promote/demote vendor backlight drivers
+Date: Wed, 13 Jun 2012 09:32:01 +0200
+Message-ID: <1339572727-24744-2-git-send-email-corentin.chary@gmail.com>
+References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet15.oracle.com ([148.87.113.117]:40721 "EHLO
-	rcsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753572Ab2FLQ3F (ORCPT
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:60350 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750778Ab2FMHcQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jun 2012 12:29:05 -0400
-Content-Disposition: inline
+	Wed, 13 Jun 2012 03:32:16 -0400
+In-Reply-To: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, linux-kernel@vger.kernel.org
 
-We only initialize the high bits of "cfg".  It probably doesn't cause
-a problem given that this is platform specific code and doesn't have to
-worry about endianness etc.  But it's sort of messy.
+Instead of adding a big blacklist in video_detect.c to set
+ACPI_VIDEO_BACKLIGHT_DMI_VENDOR correctly, let external modules
+promote or demote themselves when they know the generic video
+module won't work.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Currently drivers where using acpi_video_unregister() directly
+but:
+- That didn't respect any acpi_backlight=[video|vendor] parameter
+  provided by the user.
+- Any later call to acpi_video_register() would still re-load the
+  generic video module (and some gpu drivers are doing that).
+
+This patch fix those two issues.
+
+Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
-This is a static checker fix and I don't have the hardware.  Sorry.
+ drivers/acpi/video_detect.c |   31 +++++++++++++++++++++++++++++--
+ include/linux/acpi.h        |   10 ++++++++++
+ 2 files changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 4f20f8d..17f6dfd 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -694,10 +694,10 @@ MODULE_DEVICE_TABLE(acpi, ideapad_device_ids);
- static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 45d8097..942fa2a 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -182,8 +182,7 @@ long acpi_video_get_capabilities(acpi_handle graphics_handle)
+ }
+ EXPORT_SYMBOL(acpi_video_get_capabilities);
+ 
+-/* Returns true if video.ko can do backlight switching */
+-int acpi_video_backlight_support(void)
++static void acpi_video_caps_check(void)
  {
- 	int ret, i;
--	unsigned long cfg;
-+	int cfg;
- 	struct ideapad_private *priv;
+ 	/*
+ 	 * We must check whether the ACPI graphics device is physically plugged
+@@ -191,6 +190,34 @@ int acpi_video_backlight_support(void)
+ 	 */
+ 	if (!acpi_video_caps_checked)
+ 		acpi_video_get_capabilities(NULL);
++}
++
++/* Promote the vendor interface instead of the generic video module.
++ * This function allow DMI blacklists to be implemented by externals
++ * platform drivers instead of putting a big blacklist in video_detect.c
++ * After calling this function you will probably want to call
++ * acpi_video_unregister() to make sure the video module is not loaded
++ */
++void acpi_video_dmi_promote_vendor(void)
++{
++	acpi_video_caps_check();
++	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++}
++EXPORT_SYMBOL(acpi_video_dmi_promote_vendor);
++
++/* To be called when a driver who previously promoted the vendor
++ * interface */
++void acpi_video_dmi_demote_vendor(void)
++{
++	acpi_video_caps_check();
++	acpi_video_support &= ~ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
++}
++EXPORT_SYMBOL(acpi_video_dmi_demote_vendor);
++
++/* Returns true if video.ko can do backlight switching */
++int acpi_video_backlight_support(void)
++{
++	acpi_video_caps_check();
  
--	if (read_method_int(adevice->handle, "_CFG", (int *)&cfg))
-+	if (read_method_int(adevice->handle, "_CFG", &cfg))
- 		return -ENODEV;
+ 	/* First check for boot param -> highest prio */
+ 	if (acpi_video_support & ACPI_VIDEO_BACKLIGHT_FORCE_VENDOR)
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index f421dd8..27ab201 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -190,6 +190,8 @@ extern bool wmi_has_guid(const char *guid);
  
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-@@ -721,7 +721,7 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
- 		goto input_failed;
+ extern long acpi_video_get_capabilities(acpi_handle graphics_dev_handle);
+ extern long acpi_is_video_device(struct acpi_device *device);
++extern void acpi_video_dmi_promote_vendor(void);
++extern void acpi_video_dmi_demote_vendor(void);
+ extern int acpi_video_backlight_support(void);
+ extern int acpi_video_display_switch_support(void);
  
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++) {
--		if (test_bit(ideapad_rfk_data[i].cfgbit, &cfg))
-+		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
- 			ideapad_register_rfkill(adevice, i);
- 		else
- 			priv->rfk[i] = NULL;
+@@ -205,6 +207,14 @@ static inline long acpi_is_video_device(struct acpi_device *device)
+ 	return 0;
+ }
+ 
++static inline void acpi_video_dmi_promote_vendor(void)
++{
++}
++
++static inline void acpi_video_dmi_demote_vendor(void)
++{
++}
++
+ static inline int acpi_video_backlight_support(void)
+ {
+ 	return 0;
+-- 
+1.7.9.5
