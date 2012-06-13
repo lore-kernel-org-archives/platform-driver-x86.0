@@ -1,128 +1,88 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 2/7] drivers-platform-x86: use acpi_video_dmi_promote_vendor()
-Date: Wed, 13 Jun 2012 09:32:02 +0200
-Message-ID: <1339572727-24744-3-git-send-email-corentin.chary@gmail.com>
-References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
-
-Instead of using directly acpi_video_unregister(), use
-acpi_video_dmi_promote_vendor() (and make it call
-acpi_video_unregister() if needed)
+Subject: [PATCH] platform-drivers-x86: change my mail
+Date: Wed, 13 Jun 2012 09:33:04 +0200
+Message-ID: <1339572784-24805-1-git-send-email-corentin.chary@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-we0-f174.google.com ([74.125.82.174]:44242 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753232Ab2FMHdJ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 13 Jun 2012 03:33:09 -0400
+Received: by weyu7 with SMTP id u7so259098wey.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Jun 2012 00:33:08 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
 
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/acer-wmi.c       |   16 +++++++++-------
- drivers/platform/x86/apple-gmux.c     |    6 ++++++
- drivers/platform/x86/samsung-laptop.c |   22 ++++++++++++----------
- 3 files changed, 27 insertions(+), 17 deletions(-)
+ MAINTAINERS                        |    4 ++--
+ drivers/platform/x86/asus-nb-wmi.c |    2 +-
+ drivers/platform/x86/asus-wmi.c    |    2 +-
+ drivers/platform/x86/eeepc-wmi.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index ce875dc..ffc53df 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -2060,14 +2060,16 @@ static int __init acer_wmi_init(void)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8cad55b..e03579a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1190,7 +1190,7 @@ F:	Documentation/hwmon/asc7621
+ F:	drivers/hwmon/asc7621.c
  
- 	set_quirks();
+ ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
+-M:	Corentin Chary <corentincj@iksaif.net>
++M:	Corentin Chary <corentin.chary@gmail.com>
+ L:	acpi4asus-user@lists.sourceforge.net
+ L:	platform-driver-x86@vger.kernel.org
+ W:	http://acpi4asus.sf.net
+@@ -5825,7 +5825,7 @@ F:	drivers/media/video/*7146*
+ F:	include/media/*7146*
  
-+	if (dmi_check_system(video_vendor_dmi_table))
-+		acpi_video_dmi_promote_vendor();
- 	if (acpi_video_backlight_support()) {
--		if (dmi_check_system(video_vendor_dmi_table)) {
--			acpi_video_unregister();
--		} else {
--			interface->capability &= ~ACER_CAP_BRIGHTNESS;
--			pr_info("Brightness must be controlled by "
--				"acpi video driver\n");
--		}
-+		interface->capability &= ~ACER_CAP_BRIGHTNESS;
-+		pr_info("Brightness must be controlled by acpi video driver\n");
-+	} else {
-+#ifdef CONFIG_ACPI_VIDEO
-+		pr_info("Disabling ACPI video driver\n");
-+		acpi_video_unregister();
-+#endif
- 	}
+ SAMSUNG LAPTOP DRIVER
+-M:	Corentin Chary <corentincj@iksaif.net>
++M:	Corentin Chary <corentin.chary@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/samsung-laptop.c
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 99a30b5..fd033b7 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -31,7 +31,7 @@
  
- 	if (wmi_has_guid(WMID_GUID3)) {
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 694a15a..905fa01 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -193,7 +193,10 @@ static int __devinit gmux_probe(struct pnp_dev *pnp,
- 	 * backlight control and supports more levels than other options.
- 	 * Disable the other backlight choices.
- 	 */
-+	acpi_video_dmi_promote_vendor();
-+#ifdef CONFIG_ACPI_VIDEO
- 	acpi_video_unregister();
-+#endif
- 	apple_bl_unregister();
+ #define	ASUS_NB_WMI_FILE	"asus-nb-wmi"
  
- 	return 0;
-@@ -213,7 +216,10 @@ static void __devexit gmux_remove(struct pnp_dev *pnp)
- 	release_region(gmux_data->iostart, gmux_data->iolen);
- 	kfree(gmux_data);
+-MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>");
++MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
+ MODULE_DESCRIPTION("Asus Notebooks WMI Hotkey Driver");
+ MODULE_LICENSE("GPL");
  
-+	acpi_video_dmi_demote_vendor();
-+#ifdef CONFIG_ACPI_VIDEO
- 	acpi_video_register();
-+#endif
- 	apple_bl_register();
- }
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index c4d9b0e..4445dbe 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -53,7 +53,7 @@
  
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index e2a34b4..2cbccc1 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -26,7 +26,7 @@
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
- #include <linux/ctype.h>
--#if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
-+#ifdef CONFIG_ACPI_VIDEO
- #include <acpi/video.h>
- #endif
+ #include "asus-wmi.h"
  
-@@ -1530,15 +1530,18 @@ static int __init samsung_init(void)
- 	samsung->quirks = quirks;
+-MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>, "
++MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>, "
+ 	      "Yong Wang <yong.y.wang@intel.com>");
+ MODULE_DESCRIPTION("Asus Generic WMI Driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 5838332..60cb76a 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -39,7 +39,7 @@
  
+ #define	EEEPC_WMI_FILE	"eeepc-wmi"
  
--#if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
-+#ifdef CONFIG_ACPI
-+	if (samsung->quirks->broken_acpi_video)
-+		acpi_video_dmi_promote_vendor();
-+
- 	/* Don't handle backlight here if the acpi video already handle it */
- 	if (acpi_video_backlight_support()) {
--		if (samsung->quirks->broken_acpi_video) {
--			pr_info("Disabling ACPI video driver\n");
--			acpi_video_unregister();
--		} else {
--			samsung->handle_backlight = false;
--		}
-+		samsung->handle_backlight = false;
-+	} else if (samsung->quirks->broken_acpi_video) {
-+		pr_info("Disabling ACPI video driver\n");
-+#ifdef CONFIG_ACPI_VIDEO
-+		acpi_video_unregister();
-+#endif
- 	}
- #endif
- 
-@@ -1552,8 +1555,7 @@ static int __init samsung_init(void)
- 
- #ifdef CONFIG_ACPI
- 	/* Only log that if we are really on a sabi platform */
--	if (acpi_video_backlight_support() &&
--	    !samsung->quirks->broken_acpi_video)
-+	if (acpi_video_backlight_support())
- 		pr_info("Backlight controlled by ACPI video driver\n");
- #endif
+-MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>");
++MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
+ MODULE_DESCRIPTION("Eee PC WMI Hotkey Driver");
+ MODULE_LICENSE("GPL");
  
 -- 
 1.7.9.5
