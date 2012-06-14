@@ -1,63 +1,83 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH] sony-laptop: correct find_snc_handle failure checks
-Date: Thu, 14 Jun 2012 06:36:02 +0900
-Message-ID: <1339623362-12706-1-git-send-email-malattia@linux.it>
-References: <1339215494-4020-1-git-send-email-malattia@linux.it>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:37876 "EHLO
-	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752465Ab2FMVgH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 13 Jun 2012 17:36:07 -0400
-In-Reply-To: <1339215494-4020-1-git-send-email-malattia@linux.it>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH 2/7] drivers-platform-x86: use
+ acpi_video_dmi_promote_vendor()
+Date: Thu, 14 Jun 2012 17:58:57 +0800
+Message-ID: <1339667937.9598.97.camel@linux-s257.site>
+References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
+	 <1339572727-24744-3-git-send-email-corentin.chary@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1339572727-24744-3-git-send-email-corentin.chary@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Joey Lee <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Since bab7084c745bf4d75b760728387f375fd34dc683, find_snc_handle
-returns -EINVAL, not -1.
+Hi Corentin,=20
 
-Signed-off-by: Mattia Dongili <malattia@linux.it>
----
+=E6=96=BC =E4=B8=89=EF=BC=8C2012-06-13 =E6=96=BC 09:32 +0200=EF=BC=8CCo=
+rentin Chary =E6=8F=90=E5=88=B0=EF=BC=9A
+> Instead of using directly acpi_video_unregister(), use
+> acpi_video_dmi_promote_vendor() (and make it call
+> acpi_video_unregister() if needed)
+>=20
+> Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c       |   16 +++++++++-------
+>  drivers/platform/x86/apple-gmux.c     |    6 ++++++
+>  drivers/platform/x86/samsung-laptop.c |   22 ++++++++++++----------
+>  3 files changed, 27 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index ce875dc..ffc53df 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -2060,14 +2060,16 @@ static int __init acer_wmi_init(void)
+> =20
+>  	set_quirks();
+> =20
+> +	if (dmi_check_system(video_vendor_dmi_table))
+> +		acpi_video_dmi_promote_vendor();
+>  	if (acpi_video_backlight_support()) {
+> -		if (dmi_check_system(video_vendor_dmi_table)) {
+> -			acpi_video_unregister();
+> -		} else {
+> -			interface->capability &=3D ~ACER_CAP_BRIGHTNESS;
+> -			pr_info("Brightness must be controlled by "
+> -				"acpi video driver\n");
+> -		}
+> +		interface->capability &=3D ~ACER_CAP_BRIGHTNESS;
+> +		pr_info("Brightness must be controlled by acpi video driver\n");
+> +	} else {
+> +#ifdef CONFIG_ACPI_VIDEO
 
-Hi Matthew,
-this bug is a bug present in current 3.5-rc could you please pick this patch
-up?
-The patch will apply fine on top of the other series I sent, let me know if I
-should rebase it on something else.
+The 'ifdef CONFIG_ACPI_VIDEO' didn't work on my machine with v3.4
+kernel, the acpi video didn't unregister.=20
 
-Thanks
+My autoconf.h like following:
 
- drivers/platform/x86/sony-laptop.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+include/generated/autoconf.h:#define CONFIG_ACPI_VIDEO_MODULE 1
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 3617858..f4fc73f 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2555,19 +2555,19 @@ static void sony_nc_backlight_setup(void)
- 	const struct backlight_ops *ops = NULL;
- 	struct backlight_properties props;
- 
--	if (sony_find_snc_handle(0x12f) != -1) {
-+	if (sony_find_snc_handle(0x12f) >= 0) {
- 		ops = &sony_backlight_ng_ops;
- 		sony_bl_props.cmd_base = 0x0100;
- 		sony_nc_backlight_ng_read_limits(0x12f, &sony_bl_props);
- 		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
- 
--	} else if (sony_find_snc_handle(0x137) != -1) {
-+	} else if (sony_find_snc_handle(0x137) >= 0) {
- 		ops = &sony_backlight_ng_ops;
- 		sony_bl_props.cmd_base = 0x0100;
- 		sony_nc_backlight_ng_read_limits(0x137, &sony_bl_props);
- 		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
- 
--	} else if (sony_find_snc_handle(0x143) != -1) {
-+	} else if (sony_find_snc_handle(0x143) >= 0) {
- 		ops = &sony_backlight_ng_ops;
- 		sony_bl_props.cmd_base = 0x3000;
- 		sony_nc_backlight_ng_read_limits(0x143, &sony_bl_props);
--- 
-1.7.10
+
+Need use:
+
+-#ifdef CONFIG_ACPI_VIDEO
++#if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
+	pr_info("Disabling ACPI video driver\n");=20
+	acpi_video_unregister();
+#endif
+
+I tested the above change works to me.
+
+
+Thanks a lot!
+Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
