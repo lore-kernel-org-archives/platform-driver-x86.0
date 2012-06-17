@@ -1,77 +1,31 @@
 From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: [PATCH 3/5] acer-wmi: Use struct dev_pm_ops for power management
-Date: Sun, 17 Jun 2012 22:28:59 +0200
-Message-ID: <201206172228.59364.rjw@sisk.pl>
-References: <201206172226.42729.rjw@sisk.pl>
+Subject: [PATCH 0/5] platform / x86: Convert a few drivers to struct dev_pm_ops
+Date: Sun, 17 Jun 2012 22:26:42 +0200
+Message-ID: <201206172226.42729.rjw@sisk.pl>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ogre.sisk.pl ([193.178.161.156]:46761 "EHLO ogre.sisk.pl"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751897Ab2FQUZi (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Jun 2012 16:25:38 -0400
-In-Reply-To: <201206172226.42729.rjw@sisk.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
 Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rafael J. Wysocki <rjw@sisk.pl>
+Hi all,
 
-Make the acer-wmi driver define its PM callbacks through
-a struct dev_pm_ops object rather than by using legacy PM hooks
-in struct platform_driver.
+The following series of patches converts a few drivers under platform/x86
+to using struct dev_pm_ops objects for power management istead of legacy
+callbacks in struct platform_driver.
 
-Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
----
- drivers/platform/x86/acer-wmi.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+The ultimate goal of this will be to get rid of PM callbacks from the
+platform bus type, which are only necessary because a number of drivers
+still use the legacy hooks.
 
-Index: linux/drivers/platform/x86/acer-wmi.c
-===================================================================
---- linux.orig/drivers/platform/x86/acer-wmi.c
-+++ linux/drivers/platform/x86/acer-wmi.c
-@@ -1877,8 +1877,7 @@ static int acer_platform_remove(struct p
- 	return 0;
- }
- 
--static int acer_platform_suspend(struct platform_device *dev,
--pm_message_t state)
-+static int acer_suspend(struct device *dev)
- {
- 	u32 value;
- 	struct acer_data *data = &interface->data;
-@@ -1900,7 +1899,7 @@ pm_message_t state)
- 	return 0;
- }
- 
--static int acer_platform_resume(struct platform_device *device)
-+static int acer_resume(struct device *dev)
- {
- 	struct acer_data *data = &interface->data;
- 
-@@ -1916,6 +1915,8 @@ static int acer_platform_resume(struct p
- 	return 0;
- }
- 
-+static SIMPLE_DEV_PM_OPS(acer_pm, acer_suspend, acer_resume);
-+
- static void acer_platform_shutdown(struct platform_device *device)
- {
- 	struct acer_data *data = &interface->data;
-@@ -1931,11 +1932,10 @@ static struct platform_driver acer_platf
- 	.driver = {
- 		.name = "acer-wmi",
- 		.owner = THIS_MODULE,
-+		.pm = &acer_pm,
- 	},
- 	.probe = acer_platform_probe,
- 	.remove = acer_platform_remove,
--	.suspend = acer_platform_suspend,
--	.resume = acer_platform_resume,
- 	.shutdown = acer_platform_shutdown,
- };
- 
+Admittedly, I don't have the hardware to test all of the changes, but
+hopefully they are simple enough.
+
+Please let me know if there are any objections.
+
+Thanks,
+Rafael
