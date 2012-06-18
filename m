@@ -1,85 +1,49 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: [PATCH 1/5] thinkpad_acpi: Drop pm_message_t arguments from suspend routines
-Date: Sun, 17 Jun 2012 22:27:23 +0200
-Message-ID: <201206172227.23591.rjw@sisk.pl>
-References: <201206172226.42729.rjw@sisk.pl>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/5] printk: Add eliminated_printk
+Date: Sun, 17 Jun 2012 19:25:07 -0700
+Message-ID: <cover.1339985626.git.joe@perches.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201206172226.42729.rjw@sisk.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rafael J. Wysocki <rjw@sisk.pl>
+no_printk keeps side-effects.
+eliminated_printk removes all side effects yet still keeps
+gcc format and argument verificatino.
+By definition, pr_devel should have no side-effects if not enabled.
+Convert pr_devel from no_printk to eliminated_printk.
 
-Multiple suspend routines in drivers/platform/x86/thinkpad_acpi.c
-use take pm_message_t arguments that aren't used by any of them.
-Make those routines take no arguments as that's what they should do.
+Joe Perches (5):
+  printk: Add eliminated_printk macro
+  printk: Convert pr_devel to use eliminated_printk
+  usb: Convert dbg to pr_eliminated and pr_debug
+  fujitsu-laptop: Convert dbg_printk and vdbg_printk to fuj_dbg
+  thinkpad_acpi: Convert dbg_printk to tp_dbg and tp_vdbg
 
-Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
----
- drivers/platform/x86/thinkpad_acpi.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c |  103 +++++-----
+ drivers/platform/x86/thinkpad_acpi.c  |  358 +++++++++++++++------------------
+ include/linux/printk.h                |   12 +-
+ include/linux/usb.h                   |   12 +-
+ 4 files changed, 228 insertions(+), 257 deletions(-)
 
-Index: linux/drivers/platform/x86/thinkpad_acpi.c
-===================================================================
---- linux.orig/drivers/platform/x86/thinkpad_acpi.c
-+++ linux/drivers/platform/x86/thinkpad_acpi.c
-@@ -277,7 +277,7 @@ struct ibm_struct {
- 	int (*write) (char *);
- 	void (*exit) (void);
- 	void (*resume) (void);
--	void (*suspend) (pm_message_t state);
-+	void (*suspend) (void);
- 	void (*shutdown) (void);
- 
- 	struct list_head all_drivers;
-@@ -931,7 +931,7 @@ static int tpacpi_suspend_handler(struct
- 				 &tpacpi_all_drivers,
- 				 all_drivers) {
- 		if (ibm->suspend)
--			(ibm->suspend)(state);
-+			(ibm->suspend)();
- 	}
- 
- 	return 0;
-@@ -3758,7 +3758,7 @@ static void hotkey_notify(struct ibm_str
- 	}
- }
- 
--static void hotkey_suspend(pm_message_t state)
-+static void hotkey_suspend(void)
- {
- 	/* Do these on suspend, we get the events on early resume! */
- 	hotkey_wakeup_reason = TP_ACPI_WAKEUP_NONE;
-@@ -6329,7 +6329,7 @@ static int __init brightness_init(struct
- 	return 0;
- }
- 
--static void brightness_suspend(pm_message_t state)
-+static void brightness_suspend(void)
- {
- 	tpacpi_brightness_checkpoint_nvram();
- }
-@@ -6748,7 +6748,7 @@ static struct snd_kcontrol_new volume_al
- 	.get = volume_alsa_mute_get,
- };
- 
--static void volume_suspend(pm_message_t state)
-+static void volume_suspend(void)
- {
- 	tpacpi_volume_checkpoint_nvram();
- }
-@@ -8107,7 +8107,7 @@ static void fan_exit(void)
- 	flush_workqueue(tpacpi_wq);
- }
- 
--static void fan_suspend(pm_message_t state)
-+static void fan_suspend(void)
- {
- 	int rc;
- 
+-- 
+1.7.8.111.gad25c.dirty
+
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
