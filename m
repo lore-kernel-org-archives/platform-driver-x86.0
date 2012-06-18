@@ -1,36 +1,90 @@
-From: "R, Durgadoss" <durgadoss.r@intel.com>
-Subject: RE: [PATCH 4/5] intel_mid_thermal: Use struct dev_pm_ops for power
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH 3/5] acer-wmi: Use struct dev_pm_ops for power
  management
-Date: Mon, 18 Jun 2012 06:03:16 +0000
-Message-ID: <4D68720C2E767A4AA6A8796D42C8EB59143300@BGSMSX101.gar.corp.intel.com>
-References: <201206172226.42729.rjw@sisk.pl> <201206172229.41550.rjw@sisk.pl>
+Date: Mon, 18 Jun 2012 14:56:38 +0800
+Message-ID: <1340002598.6640.7.camel@linux-s257.site>
+References: <201206172226.42729.rjw@sisk.pl>
+	 <201206172228.59364.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:51186 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750911Ab2FRGDV (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Jun 2012 02:03:21 -0400
-In-Reply-To: <201206172229.41550.rjw@sisk.pl>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@sisk.pl>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201206172228.59364.rjw@sisk.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzIFJhZmFlbCBmb3IgdGhlIHBhdGNoLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFtt
-YWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBC
-ZWhhbGYgT2YgUmFmYWVsIEouIFd5c29ja2kNCj4gU2VudDogTW9uZGF5LCBKdW5lIDE4LCAyMDEy
-IDI6MDAgQU0NCj4gVG86IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnDQo+IENj
-OiBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2NodWg7IExLTUw7IExpbnV4IFBNIGxpc3Q7IE1hdHRo
-ZXcgR2FycmV0dDsgSm9leQ0KPiBMZWUNCj4gU3ViamVjdDogW1BBVENIIDQvNV0gaW50ZWxfbWlk
-X3RoZXJtYWw6IFVzZSBzdHJ1Y3QgZGV2X3BtX29wcyBmb3IgcG93ZXINCj4gbWFuYWdlbWVudA0K
-PiANCj4gRnJvbTogUmFmYWVsIEouIFd5c29ja2kgPHJqd0BzaXNrLnBsPg0KPiANCj4gTWFrZSB0
-aGUgaW50ZWxfbWlkX3RoZXJtYWwgZHJpdmVyIGRlZmluZSBpdHMgUE0gY2FsbGJhY2tzIHRocm91
-Z2gNCj4gYSBzdHJ1Y3QgZGV2X3BtX29wcyBvYmplY3QgcmF0aGVyIHRoYW4gYnkgdXNpbmcgbGVn
-YWN5IFBNIGhvb2tzDQo+IGluIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBSYWZhZWwgSi4gV3lzb2NraSA8cmp3QHNpc2sucGw+DQoNClJldmlld2VkLWJ5OiBE
-dXJnYWRvc3MgUiA8ZHVyZ2Fkb3NzLnJAaW50ZWwuY29tPg0KDQpUaGFua3MsDQpEdXJnYQ0K
+=E6=96=BC =E6=97=A5=EF=BC=8C2012-06-17 =E6=96=BC 22:28 +0200=EF=BC=8CRa=
+fael J. Wysocki =E6=8F=90=E5=88=B0=EF=BC=9A
+> From: Rafael J. Wysocki <rjw@sisk.pl>
+>=20
+> Make the acer-wmi driver define its PM callbacks through
+> a struct dev_pm_ops object rather than by using legacy PM hooks
+> in struct platform_driver.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+
+Patch good to me!
+
+Tested on Acer TravelMate 4750
+
+Tested-by: Lee, Chun-Yi <jlee@suse.com>
+
+
+Thanks a lot!
+Joey Lee
+
+> ---
+>  drivers/platform/x86/acer-wmi.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> Index: linux/drivers/platform/x86/acer-wmi.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux.orig/drivers/platform/x86/acer-wmi.c
+> +++ linux/drivers/platform/x86/acer-wmi.c
+> @@ -1877,8 +1877,7 @@ static int acer_platform_remove(struct p
+>  	return 0;
+>  }
+> =20
+> -static int acer_platform_suspend(struct platform_device *dev,
+> -pm_message_t state)
+> +static int acer_suspend(struct device *dev)
+>  {
+>  	u32 value;
+>  	struct acer_data *data =3D &interface->data;
+> @@ -1900,7 +1899,7 @@ pm_message_t state)
+>  	return 0;
+>  }
+> =20
+> -static int acer_platform_resume(struct platform_device *device)
+> +static int acer_resume(struct device *dev)
+>  {
+>  	struct acer_data *data =3D &interface->data;
+> =20
+> @@ -1916,6 +1915,8 @@ static int acer_platform_resume(struct p
+>  	return 0;
+>  }
+> =20
+> +static SIMPLE_DEV_PM_OPS(acer_pm, acer_suspend, acer_resume);
+> +
+>  static void acer_platform_shutdown(struct platform_device *device)
+>  {
+>  	struct acer_data *data =3D &interface->data;
+> @@ -1931,11 +1932,10 @@ static struct platform_driver acer_platf
+>  	.driver =3D {
+>  		.name =3D "acer-wmi",
+>  		.owner =3D THIS_MODULE,
+> +		.pm =3D &acer_pm,
+>  	},
+>  	.probe =3D acer_platform_probe,
+>  	.remove =3D acer_platform_remove,
+> -	.suspend =3D acer_platform_suspend,
+> -	.resume =3D acer_platform_resume,
+>  	.shutdown =3D acer_platform_shutdown,
+>  };
+> =20
+>=20
+>=20
