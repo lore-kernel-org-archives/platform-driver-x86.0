@@ -1,50 +1,42 @@
 From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] eeepc-wmi: change wireless key event to toggle all wireless
- devices.
-Date: Wed, 20 Jun 2012 11:27:47 +0800
-Message-ID: <4FE14333.6020209@canonical.com>
-References: <1340162788-531-1-git-send-email-alex.hung@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:55503 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753939Ab2FTD1y (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Jun 2012 23:27:54 -0400
-In-Reply-To: <1340162788-531-1-git-send-email-alex.hung@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
+Date: Wed, 20 Jun 2012 11:47:35 +0800
+Message-ID: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alex.hung@canonical.com, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi All,
+According to responses from the BIOS team, ASUS_WMI_METHODID_DSTS2
+(0x53545344) will be used as future DSTS ID. In addition, calling
+asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS2, 0, 0, NULL) returns
+ASUS_WMI_UNSUPPORTED_METHOD in new ASUS laptop PCs. This patch fixes
+no DSTS ID will be assigned in this case.
 
-This patch needs to work with another fix in net/rfkill/core.c
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c |    7 +------
+ 1 files changed, 1 insertions(+), 6 deletions(-)
 
-http://git.kernel.org/?p=linux/kernel/git/linville/wireless-next.git;a=commit;h=27e49ca95570c4685a32be9d4664f2b0b6d89368
-
-On 06/20/2012 11:26 AM, Alex Hung wrote:
-> The original key event from Fn+F2 hotkey only toggles the state of wireless
-> LAN and leaves other wireless devices such as bluetooth uncontrolled. This
-> fix change Fn+F2 to generate an event to toggle all wireless devices.
->
-> Signed-off-by: Alex Hung<alex.hung@canonical.com>
-> ---
->   drivers/platform/x86/eeepc-wmi.c |    2 +-
->   1 files changed, 1 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-> index 5568c43..ef361fc 100644
-> --- a/drivers/platform/x86/eeepc-wmi.c
-> +++ b/drivers/platform/x86/eeepc-wmi.c
-> @@ -68,7 +68,7 @@ static const struct key_entry eeepc_wmi_keymap[] = {
->   	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
->   	{ KE_KEY, 0x32, { KEY_MUTE } },
->   	{ KE_KEY, 0x5c, { KEY_F15 } }, /* Power Gear key */
-> -	{ KE_KEY, 0x5d, { KEY_WLAN } },
-> +	{ KE_KEY, 0x5d, { KEY_RFKILL } },
->   	{ KE_KEY, 0x6b, { KEY_TOUCHPAD_TOGGLE } }, /* Toggle Touchpad */
->   	{ KE_KEY, 0x82, { KEY_CAMERA } },
->   	{ KE_KEY, 0x83, { KEY_CAMERA_ZOOMIN } },
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 25e3093..0f69a97 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1461,14 +1461,9 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 	 */
+ 	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, 0, 0, NULL))
+ 		asus->dsts_id = ASUS_WMI_METHODID_DSTS;
+-	else if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS2, 0, 0, NULL))
++	else
+ 		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
+ 
+-	if (!asus->dsts_id) {
+-		pr_err("Can't find DSTS");
+-		return -ENODEV;
+-	}
+-
+ 	/* CWAP allow to define the behavior of the Fn+F2 key,
+ 	 * this method doesn't seems to be present on Eee PCs */
+ 	if (asus->driver->quirks->wapf >= 0)
+-- 
+1.7.0.4
