@@ -1,58 +1,29 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: Need help regarding the USB mass storage driver
-Date: Wed, 20 Jun 2012 11:05:04 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1206201100410.1804-100000@iolanthe.rowland.org>
-References: <CAKB833nfHQwdHzCFV6ELrk1-XZT-SN8WxMs=kzO=C8+6foTrDQ@mail.gmail.com>
+From: Vishal Nandanwar <operational.people@gmail.com>
+Subject: Need help to understand USB driver mechanism
+Date: Thu, 21 Jun 2012 16:09:18 +0530
+Message-ID: <CAKB833mPfX2U6_UA0Fr0CTw623gxCvcYPW3HvfVJWE1Xt7v-UQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from iolanthe.rowland.org ([192.131.102.54]:36995 "HELO
-	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1756701Ab2FTPFF (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 Jun 2012 11:05:05 -0400
-In-Reply-To: <CAKB833nfHQwdHzCFV6ELrk1-XZT-SN8WxMs=kzO=C8+6foTrDQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vishal Nandanwar <operational.people@gmail.com>
-Cc: Linux Docs <linux-doc@vger.kernel.org>, Linux Embedded Group <linux-embedded@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux USB <linux-usb@vger.kernel.org>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linux USB <linux-usb@vger.kernel.org>, Linux Docs <linux-doc@vger.kernel.org>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 20 Jun 2012, Vishal Nandanwar wrote:
+Hi,
 
-> Hi,
-> 
-> I am working on a USB mass storage driver for a pen drive. I have done
-> coding as per the USB_skeleton.c file provided in Linux 3.2 source
-> code. I could assign the driver to pen drive when pen driver is
-> inserted in USB connector.
+I am trying to understand the USB device driver writing mechanism and
+architecture. I have gone through the LDD book as well.
 
-Do you understand that the usb_skeleton.c file is totally inappropriate 
-as a model for a mass-storage driver?
+For learning purpose I am trying to write a driver for a pen drive
+i.e. USB mass storage. Linux do have the usb-storage driver which is
+used for pen drive. I have gone through the ../driver/usb/storage
+folder of Linux source code and found there are few drivers(karma,
+freecom) which uses usb-storage to achive there functionality.
 
-> I am stuck in data transfer,  could not do the data transfer. During
-> enumeration interface sub class is 06 i.e. SCSI transparent command
-> set. Please find my questions below.
-> 
-> 1. Where are these SCSI transparent command set documented?
+what is the mechanism to write a driver for pen drive(USB mass
+storage)? Is there any guide/help document which describes how to
+create a interface driver on top of usb-storage driver, so when my pen
+driver is connected it should use my driver?
 
-Google is your friend.  But see the answer to your next question...
 
-> 2. Is there any sample code(apart from Linux source) which describes
-> the SCSI transparent command set and mass storage driver?
-
-There is no such thing as the SCSI transparent command set.  "SCSI 
-transparent" means "use whatever command set the relevant SCSI standard 
-specifies".
-
-There is non-Linux source code for mass-storage drivers in other
-open-source operating systems.
-
-> 3. When I connect the pen drive and associate my driver, pop up
-> doesn't appear on the screen for this device. but when default
-> driver(usb_storage) is used this pop up does appear. What I need to do
-> here?
-
-Fix your driver.  It's not possible to give a more complete answer 
-without further information.
-
-Alan Stern
+Vishal N
