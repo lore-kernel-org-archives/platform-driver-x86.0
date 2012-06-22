@@ -1,31 +1,42 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: Need help to understand USB driver mechanism
-Date: Fri, 22 Jun 2012 09:48:53 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1206220947010.1578-100000@iolanthe.rowland.org>
-References: <CAKB833k1Q7LoJWxDp6AHdq5H=w=LeeeRQ3sRC_1zXcJ_Lp9mNg@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [patch] ideapad: uninitialized data in ideapad_acpi_add()
+Date: Fri, 22 Jun 2012 16:57:46 +0300
+Message-ID: <20120622135746.GG5390@mwanda>
+References: <20120612162850.GB11077@elgon.mountain>
+ <4FE1C0B1.9050901@canonical.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from iolanthe.rowland.org ([192.131.102.54]:43640 "HELO
-	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1762192Ab2FVNsy (ORCPT
+Received: from acsinet15.oracle.com ([141.146.126.227]:25417 "EHLO
+	acsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1762152Ab2FVN6A (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jun 2012 09:48:54 -0400
-In-Reply-To: <CAKB833k1Q7LoJWxDp6AHdq5H=w=LeeeRQ3sRC_1zXcJ_Lp9mNg@mail.gmail.com>
+	Fri, 22 Jun 2012 09:58:00 -0400
+Content-Disposition: inline
+In-Reply-To: <4FE1C0B1.9050901@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vishal Nandanwar <operational.people@gmail.com>
-Cc: Linux USB <linux-usb@vger.kernel.org>, Linux Docs <linux-doc@vger.kernel.org>, Platform driver x86 <platform-driver-x86@vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Fri, 22 Jun 2012, Vishal Nandanwar wrote:
-
-> Hi Alan,
+On Wed, Jun 20, 2012 at 08:23:13PM +0800, Ike Panhc wrote:
+> Hi Dan,
 > 
-> Thanks for your reply. It really helps.
+> # cat /sys/kernel/debug/ideapad/cfg
+> cfg: 0xFFFF8800007DE140
+>        ^^^^^^^^ the uninitialized bit
 > 
-> What approach one should use to learn the device drivers?
+> I see your point, perhaps unsigned int will be better then int?
+> 
 
-Many of the files in drivers/usb/misc would make a good place to start.  
-You can also try to figure out the usblp driver.
+I don't know if this is a question or a resend request.
 
-Alan Stern
+I just chose that base on the fact that we are reading an int from
+ACPI in read_method_int(adevice->handle, "_CFG", &cfg).  Either way
+we're going to run into integer conversion issues if we get passed
+a large or negative int.
+
+I can resend if you want, I don't have strong feelings on this.
+
+regards,
+dan carpenter
