@@ -1,42 +1,72 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [patch] ideapad: uninitialized data in ideapad_acpi_add()
-Date: Fri, 22 Jun 2012 16:57:46 +0300
-Message-ID: <20120622135746.GG5390@mwanda>
-References: <20120612162850.GB11077@elgon.mountain>
- <4FE1C0B1.9050901@canonical.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 2/2] ACER: Add support for ambient light sensor
+Date: Fri, 22 Jun 2012 22:20:15 +0200
+Message-ID: <201206222220.15755.marex@denx.de>
+References: <1338570683-16491-1-git-send-email-marex@denx.de> <201206060055.59421.marex@denx.de> <1338945755.1492.20.camel@rui.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from acsinet15.oracle.com ([141.146.126.227]:25417 "EHLO
-	acsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1762152Ab2FVN6A (ORCPT
+Received: from mail-out.m-online.net ([212.18.0.9]:40363 "EHLO
+	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753804Ab2FVUUX convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jun 2012 09:58:00 -0400
-Content-Disposition: inline
-In-Reply-To: <4FE1C0B1.9050901@canonical.com>
+	Fri, 22 Jun 2012 16:20:23 -0400
+In-Reply-To: <1338945755.1492.20.camel@rui.sh.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>, Len Brown <len.brown@intel.com>, pavel@denx.de, Martin =?utf-8?q?Li=C5=A1ka?= <marxin.liska@gmail.com>
 
-On Wed, Jun 20, 2012 at 08:23:13PM +0800, Ike Panhc wrote:
-> Hi Dan,
-> 
-> # cat /sys/kernel/debug/ideapad/cfg
-> cfg: 0xFFFF8800007DE140
->        ^^^^^^^^ the uninitialized bit
-> 
-> I see your point, perhaps unsigned int will be better then int?
-> 
+Dear Zhang Rui,
 
-I don't know if this is a question or a resend request.
+> On =E4=B8=89, 2012-06-06 at 00:55 +0200, Marek Vasut wrote:
+> > Dear Corentin Chary,
+> >=20
+> > [...]
+> >=20
+> > > >> This is a generic device, and should be handled by ACPI core
+> > > >> (Samsung laptop have this too). See "ACPI ALS" on linux-acpi.
+> > > >=20
+> > > > Saying this would be enough. Lee explained to me what this ACPI=
+0008
+> > > > means, I'm quite new to the ACPI land so pardon my ignorance he=
+re.
+> > > > But it then boils down to Lee's question, why wasn't the patch =
+for
+> > > > ACPI ALS that was already proposed accepted? And what can be do=
+ne to
+> > > > get it in?
+> > >=20
+> > > Yep, I've seen Lee's message latter. Regarding ACPI ALS status, i=
+t was
+> > > forgotten for a long time, and recently Zhang Rui told that he wi=
+ll
+> > > take another look at it, but nothing sure. If you want to know mo=
+re
+> > > about the status, you can do a quick search on gmane using "ACPI =
+ALS"
+> > > query on linux.acpi
+> >=20
+> > Actually, going through the ACPI0008 patch, I see it introduced new=
+ sysfs
+> > class. Maybe we should rather integrate it with Linux-IIO these day=
+s?
+>=20
+> yes.
+> please refer to this thread
+> http://marc.info/?l=3Dlinux-acpi&m=3D132060809120911&w=3D2
+>=20
+> I do not have time to do this right now, and it will be great if you =
+are
+> interested in introducing the ACPI ALS driver.
 
-I just chose that base on the fact that we are reading an int from
-ACPI in read_method_int(adevice->handle, "_CFG", &cfg).  Either way
-we're going to run into integer conversion issues if we get passed
-a large or negative int.
+So, I finally raised from dead again ... sorry I didn't reply earlier.=20
+Apparently, one of my students is interested in fixing/writing such dri=
+ver,=20
+therefore I'll land him my hardware and let him do it.
 
-I can resend if you want, I don't have strong feelings on this.
+I CCed him, please treat him well.
 
-regards,
-dan carpenter
+Best regards,
+Marek Vasut
