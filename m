@@ -1,75 +1,90 @@
 From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: [PATCH 13/21] hp_accel: Use struct dev_pm_ops for power management
-Date: Sat, 23 Jun 2012 23:16:20 +0200
-Message-ID: <201206232316.20989.rjw@sisk.pl>
-References: <201206232306.06602.rjw@sisk.pl>
+Subject: [PATCH] sonypi: Use struct dev_pm_ops for power management
+Date: Sat, 23 Jun 2012 23:46:26 +0200
+Message-ID: <201206232346.26432.rjw@sisk.pl>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ogre.sisk.pl ([193.178.161.156]:36964 "EHLO ogre.sisk.pl"
+Received: from ogre.sisk.pl ([193.178.161.156]:37119 "EHLO ogre.sisk.pl"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756126Ab2FWVRx (ORCPT
+	id S1754650Ab2FWVlB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Jun 2012 17:17:53 -0400
-In-Reply-To: <201206232306.06602.rjw@sisk.pl>
+	Sat, 23 Jun 2012 17:41:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Linux PM list <linux-pm@vger.kernel.org>
-Cc: ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
 
 From: Rafael J. Wysocki <rjw@sisk.pl>
 
-Make the hp_accel driver define its PM callbacks through
+Make the sonypi driver define its PM callbacks through
 a struct dev_pm_ops object rather than by using legacy PM hooks
-in struct acpi_device_ops.
+in struct platform_driver.
 
 Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
 ---
- drivers/platform/x86/hp_accel.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Index: linux/drivers/platform/x86/hp_accel.c
+Hi,
+
+If there are no objections, I'd like to push this patch for 3.6 through
+the linux-pm tree.
+
+Unfortunately, I don't have the hardware to test it, but I hope it is simple
+enough for code inspection to suffice.
+
+Thanks,
+Rafael
+
+---
+ drivers/char/sonypi.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+Index: linux/drivers/char/sonypi.c
 ===================================================================
---- linux.orig/drivers/platform/x86/hp_accel.c
-+++ linux/drivers/platform/x86/hp_accel.c
-@@ -353,20 +353,22 @@ static int lis3lv02d_remove(struct acpi_
- 
- 
+--- linux.orig/drivers/char/sonypi.c
++++ linux/drivers/char/sonypi.c
+@@ -1459,7 +1459,7 @@ static int __devexit sonypi_remove(struc
  #ifdef CONFIG_PM
--static int lis3lv02d_suspend(struct acpi_device *device)
-+static int lis3lv02d_suspend(struct device *dev)
+ static int old_camera_power;
+ 
+-static int sonypi_suspend(struct platform_device *dev, pm_message_t state)
++static int sonypi_suspend(struct device *dev)
  {
- 	/* make sure the device is off when we suspend */
- 	lis3lv02d_poweroff(&lis3_dev);
+ 	old_camera_power = sonypi_device.camera_power;
+ 	sonypi_disable();
+@@ -1467,14 +1467,16 @@ static int sonypi_suspend(struct platfor
  	return 0;
  }
  
--static int lis3lv02d_resume(struct acpi_device *device)
-+static int lis3lv02d_resume(struct device *dev)
+-static int sonypi_resume(struct platform_device *dev)
++static int sonypi_resume(struct device *dev)
  {
- 	return lis3lv02d_poweron(&lis3_dev);
+ 	sonypi_enable(old_camera_power);
+ 	return 0;
  }
 +
-+static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
-+#define HP_ACCEL_PM (&hp_accel_pm)
++static SIMPLE_DEV_PM_OPS(sonypi_pm, sonypi_suspend, sonypi_resume);
++#define SONYPI_PM	(&sonypi_pm)
  #else
--#define lis3lv02d_suspend NULL
--#define lis3lv02d_resume NULL
-+#define HP_ACCEL_PM NULL
+-#define sonypi_suspend	NULL
+-#define sonypi_resume	NULL
++#define SONYPI_PM	NULL
  #endif
  
- /* For the HP MDPS aka 3D Driveguard */
-@@ -377,9 +379,8 @@ static struct acpi_driver lis3lv02d_driv
- 	.ops = {
- 		.add     = lis3lv02d_add,
- 		.remove  = lis3lv02d_remove,
--		.suspend = lis3lv02d_suspend,
--		.resume  = lis3lv02d_resume,
--	}
-+	},
-+	.drv.pm = HP_ACCEL_PM,
+ static void sonypi_shutdown(struct platform_device *dev)
+@@ -1486,12 +1488,11 @@ static struct platform_driver sonypi_dri
+ 	.driver		= {
+ 		.name	= "sonypi",
+ 		.owner	= THIS_MODULE,
++		.pm	= SONYPI_PM,
+ 	},
+ 	.probe		= sonypi_probe,
+ 	.remove		= __devexit_p(sonypi_remove),
+ 	.shutdown	= sonypi_shutdown,
+-	.suspend	= sonypi_suspend,
+-	.resume		= sonypi_resume,
  };
  
- static int __init lis3lv02d_init_module(void)
+ static struct platform_device *sonypi_platform_device;
