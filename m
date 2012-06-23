@@ -1,72 +1,64 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 2/2] ACER: Add support for ambient light sensor
-Date: Fri, 22 Jun 2012 22:20:15 +0200
-Message-ID: <201206222220.15755.marex@denx.de>
-References: <1338570683-16491-1-git-send-email-marex@denx.de> <201206060055.59421.marex@denx.de> <1338945755.1492.20.camel@rui.sh.intel.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: [PATCH 0/21] ACPI / PM: Switch ACPI bus type and drivers to dev_pm_ops
+Date: Sat, 23 Jun 2012 23:06:06 +0200
+Message-ID: <201206232306.06602.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-out.m-online.net ([212.18.0.9]:40363 "EHLO
-	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753804Ab2FVUUX convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jun 2012 16:20:23 -0400
-In-Reply-To: <1338945755.1492.20.camel@rui.sh.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>, Len Brown <len.brown@intel.com>, pavel@denx.de, Martin =?utf-8?q?Li=C5=A1ka?= <marxin.liska@gmail.com>
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linux PM list <linux-pm@vger.kernel.org>
+Cc: ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dear Zhang Rui,
+Hi all,
 
-> On =E4=B8=89, 2012-06-06 at 00:55 +0200, Marek Vasut wrote:
-> > Dear Corentin Chary,
-> >=20
-> > [...]
-> >=20
-> > > >> This is a generic device, and should be handled by ACPI core
-> > > >> (Samsung laptop have this too). See "ACPI ALS" on linux-acpi.
-> > > >=20
-> > > > Saying this would be enough. Lee explained to me what this ACPI=
-0008
-> > > > means, I'm quite new to the ACPI land so pardon my ignorance he=
-re.
-> > > > But it then boils down to Lee's question, why wasn't the patch =
-for
-> > > > ACPI ALS that was already proposed accepted? And what can be do=
-ne to
-> > > > get it in?
-> > >=20
-> > > Yep, I've seen Lee's message latter. Regarding ACPI ALS status, i=
-t was
-> > > forgotten for a long time, and recently Zhang Rui told that he wi=
-ll
-> > > take another look at it, but nothing sure. If you want to know mo=
-re
-> > > about the status, you can do a quick search on gmane using "ACPI =
-ALS"
-> > > query on linux.acpi
-> >=20
-> > Actually, going through the ACPI0008 patch, I see it introduced new=
- sysfs
-> > class. Maybe we should rather integrate it with Linux-IIO these day=
-s?
->=20
-> yes.
-> please refer to this thread
-> http://marc.info/?l=3Dlinux-acpi&m=3D132060809120911&w=3D2
->=20
-> I do not have time to do this right now, and it will be great if you =
-are
-> interested in introducing the ACPI ALS driver.
+The following patchset converts the ACPI bus type and all of the ACPI drivers
+to the power management handling based on struct dev_pm_ops.  It does that in
+the following way:
 
-So, I finally raised from dead again ... sorry I didn't reply earlier.=20
-Apparently, one of my students is interested in fixing/writing such dri=
-ver,=20
-therefore I'll land him my hardware and let him do it.
+(1) The (unused) pm_message_t argument is dropped from the ACPI driver suspend
+    callback throughout the tree (patch [1/21]).
 
-I CCed him, please treat him well.
+(2) A struct dev_pm_ops object is defined for the ACPI bus type (patches
+    [2-3/21]) in such a way that
+    (a) driver callbacks from struct acpi_device_ops are executed for drivers
+        that provide them,
+    (b) driver callbacks from struct dev_pm_ops are executed for drivers that
+        provide them,
+    (c) 0 is returned for the remaining drivers.
+    Only suspend/resume, freeze/thaw, poweroff/restore bus type callbacks are
+    defined, because they are sufficient for the transition (they are removed
+    later on anyway).
 
-Best regards,
-Marek Vasut
+(3) All ACPI drivers that use PM callbacks are converted to the PM handling
+    based on struct dev_pm_ops (patches [4-18/21]).
+
+(4) The ACPI bus type is modified not to execute driver callbacks from
+    struct acpi_device_ops any more (patch [19/21]).  This affects several
+    x86 platform drivers and the ACPI power meter driver too.
+
+(5) The driver PM callbacks in struct acpi_device_ops are removed
+    (patch [20/21]).
+
+(6) The ACPI bus type PM callbacks added in step (2) are dropped, because they
+    aren't necessary any more (the PM core will execute the driver callbacks
+    directly now).
+
+As a result, the redundant bus type level of PM handling between ACPI drivers
+and the PM core is eliminated and the ACPI drivers are now able to define
+runtime PM callbacks, proper hibernation callbacks and late/early callbacks
+for system suspend/resume.
+
+The patchset has been tested on Toshiba Portege R500 and more testing is in
+the works.  If there are no objections, I'd like to push if for 3.6 through
+the linux-pm tree.
+
+If you want to give it a go, it's available from the pm-acpi branch of the
+linux-pm tree.  Please note, however, that this branch will be rebased, because
+it is based on the linux-pm tree's linux-next branch at the moment.
+
+Thanks,
+Rafael
+
