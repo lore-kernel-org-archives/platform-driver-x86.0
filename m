@@ -1,93 +1,58 @@
-From: Vikram Dhillon <opensolarisdev@gmail.com>
-Subject: Re: [PATCH 16/21] toshiba_bluetooth: Use struct dev_pm_ops for power management
-Date: Sun, 24 Jun 2012 08:40:02 -0400
-Message-ID: <CAK7t_7Vfgqps+iavyQmXhj+CwSoBOEkCyFhTo_mXnC3stQtxDw@mail.gmail.com>
-References: <201206232306.06602.rjw@sisk.pl>
-	<201206232318.18196.rjw@sisk.pl>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 5/5] thinkpad_acpi: Convert dbg_printk to tp_dbg and
+ tp_vdbg
+Date: Sun, 24 Jun 2012 11:42:30 -0300
+Message-ID: <20120624144230.GB24236@khazad-dum.debian.net>
+References: <cover.1339985626.git.joe@perches.com>
+ <d8ab2f07efe50ddd9d3db8612c1cc333cb7e5813.1339985627.git.joe@perches.com>
+ <20120624004051.GC20885@khazad-dum.debian.net>
+ <1340507206.7758.30.camel@joe2Laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201206232318.18196.rjw@sisk.pl>
+Content-Disposition: inline
+In-Reply-To: <1340507206.7758.30.camel@joe2Laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>
+To: Joe Perches <joe@perches.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jun 23, 2012 at 5:18 PM, Rafael J. Wysocki <rjw@sisk.pl> wrote:
-> From: Rafael J. Wysocki <rjw@sisk.pl>
->
-> Make the toshiba_bluetooth driver define its PM callbacks through
-> a struct dev_pm_ops object rather than by using legacy PM hooks
-> in struct acpi_device_ops.
->
-> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
-> ---
-> =A0drivers/platform/x86/toshiba_bluetooth.c | =A0 10 ++++++----
-> =A01 file changed, 6 insertions(+), 4 deletions(-)
->
-> Index: linux/drivers/platform/x86/toshiba_bluetooth.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux.orig/drivers/platform/x86/toshiba_bluetooth.c
-> +++ linux/drivers/platform/x86/toshiba_bluetooth.c
-> @@ -34,7 +34,6 @@ MODULE_LICENSE("GPL");
-> =A0static int toshiba_bt_rfkill_add(struct acpi_device *device);
-> =A0static int toshiba_bt_rfkill_remove(struct acpi_device *device, in=
-t type);
-> =A0static void toshiba_bt_rfkill_notify(struct acpi_device *device, u=
-32 event);
-> -static int toshiba_bt_resume(struct acpi_device *device);
->
-> =A0static const struct acpi_device_id bt_device_ids[] =3D {
-> =A0 =A0 =A0 =A0{ "TOS6205", 0},
-> @@ -42,6 +41,9 @@ static const struct acpi_device_id bt_de
-> =A0};
-> =A0MODULE_DEVICE_TABLE(acpi, bt_device_ids);
->
-> +static int toshiba_bt_resume(struct device *dev);
-> +static SIMPLE_DEV_PM_OPS(toshiba_bt_pm, NULL, toshiba_bt_resume);
-> +
-> =A0static struct acpi_driver toshiba_bt_rfkill_driver =3D {
-> =A0 =A0 =A0 =A0.name =3D =A0 =A0 =A0 =A0 "Toshiba BT",
-> =A0 =A0 =A0 =A0.class =3D =A0 =A0 =A0 =A0"Toshiba",
-> @@ -50,9 +52,9 @@ static struct acpi_driver toshiba_bt_rfk
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.add =3D=
- =A0 =A0 =A0 =A0 =A0toshiba_bt_rfkill_add,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.remov=
-e =3D =A0 =A0 =A0 toshiba_bt_rfkill_remove,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.notif=
-y =3D =A0 =A0 =A0 toshiba_bt_rfkill_notify,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .resume=
- =3D =A0 =A0 =A0 toshiba_bt_resume,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0},
-> =A0 =A0 =A0 =A0.owner =3D =A0 =A0 =A0 =A0THIS_MODULE,
-> + =A0 =A0 =A0 .drv.pm =3D =A0 =A0 =A0 &toshiba_bt_pm,
-> =A0};
->
->
-> @@ -88,9 +90,9 @@ static void toshiba_bt_rfkill_notify(str
-> =A0 =A0 =A0 =A0toshiba_bluetooth_enable(device->handle);
-> =A0}
->
-> -static int toshiba_bt_resume(struct acpi_device *device)
-> +static int toshiba_bt_resume(struct device *dev)
-> =A0{
-> - =A0 =A0 =A0 return toshiba_bluetooth_enable(device->handle);
-> + =A0 =A0 =A0 return toshiba_bluetooth_enable(to_acpi_device(dev)->ha=
-ndle);
-> =A0}
->
-> =A0static int toshiba_bt_rfkill_add(struct acpi_device *device)
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at =A0http://www.tux.org/lkml/
+On Sat, 23 Jun 2012, Joe Perches wrote:
+> On Sat, 2012-06-23 at 21:40 -0300, Henrique de Moraes Holschuh wrote:
+> > On Sun, 17 Jun 2012, Joe Perches wrote:
+> > > Use a more current logging style.
+> > > 
+> > > Add #define DEBUG and use pr_debug to enable dynamic debugging.
+> > > Coalesce formats and align arguments.
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > 
+> > Joe, are there any extra procedures required from the user to get the debug
+> > messages with this patch applied?
+> 
+> No.
+> 
+> The added #define DEBUG makes dynamic_debug emit those
+> messages automatically.  Without the #define DEBUG, then
 
-Looks good, will look into the other struct patch (#11) tomorrow.
+I suspected as much, but I wanted direct confirmation.  That
+#define DEBUG is a relatively recent enhancement to dynamic printk, isn't
+it?  Something I will have to keep in mind if I resume doing backports of
+this driver for 2.6.32, 3.0 and 3.2 ?
 
-Reviewed-by: Vikram Dhillon <opensolarisdev@gmail.com>
+> these tp_[v]dbg calls might not be compiled in at all.
+> 
+> These to_[v]dbg calls can be turned off via the normal
+> dyn_debug mechanisms.
+> 
+> see: Documentation/dynamic-debug-howto.txt
+
+Ok. That's good enough for me.
+
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
