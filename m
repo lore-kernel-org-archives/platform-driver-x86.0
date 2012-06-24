@@ -1,35 +1,35 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 2/5] thinkpad_acpi: Use struct dev_pm_ops instead of
- legacy PM routines
-Date: Sat, 23 Jun 2012 21:34:16 -0300
-Message-ID: <20120624003416.GB20885@khazad-dum.debian.net>
-References: <201206172226.42729.rjw@sisk.pl>
- <201206172227.57189.rjw@sisk.pl>
+Subject: Re: [PATCH 5/5] thinkpad_acpi: Convert dbg_printk to tp_dbg and
+ tp_vdbg
+Date: Sat, 23 Jun 2012 21:40:51 -0300
+Message-ID: <20120624004051.GC20885@khazad-dum.debian.net>
+References: <cover.1339985626.git.joe@perches.com>
+ <d8ab2f07efe50ddd9d3db8612c1cc333cb7e5813.1339985627.git.joe@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45286 "EHLO
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59903 "EHLO
 	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754547Ab2FXAeX (ORCPT
+	by vger.kernel.org with ESMTP id S1756537Ab2FXAk6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Jun 2012 20:34:23 -0400
+	Sat, 23 Jun 2012 20:40:58 -0400
 Content-Disposition: inline
-In-Reply-To: <201206172227.57189.rjw@sisk.pl>
+In-Reply-To: <d8ab2f07efe50ddd9d3db8612c1cc333cb7e5813.1339985627.git.joe@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+To: Joe Perches <joe@perches.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, 17 Jun 2012, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rjw@sisk.pl>
+On Sun, 17 Jun 2012, Joe Perches wrote:
+> Use a more current logging style.
 > 
-> Make the thinkpad_acpi driver define its PM callbacks through
-> a struct dev_pm_ops object rather than by using legacy PM hooks
-> in struct platform_driver.
+> Add #define DEBUG and use pr_debug to enable dynamic debugging.
+> Coalesce formats and align arguments.
 > 
-> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Joe, are there any extra procedures required from the user to get the debug
+messages with this patch applied?
 
 -- 
   "One disk to rule them all, One disk to find them. One disk to bring
