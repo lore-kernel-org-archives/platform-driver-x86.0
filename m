@@ -1,57 +1,93 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] thinkpad_acpi: Convert dbg_printk
- to tp_dbg and tp_vdbg
-Date: Sat, 23 Jun 2012 20:06:46 -0700
-Message-ID: <1340507206.7758.30.camel@joe2Laptop>
-References: <cover.1339985626.git.joe@perches.com>
-	<d8ab2f07efe50ddd9d3db8612c1cc333cb7e5813.1339985627.git.joe@perches.com>
-	<20120624004051.GC20885@khazad-dum.debian.net>
+From: Vikram Dhillon <opensolarisdev@gmail.com>
+Subject: Re: [PATCH 16/21] toshiba_bluetooth: Use struct dev_pm_ops for power management
+Date: Sun, 24 Jun 2012 08:40:02 -0400
+Message-ID: <CAK7t_7Vfgqps+iavyQmXhj+CwSoBOEkCyFhTo_mXnC3stQtxDw@mail.gmail.com>
+References: <201206232306.06602.rjw@sisk.pl>
+	<201206232318.18196.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20120624004051.GC20885-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201206232318.18196.rjw@sisk.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 2012-06-23 at 21:40 -0300, Henrique de Moraes Holschuh wrote:
-> On Sun, 17 Jun 2012, Joe Perches wrote:
-> > Use a more current logging style.
-> > 
-> > Add #define DEBUG and use pr_debug to enable dynamic debugging.
-> > Coalesce formats and align arguments.
-> > 
-> > Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> 
-> Joe, are there any extra procedures required from the user to get the debug
-> messages with this patch applied?
+On Sat, Jun 23, 2012 at 5:18 PM, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> From: Rafael J. Wysocki <rjw@sisk.pl>
+>
+> Make the toshiba_bluetooth driver define its PM callbacks through
+> a struct dev_pm_ops object rather than by using legacy PM hooks
+> in struct acpi_device_ops.
+>
+> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+> ---
+> =A0drivers/platform/x86/toshiba_bluetooth.c | =A0 10 ++++++----
+> =A01 file changed, 6 insertions(+), 4 deletions(-)
+>
+> Index: linux/drivers/platform/x86/toshiba_bluetooth.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux.orig/drivers/platform/x86/toshiba_bluetooth.c
+> +++ linux/drivers/platform/x86/toshiba_bluetooth.c
+> @@ -34,7 +34,6 @@ MODULE_LICENSE("GPL");
+> =A0static int toshiba_bt_rfkill_add(struct acpi_device *device);
+> =A0static int toshiba_bt_rfkill_remove(struct acpi_device *device, in=
+t type);
+> =A0static void toshiba_bt_rfkill_notify(struct acpi_device *device, u=
+32 event);
+> -static int toshiba_bt_resume(struct acpi_device *device);
+>
+> =A0static const struct acpi_device_id bt_device_ids[] =3D {
+> =A0 =A0 =A0 =A0{ "TOS6205", 0},
+> @@ -42,6 +41,9 @@ static const struct acpi_device_id bt_de
+> =A0};
+> =A0MODULE_DEVICE_TABLE(acpi, bt_device_ids);
+>
+> +static int toshiba_bt_resume(struct device *dev);
+> +static SIMPLE_DEV_PM_OPS(toshiba_bt_pm, NULL, toshiba_bt_resume);
+> +
+> =A0static struct acpi_driver toshiba_bt_rfkill_driver =3D {
+> =A0 =A0 =A0 =A0.name =3D =A0 =A0 =A0 =A0 "Toshiba BT",
+> =A0 =A0 =A0 =A0.class =3D =A0 =A0 =A0 =A0"Toshiba",
+> @@ -50,9 +52,9 @@ static struct acpi_driver toshiba_bt_rfk
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.add =3D=
+ =A0 =A0 =A0 =A0 =A0toshiba_bt_rfkill_add,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.remov=
+e =3D =A0 =A0 =A0 toshiba_bt_rfkill_remove,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.notif=
+y =3D =A0 =A0 =A0 toshiba_bt_rfkill_notify,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 .resume=
+ =3D =A0 =A0 =A0 toshiba_bt_resume,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0},
+> =A0 =A0 =A0 =A0.owner =3D =A0 =A0 =A0 =A0THIS_MODULE,
+> + =A0 =A0 =A0 .drv.pm =3D =A0 =A0 =A0 &toshiba_bt_pm,
+> =A0};
+>
+>
+> @@ -88,9 +90,9 @@ static void toshiba_bt_rfkill_notify(str
+> =A0 =A0 =A0 =A0toshiba_bluetooth_enable(device->handle);
+> =A0}
+>
+> -static int toshiba_bt_resume(struct acpi_device *device)
+> +static int toshiba_bt_resume(struct device *dev)
+> =A0{
+> - =A0 =A0 =A0 return toshiba_bluetooth_enable(device->handle);
+> + =A0 =A0 =A0 return toshiba_bluetooth_enable(to_acpi_device(dev)->ha=
+ndle);
+> =A0}
+>
+> =A0static int toshiba_bt_rfkill_add(struct acpi_device *device)
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at =A0http://www.tux.org/lkml/
 
-No.
+Looks good, will look into the other struct patch (#11) tomorrow.
 
-The added #define DEBUG makes dynamic_debug emit those
-messages automatically.  Without the #define DEBUG, then
-these tp_[v]dbg calls might not be compiled in at all.
-
-These to_[v]dbg calls can be turned off via the normal
-dyn_debug mechanisms.
-
-see: Documentation/dynamic-debug-howto.txt
-
-cheers, Joe
-
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
+Reviewed-by: Vikram Dhillon <opensolarisdev@gmail.com>
