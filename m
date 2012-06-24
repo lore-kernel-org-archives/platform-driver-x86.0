@@ -1,90 +1,36 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: [PATCH] sonypi: Use struct dev_pm_ops for power management
-Date: Sat, 23 Jun 2012 23:46:26 +0200
-Message-ID: <201206232346.26432.rjw@sisk.pl>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 1/5] thinkpad_acpi: Drop pm_message_t arguments from
+ suspend routines
+Date: Sat, 23 Jun 2012 21:32:24 -0300
+Message-ID: <20120624003224.GA20885@khazad-dum.debian.net>
+References: <201206172226.42729.rjw@sisk.pl>
+ <201206172227.23591.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ogre.sisk.pl ([193.178.161.156]:37119 "EHLO ogre.sisk.pl"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754650Ab2FWVlB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Jun 2012 17:41:01 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linux PM list <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201206172227.23591.rjw@sisk.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Joey Lee <jlee@novell.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rafael J. Wysocki <rjw@sisk.pl>
+On Sun, 17 Jun 2012, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rjw@sisk.pl>
+> 
+> Multiple suspend routines in drivers/platform/x86/thinkpad_acpi.c
+> use take pm_message_t arguments that aren't used by any of them.
+> Make those routines take no arguments as that's what they should do.
+> 
+> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
 
-Make the sonypi driver define its PM callbacks through
-a struct dev_pm_ops object rather than by using legacy PM hooks
-in struct platform_driver.
+Someday it might be necessary for some of these routines to differentiate S3
+from suspend-to-disk, but I will introduce a parameter when that day comes.
 
-Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
----
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-Hi,
-
-If there are no objections, I'd like to push this patch for 3.6 through
-the linux-pm tree.
-
-Unfortunately, I don't have the hardware to test it, but I hope it is simple
-enough for code inspection to suffice.
-
-Thanks,
-Rafael
-
----
- drivers/char/sonypi.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-Index: linux/drivers/char/sonypi.c
-===================================================================
---- linux.orig/drivers/char/sonypi.c
-+++ linux/drivers/char/sonypi.c
-@@ -1459,7 +1459,7 @@ static int __devexit sonypi_remove(struc
- #ifdef CONFIG_PM
- static int old_camera_power;
- 
--static int sonypi_suspend(struct platform_device *dev, pm_message_t state)
-+static int sonypi_suspend(struct device *dev)
- {
- 	old_camera_power = sonypi_device.camera_power;
- 	sonypi_disable();
-@@ -1467,14 +1467,16 @@ static int sonypi_suspend(struct platfor
- 	return 0;
- }
- 
--static int sonypi_resume(struct platform_device *dev)
-+static int sonypi_resume(struct device *dev)
- {
- 	sonypi_enable(old_camera_power);
- 	return 0;
- }
-+
-+static SIMPLE_DEV_PM_OPS(sonypi_pm, sonypi_suspend, sonypi_resume);
-+#define SONYPI_PM	(&sonypi_pm)
- #else
--#define sonypi_suspend	NULL
--#define sonypi_resume	NULL
-+#define SONYPI_PM	NULL
- #endif
- 
- static void sonypi_shutdown(struct platform_device *dev)
-@@ -1486,12 +1488,11 @@ static struct platform_driver sonypi_dri
- 	.driver		= {
- 		.name	= "sonypi",
- 		.owner	= THIS_MODULE,
-+		.pm	= SONYPI_PM,
- 	},
- 	.probe		= sonypi_probe,
- 	.remove		= __devexit_p(sonypi_remove),
- 	.shutdown	= sonypi_shutdown,
--	.suspend	= sonypi_suspend,
--	.resume		= sonypi_resume,
- };
- 
- static struct platform_device *sonypi_platform_device;
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
