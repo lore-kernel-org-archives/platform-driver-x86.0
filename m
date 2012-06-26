@@ -1,56 +1,73 @@
-From: Jonathan Nieder <jrnieder@gmail.com>
-Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
-Date: Tue, 26 Jun 2012 16:39:58 -0500
-Message-ID: <20120626213958.GA17871@burratino>
-References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: [PATCH 1/7] acpi: add a way to promote/demote vendor backlight
+ drivers
+Date: Wed, 27 Jun 2012 07:19:08 +0900
+Message-ID: <20120626221907.GC26614@kamineko.org>
+References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
+ <1339572727-24744-2-git-send-email-corentin.chary@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gh0-f174.google.com ([209.85.160.174]:48396 "EHLO
-	mail-gh0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750893Ab2FZVkG (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Jun 2012 17:40:06 -0400
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1339572727-24744-2-git-send-email-corentin.chary@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Alex,
+Hi Corentin,
 
-Alex Hung wrote:
+On Wed, Jun 13, 2012 at 09:32:01AM +0200, Corentin Chary wrote:
+...
+> +/* Promote the vendor interface instead of the generic video module.
+> + * This function allow DMI blacklists to be implemented by externals
+> + * platform drivers instead of putting a big blacklist in video_detect.c
+> + * After calling this function you will probably want to call
+> + * acpi_video_unregister() to make sure the video module is not loaded
+> + */
+> +void acpi_video_dmi_promote_vendor(void)
+> +{
+> +	acpi_video_caps_check();
+> +	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+> +}
+> +EXPORT_SYMBOL(acpi_video_dmi_promote_vendor);
 
-> According to responses from the BIOS team, ASUS_WMI_METHODID_DSTS2
-> (0x53545344) will be used as future DSTS ID. In addition, calling
-> asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS2, 0, 0, NULL) returns
-> ASUS_WMI_UNSUPPORTED_METHOD in new ASUS laptop PCs. This patch fixes
-> no DSTS ID will be assigned in this case.
+I think having the promote_vendor() function do the sanity check on the
+acpi_backlight parameter and the unregistering of the acpi_video device
+may make the code cleaner and more acpi_video-agnostic in the drivers.
+I.e. (untested sample code):
 
- Tested-by: Carsten Otto <otto@informatik.rwth-aachen.de> # 3.2.21, Asus UX31A
+bool acpi_video_promote_vendor(void)
+{
+	if (acpi_video_backlight_support())
+		return false;
 
-More precisely, Carsten was unable to use asus_wmi, getting the
-following message from a distro kernel based on 3.4.1 and from
-unpatched 3.2.21:[1]
+	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
+	pr_info("Disabling ACPI video driver\n");
+	acpi_video_unregister();
+	return true;
+}
+EXPORT_SYMBOL(acpi_video_promote_vendor);
 
-| asus_wmi: Can't find DSTS
+and in the drivers you do
 
-After applying the patch described above to 3.2.21, multimedia keys
-work.
+	if (my_drv->broken_acpi_video) {
+		if (acpi_video_promote_vendor())
+			do_backlight_init();
+	} else if (!acpi_video_backlight_support())
+		do_backlight_init();
 
-| The patch works, dmesg before and after are attached.
-|
-| With the patched kernel I can (at least) change the volume using the
-| Fn keys, gnome shows some audio related icons and a changing (volume)
-| bar. I did not try further than that (yet).
+or something along these lines.
+If you give a boolean parameter to acpi_video_promote_vendor to force
+vendor backlight we could make the drivers' code even simpler but that
+would change the semantics of the "promotion" to something more of a
+"take-over".
 
-This is on an Asus Zenbook Prime (UX31A).  acpidump, logs, and other
-info are at [1].  Could you remind me when this hits mainline so we
-can make sure it gets applied to earlier kernels, for example by
-adding "Cc: stable@vger.kernel.org" to the commit message?
-
-Thanks and hope that helps,
-Jonathan
-
-[1] http://bugs.debian.org/679158
+PS: I will need to promote backlight control in sony-laptop.ko
+eventually as well but I don't have a DMI based list but rather I should
+look at a specific handle (or say Method) presence in the SNC Device.
+I guess I'm just bothered by the function naming here but not a big
+deal. :)
+-- 
+mattia
+:wq!
