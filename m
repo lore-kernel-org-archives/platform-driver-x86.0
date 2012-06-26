@@ -1,73 +1,59 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 1/7] acpi: add a way to promote/demote vendor backlight
- drivers
-Date: Wed, 27 Jun 2012 07:19:08 +0900
-Message-ID: <20120626221907.GC26614@kamineko.org>
-References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
- <1339572727-24744-2-git-send-email-corentin.chary@gmail.com>
+From: Carsten Otto <otto@informatik.rwth-aachen.de>
+Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
+Date: Tue, 26 Jun 2012 23:58:06 +0200
+Message-ID: <20120626215806.GM21479@carsten-otto>
+References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
+ <20120626213958.GA17871@burratino>
+Reply-To: Carsten Otto <otto@informatik.rwth-aachen.de>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary=H14uD12u8nekTETJ
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mta-1.ms.rz.rwth-aachen.de ([134.130.7.72]:63383 "EHLO
+	mta-1.ms.rz.rwth-aachen.de" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750811Ab2FZW2S (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 26 Jun 2012 18:28:18 -0400
+Content-disposition: inline
+In-reply-to: <20120626213958.GA17871@burratino>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Nieder <jrnieder@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+
+
+--H14uD12u8nekTETJ
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1339572727-24744-2-git-send-email-corentin.chary@gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 
-Hi Corentin,
+Dear all,
 
-On Wed, Jun 13, 2012 at 09:32:01AM +0200, Corentin Chary wrote:
-...
-> +/* Promote the vendor interface instead of the generic video module.
-> + * This function allow DMI blacklists to be implemented by externals
-> + * platform drivers instead of putting a big blacklist in video_detect.c
-> + * After calling this function you will probably want to call
-> + * acpi_video_unregister() to make sure the video module is not loaded
-> + */
-> +void acpi_video_dmi_promote_vendor(void)
-> +{
-> +	acpi_video_caps_check();
-> +	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
-> +}
-> +EXPORT_SYMBOL(acpi_video_dmi_promote_vendor);
+On Tue, Jun 26, 2012 at 04:39:58PM -0500, Jonathan Nieder wrote:
+> After applying the patch described above to 3.2.21, multimedia keys
+> work.
 
-I think having the promote_vendor() function do the sanity check on the
-acpi_backlight parameter and the unregistering of the acpi_video device
-may make the code cleaner and more acpi_video-agnostic in the drivers.
-I.e. (untested sample code):
+To be precise, only some of the Fn keys work. I will update the
+bug report at http://bugs.debian.org/679158 now. Please contact me if
+you need further information,
 
-bool acpi_video_promote_vendor(void)
-{
-	if (acpi_video_backlight_support())
-		return false;
+Best regards,
+--=20
+Carsten Otto           otto@informatik.rwth-aachen.de
+LuFG Informatik 2      http://verify.rwth-aachen.de/otto/
+RWTH Aachen            phone: +49 241 80-21211
 
-	acpi_video_support |= ACPI_VIDEO_BACKLIGHT_DMI_VENDOR;
-	pr_info("Disabling ACPI video driver\n");
-	acpi_video_unregister();
-	return true;
-}
-EXPORT_SYMBOL(acpi_video_promote_vendor);
+--H14uD12u8nekTETJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-and in the drivers you do
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-	if (my_drv->broken_acpi_video) {
-		if (acpi_video_promote_vendor())
-			do_backlight_init();
-	} else if (!acpi_video_backlight_support())
-		do_backlight_init();
+iEYEARECAAYFAk/qMG4ACgkQjUF4jpCSQBSAgACcCMt9vlw7LpBiTYeOg7h1BcL9
+w4AAnjxUNN+IdbTMHuSptAimUerxpvLr
+=fc5r
+-----END PGP SIGNATURE-----
 
-or something along these lines.
-If you give a boolean parameter to acpi_video_promote_vendor to force
-vendor backlight we could make the drivers' code even simpler but that
-would change the semantics of the "promotion" to something more of a
-"take-over".
-
-PS: I will need to promote backlight control in sony-laptop.ko
-eventually as well but I don't have a DMI based list but rather I should
-look at a specific handle (or say Method) presence in the SNC Device.
-I guess I'm just bothered by the function naming here but not a big
-deal. :)
--- 
-mattia
-:wq!
+--H14uD12u8nekTETJ--
