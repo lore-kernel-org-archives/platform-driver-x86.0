@@ -1,59 +1,42 @@
-From: Carsten Otto <otto@informatik.rwth-aachen.de>
-Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
-Date: Tue, 26 Jun 2012 23:58:06 +0200
-Message-ID: <20120626215806.GM21479@carsten-otto>
-References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
- <20120626213958.GA17871@burratino>
-Reply-To: Carsten Otto <otto@informatik.rwth-aachen.de>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS
+ ID.
+Date: Wed, 27 Jun 2012 15:53:32 +0800
+Message-ID: <4FEABBFC.6090708@canonical.com>
+References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com> <20120626213958.GA17871@burratino> <20120626215806.GM21479@carsten-otto>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature"; boundary=H14uD12u8nekTETJ
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mta-1.ms.rz.rwth-aachen.de ([134.130.7.72]:63383 "EHLO
-	mta-1.ms.rz.rwth-aachen.de" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750811Ab2FZW2S (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:55160 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756357Ab2F0Hxm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Jun 2012 18:28:18 -0400
-Content-disposition: inline
-In-reply-to: <20120626213958.GA17871@burratino>
+	Wed, 27 Jun 2012 03:53:42 -0400
+In-Reply-To: <20120626215806.GM21479@carsten-otto>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Nieder <jrnieder@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jonathan Nieder <jrnieder@gmail.com>, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On 06/27/2012 05:58 AM, Carsten Otto wrote:
+> Dear all,
+>
+> On Tue, Jun 26, 2012 at 04:39:58PM -0500, Jonathan Nieder wrote:
+>> After applying the patch described above to 3.2.21, multimedia keys
+>> work.
+>
+> To be precise, only some of the Fn keys work. I will update the
+> bug report at http://bugs.debian.org/679158 now. Please contact me if
+> you need further information,
+>
+> Best regards,
 
---H14uD12u8nekTETJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some Fn keys fail to work is probably the result of un-handled events, 
+i.e. asus_wmi: Unknown key 7a pressed.
 
-Dear all,
+Do you always receive the error messages for each of the Fn-keys that 
+fails? I can take a closer look and try to fix each of them. I don't 
+have a Asus Zenbook Prime but I can check on other available Asus machines.
 
-On Tue, Jun 26, 2012 at 04:39:58PM -0500, Jonathan Nieder wrote:
-> After applying the patch described above to 3.2.21, multimedia keys
-> work.
-
-To be precise, only some of the Fn keys work. I will update the
-bug report at http://bugs.debian.org/679158 now. Please contact me if
-you need further information,
-
-Best regards,
---=20
-Carsten Otto           otto@informatik.rwth-aachen.de
-LuFG Informatik 2      http://verify.rwth-aachen.de/otto/
-RWTH Aachen            phone: +49 241 80-21211
-
---H14uD12u8nekTETJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk/qMG4ACgkQjUF4jpCSQBSAgACcCMt9vlw7LpBiTYeOg7h1BcL9
-w4AAnjxUNN+IdbTMHuSptAimUerxpvLr
-=fc5r
------END PGP SIGNATURE-----
-
---H14uD12u8nekTETJ--
+Best Regards,
+Alex Hung
