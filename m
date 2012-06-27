@@ -1,47 +1,36 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH] sonypi: Use struct dev_pm_ops for power management
-Date: Wed, 27 Jun 2012 20:34:44 +0900
-Message-ID: <20120627113443.GA20597@kamineko.org>
-References: <201206232346.26432.rjw@sisk.pl>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: re: ACER: Add support for accelerometer sensor
+Date: Wed, 27 Jun 2012 16:15:34 +0300
+Message-ID: <20120627131534.GA31703@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from acsinet15.oracle.com ([141.146.126.227]:48993 "EHLO
+	acsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751720Ab2F0NPr (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 Jun 2012 09:15:47 -0400
 Content-Disposition: inline
-In-Reply-To: <201206232346.26432.rjw@sisk.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: marex@denx.de
+Cc: platform-driver-x86@vger.kernel.org
 
-On Sat, Jun 23, 2012 at 11:46:26PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rjw@sisk.pl>
-> 
-> Make the sonypi driver define its PM callbacks through
-> a struct dev_pm_ops object rather than by using legacy PM hooks
-> in struct platform_driver.
-> 
-> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+Hello Marek Vasut,
 
-Acked-by: Mattia Dongili <malattia@linux.it>
+The patch 6ae3a0876185: "ACER: Add support for accelerometer sensor"
+from Jun 1, 2012, leads to the following Smatch warning:
+drivers/platform/x86/acer-wmi.c:1886 acer_wmi_accel_destroy()
+	 error: don't call input_free_device() after input_unregister_device()
 
-> ---
-> 
-> Hi,
-> 
-> If there are no objections, I'd like to push this patch for 3.6 through
-> the linux-pm tree.
-> 
-> Unfortunately, I don't have the hardware to test it, but I hope it is simple
-> enough for code inspection to suffice.
+drivers/platform/x86/acer-wmi.c
+  1883  static void acer_wmi_accel_destroy(void)
+  1884  {
+  1885          input_unregister_device(acer_wmi_accel_dev);
+  1886          input_free_device(acer_wmi_accel_dev);
+  1887  }
 
-It looks ok to me. I do have the hardware but it's very old, last time I
-booted that laptop is at least 5 years ago, not even sure it still boots
-actually.
+It is a double free.
 
-I'll give it a go if I get the time but don't count too much on it so
-please include this in 3.6.
-
-Thanks!
--- 
-mattia
-:wq!
+regards,
+dan carpenter
