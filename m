@@ -1,67 +1,72 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Marek Vasut <marex@denx.de>
 Subject: Re: ACER: Add support for accelerometer sensor
-Date: Wed, 27 Jun 2012 17:19:32 +0300
-Message-ID: <20120627141932.GG3007@mwanda>
-References: <20120627131534.GA31703@elgon.mountain>
- <201206271532.12841.marex@denx.de>
- <20120627134326.GF3007@mwanda>
- <201206271559.16667.marex@denx.de>
+Date: Wed, 27 Jun 2012 17:01:23 +0200
+Message-ID: <201206271701.23890.marex@denx.de>
+References: <20120627131534.GA31703@elgon.mountain> <201206271559.16667.marex@denx.de> <20120627141932.GG3007@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from rcsinet15.oracle.com ([148.87.113.117]:27299 "EHLO
-	rcsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753546Ab2F0OTn (ORCPT
+Received: from mail-out.m-online.net ([212.18.0.10]:59653 "EHLO
+	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756358Ab2F0PB2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Jun 2012 10:19:43 -0400
-Content-Disposition: inline
-In-Reply-To: <201206271559.16667.marex@denx.de>
+	Wed, 27 Jun 2012 11:01:28 -0400
+In-Reply-To: <20120627141932.GG3007@mwanda>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marek Vasut <marex@denx.de>
+To: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 27, 2012 at 03:59:16PM +0200, Marek Vasut wrote:
-> Dear Dan Carpenter,
-> 
-> > On Wed, Jun 27, 2012 at 03:32:12PM +0200, Marek Vasut wrote:
-> > > Dear Dan Carpenter,
-> > > 
-> > > > Hello Marek Vasut,
-> > > > 
-> > > > The patch 6ae3a0876185: "ACER: Add support for accelerometer sensor"
-> > > > from Jun 1, 2012, leads to the following Smatch warning:
-> > > > drivers/platform/x86/acer-wmi.c:1886 acer_wmi_accel_destroy()
-> > > > 
-> > > > 	 error: don't call input_free_device() after input_unregister_device()
-> > > > 
-> > > > drivers/platform/x86/acer-wmi.c
-> > > > 
-> > > >   1883  static void acer_wmi_accel_destroy(void)
-> > > >   1884  {
-> > > >   1885          input_unregister_device(acer_wmi_accel_dev);
-> > > >   1886          input_free_device(acer_wmi_accel_dev);
-> > > >   1887  }
-> > > > 
-> > > > It is a double free.
-> > > 
-> > > I see, understood ... shall I submit subsequent patch?
+Dear Dan Carpenter,
+
+> On Wed, Jun 27, 2012 at 03:59:16PM +0200, Marek Vasut wrote:
+> > Dear Dan Carpenter,
 > > 
-> > Yes, please.  Could you give me a:
+> > > On Wed, Jun 27, 2012 at 03:32:12PM +0200, Marek Vasut wrote:
+> > > > Dear Dan Carpenter,
+> > > > 
+> > > > > Hello Marek Vasut,
+> > > > > 
+> > > > > The patch 6ae3a0876185: "ACER: Add support for accelerometer
+> > > > > sensor" from Jun 1, 2012, leads to the following Smatch warning:
+> > > > > drivers/platform/x86/acer-wmi.c:1886 acer_wmi_accel_destroy()
+> > > > > 
+> > > > > 	 error: don't call input_free_device() after
+> > > > > 	 input_unregister_device()
+> > > > > 
+> > > > > drivers/platform/x86/acer-wmi.c
+> > > > > 
+> > > > >   1883  static void acer_wmi_accel_destroy(void)
+> > > > >   1884  {
+> > > > >   1885          input_unregister_device(acer_wmi_accel_dev);
+> > > > >   1886          input_free_device(acer_wmi_accel_dev);
+> > > > >   1887  }
+> > > > > 
+> > > > > It is a double free.
+> > > > 
+> > > > I see, understood ... shall I submit subsequent patch?
+> > > 
+> > > Yes, please.  Could you give me a:
+> > > 
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 > > 
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Looking through input_unregister_device(), that call doesn't free the
+> > structure. Actually, many drivers call explicitly kfree() on it.
+> > 
+> > Where do you see the double_free() ?
 > 
-> Looking through input_unregister_device(), that call doesn't free the structure. 
-> Actually, many drivers call explicitly kfree() on it.
+> It's been a while since I looked at this code...
 > 
-> Where do you see the double_free() ?
-> 
+> This is described in the comments for input_unregister_device().
+> It's a refcounted thing.  It is freed when the last reference is
+> dropped.
 
-It's been a while since I looked at this code...
+So kfree() eg. in here drivers/input/joystick/magellan.c is also wrong?
 
-This is described in the comments for input_unregister_device().
-It's a refcounted thing.  It is freed when the last reference is
-dropped.
+> regards,
+> dan carpenter
 
-regards,
-dan carpenter
+Best regards,
+Marek Vasut
