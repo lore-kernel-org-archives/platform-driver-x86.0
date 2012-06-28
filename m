@@ -1,26 +1,21 @@
-From: Seth Forshee <seth.forshee@canonical.com>
+From: Arun Raghavan <arun.raghavan@collabora.co.uk>
 Subject: Re: [PATCH] apple-gmux: Correctly depend on apple_bl for building
-Date: Thu, 28 Jun 2012 08:50:39 -0500
-Message-ID: <20120628135039.GC15308@thinkpad-t410>
+Date: Thu, 28 Jun 2012 19:21:11 +0530
+Message-ID: <1340891471.4994.10.camel@localhost>
 References: <1340879796-30262-1-git-send-email-arun.raghavan@collabora.co.uk>
- <20120628132058.GA15308@thinkpad-t410>
- <1340889815.4994.4.camel@localhost>
- <20120628134806.GB15308@thinkpad-t410>
+	 <20120628132058.GA15308@thinkpad-t410> <1340889815.4994.4.camel@localhost>
+	 <20120628134806.GB15308@thinkpad-t410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:33539 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751221Ab2F1Num (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 28 Jun 2012 09:50:42 -0400
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20120628134806.GB15308@thinkpad-t410>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arun Raghavan <arun.raghavan@collabora.co.uk>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 28, 2012 at 08:48:06AM -0500, Seth Forshee wrote:
+On Thu, 2012-06-28 at 08:48 -0500, Seth Forshee wrote:
 > On Thu, Jun 28, 2012 at 06:53:35PM +0530, Arun Raghavan wrote:
 > > On Thu, 2012-06-28 at 08:20 -0500, Seth Forshee wrote:
 > > > On Thu, Jun 28, 2012 at 04:06:36PM +0530, Arun Raghavan wrote:
@@ -47,10 +42,12 @@ On Thu, Jun 28, 2012 at 08:48:06AM -0500, Seth Forshee wrote:
 > As far as I know select isn't recursive, i.e. it won't select the
 > dependencies of the thing you select. 
 
-Oops, I accidentally sent this before I was done writing it.
+I missed the stubs, so the patch should probably just be adding this
+line:
 
-I want to play with this a bit more, because it looks like there are
-other scenarios that could be problematic. So I'll respond again once
-I've had a chance to do that.
+depends on APPLE_BACKLIGHT = n || APPLE_BACKLIGHT
 
-Seth
+but that conflicts with the 'select BACKLIGHT_CLASS_DEVICE' (a recursive
+dependency is detected).
+
+-- Arun
