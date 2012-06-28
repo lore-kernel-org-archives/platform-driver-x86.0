@@ -1,42 +1,26 @@
-From: Jonathan Nieder <jrnieder@gmail.com>
-Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
-Date: Wed, 27 Jun 2012 17:17:43 -0500
-Message-ID: <20120627221743.GC13738@burratino>
-References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
- <20120626213958.GA17871@burratino>
- <20120626215806.GM21479@carsten-otto>
- <4FEABBFC.6090708@canonical.com>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH] eeepc-wmi: change wireless key event to toggle all wireless
+ devices.
+Date: Thu, 28 Jun 2012 14:59:58 +0800
+Message-ID: <4FEC00EE.7040007@canonical.com>
+References: <1340162788-531-1-git-send-email-alex.hung@canonical.com> <20120626183349.GB29375@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-gh0-f174.google.com ([209.85.160.174]:49570 "EHLO
-	mail-gh0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755761Ab2F0WRt (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 Jun 2012 18:17:49 -0400
-Content-Disposition: inline
-In-Reply-To: <4FEABBFC.6090708@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Carsten Otto <otto@informatik.rwth-aachen.de>, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120626183349.GB29375@srcf.ucam.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: corentincj@iksaif.net, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Alex,
-
-Alex Hung wrote:
-
-> Some Fn keys fail to work is probably the result of un-handled
-> events, i.e. asus_wmi: Unknown key 7a pressed.
+On 06/27/2012 02:33 AM, Matthew Garrett wrote:
+> Is this the expected behaviour (ie, is this what happens on Windows as
+> well)?
 >
-> Do you always receive the error messages for each of the Fn-keys
-> that fails? I can take a closer look and try to fix each of them. I
-> don't have a Asus Zenbook Prime but I can check on other available
-> Asus machines.
 
-It looks like your message didn't reach Carsten.  I'm cc-ing him now.
+Windows has an hotkey application called ATK. When Fn+F2 is pressed, it 
+displays options for turning on/off for WLAN and Bluebooth.
 
-See http://bugs.debian.org/679158#62 for a summary of what each Fn-key
-that fails does (it varies from key to key).
-
-Regards,
-Jonathan
+ASUS agreed this is better as the previous code only turns off WLAN and 
+there is no way to turn off Bluetooth.
