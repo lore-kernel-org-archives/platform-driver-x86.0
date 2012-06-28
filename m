@@ -1,42 +1,27 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] apple-gmux: Correctly depend on apple_bl for building
-Date: Thu, 28 Jun 2012 08:48:06 -0500
-Message-ID: <20120628134806.GB15308@thinkpad-t410>
-References: <1340879796-30262-1-git-send-email-arun.raghavan@collabora.co.uk>
- <20120628132058.GA15308@thinkpad-t410>
- <1340889815.4994.4.camel@localhost>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] eeepc-wmi: change wireless key event to toggle all
+ wireless devices.
+Date: Thu, 28 Jun 2012 14:49:32 +0100
+Message-ID: <20120628134932.GA30433@srcf.ucam.org>
+References: <1340162788-531-1-git-send-email-alex.hung@canonical.com>
+ <20120626183349.GB29375@srcf.ucam.org>
+ <4FEC00EE.7040007@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:35704 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751329Ab2F1Nth (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 28 Jun 2012 09:49:37 -0400
 Content-Disposition: inline
-In-Reply-To: <1340889815.4994.4.camel@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Raghavan <arun.raghavan@collabora.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <4FEC00EE.7040007@canonical.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: corentincj@iksaif.net, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Jun 28, 2012 at 06:53:35PM +0530, Arun Raghavan wrote:
-> On Thu, 2012-06-28 at 08:20 -0500, Seth Forshee wrote:
-> > On Thu, Jun 28, 2012 at 04:06:36PM +0530, Arun Raghavan wrote:
-> > > apple_bl_register/unregister() are unconditionally used now, so we need
-> > > to make sure that apple_bl is selected appropriately (built-in/module)
-> > > if apple-gmux is being built.
-> > 
-> > apple_bl.h provides stubs for these functions when apple_bl is not
-> > built, so this shouldn't be necessary. Are you encoutering a situation
-> > that causes build problems?
-> 
-> Yes, I am. With CONFIG_BACKLIGHT_APPLE=m and CONFIG_APPLE_GMUX=y, I see
-> the following error:
-> 
->   LD      init/built-in.o
-> drivers/built-in.o: In function `gmux_probe':
-> apple-gmux.c:(.devinit.text+0xa769): undefined reference to `apple_bl_unregister'
-> drivers/built-in.o: In function `gmux_remove':
-> apple-gmux.c:(.devexit.text+0x46d): undefined reference to `apple_bl_register'
+Ok, I'll merge this.
 
-Yuck. In that case I don't think your patch probably goes far enough to
-fix your situation.
-
-As far as I know select isn't recursive, i.e. it won't select the
-dependencies of the thing you select. 
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
