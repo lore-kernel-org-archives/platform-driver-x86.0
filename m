@@ -1,84 +1,105 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] backlight: add support for disabling backlights via
- sysfs
-Date: Fri, 29 Jun 2012 15:18:49 +0800
-Message-ID: <1340954329.6196.273.camel@linux-s257.site>
-References: <1340910426-13269-1-git-send-email-seth.forshee@canonical.com>
-	 <20120628191043.GA9777@srcf.ucam.org>
-	 <20120628193017.GA29456@thinkpad-t410>
-	 <20120628193652.GB10945@srcf.ucam.org>
-	 <20120628211600.GB29456@thinkpad-t410>
-	 <20120628211936.GA14286@srcf.ucam.org>
-	 <1340937839.6196.212.camel@linux-s257.site>
-	 <20120629025724.GB18605@srcf.ucam.org>
+From: Thadeu Cascardo <cascardo@holoscopio.com>
+Subject: Re: [PATCH missing/21] classmate-laptop: Use struct dev_pm_ops for
+	power management
+Date: Fri, 29 Jun 2012 08:39:53 -0300
+Message-ID: <1340969993.24166.2.camel@Nokia-N900>
+References: <201206232306.06602.rjw@sisk.pl>
+	  <201206290011.53618.rjw@sisk.pl>
+Reply-To: Thadeu Cascardo <cascardo@holoscopio.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nat.nue.novell.com ([195.135.221.2]:14910 "EHLO
-	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750806Ab2F2HT1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 Jun 2012 03:19:27 -0400
-In-Reply-To: <20120629025724.GB18605@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: seth.forshee@canonical.com, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <201206290011.53618.rjw@sisk.pl>
+Content-ID: <1340969992.24166.1.camel@Nokia-N900>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>, Linux PM list <linux-pm@vger.kernel.org>
+Cc: ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>, Daniel Oliveira Nascimento <don@syst.com.br>
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E4=BA=94=EF=BC=8C2012-06-29 =E6=96=BC 03:57 +0100=EF=BC=8CMa=
-tthew Garrett =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Fri, Jun 29, 2012 at 10:43:59AM +0800, joeyli wrote:
+----- Original message -----
+> From: Rafael J. Wysocki <rjw@sisk.pl>
 >=20
-> > 	http://msdn.microsoft.com/en-us/windows/hardware/gg487382.aspx
-> >
-> > In WDDM architecture, in spec p.5, there have a "Monitor" driver to
-> > check the WDDM driver support brightness DDI, if not, then it will =
-use
-> > standard acpi method to control brightness.
+> Make the classmate-laptop driver define its PM callbacks through
+> a struct dev_pm_ops object rather than by using legacy PM hooks
+> in struct acpi_device_ops.
 >=20
-> What's the interaction between GPU drivers and platform drivers? For=20
-> instance, on acer systems that have backlight control via WMI, does=20
-> Windows use WMI, the GPU driver or ACPI?
-> =20
+> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+> ---
+>=20
+> Hi all,
+>=20
+> I overlooked the classmate-laptop driver in the ACPI conversion to PM
+> handling based on struct dev_pm_ops, so this one should go after [17/=
+21]
+> and the next patches should be renumbered.
+>=20
+> Thanks,
+> Rafael
+>=20
+>=20
+> ---
+>=C2=A0  drivers/platform/x86/classmate-laptop.c |=C2=A0 =C2=A0  13 +++=
++++++-----
+>=C2=A0  1 file changed, 8 insertions(+), 5 deletions(-)
+>=20
+> Index: linux/drivers/platform/x86/classmate-laptop.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux.orig/drivers/platform/x86/classmate-laptop.c
+> +++ linux/drivers/platform/x86/classmate-laptop.c
+> @@ -362,15 +362,18 @@ static int cmpc_tablet_remove(struct acp
+>=C2=A0  =C2=A0=C2=A0=C2=A0 return cmpc_remove_acpi_notify_device(acpi)=
+;
+>=C2=A0  }
+>=C2=A0 =20
+> -static int cmpc_tablet_resume(struct acpi_device *acpi)
+> +static int cmpc_tablet_resume(struct device *dev)
+>=C2=A0  {
+> -=C2=A0=C2=A0=C2=A0 struct input_dev *inputdev =3D dev_get_drvdata(&a=
+cpi->dev);
+> +=C2=A0=C2=A0=C2=A0 struct input_dev *inputdev =3D dev_get_drvdata(de=
+v);
+> +
+>=C2=A0  =C2=A0=C2=A0=C2=A0 unsigned long long val =3D 0;
+> -=C2=A0=C2=A0=C2=A0 if (ACPI_SUCCESS(cmpc_get_tablet(acpi->handle, &v=
+al)))
+> +=C2=A0=C2=A0=C2=A0 if (ACPI_SUCCESS(cmpc_get_tablet(to_acpi_device(d=
+ev)->handle, &val)))
+>=C2=A0  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 input_report_switch(inpu=
+tdev, SW_TABLET_MODE, !val);
+>=C2=A0  =C2=A0=C2=A0=C2=A0 return 0;
+>=C2=A0  }
+>=C2=A0 =20
+> +static SIMPLE_DEV_PM_OPS(cmpc_tabled_pm, NULL, cmpc_tablet_resume);
+> +
+>=C2=A0  static const struct acpi_device_id cmpc_tablet_device_ids[] =3D=
+ {
+>=C2=A0  =C2=A0=C2=A0=C2=A0 {CMPC_TABLET_HID, 0},
+>=C2=A0  =C2=A0=C2=A0=C2=A0 {"", 0}
+> @@ -384,9 +387,9 @@ static struct acpi_driver cmpc_tablet_ac
+>=C2=A0  =C2=A0=C2=A0=C2=A0 .ops =3D {
+>=C2=A0  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 .add =3D cmpc_tablet_add=
+,
+>=C2=A0  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 .remove =3D cmpc_tablet_=
+remove,
+> -=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 .resume =3D cmpc_tablet_resume=
+,
+>=C2=A0  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 .notify =3D cmpc_tablet_=
+handler,
+> -=C2=A0=C2=A0=C2=A0 }
+> +=C2=A0=C2=A0=C2=A0 },
+> +=C2=A0=C2=A0=C2=A0 .drv.pm =3D &cmpc_tabled_pm,
+>=C2=A0  };
+>=C2=A0 =20
+>=C2=A0 =20
 
-I think GPU driver.
+Aside from the typo tabled,
 
-Because there have no wmi method support backlight control on modern
-Acer machine and _BCM also broken on some machines.
-
-
-On old machines that have 6AF4F258 wmi method, it supported to set
-brightness level through wmi. But 6AF4F258 is really old now and almost
-broken or not provide by new acer BIOS.
-
-So, it is clear for modern Acer machines do NOT use wmi to control
-backlight. It must control brightness through acpi or GPU driver.
-(For very very new machine maybe changed again, need to check.)
-
-Have a a period of time, acer BIOS provide healthful _BCM
-implementation, in _BCM, they changed brightness through OPregion or
-write EC register.
-
-But now, some machines have broken _BCM and they are also not control
-brightness through WMI, that means the brightness control is through GP=
-U
-driver.
-
-Per WDDM spec, if WDDM driver support DDI, the NORMAL code path of
-brightness control is:
-	Mobility Center(userland) -> Monitor Driver -> WDDM Driver -> Graphics=
- Adapter
-
-
-Reviewed DSDT from Acer machines, I believe Acer didn't force ODM fully=
- implement
-Acer's WMI space. So, also need to check with Acer for how many ODM rea=
-lly follow WDDM spec.
-
-
-
-
-
-
-=20
+Acked-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
