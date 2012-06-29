@@ -1,66 +1,70 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] backlight: add support for disabling backlights via sysfs
-Date: Fri, 29 Jun 2012 14:24:38 +0200
-Message-ID: <CAHR064jEbtT9-+hNSq6Kr+uYCQX2fjcQb+kmkX2V46heCLO8vg@mail.gmail.com>
-References: <1340910426-13269-1-git-send-email-seth.forshee@canonical.com>
-	<20120628191043.GA9777@srcf.ucam.org>
-	<20120628193017.GA29456@thinkpad-t410>
-	<20120628193652.GB10945@srcf.ucam.org>
+From: =?UTF-8?q?Miguel=20G=C3=B3mez?= <magomez@igalia.com>
+Subject: [PATCH 0/1] Add support for Classmate V3 accelerometer to classmate-laptop
+Date: Fri, 29 Jun 2012 14:46:29 +0200
+Message-ID: <cover.1340971993.git.magomez@igalia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:55654 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751917Ab2F2MYk (ORCPT
+Received: from smtp3.mundo-r.com ([212.51.32.191]:59300 "EHLO
+	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1752710Ab2F2Mqq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 Jun 2012 08:24:40 -0400
-In-Reply-To: <20120628193652.GB10945@srcf.ucam.org>
+	Fri, 29 Jun 2012 08:46:46 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: cascardo@holoscopio.com, don@syst.com.br, mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Miguel=20G=C3=B3mez?= <magomez@igalia.com>
 
-On Thu, Jun 28, 2012 at 9:36 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Thu, Jun 28, 2012 at 02:30:17PM -0500, Seth Forshee wrote:
->
->> I actually don't think Corentin's solution is a bad one. It does suffer
->> from a couple of shortcomings though. First, it only works for broken
->> ACPI backlights, and some platforms have other backlight interfaces that
->> are broken (e.g. the i915 backlight on the MacBook Pro 8,2). Second,
->> marking backlights as broken in the kernel necessitates ever-expanding
->> dmi blacklists in some of the platform drivers, unless we can get
->> vendors to stop providing broken backlight interfaces.
->
-> Userspace should already be prioritising platform interfaces over raw
-> interfaces, so if gmux works on the Mac then there's no problem.
+Classmate V3 has a different accelerometer than the previous versions. =
+Main
+differences between the new  (ACCE0001) and the old one (ACCE0000) are:
 
-Hehe, sometime the platform interface doesn't work and the raw does.
-That's the case on various samsung-laptop since we have absolutely no
-documentation about SABI and no known way to probe if the
-implementation is working or not. But anyway, for samsung-laptop it's
-disabled by default in favor of acpi_video (which is also broken most
-of the time on samsung laptops).
+* ACPI method calls need to receive 4 parameters instead of 2
+* Values returned by the accelerometer are 2 bytes signed integers, ins=
+tead
+of one unsigned byte
+* New accelerometer has a new attribute (g_select) besides the sensitiv=
+ity one.
+This attribute's possible values are 0 (meaning 1.5g) and 1 (meaning 6g=
+).
 
-> DMI
-> lists should, broadly speaking, be unnecessary - they're mostly a
-> symptom of us not understanding how the hardware is expected to work.
->
->> I'm all for fixing integration bugs in the ACPI backlight
->> implementations if we can, but some vendor implementations are just
->> flat-out broken, and it isn't always possible to get vendor cooperation.
->> In the case of Toshiba I've tried reaching out to them to work on ACPI
->> integration issues, but they flat out refused.
->
-> We already know that our implementation of the IGD opregion is broken,
-> but Intel won't hand over newer versions of the spec. If you see
-> problems with the acpi backlight interface on Intel graphics then that
-> should be the default assumption.
->
-> --
-> Matthew Garrett | mjg59@srcf.ucam.org
+I haven't been able to find the datasheet of the accelerometer, so I go=
+t most
+of the behaviour of the device by looking at the previous model driver =
+and by
+experimenting with the hardware. Due to this, the range of the axis val=
+ues
+(currently defined as -255-255) may not be exact, and also the fuzz val=
+ue (16)
+may not be the best. But, with this configuration, the programs handlin=
+g the
+screen rotation developed for previous versions of Classmate are workin=
+g
+properly.
 
+Initially I thought of modifying the ACCE0000 driver to be able to hand=
+le both
+devices, but the patch was quite big and messy, and it might add proble=
+ms to the
+previous hardware, so I decided to implement it as a new driver, follow=
+ing the
+structure of the ACCE0000 driver. This way the new code won't break the=
+ old one.
 
+In order to differenciate the new driver code from the old one, all the
+function names that belong to the new driver end with "v3".
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+Hope everything is ok :)
+
+Regards!
+
+Miguel G=C3=B3mez (1):
+  classmate-laptop: Add support for accelerometer in classmate V3.
+
+ drivers/platform/x86/classmate-laptop.c |  400 +++++++++++++++++++++++=
++++++++-
+ 1 file changed, 398 insertions(+), 2 deletions(-)
+
+--=20
+1.7.9.5
