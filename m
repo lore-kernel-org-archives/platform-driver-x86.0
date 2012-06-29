@@ -1,50 +1,42 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] backlight: add support for disabling backlights via sysfs
-Date: Fri, 29 Jun 2012 09:11:00 -0500
-Message-ID: <20120629141100.GB23192@thinkpad-t410>
-References: <1340910426-13269-1-git-send-email-seth.forshee@canonical.com>
- <20120628191043.GA9777@srcf.ucam.org>
- <20120628193017.GA29456@thinkpad-t410>
- <20120628193652.GB10945@srcf.ucam.org>
- <CAHR064jEbtT9-+hNSq6Kr+uYCQX2fjcQb+kmkX2V46heCLO8vg@mail.gmail.com>
+From: =?UTF-8?q?Tomasz=20Mo=C5=84?= <desowin@gmail.com>
+Subject: [PATCH 1/1] x86/platform: samsung-laptop: Update Kconfig dependencies.
+Date: Fri, 29 Jun 2012 22:59:42 +0200
+Message-ID: <1341003582-4481-1-git-send-email-desowin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:38336 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751068Ab2F2OLJ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 Jun 2012 10:11:09 -0400
-Content-Disposition: inline
-In-Reply-To: <CAHR064jEbtT9-+hNSq6Kr+uYCQX2fjcQb+kmkX2V46heCLO8vg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, =?UTF-8?q?Tomasz=20Mo=C5=84?= <desowin@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 29, 2012 at 02:24:38PM +0200, Corentin Chary wrote:
-> On Thu, Jun 28, 2012 at 9:36 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> > On Thu, Jun 28, 2012 at 02:30:17PM -0500, Seth Forshee wrote:
-> >
-> >> I actually don't think Corentin's solution is a bad one. It does suffer
-> >> from a couple of shortcomings though. First, it only works for broken
-> >> ACPI backlights, and some platforms have other backlight interfaces that
-> >> are broken (e.g. the i915 backlight on the MacBook Pro 8,2). Second,
-> >> marking backlights as broken in the kernel necessitates ever-expanding
-> >> dmi blacklists in some of the platform drivers, unless we can get
-> >> vendors to stop providing broken backlight interfaces.
-> >
-> > Userspace should already be prioritising platform interfaces over raw
-> > interfaces, so if gmux works on the Mac then there's no problem.
-> 
-> Hehe, sometime the platform interface doesn't work and the raw does.
-> That's the case on various samsung-laptop since we have absolutely no
-> documentation about SABI and no known way to probe if the
-> implementation is working or not. But anyway, for samsung-laptop it's
-> disabled by default in favor of acpi_video (which is also broken most
-> of the time on samsung laptops).
+samsung-laptop driver can be compiled if ACPI_VIDEO is either compiled =
+or
+exluded. Trying to built-in the samsung-laptop driver when ACPI_VIDEO i=
+s
+compiled as module results in linking error.
 
-The situation is similar with Toshibas. On some the raw interface is
-still the only reliable way to change the backlight. I just got my hands
-on one of these models though, so I'm hoping to make some progress on
-that front in the near future.
+This patch resolves this problem by setting proper dependencies in Kcon=
+fig.
+
+Signed-off-by: Tomasz Mo=C5=84 <desowin@gmail.com>
+---
+ drivers/platform/x86/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index 2a262f5..5add45e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -717,6 +717,7 @@ config XO15_EBOOK
+ config SAMSUNG_LAPTOP
+ 	tristate "Samsung Laptop driver"
+ 	depends on X86
++	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+ 	depends on RFKILL || RFKILL =3D n
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	select LEDS_CLASS
+--=20
+1.7.10
