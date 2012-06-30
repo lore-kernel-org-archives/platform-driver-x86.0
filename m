@@ -1,87 +1,53 @@
 From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH missing/21] classmate-laptop: Use struct dev_pm_ops for power management
-Date: Fri, 29 Jun 2012 23:52:00 +0200
-Message-ID: <201206292352.01078.rjw@sisk.pl>
-References: <201206232306.06602.rjw@sisk.pl> <201206290011.53618.rjw@sisk.pl> <1340969993.24166.2.camel@Nokia-N900>
+Subject: [PATCH 1/2] hdaps: Use struct dev_pm_ops for power management
+Date: Sat, 30 Jun 2012 23:56:59 +0200
+Message-ID: <201206302356.59946.rjw@sisk.pl>
+References: <201206302356.11014.rjw@sisk.pl>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1340969993.24166.2.camel@Nokia-N900>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thadeu Cascardo <cascardo@holoscopio.com>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Eric Piel <eric.piel@tremplin-utc.net>, Mattia Dongili <malattia@linux.it>, Harald Welte <laforge@gnumonks.org>, Daniel Oliveira Nascimento <don@syst.com.br>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201206302356.11014.rjw@sisk.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Frank Seidel <frank@f-seidel.de>, "Lee, Chun-Yi" <jlee@novell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Friday, June 29, 2012, Thadeu Cascardo wrote:
-> ----- Original message -----
-> > From: Rafael J. Wysocki <rjw@sisk.pl>
-> > 
-> > Make the classmate-laptop driver define its PM callbacks through
-> > a struct dev_pm_ops object rather than by using legacy PM hooks
-> > in struct acpi_device_ops.
-> > 
-> > Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
-> > ---
-> > 
-> > Hi all,
-> > 
-> > I overlooked the classmate-laptop driver in the ACPI conversion to PM
-> > handling based on struct dev_pm_ops, so this one should go after [17/21]
-> > and the next patches should be renumbered.
-> > 
-> > Thanks,
-> > Rafael
-> > 
-> > 
-> > ---
-> >   drivers/platform/x86/classmate-laptop.c |     13 ++++++++-----
-> >   1 file changed, 8 insertions(+), 5 deletions(-)
-> > 
-> > Index: linux/drivers/platform/x86/classmate-laptop.c
-> > ===================================================================
-> > --- linux.orig/drivers/platform/x86/classmate-laptop.c
-> > +++ linux/drivers/platform/x86/classmate-laptop.c
-> > @@ -362,15 +362,18 @@ static int cmpc_tablet_remove(struct acp
-> >       return cmpc_remove_acpi_notify_device(acpi);
-> >   }
-> >   
-> > -static int cmpc_tablet_resume(struct acpi_device *acpi)
-> > +static int cmpc_tablet_resume(struct device *dev)
-> >   {
-> > -    struct input_dev *inputdev = dev_get_drvdata(&acpi->dev);
-> > +    struct input_dev *inputdev = dev_get_drvdata(dev);
-> > +
-> >       unsigned long long val = 0;
-> > -    if (ACPI_SUCCESS(cmpc_get_tablet(acpi->handle, &val)))
-> > +    if (ACPI_SUCCESS(cmpc_get_tablet(to_acpi_device(dev)->handle, &val)))
-> >           input_report_switch(inputdev, SW_TABLET_MODE, !val);
-> >       return 0;
-> >   }
-> >   
-> > +static SIMPLE_DEV_PM_OPS(cmpc_tabled_pm, NULL, cmpc_tablet_resume);
-> > +
-> >   static const struct acpi_device_id cmpc_tablet_device_ids[] = {
-> >       {CMPC_TABLET_HID, 0},
-> >       {"", 0}
-> > @@ -384,9 +387,9 @@ static struct acpi_driver cmpc_tablet_ac
-> >       .ops = {
-> >           .add = cmpc_tablet_add,
-> >           .remove = cmpc_tablet_remove,
-> > -        .resume = cmpc_tablet_resume,
-> >           .notify = cmpc_tablet_handler,
-> > -    }
-> > +    },
-> > +    .drv.pm = &cmpc_tabled_pm,
-> >   };
-> >   
-> >   
-> 
-> Aside from the typo tabled,
+From: Rafael J. Wysocki <rjw@sisk.pl>
 
-Fixed now.
+Make the HDAPS driver define its PM callbacks through
+a struct dev_pm_ops object rather than by using legacy PM hooks
+in struct platform_driver.
 
-> Acked-by: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+---
+ drivers/platform/x86/hdaps.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Thanks!
+Index: linux/drivers/platform/x86/hdaps.c
+===================================================================
+--- linux.orig/drivers/platform/x86/hdaps.c
++++ linux/drivers/platform/x86/hdaps.c
+@@ -305,17 +305,19 @@ static int hdaps_probe(struct platform_d
+ 	return 0;
+ }
+ 
+-static int hdaps_resume(struct platform_device *dev)
++static int hdaps_resume(struct device *dev)
+ {
+ 	return hdaps_device_init();
+ }
+ 
++static SIMPLE_DEV_PM_OPS(hdaps_pm, NULL, hdaps_resume);
++
+ static struct platform_driver hdaps_driver = {
+ 	.probe = hdaps_probe,
+-	.resume = hdaps_resume,
+ 	.driver	= {
+ 		.name = "hdaps",
+ 		.owner = THIS_MODULE,
++		.pm = &hdaps_pm,
+ 	},
+ };
+ 
