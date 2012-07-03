@@ -1,37 +1,27 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH] apple-gmux: Fix kconfig dependencies
-Date: Mon,  2 Jul 2012 09:55:29 -0500
-Message-ID: <1341240929-3400-1-git-send-email-seth.forshee@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: Arun Raghavan <arun.raghavan@collabora.co.uk>, linux-kernel@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Stacy Anna Scott <ketleensilva@agetop.goias.gov.br>
+Subject: Greetings to you!
+Date: Tue, 3 Jul 2012 17:11:56 -0300 (BRT)
+Message-ID: <907158653.21435.1341346316429.JavaMail.root@agetop.goias.gov.br>
+Reply-To: Stacy Anna Scott <stacyannascott@yahoo.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.agetop.goias.gov.br ([177.43.91.132]:50862 "EHLO
+	mail.agetop.goias.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754125Ab2GCUPf convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 3 Jul 2012 16:15:35 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-Fix the dependencies of apple-gmux to prevent it from being built-in
-when one or more of its dependencies is built as a module. Otherwise it
-can fail to build due to missing symbols.
+My name is Ms Stacy Ann Scott from London, I would like to have an impo=
+rtant discussion with you. It=E2=80=99s private, for more details. plea=
+se kindly Contact me on my email: stacyannascott@yahoo.com
+Thanks,=20
 
-Reported-by: Arun Raghavan <arun.raghavan@collabora.co.uk>
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
----
- drivers/platform/x86/Kconfig |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yours truly,=20
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a262f5..cf65f0a 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -759,7 +759,9 @@ config SAMSUNG_Q10
- config APPLE_GMUX
- 	tristate "Apple Gmux Driver"
- 	depends on PNP
--	select BACKLIGHT_CLASS_DEVICE
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
-+	depends on ACPI_VIDEO=n || ACPI_VIDEO
- 	---help---
- 	  This driver provides support for the gmux device found on many
- 	  Apple laptops, which controls the display mux for the hybrid
--- 
-1.7.9.5
+Ms Stacy A Scott.
+
+=20
