@@ -1,37 +1,63 @@
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
-Date: Wed, 04 Jul 2012 18:09:12 +0300
-Message-ID: <4FF45C98.60305@gmail.com>
-References: <1338811006.17357.3.camel@lenovo-ideapad-z570.gentooroot.dyndns.org> <20120626183110.GA29375@srcf.ucam.org> <4FF41640.8060608@canonical.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] ethernet-related thermal emergency on
+ Thinkpad x60
+Date: Wed, 4 Jul 2012 13:50:04 -0300
+Message-ID: <20120704165004.GB7613@khazad-dum.debian.net>
+References: <20120704141756.GA2089@elf.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:62698 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751450Ab2GDPJR (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:56351 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751755Ab2GDQuI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 Jul 2012 11:09:17 -0400
-Received: by bkwj10 with SMTP id j10so2721688bkw.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Jul 2012 08:09:16 -0700 (PDT)
-In-Reply-To: <4FF41640.8060608@canonical.com>
+	Wed, 4 Jul 2012 12:50:08 -0400
+Content-Disposition: inline
+In-Reply-To: <20120704141756.GA2089@elf.ucw.cz>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>
 
-> Hi Maxim,
->
-> I separate your patch into three smaller patch. It makes me easier to understand the detail. Please review if all function are still working fine on your ideapad
+On Wed, 04 Jul 2012, Pavel Machek wrote:
+> When using nework interface (eth0), machine starts to behave
+> weird. Like... complete freeze, then poweroff, then it hangs on boot
+> (initializing ACPI) until I let it to cool down... and I'm not even
+> using gigabit speed.
+>=20
+> Did anyone see it? Any ideas? Should I attempt to open it and clean
+> the dust?
 
-Hello Ike,
+Opening it up and cleaning things is always a good idea.  Some intel
+boxes have the GbEth MAC inside the chipset, so it is also worth
+checking whether the thermal contact between heatsink and chipset is
+operating properly (or just replace the old thermal compounts with Arti=
+c
+Silver 5 or some other non-reactive, extremely high quality compound
+that is suitable for the rapid thermal cycles of laptops).
 
-I have tested these patches and there is one problem in the part 2 of patch.
-Build fails, because you missed '+#include <linux/i8042.h>' line of original
-patch. Errors are at lines:
+> thinkpad_acpi: THERMAL EMERGENCY: a sensor reports something is extre=
+mely hot!
+> thinkpad_acpi: temperatures (Celsius): 88 49 N/A 82 40 N/A 40 N/A 52 =
+61 N/A N/A N/A N/A N/A N/A
 
-> +             i8042_command(&param, value ? I8042_CMD_AUX_ENABLE :
-> +                             I8042_CMD_AUX_DISABLE);
+My guess is that the 82=B0C reading on the fourth sensor is the problem=
+,
+althouhg the CPU is also quite hot.  That sensor is usually the GPU, bu=
+t
+if your thinkpad has an integrated GPU, it is likely to have been used
+for the northbridge/chipset.
 
-When I add '#include <linux/i8042.h>' manually, build succeeds and all
-functions work properly. Please add missing include to the second patch.
+It can also be a shortcircuity in the ethernet PHY (either the chip, or
+some of the analog auxiliary circuitry).  This is repairable by an
+skilled surface-mount technician if he can get his hands in the
+schematics and source the replacement components, but if you ask Lenovo
+about it, they will want to replace your entire planar card
+(motherboard)...
+
+--=20
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
