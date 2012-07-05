@@ -1,51 +1,46 @@
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH 1/2] ACER: Fix up sparse warning
-Date: Thu,  5 Jul 2012 01:30:09 +0200
-Message-ID: <1341444610-15067-1-git-send-email-marex@denx.de>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] drivers/platform/x86: Lenovo IdeaPad Z570 support
+Date: Thu, 05 Jul 2012 19:09:58 +0800
+Message-ID: <4FF57606.7070806@canonical.com>
+References: <1338811006.17357.3.camel@lenovo-ideapad-z570.gentooroot.dyndns.org> <20120626183110.GA29375@srcf.ucam.org> <4FF41640.8060608@canonical.com> <4FF45C98.60305@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-out.m-online.net ([212.18.0.10]:57977 "EHLO
-	mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755588Ab2GDXaU (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:59863 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753612Ab2GELKH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 Jul 2012 19:30:20 -0400
+	Thu, 5 Jul 2012 07:10:07 -0400
+In-Reply-To: <4FF45C98.60305@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, Matthew Garrett <mjg59@srcf.ucam.org>, Fengguang Wu <wfg@linux.intel.com>, joeyli <jlee@suse.com>
+To: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-drivers/platform/x86/acer-wmi.c:1836:18: sparse: Using plain integer as NULL pointer
+Thanks. I have the patch tested on my ideapads. They all looks fine.
 
-drivers/platform/x86/acer-wmi.c:1836:
-  1833
-  1834          BUG_ON(!name || !ah);
-  1835
-> 1836          handle = 0;
-  1837          status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
-  1838                                          (void *)name, &handle);
-  1839
+The last thing I need is ACK for psmouse patch.
 
-Reported-by: Fengguang Wu <wfg@linux.intel.com>
-
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Fengguang Wu <wfg@linux.intel.com>
-Cc: joeyli <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 175809d..ae969fd 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1833,7 +1833,7 @@ static int __init acer_wmi_get_handle(const char *name, const char *prop,
- 
- 	BUG_ON(!name || !ah);
- 
--	handle = 0;
-+	handle = NULL;
- 	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
- 					(void *)name, &handle);
- 
--- 
-1.7.10
+On 07/04/2012 11:09 PM, Maxim Mikityanskiy wrote:
+>> Hi Maxim,
+>>
+>> I separate your patch into three smaller patch. It makes me easier to understand the detail. Please review if all function are still working fine on your ideapad
+> 
+> Hello Ike,
+> 
+> I have tested these patches and there is one problem in the part 2 of patch.
+> Build fails, because you missed '+#include <linux/i8042.h>' line of original
+> patch. Errors are at lines:
+> 
+>> +             i8042_command(&param, value ? I8042_CMD_AUX_ENABLE :
+>> +                             I8042_CMD_AUX_DISABLE);
+> 
+> When I add '#include <linux/i8042.h>' manually, build succeeds and all
+> functions work properly. Please add missing include to the second patch.
+> 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
