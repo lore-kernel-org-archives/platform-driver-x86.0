@@ -1,88 +1,50 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 2/2] msi-laptop: Use struct dev_pm_ops for power
- management
-Date: Fri, 06 Jul 2012 15:24:40 +0800
-Message-ID: <1341559480.4823.176.camel@linux-s257.site>
-References: <201206302356.11014.rjw@sisk.pl>
-	 <201206302357.43405.rjw@sisk.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH 0/4] ideapad: patches for v3.6 merge window
+Date: Fri,  6 Jul 2012 16:07:03 +0800
+Message-ID: <1341562023-6951-1-git-send-email-ike.pan@canonical.com>
+References: <4FF45C98.60305@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from charybdis-ext.suse.de ([195.135.221.2]:45949 "EHLO
-	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750829Ab2GFHvd (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:35560 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750736Ab2GFIHN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Jul 2012 03:51:33 -0400
-In-Reply-To: <201206302357.43405.rjw@sisk.pl>
+	Fri, 6 Jul 2012 04:07:13 -0400
+In-Reply-To: <4FF45C98.60305@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Frank Seidel <frank@f-seidel.de>, "Lee, Chun-Yi" <jlee@novell.com>
-
-=E6=96=BC =E5=85=AD=EF=BC=8C2012-06-30 =E6=96=BC 23:57 +0200=EF=BC=8CRa=
-fael J. Wysocki =E6=8F=90=E5=88=B0=EF=BC=9A
-> From: Rafael J. Wysocki <rjw@sisk.pl>
->=20
-> Make the msi-laptop driver define its PM callbacks through
-> a struct dev_pm_ops object rather than by using legacy PM hooks
-> in struct platform_driver.
->=20
-> Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
 
-This patch good to me.
+One minor fix on part 2 for z570 is to let CONFIG_IDEAPAD depends on
+CONFIG_SERIO_I8042
 
-Acked-by: Lee, Chun-Yi <jlee@suse.com>
+
+The following changes since commit 71351f14b3b941eb7178567b1272d934609cb785:
+
+  Linux 3.5-rc5 (2012-07-05 14:09:43 +0800)
+
+are available in the git repository at:
+
+  git://kernel.ubuntu.com/ikepanhc/public.git ideapad-3.6
+
+for you to fetch changes up to 583f18e1378d1b15fa35333be02b79e4f9315f59:
+
+  ideapad: add Lenovo IdeaPad Z570 support (part 3) (2012-07-06 15:12:49 +0800)
 
 
-Thanks a lot!
-Joey Lee
+Dan Carpenter (1):
+  ideapad: uninitialized data in ideapad_acpi_add()
 
-> ---
->  drivers/platform/x86/msi-laptop.c |    7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> Index: linux/drivers/platform/x86/msi-laptop.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- linux.orig/drivers/platform/x86/msi-laptop.c
-> +++ linux/drivers/platform/x86/msi-laptop.c
-> @@ -85,7 +85,8 @@
->  #define MSI_STANDARD_EC_TOUCHPAD_ADDRESS	0xe4
->  #define MSI_STANDARD_EC_TOUCHPAD_MASK		(1 << 4)
-> =20
-> -static int msi_laptop_resume(struct platform_device *device);
-> +static int msi_laptop_resume(struct device *device);
-> +static SIMPLE_DEV_PM_OPS(msi_laptop_pm, NULL, msi_laptop_resume);
-> =20
->  #define MSI_STANDARD_EC_DEVICES_EXISTS_ADDRESS	0x2f
-> =20
-> @@ -437,8 +438,8 @@ static struct platform_driver msipf_driv
->  	.driver =3D {
->  		.name =3D "msi-laptop-pf",
->  		.owner =3D THIS_MODULE,
-> +		.pm =3D &msi_laptop_pm,
->  	},
-> -	.resume =3D msi_laptop_resume,
->  };
-> =20
->  static struct platform_device *msipf_device;
-> @@ -752,7 +753,7 @@ err_bluetooth:
->  	return retval;
->  }
-> =20
-> -static int msi_laptop_resume(struct platform_device *device)
-> +static int msi_laptop_resume(struct device *device)
->  {
->  	u8 data;
->  	int result;
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->=20
+Maxim Mikityanskiy (3):
+  ideapad: add Lenovo IdeaPad Z570 support (part 1)
+  ideapad: add Lenovo IdeaPad Z570 support (part 2)
+  ideapad: add Lenovo IdeaPad Z570 support (part 3)
+
+ .../ABI/testing/sysfs-platform-ideapad-laptop      |   11 ++
+ drivers/platform/x86/Kconfig                       |    1 +
+ drivers/platform/x86/ideapad-laptop.c              |  115 ++++++++++++++++++--
+ 3 files changed, 120 insertions(+), 7 deletions(-)
+
+-- 
+1.7.9.5
