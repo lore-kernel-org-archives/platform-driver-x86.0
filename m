@@ -1,136 +1,69 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH 3/4] ideapad: add Lenovo IdeaPad Z570 support (part 2)
-Date: Fri,  6 Jul 2012 16:08:00 +0800
-Message-ID: <1341562080-7054-1-git-send-email-ike.pan@canonical.com>
-References: <1341562023-6951-1-git-send-email-ike.pan@canonical.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH 1/2] ACER: Fix up sparse warning
+Date: Fri, 06 Jul 2012 18:22:31 +0800
+Message-ID: <1341570151.4823.372.camel@linux-s257.site>
+References: <1341444610-15067-1-git-send-email-marex@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:35579 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753785Ab2GFIIJ (ORCPT
+Received: from nat.nue.novell.com ([195.135.221.2]:58005 "EHLO
+	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755829Ab2GFKXT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Jul 2012 04:08:09 -0400
-In-Reply-To: <1341562023-6951-1-git-send-email-ike.pan@canonical.com>
+	Fri, 6 Jul 2012 06:23:19 -0400
+In-Reply-To: <1341444610-15067-1-git-send-email-marex@denx.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Marek Vasut <marex@denx.de>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Fengguang Wu <wfg@linux.intel.com>
 
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
+=E6=96=BC =E5=9B=9B=EF=BC=8C2012-07-05 =E6=96=BC 01:30 +0200=EF=BC=8CMa=
+rek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
+> drivers/platform/x86/acer-wmi.c:1836:18: sparse: Using plain integer =
+as NULL pointer
+>=20
+> drivers/platform/x86/acer-wmi.c:1836:
+>   1833
+>   1834          BUG_ON(!name || !ah);
+>   1835
+> > 1836          handle =3D 0;
+>   1837          status =3D acpi_get_devices(prop, acer_wmi_get_handle=
+_cb,
+>   1838                                          (void *)name, &handle=
+);
+>   1839
+>=20
+> Reported-by: Fengguang Wu <wfg@linux.intel.com>
+>=20
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+> Cc: Fengguang Wu <wfg@linux.intel.com>
+> Cc: joeyli <jlee@suse.com>
 
-The patch adds support for Lenovo IdeaPad Z570 laptop. It makes all special
-keys working, adds possibility to control fan like Windows does, controls
-Touchpad Disabled LED, toggles touchpad state via keyboard controller and
-corrects touchpad behavior on resume from suspend. It is new, modified
-version of patch. Now it does not depend on psmouse and does not need patching
-of input subsystem.
 
-Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Acked-by: joeyli <jlee@suse.com>
 
-This is part 2 for touchpad toggle
 
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/Kconfig          |    1 +
- drivers/platform/x86/ideapad-laptop.c |   33 +++++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+Thanks
+Joey Lee
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a262f5..355d840 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -289,6 +289,7 @@ config IDEAPAD_LAPTOP
- 	tristate "Lenovo IdeaPad Laptop Extras"
- 	depends on ACPI
- 	depends on RFKILL && INPUT
-+	depends on SERIO_I8042
- 	select INPUT_SPARSEKMAP
- 	help
- 	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 36c76d0..b577766 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -36,6 +36,7 @@
- #include <linux/fb.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-+#include <linux/i8042.h>
- 
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
-@@ -526,6 +527,8 @@ static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY, 17, { KEY_PROG2 } },
- 	{ KE_KEY, 64, { KEY_PROG3 } },
- 	{ KE_KEY, 65, { KEY_PROG4 } },
-+	{ KE_KEY, 66, { KEY_TOUCHPAD_OFF } },
-+	{ KE_KEY, 67, { KEY_TOUCHPAD_ON } },
- 	{ KE_END, 0 },
- };
- 
-@@ -718,6 +721,24 @@ static const struct acpi_device_id ideapad_device_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, ideapad_device_ids);
- 
-+static void ideapad_sync_touchpad_state(struct acpi_device *adevice)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(&adevice->dev);
-+	unsigned long value;
-+
-+	/* Without reading from EC touchpad LED doesn't switch state */
-+	if (!read_ec_data(adevice->handle, VPCCMD_R_TOUCHPAD, &value)) {
-+		/* Some IdeaPads don't really turn off touchpad - they only
-+		 * switch the LED state. We (de)activate KBC AUX port to turn
-+		 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
-+		 * KEY_TOUCHPAD_ON to not to get out of sync with LED */
-+		unsigned char param;
-+		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE :
-+				I8042_CMD_AUX_DISABLE);
-+		ideapad_input_report(priv, value ? 67 : 66);
-+	}
-+}
-+
- static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
- {
- 	int ret, i, cfg;
-@@ -753,6 +774,7 @@ static int __devinit ideapad_acpi_add(struct acpi_device *adevice)
- 			priv->rfk[i] = NULL;
- 	}
- 	ideapad_sync_rfk_state(priv);
-+	ideapad_sync_touchpad_state(adevice);
- 
- 	if (!acpi_video_backlight_support()) {
- 		ret = ideapad_backlight_init(priv);
-@@ -816,6 +838,9 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 			case 6:
- 				ideapad_input_report(priv, vpc_bit);
- 				break;
-+			case 5:
-+				ideapad_sync_touchpad_state(adevice);
-+				break;
- 			case 4:
- 				ideapad_backlight_notify_brightness(priv);
- 				break;
-@@ -835,6 +860,13 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
- 	}
- }
- 
-+static int ideapad_acpi_resume(struct acpi_device *adevice)
-+{
-+	ideapad_sync_rfk_state(ideapad_priv);
-+	ideapad_sync_touchpad_state(adevice);
-+	return 0;
-+}
-+
- static struct acpi_driver ideapad_acpi_driver = {
- 	.name = "ideapad_acpi",
- 	.class = "IdeaPad",
-@@ -842,6 +874,7 @@ static struct acpi_driver ideapad_acpi_driver = {
- 	.ops.add = ideapad_acpi_add,
- 	.ops.remove = ideapad_acpi_remove,
- 	.ops.notify = ideapad_acpi_notify,
-+	.ops.resume = ideapad_acpi_resume,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-1.7.9.5
+> ---
+>  drivers/platform/x86/acer-wmi.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index 175809d..ae969fd 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -1833,7 +1833,7 @@ static int __init acer_wmi_get_handle(const cha=
+r *name, const char *prop,
+> =20
+>  	BUG_ON(!name || !ah);
+> =20
+> -	handle =3D 0;
+> +	handle =3D NULL;
+>  	status =3D acpi_get_devices(prop, acer_wmi_get_handle_cb,
+>  					(void *)name, &handle);
+> =20
