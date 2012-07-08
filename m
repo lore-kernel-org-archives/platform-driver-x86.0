@@ -1,68 +1,86 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 2/2] ACER: Fix Smatch double-free issue
-Date: Fri, 06 Jul 2012 18:22:51 +0800
-Message-ID: <1341570171.4823.373.camel@linux-s257.site>
-References: <1341444610-15067-1-git-send-email-marex@denx.de>
-	 <1341444610-15067-2-git-send-email-marex@denx.de>
+From: Alex Hung <alex.hung-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH] thinkpad_acpi: added BIOS mute
+	interfaces for volume
+Date: Sun, 08 Jul 2012 23:29:48 +0800
+Message-ID: <4FF9A76C.7030308@canonical.com>
+References: <1334139302-7152-1-git-send-email-alex.hung@canonical.com>
+	<4F855A2B.6070402@canonical.com>
+	<20120411114211.GA11445@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from nat.nue.novell.com ([195.135.221.2]:58109 "EHLO
-	nat.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755829Ab2GFKXj (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Jul 2012 06:23:39 -0400
-In-Reply-To: <1341444610-15067-2-git-send-email-marex@denx.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marek Vasut <marex@denx.de>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Fengguang Wu <wfg@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20120411114211.GA11445-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2012-07-05 =E6=96=BC 01:30 +0200=EF=BC=8CMa=
-rek Vasut =E6=8F=90=E5=88=B0=EF=BC=9A
-> The patch 6ae3a0876185: "ACER: Add support for accelerometer sensor"
-> from Jun 1, 2012, leads to the following Smatch warning:
-> drivers/platform/x86/acer-wmi.c:1886 acer_wmi_accel_destroy()
->          error: don't call input_free_device() after input_unregister=
-_device()
->=20
-> drivers/platform/x86/acer-wmi.c
->   1883  static void acer_wmi_accel_destroy(void)
->   1884  {
->   1885          input_unregister_device(acer_wmi_accel_dev);
->   1886          input_free_device(acer_wmi_accel_dev);
->   1887  }
->=20
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->=20
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> Cc: Fengguang Wu <wfg@linux.intel.com>
-> Cc: joeyli <jlee@suse.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Hi,
+
+I saw a number of discussion on new thinkpad led and caused me to 
+re-think about my previous patch.
+
+The previous patches add interfaces to control hardware mute via BIOS 
+functions; however there are nobody to control it and the problem of 
+out-of-sync between hardware mute and software mute will still exist.
+
+Will it be a better idea to disable hardware mute? The hardware mute 
+will still send a scancode to mute the volue when thinkpad-acpi is 
+loaded, though the led will still not work. More specifically, a patch 
+that only calls with hoteky_set_mute_support(1) that works as below:
 
 
-Acked-by: joeyli <jlee@suse.com>
++static int hotkey_set_mute_support(int support)
++{
++	int output;
++
++	if (!acpi_evalf(hkey_handle, &output, "SHDA", "dd", support))
++		return -EIO;
++
++	if (output & TPACPI_AML_MUTE_ERROR_STATE_MASK) {
++		pr_warning("setting mute support failed.\n");
++		return -EIO;
++	}
++	pr_info("%s mute led support.\n", support ? "disable" : "enable");
++
++	return 0;
++}
+
+This can solve the problems that unmute from desktop will not unmute the 
+hardware mute until someone including myself works out a more 
+comprehensive solution.
+
+Best Regards,
+Alex Hung
 
 
-Thanks
-Joey Lee
+On 04/11/2012 07:42 PM, Henrique de Moraes Holschuh wrote:
+> On Wed, 11 Apr 2012, Alex Hung wrote:
+>> I am modifying thinkpad_acpi so it can support the mute led, and I
+>> am looking for suggestions and feedbacks.
+>>
+>> For newer BIOS, it includes three aml methods that can be used to
+>> get, set and enable the mute led.
+>
+> Aha!  THANK YOU.
+>
+> I will look at the patches this week.  Please send me (directly) a full
+> dmidecode and ACPI table dump.
+>
 
-> ---
->  drivers/platform/x86/acer-wmi.c |    1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index ae969fd..f4ed2af 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1883,7 +1883,6 @@ err_free_dev:
->  static void acer_wmi_accel_destroy(void)
->  {
->  	input_unregister_device(acer_wmi_accel_dev);
-> -	input_free_device(acer_wmi_accel_dev);
->  }
-> =20
->  static int __init acer_wmi_input_setup(void)
+
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
