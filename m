@@ -1,78 +1,40 @@
-From: Arun Raghavan <arun.raghavan@collabora.co.uk>
-Subject: [PATCH] apple-gmux: Restore switch registers on suspend/resume
-Date: Tue, 10 Jul 2012 09:09:53 +0530
-Message-ID: <1341891593-6485-1-git-send-email-arun.raghavan@collabora.co.uk>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] apple-gmux: Restore switch registers on suspend/resume
+Date: Tue, 10 Jul 2012 08:35:37 -0500
+Message-ID: <20120710133537.GC10194@thinkpad-t410>
+References: <1341891593-6485-1-git-send-email-arun.raghavan@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bhuna.collabora.co.uk ([93.93.135.160]:57924 "EHLO
-	bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752864Ab2GJDk6 (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:49636 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755821Ab2GJNfl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jul 2012 23:40:58 -0400
+	Tue, 10 Jul 2012 09:35:41 -0400
+Content-Disposition: inline
+In-Reply-To: <1341891593-6485-1-git-send-email-arun.raghavan@collabora.co.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, Seth Forshee <seth.forshee@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Arun Raghavan <arun.raghavan@collabora.co.uk>
+To: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-After suspend and resume, the values of these registers seem to change
-from what they were at suspend time, potentially preventing the actual
-output lines from being enabled post-resume. This saves relevant state
-at suspend and restores it when resumed.
+On Tue, Jul 10, 2012 at 09:09:53AM +0530, Arun Raghavan wrote:
+> After suspend and resume, the values of these registers seem to change
+> from what they were at suspend time, potentially preventing the actual
+> output lines from being enabled post-resume. This saves relevant state
+> at suspend and restores it when resumed.
+> 
+> This is at least required on the MacBook Pro 8.2 when the Intel GPU is
+> manually selected in GRUB config before the kernel is loaded.
 
-This is at least required on the MacBook Pro 8.2 when the Intel GPU is
-manually selected in GRUB config before the kernel is loaded.
+I've got a couple of problems with this. The first is that the backlight
+update_status callback isn't an appropriate place to do this. Adding
+suspend/resume ops for the pnp_driver would be better.
 
-Signed-off-by: Arun Raghavan <arun.raghavan@collabora.co.uk>
----
- drivers/platform/x86/apple-gmux.c |   29 ++++++++++++++++++++++++++++-
- 1 files changed, 28 insertions(+), 1 deletions(-)
+But the more serious concern is whether or not its safe to simply
+restore the register values. I know that the reverse engineering work
+done on the gmux has revealed a particular sequence for selecting the
+active GPU. A brute force restoration of the registers disregards this
+sequencing, which doesn't seem like a good idea.
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 694a15a..5a5d005 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -26,6 +26,11 @@ struct apple_gmux_data {
- 	unsigned long iolen;
- 
- 	struct backlight_device *bdev;
-+
-+	bool was_suspended;
-+	u8 save_switch_ddc;
-+	u8 save_switch_disp;
-+	u8 save_switch_ext;
- };
- 
- /*
-@@ -87,8 +92,30 @@ static int gmux_update_status(struct backlight_device *bd)
- 	struct apple_gmux_data *gmux_data = bl_get_data(bd);
- 	u32 brightness = bd->props.brightness;
- 
--	if (bd->props.state & BL_CORE_SUSPENDED)
-+	if (bd->props.state & BL_CORE_SUSPENDED) {
-+		/* Save mux settings for output lines since they get reset on
-+		 * suspend */
-+		gmux_data->was_suspended = TRUE;
-+		gmux_data->save_switch_ddc = gmux_read8(gmux_data,
-+				GMUX_PORT_SWITCH_DDC);
-+		gmux_data->save_switch_disp = gmux_read8(gmux_data,
-+				GMUX_PORT_SWITCH_DISPLAY);
-+		gmux_data->save_switch_ext = gmux_read8(gmux_data,
-+				GMUX_PORT_SWITCH_EXTERNAL);
-+
- 		return 0;
-+	}
-+
-+	if (gmux_data->was_suspended) {
-+		/* Restore pre-suspend values for output lines */
-+		gmux_data->was_suspended = FALSE;
-+		gmux_write8(gmux_data, GMUX_PORT_SWITCH_DDC,
-+				gmux_data->save_switch_ddc);
-+		gmux_write8(gmux_data, GMUX_PORT_SWITCH_DISPLAY,
-+				gmux_data->save_switch_disp);
-+		gmux_write8(gmux_data, GMUX_PORT_SWITCH_EXTERNAL,
-+				gmux_data->save_switch_ext);
-+	}
- 
- 	/*
- 	 * Older gmux versions require writing out lower bytes first then
--- 
-1.7.8.6
+Seth
