@@ -1,48 +1,78 @@
-From: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
-Subject: Re: ACPI ambient light sensor
-Date: Mon, 09 Jul 2012 14:29:38 +0100
-Message-ID: <4FFADCC2.6080006@cam.ac.uk>
-References: <CAObPJ3PctmLP56NvmLvJd+4w9e4xeOGSyz24FyBDXBQQVhDhxQ@mail.gmail.com> <201207082228.14318.marex@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201207082228.14318.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: =?UTF-8?B?TWFydGluIExpxaFrYQ==?= <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joeyli <jlee-IBi9RG/b67k@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pavel-ynQEQJNshbs@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Brenner <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Subject: [PATCH] apple-gmux: Restore switch registers on suspend/resume
+Date: Tue, 10 Jul 2012 09:09:53 +0530
+Message-ID: <1341891593-6485-1-git-send-email-arun.raghavan@collabora.co.uk>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bhuna.collabora.co.uk ([93.93.135.160]:57924 "EHLO
+	bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752864Ab2GJDk6 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 9 Jul 2012 23:40:58 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>, Seth Forshee <seth.forshee@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Arun Raghavan <arun.raghavan@collabora.co.uk>
 
-cc'd Jon Brenner and Peter Meerwald.
->
->> Hello,
->>     Iconia Tab W500 contains Ambient Light Sensor (hid 0008), I star=
-ted
->> implementing IIO device drive having following questions:
->>
->>     - chip could offer following variables: illuminance, color chrom=
-aticity
->>     and color temperature, how should I connect last 2 vars to any o=
-f IIO
->>     CHANNEL types?
-Jon's recent proposed additional modifiers cover temperature.=20
-Chromaticity is a new one I think though?
->>     - I'm not sure how to connect an illuminance mapping to IIO
->>     infrastructure?
-When you say mapping, what do you mean? That term tends to get used
-for quite a few different things...
->
-> See IIO_DEVICE_ATTR() maybe ?
->
->> Thank you,
->> Martin Li=C5=A1ka
->
-> Best regards,
-> Marek Vasut
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+After suspend and resume, the values of these registers seem to change
+from what they were at suspend time, potentially preventing the actual
+output lines from being enabled post-resume. This saves relevant state
+at suspend and restores it when resumed.
+
+This is at least required on the MacBook Pro 8.2 when the Intel GPU is
+manually selected in GRUB config before the kernel is loaded.
+
+Signed-off-by: Arun Raghavan <arun.raghavan@collabora.co.uk>
+---
+ drivers/platform/x86/apple-gmux.c |   29 ++++++++++++++++++++++++++++-
+ 1 files changed, 28 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 694a15a..5a5d005 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -26,6 +26,11 @@ struct apple_gmux_data {
+ 	unsigned long iolen;
+ 
+ 	struct backlight_device *bdev;
++
++	bool was_suspended;
++	u8 save_switch_ddc;
++	u8 save_switch_disp;
++	u8 save_switch_ext;
+ };
+ 
+ /*
+@@ -87,8 +92,30 @@ static int gmux_update_status(struct backlight_device *bd)
+ 	struct apple_gmux_data *gmux_data = bl_get_data(bd);
+ 	u32 brightness = bd->props.brightness;
+ 
+-	if (bd->props.state & BL_CORE_SUSPENDED)
++	if (bd->props.state & BL_CORE_SUSPENDED) {
++		/* Save mux settings for output lines since they get reset on
++		 * suspend */
++		gmux_data->was_suspended = TRUE;
++		gmux_data->save_switch_ddc = gmux_read8(gmux_data,
++				GMUX_PORT_SWITCH_DDC);
++		gmux_data->save_switch_disp = gmux_read8(gmux_data,
++				GMUX_PORT_SWITCH_DISPLAY);
++		gmux_data->save_switch_ext = gmux_read8(gmux_data,
++				GMUX_PORT_SWITCH_EXTERNAL);
++
+ 		return 0;
++	}
++
++	if (gmux_data->was_suspended) {
++		/* Restore pre-suspend values for output lines */
++		gmux_data->was_suspended = FALSE;
++		gmux_write8(gmux_data, GMUX_PORT_SWITCH_DDC,
++				gmux_data->save_switch_ddc);
++		gmux_write8(gmux_data, GMUX_PORT_SWITCH_DISPLAY,
++				gmux_data->save_switch_disp);
++		gmux_write8(gmux_data, GMUX_PORT_SWITCH_EXTERNAL,
++				gmux_data->save_switch_ext);
++	}
+ 
+ 	/*
+ 	 * Older gmux versions require writing out lower bytes first then
+-- 
+1.7.8.6
