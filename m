@@ -1,193 +1,35 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-nb-wmi: add wapf quirk for ASUS machines
-Date: Mon, 16 Jul 2012 07:43:40 +0200
-Message-ID: <CAHR064jZe_LUYBo1UWQG-5TXhbHA0kBRJ1Gd7+W6aJZUWU1e4A@mail.gmail.com>
-References: <1341371948-15255-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064hkCsqn4Kjo4hx72X9gFZbPrSKywWxFaceSjREdNqzHzQ@mail.gmail.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH 0/7] platform-drivers-x86: backlight, samsung and asus
+Date: Mon, 16 Jul 2012 07:45:37 +0200
+Message-ID: <CAHR064hi0gV7LUJbFa7O6d1MdzL9Oaab9F70o0-n3Be4ty9yOA@mail.gmail.com>
+References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
+	<20120626184201.GF29375@srcf.ucam.org>
+	<CAHR064irJRKWhAozM18E2KMAp0vVGP+TE1mypxJxqV0uvT7Heg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f174.google.com ([209.85.217.174]:55593 "EHLO
+Received: from mail-lb0-f174.google.com ([209.85.217.174]:47421 "EHLO
 	mail-lb0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751695Ab2GPFnm (ORCPT
+	with ESMTP id S1751072Ab2GPFpj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 16 Jul 2012 01:43:42 -0400
-Received: by lbbgm6 with SMTP id gm6so8244141lbb.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 15 Jul 2012 22:43:40 -0700 (PDT)
-In-Reply-To: <CAHR064hkCsqn4Kjo4hx72X9gFZbPrSKywWxFaceSjREdNqzHzQ@mail.gmail.com>
+	Mon, 16 Jul 2012 01:45:39 -0400
+In-Reply-To: <CAHR064irJRKWhAozM18E2KMAp0vVGP+TE1mypxJxqV0uvT7Heg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 16, 2012 at 7:42 AM, Corentin Chary <corentincj@iksaif.net> wrote:
-> On Wed, Jul 4, 2012 at 5:19 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
->> The BIOS of these machines will try to enable/disable wifi/bt in
->> their own sqeuence. It won't read the enable/disable parameter
->> in WMI command, but just iterates the wifi/bt's status described below
->> 1st. enable wifi, enable bt
->> 2nd. disable wifi, enable bt
->> 3rd. enable wifi, disable bt
->> 4th. disable wifi, disable bt
->> That will totally mess up the rfkill status, since we will try to read
->> wifi and bt's status and reset it again while booting up.
->>
->> To avoid this, these machines should set the wapf value to 4,
->> that will let software totally control the wifi/bt's status and
->> BIOS will do nothing instead of sending out the 0x88(KEY_RFKILL) event
->> instead of 0x5e(wifi enable), 0x5f(wifi diable), 0x7d(bt enable), and
->> 0x7e(bt disable) through WMI.
->>
->> With this patch[1], it will handle the KEY_RFKILL event correctly and
->> will block/unblock wifi and bt together.
->>
->> 1. https://lkml.org/lkml/2012/5/21/75
->>
->> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
->> ---
->>  drivers/platform/x86/asus-nb-wmi.c |  104 ++++++++++++++++++++++++++++++++++--
->>  1 file changed, 101 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->> index 99a30b5..57712ff 100644
->> --- a/drivers/platform/x86/asus-nb-wmi.c
->> +++ b/drivers/platform/x86/asus-nb-wmi.c
->> @@ -26,6 +26,7 @@
->>  #include <linux/input.h>
->>  #include <linux/input/sparse-keymap.h>
->>  #include <linux/fb.h>
->> +#include <linux/dmi.h>
->>
->>  #include "asus-wmi.h"
->>
->> @@ -48,18 +49,115 @@ MODULE_ALIAS("wmi:"ASUS_NB_WMI_EVENT_GUID);
->>   *  1  | Hardware  | Software
->>   *  4  | Software  | Software
->>   */
->> -static uint wapf;
->> +static int wapf = -1;
->>  module_param(wapf, uint, 0444);
->>  MODULE_PARM_DESC(wapf, "WAPF value");
->>
->> +static struct quirk_entry *quirks;
->> +
->>  static struct quirk_entry quirk_asus_unknown = {
->> +       .wapf = 0,
->> +};
->> +
->> +static struct quirk_entry quirk_asus_x401u = {
->> +       .wapf = 4,
->> +};
->> +
->> +static int dmi_matched(const struct dmi_system_id *dmi)
->> +{
->> +       quirks = dmi->driver_data;
->> +       return 1;
->> +}
->> +
->> +static struct dmi_system_id asus_quirks[] = {
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X401U",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X401U"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X401A1",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X401A1"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X501U",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X501U"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X501A1",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X501A1"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X55A",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X55A"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X55C",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X55C"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X55U",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X55U"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {
->> +               .callback = dmi_matched,
->> +               .ident = "ASUSTeK COMPUTER INC. X55VD",
->> +               .matches = {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X55VD"),
->> +               },
->> +               .driver_data = &quirk_asus_x401u,
->> +       },
->> +       {},
->>  };
->>
->>  static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
->>  {
->> -       driver->quirks = &quirk_asus_unknown;
->> -       driver->quirks->wapf = wapf;
->> +       quirks = &quirk_asus_unknown;
->> +       dmi_check_system(asus_quirks);
->> +
->> +       driver->quirks = quirks;
->>         driver->panel_power = FB_BLANK_UNBLANK;
->> +
->> +       /* overwrite the wapf setting if the wapf paramater is specified */
->> +       if (wapf != -1)
->> +               quirks->wapf = wapf;
->> +       else
->> +               wapf = quirks->wapf;
->>  }
->>
->>  static const struct key_entry asus_nb_wmi_keymap[] = {
->> --
->> 1.7.9.5
->>
+On Fri, Jun 29, 2012 at 2:16 PM, Corentin Chary
+<corentin.chary@gmail.com> wrote:
+> On Tue, Jun 26, 2012 at 8:42 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+>> I think I'm fine with this. Whose tree should it go through?
 >
-> Great .. Another dmi quirk list...
->
-> Acked-by: Corentin Chary <corentin.chary@gmail.com>
+> Yours would probably be easier,
+> Thanks
 
-Matthew, could you merge that one too ?
+Hi Matthew,
+Any news on this series ?
+Thanks.
 
 -- 
 Corentin Chary
