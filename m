@@ -1,37 +1,67 @@
-From: "Administrator" <support@printec.com.cy>
-Subject: Webmail Account Warning
-Date: Mon, 16 Jul 2012 21:06:45 +0300 (GTB Daylight Time)
-Message-ID: <65176.101.212.110.5.1342462005.squirrel@101.212.110.5>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] apple-gmux: Fix kconfig dependencies
+Date: Mon, 16 Jul 2012 16:50:34 -0700
+Message-ID: <20120716235034.GB11710@ubuntu-530U>
+References: <1341240929-3400-1-git-send-email-seth.forshee@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from demokritos4.cytanet.com.cy ([195.14.130.213]:60341 "EHLO
-	demokritos4.cytanet.com.cy" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751919Ab2GPSRH (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:49847 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751759Ab2GPXuj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 16 Jul 2012 14:17:07 -0400
+	Mon, 16 Jul 2012 19:50:39 -0400
+Content-Disposition: inline
+In-Reply-To: <1341240929-3400-1-git-send-email-seth.forshee@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: Arun Raghavan <arun.raghavan@collabora.co.uk>, linux-kernel@vger.kernel.org
 
-Webmail Account Warning
+On Mon, Jul 02, 2012 at 09:55:29AM -0500, Seth Forshee wrote:
+> Fix the dependencies of apple-gmux to prevent it from being built-in
+> when one or more of its dependencies is built as a module. Otherwise it
+> can fail to build due to missing symbols.
 
-This mail is from Webmail Service; we wish to bring to your notice the
-Condition of your email account.
+Matthew: Are you okay with this, or is there some better way to do it?
 
-We have just noticed that you have exceeded your email Database limit of
-500 MB quota and your email IP is causing conflict because it is been
-accessed in different server location. You need to Upgrade and expand your
-email quota limit before you can continue to use your email.
+I'm looking at Andreas's code for switcharoo support, and something I
+want to do along with it is make apple-gmux not dependent on backlight
+support (i.e. you can still build switcharoo support if
+BACKLIGHT_CLASS_DEVICE is disabled). I'm assuming this patch as a
+prerequisite. But things do get really monstrously ugly, so if there's a
+cleaner way to enforce this that I haven't found I'd love to hear about
+it.
 
-Update your email quota limit to 2.6 GB, use the below web link:
+Thanks,
+Seth
 
-https://docs.google.com/spreadsheet/viewform?formkey=dGtOSTFDbU9aTzAwNkdrRWNqRU5md1E6MQ
-
-
-Failure to do this will result to email deactivation within 24hours
-
-Thank you for your understanding.
-
-Copyright 2012 Help Desk
-Technical Upgrading
+> 
+> Reported-by: Arun Raghavan <arun.raghavan@collabora.co.uk>
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> ---
+>  drivers/platform/x86/Kconfig |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 2a262f5..cf65f0a 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -759,7 +759,9 @@ config SAMSUNG_Q10
+>  config APPLE_GMUX
+>  	tristate "Apple Gmux Driver"
+>  	depends on PNP
+> -	select BACKLIGHT_CLASS_DEVICE
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
+> +	depends on ACPI_VIDEO=n || ACPI_VIDEO
+>  	---help---
+>  	  This driver provides support for the gmux device found on many
+>  	  Apple laptops, which controls the display mux for the hybrid
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
