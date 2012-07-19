@@ -1,77 +1,44 @@
-From: =?UTF-8?B?TWlndWVsIEfDs21leg==?= <magomez@igalia.com>
-Subject: Re: [PATCH 1/1 v2] classmate-laptop: Add support for Classmate V4
- accelerometer.
-Date: Wed, 18 Jul 2012 15:53:48 +0200
-Message-ID: <5006BFEC.1010407@igalia.com>
-References: <cover.1340976795.git.magomez@igalia.com> <39ac42c709e498fbef4f0f0f24edc5331e5f4473.1340976795.git.magomez@igalia.com> <20120717224749.GA20813@nautilus.holoscopio.com>
+From: Andres Salomon <dilinger@queued.net>
+Subject: [PATCH 0/9] OLPC: create a generic OLPC EC driver
+Date: Wed, 18 Jul 2012 18:21:44 -0700
+Message-ID: <20120718182144.2d7b0b50@dev.queued.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp3.mundo-r.com ([212.51.32.191]:62398 "EHLO
-	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751276Ab2GRNxw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 18 Jul 2012 09:53:52 -0400
-In-Reply-To: <20120717224749.GA20813@nautilus.holoscopio.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Cc: don@syst.com.br, mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel>
+List-Post: <mailto:devel@linuxdriverproject.org>
+List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: devel-bounces@linuxdriverproject.org
+Sender: devel-bounces@linuxdriverproject.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: devel@driverdev.osuosl.org, Daniel Drake <dsd@laptop.org>, libertas-dev@lists.infradead.org, Dan Williams <dcbw@redhat.com>, netdev@vger.kernel.org, Jon Nettleton <jon.nettleton@gmail.com>, x86@kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Richard A. Smith" <richard@laptop.org>, Paul Fox <pgf@laptop.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anton Vorontsov <cbou@mail.ru>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, David Woodhouse <dwmw2@infradead.org>, Ingo Molnar <mingo@redhat.com>, "John W. Linville" <linville@tuxdriver.com>, Matthew Garrett <mjg@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> On Fri, Jun 29, 2012 at 03:39:48PM +0200, Miguel G=C3=B3mez wrote:
->> Classmate V4 laptop includes a new accelerometer that can't be handl=
-ed by
->> previous driver. This patch adds a new driver to handle it.
->>
->> Signed-off-by: Miguel G=C3=B3mez <magomez@igalia.com>
->
-> Hi, Miguel.
->
-> This seems OK to me. Thanks for this work. Do you have the other
-> functionality of the driver working? I am interested to know if you h=
-ave
-> the function buttons working.
+The OLPC EC (Embedded Controller) code that is currently upstream is
+x86-only, originally written for the XO-1.  Since then, we've had the
+XO-1.5 (also x86), and XO-1.75 (arm-based) enter mass production.  The
+1.75 uses a vastly different EC protocol, and future hardware revisions
+are likely to change it even further.
 
-Hi Thadeu
+However, the drivers do share quite a bit of code, so it makes sense to
+have a platform-agnostic driver that calls into platform-specific hooks
+for each XO's EC driver.  This is the first stab and creating such a
+beast (with further patches pending).  Aside from the lack of code
+duplication, this is helpful for fixing bugs in one place (for example,
+we fixed an EC suspend/resume bug in 1.75 that I've just seen happen on
+1.5 without these patches.  With these patches, the problem goes away).
 
-I've been giving a look to the buttons code. Currently they are not=20
-working because the hardware id reported by the device (FNBT0000) is no=
-t=20
-the same as the one defined by the driver (FnBT0000), as you an one of=20
-my colleagues commented in this thread:
+These patches are against Linus's current HEAD; let me know if they
+don't apply somewhere, and I'll happily redo them against the -next
+tree.  I'm assuming that these changes (which touch places like x86,
+wireless, and staging) should go through either the x86 tree, or
+through akpm's tree.
 
-https://lkml.org/lkml/2011/6/21/341
-
-I've replaced the id in the driver to FNBT0000 and it made the buttons=20
-work like a charm (enabling control of the backlight and LAN as well).=20
-To ensure compatibility with older versions of the kernel, a new id can=
-=20
-be added (FNBT0000) besides the existent one (FnBT0000), and that works=
-=20
-as well (as proposed in the thread).
-
-It seems that this problem got a bit forgotten in the lists. Quoting=20
-yourself from the last email in the thread:
-
-> I am copying the acpi list and Len Brown to see if they can tell us
-> which one should be the right solution:
->
-> 1) reverting the patch in acpica that puts all names in uppercase
-> 2) using a case-insensitive match in acpi bus driver
-> 3) using uppercase name in classmate-laptop driver
-
-I think the easiest and less risky way to fix this is by adding a new=20
-hardware id (as proposed in the thread's patch), as it doesn't add any=20
-side effects (that the other solutions might add), and it doesn't break=
-=20
-the behaviour of the old code.
-
-What do you think?
-
-Regards!
-
---=20
-Miguel G=C3=B3mez
-Igalia - http://www.igalia.com
+Alternatively, if the reviews are positive and I can get SOBs from the
+relevant maintainers, I can set up a platform-olpc tree somewhere and
+request a pull from Linus.
