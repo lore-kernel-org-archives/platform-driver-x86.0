@@ -1,256 +1,36 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH 1/2] asus-wmi: record wlan status while controlling by
- user app
-Date: Mon, 23 Jul 2012 16:01:11 +0800
-Message-ID: <CAMz9Wg_Bg6aWEd1tUZjKRMhd5cAT3ndSp6BDMNj4So=2+U_yVg@mail.gmail.com>
-References: <1342754788-22880-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064j1C=L9=tz2Hjf1N30YauEkPP+LmQXnpstbMPnCO_BS6A@mail.gmail.com>
-	<CAMz9Wg95uOLPWHtBL5zAVWwNqE6Orj6cG8d0y0An8BtCAm1MFQ@mail.gmail.com>
-	<CAHR064hq1NSDY+B1Lgbx03uTZhD3TqEkcj7AfSRg4saoo5oJoQ@mail.gmail.com>
+From: Matthew Garrett <mjg@redhat.com>
+Subject: Re: [PATCH 1/1 v2] classmate-laptop: Add support for Classmate V4
+ accelerometer.
+Date: Mon, 23 Jul 2012 14:28:41 +0100
+Message-ID: <20120723132841.GD21495@srcf.ucam.org>
+References: <cover.1340976795.git.magomez@igalia.com>
+ <39ac42c709e498fbef4f0f0f24edc5331e5f4473.1340976795.git.magomez@igalia.com>
+ <20120717224749.GA20813@nautilus.holoscopio.com>
+ <5006BFEC.1010407@igalia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:43667 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753987Ab2GWIBM convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jul 2012 04:01:12 -0400
-Received: by pbbrp8 with SMTP id rp8so10482730pbb.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Jul 2012 01:01:11 -0700 (PDT)
-In-Reply-To: <CAHR064hq1NSDY+B1Lgbx03uTZhD3TqEkcj7AfSRg4saoo5oJoQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>
-Cc: platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5006BFEC.1010407@igalia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miguel =?iso-8859-1?Q?G=F3mez?= <magomez@igalia.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, don@syst.com.br, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dear Corentin,
+On Wed, Jul 18, 2012 at 03:53:48PM +0200, Miguel G=F3mez wrote:
 
-2012/7/23 Corentin Chary <corentincj@iksaif.net>:
-> On Mon, Jul 23, 2012 at 5:27 AM, AceLan Kao <acelan.kao@canonical.com=
-> wrote:
->> Dear Corentin,
->>
->> 2012/7/20 Corentin Chary <corentincj@iksaif.net>:
->>> On Fri, Jul 20, 2012 at 5:26 AM, AceLan Kao <acelan.kao@canonical.c=
-om> wrote:
->>>> If the user bit is set, that mean BIOS can't set and record the wl=
-an
->>>> status, it will report the value read from id ASUS_WMI_DEVID_WLAN_=
-LED
->>>> while we query the wlan status by id ASUS_WMI_DEVID_WLAN through W=
-MI.
->>>> So, we have to record wlan status in id ASUS_WMI_DEVID_WLAN_LED
->>>> while setting the wlan status through WMI.
->>>> This is also the behavior that windows app will do.
->>>>
->>>> Quote from ASUS application engineer
->>>> =3D=3D=3D
->>>> When you call WMIMethod(DSTS, 0x00010011) to get WLAN status, it m=
-ay return
->>>>
->>>> (1) 0x00050001 (On)
->>>> (2) 0x00050000 (Off)
->>>> (3) 0x00030001 (On)
->>>> (4) 0x00030000 (Off)
->>>> (5) 0x00000002 (Unknown)
->>>>
->>>> (1), (2) means that the model has hardware GPIO for WLAN, you can =
-call
->>>> WMIMethod(DEVS, 0x00010011, 1 or 0) to turn WLAN on/off
->>>
->>> Will it handle the LED too, or do you have to call 0x00010012 ?
->> In this case, we don't have to worry about the LED, BIOS will pull
->> up/down the LED pin
->> after receiving the enable/disable wireless command through WMI.
->>
->>>
->>>> (3), (4) means that the model doesn=92t have hardware GPIO, you ne=
-ed to use
->>>> API or driver library to turn WLAN on/off, and call
->>>> WMIMethod(DEVS, 0x00010012, 1 or 0) to set WLAN LED status.
->>>> After you set WLAN LED status, you can see the WLAN status is chan=
-ged with
->>>> WMIMethod(DSTS, 0x00010011). Because the status is recorded lastly
->>>> (ex: Windows), you can use it for synchronization.
->>>
->>> That means WMIMethod(DSTS, 0x00010011, 0) will do nothing ? Or will=
- it
->>> control both the led and the device ?
->> Yes, WMIMethod(DSTS, 0x00010011, 0) will do nothing if we try to
->> enable/disable it.
->> It won't turn on/off the wifi nor the LED.
->> But, we still can read the status of wireless through this command, =
-but
->> need to use 0x00010012 to set wifi status.
->>
->>> How can you then call WMIMethod(DSTS, 0x00010012, 0/1) since nobody
->>> switched wlan on or off ?
->>> If you just want a way to control the led, expose it under
->>> /sys/class/leds, and remove wlan from /sys/class/rfkill if it doesn=
-'t
->>> work.
->> ASUS' BIOS engineer told us that it's a way to change the status of
->> wifi(read from id 0x00010011)
->> by writing the value to 0x00010012, and ms windows application do th=
-at as well.
->> It's a poor design by ASUS' BIOS, they really surprise me while tell=
-ing me that.
->>
->> But, the advantage of doing this is the value stored in the 0x000100=
-12
->> (should be read from id 0x00010011) will be preserved to next reboot=
-=2E
->> So that we can track the status of wifi.
->> And once we can get the correct wifi state, we then can block/unbloc=
-k
->> wifi while boot up.
->> And it will have the same behavior as the one controlled by BIOS.
->
-> So, in this case, 0x00010012 controls:
-> - The LED
-> - The LED *and* the WLAN device
-> - The WLAN device
-> - Nothing, it just stores a value
->
-> Just to be sure to understand ... Be sure to add a comment when using
-> 0x00010012 to tell exactly what it does.
-=46rom what I have heard, it should be 4 (stores a value but should be
-read from 0x00010011, instead of from 0x00010012)
-But I also raise this question to our PM and he will help us to
-clarify this from ASUS tomorrow.
+> >1) reverting the patch in acpica that puts all names in uppercase
+> >2) using a case-insensitive match in acpi bus driver
+> >3) using uppercase name in classmate-laptop driver
+>=20
+> I think the easiest and less risky way to fix this is by adding a
+> new hardware id (as proposed in the thread's patch), as it doesn't
+> add any side effects (that the other solutions might add), and it
+> doesn't break the behaviour of the old code.
 
->
->>>
->>>> (5) means that the model doesn=92t have WLAN device.
->>>>
->>>> WLAN is the ONLY special case with upper rule.
->>>>
->>>> For other device, like Bluetooth, you just need use
->>>> WMIMethod(DSTS, 0x00010013) to get, and WMIMethod(DEVS, 0x00010013=
-, 1 or 0)
->>>> to set.
->>>> =3D=3D=3D
->>>>
->>>> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
->>>> ---
->>>>  drivers/platform/x86/asus-wmi.c |   27 ++++++++++++++++++++++++++=
--
->>>>  1 file changed, 26 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x8=
-6/asus-wmi.c
->>>> index 556cbb4..638facf 100644
->>>> --- a/drivers/platform/x86/asus-wmi.c
->>>> +++ b/drivers/platform/x86/asus-wmi.c
->>>> @@ -98,6 +98,7 @@ MODULE_LICENSE("GPL");
->>>>  #define ASUS_WMI_DEVID_WIRELESS_LED    0x00010002
->>>>  #define ASUS_WMI_DEVID_CWAP            0x00010003
->>>>  #define ASUS_WMI_DEVID_WLAN            0x00010011
->>>> +#define ASUS_WMI_DEVID_WLAN_LED                0x00010012
->>>
->>> What's the difference between this one and ASUS_WMI_DEVID_WIRELESS_=
-LED ?
->>> What is really  0x00010002 ?
->> That's another weird part, that's the name defined in the ASUS WMI s=
-pec.
->> Please see the attached pic.
->> 0x00010002 is the read one which can control the wireless LED,
->> I don't know why there is another one exists in the spec.
->>
->>>>  #define ASUS_WMI_DEVID_BLUETOOTH       0x00010013
->>>>  #define ASUS_WMI_DEVID_GPS             0x00010015
->>>>  #define ASUS_WMI_DEVID_WIMAX           0x00010017
->>>> @@ -723,10 +724,34 @@ error_workqueue:
->>>>   */
->>>>  static int asus_rfkill_set(void *data, bool blocked)
->>>>  {
->>>> +       static u32 wlan_status =3D 0xffffffff;
->>>
->>> Don't use a static variable, add a field into struct asus_wmi inste=
-ad.
->> got it.
->>
->>>
->>>>         struct asus_rfkill *priv =3D data;
->>>>         u32 ctrl_param =3D !blocked;
->>>> +       u32 dev_id =3D priv->dev_id;
->>>> +       int result;
->>>>
->>>> -       return asus_wmi_set_devstate(priv->dev_id, ctrl_param, NUL=
-L);
->>>> +       /*
->>>> +        * If the user bit is set, BIOS can't set and record the w=
-lan status,
->>>> +        * it will report the value read from id ASUS_WMI_DEVID_WL=
-AN_LED
->>>> +        * while we query the wlan status through WMI.
->>>> +        * So, we have to record wlan status in id ASUS_WMI_DEVID_=
-WLAN_LED
->>>> +        * while setting the wlan status through WMI.
->>>> +        * This is also the behavior that windows app will do.
->>>> +        */
->>>> +       if (dev_id =3D=3D ASUS_WMI_DEVID_WLAN) {
->>>> +               if (wlan_status =3D=3D 0xffffffff)
->>>> +                       asus_wmi_get_devstate(priv->asus,
->>>> +                                             ASUS_WMI_DEVID_WLAN,
->>>> +                                             &wlan_status);
->>>
->>> Maybe you could read that on startup instead of using lazy loading =
-?
->>> Read the state of the wlan device, and set a flag "led should be co=
-ntrolled"
->> ok
->>
->>>
->>>> +               if (wlan_status &
->>>> +                  (ASUS_WMI_DSTS_PRESENCE_BIT | ASUS_WMI_DSTS_USE=
-R_BIT))
->>>> +                       dev_id =3D ASUS_WMI_DEVID_WLAN_LED;
->>>> +       }
->>>> +
->>>> +       result =3D asus_wmi_set_devstate(dev_id, ctrl_param, NULL)=
-;
->>>> +
->>>> +       return result;
->>>>  }
->>>>
->>>>  static void asus_rfkill_query(struct rfkill *rfkill, void *data)
->>>
->>> While this patch work, I'll prefer an approach using a led class an=
-d a
->>> led trigger. The led trigger would be set by default, but the user
->>> would also be able to switch the trigger to another one, or to cont=
-rol
->>> the led using /sys/class/leds/
->> I think the problem is not so seriously, we just need to record the =
-wifi status
->> if the wifi device is controlled by application.
->> And the solution is to store the status in 0x00010012.
->> So that rfkill could work as expected.
->>
->> Best regards,
->> AceLan Kao.
->>
->> --
->> Chia-Lin Kao(AceLan)
->> http://blog.acelan.idv.tw/
->> E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
->
->
->
-> --
-> Corentin Chary
-> http://xf.iksaif.net
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+I've lost track of the implementation state here - if all names are=20
+upper-cased in acpica, why is this not already matching?
 
 --=20
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Matthew Garrett | mjg59@srcf.ucam.org
