@@ -1,40 +1,37 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 0/7] platform-drivers-x86: backlight, samsung and asus
-Date: Mon, 23 Jul 2012 14:35:20 +0100
-Message-ID: <20120723133520.GB21838@srcf.ucam.org>
-References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
- <20120626184201.GF29375@srcf.ucam.org>
- <CAHR064irJRKWhAozM18E2KMAp0vVGP+TE1mypxJxqV0uvT7Heg@mail.gmail.com>
- <CAHR064hi0gV7LUJbFa7O6d1MdzL9Oaab9F70o0-n3Be4ty9yOA@mail.gmail.com>
+Subject: Re: [PATCH 1/1 v2] classmate-laptop: Add support for Classmate V4
+ accelerometer.
+Date: Mon, 23 Jul 2012 14:36:18 +0100
+Message-ID: <20120723133618.GC21838@srcf.ucam.org>
+References: <cover.1340976795.git.magomez@igalia.com>
+ <39ac42c709e498fbef4f0f0f24edc5331e5f4473.1340976795.git.magomez@igalia.com>
+ <20120717224749.GA20813@nautilus.holoscopio.com>
+ <5006BFEC.1010407@igalia.com>
+ <20120723132841.GD21495@srcf.ucam.org>
+ <500D52A7.8040606@igalia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:57787 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:57817 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751325Ab2GWNfZ (ORCPT
+	with ESMTP id S1751325Ab2GWNgX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jul 2012 09:35:25 -0400
+	Mon, 23 Jul 2012 09:36:23 -0400
 Content-Disposition: inline
-In-Reply-To: <CAHR064hi0gV7LUJbFa7O6d1MdzL9Oaab9F70o0-n3Be4ty9yOA@mail.gmail.com>
+In-Reply-To: <500D52A7.8040606@igalia.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Miguel =?iso-8859-1?Q?G=F3mez?= <magomez@igalia.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, don@syst.com.br, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jul 16, 2012 at 07:45:37AM +0200, Corentin Chary wrote:
-> On Fri, Jun 29, 2012 at 2:16 PM, Corentin Chary
-> <corentin.chary@gmail.com> wrote:
-> > On Tue, Jun 26, 2012 at 8:42 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> >> I think I'm fine with this. Whose tree should it go through?
-> >
-> > Yours would probably be easier,
-> > Thanks
-> 
-> Hi Matthew,
-> Any news on this series ?
-> Thanks.
+On Mon, Jul 23, 2012 at 03:33:27PM +0200, Miguel G=F3mez wrote:
 
-I'll merge these for 3.6.
+> Names are upper-cased in acpica, so the device is reported as
+> FNBT0000. But in the driver it's named FnBT0000, and that's why it
+> doesn't match.
 
--- 
+So just change the existing entry in the driver to FNBT0000?
+
+--=20
 Matthew Garrett | mjg59@srcf.ucam.org
