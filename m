@@ -1,44 +1,40 @@
-From: =?ISO-8859-1?Q?Miguel_G=F3mez?= <magomez@igalia.com>
-Subject: Re: [PATCH 1/1 v2] classmate-laptop: Add support for Classmate V4
- accelerometer.
-Date: Mon, 23 Jul 2012 15:33:27 +0200
-Message-ID: <500D52A7.8040606@igalia.com>
-References: <cover.1340976795.git.magomez@igalia.com> <39ac42c709e498fbef4f0f0f24edc5331e5f4473.1340976795.git.magomez@igalia.com> <20120717224749.GA20813@nautilus.holoscopio.com> <5006BFEC.1010407@igalia.com> <20120723132841.GD21495@srcf.ucam.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 0/7] platform-drivers-x86: backlight, samsung and asus
+Date: Mon, 23 Jul 2012 14:35:20 +0100
+Message-ID: <20120723133520.GB21838@srcf.ucam.org>
+References: <1339572727-24744-1-git-send-email-corentin.chary@gmail.com>
+ <20120626184201.GF29375@srcf.ucam.org>
+ <CAHR064irJRKWhAozM18E2KMAp0vVGP+TE1mypxJxqV0uvT7Heg@mail.gmail.com>
+ <CAHR064hi0gV7LUJbFa7O6d1MdzL9Oaab9F70o0-n3Be4ty9yOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp3.mundo-r.com ([212.51.32.191]:50404 "EHLO
-	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1752539Ab2GWNda (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:57787 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751325Ab2GWNfZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jul 2012 09:33:30 -0400
-In-Reply-To: <20120723132841.GD21495@srcf.ucam.org>
+	Mon, 23 Jul 2012 09:35:25 -0400
+Content-Disposition: inline
+In-Reply-To: <CAHR064hi0gV7LUJbFa7O6d1MdzL9Oaab9F70o0-n3Be4ty9yOA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, don@syst.com.br, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-El 23/07/12 15:28, Matthew Garrett escribi=F3:
-> On Wed, Jul 18, 2012 at 03:53:48PM +0200, Miguel G=F3mez wrote:
->
->>> 1) reverting the patch in acpica that puts all names in uppercase
->>> 2) using a case-insensitive match in acpi bus driver
->>> 3) using uppercase name in classmate-laptop driver
->>
->> I think the easiest and less risky way to fix this is by adding a
->> new hardware id (as proposed in the thread's patch), as it doesn't
->> add any side effects (that the other solutions might add), and it
->> doesn't break the behaviour of the old code.
->
-> I've lost track of the implementation state here - if all names are
-> upper-cased in acpica, why is this not already matching?
+On Mon, Jul 16, 2012 at 07:45:37AM +0200, Corentin Chary wrote:
+> On Fri, Jun 29, 2012 at 2:16 PM, Corentin Chary
+> <corentin.chary@gmail.com> wrote:
+> > On Tue, Jun 26, 2012 at 8:42 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> >> I think I'm fine with this. Whose tree should it go through?
+> >
+> > Yours would probably be easier,
+> > Thanks
+> 
+> Hi Matthew,
+> Any news on this series ?
+> Thanks.
 
-Names are upper-cased in acpica, so the device is reported as FNBT0000.=
-=20
-But in the driver it's named FnBT0000, and that's why it doesn't match.
+I'll merge these for 3.6.
 
---=20
-Miguel G=F3mez
-Igalia - http://www.igalia.com
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
