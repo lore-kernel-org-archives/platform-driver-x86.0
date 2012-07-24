@@ -1,57 +1,86 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH] apple-gmux: Fix kconfig dependencies
-Date: Mon, 23 Jul 2012 11:08:29 -0500
-Message-ID: <20120723160829.GA8980@thinkpad-t410>
-References: <1341240929-3400-1-git-send-email-seth.forshee@canonical.com>
- <20120716235034.GB11710@ubuntu-530U>
- <20120723133010.GE21495@srcf.ucam.org>
- <20120723134427.GA3524@thinkpad-t410>
- <500D6D85.4090504@xenotime.net>
+From: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
+Subject: Re: [PATCH 1/1 v2] classmate-laptop: Add support for Classmate V4
+ accelerometer.
+Date: Tue, 24 Jul 2012 00:09:47 -0300
+Message-ID: <20120724030946.GA2742@nautilus.holoscopio.com>
+References: <cover.1340976795.git.magomez@igalia.com>
+ <39ac42c709e498fbef4f0f0f24edc5331e5f4473.1340976795.git.magomez@igalia.com>
+ <20120717224749.GA20813@nautilus.holoscopio.com>
+ <5006BFEC.1010407@igalia.com>
+ <20120723132841.GD21495@srcf.ucam.org>
+ <500D52A7.8040606@igalia.com>
+ <20120723133618.GC21838@srcf.ucam.org>
+ <500D5549.3040109@igalia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:49203 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754121Ab2GWQIe (ORCPT
+Received: from trem.minaslivre.org ([74.50.53.205]:59779 "EHLO
+	grilo.cascardo.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753223Ab2GXDKr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jul 2012 12:08:34 -0400
+	Mon, 23 Jul 2012 23:10:47 -0400
 Content-Disposition: inline
-In-Reply-To: <500D6D85.4090504@xenotime.net>
+In-Reply-To: <500D5549.3040109@igalia.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Arun Raghavan <arun.raghavan@collabora.co.uk>, linux-kernel@vger.kernel.org
+To: Miguel =?utf-8?B?R8OzbWV6?= <magomez@igalia.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, don@syst.com.br, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jul 23, 2012 at 08:28:05AM -0700, Randy Dunlap wrote:
-> On 07/23/2012 06:44 AM, Seth Forshee wrote:
-> 
-> > On Mon, Jul 23, 2012 at 02:30:10PM +0100, Matthew Garrett wrote:
-> >>> I'm looking at Andreas's code for switcharoo support, and something I
-> >>> want to do along with it is make apple-gmux not dependent on backlight
-> >>> support (i.e. you can still build switcharoo support if
-> >>> BACKLIGHT_CLASS_DEVICE is disabled). I'm assuming this patch as a
-> >>> prerequisite. But things do get really monstrously ugly, so if there's a
-> >>> cleaner way to enforce this that I haven't found I'd love to hear about
-> >>> it.
-> >>
-> >> Why do you want to support that case? One of the problems we have with 
-> >> the kernel at present is that it's trivial to come up with non-sensical 
-> >> configurations. I can't think of a single case where you'd want the gmux 
-> >> support without also having the backlight support code.
-> > 
-> > Just because there isn't strictly any reason that the switching code
-> > needs to depend on backlight support. But yes, I can't think of a good
-> > reason why anyone would want this configuration. I won't mess with it
-> > then.
-> 
-> 
-> then it should be required in Kconfig file(s), not left to
-> create build errors.
 
-Of course. There are some build errors right now under certain
-configurations with apple-gmux. That's a bug, and the patch I sent fixes
-it. I'll test the patches that add switcheroo support for build failures
-under relevant configurations, but I'm not expecting any new problems
-since vga_switcheroo provides stubs when it's disabled.
+--TB36FDmn/VVEgNH/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Seth
+On Mon, Jul 23, 2012 at 03:44:41PM +0200, Miguel G=C3=B3mez wrote:
+> El 23/07/12 15:36, Matthew Garrett escribi=C3=B3:
+> >On Mon, Jul 23, 2012 at 03:33:27PM +0200, Miguel G=C3=B3mez wrote:
+> >
+> >>Names are upper-cased in acpica, so the device is reported as
+> >>FNBT0000. But in the driver it's named FnBT0000, and that's why it
+> >>doesn't match.
+> >
+> >So just change the existing entry in the driver to FNBT0000?
+>=20
+> I'd go for it. I can send a patch if you want. But not sure about
+> Thadeu's opinion. In the old thread it seems that he wanted to
+> explore other options besides that.
+>=20
+> Do you agree with that change Thadeu?
+>=20
+
+I'd say the other options were met with silence. So, go forward with the
+patch and I'll ack it.
+
+Thanks.
+Cascardo.
+
+>=20
+> --=20
+> Miguel G=C3=B3mez
+> Igalia - http://www.igalia.com
+
+--TB36FDmn/VVEgNH/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQDhH5AAoJEAq6ZQNy/ZVxF7oQAKtYBBw92OeB7YkNSlG1Wram
+IHpCk5so8sYk0rz58NKg8JMgh5GD4A0UWHMGuEb1hRbkHzTbdF5Jdps8ldFH/6Sm
+HAOJ9Pf7kiAucDVCOojsR8391FFvxQFgHUOhpY0VAUFpJgD7obDXrCCl08dBlN70
+F075JqYsK3rh9enpJvUI5nDrA/h0/XUdRgstAagUmLhCAqEgToiF5j02bE+kdlpG
+wE0iqtco337Gczc1pidRQXwEm1wY8NXM++XGFtxUPG2ITGrgyzpEyCRQOH4zN0tB
+/Ozm+nhoMTqehxToFp1Q/Q+1DUYAG46oxXw7hN8hCJzJhiuQifcbawLVb/uGwUSy
+V/b9Dkv2JVihTvW8NBN0dtgUmsO/RfvNmGG+OBN96qHvuJ8/Wdyw8uunxFGIybjM
+M+ntunSPC5IfV7k2RBd0HD4RW3hjTFgPMTp5u3Onh//EfAWOJIliLzY1ThV/LjRA
+TkVMAXUs4sGc7T9PN1/j/d5IW+or7MD+QDAnkCE5ZsCwgAA8XyrbFGAJzB80P9td
+OuDA7VEZKbVidBj64o5JSUc9YdUoWnkD697xfZuPMfFf+hoIc9DTbeICT7giicST
++pvqG4Zv0c7qBbxCzvGzCmLR2VKNRlmV5rxGSt26wWWK2Ypjt43CUbiFi1mc3v3r
+603qbYXV0iQaUy2dveBQ
+=82TM
+-----END PGP SIGNATURE-----
+
+--TB36FDmn/VVEgNH/--
