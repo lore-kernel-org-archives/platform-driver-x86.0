@@ -1,47 +1,51 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH 1/2] asus-wmi: record wlan status while controlling by
- user app
-Date: Tue, 24 Jul 2012 10:41:43 +0200
-Message-ID: <CAHR064iwxYPKH0-uuhVMrMXDaTqb84VLHQ8Xref1FJa6J0fNbg@mail.gmail.com>
-References: <1342754788-22880-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064j1C=L9=tz2Hjf1N30YauEkPP+LmQXnpstbMPnCO_BS6A@mail.gmail.com>
-	<CAMz9Wg95uOLPWHtBL5zAVWwNqE6Orj6cG8d0y0An8BtCAm1MFQ@mail.gmail.com>
-	<CAHR064hq1NSDY+B1Lgbx03uTZhD3TqEkcj7AfSRg4saoo5oJoQ@mail.gmail.com>
-	<CAMz9Wg_Bg6aWEd1tUZjKRMhd5cAT3ndSp6BDMNj4So=2+U_yVg@mail.gmail.com>
-	<CAMz9Wg_r3CDuKU_VK_=OT39vQj0JWPZQnw3h2T+sw80sTiqAdA@mail.gmail.com>
-	<CAHR064hpG77Hg1y2B4yBuhp=FwxuwOsHaWN5dhrtrk=1UWfG9w@mail.gmail.com>
-	<CAMz9Wg9O8y8oy3+P_3bwLXpKUTAesb1ZPFS9Mg=VhhD=9rR_gA@mail.gmail.com>
+From: =?UTF-8?q?Miguel=20G=C3=B3mez?= <magomez@igalia.com>
+Subject: [PATCH] classmate-laptop: Fix extra keys hardware id.
+Date: Tue, 24 Jul 2012 15:05:25 +0200
+Message-ID: <1343135125-18733-1-git-send-email-magomez@igalia.com>
+References: <20120724030946.GA2742@nautilus.holoscopio.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lpp01m010-f46.google.com ([209.85.215.46]:62628 "EHLO
-	mail-lpp01m010-f46.google.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751962Ab2GXIlp (ORCPT
+Received: from smtp3.mundo-r.com ([212.51.32.191]:16304 "EHLO
+	smtp4.mundo-r.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1753726Ab2GXNF7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Jul 2012 04:41:45 -0400
-Received: by lahd3 with SMTP id d3so671605lah.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jul 2012 01:41:44 -0700 (PDT)
-In-Reply-To: <CAMz9Wg9O8y8oy3+P_3bwLXpKUTAesb1ZPFS9Mg=VhhD=9rR_gA@mail.gmail.com>
+	Tue, 24 Jul 2012 09:05:59 -0400
+In-Reply-To: <20120724030946.GA2742@nautilus.holoscopio.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: cascardo@holoscopio.com, don@syst.com.br, mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Miguel=20G=C3=B3mez?= <magomez@igalia.com>
 
-On Tue, Jul 24, 2012 at 9:11 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
-> 2012/7/24 Corentin Chary <corentincj@iksaif.net>:
->> On Tue, Jul 24, 2012 at 8:37 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
->>> Dear Corentin,
->>>
->>> From ASUS, for old machines, they use 0x00010012 to turn on/off the wlan led
->>> but now use 0x00010002
->>> So, 0x00010012 is reused to store the wlan status nowadays if wlan is
->>> controlled by user.
+Since ACPI devices ids were changed to use always upper-case letters, t=
+he ACPI
+id of the extra keys (FNBT0000) was not maching the one defined in the =
+driver
+(FnBT0000), causing the extra keys not to work.
 
-#define ASUS_WMI_METHODID_SPEC          0x43455053 /* BIOS SPECification */
+The patch replaces the driver id with the one reported by ACPI, fixing =
+the
+problem.
 
-It's present almost all DSDT. I've seen it using
-https://github.com/iksaif/wmidump + wmixtract.py + Wmimofck.exe.
+Signed-off-by: Miguel G=C3=B3mez <magomez@igalia.com>
+---
+ drivers/platform/x86/classmate-laptop.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform=
+/x86/classmate-laptop.c
+index e2230a2..43e6e54 100644
+--- a/drivers/platform/x86/classmate-laptop.c
++++ b/drivers/platform/x86/classmate-laptop.c
+@@ -39,7 +39,7 @@ struct cmpc_accel {
+ #define CMPC_ACCEL_HID		"ACCE0000"
+ #define CMPC_TABLET_HID		"TBLT0000"
+ #define CMPC_IPML_HID	"IPML200"
+-#define CMPC_KEYS_HID		"FnBT0000"
++#define CMPC_KEYS_HID		"FNBT0000"
+=20
+ /*
+  * Generic input device code.
+--=20
+1.7.9.5
