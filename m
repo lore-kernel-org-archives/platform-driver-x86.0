@@ -1,81 +1,72 @@
-From: Li Dongyang <jerry87905@gmail.com>
-Subject: [PATCH 3/3] thinkpad_acpi: Free hotkey_keycode_map after unregistering tpacpi_inputdev
-Date: Wed, 25 Jul 2012 10:45:09 +1000
-Message-ID: <1343177109-1664-3-git-send-email-Jerry87905@gmail.com>
-References: <1343177109-1664-1-git-send-email-Jerry87905@gmail.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH 1/2] asus-wmi: record wlan status while controlling by
+ user app
+Date: Wed, 25 Jul 2012 17:11:50 +0800
+Message-ID: <CAMz9Wg8dS0rDb8-ab4JfqBVag6MMWYcx+3FgSKWi3HKaQiByMw@mail.gmail.com>
+References: <1342754788-22880-1-git-send-email-acelan.kao@canonical.com>
+	<CAHR064j1C=L9=tz2Hjf1N30YauEkPP+LmQXnpstbMPnCO_BS6A@mail.gmail.com>
+	<CAMz9Wg95uOLPWHtBL5zAVWwNqE6Orj6cG8d0y0An8BtCAm1MFQ@mail.gmail.com>
+	<CAHR064hq1NSDY+B1Lgbx03uTZhD3TqEkcj7AfSRg4saoo5oJoQ@mail.gmail.com>
+	<CAMz9Wg_Bg6aWEd1tUZjKRMhd5cAT3ndSp6BDMNj4So=2+U_yVg@mail.gmail.com>
+	<CAMz9Wg_r3CDuKU_VK_=OT39vQj0JWPZQnw3h2T+sw80sTiqAdA@mail.gmail.com>
+	<CAHR064hpG77Hg1y2B4yBuhp=FwxuwOsHaWN5dhrtrk=1UWfG9w@mail.gmail.com>
+	<CAMz9Wg9O8y8oy3+P_3bwLXpKUTAesb1ZPFS9Mg=VhhD=9rR_gA@mail.gmail.com>
+	<CAHR064iwxYPKH0-uuhVMrMXDaTqb84VLHQ8Xref1FJa6J0fNbg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:36685 "EHLO
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:44180 "EHLO
 	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756102Ab2GYAnS (ORCPT
+	with ESMTP id S1750897Ab2GYJLu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Jul 2012 20:43:18 -0400
-Received: by mail-pb0-f46.google.com with SMTP id rp8so459929pbb.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jul 2012 17:43:18 -0700 (PDT)
-In-Reply-To: <1343177109-1664-1-git-send-email-Jerry87905@gmail.com>
+	Wed, 25 Jul 2012 05:11:50 -0400
+Received: by pbbrp8 with SMTP id rp8so1109208pbb.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jul 2012 02:11:50 -0700 (PDT)
+In-Reply-To: <CAHR064iwxYPKH0-uuhVMrMXDaTqb84VLHQ8Xref1FJa6J0fNbg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: ibm-acpi@hmh.eng.br, mjg@redhat.com
+To: Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org
 
-We should free hotkey_keycode_map after unregistering tpacpi_inputdev, to aviod
-use after free like this:
+Dear Corentin,
 
-[   99.408388] =============================================================================
-[   99.408393] BUG kmalloc-64 (Not tainted): Poison overwritten
-[   99.408394] -----------------------------------------------------------------------------
-[   99.408394] 
-[   99.408398] INFO: 0xf2751962-0xf2751995. First byte 0x98 instead of 0x6b
-[   99.408402] INFO: Allocated in 0xfdc88c28 age=79 cpu=0 pid=1329
-[   99.408407]  __slab_alloc.isra.50.constprop.56+0x49f/0x533
-[   99.408410]  kmem_cache_alloc_trace+0x10d/0x140
-[   99.408412]  0xfdc88c28
-[   99.408414]  0xfdc898cc
-[   99.408417]  do_one_initcall+0x112/0x160
-[   99.408420]  sys_init_module+0xe6d/0x1bc0
-[   99.408422]  sysenter_do_call+0x12/0x28
-[   99.408427] INFO: Freed in hotkey_exit+0x50/0xb0 [thinkpad_acpi] age=14 cpu=1 pid=1333
-[   99.408429]  __slab_free+0x3d/0x30b
-[   99.408431]  kfree+0x129/0x140
-[   99.408435]  hotkey_exit+0x50/0xb0 [thinkpad_acpi]
-[   99.408438]  ibm_exit+0xe3/0x1a0 [thinkpad_acpi]
-[   99.408441]  thinkpad_acpi_module_exit+0x35/0x208 [thinkpad_acpi]
-[   99.408443]  sys_delete_module+0x11f/0x280
-[   99.408445]  sysenter_do_call+0x12/0x28
-[   99.408447] INFO: Slab 0xf4d5ea20 objects=17 used=17 fp=0x  (null) flags=0x40000080
-[   99.408449] INFO: Object 0xf2751960 @offset=2400 fp=0xf2751780
-[   99.408449] 
-[   99.408452] Bytes b4 f2751950: 64 02 00 00 ae ce fe ff 5a 5a 5a 5a 5a 5a 5a 5a  d.......ZZZZZZZZ
-[   99.408454] Object f2751960: 6b 6b 98 00 ec 00 8e 00 ee 00 6b 6b e3 00 bf 00 kk........kk....
-[   99.408456] Object f2751970: c2 00 6b 6b 6b 6b cd 00 6b 6b 6b 6b 6b 6b e1 00 ..kkkk..kkkkkk..
-[   99.408458] Object f2751980: e0 00 e4 00 6b 6b 74 01 73 00 72 00 71 00 94 00 ....kkt.s.r.q...
-[   99.408460] Object f2751990: 6b 6b 6b 6b f8 00 6b 6b 6b 6b 6b 6b 6b 6b 6b a5 kkkk..kkkkkkkkk.
-[   99.408462] Redzone f27519a0: bb bb bb bb ....
+From ASUS, 0x43455053 is not used in asus-nb, so we can't read the
+BIOS info from that id.
+And ASUS say that we don't have to care about the BIOS version,
+0x00010012 will be used to store the wlan status if
+ASUS_WMI_DSTS_USER_BIT is set.
+And old machines won't set ASUS_WMI_DSTS_USER_BIT bit.
 
-Signed-off-by: Li Dongyang <Jerry87905@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Best regards,
+AceLan Kao.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ae20355..e7f7328 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3015,8 +3015,6 @@ static void hotkey_exit(void)
- 	if (hotkey_dev_attributes)
- 		delete_attr_set(hotkey_dev_attributes, &tpacpi_pdev->dev.kobj);
- 
--	kfree(hotkey_keycode_map);
--
- 	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
- 		   "restoring original HKEY status and mask\n");
- 	/* yes, there is a bitwise or below, we want the
-@@ -8937,6 +8935,7 @@ static void thinkpad_acpi_module_exit(void)
- 			input_unregister_device(tpacpi_inputdev);
- 		else
- 			input_free_device(tpacpi_inputdev);
-+		kfree(hotkey_keycode_map);
- 	}
- 
- 	if (tpacpi_hwmon)
+2012/7/24 Corentin Chary <corentincj@iksaif.net>:
+> On Tue, Jul 24, 2012 at 9:11 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
+>> 2012/7/24 Corentin Chary <corentincj@iksaif.net>:
+>>> On Tue, Jul 24, 2012 at 8:37 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
+>>>> Dear Corentin,
+>>>>
+>>>> From ASUS, for old machines, they use 0x00010012 to turn on/off the wlan led
+>>>> but now use 0x00010002
+>>>> So, 0x00010012 is reused to store the wlan status nowadays if wlan is
+>>>> controlled by user.
+>
+> #define ASUS_WMI_METHODID_SPEC          0x43455053 /* BIOS SPECification */
+>
+> It's present almost all DSDT. I've seen it using
+> https://github.com/iksaif/wmidump + wmixtract.py + Wmimofck.exe.
+>
+> --
+> Corentin Chary
+> http://xf.iksaif.net
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.7.11.3
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
