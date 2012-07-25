@@ -1,30 +1,98 @@
-From: "roboth roli company" <info@roboth.com>
-Subject: (unknown)
-Date: Tue, 24 Jul 2012 14:48:03 +0300 (EEST)
-Message-ID: <44996.41.203.64.133.1343130483.squirrel@webmail.bm.com.ua>
-Reply-To: robothrollilimited@yahoo.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Li Dongyang <jerry87905@gmail.com>
+Subject: [PATCH 1/3] thinkpad_acpi: Flush the workqueue before freeing tpacpi_leds
+Date: Wed, 25 Jul 2012 10:45:07 +1000
+Message-ID: <1343177109-1664-1-git-send-email-Jerry87905@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from core-in.bm.com.ua ([193.23.183.17]:54232 "EHLO
-	core-in.bm.com.ua" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753447Ab2GXPgJ (ORCPT
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:36685 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753460Ab2GYAnO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Jul 2012 11:36:09 -0400
-Subject: 
+	Tue, 24 Jul 2012 20:43:14 -0400
+Received: by pbbrp8 with SMTP id rp8so459929pbb.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Jul 2012 17:43:14 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: ibm-acpi@hmh.eng.br, mjg@redhat.com
 
+We init work_struct within tpacpi_leds, and we should free tpacpi_leds after
+the workqueue is empty, in case of the work_struct is referenced after free.
 
- i am robothroli, Purchase manager from roli Merchant Ltd. We are
-Import/export Company based in taiwan. We are interested in purchasing
-your product and I would like to make an inquiry. Please inform me on:
+This script could trigger the OOPS:
 
-Sample availability and price
-Minimum order quantity
-FOB Prices
+#!/bin/sh
 
-Sincerely
-Purchase Manager
-robothroli
+while true
+do
+    modprobe -r thinkpad_acpi
+    modprobe thinkpad_acpi
+done
+
+And the OOPS looks like this:
+
+[   73.863557] BUG: unable to handle kernel paging request at 45440000
+[   73.863925] IP: [<c1051d65>] process_one_work+0x25/0x3b0
+[   73.864749] *pde = 00000000
+[   73.865571] Oops: 0000 [#1] PREEMPT SMP
+[   73.866443] Modules linked in: thinkpad_acpi(-) nvram netconsole configfs
+aes_i586 cryptd aes_generic joydev btusb bluetooth arc4 snd_hda_codec_analog
+iwl4965 uhci_hcd pcmcia microcode iwlegacy mac80211 cfg80211 firewire_ohci
+firewire_core kvm_intel kvm snd_hda_intel acpi_cpufreq mperf ehci_hcd yenta_socket
+pcmcia_rsrc crc_itu_t sr_mod snd_hda_codec processor pcmcia_core i2c_i801 usbcore
+lpc_ich cdrom serio_raw psmouse coretemp rfkill e1000e snd_pcm snd_page_alloc
+snd_hwdep snd_timer snd pcspkr evdev ac battery thermal soundcore usb_common
+intel_agp intel_gtt tp_smapi(O) thinkpad_ec(O) ext4 crc16 jbd2 mbcache sd_mod
+ata_piix ahci libahci libata scsi_mod nouveau button video mxm_wmi wmi
+i2c_algo_bit drm_kms_helper ttm drm agpgart i2c_core [last unloaded: nvram]
+ [   73.866676]
+ [   73.866676] Pid: 62, comm: kworker/u:4 Tainted: G           O 3.5.0-1-ARCH
+ #1 LENOVO 7662CTO/7662CTO
+ [   73.866676] EIP: 0060:[<c1051d65>] EFLAGS: 00010002 CPU: 1
+ [   73.866676] EIP is at process_one_work+0x25/0x3b0
+ [   73.866676] EAX: 45440065 EBX: f5545090 ECX: 00000088 EDX: 45440000
+ [   73.866676] ESI: f568ff40 EDI: c164dd40 EBP: f5705f98 ESP: f5705f68
+ [   73.866676]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
+ [   73.866676] CR0: 8005003b CR2: 45440000 CR3: 357ed000 CR4: 000007d0
+ [   73.866676] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+ [   73.866676] DR6: ffff0ff0 DR7: 00000400
+ [   73.866676] Process kworker/u:4 (pid: 62, ti=f5704000 task=f5700540 task.ti=f5704000)
+ [   73.866676] Stack:
+ [   73.866676]  f56fbf24 00000001 f5705f78 c10683e0 c1294950 00000000 00000000 f568ff40
+ [   73.866676]  00000000 f568ff40 f568ff50 c164dd40 f5705fb8 c1052589 c1060c7e c15b9300
+ [   73.866676]  c164dd40 00000000 f568ff40 c1052490 f5705fe4 c10570b2 00000000 f568ff40
+ [   73.866676] Call Trace:
+ [   73.866676]  [<c10683e0>] ? default_wake_function+0x10/0x20
+ [   73.866676]  [<c1294950>] ? dev_get_drvdata+0x20/0x20
+ [   73.866676]  [<c1052589>] worker_thread+0xf9/0x280
+ [   73.866676]  [<c1060c7e>] ? complete+0x4e/0x60
+ [   73.866676]  [<c1052490>] ? manage_workers.isra.24+0x1c0/0x1c0
+ [   73.866676]  [<c10570b2>] kthread+0x72/0x80
+ [   73.866676]  [<c1057040>] ? kthread_freezable_should_stop+0x50/0x50
+ [   73.866676]  [<c13c20fe>] kernel_thread_helper+0x6/0x10
+ [   73.866676] Code: bc 27 00 00 00 00 55 89 e5 57 56 53 83 ec 24 3e 8d 74 26
+ 00 89 c6 8b 02 89 d3 c7 45 f0 00 00 00 00 89 c2 30 d2 a8 04 0f 44 55 f0 <8b> 02 89 55 f0 89 da c1 ea
+ 0a 89 45 ec 89 d8 8b 4d ec c1 e8 04
+ [   73.866676] EIP: [<c1051d65>] process_one_work+0x25/0x3b0 SS:ESP 0068:f5705f68
+ [   73.866676] CR2: 0000000045440000
+ [   73.866676] ---[ end trace 4d8a1887edca08c5 ]---
+ [   73.866676] note: kworker/u:4[62] exited with preempt_count 1
+
+Signed-off-by: Li Dongyang <Jerry87905@gmail.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d5fd4a1..c85b666 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5217,6 +5217,7 @@ static void led_exit(void)
+ 			led_classdev_unregister(&tpacpi_leds[i].led_classdev);
+ 	}
+ 
++	flush_workqueue(tpacpi_wq);
+ 	kfree(tpacpi_leds);
+ }
+ 
+-- 
+1.7.11.3
