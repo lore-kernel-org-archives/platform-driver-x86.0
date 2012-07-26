@@ -1,37 +1,26 @@
-From: AceLan Kao <acelan.kao@canonical.com>
+From: Corentin Chary <corentincj@iksaif.net>
 Subject: Re: [PATCH 2/2] asus-wmi: update wlan LED through rfkill led trigger
-Date: Thu, 26 Jul 2012 11:39:10 +0800
-Message-ID: <CAMz9Wg8oJOMPk4gYKUgMxxAGCOdCMHK1f-V+Oi4CzQdK1ovPKA@mail.gmail.com>
+Date: Thu, 26 Jul 2012 07:19:58 +0200
+Message-ID: <CAHR064hSQC9tQG3DATufiB6+taWbkEuV_egSy5=Jqfd8iFf1sg@mail.gmail.com>
 References: <1343273640-13033-1-git-send-email-acelan.kao@canonical.com>
 	<1343273640-13033-2-git-send-email-acelan.kao@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:45577 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750774Ab2GZDjK (ORCPT
+Received: from mail-lpp01m010-f46.google.com ([209.85.215.46]:43735 "EHLO
+	mail-lpp01m010-f46.google.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751612Ab2GZFUA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 25 Jul 2012 23:39:10 -0400
-Received: by pbbrp8 with SMTP id rp8so2500436pbb.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jul 2012 20:39:10 -0700 (PDT)
+	Thu, 26 Jul 2012 01:20:00 -0400
+Received: by lahd3 with SMTP id d3so1135180lah.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jul 2012 22:19:59 -0700 (PDT)
 In-Reply-To: <1343273640-13033-2-git-send-email-acelan.kao@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-This patch uses a function, rfkill_set_led_trigger_name(), which was
-removed by commit
-2e48928d8a0f38c1b5c81eb3f1294de8a6382c68
-This function is necessary and should not be removed.
-So, I submitted another patch to revert it to linux-wireless mailing list.
-Without that revert patch, the code won't get compiled
-
-Best regards,
-AceLan Kao.
-
-2012/7/26 AceLan Kao <acelan.kao@canonical.com>:
+On Thu, Jul 26, 2012 at 5:34 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
 > For those machines with wapf=4, BIOS won't update the wireless LED,
 > since wapf=4 means user application will take in chage of the wifi and bt.
 > So, we have to update wlan LED status explicitly.
@@ -97,6 +86,12 @@ AceLan Kao.
 > +       if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
 > +               asus->wlan_led.name = "asus-wmi::wlan";
 > +               asus->wlan_led.brightness_set = wlan_led_set;
+
+Why no brightness_get ?
+(note that if you decide to add wl_led_get() function that returns
+-ENODEV when not found (like for touchpad), please use directly
+instead of checking devstate above).
+
 > +               asus->wlan_led.flags = LED_CORE_SUSPENDRESUME;
 > +               asus->wlan_led.max_brightness = 1;
 > +               asus->wlan_led.default_trigger = "asus-wlan";
@@ -114,6 +109,14 @@ AceLan Kao.
 > +       if (dev_id == ASUS_WMI_DEVID_WLAN)
 > +               rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
 > +
+
+I think this is only needed because leds are created before rfkill
+switchs. You may also simply move rfkill_init() above led_init() (take
+care of fail_led, fail_rfkill too).
+
+Another solution is to call led_trigger_set_default() instead of
+rfkill_set_led_trigger_name()
+
 >         rfkill_init_sw_state(*rfkill, !result);
 >         result = rfkill_register(*rfkill);
 >         if (result) {
@@ -124,6 +127,5 @@ AceLan Kao.
 
 
 -- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Corentin Chary
+http://xf.iksaif.net
