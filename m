@@ -1,171 +1,165 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH 1/2] asus-wmi: record wlan status while controlled by userapp
-Date: Thu, 26 Jul 2012 07:22:32 +0200
-Message-ID: <CAHR064g2vit7g2y02GSnxqkFSP2kNfZfoNDYRcyktJ-d46LZRA@mail.gmail.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH 2/2] asus-wmi: update wlan LED through rfkill led trigger
+Date: Thu, 26 Jul 2012 16:12:41 +0800
+Message-ID: <CAMz9Wg95wf-ii=9LBcDqDu0Dri6hukDg3F4VBa8xTmK+Hb0RmQ@mail.gmail.com>
 References: <1343273640-13033-1-git-send-email-acelan.kao@canonical.com>
+	<1343273640-13033-2-git-send-email-acelan.kao@canonical.com>
+	<CAHR064hSQC9tQG3DATufiB6+taWbkEuV_egSy5=Jqfd8iFf1sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lpp01m010-f46.google.com ([209.85.215.46]:65525 "EHLO
-	mail-lpp01m010-f46.google.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751238Ab2GZFWe convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Jul 2012 01:22:34 -0400
-Received: by lahd3 with SMTP id d3so1136223lah.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Jul 2012 22:22:33 -0700 (PDT)
-In-Reply-To: <1343273640-13033-1-git-send-email-acelan.kao@canonical.com>
+Received: from mail-yw0-f46.google.com ([209.85.213.46]:33785 "EHLO
+	mail-yw0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750867Ab2GZIMm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 26 Jul 2012 04:12:42 -0400
+Received: by yhmm54 with SMTP id m54so1662272yhm.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Jul 2012 01:12:42 -0700 (PDT)
+In-Reply-To: <CAHR064hSQC9tQG3DATufiB6+taWbkEuV_egSy5=Jqfd8iFf1sg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
+To: Corentin Chary <corentincj@iksaif.net>
 Cc: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 26, 2012 at 5:33 AM, AceLan Kao <acelan.kao@canonical.com> =
-wrote:
-> If the user bit is set, that mean BIOS can't set and record the wlan
-> status, it will report the value read from id ASUS_WMI_DEVID_WLAN_LED
-> (0x00010012) while we query the wlan status by id ASUS_WMI_DEVID_WLAN
-> (0x00010011) through WMI.
-> So, we have to record wlan status in id ASUS_WMI_DEVID_WLAN_LED
-> (0x00010012) while setting the wlan status through WMI.
-> This is also the behavior that windows app will do.
->
-> Quote from ASUS application engineer
-> =3D=3D=3D
-> When you call WMIMethod(DSTS, 0x00010011) to get WLAN status, it may =
-return
->
-> (1) 0x00050001 (On)
-> (2) 0x00050000 (Off)
-> (3) 0x00030001 (On)
-> (4) 0x00030000 (Off)
-> (5) 0x00000002 (Unknown)
->
-> (1), (2) means that the model has hardware GPIO for WLAN, you can cal=
-l
-> WMIMethod(DEVS, 0x00010011, 1 or 0) to turn WLAN on/off.
-> (3), (4) means that the model doesn=E2=80=99t have hardware GPIO, you=
- need to use
-> API or driver library to turn WLAN on/off, and call
-> WMIMethod(DEVS, 0x00010012, 1 or 0) to set WLAN LED status.
-> After you set WLAN LED status, you can see the WLAN status is changed=
- with
-> WMIMethod(DSTS, 0x00010011). Because the status is recorded lastly
-> (ex: Windows), you can use it for synchronization.
-> (5) means that the model doesn=E2=80=99t have WLAN device.
->
-> WLAN is the ONLY special case with upper rule.
->
-> For other device, like Bluetooth, you just need use
-> WMIMethod(DSTS, 0x00010013) to get, and WMIMethod(DEVS, 0x00010013, 1=
- or 0)
-> to set.
-> =3D=3D=3D
->
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-> ---
->  drivers/platform/x86/asus-wmi.c |   23 ++++++++++++++++++++++-
->  drivers/platform/x86/asus-wmi.h |    1 +
->  2 files changed, 23 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
-sus-wmi.c
-> index 77aadde..a13eb45 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -98,6 +98,7 @@ MODULE_LICENSE("GPL");
->  #define ASUS_WMI_DEVID_WIRELESS_LED    0x00010002
->  #define ASUS_WMI_DEVID_CWAP            0x00010003
->  #define ASUS_WMI_DEVID_WLAN            0x00010011
-> +#define ASUS_WMI_DEVID_WLAN_LED                0x00010012
->  #define ASUS_WMI_DEVID_BLUETOOTH       0x00010013
->  #define ASUS_WMI_DEVID_GPS             0x00010015
->  #define ASUS_WMI_DEVID_WIMAX           0x00010017
-> @@ -493,6 +494,8 @@ static int asus_wmi_led_init(struct asus_wmi *asu=
-s)
->
->                 rv =3D led_classdev_register(&asus->platform_device->=
-dev,
->                                            &asus->kbd_led);
-> +               if (rv)
-> +                       goto error;
->         }
->
+Dear Corentin,
 
-Hm ? Is that missing from the led patch ?
+2012/7/26 Corentin Chary <corentincj@iksaif.net>:
+> On Thu, Jul 26, 2012 at 5:34 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
+>> For those machines with wapf=4, BIOS won't update the wireless LED,
+>> since wapf=4 means user application will take in chage of the wifi and bt.
+>> So, we have to update wlan LED status explicitly.
+>>
+>> But I found there is another wireless LED bug in launchpad and which is
+>> not in the wapf=4 quirk.
+>> So, it might be better to set wireless LED status explicitly for all
+>> machines.
+>>
+>> BugLink: https://launchpad.net/bugs/901105
+>>
+>> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c |   24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index a13eb45..6ddfb0b 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -183,6 +183,7 @@ struct asus_wmi {
+>>         struct device *hwmon_device;
+>>         struct platform_device *platform_device;
+>>
+>> +       struct led_classdev wlan_led;
+>>         struct led_classdev tpd_led;
+>>         int tpd_led_wk;
+>>         struct led_classdev kbd_led;
+>> @@ -452,12 +453,20 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+>>         return value;
+>>  }
+>>
+>> +static void wlan_led_set(struct led_classdev *led_cdev,
+>> +                        enum led_brightness value)
+>> +{
+>> +       asus_wmi_set_devstate(ASUS_WMI_DEVID_WIRELESS_LED, value, NULL);
+>> +}
+>> +
+>>  static void asus_wmi_led_exit(struct asus_wmi *asus)
+>>  {
+>>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+>>                 led_classdev_unregister(&asus->kbd_led);
+>>         if (!IS_ERR_OR_NULL(asus->tpd_led.dev))
+>>                 led_classdev_unregister(&asus->tpd_led);
+>> +       if (!IS_ERR_OR_NULL(asus->wlan_led.dev))
+>> +               led_classdev_unregister(&asus->wlan_led);
+>>         if (asus->led_workqueue)
+>>                 destroy_workqueue(asus->led_workqueue);
+>>  }
+>> @@ -465,6 +474,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+>>  static int asus_wmi_led_init(struct asus_wmi *asus)
+>>  {
+>>         int rv = 0;
+>> +       u32 result;
+>>
+>>         asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+>>         if (!asus->led_workqueue)
+>> @@ -498,6 +508,17 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>>                         goto error;
+>>         }
+>>
+>> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WIRELESS_LED, &result);
+>> +       if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
+>> +               asus->wlan_led.name = "asus-wmi::wlan";
+>> +               asus->wlan_led.brightness_set = wlan_led_set;
+>
+> Why no brightness_get ?
+The return value from querying ASUS_WMI_DEVID_WIRELESS_LED  is not correct.
+In my machine, I'll get 0x00050003 when querying its status no matter
+the LED is on or off.
+That's why I didn't provide a brightness_get() function.
 
->  error:
-> @@ -725,8 +728,21 @@ static int asus_rfkill_set(void *data, bool bloc=
-ked)
->  {
->         struct asus_rfkill *priv =3D data;
->         u32 ctrl_param =3D !blocked;
-> +       u32 dev_id =3D priv->dev_id;
-> +
-> +       /*
-> +        * If the user bit is set, BIOS can't set and record the wlan=
- status,
-> +        * it will report the value read from id ASUS_WMI_DEVID_WLAN_=
-LED
-> +        * while we query the wlan status through WMI(ASUS_WMI_DEVID_=
-WLAN).
-> +        * So, we have to record wlan status in id ASUS_WMI_DEVID_WLA=
-N_LED
-> +        * while setting the wlan status through WMI.
-> +        * This is also the behavior that windows app will do.
-> +        */
-> +       if ((dev_id =3D=3D ASUS_WMI_DEVID_WLAN) &&
-> +            priv->asus->driver->wlan_ctrl_by_user)
-> +               dev_id =3D ASUS_WMI_DEVID_WLAN_LED;
+> (note that if you decide to add wl_led_get() function that returns
+> -ENODEV when not found (like for touchpad), please use directly
+> instead of checking devstate above).
+I'll wrap the devstate in a function, but won't provide a brightness_get()
+Is that okay?
+
 >
-> -       return asus_wmi_set_devstate(priv->dev_id, ctrl_param, NULL);
-> +       return asus_wmi_set_devstate(dev_id, ctrl_param, NULL);
->  }
+>> +               asus->wlan_led.flags = LED_CORE_SUSPENDRESUME;
+>> +               asus->wlan_led.max_brightness = 1;
+>> +               asus->wlan_led.default_trigger = "asus-wlan";
+>> +               rv = led_classdev_register(&asus->platform_device->dev,
+>> +                                          &asus->wlan_led);
+>> +
+>> +       }
+>>  error:
+>>         if (rv)
+>>                 asus_wmi_led_exit(asus);
+>> @@ -811,6 +832,9 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+>>         if (!*rfkill)
+>>                 return -EINVAL;
+>>
+>> +       if (dev_id == ASUS_WMI_DEVID_WLAN)
+>> +               rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
+>> +
 >
->  static void asus_rfkill_query(struct rfkill *rfkill, void *data)
-> @@ -1648,6 +1664,7 @@ static int asus_wmi_add(struct platform_device =
-*pdev)
->         struct asus_wmi *asus;
->         acpi_status status;
->         int err;
-> +       u32 result;
+> I think this is only needed because leds are created before rfkill
+> switchs. You may also simply move rfkill_init() above led_init() (take
+> care of fail_led, fail_rfkill too).
 >
->         asus =3D kzalloc(sizeof(struct asus_wmi), GFP_KERNEL);
->         if (!asus)
-> @@ -1700,6 +1717,10 @@ static int asus_wmi_add(struct platform_device=
- *pdev)
->         if (err)
->                 goto fail_debugfs;
+> Another solution is to call led_trigger_set_default() instead of
+> rfkill_set_led_trigger_name()
+I tried to exchange rfkill_init() and led_init() only in asus_wmi_add(),
+and the LED didn't work anymore.
+So, I think the current init sequence is correct and should not change it.
+
+And while calling led_classdev_register() in asus_wmi_led_init()
+it will call led_trigger_set_default() in the end of
+led_classdev_register() function.
+
+We still need to set the led trigger name to rfkill, so that our led function
+will be called when rfkill status is changed.
+
 >
-> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WLAN, &result);
-> +       if (result & (ASUS_WMI_DSTS_PRESENCE_BIT | ASUS_WMI_DSTS_USER=
-_BIT))
-> +               asus->driver->wlan_ctrl_by_user =3D 1;
-> +
->         return 0;
+>>         rfkill_init_sw_state(*rfkill, !result);
+>>         result = rfkill_register(*rfkill);
+>>         if (result) {
+>> --
+>> 1.7.9.5
+>>
 >
->  fail_debugfs:
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/a=
-sus-wmi.h
-> index d43b667..cbe7ee2 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -45,6 +45,7 @@ struct quirk_entry {
->  struct asus_wmi_driver {
->         int                     brightness;
->         int                     panel_power;
-> +       int                     wlan_ctrl_by_user;
 >
->         const char              *name;
->         struct module           *owner;
+>
 > --
-> 1.7.9.5
->
+> Corentin Chary
+> http://xf.iksaif.net
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Except the led artifact, this patch look ok. Please fix the led patch
-and we should be done !
-Thanks !
 
---=20
-Corentin Chary
-http://xf.iksaif.net
+
+-- 
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
