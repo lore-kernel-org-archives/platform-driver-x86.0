@@ -1,181 +1,47 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-wmi: update wlan LED through rfkill led trigger
-Date: Sat, 28 Jul 2012 11:54:12 +0200
-Message-ID: <CAHR064jjz3QEo_2TRJ7TYHrO9iAk7MUeM5zGnUw2+9=erQ6kNA@mail.gmail.com>
-References: <1343379119-10939-1-git-send-email-acelan.kao@canonical.com>
-	<CAHR064jqCEoUSmmbbFXia-LS=nxp2wtTcL9Aw0-aJbzP3yeidA@mail.gmail.com>
+From: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Subject: Re: Fwd: Brightness on HP EliteBook 8460p
+Date: Sat, 28 Jul 2012 16:47:31 +0200
+Message-ID: <7304456.Po7HTnWu9F@pali>
+References: <4F2E8FE40200002300007D85@novprvlin0050.provo.novell.com> <1631921.mapqS8Vd5c@pali> <1332303391.10557.391.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="nextPart1482509.WUzRrmJDWT"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qa0-f53.google.com ([209.85.216.53]:57122 "EHLO
-	mail-qa0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751329Ab2G1JyN (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:47760 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752401Ab2G1Orf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 Jul 2012 05:54:13 -0400
-Received: by qaas11 with SMTP id s11so191558qaa.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Jul 2012 02:54:12 -0700 (PDT)
-In-Reply-To: <CAHR064jqCEoUSmmbbFXia-LS=nxp2wtTcL9Aw0-aJbzP3yeidA@mail.gmail.com>
+	Sat, 28 Jul 2012 10:47:35 -0400
+In-Reply-To: <1332303391.10557.391.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>, Matthew Garrett <mjg@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
-
-On Sat, Jul 28, 2012 at 11:51 AM, Corentin Chary <corentincj@iksaif.net> wrote:
-> On Fri, Jul 27, 2012 at 10:51 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
->> For those machines with wapf=4, BIOS won't update the wireless LED,
->> since wapf=4 means user application will take in chage of the wifi and bt.
->> So, we have to update wlan LED status explicitly.
->>
->> But I found there is another wireless LED bug in launchpad and which is
->> not in the wapf=4 quirk.
->> So, it might be better to set wireless LED status explicitly for all
->> machines.
->>
->> BugLink: https://launchpad.net/bugs/901105
->>
->> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
->> ---
->>  drivers/platform/x86/asus-wmi.c |   76 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>
->> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->> index 83d4cf7..da8e13e 100644
->> --- a/drivers/platform/x86/asus-wmi.c
->> +++ b/drivers/platform/x86/asus-wmi.c
->> @@ -183,6 +183,8 @@ struct asus_wmi {
->>         struct device *hwmon_device;
->>         struct platform_device *platform_device;
->>
->> +       struct led_classdev wlan_led;
->> +       int wlan_led_wk;
->>         struct led_classdev tpd_led;
->>         int tpd_led_wk;
->>         struct led_classdev kbd_led;
->> @@ -190,6 +192,7 @@ struct asus_wmi {
->>         struct workqueue_struct *led_workqueue;
->>         struct work_struct tpd_led_work;
->>         struct work_struct kbd_led_work;
->> +       struct work_struct wlan_led_work;
->>
->>         struct asus_rfkill wlan;
->>         struct asus_rfkill bluetooth;
->> @@ -452,12 +455,65 @@ static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
->>         return value;
->>  }
->>
->> +static int wlan_led_unknown_state(struct asus_wmi *asus)
->> +{
->> +       u32 result;
->> +
->> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WIRELESS_LED, &result);
->> +
->> +       return result & ASUS_WMI_DSTS_UNKNOWN_BIT;
->> +}
->> +
->> +static int wlan_led_presence(struct asus_wmi *asus)
->> +{
->> +       u32 result;
->> +
->> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WIRELESS_LED, &result);
->> +
->> +       return result & ASUS_WMI_DSTS_PRESENCE_BIT;
->> +}
->> +
->> +static void wlan_led_update(struct work_struct *work)
->> +{
->> +       int ctrl_param;
->> +       struct asus_wmi *asus;
->> +
->> +       asus = container_of(work, struct asus_wmi, wlan_led_work);
->> +
->> +       ctrl_param = asus->wlan_led_wk;
->> +       asus_wmi_set_devstate(ASUS_WMI_DEVID_WIRELESS_LED, ctrl_param, NULL);
->> +}
->> +
->> +static void wlan_led_set(struct led_classdev *led_cdev,
->> +                        enum led_brightness value)
->> +{
->> +       struct asus_wmi *asus;
->> +
->> +       asus = container_of(led_cdev, struct asus_wmi, wlan_led);
->> +
->> +       asus->wlan_led_wk = !!value;
->> +       queue_work(asus->led_workqueue, &asus->wlan_led_work);
->> +}
->> +
->> +static enum led_brightness wlan_led_get(struct led_classdev *led_cdev)
->> +{
->> +       struct asus_wmi *asus;
->> +       u32 result;
->> +
->> +       asus = container_of(led_cdev, struct asus_wmi, wlan_led);
->> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_WIRELESS_LED, &result);
->> +
->> +       return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
->> +}
->> +
->>  static void asus_wmi_led_exit(struct asus_wmi *asus)
->>  {
->>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
->>                 led_classdev_unregister(&asus->kbd_led);
->>         if (!IS_ERR_OR_NULL(asus->tpd_led.dev))
->>                 led_classdev_unregister(&asus->tpd_led);
->> +       if (!IS_ERR_OR_NULL(asus->wlan_led.dev))
->> +               led_classdev_unregister(&asus->wlan_led);
->>         if (asus->led_workqueue)
->>                 destroy_workqueue(asus->led_workqueue);
->>  }
->> @@ -494,6 +550,23 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->>
->>                 rv = led_classdev_register(&asus->platform_device->dev,
->>                                            &asus->kbd_led);
->> +               if (rv)
->> +                       goto error;
->> +       }
->> +
->> +       if (wlan_led_presence(asus)) {
->> +               INIT_WORK(&asus->wlan_led_work, wlan_led_update);
->> +
->> +               asus->wlan_led.name = "asus::wlan";
->> +               asus->wlan_led.brightness_set = wlan_led_set;
->> +               if (!wlan_led_unknown_state(asus))
->> +                       asus->wlan_led.brightness_get = wlan_led_get;
->> +               asus->wlan_led.flags = LED_CORE_SUSPENDRESUME;
->> +               asus->wlan_led.max_brightness = 1;
->> +               asus->wlan_led.default_trigger = "asus-wlan";
->> +
->> +               rv = led_classdev_register(&asus->platform_device->dev,
->> +                                          &asus->wlan_led);
->>         }
->>
->>  error:
->> @@ -809,6 +882,9 @@ static int asus_new_rfkill(struct asus_wmi *asus,
->>         if (!*rfkill)
->>                 return -EINVAL;
->>
->> +       if (dev_id == ASUS_WMI_DEVID_WLAN)
->> +               rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
->> +
->>         rfkill_init_sw_state(*rfkill, !result);
->>         result = rfkill_register(*rfkill);
->>         if (result) {
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-> Acked-by: Corentin Chary <corentin.chary@gmail.com>
->
-> Matthew could you merge this one ?
-> Thanks,
-
-Note: it depends on 'Revert "rfkill: remove dead code"' already sent
-to linux-wireless
+To: joeyli <jlee@suse.com>
+Cc: dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Artur Flinta <aflinta@gmail.com>
 
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+--nextPart1482509.WUzRrmJDWT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Hello, I have some good news. Radeon patches from this post
+http://lists.freedesktop.org/archives/dri-devel/2012-July/025535.html
+export brightness file /sys/class/backlight/radeon_bl/brightness
+And finally with these patches I'm able to change brightness on my Elit=
+eBook.
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+--nextPart1482509.WUzRrmJDWT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlAT+4MACgkQi/DJPQPkQ1KKbwCfa7B8A2P51OAqr0l4CuC6hru9
+NVwAoK8lFICJD+twNllKBJRYn24TRAoz
+=KWvO
+-----END PGP SIGNATURE-----
+
+--nextPart1482509.WUzRrmJDWT--
