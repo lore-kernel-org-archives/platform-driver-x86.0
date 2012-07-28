@@ -1,47 +1,28 @@
-From: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Subject: Re: Fwd: Brightness on HP EliteBook 8460p
-Date: Sat, 28 Jul 2012 16:47:31 +0200
-Message-ID: <7304456.Po7HTnWu9F@pali>
-References: <4F2E8FE40200002300007D85@novprvlin0050.provo.novell.com> <1631921.mapqS8Vd5c@pali> <1332303391.10557.391.camel@linux-s257.site>
+From: Lucky winner <cutteh@libero.it>
+Subject: Summer Bonus!
+Date: Sat, 28 Jul 2012 22:54:24 +0200 (CEST)
+Message-ID: <601285.1424291343508864662.JavaMail.defaultUser@defaultHost>
+Reply-To: Lucky winner <cutteh@libero.it>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1482509.WUzRrmJDWT"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f174.google.com ([74.125.82.174]:47760 "EHLO
-	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752401Ab2G1Orf (ORCPT
+Received: from outrelay02.libero.it ([212.52.84.102]:47101 "EHLO
+	outrelay02.libero.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753093Ab2G1Uzg convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 Jul 2012 10:47:35 -0400
-In-Reply-To: <1332303391.10557.391.camel@linux-s257.site>
+	Sat, 28 Jul 2012 16:55:36 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Artur Flinta <aflinta@gmail.com>
 
-
---nextPart1482509.WUzRrmJDWT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-
-Hello, I have some good news. Radeon patches from this post
-http://lists.freedesktop.org/archives/dri-devel/2012-July/025535.html
-export brightness file /sys/class/backlight/radeon_bl/brightness
-And finally with these patches I'm able to change brightness on my Elit=
-eBook.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
---nextPart1482509.WUzRrmJDWT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlAT+4MACgkQi/DJPQPkQ1KKbwCfa7B8A2P51OAqr0l4CuC6hru9
-NVwAoK8lFICJD+twNllKBJRYn24TRAoz
-=KWvO
------END PGP SIGNATURE-----
-
---nextPart1482509.WUzRrmJDWT--
+We are please to inform you that the summer promotion award program hel=
+d 27th
+June  2012,have pronounce your email-address as the lucky winner of a t=
+otal
+sum: of =E2=82=AC50,000.
+CONTACT:
+The claim office/Email:Postinfo@luckymail.com , with your winning Seria=
+l-No:LE
+0031#44230.
+-------------------------------------
+Postcodesloterij.nl
