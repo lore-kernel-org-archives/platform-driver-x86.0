@@ -1,25 +1,43 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH 0/4] ideapad: patches for v3.6 merge window
-Date: Mon, 30 Jul 2012 09:39:01 +0800
-Message-ID: <5015E5B5.2090101@canonical.com>
-References: <4FF45C98.60305@gmail.com> <1341562023-6951-1-git-send-email-ike.pan@canonical.com> <20120728040818.GA31064@srcf.ucam.org>
+From: Artur Flinta <aflinta@gmail.com>
+Subject: Re: Fwd: Brightness on HP EliteBook 8460p
+Date: Mon, 30 Jul 2012 10:17:40 +0200
+Message-ID: <CAEPe-GKnpbzpka7y=ufukt9EUwWu95my51dGV1K41PBrmjPcRw@mail.gmail.com>
+References: <4F2E8FE40200002300007D85@novprvlin0050.provo.novell.com>
+	<1631921.mapqS8Vd5c@pali>
+	<1332303391.10557.391.camel@linux-s257.site>
+	<7304456.Po7HTnWu9F@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:48547 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753747Ab2G3BjQ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 29 Jul 2012 21:39:16 -0400
-In-Reply-To: <20120728040818.GA31064@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <7304456.Po7HTnWu9F@pali>
+Sender: linux-acpi-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: joeyli <jlee@suse.com>, dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 07/28/2012 12:08 PM, Matthew Garrett wrote:
-> This tree also seems to have ARM stuff in it?
-> 
+On Sat, Jul 28, 2012 at 4:47 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
+ wrote:
+> Hello, I have some good news. Radeon patches from this post
+> http://lists.freedesktop.org/archives/dri-devel/2012-July/025535.html
+> export brightness file /sys/class/backlight/radeon_bl/brightness
+> And finally with these patches I'm able to change brightness on my El=
+iteBook.
 
-Just a public tree. If I need to publish patches for someone to pull. I will push a new branch onto it
+Wow, it's great news :) I was reading yesterday info about ACPI
+patches from AMD on Phronix and thinking will it help or no, and now I
+have an answer :)
+
+Regards
+Artur
+
+
+
+--=20
+Ka=C5=BCdy problem ma swoje rozwi=C4=85zanie, zatem
+je=C5=BCeli nie ma rozwi=C4=85zania to nie ma problemu.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
