@@ -1,49 +1,95 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: Fwd: Brightness on HP EliteBook 8460p
-Date: Mon, 30 Jul 2012 17:28:19 +0800
-Message-ID: <1343640499.6341.80.camel@linux-s257.site>
-References: <4F2E8FE40200002300007D85@novprvlin0050.provo.novell.com>
-	 <1631921.mapqS8Vd5c@pali> <1332303391.10557.391.camel@linux-s257.site>
-	 <7304456.Po7HTnWu9F@pali>
-	 <CAEPe-GKnpbzpka7y=ufukt9EUwWu95my51dGV1K41PBrmjPcRw@mail.gmail.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT] x86 platform driver updates for 3.6
+Date: Mon, 30 Jul 2012 16:58:41 +0100
+Message-ID: <20120730155841.GA11539@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAEPe-GKnpbzpka7y=ufukt9EUwWu95my51dGV1K41PBrmjPcRw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Artur Flinta <aflinta@gmail.com>, pali.rohar@gmail.com
-Cc: dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:46968 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750918Ab2G3P6p (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 30 Jul 2012 11:58:45 -0400
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2012-07-30 =E6=96=BC 10:17 +0200=EF=BC=8CAr=
-tur Flinta =E6=8F=90=E5=88=B0=EF=BC=9A
-> On Sat, Jul 28, 2012 at 4:47 PM, Pali Roh=C3=A1r <pali.rohar@gmail.co=
-m> wrote:
-> > Hello, I have some good news. Radeon patches from this post
-> > http://lists.freedesktop.org/archives/dri-devel/2012-July/025535.ht=
-ml
-> > export brightness file /sys/class/backlight/radeon_bl/brightness
-> > And finally with these patches I'm able to change brightness on my =
-EliteBook.
->=20
-> Wow, it's great news :) I was reading yesterday info about ACPI
-> patches from AMD on Phronix and thinking will it help or no, and now =
-I
-> have an answer :)
->=20
-> Regards
-> Artur
+Hi Linus,
 
-Yes, thanks for Alex's 3 patches, those patches also works to me on my
-machine for backlight control.
+Nothing overly dramatic here - improved support for the Classmate, some=
+=20
+random small fixes and a rework of backlight management to deal with=20
+some of the more awkward cases.
+
+The following changes since commit f948ad0787de7b393c325803014fd7d5f1b5=
+01b1:
+
+  Merge tag 'gpio-for-v3.6' of git://git.kernel.org/pub/scm/linux/kerne=
+l/git/linusw/linux-gpio (2012-07-26 13:56:38 -0700)
+
+are available in the git repository at:
 
 
-Thanks
-Joey LEe
+  git://cavan.codon.org.uk/platform-drivers-x86.git linux-next
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+for you to fetch changes up to 00d39597e825a2b09ec88d4dd429ff72fe60d9d4=
+:
+
+  thinkpad_acpi: Free hotkey_keycode_map after unregistering tpacpi_inp=
+utdev (2012-07-28 00:28:57 -0400)
+
+----------------------------------------------------------------
+AceLan Kao (5):
+      asus-wmi: control backlight power through WMI, not ACPI
+      asus-wmi: enable resume on lid open
+      asus-nb-wmi: add wapf quirk for ASUS machines
+      asus-nb-wmi: add some video toggle keys
+      dell-laptop: Add 6 machines to touchpad led quirk
+
+Alex Hung (1):
+      asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
+
+Corentin Chary (5):
+      acpi: add a way to promote/demote vendor backlight drivers
+      drivers-platform-x86: use acpi_video_dmi_promote_vendor()
+      samsung-laptop: X360 ACPI backlight device is broken
+      acpi/video_detect: blacklist samsung x360
+      samsung-laptop: support R40/R41
+
+Li Dongyang (3):
+      thinkpad_acpi: Flush the workqueue before freeing tpacpi_leds
+      thinkpad_acpi: Fix a memory leak during module exit
+      thinkpad_acpi: Free hotkey_keycode_map after unregistering tpacpi=
+_inputdev
+
+Marek Vasut (3):
+      ACER: Add support for accelerometer sensor
+      ACER: Fix up sparse warning
+      ACER: Fix Smatch double-free issue
+
+Miguel G=F3mez (2):
+      classmate-laptop: Add support for Classmate V4 accelerometer.
+      classmate-laptop: Fix extra keys hardware id.
+
+ Documentation/ABI/testing/sysfs-platform-asus-wmi |    7 +
+ drivers/acpi/video_detect.c                       |   60 ++-
+ drivers/platform/x86/acer-wmi.c                   |  153 +++++++-
+ drivers/platform/x86/apple-gmux.c                 |    6 +
+ drivers/platform/x86/asus-nb-wmi.c                |  108 +++++-
+ drivers/platform/x86/asus-wmi.c                   |   23 +-
+ drivers/platform/x86/asus-wmi.h                   |    1 +
+ drivers/platform/x86/classmate-laptop.c           |  405 +++++++++++++=
++++++++-
+ drivers/platform/x86/dell-laptop.c                |   54 +++
+ drivers/platform/x86/eeepc-wmi.c                  |   25 +-
+ drivers/platform/x86/samsung-laptop.c             |   41 ++-
+ drivers/platform/x86/thinkpad_acpi.c              |    5 +-
+ include/linux/acpi.h                              |   10 +
+ 13 files changed, 864 insertions(+), 34 deletions(-)
+
+
+--=20
+Matthew Garrett | mjg59@srcf.ucam.org
