@@ -1,48 +1,25 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH] dell-laptop: Add 6 machines to touchpad led quirk
-Date: Mon, 30 Jul 2012 09:21:21 +0800
-Message-ID: <CAMz9Wg-nUzCwMa=8tpwQ++TddMJVNg+87PxoTQ8EUmDTNg7HNw@mail.gmail.com>
-References: <1342168797-26080-1-git-send-email-acelan.kao@canonical.com>
-	<20120728041656.GC31064@srcf.ucam.org>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH 0/4] ideapad: patches for v3.6 merge window
+Date: Mon, 30 Jul 2012 09:39:01 +0800
+Message-ID: <5015E5B5.2090101@canonical.com>
+References: <4FF45C98.60305@gmail.com> <1341562023-6951-1-git-send-email-ike.pan@canonical.com> <20120728040818.GA31064@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:46117 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753437Ab2G3BVV (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:48547 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753747Ab2G3BjQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 29 Jul 2012 21:21:21 -0400
-Received: by pbbrp8 with SMTP id rp8so8907699pbb.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jul 2012 18:21:21 -0700 (PDT)
-In-Reply-To: <20120728041656.GC31064@srcf.ucam.org>
+	Sun, 29 Jul 2012 21:39:16 -0400
+In-Reply-To: <20120728040818.GA31064@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Dear Matthew,
+On 07/28/2012 12:08 PM, Matthew Garrett wrote:
+> This tree also seems to have ARM stuff in it?
+> 
 
-Good idea, I'll raise this issue to our PM to see if there is a way
-do detect it and will get back to you.
-
-Best regards,
-AceLan Kao.
-
-2012/7/28 Matthew Garrett <mjg59@srcf.ucam.org>:
-> I can keep adding these, but are you really certain that there's no way
-> at all to probe this via either the PS/2 interface or the Dell DMI
-> structures?
->
-> --
-> Matthew Garrett | mjg59@srcf.ucam.org
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Just a public tree. If I need to publish patches for someone to pull. I will push a new branch onto it
