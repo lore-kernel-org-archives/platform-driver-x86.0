@@ -1,28 +1,48 @@
-From: Lucky winner <cutteh@libero.it>
-Subject: Summer Bonus!
-Date: Sat, 28 Jul 2012 22:54:24 +0200 (CEST)
-Message-ID: <601285.1424291343508864662.JavaMail.defaultUser@defaultHost>
-Reply-To: Lucky winner <cutteh@libero.it>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: [PATCH] dell-laptop: Add 6 machines to touchpad led quirk
+Date: Mon, 30 Jul 2012 09:21:21 +0800
+Message-ID: <CAMz9Wg-nUzCwMa=8tpwQ++TddMJVNg+87PxoTQ8EUmDTNg7HNw@mail.gmail.com>
+References: <1342168797-26080-1-git-send-email-acelan.kao@canonical.com>
+	<20120728041656.GC31064@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outrelay02.libero.it ([212.52.84.102]:47101 "EHLO
-	outrelay02.libero.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753093Ab2G1Uzg convert rfc822-to-8bit (ORCPT
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:46117 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753437Ab2G3BVV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 28 Jul 2012 16:55:36 -0400
+	Sun, 29 Jul 2012 21:21:21 -0400
+Received: by pbbrp8 with SMTP id rp8so8907699pbb.19
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Jul 2012 18:21:21 -0700 (PDT)
+In-Reply-To: <20120728041656.GC31064@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org
 
-We are please to inform you that the summer promotion award program hel=
-d 27th
-June  2012,have pronounce your email-address as the lucky winner of a t=
-otal
-sum: of =E2=82=AC50,000.
-CONTACT:
-The claim office/Email:Postinfo@luckymail.com , with your winning Seria=
-l-No:LE
-0031#44230.
--------------------------------------
-Postcodesloterij.nl
+Dear Matthew,
+
+Good idea, I'll raise this issue to our PM to see if there is a way
+do detect it and will get back to you.
+
+Best regards,
+AceLan Kao.
+
+2012/7/28 Matthew Garrett <mjg59@srcf.ucam.org>:
+> I can keep adding these, but are you really certain that there's no way
+> at all to probe this via either the PS/2 interface or the Dell DMI
+> structures?
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
