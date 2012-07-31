@@ -1,95 +1,109 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver updates for 3.6
-Date: Mon, 30 Jul 2012 16:58:41 +0100
-Message-ID: <20120730155841.GA11539@srcf.ucam.org>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH] WMI: fix the incorrect wmi device may be chosen from
+ BIOS's notification if multiple wmi devices exist in a system.
+Date: Tue, 31 Jul 2012 15:22:41 +0800
+Message-ID: <501787C1.10402@canonical.com>
+References: <1342662201-29878-1-git-send-email-alex.hung@canonical.com> <20120728041532.GB31064@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:46968 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750918Ab2G3P6p (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:54104 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751217Ab2GaHWr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Jul 2012 11:58:45 -0400
-Content-Disposition: inline
+	Tue, 31 Jul 2012 03:22:47 -0400
+In-Reply-To: <20120728041532.GB31064@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+On 07/28/2012 12:15 PM, Matthew Garrett wrote:
+> On Thu, Jul 19, 2012 at 09:43:21AM +0800, Alex Hung wrote:
+>
+>> +static struct acpi_device *wmi_device;
+>
+> If a machine exports multiple WMI interfaces then having a static
+> acpi_device doesn't make sense here. Instead we probably need the API to
+> take some sort of token (maybe just the wmi_device itself as an opaque
+> blob) back to the calling driver and then have it use that whenever it
+> makes a wmi call. There'd be some fixing up involved, but it should be
+> mostly mechanical.
 
-Nothing overly dramatic here - improved support for the Classmate, some=
-=20
-random small fixes and a rework of backlight management to deal with=20
-some of the more awkward cases.
+Hi,
 
-The following changes since commit f948ad0787de7b393c325803014fd7d5f1b5=
-01b1:
+In the case I am looking at, there are two cases that wmi.c will not 
+find the correct wmi device and interaction with hp-wmi.c will fail as 
+below:
 
-  Merge tag 'gpio-for-v3.6' of git://git.kernel.org/pub/scm/linux/kerne=
-l/git/linusw/linux-gpio (2012-07-26 13:56:38 -0700)
+acpi_wmi_notify -(1)-> hp_wmi_notify -(2)-> wmi_get_event_data
 
-are available in the git repository at:
+The first is in acpi_wmi_notify and can be easily fixed by
+ >> +		if (device->handle != wblock->handle)
+ >> +			continue;
 
+However, the second failure is from hp_wmi_notify() calls 
+wmi_get_event_data() and neither function has a direct access to the 
+wmi_device.
 
-  git://cavan.codon.org.uk/platform-drivers-x86.git linux-next
+To replace the static acpi_device with your proposal, I am hoping to 
+clarify your solution:
 
-for you to fetch changes up to 00d39597e825a2b09ec88d4dd429ff72fe60d9d4=
-:
+== Calling driver ==
 
-  thinkpad_acpi: Free hotkey_keycode_map after unregistering tpacpi_inp=
-utdev (2012-07-28 00:28:57 -0400)
+Is it referring to hp-wmi.c in the above case?
 
-----------------------------------------------------------------
-AceLan Kao (5):
-      asus-wmi: control backlight power through WMI, not ACPI
-      asus-wmi: enable resume on lid open
-      asus-nb-wmi: add wapf quirk for ASUS machines
-      asus-nb-wmi: add some video toggle keys
-      dell-laptop: Add 6 machines to touchpad led quirk
+It seems that hp-wmi does not have an handler to (hp's) wmi_device, and 
+calling wmi_get_event_data() with a wmi_device requires to [1] get it 
+from (a new API from) wmi.c, or [2] to add additional input parameter 
+(i.e. wmi_device) to hp_wmi_notify().
 
-Alex Hung (1):
-      asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
+Is this what you suggested?
 
-Corentin Chary (5):
-      acpi: add a way to promote/demote vendor backlight drivers
-      drivers-platform-x86: use acpi_video_dmi_promote_vendor()
-      samsung-laptop: X360 ACPI backlight device is broken
-      acpi/video_detect: blacklist samsung x360
-      samsung-laptop: support R40/R41
+== API to take some sort of token ==
 
-Li Dongyang (3):
-      thinkpad_acpi: Flush the workqueue before freeing tpacpi_leds
-      thinkpad_acpi: Fix a memory leak during module exit
-      thinkpad_acpi: Free hotkey_keycode_map after unregistering tpacpi=
-_inputdev
+Do you mean the API suggested in [1]? It needs communication between 
+acpi_wmi_notify and wmi_get_event_data which is what troubles me now... 
+(probably because I haven't understand your suggestion)
 
-Marek Vasut (3):
-      ACER: Add support for accelerometer sensor
-      ACER: Fix up sparse warning
-      ACER: Fix Smatch double-free issue
+If it is [2] you are referring, I wanted to make the changes as small as 
+possible, but it is worthwhile to check it out. The changes may be 
+larger but "mechanical".
 
-Miguel G=F3mez (2):
-      classmate-laptop: Add support for Classmate V4 accelerometer.
-      classmate-laptop: Fix extra keys hardware id.
+If it is neither, could you please share more thoughts and details with me?
 
- Documentation/ABI/testing/sysfs-platform-asus-wmi |    7 +
- drivers/acpi/video_detect.c                       |   60 ++-
- drivers/platform/x86/acer-wmi.c                   |  153 +++++++-
- drivers/platform/x86/apple-gmux.c                 |    6 +
- drivers/platform/x86/asus-nb-wmi.c                |  108 +++++-
- drivers/platform/x86/asus-wmi.c                   |   23 +-
- drivers/platform/x86/asus-wmi.h                   |    1 +
- drivers/platform/x86/classmate-laptop.c           |  405 +++++++++++++=
-+++++++-
- drivers/platform/x86/dell-laptop.c                |   54 +++
- drivers/platform/x86/eeepc-wmi.c                  |   25 +-
- drivers/platform/x86/samsung-laptop.c             |   41 ++-
- drivers/platform/x86/thinkpad_acpi.c              |    5 +-
- include/linux/acpi.h                              |   10 +
- 13 files changed, 864 insertions(+), 34 deletions(-)
-
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
+>
+>>   /*
+>>    * GUID parsing functions
+>>    */
+>> @@ -652,8 +654,9 @@ acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out)
+>>
+>>   	list_for_each(p, &wmi_block_list) {
+>>   		wblock = list_entry(p, struct wmi_block, list);
+>> +		if (wmi_device != NULL && wmi_device->handle != wblock->handle)
+>> +			continue;
+>>   		gblock = &wblock->gblock;
+>> -
+>>   		if ((gblock->flags & ACPI_WMI_EVENT) &&
+>>   			(gblock->notify_id == event))
+>>   			return acpi_evaluate_object(wblock->handle, "_WED",
+>> @@ -900,6 +903,10 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
+>>   		wblock = list_entry(p, struct wmi_block, list);
+>>   		block = &wblock->gblock;
+>>
+>> +		if (device->handle != wblock->handle)
+>> +			continue;
+>> +		wmi_device = device;
+>> +
+>>   		if ((block->flags & ACPI_WMI_EVENT) &&
+>>   			(block->notify_id == event)) {
+>>   			if (wblock->handler)
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
