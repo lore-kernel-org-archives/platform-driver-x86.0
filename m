@@ -1,68 +1,57 @@
-From: Carlos Alberto Lopez Perez <clopez@igalia.com>
-Subject: [PATCH] classmate-laptop: always call input_sync() after input_report_switch()
-Date: Thu,  2 Aug 2012 19:50:21 +0200
-Message-ID: <1343929821-18054-1-git-send-email-clopez@igalia.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp3.mundo-r.com ([212.51.32.191]:8512 "EHLO smtp4.mundo-r.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1753302Ab2HBRuu (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Aug 2012 13:50:50 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Daniel Oliveira Nascimento <don@syst.com.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: Re: [PATCH] apple-gmux: Fix kconfig dependencies
+Date: Thu, 02 Aug 2012 13:19:21 -0700
+Message-ID: <501AE0C9.1060402@xenotime.net>
+References: <1341240929-3400-1-git-send-email-seth.forshee@canonical.com> <1343927714-14937-1-git-send-email-seth.forshee@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1343927714-14937-1-git-send-email-seth.forshee@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Seth Forshee <seth.forshee@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Arun Raghavan <arun.raghavan@collabora.co.uk>, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Due to commit cdda911c34006f1089f3c87b1a1f31ab3a4722f2 evdev only
-becomes readable when the buffer contains an EV_SYN/SYN_REPORT event.
+On 08/02/2012 10:15 AM, Seth Forshee wrote:
 
-So in order to read the tablet sensor data as it happens we need to
-ensure that we always call input_sync() after input_report_switch()
+> Fix the dependencies of apple-gmux to prevent it from being built-in
+> when one or more of its dependencies is built as a module. Otherwise it
+> can fail to build due to missing symbols.
+> 
+> v2: Add dependency on ACPI to fix build failure when ACPI=n
+> 
+> Reported-by: Arun Raghavan <arun.raghavan@collabora.co.uk>
+> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 
-Signed-off-by: Carlos Alberto Lopez Perez <clopez@igalia.com>
----
- drivers/platform/x86/classmate-laptop.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 2ca7dd1..0667aa9 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -723,8 +723,10 @@ static void cmpc_tablet_handler(struct acpi_device *dev, u32 event)
- 	struct input_dev *inputdev = dev_get_drvdata(&dev->dev);
- 
- 	if (event == 0x81) {
--		if (ACPI_SUCCESS(cmpc_get_tablet(dev->handle, &val)))
-+		if (ACPI_SUCCESS(cmpc_get_tablet(dev->handle, &val))) {
- 			input_report_switch(inputdev, SW_TABLET_MODE, !val);
-+			input_sync(inputdev);
-+		}
- 	}
- }
- 
-@@ -737,8 +739,10 @@ static void cmpc_tablet_idev_init(struct input_dev *inputdev)
- 	set_bit(SW_TABLET_MODE, inputdev->swbit);
- 
- 	acpi = to_acpi_device(inputdev->dev.parent);
--	if (ACPI_SUCCESS(cmpc_get_tablet(acpi->handle, &val)))
-+	if (ACPI_SUCCESS(cmpc_get_tablet(acpi->handle, &val))) {
- 		input_report_switch(inputdev, SW_TABLET_MODE, !val);
-+		input_sync(inputdev);
-+	}
- }
- 
- static int cmpc_tablet_add(struct acpi_device *acpi)
-@@ -757,8 +761,10 @@ static int cmpc_tablet_resume(struct device *dev)
- 	struct input_dev *inputdev = dev_get_drvdata(dev);
- 
- 	unsigned long long val = 0;
--	if (ACPI_SUCCESS(cmpc_get_tablet(to_acpi_device(dev)->handle, &val)))
-+	if (ACPI_SUCCESS(cmpc_get_tablet(to_acpi_device(dev)->handle, &val))) {
- 		input_report_switch(inputdev, SW_TABLET_MODE, !val);
-+		input_sync(inputdev);
-+	}
- 	return 0;
- }
- 
+Acked-by: Randy Dunlap <rdunlap@xenotime.net>
+
+Thanks.
+
+> ---
+>  drivers/platform/x86/Kconfig |    5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 2a262f5..637074d 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -758,8 +758,11 @@ config SAMSUNG_Q10
+>  
+>  config APPLE_GMUX
+>  	tristate "Apple Gmux Driver"
+> +	depends on ACPI
+>  	depends on PNP
+> -	select BACKLIGHT_CLASS_DEVICE
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
+> +	depends on ACPI_VIDEO=n || ACPI_VIDEO
+>  	---help---
+>  	  This driver provides support for the gmux device found on many
+>  	  Apple laptops, which controls the display mux for the hybrid
+
+
+
 -- 
-1.7.10.4
+~Randy
