@@ -1,71 +1,52 @@
-From: Manoj Iyer <manoj.iyer@canonical.com>
-Subject: Re: [PATCH] thinkpad-acpi: recognize latest V-Series using
- DMI_BIOS_VENDOR
-Date: Fri, 3 Aug 2012 00:07:06 -0500 (CDT)
-Message-ID: <alpine.DEB.2.02.1208030005470.3041@lazy>
-References: <1343968187-20930-1-git-send-email-manoj.iyer@canonical.com>
+From: =?KOI8-U?B?7cHL08nNIO3Jy8nU0c7Ty8nK?= <maxtram95@gmail.com>
+Subject: Re: [PATCH 0/4] ideapad: patches for v3.6 merge window
+Date: Fri, 3 Aug 2012 15:01:32 +0300
+Message-ID: <CAKErNvrrOBDU84m1Og=MX19mVMGG_P+s7X1ZUYebsEbqE7W+Mw@mail.gmail.com>
+References: <4FF45C98.60305@gmail.com> <1341562023-6951-1-git-send-email-ike.pan@canonical.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:40431 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751069Ab2HCFHN (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Aug 2012 01:07:13 -0400
-In-Reply-To: <1343968187-20930-1-git-send-email-manoj.iyer@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: manoj.iyer@canonical.com
-Cc: linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, mjg@redhat.com, ibm-acpi@hmh.eng.br
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1341562023-6951-1-git-send-email-ike.pan@canonical.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Dan Carpenter <dan.carpenter@oracle.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+Will these patches appear in 3.6? RC1 is already available, but it
+doesn't contain these patches.
 
-Oops! This is embarrassing! my logic is flawed. Please ignore this patch, 
-I will resend it
-
-NACK
-
-
-On Thu, 2 Aug 2012, manoj.iyer@canonical.com wrote:
-
-> From: Manoj Iyer <manoj.iyer@canonical.com>
+2012/7/6 Ike Panhc <ike.pan@canonical.com>:
 >
-> In the latest V-series bios DMI_PRODUCT_VERSION does not contain
-> the string Lenovo or Thinkpad, but is set to the model number, this
-> causes the thinkpad_acpi module to fail to load. Recognize laptop
-> as Lenovo using DMI_BIOS_VENDOR instead, which is set to Lenovo.
+> One minor fix on part 2 for z570 is to let CONFIG_IDEAPAD depends on
+> CONFIG_SERIO_I8042
 >
-> Signed-off-by: Manoj Iyer <manoj.iyer@canonical.com>
-> ---
-> drivers/platform/x86/thinkpad_acpi.c |    3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index e7f7328..eec0b65 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8657,7 +8657,8 @@ static int __must_check __init get_thinkpad_model_data(
-> 		}
-> 	}
+> The following changes since commit 71351f14b3b941eb7178567b1272d934609cb785:
 >
-> -	s = dmi_get_system_info(DMI_PRODUCT_VERSION);
-> +	s = dmi_get_system_info(DMI_PRODUCT_VERSION) ?
-> +		dmi_get_system_info(DMI_BIOS_VENDOR) : NULL;
-> 	if (s && !(strnicmp(s, "ThinkPad", 8) && strnicmp(s, "Lenovo", 6))) {
-> 		tp->model_str = kstrdup(s, GFP_KERNEL);
-> 		if (!tp->model_str)
-> -- 
-> 1.7.9.5
+>   Linux 3.5-rc5 (2012-07-05 14:09:43 +0800)
+>
+> are available in the git repository at:
+>
+>   git://kernel.ubuntu.com/ikepanhc/public.git ideapad-3.6
+>
+> for you to fetch changes up to 583f18e1378d1b15fa35333be02b79e4f9315f59:
+>
+>   ideapad: add Lenovo IdeaPad Z570 support (part 3) (2012-07-06 15:12:49 +0800)
+>
+>
+> Dan Carpenter (1):
+>   ideapad: uninitialized data in ideapad_acpi_add()
+>
+> Maxim Mikityanskiy (3):
+>   ideapad: add Lenovo IdeaPad Z570 support (part 1)
+>   ideapad: add Lenovo IdeaPad Z570 support (part 2)
+>   ideapad: add Lenovo IdeaPad Z570 support (part 3)
+>
+>  .../ABI/testing/sysfs-platform-ideapad-laptop      |   11 ++
+>  drivers/platform/x86/Kconfig                       |    1 +
+>  drivers/platform/x86/ideapad-laptop.c              |  115 ++++++++++++++++++--
+>  3 files changed, 120 insertions(+), 7 deletions(-)
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.7.9.5
 >
->
-
---
-====================
-Manoj Iyer
-Ubuntu/Canonical
-Hardware Enablement
-====================
