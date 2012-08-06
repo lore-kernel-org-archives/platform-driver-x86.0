@@ -1,117 +1,75 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH] dell-laptop: Add 6 machines to touchpad led quirk
-Date: Mon, 6 Aug 2012 09:49:37 +0800
-Message-ID: <CAMz9Wg9Lh0_fwT-A7pYRiTFUo=Do0+bb2B=WQJwZSqWe=veQfA@mail.gmail.com>
-References: <1342168797-26080-1-git-send-email-acelan.kao@canonical.com>
-	<501BD59C.5040007@igalia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: manoj.iyer@canonical.com
+Subject: [PATCH] thinkpad-acpi: recognize latest V-Series using
+Date: Mon,  6 Aug 2012 16:23:12 -0500
+Message-ID: <1344288192-8469-1-git-send-email-manoj.iyer@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:41510 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755286Ab2HFBti (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:52861 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752340Ab2HFVXS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Aug 2012 21:49:38 -0400
-Received: by pbbrr13 with SMTP id rr13so1758586pbb.19
-        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Aug 2012 18:49:37 -0700 (PDT)
-In-Reply-To: <501BD59C.5040007@igalia.com>
+	Mon, 6 Aug 2012 17:23:18 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Carlos Alberto Lopez Perez <clopez@igalia.com>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: linux-kernel@vger.kernel.org
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, mjg@redhat.com, ibm-acpi@hmh.eng.br
 
-Dear Carlos,
-
-Yes, you are right.
-I copy/paste the wrong word all over the patch.
-I just submitted a patch for it, thanks for your report.
-
-Best regards,
-AceLan Kao.
-
-2012/8/3 Carlos Alberto Lopez Perez <clopez@igalia.com>:
-> On 13/07/12 10:39, AceLan Kao wrote:
->> Add the following machines into quirk,
->> Isnpiron 5420, Isnpiron 5520, Isnpiron 5720,
->> Isnpiron 7420, Isnpiron 7520, Isnpiron 7720
->>
->> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
->> ---
->>  drivers/platform/x86/dell-laptop.c |   54 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 54 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
->> index 5f78aac..4e96e8c 100644
->> --- a/drivers/platform/x86/dell-laptop.c
->> +++ b/drivers/platform/x86/dell-laptop.c
->> @@ -206,6 +206,60 @@ static struct dmi_system_id __devinitdata dell_quirks[] = {
->>               },
->>               .driver_data = &quirk_dell_vostro_v130,
->>       },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 5420",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 5420"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 5520",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 5520"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 5720",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 5720"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 7420",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 7420"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 7520",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 7520"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->> +     {
->> +             .callback = dmi_matched,
->> +             .ident = "Dell Inspiron 7720",
->> +             .matches = {
->> +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "Isnpiron 7720"),
->> +             },
->> +             .driver_data = &quirk_dell_vostro_v130,
->> +     },
->>       { }
->>  };
->>
->
-> Perhaps this needs a sed "s/Isnpiron/Inspiron/g" ???
->
+From: Manoj Iyer <manoj.iyer@canonical.com>
 
 
+Please consider this patch to thinkapd_acpi, it loads the module
+on V-series systems that do not report with "Lenovo" or "ThinkPad"
+prefix to DMI_PRODUCT_VERSION query, but only returns model name.
+
+
+=========================================================================
+Test on V490u
+=============
+== After the patch ==
+
+[ 1350.295757] thinkpad_acpi: ThinkPad ACPI Extras v0.24
+[ 1350.295760] thinkpad_acpi: http://ibm-acpi.sf.net/
+[ 1350.295761] thinkpad_acpi: ThinkPad BIOS H7ET21WW (1.00 ), EC unknown
+[ 1350.295763] thinkpad_acpi: Lenovo LENOVO, model LV5DXXX
+[ 1350.296086] thinkpad_acpi: detected a 8-level brightness capable ThinkPad
+[ 1350.296694] thinkpad_acpi: radio switch found; radios are enabled
+[ 1350.296703] thinkpad_acpi: possible tablet mode switch found; ThinkPad in laptop mode
+[ 1350.306466] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+[ 1350.307082] Registered led device: tpacpi::thinklight
+[ 1350.307215] Registered led device: tpacpi::power
+[ 1350.307255] Registered led device: tpacpi::standby
+[ 1350.307294] Registered led device: tpacpi::thinkvantage
+[ 1350.308160] thinkpad_acpi: Standard ACPI backlight interface available, not loading native one
+[ 1350.308333] thinkpad_acpi: Console audio control enabled, mode: monitor (read only)
+[ 1350.312287] input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/input14
+
+== Before the patch ==
+sudo modprobe thinkpad_acpi 
+FATAL: Error inserting thinkpad_acpi (/lib/modules/3.2.0-27-generic/kernel/drivers/platform/x86/thinkpad_acpi.ko): No such device
+
+=========================================================================
+Test on B485
+=============
+This patch was also test in a B485 where the thinkpad_acpi module does not 
+have any issues loading. But, I tested it to make sure this patch does not 
+break on already functioning models of Lenovo products. 
+
+[13486.746359] thinkpad_acpi: ThinkPad ACPI Extras v0.24
+[13486.746364] thinkpad_acpi: http://ibm-acpi.sf.net/
+[13486.746368] thinkpad_acpi: ThinkPad BIOS HJET15WW(1.01), EC unknown
+[13486.746373] thinkpad_acpi: Lenovo Lenovo LB485, model 814TR01
+[13486.747300] thinkpad_acpi: detected a 8-level brightness capable ThinkPad
+[13486.752435] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+[13486.752883] Registered led device: tpacpi::thinklight
+[13486.752915] thinkpad_acpi: Standard ACPI backlight interface available, not loading native one
+[13486.753216] thinkpad_acpi: Console audio control enabled, mode: monitor (read only)
+[13486.757147] input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/input15
+
+
+Manoj Iyer (1):
+  thinkpad-acpi: recognize latest V-Series using DMI_BIOS_VENDOR
+
+ drivers/platform/x86/thinkpad_acpi.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 -- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+1.7.9.5
