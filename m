@@ -1,50 +1,89 @@
-From: "Alexander E. Patrakov" <patrakov@gmail.com>
-Subject: Re: ACPI keys for Sony VAIO VPC-Z23A4R laptop
-Date: Thu, 9 Aug 2012 20:54:32 +0600
-Message-ID: <CAN_LGv3JT1foL2qOji8JwxX2YQt19UP7+=ykC5xnjrLhV5hing@mail.gmail.com>
-References: <CAN_LGv17f+DHvPO0DOpuBp10Rf6W-FSFu2Juk9OA-8_+atfbhw@mail.gmail.com>
-	<20120731213758.GA6206@kamineko.org>
-	<1343784601.1557.2.camel@Nokia-N900>
-	<20120801213441.GA31698@kamineko.org>
-	<CAN_LGv14kpcDbs=cfK=kKd-yWKV9CAJzspwYuOd0Xra+U93fng@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: [GIT PULL] Power management fixes for 3.6-rc2
+Date: Fri, 10 Aug 2012 22:42:55 +0200
+Message-ID: <201208102242.56112.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vc0-f174.google.com ([209.85.220.174]:58383 "EHLO
-	mail-vc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030611Ab2HIOyd (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 9 Aug 2012 10:54:33 -0400
-Received: by vcbfk26 with SMTP id fk26so442436vcb.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Aug 2012 07:54:32 -0700 (PDT)
-In-Reply-To: <CAN_LGv14kpcDbs=cfK=kKd-yWKV9CAJzspwYuOd0Xra+U93fng@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Sameer Nanda <snanda@chromium.org>, Julia Lawall <Julia.Lawall@lip6.fr>, NeilBrown <neilb@suse.de>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-2012/8/9 Alexander E. Patrakov <patrakov@gmail.com>:
-> Sorry for the long delay. The full dmesg is attached, with all
-> non-working (and two working - ASSIST and WEB) keys annotated via echo
-> "Will press something" > /dev/kmsg.
+Hi Linus,
 
-BTW, I would like to question the default keysym assignment to the
-ASSIST and WEB keys. I am basing my judgement on
-http://cgit.freedesktop.org/xorg/proto/x11proto/tree/XF86keysym.h, but
-of course I might be wrong.
+Please pull from the git repository at
 
-Currently, ASSIST produces the Help keysym. In Windows, this key is
-preconfigured to launch the "VAIO Care" application which is related
-to backup, SONY software updates & troubleshooting, not to browsing
-help files, so XF86Tools or XF86Support might be a better semantic
-fit.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-for-3.6-rc2
 
-WEB currently produces XF86HomePage, but in Windows it launches the
-browser. So I'd argue for it being assigned to XF86WWW instead.
+to receive power management fixes for v3.6-rc2 with top-most commit
+07368d32f1a67e797def08cf2ee3ea1647b204b6
 
-The VAIO key currently does not work, and in Windows it starts some
-sort of multimedia organizer. XF86AudioMedia or may be a good semantic
-equivalent.
+  tpm_tis / PM: Fix unused function warning for CONFIG_PM_SLEEP
 
--- 
-Alexander E. Patrakov
+on top of commit 0d7614f09c1ebdbaa1599a5aba7593f147bf96ee
+
+  Linux 3.6-rc1
+
+Included are:
+
+* Fix for two recent regressions in the generic PM domains framework.
+
+* Revert of a commit that introduced a resume regression and is conceptually
+  incorrect in my opinion.
+
+* Fix for a return value in pcc-cpufreq.c from Julia Lawall.
+
+* RTC wakeup signaling fix from Neil Brown.
+
+* Suppression of compiler warnings for CONFIG_PM_SLEEP unset in ACPI,
+  platform/x86 and TPM drivers.
+
+Thanks!
+
+
+ drivers/acpi/ac.c                        |  4 ++++
+ drivers/acpi/battery.c                   |  2 ++
+ drivers/acpi/button.c                    |  4 ++++
+ drivers/acpi/fan.c                       |  4 ++++
+ drivers/acpi/power.c                     |  4 ++++
+ drivers/acpi/sbs.c                       |  2 ++
+ drivers/acpi/thermal.c                   |  4 ++++
+ drivers/base/power/clock_ops.c           |  3 +--
+ drivers/base/power/common.c              |  4 +---
+ drivers/char/tpm/tpm_tis.c               |  2 ++
+ drivers/cpufreq/pcc-cpufreq.c            |  1 +
+ drivers/platform/x86/classmate-laptop.c  |  4 ++++
+ drivers/platform/x86/fujitsu-tablet.c    |  2 ++
+ drivers/platform/x86/hdaps.c             |  2 ++
+ drivers/platform/x86/hp_accel.c          |  2 +-
+ drivers/platform/x86/msi-laptop.c        |  4 ++++
+ drivers/platform/x86/panasonic-laptop.c  |  4 ++++
+ drivers/platform/x86/sony-laptop.c       | 12 +++++++++++-
+ drivers/platform/x86/thinkpad_acpi.c     |  2 ++
+ drivers/platform/x86/toshiba_acpi.c      |  2 ++
+ drivers/platform/x86/toshiba_bluetooth.c |  4 ++++
+ drivers/platform/x86/xo15-ebook.c        |  2 ++
+ drivers/rtc/interface.c                  |  2 ++
+ drivers/rtc/rtc-cmos.c                   |  1 -
+ include/linux/sched.h                    |  8 --------
+ kernel/power/suspend.c                   |  3 ---
+ kernel/watchdog.c                        | 21 ++-------------------
+ 27 files changed, 71 insertions(+), 38 deletions(-)
+
+---------------
+
+Julia Lawall (1):
+      drivers/cpufreq/pcc-cpufreq.c: fix error return code
+
+NeilBrown (1):
+      RTC: Avoid races between RTC alarm wakeup and suspend.
+
+Rafael J. Wysocki (5):
+      PM: Make dev_pm_get_subsys_data() always return 0 on success
+      Revert "NMI watchdog: fix for lockup detector breakage on resume"
+      ACPI / PM: Fix unused function warnings for CONFIG_PM_SLEEP
+      platform / x86 / PM: Fix unused function warnings for CONFIG_PM_SLEEP
+      tpm_tis / PM: Fix unused function warning for CONFIG_PM_SLEEP
