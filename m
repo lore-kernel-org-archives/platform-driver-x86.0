@@ -1,16 +1,16 @@
 From: Seth Forshee <seth.forshee@canonical.com>
 Subject: Re: [PATCH 1/2] gmux: Add generic write32 function
-Date: Mon, 13 Aug 2012 15:49:46 -0500
-Message-ID: <20120813204946.GH24088@thinkpad-t410>
+Date: Mon, 13 Aug 2012 15:55:09 -0500
+Message-ID: <20120813205509.GI24088@thinkpad-t410>
 References: <1344889232-3907-1-git-send-email-mjg@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:54469 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:54495 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752429Ab2HMUt7 (ORCPT
+	with ESMTP id S1752429Ab2HMUzV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 Aug 2012 16:49:59 -0400
+	Mon, 13 Aug 2012 16:55:21 -0400
 Content-Disposition: inline
 In-Reply-To: <1344889232-3907-1-git-send-email-mjg@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -19,18 +19,6 @@ To: Matthew Garrett <mjg@redhat.com>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
 On Mon, Aug 13, 2012 at 04:20:31PM -0400, Matthew Garrett wrote:
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> index a0a3fe3..818b93c 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_bios.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
-> @@ -6473,6 +6473,9 @@ nouveau_run_vbios_init(struct drm_device *dev)
->  		}
->  	}
->  
-> +	if (!bios->execute)
-> +		nouveau_gpio_reset(dev);
-> +
->  	return ret;
->  }
+> +	gmux_write32(gmux_data, GMUX_PORT_BRIGHTNES, brightness);
 
-This part doesn't seem to belong.
+Also, typo here. Should be GMUX_PORT_BRIGHTNESS.
