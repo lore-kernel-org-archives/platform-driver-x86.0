@@ -1,39 +1,70 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH 2/2] apple_gmux: Add support for newer hardware
-Date: Mon, 13 Aug 2012 17:03:30 -0500
-Message-ID: <20120813220330.GK24088@thinkpad-t410>
-References: <1344889232-3907-1-git-send-email-mjg@redhat.com>
- <1344889232-3907-2-git-send-email-mjg@redhat.com>
- <20120813210444.GJ24088@thinkpad-t410>
- <20120813213607.GB27838@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120813213607.GB27838@srcf.ucam.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Matthew Garrett <mjg@redhat.com>
+Subject: [PATCH V2 1/2] gmux: Add generic write32 function
+Date: Mon, 13 Aug 2012 18:52:48 -0400
+Message-ID: <1344898369-4944-1-git-send-email-mjg@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:39855 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754055Ab2HMWxE (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 13 Aug 2012 18:53:04 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, Seth Forshee <seth.forshee@canonical.com>
 
-On Mon, Aug 13, 2012 at 10:36:07PM +0100, Matthew Garrett wrote:
-> On Mon, Aug 13, 2012 at 04:04:44PM -0500, Seth Forshee wrote:
-> > > +
-> > > +	while (i && (gwr & 0x01)) {
-> > > +		inb(gmux_data->iostart + GMUX_PORT_READ);
-> > > +		gwr = inb(gmux_data->iostart + GMUX_PORT_WRITE);
-> > > +		msleep(100);
-> > 
-> > Wouldn't it make more sense if the msleep was before reading the port
-> > again? Otherwise there's no substantial dely between the first and
-> > second times we read it.
-> 
-> Mm. I'm doing the same as the ACPI implementation - it may be that 
-> reading GMUX_PORT_READ triggers the update of GMUX_PORT_WRITE? Hard to 
-> know without the docs.
+Move the special-cased backlight update function to a generic gmux_write32
+function.
 
-Indeed. I do find the structure of the loop to be odd, but I suppose the
-safest approach is to follow the only known working implementation we
-have. In that case ...
+Signed-off-by: Matthew Garrett <mjg@redhat.com>
+Cc: Seth Forshee <seth.forshee@canonical.com>
+---
 
-Acked-by: Seth Forshee <seth.forshee@canonical.com>
+Fixed the typo and irrelevant hunk
+
+ drivers/platform/x86/apple-gmux.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 905fa01..c9db5072 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -75,6 +75,18 @@ static inline u32 gmux_read32(struct apple_gmux_data *gmux_data, int port)
+ 	return inl(gmux_data->iostart + port);
+ }
+ 
++static inline u32 gmux_write32(struct apple_gmux_data *gmux_data, int port,
++			       u32 val)
++{
++	int i;
++	u8 tmpval;
++
++	for (i = 0; i < 4; i++) {
++		tmpval = (val >> (i * 8)) & 0xff;
++		outb(tmpval, port + i);
++	}
++}
++
+ static int gmux_get_brightness(struct backlight_device *bd)
+ {
+ 	struct apple_gmux_data *gmux_data = bl_get_data(bd);
+@@ -90,16 +102,7 @@ static int gmux_update_status(struct backlight_device *bd)
+ 	if (bd->props.state & BL_CORE_SUSPENDED)
+ 		return 0;
+ 
+-	/*
+-	 * Older gmux versions require writing out lower bytes first then
+-	 * setting the upper byte to 0 to flush the values. Newer versions
+-	 * accept a single u32 write, but the old method also works, so we
+-	 * just use the old method for all gmux versions.
+-	 */
+-	gmux_write8(gmux_data, GMUX_PORT_BRIGHTNESS, brightness);
+-	gmux_write8(gmux_data, GMUX_PORT_BRIGHTNESS + 1, brightness >> 8);
+-	gmux_write8(gmux_data, GMUX_PORT_BRIGHTNESS + 2, brightness >> 16);
+-	gmux_write8(gmux_data, GMUX_PORT_BRIGHTNESS + 3, 0);
++	gmux_write32(gmux_data, GMUX_PORT_BRIGHTNESS, brightness);
+ 
+ 	return 0;
+ }
+-- 
+1.7.11.2
