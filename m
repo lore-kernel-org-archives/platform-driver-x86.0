@@ -1,134 +1,61 @@
-From: Chris Wilson <chris+github@qwirx.com>
-Subject: [PATCH 2/4] soekris-net6501: Add a board driver to create leds-net6501 device.
-Date: Mon, 13 Aug 2012 14:23:56 +0200
-Message-ID: <1344860636-23328-1-git-send-email-chris+github@qwirx.com>
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: Re: [PATCH] apple-gmux: Add support for message box interface (as
+ found in MBP10,1/Retina MacBook Pro)
+Date: Mon, 13 Aug 2012 12:09:08 -0500
+Message-ID: <20120813170908.GC24088@thinkpad-t410>
+References: <5028CC19.6070003@vmars.tuwien.ac.at>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from one-mail.aptivate.org ([87.106.150.205]:55545 "EHLO
-	one-mail.aptivate.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751736Ab2HMNX4 (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:53614 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752690Ab2HMRJb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 Aug 2012 09:23:56 -0400
+	Mon, 13 Aug 2012 13:09:31 -0400
+Content-Disposition: inline
+In-Reply-To: <5028CC19.6070003@vmars.tuwien.ac.at>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: bryan.wu@canonical.com, Chris Wilson <chris+github@qwirx.com>
+To: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Andreas Heider <andreas@meetr.de>, Greg KH <gregkh@linuxfoundation.org>
 
-Bryan Wu says of creating the platform_device in the leds driver:
+On Mon, Aug 13, 2012 at 11:42:49AM +0200, Bernhard Froemel wrote:
+> 
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+> 
+> Dear all,
+> 
+> Apple changed the interface to the gmux device in recent models (at
+> least MBP 10,1).
+> This patch [1] (also attached) against 3.6-rc1 adds support for the
+> changed interface.
+> Previously the interface to gmux registers was memory mapped, now there
+> is a message box
+> interface (address, status, data I/O ports). The gmux register layout
+> itself seems to be unchanged.
+> I chose rather safe delays (1 ms) for access relaxation -- without any
+> relaxation the
+> communication is unreliable for me.
+> If someone with an older MBP could test whether the interface detection
+> (DPM/classic) works it
+> would be great. I used a similar detection routine Apple is using in
+> their driver.
 
-> This is wrong, platform_device should be created in machine board
-> files not in the drivers. For x86, please take a look at
-> drivers/platform/x86/. And for leds-hp6xx.c, I didn't find any user of
-> this in arch/sh. So probably we can drop it sometime.
->
-> I also suggest you can just add this driver into the machine board
-> file of this Soekris machine in drivers/platform/x86/ like other
-> machines do...
+Matthew also made some progress with this last week, at least enough to
+get the backlight working. From what I remember of looking at his
+changes these look fairly similar, but I think his implementation looked
+cleaner and possibly more complete.
 
-So I did. Currently I don't know of any reliable way to detect the
-hardware platform, the device that's listening on the LED GPIO
-I/O ports isn't on the PCI bus and there is no ACPI support on this
-system, so I can't see anything to do except unconditionally create
-the platform_device.
+> I see that there is a lot going on concerning and related to the
+> apple-gmux currently:
+> https://lkml.org/lkml/2012/7/9/715
+> https://lkml.org/lkml/2012/8/3/300
 
-Signed-off-by: Chris Wilson <chris+github@qwirx.com>
----
- drivers/platform/x86/Kconfig           |   10 +++++
- drivers/platform/x86/Makefile          |    1 +
- drivers/platform/x86/soekris-net6501.c |   58 ++++++++++++++++++++++++++++++++
- 3 files changed, 69 insertions(+), 0 deletions(-)
- create mode 100644 drivers/platform/x86/soekris-net6501.c
+I'm slowly making progress on the graphics switching stuff. I've got
+patches for vga_switcheroo and apple-gmux that make the muxing itself
+work fine, the problems now all revolve around making the graphics
+drivers deal with difficult behavior from Apple machines.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2a262f5..17a4d1d 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -766,4 +766,14 @@ config APPLE_GMUX
- 	  graphics as well as the backlight. Currently only backlight
- 	  control is supported by the driver.
- 
-+config SOEKRIS_NET6501
-+	tristate "Soekris Net6501 Extras"
-+	depends on X86
-+	---help---
-+	  This driver provides support for the Ready and Error LEDs on the
-+	  Soekris Net6501, along with leds-net6501.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called soekris-net6501.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index bf7e4f9..ba96e46 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -50,3 +50,4 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
- obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
- obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
- obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
-+obj-$(CONFIG_SOEKRIS_NET6501)	+= soekris-net6501.o
-diff --git a/drivers/platform/x86/soekris-net6501.c b/drivers/platform/x86/soekris-net6501.c
-new file mode 100644
-index 0000000..e908841
---- /dev/null
-+++ b/drivers/platform/x86/soekris-net6501.c
-@@ -0,0 +1,58 @@
-+/*
-+ *  Written by Chris Wilson <chris+soekris@aptivate.org>
-+ *  Based on classmate-laptop.c by Thadeu Lima de Souza Cascardo
-+ *
-+ *  This driver does nothing except make leds-net6501 work, by creating its
-+ *  platform device, as requested by Bryan Wu.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License along
-+ *  with this program; if not, write to the Free Software Foundation, Inc.,
-+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+MODULE_LICENSE("GPL");
-+
-+#define NET6501_LEDS_DEVICE "leds-net6501"
-+
-+static struct platform_device *pd;
-+
-+static int net6501_init(void)
-+{
-+	pd = platform_device_register_simple(NET6501_LEDS_DEVICE, -1, NULL, 0);
-+
-+	if (IS_ERR(pd)) {
-+		printk(KERN_WARNING NET6501_LEDS_DEVICE ": failed to register "
-+			"platform device: error %ld\n", PTR_ERR(pd));
-+		return PTR_ERR(pd);
-+	}
-+
-+	dev_info(&pd->dev, "Soekris Net6501 board driver\n");
-+	return 0;
-+}
-+
-+static void net6501_exit(void)
-+{
-+	platform_device_unregister(pd);
-+}
-+
-+module_init(net6501_init);
-+module_exit(net6501_exit);
-+
-+MODULE_AUTHOR("Chris Wilson <chris+soekris@aptivate.org>");
-+MODULE_DESCRIPTION("Soekris Net6051 board driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:soekris-net6501");
--- 
-1.7.5.4
+Thanks,
+Seth
