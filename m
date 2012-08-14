@@ -1,75 +1,44 @@
-From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
-Subject: Re: [PATCH V2 2/2] apple_gmux: Add support for newer hardware
-Date: Tue, 14 Aug 2012 19:11:19 +0200
-Message-ID: <502A86B7.8010402@vmars.tuwien.ac.at>
-References: <1344898369-4944-1-git-send-email-mjg@redhat.com> <1344898369-4944-2-git-send-email-mjg@redhat.com> <20120814004625.GB18992@thinkpad-t410> <502A5B40.9010303@vmars.tuwien.ac.at> <502A667B.2060100@vmars.tuwien.ac.at> <20120814151543.GD18992@thinkpad-t410>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH 0/3] Display switching support for Apple laptops
+Date: Tue, 14 Aug 2012 16:04:56 -0500
+Message-ID: <1344978299-9878-1-git-send-email-seth.forshee@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from luna.vmars.tuwien.ac.at ([128.130.39.29]:52666 "EHLO
-	mail.vmars.tuwien.ac.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751931Ab2HNRL2 (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:59755 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757422Ab2HNVFO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 14 Aug 2012 13:11:28 -0400
-In-Reply-To: <20120814151543.GD18992@thinkpad-t410>
+	Tue, 14 Aug 2012 17:05:14 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, David Airlie <airlied@linux.ie>, Andreas Heider <andreas@meetr.de>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This series adds display switching support for Apple laptops. The first
+two patches contain preparatory changes to vga_switcheroo, and the third
+contains the changes to support display switching with the gmux.
 
-On 08/14/2012 05:15 PM, Seth Forshee wrote:
-> On Tue, Aug 14, 2012 at 04:53:47PM +0200, Bernhard Froemel wrote:
->> -----BEGIN PGP SIGNED MESSAGE----- Hash: SHA1
->> 
->> Only in relation to Seth's future apple-gmux patch series about 
->> vgaswitcheroo and restoring the gmux device configuration across 
->> suspend/resume [1]: On resume the gmux registers 0x28 (DDC) and
->> 0x10 (SWITCH_DISPLAY) (i.e., the first two writes) are not
->> restored (result: the screen remains black after
->> suspend/resume).
->> 
->> Of course, this does not happen with my patch proposal ;) 
->> Unfortunately, I have not the time to sort this out in the next
->> couple of days -- on the other hand this is probably not a
->> problem w.r.t. this patch, but needs to be taken care of in
->> Seth's patch series.
-> 
-> The patch adding support for switcheroo *does* restore those
-> registers on resume. Are you saying that isn't happening when you
-> use it?
-Yes, the 8bit writes don't seem to get all through with Matthew's
-patch, but they do with mine.
+While these patches will allow switching the display mux, most Macbook
+owners will not be able to switch GPUs in practice until the graphics
+drivers are updated to deal with missing or incorrect vbios information
+on Apple machines. These patches do fix an issue seen by some users of
+Linux on Macbooks, however. These users will switch to the internal GPU
+in OS X and then reboot into Linux to save power, but after S3 the gmux
+gets reset to the discrete GPU. Adding the display mux support will fix
+this problem by restoring the gmux state during resume.
 
-Just tested manual switching (/sys/kernel/debug/vgaswitcheroo/switch,
-from IGD to DIS) -> doesn't work either; even locks up my system:
+Thanks,
+Seth
 
-> [  123.680062] hda-intel: spurious response 0x407381:0x0, last
-> cmd=0x770883 [  123.680070] hda-intel: spurious response
-> 0x9000094:0x0, last cmd=0x770883 [  123.680073] hda-intel: spurious
-> response 0x185600f0:0x0, last cmd=0x770883 [  123.680076]
-> hda-intel: spurious response 0x4:0x0, last cmd=0x770883 [
-> 123.680079] hda-intel: spurious response 0xb0a0908:0x0, last
-> cmd=0x770883 [  123.680082] hda-intel: spurious response
-> 0x407381:0x0, last cmd=0x770883 [  123.680084] hda-intel: spurious
-> response 0x9000094:0x0, last cmd=0x770883 [  123.680087] hda-intel:
-> spurious response 0x185600f0:0x0, last cmd=0x770883
 
-While comparing our patches, I discovered that mine isnt' a good
-reference here, because in my ready and complete function variants I
-didn't write/read the correct ioports (forgot about the offset; so
-they were only slightly delaying execution). After I fixed that (and a
-status-bit semantic mixup), the results appear similar :/
-Need to play around further..
+Andreas Heider (1):
+  apple-gmux: Add display mux support
 
-Bernhard
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+Seth Forshee (2):
+  vga_switcheroo: Don't require handler init callback
+  vga_switcheroo: Remove assumptions about registration/unregistration
+    ordering
 
-iEYEARECAAYFAlAqhrcACgkQ6iVUjPs37JnhtwCePUp7sLQW+GhBFOkFbkjr6Yrh
-VAsAoJ3TjtJu2gQpayFc6iP5nBQfdAPG
-=ziXd
------END PGP SIGNATURE-----
+ drivers/gpu/drm/nouveau/nouveau_acpi.c |    6 -
+ drivers/gpu/vga/vga_switcheroo.c       |   61 +++++----
+ drivers/platform/x86/apple-gmux.c      |  222 ++++++++++++++++++++++++++++++++
+ 3 files changed, 260 insertions(+), 29 deletions(-)
