@@ -1,44 +1,63 @@
 From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH 0/3] Display switching support for Apple laptops
-Date: Tue, 14 Aug 2012 16:04:56 -0500
-Message-ID: <1344978299-9878-1-git-send-email-seth.forshee@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:59755 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757422Ab2HNVFO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 14 Aug 2012 17:05:14 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 1/3] vga_switcheroo: Don't require handler init callback
+Date: Tue, 14 Aug 2012 16:04:57 -0500
+Message-ID: <1344978299-9878-2-git-send-email-seth.forshee@canonical.com>
+References: <1344978299-9878-1-git-send-email-seth.forshee@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1344978299-9878-1-git-send-email-seth.forshee@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
 Cc: Matthew Garrett <mjg@redhat.com>, David Airlie <airlied@linux.ie>, Andreas Heider <andreas@meetr.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This series adds display switching support for Apple laptops. The first
-two patches contain preparatory changes to vga_switcheroo, and the third
-contains the changes to support display switching with the gmux.
+This callback is a no-op in nouveau, and the upcoming apple-gmux
+switcheroo support won't require it either. Rather than forcing drivers
+to stub it out, just make it optional and remove the callback from
+nouveau.
 
-While these patches will allow switching the display mux, most Macbook
-owners will not be able to switch GPUs in practice until the graphics
-drivers are updated to deal with missing or incorrect vbios information
-on Apple machines. These patches do fix an issue seen by some users of
-Linux on Macbooks, however. These users will switch to the internal GPU
-in OS X and then reboot into Linux to save power, but after S3 the gmux
-gets reset to the discrete GPU. Adding the display mux support will fix
-this problem by restoring the gmux state during resume.
+Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_acpi.c |    6 ------
+ drivers/gpu/vga/vga_switcheroo.c       |    3 ++-
+ 2 files changed, 2 insertions(+), 7 deletions(-)
 
-Thanks,
-Seth
-
-
-Andreas Heider (1):
-  apple-gmux: Add display mux support
-
-Seth Forshee (2):
-  vga_switcheroo: Don't require handler init callback
-  vga_switcheroo: Remove assumptions about registration/unregistration
-    ordering
-
- drivers/gpu/drm/nouveau/nouveau_acpi.c |    6 -
- drivers/gpu/vga/vga_switcheroo.c       |   61 +++++----
- drivers/platform/x86/apple-gmux.c      |  222 ++++++++++++++++++++++++++++++++
- 3 files changed, 260 insertions(+), 29 deletions(-)
+diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+index fc841e8..26ebffe 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
++++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+@@ -211,11 +211,6 @@ static int nouveau_dsm_power_state(enum vga_switcheroo_client_id id,
+ 	return nouveau_dsm_set_discrete_state(nouveau_dsm_priv.dhandle, state);
+ }
+ 
+-static int nouveau_dsm_init(void)
+-{
+-	return 0;
+-}
+-
+ static int nouveau_dsm_get_client_id(struct pci_dev *pdev)
+ {
+ 	/* easy option one - intel vendor ID means Integrated */
+@@ -232,7 +227,6 @@ static int nouveau_dsm_get_client_id(struct pci_dev *pdev)
+ static struct vga_switcheroo_handler nouveau_dsm_handler = {
+ 	.switchto = nouveau_dsm_switchto,
+ 	.power_state = nouveau_dsm_power_state,
+-	.init = nouveau_dsm_init,
+ 	.get_client_id = nouveau_dsm_get_client_id,
+ };
+ 
+diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
+index 5b3c7d1..ec9069d 100644
+--- a/drivers/gpu/vga/vga_switcheroo.c
++++ b/drivers/gpu/vga/vga_switcheroo.c
+@@ -98,7 +98,8 @@ static void vga_switcheroo_enable(void)
+ 	struct vga_switcheroo_client *client;
+ 
+ 	/* call the handler to init */
+-	vgasr_priv.handler->init();
++	if (vgasr_priv.handler->init)
++		vgasr_priv.handler->init();
+ 
+ 	list_for_each_entry(client, &vgasr_priv.clients, list) {
+ 		if (client->id != -1)
+-- 
+1.7.9.5
