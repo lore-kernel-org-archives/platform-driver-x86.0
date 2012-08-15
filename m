@@ -1,49 +1,35 @@
-From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
-Subject: Re: [PATCH V2 2/2] apple_gmux: Add support for newer hardware
-Date: Wed, 15 Aug 2012 09:46:31 +0200
-Message-ID: <502B53D7.8080804@vmars.tuwien.ac.at>
-References: <1344898369-4944-1-git-send-email-mjg@redhat.com> <1344898369-4944-2-git-send-email-mjg@redhat.com> <20120814004625.GB18992@thinkpad-t410> <502A5B40.9010303@vmars.tuwien.ac.at> <502A667B.2060100@vmars.tuwien.ac.at> <20120814151543.GD18992@thinkpad-t410> <502A86B7.8010402@vmars.tuwien.ac.at>
+From: "Nathanael D. Noblet" <nathanael@gnat.ca>
+Subject: Acer-WMI disables touchpad and other issues
+Date: Wed, 15 Aug 2012 10:45:08 -0600
+Message-ID: <502BD214.6090700@gnat.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from luna.vmars.tuwien.ac.at ([128.130.39.29]:52712 "EHLO
-	mail.vmars.tuwien.ac.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751467Ab2HOHql (ORCPT
+Received: from idcmail-mo2no.shaw.ca ([64.59.134.9]:12760 "EHLO
+	idcmail-mo2no.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755868Ab2HOQpO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Aug 2012 03:46:41 -0400
-In-Reply-To: <502A86B7.8010402@vmars.tuwien.ac.at>
+	Wed, 15 Aug 2012 12:45:14 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: jlee@novell.com, platform-driver-x86@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hello,
 
-On 08/14/2012 07:11 PM, Bernhard Froemel wrote:
-> Need to play around further..
-I think I solved the communication problems concerning byte writes to
-the gmux device.
+   I recently purchased an Acer Aspire One (model A0275-0691). It has an 
+elantech touchpad. As detailed in this bug: 
+https://bugzilla.redhat.com/show_bug.cgi?id=848270 the acer-wmi driver 
+has two issues on this device.
 
-This:
-http://luna.vmars.tuwien.ac.at/~froemel/rmbp/patch-apple-gmux_v2.txt
-works reliable for me (50+ suspend/resume cycles, many brightness
-changes) *without* delays.
+#1) It is sending TOUCHPAD_TOGGLE and simultaneously changing state
+#2) It disables the touchpad at init
 
-I looked once more through Apple's original driver and noticed that
-their cmd_done waits until bit 1 is set (not cleared!) and also does
-the final read from GMUX_PORT_DPM_RADDR only if bit 1 is not set.
-Also it seems that in case of byte writes the old interface should be
-followed as well (Apple, why?!).
-
-Bernhard
+It should apparently be doing neither of those. If I boot with acer-wmi 
+blacklisted the touchpad works perfectly, all other Fn+key combos work 
+other than brightness control.
 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAlArU9cACgkQ6iVUjPs37Jk6iACfWuZ7zpbc1vFLgJR29UroJeL2
-HvMAnja8D7/o+aqywr/qRtNrB/o217Ci
-=gcjo
------END PGP SIGNATURE-----
+-- 
+Nathanael d. Noblet
+t 403.875.4613
