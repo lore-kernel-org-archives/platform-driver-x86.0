@@ -1,57 +1,47 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PROBLEM] thinkpad_acpi: unhandled HKEY event 0x6040
-Date: Fri, 17 Aug 2012 16:34:59 +0200
-Message-ID: <20120817143459.GB3462@x1.osrc.amd.com>
-References: <CAOJsxLEb+J=p8Kd782VWPm0ft3D9ujOnV0x_Av+fjWp6QiTHQQ@mail.gmail.com>
- <20120817141748.GA12934@khazad-dum.debian.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Seth Forshee <seth.forshee@canonical.com>
+Subject: [PATCH v2 0/3] Display switching support for Apple laptops
+Date: Fri, 17 Aug 2012 11:17:01 -0500
+Message-ID: <1345220224-22872-1-git-send-email-seth.forshee@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.skyhub.de ([78.46.96.112]:59951 "EHLO mail.skyhub.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756066Ab2HQOfE (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:45289 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757054Ab2HQQRU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 17 Aug 2012 10:35:04 -0400
-Content-Disposition: inline
-In-Reply-To: <20120817141748.GA12934@khazad-dum.debian.net>
+	Fri, 17 Aug 2012 12:17:20 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Pekka Enberg <penberg@kernel.org>, ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, David Airlie <airlied@linux.ie>, Andreas Heider <andreas@meetr.de>, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
 
-On Fri, Aug 17, 2012 at 11:17:48AM -0300, Henrique de Moraes Holschuh wrote:
-> On Fri, 17 Aug 2012, Pekka Enberg wrote:
-> > [ 3129.616297] thinkpad_acpi: unhandled HKEY event 0x6040
-> > [ 3129.616298] thinkpad_acpi: please report the conditions when this
-> > event happened to ibm-acpi-devel@lists.sourceforge.net
-> > [ 3129.616949] thinkpad_acpi: undocked from hotplug port replicator
-> > [ 3129.617065] ACPI: \_SB_.GDCK - undocking
-> > [ 3144.184916] ACPI: \_SB_.GDCK - docking
-> > [ 3144.185204] ACPI: Unable to dock!
-> > 
-> > and the monitor doesn't come up.
-> 
-> The monitor doesn't come up because of something else, check the GPU drivers
-> and userspace.  And also why the docking failed...
+This series adds display switching support for Apple laptops. The first
+two patches contain preparatory changes to vga_switcheroo, and the third
+contains the changes to support display switching with the gmux.
 
-Btw, I'm getting a similar thing when I unplug my x121e from AC:
+While these patches will allow switching the display mux, most Macbook
+owners will not be able to switch GPUs in practice until the graphics
+drivers are updated to deal with missing or incorrect vbios information
+on Apple machines. These patches do fix an issue seen by some users of
+Linux on Macbooks, however. These users will switch to the internal GPU
+in OS X and then reboot into Linux to save power, but after S3 the gmux
+gets reset to the discrete GPU. Adding the display mux support will fix
+this problem by restoring the gmux state during resume.
 
-[  613.517178] thinkpad_acpi: unknown possible thermal alarm or keyboard event received
-[  613.533949] thinkpad_acpi: temperatures (Celsius): 60 0 60 0 0 0 32 0
-[  613.536880] thinkpad_acpi: unhandled HKEY event 0x6040
-[  613.539703] thinkpad_acpi: please report the conditions when this event happened to ibm-acpi-devel@lists.sourceforge.net
+v2: Disable interrupts during suspend and re-enable them during resume
+    to fix timeouts waiting for switching to complete after S3
 
-this is when I plug it back:
+Thanks,
+Seth
 
-[  623.308867] thinkpad_acpi: unknown possible thermal alarm or keyboard event received
-[  623.322868] thinkpad_acpi: temperatures (Celsius): 60 0 60 0 0 0 32 0
-[  623.322926] thinkpad_acpi: unhandled HKEY event 0x6040
-[  623.322938] thinkpad_acpi: please report the conditions when this event happened to ibm-acpi-devel@lists.sourceforge.net
 
-All with 3.6-rc2 + tip/master.
+Andreas Heider (1):
+  apple-gmux: Add display mux support
 
-Thanks.
+Seth Forshee (2):
+  vga_switcheroo: Don't require handler init callback
+  vga_switcheroo: Remove assumptions about registration/unregistration
+    ordering
 
--- 
-Regards/Gruss,
-Boris.
+ drivers/gpu/drm/nouveau/nouveau_acpi.c |    6 -
+ drivers/gpu/vga/vga_switcheroo.c       |   61 +++++----
+ drivers/platform/x86/apple-gmux.c      |  224 ++++++++++++++++++++++++++++++++
+ 3 files changed, 262 insertions(+), 29 deletions(-)
