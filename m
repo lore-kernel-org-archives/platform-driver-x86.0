@@ -1,85 +1,49 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: Acer-WMI disables touchpad and other issues
-Date: Thu, 16 Aug 2012 11:33:57 +0800
-Message-ID: <1345088037.6459.144.camel@linux-s257.site>
-References: <502BD214.6090700@gnat.ca>
+From: Pekka Enberg <penberg@kernel.org>
+Subject: [PROBLEM] thinkpad_acpi: unhandled HKEY event 0x6040
+Date: Fri, 17 Aug 2012 13:57:49 +0300
+Message-ID: <CAOJsxLEb+J=p8Kd782VWPm0ft3D9ujOnV0x_Av+fjWp6QiTHQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:50132 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752162Ab2HPDhk (ORCPT
+Received: from mail-wi0-f170.google.com ([209.85.212.170]:32915 "EHLO
+	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1030992Ab2HQK5v (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Aug 2012 23:37:40 -0400
-In-Reply-To: <502BD214.6090700@gnat.ca>
+	Fri, 17 Aug 2012 06:57:51 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Nathanael D. Noblet" <nathanael@gnat.ca>
-Cc: jlee@novell.com, platform-driver-x86@vger.kernel.org
+To: ibm-acpi-devel@lists.sourceforge.net
+Cc: LKML <linux-kernel@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-Hi Nathanael
+Hello,
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2012-08-15 =E6=96=BC 10:45 -0600=EF=BC=8CNa=
-thanael D. Noblet =E6=8F=90=E5=88=B0=EF=BC=9A
-> Hello,
->=20
->    I recently purchased an Acer Aspire One (model A0275-0691). It has=
- an=20
-> elantech touchpad. As detailed in this bug:=20
-> https://bugzilla.redhat.com/show_bug.cgi?id=3D848270 the acer-wmi dri=
-ver=20
-> has two issues on this device.
->=20
-> #1) It is sending TOUCHPAD_TOGGLE and simultaneously changing state
-> #2) It disables the touchpad at init
->=20
-> It should apparently be doing neither of those. If I boot with acer-w=
-mi=20
-> blacklisted the touchpad works perfectly, all other Fn+key combos wor=
-k=20
-> other than brightness control.
->=20
->=20
+I'm seeing this when I dock a Thinkpad X220 laptop:
 
-Please help to test this testing patch. And, please attach dmidecode on
-bugzilla or here.=20
-If this testing patch can avoid problem on your machine, then I will
-write code to parser the dmidecode information for grab the acpi code o=
-f
-touchpad.
+[ 3129.616279] thinkpad_acpi: unknown possible thermal alarm or
+keyboard event received
+[ 3129.616297] thinkpad_acpi: unhandled HKEY event 0x6040
+[ 3129.616298] thinkpad_acpi: please report the conditions when this
+event happened to ibm-acpi-devel@lists.sourceforge.net
+[ 3129.616949] thinkpad_acpi: undocked from hotplug port replicator
+[ 3129.617065] ACPI: \_SB_.GDCK - undocking
+[ 3144.184916] ACPI: \_SB_.GDCK - docking
+[ 3144.185204] ACPI: Unable to dock!
 
+and the monitor doesn't come up.
 
-Thanks a lot!
-Joey Lee
+I'm currently running a stock Fedora kernel:
 
+[penberg@tux ~]$ uname -a
+Linux tux 3.3.8-1.fc16.x86_64 #1 SMP Mon Jun 4 20:49:02 UTC 2012
+x86_64 x86_64 x86_64 GNU/Linux
 
-From 969d1c0bb4fc4b69ef9d037687b4591fbd9df24f Mon Sep 17 00:00:00 2001
-=46rom: Lee, Chun-Yi <jlee@suse.com>
-Date: Thu, 16 Aug 2012 11:28:20 +0800
-Subject: [PATCH] acer-wmi: test patch for remove 0x82 acpi event with K=
-EY_TOUCHPAD_TOGGLE
+but looking at drivers/platform/x86/thinkpad_acpi.c in Linus' tree, the event
+is not handled there either:
 
+        TP_HKEY_EV_UNK_6040             = 0x6040, /* Related to AC change?
+                                                     some sort of APM hint,
+                                                     W520 */
 
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Help!
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 3782e1c..db7376b 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -125,7 +125,7 @@ static const struct key_entry acer_wmi_keymap[] =3D=
- {
- 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
- 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
- 	{KE_IGNORE, 0x81, {KEY_SLEEP} },
--	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
-+//	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_END, 0}
- };
---=20
-1.6.0.2
+                        Pekka
