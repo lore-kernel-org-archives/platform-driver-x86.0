@@ -1,117 +1,68 @@
 From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH v2 2/3] vga_switcheroo: Remove assumptions about registration/unregistration ordering
-Date: Fri, 17 Aug 2012 11:17:03 -0500
-Message-ID: <1345220224-22872-3-git-send-email-seth.forshee@canonical.com>
+Subject: [PATCH v2 1/3] vga_switcheroo: Don't require handler init callback
+Date: Fri, 17 Aug 2012 11:17:02 -0500
+Message-ID: <1345220224-22872-2-git-send-email-seth.forshee@canonical.com>
 References: <1345220224-22872-1-git-send-email-seth.forshee@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:45303 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:45291 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758367Ab2HQQRY (ORCPT
+	with ESMTP id S1757102Ab2HQQRV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 17 Aug 2012 12:17:24 -0400
+	Fri, 17 Aug 2012 12:17:21 -0400
 In-Reply-To: <1345220224-22872-1-git-send-email-seth.forshee@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
 Cc: Matthew Garrett <mjg@redhat.com>, David Airlie <airlied@linux.ie>, Andreas Heider <andreas@meetr.de>, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
 
-vga_switcheroo assumes that the handler will be registered before the
-last client, otherwise switching will not be enabled. Likewise it's
-assumed that the handler will not be unregistered without at least one
-client also being unregistered, otherwise switching will remain enabled
-despite no longer having a handler. These assumptions cannot be enforced
-if the handler is in a separate driver from both clients, as with the
-gmux found in Apple laptops. Remove this assumption.
+This callback is a no-op in nouveau, and the upcoming apple-gmux
+switcheroo support won't require it either. Rather than forcing drivers
+to stub it out, just make it optional and remove the callback from
+nouveau.
 
 Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
 ---
- drivers/gpu/vga/vga_switcheroo.c |   58 +++++++++++++++++++++++---------------
- 1 file changed, 36 insertions(+), 22 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_acpi.c |    6 ------
+ drivers/gpu/vga/vga_switcheroo.c       |    3 ++-
+ 2 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-index ec9069d..e25cf31 100644
---- a/drivers/gpu/vga/vga_switcheroo.c
-+++ b/drivers/gpu/vga/vga_switcheroo.c
-@@ -70,27 +70,12 @@ static struct vgasr_priv vgasr_priv = {
- 	.clients = LIST_HEAD_INIT(vgasr_priv.clients),
- };
+diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+index fc841e8..26ebffe 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
++++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+@@ -211,11 +211,6 @@ static int nouveau_dsm_power_state(enum vga_switcheroo_client_id id,
+ 	return nouveau_dsm_set_discrete_state(nouveau_dsm_priv.dhandle, state);
+ }
  
--int vga_switcheroo_register_handler(struct vga_switcheroo_handler *handler)
+-static int nouveau_dsm_init(void)
 -{
--	mutex_lock(&vgasr_mutex);
--	if (vgasr_priv.handler) {
--		mutex_unlock(&vgasr_mutex);
--		return -EINVAL;
--	}
--
--	vgasr_priv.handler = handler;
--	mutex_unlock(&vgasr_mutex);
 -	return 0;
 -}
--EXPORT_SYMBOL(vga_switcheroo_register_handler);
 -
--void vga_switcheroo_unregister_handler(void)
-+static bool vga_switcheroo_ready(void)
+ static int nouveau_dsm_get_client_id(struct pci_dev *pdev)
  {
--	mutex_lock(&vgasr_mutex);
--	vgasr_priv.handler = NULL;
--	mutex_unlock(&vgasr_mutex);
-+	/* we're ready if we get two clients + handler */
-+	return !vgasr_priv.active &&
-+	       vgasr_priv.registered_clients == 2 && vgasr_priv.handler;
- }
--EXPORT_SYMBOL(vga_switcheroo_unregister_handler);
+ 	/* easy option one - intel vendor ID means Integrated */
+@@ -232,7 +227,6 @@ static int nouveau_dsm_get_client_id(struct pci_dev *pdev)
+ static struct vga_switcheroo_handler nouveau_dsm_handler = {
+ 	.switchto = nouveau_dsm_switchto,
+ 	.power_state = nouveau_dsm_power_state,
+-	.init = nouveau_dsm_init,
+ 	.get_client_id = nouveau_dsm_get_client_id,
+ };
  
- static void vga_switcheroo_enable(void)
- {
-@@ -114,6 +99,37 @@ static void vga_switcheroo_enable(void)
- 	vgasr_priv.active = true;
- }
+diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
+index 5b3c7d1..ec9069d 100644
+--- a/drivers/gpu/vga/vga_switcheroo.c
++++ b/drivers/gpu/vga/vga_switcheroo.c
+@@ -98,7 +98,8 @@ static void vga_switcheroo_enable(void)
+ 	struct vga_switcheroo_client *client;
  
-+int vga_switcheroo_register_handler(struct vga_switcheroo_handler *handler)
-+{
-+	mutex_lock(&vgasr_mutex);
-+	if (vgasr_priv.handler) {
-+		mutex_unlock(&vgasr_mutex);
-+		return -EINVAL;
-+	}
-+
-+	vgasr_priv.handler = handler;
-+	if (vga_switcheroo_ready()) {
-+		printk(KERN_INFO "vga_switcheroo: enabled\n");
-+		vga_switcheroo_enable();
-+	}
-+	mutex_unlock(&vgasr_mutex);
-+	return 0;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_register_handler);
-+
-+void vga_switcheroo_unregister_handler(void)
-+{
-+	mutex_lock(&vgasr_mutex);
-+	vgasr_priv.handler = NULL;
-+	if (vgasr_priv.active) {
-+		pr_info("vga_switcheroo: disabled\n");
-+		vga_switcheroo_debugfs_fini(&vgasr_priv);
-+		vgasr_priv.active = false;
-+	}
-+	mutex_unlock(&vgasr_mutex);
-+}
-+EXPORT_SYMBOL(vga_switcheroo_unregister_handler);
-+
- static int register_client(struct pci_dev *pdev,
- 			   const struct vga_switcheroo_client_ops *ops,
- 			   int id, bool active)
-@@ -135,9 +151,7 @@ static int register_client(struct pci_dev *pdev,
- 	if (client_is_vga(client))
- 		vgasr_priv.registered_clients++;
+ 	/* call the handler to init */
+-	vgasr_priv.handler->init();
++	if (vgasr_priv.handler->init)
++		vgasr_priv.handler->init();
  
--	/* if we get two clients + handler */
--	if (!vgasr_priv.active &&
--	    vgasr_priv.registered_clients == 2 && vgasr_priv.handler) {
-+	if (vga_switcheroo_ready()) {
- 		printk(KERN_INFO "vga_switcheroo: enabled\n");
- 		vga_switcheroo_enable();
- 	}
+ 	list_for_each_entry(client, &vgasr_priv.clients, list) {
+ 		if (client->id != -1)
 -- 
 1.7.9.5
