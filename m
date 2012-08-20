@@ -1,20 +1,22 @@
 From: Matthew Garrett <mjg59@srcf.ucam.org>
 Subject: [GIT] Updates for x86 platform drivers
-Date: Mon, 20 Aug 2012 17:50:34 +0100
-Message-ID: <20120820165034.GA31999@srcf.ucam.org>
+Date: Mon, 20 Aug 2012 17:54:01 +0100
+Message-ID: <20120820165401.GA32139@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:34438 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:37690 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755514Ab2HTQui (ORCPT
+	with ESMTP id S1757403Ab2HTQyD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 20 Aug 2012 12:50:38 -0400
+	Mon, 20 Aug 2012 12:54:03 -0400
 Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundatio.org
+To: torvalds@linux-foundation.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+
+(Resend - you'd think I could get Linus's address right)
 
 Hi Linus,
 
