@@ -1,38 +1,37 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: [PATCH] apple-gmux: Fix port address calculation in gmux_pio_write32()
-Date: Tue, 21 Aug 2012 21:56:49 -0500
-Message-ID: <1345604209-24947-1-git-send-email-seth.forshee@canonical.com>
+From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+Subject: [PATCH 0/2] apple-gmux: Fixes related to 'Support for new hardware'
+Date: Fri, 24 Aug 2012 09:46:21 +0200
+Message-ID: <5037314D.5050606@vmars.tuwien.ac.at>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:33484 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752019Ab2HVC5B (ORCPT
+Received: from luna.vmars.tuwien.ac.at ([128.130.39.29]:53947 "EHLO
+	mail.vmars.tuwien.ac.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751817Ab2HXHqY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Aug 2012 22:57:01 -0400
+	Fri, 24 Aug 2012 03:46:24 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Seth Forshee <seth.forshee@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Seth Forshee <seth.forshee@canonical.com>, platform-driver-x86@vger.kernel.org
 
-This function fails to add the start address of the gmux I/O range to
-the requested port address and thus writes to the wrong location.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
----
- drivers/platform/x86/apple-gmux.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Dear Seth and Matthew,
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index dfb1a92..ee21056 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -101,7 +101,7 @@ static void gmux_pio_write32(struct apple_gmux_data *gmux_data, int port,
- 
- 	for (i = 0; i < 4; i++) {
- 		tmpval = (val >> (i * 8)) & 0xff;
--		outb(tmpval, port + i);
-+		outb(tmpval, gmux_data->iostart + port + i);
- 	}
- }
- 
--- 
-1.7.9.5
+the following two patches contain my previous input from:
+http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg03651.html
+
+Please consider them for the next rc.
+
+Thanks,
+ Bernhard
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAlA3MU0ACgkQ6iVUjPs37Jm1hgCgqWoQfFmw/bJcuG59nLA6c5LG
+UlkAn2QBEhzDoIwjuKF0bEJ/qoCSwDXv
+=vqIy
+-----END PGP SIGNATURE-----
