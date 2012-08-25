@@ -1,61 +1,43 @@
-From: Bernhard Froemel <bfroemel@gmail.com>
-Subject: [PATCH v2 2/2] apple-gmux: Obtain version info from indexed gmux
-Date: Sat, 25 Aug 2012 10:30:49 +0200
-Message-ID: <1345883449-2790-2-git-send-email-bfroemel@gmail.com>
+From: "Henrik Rydberg" <rydberg@euromail.se>
+Subject: Re: [PATCH v2 1/2] apple-gmux: Fix index read functions
+Date: Sat, 25 Aug 2012 19:53:16 +0200
+Message-ID: <20120825175316.GA4292@polaris.bitmath.org>
 References: <50388C45.6030707@gmail.com>
  <1345883449-2790-1-git-send-email-bfroemel@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:63490 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753849Ab2HYIb2 (ORCPT
+Received: from smtprelay-b11.telenor.se ([62.127.194.20]:47050 "EHLO
+	smtprelay-b11.telenor.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752264Ab2HYRsH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 25 Aug 2012 04:31:28 -0400
+	Sat, 25 Aug 2012 13:48:07 -0400
+Content-Disposition: inline
 In-Reply-To: <1345883449-2790-1-git-send-email-bfroemel@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
-Cc: linux-kernel@vger.kernel.org, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+To: Bernhard Froemel <bfroemel@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>, linux-kernel@vger.kernel.org, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
 
-From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+On Sat, Aug 25, 2012 at 10:30:48AM +0200, Bernhard Froemel wrote:
+> From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+> 
+> Study of Apple's binary driver revealed that the GMUX_READ_PORT should
+> be written between calls to gmux_index_wait_ready and
+> gmux_index_wait_complete (i.e., the new index protocol must be
+> followed). If this is not done correctly, the indexed
+> gmux device only partially accepts writes which lead to problems
+> concerning GPU switching. Special thanks to Seth Forshee who helped
+> greatly with identifying unnecessary changes.
+> 
+> Signed-off-by: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+> ---
 
-This patch extracts and displays version information from the indexed
-gmux device as it is also done for the classic gmux device.
+Hi Bernhard,
 
-Signed-off-by: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
----
- drivers/platform/x86/apple-gmux.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+thanks for your patch, this works splendidly; I can resume and select
+different screen resolutions using xrandr.
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index c38538e..0e43477 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -463,18 +463,22 @@ static int __devinit gmux_probe(struct pnp_dev *pnp,
- 	ver_release = gmux_read8(gmux_data, GMUX_PORT_VERSION_RELEASE);
- 	if (ver_major == 0xff && ver_minor == 0xff && ver_release == 0xff) {
- 		if (gmux_is_indexed(gmux_data)) {
-+			u32 version;
- 			mutex_init(&gmux_data->index_lock);
- 			gmux_data->indexed = true;
-+			version = gmux_read32(gmux_data,
-+				GMUX_PORT_VERSION_MAJOR);
-+			ver_major = (version >> 24) & 0xff;
-+			ver_minor = (version >> 16) & 0xff;
-+			ver_release = (version >> 8) & 0xff;
- 		} else {
- 			pr_info("gmux device not present\n");
- 			ret = -ENODEV;
- 			goto err_release;
- 		}
--		pr_info("Found indexed gmux\n");
--	} else {
--		pr_info("Found gmux version %d.%d.%d\n", ver_major, ver_minor,
--			ver_release);
- 	}
-+	pr_info("Found gmux version %d.%d.%d [%s]\n", ver_major, ver_minor,
-+		ver_release, (gmux_data->indexed ? "indexed" : "classic"));
- 
- 	memset(&props, 0, sizeof(props));
- 	props.type = BACKLIGHT_PLATFORM;
--- 
-1.7.9.5
+    Tested-by: Henrik Rydberg <rydberg@euromail.se>
+
+Henrik
