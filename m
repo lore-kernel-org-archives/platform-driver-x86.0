@@ -1,26 +1,38 @@
-From: Seth Forshee <seth.forshee@canonical.com>
-Subject: Re: [PATCH v2 2/2] apple-gmux: Obtain version info from indexed gmux
-Date: Sat, 25 Aug 2012 19:48:19 -0500
-Message-ID: <20120826004819.GC20735@ubuntu-mba51>
-References: <50388C45.6030707@gmail.com>
- <1345883449-2790-1-git-send-email-bfroemel@gmail.com>
- <1345883449-2790-2-git-send-email-bfroemel@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1345883449-2790-2-git-send-email-bfroemel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bernhard Froemel <bfroemel@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
-List-Id: platform-driver-x86.vger.kernel.org
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH 1/2] asus-nb-wmi: correct a touchpad hotkey mapping
+Date: Tue, 28 Aug 2012 13:58:51 +0800
+Message-ID: <1346133532-16686-1-git-send-email-acelan.kao@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-iy0-f174.google.com ([209.85.210.174]:37685 "EHLO
+	mail-iy0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751009Ab2H1F66 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Aug 2012 01:58:58 -0400
+Received: by ialo24 with SMTP id o24so9937846ial.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Aug 2012 22:58:58 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-On Sat, Aug 25, 2012 at 10:30:49AM +0200, Bernhard Froemel wrote:
-> From: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
-> 
-> This patch extracts and displays version information from the indexed
-> gmux device as it is also done for the classic gmux device.
-> 
-> Signed-off-by: Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+0x60 is touchpad enable key, but is misdefined in the keymap.
 
-Acked-by: Seth Forshee <seth.forshee@canonical.com>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 6b0ebde..ab44fee 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -180,7 +180,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x5D, { KEY_WLAN } }, /* Wireless console Toggle */
+ 	{ KE_KEY, 0x5E, { KEY_WLAN } }, /* Wireless console Enable */
+ 	{ KE_KEY, 0x5F, { KEY_WLAN } }, /* Wireless console Disable */
+-	{ KE_KEY, 0x60, { KEY_SWITCHVIDEOMODE } },
++	{ KE_KEY, 0x60, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } },
+-- 
+1.7.9.5
