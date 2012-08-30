@@ -1,19 +1,17 @@
 From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
 Subject: [PATCH] acer-wmi: support Lenovo ideapad S205 10382JG wifi switch
-Date: Thu, 30 Aug 2012 10:38:58 +0800
-Message-ID: <1346294338-16486-1-git-send-email-jlee@suse.com>
+Date: Thu, 30 Aug 2012 10:39:41 +0800
+Message-ID: <1346294381-16529-1-git-send-email-jlee@suse.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:37334 "EHLO
+Received: from mail-wg0-f44.google.com ([74.125.82.44]:48994 "EHLO
 	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754238Ab2H3Cns (ORCPT
+	with ESMTP id S1754243Ab2H3Coa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Aug 2012 22:43:48 -0400
-Received: by wgbdr13 with SMTP id dr13so1091383wgb.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Aug 2012 19:43:47 -0700 (PDT)
+	Wed, 29 Aug 2012 22:44:30 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Ivo Anjo <knuckles@gmail.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Ivo Anjo <knuckles@gmail.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>
 
 Found another Lenovo ideapad S205 the product name is 10382JG, it has
 a 0x78 EC register exposes the state of wifi hardware switch on the machine.
