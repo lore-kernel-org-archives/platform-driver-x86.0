@@ -1,40 +1,55 @@
-From: Davidlohr Bueso <dave@gnu.org>
-Subject: [PATCH 2/5] sonypi: remove acpi_bus_generate_proc_event
-Date: Mon, 03 Sep 2012 02:03:24 +0200
-Message-ID: <1346630604.3170.30.camel@offbook>
-Reply-To: dave@gnu.org
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 4/5] platform: x86: remove acpi_bus_generate_proc_event
+Date: Mon, 3 Sep 2012 09:53:36 +0930
+Message-ID: <20120903002336.GD25170@marvin.atrad.com.au>
+References: <1346630611.3170.32.camel@offbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Len Brown <lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Zhang Rui <rui.zhang@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mattia Dongili <malattia@linux.it>, Arnd Bergmann <arnd@arndb.de>
-Cc: platform-driver-x86@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1346630611.3170.32.camel@offbook>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Davidlohr Bueso <dave@gnu.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, mjg@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Calling this function no longer makes sense as /proc/acpi/event
-is being removed.
+On Mon, Sep 03, 2012 at 02:03:31AM +0200, Davidlohr Bueso wrote:
+> Calling this function no longer makes sense as /proc/acpi/event
+> is being removed.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@gnu.org>
+> :
+>  drivers/platform/x86/fujitsu-laptop.c   |    4 ----
+> :
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index c4c1a54..2fac1c5 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -773,8 +773,6 @@ static void acpi_fujitsu_notify(struct acpi_device *device, u32 event)
+>  				else
+>  					set_lcd_level(newb);
+>  			}
+> -			acpi_bus_generate_proc_event(fujitsu->dev,
+> -				ACPI_VIDEO_NOTIFY_INC_BRIGHTNESS, 0);
+>  			keycode = KEY_BRIGHTNESSUP;
+>  		} else if (oldb > newb) {
+>  			if (disable_brightness_adjust != 1) {
+> @@ -783,8 +781,6 @@ static void acpi_fujitsu_notify(struct acpi_device *device, u32 event)
+>  				else
+>  					set_lcd_level(newb);
+>  			}
+> -			acpi_bus_generate_proc_event(fujitsu->dev,
+> -				ACPI_VIDEO_NOTIFY_DEC_BRIGHTNESS, 0);
+>  			keycode = KEY_BRIGHTNESSDOWN;
+>  		}
+>  		break;
 
-Signed-off-by: Davidlohr Bueso <dave@gnu.org>
----
- drivers/char/sonypi.c |    5 -----
- 1 files changed, 0 insertions(+), 5 deletions(-)
+Presumedly the intention here is for these events to be delivered via the
+input layer after the removal of /proc/acpi/event (as is done later in the
+above function).
 
-diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
-index f877805..4543473 100644
---- a/drivers/char/sonypi.c
-+++ b/drivers/char/sonypi.c
-@@ -876,11 +876,6 @@ found:
- 	if (useinput)
- 		sonypi_report_input_event(event);
- 
--#ifdef CONFIG_ACPI
--	if (sonypi_acpi_device)
--		acpi_bus_generate_proc_event(sonypi_acpi_device, 1, event);
--#endif
--
- 	kfifo_in_locked(&sonypi_device.fifo, (unsigned char *)&event,
- 			sizeof(event), &sonypi_device.fifo_lock);
- 	kill_fasync(&sonypi_device.fifo_async, SIGIO, POLL_IN);
--- 
-1.7.4.1
+If that's the case, then:
+  Acked-by: Jonathan Woithe <jwoithe@just42.net>
+
+Regards
+  jonathan
