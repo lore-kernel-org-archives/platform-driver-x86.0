@@ -1,7 +1,7 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 Subject: Re: ACPI ambient light sensor
-Date: Tue, 11 Sep 2012 10:27:20 +0200
-Message-ID: <201209111027.20392.marex@denx.de>
+Date: Tue, 11 Sep 2012 11:21:33 +0200
+Message-ID: <201209111121.34205.marex@denx.de>
 References: <CAObPJ3PctmLP56NvmLvJd+4w9e4xeOGSyz24FyBDXBQQVhDhxQ@mail.gmail.com> <4FFADCC2.6080006@cam.ac.uk> <CAObPJ3ORe_MGbmEHzZ4SGqZkn3HCQs+ocSw=Ttb7LbCTNCDkAQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=utf-8
@@ -17,17 +17,33 @@ Dear Martin Li=C5=A1ka,
 
 [...]
 
+> +static int acpi_als_write_raw(struct iio_dev *indio_dev,
+> +     struct iio_chan_spec const *chan, int val, int val2, long mask)
+> +{
+> + return 0;
+> +}
+
+Simply set write_raw =3D NULL below (aka. don't put it into the structu=
+re at all).
+
+> +static const struct iio_chan_spec acpi_als_channels[] =3D {
+> + {
+> + .type =3D IIO_LIGHT,
+> + .indexed =3D 1,
+> + .channel =3D 1,
+> + .scan_type.sign =3D 'u',
+> + .scan_type.realbits =3D 10,
+> + .scan_type.storagebits =3D 16,
+> + .info_mask =3D IIO_CHAN_INFO_PROCESSED_SEPARATE_BIT |
+> + IIO_CHAN_INFO_SCALE_SEPARATE_BIT,
+> + },
+> +};
 > +
-> + if (kfifo_is_empty(&kf->kf))
-> + r->stufftoread =3D false;
-> + /* verify it is still empty to avoid race */
-> + if (!kfifo_is_empty(&kf->kf))
-> + r->stufftoread =3D true;
-
-I'd say the formating got pretty messed up, please repost the patch via=
- git=20
-send-email .
-
+> +static const struct iio_info acpi_als_info =3D {
+> + .driver_module =3D THIS_MODULE,
+> + .read_raw =3D &acpi_als_read_raw,
+> + .write_raw =3D &acpi_als_write_raw,
+> +};
 [...]
 Best regards,
 Marek Vasut
