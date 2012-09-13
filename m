@@ -1,49 +1,43 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: ACPI ambient light sensor
-Date: Tue, 11 Sep 2012 11:21:33 +0200
-Message-ID: <201209111121.34205.marex@denx.de>
-References: <CAObPJ3PctmLP56NvmLvJd+4w9e4xeOGSyz24FyBDXBQQVhDhxQ@mail.gmail.com> <4FFADCC2.6080006@cam.ac.uk> <CAObPJ3ORe_MGbmEHzZ4SGqZkn3HCQs+ocSw=Ttb7LbCTNCDkAQ@mail.gmail.com>
+From: "Nathanael D. Noblet" <nathanael@gnat.ca>
+Subject: Re: Acer-WMI disables touchpad and other issues
+Date: Wed, 12 Sep 2012 22:35:02 -0600
+Message-ID: <50516276.7010103@gnat.ca>
+References: <502BD214.6090700@gnat.ca>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAObPJ3ORe_MGbmEHzZ4SGqZkn3HCQs+ocSw=Ttb7LbCTNCDkAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin =?utf-8?q?Li=C5=A1ka?= <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joeyli <jlee-IBi9RG/b67k@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pavel-ynQEQJNshbs@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Brenner <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp-out-04.shaw.ca ([64.59.134.12]:52417 "EHLO
+	smtp-out-04.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752433Ab2IMEfF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 13 Sep 2012 00:35:05 -0400
+In-Reply-To: <502BD214.6090700@gnat.ca>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: jlee@novell.com, platform-driver-x86@vger.kernel.org
 
-Dear Martin Li=C5=A1ka,
+On 08/15/2012 10:45 AM, Nathanael D. Noblet wrote:
+> Hello,
+>
+>    I recently purchased an Acer Aspire One (model A0275-0691). It has an
+> elantech touchpad. As detailed in this bug:
+> https://bugzilla.redhat.com/show_bug.cgi?id=848270 the acer-wmi driver
+> has two issues on this device.
+>
+> #1) It is sending TOUCHPAD_TOGGLE and simultaneously changing state
+> #2) It disables the touchpad at init
 
-[...]
+So I tested the patch provided here. 
+https://bugzilla.redhat.com/show_bug.cgi?id=848270
 
-> +static int acpi_als_write_raw(struct iio_dev *indio_dev,
-> +     struct iio_chan_spec const *chan, int val, int val2, long mask)
-> +{
-> + return 0;
-> +}
+It definitely allows the Fn+F7 key combo to toggle the use of the 
+mousepad. Unfortunately the mousepad comes up disabled and is very much 
+confusing the users using the device. Is there somewhere I should look 
+for what is causing that? I don't mind helping to debug the issue at all 
+I just don't know where to start.
 
-Simply set write_raw =3D NULL below (aka. don't put it into the structu=
-re at all).
-
-> +static const struct iio_chan_spec acpi_als_channels[] =3D {
-> + {
-> + .type =3D IIO_LIGHT,
-> + .indexed =3D 1,
-> + .channel =3D 1,
-> + .scan_type.sign =3D 'u',
-> + .scan_type.realbits =3D 10,
-> + .scan_type.storagebits =3D 16,
-> + .info_mask =3D IIO_CHAN_INFO_PROCESSED_SEPARATE_BIT |
-> + IIO_CHAN_INFO_SCALE_SEPARATE_BIT,
-> + },
-> +};
-> +
-> +static const struct iio_info acpi_als_info =3D {
-> + .driver_module =3D THIS_MODULE,
-> + .read_raw =3D &acpi_als_read_raw,
-> + .write_raw =3D &acpi_als_write_raw,
-> +};
-[...]
-Best regards,
-Marek Vasut
+Thanks,
+-- 
+Nathanael d. Noblet
+t 403.875.4613
