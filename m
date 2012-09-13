@@ -1,49 +1,72 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Acer-WMI disables touchpad and other issues
-Date: Thu, 13 Sep 2012 17:03:41 +0100
-Message-ID: <20120913160341.GA13029@srcf.ucam.org>
-References: <502BD214.6090700@gnat.ca>
- <50516276.7010103@gnat.ca>
- <1347530718.705.23.camel@linux-s257.site>
- <5051FFFA.3010506@gnat.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jiang Liu <liuj97@gmail.com>
+Subject: [PATCH] eeepc-laptop: fix device reference count leakage in eeepc_rfkill_hotplug()
+Date: Fri, 14 Sep 2012 00:21:59 +0800
+Message-ID: <1347553319-6867-1-git-send-email-jiang.liu@huawei.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:44805 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758454Ab2IMQDy (ORCPT
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:56343 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754578Ab2IMQXa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Sep 2012 12:03:54 -0400
-Content-Disposition: inline
-In-Reply-To: <5051FFFA.3010506@gnat.ca>
+	Thu, 13 Sep 2012 12:23:30 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Nathanael D. Noblet" <nathanael@gnat.ca>
-Cc: joeyli <jlee@suse.com>, jlee@novell.com, platform-driver-x86@vger.kernel.org
+To: Corentin Chary <corentincj@iksaif.net>, Matthew Garrett <mjg@redhat.com>
+Cc: Jiang Liu <liuj97@gmail.com>, Jiang Liu <jiang.liu@huawei.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
 
-On Thu, Sep 13, 2012 at 09:47:06AM -0600, Nathanael D. Noblet wrote:
-> Hello Joey li,
-> 
-> On 09/13/2012 04:05 AM, joeyli wrote:
-> >On the other hand,
-> >I checked your dmideocde on brc#848720, the 0x82 is the RIGHT acpi code
-> >to you for touchpad_toggle key, that means acer-wmi should emit
-> >KEY_TOUCHPAD_TOGGLE to userland. There have another thing also listen
-> >the KEY_TOUCHPAD_TOGGLE and do the change. I checked the
-> >gnome-settings-daemon, it just show up OSD but didn't change touchpad
-> >status.
-> 
-> I was discussing this with Matthew Garrett in #fedora-kernel. He's
-> telling me that if the hardware does the enabling/disabling that it
-> should not emit _TOGGLE, but that it should emit KEY_TOUCHPAD_ON or
-> KEY_TOUCHPAD_OFF instead. I'm in no place to know one way or the
-> other. I've CC'd him on this so the discussion of the issue can
-> continue to figure out what the source problem is.
+Fix a device reference count leakage issue in function
+eeepc_rfkill_hotplug().
 
-Right - TOUCHPAD_TOGGLE is a request from the hardware that the desktop 
-environment change the state. In this case hitting the key is causing 
-the hardware to change its state directly, and therefore it should just 
-be sending KEY_TOUCHPAD_ON or KEY_TOUCHPAD_OFF.
+Signed-off-by: Jiang Liu <jiang.liu@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/platform/x86/eeepc-laptop.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index dab91b4..5ca2641 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -610,12 +610,12 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 
+ 		if (!bus) {
+ 			pr_warn("Unable to find PCI bus 1?\n");
+-			goto out_unlock;
++			goto out_put_dev;
+ 		}
+ 
+ 		if (pci_bus_read_config_dword(bus, 0, PCI_VENDOR_ID, &l)) {
+ 			pr_err("Unable to read PCI config space?\n");
+-			goto out_unlock;
++			goto out_put_dev;
+ 		}
+ 
+ 		absent = (l == 0xffffffff);
+@@ -627,7 +627,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 				absent ? "absent" : "present");
+ 			pr_warn("skipped wireless hotplug as probably "
+ 				"inappropriate for this model\n");
+-			goto out_unlock;
++			goto out_put_dev;
+ 		}
+ 
+ 		if (!blocked) {
+@@ -635,7 +635,7 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 			if (dev) {
+ 				/* Device already present */
+ 				pci_dev_put(dev);
+-				goto out_unlock;
++				goto out_put_dev;
+ 			}
+ 			dev = pci_scan_single_device(bus, 0);
+ 			if (dev) {
+@@ -650,6 +650,8 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 				pci_dev_put(dev);
+ 			}
+ 		}
++out_put_dev:
++		pci_dev_put(port);
+ 	}
+ 
+ out_unlock:
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.9.5
