@@ -1,95 +1,39 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] Pull request for x86 platform driver tree
-Date: Thu, 13 Sep 2012 23:09:42 +0100
-Message-ID: <20120913220942.GA22238@srcf.ucam.org>
+From: Tom Mannerhagen <tom.mannerhagen@glocalnet.net>
+Subject: Brightness hot-keys on some of our L7-models
+Date: Fri, 14 Sep 2012 14:15:30 +0200
+Message-ID: <1347624930.1466.36.camel@C850-10X.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:50731 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753408Ab2IMWJo (ORCPT
+Received: from smtprelay-b22.telenor.se ([195.54.99.213]:35213 "EHLO
+	smtprelay-b22.telenor.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755329Ab2INMPz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Sep 2012 18:09:44 -0400
-Content-Disposition: inline
+	Fri, 14 Sep 2012 08:15:55 -0400
+Received: from ipb3.telenor.se (ipb3.telenor.se [195.54.127.166])
+	by smtprelay-b22.telenor.se (Postfix) with ESMTP id 7DA6B1400D
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Sep 2012 14:15:31 +0200 (CEST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
+Hi
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was told to report issues with hot-keys to this email.
 
-Hi Linus,
+I am checking Fedora (and Linux in general) functionality on Toshiba
+notebooks.
+The display brightness hot-keys are not working on some of our
+L7-models.
 
-A few small updates for 3.6 - a trivial regression fix and a couple of=20
-conformance updates for the gmux driver, plus some tiny fixes for=20
-asus-wmi, eeepc-laptop and thinkpad_acpi.
+The brightness is possible to set in the system settings, but the
+hot-keys for brightness are completely "dead".
 
-The following changes since commit 5b716ac728bcc01b1f2a7ed6e437196602237c27:
-
-  Merge branch 'for-next' of git://git.samba.org/sfrench/cifs-2.6 (2012-09-=
-02 11:30:10 -0700)
-
-are available in the git repository at:
-
-
-  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
-
-for you to fetch changes up to eceeb4371240aff22e9a535a2bc57d2311820942:
-
-  thinkpad_acpi: buffer overflow in fan_get_status() (2012-09-13 16:46:31 -=
-0400)
-
-----------------------------------------------------------------
-Bernhard Froemel (2):
-      apple-gmux: Obtain version info from indexed gmux
-      apple-gmux: Fix index read functions
-
-Corentin Chary (2):
-      drivers-platform-x86: remove useless #ifdef CONFIG_ACPI_VIDEO
-      asus-laptop: HRWS/HWRS typo
-
-Dan Carpenter (1):
-      thinkpad_acpi: buffer overflow in fan_get_status()
-
-Jiang Liu (1):
-      eeepc-laptop: fix device reference count leakage in eeepc_rfkill_hotp=
-lug()
-
-Maxim Nikulin (1):
-      platform/x86: fix asus_laptop.wled_type description
-
-Seth Forshee (1):
-      apple-gmux: Fix port address calculation in gmux_pio_write32()
-
- drivers/platform/x86/acer-wmi.c       |  2 --
- drivers/platform/x86/apple-gmux.c     | 24 +++++++++++++-----------
- drivers/platform/x86/asus-laptop.c    | 10 +++++-----
- drivers/platform/x86/asus-wmi.c       |  4 ----
- drivers/platform/x86/eeepc-laptop.c   | 10 ++++++----
- drivers/platform/x86/samsung-laptop.c |  4 ----
- drivers/platform/x86/thinkpad_acpi.c  | 13 +++++++------
- 7 files changed, 31 insertions(+), 36 deletions(-)
+What information do You need to be able to handle this?
 
 
 --=20
-Matthew Garrett | mjg59@srcf.ucam.org
+h=C3=A4lsningar / regards
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAlBSWaYACgkQ7Hkv8l1YiTvyLACfY5gRqR7INUv+COb4P71lIpvI
-zl8AoLAd8MA1ruTrqz8qYfjv6n0rObIz
-=OYNR
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
+Tom Mannerhagen
