@@ -1,187 +1,66 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH] asus-wmi: add display toggle quirk
-Date: Tue, 18 Sep 2012 18:02:19 +0800
-Message-ID: <CAMz9Wg9ES2tkE9gRJCj_-sowes9yRuKA+bb15f=CLxo1WSg_Dw@mail.gmail.com>
-References: <1347962095-24565-1-git-send-email-acelan.kao@canonical.com>
+From: Carsten Otto <otto@informatik.rwth-aachen.de>
+Subject: Re: [PATCH] asus-wmi: use ASUS_WMI_METHODID_DSTS2 as default DSTS ID.
+Date: Tue, 18 Sep 2012 12:21:41 +0200
+Message-ID: <20120918102141.GB4118@daedalus.informatik.rwth-aachen.de>
+References: <1340164055-1062-1-git-send-email-alex.hung@canonical.com>
+ <20120626213958.GA17871@burratino> <20120626215806.GM21479@carsten-otto>
+ <4FEABBFC.6090708@canonical.com> <20120627221743.GC13738@burratino>
+Reply-To: Carsten Otto <otto@informatik.rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary=eJnRUKwClWJh1Khz
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lpp01m010-f46.google.com ([209.85.215.46]:60468 "EHLO
-	mail-lpp01m010-f46.google.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932258Ab2IRKCU (ORCPT
+Received: from mta-1.ms.rz.rwth-aachen.de ([134.130.7.72]:34370 "EHLO
+	mta-1.ms.rz.rwth-aachen.de" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756633Ab2IRKvp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 18 Sep 2012 06:02:20 -0400
-Received: by lagy9 with SMTP id y9so4807851lag.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Sep 2012 03:02:19 -0700 (PDT)
-In-Reply-To: <1347962095-24565-1-git-send-email-acelan.kao@canonical.com>
+	Tue, 18 Sep 2012 06:51:45 -0400
+Content-disposition: inline
+In-reply-to: <20120627221743.GC13738@burratino>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
-
-Hi,
-
-Is it what you want?
-And I don't remember we have suffered this issue before.
-We have many duplicate brightness events issues, but for the display toggle,
-I think it's the first time we met it.
-
-Best regards,
-AceLan Kao.
-
-2012/9/18 AceLan Kao <acelan.kao@canonical.com>:
-> For machines with AMD graphic chips, it will send out WMI event and ACPI
-> interrupt at the same time while hitting the hotkey. BIOS will notify the
-> system the next display output mode throught WMI event code, so that
-> windows' application can show an OSD to tell the user which mode will be
-> taken effect. User can hit the display toggle key many times within 2
-> seconds to choose the mode they want. After 2 seconds, WMI dirver should
-> send a WMIMethod(SDSP) command to tell the BIOS which mode the user chose.
-> And then BIOS will raise another ACPI interrupt to tell the system to
-> really switch the display mode.
->
-> In Linux desktop, we don't have this kind of OSD to let users to choose
-> the mode they want, so we don't need to call WMIMethod(SDSP) to have
-> another ACPI interrupt. To simplify the problem, we just have to ignore
-> the WMI event, and let the first ACPI interrupt to send out the key event.
->
-> For the need, here comes another quirk to add machines with this kind of
-> behavior. When the WMI driver receives the display toggle WMI event, and
-> found the machin is in the list, it will do nothing and let ACPI video
-> driver to report the key event.
->
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c |   31 ++++++++++++++++++++++++++++++-
->  drivers/platform/x86/asus-wmi.c    |   20 ++++++++++++++++++++
->  drivers/platform/x86/asus-wmi.h    |    7 +++++++
->  3 files changed, 57 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 6b0ebde..8da51cf 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -59,6 +59,17 @@ static struct quirk_entry quirk_asus_unknown = {
->         .wapf = 0,
->  };
->
-> +/*
-> + * For those machines that need software to control bt/wifi status
-> + * and can't adjust brightness through ACPI interface
-> + * and have duplicate events(ACPI and WMI) for display toggle
-> + */
-> +static struct quirk_entry quirk_asus_x55u = {
-> +       .wapf = 4,
-> +       .wmi_backlight_power = true,
-> +       .no_display_toggle = true,
-> +};
-> +
->  static struct quirk_entry quirk_asus_x401u = {
->         .wapf = 4,
->  };
-> @@ -77,6 +88,15 @@ static struct dmi_system_id asus_quirks[] = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->                         DMI_MATCH(DMI_PRODUCT_NAME, "X401U"),
->                 },
-> +               .driver_data = &quirk_asus_x55u,
-> +       },
-> +       {
-> +               .callback = dmi_matched,
-> +               .ident = "ASUSTeK COMPUTER INC. X401A",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X401A"),
-> +               },
->                 .driver_data = &quirk_asus_x401u,
->         },
->         {
-> @@ -95,6 +115,15 @@ static struct dmi_system_id asus_quirks[] = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->                         DMI_MATCH(DMI_PRODUCT_NAME, "X501U"),
->                 },
-> +               .driver_data = &quirk_asus_x55u,
-> +       },
-> +       {
-> +               .callback = dmi_matched,
-> +               .ident = "ASUSTeK COMPUTER INC. X501A",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X501A"),
-> +               },
->                 .driver_data = &quirk_asus_x401u,
->         },
->         {
-> @@ -131,7 +160,7 @@ static struct dmi_system_id asus_quirks[] = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->                         DMI_MATCH(DMI_PRODUCT_NAME, "X55U"),
->                 },
-> -               .driver_data = &quirk_asus_x401u,
-> +               .driver_data = &quirk_asus_x55u,
->         },
->         {
->                 .callback = dmi_matched,
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 18f5169..9598f62 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1341,6 +1341,23 @@ static void asus_wmi_backlight_exit(struct asus_wmi *asus)
->         asus->backlight_device = NULL;
->  }
->
-> +static int is_display_toggle(int code)
-> +{
-> +       /* display toggle keys */
-> +       if ((code >= 0x61 && code <= 0x67) ||
-> +           (code >= 0x8c && code <= 0x93) ||
-> +           (code >= 0xa0 && code <= 0xa7) ||
-> +           (code >= 0xd0 && code <= 0xd5))
-> +               return 1;
-> +
-> +       return 0;
-> +}
-> +
-> +static void do_nothing(void)
-> +{
-> +       return;
-> +}
-> +
->  static void asus_wmi_notify(u32 value, void *context)
->  {
->         struct asus_wmi *asus = context;
-> @@ -1382,6 +1399,9 @@ static void asus_wmi_notify(u32 value, void *context)
->         if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
->                 if (!acpi_video_backlight_support())
->                         asus_wmi_backlight_notify(asus, orig_code);
-> +       } else if (is_display_toggle(code) &&
-> +                  asus->driver->quirks->no_display_toggle) {
-> +               do_nothing();
->         } else if (!sparse_keymap_report_event(asus->inputdev, code,
->                                                key_value, autorelease))
->                 pr_info("Unknown key %x pressed\n", code);
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index 4c9bd38..776524c 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -41,6 +41,13 @@ struct quirk_entry {
->         bool store_backlight_power;
->         bool wmi_backlight_power;
->         int wapf;
-> +       /*
-> +        * For machines with AMD graphic chips, it will send out WMI event
-> +        * and ACPI interrupt at the same time while hitting the hotkey.
-> +        * To simplify the problem, we just have to ignore the WMI event,
-> +        * and let the ACPI interrupt to send out the key event.
-> +        */
-> +       int no_display_toggle;
->  };
->
->  struct asus_wmi_driver {
-> --
-> 1.7.10.4
->
+To: Jonathan Nieder <jrnieder@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, corentincj@iksaif.net, mjg@redhat.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 679158@bugs.debian.org
 
 
+--eJnRUKwClWJh1Khz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Chia-Lin Kao(AceLan)
-http://blog.acelan.idv.tw/
-E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
+Dear all,
+
+the patch seems to be integrated in 3.5.4 (current stable kernel). When
+rebasing using git I see that the patch is not applied on top, most
+likely because it was already included somewhere in the official stable
+Linux itself.
+
+As mentioned in the following Ubuntu bug report, this patch causes
+problems (which I also observe).
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1041883
+
+It takes me about 10 tries to successfully boot my system. In the
+unsuccessful tries the screen is blanked shortly during the boot process
+and nothing happens (the magic keys don't work, network access cannot be
+tested that early).
+
+Bye,
+--=20
+Carsten Otto           otto@informatik.rwth-aachen.de
+LuFG Informatik 2      http://verify.rwth-aachen.de/otto/
+RWTH Aachen            phone: +49 241 80-21211
+
+--eJnRUKwClWJh1Khz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlBYSzUACgkQjUF4jpCSQBQpbgCfSUUvaZbs1krkcRKa8iTcyKxA
+7AQAn1NfXugZ5553+Z9LOB46lJqFcXt8
+=avwS
+-----END PGP SIGNATURE-----
+
+--eJnRUKwClWJh1Khz--
