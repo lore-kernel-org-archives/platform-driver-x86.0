@@ -1,72 +1,118 @@
-From: manoj.iyer@canonical.com
-Subject: [PATCH 1/1] thinkpad-acpi: enable loading module with new B-series Lenovo BIOS
-Date: Mon, 24 Sep 2012 11:57:40 -0500
-Message-ID: <1348505860-4121-1-git-send-email-manoj.iyer@canonical.com>
-References: <1348505788-4090-1-git-send-email-manoj.iyer@canonical.com>
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH 2/3] acer-wmi: fix obj is NULL but dereferenced
+Date: Tue, 25 Sep 2012 14:40:55 +0800
+Message-ID: <1348555256-13129-2-git-send-email-jlee@suse.com>
+References: <1348555256-13129-1-git-send-email-jlee@suse.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:35536 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751417Ab2IXQ5p (ORCPT
+Received: from mail-qc0-f174.google.com ([209.85.216.174]:55349 "EHLO
+	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751773Ab2IYGrW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Sep 2012 12:57:45 -0400
-In-Reply-To: <1348505788-4090-1-git-send-email-manoj.iyer@canonical.com>
+	Tue, 25 Sep 2012 02:47:22 -0400
+Received: by qcro28 with SMTP id o28so4996866qcr.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Sep 2012 23:47:21 -0700 (PDT)
+In-Reply-To: <1348555256-13129-1-git-send-email-jlee@suse.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <mjg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, manoj.iyer@canonical.com
+To: mjg@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
 
-From: Manoj Iyer <manoj.iyer@canonical.com>
+Fengguang Wu run coccinelle and warns about:
+  drivers/platform/x86/acer-wmi.c:1200:17-21: ERROR: obj is NULL but dereferenced.
+  drivers/platform/x86/acer-wmi.c:891:17-21: ERROR: obj is NULL but dereferenced.
+  drivers/platform/x86/acer-wmi.c:1953:17-21: ERROR: obj is NULL but dereferenced.
 
-The new B series BIOS has version string 43CN46WW. The driver
-requires that 2nd and 3rd characters be 'E' and 'T' respectively,
-where as the newer BIOS has 'C' and 'N' respectively. Failing to
-load the module causes some of the hotkeys to not work.
+It causes by the code in patch 987dfbaa65b2c3568b85e29d2598da08a011ee09 doesn't check
+obj variable should not be NULL. There have risk for dereference a NULL obj, so add
+this patch to fix.
 
-Before the patch
-================
-sudo modprobe thinkpad_acpi
-FATAL: Error inserting thinkpad_acpi (/lib/modules/3.5.0-15-generic/kernel/drivers/platform/x86/thinkpad_acpi.ko): No such device
-
-After the patch
-===============
-[44937.265438] thinkpad_acpi: ThinkPad ACPI Extras v0.24
-[44937.265445] thinkpad_acpi: http://ibm-acpi.sf.net/
-[44937.265449] thinkpad_acpi: ThinkPad BIOS 43CN46WW, EC unknown
-[44937.265453] thinkpad_acpi: Lenovo Lenovo B470e, model HuronRiver Platform
-[44937.266479] thinkpad_acpi: detected a 8-level brightness capable ThinkPad
-[44937.266557] thinkpad_acpi: Standard ACPI backlight interface available, not loading native one
-[44937.267846] thinkpad_acpi: Console audio control enabled, mode: monitor (read only)
-[44937.268131] input: ThinkPad Extra Buttons as /devices/platform/thinkpad_acpi/input/input17
-
-Signed-off-by: Manoj Iyer <manoj.iyer@canonical.com>
-Tested-by: James Ferguson <james.ferguson@canonical.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/platform/x86/acer-wmi.c |   46 +++++++++++++++++++++-----------------
+ 1 files changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 52daaa8..d5a9f1c 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8585,7 +8585,8 @@ static bool __pure __init tpacpi_is_valid_fw_id(const char* const s,
- 	return s && strlen(s) >= 8 &&
- 		tpacpi_is_fw_digit(s[0]) &&
- 		tpacpi_is_fw_digit(s[1]) &&
--		s[2] == t && s[3] == 'T' &&
-+		s[2] == t &&
-+		(s[3] == 'T' || s[3] == 'N') &&
- 		tpacpi_is_fw_digit(s[4]) &&
- 		tpacpi_is_fw_digit(s[5]);
- }
-@@ -8618,7 +8619,8 @@ static int __must_check __init get_thinkpad_model_data(
- 		return -ENOMEM;
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 00d8c39..5ff493e 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -884,7 +884,7 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
+ 	struct acpi_buffer input = { (acpi_size) sizeof(u32), (void *)(&in) };
+ 	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+-	u32 tmp;
++	u32 tmp = 0;
+ 	acpi_status status;
  
- 	/* Really ancient ThinkPad 240X will fail this, which is fine */
--	if (!tpacpi_is_valid_fw_id(tp->bios_version_str, 'E'))
-+	if (!(tpacpi_is_valid_fw_id(tp->bios_version_str, 'E') ||
-+	      tpacpi_is_valid_fw_id(tp->bios_version_str, 'C')))
+ 	status = wmi_evaluate_method(WMID_GUID1, 1, method_id, &input, &result);
+@@ -893,14 +893,14 @@ WMI_execute_u32(u32 method_id, u32 in, u32 *out)
+ 		return status;
+ 
+ 	obj = (union acpi_object *) result.pointer;
+-	if (obj && obj->type == ACPI_TYPE_BUFFER &&
+-		(obj->buffer.length == sizeof(u32) ||
+-		obj->buffer.length == sizeof(u64))) {
+-		tmp = *((u32 *) obj->buffer.pointer);
+-	} else if (obj->type == ACPI_TYPE_INTEGER) {
+-		tmp = (u32) obj->integer.value;
+-	} else {
+-		tmp = 0;
++	if (obj) {
++		if (obj->type == ACPI_TYPE_BUFFER &&
++			(obj->buffer.length == sizeof(u32) ||
++			obj->buffer.length == sizeof(u64))) {
++			tmp = *((u32 *) obj->buffer.pointer);
++		} else if (obj->type == ACPI_TYPE_INTEGER) {
++			tmp = (u32) obj->integer.value;
++		}
+ 	}
+ 
+ 	if (out)
+@@ -1202,12 +1202,14 @@ static acpi_status WMID_set_capabilities(void)
+ 		return status;
+ 
+ 	obj = (union acpi_object *) out.pointer;
+-	if (obj && obj->type == ACPI_TYPE_BUFFER &&
+-		(obj->buffer.length == sizeof(u32) ||
+-		obj->buffer.length == sizeof(u64))) {
+-		devices = *((u32 *) obj->buffer.pointer);
+-	} else if (obj->type == ACPI_TYPE_INTEGER) {
+-		devices = (u32) obj->integer.value;
++	if (obj) {
++		if (obj->type == ACPI_TYPE_BUFFER &&
++			(obj->buffer.length == sizeof(u32) ||
++			obj->buffer.length == sizeof(u64))) {
++			devices = *((u32 *) obj->buffer.pointer);
++		} else if (obj->type == ACPI_TYPE_INTEGER) {
++			devices = (u32) obj->integer.value;
++		}
+ 	} else {
+ 		kfree(out.pointer);
+ 		return AE_ERROR;
+@@ -1955,12 +1957,14 @@ static u32 get_wmid_devices(void)
  		return 0;
  
- 	tp->bios_model = tp->bios_version_str[0]
+ 	obj = (union acpi_object *) out.pointer;
+-	if (obj && obj->type == ACPI_TYPE_BUFFER &&
+-		(obj->buffer.length == sizeof(u32) ||
+-		obj->buffer.length == sizeof(u64))) {
+-		devices = *((u32 *) obj->buffer.pointer);
+-	} else if (obj->type == ACPI_TYPE_INTEGER) {
+-		devices = (u32) obj->integer.value;
++	if (obj) {
++		if (obj->type == ACPI_TYPE_BUFFER &&
++			(obj->buffer.length == sizeof(u32) ||
++			obj->buffer.length == sizeof(u64))) {
++			devices = *((u32 *) obj->buffer.pointer);
++		} else if (obj->type == ACPI_TYPE_INTEGER) {
++			devices = (u32) obj->integer.value;
++		}
+ 	}
+ 
+ 	kfree(out.pointer);
 -- 
-1.7.9.5
+1.6.0.2
