@@ -1,95 +1,35 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH 3/3] acer-wmi: change to emit touchpad on off key
-Date: Tue, 25 Sep 2012 14:40:56 +0800
-Message-ID: <1348555256-13129-3-git-send-email-jlee@suse.com>
-References: <1348555256-13129-1-git-send-email-jlee@suse.com>
- <1348555256-13129-2-git-send-email-jlee@suse.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: Backlight control broken between 3.6.0-rc1 and 3.6.0-rc4
+Date: Tue, 25 Sep 2012 14:40:36 +0300
+Message-ID: <20120925114036.GE5368@mwanda>
+References: <CAN0CFw1GiAZxLcRGaEOxYcGhOfF2hjDuoF+e0T8r_ZryTFzw5Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qc0-f174.google.com ([209.85.216.174]:55349 "EHLO
-	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753279Ab2IYGr0 (ORCPT
+Received: from acsinet15.oracle.com ([141.146.126.227]:47409 "EHLO
+	acsinet15.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754893Ab2IYLkr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Sep 2012 02:47:26 -0400
-Received: by mail-qc0-f174.google.com with SMTP id o28so4996866qcr.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Sep 2012 23:47:26 -0700 (PDT)
-In-Reply-To: <1348555256-13129-2-git-send-email-jlee@suse.com>
+	Tue, 25 Sep 2012 07:40:47 -0400
+Content-Disposition: inline
+In-Reply-To: <CAN0CFw1GiAZxLcRGaEOxYcGhOfF2hjDuoF+e0T8r_ZryTFzw5Q@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: Grant <emailgrant@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
 
-KEY_TOUCHPAD_TOOGLE key is for notice userland change touchpad state
-via xf86-input-synaptics on the machine that don't toggle touchpad in
-hardware. But, acer laptop actually toggle touchpad in hardware.
-So, this patch change to emit KEY_TOUCHPAD_ON/OFF key when acer-wmi grab
-device state of touchpad.
+On Sun, Sep 16, 2012 at 04:25:10AM -0700, Grant wrote:
+> I have a Dell XPS 13 Ultrabook laptop.  Backlight control used to be
+> broken, it works in 3.6.0-rc1, and it is broken again in 3.6.0-rc4.
+> 
 
-Reference: brc#848270
-        https://bugzilla.redhat.com/show_bug.cgi?id=848270
+I've filed a bug for this.
+https://bugzilla.kernel.org/show_bug.cgi?id=47941
 
-Tested-by: Nathanael Noblet <nathanael@gnat.ca>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |   13 ++++++++++---
- 1 files changed, 10 insertions(+), 3 deletions(-)
+Please add the following information:
+*) Complete dmesg
+*) lsmod, working and non-working
+*) .config
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 5ff493e..2715fec 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -125,7 +125,9 @@ static const struct key_entry acer_wmi_keymap[] = {
- 	{KE_IGNORE, 0x63, {KEY_BRIGHTNESSDOWN} },
- 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
- 	{KE_IGNORE, 0x81, {KEY_SLEEP} },
--	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad On/Off */
-+	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad Toggle */
-+	{KE_KEY, KEY_TOUCHPAD_ON, {KEY_TOUCHPAD_ON} },
-+	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_END, 0}
- };
-@@ -147,6 +149,7 @@ struct event_return_value {
- #define ACER_WMID3_GDS_THREEG		(1<<6)	/* 3G */
- #define ACER_WMID3_GDS_WIMAX		(1<<7)	/* WiMAX */
- #define ACER_WMID3_GDS_BLUETOOTH	(1<<11)	/* BT */
-+#define ACER_WMID3_GDS_TOUCHPAD		(1<<1)	/* Touchpad */
- 
- struct lm_input_params {
- 	u8 function_num;        /* Function Number */
-@@ -1687,6 +1690,7 @@ static void acer_wmi_notify(u32 value, void *context)
- 	acpi_status status;
- 	u16 device_state;
- 	const struct key_entry *key;
-+	u32 scancode;
- 
- 	status = wmi_get_event_data(value, &response);
- 	if (status != AE_OK) {
-@@ -1723,6 +1727,7 @@ static void acer_wmi_notify(u32 value, void *context)
- 			pr_warn("Unknown key number - 0x%x\n",
- 				return_value.key_num);
- 		} else {
-+			scancode = return_value.key_num;
- 			switch (key->keycode) {
- 			case KEY_WLAN:
- 			case KEY_BLUETOOTH:
-@@ -1736,9 +1741,11 @@ static void acer_wmi_notify(u32 value, void *context)
- 					rfkill_set_sw_state(bluetooth_rfkill,
- 						!(device_state & ACER_WMID3_GDS_BLUETOOTH));
- 				break;
-+			case KEY_TOUCHPAD_TOGGLE:
-+				scancode = (device_state & ACER_WMID3_GDS_TOUCHPAD) ?
-+						KEY_TOUCHPAD_ON : KEY_TOUCHPAD_OFF;
- 			}
--			sparse_keymap_report_entry(acer_wmi_input_dev, key,
--						   1, true);
-+			sparse_keymap_report_event(acer_wmi_input_dev, scancode, 1, true);
- 		}
- 		break;
- 	case WMID_ACCEL_EVENT:
--- 
-1.6.0.2
+regards,
+dan carpenter
