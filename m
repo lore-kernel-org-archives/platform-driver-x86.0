@@ -1,14 +1,19 @@
 From: Lv Zheng <lv.zheng@intel.com>
 Subject: [RESEND PATCH v4 0/2] ACPI: DBGP/DBG2 early console support for LPIA.
 Date: Fri, 28 Sep 2012 13:36:35 +0800
-Message-ID: <cover.1348652044.git.lv.zheng__32474.9146392152$1348810713$gmane$org@intel.com>
+Message-ID: <cover.1348652044.git.lv.zheng__27410.249823197$1348810716$gmane$org@intel.com>
 References: <cover.1347453194.git.zetalog@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:1189 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750900Ab2I1FhS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 28 Sep 2012 01:37:18 -0400
 In-Reply-To: <cover.1347453194.git.zetalog@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Len Brown <len.brown@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>
 Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Lv Zheng <lv.zheng@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
 Microsoft Debug Port Table (DBGP or DBG2) is used by the Windows SoC
 platforms to describe their debugging facilities.
