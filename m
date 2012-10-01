@@ -1,38 +1,28 @@
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RESEND PATCH v4 0/2] ACPI: DBGP/DBG2 early console support for
- LPIA.
-Date: Thu, 27 Sep 2012 23:36:46 -0700
-Message-ID: <5065457E.4040500@zytor.com>
-References: <cover.1347453194.git.zetalog@gmail.com> <cover.1348652044.git.lv.zheng@intel.com>
+From: "Mrs. Maria Bristow" <no-reply@mx2.4shared.com>
+Subject: RE: Please am dying of breast cancer !!!
+Date: Mon, 01 Oct 2012 14:54:08 +0200
+Message-ID: <201210011258.q91CvmCD014665@srv1.iexpress.com.br>
+Reply-To: maria.bristow@1email.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <cover.1348652044.git.lv.zheng@intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lv Zheng <lv.zheng@intel.com>
-Cc: Len Brown <len.brown@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from c906f44f.static.virtua.com.br ([201.6.244.79]:52186 "EHLO
+	srv1.iexpress.com.br" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1752732Ab2JANAI convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 1 Oct 2012 09:00:08 -0400
+Content-Description: Mail message body
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <no-reply@mx2.4shared.com>
 
-On 09/27/2012 10:36 PM, Lv Zheng wrote:
-> Microsoft Debug Port Table (DBGP or DBG2) is used by the Windows SoC
-> platforms to describe their debugging facilities.
-> Recent Low Power Intel Architecture (LPIA) platforms have utilized
-> this for the SPI UART debug ports that are resident on their debug
-> boards.
->
-> This patch set enables the DBGP/DBG2 debug ports as an Linux early
-> console launcher.
-> The SPI UART debug ports support is also refined to co-exist with this
-> new usage model.
+Hello,
 
-Hi Len,
+Am dying of breast cancer and I need your assistance to help me carry o=
+ut my dream charity work with my funds =E2=82=AC2.8M Euros with a Secur=
+ity firm, if you are interested please reach me for more details on thi=
+s email: maria.bristow@1email.eu
 
-You want to take this, or should I?
-
-	-hpa
-
--- 
-H. Peter Anvin, Intel Open Source Technology Center
-I work for Intel.  I don't speak on their behalf.
-
+Yours Sincerely,
+Mrs. Maria Bristow
