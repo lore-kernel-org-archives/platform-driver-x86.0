@@ -1,47 +1,53 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 0/8] ACPI4Asus and friends updates
-Date: Wed,  3 Oct 2012 11:26:23 +0200
-Message-ID: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtpfb1-g21.free.fr ([212.27.42.9]:59284 "EHLO
-	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753071Ab2JCJ1V (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Oct 2012 05:27:21 -0400
-Received: from smtp5-g21.free.fr (smtp5-g21.free.fr [212.27.42.5])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 4DFAF2D8DD
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Oct 2012 11:27:17 +0200 (CEST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 2/8] asus-laptop: map some new keys
+Date: Wed,  3 Oct 2012 11:26:25 +0200
+Message-ID: <1349256392-20320-3-git-send-email-corentin.chary@gmail.com>
+References: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Corentin Chary <corentincj@iksaif.net>
+Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
+---
+ drivers/platform/x86/asus-laptop.c |    3 +++
+ drivers/platform/x86/asus-nb-wmi.c |    1 +
+ 2 files changed, 4 insertions(+), 0 deletions(-)
 
-Hi Matthew,
-Some patches collected from AceLan and me for asus related drivers.
-Nothing big, mainly keymaps and quirks.
-Thanks,
-
-AceLan Kao (5):
-  asus-laptop: correct a touchpad hotkey mapping
-  asus-laptop: add all video switch keys
-  asus-nb-wmi: correct a touchpad hotkey mapping
-  asus-nb-wmi: add all video switch keys
-  asus-wmi: add display toggle quirk
-
-Corentin Chary (3):
-  platform-drivers-x86: change my mail
-  asus-laptop: map some new keys
-  asus-{nb-wmi|laptop}.c: sync keymaps
-
- MAINTAINERS                        |    4 +-
- drivers/platform/x86/asus-laptop.c |   61 ++++++++++++++++++++---------
- drivers/platform/x86/asus-nb-wmi.c |   76 +++++++++++++++++++++++++++++-------
- drivers/platform/x86/asus-wmi.c    |   33 ++++++++++++++--
- drivers/platform/x86/asus-wmi.h    |    7 +++
- drivers/platform/x86/eeepc-wmi.c   |    2 +-
- 6 files changed, 142 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 4b568df..68257ed 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -314,6 +314,8 @@ static const struct key_entry asus_keymap[] = {
+ 	{KE_KEY, 0x50, { KEY_EMAIL } },
+ 	{KE_KEY, 0x51, { KEY_WWW } },
+ 	{KE_KEY, 0x55, { KEY_CALC } },
++	{KE_IGNORE, 0x57, },  /* Battery mode */
++	{KE_IGNORE, 0x58, },  /* AC mode */
+ 	{KE_KEY, 0x5C, { KEY_SCREENLOCK } },  /* Screenlock */
+ 	{KE_KEY, 0x5D, { KEY_WLAN } },
+ 	{KE_KEY, 0x5E, { KEY_WLAN } },
+@@ -325,6 +327,7 @@ static const struct key_entry asus_keymap[] = {
+ 	{KE_KEY, 0x6B, { KEY_F13 } }, /* Lock Touchpad */
+ 	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
+ 	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
++	{KE_IGNORE, 0x6E, },  /* Low Battery notification */
+ 	{KE_KEY, 0x7E, { KEY_BLUETOOTH } },
+ 	{KE_KEY, 0x7D, { KEY_BLUETOOTH } },
+ 	{KE_KEY, 0x82, { KEY_CAMERA } },
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index be79040..b70425c 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -185,6 +185,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } },
+ 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } },
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
 -- 
 1.7.8.6
