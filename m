@@ -1,53 +1,42 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 2/8] asus-laptop: map some new keys
-Date: Wed,  3 Oct 2012 11:26:25 +0200
-Message-ID: <1349256392-20320-3-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 6/8] asus-nb-wmi: correct a touchpad hotkey mapping
+Date: Wed,  3 Oct 2012 11:26:29 +0200
+Message-ID: <1349256392-20320-7-git-send-email-corentin.chary@gmail.com>
 References: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtpfb1-g21.free.fr ([212.27.42.9]:59341 "EHLO
+	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932095Ab2JCJ2M (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 3 Oct 2012 05:28:12 -0400
 In-Reply-To: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
+From: AceLan Kao <acelan.kao@canonical.com>
+
+0x60 is touchpad enable key, but is misdefined in the keymap.
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-laptop.c |    3 +++
- drivers/platform/x86/asus-nb-wmi.c |    1 +
- 2 files changed, 4 insertions(+), 0 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 4b568df..68257ed 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -314,6 +314,8 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0x50, { KEY_EMAIL } },
- 	{KE_KEY, 0x51, { KEY_WWW } },
- 	{KE_KEY, 0x55, { KEY_CALC } },
-+	{KE_IGNORE, 0x57, },  /* Battery mode */
-+	{KE_IGNORE, 0x58, },  /* AC mode */
- 	{KE_KEY, 0x5C, { KEY_SCREENLOCK } },  /* Screenlock */
- 	{KE_KEY, 0x5D, { KEY_WLAN } },
- 	{KE_KEY, 0x5E, { KEY_WLAN } },
-@@ -325,6 +327,7 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0x6B, { KEY_F13 } }, /* Lock Touchpad */
- 	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
- 	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
-+	{KE_IGNORE, 0x6E, },  /* Low Battery notification */
- 	{KE_KEY, 0x7E, { KEY_BLUETOOTH } },
- 	{KE_KEY, 0x7D, { KEY_BLUETOOTH } },
- 	{KE_KEY, 0x82, { KEY_CAMERA } },
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index be79040..b70425c 100644
+index 9f1caa7..75ce18c 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -185,6 +185,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
- 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } },
- 	{ KE_KEY, 0x7E, { KEY_BLUETOOTH } },
- 	{ KE_KEY, 0x82, { KEY_CAMERA } },
+@@ -180,7 +180,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x5D, { KEY_WLAN } }, /* Wireless console Toggle */
+ 	{ KE_KEY, 0x5E, { KEY_WLAN } }, /* Wireless console Enable */
+ 	{ KE_KEY, 0x5F, { KEY_WLAN } }, /* Wireless console Disable */
+-	{ KE_KEY, 0x60, { KEY_SWITCHVIDEOMODE } },
++	{ KE_KEY, 0x60, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* LCD Only */
+ 	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* CRT Only */
+ 	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* LCD + CRT */
 -- 
 1.7.8.6
