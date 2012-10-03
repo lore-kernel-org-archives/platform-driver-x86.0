@@ -1,88 +1,70 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 1/8] platform-drivers-x86: change my mail
-Date: Wed,  3 Oct 2012 11:26:24 +0200
-Message-ID: <1349256392-20320-2-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 7/8] asus-nb-wmi: add all video switch keys
+Date: Wed,  3 Oct 2012 11:26:30 +0200
+Message-ID: <1349256392-20320-8-git-send-email-corentin.chary@gmail.com>
 References: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtpfb1-g21.free.fr ([212.27.42.9]:59315 "EHLO
-	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754644Ab2JCJ1s (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Oct 2012 05:27:48 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1349256392-20320-1-git-send-email-corentin.chary@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+From: AceLan Kao <acelan.kao@canonical.com>
+
+Fill up all the video switch keys in the map.
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- MAINTAINERS                        |    4 ++--
- drivers/platform/x86/asus-nb-wmi.c |    2 +-
- drivers/platform/x86/asus-wmi.c    |    2 +-
- drivers/platform/x86/eeepc-wmi.c   |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c |   22 +++++++++++++++++++---
+ 1 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fdc0119..bbf52c2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1217,7 +1217,7 @@ F:	Documentation/hwmon/asc7621
- F:	drivers/hwmon/asc7621.c
- 
- ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
--M:	Corentin Chary <corentincj@iksaif.net>
-+M:	Corentin Chary <corentin.chary@gmail.com>
- L:	acpi4asus-user@lists.sourceforge.net
- L:	platform-driver-x86@vger.kernel.org
- W:	http://acpi4asus.sf.net
-@@ -5903,7 +5903,7 @@ F:	drivers/media/video/*7146*
- F:	include/media/*7146*
- 
- SAMSUNG LAPTOP DRIVER
--M:	Corentin Chary <corentincj@iksaif.net>
-+M:	Corentin Chary <corentin.chary@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/samsung-laptop.c
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 6b0ebde..be79040 100644
+index 75ce18c..87d45e0 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -32,7 +32,7 @@
- 
- #define	ASUS_NB_WMI_FILE	"asus-nb-wmi"
- 
--MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>");
-+MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
- MODULE_DESCRIPTION("Asus Notebooks WMI Hotkey Driver");
- MODULE_LICENSE("GPL");
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 18f5169..912ec7d 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -51,7 +51,7 @@
- 
- #include "asus-wmi.h"
- 
--MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>, "
-+MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>, "
- 	      "Yong Wang <yong.y.wang@intel.com>");
- MODULE_DESCRIPTION("Asus Generic WMI Driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
-index 5838332..60cb76a 100644
---- a/drivers/platform/x86/eeepc-wmi.c
-+++ b/drivers/platform/x86/eeepc-wmi.c
-@@ -39,7 +39,7 @@
- 
- #define	EEEPC_WMI_FILE	"eeepc-wmi"
- 
--MODULE_AUTHOR("Corentin Chary <corentincj@iksaif.net>");
-+MODULE_AUTHOR("Corentin Chary <corentin.chary@gmail.com>");
- MODULE_DESCRIPTION("Eee PC WMI Hotkey Driver");
- MODULE_LICENSE("GPL");
- 
+@@ -181,9 +181,13 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x5E, { KEY_WLAN } }, /* Wireless console Enable */
+ 	{ KE_KEY, 0x5F, { KEY_WLAN } }, /* Wireless console Disable */
+ 	{ KE_KEY, 0x60, { KEY_TOUCHPAD_ON } },
+-	{ KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* LCD Only */
+-	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* CRT Only */
+-	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* LCD + CRT */
++	{ KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD only */
++	{ KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT only */
++	{ KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT */
++	{ KE_KEY, 0x64, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV */
++	{ KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
++	{ KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
++	{ KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
+ 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
+ 	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
+ 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
+@@ -191,12 +195,24 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x82, { KEY_CAMERA } },
+ 	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+ 	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
++	{ KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
++	{ KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
++	{ KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
++	{ KE_KEY, 0x8F, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + DVI */
++	{ KE_KEY, 0x90, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + DVI */
++	{ KE_KEY, 0x91, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + DVI */
++	{ KE_KEY, 0x92, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + DVI */
++	{ KE_KEY, 0x93, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + DVI */
+ 	{ KE_KEY, 0x95, { KEY_MEDIA } },
+ 	{ KE_KEY, 0x99, { KEY_PHONE } },
+ 	{ KE_KEY, 0xA0, { KEY_SWITCHVIDEOMODE } }, /* SDSP HDMI only */
+ 	{ KE_KEY, 0xA1, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + HDMI */
+ 	{ KE_KEY, 0xA2, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + HDMI */
+ 	{ KE_KEY, 0xA3, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + HDMI */
++	{ KE_KEY, 0xA4, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + HDMI */
++	{ KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
++	{ KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
++	{ KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
+ 	{ KE_KEY, 0xB5, { KEY_CALC } },
+ 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+ 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
 -- 
 1.7.8.6
