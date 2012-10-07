@@ -1,37 +1,31 @@
-From: Len Brown <lenb@kernel.org>
+From: "H. Peter Anvin" <hpa@zytor.com>
 Subject: Re: [RESEND PATCH v4 0/2] ACPI: DBGP/DBG2 early console support for
  LPIA.
-Date: Sat, 06 Oct 2012 14:42:56 -0400
-Message-ID: <50707BB0.8050301@kernel.org>
-References: <cover.1347453194.git.zetalog@gmail.com> <cover.1348652044.git.lv.zheng@intel.com> <5065457E.4040500@zytor.com>
+Date: Sun, 07 Oct 2012 23:41:29 +0800
+Message-ID: <5071A2A9.3070708@zytor.com>
+References: <cover.1347453194.git.zetalog@gmail.com> <cover.1348652044.git.lv.zheng@intel.com> <5065457E.4040500@zytor.com> <50707BB0.8050301@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qc0-f174.google.com ([209.85.216.174]:40364 "EHLO
-	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753048Ab2JFSnE (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:32598 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753792Ab2JGPln (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 6 Oct 2012 14:43:04 -0400
-In-Reply-To: <5065457E.4040500@zytor.com>
+	Sun, 7 Oct 2012 11:41:43 -0400
+In-Reply-To: <50707BB0.8050301@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
+To: Len Brown <lenb@kernel.org>
 Cc: Lv Zheng <lv.zheng@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org
 
+On 10/07/2012 02:42 AM, Len Brown wrote:
+> 
+>> You want to take this, or should I?
+> 
+> go ahead and take the series in tip 3.8, Peter, thanks.
+> 
 
-> You want to take this, or should I?
+I'll pull it in after the merge window closes and I get back home.
 
-go ahead and take the series in tip 3.8, Peter, thanks.
-
-I looked over this series a while back and my feedback was that
-it should be disabled by default and enabled by bootparam --
-like other earlyprink -- else an issue here would render
-a system un-bootable.  I see that LV has addressed that
-in the latest version.
-
-LV,
-have you addressed the feedback from Konrad?
-
-thanks,
--Len
+	-hpa
