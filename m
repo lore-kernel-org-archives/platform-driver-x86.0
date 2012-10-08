@@ -1,31 +1,34 @@
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RESEND PATCH v4 0/2] ACPI: DBGP/DBG2 early console support for
+From: "Zheng, Lv" <lv.zheng@intel.com>
+Subject: RE: [RESEND PATCH v4 0/2] ACPI: DBGP/DBG2 early console support for
  LPIA.
-Date: Sun, 07 Oct 2012 23:41:29 +0800
-Message-ID: <5071A2A9.3070708@zytor.com>
-References: <cover.1347453194.git.zetalog@gmail.com> <cover.1348652044.git.lv.zheng@intel.com> <5065457E.4040500@zytor.com> <50707BB0.8050301@kernel.org>
+Date: Mon, 8 Oct 2012 00:51:35 +0000
+Message-ID: <1AE640813FDE7649BE1B193DEA596E88B9C2E4@SHSMSX101.ccr.corp.intel.com>
+References: <cover.1347453194.git.zetalog@gmail.com>
+ <cover.1348652044.git.lv.zheng@intel.com> <5065457E.4040500@zytor.com>
+ <50707BB0.8050301@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:32598 "EHLO mga03.intel.com"
+Received: from mga03.intel.com ([143.182.124.21]:19912 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753792Ab2JGPln (ORCPT
+	id S1751355Ab2JHAvj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 7 Oct 2012 11:41:43 -0400
+	Sun, 7 Oct 2012 20:51:39 -0400
 In-Reply-To: <50707BB0.8050301@kernel.org>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Len Brown <lenb@kernel.org>
-Cc: Lv Zheng <lv.zheng@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org
+To: Len Brown <lenb@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Jason Wessel <jason.wessel@windriver.com>, "Tang, Feng" <feng.tang@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 10/07/2012 02:42 AM, Len Brown wrote:
-> 
->> You want to take this, or should I?
-> 
-> go ahead and take the series in tip 3.8, Peter, thanks.
-> 
-
-I'll pull it in after the merge window closes and I get back home.
-
-	-hpa
+PiBnbyBhaGVhZCBhbmQgdGFrZSB0aGUgc2VyaWVzIGluIHRpcCAzLjgsIFBldGVyLCB0aGFua3Mu
+DQo+IA0KPiBJIGxvb2tlZCBvdmVyIHRoaXMgc2VyaWVzIGEgd2hpbGUgYmFjayBhbmQgbXkgZmVl
+ZGJhY2sgd2FzIHRoYXQgaXQgc2hvdWxkIGJlDQo+IGRpc2FibGVkIGJ5IGRlZmF1bHQgYW5kIGVu
+YWJsZWQgYnkgYm9vdHBhcmFtIC0tIGxpa2Ugb3RoZXIgZWFybHlwcmluayAtLSBlbHNlIGFuDQo+
+IGlzc3VlIGhlcmUgd291bGQgcmVuZGVyIGEgc3lzdGVtIHVuLWJvb3RhYmxlLiAgSSBzZWUgdGhh
+dCBMViBoYXMgYWRkcmVzc2VkDQo+IHRoYXQgaW4gdGhlIGxhdGVzdCB2ZXJzaW9uLg0KPiBMViwN
+Cj4gaGF2ZSB5b3UgYWRkcmVzc2VkIHRoZSBmZWVkYmFjayBmcm9tIEtvbnJhZD8NCg0KSSBtaXNz
+ZWQgdGhlIG1haWwgZnJvbSBLb25yYWQuIFRoYW5rcyBmb3IgeW91ciByZW1pbmRlci4NCkknbGwg
+ZmluZCBpdCBhbmQgdXBkYXRlIG15IHBhdGNoZXMgYWNjb3JkaW5nIHRvIGhpcyBzdWdnZXN0aW9u
+Lg0KDQpCZXN0IHJlZ2FyZHMvTHYgWmhlbmcNCg0K
