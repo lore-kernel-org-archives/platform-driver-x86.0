@@ -1,47 +1,47 @@
-From: Chris Wilson <chris@aptivate.org>
-Subject: Re: [PATCH 2/4] soekris-net6501: Add a board driver to create
- leds-net6501 device.
-Date: Fri, 12 Oct 2012 17:45:11 +0100 (BST)
-Message-ID: <alpine.DEB.2.02.1210121719140.30572@lap-x201>
-References: <1344860636-23328-1-git-send-email-chris+github@qwirx.com> <alpine.DEB.2.02.1208291432040.12396@lap-x201>
+From: Khalid Aziz <khalid@gonehiking.org>
+Subject: Re: [PATCH v6 1/2] ACPI: Add early console framework for DBGP/DBG2.
+Date: Fri, 12 Oct 2012 13:24:03 -0600
+Message-ID: <1350069843.7065.65.camel@rhapsody>
+References: <cover.1348652044.git.lv.zheng@intel.com>
+	 <09ee0e9c79c57da2fc9d0af1c2daeaacdc0bb234.1349838218.git.lv.zheng@intel.com>
+	 <20121010174406.GA13861@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from one-mail.aptivate.org ([87.106.150.205]:45965 "EHLO
-	one-mail.aptivate.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753896Ab2JLRmI (ORCPT
+Received: from qmta03.emeryville.ca.mail.comcast.net ([76.96.30.32]:36058 "EHLO
+	qmta03.emeryville.ca.mail.comcast.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750745Ab2JLT3G (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Oct 2012 13:42:08 -0400
-In-Reply-To: <alpine.DEB.2.02.1208291432040.12396@lap-x201>
+	Fri, 12 Oct 2012 15:29:06 -0400
+In-Reply-To: <20121010174406.GA13861@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chris Wilson <chris@qwirx.com>
-Cc: Chris Wilson <chris+github@qwirx.com>, platform-driver-x86@vger.kernel.org, bryan.wu@canonical.com, chris+github@aptivate.org
+To: Matthew Garrett <mjg@redhat.com>
+Cc: Lv Zheng <lv.zheng@intel.com>, Len Brown <len.brown@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org
 
-Dear sirs,
+On Wed, 2012-10-10 at 18:44 +0100, Matthew Garrett wrote:
+> On Wed, Oct 10, 2012 at 11:23:01AM +0800, Lv Zheng wrote:
+> > Microsoft Debug Port Table (DBGP or DBG2) is used by the Windows SoC
+> > platforms to describe their debugging facilities.
+> > DBGP: http://msdn.microsoft.com/en-us/windows/hardware/hh134821
+> > DBG2: http://msdn.microsoft.com/en-us/library/windows/hardware/hh673515
+> 
+> The license for these specifications only covers BIOS implementations, 
+> not OS implementations. Has this had appropriate legal review?
+> 
 
-I still haven't heard anything about this patch. I don't even know if it 
-reached the mailing lists?
+I agree with Matthew. There are potential legal issues with using
+DBGP/DBGP2 tables in Linux. I had added support for SPCR and DBGP tables
+many years ago (in early 2.6 kernel timeframe) before Microsoft added
+this new license. I pulled the code out (in 2.6.14, I think) after
+Microsoft added the new license to these tables. I agree with Matthew's
+interpretation that the license is clear only about BIOS vendors being
+allowed to use these tables. PCDP table in DIG64 spec was introduced to
+get around the legal issues with using SPCR and DBGP in Linux.
 
-I would like to see it merged, so if there is a reason why you don't want 
-to include it as is, please could you let me know, so I can produce a 
-better version?
+License for DBGP/DBGP2 needs some legal review before this patch can go
+into Linux.
 
-I have discovered that the MPTABLE exists on the net6501 and uniquely 
-identifies the device, so we could use it to refuse to load the platform 
-driver on anything other than a net6501:
-
-[    0.000000] MPTABLE: OEM ID: Soekris
-[    0.000000] MPTABLE: Product ID: net6501
-
-I don't know how to go further and integrate this with a plug and play 
-framework, since the device does not have ACPI in the BIOS (yet), nor any 
-identifiable PCI IDs as far as I know. Do you have any advice on this?
-
-Cheers, Chris.
--- 
-Aptivate | http://www.aptivate.org | Phone: +44 1223 967 838
-Future Business, Cam City FC, Milton Rd, Cambridge, CB4 1UY, UK
-
-Aptivate is a not-for-profit company registered in England and Wales
-with company number 04980791.
+--
+Khalid
