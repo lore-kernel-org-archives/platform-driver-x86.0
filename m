@@ -1,48 +1,47 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] Platform: hp-wmi: add rfkill support for integrated GPS
-Date: Thu, 11 Oct 2012 14:18:04 +0100
-Message-ID: <20121011131804.GA7266@srcf.ucam.org>
-References: <1349952660.1577.43.camel@pluto.netcomga.sk>
- <20121011123415.GA6056@srcf.ucam.org>
- <1349961347.29045.8.camel@pluto.netcomga.sk>
+From: Chris Wilson <chris@aptivate.org>
+Subject: Re: [PATCH 2/4] soekris-net6501: Add a board driver to create
+ leds-net6501 device.
+Date: Fri, 12 Oct 2012 17:45:11 +0100 (BST)
+Message-ID: <alpine.DEB.2.02.1210121719140.30572@lap-x201>
+References: <1344860636-23328-1-git-send-email-chris+github@qwirx.com> <alpine.DEB.2.02.1208291432040.12396@lap-x201>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:45040 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758555Ab2JKNSG (ORCPT
+Received: from one-mail.aptivate.org ([87.106.150.205]:45965 "EHLO
+	one-mail.aptivate.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753896Ab2JLRmI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 11 Oct 2012 09:18:06 -0400
-Content-Disposition: inline
-In-Reply-To: <1349961347.29045.8.camel@pluto.netcomga.sk>
+	Fri, 12 Oct 2012 13:42:08 -0400
+In-Reply-To: <alpine.DEB.2.02.1208291432040.12396@lap-x201>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?Q?Trep=E1k?= Vilmos <trepo@netcomga.sk>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chris Wilson <chris@qwirx.com>
+Cc: Chris Wilson <chris+github@qwirx.com>, platform-driver-x86@vger.kernel.org, bryan.wu@canonical.com, chris+github@aptivate.org
 
-On Thu, Oct 11, 2012 at 03:15:47PM +0200, Trep=E1k Vilmos wrote:
-> On Thu, 2012-10-11 at 13:34 +0100, Matthew Garrett wrote:
-> > I don't think this bit is right - in this codepath, wireless is a m=
-ask,=20
-> > so 0x3 would mean wifi and bluetooth, not gps. I'd expect gps to be=
- 0x8.
->=20
-> And you'd expect right. Re-tested with 0x8, it works.
+Dear sirs,
 
-Ok.
+I still haven't heard anything about this patch. I don't even know if it 
+reached the mailing lists?
 
-> > =20
-> > The rest looks good, though.
-> >=20
->=20
-> Of course it does, it's just copy & paste & replace... I don't even
-> think I deserve credit for it.
->=20
-> Is it worth it to resubmit the patch for a 1-byte change or will you
-> just take care of it yourself? If it's easier for you, I'll resubmit.
+I would like to see it merged, so if there is a reason why you don't want 
+to include it as is, please could you let me know, so I can produce a 
+better version?
 
-No worries, I'll fix it up. Thanks!
+I have discovered that the MPTABLE exists on the net6501 and uniquely 
+identifies the device, so we could use it to refuse to load the platform 
+driver on anything other than a net6501:
 
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
+[    0.000000] MPTABLE: OEM ID: Soekris
+[    0.000000] MPTABLE: Product ID: net6501
+
+I don't know how to go further and integrate this with a plug and play 
+framework, since the device does not have ACPI in the BIOS (yet), nor any 
+identifiable PCI IDs as far as I know. Do you have any advice on this?
+
+Cheers, Chris.
+-- 
+Aptivate | http://www.aptivate.org | Phone: +44 1223 967 838
+Future Business, Cam City FC, Milton Rd, Cambridge, CB4 1UY, UK
+
+Aptivate is a not-for-profit company registered in England and Wales
+with company number 04980791.
