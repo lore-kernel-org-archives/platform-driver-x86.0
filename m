@@ -1,47 +1,27 @@
-From: Yuanhan Liu <yuanhan.liu@linux.intel.com>
-Subject: [PATCH 4/5] sonypi: suspend/resume callbacks should be conditionally compiled on CONFIG_PM_SLEEP
-Date: Tue, 16 Oct 2012 22:59:04 +0800
-Message-ID: <1350399545-11179-4-git-send-email-yuanhan.liu@linux.intel.com>
-References: <1350399545-11179-1-git-send-email-yuanhan.liu@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350399545-11179-1-git-send-email-yuanhan.liu@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Yuanhan Liu <yuanhan.liu@linux.intel.com>, Mattia Dongili <malattia@linux.it>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, Fengguang Wu <fengguang.wu@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: "keely" <gertrudapawlikan63@wp.pl>
+Subject: hey
+Date: Tue, 16 Oct 2012 12:35:07 -0700
+Message-ID: <507D5479.BCC1B463@smtp.wp.pl>
+Reply-To: keely11@datingreplyz.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx4.wp.pl ([212.77.101.8]:38928 "EHLO mx4.wp.pl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754946Ab2JPTnK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 16 Oct 2012 15:43:10 -0400
+Received: from unknown (HELO laacguvjje) (gertrudapawlikan63@wp.pl@[197.27.39.252])
+          (envelope-sender <gertrudapawlikan63@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with AES256-SHA encrypted SMTP
+          for <platform-driver-x86@vger.kernel.org>; 16 Oct 2012 21:35:07 +0200
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, lflocke@hotmail.com
+Cc: winterkaikai@yahoo.com
 
-This will fix warnings like following when CONFIG_PM_SLEEP is not set:
 
-        warning: 'xxx_suspend' defined but not used [-Wunused-function]
-        warning: 'xxx_resume' defined but not used [-Wunused-function]
+How are you ? ! 
+I saw your primary pic on facebook. I like you a lot.  Let's chat !
+I could send you my pic if you want
 
-Because
-	SET_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
-
-Only references the callbacks on CONFIG_PM_SLEEP (instead of CONFIG_PM).
-
-Cc: Mattia Dongili <malattia@linux.it>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Yuanhan Liu <yuanhan.liu@linux.intel.com>
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
----
- drivers/char/sonypi.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/char/sonypi.c b/drivers/char/sonypi.c
-index 320debb..9b4f011 100644
---- a/drivers/char/sonypi.c
-+++ b/drivers/char/sonypi.c
-@@ -1456,7 +1456,7 @@ static int __devexit sonypi_remove(struct platform_device *dev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
-+#ifdef CONFIG_PM_SLEEP
- static int old_camera_power;
- 
- static int sonypi_suspend(struct device *dev)
--- 
-1.7.7.6
+All my love
