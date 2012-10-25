@@ -1,76 +1,278 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: samsung-laptop: Samsung 530U3C major ACPI issues
-Date: Wed, 24 Oct 2012 19:21:15 +0100
-Message-ID: <CAHR064jQwnGxxFvrcwtB9w+fHkCVxw5kpbF4sgvFmNqtXEdYxw@mail.gmail.com>
-References: <5087F449.6040906@profitbricks.com>
-	<5087F70E.3010406@profitbricks.com>
-	<5087FDA0.5010002@profitbricks.com>
-	<CAHR064g+rHyjqauc_TME17z+ZTtR3wZiXSvdx0wGhb=z5hWGfg@mail.gmail.com>
-	<508811BC.9050006@profitbricks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:32775 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934943Ab2JXSVR (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 24 Oct 2012 14:21:17 -0400
-Received: by mail-bk0-f46.google.com with SMTP id jk13so402797bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Oct 2012 11:21:15 -0700 (PDT)
-In-Reply-To: <508811BC.9050006@profitbricks.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-Cc: platform-driver-x86@vger.kernel.org, Adrian Maertins <adrian.maertins@profitbricks.com>
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH v2 1/1] Platform: x86: Add Chrome OS Laptop driver
+Date: Thu, 25 Oct 2012 14:21:21 -0700
+Message-ID: <1351200081-19349-2-git-send-email-bleung@chromium.org>
+References: <1341961393-17728-1-git-send-email-bleung@chromium.org>
+ <1351200081-19349-1-git-send-email-bleung@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1351200081-19349-1-git-send-email-bleung@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, corentin.chary@gmail.com
+Cc: bleung@chromium.org, olofj@chromium.org, olof@lixom.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 24, 2012 at 5:05 PM, Sebastian Riemer
-<sebastian.riemer@profitbricks.com> wrote:
-> Hi Corentin,
->
-> On 24.10.2012 17:24, Corentin Chary wrote:
->> samsung-laptop doesn't use ACPI, only SABI interface.
->
-> I thought it does for the video driver/backlight control. The strange
-> thing is that the issues start directly after loading the driver.
-> Perhaps it has to be blacklisted for this model.
+This adds the chromeos_laptop driver. It supports
+the Cypress APA SMBUS touchpad as well as the isl29018 i2c ambient
+light sensor on the Samsung Series 5 550 Chromebook.
 
-samsung-laptop talks to the bios directly using SABI. But the BIOS is
-also related to ACPI, so things can get ugly I guess...
+Signed-off-by: Benson Leung <bleung@chromium.org>
+Reviewed-by: Olof Johansson <olof@lixom.net>
+---
+Version history :
+v2 : * Added MODULE_DEVICE_TABLE for the dmi table.
+     * Made __init and __initdata position consistent across this file.
+     * Made prefix static const char *
+     * Made strncmp expressions more explicit
+     * Added an additional match for DMI_SYS_VENDOR for Samsung Lumpy.
+v1 : Initial
+---
+ drivers/platform/x86/Kconfig           |   11 ++
+ drivers/platform/x86/Makefile          |    1 +
+ drivers/platform/x86/chromeos_laptop.c |  205 ++++++++++++++++++++++++++++++++
+ 3 files changed, 217 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/platform/x86/chromeos_laptop.c
 
-> Kernel log:
->
-> samsung_laptop: detected SABI interface: SwSmi@
-> samsung_laptop: Backlight controlled by ACPI video driver
-> ACPI Warning: 0x000000000000efa0-0x000000000000efbf SystemIO conflicts
-> with Region \_SB_.PCI0.SBUS.SMBI 1 (20120711/utaddress-251)
-> ACPI: If an ACPI driver is available for this device, you should use it
-> instead of the native driver
-
-Hum can you try to blacklist samsung-laptop, load it manually, and
-send me the dmesg ?
-If possible with and without acpi_backlght=vendor boot parameter.
-
-> Where are the custom ACPI drivers in the kernel tree if not in
-> drivers/platform/x86 ?
-
-drivers/paltform/x86 contains x86 platform drivers, and some of them
-are ACPI drivers, but not all of them.
-
->> This looks like ACPI issues, please file a bug on bugzilla, but first
->> thing, check for bios updates :).
->
-> Which bugzilla? Sorry, I'm not an ACPI specialist.
-
-The linux kernel bugzilla. But before doing that, are this issues only
-hapenning when/if samsung-laptop is loaded ?
-Can you send me he output of:
-
-tree /sys/devices/platform/samsung-laptop/
-tree /sys/class/backlight
-
-Thanks
-
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c86bae8..12b8594 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -79,6 +79,17 @@ config ASUS_LAPTOP
+ 
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
++config CHROMEOS_LAPTOP
++	tristate "Chrome OS Laptop"
++	depends on I2C
++	depends on DMI
++	---help---
++	  This driver instantiates i2c and smbus devices such as
++	  light sensors and touchpads.
++
++	  If you have a supported Chromebook, choose Y or M here.
++	  The module will be called chromeos_laptop.
++
+ config DELL_LAPTOP
+ 	tristate "Dell Laptop Extras (EXPERIMENTAL)"
+ 	depends on X86
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index bf7e4f9..ace2b38 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -50,3 +50,4 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
++obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
+diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
+new file mode 100644
+index 0000000..a8329c3
+--- /dev/null
++++ b/drivers/platform/x86/chromeos_laptop.c
+@@ -0,0 +1,205 @@
++/*
++ *  chromeos_laptop.c - Driver to instantiate Chromebook i2c/smbus devices.
++ *
++ *  Author : Benson Leung <bleung@chromium.org>
++ *
++ *  Copyright (C) 2012 Google, Inc.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ */
++
++#include <linux/dmi.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++
++#define CYAPA_TP_I2C_ADDR	0x67
++#define ISL_ALS_I2C_ADDR	0x44
++
++static struct i2c_client *als;
++static struct i2c_client *tp;
++
++const char *i2c_adapter_names[] = {
++	"SMBus I801 adapter",
++};
++
++/* Keep this enum consistent with i2c_adapter_names */
++enum i2c_adapter_type {
++	I2C_ADAPTER_SMBUS = 0,
++};
++
++static struct i2c_board_info __initdata cyapa_device = {
++	I2C_BOARD_INFO("cyapa", CYAPA_TP_I2C_ADDR),
++	.flags		= I2C_CLIENT_WAKE,
++};
++
++static struct i2c_board_info __initdata isl_als_device = {
++	I2C_BOARD_INFO("isl29018", ISL_ALS_I2C_ADDR),
++};
++
++static struct i2c_client __init *__add_probed_i2c_device(
++		const char *name,
++		int bus,
++		struct i2c_board_info *info,
++		const unsigned short *addrs)
++{
++	const struct dmi_device *dmi_dev;
++	const struct dmi_dev_onboard *dev_data;
++	struct i2c_adapter *adapter;
++	struct i2c_client *client;
++
++	if (bus < 0)
++		return NULL;
++	/*
++	 * If a name is specified, look for irq platform information stashed
++	 * in DMI_DEV_TYPE_DEV_ONBOARD by the Chrome OS custom system firmware.
++	 */
++	if (name) {
++		dmi_dev = dmi_find_device(DMI_DEV_TYPE_DEV_ONBOARD, name, NULL);
++		if (!dmi_dev) {
++			pr_err("%s failed to dmi find device %s.\n",
++			       __func__,
++			       name);
++			return NULL;
++		}
++		dev_data = (struct dmi_dev_onboard *)dmi_dev->device_data;
++		if (!dev_data) {
++			pr_err("%s failed to get data from dmi for %s.\n",
++			       __func__, name);
++			return NULL;
++		}
++		info->irq = dev_data->instance;
++	}
++
++	adapter = i2c_get_adapter(bus);
++	if (!adapter) {
++		pr_err("%s failed to get i2c adapter %d.\n", __func__, bus);
++		return NULL;
++	}
++
++	/* add the i2c device */
++	client = i2c_new_probed_device(adapter, info, addrs, NULL);
++	if (!client)
++		pr_err("%s failed to register device %d-%02x\n",
++		       __func__, bus, info->addr);
++	else
++		pr_debug("%s added i2c device %d-%02x\n",
++			 __func__, bus, info->addr);
++
++	i2c_put_adapter(adapter);
++	return client;
++}
++
++static int __init __find_i2c_adap(struct device *dev, void *data)
++{
++	const char *name = data;
++	static const char *prefix = "i2c-";
++	struct i2c_adapter *adapter;
++	if (strncmp(dev_name(dev), prefix, strlen(prefix)) != 0)
++		return 0;
++	adapter = to_i2c_adapter(dev);
++	return (strncmp(adapter->name, name, strlen(name)) == 0);
++}
++
++static int __init find_i2c_adapter_num(enum i2c_adapter_type type)
++{
++	struct device *dev = NULL;
++	struct i2c_adapter *adapter;
++	const char *name = i2c_adapter_names[type];
++	/* find the adapter by name */
++	dev = bus_find_device(&i2c_bus_type, NULL, (void *)name,
++			      __find_i2c_adap);
++	if (!dev) {
++		pr_err("%s: i2c adapter %s not found on system.\n", __func__,
++		       name);
++		return -ENODEV;
++	}
++	adapter = to_i2c_adapter(dev);
++	return adapter->nr;
++}
++
++/*
++ * Probes for a device at a single address, the one provided by
++ * info->addr.
++ * Returns NULL if no device found.
++ */
++static struct i2c_client __init *add_smbus_device(const char *name,
++						  struct i2c_board_info *info)
++{
++	const unsigned short addr_list[] = { info->addr, I2C_CLIENT_END };
++	return __add_probed_i2c_device(name,
++				       find_i2c_adapter_num(I2C_ADAPTER_SMBUS),
++				       info,
++				       addr_list);
++}
++
++static int __init setup_lumpy_tp(const struct dmi_system_id *id)
++{
++	/* add cyapa touchpad on smbus */
++	tp = add_smbus_device("trackpad", &cyapa_device);
++	return 0;
++}
++
++static int __init setup_isl29018_als(const struct dmi_system_id *id)
++{
++	/* add isl29018 light sensor */
++	als = add_smbus_device("lightsensor", &isl_als_device);
++	return 0;
++}
++
++static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
++	{
++		.ident = "Samsung Series 5 550 - Touchpad",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Lumpy"),
++		},
++		.callback = setup_lumpy_tp,
++	},
++	{
++		.ident = "Samsung Series 5 550 - Light Sensor",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Lumpy"),
++		},
++		.callback = setup_isl29018_als,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(dmi, chromeos_laptop_dmi_table);
++
++static int __init chromeos_laptop_init(void)
++{
++	if (!dmi_check_system(chromeos_laptop_dmi_table)) {
++		pr_debug("%s unsupported system.\n", __func__);
++		return -ENODEV;
++	}
++	return 0;
++}
++
++static void __exit chromeos_laptop_exit(void)
++{
++	if (als)
++		i2c_unregister_device(als);
++	if (tp)
++		i2c_unregister_device(tp);
++}
++
++module_init(chromeos_laptop_init);
++module_exit(chromeos_laptop_exit);
++
++MODULE_DESCRIPTION("Chrome OS Laptop driver");
++MODULE_AUTHOR("Benson Leung <bleung@chromium.org>");
++MODULE_LICENSE("GPL");
 -- 
-Corentin Chary
-http://xf.iksaif.net
+1.7.7.3
