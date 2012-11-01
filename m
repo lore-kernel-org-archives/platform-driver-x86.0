@@ -1,48 +1,31 @@
-From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-Subject: How to implement ACPI EC support?
-Date: Wed, 31 Oct 2012 14:50:58 +0100
-Message-ID: <50912CC2.2050902@profitbricks.com>
+From: Coloquios Derecho Internacional 2012 <coloquios2012@udec.cl>
+Subject: Congratulation
+Date: Thu, 01 Nov 2012 09:57:38 +0530
+Message-ID: <ad01026d9cadc13e98d5ac997b156322@udec.cl>
+Reply-To: <bmclaimag@hotmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:63536 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933628Ab2JaNu6 (ORCPT
+Received: from mail.udec.cl ([152.74.16.12]:43259 "EHLO mail.udec.cl"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751087Ab2KAEeH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 31 Oct 2012 09:50:58 -0400
-Received: by mail-bk0-f46.google.com with SMTP id jk13so666684bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Oct 2012 06:50:57 -0700 (PDT)
+	Thu, 1 Nov 2012 00:34:07 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc: platform-driver-x86@vger.kernel.org
 
-Hi Henrique,
 
-I've noticed the ACPI embedded controller (EC) support in the
-"thinkpad_acpi" driver.
-
-New Samsung laptops (NP530U3C, NP900X4B, NP900X3C, ...) also have an EC
-which isn't supported by the generic ACPI driver. The lid, the battery
-status and the power supply status are connected to it.
-
-How did you implement the EC support in the thinkpad driver? Did you
-have documentation or was it done by reverse engineering?
-
-Could you have a look at the related kernel bugzilla bugs?:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D45461
-https://bugzilla.kernel.org/show_bug.cgi?id=3D44161
-
-Cheers,
-Sebastian
 
 --=20
-Sebastian Riemer
-Linux Kernel Developer - Storage
+Your E-mail ID Has Won =C2=A3:750,000.00. Great British Pounds In The B=
+MW
+Advert AWARD UK EMAIL PROMOTION, TO CLAIM FILL THE FORM BELLOW
 
-We are looking for (SENIOR) LINUX KERNEL DEVELOPERS!
-
-ProfitBricks GmbH =95 Greifswalder Str. 207 =95 10405 Berlin, Germany
-www.profitbricks.com =95 sebastian.riemer@profitbricks.com
+=46ull Names:------------
+Direct Phone No-------------
+Residential Address:----------
+Country:------------
+Age:-----------
+Nationality:---------------
