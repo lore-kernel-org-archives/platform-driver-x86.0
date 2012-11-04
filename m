@@ -1,69 +1,48 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH v2 1/1] Platform: x86: Add Chrome OS Laptop driver
-Date: Fri, 2 Nov 2012 13:32:03 +0000
-Message-ID: <CAHR064iC2WsKU3UBSTc1NpHJgXVLQmihgw3cP97xj7ya5ZBp9g@mail.gmail.com>
-References: <1341961393-17728-1-git-send-email-bleung@chromium.org>
-	<1351200081-19349-1-git-send-email-bleung@chromium.org>
-	<1351200081-19349-2-git-send-email-bleung@chromium.org>
-	<CAHR064jAfmmpf-p5Yh=SZWW31kr0JxcA3VNQrCTV=T9U48HQtw@mail.gmail.com>
-	<CAOesGMj3urrhy83o1aD4q3K0CqOL6ZrchknmdvgHDWkahavQQA@mail.gmail.com>
-	<CAHR064gM8sj75Mz1az4pS0wF3fEBcjWMvEjbYRF5pnDirhtjag@mail.gmail.com>
-	<CAOesGMhQTdpiRjFQDFRD2NaOjjFg7xVXNeyZ-nj9-1ZCpK2PQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:41611 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752568Ab2KBNcF (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 2 Nov 2012 09:32:05 -0400
-In-Reply-To: <CAOesGMhQTdpiRjFQDFRD2NaOjjFg7xVXNeyZ-nj9-1ZCpK2PQA@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Olof Johansson <olof@lixom.net>
-Cc: Benson Leung <bleung@chromium.org>, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, olofj@chromium.org
+From: Matt Fleming <matt-HNK1S37rvNbeXh+fF434Mdi2O/JbrIOy@public.gmane.org>
+Subject: [PATCH] samsung-laptop: Disable if CONFIG_EFI=y
+Date: Sun,  4 Nov 2012 17:35:06 +0000
+Message-ID: <1352050506-29317-1-git-send-email-matt@console-pimps.org>
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Crismani <alessandro.crismani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikhail Bakhterev <mike.bakhterev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrick H <kernel-0BLq+tI11CLk1uMJSBkQmQ@public.gmane.org>, Matt Fleming <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 2, 2012 at 1:09 PM, Olof Johansson <olof@lixom.net> wrote:
-> On Fri, Nov 2, 2012 at 2:03 PM, Corentin Chary <corentin.chary@gmail.com> wrote:
->> On Fri, Nov 2, 2012 at 12:45 PM, Olof Johansson <olof@lixom.net> wrote:
->>> On Fri, Oct 26, 2012 at 10:30 AM, Corentin Chary
->>> <corentin.chary@gmail.com> wrote:
->>>
->>>> Looks better, but I'm curious, what is the final purpose of this driver ?
->>>> What ABI will be exposed, who will use it ?
->>>>
->>>> If it is going to be bigger, it may be a good idea to convert it to a
->>>> real platform driver (platform_drivers/platform_device stuff).
->>>
->>> It's not a driver per se. It's platform glue that, based on the DMI
->>> table, registers platform and i2c devices (at this time only i2c
->>> devices).
->>>
->>> Unfortunately there's no way to do this nicely from userspace after
->>> boot, since there's limits to how much data you can provide with the
->>> simpler userspace-driven i2c probing protocol.
->>>
->>> So, there's no user-facing ABI on this, and no one is expected to use
->>> it from userspace. It's just there to make sure that the un-probably
->>> devices on this kind of hardware gets bound to drivers properly.
->>>
->>> If it's converted to a platform_driver, how do you expect that to
->>> probe, where would the platform_device be registered?
->>
->> I guess I would check dmi in the module init method, and then use the
->> probe callback of platform_create_bundle to do more probing if
->> necessary.
->
-> Maybe I'm dense but I don't see how that could possibly be better than
-> what the code does today. It would just add more overhead and clutter
-> by creating a unnecessary dummy device/driver setup just to, in the
-> end, register the same i2c devices.
->
+From: Matt Fleming <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Well that was the point of "If it is going to be bigger".
-Of course, as long as it only register those i2c devices, it doesn't
-really matter.
+We've started getting reports of users seeing Machine Check Exceptions
+when booting their Samsung laptops in UEFI mode,
 
---
-Corentin Chary
-http://xf.iksaif.net
+     https://bugzilla.kernel.org/show_bug.cgi?id=47121
+
+This module seems to be the culprit as it's grovelling around in the
+0xf0000 region which has no mapping in either the e820 or EFI memory
+maps on the affected machines.
+
+Reported-by: Alessandro Crismani <alessandro.crismani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reported-by: Mikhail Bakhterev <mike.bakhterev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Patrick H <kernel-0BLq+tI11CLk1uMJSBkQmQ@public.gmane.org>
+Cc: H. Peter Anvin <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>
+Cc: Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Fleming <matt.fleming-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c86bae8..0fe5200 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -717,7 +717,7 @@ config XO15_EBOOK
+ 
+ config SAMSUNG_LAPTOP
+ 	tristate "Samsung Laptop driver"
+-	depends on X86
++	depends on X86 && !EFI
+ 	depends on RFKILL || RFKILL = n
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	select LEDS_CLASS
+-- 
+1.7.11.7
