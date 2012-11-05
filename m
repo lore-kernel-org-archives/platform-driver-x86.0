@@ -1,44 +1,38 @@
-From: Matt Fleming <matt-HNK1S37rvNbeXh+fF434Mdi2O/JbrIOy@public.gmane.org>
+From: Corentin Chary <corentincj@iksaif.net>
 Subject: Re: [PATCH] samsung-laptop: Disable if CONFIG_EFI=y
-Date: Sun, 04 Nov 2012 20:58:44 +0000
-Message-ID: <1352062724.14888.206.camel@mfleming-mobl1.ger.corp.intel.com>
+Date: Mon, 5 Nov 2012 09:12:01 +0000
+Message-ID: <CAHR064jwe=diZ9B-D+-SroCW1ZevkRDMosB7uDuc2VXZkFxmdA@mail.gmail.com>
 References: <1352050506-29317-1-git-send-email-matt@console-pimps.org>
-	 <20121104174713.GA28414@elie.Belkin>
+	<CAHR064isMXk8qkqhBJ==9sRRP7xC_j_K5rqXApza-LNkosp5mg@mail.gmail.com>
+	<20121104193741.7b4ca37b@pyramind.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121104174713.GA28414-fcEM2ccDkbL2nhBuCrrZHw@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Nieder <jrnieder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>, Matthew Garrett <mjg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Crismani <alessandro.crismani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikhail Bakhterev <mike.bakhterev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrick H <kernel-0BLq+tI11CLk1uMJSBkQmQ@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121104193741.7b4ca37b@pyramind.ukuu.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Matt Fleming <matt@console-pimps.org>, Matthew Garrett <mjg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-efi@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alessandro Crismani <alessandro.crismani@gmail.com>, Mikhail Bakhterev <mike.bakhterev@gmail.com>, Patrick H <kernel@feystorm.net>, Matt Fleming <matt.fleming@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 2012-11-04 at 09:47 -0800, Jonathan Nieder wrote:
-> Matt Fleming wrote:
-> 
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -717,7 +717,7 @@ config XO15_EBOOK
-> > 
-> >  config SAMSUNG_LAPTOP
-> >  	tristate "Samsung Laptop driver"
-> > -	depends on X86
-> > +	depends on X86 && !EFI
-> 
-> That means distros would just not get the samsung-laptop driver.
-> Is there a runtime check that could be used instead?
+On Sun, Nov 4, 2012 at 7:37 PM, Alan Cox <alan@lxorguk.ukuu.org.uk> wrote:
+>> Acked-by: Corentin Chary <corentin.chary@gmail.com>
+>
+> This is totally bogus and prevents users build a kernel which can work in
+> either mode. As such its a regression.
 
-Well, the closest thing we have at the moment is the 'efi_enabled'
-variable, but that doesn't actually mean "We were booted from EFI?", it
-means "Do we have EFI runtime services?", and that's not a broad enough
-check for this case. We don't have access to the EFI runtime services
-when a 64-bit kernel is booted from 32-bit EFI firmware or vice-versa.
-Notably the chromebooks use this scheme. And seeing as Samsung make
-chromebooks, I'm not convinced we won't hit that case.
+Arg.. Sorry for that, I didn't realized that CONFIG_EFI=y was not
+something rare these days.
 
-But yeah, you've got a valid point. Clearly we need a way to check this
-at runtime. I'll repsin this patch.
+> Do the detection check at runtime. If it was booted via EFI then don't
+> grovel in places you shouldn't. Indeed its possible EFI should reserve
+> those memory regions ?
 
--- 
-Matt Fleming, Intel Open Source Technology Center
+I wonder how the windows driver works in this case.. Maybe they use
+something completly different, and the SABI interface is still there
+because nobody removed/disabled it ? In this case it's probably not a
+good idea to use it on these machines since the implementation is
+likely to be completly broken.
+
+--
+Corentin Chary
+http://xf.iksaif.net
