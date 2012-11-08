@@ -1,76 +1,63 @@
-From: Matt Fleming <matt@console-pimps.org>
-Subject: Re: [PATCH] samsung-laptop: Disable if CONFIG_EFI=y
-Date: Mon, 05 Nov 2012 12:13:21 +0000
-Message-ID: <1352117601.14888.278.camel@mfleming-mobl1.ger.corp.intel.com>
-References: <1352050506-29317-1-git-send-email-matt@console-pimps.org>
-	 <CAHR064isMXk8qkqhBJ==9sRRP7xC_j_K5rqXApza-LNkosp5mg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] asus-wmi: preserve the bt rfkill status if wapf=4
+Date: Thu,  8 Nov 2012 11:39:07 +0800
+Message-ID: <1352345948-13924-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194]:42247 "EHLO
-	arkanian.console-pimps.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752059Ab2KEMNZ (ORCPT
+Received: from mail-pa0-f46.google.com ([209.85.220.46]:48337 "EHLO
+	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753836Ab2KHDjN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 Nov 2012 07:13:25 -0500
-In-Reply-To: <CAHR064isMXk8qkqhBJ==9sRRP7xC_j_K5rqXApza-LNkosp5mg@mail.gmail.com>
+	Wed, 7 Nov 2012 22:39:13 -0500
+Received: by mail-pa0-f46.google.com with SMTP id hz1so1652436pad.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Nov 2012 19:39:12 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentincj@iksaif.net>
-Cc: Matthew Garrett <mjg@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-efi@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alessandro Crismani <alessandro.crismani@gmail.com>, Mikhail Bakhterev <mike.bakhterev@gmail.com>, Patrick H <kernel@feystorm.net>, "H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Corentin Chary <corentincj@iksaif.net>
 
-On Sun, 2012-11-04 at 17:44 +0000, Corentin Chary wrote:
-> On Sun, Nov 4, 2012 at 5:35 PM, Matt Fleming <matt@console-pimps.org> wrote:
-> > From: Matt Fleming <matt.fleming@intel.com>
-> >
-> > We've started getting reports of users seeing Machine Check Exceptions
-> > when booting their Samsung laptops in UEFI mode,
-> >
-> >      https://bugzilla.kernel.org/show_bug.cgi?id=47121
-> >
-> > This module seems to be the culprit as it's grovelling around in the
-> > 0xf0000 region which has no mapping in either the e820 or EFI memory
-> > maps on the affected machines.
-> >
-> > Reported-by: Alessandro Crismani <alessandro.crismani@gmail.com>
-> > Reported-by: Mikhail Bakhterev <mike.bakhterev@gmail.com>
-> > Tested-by: Patrick H <kernel@feystorm.net>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Matthew Garrett <mjg@redhat.com>
-> > Cc: Corentin Chary <corentincj@iksaif.net>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Matt Fleming <matt.fleming@intel.com>
-> > ---
-> >  drivers/platform/x86/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index c86bae8..0fe5200 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -717,7 +717,7 @@ config XO15_EBOOK
-> >
-> >  config SAMSUNG_LAPTOP
-> >         tristate "Samsung Laptop driver"
-> > -       depends on X86
-> > +       depends on X86 && !EFI
-> >         depends on RFKILL || RFKILL = n
-> >         depends on BACKLIGHT_CLASS_DEVICE
-> >         select LEDS_CLASS
-> > --
-> > 1.7.11.7
-> >
-> 
-> Acked-by: Corentin Chary <corentin.chary@gmail.com>
-> 
-> Matthew could you merge this in your tree ? Thanks.
-> 
-> Matt, any idea if SABI doesn't exist on these machines, or is just
-> mapped somewhere else ?
-> By any luck, could Samsung tell you how to safely detect SABI aware machines ?
+When wapf=4, BIOS won't resotre the wlan/bt rfkill status after resume or
+reboot. And when wapf=4, the bt rfkill status will be stored in the same
+place as wlan in the BIOS.
+Without this patch, bt status will be always on after reboot or resume.
 
-I don't know whether or not SABI exists on these machines and I don't
-have one of them to try and figure that out, sorry.
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 18f5169..a317f44 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -334,6 +334,9 @@ static int asus_wmi_get_devstate_bits(struct asus_wmi *asus,
+ 
+ static int asus_wmi_get_devstate_simple(struct asus_wmi *asus, u32 dev_id)
+ {
++	/* BT status will be stored in WLAN if wapf is 4. */
++	if (dev_id == ASUS_WMI_DEVID_BLUETOOTH && asus->driver->quirks->wapf == 4)
++		dev_id = ASUS_WMI_DEVID_WLAN;
+ 	return asus_wmi_get_devstate_bits(asus, dev_id,
+ 					  ASUS_WMI_DSTS_STATUS_BIT);
+ }
+@@ -1875,6 +1878,12 @@ static int asus_hotk_restore(struct device *device)
+ 	if (asus->bluetooth.rfkill) {
+ 		bl = !asus_wmi_get_devstate_simple(asus,
+ 						   ASUS_WMI_DEVID_BLUETOOTH);
++		if (asus->driver->quirks->wapf == 4)
++		{
++			mutex_lock(&asus->wmi_lock);
++			asus_rfkill_set(&asus->bluetooth, bl);
++			mutex_unlock(&asus->wmi_lock);
++		}
+ 		rfkill_set_sw_state(asus->bluetooth.rfkill, bl);
+ 	}
+ 	if (asus->wimax.rfkill) {
+@@ -1900,6 +1909,7 @@ static int asus_hotk_restore(struct device *device)
+ static const struct dev_pm_ops asus_pm_ops = {
+ 	.thaw = asus_hotk_thaw,
+ 	.restore = asus_hotk_restore,
++	.resume = asus_hotk_restore,
+ };
+ 
+ static int asus_wmi_probe(struct platform_device *pdev)
 -- 
-Matt Fleming, Intel Open Source Technology Center
+1.7.10.4
