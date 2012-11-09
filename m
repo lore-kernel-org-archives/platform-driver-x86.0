@@ -1,84 +1,87 @@
-From: Corentin Chary <corentincj@iksaif.net>
-Subject: Re: [PATCH] asus-wmi: preserve the bt rfkill status if wapf=4
-Date: Thu, 8 Nov 2012 09:21:37 +0000
-Message-ID: <CAHR064gMm26w9hv9urWYCm=oY7hUCZ8tqBm5+UC09+DXwOO_NQ@mail.gmail.com>
-References: <1352345948-13924-1-git-send-email-acelan.kao@canonical.com>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] asus-laptop: Do not call HWRS on init
+Date: Fri, 9 Nov 2012 09:12:40 +0000
+Message-ID: <CAHR064jyoG1A0NRpTPAqOF_1sVRdcM6kn0GQLx+j8UBY8kuaSw@mail.gmail.com>
+References: <1352430453.4728.59.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:44691 "EHLO
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:47753 "EHLO
 	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751580Ab2KHJVj (ORCPT
+	with ESMTP id S1750881Ab2KIJMm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Nov 2012 04:21:39 -0500
-Received: by mail-bk0-f46.google.com with SMTP id jk13so1053382bkc.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Nov 2012 01:21:38 -0800 (PST)
-In-Reply-To: <1352345948-13924-1-git-send-email-acelan.kao@canonical.com>
+	Fri, 9 Nov 2012 04:12:42 -0500
+In-Reply-To: <1352430453.4728.59.camel@deadeye.wl.decadent.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: 692436@bugs.debian.org, ryan <draziw+deb@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, stable@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg@redhat.com>
 
-Hi,
-
-On Thu, Nov 8, 2012 at 3:39 AM, AceLan Kao <acelan.kao@canonical.com> wrote:
-> When wapf=4, BIOS won't resotre the wlan/bt rfkill status after resume or
-> reboot. And when wapf=4, the bt rfkill status will be stored in the same
-> place as wlan in the BIOS.
-> Without this patch, bt status will be always on after reboot or resume.
-
-Is this part of a spec from Asus, or just something that happens to
-work on a specific machine ?
-
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+On Fri, Nov 9, 2012 at 3:07 AM, Ben Hutchings <ben@decadent.org.uk> wrote:
+> Since commit 8871e99f89b7 ('asus-laptop: HRWS/HWRS typo'), module
+> initialisation is very slow on the Asus UL30A.  The HWRS method takes
+> about 12 seconds to run, and subsequent initialisation also seems to
+> be delayed.  Since we don't really need the result, don't bother
+> calling it on init.  Those who are curious can still get the result
+> through the 'infos' device attribute.
+>
+> Update the comment about HWRS in show_infos().
+>
+> Reported-by: ryan <draziw+deb@gmail.com>
+> References: http://bugs.debian.org/692436
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> Cc: <stable@vger.kernel.org> # v3.0+
 > ---
->  drivers/platform/x86/asus-wmi.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/platform/x86/asus-laptop.c |   17 ++++-------------
+>  1 file changed, 4 insertions(+), 13 deletions(-)
 >
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 18f5169..a317f44 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -334,6 +334,9 @@ static int asus_wmi_get_devstate_bits(struct asus_wmi *asus,
->
->  static int asus_wmi_get_devstate_simple(struct asus_wmi *asus, u32 dev_id)
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+> index 4b568df..a961156 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -860,8 +860,10 @@ static ssize_t show_infos(struct device *dev,
+>         /*
+>          * The HWRS method return informations about the hardware.
+>          * 0x80 bit is for WLAN, 0x100 for Bluetooth.
+> +        * 0x40 for WWAN, 0x10 for WIMAX.
+>          * The significance of others is yet to be found.
+> -        * If we don't find the method, we assume the device are present.
+> +        * We don't currently use this for device detection, and it
+> +        * takes several seconds to run on some systems.
+>          */
+>         rv = acpi_evaluate_integer(asus->handle, "HWRS", NULL, &temp);
+>         if (!ACPI_FAILURE(rv))
+> @@ -1682,7 +1684,7 @@ static int asus_laptop_get_info(struct asus_laptop *asus)
 >  {
-> +       /* BT status will be stored in WLAN if wapf is 4. */
-> +       if (dev_id == ASUS_WMI_DEVID_BLUETOOTH && asus->driver->quirks->wapf == 4)
-> +               dev_id = ASUS_WMI_DEVID_WLAN;
->         return asus_wmi_get_devstate_bits(asus, dev_id,
->                                           ASUS_WMI_DSTS_STATUS_BIT);
->  }
-> @@ -1875,6 +1878,12 @@ static int asus_hotk_restore(struct device *device)
->         if (asus->bluetooth.rfkill) {
->                 bl = !asus_wmi_get_devstate_simple(asus,
->                                                    ASUS_WMI_DEVID_BLUETOOTH);
-> +               if (asus->driver->quirks->wapf == 4)
-> +               {
-> +                       mutex_lock(&asus->wmi_lock);
-> +                       asus_rfkill_set(&asus->bluetooth, bl);
-> +                       mutex_unlock(&asus->wmi_lock);
-> +               }
->                 rfkill_set_sw_state(asus->bluetooth.rfkill, bl);
->         }
->         if (asus->wimax.rfkill) {
-> @@ -1900,6 +1909,7 @@ static int asus_hotk_restore(struct device *device)
->  static const struct dev_pm_ops asus_pm_ops = {
->         .thaw = asus_hotk_thaw,
->         .restore = asus_hotk_restore,
-> +       .resume = asus_hotk_restore,
->  };
+>         struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>         union acpi_object *model = NULL;
+> -       unsigned long long bsts_result, hwrs_result;
+> +       unsigned long long bsts_result;
+>         char *string = NULL;
+>         acpi_status status;
 >
->  static int asus_wmi_probe(struct platform_device *pdev)
-> --
-> 1.7.10.4
+> @@ -1744,17 +1746,6 @@ static int asus_laptop_get_info(struct asus_laptop *asus)
+>         if (*string)
+>                 pr_notice("  %s model detected\n", string);
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -       /*
+> -        * The HWRS method return informations about the hardware.
+> -        * 0x80 bit is for WLAN, 0x100 for Bluetooth,
+> -        * 0x40 for WWAN, 0x10 for WIMAX.
+> -        * The significance of others is yet to be found.
+> -        */
+> -       status =
+> -           acpi_evaluate_integer(asus->handle, "HWRS", NULL, &hwrs_result);
+> -       if (!ACPI_FAILURE(status))
+> -               pr_notice("  HWRS returned %x", (int)hwrs_result);
+> -
+>         if (!acpi_check_handle(asus->handle, METHOD_WL_STATUS, NULL))
+>                 asus->have_rsts = true;
+>
+>
+>
 
-
+Acked-by: Corentin Chary <corentin.chary@gmail.com>
 
 --
 Corentin Chary
