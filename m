@@ -1,117 +1,244 @@
 From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: [PATCH 5/6] msi-laptop: Add missing ABI documentation
-Date: Sun, 25 Nov 2012 00:29:00 +0200
-Message-ID: <1353796141-1470-6-git-send-email-maxtram95@gmail.com>
+Subject: [PATCH 6/6] Add MSI Wind WMI support
+Date: Sun, 25 Nov 2012 00:29:01 +0200
+Message-ID: <1353796141-1470-7-git-send-email-maxtram95@gmail.com>
 References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from mail-ea0-f174.google.com ([209.85.215.174]:51195 "EHLO
 	mail-ea0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752502Ab2KXW3Y (ORCPT
+	with ESMTP id S1752502Ab2KXW30 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 24 Nov 2012 17:29:24 -0500
+	Sat, 24 Nov 2012 17:29:26 -0500
 Received: by mail-ea0-f174.google.com with SMTP id e13so3959552eaa.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Nov 2012 14:29:23 -0800 (PST)
+        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Nov 2012 14:29:25 -0800 (PST)
 In-Reply-To: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, jlee@novell.com, mjg@redhat.com
 Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
 
+Create a driver to support WMI found on MSI Wind laptops. This driver
+allows us to receive some additional keycodes for keys that are not
+handled without this driver.
 
 Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 ---
- .../ABI/testing/sysfs-platform-msi-laptop          | 83 ++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-msi-laptop
+ drivers/platform/x86/Kconfig        |  13 +++
+ drivers/platform/x86/Makefile       |   1 +
+ drivers/platform/x86/msi-wind-wmi.c | 169 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 183 insertions(+)
+ create mode 100644 drivers/platform/x86/msi-wind-wmi.c
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-msi-laptop b/Documentation/ABI/testing/sysfs-platform-msi-laptop
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c86bae8..46f269e5 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -561,6 +561,19 @@ config MSI_WMI
+ 	 To compile this driver as a module, choose M here: the module will
+ 	 be called msi-wmi.
+ 
++config MSI_WIND_WMI
++	tristate "MSI Wind WMI Driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	---help---
++	 Say Y here if you want to support WMI-based hotkeys on MSI Wind
++	 laptops. MSI Wind WMI differs from WMI found on other MSI laptops, so
++	 say Y here if you have MSI Wind, otherwise select "MSI WMI extras".
++
++	 To compile this driver as a module, choose M here: the module will
++	 be called msi-wind-wmi.
++
+ config TOPSTAR_LAPTOP
+ 	tristate "Topstar Laptop Extras"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index bf7e4f9..44389c0 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
+ obj-$(CONFIG_ACPI_WMI)		+= wmi.o
+ obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
+ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
++obj-$(CONFIG_MSI_WIND_WMI)	+= msi-wind-wmi.o
+ 
+ # toshiba_acpi must link after wmi to ensure that wmi devices are found
+ # before toshiba_acpi initializes
+diff --git a/drivers/platform/x86/msi-wind-wmi.c b/drivers/platform/x86/msi-wind-wmi.c
 new file mode 100644
-index 0000000..f621027
+index 0000000..4f19434
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-msi-laptop
-@@ -0,0 +1,83 @@
-+What:		/sys/devices/platform/msi-laptop-pf/lcd_level
-+Date:		Oct 2006
-+KernelVersion:	2.6.19
-+Contact:	"Lennart Poettering <mzxreary@0pointer.de>"
-+Description:
-+		Screen brightness: contains a single integer in the range 0..8.
++++ b/drivers/platform/x86/msi-wind-wmi.c
+@@ -0,0 +1,169 @@
++/*
++ * MSI Wind WMI hotkeys
++ *
++ * Copyright (C) 2012 Maxim Mikityanskiy <maxtram95@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ */
 +
-+What:		/sys/devices/platform/msi-laptop-pf/auto_brightness
-+Date:		Oct 2006
-+KernelVersion:	2.6.19
-+Contact:	"Lennart Poettering <mzxreary@0pointer.de>"
-+Description:
-+		Enable automatic brightness control: contains either 0 or 1. If
-+		set to 1 the hardware adjusts the screen brightness
-+		automatically when the power cord is plugged/unplugged.
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+What:		/sys/devices/platform/msi-laptop-pf/wlan
-+Date:		Oct 2006
-+KernelVersion:	2.6.19
-+Contact:	"Lennart Poettering <mzxreary@0pointer.de>"
-+Description:
-+		WLAN subsystem enabled: contains either 0 or 1.
++#include <linux/module.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/acpi.h>
 +
-+What:		/sys/devices/platform/msi-laptop-pf/bluetooth
-+Date:		Oct 2006
-+KernelVersion:	2.6.19
-+Contact:	"Lennart Poettering <mzxreary@0pointer.de>"
-+Description:
-+		Bluetooth subsystem enabled: contains either 0 or 1. Please
-+		note that this file is constantly 0 if no Bluetooth hardware is
-+		available.
++MODULE_AUTHOR("Maxim Mikityanskiy <maxtram95@gmail.com>");
++MODULE_DESCRIPTION("MSI Wind laptop WMI hotkeys driver");
++MODULE_LICENSE("GPL");
 +
-+What:		/sys/devices/platform/msi-laptop-pf/touchpad
-+Date:		Nov 2012
-+KernelVersion:	3.7
-+Contact:	"Maxim Mikityanskiy <maxtram95@gmail.com>"
-+Description:
-+		Contains either 0 or 1 and indicates if touchpad is turned on.
-+		Touchpad state can only be toggled by pressing Fn+F3.
++#define WMI_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
 +
-+What:		/sys/devices/platform/msi-laptop-pf/turbo_mode
-+Date:		Nov 2012
-+KernelVersion:	3.7
-+Contact:	"Maxim Mikityanskiy <maxtram95@gmail.com>"
-+Description:
-+		Contains either 0 or 1 and indicates if turbo mode is turned
-+		on. In turbo mode power LED is orange and processor is
-+		overclocked. Turbo mode is available only if charging. It is
-+		only possible to toggle turbo mode state by pressing Fn+F10,
-+		and there is a few seconds cooldown between subsequent toggles.
-+		If user presses Fn+F10 too frequent, turbo mode state is not
-+		changed.
++MODULE_ALIAS("wmi:" WMI_EVENT_GUID);
 +
-+What:		/sys/devices/platform/msi-laptop-pf/eco_mode
-+Date:		Nov 2012
-+KernelVersion:	3.7
-+Contact:	"Maxim Mikityanskiy <maxtram95@gmail.com>"
-+Description:
-+		Contains either 0 or 1 and indicates if ECO mode is turned on.
-+		In ECO mode power LED is green and userspace should do some
-+		powersaving actions. ECO mode is available only on battery
-+		power. ECO mode can only be toggled by pressing Fn+F10.
++/* Fn+F3 touchpad toggle */
++#define WIND_KEY_TOUCHPAD	0x08
++/* Fn+F11 Bluetooth toggle */
++#define WIND_KEY_BLUETOOTH	0x56
++/* Fn+F6 webcam toggle */
++#define WIND_KEY_CAMERA		0x57
++/* Fn+F11 Wi-Fi toggle */
++#define WIND_KEY_WLAN		0x5f
++/* Fn+F10 turbo mode toggle */
++#define WIND_KEY_TURBO		0x60
++/* Fn+F10 ECO mode toggle */
++#define WIND_KEY_ECO		0x69
 +
-+What:		/sys/devices/platform/msi-laptop-pf/turbo_cooldown
-+Date:		Nov 2012
-+KernelVersion:	3.7
-+Contact:	"Maxim Mikityanskiy <maxtram95@gmail.com>"
-+Description:
-+		Contains value in range 0..3:
-+			* 0 -> Turbo mode is off
-+			* 1 -> Turbo mode is on, cannot be turned off yet
-+			* 2 -> Turbo mode is off, cannot be turned on yet
-+			* 3 -> Turbo mode is on
++static struct key_entry wind_keymap[] = {
++	/* These keys work without WMI. Ignore them to avoid double keycodes */
++	{ KE_IGNORE, WIND_KEY_TOUCHPAD,		{ KEY_TOUCHPAD_TOGGLE } },
++	{ KE_IGNORE, WIND_KEY_BLUETOOTH,	{ KEY_BLUETOOTH } },
++	{ KE_IGNORE, WIND_KEY_CAMERA,		{ KEY_CAMERA } },
++	{ KE_IGNORE, WIND_KEY_WLAN,		{ KEY_WLAN } },
++	/* These are keys that should be handled via WMI */
++	{ KE_KEY,    WIND_KEY_TURBO,		{ KEY_PROG1 } },
++	{ KE_KEY,    WIND_KEY_ECO,		{ KEY_PROG2 } },
++	{ KE_END, 0 }
++};
 +
-+What:		/sys/devices/platform/msi-laptop-pf/auto_fan
-+Date:		Nov 2012
-+KernelVersion:	3.7
-+Contact:	"Maxim Mikityanskiy <maxtram95@gmail.com>"
-+Description:
-+		Contains either 0 or 1 and indicates if fan speed is controlled
-+		automatically (1) or fan runs at maximal speed (0). Can be
-+		toggled in software.
++static struct input_dev *wind_input_dev;
 +
++static void wind_wmi_notify(u32 value, void *context)
++{
++	struct acpi_buffer response = {
++		.length		= ACPI_ALLOCATE_BUFFER,
++		.pointer	= NULL
++	};
++	acpi_status status = wmi_get_event_data(value, &response);
++	union acpi_object *obj = response.pointer;
++	int code;
++
++	if (status != AE_OK) {
++		pr_warn("Bad event status %#x\n", status);
++		return;
++	}
++
++	if (!obj || obj->type != ACPI_TYPE_INTEGER) {
++		pr_warn("Unknown event received\n");
++		goto wind_wmi_notify_free;
++	}
++
++	code = obj->integer.value;
++	pr_debug("Event code: %#x\n", code);
++
++	if (code == 0x00 || code == 0x62 || code == 0x63) {
++		/* Unknown events - drop them for now */
++		goto wind_wmi_notify_free;
++	}
++
++	if (!sparse_keymap_report_event(wind_input_dev, code, 1, true))
++		pr_warn("Unknown key %#x pressed\n", code);
++
++wind_wmi_notify_free:
++	kfree(response.pointer);
++}
++
++static int __init wind_input_setup(void)
++{
++	int err;
++
++	wind_input_dev = input_allocate_device();
++	if (!wind_input_dev)
++		return -ENOMEM;
++
++	wind_input_dev->name = "MSI WMI hotkeys";
++	wind_input_dev->phys = "wmi/input0";
++	wind_input_dev->id.bustype = BUS_HOST;
++
++	err = sparse_keymap_setup(wind_input_dev, wind_keymap, NULL);
++	if (err)
++		goto wind_input_setup_free_dev;
++
++	err = input_register_device(wind_input_dev);
++	if (err)
++		goto wind_input_setup_free_keymap;
++
++	return 0;
++
++wind_input_setup_free_keymap:
++	sparse_keymap_free(wind_input_dev);
++wind_input_setup_free_dev:
++	input_free_device(wind_input_dev);
++	return err;
++}
++
++static int __init wind_wmi_init(void)
++{
++	int err;
++
++	if (!wmi_has_guid(WMI_EVENT_GUID)) {
++		pr_err("No MSI Wind WMI found\n");
++		return -ENODEV;
++	}
++
++	err = wind_input_setup();
++	if (err) {
++		pr_err("Unable to setup input device\n");
++		return err;
++	}
++
++	if (ACPI_FAILURE(wmi_install_notify_handler(WMI_EVENT_GUID,
++		wind_wmi_notify, NULL))) {
++		pr_err("Unable to install WMI notify handler\n");
++		err = -EIO;
++		goto wind_wmi_init_unregister_input;
++	}
++
++	pr_debug("Event handler installed\n");
++
++	return 0;
++
++wind_wmi_init_unregister_input:
++	input_unregister_device(wind_input_dev);
++	sparse_keymap_free(wind_input_dev);
++	input_free_device(wind_input_dev);
++	return err;
++}
++
++static void __exit wind_wmi_exit(void)
++{
++	wmi_remove_notify_handler(WMI_EVENT_GUID);
++	input_unregister_device(wind_input_dev);
++	sparse_keymap_free(wind_input_dev);
++	input_free_device(wind_input_dev);
++}
++
++module_init(wind_wmi_init);
++module_exit(wind_wmi_exit);
 -- 
 1.8.0
