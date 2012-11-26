@@ -1,244 +1,99 @@
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: [PATCH 6/6] Add MSI Wind WMI support
-Date: Sun, 25 Nov 2012 00:29:01 +0200
-Message-ID: <1353796141-1470-7-git-send-email-maxtram95@gmail.com>
-References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
+From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
+Subject: Re: Acer Aspire 5733 - acer_wmi problems
+Date: Mon, 26 Nov 2012 10:59:35 +0100
+Message-ID: <50B33D87.9080904@profitbricks.com>
+References: <50AFD2B6.6050502@justinzane.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f174.google.com ([209.85.215.174]:51195 "EHLO
-	mail-ea0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752502Ab2KXW30 (ORCPT
+Received: from mail-lb0-f174.google.com ([209.85.217.174]:56837 "EHLO
+	mail-lb0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753371Ab2KZJ7Y (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 24 Nov 2012 17:29:26 -0500
-Received: by mail-ea0-f174.google.com with SMTP id e13so3959552eaa.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Nov 2012 14:29:25 -0800 (PST)
-In-Reply-To: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
+	Mon, 26 Nov 2012 04:59:24 -0500
+Received: by mail-lb0-f174.google.com with SMTP id gi11so5504303lbb.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Nov 2012 01:59:23 -0800 (PST)
+In-Reply-To: <50AFD2B6.6050502@justinzane.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, jlee@novell.com, mjg@redhat.com
-Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+To: Justin Chudgar <justin@justinzane.com>
+Cc: platform-driver-x86@vger.kernel.org, joeyli <jlee@suse.com>
 
-Create a driver to support WMI found on MSI Wind laptops. This driver
-allows us to receive some additional keycodes for keys that are not
-handled without this driver.
+Hi Justin,
 
-Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
----
- drivers/platform/x86/Kconfig        |  13 +++
- drivers/platform/x86/Makefile       |   1 +
- drivers/platform/x86/msi-wind-wmi.c | 169 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
- create mode 100644 drivers/platform/x86/msi-wind-wmi.c
+the disassembled DSDT always helps as a first step.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c86bae8..46f269e5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -561,6 +561,19 @@ config MSI_WMI
- 	 To compile this driver as a module, choose M here: the module will
- 	 be called msi-wmi.
- 
-+config MSI_WIND_WMI
-+	tristate "MSI Wind WMI Driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	---help---
-+	 Say Y here if you want to support WMI-based hotkeys on MSI Wind
-+	 laptops. MSI Wind WMI differs from WMI found on other MSI laptops, so
-+	 say Y here if you have MSI Wind, otherwise select "MSI WMI extras".
-+
-+	 To compile this driver as a module, choose M here: the module will
-+	 be called msi-wind-wmi.
-+
- config TOPSTAR_LAPTOP
- 	tristate "Topstar Laptop Extras"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index bf7e4f9..44389c0 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
- obj-$(CONFIG_ACPI_WMI)		+= wmi.o
- obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
- obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
-+obj-$(CONFIG_MSI_WIND_WMI)	+= msi-wind-wmi.o
- 
- # toshiba_acpi must link after wmi to ensure that wmi devices are found
- # before toshiba_acpi initializes
-diff --git a/drivers/platform/x86/msi-wind-wmi.c b/drivers/platform/x86/msi-wind-wmi.c
-new file mode 100644
-index 0000000..4f19434
---- /dev/null
-+++ b/drivers/platform/x86/msi-wind-wmi.c
-@@ -0,0 +1,169 @@
-+/*
-+ * MSI Wind WMI hotkeys
-+ *
-+ * Copyright (C) 2012 Maxim Mikityanskiy <maxtram95@gmail.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/module.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/acpi.h>
-+
-+MODULE_AUTHOR("Maxim Mikityanskiy <maxtram95@gmail.com>");
-+MODULE_DESCRIPTION("MSI Wind laptop WMI hotkeys driver");
-+MODULE_LICENSE("GPL");
-+
-+#define WMI_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
-+
-+MODULE_ALIAS("wmi:" WMI_EVENT_GUID);
-+
-+/* Fn+F3 touchpad toggle */
-+#define WIND_KEY_TOUCHPAD	0x08
-+/* Fn+F11 Bluetooth toggle */
-+#define WIND_KEY_BLUETOOTH	0x56
-+/* Fn+F6 webcam toggle */
-+#define WIND_KEY_CAMERA		0x57
-+/* Fn+F11 Wi-Fi toggle */
-+#define WIND_KEY_WLAN		0x5f
-+/* Fn+F10 turbo mode toggle */
-+#define WIND_KEY_TURBO		0x60
-+/* Fn+F10 ECO mode toggle */
-+#define WIND_KEY_ECO		0x69
-+
-+static struct key_entry wind_keymap[] = {
-+	/* These keys work without WMI. Ignore them to avoid double keycodes */
-+	{ KE_IGNORE, WIND_KEY_TOUCHPAD,		{ KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_IGNORE, WIND_KEY_BLUETOOTH,	{ KEY_BLUETOOTH } },
-+	{ KE_IGNORE, WIND_KEY_CAMERA,		{ KEY_CAMERA } },
-+	{ KE_IGNORE, WIND_KEY_WLAN,		{ KEY_WLAN } },
-+	/* These are keys that should be handled via WMI */
-+	{ KE_KEY,    WIND_KEY_TURBO,		{ KEY_PROG1 } },
-+	{ KE_KEY,    WIND_KEY_ECO,		{ KEY_PROG2 } },
-+	{ KE_END, 0 }
-+};
-+
-+static struct input_dev *wind_input_dev;
-+
-+static void wind_wmi_notify(u32 value, void *context)
-+{
-+	struct acpi_buffer response = {
-+		.length		= ACPI_ALLOCATE_BUFFER,
-+		.pointer	= NULL
-+	};
-+	acpi_status status = wmi_get_event_data(value, &response);
-+	union acpi_object *obj = response.pointer;
-+	int code;
-+
-+	if (status != AE_OK) {
-+		pr_warn("Bad event status %#x\n", status);
-+		return;
-+	}
-+
-+	if (!obj || obj->type != ACPI_TYPE_INTEGER) {
-+		pr_warn("Unknown event received\n");
-+		goto wind_wmi_notify_free;
-+	}
-+
-+	code = obj->integer.value;
-+	pr_debug("Event code: %#x\n", code);
-+
-+	if (code == 0x00 || code == 0x62 || code == 0x63) {
-+		/* Unknown events - drop them for now */
-+		goto wind_wmi_notify_free;
-+	}
-+
-+	if (!sparse_keymap_report_event(wind_input_dev, code, 1, true))
-+		pr_warn("Unknown key %#x pressed\n", code);
-+
-+wind_wmi_notify_free:
-+	kfree(response.pointer);
-+}
-+
-+static int __init wind_input_setup(void)
-+{
-+	int err;
-+
-+	wind_input_dev = input_allocate_device();
-+	if (!wind_input_dev)
-+		return -ENOMEM;
-+
-+	wind_input_dev->name = "MSI WMI hotkeys";
-+	wind_input_dev->phys = "wmi/input0";
-+	wind_input_dev->id.bustype = BUS_HOST;
-+
-+	err = sparse_keymap_setup(wind_input_dev, wind_keymap, NULL);
-+	if (err)
-+		goto wind_input_setup_free_dev;
-+
-+	err = input_register_device(wind_input_dev);
-+	if (err)
-+		goto wind_input_setup_free_keymap;
-+
-+	return 0;
-+
-+wind_input_setup_free_keymap:
-+	sparse_keymap_free(wind_input_dev);
-+wind_input_setup_free_dev:
-+	input_free_device(wind_input_dev);
-+	return err;
-+}
-+
-+static int __init wind_wmi_init(void)
-+{
-+	int err;
-+
-+	if (!wmi_has_guid(WMI_EVENT_GUID)) {
-+		pr_err("No MSI Wind WMI found\n");
-+		return -ENODEV;
-+	}
-+
-+	err = wind_input_setup();
-+	if (err) {
-+		pr_err("Unable to setup input device\n");
-+		return err;
-+	}
-+
-+	if (ACPI_FAILURE(wmi_install_notify_handler(WMI_EVENT_GUID,
-+		wind_wmi_notify, NULL))) {
-+		pr_err("Unable to install WMI notify handler\n");
-+		err = -EIO;
-+		goto wind_wmi_init_unregister_input;
-+	}
-+
-+	pr_debug("Event handler installed\n");
-+
-+	return 0;
-+
-+wind_wmi_init_unregister_input:
-+	input_unregister_device(wind_input_dev);
-+	sparse_keymap_free(wind_input_dev);
-+	input_free_device(wind_input_dev);
-+	return err;
-+}
-+
-+static void __exit wind_wmi_exit(void)
-+{
-+	wmi_remove_notify_handler(WMI_EVENT_GUID);
-+	input_unregister_device(wind_input_dev);
-+	sparse_keymap_free(wind_input_dev);
-+	input_free_device(wind_input_dev);
-+}
-+
-+module_init(wind_wmi_init);
-+module_exit(wind_wmi_exit);
--- 
-1.8.0
+1. install "iasl" or get and compile the source:
+https://www.acpica.org/downloads/unix_source_code.php
+2. cp /sys/firmware/acpi/tables/DSDT dsdt.aml
+3. iasl -d dsdt.aml
+
+This creates a "dsdt.dsl" file. This is the interesting one.
+
+Furthermore, check the kernel bugzilla if there isn't a similar bug
+somewhere already.
+http://bugzilla.kernel.org
+
+This article is also good literature how WMI drivers work:
+http://lwn.net/Articles/391230/
+
+Also check for latest /lib/udev/keymaps/ and
+/lib/udev/keymaps/force-release/. On this page this helped e.g. on a
+Samsung laptop: http://blog.nonobis.nl/?p=11
+
+Cheers,
+Sebastian
+
+
+On 23.11.2012 20:47, Justin Chudgar wrote:
+> I have an Acer Aspire 5733 that is having issues with:
+> - <fn>+<brightness/volume/suspend/etc.> key combos not working
+> - screen not resuming when unplugging/replugging a system while system
+> continues operating
+>
+> Could someone please help me determine how to triage these and direct me
+> on what info the maintainer needs from me.
+>
+> Thank you.
+>
+> ##### Excerpt from lshw #####
+>    description: Notebook
+>     product: Aspire 5733 (Calpella_CRB)
+>     vendor: Acer
+>     version: V1.07
+>     serial:
+> NXRN5AA00221703D023400                                                                           
+>
+>     width: 64
+> bits                                                                                           
+>
+>     capabilities: smbios-2.6 dmi-2.6
+> vsyscall32                                                              
+>     configuration: boot=normal chassis=notebook family=Intel_Mobile
+> sku=Calpella_CRB
+> uuid=F5E6A1B5-81FF-11E1-A5D0-DC0EA1AC38D5                                                                                             
+>
+>  
+> *-core                                                                                                     
+>
+>        description: Motherboard
+>        product: Aspire 5733
+>        vendor: Acer
+>        physical id: 0
+>        version: V1.07
+>        serial: Base Board Serial Number
+>        slot: Base Board Chassis Location
+>      *-firmware
+>           description: BIOS
+>           vendor: Acer
+>           physical id: 0
+>           version: V1.07
+>           date: 11/07/2011
+>           size: 1MiB
+>           capacity: 1472KiB
+>           capabilities: pci upgrade shadowing cdboot bootselect edd
+> int13floppynec int13floppytoshiba int13floppy360 int13floppy1200
+> int13floppy720 int13floppy2880 int9keyboard int10video acpi usb
+> biosbootspecification
+>
