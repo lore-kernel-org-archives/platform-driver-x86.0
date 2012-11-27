@@ -1,172 +1,322 @@
-From: Sebastian Riemer <sebastian.riemer@profitbricks.com>
-Subject: Re: Fwd: Acer Aspire 5733 - acer_wmi problems
-Date: Tue, 27 Nov 2012 11:37:33 +0100
-Message-ID: <50B497ED.401@profitbricks.com>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: Re: [PATCH 6/6] Add MSI Wind WMI support
+Date: Tue, 27 Nov 2012 17:55:16 +0200
+Message-ID: <CAKErNvrmXTarBEZeXFwHOn6zD+Tg43sGhf3OwTGqVMFfyJ9SVg@mail.gmail.com>
+References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
+ <1353796141-1470-7-git-send-email-maxtram95@gmail.com> <1354004064.21227.867.camel@linux-s257.site>
+ <CAHR064g9oe4C+GswHYcq-Fr-WFnnxjLiHFKdtCEWuKYAs1tRfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f46.google.com ([209.85.215.46]:45091 "EHLO
-	mail-la0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752596Ab2K0KhY (ORCPT
+Received: from mail-ie0-f174.google.com ([209.85.223.174]:50282 "EHLO
+	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754030Ab2K0Pzi convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 27 Nov 2012 05:37:24 -0500
-Received: by mail-la0-f46.google.com with SMTP id p5so6612485lag.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Nov 2012 02:37:22 -0800 (PST)
+	Tue, 27 Nov 2012 10:55:38 -0500
+Received: by mail-ie0-f174.google.com with SMTP id k11so8418059iea.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Nov 2012 07:55:37 -0800 (PST)
+In-Reply-To: <CAHR064g9oe4C+GswHYcq-Fr-WFnnxjLiHFKdtCEWuKYAs1tRfw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Justin Chudgar <justin@justinzane.com>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: joeyli <jlee@suse.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
 
-On 26.11.2012 19:28, joeyli wrote:
-> Hi Justin,=20
->
-> OK, looks not just one problem on you machine. Let's clarify one by o=
-ne:
-> =20
-> + For the Fn key you said:=20
->    <fn>+<brightness/volume/suspend/etc.> key combos not working=20
->   =20
->    That a bit strange for at least the volume control (normally on Ac=
+2012/11/27 Corentin Chary <corentin.chary@gmail.com>:
+> On Tue, Nov 27, 2012 at 8:14 AM, joeyli <jlee@suse.com> wrote:
+>> Hi Maxim,
+>>
+>> =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 00:29 +0200=EF=BC=8C=
+Maxim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
+>>> Create a driver to support WMI found on MSI Wind laptops. This driv=
 er
-> machine are Fn+up/down) should work because it direct send out useful
-> scan code.=20
->
->    Please help to capture the scan code by showkey:
-> 	- Add atkbd.softraw=3D0 kernel parameter and reboot system.
-> 	- Switch to console and login with root account, then run:
-> 		# showkey -s
->    	 press Fn key and monitor the showkey output.
->
->
-> + For we want to make sure acer-wmi causes any problem:
->    Please add acer-wmi to the blacklist of modprobe
-> (e.g. /etc/modprobe.d/blacklist), then try to reproduce all issues on
-> your machine. (Fn key, AC power...)
->
->
-> + For brightness control:
->   Please check does there have /sys/class/backlight/acpi_video0 folde=
-r
-> on your machine. If you found it, please try to change the backlight =
-by:
-> 	# echo 3 > /sys/class/backlight/acpi_video0/brightness
->
->   If you didn't see acpi_video0, please try 'acpi_backlight=3Dvendor'
-> kernel parameter. Then /sys/class/backlight/intel_backlight should sh=
-ow
-> up on your machine if it used Intel graphics Adapter.
->
->
-> + For the AC power problem:
-> 	Per your DSDT, the EC _Q37 is mapping to AC unplug and _Q38 is AC pl=
-ug.
-> In _Q37 and _Q38, they notify AC, Battery and Processor acpi devices,
-> but I didn't see it changed backlight. Did you set S3 suspend when li=
-d
-> close?
-
-Interesting, there are similar issues with latest Samsung laptops and
-the EC of the Intel HM76 chip-set:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D45461
-https://bugzilla.kernel.org/show_bug.cgi?id=3D44161
-
-
-> Thanks a lot!
-> Joey Lee
->
-> =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 17:05 -0800=EF=BC=8C=
-Justin Chudgar =E6=8F=90=E5=88=B0=EF=BC=9A
->> The acpidump tarball isattached.What I meant by unplugged/plugged wa=
-s this:
->> 1 - the laptop is plugged into AC power
->> 2 - the laptop is left with the lid closed, unused for longer than
->> ~15-30 minutes.
->> 3 - the laptop's power adapter is unplugged from the AC outlet for
->> ~30-60 seconds.
->> 4 - the laptop's power adapter is plugged into another AC outlet
->> *Problem*
->> - After the above sequence, the laptop screen will not work. This me=
-ans
->> that the backlight is off and the screen is blank. The laptop does n=
-ot
->> respond to any user input, via trackpad, normal keyboard keys,
->> <fn>+<SPECIAL> keys that I assume are handled by acer_wmi. It does w=
-ork
->> perfectly fine when accessed via ssh, though even restarting kdm via=
- ssh
->> fails to reactivate the screen. The only way to recover the screen i=
-s to
->> reboot.
->> *Other Problems*
->> - Multimedia keys do not work.
+>>> allows us to receive some additional keycodes for keys that are not
+>>> handled without this driver.
+>>>
+>>> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 >>
->> Justin Chudgar  |  Weed, CA 96094  |  530 921 0738 | http://www.just=
-inzane.com/
+>> I simply review this patch and looks there have many code the same w=
+ith
+>> msi-wmi.c. Does there have any reason didn't direct patch msi-wmi bu=
+t
+>> need generate a new driver?
+>
+> Right, if it's only a keymap and guid change, plus 1 or 2 quirks, it
+> may makes sense to be in msi-wind.c
+
+Compare msi-wind-wmi.c and dell-wmi-aio.c. They look very similar,
+even more similar than msi-wind-wmi.c and msi-wmi.c. Why do you
+recommend to merge msi-wind-wmi features into msi-wmi, but not
+dell-wmi-aio?
+
+Look at dell-wmi.c, dell-wmi-aio.c and msi-wmi.c. They have lots of
+common code and they differ only in GUIDs, keymap tables and some
+quirks, but they are still different modules.
+
+msi-wind-wmi is WMI driver that only supports hotkey handling. Each
+WMI driver providing this feature contains such code, so there is
+nothing strange in that msi-wmi driver also contains such code.
+msi-wmi is a driver for fully different laptop with fully different
+WMI. It also handles backlight brightness and needs a quirk for hotkey
+handling. MSI Wind WMI does not send brightness change events and does
+not need that quirk.
+
+Do you still think I should merge msi-wind-wmi code into msi-wmi?
+
+>
 >>
->> On 11/24/2012 10:41 PM, joeyli wrote:
->>> Hi Justin,=20
+>> Thanks a lot!
+>> Joey Lee
+>>
+>>> ---
+>>>  drivers/platform/x86/Kconfig        |  13 +++
+>>>  drivers/platform/x86/Makefile       |   1 +
+>>>  drivers/platform/x86/msi-wind-wmi.c | 169 ++++++++++++++++++++++++=
+++++++++++++
+>>>  3 files changed, 183 insertions(+)
+>>>  create mode 100644 drivers/platform/x86/msi-wind-wmi.c
 >>>
->>> =E6=96=BC =E5=85=AD=EF=BC=8C2012-11-24 =E6=96=BC 12:33 -0800=EF=BC=8C=
-Justin Chudgar =E6=8F=90=E5=88=B0=EF=BC=9A
->>>> This is what I am having problems with. Thanks for the quick reply=
-=2E
->>>>
->>>> Justin Chudgar  |  Weed, CA 96094  |  530 921 0738 |
->>>> http://www.justinzane.com/
->>>>
->>>>
->>>>
->>>> -------- Original Message --------
->>>> Subject:        Acer Aspire 5733 - acer_wmi problems
->>>> Date:   Fri, 23 Nov 2012 11:47:02 -0800
->>>> From:   Justin Chudgar <justin@justinzane.com>
->>>> To:     platform-driver-x86@vger.kernel.org
->>>>
->>>>
->>>>
->>>> I have an Acer Aspire 5733 that is having issues with:
->>>> - <fn>+<brightness/volume/suspend/etc.> key combos not working
->>> Please provide acpidump from your Aspire 5733. Run the following co=
-mmand
->>> by root:
->>>  # acpidump > acpidump.dat
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kc=
+onfig
+>>> index c86bae8..46f269e5 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -561,6 +561,19 @@ config MSI_WMI
+>>>        To compile this driver as a module, choose M here: the modul=
+e will
+>>>        be called msi-wmi.
 >>>
->>> Please send acpidump.dat to me.
+>>> +config MSI_WIND_WMI
+>>> +     tristate "MSI Wind WMI Driver"
+>>> +     depends on ACPI_WMI
+>>> +     depends on INPUT
+>>> +     select INPUT_SPARSEKMAP
+>>> +     ---help---
+>>> +      Say Y here if you want to support WMI-based hotkeys on MSI W=
+ind
+>>> +      laptops. MSI Wind WMI differs from WMI found on other MSI la=
+ptops, so
+>>> +      say Y here if you have MSI Wind, otherwise select "MSI WMI e=
+xtras".
+>>> +
+>>> +      To compile this driver as a module, choose M here: the modul=
+e will
+>>> +      be called msi-wind-wmi.
+>>> +
+>>>  config TOPSTAR_LAPTOP
+>>>       tristate "Topstar Laptop Extras"
+>>>       depends on ACPI
+>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/M=
+akefile
+>>> index bf7e4f9..44389c0 100644
+>>> --- a/drivers/platform/x86/Makefile
+>>> +++ b/drivers/platform/x86/Makefile
+>>> @@ -30,6 +30,7 @@ obj-$(CONFIG_INTEL_MENLOW)  +=3D intel_menlow.o
+>>>  obj-$(CONFIG_ACPI_WMI)               +=3D wmi.o
+>>>  obj-$(CONFIG_MSI_WMI)                +=3D msi-wmi.o
+>>>  obj-$(CONFIG_TOPSTAR_LAPTOP) +=3D topstar-laptop.o
+>>> +obj-$(CONFIG_MSI_WIND_WMI)   +=3D msi-wind-wmi.o
 >>>
->>>> - screen not resuming when unplugging/replugging a system while sy=
-stem
->>>> continues operating
->>> I am not fully understand what means 'unplugging/replugging'?=20
->>>
->>>> Could someone please help me determine how to triage these and dir=
-ect
->>>> me
->>>> on what info the maintainer needs from me.
->>>>
->>>> Thank you.=20
->>> Thanks a lot!
->>> Joey Lee
->>>
+>>>  # toshiba_acpi must link after wmi to ensure that wmi devices are =
+found
+>>>  # before toshiba_acpi initializes
+>>> diff --git a/drivers/platform/x86/msi-wind-wmi.c b/drivers/platform=
+/x86/msi-wind-wmi.c
+>>> new file mode 100644
+>>> index 0000000..4f19434
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/msi-wind-wmi.c
+>>> @@ -0,0 +1,169 @@
+>>> +/*
+>>> + * MSI Wind WMI hotkeys
+>>> + *
+>>> + * Copyright (C) 2012 Maxim Mikityanskiy <maxtram95@gmail.com>
+>>> + *
+>>> + *  This program is free software; you can redistribute it and/or =
+modify
+>>> + *  it under the terms of the GNU General Public License as publis=
+hed by
+>>> + *  the Free Software Foundation; either version 2 of the License,=
+ or
+>>> + *  (at your option) any later version.
+>>> + *
+>>> + *  This program is distributed in the hope that it will be useful=
+,
+>>> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + *  GNU General Public License for more details.
+>>> + *
+>>> + *  You should have received a copy of the GNU General Public Lice=
+nse
+>>> + *  along with this program; if not, write to the Free Software
+>>> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  0211=
+1-1307  USA
+>>> + */
+>>> +
+>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>> +
+>>> +#include <linux/module.h>
+>>> +#include <linux/input.h>
+>>> +#include <linux/input/sparse-keymap.h>
+>>> +#include <linux/acpi.h>
+>>> +
+>>> +MODULE_AUTHOR("Maxim Mikityanskiy <maxtram95@gmail.com>");
+>>> +MODULE_DESCRIPTION("MSI Wind laptop WMI hotkeys driver");
+>>> +MODULE_LICENSE("GPL");
+>>> +
+>>> +#define WMI_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
+>>> +
+>>> +MODULE_ALIAS("wmi:" WMI_EVENT_GUID);
+>>> +
+>>> +/* Fn+F3 touchpad toggle */
+>>> +#define WIND_KEY_TOUCHPAD    0x08
+>>> +/* Fn+F11 Bluetooth toggle */
+>>> +#define WIND_KEY_BLUETOOTH   0x56
+>>> +/* Fn+F6 webcam toggle */
+>>> +#define WIND_KEY_CAMERA              0x57
+>>> +/* Fn+F11 Wi-Fi toggle */
+>>> +#define WIND_KEY_WLAN                0x5f
+>>> +/* Fn+F10 turbo mode toggle */
+>>> +#define WIND_KEY_TURBO               0x60
+>>> +/* Fn+F10 ECO mode toggle */
+>>> +#define WIND_KEY_ECO         0x69
+>>> +
+>>> +static struct key_entry wind_keymap[] =3D {
+>>> +     /* These keys work without WMI. Ignore them to avoid double k=
+eycodes */
+>>> +     { KE_IGNORE, WIND_KEY_TOUCHPAD,         { KEY_TOUCHPAD_TOGGLE=
+ } },
+>>> +     { KE_IGNORE, WIND_KEY_BLUETOOTH,        { KEY_BLUETOOTH } },
+>>> +     { KE_IGNORE, WIND_KEY_CAMERA,           { KEY_CAMERA } },
+>>> +     { KE_IGNORE, WIND_KEY_WLAN,             { KEY_WLAN } },
+>>> +     /* These are keys that should be handled via WMI */
+>>> +     { KE_KEY,    WIND_KEY_TURBO,            { KEY_PROG1 } },
+>>> +     { KE_KEY,    WIND_KEY_ECO,              { KEY_PROG2 } },
+>>> +     { KE_END, 0 }
+>>> +};
+>>> +
+>>> +static struct input_dev *wind_input_dev;
+>>> +
+>>> +static void wind_wmi_notify(u32 value, void *context)
+>>> +{
+>>> +     struct acpi_buffer response =3D {
+>>> +             .length         =3D ACPI_ALLOCATE_BUFFER,
+>>> +             .pointer        =3D NULL
+>>> +     };
+>>> +     acpi_status status =3D wmi_get_event_data(value, &response);
+>>> +     union acpi_object *obj =3D response.pointer;
+>>> +     int code;
+>>> +
+>>> +     if (status !=3D AE_OK) {
+>>> +             pr_warn("Bad event status %#x\n", status);
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     if (!obj || obj->type !=3D ACPI_TYPE_INTEGER) {
+>>> +             pr_warn("Unknown event received\n");
+>>> +             goto wind_wmi_notify_free;
+>>> +     }
+>>> +
+>>> +     code =3D obj->integer.value;
+>>> +     pr_debug("Event code: %#x\n", code);
+>>> +
+>>> +     if (code =3D=3D 0x00 || code =3D=3D 0x62 || code =3D=3D 0x63)=
+ {
+>>> +             /* Unknown events - drop them for now */
+>>> +             goto wind_wmi_notify_free;
+>>> +     }
+>>> +
+>>> +     if (!sparse_keymap_report_event(wind_input_dev, code, 1, true=
+))
+>>> +             pr_warn("Unknown key %#x pressed\n", code);
+>>> +
+>>> +wind_wmi_notify_free:
+>>> +     kfree(response.pointer);
+>>> +}
+>>> +
+>>> +static int __init wind_input_setup(void)
+>>> +{
+>>> +     int err;
+>>> +
+>>> +     wind_input_dev =3D input_allocate_device();
+>>> +     if (!wind_input_dev)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     wind_input_dev->name =3D "MSI WMI hotkeys";
+>>> +     wind_input_dev->phys =3D "wmi/input0";
+>>> +     wind_input_dev->id.bustype =3D BUS_HOST;
+>>> +
+>>> +     err =3D sparse_keymap_setup(wind_input_dev, wind_keymap, NULL=
+);
+>>> +     if (err)
+>>> +             goto wind_input_setup_free_dev;
+>>> +
+>>> +     err =3D input_register_device(wind_input_dev);
+>>> +     if (err)
+>>> +             goto wind_input_setup_free_keymap;
+>>> +
+>>> +     return 0;
+>>> +
+>>> +wind_input_setup_free_keymap:
+>>> +     sparse_keymap_free(wind_input_dev);
+>>> +wind_input_setup_free_dev:
+>>> +     input_free_device(wind_input_dev);
+>>> +     return err;
+>>> +}
+>>> +
+>>> +static int __init wind_wmi_init(void)
+>>> +{
+>>> +     int err;
+>>> +
+>>> +     if (!wmi_has_guid(WMI_EVENT_GUID)) {
+>>> +             pr_err("No MSI Wind WMI found\n");
+>>> +             return -ENODEV;
+>>> +     }
+>>> +
+>>> +     err =3D wind_input_setup();
+>>> +     if (err) {
+>>> +             pr_err("Unable to setup input device\n");
+>>> +             return err;
+>>> +     }
+>>> +
+>>> +     if (ACPI_FAILURE(wmi_install_notify_handler(WMI_EVENT_GUID,
+>>> +             wind_wmi_notify, NULL))) {
+>>> +             pr_err("Unable to install WMI notify handler\n");
+>>> +             err =3D -EIO;
+>>> +             goto wind_wmi_init_unregister_input;
+>>> +     }
+>>> +
+>>> +     pr_debug("Event handler installed\n");
+>>> +
+>>> +     return 0;
+>>> +
+>>> +wind_wmi_init_unregister_input:
+>>> +     input_unregister_device(wind_input_dev);
+>>> +     sparse_keymap_free(wind_input_dev);
+>>> +     input_free_device(wind_input_dev);
+>>> +     return err;
+>>> +}
+>>> +
+>>> +static void __exit wind_wmi_exit(void)
+>>> +{
+>>> +     wmi_remove_notify_handler(WMI_EVENT_GUID);
+>>> +     input_unregister_device(wind_input_dev);
+>>> +     sparse_keymap_free(wind_input_dev);
+>>> +     input_free_device(wind_input_dev);
+>>> +}
+>>> +
+>>> +module_init(wind_wmi_init);
+>>> +module_exit(wind_wmi_exit);
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe platform-d=
+river-x86" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe platform-dr=
-iver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
---=20
-Sebastian Riemer
-Linux Kernel Developer - Storage
-
-We are looking for (SENIOR) LINUX KERNEL DEVELOPERS!
-
-ProfitBricks GmbH =95 Greifswalder Str. 207 =95 10405 Berlin, Germany
-www.profitbricks.com =95 sebastian.riemer@profitbricks.com
-Tel.: +49 - 30 - 60 98 56 991 - 915
-
-Sitz der Gesellschaft: Berlin
-Registergericht: Amtsgericht Charlottenburg, HRB 125506 B
-Gesch=E4ftsf=FChrer: Andreas Gauger, Achim Weiss
+> Corentin Chary
+> http://xf.iksaif.net
