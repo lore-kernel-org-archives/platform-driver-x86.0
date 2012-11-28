@@ -1,406 +1,386 @@
 From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH 4/6] msi-laptop: Add MSI Wind U90/U100 support
-Date: Wed, 28 Nov 2012 19:41:23 +0200
-Message-ID: <CAKErNvrSOTFLn=Q3jDH954rm7gOKGyJ7BQZH+26fr1vXvWvd+w@mail.gmail.com>
+Subject: Re: [PATCH 6/6] Add MSI Wind WMI support
+Date: Wed, 28 Nov 2012 20:03:10 +0200
+Message-ID: <CAKErNvp3FptBG_XeEoevnB=158t5thxPDNkw6UztbWXxRgmRJA@mail.gmail.com>
 References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
- <1353796141-1470-5-git-send-email-maxtram95@gmail.com> <1354073572.21227.1000.camel@linux-s257.site>
+ <1353796141-1470-7-git-send-email-maxtram95@gmail.com> <1354004064.21227.867.camel@linux-s257.site>
+ <CAHR064g9oe4C+GswHYcq-Fr-WFnnxjLiHFKdtCEWuKYAs1tRfw@mail.gmail.com>
+ <CAKErNvrmXTarBEZeXFwHOn6zD+Tg43sGhf3OwTGqVMFfyJ9SVg@mail.gmail.com> <1354058414.21227.933.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=Big5
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ia0-f174.google.com ([209.85.210.174]:57141 "EHLO
+Received: from mail-ia0-f174.google.com ([209.85.210.174]:57090 "EHLO
 	mail-ia0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752324Ab2K1Rlp convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1754443Ab2K1SDb convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 28 Nov 2012 12:41:45 -0500
-Received: by mail-ia0-f174.google.com with SMTP id y25so10085486iay.19
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Nov 2012 09:41:45 -0800 (PST)
-In-Reply-To: <1354073572.21227.1000.camel@linux-s257.site>
+	Wed, 28 Nov 2012 13:03:31 -0500
+Received: by mail-ia0-f174.google.com with SMTP id y25so10106481iay.19
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Nov 2012 10:03:31 -0800 (PST)
+In-Reply-To: <1354058414.21227.933.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: joeyli <jlee@suse.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
 
 2012/11/28 joeyli <jlee@suse.com>:
-> =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 00:28 +0200=EF=BC=8C=
-Maxim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
->> Add MSI Wind U90/U100 to separate DMI table, add U90/U100 specific
->> workarounds and add some missing EC features support such as basic f=
-an
->> control, turbo and ECO modes and touchpad state.
+> =A9=F3 =A4G=A1A2012-11-27 =A9=F3 17:55 +0200=A1AMaxim Mikityanskiy =B4=
+=A3=A8=EC=A1G
+>> 2012/11/27 Corentin Chary <corentin.chary@gmail.com>:
+>> > On Tue, Nov 27, 2012 at 8:14 AM, joeyli <jlee@suse.com> wrote:
+>> >> Hi Maxim,
+>> >>
+>> >> =A9=F3 =A4=E9=A1A2012-11-25 =A9=F3 00:29 +0200=A1AMaxim Mikityans=
+kiy =B4=A3=A8=EC=A1G
+>> >>> Create a driver to support WMI found on MSI Wind laptops. This d=
+river
+>> >>> allows us to receive some additional keycodes for keys that are =
+not
+>> >>> handled without this driver.
+>> >>>
+>> >>> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+>> >>
+>> >> I simply review this patch and looks there have many code the sam=
+e with
+>> >> msi-wmi.c. Does there have any reason didn't direct patch msi-wmi=
+ but
+>> >> need generate a new driver?
+>> >
+>> > Right, if it's only a keymap and guid change, plus 1 or 2 quirks, =
+it
+>> > may makes sense to be in msi-wind.c
 >>
->> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
->> ---
->>  drivers/platform/x86/msi-laptop.c | 199 +++++++++++++++++++++++++++=
-+++++------
->>  1 file changed, 171 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x8=
-6/msi-laptop.c
->> index 3b6f494..16e9863 100644
->> --- a/drivers/platform/x86/msi-laptop.c
->> +++ b/drivers/platform/x86/msi-laptop.c
->> @@ -82,8 +82,19 @@
->>  #define MSI_STANDARD_EC_SCM_LOAD_ADDRESS     0x2d
->>  #define MSI_STANDARD_EC_SCM_LOAD_MASK                (1 << 0)
->>
->> -#define MSI_STANDARD_EC_TOUCHPAD_ADDRESS     0xe4
->> +#define MSI_STANDARD_EC_POWER_ADDRESS                0xe4
+>> Compare msi-wind-wmi.c and dell-wmi-aio.c. They look very similar,
+>> even more similar than msi-wind-wmi.c and msi-wmi.c. Why do you
+>> recommend to merge msi-wind-wmi features into msi-wmi, but not
+>> dell-wmi-aio?
 >
-> If 0xE4 register is not just for touchpad and power, then I suggest u=
-se
-> a more general name like: MSI_STANDARD_EC_FUNCTIONS_ADDRESS or other.
-
-OK, I will rename it.
-
->> +/* Power LED is orange - Turbo mode */
->> +#define MSI_STANDARD_EC_TURBO_MASK           (1 << 1)
->> +/* Power LED is green - ECO mode */
->> +#define MSI_STANDARD_EC_ECO_MASK             (1 << 3)
->> +/* Touchpad is turned on */
->>  #define MSI_STANDARD_EC_TOUCHPAD_MASK                (1 << 4)
->> +/* If this bit !=3D bit 1, turbo mode can't be toggled */
->> +#define MSI_STANDARD_EC_TURBO_COOLDOWN_MASK  (1 << 7)
->> +
->> +#define MSI_STANDARD_EC_FAN_ADDRESS          0x33
->> +/* If zero, fan rotates at maximal speed */
->> +#define MSI_STANDARD_EC_AUTOFAN_MASK         (1 << 0)
->>
->>  #ifdef CONFIG_PM_SLEEP
->>  static int msi_laptop_resume(struct device *device);
->> @@ -123,6 +134,13 @@ static int threeg_exists;
->>   * e.g. MSI N034 netbook
->>   */
->>  static bool load_scm_model;
->> +
->> +/* Some MSI Wind netbooks (e.g. MSI Wind U100) need loading SCM to =
-get some
->> + * features working (e.g. ECO mode), but we cannot change Wlan/Blue=
-tooth state
->> + * in software and we can only read its state.
->> + */
->> +static bool ec_read_only;
->> +
->>  static struct rfkill *rfk_wlan, *rfk_bluetooth, *rfk_threeg;
->>
->>  /* Hardware access */
->> @@ -195,6 +213,9 @@ static ssize_t set_device_state(const char *buf,=
- size_t count, u8 mask)
->>       if (sscanf(buf, "%i", &status) !=3D 1 || (status < 0 || status=
- > 1))
->>               return -EINVAL;
->>
->> +     if (ec_read_only)
->> +             return -EOPNOTSUPP;
->> +
->>       /* read current device state */
->>       result =3D ec_read(MSI_STANDARD_EC_COMMAND_ADDRESS, &rdata);
->>       if (result < 0)
->> @@ -417,18 +438,115 @@ static ssize_t store_auto_brightness(struct d=
-evice *dev,
->>       return count;
->>  }
->>
->> +static ssize_t show_touchpad(struct device *dev,
->> +     struct device_attribute *attr, char *buf)
->> +{
->> +
->> +     u8 rdata;
->> +     int result;
->> +
->> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPA=
-D_MASK));
->> +}
+> Because MSI and DELL are different manufacturers. For the similar cod=
+e
+> between different manufacturers we should extract those similar code =
+to
+> acpi wmi or platform framework.
 >
-> I don't think we need create a touchpad attribute interface because
-> there already have key code raise the change to user space.
-
-Key codes only indicate touchpad state change. We cannot determine
-initial touchpad state on boot using only key codes. I think, it might
-be useful to have a file in sysfs that always keeps actual touchpad
-state, so that we can get initial touchpad state on boot. Do you
-disagree with that?
-
->> +
->> +static ssize_t show_turbo(struct device *dev,
->> +     struct device_attribute *attr, char *buf)
->> +{
->> +
->> +     u8 rdata;
->> +     int result;
->> +
->> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_M=
-ASK));
->> +}
->> +
->> +static ssize_t show_eco(struct device *dev,
->> +     struct device_attribute *attr, char *buf)
->> +{
->> +
->> +     u8 rdata;
->> +     int result;
->> +
->> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MAS=
-K));
->> +}
->> +
->> +static ssize_t show_turbo_cooldown(struct device *dev,
->> +     struct device_attribute *attr, char *buf)
->> +{
->> +
->> +     u8 rdata;
->> +     int result;
->> +
->> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return sprintf(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_=
-MASK)) |
->> +             (!!(rdata & MSI_STANDARD_EC_TURBO_COOLDOWN_MASK) << 1)=
-);
->> +}
->> +
->> +static ssize_t show_auto_fan(struct device *dev,
->> +     struct device_attribute *attr, char *buf)
->> +{
->> +
->> +     u8 rdata;
->> +     int result;
->> +
->> +     result =3D ec_read(MSI_STANDARD_EC_FAN_ADDRESS, &rdata);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN=
-_MASK));
->> +}
->> +
->> +static ssize_t store_auto_fan(struct device *dev,
->> +     struct device_attribute *attr, const char *buf, size_t count)
->> +{
->> +
->> +     int enable, result;
->> +
->> +     if (sscanf(buf, "%i", &enable) !=3D 1 || (enable !=3D (enable =
-& 1)))
->> +             return -EINVAL;
->> +
->> +     result =3D ec_write(MSI_STANDARD_EC_FAN_ADDRESS, enable);
->> +     if (result < 0)
->> +             return result;
->> +
->> +     return count;
->> +}
->> +
->>  static DEVICE_ATTR(lcd_level, 0644, show_lcd_level, store_lcd_level=
-);
->>  static DEVICE_ATTR(auto_brightness, 0644, show_auto_brightness,
->>                  store_auto_brightness);
->>  static DEVICE_ATTR(bluetooth, 0444, show_bluetooth, NULL);
->>  static DEVICE_ATTR(wlan, 0444, show_wlan, NULL);
->>  static DEVICE_ATTR(threeg, 0444, show_threeg, NULL);
->> +static DEVICE_ATTR(touchpad, 0444, show_touchpad, NULL);
->> +static DEVICE_ATTR(turbo_mode, 0444, show_turbo, NULL);
->> +static DEVICE_ATTR(eco_mode, 0444, show_eco, NULL);
->> +static DEVICE_ATTR(turbo_cooldown, 0444, show_turbo_cooldown, NULL)=
-;
->> +static DEVICE_ATTR(auto_fan, 0644, show_auto_fan, store_auto_fan);
 >>
->>  static struct attribute *msipf_attributes[] =3D {
->>       &dev_attr_lcd_level.attr,
->>       &dev_attr_auto_brightness.attr,
->>       &dev_attr_bluetooth.attr,
->>       &dev_attr_wlan.attr,
->> +     &dev_attr_touchpad.attr,
->> +     &dev_attr_turbo_mode.attr,
->> +     &dev_attr_eco_mode.attr,
->> +     &dev_attr_turbo_cooldown.attr,
->> +     &dev_attr_auto_fan.attr,
->>       NULL
->>  };
->>
->> @@ -553,6 +671,19 @@ static struct dmi_system_id __initdata msi_load=
-_scm_models_dmi_table[] =3D {
->>       { }
->>  };
->>
->> +static struct dmi_system_id __initdata msi_load_scm_ro_models_dmi_t=
-able[] =3D {
->> +     {
->> +             .ident =3D "MSI U90/U100",
->> +             .matches =3D {
->> +                     DMI_MATCH(DMI_SYS_VENDOR,
->> +                             "MICRO-STAR INTERNATIONAL CO., LTD"),
->> +                     DMI_MATCH(DMI_PRODUCT_NAME, "U90/U100"),
->> +             },
->> +             .callback =3D dmi_check_cb
->> +     },
->> +     { }
->> +};
->> +
->>  static int rfkill_bluetooth_set(void *data, bool blocked)
->>  {
->>       /* Do something with blocked...*/
->> @@ -560,32 +691,26 @@ static int rfkill_bluetooth_set(void *data, bo=
-ol blocked)
->>        * blocked =3D=3D false is on
->>        * blocked =3D=3D true is off
->>        */
->> -     if (blocked)
->> -             set_device_state("0", 0, MSI_STANDARD_EC_BLUETOOTH_MAS=
-K);
->> -     else
->> -             set_device_state("1", 0, MSI_STANDARD_EC_BLUETOOTH_MAS=
-K);
->> +     int result =3D set_device_state(blocked ? "0" : "1", 0,
->> +             MSI_STANDARD_EC_BLUETOOTH_MASK);
->>
->> -     return 0;
->> +     return result < 0 ? result : 0;
->>  }
->>
->>  static int rfkill_wlan_set(void *data, bool blocked)
->>  {
->> -     if (blocked)
->> -             set_device_state("0", 0, MSI_STANDARD_EC_WLAN_MASK);
->> -     else
->> -             set_device_state("1", 0, MSI_STANDARD_EC_WLAN_MASK);
->> +     int result =3D set_device_state(blocked ? "0" : "1", 0,
->> +             MSI_STANDARD_EC_WLAN_MASK);
->>
->> -     return 0;
->> +     return result < 0 ? result : 0;
->>  }
->>
->>  static int rfkill_threeg_set(void *data, bool blocked)
->>  {
->> -     if (blocked)
->> -             set_device_state("0", 0, MSI_STANDARD_EC_3G_MASK);
->> -     else
->> -             set_device_state("1", 0, MSI_STANDARD_EC_3G_MASK);
->> +     int result =3D set_device_state(blocked ? "0" : "1", 0,
->> +             MSI_STANDARD_EC_3G_MASK);
->>
->> -     return 0;
->> +     return result < 0 ? result : 0;
->>  }
->>
->>  static const struct rfkill_ops rfkill_bluetooth_ops =3D {
->> @@ -600,16 +725,24 @@ static const struct rfkill_ops rfkill_threeg_o=
-ps =3D {
->>       .set_block =3D rfkill_threeg_set
->>  };
->>
->> +static bool msi_rfkill_set_state(struct rfkill *rfkill, bool blocke=
-d)
->> +{
->> +     if (ec_read_only)
->> +             return rfkill_set_hw_state(rfkill, blocked);
->> +     else
->> +             return rfkill_set_sw_state(rfkill, blocked);
->> +}
->> +
->>  static void msi_update_rfkill(struct work_struct *ignored)
->>  {
->>       get_wireless_state_ec_standard();
->>
->>       if (rfk_wlan)
->> -             rfkill_set_sw_state(rfk_wlan, !wlan_s);
->> +             msi_rfkill_set_state(rfk_wlan, !wlan_s);
->>       if (rfk_bluetooth)
->> -             rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
->> +             msi_rfkill_set_state(rfk_bluetooth, !bluetooth_s);
->>       if (rfk_threeg)
->> -             rfkill_set_sw_state(rfk_threeg, !threeg_s);
->> +             msi_rfkill_set_state(rfk_threeg, !threeg_s);
->>  }
->>  static DECLARE_WORK(msi_rfkill_work, msi_update_rfkill);
->>
->> @@ -638,7 +771,7 @@ static void msi_send_touchpad_key(struct work_st=
-ruct *ignored)
->>       u8 rdata;
->>       int result;
->>
->> -     result =3D ec_read(MSI_STANDARD_EC_TOUCHPAD_ADDRESS, &rdata);
->> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->>       if (result < 0)
->>               return;
->>
->> @@ -802,13 +935,15 @@ static int __init load_scm_model_init(struct p=
-latform_device *sdev)
->>       u8 data;
->>       int result;
->>
->> -     /* allow userland write sysfs file  */
->> -     dev_attr_bluetooth.store =3D store_bluetooth;
->> -     dev_attr_wlan.store =3D store_wlan;
->> -     dev_attr_threeg.store =3D store_threeg;
->> -     dev_attr_bluetooth.attr.mode |=3D S_IWUSR;
->> -     dev_attr_wlan.attr.mode |=3D S_IWUSR;
->> -     dev_attr_threeg.attr.mode |=3D S_IWUSR;
->> +     if (!ec_read_only) {
->> +             /* allow userland write sysfs file  */
->> +             dev_attr_bluetooth.store =3D store_bluetooth;
->> +             dev_attr_wlan.store =3D store_wlan;
->> +             dev_attr_threeg.store =3D store_threeg;
->> +             dev_attr_bluetooth.attr.mode |=3D S_IWUSR;
->> +             dev_attr_wlan.attr.mode |=3D S_IWUSR;
->> +             dev_attr_threeg.attr.mode |=3D S_IWUSR;
->> +     }
->>
->>       /* disable hardware control by fn key */
->>       result =3D ec_read(MSI_STANDARD_EC_SCM_LOAD_ADDRESS, &data);
->> @@ -860,8 +995,15 @@ static int __init msi_init(void)
->>       if (force || dmi_check_system(msi_dmi_table))
->>               old_ec_model =3D 1;
->>
->> -     if (!old_ec_model)
->> +     if (!old_ec_model) {
->>               get_threeg_exists();
->> +             if (dmi_check_system(msi_load_scm_models_dmi_table))
->> +                     load_scm_model =3D 1;
->> +             else if (dmi_check_system(msi_load_scm_ro_models_dmi_t=
-able)) {
->> +                     load_scm_model =3D 1;
->> +                     ec_read_only =3D 1;
->> +             }
->> +     }
->>
->>       if (!old_ec_model && dmi_check_system(msi_load_scm_models_dmi_=
-table))
->>               load_scm_model =3D 1;
+>> Look at dell-wmi.c, dell-wmi-aio.c and msi-wmi.c. They have lots of
+>> common code and they differ only in GUIDs, keymap tables and some
+>> quirks, but they are still different modules.
 >
-> hmm... the load_scm_model dmi table check 2 times? I think you can ju=
-st
-> remove the duplicate code.
-
-Oops, I forgot to remove the last two lines when I were preparing patch=
-es.
-
-Do I need to resend all patches after doing all needed fixes?
-
->> @@ -992,3 +1134,4 @@ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*=
-:pnMS-N051:*");
->>  MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N014:*");
->>  MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnCR620:*");
->>  MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnU270series:*");
->> +MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnU90/U100:*");
+> Yes, because different manufacturers. For those common code need extr=
+act
+> to framework.
 >
+>>
+>> msi-wind-wmi is WMI driver that only supports hotkey handling. Each
+>> WMI driver providing this feature contains such code, so there is
+>> nothing strange in that msi-wmi driver also contains such code.
+>> msi-wmi is a driver for fully different laptop with fully different
+>> WMI. It also handles backlight brightness and needs a quirk for hotk=
+ey
+>> handling. MSI Wind WMI does not send brightness change events and do=
+es
+>> not need that quirk.
+>>
+>> Do you still think I should merge msi-wind-wmi code into msi-wmi?
+>
+> Yes, your contribution is very good for MSI wind user, but I still th=
+ink
+> it's not worth to create a new driver for a small series.
+>
+> In Kconfig, it separate different platform driver by manufacturers, t=
+hen
+> the drivers of the same manufacturer are separate to different interf=
+ace
+> type (platform or wmi), or different hardware series like Laptop and
+> AIO.
+>
+> Current help of MSI_WMI in Kconfig is:
+>   help
+>    Say Y here if you want to support WMI-based hotkeys on MSI laptops=
+=2E
+>
+> Per this define, MSI wind series is undoubted a subset of MSI laptops=
+=2E
+>
+> We can say the MSI wind is a series that should separate to different=
+ driver,
+> but I don't think MSI wind series is a big and complex series that wo=
+rth to do that.
+
+Okay, okay, if you really want to preserve one vendor - one driver
+logic, I can make a patch for msi-wmi, but I think it will lead to
+complication of code, lots of ifs and lots of code unused by U90/U100
+but loaded in RAM.
+
 >
 > Thanks a lot!
 > Joey Lee
+>
+>>
+>> >
+>> >>
+>> >> Thanks a lot!
+>> >> Joey Lee
+>> >>
+>> >>> ---
+>> >>>  drivers/platform/x86/Kconfig        |  13 +++
+>> >>>  drivers/platform/x86/Makefile       |   1 +
+>> >>>  drivers/platform/x86/msi-wind-wmi.c | 169 +++++++++++++++++++++=
++++++++++++++++
+>> >>>  3 files changed, 183 insertions(+)
+>> >>>  create mode 100644 drivers/platform/x86/msi-wind-wmi.c
+>> >>>
+>> >>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86=
+/Kconfig
+>> >>> index c86bae8..46f269e5 100644
+>> >>> --- a/drivers/platform/x86/Kconfig
+>> >>> +++ b/drivers/platform/x86/Kconfig
+>> >>> @@ -561,6 +561,19 @@ config MSI_WMI
+>> >>>        To compile this driver as a module, choose M here: the mo=
+dule will
+>> >>>        be called msi-wmi.
+>> >>>
+>> >>> +config MSI_WIND_WMI
+>> >>> +     tristate "MSI Wind WMI Driver"
+>> >>> +     depends on ACPI_WMI
+>> >>> +     depends on INPUT
+>> >>> +     select INPUT_SPARSEKMAP
+>> >>> +     ---help---
+>> >>> +      Say Y here if you want to support WMI-based hotkeys on MS=
+I Wind
+>> >>> +      laptops. MSI Wind WMI differs from WMI found on other MSI=
+ laptops, so
+>> >>> +      say Y here if you have MSI Wind, otherwise select "MSI WM=
+I extras".
+>> >>> +
+>> >>> +      To compile this driver as a module, choose M here: the mo=
+dule will
+>> >>> +      be called msi-wind-wmi.
+>> >>> +
+>> >>>  config TOPSTAR_LAPTOP
+>> >>>       tristate "Topstar Laptop Extras"
+>> >>>       depends on ACPI
+>> >>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x8=
+6/Makefile
+>> >>> index bf7e4f9..44389c0 100644
+>> >>> --- a/drivers/platform/x86/Makefile
+>> >>> +++ b/drivers/platform/x86/Makefile
+>> >>> @@ -30,6 +30,7 @@ obj-$(CONFIG_INTEL_MENLOW)  +=3D intel_menlow.=
+o
+>> >>>  obj-$(CONFIG_ACPI_WMI)               +=3D wmi.o
+>> >>>  obj-$(CONFIG_MSI_WMI)                +=3D msi-wmi.o
+>> >>>  obj-$(CONFIG_TOPSTAR_LAPTOP) +=3D topstar-laptop.o
+>> >>> +obj-$(CONFIG_MSI_WIND_WMI)   +=3D msi-wind-wmi.o
+>> >>>
+>> >>>  # toshiba_acpi must link after wmi to ensure that wmi devices a=
+re found
+>> >>>  # before toshiba_acpi initializes
+>> >>> diff --git a/drivers/platform/x86/msi-wind-wmi.c b/drivers/platf=
+orm/x86/msi-wind-wmi.c
+>> >>> new file mode 100644
+>> >>> index 0000000..4f19434
+>> >>> --- /dev/null
+>> >>> +++ b/drivers/platform/x86/msi-wind-wmi.c
+>> >>> @@ -0,0 +1,169 @@
+>> >>> +/*
+>> >>> + * MSI Wind WMI hotkeys
+>> >>> + *
+>> >>> + * Copyright (C) 2012 Maxim Mikityanskiy <maxtram95@gmail.com>
+>> >>> + *
+>> >>> + *  This program is free software; you can redistribute it and/=
+or modify
+>> >>> + *  it under the terms of the GNU General Public License as pub=
+lished by
+>> >>> + *  the Free Software Foundation; either version 2 of the Licen=
+se, or
+>> >>> + *  (at your option) any later version.
+>> >>> + *
+>> >>> + *  This program is distributed in the hope that it will be use=
+ful,
+>> >>> + *  but WITHOUT ANY WARRANTY; without even the implied warranty=
+ of
+>> >>> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See t=
+he
+>> >>> + *  GNU General Public License for more details.
+>> >>> + *
+>> >>> + *  You should have received a copy of the GNU General Public L=
+icense
+>> >>> + *  along with this program; if not, write to the Free Software
+>> >>> + *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  0=
+2111-1307  USA
+>> >>> + */
+>> >>> +
+>> >>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> >>> +
+>> >>> +#include <linux/module.h>
+>> >>> +#include <linux/input.h>
+>> >>> +#include <linux/input/sparse-keymap.h>
+>> >>> +#include <linux/acpi.h>
+>> >>> +
+>> >>> +MODULE_AUTHOR("Maxim Mikityanskiy <maxtram95@gmail.com>");
+>> >>> +MODULE_DESCRIPTION("MSI Wind laptop WMI hotkeys driver");
+>> >>> +MODULE_LICENSE("GPL");
+>> >>> +
+>> >>> +#define WMI_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
+>> >>> +
+>> >>> +MODULE_ALIAS("wmi:" WMI_EVENT_GUID);
+>> >>> +
+>> >>> +/* Fn+F3 touchpad toggle */
+>> >>> +#define WIND_KEY_TOUCHPAD    0x08
+>> >>> +/* Fn+F11 Bluetooth toggle */
+>> >>> +#define WIND_KEY_BLUETOOTH   0x56
+>> >>> +/* Fn+F6 webcam toggle */
+>> >>> +#define WIND_KEY_CAMERA              0x57
+>> >>> +/* Fn+F11 Wi-Fi toggle */
+>> >>> +#define WIND_KEY_WLAN                0x5f
+>> >>> +/* Fn+F10 turbo mode toggle */
+>> >>> +#define WIND_KEY_TURBO               0x60
+>> >>> +/* Fn+F10 ECO mode toggle */
+>> >>> +#define WIND_KEY_ECO         0x69
+>> >>> +
+>> >>> +static struct key_entry wind_keymap[] =3D {
+>> >>> +     /* These keys work without WMI. Ignore them to avoid doubl=
+e keycodes */
+>> >>> +     { KE_IGNORE, WIND_KEY_TOUCHPAD,         { KEY_TOUCHPAD_TOG=
+GLE } },
+>> >>> +     { KE_IGNORE, WIND_KEY_BLUETOOTH,        { KEY_BLUETOOTH } =
+},
+>> >>> +     { KE_IGNORE, WIND_KEY_CAMERA,           { KEY_CAMERA } },
+>> >>> +     { KE_IGNORE, WIND_KEY_WLAN,             { KEY_WLAN } },
+>> >>> +     /* These are keys that should be handled via WMI */
+>> >>> +     { KE_KEY,    WIND_KEY_TURBO,            { KEY_PROG1 } },
+>> >>> +     { KE_KEY,    WIND_KEY_ECO,              { KEY_PROG2 } },
+>> >>> +     { KE_END, 0 }
+>> >>> +};
+>> >>> +
+>> >>> +static struct input_dev *wind_input_dev;
+>> >>> +
+>> >>> +static void wind_wmi_notify(u32 value, void *context)
+>> >>> +{
+>> >>> +     struct acpi_buffer response =3D {
+>> >>> +             .length         =3D ACPI_ALLOCATE_BUFFER,
+>> >>> +             .pointer        =3D NULL
+>> >>> +     };
+>> >>> +     acpi_status status =3D wmi_get_event_data(value, &response=
+);
+>> >>> +     union acpi_object *obj =3D response.pointer;
+>> >>> +     int code;
+>> >>> +
+>> >>> +     if (status !=3D AE_OK) {
+>> >>> +             pr_warn("Bad event status %#x\n", status);
+>> >>> +             return;
+>> >>> +     }
+>> >>> +
+>> >>> +     if (!obj || obj->type !=3D ACPI_TYPE_INTEGER) {
+>> >>> +             pr_warn("Unknown event received\n");
+>> >>> +             goto wind_wmi_notify_free;
+>> >>> +     }
+>> >>> +
+>> >>> +     code =3D obj->integer.value;
+>> >>> +     pr_debug("Event code: %#x\n", code);
+>> >>> +
+>> >>> +     if (code =3D=3D 0x00 || code =3D=3D 0x62 || code =3D=3D 0x=
+63) {
+>> >>> +             /* Unknown events - drop them for now */
+>> >>> +             goto wind_wmi_notify_free;
+>> >>> +     }
+>> >>> +
+>> >>> +     if (!sparse_keymap_report_event(wind_input_dev, code, 1, t=
+rue))
+>> >>> +             pr_warn("Unknown key %#x pressed\n", code);
+>> >>> +
+>> >>> +wind_wmi_notify_free:
+>> >>> +     kfree(response.pointer);
+>> >>> +}
+>> >>> +
+>> >>> +static int __init wind_input_setup(void)
+>> >>> +{
+>> >>> +     int err;
+>> >>> +
+>> >>> +     wind_input_dev =3D input_allocate_device();
+>> >>> +     if (!wind_input_dev)
+>> >>> +             return -ENOMEM;
+>> >>> +
+>> >>> +     wind_input_dev->name =3D "MSI WMI hotkeys";
+>> >>> +     wind_input_dev->phys =3D "wmi/input0";
+>> >>> +     wind_input_dev->id.bustype =3D BUS_HOST;
+>> >>> +
+>> >>> +     err =3D sparse_keymap_setup(wind_input_dev, wind_keymap, N=
+ULL);
+>> >>> +     if (err)
+>> >>> +             goto wind_input_setup_free_dev;
+>> >>> +
+>> >>> +     err =3D input_register_device(wind_input_dev);
+>> >>> +     if (err)
+>> >>> +             goto wind_input_setup_free_keymap;
+>> >>> +
+>> >>> +     return 0;
+>> >>> +
+>> >>> +wind_input_setup_free_keymap:
+>> >>> +     sparse_keymap_free(wind_input_dev);
+>> >>> +wind_input_setup_free_dev:
+>> >>> +     input_free_device(wind_input_dev);
+>> >>> +     return err;
+>> >>> +}
+>> >>> +
+>> >>> +static int __init wind_wmi_init(void)
+>> >>> +{
+>> >>> +     int err;
+>> >>> +
+>> >>> +     if (!wmi_has_guid(WMI_EVENT_GUID)) {
+>> >>> +             pr_err("No MSI Wind WMI found\n");
+>> >>> +             return -ENODEV;
+>> >>> +     }
+>> >>> +
+>> >>> +     err =3D wind_input_setup();
+>> >>> +     if (err) {
+>> >>> +             pr_err("Unable to setup input device\n");
+>> >>> +             return err;
+>> >>> +     }
+>> >>> +
+>> >>> +     if (ACPI_FAILURE(wmi_install_notify_handler(WMI_EVENT_GUID=
+,
+>> >>> +             wind_wmi_notify, NULL))) {
+>> >>> +             pr_err("Unable to install WMI notify handler\n");
+>> >>> +             err =3D -EIO;
+>> >>> +             goto wind_wmi_init_unregister_input;
+>> >>> +     }
+>> >>> +
+>> >>> +     pr_debug("Event handler installed\n");
+>> >>> +
+>> >>> +     return 0;
+>> >>> +
+>> >>> +wind_wmi_init_unregister_input:
+>> >>> +     input_unregister_device(wind_input_dev);
+>> >>> +     sparse_keymap_free(wind_input_dev);
+>> >>> +     input_free_device(wind_input_dev);
+>> >>> +     return err;
+>> >>> +}
+>> >>> +
+>> >>> +static void __exit wind_wmi_exit(void)
+>> >>> +{
+>> >>> +     wmi_remove_notify_handler(WMI_EVENT_GUID);
+>> >>> +     input_unregister_device(wind_input_dev);
+>> >>> +     sparse_keymap_free(wind_input_dev);
+>> >>> +     input_free_device(wind_input_dev);
+>> >>> +}
+>> >>> +
+>> >>> +module_init(wind_wmi_init);
+>> >>> +module_exit(wind_wmi_exit);
+>> >>
+>> >>
+>> >> --
+>> >> To unsubscribe from this list: send the line "unsubscribe platfor=
+m-driver-x86" in
+>> >> the body of a message to majordomo@vger.kernel.org
+>> >> More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
+l
+>> >
+>> >
+>> >
+>> > --
+>> > Corentin Chary
+>> > http://xf.iksaif.net
+>>
 >
 >
