@@ -1,19 +1,19 @@
 From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 3/6] msi-laptop: Code cleanups
-Date: Wed, 28 Nov 2012 11:11:50 +0800
-Message-ID: <1354072310.21227.962.camel@linux-s257.site>
+Subject: Re: [PATCH 4/6] msi-laptop: Add MSI Wind U90/U100 support
+Date: Wed, 28 Nov 2012 11:32:52 +0800
+Message-ID: <1354073572.21227.1000.camel@linux-s257.site>
 References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
-	 <1353796141-1470-4-git-send-email-maxtram95@gmail.com>
+	 <1353796141-1470-5-git-send-email-maxtram95@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:42382 "EHLO
+Received: from smtp.nue.novell.com ([195.135.221.5]:41759 "EHLO
 	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752437Ab2K1DMt (ORCPT
+	with ESMTP id S1751836Ab2K1Ddv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 27 Nov 2012 22:12:49 -0500
-In-Reply-To: <1353796141-1470-4-git-send-email-maxtram95@gmail.com>
+	Tue, 27 Nov 2012 22:33:51 -0500
+In-Reply-To: <1353796141-1470-5-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Maxim Mikityanskiy <maxtram95@gmail.com>
@@ -21,187 +21,360 @@ Cc: platform-driver-x86@vger.kernel.org, jlee@novell.com, mjg@redhat.com
 
 =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 00:28 +0200=EF=BC=8CMa=
 xim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
-> Replaced msi_init_rfkill() by msi_update_rfkill(), removed delays by
-> replacing delayed works by just works and made msi_laptop_i8042_filte=
-r()
-> filter out KEY_TOUCHPAD_TOGGLE when sending KEY_TOUCHPAD_ON and
-> KEY_TOUCHPAD_OFF.
-
-Please separate to 2 patches, one for touchpad key and other one for
-rfkill.
-
-And,=20
-I am not agree for the clean up to msi_init_rfkill unless it causes
-problem on U90/U100. Did you find any issue on U90/U100?
-
-I delay 1 magic second for msi_rfkill_init because there have other MSI
-model need a delay time after we set SCM mode through write EC
-register.=20
-So, please don't change the code for msi_init_rfkill delay work, just
-keep it works with other MSI shipping machines.
-
+> Add MSI Wind U90/U100 to separate DMI table, add U90/U100 specific
+> workarounds and add some missing EC features support such as basic fa=
+n
+> control, turbo and ECO modes and touchpad state.
 >=20
 > Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 > ---
->  drivers/platform/x86/msi-laptop.c | 67 ++++++++++++++---------------=
-----------
->  1 file changed, 24 insertions(+), 43 deletions(-)
+>  drivers/platform/x86/msi-laptop.c | 199 ++++++++++++++++++++++++++++=
+++++------
+>  1 file changed, 171 insertions(+), 28 deletions(-)
 >=20
 > diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86=
 /msi-laptop.c
-> index 7ba107a..3b6f494 100644
+> index 3b6f494..16e9863 100644
 > --- a/drivers/platform/x86/msi-laptop.c
 > +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -600,8 +600,23 @@ static const struct rfkill_ops rfkill_threeg_ops=
- =3D {
+> @@ -82,8 +82,19 @@
+>  #define MSI_STANDARD_EC_SCM_LOAD_ADDRESS	0x2d
+>  #define MSI_STANDARD_EC_SCM_LOAD_MASK		(1 << 0)
+> =20
+> -#define MSI_STANDARD_EC_TOUCHPAD_ADDRESS	0xe4
+> +#define MSI_STANDARD_EC_POWER_ADDRESS		0xe4
+
+If 0xE4 register is not just for touchpad and power, then I suggest use
+a more general name like: MSI_STANDARD_EC_FUNCTIONS_ADDRESS or other.
+
+> +/* Power LED is orange - Turbo mode */
+> +#define MSI_STANDARD_EC_TURBO_MASK		(1 << 1)
+> +/* Power LED is green - ECO mode */
+> +#define MSI_STANDARD_EC_ECO_MASK		(1 << 3)
+> +/* Touchpad is turned on */
+>  #define MSI_STANDARD_EC_TOUCHPAD_MASK		(1 << 4)
+> +/* If this bit !=3D bit 1, turbo mode can't be toggled */
+> +#define MSI_STANDARD_EC_TURBO_COOLDOWN_MASK	(1 << 7)
+> +
+> +#define MSI_STANDARD_EC_FAN_ADDRESS		0x33
+> +/* If zero, fan rotates at maximal speed */
+> +#define MSI_STANDARD_EC_AUTOFAN_MASK		(1 << 0)
+> =20
+>  #ifdef CONFIG_PM_SLEEP
+>  static int msi_laptop_resume(struct device *device);
+> @@ -123,6 +134,13 @@ static int threeg_exists;
+>   * e.g. MSI N034 netbook
+>   */
+>  static bool load_scm_model;
+> +
+> +/* Some MSI Wind netbooks (e.g. MSI Wind U100) need loading SCM to g=
+et some
+> + * features working (e.g. ECO mode), but we cannot change Wlan/Bluet=
+ooth state
+> + * in software and we can only read its state.
+> + */
+> +static bool ec_read_only;
+> +
+>  static struct rfkill *rfk_wlan, *rfk_bluetooth, *rfk_threeg;
+> =20
+>  /* Hardware access */
+> @@ -195,6 +213,9 @@ static ssize_t set_device_state(const char *buf, =
+size_t count, u8 mask)
+>  	if (sscanf(buf, "%i", &status) !=3D 1 || (status < 0 || status > 1)=
+)
+>  		return -EINVAL;
+> =20
+> +	if (ec_read_only)
+> +		return -EOPNOTSUPP;
+> +
+>  	/* read current device state */
+>  	result =3D ec_read(MSI_STANDARD_EC_COMMAND_ADDRESS, &rdata);
+>  	if (result < 0)
+> @@ -417,18 +438,115 @@ static ssize_t store_auto_brightness(struct de=
+vice *dev,
+>  	return count;
+>  }
+> =20
+> +static ssize_t show_touchpad(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +
+> +	u8 rdata;
+> +	int result;
+> +
+> +	result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MAS=
+K));
+> +}
+
+I don't think we need create a touchpad attribute interface because
+there already have key code raise the change to user space.
+
+> +
+> +static ssize_t show_turbo(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +
+> +	u8 rdata;
+> +	int result;
+> +
+> +	result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK))=
+;
+> +}
+> +
+> +static ssize_t show_eco(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +
+> +	u8 rdata;
+> +	int result;
+> +
+> +	result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
+> +}
+> +
+> +static ssize_t show_turbo_cooldown(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +
+> +	u8 rdata;
+> +	int result;
+> +
+> +	result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sprintf(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)=
+) |
+> +		(!!(rdata & MSI_STANDARD_EC_TURBO_COOLDOWN_MASK) << 1));
+> +}
+> +
+> +static ssize_t show_auto_fan(struct device *dev,
+> +	struct device_attribute *attr, char *buf)
+> +{
+> +
+> +	u8 rdata;
+> +	int result;
+> +
+> +	result =3D ec_read(MSI_STANDARD_EC_FAN_ADDRESS, &rdata);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK=
+));
+> +}
+> +
+> +static ssize_t store_auto_fan(struct device *dev,
+> +	struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +
+> +	int enable, result;
+> +
+> +	if (sscanf(buf, "%i", &enable) !=3D 1 || (enable !=3D (enable & 1))=
+)
+> +		return -EINVAL;
+> +
+> +	result =3D ec_write(MSI_STANDARD_EC_FAN_ADDRESS, enable);
+> +	if (result < 0)
+> +		return result;
+> +
+> +	return count;
+> +}
+> +
+>  static DEVICE_ATTR(lcd_level, 0644, show_lcd_level, store_lcd_level)=
+;
+>  static DEVICE_ATTR(auto_brightness, 0644, show_auto_brightness,
+>  		   store_auto_brightness);
+>  static DEVICE_ATTR(bluetooth, 0444, show_bluetooth, NULL);
+>  static DEVICE_ATTR(wlan, 0444, show_wlan, NULL);
+>  static DEVICE_ATTR(threeg, 0444, show_threeg, NULL);
+> +static DEVICE_ATTR(touchpad, 0444, show_touchpad, NULL);
+> +static DEVICE_ATTR(turbo_mode, 0444, show_turbo, NULL);
+> +static DEVICE_ATTR(eco_mode, 0444, show_eco, NULL);
+> +static DEVICE_ATTR(turbo_cooldown, 0444, show_turbo_cooldown, NULL);
+> +static DEVICE_ATTR(auto_fan, 0644, show_auto_fan, store_auto_fan);
+> =20
+>  static struct attribute *msipf_attributes[] =3D {
+>  	&dev_attr_lcd_level.attr,
+>  	&dev_attr_auto_brightness.attr,
+>  	&dev_attr_bluetooth.attr,
+>  	&dev_attr_wlan.attr,
+> +	&dev_attr_touchpad.attr,
+> +	&dev_attr_turbo_mode.attr,
+> +	&dev_attr_eco_mode.attr,
+> +	&dev_attr_turbo_cooldown.attr,
+> +	&dev_attr_auto_fan.attr,
+>  	NULL
+>  };
+> =20
+> @@ -553,6 +671,19 @@ static struct dmi_system_id __initdata msi_load_=
+scm_models_dmi_table[] =3D {
+>  	{ }
+>  };
+> =20
+> +static struct dmi_system_id __initdata msi_load_scm_ro_models_dmi_ta=
+ble[] =3D {
+> +	{
+> +		.ident =3D "MSI U90/U100",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR,
+> +				"MICRO-STAR INTERNATIONAL CO., LTD"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "U90/U100"),
+> +		},
+> +		.callback =3D dmi_check_cb
+> +	},
+> +	{ }
+> +};
+> +
+>  static int rfkill_bluetooth_set(void *data, bool blocked)
+>  {
+>  	/* Do something with blocked...*/
+> @@ -560,32 +691,26 @@ static int rfkill_bluetooth_set(void *data, boo=
+l blocked)
+>  	 * blocked =3D=3D false is on
+>  	 * blocked =3D=3D true is off
+>  	 */
+> -	if (blocked)
+> -		set_device_state("0", 0, MSI_STANDARD_EC_BLUETOOTH_MASK);
+> -	else
+> -		set_device_state("1", 0, MSI_STANDARD_EC_BLUETOOTH_MASK);
+> +	int result =3D set_device_state(blocked ? "0" : "1", 0,
+> +		MSI_STANDARD_EC_BLUETOOTH_MASK);
+> =20
+> -	return 0;
+> +	return result < 0 ? result : 0;
+>  }
+> =20
+>  static int rfkill_wlan_set(void *data, bool blocked)
+>  {
+> -	if (blocked)
+> -		set_device_state("0", 0, MSI_STANDARD_EC_WLAN_MASK);
+> -	else
+> -		set_device_state("1", 0, MSI_STANDARD_EC_WLAN_MASK);
+> +	int result =3D set_device_state(blocked ? "0" : "1", 0,
+> +		MSI_STANDARD_EC_WLAN_MASK);
+> =20
+> -	return 0;
+> +	return result < 0 ? result : 0;
+>  }
+> =20
+>  static int rfkill_threeg_set(void *data, bool blocked)
+>  {
+> -	if (blocked)
+> -		set_device_state("0", 0, MSI_STANDARD_EC_3G_MASK);
+> -	else
+> -		set_device_state("1", 0, MSI_STANDARD_EC_3G_MASK);
+> +	int result =3D set_device_state(blocked ? "0" : "1", 0,
+> +		MSI_STANDARD_EC_3G_MASK);
+> =20
+> -	return 0;
+> +	return result < 0 ? result : 0;
+>  }
+> =20
+>  static const struct rfkill_ops rfkill_bluetooth_ops =3D {
+> @@ -600,16 +725,24 @@ static const struct rfkill_ops rfkill_threeg_op=
+s =3D {
 >  	.set_block =3D rfkill_threeg_set
 >  };
 > =20
-> +static void msi_update_rfkill(struct work_struct *ignored)
+> +static bool msi_rfkill_set_state(struct rfkill *rfkill, bool blocked=
+)
 > +{
-> +	get_wireless_state_ec_standard();
-> +
-> +	if (rfk_wlan)
-> +		rfkill_set_sw_state(rfk_wlan, !wlan_s);
-> +	if (rfk_bluetooth)
-> +		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
-> +	if (rfk_threeg)
-> +		rfkill_set_sw_state(rfk_threeg, !threeg_s);
+> +	if (ec_read_only)
+> +		return rfkill_set_hw_state(rfkill, blocked);
+> +	else
+> +		return rfkill_set_sw_state(rfkill, blocked);
 > +}
-> +static DECLARE_WORK(msi_rfkill_work, msi_update_rfkill);
 > +
->  static void rfkill_cleanup(void)
+>  static void msi_update_rfkill(struct work_struct *ignored)
 >  {
-> +	cancel_work_sync(&msi_rfkill_work);
-> +
->  	if (rfk_bluetooth) {
->  		rfkill_unregister(rfk_bluetooth);
->  		rfkill_destroy(rfk_bluetooth);
-> @@ -618,19 +633,6 @@ static void rfkill_cleanup(void)
->  	}
->  }
+>  	get_wireless_state_ec_standard();
 > =20
-> -static void msi_update_rfkill(struct work_struct *ignored)
-> -{
-> -	get_wireless_state_ec_standard();
-> -
-> -	if (rfk_wlan)
+>  	if (rfk_wlan)
 > -		rfkill_set_sw_state(rfk_wlan, !wlan_s);
-> -	if (rfk_bluetooth)
+> +		msi_rfkill_set_state(rfk_wlan, !wlan_s);
+>  	if (rfk_bluetooth)
 > -		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
-> -	if (rfk_threeg)
+> +		msi_rfkill_set_state(rfk_bluetooth, !bluetooth_s);
+>  	if (rfk_threeg)
 > -		rfkill_set_sw_state(rfk_threeg, !threeg_s);
-> -}
-> -static DECLARE_DELAYED_WORK(msi_rfkill_work, msi_update_rfkill);
-> -
->  static void msi_send_touchpad_key(struct work_struct *ignored)
->  {
->  	u8 rdata;
-> @@ -644,7 +646,7 @@ static void msi_send_touchpad_key(struct work_str=
+> +		msi_rfkill_set_state(rfk_threeg, !threeg_s);
+>  }
+>  static DECLARE_WORK(msi_rfkill_work, msi_update_rfkill);
+> =20
+> @@ -638,7 +771,7 @@ static void msi_send_touchpad_key(struct work_str=
 uct *ignored)
->  		(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK) ?
->  		KEY_TOUCHPAD_ON : KEY_TOUCHPAD_OFF, 1, true);
->  }
-> -static DECLARE_DELAYED_WORK(msi_touchpad_work, msi_send_touchpad_key=
-);
-> +static DECLARE_WORK(msi_touchpad_work, msi_send_touchpad_key);
+>  	u8 rdata;
+>  	int result;
 > =20
->  static bool msi_laptop_i8042_filter(unsigned char data, unsigned cha=
-r str,
->  				struct serio *port)
-> @@ -662,14 +664,16 @@ static bool msi_laptop_i8042_filter(unsigned ch=
-ar data, unsigned char str,
->  		extended =3D false;
->  		switch (data) {
->  		case 0xE4:
-> -			schedule_delayed_work(&msi_touchpad_work,
-> -				round_jiffies_relative(0.5 * HZ));
-> -			break;
-> +			schedule_work(&msi_touchpad_work);
+> -	result =3D ec_read(MSI_STANDARD_EC_TOUCHPAD_ADDRESS, &rdata);
+> +	result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
+>  	if (result < 0)
+>  		return;
+> =20
+> @@ -802,13 +935,15 @@ static int __init load_scm_model_init(struct pl=
+atform_device *sdev)
+>  	u8 data;
+>  	int result;
+> =20
+> -	/* allow userland write sysfs file  */
+> -	dev_attr_bluetooth.store =3D store_bluetooth;
+> -	dev_attr_wlan.store =3D store_wlan;
+> -	dev_attr_threeg.store =3D store_threeg;
+> -	dev_attr_bluetooth.attr.mode |=3D S_IWUSR;
+> -	dev_attr_wlan.attr.mode |=3D S_IWUSR;
+> -	dev_attr_threeg.attr.mode |=3D S_IWUSR;
+> +	if (!ec_read_only) {
+> +		/* allow userland write sysfs file  */
+> +		dev_attr_bluetooth.store =3D store_bluetooth;
+> +		dev_attr_wlan.store =3D store_wlan;
+> +		dev_attr_threeg.store =3D store_threeg;
+> +		dev_attr_bluetooth.attr.mode |=3D S_IWUSR;
+> +		dev_attr_wlan.attr.mode |=3D S_IWUSR;
+> +		dev_attr_threeg.attr.mode |=3D S_IWUSR;
+> +	}
+> =20
+>  	/* disable hardware control by fn key */
+>  	result =3D ec_read(MSI_STANDARD_EC_SCM_LOAD_ADDRESS, &data);
+> @@ -860,8 +995,15 @@ static int __init msi_init(void)
+>  	if (force || dmi_check_system(msi_dmi_table))
+>  		old_ec_model =3D 1;
+> =20
+> -	if (!old_ec_model)
+> +	if (!old_ec_model) {
+>  		get_threeg_exists();
+> +		if (dmi_check_system(msi_load_scm_models_dmi_table))
+> +			load_scm_model =3D 1;
+> +		else if (dmi_check_system(msi_load_scm_ro_models_dmi_table)) {
+> +			load_scm_model =3D 1;
+> +			ec_read_only =3D 1;
+> +		}
+> +	}
+> =20
+>  	if (!old_ec_model && dmi_check_system(msi_load_scm_models_dmi_table=
+))
+>  		load_scm_model =3D 1;
 
-Don't remove the 0.5 magic delay, please! It will cause other shipped
-MSI machines got problem could not capture the real change of EC
-register.
+hmm... the load_scm_model dmi table check 2 times? I think you can just
+remove the duplicate code.
 
-> +		case 0x64:
-> +			/* Filter out KEY_TOUCHPAD_TOGGLE and send only
-> +			 * KEY_TOUCHPAD_ON and KEY_TOUCHPAD_OFF
-> +			 */
-> +			return true;
+> @@ -992,3 +1134,4 @@ MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:=
+pnMS-N051:*");
+>  MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnMS-N014:*");
+>  MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnCR620:*");
+>  MODULE_ALIAS("dmi:*:svnMicro-StarInternational*:pnU270series:*");
+> +MODULE_ALIAS("dmi:*:svnMICRO-STARINTERNATIONAL*:pnU90/U100:*");
 
-Why this patch filter out 0x64 key? What's the scan code emitted when
-press the touchpad on/off Fn key on U100? Does it emit
-KEY_TOUCHPAD_TOGGLE and KEY_TOUCHPAD_ON/OFF at the same time?
-
->  		case 0x54:
->  		case 0x62:
->  		case 0x76:
-> -			schedule_delayed_work(&msi_rfkill_work,
-> -				round_jiffies_relative(0.5 * HZ));
-> +			schedule_work(&msi_rfkill_work);
->  			break;
->  		}
->  	}
-> @@ -677,31 +681,11 @@ static bool msi_laptop_i8042_filter(unsigned ch=
-ar data, unsigned char str,
->  	return false;
->  }
-> =20
-> -static void msi_init_rfkill(struct work_struct *ignored)
-> -{
-> -	if (rfk_wlan) {
-> -		rfkill_set_sw_state(rfk_wlan, !wlan_s);
-> -		rfkill_wlan_set(NULL, !wlan_s);
-> -	}
-> -	if (rfk_bluetooth) {
-> -		rfkill_set_sw_state(rfk_bluetooth, !bluetooth_s);
-> -		rfkill_bluetooth_set(NULL, !bluetooth_s);
-> -	}
-> -	if (rfk_threeg) {
-> -		rfkill_set_sw_state(rfk_threeg, !threeg_s);
-> -		rfkill_threeg_set(NULL, !threeg_s);
-> -	}
-> -}
-> -static DECLARE_DELAYED_WORK(msi_rfkill_init, msi_init_rfkill);
-> -
->  static int rfkill_init(struct platform_device *sdev)
->  {
->  	/* add rfkill */
->  	int retval;
-> =20
-> -	/* keep the hardware wireless state */
-> -	get_wireless_state_ec_standard();
-> -
->  	rfk_bluetooth =3D rfkill_alloc("msi-bluetooth", &sdev->dev,
->  				RFKILL_TYPE_BLUETOOTH,
->  				&rfkill_bluetooth_ops, NULL);
-> @@ -736,8 +720,7 @@ static int rfkill_init(struct platform_device *sd=
-ev)
->  	}
-> =20
->  	/* schedule to run rfkill state initial */
-> -	schedule_delayed_work(&msi_rfkill_init,
-> -				round_jiffies_relative(1 * HZ));
-> +	schedule_work(&msi_rfkill_work);
-> =20
->  	return 0;
-> =20
-> @@ -951,7 +934,6 @@ fail_platform_device2:
-> =20
->  	if (load_scm_model) {
->  		i8042_remove_filter(msi_laptop_i8042_filter);
-> -		cancel_delayed_work_sync(&msi_rfkill_work);
->  		rfkill_cleanup();
->  	}
->  	platform_device_del(msipf_device);
-> @@ -976,7 +958,6 @@ static void __exit msi_cleanup(void)
->  	if (load_scm_model) {
->  		i8042_remove_filter(msi_laptop_i8042_filter);
->  		msi_laptop_input_destroy();
-> -		cancel_delayed_work_sync(&msi_rfkill_work);
->  		rfkill_cleanup();
->  	}
-> =20
 
 Thanks a lot!
 Joey Lee
