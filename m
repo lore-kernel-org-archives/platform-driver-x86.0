@@ -1,171 +1,443 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 08/11] asus-wmi: add display toggle quirk
-Date: Thu, 29 Nov 2012 09:12:36 +0100
-Message-ID: <1354176759-630-9-git-send-email-corentin.chary@gmail.com>
-References: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentincj@iksaif.net>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] ACPI ALS driver for iio introduced.
+Date: Thu, 29 Nov 2012 11:15:52 +0100
+Message-ID: <50B735D8.6000907@metafoo.de>
+References: <CAHR064j_7Y3wYXVXmC4TqZHxkqa0Z2HK84-OaDTiC7oesB_TrQ@mail.gmail.com> <1354157205-2956-1-git-send-email-marxin.liska@gmail.com> <1354157205-2956-2-git-send-email-marxin.liska@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1354157205-2956-2-git-send-email-marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jlee-IBi9RG/b67k@public.gmane.org, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
+Hi,
 
-For machines with AMD graphic chips, it will send out WMI event and ACPI
-interrupt at the same time while hitting the hotkey. BIOS will notify the
-system the next display output mode throught WMI event code, so that
-windows' application can show an OSD to tell the user which mode will be
-taken effect. User can hit the display toggle key many times within 2
-seconds to choose the mode they want. After 2 seconds, WMI dirver should
-send a WMIMethod(SDSP) command to tell the BIOS which mode the user chose.
-And then BIOS will raise another ACPI interrupt to tell the system to
-really switch the display mode.
+On 11/29/2012 03:46 AM, marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: marxin <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-In Linux desktop, we don't have this kind of OSD to let users to choose
-the mode they want, so we don't need to call WMIMethod(SDSP) to have
-another ACPI interrupt. To simplify the problem, we just have to ignore
-the WMI event, and let the first ACPI interrupt to send out the key event.
+The from tag should contain your full name. Also you need to add a
+Signed-off-by tag. And a short description what the patch does wouldn't hurt
+either. And the subject line prefix should match that of the subsystem, in
+this case "iio:". Your subject line could for example be "iio: Add ACPI
+ambient light sensor driver".
 
-For the need, here comes another quirk to add machines with this kind of
-behavior. When the WMI driver receives the display toggle WMI event, and
-found the machin is in the list, it will do nothing and let ACPI video
-driver to report the key event.
+Also what's up with all the TODOs in the driver, shouldn't these be
+addressed first before the driver is merged upstream? The driver looks a bit
+as if it is only half finished, which is fine if you just want to get some
+initial feedback, but you should definitely state this somewhere.
 
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-Signed-off-by: Corentin Chary <corentincj@iksaif.net>
-Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c |   31 ++++++++++++++++++++++++++++++-
- drivers/platform/x86/asus-wmi.c    |   26 +++++++++++++++++++++++---
- drivers/platform/x86/asus-wmi.h    |    7 +++++++
- 3 files changed, 60 insertions(+), 4 deletions(-)
+> 
+> ---
+>  drivers/iio/industrialio-buffer.c    |    4 +-
+>  drivers/staging/iio/light/Kconfig    |    6 +
+>  drivers/staging/iio/light/Makefile   |    1 +
+>  drivers/staging/iio/light/acpi-als.c |  486 ++++++++++++++++++++++++++++++++++
+>  4 files changed, 495 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/staging/iio/light/acpi-als.c
+> 
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index aaadd32..b8b377c 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -119,8 +119,8 @@ static ssize_t iio_scan_el_show(struct device *dev,
+>  	int ret;
+>  	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+>  
+> -	ret = test_bit(to_iio_dev_attr(attr)->address,
+> -		       indio_dev->buffer->scan_mask);
+> +	ret = !!(test_bit(to_iio_dev_attr(attr)->address,
+> +		       indio_dev->buffer->scan_mask));
+>  
+>  	return sprintf(buf, "%d\n", ret);
+>  }
+> diff --git a/drivers/staging/iio/light/Kconfig b/drivers/staging/iio/light/Kconfig
+> index 4bed30e..a164ecc 100644
+> --- a/drivers/staging/iio/light/Kconfig
+> +++ b/drivers/staging/iio/light/Kconfig
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 87d45e0..9aa6642 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -59,6 +59,17 @@ static struct quirk_entry quirk_asus_unknown = {
- 	.wapf = 0,
- };
- 
-+/*
-+ * For those machines that need software to control bt/wifi status
-+ * and can't adjust brightness through ACPI interface
-+ * and have duplicate events(ACPI and WMI) for display toggle
-+ */
-+static struct quirk_entry quirk_asus_x55u = {
-+	.wapf = 4,
-+	.wmi_backlight_power = true,
-+	.no_display_toggle = true,
-+};
-+
- static struct quirk_entry quirk_asus_x401u = {
- 	.wapf = 4,
- };
-@@ -77,6 +88,15 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X401U"),
- 		},
-+		.driver_data = &quirk_asus_x55u,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X401A",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X401A"),
-+		},
- 		.driver_data = &quirk_asus_x401u,
- 	},
- 	{
-@@ -95,6 +115,15 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X501U"),
- 		},
-+		.driver_data = &quirk_asus_x55u,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X501A",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X501A"),
-+		},
- 		.driver_data = &quirk_asus_x401u,
- 	},
- 	{
-@@ -131,7 +160,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X55U"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_x55u,
- 	},
- 	{
- 		.callback = dmi_matched,
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 912ec7d..6327a1b 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1341,6 +1341,18 @@ static void asus_wmi_backlight_exit(struct asus_wmi *asus)
- 	asus->backlight_device = NULL;
- }
- 
-+static int is_display_toggle(int code)
-+{
-+	/* display toggle keys */
-+	if ((code >= 0x61 && code <= 0x67) ||
-+	    (code >= 0x8c && code <= 0x93) ||
-+	    (code >= 0xa0 && code <= 0xa7) ||
-+	    (code >= 0xd0 && code <= 0xd5))
-+		return 1;
-+
-+	return 0;
-+}
-+
- static void asus_wmi_notify(u32 value, void *context)
- {
- 	struct asus_wmi *asus = context;
-@@ -1380,10 +1392,18 @@ static void asus_wmi_notify(u32 value, void *context)
- 		code = NOTIFY_BRNDOWN_MIN;
- 
- 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
--		if (!acpi_video_backlight_support())
-+		if (!acpi_video_backlight_support()) {
- 			asus_wmi_backlight_notify(asus, orig_code);
--	} else if (!sparse_keymap_report_event(asus->inputdev, code,
--					       key_value, autorelease))
-+		}
-+		goto exit;
-+	}
-+
-+	if (is_display_toggle(code) &&
-+	    asus->driver->quirks->no_display_toggle)
-+		goto exit;
-+
-+	if (!sparse_keymap_report_event(asus->inputdev, code,
-+					key_value, autorelease))
- 		pr_info("Unknown key %x pressed\n", code);
- 
- exit:
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 4c9bd38..776524c 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -41,6 +41,13 @@ struct quirk_entry {
- 	bool store_backlight_power;
- 	bool wmi_backlight_power;
- 	int wapf;
-+	/*
-+	 * For machines with AMD graphic chips, it will send out WMI event
-+	 * and ACPI interrupt at the same time while hitting the hotkey.
-+	 * To simplify the problem, we just have to ignore the WMI event,
-+	 * and let the ACPI interrupt to send out the key event.
-+	 */
-+	int no_display_toggle;
- };
- 
- struct asus_wmi_driver {
--- 
-1.7.8.6
+Unless you have a really good reason we shouldn't add new iio drivers to
+staging. Just put it in drivers/iio/light/
+
+> @@ -50,4 +50,10 @@ config TSL2x7x
+>  	 tmd2672, tsl2772, tmd2772 devices.
+>  	 Provides iio_events and direct access via sysfs.
+>  
+> +config ACPI_ALS
+> +	tristate "ACPI Ambient Light Sensor"
+
+I suspect that the driver depends on CONFIG_ACPI
+
+
+> +	help
+> +	 Support for ACPI0008 Light Sensor.
+> +	 Provides direct access via sysfs.
+> +
+>  endmenu
+> diff --git a/drivers/staging/iio/light/Makefile b/drivers/staging/iio/light/Makefile
+> index 141af1e..13090e6 100644
+> --- a/drivers/staging/iio/light/Makefile
+> +++ b/drivers/staging/iio/light/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_SENSORS_ISL29018)	+= isl29018.o
+>  obj-$(CONFIG_SENSORS_ISL29028)	+= isl29028.o
+>  obj-$(CONFIG_TSL2583)	+= tsl2583.o
+>  obj-$(CONFIG_TSL2x7x)	+= tsl2x7x_core.o
+> +obj-$(CONFIG_ACPI_ALS)	+= acpi-als.o
+> diff --git a/drivers/staging/iio/light/acpi-als.c b/drivers/staging/iio/light/acpi-als.c
+> new file mode 100644
+> index 0000000..9ba0fc4
+> --- /dev/null
+> +++ b/drivers/staging/iio/light/acpi-als.c
+> @@ -0,0 +1,486 @@
+> +/*
+> + * ACPI Ambient Light Sensor Driver
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <trace/events/printk.h>
+> +#include <acpi/acpi_bus.h>
+> +#include <acpi/acpi_drivers.h>
+> +#include <linux/err.h>
+> +#include <linux/mutex.h>
+> +
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +#define PREFIX "ACPI: "
+> +
+> +#define ACPI_ALS_CLASS			"als"
+> +#define ACPI_ALS_DEVICE_NAME		"acpi-als"
+> +#define ACPI_ALS_NOTIFY_ILLUMINANCE	0x80
+> +
+> +#define ACPI_ALS_OUTPUTS		1
+> +
+> +#define _COMPONENT			ACPI_ALS_COMPONENT
+> +ACPI_MODULE_NAME("acpi-als");
+> +
+> +MODULE_AUTHOR("Martin Liska <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("ACPI Ambient Light Sensor Driver");
+> +MODULE_LICENSE("GPL");
+> +
+> +struct acpi_als_chip {
+> +    struct acpi_device		*device;
+> +    struct acpi_als_device	*acpi_als_sys;
+
+Neither the struct is defined nor the field is used.
+
+> +    struct mutex		lock;
+> +    struct iio_trigger		*trig;
+> +
+> +    int				illuminance;
+> +    int				polling;
+
+Polling is only ever assigned, but never read.
+
+> +
+> +    int				count;
+> +    struct acpi_als_mapping	*mappings;
+> +};
+> +
+> +static int acpi_als_add(struct acpi_device *device);
+> +static int acpi_als_remove(struct acpi_device *device, int type);
+> +static void acpi_als_notify(struct acpi_device *device, u32 event);
+> +
+> +static const struct acpi_device_id acpi_als_device_ids[] = {
+> +    {"ACPI0008", 0},
+> +    {"", 0},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(acpi, acpi_als_device_ids);
+> +
+> +static struct acpi_driver acpi_als_driver = {
+> +    .name = "acpi_als",
+> +    .class = ACPI_ALS_CLASS,
+> +    .ids = acpi_als_device_ids,
+> +    .ops = {
+> +        .add = acpi_als_add,
+> +        .remove = acpi_als_remove,
+> +        .notify = acpi_als_notify,
+> +    },
+> +};
+> +
+> +struct acpi_als_mapping {
+> +    int adjustment;
+> +    int illuminance;
+> +};
+> +
+> +#define ALS_INVALID_VALUE_LOW		0
+> +#define ALS_INVALID_VALUE_HIGH		-1
+> +
+
+[...]
+> +/*
+> + * acpi_als_get_polling - get a recommended polling frequency
+> + * 			  for the Ambient Light Sensor device
+> + */
+> +static int acpi_als_get_polling(struct acpi_als_chip *chip)
+> +{
+> +    acpi_status status;
+> +    unsigned long long polling;
+> +
+> +    status =
+> +        acpi_evaluate_integer(chip->device->handle, "_ALP", NULL, &polling);
+> +    if (ACPI_FAILURE(status)) {
+> +        ACPI_DEBUG_PRINT((ACPI_DB_INFO, "_ALP not available\n"));
+> +        return -ENODEV;
+> +    }
+> +
+> +    chip->polling = polling;
+> +    return 0;
+> +}
+> +
+> +/*
+> + * get_illuminance - wrapper for getting the currect ambient light illuminance
+> + */
+
+Why is this wrapper necessary?
+
+> +static int get_illuminance(struct acpi_als_chip *als, int *illuminance)
+> +{
+> +    int result;
+> +
+> +    result = acpi_als_get_illuminance(als);
+> +    if (!result)
+> +        *illuminance = als->illuminance;
+> +
+> +    return result;
+> +}
+> +
+> +static void acpi_als_notify(struct acpi_device *device, u32 event)
+> +{
+> +	int illuminance;
+> +	struct iio_dev *indio_dev = acpi_driver_data(device);
+> +	struct acpi_als_chip *chip = iio_priv(indio_dev);
+> +
+> +	s64 time_ns = iio_get_time_ns();
+> +	int len = sizeof(int);
+> +	u8 data[sizeof(s64) + ACPI_ALS_OUTPUTS * len];
+> +
+> +	switch(event) {
+> +	case ACPI_ALS_NOTIFY_ILLUMINANCE:
+> +		get_illuminance(chip, &illuminance);
+> +		*(int *)((u8 *)data) = illuminance;
+> +		*(s64 *)((u8 *)data + ALIGN(len, sizeof(s64))) = time_ns;
+
+You don't have a timestamp channel in your channel spec.
+
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	if (iio_buffer_enabled(indio_dev))
+> +		iio_push_to_buffers(indio_dev, data);
+> +
+> +	return;
+> +}
+> +
+> +static int acpi_als_read_raw(struct iio_dev *indio_dev,
+> +                             struct iio_chan_spec const *chan, int *val, int *val2, long mask)
+> +{
+> +    struct acpi_als_chip *chip = iio_priv(indio_dev);
+> +    int ret = -EINVAL;
+> +
+> +    mutex_lock(&chip->lock);
+> +
+> +    switch (mask) {
+> +    case IIO_CHAN_INFO_RAW:
+
+You did not register a RAW attribute for this device.
+
+> +    case IIO_CHAN_INFO_PROCESSED:
+> +        switch(chan->type) {
+> +        case IIO_LIGHT:
+> +            ret = get_illuminance(chip, val);
+> +            break;
+> +        default:
+> +            break;
+> +        }
+> +
+> +        if(!ret)
+> +            ret = IIO_VAL_INT;
+> +
+> +        break;
+> +    default:
+> +        dev_err(&chip->device->dev, "mask value 0x%08lx not supported\n", mask);
+
+You did register a scale attribute for the device, so whenever somebody
+reads the scale attribute he will get this message. I don't think that makes
+much sense. Better just remove IIO_CHAN_INFO_SCALE_SEPARATE_BIT from the
+channel spec. And also remove this dev_err.
+
+> +        break;
+> +    }
+> +
+> +    mutex_unlock(&chip->lock);
+> +
+> +    return ret;
+> +}
+> +
+> +static const struct iio_chan_spec acpi_als_channels[] = {
+> +    {
+> +        .type = IIO_LIGHT,
+> +        .indexed = 1,
+> +        .channel = 1,
+> +        .scan_type.sign = 'u',
+> +        .scan_type.realbits = 10,
+> +        .scan_type.storagebits = 16,
+> +        .info_mask = IIO_CHAN_INFO_PROCESSED_SEPARATE_BIT |
+> +        IIO_CHAN_INFO_SCALE_SEPARATE_BIT,
+> +    },
+> +};
+> +
+> +static const struct iio_info acpi_als_info = {
+> +    .driver_module = THIS_MODULE,
+> +    .read_raw = &acpi_als_read_raw,
+> +    .write_raw = NULL,
+> +};
+> +
+> +static irqreturn_t acpi_als_trigger_handler(int irq, void *p)
+> +{
+> +
+> +    struct iio_poll_func *pf = p;
+> +    struct iio_dev *idev = pf->indio_dev;
+> +
+> +
+> +    struct acpi_als_chip *chip = iio_priv(idev);
+> +
+> +    printk("XXX: TRIGGER handler called :)");
+
+Aha?
+
+> +    iio_trigger_notify_done(chip->trig);
+> +    return IRQ_HANDLED;
+> +}
+> +
+[...]
+> +
+> +static int acpi_als_add(struct acpi_device *device)
+> +{
+> +    int result;
+> +    struct acpi_als_chip *chip;
+> +    struct iio_dev *indio_dev;
+> +
+> +    /*
+> +    if (unlikely(als_id >= 10)) {
+> +    	printk(KERN_WARNING PREFIX "Too many ALS device found\n");
+> +    	return -ENODEV;
+> +    }
+> +    */
+
+What's with this?
+
+> +
+> +    indio_dev = iio_device_alloc(sizeof(*chip));
+> +    if (!indio_dev) {
+> +        dev_err(&device->dev, "iio allocation fails\n");
+> +        return -ENOMEM;
+> +    }
+> +
+> +    chip = iio_priv(indio_dev);
+> +
+> +    device->driver_data = indio_dev;
+> +    chip->device = device;
+> +    mutex_init(&chip->lock);
+> +
+> +    indio_dev->info = &acpi_als_info;
+> +    indio_dev->channels = acpi_als_channels;
+> +    indio_dev->num_channels = ARRAY_SIZE(acpi_als_channels);
+> +    indio_dev->name = ACPI_ALS_DEVICE_NAME;
+> +    indio_dev->dev.parent = &device->dev;
+> +    indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +    result = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+> +                                        &acpi_als_trigger_handler, NULL);
+> +
+> +    if(result) {
+> +        printk("Could not setup buffer for iio device\n");
+
+dev_err
+
+> +        goto exit_iio_free;
+> +    }
+> +
+> +    result = acpi_als_trigger_init(indio_dev);
+> +    if (result) {
+> +        printk("Couldn't setup the triggers.\n");
+
+dev_err
+
+> +        // TODO
+> +        //goto error_unregister_buffer;
+> +    }
+> +
+> +    result = iio_device_register(indio_dev);
+> +    if (result < 0) {
+> +        dev_err(&chip->device->dev, "iio registration fails with error %d\n",
+> +                result);
+> +        goto exit_iio_free;
+> +    }
+> +
+> +    printk("ACPI ALS initialized");
+
+This is just noise, please remove it.
+
+> +    return 0;
+> +
+> +exit_iio_free:
+> +    iio_device_free(indio_dev);
+> +    return result;
+> +}
+> +
+> +static int acpi_als_remove(struct acpi_device *device, int type)
+> +{
+> +    struct iio_dev *indio_dev;
+> +
+> +    indio_dev = acpi_driver_data(device);
+> +    if(!indio_dev) {
+
+Can this ever happen? I suspect not.
+
+> +        dev_err(&device->dev, "could not get indio_dev for ACPI device\n");
+> +        return -1;
+> +    }
+> +
+> +    iio_device_unregister(indio_dev);
+> +    iio_device_free(indio_dev);
+> +
+> +    return 0;
+> +}
+> +
+> +static int __init acpi_als_init(void)
+> +{
+> +    return acpi_bus_register_driver(&acpi_als_driver);
+> +}
+> +
+> +static void __exit acpi_als_exit(void)
+> +{
+> +    acpi_bus_unregister_driver(&acpi_als_driver);
+> +}
+> +
+> +module_init(acpi_als_init);
+> +module_exit(acpi_als_exit);
+
+Hm, there is no module_acpi_driver? We should probably add one.
