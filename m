@@ -1,52 +1,76 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH] ACPI ALS driver for iio introduced.
-Date: Thu, 29 Nov 2012 11:18:18 +0100
-Message-ID: <50B7366A.9040800@metafoo.de>
-References: <CAHR064j_7Y3wYXVXmC4TqZHxkqa0Z2HK84-OaDTiC7oesB_TrQ@mail.gmail.com> <1354157205-2956-1-git-send-email-marxin.liska@gmail.com> <1354157205-2956-2-git-send-email-marxin.liska@gmail.com> <CAHR064gj3CUUZyuGiw6WhLjGQrhq-eAOKr-=+UmpW2Ry3mce8g@mail.gmail.com>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH 09/11] asus-laptop: Do not call HWRS on init
+Date: Thu, 29 Nov 2012 14:10:40 +0000
+Message-ID: <1354198240.7995.5.camel@deadeye.wl.decadent.org.uk>
+References: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
+	 <1354176759-630-10-git-send-email-corentin.chary@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHR064gj3CUUZyuGiw6WhLjGQrhq-eAOKr-=+UmpW2Ry3mce8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?TWFydGluIExpxaFrYQ==?= <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Zhang, Rui" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, joeyli <jlee-IBi9RG/b67k@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pavel-ynQEQJNshbs@public.gmane.org, Jon Brenner <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-FYGSVNe7XosKUN8aWf1H"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33643 "EHLO
+	shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752681Ab2K2OK7 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 29 Nov 2012 09:10:59 -0500
+In-Reply-To: <1354176759-630-10-git-send-email-corentin.chary@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-On 11/29/2012 09:02 AM, Corentin Chary wrote:
-> On Thu, Nov 29, 2012 at 2:46 AM,  <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: marxin <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> ---
->>  drivers/iio/industrialio-buffer.c    |    4 +-
->>  drivers/staging/iio/light/Kconfig    |    6 +
->>  drivers/staging/iio/light/Makefile   |    1 +
->>  drivers/staging/iio/light/acpi-als.c |  486 ++++++++++++++++++++++++++++++++++
->>  4 files changed, 495 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/staging/iio/light/acpi-als.c
->>
->> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
->> index aaadd32..b8b377c 100644
->> --- a/drivers/iio/industrialio-buffer.c
->> +++ b/drivers/iio/industrialio-buffer.c
->> @@ -119,8 +119,8 @@ static ssize_t iio_scan_el_show(struct device *dev,
->>         int ret;
->>         struct iio_dev *indio_dev = dev_to_iio_dev(dev);
->>
->> -       ret = test_bit(to_iio_dev_attr(attr)->address,
->> -                      indio_dev->buffer->scan_mask);
->> +       ret = !!(test_bit(to_iio_dev_attr(attr)->address,
->> +                      indio_dev->buffer->scan_mask));
-> 
-> It's strange that you have to do that.
-> Can you give use the exact values that make test_bit return something
-> else that 1 or 0 ?
-> Maybe there is a bug to fix in test_bit here.
 
-Even if this was a bug in IIO this should be in a separate patch.
+--=-FYGSVNe7XosKUN8aWf1H
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>
->>         return sprintf(buf, "%d\n", ret);
->>  }
+On Thu, 2012-11-29 at 09:12 +0100, Corentin Chary wrote:
+> From: Ben Hutchings <ben@decadent.org.uk>
+>=20
+> Since commit 8871e99f89b7 ('asus-laptop: HRWS/HWRS typo'), module
+> initialisation is very slow on the Asus UL30A.  The HWRS method takes
+> about 12 seconds to run, and subsequent initialisation also seems to
+> be delayed.  Since we don't really need the result, don't bother
+> calling it on init.  Those who are curious can still get the result
+> through the 'infos' device attribute.
+>=20
+> Update the comment about HWRS in show_infos().
+>=20
+> Reported-by: ryan <draziw+deb@gmail.com>
+> References: http://bugs.debian.org/692436
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 [...]
+
+Can you add a Cc: <stable@vger.kernel.org> to this?
+
+Ben.
+
+--=20
+Ben Hutchings
+Never attribute to conspiracy what can adequately be explained by stupidity=
+.
+
+--=-FYGSVNe7XosKUN8aWf1H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIVAwUAULds4Oe/yOyVhhEJAQo7uBAAl1Y5FSCljxZ4MGLpZmVuj8tftg2FRCGN
+RJeGePse7FwtQ0unOOR/bmwnpw45D+IuYPxt2IxdcKfYo4BMveEm/5d+EokLt/TC
+VhoaRwWMHZNnysdSul+a/GRLt3i+JAnudmeyV1B8P9e5LqiYaxWMUT9R/kINtFRL
+5cKnh4eh5dj8+Vu3nlvcvcdudo0OcPf9VU56h585wJTs78ll3AaHVs+ZDjkxYOuZ
+1KfLRnHl2Av3RLLHaVSb0E9JdM1AtnI3WE3/gusIM8yIOd0+wHqICv95dqhILfTL
+Q5+I5C1k2cjb+FzI/0BT967AFcC4LpFhEYkb07XQEjvEFzcrPRUrM/eQEDPPn+WI
+RXQ02yuAR+W5aCY9b5Fs7ZZTEmfDyZPlm/IMu67X5h+steeMJmAYDIiRD/gW6xhb
+8RPrxg0PcC1xRlamIH9ldDuY8JQxSc+jj5BQ23BRGFz1crfS8Ctl2/8q64sLDxTA
+O2pZNpTsNSghUCsfzl64pl1fpj2wxOohhgIfQxu+oIVD+VL4BhIgCFZLLcMz9h/b
+PQZWmxq7+h8NJ2sCthzs1Dr0hGdKtqvaIwIp4z2fBP96qyiZqGYdBUNmhYCf/7AJ
+UyfZzuBMsg8SnMbieA0qRX7E/l9a8okxkBCVlN+Dj/zgMjDzT0Ebtlb0lOhMiPQJ
+DDrxE6mup+k=
+=Higd
+-----END PGP SIGNATURE-----
+
+--=-FYGSVNe7XosKUN8aWf1H--
