@@ -1,151 +1,562 @@
 From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH 4/6] msi-laptop: Add MSI Wind U90/U100 support
-Date: Thu, 29 Nov 2012 18:31:11 +0200
-Message-ID: <CAKErNvov1YeX8uJ-zjT9MTUxoKOEp4sguG3d91zcHPSxDjeswQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] msi-laptop: Code cleanups
+Date: Thu, 29 Nov 2012 18:31:30 +0200
+Message-ID: <CAKErNvpyoHzLndfA4gOMXpj1LeLsHKSSSEeHke9Z7UfrJrw5UQ@mail.gmail.com>
 References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
- <1353796141-1470-5-git-send-email-maxtram95@gmail.com> <1354073572.21227.1000.camel@linux-s257.site>
- <CAKErNvrSOTFLn=Q3jDH954rm7gOKGyJ7BQZH+26fr1vXvWvd+w@mail.gmail.com> <1354162463.21227.1148.camel@linux-s257.site>
+ <1353796141-1470-4-git-send-email-maxtram95@gmail.com> <1354072310.21227.962.camel@linux-s257.site>
+ <CAKErNvozZ9GZjRUbeqiz53=5x4EMi+ST7YFfM5BQvhZPZ8P4kA@mail.gmail.com> <1354176640.21227.1212.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Big5
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from mail-vc0-f174.google.com ([209.85.220.174]:49718 "EHLO
 	mail-vc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751938Ab2K2Qbd convert rfc822-to-8bit (ORCPT
+	with ESMTP id S1750846Ab2K2Qbu convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Nov 2012 11:31:33 -0500
+	Thu, 29 Nov 2012 11:31:50 -0500
 Received: by mail-vc0-f174.google.com with SMTP id m18so11549133vcm.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Nov 2012 08:31:32 -0800 (PST)
-In-Reply-To: <1354162463.21227.1148.camel@linux-s257.site>
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Nov 2012 08:31:50 -0800 (PST)
+In-Reply-To: <1354176640.21227.1212.camel@linux-s257.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: joeyli <jlee@suse.com>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
 
 2012/11/29 joeyli <jlee@suse.com>:
-> =A9=F3 =A4T=A1A2012-11-28 =A9=F3 19:41 +0200=A1AMaxim Mikityanskiy =B4=
-=A3=A8=EC=A1G
+> =E6=96=BC =E4=B8=89=EF=BC=8C2012-11-28 =E6=96=BC 19:32 +0200=EF=BC=8C=
+Maxim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
 >> 2012/11/28 joeyli <jlee@suse.com>:
->> > =A9=F3 =A4=E9=A1A2012-11-25 =A9=F3 00:28 +0200=A1AMaxim Mikityansk=
-iy =B4=A3=A8=EC=A1G
->> >> Add MSI Wind U90/U100 to separate DMI table, add U90/U100 specifi=
-c
->> >> workarounds and add some missing EC features support such as basi=
-c fan
->> >> control, turbo and ECO modes and touchpad state.
+>> > =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 00:28 +0200=EF=BC=
+=8CMaxim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
+>> >> Replaced msi_init_rfkill() by msi_update_rfkill(), removed delays=
+ by
+>> >> replacing delayed works by just works and made msi_laptop_i8042_f=
+ilter()
+>> >> filter out KEY_TOUCHPAD_TOGGLE when sending KEY_TOUCHPAD_ON and
+>> >> KEY_TOUCHPAD_OFF.
+>> >
+>> > Please separate to 2 patches, one for touchpad key and other one f=
+or
+>> > rfkill.
+>> >
+>> > And,
+>> > I am not agree for the clean up to msi_init_rfkill unless it cause=
+s
+>> > problem on U90/U100. Did you find any issue on U90/U100?
+>>
+>> In original code, we call get_wireless_state_ec_standard() in
+>> rfkill_init() in order to get initial rfkill state from hardware and
+>> after a second we call msi_init_rfkill() that sets rfkill state and
+>> writes it to hardware. msi_update_rfkill() reads rfkill state from
+>> hardware and sets it immediately. On U90/U100 writing to EC confuses
+>> it. In patch 4 I add a quirk in set_device_state() that blocks writi=
+ng
+>> to EC so msi_init_rfkill() should not cause any issue, but we would
+>> have unneeded 1 second delay and function calls.
+>>
+>> > I delay 1 magic second for msi_rfkill_init because there have othe=
+r MSI
+>> > model need a delay time after we set SCM mode through write EC
+>> > register.
+>> > So, please don't change the code for msi_init_rfkill delay work, j=
+ust
+>> > keep it works with other MSI shipping machines.
+>>
+>> What do you think if I remove delay only for U90/U100 and keep it fo=
+r
+>> other models?
+>
+> Please consider to include this patch[1] to your msi-laptop patch set=
+=2E
+> This patch introduced quirk_entry and merged quirk tables to
+> msi_dmi_table.
+>
+> Currently I don't have msi machine on my hand, so I didn't test this
+> patch. Just feel free to modify or even separate it for put to your
+> patches.
+
+Thank you, I'll test it on my laptop and include it when I will resend
+fixed patches. I'm going to modify this patch so that it could be
+applied before patch that adds support for U90/U100.
+
+> And, I put a quirk that name is ec_delay, please consider to use this
+> quirk in your patch for add the 1 second (and 0.5 second) for other S=
+CM
+> machines.
+
+OK, I'll use this quirk.
+
+>>
 >> >>
 >> >> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 >> >> ---
->> >>  drivers/platform/x86/msi-laptop.c | 199 ++++++++++++++++++++++++=
-++++++++------
->> >>  1 file changed, 171 insertions(+), 28 deletions(-)
+>> >>  drivers/platform/x86/msi-laptop.c | 67 ++++++++++++++-----------=
+--------------
+>> >>  1 file changed, 24 insertions(+), 43 deletions(-)
 >> >>
 >> >> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform=
 /x86/msi-laptop.c
->> >> index 3b6f494..16e9863 100644
+>> >> index 7ba107a..3b6f494 100644
 >> >> --- a/drivers/platform/x86/msi-laptop.c
 >> >> +++ b/drivers/platform/x86/msi-laptop.c
->> >> @@ -82,8 +82,19 @@
->> >>  #define MSI_STANDARD_EC_SCM_LOAD_ADDRESS     0x2d
->> >>  #define MSI_STANDARD_EC_SCM_LOAD_MASK                (1 << 0)
->> >>
->> >> -#define MSI_STANDARD_EC_TOUCHPAD_ADDRESS     0xe4
->> >> +#define MSI_STANDARD_EC_POWER_ADDRESS                0xe4
->> >
->> > If 0xE4 register is not just for touchpad and power, then I sugges=
-t use
->> > a more general name like: MSI_STANDARD_EC_FUNCTIONS_ADDRESS or oth=
-er.
->>
->> OK, I will rename it.
->
-> thanks
->
->> >> +static ssize_t show_touchpad(struct device *dev,
->> >> +     struct device_attribute *attr, char *buf)
->> >> +{
->> >> +
->> >> +     u8 rdata;
->> >> +     int result;
->> >> +
->> >> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
->> >> +     if (result < 0)
->> >> +             return result;
->> >> +
->> >> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUC=
-HPAD_MASK));
->> >> +}
->> >
->> > I don't think we need create a touchpad attribute interface becaus=
-e
->> > there already have key code raise the change to user space.
->>
->> Key codes only indicate touchpad state change. We cannot determine
->> initial touchpad state on boot using only key codes. I think, it mig=
-ht
->> be useful to have a file in sysfs that always keeps actual touchpad
->> state, so that we can get initial touchpad state on boot. Do you
->> disagree with that?
->>
->
-> I agree this reason for add a sysfs interface for raise touchpad stat=
-us
-> to userland.
-> But this interface will be a special api and I am not sure there alre=
-ady
-> have standard way in input subsystem for raise touchpad status. If th=
-ere
-> have no standard api to raise it, I think add it is make sense.
-
-AFAIK, there is no generic interface that exposes touchpad state. As
-for now, the only way is to create such special platform-specific file
-in sysfs. asus-wmi uses the same approach.
-
->> >> +
->> >> +static ssize_t show_turbo(struct device *dev,
->> >> +     struct device_attribute *attr, char *buf)
->> >> +{
+>> >> @@ -600,8 +600,23 @@ static const struct rfkill_ops rfkill_threeg=
+_ops =3D {
+>> >>       .set_block =3D rfkill_threeg_set
+>> >>  };
 > ...
->> >> -     if (!old_ec_model)
->> >> +     if (!old_ec_model) {
->> >>               get_threeg_exists();
->> >> +             if (dmi_check_system(msi_load_scm_models_dmi_table)=
-)
->> >> +                     load_scm_model =3D 1;
->> >> +             else if (dmi_check_system(msi_load_scm_ro_models_dm=
-i_table)) {
->> >> +                     load_scm_model =3D 1;
->> >> +                     ec_read_only =3D 1;
->> >> +             }
->> >> +     }
->> >>
->> >>       if (!old_ec_model && dmi_check_system(msi_load_scm_models_d=
-mi_table))
->> >>               load_scm_model =3D 1;
+>> >>  static bool msi_laptop_i8042_filter(unsigned char data, unsigned=
+ char str,
+>> >>                               struct serio *port)
+>> >> @@ -662,14 +664,16 @@ static bool msi_laptop_i8042_filter(unsigne=
+d char data, unsigned char str,
+>> >>               extended =3D false;
+>> >>               switch (data) {
+>> >>               case 0xE4:
+>> >> -                     schedule_delayed_work(&msi_touchpad_work,
+>> >> -                             round_jiffies_relative(0.5 * HZ));
+>> >> -                     break;
+>> >> +                     schedule_work(&msi_touchpad_work);
 >> >
->> > hmm... the load_scm_model dmi table check 2 times? I think you can=
- just
->> > remove the duplicate code.
+>> > Don't remove the 0.5 magic delay, please! It will cause other ship=
+ped
+>> > MSI machines got problem could not capture the real change of EC
+>> > register.
 >>
->> Oops, I forgot to remove the last two lines when I were preparing pa=
-tches.
+>> The same question here.
 >>
->> Do I need to resend all patches after doing all needed fixes?
 >
-> Yes, please modify your patches for all changed and I suggest re-send
-> them by add v2 to subject, like:
->         [PATCH 0/6 v2] msi-laptop: Add MSI Wind U90/U100 support
->         ...
->         [PATCH 4/6 v2] msi-laptop: Add MSI Wind U90/U100 support
+> Here the same, please consider to use this quirk in your patch for ad=
+d
+> the 0.5 second for other SCM machines.
 >
-> Please write down what's the v2 change for each patch on description =
-of
-> patch.
-
-OK, I'll do that when v2 will be ready.
-
+>> >> +             case 0x64:
+>> >> +                     /* Filter out KEY_TOUCHPAD_TOGGLE and send =
+only
+>> >> +                      * KEY_TOUCHPAD_ON and KEY_TOUCHPAD_OFF
+>> >> +                      */
+>> >> +                     return true;
+>> >
+>> > Why this patch filter out 0x64 key? What's the scan code emitted w=
+hen
+>> > press the touchpad on/off Fn key on U100? Does it emit
+>> > KEY_TOUCHPAD_TOGGLE and KEY_TOUCHPAD_ON/OFF at the same time?
+>>
+>> 0xE4 stands for Fn+F3 release and 0x64 stands for Fn+F3 press. So, i=
+f
+>> we do not use msi-laptop driver, we will get KEY_TOUCHPAD_TOGGLE
+>> (maybe from i8042 driver). If we load msi-laptop driver, it hooks
+>> Fn+F3 release and sends KEY_TOUCHPAD_ON/OFF, so userspace will recei=
+ve
+>> KEY_TOUCHPAD_TOGGLE before KEY_TOUCHPAD_ON/OFF. So we need to filter
+>> out both Fn+F3 press and release, so that KEY_TOUCHPAD_TOGGLE will n=
+ot
+>> be sent.
+>
+> OK, understood!
+>
+>> >>               case 0x54:
+>> >>               case 0x62:
+>> >>               case 0x76:
+>> >> -                     schedule_delayed_work(&msi_rfkill_work,
+>> >> -                             round_jiffies_relative(0.5 * HZ));
+>> >> +                     schedule_work(&msi_rfkill_work);
+>> >>                       break;
+>> >>               }
+> ...
+>
+>> >>       platform_device_del(msipf_device);
+>> >> @@ -976,7 +958,6 @@ static void __exit msi_cleanup(void)
+>> >>       if (load_scm_model) {
+>> >>               i8042_remove_filter(msi_laptop_i8042_filter);
+>> >>               msi_laptop_input_destroy();
+>> >> -             cancel_delayed_work_sync(&msi_rfkill_work);
+>> >>               rfkill_cleanup();
+>> >>       }
+>
 >
 > Thanks a lot!
 > Joey Lee
+>
+> [1]
+>
+> >From 79db5e187ac10aea5f142ce0a352dcd17442c190 Mon Sep 17 00:00:00 20=
+01
+> From: "Lee, Chun-Yi" <jlee@suse.com>
+> Date: Fri, 30 Nov 2012 01:22:21 +0800
+> Subject: [PATCH] msi-laptop: merge quirk tables to one
+>
+> This patch introduced a quirk_entry struct, then we merged all quirk =
+tables to
+> msi_dmi_table. Then we can more easily to set different quirk attribu=
+tes for different
+> machine.
+>
+> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+> ---
+>  drivers/platform/x86/msi-laptop.c |  125 +++++++++++++++++++++------=
+----------
+>  1 file changed, 72 insertions(+), 53 deletions(-)
+>
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86=
+/msi-laptop.c
+> index 16e9863..2447128 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -119,29 +119,35 @@ static const struct key_entry msi_laptop_keymap=
+[] =3D {
+>
+>  static struct input_dev *msi_laptop_input_dev;
+>
+> -static bool old_ec_model;
+>  static int wlan_s, bluetooth_s, threeg_s;
+>  static int threeg_exists;
+> +static struct rfkill *rfk_wlan, *rfk_bluetooth, *rfk_threeg;
+>
+> -/* Some MSI 3G netbook only have one fn key to control Wlan/Bluetoot=
+h/3G,
+> - * those netbook will load the SCM (windows app) to disable the orig=
+inal
+> - * Wlan/Bluetooth control by BIOS when user press fn key, then contr=
+ol
+> - * Wlan/Bluetooth/3G by SCM (software control by OS). Without SCM, u=
+ser
+> - * cann't on/off 3G module on those 3G netbook.
+> - * On Linux, msi-laptop driver will do the same thing to disable the
+> - * original BIOS control, then might need use HAL or other userland
+> - * application to do the software control that simulate with SCM.
+> - * e.g. MSI N034 netbook
+> - */
+> -static bool load_scm_model;
+> +/* MSI laptop quirks */
+> +struct quirk_entry {
+> +       u8 old_ec_model;
+> +
+> +       /* Some MSI 3G netbook only have one fn key to control Wlan/B=
+luetooth/3G,
+> +        * those netbook will load the SCM (windows app) to disable t=
+he original
+> +        * Wlan/Bluetooth control by BIOS when user press fn key, the=
+n control
+> +        * Wlan/Bluetooth/3G by SCM (software control by OS). Without=
+ SCM, user
+> +        * cann't on/off 3G module on those 3G netbook.
+> +        * On Linux, msi-laptop driver will do the same thing to disa=
+ble the
+> +        * original BIOS control, then might need use HAL or other us=
+erland
+> +        * application to do the software control that simulate with =
+SCM.
+> +        * e.g. MSI N034 netbook
+> +        */
+> +       u8 load_scm_model;
+> +       u8 ec_delay;
+>
+> -/* Some MSI Wind netbooks (e.g. MSI Wind U100) need loading SCM to g=
+et some
+> - * features working (e.g. ECO mode), but we cannot change Wlan/Bluet=
+ooth state
+> - * in software and we can only read its state.
+> - */
+> -static bool ec_read_only;
+> +       /* Some MSI Wind netbooks (e.g. MSI Wind U100) need loading S=
+CM to get some
+> +        * features working (e.g. ECO mode), but we cannot change Wla=
+n/Bluetooth state
+> +        * in software and we can only read its state.
+> +        */
+> +       u8 ec_read_only;
+> +};
+>
+> -static struct rfkill *rfk_wlan, *rfk_bluetooth, *rfk_threeg;
+> +static struct quirk_entry *quirks;
+>
+>  /* Hardware access */
+>
+> @@ -213,7 +219,7 @@ static ssize_t set_device_state(const char *buf, =
+size_t count, u8 mask)
+>         if (sscanf(buf, "%i", &status) !=3D 1 || (status < 0 || statu=
+s > 1))
+>                 return -EINVAL;
+>
+> -       if (ec_read_only)
+> +       if (quirks->ec_read_only)
+>                 return -EOPNOTSUPP;
+>
+>         /* read current device state */
+> @@ -314,7 +320,7 @@ static ssize_t show_wlan(struct device *dev,
+>
+>         int ret, enabled =3D 0;
+>
+> -       if (old_ec_model) {
+> +       if (quirks->old_ec_model) {
+>                 ret =3D get_wireless_state(&enabled, NULL);
+>         } else {
+>                 ret =3D get_wireless_state_ec_standard();
+> @@ -338,7 +344,7 @@ static ssize_t show_bluetooth(struct device *dev,
+>
+>         int ret, enabled =3D 0;
+>
+> -       if (old_ec_model) {
+> +       if (quirks->old_ec_model) {
+>                 ret =3D get_wireless_state(NULL, &enabled);
+>         } else {
+>                 ret =3D get_wireless_state_ec_standard();
+> @@ -363,7 +369,7 @@ static ssize_t show_threeg(struct device *dev,
+>         int ret;
+>
+>         /* old msi ec not support 3G */
+> -       if (old_ec_model)
+> +       if (quirks->old_ec_model)
+>                 return -ENODEV;
+>
+>         ret =3D get_wireless_state_ec_standard();
+> @@ -566,9 +572,29 @@ static struct platform_device *msipf_device;
+>
+>  /* Initialization */
+>
+> -static int dmi_check_cb(const struct dmi_system_id *id)
+> +static struct quirk_entry quirk_old_ec_model =3D {
+> +       .old_ec_model =3D 1,
+> +};
+> +
+> +static struct quirk_entry quirk_load_scm_model =3D {
+> +       .load_scm_model =3D 1,
+> +       .ec_delay =3D 1,
+> +};
+> +
+> +static struct quirk_entry quirk_load_scm_ro_model =3D {
+> +       .load_scm_model =3D 1,
+> +       .ec_read_only =3D 1,
+> +};
+> +
+> +static int dmi_check_cb(const struct dmi_system_id *dmi)
+>  {
+> -       pr_info("Identified laptop model '%s'\n", id->ident);
+> +       pr_info("Identified laptop model '%s'\n", dmi->ident);
+> +
+> +       if (dmi->driver_data)
+> +               quirks =3D dmi->driver_data;
+> +       else
+> +               quirks =3D &quirk_load_scm_model;
+> +
+>         return 1;
+>  }
+>
+> @@ -582,6 +608,7 @@ static struct dmi_system_id __initdata msi_dmi_ta=
+ble[] =3D {
+>                         DMI_MATCH(DMI_CHASSIS_VENDOR,
+>                                   "MICRO-STAR INT'L CO.,LTD")
+>                 },
+> +               .driver_data =3D &quirk_old_ec_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -592,6 +619,7 @@ static struct dmi_system_id __initdata msi_dmi_ta=
+ble[] =3D {
+>                         DMI_MATCH(DMI_PRODUCT_VERSION, "0581"),
+>                         DMI_MATCH(DMI_BOARD_NAME, "MS-1058")
+>                 },
+> +               .driver_data =3D &quirk_old_ec_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -602,6 +630,7 @@ static struct dmi_system_id __initdata msi_dmi_ta=
+ble[] =3D {
+>                         DMI_MATCH(DMI_BOARD_VENDOR, "MSI"),
+>                         DMI_MATCH(DMI_BOARD_NAME, "MS-1412")
+>                 },
+> +               .driver_data =3D &quirk_old_ec_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -613,12 +642,9 @@ static struct dmi_system_id __initdata msi_dmi_t=
+able[] =3D {
+>                         DMI_MATCH(DMI_CHASSIS_VENDOR,
+>                                   "MICRO-STAR INT'L CO.,LTD")
+>                 },
+> +               .driver_data =3D &quirk_old_ec_model,
+>                 .callback =3D dmi_check_cb
+>         },
+> -       { }
+> -};
+> -
+> -static struct dmi_system_id __initdata msi_load_scm_models_dmi_table=
+[] =3D {
+>         {
+>                 .ident =3D "MSI N034",
+>                 .matches =3D {
+> @@ -628,6 +654,7 @@ static struct dmi_system_id __initdata msi_load_s=
+cm_models_dmi_table[] =3D {
+>                         DMI_MATCH(DMI_CHASSIS_VENDOR,
+>                         "MICRO-STAR INTERNATIONAL CO., LTD")
+>                 },
+> +               .driver_data =3D &quirk_load_scm_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -639,6 +666,7 @@ static struct dmi_system_id __initdata msi_load_s=
+cm_models_dmi_table[] =3D {
+>                         DMI_MATCH(DMI_CHASSIS_VENDOR,
+>                         "MICRO-STAR INTERNATIONAL CO., LTD")
+>                 },
+> +               .driver_data =3D &quirk_load_scm_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -648,6 +676,7 @@ static struct dmi_system_id __initdata msi_load_s=
+cm_models_dmi_table[] =3D {
+>                                 "MICRO-STAR INTERNATIONAL CO., LTD"),
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "MS-N014"),
+>                 },
+> +               .driver_data =3D &quirk_load_scm_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -657,6 +686,7 @@ static struct dmi_system_id __initdata msi_load_s=
+cm_models_dmi_table[] =3D {
+>                                 "Micro-Star International"),
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "CR620"),
+>                 },
+> +               .driver_data =3D &quirk_load_scm_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         {
+> @@ -666,12 +696,9 @@ static struct dmi_system_id __initdata msi_load_=
+scm_models_dmi_table[] =3D {
+>                                 "Micro-Star International Co., Ltd.")=
+,
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "U270 series"),
+>                 },
+> +               .driver_data =3D &quirk_load_scm_model,
+>                 .callback =3D dmi_check_cb
+>         },
+> -       { }
+> -};
+> -
+> -static struct dmi_system_id __initdata msi_load_scm_ro_models_dmi_ta=
+ble[] =3D {
+>         {
+>                 .ident =3D "MSI U90/U100",
+>                 .matches =3D {
+> @@ -679,6 +706,7 @@ static struct dmi_system_id __initdata msi_load_s=
+cm_ro_models_dmi_table[] =3D {
+>                                 "MICRO-STAR INTERNATIONAL CO., LTD"),
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "U90/U100"),
+>                 },
+> +               .driver_data =3D &quirk_load_scm_ro_model,
+>                 .callback =3D dmi_check_cb
+>         },
+>         { }
+> @@ -727,7 +755,7 @@ static const struct rfkill_ops rfkill_threeg_ops =
+=3D {
+>
+>  static bool msi_rfkill_set_state(struct rfkill *rfkill, bool blocked=
+)
+>  {
+> -       if (ec_read_only)
+> +       if (quirks->ec_read_only)
+>                 return rfkill_set_hw_state(rfkill, blocked);
+>         else
+>                 return rfkill_set_sw_state(rfkill, blocked);
+> @@ -877,7 +905,7 @@ static int msi_laptop_resume(struct device *devic=
+e)
+>         u8 data;
+>         int result;
+>
+> -       if (!load_scm_model)
+> +       if (!quirks->load_scm_model)
+>                 return 0;
+>
+>         /* set load SCM to disable hardware control by fn key */
+> @@ -935,7 +963,7 @@ static int __init load_scm_model_init(struct plat=
+form_device *sdev)
+>         u8 data;
+>         int result;
+>
+> -       if (!ec_read_only) {
+> +       if (!quirks->ec_read_only) {
+>                 /* allow userland write sysfs file  */
+>                 dev_attr_bluetooth.store =3D store_bluetooth;
+>                 dev_attr_wlan.store =3D store_wlan;
+> @@ -992,21 +1020,12 @@ static int __init msi_init(void)
+>         if (acpi_disabled)
+>                 return -ENODEV;
+>
+> -       if (force || dmi_check_system(msi_dmi_table))
+> -               old_ec_model =3D 1;
+> +       dmi_check_system(msi_dmi_table);
+> +       if (force)
+> +               quirks =3D &quirk_old_ec_model;
+>
+> -       if (!old_ec_model) {
+> +       if (!quirks->old_ec_model)
+>                 get_threeg_exists();
+> -               if (dmi_check_system(msi_load_scm_models_dmi_table))
+> -                       load_scm_model =3D 1;
+> -               else if (dmi_check_system(msi_load_scm_ro_models_dmi_=
+table)) {
+> -                       load_scm_model =3D 1;
+> -                       ec_read_only =3D 1;
+> -               }
+> -       }
+> -
+> -       if (!old_ec_model && dmi_check_system(msi_load_scm_models_dmi=
+_table))
+> -               load_scm_model =3D 1;
+>
+>         if (auto_brightness < 0 || auto_brightness > 2)
+>                 return -EINVAL;
+> @@ -1043,7 +1062,7 @@ static int __init msi_init(void)
+>         if (ret)
+>                 goto fail_platform_device1;
+>
+> -       if (load_scm_model && (load_scm_model_init(msipf_device) < 0)=
+) {
+> +       if (quirks->load_scm_model && (load_scm_model_init(msipf_devi=
+ce) < 0)) {
+>                 ret =3D -EINVAL;
+>                 goto fail_platform_device1;
+>         }
+> @@ -1053,7 +1072,7 @@ static int __init msi_init(void)
+>         if (ret)
+>                 goto fail_platform_device2;
+>
+> -       if (!old_ec_model) {
+> +       if (!quirks->old_ec_model) {
+>                 if (threeg_exists)
+>                         ret =3D device_create_file(&msipf_device->dev=
+,
+>                                                 &dev_attr_threeg);
+> @@ -1074,7 +1093,7 @@ static int __init msi_init(void)
+>
+>  fail_platform_device2:
+>
+> -       if (load_scm_model) {
+> +       if (quirks->load_scm_model) {
+>                 i8042_remove_filter(msi_laptop_i8042_filter);
+>                 rfkill_cleanup();
+>         }
+> @@ -1097,14 +1116,14 @@ fail_backlight:
+>
+>  static void __exit msi_cleanup(void)
+>  {
+> -       if (load_scm_model) {
+> +       if (quirks->load_scm_model) {
+>                 i8042_remove_filter(msi_laptop_i8042_filter);
+>                 msi_laptop_input_destroy();
+>                 rfkill_cleanup();
+>         }
+>
+>         sysfs_remove_group(&msipf_device->dev.kobj, &msipf_attribute_=
+group);
+> -       if (!old_ec_model && threeg_exists)
+> +       if (!quirks->old_ec_model && threeg_exists)
+>                 device_remove_file(&msipf_device->dev, &dev_attr_thre=
+eg);
+>         platform_device_unregister(msipf_device);
+>         platform_driver_unregister(&msipf_driver);
+> --
+> 1.7.10.4
+>
 >
 >
