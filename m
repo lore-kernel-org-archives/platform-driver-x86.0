@@ -1,70 +1,91 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 05/11] asus-laptop: add all video switch keys
-Date: Thu, 29 Nov 2012 09:12:33 +0100
-Message-ID: <1354176759-630-6-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 10/11] asus-wmi: always report brightness key events
+Date: Thu, 29 Nov 2012 09:12:38 +0100
+Message-ID: <1354176759-630-11-git-send-email-corentin.chary@gmail.com>
 References: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp5-g21.free.fr ([212.27.42.5]:34935 "EHLO smtp5-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754134Ab2K2INx (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 29 Nov 2012 03:13:53 -0500
 In-Reply-To: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-From: AceLan Kao <acelan.kao@canonical.com>
-
-Fill up all the video switch keys in the map.
-
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-laptop.c |   26 +++++++++++++++++++++++---
- 1 files changed, 23 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c |    2 ++
+ drivers/platform/x86/asus-wmi.c    |    8 ++++----
+ drivers/platform/x86/asus-wmi.h    |    2 ++
+ drivers/platform/x86/eeepc-wmi.c   |    2 ++
+ 4 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 73d0198..0d371d0 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -321,9 +321,13 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0x5E, { KEY_WLAN } }, /* WLAN Enable */
- 	{KE_KEY, 0x5F, { KEY_WLAN } }, /* WLAN Disable */
- 	{KE_KEY, 0x60, { KEY_TOUCHPAD_ON } },
--	{KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* LCD Only */
--	{KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* CRT Only */
--	{KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* LCD + CRT */
-+	{KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD only */
-+	{KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT only */
-+	{KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT */
-+	{KE_KEY, 0x64, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV */
-+	{KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
-+	{KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
-+	{KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
- 	{KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
- 	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
- 	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
-@@ -333,8 +337,24 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0x82, { KEY_CAMERA } },
- 	{KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
- 	{KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
-+	{KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
-+	{KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
-+	{KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
-+	{KE_KEY, 0x8F, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + DVI */
-+	{KE_KEY, 0x90, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + DVI */
-+	{KE_KEY, 0x91, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + DVI */
-+	{KE_KEY, 0x92, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + DVI */
-+	{KE_KEY, 0x93, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + DVI */
- 	{KE_KEY, 0x95, { KEY_MEDIA } },
- 	{KE_KEY, 0x99, { KEY_PHONE } },
-+	{KE_KEY, 0xA0, { KEY_SWITCHVIDEOMODE } }, /* SDSP HDMI only */
-+	{KE_KEY, 0xA1, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + HDMI */
-+	{KE_KEY, 0xA2, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + HDMI */
-+	{KE_KEY, 0xA3, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + HDMI */
-+	{KE_KEY, 0xA4, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + HDMI */
-+	{KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
-+	{KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
-+	{KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
- 	{KE_KEY, 0xB5, { KEY_CALC } },
- 	{KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
- 	{KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 9aa6642..210b5b8 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -190,6 +190,8 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ }
+ 
+ static const struct key_entry asus_nb_wmi_keymap[] = {
++	{ KE_KEY, ASUS_WMI_BRN_DOWN, { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, ASUS_WMI_BRN_UP, { KEY_BRIGHTNESSUP } },
+ 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+ 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 6327a1b..c11b242 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1386,16 +1386,16 @@ static void asus_wmi_notify(u32 value, void *context)
+ 	}
+ 
+ 	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
+-		code = NOTIFY_BRNUP_MIN;
++		code = ASUS_WMI_BRN_UP;
+ 	else if (code >= NOTIFY_BRNDOWN_MIN &&
+ 		 code <= NOTIFY_BRNDOWN_MAX)
+-		code = NOTIFY_BRNDOWN_MIN;
++		code = ASUS_WMI_BRN_DOWN;
+ 
+-	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
++	if (code == ASUS_WMI_BRN_DOWN || code == ASUS_WMI_BRN_UP) {
+ 		if (!acpi_video_backlight_support()) {
+ 			asus_wmi_backlight_notify(asus, orig_code);
++			goto exit;
+ 		}
+-		goto exit;
+ 	}
+ 
+ 	if (is_display_toggle(code) &&
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 776524c..4da4c8b 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -30,6 +30,8 @@
+ #include <linux/platform_device.h>
+ 
+ #define ASUS_WMI_KEY_IGNORE (-1)
++#define ASUS_WMI_BRN_DOWN	0x20
++#define ASUS_WMI_BRN_UP		0x2f
+ 
+ struct module;
+ struct key_entry;
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 60cb76a..af67e6e 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -63,6 +63,8 @@ MODULE_PARM_DESC(hotplug_wireless,
+ #define HOME_RELEASE	0xe5
+ 
+ static const struct key_entry eeepc_wmi_keymap[] = {
++	{ KE_KEY, ASUS_WMI_BRN_DOWN, { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, ASUS_WMI_BRN_UP, { KEY_BRIGHTNESSUP } },
+ 	/* Sleep already handled via generic ACPI code */
+ 	{ KE_KEY, 0x30, { KEY_VOLUMEUP } },
+ 	{ KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
 -- 
 1.7.8.6
