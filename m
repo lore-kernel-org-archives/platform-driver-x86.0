@@ -1,81 +1,171 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 09/11] asus-laptop: Do not call HWRS on init
-Date: Thu, 29 Nov 2012 09:12:37 +0100
-Message-ID: <1354176759-630-10-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 08/11] asus-wmi: add display toggle quirk
+Date: Thu, 29 Nov 2012 09:12:36 +0100
+Message-ID: <1354176759-630-9-git-send-email-corentin.chary@gmail.com>
 References: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:34715 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753274Ab2K2INt (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Nov 2012 03:13:49 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentincj@iksaif.net>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: AceLan Kao <acelan.kao@canonical.com>
 
-Since commit 8871e99f89b7 ('asus-laptop: HRWS/HWRS typo'), module
-initialisation is very slow on the Asus UL30A.  The HWRS method takes
-about 12 seconds to run, and subsequent initialisation also seems to
-be delayed.  Since we don't really need the result, don't bother
-calling it on init.  Those who are curious can still get the result
-through the 'infos' device attribute.
+For machines with AMD graphic chips, it will send out WMI event and ACPI
+interrupt at the same time while hitting the hotkey. BIOS will notify the
+system the next display output mode throught WMI event code, so that
+windows' application can show an OSD to tell the user which mode will be
+taken effect. User can hit the display toggle key many times within 2
+seconds to choose the mode they want. After 2 seconds, WMI dirver should
+send a WMIMethod(SDSP) command to tell the BIOS which mode the user chose.
+And then BIOS will raise another ACPI interrupt to tell the system to
+really switch the display mode.
 
-Update the comment about HWRS in show_infos().
+In Linux desktop, we don't have this kind of OSD to let users to choose
+the mode they want, so we don't need to call WMIMethod(SDSP) to have
+another ACPI interrupt. To simplify the problem, we just have to ignore
+the WMI event, and let the first ACPI interrupt to send out the key event.
 
-Reported-by: ryan <draziw+deb@gmail.com>
-References: http://bugs.debian.org/692436
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+For the need, here comes another quirk to add machines with this kind of
+behavior. When the WMI driver receives the display toggle WMI event, and
+found the machin is in the list, it will do nothing and let ACPI video
+driver to report the key event.
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+Signed-off-by: Corentin Chary <corentincj@iksaif.net>
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-laptop.c |   17 ++++-------------
- 1 files changed, 4 insertions(+), 13 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c |   31 ++++++++++++++++++++++++++++++-
+ drivers/platform/x86/asus-wmi.c    |   26 +++++++++++++++++++++++---
+ drivers/platform/x86/asus-wmi.h    |    7 +++++++
+ 3 files changed, 60 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 0d371d0..0fc4e30 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -883,8 +883,10 @@ static ssize_t show_infos(struct device *dev,
- 	/*
- 	 * The HWRS method return informations about the hardware.
- 	 * 0x80 bit is for WLAN, 0x100 for Bluetooth.
-+	 * 0x40 for WWAN, 0x10 for WIMAX.
- 	 * The significance of others is yet to be found.
--	 * If we don't find the method, we assume the device are present.
-+	 * We don't currently use this for device detection, and it
-+	 * takes several seconds to run on some systems.
- 	 */
- 	rv = acpi_evaluate_integer(asus->handle, "HWRS", NULL, &temp);
- 	if (!ACPI_FAILURE(rv))
-@@ -1705,7 +1707,7 @@ static int asus_laptop_get_info(struct asus_laptop *asus)
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 87d45e0..9aa6642 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -59,6 +59,17 @@ static struct quirk_entry quirk_asus_unknown = {
+ 	.wapf = 0,
+ };
+ 
++/*
++ * For those machines that need software to control bt/wifi status
++ * and can't adjust brightness through ACPI interface
++ * and have duplicate events(ACPI and WMI) for display toggle
++ */
++static struct quirk_entry quirk_asus_x55u = {
++	.wapf = 4,
++	.wmi_backlight_power = true,
++	.no_display_toggle = true,
++};
++
+ static struct quirk_entry quirk_asus_x401u = {
+ 	.wapf = 4,
+ };
+@@ -77,6 +88,15 @@ static struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X401U"),
+ 		},
++		.driver_data = &quirk_asus_x55u,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X401A",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X401A"),
++		},
+ 		.driver_data = &quirk_asus_x401u,
+ 	},
+ 	{
+@@ -95,6 +115,15 @@ static struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X501U"),
+ 		},
++		.driver_data = &quirk_asus_x55u,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X501A",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X501A"),
++		},
+ 		.driver_data = &quirk_asus_x401u,
+ 	},
+ 	{
+@@ -131,7 +160,7 @@ static struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X55U"),
+ 		},
+-		.driver_data = &quirk_asus_x401u,
++		.driver_data = &quirk_asus_x55u,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 912ec7d..6327a1b 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1341,6 +1341,18 @@ static void asus_wmi_backlight_exit(struct asus_wmi *asus)
+ 	asus->backlight_device = NULL;
+ }
+ 
++static int is_display_toggle(int code)
++{
++	/* display toggle keys */
++	if ((code >= 0x61 && code <= 0x67) ||
++	    (code >= 0x8c && code <= 0x93) ||
++	    (code >= 0xa0 && code <= 0xa7) ||
++	    (code >= 0xd0 && code <= 0xd5))
++		return 1;
++
++	return 0;
++}
++
+ static void asus_wmi_notify(u32 value, void *context)
  {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
- 	union acpi_object *model = NULL;
--	unsigned long long bsts_result, hwrs_result;
-+	unsigned long long bsts_result;
- 	char *string = NULL;
- 	acpi_status status;
+ 	struct asus_wmi *asus = context;
+@@ -1380,10 +1392,18 @@ static void asus_wmi_notify(u32 value, void *context)
+ 		code = NOTIFY_BRNDOWN_MIN;
  
-@@ -1767,17 +1769,6 @@ static int asus_laptop_get_info(struct asus_laptop *asus)
- 	if (*string)
- 		pr_notice("  %s model detected\n", string);
+ 	if (code == NOTIFY_BRNUP_MIN || code == NOTIFY_BRNDOWN_MIN) {
+-		if (!acpi_video_backlight_support())
++		if (!acpi_video_backlight_support()) {
+ 			asus_wmi_backlight_notify(asus, orig_code);
+-	} else if (!sparse_keymap_report_event(asus->inputdev, code,
+-					       key_value, autorelease))
++		}
++		goto exit;
++	}
++
++	if (is_display_toggle(code) &&
++	    asus->driver->quirks->no_display_toggle)
++		goto exit;
++
++	if (!sparse_keymap_report_event(asus->inputdev, code,
++					key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
  
--	/*
--	 * The HWRS method return informations about the hardware.
--	 * 0x80 bit is for WLAN, 0x100 for Bluetooth,
--	 * 0x40 for WWAN, 0x10 for WIMAX.
--	 * The significance of others is yet to be found.
--	 */
--	status =
--	    acpi_evaluate_integer(asus->handle, "HWRS", NULL, &hwrs_result);
--	if (!ACPI_FAILURE(status))
--		pr_notice("  HWRS returned %x", (int)hwrs_result);
--
- 	if (!acpi_check_handle(asus->handle, METHOD_WL_STATUS, NULL))
- 		asus->have_rsts = true;
+ exit:
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 4c9bd38..776524c 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -41,6 +41,13 @@ struct quirk_entry {
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_power;
+ 	int wapf;
++	/*
++	 * For machines with AMD graphic chips, it will send out WMI event
++	 * and ACPI interrupt at the same time while hitting the hotkey.
++	 * To simplify the problem, we just have to ignore the WMI event,
++	 * and let the ACPI interrupt to send out the key event.
++	 */
++	int no_display_toggle;
+ };
  
+ struct asus_wmi_driver {
 -- 
 1.7.8.6
