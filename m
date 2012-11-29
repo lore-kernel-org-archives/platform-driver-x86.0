@@ -1,136 +1,98 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 4/6] msi-laptop: Add MSI Wind U90/U100 support
-Date: Thu, 29 Nov 2012 12:14:23 +0800
-Message-ID: <1354162463.21227.1148.camel@linux-s257.site>
-References: <1353796141-1470-1-git-send-email-maxtram95@gmail.com>
-	 <1353796141-1470-5-git-send-email-maxtram95@gmail.com>
-	 <1354073572.21227.1000.camel@linux-s257.site>
-	 <CAKErNvrSOTFLn=Q3jDH954rm7gOKGyJ7BQZH+26fr1vXvWvd+w@mail.gmail.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: Re: A weird rfkill problem after rebooting the system
+Date: Thu, 29 Nov 2012 14:08:31 +0800
+Message-ID: <CAMz9Wg9gzExOkXwWa4g-KfvSiuJeDj1FBZi5=1+=tCbSdcj2Zg@mail.gmail.com>
+References: <CAMz9Wg8y3JaJiEhsOz94viqpC4XXhQeE-eruBUGkXdY78-G=4A@mail.gmail.com>
+	<1354004901.9576.4.camel@jlt4.sipsolutions.net>
+	<CAHR064jC1rkHumt898XrfaFieu8PShRM7c_o6dxkPrp3Jb2W6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:53651 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753030Ab2K2EPY (ORCPT
+Received: from mail-lb0-f174.google.com ([209.85.217.174]:38984 "EHLO
+	mail-lb0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751392Ab2K2GId (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 28 Nov 2012 23:15:24 -0500
-In-Reply-To: <CAKErNvrSOTFLn=Q3jDH954rm7gOKGyJ7BQZH+26fr1vXvWvd+w@mail.gmail.com>
+	Thu, 29 Nov 2012 01:08:33 -0500
+In-Reply-To: <CAHR064jC1rkHumt898XrfaFieu8PShRM7c_o6dxkPrp3Jb2W6A@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Lee, Chun-Yi" <jlee@novell.com>, Matthew Garrett <mjg@redhat.com>
+To: Corentin Chary <corentin.chary@gmail.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>, Alan Jenkins <alan-jenkins@tuffmail.co.uk>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>
 
-=E6=96=BC =E4=B8=89=EF=BC=8C2012-11-28 =E6=96=BC 19:41 +0200=EF=BC=8CMa=
-xim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
-> 2012/11/28 joeyli <jlee@suse.com>:
-> > =E6=96=BC =E6=97=A5=EF=BC=8C2012-11-25 =E6=96=BC 00:28 +0200=EF=BC=8C=
-Maxim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
-> >> Add MSI Wind U90/U100 to separate DMI table, add U90/U100 specific
-> >> workarounds and add some missing EC features support such as basic=
- fan
-> >> control, turbo and ECO modes and touchpad state.
-> >>
-> >> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> >> ---
-> >>  drivers/platform/x86/msi-laptop.c | 199 +++++++++++++++++++++++++=
-+++++++------
-> >>  1 file changed, 171 insertions(+), 28 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/=
-x86/msi-laptop.c
-> >> index 3b6f494..16e9863 100644
-> >> --- a/drivers/platform/x86/msi-laptop.c
-> >> +++ b/drivers/platform/x86/msi-laptop.c
-> >> @@ -82,8 +82,19 @@
-> >>  #define MSI_STANDARD_EC_SCM_LOAD_ADDRESS     0x2d
-> >>  #define MSI_STANDARD_EC_SCM_LOAD_MASK                (1 << 0)
-> >>
-> >> -#define MSI_STANDARD_EC_TOUCHPAD_ADDRESS     0xe4
-> >> +#define MSI_STANDARD_EC_POWER_ADDRESS                0xe4
-> >
-> > If 0xE4 register is not just for touchpad and power, then I suggest=
- use
-> > a more general name like: MSI_STANDARD_EC_FUNCTIONS_ADDRESS or othe=
-r.
->=20
-> OK, I will rename it.
+Dear Corentin,
 
-thanks
+2012/11/27 Corentin Chary <corentin.chary@gmail.com>:
+> On Tue, Nov 27, 2012 at 8:28 AM, Johannes Berg
+> <johannes@sipsolutions.net> wrote:
+>> On Tue, 2012-11-27 at 14:35 +0800, AceLan Kao wrote:
+>>> Hi,
+>>>
+>>> I encountered a strange rfkill problem on the ASUS laptop.
+>>> But it's more like an rfkill issue to me, so I mail to the
+>>> linux-wireless mailing list and
+>>> CC'd to the maintainer of the asus-wmi driver.
+>>
+>> This totally sounds like a platform driver issue, adding that mailing
+>> list (left full text intact below). Nothing I can help you with.
+>>
+>> johannes
+>>
+>>> I attached 2 rfkill event log files.
+>>> 1. The first one(rfkill.0.log) is the driver we use currently,
+>>> you can see that I can soft block/unblock the devices by hitting the hotkey.
+>>> But the behavior is abnormal if I reboot the system with the devices blocked.
+>>> They are blocked after reboot is as expected.
+>>> But while I'm trying to unblock them, the phy0(the one keeps changing
+>>> its index) will become blocked.
+>>> So, there is no way to unblock the bt device by hitting hotkey.
+>>>
+>>> 2. The second log file is I try to remove the line from asus-wmi.c
+>>>    rfkill_init_sw_state(*rfkill, !result);
+>>> Then, it works after rebooting.
+>>> I suspect the problem comes from the line in rfkill_init_sw_state() function
+>>>    rfkill->persistent = true;
+>
+> Well, persistent means:
+> "Whether the soft blocked state is initialised from non-volatile
+> storage at startup."
+> So if we call rfkill_init_sw_state(), that makes some sense
+>
+>>> While calling rfkill_register() with persistent is false, then it'll
+>>> call rfkill_sync_work()
+>>> to set device block state, so that it prevents this issue.
+>>> But I'm not sure if my guess is correct and have no idea why it
+>>> doesn't need to this if persistent is true.
+>>> The persistent value seems doesn't affect the rfkill state that much
+>>> after reboot, the rfkill state is correct all the time.
+>>
+>>> BTW, the BIOS of this ASUS machine doesn't set the rfkill state while
+>>> we hit the hotkey.
+>
+> We are missing some context here. What is the hotkey doing in userspace ?
+> Who owns this phy0 rfkill ? The asus platform driver, or the wireless driver ?
+> If it's the asus platform driver, why is it different from bluetooth ?
+> Something special done by the BIOS ? or the driver ?
+Sorry, my fault, it's hci0, not phy0
+The hci0 is not controlled by asus-wmi driver,
+I think only asus-wlan and asus-bluetooth are controlled by asus-wmi driver.
 
-> >> +static ssize_t show_touchpad(struct device *dev,
-> >> +     struct device_attribute *attr, char *buf)
-> >> +{
-> >> +
-> >> +     u8 rdata;
-> >> +     int result;
-> >> +
-> >> +     result =3D ec_read(MSI_STANDARD_EC_POWER_ADDRESS, &rdata);
-> >> +     if (result < 0)
-> >> +             return result;
-> >> +
-> >> +     return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCH=
-PAD_MASK));
-> >> +}
-> >
-> > I don't think we need create a touchpad attribute interface because
-> > there already have key code raise the change to user space.
->=20
-> Key codes only indicate touchpad state change. We cannot determine
-> initial touchpad state on boot using only key codes. I think, it migh=
-t
-> be useful to have a file in sysfs that always keeps actual touchpad
-> state, so that we can get initial touchpad state on boot. Do you
-> disagree with that?
->=20
+I didn't report keyevent while receiving the WMI hotkey event,
+so I think userspace app don't know what happened.
+And as far as I know, ASUS BIOS engineer says in the wapf=4 mode,
+BIOS will do nothing.
 
-I agree this reason for add a sysfs interface for raise touchpad status
-to userland.
-But this interface will be a special api and I am not sure there alread=
-y
-have standard way in input subsystem for raise touchpad status. If ther=
-e
-have no standard api to raise it, I think add it is make sense.
-
-> >> +
-> >> +static ssize_t show_turbo(struct device *dev,
-> >> +     struct device_attribute *attr, char *buf)
-> >> +{
-=2E..
-> >> -     if (!old_ec_model)
-> >> +     if (!old_ec_model) {
-> >>               get_threeg_exists();
-> >> +             if (dmi_check_system(msi_load_scm_models_dmi_table))
-> >> +                     load_scm_model =3D 1;
-> >> +             else if (dmi_check_system(msi_load_scm_ro_models_dmi=
-_table)) {
-> >> +                     load_scm_model =3D 1;
-> >> +                     ec_read_only =3D 1;
-> >> +             }
-> >> +     }
-> >>
-> >>       if (!old_ec_model && dmi_check_system(msi_load_scm_models_dm=
-i_table))
-> >>               load_scm_model =3D 1;
-> >
-> > hmm... the load_scm_model dmi table check 2 times? I think you can =
-just
-> > remove the duplicate code.
->=20
-> Oops, I forgot to remove the last two lines when I were preparing pat=
-ches.
->=20
-> Do I need to resend all patches after doing all needed fixes?
-
-Yes, please modify your patches for all changed and I suggest re-send
-them by add v2 to subject, like:
-	[PATCH 0/6 v2] msi-laptop: Add MSI Wind U90/U100 support
-	...
-	[PATCH 4/6 v2] msi-laptop: Add MSI Wind U90/U100 support
-
-Please write down what's the v2 change for each patch on description of
-patch.
+>
+> --
+> Corentin Chary
+> http://xf.iksaif.net
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
-Thanks a lot!
-Joey Lee
+
+-- 
+Chia-Lin Kao(AceLan)
+http://blog.acelan.idv.tw/
+E-Mail: acelan.kaoATcanonical.com (s/AT/@/)
