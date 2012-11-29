@@ -1,73 +1,70 @@
 From: Corentin Chary <corentin.chary@gmail.com>
-Subject: [PATCH 11/11] asus-laptop: always report brightness key events
-Date: Thu, 29 Nov 2012 09:12:39 +0100
-Message-ID: <1354176759-630-12-git-send-email-corentin.chary@gmail.com>
+Subject: [PATCH 05/11] asus-laptop: add all video switch keys
+Date: Thu, 29 Nov 2012 09:12:33 +0100
+Message-ID: <1354176759-630-6-git-send-email-corentin.chary@gmail.com>
 References: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1354176759-630-1-git-send-email-corentin.chary@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: AceLan Kao <acelan.kao@canonical.com>
+
+Fill up all the video switch keys in the map.
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 Signed-off-by: Corentin Chary <corentin.chary@gmail.com>
 ---
- drivers/platform/x86/asus-laptop.c |   24 ++++++++++++++++--------
- 1 files changed, 16 insertions(+), 8 deletions(-)
+ drivers/platform/x86/asus-laptop.c |   26 +++++++++++++++++++++++---
+ 1 files changed, 23 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 0fc4e30..a8a7755 100644
+index 73d0198..0d371d0 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -128,10 +128,12 @@ MODULE_PARM_DESC(als_status, "Set the ALS status on boot "
- /*
-  * Some events we use, same for all Asus
-  */
--#define ATKD_BR_UP	0x10	/* (event & ~ATKD_BR_UP) = brightness level */
--#define ATKD_BR_DOWN	0x20	/* (event & ~ATKD_BR_DOWN) = britghness level */
--#define ATKD_BR_MIN	ATKD_BR_UP
--#define ATKD_BR_MAX	(ATKD_BR_DOWN | 0xF)	/* 0x2f */
-+#define ATKD_BRNUP_MIN		0x10
-+#define ATKD_BRNUP_MAX		0x1f
-+#define ATKD_BRNDOWN_MIN	0x20
-+#define ATKD_BRNDOWN_MAX	0x2f
-+#define ATKD_BRNDOWN		0x20
-+#define ATKD_BRNUP		0x2f
- #define ATKD_LCD_ON	0x33
- #define ATKD_LCD_OFF	0x34
- 
-@@ -301,6 +303,8 @@ static const struct key_entry asus_keymap[] = {
- 	{KE_KEY, 0x17, { KEY_ZOOM } },
- 	{KE_KEY, 0x1f, { KEY_BATTERY } },
- 	/* End of Lenovo SL Specific keycodes */
-+	{KE_KEY, ATKD_BRNDOWN, { KEY_BRIGHTNESSDOWN } },
-+	{KE_KEY, ATKD_BRNUP, { KEY_BRIGHTNESSUP } },
- 	{KE_KEY, 0x30, { KEY_VOLUMEUP } },
- 	{KE_KEY, 0x31, { KEY_VOLUMEDOWN } },
- 	{KE_KEY, 0x32, { KEY_MUTE } },
-@@ -1544,15 +1548,19 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
- 					dev_name(&asus->device->dev), event,
- 					count);
- 
--	/* Brightness events are special */
--	if (event >= ATKD_BR_MIN && event <= ATKD_BR_MAX) {
-+	if (event >= ATKD_BRNUP_MIN && event <= ATKD_BRNUP_MAX)
-+		event = ATKD_BRNUP;
-+	else if (event >= ATKD_BRNDOWN_MIN &&
-+		 event <= ATKD_BRNDOWN_MAX)
-+		event = ATKD_BRNDOWN;
- 
--		/* Ignore them completely if the acpi video driver is used */
-+	/* Brightness events are special */
-+	if (event == ATKD_BRNDOWN && event == ATKD_BRNUP) {
- 		if (asus->backlight_device != NULL) {
- 			/* Update the backlight device. */
- 			asus_backlight_notify(asus);
-+			return ;
- 		}
--		return ;
- 	}
- 
- 	/* Accelerometer "coarse orientation change" event */
+@@ -321,9 +321,13 @@ static const struct key_entry asus_keymap[] = {
+ 	{KE_KEY, 0x5E, { KEY_WLAN } }, /* WLAN Enable */
+ 	{KE_KEY, 0x5F, { KEY_WLAN } }, /* WLAN Disable */
+ 	{KE_KEY, 0x60, { KEY_TOUCHPAD_ON } },
+-	{KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* LCD Only */
+-	{KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* CRT Only */
+-	{KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* LCD + CRT */
++	{KE_KEY, 0x61, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD only */
++	{KE_KEY, 0x62, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT only */
++	{KE_KEY, 0x63, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT */
++	{KE_KEY, 0x64, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV */
++	{KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
++	{KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
++	{KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
+ 	{KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
+ 	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
+ 	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
+@@ -333,8 +337,24 @@ static const struct key_entry asus_keymap[] = {
+ 	{KE_KEY, 0x82, { KEY_CAMERA } },
+ 	{KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+ 	{KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
++	{KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
++	{KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
++	{KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
++	{KE_KEY, 0x8F, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + DVI */
++	{KE_KEY, 0x90, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + DVI */
++	{KE_KEY, 0x91, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + DVI */
++	{KE_KEY, 0x92, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + DVI */
++	{KE_KEY, 0x93, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + DVI */
+ 	{KE_KEY, 0x95, { KEY_MEDIA } },
+ 	{KE_KEY, 0x99, { KEY_PHONE } },
++	{KE_KEY, 0xA0, { KEY_SWITCHVIDEOMODE } }, /* SDSP HDMI only */
++	{KE_KEY, 0xA1, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + HDMI */
++	{KE_KEY, 0xA2, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + HDMI */
++	{KE_KEY, 0xA3, { KEY_SWITCHVIDEOMODE } }, /* SDSP TV + HDMI */
++	{KE_KEY, 0xA4, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + HDMI */
++	{KE_KEY, 0xA5, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV + HDMI */
++	{KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
++	{KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
+ 	{KE_KEY, 0xB5, { KEY_CALC } },
+ 	{KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+ 	{KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
 -- 
 1.7.8.6
