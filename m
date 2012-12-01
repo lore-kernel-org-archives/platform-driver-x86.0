@@ -1,436 +1,459 @@
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: Re: [PATCH v2 8/8] msi-wmi: Add MSI Wind support
-Date: Fri, 30 Nov 2012 20:36:48 +0200
-Message-ID: <CAKErNvpE_akTYWRFL3qQHvATd0pqx-jqB=dkkdBwS7Oo+f2TTQ@mail.gmail.com>
-References: <1354291477-8788-1-git-send-email-maxtram95@gmail.com>
- <1354291477-8788-9-git-send-email-maxtram95@gmail.com> <20121130182209.329bebd0@destiny.ordissimo>
+From: =?UTF-8?Q?Martin_Li=C5=A1ka?= <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ACPI ALS driver for iio introduced.
+Date: Sat, 1 Dec 2012 17:46:54 +0100
+Message-ID: <CAObPJ3M1yOtKTs0e7oi74+bVMjvPfe7Jn+EXVoVFzMc6cr43dQ@mail.gmail.com>
+References: <CAHR064j_7Y3wYXVXmC4TqZHxkqa0Z2HK84-OaDTiC7oesB_TrQ@mail.gmail.com>
+	<1354157205-2956-1-git-send-email-marxin.liska@gmail.com>
+	<1354157205-2956-2-git-send-email-marxin.liska@gmail.com>
+	<50B735D8.6000907@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f174.google.com ([209.85.223.174]:47892 "EHLO
-	mail-ie0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751736Ab2K3ShK (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 30 Nov 2012 13:37:10 -0500
-Received: by mail-ie0-f174.google.com with SMTP id c11so1113874ieb.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Nov 2012 10:37:08 -0800 (PST)
-In-Reply-To: <20121130182209.329bebd0@destiny.ordissimo>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Anisse Astier <anisse@astier.eu>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, joeyli <jlee@suse.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50B735D8.6000907-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, joeyli <jlee-IBi9RG/b67k@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pavel-ynQEQJNshbs@public.gmane.org, Jon Brenner <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-2012/11/30 Anisse Astier <anisse@astier.eu>:
-> On Fri, 30 Nov 2012 18:04:37 +0200, Maxim Mikityanskiy <maxtram95@gmail.com> wrote :
+On 29 November 2012 11:15, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> Hi,
 >
->> Add MSI Wind support to msi-wmi driver. MSI Wind has different GUID for
->> key events, different WMI key scan codes, it does not need filtering
->> consequent identical events and it does not support backlight control
->> via MSIWMI_BIOS_GUID WMI. Tested on MSI Wind U100.
+> On 11/29/2012 03:46 AM, marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: marxin <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> The from tag should contain your full name. Also you need to add a
+> Signed-off-by tag. And a short description what the patch does wouldn't hurt
+> either. And the subject line prefix should match that of the subsystem, in
+> this case "iio:". Your subject line could for example be "iio: Add ACPI
+> ambient light sensor driver".
+>
+> Also what's up with all the TODOs in the driver, shouldn't these be
+> addressed first before the driver is merged upstream? The driver looks a bit
+> as if it is only half finished, which is fine if you just want to get some
+> initial feedback, but you should definitely state this somewhere.
+>
 >>
->> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 >> ---
->>  drivers/platform/x86/msi-wmi.c | 255 ++++++++++++++++++++++++++++-------------
->>  1 file changed, 177 insertions(+), 78 deletions(-)
+>>  drivers/iio/industrialio-buffer.c    |    4 +-
+>>  drivers/staging/iio/light/Kconfig    |    6 +
+>>  drivers/staging/iio/light/Makefile   |    1 +
+>>  drivers/staging/iio/light/acpi-als.c |  486 ++++++++++++++++++++++++++++++++++
+>>  4 files changed, 495 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/staging/iio/light/acpi-als.c
 >>
->> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
->> index b96766b..31a7221 100644
->> --- a/drivers/platform/x86/msi-wmi.c
->> +++ b/drivers/platform/x86/msi-wmi.c
->> @@ -34,29 +34,63 @@ MODULE_AUTHOR("Thomas Renninger <trenn@suse.de>");
->>  MODULE_DESCRIPTION("MSI laptop WMI hotkeys driver");
->>  MODULE_LICENSE("GPL");
+>> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+>> index aaadd32..b8b377c 100644
+>> --- a/drivers/iio/industrialio-buffer.c
+>> +++ b/drivers/iio/industrialio-buffer.c
+>> @@ -119,8 +119,8 @@ static ssize_t iio_scan_el_show(struct device *dev,
+>>       int ret;
+>>       struct iio_dev *indio_dev = dev_to_iio_dev(dev);
 >>
->> -MODULE_ALIAS("wmi:551A1F84-FBDD-4125-91DB-3EA8F44F1D45");
->> -MODULE_ALIAS("wmi:B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2");
->> -
->>  #define DRV_NAME "msi-wmi"
+>> -     ret = test_bit(to_iio_dev_attr(attr)->address,
+>> -                    indio_dev->buffer->scan_mask);
+>> +     ret = !!(test_bit(to_iio_dev_attr(attr)->address,
+>> +                    indio_dev->buffer->scan_mask));
 >>
->>  #define MSIWMI_BIOS_GUID "551A1F84-FBDD-4125-91DB-3EA8F44F1D45"
->> -#define MSIWMI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
->> -
->> -#define SCANCODE_BASE 0xD0
->> -#define MSI_WMI_BRIGHTNESSUP   SCANCODE_BASE
->> -#define MSI_WMI_BRIGHTNESSDOWN (SCANCODE_BASE + 1)
->> -#define MSI_WMI_VOLUMEUP       (SCANCODE_BASE + 2)
->> -#define MSI_WMI_VOLUMEDOWN     (SCANCODE_BASE + 3)
->> -#define MSI_WMI_MUTE           (SCANCODE_BASE + 4)
->> +#define MSIWMI_MSI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
->> +#define MSIWMI_WIND_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
->> +
->> +MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
->> +MODULE_ALIAS("wmi:" MSIWMI_MSI_EVENT_GUID);
->> +MODULE_ALIAS("wmi:" MSIWMI_WIND_EVENT_GUID);
->> +
->> +enum msi_scancodes {
->> +     MSI_SCANCODE_BASE       = 0xD0,
->> +     MSI_KEY_BRIGHTNESSUP    = MSI_SCANCODE_BASE,
->> +     MSI_KEY_BRIGHTNESSDOWN,
->> +     MSI_KEY_VOLUMEUP,
->> +     MSI_KEY_VOLUMEDOWN,
->> +     MSI_KEY_MUTE,
->> +};
->>  static struct key_entry msi_wmi_keymap[] = {
->> -     { KE_KEY, MSI_WMI_BRIGHTNESSUP,   {KEY_BRIGHTNESSUP} },
->> -     { KE_KEY, MSI_WMI_BRIGHTNESSDOWN, {KEY_BRIGHTNESSDOWN} },
->> -     { KE_KEY, MSI_WMI_VOLUMEUP,       {KEY_VOLUMEUP} },
->> -     { KE_KEY, MSI_WMI_VOLUMEDOWN,     {KEY_VOLUMEDOWN} },
->> -     { KE_KEY, MSI_WMI_MUTE,           {KEY_MUTE} },
->> -     { KE_END, 0}
->> +     { KE_KEY, MSI_KEY_BRIGHTNESSUP,         { KEY_BRIGHTNESSUP } },
->> +     { KE_KEY, MSI_KEY_BRIGHTNESSDOWN,       { KEY_BRIGHTNESSDOWN } },
->> +     { KE_KEY, MSI_KEY_VOLUMEUP,             { KEY_VOLUMEUP } },
->> +     { KE_KEY, MSI_KEY_VOLUMEDOWN,           { KEY_VOLUMEDOWN} },
->> +     { KE_KEY, MSI_KEY_MUTE,                 { KEY_MUTE } },
->> +     { KE_END, 0 }
->> +};
->> +static ktime_t *last_pressed;
->> +
->> +enum wind_scancodes {
->> +     /* Fn+F3 touchpad toggle */
->> +     WIND_KEY_TOUCHPAD       = 0x08,
->> +     /* Fn+F11 Bluetooth toggle */
->> +     WIND_KEY_BLUETOOTH      = 0x56,
->> +     /* Fn+F6 webcam toggle */
->> +     WIND_KEY_CAMERA         = 0x57,
->> +     /* Fn+F11 Wi-Fi toggle */
->> +     WIND_KEY_WLAN           = 0x5f,
->> +     /* Fn+F10 turbo mode toggle */
->> +     WIND_KEY_TURBO          = 0x60,
->> +     /* Fn+F10 ECO mode toggle */
->> +     WIND_KEY_ECO            = 0x69,
->> +};
->
-> Looking at the scancode numbers and the key function, I see no collision
-> that necessitate using a separate sparse keymap, or a separate enum.
-> Merging them would simplify a lot of your patch.
-
-By merging keymaps we will lose information about what laptop
-corresponds the key to. Should I add this information in comments or
-is it better to use some other way?
-
->
->> +static struct key_entry wind_wmi_keymap[] = {
->> +     /* These keys work without WMI. Ignore them to avoid double keycodes */
->> +     { KE_IGNORE, WIND_KEY_TOUCHPAD,         { KEY_TOUCHPAD_TOGGLE } },
->> +     { KE_IGNORE, WIND_KEY_BLUETOOTH,        { KEY_BLUETOOTH } },
->> +     { KE_IGNORE, WIND_KEY_CAMERA,           { KEY_CAMERA } },
->> +     { KE_IGNORE, WIND_KEY_WLAN,             { KEY_WLAN } },
->> +     /* These are unknown WMI events */
->> +     { KE_IGNORE, 0x00 },
->> +     { KE_IGNORE, 0x62 },
->> +     { KE_IGNORE, 0x63 },
->> +     /* These are keys that should be handled via WMI */
->> +     { KE_KEY,    WIND_KEY_TURBO,            { KEY_PROG1 } },
->> +     { KE_KEY,    WIND_KEY_ECO,              { KEY_PROG2 } },
->> +     { KE_END, 0 }
->>  };
->> -static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
->>
->>  static struct backlight_device *backlight;
->>
->> @@ -64,6 +98,38 @@ static int backlight_map[] = { 0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF };
->>
->>  static struct input_dev *msi_wmi_input_dev;
->>
->> +struct msi_wmi_table_entry {
->> +     const char *guid;
->> +     struct key_entry *keymap;
->> +
->> +     /* Some MSI laptops send lots of identical events for one key press
->> +      * within short period of time. Set quirk_last_pressed to true if such
->> +      * repeated events need to be filtered. All scan codes must be
->> +      * sequential numbers. Set scancode_base to first of them and
->> +      * scancode_count to their count
->> +      */
->> +     bool quirk_last_pressed;
->> +     u32 scancode_base;
->> +     size_t scancode_count;
->> +};
->> +
->> +static struct msi_wmi_table_entry msi_wmi_table[] = {
->> +     {
->> +             .guid                   = MSIWMI_MSI_EVENT_GUID,
->> +             .keymap                 = msi_wmi_keymap,
->> +             .quirk_last_pressed     = true,
->> +             .scancode_base          = MSI_SCANCODE_BASE,
->> +             .scancode_count         = ARRAY_SIZE(msi_wmi_keymap)-1,
->> +     },
->> +     {
->> +             .guid                   = MSIWMI_WIND_EVENT_GUID,
->> +             .keymap                 = wind_wmi_keymap,
->> +     },
->> +     {}
->> +};
-> If you merge them you would only need the quirk_last_pressed variable,
-> and could do away with this struct.
-
-Yes, you're right. But what if I would completely remove
-quirk_last_pressed and would use last_pressed if event 0xD0 - 0xD4
-happens, otherwise skip last_pressed check? Is it good way too?
-
->
->> +
->> +static struct msi_wmi_table_entry *wmi;
->> +
->>  static int msi_wmi_query_block(int instance, int *ret)
->>  {
->>       acpi_status status;
->> @@ -165,11 +231,15 @@ static void msi_wmi_notify(u32 value, void *context)
->>               pr_debug("Eventcode: 0x%x\n", eventcode);
->>               key = sparse_keymap_entry_from_scancode(msi_wmi_input_dev,
->>                               eventcode);
->> -             if (key) {
->> +             if (!key) {
->> +                     pr_info("Unknown key pressed - %x\n", eventcode);
->> +                     goto msi_wmi_notify_exit;
->> +             }
->> +             if (wmi->quirk_last_pressed) {
->>                       ktime_t diff;
->>                       cur = ktime_get_real();
->>                       diff = ktime_sub(cur, last_pressed[key->code -
->> -                                     SCANCODE_BASE]);
->> +                                     wmi->scancode_base]);
->>                       /* Ignore event if the same event happened in a 50 ms
->>                          timeframe -> Key press may result in 10-20 GPEs */
->>                       if (ktime_to_us(diff) < 1000 * 50) {
->> @@ -178,21 +248,19 @@ static void msi_wmi_notify(u32 value, void *context)
->>                                        key->code, ktime_to_us(diff));
->>                               goto msi_wmi_notify_exit;
->>                       }
->> -                     last_pressed[key->code - SCANCODE_BASE] = cur;
->> -
->> -                     if (key->type == KE_KEY &&
->> -                     /* Brightness is served via acpi video driver */
->> -                     (!acpi_video_backlight_support() ||
->
-> You modify behaviour by removing this test. Backlight might be
-> registered, but we may not want to modify it directly from here because
-> the acpi video driver does that for us.
-
-I don't remove the test. I only change !acpi_video_backlight_support()
-condition by !backlight condition (actually, it's a typo, condition
-have to look like 'backlight', not '!backlight', I'm sorry for this).
-There is a check in msi_wmi_backlight_setup(). I call
-acpi_video_backlight_support() from there and backlight will be NULL
-if acpi video driver supports backlight. So checking backlight != NULL
-is the same as checking acpi_video_backlight_support() plus fallback
-if acpi video driver doesn't support backlight and WMI driver failed
-to initialize backlight.
-
->
->> -                     (key->code != MSI_WMI_BRIGHTNESSUP &&
->> -                     key->code != MSI_WMI_BRIGHTNESSDOWN))) {
->> -                             pr_debug("Send key: 0x%X - "
->> -                                      "Input layer keycode: %d\n",
->> -                                      key->code, key->keycode);
->> -                             sparse_keymap_report_entry(msi_wmi_input_dev,
->> -                                             key, 1, true);
->> -                     }
->> -             } else
->> -                     pr_info("Unknown key pressed - %x\n", eventcode);
->
-> Why did you remove this message ? It's useful because it helps users
-> report new keys for new hardware.
-
-No, I didn't remove the message, I only moved these lines above. I
-understand importance of this message.
-
->
->> +                     last_pressed[key->code - wmi->scancode_base] = cur;
->> +             }
->> +
->> +             if (key->type == KE_KEY &&
->> +             /* Brightness is served via acpi video driver */
->> +             (!backlight ||
->> +             (key->keycode != KEY_BRIGHTNESSUP &&
->> +             key->keycode != KEY_BRIGHTNESSDOWN))) {
->> +                     pr_debug("Send key: 0x%X - Input layer keycode: %d\n",
->> +                              key->code, key->keycode);
->> +                     sparse_keymap_report_entry(msi_wmi_input_dev,
->> +                                     key, 1, true);
->> +             }
->>       } else
->>               pr_info("Unknown event received\n");
->>
->> @@ -200,10 +268,45 @@ msi_wmi_notify_exit:
->>       kfree(response.pointer);
+>>       return sprintf(buf, "%d\n", ret);
 >>  }
+>> diff --git a/drivers/staging/iio/light/Kconfig b/drivers/staging/iio/light/Kconfig
+>> index 4bed30e..a164ecc 100644
+>> --- a/drivers/staging/iio/light/Kconfig
+>> +++ b/drivers/staging/iio/light/Kconfig
+>
+> Unless you have a really good reason we shouldn't add new iio drivers to
+> staging. Just put it in drivers/iio/light/
+>
+>> @@ -50,4 +50,10 @@ config TSL2x7x
+>>        tmd2672, tsl2772, tmd2772 devices.
+>>        Provides iio_events and direct access via sysfs.
 >>
->> +static int __init msi_wmi_backlight_setup(void)
+>> +config ACPI_ALS
+>> +     tristate "ACPI Ambient Light Sensor"
+>
+> I suspect that the driver depends on CONFIG_ACPI
+>
+>
+>> +     help
+>> +      Support for ACPI0008 Light Sensor.
+>> +      Provides direct access via sysfs.
+>> +
+>>  endmenu
+>> diff --git a/drivers/staging/iio/light/Makefile b/drivers/staging/iio/light/Makefile
+>> index 141af1e..13090e6 100644
+>> --- a/drivers/staging/iio/light/Makefile
+>> +++ b/drivers/staging/iio/light/Makefile
+>> @@ -7,3 +7,4 @@ obj-$(CONFIG_SENSORS_ISL29018)        += isl29018.o
+>>  obj-$(CONFIG_SENSORS_ISL29028)       += isl29028.o
+>>  obj-$(CONFIG_TSL2583)        += tsl2583.o
+>>  obj-$(CONFIG_TSL2x7x)        += tsl2x7x_core.o
+>> +obj-$(CONFIG_ACPI_ALS)       += acpi-als.o
+>> diff --git a/drivers/staging/iio/light/acpi-als.c b/drivers/staging/iio/light/acpi-als.c
+>> new file mode 100644
+>> index 0000000..9ba0fc4
+>> --- /dev/null
+>> +++ b/drivers/staging/iio/light/acpi-als.c
+>> @@ -0,0 +1,486 @@
+>> +/*
+>> + * ACPI Ambient Light Sensor Driver
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/interrupt.h>
+>> +#include <trace/events/printk.h>
+>> +#include <acpi/acpi_bus.h>
+>> +#include <acpi/acpi_drivers.h>
+>> +#include <linux/err.h>
+>> +#include <linux/mutex.h>
+>> +
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +
+>> +#define PREFIX "ACPI: "
+>> +
+>> +#define ACPI_ALS_CLASS                       "als"
+>> +#define ACPI_ALS_DEVICE_NAME         "acpi-als"
+>> +#define ACPI_ALS_NOTIFY_ILLUMINANCE  0x80
+>> +
+>> +#define ACPI_ALS_OUTPUTS             1
+>> +
+>> +#define _COMPONENT                   ACPI_ALS_COMPONENT
+>> +ACPI_MODULE_NAME("acpi-als");
+>> +
+>> +MODULE_AUTHOR("Martin Liska <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+>> +MODULE_DESCRIPTION("ACPI Ambient Light Sensor Driver");
+>> +MODULE_LICENSE("GPL");
+>> +
+>> +struct acpi_als_chip {
+>> +    struct acpi_device               *device;
+>> +    struct acpi_als_device   *acpi_als_sys;
+>
+> Neither the struct is defined nor the field is used.
+>
+>> +    struct mutex             lock;
+>> +    struct iio_trigger               *trig;
+>> +
+>> +    int                              illuminance;
+>> +    int                              polling;
+>
+> Polling is only ever assigned, but never read.
+>
+>> +
+>> +    int                              count;
+>> +    struct acpi_als_mapping  *mappings;
+>> +};
+>> +
+>> +static int acpi_als_add(struct acpi_device *device);
+>> +static int acpi_als_remove(struct acpi_device *device, int type);
+>> +static void acpi_als_notify(struct acpi_device *device, u32 event);
+>> +
+>> +static const struct acpi_device_id acpi_als_device_ids[] = {
+>> +    {"ACPI0008", 0},
+>> +    {"", 0},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(acpi, acpi_als_device_ids);
+>> +
+>> +static struct acpi_driver acpi_als_driver = {
+>> +    .name = "acpi_als",
+>> +    .class = ACPI_ALS_CLASS,
+>> +    .ids = acpi_als_device_ids,
+>> +    .ops = {
+>> +        .add = acpi_als_add,
+>> +        .remove = acpi_als_remove,
+>> +        .notify = acpi_als_notify,
+>> +    },
+>> +};
+>> +
+>> +struct acpi_als_mapping {
+>> +    int adjustment;
+>> +    int illuminance;
+>> +};
+>> +
+>> +#define ALS_INVALID_VALUE_LOW                0
+>> +#define ALS_INVALID_VALUE_HIGH               -1
+>> +
+>
+> [...]
+>> +/*
+>> + * acpi_als_get_polling - get a recommended polling frequency
+>> + *                     for the Ambient Light Sensor device
+>> + */
+>> +static int acpi_als_get_polling(struct acpi_als_chip *chip)
 >> +{
->> +     int err;
->> +     struct backlight_properties props;
+>> +    acpi_status status;
+>> +    unsigned long long polling;
 >> +
->> +     if (!wmi_has_guid(MSIWMI_BIOS_GUID) || acpi_video_backlight_support())
->> +             return -ENODEV;
+>> +    status =
+>> +        acpi_evaluate_integer(chip->device->handle, "_ALP", NULL, &polling);
+>> +    if (ACPI_FAILURE(status)) {
+>> +        ACPI_DEBUG_PRINT((ACPI_DB_INFO, "_ALP not available\n"));
+>> +        return -ENODEV;
+>> +    }
 >> +
->> +     memset(&props, 0, sizeof(struct backlight_properties));
->> +     props.type = BACKLIGHT_PLATFORM;
->> +     props.max_brightness = ARRAY_SIZE(backlight_map) - 1;
->> +     backlight = backlight_device_register(DRV_NAME, NULL, NULL,
->> +                                           &msi_backlight_ops,
->> +                                           &props);
->> +     if (IS_ERR(backlight))
->> +             return PTR_ERR(backlight);
->> +
->> +     err = bl_get(NULL);
->> +     if (err < 0) {
->> +             backlight_device_unregister(backlight);
->> +             return err;
->> +     }
->> +
->> +     backlight->props.brightness = err;
->> +
->> +     return 0;
+>> +    chip->polling = polling;
+>> +    return 0;
 >> +}
 >> +
->>  static int __init msi_wmi_input_setup(void)
->>  {
->>       int err;
->>
->> +     if (wmi->quirk_last_pressed) {
->> +             last_pressed = kcalloc(wmi->scancode_count,
->> +                     sizeof(last_pressed[0]), GFP_KERNEL);
+>> +/*
+>> + * get_illuminance - wrapper for getting the currect ambient light illuminance
+>> + */
 >
-> I see why you separated the keymaps. I'm pretty sure we can have an
-> unified keymap while keeping the last_pressed array working.
-
-I think I could check in msi_wmi_notify if event is between 0xD0 and
-0xD4 and if so, use last_pressed.
-
->> +             if (!last_pressed)
->> +                     return -ENOMEM;
+> Why is this wrapper necessary?
+>
+>> +static int get_illuminance(struct acpi_als_chip *als, int *illuminance)
+>> +{
+>> +    int result;
+>> +
+>> +    result = acpi_als_get_illuminance(als);
+>> +    if (!result)
+>> +        *illuminance = als->illuminance;
+>> +
+>> +    return result;
+>> +}
+>> +
+>> +static void acpi_als_notify(struct acpi_device *device, u32 event)
+>> +{
+>> +     int illuminance;
+>> +     struct iio_dev *indio_dev = acpi_driver_data(device);
+>> +     struct acpi_als_chip *chip = iio_priv(indio_dev);
+>> +
+>> +     s64 time_ns = iio_get_time_ns();
+>> +     int len = sizeof(int);
+>> +     u8 data[sizeof(s64) + ACPI_ALS_OUTPUTS * len];
+>> +
+>> +     switch(event) {
+>> +     case ACPI_ALS_NOTIFY_ILLUMINANCE:
+>> +             get_illuminance(chip, &illuminance);
+>> +             *(int *)((u8 *)data) = illuminance;
+>> +             *(s64 *)((u8 *)data + ALIGN(len, sizeof(s64))) = time_ns;
+>
+> You don't have a timestamp channel in your channel spec.
+>
+>> +             break;
+>> +     default:
+>> +             return;
 >> +     }
 >> +
->>       msi_wmi_input_dev = input_allocate_device();
->>       if (!msi_wmi_input_dev)
->>               return -ENOMEM;
->> @@ -212,7 +315,7 @@ static int __init msi_wmi_input_setup(void)
->>       msi_wmi_input_dev->phys = "wmi/input0";
->>       msi_wmi_input_dev->id.bustype = BUS_HOST;
->>
->> -     err = sparse_keymap_setup(msi_wmi_input_dev, msi_wmi_keymap, NULL);
->> +     err = sparse_keymap_setup(msi_wmi_input_dev, wmi->keymap, NULL);
->>       if (err)
->>               goto err_free_dev;
->>
->> @@ -221,8 +324,6 @@ static int __init msi_wmi_input_setup(void)
->>       if (err)
->>               goto err_free_keymap;
->>
->> -     memset(last_pressed, 0, sizeof(last_pressed));
->> -
->>       return 0;
->>
->>  err_free_keymap:
->> @@ -235,61 +336,59 @@ err_free_dev:
->>  static int __init msi_wmi_init(void)
->>  {
->>       int err;
->> +     bool found = false;
->> +     size_t i;
+>> +     if (iio_buffer_enabled(indio_dev))
+>> +             iio_push_to_buffers(indio_dev, data);
 >> +
->> +     for (i = 0; msi_wmi_table[i].guid; i++) {
->> +             if (wmi_has_guid(msi_wmi_table[i].guid)) {
->> +                     found = true;
->> +                     wmi = &msi_wmi_table[i];
+>> +     return;
+>> +}
 >> +
->> +                     err = msi_wmi_input_setup();
->> +                     if (err) {
->> +                             pr_err("Unable to setup input device\n");
->> +                             wmi = NULL;
->> +                             return err;
->> +                     }
->>
->> -     if (!wmi_has_guid(MSIWMI_EVENT_GUID)) {
->> -             pr_err("This machine doesn't have MSI-hotkeys through WMI\n");
->> -             return -ENODEV;
->> -     }
->> -     err = wmi_install_notify_handler(MSIWMI_EVENT_GUID,
->> -                     msi_wmi_notify, NULL);
->> -     if (ACPI_FAILURE(err))
->> -             return -EINVAL;
->> +                     err = wmi_install_notify_handler(wmi->guid,
->> +                             msi_wmi_notify, NULL);
->> +                     if (ACPI_FAILURE(err)) {
->> +                             pr_err("Unable to setup WMI notify handler\n");
->> +                             sparse_keymap_free(msi_wmi_input_dev);
->> +                             input_unregister_device(msi_wmi_input_dev);
->> +                             wmi = NULL;
->> +                             return -EINVAL;
->> +                     }
->>
->> -     err = msi_wmi_input_setup();
->> -     if (err)
->> -             goto err_uninstall_notifier;
->> -
->> -     if (!acpi_video_backlight_support()) {
->> -             struct backlight_properties props;
->> -             memset(&props, 0, sizeof(struct backlight_properties));
->> -             props.type = BACKLIGHT_PLATFORM;
->> -             props.max_brightness = ARRAY_SIZE(backlight_map) - 1;
->> -             backlight = backlight_device_register(DRV_NAME, NULL, NULL,
->> -                                                   &msi_backlight_ops,
->> -                                                   &props);
->> -             if (IS_ERR(backlight)) {
->> -                     err = PTR_ERR(backlight);
->> -                     goto err_free_input;
->> +                     pr_debug("Event handler installed\n");
->> +                     break;
->>               }
->> +     }
->>
->> -             err = bl_get(NULL);
->> -             if (err < 0)
->> -                     goto err_free_backlight;
->> +     if (!msi_wmi_backlight_setup()) {
->> +             found = true;
->> +             pr_debug("Backlight device created\n");
->> +     }
->>
->> -             backlight->props.brightness = err;
->> +     if (!found) {
->> +             pr_err("This machine doesn't have neither MSI-hotkeys nor backlight through WMI\n");
->> +             return -ENODEV;
->>       }
->> -     pr_debug("Event handler installed\n");
->>
->>       return 0;
->> -
->> -err_free_backlight:
->> -     backlight_device_unregister(backlight);
->> -err_free_input:
->> -     sparse_keymap_free(msi_wmi_input_dev);
->> -     input_unregister_device(msi_wmi_input_dev);
->> -err_uninstall_notifier:
->> -     wmi_remove_notify_handler(MSIWMI_EVENT_GUID);
->> -     return err;
->>  }
->>
->>  static void __exit msi_wmi_exit(void)
->>  {
->> -     if (wmi_has_guid(MSIWMI_EVENT_GUID)) {
->> -             wmi_remove_notify_handler(MSIWMI_EVENT_GUID);
->> +     kfree(last_pressed);
->> +     if (wmi) {
->> +             wmi_remove_notify_handler(wmi->guid);
->>               sparse_keymap_free(msi_wmi_input_dev);
->>               input_unregister_device(msi_wmi_input_dev);
->> -             backlight_device_unregister(backlight);
->>       }
->> +     if (backlight)
->> +             backlight_device_unregister(backlight);
->>  }
+>> +static int acpi_als_read_raw(struct iio_dev *indio_dev,
+>> +                             struct iio_chan_spec const *chan, int *val, int *val2, long mask)
+>> +{
+>> +    struct acpi_als_chip *chip = iio_priv(indio_dev);
+>> +    int ret = -EINVAL;
+>> +
+>> +    mutex_lock(&chip->lock);
+>> +
+>> +    switch (mask) {
+>> +    case IIO_CHAN_INFO_RAW:
 >
-> There's a lot of restructuring in here that aren't directly related to
-> adding support for new hardware (enums, init path for backlight, quirk,
-> etc.), which make this patch hard to review. You should try to put these
-> in separate patches.
-
-OK, I will do that and resend later, when I'll receive comments on
-other patches and fix all needed things.
-
-> Regards,
+> You did not register a RAW attribute for this device.
 >
-> Anisse
+>> +    case IIO_CHAN_INFO_PROCESSED:
+>> +        switch(chan->type) {
+>> +        case IIO_LIGHT:
+>> +            ret = get_illuminance(chip, val);
+>> +            break;
+>> +        default:
+>> +            break;
+>> +        }
+>> +
+>> +        if(!ret)
+>> +            ret = IIO_VAL_INT;
+>> +
+>> +        break;
+>> +    default:
+>> +        dev_err(&chip->device->dev, "mask value 0x%08lx not supported\n", mask);
+>
+> You did register a scale attribute for the device, so whenever somebody
+> reads the scale attribute he will get this message. I don't think that makes
+> much sense. Better just remove IIO_CHAN_INFO_SCALE_SEPARATE_BIT from the
+> channel spec. And also remove this dev_err.
+>
+>> +        break;
+>> +    }
+>> +
+>> +    mutex_unlock(&chip->lock);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +static const struct iio_chan_spec acpi_als_channels[] = {
+>> +    {
+>> +        .type = IIO_LIGHT,
+>> +        .indexed = 1,
+>> +        .channel = 1,
+>> +        .scan_type.sign = 'u',
+>> +        .scan_type.realbits = 10,
+>> +        .scan_type.storagebits = 16,
+>> +        .info_mask = IIO_CHAN_INFO_PROCESSED_SEPARATE_BIT |
+>> +        IIO_CHAN_INFO_SCALE_SEPARATE_BIT,
+>> +    },
+>> +};
+>> +
+>> +static const struct iio_info acpi_als_info = {
+>> +    .driver_module = THIS_MODULE,
+>> +    .read_raw = &acpi_als_read_raw,
+>> +    .write_raw = NULL,
+>> +};
+>> +
+>> +static irqreturn_t acpi_als_trigger_handler(int irq, void *p)
+>> +{
+>> +
+>> +    struct iio_poll_func *pf = p;
+>> +    struct iio_dev *idev = pf->indio_dev;
+>> +
+>> +
+>> +    struct acpi_als_chip *chip = iio_priv(idev);
+>> +
+>> +    printk("XXX: TRIGGER handler called :)");
+>
+> Aha?
+>
+>> +    iio_trigger_notify_done(chip->trig);
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+> [...]
+>> +
+>> +static int acpi_als_add(struct acpi_device *device)
+>> +{
+>> +    int result;
+>> +    struct acpi_als_chip *chip;
+>> +    struct iio_dev *indio_dev;
+>> +
+>> +    /*
+>> +    if (unlikely(als_id >= 10)) {
+>> +     printk(KERN_WARNING PREFIX "Too many ALS device found\n");
+>> +     return -ENODEV;
+>> +    }
+>> +    */
+>
+> What's with this?
+>
+>> +
+>> +    indio_dev = iio_device_alloc(sizeof(*chip));
+>> +    if (!indio_dev) {
+>> +        dev_err(&device->dev, "iio allocation fails\n");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>> +    chip = iio_priv(indio_dev);
+>> +
+>> +    device->driver_data = indio_dev;
+>> +    chip->device = device;
+>> +    mutex_init(&chip->lock);
+>> +
+>> +    indio_dev->info = &acpi_als_info;
+>> +    indio_dev->channels = acpi_als_channels;
+>> +    indio_dev->num_channels = ARRAY_SIZE(acpi_als_channels);
+>> +    indio_dev->name = ACPI_ALS_DEVICE_NAME;
+>> +    indio_dev->dev.parent = &device->dev;
+>> +    indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +    result = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
+>> +                                        &acpi_als_trigger_handler, NULL);
+>> +
+>> +    if(result) {
+>> +        printk("Could not setup buffer for iio device\n");
+>
+> dev_err
+>
+>> +        goto exit_iio_free;
+>> +    }
+>> +
+>> +    result = acpi_als_trigger_init(indio_dev);
+>> +    if (result) {
+>> +        printk("Couldn't setup the triggers.\n");
+>
+> dev_err
+>
+>> +        // TODO
+>> +        //goto error_unregister_buffer;
+>> +    }
+>> +
+>> +    result = iio_device_register(indio_dev);
+>> +    if (result < 0) {
+>> +        dev_err(&chip->device->dev, "iio registration fails with error %d\n",
+>> +                result);
+>> +        goto exit_iio_free;
+>> +    }
+>> +
+>> +    printk("ACPI ALS initialized");
+>
+> This is just noise, please remove it.
+>
+>> +    return 0;
+>> +
+>> +exit_iio_free:
+>> +    iio_device_free(indio_dev);
+>> +    return result;
+>> +}
+>> +
+>> +static int acpi_als_remove(struct acpi_device *device, int type)
+>> +{
+>> +    struct iio_dev *indio_dev;
+>> +
+>> +    indio_dev = acpi_driver_data(device);
+>> +    if(!indio_dev) {
+>
+> Can this ever happen? I suspect not.
+>
+>> +        dev_err(&device->dev, "could not get indio_dev for ACPI device\n");
+>> +        return -1;
+>> +    }
+>> +
+>> +    iio_device_unregister(indio_dev);
+>> +    iio_device_free(indio_dev);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static int __init acpi_als_init(void)
+>> +{
+>> +    return acpi_bus_register_driver(&acpi_als_driver);
+>> +}
+>> +
+>> +static void __exit acpi_als_exit(void)
+>> +{
+>> +    acpi_bus_unregister_driver(&acpi_als_driver);
+>> +}
+>> +
+>> +module_init(acpi_als_init);
+>> +module_exit(acpi_als_exit);
+>
+> Hm, there is no module_acpi_driver? We should probably add one.
+>
+
+Hello,
+   you are right. The patch is really just half finished patch (let's
+call it draft). I will merge all comments you added to my patch. But
+the major stuff is that I don't know how to handle iio trigger. As I
+wrote before, I use acpi_notify callback for filling iio buffer.
+Guideline for IIO says each iio buffer should be completed with
+appropriate trigger. In my case makes not sense because I can fill the
+buffer for ACPI event handler?
+
+Thank you for advice,
+Martin
