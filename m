@@ -1,514 +1,59 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ACPI ALS driver for iio introduced.
-Date: Sun, 02 Dec 2012 13:24:52 +0000
-Message-ID: <50BB56A4.7000709@kernel.org>
-References: <CAHR064j_7Y3wYXVXmC4TqZHxkqa0Z2HK84-OaDTiC7oesB_TrQ@mail.gmail.com> <1354157205-2956-1-git-send-email-marxin.liska@gmail.com> <1354157205-2956-2-git-send-email-marxin.liska@gmail.com> <50B735D8.6000907@metafoo.de> <CAObPJ3M1yOtKTs0e7oi74+bVMjvPfe7Jn+EXVoVFzMc6cr43dQ@mail.gmail.com>
+From: Jens Kapitza <j.kapitza@schwarze-allianz.de>
+Subject: Medion  S4216 (BUG rfkill)
+Date: Mon, 03 Dec 2012 10:27:34 +0100
+Message-ID: <50BC7086.8060903@schwarze-allianz.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAObPJ3M1yOtKTs0e7oi74+bVMjvPfe7Jn+EXVoVFzMc6cr43dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?windows-1252?Q?Martin_Li=9Aka?= <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?windows-1252?Q?Marek_Va=9Aut?= <marex-ynQEQJNshbs@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, joeyli <jlee-IBi9RG/b67k@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, pavel-ynQEQJNshbs@public.gmane.org, Jon Brenner <jbrenner-yYKgigLBUwlBDgjK7y7TUQ@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.legal.de ([46.38.240.131]:53371 "EHLO mail.legal.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751546Ab2LCJhY (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 3 Dec 2012 04:37:24 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.legal.de (Postfix) with ESMTP id 5DB0C606089B
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Dec 2012 09:27:40 +0000 (UTC)
+Received: from mail.legal.de ([127.0.0.1])
+	by localhost (mail.legal.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 6BTBcs3rdzUH for <platform-driver-x86@vger.kernel.org>;
+	Mon,  3 Dec 2012 09:27:34 +0000 (UTC)
+Received: from [134.91.53.250] (unknown [134.91.53.250])
+	by mail.legal.de (Postfix) with ESMTPSA id DFA2E6060667
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Dec 2012 09:27:34 +0000 (UTC)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 12/01/2012 04:46 PM, Martin Li=9Aka wrote:
-> On 29 November 2012 11:15, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote=
-:
->> Hi,
->>
->> On 11/29/2012 03:46 AM, marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> From: marxin <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The from tag should contain your full name. Also you need to add a
->> Signed-off-by tag. And a short description what the patch does would=
-n't hurt
->> either. And the subject line prefix should match that of the subsyst=
-em, in
->> this case "iio:". Your subject line could for example be "iio: Add A=
-CPI
->> ambient light sensor driver".
->>
->> Also what's up with all the TODOs in the driver, shouldn't these be
->> addressed first before the driver is merged upstream? The driver loo=
-ks a bit
->> as if it is only half finished, which is fine if you just want to ge=
-t some
->> initial feedback, but you should definitely state this somewhere.
->>
->>>
->>> ---
->>>  drivers/iio/industrialio-buffer.c    |    4 +-
->>>  drivers/staging/iio/light/Kconfig    |    6 +
->>>  drivers/staging/iio/light/Makefile   |    1 +
->>>  drivers/staging/iio/light/acpi-als.c |  486 ++++++++++++++++++++++=
-++++++++++++
->>>  4 files changed, 495 insertions(+), 2 deletions(-)
->>>  create mode 100644 drivers/staging/iio/light/acpi-als.c
->>>
->>> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/indust=
-rialio-buffer.c
->>> index aaadd32..b8b377c 100644
->>> --- a/drivers/iio/industrialio-buffer.c
->>> +++ b/drivers/iio/industrialio-buffer.c
->>> @@ -119,8 +119,8 @@ static ssize_t iio_scan_el_show(struct device *=
-dev,
->>>       int ret;
->>>       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
->>>
->>> -     ret =3D test_bit(to_iio_dev_attr(attr)->address,
->>> -                    indio_dev->buffer->scan_mask);
->>> +     ret =3D !!(test_bit(to_iio_dev_attr(attr)->address,
->>> +                    indio_dev->buffer->scan_mask));
->>>
->>>       return sprintf(buf, "%d\n", ret);
->>>  }
->>> diff --git a/drivers/staging/iio/light/Kconfig b/drivers/staging/ii=
-o/light/Kconfig
->>> index 4bed30e..a164ecc 100644
->>> --- a/drivers/staging/iio/light/Kconfig
->>> +++ b/drivers/staging/iio/light/Kconfig
->>
->> Unless you have a really good reason we shouldn't add new iio driver=
-s to
->> staging. Just put it in drivers/iio/light/
->>
->>> @@ -50,4 +50,10 @@ config TSL2x7x
->>>        tmd2672, tsl2772, tmd2772 devices.
->>>        Provides iio_events and direct access via sysfs.
->>>
->>> +config ACPI_ALS
->>> +     tristate "ACPI Ambient Light Sensor"
->>
->> I suspect that the driver depends on CONFIG_ACPI
->>
->>
->>> +     help
->>> +      Support for ACPI0008 Light Sensor.
->>> +      Provides direct access via sysfs.
->>> +
->>>  endmenu
->>> diff --git a/drivers/staging/iio/light/Makefile b/drivers/staging/i=
-io/light/Makefile
->>> index 141af1e..13090e6 100644
->>> --- a/drivers/staging/iio/light/Makefile
->>> +++ b/drivers/staging/iio/light/Makefile
->>> @@ -7,3 +7,4 @@ obj-$(CONFIG_SENSORS_ISL29018)        +=3D isl29018=
-=2Eo
->>>  obj-$(CONFIG_SENSORS_ISL29028)       +=3D isl29028.o
->>>  obj-$(CONFIG_TSL2583)        +=3D tsl2583.o
->>>  obj-$(CONFIG_TSL2x7x)        +=3D tsl2x7x_core.o
->>> +obj-$(CONFIG_ACPI_ALS)       +=3D acpi-als.o
->>> diff --git a/drivers/staging/iio/light/acpi-als.c b/drivers/staging=
-/iio/light/acpi-als.c
->>> new file mode 100644
->>> index 0000000..9ba0fc4
->>> --- /dev/null
->>> +++ b/drivers/staging/iio/light/acpi-als.c
->>> @@ -0,0 +1,486 @@
->>> +/*
->>> + * ACPI Ambient Light Sensor Driver
->>> + *
->>> + * This program is free software; you can redistribute it and/or m=
-odify it
->>> + * under the terms and conditions of the GNU General Public Licens=
-e,
->>> + * version 2, as published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope it will be useful, but =
-WITHOUT
->>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
->>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
->>> + * more details.
->>> + *
->>> + * You should have received a copy of the GNU General Public Licen=
-se
->>> + * along with this program.  If not, see <http://www.gnu.org/licen=
-ses/>.
->>> + */
->>> +
->>> +#include <linux/module.h>
->>> +#include <linux/interrupt.h>
->>> +#include <trace/events/printk.h>
->>> +#include <acpi/acpi_bus.h>
->>> +#include <acpi/acpi_drivers.h>
->>> +#include <linux/err.h>
->>> +#include <linux/mutex.h>
->>> +
->>> +#include <linux/iio/iio.h>
->>> +#include <linux/iio/buffer.h>
->>> +#include <linux/iio/sysfs.h>
->>> +#include <linux/iio/trigger.h>
->>> +#include <linux/iio/trigger_consumer.h>
->>> +#include <linux/iio/triggered_buffer.h>
->>> +
->>> +#define PREFIX "ACPI: "
->>> +
->>> +#define ACPI_ALS_CLASS                       "als"
->>> +#define ACPI_ALS_DEVICE_NAME         "acpi-als"
->>> +#define ACPI_ALS_NOTIFY_ILLUMINANCE  0x80
->>> +
->>> +#define ACPI_ALS_OUTPUTS             1
->>> +
->>> +#define _COMPONENT                   ACPI_ALS_COMPONENT
->>> +ACPI_MODULE_NAME("acpi-als");
->>> +
->>> +MODULE_AUTHOR("Martin Liska <marxin.liska-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
->>> +MODULE_DESCRIPTION("ACPI Ambient Light Sensor Driver");
->>> +MODULE_LICENSE("GPL");
->>> +
->>> +struct acpi_als_chip {
->>> +    struct acpi_device               *device;
->>> +    struct acpi_als_device   *acpi_als_sys;
->>
->> Neither the struct is defined nor the field is used.
->>
->>> +    struct mutex             lock;
->>> +    struct iio_trigger               *trig;
->>> +
->>> +    int                              illuminance;
->>> +    int                              polling;
->>
->> Polling is only ever assigned, but never read.
->>
->>> +
->>> +    int                              count;
->>> +    struct acpi_als_mapping  *mappings;
->>> +};
->>> +
->>> +static int acpi_als_add(struct acpi_device *device);
->>> +static int acpi_als_remove(struct acpi_device *device, int type);
->>> +static void acpi_als_notify(struct acpi_device *device, u32 event)=
-;
->>> +
->>> +static const struct acpi_device_id acpi_als_device_ids[] =3D {
->>> +    {"ACPI0008", 0},
->>> +    {"", 0},
->>> +};
->>> +
->>> +MODULE_DEVICE_TABLE(acpi, acpi_als_device_ids);
->>> +
->>> +static struct acpi_driver acpi_als_driver =3D {
->>> +    .name =3D "acpi_als",
->>> +    .class =3D ACPI_ALS_CLASS,
->>> +    .ids =3D acpi_als_device_ids,
->>> +    .ops =3D {
->>> +        .add =3D acpi_als_add,
->>> +        .remove =3D acpi_als_remove,
->>> +        .notify =3D acpi_als_notify,
->>> +    },
->>> +};
->>> +
->>> +struct acpi_als_mapping {
->>> +    int adjustment;
->>> +    int illuminance;
->>> +};
->>> +
->>> +#define ALS_INVALID_VALUE_LOW                0
->>> +#define ALS_INVALID_VALUE_HIGH               -1
->>> +
->>
->> [...]
->>> +/*
->>> + * acpi_als_get_polling - get a recommended polling frequency
->>> + *                     for the Ambient Light Sensor device
->>> + */
->>> +static int acpi_als_get_polling(struct acpi_als_chip *chip)
->>> +{
->>> +    acpi_status status;
->>> +    unsigned long long polling;
->>> +
->>> +    status =3D
->>> +        acpi_evaluate_integer(chip->device->handle, "_ALP", NULL, =
-&polling);
->>> +    if (ACPI_FAILURE(status)) {
->>> +        ACPI_DEBUG_PRINT((ACPI_DB_INFO, "_ALP not available\n"));
->>> +        return -ENODEV;
->>> +    }
->>> +
->>> +    chip->polling =3D polling;
->>> +    return 0;
->>> +}
->>> +
->>> +/*
->>> + * get_illuminance - wrapper for getting the currect ambient light=
- illuminance
->>> + */
->>
->> Why is this wrapper necessary?
->>
->>> +static int get_illuminance(struct acpi_als_chip *als, int *illumin=
-ance)
->>> +{
->>> +    int result;
->>> +
->>> +    result =3D acpi_als_get_illuminance(als);
->>> +    if (!result)
->>> +        *illuminance =3D als->illuminance;
->>> +
->>> +    return result;
->>> +}
->>> +
->>> +static void acpi_als_notify(struct acpi_device *device, u32 event)
->>> +{
->>> +     int illuminance;
->>> +     struct iio_dev *indio_dev =3D acpi_driver_data(device);
->>> +     struct acpi_als_chip *chip =3D iio_priv(indio_dev);
->>> +
->>> +     s64 time_ns =3D iio_get_time_ns();
->>> +     int len =3D sizeof(int);
->>> +     u8 data[sizeof(s64) + ACPI_ALS_OUTPUTS * len];
->>> +
->>> +     switch(event) {
->>> +     case ACPI_ALS_NOTIFY_ILLUMINANCE:
->>> +             get_illuminance(chip, &illuminance);
->>> +             *(int *)((u8 *)data) =3D illuminance;
->>> +             *(s64 *)((u8 *)data + ALIGN(len, sizeof(s64))) =3D ti=
-me_ns;
->>
->> You don't have a timestamp channel in your channel spec.
->>
->>> +             break;
->>> +     default:
->>> +             return;
->>> +     }
->>> +
->>> +     if (iio_buffer_enabled(indio_dev))
->>> +             iio_push_to_buffers(indio_dev, data);
->>> +
->>> +     return;
->>> +}
->>> +
->>> +static int acpi_als_read_raw(struct iio_dev *indio_dev,
->>> +                             struct iio_chan_spec const *chan, int=
- *val, int *val2, long mask)
->>> +{
->>> +    struct acpi_als_chip *chip =3D iio_priv(indio_dev);
->>> +    int ret =3D -EINVAL;
->>> +
->>> +    mutex_lock(&chip->lock);
->>> +
->>> +    switch (mask) {
->>> +    case IIO_CHAN_INFO_RAW:
->>
->> You did not register a RAW attribute for this device.
->>
->>> +    case IIO_CHAN_INFO_PROCESSED:
->>> +        switch(chan->type) {
->>> +        case IIO_LIGHT:
->>> +            ret =3D get_illuminance(chip, val);
->>> +            break;
->>> +        default:
->>> +            break;
->>> +        }
->>> +
->>> +        if(!ret)
->>> +            ret =3D IIO_VAL_INT;
->>> +
->>> +        break;
->>> +    default:
->>> +        dev_err(&chip->device->dev, "mask value 0x%08lx not suppor=
-ted\n", mask);
->>
->> You did register a scale attribute for the device, so whenever someb=
-ody
->> reads the scale attribute he will get this message. I don't think th=
-at makes
->> much sense. Better just remove IIO_CHAN_INFO_SCALE_SEPARATE_BIT from=
- the
->> channel spec. And also remove this dev_err.
->>
->>> +        break;
->>> +    }
->>> +
->>> +    mutex_unlock(&chip->lock);
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static const struct iio_chan_spec acpi_als_channels[] =3D {
->>> +    {
->>> +        .type =3D IIO_LIGHT,
->>> +        .indexed =3D 1,
->>> +        .channel =3D 1,
->>> +        .scan_type.sign =3D 'u',
->>> +        .scan_type.realbits =3D 10,
->>> +        .scan_type.storagebits =3D 16,
->>> +        .info_mask =3D IIO_CHAN_INFO_PROCESSED_SEPARATE_BIT |
->>> +        IIO_CHAN_INFO_SCALE_SEPARATE_BIT,
->>> +    },
->>> +};
->>> +
->>> +static const struct iio_info acpi_als_info =3D {
->>> +    .driver_module =3D THIS_MODULE,
->>> +    .read_raw =3D &acpi_als_read_raw,
->>> +    .write_raw =3D NULL,
->>> +};
->>> +
->>> +static irqreturn_t acpi_als_trigger_handler(int irq, void *p)
->>> +{
->>> +
->>> +    struct iio_poll_func *pf =3D p;
->>> +    struct iio_dev *idev =3D pf->indio_dev;
->>> +
->>> +
->>> +    struct acpi_als_chip *chip =3D iio_priv(idev);
->>> +
->>> +    printk("XXX: TRIGGER handler called :)");
->>
->> Aha?
->>
->>> +    iio_trigger_notify_done(chip->trig);
->>> +    return IRQ_HANDLED;
->>> +}
->>> +
->> [...]
->>> +
->>> +static int acpi_als_add(struct acpi_device *device)
->>> +{
->>> +    int result;
->>> +    struct acpi_als_chip *chip;
->>> +    struct iio_dev *indio_dev;
->>> +
->>> +    /*
->>> +    if (unlikely(als_id >=3D 10)) {
->>> +     printk(KERN_WARNING PREFIX "Too many ALS device found\n");
->>> +     return -ENODEV;
->>> +    }
->>> +    */
->>
->> What's with this?
->>
->>> +
->>> +    indio_dev =3D iio_device_alloc(sizeof(*chip));
->>> +    if (!indio_dev) {
->>> +        dev_err(&device->dev, "iio allocation fails\n");
->>> +        return -ENOMEM;
->>> +    }
->>> +
->>> +    chip =3D iio_priv(indio_dev);
->>> +
->>> +    device->driver_data =3D indio_dev;
->>> +    chip->device =3D device;
->>> +    mutex_init(&chip->lock);
->>> +
->>> +    indio_dev->info =3D &acpi_als_info;
->>> +    indio_dev->channels =3D acpi_als_channels;
->>> +    indio_dev->num_channels =3D ARRAY_SIZE(acpi_als_channels);
->>> +    indio_dev->name =3D ACPI_ALS_DEVICE_NAME;
->>> +    indio_dev->dev.parent =3D &device->dev;
->>> +    indio_dev->modes =3D INDIO_DIRECT_MODE;
->>> +
->>> +    result =3D iio_triggered_buffer_setup(indio_dev, &iio_pollfunc=
-_store_time,
->>> +                                        &acpi_als_trigger_handler,=
- NULL);
->>> +
->>> +    if(result) {
->>> +        printk("Could not setup buffer for iio device\n");
->>
->> dev_err
->>
->>> +        goto exit_iio_free;
->>> +    }
->>> +
->>> +    result =3D acpi_als_trigger_init(indio_dev);
->>> +    if (result) {
->>> +        printk("Couldn't setup the triggers.\n");
->>
->> dev_err
->>
->>> +        // TODO
->>> +        //goto error_unregister_buffer;
->>> +    }
->>> +
->>> +    result =3D iio_device_register(indio_dev);
->>> +    if (result < 0) {
->>> +        dev_err(&chip->device->dev, "iio registration fails with e=
-rror %d\n",
->>> +                result);
->>> +        goto exit_iio_free;
->>> +    }
->>> +
->>> +    printk("ACPI ALS initialized");
->>
->> This is just noise, please remove it.
->>
->>> +    return 0;
->>> +
->>> +exit_iio_free:
->>> +    iio_device_free(indio_dev);
->>> +    return result;
->>> +}
->>> +
->>> +static int acpi_als_remove(struct acpi_device *device, int type)
->>> +{
->>> +    struct iio_dev *indio_dev;
->>> +
->>> +    indio_dev =3D acpi_driver_data(device);
->>> +    if(!indio_dev) {
->>
->> Can this ever happen? I suspect not.
->>
->>> +        dev_err(&device->dev, "could not get indio_dev for ACPI de=
-vice\n");
->>> +        return -1;
->>> +    }
->>> +
->>> +    iio_device_unregister(indio_dev);
->>> +    iio_device_free(indio_dev);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int __init acpi_als_init(void)
->>> +{
->>> +    return acpi_bus_register_driver(&acpi_als_driver);
->>> +}
->>> +
->>> +static void __exit acpi_als_exit(void)
->>> +{
->>> +    acpi_bus_unregister_driver(&acpi_als_driver);
->>> +}
->>> +
->>> +module_init(acpi_als_init);
->>> +module_exit(acpi_als_exit);
->>
->> Hm, there is no module_acpi_driver? We should probably add one.
->>
->=20
-> Hello,
->    you are right. The patch is really just half finished patch (let's
-> call it draft). I will merge all comments you added to my patch. But
-> the major stuff is that I don't know how to handle iio trigger. As I
-> wrote before, I use acpi_notify callback for filling iio buffer.
-> Guideline for IIO says each iio buffer should be completed with
-> appropriate trigger. In my case makes not sense because I can fill th=
-e
-> buffer for ACPI event handler?
-Doing things via triggers is not a hard and fast rule. Often it makes
-sense because multiple devices may use the same trigger.  Here for exam=
-ple
-you might want to sample some other sensor as close as possible to when=
- the
-acpi als event occurs (no idea why, this makes a lot more sense for som=
-e
-other types of sensor!)
+Hello,
 
-If you want to push to the buffer directly because the trigger event in=
-cludes
-the data in question then that is also fine.
+after  linux-wireless list said i should move to acpi wmi list (cause my 
+problem seems to be a interrupt problem from bios / uefi?)
 
-Jonathan
->=20
-> Thank you for advice,
-> Martin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+
+This modules are loaded
+
+wmi                    19070  1 mxm_wmi
+
+
+
+Problem:
+
+there are not all Fn-Keys working
+and after suspend the bios do a hardkill for wlan-atenna
+
+rfkill can't unblock it.
+
+can anyone tell me how to debug it better.
+(it's just the wlan which is not working as expected after resume from 
+suspend)
+
+jens@jens-S4216:~$ uname -a
+Linux jens-S4216 3.6.7 #2 SMP Sat Nov 24 19:30:21 CET 2012 x86_64 x86_64 
+x86_64 GNU/Linux
+
+
+Can anyone help me to get further?
+
+
+Thanks in advance, Jens Kapitza
