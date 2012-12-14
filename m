@@ -1,64 +1,50 @@
 From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [RESEND][PATCH 5/5] acer-wmi: support Lenovo ideapad S205 1038DPG wifi switch
-Date: Fri, 14 Dec 2012 16:10:09 +0800
-Message-ID: <1355472609-9957-5-git-send-email-jlee@suse.com>
-References: <1355472609-9957-1-git-send-email-jlee@suse.com>
+Subject: [RESEND][PATCH 1/5] MAINTAINERS: change the mail address of acer-wmi/msi-laptop maintainer
+Date: Fri, 14 Dec 2012 16:14:24 +0800
+Message-ID: <1355472868-10351-1-git-send-email-jlee@suse.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ia0-f174.google.com ([209.85.210.174]:53460 "EHLO
+Received: from mail-ia0-f174.google.com ([209.85.210.174]:57359 "EHLO
 	mail-ia0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751827Ab2LNILp (ORCPT
+	with ESMTP id S1750986Ab2LNIPo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 14 Dec 2012 03:11:45 -0500
-Received: by mail-ia0-f174.google.com with SMTP id y25so2877293iay.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Dec 2012 00:11:44 -0800 (PST)
-In-Reply-To: <1355472609-9957-1-git-send-email-jlee@suse.com>
+	Fri, 14 Dec 2012 03:15:44 -0500
+Received: by mail-ia0-f174.google.com with SMTP id y25so2879622iay.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Dec 2012 00:15:43 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: mjg59@srcf.ucam.org
+Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Matthew Garrett <mjg@redhat.com>
 
-Found another Lenovo ideapad S205 the product name is 1038DPG, it has
-a 0x78 EC register exposes the state of wifi hardware switch on the machine.
+Due to I moved to use suse.com mail address, so, add patch to change the
+mail address in MAINTAINERS file.
 
-So, add this patch to support Lenovo ideapad S205-1038DPG wifi hardware
-switch in acer-wmi driver.
-
-Evidently the Ideapad S205 is just a model name on the market, but they have
-totally different product name in DMI table.
-
-Reference: bko#43007
-        https://bugzilla.kernel.org/show_bug.cgi?id=43007
-
-Tested-by: Colin <colin.newell@gmail.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
 Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Thomas Renninger <trenn@suse.de>
 Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
 ---
- drivers/platform/x86/acer-wmi.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+ MAINTAINERS |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 83abfaa..f95a2d4 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -519,6 +519,15 @@ static struct dmi_system_id acer_quirks[] = {
- 		},
- 		.driver_data = &quirk_lenovo_ideapad_s205,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Lenovo Ideapad S205-1038DPG",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "1038DPG"),
-+		},
-+		.driver_data = &quirk_lenovo_ideapad_s205,
-+	},
- 	{}
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fdc0119..555bf5b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -218,7 +218,7 @@ S:	Maintained
+ F:	drivers/platform/x86/acerhdf.c
  
+ ACER WMI LAPTOP EXTRAS
+-M:	Joey Lee <jlee@novell.com>
++M:	"Lee, Chun-Yi" <jlee@suse.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/acer-wmi.c
+@@ -4577,7 +4577,7 @@ F:	Documentation/serial/moxa-smartio
+ F:	drivers/tty/mxser.*
+ 
+ MSI LAPTOP SUPPORT
+-M:	"Lee, Chun-Yi" <jlee@novell.com>
++M:	"Lee, Chun-Yi" <jlee@suse.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/msi-laptop.c
 -- 
 1.6.0.2
