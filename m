@@ -1,137 +1,178 @@
 From: Maxim Mikityanskiy <maxtram95@gmail.com>
-Subject: [PATCH v4 11/12] msi-wmi: Introduced quirk_last_pressed
-Date: Sat, 15 Dec 2012 19:31:35 +0200
-Message-ID: <1355592696-15454-12-git-send-email-maxtram95@gmail.com>
+Subject: [PATCH v4 12/12] msi-wmi: Add MSI Wind support
+Date: Sat, 15 Dec 2012 19:31:36 +0200
+Message-ID: <1355592696-15454-13-git-send-email-maxtram95@gmail.com>
 References: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f174.google.com ([209.85.215.174]:63025 "EHLO
-	mail-ea0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751057Ab2LORde (ORCPT
+Received: from mail-ee0-f46.google.com ([74.125.83.46]:42634 "EHLO
+	mail-ee0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751057Ab2LORdm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 15 Dec 2012 12:33:34 -0500
-Received: by mail-ea0-f174.google.com with SMTP id e13so1774162eaa.19
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Dec 2012 09:33:33 -0800 (PST)
+	Sat, 15 Dec 2012 12:33:42 -0500
+Received: by mail-ee0-f46.google.com with SMTP id e53so2511207eek.19
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Dec 2012 09:33:41 -0800 (PST)
 In-Reply-To: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, jlee@suse.com, anisse@astier.eu
 Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-Introduced quirk_last_pressed variable that would indicate if
-last_pressed is used or not. Also converted last_pressed to simple
-variable in order to allow keymap to be non-contiguous.
+Add MSI Wind support to msi-wmi driver. MSI Wind has different GUID for
+key events, different WMI key scan codes, it does not need filtering
+consecutive identical events and it does not support backlight control
+via MSIWMI_BIOS_GUID WMI. Tested on MSI Wind U100.
 
 Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 ---
- drivers/platform/x86/msi-wmi.c | 54 ++++++++++++++++++++++--------------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+ drivers/platform/x86/msi-wmi.c | 65 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-index 3a60619..739bd4d 100644
+index 739bd4d..70222f2 100644
 --- a/drivers/platform/x86/msi-wmi.c
 +++ b/drivers/platform/x86/msi-wmi.c
-@@ -43,8 +43,7 @@ MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
- MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
+@@ -37,17 +37,27 @@ MODULE_LICENSE("GPL");
+ #define DRV_NAME "msi-wmi"
+ 
+ #define MSIWMI_BIOS_GUID "551A1F84-FBDD-4125-91DB-3EA8F44F1D45"
+-#define MSIWMI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
++#define MSIWMI_MSI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
++#define MSIWMI_WIND_EVENT_GUID "5B3CC38A-40D9-7245-8AE6-1145B751BE3F"
+ 
+ MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
+-MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
++MODULE_ALIAS("wmi:" MSIWMI_MSI_EVENT_GUID);
++MODULE_ALIAS("wmi:" MSIWMI_WIND_EVENT_GUID);
  
  enum msi_scancodes {
--	MSI_SCANCODE_BASE	= 0xD0,
--	MSI_KEY_BRIGHTNESSUP	= MSI_SCANCODE_BASE,
-+	MSI_KEY_BRIGHTNESSUP	= 0xD0,
++	/* Generic MSI keys (not present on MSI Wind) */
+ 	MSI_KEY_BRIGHTNESSUP	= 0xD0,
  	MSI_KEY_BRIGHTNESSDOWN,
  	MSI_KEY_VOLUMEUP,
  	MSI_KEY_VOLUMEDOWN,
-@@ -58,7 +57,9 @@ static struct key_entry msi_wmi_keymap[] = {
+ 	MSI_KEY_MUTE,
++	/* MSI Wind keys */
++	WIND_KEY_TOUCHPAD	= 0x08,	/* Fn+F3 touchpad toggle */
++	WIND_KEY_BLUETOOTH	= 0x56,	/* Fn+F11 Bluetooth toggle */
++	WIND_KEY_CAMERA,		/* Fn+F6 webcam toggle */
++	WIND_KEY_WLAN		= 0x5f,	/* Fn+F11 Wi-Fi toggle */
++	WIND_KEY_TURBO,			/* Fn+F10 turbo mode toggle */
++	WIND_KEY_ECO		= 0x69,	/* Fn+F10 ECO mode toggle */
+ };
+ static struct key_entry msi_wmi_keymap[] = {
+ 	{ KE_KEY, MSI_KEY_BRIGHTNESSUP,		{KEY_BRIGHTNESSUP} },
+@@ -55,13 +65,34 @@ static struct key_entry msi_wmi_keymap[] = {
+ 	{ KE_KEY, MSI_KEY_VOLUMEUP,		{KEY_VOLUMEUP} },
+ 	{ KE_KEY, MSI_KEY_VOLUMEDOWN,		{KEY_VOLUMEDOWN} },
  	{ KE_KEY, MSI_KEY_MUTE,			{KEY_MUTE} },
++
++	/* These keys work without WMI. Ignore them to avoid double keycodes */
++	{ KE_IGNORE, WIND_KEY_TOUCHPAD,		{KEY_TOUCHPAD_TOGGLE} },
++	{ KE_IGNORE, WIND_KEY_BLUETOOTH,	{KEY_BLUETOOTH} },
++	{ KE_IGNORE, WIND_KEY_CAMERA,		{KEY_CAMERA} },
++	{ KE_IGNORE, WIND_KEY_WLAN,		{KEY_WLAN} },
++
++	/* These are unknown WMI events found on MSI Wind */
++	{ KE_IGNORE, 0x00 },
++	{ KE_IGNORE, 0x62 },
++	{ KE_IGNORE, 0x63 },
++
++	/* These are MSI Wind keys that should be handled via WMI */
++	{ KE_KEY, WIND_KEY_TURBO,		{KEY_PROG1} },
++	{ KE_KEY, WIND_KEY_ECO,			{KEY_PROG2} },
++
  	{ KE_END, 0 }
  };
--static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
+ 
+ static ktime_t last_pressed;
+-static bool quirk_last_pressed;
+ 
+-static const char *event_wmi_guid;
++static const struct {
++	const char *guid;
++	bool quirk_last_pressed;
++} *event_wmi, event_wmis[] = {
++	{ MSIWMI_MSI_EVENT_GUID, true },
++	{ MSIWMI_WIND_EVENT_GUID, false },
++};
+ 
+ static struct backlight_device *backlight;
+ 
+@@ -174,7 +205,7 @@ static void msi_wmi_notify(u32 value, void *context)
+ 			goto msi_wmi_notify_exit;
+ 		}
+ 
+-		if (quirk_last_pressed) {
++		if (event_wmi->quirk_last_pressed) {
+ 			ktime_t cur = ktime_get_real();
+ 			ktime_t diff = ktime_sub(cur, last_pressed);
+ 			/* Ignore event if any event happened in a 50 ms
+@@ -265,15 +296,19 @@ err_free_dev:
+ static int __init msi_wmi_init(void)
+ {
+ 	int err;
++	int i;
 +
-+static ktime_t last_pressed;
-+static bool quirk_last_pressed;
++	for (i = 0; i < ARRAY_SIZE(event_wmis); i++) {
++		if (!wmi_has_guid(event_wmis[i].guid))
++			continue;
  
- static const char *event_wmi_guid;
+-	if (wmi_has_guid(MSIWMI_EVENT_GUID)) {
+ 		err = msi_wmi_input_setup();
+ 		if (err) {
+ 			pr_err("Unable to setup input device\n");
+ 			return err;
+ 		}
  
-@@ -153,7 +154,6 @@ static void msi_wmi_notify(u32 value, void *context)
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
- 	static struct key_entry *key;
- 	union acpi_object *obj;
--	ktime_t cur;
- 	acpi_status status;
- 
- 	status = wmi_get_event_data(value, &response);
-@@ -169,12 +169,15 @@ static void msi_wmi_notify(u32 value, void *context)
- 		pr_debug("Eventcode: 0x%x\n", eventcode);
- 		key = sparse_keymap_entry_from_scancode(msi_wmi_input_dev,
- 				eventcode);
--		if (key) {
--			ktime_t diff;
--			cur = ktime_get_real();
--			diff = ktime_sub(cur, last_pressed[key->code -
--					MSI_SCANCODE_BASE]);
--			/* Ignore event if the same event happened in a 50 ms
-+		if (!key) {
-+			pr_info("Unknown key pressed - %x\n", eventcode);
-+			goto msi_wmi_notify_exit;
-+		}
-+
-+		if (quirk_last_pressed) {
-+			ktime_t cur = ktime_get_real();
-+			ktime_t diff = ktime_sub(cur, last_pressed);
-+			/* Ignore event if any event happened in a 50 ms
- 			   timeframe -> Key press may result in 10-20 GPEs */
- 			if (ktime_to_us(diff) < 1000 * 50) {
- 				pr_debug("Suppressed key event 0x%X - "
-@@ -182,21 +185,19 @@ static void msi_wmi_notify(u32 value, void *context)
- 					 key->code, ktime_to_us(diff));
- 				goto msi_wmi_notify_exit;
- 			}
--			last_pressed[key->code - MSI_SCANCODE_BASE] = cur;
--
--			if (key->type == KE_KEY &&
--			/* Brightness is served via acpi video driver */
--			(backlight ||
--			(key->code != MSI_KEY_BRIGHTNESSUP &&
--			key->code != MSI_KEY_BRIGHTNESSDOWN))) {
--				pr_debug("Send key: 0x%X - "
--					 "Input layer keycode: %d\n",
--					 key->code, key->keycode);
--				sparse_keymap_report_entry(msi_wmi_input_dev,
--						key, 1, true);
--			}
--		} else
--			pr_info("Unknown key pressed - %x\n", eventcode);
-+			last_pressed = cur;
-+		}
-+
-+		if (key->type == KE_KEY &&
-+		/* Brightness is served via acpi video driver */
-+		(backlight ||
-+		(key->code != MSI_KEY_BRIGHTNESSUP &&
-+		key->code != MSI_KEY_BRIGHTNESSDOWN))) {
-+			pr_debug("Send key: 0x%X - Input layer keycode: %d\n",
-+				 key->code, key->keycode);
-+			sparse_keymap_report_entry(msi_wmi_input_dev, key, 1,
-+						   true);
-+		}
- 	} else
- 		pr_info("Unknown event received\n");
- 
-@@ -250,7 +251,7 @@ static int __init msi_wmi_input_setup(void)
- 	if (err)
- 		goto err_free_keymap;
- 
--	memset(last_pressed, 0, sizeof(last_pressed));
-+	last_pressed = ktime_set(0, 0);
- 
- 	return 0;
- 
-@@ -281,6 +282,7 @@ static int __init msi_wmi_init(void)
+-		err = wmi_install_notify_handler(MSIWMI_EVENT_GUID,
++		err = wmi_install_notify_handler(event_wmis[i].guid,
+ 			msi_wmi_notify, NULL);
+ 		if (ACPI_FAILURE(err)) {
+ 			pr_err("Unable to setup WMI notify handler\n");
+@@ -281,8 +316,8 @@ static int __init msi_wmi_init(void)
+ 		}
  
  		pr_debug("Event handler installed\n");
- 		event_wmi_guid = MSIWMI_EVENT_GUID;
-+		quirk_last_pressed = true;
+-		event_wmi_guid = MSIWMI_EVENT_GUID;
+-		quirk_last_pressed = true;
++		event_wmi = &event_wmis[i];
++		break;
  	}
  
  	if (wmi_has_guid(MSIWMI_BIOS_GUID) && !acpi_video_backlight_support()) {
+@@ -294,7 +329,7 @@ static int __init msi_wmi_init(void)
+ 		pr_debug("Backlight device created\n");
+ 	}
+ 
+-	if (!event_wmi_guid && !backlight) {
++	if (!event_wmi && !backlight) {
+ 		pr_err("This machine doesn't have neither MSI-hotkeys nor backlight through WMI\n");
+ 		return -ENODEV;
+ 	}
+@@ -302,10 +337,10 @@ static int __init msi_wmi_init(void)
+ 	return 0;
+ 
+ err_uninstall_handler:
+-	if (event_wmi_guid)
+-		wmi_remove_notify_handler(event_wmi_guid);
++	if (event_wmi)
++		wmi_remove_notify_handler(event_wmi->guid);
+ err_free_input:
+-	if (event_wmi_guid) {
++	if (event_wmi) {
+ 		sparse_keymap_free(msi_wmi_input_dev);
+ 		input_unregister_device(msi_wmi_input_dev);
+ 	}
+@@ -314,8 +349,8 @@ err_free_input:
+ 
+ static void __exit msi_wmi_exit(void)
+ {
+-	if (event_wmi_guid) {
+-		wmi_remove_notify_handler(event_wmi_guid);
++	if (event_wmi) {
++		wmi_remove_notify_handler(event_wmi->guid);
+ 		sparse_keymap_free(msi_wmi_input_dev);
+ 		input_unregister_device(msi_wmi_input_dev);
+ 	}
 -- 
 1.8.0.1
