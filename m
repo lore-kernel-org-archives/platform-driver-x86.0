@@ -1,19 +1,19 @@
 From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH v4 10/12] msi-wmi: Make keys and backlight independent
-Date: Mon, 17 Dec 2012 17:04:20 +0800
-Message-ID: <1355735060.2710.87.camel@linux-s257.site>
+Subject: Re: [PATCH v4 11/12] msi-wmi: Introduced quirk_last_pressed
+Date: Mon, 17 Dec 2012 17:56:55 +0800
+Message-ID: <1355738215.2710.88.camel@linux-s257.site>
 References: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
-	 <1355592696-15454-11-git-send-email-maxtram95@gmail.com>
+	 <1355592696-15454-12-git-send-email-maxtram95@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:48537 "EHLO
+Received: from smtp.nue.novell.com ([195.135.221.5]:47079 "EHLO
 	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751242Ab2LQJFq (ORCPT
+	with ESMTP id S1751399Ab2LQJ6W (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 Dec 2012 04:05:46 -0500
-In-Reply-To: <1355592696-15454-11-git-send-email-maxtram95@gmail.com>
+	Mon, 17 Dec 2012 04:58:22 -0500
+In-Reply-To: <1355592696-15454-12-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Maxim Mikityanskiy <maxtram95@gmail.com>
@@ -21,14 +21,11 @@ Cc: platform-driver-x86@vger.kernel.org, anisse@astier.eu
 
 =E6=96=BC =E5=85=AD=EF=BC=8C2012-12-15 =E6=96=BC 19:31 +0200=EF=BC=8CMa=
 xim Mikityanskiy =E6=8F=90=E5=88=B0=EF=BC=9A
-> Introduced function msi_wmi_backlight_setup() that initializes backli=
-ght
-> device. Made driver load and work if only one WMI (only for hotkeys o=
-r
-> only for backlight) is present.
+> Introduced quirk_last_pressed variable that would indicate if
+> last_pressed is used or not. Also converted last_pressed to simple
+> variable in order to allow keymap to be non-contiguous.
 >=20
 > Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-
 
 Acked-by: Lee, Chun-Yi <jlee@suse.com>
 
@@ -36,163 +33,119 @@ Thanks a lot!
 Joey Lee
 
 > ---
->  drivers/platform/x86/msi-wmi.c | 101 ++++++++++++++++++++++++++-----=
+>  drivers/platform/x86/msi-wmi.c | 54 ++++++++++++++++++++++----------=
 ----------
->  1 file changed, 64 insertions(+), 37 deletions(-)
+>  1 file changed, 28 insertions(+), 26 deletions(-)
 >=20
 > diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/ms=
 i-wmi.c
-> index 112ec14..3a60619 100644
+> index 3a60619..739bd4d 100644
 > --- a/drivers/platform/x86/msi-wmi.c
 > +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -60,6 +60,8 @@ static struct key_entry msi_wmi_keymap[] =3D {
+> @@ -43,8 +43,7 @@ MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
+>  MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
+> =20
+>  enum msi_scancodes {
+> -	MSI_SCANCODE_BASE	=3D 0xD0,
+> -	MSI_KEY_BRIGHTNESSUP	=3D MSI_SCANCODE_BASE,
+> +	MSI_KEY_BRIGHTNESSUP	=3D 0xD0,
+>  	MSI_KEY_BRIGHTNESSDOWN,
+>  	MSI_KEY_VOLUMEUP,
+>  	MSI_KEY_VOLUMEDOWN,
+> @@ -58,7 +57,9 @@ static struct key_entry msi_wmi_keymap[] =3D {
+>  	{ KE_KEY, MSI_KEY_MUTE,			{KEY_MUTE} },
+>  	{ KE_END, 0 }
 >  };
->  static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
-> =20
-> +static const char *event_wmi_guid;
+> -static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
 > +
->  static struct backlight_device *backlight;
+> +static ktime_t last_pressed;
+> +static bool quirk_last_pressed;
 > =20
->  static int backlight_map[] =3D { 0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF =
-};
-> @@ -184,7 +186,7 @@ static void msi_wmi_notify(u32 value, void *conte=
+>  static const char *event_wmi_guid;
+> =20
+> @@ -153,7 +154,6 @@ static void msi_wmi_notify(u32 value, void *conte=
 xt)
+>  	struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
+>  	static struct key_entry *key;
+>  	union acpi_object *obj;
+> -	ktime_t cur;
+>  	acpi_status status;
 > =20
->  			if (key->type =3D=3D KE_KEY &&
->  			/* Brightness is served via acpi video driver */
-> -			(!acpi_video_backlight_support() ||
-> +			(backlight ||
->  			(key->code !=3D MSI_KEY_BRIGHTNESSUP &&
->  			key->code !=3D MSI_KEY_BRIGHTNESSDOWN))) {
->  				pr_debug("Send key: 0x%X - "
-> @@ -202,6 +204,31 @@ msi_wmi_notify_exit:
->  	kfree(response.pointer);
->  }
-> =20
-> +static int __init msi_wmi_backlight_setup(void)
-> +{
-> +	int err;
-> +	struct backlight_properties props;
-> +
-> +	memset(&props, 0, sizeof(struct backlight_properties));
-> +	props.type =3D BACKLIGHT_PLATFORM;
-> +	props.max_brightness =3D ARRAY_SIZE(backlight_map) - 1;
-> +	backlight =3D backlight_device_register(DRV_NAME, NULL, NULL,
-> +					      &msi_backlight_ops,
-> +					      &props);
-> +	if (IS_ERR(backlight))
-> +		return PTR_ERR(backlight);
-> +
-> +	err =3D bl_get(NULL);
-> +	if (err < 0) {
-> +		backlight_device_unregister(backlight);
-> +		return err;
-> +	}
-> +
-> +	backlight->props.brightness =3D err;
-> +
-> +	return 0;
-> +}
-> +
->  static int __init msi_wmi_input_setup(void)
->  {
->  	int err;
-> @@ -238,60 +265,60 @@ static int __init msi_wmi_init(void)
->  {
->  	int err;
-> =20
-> -	if (!wmi_has_guid(MSIWMI_EVENT_GUID)) {
-> -		pr_err("This machine doesn't have MSI-hotkeys through WMI\n");
-> -		return -ENODEV;
-> -	}
-> -	err =3D wmi_install_notify_handler(MSIWMI_EVENT_GUID,
-> -			msi_wmi_notify, NULL);
-> -	if (ACPI_FAILURE(err))
-> -		return -EINVAL;
-> +	if (wmi_has_guid(MSIWMI_EVENT_GUID)) {
-> +		err =3D msi_wmi_input_setup();
-> +		if (err) {
-> +			pr_err("Unable to setup input device\n");
-> +			return err;
+>  	status =3D wmi_get_event_data(value, &response);
+> @@ -169,12 +169,15 @@ static void msi_wmi_notify(u32 value, void *con=
+text)
+>  		pr_debug("Eventcode: 0x%x\n", eventcode);
+>  		key =3D sparse_keymap_entry_from_scancode(msi_wmi_input_dev,
+>  				eventcode);
+> -		if (key) {
+> -			ktime_t diff;
+> -			cur =3D ktime_get_real();
+> -			diff =3D ktime_sub(cur, last_pressed[key->code -
+> -					MSI_SCANCODE_BASE]);
+> -			/* Ignore event if the same event happened in a 50 ms
+> +		if (!key) {
+> +			pr_info("Unknown key pressed - %x\n", eventcode);
+> +			goto msi_wmi_notify_exit;
 > +		}
-> =20
-> -	err =3D msi_wmi_input_setup();
-> -	if (err)
-> -		goto err_uninstall_notifier;
+> +
+> +		if (quirk_last_pressed) {
+> +			ktime_t cur =3D ktime_get_real();
+> +			ktime_t diff =3D ktime_sub(cur, last_pressed);
+> +			/* Ignore event if any event happened in a 50 ms
+>  			   timeframe -> Key press may result in 10-20 GPEs */
+>  			if (ktime_to_us(diff) < 1000 * 50) {
+>  				pr_debug("Suppressed key event 0x%X - "
+> @@ -182,21 +185,19 @@ static void msi_wmi_notify(u32 value, void *con=
+text)
+>  					 key->code, ktime_to_us(diff));
+>  				goto msi_wmi_notify_exit;
+>  			}
+> -			last_pressed[key->code - MSI_SCANCODE_BASE] =3D cur;
 > -
-> -	if (!acpi_video_backlight_support()) {
-> -		struct backlight_properties props;
-> -		memset(&props, 0, sizeof(struct backlight_properties));
-> -		props.type =3D BACKLIGHT_PLATFORM;
-> -		props.max_brightness =3D ARRAY_SIZE(backlight_map) - 1;
-> -		backlight =3D backlight_device_register(DRV_NAME, NULL, NULL,
-> -						      &msi_backlight_ops,
-> -						      &props);
-> -		if (IS_ERR(backlight)) {
-> -			err =3D PTR_ERR(backlight);
-> +		err =3D wmi_install_notify_handler(MSIWMI_EVENT_GUID,
-> +			msi_wmi_notify, NULL);
-> +		if (ACPI_FAILURE(err)) {
-> +			pr_err("Unable to setup WMI notify handler\n");
->  			goto err_free_input;
->  		}
-> =20
-> -		err =3D bl_get(NULL);
-> -		if (err < 0)
-> -			goto err_free_backlight;
-> +		pr_debug("Event handler installed\n");
-> +		event_wmi_guid =3D MSIWMI_EVENT_GUID;
-> +	}
-> +
-> +	if (wmi_has_guid(MSIWMI_BIOS_GUID) && !acpi_video_backlight_support=
-()) {
-> +		err =3D msi_wmi_backlight_setup();
-> +		if (err) {
-> +			pr_err("Unable to setup backlight device\n");
-> +			goto err_uninstall_handler;
+> -			if (key->type =3D=3D KE_KEY &&
+> -			/* Brightness is served via acpi video driver */
+> -			(backlight ||
+> -			(key->code !=3D MSI_KEY_BRIGHTNESSUP &&
+> -			key->code !=3D MSI_KEY_BRIGHTNESSDOWN))) {
+> -				pr_debug("Send key: 0x%X - "
+> -					 "Input layer keycode: %d\n",
+> -					 key->code, key->keycode);
+> -				sparse_keymap_report_entry(msi_wmi_input_dev,
+> -						key, 1, true);
+> -			}
+> -		} else
+> -			pr_info("Unknown key pressed - %x\n", eventcode);
+> +			last_pressed =3D cur;
 > +		}
-> +		pr_debug("Backlight device created\n");
-> +	}
+> +
+> +		if (key->type =3D=3D KE_KEY &&
+> +		/* Brightness is served via acpi video driver */
+> +		(backlight ||
+> +		(key->code !=3D MSI_KEY_BRIGHTNESSUP &&
+> +		key->code !=3D MSI_KEY_BRIGHTNESSDOWN))) {
+> +			pr_debug("Send key: 0x%X - Input layer keycode: %d\n",
+> +				 key->code, key->keycode);
+> +			sparse_keymap_report_entry(msi_wmi_input_dev, key, 1,
+> +						   true);
+> +		}
+>  	} else
+>  		pr_info("Unknown event received\n");
 > =20
-> -		backlight->props.brightness =3D err;
-> +	if (!event_wmi_guid && !backlight) {
-> +		pr_err("This machine doesn't have neither MSI-hotkeys nor backligh=
-t through WMI\n");
-> +		return -ENODEV;
->  	}
-> -	pr_debug("Event handler installed\n");
+> @@ -250,7 +251,7 @@ static int __init msi_wmi_input_setup(void)
+>  	if (err)
+>  		goto err_free_keymap;
+> =20
+> -	memset(last_pressed, 0, sizeof(last_pressed));
+> +	last_pressed =3D ktime_set(0, 0);
 > =20
 >  	return 0;
 > =20
-> -err_free_backlight:
-> -	backlight_device_unregister(backlight);
-> +err_uninstall_handler:
-> +	if (event_wmi_guid)
-> +		wmi_remove_notify_handler(event_wmi_guid);
->  err_free_input:
-> -	sparse_keymap_free(msi_wmi_input_dev);
-> -	input_unregister_device(msi_wmi_input_dev);
-> -err_uninstall_notifier:
-> -	wmi_remove_notify_handler(MSIWMI_EVENT_GUID);
-> +	if (event_wmi_guid) {
-> +		sparse_keymap_free(msi_wmi_input_dev);
-> +		input_unregister_device(msi_wmi_input_dev);
-> +	}
->  	return err;
->  }
+> @@ -281,6 +282,7 @@ static int __init msi_wmi_init(void)
 > =20
->  static void __exit msi_wmi_exit(void)
->  {
-> -	if (wmi_has_guid(MSIWMI_EVENT_GUID)) {
-> -		wmi_remove_notify_handler(MSIWMI_EVENT_GUID);
-> +	if (event_wmi_guid) {
-> +		wmi_remove_notify_handler(event_wmi_guid);
->  		sparse_keymap_free(msi_wmi_input_dev);
->  		input_unregister_device(msi_wmi_input_dev);
-> -		backlight_device_unregister(backlight);
+>  		pr_debug("Event handler installed\n");
+>  		event_wmi_guid =3D MSIWMI_EVENT_GUID;
+> +		quirk_last_pressed =3D true;
 >  	}
-> +	if (backlight)
-> +		backlight_device_unregister(backlight);
->  }
 > =20
->  module_init(msi_wmi_init);
+>  	if (wmi_has_guid(MSIWMI_BIOS_GUID) && !acpi_video_backlight_support=
+()) {
