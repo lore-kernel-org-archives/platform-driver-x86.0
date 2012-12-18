@@ -1,45 +1,34 @@
-From: Laurent Navet <laurent.navet@gmail.com>
-Subject: [PATCH] driver thinkpad acpi : semantic patch (bool usage)
-Date: Mon, 17 Dec 2012 13:35:13 +0100
-Message-ID: <1355747714-2843-1-git-send-email-laurent.navet@gmail.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: sony-laptop: fix SNC buffer calls when SN06 returns Integers
+Date: Tue, 18 Dec 2012 15:08:44 +0800
+Message-ID: <1355814524.19698.19.camel@rzhang1-mobl4>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f46.google.com ([74.125.82.46]:50560 "EHLO
-	mail-wg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752403Ab2LQMeg (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:58917 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751540Ab2LRHIs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 Dec 2012 07:34:36 -0500
+	Tue, 18 Dec 2012 02:08:48 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ibm-acpi@hmh.eng.br
-Cc: mjg@redhat.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Laurent Navet <laurent.navet@gmail.com>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, malattia@linux.it
+Cc: "Zhang, Rui" <rui.zhang@intel.com>
 
-Bool initializations should use true and false.  Bool tests don't need
-comparisons.  Based on contributions from Joe Perches, Rusty Russell
-and Bruce W Allan.
+Hi, Mattia,
 
-The semantic patch that makes this output is available
-in scripts/coccinelle/misc/boolinit.cocci.
+I saw your fix for the SN06 Integer return value issue at
+http://www.spinics.net/lists/platform-driver-x86/msg03934.html
 
-More information about semantic patching is available at
-http://coccinelle.lip6.fr/
+here is a duplicate bug report at
+https://bugzilla.kernel.org/show_bug.cgi?id=50111
 
-Signed-off-by: Laurent Navet <laurent.navet@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I generated a similar patch as yours but I still have one concern about the fix.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 75dd651..cb46b6a 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3728,7 +3728,7 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 			if (tp_features.hotkey_wlsw &&
- 					hkey == TP_HKEY_EV_RFKILL_CHANGED) {
- 				tpacpi_send_radiosw_update();
--				send_acpi_ev = 0;
-+				send_acpi_ev = false;
- 				known_ev = true;
- 				break;
- 			}
--- 
-1.7.10.4
+memcpy(buffer, (void *)&object->integer.value, len) may break the byte order but
+sony_nc_rfkill_setup() terminates if byte 0xff is checked.
+is this true? or am I thinking wrong?
+
+thanks,
+rui
