@@ -1,142 +1,58 @@
 From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [PATCH v4 11/12] msi-wmi: Introduced quirk_last_pressed
-Date: Thu, 20 Dec 2012 18:02:20 +0100
-Message-ID: <20121220180220.627277d2@destiny.ordissimo>
+Subject: Re: [PATCH v4 08/12] msi-wmi: Avoid repeating constants
+Date: Thu, 20 Dec 2012 17:59:36 +0100
+Message-ID: <20121220175936.21b75b27@destiny.ordissimo>
 References: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
-	<1355592696-15454-12-git-send-email-maxtram95@gmail.com>
+	<1355592696-15454-9-git-send-email-maxtram95@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:32901 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751035Ab2LTRKp (ORCPT
+Received: from mail-ee0-f47.google.com ([74.125.83.47]:40052 "EHLO
+	mail-ee0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751228Ab2LTR3M (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Dec 2012 12:10:45 -0500
-Received: by mail-wi0-f178.google.com with SMTP id hn3so2152798wib.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Dec 2012 09:10:44 -0800 (PST)
-In-Reply-To: <1355592696-15454-12-git-send-email-maxtram95@gmail.com>
+	Thu, 20 Dec 2012 12:29:12 -0500
+Received: by mail-ee0-f47.google.com with SMTP id e51so1866628eek.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Dec 2012 09:29:11 -0800 (PST)
+In-Reply-To: <1355592696-15454-9-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Maxim Mikityanskiy <maxtram95@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, jlee@suse.com
 
-On Sat, 15 Dec 2012 19:31:35 +0200, Maxim Mikityanskiy <maxtram95@gmail.com> wrote :
+On Sat, 15 Dec 2012 19:31:32 +0200, Maxim Mikityanskiy <maxtram95@gmail.com> wrote :
 
-> Introduced quirk_last_pressed variable that would indicate if
-> last_pressed is used or not. Also converted last_pressed to simple
-> variable in order to allow keymap to be non-contiguous.
+> Use UUID defines in MODULE_ALIAS strings to avoid repeating strings.
 > 
 > Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Acked-by: Lee, Chun-Yi <jlee@suse.com>
 Acked-by: Anisse Astier <anisse@astier.eu>
+
+
 > ---
->  drivers/platform/x86/msi-wmi.c | 54 ++++++++++++++++++++++--------------------
->  1 file changed, 28 insertions(+), 26 deletions(-)
+>  drivers/platform/x86/msi-wmi.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-> index 3a60619..739bd4d 100644
+> index b96766b..4db0c55 100644
 > --- a/drivers/platform/x86/msi-wmi.c
 > +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -43,8 +43,7 @@ MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
->  MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
+> @@ -34,14 +34,14 @@ MODULE_AUTHOR("Thomas Renninger <trenn@suse.de>");
+>  MODULE_DESCRIPTION("MSI laptop WMI hotkeys driver");
+>  MODULE_LICENSE("GPL");
 >  
->  enum msi_scancodes {
-> -	MSI_SCANCODE_BASE	= 0xD0,
-> -	MSI_KEY_BRIGHTNESSUP	= MSI_SCANCODE_BASE,
-> +	MSI_KEY_BRIGHTNESSUP	= 0xD0,
->  	MSI_KEY_BRIGHTNESSDOWN,
->  	MSI_KEY_VOLUMEUP,
->  	MSI_KEY_VOLUMEDOWN,
-> @@ -58,7 +57,9 @@ static struct key_entry msi_wmi_keymap[] = {
->  	{ KE_KEY, MSI_KEY_MUTE,			{KEY_MUTE} },
->  	{ KE_END, 0 }
->  };
-> -static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
-> +
-> +static ktime_t last_pressed;
-> +static bool quirk_last_pressed;
->  
->  static const char *event_wmi_guid;
->  
-> @@ -153,7 +154,6 @@ static void msi_wmi_notify(u32 value, void *context)
->  	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
->  	static struct key_entry *key;
->  	union acpi_object *obj;
-> -	ktime_t cur;
->  	acpi_status status;
->  
->  	status = wmi_get_event_data(value, &response);
-> @@ -169,12 +169,15 @@ static void msi_wmi_notify(u32 value, void *context)
->  		pr_debug("Eventcode: 0x%x\n", eventcode);
->  		key = sparse_keymap_entry_from_scancode(msi_wmi_input_dev,
->  				eventcode);
-> -		if (key) {
-> -			ktime_t diff;
-> -			cur = ktime_get_real();
-> -			diff = ktime_sub(cur, last_pressed[key->code -
-> -					MSI_SCANCODE_BASE]);
-> -			/* Ignore event if the same event happened in a 50 ms
-> +		if (!key) {
-> +			pr_info("Unknown key pressed - %x\n", eventcode);
-> +			goto msi_wmi_notify_exit;
-> +		}
-> +
-> +		if (quirk_last_pressed) {
-> +			ktime_t cur = ktime_get_real();
-> +			ktime_t diff = ktime_sub(cur, last_pressed);
-> +			/* Ignore event if any event happened in a 50 ms
->  			   timeframe -> Key press may result in 10-20 GPEs */
->  			if (ktime_to_us(diff) < 1000 * 50) {
->  				pr_debug("Suppressed key event 0x%X - "
-> @@ -182,21 +185,19 @@ static void msi_wmi_notify(u32 value, void *context)
->  					 key->code, ktime_to_us(diff));
->  				goto msi_wmi_notify_exit;
->  			}
-> -			last_pressed[key->code - MSI_SCANCODE_BASE] = cur;
+> -MODULE_ALIAS("wmi:551A1F84-FBDD-4125-91DB-3EA8F44F1D45");
+> -MODULE_ALIAS("wmi:B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2");
 > -
-> -			if (key->type == KE_KEY &&
-> -			/* Brightness is served via acpi video driver */
-> -			(backlight ||
-> -			(key->code != MSI_KEY_BRIGHTNESSUP &&
-> -			key->code != MSI_KEY_BRIGHTNESSDOWN))) {
-> -				pr_debug("Send key: 0x%X - "
-> -					 "Input layer keycode: %d\n",
-> -					 key->code, key->keycode);
-> -				sparse_keymap_report_entry(msi_wmi_input_dev,
-> -						key, 1, true);
-> -			}
-> -		} else
-> -			pr_info("Unknown key pressed - %x\n", eventcode);
-> +			last_pressed = cur;
-> +		}
+>  #define DRV_NAME "msi-wmi"
+>  
+>  #define MSIWMI_BIOS_GUID "551A1F84-FBDD-4125-91DB-3EA8F44F1D45"
+>  #define MSIWMI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
+>  
+> +MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
+> +MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
 > +
-> +		if (key->type == KE_KEY &&
-> +		/* Brightness is served via acpi video driver */
-> +		(backlight ||
-> +		(key->code != MSI_KEY_BRIGHTNESSUP &&
-> +		key->code != MSI_KEY_BRIGHTNESSDOWN))) {
-> +			pr_debug("Send key: 0x%X - Input layer keycode: %d\n",
-> +				 key->code, key->keycode);
-> +			sparse_keymap_report_entry(msi_wmi_input_dev, key, 1,
-> +						   true);
-> +		}
->  	} else
->  		pr_info("Unknown event received\n");
->  
-> @@ -250,7 +251,7 @@ static int __init msi_wmi_input_setup(void)
->  	if (err)
->  		goto err_free_keymap;
->  
-> -	memset(last_pressed, 0, sizeof(last_pressed));
-> +	last_pressed = ktime_set(0, 0);
->  
->  	return 0;
->  
-> @@ -281,6 +282,7 @@ static int __init msi_wmi_init(void)
->  
->  		pr_debug("Event handler installed\n");
->  		event_wmi_guid = MSIWMI_EVENT_GUID;
-> +		quirk_last_pressed = true;
->  	}
->  
->  	if (wmi_has_guid(MSIWMI_BIOS_GUID) && !acpi_video_backlight_support()) {
+>  #define SCANCODE_BASE 0xD0
+>  #define MSI_WMI_BRIGHTNESSUP   SCANCODE_BASE
+>  #define MSI_WMI_BRIGHTNESSDOWN (SCANCODE_BASE + 1)
