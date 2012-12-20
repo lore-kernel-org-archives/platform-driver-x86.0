@@ -1,80 +1,100 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: sony-laptop: fix SNC buffer calls when SN06 returns Integers
-Date: Thu, 20 Dec 2012 07:08:03 +0900
-Message-ID: <20121219220803.GA30941@kamineko.org>
-References: <1355814524.19698.19.camel@rzhang1-mobl4>
- <20121218213958.GA28648@kamineko.org>
- <1355878834.2280.2.camel@rzhang1-mobl4>
+From: Anisse Astier <anisse@astier.eu>
+Subject: Re: [PATCH v4 09/12] msi-wmi: Use enums for scancodes
+Date: Thu, 20 Dec 2012 18:01:12 +0100
+Message-ID: <20121220180112.1bd91d23@destiny.ordissimo>
+References: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
+	<1355592696-15454-10-git-send-email-maxtram95@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:42410 "EHLO
-	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751725Ab2LSWIB (ORCPT
+Received: from mail-ee0-f43.google.com ([74.125.83.43]:42594 "EHLO
+	mail-ee0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751203Ab2LTRBV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 19 Dec 2012 17:08:01 -0500
-Content-Disposition: inline
-In-Reply-To: <1355878834.2280.2.camel@rzhang1-mobl4>
+	Thu, 20 Dec 2012 12:01:21 -0500
+Received: by mail-ee0-f43.google.com with SMTP id e49so1930262eek.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Dec 2012 09:01:20 -0800 (PST)
+In-Reply-To: <1355592696-15454-10-git-send-email-maxtram95@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, jlee@suse.com
 
-On Wed, Dec 19, 2012 at 09:00:34AM +0800, Zhang Rui wrote:
-> On Wed, 2012-12-19 at 06:39 +0900, Mattia Dongili wrote:
-> > On Tue, Dec 18, 2012 at 03:08:44PM +0800, Zhang Rui wrote:
-> > > Hi, Mattia,
-> > 
-> > Hi Rui!
-> > 
-> > > I generated a similar patch as yours but I still have one concern about the fix.
-> > 
-> > thanks for taking care of that.
-> > 
-> > > memcpy(buffer, (void *)&object->integer.value, len) may break the byte order but
-> > > sony_nc_rfkill_setup() terminates if byte 0xff is checked.
-> > > is this true? or am I thinking wrong?
-> > 
-> > You're correct, sony_nc_rfkill_setup() stops looking at the buffer as
-> > soon as it hits 0xff but why do you think memcpy would break the byte
-> > order?
-> > 
-> I'm not sure how SN06 works.
-> say, you have supported codes 0x00, 0x10, and 0x20, what would SN06
-> return?
-> 0x001020FF00000000 or 0x00000000FF201000?
+On Sat, 15 Dec 2012 19:31:33 +0200, Maxim Mikityanskiy <maxtram95@gmail.com> wrote :
 
-The return buffer is filled in sequentially and we go through it in the
-same way in sony_nc_rfkill_setup(), it should be safe but here's an
-example:
+> Use enums for consecutive scancodes, rename key names from MSI_WMI_* to
+> MSI_KEY_* and use tabs for whitespace in msi_wmi_keymap.
+> 
+> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Acked-by: Lee, Chun-Yi <jlee@suse.com>
+Acked-by: Anisse Astier <anisse@astier.eu>
 
-    Name (BUFF, Buffer (0x0410) {})                                                                              
-    CreateDWordField (BUFF, Zero, BUFS)                                                                          
-...
-
-    Store (Zero, Local3)                                                                                 
-    If (WLAP)                                                                                            
-    {                                                                                                    
-	Store (Zero, Index (BUFF, Local3))                                                               
-	Add (Local3, One, Local3)                                                                        
-    }                                                                                                    
-													 
-    If (BLTH)                                                                                            
-    {                                                                                                    
-	Store (0x10, Index (BUFF, Local3))                                                               
-	Add (Local3, One, Local3)                                                                        
-    }                                                                                                    
-													 
-    If (WNED)                                                                                            
-    {                                                                                                    
-	Store (0x20, Index (BUFF, Local3))                                                               
-	Add (Local3, One, Local3)                                                                        
-    }                                                                                                    
-
-Then based on some odd consideration the method may return BUFF or BUFS
-and that's where we have to take either integer.value or buffer.pointer.
-
-Thanks!!
--- 
-mattia
-:wq!
+> ---
+>  drivers/platform/x86/msi-wmi.c | 34 ++++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+> index 4db0c55..112ec14 100644
+> --- a/drivers/platform/x86/msi-wmi.c
+> +++ b/drivers/platform/x86/msi-wmi.c
+> @@ -42,19 +42,21 @@ MODULE_LICENSE("GPL");
+>  MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
+>  MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
+>  
+> -#define SCANCODE_BASE 0xD0
+> -#define MSI_WMI_BRIGHTNESSUP   SCANCODE_BASE
+> -#define MSI_WMI_BRIGHTNESSDOWN (SCANCODE_BASE + 1)
+> -#define MSI_WMI_VOLUMEUP       (SCANCODE_BASE + 2)
+> -#define MSI_WMI_VOLUMEDOWN     (SCANCODE_BASE + 3)
+> -#define MSI_WMI_MUTE           (SCANCODE_BASE + 4)
+> +enum msi_scancodes {
+> +	MSI_SCANCODE_BASE	= 0xD0,
+> +	MSI_KEY_BRIGHTNESSUP	= MSI_SCANCODE_BASE,
+> +	MSI_KEY_BRIGHTNESSDOWN,
+> +	MSI_KEY_VOLUMEUP,
+> +	MSI_KEY_VOLUMEDOWN,
+> +	MSI_KEY_MUTE,
+> +};
+>  static struct key_entry msi_wmi_keymap[] = {
+> -	{ KE_KEY, MSI_WMI_BRIGHTNESSUP,   {KEY_BRIGHTNESSUP} },
+> -	{ KE_KEY, MSI_WMI_BRIGHTNESSDOWN, {KEY_BRIGHTNESSDOWN} },
+> -	{ KE_KEY, MSI_WMI_VOLUMEUP,       {KEY_VOLUMEUP} },
+> -	{ KE_KEY, MSI_WMI_VOLUMEDOWN,     {KEY_VOLUMEDOWN} },
+> -	{ KE_KEY, MSI_WMI_MUTE,           {KEY_MUTE} },
+> -	{ KE_END, 0}
+> +	{ KE_KEY, MSI_KEY_BRIGHTNESSUP,		{KEY_BRIGHTNESSUP} },
+> +	{ KE_KEY, MSI_KEY_BRIGHTNESSDOWN,	{KEY_BRIGHTNESSDOWN} },
+> +	{ KE_KEY, MSI_KEY_VOLUMEUP,		{KEY_VOLUMEUP} },
+> +	{ KE_KEY, MSI_KEY_VOLUMEDOWN,		{KEY_VOLUMEDOWN} },
+> +	{ KE_KEY, MSI_KEY_MUTE,			{KEY_MUTE} },
+> +	{ KE_END, 0 }
+>  };
+>  static ktime_t last_pressed[ARRAY_SIZE(msi_wmi_keymap) - 1];
+>  
+> @@ -169,7 +171,7 @@ static void msi_wmi_notify(u32 value, void *context)
+>  			ktime_t diff;
+>  			cur = ktime_get_real();
+>  			diff = ktime_sub(cur, last_pressed[key->code -
+> -					SCANCODE_BASE]);
+> +					MSI_SCANCODE_BASE]);
+>  			/* Ignore event if the same event happened in a 50 ms
+>  			   timeframe -> Key press may result in 10-20 GPEs */
+>  			if (ktime_to_us(diff) < 1000 * 50) {
+> @@ -178,13 +180,13 @@ static void msi_wmi_notify(u32 value, void *context)
+>  					 key->code, ktime_to_us(diff));
+>  				goto msi_wmi_notify_exit;
+>  			}
+> -			last_pressed[key->code - SCANCODE_BASE] = cur;
+> +			last_pressed[key->code - MSI_SCANCODE_BASE] = cur;
+>  
+>  			if (key->type == KE_KEY &&
+>  			/* Brightness is served via acpi video driver */
+>  			(!acpi_video_backlight_support() ||
+> -			(key->code != MSI_WMI_BRIGHTNESSUP &&
+> -			key->code != MSI_WMI_BRIGHTNESSDOWN))) {
+> +			(key->code != MSI_KEY_BRIGHTNESSUP &&
+> +			key->code != MSI_KEY_BRIGHTNESSDOWN))) {
+>  				pr_debug("Send key: 0x%X - "
+>  					 "Input layer keycode: %d\n",
+>  					 key->code, key->keycode);
