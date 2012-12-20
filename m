@@ -1,58 +1,86 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [PATCH v4 08/12] msi-wmi: Avoid repeating constants
-Date: Thu, 20 Dec 2012 17:59:36 +0100
-Message-ID: <20121220175936.21b75b27@destiny.ordissimo>
-References: <1355592696-15454-1-git-send-email-maxtram95@gmail.com>
-	<1355592696-15454-9-git-send-email-maxtram95@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Mattia Dongili <malattia@linux.it>
+Subject: [PATCH 4/4] sony-laptop: support basic functions for handle 0x14B and 0x14C
+Date: Fri, 21 Dec 2012 07:21:11 +0900
+Message-ID: <1356042071-8903-5-git-send-email-malattia@linux.it>
+References: <1356042071-8903-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ee0-f47.google.com ([74.125.83.47]:40052 "EHLO
-	mail-ee0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751228Ab2LTR3M (ORCPT
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:37697 "EHLO
+	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751607Ab2LTW2E (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Dec 2012 12:29:12 -0500
-Received: by mail-ee0-f47.google.com with SMTP id e51so1866628eek.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Dec 2012 09:29:11 -0800 (PST)
-In-Reply-To: <1355592696-15454-9-git-send-email-maxtram95@gmail.com>
+	Thu, 20 Dec 2012 17:28:04 -0500
+In-Reply-To: <1356042071-8903-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, jlee@suse.com
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
 
-On Sat, 15 Dec 2012 19:31:32 +0200, Maxim Mikityanskiy <maxtram95@gmail.com> wrote :
+Z series and other recent models have 0x14? for lid and keyboard
+backlight.
 
-> Use UUID defines in MODULE_ALIAS strings to avoid repeating strings.
-> 
-> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Acked-by: Lee, Chun-Yi <jlee@suse.com>
-Acked-by: Anisse Astier <anisse@astier.eu>
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+ drivers/platform/x86/sony-laptop.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-
-> ---
->  drivers/platform/x86/msi-wmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-> index b96766b..4db0c55 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -34,14 +34,14 @@ MODULE_AUTHOR("Thomas Renninger <trenn@suse.de>");
->  MODULE_DESCRIPTION("MSI laptop WMI hotkeys driver");
->  MODULE_LICENSE("GPL");
->  
-> -MODULE_ALIAS("wmi:551A1F84-FBDD-4125-91DB-3EA8F44F1D45");
-> -MODULE_ALIAS("wmi:B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2");
-> -
->  #define DRV_NAME "msi-wmi"
->  
->  #define MSIWMI_BIOS_GUID "551A1F84-FBDD-4125-91DB-3EA8F44F1D45"
->  #define MSIWMI_EVENT_GUID "B6F3EEF2-3D2F-49DC-9DE3-85BCE18C62F2"
->  
-> +MODULE_ALIAS("wmi:" MSIWMI_BIOS_GUID);
-> +MODULE_ALIAS("wmi:" MSIWMI_EVENT_GUID);
-> +
->  #define SCANCODE_BASE 0xD0
->  #define MSI_WMI_BRIGHTNESSUP   SCANCODE_BASE
->  #define MSI_WMI_BRIGHTNESSDOWN (SCANCODE_BASE + 1)
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 385835d..075f998 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -1373,6 +1373,8 @@ static void sony_nc_function_setup(struct acpi_device *device,
+ 			break;
+ 		case 0x0137:
+ 		case 0x0143:
++		case 0x014b:
++		case 0x014c:
+ 			result = sony_nc_kbd_backlight_setup(pf_device, handle);
+ 			if (result)
+ 				pr_err("couldn't set up keyboard backlight function (%d)\n",
+@@ -1435,6 +1437,8 @@ static void sony_nc_function_cleanup(struct platform_device *pd)
+ 			break;
+ 		case 0x0137:
+ 		case 0x0143:
++		case 0x014b:
++		case 0x014c:
+ 			sony_nc_kbd_backlight_cleanup(pd);
+ 			break;
+ 		default:
+@@ -1479,6 +1483,8 @@ static void sony_nc_function_resume(void)
+ 			break;
+ 		case 0x0137:
+ 		case 0x0143:
++		case 0x014b:
++		case 0x014c:
+ 			sony_nc_kbd_backlight_resume();
+ 			break;
+ 		default:
+@@ -2636,6 +2642,8 @@ static void sony_nc_backlight_ng_read_limits(int handle,
+ 		lvl_table_len = 9;
+ 		break;
+ 	case 0x143:
++	case 0x14b:
++	case 0x14c:
+ 		lvl_table_len = 16;
+ 		break;
+ 	}
+@@ -2687,6 +2695,18 @@ static void sony_nc_backlight_setup(void)
+ 		sony_nc_backlight_ng_read_limits(0x143, &sony_bl_props);
+ 		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
+ 
++	} else if (sony_find_snc_handle(0x14b) >= 0) {
++		ops = &sony_backlight_ng_ops;
++		sony_bl_props.cmd_base = 0x3000;
++		sony_nc_backlight_ng_read_limits(0x14b, &sony_bl_props);
++		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
++
++	} else if (sony_find_snc_handle(0x14c) >= 0) {
++		ops = &sony_backlight_ng_ops;
++		sony_bl_props.cmd_base = 0x3000;
++		sony_nc_backlight_ng_read_limits(0x14c, &sony_bl_props);
++		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
++
+ 	} else if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "GBRT",
+ 						&unused))) {
+ 		ops = &sony_backlight_ops;
+-- 
+1.7.10.4
