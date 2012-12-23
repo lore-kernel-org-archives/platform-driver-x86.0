@@ -1,59 +1,45 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH 08/25] thinkpad_acpi: don't use
-	[delayed_]work_pending()
-Date: Sat, 22 Dec 2012 21:55:04 -0200
-Message-ID: <20121222235504.GA12747@khazad-dum.debian.net>
-References: <1356141435-17340-1-git-send-email-tj@kernel.org>
-	<1356141435-17340-9-git-send-email-tj@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1356141435-17340-9-git-send-email-tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Roland Stigge <stigge@antcom.de>
+Subject: [PATCH] samsung-laptop: Set keyboard backlight initially
+Date: Sun, 23 Dec 2012 18:21:18 +0100
+Message-ID: <1356283278-5046-1-git-send-email-stigge@antcom.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.work-microwave.de ([62.245.205.51]:30475 "EHLO
+	work-microwave.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1751318Ab2LWRVk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 23 Dec 2012 12:21:40 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: gregkh@linuxfoundation.org, corentin.chary@gmail.com, mjg@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Roland Stigge <stigge@antcom.de>
 
-On Fri, 21 Dec 2012, Tejun Heo wrote:
-> There's no need to test whether a (delayed) work item in pending
-> before queueing, flushing or cancelling it.  Most uses are unnecessary
-> and quite a few of them are buggy.
-> 
-> Remove unnecessary pending tests from thinkpad_acpi.  Only compile
-> tested.
-> 
-> Signed-off-by: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-> Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> Cc: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+After boot, /sys/devices/platform/samsung/leds/samsung::kbd_backlight/brightness
+shows the maximum value (8) by readout, but the led is off. I need to manually
+set it to the respective value to have keyboard backlight.
 
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Fixing via readout-write in samsung_leds_init().
 
-> ---
-> Please let me know how this patch should be routed.  I can take it
-> through the workqueue tree if necessary.
+Tested on Samsung NP900X3C.
 
-It will not clash with anything I know of, so feel free to route it
-through the workqueue tree.
+Signed-off-by: Roland Stigge <stigge@antcom.de>
+--
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+I'm encountering a similar issue after suspend/resume (led is off). Still
+wondering if and by which technique I should add a respective .resume() because
+the driver currently doesn't have pm support and also doesn't register as a
+driver. Any hint appreciated.
 
-------------------------------------------------------------------------------
-LogMeIn Rescue: Anywhere, Anytime Remote support for IT. Free Trial
-Remotely access PCs and mobile devices and provide instant support
-Improve your efficiency, and focus on delivering more value-add services
-Discover what IT Professionals Know. Rescue delivers
-http://p.sf.net/sfu/logmein_12329d2d
+Thanks in advance!
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index dd90d15..1d3292c 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1053,6 +1053,7 @@ static int __init samsung_leds_init(struct samsung_laptop *samsung)
+ 
+ 		ret = led_classdev_register(&samsung->platform_device->dev,
+ 					   &samsung->kbd_led);
++		kbd_led_set(&samsung->kbd_led, kbd_led_get(&samsung->kbd_led));
+ 	}
+ 
+ 	if (ret)
