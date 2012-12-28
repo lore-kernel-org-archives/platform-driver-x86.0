@@ -1,42 +1,54 @@
-From: Servicio Webmail <david.antia2@mail.dcu.ie>
-Subject: =?ISO-8859-1?Q?E=2Dmail_de_atualiza=E7=E3o_de_verifica=E7=E3o_de_conta?=
-Date: Thu, 27 Dec 2012 14:29:03 +0100
-Message-ID: <CAP6Rbx9T16dudc98nX7VPf4Nk8ndwwhYJXFDRKpCek4gt6=eGQ@mail.gmail.com>
-Reply-To: re.activate.account@hotmail.com
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH] drivers/platform/x86/thinkpad_acpi.c:
+ Handle HKEY event 0x6040
+Date: Fri, 28 Dec 2012 08:10:13 -0200
+Message-ID: <20121228101013.GA15327@khazad-dum.debian.net>
+References: <1356543973-18459-1-git-send-email-richih.mailinglist@gmail.com>
+ <20121227103843.GB7894@khazad-dum.debian.net>
+ <CAD77+gTj+EvuOTU9SZBXOv92YmBdy3EgH9vHwypeFtAJY6+Eyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f172.google.com ([209.85.223.172]:41531 "EHLO
-	mail-ie0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752166Ab2L0N3F convert rfc822-to-8bit (ORCPT
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38801 "EHLO
+	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752111Ab2L1KKT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 27 Dec 2012 08:29:05 -0500
-Received: by mail-ie0-f172.google.com with SMTP id c13so11649458ieb.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Dec 2012 05:29:03 -0800 (PST)
+	Fri, 28 Dec 2012 05:10:19 -0500
+Content-Disposition: inline
+In-Reply-To: <CAD77+gTj+EvuOTU9SZBXOv92YmBdy3EgH9vHwypeFtAJY6+Eyw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Richard Hartmann <richih.mailinglist@gmail.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-Caro Usb.org.br Usu=E1rio E-mail
+On Thu, 27 Dec 2012, Richard Hartmann wrote:
+> On Thu, Dec 27, 2012 at 11:38 AM, Henrique de Moraes Holschuh <
+> hmh@hmh.eng.br> wrote:
+> 
+> > /* fallthrough */
+> >
+> [...]
+> 
+> > and letting it proceed to the TP_HKEY_EV_KEY_NUMLOCK block.
+> >
+> 
+> OK.
+> 
+> 
+> Also, do we have any confirmed reports about the lid switch
+> > causing event 0x6040?  It doesn't look right... the comment
+> > might need to be updated.
+> >
+> 
+> I could not reproduce it on my X220. Would you prefer even stronger wording
+> or should I get of it entirely?
 
-Usb.org.br Computador Pol=EDtica de Seguran=E7a exige que usu=E1rio e s=
-enha
-s=E3o verificados em uma base regular. Para o usu=E1rio final de servi=E7=
-os,
-incluindo p=E1ginas Usb.org.br de e-mail de Internet, STV Cluster &
-Staff e servi=E7os Unix, como S=F3crates e Plat=E3o, este nome de usu=E1=
-rio e
-senha deve ser verificada aqui no nosso banco de dados.
+If you cannot reproduce it, we can shalk it up to user error or to corrected
+firmware bug, so you can remove any mention of lid open/close to event
+6040...
 
-Se o seu nome de usu=E1rio e senha n=E3o foi verificada nos sete dias
-seguintes, ele ser=E1 automaticamente reiniciar e ser desativado do
-nosso banco de dados. fornecer os seguintes dados
-
-Nome de Usu=E1rio:   (               )
-Senha:    (                  )
-
-Nota: Voc=EA est=E1 para voltar o mais r=E1pido poss=EDvel.
-
-Ajuda Desk.Important:
-Usb.org.br Equipa de Verifica=E7=E3o Conta
-E-mail de atualiza=E7=E3o de verifica=E7=E3o de conta! !
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
