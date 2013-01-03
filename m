@@ -1,60 +1,52 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH] acer-wmi: avoid the warning of 'devices' may be used uninitialized
-Date: Thu,  3 Jan 2013 10:37:45 +0800
-Message-ID: <1357180665-27511-1-git-send-email-jlee@suse.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Matt Fleming <matt@console-pimps.org>
+Subject: [RFC PATCH 2/2] samsung-laptop: Disable on EFI hardware
+Date: Thu,  3 Jan 2013 13:18:05 +0000
+Message-ID: <1357219085-4312-3-git-send-email-matt@console-pimps.org>
+References: <1357219085-4312-1-git-send-email-matt@console-pimps.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-da0-f47.google.com ([209.85.210.47]:34139 "EHLO
-	mail-da0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752979Ab3ACCkk (ORCPT
+Received: from arkanian.console-pimps.org ([212.110.184.194]:39177 "EHLO
+	arkanian.console-pimps.org" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753059Ab3ACN1d (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 2 Jan 2013 21:40:40 -0500
-Received: by mail-da0-f47.google.com with SMTP id s35so6731009dak.34
-        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Jan 2013 18:40:40 -0800 (PST)
+	Thu, 3 Jan 2013 08:27:33 -0500
+In-Reply-To: <1357219085-4312-1-git-send-email-matt@console-pimps.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Matthew Garrett <mjg@redhat.com>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Fengguang Wu <fengguang.wu@intel.com>
+To: Steve Langasek <steve.langasek@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Olof Johansson <olof@lixom.net>, Tony Luck <tony.luck@intel.com>, Matt Fleming <matt.fleming@intel.com>, Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org
 
-=46engguang Wu run kernel build test to platform-drivers-x86/linux-next=
- git tree
-on x86_64 architecture and found a warning that was introduced by
-727651bf738b6b917335025d09323d0962eda114 commit:
+From: Matt Fleming <matt.fleming@intel.com>
 
-drivers/platform/x86/acer-wmi.c: In function =E2=80=98WMID_set_capabili=
-ties=E2=80=99:
-drivers/platform/x86/acer-wmi.c:1211: warning: =E2=80=98devices=E2=80=99=
- may be used
-uninitialized in this function
+There have been reports of this driver causing Machine Check
+Exceptions on recent EFI-enabled Samsung laptops,
 
-This patch fixes the above warning message.
+	https://bugzilla.kernel.org/show_bug.cgi?id=47121
 
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
+So disable it if booting from EFI since this driver relies on
+grovelling around in the BIOS memory map which isn't going to work.
+
 Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Steve Langasek <steve.langasek@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Matt Fleming <matt.fleming@intel.com>
 ---
- drivers/platform/x86/acer-wmi.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ drivers/platform/x86/samsung-laptop.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index 563dc3f..c9076bd 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1222,6 +1222,9 @@ static acpi_status WMID_set_capabilities(void)
- 			devices =3D *((u32 *) obj->buffer.pointer);
- 		} else if (obj->type =3D=3D ACPI_TYPE_INTEGER) {
- 			devices =3D (u32) obj->integer.value;
-+		} else {
-+			kfree(out.pointer);
-+			return AE_ERROR;
- 		}
- 	} else {
- 		kfree(out.pointer);
---=20
-1.6.4.2
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index dd90d15..a94c0ee 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1534,6 +1534,9 @@ static int __init samsung_init(void)
+ 	struct samsung_laptop *samsung;
+ 	int ret;
+ 
++	if (efi_enabled(EFI_BOOT))
++		return -ENODEV;
++
+ 	quirks = &samsung_unknown;
+ 	if (!force && !dmi_check_system(samsung_dmi_table))
+ 		return -ENODEV;
+-- 
+1.7.11.7
