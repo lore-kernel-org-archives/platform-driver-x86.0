@@ -1,52 +1,56 @@
-From: Matt Fleming <matt@console-pimps.org>
-Subject: [RFC PATCH 2/2] samsung-laptop: Disable on EFI hardware
-Date: Thu,  3 Jan 2013 13:18:05 +0000
-Message-ID: <1357219085-4312-3-git-send-email-matt@console-pimps.org>
-References: <1357219085-4312-1-git-send-email-matt@console-pimps.org>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH] samsung-laptop: Set keyboard backlight initially
+Date: Thu, 3 Jan 2013 20:46:12 +0000
+Message-ID: <CAHR064iThHwC17=fgkdC5Kth+Mn4uAQfNA1DDFnAbTJigYK2ww@mail.gmail.com>
+References: <1356283278-5046-1-git-send-email-stigge@antcom.de>
+	<CAHR064iQeQrQF0qrGXJoCmYny2H_H_JnV_h8OvRSmD=bGE5eYA@mail.gmail.com>
+	<50D850C2.7050809@antcom.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from arkanian.console-pimps.org ([212.110.184.194]:39177 "EHLO
-	arkanian.console-pimps.org" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753059Ab3ACN1d (ORCPT
+Received: from mail-bk0-f47.google.com ([209.85.214.47]:36378 "EHLO
+	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753953Ab3ACUqO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 Jan 2013 08:27:33 -0500
-In-Reply-To: <1357219085-4312-1-git-send-email-matt@console-pimps.org>
+	Thu, 3 Jan 2013 15:46:14 -0500
+In-Reply-To: <50D850C2.7050809@antcom.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Steve Langasek <steve.langasek@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Olof Johansson <olof@lixom.net>, Tony Luck <tony.luck@intel.com>, Matt Fleming <matt.fleming@intel.com>, Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: gregkh@linuxfoundation.org, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 
-From: Matt Fleming <matt.fleming@intel.com>
+Sorry for the lag...
 
-There have been reports of this driver causing Machine Check
-Exceptions on recent EFI-enabled Samsung laptops,
+On Mon, Dec 24, 2012 at 12:55 PM, Roland Stigge <stigge@antcom.de> wrote:
+> On 24/12/12 09:41, Corentin Chary wrote:
+>> On Sun, Dec 23, 2012 at 6:21 PM, Roland Stigge <stigge@antcom.de> wrote:
+>>> After boot, /sys/devices/platform/samsung/leds/samsung::kbd_backlight/brightness
+>>> shows the maximum value (8) by readout, but the led is off. I need to manually
+>>> set it to the respective value to have keyboard backlight.
+>>
+>> If the led is set to 0, what's the value after reboot ? 0 or 8 ?
+>
+> Right - when writing 0 there before restart, the led value is actually 8
+> after reboot, and the LED hardware is ON. This holds for both reboot and
+> halt+poweron cycle.
 
-	https://bugzilla.kernel.org/show_bug.cgi?id=47121
+Ok,
 
-So disable it if booting from EFI since this driver relies on
-grovelling around in the BIOS memory map which isn't going to work.
+> Maybe this is related to the "#define MAX_BRIGHT 0x07" (which is unused
+> in samsung-laptop.c)? A bit confusing in the code - but your question
+> hints for some other bug (to be solved differently). Tell me if I can
+> help somehow, here.
 
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Steve Langasek <steve.langasek@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Matt Fleming <matt.fleming@intel.com>
----
- drivers/platform/x86/samsung-laptop.c | 3 +++
- 1 file changed, 3 insertions(+)
+I don't think this is really used.
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index dd90d15..a94c0ee 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1534,6 +1534,9 @@ static int __init samsung_init(void)
- 	struct samsung_laptop *samsung;
- 	int ret;
- 
-+	if (efi_enabled(EFI_BOOT))
-+		return -ENODEV;
-+
- 	quirks = &samsung_unknown;
- 	if (!force && !dmi_check_system(samsung_dmi_table))
- 		return -ENODEV;
--- 
-1.7.11.7
+>> What's the behavior on windows ?
+>
+> There is no windows available on this machine.
+
+Too bad, let's assume your patch is the best behavior :). Will merge it soon.
+
+
+
+--
+Corentin Chary
+http://xf.iksaif.net
