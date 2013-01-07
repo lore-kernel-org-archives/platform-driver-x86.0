@@ -1,56 +1,45 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] samsung-laptop: Set keyboard backlight initially
-Date: Thu, 3 Jan 2013 20:46:12 +0000
-Message-ID: <CAHR064iThHwC17=fgkdC5Kth+Mn4uAQfNA1DDFnAbTJigYK2ww@mail.gmail.com>
-References: <1356283278-5046-1-git-send-email-stigge@antcom.de>
-	<CAHR064iQeQrQF0qrGXJoCmYny2H_H_JnV_h8OvRSmD=bGE5eYA@mail.gmail.com>
-	<50D850C2.7050809@antcom.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: re: acer-wmi: fix obj is NULL but dereferenced
+Date: Mon, 7 Jan 2013 14:32:11 +0300
+Message-ID: <20130107113210.GA29782@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f47.google.com ([209.85.214.47]:36378 "EHLO
-	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753953Ab3ACUqO (ORCPT
+Received: from userp1040.oracle.com ([156.151.31.81]:41662 "EHLO
+	userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753680Ab3AGLcO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 Jan 2013 15:46:14 -0500
-In-Reply-To: <50D850C2.7050809@antcom.de>
+	Mon, 7 Jan 2013 06:32:14 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Roland Stigge <stigge@antcom.de>
-Cc: gregkh@linuxfoundation.org, Matthew Garrett <mjg@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: joeyli.kernel@gmail.com
+Cc: platform-driver-x86@vger.kernel.org
 
-Sorry for the lag...
+Hello Lee, Chun-Yi,
 
-On Mon, Dec 24, 2012 at 12:55 PM, Roland Stigge <stigge@antcom.de> wrote:
-> On 24/12/12 09:41, Corentin Chary wrote:
->> On Sun, Dec 23, 2012 at 6:21 PM, Roland Stigge <stigge@antcom.de> wrote:
->>> After boot, /sys/devices/platform/samsung/leds/samsung::kbd_backlight/brightness
->>> shows the maximum value (8) by readout, but the led is off. I need to manually
->>> set it to the respective value to have keyboard backlight.
->>
->> If the led is set to 0, what's the value after reboot ? 0 or 8 ?
->
-> Right - when writing 0 there before restart, the led value is actually 8
-> after reboot, and the LED hardware is ON. This holds for both reboot and
-> halt+poweron cycle.
+The patch 727651bf738b: "acer-wmi: fix obj is NULL but dereferenced" 
+from Dec 14, 2012, leads to the following warning:
+drivers/platform/x86/acer-wmi.c:1227 WMID_set_capabilities()
+	 warn: calling kfree() when 'out.pointer' is always NULL.
 
-Ok,
+  1217          obj = (union acpi_object *) out.pointer;
+  1218          if (obj) {
+  1219                  if (obj->type == ACPI_TYPE_BUFFER &&
+  1220                          (obj->buffer.length == sizeof(u32) ||
+  1221                          obj->buffer.length == sizeof(u64))) {
+  1222                          devices = *((u32 *) obj->buffer.pointer);
+  1223                  } else if (obj->type == ACPI_TYPE_INTEGER) {
+  1224                          devices = (u32) obj->integer.value;
+  1225                  }
+  1226          } else {
+  1227                  kfree(out.pointer);
+  1228                  return AE_ERROR;
+  1229          }
 
-> Maybe this is related to the "#define MAX_BRIGHT 0x07" (which is unused
-> in samsung-laptop.c)? A bit confusing in the code - but your question
-> hints for some other bug (to be solved differently). Tell me if I can
-> help somehow, here.
+I was going to remove the kfree() but looking the patch which introduced
+it causes GCC warnings and so there is some other stuff which needs to
+be fixed as well.
 
-I don't think this is really used.
-
->> What's the behavior on windows ?
->
-> There is no windows available on this machine.
-
-Too bad, let's assume your patch is the best behavior :). Will merge it soon.
-
-
-
---
-Corentin Chary
-http://xf.iksaif.net
+regards,
+dan carpenter
