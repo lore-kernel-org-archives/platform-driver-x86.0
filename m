@@ -1,50 +1,78 @@
 From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH 2/3] platform/x86: (eeepc-laptop) Replace SENSORS_LIMIT
- with clamp_val
-Date: Wed, 9 Jan 2013 23:01:51 +0100
-Message-ID: <20130109230151.7d4679af@endymion.delvare>
+Subject: Re: [PATCH 3/3] hwmon: Retire SENSORS_LIMIT
+Date: Wed, 9 Jan 2013 23:03:12 +0100
+Message-ID: <20130109230312.215abe51@endymion.delvare>
 References: <1357750750-30512-1-git-send-email-linux@roeck-us.net>
-	<1357750750-30512-2-git-send-email-linux@roeck-us.net>
+	<1357750750-30512-3-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from zoneX.GCU-Squad.org ([194.213.125.0]:42061 "EHLO
+Received: from zoneX.GCU-Squad.org ([194.213.125.0]:37883 "EHLO
 	services.gcu-squad.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756635Ab3AIWCV (ORCPT
+	with ESMTP id S1757942Ab3AIWDf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Jan 2013 17:02:21 -0500
-In-Reply-To: <1357750750-30512-2-git-send-email-linux@roeck-us.net>
+	Wed, 9 Jan 2013 17:03:35 -0500
+In-Reply-To: <1357750750-30512-3-git-send-email-linux@roeck-us.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Guenter Roeck <linux@roeck-us.net>
 Cc: lm-sensors@lm-sensors.org, "Mark M. Hoffman" <mhoffman@lightlink.com>, George Joseph <george.joseph@fairview5.com>, Juerg Haefliger <juergh@gmail.com>, Steve Glendinning <steve.glendinning@shawell.net>, Riku Voipio <riku.voipio@iki.fi>, Guillaume Ligneul <guillaume.ligneul@gmail.com>, "Hans J. Koch" <hjk@hansjkoch.de>, Roger Lucas <vt8231@hiddenengine.co.uk>, Marc Hulsman <m.hulsman@tudelft.nl>, Rudolf Marek <r.marek@assembler.cz>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <mjg@redhat.com>, platform-driver-x86@vger.kernel.org
 
-On Wed,  9 Jan 2013 08:59:08 -0800, Guenter Roeck wrote:
+On Wed,  9 Jan 2013 08:59:09 -0800, Guenter Roeck wrote:
 > SENSORS_LIMIT and clamp_val have the same functionality, so retire SENSORS_LIMIT
 > as it is no longer needed.
 > 
-> The change reduces text size by 26 bytes and bss size by 16 bytes on x86_86
-> builds.
-> 
 > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > ---
->  drivers/platform/x86/eeepc-laptop.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/hwmon/sysfs-interface |    8 ++++----
+>  include/linux/hwmon.h               |   12 ------------
+>  2 files changed, 4 insertions(+), 16 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index 528e949..a5da0b5 100644
-> --- a/drivers/platform/x86/eeepc-laptop.c
-> +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -1007,7 +1007,7 @@ static int eeepc_get_fan_pwm(void)
+> diff --git a/Documentation/hwmon/sysfs-interface b/Documentation/hwmon/sysfs-interface
+> index 1f4dd85..79f8257 100644
+> --- a/Documentation/hwmon/sysfs-interface
+> +++ b/Documentation/hwmon/sysfs-interface
+> @@ -722,14 +722,14 @@ add/subtract if it has been divided before the add/subtract.
+>  What to do if a value is found to be invalid, depends on the type of the
+>  sysfs attribute that is being set. If it is a continuous setting like a
+>  tempX_max or inX_max attribute, then the value should be clamped to its
+> -limits using SENSORS_LIMIT(value, min_limit, max_limit). If it is not
+> -continuous like for example a tempX_type, then when an invalid value is
+> -written, -EINVAL should be returned.
+> +limits using clamp_val(value, min_limit, max_limit). If it is not continuous
+> +like for example a tempX_type, then when an invalid value is written,
+> +-EINVAL should be returned.
 >  
->  static void eeepc_set_fan_pwm(int value)
->  {
-> -	value = SENSORS_LIMIT(value, 0, 255);
-> +	value = clamp_val(value, 0, 255);
->  	value = value * 100 / 255;
->  	ec_write(EEEPC_EC_FAN_PWM, value);
->  }
+>  Example1, temp1_max, register is a signed 8 bit value (-128 - 127 degrees):
+>  
+>  	long v = simple_strtol(buf, NULL, 10) / 1000;
+> -	v = SENSORS_LIMIT(v, -128, 127);
+> +	v = clamp_val(v, -128, 127);
+>  	/* write v to register */
+>  
+>  Example2, fan divider setting, valid values 2, 4 and 8:
+> diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+> index 82b29ae..b2514f7 100644
+> --- a/include/linux/hwmon.h
+> +++ b/include/linux/hwmon.h
+> @@ -20,16 +20,4 @@ struct device *hwmon_device_register(struct device *dev);
+>  
+>  void hwmon_device_unregister(struct device *dev);
+>  
+> -/* Scale user input to sensible values */
+> -static inline int SENSORS_LIMIT(long value, long low, long high)
+> -{
+> -	if (value < low)
+> -		return low;
+> -	else if (value > high)
+> -		return high;
+> -	else
+> -		return value;
+> -}
+> -
+>  #endif
+> -
 
 Acked-by: Jean Delvare <khali@linux-fr.org>
 
