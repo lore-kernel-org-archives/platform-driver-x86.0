@@ -1,17 +1,17 @@
 From: "Mercy Stokes" <mercy5stokes5@yahoo.com>
 Subject: Hello my dear
-Date: Mon, 14 Jan 2013 23:54:42 +0100
-Message-ID: <20130114224538.M28860@freebsd.ccyes.ntpc.edu.tw>
+Date: Tue, 15 Jan 2013 02:34:09 +0100
+Message-ID: <20130115012920.M4519@freebsd.ccyes.ntpc.edu.tw>
 Reply-To: mercy5stokes5@yahoo.com
 Mime-Version: 1.0
 Content-Type: text/plain;
 	charset=euc-jp
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [163.20.79.129] ([163.20.79.129]:1816 "EHLO
+Received: from [163.20.79.129] ([163.20.79.129]:4625 "EHLO
 	freebsd.ccyes.ntpc.edu.tw" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1756282Ab3ANXWS (ORCPT
+	by vger.kernel.org with ESMTP id S1755279Ab3AOBeb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Jan 2013 18:22:18 -0500
+	Mon, 14 Jan 2013 20:34:31 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: mercy5stokes5@yahoo.com
