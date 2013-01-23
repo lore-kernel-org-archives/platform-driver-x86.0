@@ -1,56 +1,57 @@
-From: Matt Fleming <matt@console-pimps.org>
-Subject: [PATCH 2/2] samsung-laptop: Disable on EFI hardware
-Date: Mon, 21 Jan 2013 20:40:38 +0000
-Message-ID: <1358800838-10459-3-git-send-email-matt@console-pimps.org>
-References: <1358800838-10459-1-git-send-email-matt@console-pimps.org>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH TRIVIAL] asus-wmi: Fix unused function build warning
+Date: Wed, 23 Jan 2013 09:35:57 +0000
+Message-ID: <CAHR064jGOp7tZL4ZAmOLp5G3cWXwjBtsZVH=sL1xsxOGMoMBOg@mail.gmail.com>
+References: <1358203840.10402.3.camel@lorien2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358800838-10459-1-git-send-email-matt@console-pimps.org>
+In-Reply-To: <1358203840.10402.3.camel@lorien2>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-Cc: Tim Gardner <rtg.canonical@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "H. Peter Anvin" <hpa@zytor.com>, Olof Johansson <olof@lixom.net>, Tony Luck <tony.luck@intel.com>, Steve Langasek <steve.langasek@canonical.com>, Colin Ian King <colin.king@canonical.com>, Matt Fleming <matt.fleming@intel.com>, Corentin Chary <corentincj@iksaif.net>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+To: shuah.khan@hp.com
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, shuahkhan@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Matt Fleming <matt.fleming@intel.com>
+On Mon, Jan 14, 2013 at 10:50 PM, Shuah Khan <shuah.khan@hp.com> wrote:
+> Fix the following build warning
+>
+> CC [M]  drivers/platform/x86/asus-wmi.o
+> drivers/platform/x86/asus-wmi.c:1356:13: warning: =E2=80=98do_nothing=
+=E2=80=99 defined but not used [-Wunused-function]
+>
+> Signed-off-by: Shuah Khan <shuah.khan@hp.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c |    5 -----
+>  1 file changed, 5 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
+sus-wmi.c
+> index e41eae3..c11b242 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1353,11 +1353,6 @@ static int is_display_toggle(int code)
+>         return 0;
+>  }
+>
+> -static void do_nothing(void)
+> -{
+> -       return;
+> -}
+> -
+>  static void asus_wmi_notify(u32 value, void *context)
+>  {
+>         struct asus_wmi *asus =3D context;
+> --
+> 1.7.9.5
+>
+>
+>
 
-It has been reported that running this driver on some Samsung laptops
-with EFI can cause those machines to become bricked as detailed in the
-following report,
+Acked-by: Corentin Chary <corentin.chary@gmail.com>
 
-	https://bugs.launchpad.net/ubuntu-cdimage/+bug/1040557
 
-There have also been reports of this driver causing Machine Check
-Exceptions on recent EFI-enabled Samsung laptops,
 
-	https://bugzilla.kernel.org/show_bug.cgi?id=47121
-
-So disable it if booting from EFI since this driver relies on
-grovelling around in the BIOS memory map which isn't going to work.
-
-Acked-by: H. Peter Anvin <hpa@zytor.com>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Steve Langasek <steve.langasek@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Matt Fleming <matt.fleming@intel.com>
----
- drivers/platform/x86/samsung-laptop.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index dd90d15..a94c0ee 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1534,6 +1534,9 @@ static int __init samsung_init(void)
- 	struct samsung_laptop *samsung;
- 	int ret;
- 
-+	if (efi_enabled(EFI_BOOT))
-+		return -ENODEV;
-+
- 	quirks = &samsung_unknown;
- 	if (!force && !dmi_check_system(samsung_dmi_table))
- 		return -ENODEV;
--- 
-1.7.11.7
+--
+Corentin Chary
+http://xf.iksaif.net
