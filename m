@@ -1,51 +1,67 @@
-From: Rolando Martins <rolando.martins@gmail.com>
-Subject: apple_gmux bug
-Date: Thu, 24 Jan 2013 00:25:47 -0500
-Message-ID: <CABcS5h0iKuJ_wR1N+7e1J6U=M_7HaU6a+bKpzKkRxu-m7zkdnQ@mail.gmail.com>
+From: Benoit Gschwind <gschwind@gnu-log.net>
+Subject: Re: apple_gmux bug
+Date: Thu, 24 Jan 2013 09:13:40 +0100
+Message-ID: <5100ED34.4040400@gnu-log.net>
+References: <CABcS5h0iKuJ_wR1N+7e1J6U=M_7HaU6a+bKpzKkRxu-m7zkdnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f41.google.com ([209.85.215.41]:44030 "EHLO
-	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750798Ab3AXFZt (ORCPT
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33741 "EHLO
+	relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751777Ab3AXINp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Jan 2013 00:25:49 -0500
-Received: by mail-la0-f41.google.com with SMTP id fo12so4187540lab.28
-        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Jan 2013 21:25:48 -0800 (PST)
+	Thu, 24 Jan 2013 03:13:45 -0500
+In-Reply-To: <CABcS5h0iKuJ_wR1N+7e1J6U=M_7HaU6a+bKpzKkRxu-m7zkdnQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>
+To: Rolando Martins <rolando.martins@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-Hi,
-I am currently experienced problems with the apple_gmux driver
-while using a MBP retina 10,1.
-System description & behavior:
--Ubuntu 13.04 with kernel 3.8-rc4.
--dmesg: apple_gmux: Found gmux version 3.2.19 [indexed]
--Under /sys/class/backlight I only have gmux_backlight.
--Under gmux_backlight both actual and max brightness are equal to 2^24
-= 16777216,
-while brightness value is within [0,1023] (the value can be changed)
--The backlight is dimmed throughout the boot process and remains the same,
-without being possible to adjust it.
+Hello Rolando,
 
-If the following hack is applied then full brightness can be achieved,
-however it remains nonadjustable.
+Do you use NVIDIA proprietary driver ?
 
- #define HACK_VALUE 1023
- ...
- In gmux_probe() :
- ...
- props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
- //hack
- props.max_brightness = HACK_VALUE;
- ....
- bdev->props.brightness = gmux_get_brightness(bdev);
- //hack
- bdev->props.brightness = HACK_VALUE;
+If this is the case, this explain your issue probably. NVIDIA driver 
+seems disable gmux chips.
 
-Does anybody have a clue to solve this problem?
+Best regards.
 
-Thanks for the help,
-Rolando
+Le 24/01/2013 06:25, Rolando Martins wrote :
+> Hi,
+> I am currently experienced problems with the apple_gmux driver
+> while using a MBP retina 10,1.
+> System description & behavior:
+> -Ubuntu 13.04 with kernel 3.8-rc4.
+> -dmesg: apple_gmux: Found gmux version 3.2.19 [indexed]
+> -Under /sys/class/backlight I only have gmux_backlight.
+> -Under gmux_backlight both actual and max brightness are equal to 2^24
+> = 16777216,
+> while brightness value is within [0,1023] (the value can be changed)
+> -The backlight is dimmed throughout the boot process and remains the same,
+> without being possible to adjust it.
+>
+> If the following hack is applied then full brightness can be achieved,
+> however it remains nonadjustable.
+>
+>   #define HACK_VALUE 1023
+>   ...
+>   In gmux_probe() :
+>   ...
+>   props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
+>   //hack
+>   props.max_brightness = HACK_VALUE;
+>   ....
+>   bdev->props.brightness = gmux_get_brightness(bdev);
+>   //hack
+>   bdev->props.brightness = HACK_VALUE;
+>
+> Does anybody have a clue to solve this problem?
+>
+> Thanks for the help,
+> Rolando
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
