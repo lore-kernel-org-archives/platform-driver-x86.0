@@ -1,63 +1,120 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: [PATCH] acer-wmi: do not use 'devices' uninitialized
-Date: Thu, 24 Jan 2013 14:12:58 +0100
-Message-ID: <1359033178.1325.15.camel@x61.thuisdomein>
+From: Rolando Martins <rolando.martins@gmail.com>
+Subject: Re: apple_gmux bug
+Date: Thu, 24 Jan 2013 08:37:07 -0500
+Message-ID: <CABcS5h1EVee+RVDr1ebEn6hQDMHq3XdW1wwB0jhnE6bSdoirUQ@mail.gmail.com>
+References: <CABcS5h0iKuJ_wR1N+7e1J6U=M_7HaU6a+bKpzKkRxu-m7zkdnQ@mail.gmail.com>
+	<5100ED34.4040400@gnu-log.net>
+	<5100EDCF.1040208@gnu-log.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Lee, Chun-Yi" <jlee@suse.com>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lb0-f176.google.com ([209.85.217.176]:33764 "EHLO
+	mail-lb0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753852Ab3AXNhJ convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 24 Jan 2013 08:37:09 -0500
+Received: by mail-lb0-f176.google.com with SMTP id s4so3970210lbc.35
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Jan 2013 05:37:08 -0800 (PST)
+In-Reply-To: <5100EDCF.1040208@gnu-log.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Benoit Gschwind <gschwind@gnu-log.net>
+Cc: platform-driver-x86@vger.kernel.org, Seth Forshee <seth.forshee@canonical.com>
 
-Commit f20aaba9819d0801fb1314363f97239da0100bac ("acer-wmi: fix obj is
-NULL but dereferenced") introduced a GCC warning:
-    drivers/platform/x86/acer-wmi.c: In function =E2=80=98acer_wmi_init=
-=E2=80=99:
-    drivers/platform/x86/acer-wmi.c:1216:14: warning: =E2=80=98devices=E2=
-=80=99 may be used uninitialized in this function [-Wmaybe-uninitialize=
-d]
-    drivers/platform/x86/acer-wmi.c:1193:6: note: =E2=80=98devices=E2=80=
-=99 was declared here
+Hi Benoit,
+thanks for the quick reply and help.
+Sorry forgot to mention that, yes I am using the Nvidia driver.
+You are right, after suspend it does work.
+Got this message after suspend, "apple-gmux 00:07: System wakeup
+disabled by ACPI"
 
-GCC is correct. In WMID_set_capabilities() there are now clearly codepa=
-ths
-that use 'devices' uninitialized. (WMID_set_capabilities() is apparentl=
-y
-inlined in acer_wmi_init().) Previously that couldn't happen. So rework
-the code to use the previous logic, but also make sure 'obj' will not b=
+>> If this is the case, this explain your issue probably. NVIDIA driver
+>> seems disable gmux chips.
+Also right:), if I shutdown and power up, the apple-gmux reports
+device not present.
+But if I do a reboot then it shows up.
+
+We will have to wait for a nvidia patch (while using the proprietary
+driver), right?
+
+Thanks again,
+Rolando
+
+On Thu, Jan 24, 2013 at 3:16 AM, Benoit Gschwind <gschwind@gnu-log.net>=
+ wrote:
+> Hello Rolando,
+>
+> I found that if you turn you computer in stanby (suspend to RAM) and =
+turn it
+> on again, gmux work again.
+>
+> I didn't found a way ot enable this behaviour at boot.
+>
+> Best regards
+>
+> Le 24/01/2013 09:13, Benoit Gschwind a =E9crit :
+>
+>> Hello Rolando,
+>>
+>> Do you use NVIDIA proprietary driver ?
+>>
+>> If this is the case, this explain your issue probably. NVIDIA driver
+>> seems disable gmux chips.
+>>
+>> Best regards.
+>>
+>> Le 24/01/2013 06:25, Rolando Martins wrote :
+>>>
+>>> Hi,
+>>> I am currently experienced problems with the apple_gmux driver
+>>> while using a MBP retina 10,1.
+>>> System description & behavior:
+>>> -Ubuntu 13.04 with kernel 3.8-rc4.
+>>> -dmesg: apple_gmux: Found gmux version 3.2.19 [indexed]
+>>> -Under /sys/class/backlight I only have gmux_backlight.
+>>> -Under gmux_backlight both actual and max brightness are equal to 2=
+^24
+>>> =3D 16777216,
+>>> while brightness value is within [0,1023] (the value can be changed=
+)
+>>> -The backlight is dimmed throughout the boot process and remains th=
 e
-dereferenced while NULL.
-
-Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
----
-Compile tested only!
-
- drivers/platform/x86/acer-wmi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-index afed701..0ddac19 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1197,14 +1197,12 @@ static acpi_status WMID_set_capabilities(void)
- 		return status;
-=20
- 	obj =3D (union acpi_object *) out.pointer;
--	if (obj) {
--		if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
-+	if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER &&
- 			(obj->buffer.length =3D=3D sizeof(u32) ||
- 			obj->buffer.length =3D=3D sizeof(u64))) {
- 			devices =3D *((u32 *) obj->buffer.pointer);
--		} else if (obj->type =3D=3D ACPI_TYPE_INTEGER) {
-+	} else if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
- 			devices =3D (u32) obj->integer.value;
--		}
- 	} else {
- 		kfree(out.pointer);
- 		return AE_ERROR;
---=20
-1.7.11.7
+>>> same,
+>>> without being possible to adjust it.
+>>>
+>>> If the following hack is applied then full brightness can be achiev=
+ed,
+>>> however it remains nonadjustable.
+>>>
+>>>   #define HACK_VALUE 1023
+>>>   ...
+>>>   In gmux_probe() :
+>>>   ...
+>>>   props.max_brightness =3D gmux_read32(gmux_data,
+>>> GMUX_PORT_MAX_BRIGHTNESS);
+>>>   //hack
+>>>   props.max_brightness =3D HACK_VALUE;
+>>>   ....
+>>>   bdev->props.brightness =3D gmux_get_brightness(bdev);
+>>>   //hack
+>>>   bdev->props.brightness =3D HACK_VALUE;
+>>>
+>>> Does anybody have a clue to solve this problem?
+>>>
+>>> Thanks for the help,
+>>> Rolando
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe
+>>> platform-driver-x86" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe
+>> platform-driver-x86" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
