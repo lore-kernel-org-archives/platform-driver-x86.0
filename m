@@ -1,57 +1,51 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH TRIVIAL] asus-wmi: Fix unused function build warning
-Date: Wed, 23 Jan 2013 09:35:57 +0000
-Message-ID: <CAHR064jGOp7tZL4ZAmOLp5G3cWXwjBtsZVH=sL1xsxOGMoMBOg@mail.gmail.com>
-References: <1358203840.10402.3.camel@lorien2>
+From: Rolando Martins <rolando.martins@gmail.com>
+Subject: apple_gmux bug
+Date: Thu, 24 Jan 2013 00:25:47 -0500
+Message-ID: <CABcS5h0iKuJ_wR1N+7e1J6U=M_7HaU6a+bKpzKkRxu-m7zkdnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358203840.10402.3.camel@lorien2>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shuah.khan@hp.com
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, shuahkhan@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-la0-f41.google.com ([209.85.215.41]:44030 "EHLO
+	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750798Ab3AXFZt (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 24 Jan 2013 00:25:49 -0500
+Received: by mail-la0-f41.google.com with SMTP id fo12so4187540lab.28
+        for <platform-driver-x86@vger.kernel.org>; Wed, 23 Jan 2013 21:25:48 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Seth Forshee <seth.forshee@canonical.com>
 
-On Mon, Jan 14, 2013 at 10:50 PM, Shuah Khan <shuah.khan@hp.com> wrote:
-> Fix the following build warning
->
-> CC [M]  drivers/platform/x86/asus-wmi.o
-> drivers/platform/x86/asus-wmi.c:1356:13: warning: =E2=80=98do_nothing=
-=E2=80=99 defined but not used [-Wunused-function]
->
-> Signed-off-by: Shuah Khan <shuah.khan@hp.com>
-> ---
->  drivers/platform/x86/asus-wmi.c |    5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
-sus-wmi.c
-> index e41eae3..c11b242 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1353,11 +1353,6 @@ static int is_display_toggle(int code)
->         return 0;
->  }
->
-> -static void do_nothing(void)
-> -{
-> -       return;
-> -}
-> -
->  static void asus_wmi_notify(u32 value, void *context)
->  {
->         struct asus_wmi *asus =3D context;
-> --
-> 1.7.9.5
->
->
->
+Hi,
+I am currently experienced problems with the apple_gmux driver
+while using a MBP retina 10,1.
+System description & behavior:
+-Ubuntu 13.04 with kernel 3.8-rc4.
+-dmesg: apple_gmux: Found gmux version 3.2.19 [indexed]
+-Under /sys/class/backlight I only have gmux_backlight.
+-Under gmux_backlight both actual and max brightness are equal to 2^24
+= 16777216,
+while brightness value is within [0,1023] (the value can be changed)
+-The backlight is dimmed throughout the boot process and remains the same,
+without being possible to adjust it.
 
-Acked-by: Corentin Chary <corentin.chary@gmail.com>
+If the following hack is applied then full brightness can be achieved,
+however it remains nonadjustable.
 
+ #define HACK_VALUE 1023
+ ...
+ In gmux_probe() :
+ ...
+ props.max_brightness = gmux_read32(gmux_data, GMUX_PORT_MAX_BRIGHTNESS);
+ //hack
+ props.max_brightness = HACK_VALUE;
+ ....
+ bdev->props.brightness = gmux_get_brightness(bdev);
+ //hack
+ bdev->props.brightness = HACK_VALUE;
 
+Does anybody have a clue to solve this problem?
 
---
-Corentin Chary
-http://xf.iksaif.net
+Thanks for the help,
+Rolando
