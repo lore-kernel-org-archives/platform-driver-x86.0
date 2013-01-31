@@ -1,66 +1,49 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: make i2c_adapter_names static to avoid sparse warnings
-Date: Tue, 29 Jan 2013 16:42:10 -0800
-Message-ID: <CANLzEktBPj9dAYkqoBzq38uc1AZnPNnsUy1eXVte5X3Jn1yiAw@mail.gmail.com>
-References: <20121227080739.GA20905@bee>
-	<CANLzEks3J2ATt73ZS6+JrT6a36AK+OmheoJYqruM0nkkDHwx5A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Kyle Evans <kvans32@gmail.com>
+Subject: Re: [PATCH] hp-wmi: Add support for SMBus hotkeys
+Date: Thu, 31 Jan 2013 15:44:27 -0500
+Message-ID: <1359665067-13035-1-git-send-email-kvans32@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f54.google.com ([209.85.219.54]:62649 "EHLO
-	mail-oa0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751747Ab3A3Arf (ORCPT
+Received: from mail-ia0-f173.google.com ([209.85.210.173]:61492 "EHLO
+	mail-ia0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753942Ab3AaPoh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Jan 2013 19:47:35 -0500
-Received: by mail-oa0-f54.google.com with SMTP id n9so1131884oag.27
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Jan 2013 16:47:35 -0800 (PST)
-In-Reply-To: <CANLzEks3J2ATt73ZS6+JrT6a36AK+OmheoJYqruM0nkkDHwx5A@mail.gmail.com>
+	Thu, 31 Jan 2013 10:44:37 -0500
+Received: by mail-ia0-f173.google.com with SMTP id l29so4057761iag.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 31 Jan 2013 07:44:36 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Xiechanglong <changlongx.xie@intel.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, kbuild@01.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Kyle Evans <kvans32@gmail.com>
 
-Actually, it looks like there's a checkpatch warning :
+Several models of HP laptops using the same DSDT have hotkey buttons
+that do not work until the EC is configured to enable them.
 
-WARNING: static const char * array should probably be static const char * const
-#20: FILE: drivers/platform/x86/chromeos_laptop.c:34:
-+static const char *i2c_adapter_names[] = {
+Signed-off-by: Kyle Evans <kvans32@gmail.com>
+---
+ drivers/platform/x86/hp-wmi.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-total: 0 errors, 1 warnings, 8 lines checked
-
-On Tue, Jan 29, 2013 at 4:16 PM, Benson Leung <bleung@chromium.org> wrote:
->  Reviewed-by: Benson Leung <bleung@chromium.org>
->
-> Thanks,
-> Benson
->
-> On Thu, Dec 27, 2012 at 12:07 AM, Xiechanglong <changlongx.xie@intel.com> wrote:
->> Signed-off-by: Changlong Xie <changlongx.xie@intel.com>
->> ---
->> Index: linux/drivers/platform/x86/chromeos_laptop.c
->> ===================================================================
->> --- linux.orig/drivers/platform/x86/chromeos_laptop.c
->> +++ linux/drivers/platform/x86/chromeos_laptop.c
->> @@ -31,7 +31,7 @@
->>  static struct i2c_client *als;
->>  static struct i2c_client *tp;
->>
->> -const char *i2c_adapter_names[] = {
->> +static const char *i2c_adapter_names[] = {
->>         "SMBus I801 adapter",
->>  };
->>
->
->
->
-> --
-> Benson Leung
-> Software Engineer, Chrom* OS
-> bleung@chromium.org
-
-
-
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 1dde7ac..90938d6 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -137,6 +137,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_KEY, 0x2142, { KEY_MEDIA } },
+ 	{ KE_KEY, 0x213b, { KEY_INFO } },
+ 	{ KE_KEY, 0x2169, { KEY_DIRECTION } },
++	{ KE_KEY, 0x216a, { KEY_SETUP } },
+ 	{ KE_KEY, 0x231b, { KEY_HELP } },
+ 	{ KE_END, 0 }
+ };
+@@ -884,6 +885,9 @@ static int __init hp_wmi_init(void)
+ 		err = hp_wmi_input_setup();
+ 		if (err)
+ 			return err;
++		
++		//Enable magic for hotkeys that run on the SMBus
++		ec_write(0xe6,0x6e);
+ 	}
+ 
+ 	if (bios_capable) {
 -- 
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+1.7.3.4
