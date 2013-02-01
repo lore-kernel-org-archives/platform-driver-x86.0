@@ -1,38 +1,27 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] sony-laptop: leak in error handling
- sony_nc_lid_resume_setup()
-Date: Fri, 1 Feb 2013 16:28:27 +0300
-Message-ID: <20130201132826.GA23374@elgon.mountain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH 0/4] Platform: x86: chromeos_laptop - Add more x86 Chromebooks
+Date: Fri,  1 Feb 2013 14:34:42 -0800
+Message-ID: <1359758086-2320-1-git-send-email-bleung@chromium.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from userp1040.oracle.com ([156.151.31.81]:51179 "EHLO
-	userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755143Ab3BAN2n (ORCPT
+Received: from mail-pb0-f53.google.com ([209.85.160.53]:45826 "EHLO
+	mail-pb0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757912Ab3BAWe6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Feb 2013 08:28:43 -0500
-Content-Disposition: inline
+	Fri, 1 Feb 2013 17:34:58 -0500
+Received: by mail-pb0-f53.google.com with SMTP id un1so2328962pbc.12
+        for <platform-driver-x86@vger.kernel.org>; Fri, 01 Feb 2013 14:34:57 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: bleung@chromium.org, olofj@chromium.org, olof@lixom.net
 
-We need to decrement "i" first because the current "i" was not allocated
-succesfully.  Also we should go free the way down to zero to avoid a
-leak.
+This patch series will add support for the following devices on
+the following laptops:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acer C7 Chromebook - Cypress APA Smbus Trackpad
+Acer AC700 - Taos tsl2563 light sensor
+Samsung Series 5 Chromebook - Taos tsl2583 light sensor
+Cr-48 - Taos tsl2563 light sensor
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 438c7fa..9557414 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2351,7 +2351,7 @@ static int sony_nc_lid_resume_setup(struct platform_device *pd)
- 	return 0;
- 
- liderror:
--	for (; i > 0; i--)
-+	for (i--; i >= 0; i--)
- 		device_remove_file(&pd->dev, &lid_ctl->attrs[i]);
- 
- 	kfree(lid_ctl);
+Cheers,
+Benson
