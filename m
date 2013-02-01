@@ -1,7 +1,7 @@
 From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH 4/4] Platform: x86: chromeos_laptop - Add Taos tsl2583 device
-Date: Fri,  1 Feb 2013 14:34:46 -0800
-Message-ID: <1359758086-2320-5-git-send-email-bleung@chromium.org>
+Subject: [PATCH 3/4] Platform: x86: chromeos_laptop - Add Taos tsl2563 device
+Date: Fri,  1 Feb 2013 14:34:45 -0800
+Message-ID: <1359758086-2320-4-git-send-email-bleung@chromium.org>
 References: <1359758086-2320-1-git-send-email-bleung@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1359758086-2320-1-git-send-email-bleung@chromium.org>
@@ -10,56 +10,72 @@ To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kerne
 Cc: bleung@chromium.org, olofj@chromium.org, olof@lixom.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-The Samsung Series 5 Chromebook is equipped with  a Taos tsl2583
-light sensor. Instatiate it here.
+Two legacy Chromebooks, the Cr-48, and the Acer AC700,
+are equipped with a Taos tsl2563 light sensor.
+This will instantiate the sensor on those laptops.
 
 Signed-off-by: Benson Leung <bleung@chromium.org>
 ---
- drivers/platform/x86/chromeos_laptop.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/platform/x86/chromeos_laptop.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
-index 188b7da..95bf94f 100644
+index 9293c66..188b7da 100644
 --- a/drivers/platform/x86/chromeos_laptop.c
 +++ b/drivers/platform/x86/chromeos_laptop.c
-@@ -50,6 +50,10 @@ static struct i2c_board_info __initdata isl_als_device = {
+@@ -27,6 +27,7 @@
+ 
+ #define CYAPA_TP_I2C_ADDR	0x67
+ #define ISL_ALS_I2C_ADDR	0x44
++#define TAOS_ALS_I2C_ADDR	0x29
+ 
+ static struct i2c_client *als;
+ static struct i2c_client *tp;
+@@ -49,6 +50,10 @@ static struct i2c_board_info __initdata isl_als_device = {
  	I2C_BOARD_INFO("isl29018", ISL_ALS_I2C_ADDR),
  };
  
-+static struct i2c_board_info __initdata tsl2583_als_device = {
-+	I2C_BOARD_INFO("tsl2583", TAOS_ALS_I2C_ADDR),
++static struct i2c_board_info __initdata tsl2563_als_device = {
++	I2C_BOARD_INFO("tsl2563", TAOS_ALS_I2C_ADDR),
 +};
 +
- static struct i2c_board_info __initdata tsl2563_als_device = {
- 	I2C_BOARD_INFO("tsl2563", TAOS_ALS_I2C_ADDR),
- };
-@@ -164,6 +168,13 @@ static int __init setup_isl29018_als(const struct dmi_system_id *id)
+ static struct i2c_client __init *__add_probed_i2c_device(
+ 		const char *name,
+ 		int bus,
+@@ -159,6 +164,13 @@ static int __init setup_isl29018_als(const struct dmi_system_id *id)
  	return 0;
  }
  
-+static int __init setup_tsl2583_als(const struct dmi_system_id *id)
++static int __init setup_tsl2563_als(const struct dmi_system_id *id)
 +{
-+	/* add tsl2583 light sensor on smbus */
-+	als = add_smbus_device(NULL, &tsl2583_als_device);
++	/* add tsl2563 light sensor on smbus */
++	als = add_smbus_device(NULL, &tsl2563_als_device);
 +	return 0;
 +}
 +
- static int __init setup_tsl2563_als(const struct dmi_system_id *id)
- {
- 	/* add tsl2563 light sensor on smbus */
-@@ -196,6 +207,13 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ 	{
+ 		.ident = "Samsung Series 5 550 - Touchpad",
+@@ -183,6 +195,20 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ 		},
  		.callback = setup_cyapa_smbus_tp,
  	},
- 	{
-+		.ident = "Samsung Series 5 - Light Sensor",
++	{
++		.ident = "Cr-48 - Light Sensor",
 +		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Alex"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Mario"),
 +		},
-+		.callback = setup_tsl2583_als,
++		.callback = setup_tsl2563_als,
 +	},
 +	{
- 		.ident = "Cr-48 - Light Sensor",
- 		.matches = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Mario"),
++		.ident = "Acer AC700 - Light Sensor",
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "ZGB"),
++		},
++		.callback = setup_tsl2563_als,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(dmi, chromeos_laptop_dmi_table);
 -- 
 1.8.1
