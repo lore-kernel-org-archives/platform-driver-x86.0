@@ -1,27 +1,44 @@
 From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH 0/4] Platform: x86: chromeos_laptop - Add more x86 Chromebooks
-Date: Fri,  1 Feb 2013 14:34:42 -0800
-Message-ID: <1359758086-2320-1-git-send-email-bleung@chromium.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f53.google.com ([209.85.160.53]:45826 "EHLO
-	mail-pb0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757912Ab3BAWe6 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 1 Feb 2013 17:34:58 -0500
-Received: by mail-pb0-f53.google.com with SMTP id un1so2328962pbc.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 01 Feb 2013 14:34:57 -0800 (PST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 1/4] Platform: x86: chromeos_laptop - Rename setup_lumpy_tp to setup_cyapa_smbus_tp
+Date: Fri,  1 Feb 2013 14:34:43 -0800
+Message-ID: <1359758086-2320-2-git-send-email-bleung@chromium.org>
+References: <1359758086-2320-1-git-send-email-bleung@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1359758086-2320-1-git-send-email-bleung@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: bleung@chromium.org, olofj@chromium.org, olof@lixom.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch series will add support for the following devices on
-the following laptops:
+The Cypress trackpad on smbus is used on other systems
+as well. Lets make the name more generic.
 
-Acer C7 Chromebook - Cypress APA Smbus Trackpad
-Acer AC700 - Taos tsl2563 light sensor
-Samsung Series 5 Chromebook - Taos tsl2583 light sensor
-Cr-48 - Taos tsl2563 light sensor
+Signed-off-by: Benson Leung <bleung@chromium.org>
+---
+ drivers/platform/x86/chromeos_laptop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
-Benson
+diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
+index a8329c3..6440d22 100644
+--- a/drivers/platform/x86/chromeos_laptop.c
++++ b/drivers/platform/x86/chromeos_laptop.c
+@@ -145,7 +145,7 @@ static struct i2c_client __init *add_smbus_device(const char *name,
+ 				       addr_list);
+ }
+ 
+-static int __init setup_lumpy_tp(const struct dmi_system_id *id)
++static int __init setup_cyapa_smbus_tp(const struct dmi_system_id *id)
+ {
+ 	/* add cyapa touchpad on smbus */
+ 	tp = add_smbus_device("trackpad", &cyapa_device);
+@@ -166,7 +166,7 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Lumpy"),
+ 		},
+-		.callback = setup_lumpy_tp,
++		.callback = setup_cyapa_smbus_tp,
+ 	},
+ 	{
+ 		.ident = "Samsung Series 5 550 - Light Sensor",
+-- 
+1.8.1
