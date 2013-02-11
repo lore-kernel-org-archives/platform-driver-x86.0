@@ -1,23 +1,48 @@
 From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH 0/1] Platform: x86: chromeos_laptop - Add HP Pavilion 14
-Date: Sun, 10 Feb 2013 16:20:16 -0800
-Message-ID: <1360542017-1163-1-git-send-email-bleung@chromium.org>
+Subject: [PATCH 1/1] Platform: x86: chromeos_laptop - Add HP Pavilion 14
+Date: Sun, 10 Feb 2013 16:20:17 -0800
+Message-ID: <1360542017-1163-2-git-send-email-bleung@chromium.org>
 References: <1359758086-2320-1-git-send-email-bleung@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359758086-2320-1-git-send-email-bleung@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
+ <1360542017-1163-1-git-send-email-bleung@chromium.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pa0-f48.google.com ([209.85.220.48]:48541 "EHLO
+	mail-pa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751341Ab3BKAUc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 10 Feb 2013 19:20:32 -0500
+Received: by mail-pa0-f48.google.com with SMTP id hz10so2847143pad.21
+        for <platform-driver-x86@vger.kernel.org>; Sun, 10 Feb 2013 16:20:32 -0800 (PST)
+In-Reply-To: <1360542017-1163-1-git-send-email-bleung@chromium.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: bleung@chromium.org, olofj@chromium.org, olof@lixom.net
-List-Id: platform-driver-x86.vger.kernel.org
 
-This patch will add an entry for one more Chromebook that was released
-last week: HP's Pavilion 14 Chromebook. 
+Add support for the HP Pavilion 14 Chromebook's trackpad, which is a reuse
+of the Samsung Series 5 550 trackpad.
 
-This will instatiate that system's Cypress APA trackpad, very similar
-to the one in the Samsung 550 and Acer C7.
+Signed-off-by: Benson Leung <bleung@chromium.org>
+---
+ drivers/platform/x86/chromeos_laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-This should be merged after the previous patch series of 4:
-Platform: x86: chromeos_laptop - Add more x86 Chromebooks
-
-Thanks,
-Benson
+diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
+index 95bf94f..bc6599c 100644
+--- a/drivers/platform/x86/chromeos_laptop.c
++++ b/drivers/platform/x86/chromeos_laptop.c
+@@ -207,6 +207,13 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ 		.callback = setup_cyapa_smbus_tp,
+ 	},
+ 	{
++		.ident = "HP Pavilion 14 Chromebook - Touchpad",
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "Butterfly"),
++		},
++		.callback = setup_cyapa_smbus_tp,
++	},
++	{
+ 		.ident = "Samsung Series 5 - Light Sensor",
+ 		.matches = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Alex"),
+-- 
+1.8.1
