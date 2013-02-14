@@ -1,209 +1,105 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH] Platform: x86: chromeos_laptop: make dmi_check_callback
- return 1
-Date: Tue, 26 Feb 2013 20:17:56 -0800
-Message-ID: <CANLzEksD+-PG6dyZXMNf-a12FOi+=G-SCMEm2tVna5LssJQ_0w@mail.gmail.com>
-References: <1361933759.8798.1.camel@phoenix>
+From: Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] Remove nested functions from the Thinkpad
+	ACPI
+Date: Thu, 14 Feb 2013 09:44:30 -0500
+Message-ID: <1360853070-11301-1-git-send-email-behanw@converseincode.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f43.google.com ([209.85.219.43]:35421 "EHLO
-	mail-oa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758286Ab3B0ER5 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Feb 2013 23:17:57 -0500
-Received: by mail-oa0-f43.google.com with SMTP id l10so307755oag.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Feb 2013 20:17:57 -0800 (PST)
-In-Reply-To: <1361933759.8798.1.camel@phoenix>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Axel Lin <axel.lin@ingics.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Yufeng Shen <miletus@chromium.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org
+Cc: matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Behan Webster <behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Actually, the way that this table is set up currently, we rely on the
-possibility of multiple matches, so it is necessary to go through the
-whole thing.
-
-Look carefully at the chromeos_laptop_dmi_table. You'll see that
-boards like Link and Lumpy show up multiple times in the table to
-instantiate different devices.
-
-Returning 1 will simply stop on the first device it finds in the list.
-
-Benson
-
-On Tue, Feb 26, 2013 at 6:55 PM, Axel Lin <axel.lin@ingics.com> wrote:
-> We only care about if there is any successful match from the dmi table
-> or no match at all, we can make dmi_check_system return immediately if
-> we have a successful match instead of iterate thorough the whole table.
->
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> ---
->  drivers/platform/x86/chromeos_laptop.c |   14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
-> index 93d6680..b6018d4 100644
-> --- a/drivers/platform/x86/chromeos_laptop.c
-> +++ b/drivers/platform/x86/chromeos_laptop.c
-> @@ -207,7 +207,7 @@ static int __init setup_cyapa_smbus_tp(const struct dmi_system_id *id)
->  {
->         /* add cyapa touchpad on smbus */
->         tp = add_smbus_device("trackpad", &cyapa_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_atmel_224s_tp(const struct dmi_system_id *id)
-> @@ -219,7 +219,7 @@ static int __init setup_atmel_224s_tp(const struct dmi_system_id *id)
->         /* add atmel mxt touchpad on VGA DDC GMBus */
->         tp = add_probed_i2c_device("trackpad", I2C_ADAPTER_VGADDC,
->                                    &atmel_224s_tp_device, addr_list);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_atmel_1664s_ts(const struct dmi_system_id *id)
-> @@ -231,7 +231,7 @@ static int __init setup_atmel_1664s_ts(const struct dmi_system_id *id)
->         /* add atmel mxt touch device on PANEL GMBus */
->         ts = add_probed_i2c_device("touchscreen", I2C_ADAPTER_PANEL,
->                                    &atmel_1664s_device, addr_list);
-> -       return 0;
-> +       return 1;
->  }
->
->
-> @@ -239,7 +239,7 @@ static int __init setup_isl29018_als(const struct dmi_system_id *id)
->  {
->         /* add isl29018 light sensor */
->         als = add_smbus_device("lightsensor", &isl_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_isl29023_als(const struct dmi_system_id *id)
-> @@ -247,21 +247,21 @@ static int __init setup_isl29023_als(const struct dmi_system_id *id)
->         /* add isl29023 light sensor on Panel GMBus */
->         als = add_i2c_device("lightsensor", I2C_ADAPTER_PANEL,
->                              &isl_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_tsl2583_als(const struct dmi_system_id *id)
->  {
->         /* add tsl2583 light sensor on smbus */
->         als = add_smbus_device(NULL, &tsl2583_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_tsl2563_als(const struct dmi_system_id *id)
->  {
->         /* add tsl2563 light sensor on smbus */
->         als = add_smbus_device(NULL, &tsl2563_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
-> --
-> 1.7.9.5
->
->
->
-
-
-
---
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
-
-On Tue, Feb 26, 2013 at 6:55 PM, Axel Lin <axel.lin@ingics.com> wrote:
-> We only care about if there is any successful match from the dmi table
-> or no match at all, we can make dmi_check_system return immediately if
-> we have a successful match instead of iterate thorough the whole table.
->
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> ---
->  drivers/platform/x86/chromeos_laptop.c |   14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
-> index 93d6680..b6018d4 100644
-> --- a/drivers/platform/x86/chromeos_laptop.c
-> +++ b/drivers/platform/x86/chromeos_laptop.c
-> @@ -207,7 +207,7 @@ static int __init setup_cyapa_smbus_tp(const struct dmi_system_id *id)
->  {
->         /* add cyapa touchpad on smbus */
->         tp = add_smbus_device("trackpad", &cyapa_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_atmel_224s_tp(const struct dmi_system_id *id)
-> @@ -219,7 +219,7 @@ static int __init setup_atmel_224s_tp(const struct dmi_system_id *id)
->         /* add atmel mxt touchpad on VGA DDC GMBus */
->         tp = add_probed_i2c_device("trackpad", I2C_ADAPTER_VGADDC,
->                                    &atmel_224s_tp_device, addr_list);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_atmel_1664s_ts(const struct dmi_system_id *id)
-> @@ -231,7 +231,7 @@ static int __init setup_atmel_1664s_ts(const struct dmi_system_id *id)
->         /* add atmel mxt touch device on PANEL GMBus */
->         ts = add_probed_i2c_device("touchscreen", I2C_ADAPTER_PANEL,
->                                    &atmel_1664s_device, addr_list);
-> -       return 0;
-> +       return 1;
->  }
->
->
-> @@ -239,7 +239,7 @@ static int __init setup_isl29018_als(const struct dmi_system_id *id)
->  {
->         /* add isl29018 light sensor */
->         als = add_smbus_device("lightsensor", &isl_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_isl29023_als(const struct dmi_system_id *id)
-> @@ -247,21 +247,21 @@ static int __init setup_isl29023_als(const struct dmi_system_id *id)
->         /* add isl29023 light sensor on Panel GMBus */
->         als = add_i2c_device("lightsensor", I2C_ADAPTER_PANEL,
->                              &isl_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_tsl2583_als(const struct dmi_system_id *id)
->  {
->         /* add tsl2583 light sensor on smbus */
->         als = add_smbus_device(NULL, &tsl2583_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static int __init setup_tsl2563_als(const struct dmi_system_id *id)
->  {
->         /* add tsl2563 light sensor on smbus */
->         als = add_smbus_device(NULL, &tsl2563_als_device);
-> -       return 0;
-> +       return 1;
->  }
->
->  static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
-> --
-> 1.7.9.5
->
->
->
-
-
-
---
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+UmVtb3ZlIHRoZSB1c2Ugb2YgbmVzdGVkIGZ1bmN0aW9ucyBmcm9tIHRoZSBUaGlua3BhZCBBQ1BJ
+IGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IEJlaGFuIFdlYnN0ZXIgPGJlaGFud0Bjb252ZXJzZWlu
+Y29kZS5jb20+ClNpZ25lZC1vZmYtYnk6IEphbi1TaW1vbiBNw7ZsbGVyIDxkbDlwZiBhdCBnbXgu
+ZGU+Ci0tLQogZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jIHwgICA4NiArKysr
+KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0
+aW9ucygrKSwgNDEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94
+ODYvdGhpbmtwYWRfYWNwaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5j
+CmluZGV4IGY5NDZjYTcuLmI4NWZlYzAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L3RoaW5rcGFkX2FjcGkuYworKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3Bp
+LmMKQEAgLTIzMjgsNTMgKzIzMjgsNTUgQEAgc3RhdGljIHZvaWQgaG90a2V5X3JlYWRfbnZyYW0o
+c3RydWN0IHRwX252cmFtX3N0YXRlICpuLCBjb25zdCB1MzIgbSkKIAl9CiB9CiAKLXN0YXRpYyB2
+b2lkIGhvdGtleV9jb21wYXJlX2FuZF9pc3N1ZV9ldmVudChzdHJ1Y3QgdHBfbnZyYW1fc3RhdGUg
+Km9sZG4sCi0JCQkJCSAgIHN0cnVjdCB0cF9udnJhbV9zdGF0ZSAqbmV3biwKLQkJCQkJICAgY29u
+c3QgdTMyIGV2ZW50X21hc2spCi17Ci0KICNkZWZpbmUgVFBBQ1BJX0NPTVBBUkVfS0VZKF9fc2Nh
+bmNvZGUsIF9fbWVtYmVyKSBcCi0JZG8geyBcCi0JCWlmICgoZXZlbnRfbWFzayAmICgxIDw8IF9f
+c2NhbmNvZGUpKSAmJiBcCi0JCSAgICBvbGRuLT5fX21lbWJlciAhPSBuZXduLT5fX21lbWJlcikg
+XAotCQkJdHBhY3BpX2hvdGtleV9zZW5kX2tleShfX3NjYW5jb2RlKTsgXAotCX0gd2hpbGUgKDAp
+CitkbyB7IFwKKwlpZiAoKGV2ZW50X21hc2sgJiAoMSA8PCBfX3NjYW5jb2RlKSkgJiYgXAorCSAg
+ICBvbGRuLT5fX21lbWJlciAhPSBuZXduLT5fX21lbWJlcikgXAorCQl0cGFjcGlfaG90a2V5X3Nl
+bmRfa2V5KF9fc2NhbmNvZGUpOyBcCit9IHdoaWxlICgwKQogCiAjZGVmaW5lIFRQQUNQSV9NQVlf
+U0VORF9LRVkoX19zY2FuY29kZSkgXAotCWRvIHsgXAotCQlpZiAoZXZlbnRfbWFzayAmICgxIDw8
+IF9fc2NhbmNvZGUpKSBcCi0JCQl0cGFjcGlfaG90a2V5X3NlbmRfa2V5KF9fc2NhbmNvZGUpOyBc
+Ci0JfSB3aGlsZSAoMCkKK2RvIHsgXAorCWlmIChldmVudF9tYXNrICYgKDEgPDwgX19zY2FuY29k
+ZSkpIFwKKwkJdHBhY3BpX2hvdGtleV9zZW5kX2tleShfX3NjYW5jb2RlKTsgXAorfSB3aGlsZSAo
+MCkKIAotCXZvaWQgaXNzdWVfdm9sY2hhbmdlKGNvbnN0IHVuc2lnbmVkIGludCBvbGR2b2wsCi0J
+CQkgICAgIGNvbnN0IHVuc2lnbmVkIGludCBuZXd2b2wpCi0JewotCQl1bnNpZ25lZCBpbnQgaSA9
+IG9sZHZvbDsKK3N0YXRpYyB2b2lkIGlzc3VlX3ZvbGNoYW5nZShjb25zdCB1bnNpZ25lZCBpbnQg
+b2xkdm9sLAorCQkJICAgIGNvbnN0IHVuc2lnbmVkIGludCBuZXd2b2wsCisJCQkgICAgY29uc3Qg
+dTMyIGV2ZW50X21hc2spCit7CisJdW5zaWduZWQgaW50IGkgPSBvbGR2b2w7CiAKLQkJd2hpbGUg
+KGkgPiBuZXd2b2wpIHsKLQkJCVRQQUNQSV9NQVlfU0VORF9LRVkoVFBfQUNQSV9IT1RLRVlTQ0FO
+X1ZPTFVNRURPV04pOwotCQkJaS0tOwotCQl9Ci0JCXdoaWxlIChpIDwgbmV3dm9sKSB7Ci0JCQlU
+UEFDUElfTUFZX1NFTkRfS0VZKFRQX0FDUElfSE9US0VZU0NBTl9WT0xVTUVVUCk7Ci0JCQlpKys7
+Ci0JCX0KKwl3aGlsZSAoaSA+IG5ld3ZvbCkgeworCQlUUEFDUElfTUFZX1NFTkRfS0VZKFRQX0FD
+UElfSE9US0VZU0NBTl9WT0xVTUVET1dOKTsKKwkJaS0tOworCX0KKwl3aGlsZSAoaSA8IG5ld3Zv
+bCkgeworCQlUUEFDUElfTUFZX1NFTkRfS0VZKFRQX0FDUElfSE9US0VZU0NBTl9WT0xVTUVVUCk7
+CisJCWkrKzsKIAl9Cit9CiAKLQl2b2lkIGlzc3VlX2JyaWdodG5lc3NjaGFuZ2UoY29uc3QgdW5z
+aWduZWQgaW50IG9sZGJydCwKLQkJCQkgICAgY29uc3QgdW5zaWduZWQgaW50IG5ld2JydCkKLQl7
+Ci0JCXVuc2lnbmVkIGludCBpID0gb2xkYnJ0Oworc3RhdGljIHZvaWQgaXNzdWVfYnJpZ2h0bmVz
+c2NoYW5nZShjb25zdCB1bnNpZ25lZCBpbnQgb2xkYnJ0LAorCQkJCSAgIGNvbnN0IHVuc2lnbmVk
+IGludCBuZXdicnQsCisJCQkJICAgY29uc3QgdTMyIGV2ZW50X21hc2spCit7CisJdW5zaWduZWQg
+aW50IGkgPSBvbGRicnQ7CiAKLQkJd2hpbGUgKGkgPiBuZXdicnQpIHsKLQkJCVRQQUNQSV9NQVlf
+U0VORF9LRVkoVFBfQUNQSV9IT1RLRVlTQ0FOX0ZORU5EKTsKLQkJCWktLTsKLQkJfQotCQl3aGls
+ZSAoaSA8IG5ld2JydCkgewotCQkJVFBBQ1BJX01BWV9TRU5EX0tFWShUUF9BQ1BJX0hPVEtFWVND
+QU5fRk5IT01FKTsKLQkJCWkrKzsKLQkJfQorCXdoaWxlIChpID4gbmV3YnJ0KSB7CisJCVRQQUNQ
+SV9NQVlfU0VORF9LRVkoVFBfQUNQSV9IT1RLRVlTQ0FOX0ZORU5EKTsKKwkJaS0tOwogCX0KKwl3
+aGlsZSAoaSA8IG5ld2JydCkgeworCQlUUEFDUElfTUFZX1NFTkRfS0VZKFRQX0FDUElfSE9US0VZ
+U0NBTl9GTkhPTUUpOworCQlpKys7CisJfQorfQorCitzdGF0aWMgdm9pZCBob3RrZXlfY29tcGFy
+ZV9hbmRfaXNzdWVfZXZlbnQoc3RydWN0IHRwX252cmFtX3N0YXRlICpvbGRuLAorCQkJCQkgICBz
+dHJ1Y3QgdHBfbnZyYW1fc3RhdGUgKm5ld24sCisJCQkJCSAgIGNvbnN0IHUzMiBldmVudF9tYXNr
+KQorewogCiAJVFBBQ1BJX0NPTVBBUkVfS0VZKFRQX0FDUElfSE9US0VZU0NBTl9USElOS1BBRCwg
+dGhpbmtwYWRfdG9nZ2xlKTsKIAlUUEFDUElfQ09NUEFSRV9LRVkoVFBfQUNQSV9IT1RLRVlTQ0FO
+X0ZOU1BBQ0UsIHpvb21fdG9nZ2xlKTsKQEAgLTI0MDksNyArMjQxMSw4IEBAIHN0YXRpYyB2b2lk
+IGhvdGtleV9jb21wYXJlX2FuZF9pc3N1ZV9ldmVudChzdHJ1Y3QgdHBfbnZyYW1fc3RhdGUgKm9s
+ZG4sCiAJCSAgICBvbGRuLT52b2x1bWVfbGV2ZWwgIT0gbmV3bi0+dm9sdW1lX2xldmVsKSB7CiAJ
+CQkvKiByZWNlbnRseSBtdXRlZCwgb3IgcmVwZWF0ZWQgbXV0ZSBrZXlwcmVzcywgb3IKIAkJCSAq
+IG11bHRpcGxlIHByZXNzZXMgZW5kaW5nIGluIG11dGUgKi8KLQkJCWlzc3VlX3ZvbGNoYW5nZShv
+bGRuLT52b2x1bWVfbGV2ZWwsIG5ld24tPnZvbHVtZV9sZXZlbCk7CisJCQlpc3N1ZV92b2xjaGFu
+Z2Uob2xkbi0+dm9sdW1lX2xldmVsLCBuZXduLT52b2x1bWVfbGV2ZWwsCisJCQkJZXZlbnRfbWFz
+ayk7CiAJCQlUUEFDUElfTUFZX1NFTkRfS0VZKFRQX0FDUElfSE9US0VZU0NBTl9NVVRFKTsKIAkJ
+fQogCX0gZWxzZSB7CkBAIC0yNDE5LDcgKzI0MjIsOCBAQCBzdGF0aWMgdm9pZCBob3RrZXlfY29t
+cGFyZV9hbmRfaXNzdWVfZXZlbnQoc3RydWN0IHRwX252cmFtX3N0YXRlICpvbGRuLAogCQkJVFBB
+Q1BJX01BWV9TRU5EX0tFWShUUF9BQ1BJX0hPVEtFWVNDQU5fVk9MVU1FVVApOwogCQl9CiAJCWlm
+IChvbGRuLT52b2x1bWVfbGV2ZWwgIT0gbmV3bi0+dm9sdW1lX2xldmVsKSB7Ci0JCQlpc3N1ZV92
+b2xjaGFuZ2Uob2xkbi0+dm9sdW1lX2xldmVsLCBuZXduLT52b2x1bWVfbGV2ZWwpOworCQkJaXNz
+dWVfdm9sY2hhbmdlKG9sZG4tPnZvbHVtZV9sZXZlbCwgbmV3bi0+dm9sdW1lX2xldmVsLAorCQkJ
+CWV2ZW50X21hc2spOwogCQl9IGVsc2UgaWYgKG9sZG4tPnZvbHVtZV90b2dnbGUgIT0gbmV3bi0+
+dm9sdW1lX3RvZ2dsZSkgewogCQkJLyogcmVwZWF0ZWQgdm9sIHVwL2Rvd24ga2V5cHJlc3MgYXQg
+ZW5kIG9mIHNjYWxlID8gKi8KIAkJCWlmIChuZXduLT52b2x1bWVfbGV2ZWwgPT0gMCkKQEAgLTI0
+MzIsNyArMjQzNiw3IEBAIHN0YXRpYyB2b2lkIGhvdGtleV9jb21wYXJlX2FuZF9pc3N1ZV9ldmVu
+dChzdHJ1Y3QgdHBfbnZyYW1fc3RhdGUgKm9sZG4sCiAJLyogaGFuZGxlIGJyaWdodG5lc3MgKi8K
+IAlpZiAob2xkbi0+YnJpZ2h0bmVzc19sZXZlbCAhPSBuZXduLT5icmlnaHRuZXNzX2xldmVsKSB7
+CiAJCWlzc3VlX2JyaWdodG5lc3NjaGFuZ2Uob2xkbi0+YnJpZ2h0bmVzc19sZXZlbCwKLQkJCQkg
+ICAgICAgbmV3bi0+YnJpZ2h0bmVzc19sZXZlbCk7CisJCQkJICAgICAgIG5ld24tPmJyaWdodG5l
+c3NfbGV2ZWwsIGV2ZW50X21hc2spOwogCX0gZWxzZSBpZiAob2xkbi0+YnJpZ2h0bmVzc190b2dn
+bGUgIT0gbmV3bi0+YnJpZ2h0bmVzc190b2dnbGUpIHsKIAkJLyogcmVwZWF0ZWQga2V5IHByZXNz
+ZXMgdGhhdCBkaWRuJ3QgY2hhbmdlIHN0YXRlICovCiAJCWlmIChuZXduLT5icmlnaHRuZXNzX2xl
+dmVsID09IDApCi0tIAoxLjcuMTAuNAoKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpFdmVyeW9uZSBo
+YXRlcyBzbG93IHdlYnNpdGVzLiBTbyBkbyB3ZS4KTWFrZSB5b3VyIHdlYiBhcHBzIGZhc3RlciB3
+aXRoIEFwcER5bmFtaWNzCkRvd25sb2FkIEFwcER5bmFtaWNzIExpdGUgZm9yIGZyZWUgdG9kYXk6
+Cmh0dHA6Ly9wLnNmLm5ldC9zZnUvYXBwZHluX2QyZF9mZWIKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0Cmli
+bS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZv
+cmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
