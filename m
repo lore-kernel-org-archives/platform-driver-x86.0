@@ -1,89 +1,78 @@
 From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: do not use 'devices' uninitialized
-Date: Tue, 19 Feb 2013 10:38:14 +0800
-Message-ID: <1361241494.6635.2.camel@linux-s257.site>
-References: <1359033178.1325.15.camel@x61.thuisdomein>
+Subject: re: acer-wmi: fix obj is NULL but dereferenced
+Date: Tue, 19 Feb 2013 12:35:17 +0800
+Message-ID: <1361248517.6635.8.camel@linux-s257.site>
+References: <20130107113210.GA29782@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:53104 "EHLO
+Received: from smtp.nue.novell.com ([195.135.221.5]:60938 "EHLO
 	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757003Ab3BSCjI (ORCPT
+	with ESMTP id S1755688Ab3BSEgL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Feb 2013 21:39:08 -0500
-In-Reply-To: <1359033178.1325.15.camel@x61.thuisdomein>
+	Mon, 18 Feb 2013 23:36:11 -0500
+In-Reply-To: <20130107113210.GA29782@elgon.mountain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Paul Bolle <pebolle@tiscali.nl>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Paul,=20
+Hi Dan,=20
 
-Sorry for I am late to reply your patch.
+Sorry for I am late to reply you!
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2013-01-24 =E6=96=BC 14:12 +0100=EF=BC=8CPa=
-ul Bolle =E6=8F=90=E5=88=B0=EF=BC=9A
-> Commit f20aaba9819d0801fb1314363f97239da0100bac ("acer-wmi: fix obj i=
-s
-> NULL but dereferenced") introduced a GCC warning:
->     drivers/platform/x86/acer-wmi.c: In function =E2=80=98acer_wmi_in=
-it=E2=80=99:
->     drivers/platform/x86/acer-wmi.c:1216:14: warning: =E2=80=98device=
-s=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitia=
-lized]
->     drivers/platform/x86/acer-wmi.c:1193:6: note: =E2=80=98devices=E2=
-=80=99 was declared here
+=E6=96=BC =E4=B8=80=EF=BC=8C2013-01-07 =E6=96=BC 14:32 +0300=EF=BC=8CDa=
+n Carpenter =E6=8F=90=E5=88=B0=EF=BC=9A
+> Hello Lee, Chun-Yi,
 >=20
-> GCC is correct. In WMID_set_capabilities() there are now clearly code=
-paths
-> that use 'devices' uninitialized. (WMID_set_capabilities() is apparen=
-tly
-> inlined in acer_wmi_init().) Previously that couldn't happen. So rewo=
-rk
-> the code to use the previous logic, but also make sure 'obj' will not=
- be
-> dereferenced while NULL.
+> The patch 727651bf738b: "acer-wmi: fix obj is NULL but dereferenced"=20
+> from Dec 14, 2012, leads to the following warning:
+> drivers/platform/x86/acer-wmi.c:1227 WMID_set_capabilities()
+> 	 warn: calling kfree() when 'out.pointer' is always NULL.
 >=20
-> Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+>   1217          obj =3D (union acpi_object *) out.pointer;
+>   1218          if (obj) {
+>   1219                  if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
+>   1220                          (obj->buffer.length =3D=3D sizeof(u32=
+) ||
+>   1221                          obj->buffer.length =3D=3D sizeof(u64)=
+)) {
+>   1222                          devices =3D *((u32 *) obj->buffer.poi=
+nter);
+>   1223                  } else if (obj->type =3D=3D ACPI_TYPE_INTEGER=
+) {
+>   1224                          devices =3D (u32) obj->integer.value;
+>   1225                  }
+>   1226          } else {
+>   1227                  kfree(out.pointer);
+>   1228                  return AE_ERROR;
+>   1229          }
+>=20
+> I was going to remove the kfree() but looking the patch which introdu=
+ced
+> it causes GCC warnings and so there is some other stuff which needs t=
+o
+> be fixed as well.
+>=20
+> regards,
+> dan carpenter
+>=20
+>=20
 
-Zhang Rui sent similar patch for fix the warning:
+The warning will be fixed by Zhang Rui or Paul Bolle's patch:
+
 http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg0401=
 6.html
+http://lkml.org/lkml/2013/1/24/215
 
+With the above patch, kfree() will called when:
+ + obj is not NULL but the type is not BUFFER or INTEGER
+or
+ + obj is NULL. The kfree() check obj is NULL then direct return.
 
-Still appreciate for your contribution!
+Still appreciate for your review and suggestion!
 
 
 Thanks a lot!
 Joey Lee
-
-> ---
-> Compile tested only!
->=20
->  drivers/platform/x86/acer-wmi.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index afed701..0ddac19 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1197,14 +1197,12 @@ static acpi_status WMID_set_capabilities(void=
-)
->  		return status;
-> =20
->  	obj =3D (union acpi_object *) out.pointer;
-> -	if (obj) {
-> -		if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
-> +	if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER &&
->  			(obj->buffer.length =3D=3D sizeof(u32) ||
->  			obj->buffer.length =3D=3D sizeof(u64))) {
->  			devices =3D *((u32 *) obj->buffer.pointer);
-> -		} else if (obj->type =3D=3D ACPI_TYPE_INTEGER) {
-> +	} else if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
->  			devices =3D (u32) obj->integer.value;
-> -		}
->  	} else {
->  		kfree(out.pointer);
->  		return AE_ERROR;
