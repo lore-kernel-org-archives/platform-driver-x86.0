@@ -1,46 +1,46 @@
-From: Jens Kapitza <j.kapitza@schwarze-allianz.de>
-Subject: mxm_wmi  and wmi (help)
-Date: Tue, 19 Feb 2013 12:10:06 +0100
-Message-ID: <51235D8E.3010302@schwarze-allianz.de>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: do not use 'devices' uninitialized
+Date: Tue, 19 Feb 2013 23:09:47 +0800
+Message-ID: <1361286587.6635.29.camel@linux-s257.site>
+References: <1359033178.1325.15.camel@x61.thuisdomein>
+	 <1361241494.6635.2.camel@linux-s257.site>
+	 <1361261230.26423.9.camel@x61.thuisdomein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.legal.de ([46.38.240.131]:45079 "EHLO mail.legal.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932354Ab3BSLQn (ORCPT
+Received: from smtp.nue.novell.com ([195.135.221.5]:57610 "EHLO
+	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932551Ab3BSPKw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Feb 2013 06:16:43 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.legal.de (Postfix) with ESMTP id 782076060558
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Feb 2013 11:10:12 +0000 (UTC)
-Received: from mail.legal.de ([127.0.0.1])
-	by localhost (mail.legal.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id BsZIvlQGEKvp for <platform-driver-x86@vger.kernel.org>;
-	Tue, 19 Feb 2013 11:10:07 +0000 (UTC)
-Received: from [134.91.77.98] (unknown [134.91.77.98])
-	by mail.legal.de (Postfix) with ESMTPSA id 2160860604D7
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 Feb 2013 11:10:07 +0000 (UTC)
+	Tue, 19 Feb 2013 10:10:52 -0500
+In-Reply-To: <1361261230.26423.9.camel@x61.thuisdomein>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>
 
-Hi @all,
+=E6=96=BC =E4=BA=8C=EF=BC=8C2013-02-19 =E6=96=BC 09:07 +0100=EF=BC=8CPa=
+ul Bolle =E6=8F=90=E5=88=B0=EF=BC=9A
+> Joey.
+>=20
+> On Tue, 2013-02-19 at 10:38 +0800, joeyli wrote:
+> > Zhang Rui sent similar patch for fix the warning:
+> > http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg=
+04016.html
+>=20
+> I see. It didn't make it into the v3.8 release. Could someone please
+> send a note to the stable list once Zhang's patch hits mainline
+> (presumably in one of the v3.9 release candidates)?
+>=20
+>=20
+> Paul Bolle
+>=20
+> .
 
-I'm using  Linux jens-S4216 3.7.8 #1 SMP Fri Feb 15 20:22:32 CET 2013 
-x86_64 x86_64 x86_64 GNU/Linux
-
-since 3.6.9 i've the same problem
-
-after going to standby my wireless nic is in hardware block state.
+I will track this patch and send the note to stable kernel when it
+merged to platform driver git.
 
 
-can someone help me to solve my problem?
-
-I don't know how to debug acpi calls (or spezial keys like Fn+?) the 
-driver mxm_wmi make sound controll possible but ends up in an endless 
-loop after pressing one key. (whole system freeze)
-
-Thanks in advanced
-
-Jens Kapitza
+Thanks a lot!
+Joey Lee
