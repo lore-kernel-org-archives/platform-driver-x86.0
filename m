@@ -1,110 +1,56 @@
 From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH 6/6] Platform: x86: chromeos_laptop - Add Pixel Touchscreen
-Date: Thu, 21 Feb 2013 12:15:00 -0800
-Message-ID: <1361477700-26342-7-git-send-email-bleung@chromium.org>
+Subject: [PATCH 3/6] Platform: x86: chromeos_laptop - Add isl light sensor for Pixel
+Date: Thu, 21 Feb 2013 12:14:57 -0800
+Message-ID: <1361477700-26342-4-git-send-email-bleung@chromium.org>
 References: <1361477700-26342-1-git-send-email-bleung@chromium.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-da0-f45.google.com ([209.85.210.45]:36880 "EHLO
-	mail-da0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753760Ab3BUUPW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Feb 2013 15:15:22 -0500
-Received: by mail-da0-f45.google.com with SMTP id v40so792870dad.32
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Feb 2013 12:15:21 -0800 (PST)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1361477700-26342-1-git-send-email-bleung@chromium.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: olofj@chromium.org, miletus@chromium.org, Benson Leung <bleung@chromium.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Yufeng Shen <miletus@chromium.org>
+The Chromebook Pixel uses an isl29023 ambient light sensor on the PANEL
+GMBus.
 
-Instantiate the atmel mxt1664s touchscreen on this system.
-The touchscreen may appear at two possible addresses:
-0x4a in operational mode.
-0x26 in bootloader mode.
-
-Signed-off-by: Yufeng Shen <miletus@chromium.org>
 Signed-off-by: Benson Leung <bleung@chromium.org>
 ---
- drivers/platform/x86/chromeos_laptop.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/platform/x86/chromeos_laptop.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
-index febedc0..93d6680 100644
+index d585548..3e405d7 100644
 --- a/drivers/platform/x86/chromeos_laptop.c
 +++ b/drivers/platform/x86/chromeos_laptop.c
-@@ -27,12 +27,15 @@
- 
- #define ATMEL_TP_I2C_ADDR	0x4b
- #define ATMEL_TP_I2C_BL_ADDR	0x25
-+#define ATMEL_TS_I2C_ADDR	0x4a
-+#define ATMEL_TS_I2C_BL_ADDR	0x26
- #define CYAPA_TP_I2C_ADDR	0x67
- #define ISL_ALS_I2C_ADDR	0x44
- #define TAOS_ALS_I2C_ADDR	0x29
- 
- static struct i2c_client *als;
- static struct i2c_client *tp;
-+static struct i2c_client *ts;
- 
- const char *i2c_adapter_names[] = {
- 	"SMBus I801 adapter",
-@@ -70,6 +73,12 @@ static struct i2c_board_info __initdata atmel_224s_tp_device = {
- 	.flags		= I2C_CLIENT_WAKE,
- };
- 
-+static struct i2c_board_info __initdata atmel_1664s_device = {
-+	I2C_BOARD_INFO("atmel_mxt_ts", ATMEL_TS_I2C_ADDR),
-+	.platform_data = NULL,
-+	.flags		= I2C_CLIENT_WAKE,
-+};
-+
- static struct i2c_client __init *__add_probed_i2c_device(
- 		const char *name,
- 		int bus,
-@@ -213,6 +222,18 @@ static int __init setup_atmel_224s_tp(const struct dmi_system_id *id)
+@@ -180,6 +180,14 @@ static int __init setup_isl29018_als(const struct dmi_system_id *id)
  	return 0;
  }
  
-+static int __init setup_atmel_1664s_ts(const struct dmi_system_id *id)
++static int __init setup_isl29023_als(const struct dmi_system_id *id)
 +{
-+	const unsigned short addr_list[] = { ATMEL_TS_I2C_BL_ADDR,
-+					     ATMEL_TS_I2C_ADDR,
-+					     I2C_CLIENT_END };
-+
-+	/* add atmel mxt touch device on PANEL GMBus */
-+	ts = add_probed_i2c_device("touchscreen", I2C_ADAPTER_PANEL,
-+				   &atmel_1664s_device, addr_list);
++	/* add isl29023 light sensor on Panel GMBus */
++	als = add_i2c_device("lightsensor", I2C_ADAPTER_PANEL,
++			     &isl_als_device);
 +	return 0;
 +}
 +
- 
- static int __init setup_isl29018_als(const struct dmi_system_id *id)
+ static int __init setup_tsl2583_als(const struct dmi_system_id *id)
  {
-@@ -253,6 +274,14 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
- 		.callback = setup_cyapa_smbus_tp,
+ 	/* add tsl2583 light sensor on smbus */
+@@ -212,6 +220,14 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ 		.callback = setup_isl29018_als,
  	},
  	{
-+		.ident = "Chromebook Pixel - Touchscreen",
++		.ident = "Chromebook Pixel - Light Sensor",
 +		.matches = {
 +			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
 +			DMI_MATCH(DMI_PRODUCT_NAME, "Link"),
 +		},
-+		.callback = setup_atmel_1664s_ts,
++		.callback = setup_isl29023_als,
 +	},
 +	{
- 		.ident = "Chromebook Pixel - Touchpad",
+ 		.ident = "Acer C7 Chromebook - Touchpad",
  		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
-@@ -330,6 +359,8 @@ static void __exit chromeos_laptop_exit(void)
- 		i2c_unregister_device(als);
- 	if (tp)
- 		i2c_unregister_device(tp);
-+	if (ts)
-+		i2c_unregister_device(ts);
- }
- 
- module_init(chromeos_laptop_init);
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Parrot"),
 -- 
 1.8.1.3
