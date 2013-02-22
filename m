@@ -1,31 +1,52 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 1/6] Platform: x86: chromeos_laptop - add i915 gmbuses
- to adapter names
-Date: Thu, 21 Feb 2013 21:43:32 +0000
-Message-ID: <1361483011.2813.1.camel@x230>
-References: <1361477700-26342-1-git-send-email-bleung@chromium.org>
-	 <1361477700-26342-2-git-send-email-bleung@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] ideapad: depends on backlight subsystem and update comment
+Date: Fri, 22 Feb 2013 16:48:40 +0800
+Message-ID: <1361522920-10738-1-git-send-email-ike.pan@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from va3ehsobe001.messaging.microsoft.com ([216.32.180.11]:51356
-	"EHLO va3outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753022Ab3BUVnj (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:40416 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751055Ab3BVIsr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Feb 2013 16:43:39 -0500
-In-Reply-To: <1361477700-26342-2-git-send-email-bleung@chromium.org>
-Content-Language: en-US
-Content-ID: <AE8BCBB5CE37D040B344E0C7449E0920@namprd05.prod.outlook.com>
+	Fri, 22 Feb 2013 03:48:47 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benson Leung <bleung@chromium.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "olofj@chromium.org" <olofj@chromium.org>, "miletus@chromium.org" <miletus@chromium.org>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
 
-T24gVGh1LCAyMDEzLTAyLTIxIGF0IDEyOjE0IC0wODAwLCBCZW5zb24gTGV1bmcgd3JvdGU6DQo+
-IEFkZCB0aGUgdHdvIG90aGVyIGkyYyBidXNlcyAodmdhIGFuZCBwYW5lbCkgZnJvbSBpOTE1Lg0K
-PiBDaHJvbWVib29rIFBpeGVsIGhhcyBpbnB1dCBhbmQgbGlnaHQgc2Vuc29yIGRldmljZXMgb24g
-dGhlc2UgYnVzc2VzLg0KDQpUaGlzIGlzIGFmdGVyIHlvdSBwdXQgdGhlIEhETUkgZW5jb2RlciBv
-biB0aGUgc3lzdGVtIGkyYyBidXMgb24gdGhlDQpDUi00OD8gV2hhdGV2ZXIgdGhleSdyZSBwdXR0
-aW5nIGluIHRoZSBmb29kIHRoZXJlIG11c3QgYmUgZ29vZC4gSSdsbA0KcXVldWUgdGhlc2UuDQoN
-Ci0tIA0KTWF0dGhldyBHYXJyZXR0IHwgbWpnNTlAc3JjZi51Y2FtLm9yZw0K
+I've got a report of build failure on ideapad-laptop, which shows
+
+drivers/built-in.o: In function `ideapad_acpi_notify':
+ideapad-laptop.c:(.text+0x63876a): undefined reference to `backlight_force_update'
+drivers/built-in.o: In function `ideapad_acpi_remove':
+ideapad-laptop.c:(.devexit.text+0x64a7): undefined reference to `backlight_device_unregister'
+drivers/built-in.o: In function `ideapad_acpi_add':
+ideapad-laptop.c:(.devinit.text+0x45e28): undefined reference to `backlight_device_register'
+
+To select backlight subsystem can prevent this error from happening.
+
+Also update comment for this driver.
+
+Reported-by: Fengguang Wu <fengguang.wu@intel.com>
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/Kconfig |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c86bae8..c5bc068 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -291,8 +291,10 @@ config IDEAPAD_LAPTOP
+ 	depends on RFKILL && INPUT
+ 	depends on SERIO_I8042
+ 	select INPUT_SPARSEKMAP
++	select BACKLIGHT_CLASS_DEVICE
+ 	help
+-	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
++	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
++	  rfkill switch, hotkey, fan control and backlight control.
+ 
+ config THINKPAD_ACPI
+ 	tristate "ThinkPad ACPI Laptop Extras"
+-- 
+1.7.9.5
