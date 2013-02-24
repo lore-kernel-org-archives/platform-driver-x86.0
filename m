@@ -1,52 +1,55 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: [PATCH] ideapad: depends on backlight subsystem and update comment
-Date: Fri, 22 Feb 2013 16:48:40 +0800
-Message-ID: <1361522920-10738-1-git-send-email-ike.pan@canonical.com>
+From: Artem Savkov <artem.savkov@gmail.com>
+Subject: [PATCH] thinkpad_acpi: moved hotkey_thread_mutex lock after set_freezable()
+Date: Sun, 24 Feb 2013 13:22:02 +0400
+Message-ID: <1361697722-4575-1-git-send-email-artem.savkov@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:40416 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751055Ab3BVIsr (ORCPT
+Received: from mail-la0-f41.google.com ([209.85.215.41]:43793 "EHLO
+	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751286Ab3BXJWh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Feb 2013 03:48:47 -0500
+	Sun, 24 Feb 2013 04:22:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
+To: ibm-acpi-devel@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br, matthew.garrett@nebula.com, linux-kernel@vger.kernel.org, Artem Savkov <artem.savkov@gmail.com>
 
-I've got a report of build failure on ideapad-laptop, which shows
+set_freezable() checks freezing during which no locks should be held.
+hotkey_thread_mutex lock should be moved closer to where it is actually needed.
 
-drivers/built-in.o: In function `ideapad_acpi_notify':
-ideapad-laptop.c:(.text+0x63876a): undefined reference to `backlight_force_update'
-drivers/built-in.o: In function `ideapad_acpi_remove':
-ideapad-laptop.c:(.devexit.text+0x64a7): undefined reference to `backlight_device_unregister'
-drivers/built-in.o: In function `ideapad_acpi_add':
-ideapad-laptop.c:(.devinit.text+0x45e28): undefined reference to `backlight_device_register'
-
-To select backlight subsystem can prevent this error from happening.
-
-Also update comment for this driver.
-
-Reported-by: Fengguang Wu <fengguang.wu@intel.com>
-Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+Signed-off-by: Artem Savkov <artem.savkov@gmail.com>
 ---
- drivers/platform/x86/Kconfig |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/thinkpad_acpi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c86bae8..c5bc068 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -291,8 +291,10 @@ config IDEAPAD_LAPTOP
- 	depends on RFKILL && INPUT
- 	depends on SERIO_I8042
- 	select INPUT_SPARSEKMAP
-+	select BACKLIGHT_CLASS_DEVICE
- 	help
--	  This is a driver for the rfkill switches on Lenovo IdeaPad netbooks.
-+	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
-+	  rfkill switch, hotkey, fan control and backlight control.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 22d8936..ffed96cd 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -2463,13 +2463,13 @@ static int hotkey_kthread(void *data)
+ 	unsigned int poll_freq;
+ 	bool was_frozen;
  
- config THINKPAD_ACPI
- 	tristate "ThinkPad ACPI Laptop Extras"
+-	mutex_lock(&hotkey_thread_mutex);
+-
+ 	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
+ 		goto exit;
+ 
+ 	set_freezable();
+ 
++	mutex_lock(&hotkey_thread_mutex);
++
+ 	so = 0;
+ 	si = 1;
+ 	t = 0;
+@@ -2523,8 +2523,8 @@ static int hotkey_kthread(void *data)
+ 		si ^= 1;
+ 	}
+ 
+-exit:
+ 	mutex_unlock(&hotkey_thread_mutex);
++exit:
+ 	return 0;
+ }
+ 
 -- 
-1.7.9.5
+1.8.1.4
