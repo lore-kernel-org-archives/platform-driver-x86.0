@@ -1,55 +1,39 @@
-From: Artem Savkov <artem.savkov@gmail.com>
-Subject: [PATCH] thinkpad_acpi: moved hotkey_thread_mutex lock after set_freezable()
-Date: Sun, 24 Feb 2013 13:22:02 +0400
-Message-ID: <1361697722-4575-1-git-send-email-artem.savkov@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f41.google.com ([209.85.215.41]:43793 "EHLO
-	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751286Ab3BXJWh (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 24 Feb 2013 04:22:37 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: ibm-acpi-devel@lists.sourceforge.net
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br, matthew.garrett@nebula.com, linux-kernel@vger.kernel.org, Artem Savkov <artem.savkov@gmail.com>
+From: Richard Hartmann <richih.mailinglist@gmail.com>
+Subject: Re: [ibm-acpi-devel] [PATCH] drivers/platform/x86/thinkpad_acpi.c:
+ Handle HKEY event 0x6040
+Date: Mon, 25 Feb 2013 12:57:17 +0100
+Message-ID: <CAD77+gQ8Ob0rbT_n4YAYtSqPScLLeawY66+7m_yZn_OBVOmTeg@mail.gmail.com>
+References: <CAD77+gROUfVX=9LPZc6_jf=2Bc_iaf5FW5Z2efwESzORNrq9dQ@mail.gmail.com>
+ <1356817910-20890-1-git-send-email-richih.mailinglist@gmail.com>
+ <20121230020008.GA24121@khazad-dum.debian.net> <CAD77+gROHKXOBDAy8A4sLnzSnZXTz-KKomk4nqrEfapjNo03vA@mail.gmail.com>
+ <20121231014513.GA2416@khazad-dum.debian.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121231014513.GA2416@khazad-dum.debian.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-set_freezable() checks freezing during which no locks should be held.
-hotkey_thread_mutex lock should be moved closer to where it is actually needed.
+On Mon, Dec 31, 2012 at 2:45 AM, Henrique de Moraes Holschuh
+<hmh@hmh.eng.br> wrote:
 
-Signed-off-by: Artem Savkov <artem.savkov@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> Usually the subsystem maintainer picks such simple patches and ACKs directly
+> from the platform-driver-x86 list email, adds his signed-of-by, and
+> eventually sends it to Linus.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 22d8936..ffed96cd 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -2463,13 +2463,13 @@ static int hotkey_kthread(void *data)
- 	unsigned int poll_freq;
- 	bool was_frozen;
- 
--	mutex_lock(&hotkey_thread_mutex);
--
- 	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
- 		goto exit;
- 
- 	set_freezable();
- 
-+	mutex_lock(&hotkey_thread_mutex);
-+
- 	so = 0;
- 	si = 1;
- 	t = 0;
-@@ -2523,8 +2523,8 @@ static int hotkey_kthread(void *data)
- 		si ^= 1;
- 	}
- 
--exit:
- 	mutex_unlock(&hotkey_thread_mutex);
-+exit:
- 	return 0;
- }
- 
--- 
-1.8.1.4
+Just so this does not get lost, neither Linus' tree nor [1] carry this
+patch, yet. Is there anything more I can/should do?
+
+
+> For this "obviously correct" single-code-line fix, we might even lucky
+> out and it could make it to 3.8, depends on his judgment.
+
+Sadly, no.
+
+
+Thanks,
+Richard
+
+[1] git://cavan.codon.org.uk/platform-drivers-x86.git
