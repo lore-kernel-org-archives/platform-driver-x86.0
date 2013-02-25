@@ -1,40 +1,35 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: [PATCH] ideapad-laptop: Depend on BACKLIGHT_CLASS_DEVICE instead of selecting it
-Date: Mon, 25 Feb 2013 17:01:57 -0500
-Message-ID: <1361829717-32058-1-git-send-email-matthew.garrett@nebula.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] thinkpad_acpi: moved hotkey_thread_mutex lock after
+ set_freezable()
+Date: Mon, 25 Feb 2013 15:54:45 -0800
+Message-ID: <20130225155445.d3eef1ad.akpm@linux-foundation.org>
+References: <1361697722-4575-1-git-send-email-artem.savkov@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:47200 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758606Ab3BYWCK (ORCPT
+Received: from mail.linuxfoundation.org ([140.211.169.12]:56568 "EHLO
+	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752513Ab3BYXyr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Feb 2013 17:02:10 -0500
+	Mon, 25 Feb 2013 18:54:47 -0500
+In-Reply-To: <1361697722-4575-1-git-send-email-artem.savkov@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: ike.pan@canonical.com, Matthew Garrett <matthew.garrett@nebula.com>
+To: Artem Savkov <artem.savkov@gmail.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br, matthew.garrett@nebula.com, linux-kernel@vger.kernel.org
 
-Selecting BACKLIGHT_CLASS_DEVICE doesn't guarantee that any of its
-dependencies are enabled, and these are complicated. Depending isn't ideal
-for configuration UI purposes, but is probably more appropriate here.
+On Sun, 24 Feb 2013 13:22:02 +0400
+Artem Savkov <artem.savkov@gmail.com> wrote:
 
-Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
----
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> set_freezable() checks freezing during which no locks should be held.
+> hotkey_thread_mutex lock should be moved closer to where it is actually needed.
+> 
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 242c524..3338437 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -299,8 +299,8 @@ config IDEAPAD_LAPTOP
- 	depends on ACPI
- 	depends on RFKILL && INPUT
- 	depends on SERIO_I8042
-+	depends on BACKLIGHT_CLASS_DEVICE
- 	select INPUT_SPARSEKMAP
--	select BACKLIGHT_CLASS_DEVICE
- 	help
- 	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- 	  rfkill switch, hotkey, fan control and backlight control.
--- 
-1.8.1.2
+Thanks.
+
+When fixing a bug, we always like to see a full description of that bug
+so we can better work out which kernel versions need the fix.
+
+Did you actually hit a lockup because of this?  Or was it just from
+code inspection?  Or ...  ?
