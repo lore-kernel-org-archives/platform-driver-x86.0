@@ -1,56 +1,34 @@
-From: =?ISO-8859-1?Q?=C9ric_Piel?= <eric.piel@tremplin-utc.net>
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH] hp_accel: Add a new PnP ID HPQ6007 for new HP laptops
-Date: Tue, 05 Mar 2013 12:49:41 +0100
-Message-ID: <5135DBD5.1070702@tremplin-utc.net>
+Date: Tue, 5 Mar 2013 15:42:58 +0000
+Message-ID: <1362498177.7780.13.camel@x230>
 References: <s5h4ngz56yg.wl%tiwai@suse.de>
+	 <5135DBD5.1070702@tremplin-utc.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailservice.tudelft.nl ([130.161.131.5]:35976 "EHLO
-	mailservice.tudelft.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754746Ab3CEMIH (ORCPT
+Received: from va3ehsobe002.messaging.microsoft.com ([216.32.180.12]:19879
+	"EHLO va3outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755896Ab3CEPnK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Mar 2013 07:08:07 -0500
-In-Reply-To: <s5h4ngz56yg.wl%tiwai@suse.de>
+	Tue, 5 Mar 2013 10:43:10 -0500
+In-Reply-To: <5135DBD5.1070702@tremplin-utc.net>
+Content-Language: en-US
+Content-ID: <E758D63EA85ECA4C800FE9F9EBB4075C@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Takashi Iwai <tiwai@suse.de>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?utf-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>
+Cc: Takashi Iwai <tiwai@suse.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On 26/02/13 18:19, Takashi Iwai wrote:
-> The DriveGuard chips on the new HP laptops are with a new PnP ID
-> "HPQ6007".  It should be compatible with older chips.
->
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Hi,
-Sorry for the delay. The driver is able to detect the actual type of=20
-accelerometer behind, so indeed it should work fine.
-
-Thanks for the patch, here is my:
-Acked-by: =C9ric Piel <eric.piel@tremplin-utc.net>
-
-Matthew, could you pick this patch into your tree?
-Cheers,
-=C9ric
->
-> ---
->   drivers/platform/x86/hp_accel.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/h=
-p_accel.c
-> index e64a7a8..b6c4305 100644
-> --- a/drivers/platform/x86/hp_accel.c
-> +++ b/drivers/platform/x86/hp_accel.c
-> @@ -77,6 +77,7 @@ static inline void delayed_sysfs_set(struct led_cla=
-ssdev *led_cdev,
->   static struct acpi_device_id lis3lv02d_device_ids[] =3D {
->   	{"HPQ0004", 0}, /* HP Mobile Data Protection System PNP */
->   	{"HPQ6000", 0}, /* HP Mobile Data Protection System PNP */
-> +	{"HPQ6007", 0}, /* HP Mobile Data Protection System PNP */
->   	{"", 0},
->   };
->   MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
->
+T24gVHVlLCAyMDEzLTAzLTA1IGF0IDEyOjQ5ICswMTAwLCDDiXJpYyBQaWVsIHdyb3RlOg0KPiBP
+biAyNi8wMi8xMyAxODoxOSwgVGFrYXNoaSBJd2FpIHdyb3RlOg0KPiA+IFRoZSBEcml2ZUd1YXJk
+IGNoaXBzIG9uIHRoZSBuZXcgSFAgbGFwdG9wcyBhcmUgd2l0aCBhIG5ldyBQblAgSUQNCj4gPiAi
+SFBRNjAwNyIuICBJdCBzaG91bGQgYmUgY29tcGF0aWJsZSB3aXRoIG9sZGVyIGNoaXBzLg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogVGFrYXNoaSBJd2FpIDx0aXdhaUBzdXNlLmRlPg0KPiBIaSwN
+Cj4gU29ycnkgZm9yIHRoZSBkZWxheS4gVGhlIGRyaXZlciBpcyBhYmxlIHRvIGRldGVjdCB0aGUg
+YWN0dWFsIHR5cGUgb2YgDQo+IGFjY2VsZXJvbWV0ZXIgYmVoaW5kLCBzbyBpbmRlZWQgaXQgc2hv
+dWxkIHdvcmsgZmluZS4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoLCBoZXJlIGlzIG15Og0K
+PiBBY2tlZC1ieTogw4lyaWMgUGllbCA8ZXJpYy5waWVsQHRyZW1wbGluLXV0Yy5uZXQ+DQo+IA0K
+PiBNYXR0aGV3LCBjb3VsZCB5b3UgcGljayB0aGlzIHBhdGNoIGludG8geW91ciB0cmVlPw0KDQpX
+aWxsIGRvLg0KDQotLSANCk1hdHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
