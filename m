@@ -1,35 +1,53 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [GIT] x86 platform driver updates for 3.8
-Date: Wed, 6 Mar 2013 12:17:04 +0000
-Message-ID: <CAHR064iDAXDL8-vnv+Hp3F6ymezbLgtfPQt5AH-k+7sOd-cGqg@mail.gmail.com>
-References: <20130107171722.GA31427@srcf.ucam.org>
-	<CA+55aFzL00K+oURqcnSgbAAkD18DJ8-p1G8vd7KE6RD77dLmCQ@mail.gmail.com>
+From: Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH] thinkpad-acpi: fix potential suspend blocking issue
+Date: Wed, 6 Mar 2013 16:44:20 +0100
+Message-ID: <20130306154420.GA7697@redhat.com>
+References: <201303042055.38040.maciej.rutecki@gmail.com> <1362504883-9180-1-git-send-email-msb@chromium.org> <20130305174838.GA7276@redhat.com> <CACBanvqHRDsOQiMsQMw5_QDt1wFrb8_DRoiASSvqeA6XdFrwZQ@mail.gmail.com> <20130305180542.GA12738@redhat.com> <CACBanvr7XvXbFjphpRwKHHJKzVuA-s6sF-qkPiizBV3+uqzpJw@mail.gmail.com> <20130305232603.GA16045@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:35877 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757706Ab3CFMRH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Mar 2013 07:17:07 -0500
-In-Reply-To: <CA+55aFzL00K+oURqcnSgbAAkD18DJ8-p1G8vd7KE6RD77dLmCQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, aaron.lu@intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130305232603.GA16045@khazad-dum.debian.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Mandeep Singh Baines <msb@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 7, 2013 at 5:22 PM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, Jan 7, 2013 at 9:17 AM, Matthew Garrett
-> <matthew.garrett@nebula.com> wrote:
->>
->> A bit delayed (new job fun), but there's nothing terribly exciting in
->> here.
+On 03/05, Henrique de Moraes Holschuh wrote:
 >
-> Nonetheless, this does not seem to be appropriate for outside the merge window.
+> On Tue, 05 Mar 2013, Mandeep Singh Baines wrote:
+> > This mutex seems wrong. Its held the entire time the kthread is
+> > running. I think its used to synchronize on the exit of the kthread. A
+> > completion would more appropriate in that case.
+>
+> From the top of the driver source:
+>
+> /* Acquired while the poller kthread is running, use to sync start/stop */
+> static struct mutex hotkey_thread_mutex;
 
-Was this re-sent for 3.9 ? Or will this hit 3.10 instead ?
+I simply can't understand what this "sync start/stop" means...
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+Ignoring hotkey_kthread(), the only user is
+
+	static void hotkey_poll_stop_sync(void)
+	{
+		if (tpacpi_hotkey_task) {
+			kthread_stop(tpacpi_hotkey_task);
+			tpacpi_hotkey_task = NULL;
+			mutex_lock(&hotkey_thread_mutex);
+			/* at this point, the thread did exit */
+			mutex_unlock(&hotkey_thread_mutex);
+		}
+	}
+
+And I simply do not understand the comment. This thread has already exited
+when kthread_stop() returns (OK, it can be running do_exit() paths but this
+doesn't matter). So this mutex_lock() buys nothing afaics.
+
+As for serializing with hotkey_poll_setup/etc, looks like this code relies
+on hotkey_mutex.
+
+So I think hotkey_thread_mutex can be simply removed?
+
+Oleg.
+
