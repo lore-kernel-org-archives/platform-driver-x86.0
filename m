@@ -1,136 +1,198 @@
-From: Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH] dell: add new dell WMI format for the AIO machines
-Date: Wed, 06 Mar 2013 08:33:59 +0000
-Message-ID: <5136FF77.1050508@canonical.com>
-References: <1362556278-19571-1-git-send-email-acelan.kao@canonical.com>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts - add device id for touchpad
+ variant
+Date: Wed, 06 Mar 2013 17:44:54 +0900
+Message-ID: <51370206.7000608@samsung.com>
+References: <1362187254-9227-1-git-send-email-bleung@chromium.org>
+ <1362555707-24654-1-git-send-email-bleung@chromium.org>
+ <1362555707-24654-2-git-send-email-bleung@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:40024 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753423Ab3CFIeB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Mar 2013 03:34:01 -0500
-In-Reply-To: <1362556278-19571-1-git-send-email-acelan.kao@canonical.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-reply-to: <1362555707-24654-2-git-send-email-bleung@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Benson Leung <bleung@chromium.org>
+Cc: olofj@chromium.org, miletus@chromium.org, dmitry.torokhov@gmail.com, matthew.garrett@nebula.com, rydberg@euromail.se, djkurtz@chromium.org, wfp5p@virginia.edu, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Nick Dyer <nick.dyer@itdev.co.uk>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/03/13 07:51, AceLan Kao wrote:
-> There is a new DELL WMI spec. with new WMI event format.
-> I'm working on the AIO machines, but I think the new format will apply to
-> all the Dell's machines, not only for AIO, which will be released later
-> this year.
+Hi Benson,
+
+On 03/06/2013 04:41 PM, Benson Leung wrote:
+> From: Daniel Kurtz <djkurtz@chromium.org>
 >
-> The new format of the WMI buffer is shown as below
-> word 0 - the number of words following in the WMI buffer(not including
->          this word.
-> word 1 - the event type
-> 	0x0000 - A hot key is pressed or an event occurred
-> 	0x000F - A sequence of hot keys are pressed
-> word 2 and on - the event data
+> This same driver can be used by atmel based touchscreens and touchpads
+> (buttonpads) by instantiating the i2c device as a "atmel_mxt_tp".
 >
-> Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+> This will cause the driver to perform some touchpad specific
+> initializations, such as:
+>    * register input device name "Atmel maXTouch Touchpad" instead of
+>    Touchscreen.
+>    * register BTN_LEFT & BTN_TOOL_* event types.
+>    * register axis resolution (as a fixed constant, for now)
+>    * register BUTTONPAD property
+>    * process GPIO buttons using reportid T19
+>
+> For now, the left mouse button is mapped to GPIO3. Going forward,
+> platform data should specify the configuration of the buttons.
+> They can be configured via a future platform data change to
+> specify optional middle and right buttons, as well as other possible
+> uses for the GPIO object T19.
+
+It's better to implement this now.
+
+> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Benson Leung <bleung@chromium.org>
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+> Tested-by: Olof Johansson <olof@lixom.net>
 > ---
->   drivers/platform/x86/dell-wmi-aio.c | 50 +++++++++++++++++++++++++++++++++----
->   1 file changed, 45 insertions(+), 5 deletions(-)
+> v2: zero reportid in mxt_object_table_free(), Thanks nick.dyer@itdev.co.uk
+> v1: Initial
+> ---
+>   drivers/input/touchscreen/atmel_mxt_ts.c | 57 ++++++++++++++++++++++++++++++--
+>   1 file changed, 55 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/platform/x86/dell-wmi-aio.c b/drivers/platform/x86/dell-wmi-aio.c
-> index 3f94545..d77fa86 100644
-> --- a/drivers/platform/x86/dell-wmi-aio.c
-> +++ b/drivers/platform/x86/dell-wmi-aio.c
-> @@ -34,6 +34,14 @@ MODULE_LICENSE("GPL");
->   #define EVENT_GUID1 "284A0E6B-380E-472A-921F-E52786257FB4"
->   #define EVENT_GUID2 "02314822-307C-4F66-BF0E-48AEAEB26CC8"
->
-> +struct dell_wmi_event {
-> +	u16	length;
-> +	/* 0x000: A hot key pressed or an event occurred
-> +	 * 0x00F: A sequence of hot keys are pressed */
-> +	u16	type;
-> +	u16	event[];
-> +};
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index d04f810..3611a26 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -181,6 +181,12 @@
+>   
+>   #define MXT_FWRESET_TIME	175	/* msec */
+>   
+> +/* MXT_SPT_GPIOPWM_T19 field */
+> +#define MXT_GPIO0_MASK		0x04
+> +#define MXT_GPIO1_MASK		0x08
+> +#define MXT_GPIO2_MASK		0x10
+> +#define MXT_GPIO3_MASK		0x20
 > +
->   static const char *dell_wmi_aio_guids[] = {
->   	EVENT_GUID1,
->   	EVENT_GUID2,
-> @@ -46,11 +54,35 @@ MODULE_ALIAS("wmi:"EVENT_GUID2);
->   static const struct key_entry dell_wmi_aio_keymap[] = {
->   	{ KE_KEY, 0xc0, { KEY_VOLUMEUP } },
->   	{ KE_KEY, 0xc1, { KEY_VOLUMEDOWN } },
-> +	{ KE_KEY, 0xe030, { KEY_VOLUMEUP } },
-> +	{ KE_KEY, 0xe02e, { KEY_VOLUMEDOWN } },
-> +	{ KE_KEY, 0xe020, { KEY_MUTE } },
-> +	{ KE_KEY, 0xe027, { KEY_DISPLAYTOGGLE } },
-> +	{ KE_KEY, 0xe006, { KEY_BRIGHTNESSUP } },
-> +	{ KE_KEY, 0xe005, { KEY_BRIGHTNESSDOWN } },
-> +	{ KE_KEY, 0xe00b, { KEY_SWITCHVIDEOMODE } },
->   	{ KE_END, 0 }
+>   /* Command to unlock bootloader */
+>   #define MXT_UNLOCK_CMD_MSB	0xaa
+>   #define MXT_UNLOCK_CMD_LSB	0xdc
+> @@ -212,6 +218,8 @@
+>   /* Touchscreen absolute values */
+>   #define MXT_MAX_AREA		0xff
+>   
+> +#define MXT_PIXELS_PER_MM	20
+> +
+>   struct mxt_info {
+>   	u8 family_id;
+>   	u8 variant_id;
+> @@ -243,6 +251,8 @@ struct mxt_data {
+>   	const struct mxt_platform_data *pdata;
+>   	struct mxt_object *object_table;
+>   	struct mxt_info info;
+> +	bool is_tp;
+> +
+>   	unsigned int irq;
+>   	unsigned int max_x;
+>   	unsigned int max_y;
+> @@ -251,6 +261,7 @@ struct mxt_data {
+>   	u8 T6_reportid;
+>   	u8 T9_reportid_min;
+>   	u8 T9_reportid_max;
+> +	u8 T19_reportid;
 >   };
->
->   static struct input_dev *dell_wmi_aio_input_dev;
->
-> +/*
-> + * The new WMI event data format will follow the dell_wmi_event structure
-> + * So, we will check if the buffer matches the format
-> + */
-> +static bool dell_wmi_aio_event_check(u8 *buffer)
+>   
+>   static bool mxt_object_readable(unsigned int type)
+> @@ -502,6 +513,18 @@ static int mxt_write_object(struct mxt_data *data,
+>   	return mxt_write_reg(data->client, reg + offset, val);
+>   }
+>   
+> +static void mxt_input_button(struct mxt_data *data, struct mxt_message *message)
 > +{
-> +	dell_wmi_event *event = (dell_wmi_event *)buffer;
+> +	struct device *dev = &data->client->dev;
+> +	struct input_dev *input = data->input_dev;
+> +	bool button;
 > +
-> +	/* longest length is 6 right now */
-> +	if (event->length > 10)
-> +		return false;
-> +	if (event->type != 0 && event->type != 0xf)
-> +		return false;
-
-This does assume that the buffer pointer is not null and long enough to 
-access the event structure fields,  which may not be so in future 
-firmware.  So, please check that the pointer is valid and the buffer is 
-long enough.
-
-> +
-> +	return true;
+> +	/* Active-low switch */
+> +	button = !(message->message[0] & MXT_GPIO3_MASK);
+> +	input_report_key(input, BTN_LEFT, button);
+> +	dev_dbg(dev, "Button state: %d\n", button);
 > +}
 > +
->   static void dell_wmi_aio_notify(u32 value, void *context)
+>   static void mxt_input_touchevent(struct mxt_data *data,
+>   				      struct mxt_message *message, int id)
 >   {
->   	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-> @@ -65,7 +97,7 @@ static void dell_wmi_aio_notify(u32 value, void *context)
->
->   	obj = (union acpi_object *)response.pointer;
->   	if (obj) {
-> -		unsigned int scancode;
-> +		unsigned int scancode = 0;
->
->   		switch (obj->type) {
->   		case ACPI_TYPE_INTEGER:
-> @@ -75,13 +107,21 @@ static void dell_wmi_aio_notify(u32 value, void *context)
->   				scancode, 1, true);
+> @@ -585,6 +608,9 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
+>   			int id = reportid - data->T9_reportid_min;
+>   			mxt_input_touchevent(data, &message, id);
+>   			update_input = true;
+> +		} else if (message.reportid == data->T19_reportid) {
+> +			mxt_input_button(data, &message);
+> +			update_input = true;
+>   		} else {
+>   			mxt_dump_message(dev, &message);
+>   		}
+> @@ -764,6 +790,9 @@ static int mxt_get_object_table(struct mxt_data *data)
+>   			data->T9_reportid_min = min_id;
+>   			data->T9_reportid_max = max_id;
 >   			break;
->   		case ACPI_TYPE_BUFFER:
-> -			/* Broken machines return the scancode in a buffer */
-> -			if (obj->buffer.pointer && obj->buffer.length > 0) {
-> -				scancode = obj->buffer.pointer[0];
-> +			if (dell_wmi_aio_event_check(obj->buffer.pointer)) {
-> +				dell_wmi_event *event =
-> +					(dell_wmi_event *)obj->buffer.pointer;
-> +				scancode = event->event[0];
-> +			} else {
-> +				/* Broken machines return the scancode in a
-> +				   buffer */
-> +				if (obj->buffer.pointer &&
-> +						obj->buffer.length > 0)
-> +					scancode = obj->buffer.pointer[0];
-> +			}
-> +			if (scancode)
->   				sparse_keymap_report_event(
->   					dell_wmi_aio_input_dev,
->   					scancode, 1, true);
-> -			}
->   			break;
+> +		case MXT_SPT_GPIOPWM_T19:
+> +			data->T19_reportid = min_id;
+> +			break;
 >   		}
 >   	}
->
+>   
+> @@ -777,7 +806,7 @@ static void mxt_free_object_table(struct mxt_data *data)
+>   	data->T6_reportid = 0;
+>   	data->T9_reportid_min = 0;
+>   	data->T9_reportid_max = 0;
+> -
+> +	data->T19_reportid = 0;
+>   }
+>   
+>   static int mxt_initialize(struct mxt_data *data)
+> @@ -1115,9 +1144,13 @@ static int mxt_probe(struct i2c_client *client,
+>   		goto err_free_mem;
+>   	}
+>   
+> -	input_dev->name = "Atmel maXTouch Touchscreen";
+> +	data->is_tp = !strcmp(id->name, "atmel_mxt_tp");
+> +
+> +	input_dev->name = (data->is_tp) ? "Atmel maXTouch Touchpad" :
+> +					  "Atmel maXTouch Touchscreen";
+>   	snprintf(data->phys, sizeof(data->phys), "i2c-%u-%04x/input0",
+>   		 client->adapter->nr, client->addr);
+> +
+>   	input_dev->phys = data->phys;
+>   
+>   	input_dev->id.bustype = BUS_I2C;
+> @@ -1140,6 +1173,25 @@ static int mxt_probe(struct i2c_client *client,
+>   	__set_bit(EV_KEY, input_dev->evbit);
+>   	__set_bit(BTN_TOUCH, input_dev->keybit);
+>   
+> +	if (data->is_tp) {
+> +		__set_bit(INPUT_PROP_POINTER, input_dev->propbit);
+> +		__set_bit(INPUT_PROP_BUTTONPAD, input_dev->propbit);
+> +
+> +		__set_bit(BTN_LEFT, input_dev->keybit);
+> +		__set_bit(BTN_TOOL_FINGER, input_dev->keybit);
+> +		__set_bit(BTN_TOOL_DOUBLETAP, input_dev->keybit);
+> +		__set_bit(BTN_TOOL_TRIPLETAP, input_dev->keybit);
+> +		__set_bit(BTN_TOOL_QUADTAP, input_dev->keybit);
+> +		__set_bit(BTN_TOOL_QUINTTAP, input_dev->keybit);
+> +
+> +		input_abs_set_res(input_dev, ABS_X, MXT_PIXELS_PER_MM);
+> +		input_abs_set_res(input_dev, ABS_Y, MXT_PIXELS_PER_MM);
+> +		input_abs_set_res(input_dev, ABS_MT_POSITION_X,
+> +				  MXT_PIXELS_PER_MM);
+> +		input_abs_set_res(input_dev, ABS_MT_POSITION_Y,
+> +				  MXT_PIXELS_PER_MM);
+> +	}
+> +
+>   	/* For single touch */
+>   	input_set_abs_params(input_dev, ABS_X,
+>   			     0, data->max_x, 0, 0);
+> @@ -1258,6 +1310,7 @@ static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+>   static const struct i2c_device_id mxt_id[] = {
+>   	{ "qt602240_ts", 0 },
+>   	{ "atmel_mxt_ts", 0 },
+> +	{ "atmel_mxt_tp", 0 },
+
+How about driver_data to distinguish touchscreen and touchpad?
+
+>   	{ "mXT224", 0 },
+>   	{ }
+>   };
+
