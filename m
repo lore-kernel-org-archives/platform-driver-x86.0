@@ -1,88 +1,126 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: [PATCH v2 2/2] Platform: x86: chromeos_laptop : Add basic platform data for atmel devices
-Date: Tue,  5 Mar 2013 23:41:47 -0800
-Message-ID: <1362555707-24654-3-git-send-email-bleung@chromium.org>
-References: <1362187254-9227-1-git-send-email-bleung@chromium.org>
- <1362555707-24654-1-git-send-email-bleung@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1362555707-24654-1-git-send-email-bleung@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: olofj@chromium.org, miletus@chromium.org, dmitry.torokhov@gmail.com, matthew.garrett@nebula.com, rydberg@euromail.se, djkurtz@chromium.org, jy0922.shim@samsung.com, wfp5p@virginia.edu, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: bleung@chromium.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] dell: add new dell WMI format for the AIO machines
+Date: Wed,  6 Mar 2013 15:51:18 +0800
+Message-ID: <1362556278-19571-1-git-send-email-acelan.kao@canonical.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ia0-f170.google.com ([209.85.210.170]:56942 "EHLO
+	mail-ia0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754142Ab3CFHv0 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 6 Mar 2013 02:51:26 -0500
+Received: by mail-ia0-f170.google.com with SMTP id h8so1908055iaa.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Mar 2013 23:51:25 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Colin Ian King <colin.king@canonical.com>
 
-Add basic platform data to get the current upstream driver working
-with the 224s touchpad and 1664s touchscreen.
-We will be using NULL config so we will use the settings from the
-devices' NVRAMs.
+There is a new DELL WMI spec. with new WMI event format.
+I'm working on the AIO machines, but I think the new format will apply to
+all the Dell's machines, not only for AIO, which will be released later
+this year.
 
-Signed-off-by: Benson Leung <bleung@chromium.org>
-Tested-by: Olof Johansson <olof@lixom.net>
+The new format of the WMI buffer is shown as below
+word 0 - the number of words following in the WMI buffer(not including
+        this word.
+word 1 - the event type
+	0x0000 - A hot key is pressed or an event occurred
+	0x000F - A sequence of hot keys are pressed
+word 2 and on - the event data
+
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
-v2: Patches cleanly with v3.9-rc1
-v1: Initial
----
- drivers/platform/x86/chromeos_laptop.c | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+ drivers/platform/x86/dell-wmi-aio.c | 50 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
-index 93d6680..c10ff84 100644
---- a/drivers/platform/x86/chromeos_laptop.c
-+++ b/drivers/platform/x86/chromeos_laptop.c
-@@ -23,6 +23,8 @@
+diff --git a/drivers/platform/x86/dell-wmi-aio.c b/drivers/platform/x86/dell-wmi-aio.c
+index 3f94545..d77fa86 100644
+--- a/drivers/platform/x86/dell-wmi-aio.c
++++ b/drivers/platform/x86/dell-wmi-aio.c
+@@ -34,6 +34,14 @@ MODULE_LICENSE("GPL");
+ #define EVENT_GUID1 "284A0E6B-380E-472A-921F-E52786257FB4"
+ #define EVENT_GUID2 "02314822-307C-4F66-BF0E-48AEAEB26CC8"
  
- #include <linux/dmi.h>
- #include <linux/i2c.h>
-+#include <linux/i2c/atmel_mxt_ts.h>
-+#include <linux/interrupt.h>
- #include <linux/module.h>
- 
- #define ATMEL_TP_I2C_ADDR	0x4b
-@@ -67,15 +69,43 @@ static struct i2c_board_info __initdata tsl2563_als_device = {
- 	I2C_BOARD_INFO("tsl2563", TAOS_ALS_I2C_ADDR),
- };
- 
-+static struct mxt_platform_data atmel_224s_tp_platform_data = {
-+	.x_line			= 18,
-+	.y_line			= 12,
-+	.x_size			= 102*20,
-+	.y_size			= 68*20,
-+	.blen			= 0x80,	/* Gain setting is in upper 4 bits */
-+	.threshold		= 0x32,
-+	.voltage		= 0,	/* 3.3V */
-+	.orient			= MXT_VERTICAL_FLIP,
-+	.irqflags		= IRQF_TRIGGER_FALLING,
-+	.config			= NULL,
-+	.config_length		= 0,
++struct dell_wmi_event {
++	u16	length;
++	/* 0x000: A hot key pressed or an event occurred
++	 * 0x00F: A sequence of hot keys are pressed */
++	u16	type;
++	u16	event[];
 +};
 +
- static struct i2c_board_info __initdata atmel_224s_tp_device = {
- 	I2C_BOARD_INFO("atmel_mxt_tp", ATMEL_TP_I2C_ADDR),
--	.platform_data = NULL,
-+	.platform_data = &atmel_224s_tp_platform_data,
- 	.flags		= I2C_CLIENT_WAKE,
+ static const char *dell_wmi_aio_guids[] = {
+ 	EVENT_GUID1,
+ 	EVENT_GUID2,
+@@ -46,11 +54,35 @@ MODULE_ALIAS("wmi:"EVENT_GUID2);
+ static const struct key_entry dell_wmi_aio_keymap[] = {
+ 	{ KE_KEY, 0xc0, { KEY_VOLUMEUP } },
+ 	{ KE_KEY, 0xc1, { KEY_VOLUMEDOWN } },
++	{ KE_KEY, 0xe030, { KEY_VOLUMEUP } },
++	{ KE_KEY, 0xe02e, { KEY_VOLUMEDOWN } },
++	{ KE_KEY, 0xe020, { KEY_MUTE } },
++	{ KE_KEY, 0xe027, { KEY_DISPLAYTOGGLE } },
++	{ KE_KEY, 0xe006, { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 0xe005, { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, 0xe00b, { KEY_SWITCHVIDEOMODE } },
+ 	{ KE_END, 0 }
  };
  
-+static struct mxt_platform_data atmel_1664s_platform_data = {
-+	.x_line			= 32,
-+	.y_line			= 50,
-+	.x_size			= 1700,
-+	.y_size			= 2560,
-+	.blen			= 0x89,	/* Gain setting is in upper 4 bits */
-+	.threshold		= 0x28,
-+	.voltage		= 0,	/* 3.3V */
-+	.orient			= MXT_ROTATED_90_COUNTER,
-+	.irqflags		= IRQF_TRIGGER_FALLING,
-+	.config			= NULL,
-+	.config_length		= 0,
-+};
+ static struct input_dev *dell_wmi_aio_input_dev;
+ 
++/*
++ * The new WMI event data format will follow the dell_wmi_event structure
++ * So, we will check if the buffer matches the format
++ */
++static bool dell_wmi_aio_event_check(u8 *buffer)
++{
++	dell_wmi_event *event = (dell_wmi_event *)buffer;
 +
- static struct i2c_board_info __initdata atmel_1664s_device = {
- 	I2C_BOARD_INFO("atmel_mxt_ts", ATMEL_TS_I2C_ADDR),
--	.platform_data = NULL,
-+	.platform_data = &atmel_1664s_platform_data,
- 	.flags		= I2C_CLIENT_WAKE,
- };
++	/* longest length is 6 right now */
++	if (event->length > 10)
++		return false;
++	if (event->type != 0 && event->type != 0xf)
++		return false;
++
++	return true;
++}
++
+ static void dell_wmi_aio_notify(u32 value, void *context)
+ {
+ 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -65,7 +97,7 @@ static void dell_wmi_aio_notify(u32 value, void *context)
  
+ 	obj = (union acpi_object *)response.pointer;
+ 	if (obj) {
+-		unsigned int scancode;
++		unsigned int scancode = 0;
+ 
+ 		switch (obj->type) {
+ 		case ACPI_TYPE_INTEGER:
+@@ -75,13 +107,21 @@ static void dell_wmi_aio_notify(u32 value, void *context)
+ 				scancode, 1, true);
+ 			break;
+ 		case ACPI_TYPE_BUFFER:
+-			/* Broken machines return the scancode in a buffer */
+-			if (obj->buffer.pointer && obj->buffer.length > 0) {
+-				scancode = obj->buffer.pointer[0];
++			if (dell_wmi_aio_event_check(obj->buffer.pointer)) {
++				dell_wmi_event *event =
++					(dell_wmi_event *)obj->buffer.pointer;
++				scancode = event->event[0];
++			} else {
++				/* Broken machines return the scancode in a
++				   buffer */
++				if (obj->buffer.pointer &&
++						obj->buffer.length > 0)
++					scancode = obj->buffer.pointer[0];
++			}
++			if (scancode)
+ 				sparse_keymap_report_event(
+ 					dell_wmi_aio_input_dev,
+ 					scancode, 1, true);
+-			}
+ 			break;
+ 		}
+ 	}
 -- 
-1.8.1.3
+1.8.1.2
