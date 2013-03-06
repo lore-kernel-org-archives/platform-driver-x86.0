@@ -1,64 +1,29 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad-acpi: fix potential suspend blocking issue
-Date: Tue, 5 Mar 2013 20:26:03 -0300
-Message-ID: <20130305232603.GA16045@khazad-dum.debian.net>
-References: <201303042055.38040.maciej.rutecki@gmail.com>
- <1362504883-9180-1-git-send-email-msb@chromium.org>
- <20130305174838.GA7276@redhat.com>
- <CACBanvqHRDsOQiMsQMw5_QDt1wFrb8_DRoiASSvqeA6XdFrwZQ@mail.gmail.com>
- <20130305180542.GA12738@redhat.com>
- <CACBanvr7XvXbFjphpRwKHHJKzVuA-s6sF-qkPiizBV3+uqzpJw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH v2 0/2] Add platform data and touchpad functionality for Pixel
+Date: Tue,  5 Mar 2013 23:41:45 -0800
+Message-ID: <1362555707-24654-1-git-send-email-bleung@chromium.org>
+References: <1362187254-9227-1-git-send-email-bleung@chromium.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:51371 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750931Ab3CEX0I (ORCPT
+Received: from mail-ie0-f178.google.com ([209.85.223.178]:33195 "EHLO
+	mail-ie0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753883Ab3CFHl7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Mar 2013 18:26:08 -0500
-Content-Disposition: inline
-In-Reply-To: <CACBanvr7XvXbFjphpRwKHHJKzVuA-s6sF-qkPiizBV3+uqzpJw@mail.gmail.com>
+	Wed, 6 Mar 2013 02:41:59 -0500
+Received: by mail-ie0-f178.google.com with SMTP id c13so8881813ieb.23
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Mar 2013 23:41:58 -0800 (PST)
+In-Reply-To: <1362187254-9227-1-git-send-email-bleung@chromium.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mandeep Singh Baines <msb@chromium.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+To: olofj@chromium.org, miletus@chromium.org, dmitry.torokhov@gmail.com, matthew.garrett@nebula.com, rydberg@euromail.se, djkurtz@chromium.org, jy0922.shim@samsung.com, wfp5p@virginia.edu, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: bleung@chromium.org
 
-On Tue, 05 Mar 2013, Mandeep Singh Baines wrote:
-> This mutex seems wrong. Its held the entire time the kthread is
-> running. I think its used to synchronize on the exit of the kthread. A
-> completion would more appropriate in that case.
+Add support for an "atmel_mxt_tp" variant in the atmel_mxt_ts.c driver.
+Then, add platform data for the 224s trackpad and the 1664s touchscreen
+in chromeos_laptop so that the existing version of the driver will
+probe these devices correctly.
 
-From the top of the driver source:
+v2 : Minor bugfix in patch 1. Cleanup client_id from commit message.
+     Make sure chromeos_laptop patch applies cleanly to v3.9-rc1
 
-/* Acquired while the poller kthread is running, use to sync start/stop */
-static struct mutex hotkey_thread_mutex;
-
-/*
- * Acquire mutex to write poller control variables as an
- * atomic block.
- *
- * Increment hotkey_config_change when changing them if you
- * want the kthread to forget old state.
- *
- * See HOTKEY_CONFIG_CRITICAL_START/HOTKEY_CONFIG_CRITICAL_END
- */
-static struct mutex hotkey_thread_data_mutex;
-static unsigned int hotkey_config_change;
-
-#define HOTKEY_CONFIG_CRITICAL_START \
-        do { \
-                mutex_lock(&hotkey_thread_data_mutex); \
-                hotkey_config_change++; \
-        } while (0);
-#define HOTKEY_CONFIG_CRITICAL_END \
-        mutex_unlock(&hotkey_thread_data_mutex);
-
-
-This can likely be modernized a lot.  This code is from 2008, I think it
-first shipped in 2.6.25-rc1.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+[PATCH v2 1/2] Input: atmel_mxt_ts - add device id for touchpad variant
+[PATCH v2 2/2] Platform: x86: chromeos_laptop : Add basic platform data
