@@ -1,34 +1,45 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [GIT] x86 platform driver updates for 3.8
-Date: Wed, 6 Mar 2013 16:20:10 +0000
-Message-ID: <1362586810.7780.18.camel@x230>
-References: <20130107171722.GA31427@srcf.ucam.org>
-	 <CA+55aFzL00K+oURqcnSgbAAkD18DJ8-p1G8vd7KE6RD77dLmCQ@mail.gmail.com>
-	 <CAHR064iDAXDL8-vnv+Hp3F6ymezbLgtfPQt5AH-k+7sOd-cGqg@mail.gmail.com>
+From: Artem Savkov <artem.savkov@gmail.com>
+Subject: Re: [PATCH] thinkpad-acpi: fix potential suspend blocking issue
+Date: Thu, 7 Mar 2013 00:18:49 +0400
+Message-ID: <20130306201849.GA4897@thinkpad.lan>
+References: <201303042055.38040.maciej.rutecki@gmail.com>
+ <1362504883-9180-1-git-send-email-msb@chromium.org>
+ <20130305141817.4e27e83aa66598115e52eb9e@linux-foundation.org>
+ <20130306155039.GB7697@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db8lp0189.outbound.messaging.microsoft.com ([213.199.154.189]:31779
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752794Ab3CFQUQ (ORCPT
+Received: from mail-la0-f49.google.com ([209.85.215.49]:58935 "EHLO
+	mail-la0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752809Ab3CFUSy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 Mar 2013 11:20:16 -0500
-In-Reply-To: <CAHR064iDAXDL8-vnv+Hp3F6ymezbLgtfPQt5AH-k+7sOd-cGqg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <F028D9DFE1D5F14D8E1DFD9EF0B76241@namprd05.prod.outlook.com>
+	Wed, 6 Mar 2013 15:18:54 -0500
+Content-Disposition: inline
+In-Reply-To: <20130306155039.GB7697@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "aaron.lu@intel.com" <aaron.lu@intel.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mandeep Singh Baines <msb@chromium.org>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Tejun Heo <tj@kernel.org>, Maciej Rutecki <maciej.rutecki@gmail.com>
 
-T24gV2VkLCAyMDEzLTAzLTA2IGF0IDEyOjE3ICswMDAwLCBDb3JlbnRpbiBDaGFyeSB3cm90ZToN
-Cj4gT24gTW9uLCBKYW4gNywgMjAxMyBhdCA1OjIyIFBNLCBMaW51cyBUb3J2YWxkcw0KPiA8dG9y
-dmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiA+IE9uIE1vbiwgSmFuIDcsIDIw
-MTMgYXQgOToxNyBBTSwgTWF0dGhldyBHYXJyZXR0DQo+ID4gPG1hdHRoZXcuZ2FycmV0dEBuZWJ1
-bGEuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4gQSBiaXQgZGVsYXllZCAobmV3IGpvYiBmdW4pLCBi
-dXQgdGhlcmUncyBub3RoaW5nIHRlcnJpYmx5IGV4Y2l0aW5nIGluDQo+ID4+IGhlcmUuDQo+ID4N
-Cj4gPiBOb25ldGhlbGVzcywgdGhpcyBkb2VzIG5vdCBzZWVtIHRvIGJlIGFwcHJvcHJpYXRlIGZv
-ciBvdXRzaWRlIHRoZSBtZXJnZSB3aW5kb3cuDQo+IA0KPiBXYXMgdGhpcyByZS1zZW50IGZvciAz
-LjkgPyBPciB3aWxsIHRoaXMgaGl0IDMuMTAgaW5zdGVhZCA/DQoNCkl0J3MgbWVyZ2VkIGluIDMu
-OS4NCg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgfCBtamc1OUBzcmNmLnVjYW0ub3JnDQo=
+On Wed, Mar 06, 2013 at 04:50:39PM +0100, Oleg Nesterov wrote:
+> On 03/05, Andrew Morton wrote:
+> >
+> > Basically the same as
+> > http://ozlabs.org/~akpm/mmots/broken-out/drivers-platform-x86-thinkpad_acpic-move-hotkey_thread_mutex-lock-after-set_freezable.patch.
+> >  I think Artem's patch is a little better.  There doesn't appear to be
+> > any locking protocol for tpacpi_lifecycle.
+> 
+> Which seems to have the same problem, hotkey_kthread() still calls
+> kthread_freezable_should_stop() under hotkey_thread_mutex.
+> 
+> IOW, we have two try_to_freeze's here, the patch moves only one of
+> them outside of the hotkey_thread_mutex.
+
+It's hard for me to judge but this lock does indeed look like it has
+been used to block until the thread exits. I'm trying out the "remove
+hotkey_thread_mutex completely" approach and everything looks fine so
+far.
+
+-- 
+Regards,
+Artem
