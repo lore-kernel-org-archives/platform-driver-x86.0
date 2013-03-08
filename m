@@ -1,93 +1,62 @@
-From: Mandeep Singh Baines <msb@chromium.org>
-Subject: Re: [PATCH 1/1] thinkpad-acpi: kill hotkey_thread_mutex
-Date: Thu, 7 Mar 2013 10:42:46 -0800
-Message-ID: <CACBanvqP0jx_d-LtV5+fRD7M698M_b6j0Sv=v0uoTBpjEusQCw@mail.gmail.com>
-References: <201303042055.38040.maciej.rutecki@gmail.com>
-	<1362504883-9180-1-git-send-email-msb@chromium.org>
-	<20130305174838.GA7276@redhat.com>
-	<CACBanvqHRDsOQiMsQMw5_QDt1wFrb8_DRoiASSvqeA6XdFrwZQ@mail.gmail.com>
-	<20130305180542.GA12738@redhat.com>
-	<CACBanvr7XvXbFjphpRwKHHJKzVuA-s6sF-qkPiizBV3+uqzpJw@mail.gmail.com>
-	<20130305232603.GA16045@khazad-dum.debian.net>
-	<20130306154420.GA7697@redhat.com>
-	<20130306233232.GA12645@khazad-dum.debian.net>
-	<20130307175305.GA15631@redhat.com>
-	<20130307175359.GB15631@redhat.com>
+From: Murray Campbell <murray@sonology.net>
+Subject: asus-wmi: wlan rfkill on eee pc 1015PEM possible regression?
+Date: Thu, 7 Mar 2013 16:26:49 -0800
+Message-ID: <20130308002649.GA4232@wavelet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f51.google.com ([209.85.219.51]:63612 "EHLO
-	mail-oa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759464Ab3CGSmr (ORCPT
+Received: from mail-ye0-f176.google.com ([209.85.213.176]:44197 "EHLO
+	mail-ye0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760097Ab3CHA1H (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Mar 2013 13:42:47 -0500
-Received: by mail-oa0-f51.google.com with SMTP id h2so1013907oag.10
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Mar 2013 10:42:46 -0800 (PST)
-In-Reply-To: <20130307175359.GB15631@redhat.com>
+	Thu, 7 Mar 2013 19:27:07 -0500
+Received: by mail-ye0-f176.google.com with SMTP id m9so181541yen.21
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Mar 2013 16:27:06 -0800 (PST)
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Artem Savkov <artem.savkov@gmail.com>
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, Mar 7, 2013 at 9:53 AM, Oleg Nesterov <oleg@redhat.com> wrote:
-> hotkey_kthread() does try_to_freeze() under hotkey_thread_mutex.
->
-> We can simply kill this mutex, hotkey_poll_stop_sync() does not need
-> to serialize with hotkey_kthread(). When kthread_stop() returns the
-> thread is already dead, it called do_exit()->complete_vfork_done().
->
-> Reported-by: Artem Savkov <artem.savkov@gmail.com>
-> Reported-by: Maciej Rutecki <maciej.rutecki@gmail.com>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
+Hi,
 
-Reviewed-by: Mandeep Singh Baines <msb@chromium.org>
+I have an ASUS Eee PC 1015PEM and, on upgrading from kernel 3.5.7 to
+3.6.11 noticed that the rfkill behaviour stopped working the way I was
+expecting.
 
-> --- x/drivers/platform/x86/thinkpad_acpi.c
-> +++ x/drivers/platform/x86/thinkpad_acpi.c
-> @@ -1965,9 +1965,6 @@ struct tp_nvram_state {
->  /* kthread for the hotkey poller */
->  static struct task_struct *tpacpi_hotkey_task;
->
-> -/* Acquired while the poller kthread is running, use to sync start/stop */
-> -static struct mutex hotkey_thread_mutex;
-> -
->  /*
->   * Acquire mutex to write poller control variables as an
->   * atomic block.
-> @@ -2463,8 +2460,6 @@ static int hotkey_kthread(void *data)
->         unsigned int poll_freq;
->         bool was_frozen;
->
-> -       mutex_lock(&hotkey_thread_mutex);
-> -
->         if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
->                 goto exit;
->
-> @@ -2524,7 +2519,6 @@ static int hotkey_kthread(void *data)
->         }
->
->  exit:
-> -       mutex_unlock(&hotkey_thread_mutex);
->         return 0;
->  }
->
-> @@ -2534,9 +2528,6 @@ static void hotkey_poll_stop_sync(void)
->         if (tpacpi_hotkey_task) {
->                 kthread_stop(tpacpi_hotkey_task);
->                 tpacpi_hotkey_task = NULL;
-> -               mutex_lock(&hotkey_thread_mutex);
-> -               /* at this point, the thread did exit */
-> -               mutex_unlock(&hotkey_thread_mutex);
->         }
->  }
->
-> @@ -3235,7 +3226,6 @@ static int __init hotkey_init(struct ibm
->         mutex_init(&hotkey_mutex);
->
->  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
-> -       mutex_init(&hotkey_thread_mutex);
->         mutex_init(&hotkey_thread_data_mutex);
->  #endif
->
->
+I have git-bisect-ed it down to the following commit:
+
+a50bd128f28cf81c1250874fc53728e113f12957
+
+which certainly looks relevant.
+
+I first noticed the problem because the WLAN rfkill toggle button
+(Fn+F2) stopped toggling the WLAN LED.  Also, it won't enable the WLAN
+if it is disabled in the BIOS.
+
+Prior to the change 'rfkill list' would show two devices: 0: "asus-wlan"
+and 1: "phy0".  Using either the button or 'rfkill (un)block all' would
+toggle the blocked state from "no,no; no,no" to "yes,no; yes,yes" where
+each pair is soft/hard and the first pair is the asus-wlan, the second
+the phy0.  Each time the phy0 hard block status would take a second or
+two to change.
+
+This worked regardless of the state in the BIOS and would appropriately
+toggle the WLAN LED.
+
+After the commit the two devices are switched: phy0 is number 0 and
+asus-wlan is number 1.  The hard block status of both devices is
+impossible to change with either 'rfkill' or the button.  The asus-wlan
+device is always not hard-blocked,  the phy0 hard-block always keeps the
+status assigned in the BIOS.  The soft-block state changes
+appropriately.  The WLAN LED never changes.
+
+If the WLAN is disabled in the BIOS it is never possible to enable it
+without a reboot and I am wondering if the device is ever switched off
+properly if it is enabled in the BIOS.
+
+Is this expected behaviour?  If not I am more than willing to
+investigate further if anyone can suggest a line of enquiry.
+
+Thank you,
+
+Murray Campbell <murray@sonology.net>
