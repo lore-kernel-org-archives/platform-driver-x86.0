@@ -1,62 +1,31 @@
-From: Murray Campbell <murray@sonology.net>
-Subject: asus-wmi: wlan rfkill on eee pc 1015PEM possible regression?
-Date: Thu, 7 Mar 2013 16:26:49 -0800
-Message-ID: <20130308002649.GA4232@wavelet>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH v3 0/2] Add platform data and touchpad functionality for Pixel
+Date: Thu,  7 Mar 2013 19:43:32 -0800
+Message-ID: <1362714214-32405-1-git-send-email-bleung@chromium.org>
+References: <1362187254-9227-1-git-send-email-bleung@chromium.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ye0-f176.google.com ([209.85.213.176]:44197 "EHLO
-	mail-ye0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1760097Ab3CHA1H (ORCPT
+Received: from mail-pb0-f50.google.com ([209.85.160.50]:48883 "EHLO
+	mail-pb0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754999Ab3CHDnn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Mar 2013 19:27:07 -0500
-Received: by mail-ye0-f176.google.com with SMTP id m9so181541yen.21
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Mar 2013 16:27:06 -0800 (PST)
-Content-Disposition: inline
+	Thu, 7 Mar 2013 22:43:43 -0500
+Received: by mail-pb0-f50.google.com with SMTP id up1so867343pbc.37
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Mar 2013 19:43:43 -0800 (PST)
+In-Reply-To: <1362187254-9227-1-git-send-email-bleung@chromium.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: torvalds@linux-foundation.org, olofj@chromium.org, miletus@chromium.org, dmitry.torokhov@gmail.com, matthew.garrett@nebula.com, rydberg@euromail.se, djkurtz@chromium.org, jy0922.shim@samsung.com, wfp5p@virginia.edu, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: bleung@chromium.org, davem@davemloft.net
 
-Hi,
+Add support for a touchpad variant in the atmel_mxt_ts driver.
+Then, add platform data for the 224s trackpad and the 1664s touchscreen
+in chromeos_laptop so that the existing version of the driver will
+probe these devices correctly.
 
-I have an ASUS Eee PC 1015PEM and, on upgrading from kernel 3.5.7 to
-3.6.11 noticed that the rfkill behaviour stopped working the way I was
-expecting.
+v3 : Add platform data for is_tp and key_map. Remove dependence on
+     device name for tp behavior.
+v2 : Minor bugfix in patch 1. Cleanup client_id from commit message.
+     Make sure chromeos_laptop patch applies cleanly to v3.9-rc1
 
-I have git-bisect-ed it down to the following commit:
-
-a50bd128f28cf81c1250874fc53728e113f12957
-
-which certainly looks relevant.
-
-I first noticed the problem because the WLAN rfkill toggle button
-(Fn+F2) stopped toggling the WLAN LED.  Also, it won't enable the WLAN
-if it is disabled in the BIOS.
-
-Prior to the change 'rfkill list' would show two devices: 0: "asus-wlan"
-and 1: "phy0".  Using either the button or 'rfkill (un)block all' would
-toggle the blocked state from "no,no; no,no" to "yes,no; yes,yes" where
-each pair is soft/hard and the first pair is the asus-wlan, the second
-the phy0.  Each time the phy0 hard block status would take a second or
-two to change.
-
-This worked regardless of the state in the BIOS and would appropriately
-toggle the WLAN LED.
-
-After the commit the two devices are switched: phy0 is number 0 and
-asus-wlan is number 1.  The hard block status of both devices is
-impossible to change with either 'rfkill' or the button.  The asus-wlan
-device is always not hard-blocked,  the phy0 hard-block always keeps the
-status assigned in the BIOS.  The soft-block state changes
-appropriately.  The WLAN LED never changes.
-
-If the WLAN is disabled in the BIOS it is never possible to enable it
-without a reboot and I am wondering if the device is ever switched off
-properly if it is enabled in the BIOS.
-
-Is this expected behaviour?  If not I am more than willing to
-investigate further if anyone can suggest a line of enquiry.
-
-Thank you,
-
-Murray Campbell <murray@sonology.net>
+[PATCH v3 1/2] Input: atmel_mxt_ts - Support for touchpad variant
+[PATCH v3 2/2] Platform: x86: chromeos_laptop : Add basic platform data
