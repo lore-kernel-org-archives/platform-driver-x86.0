@@ -1,66 +1,35 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH] hp-wmi: add more definitions for new event_id's
-Date: Fri, 15 Mar 2013 17:18:22 +0800
-Message-ID: <1363339102-22999-1-git-send-email-alex.hung@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:57417 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753528Ab3COJS2 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 15 Mar 2013 05:18:28 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: alex.hung@canonical.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH] pvevent: pvevent device driver
+Date: Fri, 15 Mar 2013 19:35:12 +0000
+Message-ID: <1363376111.2553.6.camel@x230.sbx07502.somerma.wayport.net>
+References: <1363251073-20380-1-git-send-email-hutao@cn.fujitsu.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+In-Reply-To: <1363251073-20380-1-git-send-email-hutao@cn.fujitsu.com>
+Content-Language: en-US
+Content-ID: <636F262DEFE665439B5DD84D24E9F7A2@namprd05.prod.outlook.com>
+List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: Hu Tao <hutao@cn.fujitsu.com>
+Cc: Peter Maydell <peter.maydell@linaro.org>, Gleb Natapov <gleb@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>, qemu-devel <qemu-devel@nongnu.org>, Markus Armbruster <armbru@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Orit Wasserman <owasserm@redhat.com>, Juan Quintela <quintela@redhat.com>, Alexander Graf <agraf@suse.de>, Christian Borntraeger <borntraeger@de.ibm.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andrew Jones <drjones@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Stefan Hajnoczi <stefanha@redhat.com>, Luiz Capitulino <lcapitulino@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Kevin Wolf <kwolf@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Marcelo Tosatti <mtosatti@redhat.com>, linux-kernel@vger.kernel.o
+List-Id: platform-driver-x86.vger.kernel.org
 
-New HP laptops start generating new events, and hp-wmi prints unknown
-event_ids for them. This patch also removes these messages
-
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/hp-wmi.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 45cacf7..b9e8c29 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -71,6 +71,14 @@ enum hp_wmi_event_ids {
- 	HPWMI_WIRELESS = 5,
- 	HPWMI_CPU_BATTERY_THROTTLE = 6,
- 	HPWMI_LOCK_SWITCH = 7,
-+	HPWMI_LID_SWITCH = 8,
-+	HPWMI_SCREEN_ROTATION = 9,
-+	HPWMI_COOLSENSE_SYSTEM_MOBILE = 0x0A,
-+	HPWMI_COOLSENSE_SYSTEM_HOT = 0x0B,
-+	HPWMI_PROXIMITY_SENSOR = 0x0C,
-+	HPWMI_BACKLIT_KB_BRIGHTNESS = 0x0D,
-+	HPWMI_PEAKSHIFT_PERIOD = 0x0F,
-+	HPWMI_BATTERY_CHARGE_PERIOD = 0x10,
- };
- 
- struct bios_args {
-@@ -537,6 +545,22 @@ static void hp_wmi_notify(u32 value, void *context)
- 		break;
- 	case HPWMI_LOCK_SWITCH:
- 		break;
-+	case HPWMI_LID_SWITCH:
-+		break;
-+	case HPWMI_SCREEN_ROTATION:
-+		break;
-+	case HPWMI_COOLSENSE_SYSTEM_MOBILE:
-+		break;
-+	case HPWMI_COOLSENSE_SYSTEM_HOT:
-+		break;
-+	case HPWMI_PROXIMITY_SENSOR:
-+		break;
-+	case HPWMI_BACKLIT_KB_BRIGHTNESS:
-+		break;
-+	case HPWMI_PEAKSHIFT_PERIOD:
-+		break;
-+	case HPWMI_BATTERY_CHARGE_PERIOD:
-+		break;
- 	default:
- 		pr_info("Unknown event_id - %d - 0x%x\n", event_id, event_data);
- 		break;
--- 
-1.7.9.5
+T24gVGh1LCAyMDEzLTAzLTE0IGF0IDE2OjUxICswODAwLCBIdSBUYW8gd3JvdGU6DQoNCj4gKwl7
+ICJNU0ZUMDAwMSIsIDB9LA0KDQpUaGlzIHNlZW1zIHdyb25nLCBhbmQgaXQgbG9va3MgbGlrZSBx
+ZW11IGFncmVlcy4gQ2FuIHlvdSByZXN1Ym1pdCB3aGVuDQp0aGVyZSdzIGFncmVlbWVudCBvbiB0
+aGUgbmFtZT8NCg0KPiArCWFjcGlfZXZhbHVhdGVfb2JqZWN0KGhhbmRsZSwgIldSUFQiLCAmYXJn
+X2xpc3QsIE5VTEwpOw0KDQpJcyB0aGVyZSBhIHNwZWMgZm9yIHRoaXM/DQoNCklzIHRoZSBvbmx5
+IHJlYXNvbiBmb3IgdGhpcyB0byBhbGxvdyBndWVzdHMgdG8gbm90aWZ5IHRoZSBob3N0IHRoYXQN
+CnRoZXkndmUgcGFuaWNrZWQ/IEl0IHNlZW1zIGxpa2UgbWFraW5nIHVzZSBvZiBwc3RvcmUgdG8g
+cHVzaCB0aGUgY3Jhc2gNCmR1bXAgdG8gdGhlIGhvc3QgYXMgd2VsbCB3b3VsZCBiZSBhIHVzZWZ1
+bCB0aGluZyB0byBkby4NCg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgfCBtamc1OUBzcmNmLnVjYW0u
+b3JnDQo=
