@@ -1,35 +1,34 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH] pvevent: pvevent device driver
-Date: Fri, 15 Mar 2013 19:35:12 +0000
-Message-ID: <1363376111.2553.6.camel@x230.sbx07502.somerma.wayport.net>
-References: <1363251073-20380-1-git-send-email-hutao@cn.fujitsu.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-In-Reply-To: <1363251073-20380-1-git-send-email-hutao@cn.fujitsu.com>
-Content-Language: en-US
-Content-ID: <636F262DEFE665439B5DD84D24E9F7A2@namprd05.prod.outlook.com>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: Hu Tao <hutao@cn.fujitsu.com>
-Cc: Peter Maydell <peter.maydell@linaro.org>, Gleb Natapov <gleb@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>, qemu-devel <qemu-devel@nongnu.org>, Markus Armbruster <armbru@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Orit Wasserman <owasserm@redhat.com>, Juan Quintela <quintela@redhat.com>, Alexander Graf <agraf@suse.de>, Christian Borntraeger <borntraeger@de.ibm.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andrew Jones <drjones@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Stefan Hajnoczi <stefanha@redhat.com>, Luiz Capitulino <lcapitulino@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Kevin Wolf <kwolf@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Marcelo Tosatti <mtosatti@redhat.com>, linux-kernel@vger.kernel.o
-List-Id: platform-driver-x86.vger.kernel.org
+From: Stephen Gildea <stepheng+linux@gildea.com>
+Subject: Dell Latitude E6530 keyboard mapping
+Date: Sun, 17 Mar 2013 07:51:40 -0700
+Message-ID: <8157.1363531900@owl>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from tigger.sg.gildea.net ([99.65.78.170]:44200 "EHLO
+	tigger2.sg.gildea.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756313Ab3CQO7f (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 17 Mar 2013 10:59:35 -0400
+Received: from owl.sg.gildea.net (owl-vpn.sg.gildea.net [192.168.115.10])
+	(using TLSv1.1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "owl.ma.gildea.net", Issuer "tigger.ma.gildea.net" (verified OK))
+	by tigger2.sg.gildea.net (Postfix) with ESMTPS id C85FFA90D7
+	for <platform-driver-x86@vger.kernel.org>; Sun, 17 Mar 2013 07:52:24 -0700 (PDT)
+Received: from owl (localhost.localdomain [127.0.0.1])
+	by owl.sg.gildea.net (Postfix) with ESMTP id D7E6D805E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 17 Mar 2013 07:51:40 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-T24gVGh1LCAyMDEzLTAzLTE0IGF0IDE2OjUxICswODAwLCBIdSBUYW8gd3JvdGU6DQoNCj4gKwl7
-ICJNU0ZUMDAwMSIsIDB9LA0KDQpUaGlzIHNlZW1zIHdyb25nLCBhbmQgaXQgbG9va3MgbGlrZSBx
-ZW11IGFncmVlcy4gQ2FuIHlvdSByZXN1Ym1pdCB3aGVuDQp0aGVyZSdzIGFncmVlbWVudCBvbiB0
-aGUgbmFtZT8NCg0KPiArCWFjcGlfZXZhbHVhdGVfb2JqZWN0KGhhbmRsZSwgIldSUFQiLCAmYXJn
-X2xpc3QsIE5VTEwpOw0KDQpJcyB0aGVyZSBhIHNwZWMgZm9yIHRoaXM/DQoNCklzIHRoZSBvbmx5
-IHJlYXNvbiBmb3IgdGhpcyB0byBhbGxvdyBndWVzdHMgdG8gbm90aWZ5IHRoZSBob3N0IHRoYXQN
-CnRoZXkndmUgcGFuaWNrZWQ/IEl0IHNlZW1zIGxpa2UgbWFraW5nIHVzZSBvZiBwc3RvcmUgdG8g
-cHVzaCB0aGUgY3Jhc2gNCmR1bXAgdG8gdGhlIGhvc3QgYXMgd2VsbCB3b3VsZCBiZSBhIHVzZWZ1
-bCB0aGluZyB0byBkby4NCg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgfCBtamc1OUBzcmNmLnVjYW0u
-b3JnDQo=
+On my Dell Latitude E6530 laptop, some of the function keys and keypad
+keys are mapped incorrectly by the kernel.  I first tested this with
+Linux 3.6; testing now with the current head (3.8+), I find that some of
+the keys have been fixed (End, NumLock, KbdLightOnOff, AudioPlayPause).
+Some of the other wrong keys have changed mappings but are still wrong
+(External Screen).
+
+What change fixed these keys, and where should I be looking to fix the
+rest of them?  I looked through drivers/platform/x86/, but I don't see
+any other drivers dealing with keyboard mappings.
+
+ < Stephen
