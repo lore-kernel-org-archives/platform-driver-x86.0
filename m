@@ -1,41 +1,40 @@
-From: Alexandru Gheorghiu <gheorghiuandru@gmail.com>
-Subject: [PATCH] drivers: platform: x86: Use PTR_RET function
-Date: Tue, 19 Mar 2013 03:01:34 +0200
-Message-ID: <1363654894-20309-1-git-send-email-gheorghiuandru@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: Dell Latitude E6530 keyboard mapping
+Date: Tue, 19 Mar 2013 10:55:31 -0700
+Message-ID: <1426990.1ajUrW6ygT@dtor-d630.eng.vmware.com>
+References: <8157.1363531900@owl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ee0-f48.google.com ([74.125.83.48]:43527 "EHLO
-	mail-ee0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751676Ab3CSKHR (ORCPT
+Received: from mail-da0-f48.google.com ([209.85.210.48]:50057 "EHLO
+	mail-da0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933316Ab3CSRze (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Mar 2013 06:07:17 -0400
+	Tue, 19 Mar 2013 13:55:34 -0400
+Received: by mail-da0-f48.google.com with SMTP id p8so450199dan.7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Mar 2013 10:55:34 -0700 (PDT)
+In-Reply-To: <8157.1363531900@owl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Gheorghiu <gheorghiuandru@gmail.com>
+To: Stephen Gildea <stepheng+linux@gildea.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Used PTR_RET function instead of IS_ERR and PTR_ERR.
-Patch found using coccinelle.
+Hi Stephen,
 
-Signed-off-by: Alexandru Gheorghiu <gheorghiuandru@gmail.com>
----
- drivers/platform/x86/samsung-q10.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+On Sunday, March 17, 2013 07:51:40 AM Stephen Gildea wrote:
+> On my Dell Latitude E6530 laptop, some of the function keys and keypad
+> keys are mapped incorrectly by the kernel.  I first tested this with
+> Linux 3.6; testing now with the current head (3.8+), I find that some of
+> the keys have been fixed (End, NumLock, KbdLightOnOff, AudioPlayPause).
+> Some of the other wrong keys have changed mappings but are still wrong
+> (External Screen).
+> 
+> What change fixed these keys, and where should I be looking to fix the
+> rest of them?  I looked through drivers/platform/x86/, but I don't see
+> any other drivers dealing with keyboard mappings.
 
-diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
-index 5f77005..1a90b62 100644
---- a/drivers/platform/x86/samsung-q10.c
-+++ b/drivers/platform/x86/samsung-q10.c
-@@ -176,10 +176,7 @@ static int __init samsungq10_init(void)
- 						   samsungq10_probe,
- 						   NULL, 0, NULL, 0);
- 
--	if (IS_ERR(samsungq10_device))
--		return PTR_ERR(samsungq10_device);
--
--	return 0;
-+	return PTR_RET(samsungq10_device);
- }
- 
- static void __exit samsungq10_exit(void)
+The mappings for AT keyboards is done by udev (look at its keymaps).
+
 -- 
-1.7.9.5
+Dmitry
