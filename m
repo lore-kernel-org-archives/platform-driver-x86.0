@@ -1,40 +1,52 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: Dell Latitude E6530 keyboard mapping
-Date: Tue, 19 Mar 2013 10:55:31 -0700
-Message-ID: <1426990.1ajUrW6ygT@dtor-d630.eng.vmware.com>
-References: <8157.1363531900@owl>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: [PATCH] Add support for fan button on Ideapad Z580
+Date: Wed, 20 Mar 2013 12:34:17 +0200
+Message-ID: <5434364.XvFO6bLzbd@ideapad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-da0-f48.google.com ([209.85.210.48]:50057 "EHLO
-	mail-da0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933316Ab3CSRze (ORCPT
+Received: from mail-bk0-f48.google.com ([209.85.214.48]:56490 "EHLO
+	mail-bk0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750835Ab3CTKeW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Mar 2013 13:55:34 -0400
-Received: by mail-da0-f48.google.com with SMTP id p8so450199dan.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Mar 2013 10:55:34 -0700 (PDT)
-In-Reply-To: <8157.1363531900@owl>
+	Wed, 20 Mar 2013 06:34:22 -0400
+Received: by mail-bk0-f48.google.com with SMTP id jf20so713408bkc.35
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Mar 2013 03:34:21 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stephen Gildea <stepheng+linux@gildea.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Ike Panhc <ike.pan@canonical.com>
+Cc: Ivan Vojtko <nekroman.sk@gmail.com>
 
-Hi Stephen,
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-On Sunday, March 17, 2013 07:51:40 AM Stephen Gildea wrote:
-> On my Dell Latitude E6530 laptop, some of the function keys and keypad
-> keys are mapped incorrectly by the kernel.  I first tested this with
-> Linux 3.6; testing now with the current head (3.8+), I find that some of
-> the keys have been fixed (End, NumLock, KbdLightOnOff, AudioPlayPause).
-> Some of the other wrong keys have changed mappings but are still wrong
-> (External Screen).
-> 
-> What change fixed these keys, and where should I be looking to fix the
-> rest of them?  I looked through drivers/platform/x86/, but I don't see
-> any other drivers dealing with keyboard mappings.
+The patch adds support for fan control button on Ideapad Z580. This is
+the same button as on Z570, but it raises different bit in
+VPCCMD_R_SPECIAL_BUTTONS. Also add message to dmesg when unknown button
+press detected, it will help adding support for new special buttons.
 
-The mappings for AT keyboards is done by udev (look at its keymaps).
-
--- 
-Dmitry
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Tested-by: Ivan Vojtko <nekroman.sk@gmail.com>
+---
+--- ideapad-laptop.c
++++ ideapad-laptop.c
+@@ -640,7 +640,8 @@
+ 	for (bit = 0; bit < 16; bit++) {
+ 		if (test_bit(bit, &value)) {
+ 			switch (bit) {
+-			case 6:
++			case 0:	/* Z580 */
++			case 6:	/* Z570 */
+ 				/* Thermal Management button */
+ 				ideapad_input_report(priv, 65);
+ 				break;
+@@ -648,6 +649,9 @@
+ 				/* OneKey Theater button */
+ 				ideapad_input_report(priv, 64);
+ 				break;
++			default:
++				pr_info("Unknown special button: %lu\n", bit);
++				break;
+ 			}
+ 		}
+ 	}
