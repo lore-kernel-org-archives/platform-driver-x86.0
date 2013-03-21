@@ -1,183 +1,42 @@
-From: Hu Tao <hutao@cn.fujitsu.com>
-Subject: [PATCH v15] pvpanic: pvpanic device driver
-Date: Thu, 21 Mar 2013 17:13:35 +0800
-Message-ID: <1363857215-23783-1-git-send-email-hutao@cn.fujitsu.com>
-References: <cover.1363847789.git.hutao@cn.fujitsu.com>
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-In-Reply-To: <cover.1363847789.git.hutao@cn.fujitsu.com>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, qemu-devel <qemu-devel@nongnu.org>, "Daniel P. Berrange" <berrange@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Jan Kiszka <jan.kiszka@siemens.com>, Gleb Natapov <gleb@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Eric Blake <eblake@redhat.com>, Andrew Jones <drjones@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Luiz Capitulino <lcapitulino@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Markus Armbruster <armbru@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Juan Quintela <quintela@redhat.com>, Orit Wasserman <owasserm@redhat.com>, Wen Congyang <wency@cn.fujitsu.com>, "Michael S. Tsirkin" <mst@redhat.com>, Alexander Graf <agraf@suse.de>Alex
-List-Id: platform-driver-x86.vger.kernel.org
+From: "WERNER ERICH ZELLER" <e639@humv.es>
+Subject: ACHTUNG FRIEND!
+Date: Fri, 22 Mar 2013 00:57:10 +0100 (CET)
+Message-ID: <55112.82.128.17.98.1363910230.squirrel__31067.8456597545$1363975558$gmane$org@correo.humv.es>
+Reply-To: wernererichzeller@yahoo.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from agero.humv.es ([193.146.74.20]:58141 "EHLO agero.humv.es"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1422633Ab3CVSFL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 22 Mar 2013 14:05:11 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-pvpanic device is a qemu simulated device through which guest panic
-event is sent to host.
 
-Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
----
 
-ref: http://lists.nongnu.org/archive/html/qemu-devel/2013-03/msg03630.html
-The version number is 15 to consist with qemu patches.
 
- drivers/platform/x86/Kconfig   |   7 +++
- drivers/platform/x86/Makefile  |   2 +
- drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 124 insertions(+)
- create mode 100644 drivers/platform/x86/pvpanic.c
+--=20
+Eure Eminenz, das ist das dritte Mal, dass ich schreibe Ihnen bin, ich
+bete nur du es dieses Mal! Ich bin Barrister Werner Erich Zeller des
+Vereinigten K=F6nigreichs und ich schreibe auf Ihre 100% aufrichtiges
+Interesse und Partnerschaft bei der Wiederherstellung der H=F6he von =80=
+ 15
+Mio. (EURO) Privatbank, die fr=FCher zu einem sp=E4ten Kunde von mir, d=
+ie,
+ohne einem bestimmten Nest weitergegeben geh=F6rten zu suchen Angeh=F6r=
+igen
+und Empf=E4nger. Wie f=FCr die Rechtm=E4=DFigkeit und Echtheit, lassen =
+Sie das zu
+mir, ich werde es als Rechtsanwalt rechtlich 100% Griff! Wir stehen bei=
+de
+zu 50% des =80 15 Mio. (EURO) jeweils als Partner profitieren. Schicken=
+ Sie
+mir eine private E-Mail f=FCr die Details: wernererichzeller@yahoo.com =
+und
+Telefon: +447024090820
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7ab0b2f..c72598e 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -768,4 +768,11 @@ config APPLE_GMUX
- 	  graphics as well as the backlight. Currently only backlight
- 	  control is supported by the driver.
- 
-+config PVPANIC
-+	tristate "pvpanic device support"
-+	depends on ACPI
-+	---help---
-+	  This driver provides support for pvpanic device, which is a qemu
-+	  simulated device through which guest panic event is sent to host.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index bf7e4f9..b52f1c4 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -50,3 +50,5 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
- obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
- obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
- obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
-+
-+obj-$(CONFIG_PVPANIC)           += pvpanic.o
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-new file mode 100644
-index 0000000..e6ea595
---- /dev/null
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -0,0 +1,115 @@
-+/*
-+ *  pvpanic.c - pvpanic Device Support
-+ *
-+ *  Copyright (C) 2013 Fujitsu.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
-+
-+MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-+MODULE_DESCRIPTION("pvpanic device driver");
-+MODULE_LICENSE("GPL");
-+
-+static int pvpanic_add(struct acpi_device *device);
-+static int pvpanic_remove(struct acpi_device *device);
-+
-+static const struct acpi_device_id pvpanic_device_ids[] = {
-+	{ "QEMU0001", 0},
-+	{ "", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-+
-+#define PVPANIC_PANICKED	(1 << 0)
-+
-+static acpi_handle handle;
-+
-+static struct acpi_driver pvpanic_driver = {
-+	.name =		"pvpanic",
-+	.class =	"QEMU",
-+	.ids =		pvpanic_device_ids,
-+	.ops =		{
-+				.add =		pvpanic_add,
-+				.remove =	pvpanic_remove,
-+			},
-+	.owner =	THIS_MODULE,
-+};
-+
-+static void
-+pvpanic_send_event(unsigned int event)
-+{
-+	union acpi_object arg;
-+	struct acpi_object_list arg_list;
-+
-+	if (!handle)
-+		return;
-+
-+	arg.type = ACPI_TYPE_INTEGER;
-+	arg.integer.value = event;
-+
-+	arg_list.count = 1;
-+	arg_list.pointer = &arg;
-+
-+	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
-+}
-+
-+static int
-+pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-+		     void *unused)
-+{
-+	pvpanic_send_event(PVPANIC_PANICKED);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block pvpanic_panic_nb = {
-+	.notifier_call = pvpanic_panic_notify,
-+};
-+
-+static int pvpanic_add(struct acpi_device *device)
-+{
-+	acpi_status status;
-+	u64 ret;
-+
-+	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-+				       &ret);
-+
-+	if (ACPI_FAILURE(status) || !ret)
-+		return -ENODEV;
-+
-+	handle = device->handle;
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &pvpanic_panic_nb);
-+
-+	return 0;
-+}
-+
-+static int pvpanic_remove(struct acpi_device *device)
-+{
-+
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &pvpanic_panic_nb);
-+	handle = NULL;
-+	return 0;
-+}
-+
-+module_acpi_driver(pvpanic_driver);
--- 
-1.8.1.4
+Bitte zur=FCck zu mir sofort!
+Werner Erich Zeller (Attorney)
