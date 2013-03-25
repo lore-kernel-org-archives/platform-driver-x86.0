@@ -1,81 +1,26 @@
-From: Yinghai Lu <yinghai@kernel.org>
-Subject: [PATCH] ACPI: Set length even for TYPE_END_TAG acpi resource
-Date: Sat, 23 Mar 2013 12:16:37 -0700
-Message-ID: <1364066197-11670-1-git-send-email-yinghai@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>, Bob Moore <robert.moore@intel.com>
-Cc: Len Brown <len.brown@intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Mattia Dongili <malattia@linux.it>, Matthew Garrett <matthew.garrett@nebula.com>, Adam Belay <abelay@mit.edu>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Sec Loan Firm <drsuhaila@kk.usm.my>
+Subject: loan offer
+Date: Tue, 26 Mar 2013 02:27:44 +0800 (MYT)
+Message-ID: <2681337.204771364236064312.JavaMail.root@mail.kk.usm.my>
+Reply-To: Sec Loan Firm <sec.capitaloans@kimo.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.kk.usm.my ([202.170.49.111]:60591 "EHLO mail.kk.usm.my"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932337Ab3CYWuI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 25 Mar 2013 18:50:08 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-Found with pm/linux-next, network device in QEMU/KVM guest does not
-work anymore.
+Good Day,
 
-Bisected to commit c13085e5
-    ACPICA: Resource Mgr: Prevent infinite loops in resource walks
+Do you need a personal or business loan without stress and quick approval? If yes, contact us today as we are currently offering loans at superb interest rate. Our loan is secured and safe, our customers happiness is our strength. For more information and Application
 
-That commit will check acpi_resource length strictly.
-it cause acpi_set_current_resources return failure and irq for pci device
-is not set properly.
+Sincerely,
+Mrs Lina Vija.
 
-Set length for all those TYPE_END_TAG acpi_resources.
-
-Bisected-by: Yinghai Lu <yinghai@kernel.org>
-Signed-off-by: Yinghai Lu <yinghai@kernel.org>
-Cc: Mattia Dongili <malattia@linux.it>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Adam Belay <abelay@mit.edu>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: platform-driver-x86@vger.kernel.org
-
----
- drivers/acpi/pci_link.c            |    1 +
- drivers/platform/x86/sony-laptop.c |    3 ++-
- drivers/pnp/pnpacpi/rsparser.c     |    1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
-
-Index: linux-2.6/drivers/acpi/pci_link.c
-===================================================================
---- linux-2.6.orig/drivers/acpi/pci_link.c
-+++ linux-2.6/drivers/acpi/pci_link.c
-@@ -354,6 +354,7 @@ static int acpi_pci_link_set(struct acpi
- 
- 	}
- 	resource->end.type = ACPI_RESOURCE_TYPE_END_TAG;
-+	resource->end.length = sizeof(struct acpi_resource);
- 
- 	/* Attempt to set the resource */
- 	status = acpi_set_current_resources(link->device->handle, &buffer);
-Index: linux-2.6/drivers/platform/x86/sony-laptop.c
-===================================================================
---- linux-2.6.orig/drivers/platform/x86/sony-laptop.c
-+++ linux-2.6/drivers/platform/x86/sony-laptop.c
-@@ -4121,7 +4121,7 @@ static int sony_pic_enable(struct acpi_d
- 		resource->res3.data.irq.sharable = ACPI_SHARED;
- 
- 		resource->res4.type = ACPI_RESOURCE_TYPE_END_TAG;
--
-+		resource->res4.length = sizeof(struct acpi_resource);
- 	}
- 	/* setup Type 2/3 resources */
- 	else {
-@@ -4140,6 +4140,7 @@ static int sony_pic_enable(struct acpi_d
- 		resource->res2.data.irq.sharable = ACPI_SHARED;
- 
- 		resource->res3.type = ACPI_RESOURCE_TYPE_END_TAG;
-+		resource->res3.length = sizeof(struct acpi_resource);
- 	}
- 
- 	/* Attempt to set the resource */
-Index: linux-2.6/drivers/pnp/pnpacpi/rsparser.c
-===================================================================
---- linux-2.6.orig/drivers/pnp/pnpacpi/rsparser.c
-+++ linux-2.6/drivers/pnp/pnpacpi/rsparser.c
-@@ -634,6 +634,7 @@ int pnpacpi_build_resource_template(stru
- 	}
- 	/* resource will pointer the end resource now */
- 	resource->type = ACPI_RESOURCE_TYPE_END_TAG;
-+	resource->length = sizeof(struct acpi_resource);
- 
- 	return 0;
- }
+SEC capitals Inc.
+Public Relations Officer.
