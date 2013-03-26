@@ -1,99 +1,105 @@
-From: Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH 1/1] thinkpad-acpi: kill hotkey_thread_mutex
-Date: Tue, 26 Mar 2013 14:09:19 +0100
-Message-ID: <20130326130918.GA29941@redhat.com>
-References: <201303042055.38040.maciej.rutecki@gmail.com> <20130307175305.GA15631@redhat.com> <20130307175359.GB15631@redhat.com> <3714515.nbfe9U9zSg@vostro.rjw.lan>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH] ACPI: Set length even for TYPE_END_TAG acpi resource
+Date: Tue, 26 Mar 2013 14:38:48 +0100
+Message-ID: <3286748.nH2qgHsh48@vostro.rjw.lan>
+References: <1364066197-11670-1-git-send-email-yinghai@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:43269 "EHLO mx1.redhat.com"
+Received: from hydra.sisk.pl ([212.160.235.94]:43102 "EHLO hydra.sisk.pl"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758085Ab3CZNLs (ORCPT
+	id S933808Ab3CZNbW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 26 Mar 2013 09:11:48 -0400
-Content-Disposition: inline
-In-Reply-To: <3714515.nbfe9U9zSg@vostro.rjw.lan>
+	Tue, 26 Mar 2013 09:31:22 -0400
+In-Reply-To: <1364066197-11670-1-git-send-email-yinghai@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mandeep Singh Baines <msb@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Artem Savkov <artem.savkov@gmail.com>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Bob Moore <robert.moore@intel.com>, Len Brown <len.brown@intel.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Mattia Dongili <malattia@linux.it>, Matthew Garrett <matthew.garrett@nebula.com>, Adam Belay <abelay@mit.edu>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org
 
-On 03/26, Rafael J. Wysocki wrote:
->
-> On Thursday, March 07, 2013 06:53:59 PM Oleg Nesterov wrote:
-> > hotkey_kthread() does try_to_freeze() under hotkey_thread_mutex.
-> >
-> > We can simply kill this mutex, hotkey_poll_stop_sync() does not need
-> > to serialize with hotkey_kthread(). When kthread_stop() returns the
-> > thread is already dead, it called do_exit()->complete_vfork_done().
-> >
-> > Reported-by: Artem Savkov <artem.savkov@gmail.com>
-> > Reported-by: Maciej Rutecki <maciej.rutecki@gmail.com>
-> > Signed-off-by: Oleg Nesterov <oleg@redhat.com>
->
-> I wonder if anyone is taking care of this patch?
-
-IIRC, it is already in -mm tree.
-
-
-
-
-
-> Rafael
+On Saturday, March 23, 2013 12:16:37 PM Yinghai Lu wrote:
+> Found with pm/linux-next, network device in QEMU/KVM guest does not
+> work anymore.
 > 
+> Bisected to commit c13085e5
+>     ACPICA: Resource Mgr: Prevent infinite loops in resource walks
 > 
-> > --- x/drivers/platform/x86/thinkpad_acpi.c
-> > +++ x/drivers/platform/x86/thinkpad_acpi.c
-> > @@ -1965,9 +1965,6 @@ struct tp_nvram_state {
-> >  /* kthread for the hotkey poller */
-> >  static struct task_struct *tpacpi_hotkey_task;
-> >  
-> > -/* Acquired while the poller kthread is running, use to sync start/stop */
-> > -static struct mutex hotkey_thread_mutex;
-> > -
-> >  /*
-> >   * Acquire mutex to write poller control variables as an
-> >   * atomic block.
-> > @@ -2463,8 +2460,6 @@ static int hotkey_kthread(void *data)
-> >  	unsigned int poll_freq;
-> >  	bool was_frozen;
-> >  
-> > -	mutex_lock(&hotkey_thread_mutex);
-> > -
-> >  	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
-> >  		goto exit;
-> >  
-> > @@ -2524,7 +2519,6 @@ static int hotkey_kthread(void *data)
-> >  	}
-> >  
-> >  exit:
-> > -	mutex_unlock(&hotkey_thread_mutex);
-> >  	return 0;
-> >  }
-> >  
-> > @@ -2534,9 +2528,6 @@ static void hotkey_poll_stop_sync(void)
-> >  	if (tpacpi_hotkey_task) {
-> >  		kthread_stop(tpacpi_hotkey_task);
-> >  		tpacpi_hotkey_task = NULL;
-> > -		mutex_lock(&hotkey_thread_mutex);
-> > -		/* at this point, the thread did exit */
-> > -		mutex_unlock(&hotkey_thread_mutex);
-> >  	}
-> >  }
-> >  
-> > @@ -3235,7 +3226,6 @@ static int __init hotkey_init(struct ibm
-> >  	mutex_init(&hotkey_mutex);
-> >  
-> >  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
-> > -	mutex_init(&hotkey_thread_mutex);
-> >  	mutex_init(&hotkey_thread_data_mutex);
-> >  #endif
-> >  
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> -- 
-> I speak only for myself.
-> Rafael J. Wysocki, Intel Open Source Technology Center.
+> That commit will check acpi_resource length strictly.
+> it cause acpi_set_current_resources return failure and irq for pci device
+> is not set properly.
+> 
+> Set length for all those TYPE_END_TAG acpi_resources.
+> 
+> Bisected-by: Yinghai Lu <yinghai@kernel.org>
+> Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+> Cc: Mattia Dongili <malattia@linux.it>
+> Cc: Matthew Garrett <matthew.garrett@nebula.com>
+> Cc: Adam Belay <abelay@mit.edu>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: platform-driver-x86@vger.kernel.org
+
+Applied.
+
+Thanks,
+Rafael
+
+
+> ---
+>  drivers/acpi/pci_link.c            |    1 +
+>  drivers/platform/x86/sony-laptop.c |    3 ++-
+>  drivers/pnp/pnpacpi/rsparser.c     |    1 +
+>  3 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> Index: linux-2.6/drivers/acpi/pci_link.c
+> ===================================================================
+> --- linux-2.6.orig/drivers/acpi/pci_link.c
+> +++ linux-2.6/drivers/acpi/pci_link.c
+> @@ -354,6 +354,7 @@ static int acpi_pci_link_set(struct acpi
+>  
+>  	}
+>  	resource->end.type = ACPI_RESOURCE_TYPE_END_TAG;
+> +	resource->end.length = sizeof(struct acpi_resource);
+>  
+>  	/* Attempt to set the resource */
+>  	status = acpi_set_current_resources(link->device->handle, &buffer);
+> Index: linux-2.6/drivers/platform/x86/sony-laptop.c
+> ===================================================================
+> --- linux-2.6.orig/drivers/platform/x86/sony-laptop.c
+> +++ linux-2.6/drivers/platform/x86/sony-laptop.c
+> @@ -4121,7 +4121,7 @@ static int sony_pic_enable(struct acpi_d
+>  		resource->res3.data.irq.sharable = ACPI_SHARED;
+>  
+>  		resource->res4.type = ACPI_RESOURCE_TYPE_END_TAG;
+> -
+> +		resource->res4.length = sizeof(struct acpi_resource);
+>  	}
+>  	/* setup Type 2/3 resources */
+>  	else {
+> @@ -4140,6 +4140,7 @@ static int sony_pic_enable(struct acpi_d
+>  		resource->res2.data.irq.sharable = ACPI_SHARED;
+>  
+>  		resource->res3.type = ACPI_RESOURCE_TYPE_END_TAG;
+> +		resource->res3.length = sizeof(struct acpi_resource);
+>  	}
+>  
+>  	/* Attempt to set the resource */
+> Index: linux-2.6/drivers/pnp/pnpacpi/rsparser.c
+> ===================================================================
+> --- linux-2.6.orig/drivers/pnp/pnpacpi/rsparser.c
+> +++ linux-2.6/drivers/pnp/pnpacpi/rsparser.c
+> @@ -634,6 +634,7 @@ int pnpacpi_build_resource_template(stru
+>  	}
+>  	/* resource will pointer the end resource now */
+>  	resource->type = ACPI_RESOURCE_TYPE_END_TAG;
+> +	resource->length = sizeof(struct acpi_resource);
+>  
+>  	return 0;
+>  }
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
