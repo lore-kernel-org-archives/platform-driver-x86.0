@@ -1,30 +1,86 @@
-From: Danny Baumann <dannybaumann@web.de>
-Subject: [PATCH 0/1] dell-wmi: Add support for keys present on Inspiron 15R SE.
-Date: Tue, 26 Mar 2013 12:36:33 +0100
-Message-ID: <1364297794-3931-1-git-send-email-dannybaumann@web.de>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 1/1] thinkpad-acpi: kill hotkey_thread_mutex
+Date: Tue, 26 Mar 2013 14:14:07 +0100
+Message-ID: <3714515.nbfe9U9zSg@vostro.rjw.lan>
+References: <201303042055.38040.maciej.rutecki@gmail.com> <20130307175305.GA15631@redhat.com> <20130307175359.GB15631@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130307175359.GB15631@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Danny Baumann <dannybaumann@web.de>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mandeep Singh Baines <msb@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Artem Savkov <artem.savkov@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch adds support for some keys of the newer Inspiron models not
-yet supported (the two buttons in the upper right corner in [1]). I'm not
-yet entirely sure what the best way to handle the audio one (in the middle)
-is (whether it's best to handle the key-down or the key-up event, and what
-scancode to use), I would appreciate input on that.
+On Thursday, March 07, 2013 06:53:59 PM Oleg Nesterov wrote:
+> hotkey_kthread() does try_to_freeze() under hotkey_thread_mutex.
+> 
+> We can simply kill this mutex, hotkey_poll_stop_sync() does not need
+> to serialize with hotkey_kthread(). When kthread_stop() returns the
+> thread is already dead, it called do_exit()->complete_vfork_done().
+> 
+> Reported-by: Artem Savkov <artem.savkov@gmail.com>
+> Reported-by: Maciej Rutecki <maciej.rutecki@gmail.com>
+> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 
-Regards,
+I wonder if anyone is taking care of this patch?
 
-Danny
+Rafael
 
-[1] http://www.tomshw.it/files/2012/08/collezioni/1752/32067_b.jpg
 
-Danny Baumann (1):
-  dell-wmi: Add support for keys present on Inspiron 15R SE.
-
- drivers/platform/x86/dell-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
+> --- x/drivers/platform/x86/thinkpad_acpi.c
+> +++ x/drivers/platform/x86/thinkpad_acpi.c
+> @@ -1965,9 +1965,6 @@ struct tp_nvram_state {
+>  /* kthread for the hotkey poller */
+>  static struct task_struct *tpacpi_hotkey_task;
+>  
+> -/* Acquired while the poller kthread is running, use to sync start/stop */
+> -static struct mutex hotkey_thread_mutex;
+> -
+>  /*
+>   * Acquire mutex to write poller control variables as an
+>   * atomic block.
+> @@ -2463,8 +2460,6 @@ static int hotkey_kthread(void *data)
+>  	unsigned int poll_freq;
+>  	bool was_frozen;
+>  
+> -	mutex_lock(&hotkey_thread_mutex);
+> -
+>  	if (tpacpi_lifecycle == TPACPI_LIFE_EXITING)
+>  		goto exit;
+>  
+> @@ -2524,7 +2519,6 @@ static int hotkey_kthread(void *data)
+>  	}
+>  
+>  exit:
+> -	mutex_unlock(&hotkey_thread_mutex);
+>  	return 0;
+>  }
+>  
+> @@ -2534,9 +2528,6 @@ static void hotkey_poll_stop_sync(void)
+>  	if (tpacpi_hotkey_task) {
+>  		kthread_stop(tpacpi_hotkey_task);
+>  		tpacpi_hotkey_task = NULL;
+> -		mutex_lock(&hotkey_thread_mutex);
+> -		/* at this point, the thread did exit */
+> -		mutex_unlock(&hotkey_thread_mutex);
+>  	}
+>  }
+>  
+> @@ -3235,7 +3226,6 @@ static int __init hotkey_init(struct ibm
+>  	mutex_init(&hotkey_mutex);
+>  
+>  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+> -	mutex_init(&hotkey_thread_mutex);
+>  	mutex_init(&hotkey_thread_data_mutex);
+>  #endif
+>  
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 -- 
-1.8.1.4
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
