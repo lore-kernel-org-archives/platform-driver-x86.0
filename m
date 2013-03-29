@@ -1,196 +1,63 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v16] pvpanic: pvpanic device driver
-Date: Fri, 29 Mar 2013 10:31:59 +0100
-Message-ID: <51555F8F.1050508@redhat.com>
-References: <cover.1364541739.git.hutao@cn.fujitsu.com>
-	<1364546077-10539-1-git-send-email-hutao@cn.fujitsu.com>
+From: Phillip Williams <p.williams@americanmediadistributioninc.com>
+Subject: Offer to Attend Events for AMD
+Date: Fri, 29 Mar 2013 12:52:30 -0400
+Message-ID: <8922fbac1c17daf9db17181442867d49@www.americanmediadistributioninc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
-In-Reply-To: <1364546077-10539-1-git-send-email-hutao@cn.fujitsu.com>
-List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
-List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
-List-Post: <mailto:qemu-devel@nongnu.org>
-List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
-List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
-	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
-Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
-To: Hu Tao <hutao@cn.fujitsu.com>
-Cc: Peter Maydell <peter.maydell@linaro.org>, Gleb Natapov <gleb@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jan Kiszka <jan.kiszka@siemens.com>, qemu-devel <qemu-devel@nongnu.org>, Alexander Graf <agraf@suse.de>, Blue Swirl <blauwirbel@gmail.com>, Orit Wasserman <owasserm@redhat.com>, Matthew Garrett <matthew.garrett@nebula.com>, Juan Quintela <quintela@redhat.com>, Markus Armbruster <armbru@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, platform-driver-x86@vger.kernel.org, Andrew Jones <drjones@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Stefan Hajnoczi <stefanha@redhat.com>, Luiz Capitulino <lcapitulino@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Anthony Liguori <aliguori@us.ibm.com>, Marcelo Tosatti <mtosatti@redhat.com>, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from [204.12.61.126] ([204.12.61.126]:51043 "EHLO
+	s1051440.instanturl.net" rhost-flags-FAIL-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1755945Ab3C2RBH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 29 Mar 2013 13:01:07 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-Il 29/03/2013 09:34, Hu Tao ha scritto:
-> pvpanic device is a qemu simulated device through which guest panic
-> event is sent to host.
-> 
-> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
-> ---
-> 
-> ref: http://lists.nongnu.org/archive/html/qemu-devel/2013-03/msg05297.html
-> 
->  drivers/platform/x86/Kconfig   |   7 +++
->  drivers/platform/x86/Makefile  |   2 +
->  drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 124 insertions(+)
->  create mode 100644 drivers/platform/x86/pvpanic.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 3338437..527ed04 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -781,4 +781,11 @@ config APPLE_GMUX
->  	  graphics as well as the backlight. Currently only backlight
->  	  control is supported by the driver.
->  
-> +config PVPANIC
-> +	tristate "pvpanic device support"
-> +	depends on ACPI
-> +	---help---
-> +	  This driver provides support for pvpanic device, which is a qemu
-> +	  simulated device through which guest panic event is sent to host.
-> +
->  endif # X86_PLATFORM_DEVICES
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index ace2b38..ef0ec74 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
->  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
->  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->  obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
-> +
-> +obj-$(CONFIG_PVPANIC)           += pvpanic.o
-> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-> new file mode 100644
-> index 0000000..e6ea595
-> --- /dev/null
-> +++ b/drivers/platform/x86/pvpanic.c
-> @@ -0,0 +1,115 @@
-> +/*
-> + *  pvpanic.c - pvpanic Device Support
-> + *
-> + *  Copyright (C) 2013 Fujitsu.
-> + *
-> + *  This program is free software; you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License as published by
-> + *  the Free Software Foundation; either version 2 of the License, or
-> + *  (at your option) any later version.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *  GNU General Public License for more details.
-> + *
-> + *  You should have received a copy of the GNU General Public License
-> + *  along with this program; if not, write to the Free Software
-> + *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/types.h>
-> +#include <acpi/acpi_bus.h>
-> +#include <acpi/acpi_drivers.h>
-> +
-> +MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-> +MODULE_DESCRIPTION("pvpanic device driver");
-> +MODULE_LICENSE("GPL");
-> +
-> +static int pvpanic_add(struct acpi_device *device);
-> +static int pvpanic_remove(struct acpi_device *device);
-> +
-> +static const struct acpi_device_id pvpanic_device_ids[] = {
-> +	{ "QEMU0001", 0},
-> +	{ "", 0},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-> +
-> +#define PVPANIC_PANICKED	(1 << 0)
-> +
-> +static acpi_handle handle;
-> +
-> +static struct acpi_driver pvpanic_driver = {
-> +	.name =		"pvpanic",
-> +	.class =	"QEMU",
-> +	.ids =		pvpanic_device_ids,
-> +	.ops =		{
-> +				.add =		pvpanic_add,
-> +				.remove =	pvpanic_remove,
-> +			},
-> +	.owner =	THIS_MODULE,
-> +};
-> +
-> +static void
-> +pvpanic_send_event(unsigned int event)
-> +{
-> +	union acpi_object arg;
-> +	struct acpi_object_list arg_list;
-> +
-> +	if (!handle)
-> +		return;
-> +
-> +	arg.type = ACPI_TYPE_INTEGER;
-> +	arg.integer.value = event;
-> +
-> +	arg_list.count = 1;
-> +	arg_list.pointer = &arg;
-> +
-> +	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
-> +}
-> +
-> +static int
-> +pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-> +		     void *unused)
-> +{
-> +	pvpanic_send_event(PVPANIC_PANICKED);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block pvpanic_panic_nb = {
-> +	.notifier_call = pvpanic_panic_notify,
-> +};
-> +
-> +static int pvpanic_add(struct acpi_device *device)
-> +{
-> +	acpi_status status;
-> +	u64 ret;
-> +
-> +	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-> +				       &ret);
-> +
-> +	if (ACPI_FAILURE(status) || !ret)
-> +		return -ENODEV;
+I would like to know if you would have any interest in covering some
+events for us in your area?
 
-Please return if (ret & 0x0B) != 0x0B.  This checks:
+There would be NO COST at all for admission, and it would not be
+necessary for you to be an experienced reporter.
 
-Bit 0 - Set if the device is present.
-Bit 1 - Set if the device is enabled and decoding its resources.
-Bit 3 - Set if the device is functioning properly.
+We are looking for members of the public to cover events such as Music
+Concerts, Sporting Events, Restaurant Openings, Movies, Gallery
+Openings, Shows, and others.
 
-Otherwise looks good.
+Since AMD has different pools relevant to experience (beginners up to
+experienced working reporters) should you not be familiar with our
+company, please take a moment to look into American Media Distribution
+with any source you deem trusted.
 
-> +
-> +	handle = device->handle;
-> +	atomic_notifier_chain_register(&panic_notifier_list,
-> +				       &pvpanic_panic_nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pvpanic_remove(struct acpi_device *device)
-> +{
-> +
-> +	atomic_notifier_chain_unregister(&panic_notifier_list,
-> +					 &pvpanic_panic_nb);
-> +	handle = NULL;
-> +	return 0;
-> +}
-> +
-> +module_acpi_driver(pvpanic_driver);
-> 
+Here is a link to the AMD BBB page for your convenience.
+
+http://www.bbb.org/new-jersey/business-reviews/news-service/american-media-distribution-in-howell-nj-90096055
+
+There is compensation for the events you would attend and again, there
+is no cost for admission to any of the events, and no obligation is
+required. 
+
+We will be accepting only a few people from your area so let us know
+if you are interested in obtaining any further information. 
+
+Phil Williams
+AMD Event Coverage Coordinator
+American Media Distribution(.com) or americanmediadist.com
+4057 US Hwy 9 North Howell NJ 07731
+888.319.6336 x714(by appointment only please)
+
+-This e-mail and any accompanying attachments are confidential. This
+information is intended solely for the use of the individual to whom
+it is addressed. Any review, disclosure, copying, distribution, or use
+of this e-mail communication by others is strictly prohibited. THERE
+WILL BE NO FOLLOWING EMAILS SENT - If you are not the intended
+recipient, please notify us immediately by returning this message to
+the sender and delete all copies. Thank you for your cooperation.
+-MacAfee Virus Checked - Virus Free-
+
+-- no more reporter/event updates reply w NO MORE in subject
+
+
+
+--
