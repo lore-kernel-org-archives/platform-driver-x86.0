@@ -1,81 +1,184 @@
-From: Jelle van der Waa <jelle@vdwaa.nl>
-Subject: hp-wmi hp 8570W hardware wifi key
-Date: Tue, 02 Apr 2013 15:51:58 +0200
-Message-ID: <515AE27E.8050204@vdwaa.nl>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: =?UTF-8?q?=5BPATCH=200/1=5D=20RAPL=20=28Running=20Average=20Power=20Limit=29=20driver?=
+Date: Tue,  2 Apr 2013 15:15:35 -0700
+Message-ID: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------070901080405020304070002"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f177.google.com ([209.85.215.177]:38666 "EHLO
-	mail-ea0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752256Ab3DBNrq (ORCPT
+Received: from mga03.intel.com ([143.182.124.21]:62899 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S933879Ab3DBWP4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Apr 2013 09:47:46 -0400
-Received: by mail-ea0-f177.google.com with SMTP id q14so227867eaj.22
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Apr 2013 06:47:45 -0700 (PDT)
+	Tue, 2 Apr 2013 18:15:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com
-Cc: platform-driver-x86@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-This is a multi-part message in MIME format.
---------------070901080405020304070002
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+RAPL(Running Average Power Limit) interface provides platform software
+with the ability to monitor, control, and get notifications on SOC
+power consumptions. Since its first appearance on Sandy Bridge, more
+features have being added to extend its usage. In RAPL, platforms are
+divided into domains for fine grained control. These domains include
+package, DRAM controller, CPU core (Power Plane 0), graphics uncore
+(power plane 1), etc.
 
-Hi,
+The purpose of this driver is to expose RAPL for userspace
+consumption. Overall, RAPL fits in the generic thermal layer in
+that platform level power capping and monitoring are mainly used for
+thermal management and thermal layer provides the abstracted interface
+needed to have portable applications.
 
-I recently updated my laptop's BIOS and now my hardware wifi key fails,
-it doesn't disable the wifi chip anymore.
-In dmesg I found an error message, which indicates a event_id changed. (
-dmesg.txt )
+Specifically, userspace is presented with per domain cooling device
+with sysfs links to its kobject. Although RAPL domain provides many
+parameters for fine tuning, long term power limit is exposed as the
+single knob via cooling device state. Whereas the rest of the
+parameters are still accessible via the linked kobject. This simplifies
+the interface for both simple and advanced use cases.
 
-I tried to fix the issue by patching hp_wmi.c, to match the new event_id
-which seems to be 8, but I couldn't get it working. (
-hp_wmi_wireless_event_id_changed.patch ).
+DETAILS
+=3D=3D=3D=3D=3D=3D=3D
+1. sysfs layout
 
-I'm willing to test patches and I will try to test if the issues occurs
-with the recent rc release of linux.
+As an x86 platform driver, RAPL driver binds with supported CPU ids
+during probing phase. Once domains are discovered, kobjets are created
+for each domain which are also linked with cooling devices after its
+registration with the generic thermal layer.
 
---------------070901080405020304070002
-Content-Type: text/plain; charset=UTF-8;
- name="dmesg.txt"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="dmesg.txt"
+e.g.package RAPL domain registered as cooling device #15, link "device"
+back to its kobject.
 
-[89172.325510] hp_wmi: Unknown event_id - 8 - 0x2
-[89174.314755] atkbd serio0: Unknown key pressed (translated set 2, code 0xf8 on isa0060/serio0).
-[89174.314763] atkbd serio0: Use 'setkeycodes e078 <keycode>' to make it known.
-[89174.495251] atkbd serio0: Unknown key released (translated set 2, code 0xf8 on isa0060/serio0).
-[89174.495259] atkbd serio0: Use 'setkeycodes e078 <keycode>' to make it known.
+/sys/class/thermal/cooling_device15/
+=E2=94=9C=E2=94=80=E2=94=80 cur_state
+=E2=94=9C=E2=94=80=E2=94=80 device -> ../../../platform/intel_rapl/rapl=
+_domains/package
+=E2=94=9C=E2=94=80=E2=94=80 max_state
+=E2=94=9C=E2=94=80=E2=94=80 power
+=E2=94=9C=E2=94=80=E2=94=80 subsystem -> ../../../../class/thermal
+=E2=94=9C=E2=94=80=E2=94=80 type
+=E2=94=94=E2=94=80=E2=94=80 uevent
 
---------------070901080405020304070002
-Content-Type: text/x-patch;
- name="hp_wmi_wireless_event_id_changed.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="hp_wmi_wireless_event_id_changed.patch"
+In driver's private sysfs area, domains kobjects are grouped under a
+kset which exposes global data.
+/sys/devices/platform/intel_rapl/
+=E2=94=9C=E2=94=80=E2=94=80 driver -> ../../../bus/platform/drivers/int=
+el_rapl
+=E2=94=9C=E2=94=80=E2=94=80 power
+=E2=94=9C=E2=94=80=E2=94=80 rapl_domains
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 package
+=E2=94=82=C2=A0=C2=A0 =E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80=
+ thermal_cooling
+-> ../../../../virtual/thermal/cooling_device15 =20
+=E2=94=82=C2=A0=C2=A0 =E2=94=9C=E2=94=80=E2=94=80 power_plane_0
+=E2=94=82=C2=A0=C2=A0 =E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80=
+ thermal_cooling
+-> ../../../../virtual/thermal/cooling_device16 =20
+=E2=94=82=C2=A0=C2=A0 =E2=94=94=E2=94=80=E2=94=80 power_plane_1
+=E2=94=82=C2=A0=C2=A0     =E2=94=94=E2=94=80=E2=94=80 thermal_cooling
+-> ../../../../virtual/thermal/cooling_device18 =20
+=E2=94=94=E2=94=80=E2=94=80 subsystem -> ../../../bus/platform
 
-diff -aur linux-3.9-rc6/drivers/platform/x86/hp-wmi.c linux-3.9-rc5/drivers/platform/x86/hp-wmi.c
---- linux-3.9-rc6/drivers/platform/x86/hp-wmi.c	2013-04-02 14:50:59.674132120 +0200
-+++ linux-3.9-rc5/drivers/platform/x86/hp-wmi.c	2013-04-02 14:55:51.484149029 +0200
-@@ -71,6 +71,7 @@
- 	HPWMI_WIRELESS = 5,
- 	HPWMI_CPU_BATTERY_THROTTLE = 6,
- 	HPWMI_LOCK_SWITCH = 7,
-+	HPWMI_WIRELESS_NEW = 8,
- };
- 
- struct bios_args {
-@@ -509,7 +510,7 @@
- 						key_code, 1, true))
- 			pr_info("Unknown key code - 0x%x\n", key_code);
- 		break;
--	case HPWMI_WIRELESS:
-+	case HPWMI_WIRELESS: case HPWMI_WIRELESS_NEW:
- 		if (rfkill2_count) {
- 			hp_wmi_rfkill2_refresh();
- 			break;
 
---------------070901080405020304070002--
+2. per domain parameters
+
+These are the fine tuning parameters only used by advanced
+power/thermal management applications. Refer to Intel SDM ch14 for
+details.
+
+root@chromoly:/sys/class/thermal/cooling_device15/device# grep . *
+domain_name:package
+energy:924228
+lock:0
+max_power:0
+max_window:0
+min_power:0
+pl1_clamp:1
+pl1_enable:1
+pl2_clamp:0
+pl2_enable:1
+power:2276
+power_limit1:12000
+power_limit2:31250
+thermal_spec_power:17000
+throttle_time:
+time_window1:28000
+time_window2:0
+
+3. event notifications
+
+RAPL driver uses eventfd to provide userspace notifications on selected
+events. A file node called "event_control" is created for each RAPL
+domain. User can write control file descriptor, eventfd descriptor, and
+threshold to event_control file. Then, user application can use
+poll/select or blocking read to get notifications from the driver.
+Multiple events are allowed for each domain but only a single threshold
+is accepted.
+
+4. Usage Examples (assume the topology in the sysfs layout above)
+
+- set power limit to package domain (whole SOC package) to 6w
+root@chromoly:~# echo 6000
+	> /sys/class/thermal/cooling_device15/cur_state =20
+
+- set power limit to pp1 domain (graphics) to 4w
+root@chromoly:~# echo 4000
+	> /sys/class/thermal/cooling_device18/cur_state =20
+
+- check the current power usage in mWatts of pp1 domain
+root@chromoly:~# cat  /sys/class/thermal/cooling_device18/cur_state=20
+61
+
+- set event notification when power consumption of graphics unit crosse=
+s
+  5w.
+root@chromoly:~#
+  event_fd_listener /sys/class/thermal/cooling_device18/device/power 50=
+00
+(event_fd_listener opens control file power and creates an eventfd,
+then write efd, cfd, threshold to event_control file of the given
+domain)
+
+
+Caveats:
+
+1. Package power limit events are supported by legacy thermal reporting
+mechanism, which uses local APIC thermal vector to generate interrupts
+when targeted P-states are not honored by the HW/FW. This is tied to
+machine check reporting. Until RAPL is used, this notification is a rar=
+e
+exception. When RAPL power limit is set artifically low, this
+notification could result in unwanted interrupts for each power limit
+excursion. Therefore, RAPL driver attempts to turn off the power limit
+notification interrupt when user sets a power limit.
+
+2. By Intel Software Developer's Manual, RAPL interface can report
+max/min power for certain domains. But in reality HW often reports 0
+for max/min power. RAPL driver tackles this problem by using thermal
+specification power or current power limit1 when max power information
+is not available. The result is that the max_state of a RAPL cooling
+device can be based on thermal spec power or power limit 1.
+
+3. Since RAPL is backed by FW. In case of FW failure or plain lack of
+support, setting RAPL power limit could result in silent failure. I
+don't have a good solution for that.
+
+4. Data polling starts only when the following items are set
+	- power limit
+	- events
+
+
+Jacob Pan (1):
+  Introduce Intel RAPL cooling device driver
+
+ drivers/platform/x86/Kconfig      |    8 +
+ drivers/platform/x86/Makefile     |    1 +
+ drivers/platform/x86/intel_rapl.c | 1323 +++++++++++++++++++++++++++++=
+++++++++
+ drivers/platform/x86/intel_rapl.h |  249 +++++++
+ 4 files changed, 1581 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_rapl.c
+ create mode 100644 drivers/platform/x86/intel_rapl.h
+
+--=20
+1.7.9.5
