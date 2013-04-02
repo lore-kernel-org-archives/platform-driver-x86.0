@@ -1,20 +1,24 @@
-From: Joe Perches <joe@perches.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
-Date: Tue, 02 Apr 2013 15:35:15 -0700
-Message-ID: <1364942115.2085.10.camel@joe-AO722>
-References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	 <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Date: Tue, 02 Apr 2013 14:42:39 -0700
+Message-ID: <515B50CF.7050103@infradead.org>
+References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com> <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from casper.infradead.org ([85.118.1.10]:55432 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756493Ab3DBWnR (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 2 Apr 2013 18:43:17 -0400
 In-Reply-To: <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2013-04-02 at 15:15 -0700, Jacob Pan wrote:
+On 04/02/13 15:15, Jacob Pan wrote:
 > RAPL(Running Average Power Limit) interface provides platform software
 > with the ability to monitor, control, and get notifications on SOC
 > power consumptions. Since its first appearance on Sandy Bridge, more
@@ -22,161 +26,69 @@ On Tue, 2013-04-02 at 15:15 -0700, Jacob Pan wrote:
 > divided into domains for fine grained control. These domains include
 > package, DRAM controller, CPU core (Power Plane 0), graphics uncore
 > (power plane 1), etc.
+> 
+> The purpose of this driver is to expose RAPL for userspace
+> consumption. Overall, RAPL fits in the generic thermal layer in
+> that platform level power capping and monitoring are mainly used for
+> thermal management and thermal layer provides the abstracted interface
+> needed to have portable applications.
+> 
+> Specifically, userspace is presented with per domain cooling device
+> with sysfs links to its kobject. Although RAPL domain provides many
+> parameters for fine tuning, long term power limit is exposed as the
+> single knob via cooling device state. Whereas the rest of the
+> parameters are still accessible via the linked kobject. This simplifies
+> the interface for both simple and advanced use cases.
+> 
+> Eventfd is used to provide notifications to the userspace. At per domain
+> level, use can choose any event capable parameters to register for
+> threshold crossing notifications. This is shamelessly "borrowed" from
+> cgroup with some trimming/fitting.
+> 
+> Zhang, Rui's initial RAPL driver was used as a reference and starting
+> point. Many thanks.
+> https://lkml.org/lkml/2011/5/26/93
+> 
+> Unlike the patch above, which is mainly for monitoring, this driver
+> focus on the control and usability by user applications.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/platform/x86/Kconfig      |    8 +
+>  drivers/platform/x86/Makefile     |    1 +
+>  drivers/platform/x86/intel_rapl.c | 1323 +++++++++++++++++++++++++++++++++++++
+>  drivers/platform/x86/intel_rapl.h |  249 +++++++
+>  4 files changed, 1581 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_rapl.c
+>  create mode 100644 drivers/platform/x86/intel_rapl.h
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 3338437..34bcd52 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -781,4 +781,12 @@ config APPLE_GMUX
+>  	  graphics as well as the backlight. Currently only backlight
+>  	  control is supported by the driver.
+>  
+> +config INTEL_RAPL
+> +	tristate "Intel RAPL Support"
+> +	depends on X86 && THERMAL
+> +	default y
+> +	---help---
+> +	  RAPL, AKA, Running Average Power Limit provides mechanisms to enforce
 
-trivia only:
+	  RAPL, aka Running Average Power Limit, provides mechanisms to enforce
 
-> diff --git a/drivers/platform/x86/intel_rapl.c b/drivers/platform/x86/intel_rapl.c
-[]
-> +static char *rapl_domain_names[] = {
-> +	"package",
-> +	"power_plane_0",
-> +	"power_plane_1",
-> +	"dram",
-> +};
+or a.k.a., but not AKA
 
-const
-
-> +static void rapl_init_domains(void)
-> +{
-> +	int i, j = 0;
+or even:
+	  RAPL (Running Average Power Limit) provides mechanisms to enforce
 
 
-I think this below is unpleasant to read.
-Maybe add a temporary pointer and get rid of j?
-
-	typeof rapl_domains *t = rapl_domains;
-
-(not typeof, but the actual type)
-
+> +	  and monitor per domain power consumption limits of supported Intel CPUs.
 > +
-> +	for (i = 0; i < RAPL_DOMAIN_MAX; i++) {
-> +		unsigned int mask = rg_data.domain_map & (1 << i);
-> +
-> +		switch (mask) {
-> +		case 1 << RAPL_DOMAIN_PKG:
-> +			rapl_domains[j].name =
-> +				rapl_domain_names[RAPL_DOMAIN_PKG];
-
-			t->name = rapl_domain_names[RAPL_DOMAIN_PKG];
-			etc...
-[]
-> +		if (mask)
-> +			j++;
-
-			t++;
-
-> +/* in the order of enum rapl_primitives */
-> +static struct rapl_primitive_info rpi[] = {
-
-const?
-
-> +	/* name, mask, shift, msr index, unit divisor*/
-> +	PRIMITIVE_INFO_INIT(energy, ENERGY_STATUS_MASK, 0,
-> +			RAPL_DOMAIN_MSR_STATUS, ENERGY_UNIT,
-> +			RAPL_PRIMITIVE_EVENT_CAP),
-
-[]
-> +static int rapl_read_data_raw(struct rapl_domain *domain,
-> +			struct rapl_primitive_info *rp, bool xlate, u64 *data)
-> +{
-[]
-> +	/* specical-case pkg lock bit since pkg domain uses a different bit */
-
-special-case
-
-[]
-> +static ssize_t store_event_control(struct rapl_domain *rd, const char *buf,
-> +				size_t size)
-> +{
-> +	unsigned int efd, cfd, new_threshold;
-> +	struct file *efile = NULL;
-> +	struct file *cfile = NULL;
-> +	int ret = 0;
-> +	int prim;
-> +	struct rapl_event *ep;
-> +	u64 val;
-> +
-> +	if (sscanf(buf, "%u %u %u", &efd, &cfd, &new_threshold) != 3)
-> +		return -EINVAL;
-> +
-> +	efile = eventfd_fget(efd);
-> +	if (IS_ERR(efile)) {
-> +		ret = PTR_ERR(efile);
-> +		pr_err("failed to get eventfd file %d\n", efd);
-> +		goto done;
-> +	}
-> +	cfile = fget(cfd);
-> +	if (!cfile) {
-> +		ret = -EBADF;
-> +		fput(efile);
-> +		goto done;
-> +	}
-> +	/* check if the cfile belongs to the same rapl domain */
-> +	if (strcmp(rd->kobj.sd->s_name,
-> +			cfile->f_dentry->d_parent->d_name.name)) {
-> +		pr_debug("cfile does not belong to domain %s\n",
-> +			rd->kobj.sd->s_name);
-> +		ret = -EINVAL;
-> +		goto exit_cleanup_fds;
-> +	}
-> +	prim = primitive_name_to_entry(
-> +		(const char *)cfile->f_dentry->d_name.name);
-> +	if (prim < 0) {
-> +		pr_err("failed lookup primitive id for control file %s\n",
-> +			cfile->f_dentry->d_name.name);
-> +		ret = -EINVAL;
-> +		goto exit_cleanup_fds;
-> +	}
-> +	if (!(rpi[prim].flag & RAPL_PRIMITIVE_EVENT_CAP)) {
-> +		pr_info("Invalid control file %d\n", prim);
-> +		ret = -EINVAL;
-> +		goto exit_cleanup_fds;
-> +	}
-
-Perhaps all these pr_<levels> should be pr_err as they
-all lead to a failure path.
+>  endif # X86_PLATFORM_DEVICES
 
 
-[]
-
-> +static int stop_periodic_polling(void)
-> +{
-> +	if (true == polling_started) {
-
-You don't need a comparison,
-	if (polling_started) {
-is perhaps better.
-
-[]
-> +static int rapl_detect_domains(void)
-> +{
-[]
-> +	pr_info("Found %d vaild RAPL domains\n", rg_data.nr_domains);
-
-valid
-
-> +	rapl_domains = kzalloc(sizeof(struct rapl_domain) * rg_data.nr_domains,
-> +			GFP_KERNEL);
-
-kcalloc
-
-> +	if (NULL == rapl_domains) {
-> +		pr_err("Failed to allocate memory for rapl domain\n");
-
-You don't need OOM messages as the memory
-subsystem already does a dump_stack on OOM.
-
-[]
-
-> +static int __init intel_rapl_init(void)
-> +{
-
-> +	rd_data = kzalloc(sizeof(struct rapl_domain_data) * rg_data.nr_domains,
-> +			GFP_KERNEL);
-
-kcalloc again.
-
-> +	if (NULL == rd_data) {
-> +		pr_err("Failed to allocate memory for rapl domain data\n");
-
-OOM too.
+-- 
+~Randy
