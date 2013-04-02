@@ -1,93 +1,42 @@
 From: Randy Dunlap <rdunlap@infradead.org>
 Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
-Date: Tue, 02 Apr 2013 14:42:39 -0700
-Message-ID: <515B50CF.7050103@infradead.org>
+Date: Tue, 02 Apr 2013 14:47:35 -0700
+Message-ID: <515B51F7.6070901@infradead.org>
 References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com> <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:55432 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756493Ab3DBWnR (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Apr 2013 18:43:17 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
 On 04/02/13 15:15, Jacob Pan wrote:
-> RAPL(Running Average Power Limit) interface provides platform software
-> with the ability to monitor, control, and get notifications on SOC
-> power consumptions. Since its first appearance on Sandy Bridge, more
-> features have being added to extend its usage. In RAPL, platforms are
-> divided into domains for fine grained control. These domains include
-> package, DRAM controller, CPU core (Power Plane 0), graphics uncore
-> (power plane 1), etc.
-> 
-> The purpose of this driver is to expose RAPL for userspace
-> consumption. Overall, RAPL fits in the generic thermal layer in
-> that platform level power capping and monitoring are mainly used for
-> thermal management and thermal layer provides the abstracted interface
-> needed to have portable applications.
-> 
-> Specifically, userspace is presented with per domain cooling device
-> with sysfs links to its kobject. Although RAPL domain provides many
-> parameters for fine tuning, long term power limit is exposed as the
-> single knob via cooling device state. Whereas the rest of the
-> parameters are still accessible via the linked kobject. This simplifies
-> the interface for both simple and advanced use cases.
-> 
-> Eventfd is used to provide notifications to the userspace. At per domain
-> level, use can choose any event capable parameters to register for
-> threshold crossing notifications. This is shamelessly "borrowed" from
-> cgroup with some trimming/fitting.
-> 
-> Zhang, Rui's initial RAPL driver was used as a reference and starting
-> point. Many thanks.
-> https://lkml.org/lkml/2011/5/26/93
-> 
-> Unlike the patch above, which is mainly for monitoring, this driver
-> focus on the control and usability by user applications.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/platform/x86/Kconfig      |    8 +
->  drivers/platform/x86/Makefile     |    1 +
->  drivers/platform/x86/intel_rapl.c | 1323 +++++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/intel_rapl.h |  249 +++++++
->  4 files changed, 1581 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_rapl.c
->  create mode 100644 drivers/platform/x86/intel_rapl.h
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 3338437..34bcd52 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -781,4 +781,12 @@ config APPLE_GMUX
->  	  graphics as well as the backlight. Currently only backlight
->  	  control is supported by the driver.
->  
-> +config INTEL_RAPL
-> +	tristate "Intel RAPL Support"
-> +	depends on X86 && THERMAL
-> +	default y
-> +	---help---
-> +	  RAPL, AKA, Running Average Power Limit provides mechanisms to enforce
-
-	  RAPL, aka Running Average Power Limit, provides mechanisms to enforce
-
-or a.k.a., but not AKA
-
-or even:
-	  RAPL (Running Average Power Limit) provides mechanisms to enforce
-
-
-> +	  and monitor per domain power consumption limits of supported Intel CPUs.
+> diff --git a/drivers/platform/x86/intel_rapl.c b/drivers/platform/x86/intel_rapl.c
+> new file mode 100644
+> index 0000000..56ee928
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_rapl.c
+> @@ -0,0 +1,1323 @@
+> +/*
+> + *  intel_rapl.c - Intel Running Average Power Limit Driver for MSR based
+> + *                 RAPL interface
+> + *
+> + *  Copyright (c) 2013, Intel Corporation.
+> + * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +#include <linux/sysfs.h>
 > +
->  endif # X86_PLATFORM_DEVICES
+
+> +#include "../../../fs/sysfs/sysfs.h"
+
+
+What does this driver need from ^^^^^^ that file, which says:
+
+ * fs/sysfs/sysfs.h - sysfs internal header file
+
+and should that be moved to include/linux/sysfs.h ?
 
 
 -- 
