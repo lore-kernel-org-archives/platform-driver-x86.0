@@ -1,196 +1,133 @@
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
-Date: Wed, 3 Apr 2013 10:35:51 -0700
-Message-ID: <20130403103551.16e62eb6@chromoly>
+Date: Wed, 3 Apr 2013 11:03:08 -0700
+Message-ID: <20130403110308.2bbcf7ec@chromoly>
 References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
 	<1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
 	<20130402230042.GA8713@kroah.com>
-	<20130402165340.61b7da02@chromoly>
-	<20130403001300.GA13838@kroah.com>
-	<20130402214818.50f1ae89@chromoly>
-	<20130403163509.GC21969@kroah.com>
+	<20130402163357.72dac902@chromoly>
+	<20130402234805.GA11880@kroah.com>
+	<20130402171714.7309cdf2@chromoly>
+	<20130403163052.GB21969@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:24816 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758593Ab3DCRgP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Apr 2013 13:36:15 -0400
-In-Reply-To: <20130403163509.GC21969@kroah.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130403163052.GB21969@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Greg KH <gregkh@linuxfoundation.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 3 Apr 2013 09:35:09 -0700
+On Wed, 3 Apr 2013 09:30:52 -0700
 Greg KH <gregkh@linuxfoundation.org> wrote:
 
-> On Tue, Apr 02, 2013 at 09:48:18PM -0700, Jacob Pan wrote:
-> > > Let's step back and start over, what exactly are you trying to
-> > > tell userspace?  What data do you have that you need to express
-> > > to it?  How do you want userspace to see/use it?
+> On Tue, Apr 02, 2013 at 05:17:14PM -0700, Jacob Pan wrote:
+> > On Tue, 2 Apr 2013 16:48:05 -0700
+> > Greg KH <gregkh@linuxfoundation.org> wrote:
 > > 
-> > It is a good idea to step back and let me explain what I wanted to
-> > do here for userspace.
+> > > On Tue, Apr 02, 2013 at 04:33:57PM -0700, Jacob Pan wrote:
+> > > > On Tue, 2 Apr 2013 16:00:42 -0700
+> > > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > 
+> > > > > > +#include "intel_rapl.h"
+> > > > > > +#include "../../../fs/sysfs/sysfs.h"  
+> > > > > 
+> > > > > WTF?
+> > > > > 
+> > > > > Oh, that's a sure sign you are not doing something properly,
+> > > > > if you think it's ok to muck around with the internals of
+> > > > > sysfs.
+> > > > > 
+> > > > > There's a reason that file is "private", why do you think
+> > > > > it's ok to use it directly?  Did you just think that I
+> > > > > somehow "forgot" to put it in the proper include directory?
+> > > > I did feel unsure about this but i saw some precedence in the
+> > > > kernel.
+> > > 
+> > > Someone else is doing this with the sysfs api?  I don't see any
+> > > other code in Linus's tree doing this at the moment, where did
+> > > you see this? Let me know and I'll fix it up right away.
+> > > 
+> > no, i did not mean sysfs api. I mean include internal header files
+> > via #include ../../ 
+> > e.g.in drivers/usb/image/microtek.c
 > > 
-> > I have two kinds of applications that might use this driver.
-> > 1. simple use case where user sets a power limit for a RAPL domain.
-> > e.g. set graphics unit power limit to 7w
-> > 2. advanced use case where use can do fine tuning on top of simple
-> > power limit,e.g. the dynamic response parameters of power control
-> > logic, event notifications, etc.
+> > #include "../../scsi/scsi.h"
+> > #include <scsi/scsi_host.h>
+> 
+> That is because this is a scsi host driver.  Your code is not part of
+> sysfs itself.
+> 
+> > > > Anyway, I needed a way to validate a userspace file passed to
+> > > > rapl driver belong to the same sysfs directory. I will look for
+> > > > alternative ways.
+> > > 
+> > > What do you mean by this?  What exactly are you trying to do?  No
+> > > normal driver code should _ever_ call sysfs functions directly,
+> > > nor should they ever care about sysfs internals.
+> > > 
+> > i did not call sysfs internal calls, just need to use 
+> > struct sysfs_dirent {}
 > > 
-> > For #1, this driver register with the abstract generic thermal layer
-> > (/sys/class/thermal) and presents itself as a set of cooling devices
-> > with a single knob per domain for power limits.
-> > root@chromoly:/sys/class/thermal/cooling_device15# echo 7000 >
-> > cur_state 
+> > to do the following sanity check against user passed event control
+> > file, it is still not a 100% strong check. 
+> > 	/* check if the cfile belongs to the same rapl domain */
+> > 	if (strcmp(rd->kobj.sd->s_name,
+> > 			cfile->f_dentry->d_parent->d_name.name)) {
+> > 		pr_debug("cfile does not belong to domain %s\n",
+> > 			rd->kobj.sd->s_name);
+> > 		ret = -EINVAL;
+> > 		goto exit_cleanup_fds;
+> > 	}
 > 
-> Great, how about submitting that functionality as patch 1 of your
-> series?  That seems like a very "normal" thermal driver, right?
+> This made it through a code review at Intel?  Seriously?  Come on,
+> there's just so much wrong here, I don't know where to begin.
 > 
-yes, that would be a normal thermal cooling device driver. I will do
-that first. Thanks for the suggestion.
-> > For #2, to give userspace complete control of the RAPL interface,
-> > which is not generic, I put them under the device private sysfs
-> > area. root@chromoly:/sys/class/thermal/cooling_device15/device#
-> > echo 1000 > time_window1 
+> Hint, if you find yourself caring about the internals of sysfs in a
+> device driver, you are doing something so wrong it's not funny.  Do
+> you see _any_ other driver doing anything like this?  What makes this
+> driver so special that it can do unexpected, and totally different
+> things with sysfs?
 > 
-> I totally fail to understand the difference.  What do you want to show
-> to userspace that can't be expressed through the thermal interface
-> today?
-The difference is one single knob (long term power limit) in the thermal
-interface vs multiple fine grained control and data in the complete RAPL
-interface.
+I admit that my knowledge in this area are limited. I appreciate your
+help and straightforward comments.
 
-Here is what a complete RAPL interface for package domain looks like.
-root@chromoly:/sys/class/thermal/cooling_device15/device# grep . *
-domain_name:package
-energy:22396031
-lock:0
-max_power:0
-max_window:0
-min_power:0
-pl1_clamp:0
-pl1_enable:1
-pl2_clamp:0
-pl2_enable:1
-power:7841
-power_limit1:25000
-power_limit2:31250
-thermal_spec_power:17000
-throttle_time: 
-time_window1:28000
-time_window2:0
+Perhaps the reason is that not many drivers use eventfd and its way to
+arm event thresholds. The userspace passed an eventfd, a file
+descriptor, and a threshold value to the RAPL driver. In order to
+authenticate the control file descriptor is a valid, I need to check
+1. the control file is capable of generating events, e.g. it can be an
+energy counter but not a constant power_limit1
+2. the control file belongs to the same RAPL domain since the name are
+reused in all RAPL domains. e.g. all domains have energy counter and
+events are per domain.
 
+I used the sysfs directory check for #2. It is just an extra check. But
+I think can drop that check and user pick events based on its name
+string. The fact that user writes to the per domain control file
+implies the domain specificness of the event.
 
->  Perhaps the thermal interface could be expanded to provide
-> more functionality that you need?
-yes, some of them such as limits. But not all the data in the list
-above are suitable for thermal interface. That is why I am trying to
-balance between abstracted generic data and RAPL specific data while
-still allow linking between the two.
+In similar eventfd usage in cgroup, it has its own fs so i does the
+check based on file ops of the control files.
 
-The way I envisioned how a thermal/power management app would use is:
-1. go through generic thermal layer sysfs and find available RAPL
-domains
-2. if the app wants to do more fine grained control, it follows the
-device symlink to locate the RAPL domain specific sysfs area.
-
->  Why create a one-off API that will
-> never be used again and require userspace programs to be written just
-> to handle this one type of device?
+> > > And, odds are, you didn't test your code as a module, right, as
+> > > any internal sysfs function that you could get from this .h file,
+> > > wouldn't be exported for a module to use, unless I missed one
+> > > somewhere?
+> > > 
+> > I did run the driver as module since i didn't use sysfs internal
+> > functions, just the struct. I may be hitting a corner case here, but
+> > for drivers who need to discover sysfs hierarchy would it be useful
+> > to expose some info in struct sysfs_dirent{}?
 > 
-why is that a one-off API? RAPL interface is maintained identical across
-Intel CPUs after Sandy Bridges. I agree with you that it is still one
-type of device with some of its data unique. Should i create a RAPL
-class device?
-
-> > As you mentioned about using device tree vs. fs, and how kobject are
-> > used for fs. I do have the need to go between a generic thermal
-> > sysfs and the true device tree. This is the reason why I used
-> > kobjects and link them between device tree and its thermal sysfs
-> > representation.
-> 
-> I don't understand your leap to using kobjects.
-> 
-I use kobjects mainly for its symlink to allow userspace locate the
-'true' device behind generic thermal layers' cooling device.
-
-
-> > e.g. a RAPL package cooling device linked with its platform device
-> > kobj. (device is linked with rapl_domains/package, the line is too
-> > long)
-> > 
-> > root@chromoly:/sys/class/thermal# ls -l cooling_device15/
-> > total 0
-> > -rw-r--r-- 1 root root 4096 Apr  2 15:03 cur_state
-> > lrwxrwxrwx 1 root root    0 Apr  2 21:28 device
-> > -> ../../../platform/intel_rapl/rapl_domains/package
-> > -r--r--r-- 1 root root 4096 Apr  2 15:03 max_state
-> > drwxr-xr-x 2 root root    0 Apr  2 21:28 power
-> > lrwxrwxrwx 1 root root    0 Apr  2 15:03 subsystem
-> > -> ../../../../class/thermal
-> > -r--r--r-- 1 root root 4096 Apr  2 15:03 type
-> > -rw-r--r-- 1 root root 4096 Apr  2 15:03 uevent
-> 
-> I still don't understand.  What are you adding here, the device
-> symlink? Or something else?
-> 
-> > For userspace which is not satisfied with the simple use case of a
-> > single knob for setting power limit, it can follow the link to find
-> > the device tree entry. Then get access to the complete knobs,
-> > including event notifications.
-> 
-> And what is in that device directory? 
- 
-the device directory contains the complete RAPL interface
-representation. paste the example of package domain again.
-
-root@chromoly:/sys/class/thermal/cooling_device15/device# grep . *
-domain_name:package
-energy:22396031
-lock:0
-max_power:0
-max_window:0
-min_power:0
-pl1_clamp:0
-pl1_enable:1
-pl2_clamp:0
-pl2_enable:1
-power:7841
-power_limit1:25000
-power_limit2:31250
-thermal_spec_power:17000
-grep: throttle_time: Input/output error
-time_window1:28000
-time_window2:0
-
-> What is rapl_domains?  Why
-> isn't that a normal 'struct device'?
->
-RAPL domains can be viewed as sub devices of RAPL interface. On a given
-platform they can be a complete or partial list of 
-package, power plane 0 (processor core), power plane 1 (graphics),
-dram controller, pch, etc.
-
-Yes, I can create a RAPL class and create_device for each domain based
-on 'struct device'. I can still use the kobj symlink to link to generic
-thermal layer. I just thought it is an overkill as compared to
-simply using kobjects and kset.
-
-I don't understand the benefit of using 'struct device' in this
-case. RAPL interface as a whole has its device, I am not creating
-standalone kobjects.
-
-
-> Still confused.
+> No, not at all, why would a driver ever care about that?  Somehow we
+> have gotten by for the past 10+ years without needing it, why is your
+> driver so different than the thousands of other Linux drivers?
 > 
 > greg k-h
 
-[Jacob Pan]
+ditto, I will drop that extra check.
 
 -- 
 Thanks,
