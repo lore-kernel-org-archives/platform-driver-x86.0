@@ -1,135 +1,61 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
-Date: Wed, 3 Apr 2013 11:03:08 -0700
-Message-ID: <20130403110308.2bbcf7ec@chromoly>
-References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
-	<20130402230042.GA8713@kroah.com>
-	<20130402163357.72dac902@chromoly>
-	<20130402234805.GA11880@kroah.com>
-	<20130402171714.7309cdf2@chromoly>
-	<20130403163052.GB21969@kroah.com>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: [RFD] Let acpi video driver handle its dmi table
+Date: Thu, 04 Apr 2013 19:37:37 +0800
+Message-ID: <515D6601.4070509@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130403163052.GB21969@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([143.182.124.21]:4050 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1758670Ab3DDLg0 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 4 Apr 2013 07:36:26 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@novell.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Zhang Rui <rui.zhang@intel.com>
+Cc: ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Wed, 3 Apr 2013 09:30:52 -0700
-Greg KH <gregkh@linuxfoundation.org> wrote:
+Hi,
 
-> On Tue, Apr 02, 2013 at 05:17:14PM -0700, Jacob Pan wrote:
-> > On Tue, 2 Apr 2013 16:48:05 -0700
-> > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > 
-> > > On Tue, Apr 02, 2013 at 04:33:57PM -0700, Jacob Pan wrote:
-> > > > On Tue, 2 Apr 2013 16:00:42 -0700
-> > > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > 
-> > > > > > +#include "intel_rapl.h"
-> > > > > > +#include "../../../fs/sysfs/sysfs.h"  
-> > > > > 
-> > > > > WTF?
-> > > > > 
-> > > > > Oh, that's a sure sign you are not doing something properly,
-> > > > > if you think it's ok to muck around with the internals of
-> > > > > sysfs.
-> > > > > 
-> > > > > There's a reason that file is "private", why do you think
-> > > > > it's ok to use it directly?  Did you just think that I
-> > > > > somehow "forgot" to put it in the proper include directory?
-> > > > I did feel unsure about this but i saw some precedence in the
-> > > > kernel.
-> > > 
-> > > Someone else is doing this with the sysfs api?  I don't see any
-> > > other code in Linus's tree doing this at the moment, where did
-> > > you see this? Let me know and I'll fix it up right away.
-> > > 
-> > no, i did not mean sysfs api. I mean include internal header files
-> > via #include ../../ 
-> > e.g.in drivers/usb/image/microtek.c
-> > 
-> > #include "../../scsi/scsi.h"
-> > #include <scsi/scsi_host.h>
-> 
-> That is because this is a scsi host driver.  Your code is not part of
-> sysfs itself.
-> 
-> > > > Anyway, I needed a way to validate a userspace file passed to
-> > > > rapl driver belong to the same sysfs directory. I will look for
-> > > > alternative ways.
-> > > 
-> > > What do you mean by this?  What exactly are you trying to do?  No
-> > > normal driver code should _ever_ call sysfs functions directly,
-> > > nor should they ever care about sysfs internals.
-> > > 
-> > i did not call sysfs internal calls, just need to use 
-> > struct sysfs_dirent {}
-> > 
-> > to do the following sanity check against user passed event control
-> > file, it is still not a 100% strong check. 
-> > 	/* check if the cfile belongs to the same rapl domain */
-> > 	if (strcmp(rd->kobj.sd->s_name,
-> > 			cfile->f_dentry->d_parent->d_name.name)) {
-> > 		pr_debug("cfile does not belong to domain %s\n",
-> > 			rd->kobj.sd->s_name);
-> > 		ret = -EINVAL;
-> > 		goto exit_cleanup_fds;
-> > 	}
-> 
-> This made it through a code review at Intel?  Seriously?  Come on,
-> there's just so much wrong here, I don't know where to begin.
-> 
-> Hint, if you find yourself caring about the internals of sysfs in a
-> device driver, you are doing something so wrong it's not funny.  Do
-> you see _any_ other driver doing anything like this?  What makes this
-> driver so special that it can do unexpected, and totally different
-> things with sysfs?
-> 
-I admit that my knowledge in this area are limited. I appreciate your
-help and straightforward comments.
+Recently I saw two bugs about acer system:
+https://bugzilla.kernel.org/show_bug.cgi?id=35622
+https://bugzilla.kernel.org/show_bug.cgi?id=51051
+The backlight is handled by gpu driver's backlight interface, and hotkey
+is handled by acpi video driver. The problem is, hotkey notification
+does not function on these systems now.
 
-Perhaps the reason is that not many drivers use eventfd and its way to
-arm event thresholds. The userspace passed an eventfd, a file
-descriptor, and a threshold value to the RAPL driver. In order to
-authenticate the control file descriptor is a valid, I need to check
-1. the control file is capable of generating events, e.g. it can be an
-energy counter but not a constant power_limit1
-2. the control file belongs to the same RAPL domain since the name are
-reused in all RAPL domains. e.g. all domains have energy counter and
-events are per domain.
+The reason is, acer-wmi driver will unload acpi video driver when it
+found these systems are in its video_vendor_dmi_table, which is used to
+keep all the systems that are known having buggy acpi video interface
+implementations.
 
-I used the sysfs directory check for #2. It is just an extra check. But
-I think can drop that check and user pick events based on its name
-string. The fact that user writes to the per domain control file
-implies the domain specificness of the event.
+So we have a problem here, though acpi video driver can't handle
+backlight level change, it is still required to handle hotkey
+notificaions, and thus unload the driver is not desired.
 
-In similar eventfd usage in cgroup, it has its own fs so i does the
-check based on file ops of the control files.
+One way to solve this problem is, to have acpi video driver deal with
+these broken systems that it can not handle by itself: not create
+backlight interface while still keeping the notification handler there.
+To achieve this, we need to move those systems listed in
+video_vendor_dmi_table to video_detect_dmi_table, and we are done. And
+any code to touch acpi video driver in acer-wmi driver can be removed,
+also no need to add SELECT ACPI_VIDEO to CONFIG_ACER_WMI. The downside
+is, if other platform vendor drivers all follow this rule, we will end
+up with a big video_detect_dmi_table.
 
-> > > And, odds are, you didn't test your code as a module, right, as
-> > > any internal sysfs function that you could get from this .h file,
-> > > wouldn't be exported for a module to use, unless I missed one
-> > > somewhere?
-> > > 
-> > I did run the driver as module since i didn't use sysfs internal
-> > functions, just the struct. I may be hitting a corner case here, but
-> > for drivers who need to discover sysfs hierarchy would it be useful
-> > to expose some info in struct sysfs_dirent{}?
-> 
-> No, not at all, why would a driver ever care about that?  Somehow we
-> have gotten by for the past 10+ years without needing it, why is your
-> driver so different than the thousands of other Linux drivers?
-> 
-> greg k-h
+Another way is to add a new interface, something like
+acpi_video_unregister_backlight, to let platform drivers call. And this
+new interface will only unregister the backlight device acpi video
+driver has already created and nothing more. So the notification handler
+of acpi video driver will stay, solving the problem. The downside is,
+it's kind of odd to let another module solve a problem for acpi video
+module. In this case, the vendor driver's whole point is to unregister
+acpi video driver's backlight interface, while it does't handle backlight
+nor hotkey. So it doesn't seem to be required in this game.
 
-ditto, I will drop that extra check.
+Please feel free to share your opinion, which one you prefer or some new
+idea perhaps.
 
--- 
 Thanks,
-
-Jacob
+Aaron
