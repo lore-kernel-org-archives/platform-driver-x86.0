@@ -1,38 +1,49 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
-Date: Fri, 5 Apr 2013 14:57:20 -0700
-Message-ID: <20130405145720.74ec046f@chromoly>
+Date: Fri, 5 Apr 2013 14:35:18 -0700
+Message-ID: <20130405213518.GA5615@kroah.com>
 References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1365197195.2075.23.camel@joe-AO722>
+ <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1365197195.2075.23.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:53449 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1162601Ab3DEV5U (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Apr 2013 17:57:20 -0400
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <1365197195.2075.23.camel@joe-AO722>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Joe Perches <joe@perches.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 05 Apr 2013 14:26:35 -0700
-Joe Perches <joe@perches.com> wrote:
-
-> > +/* in the order of enum rapl_primitives */
-> > +static struct rapl_primitive_info rpi[] = {  
+On Fri, Apr 05, 2013 at 02:26:35PM -0700, Joe Perches wrote:
+> On Fri, 2013-04-05 at 14:02 -0700, Jacob Pan wrote:
+> > +static ssize_t store_event_control(struct device *dev,
+> > +				struct device_attribute *attr,
+> > +				const char *buf,
+> > +				size_t size)
+> > +{
+> > +	struct rapl_domain *rd = dev_get_drvdata(dev);
+> > +	unsigned int efd, new_threshold;
+> > +	struct file *efile = NULL;
+> > +	int ret = 0;
+> > +	int prim;
+> > +	struct rapl_event *ep;
+> > +	u64 val;
+> > +	char cmd[MAX_PRIM_NAME];
+> > +
+> > +	if (sscanf(buf, "%u %s %u", &efd, cmd, &new_threshold) != 3)
+> > +		return -EINVAL;
 > 
-> const?
-I do need to override one entry for a special case. The hardware uses a
-different bit location for the same lock functionality.
+> This sscanf looks fragile.
+> 
+> buf = "1 some_really_long_name_longer_than_MAX_PRIM_NAME 2"
+> 
+> stack overrun.
+> 
+> Where does buf come from?
 
-The other comments are well taken,
+It comes from the sysfs core, which limits it to a PAGE_SIZE.  But yes,
+it does look fragile, and flat out wrong, but I'm not going into that
+just yet, as that whole api should just be deleted for now.
 
--- 
-Thanks,
-
-Jacob
+greg k-h
