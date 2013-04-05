@@ -1,193 +1,104 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v17] pvpanic: pvpanic device driver
-Date: Fri, 05 Apr 2013 13:45:10 +0200
-Message-ID: <515EB946.7090705@redhat.com>
-References: <cover.1365143012.git.hutao@cn.fujitsu.com> <1365145843-6000-1-git-send-email-hutao@cn.fujitsu.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
+Date: Fri, 05 Apr 2013 14:26:35 -0700
+Message-ID: <1365197195.2075.23.camel@joe-AO722>
+References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	 <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:37971 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752163Ab3DELqc (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Apr 2013 07:46:32 -0400
-In-Reply-To: <1365145843-6000-1-git-send-email-hutao@cn.fujitsu.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hu Tao <hutao@cn.fujitsu.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, qemu-devel <qemu-devel@nongnu.org>, "Daniel P. Berrange" <berrange@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Jan Kiszka <jan.kiszka@siemens.com>, Gleb Natapov <gleb@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Eric Blake <eblake@redhat.com>, Andrew Jones <drjones@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Luiz Capitulino <lcapitulino@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Markus Armbruster <armbru@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Juan Quintela <quintela@redhat.com>, Orit Wasserman <owasserm@redhat.com>, Wen Congyang <wency@cn.fujitsu.com>, "Michael S. Tsirkin" <mst@redhat.com>, Alexander Graf <agraf@suse.de>, Alex Williamson <alex.williamson@redhat>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Il 05/04/2013 09:10, Hu Tao ha scritto:
-> pvpanic device is a qemu simulated device through which guest panic
-> event is sent to host.
-> 
-> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
+On Fri, 2013-04-05 at 14:02 -0700, Jacob Pan wrote:
+> RAPL(Running Average Power Limit) interface provides platform software
+> with the ability to monitor, control, and get notifications on SOC
+> power consumptions. Since its first appearance on Sandy Bridge, more
+> features have being added to extend its usage. In RAPL, platforms are
+> divided into domains for fine grained control. These domains include
+> package, DRAM controller, CPU core (Power Plane 0), graphics uncore
+> (power plane 1), etc.
 
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Some more trivia...
 
-Matthew, it would be nice to include this in 3.10.
+> diff --git a/drivers/platform/x86/intel_rapl.c b/drivers/platform/x86/intel_rapl.c
+[]
+> +/* in the order of enum rapl_primitives */
+> +static struct rapl_primitive_info rpi[] = {
 
-The implementation of the device in QEMU is final, the only thing that
-needs a respin is how it is enabled by default.
+const?
 
-Paolo
+> +	/* name, mask, shift, msr index, unit divisor*/
+> +	PRIMITIVE_INFO_INIT(energy, ENERGY_STATUS_MASK, 0,
+> +			RAPL_DOMAIN_MSR_STATUS, ENERGY_UNIT,
+> +			RAPL_PRIMITIVE_EVENT_CAP),
 
-> ---
-> 
-> ref: http://lists.nongnu.org/archive/html/qemu-devel/2013-04/msg01028.html
-> 
->  drivers/platform/x86/Kconfig   |   7 +++
->  drivers/platform/x86/Makefile  |   2 +
->  drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 124 insertions(+)
->  create mode 100644 drivers/platform/x86/pvpanic.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 3338437..527ed04 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -781,4 +781,11 @@ config APPLE_GMUX
->  	  graphics as well as the backlight. Currently only backlight
->  	  control is supported by the driver.
->  
-> +config PVPANIC
-> +	tristate "pvpanic device support"
-> +	depends on ACPI
-> +	---help---
-> +	  This driver provides support for pvpanic device, which is a qemu
-> +	  simulated device through which guest panic event is sent to host.
-> +
->  endif # X86_PLATFORM_DEVICES
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index ace2b38..ef0ec74 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
->  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
->  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->  obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
-> +
-> +obj-$(CONFIG_PVPANIC)           += pvpanic.o
-> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-> new file mode 100644
-> index 0000000..81c95ec
-> --- /dev/null
-> +++ b/drivers/platform/x86/pvpanic.c
-> @@ -0,0 +1,115 @@
-> +/*
-> + *  pvpanic.c - pvpanic Device Support
-> + *
-> + *  Copyright (C) 2013 Fujitsu.
-> + *
-> + *  This program is free software; you can redistribute it and/or modify
-> + *  it under the terms of the GNU General Public License as published by
-> + *  the Free Software Foundation; either version 2 of the License, or
-> + *  (at your option) any later version.
-> + *
-> + *  This program is distributed in the hope that it will be useful,
-> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *  GNU General Public License for more details.
-> + *
-> + *  You should have received a copy of the GNU General Public License
-> + *  along with this program; if not, write to the Free Software
-> + *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/types.h>
-> +#include <acpi/acpi_bus.h>
-> +#include <acpi/acpi_drivers.h>
-> +
-> +MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-> +MODULE_DESCRIPTION("pvpanic device driver");
-> +MODULE_LICENSE("GPL");
-> +
-> +static int pvpanic_add(struct acpi_device *device);
-> +static int pvpanic_remove(struct acpi_device *device);
-> +
-> +static const struct acpi_device_id pvpanic_device_ids[] = {
-> +	{ "QEMU0001", 0},
-> +	{ "", 0},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-> +
-> +#define PVPANIC_PANICKED	(1 << 0)
-> +
-> +static acpi_handle handle;
-> +
-> +static struct acpi_driver pvpanic_driver = {
-> +	.name =		"pvpanic",
-> +	.class =	"QEMU",
-> +	.ids =		pvpanic_device_ids,
-> +	.ops =		{
-> +				.add =		pvpanic_add,
-> +				.remove =	pvpanic_remove,
-> +			},
-> +	.owner =	THIS_MODULE,
-> +};
-> +
-> +static void
-> +pvpanic_send_event(unsigned int event)
+> +static int rapl_set_cur_state(struct thermal_cooling_device *cdev,
+> +			unsigned long state)
+
+I think most of this would look nicer if you
+adopted the net style of aligning multi-line
+statements to the appropriate open parenthesis.
+
+> +static ssize_t store_event_control(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf,
+> +				size_t size)
 > +{
-> +	union acpi_object arg;
-> +	struct acpi_object_list arg_list;
+> +	struct rapl_domain *rd = dev_get_drvdata(dev);
+> +	unsigned int efd, new_threshold;
+> +	struct file *efile = NULL;
+> +	int ret = 0;
+> +	int prim;
+> +	struct rapl_event *ep;
+> +	u64 val;
+> +	char cmd[MAX_PRIM_NAME];
 > +
-> +	if (!handle)
-> +		return;
+> +	if (sscanf(buf, "%u %s %u", &efd, cmd, &new_threshold) != 3)
+> +		return -EINVAL;
+
+This sscanf looks fragile.
+
+buf = "1 some_really_long_name_longer_than_MAX_PRIM_NAME 2"
+
+stack overrun.
+
+Where does buf come from?
+
+> +#define primitive_show_fn(n)						\
 > +
-> +	arg.type = ACPI_TYPE_INTEGER;
-> +	arg.integer.value = event;
-> +
-> +	arg_list.count = 1;
-> +	arg_list.pointer = &arg;
-> +
-> +	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
-> +}
-> +
-> +static int
-> +pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-> +		     void *unused)
+> +#define primitive_store_fn(n)						\
+
+Can't both of these be consolidated into a 2 functions using
+offset_of and/or adding a string argument?
+
+> +static struct attribute *all_attrs[] = {
+
+const?
+
+> +	&dev_attr_energy.attr,
+
+
+> +static void rapl_update_domain_data(void)
 > +{
-> +	pvpanic_send_event(PVPANIC_PANICKED);
-> +	return NOTIFY_DONE;
-> +}
+> +	int i, j;
+> +	u64 val;
+> +	bool xlate;
 > +
-> +static struct notifier_block pvpanic_panic_nb = {
-> +	.notifier_call = pvpanic_panic_notify,
-> +};
-> +
-> +static int pvpanic_add(struct acpi_device *device)
-> +{
-> +	acpi_status status;
-> +	u64 ret;
-> +
-> +	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-> +				       &ret);
-> +
-> +	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
-> +		return -ENODEV;
-> +
-> +	handle = device->handle;
-> +	atomic_notifier_chain_register(&panic_notifier_list,
-> +				       &pvpanic_panic_nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pvpanic_remove(struct acpi_device *device)
-> +{
-> +
-> +	atomic_notifier_chain_unregister(&panic_notifier_list,
-> +					 &pvpanic_panic_nb);
-> +	handle = NULL;
-> +	return 0;
-> +}
-> +
-> +module_acpi_driver(pvpanic_driver);
-> 
+> +	for (i = 0; i < rg_data.nr_domains; i++) {
+> +		/* exclude non-raw primitives */
+> +		for (j = 0; j < NR_RAW_PRIMITIVES; j++)
+> +			xlate = !!(rpi[j].unit);
+
+You don't really need the !!.  The compiler does that.
+
+> +/* for global rapl data */
+> +static struct class_attribute rapl_class_attrs[] = {
+
+const?
+
+> +	GLOBAL_CLASS_RO_ATTR(energy_unit_divisor),
