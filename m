@@ -1,104 +1,91 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
-Date: Fri, 05 Apr 2013 14:26:35 -0700
-Message-ID: <1365197195.2075.23.camel@joe-AO722>
-References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	 <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
+Date: Fri, 5 Apr 2013 13:23:09 -0700
+Message-ID: <20130405202309.GA3303@kroah.com>
+References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20130402230042.GA8713@kroah.com>
+ <20130402165340.61b7da02@chromoly>
+ <20130403001300.GA13838@kroah.com>
+ <20130402214818.50f1ae89@chromoly>
+ <20130403163509.GC21969@kroah.com>
+ <20130403103551.16e62eb6@chromoly>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pd0-f169.google.com ([209.85.192.169]:43345 "EHLO
+	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1162727Ab3DEUXN (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 5 Apr 2013 16:23:13 -0400
+Received: by mail-pd0-f169.google.com with SMTP id 10so2211166pdc.14
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Apr 2013 13:23:13 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20130403103551.16e62eb6@chromoly>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
 
-On Fri, 2013-04-05 at 14:02 -0700, Jacob Pan wrote:
-> RAPL(Running Average Power Limit) interface provides platform software
-> with the ability to monitor, control, and get notifications on SOC
-> power consumptions. Since its first appearance on Sandy Bridge, more
-> features have being added to extend its usage. In RAPL, platforms are
-> divided into domains for fine grained control. These domains include
-> package, DRAM controller, CPU core (Power Plane 0), graphics uncore
-> (power plane 1), etc.
+On Wed, Apr 03, 2013 at 10:35:51AM -0700, Jacob Pan wrote:
+> On Wed, 3 Apr 2013 09:35:09 -0700
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Tue, Apr 02, 2013 at 09:48:18PM -0700, Jacob Pan wrote:
+> > > > Let's step back and start over, what exactly are you trying to
+> > > > tell userspace?  What data do you have that you need to express
+> > > > to it?  How do you want userspace to see/use it?
+> > > 
+> > > It is a good idea to step back and let me explain what I wanted to
+> > > do here for userspace.
+> > > 
+> > > I have two kinds of applications that might use this driver.
+> > > 1. simple use case where user sets a power limit for a RAPL domain.
+> > > e.g. set graphics unit power limit to 7w
+> > > 2. advanced use case where use can do fine tuning on top of simple
+> > > power limit,e.g. the dynamic response parameters of power control
+> > > logic, event notifications, etc.
+> > > 
+> > > For #1, this driver register with the abstract generic thermal layer
+> > > (/sys/class/thermal) and presents itself as a set of cooling devices
+> > > with a single knob per domain for power limits.
+> > > root@chromoly:/sys/class/thermal/cooling_device15# echo 7000 >
+> > > cur_state 
+> > 
+> > Great, how about submitting that functionality as patch 1 of your
+> > series?  That seems like a very "normal" thermal driver, right?
+> > 
+> yes, that would be a normal thermal cooling device driver. I will do
+> that first. Thanks for the suggestion.
 
-Some more trivia...
+Do that first, get it merged, and then let's work on the second part.
+The patch for that will be much more obvious as to what you are
+attempting to do.
 
-> diff --git a/drivers/platform/x86/intel_rapl.c b/drivers/platform/x86/intel_rapl.c
-[]
-> +/* in the order of enum rapl_primitives */
-> +static struct rapl_primitive_info rpi[] = {
+> >  Perhaps the thermal interface could be expanded to provide
+> > more functionality that you need?
+> yes, some of them such as limits. But not all the data in the list
+> above are suitable for thermal interface. That is why I am trying to
+> balance between abstracted generic data and RAPL specific data while
+> still allow linking between the two.
 
-const?
+What is not in the existing interface?  And as this is a thermal device,
+why can't you add them there?
 
-> +	/* name, mask, shift, msr index, unit divisor*/
-> +	PRIMITIVE_INFO_INIT(energy, ENERGY_STATUS_MASK, 0,
-> +			RAPL_DOMAIN_MSR_STATUS, ENERGY_UNIT,
-> +			RAPL_PRIMITIVE_EVENT_CAP),
+> The way I envisioned how a thermal/power management app would use is:
+> 1. go through generic thermal layer sysfs and find available RAPL
+> domains
+> 2. if the app wants to do more fine grained control, it follows the
+> device symlink to locate the RAPL domain specific sysfs area.
 
-> +static int rapl_set_cur_state(struct thermal_cooling_device *cdev,
-> +			unsigned long state)
+So any application will have to know all of the device-specific
+attributes?  That totally defeats the purpose of a generic api that the
+kernel is providing.  You are creating device-specific apis that will
+not work over the long-run (i.e. next 5-10 years.)  Please don't do that
+unless you have exhausted _all_ other alternatives.
 
-I think most of this would look nicer if you
-adopted the net style of aligning multi-line
-statements to the appropriate open parenthesis.
+So, get your first driver accepted, using the in-kernel thermal api, and
+then, if you still feel you wish to do device-specific extensions, we
+can discuss that then.
 
-> +static ssize_t store_event_control(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf,
-> +				size_t size)
-> +{
-> +	struct rapl_domain *rd = dev_get_drvdata(dev);
-> +	unsigned int efd, new_threshold;
-> +	struct file *efile = NULL;
-> +	int ret = 0;
-> +	int prim;
-> +	struct rapl_event *ep;
-> +	u64 val;
-> +	char cmd[MAX_PRIM_NAME];
-> +
-> +	if (sscanf(buf, "%u %s %u", &efd, cmd, &new_threshold) != 3)
-> +		return -EINVAL;
-
-This sscanf looks fragile.
-
-buf = "1 some_really_long_name_longer_than_MAX_PRIM_NAME 2"
-
-stack overrun.
-
-Where does buf come from?
-
-> +#define primitive_show_fn(n)						\
-> +
-> +#define primitive_store_fn(n)						\
-
-Can't both of these be consolidated into a 2 functions using
-offset_of and/or adding a string argument?
-
-> +static struct attribute *all_attrs[] = {
-
-const?
-
-> +	&dev_attr_energy.attr,
-
-
-> +static void rapl_update_domain_data(void)
-> +{
-> +	int i, j;
-> +	u64 val;
-> +	bool xlate;
-> +
-> +	for (i = 0; i < rg_data.nr_domains; i++) {
-> +		/* exclude non-raw primitives */
-> +		for (j = 0; j < NR_RAW_PRIMITIVES; j++)
-> +			xlate = !!(rpi[j].unit);
-
-You don't really need the !!.  The compiler does that.
-
-> +/* for global rapl data */
-> +static struct class_attribute rapl_class_attrs[] = {
-
-const?
-
-> +	GLOBAL_CLASS_RO_ATTR(energy_unit_divisor),
+greg k-h
