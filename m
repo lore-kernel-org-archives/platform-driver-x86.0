@@ -1,45 +1,59 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] RAPL (Running Average Power Limit) driver
-Date: Fri, 5 Apr 2013 14:06:05 -0700
-Message-ID: <20130405210605.GA18505@kroah.com>
-References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2] RAPL (Running Average Power Limit) driver
+Date: Fri,  5 Apr 2013 14:02:03 -0700
+Message-ID: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f47.google.com ([209.85.220.47]:63784 "EHLO
-	mail-pa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1162203Ab3DEVGJ (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:40523 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1162095Ab3DEVDD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Apr 2013 17:06:09 -0400
-Received: by mail-pa0-f47.google.com with SMTP id bj3so2250113pad.20
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Apr 2013 14:06:08 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	Fri, 5 Apr 2013 17:03:03 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Joe Perches <joe@perches.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+To: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>, Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-On Fri, Apr 05, 2013 at 02:02:03PM -0700, Jacob Pan wrote:
-> Changes since V2:
-> 	- use 'struct device' instead of raw kobject to represent
-> 	  RAPL domains
-> 	- changed eventfd control interface to use event string
-> 	  instead of passing file descriptors that cannot be
-> 	  authenticated in sysfs directory
-> 	- clean ups based on v1 reviews
-> 		- use kcalloc for arrays
-> 		- drop dependencies on X86
-> 		- misc cleanups
+Changes since V2:
+	- use 'struct device' instead of raw kobject to represent
+	  RAPL domains
+	- changed eventfd control interface to use event string
+	  instead of passing file descriptors that cannot be
+	  authenticated in sysfs directory
+	- clean ups based on v1 reviews
+		- use kcalloc for arrays
+		- drop dependencies on X86
+		- misc cleanups
 
-Please no, split this up into at least 2 patches, the first being the
-"standard" thermal driver, and the rest for the "custom" extensions you
-are proposing.
+I don have a checkpatch error which I think it is not valid. I can
+fix it by avoiding the macro/adding more lines.
 
-That way the first can get accepted easily, and into 3.10 (hopefully),
-so people can use it and not stall everything as we continue to iterate
-over the "custom" things.
+ERROR: Macros with complex values should be enclosed in parenthesis
+#735: FILE: platform/x86/intel_rapl.c:735:
++#define RO_PRIMITIVE(name)						\
++	primitive_show_fn(name)						\
++	static DEVICE_ATTR(name, S_IRUGO, show_##name, NULL)
 
-As is, this driver isn't acceptable, sorry.
+If i put parenthesis around it to mute the error then it won't compile.
 
-greg k-h
+I attempted to come up with a simple version as Greg suggested to
+just expose cooling device but then I realized we could lose many
+key functionalities partially due to the correlations among RAPL
+control knobs. I am still working on this since it is not as simple as
+deleting the advanced interfaces, I would have to do some setup based
+on best guesses.
+
+Jacob Pan (1):
+  Introduce Intel RAPL cooling device driver
+
+ Documentation/ABI/testing/sysfs-class-intel-rapl |  121 ++
+ drivers/platform/x86/Kconfig                     |    9 +
+ drivers/platform/x86/Makefile                    |    1 +
+ drivers/platform/x86/intel_rapl.c                | 1285 ++++++++++++++++++++++
+ drivers/platform/x86/intel_rapl.h                |  244 ++++
+ 5 files changed, 1660 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel-rapl
+ create mode 100644 drivers/platform/x86/intel_rapl.c
+ create mode 100644 drivers/platform/x86/intel_rapl.h
+
+-- 
+1.7.9.5
