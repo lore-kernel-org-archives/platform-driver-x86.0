@@ -1,61 +1,182 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: [RFD] Let acpi video driver handle its dmi table
-Date: Thu, 04 Apr 2013 19:37:37 +0800
-Message-ID: <515D6601.4070509@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:4050 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758670Ab3DDLg0 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Apr 2013 07:36:26 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@novell.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Zhang Rui <rui.zhang@intel.com>
-Cc: ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+From: Hu Tao <hutao@cn.fujitsu.com>
+Subject: [PATCH v17] pvpanic: pvpanic device driver
+Date: Fri, 5 Apr 2013 15:10:43 +0800
+Message-ID: <1365145843-6000-1-git-send-email-hutao@cn.fujitsu.com>
+References: <cover.1365143012.git.hutao@cn.fujitsu.com>
+Return-path: <qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org>
+In-Reply-To: <cover.1365143012.git.hutao@cn.fujitsu.com>
+List-Unsubscribe: <https://lists.nongnu.org/mailman/options/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=unsubscribe>
+List-Archive: <http://lists.nongnu.org/archive/html/qemu-devel>
+List-Post: <mailto:qemu-devel@nongnu.org>
+List-Help: <mailto:qemu-devel-request@nongnu.org?subject=help>
+List-Subscribe: <https://lists.nongnu.org/mailman/listinfo/qemu-devel>,
+	<mailto:qemu-devel-request@nongnu.org?subject=subscribe>
+Errors-To: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+Sender: qemu-devel-bounces+gceq-qemu-devel=gmane.org@nongnu.org
+To: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, qemu-devel <qemu-devel@nongnu.org>, "Daniel P. Berrange" <berrange@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Jan Kiszka <jan.kiszka@siemens.com>, Gleb Natapov <gleb@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Eric Blake <eblake@redhat.com>, Andrew Jones <drjones@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Luiz Capitulino <lcapitulino@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Markus Armbruster <armbru@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Juan Quintela <quintela@redhat.com>, Orit Wasserman <owasserm@redhat.com>, Wen Congyang <wency@cn.fujitsu.com>, "Michael S. Tsirkin" <mst@redhat.com>, Alexander Graf <agraf@suse.de>Alex
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+pvpanic device is a qemu simulated device through which guest panic
+event is sent to host.
 
-Recently I saw two bugs about acer system:
-https://bugzilla.kernel.org/show_bug.cgi?id=35622
-https://bugzilla.kernel.org/show_bug.cgi?id=51051
-The backlight is handled by gpu driver's backlight interface, and hotkey
-is handled by acpi video driver. The problem is, hotkey notification
-does not function on these systems now.
+Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
+---
 
-The reason is, acer-wmi driver will unload acpi video driver when it
-found these systems are in its video_vendor_dmi_table, which is used to
-keep all the systems that are known having buggy acpi video interface
-implementations.
+ref: http://lists.nongnu.org/archive/html/qemu-devel/2013-04/msg01028.html
 
-So we have a problem here, though acpi video driver can't handle
-backlight level change, it is still required to handle hotkey
-notificaions, and thus unload the driver is not desired.
+ drivers/platform/x86/Kconfig   |   7 +++
+ drivers/platform/x86/Makefile  |   2 +
+ drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 drivers/platform/x86/pvpanic.c
 
-One way to solve this problem is, to have acpi video driver deal with
-these broken systems that it can not handle by itself: not create
-backlight interface while still keeping the notification handler there.
-To achieve this, we need to move those systems listed in
-video_vendor_dmi_table to video_detect_dmi_table, and we are done. And
-any code to touch acpi video driver in acer-wmi driver can be removed,
-also no need to add SELECT ACPI_VIDEO to CONFIG_ACER_WMI. The downside
-is, if other platform vendor drivers all follow this rule, we will end
-up with a big video_detect_dmi_table.
-
-Another way is to add a new interface, something like
-acpi_video_unregister_backlight, to let platform drivers call. And this
-new interface will only unregister the backlight device acpi video
-driver has already created and nothing more. So the notification handler
-of acpi video driver will stay, solving the problem. The downside is,
-it's kind of odd to let another module solve a problem for acpi video
-module. In this case, the vendor driver's whole point is to unregister
-acpi video driver's backlight interface, while it does't handle backlight
-nor hotkey. So it doesn't seem to be required in this game.
-
-Please feel free to share your opinion, which one you prefer or some new
-idea perhaps.
-
-Thanks,
-Aaron
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3338437..527ed04 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -781,4 +781,11 @@ config APPLE_GMUX
+ 	  graphics as well as the backlight. Currently only backlight
+ 	  control is supported by the driver.
+ 
++config PVPANIC
++	tristate "pvpanic device support"
++	depends on ACPI
++	---help---
++	  This driver provides support for pvpanic device, which is a qemu
++	  simulated device through which guest panic event is sent to host.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index ace2b38..ef0ec74 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
++
++obj-$(CONFIG_PVPANIC)           += pvpanic.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+new file mode 100644
+index 0000000..81c95ec
+--- /dev/null
++++ b/drivers/platform/x86/pvpanic.c
+@@ -0,0 +1,115 @@
++/*
++ *  pvpanic.c - pvpanic Device Support
++ *
++ *  Copyright (C) 2013 Fujitsu.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
++MODULE_DESCRIPTION("pvpanic device driver");
++MODULE_LICENSE("GPL");
++
++static int pvpanic_add(struct acpi_device *device);
++static int pvpanic_remove(struct acpi_device *device);
++
++static const struct acpi_device_id pvpanic_device_ids[] = {
++	{ "QEMU0001", 0},
++	{ "", 0},
++};
++MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
++
++#define PVPANIC_PANICKED	(1 << 0)
++
++static acpi_handle handle;
++
++static struct acpi_driver pvpanic_driver = {
++	.name =		"pvpanic",
++	.class =	"QEMU",
++	.ids =		pvpanic_device_ids,
++	.ops =		{
++				.add =		pvpanic_add,
++				.remove =	pvpanic_remove,
++			},
++	.owner =	THIS_MODULE,
++};
++
++static void
++pvpanic_send_event(unsigned int event)
++{
++	union acpi_object arg;
++	struct acpi_object_list arg_list;
++
++	if (!handle)
++		return;
++
++	arg.type = ACPI_TYPE_INTEGER;
++	arg.integer.value = event;
++
++	arg_list.count = 1;
++	arg_list.pointer = &arg;
++
++	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
++}
++
++static int
++pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
++		     void *unused)
++{
++	pvpanic_send_event(PVPANIC_PANICKED);
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block pvpanic_panic_nb = {
++	.notifier_call = pvpanic_panic_notify,
++};
++
++static int pvpanic_add(struct acpi_device *device)
++{
++	acpi_status status;
++	u64 ret;
++
++	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
++				       &ret);
++
++	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
++		return -ENODEV;
++
++	handle = device->handle;
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &pvpanic_panic_nb);
++
++	return 0;
++}
++
++static int pvpanic_remove(struct acpi_device *device)
++{
++
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &pvpanic_panic_nb);
++	handle = NULL;
++	return 0;
++}
++
++module_acpi_driver(pvpanic_driver);
+-- 
+1.8.1.4
