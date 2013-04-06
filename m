@@ -1,65 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
-Date: Fri, 5 Apr 2013 14:06:48 -0700
-Message-ID: <20130405210648.GB18505@kroah.com>
-References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: jhbird.choi@gmail.com
+Subject: [PATCH 3.8-stable] msi-wmi: Fix memory leak
+Date: Sat,  6 Apr 2013 21:43:57 +0900
+Message-ID: <516018d4.41e1440a.5308.fffff9f2@mx.google.com>
+References: <y>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f48.google.com ([209.85.160.48]:35612 "EHLO
-	mail-pb0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1162395Ab3DEVGv (ORCPT
+Received: from mail-pd0-f174.google.com ([209.85.192.174]:38431 "EHLO
+	mail-pd0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1422847Ab3DFMpK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Apr 2013 17:06:51 -0400
-Received: by mail-pb0-f48.google.com with SMTP id xb4so2194041pbc.7
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Apr 2013 14:06:50 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
+	Sat, 6 Apr 2013 08:45:10 -0400
+In-Reply-To: <y>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Joe Perches <joe@perches.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+To: Anisse Astier <anisse@astier.eu>, Matthew Garrett <matthew.garrett@nebula.com>, Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Jonghwan Choi <jhbird.choi@samsung.com>
 
-On Fri, Apr 05, 2013 at 02:02:04PM -0700, Jacob Pan wrote:
-> RAPL(Running Average Power Limit) interface provides platform software
-> with the ability to monitor, control, and get notifications on SOC
-> power consumptions. Since its first appearance on Sandy Bridge, more
-> features have being added to extend its usage. In RAPL, platforms are
-> divided into domains for fine grained control. These domains include
-> package, DRAM controller, CPU core (Power Plane 0), graphics uncore
-> (power plane 1), etc.
-> 
-> The purpose of this driver is to expose RAPL for userspace
-> consumption. Overall, RAPL fits in the generic thermal layer in
-> that platform level power capping and monitoring are mainly used for
-> thermal management and thermal layer provides the abstracted interface
-> needed to have portable applications.
-> 
-> Specifically, userspace is presented with per domain cooling device
-> with sysfs links to its true device. Although RAPL domain provides many
-> parameters for fine tuning, long term power limit is exposed as the
-> single knob via cooling device state. Whereas the rest of the
-> parameters are still accessible via the linked RAPL class devices.
-> This interface allows both simple and advanced use cases.
-> 
-> Eventfd is used to provide notifications to the userspace. At per domain
-> level, use can choose any event capable parameters to register for
-> threshold crossing notifications. This is shamelessly "borrowed" from
-> cgroup with some trimming/fitting.
-> 
-> Zhang, Rui's initial RAPL driver was used as a reference and starting
-> point. Many thanks.
-> https://lkml.org/lkml/2011/5/26/93
-> 
-> Unlike the patch above, which is mainly for monitoring, this driver
-> focus on the control and usability by user applications.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-As described in the cover letter response:
-	NACKed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch looks like it should be in the 3.8-stable tree, should we apply
+it?
 
-please redo this based on those comments.
+------------------
 
-greg k-h
+From: "Maxim Mikityanskiy <maxtram95@gmail.com>"
+
+commit 51c94491c82c3d9029f6e87a1a153db321d88e35 upstream
+
+Fix memory leak - don't forget to kfree ACPI object when returning from
+msi_wmi_notify() after suppressing key event.
+
+Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+Acked-by: Anisse Astier <anisse@astier.eu>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
+Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
+---
+ drivers/platform/x86/msi-wmi.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+index 2264331..b96766b 100644
+--- a/drivers/platform/x86/msi-wmi.c
++++ b/drivers/platform/x86/msi-wmi.c
+@@ -176,7 +176,7 @@ static void msi_wmi_notify(u32 value, void *context)
+ 				pr_debug("Suppressed key event 0x%X - "
+ 					 "Last press was %lld us ago\n",
+ 					 key->code, ktime_to_us(diff));
+-				return;
++				goto msi_wmi_notify_exit;
+ 			}
+ 			last_pressed[key->code - SCANCODE_BASE] = cur;
+ 
+@@ -195,6 +195,8 @@ static void msi_wmi_notify(u32 value, void *context)
+ 			pr_info("Unknown key pressed - %x\n", eventcode);
+ 	} else
+ 		pr_info("Unknown event received\n");
++
++msi_wmi_notify_exit:
+ 	kfree(response.pointer);
+ }
+ 
+-- 
+1.7.10.4
