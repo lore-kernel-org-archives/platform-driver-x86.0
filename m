@@ -1,99 +1,77 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/1] Introduce Intel RAPL cooling device driver
-Date: Fri, 5 Apr 2013 14:46:45 -0700
-Message-ID: <20130405214645.GA31362@kroah.com>
-References: <1364940936-20846-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1364940936-20846-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <20130402230042.GA8713@kroah.com>
- <20130402165340.61b7da02@chromoly>
- <20130403001300.GA13838@kroah.com>
- <20130402214818.50f1ae89@chromoly>
- <20130403163509.GC21969@kroah.com>
- <20130403103551.16e62eb6@chromoly>
- <20130405202309.GA3303@kroah.com>
- <20130405143340.4ea36d2e@chromoly>
+From: Anisse Astier <anisse@astier.eu>
+Subject: Re: [PATCH 3.8-stable] msi-wmi: Fix memory leak
+Date: Sat, 6 Apr 2013 19:50:42 +0200
+Message-ID: <CALUN=q+3uONXZ2Gtvi7jBRhX+rHdCkw1PjcH6A6tFKyoecc0VQ@mail.gmail.com>
+References: <516018d4.41e1440a.5308.fffff9f2@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pd0-f176.google.com ([209.85.192.176]:57983 "EHLO
-	mail-pd0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1162744Ab3DEVqs (ORCPT
+Received: from mail-ie0-f179.google.com ([209.85.223.179]:63232 "EHLO
+	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753325Ab3DFRvD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Apr 2013 17:46:48 -0400
-Received: by mail-pd0-f176.google.com with SMTP id r11so2210288pdi.21
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Apr 2013 14:46:47 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20130405143340.4ea36d2e@chromoly>
+	Sat, 6 Apr 2013 13:51:03 -0400
+Received: by mail-ie0-f179.google.com with SMTP id k11so5479072iea.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 06 Apr 2013 10:51:02 -0700 (PDT)
+In-Reply-To: <516018d4.41e1440a.5308.fffff9f2@mx.google.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
+To: jhbird.choi@gmail.com
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Jonghwan Choi <jhbird.choi@samsung.com>
 
-On Fri, Apr 05, 2013 at 02:33:40PM -0700, Jacob Pan wrote:
-> On Fri, 5 Apr 2013 13:23:09 -0700
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Wed, Apr 03, 2013 at 10:35:51AM -0700, Jacob Pan wrote:
-> > > On Wed, 3 Apr 2013 09:35:09 -0700
-> > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Tue, Apr 02, 2013 at 09:48:18PM -0700, Jacob Pan wrote:
-> > > > > > Let's step back and start over, what exactly are you trying to
-> > > > > > tell userspace?  What data do you have that you need to
-> > > > > > express to it?  How do you want userspace to see/use it?
-> > > > > 
-> > > > > It is a good idea to step back and let me explain what I wanted
-> > > > > to do here for userspace.
-> > > > > 
-> > > > > I have two kinds of applications that might use this driver.
-> > > > > 1. simple use case where user sets a power limit for a RAPL
-> > > > > domain. e.g. set graphics unit power limit to 7w
-> > > > > 2. advanced use case where use can do fine tuning on top of
-> > > > > simple power limit,e.g. the dynamic response parameters of
-> > > > > power control logic, event notifications, etc.
-> > > > > 
-> > > > > For #1, this driver register with the abstract generic thermal
-> > > > > layer (/sys/class/thermal) and presents itself as a set of
-> > > > > cooling devices with a single knob per domain for power limits.
-> > > > > root@chromoly:/sys/class/thermal/cooling_device15# echo 7000 >
-> > > > > cur_state 
-> > > > 
-> > > > Great, how about submitting that functionality as patch 1 of your
-> > > > series?  That seems like a very "normal" thermal driver, right?
-> > > > 
-> > > yes, that would be a normal thermal cooling device driver. I will do
-> > > that first. Thanks for the suggestion.
-> > 
-> > Do that first, get it merged, and then let's work on the second part.
-> > The patch for that will be much more obvious as to what you are
-> > attempting to do.
-> > 
-> Sorry I was too busy to work on v2 before seeing this. I agree I need
-> to simplify the interface, I just need to come up with a more
-> intelligent way to abstract that and do the best guesses for the user.
-> Hopefully, v2 will serve as a confirmation on the comments I got from
-> v1. i.e. kobject->struct device, removed dependencies on sysfs internal
-> data struct, etc.
+On Sat, Apr 6, 2013 at 2:43 PM,  <jhbird.choi@gmail.com> wrote:
+> From: Maxim Mikityanskiy <maxtram95@gmail.com>
+>
+> This patch looks like it should be in the 3.8-stable tree, should we apply
+> it?
 
-I'm not going to review that part of the code, sorry, as it's about to
-be ripped out anyway :)
+Looks like stable-material to me.
 
-> > > >  Perhaps the thermal interface could be expanded to provide
-> > > > more functionality that you need?
-> > > yes, some of them such as limits. But not all the data in the list
-> > > above are suitable for thermal interface. That is why I am trying to
-> > > balance between abstracted generic data and RAPL specific data while
-> > > still allow linking between the two.
-> > 
-> > What is not in the existing interface?  And as this is a thermal
-> > device, why can't you add them there?
-> existing interface has only cur_state and max_state, I have been
-> working with Rui (thermal maintainer) on adding more knobs for cooling
-> devices, such as limit low, limit high, event control. I believe they
-> can all be added.
 
-Great, then you will not need any of the driver-specific sysfs files,
-struct device usage, or kobject mess, so your code should be a lot
-smaller.
 
-greg k-h
+> ------------------
+>
+> From: "Maxim Mikityanskiy <maxtram95@gmail.com>"
+>
+> commit 51c94491c82c3d9029f6e87a1a153db321d88e35 upstream
+>
+> Fix memory leak - don't forget to kfree ACPI object when returning from
+> msi_wmi_notify() after suppressing key event.
+>
+> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Acked-by: Anisse Astier <anisse@astier.eu>
+> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
+> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
+> ---
+>  drivers/platform/x86/msi-wmi.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
+> index 2264331..b96766b 100644
+> --- a/drivers/platform/x86/msi-wmi.c
+> +++ b/drivers/platform/x86/msi-wmi.c
+> @@ -176,7 +176,7 @@ static void msi_wmi_notify(u32 value, void *context)
+>                                 pr_debug("Suppressed key event 0x%X - "
+>                                          "Last press was %lld us ago\n",
+>                                          key->code, ktime_to_us(diff));
+> -                               return;
+> +                               goto msi_wmi_notify_exit;
+>                         }
+>                         last_pressed[key->code - SCANCODE_BASE] = cur;
+>
+> @@ -195,6 +195,8 @@ static void msi_wmi_notify(u32 value, void *context)
+>                         pr_info("Unknown key pressed - %x\n", eventcode);
+>         } else
+>                 pr_info("Unknown event received\n");
+> +
+> +msi_wmi_notify_exit:
+>         kfree(response.pointer);
+>  }
+>
+> --
+> 1.7.10.4
+>
+
+(sorry for the resend, first one was rejected by vger due to html from
+my mobile).
