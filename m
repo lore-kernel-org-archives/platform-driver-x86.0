@@ -1,45 +1,72 @@
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v3 1/1] Introduce Intel RAPL cooling device driver
-Date: Tue, 9 Apr 2013 16:22:13 -0700
-Message-ID: <20130409162213.44cffcac@chromoly>
-References: <1365511578-30453-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1365511578-30453-2-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1365523237.6865.40.camel@joe-AO722>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v4 0/1] RAPL (Running Average Power Limit) driver
+Date: Tue,  9 Apr 2013 16:46:48 -0700
+Message-ID: <1365551209-14392-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:32504 "EHLO mga09.intel.com"
+Received: from mga14.intel.com ([143.182.124.37]:39901 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932165Ab3DIXWP (ORCPT
+	id S932625Ab3DIXqx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Apr 2013 19:22:15 -0400
-In-Reply-To: <1365523237.6865.40.camel@joe-AO722>
+	Tue, 9 Apr 2013 19:46:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joe Perches <joe@perches.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
+To: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-On Tue, 09 Apr 2013 09:00:37 -0700
-Joe Perches <joe@perches.com> wrote:
+Changes since V3:
+	- Removed dependency on platform_device/platform_driver.
+	  I initially used platform bus for the purpose of linking
+	  RAPL domain device objects to thermal sysfs. For this simplified
+	  version we don't need this anymore nor do we need any
+	  resources/platform data. This simplified version only needs
+	  MSR access. (not to avoid .release() :). I should be freeing
+	  device data after it gets called from driver core)
 
-> > +static int start_periodic_polling(void)
-> > +{
-> > +	if (polling_started)
-> > +		goto out;
-> > +	schedule_delayed_work(&rapl_polling_work, 0);
-> > +	polling_started = true;  
-> 
-> Should polling_started be device specific (in struct rapl_data ?)
-> instead of a single instance static?
-hmmm, one of the future improvements is to add support for multi
-package CPUs. I intend to use rapl_data for per package common data
-across different domains but use a single polling thread to reduce
-wakeups if we were to poll on multiple packages. So in that sense, I
-want to keep the polling_started flag as a single instance within the
-driver.
+	- merged header file into .c file, there is no public data nor
+	  APIs.
+
+	- misc. cleanups based on reviews
+
+Changes since V2:
+	This is a simpler version which only exposes interface via
+	the generic thermal layer. No new ABI introduced.
+
+	RAPL driver does some automatic settings to the related power
+	parameters based on user's single input from thermal cooling
+	device interface.
+
+	On the other side, more work needed to fully use RAPL
+	interface. This is likely result in adding more knobs in the
+	generic thermal sysfs.
+
+	- deleted event notifications
+	- deleted per domain device and RAPL class and their private
+	  sysfs
+	- added more logic to do some automatic settings based on
+	  user input. e.g. will enable clamping by default and set
+	  a reasonable time window for long term power limits.
+
+Changes since V1:
+	- use 'struct device' instead of raw kobject to represent
+	  RAPL domains
+	- changed eventfd control interface to use event string
+	  instead of passing file descriptors that cannot be
+	  authenticated in sysfs directory
+	- clean ups based on v1 reviews
+		- use kcalloc for arrays
+		- drop dependencies on X86
+		- misc cleanups
+
+
+
+Jacob Pan (1):
+  Introduce Intel RAPL cooling device driver
+
+ drivers/platform/x86/Kconfig      |    9 +
+ drivers/platform/x86/Makefile     |    1 +
+ drivers/platform/x86/intel_rapl.c |  889 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 899 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_rapl.c
 
 -- 
-Thanks,
-
-Jacob
+1.7.9.5
