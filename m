@@ -1,57 +1,40 @@
 From: Joe Perches <joe@perches.com>
 Subject: Re: [PATCH v3 1/1] Introduce Intel RAPL cooling device driver
-Date: Tue, 09 Apr 2013 09:26:55 -0700
-Message-ID: <1365524815.6865.54.camel@joe-AO722>
+Date: Tue, 09 Apr 2013 09:29:48 -0700
+Message-ID: <1365524988.6865.55.camel@joe-AO722>
 References: <1365511578-30453-1-git-send-email-jacob.jun.pan@linux.intel.com>
 	 <1365511578-30453-2-git-send-email-jacob.jun.pan@linux.intel.com>
-	 <20130409152638.GA3033@kroah.com> <20130409091517.3b73a583@chromoly>
+	 <20130409152638.GA3033@kroah.com> <1365522817.6865.33.camel@joe-AO722>
+	 <20130409160741.GA8080@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from perches-mx.perches.com ([206.117.179.246]:43930 "EHLO
+Received: from perches-mx.perches.com ([206.117.179.246]:49009 "EHLO
 	labridge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S936133Ab3DIQ06 (ORCPT
+	id S1764934Ab3DIQ3t (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Apr 2013 12:26:58 -0400
-In-Reply-To: <20130409091517.3b73a583@chromoly>
+	Tue, 9 Apr 2013 12:29:49 -0400
+In-Reply-To: <20130409160741.GA8080@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>
 
-On Tue, 2013-04-09 at 09:15 -0700, Jacob Pan wrote:
-> On Tue, 9 Apr 2013 08:26:38 -0700
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > > +	if (NULL == rp->name || rp->flag & RAPL_PRIMITIVE_DUMMY)
+On Tue, 2013-04-09 at 09:07 -0700, Greg Kroah-Hartman wrote:
+> On Tue, Apr 09, 2013 at 08:53:37AM -0700, Joe Perches wrote:
+> > On Tue, 2013-04-09 at 08:26 -0700, Greg Kroah-Hartman wrote:
+> > > On Tue, Apr 09, 2013 at 05:46:18AM -0700, Jacob Pan wrote:
+> > > > +#define DEBUG
+> > > Why?  I think you need to remove this line :)
 > > 
-> > In Linux we do (rp->name == NULL), or even better yet (!rp->name),
-> > please fix that up here and elsewhere in the driver.
-> > 
-> I can fix that. I did that because checkpatch does not complain about
-> it. also it avoids common mistake as:
-> rp->name = NULL
+> > Some people like their dev_dbg statements to
+> > be emitted all the time.
 > 
-> > > +
-> > > +#define PRIMITIVE_INFO_INIT(p, m, s, i, u, f) {#p, m, s, i, u, p,
-> > > f}
-> > 
-> > C has named initializers, use them please.
-> > 
-> this macro can save lots of repeated text.
+> Those people should not be submitting new drivers for inclusion in the
+> kernel tree.
 
-Use the macro.  Use named initializers in the macro.
-
-#define PRIMITIVE_INFO_INIT(p, m, s, i, u, f)	\
-{						\
-	.name = #p,				\
-	.mask = m,				\
-	.shift = s,				\
-	.id = i,				\
-	.unit = u,				\
-/*						\
-(hmm looks like a bug ?)			\
-	enum rapl_primitives pm_id;		\
-*/						\
-	.flag = f,				\
-}
+I think age of code (with some obvious exceptions) isn't
+too much of a reliable indicator and adding new
+CONFIG_<foo>_DEBUG controls isn't all that great a way
+to enable debugging.
