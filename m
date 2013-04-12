@@ -1,81 +1,73 @@
-From: Luis Henriques <luis.henriques@canonical.com>
-Subject: Re: [PATCH 3.8-stable] msi-wmi: Fix memory leak
-Date: Thu, 11 Apr 2013 13:41:11 +0100
-Message-ID: <20130411124111.GB13039@hercules>
-References: <y>
- <516018d4.41e1440a.5308.fffff9f2@mx.google.com>
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
+Date: Fri, 12 Apr 2013 08:32:03 -0700
+Message-ID: <20130412083203.13cf56b0@chromoly>
+References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	<1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
+	<1365197195.2075.23.camel@joe-AO722>
+	<20130405213518.GA5615@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:43421 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752764Ab3DKMlQ (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:22822 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751367Ab3DLPcG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 11 Apr 2013 08:41:16 -0400
-Content-Disposition: inline
-In-Reply-To: <516018d4.41e1440a.5308.fffff9f2@mx.google.com>
+	Fri, 12 Apr 2013 11:32:06 -0400
+In-Reply-To: <20130405213518.GA5615@kroah.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jhbird.choi@gmail.com
-Cc: Anisse Astier <anisse@astier.eu>, Matthew Garrett <matthew.garrett@nebula.com>, Maxim Mikityanskiy <maxtram95@gmail.com>, stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Jonghwan Choi <jhbird.choi@samsung.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
 
-On Sat, Apr 06, 2013 at 09:43:57PM +0900, jhbird.choi@gmail.com wrote:
-> From: Maxim Mikityanskiy <maxtram95@gmail.com>
-> 
-> This patch looks like it should be in the 3.8-stable tree, should we apply
-> it?
+On Fri, 5 Apr 2013 14:35:18 -0700
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-I believe this is also applicable to 3.5 kernels.  I'm queuing it.
+> On Fri, Apr 05, 2013 at 02:26:35PM -0700, Joe Perches wrote:
+> > On Fri, 2013-04-05 at 14:02 -0700, Jacob Pan wrote:
+> > > +static ssize_t store_event_control(struct device *dev,
+> > > +				struct device_attribute *attr,
+> > > +				const char *buf,
+> > > +				size_t size)
+> > > +{
+> > > +	struct rapl_domain *rd = dev_get_drvdata(dev);
+> > > +	unsigned int efd, new_threshold;
+> > > +	struct file *efile = NULL;
+> > > +	int ret = 0;
+> > > +	int prim;
+> > > +	struct rapl_event *ep;
+> > > +	u64 val;
+> > > +	char cmd[MAX_PRIM_NAME];
+> > > +
+> > > +	if (sscanf(buf, "%u %s %u", &efd, cmd,
+> > > &new_threshold) != 3)
+> > > +		return -EINVAL;
+> > 
+> > This sscanf looks fragile.
+> > 
+> > buf = "1 some_really_long_name_longer_than_MAX_PRIM_NAME 2"
+> > 
+> > stack overrun.
+> > 
+> > Where does buf come from?
+> 
+> It comes from the sysfs core, which limits it to a PAGE_SIZE.  But
+> yes, it does look fragile, and flat out wrong, but I'm not going into
+> that just yet, as that whole api should just be deleted for now.
+> 
+> greg k-h
+> 
+I am just curious to know besides fixing string length check, is the
+problem related to the fact that I have more than
+one element for the event_control sysfs node?
+i.e. <eventfd> <event_name> <threshold>
 
-Cheers,
---
-Luis
+If so, the reason being I don't know if there is a standard way
+to a transaction via sysfs where I can commit multiple inputs
+atomically.
 
-> 
-> ------------------
-> 
-> From: "Maxim Mikityanskiy <maxtram95@gmail.com>"
-> 
-> commit 51c94491c82c3d9029f6e87a1a153db321d88e35 upstream
-> 
-> Fix memory leak - don't forget to kfree ACPI object when returning from
-> msi_wmi_notify() after suppressing key event.
-> 
-> Signed-off-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> Acked-by: Anisse Astier <anisse@astier.eu>
-> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
-> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
-> ---
->  drivers/platform/x86/msi-wmi.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-> index 2264331..b96766b 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -176,7 +176,7 @@ static void msi_wmi_notify(u32 value, void *context)
->  				pr_debug("Suppressed key event 0x%X - "
->  					 "Last press was %lld us ago\n",
->  					 key->code, ktime_to_us(diff));
-> -				return;
-> +				goto msi_wmi_notify_exit;
->  			}
->  			last_pressed[key->code - SCANCODE_BASE] = cur;
->  
-> @@ -195,6 +195,8 @@ static void msi_wmi_notify(u32 value, void *context)
->  			pr_info("Unknown key pressed - %x\n", eventcode);
->  	} else
->  		pr_info("Unknown event received\n");
-> +
-> +msi_wmi_notify_exit:
->  	kfree(response.pointer);
->  }
->  
-> -- 
-> 1.7.10.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe stable" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks,
+
+Jacob
