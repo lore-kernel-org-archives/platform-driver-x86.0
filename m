@@ -1,32 +1,53 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] Introduce Intel RAPL cooling device driver
-Date: Fri, 12 Apr 2013 08:39:00 -0700
-Message-ID: <20130412153900.GB25603@kroah.com>
-References: <1365195724-8945-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1365195724-8945-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <1365197195.2075.23.camel@joe-AO722>
- <20130405213518.GA5615@kroah.com>
- <20130412083203.13cf56b0@chromoly>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: BUG: Fn keys not working on EliteBook 8460p after fabf85e3ca15d5b94058f391dac8df870cdd427a
+Date: Sat, 13 Apr 2013 03:31:17 +0200
+Message-ID: <201304130331.18301@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed;
+  boundary="nextPart4181137.1YX98hxonW";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f50.google.com ([209.85.220.50]:38036 "EHLO
-	mail-pa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754048Ab3DLPjE (ORCPT
+Received: from mail-ee0-f43.google.com ([74.125.83.43]:65524 "EHLO
+	mail-ee0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752426Ab3DMBbW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Apr 2013 11:39:04 -0400
-Received: by mail-pa0-f50.google.com with SMTP id bg2so1533885pad.37
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2013 08:39:03 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20130412083203.13cf56b0@chromoly>
+	Fri, 12 Apr 2013 21:31:22 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Len Brown <len.brown@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Arjan van de Ven <arjan@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>, Paul Bolle <pebolle@tiscali.nl>
+To: Kyle Evans <kvans32@gmail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 12, 2013 at 08:32:03AM -0700, Jacob Pan wrote:
-> If so, the reason being I don't know if there is a standard way
-> to a transaction via sysfs where I can commit multiple inputs
-> atomically.
+--nextPart4181137.1YX98hxonW
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-That is by design.
+Hello,
+
+all Fn keys, wifi switch, web and mute buttons not working anymore=20
+on my notebook HP EliteBook 8460p. I bisected git commit which=20
+broke all above keys: fabf85e3ca15d5b94058f391dac8df870cdd427a
+
+When I reverted that commit after reboot buttons started working=20
+again. Can you fix it or revert that broken commit? This is=20
+critical problem, which caused my notebook to be unusable...
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart4181137.1YX98hxonW
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlFotWYACgkQi/DJPQPkQ1KymQCgkwd4k/Sh0AITDgZnM7hVAW62
+jFcAn0RhxaOLUKtWOJ56bTsP3XOcIulK
+=w7se
+-----END PGP SIGNATURE-----
+
+--nextPart4181137.1YX98hxonW--
