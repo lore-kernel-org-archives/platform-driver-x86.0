@@ -1,35 +1,39 @@
 From: Olof Johansson <olof@lixom.net>
 Subject: Re: [PATCH] Platform: x86: chromeos_laptop: defer probing if no i2c
  busses found
-Date: Thu, 18 Apr 2013 15:05:47 -0700
-Message-ID: <CAOesGMj6nyjYjxQ23Vk0L76fYQo7YPeKoKrPptq8TVdv7Cwa-g@mail.gmail.com>
+Date: Thu, 18 Apr 2013 15:44:20 -0700
+Message-ID: <CAOesGMg5F-+Sco0sA1s2ACD2ZcqG2Z1Ovq51oyo=fO19S6Njfg@mail.gmail.com>
 References: <1366322130-19364-1-git-send-email-olof@lixom.net>
+	<CAOesGMj6nyjYjxQ23Vk0L76fYQo7YPeKoKrPptq8TVdv7Cwa-g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182]:41739 "EHLO
-	mail-wi0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S936482Ab3DRWFs (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Apr 2013 18:05:48 -0400
-Received: by mail-wi0-f182.google.com with SMTP id m6so3704029wiv.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2013 15:05:47 -0700 (PDT)
-In-Reply-To: <1366322130-19364-1-git-send-email-olof@lixom.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMj6nyjYjxQ23Vk0L76fYQo7YPeKoKrPptq8TVdv7Cwa-g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <matthew.garrett@nebula.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benson Leung <bleung@chromium.org>, dirk@hohndel.org, Olof Johansson <olof@lixom.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 18, 2013 at 2:55 PM, Olof Johansson <olof@lixom.net> wrote:
-> If chromeos_laptop is loaded before the DRM driver, the i2c busses will
-> not yet be available. Defer probe for that case and try again later.
+On Thu, Apr 18, 2013 at 3:05 PM, Olof Johansson <olof@lixom.net> wrote:
+> On Thu, Apr 18, 2013 at 2:55 PM, Olof Johansson <olof@lixom.net> wrote:
+>> If chromeos_laptop is loaded before the DRM driver, the i2c busses will
+>> not yet be available. Defer probe for that case and try again later.
+>>
+>> Trickling the error up to the module init function is unfortuantely a
+>> little awkward, since the i2c bus lookup and device registration happens
+>> as a dmi callback.
 >
-> Trickling the error up to the module init function is unfortuantely a
-> little awkward, since the i2c bus lookup and device registration happens
-> as a dmi callback.
+> Uh, wait, hold off on this. I'm returning -EPROBE_DEFER from the
+> module init function. It's not valid outside of the driver model.
 
-Uh, wait, hold off on this. I'm returning -EPROBE_DEFER from the
-module init function. It's not valid outside of the driver model.
+Ugh. Ok, so that worked just because any error seem to re-trigger an
+attempt to load the module later on my system (three times, it seems),
+and most of the reproductions I had happened to work out on the second
+load.
+
+Looks like keeping the module loaded and adding a bus notifier to wait
+for the right busses to show up is the only way to do this in a
+foolproof way. Revised patch tonight or tomorrow.
 
 
 -Olof
