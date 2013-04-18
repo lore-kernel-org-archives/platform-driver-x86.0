@@ -1,37 +1,92 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: BUG: Fn keys not working on EliteBook 8460p after
- fabf85e3ca15d5b94058f391dac8df870cdd427a
-Date: Thu, 18 Apr 2013 16:53:28 +0000
-Message-ID: <1366304008.13667.17.camel@x230.lan>
-References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>
-	     <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>
-	    <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>
-	   <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>
-	  <516FFB3D.3060002@gmail.com> <1366300697.13667.15.camel@x230.lan>
-	 <517023F8.5050606@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [216.32.180.184] ([216.32.180.184]:33384 "EHLO
-	co1outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1753682Ab3DRQyv (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Apr 2013 12:54:51 -0400
-In-Reply-To: <517023F8.5050606@gmail.com>
-Content-Language: en-US
-Content-ID: <7E0DD66B401FA1409DC81B4F5059173B@namprd05.prod.outlook.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>
-Cc: =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: [PATCH] Platform: x86: chromeos_laptop: defer probing if no i2c busses found
+Date: Thu, 18 Apr 2013 14:55:30 -0700
+Message-ID: <1366322130-19364-1-git-send-email-olof@lixom.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: torvalds@linux-foundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, bleung@chromium.org, dirk@hohndel.org, Olof Johansson <olof@lixom.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gVGh1LCAyMDEzLTA0LTE4IGF0IDEyOjQ4IC0wNDAwLCBLeWxlIEV2YW5zIHdyb3RlOg0KDQo+
-IFRoYXQgb25seSB3b3JrcyBpZiBJIGFsc28gY2hhbmdlOg0KPiANCj4gLSNkZWZpbmUgSFBXTUlf
-QklPU19RVUVSWSAweDgNCj4gKyNkZWZpbmUgSFBXTUlfQklPU19RVUVSWSAweDkNCj4gDQo+IEJ1
-dCB0aGVuIHdlIGFyZSBzdGlsbCBmYWNlZCB3aXRoIGEgaGFyZHdhcmUgZGV0ZWN0aW9uIHByb2Js
-ZW0gSSB3b3VsZCBhc3N1bWUuDQoNCkhlaC4gVGhhdCdzIGFjdHVhbGx5IHdoYXQgaXQgc2hvdWxk
-IGhhdmUgYmVlbiBpbiB0aGUgZmlyc3QgcGxhY2UgLSBJDQpqdXN0IHNjcmV3ZWQgaXQgdXAuIFNv
-LCBsb29rcyBsaWtlIHRoYXQncyBhIGdvb2Qgc3RhcnRpbmcgcG9pbnQuIEknbGwNCnB1c2ggdGhl
-IHJldmVydCB0byBMaW51eCBhbmQgcXVldWUgdGhpcyB1cCBmb3IgMy4xMC4NCg0KLS0gDQpNYXR0
-aGV3IEdhcnJldHQgfCBtamc1OUBzcmNmLnVjYW0ub3JnDQo=
+If chromeos_laptop is loaded before the DRM driver, the i2c busses will
+not yet be available. Defer probe for that case and try again later.
+
+Trickling the error up to the module init function is unfortuantely a
+little awkward, since the i2c bus lookup and device registration happens
+as a dmi callback.
+
+Reported-by: Dirk Hohndel <dirk@hohndel.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ drivers/platform/x86/chromeos_laptop.c |   33 ++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/x86/chromeos_laptop.c
+index 3e5b4497..7ff12fa 100644
+--- a/drivers/platform/x86/chromeos_laptop.c
++++ b/drivers/platform/x86/chromeos_laptop.c
+@@ -39,6 +39,7 @@
+ static struct i2c_client *als;
+ static struct i2c_client *tp;
+ static struct i2c_client *ts;
++static int setup_error;
+ 
+ const char *i2c_adapter_names[] = {
+ 	"SMBus I801 adapter",
+@@ -191,7 +192,8 @@ static int __init find_i2c_adapter_num(enum i2c_adapter_type type)
+ 	if (!dev) {
+ 		pr_err("%s: i2c adapter %s not found on system.\n", __func__,
+ 		       name);
++		setup_error = -EPROBE_DEFER;
+ 		return -ENODEV;
+ 	}
+ 	adapter = to_i2c_adapter(dev);
+ 	return adapter->nr;
+@@ -381,23 +383,38 @@ static struct dmi_system_id __initdata chromeos_laptop_dmi_table[] = {
+ };
+ MODULE_DEVICE_TABLE(dmi, chromeos_laptop_dmi_table);
+ 
++static void chromeos_laptop_unregister(void)
++{
++	if (als)
++		i2c_unregister_device(als);
++	if (tp)
++		i2c_unregister_device(tp);
++	if (ts)
++		i2c_unregister_device(ts);
++
++	als = NULL;
++	tp = NULL;
++	ts = NULL;
++}
++
+ static int __init chromeos_laptop_init(void)
+ {
++	setup_error = 0;
++
+ 	if (!dmi_check_system(chromeos_laptop_dmi_table)) {
+ 		pr_debug("%s unsupported system.\n", __func__);
+ 		return -ENODEV;
+ 	}
+-	return 0;
++
++	if (setup_error)
++		chromeos_laptop_unregister();
++
++	return setup_error;
+ }
+ 
+ static void __exit chromeos_laptop_exit(void)
+ {
+-	if (als)
+-		i2c_unregister_device(als);
+-	if (tp)
+-		i2c_unregister_device(tp);
+-	if (ts)
+-		i2c_unregister_device(ts);
++	chromeos_laptop_unregister();
+ }
+ 
+ module_init(chromeos_laptop_init);
+-- 
+1.7.10.4
