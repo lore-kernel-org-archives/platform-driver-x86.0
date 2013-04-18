@@ -1,17 +1,17 @@
 From: Kyle Evans <kvans32@gmail.com>
 Subject: Re: BUG: Fn keys not working on EliteBook 8460p after fabf85e3ca15d5b94058f391dac8df870cdd427a
-Date: Wed, 17 Apr 2013 14:55:34 -0400
-Message-ID: <516EF026.5000508@gmail.com>
+Date: Thu, 18 Apr 2013 09:55:09 -0400
+Message-ID: <516FFB3D.3060002@gmail.com>
 References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>    <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>   <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>  <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f179.google.com ([209.85.223.179]:56117 "EHLO
-	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754424Ab3DQSzr (ORCPT
+Received: from mail-ia0-f171.google.com ([209.85.210.171]:53700 "EHLO
+	mail-ia0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S935511Ab3DRNzV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Apr 2013 14:55:47 -0400
+	Thu, 18 Apr 2013 09:55:21 -0400
 In-Reply-To: <1366221554.13667.13.camel@x230.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -33,6 +33,23 @@ On 04/17/2013 01:59 PM, Matthew Garrett wrote:
 > that's not happening?
 >
 
-I see, I don't know how I missed that before. I think because I was 
-searching for e6 instead of E6. I'm sure we can crack this the right way 
-now. I'll do some digging.
+I am not fully understanding how the bios query ID gets translated into 
+the method. As far as I can tell this happens under HWMC. But, if I 
+trace through that, 0x8(write) and 0x9(read) do not exist. However, 
+0x9(read) does have a method that works when I query it, GHKS. I do not 
+find the method for 0x8(write).
+
+0x9(write), or SHKS, is essentially ec_write(SFHK,Arg0). Arg0 turns out 
+to be whatever data is sent in the 0x9 buffer.
+                                 ...
+                                 CreateDWordField (Arg1, 0x10, DDWD)
+
+                                 If (LEqual (CMDT, 0x09))
+                                 {
+                                     Store (SHKS (DDWD), Local2)
+                                 ...
+
+I tried writing 0x60, and I tried writing 0x0e just to see if it if a 
+subset of that register is needed to enable the keys and it seems I need 
+the full 0x6e. I only find two places in the DSDT with that value, both 
+in the WQAE buffer and I can't see how that is used.
