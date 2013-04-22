@@ -1,39 +1,91 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] Platform: x86: chromeos_laptop: defer probing if no i2c
- busses found
-Date: Thu, 18 Apr 2013 15:44:20 -0700
-Message-ID: <CAOesGMg5F-+Sco0sA1s2ACD2ZcqG2Z1Ovq51oyo=fO19S6Njfg@mail.gmail.com>
-References: <1366322130-19364-1-git-send-email-olof@lixom.net>
-	<CAOesGMj6nyjYjxQ23Vk0L76fYQo7YPeKoKrPptq8TVdv7Cwa-g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Chun-Yi Lee <joeyli.kernel@gmail.com>
+Subject: [PATCH 2/2] acer-wmi: add Acer Aspire 5750G to video vendor list but keep acpi video driver
+Date: Mon, 22 Apr 2013 20:39:14 +0800
+Message-ID: <1366634355-26482-1-git-send-email-jlee@suse.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMj6nyjYjxQ23Vk0L76fYQo7YPeKoKrPptq8TVdv7Cwa-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benson Leung <bleung@chromium.org>, dirk@hohndel.org, Olof Johansson <olof@lixom.net>
+To: mjg@redhat.com, rjw@sisk.pl
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Aaron Lu <aaron.lu@intel.com>, Thomas Renninger <trenn@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 18, 2013 at 3:05 PM, Olof Johansson <olof@lixom.net> wrote:
-> On Thu, Apr 18, 2013 at 2:55 PM, Olof Johansson <olof@lixom.net> wrote:
->> If chromeos_laptop is loaded before the DRM driver, the i2c busses will
->> not yet be available. Defer probe for that case and try again later.
->>
->> Trickling the error up to the module init function is unfortuantely a
->> little awkward, since the i2c bus lookup and device registration happens
->> as a dmi callback.
->
-> Uh, wait, hold off on this. I'm returning -EPROBE_DEFER from the
-> module init function. It's not valid outside of the driver model.
+From: Lee, Chun-Yi <jlee@suse.com>
 
-Ugh. Ok, so that worked just because any error seem to re-trigger an
-attempt to load the module later on my system (three times, it seems),
-and most of the reproductions I had happened to work out on the second
-load.
+After Andrzej's testing, we found the acpi backlight methods broken on Acer
+Aspire 5750G but the i915 backlight control works when we set to vendor mode.
+And, we still want to keep the acpi/video driver for transfer acpi event to key
+event but not unregister whole acpi/video driver.
 
-Looks like keeping the module loaded and adding a bus notifier to wait
-for the right busses to show up is the only way to do this in a
-foolproof way. Revised patch tonight or tomorrow.
+This patch introduced a new capability flag is ACER_CAP_KEEP_VIDEO_KEY, it
+indicates the machine works fine with acpi/video driver for key event but want
+to unregister the backlight interface of acpi/video.
 
+Reference: bko#35622
+        https://bugzilla.kernel.org/show_bug.cgi?id=35622
 
--Olof
+Tested-by: Andrzej Krentosz <endrjux@gmail.com>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Rafael J. Wysocki <rjw@sisk.pl>
+Cc: Aaron Lu <aaron.lu@intel.com>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index c9076bd..2a02409 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -207,6 +207,7 @@ struct hotkey_function_type_aa {
+ #define ACER_CAP_BRIGHTNESS		(1<<3)
+ #define ACER_CAP_THREEG			(1<<4)
+ #define ACER_CAP_ACCEL			(1<<5)
++#define ACER_CAP_KEEP_VIDEO_KEY		(1<<6)
+ #define ACER_CAP_ANY			(0xFFFFFFFF)
+ 
+ /*
+@@ -539,6 +540,15 @@ static int video_set_backlight_video_vendor(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
++static int video_set_backlight_video_vendor_keep_acpi_video(
++		const struct dmi_system_id *d)
++{
++	video_set_backlight_video_vendor(d);
++	interface->capability |= ACER_CAP_KEEP_VIDEO_KEY;
++	pr_info("Keep acpi video driver for emit keycode against backlight change\n");
++	return 0;
++}
++
+ static const struct dmi_system_id video_vendor_dmi_table[] = {
+ 	{
+ 		.callback = video_set_backlight_video_vendor,
+@@ -572,6 +582,14 @@ static const struct dmi_system_id video_vendor_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
+ 		},
+ 	},
++	{
++		.callback = video_set_backlight_video_vendor_keep_acpi_video,
++		.ident = "Acer Aspire 5750G",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750G"),
++		},
++	},
+ 	{}
+ };
+ 
+@@ -2228,6 +2246,8 @@ static int __init acer_wmi_init(void)
+ 	if (acpi_video_backlight_support()) {
+ 		interface->capability &= ~ACER_CAP_BRIGHTNESS;
+ 		pr_info("Brightness must be controlled by acpi video driver\n");
++	} else if (interface->capability & ACER_CAP_KEEP_VIDEO_KEY) {
++		acpi_video_backlight_unregister();
+ 	} else {
+ 		pr_info("Disabling ACPI video driver\n");
+ 		acpi_video_unregister();
+-- 
+1.6.0.2
