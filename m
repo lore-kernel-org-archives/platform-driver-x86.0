@@ -1,127 +1,48 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [PATCH 1/2] acpi: video: add function to support unregister backlight
-Date: Fri, 26 Apr 2013 13:24:49 +0800
-Message-ID: <517A0FA1.3040406@intel.com>
-References: <1366634355-26482-1-git-send-email-jlee@suse.com> <1366634355-26482-2-git-send-email-jlee@suse.com>
+From: nmn@nathanielmnelson.com
+Subject: [PATCH] platform-driver-x86: toshiba_hdaps (new) (3.8.10)
+Date: Sun, 28 Apr 2013 22:42:16 -0700
+Message-ID: <fdc446a704647f251072e94517f5fa2e.squirrel@webmail.nathanielmnelson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1366634355-26482-2-git-send-email-jlee@suse.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Chun-Yi Lee <joeyli.kernel@gmail.com>
-Cc: mjg@redhat.com, rjw@sisk.pl, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from hapkido.dreamhost.com ([66.33.216.122]:45328 "EHLO
+	hapkido.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750712Ab3D2Fm4 convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 29 Apr 2013 01:42:56 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
 
-On 04/22/2013 08:39 PM, Chun-Yi Lee wrote:
-> From: "Lee, Chun-Yi" <jlee@suse.com>
->
-> There have situation we unregister whole acpi/video driver by downstream driver
-> just want to remove backlight control interface of acpi/video. It caues we lost
-> other functions of acpi/video, e.g. transfer acpi event to input event.
->
-> So, this patch add a new function, find_video_unregister_backlight, it provide
-> the interface let downstream driver can tell acpi/video to unregister backlight
-> interface of all acpi video devices. Then we can keep functions of acpi/video
-> but only remove backlight support.
->
-> Reference: bko#35622
->          https://bugzilla.kernel.org/show_bug.cgi?id=35622
->
-> Tested-by: Andrzej Krentosz <endrjux@gmail.com>
-> Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-> Cc: Matthew Garrett <mjg@redhat.com>
-> Cc: Dmitry Torokhov <dtor@mail.ru>
-> Cc: Corentin Chary <corentincj@iksaif.net>
-> Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> Cc: Aaron Lu <aaron.lu@intel.com>
-> Cc: Thomas Renninger <trenn@suse.de>
-> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> ---
->   drivers/acpi/video.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->   include/acpi/video.h |  2 ++
->   2 files changed, 48 insertions(+)
->
-> diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
-> index 313f959..acd2e7a 100644
-> --- a/drivers/acpi/video.c
-> +++ b/drivers/acpi/video.c
-> @@ -1793,6 +1793,52 @@ static int __init intel_opregion_present(void)
->   	return opregion;
->   }
->
-> +static acpi_status
-> +find_video_unregister_backlight(acpi_handle handle, u32 lvl, void *context,
-> +				void **rv)
-> +{
-> +	struct acpi_device *acpi_dev;
-> +	struct acpi_video_bus *video = NULL;
-> +	struct acpi_video_device *dev, *next;
-> +
-> +	if (acpi_bus_get_device(handle, &acpi_dev))
-> +		return AE_OK;
-> +
-> +	if (!acpi_match_device_ids(acpi_dev, video_device_ids)) {
-> +		video = acpi_driver_data(acpi_dev);
-> +		acpi_video_bus_stop_devices(video);
-> +		mutex_lock(&video->device_list_lock);
-> +		list_for_each_entry_safe(dev, next, &video->video_device_list,
-> +					entry) {
-> +			if (dev->backlight) {
-> +				backlight_device_unregister(dev->backlight);
-> +				dev->backlight = NULL;
-> +				kfree(dev->brightness->levels);
-> +				kfree(dev->brightness);
-> +			}
+Hello all, I've created a patch that enables support for the TOS620A device,
+an accelerometer device on many Toshiba laptops to detect hard drive shock.
+Included is a pretty simple ACPI module and will send out notifications via
+netlink and procfs when the detected state changes.
 
-The cooling_dev should also be unregistered I think.
+This module will send a value of 0x80 when vibration is detected from the
+HDAPS device, and 0x81 when the laptop has been stable for about 1-2 seconds.
+There are 3 different levels of sensitivity set explicitly in ACPI.  These are
+essentially 'low', 'medium', and 'high'. (1, 2, 3 respectively).
 
-Thanks,
-Aaron
+For the actual parking of the hard drive heads, I then use two separate ACPI2
+event files.  The first is triggered when vibration is detected:
 
-> +		}
-> +		mutex_unlock(&video->device_list_lock);
-> +		acpi_video_bus_start_devices(video);
-> +	}
-> +	return AE_OK;
-> +}
-> +
-> +void acpi_video_backlight_unregister(void)
-> +{
-> +	if (!register_count) {
-> +		/*
-> +		 * If the acpi video bus is already unloaded, don't
-> +		 * unregister backlight of devices and return directly.
-> +		 */
-> +		return;
-> +	}
-> +	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-> +			    ACPI_UINT32_MAX, find_video_unregister_backlight,
-> +			    NULL, NULL, NULL);
-> +	return;
-> +}
-> +EXPORT_SYMBOL(acpi_video_backlight_unregister);
-> +
->   int acpi_video_register(void)
->   {
->   	int result = 0;
-> diff --git a/include/acpi/video.h b/include/acpi/video.h
-> index 61109f2..1e810a1 100644
-> --- a/include/acpi/video.h
-> +++ b/include/acpi/video.h
-> @@ -19,11 +19,13 @@ struct acpi_device;
->   #if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
->   extern int acpi_video_register(void);
->   extern void acpi_video_unregister(void);
-> +extern void acpi_video_backlight_unregister(void);
->   extern int acpi_video_get_edid(struct acpi_device *device, int type,
->   			       int device_id, void **edid);
->   #else
->   static inline int acpi_video_register(void) { return 0; }
->   static inline void acpi_video_unregister(void) { return; }
-> +static inline void acpi_video_backlight_unregister(void) { return; }
->   static inline int acpi_video_get_edid(struct acpi_device *device, int type,
->   				      int device_id, void **edid)
->   {
->
+event=HAPS 00000080
+action=echo 30000 > /sys/block/sd?/device/unload_heads
 
+and to reset:
+
+event=HAPS 00000081
+action=echo 0 > /sys/block/sd?/device/unload_heads
+
+It creates 2 sysfs attributes.  The first is 'status', which just returns 1 if
+the device exists and everything is cool.  The second is 'protlevel' which is
+RW and allows you to view the current protection level or set a new level.
+
+Since it is a full module patch, I've included a link to download.  Please let
+me know what you think.  Thanks!
+
+Signed off by: Nate Nelson <nmn@nathanielmnelson.com>
+---
+http://www.nathanielmnelson.com/sites/default/files/toshiba_hdaps-3.8.10.patch
