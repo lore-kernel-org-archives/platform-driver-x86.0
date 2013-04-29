@@ -1,48 +1,88 @@
-From: nmn@nathanielmnelson.com
-Subject: [PATCH] platform-driver-x86: toshiba_hdaps (new) (3.8.10)
-Date: Sun, 28 Apr 2013 22:42:16 -0700
-Message-ID: <fdc446a704647f251072e94517f5fa2e.squirrel@webmail.nathanielmnelson.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH 1/2] acpi: video: add function to support unregister
+ backlight
+Date: Mon, 29 Apr 2013 17:19:27 +0800
+Message-ID: <1367227167.22858.42.camel@linux-s257.site>
+References: <1366634355-26482-1-git-send-email-jlee@suse.com>
+	 <1366634355-26482-2-git-send-email-jlee@suse.com>
+	 <20130423041245.GB2435@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from hapkido.dreamhost.com ([66.33.216.122]:45328 "EHLO
-	hapkido.dreamhost.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750712Ab3D2Fm4 convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Apr 2013 01:42:56 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20130423041245.GB2435@core.coreip.homeip.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: mjg@redhat.com, rjw@sisk.pl, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Carlos Corbacho <carlos@strangeworlds.co.uk>, Corentin Chary <corentincj@iksaif.net>, Aaron Lu <aaron.lu@intel.com>, Thomas Renninger <trenn@suse.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hello all, I've created a patch that enables support for the TOS620A device,
-an accelerometer device on many Toshiba laptops to detect hard drive shock.
-Included is a pretty simple ACPI module and will send out notifications via
-netlink and procfs when the detected state changes.
+Hi Dmitry,=20
 
-This module will send a value of 0x80 when vibration is detected from the
-HDAPS device, and 0x81 when the laptop has been stable for about 1-2 seconds.
-There are 3 different levels of sensitivity set explicitly in ACPI.  These are
-essentially 'low', 'medium', and 'high'. (1, 2, 3 respectively).
+Thanks for your review and suggestions first!
 
-For the actual parking of the hard drive heads, I then use two separate ACPI2
-event files.  The first is triggered when vibration is detected:
+=E6=96=BC =E4=B8=80=EF=BC=8C2013-04-22 =E6=96=BC 21:12 -0700=EF=BC=8CDm=
+itry Torokhov =E6=8F=90=E5=88=B0=EF=BC=9A
+> On Mon, Apr 22, 2013 at 08:39:15PM +0800, Chun-Yi Lee wrote:
+> > From: "Lee, Chun-Yi" <jlee@suse.com>
+> > +static acpi_status
+> > +find_video_unregister_backlight(acpi_handle handle, u32 lvl, void =
+*context,
+> > +				void **rv)
+> > +{
+> > +	struct acpi_device *acpi_dev;
+> > +	struct acpi_video_bus *video =3D NULL;
+>=20
+> Gratuitous initialization of local variables prevents compiler from
+> warning when you using variable uninitialized.
 
-event=HAPS 00000080
-action=echo 30000 > /sys/block/sd?/device/unload_heads
+Yes, I agreed should not put gratuitous initialization, I will remove i=
+t
+in v2 patch.
 
-and to reset:
+>=20
+> > +	struct acpi_video_device *dev, *next;
+> > +
+> > +	if (acpi_bus_get_device(handle, &acpi_dev))
+> > +		return AE_OK;
+> > +
+> > +	if (!acpi_match_device_ids(acpi_dev, video_device_ids)) {
+> > +		video =3D acpi_driver_data(acpi_dev);
+> > +		acpi_video_bus_stop_devices(video);
+> > +		mutex_lock(&video->device_list_lock);
+> > +		list_for_each_entry_safe(dev, next, &video->video_device_list,
+> > +					entry) {
+> > +			if (dev->backlight) {
+> > +				backlight_device_unregister(dev->backlight);
+> > +				dev->backlight =3D NULL;
+> > +				kfree(dev->brightness->levels);
+> > +				kfree(dev->brightness);
+> > +			}
+> > +		}
+> > +		mutex_unlock(&video->device_list_lock);
+> > +		acpi_video_bus_start_devices(video);
+> > +	}
+> > +	return AE_OK;
+> > +}
+> > +
+> > +void acpi_video_backlight_unregister(void)
+> > +{
+> > +	if (!register_count) {
+>=20
+> Locking? It looks like the rest of the driver ignores locking too...
 
-event=HAPS 00000081
-action=echo 0 > /sys/block/sd?/device/unload_heads
+Did you mean locking video_device_list?=20
 
-It creates 2 sysfs attributes.  The first is 'status', which just returns 1 if
-the device exists and everything is cool.  The second is 'protlevel' which is
-RW and allows you to view the current protection level or set a new level.
+The acpi/video locks video_device_list when add, remove and notify acpi
+video bus driver. It always do the mutex lock before control
+video_device_list, so I also add lock when unregister all backlight of
+devices.
 
-Since it is a full module patch, I've included a link to download.  Please let
-me know what you think.  Thanks!
 
-Signed off by: Nate Nelson <nmn@nathanielmnelson.com>
----
-http://www.nathanielmnelson.com/sites/default/files/toshiba_hdaps-3.8.10.patch
+Thanks a lot!
+Joey Lee
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
