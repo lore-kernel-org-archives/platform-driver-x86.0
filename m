@@ -1,106 +1,185 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 1/2] acpi: video: add function to support unregister
- backlight
-Date: Mon, 29 Apr 2013 18:06:06 +0800
-Message-ID: <1367229966.22858.52.camel@linux-s257.site>
-References: <1366634355-26482-1-git-send-email-jlee@suse.com>
-	 <1366634355-26482-2-git-send-email-jlee@suse.com>
-	 <517A0FA1.3040406@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v17] pvpanic: pvpanic device driver
+Date: Tue, 30 Apr 2013 17:39:08 +0200
+Message-ID: <517FE59C.1030109@redhat.com>
+References: <cover.1365143012.git.hutao@cn.fujitsu.com> <1365145843-6000-1-git-send-email-hutao@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <517A0FA1.3040406@intel.com>
+In-Reply-To: <1365145843-6000-1-git-send-email-hutao@cn.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: mjg@redhat.com, rjw@sisk.pl, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Thomas Renninger <trenn@suse.de>
+To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+Cc: Hu Tao <hutao@cn.fujitsu.com>, linux-kernel@vger.kernel.org, qemu-devel <qemu-devel@nongnu.org>, "Daniel P. Berrange" <berrange@redhat.com>, KAMEZAWA Hiroyuki <kamezawa.hiroyu@jp.fujitsu.com>, Jan Kiszka <jan.kiszka@siemens.com>, Gleb Natapov <gleb@redhat.com>, Blue Swirl <blauwirbel@gmail.com>, Eric Blake <eblake@redhat.com>, Andrew Jones <drjones@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Sasha Levin <levinsasha928@gmail.com>, Luiz Capitulino <lcapitulino@redhat.com>, Anthony Liguori <aliguori@us.ibm.com>, Markus Armbruster <armbru@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Juan Quintela <quintela@redhat.com>, Orit Wasserman <owasserm@redhat.com>, Wen Congyang <wency@cn.fujitsu.com>, "Michael S. Tsirkin" <mst@redhat.com>, Alexander Graf <agraf@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-=E6=96=BC =E4=BA=94=EF=BC=8C2013-04-26 =E6=96=BC 13:24 +0800=EF=BC=8CAa=
-ron Lu =E6=8F=90=E5=88=B0=EF=BC=9A
-> On 04/22/2013 08:39 PM, Chun-Yi Lee wrote:
-> > From: "Lee, Chun-Yi" <jlee@suse.com>
-> >
-> > There have situation we unregister whole acpi/video driver by downs=
-tream driver
-> > just want to remove backlight control interface of acpi/video. It c=
-aues we lost
-> > other functions of acpi/video, e.g. transfer acpi event to input ev=
-ent.
-> >
-> > So, this patch add a new function, find_video_unregister_backlight,=
- it provide
-> > the interface let downstream driver can tell acpi/video to unregist=
-er backlight
-> > interface of all acpi video devices. Then we can keep functions of =
-acpi/video
-> > but only remove backlight support.
-> >
-> > Reference: bko#35622
-> >          https://bugzilla.kernel.org/show_bug.cgi?id=3D35622
-> >
-> > Tested-by: Andrzej Krentosz <endrjux@gmail.com>
-> > Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-> > Cc: Matthew Garrett <mjg@redhat.com>
-> > Cc: Dmitry Torokhov <dtor@mail.ru>
-> > Cc: Corentin Chary <corentincj@iksaif.net>
-> > Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> > Cc: Aaron Lu <aaron.lu@intel.com>
-> > Cc: Thomas Renninger <trenn@suse.de>
-> > Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> > ---
-> >   drivers/acpi/video.c | 46 +++++++++++++++++++++++++++++++++++++++=
-+++++++
-> >   include/acpi/video.h |  2 ++
-> >   2 files changed, 48 insertions(+)
-> >
-> > diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
-> > index 313f959..acd2e7a 100644
-> > --- a/drivers/acpi/video.c
-> > +++ b/drivers/acpi/video.c
-> > @@ -1793,6 +1793,52 @@ static int __init intel_opregion_present(voi=
-d)
-> >   	return opregion;
-> >   }
-> >
-> > +static acpi_status
-> > +find_video_unregister_backlight(acpi_handle handle, u32 lvl, void =
-*context,
-> > +				void **rv)
-> > +{
-> > +	struct acpi_device *acpi_dev;
-> > +	struct acpi_video_bus *video =3D NULL;
-> > +	struct acpi_video_device *dev, *next;
-> > +
-> > +	if (acpi_bus_get_device(handle, &acpi_dev))
-> > +		return AE_OK;
-> > +
-> > +	if (!acpi_match_device_ids(acpi_dev, video_device_ids)) {
-> > +		video =3D acpi_driver_data(acpi_dev);
-> > +		acpi_video_bus_stop_devices(video);
-> > +		mutex_lock(&video->device_list_lock);
-> > +		list_for_each_entry_safe(dev, next, &video->video_device_list,
-> > +					entry) {
-> > +			if (dev->backlight) {
-> > +				backlight_device_unregister(dev->backlight);
-> > +				dev->backlight =3D NULL;
-> > +				kfree(dev->brightness->levels);
-> > +				kfree(dev->brightness);
-> > +			}
->=20
-> The cooling_dev should also be unregistered I think.
->=20
-> Thanks,
-> Aaron
->=20
+Il 05/04/2013 09:10, Hu Tao ha scritto:
+> pvpanic device is a qemu simulated device through which guest panic
+> event is sent to host.
+> 
+> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
 
-Yes, you are right!
+Ping.  This will be in QEMU 1.5, is this on track for the 3.10 kernel?
 
-Unregistering  backlight interface of video devices means the backlight
-control functions broken, so it can not used for throttling.
+Thanks,
 
-I will unregister cooling_dev in v2 patch.
+Paolo
 
-
-Thanks a lot!
-Joey Lee
+> ---
+> 
+> ref: http://lists.nongnu.org/archive/html/qemu-devel/2013-04/msg01028.html
+> 
+>  drivers/platform/x86/Kconfig   |   7 +++
+>  drivers/platform/x86/Makefile  |   2 +
+>  drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 124 insertions(+)
+>  create mode 100644 drivers/platform/x86/pvpanic.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 3338437..527ed04 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -781,4 +781,11 @@ config APPLE_GMUX
+>  	  graphics as well as the backlight. Currently only backlight
+>  	  control is supported by the driver.
+>  
+> +config PVPANIC
+> +	tristate "pvpanic device support"
+> +	depends on ACPI
+> +	---help---
+> +	  This driver provides support for pvpanic device, which is a qemu
+> +	  simulated device through which guest panic event is sent to host.
+> +
+>  endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index ace2b38..ef0ec74 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+>  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+>  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+>  obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
+> +
+> +obj-$(CONFIG_PVPANIC)           += pvpanic.o
+> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+> new file mode 100644
+> index 0000000..81c95ec
+> --- /dev/null
+> +++ b/drivers/platform/x86/pvpanic.c
+> @@ -0,0 +1,115 @@
+> +/*
+> + *  pvpanic.c - pvpanic Device Support
+> + *
+> + *  Copyright (C) 2013 Fujitsu.
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License as published by
+> + *  the Free Software Foundation; either version 2 of the License, or
+> + *  (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *  GNU General Public License for more details.
+> + *
+> + *  You should have received a copy of the GNU General Public License
+> + *  along with this program; if not, write to the Free Software
+> + *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +#include <acpi/acpi_bus.h>
+> +#include <acpi/acpi_drivers.h>
+> +
+> +MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+> +MODULE_DESCRIPTION("pvpanic device driver");
+> +MODULE_LICENSE("GPL");
+> +
+> +static int pvpanic_add(struct acpi_device *device);
+> +static int pvpanic_remove(struct acpi_device *device);
+> +
+> +static const struct acpi_device_id pvpanic_device_ids[] = {
+> +	{ "QEMU0001", 0},
+> +	{ "", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
+> +
+> +#define PVPANIC_PANICKED	(1 << 0)
+> +
+> +static acpi_handle handle;
+> +
+> +static struct acpi_driver pvpanic_driver = {
+> +	.name =		"pvpanic",
+> +	.class =	"QEMU",
+> +	.ids =		pvpanic_device_ids,
+> +	.ops =		{
+> +				.add =		pvpanic_add,
+> +				.remove =	pvpanic_remove,
+> +			},
+> +	.owner =	THIS_MODULE,
+> +};
+> +
+> +static void
+> +pvpanic_send_event(unsigned int event)
+> +{
+> +	union acpi_object arg;
+> +	struct acpi_object_list arg_list;
+> +
+> +	if (!handle)
+> +		return;
+> +
+> +	arg.type = ACPI_TYPE_INTEGER;
+> +	arg.integer.value = event;
+> +
+> +	arg_list.count = 1;
+> +	arg_list.pointer = &arg;
+> +
+> +	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
+> +}
+> +
+> +static int
+> +pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+> +		     void *unused)
+> +{
+> +	pvpanic_send_event(PVPANIC_PANICKED);
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block pvpanic_panic_nb = {
+> +	.notifier_call = pvpanic_panic_notify,
+> +};
+> +
+> +static int pvpanic_add(struct acpi_device *device)
+> +{
+> +	acpi_status status;
+> +	u64 ret;
+> +
+> +	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
+> +				       &ret);
+> +
+> +	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
+> +		return -ENODEV;
+> +
+> +	handle = device->handle;
+> +	atomic_notifier_chain_register(&panic_notifier_list,
+> +				       &pvpanic_panic_nb);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pvpanic_remove(struct acpi_device *device)
+> +{
+> +
+> +	atomic_notifier_chain_unregister(&panic_notifier_list,
+> +					 &pvpanic_panic_nb);
+> +	handle = NULL;
+> +	return 0;
+> +}
+> +
+> +module_acpi_driver(pvpanic_driver);
+> 
