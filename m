@@ -1,19 +1,35 @@
-From: ".." <greta.perez@iniap.gob.ec>
-Subject: (unknown)
-Date: Thu, 02 May 2013 03:54:01 -0500 (ECT)
-Message-ID: <ec528d19-f0d0-4deb-a55a-349491d090ed@mail.iniap.gob.ec>
-Reply-To: "bkimt0808@vf.vf" <bkimt0808@vf.vc>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for May 2 (platform/x86/toshiba_acpi)
+Date: Thu, 02 May 2013 14:41:45 -0700
+Message-ID: <5182DD99.7070808@infradead.org>
+References: <20130502173537.c8aa671a1b22abe2ec341b87@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx.iniap.gob.ec ([190.12.16.186]:51848 "EHLO mail.iniap.gob.ec"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750816Ab3EBJEr (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 May 2013 05:04:47 -0400
-Subject: 
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20130502173537.c8aa671a1b22abe2ec341b87@canb.auug.org.au>
+Sender: linux-next-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi, I am Becky Mathews suffering from cancer illness, can you be my next of kin?
+On 05/02/13 00:35, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Please do not add any v3.11 destined work to your linux-next included
+> branches until after v3.10-rc1 is released.
+> 
+> Changes since 20130501:
+> 
+
+when TOSHIBA_ACPI=y and SERIO_I8042=m:
+
+drivers/built-in.o: In function `toshiba_acpi_remove':
+toshiba_acpi.c:(.text+0x29827a): undefined reference to `i8042_remove_filter'
+drivers/built-in.o: In function `toshiba_acpi_add':
+toshiba_acpi.c:(.text+0x298b8c): undefined reference to `i8042_install_filter'
+toshiba_acpi.c:(.text+0x298c3b): undefined reference to `i8042_remove_filter'
+
+
+-- 
+~Randy
