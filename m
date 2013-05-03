@@ -1,35 +1,28 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Marcelo Tosatti <mtosatti@redhat.com>
 Subject: Re: [PATCH v17 RESEND] pvpanic: pvpanic device driver
-Date: Fri, 03 May 2013 11:17:43 +0200
-Message-ID: <518380B7.90905@redhat.com>
+Date: Fri, 3 May 2013 18:59:18 -0300
+Message-ID: <20130503215918.GA13555@amt.cnet>
 References: <1367549230-12805-1-git-send-email-hutao@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:28989 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:20108 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1762898Ab3ECJSN (ORCPT
+	id S1756206Ab3ECWBH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 May 2013 05:18:13 -0400
+	Fri, 3 May 2013 18:01:07 -0400
+Content-Disposition: inline
 In-Reply-To: <1367549230-12805-1-git-send-email-hutao@cn.fujitsu.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Hu Tao <hutao@cn.fujitsu.com>
-Cc: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Marcelo Tosatti <mtosatti@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Il 03/05/2013 04:47, Hu Tao ha scritto:
+On Fri, May 03, 2013 at 10:47:10AM +0800, Hu Tao wrote:
 > pvpanic device is a qemu simulated device through which guest panic
 > event is sent to host.
 > 
 > Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
-
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-
-but you may reword the help message as hinted below.
-
-Paolo
-
 > ---
 >  drivers/platform/x86/Kconfig   |   7 +++
 >  drivers/platform/x86/Makefile  |   2 +
@@ -51,11 +44,7 @@ Paolo
 > +	---help---
 > +	  This driver provides support for pvpanic device, which is a qemu
 > +	  simulated device through which guest panic event is sent to host.
-
-This driver provides support for the pvpanic device.  pvpanic is
-a paravirtualized device provided by QEMU; it lets a virtual machine
-(guest) communicate panic events to the host.
-
+> +
 >  endif # X86_PLATFORM_DEVICES
 > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
 > index ace2b38..ef0ec74 100644
@@ -147,45 +136,9 @@ a paravirtualized device provided by QEMU; it lets a virtual machine
 > +
 > +	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
 > +}
-> +
-> +static int
-> +pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-> +		     void *unused)
-> +{
-> +	pvpanic_send_event(PVPANIC_PANICKED);
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block pvpanic_panic_nb = {
-> +	.notifier_call = pvpanic_panic_notify,
-> +};
-> +
-> +static int pvpanic_add(struct acpi_device *device)
-> +{
-> +	acpi_status status;
-> +	u64 ret;
-> +
-> +	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-> +				       &ret);
-> +
-> +	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
-> +		return -ENODEV;
-> +
-> +	handle = device->handle;
-> +	atomic_notifier_chain_register(&panic_notifier_list,
-> +				       &pvpanic_panic_nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pvpanic_remove(struct acpi_device *device)
-> +{
-> +
-> +	atomic_notifier_chain_unregister(&panic_notifier_list,
-> +					 &pvpanic_panic_nb);
-> +	handle = NULL;
-> +	return 0;
-> +}
-> +
-> +module_acpi_driver(pvpanic_driver);
-> 
+
+Is it safe to call acpi_evaluate_object from a panic notifier? For
+example:
+
+- Has it been confirmed that no code invoked via acpi_evaluate_object can panic() ?
+- acpi_ex_enter_interpreter grabs a mutex. Is that path ever used?
