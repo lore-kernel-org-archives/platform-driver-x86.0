@@ -1,164 +1,40 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v17 RESEND] pvpanic: pvpanic device driver
-Date: Mon, 06 May 2013 15:18:39 +0200
-Message-ID: <5187ADAF.4020103@redhat.com>
-References: <1367549230-12805-1-git-send-email-hutao@cn.fujitsu.com> <20130503215918.GA13555@amt.cnet> <20130506033935.GA20827@localhost.localdomain> <20130506113850.GA5603@amt.cnet>
+From: Kyle Evans <kvans32@gmail.com>
+Subject: Re: hp-wmi: SMBus hotkeys
+Date: Mon, 06 May 2013 12:57:27 -0400
+Message-ID: <5187E0F7.7010507@gmail.com>
+References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>      <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>     <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>    <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>   <516FFB3D.3060002@gmail.com> <1366300697.13667.15.camel@x230.lan>  <517023F8.5050606@gmail.com> <1366304008.13667.17.camel@x230.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:11799 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753190Ab3EFNTB (ORCPT
+Received: from mail-ie0-f182.google.com ([209.85.223.182]:36442 "EHLO
+	mail-ie0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753109Ab3EFQ5j (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 May 2013 09:19:01 -0400
-In-Reply-To: <20130506113850.GA5603@amt.cnet>
+	Mon, 6 May 2013 12:57:39 -0400
+Received: by mail-ie0-f182.google.com with SMTP id a14so4384879iee.27
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 May 2013 09:57:39 -0700 (PDT)
+In-Reply-To: <1366304008.13667.17.camel@x230.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Hu Tao <hutao@cn.fujitsu.com>, platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Il 06/05/2013 13:38, Marcelo Tosatti ha scritto:
-> On Mon, May 06, 2013 at 11:39:35AM +0800, Hu Tao wrote:
->> On Fri, May 03, 2013 at 06:59:18PM -0300, Marcelo Tosatti wrote:
->>> On Fri, May 03, 2013 at 10:47:10AM +0800, Hu Tao wrote:
->>>> pvpanic device is a qemu simulated device through which guest panic
->>>> event is sent to host.
->>>>
->>>> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
->>>> ---
->>>>  drivers/platform/x86/Kconfig   |   7 +++
->>>>  drivers/platform/x86/Makefile  |   2 +
->>>>  drivers/platform/x86/pvpanic.c | 115 +++++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 124 insertions(+)
->>>>  create mode 100644 drivers/platform/x86/pvpanic.c
->>>>
->>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->>>> index 3338437..527ed04 100644
->>>> --- a/drivers/platform/x86/Kconfig
->>>> +++ b/drivers/platform/x86/Kconfig
->>>> @@ -781,4 +781,11 @@ config APPLE_GMUX
->>>>  	  graphics as well as the backlight. Currently only backlight
->>>>  	  control is supported by the driver.
->>>>  
->>>> +config PVPANIC
->>>> +	tristate "pvpanic device support"
->>>> +	depends on ACPI
->>>> +	---help---
->>>> +	  This driver provides support for pvpanic device, which is a qemu
->>>> +	  simulated device through which guest panic event is sent to host.
->>>> +
->>>>  endif # X86_PLATFORM_DEVICES
->>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->>>> index ace2b38..ef0ec74 100644
->>>> --- a/drivers/platform/x86/Makefile
->>>> +++ b/drivers/platform/x86/Makefile
->>>> @@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
->>>>  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
->>>>  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->>>>  obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
->>>> +
->>>> +obj-$(CONFIG_PVPANIC)           += pvpanic.o
->>>> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
->>>> new file mode 100644
->>>> index 0000000..81c95ec
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/pvpanic.c
->>>> @@ -0,0 +1,115 @@
->>>> +/*
->>>> + *  pvpanic.c - pvpanic Device Support
->>>> + *
->>>> + *  Copyright (C) 2013 Fujitsu.
->>>> + *
->>>> + *  This program is free software; you can redistribute it and/or modify
->>>> + *  it under the terms of the GNU General Public License as published by
->>>> + *  the Free Software Foundation; either version 2 of the License, or
->>>> + *  (at your option) any later version.
->>>> + *
->>>> + *  This program is distributed in the hope that it will be useful,
->>>> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> + *  GNU General Public License for more details.
->>>> + *
->>>> + *  You should have received a copy of the GNU General Public License
->>>> + *  along with this program; if not, write to the Free Software
->>>> + *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
->>>> + */
->>>> +
->>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>>> +
->>>> +#include <linux/kernel.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/init.h>
->>>> +#include <linux/types.h>
->>>> +#include <acpi/acpi_bus.h>
->>>> +#include <acpi/acpi_drivers.h>
->>>> +
->>>> +MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
->>>> +MODULE_DESCRIPTION("pvpanic device driver");
->>>> +MODULE_LICENSE("GPL");
->>>> +
->>>> +static int pvpanic_add(struct acpi_device *device);
->>>> +static int pvpanic_remove(struct acpi_device *device);
->>>> +
->>>> +static const struct acpi_device_id pvpanic_device_ids[] = {
->>>> +	{ "QEMU0001", 0},
->>>> +	{ "", 0},
->>>> +};
->>>> +MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
->>>> +
->>>> +#define PVPANIC_PANICKED	(1 << 0)
->>>> +
->>>> +static acpi_handle handle;
->>>> +
->>>> +static struct acpi_driver pvpanic_driver = {
->>>> +	.name =		"pvpanic",
->>>> +	.class =	"QEMU",
->>>> +	.ids =		pvpanic_device_ids,
->>>> +	.ops =		{
->>>> +				.add =		pvpanic_add,
->>>> +				.remove =	pvpanic_remove,
->>>> +			},
->>>> +	.owner =	THIS_MODULE,
->>>> +};
->>>> +
->>>> +static void
->>>> +pvpanic_send_event(unsigned int event)
->>>> +{
->>>> +	union acpi_object arg;
->>>> +	struct acpi_object_list arg_list;
->>>> +
->>>> +	if (!handle)
->>>> +		return;
->>>> +
->>>> +	arg.type = ACPI_TYPE_INTEGER;
->>>> +	arg.integer.value = event;
->>>> +
->>>> +	arg_list.count = 1;
->>>> +	arg_list.pointer = &arg;
->>>> +
->>>> +	acpi_evaluate_object(handle, "WRPT", &arg_list, NULL);
->>>> +}
->>>
->>> Is it safe to call acpi_evaluate_object from a panic notifier? For
->>> example:
->>>
->>> - Has it been confirmed that no code invoked via acpi_evaluate_object can panic() ?
->>
->> Confirmed.
->>
->>> - acpi_ex_enter_interpreter grabs a mutex. Is that path ever used?
->>
->> Unfortunately yes. As I can tell, there are 2 places in the path to grab
->> a mutex: when searching the namespace for the method, and when executing
->> the method. I didn't find a non-blocking version of acpi_evaluate_object.
-> 
-> Then thats a bug because the pvpanic notifier is called with interrupts
-> disabled.
-> 
-> Suppose its safer to use an OUT instruction?
 
-Yeah, it probably is...  You can still use acpi_walk_resources to find
-the port number instead of hard-coding 0x505...
-
-Paolo
+On 04/18/2013 12:53 PM, Matthew Garrett wrote:
+> On Thu, 2013-04-18 at 12:48 -0400, Kyle Evans wrote:
+>
+>> That only works if I also change:
+>>
+>> -#define HPWMI_BIOS_QUERY 0x8
+>> +#define HPWMI_BIOS_QUERY 0x9
+>>
+>> But then we are still faced with a hardware detection problem I would assume.
+> Heh. That's actually what it should have been in the first place - I
+> just screwed it up. So, looks like that's a good starting point. I'll
+> push the revert to Linux and queue this up for 3.10.
+>
+So, what is the plan for this? We have the WMI method so that ec_write 
+is not needed, but how are you thinking it should be triggered? I've got 
+some free time coming up and would like to get this banged out during 
+that time if it is something I can do.
