@@ -1,268 +1,199 @@
-From: Qiaowei Ren <qiaowei.ren@intel.com>
-Subject: [PATCH 3/4] driver: provide sysfs interfaces to access TXT log
-Date: Tue,  7 May 2013 22:55:18 +0800
-Message-ID: <1367938519-840-4-git-send-email-qiaowei.ren@intel.com>
-References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Qiaowei Ren <qiaowei.ren@intel.com>, Xiaoyan Zhang <xiaoyan.zhang@intel.com>, Gang Wei <gang.wei@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v18] pvpanic: pvpanic device driver
+Date: Tue, 07 May 2013 10:10:32 +0200
+Message-ID: <5188B6F8.9070209@redhat.com>
+References: <5187ADAF.4020103@redhat.com> <1367897958-14126-1-git-send-email-hutao@cn.fujitsu.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f45.google.com ([74.125.82.45]:39227 "EHLO
+	mail-wg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754068Ab3EGIKt (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 7 May 2013 04:10:49 -0400
+In-Reply-To: <1367897958-14126-1-git-send-email-hutao@cn.fujitsu.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hu Tao <hutao@cn.fujitsu.com>
+Cc: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Marcelo Tosatti <mtosatti@redhat.com>
 
-These interfaces are located in /sys/devices/platform/intel_txt/log/.
+Il 07/05/2013 05:39, Hu Tao ha scritto:
+> pvpanic device is a qemu simulated device through which guest panic
+> event is sent to host.
+> 
+> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
+> ---
+> 
+> v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
+>                 of acpi_evaluate_oject in panic notifier callback
+>              2. reword help message
+> 
+>  drivers/platform/x86/Kconfig   |   8 +++
+>  drivers/platform/x86/Makefile  |   2 +
+>  drivers/platform/x86/pvpanic.c | 122 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 132 insertions(+)
+>  create mode 100644 drivers/platform/x86/pvpanic.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 3338437..8577261 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -781,4 +781,12 @@ config APPLE_GMUX
+>  	  graphics as well as the backlight. Currently only backlight
+>  	  control is supported by the driver.
+>  
+> +config PVPANIC
+> +	tristate "pvpanic device support"
+> +	depends on ACPI
+> +	---help---
+> +	  This driver provides support for the pvpanic device.  pvpanic is
+> +	  a paravirtualized device provided by QEMU; it lets a virtual machine
+> +	  (guest) communicate panic events to the host.
+> +
+>  endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index ace2b38..ef0ec74 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+>  obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+>  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+>  obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
+> +
+> +obj-$(CONFIG_PVPANIC)           += pvpanic.o
+> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+> new file mode 100644
+> index 0000000..ddec5cb
+> --- /dev/null
+> +++ b/drivers/platform/x86/pvpanic.c
+> @@ -0,0 +1,122 @@
+> +/*
+> + *  pvpanic.c - pvpanic Device Support
+> + *
+> + *  Copyright (C) 2013 Fujitsu.
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License as published by
+> + *  the Free Software Foundation; either version 2 of the License, or
+> + *  (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *  GNU General Public License for more details.
+> + *
+> + *  You should have received a copy of the GNU General Public License
+> + *  along with this program; if not, write to the Free Software
+> + *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +#include <acpi/acpi_bus.h>
+> +#include <acpi/acpi_drivers.h>
+> +
+> +MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+> +MODULE_DESCRIPTION("pvpanic device driver");
+> +MODULE_LICENSE("GPL");
+> +
+> +static int pvpanic_add(struct acpi_device *device);
+> +static int pvpanic_remove(struct acpi_device *device);
+> +
+> +static const struct acpi_device_id pvpanic_device_ids[] = {
+> +	{ "QEMU0001", 0},
+> +	{ "", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
+> +
+> +#define PVPANIC_PANICKED	(1 << 0)
+> +
+> +static u16 port;
+> +
+> +static struct acpi_driver pvpanic_driver = {
+> +	.name =		"pvpanic",
+> +	.class =	"QEMU",
+> +	.ids =		pvpanic_device_ids,
+> +	.ops =		{
+> +				.add =		pvpanic_add,
+> +				.remove =	pvpanic_remove,
+> +			},
+> +	.owner =	THIS_MODULE,
+> +};
+> +
+> +static void
+> +pvpanic_send_event(unsigned int event)
+> +{
+> +	if (port)
+> +		outb(event, port);
+> +}
+> +
+> +static int
+> +pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+> +		     void *unused)
+> +{
+> +	pvpanic_send_event(PVPANIC_PANICKED);
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block pvpanic_panic_nb = {
+> +	.notifier_call = pvpanic_panic_notify,
+> +};
+> +
+> +
+> +static acpi_status
+> +pvpanic_walk_resources(struct acpi_resource *res, void *context)
+> +{
+> +	switch (res->type) {
+> +	case ACPI_RESOURCE_TYPE_END_TAG:
+> +		return AE_OK;
+> +
+> +	case ACPI_RESOURCE_TYPE_IO:
+> +		port = res->data.io.minimum;
+> +		return AE_OK;
+> +
+> +	default:
+> +		return AE_ERROR;
+> +	}
+> +}
+> +
+> +static int pvpanic_add(struct acpi_device *device)
+> +{
+> +	acpi_status status;
+> +	u64 ret;
+> +
+> +	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
+> +				       &ret);
+> +
+> +	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
+> +		return -ENODEV;
+> +
+> +	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> +			    pvpanic_walk_resources, NULL);
+> +
 
-Signed-off-by: Qiaowei Ren <qiaowei.ren@intel.com>
-Signed-off-by: Xiaoyan Zhang <xiaoyan.zhang@intel.com>
-Signed-off-by: Gang Wei <gang.wei@intel.com>
----
- Documentation/ABI/testing/sysfs-platform-intel-txt |   28 +++++
- drivers/platform/x86/intel_txt/Makefile            |    2 +-
- drivers/platform/x86/intel_txt/txt-log.c           |  131 ++++++++++++++++++++
- drivers/platform/x86/intel_txt/txt-log.h           |   27 ++++
- drivers/platform/x86/intel_txt/txt-sysfs.c         |    5 +
- 5 files changed, 192 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/intel_txt/txt-log.c
- create mode 100644 drivers/platform/x86/intel_txt/txt-log.h
+Perhaps ENODEV if port is zero, so you can remove the if from
+pvpanic_send_event?
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-intel-txt b/Documentation/ABI/testing/sysfs-platform-intel-txt
-index fa20a9f..ccacac3 100644
---- a/Documentation/ABI/testing/sysfs-platform-intel-txt
-+++ b/Documentation/ABI/testing/sysfs-platform-intel-txt
-@@ -307,3 +307,31 @@ Contact:	"Qiaowei Ren" <qiaowei.ren@intel.com>
- Description:	0 = Chipset acknowledges that no secrets are in memory.
- 		1 = Chipset believes that secrets are in memory and will
- 		provide reset protection.
-+
-+What:		/sys/devices/platform/intel_txt/log/
-+Date:		May 2013
-+KernelVersion:	3.9
-+Contact:	"Qiaowei Ren" <qiaowei.ren@intel.com>
-+Description:	The log/ directory exposes tboot log memory.
-+
-+What:		/sys/devices/platform/intel_txt/log/log_header
-+Date:		May 2013
-+KernelVersion:	3.9
-+Contact:	"Qiaowei Ren" <qiaowei.ren@intel.com>
-+Description:	The "log_header" property will output log header, including
-+		max_size and curr_pos.
-+
-+What:		/sys/devices/platform/intel_txt/log/block
-+Date:		May 2013
-+KernelVersion:	3.9
-+Contact:	"Qiaowei Ren" <qiaowei.ren@intel.com>
-+Description:	The "block" property will dump pure log in block style,
-+		1 page size.
-+
-+What:		/sys/devices/platform/intel_txt/log/block_index
-+Date:		May 2013
-+KernelVersion:	3.9
-+Contact:	"Qiaowei Ren" <qiaowei.ren@intel.com>
-+Description:	The "block_index" property allows you to set the block
-+		index for output.
-+
-diff --git a/drivers/platform/x86/intel_txt/Makefile b/drivers/platform/x86/intel_txt/Makefile
-index 8d5258e..2265370 100644
---- a/drivers/platform/x86/intel_txt/Makefile
-+++ b/drivers/platform/x86/intel_txt/Makefile
-@@ -2,4 +2,4 @@
- # Makefile for the intel TXT drivers.
- #
- obj-$(CONFIG_INTEL_TXT_DRIVER) += intel_txt.o
--intel_txt-y := txt-sysfs.o txt-config.o
-+intel_txt-y := txt-sysfs.o txt-config.o txt-log.o
-diff --git a/drivers/platform/x86/intel_txt/txt-log.c b/drivers/platform/x86/intel_txt/txt-log.c
-new file mode 100644
-index 0000000..3f0f91d
---- /dev/null
-+++ b/drivers/platform/x86/intel_txt/txt-log.c
-@@ -0,0 +1,131 @@
-+/*
-+ * txt-log.c
-+ *
-+ * - log/
-+ *   log_header	 -r--r--r-- ; output log header, including max_size and
-+ *			      curr_pos.
-+ *   block	 -r--r--r-- ; output pure log in block style, 1 page size.
-+ *   block_index -rw-rw-r-- ; the block index for output.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/sysfs.h>
-+#include <linux/io.h>
-+#include <linux/stat.h>
-+
-+#include "txt-log.h"
-+
-+static u32 log_block_index;
-+
-+static int are_uuids_equal(const struct uuid *uuid1,
-+			   const struct uuid *uuid2)
-+{
-+	return (memcmp(uuid1, uuid2, sizeof(*uuid1)) == 0) ? 1 : 0;
-+}
-+
-+static struct tboot_log *get_log(void)
-+{
-+	struct tboot_log *log;
-+
-+	log = (struct tboot_log *)ioremap_nocache(TBOOT_SERIAL_LOG_ADDR,
-+						  TBOOT_SERIAL_LOG_SIZE);
-+	if (!log)
-+		return NULL;
-+
-+	if (!are_uuids_equal(&(log->uuid),
-+			     &((struct uuid)TBOOT_LOG_UUID))) {
-+		iounmap(log);
-+		return NULL;
-+	}
-+
-+	return log;
-+}
-+
-+ssize_t txt_show_log_header(struct device *dev,
-+			    struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct tboot_log *log;
-+	int ret;
-+
-+	log = get_log();
-+	if (!log)
-+		return -EFAULT;
-+
-+	ret = scnprintf(buf, PAGE_SIZE, "max_size: %x\ncurr_pos: %x\n",
-+		       log->max_size, log->curr_pos);
-+
-+	iounmap(log);
-+	return ret;
-+}
-+static DEVICE_ATTR(log_header, S_IRUGO, txt_show_log_header, NULL);
-+
-+ssize_t txt_show_block(struct device *dev, struct device_attribute *attr,
-+		       char *buf)
-+{
-+	struct tboot_log *log;
-+	char *block;
-+	int ret;
-+
-+	log = get_log();
-+	if (!log)
-+		return -EFAULT;
-+
-+	block = log->buf + log_block_index * PAGE_SIZE;
-+	ret = scnprintf(buf, PAGE_SIZE, "%s\n", block);
-+
-+	iounmap(log);
-+	return ret;
-+}
-+static DEVICE_ATTR(block, S_IRUGO, txt_show_block, NULL);
-+
-+ssize_t txt_show_block_index(struct device *dev,
-+			     struct device_attribute *attr,
-+			     char *buf)
-+{
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", log_block_index);
-+}
-+
-+ssize_t txt_store_block_index(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	u32 index;
-+	struct tboot_log *log;
-+
-+	log = get_log();
-+	if (!log)
-+		return -EFAULT;
-+
-+	sscanf(buf, "%d", &index);
-+	if (index > log->curr_pos / PAGE_SIZE)
-+		return -EINVAL;
-+	log_block_index = index;
-+
-+	iounmap(log);
-+	return count;
-+}
-+static DEVICE_ATTR(block_index, S_IRUGO | S_IWUSR | S_IWGRP,
-+		   txt_show_block_index, txt_store_block_index);
-+
-+static struct attribute *log_attrs[] = {
-+	&dev_attr_log_header.attr,
-+	&dev_attr_block.attr,
-+	&dev_attr_block_index.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group log_attr_grp = {
-+	.name = "log",
-+	.attrs = log_attrs
-+};
-+
-+int sysfs_create_log(struct kobject *parent)
-+{
-+	return sysfs_create_group(parent, &log_attr_grp);
-+}
-+EXPORT_SYMBOL_GPL(sysfs_create_log);
-+
-+MODULE_LICENSE("GPL");
-+
-diff --git a/drivers/platform/x86/intel_txt/txt-log.h b/drivers/platform/x86/intel_txt/txt-log.h
-new file mode 100644
-index 0000000..7eb835e
---- /dev/null
-+++ b/drivers/platform/x86/intel_txt/txt-log.h
-@@ -0,0 +1,27 @@
-+#ifndef __LOG_H__
-+#define __LOG_H__
-+
-+struct uuid {
-+	uint32_t data1;
-+	uint16_t data2;
-+	uint16_t data3;
-+	uint16_t data4;
-+	uint8_t  data5[6];
-+} __packed;
-+
-+struct tboot_log {
-+	struct uuid   uuid;
-+	uint32_t      max_size;
-+	uint32_t      curr_pos;
-+	char          buf[];
-+};
-+
-+#define TBOOT_LOG_UUID		{0xc0192526, 0x6b30, 0x4db4, 0x844c, \
-+				{0xa3, 0xe9, 0x53, 0xb8, 0x81, 0x74} }
-+#define TBOOT_SERIAL_LOG_ADDR	0x60000
-+#define TBOOT_SERIAL_LOG_SIZE	0x08000
-+
-+extern int sysfs_create_log(struct kobject *parent);
-+
-+#endif /* __LOG_H__ */
-+
-diff --git a/drivers/platform/x86/intel_txt/txt-sysfs.c b/drivers/platform/x86/intel_txt/txt-sysfs.c
-index 28cc8a2..af556b6 100644
---- a/drivers/platform/x86/intel_txt/txt-sysfs.c
-+++ b/drivers/platform/x86/intel_txt/txt-sysfs.c
-@@ -16,6 +16,7 @@
- #include <linux/sysfs.h>
- 
- #include "txt-config.h"
-+#include "txt-log.h"
- 
- #define DEV_NAME "intel_txt"
- static struct platform_device *txt_pdev;
-@@ -32,6 +33,10 @@ static int __init txt_sysfs_init(void)
- 	if (retval)
- 		goto err;
- 
-+	retval = sysfs_create_log(&txt_pdev->dev.kobj);
-+	if (retval)
-+		goto err;
-+
- 	return 0;
- 
- err:
--- 
-1.7.9.5
+Paolo
+
+> +	atomic_notifier_chain_register(&panic_notifier_list,
+> +				       &pvpanic_panic_nb);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pvpanic_remove(struct acpi_device *device)
+> +{
+> +
+> +	atomic_notifier_chain_unregister(&panic_notifier_list,
+> +					 &pvpanic_panic_nb);
+> +	return 0;
+> +}
+> +
+> +module_acpi_driver(pvpanic_driver);
+> 
