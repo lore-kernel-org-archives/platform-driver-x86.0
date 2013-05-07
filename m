@@ -1,186 +1,70 @@
-From: Hu Tao <hutao@cn.fujitsu.com>
-Subject: [PATCH v18] pvpanic: pvpanic device driver
-Date: Tue, 7 May 2013 11:39:18 +0800
-Message-ID: <1367897958-14126-1-git-send-email-hutao@cn.fujitsu.com>
-References: <5187ADAF.4020103@redhat.com>
-Return-path: <kvm-owner@vger.kernel.org>
-In-Reply-To: <5187ADAF.4020103@redhat.com>
-Sender: kvm-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, hutao@cn.fujitsu.com
-List-Id: platform-driver-x86.vger.kernel.org
+From: Qiaowei Ren <qiaowei.ren@intel.com>
+Subject: [PATCH 0/4] Intel TXT driver
+Date: Tue,  7 May 2013 22:55:15 +0800
+Message-ID: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([143.182.124.21]:5460 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752690Ab3EGHFD (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 7 May 2013 03:05:03 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Qiaowei Ren <qiaowei.ren@intel.com>
 
-pvpanic device is a qemu simulated device through which guest panic
-event is sent to host.
+This module is expected to be a better tool to access below resources
+  - TXT config space
+  - Tboot log mem
+  - SMX parameter
 
-Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
----
+Intel TXT (Trusted Execution Technology) will provide higher assurance
+of system configuration and initial state as well as data reset
+protection. It also helps solve real end user concerns about having
+confidence that their hardware is running the VMM or kernel that
+it was configured with, especially since they may be responsible for
+providing such assurances to VMs and services running on it.
 
-v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
-                of acpi_evaluate_oject in panic notifier callback
-             2. reword help message
+See <http://www.intel.com/technology/security/> for more information
+about Intel(R) TXT.
 
- drivers/platform/x86/Kconfig   |   8 +++
- drivers/platform/x86/Makefile  |   2 +
- drivers/platform/x86/pvpanic.c | 122 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 132 insertions(+)
- create mode 100644 drivers/platform/x86/pvpanic.c
+Intel TXT configuration registers are a subset of chipset registers.
+These chipset registers that interact with SMX are accessed from two
+regions of memory, which represent the public and private configuration
+spaces, by system software using memory read/write protocols.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 3338437..8577261 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -781,4 +781,12 @@ config APPLE_GMUX
- 	  graphics as well as the backlight. Currently only backlight
- 	  control is supported by the driver.
- 
-+config PVPANIC
-+	tristate "pvpanic device support"
-+	depends on ACPI
-+	---help---
-+	  This driver provides support for the pvpanic device.  pvpanic is
-+	  a paravirtualized device provided by QEMU; it lets a virtual machine
-+	  (guest) communicate panic events to the host.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index ace2b38..ef0ec74 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
- obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
- obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
- obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
-+
-+obj-$(CONFIG_PVPANIC)           += pvpanic.o
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-new file mode 100644
-index 0000000..ddec5cb
---- /dev/null
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -0,0 +1,122 @@
-+/*
-+ *  pvpanic.c - pvpanic Device Support
-+ *
-+ *  Copyright (C) 2013 Fujitsu.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
-+
-+MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-+MODULE_DESCRIPTION("pvpanic device driver");
-+MODULE_LICENSE("GPL");
-+
-+static int pvpanic_add(struct acpi_device *device);
-+static int pvpanic_remove(struct acpi_device *device);
-+
-+static const struct acpi_device_id pvpanic_device_ids[] = {
-+	{ "QEMU0001", 0},
-+	{ "", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-+
-+#define PVPANIC_PANICKED	(1 << 0)
-+
-+static u16 port;
-+
-+static struct acpi_driver pvpanic_driver = {
-+	.name =		"pvpanic",
-+	.class =	"QEMU",
-+	.ids =		pvpanic_device_ids,
-+	.ops =		{
-+				.add =		pvpanic_add,
-+				.remove =	pvpanic_remove,
-+			},
-+	.owner =	THIS_MODULE,
-+};
-+
-+static void
-+pvpanic_send_event(unsigned int event)
-+{
-+	if (port)
-+		outb(event, port);
-+}
-+
-+static int
-+pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-+		     void *unused)
-+{
-+	pvpanic_send_event(PVPANIC_PANICKED);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block pvpanic_panic_nb = {
-+	.notifier_call = pvpanic_panic_notify,
-+};
-+
-+
-+static acpi_status
-+pvpanic_walk_resources(struct acpi_resource *res, void *context)
-+{
-+	switch (res->type) {
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
-+	case ACPI_RESOURCE_TYPE_IO:
-+		port = res->data.io.minimum;
-+		return AE_OK;
-+
-+	default:
-+		return AE_ERROR;
-+	}
-+}
-+
-+static int pvpanic_add(struct acpi_device *device)
-+{
-+	acpi_status status;
-+	u64 ret;
-+
-+	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-+				       &ret);
-+
-+	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
-+		return -ENODEV;
-+
-+	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
-+			    pvpanic_walk_resources, NULL);
-+
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &pvpanic_panic_nb);
-+
-+	return 0;
-+}
-+
-+static int pvpanic_remove(struct acpi_device *device)
-+{
-+
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &pvpanic_panic_nb);
-+	return 0;
-+}
-+
-+module_acpi_driver(pvpanic_driver);
+With this module, it will be easier to access TXT/tboot related
+information/logs.
+
+Qiaowei Ren (4):
+  driver: add TXT driver in kernel
+  driver: provide sysfs interfaces to access TXT config space
+  driver: provide sysfs interfaces to access TXT log
+  driver: provide sysfs interfaces to access SMX parameter
+
+ Documentation/ABI/testing/sysfs-platform-intel-txt |  402 ++++++++
+ drivers/platform/x86/Kconfig                       |    2 +
+ drivers/platform/x86/Makefile                      |    1 +
+ drivers/platform/x86/intel_txt/Kconfig             |   17 +
+ drivers/platform/x86/intel_txt/Makefile            |    5 +
+ drivers/platform/x86/intel_txt/txt-config.c        | 1032 ++++++++++++++++++++
+ drivers/platform/x86/intel_txt/txt-config.h        |  138 +++
+ drivers/platform/x86/intel_txt/txt-log.c           |  131 +++
+ drivers/platform/x86/intel_txt/txt-log.h           |   27 +
+ drivers/platform/x86/intel_txt/txt-parameter.c     |  253 +++++
+ drivers/platform/x86/intel_txt/txt-parameter.h     |   40 +
+ drivers/platform/x86/intel_txt/txt-sysfs.c         |   60 ++
+ 12 files changed, 2108 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-txt
+ create mode 100644 drivers/platform/x86/intel_txt/Kconfig
+ create mode 100644 drivers/platform/x86/intel_txt/Makefile
+ create mode 100644 drivers/platform/x86/intel_txt/txt-config.c
+ create mode 100644 drivers/platform/x86/intel_txt/txt-config.h
+ create mode 100644 drivers/platform/x86/intel_txt/txt-log.c
+ create mode 100644 drivers/platform/x86/intel_txt/txt-log.h
+ create mode 100644 drivers/platform/x86/intel_txt/txt-parameter.c
+ create mode 100644 drivers/platform/x86/intel_txt/txt-parameter.h
+ create mode 100644 drivers/platform/x86/intel_txt/txt-sysfs.c
+
 -- 
-1.8.1.4
-
+1.7.9.5
