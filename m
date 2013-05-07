@@ -1,40 +1,186 @@
-From: Kyle Evans <kvans32@gmail.com>
-Subject: Re: hp-wmi: SMBus hotkeys
-Date: Mon, 06 May 2013 12:57:27 -0400
-Message-ID: <5187E0F7.7010507@gmail.com>
-References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>      <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>     <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>    <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>   <516FFB3D.3060002@gmail.com> <1366300697.13667.15.camel@x230.lan>  <517023F8.5050606@gmail.com> <1366304008.13667.17.camel@x230.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f182.google.com ([209.85.223.182]:36442 "EHLO
-	mail-ie0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753109Ab3EFQ5j (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 May 2013 12:57:39 -0400
-Received: by mail-ie0-f182.google.com with SMTP id a14so4384879iee.27
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 May 2013 09:57:39 -0700 (PDT)
-In-Reply-To: <1366304008.13667.17.camel@x230.lan>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+From: Hu Tao <hutao@cn.fujitsu.com>
+Subject: [PATCH v18] pvpanic: pvpanic device driver
+Date: Tue, 7 May 2013 11:39:18 +0800
+Message-ID: <1367897958-14126-1-git-send-email-hutao@cn.fujitsu.com>
+References: <5187ADAF.4020103@redhat.com>
+Return-path: <kvm-owner@vger.kernel.org>
+In-Reply-To: <5187ADAF.4020103@redhat.com>
+Sender: kvm-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, hutao@cn.fujitsu.com
+List-Id: platform-driver-x86.vger.kernel.org
 
+pvpanic device is a qemu simulated device through which guest panic
+event is sent to host.
 
-On 04/18/2013 12:53 PM, Matthew Garrett wrote:
-> On Thu, 2013-04-18 at 12:48 -0400, Kyle Evans wrote:
->
->> That only works if I also change:
->>
->> -#define HPWMI_BIOS_QUERY 0x8
->> +#define HPWMI_BIOS_QUERY 0x9
->>
->> But then we are still faced with a hardware detection problem I would assume.
-> Heh. That's actually what it should have been in the first place - I
-> just screwed it up. So, looks like that's a good starting point. I'll
-> push the revert to Linux and queue this up for 3.10.
->
-So, what is the plan for this? We have the WMI method so that ec_write 
-is not needed, but how are you thinking it should be triggered? I've got 
-some free time coming up and would like to get this banged out during 
-that time if it is something I can do.
+Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
+---
+
+v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
+                of acpi_evaluate_oject in panic notifier callback
+             2. reword help message
+
+ drivers/platform/x86/Kconfig   |   8 +++
+ drivers/platform/x86/Makefile  |   2 +
+ drivers/platform/x86/pvpanic.c | 122 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 drivers/platform/x86/pvpanic.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3338437..8577261 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -781,4 +781,12 @@ config APPLE_GMUX
+ 	  graphics as well as the backlight. Currently only backlight
+ 	  control is supported by the driver.
+ 
++config PVPANIC
++	tristate "pvpanic device support"
++	depends on ACPI
++	---help---
++	  This driver provides support for the pvpanic device.  pvpanic is
++	  a paravirtualized device provided by QEMU; it lets a virtual machine
++	  (guest) communicate panic events to the host.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index ace2b38..ef0ec74 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
++
++obj-$(CONFIG_PVPANIC)           += pvpanic.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+new file mode 100644
+index 0000000..ddec5cb
+--- /dev/null
++++ b/drivers/platform/x86/pvpanic.c
+@@ -0,0 +1,122 @@
++/*
++ *  pvpanic.c - pvpanic Device Support
++ *
++ *  Copyright (C) 2013 Fujitsu.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
++MODULE_DESCRIPTION("pvpanic device driver");
++MODULE_LICENSE("GPL");
++
++static int pvpanic_add(struct acpi_device *device);
++static int pvpanic_remove(struct acpi_device *device);
++
++static const struct acpi_device_id pvpanic_device_ids[] = {
++	{ "QEMU0001", 0},
++	{ "", 0},
++};
++MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
++
++#define PVPANIC_PANICKED	(1 << 0)
++
++static u16 port;
++
++static struct acpi_driver pvpanic_driver = {
++	.name =		"pvpanic",
++	.class =	"QEMU",
++	.ids =		pvpanic_device_ids,
++	.ops =		{
++				.add =		pvpanic_add,
++				.remove =	pvpanic_remove,
++			},
++	.owner =	THIS_MODULE,
++};
++
++static void
++pvpanic_send_event(unsigned int event)
++{
++	if (port)
++		outb(event, port);
++}
++
++static int
++pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
++		     void *unused)
++{
++	pvpanic_send_event(PVPANIC_PANICKED);
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block pvpanic_panic_nb = {
++	.notifier_call = pvpanic_panic_notify,
++};
++
++
++static acpi_status
++pvpanic_walk_resources(struct acpi_resource *res, void *context)
++{
++	switch (res->type) {
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
++	case ACPI_RESOURCE_TYPE_IO:
++		port = res->data.io.minimum;
++		return AE_OK;
++
++	default:
++		return AE_ERROR;
++	}
++}
++
++static int pvpanic_add(struct acpi_device *device)
++{
++	acpi_status status;
++	u64 ret;
++
++	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
++				       &ret);
++
++	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
++		return -ENODEV;
++
++	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
++			    pvpanic_walk_resources, NULL);
++
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &pvpanic_panic_nb);
++
++	return 0;
++}
++
++static int pvpanic_remove(struct acpi_device *device)
++{
++
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &pvpanic_panic_nb);
++	return 0;
++}
++
++module_acpi_driver(pvpanic_driver);
+-- 
+1.8.1.4
+
