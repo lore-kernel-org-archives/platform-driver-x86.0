@@ -1,104 +1,192 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 2/4] driver: provide sysfs interfaces to access TXT
- config space
-Date: Wed, 8 May 2013 02:44:50 +0000
-Message-ID: <1367981089.2425.18.camel@x230>
-References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-	 <1367938519-840-3-git-send-email-qiaowei.ren@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hu Tao <hutao@cn.fujitsu.com>
+Subject: [PATCH v19] pvpanic: pvpanic device driver
+Date: Wed, 8 May 2013 11:15:32 +0800
+Message-ID: <1367982932-23387-1-git-send-email-hutao@cn.fujitsu.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ch1ehsobe006.messaging.microsoft.com ([216.32.181.186]:31170
-	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752147Ab3EHCo4 (ORCPT
+Received: from cn.fujitsu.com ([222.73.24.84]:4357 "EHLO song.cn.fujitsu.com"
+	rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+	id S1751642Ab3EHDQF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 May 2013 22:44:56 -0400
-In-Reply-To: <1367938519-840-3-git-send-email-qiaowei.ren@intel.com>
-Content-Language: en-US
-Content-ID: <A26D3EAD3F3FED48A3EF429A14366771@namprd05.prod.outlook.com>
+	Tue, 7 May 2013 23:16:05 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Xiaoyan Zhang <xiaoyan.zhang@intel.com>, Gang Wei <gang.wei@intel.com>
+To: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, hutao@cn.fujitsu.com
 
-T24gVHVlLCAyMDEzLTA1LTA3IGF0IDIyOjU1ICswODAwLCBRaWFvd2VpIFJlbiB3cm90ZToNCg0K
-PiArCQlSZWdpc3RlcnMgaW4gdGhlIHByaXZhdGUgc3BhY2UgY2FuIG9ubHkgYmUgYWNjZXNzZWQg
-YWZ0ZXIgYQ0KPiArCQltZWFzdXJlZCBlbnZpcm9ubWVudCBoYXMgYmVlbiBlc3RhYmxpc2hlZCBh
-bmQgYmVmb3JlIHRoZQ0KPiArCQlUWFQuQ01ELkNMT1NFLVBSSVZBVEUgY29tbWFuZCBoYXMgYmVl
-biBpc3N1ZWQuIA0KDQpJcyB1c2Vyc3BhY2UgZXZlciBnb2luZyB0byBiZSBydW5uaW5nIGluIHRo
-aXMgc2l0dWF0aW9uPw0KDQo+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4
-dC9jb25maWcvU1RTX3Jhdw0KPiArRGF0ZToJCU1heSAyMDEzDQo+ICtLZXJuZWxWZXJzaW9uOgkz
-LjkNCj4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVsLmNvbT4NCj4g
-K0Rlc2NyaXB0aW9uOglUWFQuU1RTIGlzIHRoZSBnZW5lcmFsIHN0YXR1cyByZWdpc3Rlci4gVGhp
-cyByZWFkLW9ubHkgcmVnaXN0ZXINCj4gKwkJaXMgdXNlZCBieSBBQyBtb2R1bGVzIGFuZCB0aGUg
-TUxFIHRvIGdldCB0aGUgc3RhdHVzIG9mIHZhcmlvdXMNCj4gKwkJSW50ZWwgVFhUIGZlYXR1cmVz
-Lg0KDQpBQz8gTUxFPw0KDQo+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4
-dC9jb25maWcvU1RTX2VudGVyX2RvbmUNCj4gK0RhdGU6CQlNYXkgMjAxMw0KPiArS2VybmVsVmVy
-c2lvbjoJMy45DQo+ICtDb250YWN0OgkiUWlhb3dlaSBSZW4iIDxxaWFvd2VpLnJlbkBpbnRlbC5j
-b20+DQo+ICtEZXNjcmlwdGlvbjoJVGhlIGNoaXBzZXQgc2V0cyBTRU5URVIuRE9ORS5TVFMgc3Rh
-dHVzIGJpdCB3aGVuIGl0IHNlZXMgYWxsDQo+ICsJCW9mIHRoZSB0aHJlYWRzIGhhdmUgZG9uZSBh
-biBUWFQuQ1lDLlNFTlRFUi1BQ0suDQoNCkFsbCBvZiB3aGljaCB0aHJlYWRzPyBJdCBtaWdodCBi
-ZSB3b3J0aCBhZGRpbmcgYSBnZW5lcmFsIGludHJvZHVjdGlvbiB0bw0KVFhUIGluIERvY3VtZW50
-YXRpb24gYW5kIHJlZmVyZW5jaW5nIGl0IGluIHRoZXNlIGVudHJpZXMuDQoNCj4gK1doYXQ6CQkv
-c3lzL2RldmljZXMvcGxhdGZvcm0vaW50ZWxfdHh0L2NvbmZpZy9TVFNfc2V4aXRfZG9uZQ0KPiAr
-RGF0ZToJCU1heSAyMDEzDQo+ICtLZXJuZWxWZXJzaW9uOgkzLjkNCj4gK0NvbnRhY3Q6CSJRaWFv
-d2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVsLmNvbT4NCj4gK0Rlc2NyaXB0aW9uOglTRVhJVC5E
-T05FLlNUUyBzdGF0dXMgYml0IGlzIHNldCB3aGVuIGFsbCBvZiB0aGUgYml0cyBpbiB0aGUNCj4g
-KwkJVFhULlRIUkVBRFMuSk9JTiByZWdpc3RlciBhcmUgY2xlYXIuIFRodXMsIHRoaXMgYml0IHdp
-bGwgYmUNCj4gKwkJc2V0IGltbWVkaWF0ZWx5IGFmdGVyIHJlc2V0Lg0KDQpJdCB3aWxsPyBXaGVu
-IHdpbGwgaXQgYmUgY2xlYXI/IFdoYXQgd291bGQgdXNlcnNwYWNlIGV2ZXIgd2FudCB0aGlzIGZv
-cj8NCg0KPiArQ29udGFjdDoJIlFpYW93ZWkgUmVuIiA8cWlhb3dlaS5yZW5AaW50ZWwuY29tPg0K
-PiArRGVzY3JpcHRpb246CVRYVC5TSU5JVC5CQVNFIHJlZ2lzdGVyIGNvbnRhaW5zIHRoZSBwaHlz
-aWNhbCBiYXNlIGFkZHJlc3MNCj4gKwkJb2YgdGhlIG1lbW9yeSByZWdpb24gc2V0IGFzaWRlIGJ5
-IHRoZSBCSU9TIGZvciBsb2FkaW5nIGFuDQo+ICsJCVNJTklUIEFDIG1vZHVsZS4gSWYgQklPUyBo
-YXMgcHJvdmlkZWQgYW4gU0lOSVQgQUMgbW9kdWxlLA0KPiArCQlpdCB3aWxsIGJlIGxvY2F0ZWQg
-YXQgdGhpcyBhZGRyZXNzLiBTeXN0ZW0gc29mdHdhcmUgdGhhdA0KPiArCQlwcm92aWRlcyBhbiBT
-SU5JVCBBQyBtb2R1bGUgbXVzdCBzdG9yZSBpdCB0byB0aGlzIGxvY2F0aW9uLg0KDQpXaHkgd291
-bGQgdXNlcnNwYWNlIGV2ZXIgY2FyZSBhYm91dCB0aGlzPw0KDQo+ICtXaGF0OgkJL3N5cy9kZXZp
-Y2VzL3BsYXRmb3JtL2ludGVsX3R4dC9jb25maWcvU0lOSVRfU0laRQ0KPiArRGF0ZToJCU1heSAy
-MDEzDQo+ICtLZXJuZWxWZXJzaW9uOgkzLjkNCj4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFp
-YW93ZWkucmVuQGludGVsLmNvbT4NCj4gK0Rlc2NyaXB0aW9uOglUWFQuU0lOSVQuU0laRSByZWdp
-c3RlciBjb250YWlucyB0aGUgc2l6ZSAoaW4gYnl0ZXMpIG9mDQo+ICsJCXRoZSBtZW1vcnkgcmVn
-aW9uIHNldCBhc2lkZSBieSB0aGUgQklPUyBmb3IgbG9hZGluZyBhbg0KPiArCQlTSU5JVCBBQyBt
-b2R1bGUuIFRoaXMgcmVnaXN0ZXIgaXMgaW5pdGlhbGl6ZWQgYnkgdGhlIEJJT1MuDQoNCk9yIHRo
-aXM/DQoNCj4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50ZWxfdHh0L2NvbmZpZy9N
-TEVfSk9JTg0KPiArRGF0ZToJCU1heSAyMDEzDQo+ICtLZXJuZWxWZXJzaW9uOgkzLjkNCj4gK0Nv
-bnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVsLmNvbT4NCj4gK0Rlc2NyaXB0
-aW9uOglIb2xkcyBhIHBoeXNpY2FsIGFkZHJlc3MgcG9pbnRlciB0byB0aGUgYmFzZSBvZiB0aGUg
-am9pbg0KPiArCQlkYXRhIHN0cnVjdHVyZSB1c2VkIHRvIGluaXRpYWxpemUgUkxQcyBpbiByZXNw
-b25zZSB0bw0KPiArCQlHRVRTRUNbV0FLRVVQXS4NCg0KUkxQcz8NCg0KPiArV2hhdDoJCS9zeXMv
-ZGV2aWNlcy9wbGF0Zm9ybS9pbnRlbF90eHQvY29uZmlnL0hFQVBfQkFTRQ0KPiArRGF0ZToJCU1h
-eSAyMDEzDQo+ICtLZXJuZWxWZXJzaW9uOgkzLjkNCj4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIg
-PHFpYW93ZWkucmVuQGludGVsLmNvbT4NCj4gK0Rlc2NyaXB0aW9uOglUWFQuSEVBUC5CQVNFIHJl
-Z2lzdGVyIGNvbnRhaW5zIHRoZSBwaHlzaWNhbCBiYXNlIGFkZHJlc3MNCj4gKwkJb2YgdGhlIElu
-dGVsIFRYVCBIZWFwIG1lbW9yeSByZWdpb24uIFRoZSBCSU9TIGluaXRpYWxpemVzDQo+ICsJCXRo
-aXMgcmVnaXN0ZXIuDQoNCkFnYWluLCBpdCBkb2Vzbid0IHNlZW0gb2J2aW91cyB3aHkgdXNlcnNw
-YWNlIHdvdWxkIGV2ZXIgd2FudCB0aGlzLi4uDQoNCj4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxh
-dGZvcm0vaW50ZWxfdHh0L2NvbmZpZy9IRUFQX1NJWkUNCj4gK0RhdGU6CQlNYXkgMjAxMw0KPiAr
-S2VybmVsVmVyc2lvbjoJMy45DQo+ICtDb250YWN0OgkiUWlhb3dlaSBSZW4iIDxxaWFvd2VpLnJl
-bkBpbnRlbC5jb20+DQo+ICtEZXNjcmlwdGlvbjoJVFhULkhFQVAuU0laRSByZWdpc3RlciBjb250
-YWlucyB0aGUgc2l6ZSAoaW4gYnl0ZXMpIG9mIHRoZQ0KPiArCQlJbnRlbCBUWFQgSGVhcCBtZW1v
-cnkgcmVnaW9uLiBUaGUgQklPUyBpbml0aWFsaXplcyB0aGlzDQo+ICsJCXJlZ2lzdGVyLg0KDQpP
-ciB0aGlzLg0KDQpCYXNpY2FsbHksIGRvbid0IGp1c3QgZGVmaW5lIHdoYXQgdGhlc2UgZmlsZXMg
-ZG8gLSBtYWtlIGl0IGNsZWFyIHdoeQ0KdGhleSdkIGJlIHVzZWQuIFJpZ2h0IG5vdyBJIGhhdmUg
-bm8gaWRlYSB3aGV0aGVyIHRoZXNlIGFyZSBkaWFnbm9zdGljLA0KbGlrZWx5IHRvIGJlIHVzZWQg
-ZHVyaW5nIHJ1bnRpbWUgb3IgYmFzaWNhbGx5IGNvbXBsZXRlbHkgdXNlbGVzcy4NCg0KPiArc3Rh
-dGljIHNzaXplX3QgdHh0X3Nob3dfRVJST1JDT0RFKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gKwkJ
-CQkgIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLCBjaGFyICpidWYpDQo+ICt7DQo+ICsJ
-cmV0dXJuIHNob3dfY29uZmlnKGJ1Ziwgb2ZmX0VSUk9SQ09ERSk7DQo+ICt9DQoNCk11Y2ggYXMg
-SSB1c3VhbGx5IGhhdGUgaXQsIHRoZXNlIGFsbCBzZWVtIHByZXR0eSBib2lsZXJwbGF0ZS4gSXQg
-d291bGQNCmFyZ3VhYmx5IGJlIGNsZWFuZXIgdG8gcmVwbGFjZSB0aGVtIGFsbCB3aXRoIHNvbWV0
-aGluZyBsaWtlOg0KDQojZGVmaW5lIGNvbmZpZ19mdW5jKHgpIHN0YXRpYyBzaXplX3QgdHh0X3No
-b3dfeChzdHJ1Y3QgZGV2aWNlICpkZXYsDQpzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwg
-Y2hhciAqYnVmKSB7IHJldHVybiBzaG93X2NvbmZpZyhidWYNCm9mZl94KTt9XG50eHRfc3RvcmVf
-eChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0KY29u
-c3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQpIHsgYmxhaCBibGFoDQoNCmNvbmZpZ19mdW5jKEVS
-Uk9SQ09ERSkNCmNvbmZpZ19mdW5jKEVTVFNfcmF3KQ0KDQphbmQgc28gb24uDQoNCj4gK2ludCBz
-eXNmc19jcmVhdGVfY29uZmlnKHN0cnVjdCBrb2JqZWN0ICpwYXJlbnQpDQo+ICt7DQo+ICsJcmV0
-dXJuIHN5c2ZzX2NyZWF0ZV9ncm91cChwYXJlbnQsICZjb25maWdfYXR0cl9ncnApOw0KPiArfQ0K
-PiArRVhQT1JUX1NZTUJPTF9HUEwoc3lzZnNfY3JlYXRlX2NvbmZpZyk7DQoNClRoaXMgZG9lc24n
-dCBzZWVtIHJpZ2h0LiBZb3UncmUgbGlua2luZyB0aGlzIGludG8gdGhlIGV4aXN0aW5nIHR4dA0K
-bW9kdWxlIC0geW91IGRvbid0IG5lZWQgdG8gZXhwb3J0IHN5bWJvbHMuDQoNCj4gK01PRFVMRV9M
-SUNFTlNFKCJHUEwiKTsNCg0KT3IgZGVjbGFyZSBhIG1vZHVsZSBsaWNlbnNlLg0KDQotLSANCk1h
-dHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
+pvpanic device is a qemu simulated device through which guest panic
+event is sent to host.
+
+Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
+---
+
+v18 -> v19:  1. return -ENODEV early if port is 0
+
+v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
+                of acpi_evaluate_oject in panic notifier callback
+             2. reword help message
+
+ drivers/platform/x86/Kconfig   |   8 +++
+ drivers/platform/x86/Makefile  |   2 +
+ drivers/platform/x86/pvpanic.c | 124 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 134 insertions(+)
+ create mode 100644 drivers/platform/x86/pvpanic.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 3338437..8577261 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -781,4 +781,12 @@ config APPLE_GMUX
+ 	  graphics as well as the backlight. Currently only backlight
+ 	  control is supported by the driver.
+ 
++config PVPANIC
++	tristate "pvpanic device support"
++	depends on ACPI
++	---help---
++	  This driver provides support for the pvpanic device.  pvpanic is
++	  a paravirtualized device provided by QEMU; it lets a virtual machine
++	  (guest) communicate panic events to the host.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index ace2b38..ef0ec74 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
++
++obj-$(CONFIG_PVPANIC)           += pvpanic.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+new file mode 100644
+index 0000000..47ae0c4
+--- /dev/null
++++ b/drivers/platform/x86/pvpanic.c
+@@ -0,0 +1,124 @@
++/*
++ *  pvpanic.c - pvpanic Device Support
++ *
++ *  Copyright (C) 2013 Fujitsu.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
++MODULE_DESCRIPTION("pvpanic device driver");
++MODULE_LICENSE("GPL");
++
++static int pvpanic_add(struct acpi_device *device);
++static int pvpanic_remove(struct acpi_device *device);
++
++static const struct acpi_device_id pvpanic_device_ids[] = {
++	{ "QEMU0001", 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
++
++#define PVPANIC_PANICKED	(1 << 0)
++
++static u16 port;
++
++static struct acpi_driver pvpanic_driver = {
++	.name =		"pvpanic",
++	.class =	"QEMU",
++	.ids =		pvpanic_device_ids,
++	.ops =		{
++				.add =		pvpanic_add,
++				.remove =	pvpanic_remove,
++			},
++	.owner =	THIS_MODULE,
++};
++
++static void
++pvpanic_send_event(unsigned int event)
++{
++	outb(event, port);
++}
++
++static int
++pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
++		     void *unused)
++{
++	pvpanic_send_event(PVPANIC_PANICKED);
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block pvpanic_panic_nb = {
++	.notifier_call = pvpanic_panic_notify,
++};
++
++
++static acpi_status
++pvpanic_walk_resources(struct acpi_resource *res, void *context)
++{
++	switch (res->type) {
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
++	case ACPI_RESOURCE_TYPE_IO:
++		port = res->data.io.minimum;
++		return AE_OK;
++
++	default:
++		return AE_ERROR;
++	}
++}
++
++static int pvpanic_add(struct acpi_device *device)
++{
++	acpi_status status;
++	u64 ret;
++
++	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
++				       &ret);
++
++	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
++		return -ENODEV;
++
++	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
++			    pvpanic_walk_resources, NULL);
++
++	if (!port)
++		return -ENODEV;
++
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &pvpanic_panic_nb);
++
++	return 0;
++}
++
++static int pvpanic_remove(struct acpi_device *device)
++{
++
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &pvpanic_panic_nb);
++	return 0;
++}
++
++module_acpi_driver(pvpanic_driver);
+-- 
+1.8.2
