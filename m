@@ -1,59 +1,42 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 4/4] driver: provide sysfs interfaces to access SMX
- parameter
-Date: Wed, 8 May 2013 05:24:58 +0000
-Message-ID: <1367990697.2425.33.camel@x230>
-References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-	 <1367938519-840-5-git-send-email-qiaowei.ren@intel.com>
+From: "John P. Goldman" <gliceaga@mendoza-conicet.gob.ar>
+Subject: dringender Vorschlag
+Date: Wed, 8 May 2013 05:46:28 -0300 (ART)
+Message-ID: <351326728.69416.1368002788604.JavaMail.root__22385.0706512623$1368004079$gmane$org@correo.mendoza-conicet.gob.ar>
+Reply-To: "John P. Goldman" <johnp.goldman@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367938519-840-5-git-send-email-qiaowei.ren@intel.com>
-Content-Language: en-US
-Content-ID: <9DE57C1201CE4B40993265B5198C519A@namprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Xiaoyan Zhang <xiaoyan.zhang@intel.com>, Gang Wei <gang.wei@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx2.mendoza-conicet.gob.ar ([200.69.149.90]:40948 "EHLO
+	mx2.mendoza-conicet.gob.ar" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751190Ab3EHJG6 convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 8 May 2013 05:06:58 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-T24gVHVlLCAyMDEzLTA1LTA3IGF0IDIyOjU1ICswODAwLCBRaWFvd2VpIFJlbiB3cm90ZToNCj4g
-VGhlc2UgaW50ZXJmYWNlcyBhcmUgbG9jYXRlZCBpbiAvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50
-ZWxfdHh0L3BhcmFtZXRlci8sDQo+IHNob3dpbmcgc3BlY2lmaWMgcGFyYW1ldGVyIGluZm9ybWF0
-aW9uIGZvciBTTVggZmVhdHVyZXMgc3VwcG9ydGVkIGJ5DQo+IHRoZSBwcm9jZXNzb3IuDQoNCkV4
-cGxhaW4gd2hhdCBTTVggaXMgaGVyZS4NCg0KPiArQ29udGFjdDoJIlFpYW93ZWkgUmVuIiA8cWlh
-b3dlaS5yZW5AaW50ZWwuY29tPg0KPiArRGVzY3JpcHRpb246CVRoZSBwYXJhbWV0ZXIvIGRpcmVj
-dG9yeSBleHBvc2VzIHNwZWNpZmljIHBhcmFtZXRlcg0KPiArCQlpbmZvcm1hdGlvbiBmb3IgU01Y
-IGZlYXR1cmVzIHN1cHBvcnRlZCBieSB0aGUgcHJvY2Vzc29yLg0KDQpBbHNvIGhlcmUuDQoNCj4g
-K1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50ZWxfdHh0L3BhcmFtZXRlci9hY21fbWF4
-X3NpemUNCj4gK0RhdGU6CQlNYXkgMjAxMw0KPiArS2VybmVsVmVyc2lvbjoJMy45DQo+ICtDb250
-YWN0OgkiUWlhb3dlaSBSZW4iIDxxaWFvd2VpLnJlbkBpbnRlbC5jb20+DQo+ICtEZXNjcmlwdGlv
-bjoJVGhlICJhY21fbWF4X3NpemUiIHByb3BlcnR5IHdpbGwgc2hvdyBtYXggc2l6ZSBvZg0KPiAr
-CQlhdXRoZW50aWNhdGVkIGNvZGUgZXhlY3V0aW9uIGFyZWEuDQoNCldoYXQgd291bGQgdXNlcnNw
-YWNlIHVzZSB0aGlzIGZvcj8NCg0KPiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9pbnRl
-bF90eHQvcGFyYW1ldGVyL2FjbV9tZW1fdHlwZXMNCj4gK0RhdGU6CQlNYXkgMjAxMw0KPiArS2Vy
-bmVsVmVyc2lvbjoJMy45DQo+ICtDb250YWN0OgkiUWlhb3dlaSBSZW4iIDxxaWFvd2VpLnJlbkBp
-bnRlbC5jb20+DQo+ICtEZXNjcmlwdGlvbjoJVGhlICJhY21fbWF4X3R5cGVzIiBwcm9wZXJ0eSB3
-aWxsIHNob3cgZXh0ZXJuYWwgbWVtb3J5DQo+ICsJCXR5cGVzIHN1cHBvcnRlZCBkdXJpbmcgQUMg
-bW9kZS4NCg0KT3IgdGhpcz8gQW5kIHdoYXQncyBBQyBtb2RlPw0KDQo+ICtzdGF0aWMgdm9pZCBf
-X2dldHNlY19wYXJhbWV0ZXJzKHVpbnQzMl90IGluZGV4LCBpbnQgKnBhcmFtX3R5cGUsDQo+ICsJ
-CQkJdWludDMyX3QgKnBlYXgsIHVpbnQzMl90ICpwZWJ4LA0KPiArCQkJCXVpbnQzMl90ICpwZWN4
-KQ0KPiArew0KPiArCXVpbnQzMl90IGVheCA9IDAsIGVieCA9IDAsIGVjeCA9IDA7DQoNClRoZXNl
-IGFyZSBhbGwgZ29pbmcgdG8gYmUgb3ZlcndyaXR0ZW4gYnkgdGhlIGdldHNlYyBvcGVyYXRpb24/
-IERvIHRoZXkNCnJlYWxseSBuZWVkIHRvIGJlIGluaXRpYWxpc2VkPw0KDQo+ICsJX19hc21fXyBf
-X3ZvbGF0aWxlX18gKElBMzJfR0VUU0VDX09QQ09ERSAiXG4iDQo+ICsJCQkgICAgICA6ICI9YSIo
-ZWF4KSwgIj1iIihlYngpLCAiPWMiKGVjeCkNCj4gKwkJCSAgICAgIDogImEiKElBMzJfR0VUU0VD
-X1BBUkFNRVRFUlMpLCAiYiIoaW5kZXgpKTsNCj4gKw0KPiArCSpwYXJhbV90eXBlID0gZWF4ICYg
-MHgxZjsNCj4gKwkqcGVheCA9IGVheDsNCj4gKwkqcGVieCA9IGVieDsNCj4gKwkqcGVjeCA9IGVj
-eDsNCg0KU2hvdWxkIHRoZXJlIGJlIGEgY2hlY2sgZm9yIGZhaWx1cmUgaGVyZT8gSXMgaXQgcG9z
-c2libGUgZm9yIHRoaXMNCm9wZXJhdGlvbiB0byBmYWlsPw0KDQo+ICsJd3JpdGVfY3I0KHJlYWRf
-Y3I0KCkgfCBDUjRfU01YRSk7DQoNCldob28uIFRoaXMgbmVlZHMgYXQgbGVhc3QgYSBnaWFudCBj
-b21tZW50IGFuZCBwcm9iYWJseSBzb21lIGxvY2tpbmcsIGJ1dA0KaWYgdGhpcyBpcyBzdXBwb3Nl
-ZCB0byBiZSBzZXQgZHVyaW5nIHJ1bnRpbWUgdGhlbiBpdCBzaG91bGQgYmUgZG9uZSBpbg0KY29y
-ZSBhcmNoaXRlY3R1cmUgY29kZSByYXRoZXIgdGhhbiBqdXN0IGluIHRoaXMgZHJpdmVyLg0KDQo+
-ICsJc3NjYW5mKGJ1ZiwgIiVkIiwgJmluZGV4KTsNCg0KV2hhdCBpZiB0aGlzIGZhaWxzPw0KDQo+
-ICtFWFBPUlRfU1lNQk9MX0dQTChzeXNmc19jcmVhdGVfcGFyYW1ldGVyKTsNCj4gKw0KPiArTU9E
-VUxFX0xJQ0VOU0UoIkdQTCIpOw0KDQpOb3QgbmVlZGVkLg0KDQo+ICsjZGVmaW5lIElBMzJfR0VU
-U0VDX09QQ09ERQkiLmJ5dGUgMHgwZiwweDM3Ig0KDQpObmYuIERvZXMgdGhlIGFzc2VtYmxlciBy
-ZWFsbHkgbm90IGtub3cgYWJvdXQgdGhpcyBpbnN0cnVjdGlvbj8NCg0KLS0gDQpNYXR0aGV3IEdh
-cnJldHQgfCBtamc1OUBzcmNmLnVjYW0ub3JnDQo=
+
+
+Entschuldigungen f=C3=BCr kommen in Ihre Privatsph=C3=A4re! Ich bin Rec=
+htsanwalt
+Werner Erich Zeller; Ich habe einen meiner einflussreichen und
+wohlhabenden Kunden zum Tode; und er hatte eine sehr geheime und privat=
+e
+Investitionen von =E2=82=AC15,000,000.00 bei einer privaten Bank in Gro=
+=C3=9Fbritannien
+hier zu Lebzeiten. Diese Investition wurde ohne einen deklarierten
+n=C3=A4chsten Angeh=C3=B6rigen und beg=C3=BCnstigte. Jetzt brauche ich =
+Sie arbeiten mit
+mir als mein Partner zu erholen und zu je 50 % Aktienfonds. Alle Dokume=
+nte
+werden rechtlich beantragt und beschafft, und in 5 Werktage, wird diese
+Transaktion auftreten. Aber ich brauche einen ernsten, treuen und
+glaubw=C3=BCrdigen Partner.
+
+Bitte senden Sie mir eine vertrauliche Antwort, wenn Sie denken, Sie
+vertraut werden k=C3=B6nnen und sind von den Qualit=C3=A4ten! Ich warte=
+ auf Ihre
+schnelle Antwort.
+
+Werner Erich Zeller (Rechtsanwalt)
+Rufen Sie + 44-702-409-0820 (Office)
