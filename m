@@ -1,192 +1,48 @@
-From: Hu Tao <hutao@cn.fujitsu.com>
-Subject: [PATCH v19] pvpanic: pvpanic device driver
-Date: Wed, 8 May 2013 11:15:32 +0800
-Message-ID: <1367982932-23387-1-git-send-email-hutao@cn.fujitsu.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 3/4] driver: provide sysfs interfaces to access TXT log
+Date: Wed, 8 May 2013 05:16:43 +0000
+Message-ID: <1367990202.2425.26.camel@x230>
+References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
+	 <1367938519-840-4-git-send-email-qiaowei.ren@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([222.73.24.84]:4357 "EHLO song.cn.fujitsu.com"
-	rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-	id S1751642Ab3EHDQF (ORCPT
+Received: from tx2ehsobe003.messaging.microsoft.com ([65.55.88.13]:9756 "EHLO
+	tx2outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751088Ab3EHFQv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 7 May 2013 23:16:05 -0400
+	Wed, 8 May 2013 01:16:51 -0400
+In-Reply-To: <1367938519-840-4-git-send-email-qiaowei.ren@intel.com>
+Content-Language: en-US
+Content-ID: <61966D219BF4B646874C4D67E97F1619@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, hutao@cn.fujitsu.com
+To: Qiaowei Ren <qiaowei.ren@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Xiaoyan Zhang <xiaoyan.zhang@intel.com>, Gang Wei <gang.wei@intel.com>
 
-pvpanic device is a qemu simulated device through which guest panic
-event is sent to host.
-
-Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
----
-
-v18 -> v19:  1. return -ENODEV early if port is 0
-
-v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
-                of acpi_evaluate_oject in panic notifier callback
-             2. reword help message
-
- drivers/platform/x86/Kconfig   |   8 +++
- drivers/platform/x86/Makefile  |   2 +
- drivers/platform/x86/pvpanic.c | 124 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
- create mode 100644 drivers/platform/x86/pvpanic.c
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 3338437..8577261 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -781,4 +781,12 @@ config APPLE_GMUX
- 	  graphics as well as the backlight. Currently only backlight
- 	  control is supported by the driver.
- 
-+config PVPANIC
-+	tristate "pvpanic device support"
-+	depends on ACPI
-+	---help---
-+	  This driver provides support for the pvpanic device.  pvpanic is
-+	  a paravirtualized device provided by QEMU; it lets a virtual machine
-+	  (guest) communicate panic events to the host.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index ace2b38..ef0ec74 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -51,3 +51,5 @@ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
- obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
- obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
- obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
-+
-+obj-$(CONFIG_PVPANIC)           += pvpanic.o
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-new file mode 100644
-index 0000000..47ae0c4
---- /dev/null
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -0,0 +1,124 @@
-+/*
-+ *  pvpanic.c - pvpanic Device Support
-+ *
-+ *  Copyright (C) 2013 Fujitsu.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
-+
-+MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-+MODULE_DESCRIPTION("pvpanic device driver");
-+MODULE_LICENSE("GPL");
-+
-+static int pvpanic_add(struct acpi_device *device);
-+static int pvpanic_remove(struct acpi_device *device);
-+
-+static const struct acpi_device_id pvpanic_device_ids[] = {
-+	{ "QEMU0001", 0 },
-+	{ "", 0 },
-+};
-+MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-+
-+#define PVPANIC_PANICKED	(1 << 0)
-+
-+static u16 port;
-+
-+static struct acpi_driver pvpanic_driver = {
-+	.name =		"pvpanic",
-+	.class =	"QEMU",
-+	.ids =		pvpanic_device_ids,
-+	.ops =		{
-+				.add =		pvpanic_add,
-+				.remove =	pvpanic_remove,
-+			},
-+	.owner =	THIS_MODULE,
-+};
-+
-+static void
-+pvpanic_send_event(unsigned int event)
-+{
-+	outb(event, port);
-+}
-+
-+static int
-+pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-+		     void *unused)
-+{
-+	pvpanic_send_event(PVPANIC_PANICKED);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block pvpanic_panic_nb = {
-+	.notifier_call = pvpanic_panic_notify,
-+};
-+
-+
-+static acpi_status
-+pvpanic_walk_resources(struct acpi_resource *res, void *context)
-+{
-+	switch (res->type) {
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
-+	case ACPI_RESOURCE_TYPE_IO:
-+		port = res->data.io.minimum;
-+		return AE_OK;
-+
-+	default:
-+		return AE_ERROR;
-+	}
-+}
-+
-+static int pvpanic_add(struct acpi_device *device)
-+{
-+	acpi_status status;
-+	u64 ret;
-+
-+	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
-+				       &ret);
-+
-+	if (ACPI_FAILURE(status) || (ret & 0x0B) != 0x0B)
-+		return -ENODEV;
-+
-+	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
-+			    pvpanic_walk_resources, NULL);
-+
-+	if (!port)
-+		return -ENODEV;
-+
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &pvpanic_panic_nb);
-+
-+	return 0;
-+}
-+
-+static int pvpanic_remove(struct acpi_device *device)
-+{
-+
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &pvpanic_panic_nb);
-+	return 0;
-+}
-+
-+module_acpi_driver(pvpanic_driver);
--- 
-1.8.2
+T24gVHVlLCAyMDEzLTA1LTA3IGF0IDIyOjU1ICswODAwLCBRaWFvd2VpIFJlbiB3cm90ZToNCg0K
+PiArV2hhdDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9pbnRlbF90eHQvbG9nL2xvZ19oZWFkZXIN
+Cj4gK0RhdGU6CQlNYXkgMjAxMw0KPiArS2VybmVsVmVyc2lvbjoJMy45DQoNCkhvdyBkaWZmZXJl
+bnQgYXJlIHRoZXNlIGxvZ3MgdG8gdGhlIFRQTSBtZWFzdXJlbWVudHMgZXhwb3J0ZWQgdmlhDQpz
+ZWN1cml0eWZzPw0KDQo+ICtXaGF0OgkJL3N5cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4dC9s
+b2cvYmxvY2tfaW5kZXgNCj4gK0RhdGU6CQlNYXkgMjAxMw0KPiArS2VybmVsVmVyc2lvbjoJMy45
+DQo+ICtDb250YWN0OgkiUWlhb3dlaSBSZW4iIDxxaWFvd2VpLnJlbkBpbnRlbC5jb20+DQo+ICtE
+ZXNjcmlwdGlvbjoJVGhlICJibG9ja19pbmRleCIgcHJvcGVydHkgYWxsb3dzIHlvdSB0byBzZXQg
+dGhlIGJsb2NrDQo+ICsJCWluZGV4IGZvciBvdXRwdXQuDQoNClNvIEkgd3JpdGUgYSB2YWx1ZSBo
+ZXJlIGFuZCB0aGVuIEkgc2VlIGRpZmZlcmVudCBjaHVua3Mgb2YgbG9nPyBUaGlzDQpkb2Vzbid0
+IHNlZW0gbGlrZSBhbiBvcHRpbWFsIGludGVyZmFjZS4gV2hhdCBkbyB0aGVzZSBsb2dzIGFjdHVh
+bGx5DQpjb250YWluPyBIb3cgZG8gSSBrbm93IHdoaWNoIGJsb2NrIEkgc2hvdWxkIGJlIHJlYWRp
+bmc/DQoNCj4gK3N0YXRpYyBpbnQgYXJlX3V1aWRzX2VxdWFsKGNvbnN0IHN0cnVjdCB1dWlkICp1
+dWlkMSwNCj4gKwkJCSAgIGNvbnN0IHN0cnVjdCB1dWlkICp1dWlkMikNCj4gK3sNCj4gKwlyZXR1
+cm4gKG1lbWNtcCh1dWlkMSwgdXVpZDIsIHNpemVvZigqdXVpZDEpKSA9PSAwKSA/IDEgOiAwOw0K
+PiArfQ0KDQpVc2Ugb25lIG9mIHRoZSB1dWlkY21wIGZ1bmN0aW9ucyBmcm9tIHV1aWQuaD8NCg0K
+PiArRVhQT1JUX1NZTUJPTF9HUEwoc3lzZnNfY3JlYXRlX2xvZyk7DQo+ICsNCj4gK01PRFVMRV9M
+SUNFTlNFKCJHUEwiKTsNCg0KU2FtZSBhcyBmb3IgdGhlIHByZXZpb3VzIHBhdGNoIC0geW91IGRv
+bid0IG5lZWQgdGhlc2UuDQoNCj4gK3N0cnVjdCB1dWlkIHsNCj4gKwl1aW50MzJfdCBkYXRhMTsN
+Cj4gKwl1aW50MTZfdCBkYXRhMjsNCj4gKwl1aW50MTZfdCBkYXRhMzsNCj4gKwl1aW50MTZfdCBk
+YXRhNDsNCj4gKwl1aW50OF90ICBkYXRhNVs2XTsNCj4gK30gX19wYWNrZWQ7DQoNClRoZXJlJ3Mg
+YWxyZWFkeSBVVUlEIHN0cnVjdHVyZXMgaW4gdXVpZC5oDQoNCj4gKyNkZWZpbmUgVEJPT1RfTE9H
+X1VVSUQJCXsweGMwMTkyNTI2LCAweDZiMzAsIDB4NGRiNCwgMHg4NDRjLCBcDQo+ICsJCQkJezB4
+YTMsIDB4ZTksIDB4NTMsIDB4YjgsIDB4ODEsIDB4NzR9IH0NCg0KdXVpZC5oIGFnYWluLg0KDQot
+LSANCk1hdHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
