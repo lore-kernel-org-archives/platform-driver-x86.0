@@ -1,42 +1,37 @@
-From: "John P. Goldman" <gliceaga@mendoza-conicet.gob.ar>
-Subject: dringender Vorschlag
-Date: Wed, 8 May 2013 05:46:28 -0300 (ART)
-Message-ID: <351326728.69416.1368002788604.JavaMail.root__22385.0706512623$1368004079$gmane$org@correo.mendoza-conicet.gob.ar>
-Reply-To: "John P. Goldman" <johnp.goldman@yahoo.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: hp-wmi: SMBus hotkeys
+Date: Wed, 8 May 2013 21:02:45 +0000
+Message-ID: <1368046965.2425.34.camel@x230>
+References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>
+	      <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>
+	     <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>
+	    <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>
+	   <516FFB3D.3060002@gmail.com> <1366300697.13667.15.camel@x230.lan>
+	  <517023F8.5050606@gmail.com> <1366304008.13667.17.camel@x230.lan>
+	 <5187E0F7.7010507@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.mendoza-conicet.gob.ar ([200.69.149.90]:40948 "EHLO
-	mx2.mendoza-conicet.gob.ar" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751190Ab3EHJG6 convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 May 2013 05:06:58 -0400
+Received: from mail-db8lp0184.outbound.messaging.microsoft.com ([213.199.154.184]:50634
+	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756972Ab3EHVDF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 8 May 2013 17:03:05 -0400
+In-Reply-To: <5187E0F7.7010507@gmail.com>
+Content-Language: en-US
+Content-ID: <64FCFC9E4A1B474F8A769DC75B485299@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Kyle Evans <kvans32@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-
-
-Entschuldigungen f=C3=BCr kommen in Ihre Privatsph=C3=A4re! Ich bin Rec=
-htsanwalt
-Werner Erich Zeller; Ich habe einen meiner einflussreichen und
-wohlhabenden Kunden zum Tode; und er hatte eine sehr geheime und privat=
-e
-Investitionen von =E2=82=AC15,000,000.00 bei einer privaten Bank in Gro=
-=C3=9Fbritannien
-hier zu Lebzeiten. Diese Investition wurde ohne einen deklarierten
-n=C3=A4chsten Angeh=C3=B6rigen und beg=C3=BCnstigte. Jetzt brauche ich =
-Sie arbeiten mit
-mir als mein Partner zu erholen und zu je 50 % Aktienfonds. Alle Dokume=
-nte
-werden rechtlich beantragt und beschafft, und in 5 Werktage, wird diese
-Transaktion auftreten. Aber ich brauche einen ernsten, treuen und
-glaubw=C3=BCrdigen Partner.
-
-Bitte senden Sie mir eine vertrauliche Antwort, wenn Sie denken, Sie
-vertraut werden k=C3=B6nnen und sind von den Qualit=C3=A4ten! Ich warte=
- auf Ihre
-schnelle Antwort.
-
-Werner Erich Zeller (Rechtsanwalt)
-Rufen Sie + 44-702-409-0820 (Office)
+T24gTW9uLCAyMDEzLTA1LTA2IGF0IDEyOjU3IC0wNDAwLCBLeWxlIEV2YW5zIHdyb3RlOg0KDQo+
+IFNvLCB3aGF0IGlzIHRoZSBwbGFuIGZvciB0aGlzPyBXZSBoYXZlIHRoZSBXTUkgbWV0aG9kIHNv
+IHRoYXQgZWNfd3JpdGUgDQo+IGlzIG5vdCBuZWVkZWQsIGJ1dCBob3cgYXJlIHlvdSB0aGlua2lu
+ZyBpdCBzaG91bGQgYmUgdHJpZ2dlcmVkPyBJJ3ZlIGdvdCANCj4gc29tZSBmcmVlIHRpbWUgY29t
+aW5nIHVwIGFuZCB3b3VsZCBsaWtlIHRvIGdldCB0aGlzIGJhbmdlZCBvdXQgZHVyaW5nIA0KPiB0
+aGF0IHRpbWUgaWYgaXQgaXMgc29tZXRoaW5nIEkgY2FuIGRvLg0KDQpXZWxsLCB3aXRoIGx1Y2sg
+dGhpcyBwYXRjaCB3b3VsZCBiZSBzYWZlIG9uIGl0cyBvd24uIEhvdyBkaWQgeW91IGZpZ3VyZQ0K
+b3V0IHRoYXQgeW91IG5lZWRlZCB0byBzZXQgdGhpcyByZWdpc3RlciB0byB0aGlzIHZhbHVlPw0K
+DQotLSANCk1hdHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
