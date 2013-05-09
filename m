@@ -1,37 +1,46 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: hp-wmi: SMBus hotkeys
-Date: Wed, 8 May 2013 21:02:45 +0000
-Message-ID: <1368046965.2425.34.camel@x230>
-References: <201304130331.18301@pali> <1365816906.13667.6.camel@x230.lan>
-	      <51695169.6090306@gmail.com> <1365870087.13667.7.camel@x230.lan>
-	     <51699843.7060905@gmail.com> <1366129583.13667.11.camel@x230.lan>
-	    <516EC19C.3010906@gmail.com> <1366221554.13667.13.camel@x230.lan>
-	   <516FFB3D.3060002@gmail.com> <1366300697.13667.15.camel@x230.lan>
-	  <517023F8.5050606@gmail.com> <1366304008.13667.17.camel@x230.lan>
-	 <5187E0F7.7010507@gmail.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] dell-laptop: fix error return code in dell_init()
+Date: Thu, 9 May 2013 10:03:02 +0800
+Message-ID: <CAPgLHd8SVKos7e9ZUCAw7sb4AUHyh0AyA1umrVVuaPMShDjJJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db8lp0184.outbound.messaging.microsoft.com ([213.199.154.184]:50634
-	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1756972Ab3EHVDF (ORCPT
+Received: from mail-bk0-f51.google.com ([209.85.214.51]:64264 "EHLO
+	mail-bk0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755495Ab3EICDE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 May 2013 17:03:05 -0400
-In-Reply-To: <5187E0F7.7010507@gmail.com>
-Content-Language: en-US
-Content-ID: <64FCFC9E4A1B474F8A769DC75B485299@namprd05.prod.outlook.com>
+	Wed, 8 May 2013 22:03:04 -0400
+Received: by mail-bk0-f51.google.com with SMTP id ji2so1231976bkc.38
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 May 2013 19:03:02 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: mjg59@srcf.ucam.org
+Cc: yongjun_wei@trendmicro.com.cn, platform-driver-x86@vger.kernel.org
 
-T24gTW9uLCAyMDEzLTA1LTA2IGF0IDEyOjU3IC0wNDAwLCBLeWxlIEV2YW5zIHdyb3RlOg0KDQo+
-IFNvLCB3aGF0IGlzIHRoZSBwbGFuIGZvciB0aGlzPyBXZSBoYXZlIHRoZSBXTUkgbWV0aG9kIHNv
-IHRoYXQgZWNfd3JpdGUgDQo+IGlzIG5vdCBuZWVkZWQsIGJ1dCBob3cgYXJlIHlvdSB0aGlua2lu
-ZyBpdCBzaG91bGQgYmUgdHJpZ2dlcmVkPyBJJ3ZlIGdvdCANCj4gc29tZSBmcmVlIHRpbWUgY29t
-aW5nIHVwIGFuZCB3b3VsZCBsaWtlIHRvIGdldCB0aGlzIGJhbmdlZCBvdXQgZHVyaW5nIA0KPiB0
-aGF0IHRpbWUgaWYgaXQgaXMgc29tZXRoaW5nIEkgY2FuIGRvLg0KDQpXZWxsLCB3aXRoIGx1Y2sg
-dGhpcyBwYXRjaCB3b3VsZCBiZSBzYWZlIG9uIGl0cyBvd24uIEhvdyBkaWQgeW91IGZpZ3VyZQ0K
-b3V0IHRoYXQgeW91IG5lZWRlZCB0byBzZXQgdGhpcyByZWdpc3RlciB0byB0aGlzIHZhbHVlPw0K
-DQotLSANCk1hdHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+
+Fix to return -ENOMEM in the alloc_page() error handling
+case instead of 0, as done elsewhere in this function.
+
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/platform/x86/dell-laptop.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 1134119..bb77e18 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -551,9 +551,10 @@ static int __init dell_init(void)
+ 	 * is passed to SMI handler.
+ 	 */
+ 	bufferpage = alloc_page(GFP_KERNEL | GFP_DMA32);
+-
+-	if (!bufferpage)
++	if (!bufferpage) {
++		ret = -ENOMEM;
+ 		goto fail_buffer;
++	}
+ 	buffer = page_address(bufferpage);
+ 
+ 	if (quirks && quirks->touchpad_led)
