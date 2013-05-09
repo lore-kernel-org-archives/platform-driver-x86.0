@@ -1,40 +1,32 @@
 From: "Ren, Qiaowei" <qiaowei.ren@intel.com>
-Subject: RE: [PATCH 3/4] driver: provide sysfs interfaces to access TXT log
-Date: Thu, 9 May 2013 08:05:25 +0000
-Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9A9BD2@SHSMSX102.ccr.corp.intel.com>
+Subject: RE: [PATCH 0/4] Intel TXT driver
+Date: Thu, 9 May 2013 08:19:51 +0000
+Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9AAC26@SHSMSX102.ccr.corp.intel.com>
 References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-	 <1367938519-840-4-git-send-email-qiaowei.ren@intel.com>
- <1367990202.2425.26.camel@x230>
+ <1367980128.2425.3.camel@x230>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367990202.2425.26.camel@x230>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga02.intel.com ([134.134.136.20]:62855 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751305Ab3EIIT4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 9 May 2013 04:19:56 -0400
+In-Reply-To: <1367980128.2425.3.camel@x230>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
 T24gMjAxMy0wNS0wOCwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTMtMDUt
-MDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiANCj4+ICtXaGF0OgkJL3N5
-cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4dC9sb2cvbG9nX2hlYWRlcg0KPj4gK0RhdGU6CQlN
-YXkgMjAxMw0KPj4gK0tlcm5lbFZlcnNpb246CTMuOQ0KPiANCj4gSG93IGRpZmZlcmVudCBhcmUg
-dGhlc2UgbG9ncyB0byB0aGUgVFBNIG1lYXN1cmVtZW50cyBleHBvcnRlZCB2aWENCj4gc2VjdXJp
-dHlmcz8NCg0KVGhlc2UgbG9ncyBjb21lIGZyb20gdGJvb3QgKFRydXN0ZWQgQm9vdCwgYW4gb3Bl
-biBzb3VyY2UsIHByZS1rZXJuZWwvVk1NIG1vZHVsZSB0aGF0IHVzZXMgSW50ZWzCriBUcnVzdGVk
-IEV4ZWN1dGlvbiBUZWNobm9sb2d5IChJbnRlbMKuIFRYVCkgdG8gcGVyZm9ybSBhIG1lYXN1cmVk
-IGFuZCB2ZXJpZmllZCBsYXVuY2ggb2YgYW4gT1Mga2VybmVsL1ZNTS4pLCBhbmQgc2hvdWxkIGJl
-IGRpZmZlcmVudCBmcm9tIHRob3NlIFRQTSBtZWFzdXJlbWVudHMgKGZyb20gQklPUz8pIGV4cG9y
-dGVkIHZpYSBzZWN1cml0eS4NCg0KPj4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50
-ZWxfdHh0L2xvZy9ibG9ja19pbmRleA0KPj4gK0RhdGU6CQlNYXkgMjAxMw0KPj4gK0tlcm5lbFZl
-cnNpb246CTMuOQ0KPj4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVs
-LmNvbT4NCj4+ICtEZXNjcmlwdGlvbjoJVGhlICJibG9ja19pbmRleCIgcHJvcGVydHkgYWxsb3dz
-IHlvdSB0byBzZXQgdGhlIGJsb2NrDQo+PiArCQlpbmRleCBmb3Igb3V0cHV0Lg0KPiANCj4gU28g
-SSB3cml0ZSBhIHZhbHVlIGhlcmUgYW5kIHRoZW4gSSBzZWUgZGlmZmVyZW50IGNodW5rcyBvZiBs
-b2c/IFRoaXMNCj4gZG9lc24ndCBzZWVtIGxpa2UgYW4gb3B0aW1hbCBpbnRlcmZhY2UuIFdoYXQg
-ZG8gdGhlc2UgbG9ncyBhY3R1YWxseQ0KPiBjb250YWluPyBIb3cgZG8gSSBrbm93IHdoaWNoIGJs
-b2NrIEkgc2hvdWxkIGJlIHJlYWRpbmc/DQoNClllcy4gU2luY2UgdG90YWwgbG9nIHNpemUgaXMg
-YmlnZ2VyIHRoYW4gb25lIHBhZ2UgNEssIHRoZSBsb2cgaGF2ZSB0byBiZSBkaXNwbGF5ZWQgaW4g
-NEstYmxvY2sgaW5kZXhlZCBieSBibG9ja19pbmRleC4NClRoZXNlIGxvZ3Mgd2lsbCBiZSB2ZXJ5
-IGhlbHBmdWwgZm9yIHR4dCByZWxhdGVkIGRlYnVnZ2luZy4NCg0KVGhhbmtzLA0KUWlhb3dlaQ0K
+MDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPj4gVGhpcyBtb2R1bGUgaXMg
+ZXhwZWN0ZWQgdG8gYmUgYSBiZXR0ZXIgdG9vbCB0byBhY2Nlc3MgYmVsb3cgcmVzb3VyY2VzDQo+
+PiAgIC0gVFhUIGNvbmZpZyBzcGFjZQ0KPj4gICAtIFRib290IGxvZyBtZW0NCj4+ICAgLSBTTVgg
+cGFyYW1ldGVyDQo+IA0KPiBXaGF0J3MgU01YPw0KDQpTYWZlciBNb2RlIEV4dGVuc2lvbnMgKFNN
+WCkgcHJvdmlkZSBhIHByb2dyYW1taW5nIGludGVyZmFjZSBmb3Igc3lzdGVtIHNvZnR3YXJlIHRv
+IGVzdGFibGlzaCBhIG1lYXN1cmVkIGVudmlyb25tZW50IHdpdGhpbiB0aGUgcGxhdGZvcm0gdG8g
+c3VwcG9ydCB0cnVzdCBkZWNpc2lvbnMgYnkgZW5kIHVzZXJzLiBTTVggZnVuY3Rpb25hbGl0eSBp
+cyBwcm92aWRlZCBpbiBhbiBJbnRlbCA2NCBwcm9jZXNzb3IgdGhyb3VnaCB0aGUgR0VUU0VDIGlu
+c3RydWN0aW9uIHZpYSBsZWFmIGZ1bmN0aW9ucy4NCg0KVGhhbmtzLA0KUWlhb3dlaQ0KDQo=
