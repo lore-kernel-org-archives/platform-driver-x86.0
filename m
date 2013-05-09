@@ -1,46 +1,40 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] dell-laptop: fix error return code in dell_init()
-Date: Thu, 9 May 2013 10:03:02 +0800
-Message-ID: <CAPgLHd8SVKos7e9ZUCAw7sb4AUHyh0AyA1umrVVuaPMShDjJJQ@mail.gmail.com>
+From: "Ren, Qiaowei" <qiaowei.ren@intel.com>
+Subject: RE: [PATCH 3/4] driver: provide sysfs interfaces to access TXT log
+Date: Thu, 9 May 2013 08:05:25 +0000
+Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9A9BD2@SHSMSX102.ccr.corp.intel.com>
+References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
+	 <1367938519-840-4-git-send-email-qiaowei.ren@intel.com>
+ <1367990202.2425.26.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f51.google.com ([209.85.214.51]:64264 "EHLO
-	mail-bk0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755495Ab3EICDE (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 May 2013 22:03:04 -0400
-Received: by mail-bk0-f51.google.com with SMTP id ji2so1231976bkc.38
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 May 2013 19:03:02 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org
-Cc: yongjun_wei@trendmicro.com.cn, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1367990202.2425.26.camel@x230>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-
-Fix to return -ENOMEM in the alloc_page() error handling
-case instead of 0, as done elsewhere in this function.
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/platform/x86/dell-laptop.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 1134119..bb77e18 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -551,9 +551,10 @@ static int __init dell_init(void)
- 	 * is passed to SMI handler.
- 	 */
- 	bufferpage = alloc_page(GFP_KERNEL | GFP_DMA32);
--
--	if (!bufferpage)
-+	if (!bufferpage) {
-+		ret = -ENOMEM;
- 		goto fail_buffer;
-+	}
- 	buffer = page_address(bufferpage);
- 
- 	if (quirks && quirks->touchpad_led)
+T24gMjAxMy0wNS0wOCwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTMtMDUt
+MDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiANCj4+ICtXaGF0OgkJL3N5
+cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4dC9sb2cvbG9nX2hlYWRlcg0KPj4gK0RhdGU6CQlN
+YXkgMjAxMw0KPj4gK0tlcm5lbFZlcnNpb246CTMuOQ0KPiANCj4gSG93IGRpZmZlcmVudCBhcmUg
+dGhlc2UgbG9ncyB0byB0aGUgVFBNIG1lYXN1cmVtZW50cyBleHBvcnRlZCB2aWENCj4gc2VjdXJp
+dHlmcz8NCg0KVGhlc2UgbG9ncyBjb21lIGZyb20gdGJvb3QgKFRydXN0ZWQgQm9vdCwgYW4gb3Bl
+biBzb3VyY2UsIHByZS1rZXJuZWwvVk1NIG1vZHVsZSB0aGF0IHVzZXMgSW50ZWzCriBUcnVzdGVk
+IEV4ZWN1dGlvbiBUZWNobm9sb2d5IChJbnRlbMKuIFRYVCkgdG8gcGVyZm9ybSBhIG1lYXN1cmVk
+IGFuZCB2ZXJpZmllZCBsYXVuY2ggb2YgYW4gT1Mga2VybmVsL1ZNTS4pLCBhbmQgc2hvdWxkIGJl
+IGRpZmZlcmVudCBmcm9tIHRob3NlIFRQTSBtZWFzdXJlbWVudHMgKGZyb20gQklPUz8pIGV4cG9y
+dGVkIHZpYSBzZWN1cml0eS4NCg0KPj4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50
+ZWxfdHh0L2xvZy9ibG9ja19pbmRleA0KPj4gK0RhdGU6CQlNYXkgMjAxMw0KPj4gK0tlcm5lbFZl
+cnNpb246CTMuOQ0KPj4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVs
+LmNvbT4NCj4+ICtEZXNjcmlwdGlvbjoJVGhlICJibG9ja19pbmRleCIgcHJvcGVydHkgYWxsb3dz
+IHlvdSB0byBzZXQgdGhlIGJsb2NrDQo+PiArCQlpbmRleCBmb3Igb3V0cHV0Lg0KPiANCj4gU28g
+SSB3cml0ZSBhIHZhbHVlIGhlcmUgYW5kIHRoZW4gSSBzZWUgZGlmZmVyZW50IGNodW5rcyBvZiBs
+b2c/IFRoaXMNCj4gZG9lc24ndCBzZWVtIGxpa2UgYW4gb3B0aW1hbCBpbnRlcmZhY2UuIFdoYXQg
+ZG8gdGhlc2UgbG9ncyBhY3R1YWxseQ0KPiBjb250YWluPyBIb3cgZG8gSSBrbm93IHdoaWNoIGJs
+b2NrIEkgc2hvdWxkIGJlIHJlYWRpbmc/DQoNClllcy4gU2luY2UgdG90YWwgbG9nIHNpemUgaXMg
+YmlnZ2VyIHRoYW4gb25lIHBhZ2UgNEssIHRoZSBsb2cgaGF2ZSB0byBiZSBkaXNwbGF5ZWQgaW4g
+NEstYmxvY2sgaW5kZXhlZCBieSBibG9ja19pbmRleC4NClRoZXNlIGxvZ3Mgd2lsbCBiZSB2ZXJ5
+IGhlbHBmdWwgZm9yIHR4dCByZWxhdGVkIGRlYnVnZ2luZy4NCg0KVGhhbmtzLA0KUWlhb3dlaQ0K
