@@ -1,41 +1,59 @@
-From: Hu Tao <hutao@cn.fujitsu.com>
-Subject: Re: [PATCH v19] pvpanic: pvpanic device driver
-Date: Fri, 10 May 2013 13:00:42 +0800
-Message-ID: <20130510050042.GB2939@arch.fnst.cn.fujitsu.com>
-References: <1367982932-23387-1-git-send-email-hutao@cn.fujitsu.com>
+From: "Ren, Qiaowei" <qiaowei.ren@intel.com>
+Subject: RE: [PATCH 4/4] driver: provide sysfs interfaces to access SMX
+ parameter
+Date: Fri, 10 May 2013 07:05:53 +0000
+Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9AC926@SHSMSX102.ccr.corp.intel.com>
+References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
+	 <1367938519-840-5-git-send-email-qiaowei.ren@intel.com>
+ <1367990697.2425.33.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([222.73.24.84]:33756 "EHLO song.cn.fujitsu.com"
-	rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-	id S1750824Ab3EJFBP (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:32579 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750825Ab3EJHF5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 10 May 2013 01:01:15 -0400
-In-Reply-To: <1367982932-23387-1-git-send-email-hutao@cn.fujitsu.com>
-Content-Disposition: inline
+	Fri, 10 May 2013 03:05:57 -0400
+In-Reply-To: <1367990697.2425.33.camel@x230>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, kvm@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Paolo Bonzini <pbonzini@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
 
-On Wed, May 08, 2013 at 11:15:32AM +0800, Hu Tao wrote:
-> pvpanic device is a qemu simulated device through which guest panic
-> event is sent to host.
-> 
-> Signed-off-by: Hu Tao <hutao@cn.fujitsu.com>
-> ---
-> 
-> v18 -> v19:  1. return -ENODEV early if port is 0
-> 
-> v17 -> v18:  1. call acpi_walk_resources to get the port, and usb outb instead
->                 of acpi_evaluate_oject in panic notifier callback
->              2. reword help message
-> 
->  drivers/platform/x86/Kconfig   |   8 +++
->  drivers/platform/x86/Makefile  |   2 +
->  drivers/platform/x86/pvpanic.c | 124 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 134 insertions(+)
->  create mode 100644 drivers/platform/x86/pvpanic.c
-> 
-
-ping...
+T24gMjAxMy0wNS0wOCwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTMtMDUt
+MDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPg0KPiA+ICtXaGF0OgkJL3N5
+cy9kZXZpY2VzL3BsYXRmb3JtL2ludGVsX3R4dC9wYXJhbWV0ZXIvYWNtX21heF9zaXplDQo+ID4g
+K0RhdGU6CQlNYXkgMjAxMw0KPiA+ICtLZXJuZWxWZXJzaW9uOgkzLjkNCj4gPiArQ29udGFjdDoJ
+IlFpYW93ZWkgUmVuIiA8cWlhb3dlaS5yZW5AaW50ZWwuY29tPg0KPiA+ICtEZXNjcmlwdGlvbjoJ
+VGhlICJhY21fbWF4X3NpemUiIHByb3BlcnR5IHdpbGwgc2hvdyBtYXggc2l6ZSBvZg0KPiA+ICsJ
+CWF1dGhlbnRpY2F0ZWQgY29kZSBleGVjdXRpb24gYXJlYS4NCj4gDQo+IFdoYXQgd291bGQgdXNl
+cnNwYWNlIHVzZSB0aGlzIGZvcj8NCg0KVGhlc2Ugc3lzZnMgZmlsZXMgYXJlIGp1c3QgZXhwb3J0
+IFNNWCAmIFRYVCByZWxhdGVkIGluZm9ybWF0aW9uIHRvIHVzZXJzcGFjZS4gU28gdGhhdCBvdGhl
+ciBkZXZlbG9wZXJzIChvciBPU1YgJiBJU1YpIGNhbiBiZSBhYmxlIHRvIGRldmVsb3AgdHh0IHJl
+bGF0ZWQgYXBwbGljYXRpb25zIG9yIHRvb2xzIGJhc2VkIG9uIHRoZXNlIGluZm9ybWF0aW9uLg0K
+DQo+ID4gK1doYXQ6CQkvc3lzL2RldmljZXMvcGxhdGZvcm0vaW50ZWxfdHh0L3BhcmFtZXRlci9h
+Y21fbWVtX3R5cGVzDQo+ID4gK0RhdGU6CQlNYXkgMjAxMw0KPiA+ICtLZXJuZWxWZXJzaW9uOgkz
+LjkNCj4gPiArQ29udGFjdDoJIlFpYW93ZWkgUmVuIiA8cWlhb3dlaS5yZW5AaW50ZWwuY29tPg0K
+PiA+ICtEZXNjcmlwdGlvbjoJVGhlICJhY21fbWF4X3R5cGVzIiBwcm9wZXJ0eSB3aWxsIHNob3cg
+ZXh0ZXJuYWwgbWVtb3J5DQo+ID4gKwkJdHlwZXMgc3VwcG9ydGVkIGR1cmluZyBBQyBtb2RlLg0K
+PiANCj4gT3IgdGhpcz8gQW5kIHdoYXQncyBBQyBtb2RlPw0KDQpJdCBtZWFucyB0aGF0IHRoZSBw
+cm9wZXJ0eSB3aWxsIHNob3cgc3VwcG9ydGFibGUgbWVtb3J5IHR5cGVzIGZvciBtZW1vcnkgbWFw
+cGVkIG91dHNpZGUgb2YgdGhlIGF1dGhlbnRpY2F0ZWQgY29kZSBleGVjdXRpb24gYXJlYS4NCg0K
+PiA+ICsJX19hc21fXyBfX3ZvbGF0aWxlX18gKElBMzJfR0VUU0VDX09QQ09ERSAiXG4iDQo+ID4g
+KwkJCSAgICAgIDogIj1hIihlYXgpLCAiPWIiKGVieCksICI9YyIoZWN4KQ0KPiA+ICsJCQkgICAg
+ICA6ICJhIihJQTMyX0dFVFNFQ19QQVJBTUVURVJTKSwgImIiKGluZGV4KSk7DQo+ID4gKw0KPiA+
+ICsJKnBhcmFtX3R5cGUgPSBlYXggJiAweDFmOw0KPiA+ICsJKnBlYXggPSBlYXg7DQo+ID4gKwkq
+cGVieCA9IGVieDsNCj4gPiArCSpwZWN4ID0gZWN4Ow0KPiANCj4gU2hvdWxkIHRoZXJlIGJlIGEg
+Y2hlY2sgZm9yIGZhaWx1cmUgaGVyZT8gSXMgaXQgcG9zc2libGUgZm9yIHRoaXMgb3BlcmF0aW9u
+IHRvIGZhaWw/DQoNCllvdSBtZWFuIEdFVFNFQyBpbnN0cnVjdGlvbj8gSSBkb24ndCBub3RpY2Ug
+cmVsYXRlZCBkZXNjcmlwdGlvbiBpbiBtYW51YWwuIE5leHQgZnVuY3Rpb24gZ2V0X3BhcmFtZXRl
+cnMoKSB3aWxsIHByb2Nlc3MgcmV0dXJuIGVheC9lYngvZWN4IHJldHVybmVkIGJ5IHRoaXMgaW5z
+dHJ1Y3Rpb24uDQoNCj4gPiArCXdyaXRlX2NyNChyZWFkX2NyNCgpIHwgQ1I0X1NNWEUpOw0KPiAN
+Cj4gV2hvby4gVGhpcyBuZWVkcyBhdCBsZWFzdCBhIGdpYW50IGNvbW1lbnQgYW5kIHByb2JhYmx5
+IHNvbWUgbG9ja2luZywgYnV0IGlmDQo+IHRoaXMgaXMgc3VwcG9zZWQgdG8gYmUgc2V0IGR1cmlu
+ZyBydW50aW1lIHRoZW4gaXQgc2hvdWxkIGJlIGRvbmUgaW4gY29yZQ0KPiBhcmNoaXRlY3R1cmUg
+Y29kZSByYXRoZXIgdGhhbiBqdXN0IGluIHRoaXMgZHJpdmVyLg0KDQpPaC4gVGhpcyBjb2RlIHNo
+b3VsZCBiZSByZW1vdmVkLCBiZWNhdXNlIHRib290IGNvZGUgaGF2ZSBzZXQgU01YRSBiaXQuDQoN
+ClRoYW5rcywNClFpYW93ZWkNCg0K
