@@ -1,38 +1,49 @@
 From: "Ren, Qiaowei" <qiaowei.ren@intel.com>
-Subject: RE: [PATCH 0/4] Intel TXT driver
-Date: Fri, 10 May 2013 02:20:56 +0000
-Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9AC7F5@SHSMSX102.ccr.corp.intel.com>
+Subject: RE: [PATCH 1/4] driver: add TXT driver in kernel
+Date: Fri, 10 May 2013 03:38:05 +0000
+Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9AC855@SHSMSX102.ccr.corp.intel.com>
 References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
-	 <1367980128.2425.3.camel@x230>
-	 <9E0BE1322F2F2246BD820DA9FC397ADE9AAC26@SHSMSX102.ccr.corp.intel.com>
- <1368100959.2425.37.camel@x230>
+	 <1367938519-840-2-git-send-email-qiaowei.ren@intel.com>
+ <1367980339.2425.7.camel@x230>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:2391 "EHLO mga09.intel.com"
+Received: from mga14.intel.com ([143.182.124.37]:50288 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754853Ab3EJCVG (ORCPT
+	id S1751042Ab3EJDiK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 9 May 2013 22:21:06 -0400
-In-Reply-To: <1368100959.2425.37.camel@x230>
+	Thu, 9 May 2013 23:38:10 -0400
+In-Reply-To: <1367980339.2425.7.camel@x230>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
 
-T24gMjAxMy0wNS0wOSwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUaHUsIDIwMTMtMDUt
-MDkgYXQgMDg6MTkgKzAwMDAsIFJlbiwgUWlhb3dlaSB3cm90ZToNCj4gPiBPbiAyMDEzLTA1LTA4
-LCBNYXR0aGV3IEdhcnJldHQgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIDIwMTMtMDUtMDcgYXQgMjI6
-NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiA+ID4+IFRoaXMgbW9kdWxlIGlzIGV4cGVj
-dGVkIHRvIGJlIGEgYmV0dGVyIHRvb2wgdG8gYWNjZXNzIGJlbG93IHJlc291cmNlcw0KPiA+ID4+
-ICAgLSBUWFQgY29uZmlnIHNwYWNlDQo+ID4gPj4gICAtIFRib290IGxvZyBtZW0NCj4gPiA+PiAg
-IC0gU01YIHBhcmFtZXRlcg0KPiA+ID4NCj4gPiA+IFdoYXQncyBTTVg/DQo+ID4NCj4gPiBTYWZl
-ciBNb2RlIEV4dGVuc2lvbnMgKFNNWCkgcHJvdmlkZSBhIHByb2dyYW1taW5nIGludGVyZmFjZSBm
-b3Igc3lzdGVtDQo+IHNvZnR3YXJlIHRvIGVzdGFibGlzaCBhIG1lYXN1cmVkIGVudmlyb25tZW50
-IHdpdGhpbiB0aGUgcGxhdGZvcm0gdG8gc3VwcG9ydA0KPiB0cnVzdCBkZWNpc2lvbnMgYnkgZW5k
-IHVzZXJzLiBTTVggZnVuY3Rpb25hbGl0eSBpcyBwcm92aWRlZCBpbiBhbiBJbnRlbCA2NA0KPiBw
-cm9jZXNzb3IgdGhyb3VnaCB0aGUgR0VUU0VDIGluc3RydWN0aW9uIHZpYSBsZWFmIGZ1bmN0aW9u
-cy4NCj4gDQo+IEdyZWF0LiBDYW4geW91IGluY2x1ZGUgdGhhdCBpbiB0aGUgcGF0Y2hlcyBhbmQg
-aGVscCB0ZXh0Pw0KDQpPay4NCg0KVGhhbmtzLA0KUWlhb3dlaQ0K
+T24gMjAxMy0wNS0wOCwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTMtMDUt
+MDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiANCj4gPiArICogVGhpcyBt
+b2R1bGUgaXMgZXhwZWN0ZWQgdG8gYmUgYSBiZXR0ZXIgdG9vbCB0byBhY2Nlc3MgYmVsb3cNCj4g
+PiArIHJlc291cmNlcw0KPiANCj4gRXhwZWN0ZWQgdG8gYmUgb3IgaXM/IDopDQoNCiJpcyIgOikN
+Cg0KPiA+ICsgKiBEYXRhIGlzIGN1cnJlbnRseSBmb3VuZCBiZWxvdw0KPiANCj4gWW91J3JlIGFk
+ZGluZyBpdCB0byBBQkksIHNvIGl0IHNob3VsZG4ndCBqdXN0IGJlIGN1cnJlbnQgLSBhcmUgeW91
+IHBsYW5uaW5nIG9uDQo+IG1vdmluZyBpdCBhdCBhbnkgcG9pbnQ/IElzIHRoaXMgZnVuY3Rpb25h
+bGl0eSB0aGF0IHNob3VsZCBiZSB1bmRlciBzZWN1cml0eWZzDQo+IGluc3RlYWQ/DQo+IA0KPiA+
+ICsJdHh0X3BkZXYgPSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKERFVl9OQU1FLCAt
+MSwgTlVMTCwgMCk7DQo+IA0KPiBUaGlzIHdpbGwgcmVnaXN0ZXIgZXZlbiBpZiB0aGVyZSdzIG5v
+IFRYVCBzdXBwb3J0IG9uIHRoZSBwbGF0Zm9ybSwgcmlnaHQ/IElzIHRoZXJlDQo+IG5vIG1lY2hh
+bmlzbSBmb3IgZGV0ZXJtaW5pbmcgd2hldGhlciBhIHBsYXRmb3JtIGhhcyBUWFQgc3VwcG9ydCBi
+ZWZvcmUNCj4gcmVnaXN0ZXJpbmcgYSBkZXZpY2U/DQo+IA0KPiA+ICttb2R1bGVfaW5pdCh0eHRf
+c3lzZnNfaW5pdCk7DQo+ID4gK21vZHVsZV9leGl0KHR4dF9zeXNmc19leGl0KTsNCj4gDQo+IEFu
+ZCB5b3UndmUgZ290IG5vIG1vZHVsZSBhbGlhc2VzLCBzbyB0aGlzIHdpbGwgbmV2ZXIgYmUgYXV0
+b2xvYWRlZC4gSG93IGRvZXMNCj4gdGhlIE9TIGtub3cgdGhhdCB0aGUgcGxhdGZvcm0gaW1wbGVt
+ZW50cyBUWFQ/DQoNCkN1cnJlbnRseSB0aGlzIGRyaXZlciBvbmx5IGRlcGVuZHMgb24gQ09ORklH
+X0lOVEVMX1RYVCwgd2hpY2ggaXMgdGhlIGtlcm5lbCBvcHRpb24gZm9yIGVuYWJsaW5nIEludGVs
+IFRYVCBzdXBwb3J0LiBBbmQgdGhlcmUgaXMgbm8gZXhwbGljaXQgaW50ZXJmYWNlIHRvIGNoZWNr
+IHdoZXRoZXIgdHh0IGlzIHN1cHBvcnRlZCBpbiB0aGlzIHR4dCBlbmFibGluZyBwYXJ0IG9mIGtl
+cm5lbC4gQnV0IHNpbmNlIHRoZSB0Ym9vdCBjb2RlIHdpbGwgZGV0ZWN0IHdoZXRoZXIgdGhlIHBs
+YXRmb3JtIGFjdHVhbGx5IHN1cHBvcnRzIEludGVsIFRYVCwgYW5kIHNvIHRib290X2VuYWJsZWQo
+KSBpbiBpbmNsdWRlL2xpbnV4L3Rib290LmggbWF5IGJlIHVzZWQgdG8gZGV0ZXJtaW5lIHdoZXRo
+ZXIgYSBwbGF0Zm9ybSBoYXMgVFhUIHN1cHBvcnQuDQoNCkluIGZhY3QsIHdlIG1heSBhbHNvIGNo
+ZWNrIENQVSBmZWF0dXJlIEVDWFs2XSAoU01YKSBmb3IgdGhpcyBwdXJwb3NlLg0KDQpUaGFua3Ms
+DQpRaWFvd2VpDQoNCg==
