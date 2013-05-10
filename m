@@ -1,105 +1,43 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver updates
-Date: Fri, 10 May 2013 14:05:57 +0100
-Message-ID: <20130510130557.GA17300@srcf.ucam.org>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 4/4] driver: provide sysfs interfaces to access SMX
+ parameter
+Date: Fri, 10 May 2013 13:07:48 +0000
+Message-ID: <1368191268.2425.38.camel@x230>
+References: <1367938519-840-1-git-send-email-qiaowei.ren@intel.com>
+	 <1367938519-840-5-git-send-email-qiaowei.ren@intel.com>
+	 <1367990697.2425.33.camel@x230>
+	 <9E0BE1322F2F2246BD820DA9FC397ADE9AC926@SHSMSX102.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:45906 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752574Ab3EJNGF (ORCPT
+Received: from tx2ehsobe003.messaging.microsoft.com ([65.55.88.13]:9157 "EHLO
+	tx2outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751247Ab3EJNIw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 10 May 2013 09:06:05 -0400
-Content-Disposition: inline
+	Fri, 10 May 2013 09:08:52 -0400
+In-Reply-To: <9E0BE1322F2F2246BD820DA9FC397ADE9AC926@SHSMSX102.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <AFB5317BDD6C60488F441B16A9F44B58@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Ren, Qiaowei" <qiaowei.ren@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
 
-
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-Small set of updates, mainly trivial bugfixes and some small updates to=20
-deal with newer hardware. There's also a new driver that allows qemu=20
-guests to notify the hypervisor that they've just paniced, which seems=20
-useful.
-
-The following changes since commit e0fd9affeb64088eff407dfc98bbd3a5c17ea479:
-
-  Merge tag 'rdma-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/g=
-it/roland/infiniband (2013-05-08 15:29:48 -0700)
-
-are available in the git repository at:
-
-
-  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
-
-for you to fetch changes up to a1ec56ed9f42fb5374cd2add373811c9527c0995:
-
-  Add support for fan button on Ideapad Z580 (2013-05-08 20:00:50 -0400)
-
-----------------------------------------------------------------
-AceLan Kao (2):
-      dell: add new dell WMI format for the AIO machines
-      asus-nb-wmi: set wapf=3D4 for ASUSTeK COMPUTER INC. X75A
-
-Alex Hung (1):
-      hp-wmi: add more definitions for new event_id's
-
-Alexandru Gheorghiu (1):
-      drivers: platform: x86: Use PTR_RET function
-
-Arthur Wirski (1):
-      sony-laptop: SVS151290S kbd backlight and gfx switch support
-
-David Woodhouse (1):
-      dell-laptop: Fix krealloc() misuse in parse_da_table()
-
-Hu Tao (1):
-      pvpanic: pvpanic device driver
-
-Maxim Mikityanskiy (1):
-      Add support for fan button on Ideapad Z580
-
-Shuah Khan (1):
-      hp_accel: Ignore the error from lis3lv02d_poweron() at resume
-
- drivers/platform/x86/Kconfig          |   8 +++
- drivers/platform/x86/Makefile         |   2 +
- drivers/platform/x86/asus-nb-wmi.c    |   9 +++
- drivers/platform/x86/dell-laptop.c    |  10 +--
- drivers/platform/x86/dell-wmi-aio.c   |  53 +++++++++++++--
- drivers/platform/x86/hp-wmi.c         |  24 +++++++
- drivers/platform/x86/hp_accel.c       |   3 +-
- drivers/platform/x86/ideapad-laptop.c |   6 +-
- drivers/platform/x86/pvpanic.c        | 124 ++++++++++++++++++++++++++++++=
-++++
- drivers/platform/x86/samsung-q10.c    |   5 +-
- drivers/platform/x86/sony-laptop.c    |  20 +++++-
- 11 files changed, 248 insertions(+), 16 deletions(-)
- create mode 100644 drivers/platform/x86/pvpanic.c
-
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAlGM8LUACgkQ7Hkv8l1YiTtYPwCdHeP9G617Y9SfUtK2fHN2jnPX
-xqYAn2gDbmgKjse9pHkwAXK8BkXwaWvD
-=Ni17
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+T24gRnJpLCAyMDEzLTA1LTEwIGF0IDA3OjA1ICswMDAwLCBSZW4sIFFpYW93ZWkgd3JvdGU6DQo+
+IE9uIDIwMTMtMDUtMDgsIE1hdHRoZXcgR2FycmV0dCB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMTMt
+MDUtMDcgYXQgMjI6NTUgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiA+DQo+ID4gPiArV2hh
+dDoJCS9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9pbnRlbF90eHQvcGFyYW1ldGVyL2FjbV9tYXhfc2l6
+ZQ0KPiA+ID4gK0RhdGU6CQlNYXkgMjAxMw0KPiA+ID4gK0tlcm5lbFZlcnNpb246CTMuOQ0KPiA+
+ID4gK0NvbnRhY3Q6CSJRaWFvd2VpIFJlbiIgPHFpYW93ZWkucmVuQGludGVsLmNvbT4NCj4gPiA+
+ICtEZXNjcmlwdGlvbjoJVGhlICJhY21fbWF4X3NpemUiIHByb3BlcnR5IHdpbGwgc2hvdyBtYXgg
+c2l6ZSBvZg0KPiA+ID4gKwkJYXV0aGVudGljYXRlZCBjb2RlIGV4ZWN1dGlvbiBhcmVhLg0KPiA+
+IA0KPiA+IFdoYXQgd291bGQgdXNlcnNwYWNlIHVzZSB0aGlzIGZvcj8NCj4gDQo+IFRoZXNlIHN5
+c2ZzIGZpbGVzIGFyZSBqdXN0IGV4cG9ydCBTTVggJiBUWFQgcmVsYXRlZCBpbmZvcm1hdGlvbiB0
+byB1c2Vyc3BhY2UuIFNvIHRoYXQgb3RoZXIgZGV2ZWxvcGVycyAob3IgT1NWICYgSVNWKSBjYW4g
+YmUgYWJsZSB0byBkZXZlbG9wIHR4dCByZWxhdGVkIGFwcGxpY2F0aW9ucyBvciB0b29scyBiYXNl
+ZCBvbiB0aGVzZSBpbmZvcm1hdGlvbi4NCg0KSWYgdGhleSdyZSBvbmx5IHVzaW5nIGl0IGZvciBk
+ZWJ1Z2dpbmcgcHVycG9zZXMgdGhlbiBzeXNmcyBwcm9iYWJseQ0KaXNuJ3QgdGhlIHJpZ2h0IHBs
+YWNlLiBJcyB0aGVyZSBhbnkgcmVhc29uIHRvb2xzIHdvdWxkIG5lZWQgdG8ga25vdyB0aGlzDQpk
+dXJpbmcgbm9ybWFsIHVzYWdlPw0KDQotLSANCk1hdHRoZXcgR2FycmV0dCB8IG1qZzU5QHNyY2Yu
+dWNhbS5vcmcNCg==
