@@ -1,93 +1,67 @@
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Subject: [PATCH 2/2 v2] acer-wmi: add Acer Aspire 5750G to video vendor list but keep acpi video driver
-Date: Mon, 13 May 2013 15:43:57 +0800
-Message-ID: <1368431037-21105-2-git-send-email-jlee@suse.com>
-References: <1368431037-21105-1-git-send-email-jlee@suse.com>
+From: Qiaowei Ren <qiaowei.ren@intel.com>
+Subject: [PATCH v2 0/3] Intel TXT driver
+Date: Tue, 14 May 2013 01:24:41 +0800
+Message-ID: <1368465884-14779-1-git-send-email-qiaowei.ren@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1368431037-21105-1-git-send-email-jlee@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mjg@redhat.com, rjw@sisk.pl
-Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Aaron Lu <aaron.lu@intel.com>, Thomas Renninger <trenn@suse.de>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Qiaowei Ren <qiaowei.ren@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-After Andrzej's testing, we found the acpi backlight methods broken on Acer
-Aspire 5750G but the i915 backlight control works when we set to vendor mode.
-And, we still want to keep the acpi/video driver for transfer acpi event to key
-event but not unregister whole acpi/video driver.
+Changeslog from v1:
+  * remove tboot log code
+  * add terms description in commit log and comment at the top of the driver
+  * check whether a platform has TXT support before registering a device 
 
-This patch introduced a new capability flag is ACER_CAP_KEEP_VIDEO_KEY, it
-indicates the machine works fine with acpi/video driver for key event but want
-to unregister the backlight interface of acpi/video.
+This module is expected to be a better tool to access below resources
+  - TXT config space
+  - SMX parameter
 
-Reference: bko#35622
-        https://bugzilla.kernel.org/show_bug.cgi?id=35622
+Intel TXT (Trusted Execution Technology) will provide higher assurance
+of system configuration and initial state as well as data reset
+protection. It also helps solve real end user concerns about having
+confidence that their hardware is running the VMM or kernel that
+it was configured with, especially since they may be responsible for
+providing such assurances to VMs and services running on it.
 
-v2: changed the information statement of keeping acpi video driver.
+See Documentation/intel_txt.txt for more information about Intel TXT.
 
-Tested-by: Andrzej Krentosz <endrjux@gmail.com>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
-Cc: Matthew Garrett <mjg@redhat.com>
-Cc: Dmitry Torokhov <dtor@mail.ru>
-Cc: Corentin Chary <corentincj@iksaif.net>
-Cc: Rafael J. Wysocki <rjw@sisk.pl>
-Cc: Aaron Lu <aaron.lu@intel.com>
-Cc: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
----
- drivers/platform/x86/acer-wmi.c |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+Intel TXT configuration registers are a subset of chipset registers.
+These chipset registers that interact with SMX are accessed from two
+regions of memory, which represent the public and private configuration
+spaces, by system software using memory read/write protocols.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index c9076bd..a81c9ed 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -207,6 +207,7 @@ struct hotkey_function_type_aa {
- #define ACER_CAP_BRIGHTNESS		(1<<3)
- #define ACER_CAP_THREEG			(1<<4)
- #define ACER_CAP_ACCEL			(1<<5)
-+#define ACER_CAP_KEEP_VIDEO_KEY		(1<<6)
- #define ACER_CAP_ANY			(0xFFFFFFFF)
- 
- /*
-@@ -539,6 +540,15 @@ static int video_set_backlight_video_vendor(const struct dmi_system_id *d)
- 	return 0;
- }
- 
-+static int video_set_backlight_video_vendor_keep_acpi_video(
-+		const struct dmi_system_id *d)
-+{
-+	video_set_backlight_video_vendor(d);
-+	interface->capability |= ACER_CAP_KEEP_VIDEO_KEY;
-+	pr_info("Keeping acpi video driver active to emit backlight brightness change key events\n");
-+	return 0;
-+}
-+
- static const struct dmi_system_id video_vendor_dmi_table[] = {
- 	{
- 		.callback = video_set_backlight_video_vendor,
-@@ -572,6 +582,14 @@ static const struct dmi_system_id video_vendor_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
- 		},
- 	},
-+	{
-+		.callback = video_set_backlight_video_vendor_keep_acpi_video,
-+		.ident = "Acer Aspire 5750G",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750G"),
-+		},
-+	},
- 	{}
- };
- 
-@@ -2228,6 +2246,8 @@ static int __init acer_wmi_init(void)
- 	if (acpi_video_backlight_support()) {
- 		interface->capability &= ~ACER_CAP_BRIGHTNESS;
- 		pr_info("Brightness must be controlled by acpi video driver\n");
-+	} else if (interface->capability & ACER_CAP_KEEP_VIDEO_KEY) {
-+		acpi_video_backlight_unregister();
- 	} else {
- 		pr_info("Disabling ACPI video driver\n");
- 		acpi_video_unregister();
+Safer Mode Extensions (SMX) provide a processor's programming
+interface in an Intel TXT platform for system software to establish
+a measured environment within the platform to support trust decisions
+by end users.
+
+With this module, it will be easier to access TXT related information.
+
+Qiaowei Ren (3):
+  driver: add TXT driver in kernel
+  driver: provide sysfs interfaces to access TXT config space
+  driver: provide sysfs interfaces to access SMX parameter
+
+ Documentation/ABI/testing/sysfs-platform-intel-txt |  382 ++++++++
+ drivers/platform/x86/Kconfig                       |    2 +
+ drivers/platform/x86/Makefile                      |    1 +
+ drivers/platform/x86/intel_txt/Kconfig             |   27 +
+ drivers/platform/x86/intel_txt/Makefile            |    5 +
+ drivers/platform/x86/intel_txt/txt-config.c        | 1029 ++++++++++++++++++++
+ drivers/platform/x86/intel_txt/txt-config.h        |  138 +++
+ drivers/platform/x86/intel_txt/txt-parameter.c     |  254 +++++
+ drivers/platform/x86/intel_txt/txt-parameter.h     |   39 +
+ drivers/platform/x86/intel_txt/txt-sysfs.c         |   79 ++
+ 10 files changed, 1956 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-txt
+ create mode 100644 drivers/platform/x86/intel_txt/Kconfig
+ create mode 100644 drivers/platform/x86/intel_txt/Makefile
+ create mode 100644 drivers/platform/x86/intel_txt/txt-config.c
+ create mode 100644 drivers/platform/x86/intel_txt/txt-config.h
+ create mode 100644 drivers/platform/x86/intel_txt/txt-parameter.c
+ create mode 100644 drivers/platform/x86/intel_txt/txt-parameter.h
+ create mode 100644 drivers/platform/x86/intel_txt/txt-sysfs.c
+
 -- 
-1.6.4.2
+1.7.9.5
