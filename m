@@ -1,30 +1,57 @@
-From: "Ren, Qiaowei" <qiaowei.ren@intel.com>
-Subject: RE: [PATCH v2 1/3] driver: add TXT driver in kernel
-Date: Tue, 14 May 2013 01:49:56 +0000
-Message-ID: <9E0BE1322F2F2246BD820DA9FC397ADE9AE80A@SHSMSX102.ccr.corp.intel.com>
-References: <1368465884-14779-1-git-send-email-qiaowei.ren@intel.com>
-	 <1368465884-14779-2-git-send-email-qiaowei.ren@intel.com>
- <1368466296.2425.48.camel@x230>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:52899 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755578Ab3ENBuB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 May 2013 21:50:01 -0400
-In-Reply-To: <1368466296.2425.48.camel@x230>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wei, Gang" <gang.wei@intel.com>
+From: Jiang Liu <liuj97@gmail.com>
+Subject: [RFC PATCH v2, part 2 17/18] PCI, eeepc-laptop: use hotplug-safe iterators to walk PCI buses
+Date: Wed, 15 May 2013 00:52:01 +0800
+Message-ID: <1368550322-1045-17-git-send-email-jiang.liu@huawei.com>
+References: <1368550322-1045-1-git-send-email-jiang.liu@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1368550322-1045-1-git-send-email-jiang.liu@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Yinghai Lu <yinghai@kernel.org>
+Cc: Jiang Liu <jiang.liu@huawei.com>, "Rafael J . Wysocki" <rjw@sisk.pl>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gu Zheng <guz.fnst@cn.fujitsu.com>, Toshi Kani <toshi.kani@hp.com>, Myron Stowe <myron.stowe@redhat.com>, Yijing Wang <wangyijing@huawei.com>, Jiang Liu <liuj97@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gMjAxMy0wNS0xNCwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiBPbiBUdWUsIDIwMTMtMDUt
-MTQgYXQgMDE6MjQgKzA4MDAsIFFpYW93ZWkgUmVuIHdyb3RlOg0KPiA+IHN0YXRpYyBpbnQgX19p
-bml0IHR4dF9zeXNmc19pbml0KHZvaWQpDQo+ID4gK3sNCj4gPiArCWlmICghdGJvb3RfZW5hYmxl
-ZCgpKQ0KPiA+ICsJCXJldHVybiAtRU5PREVWOw0KPiANCj4gSWYgdGhlcmUncyBhIENQVSBmbGFn
-IHRoYXQgaW5kaWNhdGVzIHRib290IHN1cHBvcnQsIHlvdSBzaG91bGQgYWRkIGEgbW9kYWxpYXMg
-Zm9yDQo+IGl0IGluIG9yZGVyIHRvIGVuc3VyZSB0aGF0IHRoZSBtb2R1bGUgZ2V0cyBhdXRvbWF0
-aWNhbGx5IGxvYWRlZC4NCg0KT2suDQoNClRoYW5rcywNClFpYW93ZWkNCg==
+Enhance eeepc-laptop drvier to use hotplug-safe iterators to walk
+PCI buses.
+
+Signed-off-by: Jiang Liu <jiang.liu@huawei.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: acpi4asus-user@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/platform/x86/eeepc-laptop.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index 5d26e70..6291b4f 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -759,7 +759,7 @@ static struct hotplug_slot_ops eeepc_hotplug_slot_ops = {
+ static int eeepc_setup_pci_hotplug(struct eeepc_laptop *eeepc)
+ {
+ 	int ret = -ENOMEM;
+-	struct pci_bus *bus = pci_find_bus(0, 1);
++	struct pci_bus *bus = pci_get_bus(0, 1);
+ 
+ 	if (!bus) {
+ 		pr_err("Unable to find wifi PCI bus\n");
+@@ -787,6 +787,8 @@ static int eeepc_setup_pci_hotplug(struct eeepc_laptop *eeepc)
+ 		goto error_register;
+ 	}
+ 
++	pci_bus_put(bus);
++
+ 	return 0;
+ 
+ error_register:
+@@ -795,6 +797,7 @@ error_info:
+ 	kfree(eeepc->hotplug_slot);
+ 	eeepc->hotplug_slot = NULL;
+ error_slot:
++	pci_bus_put(bus);
+ 	return ret;
+ }
+ 
+-- 
+1.8.1.2
