@@ -1,44 +1,32 @@
-From: Viktar Vauchkevich <victorenator@gmail.com>
-Subject: [PATCH 1/1] asus-nb-wmi: ignore ALS notification key code
-Date: Thu, 23 May 2013 07:17:11 +0300
-Message-ID: <3187019.OJTtjt5AeY@vs>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for May 23 (asus-wmi)
+Date: Thu, 23 May 2013 09:13:29 -0700
+Message-ID: <519E4029.5090101@infradead.org>
+References: <20130523154924.db69d92fe88f9d22a87e822d@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ee0-f46.google.com ([74.125.83.46]:47832 "EHLO
-	mail-ee0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750916Ab3EWEQo (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 May 2013 00:16:44 -0400
-Received: by mail-ee0-f46.google.com with SMTP id e49so1509690eek.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 May 2013 21:16:43 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20130523154924.db69d92fe88f9d22a87e822d@canb.auug.org.au>
+Sender: linux-next-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Ignore Ambient Light Sensor notification key code 0xC6 found in ASUS UX31a.
-When the illuminance changes dmesg shows:
-[10814.939979] asus_wmi: Unknown key c6 pressed
+On 05/22/13 22:49, Stephen Rothwell wrote:
+> Hi all,
+> 
+> There will be no linux-next release tomorrow.
+> 
+> Changes since 20130522:
+> 
 
-Signed-off-by: Viktar Vauchkevich <victorenator@gmail.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-
-wmi.c
-index 8fcb41e..7340566 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -256,6 +256,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0xB5, { KEY_CALC } },
- 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
- 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
-+	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
- 	{ KE_END, 0},
- };
- 
+when CONFIG_ACPI_VIDEO=m and ASUS_WMI=y:
+
+drivers/built-in.o: In function `asus_wmi_add':
+asus-wmi.c:(.text+0x252514): undefined reference to `acpi_video_unregister'
+
+
 -- 
-1.8.2.1
+~Randy
