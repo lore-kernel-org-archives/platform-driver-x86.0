@@ -1,32 +1,37 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: Tree for May 23 (asus-wmi)
-Date: Thu, 23 May 2013 09:13:29 -0700
-Message-ID: <519E4029.5090101@infradead.org>
-References: <20130523154924.db69d92fe88f9d22a87e822d@canb.auug.org.au>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 2/3] driver: provide sysfs interfaces to access TXT
+ config space
+Date: Fri, 24 May 2013 11:58:34 +0200
+Message-ID: <20130524095834.GA14554@amd.pavel.ucw.cz>
+References: <1368587074-12712-1-git-send-email-qiaowei.ren@intel.com>
+ <1368587074-12712-3-git-send-email-qiaowei.ren@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20130523154924.db69d92fe88f9d22a87e822d@canb.auug.org.au>
-Sender: linux-next-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:38459 "EHLO
+	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752201Ab3EXJ6g (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 24 May 2013 05:58:36 -0400
+Content-Disposition: inline
+In-Reply-To: <1368587074-12712-3-git-send-email-qiaowei.ren@intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Qiaowei Ren <qiaowei.ren@intel.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, "Signed-off-by: Gang Wei" <gang.wei@intel.com>, Xiaoyan Zhang <xiaoyan.zhang@intel.com>
 
-On 05/22/13 22:49, Stephen Rothwell wrote:
-> Hi all,
+On Wed 2013-05-15 11:04:33, Qiaowei Ren wrote:
+> These interfaces are located in /sys/devices/platform/intel_txt/config,
+> and including totally 37 files, providing access to Intel TXT
+> configuration registers.
 > 
-> There will be no linux-next release tomorrow.
-> 
-> Changes since 20130522:
-> 
+> Signed-off-by: Qiaowei Ren <qiaowei.ren@intel.com>
+> Signed-off-by: Xiaoyan Zhang <xiaoyan.zhang@intel.com>
+> Signed-off-by: Gang Wei <gang.wei@intel.com>
 
-
-when CONFIG_ACPI_VIDEO=m and ASUS_WMI=y:
-
-drivers/built-in.o: In function `asus_wmi_add':
-asus-wmi.c:(.text+0x252514): undefined reference to `acpi_video_unregister'
-
+You forgot to Cc sysfs maintainer, and proposed interface is not
+suitable for reasons explained before.
 
 -- 
-~Randy
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
