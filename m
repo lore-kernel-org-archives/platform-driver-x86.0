@@ -1,68 +1,45 @@
-From: Daniel Serpell <daniel.serpell@gmail.com>
-Subject: Re: [PATCH] sony-laptop: Reading gfx_switch_status in SVS13A15GLB
-Date: Sun, 26 May 2013 19:37:45 -0400
-Message-ID: <20130526233725.GA22177@daniel-vaio>
-References: <CANepG=Ot72gY8qacyTvte1oGO8ymEj69xgrvdKg1Q8McMddKLw@mail.gmail.com>
- <20130526221607.GA9539@kamineko.org>
+From: Libo Chen <libo.chen@huawei.com>
+Subject: [PATCH 14/24] drivers/platform/x86/intel_ips: Convert to module_pci_driver
+Date: Mon, 27 May 2013 10:31:33 +0800
+Message-ID: <1369621893-11984-1-git-send-email-libo.chen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f50.google.com ([209.85.220.50]:64348 "EHLO
-	mail-pa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755447Ab3EZXhw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 26 May 2013 19:37:52 -0400
-Received: by mail-pa0-f50.google.com with SMTP id fb11so4789231pad.23
-        for <platform-driver-x86@vger.kernel.org>; Sun, 26 May 2013 16:37:52 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20130526221607.GA9539@kamineko.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: Arthur Wirski <awirski@gmail.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lizefan@huawei.com, libo.chen@huawei.com, gregkh@linuxfoundation.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 27, 2013 at 07:16:07AM +0900, Mattia Dongili wrote:
-> On Sat, May 25, 2013 at 08:12:43PM -0400, Daniel Serpell wrote:
-> > 
-> > Attached is a patch to fix this.
-> 
-> oh, nice. we've been reporting the opposite for all this time... And it
-> looks like we're missing the AUTO value of the enum when setting the
-> buffer.
-> Mind adding that and resending the patch (as inline attachment)?
-> 
+use module_pci_driver instead of init/exit, make code clean.
 
-Ok, I'm not sure what is the preferred style, but here is the new patch.
-I can't test the "AUTO" setting, as this laptop has only two positions.
-
-Thanks,
-
-    Daniel.
-
-From: Daniel Serpell <daniel.serpell@gmail.com>
-Date: Sun, 26 May 2013 19:16:18 -0400
-Subject: [PATCH] Fix reporting of sony-laptop gfx_switch_status.
-
-Signed-off-by: Daniel Serpell <daniel.serpell@gmail.com>
+Signed-off-by: Libo Chen <libo.chen@huawei.com>
 ---
- drivers/platform/x86/sony-laptop.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_ips.c |   13 +------------
+ 1 files changed, 1 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index a10a376..3503d9c 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2440,7 +2440,10 @@ static ssize_t sony_nc_gfx_switch_status_show(struct device *dev,
- 	if (pos < 0)
- 		return pos;
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 5051aa9..18dcb58 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1731,18 +1731,7 @@ static struct pci_driver ips_pci_driver = {
+ 	.shutdown = ips_shutdown,
+ };
  
--	return snprintf(buffer, PAGE_SIZE, "%s\n", pos ? "speed" : "stamina");
-+	return snprintf(buffer, PAGE_SIZE, "%s\n",
-+					pos == SPEED ? "speed" :
-+					pos == STAMINA ? "stamina" :
-+					pos == AUTO ? "auto" : "unknown" );
- }
+-static int __init ips_init(void)
+-{
+-	return pci_register_driver(&ips_pci_driver);
+-}
+-module_init(ips_init);
+-
+-static void ips_exit(void)
+-{
+-	pci_unregister_driver(&ips_pci_driver);
+-	return;
+-}
+-module_exit(ips_exit);
++module_pci_driver(ips_pci_driver);
  
- static int sony_nc_gfx_switch_setup(struct platform_device *pd,
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Jesse Barnes <jbarnes@virtuousgeek.org>");
 -- 
-1.8.1.2
+1.7.1
