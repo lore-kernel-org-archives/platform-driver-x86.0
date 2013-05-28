@@ -1,70 +1,218 @@
-From: Lan Tianyu <tianyu.lan@intel.com>
-Subject: [PATCH] Platform/HP: Fix misuse variable bluetooth_rfkill in the hp_wmi_rfkill_setup()
-Date: Tue, 28 May 2013 10:25:33 +0800
-Message-ID: <1369707933-8565-1-git-send-email-tianyu.lan@intel.com>
+From: Bruce <bruce.ma@canonical.com>
+Subject: Patch for thinkpad-acpi.c
+Date: Tue, 28 May 2013 17:22:59 +0800
+Message-ID: <51A47773.4080701@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([143.182.124.37]:1992 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758658Ab3E1Cbq (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:55454 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933724Ab3E1JXH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 27 May 2013 22:31:46 -0400
+	Tue, 28 May 2013 05:23:07 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: lenb@kernel.org, rjw@sisk.pl, linux-kernel@vger.kernel.org, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, mytbk920423@gmail.com
-Cc: Lan Tianyu <tianyu.lan@intel.com>, stable@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-kernel@vger.kernel.org
 
-HP wmi platform driver fails to initialize GPS and causes poweroff
-failure in HP Elitebook 6930p.
 
-[    9.462428] Call Trace:
-[    9.462449]  [<ffffffffa088d25a>] hp_wmi_bios_setup+0x25a/0x3a0 [hp_wmi]
-[    9.462493]  [<ffffffff8135978c>] platform_drv_probe+0x3c/0x70
-[    9.462530]  [<ffffffff81356d6a>] ? driver_sysfs_add+0x7a/0xb0
-[    9.462566]  [<ffffffff81357407>] driver_probe_device+0x87/0x3a0
-[    9.462603]  [<ffffffff813577f3>] __driver_attach+0x93/0xa0
-[    9.462636]  [<ffffffff81357760>] ? __device_attach+0x40/0x40
-[    9.462671]  [<ffffffff81355403>] bus_for_each_dev+0x63/0xa0
-[    9.462707]  [<ffffffff81356e8e>] driver_attach+0x1e/0x20
-[    9.462740]  [<ffffffff81356a28>] bus_add_driver+0x1f8/0x2b0
-[    9.462775]  [<ffffffff81357e81>] driver_register+0x71/0x150
-[    9.462810]  [<ffffffff813594e6>] platform_driver_register+0x46/0x50
-[    9.462849]  [<ffffffff813595ab>] platform_driver_probe+0x1b/0xa0
-[    9.462886]  [<ffffffffa088d55e>] hp_wmi_init+0x1be/0x1fb [hp_wmi]
-[    9.462925]  [<ffffffffa088d3a0>] ? hp_wmi_bios_setup+0x3a0/0x3a0 [hp_wmi]
-[    9.462967]  [<ffffffff8100210a>] do_one_initcall+0x10a/0x160
-[    9.463004]  [<ffffffff810bdac6>] load_module+0x1b46/0x2640
-[    9.463038]  [<ffffffff8128da20>] ? ddebug_proc_write+0xf0/0xf0
-[    9.463076]  [<ffffffff810be662>] sys_init_module+0xa2/0xf0
-[    9.463111]  [<ffffffff814d975d>] system_call_fastpath+0x1a/0x1f
-[    9.463146] Code: 48 ff ff ff 80 7b 24 00 74 d2 41 83 e5 01 45 38 ec 74 c9
-48 8d bb a0 03 00 00 e8 ed fb aa e0 5b 41 5c 41 5d 44 89 f0 41 5e 5d c3 <0f> 0b
-66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66
-[    9.463479] RIP  [<ffffffffa05c57af>] rfkill_set_hw_state+0x9f/0xb0 [rfkill]
-[    9.463526]  RSP <ffff880071523b60>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Check code and find this error is caused by misusing variable bluetooth_rfkill
-where gps_rfkill should be.
+Hi, all:
 
-Reported-and-tested-by: Iru Cai <mytbk920423@gmail.com>
-References: https://bugzilla.kernel.org/show_bug.cgi?id=58401
-Cc: stable@vger.kernel.org
-Signed-off-by: Lan Tianyu <tianyu.lan@intel.com>
----
- drivers/platform/x86/hp-wmi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We are testing Ubuntu 12.04 on some laptops , and find out there are
+some error messages in dmesg after run S3 or S4. Like:
+[10512.177806] ACPI Warning: For \_SB_.PCI0.LPCB.H_EC.LED_: Excess
+arguments - needs 1, found 2 (20110623/nspredef-326)
+[11728.328110] ACPI Warning: For \_SB_.PCI0.LPCB.H_EC.LED_: Excess
+arguments - needs 1, found 2 (20110623/nspredef-326)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 45cacf7..9b60282 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -680,7 +680,7 @@ static int hp_wmi_rfkill_setup(struct platform_device *device)
- 		}
- 		rfkill_init_sw_state(gps_rfkill,
- 				     hp_wmi_get_sw_state(HPWMI_GPS));
--		rfkill_set_hw_state(bluetooth_rfkill,
-+		rfkill_set_hw_state(gps_rfkill,
- 				    hp_wmi_get_hw_state(HPWMI_GPS));
- 		err = rfkill_register(gps_rfkill);
- 		if (err)
--- 
-1.7.9.5
+The root cause is thinkpad-acpi.c, the LED function will trigger this
+message.
+Because theses laptops don't have any led light, so we don't need any
+action for leds.
+
+Then I make a patch for this issue:
+1. Add a blacklist which include some model name and model number.
+2. Add a function which name tpacpi_check_model()  in
+thinkpad_acpi_module_i() . It will check the model name and model number
+    during init step. If this model name is in blacklist, then set value
+no_led to 1.
+3. Add a condition in led_exit(),led_init(),led_read() and led_write(),
+if no_led is 1, then just return.
+
+
+patch file no-led.patch:
+
+- --- old/thinkpad_acpi.c    2013-01-29 16:54:34.000000000 +0800
++++ src/thinkpad_acpi.c    2013-01-29 16:52:46.000000000 +0800
+@@ -1787,6 +1787,90 @@ static const struct tpacpi_quirk tpacpi_
+ #undef TPV_Q_X
+ #undef TPV_Q
+ 
++/*
++check tpacpi_check_model()
++
++ * Model Name   , Number Model Name
++ * Lenovo LM490s, 814YG01
++
++ "dmesg | grep thinkpad_acpi" shows:
++ thinkpad_acpi: Lenovo Lenovo LM490s,      model 814YG01
++
++ How to add new model to blacklist:
++ Add these lines like below into lenovo_blacklist[].
++   {
++    .model_s = "Lenovo K490s",
++    .nummodel_s = "814YJ01",
++   },
++ */
++
++unsigned int no_led = 0 ;
++
++struct blacklist {
++  struct list_head blist;
++  char *model_s;
++  char *nummodel_s;
++};
++
++struct blacklist led_blacklist = {
++  .model_s = NULL,
++  .nummodel_s = NULL,
++};
++
++struct blacklist lenovo_blacklist[] = {
++  {
++    .model_s = "Lenovo LM490s",
++    .nummodel_s = "814YG01",
++  },
++  {
++    .model_s = "ThinkPad Edge E430",
++    .nummodel_s = "3254TNU",
++  },
++  {
++    .model_s = "LENOVO",
++    .nummodel_s = "914TK01",
++  },
++  {
++    .model_s = "ThinkPad Twist",
++    .nummodel_s = "334724C",
++  },
++  {
++    .model_s = "Lenovo M490s",
++    .nummodel_s = "914YG01",
++  },
++  {
++    .model_s = "Lenovo K490s",
++    .nummodel_s = "814YJ01",
++  },
++};
++
++static int __init tpacpi_check_model(void)
++{
++  unsigned int i ;
++  struct blacklist *list_p;
++
++  /* If thinkpad_id.nummodel_str is "unkown". */
++  if (!thinkpad_id.nummodel_str) {
++    return 1;
++  }
++
++  INIT_LIST_HEAD(&led_blacklist.blist);
++
++  for(i = 0; i < ARRAY_SIZE(lenovo_blacklist) ; i++) {
++    INIT_LIST_HEAD(&lenovo_blacklist[i].blist);
++    list_add(&lenovo_blacklist[i].blist, &led_blacklist.blist);
++  }
++
++  list_for_each_entry(list_p,&led_blacklist.blist,blist) {
++    if (!strcmp(list_p->model_s,thinkpad_id.model_str)
++                  &&
+!strcmp(list_p->nummodel_s,thinkpad_id.nummodel_str)) {
++      no_led = 1;
++      pr_info("Disable led support for this model.\n");
++    }
++  }
++  return 0;
++}
++
+ static void __init tpacpi_check_outdated_fw(void)
+ {
+     unsigned long fwvers;
+@@ -5235,6 +5319,10 @@ static enum led_brightness led_sysfs_get
+ 
+ static void led_exit(void)
+ {
++        if (no_led == 1 ) {
++                 return 0;
++  }
++
+     unsigned int i;
+ 
+     for (i = 0; i < TPACPI_LED_NUMLEDS; i++) {
+@@ -5349,6 +5437,10 @@ static enum led_access_mode __init led_i
+ 
+ static int __init led_init(struct ibm_init_struct *iibm)
+ {
++        if (no_led == 1 ) {
++           return 0;
++        }
++
+     unsigned int i;
+     int rc;
+     unsigned long useful_leds;
+@@ -5397,6 +5489,10 @@ static int __init led_init(struct ibm_in
+ 
+ static int led_read(struct seq_file *m)
+ {
++        if (no_led == 1 ) {
++                return 0;
++        }
++
+     if (!led_supported) {
+         seq_printf(m, "status:\t\tnot supported\n");
+         return 0;
+@@ -5423,6 +5519,10 @@ static int led_read(struct seq_file *m)
+ 
+ static int led_write(char *buf)
+ {
++        if (no_led == 1 ) {
++                return 0;
++        }
++
+     char *cmd;
+     int led, rc;
+     enum led_status_t s;
+@@ -9031,6 +9131,9 @@ static int __init thinkpad_acpi_module_i
+     /* Driver initialization */
+ 
+     thinkpad_acpi_init_banner();
++
++    tpacpi_check_model();
++
+     tpacpi_check_outdated_fw();
+ 
+     TPACPI_ACPIHANDLE_INIT(ecrd);
+
+# End of patch
+
+
+
+==============
+Bruce Ma
+May 28,2013
+
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQEcBAEBAgAGBQJRpHdvAAoJEFnPatyLvGg17w0H/i2r/ZFbnHD2KRf5tgCWGol+
+ihha9IqNXUGMMoltcWh2NrJybKZcc4QspGHAhr3sqX7id825tPYvWEtSPOMXs373
+ytHFAVc5SEf40I6Zmwhb6YDgwJsh2SS02wkQeKbfTyi5aj2XSOvK0ap4IDFeFJgd
++Ewe7A7ZGwkR5ybBgHSqgw+IUv0H0Gj0PnJooLqLVXbt7gJ9583yP/SLZyADkgJv
+KCRjbId/I8OI58/Wil8u3rkzTKO1RU0UUItxiJrDuinod4heKnQ0MyPgbDzVlUU1
+3KE08jsITFEckI4QDwQpPcHbWLh3+C5hrsCwBhKDZDZEorzAxXxEDo1idz/g3Io=
+=DuJ/
+-----END PGP SIGNATURE-----
