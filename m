@@ -1,62 +1,56 @@
-From: Bruce <bruce.ma@canonical.com>
-Subject: Re: Patch for thinkpad-acpi.c
-Date: Wed, 29 May 2013 11:54:57 +0800
-Message-ID: <51A57C11.40403@canonical.com>
-References: <51A47773.4080701@canonical.com> <87r4gr9z5o.fsf@nemi.mork.no>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] asus-wmi: control wlan-led only if wapf == 4
+Date: Thu, 30 May 2013 10:31:50 +0800
+Message-ID: <1369881110-16538-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:33273 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759239Ab3E2DzH (ORCPT
+Received: from mail-pb0-f47.google.com ([209.85.160.47]:63011 "EHLO
+	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S967053Ab3E3Cbz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 May 2013 23:55:07 -0400
-In-Reply-To: <87r4gr9z5o.fsf@nemi.mork.no>
+	Wed, 29 May 2013 22:31:55 -0400
+Received: by mail-pb0-f47.google.com with SMTP id rr4so10176831pbb.34
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 May 2013 19:31:55 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?QmrDuHJuIE1vcms=?= <bjorn@mork.no>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>
 
-Hi, Bjorn
+Controlling the wlan led seems to have some side effects to the machines
+with wapf value is not equal to 4. It will make the keyboard backlight
+out of order.
+So, the patch will enable the wlan led function only if the wapf == 4.
 
-Thank your advice .
-I will modify my code, then try to submit again.
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=46791
 
-Bruce.Ma
-May 29,2013
+Reported-by: Mirto Silvio Busico <m.busico@ieee.org>
+Tested-by: Karol Herbst <karolherbst@me.com>
+Tested-by: drunkenbatman <drunkenbatman@gmail.com>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-
-On 05/28/2013 06:28 PM, Bj=C3=B8rn Mork wrote:
-> Bruce <bruce.ma@canonical.com> writes:
->
->> +struct blacklist lenovo_blacklist[] =3D {
->> +  {
->> +    .model_s =3D "Lenovo LM490s",
->> +    .nummodel_s =3D "814YG01",
->> +  },
->
-> The driver already has a list of LED support per model in the=20
->
->   static const struct tpacpi_quirk led_useful_qtable[] __initconst =3D=
- {}
->
-> array.   Why do you duplicate this with lots of new model checking co=
-de
-> instead of just using the code that's already there?
->
->>  static void led_exit(void)
->>  {
->> +        if (no_led =3D=3D 1 ) {
->
-> The driver already has provisions for signalling that LEDs are
-> unsupported through the 'led_supported' variable.  Why do you add
-> another variable, and duplicate testing in every access function?
->
-> But I don't think this part is needed at all, as long as you set up t=
-he
-> proper LED map in led_useful_qtable.
->
->
->
-> Bj=C3=B8rn
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index c11b242..8084a6f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -558,7 +558,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 			goto error;
+ 	}
+ 
+-	if (wlan_led_presence(asus)) {
++	if (wlan_led_presence(asus) && (asus->driver->quirks->wapf == 4)) {
+ 		INIT_WORK(&asus->wlan_led_work, wlan_led_update);
+ 
+ 		asus->wlan_led.name = "asus::wlan";
+@@ -886,7 +886,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+ 	if (!*rfkill)
+ 		return -EINVAL;
+ 
+-	if (dev_id == ASUS_WMI_DEVID_WLAN)
++	if ((dev_id == ASUS_WMI_DEVID_WLAN) &&
++			(asus->driver->quirks->wapf == 4))
+ 		rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
+ 
+ 	rfkill_init_sw_state(*rfkill, !result);
+-- 
+1.8.1.2
