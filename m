@@ -1,56 +1,76 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: [PATCH] asus-wmi: control wlan-led only if wapf == 4
-Date: Thu, 30 May 2013 10:31:50 +0800
-Message-ID: <1369881110-16538-1-git-send-email-acelan.kao@canonical.com>
+From: Web Administrator <info@gmail.com>
+Subject: Dear Account User
+Date: Thu, 30 May 2013 15:20:48 +0200
+Message-ID: <6974a65282ef12072bbad82db78283bd@mail.aitel.kz>
+Reply-To: <mmmnelson1@hotmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f47.google.com ([209.85.160.47]:63011 "EHLO
-	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S967053Ab3E3Cbz (ORCPT
+Received: from wms.aitel.kz ([212.154.154.130]:38108 "EHLO wms.aitel.kz"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752238Ab3E3N76 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 May 2013 22:31:55 -0400
-Received: by mail-pb0-f47.google.com with SMTP id rr4so10176831pbb.34
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 May 2013 19:31:55 -0700 (PDT)
+	Thu, 30 May 2013 09:59:58 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>
 
-Controlling the wlan led seems to have some side effects to the machines
-with wapf value is not equal to 4. It will make the keyboard backlight
-out of order.
-So, the patch will enable the wlan led function only if the wapf == 4.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=46791
 
-Reported-by: Mirto Silvio Busico <m.busico@ieee.org>
-Tested-by: Karol Herbst <karolherbst@me.com>
-Tested-by: drunkenbatman <drunkenbatman@gmail.com>
-Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
----
- drivers/platform/x86/asus-wmi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+--=20
+Dear Account User,
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index c11b242..8084a6f 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -558,7 +558,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
- 
--	if (wlan_led_presence(asus)) {
-+	if (wlan_led_presence(asus) && (asus->driver->quirks->wapf == 4)) {
- 		INIT_WORK(&asus->wlan_led_work, wlan_led_update);
- 
- 		asus->wlan_led.name = "asus::wlan";
-@@ -886,7 +886,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
- 	if (!*rfkill)
- 		return -EINVAL;
- 
--	if (dev_id == ASUS_WMI_DEVID_WLAN)
-+	if ((dev_id == ASUS_WMI_DEVID_WLAN) &&
-+			(asus->driver->quirks->wapf == 4))
- 		rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
- 
- 	rfkill_init_sw_state(*rfkill, !result);
--- 
-1.8.1.2
+This message is from the Server Control Panel messaging center to you=20
+dear
+e-mail account holder. Your  Account will undergo regularly
+scheduled maintenance. Access to your mailbox via our mail portal will
+be unavailable for some period of time during this maintenance=20
+period.We shall
+be carrying out service maintenance on our database and  e-mail account
+center for better online services. We are deleting all unused  e-mail
+accounts to create more space for new accounts.
+
+In order to ensure you do not experience service interruptions/=20
+possible
+deactivation, please you must reply to this email immediately=20
+confirming your
+email account details below for confirmation/identification because
+your  Account was recently trying to logged into from a computer,=20
+mobile
+device on other location you've never used before. For your protection,=
+=20
+we
+will
+temporarily lock your account within 24hrs until you can review this=20
+activity
+and make sure no one is trying to use your Account without your=20
+permission.
+
+Did you log into your Account from a new device or an unusual location?
+
+If this was not you, please log into your account by filling in the=20
+below
+details from your computer and follow the instructions provided to help=
+=20
+you
+verify your account information. And block the ip of the remote=20
+computer from
+logging into your account again
+
+
+User Name:
+
+Email Address:
+
+Password:
+
+Confirm Password:
+
+Date Of Birth:
+
+Thanks, for your co-operation
+
+Web-mail Security Team
+Copyright =C2=A9web-mail security team 2012. All rights reserved
+Server Control Room
