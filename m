@@ -1,76 +1,130 @@
-From: Web Administrator <info@gmail.com>
-Subject: Dear Account User
-Date: Thu, 30 May 2013 15:20:48 +0200
-Message-ID: <6974a65282ef12072bbad82db78283bd@mail.aitel.kz>
-Reply-To: <mmmnelson1@hotmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Subject: [PATCH v2 1/2] acpi: video: add function to support unregister backlight interface
+Date: Fri, 31 May 2013 12:10:33 +0800
+Message-ID: <1369973434-8742-1-git-send-email-jlee@suse.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from wms.aitel.kz ([212.154.154.130]:38108 "EHLO wms.aitel.kz"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752238Ab3E3N76 (ORCPT
+Received: from mail-pd0-f179.google.com ([209.85.192.179]:57736 "EHLO
+	mail-pd0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750756Ab3EaELG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 May 2013 09:59:58 -0400
+	Fri, 31 May 2013 00:11:06 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: rui.zhang@intel.com, mjg@redhat.com, rjw@sisk.pl
+Cc: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Dmitry Torokhov <dtor@mail.ru>, Corentin Chary <corentincj@iksaif.net>, Aaron Lu <aaron.lu@intel.com>, Thomas Renninger <trenn@suse.de>
 
+There have some situation we unregister whole acpi/video driver by downstream
+driver just want to remove backlight control interface of acpi/video. It caues
+we lost other functions of acpi/video, e.g. transfer acpi event to input event.
 
+So, this patch add a new function, find_video_unregister_backlight, it provide
+the interface let downstream driver can tell acpi/video to unregister backlight
+interface of all acpi video devices. Then we can keep functions of acpi/video
+but only remove backlight support.
 
---=20
-Dear Account User,
+Reference: bko#35622
+        https://bugzilla.kernel.org/show_bug.cgi?id=35622
 
-This message is from the Server Control Panel messaging center to you=20
-dear
-e-mail account holder. Your  Account will undergo regularly
-scheduled maintenance. Access to your mailbox via our mail portal will
-be unavailable for some period of time during this maintenance=20
-period.We shall
-be carrying out service maintenance on our database and  e-mail account
-center for better online services. We are deleting all unused  e-mail
-accounts to create more space for new accounts.
+v2: Also unregister cooling devices.
 
-In order to ensure you do not experience service interruptions/=20
-possible
-deactivation, please you must reply to this email immediately=20
-confirming your
-email account details below for confirmation/identification because
-your  Account was recently trying to logged into from a computer,=20
-mobile
-device on other location you've never used before. For your protection,=
-=20
-we
-will
-temporarily lock your account within 24hrs until you can review this=20
-activity
-and make sure no one is trying to use your Account without your=20
-permission.
+Tested-by: Andrzej Krentosz <endrjux@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Rafael J. Wysocki <rjw@sisk.pl>
+Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>
+Cc: Matthew Garrett <mjg@redhat.com>
+Cc: Dmitry Torokhov <dtor@mail.ru>
+Cc: Corentin Chary <corentincj@iksaif.net>
+Cc: Aaron Lu <aaron.lu@intel.com>
+Cc: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+---
+ drivers/acpi/video.c |   54 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/acpi/video.h |    2 +
+ 2 files changed, 56 insertions(+), 0 deletions(-)
 
-Did you log into your Account from a new device or an unusual location?
-
-If this was not you, please log into your account by filling in the=20
-below
-details from your computer and follow the instructions provided to help=
-=20
-you
-verify your account information. And block the ip of the remote=20
-computer from
-logging into your account again
-
-
-User Name:
-
-Email Address:
-
-Password:
-
-Confirm Password:
-
-Date Of Birth:
-
-Thanks, for your co-operation
-
-Web-mail Security Team
-Copyright =C2=A9web-mail security team 2012. All rights reserved
-Server Control Room
+diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
+index c3932d0..f21104d 100644
+--- a/drivers/acpi/video.c
++++ b/drivers/acpi/video.c
+@@ -1861,6 +1861,60 @@ static int __init intel_opregion_present(void)
+ 	return opregion;
+ }
+ 
++static acpi_status
++find_video_unregister_backlight(acpi_handle handle, u32 lvl, void *context,
++				void **rv)
++{
++	struct acpi_device *acpi_dev;
++	struct acpi_video_bus *video;
++	struct acpi_video_device *dev, *next;
++
++	if (acpi_bus_get_device(handle, &acpi_dev))
++		return AE_OK;
++
++	if (!acpi_match_device_ids(acpi_dev, video_device_ids)) {
++		video = acpi_driver_data(acpi_dev);
++		acpi_video_bus_stop_devices(video);
++		mutex_lock(&video->device_list_lock);
++		list_for_each_entry_safe(dev, next, &video->video_device_list,
++					entry) {
++			if (dev->backlight) {
++				backlight_device_unregister(dev->backlight);
++				dev->backlight = NULL;
++				kfree(dev->brightness->levels);
++				kfree(dev->brightness);
++			}
++			if (dev->cooling_dev) {
++				sysfs_remove_link(&dev->dev->dev.kobj,
++						  "thermal_cooling");
++				sysfs_remove_link(&dev->cooling_dev->device.kobj,
++						  "device");
++				thermal_cooling_device_unregister(dev->cooling_dev);
++				dev->cooling_dev = NULL;
++			}
++		}
++		mutex_unlock(&video->device_list_lock);
++		acpi_video_bus_start_devices(video);
++	}
++	return AE_OK;
++}
++
++void acpi_video_backlight_unregister(void)
++{
++	if (!register_count) {
++		/*
++		 * If the acpi video bus is already unloaded, don't
++		 * unregister backlight of devices and return directly.
++		 */
++		return;
++	}
++	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
++			    ACPI_UINT32_MAX, find_video_unregister_backlight,
++			    NULL, NULL, NULL);
++	return;
++}
++EXPORT_SYMBOL(acpi_video_backlight_unregister);
++
+ int acpi_video_register(void)
+ {
+ 	int result = 0;
+diff --git a/include/acpi/video.h b/include/acpi/video.h
+index 61109f2..1e810a1 100644
+--- a/include/acpi/video.h
++++ b/include/acpi/video.h
+@@ -19,11 +19,13 @@ struct acpi_device;
+ #if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
+ extern int acpi_video_register(void);
+ extern void acpi_video_unregister(void);
++extern void acpi_video_backlight_unregister(void);
+ extern int acpi_video_get_edid(struct acpi_device *device, int type,
+ 			       int device_id, void **edid);
+ #else
+ static inline int acpi_video_register(void) { return 0; }
+ static inline void acpi_video_unregister(void) { return; }
++static inline void acpi_video_backlight_unregister(void) { return; }
+ static inline int acpi_video_get_edid(struct acpi_device *device, int type,
+ 				      int device_id, void **edid)
+ {
+-- 
+1.6.4.2
