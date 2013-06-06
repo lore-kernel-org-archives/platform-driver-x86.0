@@ -1,39 +1,39 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 1/2] ACPI: Add early console framework for DBGP/DBG2.
-Date: Tue, 4 Jun 2013 14:35:39 +0100
-Message-ID: <CACxGe6vYKq0QpeXHzgMabjkY4x9rVbm7OpXs6boAntVvPK=vrA@mail.gmail.com>
-References: <cover.1348652044.git.lv.zheng@intel.com> <09ee0e9c79c57da2fc9d0af1c2daeaacdc0bb234.1349838218.git.lv.zheng@intel.com>
- <20121010174406.GA13861@srcf.ucam.org> <1350069843.7065.65.camel@rhapsody>
- <CACxGe6tC+=98uD=Oc=u-=NHzVKgG9r_3eg+-sG-DQYUnCGw0sA@mail.gmail.com> <20130604132322.GA10933@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qc0-f174.google.com ([209.85.216.174]:33733 "EHLO
-	mail-qc0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751733Ab3FDNgC (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 4 Jun 2013 09:36:02 -0400
-Received: by mail-qc0-f174.google.com with SMTP id m16so126764qcq.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Jun 2013 06:36:01 -0700 (PDT)
-In-Reply-To: <20130604132322.GA10933@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Khalid Aziz <khalid@gonehiking.org>, Matthew Garrett <mjg@redhat.com>, Lv Zheng <lv.zheng@intel.com>, Len Brown <len.brown@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Jason Wessel <jason.wessel@windriver.com>, Feng Tang <feng.tang@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>, x86@kernel.org, platform-driver-x86@vger.kernel.org, Al Stone <al.stone@linaro.org>
+From: liguang <lig.fnst@cn.fujitsu.com>
+Subject: [PATCH RFC 0/3] add cpu physically hotplug driver
+Date: Thu, 6 Jun 2013 09:32:13 +0800
+Message-ID: <1370482336-636-1-git-send-email-lig.fnst@cn.fujitsu.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, liguang <lig.fnst@cn.fujitsu.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 4, 2013 at 2:23 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Tue, Jun 04, 2013 at 11:53:56AM +0100, Grant Likely wrote:
->
->> Matthew, can you point me at the license Microsoft is using for the
->> DBG2 table? I can download the document from Microsoft's site without
->> seeing any reference to it being licensed only for BIOS implementers.
->> All I see is a "this document is provided 'as-is', blah blah blah"
->> blurb at the beginning of the document. It may be that Microsoft has
->> changed the license on this document in the last 6 months.
->
-> The DBGP spec still seems to have the restrictive license, but I can't
-> find it on DBG2.
+This patch-set try to support physically hot-plug/unplug
+a cpu automatically, that is:
+if you offline a cpu, it will automatically actually remove
+a cpu, and if you hot-plug a cpu, then it will online this
+cpu automatically.
+so, offline is just like eject, but eject attribute seems not
+available since recent kernel(can't figure out when), with
+this driver, if allowed, it will trigger a eject cpu process.
+and for automatically online, it was said there are objections,
+don't know the reason, so, send this patch-set boldly.
 
-Thanks Matthew. I'll follow up with Microsoft on DBGP.
+of course, this approach is for QEMU 's hotplug cpu emulation 
+only, but not limited, if someone like to explore ec space to
+implment cpu hot-plug/unplug for real platform please
+feel free to continue.
 
-g.
+Li Guang (3)
+	 drivers/platform/x86: add cpu physically hotplug driver
+	 ec: add ec space notifier
+	 cpu_physic_hotplug: register handler for ec space notifier
+
+drivers/acpi/ec.c                         | 32 ++++++++++++++++++++++++++++++++
+drivers/platform/x86/Kconfig              |  8 ++++
+drivers/platform/x86/Makefile             |  1 +
+drivers/platform/x86/cpu_physic_hotplug.c | 87 +++++++++++++++++++++++++++++
+include/linux/acpi.h                      |  2 ++
+5 files changed, 128 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/platform/x86/cpu_physic_hotplug.c
+
