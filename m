@@ -1,59 +1,99 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH RFC v2 1/3] drivers/platform/x86: add cpu physically
- hotplug driver
-Date: Thu, 6 Jun 2013 11:34:02 +0200
-Message-ID: <20130606093402.GA21272@pd.tnic>
-References: <1370482835-764-1-git-send-email-lig.fnst@cn.fujitsu.com>
- <1370482835-764-2-git-send-email-lig.fnst@cn.fujitsu.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH RFC v2 2/3] ec: add ec space notifier
+Date: Thu, 06 Jun 2013 12:59:28 +0200
+Message-ID: <10739719.ouMOhAfYPv@vostro.rjw.lan>
+References: <1370482835-764-1-git-send-email-lig.fnst@cn.fujitsu.com> <1370482835-764-3-git-send-email-lig.fnst@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370482835-764-2-git-send-email-lig.fnst@cn.fujitsu.com>
+In-Reply-To: <1370482835-764-3-git-send-email-lig.fnst@cn.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: liguang <lig.fnst@cn.fujitsu.com>
-Cc: Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Igor Mammedov <imammedo@redhat.com>
+Cc: Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Igor Mammedov <imammedo@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 06, 2013 at 09:40:33AM +0800, liguang wrote:
-> this driver will support cpu phyical add/removal automatically
-> after online/offline. if cpu hotpluged, cpu will not
-> online automatically, and for cpu offline, we try to
-> do actually eject if allowed for cpu like
-> "echo 1 > /sys/bus/acpi/devices/LNXCPU\:0X/eject"
-> this "echo ..." is only present for recent kernel
-> (sorry, can't figure out since when), for a little
-> older kernel, there's not such approach AFAICS.
+On Thursday, June 06, 2013 09:40:34 AM liguang wrote:
+> add a notifier for anyone who are instresting in
+> ec space changing.
 > 
 > Signed-off-by: liguang <lig.fnst@cn.fujitsu.com>
+
+I'm not going to apply this anyway, but can you please explain what's the
+problem you're trying to solve here?
+
+Rafael
+
+
 > ---
->  drivers/platform/x86/Kconfig              |    8 ++++
->  drivers/platform/x86/Makefile             |    1 +
->  drivers/platform/x86/cpu_physic_hotplug.c |   60 +++++++++++++++++++++++++++++
->  3 files changed, 69 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/platform/x86/cpu_physic_hotplug.c
+>  drivers/acpi/ec.c    |   32 ++++++++++++++++++++++++++++++++
+>  include/linux/acpi.h |    2 ++
+>  2 files changed, 34 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 8577261..39b2392 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -789,4 +789,12 @@ config PVPANIC
->  	  a paravirtualized device provided by QEMU; it lets a virtual machine
->  	  (guest) communicate panic events to the host.
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index edc0081..dee3417 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -124,6 +124,35 @@ static int EC_FLAGS_MSI; /* Out-of-spec MSI controller */
+>  static int EC_FLAGS_VALIDATE_ECDT; /* ASUStec ECDTs need to be validated */
+>  static int EC_FLAGS_SKIP_DSDT_SCAN; /* Not all BIOS survive early DSDT scan */
 >  
-> +config QEMU_CPU_PHYSIC_HOTPLUG
-
-This is hillarious: have you actually checked the dictionary on the
-meaning of "physic"?
-
-Yep, "laxative" because the kernel is constipated and can't hold its
-CPUs anymore.
-
-LOOOL :-).
-
+> +/* notifier chain for who are intresting in ec space changing */
+> +static RAW_NOTIFIER_HEAD(ec_space_chain);
+> +
+> +int __ref register_ec_space_notifier(struct notifier_block *nb)
+> +{
+> +        int ret;
+> +
+> +        ret = raw_notifier_chain_register(&ec_space_chain, nb);
+> +
+> +        return ret;
+> +}
+> +EXPORT_SYMBOL(register_ec_space_notifier);
+> +
+> +void __ref unregister_ec_space_notifier(struct notifier_block *nb)
+> +{
+> +
+> +        raw_notifier_chain_unregister(&ec_space_chain, nb);
+> +}
+> +EXPORT_SYMBOL(unregister_ec_space_notifier);
+> +
+> +static int ec_space_notify(void *data)
+> +{
+> +    int ret;
+> +
+> +    ret = __raw_notifier_call_chain(&ec_space_chain, 0, data, -1, NULL);
+> +
+> +     return notifier_to_errno(ret);
+> +}
+> +
+>  /* --------------------------------------------------------------------------
+>                               Transaction Management
+>     -------------------------------------------------------------------------- */
+> @@ -638,6 +667,9 @@ static u32 acpi_ec_gpe_handler(acpi_handle gpe_device,
+>  		wake_up(&ec->wait);
+>  		ec_check_sci(ec, acpi_ec_read_status(ec));
+>  	}
+> +
+> +	ec_space_notify(data);
+> +
+>  	return ACPI_INTERRUPT_HANDLED | ACPI_REENABLE_GPE;
+>  }
+>  
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 17b5b59..4fe2247 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -158,6 +158,8 @@ extern int ec_transaction(u8 command,
+>                            const u8 *wdata, unsigned wdata_len,
+>                            u8 *rdata, unsigned rdata_len);
+>  extern acpi_handle ec_get_handle(void);
+> +extern int register_ec_space_notifier(struct notifier_block *nb);
+> +extern void unregister_ec_space_notifier(struct notifier_block *nb);
+>  
+>  #if defined(CONFIG_ACPI_WMI) || defined(CONFIG_ACPI_WMI_MODULE)
+>  
+> 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
