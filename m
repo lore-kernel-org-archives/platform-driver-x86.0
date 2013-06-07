@@ -1,60 +1,27 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH RFC v2 0/3] add cpu physically hotplug driver
-Date: Thu, 06 Jun 2013 13:00:31 +0200
-Message-ID: <5449620.11SBDUltzF@vostro.rjw.lan>
-References: <1370482835-764-1-git-send-email-lig.fnst@cn.fujitsu.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from hydra.sisk.pl ([212.160.235.94]:58837 "EHLO hydra.sisk.pl"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932590Ab3FFKv0 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 6 Jun 2013 06:51:26 -0400
-In-Reply-To: <1370482835-764-1-git-send-email-lig.fnst@cn.fujitsu.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: liguang <lig.fnst@cn.fujitsu.com>
-Cc: Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Igor Mammedov <imammedo@redhat.com>
+From: Adam Lee <adam.lee@canonical.com>
+Subject: [PATCH 0/3] thinkpad_acpi: avoid ACPI Warning while operating non-exist LEDs
+Date: Fri,  7 Jun 2013 16:20:06 +0800
+Message-ID: <1370593209-21358-1-git-send-email-adam.lee@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Matthew Garrett <matthew.garrett@nebula.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Alex Hung <alex.hung@canonical.com>, Bjorn Mork <bjorn@mork.no>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday, June 06, 2013 09:40:32 AM liguang wrote:
-> This patch-set try to support physically hot-plug/unplug
-> a cpu automatically, that is:
-> if you offline a cpu, it will automatically actually remove
-> a cpu, and if you hot-plug a cpu, then it will online this
-> cpu automatically.
+Some new Lenovo or ThinkPad laptops don't have EC controllable LEDs,
+they control LEDs by BIOS functions, and return ACPI Warning while
+operating LEDs by EC.
 
-No and no.
+These patches set some quirks, optimize led_init() and led_write() to
+avoid that warning.
 
-Why do you need this?
+Adam Lee (3):
+  thinkpad_acpi: return -NODEV while operating uninitialized LEDs
+  thinkpad_acpi: add the ability setting TPACPI_LED_NONE by quirk
+  thinkpad_acpi: add LED quirks of models which don't have EC controllable LEDs
 
-Rafael
+ drivers/platform/x86/thinkpad_acpi.c |   24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-
-> so, offline is just like eject, but eject attribute seems not
-> available since recent kernel(can't figure out when), with
-> this driver, if allowed, it will trigger a eject cpu process.
-> and for automatically online, it was said there are objections,
-> don't know the reason, so, send this patch-set boldly.
-> 
-> of course, this approach is for QEMU 's hotplug cpu emulation 
-> only, but not limited, if someone like to explore ec space to
-> implment cpu hot-plug/unplug for real platform please
-> feel free to continue.
-> 
-> Li Guang (3)
-> 	 drivers/platform/x86: add cpu physically hotplug driver
-> 	 ec: add ec space notifier
-> 	 cpu_physic_hotplug: register handler for ec space notifier
-> 
-> drivers/acpi/ec.c                         | 32 ++++++++++++++++++++++++++++++++
-> drivers/platform/x86/Kconfig              |  8 ++++
-> drivers/platform/x86/Makefile             |  1 +
-> drivers/platform/x86/cpu_physic_hotplug.c | 90 +++++++++++++++++++++++++++++
-> include/linux/acpi.h                      |  2 ++
-> 5 files changed, 130 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/platform/x86/cpu_physic_hotplug.c
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+1.7.10.4
