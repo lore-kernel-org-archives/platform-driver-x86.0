@@ -1,133 +1,124 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH RFC v2 0/3] add cpu physically hotplug driver
-Date: Mon, 10 Jun 2013 13:47:17 +0200
-Message-ID: <1875411.erfv3Z7LVk@vostro.rjw.lan>
-References: <1370482835-764-1-git-send-email-lig.fnst@cn.fujitsu.com> <51B54D51.2070505@jp.fujitsu.com> <1370837061.21655.54.camel@liguang.fnst.cn.fujitsu.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Alex Hung <alex.hung@canonical.com>
+Subject: [PATCH] hp-wmi: add supports for POST code error
+Date: Thu, 13 Jun 2013 16:43:14 +0800
+Message-ID: <1371112994-20477-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from hydra.sisk.pl ([212.160.235.94]:33139 "EHLO hydra.sisk.pl"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753305Ab3FJLiJ convert rfc822-to-8bit (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:49873 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756572Ab3FMInV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 10 Jun 2013 07:38:09 -0400
-In-Reply-To: <1370837061.21655.54.camel@liguang.fnst.cn.fujitsu.com>
+	Thu, 13 Jun 2013 04:43:21 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: li guang <lig.fnst@cn.fujitsu.com>
-Cc: Yasuaki Ishimatsu <isimatu.yasuaki@jp.fujitsu.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Igor Mammedov <imammedo@redhat.com>
+To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
+Cc: Alex Hung <alex.hung@canonical.com>
 
-On Monday, June 10, 2013 12:04:21 PM li guang wrote:
-> =E5=9C=A8 2013-06-10=E4=B8=80=E7=9A=84 12:51 +0900=EF=BC=8CYasuaki Is=
-himatsu=E5=86=99=E9=81=93=EF=BC=9A
-> > 2013/06/10 9:36, li guang wrote:
-> > > Hi, Rafael
-> > >
-> > > =E5=9C=A8 2013-06-06=E5=9B=9B=E7=9A=84 13:00 +0200=EF=BC=8CRafael=
- J. Wysocki=E5=86=99=E9=81=93=EF=BC=9A
-> > >> On Thursday, June 06, 2013 09:40:32 AM liguang wrote:
-> > >>> This patch-set try to support physically hot-plug/unplug
-> > >>> a cpu automatically, that is:
-> > >>> if you offline a cpu, it will automatically actually remove
-> > >>> a cpu, and if you hot-plug a cpu, then it will online this
-> > >>> cpu automatically.
-> > >>
-> > >> No and no.
-> > >
-> > > Hmm... are you saying cpu online/offline designed to distinguish
-> > > with real cpu plug/unplug?
-> > > but, what the actual usage of online/offline?
-> > > forgive my foolish.
-> > >
-> > >>
-> > >> Why do you need this?
-> > >>
-> > >
-> > > e.g. for QEMU case, if hot-plug a cpu,
-> >=20
-> > > we have to online a cpu manually if there's
-> > > no user space support like udev to do it automatically.
-> >=20
-> > I could not understand why you do not use udev.
-> > Please explain in detail.
->=20
-> I did not say I can't use udev now,
-> just for in case someone can't.
->=20
-> >=20
-> > > and also, I think maybe online/offline should be naturally
-> > > integrated with real plug/unplug process of CPU.
-> >=20
-> > I could not understand this explanation too.
-> > Why do we need it?
-> >=20
->=20
-> actually, I am asking if CPU online/offline have real purpose,
-> you offline a CPU, then threads can't run on it,
-> you online a CPU, then threads can run on it,
-> so, the purpose here is just bouncing threads?
-> obviously not, any profound historical reasons?
+HP laptops include a POST code error query 0x2A that reports
+which point BIOS fails to boot at. The error code is kept in CMOS
+until it is cleared.
 
-The purpose is to ensure that the CPU won't be used after the offline
-and the online is simply complementary.
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/hp-wmi.c |   47 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-> I boldly think maybe online/offline should be integrated into
-> real plug/unplug process of CPU.
-
-Well, please look into the acpi-hotplug branch of the linux-pm.git tree=
- for
-patches that do just that.
-
-Thanks,
-Rafael
-
-
->=20
-> Thanks!
->=20
-> > >
-> > >>
-> > >>
-> > >>> so, offline is just like eject, but eject attribute seems not
-> > >>> available since recent kernel(can't figure out when), with
-> > >>> this driver, if allowed, it will trigger a eject cpu process.
-> > >>> and for automatically online, it was said there are objections,
-> > >>> don't know the reason, so, send this patch-set boldly.
-> > >>>
-> > >>> of course, this approach is for QEMU 's hotplug cpu emulation
-> > >>> only, but not limited, if someone like to explore ec space to
-> > >>> implment cpu hot-plug/unplug for real platform please
-> > >>> feel free to continue.
-> > >>>
-> > >>> Li Guang (3)
-> > >>> 	 drivers/platform/x86: add cpu physically hotplug driver
-> > >>> 	 ec: add ec space notifier
-> > >>> 	 cpu_physic_hotplug: register handler for ec space notifier
-> > >>>
-> > >>> drivers/acpi/ec.c                         | 32 ++++++++++++++++=
-++++++++++++++++
-> > >>> drivers/platform/x86/Kconfig              |  8 ++++
-> > >>> drivers/platform/x86/Makefile             |  1 +
-> > >>> drivers/platform/x86/cpu_physic_hotplug.c | 90 ++++++++++++++++=
-+++++++++++++
-> > >>> include/linux/acpi.h                      |  2 ++
-> > >>> 5 files changed, 130 insertions(+), 3 deletions(-)
-> > >>>   create mode 100644 drivers/platform/x86/cpu_physic_hotplug.c
-> > >
-> > >
-> > > --
-> > > To unsubscribe from this list: send the line "unsubscribe linux-k=
-ernel" in
-> > > the body of a message to majordomo@vger.kernel.org
-> > > More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
-l
-> > > Please read the FAQ at  http://www.tux.org/lkml/
-> > >
-> >=20
-> >=20
->=20
->=20
---=20
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index d111c86..d6970f4 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -55,6 +55,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+ #define HPWMI_WIRELESS_QUERY 0x5
+ #define HPWMI_HOTKEY_QUERY 0xc
+ #define HPWMI_WIRELESS2_QUERY 0x1b
++#define HPWMI_POSTCODEERROR_QUERY 0x2a
+ 
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI = 0,
+@@ -386,6 +387,16 @@ static int hp_wmi_rfkill2_refresh(void)
+ 	return 0;
+ }
+ 
++static int hp_wmi_post_code_state(void)
++{
++	int state = 0;
++	int ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, 0, &state,
++				       sizeof(state), sizeof(state));
++	if (ret)
++		return -EINVAL;
++	return state;
++}
++
+ static ssize_t show_display(struct device *dev, struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -431,6 +442,16 @@ static ssize_t show_tablet(struct device *dev, struct device_attribute *attr,
+ 	return sprintf(buf, "%d\n", value);
+ }
+ 
++static ssize_t show_postcode(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	/* Get the POST error code of previous boot failure. */
++	int value = hp_wmi_post_code_state();
++	if (value < 0)
++		return -EINVAL;
++	return sprintf(buf, "0x%x\n", value);
++}
++
+ static ssize_t set_als(struct device *dev, struct device_attribute *attr,
+ 		       const char *buf, size_t count)
+ {
+@@ -443,11 +464,33 @@ static ssize_t set_als(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
++static ssize_t set_postcode(struct device *dev, struct device_attribute *attr,
++		       const char *buf, size_t count)
++{
++	int ret;
++	u32 tmp;
++	long unsigned int tmp2;
++
++	ret = kstrtoul(buf, 10, &tmp2);
++	if (ret || tmp2 != 1)
++		return -EINVAL;
++
++	/* Clear the POST error code. It is kept until until cleared. */
++	tmp = (u32) tmp2;
++	ret = hp_wmi_perform_query(HPWMI_POSTCODEERROR_QUERY, 1, &tmp,
++				       sizeof(tmp), sizeof(tmp));
++	if (ret)
++		return -EINVAL;
++
++	return count;
++}
++
+ static DEVICE_ATTR(display, S_IRUGO, show_display, NULL);
+ static DEVICE_ATTR(hddtemp, S_IRUGO, show_hddtemp, NULL);
+ static DEVICE_ATTR(als, S_IRUGO | S_IWUSR, show_als, set_als);
+ static DEVICE_ATTR(dock, S_IRUGO, show_dock, NULL);
+ static DEVICE_ATTR(tablet, S_IRUGO, show_tablet, NULL);
++static DEVICE_ATTR(postcode, S_IRUGO | S_IWUSR, show_postcode, set_postcode);
+ 
+ static void hp_wmi_notify(u32 value, void *context)
+ {
+@@ -628,6 +671,7 @@ static void cleanup_sysfs(struct platform_device *device)
+ 	device_remove_file(&device->dev, &dev_attr_als);
+ 	device_remove_file(&device->dev, &dev_attr_dock);
+ 	device_remove_file(&device->dev, &dev_attr_tablet);
++	device_remove_file(&device->dev, &dev_attr_postcode);
+ }
+ 
+ static int hp_wmi_rfkill_setup(struct platform_device *device)
+@@ -845,6 +889,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	err = device_create_file(&device->dev, &dev_attr_tablet);
+ 	if (err)
+ 		goto add_sysfs_error;
++	err = device_create_file(&device->dev, &dev_attr_postcode);
++	if (err)
++		goto add_sysfs_error;
+ 	return 0;
+ 
+ add_sysfs_error:
+-- 
+1.7.9.5
