@@ -1,13 +1,13 @@
 From: Alex Hung <alex.hung@canonical.com>
 Subject: [PATCH] hp-wmi: add supports for POST code error
-Date: Thu, 13 Jun 2013 16:43:14 +0800
-Message-ID: <1371112994-20477-1-git-send-email-alex.hung@canonical.com>
+Date: Thu, 13 Jun 2013 16:46:25 +0800
+Message-ID: <1371113185-20542-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:49873 "EHLO
+Received: from youngberry.canonical.com ([91.189.89.112]:49899 "EHLO
 	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756572Ab3FMInV (ORCPT
+	with ESMTP id S1758442Ab3FMIqb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Jun 2013 04:43:21 -0400
+	Thu, 13 Jun 2013 04:46:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
