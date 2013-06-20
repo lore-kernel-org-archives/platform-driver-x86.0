@@ -1,66 +1,59 @@
-From: Xiong Zhou <jencce.kernel@gmail.com>
-Subject: Re: [PATCH]amilo-rfkill: add depends on i8042 in Kconfig
-Date: Wed, 19 Jun 2013 09:09:11 +0800
-Message-ID: <CADJHv_vZiPsDUiLrFao41rRVduf+AYFm0NuvpNaCW8S3KrAjnA@mail.gmail.com>
-References: <alpine.DEB.2.02.1306181705530.28460@M2420>
-	<1371560680.3495.121.camel@deadeye.wl.decadent.org.uk>
-	<51C07608.2070406@infradead.org>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: regression after "asus-wmi: update wlan LED through rfkill led trigger"
+Date: Thu, 20 Jun 2013 08:44:03 +0200
+Message-ID: <51C2A4B3.8090708@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <51C07608.2070406@infradead.org>
-Sender: linux-next-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Linux-Next <linux-next@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, jim.epost@gmail.com
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mout.gmx.net ([212.227.17.21]:60586 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753498Ab3FTGoL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 20 Jun 2013 02:44:11 -0400
+Received: from mailout-de.gmx.net ([10.1.76.4]) by mrigmx.server.lan
+ (mrigmx001) with ESMTP (Nemesis) id 0MFwhE-1V3Hpv2xcc-00ErxJ for
+ <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2013 08:44:09 +0200
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Corentin Chary <corentin.chary@gmail.com>, AceLan Kao <acelan.kao@canonical.com>, Matthew Garrett <mjg@redhat.com>
 
-2013/6/18 Randy Dunlap <rdunlap@infradead.org>:
-> On 06/18/13 06:04, Ben Hutchings wrote:
->> On Tue, 2013-06-18 at 17:21 +0800, Xiong Zhou wrote:
->>> From: Xiong Zhou <jencce.kernel@gmail.com>
->>>
->>> Fix randconfig build failure for Amilo x86 platform driver.
->>> AMILO_RFKILL requires SERIO_I8042 being available.
->>>
->>> amilo-rfkill.c:(.text+0x108b5b): undefined reference to `i8042_lock_chip'
->>> amilo-rfkill.c:(.text+0x108b69): undefined reference to `i8042_command'
->>> amilo-rfkill.c:(.text+0x108b71): undefined reference to `i8042_unlock_chip'
->>>
->>> Reported-by: Jim Davis <jim.epost@gmail.com>
->>> Signed-off-by: Xiong Zhou <jencce.kernel@gmail.com>
->>
->> Acked-by: Ben Hutchings <ben@decadent.org.uk>
->>
->> But I thought somehow sent this same fix a while back...
->
-> Yes, I reported it and sent a patch for it that you acked...
-> I guess my patch was never picked up.
->
+Hello all,
 
-... Better someone pick this up.
+i have regression on Asus Zenbook UX32A after this patch:
+
+commit 6cae06e603339f99334bc6b276e2ac619cf0d476
+Author: AceLan Kao <acelan.kao@canonical.com>
+Date:   Fri Jul 27 16:51:59 2012 +0800
+
+     asus-wmi: update wlan LED through rfkill led trigger
+
+     For those machines with wapf=4, BIOS won't update the wireless LED,
+     since wapf=4 means user application will take in chage of the wifi 
+and bt.
+     So, we have to update wlan LED status explicitly.
+
+     But I found there is another wireless LED bug in launchpad and which is
+     not in the wapf=4 quirk.
+     So, it might be better to set wireless LED status explicitly for all
+     machines.
+
+     BugLink: https://launchpad.net/bugs/901105
+
+     Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+     Signed-off-by: Matthew Garrett <mjg@redhat.com>
 
 
->>
->> Ben.
->>
->>> ---
->>>  drivers/platform/x86/Kconfig |    1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->>> index 8577261..37645b9 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -176,6 +176,7 @@ config FUJITSU_TABLET
->>>  config AMILO_RFKILL
->>>      tristate "Fujitsu-Siemens Amilo rfkill support"
->>>      depends on RFKILL
->>> +    depends on SERIO_I8042
->>>      ---help---
->>>        This is a driver for enabling wifi on some Fujitsu-Siemens Amilo
->>>        laptops.
->>
->
->
-> --
-> ~Randy
+Symptoms are fallowing:
+- hot keys: F3, F4 (keyboard led); F10, F11, F12 (sound) - are not working.
+- keyboard back light is off
+- brightness keys (F5, F6) are working but with some issues. For example 
+if you press it with short intervals, then it works ok. If you hold this 
+buttons, thin it accumulate all calls and will fire them all after some 
+time.
+
+I also have similar machine "Asus Zenbook UX32E", without this problem.
+
+-- 
+Regards,
+Oleksij
