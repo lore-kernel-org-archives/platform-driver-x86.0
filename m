@@ -1,122 +1,53 @@
 From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH 5/8] minnowboard-gpio: Export MinnowBoard expansion GPIO
-Date: Wed, 26 Jun 2013 09:21:58 -0700
-Message-ID: <1372263718.8177.74.camel@envy.home>
+Subject: Re: [PATCH 6/8] minnowboard-keys: Bind MinnowBoard buttons to arrow
+ keys
+Date: Wed, 26 Jun 2013 09:28:07 -0700
+Message-ID: <1372264087.8177.80.camel@envy.home>
 References: <cover.1372211451.git.dvhart@linux.intel.com>
-	 <c7bed09378e5edf88872e277b238ecc3f52634aa.1372211451.git.dvhart@linux.intel.com>
-	 <1372233328.24799.48.camel@smile>
+	 <1ded9714150de50fac7fb6ee82166fbcb5621f7d.1372211451.git.dvhart@linux.intel.com>
+	 <1372236386.24799.58.camel@smile>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:62736 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751658Ab3FZQWB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Jun 2013 12:22:01 -0400
-In-Reply-To: <1372233328.24799.48.camel@smile>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372236386.24799.58.camel@smile>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, peter.p.waskiewicz.jr@intel.com, danders@circuitco.com, vishal.l.verma@intel.com, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2013-06-26 at 10:55 +0300, Andy Shevchenko wrote:
+On Wed, 2013-06-26 at 11:46 +0300, Andy Shevchenko wrote:
 > On Tue, 2013-06-25 at 18:53 -0700, Darren Hart wrote: 
-> > Request and export the user-configurable GPIO lines to sysfs. This provides a
-> > label readable in /debugfs/gpio and a simple interface for experimenting with
-> > GPIO on the MinnowBoard.
+> > Configure the four buttons tied to the E6XX GPIO lines on the
+> > MinnowBoard as keys using the gpio-keys-polled platform driver. From
+> > left to right, bind them to LEFT, DOWN, UP, RIGHT, similar to the VI
+> > directional keys.
 > > 
 > > This is separate from the minnowboard driver to provide users with the
 > > flexibility to write kernel drivers for their own devices using these GPIO
 > > lines.
 > 
-> Few comments below.
+> I'm repeating my comment I did early to you.
 > 
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -35,6 +35,24 @@ config MINNOWBOARD
-> >  
-> >  	  If you have a MinnowBoard, say Y or M here.
-> >  
-> > +if MINNOWBOARD
-> > +config MINNOWBOARD_GPIO
-> > +	tristate "MinnowBoard Expansion GPIO"
-> > +	depends on MINNOWBOARD
-> > +	default n
-> 
-> Like you already had been told you don't need to have default n.
-> 
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/minnowboard-gpio.c
-> 
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/gpio_keys.h>
-> > +#include <linux/input.h>
-> > +#include <linux/minnowboard.h>
-> 
-> + empty line here?
-> 
-> > +#include "minnowboard-gpio.h"
-> 
-> > +static int __init minnow_gpio_module_init(void)
-> > +{
-> > +	int err;
-> > +
-> > +	err = -ENODEV;
-> > +	if (!minnow_detect())
-> > +		goto out;
-> > +
-> > +#ifdef MODULE
-> > +#ifdef CONFIG_MINNOWBOARD_MODULE
-> 
-> And less ifdefs with IS_MODULE().
-> 
+> I think this driver is a wrong approach, since you just use
+> gpio_keys_polling with custom platform data. So, it should go to the
+> platform code / board file under arch/x86/platform/minnow/...
 
-All good to here and consistent with Olof's comments. Thanks, I will
-include in V2.
 
-> > +	if (request_module("minnowboard"))
-> > +		goto out;
-> > +#endif
-> > +#endif
-> > +
-> > +	/* Auxillary Expansion GPIOs */
-> > +	if (!minnow_lvds_detect()) {
-> > +		pr_debug("LVDS_DETECT not asserted, configuring Aux GPIO lines\n");
-> > +		err = gpio_request_array(expansion_aux_gpios,
-> > +					 ARRAY_SIZE(expansion_aux_gpios));
-> > +		if (err) {
-> > +			pr_err("Failed to request expansion aux GPIO lines\n");
-> > +			goto out;
-> > +		}
-> > +	} else {
-> > +		pr_debug("LVDS_DETECT asserted, ignoring aux GPIO lines\n");
-> > +	}
-> > +
-> > +	/* Expansion GPIOs */
-> > +	err = gpio_request_array(expansion_gpios, ARRAY_SIZE(expansion_gpios));
-> > +	if (err) {
-> > +		pr_err("Failed to request expansion GPIO lines\n");
-> > +		if (minnow_lvds_detect())
-> > +			gpio_free_array(expansion_aux_gpios,
-> > +					ARRAY_SIZE(expansion_aux_gpios));
-> > +		goto out;
-> > +	}
-> > +
-> > + out:
-> > +	return err;
-> 
-> Are you planning to add something else to 'out' path?
-> Otherwise I think it will look better if you do return instead of
-> [useless] gotos.
+Olof mentinoed something similar. The reason this is separate is that I
+can easily see someone wanting to use these buttons in a different way
+when integrating the MinnowBoard into some kind of product. The
+minnowboard.c driver sets up the fixed functionality GPIO lines, such as
+the LEDs (which can be easily reconfigured via triggers) while this
+driver serves as an example of how the GPIO buttons could be used as
+keys, but if included in the minnowboard driver, users couldn't get the
+fixed functionality without also tying up these GPIO lines.
 
-I suppose this is a matter of preference. I am allergic to multiple
-return points. However, your argument is consistent with CodingStyle
-Chapter 7 in that it states "and some common work such as cleanup has to
-be done." If that "and" is a required sort of &&, then I should change
-it. Do others have a strong opinion here?
+I could remedy that with driver command-line options, but I know I've
+heard Greg KH discourage their use in the past.
+
+Does that address your concern or do you still feel they should be
+merged?
 
 -- 
 Darren Hart
