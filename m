@@ -1,39 +1,47 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
+From: Darren Hart <dvhart@linux.intel.com>
 Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
  MinnowBoard
-Date: Wed, 26 Jun 2013 05:36:29 +0000
-Message-ID: <1372224988.9179.5.camel@x230>
+Date: Wed, 26 Jun 2013 00:17:32 -0700
+Message-ID: <1372231052.8177.68.camel@envy.home>
 References: <cover.1372211451.git.dvhart@linux.intel.com>
 	 <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
 	 <20130626040026.GA23621@quad.lixom.net>
 	 <1372221808.8177.52.camel@envy.home> <1372222365.9179.4.camel@x230>
-	 <1372224736.8177.63.camel@envy.home>
+	 <1372224736.8177.63.camel@envy.home> <1372224988.9179.5.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [207.46.163.212] ([207.46.163.212]:28007 "EHLO
-	na01-bl2-obe.outbound.protection.outlook.com"
-	rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751652Ab3FZFil (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Jun 2013 01:38:41 -0400
-In-Reply-To: <1372224736.8177.63.camel@envy.home>
-Content-Language: en-US
-Content-ID: <2C06A9FFF7010348A32036CB5312020B@namprd05.prod.outlook.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372224988.9179.5.camel@x230>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
 Cc: Olof Johansson <olof@lixom.net>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr@intel.com" <peter.p.waskiewicz.jr@intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "danders@circuitco.com" <danders@circuitco.com>, "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gVHVlLCAyMDEzLTA2LTI1IGF0IDIyOjMyIC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCg0K
-PiBhcmUgYWxsIGJvYXJkLXNwZWNpZmljLiBUaGV5IG1hcCBHUElPIHRvIHRoZWlyIGZpeGVkIGZ1
-bmN0aW9ucyBhbmQNCj4gcHJvdmlkZSBhbiBBUEkgZm9yIGJvYXJkLXNwZWNpZmljIHF1ZXJpZXMg
-KG1pbm5vd2JvYXJkLmMpLCB0aGV5IHByb3ZpZGUNCj4gZXhhbXBsZSB1c2VzIChtaW5ub3dib2Fy
-ZC1ncGlvIGFuZCBtaW5ub3dib2FyZC1rZXlzKSB3aGljaCBhaWQgaW4NCj4gZXhwZXJpbWVudGF0
-aW9uIGFuZCB0aGUgZGV2ZWxvcG1lbnQgb2YgbmV3IGRyaXZlcnMuDQo+IA0KPiBXaGljaCBvZiB0
-aGVzZSBtYWtlIHNlbnNlIGFzIEFDUEkgZGV2aWNlcyBpbiB5b3VyIG9waW5pb24/DQoNCkRvZXMg
-dGhlIGZpcm13YXJlIGNvbnRhaW4gYSBjb3JyZXNwb25kaW5nIEFDUEkgZGV2aWNlIHdpdGggYSBz
-cGVjaWZpYw0KX0hJRCB0aGF0IGRlZmluZXMgdGhlIHByb2dyYW1taW5nIG1vZGVsPyBJZiBzbywg
-aXQgc2hvdWxkIGhhdmUgYW4gQUNQSQ0KZHJpdmVyLiBJZiBub3QsIGl0IHNob3VsZG4ndC4NCg0K
-LS0gDQpNYXR0aGV3IEdhcnJldHQgfCBtamc1OUBzcmNmLnVjYW0ub3JnDQo=
+On Wed, 2013-06-26 at 05:36 +0000, Matthew Garrett wrote:
+> On Tue, 2013-06-25 at 22:32 -0700, Darren Hart wrote:
+> 
+> > are all board-specific. They map GPIO to their fixed functions and
+> > provide an API for board-specific queries (minnowboard.c), they provide
+> > example uses (minnowboard-gpio and minnowboard-keys) which aid in
+> > experimentation and the development of new drivers.
+> > 
+> > Which of these make sense as ACPI devices in your opinion?
+> 
+> Does the firmware contain a corresponding ACPI device with a specific
+> _HID that defines the programming model? If so, it should have an ACPI
+> driver. If not, it shouldn't.
+
+It does not currently. However, the firmware is being developed along
+with the hardware and the OS. We have the opportunity to do whatever
+makes the most sense.
+
+My next-steps here were to get a basic ACPI ID setup for each of the
+three drivers just so they could be enumerated over ACPI rather than
+just loaded manually. Beyond that I'll be looking to Len and Rafael for
+guidance.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Technical Lead - Linux Kernel
