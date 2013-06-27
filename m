@@ -1,47 +1,39 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 5/8] minnowboard-gpio: Export MinnowBoard expansion GPIO
-Date: Thu, 27 Jun 2013 11:18:27 +0300
-Message-ID: <1372321107.24799.75.camel@smile>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the MinnowBoard
+Date: Thu, 27 Jun 2013 11:14:30 +0200
+Message-ID: <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
 References: <cover.1372211451.git.dvhart@linux.intel.com>
-	 <c7bed09378e5edf88872e277b238ecc3f52634aa.1372211451.git.dvhart@linux.intel.com>
-	 <1372233328.24799.48.camel@smile> <1372263718.8177.74.camel@envy.home>
+	<a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:28877 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752741Ab3F0ISh convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 27 Jun 2013 04:18:37 -0400
-In-Reply-To: <1372263718.8177.74.camel@envy.home>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@linux.intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, peter.p.waskiewicz.jr@intel.com, danders@circuitco.com, vishal.l.verma@intel.com, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2013-06-26 at 09:21 -0700, Darren Hart wrote: 
-> On Wed, 2013-06-26 at 10:55 +0300, Andy Shevchenko wrote:
+On Wed, Jun 26, 2013 at 3:53 AM, Darren Hart <dvhart@linux.intel.com> wrote:
 
-> > > + out:
-> > > +	return err;
-> > 
-> > Are you planning to add something else to 'out' path?
-> > Otherwise I think it will look better if you do return instead of
-> > [useless] gotos.
-> 
-> I suppose this is a matter of preference. I am allergic to multiple
-> return points. However, your argument is consistent with CodingStyle
-> Chapter 7 in that it states "and some common work such as cleanup has to
-> be done." If that "and" is a required sort of &&, then I should change
-> it. Do others have a strong opinion here?
+> Provide a minimal public interface:
+>         minnow_detect()
+>         minnow_lvds_detect()
+>         minnow_hwid()
+>         minnow_phy_reset()
 
-There was recently similar discussion. Author finally agreed to change:
-http://www.spinics.net/lists/arm-kernel/msg252108.html
+So instead of these calling drivers issueing gpio_request() themselves
+to obtain a resource, they make a function call to this proxy that issue
+gpio_request() for them.
 
-"I did say in the changelog I opted for goto over return. But since
-everybody keeps preferring returns..."
+This is generally not how we do things. A driver should request its
+GPIO just as it requests its regulator or clock or IRQ line or anything
+else. Centralizing resource handling is not a good idea IMO, it's better
+that each driver request it's GPIO pin(s) and do the stuff it needs
+with them.
 
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+This of course creates the problem of associating the GPIOs to a
+driver and how it should look that up, which I guess ACPI can do,
+isn't that what acpi_find_gpio() is for?
+
+Yours,
+Linus Walleij
