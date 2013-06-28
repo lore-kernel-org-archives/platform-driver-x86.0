@@ -1,77 +1,32 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
- MinnowBoard
-Date: Thu, 27 Jun 2013 22:43:38 -0700
-Message-ID: <1372398218.9243.29.camel@envy.home>
-References: <cover.1372211451.git.dvhart@linux.intel.com>
-	 <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
-	 <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+From: Jan Hinnerk Stosch <janhinnerk.stosch@gmail.com>
+Subject: Wireless key on Fujitsu E753 not working since a57f7f9175b8ccbc9df83ac13860488913115de4
+Date: Fri, 28 Jun 2013 16:14:57 +0200
+Message-ID: <CAO_aot5FJb1v6-CztDeuAPS7=-byULP-tMzF_DZhw6aG4A+vVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:37181 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750868Ab3F1Fnj (ORCPT
+Received: from mail-qc0-f170.google.com ([209.85.216.170]:63114 "EHLO
+	mail-qc0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755159Ab3F1OPA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 Jun 2013 01:43:39 -0400
-In-Reply-To: <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+	Fri, 28 Jun 2013 10:15:00 -0400
+Received: by mail-qc0-f170.google.com with SMTP id s1so1389214qcw.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 28 Jun 2013 07:14:59 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-On Thu, 2013-06-27 at 11:14 +0200, Linus Walleij wrote:
-> On Wed, Jun 26, 2013 at 3:53 AM, Darren Hart <dvhart@linux.intel.com> wrote:
-> 
-> > Provide a minimal public interface:
-> >         minnow_detect()
-> >         minnow_lvds_detect()
-> >         minnow_hwid()
-> >         minnow_phy_reset()
-> 
-> So instead of these calling drivers issueing gpio_request() themselves
-> to obtain a resource, they make a function call to this proxy that issue
-> gpio_request() for them.
-> 
-> This is generally not how we do things. A driver should request its
-> GPIO just as it requests its regulator or clock or IRQ line or anything
-> else.
+Hi,
 
-I'll fix this for minnow_phy_reset() by moving the reset routine into
-the pch_gbe driver and have it request the GPIO, using the pci_id
-structure to determine the GPIO line.
+since commit "a57f7f9175b8ccbc9df83ac13860488913115de4" (bisected) the
+wireless key on my Fujitsu E753 is not working any more. If I boot up
+with parameter "acpi_osi="!Windows 2012"" it works, though.
+I filed an ACPI-bug
+(https://bugzilla.kernel.org/show_bug.cgi?id=60161), but was told
+(https://bugzilla.kernel.org/show_bug.cgi?id=60161#c5) that this is
+caused by the fujitsu_laptop driver. So I report it here. Should I
+file a bug anywhere or is it enough to write it to the list?
 
-I'll drop minnow_lvds_detect() and work toward the firmware managing
-this aspect instead.
+Thanks in advance,
 
-minnow_detect() doesn't access GPIO.
-
-minnow_hwid() just returns an int that the minnowboard platform driver
-read from the GPIO. This seems like a proper abstraction to me. Do you
-object to this one as well?
-
->  Centralizing resource handling is not a good idea IMO, it's better
-> that each driver request it's GPIO pin(s) and do the stuff it needs
-> with them.
-
-Understood. Since minnow_hwid() is not currently used anywhere anyway,
-I'll take Olof's advice and just drop it. We can always add it back if
-it becomes necessary.
-
-> This of course creates the problem of associating the GPIOs to a
-> driver and how it should look that up, which I guess ACPI can do,
-> isn't that what acpi_find_gpio() is for?
-
-The only one that remains is pch_gbe and we have a PCI Subsystem ID
-there that we can use. Once we determine it is a MinnowBoard, we can
-look the GPIO up by chip and offset. If this changes in future board
-revs, we'll need minnow_hwid(), or we'll have to figure something out
-either in the PCI config space or via ACPI as you suggested.
-
-Thanks Linus, appreciate all the feedback.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
-Yocto Project - Technical Lead - Linux Kernel
+jhs
