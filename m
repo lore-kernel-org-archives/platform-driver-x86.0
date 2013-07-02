@@ -1,49 +1,33 @@
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 Subject: Re: [PATCH] Add support driver for Intel Rapid Start Technology
-Date: Tue, 02 Jul 2013 15:31:38 -0700
-Message-ID: <51D354CA.7010305@infradead.org>
+Date: Tue, 2 Jul 2013 23:36:44 +0100
+Message-ID: <20130702223644.GA13334@srcf.ucam.org>
 References: <1372804061-2260-1-git-send-email-mjg59@srcf.ucam.org>
+ <51D354CA.7010305@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from merlin.infradead.org ([205.233.59.134]:55151 "EHLO
-	merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753373Ab3GBWcN (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:44864 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753779Ab3GBWgq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Jul 2013 18:32:13 -0400
-In-Reply-To: <1372804061-2260-1-git-send-email-mjg59@srcf.ucam.org>
+	Tue, 2 Jul 2013 18:36:46 -0400
+Content-Disposition: inline
+In-Reply-To: <51D354CA.7010305@infradead.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
+To: Randy Dunlap <rdunlap@infradead.org>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On 07/02/13 15:27, Matthew Garrett wrote:
-> Intel Rapid Start Technology is a firmware-based suspend-to-disk
-> implementation. Once placed in S3, the device will wake once either a
-> timeout elapses or the battery reaches a critical level. It will then resume
-> to the firmware and copy the contents of RAM to a specialised partition, and
-> then power off the machine. If the user turns the machine back on the
-> firmware will copy the contents of the partition back to RAM and then resume
-> from S3 as normal.
-> 
-> This driver provides an interface for configuring the wakeup events and
-> timeout. It still requires firmware support and an appropriate suspend
-> partition.
-> 
-> Signed-off-by: Matthew Garrett <mjg59@srcf.ucam.org>
-> ---
->  .../ABI/testing/sysfs-driver-intel-rapid-start     |  21 +++
->  drivers/platform/x86/intel-rst.c                   | 209 +++++++++++++++++++++
->  2 files changed, 230 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-rapid-start
->  create mode 100644 drivers/platform/x86/intel-rst.c
+On Tue, Jul 02, 2013 at 03:31:38PM -0700, Randy Dunlap wrote:
 
-Kconfig and Makefile changes?
+> Kconfig and Makefile changes?
 
-Is RST described in the current ACPI spec or somewhere else?
+Ugh. Miscommit.
 
-thanks,
+> Is RST described in the current ACPI spec or somewhere else?
+
+No, this is from staring at disassembled ACPI tables.
 
 -- 
-~Randy
+Matthew Garrett | mjg59@srcf.ucam.org
