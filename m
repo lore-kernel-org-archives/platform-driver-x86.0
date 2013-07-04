@@ -1,30 +1,25 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 2/3] ACPI: Remove old /proc/acpi/event interface
-Date: Thu, 4 Jul 2013 13:52:56 +0000
-Message-ID: <1372945976.24233.2.camel@x230.lan>
-References: <1372855719-34315-1-git-send-email-trenn@suse.de>
-	 <1545278.bq6oSR27Gq@vostro.rjw.lan>
-	 <1513052.oSjeLTGJqb@skinner.arch.suse.de>
-	 <1935997.TsJ39x11ul@vostro.rjw.lan>
+From: Juhani Laurinkari <juhani.laurinkari@uef.fi>
+Subject: Attention
+Date: Thu, 4 Jul 2013 16:35:31 +0300
+Message-ID: <5A9F85948C3992498080C6D99D372C7E2ACF95CCCA__19719.4412503906$1372946383$gmane$org@EXCVS1.uefad.uef.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bl2lp0209.outbound.protection.outlook.com ([207.46.163.209]:35872
-	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1756495Ab3GDNxT (ORCPT
+Received: from mail4.uef.fi ([193.167.228.228]:34425 "EHLO mail4.uef.fi"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752153Ab3GDN7N convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Jul 2013 09:53:19 -0400
-In-Reply-To: <1935997.TsJ39x11ul@vostro.rjw.lan>
-Content-Language: en-US
-Content-ID: <C09BD3426420BF44B25E63202D8EE310@namprd05.prod.outlook.com>
+	Thu, 4 Jul 2013 09:59:13 -0400
+Content-Language: fi-FI
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Thomas Renninger <trenn@suse.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "lenb@kernel.org" <lenb@kernel.org>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-T24gVGh1LCAyMDEzLTA3LTA0IGF0IDE0OjM3ICswMjAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCg0KPiBJIGNhbiB0YWtlIFsyLzNdIGFuZCBbMy8zXSBmb3IgMy4xMiBpZiBNYXR0aGV3IGhh
-cyBubyBvYmplY3Rpb25zLiAgTWF0dGhldz8NCg0KQUNLLg0KDQotLSANCk1hdHRoZXcgR2FycmV0
-dCB8IG1qZzU5QHNyY2YudWNhbS5vcmcNCg==
+
+
+
+Attention,
+Important message from ADMIN- Please confirm your email address by
+clicking this link:
+http://webbup.jimdo.com/
+Webmaster
