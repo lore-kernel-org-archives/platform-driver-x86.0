@@ -1,25 +1,63 @@
-From: Juhani Laurinkari <juhani.laurinkari@uef.fi>
-Subject: Attention
-Date: Thu, 4 Jul 2013 16:35:31 +0300
-Message-ID: <5A9F85948C3992498080C6D99D372C7E2ACF95CCCA__19719.4412503906$1372946383$gmane$org@EXCVS1.uefad.uef.fi>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
+ MinnowBoard
+Date: Thu, 4 Jul 2013 17:26:41 +0100
+Message-ID: <20130704162641.GG27646@sirena.org.uk>
+References: <cover.1372211451.git.dvhart@linux.intel.com>
+ <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+ <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+ <1372398218.9243.29.camel@envy.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4vGmjSrOD7pGiAie"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail4.uef.fi ([193.167.228.228]:34425 "EHLO mail4.uef.fi"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752153Ab3GDN7N convert rfc822-to-8bit (ORCPT
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:51142 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756525Ab3GDQ1O (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Jul 2013 09:59:13 -0400
-Content-Language: fi-FI
+	Thu, 4 Jul 2013 12:27:14 -0400
+Content-Disposition: inline
+In-Reply-To: <1372398218.9243.29.camel@envy.home>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
 
+--4vGmjSrOD7pGiAie
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
 
-Attention,
-Important message from ADMIN- Please confirm your email address by
-clicking this link:
-http://webbup.jimdo.com/
-Webmaster
+> minnow_hwid() just returns an int that the minnowboard platform driver
+> read from the GPIO. This seems like a proper abstraction to me. Do you
+> object to this one as well?
+
+We should really have a subsystem for this too - the general idea idea
+of identifying boards, fit options and so on by looking at things like
+GPIOs or numbers in flash is really common.
+
+--4vGmjSrOD7pGiAie
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR1aI+AAoJELSic+t+oim9Gi8P/irPpX97W+QL99brauSPPkJo
+5M0mgyUN3SYDKTcDBCUKgr/aQ/gjvyYFQLjyGwI7910u05EF/OIF4AFUMiECmiWN
+yFVbycYchEhYSet++fHL85WxNTi+G4Dxn13/F2RkX4SQo22JSSIbt7ZA52FacYfT
+QLkRuVmUwKWRDhbNJDit2pfOW/VNnakfaSlcTJuEZn2h5DgBW8Mwti9KpPmENsGP
+vG6YhTWh2jdHJrFpNyCfdO8mtEyO3MxBdBBdRgqDr1mltJU/f7RvXjNwXRMkXcAG
+ERI3+GUpV+rS4FQx5YjJCvWC2KKvhuvNsO3uxCiFjBsoRq9S4z9RiP7Ltbqd3At5
+BPF1ZBD6I/6XMCQxxmQDjVsxcPPXRFnEWu3MVQogZx1qObP7lZQ7hfSOnKE0i4q2
+gDKPj79YrDhit69zKw6gmLggB1WzB/3ZmEk4a2w4l95oVdP4R5MYsiZfP1tWLDSZ
+sQ6FB3OVMXww05+UEIBaX6Ilai3MzEuBUvCVrWYfvQoAQNnVQ45y2j/V9LBZMeid
+LtkLsCkBVW/RysPlOZ0nPPvGK+tMWMnkLLNEHzf01Rc8BHj5A0NNPvhgLLS3QBJu
+xtSL+MXNX+bApY8q+L2rIwxfAq7rW2QPcjhvbXcWUnaGpSKlACVXYcjsre3de/vr
+ARVp5escNrEyh7W8YCRh
+=YmUE
+-----END PGP SIGNATURE-----
+
+--4vGmjSrOD7pGiAie--
