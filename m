@@ -1,195 +1,43 @@
-From: Frederick van der Wyck <fvanderwyck@gmail.com>
-Subject: Re: [PATCH] platform samsung-q10: use ACPI instead of direct EC
- calls
-Date: Mon, 8 Jul 2013 22:34:56 +0100
-Message-ID: <20130708213456.GA5441@lat.lan>
-References: <20130703212737.GC5579@lat.lan>
- <1373297814.24233.5.camel@x230.lan>
+From: Xiong Zhou <jencce.kernel@gmail.com>
+Subject: [PATCH] x86: ce4100: add head file for reboot type
+Date: Tue, 9 Jul 2013 11:06:27 +0800 (CST)
+Message-ID: <alpine.DEB.2.02.1307091053280.28371@M2420>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ee0-f41.google.com ([74.125.83.41]:34785 "EHLO
-	mail-ee0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753100Ab3GHViv (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Jul 2013 17:38:51 -0400
-Content-Disposition: inline
-In-Reply-To: <1373297814.24233.5.camel@x230.lan>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-1625292718-1373339199=:28371"
+Return-path: <linux-next-owner@vger.kernel.org>
+Sender: linux-next-owner@vger.kernel.org
+To: tglx@linutronix.de, matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, x86@kernel.org, rui.zhang@intel.com, alan@linux.intel.com, ffainelli@freebox.fr, mingo@kernel.org, mbizon@freebox.fr
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 08, 2013 at 11:36:54AM -0400, Matthew Garrett wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> you should be able to just use first_ec directly rather than  
-> probing yourself.
+--8323328-1625292718-1373339199=:28371
+Content-Type: TEXT/PLAIN; charset=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
 
-Thanks, I've made that change below.
+From: Xiong Zhou <jencce.kernel@gmail.com>
 
-> > +	for (i = 0; i < SAMSUNGQ10_BL_MAX_INTENSITY; i++) {
-> > +		status = acpi_evaluate_object(ec_handle, "_Q63", NULL, NULL);
-> 
-> The potential problem here is that there's no guarantee that these event
-> numbers are stable, and a firmware upgrade could change them. Of course,
-> that's also true of the EC registers, but we haven't had anyone complain
-> about the driver suddenly breaking so I'm not hugely enthusiastic about
-> replacing one fragile but seemingly working method with a fragile but
-> unproven one. 
+Add head file for reboot type stuff to fix this:
+error: ¡reboot_type¢ undeclared (first use in this function)
+error: ¡BOOT_KBD¢ undeclared (first use in this function)
 
-That's true. On the other hand, imitating the action of the brightness keys at
-this higher level seems somewhat cleaner and has the advantage that the
-brightness setting is preserved on reboot (as the smi handler stores it in
-nvram). I did test that 63 and 64 are the appropriate event numbers on each of
-the models in the dmi table (although I only tested one firmware version per
-model).
-
-Signed-off-by: Frederick van der Wyck <fvanderwyck@gmail.com>
+Signed-off-by: Xiong Zhou <jencce.kernel@gmail.com>
 ---
- drivers/platform/x86/Kconfig       |    2 +-
- drivers/platform/x86/samsung-q10.c |   65 +++++++++++------------------------
- 2 files changed, 22 insertions(+), 45 deletions(-)
+ arch/x86/platform/ce4100/ce4100.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8577261..52aed6d 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -762,7 +762,7 @@ config INTEL_OAKTRAIL
+diff --git a/arch/x86/platform/ce4100/ce4100.c b/arch/x86/platform/ce4100/ce4100.c
+index baec704..643b8b5e 100644
+--- a/arch/x86/platform/ce4100/ce4100.c
++++ b/arch/x86/platform/ce4100/ce4100.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/serial_reg.h>
+ #include <linux/serial_8250.h>
++#include <linux/reboot.h>
  
- config SAMSUNG_Q10
- 	tristate "Samsung Q10 Extras"
--	depends on SERIO_I8042
-+	depends on ACPI
- 	select BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This driver provides support for backlight control on Samsung Q10
-diff --git a/drivers/platform/x86/samsung-q10.c b/drivers/platform/x86/samsung-q10.c
-index 1a90b62..9d6609d 100644
---- a/drivers/platform/x86/samsung-q10.c
-+++ b/drivers/platform/x86/samsung-q10.c
-@@ -14,16 +14,12 @@
- #include <linux/init.h>
- #include <linux/platform_device.h>
- #include <linux/backlight.h>
--#include <linux/i8042.h>
- #include <linux/dmi.h>
-+#include <acpi/acpi_drivers.h>
- 
--#define SAMSUNGQ10_BL_MAX_INTENSITY      255
--#define SAMSUNGQ10_BL_DEFAULT_INTENSITY  185
-+#define SAMSUNGQ10_BL_MAX_INTENSITY 7
- 
--#define SAMSUNGQ10_BL_8042_CMD           0xbe
--#define SAMSUNGQ10_BL_8042_DATA          { 0x89, 0x91 }
--
--static int samsungq10_bl_brightness;
-+static acpi_handle ec_handle;
- 
- static bool force;
- module_param(force, bool, 0);
-@@ -33,21 +29,26 @@ MODULE_PARM_DESC(force,
- static int samsungq10_bl_set_intensity(struct backlight_device *bd)
- {
- 
--	int brightness = bd->props.brightness;
--	unsigned char c[3] = SAMSUNGQ10_BL_8042_DATA;
-+	acpi_status status;
-+	int i;
- 
--	c[2] = (unsigned char)brightness;
--	i8042_lock_chip();
--	i8042_command(c, (0x30 << 8) | SAMSUNGQ10_BL_8042_CMD);
--	i8042_unlock_chip();
--	samsungq10_bl_brightness = brightness;
-+	for (i = 0; i < SAMSUNGQ10_BL_MAX_INTENSITY; i++) {
-+		status = acpi_evaluate_object(ec_handle, "_Q63", NULL, NULL);
-+		if (ACPI_FAILURE(status))
-+			return -EIO;
-+	}
-+	for (i = 0; i < bd->props.brightness; i++) {
-+		status = acpi_evaluate_object(ec_handle, "_Q64", NULL, NULL);
-+		if (ACPI_FAILURE(status))
-+			return -EIO;
-+	}
- 
- 	return 0;
- }
- 
- static int samsungq10_bl_get_intensity(struct backlight_device *bd)
- {
--	return samsungq10_bl_brightness;
-+	return bd->props.brightness;
- }
- 
- static const struct backlight_ops samsungq10_bl_ops = {
-@@ -55,28 +56,6 @@ static const struct backlight_ops samsungq10_bl_ops = {
- 	.update_status	= samsungq10_bl_set_intensity,
- };
- 
--#ifdef CONFIG_PM_SLEEP
--static int samsungq10_suspend(struct device *dev)
--{
--	return 0;
--}
--
--static int samsungq10_resume(struct device *dev)
--{
--
--	struct backlight_device *bd = dev_get_drvdata(dev);
--
--	samsungq10_bl_set_intensity(bd);
--	return 0;
--}
--#else
--#define samsungq10_suspend NULL
--#define samsungq10_resume  NULL
--#endif
--
--static SIMPLE_DEV_PM_OPS(samsungq10_pm_ops,
--			  samsungq10_suspend, samsungq10_resume);
--
- static int samsungq10_probe(struct platform_device *pdev)
- {
- 
-@@ -93,9 +72,6 @@ static int samsungq10_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, bd);
- 
--	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
--	samsungq10_bl_set_intensity(bd);
--
- 	return 0;
- }
- 
-@@ -104,9 +80,6 @@ static int samsungq10_remove(struct platform_device *pdev)
- 
- 	struct backlight_device *bd = platform_get_drvdata(pdev);
- 
--	bd->props.brightness = SAMSUNGQ10_BL_DEFAULT_INTENSITY;
--	samsungq10_bl_set_intensity(bd);
--
- 	backlight_device_unregister(bd);
- 
- 	return 0;
-@@ -116,7 +89,6 @@ static struct platform_driver samsungq10_driver = {
- 	.driver		= {
- 		.name	= KBUILD_MODNAME,
- 		.owner	= THIS_MODULE,
--		.pm	= &samsungq10_pm_ops,
- 	},
- 	.probe		= samsungq10_probe,
- 	.remove		= samsungq10_remove,
-@@ -172,6 +144,11 @@ static int __init samsungq10_init(void)
- 	if (!force && !dmi_check_system(samsungq10_dmi_table))
- 		return -ENODEV;
- 
-+	ec_handle = ec_get_handle();
-+
-+	if (!ec_handle)
-+		return -ENODEV;
-+
- 	samsungq10_device = platform_create_bundle(&samsungq10_driver,
- 						   samsungq10_probe,
- 						   NULL, 0, NULL, 0);
--- 
-1.7.3.4
+ #include <asm/ce4100.h>
+ #include <asm/prom.h>
+--8323328-1625292718-1373339199=:28371--
