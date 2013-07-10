@@ -1,23 +1,54 @@
-From: Mercedes Benz Company <mercedes-benz3966@hotmail.co.uk>
-Subject: (unknown)
-Date: Wed, 10 Jul 2013 01:57:08 +1200
-Message-ID: <51dc16b4.1fc.156d.11480@clear.net.nz>
-Reply-To: mercedes-benz3966@hotmail.co.uk
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp4.clear.net.nz ([203.97.37.64]:43569 "EHLO
-	smtp4.clear.net.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752727Ab3GIOMK (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Jul 2013 10:12:10 -0400
-Received: from mxin1-orange.clear.net.nz
- (lb2-srcnat.clear.net.nz [203.97.32.237])
- by smtp4.clear.net.nz (CLEAR Net Mail)
- with ESMTP id <0MPO0055G9EYSA00@smtp4.clear.net.nz> for
- platform-driver-x86@vger.kernel.org; Wed, 10 Jul 2013 01:57:09 +1200 (NZST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: info@co.uk
+From: Shuah Khan <shuah.kh@samsung.com>
+Subject: [PATCH 1/4] pnp: Change pnp bus pm_ops to invoke pnp driver dev_pm_ops if specified
+Date: Tue,  9 Jul 2013 22:09:26 -0600
+Message-ID: <1373429366-3870-1-git-send-email-shuah.kh@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rafael.j.wysocki@intel.com, bhelgaas@google.com, a.zummo@towertech.it, key@linux.vnet.ibm.com, mail@srajiv.net, tpmdd@selhorst.net, tpmdd@sirrix.com, matthew.garrett@nebula.com
+Cc: Shuah Khan <shuah.kh@samsung.com>, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, tpmdd-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, shuahkhan@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
+pnp_bus_suspend() and pnp_bus_resume() invoke legacy pm_ops from
+pnp_driver. Changed pnp_bus_suspend() and pnp_bus_resume() to check
+if pnp driver has dev_pm_ops and call. If dev_pm_ops don't exist, then
+call use legacy pm_ops. Without this change, pnp_driver dev_pm_ops will
+not get called.
 
+Signed-off-by: Shuah Khan <shuah.kh@samsung.com>
+---
+ drivers/pnp/driver.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Did You Receive Our Last Email?. 
+diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
+index 00e9403..c3f9e89 100644
+--- a/drivers/pnp/driver.c
++++ b/drivers/pnp/driver.c
+@@ -163,6 +163,13 @@ static int pnp_bus_suspend(struct device *dev, pm_message_t state)
+ 	if (!pnp_drv)
+ 		return 0;
+ 
++	if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
++		error = pnp_drv->driver.pm->suspend(dev);
++		suspend_report_result(pnp_drv->driver.pm->suspend, error);
++		if (error)
++			return error;
++	}
++
+ 	if (pnp_drv->suspend) {
+ 		error = pnp_drv->suspend(pnp_dev, state);
+ 		if (error)
+@@ -201,6 +208,12 @@ static int pnp_bus_resume(struct device *dev)
+ 			return error;
+ 	}
+ 
++	if (pnp_drv->driver.pm && pnp_drv->driver.pm->resume) {
++		error = pnp_drv->driver.pm->resume(dev);
++		if (error)
++			return error;
++	}
++
+ 	if (pnp_drv->resume) {
+ 		error = pnp_drv->resume(pnp_dev);
+ 		if (error)
+-- 
+1.7.10.4
