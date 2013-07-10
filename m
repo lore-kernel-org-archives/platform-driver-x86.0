@@ -1,63 +1,79 @@
-From: Shuah Khan <shuah.kh@samsung.com>
-Subject: Re: [tpmdd-devel] [PATCH 3/4] tpm: Convert tpm_tis driver to use
- dev_pm_ops from legacy pm_ops
-Date: Wed, 10 Jul 2013 23:02:45 +0000
-Message-ID: <B8EFE96D1287C24090BAD9D858E15E61738933@sisaex02sj>
-References: <1373429409-3944-1-git-send-email-shuah.kh@samsung.com>
- <201307110051.04726.PeterHuewe@gmx.de>
+From: Peter =?iso-8859-1?q?H=FCwe?= <PeterHuewe@gmx.de>
+Subject: Re: [tpmdd-devel] [PATCH 3/4] tpm: Convert tpm_tis driver to use dev_pm_ops from legacy pm_ops
+Date: Thu, 11 Jul 2013 01:37:32 +0200
+Message-ID: <201307110137.32309.PeterHuewe@gmx.de>
+References: <1373429409-3944-1-git-send-email-shuah.kh@samsung.com> <201307110051.04726.PeterHuewe@gmx.de> <B8EFE96D1287C24090BAD9D858E15E61738933@sisaex02sj>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Peter_H=FCwe?= <PeterHuewe@gmx.de>
-Cc: "tpmdd-devel@lists.sourceforge.net" <tpmdd-devel@lists.sourceforge.net>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "key@linux.vnet.ibm.com" <key@linux.vnet.ibm.com>, "mail@srajiv.net" <mail@srajiv.net>, "tpmdd@selhorst.net" <tpmdd@selhorst.net>, "tpmdd@sirrix.com" <tpmdd@sirrix.com>, "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "shuahkhan@gmail.com" <shuahkhan@gmail.com>, Shuah Khan <shuah.kh@samsung.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mout.gmx.net ([212.227.17.21]:60161 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753834Ab3GJX3Z (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 10 Jul 2013 19:29:25 -0400
+In-Reply-To: <B8EFE96D1287C24090BAD9D858E15E61738933@sisaex02sj>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Shuah Khan <shuah.kh@samsung.com>
+Cc: "tpmdd-devel@lists.sourceforge.net" <tpmdd-devel@lists.sourceforge.net>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "key@linux.vnet.ibm.com" <key@linux.vnet.ibm.com>, "mail@srajiv.net" <mail@srajiv.net>, "tpmdd@selhorst.net" <tpmdd@selhorst.net>, "tpmdd@sirrix.com" <tpmdd@sirrix.com>, "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "shuahkhan@gmail.com" <shuahkhan@gmail.com>, "Rafael J. Wysocki" <rjw@sisk.pl>
 
-On 07/10/2013 04:43 PM, Peter H=FCwe wrote:
-> Hi,
->
-> thanks for your patch
->>   static struct pnp_device_id tpm_pnp_tbl[] =3D {
->>   	{"PNP0C31", 0},		/* TPM */
->>   	{"ATM1200", 0},		/* Atmel */
->> @@ -835,9 +834,12 @@ static struct pnp_driver tis_pnp_driver =3D {
->>   	.name =3D "tpm_tis",
->>   	.id_table =3D tpm_pnp_tbl,
->>   	.probe =3D tpm_tis_pnp_init,
->> -	.suspend =3D tpm_tis_pnp_suspend,
->> -	.resume =3D tpm_tis_pnp_resume,
->>   	.remove =3D tpm_tis_pnp_remove,
->> +#ifdef CONFIG_PM_SLEEP
->> +	.driver	=3D {
->> +		.pm =3D &tpm_tis_pm,
->> +	},
->> +#endif
->>   };
->
->
-> I don't think the #if CONFIG_PM_SLEEP is required here.
->
-> Thanks,
-> Peter
->
+Hi Shuah,
+thanks for your reply.
 
-tpm_tis_resume() is defined originally in CONFIG_PM_SLEEP scope. I can=20
-make the change to have tpm_tis_resume() not be in CONFIG_PM_SLEEP scop=
-e=20
-and remove this CONFIG_PM_SLEEP when defining .pm. That does make sense=
-=20
-looking at tpm_pm_suspend() and tpm_pm_resume() which are defined=20
-without CONFIG_PM_SLEEP scope. Sounds like the right approach? I will=20
-redo the patch and send v2.
 
-I find that the use of CONFIG_PM, CONFIG_PM_SLEEP, and CONFIG_PM_RUNTIM=
-E=20
-are not very consistent. :)
+> >> +#ifdef CONFIG_PM_SLEEP
+> >> +	.driver	= {
+> >> +		.pm = &tpm_tis_pm,
+> >> +	},
+> >> +#endif
+> >> 
+> >>   };
+> > 
+> > I don't think the #if CONFIG_PM_SLEEP is required here.
+In this case, the SIMPLE_DEV_PM_OPS macro handles the case internally - i.e. 
+no matter whether CONFIG_PM_SLEEP is set or not, the correct structure is set 
+up and thus no ifdef needed.
 
--- Shuah
 
-Shuah Khan, Linux Kernel Developer - Open Source Group Samsung Research=
-=20
-America (Silicon Valley) shuah.kh@samsung.com | (970) 672-0658
+> 
+> tpm_tis_resume() is defined originally in CONFIG_PM_SLEEP scope. I can
+> make the change to have tpm_tis_resume() not be in CONFIG_PM_SLEEP scope
+> and remove this CONFIG_PM_SLEEP when defining .pm. 
+> That does make sense looking at tpm_pm_suspend() and tpm_pm_resume() which  
+> are defined ithout CONFIG_PM_SLEEP scope. Sounds like the right approach?
+> I will redo the patch and send v2.
+
+Hmm,
+at first I thought that would be a good idea, however scrolling to the git 
+history I found:
+
+commit 07368d32f1a67e797def08cf2ee3ea1647b204b6
+Author: Rafael J. Wysocki <rjw@sisk.pl>
+Date:   Thu Aug 9 23:00:35 2012 +0200
+
+    tpm_tis / PM: Fix unused function warning for CONFIG_PM_SLEEP
+    
+    According to a compiler warning, the tpm_tis_resume() function is not
+    used for CONFIG_PM_SLEEP unset, so add a #ifdef to prevent it from
+    being built in that case.
+    
+    Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+
+So removing it there would effectively revert the patch and re-enable the 
+warning.
+
+
+ 
+> I find that the use of CONFIG_PM, CONFIG_PM_SLEEP, and CONFIG_PM_RUNTIME
+> are not very consistent. :)
+Yes.
+
+Maybe the better idea is to add the correct CONFIG_PM ifdefs for all code 
+paths related to PM.
+Or leave the CONFIG_PM for tpm_tis_resume as it is.
+
+
+Thanks,
+Peter
