@@ -1,61 +1,46 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [GIT] x86 platform driver updates for 3.11
-Date: Thu, 11 Jul 2013 06:20:17 +0900
-Message-ID: <20130710212017.GA24522@kamineko.org>
-References: <20130710194420.GA14945@srcf.ucam.org>
+From: Peter =?iso-8859-1?q?H=FCwe?= <PeterHuewe@gmx.de>
+Subject: Re: [tpmdd-devel] [PATCH 3/4] tpm: Convert tpm_tis driver to use dev_pm_ops from legacy pm_ops
+Date: Thu, 11 Jul 2013 00:51:04 +0200
+Message-ID: <201307110051.04726.PeterHuewe@gmx.de>
+References: <1373429409-3944-1-git-send-email-shuah.kh@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:54134 "EHLO
-	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754869Ab3GJV2w (ORCPT
+Received: from mout.gmx.net ([212.227.17.20]:52573 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754474Ab3GJWnI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Jul 2013 17:28:52 -0400
-Content-Disposition: inline
-In-Reply-To: <20130710194420.GA14945@srcf.ucam.org>
+	Wed, 10 Jul 2013 18:43:08 -0400
+In-Reply-To: <1373429409-3944-1-git-send-email-shuah.kh@samsung.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+To: tpmdd-devel@lists.sourceforge.net
+Cc: Shuah Khan <shuah.kh@samsung.com>, rafael.j.wysocki@intel.com, bhelgaas@google.com, a.zummo@towertech.it, key@linux.vnet.ibm.com, mail@srajiv.net, tpmdd@selhorst.net, tpmdd@sirrix.com, matthew.garrett@nebula.com, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, shuahkhan@gmail.com
+
+Hi,
+
+thanks for your patch
+>  static struct pnp_device_id tpm_pnp_tbl[] = {
+>  	{"PNP0C31", 0},		/* TPM */
+>  	{"ATM1200", 0},		/* Atmel */
+> @@ -835,9 +834,12 @@ static struct pnp_driver tis_pnp_driver = {
+>  	.name = "tpm_tis",
+>  	.id_table = tpm_pnp_tbl,
+>  	.probe = tpm_tis_pnp_init,
+> -	.suspend = tpm_tis_pnp_suspend,
+> -	.resume = tpm_tis_pnp_resume,
+>  	.remove = tpm_tis_pnp_remove,
+> +#ifdef CONFIG_PM_SLEEP
+> +	.driver	= {
+> +		.pm = &tpm_tis_pm,
+> +	},
+> +#endif
+>  };
 
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't think the #if CONFIG_PM_SLEEP is required here.
 
-On Wed, Jul 10, 2013 at 08:44:20PM +0100, Matthew Garrett wrote:
-=2E..
-> Nothing overly exciting here - a couple of new drivers that don't do a=20
-> great deal, along with some miscellaneous fixes and a couple of small=20
-> feature enablement patches.
-
-Hi Matthew,
-I sent a couple of fixes for sony-laptop in
-Message-Id: <1369778133-24015-1-git-send-email-malattia@linux.it> [1]
-
-Could you pick those up too?
-
-Thanks
-
-[1]:
-http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg04310.ht=
-ml
---=20
-mattia
-:wq!
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlHd0BEACgkQgpRPaOotLEF9xgCgtM95iW1IKrCwmXOH3+/b6XEF
-Y30AoJqXDb5OermNrfJU5QGg6CXyNGAP
-=H1X1
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+Thanks,
+Peter
