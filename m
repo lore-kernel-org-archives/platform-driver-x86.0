@@ -1,47 +1,46 @@
-From: Martin Nordholts <enselic@gmail.com>
-Subject: Re: [PATCH 0/2] Platform: x86: chromeos_laptop - Deferred Probing
-Date: Thu, 18 Jul 2013 18:13:35 +0200
-Message-ID: <CAC-DJzKqv7b0fdPOL5+Sx2AF7EG=2+xrq8R+UrK-ev1-sNu=Pw@mail.gmail.com>
-References: <1374106861-3549-1-git-send-email-bleung@chromium.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] intel_ips: fix error handling for debugfs_create_dir()
+Date: Fri, 19 Jul 2013 08:51:44 +0300
+Message-ID: <20130719055144.GE9729@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f182.google.com ([209.85.214.182]:42827 "EHLO
-	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754643Ab3GRQNg (ORCPT
+Received: from aserp1040.oracle.com ([141.146.126.69]:25024 "EHLO
+	aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965200Ab3GSFv7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Jul 2013 12:13:36 -0400
-In-Reply-To: <1374106861-3549-1-git-send-email-bleung@chromium.org>
+	Fri, 19 Jul 2013 01:51:59 -0400
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benson Leung <bleung@chromium.org>
-Cc: matthew.garrett@nebula.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, adurbin@chromium.org, olofj@chromium.org, axel.lin@ingics.com
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-2013/7/18 Benson Leung <bleung@chromium.org>
->
-> The following patch series refactors the dmi check system and
-> returns -EPROBE_DEFER when an expected i2c adapter is not present
-> at probe time.
->
-> This will allow the touchpad, touchscreen, and light sensors on
-> Pixel to load even if the i915 DDC and PANEL buses are instantiated
-> after chromeos_laptop.
->
-> [PATCH 1/2] Platform: x86: chromeos_laptop - Restructure device associations
-> [PATCH 2/2] Platform: x86: chromeos_laptop - Use deferred probing
+If debugfs is not enabled then debugfs_create_dir() returns
+ERR_PTR(-ENODEV).  Also my static checker complains that we are trying
+to print the error code, but it's is always just NULL.
 
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Hi,
-
-I have worked on the same problem for the last days and just submitted
-my solution proposal for review:
-http://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg04440.html
-
-One downside with the solution in this set of patches is that more
-lines are added to the driver.
-By making use of the i2c_driver.detect() mechanism like in my patch,
-we can actually reduce the number of lines in the driver.
-
-Looking forward to your comments on my other solution proposal!
-
-/ Martin
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 18dcb58..4416d92 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1328,7 +1328,7 @@ static void ips_debugfs_init(struct ips_driver *ips)
+ 	int i;
+ 
+ 	ips->debug_root = debugfs_create_dir("ips", NULL);
+-	if (!ips->debug_root) {
++	if (IS_ERR_OR_NULL(ips->debug_root)) {
+ 		dev_err(&ips->dev->dev,
+ 			"failed to create debugfs entries: %ld\n",
+ 			PTR_ERR(ips->debug_root));
+@@ -1343,7 +1343,7 @@ static void ips_debugfs_init(struct ips_driver *ips)
+ 		ent = debugfs_create_file(node->name, S_IFREG | S_IRUGO,
+ 					  ips->debug_root, node,
+ 					  &ips_debugfs_ops);
+-		if (!ent) {
++		if (IS_ERR_OR_NULL(ent)) {
+ 			dev_err(&ips->dev->dev,
+ 				"failed to create debug file: %ld\n",
+ 				PTR_ERR(ent));
