@@ -1,99 +1,47 @@
-From: Peter Meiser <meiser@gmx-topmail.de>
-Subject: Re: Dell Vostro V131: special hotkey not working
-Date: Sat, 20 Jul 2013 07:03:03 +0200
-Message-ID: <51EA1A07.10105@gmx-topmail.de>
-References: <4F97FA4C.9040201@gmx-topmail.de> <20120425135328.GA13385@srcf.ucam.org> <4F980807.6000705@gmx-topmail.de> <20120425142205.GA14322@srcf.ucam.org> <50FA77C0.4060808@gmx-topmail.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the MinnowBoard
+Date: Sat, 20 Jul 2013 19:37:54 +0200
+Message-ID: <CACRpkdbKGti==FTfHm81EkwD++iRfixnXt3kWgBj7CxjM+2znA@mail.gmail.com>
+References: <cover.1372211451.git.dvhart@linux.intel.com>
+	<a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+	<CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+	<1372398218.9243.29.camel@envy.home>
+	<20130704162641.GG27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------010904050000020700000105"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.gmx.net ([212.227.17.22]:51131 "EHLO mout.gmx.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751074Ab3GTFC7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 20 Jul 2013 01:02:59 -0400
-Received: from [192.168.1.170] ([188.14.17.142]) by mail.gmx.com (mrgmx103)
- with ESMTPSA (Nemesis) id 0MOwY7-1V5cO63hxv-006Qn6 for
- <platform-driver-x86@vger.kernel.org>; Sat, 20 Jul 2013 07:02:58 +0200
-In-Reply-To: <50FA77C0.4060808@gmx-topmail.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-
-This is a multi-part message in MIME format.
---------------010904050000020700000105
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130704162641.GG27646@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Darren Hart <dvhart@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi again,
+On Thu, Jul 4, 2013 at 6:26 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
+>
+>> minnow_hwid() just returns an int that the minnowboard platform driver
+>> read from the GPIO. This seems like a proper abstraction to me. Do you
+>> object to this one as well?
+>
+> We should really have a subsystem for this too - the general idea idea
+> of identifying boards, fit options and so on by looking at things like
+> GPIOs or numbers in flash is really common.
 
-I found a solution for the 1st issue. It needs a udev quirk to force_release. Please find attached a patch against current udev in Ubuntu 12.04.
+Would it then be a bus following the pattern we chiseled out for
+the soc bus? (Greg, Lee & Arnd architectured this.)
 
-For the 2nd issue, I still can't find a way to generate a keycode.
+There we needed a struct device * on an overarching level to
+tie in the sysfs entries reading out the SoC properties. But
+it would be the same thing with in-kernel accessors for these
+properties.
 
-Thanks for your help!
-Best regards,
-Peter
+So it would be the same pattern above with a board bus, in
+DT syntax:
 
-Am 19.01.2013 11:38, schrieb Peter Meiser:
-> Hi Matthew,
-> 
-> this topic is still valid. Could you help me debugging the hotkeys?
-> 
-> There're two issues:
-> 1. The "Dell support center" hotkey generates keycode 0xEE, but this is done forever. That means that I don't see a release event.
-> 2. The "Dell instant launch manager" hotkey doesn't generate anything.
-> 
-> Thanks a lot in advance,
-> Peter
-> 
-> Am 25.04.2012 16:22, schrieb Matthew Garrett:
->> On Wed, Apr 25, 2012 at 04:19:51PM +0200, Peter Meiser wrote:
->>> Hello Matthew,
->>>
->>> Am 25.04.2012 15:53, schrieb Matthew Garrett:
->>>> watch -n 0.1 cat /proc/interrupts
->>>
->>> When running "watch -n 0,1 cat /proc/interrupts" (watch -n 0.1 errors out, maybe because of German environment???), the following row increases after each press:
->>>
->>>   9:          5          0          0          0   IO-APIC-fasteoi   acpi
->>
->> Ok, so it's definitely being handled by ACPI somehow - probably via WMI, 
->> but unsure. Rez, any chance you can look at the original message and let 
->> us know if this is expected to work with the current driver?
->>
+board {
+     soc {
+     };
+};
 
---------------010904050000020700000105
-Content-Type: text/x-patch;
- name="udev-keymaps-dell.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="udev-keymaps-dell.patch"
-
---- a/extras/keymap/keymaps/dell
-+++ b/extras/keymap/keymaps/dell
-@@ -25,5 +25,6 @@
- 0xA2 playpause # Front panel play/pause
- 0xA4 stopcd # Front panel stop
- 0xED media # MediaDirect button
-+0xEE screenlock # FIXME: Dell Support Center button
- 0xD8 screenlock # FIXME: Tablet lock button
- 0xD9 f21 # touchpad toggle
-diff -Naur a/extras/keymap/95-keyboard-force-release.rules b/extras/keymap/95-keyboard-force-release.rules
---- a/extras/keymap/95-keyboard-force-release.rules	2013-07-20 06:59:13.626208521 +0200
-+++ b/extras/keymap/95-keyboard-force-release.rules	2013-07-20 07:00:30.166211692 +0200
-@@ -24,6 +24,7 @@
- ENV{DMI_VENDOR}=="Dell Inc.", ATTR{[dmi/id]product_name}=="Studio 1557|Studio 1558", RUN+="keyboard-force-release.sh $devpath common-volume-keys"
- ENV{DMI_VENDOR}=="Dell Inc.", ATTR{[dmi/id]product_name}=="*Latitude*|*Precision*", RUN+="keyboard-force-release.sh $devpath dell-touchpad"
- ENV{DMI_VENDOR}=="Dell Inc.", ATTR{[dmi/id]product_name}=="XPS*", RUN+="keyboard-force-release.sh $devpath dell-xps"
-+ENV{DMI_VENDOR}=="Dell Inc.", ATTR{[dmi/id]product_name}=="*Vostro*", RUN+="keyboard-force-release.sh $devpath dell-vostro"
- 
- ENV{DMI_VENDOR}=="FUJITSU SIEMENS", ATTR{[dmi/id]product_name}=="AMILO*", RUN+="keyboard-force-release.sh $devpath common-volume-keys"
- 
-diff -Naur a/extras/keymap/force-release-maps/dell-vostro b/extras/keymap/force-release-maps/dell-vostro
---- a/extras/keymap/force-release-maps/dell-vostro	1970-01-01 01:00:00.000000000 +0100
-+++ b/extras/keymap/force-release-maps/dell-vostro	2013-07-20 06:59:45.086209823 +0200
-@@ -0,0 +1 @@
-+0xEE # Dell Support Center button
-
---------------010904050000020700000105--
+Yours,
+Linus Walleij
