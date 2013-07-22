@@ -1,45 +1,56 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the MinnowBoard
-Date: Mon, 22 Jul 2013 01:09:55 +0100
-Message-ID: <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
-References: <cover.1372211451.git.dvhart@linux.intel.com> <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
- <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
- <1372398218.9243.29.camel@envy.home> <20130704162641.GG27646@sirena.org.uk>
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
+ MinnowBoard
+Date: Sun, 21 Jul 2013 20:27:53 -0700
+Message-ID: <1374463673.3436.68.camel@dvhart-mobl1.amr.corp.intel.com>
+References: <cover.1372211451.git.dvhart@linux.intel.com>
+	 <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+	 <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+	 <1372398218.9243.29.camel@envy.home> <20130704162641.GG27646@sirena.org.uk>
+	 <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f172.google.com ([209.85.223.172]:48615 "EHLO
-	mail-ie0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753103Ab3GVAKQ (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:18049 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755454Ab3GVD1z (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 21 Jul 2013 20:10:16 -0400
-Received: by mail-ie0-f172.google.com with SMTP id 17so1490196iea.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jul 2013 17:10:16 -0700 (PDT)
-In-Reply-To: <20130704162641.GG27646@sirena.org.uk>
+	Sun, 21 Jul 2013 23:27:55 -0400
+In-Reply-To: <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Darren Hart <dvhart@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-On Thu, Jul 4, 2013 at 5:26 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
->
->> minnow_hwid() just returns an int that the minnowboard platform driver
->> read from the GPIO. This seems like a proper abstraction to me. Do you
->> object to this one as well?
->
-> We should really have a subsystem for this too - the general idea idea
-> of identifying boards, fit options and so on by looking at things like
-> GPIOs or numbers in flash is really common.
+On Mon, 2013-07-22 at 01:09 +0100, Grant Likely wrote:
+> On Thu, Jul 4, 2013 at 5:26 PM, Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
+> >
+> >> minnow_hwid() just returns an int that the minnowboard platform driver
+> >> read from the GPIO. This seems like a proper abstraction to me. Do you
+> >> object to this one as well?
+> >
+> > We should really have a subsystem for this too - the general idea idea
+> > of identifying boards, fit options and so on by looking at things like
+> > GPIOs or numbers in flash is really common.
+> 
+> And yet this is a platform with ACPI. I would expect the ACPI to
+> identify the board, not a custom driver. The newest ACPI spec adds a
+> lot of nice useful things like GPIO and SPI bindings. Talk to Al Stone
+> about the progress his team has made on adding GPIO support to ACPICA.
+> 
+> This driver shouldn't be merged into mainline. Keep it as an
+> out-of-tree patch until the proper solution is implemented. That
+> shouldn't be too onerous since we now have available not one, but two
+> mechanisms for describing exactly what you want to do; ACPI or FDT.
 
-And yet this is a platform with ACPI. I would expect the ACPI to
-identify the board, not a custom driver. The newest ACPI spec adds a
-lot of nice useful things like GPIO and SPI bindings. Talk to Al Stone
-about the progress his team has made on adding GPIO support to ACPICA.
+Yes, that is the current plan. I have isolated the necessary patches for
+bug fixes (merged, serial support (merged) and networking support (under
+review). I am exploring different options with ACPI for how to best
+handle the GPIO (LEDs and Keys) and the Lure device descriptions.
 
-This driver shouldn't be merged into mainline. Keep it as an
-out-of-tree patch until the proper solution is implemented. That
-shouldn't be too onerous since we now have available not one, but two
-mechanisms for describing exactly what you want to do; ACPI or FDT.
-
-g.
+-- 
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Linux Kernel
