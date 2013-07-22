@@ -1,56 +1,53 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
- MinnowBoard
-Date: Sun, 21 Jul 2013 20:27:53 -0700
-Message-ID: <1374463673.3436.68.camel@dvhart-mobl1.amr.corp.intel.com>
-References: <cover.1372211451.git.dvhart@linux.intel.com>
-	 <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
-	 <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
-	 <1372398218.9243.29.camel@envy.home> <20130704162641.GG27646@sirena.org.uk>
-	 <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch v2] intel_ips: cleanup a couple error messages
+Date: Mon, 22 Jul 2013 23:38:39 +0300
+Message-ID: <20130722203839.GA22020@elgon.mountain>
+References: <20130719055144.GE9729@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([143.182.124.37]:18049 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755454Ab3GVD1z (ORCPT
+Received: from userp1040.oracle.com ([156.151.31.81]:34139 "EHLO
+	userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757135Ab3GVUjR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 21 Jul 2013 23:27:55 -0400
-In-Reply-To: <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
+	Mon, 22 Jul 2013 16:39:17 -0400
+Content-Disposition: inline
+In-Reply-To: <20130719055144.GE9729@elgon.mountain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Mon, 2013-07-22 at 01:09 +0100, Grant Likely wrote:
-> On Thu, Jul 4, 2013 at 5:26 PM, Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
-> >
-> >> minnow_hwid() just returns an int that the minnowboard platform driver
-> >> read from the GPIO. This seems like a proper abstraction to me. Do you
-> >> object to this one as well?
-> >
-> > We should really have a subsystem for this too - the general idea idea
-> > of identifying boards, fit options and so on by looking at things like
-> > GPIOs or numbers in flash is really common.
-> 
-> And yet this is a platform with ACPI. I would expect the ACPI to
-> identify the board, not a custom driver. The newest ACPI spec adds a
-> lot of nice useful things like GPIO and SPI bindings. Talk to Al Stone
-> about the progress his team has made on adding GPIO support to ACPICA.
-> 
-> This driver shouldn't be merged into mainline. Keep it as an
-> out-of-tree patch until the proper solution is implemented. That
-> shouldn't be too onerous since we now have available not one, but two
-> mechanisms for describing exactly what you want to do; ACPI or FDT.
+Printing PTR_ERR(NULL) is not useful so I have updated the error
+messages a little.
 
-Yes, that is the current plan. I have isolated the necessary patches for
-bug fixes (merged, serial support (merged) and networking support (under
-review). I am exploring different options with ACPI for how to best
-handle the GPIO (LEDs and Keys) and the Lure device descriptions.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: completely different
 
--- 
-Darren Hart
-Intel Open Source Technology Center
-Yocto Project - Linux Kernel
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 18dcb58..e5c115d 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1329,9 +1329,7 @@ static void ips_debugfs_init(struct ips_driver *ips)
+ 
+ 	ips->debug_root = debugfs_create_dir("ips", NULL);
+ 	if (!ips->debug_root) {
+-		dev_err(&ips->dev->dev,
+-			"failed to create debugfs entries: %ld\n",
+-			PTR_ERR(ips->debug_root));
++		dev_err(&ips->dev->dev, "failed to create debugfs entries\n");
+ 		return;
+ 	}
+ 
+@@ -1345,8 +1343,8 @@ static void ips_debugfs_init(struct ips_driver *ips)
+ 					  &ips_debugfs_ops);
+ 		if (!ent) {
+ 			dev_err(&ips->dev->dev,
+-				"failed to create debug file: %ld\n",
+-				PTR_ERR(ent));
++				"failed to create debug file: %s\n",
++				node->name);
+ 			goto err_cleanup;
+ 		}
+ 	}
