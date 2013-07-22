@@ -1,84 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
- MinnowBoard
-Date: Mon, 22 Jul 2013 00:41:34 +0100
-Message-ID: <20130721234134.GA9858@sirena.org.uk>
-References: <cover.1372211451.git.dvhart@linux.intel.com>
- <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the MinnowBoard
+Date: Mon, 22 Jul 2013 01:09:55 +0100
+Message-ID: <CACxGe6vOOMAj18LSzNHfgsDeJr1V7_d2CcB08jx_ZekOZ61jRQ@mail.gmail.com>
+References: <cover.1372211451.git.dvhart@linux.intel.com> <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
  <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
- <1372398218.9243.29.camel@envy.home>
- <20130704162641.GG27646@sirena.org.uk>
- <CACRpkdbKGti==FTfHm81EkwD++iRfixnXt3kWgBj7CxjM+2znA@mail.gmail.com>
+ <1372398218.9243.29.camel@envy.home> <20130704162641.GG27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+9kyDs7IugQ0lHaC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbKGti==FTfHm81EkwD++iRfixnXt3kWgBj7CxjM+2znA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Darren Hart <dvhart@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ie0-f172.google.com ([209.85.223.172]:48615 "EHLO
+	mail-ie0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753103Ab3GVAKQ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 21 Jul 2013 20:10:16 -0400
+Received: by mail-ie0-f172.google.com with SMTP id 17so1490196iea.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jul 2013 17:10:16 -0700 (PDT)
+In-Reply-To: <20130704162641.GG27646@sirena.org.uk>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Darren Hart <dvhart@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
+On Thu, Jul 4, 2013 at 5:26 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Jun 27, 2013 at 10:43:38PM -0700, Darren Hart wrote:
+>
+>> minnow_hwid() just returns an int that the minnowboard platform driver
+>> read from the GPIO. This seems like a proper abstraction to me. Do you
+>> object to this one as well?
+>
+> We should really have a subsystem for this too - the general idea idea
+> of identifying boards, fit options and so on by looking at things like
+> GPIOs or numbers in flash is really common.
 
---+9kyDs7IugQ0lHaC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+And yet this is a platform with ACPI. I would expect the ACPI to
+identify the board, not a custom driver. The newest ACPI spec adds a
+lot of nice useful things like GPIO and SPI bindings. Talk to Al Stone
+about the progress his team has made on adding GPIO support to ACPICA.
 
-On Sat, Jul 20, 2013 at 07:37:54PM +0200, Linus Walleij wrote:
-> On Thu, Jul 4, 2013 at 6:26 PM, Mark Brown <broonie@kernel.org> wrote:
+This driver shouldn't be merged into mainline. Keep it as an
+out-of-tree patch until the proper solution is implemented. That
+shouldn't be too onerous since we now have available not one, but two
+mechanisms for describing exactly what you want to do; ACPI or FDT.
 
-> > We should really have a subsystem for this too - the general idea idea
-> > of identifying boards, fit options and so on by looking at things like
-> > GPIOs or numbers in flash is really common.
-
-> Would it then be a bus following the pattern we chiseled out for
-> the soc bus? (Greg, Lee & Arnd architectured this.)
-
-I'd expect it to be a bus, yes.
-
-> There we needed a struct device * on an overarching level to
-> tie in the sysfs entries reading out the SoC properties. But
-> it would be the same thing with in-kernel accessors for these
-> properties.
-
-I'd expect us to end up with devices for the modules doing the mapping.
-I'm not sure what the accessors you're thinking about would be, this
-should hopefully be transparent to devices sitting on the boards
-otherwise it seems like there's not that much point really.
-
-> So it would be the same pattern above with a board bus, in
-> DT syntax:
-
-> board {
->      soc {
->      };
-> };
-
-I'm not 100% sure what this means, sorry?  If you're saying it'd be
-something that sits within the master board for the system (whatever
-that happens to be) then yes.
-
---+9kyDs7IugQ0lHaC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR7HGrAAoJELSic+t+oim9hQIP/Rv9nb8MhAOuKfIMJwrtK37c
-A4J5XRhfAjN3GKrrivpMHA9FqkLzGhwvAxXa/qMZDT2Ssk5F7MwrtmFcW2taBDnq
-GHiYRfwl3iMdIPEPE1t3YqVcFNCdCNxmsuv05uLL0pYuK3pMKOqE+JjMaErv1jPR
-dVarY7S+2Ls47H7tP+AtfswHdsMblG5txmaGerHUUpeMga22/xjS+nu4B7G9GPpm
-M6gwf6xhjKBXLIIVQbupHvf0Ajb7jNxgcftAIB+fGP0l7IIPC8AWj2JWlj0drLv9
-e9Gdd599TpmNGGVQQFeEtxxMnERxUTrvhO+Qdn7+MHFWD7g06v1LiH8MWEj1/FiO
-cjbbjf70SOkMPv0c5atetL8IYFCcbjmvzAn5dF+TzUbQ9irVPfpeHypX6ITbBkfC
-/x/KcVsE4Zz4WT464LT+NK27hpr7JVCVtcE9vHt2o0ygXd6QIGUmFmPfapvXg0i9
-7UrF4rppDWk07oltv6OpMm1chAMnWZidVxwc2Sd2uz++byBJMKb21iD9oTuzQMYy
-rOPxcDIZoYk/BhY5mwvv507ZWTf9mo98l2t9c6l5NEXr2kDnq4v0zNl6w8Vy6d+L
-yvVKQWzem3qnFRfvoG9t/kNr/zE+1jXkmooJIxFIiMj1iYrsFDMunXT21KWIKDOX
-pZpQ9Syi3b3Bu7lw6Qc0
-=agOk
------END PGP SIGNATURE-----
-
---+9kyDs7IugQ0lHaC--
+g.
