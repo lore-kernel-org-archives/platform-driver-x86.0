@@ -1,53 +1,32 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch v2] intel_ips: cleanup a couple error messages
-Date: Mon, 22 Jul 2013 23:38:39 +0300
-Message-ID: <20130722203839.GA22020@elgon.mountain>
-References: <20130719055144.GE9729@elgon.mountain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v1 0/3] IPC driver patches
+Date: Mon, 22 Jul 2013 19:48:42 -0700
+Message-ID: <cover.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from userp1040.oracle.com ([156.151.31.81]:34139 "EHLO
-	userp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757135Ab3GVUjR (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:23708 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753692Ab3GWCje (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Jul 2013 16:39:17 -0400
-Content-Disposition: inline
-In-Reply-To: <20130719055144.GE9729@elgon.mountain>
+	Mon, 22 Jul 2013 22:39:34 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: matthew.garrett@nebula.com, linux-kernel@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Printing PTR_ERR(NULL) is not useful so I have updated the error
-messages a little.
+Following patches adds IPC support for addional intel platforms and provides
+default interrupt mode support.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: completely different
+Please let me know your review comments.
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 18dcb58..e5c115d 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -1329,9 +1329,7 @@ static void ips_debugfs_init(struct ips_driver *ips)
- 
- 	ips->debug_root = debugfs_create_dir("ips", NULL);
- 	if (!ips->debug_root) {
--		dev_err(&ips->dev->dev,
--			"failed to create debugfs entries: %ld\n",
--			PTR_ERR(ips->debug_root));
-+		dev_err(&ips->dev->dev, "failed to create debugfs entries\n");
- 		return;
- 	}
- 
-@@ -1345,8 +1343,8 @@ static void ips_debugfs_init(struct ips_driver *ips)
- 					  &ips_debugfs_ops);
- 		if (!ent) {
- 			dev_err(&ips->dev->dev,
--				"failed to create debug file: %ld\n",
--				PTR_ERR(ent));
-+				"failed to create debug file: %s\n",
-+				node->name);
- 			goto err_cleanup;
- 		}
- 	}
+Kuppuswamy Sathyanarayanan (3):
+  ipc: Added platform data structure
+  ipc: Enabled ipc support for additional intel platforms
+  ipc: Add support for default interrupt mode
+
+ drivers/platform/x86/Kconfig         |   15 +++++
+ drivers/platform/x86/intel_scu_ipc.c |  114 ++++++++++++++++++++++++++++++----
+ 2 files changed, 118 insertions(+), 11 deletions(-)
+
+-- 
+1.7.9.5
