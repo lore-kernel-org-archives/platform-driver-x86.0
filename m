@@ -1,71 +1,60 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH 0/2] Platform: x86: chromeos_laptop - Deferred Probing
-Date: Sun, 4 Aug 2013 21:05:50 -0700
-Message-ID: <CANLzEkvkTaRZXU66zzC4GtO4zyJgwak5QNMZkL_iaUaRqow_mQ@mail.gmail.com>
-References: <1374106861-3549-1-git-send-email-bleung@chromium.org>
-	<CAC-DJzKqv7b0fdPOL5+Sx2AF7EG=2+xrq8R+UrK-ev1-sNu=Pw@mail.gmail.com>
+From: Martin Nordholts <enselic@gmail.com>
+Subject: Re: [PATCH 0/1] Platform: x86: chromeos_laptop - convert to
+ i2c_driver to handle i915 race
+Date: Mon, 5 Aug 2013 07:32:43 +0200
+Message-ID: <CAC-DJzL0VzDxCpsdwjugavBhcFUr+kv+iN9D-Yz_tasw=DF75Q@mail.gmail.com>
+References: <1374163091-4750-1-git-send-email-enselic@gmail.com>
+	<CANLzEksSsMY2pTYTfGzgntF-i_Kus+WeVPyNzW0U7APcGOv_5g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vb0-f44.google.com ([209.85.212.44]:64028 "EHLO
-	mail-vb0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751378Ab3HEEFv (ORCPT
+Received: from mail-oa0-f54.google.com ([209.85.219.54]:47373 "EHLO
+	mail-oa0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753869Ab3HEFcn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 Aug 2013 00:05:51 -0400
-Received: by mail-vb0-f44.google.com with SMTP id e13so2370777vbg.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 04 Aug 2013 21:05:51 -0700 (PDT)
-In-Reply-To: <CAC-DJzKqv7b0fdPOL5+Sx2AF7EG=2+xrq8R+UrK-ev1-sNu=Pw@mail.gmail.com>
+	Mon, 5 Aug 2013 01:32:43 -0400
+In-Reply-To: <CANLzEksSsMY2pTYTfGzgntF-i_Kus+WeVPyNzW0U7APcGOv_5g@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Martin Nordholts <enselic@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, adurbin@chromium.org, Olof Johansson <olofj@chromium.org>, Axel Lin <axel.lin@ingics.com>
+To: Benson Leung <bleung@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Olof Johansson <olof@lixom.net>, Yufeng Shen <miletus@chromium.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi Martin,
-
-I commented on your patch, but I want to add a little bit more in response here.
-
-On Thu, Jul 18, 2013 at 9:13 AM, Martin Nordholts <enselic@gmail.com> wrote:
-> One downside with the solution in this set of patches is that more
-> lines are added to the driver.
-> By making use of the i2c_driver.detect() mechanism like in my patch,
-> we can actually reduce the number of lines in the driver.
+2013/8/5 Benson Leung <bleung@chromium.org>:
+> Hi Martin,
 >
+> Thank you for looking into this problem. Obviously, this is a problem
+> Olof and our team has been working on as well.
 
-It looks like the vast majority of the savings in number of lines of
-code in your patch is from removing the board specific enumeration of
-peripherals.
+Hi Benson,
 
-For example, in my patch, I have a data structure that describes the
-chromebook pixel thusly :
+Thank you for spending time reviewing and testing my patch. I
+understand your team is busy and am honored you took the time to look
+at my code.
 
-static struct chromeos_laptop chromebook_pixel = {
-        .i2c_peripherals = {
-                /* Touch Screen. */
-                { .add = setup_atmel_1664s_ts, I2C_ADAPTER_PANEL },
-                /* Touchpad. */
-                { .add = setup_atmel_224s_tp, I2C_ADAPTER_VGADDC },
-                /* Light Sensor. */
-                { .add = setup_isl29018_als, I2C_ADAPTER_PANEL },
-        },
-};
+> Your driver would result in three failed probes in 2 different drivers
+> on my board.
 
-And so on for every other board that the driver supports. It
-explicitly describes the small set of devices that are known to exist
-on a particular system, and describes precisely which bus it lives on.
-That way, we can use i2c_new_probed_device.
+Yes that is one down-side; sometimes the detect() function will be
+triggered even though the device is not supported (the return -ENODEV
+code paths in my driver). I thought that maybe a simpler driver could
+make up for unnecessary detect() calls. However ...
 
-Your patch removes these, and instead, makes one list of all devices
-that the driver supports across all systems that pass the dmi check.
-Your driver then uses detect in sort of a shotgun approach for all
-supported i2c adapters. The approach may work for Pixel, but as I
-mentioned in my other email, it causes failed probes on other systems.
+> "Detect" is method #3, but it comes with a
+> stern warning : Once again, method 3 should be avoided wherever
+> possible. Explicit device instantiation (methods 1 and 2) is much
+> preferred for it is safer and faster.
 
-It would be my preference to continue to use i2c_new_probed_device,
-and explicitly describe each Chromebook system
+... I must admit I did not see this. I realize that this makes my
+patch a dead end. I wish I would have seen that earlier, that would
+have saved time for everyone. My apologies.
 
+Regarding the interaction with non-i2c devices in chromeos_laptop, I
+was thinking that could perhaps have been solved by putting the i2c
+stuff in a separate driver, say chromeos_laptop_i2c, but that point is
+irrelevant now that you pointed out that the use of the
+detect()-method is discouraged by the documentation.
 
+Thank you again for reviewing the patch and for providing feedback.
 
--- 
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+BR,
+Martin
