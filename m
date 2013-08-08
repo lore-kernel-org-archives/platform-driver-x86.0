@@ -1,44 +1,35 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH 0/1] Platform: x86: chromeos_laptop - convert to
- i2c_driver to handle i915 race
-Date: Wed, 7 Aug 2013 14:55:16 -0700
-Message-ID: <CANLzEkvi7PY7iO+kicCQZaSi7n6mn2JUC3hVVvPJN2LcCLnqKw@mail.gmail.com>
-References: <1374163091-4750-1-git-send-email-enselic@gmail.com>
-	<CANLzEksSsMY2pTYTfGzgntF-i_Kus+WeVPyNzW0U7APcGOv_5g@mail.gmail.com>
-	<CAC-DJzL0VzDxCpsdwjugavBhcFUr+kv+iN9D-Yz_tasw=DF75Q@mail.gmail.com>
+From: "EMAIL SERVICE ADMINISTRATION" <emailserviceadmin@mail.org>
+Subject: PROTECT YOUR MAIL
+Date: Thu, 8 Aug 2013 16:36:55 +0200
+Message-ID: <20130808143655.M58612@mail.org>
+Reply-To: webmailupdateteam@163.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAC-DJzL0VzDxCpsdwjugavBhcFUr+kv+iN9D-Yz_tasw=DF75Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Nordholts <enselic@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Olof Johansson <olof@lixom.net>, Yufeng Shen <miletus@chromium.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain;
+	charset=iso-8859-2
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ns1.ef.uns.ac.rs ([147.91.175.65]:62229 "HELO
+	visnja.ef.uns.ac.rs" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1752006Ab3HHOou (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 8 Aug 2013 10:44:50 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-Hi Martin,
+Dear EMAIL Subscriber,
+     
+    This is to inform you that We have
+noticed some unusual activities in your
+EMAIL account.
+    As a result, access to your EMAIL
+ account has been limited in accordance with the EMAIL.
+    EMAIL Terms And Condition User
+Agreement. To re-validate your EMAIL box, respond
+to this e-mail immediately. 
+And protect your EMAIL from phishing mails.
+ By clicking the link below and follow the instruction
 
+http://www.cheatwoodsroofing.com/form/use/EMAILPROTECTIONSERVICE/form1.html
 
-On Sun, Aug 4, 2013 at 10:32 PM, Martin Nordholts <enselic@gmail.com> wrote:
-> ... I must admit I did not see this. I realize that this makes my
-> patch a dead end. I wish I would have seen that earlier, that would
-> have saved time for everyone. My apologies.
->
-> Regarding the interaction with non-i2c devices in chromeos_laptop, I
-> was thinking that could perhaps have been solved by putting the i2c
-> stuff in a separate driver, say chromeos_laptop_i2c, but that point is
-> irrelevant now that you pointed out that the use of the
-> detect()-method is discouraged by the documentation.
->
-> Thank you again for reviewing the patch and for providing feedback.
+Thank you for using our email.
 
-No problem at all. Thank you for your interest in our project, actually!
-
-If you get a chance, could you let me know if my deferred probe
-changes work well in your configuration?
-
-
-
--- 
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+Copyright 2013 Email Administrator
