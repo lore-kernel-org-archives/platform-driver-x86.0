@@ -1,12 +1,12 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 2/2] sony-laptop: Fix reporting of gfx_switch_status
-Date: Sat, 10 Aug 2013 13:11:19 +0900
-Message-ID: <1376107879-22608-3-git-send-email-malattia@linux.it>
+Subject: [PATCH 1/2] sony-laptop: return a negative error code in sonypi_compat_init()
+Date: Sat, 10 Aug 2013 13:11:18 +0900
+Message-ID: <1376107879-22608-2-git-send-email-malattia@linux.it>
 References: <1376107879-22608-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:52441 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:52440 "EHLO
 	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750785Ab3HJESF (ORCPT
+	with ESMTP id S1750799Ab3HJESF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Sat, 10 Aug 2013 00:18:05 -0400
 In-Reply-To: <1376107879-22608-1-git-send-email-malattia@linux.it>
@@ -15,31 +15,32 @@ References: <20130710212017.GA24522@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Daniel Serpell <daniel.serpell@gmail.com>, Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86@vger.kernel.org, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, Mattia Dongili <malattia@linux.it>
 
-From: Daniel Serpell <daniel.serpell@gmail.com>
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Signed-off-by: Daniel Serpell <daniel.serpell@gmail.com>
+Return -1 in the error handling case instead of 0, as done elsewhere in
+this function.
+
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/x86/sony-laptop.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index b162733..3a1b6bf 100644
+index 2ac045f..b162733 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -2440,7 +2440,10 @@ static ssize_t sony_nc_gfx_switch_status_show(struct device *dev,
- 	if (pos < 0)
- 		return pos;
+@@ -4320,7 +4320,8 @@ static int sony_pic_add(struct acpi_device *device)
+ 		goto err_free_resources;
+ 	}
  
--	return snprintf(buffer, PAGE_SIZE, "%s\n", pos ? "speed" : "stamina");
-+	return snprintf(buffer, PAGE_SIZE, "%s\n",
-+					pos == SPEED ? "speed" :
-+					pos == STAMINA ? "stamina" :
-+					pos == AUTO ? "auto" : "unknown");
- }
+-	if (sonypi_compat_init())
++	result = sonypi_compat_init();
++	if (result)
+ 		goto err_remove_input;
  
- static int sony_nc_gfx_switch_setup(struct platform_device *pd,
+ 	/* request io port */
 -- 
 1.8.4.rc1
