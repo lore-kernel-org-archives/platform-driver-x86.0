@@ -1,135 +1,45 @@
-From: =?ISO-8859-1?Q?Marco_Kr=FCger?= <krgsch@gmail.com>
-Subject: Re: sony-laptop crash (Sony VPC SE 1V9E) for 3.8.0+
-Date: Fri, 09 Aug 2013 15:35:21 +0200
-Message-ID: <5204F019.3000204@gmail.com>
-References: <51FE2F39.4080504@gmail.com> <20130804221454.GB7707@kamineko.org> <51FEF199.7050800@gmail.com> <20130808221742.GA27435@kamineko.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------010805050205030301090108"
+From: Mattia Dongili <malattia@linux.it>
+Subject: [PATCH 2/2] sony-laptop: Fix reporting of gfx_switch_status
+Date: Sat, 10 Aug 2013 13:11:19 +0900
+Message-ID: <1376107879-22608-3-git-send-email-malattia@linux.it>
+References: <1376107879-22608-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f173.google.com ([74.125.82.173]:37787 "EHLO
-	mail-we0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S967831Ab3HINdX (ORCPT
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:52441 "EHLO
+	smtp.kamineko.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750785Ab3HJESF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Aug 2013 09:33:23 -0400
-Received: by mail-we0-f173.google.com with SMTP id x55so3531397wes.18
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Aug 2013 06:33:21 -0700 (PDT)
-In-Reply-To: <20130808221742.GA27435@kamineko.org>
+	Sat, 10 Aug 2013 00:18:05 -0400
+In-Reply-To: <1376107879-22608-1-git-send-email-malattia@linux.it>
+In-Reply-To: <20130710212017.GA24522@kamineko.org>
+References: <20130710212017.GA24522@kamineko.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Daniel Serpell <daniel.serpell@gmail.com>, Mattia Dongili <malattia@linux.it>
 
-This is a multi-part message in MIME format.
---------------010805050205030301090108
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Daniel Serpell <daniel.serpell@gmail.com>
 
-Hi Mattia!
+Signed-off-by: Daniel Serpell <daniel.serpell@gmail.com>
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+ drivers/platform/x86/sony-laptop.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I'm already on the latest BIOS (R2087H4). I attached a screenshot of the 
-windows options.
-
-Thanks
-
---------------010805050205030301090108
-Content-Type: image/png;
- name="keyboard_backlight_options.png"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="keyboard_backlight_options.png"
-
-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
-Atugr/IAYw+QAAAAAElFTkSuQmCC
---------------010805050205030301090108--
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index b162733..3a1b6bf 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -2440,7 +2440,10 @@ static ssize_t sony_nc_gfx_switch_status_show(struct device *dev,
+ 	if (pos < 0)
+ 		return pos;
+ 
+-	return snprintf(buffer, PAGE_SIZE, "%s\n", pos ? "speed" : "stamina");
++	return snprintf(buffer, PAGE_SIZE, "%s\n",
++					pos == SPEED ? "speed" :
++					pos == STAMINA ? "stamina" :
++					pos == AUTO ? "auto" : "unknown");
+ }
+ 
+ static int sony_nc_gfx_switch_setup(struct platform_device *pd,
+-- 
+1.8.4.rc1
