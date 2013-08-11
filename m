@@ -1,25 +1,45 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH 0/2] Fixes for sony-laptop for 3.11
-Date: Sat, 10 Aug 2013 05:19:12 +0100
-Message-ID: <20130810041912.GA29503@srcf.ucam.org>
-References: <20130710212017.GA24522@kamineko.org>
- <1376107879-22608-1-git-send-email-malattia@linux.it>
+From: Martin Nordholts <enselic@gmail.com>
+Subject: Re: [PATCH 0/1] Platform: x86: chromeos_laptop - convert to
+ i2c_driver to handle i915 race
+Date: Sun, 11 Aug 2013 21:54:50 +0200
+Message-ID: <CAC-DJz+Q=O9hvj1QoaZkhSZ-e6ueUQHUuMntin=GYdLqwV0VtA@mail.gmail.com>
+References: <1374163091-4750-1-git-send-email-enselic@gmail.com>
+	<CANLzEksSsMY2pTYTfGzgntF-i_Kus+WeVPyNzW0U7APcGOv_5g@mail.gmail.com>
+	<CAC-DJzL0VzDxCpsdwjugavBhcFUr+kv+iN9D-Yz_tasw=DF75Q@mail.gmail.com>
+	<CANLzEkvi7PY7iO+kicCQZaSi7n6mn2JUC3hVVvPJN2LcCLnqKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:60965 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750770Ab3HJETO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 10 Aug 2013 00:19:14 -0400
-Content-Disposition: inline
-In-Reply-To: <1376107879-22608-1-git-send-email-malattia@linux.it>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANLzEkvi7PY7iO+kicCQZaSi7n6mn2JUC3hVVvPJN2LcCLnqKw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benson Leung <bleung@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Olof Johansson <olof@lixom.net>, Yufeng Shen <miletus@chromium.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-I'm sorry, yes - I'll get these pulled.
+2013/8/7 Benson Leung <bleung@chromium.org>
+>
+> If you get a chance, could you let me know if my deferred probe
+> changes work well in your configuration?
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+I can confirm that your changes works, i.e. the touchpad and
+touchscreen works directly after boot on my 32GB non-LTE Chromebook
+Pixel. I applied the patches on a clean 3.11-rc4 tree using a
+localmodconfig on Debian 7.1. I get this in dmesg --level err
+(--notime) though
+
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
+find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+
+Personally I don't like getting error messages when the driver works
+as designed. I would prefer to have priority lowered to 'notice' on
+those.
+
+Regards,
+Martin
