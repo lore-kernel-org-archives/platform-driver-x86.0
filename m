@@ -1,49 +1,44 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH 0/1] Platform: x86: chromeos_laptop - convert to
- i2c_driver to handle i915 race
-Date: Sun, 11 Aug 2013 15:44:36 -0700
-Message-ID: <CANLzEkumGkXfvWNG+MsMV9Vaq=_bywoQF91J39mV3S2jBW1KFg@mail.gmail.com>
-References: <1374163091-4750-1-git-send-email-enselic@gmail.com>
-	<CANLzEksSsMY2pTYTfGzgntF-i_Kus+WeVPyNzW0U7APcGOv_5g@mail.gmail.com>
-	<CAC-DJzL0VzDxCpsdwjugavBhcFUr+kv+iN9D-Yz_tasw=DF75Q@mail.gmail.com>
-	<CANLzEkvi7PY7iO+kicCQZaSi7n6mn2JUC3hVVvPJN2LcCLnqKw@mail.gmail.com>
-	<CAC-DJz+Q=O9hvj1QoaZkhSZ-e6ueUQHUuMntin=GYdLqwV0VtA@mail.gmail.com>
+From: Jan Hinnerk Stosch <janhinnerk.stosch@gmail.com>
+Subject: Re: Wireless key on Fujitsu E753 not working since a57f7f9175b8ccbc9df83ac13860488913115de4
+Date: Mon, 12 Aug 2013 15:46:46 +0200
+Message-ID: <CAO_aot4Ye=YwSvi6P2Nn=3r4N8OY03mPxXLj+mTd_ziRxb5LXA@mail.gmail.com>
+References: <CAO_aot5FJb1v6-CztDeuAPS7=-byULP-tMzF_DZhw6aG4A+vVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAC-DJz+Q=O9hvj1QoaZkhSZ-e6ueUQHUuMntin=GYdLqwV0VtA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Nordholts <enselic@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Olof Johansson <olof@lixom.net>, Yufeng Shen <miletus@chromium.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qc0-f173.google.com ([209.85.216.173]:39743 "EHLO
+	mail-qc0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756181Ab3HLNqr (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 12 Aug 2013 09:46:47 -0400
+Received: by mail-qc0-f173.google.com with SMTP id z10so3368887qcx.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2013 06:46:47 -0700 (PDT)
+In-Reply-To: <CAO_aot5FJb1v6-CztDeuAPS7=-byULP-tMzF_DZhw6aG4A+vVw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-Hi Martin,
+Hi,
 
+as I have not received any answer I'd like to ask again, what to do
+with that problem, because I don't have a clue at all...
 
-On Sun, Aug 11, 2013 at 12:54 PM, Martin Nordholts <enselic@gmail.com> wrote:
-> I get this in dmesg --level err
-> (--notime) though
+Regards,
+
+jhs
+
+2013/6/28 Jan Hinnerk Stosch <janhinnerk.stosch@gmail.com>:
+> Hi,
 >
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus vga not found on system.
-> find_i2c_adapter_num: i2c adapter i915 gmbus panel not found on system.
+> since commit "a57f7f9175b8ccbc9df83ac13860488913115de4" (bisected) the
+> wireless key on my Fujitsu E753 is not working any more. If I boot up
+> with parameter "acpi_osi="!Windows 2012"" it works, though.
+> I filed an ACPI-bug
+> (https://bugzilla.kernel.org/show_bug.cgi?id=60161), but was told
+> (https://bugzilla.kernel.org/show_bug.cgi?id=60161#c5) that this is
+> caused by the fujitsu_laptop driver. So I report it here. Should I
+> file a bug anywhere or is it enough to write it to the list?
 >
-> Personally I don't like getting error messages when the driver works
-> as designed. I would prefer to have priority lowered to 'notice' on
-> those.
-
-Sounds good to me. I'll make this change.
-
-Thanks again!
-Benson
-
--- 
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+> Thanks in advance,
+>
+> jhs
