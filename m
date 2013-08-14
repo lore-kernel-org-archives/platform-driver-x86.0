@@ -1,77 +1,36 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH 2/2] thinkpad-acpi: add sysfs for enabling and disabling hardware mute
-Date: Wed, 14 Aug 2013 13:40:02 +0800
-Message-ID: <1376458802-11923-3-git-send-email-alex.hung@canonical.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
+ mute
+Date: Wed, 14 Aug 2013 05:54:07 +0000
+Message-ID: <1376459647.30031.2.camel@x230>
 References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
+	 <1376458937.30031.1.camel@x230>
+	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:33038 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751839Ab3HNFkU (ORCPT
+Received: from mail-bl2lp0206.outbound.protection.outlook.com ([207.46.163.206]:18415
+	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1752027Ab3HNFy0 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 01:40:20 -0400
-In-Reply-To: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
+	Wed, 14 Aug 2013 01:54:26 -0400
+In-Reply-To: <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <9B1233D96384A1459ED8D8F826E4CE9E@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: alex.hung@canonical.com, ibm-acpi@hmh.eng.br, matthew.garrett@nebula.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>
+Cc: "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Thinkpad BIOS provides an ACPI interface to disable hardware mute.
-When enabled (as default), Thinkpad issues a scancode and toggles
-hardware mute + led. Once disabled, Thinkpad will only issues the
-scancode.
-
-When hardware mute is enabled, hardware mute can be out-of-sync
-with user-space if a user changes mute state by user application.
-This patch gives a chance to disable hardware mute.
-
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 3b648c0..a901fac 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -2978,6 +2978,32 @@ static struct device_attribute dev_attr_hotkey_mute_state =
- 	__ATTR(hotkey_mute_state, S_IWUSR | S_IRUGO,
- 	hotkey_mute_state_show, hotkey_mute_state_store);
- 
-+/* sysfs hotkey_mute_enable -------------------------------------------- */
-+static ssize_t hotkey_mute_enable_store(struct device *dev,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t count)
-+{
-+	unsigned long state;
-+	int output;
-+
-+	if (parse_strtoul(buf, 25, &state))
-+		return -EINVAL;
-+
-+	if (state != 1 && state != 0)
-+		return -EINVAL;
-+
-+	if (!acpi_evalf(hkey_handle, &output, "SHDA", "dd", state))
-+		return -EIO;
-+
-+	if (output & TPACPI_AML_MUTE_ERROR_STATE_MASK)
-+		return -EIO;
-+
-+	return count;
-+}
-+
-+static struct device_attribute dev_attr_hotkey_mute_enable =
-+	__ATTR(hotkey_mute_enable, S_IWUSR, NULL, hotkey_mute_enable_store);
-+
- /* --------------------------------------------------------------------- */
- 
- static struct attribute *hotkey_attributes[] __initdata = {
-@@ -2995,6 +3021,7 @@ static struct attribute *hotkey_attributes[] __initdata = {
- 	&dev_attr_hotkey_poll_freq.attr,
- #endif
- 	&dev_attr_hotkey_mute_state.attr,
-+	&dev_attr_hotkey_mute_enable.attr,
- };
- 
- /*
--- 
-1.8.1.2
+T24gV2VkLCAyMDEzLTA4LTE0IGF0IDEzOjUzICswODAwLCBBbGV4IEh1bmcgd3JvdGU6DQo+IEhp
+IE1hdHRoZXcsDQo+IA0KPiANCj4gVGhlIHNjZW5hcmlvIHdpbGwgYmUgdG8gaGF2ZSBhbiB1c2Vy
+LWFwcGxpY2F0aW9uIHRvIGxpc3RlbiB0byB0aGUgbXV0ZQ0KPiBrZXkgZXZlbnQsIGNvbXBhcmUg
+dG8gaGFyZHdhcmUgbXV0ZSBhZ2FpbnN0IE9TIG11dGUsIGFuZCBzeW5jIGJvdGgNCj4gbXV0ZS4g
+V2hlbiB0aGUgYXBwbGljYXRpb24gaXMgbG9hZGVkLCBpdCBjYW4gdXNlIHRoaXMgaW50ZXJmYWNl
+IHRvDQo+IGVuYWJsZSBpdDsgd2hlbiBpdCBpcyB1bmxvYWRlZCBpdCBjYW4gZGlzYWJsZSBpdC4N
+Cg0KSXMgdGhlcmUgYW55IHJlYXNvbiB5b3UnZCB3YW50IHRoaXMgcmF0aGVyIHRoYW4ganVzdCBo
+YXZpbmcgaXQgZ2VuZXJhdGUNCmEgc2NhbmNvZGUgYW5kIGJlIHVuZGVyIHVzZXJzcGFjZSBjb250
+cm9sPw0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
+DQo=
