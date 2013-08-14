@@ -1,37 +1,62 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 1/1] intel_ips: blacklist ASUSTek G60JX laptops
-Date: Wed, 14 Aug 2013 14:11:31 -0700
-Message-ID: <CA+55aFy09OfUb_ENi6NgVWaNM7YBvLovcf5FvyHfpXXBUGsQkg@mail.gmail.com>
-References: <cover.1376494861.git.joseph.salisbury@canonical.com>
-	<d4635f76028172e872cc4be506bad1c11816f75a.1376494861.git.joseph.salisbury@canonical.com>
-	<20130814093836.57002b77@jbarnes-desktop>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of
+ thinkpad hardware mute
+Date: Wed, 14 Aug 2013 21:15:57 +0000
+Message-ID: <1376514957.28002.13.camel@x230.lan>
+References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
+ <1376458937.30031.1.camel@x230>
+ <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+ <1376459647.30031.2.camel@x230>
+ <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
+ <1376460872.30031.4.camel@x230>
+ <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
+ <1376463610.30031.6.camel@x230>
+ <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
+ <520B3511.7020604@canonical.com> <1376466691.30031.14.camel@x230>
+ <520B4D71.6070109@canonical.com> <1376492217.28002.1.camel@x230.lan>
+ <520BE01F.9090402@canonical.com> <1376510744.28002.6.camel@x230.lan>
+ <520BEA52.5030705@canonical.com> <1376512731.28002.8.camel@x230.lan>
+ <520BEFC4.4030203@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vb0-f42.google.com ([209.85.212.42]:57377 "EHLO
-	mail-vb0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933186Ab3HNVLc (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 17:11:32 -0400
-In-Reply-To: <20130814093836.57002b77@jbarnes-desktop>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jesse Barnes <jbarnes@virtuousgeek.org>
-Cc: Joseph Salisbury <joseph.salisbury@canonical.com>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <520BEFC4.4030203@canonical.com>
+Content-Language: en-US
+Content-ID: <BB6D76EC2CBEB142BEA7CBF9CEC855A9@namprd05.prod.outlook.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: David Henningsson <david.henningsson@canonical.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, Alex Hung <alex.hung@canonical.com>, YK <yk@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 14, 2013 at 9:38 AM, Jesse Barnes <jbarnes@virtuousgeek.org> wrote:
->
-> Linus, you may want to pick this up directly, as I'm not sure if
-> Matthew is still looking after the x86 drivers these days.
+On Wed, 2013-08-14 at 22:59 +0200, David Henningsson wrote:
+> On 08/14/2013 10:38 PM, Matthew Garrett wrote:
+> > The user hit the mute key. Why would they expect *anything* to be
+> > unmuted?
+> > 
+> 
+> Why should the userspace application, who just wants to lit a LED, have
+> to care about a lot of other sound cards and interfaces and mute them,
+> when the user does not care?
 
-Can't we make the simpler patch be to just not spam the logs? Do it
-once, and forget about it. Maybe make the timeouts long enough to make
-sure that there are no other downsides from having the driver
-occasionally testing if it's back?
+Because there's no interface for the userspace application to light an
+LED. Henrique has previously said that he doesn't want userspace to have
+arbitrary control over it, and I agree with him.
 
-I *detest* hardware-specific blacklists. They are impossible to
-maintain, and we've had the situation more than once that we fixed the
-real bug that caused the blacklist in the first place, but the entry
-stays around because nobody knows/cares/tests it.
+> And what about multiseat setups? If a multiseat keyboard has a mic mute
+> LED, do you think another user's mic mute state should influence the LED
+> of your keyboard?
 
-                  Linus
+Once we see an external keyboard with a microphone mute LED, that's
+certainly something we can worry about.
+
+-- 
+Matthew Garrett <matthew.garrett@nebula.com>
