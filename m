@@ -1,79 +1,78 @@
-From: David Henningsson <david.henningsson@canonical.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
  mute
-Date: Wed, 14 Aug 2013 09:43:13 +0200
-Message-ID: <520B3511.7020604@canonical.com>
-References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com> <1376458937.30031.1.camel@x230> <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com> <1376459647.30031.2.camel@x230> <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com> <1376460872.30031.4.camel@x230> <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com> <1376463610.30031.6.camel@x230> <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
+Date: Wed, 14 Aug 2013 07:51:31 +0000
+Message-ID: <1376466691.30031.14.camel@x230>
+References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
+	 <1376458937.30031.1.camel@x230>
+	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+	 <1376459647.30031.2.camel@x230>
+	 <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
+	 <1376460872.30031.4.camel@x230>
+	 <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
+	 <1376463610.30031.6.camel@x230>
+	 <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
+	 <520B3511.7020604@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:33527 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759199Ab3HNHnT (ORCPT
+Received: from mail-by2lp0241.outbound.protection.outlook.com ([207.46.163.241]:38231
+	"EHLO na01-by2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1757923Ab3HNHvm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 03:43:19 -0400
-In-Reply-To: <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
+	Wed, 14 Aug 2013 03:51:42 -0400
+In-Reply-To: <520B3511.7020604@canonical.com>
+Content-Language: en-US
+Content-ID: <6F44D557034FDD4685C6381C53BDF43E@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, YK <yk@canonical.com>
+To: David Henningsson <david.henningsson@canonical.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, YK <yk@canonical.com>
 
-(Added alsa-devel to CC)
-
-On 08/14/2013 09:16 AM, Alex Hung wrote:
-> Added in David and Tim who also has some ideas to share.
-> 
-> On Wed, Aug 14, 2013 at 3:00 PM, Matthew Garrett
-> <matthew.garrett@nebula.com> wrote:
->> On Wed, 2013-08-14 at 14:41 +0800, Alex Hung wrote:
->>> Hi Matthew,
->>>
->>> The problem is that thinkpad-acpi does not aware of mute is changed by
->>> either hotkey presses or in desktop.
->>
->> Ok, how about this. Register the LED with the kernel LED subsystem. Add
->> a new LED trigger for volume-mute. Have the HDA driver call that trigger
->> whenever the mute state changes.
->>
->> --
->> Matthew Garrett <matthew.garrett@nebula.com>
-> 
-> 
-> 
-
-So, to take a wider grip on this issue.
-
-First, the hardware mute. Because this is directly connected to the
-internal speaker (and headphones?), it needs to turn into a ALSA
-kcontrol on the sound card that controls speaker and/or headphones. And
-it needs to named accordingly, e g "Speaker Playback Switch" if it
-controls the speaker only.
-Exactly how this is going to work out given the arbitrary module load
-order of snd-hda-intel and thinkpad-acpi, I'm not sure, but the way of
-creating another sound card (which I've seen on some thinkpads) just
-isn't working out for userspace.
-
-Second, about the mute LEDs and mic-mute LEDs, we currently have several
-interfaces to choose from:
- a) HP LEDs currently uses a ALSA kcontrol to control them. For Mute LED
-there is also a limited automatic control of this LED from kernel space
-(by default), so it follows the status of "Master Playback Switch" IIRC.
- b) thinkpad-acpi currently uses custom sysfs nodes to control the LEDs.
- c) and we also have the /sys/class/leds interface.
-There might be even more solutions.
-
-It's important we get a consistent interfaces towards userspace for the
-LEDs. And we should also make sure we don't have a permissions problem:
-if we want the mute/mic-mute LED to follow the status of the currently
-selected sound card in PulseAudio, which IMO should be our goal, writes
-cannot be root-only.
-To have the HDA driver call into the LED subsystem is better than
-nothing, but in the end we would want the LEDs to follow whatever sound
-input/output the user currently uses, whether that is bluetooth, USB,
-HDMI, or internal audio.
-
-
--- 
-David Henningsson, Canonical Ltd.
-https://launchpad.net/~diwic
+T24gV2VkLCAyMDEzLTA4LTE0IGF0IDA5OjQzICswMjAwLCBEYXZpZCBIZW5uaW5nc3NvbiB3cm90
+ZToNCg0KPiBGaXJzdCwgdGhlIGhhcmR3YXJlIG11dGUuIEJlY2F1c2UgdGhpcyBpcyBkaXJlY3Rs
+eSBjb25uZWN0ZWQgdG8gdGhlDQo+IGludGVybmFsIHNwZWFrZXIgKGFuZCBoZWFkcGhvbmVzPyks
+IGl0IG5lZWRzIHRvIHR1cm4gaW50byBhIEFMU0ENCj4ga2NvbnRyb2wgb24gdGhlIHNvdW5kIGNh
+cmQgdGhhdCBjb250cm9scyBzcGVha2VyIGFuZC9vciBoZWFkcGhvbmVzLiBBbmQNCj4gaXQgbmVl
+ZHMgdG8gbmFtZWQgYWNjb3JkaW5nbHksIGUgZyAiU3BlYWtlciBQbGF5YmFjayBTd2l0Y2giIGlm
+IGl0DQo+IGNvbnRyb2xzIHRoZSBzcGVha2VyIG9ubHkuDQo+IEV4YWN0bHkgaG93IHRoaXMgaXMg
+Z29pbmcgdG8gd29yayBvdXQgZ2l2ZW4gdGhlIGFyYml0cmFyeSBtb2R1bGUgbG9hZA0KPiBvcmRl
+ciBvZiBzbmQtaGRhLWludGVsIGFuZCB0aGlua3BhZC1hY3BpLCBJJ20gbm90IHN1cmUsIGJ1dCB0
+aGUgd2F5IG9mDQo+IGNyZWF0aW5nIGFub3RoZXIgc291bmQgY2FyZCAod2hpY2ggSSd2ZSBzZWVu
+IG9uIHNvbWUgdGhpbmtwYWRzKSBqdXN0DQo+IGlzbid0IHdvcmtpbmcgb3V0IGZvciB1c2Vyc3Bh
+Y2UuDQoNClN1cmUuIFRoZXJlIHdhcyBhcmd1YWJseSBhIGJlbmVmaXQgaW4gZXhwb3NpbmcgdGhl
+IGhhcmR3YXJlIG1peGVyIGJhY2sNCmluIHRoZSAqNDAgYW5kIGVhcmxpZXIgbWFjaGluZXMsIHNp
+bmNlIHZvbHVtZSB3YXMgYWxzbyB1bmRlciBoYXJkd2FyZQ0KY29udHJvbCBiYWNrIHRoZW4uIFRo
+ZSBtdXRlIHN1cHBvcnQgaXMgc29tZXdoYXQgdmVzdGlnaWFsLCBhbmQgSSBkb24ndA0KdGhpbmsg
+dHJ5aW5nIHRvIHRpZSBpbnRvIGl0IGlzIGdvaW5nIHRvIG1ha2UgdGhpbmdzIGJldHRlci4NCg0K
+PiBTZWNvbmQsIGFib3V0IHRoZSBtdXRlIExFRHMgYW5kIG1pYy1tdXRlIExFRHMsIHdlIGN1cnJl
+bnRseSBoYXZlIHNldmVyYWwNCj4gaW50ZXJmYWNlcyB0byBjaG9vc2UgZnJvbToNCj4gIGEpIEhQ
+IExFRHMgY3VycmVudGx5IHVzZXMgYSBBTFNBIGtjb250cm9sIHRvIGNvbnRyb2wgdGhlbS4gRm9y
+IE11dGUgTEVEDQo+IHRoZXJlIGlzIGFsc28gYSBsaW1pdGVkIGF1dG9tYXRpYyBjb250cm9sIG9m
+IHRoaXMgTEVEIGZyb20ga2VybmVsIHNwYWNlDQo+IChieSBkZWZhdWx0KSwgc28gaXQgZm9sbG93
+cyB0aGUgc3RhdHVzIG9mICJNYXN0ZXIgUGxheWJhY2sgU3dpdGNoIiBJSVJDLg0KDQpIREEgaGFz
+IHN1cHBvcnQgZm9yIG11dGUgTEVEcyB0aGF0IGFyZSB0aWVkIHRvIEdQSU8gbGluZXMgb24gdGhl
+IGNvZGVjIC0NCmlzIHRoaXMgdGhlIGV4dGVudCBvZiBpdD8NCg0KPiAgYikgdGhpbmtwYWQtYWNw
+aSBjdXJyZW50bHkgdXNlcyBjdXN0b20gc3lzZnMgbm9kZXMgdG8gY29udHJvbCB0aGUgTEVEcy4N
+Cg0KUmlnaHQuDQoNCj4gIGMpIGFuZCB3ZSBhbHNvIGhhdmUgdGhlIC9zeXMvY2xhc3MvbGVkcyBp
+bnRlcmZhY2UuDQoNClllYWguDQoNCj4gSXQncyBpbXBvcnRhbnQgd2UgZ2V0IGEgY29uc2lzdGVu
+dCBpbnRlcmZhY2VzIHRvd2FyZHMgdXNlcnNwYWNlIGZvciB0aGUNCj4gTEVEcy4gQW5kIHdlIHNo
+b3VsZCBhbHNvIG1ha2Ugc3VyZSB3ZSBkb24ndCBoYXZlIGEgcGVybWlzc2lvbnMgcHJvYmxlbToN
+Cj4gaWYgd2Ugd2FudCB0aGUgbXV0ZS9taWMtbXV0ZSBMRUQgdG8gZm9sbG93IHRoZSBzdGF0dXMg
+b2YgdGhlIGN1cnJlbnRseQ0KPiBzZWxlY3RlZCBzb3VuZCBjYXJkIGluIFB1bHNlQXVkaW8sIHdo
+aWNoIElNTyBzaG91bGQgYmUgb3VyIGdvYWwsIHdyaXRlcw0KPiBjYW5ub3QgYmUgcm9vdC1vbmx5
+Lg0KDQpJJ20gbm90IGNvbnZpbmNlZCB0aGF0IHNob3VsZCBiZSBvdXIgZ29hbCAtIGlmIHRoZSBt
+aWMgbXV0ZSBsaWdodCBpcyBvbiwNCkknZCBleHBlY3QgKmFsbCogbWljcyB0byBiZSBtdXRlZCwg
+c2luY2UgdGhlIHBvaW50IG9mIHRoZSBsaWdodCB0aGVyZSBpcw0Kc29tZXRoaW5nIG9mIGEgcHJp
+dmFjeSBndWFyZC4gSXQncyBub3QgcXVpdGUgYXMgY2xlYXIgdGhhdCBJJ2QgZXhwZWN0DQp0aGUg
+bXV0ZSBMRUQgdG8gYmluZCB0byBldmVyeXRoaW5nLiBIb3dldmVyLCBnaXZlbiBhIHNpbmdsZSAi
+Y3VycmVudGx5DQpzZWxlY3RlZCBzb3VuZCBjYXJkIiwgdGhlcmUncyBubyBvYnZpb3VzbHkgdXNl
+ci12aXNpYmxlIGRpZmZlcmVuY2UNCmJldHdlZW4gbXV0aW5nIHRoZSBjdXJyZW50IGRldmljZSBh
+bmQgbXV0aW5nIGFsbCBkZXZpY2VzLg0KDQpHaXZlbiB0aGUgcHJpdmFjeSBjb25jZXJucyBhcm91
+bmQgdGhlIG1pY3JvcGhvbmUgTEVELCBJIHRoaW5rIGFueQ0KZXhwb3NlZCBMRUQgd291bGQgaGF2
+ZSB0byBiZSBlaXRoZXIgdW5kZXIga2VybmVsIGNvbnRyb2wuIEhhdmluZyBhDQpjb21wcm9taXNl
+ZCBjb21wb25lbnQgb2YgYSB1c2VyIHNlc3Npb24gYmUgYWJsZSB0byByZWNvcmQgYXVkaW8gd2hp
+bGUNCmxlYXZpbmcgdGhlIExFRCBsaXQgd291bGQgYmUgYSBwcm9ibGVtLg0KDQotLSANCk1hdHRo
+ZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+DQo=
