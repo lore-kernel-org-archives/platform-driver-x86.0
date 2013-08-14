@@ -1,62 +1,56 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of
  thinkpad hardware mute
-Date: Wed, 14 Aug 2013 21:15:57 +0000
-Message-ID: <1376514957.28002.13.camel@x230.lan>
+Date: Wed, 14 Aug 2013 20:30:55 -0300
+Message-ID: <20130814233055.GB13242@khazad-dum.debian.net>
 References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
- <1376458937.30031.1.camel@x230>
- <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
- <1376459647.30031.2.camel@x230>
- <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
- <1376460872.30031.4.camel@x230>
- <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
- <1376463610.30031.6.camel@x230>
- <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
- <520B3511.7020604@canonical.com> <1376466691.30031.14.camel@x230>
- <520B4D71.6070109@canonical.com> <1376492217.28002.1.camel@x230.lan>
- <520BE01F.9090402@canonical.com> <1376510744.28002.6.camel@x230.lan>
- <520BEA52.5030705@canonical.com> <1376512731.28002.8.camel@x230.lan>
- <520BEFC4.4030203@canonical.com>
+	<1376458937.30031.1.camel@x230>
+	<CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+	<1376459647.30031.2.camel@x230>
+	<CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
+	<1376460872.30031.4.camel@x230>
+	<CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
+	<1376463610.30031.6.camel@x230>
+	<CAJ=jqubWWeWH+xsGrTVaNguNuw7gm2E=CZmXY_SxO+Bxg1Hxag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <520BEFC4.4030203@canonical.com>
-Content-Language: en-US
-Content-ID: <BB6D76EC2CBEB142BEA7CBF9CEC855A9@namprd05.prod.outlook.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: David Henningsson <david.henningsson@canonical.com>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, Alex Hung <alex.hung@canonical.com>, YK <yk@canonical.com>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ=jqubWWeWH+xsGrTVaNguNuw7gm2E=CZmXY_SxO+Bxg1Hxag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Alex Hung <alex.hung-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2013-08-14 at 22:59 +0200, David Henningsson wrote:
-> On 08/14/2013 10:38 PM, Matthew Garrett wrote:
-> > The user hit the mute key. Why would they expect *anything* to be
-> > unmuted?
-> > 
-> 
-> Why should the userspace application, who just wants to lit a LED, have
-> to care about a lot of other sound cards and interfaces and mute them,
-> when the user does not care?
+On Wed, 14 Aug 2013, Alex Hung wrote:
+> That sounds good. I will work on it.
 
-Because there's no interface for the userspace application to light an
-LED. Henrique has previously said that he doesn't want userspace to have
-arbitrary control over it, and I agree with him.
+AND that sounds like what I've asked people to do the last time the "user
+privacy" LEDs (MIC mute, sound mute) topic was raised, so I am also all for
+it.
 
-> And what about multiseat setups? If a multiseat keyboard has a mic mute
-> LED, do you think another user's mic mute state should influence the LED
-> of your keyboard?
-
-Once we see an external keyboard with a microphone mute LED, that's
-certainly something we can worry about.
+I don't know if we should allow anything but the alsa layer to toggle those
+leds, though (at least without a module parameter).  It would be really nice
+if, by default, the LED was permanently locked to the mixer hardware state
+with no userspace override possible.
 
 -- 
-Matthew Garrett <matthew.garrett@nebula.com>
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+Get 100% visibility into Java/.NET code with AppDynamics Lite!
+It's a free troubleshooting tool designed for production.
+Get down to code-level detail for bottlenecks, with <2% overhead. 
+Download for free and get started troubleshooting in minutes. 
+http://pubads.g.doubleclick.net/gampad/clk?id=48897031&iu=/4140/ostg.clktrk
