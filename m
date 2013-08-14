@@ -1,36 +1,42 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
- mute
-Date: Wed, 14 Aug 2013 05:54:07 +0000
-Message-ID: <1376459647.30031.2.camel@x230>
+From: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of
+ thinkpad hardware mute
+Date: Wed, 14 Aug 2013 05:42:17 +0000
+Message-ID: <1376458937.30031.1.camel@x230>
 References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
-	 <1376458937.30031.1.camel@x230>
-	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bl2lp0206.outbound.protection.outlook.com ([207.46.163.206]:18415
-	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1752027Ab3HNFy0 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 01:54:26 -0400
-In-Reply-To: <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1376458802-11923-1-git-send-email-alex.hung-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Content-Language: en-US
-Content-ID: <9B1233D96384A1459ED8D8F826E4CE9E@namprd05.prod.outlook.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-ID: <90C1D38C72BA6A47BB25E1171A037A8E-HX+pjaQZbrqcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Alex Hung <alex.hung-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCAyMDEzLTA4LTE0IGF0IDEzOjUzICswODAwLCBBbGV4IEh1bmcgd3JvdGU6DQo+IEhp
-IE1hdHRoZXcsDQo+IA0KPiANCj4gVGhlIHNjZW5hcmlvIHdpbGwgYmUgdG8gaGF2ZSBhbiB1c2Vy
-LWFwcGxpY2F0aW9uIHRvIGxpc3RlbiB0byB0aGUgbXV0ZQ0KPiBrZXkgZXZlbnQsIGNvbXBhcmUg
-dG8gaGFyZHdhcmUgbXV0ZSBhZ2FpbnN0IE9TIG11dGUsIGFuZCBzeW5jIGJvdGgNCj4gbXV0ZS4g
-V2hlbiB0aGUgYXBwbGljYXRpb24gaXMgbG9hZGVkLCBpdCBjYW4gdXNlIHRoaXMgaW50ZXJmYWNl
-IHRvDQo+IGVuYWJsZSBpdDsgd2hlbiBpdCBpcyB1bmxvYWRlZCBpdCBjYW4gZGlzYWJsZSBpdC4N
-Cg0KSXMgdGhlcmUgYW55IHJlYXNvbiB5b3UnZCB3YW50IHRoaXMgcmF0aGVyIHRoYW4ganVzdCBo
-YXZpbmcgaXQgZ2VuZXJhdGUNCmEgc2NhbmNvZGUgYW5kIGJlIHVuZGVyIHVzZXJzcGFjZSBjb250
-cm9sPw0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
-DQo=
+On Wed, 2013-08-14 at 13:40 +0800, Alex Hung wrote:
+> Newer Thinkpad models comes with a mute hotkey with a mute led. It also comes
+> with ACPI AML functions to control hardware mute + led. The patches add sysfs
+> nodes so it is possible to enable, disable and control from user-space.
+
+What's expected to use this interface? If it's supposed to be some
+system wide configuration at boot time, we should just add a config
+option to the kernel and let it be overridden by module parameter.
+
+-- 
+Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+------------------------------------------------------------------------------
+Get 100% visibility into Java/.NET code with AppDynamics Lite!
+It's a free troubleshooting tool designed for production.
+Get down to code-level detail for bottlenecks, with <2% overhead. 
+Download for free and get started troubleshooting in minutes. 
+http://pubads.g.doubleclick.net/gampad/clk?id=48897031&iu=/4140/ostg.clktrk
