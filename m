@@ -1,68 +1,41 @@
-From: Kyle Evans <kvans32@gmail.com>
-Subject: [PATCH] hp-wmi; Limit hotkey enable funtion
-Date: Wed, 14 Aug 2013 14:16:43 -0500
-Message-ID: <1376507803-7718-1-git-send-email-kvans32@gmail.com>
-References: <201308141019.53740@pali>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
+ mute
+Date: Wed, 14 Aug 2013 14:57:07 +0000
+Message-ID: <1376492217.28002.1.camel@x230.lan>
+References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
+	 <1376458937.30031.1.camel@x230>
+	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
+	 <1376459647.30031.2.camel@x230>
+	 <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
+	 <1376460872.30031.4.camel@x230>
+	 <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
+	 <1376463610.30031.6.camel@x230>
+	 <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
+	 <520B3511.7020604@canonical.com> <1376466691.30031.14.camel@x230>
+	 <520B4D71.6070109@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f179.google.com ([209.85.223.179]:36926 "EHLO
-	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752803Ab3HNOS3 (ORCPT
+Received: from mail-bn1lp0150.outbound.protection.outlook.com ([207.46.163.150]:36765
+	"EHLO na01-bn1-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S932620Ab3HNO5M (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 10:18:29 -0400
-In-Reply-To: <201308141019.53740@pali>
+	Wed, 14 Aug 2013 10:57:12 -0400
+In-Reply-To: <520B4D71.6070109@canonical.com>
+Content-Language: en-US
+Content-ID: <F327880F25683B4C8D8F16EC97B3774C@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kyle Evans <kvans32@gmail.com>
+To: David Henningsson <david.henningsson@canonical.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, YK <yk@canonical.com>
 
-This patch is a supplement to commit
-b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd
-
-Signed-off-by: Kyle Evans <kvans32@gmail.com>
----
- drivers/platform/x86/hp-wmi.c |   16 +++++++++++++++-
- 1 files changed, 15 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 97bb05e..b65014f 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -35,6 +35,7 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/platform_device.h>
- #include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/rfkill.h>
- #include <linux/string.h>
- 
-@@ -996,6 +997,17 @@ static struct platform_driver hp_wmi_driver = {
- 	.remove = __exit_p(hp_wmi_bios_remove),
- };
- 
-+static struct dmi_system_id __initdata tx2_dmi_table[] = {
-+	{
-+		.ident = "tx2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "tx2"),
-+		},
-+	},
-+	{ }
-+};
-+
- static int __init hp_wmi_init(void)
- {
- 	int err;
-@@ -1010,7 +1022,9 @@ static int __init hp_wmi_init(void)
- 		if (err)
- 			return err;
- 
--		hp_wmi_enable_hotkeys();
-+		if (dmi_check_system(tx2_dmi_table)) {
-+			hp_wmi_enable_hotkeys();
-+		{
- 	}
- 
- 	if (bios_capable) {
--- 
-1.7.3.4
+T24gV2VkLCAyMDEzLTA4LTE0IGF0IDExOjI3ICswMjAwLCBEYXZpZCBIZW5uaW5nc3NvbiB3cm90
+ZToNCg0KPiBUaGUgcHJpdmFjeSBpc3N1ZSBpcyBpbnRlcmVzdGluZywgYnV0IEkgZG9uJ3Qgc2Vl
+IGEgcHJhY3RpY2FsIHdheSBvZg0KPiBpbXBsZW1lbnRpbmcgdGhpbmdzIHRoYXQgd291bGQgcHJv
+dGVjdCB1cyBhZ2FpbnN0IGNvbXByb21pc2VkIHVzZXJzcGFjZXMuDQoNClRoYXQncyBwcmV0dHkg
+ZWFzeSAtIGp1c3QgdGllIHRoZSBMRUQgY29udHJvbCB0byB0aGUgSERBIGRldmljZSBpbi1rZXJu
+ZWwuDQoNCi0tIA0KTWF0dGhldyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRAbmVidWxhLmNvbT4N
+Cg==
