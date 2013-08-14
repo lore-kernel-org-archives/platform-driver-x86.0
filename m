@@ -1,78 +1,78 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
- mute
-Date: Wed, 14 Aug 2013 07:51:31 +0000
-Message-ID: <1376466691.30031.14.camel@x230>
-References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
-	 <1376458937.30031.1.camel@x230>
-	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
-	 <1376459647.30031.2.camel@x230>
-	 <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
-	 <1376460872.30031.4.camel@x230>
-	 <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
-	 <1376463610.30031.6.camel@x230>
-	 <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
-	 <520B3511.7020604@canonical.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: BUG: Again: Fn keys not working on EliteBook 8460p after b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd
+Date: Wed, 14 Aug 2013 10:19:53 +0200
+Message-ID: <201308141019.53740@pali>
+References: <201304130331.18301@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed;
+  boundary="nextPart18357273.Elkb8AqA6n";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0241.outbound.protection.outlook.com ([207.46.163.241]:38231
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1757923Ab3HNHvm (ORCPT
+Received: from mail-ea0-f169.google.com ([209.85.215.169]:63608 "EHLO
+	mail-ea0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759459Ab3HNIT6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 03:51:42 -0400
-In-Reply-To: <520B3511.7020604@canonical.com>
-Content-Language: en-US
-Content-ID: <6F44D557034FDD4685C6381C53BDF43E@namprd05.prod.outlook.com>
+	Wed, 14 Aug 2013 04:19:58 -0400
+In-Reply-To: <201304130331.18301@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Henningsson <david.henningsson@canonical.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, YK <yk@canonical.com>
+To: Kyle Evans <kvans32@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-T24gV2VkLCAyMDEzLTA4LTE0IGF0IDA5OjQzICswMjAwLCBEYXZpZCBIZW5uaW5nc3NvbiB3cm90
-ZToNCg0KPiBGaXJzdCwgdGhlIGhhcmR3YXJlIG11dGUuIEJlY2F1c2UgdGhpcyBpcyBkaXJlY3Rs
-eSBjb25uZWN0ZWQgdG8gdGhlDQo+IGludGVybmFsIHNwZWFrZXIgKGFuZCBoZWFkcGhvbmVzPyks
-IGl0IG5lZWRzIHRvIHR1cm4gaW50byBhIEFMU0ENCj4ga2NvbnRyb2wgb24gdGhlIHNvdW5kIGNh
-cmQgdGhhdCBjb250cm9scyBzcGVha2VyIGFuZC9vciBoZWFkcGhvbmVzLiBBbmQNCj4gaXQgbmVl
-ZHMgdG8gbmFtZWQgYWNjb3JkaW5nbHksIGUgZyAiU3BlYWtlciBQbGF5YmFjayBTd2l0Y2giIGlm
-IGl0DQo+IGNvbnRyb2xzIHRoZSBzcGVha2VyIG9ubHkuDQo+IEV4YWN0bHkgaG93IHRoaXMgaXMg
-Z29pbmcgdG8gd29yayBvdXQgZ2l2ZW4gdGhlIGFyYml0cmFyeSBtb2R1bGUgbG9hZA0KPiBvcmRl
-ciBvZiBzbmQtaGRhLWludGVsIGFuZCB0aGlua3BhZC1hY3BpLCBJJ20gbm90IHN1cmUsIGJ1dCB0
-aGUgd2F5IG9mDQo+IGNyZWF0aW5nIGFub3RoZXIgc291bmQgY2FyZCAod2hpY2ggSSd2ZSBzZWVu
-IG9uIHNvbWUgdGhpbmtwYWRzKSBqdXN0DQo+IGlzbid0IHdvcmtpbmcgb3V0IGZvciB1c2Vyc3Bh
-Y2UuDQoNClN1cmUuIFRoZXJlIHdhcyBhcmd1YWJseSBhIGJlbmVmaXQgaW4gZXhwb3NpbmcgdGhl
-IGhhcmR3YXJlIG1peGVyIGJhY2sNCmluIHRoZSAqNDAgYW5kIGVhcmxpZXIgbWFjaGluZXMsIHNp
-bmNlIHZvbHVtZSB3YXMgYWxzbyB1bmRlciBoYXJkd2FyZQ0KY29udHJvbCBiYWNrIHRoZW4uIFRo
-ZSBtdXRlIHN1cHBvcnQgaXMgc29tZXdoYXQgdmVzdGlnaWFsLCBhbmQgSSBkb24ndA0KdGhpbmsg
-dHJ5aW5nIHRvIHRpZSBpbnRvIGl0IGlzIGdvaW5nIHRvIG1ha2UgdGhpbmdzIGJldHRlci4NCg0K
-PiBTZWNvbmQsIGFib3V0IHRoZSBtdXRlIExFRHMgYW5kIG1pYy1tdXRlIExFRHMsIHdlIGN1cnJl
-bnRseSBoYXZlIHNldmVyYWwNCj4gaW50ZXJmYWNlcyB0byBjaG9vc2UgZnJvbToNCj4gIGEpIEhQ
-IExFRHMgY3VycmVudGx5IHVzZXMgYSBBTFNBIGtjb250cm9sIHRvIGNvbnRyb2wgdGhlbS4gRm9y
-IE11dGUgTEVEDQo+IHRoZXJlIGlzIGFsc28gYSBsaW1pdGVkIGF1dG9tYXRpYyBjb250cm9sIG9m
-IHRoaXMgTEVEIGZyb20ga2VybmVsIHNwYWNlDQo+IChieSBkZWZhdWx0KSwgc28gaXQgZm9sbG93
-cyB0aGUgc3RhdHVzIG9mICJNYXN0ZXIgUGxheWJhY2sgU3dpdGNoIiBJSVJDLg0KDQpIREEgaGFz
-IHN1cHBvcnQgZm9yIG11dGUgTEVEcyB0aGF0IGFyZSB0aWVkIHRvIEdQSU8gbGluZXMgb24gdGhl
-IGNvZGVjIC0NCmlzIHRoaXMgdGhlIGV4dGVudCBvZiBpdD8NCg0KPiAgYikgdGhpbmtwYWQtYWNw
-aSBjdXJyZW50bHkgdXNlcyBjdXN0b20gc3lzZnMgbm9kZXMgdG8gY29udHJvbCB0aGUgTEVEcy4N
-Cg0KUmlnaHQuDQoNCj4gIGMpIGFuZCB3ZSBhbHNvIGhhdmUgdGhlIC9zeXMvY2xhc3MvbGVkcyBp
-bnRlcmZhY2UuDQoNClllYWguDQoNCj4gSXQncyBpbXBvcnRhbnQgd2UgZ2V0IGEgY29uc2lzdGVu
-dCBpbnRlcmZhY2VzIHRvd2FyZHMgdXNlcnNwYWNlIGZvciB0aGUNCj4gTEVEcy4gQW5kIHdlIHNo
-b3VsZCBhbHNvIG1ha2Ugc3VyZSB3ZSBkb24ndCBoYXZlIGEgcGVybWlzc2lvbnMgcHJvYmxlbToN
-Cj4gaWYgd2Ugd2FudCB0aGUgbXV0ZS9taWMtbXV0ZSBMRUQgdG8gZm9sbG93IHRoZSBzdGF0dXMg
-b2YgdGhlIGN1cnJlbnRseQ0KPiBzZWxlY3RlZCBzb3VuZCBjYXJkIGluIFB1bHNlQXVkaW8sIHdo
-aWNoIElNTyBzaG91bGQgYmUgb3VyIGdvYWwsIHdyaXRlcw0KPiBjYW5ub3QgYmUgcm9vdC1vbmx5
-Lg0KDQpJJ20gbm90IGNvbnZpbmNlZCB0aGF0IHNob3VsZCBiZSBvdXIgZ29hbCAtIGlmIHRoZSBt
-aWMgbXV0ZSBsaWdodCBpcyBvbiwNCkknZCBleHBlY3QgKmFsbCogbWljcyB0byBiZSBtdXRlZCwg
-c2luY2UgdGhlIHBvaW50IG9mIHRoZSBsaWdodCB0aGVyZSBpcw0Kc29tZXRoaW5nIG9mIGEgcHJp
-dmFjeSBndWFyZC4gSXQncyBub3QgcXVpdGUgYXMgY2xlYXIgdGhhdCBJJ2QgZXhwZWN0DQp0aGUg
-bXV0ZSBMRUQgdG8gYmluZCB0byBldmVyeXRoaW5nLiBIb3dldmVyLCBnaXZlbiBhIHNpbmdsZSAi
-Y3VycmVudGx5DQpzZWxlY3RlZCBzb3VuZCBjYXJkIiwgdGhlcmUncyBubyBvYnZpb3VzbHkgdXNl
-ci12aXNpYmxlIGRpZmZlcmVuY2UNCmJldHdlZW4gbXV0aW5nIHRoZSBjdXJyZW50IGRldmljZSBh
-bmQgbXV0aW5nIGFsbCBkZXZpY2VzLg0KDQpHaXZlbiB0aGUgcHJpdmFjeSBjb25jZXJucyBhcm91
-bmQgdGhlIG1pY3JvcGhvbmUgTEVELCBJIHRoaW5rIGFueQ0KZXhwb3NlZCBMRUQgd291bGQgaGF2
-ZSB0byBiZSBlaXRoZXIgdW5kZXIga2VybmVsIGNvbnRyb2wuIEhhdmluZyBhDQpjb21wcm9taXNl
-ZCBjb21wb25lbnQgb2YgYSB1c2VyIHNlc3Npb24gYmUgYWJsZSB0byByZWNvcmQgYXVkaW8gd2hp
-bGUNCmxlYXZpbmcgdGhlIExFRCBsaXQgd291bGQgYmUgYSBwcm9ibGVtLg0KDQotLSANCk1hdHRo
-ZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+DQo=
+--nextPart18357273.Elkb8AqA6n
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Saturday 13 April 2013 03:31:17 Pali Roh=C3=A1r wrote:
+> Hello,
+>=20
+> all Fn keys, wifi switch, web and mute buttons not working
+> anymore on my notebook HP EliteBook 8460p. I bisected git
+> commit which broke all above keys:
+> fabf85e3ca15d5b94058f391dac8df870cdd427a
+>=20
+> When I reverted that commit after reboot buttons started
+> working again. Can you fix it or revert that broken commit?
+> This is critical problem, which caused my notebook to be
+> unusable...
+
+Hello, same problem happen again on my notebook. Problematic=20
+commit is now: b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd
+hp-wmi: Enable hotkeys on some systems
+
+When I disabled calling function hp_wmi_enable_hotkeys() from=20
+hp_wmi_init() keys started working again after reboot.
+
+This problem is present in 3.11 rc5. Please can you do something=20
+so keys on my notebook will work again and it will not be broken=20
+again in next kernel release? If you need some debug data or=20
+something else, I can help.
+
+In mail from 16.04.2013 you provided similar patch but with
+#define HPWMI_BIOS_QUERY 0x8
+I tested that patch and that does not broke keys.
+
+But commit b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd have
+#define HPWMI_BIOS_QUERY 0x9
+which broke keys again...
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart18357273.Elkb8AqA6n
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlILPakACgkQi/DJPQPkQ1ITAACcCdgNkZt/ttqEsGHf46T0MCqT
+quUAnReEAq2t0CQL59hth4F33fU///1l
+=h4+b
+-----END PGP SIGNATURE-----
+
+--nextPart18357273.Elkb8AqA6n--
