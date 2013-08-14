@@ -1,41 +1,52 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 0/2] add sysfs for acpi interfaces of thinkpad hardware
- mute
-Date: Wed, 14 Aug 2013 14:57:07 +0000
-Message-ID: <1376492217.28002.1.camel@x230.lan>
-References: <1376458802-11923-1-git-send-email-alex.hung@canonical.com>
-	 <1376458937.30031.1.camel@x230>
-	 <CAJ=jqua8STZQideGbQTDh2W8iHcF4J9OJAC5tw-bkdBLLzsP2A@mail.gmail.com>
-	 <1376459647.30031.2.camel@x230>
-	 <CAJ=jqub1sRSzBRv_R6soDVAydRL+5nmA9-pMC4E+sgXhP6tbPw@mail.gmail.com>
-	 <1376460872.30031.4.camel@x230>
-	 <CAJ=jquaCHpBPKVYHKKCyMoih3NVCL8VmyiiN5Vy0UmTTTrwKjQ@mail.gmail.com>
-	 <1376463610.30031.6.camel@x230>
-	 <CAJ=jqubPzq+pwY9F4tMEFRHr6rG+-1Hxm++5L45AbpR6mfFeJw@mail.gmail.com>
-	 <520B3511.7020604@canonical.com> <1376466691.30031.14.camel@x230>
-	 <520B4D71.6070109@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Joseph Salisbury <joseph.salisbury@canonical.com>
+Subject: [PATCH 1/1] intel_ips: blacklist ASUSTek G60JX laptops
+Date: Wed, 14 Aug 2013 12:22:49 -0400
+Message-ID: <d4635f76028172e872cc4be506bad1c11816f75a.1376494861.git.joseph.salisbury@canonical.com>
+References: <cover.1376494861.git.joseph.salisbury@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bn1lp0150.outbound.protection.outlook.com ([207.46.163.150]:36765
-	"EHLO na01-bn1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S932620Ab3HNO5M (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:36428 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760024Ab3HNQWy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 10:57:12 -0400
-In-Reply-To: <520B4D71.6070109@canonical.com>
-Content-Language: en-US
-Content-ID: <F327880F25683B4C8D8F16EC97B3774C@namprd05.prod.outlook.com>
+	Wed, 14 Aug 2013 12:22:54 -0400
+In-Reply-To: <cover.1376494861.git.joseph.salisbury@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Henningsson <david.henningsson@canonical.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Tim Chen <tim.chen119@canonical.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, YK <yk@canonical.com>
+To: mjg@redhat.com
+Cc: jbarnes@virtuousgeek.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDEzLTA4LTE0IGF0IDExOjI3ICswMjAwLCBEYXZpZCBIZW5uaW5nc3NvbiB3cm90
-ZToNCg0KPiBUaGUgcHJpdmFjeSBpc3N1ZSBpcyBpbnRlcmVzdGluZywgYnV0IEkgZG9uJ3Qgc2Vl
-IGEgcHJhY3RpY2FsIHdheSBvZg0KPiBpbXBsZW1lbnRpbmcgdGhpbmdzIHRoYXQgd291bGQgcHJv
-dGVjdCB1cyBhZ2FpbnN0IGNvbXByb21pc2VkIHVzZXJzcGFjZXMuDQoNClRoYXQncyBwcmV0dHkg
-ZWFzeSAtIGp1c3QgdGllIHRoZSBMRUQgY29udHJvbCB0byB0aGUgSERBIGRldmljZSBpbi1rZXJu
-ZWwuDQoNCi0tIA0KTWF0dGhldyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRAbmVidWxhLmNvbT4N
-Cg==
+BugLink: http://bugs.launchpad.net/bugs/1210848
+
+On an ASUSTek G60JX laptop, the intel_ips driver spams the log with a warning message: "ME failed to update for more than 1s, likely hung".  This ME doesn't support the feature, so requesting it be blacklisted for now.   
+
+Signed-off-by: Joseph Salisbury <joseph.salisbury@canonical.com>
+Tested-by: Nick Jenkins <tech.crew.jenkins@gmail.com> 
+Cc: Jesse Barnes <jbarnes@virtuousgeek.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+---
+ drivers/platform/x86/intel_ips.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 18dcb58..6d8c5e0 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1501,6 +1501,14 @@ static const struct dmi_system_id ips_blacklist[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "HP ProBook"),
+ 		},
+ 	},
++	{
++		.callback = ips_blacklist_callback,
++		.ident = "G60JX",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "G60JX"),
++		},
++	},
+ 	{ }	/* terminating entry */
+ };
+ 
+-- 
+1.7.9.5
