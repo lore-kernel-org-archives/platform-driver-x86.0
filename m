@@ -1,78 +1,42 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: BUG: Again: Fn keys not working on EliteBook 8460p after b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd
-Date: Wed, 14 Aug 2013 10:19:53 +0200
-Message-ID: <201308141019.53740@pali>
-References: <201304130331.18301@pali>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] wmi: parse_wdg() should return kernel error codes
+Date: Wed, 14 Aug 2013 12:02:30 +0300
+Message-ID: <20130814090230.GA521@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart18357273.Elkb8AqA6n";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f169.google.com ([209.85.215.169]:63608 "EHLO
-	mail-ea0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759459Ab3HNIT6 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Aug 2013 04:19:58 -0400
-In-Reply-To: <201304130331.18301@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart18357273.Elkb8AqA6n
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The current code returns a mix of acpi_status and kernel error codes.
+It should just return kernel error codes.  There are already error paths
+in this function which return -ENOMEM and that's what the caller
+expects.
 
-On Saturday 13 April 2013 03:31:17 Pali Roh=C3=A1r wrote:
-> Hello,
->=20
-> all Fn keys, wifi switch, web and mute buttons not working
-> anymore on my notebook HP EliteBook 8460p. I bisected git
-> commit which broke all above keys:
-> fabf85e3ca15d5b94058f391dac8df870cdd427a
->=20
-> When I reverted that commit after reboot buttons started
-> working again. Can you fix it or revert that broken commit?
-> This is critical problem, which caused my notebook to be
-> unusable...
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Hello, same problem happen again on my notebook. Problematic=20
-commit is now: b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd
-hp-wmi: Enable hotkeys on some systems
-
-When I disabled calling function hp_wmi_enable_hotkeys() from=20
-hp_wmi_init() keys started working again after reboot.
-
-This problem is present in 3.11 rc5. Please can you do something=20
-so keys on my notebook will work again and it will not be broken=20
-again in next kernel release? If you need some debug data or=20
-something else, I can help.
-
-In mail from 16.04.2013 you provided similar patch but with
-#define HPWMI_BIOS_QUERY 0x8
-I tested that patch and that does not broke keys.
-
-But commit b253c9d1d858a3f115f791ee4fe2b9399ae7dbbd have
-#define HPWMI_BIOS_QUERY 0x9
-which broke keys again...
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart18357273.Elkb8AqA6n
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlILPakACgkQi/DJPQPkQ1ITAACcCdgNkZt/ttqEsGHf46T0MCqT
-quUAnReEAq2t0CQL59hth4F33fU///1l
-=h4+b
------END PGP SIGNATURE-----
-
---nextPart18357273.Elkb8AqA6n--
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index b13344c..f75ea69 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -778,7 +778,7 @@ static bool guid_already_parsed(const char *guid_string)
+ /*
+  * Parse the _WDG method for the GUID data blocks
+  */
+-static acpi_status parse_wdg(acpi_handle handle)
++static int parse_wdg(acpi_handle handle)
+ {
+ 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	union acpi_object *obj;
+@@ -810,7 +810,7 @@ static acpi_status parse_wdg(acpi_handle handle)
+ 
+ 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
+ 		if (!wblock)
+-			return AE_NO_MEMORY;
++			return -ENOMEM;
+ 
+ 		wblock->handle = handle;
+ 		wblock->gblock = gblock[i];
