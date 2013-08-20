@@ -1,42 +1,92 @@
-From: Jerome Meinke <jerome.meinke@gmail.com>
-Subject: [PATCH 1/1] amilo-rfkill: Enable using amilo-rfkill with the FSC Amilo L1310.
-Date: Mon, 19 Aug 2013 17:15:45 +0200
-Message-ID: <1376925345-6687-1-git-send-email-meinkej@informatik.uni-freiburg.de>
+From: Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH]amilo-rfkill: add depends on i8042 in Kconfig
+Date: Tue, 20 Aug 2013 13:05:36 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1308201305160.21654@pobox.suse.cz>
+References: <alpine.DEB.2.02.1306181705530.28460@M2420> <1371560680.3495.121.camel@deadeye.wl.decadent.org.uk> <51C07608.2070406@infradead.org> <CADJHv_vZiPsDUiLrFao41rRVduf+AYFm0NuvpNaCW8S3KrAjnA@mail.gmail.com> <51CC6B09.5080809@infradead.org>
+ <CADJHv_sSn9oU-xg5qgoHRKDeyHRCqy8VuPJW5_punHd45inzsA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f179.google.com ([209.85.215.179]:55332 "EHLO
-	mail-ea0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750723Ab3HSPPu (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:48114 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750878Ab3HTLFm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 19 Aug 2013 11:15:50 -0400
+	Tue, 20 Aug 2013 07:05:42 -0400
+In-Reply-To: <CADJHv_sSn9oU-xg5qgoHRKDeyHRCqy8VuPJW5_punHd45inzsA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Jerome Meinke <meinkej@informatik.uni-freiburg.de>
+To: Xiong Zhou <jencce.kernel@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Ben Hutchings <ben@decadent.org.uk>, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Linux-Next <linux-next@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Jim Davis <jim.epost@gmail.com>
 
-This change extends the amilo_rfkill_id_table[] with the DMI_BOARD_NAME information of the Amilo L1310, so that the wifi device can be switched on.
+On Fri, 12 Jul 2013, Xiong Zhou wrote:
 
-Signed-off-by: Jerome Meinke <meinkej@informatik.uni-freiburg.de>
----
- drivers/platform/x86/amilo-rfkill.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> >>>>> Fix randconfig build failure for Amilo x86 platform driver.
+> >>>>> AMILO_RFKILL requires SERIO_I8042 being available.
+> >>>>>
+> >>>>> amilo-rfkill.c:(.text+0x108b5b): undefined reference to `i8042_lock_chip'
+> >>>>> amilo-rfkill.c:(.text+0x108b69): undefined reference to `i8042_command'
+> >>>>> amilo-rfkill.c:(.text+0x108b71): undefined reference to `i8042_unlock_chip'
+> >>>>>
+> >>>>> Reported-by: Jim Davis <jim.epost@gmail.com>
+> >>>>> Signed-off-by: Xiong Zhou <jencce.kernel@gmail.com>
+> >>>>
+> >>>> Acked-by: Ben Hutchings <ben@decadent.org.uk>
+> >>>>
+> >>>> But I thought somehow sent this same fix a while back...
+> >>>
+> >>> Yes, I reported it and sent a patch for it that you acked...
+> >>> I guess my patch was never picked up.
+> >>>
+> >>
+> >> ... Better someone pick this up.
+> >>
+> >
+> > This build error is still occurring in linux-next (20130627).
+> > I first reported it and posted a patch for it on May-15 2013.
+> >
+> > Please merge either patch...
+> >
+> > Is anybody out there?
+> >
+> >
+> >>
+> >>>>
+> >>>> Ben.
+> >>>>
+> >>>>> ---
+> >>>>>  drivers/platform/x86/Kconfig |    1 +
+> >>>>>  1 file changed, 1 insertion(+)
+> >>>>>
+> >>>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> >>>>> index 8577261..37645b9 100644
+> >>>>> --- a/drivers/platform/x86/Kconfig
+> >>>>> +++ b/drivers/platform/x86/Kconfig
+> >>>>> @@ -176,6 +176,7 @@ config FUJITSU_TABLET
+> >>>>>  config AMILO_RFKILL
+> >>>>>      tristate "Fujitsu-Siemens Amilo rfkill support"
+> >>>>>      depends on RFKILL
+> >>>>> +    depends on SERIO_I8042
+> >>>>>      ---help---
+> >>>>>        This is a driver for enabling wifi on some Fujitsu-Siemens Amilo
+> >>>>>        laptops.
+> >>>>
+> >>>
+> >>>
+> >>> --
+> >>> ~Randy
+> >> --
+> >
+> >
+> > --
+> > ~Randy
+> 
+> 
+> 
+> cc Jiri Kosina <trivial@kernel.org>
 
-diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
-index 6296f07..da36b5e 100644
---- a/drivers/platform/x86/amilo-rfkill.c
-+++ b/drivers/platform/x86/amilo-rfkill.c
-@@ -85,6 +85,13 @@ static const struct dmi_system_id amilo_rfkill_id_table[] = {
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
-+			DMI_MATCH(DMI_BOARD_NAME, "AMILO L1310"),
-+		},
-+		.driver_data = (void *)&amilo_a1655_rfkill_ops
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU SIEMENS"),
- 			DMI_MATCH(DMI_BOARD_NAME, "AMILO M7440"),
- 		},
- 		.driver_data = (void *)&amilo_m7440_rfkill_ops
+Please resend the patch properly, it's not easy to dig it from the 
+multi-depth quoted text.
+
 -- 
-1.8.3.4
+Jiri Kosina
+SUSE Labs
