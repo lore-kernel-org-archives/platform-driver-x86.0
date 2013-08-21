@@ -1,77 +1,45 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver fixes for 3.11
-Date: Tue, 20 Aug 2013 13:45:49 +0100
-Message-ID: <20130820124549.GA12264@srcf.ucam.org>
+From: Xiong Zhou <jencce.kernel@gmail.com>
+Subject: [PATCH] amilo-rfkill: add Kconfig depends on i8042
+Date: Wed, 21 Aug 2013 08:53:15 +0800 (CST)
+Message-ID: <alpine.DEB.2.02.1308210849530.4098@M2420>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:35035 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750962Ab3HTMpx (ORCPT
+Received: from mail-pb0-f44.google.com ([209.85.160.44]:64312 "EHLO
+	mail-pb0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751800Ab3HUAx3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 20 Aug 2013 08:45:53 -0400
-Content-Disposition: inline
+	Tue, 20 Aug 2013 20:53:29 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jiri Kosina <jkosina@suse.cz>
+Cc: linux-kernel@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Ben Hutchings <bhutchings@solarflare.com>, Stephen Rothwell <sfr@canb.auug.org.au>, platform-driver-x86@vger.kernel.org, jim.epost@gmail.com, jencce.kernel@gmail.com
 
+From: Xiong Zhou <jencce.kernel@gmail.com>
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fix randconfig build failure for Amilo x86 platform driver.
+AMILO_RFKILL requires SERIO_I8042 being available.
 
-Hi Linus,
+amilo-rfkill.c:(.text+0x108b5b): undefined reference to `i8042_lock_chip'
+amilo-rfkill.c:(.text+0x108b69): undefined reference to `i8042_command'
+amilo-rfkill.c:(.text+0x108b71): undefined reference to `i8042_unlock_chip'
 
-Three trivial fixes - the first reverts a patch that's broken some other=20
-devices (again - I'm trying to figure out a clean way to implement=20
-this), the other two fix minor issues in the sony-laptop driver.
+Reported-by: Jim Davis <jim.epost@gmail.com>
+Signed-off-by: Xiong Zhou <jencce.kernel@gmail.com>
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/platform/x86/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-The following changes since commit 50e37ccea06ca8846ceb60dbfbe056012c60d71b:
-
-  Merge branch 'for-3.11-fixes' of git://git.kernel.org/pub/scm/linux/kerne=
-l/git/tj/cgroup (2013-08-18 08:51:28 -0700)
-
-are available in the git repository at:
-
-
-  ssh://cavan.codon.org.uk/srv/git/platform-drivers-x86.git linux-next
-
-for you to fetch changes up to 41c8bd1c75ef8e8566eca6b1c7bc273bc282f495:
-
-  Revert "hp-wmi: Enable hotkeys on some systems" (2013-08-18 13:23:31 -040=
-0)
-
-----------------------------------------------------------------
-Daniel Serpell (1):
-      sony-laptop: Fix reporting of gfx_switch_status
-
-Matthew Garrett (1):
-      Revert "hp-wmi: Enable hotkeys on some systems"
-
-Wei Yongjun (1):
-      sony-laptop: return a negative error code in sonypi_compat_init()
-
- drivers/platform/x86/hp-wmi.c      | 16 ----------------
- drivers/platform/x86/sony-laptop.c |  8 ++++++--
- 2 files changed, 6 insertions(+), 18 deletions(-)
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAlITZP0ACgkQ7Hkv8l1YiTswzACeKoro+UM5O0+9nYzkFdxv3Hyl
-5MIAnR4f2O4x482bIejKucV2M6gHki2a
-=NhIw
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 8577261..37645b9 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -176,6 +176,7 @@ config FUJITSU_TABLET
+ config AMILO_RFKILL
+ 	tristate "Fujitsu-Siemens Amilo rfkill support"
+ 	depends on RFKILL
++	depends on SERIO_I8042
+ 	---help---
+ 	  This is a driver for enabling wifi on some Fujitsu-Siemens Amilo
+ 	  laptops.
