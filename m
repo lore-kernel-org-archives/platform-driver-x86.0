@@ -1,83 +1,65 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 3/5] drivers: thermal: make usage of
- CONFIG_THERMAL_HWMON optional
-Date: Wed, 28 Aug 2013 08:13:56 +0800
-Message-ID: <1377648836.2335.252.camel@rzhang-lenovo>
-References: <1377295396-17289-1-git-send-email-eduardo.valentin@ti.com>
-	 <4832825.8PCMQe7StP@vostro.rjw.lan> <521CEF61.6040504@ti.com>
-	 <8131326.8QGX41MW6c@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <8131326.8QGX41MW6c@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Peter Feuerer <peter@piie.net>, platform-driver-x86@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Lan Tianyu <tianyu.lan@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 1/3] platform/x86: panasonic-laptop: reuse module_acpi_driver
+Date: Wed, 28 Aug 2013 14:48:41 +0300
+Message-ID: <1377690523-3511-1-git-send-email-andriy.shevchenko@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:51523 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752675Ab3H1LtA (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 28 Aug 2013 07:49:00 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>, Harald Welte <laforge@gnumonks.org>, platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On =E4=BA=8C, 2013-08-27 at 23:17 +0200, Rafael J. Wysocki wrote:
-> On Tuesday, August 27, 2013 02:26:41 PM Eduardo Valentin wrote:
-> > On 23-08-2013 19:08, Rafael J. Wysocki wrote:
-> > > On Friday, August 23, 2013 06:03:14 PM Eduardo Valentin wrote:
-> > >> When registering a new thermal_device, the thermal framework
-> > >> will always add a hwmon sysfs interface.
-> > >>
-> > >> This patch adds a flag to make this behavior optional. Now
-> > >> when registering a new thermal device, the caller needs
-> > >> to say if the hwmon interface is required.
-> > >>
-> > >> In order to keep same behavior as of today, all current
-> > >> calls will by default create the hwmon interface.
-> > >=20
-> > > Well, instead of modifying all of the callers this way, why don't
-> > > you add new versions taking the additional argument as, for examp=
-le,
-> > >=20
-> > > thermal_zone_device_register_full()
-> > >=20
-> > > and redefine the old ones as static inline wrappers, for example
-> > >=20
-> > > static inline struct thermal_zone_device *thermal_zone_device_reg=
-ister(args)
-> > > {
-> > > 	return thermal_zone_device_register_full(args, true);
-> > > }
-> > >=20
-> > > ?
-> >=20
-> > Yeah, that is another way to go and I thought of doing it like that=
-=2E I
-> > just could not come out with a good API naming:
-> >=20
-> > thermal_zone_device_register_full(all args)
-> >=20
-> > thermal_zone_device_register(args) /* on hwmon =3D=3D true */
-> > thermal_zone_device_register_no_hwmon(args) /* on hwmon =3D=3D fals=
-e */
-> >=20
-> > Would this sound reasonable naming?
->=20
-> Yeah, sounds good to me.
->=20
-Well, actually, Tianyu is working on a patch set to move all the
-thermal_zone_device_register() parameters to struct thermal_zone_params=
-=2E
+There is a macro to register and unregister modules in simple cases, Let's use
+it and clean up the driver.
 
-But with that patch set done, what you need to do next is just to
-introduce a new field in struct thermal_zone_params and make sure 0
-means registering hwmon sysfs I/F.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/panasonic-laptop.c | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 
-thanks,
-rui
-
-> Thanks,
-> Rafael
->=20
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 984253d..014e5ed 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -643,23 +643,6 @@ out_hotkey:
+ 	return result;
+ }
+ 
+-static int __init acpi_pcc_init(void)
+-{
+-	int result = 0;
+-
+-	if (acpi_disabled)
+-		return -ENODEV;
+-
+-	result = acpi_bus_register_driver(&acpi_pcc_driver);
+-	if (result < 0) {
+-		ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
+-				  "Error registering hotkey driver\n"));
+-		return -ENODEV;
+-	}
+-
+-	return 0;
+-}
+-
+ static int acpi_pcc_hotkey_remove(struct acpi_device *device)
+ {
+ 	struct pcc_acpi *pcc = acpi_driver_data(device);
+@@ -679,10 +662,4 @@ static int acpi_pcc_hotkey_remove(struct acpi_device *device)
+ 	return 0;
+ }
+ 
+-static void __exit acpi_pcc_exit(void)
+-{
+-	acpi_bus_unregister_driver(&acpi_pcc_driver);
+-}
+-
+-module_init(acpi_pcc_init);
+-module_exit(acpi_pcc_exit);
++module_acpi_driver(&acpi_pcc_driver);
+-- 
+1.8.4.rc3
