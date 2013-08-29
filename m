@@ -1,139 +1,78 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 3/5] drivers: thermal: make usage of CONFIG_THERMAL_HWMON
- optional
-Date: Wed, 28 Aug 2013 09:15:50 -0400
-Message-ID: <521DF806.4030900@ti.com>
-References: <1377295396-17289-1-git-send-email-eduardo.valentin@ti.com>
- <4832825.8PCMQe7StP@vostro.rjw.lan> <521CEF61.6040504@ti.com>
- <8131326.8QGX41MW6c@vostro.rjw.lan> <1377648836.2335.252.camel@rzhang-lenovo>
+From: Joseph Salisbury <joseph.salisbury@canonical.com>
+Subject: Re: [PATCH 1/1] intel_ips: blacklist ASUSTek G60JX laptops
+Date: Thu, 29 Aug 2013 12:18:14 -0400
+Message-ID: <521F7446.7060002@canonical.com>
+References: <cover.1376494861.git.joseph.salisbury@canonical.com> <d4635f76028172e872cc4be506bad1c11816f75a.1376494861.git.joseph.salisbury@canonical.com> <20130814093836.57002b77@jbarnes-desktop> <CA+55aFy09OfUb_ENi6NgVWaNM7YBvLovcf5FvyHfpXXBUGsQkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3684300722018677354=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1377648836.2335.252.camel@rzhang-lenovo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: Lan Tianyu <tianyu.lan@intel.com>, Eduardo Valentin <eduardo.valentin@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-pm@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, Peter Feuerer <peter@piie.net>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Matthew Garrett <matthew.garrett@nebula.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Len Brown <lenb@kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
-
---===============3684300722018677354==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="mWhQBTIXSPWUdFBXk4Q2HNmMGfgbf8xVc"
-
---mWhQBTIXSPWUdFBXk4Q2HNmMGfgbf8xVc
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 27-08-2013 20:13, Zhang Rui wrote:
-> On =E4=BA=8C, 2013-08-27 at 23:17 +0200, Rafael J. Wysocki wrote:
->> On Tuesday, August 27, 2013 02:26:41 PM Eduardo Valentin wrote:
->>> On 23-08-2013 19:08, Rafael J. Wysocki wrote:
->>>> On Friday, August 23, 2013 06:03:14 PM Eduardo Valentin wrote:
->>>>> When registering a new thermal_device, the thermal framework
->>>>> will always add a hwmon sysfs interface.
->>>>>
->>>>> This patch adds a flag to make this behavior optional. Now
->>>>> when registering a new thermal device, the caller needs
->>>>> to say if the hwmon interface is required.
->>>>>
->>>>> In order to keep same behavior as of today, all current
->>>>> calls will by default create the hwmon interface.
->>>>
->>>> Well, instead of modifying all of the callers this way, why don't
->>>> you add new versions taking the additional argument as, for example,=
-
->>>>
->>>> thermal_zone_device_register_full()
->>>>
->>>> and redefine the old ones as static inline wrappers, for example
->>>>
->>>> static inline struct thermal_zone_device *thermal_zone_device_regist=
-er(args)
->>>> {
->>>> 	return thermal_zone_device_register_full(args, true);
->>>> }
->>>>
->>>> ?
->>>
->>> Yeah, that is another way to go and I thought of doing it like that. =
-I
->>> just could not come out with a good API naming:
->>>
->>> thermal_zone_device_register_full(all args)
->>>
->>> thermal_zone_device_register(args) /* on hwmon =3D=3D true */
->>> thermal_zone_device_register_no_hwmon(args) /* on hwmon =3D=3D false =
-*/
->>>
->>> Would this sound reasonable naming?
->>
->> Yeah, sounds good to me.
->>
-> Well, actually, Tianyu is working on a patch set to move all the
-> thermal_zone_device_register() parameters to struct thermal_zone_params=
-=2E
->=20
-> But with that patch set done, what you need to do next is just to
-> introduce a new field in struct thermal_zone_params and make sure 0
-> means registering hwmon sysfs I/F.
-
-Rui,
-
-Do you have a pointer to his patch?
-
->=20
-> thanks,
-> rui
->=20
->> Thanks,
->> Rafael
->>
->=20
->=20
->=20
->=20
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
---mWhQBTIXSPWUdFBXk4Q2HNmMGfgbf8xVc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlId+AoACgkQCXcVR3XQvP2kqQD+Pw7guXqGlaKBfZxUlPAxmFpO
-0FpvSYqnSqGxrvIY10EA/jw72f7Ssk7xDeg14e8VfJi3M0jNbGQSm9w8sIVcH2QW
-=lOEf
------END PGP SIGNATURE-----
-
---mWhQBTIXSPWUdFBXk4Q2HNmMGfgbf8xVc--
-
-
---===============3684300722018677354==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from youngberry.canonical.com ([91.189.89.112]:44378 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754243Ab3H2QS1 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 29 Aug 2013 12:18:27 -0400
+In-Reply-To: <CA+55aFy09OfUb_ENi6NgVWaNM7YBvLovcf5FvyHfpXXBUGsQkg@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jesse Barnes <jbarnes@virtuousgeek.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On 08/14/2013 05:11 PM, Linus Torvalds wrote:
+> On Wed, Aug 14, 2013 at 9:38 AM, Jesse Barnes <jbarnes@virtuousgeek.org> wrote:
+>> Linus, you may want to pick this up directly, as I'm not sure if
+>> Matthew is still looking after the x86 drivers these days.
+> Can't we make the simpler patch be to just not spam the logs? Do it
+> once, and forget about it. Maybe make the timeouts long enough to make
+> sure that there are no other downsides from having the driver
+> occasionally testing if it's back?
+>
+> I *detest* hardware-specific blacklists. They are impossible to
+> maintain, and we've had the situation more than once that we fixed the
+> real bug that caused the blacklist in the first place, but the entry
+> stays around because nobody knows/cares/tests it.
+>
+>                   Linus
+Hi Jesse,
 
---===============3684300722018677354==--
+What are your thoughts on alternatives to using a blacklist?  Is there a
+bit we can read to determine if IPS is supported on a platform?
+
+If not, can we do something like the following?  Basically increase the
+timeout to 30 seconds then return an error from the monitor if there was
+no update in that time:
+
+diff --git a/drivers/platform/x86/intel_ips.c
+b/drivers/platform/x86/intel_ips.c
+index 18dcb58..a2391f7 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1095,8 +1095,15 @@ static int ips_monitor(void *data)
+                cur_seqno = (thm_readl(THM_ITV) & ITV_ME_SEQNO_MASK) >>
+                        ITV_ME_SEQNO_SHIFT;
+                if (cur_seqno == last_seqno &&
+-                   time_after(jiffies, seqno_timestamp + HZ)) {
+-                       dev_warn(&ips->dev->dev, "ME failed to update
+for more than 1s, likely hung\n");
++                   time_after(jiffies, seqno_timestamp + (HZ*30))) {
++                       /* It's been 30s.  ME is likely hung.  Print
+message and return. */
++                       dev_warn(&ips->dev->dev, "ME failed to update
+for more than 30s, likely hung so exiting\n");
++                       del_timer_sync(&timer);
++                       destroy_timer_on_stack(&timer);
++
++                       dev_dbg(&ips->dev->dev, "ips-monitor thread
+stopped\n");
++                       return -1;
++
+                } else {
+                        seqno_timestamp = get_jiffies_64();
+                        last_seqno = cur_seqno;
+
+There may be more to include such as restarting the monitor later to see
+if the ME ever came back, just looking for other ideas and/or suggestions.
+
+Thanks,
+
+Joe
