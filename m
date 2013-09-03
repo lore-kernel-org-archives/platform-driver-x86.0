@@ -1,54 +1,53 @@
 From: Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 08/27] toshiba_acpi: convert acpi_evaluate_object() to acpi_execute_simple_method()
-Date: Tue,  3 Sep 2013 08:31:56 +0800
-Message-ID: <1378168335-22556-9-git-send-email-rui.zhang@intel.com>
+Subject: [PATCH 07/27] topstar-laptop: convert acpi_evaluate_object() to acpi_execute_simple_method()
+Date: Tue,  3 Sep 2013 08:31:55 +0800
+Message-ID: <1378168335-22556-8-git-send-email-rui.zhang@intel.com>
 References: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([143.182.124.21]:19506 "EHLO mga03.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:46140 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1759189Ab3ICAbG (ORCPT
+	id S1756447Ab3ICAbF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Sep 2013 20:31:06 -0400
+	Mon, 2 Sep 2013 20:31:05 -0400
 In-Reply-To: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: rjw@sisk.pl
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Herton Ronaldo Krzesinski <herton@mandriva.com.br>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
 acpi_execute_simple_method() is a new ACPI API introduced to invoke
 an ACPI control method that has single integer parameter and no return value.
 
 Convert acpi_evaluate_object() to acpi_execute_simple_method()
-in drivers/platform/x86/toshiba_acpi.c
+in drivers/platform/x86/topstar-laptop.c
 
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+CC: Herton Ronaldo Krzesinski <herton@mandriva.com.br>
 CC: Matthew Garrett <matthew.garrett@nebula.com>
 CC: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/toshiba_acpi.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/platform/x86/topstar-laptop.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index eb3467e..4c0e657 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -191,16 +191,9 @@ static __inline__ void _set_bit(u32 * word, u32 mask, int value)
- 
- static int write_acpi_int(const char *methodName, int val)
+diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
+index 4ab618c..67897c8 100644
+--- a/drivers/platform/x86/topstar-laptop.c
++++ b/drivers/platform/x86/topstar-laptop.c
+@@ -80,13 +80,9 @@ static void acpi_topstar_notify(struct acpi_device *device, u32 event)
+ static int acpi_topstar_fncx_switch(struct acpi_device *device, bool state)
  {
--	struct acpi_object_list params;
--	union acpi_object in_objs[1];
  	acpi_status status;
+-	union acpi_object fncx_params[1] = {
+-		{ .type = ACPI_TYPE_INTEGER }
+-	};
+-	struct acpi_object_list fncx_arg_list = { 1, &fncx_params[0] };
  
--	params.count = ARRAY_SIZE(in_objs);
--	params.pointer = in_objs;
--	in_objs[0].type = ACPI_TYPE_INTEGER;
--	in_objs[0].integer.value = val;
--
--	status = acpi_evaluate_object(NULL, (char *)methodName, &params, NULL);
-+	status = acpi_execute_simple_method(NULL, (char *)methodName, val);
- 	return (status == AE_OK) ? 0 : -EIO;
- }
- 
+-	fncx_params[0].integer.value = state ? 0x86 : 0x87;
+-	status = acpi_evaluate_object(device->handle, "FNCX", &fncx_arg_list, NULL);
++	status = acpi_execute_simple_method(device->handle, "FNCX",
++						state ? 0x86 : 0x87);
+ 	if (ACPI_FAILURE(status)) {
+ 		pr_err("Unable to switch FNCX notifications\n");
+ 		return -ENODEV;
 -- 
 1.8.1.2
