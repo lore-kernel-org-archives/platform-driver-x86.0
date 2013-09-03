@@ -1,46 +1,64 @@
-From: Felipe Contreras <felipe.contreras@gmail.com>
-Subject: [PATCH] x86: asus-laptop: trivial style cleanups
-Date: Fri, 30 Aug 2013 16:16:23 -0500
-Message-ID: <1377897383-2841-1-git-send-email-felipe.contreras@gmail.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH 06/27] intel-smartconnect: convert acpi_evaluate_object() to acpi_execute_simple_method()
+Date: Tue,  3 Sep 2013 08:31:54 +0800
+Message-ID: <1378168335-22556-7-git-send-email-rui.zhang@intel.com>
+References: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f171.google.com ([209.85.214.171]:39461 "EHLO
-	mail-ob0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755752Ab3H3VVD (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:15036 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1759199Ab3ICAbF (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 30 Aug 2013 17:21:03 -0400
+	Mon, 2 Sep 2013 20:31:05 -0400
+In-Reply-To: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Felipe Contreras <felipe.contreras@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, Jiri Kosina <trivial@kernel.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86@vger.kernel.org>
+To: rjw@sisk.pl
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
-Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+acpi_execute_simple_method() is a new ACPI API introduced to invoke
+an ACPI control method that has single integer parameter and no return value.
+
+Convert acpi_evaluate_object() to acpi_execute_simple_method()
+in drivers/platform/x86/intel-smartconnect.c
+
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+CC: Matthew Garrett <matthew.garrett@nebula.com>
+CC: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/asus-laptop.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel-smartconnect.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 8e268da..81a5f26 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -1032,7 +1032,7 @@ static ssize_t store_wlan(struct device *dev, struct device_attribute *attr,
- 	return sysfs_acpi_set(asus, buf, count, METHOD_WLAN);
- }
+diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel-smartconnect.c
+index f74e93d..9758b00 100644
+--- a/drivers/platform/x86/intel-smartconnect.c
++++ b/drivers/platform/x86/intel-smartconnect.c
+@@ -25,10 +25,8 @@ MODULE_LICENSE("GPL");
  
--/*e
-+/*
-  * Bluetooth
-  */
- static int asus_bluetooth_set(struct asus_laptop *asus, int status)
-@@ -1854,9 +1854,8 @@ static void asus_dmi_check(void)
- 		return;
+ static int smartconnect_acpi_init(struct acpi_device *acpi)
+ {
+-	struct acpi_object_list input;
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *result;
+-	union acpi_object param;
+ 	acpi_status status;
  
- 	/* On L1400B WLED control the sound card, don't mess with it ... */
--	if (strncmp(model, "L1400B", 6) == 0) {
-+	if (strncmp(model, "L1400B", 6) == 0)
- 		wlan_status = -1;
--	}
- }
+ 	status = acpi_evaluate_object(acpi->handle, "GAOS", NULL, &output);
+@@ -43,15 +41,8 @@ static int smartconnect_acpi_init(struct acpi_device *acpi)
+ 	}
  
- static bool asus_device_present;
+ 	if (result->integer.value & 0x1) {
+-		param.type = ACPI_TYPE_INTEGER;
+-		param.integer.value = 0;
+-
+-		input.count = 1;
+-		input.pointer = &param;
+-
+ 		dev_info(&acpi->dev, "Disabling Intel Smart Connect\n");
+-		status = acpi_evaluate_object(acpi->handle, "SAOS", &input,
+-					      NULL);
++		status = acpi_execute_simple_method(acpi->handle, "SAOS", 0);
+ 	}
+ 
+ 	kfree(result);
 -- 
-1.8.4-fc
+1.8.1.2
