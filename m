@@ -1,136 +1,82 @@
 From: Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 17/27] sony-laptop: convert acpi_get_handle() to acpi_has_method()
-Date: Tue,  3 Sep 2013 08:32:05 +0800
-Message-ID: <1378168335-22556-18-git-send-email-rui.zhang@intel.com>
+Subject: [PATCH 24/27] fujitsu-laptop: convert acpi_evaluate_object() to acpi_evaluate_integer()
+Date: Tue,  3 Sep 2013 08:32:12 +0800
+Message-ID: <1378168335-22556-25-git-send-email-rui.zhang@intel.com>
 References: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:41183 "EHLO mga09.intel.com"
+Received: from mga14.intel.com ([143.182.124.37]:15544 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1759256Ab3ICAbh (ORCPT
+	id S1759256Ab3ICAbi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Sep 2013 20:31:37 -0400
+	Mon, 2 Sep 2013 20:31:38 -0400
 In-Reply-To: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: rjw@sisk.pl
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Jonathan Woithe <jwoithe@physics.adelaide.edu.au>, platform-driver-x86@vger.kernel.org
 
-acpi_has_method() is a new ACPI API introduced to check
-the existence of an ACPI control method.
+acpi_evaluate_integer() is an ACPI API introduced to evaluate an
+ACPI control method that is known to have an integer return value.
+This API can simplify the code because the calling function does not need to
+use the specified acpi_buffer structure required by acpi_evaluate_object();
 
-It can be used to replace acpi_get_handle() in the case that
-1. the calling function doesn't need the ACPI handle of the control method.
-and
-2. the calling function doesn't care the reason why the method is unavailable.
-
-Convert acpi_get_handle() to acpi_has_method()
-in drivers/platform/x86/sony-laptop.c in this patch.
+Convert acpi_evaluate_object() to acpi_evaluate_integer()
+in drivers/platform/x86/fujitsu-laptop.c in this patch.
 
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 CC: Matthew Garrett <matthew.garrett@nebula.com>
-CC: Mattia Dongili <malattia@linux.it>
+CC: Jonathan Woithe <jwoithe@physics.adelaide.edu.au>
 CC: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/sony-laptop.c | 28 +++++++++-------------------
- 1 file changed, 9 insertions(+), 19 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 069821b..ccacd13 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -1509,7 +1509,6 @@ static void sony_nc_function_resume(void)
- static int sony_nc_resume(struct device *dev)
- {
- 	struct sony_nc_value *item;
--	acpi_handle handle;
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 765d8c1..9d30d69 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -219,8 +219,7 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
+ 	{ .type = ACPI_TYPE_INTEGER }
+ 	};
+ 	struct acpi_object_list arg_list = { 4, &params[0] };
+-	struct acpi_buffer output;
+-	union acpi_object out_obj;
++	unsigned long long value;
+ 	acpi_handle handle = NULL;
  
- 	for (item = sony_nc_values; item->name; item++) {
- 		int ret;
-@@ -1524,15 +1523,13 @@ static int sony_nc_resume(struct device *dev)
- 		}
+ 	status = acpi_get_handle(fujitsu_hotkey->acpi_handle, "FUNC", &handle);
+@@ -235,10 +234,7 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
+ 	params[2].integer.value = arg1;
+ 	params[3].integer.value = arg2;
+ 
+-	output.length = sizeof(out_obj);
+-	output.pointer = &out_obj;
+-
+-	status = acpi_evaluate_object(handle, NULL, &arg_list, &output);
++	status = acpi_evaluate_integer(handle, NULL, &arg_list, &value);
+ 	if (ACPI_FAILURE(status)) {
+ 		vdbg_printk(FUJLAPTOP_DBG_WARN,
+ 			"FUNC 0x%x (args 0x%x, 0x%x, 0x%x) call failed\n",
+@@ -246,18 +242,10 @@ static int call_fext_func(int cmd, int arg0, int arg1, int arg2)
+ 		return -ENODEV;
  	}
  
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "ECON",
--					 &handle))) {
-+	if (acpi_has_method(sony_nc_acpi_handle, "ECON")) {
- 		int arg = 1;
- 		if (sony_nc_int_call(sony_nc_acpi_handle, "ECON", &arg, NULL))
- 			dprintk("ECON Method failed\n");
- 	}
+-	if (out_obj.type != ACPI_TYPE_INTEGER) {
+-		vdbg_printk(FUJLAPTOP_DBG_WARN,
+-			"FUNC 0x%x (args 0x%x, 0x%x, 0x%x) did not "
+-			"return an integer\n",
+-			cmd, arg0, arg1, arg2);
+-		return -ENODEV;
+-	}
+-
+ 	vdbg_printk(FUJLAPTOP_DBG_TRACE,
+ 		"FUNC 0x%x (args 0x%x, 0x%x, 0x%x) returned 0x%x\n",
+-			cmd, arg0, arg1, arg2, (int)out_obj.integer.value);
+-	return out_obj.integer.value;
++			cmd, arg0, arg1, arg2, (int)value);
++	return value;
+ }
  
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
--					 &handle)))
-+	if (acpi_has_method(sony_nc_acpi_handle, "SN00"))
- 		sony_nc_function_resume();
- 
- 	return 0;
-@@ -2687,7 +2684,6 @@ static void sony_nc_backlight_ng_read_limits(int handle,
- 
- static void sony_nc_backlight_setup(void)
- {
--	acpi_handle unused;
- 	int max_brightness = 0;
- 	const struct backlight_ops *ops = NULL;
- 	struct backlight_properties props;
-@@ -2722,8 +2718,7 @@ static void sony_nc_backlight_setup(void)
- 		sony_nc_backlight_ng_read_limits(0x14c, &sony_bl_props);
- 		max_brightness = sony_bl_props.maxlvl - sony_bl_props.offset;
- 
--	} else if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "GBRT",
--						&unused))) {
-+	} else if (acpi_has_method(sony_nc_acpi_handle, "GBRT")) {
- 		ops = &sony_backlight_ops;
- 		max_brightness = SONY_MAX_BRIGHTNESS - 1;
- 
-@@ -2755,7 +2750,6 @@ static int sony_nc_add(struct acpi_device *device)
- {
- 	acpi_status status;
- 	int result = 0;
--	acpi_handle handle;
- 	struct sony_nc_value *item;
- 
- 	pr_info("%s v%s\n", SONY_NC_DRIVER_NAME, SONY_LAPTOP_DRIVER_VERSION);
-@@ -2795,15 +2789,13 @@ static int sony_nc_add(struct acpi_device *device)
- 		goto outplatform;
- 	}
- 
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "ECON",
--					 &handle))) {
-+	if (acpi_has_method(sony_nc_acpi_handle, "ECON")) {
- 		int arg = 1;
- 		if (sony_nc_int_call(sony_nc_acpi_handle, "ECON", &arg, NULL))
- 			dprintk("ECON Method failed\n");
- 	}
- 
--	if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle, "SN00",
--					 &handle))) {
-+	if (acpi_has_method(sony_nc_acpi_handle, "SN00")) {
- 		dprintk("Doing SNC setup\n");
- 		/* retrieve the available handles */
- 		result = sony_nc_handles_setup(sony_pf_device);
-@@ -2826,9 +2818,8 @@ static int sony_nc_add(struct acpi_device *device)
- 
- 		/* find the available acpiget as described in the DSDT */
- 		for (; item->acpiget && *item->acpiget; ++item->acpiget) {
--			if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle,
--							 *item->acpiget,
--							 &handle))) {
-+			if (acpi_has_method(sony_nc_acpi_handle,
-+							*item->acpiget)) {
- 				dprintk("Found %s getter: %s\n",
- 						item->name, *item->acpiget);
- 				item->devattr.attr.mode |= S_IRUGO;
-@@ -2838,9 +2829,8 @@ static int sony_nc_add(struct acpi_device *device)
- 
- 		/* find the available acpiset as described in the DSDT */
- 		for (; item->acpiset && *item->acpiset; ++item->acpiset) {
--			if (ACPI_SUCCESS(acpi_get_handle(sony_nc_acpi_handle,
--							 *item->acpiset,
--							 &handle))) {
-+			if (acpi_has_method(sony_nc_acpi_handle,
-+							*item->acpiset)) {
- 				dprintk("Found %s setter: %s\n",
- 						item->name, *item->acpiset);
- 				item->devattr.attr.mode |= S_IWUSR;
+ #if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
 -- 
 1.8.1.2
