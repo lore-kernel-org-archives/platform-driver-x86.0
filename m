@@ -1,56 +1,33 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 19/27] wmi: convert acpi_get_handle() to acpi_has_method()
-Date: Tue,  3 Sep 2013 08:32:07 +0800
-Message-ID: <1378168335-22556-20-git-send-email-rui.zhang@intel.com>
-References: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1378168335-22556-1-git-send-email-rui.zhang@intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: rjw@sisk.pl
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH v1 3/3] ipc: Add support for default interrupt mode
+Date: Tue, 3 Sep 2013 11:48:25 +0000
+Message-ID: <1378208904.11730.2.camel@x230>
+References: <cover.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+	 <871d1b965914d6c90e698aa67827854e748f18e1.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-bl2lp0206.outbound.protection.outlook.com ([207.46.163.206]:26082
+	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S932597Ab3ICLsa (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 3 Sep 2013 07:48:30 -0400
+In-Reply-To: <871d1b965914d6c90e698aa67827854e748f18e1.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Language: en-US
+Content-ID: <DF3B0281D1937B40BA8E72CC3EF2E03D@namprd05.prod.outlook.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-acpi_has_method() is a new ACPI API introduced to check
-the existence of an ACPI control method.
-
-It can be used to replace acpi_get_handle() in the case that
-1. the calling function doesn't need the ACPI handle of the control method.
-and
-2. the calling function doesn't care the reason why the method is unavailable.
-
-Convert acpi_get_handle() to acpi_has_method()
-in drivers/platform/x86/wmi.c in this patch.
-
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-CC: Matthew Garrett <matthew.garrett@nebula.com>
-CC: platform-driver-x86@vger.kernel.org
----
- drivers/platform/x86/wmi.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index cb4fe80..806ad7a 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -347,7 +347,7 @@ struct acpi_buffer *out)
- {
- 	struct guid_block *block = NULL;
- 	struct wmi_block *wblock = NULL;
--	acpi_handle handle, wc_handle;
-+	acpi_handle handle;
- 	acpi_status status, wc_status = AE_ERROR;
- 	struct acpi_object_list input;
- 	union acpi_object wq_params[1];
-@@ -387,8 +387,7 @@ struct acpi_buffer *out)
- 		 * expensive, but have no corresponding WCxx method. So we
- 		 * should not fail if this happens.
- 		 */
--		wc_status = acpi_get_handle(handle, wc_method, &wc_handle);
--		if (ACPI_SUCCESS(wc_status))
-+		if (acpi_has_method(handle, wc_method))
- 			wc_status = acpi_execute_simple_method(handle,
- 								wc_method, 1);
- 	}
--- 
-1.8.1.2
-
+T24gTW9uLCAyMDEzLTA3LTIyIGF0IDE5OjQ4IC0wNzAwLCBLdXBwdXN3YW15IFNhdGh5YW5hcmF5
+YW5hbiB3cm90ZToNCj4gQWRkZWQgaW50ZWwgc2N1IGlwYyBhY2Nlc3MgbW9kZSBjb25maWcgb3B0
+aW9uLg0KPiANCj4gQWxzbywgVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgdG8gZW5hYmxlIGlwYyBj
+b21tYW5kIGludGVycnVwdA0KPiBtb2RlIGJ5IGRlZmF1bHQuIFRoaXMgZnVuY3Rpb25hbGl0eSBp
+cyBlbmFibGVkIGJ5IGZvbGxvd2luZw0KPiBjb25maWcgb3B0aW9uLg0KPiANCj4gQ09ORklHX0lO
+VEVMX1NDVV9JUENfSU5UUl9NT0RFPXkNCg0KQ2FuIHlvdSBkb2N1bWVudCB0aGlzIGluIHRoZSBo
+ZWxwIHRleHQ/IEl0J3MgdW5jbGVhciB3aGV0aGVyIHBlb3BsZQ0Kc2hvdWxkIGVuYWJsZSB0aGlz
+IG9wdGlvbiBvciBub3QuDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5l
+YnVsYS5jb20+DQo=
