@@ -1,30 +1,30 @@
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 1/1] amilo-rfkill: Enable using amilo-rfkill with the
- FSC Amilo L1310.
-Date: Tue, 3 Sep 2013 12:08:38 +0000
-Message-ID: <1378210093.11730.9.camel@x230>
-References: <1376925345-6687-1-git-send-email-meinkej@informatik.uni-freiburg.de>
+Subject: Re: [patch] wmi: parse_wdg() should return kernel error codes
+Date: Tue, 3 Sep 2013 12:14:04 +0000
+Message-ID: <1378210443.11730.11.camel@x230>
+References: <20130814090230.GA521@elgon.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0241.outbound.protection.outlook.com ([207.46.163.241]:34790
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
+Received: from mail-bl2lp0204.outbound.protection.outlook.com ([207.46.163.204]:33277
+	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
 	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1752764Ab3ICMIl (ORCPT
+	id S1759909Ab3ICMOI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 3 Sep 2013 08:08:41 -0400
-In-Reply-To: <1376925345-6687-1-git-send-email-meinkej@informatik.uni-freiburg.de>
+	Tue, 3 Sep 2013 08:14:08 -0400
+In-Reply-To: <20130814090230.GA521@elgon.mountain>
 Content-Language: en-US
-Content-ID: <89472A52FC6A794DB00D03FBFC4079AA@namprd05.prod.outlook.com>
+Content-ID: <0EF126D6EF84754AA42B668013D1D1A0@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jerome Meinke <jerome.meinke@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jerome Meinke <meinkej@informatik.uni-freiburg.de>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
 
-T24gTW9uLCAyMDEzLTA4LTE5IGF0IDE3OjE1ICswMjAwLCBKZXJvbWUgTWVpbmtlIHdyb3RlOg0K
-PiBUaGlzIGNoYW5nZSBleHRlbmRzIHRoZSBhbWlsb19yZmtpbGxfaWRfdGFibGVbXSB3aXRoIHRo
-ZQ0KPiBETUlfQk9BUkRfTkFNRSBpbmZvcm1hdGlvbiBvZiB0aGUgQW1pbG8gTDEzMTAsIHNvIHRo
-YXQgdGhlIHdpZmkgZGV2aWNlDQo+IGNhbiBiZSBzd2l0Y2hlZCBvbi4NCg0KQXBwbGllZCwgdGhh
-bmtzLg0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
-DQo=
+T24gV2VkLCAyMDEzLTA4LTE0IGF0IDEyOjAyICswMzAwLCBEYW4gQ2FycGVudGVyIHdyb3RlOg0K
+PiBUaGUgY3VycmVudCBjb2RlIHJldHVybnMgYSBtaXggb2YgYWNwaV9zdGF0dXMgYW5kIGtlcm5l
+bCBlcnJvciBjb2Rlcy4NCj4gSXQgc2hvdWxkIGp1c3QgcmV0dXJuIGtlcm5lbCBlcnJvciBjb2Rl
+cy4gIFRoZXJlIGFyZSBhbHJlYWR5IGVycm9yDQo+IHBhdGhzDQo+IGluIHRoaXMgZnVuY3Rpb24g
+d2hpY2ggcmV0dXJuIC1FTk9NRU0gYW5kIHRoYXQncyB3aGF0IHRoZSBjYWxsZXINCj4gZXhwZWN0
+cy4NCg0KQXBwbGllZCwgdGhhbmtzLg0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5n
+YXJyZXR0QG5lYnVsYS5jb20+DQo=
