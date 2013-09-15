@@ -1,29 +1,110 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] Move and rename HP watchdog timer driver
-Date: Tue, 03 Sep 2013 22:56:58 -0700
-Message-ID: <5226CBAA.10002@roeck-us.net>
-References: <1378272591-9755-1-git-send-email-matthew.garrett@nebula.com>  <5226C880.8010704@roeck-us.net> <1378273901.11730.53.camel@x230>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT] x86 platform driver updates for 3.12
+Date: Sun, 15 Sep 2013 18:34:17 +0100
+Message-ID: <20130915173417.GA11116@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1378273901.11730.53.camel@x230>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thomas.Mingarelli@hp.com" <Thomas.Mingarelli@hp.com>, "toshi.kani@hp.com" <toshi.kani@hp.com>, "wim@iguana.be" <wim@iguana.be>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cavan.codon.org.uk ([93.93.128.6]:41762 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932164Ab3IOReW (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 15 Sep 2013 13:34:22 -0400
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On 09/03/2013 10:51 PM, Matthew Garrett wrote:
-> On Tue, 2013-09-03 at 22:43 -0700, Guenter Roeck wrote:
->
->> If that is the case, wouldn't it make more sense to have separate drivers,
->> one per functionality, plus an mfd driver to bind them all together ?
->
-> It'd be an option, but I don't think there's a huge benefit - the
-> functionality's reasonably related and there's no real internal bus
-> architecture on the device.
->
-On the other side it is much cleaner. drivers/mfd/lpc_sch.c and drivers/mfd/lpc_ich.c
-are good examples.
 
-Guenter
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Linus,
+
+Nothing amazing here, almost entirely cleanups and minor bugfixes and=20
+one bit of hardware enablement in the amilo-rfkill driver.
+
+The following changes since commit cb3e4330e697dffaf3d9cefebc9c7e7d39c89f2e:
+
+  Merge branch 'x86-mm-for-linus' of git://git.kernel.org/pub/scm/linux/ker=
+nel/git/tip/tip (2013-09-04 09:39:26 -0700)
+
+are available in the git repository at:
+
+
+  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
+
+for you to fetch changes up to 5c07eae979dfb596141c6885e5f5ecf1cd22cad3:
+
+  platform/x86: panasonic-laptop: reuse module_acpi_driver (2013-09-05 08:5=
+2:46 -0400)
+
+----------------------------------------------------------------
+Adam Lee (2):
+      thinkpad_acpi: return -NODEV while operating uninitialized LEDs
+      thinkpad_acpi: add the ability setting TPACPI_LED_NONE by quirk
+
+Andy Shevchenko (1):
+      platform/x86: panasonic-laptop: reuse module_acpi_driver
+
+Dan Carpenter (1):
+      wmi: parse_wdg() should return kernel error codes
+
+Frederick van der Wyck (1):
+      platform samsung-q10: use ACPI instead of direct EC calls
+
+Jerome Meinke (1):
+      amilo-rfkill: Enable using amilo-rfkill with the FSC Amilo L1310.
+
+Jingoo Han (2):
+      platform: replace strict_strto*() with kstrto*()
+      platform: x86: remove unnecessary platform_set_drvdata()
+
+Kirill Tkhai (1):
+      hp_wmi: Fix unregister order in hp_wmi_rfkill_setup()
+
+Randy Dunlap (1):
+      samsung-laptop: fix config build error
+
+Wei Yongjun (2):
+      x86: smartconnect: use module_acpi_driver to simplify the code
+      x86: irst: use module_acpi_driver to simplify the code
+
+ drivers/platform/x86/Kconfig              |  3 +-
+ drivers/platform/x86/amilo-rfkill.c       |  7 ++++
+ drivers/platform/x86/classmate-laptop.c   |  2 +-
+ drivers/platform/x86/compal-laptop.c      |  7 ++--
+ drivers/platform/x86/hp-wmi.c             | 16 ++++----
+ drivers/platform/x86/intel-rst.c          | 13 +------
+ drivers/platform/x86/intel-smartconnect.c | 13 +------
+ drivers/platform/x86/intel_mid_powerbtn.c |  1 -
+ drivers/platform/x86/intel_mid_thermal.c  |  1 -
+ drivers/platform/x86/panasonic-laptop.c   | 25 +-----------
+ drivers/platform/x86/samsung-q10.c        | 65 ++++++++++-----------------=
+----
+ drivers/platform/x86/thinkpad_acpi.c      | 23 ++++++++---
+ drivers/platform/x86/wmi.c                |  4 +-
+ 13 files changed, 66 insertions(+), 114 deletions(-)
+
+
+--=20
+Matthew Garrett | mjg59@srcf.ucam.org
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlI175kACgkQ7Hkv8l1YiTtPcwCeKYoio1mW6nzgiINwbzPlygj/
+N0gAn00lSrVkfjERGeEQ1KwQ0MfoHqyf
+=Yi0h
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
