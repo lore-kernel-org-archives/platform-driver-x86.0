@@ -1,30 +1,61 @@
-From: =?ISO-8859-1?Q?Marco_Kr=FCger?= <krgsch@gmail.com>
-Subject: Re: sony-laptop crash (Sony VPC SE 1V9E) for 3.8.0+
-Date: Sun, 22 Sep 2013 11:07:12 +0200
-Message-ID: <523EB340.5000207@gmail.com>
-References: <51FE2F39.4080504@gmail.com> <20130804221454.GB7707@kamineko.org> <51FEF199.7050800@gmail.com> <20130808221742.GA27435@kamineko.org> <523E1206.8080001@gmail.com> <20130922031001.GA6901@kamineko.org> <523E9296.2000303@gmail.com> <20130922075553.GA11177@kamineko.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH 2/6] ideapad_laptop: introduce #ifdef CONFIG_PM_SLEEP for PM specific code
+Date: Mon, 23 Sep 2013 15:50:47 +0800
+Message-ID: <1379922651-5578-3-git-send-email-rui.zhang@intel.com>
+References: <1379922651-5578-1-git-send-email-rui.zhang@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f47.google.com ([209.85.214.47]:40179 "EHLO
-	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752549Ab3IVJGI (ORCPT
+Received: from mga14.intel.com ([143.182.124.37]:40072 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752558Ab3IWHvC (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 22 Sep 2013 05:06:08 -0400
-Received: by mail-bk0-f47.google.com with SMTP id mx12so747558bkb.20
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Sep 2013 02:06:07 -0700 (PDT)
-In-Reply-To: <20130922075553.GA11177@kamineko.org>
+	Mon, 23 Sep 2013 03:51:02 -0400
+In-Reply-To: <1379922651-5578-1-git-send-email-rui.zhang@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mattia Dongili <malattia@linux.it>
-Cc: platform-driver-x86@vger.kernel.org
+To: rjw@sisk.pl
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org
 
+ideapad_acpi_resume() and ideapad_pm is meaningful
+only if CONFIG_PM_SLEEP is set.
+Thus introduce #ifdef for this piece of code.
 
-> what kernel version are you using? 3.11 is supposed to have a fix for
-> that. is it still wrong after that?
-It's kernel v3.11.1 - my notebook is a diva ;)
-> ha! I guess this is not particularly pressing, it's just the help text
-> that is incorrect, right?
->
-Right! That was my guess, too. 0-> disabled, ... just makes more sense.
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+CC: Matthew Garrett <matthew.garrett@nebula.com>
+CC: Ike Panhc <ike.pan@canonical.com>
+CC: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/x86/ideapad-laptop.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 89c4519..5021c55 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -901,6 +901,7 @@ static void ideapad_acpi_notify(struct acpi_device *adevice, u32 event)
+ 	}
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
+ static int ideapad_acpi_resume(struct device *device)
+ {
+ 	ideapad_sync_rfk_state(ideapad_priv);
+@@ -909,6 +910,7 @@ static int ideapad_acpi_resume(struct device *device)
+ }
+ 
+ static SIMPLE_DEV_PM_OPS(ideapad_pm, NULL, ideapad_acpi_resume);
++#endif
+ 
+ static struct acpi_driver ideapad_acpi_driver = {
+ 	.name = "ideapad_acpi",
+@@ -917,7 +919,9 @@ static struct acpi_driver ideapad_acpi_driver = {
+ 	.ops.add = ideapad_acpi_add,
+ 	.ops.remove = ideapad_acpi_remove,
+ 	.ops.notify = ideapad_acpi_notify,
++#ifdef CONFIG_PM_SLEEP
+ 	.drv.pm = &ideapad_pm,
++#endif
+ 	.owner = THIS_MODULE,
+ };
+ module_acpi_driver(ideapad_acpi_driver);
+-- 
+1.7.9.5
