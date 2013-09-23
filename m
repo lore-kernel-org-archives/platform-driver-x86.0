@@ -1,29 +1,36 @@
-From: Pavel Machek <pavel@ucw.cz>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 Subject: Re: thinkpad x60: critical thermal shutdown does not work (and
  ethernet overheats)
-Date: Mon, 23 Sep 2013 12:42:56 +0200
-Message-ID: <20130923095814.GA2052@Nokia-N900>
+Date: Mon, 23 Sep 2013 09:02:56 -0300
+Message-ID: <20130923120256.GB29847@khazad-dum.debian.net>
 References: <20120515181004.GA2499@elf.ucw.cz>
+ <20130923095814.GA2052@Nokia-N900>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120515181004.GA2499@elf.ucw.cz>
+In-Reply-To: <20130923095814.GA2052@Nokia-N900>
 Sender: linux-acpi-owner@vger.kernel.org
-To: lenb@kernel.org, linux-acpi@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: lenb@kernel.org, linux-acpi@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi!
+On Mon, 23 Sep 2013, Pavel Machek wrote:
+> > I have rather old thinkpad x60 here. Long time ago, I noticed that on
+> > high continuous ethernet load, it shuts itself down in regular
+> > way. I traced it down to overheat, followed by ACPI signaling system
+> > to go down.
+> 
+> just to wrap the story up... after fixing pcie aspm problems,
+> ethernet apparently stopped overheating.
 
-> I have rather old thinkpad x60 here. Long time ago, I noticed that on
-> high continuous ethernet load, it shuts itself down in regular
-> way. I traced it down to overheat, followed by ACPI signaling system
-> to go down.
+And that means a new kernel with fixed ASPM handling, or disabling ASPM
+entirely, or what?
 
-just to wrap the story up... after fixing pcie aspm problems,
-ethernet apparently stopped overheating.
+Good to know it can be handled by a software fix, though!
 
-					pavel
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
