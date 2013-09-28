@@ -1,43 +1,41 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: thinkpad x60: critical thermal shutdown does not work (and
- ethernet overheats)
-Date: Fri, 27 Sep 2013 12:22:54 +0200
-Message-ID: <20130927102254.GC18121@amd.pavel.ucw.cz>
-References: <20120515181004.GA2499@elf.ucw.cz>
- <20130923095814.GA2052@Nokia-N900>
- <20130923120256.GB29847@khazad-dum.debian.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130923120256.GB29847@khazad-dum.debian.net>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: lenb@kernel.org, linux-acpi@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 03/10] dell-laptop: If there is no hwswitch, then clear all hw-controlled bits
+Date: Sat, 28 Sep 2013 21:26:32 +0200
+Message-ID: <1380396399-3889-4-git-send-email-hdegoede@redhat.com>
+References: <1380396399-3889-1-git-send-email-hdegoede@redhat.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:35486 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754947Ab3I1T0s (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 28 Sep 2013 15:26:48 -0400
+In-Reply-To: <1380396399-3889-1-git-send-email-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>
 
-On Mon 2013-09-23 09:02:56, Henrique de Moraes Holschuh wrote:
-> On Mon, 23 Sep 2013, Pavel Machek wrote:
-> > > I have rather old thinkpad x60 here. Long time ago, I noticed that on
-> > > high continuous ethernet load, it shuts itself down in regular
-> > > way. I traced it down to overheat, followed by ACPI signaling system
-> > > to go down.
-> > 
-> > just to wrap the story up... after fixing pcie aspm problems,
-> > ethernet apparently stopped overheating.
-> 
-> And that means a new kernel with fixed ASPM handling, or disabling ASPM
-> entirely, or what?
+To ensure we don't enter any hw-switch related code paths on machines without
+a hw-switch.
 
-That means single-line forcing ASPM to be disabled, even through linux
-is normally not able to disable ASPM when it is not supported by the
-BIOS. Someone at Intel knows about the problem, hopefully they will
-present some better solution...
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/dell-laptop.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Good to know it can be handled by a software fix, though!
-
-Yes :-). [I wonder if it happens on other X60 machines, too?]
-									Pavel
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index bae932b..48fabf6 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -548,6 +548,9 @@ static int __init dell_setup_rfkill(void)
+ 	buffer->input[0] = 0x2;
+ 	dell_send_request(buffer, 17, 11);
+ 	hwswitch_state = buffer->output[1];
++	/* If there is no hwswitch, then clear all hw-controlled bits */
++	if (!(status & BIT(0)))
++		hwswitch_state &= ~7;
+ 	release_buffer();
+ 
+ 	if ((status & (1<<2|1<<8)) == (1<<2|1<<8)) {
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.8.3.1
