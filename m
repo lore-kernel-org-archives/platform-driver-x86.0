@@ -1,45 +1,44 @@
-From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH] x86, wmi fix modalias_show return values
-Date: Thu,  3 Oct 2013 19:23:36 -0400
-Message-ID: <1380842616-4747-1-git-send-email-prarit@redhat.com>
+From: "Administrador do Sistema" <system.administrator@inMail24.com>
+Subject: RE
+Date: Fri, 4 Oct 2013 20:35:22 -0400 (AMT)
+Message-ID: <64424.180.215.162.252.1380933322.squirrel@webmail.pmm.am.gov.br>
+Reply-To: system.administrator24@inMail24.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:9329 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752216Ab3JCXXk (ORCPT
+Received: from taruma.pmm.am.gov.br ([200.242.41.132]:31540 "EHLO
+	webmail.manaus.am.gov.br" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751592Ab3JEAqb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 Oct 2013 19:23:40 -0400
+	Fri, 4 Oct 2013 20:46:31 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Prarit Bhargava <prarit@redhat.com>, Matthew Garrett <matthew.garrett@nebula.com>
 
-I just fixed this same bug in arch/powerpc/kernel/vio.c and took a quick
-look for other similar errors in the kernel.
 
-modalias_show() should return an empty string on error, not errno.
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
----
- drivers/platform/x86/wmi.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 601ea95..6170b64 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -686,8 +686,10 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
- 	struct wmi_block *wblock;
- 
- 	wblock = dev_get_drvdata(dev);
--	if (!wblock)
--		return -ENOMEM;
-+	if (!wblock) {
-+		strcat(buf, "\n");
-+		return strlen(buf);
-+	}
- 
- 	wmi_gtoa(wblock->gblock.guid, guid_string);
- 
--- 
-1.7.9.3
+ATEN=C7=C3O;
+
+Sua caixa de correio excedeu o limite de 10GB de armazenamento, que =E9=
+ como
+definido pelo administrador, voc=EA est=E1 atualmente em execu=E7=E3o n=
+o 10.9GB,
+voc=EA pode n=E3o ser capaz de enviar ou receber novas mensagens at=E9 =
+que voc=EA
+re-validar a sua caixa de correio. Para revalidar sua caixa de correio,
+envie os seguintes dados abaixo:
+
+nome:
+Usu=E1rio:
+senha:
+Confirme a Senha:
+Endere=E7o de E-mail:
+Telefone:
+
+Se voc=EA n=E3o conseguir revalidar sua caixa de correio, a caixa de co=
+rreio
+ser=E1 desativado!
+
+obrigado
+Administrador do Sistema
