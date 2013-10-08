@@ -1,25 +1,43 @@
-From: "Mr. M. Barlow" <curtisbarlow001@live.com>
-Subject: VERY URGENT..!
-Date: Sun, 06 Oct 2013 21:30:31 +0100
-Message-ID: <20131007033034.3BF5D4913D6__9444.7820600637$1381092226$gmane$org@mail.suza.ac.tz>
-Reply-To: curtisbarlow001@live.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.suza.ac.tz ([41.204.150.68]:57960 "EHLO mail.suza.ac.tz"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754317Ab3JFUnR convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 6 Oct 2013 16:43:17 -0400
-Content-Description: Mail message body
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <curtisbarlow001@live.com>
+From: Felipe Contreras <felipe.contreras@gmail.com>
+Subject: [RESEND/PATCH 2/2] x86: asus-laptop: trivial style cleanups
+Date: Mon,  7 Oct 2013 22:08:38 -0500
+Message-ID: <1381201718-24698-3-git-send-email-felipe.contreras@gmail.com>
+References: <1381201718-24698-1-git-send-email-felipe.contreras@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1381201718-24698-1-git-send-email-felipe.contreras@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Jiri Kosina <trivial@kernel.org>, Felipe Contreras <felipe.contreras@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hello, I am Mr. M. Barlow from Paris, France. I have been advised to contact you regarding my business investment in your country. For urgent response and more details, kindly get back to me via this E-mail: bc82022@gmail.com or Telephone number below. Thank you as I wait for your response.
+Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+---
+ drivers/platform/x86/asus-laptop.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Mr. M. Barlow.
-+33-753-194-496
-
-Sent from Orange Wireless BlackBerry Smartphone, France.
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 0e9c169..0210cf4 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -1032,7 +1032,7 @@ static ssize_t store_wlan(struct device *dev, struct device_attribute *attr,
+ 	return sysfs_acpi_set(asus, buf, count, METHOD_WLAN);
+ }
+ 
+-/*e
++/*
+  * Bluetooth
+  */
+ static int asus_bluetooth_set(struct asus_laptop *asus, int status)
+@@ -1853,9 +1853,8 @@ static void asus_dmi_check(void)
+ 		return;
+ 
+ 	/* On L1400B WLED control the sound card, don't mess with it ... */
+-	if (strncmp(model, "L1400B", 6) == 0) {
++	if (strncmp(model, "L1400B", 6) == 0)
+ 		wlan_status = -1;
+-	}
+ }
+ 
+ static bool asus_device_present;
+-- 
+1.8.4-fc
