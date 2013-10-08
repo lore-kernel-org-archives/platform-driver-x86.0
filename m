@@ -1,140 +1,186 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: [PATCH v4 3/4] ACPI / video: Do not register backlight if win8 and native interface exists
-Date: Tue,  8 Oct 2013 14:40:00 +0800
-Message-ID: <1381214401-24672-4-git-send-email-aaron.lu@intel.com>
-References: <1381214401-24672-1-git-send-email-aaron.lu@intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:14013 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754755Ab3JHGjr (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Oct 2013 02:39:47 -0400
-In-Reply-To: <1381214401-24672-1-git-send-email-aaron.lu@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: Daniel Vetter <daniel@ffwll.ch>, "Rafael J. Wysocki" <rjw@sisk.pl>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Yves-Alexis Perez <corsac@debian.org>, Felipe Contreras <felipe.contreras@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?UTF-8?q?J=C3=B6rg=20Otte?= <jrg.otte@gmail.com>, Mike Galbraith <bitbucket@online.de>, platform-driver-x86@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Henrique
+From: Felipe Contreras <felipe.contreras@gmail.com>
+Subject: [PATCH v2] platform: x86: asus-wmi: add fan control
+Date: Tue,  8 Oct 2013 07:48:44 -0500
+Message-ID: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>, Felipe Contreras <felipe.contreras@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-According to Matthew Garrett, "Windows 8 leaves backlight control up
-to individual graphics drivers rather than making ACPI calls itself.
-There's plenty of evidence to suggest that the Intel driver for
-Windows [8] doesn't use the ACPI interface, including the fact that
-it's broken on a bunch of machines when the OS claims to support
-Windows 8.  The simplest thing to do appears to be to disable the
-ACPI backlight interface on these systems".
+Simple driver to enable control of the fan in ASUS laptops. So far this
+has only been tested in ASUS Zenbook Prime UX31A, but according to some
+online reference [1], it should work in other models as well.
 
-So for Win8 systems, if there is native backlight control interface
-registered by GPU driver, ACPI video will not register its own. For
-users who prefer to keep ACPI video's backlight interface, the existing
-kernel cmdline option acpi_backlight=video can be used.
+The implementation is very straight-forward, the only caveat is that the
+fan speed needs to be saved after it has been manually changed because
+it won't be reported properly until it goes back to 'auto' mode.
 
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-Tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
-Tested-by: Yves-Alexis Perez <corsac@debian.org>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[1] http://forum.notebookreview.com/asus/705656-fan-control-asus-prime-ux31-ux31a-ux32a-ux32vd.html
+
+Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
 ---
- drivers/acpi/internal.h     |  5 ++---
- drivers/acpi/video.c        | 10 +++++-----
- drivers/acpi/video_detect.c | 14 ++++++++++++--
- 3 files changed, 19 insertions(+), 10 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 105 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-index 20f4233..453ae8d 100644
---- a/drivers/acpi/internal.h
-+++ b/drivers/acpi/internal.h
-@@ -169,9 +169,8 @@ int acpi_create_platform_device(struct acpi_device *adev,
- 					Video
-   -------------------------------------------------------------------------- */
- #if defined(CONFIG_ACPI_VIDEO) || defined(CONFIG_ACPI_VIDEO_MODULE)
--bool acpi_video_backlight_quirks(void);
--#else
--static inline bool acpi_video_backlight_quirks(void) { return false; }
-+bool acpi_osi_is_win8(void);
-+bool acpi_video_verify_backlight_support(void);
- #endif
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 19c313b..5fdfed6 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -78,6 +78,7 @@ MODULE_LICENSE("GPL");
+ #define ASUS_WMI_METHODID_GPID		0x44495047 /* Get Panel ID?? (Resol) */
+ #define ASUS_WMI_METHODID_QMOD		0x444F4D51 /* Quiet MODe */
+ #define ASUS_WMI_METHODID_SPLV		0x4C425053 /* Set Panel Light Value */
++#define ASUS_WMI_METHODID_AGFN		0x4E464741
+ #define ASUS_WMI_METHODID_SFUN		0x4E554653 /* FUNCtionalities */
+ #define ASUS_WMI_METHODID_SDSP		0x50534453 /* Set DiSPlay output */
+ #define ASUS_WMI_METHODID_GDSP		0x50534447 /* Get DiSPlay output */
+@@ -155,6 +156,16 @@ struct bios_args {
+ 	u32 arg1;
+ } __packed;
  
- #endif /* _ACPI_INTERNAL_H_ */
-diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
-index 3bd1eaa..343db59 100644
---- a/drivers/acpi/video.c
-+++ b/drivers/acpi/video.c
-@@ -1256,8 +1256,8 @@ acpi_video_switch_brightness(struct acpi_video_device *device, int event)
- 	unsigned long long level_current, level_next;
- 	int result = -EINVAL;
- 
--	/* no warning message if acpi_backlight=vendor is used */
--	if (!acpi_video_backlight_support())
-+	/* no warning message if acpi_backlight=vendor or a quirk is used */
-+	if (!acpi_video_verify_backlight_support())
- 		return 0;
- 
- 	if (!device->brightness)
-@@ -1386,13 +1386,13 @@ acpi_video_bus_get_devices(struct acpi_video_bus *video,
- static int acpi_video_bus_start_devices(struct acpi_video_bus *video)
- {
- 	return acpi_video_bus_DOS(video, 0,
--				  acpi_video_backlight_quirks() ? 1 : 0);
-+				  acpi_osi_is_win8() ? 1 : 0);
- }
- 
- static int acpi_video_bus_stop_devices(struct acpi_video_bus *video)
- {
- 	return acpi_video_bus_DOS(video, 0,
--				  acpi_video_backlight_quirks() ? 0 : 1);
-+				  acpi_osi_is_win8() ? 0 : 1);
- }
- 
- static void acpi_video_bus_notify(struct acpi_device *device, u32 event)
-@@ -1558,7 +1558,7 @@ acpi_video_bus_match(acpi_handle handle, u32 level, void *context,
- 
- static void acpi_video_dev_register_backlight(struct acpi_video_device *device)
- {
--	if (acpi_video_backlight_support()) {
-+	if (acpi_video_verify_backlight_support()) {
- 		struct backlight_properties props;
- 		struct pci_dev *pdev;
- 		acpi_handle acpi_parent;
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 940edbf..23d7d26 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -37,6 +37,7 @@
- #include <linux/acpi.h>
- #include <linux/dmi.h>
- #include <linux/pci.h>
-+#include <linux/backlight.h>
- 
- #include "internal.h"
- 
-@@ -233,11 +234,11 @@ static void acpi_video_caps_check(void)
- 		acpi_video_get_capabilities(NULL);
- }
- 
--bool acpi_video_backlight_quirks(void)
-+bool acpi_osi_is_win8(void)
- {
- 	return acpi_gbl_osi_data >= ACPI_OSI_WIN_8;
- }
--EXPORT_SYMBOL(acpi_video_backlight_quirks);
-+EXPORT_SYMBOL(acpi_osi_is_win8);
- 
- /* Promote the vendor interface instead of the generic video module.
-  * This function allow DMI blacklists to be implemented by externals
-@@ -283,6 +284,15 @@ int acpi_video_backlight_support(void)
- }
- EXPORT_SYMBOL(acpi_video_backlight_support);
- 
-+bool acpi_video_verify_backlight_support(void)
-+{
-+	if (!(acpi_video_support & ACPI_VIDEO_BACKLIGHT_FORCE_VIDEO) &&
-+	    acpi_osi_is_win8() && backlight_device_registered(BACKLIGHT_RAW))
-+		return false;
-+	return acpi_video_backlight_support();
-+}
-+EXPORT_SYMBOL(acpi_video_verify_backlight_support);
++struct fan_args {
++	u16 mfun;
++	u16 sfun;
++	u16 len;
++	u8 stas;
++	u8 err;
++	u8 fan;
++	u32 speed;
++} __packed;
 +
  /*
-  * Use acpi_backlight=vendor/video to force that backlight switching
-  * is processed by vendor specific acpi drivers or video.ko driver.
+  * <platform>/    - debugfs root directory
+  *   dev_id      - current dev_id
+@@ -205,6 +216,9 @@ struct asus_wmi {
+ 	struct asus_rfkill gps;
+ 	struct asus_rfkill uwb;
+ 
++	struct thermal_cooling_device *fan;
++	int fan_speed;
++
+ 	struct hotplug_slot *hotplug_slot;
+ 	struct mutex hotplug_lock;
+ 	struct mutex wmi_lock;
+@@ -1022,6 +1036,90 @@ exit:
+ }
+ 
+ /*
++ * Fan
++ */
++
++static int fan_speed(struct asus_wmi *asus, int write, int fan, unsigned long *speed)
++{
++	struct fan_args args = {
++		.len = sizeof(args),
++		.mfun = 0x13,
++		.sfun = write ? 0x07 : 0x06,
++		.fan = fan,
++		.speed = write ? *speed : 0,
++	};
++	int r;
++	u32 value;
++
++	if (!write && asus->fan_speed >= 0) {
++		*speed = asus->fan_speed;
++		return 0;
++	}
++
++	r = asus_wmi_evaluate_method(ASUS_WMI_METHODID_AGFN, virt_to_phys(&args), 0, &value);
++	if (r || value || args.err)
++		return -1;
++
++	if (write)
++		asus->fan_speed = fan > 0 ? *speed : -1;
++	else
++		*speed = args.speed;
++
++	return 0;
++}
++
++static int fan_set_auto(struct asus_wmi *asus)
++{
++	unsigned long speed = 0;
++	return fan_speed(asus, 1, 0, &speed);
++}
++
++static int fan_get_max_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	*state = 0xff;
++	return 0;
++}
++
++static int fan_get_cur_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	return fan_speed(cdev->devdata, 0, 1, state);
++}
++
++static int fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
++{
++	return fan_speed(cdev->devdata, 1, 1, &state);
++}
++
++static const struct thermal_cooling_device_ops fan_cooling_ops = {
++	.get_max_state = fan_get_max_state,
++	.get_cur_state = fan_get_cur_state,
++	.set_cur_state = fan_set_cur_state,
++};
++
++static int asus_wmi_fan_init(struct asus_wmi *asus)
++{
++	struct thermal_cooling_device *cdev;
++
++	if (fan_set_auto(asus))
++		return 0;
++
++	cdev = thermal_cooling_device_register("Fan", asus, &fan_cooling_ops);
++	if (IS_ERR(cdev))
++		return PTR_ERR(cdev);
++	asus->fan = cdev;
++	return 0;
++}
++
++static void asus_wmi_fan_exit(struct asus_wmi *asus)
++{
++	if (!asus->fan)
++		return;
++	fan_set_auto(asus);
++	thermal_cooling_device_unregister(asus->fan);
++	asus->fan = NULL;
++}
++
++/*
+  * Hwmon device
+  */
+ static ssize_t asus_hwmon_pwm1(struct device *dev,
+@@ -1796,6 +1894,10 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_rfkill;
+ 
++	err = asus_wmi_fan_init(asus);
++	if (err)
++		goto fail_fan;
++
+ 	if (asus->driver->quirks->wmi_backlight_power)
+ 		acpi_video_dmi_promote_vendor();
+ 	if (!acpi_video_backlight_support()) {
+@@ -1830,6 +1932,8 @@ fail_debugfs:
+ fail_wmi_handler:
+ 	asus_wmi_backlight_exit(asus);
+ fail_backlight:
++	asus_wmi_fan_exit(asus);
++fail_fan:
+ 	asus_wmi_rfkill_exit(asus);
+ fail_rfkill:
+ 	asus_wmi_led_exit(asus);
+@@ -1855,6 +1959,7 @@ static int asus_wmi_remove(struct platform_device *device)
+ 	asus_wmi_hwmon_exit(asus);
+ 	asus_wmi_led_exit(asus);
+ 	asus_wmi_rfkill_exit(asus);
++	asus_wmi_fan_exit(asus);
+ 	asus_wmi_debugfs_exit(asus);
+ 	asus_wmi_platform_exit(asus);
+ 
 -- 
-1.8.4.12.g2ea3df6
+1.8.4-fc
+
