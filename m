@@ -1,29 +1,53 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
-Date: Thu, 10 Oct 2013 16:06:40 +0000
-Message-ID: <1381421199.4248.2.camel@x230.lan>
-References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
-	 <CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
+From: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v2 09/10] intel_mid: Moved board related code to a new
+     file
+Date: Thu, 10 Oct 2013 12:27:54 -0700 (PDT)
+Message-ID: <59573.10.7.199.145.1381433274.squirrel@linux.intel.com>
+References: <1381384807-14146-1-git-send-email-david.a.cohen@linux.intel.com>
+    <1381384807-14146-10-git-send-email-david.a.cohen@linux.intel.com>
+    <20131010105235.GA25140@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <89C3BCDD5253D640A2B59ABFEDD1E8D3@namprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "corentin.chary@gmail.com" <corentin.chary@gmail.com>
-Cc: "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:20832 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755621Ab3JJT14 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 10 Oct 2013 15:27:56 -0400
+In-Reply-To: <20131010105235.GA25140@roeck-us.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: David Cohen <david.a.cohen@linux.intel.com>, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, linux-kernel@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-T24gVGh1LCAyMDEzLTEwLTEwIGF0IDE2OjU5ICswMTAwLCBDb3JlbnRpbiBDaGFyeSB3cm90ZToN
-Cg0KPiANCj4gVGhpcyBkb2Vzbid0IHJlYWxseSBzZWVtcyB0byBiZSByZWxhdGVkIHRvIHdtaSwg
-YW5kIGlzIGxpa2VseSB0byBiZQ0KPiBhdmFpbGFibGUgb25seSBvbiBhIHN1YnNldCBvZiBtb2Rl
-bHMuIE1heWJlIGl0IHNob3VsZCBhIHNlcGFyYXRlDQo+IGRyaXZlciBpbnN0ZWFkID8NCg0KVGhp
-cyB2ZXJzaW9uIHNlZW1zIHRvIGJlIGltcGxlbWVudGVkIGVudGlyZWx5IGluIFdNSSwgYW5kIGl0
-J3MgdXNpbmcgdGhlDQpzYW1lIFdNSSBHVUlEIGFzIGFzdXMtd21pIC0gaW1wbGVtZW50aW5nIGl0
-IGhlcmUgc2VlbXMgYXBwcm9wcmlhdGUuIEkgYW0NCmNvbmNlcm5lZCBhYm91dCB0aGUgcGh5cy92
-aXJ0IHRoaW5nLCB0aG91Z2guIFRoZSBBQ1BJIGludGVycHJldGVyIGlzDQpydW5uaW5nIGluIHRo
-ZSBrZXJuZWwsIG5vdCB0aGUgaGFyZHdhcmUgLSBhcmUgd2UgYXJ0aWZpY2lhbGx5IGxpbWl0aW5n
-DQpTeXN0ZW1NZW1vcnkgb3ByZWdpb25zIHRvIHBoeXNpY2FsIGFkZHJlc3Nlcz8NCg0KLS0gDQpN
-YXR0aGV3IEdhcnJldHQgPG1hdHRoZXcuZ2FycmV0dEBuZWJ1bGEuY29tPg0K
+> On Wed, Oct 09, 2013 at 11:00:06PM -0700, David Cohen wrote:
+>> From: Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> +# I2C Devices
+>> +obj-$(subst m,y,$(CONFIG_SENSORS_EMC1403)) += platform_emc1403.o
+>> +obj-$(subst m,y,$(CONFIG_SENSORS_LIS3LV02D)) += platform_lis331.o
+>
+> I am a bit confused by the platform data for the above i2c devices.
+> The driver for EMC1403 does supports neither interrupts nor platform data.
+> The driver for LIS3LV02D supports both, but the platform data does not
+> seem to match what is provided here. Am I missing something ?
+
+I did not add anything new here. I just moved the code from mrst.c to the
+respective platform data files. I am not sure whether the driver uses this
+data or not. If this code needs to be fixed , we can probably do it in a
+different patch.
+
+>
+>> +obj-$(subst m,y,$(CONFIG_GPIO_PCA953X)) += platform_max7315.o
+>> +obj-$(subst m,y,$(CONFIG_SENSORS_MPU3050)) += platform_mpu3050.o
+>
+> Do you possibly mean CONFIG_INPUT_MPU3050 ?
+
+Thanks for pointing it. I will fix it in next patchset.
+
+>
+> Guenter
+>
+Sathya
