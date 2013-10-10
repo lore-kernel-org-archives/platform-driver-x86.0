@@ -1,68 +1,76 @@
-From: Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v4 1/4] backlight: introduce backlight_device_registered
-Date: Thu, 10 Oct 2013 08:23:02 +0300
-Message-ID: <874n8p66o9.fsf@intel.com>
-References: <1381214401-24672-1-git-send-email-aaron.lu@intel.com> <1381214401-24672-2-git-send-email-aaron.lu@intel.com> <2202423.8QyNjoNEPr@vostro.rjw.lan> <5255FAC5.2090105@intel.com> <878uy1694u.fsf@intel.com> <525632AE.2080909@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <525632AE.2080909@intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Aaron Lu <aaron.lu@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Yves-Alexis Perez <corsac@debian.org>, Felipe Contreras <felipe.contreras@gmail.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?utf-8?Q?J=C3=B6rg?= Otte <jrg.otte@gmail.com>, Mike Galbraith <bitbucket@online.de>, platform-driver-x86@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>
+From: David Cohen <david.a.cohen@linux.intel.com>
+Subject: [PATCH 01/10] mrst: Fixed printk/pr_* related issues
+Date: Wed,  9 Oct 2013 22:51:39 -0700
+Message-ID: <1381384308-14066-2-git-send-email-david.a.cohen@linux.intel.com>
+References: <1381384308-14066-1-git-send-email-david.a.cohen@linux.intel.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1381384308-14066-1-git-send-email-david.a.cohen@linux.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com
+Cc: linux-doc@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, David Cohen <david.a.cohen@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 10 Oct 2013, Aaron Lu <aaron.lu@intel.com> wrote:
-> On 10/10/2013 12:29 PM, Jani Nikula wrote:
->> On Thu, 10 Oct 2013, Aaron Lu <aaron.lu@intel.com> wrote:
->>> On 10/10/2013 08:25 AM, Rafael J. Wysocki wrote:
->>>> On Tuesday, October 08, 2013 02:39:58 PM Aaron Lu wrote:
->>>>> +bool backlight_device_registered(enum backlight_type type)
->>>>> +{
->>>>> +	bool found = false;
->>>>> +	struct backlight_device *bd;
->>>>> +
->>>>> +	mutex_lock(&bd_list_mutex);
->>>>> +	list_for_each_entry(bd, &bd_list_head, entry) {
->>>>> +		if (bd->props.type == type) {
->>>>> +			found = true;
->>>>> +			break;
->>>>> +		}
->>>>> +	}
->>>>
->>>> Isn't it useful to be able to register more than one backlight device of the
->>>> same type sometimes?
->>>
->>> I think so for some kind of computers. OTOH, the above function should
->>> be enough for the problem we are solving here, if someday we need to
->>> differentiate, we can enhance the code then.
->> 
->> Since both Baytrail and Haswell already have two backlight PWMs, this
->> may be needed sooner than you think. But we shouldn't let that block
->
-> Do we need to differentiate which backlight PWM is registered to decide
-> if ACPI video backlight interface should be skipped? My understanding is
-> no.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-That's correct. If things change, we can fix it then.
+Fixed printk and pr_* related issues in mrst related files.
 
-Jani.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+---
+ arch/x86/platform/mrst/early_printk_mrst.c |    2 +-
+ arch/x86/platform/mrst/mrst.c              |    2 +-
+ arch/x86/platform/mrst/vrtc.c              |    5 ++---
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-
->
-> Thanks,
-> Aaron
->
->> fixing the more urgent issue we have now. So I'm fine with this. It
->> doesn't prevent one from registering more than one device of the same
->> type anyway.
->> 
->> BR,
->> Jani.
->> 
->> 
->> 
->
-
+diff --git a/arch/x86/platform/mrst/early_printk_mrst.c b/arch/x86/platform/mrst/early_printk_mrst.c
+index 028454f..95880f7 100644
+--- a/arch/x86/platform/mrst/early_printk_mrst.c
++++ b/arch/x86/platform/mrst/early_printk_mrst.c
+@@ -213,7 +213,7 @@ static void early_mrst_spi_putc(char c)
+ 	}
+ 
+ 	if (!timeout)
+-		pr_warning("MRST earlycon: timed out\n");
++		pr_warn("MRST earlycon: timed out\n");
+ 	else
+ 		max3110_write_data(c);
+ }
+diff --git a/arch/x86/platform/mrst/mrst.c b/arch/x86/platform/mrst/mrst.c
+index 3ca5957..b9aeb54 100644
+--- a/arch/x86/platform/mrst/mrst.c
++++ b/arch/x86/platform/mrst/mrst.c
+@@ -328,7 +328,7 @@ static inline int __init setup_x86_mrst_timer(char *arg)
+ 	else if (strcmp("lapic_and_apbt", arg) == 0)
+ 		mrst_timer_options = MRST_TIMER_LAPIC_APBT;
+ 	else {
+-		pr_warning("X86 MRST timer option %s not recognised"
++		pr_warn("X86 MRST timer option %s not recognised"
+ 			   " use x86_mrst_timer=apbt_only or lapic_and_apbt\n",
+ 			   arg);
+ 		return -EINVAL;
+diff --git a/arch/x86/platform/mrst/vrtc.c b/arch/x86/platform/mrst/vrtc.c
+index 5e355b1..ca4f7d9 100644
+--- a/arch/x86/platform/mrst/vrtc.c
++++ b/arch/x86/platform/mrst/vrtc.c
+@@ -79,7 +79,7 @@ void vrtc_get_time(struct timespec *now)
+ 	/* vRTC YEAR reg contains the offset to 1972 */
+ 	year += 1972;
+ 
+-	printk(KERN_INFO "vRTC: sec: %d min: %d hour: %d day: %d "
++	pr_info("vRTC: sec: %d min: %d hour: %d day: %d "
+ 		"mon: %d year: %d\n", sec, min, hour, mday, mon, year);
+ 
+ 	now->tv_sec = mktime(year, mon, mday, hour, min, sec);
+@@ -109,8 +109,7 @@ int vrtc_set_mmss(const struct timespec *now)
+ 		vrtc_cmos_write(tm.tm_sec, RTC_SECONDS);
+ 		spin_unlock_irqrestore(&rtc_lock, flags);
+ 	} else {
+-		printk(KERN_ERR
+-		       "%s: Invalid vRTC value: write of %lx to vRTC failed\n",
++		pr_err("%s: Invalid vRTC value: write of %lx to vRTC failed\n",
+ 			__FUNCTION__, now->tv_sec);
+ 		retval = -EINVAL;
+ 	}
 -- 
-Jani Nikula, Intel Open Source Technology Center
+1.7.9.5
+
