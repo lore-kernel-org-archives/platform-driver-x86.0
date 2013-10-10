@@ -1,60 +1,138 @@
-From: Felipe Contreras <felipe.contreras@gmail.com>
-Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
-Date: Tue, 8 Oct 2013 07:57:38 -0500
-Message-ID: <CAMP44s0ShT6+msCm0T+cpwzktzQZ9OtD2MOXg3AQACkyjB92GQ@mail.gmail.com>
-References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v4 1/4] backlight: introduce backlight_device_registered
+Date: Thu, 10 Oct 2013 02:25:42 +0200
+Message-ID: <2202423.8QyNjoNEPr@vostro.rjw.lan>
+References: <1381214401-24672-1-git-send-email-aaron.lu@intel.com> <1381214401-24672-2-git-send-email-aaron.lu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f51.google.com ([209.85.215.51]:61181 "EHLO
-	mail-la0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752747Ab3JHM5k (ORCPT
+Received: from v094114.home.net.pl ([79.96.170.134]:49475 "HELO
+	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1752747Ab3JJAOA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Oct 2013 08:57:40 -0400
-In-Reply-To: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
+	Wed, 9 Oct 2013 20:14:00 -0400
+In-Reply-To: <1381214401-24672-2-git-send-email-aaron.lu@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: "open list:ASUS NOTEBOOKS AN..." <platform-driver-x86@vger.kernel.org>, "open list:ASUS NOTEBOOKS AN..." <acpi4asus-user@lists.sourceforge.net>, Linux PM <linux-pm@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>, Felipe Contreras <felipe.contreras@gmail.com>
+To: Aaron Lu <aaron.lu@intel.com>
+Cc: linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Yves-Alexis Perez <corsac@debian.org>, Felipe Contreras <felipe.contreras@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?ISO-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>, Mike Galbraith <bitbucket@online.de>, platform-driver-x86@vger.kernel.org, Mika
 
-On Tue, Oct 8, 2013 at 7:48 AM, Felipe Contreras
-<felipe.contreras@gmail.com> wrote:
-> Simple driver to enable control of the fan in ASUS laptops. So far this
-> has only been tested in ASUS Zenbook Prime UX31A, but according to some
-> online reference [1], it should work in other models as well.
->
-> The implementation is very straight-forward, the only caveat is that the
-> fan speed needs to be saved after it has been manually changed because
-> it won't be reported properly until it goes back to 'auto' mode.
->
-> [1] http://forum.notebookreview.com/asus/705656-fan-control-asus-prime-ux31-ux31a-ux32a-ux32vd.html
->
-> Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+On Tuesday, October 08, 2013 02:39:58 PM Aaron Lu wrote:
+> Introduce a new API for modules to query if a specific type of backlight
+> device has been registered. This is useful for some backlight device
+> provider module(e.g. ACPI video) to know if a native control
+> interface(e.g. the interface created by i915) is available and then do
+> things accordingly(e.g. avoid register its own on Win8 systems).
+> 
+> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+> Tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+> Tested-by: Yves-Alexis Perez <corsac@debian.org>
+> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/video/backlight/backlight.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/backlight.h           |  4 ++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index 94a403a..bf2d71d 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -21,6 +21,9 @@
+>  #include <asm/backlight.h>
+>  #endif
+>  
+> +static struct list_head bd_list_head;
+> +static struct mutex bd_list_mutex;
 
-> +       r = asus_wmi_evaluate_method(ASUS_WMI_METHODID_AGFN, virt_to_phys(&args), 0, &value);
+I'd prefer these two things to be called backlight_dev_list and
+backlight_dev_list_mutex, respectively.
 
-I don't like using virt_to_phys() here, but it seems that's what the
-ACPI code expects.
+> +
+>  static const char *const backlight_types[] = {
+>  	[BACKLIGHT_RAW] = "raw",
+>  	[BACKLIGHT_PLATFORM] = "platform",
+> @@ -349,10 +352,32 @@ struct backlight_device *backlight_device_register(const char *name,
+>  	mutex_unlock(&pmac_backlight_mutex);
+>  #endif
+>  
+> +	mutex_lock(&bd_list_mutex);
+> +	list_add(&new_bd->entry, &bd_list_head);
+> +	mutex_unlock(&bd_list_mutex);
+> +
+>  	return new_bd;
+>  }
+>  EXPORT_SYMBOL(backlight_device_register);
+>  
+> +bool backlight_device_registered(enum backlight_type type)
+> +{
+> +	bool found = false;
+> +	struct backlight_device *bd;
+> +
+> +	mutex_lock(&bd_list_mutex);
+> +	list_for_each_entry(bd, &bd_list_head, entry) {
+> +		if (bd->props.type == type) {
+> +			found = true;
+> +			break;
+> +		}
+> +	}
 
-        Method (AGFN, 1, Serialized)
-        {
-            If (LEqual (Arg0, Zero))
-            {
-                Return (GNBF)
-            }
+Isn't it useful to be able to register more than one backlight device of the
+same type sometimes?
 
-            Store (Zero, Local0)
-            OperationRegion (\PARM, SystemMemory, Arg0, 0x08)
-            Field (PARM, DWordAcc, NoLock, Preserve)
-            {
-                MFUN,   16,
-                SFUN,   16,
-                LEN,    16,
-                STAS,   8,
-                EROR,   8
-            }
+> +	mutex_unlock(&bd_list_mutex);
+> +
+> +	return found;
+> +}
+> +EXPORT_SYMBOL(backlight_device_registered);
+> +
+>  /**
+>   * backlight_device_unregister - unregisters a backlight device object.
+>   * @bd: the backlight device object to be unregistered and freed.
+> @@ -364,6 +389,10 @@ void backlight_device_unregister(struct backlight_device *bd)
+>  	if (!bd)
+>  		return;
+>  
+> +	mutex_lock(&bd_list_mutex);
+> +	list_del(&bd->entry);
+> +	mutex_unlock(&bd_list_mutex);
+> +
+>  #ifdef CONFIG_PMAC_BACKLIGHT
+>  	mutex_lock(&pmac_backlight_mutex);
+>  	if (pmac_backlight == bd)
+> @@ -499,6 +528,8 @@ static int __init backlight_class_init(void)
+>  
+>  	backlight_class->dev_groups = bl_device_groups;
+>  	backlight_class->pm = &backlight_class_dev_pm_ops;
+> +	INIT_LIST_HEAD(&bd_list_head);
+> +	mutex_init(&bd_list_mutex);
+>  	return 0;
+>  }
+>  
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 53b7794..5f9cd96 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -100,6 +100,9 @@ struct backlight_device {
+>  	/* The framebuffer notifier block */
+>  	struct notifier_block fb_notif;
+>  
+> +	/* list entry of all registered backlight devices */
+> +	struct list_head entry;
+> +
+>  	struct device dev;
+>  };
+>  
+> @@ -123,6 +126,7 @@ extern void devm_backlight_device_unregister(struct device *dev,
+>  					struct backlight_device *bd);
+>  extern void backlight_force_update(struct backlight_device *bd,
+>  				   enum backlight_update_reason reason);
+> +extern bool backlight_device_registered(enum backlight_type type);
+>  
+>  #define to_backlight_device(obj) container_of(obj, struct backlight_device, dev)
 
-Any suggestions?
+Thanks!
 
 -- 
-Felipe Contreras
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
