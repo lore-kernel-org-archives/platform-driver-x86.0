@@ -1,199 +1,68 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH 08/10] intel_mid: Added custom handler for ipc devices
-Date: Wed,  9 Oct 2013 22:26:13 -0700
-Message-ID: <1381382775-13883-9-git-send-email-david.a.cohen@linux.intel.com>
-References: <1381382775-13883-1-git-send-email-david.a.cohen@linux.intel.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1381382775-13883-1-git-send-email-david.a.cohen@linux.intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, alan@linux.intel.com
-Cc: linux-doc@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, David Cohen <david.a.cohen@linux.intel.com>
+From: Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v4 1/4] backlight: introduce backlight_device_registered
+Date: Thu, 10 Oct 2013 08:23:02 +0300
+Message-ID: <874n8p66o9.fsf@intel.com>
+References: <1381214401-24672-1-git-send-email-aaron.lu@intel.com> <1381214401-24672-2-git-send-email-aaron.lu@intel.com> <2202423.8QyNjoNEPr@vostro.rjw.lan> <5255FAC5.2090105@intel.com> <878uy1694u.fsf@intel.com> <525632AE.2080909@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <525632AE.2080909@intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Aaron Lu <aaron.lu@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Yves-Alexis Perez <corsac@debian.org>, Felipe Contreras <felipe.contreras@gmail.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?utf-8?Q?J=C3=B6rg?= Otte <jrg.otte@gmail.com>, Mike Galbraith <bitbucket@online.de>, platform-driver-x86@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Thu, 10 Oct 2013, Aaron Lu <aaron.lu@intel.com> wrote:
+> On 10/10/2013 12:29 PM, Jani Nikula wrote:
+>> On Thu, 10 Oct 2013, Aaron Lu <aaron.lu@intel.com> wrote:
+>>> On 10/10/2013 08:25 AM, Rafael J. Wysocki wrote:
+>>>> On Tuesday, October 08, 2013 02:39:58 PM Aaron Lu wrote:
+>>>>> +bool backlight_device_registered(enum backlight_type type)
+>>>>> +{
+>>>>> +	bool found = false;
+>>>>> +	struct backlight_device *bd;
+>>>>> +
+>>>>> +	mutex_lock(&bd_list_mutex);
+>>>>> +	list_for_each_entry(bd, &bd_list_head, entry) {
+>>>>> +		if (bd->props.type == type) {
+>>>>> +			found = true;
+>>>>> +			break;
+>>>>> +		}
+>>>>> +	}
+>>>>
+>>>> Isn't it useful to be able to register more than one backlight device of the
+>>>> same type sometimes?
+>>>
+>>> I think so for some kind of computers. OTOH, the above function should
+>>> be enough for the problem we are solving here, if someday we need to
+>>> differentiate, we can enhance the code then.
+>> 
+>> Since both Baytrail and Haswell already have two backlight PWMs, this
+>> may be needed sooner than you think. But we shouldn't let that block
+>
+> Do we need to differentiate which backlight PWM is registered to decide
+> if ACPI video backlight interface should be skipped? My understanding is
+> no.
 
-Added a custom handler for medfield based ipc devices and
-moved devs_id structure defintion to header file.
+That's correct. If things change, we can fix it then.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
----
- arch/x86/include/asm/intel-mid.h        |   15 ++++++
- arch/x86/platform/intel-mid/intel-mid.c |   87 ++++++++++++++++++++-----------
- 2 files changed, 71 insertions(+), 31 deletions(-)
+Jani.
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index beb7a5f..ad236ae 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -19,6 +19,21 @@ extern int sfi_mrtc_num;
- extern struct sfi_rtc_table_entry sfi_mrtc_array[];
- 
- /*
-+ * Here defines the array of devices platform data that IAFW would export
-+ * through SFI "DEVS" table, we use name and type to match the device and
-+ * its platform data.
-+ */
-+struct devs_id {
-+	char name[SFI_NAME_LEN + 1];
-+	u8 type;
-+	u8 delay;
-+	void *(*get_platform_data)(void *info);
-+	/* Custom handler for devices */
-+	void (*device_handler)(struct sfi_device_table_entry *pentry,
-+				struct devs_id *dev);
-+};
-+
-+/*
-  * Medfield is the follow-up of Moorestown, it combines two chip solution into
-  * one. Other than that it also added always-on and constant tsc and lapic
-  * timers. Medfield is the platform name, and the chip name is called Penwell
-diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
-index 65c7bca..3a210d9 100644
---- a/arch/x86/platform/intel-mid/intel-mid.c
-+++ b/arch/x86/platform/intel-mid/intel-mid.c
-@@ -78,6 +78,8 @@ int sfi_mtimer_num;
- struct sfi_rtc_table_entry sfi_mrtc_array[SFI_MRTC_MAX];
- EXPORT_SYMBOL_GPL(sfi_mrtc_array);
- int sfi_mrtc_num;
-+static void __init ipc_device_handler(struct sfi_device_table_entry *pentry,
-+			struct devs_id *dev);
- 
- static void intel_mid_power_off(void)
- {
-@@ -386,21 +388,6 @@ static int get_gpio_by_name(const char *name)
- 	return -1;
- }
- 
--/*
-- * Here defines the array of devices platform data that IAFW would export
-- * through SFI "DEVS" table, we use name and type to match the device and
-- * its platform data.
-- */
--struct devs_id {
--	char name[SFI_NAME_LEN + 1];
--	u8 type;
--	u8 delay;
--	void *(*get_platform_data)(void *info);
--	/* Custom handler for devices */
--	void (*device_handler)(struct sfi_device_table_entry *pentry,
--				struct devs_id *dev);
--};
--
- /* the offset for the mapping of global gpio pin to irq */
- #define INTEL_MID_IRQ_OFFSET 0x100
- 
-@@ -695,27 +682,32 @@ static void *tc35876x_platform_data(void *data)
- static const struct devs_id __initconst device_ids[] = {
- 	{"bma023", SFI_DEV_TYPE_I2C, 1, &no_platform_data, NULL},
- 	{"pmic_gpio", SFI_DEV_TYPE_SPI, 1, &pmic_gpio_platform_data, NULL},
--	{"pmic_gpio", SFI_DEV_TYPE_IPC, 1, &pmic_gpio_platform_data, NULL},
-+	{"pmic_gpio", SFI_DEV_TYPE_IPC, 1, &pmic_gpio_platform_data,
-+					&ipc_device_handler},
- 	{"spi_max3111", SFI_DEV_TYPE_SPI, 0, &max3111_platform_data, NULL},
- 	{"i2c_max7315", SFI_DEV_TYPE_I2C, 1, &max7315_platform_data, NULL},
- 	{"i2c_max7315_2", SFI_DEV_TYPE_I2C, 1, &max7315_platform_data, NULL},
- 	{"tca6416", SFI_DEV_TYPE_I2C, 1, &tca6416_platform_data, NULL},
- 	{"emc1403", SFI_DEV_TYPE_I2C, 1, &emc1403_platform_data, NULL},
- 	{"i2c_accel", SFI_DEV_TYPE_I2C, 0, &lis331dl_platform_data, NULL},
--	{"pmic_audio", SFI_DEV_TYPE_IPC, 1, &no_platform_data, NULL},
-+	{"pmic_audio", SFI_DEV_TYPE_IPC, 1, &no_platform_data,
-+					&ipc_device_handler},
- 	{"mpu3050", SFI_DEV_TYPE_I2C, 1, &mpu3050_platform_data, NULL},
- 	{"i2c_disp_brig", SFI_DEV_TYPE_I2C, 0, &tc35876x_platform_data, NULL},
- 
- 	/* MSIC subdevices */
- 	{"msic_battery", SFI_DEV_TYPE_IPC, 1, &msic_battery_platform_data,
--					NULL},
--	{"msic_gpio", SFI_DEV_TYPE_IPC, 1, &msic_gpio_platform_data, NULL},
--	{"msic_audio", SFI_DEV_TYPE_IPC, 1, &msic_audio_platform_data, NULL},
-+					&ipc_device_handler},
-+	{"msic_gpio", SFI_DEV_TYPE_IPC, 1, &msic_gpio_platform_data,
-+					&ipc_device_handler},
-+	{"msic_audio", SFI_DEV_TYPE_IPC, 1, &msic_audio_platform_data,
-+					&ipc_device_handler},
- 	{"msic_power_btn", SFI_DEV_TYPE_IPC, 1, &msic_power_btn_platform_data,
--					NULL},
--	{"msic_ocd", SFI_DEV_TYPE_IPC, 1, &msic_ocd_platform_data, NULL},
-+					&ipc_device_handler},
-+	{"msic_ocd", SFI_DEV_TYPE_IPC, 1, &msic_ocd_platform_data,
-+					&ipc_device_handler},
- 	{"msic_thermal", SFI_DEV_TYPE_IPC, 1, &msic_thermal_platform_data,
--					NULL},
-+					&ipc_device_handler},
- 	{},
- };
- 
-@@ -846,13 +838,6 @@ static void __init sfi_handle_ipc_dev(struct sfi_device_table_entry *pentry,
- 		pentry->name, pentry->irq);
- 	pdata = dev->get_platform_data(pentry);
- 
--	/*
--	 * On Medfield the platform device creation is handled by the MSIC
--	 * MFD driver so we don't need to do it here.
--	 */
--	if (intel_mid_has_msic())
--		return;
--
- 	pdev = platform_device_alloc(pentry->name, 0);
- 	if (pdev == NULL) {
- 		pr_err("out of memory for SFI platform device '%s'.\n",
-@@ -862,7 +847,7 @@ static void __init sfi_handle_ipc_dev(struct sfi_device_table_entry *pentry,
- 	install_irq_resource(pdev, pentry->irq);
- 
- 	pdev->dev.platform_data = pdata;
--	intel_scu_device_register(pdev);
-+	platform_device_add(pdev);
- }
- 
- static void __init sfi_handle_spi_dev(struct sfi_device_table_entry *pentry,
-@@ -917,6 +902,46 @@ static void __init sfi_handle_i2c_dev(struct sfi_device_table_entry *pentry,
- 		i2c_register_board_info(pentry->host_num, &i2c_info, 1);
- }
- 
-+static void __init ipc_device_handler(struct sfi_device_table_entry *pentry,
-+				struct devs_id *dev)
-+{
-+	struct platform_device *pdev;
-+	void *pdata = NULL;
-+	static struct resource res __initdata = {
-+		.name = "IRQ",
-+		.flags = IORESOURCE_IRQ,
-+	};
-+
-+	pr_debug("IPC bus, name = %16.16s, irq = 0x%2x\n",
-+		pentry->name, pentry->irq);
-+
-+	/*
-+	 * We need to call platform init of IPC devices to fill misc_pdata
-+	 * structure. It will be used in msic_init for initialization.
-+	 */
-+	if (dev != NULL)
-+		pdata = dev->get_platform_data(pentry);
-+
-+	/*
-+	 * On Medfield the platform device creation is handled by the MSIC
-+	 * MFD driver so we don't need to do it here.
-+	 */
-+	if (intel_mid_has_msic())
-+		return;
-+
-+	pdev = platform_device_alloc(pentry->name, 0);
-+	if (pdev == NULL) {
-+		pr_err("out of memory for SFI platform device '%s'.\n",
-+			pentry->name);
-+		return;
-+	}
-+	res.start = pentry->irq;
-+	platform_device_add_resources(pdev, &res, 1);
-+
-+	pdev->dev.platform_data = pdata;
-+	intel_scu_device_register(pdev);
-+}
-+
- static struct devs_id __init *get_device_id(u8 type, char *name)
- {
- 	struct devs_id *dev = device_ids;
+
+>
+> Thanks,
+> Aaron
+>
+>> fixing the more urgent issue we have now. So I'm fine with this. It
+>> doesn't prevent one from registering more than one device of the same
+>> type anyway.
+>> 
+>> BR,
+>> Jani.
+>> 
+>> 
+>> 
+>
+
 -- 
-1.7.9.5
-
+Jani Nikula, Intel Open Source Technology Center
