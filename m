@@ -1,7 +1,7 @@
-From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
-Date: Sat, 12 Oct 2013 01:01:36 +0400
-Message-ID: <1381525296.2373.1.camel@ThinkPad-X230.localdomain>
+Date: Sat, 12 Oct 2013 00:10:53 +0200
+Message-ID: <1712683.D4Gy4SDE7p@vostro.rjw.lan>
 References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
 	<CA+5PVA5RfbJjLaZNDN81tvWYhm1pLuu9OpMTwMfUpC4ma4ac4A@mail.gmail.com>
 Mime-Version: 1.0
@@ -19,10 +19,10 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
 Sender: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
 Errors-To: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
 To: Josh Boyer <jwboyer@fedoraproject.org>
-Cc: James Hogan <james@albanarts.com>, Martin Steigerwald <Martin@lichtvoll.de>, Felipe Contreras <felipe.contreras@gmail.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, Mike Galbraith <bitbucket@online.de>, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, linux-acpi@vger.kernel.org, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?ISO-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>, intel-gfx@lists.freedesktop.org, Joerg Platte <jplatte@naasa.net>, Seth Forshee <seth.forshee@canonical.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Richard Purdie <rpurdi>
+Cc: James Hogan <james@albanarts.com>, Martin Steigerwald <Martin@lichtvoll.de>, Felipe Contreras <felipe.contreras@gmail.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, Mike Galbraith <bitbucket@online.de>, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, linux-acpi@vger.kernel.org, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?ISO-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>, Joerg Platte <jplatte@naasa.net>, intel-gfx@lists.freedesktop.org, Seth Forshee <seth.forshee@canonical.com>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Richard Purdie <rp>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2013-10-11 at 12:42 -0400, Josh Boyer wrote:
+On Friday, October 11, 2013 12:42:43 PM Josh Boyer wrote:
 > On Fri, Oct 11, 2013 at 9:27 AM, Aaron Lu <aaron.lu@intel.com> wrote:
 > > v5:
 > > 1 Introduce video.use_native_backlight module parameter and set its
@@ -37,17 +37,24 @@ On Fri, 2013-10-11 at 12:42 -0400, Josh Boyer wrote:
 > try setting that option on the command line.  While I appreciate the
 > setting breaks things for some people, doesn't the Win8 issue impact
 > far more people?  Shouldn't it be defaulted to true?
-> 
+
+Well, we have a rule in the kernel not to introduce regressions for users even
+if they are minority.
+
 > If nothing else, can you add a config option for the default so
 > distros can use that to decide which way to default it and then work
 > on fixing the remaining users that have troubles?
-> 
-> josh
 
-I think more better to use this unregister as default and give option to
-disable it.
+The current plan is to create a blacklist of systems where that option should
+be set.  We actually already have one, but it is at the _OSI() level, which
+is overkill in my view and may affect things beyond backlight.  Along with that
+we will debug systems where setting that option (to true) causes problems to
+happen, so that we'll be able to drop it going forward (hopefully).
+
+Of course, distro kernels may always change the default to true if they want.
+
+Thanks!
 
 -- 
-Igor Gnatenko
-Fedora release 20 (Heisenbug)
-Linux 3.11.4-301.fc20.x86_64
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
