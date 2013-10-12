@@ -1,140 +1,56 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH v3 00/10] rework arch/x86/platform/[mrst => intel-mid]
-Date: Fri, 11 Oct 2013 20:43:14 -0700
-Message-ID: <1381549404-22594-1-git-send-email-david.a.cohen@linux.intel.com>
+From: Yves-Alexis Perez <corsac@debian.org>
+Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
+Date: Sat, 12 Oct 2013 07:54:06 +0200
+Message-ID: <1381557246.3261.67.camel@scapa>
+References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
+	 <1712683.D4Gy4SDE7p@vostro.rjw.lan>
+	 <CA+5PVA4xFQ82FdQ3RfcV4aAzZZ6onfOUWb9Z+ZFBP-Ay7sEsKQ@mail.gmail.com>
+	 <3899323.lQYrFPeQhE@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-6TKtBSrc+l1kgjxrG52D"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3899323.lQYrFPeQhE@vostro.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Josh Boyer <jwboyer@fedoraproject.org>, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, DRI mailing list <dri-devel@lists.freedesktop.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Felipe Contreras <felipe.contreras@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?ISO-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.co>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch set does initial rework from arch/x86/platform/mrst to
-arch/x86/platform/intel-mid.
-These changes are necessary to update the obsolete Intel Atom Moorestown code
-to support the newer Atom processors of this family (called 'intel-mid'). 
 
-Kuppuswamy Sathyanarayanan (10):
-  mrst: Fixed printk/pr_* related issues
-  mrst: Fixed indentation issues
-  mrst: Fixed checkpatch warnings
-  intel_mid: Renamed *mrst* to *intel_mid*
-  intel_mid: Renamed *mrst* to *intel_mid*
-  intel_mid: Refactored sfi_parse_devs() function
-  intel_mid: Added custom device_handler support
-  intel_mid: Added custom handler for ipc devices
-  intel_mid: Moved board related code to a new file
-  intel_mid: Moved SFI related code to intel_mid_sfi.c
+--=-6TKtBSrc+l1kgjxrG52D
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/kernel-parameters.txt                |    6 +-
- arch/x86/include/asm/{mrst.h => intel-mid.h}       |   62 +-
- .../include/asm/{mrst-vrtc.h => intel_mid_vrtc.h}  |    4 +-
- arch/x86/include/asm/setup.h                       |    4 +-
- arch/x86/include/uapi/asm/bootparam.h              |    2 +-
- arch/x86/kernel/apb_timer.c                        |   10 +-
- arch/x86/kernel/early_printk.c                     |    2 +-
- arch/x86/kernel/head32.c                           |    4 +-
- arch/x86/kernel/rtc.c                              |    4 +-
- arch/x86/pci/Makefile                              |    2 +-
- arch/x86/pci/{mrst.c => intel_mid_pci.c}           |   14 +-
- arch/x86/platform/Makefile                         |    2 +-
- arch/x86/platform/intel-mid/Makefile               |    9 +
- arch/x86/platform/intel-mid/board.c                |  109 ++
- arch/x86/platform/intel-mid/device_libs/Makefile   |   21 +
- .../intel-mid/device_libs/platform_emc1403.c       |   33 +
- .../intel-mid/device_libs/platform_emc1403.h       |   16 +
- .../intel-mid/device_libs/platform_gpio_keys.c     |   82 ++
- .../intel-mid/device_libs/platform_gpio_keys.h     |   16 +
- .../platform/intel-mid/device_libs/platform_ipc.c  |   59 ++
- .../platform/intel-mid/device_libs/platform_ipc.h  |   17 +
- .../intel-mid/device_libs/platform_lis331.c        |   32 +
- .../intel-mid/device_libs/platform_lis331.h        |   16 +
- .../intel-mid/device_libs/platform_max3111.c       |   28 +
- .../intel-mid/device_libs/platform_max3111.h       |   16 +
- .../intel-mid/device_libs/platform_max7315.c       |   62 ++
- .../intel-mid/device_libs/platform_max7315.h       |   19 +
- .../intel-mid/device_libs/platform_mpu3050.c       |   28 +
- .../intel-mid/device_libs/platform_mpu3050.h       |   16 +
- .../platform/intel-mid/device_libs/platform_msic.c |   87 ++
- .../platform/intel-mid/device_libs/platform_msic.h |   19 +
- .../intel-mid/device_libs/platform_msic_audio.c    |   36 +
- .../intel-mid/device_libs/platform_msic_audio.h    |   16 +
- .../intel-mid/device_libs/platform_msic_battery.c  |   26 +
- .../intel-mid/device_libs/platform_msic_battery.h  |   17 +
- .../intel-mid/device_libs/platform_msic_gpio.c     |   37 +
- .../intel-mid/device_libs/platform_msic_gpio.h     |   16 +
- .../intel-mid/device_libs/platform_msic_ocd.c      |   39 +
- .../intel-mid/device_libs/platform_msic_ocd.h      |   16 +
- .../device_libs/platform_msic_power_btn.c          |   25 +
- .../device_libs/platform_msic_power_btn.h          |   17 +
- .../intel-mid/device_libs/platform_msic_thermal.c  |   26 +
- .../intel-mid/device_libs/platform_msic_thermal.h  |   17 +
- .../intel-mid/device_libs/platform_pmic_gpio.c     |   36 +
- .../intel-mid/device_libs/platform_pmic_gpio.h     |   16 +
- .../intel-mid/device_libs/platform_tc35876x.c      |   29 +
- .../intel-mid/device_libs/platform_tc35876x.h      |   16 +
- .../intel-mid/device_libs/platform_tca6416.c       |   45 +
- .../intel-mid/device_libs/platform_tca6416.h       |   20 +
- .../early_printk_intel_mid.c}                      |   11 +-
- arch/x86/platform/intel-mid/intel-mid.c            |  213 ++++
- arch/x86/platform/intel-mid/intel_mid_sfi.c        |  485 +++++++++
- .../{mrst/vrtc.c => intel-mid/intel_mid_vrtc.c}    |   19 +-
- arch/x86/platform/intel-mid/intel_mid_weak_decls.h |   15 +
- arch/x86/platform/mrst/Makefile                    |    3 -
- arch/x86/platform/mrst/mrst.c                      | 1052 --------------------
- drivers/gpu/drm/gma500/mdfld_dsi_output.h          |    2 +-
- drivers/gpu/drm/gma500/oaktrail_device.c           |    2 +-
- drivers/gpu/drm/gma500/oaktrail_lvds.c             |    2 +-
- drivers/platform/x86/intel_scu_ipc.c               |    4 +-
- drivers/rtc/rtc-mrst.c                             |    4 +-
- drivers/watchdog/intel_scu_watchdog.c              |    4 +-
- 62 files changed, 1944 insertions(+), 1123 deletions(-)
- rename arch/x86/include/asm/{mrst.h => intel-mid.h} (50%)
- rename arch/x86/include/asm/{mrst-vrtc.h => intel_mid_vrtc.h} (81%)
- rename arch/x86/pci/{mrst.c => intel_mid_pci.c} (96%)
- create mode 100644 arch/x86/platform/intel-mid/Makefile
- create mode 100644 arch/x86/platform/intel-mid/board.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/Makefile
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_emc1403.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_emc1403.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_gpio_keys.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_gpio_keys.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_ipc.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_ipc.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_lis331.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_lis331.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_max3111.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_max3111.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_max7315.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_max7315.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mpu3050.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mpu3050.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_audio.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_audio.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_battery.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_battery.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_gpio.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_gpio.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_ocd.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_ocd.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_power_btn.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_power_btn.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_thermal.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_msic_thermal.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_pmic_gpio.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_pmic_gpio.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tc35876x.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tc35876x.h
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tca6416.c
- create mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tca6416.h
- rename arch/x86/platform/{mrst/early_printk_mrst.c => intel-mid/early_printk_intel_mid.c} (97%)
- create mode 100644 arch/x86/platform/intel-mid/intel-mid.c
- create mode 100644 arch/x86/platform/intel-mid/intel_mid_sfi.c
- rename arch/x86/platform/{mrst/vrtc.c => intel-mid/intel_mid_vrtc.c} (90%)
- create mode 100644 arch/x86/platform/intel-mid/intel_mid_weak_decls.h
- delete mode 100644 arch/x86/platform/mrst/Makefile
- delete mode 100644 arch/x86/platform/mrst/mrst.c
+On sam., 2013-10-12 at 01:27 +0200, Rafael J. Wysocki wrote:
+> If we are to use a Kconfig option, why don't we use one instead of rather=
+ than
+> in addition to a command line option?  Say, we have
+> CONFIG_ACPI_VIDEO_WIN8_WORKAROUND and if that is set, the code will work =
+like
+> the previous version of the Aaron's patchset (the one without
+> video.use_native_backlight)?
 
--- 
-1.8.4.rc3
+Doesn't this mean user will have to rebuild distro kernel in order to
+test behavior?
+
+Regards,
+--=20
+Yves-Alexis
+
+--=-6TKtBSrc+l1kgjxrG52D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQEcBAABCAAGBQJSWOP+AAoJEG3bU/KmdcClKIgH/3ITxskPtsfFd2IeRadOYRB2
+QX9aI3QYL8OxyHVXEmPH4W1cEbmlLBau2Sm122bkCVrAV7TOnC2vDegJwhrZLqLP
+xrPEWU3OW7EajvDEIH3OgJ7SgkudnJE1z31jPY9UzlDyBBFaa3G8S9e32rcNTI9N
+ToQxO3+/2pPTkm7DwissFPgOk1Te3Ipj1mFsNwV93d9tpw4k/qOkMOpmJtHxaBeL
+0RLEOkrizZ9WbXsyKzIhUz03nhrMgYQn8QkNA1CWqN4zItL+Ptonv0byqtF+gN+K
+Yx2OyvVKxNhJCBkeVJi9+rYwlQMxQ5piLCd7BKHdPnWuHv1BF7TNmrMXsEU+Tz8=
+=DXHw
+-----END PGP SIGNATURE-----
+
+--=-6TKtBSrc+l1kgjxrG52D--
