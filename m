@@ -1,45 +1,89 @@
-From: Felipe Contreras <felipe.contreras@gmail.com>
-Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
-Date: Sun, 13 Oct 2013 21:31:25 -0500
-Message-ID: <CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
-References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
-	<CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
-	<1381421199.4248.2.camel@x230.lan>
-	<CAMP44s04+_aP7KpVMTUjdNcRWMg6PC6HBaNhF_uhAHm=fhmTcw@mail.gmail.com>
-	<20131013151729.GA4028@srcf.ucam.org>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: Re: [PATCH] acpi/video: Add Lenovo IdeaPad Yoga 13 to acpi video
+ detect blacklist
+Date: Mon, 14 Oct 2013 10:36:46 +0800
+Message-ID: <525B58BE.5050009@intel.com>
+References: <20131014005505.GA30503@tango.0pointer.de> <525B44C0.3010204@intel.com> <20131014022325.GA2248@tango.0pointer.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20131013151729.GA4028@srcf.ucam.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: "corentin.chary@gmail.com" <corentin.chary@gmail.com>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20131014022325.GA2248@tango.0pointer.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 13, 2013 at 10:17 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> On Sun, Oct 13, 2013 at 04:29:34AM -0500, Felipe Contreras wrote:
->
->> I don't see anything in acpi_ex_system_memory_space_handler() that
->> takes into consideration virtual addresses.
->
-> The spec doesn't seem to constrain it to physical addresses (it just
-> refers to "Control Methods read and write data to locations in address
-> spaces (for example, System memory and System I/O)", so I'd lean towards
-> changing the behaviour of acpica rather than adding virt_to_phys().
+On 10/14/2013 10:23 AM, Lennart Poettering wrote:
+> On Mon, 14.10.13 09:11, Aaron Lu (aaron.lu@intel.com) wrote:
+> 
+>>> Note that this appears unrelated to the Windows 8 backlight issues tracked
+>>> here:
+>>>
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=51231
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=60682
+>>>
+>>> The Yoga's ACPI backlight controls work neither with nor without
+>>> acpi_osi="!Windows 2012" on the kernel command line. It appears that
+>>> backlight control via the EC simply is not available at all, regardless
+>>> whether done via ACPI or via the vendor driver.
+>>
+>> Just a side note, if the firmware of Yoga 13 has a _OSI("Windows 2012")
+>> query, then it should be solved with the patch proposed here:
+>> https://lkml.org/lkml/2013/10/11/409, Fix Win8 backlight issue.
+>>
+>> We are still discussing a proper default behaviour in that patchset.
+> 
+> No. 
+> 
+> Did you actually read the commit message of the patch? Please do!
 
-And I assume you are not going to do that. Isn't acpica code outside
-of the scope of Linux kernel development? If not, how do I go about
-adding that capability.
+Yes I've read the commit message...
 
-Also, I find it weird that this the first driver that needs this.
+> 
+> The backlight for the Yoga 13 doesn't work, regardless what the _OSI
+> value is. In fact, it doesn't even work by directly accessing the EC via
+> the ideapad-laptop driver. 
+> 
+> So, again:
+> 
+> - Backlight control doesn't work via ACPI without acpi_osi="!Windows 2012"
+> - Backlight control doesn't work via ACPI with acpi_osi="!Windows 2012"
+> - Backlight control doesn't work via EC commands from ideapad-laptop.c
+> 
+> The only way backlight handling is supported on the Yoga 13 is via the
+> intel video driver.
 
-Finally, I'm much more interested on what happens next, because I want
-to link this driver to the thermal framework, so when temperature gets
-too high, the fan gets an increased speed, because right now it seems
-it's always on low speed, temperature gets high, and instead the CPU
-gets throttled, which is not desirable.
+Since I don't have access to the acpidump of this system, my only
+question is, does the firmware has a _OSI("Windows 2012") query in DSDT
+table?
 
-Maybe this driver should be added to the staging area.
+> 
+> Or in other words: the situation for the Yoga 13 is *unrelated* to the
+> Windows 8 issues, and your patch.
 
--- 
-Felipe Contreras
+I think they are related...
+If the firmware is compatible to Windows 8, then my patch will disable
+ACPI video backlight interface to prefer GPU's interface.
+
+> 
+> Hence this patch I posted, which blacklists the backlight control
+> entirely in the ACPI driver, since the Windows 2012 setting is
+> irrelevant to it.
+
+Yes, the Windows 2012 setting is irrelevant to ACPI's interface(with or
+without it, it doesn't work), but it's relevant to my patch as that is
+the condition we are using to decide if we should skip registering ACPI
+video's backlight interface.
+
+> 
+> I'll soon send another patch which also blacklists the thing in the
+> ideapad driver, so that only the intel backlight driver is enabled on
+> Yoga 13 systems, at which point everything will work fine.
+
+Right, that is needed. And if going with my patch, the ideapad driver
+will need to be patched similarly like thinkpad_acpi to add a check of
+acpi_video_backlight_support before it decides to register its own
+backlight interface.
+
+-Aaron
