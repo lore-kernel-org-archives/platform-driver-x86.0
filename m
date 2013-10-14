@@ -1,89 +1,70 @@
-From: Aaron Lu <aaron.lu@intel.com>
+From: Lennart Poettering <mzxreary@0pointer.de>
 Subject: Re: [PATCH] acpi/video: Add Lenovo IdeaPad Yoga 13 to acpi video
- detect blacklist
-Date: Mon, 14 Oct 2013 10:36:46 +0800
-Message-ID: <525B58BE.5050009@intel.com>
-References: <20131014005505.GA30503@tango.0pointer.de> <525B44C0.3010204@intel.com> <20131014022325.GA2248@tango.0pointer.de>
+  detect blacklist
+Date: Mon, 14 Oct 2013 05:49:28 +0200
+Message-ID: <20131014034927.GA3638@tango.0pointer.de>
+References: <20131014005505.GA30503@tango.0pointer.de>
+ <525B44C0.3010204@intel.com>
+ <20131014022325.GA2248@tango.0pointer.de>
+ <525B58BE.5050009@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20131014022325.GA2248@tango.0pointer.de>
+Content-Disposition: inline
+In-Reply-To: <525B58BE.5050009@intel.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Lennart Poettering <mzxreary@0pointer.de>
+To: Aaron Lu <aaron.lu@intel.com>
 Cc: Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 10/14/2013 10:23 AM, Lennart Poettering wrote:
-> On Mon, 14.10.13 09:11, Aaron Lu (aaron.lu@intel.com) wrote:
-> 
->>> Note that this appears unrelated to the Windows 8 backlight issues tracked
->>> here:
->>>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=51231
->>> https://bugzilla.kernel.org/show_bug.cgi?id=60682
->>>
->>> The Yoga's ACPI backlight controls work neither with nor without
->>> acpi_osi="!Windows 2012" on the kernel command line. It appears that
->>> backlight control via the EC simply is not available at all, regardless
->>> whether done via ACPI or via the vendor driver.
->>
->> Just a side note, if the firmware of Yoga 13 has a _OSI("Windows 2012")
->> query, then it should be solved with the patch proposed here:
->> https://lkml.org/lkml/2013/10/11/409, Fix Win8 backlight issue.
->>
->> We are still discussing a proper default behaviour in that patchset.
-> 
-> No. 
-> 
-> Did you actually read the commit message of the patch? Please do!
+On Mon, 14.10.13 10:36, Aaron Lu (aaron.lu@intel.com) wrote:
 
-Yes I've read the commit message...
-
+> > - Backlight control doesn't work via ACPI without acpi_osi="!Windows 2012"
+> > - Backlight control doesn't work via ACPI with acpi_osi="!Windows 2012"
+> > - Backlight control doesn't work via EC commands from ideapad-laptop.c
+> > 
+> > The only way backlight handling is supported on the Yoga 13 is via the
+> > intel video driver.
 > 
-> The backlight for the Yoga 13 doesn't work, regardless what the _OSI
-> value is. In fact, it doesn't even work by directly accessing the EC via
-> the ideapad-laptop driver. 
+> Since I don't have access to the acpidump of this system, my only
+> question is, does the firmware has a _OSI("Windows 2012") query in DSDT
+> table?
+
+Yes, it appears to do that as part of _OSC.
+
+The disassembled DSDT table is here:
+
+http://0pointer.de/public/yoga13-dsdt.dsl
+
+> > Or in other words: the situation for the Yoga 13 is *unrelated* to the
+> > Windows 8 issues, and your patch.
 > 
-> So, again:
+> I think they are related...
+> If the firmware is compatible to Windows 8, then my patch will disable
+> ACPI video backlight interface to prefer GPU's interface.
+
+OK, that might indeed work.
+
+> > I'll soon send another patch which also blacklists the thing in the
+> > ideapad driver, so that only the intel backlight driver is enabled on
+> > Yoga 13 systems, at which point everything will work fine.
 > 
-> - Backlight control doesn't work via ACPI without acpi_osi="!Windows 2012"
-> - Backlight control doesn't work via ACPI with acpi_osi="!Windows 2012"
-> - Backlight control doesn't work via EC commands from ideapad-laptop.c
-> 
-> The only way backlight handling is supported on the Yoga 13 is via the
-> intel video driver.
+> Right, that is needed. And if going with my patch, the ideapad driver
+> will need to be patched similarly like thinkpad_acpi to add a check of
+> acpi_video_backlight_support before it decides to register its own
+> backlight interface.
 
-Since I don't have access to the acpidump of this system, my only
-question is, does the firmware has a _OSI("Windows 2012") query in DSDT
-table?
+The ideapad driver currently skips registration of the backlight device
+if acpi_video_backlight_support() returns true. is that all you need?
 
-> 
-> Or in other words: the situation for the Yoga 13 is *unrelated* to the
-> Windows 8 issues, and your patch.
+Hmm, regarding your patch series, do you plan to skip the registration
+of the acpi backlight device if the "raw" device is supported? I mean,
+the intel driver could be compiled as a module (and generally is on the
+popular distros), so at the time the ACPI subsystem wants to register
+the backlight device and know if a raw backlight device is around it
+never will be, so what is the point of that? Or am I missing something?
 
-I think they are related...
-If the firmware is compatible to Windows 8, then my patch will disable
-ACPI video backlight interface to prefer GPU's interface.
+Lennart
 
-> 
-> Hence this patch I posted, which blacklists the backlight control
-> entirely in the ACPI driver, since the Windows 2012 setting is
-> irrelevant to it.
-
-Yes, the Windows 2012 setting is irrelevant to ACPI's interface(with or
-without it, it doesn't work), but it's relevant to my patch as that is
-the condition we are using to decide if we should skip registering ACPI
-video's backlight interface.
-
-> 
-> I'll soon send another patch which also blacklists the thing in the
-> ideapad driver, so that only the intel backlight driver is enabled on
-> Yoga 13 systems, at which point everything will work fine.
-
-Right, that is needed. And if going with my patch, the ideapad driver
-will need to be patched similarly like thinkpad_acpi to add a check of
-acpi_video_backlight_support before it decides to register its own
-backlight interface.
-
--Aaron
+-- 
+Lennart Poettering - Red Hat, Inc.
