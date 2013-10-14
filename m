@@ -1,57 +1,49 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
-Date: Mon, 14 Oct 2013 16:52:54 +0100
-Message-ID: <20131014155254.GB20187@srcf.ucam.org>
-References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
- <CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
- <1381421199.4248.2.camel@x230.lan>
- <CAMP44s04+_aP7KpVMTUjdNcRWMg6PC6HBaNhF_uhAHm=fhmTcw@mail.gmail.com>
- <20131013151729.GA4028@srcf.ucam.org>
- <CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 07/10] intel_mid: Added custom device_handler support
+Date: Mon, 14 Oct 2013 09:03:52 -0700
+Message-ID: <525C15E8.9010201@zytor.com>
+References: <1381549404-22594-1-git-send-email-david.a.cohen@linux.intel.com> <1381549404-22594-8-git-send-email-david.a.cohen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Contreras <felipe.contreras@gmail.com>
-Cc: "corentin.chary@gmail.com" <corentin.chary@gmail.com>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from terminus.zytor.com ([198.137.202.10]:54569 "EHLO mail.zytor.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754396Ab3JNQFF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 14 Oct 2013 12:05:05 -0400
+In-Reply-To: <1381549404-22594-8-git-send-email-david.a.cohen@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: David Cohen <david.a.cohen@linux.intel.com>, tglx@linutronix.de, Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On Sun, Oct 13, 2013 at 09:31:25PM -0500, Felipe Contreras wrote:
-> On Sun, Oct 13, 2013 at 10:17 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
-> > The spec doesn't seem to constrain it to physical addresses (it just
-> > refers to "Control Methods read and write data to locations in address
-> > spaces (for example, System memory and System I/O)", so I'd lean towards
-> > changing the behaviour of acpica rather than adding virt_to_phys().
-> 
-> And I assume you are not going to do that. Isn't acpica code outside
-> of the scope of Linux kernel development? If not, how do I go about
-> adding that capability.
+On 10/11/2013 08:43 PM, David Cohen wrote:
+>  
+>  	/* MSIC subdevices */
+> -	{"msic_battery", SFI_DEV_TYPE_IPC, 1, &msic_battery_platform_data},
+> -	{"msic_gpio", SFI_DEV_TYPE_IPC, 1, &msic_gpio_platform_data},
+> -	{"msic_audio", SFI_DEV_TYPE_IPC, 1, &msic_audio_platform_data},
+> -	{"msic_power_btn", SFI_DEV_TYPE_IPC, 1, &msic_power_btn_platform_data},
+> -	{"msic_ocd", SFI_DEV_TYPE_IPC, 1, &msic_ocd_platform_data},
+> -	{"msic_thermal", SFI_DEV_TYPE_IPC, 1, &msic_thermal_platform_data},
+> -
+> +	{"msic_battery", SFI_DEV_TYPE_IPC, 1, &msic_battery_platform_data,
+> +					NULL},
+> +	{"msic_gpio", SFI_DEV_TYPE_IPC, 1, &msic_gpio_platform_data, NULL},
+> +	{"msic_audio", SFI_DEV_TYPE_IPC, 1, &msic_audio_platform_data, NULL},
+> +	{"msic_power_btn", SFI_DEV_TYPE_IPC, 1, &msic_power_btn_platform_data,
+> +					NULL},
+> +	{"msic_ocd", SFI_DEV_TYPE_IPC, 1, &msic_ocd_platform_data, NULL},
+> +	{"msic_thermal", SFI_DEV_TYPE_IPC, 1, &msic_thermal_platform_data,
+> +					NULL},
+>  	{},
+>  };
+>  
 
-I wasn't planning on it, no. Just write the code and submit it to 
-linux-acpi, and Cc: Bob Moore.
+For highly regular arrays like this it is better to keep each line a
+single line even if it gets a bit too long rather than randomly breaking
+them.  The alternative is to put every field of every entry on a
+separate line, but I don't think that is necessary called for here.
 
-> Also, I find it weird that this the first driver that needs this.
-
-The normal way to do this would be for the ASL to just define a buffer 
-within the argument, rather than assigning it to an operation region. I 
-haven't seen anyone take this approach before.
-
-> Finally, I'm much more interested on what happens next, because I want
-> to link this driver to the thermal framework, so when temperature gets
-> too high, the fan gets an increased speed, because right now it seems
-> it's always on low speed, temperature gets high, and instead the CPU
-> gets throttled, which is not desirable.
-
-It wouldn't be appropriate to alter the firmware behaviour by default, 
-but yeah, that's the kind of thing that the thermal framework exists to 
-do.
-
-> Maybe this driver should be added to the staging area.
-
-I don't think you can easily register multiple drivers for the same WMI 
-device.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+	-hpa
