@@ -1,38 +1,57 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH] acpi/video: Add Lenovo IdeaPad Yoga 13 to acpi video
- detect blacklist
-Date: Mon, 14 Oct 2013 15:48:28 +0000
-Message-ID: <1381765708.24317.1.camel@x230.lan>
-References: <20131014005505.GA30503@tango.0pointer.de>
-	 <525B44C0.3010204@intel.com> <20131014022325.GA2248@tango.0pointer.de>
-	 <525B58BE.5050009@intel.com> <20131014034927.GA3638@tango.0pointer.de>
-	 <525B703E.7080102@intel.com> <20131014153621.GA7758@tango.0pointer.de>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
+Date: Mon, 14 Oct 2013 16:52:54 +0100
+Message-ID: <20131014155254.GB20187@srcf.ucam.org>
+References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
+ <CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
+ <1381421199.4248.2.camel@x230.lan>
+ <CAMP44s04+_aP7KpVMTUjdNcRWMg6PC6HBaNhF_uhAHm=fhmTcw@mail.gmail.com>
+ <20131013151729.GA4028@srcf.ucam.org>
+ <CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0241.outbound.protection.outlook.com ([207.46.163.241]:25299
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1750814Ab3JNPsd (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Oct 2013 11:48:33 -0400
-In-Reply-To: <20131014153621.GA7758@tango.0pointer.de>
-Content-Language: en-US
-Content-ID: <482529D0A601B84388C191DD4F19FDEE@namprd05.prod.outlook.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "mzxreary@0pointer.de" <mzxreary@0pointer.de>
-Cc: "lenb@kernel.org" <lenb@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "aaron.lu@intel.com" <aaron.lu@intel.com>, "rjw@sisk.pl" <rjw@sisk.pl>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Contreras <felipe.contreras@gmail.com>
+Cc: "corentin.chary@gmail.com" <corentin.chary@gmail.com>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gTW9uLCAyMDEzLTEwLTE0IGF0IDE3OjM2ICswMjAwLCBMZW5uYXJ0IFBvZXR0ZXJpbmcgd3Jv
-dGU6DQoNCj4gU29ycnksIHN0aWxsIG5vdCBnZXR0aW5nIHRoaXMuIEhvdyBzaG91bGQgdGhpcyBl
-dmVyIHdvcmsgaWYgdGhlIGludGVsDQo+IHZpZGVvIGRyaXZlciBpcyBjb21waWxlZCBhcyBrbW9k
-PyBUaGF0IG1lYW5zIHRoYXQgaXQgaXNuJ3QgY2xlYXIgYXQgYWxsDQo+IHdoZW4gdGhlIGttb2Qg
-aXMgZ29pbmcgdG8gYmUgbG9hZGVkIG9yIGlmIGl0IGlzIGxvYWRlZCBhdCBhbGwsIHlvdQ0KPiBj
-YW5ub3QgZGVsYXkgdGhlIHJlZ2lzdHJhdGlvbiBvZiB0aGUgYWNwaSBiYWNrbGlnaHQgdGhhdCBs
-b25nLCBzaW5jZSB0aGUNCj4gdGltZSB5b3UnZCBoYXZlIHRvIHdhaXQgaXMgYmFzaWNhbGx5IHVu
-Ym91bmRlZC4uLg0KDQpTZWUgdGhlIGludGVsX29wcmVnaW9uX3ByZXNlbnQoKSBjb2RlIGluIGRy
-aXZlcnMvYWNwaS92aWRlby5jLiBUaGUgQUNQSQ0KZHJpdmVyIHdvbid0IGJpbmQgdG8gSW50ZWwg
-aGFyZHdhcmUgdW50aWwgaTkxNSBpbmRpY2F0ZXMgdGhhdCBpdCBzaG91bGQNCmRvIHNvLg0KDQot
-LSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+DQo=
+On Sun, Oct 13, 2013 at 09:31:25PM -0500, Felipe Contreras wrote:
+> On Sun, Oct 13, 2013 at 10:17 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> > The spec doesn't seem to constrain it to physical addresses (it just
+> > refers to "Control Methods read and write data to locations in address
+> > spaces (for example, System memory and System I/O)", so I'd lean towards
+> > changing the behaviour of acpica rather than adding virt_to_phys().
+> 
+> And I assume you are not going to do that. Isn't acpica code outside
+> of the scope of Linux kernel development? If not, how do I go about
+> adding that capability.
+
+I wasn't planning on it, no. Just write the code and submit it to 
+linux-acpi, and Cc: Bob Moore.
+
+> Also, I find it weird that this the first driver that needs this.
+
+The normal way to do this would be for the ASL to just define a buffer 
+within the argument, rather than assigning it to an operation region. I 
+haven't seen anyone take this approach before.
+
+> Finally, I'm much more interested on what happens next, because I want
+> to link this driver to the thermal framework, so when temperature gets
+> too high, the fan gets an increased speed, because right now it seems
+> it's always on low speed, temperature gets high, and instead the CPU
+> gets throttled, which is not desirable.
+
+It wouldn't be appropriate to alter the firmware behaviour by default, 
+but yeah, that's the kind of thing that the thermal framework exists to 
+do.
+
+> Maybe this driver should be added to the staging area.
+
+I don't think you can easily register multiple drivers for the same WMI 
+device.
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
