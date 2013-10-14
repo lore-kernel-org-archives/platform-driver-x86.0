@@ -1,52 +1,67 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: Re: [PATCH v3 10/10] intel_mid: Moved SFI related code to intel_mid_sfi.c
-Date: Mon, 14 Oct 2013 09:47:00 -0700
-Message-ID: <525C2004.1030604@linux.intel.com>
-References: <1381549404-22594-1-git-send-email-david.a.cohen@linux.intel.com> <1381549404-22594-11-git-send-email-david.a.cohen@linux.intel.com> <525C1E1C.9060306@zytor.com>
+From: Felipe Contreras <felipe.contreras@gmail.com>
+Subject: Re: [PATCH v2] platform: x86: asus-wmi: add fan control
+Date: Mon, 14 Oct 2013 18:18:36 -0500
+Message-ID: <CAMP44s3O6z6-gVCqhCps7fKSKMbL9JSakZLfBUxqUYytrWFWKw@mail.gmail.com>
+References: <1381236524-19633-1-git-send-email-felipe.contreras@gmail.com>
+	<CAHR064ge8zew7uMeD+_LXR3ju5ARGG1y8utLOFzOLexny_DPLA@mail.gmail.com>
+	<1381421199.4248.2.camel@x230.lan>
+	<CAMP44s04+_aP7KpVMTUjdNcRWMg6PC6HBaNhF_uhAHm=fhmTcw@mail.gmail.com>
+	<20131013151729.GA4028@srcf.ucam.org>
+	<CAMP44s0utW0ABWgFicDH=vDMxZbQudeM6D13RL8BfPnr55hR8Q@mail.gmail.com>
+	<20131014155254.GB20187@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:61032 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757034Ab3JNQnI (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Oct 2013 12:43:08 -0400
-In-Reply-To: <525C1E1C.9060306@zytor.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, linux-kernel@vger.kernel.org, x86@kernel.org, platform-driver-x86@vger.kernel.org, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20131014155254.GB20187@srcf.ucam.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "corentin.chary@gmail.com" <corentin.chary@gmail.com>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 10/14/2013 09:38 AM, H. Peter Anvin wrote:
-> On 10/11/2013 08:43 PM, David Cohen wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Mon, Oct 14, 2013 at 10:52 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> On Sun, Oct 13, 2013 at 09:31:25PM -0500, Felipe Contreras wrote:
+>> On Sun, Oct 13, 2013 at 10:17 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+>> > The spec doesn't seem to constrain it to physical addresses (it just
+>> > refers to "Control Methods read and write data to locations in address
+>> > spaces (for example, System memory and System I/O)", so I'd lean towards
+>> > changing the behaviour of acpica rather than adding virt_to_phys().
 >>
->> Moved SFI specific parsing/handling code to intel_mid_sfi.c. This will enable
->> us to reuse our intel-mid code for platforms that supports firmware interfaces
->> other than SFI (like ACPI).
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
->> ---
->>   arch/x86/include/asm/intel-mid.h            |   1 +
->>   arch/x86/platform/intel-mid/Makefile        |   5 +-
->>   arch/x86/platform/intel-mid/intel-mid.c     | 450 --------------------------
->>   arch/x86/platform/intel-mid/intel_mid_sfi.c | 485 ++++++++++++++++++++++++++++
->>   4 files changed, 489 insertions(+), 452 deletions(-)
->>   create mode 100644 arch/x86/platform/intel-mid/intel_mid_sfi.c
->>
+>> And I assume you are not going to do that. Isn't acpica code outside
+>> of the scope of Linux kernel development? If not, how do I go about
+>> adding that capability.
 >
-> Why not just sfi.c?  It is already in a directly named intel-mid.
->
-> I presume otherwise this is just code movement... I haven't verified
-> that, but it looked like it.
+> I wasn't planning on it, no. Just write the code and submit it to
+> linux-acpi, and Cc: Bob Moore.
 
-Yes, it is and I agree sfi.c seems better. Changing it for next patch
-set too.
+I might give it a try.
 
-Br, David Cohen
+>> Also, I find it weird that this the first driver that needs this.
+>
+> The normal way to do this would be for the ASL to just define a buffer
+> within the argument, rather than assigning it to an operation region. I
+> haven't seen anyone take this approach before.
+>
+>> Finally, I'm much more interested on what happens next, because I want
+>> to link this driver to the thermal framework, so when temperature gets
+>> too high, the fan gets an increased speed, because right now it seems
+>> it's always on low speed, temperature gets high, and instead the CPU
+>> gets throttled, which is not desirable.
+>
+> It wouldn't be appropriate to alter the firmware behaviour by default,
+> but yeah, that's the kind of thing that the thermal framework exists to
+> do.
 
+Well, how do I do that? The driver is up and running, and I can
+manually set different fan speeds, however nothing seems to happen
+automatically when the temperature increases.
+
+>> Maybe this driver should be added to the staging area.
 >
-> 	-hpa
->
+> I don't think you can easily register multiple drivers for the same WMI
+> device.
+
+I don't mean this one, I mean the standalone one. Actually, the first
+one I sent doesn't require all this system memory stuff.
+
+-- 
+Felipe Contreras
