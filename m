@@ -1,42 +1,39 @@
-From: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v1 3/3] ipc: Add support for default interrupt mode
-Date: Mon, 14 Oct 2013 20:55:37 -0700 (PDT)
-Message-ID: <52278.10.7.201.52.1381809337.squirrel@linux.intel.com>
-References: <cover.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-    <871d1b965914d6c90e698aa67827854e748f18e1.1374547036.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-    <1378208904.11730.2.camel@x230>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: Kuppuswamy Sathyanarayanan
+	<sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v2 0/3] IPC driver patches
+Date: Mon, 14 Oct 2013 21:06:21 -0700
+Message-ID: <cover.1381809435.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:45319 "EHLO mga09.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:56768 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756434Ab3JODzy (ORCPT
+	id S1750869Ab3JOEGZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Oct 2013 23:55:54 -0400
-In-Reply-To: <1378208904.11730.2.camel@x230>
+	Tue, 15 Oct 2013 00:06:25 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: matthew.garrett@nebula.com, linux-kernel@vger.kernel.org, sathyanarayanan.kuppuswamy@linux.intel.com
 
-> On Mon, 2013-07-22 at 19:48 -0700, Kuppuswamy Sathyanarayanan wrote:
->> Added intel scu ipc access mode config option.
->>
->> Also, This patch adds support to enable ipc command interrupt
->> mode by default. This functionality is enabled by following
->> config option.
->>
->> CONFIG_INTEL_SCU_IPC_INTR_MODE=y
->
-> Can you document this in the help text? It's unclear whether people
-> should enable this option or not.
+Following patches adds IPC support for addional intel platforms and adds
+support for IPC command interrupt mode.
 
-Thanks for the review. I will update the help content in my next patchset.
+Please let me know your review comments.
 
-> --
-> Matthew Garrett <matthew.garrett@nebula.com>
->
+Diff between v1 - v2 is,
 
---
-Sathyanarayanan Kuppuswamy
+- Updated the help content for CONFIG_INTEL_SCU_IPC_INTR_MODE and
+  CONFIG_INTEL_SCU_IPC_POLL_MODE
+- Updated the commit summary
+
+
+Kuppuswamy Sathyanarayanan (3):
+  ipc: Added platform data structure
+  ipc: Enabled ipc support for additional intel platforms
+  ipc: Added support for IPC interrupt mode
+
+ drivers/platform/x86/Kconfig         |   23 +++++++
+ drivers/platform/x86/intel_scu_ipc.c |  114 ++++++++++++++++++++++++++++++----
+ 2 files changed, 126 insertions(+), 11 deletions(-)
+
+-- 
+1.7.9.5
