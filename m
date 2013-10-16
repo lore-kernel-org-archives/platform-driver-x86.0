@@ -1,93 +1,178 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
-Date: Wed, 16 Oct 2013 01:33:44 +0200
-Message-ID: <2140073.U60XyxRqVZ@vostro.rjw.lan>
-References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+From: David Henningsson <david.henningsson@canonical.com>
+Subject: [RFC PATCH 1/2] thinkpad-acpi: Add mute and mic-mute LED functionality
+Date: Wed, 16 Oct 2013 14:15:35 +0200
+Message-ID: <1381925736-11399-2-git-send-email-david.henningsson@canonical.com>
+References: <1381925736-11399-1-git-send-email-david.henningsson@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:49640 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S933711Ab3JOXVz (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:33218 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933249Ab3JPMPh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Oct 2013 19:21:55 -0400
-In-Reply-To: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
+	Wed, 16 Oct 2013 08:15:37 -0400
+In-Reply-To: <1381925736-11399-1-git-send-email-david.henningsson@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: linux-acpi@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Matthew Garrett <matthew.garrett@nebula.com>, Seth Forshee <seth.forshee@canonical.com>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Yves-Alexis Perez <corsac@debian.org>, Felipe Contreras <felipe.contreras@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, Ben Jencks <ben@bjencks.net>, Steven Newbury <steve@snewbury.org.uk>, James Hogan <james@albanarts.com>, Kamal Mostafa <kamal@canonical.com>, Joerg Platte <jplatte@naasa.net>, Kalle Valo <kvalo@adurom.com>, Martin Steigerwald <Martin@lichtvoll.de>, =?ISO-8859-1?Q?J=F6rg?= Otte <jrg.otte@gmail.com>, Mike Galbraith <bitbucket@online.de>, platform-driver-x86@vger.kernel.org, Mika
+To: tiwai@suse.de, alsa-devel@alsa-project.org, platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br, alex.hung@canonical.com, hui.wang@canonical.com
+Cc: David Henningsson <david.henningsson@canonical.com>
 
-On Friday, October 11, 2013 09:27:42 PM Aaron Lu wrote:
-> v5:
-> 1 Introduce video.use_native_backlight module parameter and set its
->   value to false by default as suggested by Rafael. For Win8 systems
->   which have broken ACPI video backlight control, the parameter can be
->   set to 1 in kernel cmdline to skip registering ACPI video's backlight
->   interface. Due to this change, the acpi_video_verify_backlight_support
->   is moved from video_detect.c to video.c - patch 3/4;
-> 2 Rename bd_list_head and bd_list_mutex in backlight.c to
->   backlight_dev_list and backlight_dev_list_mutex as suggested by Rafael
->   - patch 1/4.
-> 
-> v4:
-> Remove decleration and stub for acpi_video_unregister_backlight in
-> video.h of patch 2/4 since that function doesn't exist anymore in v3.
-> 
-> v3:
-> 1 Add a new patch 4/4 to fix some problems in thinkpad-acpi module;
-> 2 Remove unnecessary function acpi_video_unregister_backlight introduced
->   in patch 2/4 as pointed out by Jani Nikula.
-> 
-> v2:
-> v1 has the subject of "Rework ACPI video driver" and is posted here:
-> http://lkml.org/lkml/2013/9/9/74
-> Since the objective is really to fix Win8 backlight issues, I changed
-> the subject in this version, sorry about that.
-> 
-> This patchset has four patches, the first introduced a new API named
-> backlight_device_registered in backlight layer that can be used for
-> backlight interface provider module to check if a specific type backlight
-> interface has been registered, see changelog for patch 1/4 for details.
-> Then patch 2/4 does the cleanup to sepeate the backlight control and
-> event delivery functionality in the ACPI video module and patch 3/4
-> solves some Win8 backlight control problems by avoiding register ACPI
-> video's backlight interface if:
-> 1 Kernel cmdline option acpi_backlight=video is not given;
-> 2 This is a Win8 system;
-> 3 Native backlight control interface exists.
-> Patch 4/4 fixes some problems in thinkpad-acpi module.
-> 
-> Technically, patch 2/4 is not required to fix the issue here. So if you
-> think it is not necessary, I can remove it from the series.
-> 
-> Aaron Lu (4):
->   backlight: introduce backlight_device_registered
->   ACPI / video: seperate backlight control and event interface
->   ACPI / video: Do not register backlight if win8 and native interface
->     exists
->   thinkpad-acpi: fix handle locate for video and query of _BCL
-> 
->  drivers/acpi/internal.h              |   4 +-
->  drivers/acpi/video.c                 | 457 ++++++++++++++++++++---------------
->  drivers/acpi/video_detect.c          |   4 +-
->  drivers/platform/x86/thinkpad_acpi.c |  31 ++-
->  drivers/video/backlight/backlight.c  |  31 +++
->  include/linux/backlight.h            |   4 +
->  6 files changed, 326 insertions(+), 205 deletions(-)
+Questions / notes:
 
-I've added this series to my queue for 3.13.
+This patch supersedes the second of Alex Hung's patches posted earlier at
+http://www.spinics.net/lists/platform-driver-x86/msg04673.html
 
-Since the next step will be to introduce a list of systems that need
-video.use_native_backlight=1 *and* don't break in that configuration, I don't
-see much point adding another Kconfig option for the default.
+Not sure if thinkpad_acpi should be dropped into include/linux
+though, any better suggestion?
 
-Hopefully, in the future we'll be able to fix the problems causing
-video.use_native_backlight=1 to fail of the systems where it fails and then
-we'll be able to make that the default behavior and drop the option altogether.
+Should TPACPI_VERSION be increased because we added a new LED driver?
 
-Thanks!
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c |   94 +++++++++++++++++++++++++++++++++-
+ include/linux/thinkpad_acpi.h        |   10 ++++
+ 2 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/thinkpad_acpi.h
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 03ca6c1..ecdfeae 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -23,7 +23,7 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+-#define TPACPI_VERSION "0.24"
++#define TPACPI_VERSION "0.25"
+ #define TPACPI_SYSFS_VERSION 0x020700
+ 
+ /*
+@@ -88,6 +88,7 @@
+ 
+ #include <linux/pci_ids.h>
+ 
++#include <linux/thinkpad_acpi.h>
+ 
+ /* ThinkPad CMOS commands */
+ #define TP_CMOS_VOLUME_DOWN	0
+@@ -8350,6 +8351,93 @@ static struct ibm_struct fan_driver_data = {
+ 	.resume = fan_resume,
+ };
+ 
++/*************************************************************************
++ * Mute LED subdriver
++ */
++
++#define MUTE_LED_INDEX 0
++#define MICMUTE_LED_INDEX 1
++
++static int mute_led_on_off(int whichled, int state)
++{
++	int output;
++	acpi_handle temp;
++
++	acpi_string m;
++	if (whichled == MICMUTE_LED_INDEX) {
++		state = state > 0 ? 2 : 0;
++		m = "MMTS";
++	} else {
++		state = state > 0 ? 1 : 0;
++		m = "SSMS";
++	}
++
++	if (!ACPI_SUCCESS(acpi_get_handle(hkey_handle, m, &temp))) {
++		pr_warn("Thinkpad ACPI has no %s interface.\n", m);
++		return -EIO;
++	}
++
++	if (!acpi_evalf(hkey_handle, &output, m, "dd", state))
++		return -EIO;
++
++	return 0;
++}
++
++static unsigned int mute_led_state;
++static unsigned int micmute_led_state;
++
++int tpacpi_mute_led_set(int on)
++{
++	int err;
++	int state = on ? 1 : 0;
++	if (mute_led_state < 0 || mute_led_state == state)
++		return mute_led_state;
++	err = mute_led_on_off(MUTE_LED_INDEX, state);
++	mute_led_state = err ? err : state;
++	return err;
++}
++EXPORT_SYMBOL(tpacpi_mute_led_set);
++
++int tpacpi_micmute_led_set(int on)
++{
++	int err;
++	int state = on ? 1 : 0;
++	if (micmute_led_state < 0 || micmute_led_state == state)
++		return micmute_led_state;
++	err = mute_led_on_off(MICMUTE_LED_INDEX, state);
++	micmute_led_state = err ? err : state;
++	return err;
++}
++EXPORT_SYMBOL(tpacpi_micmute_led_set);
++
++static int mute_led_init(struct ibm_init_struct *iibm)
++{
++	acpi_handle temp;
++
++	if (ACPI_SUCCESS(acpi_get_handle(hkey_handle, "MMTG", &temp)))
++		micmute_led_state = mute_led_on_off(MICMUTE_LED_INDEX, 0);
++	else
++		micmute_led_state = -ENODEV;
++
++	if (ACPI_SUCCESS(acpi_get_handle(hkey_handle, "GSMS", &temp)))
++		mute_led_state = mute_led_on_off(MUTE_LED_INDEX, 0);
++	else
++		mute_led_state = -ENODEV;
++
++	return 0;
++}
++
++static void mute_led_exit(void)
++{
++	tpacpi_mute_led_set(0);
++	tpacpi_micmute_led_set(0);
++}
++
++static struct ibm_struct mute_led_driver_data = {
++	.name = "mute_led",
++	.exit = mute_led_exit,
++};
++
+ /****************************************************************************
+  ****************************************************************************
+  *
+@@ -8768,6 +8856,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = fan_init,
+ 		.data = &fan_driver_data,
+ 	},
++	{
++		.init = mute_led_init,
++		.data = &mute_led_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, struct kernel_param *kp)
+diff --git a/include/linux/thinkpad_acpi.h b/include/linux/thinkpad_acpi.h
+new file mode 100644
+index 0000000..9fecd15
+--- /dev/null
++++ b/include/linux/thinkpad_acpi.h
+@@ -0,0 +1,10 @@
++#ifndef __THINKPAD_ACPI_H__
++#define __THINKPAD_ACPI_H__
++
++/* These two functions return 0 if success, or negative error code
++   (e g -ENODEV if no led present) */
++
++int tpacpi_mute_led_set(int on);
++int tpacpi_micmute_led_set(int on);
++
++#endif
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+1.7.9.5
