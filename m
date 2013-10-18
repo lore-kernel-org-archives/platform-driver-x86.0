@@ -1,39 +1,39 @@
-From: David Henningsson <david.henningsson@canonical.com>
-Subject: Re: [PATCH v2 0/3] Enable mute LEDs and mic mute LEDs on Thinkpad
-Date: Thu, 17 Oct 2013 18:16:15 +0200
-Message-ID: <52600D4F.1090903@canonical.com>
-References: <1381957833-13788-1-git-send-email-david.henningsson@canonical.com>	<s5h61swus41.wl%tiwai@suse.de>	<20131017113436.GD18254@khazad-dum.debian.net> <s5hsiw0t4x4.wl%tiwai@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Felipe Pena <felipensp@gmail.com>
+Subject: [PATCH] thinkpad-acpi: Fix wrong assignment
+Date: Fri, 18 Oct 2013 19:41:07 -0300
+Message-ID: <1382136067-3888-1-git-send-email-felipensp@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:41204 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757482Ab3JQQQU (ORCPT
+Received: from mail-ve0-f180.google.com ([209.85.128.180]:50505 "EHLO
+	mail-ve0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757492Ab3JRWkz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 17 Oct 2013 12:16:20 -0400
-In-Reply-To: <s5hsiw0t4x4.wl%tiwai@suse.de>
+	Fri, 18 Oct 2013 18:40:55 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Takashi Iwai <tiwai@suse.de>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: alsa-devel@alsa-project.org, platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br, alex.hung@canonical.com, hui.wang@canonical.com
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Pena <felipensp@gmail.com>
 
-On 10/17/2013 03:15 PM, Takashi Iwai wrote:
-> At Thu, 17 Oct 2013 08:34:36 -0300,
-> Henrique de Moraes Holschuh wrote:
->>
->> On Thu, 17 Oct 2013, Takashi Iwai wrote:
->>> The new patches look OK to me.  If Henrique agrees, I can apply all to
->>> sound git tree.
->>
->> Sure, go ahead.
-> 
-> OK, I applied all patches to for-next branch now.
+In the thermal_init function when checking for thinkpad_id.ec_model,
+the 'ta2' variable is being OR'd when acpi_ec_read call succeeds,
+on fail it is setting 0 to 'ta1' variable instead.
 
-Ok, thanks a lot!
+Signed-off-by: Felipe Pena <felipensp@gmail.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
--- 
-David Henningsson, Canonical Ltd.
-https://launchpad.net/~diwic
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 03ca6c1..ac6f938 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5730,7 +5730,7 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+ 			if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+ 				ta2 |= t;
+ 			} else {
+-				ta1 = 0;
++				ta2 = 0;
+ 				break;
+ 			}
+ 		}
+--
+1.7.10.4
