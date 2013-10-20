@@ -1,39 +1,37 @@
-From: Felipe Pena <felipensp@gmail.com>
-Subject: [PATCH] thinkpad-acpi: Fix wrong assignment
-Date: Fri, 18 Oct 2013 19:41:07 -0300
-Message-ID: <1382136067-3888-1-git-send-email-felipensp@gmail.com>
+From: Sung Lee <suzlee@aswara.edu.my>
+Subject: Greetings
+Date: Sun, 20 Oct 2013 19:47:30 +0800 (MYT)
+Message-ID: <ec9e4461-9fb7-4108-81e8-e2f0ba2fb51a__2126.7383046963$1382280323$gmane$org@zimbra>
+Reply-To: Sung Lee <sleehk24@zing.vn>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ve0-f180.google.com ([209.85.128.180]:50505 "EHLO
-	mail-ve0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757492Ab3JRWkz (ORCPT
+Received: from mail.aswara.edu.my ([211.25.235.134]:50082 "HELO
+	zimbra.aswara.edu.my" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with SMTP id S1750785Ab3JTOoq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 Oct 2013 18:40:55 -0400
+	Sun, 20 Oct 2013 10:44:46 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Pena <felipensp@gmail.com>
 
-In the thermal_init function when checking for thinkpad_id.ec_model,
-the 'ta2' variable is being OR'd when acpi_ec_read call succeeds,
-on fail it is setting 0 to 'ta1' variable instead.
 
-Signed-off-by: Felipe Pena <felipensp@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 03ca6c1..ac6f938 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5730,7 +5730,7 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 			if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
- 				ta2 |= t;
- 			} else {
--				ta1 = 0;
-+				ta2 = 0;
- 				break;
- 			}
- 		}
---
-1.7.10.4
+
+
+DAH SING BANK LTD
+DES VOEUX RD.BRANCH,CENTRAL HONG KONG,
+HONG KONG.
+
+Greetings,
+
+I am Mr.Sung Lee, Auditing and Account Credit Officer, Dah Sing Bank Ltd,(Hong Kong). I ask for your partnership in re-profiling funds Transfer. 
+
+Further to this,details would be made known if interested but in summary the funds would be transferred from my bank and further to this other informations to facilitate the remittance of the funds will be revealed to you in due course. For your assistance, you shall receive 25% of the funds to be transferred .
+
+I will appreciate if you can reply me.
+
+I'm looking forward to it
+Sung Lee
+
+The information contained in this email and any attachments is confidential and may be subject to copyright or other intellectual property protection. If you are not the intended recipient, you are not authorized to use or disclose this information, and we request that you notify us by reply mail or telephone and delete the original message from your mail system.
