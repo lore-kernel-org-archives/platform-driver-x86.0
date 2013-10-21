@@ -1,37 +1,45 @@
-From: Sung Lee <suzlee@aswara.edu.my>
-Subject: Greetings
-Date: Sun, 20 Oct 2013 19:47:30 +0800 (MYT)
-Message-ID: <ec9e4461-9fb7-4108-81e8-e2f0ba2fb51a__2126.7383046963$1382280323$gmane$org@zimbra>
-Reply-To: Sung Lee <sleehk24@zing.vn>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Benson Leung <bleung@chromium.org>
+Subject: [PATCH 0/6] Platform: x86: chromeos_laptop - Deferring and Haswell
+Date: Sun, 20 Oct 2013 20:58:23 -0700
+Message-ID: <1382327909-6140-1-git-send-email-bleung@chromium.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.aswara.edu.my ([211.25.235.134]:50082 "HELO
-	zimbra.aswara.edu.my" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with SMTP id S1750785Ab3JTOoq (ORCPT
+Received: from mail-pa0-f43.google.com ([209.85.220.43]:45531 "EHLO
+	mail-pa0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752490Ab3JUD6p (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 20 Oct 2013 10:44:46 -0400
+	Sun, 20 Oct 2013 23:58:45 -0400
+Received: by mail-pa0-f43.google.com with SMTP id hz1so5894476pad.30
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Oct 2013 20:58:44 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, adurbin@chromium.org, dlaurie@chromium.org, olofj@chromium.org, enselic@gmail.com
+Cc: bleung@chromium.org
 
+The following patch series refactors the dmi check system and
+returns -EPROBE_DEFER when an expected i2c adapter is not present
+at probe time.
 
+This will allow the touchpad, touchscreen, and light sensors on
+Pixel to load even if the i915 DDC and PANEL buses are instantiated
+after chromeos_laptop.
 
+The deferred probing patches were sent previously, and have been cleaned up
+slightly since.
 
+Also one patch to clean up the placement of __initdata for the dmi_table.
 
-DAH SING BANK LTD
-DES VOEUX RD.BRANCH,CENTRAL HONG KONG,
-HONG KONG.
+Finally, add support for the Haswell generation Chromebook systems' 
+peripherals over the new native i2c-designware-pci busses.
 
-Greetings,
+The last three patches depend on this patch series :
+https://lkml.org/lkml/2013/10/20/136
 
-I am Mr.Sung Lee, Auditing and Account Credit Officer, Dah Sing Bank Ltd,(Hong Kong). I ask for your partnership in re-profiling funds Transfer. 
+[PATCH 1/6] Platform: x86: chromeos_laptop - Restructure device associations
+[PATCH 2/6] Platform: x86: chromeos_laptop - Use deferred probing
+[PATCH 3/6] Platform: x86: chromeos_laptop - fix incorrect placement of __initdata tag
+[PATCH 4/6] Platform: x86: chromeos_laptop - Add names of Haswell ULT i2c busses
+[PATCH 5/6] Platform: x86: chromeos_laptop - Add HP Chromebook 14
+[PATCH 6/6] Platform: x86: chromeos_laptop - Add Acer C720
 
-Further to this,details would be made known if interested but in summary the funds would be transferred from my bank and further to this other informations to facilitate the remittance of the funds will be revealed to you in due course. For your assistance, you shall receive 25% of the funds to be transferred .
-
-I will appreciate if you can reply me.
-
-I'm looking forward to it
-Sung Lee
-
-The information contained in this email and any attachments is confidential and may be subject to copyright or other intellectual property protection. If you are not the intended recipient, you are not authorized to use or disclose this information, and we request that you notify us by reply mail or telephone and delete the original message from your mail system.
+Regards,
+Benson
