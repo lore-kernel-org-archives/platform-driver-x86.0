@@ -1,46 +1,44 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH 6/8] platform:x86: Remove OOM message
- after input_allocate_device
-Date: Thu, 24 Oct 2013 07:31:07 -0200
-Message-ID: <20131024093107.GA24862@khazad-dum.debian.net>
-References: <cover.1382555436.git.joe@perches.com>
-	<93f2f693853e4409877d3d639e39b3b497738757.1382555436.git.joe@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <93f2f693853e4409877d3d639e39b3b497738757.1382555436.git.joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, Ike Panhc <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harald Welte <laforge-TgoAw6mPHtdg9hUCZPvPmw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Herton Ronaldo Krzesinski <herton-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] thinkpad_acpi: Fix build error when CONFIG_SND_MAX_CARDS > 32
+Date: Thu, 24 Oct 2013 16:06:32 +0200
+Message-ID: <1382623592-31690-1-git-send-email-tiwai@suse.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:34654 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755201Ab3JXODi (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 24 Oct 2013 10:03:38 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, 23 Oct 2013, Joe Perches wrote:
-> Emitting an OOM message isn't necessary after input_allocate_device
-> as there's a generic OOM and a dump_stack already done.
-> 
-> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+SNDRV_CARDS can be specified via Kconfig since 3.11 kernel, so this
+can be over 32bit integer range, which leads to a build error.
 
-For the thinkpad-acpi bits:
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: <stable@vger.kernel.org> [v3.11+]
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0b7efb2..79f77a7 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6421,7 +6421,12 @@ static struct ibm_struct brightness_driver_data = {
+ #define TPACPI_ALSA_SHRTNAME "ThinkPad Console Audio Control"
+ #define TPACPI_ALSA_MIXERNAME TPACPI_ALSA_SHRTNAME
+ 
+-static int alsa_index = ~((1 << (SNDRV_CARDS - 3)) - 1); /* last three slots */
++#if SNDRV_CARDS <= 32
++#define DEFAULT_ALSA_IDX		~((1 << (SNDRV_CARDS - 3)) - 1)
++#else
++#define DEFAULT_ALSA_IDX		~((1 << (32 - 3)) - 1)
++#endif
++static int alsa_index = DEFAULT_ALSA_IDX; /* last three slots */
+ static char *alsa_id = "ThinkPadEC";
+ static bool alsa_enable = SNDRV_DEFAULT_ENABLE1;
+ 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
-
-------------------------------------------------------------------------------
-October Webinars: Code for Performance
-Free Intel webinars can help you accelerate application performance.
-Explore tips for MPI, OpenMP, advanced profiling, and more. Get the most from 
-the latest Intel processors and coprocessors. See abstracts and register >
-http://pubads.g.doubleclick.net/gampad/clk?id=60135991&iu=/4140/ostg.clktrk
+1.8.4
