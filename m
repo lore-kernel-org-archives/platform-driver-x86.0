@@ -1,176 +1,46 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
-Date: Thu, 24 Oct 2013 16:13:47 +0800
-Message-ID: <5268D6BB.3010207@intel.com>
-References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
-	<2140073.U60XyxRqVZ@vostro.rjw.lan>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH 6/8] platform:x86: Remove OOM message
+ after input_allocate_device
+Date: Thu, 24 Oct 2013 07:31:07 -0200
+Message-ID: <20131024093107.GA24862@khazad-dum.debian.net>
+References: <cover.1382555436.git.joe@perches.com>
+	<93f2f693853e4409877d3d639e39b3b497738757.1382555436.git.joe@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <2140073.U60XyxRqVZ@vostro.rjw.lan>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
-Errors-To: intel-gfx-bounces+gcfxdi-intel-gfx=m.gmane.org@lists.freedesktop.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: James Hogan <james@albanarts.com>, Martin Steigerwald <Martin@lichtvoll.de>, Felipe Contreras <felipe.contreras@gmail.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, linux-acpi@vger.kernel.org, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, Mike Galbraith <bitbucket@online.de>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?UTF-8?B?SsO2cmcgT3R0ZQ==?= <jrg.otte@gmail.com>, intel-gfx@lists.freedesktop.org, Peter Weber <bugs@ttyhoney.com>, Joerg Platte <jplatte@naasa.net>, Seth Forshee <seth.forshee@canonical.com>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Lennart Poettering <lennart@poettering.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Theodore Tso <tytso@mit.edu>, linux-kernel@vger.kernel.
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <93f2f693853e4409877d3d639e39b3b497738757.1382555436.git.joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, Ike Panhc <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, acpi4asus-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harald Welte <laforge-TgoAw6mPHtdg9hUCZPvPmw@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Herton Ronaldo Krzesinski <herton-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 10/16/2013 07:33 AM, Rafael J. Wysocki wrote:
-> On Friday, October 11, 2013 09:27:42 PM Aaron Lu wrote:
->> v5:
->> 1 Introduce video.use_native_backlight module parameter and set its
->>   value to false by default as suggested by Rafael. For Win8 systems
->>   which have broken ACPI video backlight control, the parameter can be
->>   set to 1 in kernel cmdline to skip registering ACPI video's backlight
->>   interface. Due to this change, the acpi_video_verify_backlight_support
->>   is moved from video_detect.c to video.c - patch 3/4;
->> 2 Rename bd_list_head and bd_list_mutex in backlight.c to
->>   backlight_dev_list and backlight_dev_list_mutex as suggested by Rafael
->>   - patch 1/4.
->>
->> v4:
->> Remove decleration and stub for acpi_video_unregister_backlight in
->> video.h of patch 2/4 since that function doesn't exist anymore in v3.
->>
->> v3:
->> 1 Add a new patch 4/4 to fix some problems in thinkpad-acpi module;
->> 2 Remove unnecessary function acpi_video_unregister_backlight introduced
->>   in patch 2/4 as pointed out by Jani Nikula.
->>
->> v2:
->> v1 has the subject of "Rework ACPI video driver" and is posted here:
->> http://lkml.org/lkml/2013/9/9/74
->> Since the objective is really to fix Win8 backlight issues, I changed
->> the subject in this version, sorry about that.
->>
->> This patchset has four patches, the first introduced a new API named
->> backlight_device_registered in backlight layer that can be used for
->> backlight interface provider module to check if a specific type backlight
->> interface has been registered, see changelog for patch 1/4 for details.
->> Then patch 2/4 does the cleanup to sepeate the backlight control and
->> event delivery functionality in the ACPI video module and patch 3/4
->> solves some Win8 backlight control problems by avoiding register ACPI
->> video's backlight interface if:
->> 1 Kernel cmdline option acpi_backlight=video is not given;
->> 2 This is a Win8 system;
->> 3 Native backlight control interface exists.
->> Patch 4/4 fixes some problems in thinkpad-acpi module.
->>
->> Technically, patch 2/4 is not required to fix the issue here. So if you
->> think it is not necessary, I can remove it from the series.
->>
->> Aaron Lu (4):
->>   backlight: introduce backlight_device_registered
->>   ACPI / video: seperate backlight control and event interface
->>   ACPI / video: Do not register backlight if win8 and native interface
->>     exists
->>   thinkpad-acpi: fix handle locate for video and query of _BCL
->>
->>  drivers/acpi/internal.h              |   4 +-
->>  drivers/acpi/video.c                 | 457 ++++++++++++++++++++---------------
->>  drivers/acpi/video_detect.c          |   4 +-
->>  drivers/platform/x86/thinkpad_acpi.c |  31 ++-
->>  drivers/video/backlight/backlight.c  |  31 +++
->>  include/linux/backlight.h            |   4 +
->>  6 files changed, 326 insertions(+), 205 deletions(-)
+On Wed, 23 Oct 2013, Joe Perches wrote:
+> Emitting an OOM message isn't necessary after input_allocate_device
+> as there's a generic OOM and a dump_stack already done.
 > 
-> I've added this series to my queue for 3.13.
-> 
-> Since the next step will be to introduce a list of systems that need
-> video.use_native_backlight=1 *and* don't break in that configuration, I don't
-> see much point adding another Kconfig option for the default.
-> 
-> Hopefully, in the future we'll be able to fix the problems causing
-> video.use_native_backlight=1 to fail of the systems where it fails and then
-> we'll be able to make that the default behavior and drop the option altogether.
+> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 
-I've prepared a patch(at the end of the mail) to set use_native_backlight
-by default for some systems. There are 3 systems currently that I'm
-kind of sure that should be added:
+For the thinkpad-acpi bits:
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 
-The ThinkPad T430s and X230 is:
-Reported-by: Theodore Tso <tytso@mit.edu>
-Reported-and-tested-by: Peter Weber <bugs@ttyhoney.com>
-Reported-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
-Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
-
-The Lenovo Yoga is:
-Reported-by: Lennart Poettering <lennart@poettering.net>
-Reference: https://lkml.org/lkml/2013/10/13/178
-
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: [PATCH] ACPI / video: Add systems that should favor native backlight
- interface
-
-Some system's ACPI video backlight control interface is broken and the
-native backlight control interface should be used by default. This patch
-sets the use_native_backlight parameter to true for those systems so
-that video backlight control interface will not be created. To be
-clear, the ThinkPad T430s/X230 and Lenovo Yoga 13 are added here.
-
-Reported-by: Theodore Tso <tytso@mit.edu>
-Reported-and-tested-by: Peter Weber <bugs@ttyhoney.com>
-Reported-by: Lennart Poettering <lennart@poettering.net>
-Reported-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
----
- drivers/acpi/video.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
-index d020df5..9a80a94 100644
---- a/drivers/acpi/video.c
-+++ b/drivers/acpi/video.c
-@@ -412,6 +412,12 @@ static int video_ignore_initial_backlight(const struct dmi_system_id *d)
- 	return 0;
- }
- 
-+static int __init video_set_use_native_backlight(const struct dmi_system_id *d)
-+{
-+	use_native_backlight = true;
-+	return 0;
-+}
-+
- static struct dmi_system_id video_dmi_table[] __initdata = {
- 	/*
- 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
-@@ -504,6 +510,30 @@ static struct dmi_system_id video_dmi_table[] __initdata = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion m4 Notebook PC"),
- 		},
- 	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "ThinkPad T430s",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T430s"),
-+		},
-+	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "ThinkPad X230",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X230"),
-+		},
-+	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "Lenovo Yoga 13",
-+	 .matches = {
-+		 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		 DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
-+		},
-+	},
- 	{}
- };
- 
 -- 
-1.8.4.39.ga0d3f10
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
+October Webinars: Code for Performance
+Free Intel webinars can help you accelerate application performance.
+Explore tips for MPI, OpenMP, advanced profiling, and more. Get the most from 
+the latest Intel processors and coprocessors. See abstracts and register >
+http://pubads.g.doubleclick.net/gampad/clk?id=60135991&iu=/4140/ostg.clktrk
