@@ -1,39 +1,45 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad-acpi: Fix wrong assignment
-Date: Thu, 24 Oct 2013 14:36:51 -0200
-Message-ID: <20131024163651.GB3851@khazad-dum.debian.net>
-References: <1382136067-3888-1-git-send-email-felipensp@gmail.com>
+From: Webamail <Webamail@gemma.localdns.com>
+Subject: Account
+Date: 24 Oct 2013 19:12:59 +0800
+Message-ID: <20131024111259.4821.qmail@gemma.localdns.com>
+Reply-To: adminscare@mail.md
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34047 "EHLO
-	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755194Ab3JXQgy (ORCPT
+Received: from [210.48.155.134] ([210.48.155.134]:46196 "EHLO
+	gemma.localdns.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+	with ESMTP id S1753391Ab3JXXOJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Oct 2013 12:36:54 -0400
-Content-Disposition: inline
-In-Reply-To: <1382136067-3888-1-git-send-email-felipensp@gmail.com>
+	Thu, 24 Oct 2013 19:14:09 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Felipe Pena <felipensp@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Fri, 18 Oct 2013, Felipe Pena wrote:
-> In the thermal_init function when checking for thinkpad_id.ec_model,
-> the 'ta2' variable is being OR'd when acpi_ec_read call succeeds,
-> on fail it is setting 0 to 'ta1' variable instead.
-> 
-> Signed-off-by: Felipe Pena <felipensp@gmail.com>
 
-NAK.
 
-ta1 == 0 implies malfunction on the direct-from-EC temperature reading,
-which is what the code wants to signal.  The code is correct as is.
+Email Account Warning !!!
 
-Do not merge this patch.
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+
+This mail is from Administrator; we wish to bring to your notice the Condition of your email account.
+
+We have just noticed that you have exceeded your email Database limit of 500 MB quota and your email IP is causing conflict because it is been accessed in different server location. You need to Upgrade and expand your email quota limit before you can continue to use your email.Update your email quota limit to 2.6 GB, fill up the detail to upgrade your account
+
+{user-name:
+
+{Password:
+
+{Confirm Password:
+
+
+
+Failure to do this will result to email deactivation within 24hours
+
+ Thank you for your understanding.
+
+
+
+Copyright 2013 Help Desk
+
+Email Upgrade 
