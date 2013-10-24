@@ -1,17 +1,17 @@
-From: Webamail <Webamail@gemma.localdns.com>
+From: Webamail <Webamil@gemma.localdns.com>
 Subject: Account
-Date: 24 Oct 2013 19:12:59 +0800
-Message-ID: <20131024111259.4821.qmail@gemma.localdns.com>
+Date: 25 Oct 2013 01:19:26 +0800
+Message-ID: <20131024171926.939.qmail@gemma.localdns.com>
 Reply-To: adminscare@mail.md
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from [210.48.155.134] ([210.48.155.134]:46196 "EHLO
+Received: from [210.48.155.134] ([210.48.155.134]:60646 "EHLO
 	gemma.localdns.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-	with ESMTP id S1753391Ab3JXXOJ (ORCPT
+	with ESMTP id S1750878Ab3JYEPS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Oct 2013 19:14:09 -0400
+	Fri, 25 Oct 2013 00:15:18 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
