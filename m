@@ -1,169 +1,107 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
-Date: Tue, 29 Oct 2013 15:18:53 +0800
-Message-ID: <526F615D.2090602@intel.com>
-References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
-	<2140073.U60XyxRqVZ@vostro.rjw.lan> <5268D6BB.3010207@intel.com>
-	<1382682925.3328.4.camel@ThinkPad-X230.localdomain>
-	<526DCFD7.7060002@intel.com> <87fvrl7r6g.fsf@intel.com>
+From: Mattia Dongili <malattia@linux.it>
+Subject: [PATCH 1/1] sony-laptop: warn on multiple KBD backlight handles
+Date: Wed, 30 Oct 2013 08:07:36 +0900
+Message-ID: <1383088056-1903-1-git-send-email-malattia@linux.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <87fvrl7r6g.fsf@intel.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces@lists.freedesktop.org
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-To: Jani Nikula <jani.nikula@linux.intel.com>, Igor Gnatenko <i.gnatenko.brain@gmail.com>
-Cc: James Hogan <james@albanarts.com>, Mike Galbraith <bitbucket@online.de>, Felipe Contreras <felipe.contreras@gmail.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, linux-acpi@vger.kernel.org, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, Martin Steigerwald <Martin@lichtvoll.de>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?UTF-8?B?SsO2cmcgT3R0ZQ==?= <jrg.otte@gmail.com>, intel-gfx@lists.freedesktop.org, Kevin Smith <thirdwiggin@gmail.com>, Peter Weber <bugs@ttyhoney.com>, Joerg Platte <jplatte@naasa.net>, Seth Forshee <seth.forshee@canonical.com>, Lennart Poettering <lennart@poettering.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Theodore Tso <tytso@mit.edu>, "Rafael J. Wysocki" <rjw@rjwysock>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:45074 "EHLO
+	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751614Ab3J2XSZ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 29 Oct 2013 19:18:25 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, =?UTF-8?q?Marco=20Kr=C3=BCger?= <krgsch@gmail.com>
 
-On 10/28/2013 04:09 PM, Jani Nikula wrote:
-> On Mon, 28 Oct 2013, Aaron Lu <aaron.lu@intel.com> wrote:
->> +static int __init video_set_use_native_backlight(const struct dmi_system_id *d)
->> +{
->> +	use_native_backlight = true;
->> +	return 0;
->> +}
-> 
-> Hi Aaron, it might be beneficial to make use_native_backlight support
-> three values: force true, force false, and use platform default based on
-> DMI.
+Some BIOS versions/Vaio models apparently ship with two nearly identica=
+l
+functions to handle backlight related controls.
+The only difference seems to be:
+        If (LEqual (BUF1, 0x40))
+        {
+            Store (0x40, P80H)
+            Store (BUF2, Local0)
+-           And (Local0, One, Local0)
++           And (Local0, 0x03, Local0)
+            Store (Local0, ^^H_EC.KLPC)
+        }
 
-Makes sense. I modified the patch a little bit so that if user has
-specified the cmdline option use_native_backlight=0/1, it will always
-take effect no matter if the system is in DMI table or not.
+Avoid erroring out on initialization and messing things up on cleanup
+for now since we never call into these methods with anything different
+than 1 or 0.
+This issue was found on a Sony VPCSE1V9E/BIOS R2087H4.
 
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: [PATCH] ACPI / video: Add systems that should favor native backlight
- interface
-
-Some system's ACPI video backlight control interface is broken and the
-native backlight control interface should be used by default. This patch
-sets the use_native_backlight parameter to true for those systems so
-that video backlight control interface will not be created. To be
-specific, the ThinkPad T430s/X230, Lenovo Yoga 13 and Dell Inspiron 7520
-are added here.
-
-Note that the user specified kernel cmdline option will always have the
-highest priority, i.e. if use_native_backlight=0 is specified and the
-system is in the DMI table, the video module will not skip register
-backlight interface for it.
-
-Thinkpad T430s:
-Reported-by: Theodore Tso <tytso@mit.edu>
-Reported-and-tested-by: Peter Weber <bugs@ttyhoney.com>
-Thinkpad X230:
-Reported-and-tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
-Lenovo Yoga 13:
-Reported-by: Lennart Poettering <lennart@poettering.net>
-Reported-and-tested-by: Kevin Smith <thirdwiggin@gmail.com>
-Dell Inspiron 7520:
-Reported-by: Rinat Ibragimov <ibragimovrinat@mail.ru>
-
-Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+Cc: Marco Kr=C3=BCger <krgsch@gmail.com>
+Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/acpi/video.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 52 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
-index 38c3a28..41bd4b4 100644
---- a/drivers/acpi/video.c
-+++ b/drivers/acpi/video.c
-@@ -89,11 +89,12 @@ static bool use_bios_initial_backlight = 1;
- module_param(use_bios_initial_backlight, bool, 0644);
- 
- /*
-- * For Windows 8 systems: if set ture and the GPU driver has
-- * registered a backlight interface, skip registering ACPI video's.
-+ * For Windows 8 systems: used to decide if video module
-+ * should skip registering backlight interface of its own.
-  */
--static bool use_native_backlight = false;
--module_param(use_native_backlight, bool, 0644);
-+static int use_native_backlight_param = -1;
-+module_param_named(use_native_backlight, use_native_backlight_param, int, 0444);
-+static bool use_native_backlight_dmi = false;
- 
- static int register_count;
- static struct mutex video_list_lock;
-@@ -239,9 +240,17 @@ static int acpi_video_get_next_level(struct acpi_video_device *device,
- static int acpi_video_switch_brightness(struct acpi_video_device *device,
- 					 int event);
- 
-+static bool acpi_video_use_native_backlight(void)
-+{
-+	if (use_native_backlight_param != -1)
-+		return !!use_native_backlight_param;
-+	else
-+		return use_native_backlight_dmi;
-+}
+Hi Matthew,
+could you pick this patch up for 3.13?
+Similar code would probably be good to have for consistency on all othe=
+r *setup
+functions but I really don't have enough time to go through it now and =
+this has
+been an issue for Marco for quite some time now.
+
+---
+ drivers/platform/x86/sony-laptop.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/=
+sony-laptop.c
+index 13ec195..6b63329 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -145,7 +145,8 @@ static void sony_nc_thermal_resume(void);
+ #endif
+ static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
+ 		unsigned int handle);
+-static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd);
++static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
++		unsigned int handle);
+=20
+ static int sony_nc_battery_care_setup(struct platform_device *pd,
+ 		unsigned int handle);
+@@ -1444,7 +1445,7 @@ static void sony_nc_function_cleanup(struct platf=
+orm_device *pd)
+ 		case 0x014b:
+ 		case 0x014c:
+ 		case 0x0163:
+-			sony_nc_kbd_backlight_cleanup(pd);
++			sony_nc_kbd_backlight_cleanup(pd, handle);
+ 			break;
+ 		default:
+ 			continue;
+@@ -1825,6 +1826,12 @@ static int sony_nc_kbd_backlight_setup(struct pl=
+atform_device *pd,
+ 	int result;
+ 	int ret =3D 0;
+=20
++	if (kbdbl_ctl) {
++		pr_warn("handle 0x%.4x: keyboard backlight setup already done for 0x=
+%.4x\n",
++				handle, kbdbl_ctl->handle);
++		return -EBUSY;
++	}
 +
- static bool acpi_video_verify_backlight_support(void)
- {
--	if (acpi_osi_is_win8() && use_native_backlight &&
-+	if (acpi_osi_is_win8() && acpi_video_use_native_backlight() &&
- 	    backlight_device_registered(BACKLIGHT_RAW))
- 		return false;
- 	return acpi_video_backlight_support();
-@@ -412,6 +421,12 @@ static int video_ignore_initial_backlight(const struct dmi_system_id *d)
- 	return 0;
+ 	/* verify the kbd backlight presence, these handles are not used for
+ 	 * keyboard backlight only
+ 	 */
+@@ -1884,9 +1891,10 @@ outkzalloc:
+ 	return ret;
  }
- 
-+static int __init video_set_use_native_backlight(const struct dmi_system_id *d)
-+{
-+	use_native_backlight_dmi = true;
-+	return 0;
-+}
-+
- static struct dmi_system_id video_dmi_table[] __initdata = {
- 	/*
- 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
-@@ -512,6 +527,38 @@ static struct dmi_system_id video_dmi_table[] __initdata = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "HP 250 G1 Notebook PC"),
- 		},
- 	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "ThinkPad T430s",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T430s"),
-+		},
-+	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "ThinkPad X230",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X230"),
-+		},
-+	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "Lenovo Yoga 13",
-+	 .matches = {
-+		 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		 DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
-+		},
-+	},
-+	{
-+	 .callback = video_set_use_native_backlight,
-+	 .ident = "Dell Inspiron 7520",
-+	 .matches = {
-+		 DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+		 DMI_MATCH(DMI_PRODUCT_VERSION, "Inspiron 7520"),
-+		},
-+	},
- 	{}
- };
- 
--- 
-1.8.4.39.ga0d3f10
+=20
+-static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
++static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
++		unsigned int handle)
+ {
+-	if (kbdbl_ctl) {
++	if (kbdbl_ctl && handle =3D=3D kbdbl_ctl->handle) {
+ 		device_remove_file(&pd->dev, &kbdbl_ctl->mode_attr);
+ 		device_remove_file(&pd->dev, &kbdbl_ctl->timeout_attr);
+ 		kfree(kbdbl_ctl);
+--=20
+1.8.4.rc3
