@@ -1,36 +1,49 @@
-From: "1jadh@tiscali.co.uk" <1jadh@tiscali.co.uk>
-Subject: =?UTF-8?Q?p=C5=99ekro=C4=8Den=C3=AD_kv=C3=B3ty_?=
- =?UTF-8?Q?po=C5=A1tovn=C3=AD_schr=C3=A1nky?=
-Date: Wed, 30 Oct 2013 08:28:53 +0000 (GMT)
-Message-ID: <29324597.1362431383121733558.JavaMail.defaultUser__39821.5092755438$1383122383$gmane$org@defaultHost>
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: Re: [PATCH 4/8] minnowboard: Add base platform driver for the
+ MinnowBoard
+Date: Wed, 30 Oct 2013 14:18:00 +0000
+Message-ID: <1383142680.2460.5.camel@dvhart-mobl4.amr.corp.intel.com>
+References: <cover.1372211451.git.dvhart@linux.intel.com>
+	 <a459c0b97ea41148af901fc73dbeff98778c7419.1372211451.git.dvhart@linux.intel.com>
+	 <CACRpkda8QGdoAvjsUs7Uu+ukUu7ST63g=H9arA7SS7ceWmMTaQ@mail.gmail.com>
+	 <1372398218.9243.29.camel@envy.home> <20130704162641.GG27646@sirena.org.uk>
+	 <CACRpkdbKGti==FTfHm81EkwD++iRfixnXt3kWgBj7CxjM+2znA@mail.gmail.com>
+	 <20130721234134.GA9858@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out.ipsmtp4nec.opaltelecom.net ([62.24.202.76]:5806 "EHLO
-	out.ipsmtp4nec.opaltelecom.net" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752632Ab3J3IjO convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Oct 2013 04:39:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25425 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752924Ab3J3VSc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 30 Oct 2013 17:18:32 -0400
+In-Reply-To: <20130721234134.GA9858@sirena.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "peter.p.waskiewicz.jr" <peter.p.waskiewicz.jr@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, danders <danders@circuitco.com>, "vishal.l.verma" <vishal.l.verma@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, Grant Likely <grant.likely@linaro.org>, Richard Purdie <richard.purdie@linuxfoundation.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 
-V=C3=A1=C5=BEen=C3=AD ID u=C5=BEivatele
+On Mon, 2013-07-22 at 00:41 +0100, Mark Brown wrote:
+> On Sat, Jul 20, 2013 at 07:37:54PM +0200, Linus Walleij wrote:
+> > On Thu, Jul 4, 2013 at 6:26 PM, Mark Brown <broonie@kernel.org> wrote:
+> 
+> > > We should really have a subsystem for this too - the general idea idea
+> > > of identifying boards, fit options and so on by looking at things like
+> > > GPIOs or numbers in flash is really common.
+> 
+> > Would it then be a bus following the pattern we chiseled out for
+> > the soc bus? (Greg, Lee & Arnd architectured this.)
+> 
+> I'd expect it to be a bus, yes.
 
-P=C5=99=C3=ADchoz=C3=AD zpr=C3=A1vy byly um=C3=ADst=C4=9Bny do doby, ne=
-=C5=BE d=C3=ADky=20
-na=C5=A1=C3=AD nov=C3=A9 aktualizace. Laskav=C4=9B postupujte podle n=C3=
-=AD=C5=BEe odkazu informace k=20
-ov=C4=9B=C5=99en=C3=AD sv=C3=A9 hlasov=C3=A9 schr=C3=A1nky a zv=C3=BD=C5=
-=A1it sv=C3=A9 kv=C3=B3ty po=C5=A1tovn=C3=AD schr=C3=A1nky=20
-slu=C5=BEby.
+It seems to me the platform bus already provides everything we need. We
+can just make a platform driver, say platform-id-gpio.c which can get
+it's platform data from OF or ACPI (_PRP proposal from kernel summit
+last week for example). Why would a separate bus type need to be
+defined?
 
-Klikn=C4=9Bte  http://emailuserupgrade010.webs.com/  dostat va=C5=A1e s=
-chr=C3=A1nka=20
-aktualizov=C3=A1na.
-
-Omlouv=C3=A1me se za zp=C5=AFsoben=C3=A9 nep=C5=99=C3=ADjemnosti.
-
-d=C3=ADky
-Mail=20
-Client Support Team
+-- 
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Linux Kernel
