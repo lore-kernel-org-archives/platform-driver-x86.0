@@ -1,37 +1,36 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
-Date: Wed, 30 Oct 2013 00:40:13 +0000
-Message-ID: <1383093613.20804.4.camel@x230>
-References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
-	<2140073.U60XyxRqVZ@vostro.rjw.lan>
+From: "1jadh@tiscali.co.uk" <1jadh@tiscali.co.uk>
+Subject: =?UTF-8?Q?p=C5=99ekro=C4=8Den=C3=AD_kv=C3=B3ty_?=
+ =?UTF-8?Q?po=C5=A1tovn=C3=AD_schr=C3=A1nky?=
+Date: Wed, 30 Oct 2013 08:28:53 +0000 (GMT)
+Message-ID: <29324597.1362431383121733558.JavaMail.defaultUser__39821.5092755438$1383122383$gmane$org@defaultHost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <2140073.U60XyxRqVZ@vostro.rjw.lan>
-Content-Language: en-US
-Content-ID: <B62BC12587A7764CAABE97D06955885E@namprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces@lists.freedesktop.org
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-To: "rjw@rjwysocki.net" <rjw@rjwysocki.net>
-Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <seth.forshee@canonical.com>, "i.gnatenko.brain@gmail.com" <i.gnatenko.brain@gmail.com>, mik
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out.ipsmtp4nec.opaltelecom.net ([62.24.202.76]:5806 "EHLO
+	out.ipsmtp4nec.opaltelecom.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752632Ab3J3IjO convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 30 Oct 2013 04:39:14 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-On Wed, 2013-10-16 at 01:33 +0200, Rafael J. Wysocki wrote:
+V=C3=A1=C5=BEen=C3=AD ID u=C5=BEivatele
 
-> Since the next step will be to introduce a list of systems that need
-> video.use_native_backlight=1 *and* don't break in that configuration, I don't
-> see much point adding another Kconfig option for the default.
+P=C5=99=C3=ADchoz=C3=AD zpr=C3=A1vy byly um=C3=ADst=C4=9Bny do doby, ne=
+=C5=BE d=C3=ADky=20
+na=C5=A1=C3=AD nov=C3=A9 aktualizace. Laskav=C4=9B postupujte podle n=C3=
+=AD=C5=BEe odkazu informace k=20
+ov=C4=9B=C5=99en=C3=AD sv=C3=A9 hlasov=C3=A9 schr=C3=A1nky a zv=C3=BD=C5=
+=A1it sv=C3=A9 kv=C3=B3ty po=C5=A1tovn=C3=AD schr=C3=A1nky=20
+slu=C5=BEby.
 
-I'd still really prefer not to add such a list, because it almost
-inevitably means that we'll never fix this problem properly.
+Klikn=C4=9Bte  http://emailuserupgrade010.webs.com/  dostat va=C5=A1e s=
+chr=C3=A1nka=20
+aktualizov=C3=A1na.
 
--- 
-Matthew Garrett <matthew.garrett@nebula.com>
+Omlouv=C3=A1me se za zp=C5=AFsoben=C3=A9 nep=C5=99=C3=ADjemnosti.
+
+d=C3=ADky
+Mail=20
+Client Support Team
