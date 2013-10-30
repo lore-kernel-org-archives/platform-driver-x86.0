@@ -1,107 +1,41 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 1/1] sony-laptop: warn on multiple KBD backlight handles
-Date: Wed, 30 Oct 2013 08:07:36 +0900
-Message-ID: <1383088056-1903-1-git-send-email-malattia@linux.it>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 0/4] Fix Win8 backlight issue
+Date: Wed, 30 Oct 2013 01:56:04 +0100
+Message-ID: <3079224.ztPUEhjm69@vostro.rjw.lan>
+References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
+	<2140073.U60XyxRqVZ@vostro.rjw.lan> <1383093613.20804.4.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:45074 "EHLO
-	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751614Ab3J2XSZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Oct 2013 19:18:25 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, =?UTF-8?q?Marco=20Kr=C3=BCger?= <krgsch@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <1383093613.20804.4.camel@x230>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces@lists.freedesktop.org
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <seth.forshee@canonical.com>, "i.gnatenko.brain@gmail.com" <i.gnatenko.brain@gmail.com>, mik
+List-Id: platform-driver-x86.vger.kernel.org
 
-Some BIOS versions/Vaio models apparently ship with two nearly identica=
-l
-functions to handle backlight related controls.
-The only difference seems to be:
-        If (LEqual (BUF1, 0x40))
-        {
-            Store (0x40, P80H)
-            Store (BUF2, Local0)
--           And (Local0, One, Local0)
-+           And (Local0, 0x03, Local0)
-            Store (Local0, ^^H_EC.KLPC)
-        }
+On Wednesday, October 30, 2013 12:40:13 AM Matthew Garrett wrote:
+> On Wed, 2013-10-16 at 01:33 +0200, Rafael J. Wysocki wrote:
+> 
+> > Since the next step will be to introduce a list of systems that need
+> > video.use_native_backlight=1 *and* don't break in that configuration, I don't
+> > see much point adding another Kconfig option for the default.
+> 
+> I'd still really prefer not to add such a list, because it almost
+> inevitably means that we'll never fix this problem properly.
 
-Avoid erroring out on initialization and messing things up on cleanup
-for now since we never call into these methods with anything different
-than 1 or 0.
-This issue was found on a Sony VPCSE1V9E/BIOS R2087H4.
+We have this list in blacklist.c anyway.
 
-Cc: Marco Kr=C3=BCger <krgsch@gmail.com>
-Signed-off-by: Mattia Dongili <malattia@linux.it>
----
+Thanks!
 
-Hi Matthew,
-could you pick this patch up for 3.13?
-Similar code would probably be good to have for consistency on all othe=
-r *setup
-functions but I really don't have enough time to go through it now and =
-this has
-been an issue for Marco for quite some time now.
-
----
- drivers/platform/x86/sony-laptop.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/=
-sony-laptop.c
-index 13ec195..6b63329 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -145,7 +145,8 @@ static void sony_nc_thermal_resume(void);
- #endif
- static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
- 		unsigned int handle);
--static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd);
-+static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
-+		unsigned int handle);
-=20
- static int sony_nc_battery_care_setup(struct platform_device *pd,
- 		unsigned int handle);
-@@ -1444,7 +1445,7 @@ static void sony_nc_function_cleanup(struct platf=
-orm_device *pd)
- 		case 0x014b:
- 		case 0x014c:
- 		case 0x0163:
--			sony_nc_kbd_backlight_cleanup(pd);
-+			sony_nc_kbd_backlight_cleanup(pd, handle);
- 			break;
- 		default:
- 			continue;
-@@ -1825,6 +1826,12 @@ static int sony_nc_kbd_backlight_setup(struct pl=
-atform_device *pd,
- 	int result;
- 	int ret =3D 0;
-=20
-+	if (kbdbl_ctl) {
-+		pr_warn("handle 0x%.4x: keyboard backlight setup already done for 0x=
-%.4x\n",
-+				handle, kbdbl_ctl->handle);
-+		return -EBUSY;
-+	}
-+
- 	/* verify the kbd backlight presence, these handles are not used for
- 	 * keyboard backlight only
- 	 */
-@@ -1884,9 +1891,10 @@ outkzalloc:
- 	return ret;
- }
-=20
--static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd)
-+static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
-+		unsigned int handle)
- {
--	if (kbdbl_ctl) {
-+	if (kbdbl_ctl && handle =3D=3D kbdbl_ctl->handle) {
- 		device_remove_file(&pd->dev, &kbdbl_ctl->mode_attr);
- 		device_remove_file(&pd->dev, &kbdbl_ctl->timeout_attr);
- 		kfree(kbdbl_ctl);
---=20
-1.8.4.rc3
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
