@@ -1,224 +1,52 @@
-From: Julian Andres Klode <jak@jak-linux.org>
-Subject: [RFC PATCH] thinkpad_acpi: Add support for controlling charge thresholds
-Date: Mon,  4 Nov 2013 22:38:08 +0100
-Message-ID: <1383601088-21177-1-git-send-email-jak@jak-linux.org>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [RFC PATCH] thinkpad_acpi: Add support for controlling charge thresholds
+Date: Tue, 05 Nov 2013 11:18:02 +0100
+Message-ID: <87ppqfrw2t.fsf@nemi.mork.no>
+References: <1383601088-21177-1-git-send-email-jak@jak-linux.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f48.google.com ([209.85.214.48]:35139 "EHLO
-	mail-bk0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751278Ab3KDViY (ORCPT
+Received: from canardo.mork.no ([148.122.252.1]:39589 "EHLO canardo.mork.no"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752839Ab3KEKSY convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Nov 2013 16:38:24 -0500
+	Tue, 5 Nov 2013 05:18:24 -0500
+In-Reply-To: <1383601088-21177-1-git-send-email-jak@jak-linux.org> (Julian
+	Andres Klode's message of "Mon, 4 Nov 2013 22:38:08 +0100")
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Julian Andres Klode <jak@jak-linux.org>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Julian Andres Klode <jak@jak-linux.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-Add support for battery charge thresholds in new Sandy Bridge and Ivy Bridge
-ThinkPads. Based on the unofficial documentation in tpacpi-bat.
+Julian Andres Klode <jak@jak-linux.org> writes:
 
-The threshold files support the values '0' for the controller's default,
-and 1-99 as percentages. Values outside of that range are rejected. The
-behaviour of '0' might be confusing, especially for the stop case where
-it basically seems to mean '100'.
+> =20
+> +TPACPI_HANDLE(battery, root, "\\_SB.PCI0.LPC.EC.HKEY",
+> +	   "\\_SB.PCI0.LPCB.EC.HKEY",		/* X121e, T430u */
+> +	   "\\_SB.PCI0.LPCB.H_EC.HKEY",		/* L430 */
+> +	   "\\_SB.PCI0.LPCB.EC0.HKEY",		/* Edge/S series */
+> +	   );
+> +
 
-Signed-off-by: Julian Andres Klode <jak@jak-linux.org>
----
-Does this look OK so far? There are some other things I want to add
-(force_discharge and others), but I thought I'd gather some comments
-in case I'm doing it all wrong...
+Isn't this just the full patch to the existing "hkey_handle" for those
+models?  Why not just use that handle, like e.g the rfkill driver does?
 
-I'm slightly abusing struct dev_ext_attribute here, as I'm storing the
-battery number in the 'var' pointer.
+Supported models could probably be autodetected by checking whether the
+methods exist?
 
-Note that I export the batteries starting at BAT0, but the EC starts
-counting at 1 (0 is reserved for setting all batteries at once, but
-that functionality is not provided here).
+> +static struct attribute_group bat##_BAT##_attribute_group =3D { \
+> +	.name  =3D "BAT" #_BAT, \
+> +	.attrs =3D bat##_BAT##_attributes \
+> +};
 
- drivers/platform/x86/thinkpad_acpi.c | 158 +++++++++++++++++++++++++++++++++++
- 1 file changed, 158 insertions(+)
+Are these names guaranteed to match the ACPI battery device(s)?
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 03ca6c1..1e17222 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -528,6 +528,12 @@ static acpi_handle ec_handle;
- TPACPI_HANDLE(ecrd, ec, "ECRD");	/* 570 */
- TPACPI_HANDLE(ecwr, ec, "ECWR");	/* 570 */
- 
-+TPACPI_HANDLE(battery, root, "\\_SB.PCI0.LPC.EC.HKEY",
-+	   "\\_SB.PCI0.LPCB.EC.HKEY",		/* X121e, T430u */
-+	   "\\_SB.PCI0.LPCB.H_EC.HKEY",		/* L430 */
-+	   "\\_SB.PCI0.LPCB.EC0.HKEY",		/* Edge/S series */
-+	   );
-+
- TPACPI_HANDLE(cmos, root, "\\UCMS",	/* R50, R50e, R50p, R51, */
- 					/* T4x, X31, X40 */
- 	   "\\CMOS",		/* A3x, G4x, R32, T23, T30, X22-24, X30 */
-@@ -8350,6 +8356,154 @@ static struct ibm_struct fan_driver_data = {
- 	.resume = fan_resume,
- };
- 
-+
-+/*************************************************************************
-+ * Battery subdriver
-+ */
-+
-+/* Define a new battery, _BAT is a number >= 0 */
-+#define DEFINE_BATTERY(_BAT) \
-+static struct dev_ext_attribute bat##_BAT##_attribute_start_charge_thresh = { \
-+	.attr = __ATTR(start_charge_tresh, (S_IWUSR | S_IRUGO), \
-+		       battery_start_charge_thresh_show, \
-+		       battery_start_charge_thresh_store), \
-+	.var = (void *) (_BAT + 1) \
-+}; \
-+static struct dev_ext_attribute bat##_BAT##_attribute_stop_charge_thresh = { \
-+	.attr = __ATTR(stop_charge_tresh, (S_IWUSR | S_IRUGO), \
-+		       battery_stop_charge_thresh_show, \
-+		       battery_stop_charge_thresh_store), \
-+	.var = (void *) (_BAT + 1) \
-+}; \
-+static struct attribute *bat##_BAT##_attributes[] = { \
-+	&bat##_BAT##_attribute_start_charge_thresh.attr.attr, \
-+	&bat##_BAT##_attribute_stop_charge_thresh.attr.attr, \
-+	NULL \
-+}; \
-+\
-+static struct attribute_group bat##_BAT##_attribute_group = { \
-+	.name  = "BAT" #_BAT, \
-+	.attrs = bat##_BAT##_attributes \
-+};
-+
-+static int battery_attribute_get_battery(struct device_attribute *attr)
-+{
-+	return (int) (unsigned long) container_of(attr,
-+						  struct dev_ext_attribute,
-+						  attr)->var;
-+}
-+
-+static ssize_t battery_start_charge_thresh_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t count)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int res = -EINVAL;
-+	unsigned long value;
-+
-+	res = kstrtoul(buf, 0, &value);
-+	if (res || value > 99)
-+		return res ? res : -EINVAL;
-+
-+	if (!battery_handle || !acpi_evalf(battery_handle, &res, "BCCS",
-+					   "dd", (int) value | (bat << 8)))
-+		return -EIO;
-+
-+	return count;
-+}
-+
-+static ssize_t battery_stop_charge_thresh_store(struct device *dev,
-+						struct device_attribute *attr,
-+						const char *buf, size_t count)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int res = -EINVAL;
-+	unsigned long value;
-+
-+	res = kstrtoul(buf, 0, &value);
-+	if (res || value > 99)
-+		return res ? res : -EINVAL;
-+
-+	if (!battery_handle || !acpi_evalf(battery_handle, &res, "BCSS",
-+					   "dd", (int) value | (bat << 8)))
-+		return -EIO;
-+
-+	return count;
-+}
-+
-+static ssize_t battery_start_charge_thresh_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int value;
-+
-+	if (!battery_handle || !acpi_evalf(battery_handle, &value, "BCTG",
-+					   "dd", bat))
-+		return -EIO;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0xFF);
-+}
-+
-+static ssize_t battery_stop_charge_thresh_show(struct device *dev,
-+					       struct device_attribute *attr,
-+					       char *buf)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int value;
-+
-+	if (!battery_handle || !acpi_evalf(battery_handle, &value, "BCSG",
-+					   "dd", bat))
-+		return -EIO;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0xFF);
-+}
-+
-+DEFINE_BATTERY(0);
-+DEFINE_BATTERY(1);
-+
-+static struct attribute_group *bat_attribute_groups[] = {
-+	&bat0_attribute_group,
-+	&bat1_attribute_group,
-+};
-+
-+static int __init battery_init(struct ibm_init_struct *iibm)
-+{
-+	int res;
-+	int i;
-+
-+	vdbg_printk(TPACPI_DBG_INIT,
-+		"initializing battery commands subdriver\n");
-+
-+	TPACPI_ACPIHANDLE_INIT(battery);
-+
-+	vdbg_printk(TPACPI_DBG_INIT, "battery commands are %s\n",
-+		str_supported(battery_handle != NULL));
-+
-+	for (i = 0; i < ARRAY_SIZE(bat_attribute_groups); i++) {
-+		res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
-+					 bat_attribute_groups[i]);
-+		if (res)
-+			return res;
-+	}
-+
-+	return (battery_handle) ? 0 : 1;
-+}
-+
-+static void battery_exit(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(bat_attribute_groups); i++)
-+		sysfs_remove_group(&tpacpi_pdev->dev.kobj,
-+				   bat_attribute_groups[i]);
-+}
-+
-+static struct ibm_struct battery_driver_data = {
-+	.name = "battery",
-+	.exit = battery_exit,
-+};
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -8741,6 +8895,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.data = &light_driver_data,
- 	},
- 	{
-+		.init = battery_init,
-+		.data = &battery_driver_data,
-+	},
-+	{
- 		.init = cmos_init,
- 		.data = &cmos_driver_data,
- 	},
--- 
-1.8.4.2
+> +DEFINE_BATTERY(0);
+> +DEFINE_BATTERY(1);
+
+Are there always two batteries?
+
+
+
+Bj=C3=B8rn
