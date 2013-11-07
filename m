@@ -1,60 +1,156 @@
-From: paul compaore <didiercompaore2@gmail.com>
-Subject: Request for an immediate corporate
-Date: Tue, 5 Nov 2013 22:37:33 +0000
-Message-ID: <CAMWjptoUDMm8RR27znS=4XpR85t6zLHcg89L6eKxrYrajs5NGA@mail.gmail.com>
-Reply-To: paulcompaore55@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Olof Johansson <olof@lixom.net>
+Subject: [PATCH] platform: add chrome platform directory
+Date: Thu,  7 Nov 2013 14:25:45 -0800
+Message-ID: <1383863145-8826-1-git-send-email-olof@lixom.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f196.google.com ([209.85.223.196]:59677 "EHLO
-	mail-ie0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755168Ab3KEWhe (ORCPT
+Received: from mail-pa0-f45.google.com ([209.85.220.45]:35242 "EHLO
+	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755020Ab3KGW2k (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Nov 2013 17:37:34 -0500
-Received: by mail-ie0-f196.google.com with SMTP id e14so3784557iej.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Nov 2013 14:37:33 -0800 (PST)
+	Thu, 7 Nov 2013 17:28:40 -0500
+Received: by mail-pa0-f45.google.com with SMTP id kp14so1268866pab.18
+        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2013 14:28:40 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, Olof Johansson <olof@lixom.net>
 
-Dear friend,
+It makes sense to split out the Chromebook/Chromebox hardware platform
+drivers to a separate subdirectory, since some of it will be shared
+between ARM and x86.
 
+This moves over the existing chromeos_laptop driver without making
+any other changes, and adds appropriate Kconfig entries for the new
+directory. It also adds a MAINTAINERS entry for the new subdir.
 
-I know that this message will come to you as a surprise. I
-am Dr.Paul Compaore from Burkina Faso the Accounting and
-Auditing Manager bank of Africa (B.O.A), Ouagadougou
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ MAINTAINERS                                        |  5 ++++
+ drivers/platform/Kconfig                           |  1 +
+ drivers/platform/Makefile                          |  1 +
+ drivers/platform/chrome/Kconfig                    | 28 ++++++++++++++++++++++
+ drivers/platform/chrome/Makefile                   |  2 ++
+ drivers/platform/{x86 => chrome}/chromeos_laptop.c |  0
+ drivers/platform/x86/Kconfig                       | 11 ---------
+ drivers/platform/x86/Makefile                      |  1 -
+ 8 files changed, 37 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/platform/chrome/Kconfig
+ create mode 100644 drivers/platform/chrome/Makefile
+ rename drivers/platform/{x86 => chrome}/chromeos_laptop.c (100%)
 
-
-
-I hoped that you will not expose or betray this trust and
-confident that I am about to repose on you for the mutual
-benefit of our families. I need your urgent assistance in
-transferring the sum of (usd$10.5m) million to your account
-within 10 to 14 banking days. This money has been dormant
-for years in our bank without claim. I want the bank to
-release the money to you as the nearest person to our
-deceased customer (the owner of the account) died along with
-his supposed next of kin in an air crash since July, 2007.
-
-
-
-I don't want the money to go into our bank treasurer account
-as an abandoned fund. So this is the reason why I contacted
-you so that the bank can release the money to you as the
-next of kin to the deceased customer. Please I would like
-you to keep this proposal as a top secret and delete it if
-you are not upon receipt of your reply, I will give you full
-details on how the business will be executed and also note
-that you will have 35% of the above mentioned sum if you
-agree to handle this business with me? And 10% will be set
-aside for any expenses that warrant on the process before
-the fund get into your bank account such as telephone calls
-bills (etc). please reply me with this my privt box:  (
-paulcompaore55@gmail.com )
-
-
-Finally send your photo or your international passports for
-more identification.
-
-
-Best Regards,
-Dr.Paul Compaore
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 831b8690cf13..07e312a3377b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2129,6 +2129,11 @@ L:	linux-usb@vger.kernel.org
+ S:	Maintained
+ F:	drivers/usb/chipidea/
+ 
++CHROME HARDWARE PLATFORM SUPPORT
++M:	Olof Johansson <olof@lixom.net>
++S:	Maintained
++F:	drivers/platform/chrome/
++
+ CISCO VIC ETHERNET NIC DRIVER
+ M:	Christian Benvenuti <benve@cisco.com>
+ M:	Sujith Sankar <ssujith@cisco.com>
+diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+index 69616aeaa966..09fde58b12e0 100644
+--- a/drivers/platform/Kconfig
++++ b/drivers/platform/Kconfig
+@@ -5,3 +5,4 @@ if GOLDFISH
+ source "drivers/platform/goldfish/Kconfig"
+ endif
+ 
++source "drivers/platform/chrome/Kconfig"
+diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+index 8a44a4cd6d1e..3656b7b17b99 100644
+--- a/drivers/platform/Makefile
++++ b/drivers/platform/Makefile
+@@ -5,3 +5,4 @@
+ obj-$(CONFIG_X86)		+= x86/
+ obj-$(CONFIG_OLPC)		+= olpc/
+ obj-$(CONFIG_GOLDFISH)		+= goldfish/
++obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+new file mode 100644
+index 000000000000..b13303e75a34
+--- /dev/null
++++ b/drivers/platform/chrome/Kconfig
+@@ -0,0 +1,28 @@
++#
++# Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
++#
++
++menuconfig CHROME_PLATFORMS
++	bool "Platform support for Chrome hardware"
++	depends on X86
++	---help---
++	  Say Y here to get to see options for platform support for
++	  various Chromebooks and Chromeboxes. This option alone does
++	  not add any kernel code.
++
++	  If you say N, all options in this submenu will be skipped and disabled.
++
++if CHROME_PLATFORMS
++
++config CHROMEOS_LAPTOP
++	tristate "Chrome OS Laptop"
++	depends on I2C
++	depends on DMI
++	---help---
++	  This driver instantiates i2c and smbus devices such as
++	  light sensors and touchpads.
++
++	  If you have a supported Chromebook, choose Y or M here.
++	  The module will be called chromeos_laptop.
++
++endif # CHROMEOS_PLATFORMS
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+new file mode 100644
+index 000000000000..015e9195e226
+--- /dev/null
++++ b/drivers/platform/chrome/Makefile
+@@ -0,0 +1,2 @@
++
++obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
+diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/chrome/chromeos_laptop.c
+similarity index 100%
+rename from drivers/platform/x86/chromeos_laptop.c
+rename to drivers/platform/chrome/chromeos_laptop.c
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b51a7460cc49..d9dcd37b5a52 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -79,17 +79,6 @@ config ASUS_LAPTOP
+ 
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
+-config CHROMEOS_LAPTOP
+-	tristate "Chrome OS Laptop"
+-	depends on I2C
+-	depends on DMI
+-	---help---
+-	  This driver instantiates i2c and smbus devices such as
+-	  light sensors and touchpads.
+-
+-	  If you have a supported Chromebook, choose Y or M here.
+-	  The module will be called chromeos_laptop.
+-
+ config DELL_LAPTOP
+ 	tristate "Dell Laptop Extras"
+ 	depends on X86
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 5dbe19324351..f0e6aa407ffb 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -50,7 +50,6 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
+ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+-obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
+ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ 
+-- 
+1.8.4.1.601.g02b3b1d
