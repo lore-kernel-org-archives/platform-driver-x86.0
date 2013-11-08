@@ -1,156 +1,39 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: [PATCH] platform: add chrome platform directory
-Date: Thu,  7 Nov 2013 14:25:45 -0800
-Message-ID: <1383863145-8826-1-git-send-email-olof@lixom.net>
+From: Benson Leung <bleung@chromium.org>
+Subject: Re: [PATCH] platform: add chrome platform directory
+Date: Fri, 8 Nov 2013 10:22:36 -0800
+Message-ID: <CANLzEktOccLaQGwO2V43eTMT=dZhytuNvo6FzD6W41Zf9E-YGg@mail.gmail.com>
+References: <1383863145-8826-1-git-send-email-olof@lixom.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f45.google.com ([209.85.220.45]:35242 "EHLO
-	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755020Ab3KGW2k (ORCPT
+Received: from mail-ve0-f178.google.com ([209.85.128.178]:52543 "EHLO
+	mail-ve0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932155Ab3KHSWh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Nov 2013 17:28:40 -0500
-Received: by mail-pa0-f45.google.com with SMTP id kp14so1268866pab.18
-        for <platform-driver-x86@vger.kernel.org>; Thu, 07 Nov 2013 14:28:40 -0800 (PST)
+	Fri, 8 Nov 2013 13:22:37 -0500
+Received: by mail-ve0-f178.google.com with SMTP id db12so1748856veb.37
+        for <platform-driver-x86@vger.kernel.org>; Fri, 08 Nov 2013 10:22:36 -0800 (PST)
+In-Reply-To: <1383863145-8826-1-git-send-email-olof@lixom.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, Olof Johansson <olof@lixom.net>
+To: Olof Johansson <olof@lixom.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-It makes sense to split out the Chromebook/Chromebox hardware platform
-drivers to a separate subdirectory, since some of it will be shared
-between ARM and x86.
+On Thu, Nov 7, 2013 at 2:25 PM, Olof Johansson <olof@lixom.net> wrote:
+> It makes sense to split out the Chromebook/Chromebox hardware platform
+> drivers to a separate subdirectory, since some of it will be shared
+> between ARM and x86.
+>
+> This moves over the existing chromeos_laptop driver without making
+> any other changes, and adds appropriate Kconfig entries for the new
+> directory. It also adds a MAINTAINERS entry for the new subdir.
+>
+> Signed-off-by: Olof Johansson <olof@lixom.net>
 
-This moves over the existing chromeos_laptop driver without making
-any other changes, and adds appropriate Kconfig entries for the new
-directory. It also adds a MAINTAINERS entry for the new subdir.
+Reviewed-by: Benson Leung <bleung@chromium.org>
 
-Signed-off-by: Olof Johansson <olof@lixom.net>
----
- MAINTAINERS                                        |  5 ++++
- drivers/platform/Kconfig                           |  1 +
- drivers/platform/Makefile                          |  1 +
- drivers/platform/chrome/Kconfig                    | 28 ++++++++++++++++++++++
- drivers/platform/chrome/Makefile                   |  2 ++
- drivers/platform/{x86 => chrome}/chromeos_laptop.c |  0
- drivers/platform/x86/Kconfig                       | 11 ---------
- drivers/platform/x86/Makefile                      |  1 -
- 8 files changed, 37 insertions(+), 12 deletions(-)
- create mode 100644 drivers/platform/chrome/Kconfig
- create mode 100644 drivers/platform/chrome/Makefile
- rename drivers/platform/{x86 => chrome}/chromeos_laptop.c (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 831b8690cf13..07e312a3377b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2129,6 +2129,11 @@ L:	linux-usb@vger.kernel.org
- S:	Maintained
- F:	drivers/usb/chipidea/
- 
-+CHROME HARDWARE PLATFORM SUPPORT
-+M:	Olof Johansson <olof@lixom.net>
-+S:	Maintained
-+F:	drivers/platform/chrome/
-+
- CISCO VIC ETHERNET NIC DRIVER
- M:	Christian Benvenuti <benve@cisco.com>
- M:	Sujith Sankar <ssujith@cisco.com>
-diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-index 69616aeaa966..09fde58b12e0 100644
---- a/drivers/platform/Kconfig
-+++ b/drivers/platform/Kconfig
-@@ -5,3 +5,4 @@ if GOLDFISH
- source "drivers/platform/goldfish/Kconfig"
- endif
- 
-+source "drivers/platform/chrome/Kconfig"
-diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
-index 8a44a4cd6d1e..3656b7b17b99 100644
---- a/drivers/platform/Makefile
-+++ b/drivers/platform/Makefile
-@@ -5,3 +5,4 @@
- obj-$(CONFIG_X86)		+= x86/
- obj-$(CONFIG_OLPC)		+= olpc/
- obj-$(CONFIG_GOLDFISH)		+= goldfish/
-+obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-new file mode 100644
-index 000000000000..b13303e75a34
---- /dev/null
-+++ b/drivers/platform/chrome/Kconfig
-@@ -0,0 +1,28 @@
-+#
-+# Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
-+#
-+
-+menuconfig CHROME_PLATFORMS
-+	bool "Platform support for Chrome hardware"
-+	depends on X86
-+	---help---
-+	  Say Y here to get to see options for platform support for
-+	  various Chromebooks and Chromeboxes. This option alone does
-+	  not add any kernel code.
-+
-+	  If you say N, all options in this submenu will be skipped and disabled.
-+
-+if CHROME_PLATFORMS
-+
-+config CHROMEOS_LAPTOP
-+	tristate "Chrome OS Laptop"
-+	depends on I2C
-+	depends on DMI
-+	---help---
-+	  This driver instantiates i2c and smbus devices such as
-+	  light sensors and touchpads.
-+
-+	  If you have a supported Chromebook, choose Y or M here.
-+	  The module will be called chromeos_laptop.
-+
-+endif # CHROMEOS_PLATFORMS
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-new file mode 100644
-index 000000000000..015e9195e226
---- /dev/null
-+++ b/drivers/platform/chrome/Makefile
-@@ -0,0 +1,2 @@
-+
-+obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
-diff --git a/drivers/platform/x86/chromeos_laptop.c b/drivers/platform/chrome/chromeos_laptop.c
-similarity index 100%
-rename from drivers/platform/x86/chromeos_laptop.c
-rename to drivers/platform/chrome/chromeos_laptop.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b51a7460cc49..d9dcd37b5a52 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -79,17 +79,6 @@ config ASUS_LAPTOP
- 
- 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
- 
--config CHROMEOS_LAPTOP
--	tristate "Chrome OS Laptop"
--	depends on I2C
--	depends on DMI
--	---help---
--	  This driver instantiates i2c and smbus devices such as
--	  light sensors and touchpads.
--
--	  If you have a supported Chromebook, choose Y or M here.
--	  The module will be called chromeos_laptop.
--
- config DELL_LAPTOP
- 	tristate "Dell Laptop Extras"
- 	depends on X86
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5dbe19324351..f0e6aa407ffb 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -50,7 +50,6 @@ obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
- obj-$(CONFIG_INTEL_OAKTRAIL)	+= intel_oaktrail.o
- obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
- obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
--obj-$(CONFIG_CHROMEOS_LAPTOP)	+= chromeos_laptop.o
- obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
- obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
- 
 -- 
-1.8.4.1.601.g02b3b1d
+Benson Leung
+Software Engineer, Chrom* OS
+bleung@chromium.org
