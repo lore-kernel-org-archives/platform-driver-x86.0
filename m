@@ -1,8 +1,8 @@
 From: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
-Subject: [PATCH 1/4] thinkpad_acpi: Add support for
-	controlling charge thresholds
-Date: Mon, 11 Nov 2013 14:56:30 +0100
-Message-ID: <1384178195-12218-2-git-send-email-jak@jak-linux.org>
+Subject: [PATCH 4/4] thinkpad_acpi: battery: Add
+	inhibit_charge_minutes attribute
+Date: Mon, 11 Nov 2013 14:56:33 +0100
+Message-ID: <1384178195-12218-5-git-send-email-jak@jak-linux.org>
 References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,253 +21,102 @@ To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.or
 Cc: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add support for battery charge thresholds in new Sandy Bridge and Ivy Bridge
-ThinkPads. Based on the unofficial documentation in tpacpi-bat.
+This should be considered experimental. There seem to be to ways to
+inhibit charging, one globally using peak shift state, and one using
+a battery-specific inhibit charge command. The latter is implemented
+here. Setting a permanent timeout is not supported currently.
 
-The threshold files support the values '0' for the controller's default,
-and 1-99 as percentages. Values outside of that range are rejected. The
-behaviour of '0' might be confusing, especially for the stop case where
-it basically seems to mean '100'.
+Reading the timeout is not supported because the ACPI call needed
+to read the value is not documented/reverse-engineered yet.
 
 Signed-off-by: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
 ---
- Documentation/laptops/thinkpad-acpi.txt |  17 ++++
- drivers/platform/x86/thinkpad_acpi.c    | 173 ++++++++++++++++++++++++++++++++
- 2 files changed, 190 insertions(+)
+ Documentation/laptops/thinkpad-acpi.txt | 12 ++++++++++++
+ drivers/platform/x86/thinkpad_acpi.c    | 34 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 86c5236..97b150a 100644
+index 8ec1898..e639f72 100644
 --- a/Documentation/laptops/thinkpad-acpi.txt
 +++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -46,6 +46,7 @@ detailed description):
- 	- Fan control and monitoring: fan speed, fan enable/disable
- 	- WAN enable and disable
- 	- UWB enable and disable
-+	- Charging control
+@@ -1378,6 +1378,18 @@ battery sysfs attribute: force_discharge_ac_break
  
- A compatibility table by model and feature is maintained on the web
- site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-@@ -1352,6 +1353,22 @@ Sysfs notes:
- 	rfkill controller switch "tpacpi_uwb_sw": refer to
- 	Documentation/rfkill.txt for details.
+ 	Break the discharging when the AC disconnects (0 or 1)
  
-+Charging control
-+----------------
-+sysfs attribute groups: BAT0, BAT1, and so on, depending on how many batteries
-+are supported by the embedded controller.
++battery sysfs attribute: inhibit_charge_minutes
 +
-+This feature controls the battery charging process.
++	Inhibit charging for the specified amount of minutes. This attribute
++	may not be very precise, the charging may start again some seconds
++	earlier than requested. It's also write-only until someone figured out
++	how reading that value works.
 +
-+battery sysfs attribute: start_charge_thresh
++	Values range: -1 to 720
 +
-+	A percentage value from 1-99%, controlling when charging should start, or
-+	0 for the default value.
++	The value -1 is supposed to mean permanently.
 +
-+battery sysfs attribute: stop_charge_thresh
 +
-+	A percentage value from 1-99%, controlling when charging should stop, or
-+	0 for the default value.
- 
  Multiple Commands, Module Parameters
  ------------------------------------
+ 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 03ca6c1..66e629e 100644
+index 6b0521a..a9cba4e 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -323,6 +323,7 @@ static struct {
- 	u32 sensors_pdrv_attrs_registered:1;
- 	u32 sensors_pdev_attrs_registered:1;
- 	u32 hotkey_poll_active:1;
-+	u32 battery:1;
- } tp_features;
+@@ -8358,7 +8358,7 @@ static struct ibm_struct fan_driver_data = {
  
- static struct {
-@@ -8350,6 +8351,174 @@ static struct ibm_struct fan_driver_data = {
- 	.resume = fan_resume,
- };
+ /* Modify battery_init() if you modify them */
+ #define BATTERY_MAX_COUNT 3
+-#define BATTERY_MAX_ATTRS 4
++#define BATTERY_MAX_ATTRS 5
  
-+
-+/*************************************************************************
-+ * Battery subdriver
-+ */
-+
-+/* Modify battery_init() if you modify them */
-+#define BATTERY_MAX_COUNT 3
-+#define BATTERY_MAX_ATTRS 2
-+
-+static struct battery {
-+	char name[3 + 1 + 1];
-+	struct attribute_set *set;
-+	struct dev_ext_attribute attributes[BATTERY_MAX_ATTRS];
-+} batteries[BATTERY_MAX_COUNT];
-+
-+static int battery_attribute_get_battery(struct device_attribute *attr)
-+{
-+	return (int) (unsigned long) container_of(attr,
-+						  struct dev_ext_attribute,
-+						  attr)->var;
-+}
-+
-+static ssize_t battery_start_charge_thresh_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t count)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int res = -EINVAL;
-+	unsigned long value;
-+
-+	res = kstrtoul(buf, 0, &value);
-+	if (res || value > 99)
-+		return res ? res : -EINVAL;
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BCCS", "dd",
-+					(int) value | (bat << 8)) || res < 0)
-+		return -EIO;
-+	return count;
-+}
-+
-+static ssize_t battery_stop_charge_thresh_store(struct device *dev,
+ static struct battery {
+ 	char name[3 + 1 + 1];
+@@ -8518,6 +8518,31 @@ static ssize_t battery_force_discharge_ac_break_store(struct device *dev,
+ 	return count;
+ }
+ 
++static ssize_t battery_inhibit_charge_minutes_store(struct device *dev,
 +						struct device_attribute *attr,
 +						const char *buf, size_t count)
 +{
 +	int bat = battery_attribute_get_battery(attr);
 +	int res = -EINVAL;
-+	unsigned long value;
++	int value;
 +
-+	res = kstrtoul(buf, 0, &value);
-+	if (res || value > 99)
++	res = kstrtoint(buf, 0, &value);
++	if (res || value > 720 || value < -1)
 +		return res ? res : -EINVAL;
 +
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BCSS", "dd",
-+					(int) value | (bat << 8)) || res < 0)
++	if (value == -1)
++		value = 1;
++	else
++		value = (value << 8) | (value & 1);
++
++	value |= (bat << 4);
++
++	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BICS",
++					"dd", (int) value) || res < 0)
 +		return -EIO;
 +	return count;
 +}
 +
-+static ssize_t battery_start_charge_thresh_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int value;
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &value, "BCTG",
-+					"dd", bat))
-+		return -EIO;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0xFF);
-+}
-+
-+static ssize_t battery_stop_charge_thresh_show(struct device *dev,
-+					       struct device_attribute *attr,
-+					       char *buf)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int value;
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &value, "BCSG",
-+					"dd", bat))
-+		return -EIO;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0xFF);
-+}
-+
-+static int __init battery_init(struct ibm_init_struct *iibm)
-+{
-+	int res;
-+	int i;
-+	int state;
-+
-+	vdbg_printk(TPACPI_DBG_INIT,
-+		    "initializing battery commands subdriver\n");
-+
-+	TPACPI_ACPIHANDLE_INIT(hkey);
-+
-+	/* Check whether getter for start threshold exists */
-+	tp_features.battery = hkey_handle &&
-+	    acpi_evalf(hkey_handle, &state, "BCTG", "qdd", 1);
-+
-+	vdbg_printk(TPACPI_DBG_INIT, "battery commands are %s\n",
-+		    str_supported(tp_features.battery));
-+
-+	if (!tp_features.battery)
-+		return 1;
-+
-+	for (i = 0; i < BATTERY_MAX_COUNT; i++) {
-+		int j = 0;
-+		if (!acpi_evalf(hkey_handle, &state, "BCTG", "qdd", i + 1))
-+			continue;
-+		/* If the sign bit was set, we could not get the start charge
-+		 * threshold of that battery. Let's assume that this battery
-+		 * (and all following ones) do not exist */
-+		if (state < 0)
-+			break;
-+		/* Modify BATTERY_MAX_ATTRS if you add an attribute */
+ static int __init battery_init(struct ibm_init_struct *iibm)
+ {
+ 	int res;
+@@ -8577,6 +8602,13 @@ static int __init battery_init(struct ibm_init_struct *iibm)
+ 				       battery_force_discharge_ac_break_store),
+ 			.var = (void *) (unsigned long) (i + 1)
+ 		};
 +		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
-+			.attr = __ATTR(start_charge_tresh,
-+				       S_IWUSR | S_IRUGO,
-+				       battery_start_charge_thresh_show,
-+				       battery_start_charge_thresh_store),
++			.attr = __ATTR(inhibit_charge_minutes,
++				       S_IWUSR,
++				       NULL,
++				       battery_inhibit_charge_minutes_store),
 +			.var = (void *) (unsigned long) (i + 1)
 +		};
-+		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
-+			.attr = __ATTR(stop_charge_tresh,
-+				       S_IWUSR | S_IRUGO,
-+				       battery_stop_charge_thresh_show,
-+				       battery_stop_charge_thresh_store),
-+			.var = (void *) (unsigned long) (i + 1)
-+		};
-+
-+		strncpy(batteries[i].name, "BAT", 3);
-+		batteries[i].name[3] = '0' + i;
-+		batteries[i].name[4] = '\0';
-+		batteries[i].set = create_attr_set(j - 1, batteries[i].name);
-+
-+		for (j = j - 1; j >= 0; j--)
-+			add_to_attr_set(batteries[i].set,
-+					&batteries[i].attributes[j].attr.attr);
-+
-+		res = register_attr_set_with_sysfs(batteries[i].set,
-+						   &tpacpi_pdev->dev.kobj);
-+
-+		if (res)
-+			return res;
-+	}
-+
-+	return 0;
-+}
-+
-+static void battery_exit(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < BATTERY_MAX_COUNT; i++) {
-+		if (batteries[i].set != NULL) {
-+			delete_attr_set(batteries[i].set,
-+					&tpacpi_pdev->dev.kobj);
-+		}
-+	}
-+}
-+
-+static struct ibm_struct battery_driver_data = {
-+	.name = "battery",
-+	.exit = battery_exit,
-+};
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -8741,6 +8910,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.data = &light_driver_data,
- 	},
- 	{
-+		.init = battery_init,
-+		.data = &battery_driver_data,
-+	},
-+	{
- 		.init = cmos_init,
- 		.data = &cmos_driver_data,
- 	},
+ 
+ 		strncpy(batteries[i].name, "BAT", 3);
+ 		batteries[i].name[3] = '0' + i;
 -- 
 1.8.4.2
 
