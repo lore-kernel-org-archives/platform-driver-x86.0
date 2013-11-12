@@ -1,130 +1,93 @@
-From: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
-Subject: [PATCH 2/4] thinkpad_acpi: battery: Add
-	force_discharge attribute
-Date: Mon, 11 Nov 2013 14:56:31 +0100
-Message-ID: <1384178195-12218-3-git-send-email-jak@jak-linux.org>
-References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH] video: backlight: Remove backlight sysfs uevent
+Date: Tue, 12 Nov 2013 09:18:04 +0900
+Message-ID: <002901cedf3c$a7e77a00$f7b66e00$%han@samsung.com>
+References: <20131111235700.GA29987@july>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1384178195-12218-1-git-send-email-jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
-Cc: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout3.samsung.com ([203.254.224.33]:8892 "EHLO
+	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752434Ab3KLASG (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Nov 2013 19:18:06 -0500
+In-reply-to: <20131111235700.GA29987@july>
+Content-language: ko
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: 'Kyungmin Park' <kmpark@infradead.org>, 'Henrique de Moraes Holschuh' <ibm-acpi@hmh.eng.br>
+Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, kay@vrfy.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jingoo Han' <jg1.han@samsung.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-This makes it possible to forcefully discharge a battery.
+On Tuesday, November 12, 2013 8:57 AM, Kyungmin Park wrote:
+> 
+> From: Kyungmin Park <kyungmin.park@samsung.com>
+> 
+> The most mobile phones have Ambient Light Sensors and it changes brightness according lux.
+> It means it changes backlight brightness frequently by just writing sysfs node, so it generates uevent.
+> 
+> Usually there's no user to use this backlight changes. But it forks udev worker threads and it takes
+> about 5ms. The main problem is that it hurts other process activities. so remove it.
+> 
+> Kay said
+> "Uevents are for the major, low-frequent, global device state-changes,
+>  not for carrying-out any sort of measurement data. Subsystems which
+>  need that should use other facilities like poll()-able sysfs file or
+>  any other subscription-based, client-tracking interface which does not
+>  cause overhead if it isn't used. Uevents are not the right thing to
+>  use here, and upstream udev should not paper-over broken kernel
+>  subsystems."
+> 
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index 94a403a..441272d 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -88,9 +88,6 @@ static void backlight_generate_event(struct backlight_device *bd,
+>  	char *envp[2];
+> 
+>  	switch (reason) {
+> -	case BACKLIGHT_UPDATE_SYSFS:
+> -		envp[0] = "SOURCE=sysfs";
+> -		break;
+>  	case BACKLIGHT_UPDATE_HOTKEY:
+>  		envp[0] = "SOURCE=hotkey";
+>  		break;
+> @@ -172,8 +169,6 @@ static ssize_t brightness_store(struct device *dev,
+>  	}
+>  	mutex_unlock(&bd->ops_lock);
+> 
+> -	backlight_generate_event(bd, BACKLIGHT_UPDATE_SYSFS);
+> -
+>  	return rc;
+>  }
+>  static DEVICE_ATTR_RW(brightness);
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 53b7794..d2a27dd 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -29,7 +29,6 @@
+> 
+>  enum backlight_update_reason {
+>  	BACKLIGHT_UPDATE_HOTKEY,
+> -	BACKLIGHT_UPDATE_SYSFS,
 
-Signed-off-by: Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>
----
- Documentation/laptops/thinkpad-acpi.txt |  4 +++
- drivers/platform/x86/thinkpad_acpi.c    | 49 ++++++++++++++++++++++++++++++++-
- 2 files changed, 52 insertions(+), 1 deletion(-)
++cc Henrique de Moraes Holschuh (Maintainer of thinkpad_acpi)
 
-diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.txt
-index 97b150a..72882bb 100644
---- a/Documentation/laptops/thinkpad-acpi.txt
-+++ b/Documentation/laptops/thinkpad-acpi.txt
-@@ -1370,6 +1370,10 @@ battery sysfs attribute: stop_charge_thresh
- 	A percentage value from 1-99%, controlling when charging should stop, or
- 	0 for the default value.
- 
-+battery sysfs attribute: force_discharge
-+
-+	Force discharging (0 or 1)
-+
- Multiple Commands, Module Parameters
- ------------------------------------
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 66e629e..67ce469 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8358,7 +8358,7 @@ static struct ibm_struct fan_driver_data = {
- 
- /* Modify battery_init() if you modify them */
- #define BATTERY_MAX_COUNT 3
--#define BATTERY_MAX_ATTRS 2
-+#define BATTERY_MAX_ATTRS 3
- 
- static struct battery {
- 	char name[3 + 1 + 1];
-@@ -8437,6 +8437,46 @@ static ssize_t battery_stop_charge_thresh_show(struct device *dev,
- 	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0xFF);
- }
- 
-+static ssize_t battery_force_discharge_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int value;
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &value, "BDSG",
-+					"dd", bat))
-+		return -EIO;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", value & 0x1);
-+}
-+
-+static ssize_t battery_force_discharge_store(struct device *dev,
-+						struct device_attribute *attr,
-+						const char *buf, size_t count)
-+{
-+	int bat = battery_attribute_get_battery(attr);
-+	int res = -EINVAL;
-+	unsigned long value;
-+
-+	res = kstrtoul(buf, 0, &value);
-+	if (res || value > 1)
-+		return res ? res : -EINVAL;
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BDSG", "dd", bat))
-+		return -EIO;
-+
-+	/* Keep the break on AC disconnect state */
-+	value |= (res >> 1) & 0x1;
-+	/* Set the battery */
-+	value |= (bat << 8);
-+
-+	if (!hkey_handle || !acpi_evalf(hkey_handle, &res, "BDSS",
-+					"dd", (int) value) || res < 0)
-+		return -EIO;
-+	return count;
-+}
-+
- static int __init battery_init(struct ibm_init_struct *iibm)
- {
- 	int res;
-@@ -8482,6 +8522,13 @@ static int __init battery_init(struct ibm_init_struct *iibm)
- 				       battery_stop_charge_thresh_store),
- 			.var = (void *) (unsigned long) (i + 1)
- 		};
-+		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
-+			.attr = __ATTR(force_discharge,
-+				       S_IWUSR | S_IRUGO,
-+				       battery_force_discharge_show,
-+				       battery_force_discharge_store),
-+			.var = (void *) (unsigned long) (i + 1)
-+		};
- 
- 		strncpy(batteries[i].name, "BAT", 3);
- 		batteries[i].name[3] = '0' + i;
--- 
-1.8.4.2
+Hi Henrique de Moraes Holschuh,
 
+'thinkpad_acpi.c' uses the 'BACKLIGHT_UPDATE_SYSFS'.
+Henrique, can we remove it?
 
-------------------------------------------------------------------------------
-November Webinars for C, C++, Fortran Developers
-Accelerate application performance with scalable programming models. Explore
-techniques for threading, error checking, porting, and tuning. Get the most 
-from the latest Intel processors and coprocessors. See abstracts and register
-http://pubads.g.doubleclick.net/gampad/clk?id=60136231&iu=/4140/ostg.clktrk
+drivers/platform/x86/thinkpad_acpi.c
+if (!rc && ibm_backlight_device)
+                backlight_force_update(ibm_backlight_device,
+                                        BACKLIGHT_UPDATE_SYSFS);
+
+Best regards,
+Jingoo Han
+
+>  };
+> 
+>  enum backlight_type {
