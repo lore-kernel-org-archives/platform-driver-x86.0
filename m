@@ -1,22 +1,93 @@
-From: ''Fredrick Loan Investment''
-	<xmasloan0005@beakend.onmicrosoft.com>
-Subject: Xmas Loan ...Apply Now
-Date: Wed, 13 Nov 2013 14:41:53 +0530
-Message-ID: <8b097be4-333d-4c13-be9b-0388ad15c220@HKNPR02MB033.apcprd02.prod.outlook.com>
-Reply-To: <fredrickplc@qq.com>
+From: Julian Andres Klode <jak@jak-linux.org>
+Subject: Re: [PATCH 1/4] thinkpad_acpi: Add support for controlling charge
+ thresholds
+Date: Wed, 13 Nov 2013 14:50:51 +0100
+Message-ID: <20131113135051.GA13304@jak-x230>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <1384178195-12218-2-git-send-email-jak@jak-linux.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from emea01-db3-ndr.ptr.protection.outlook.com ([157.56.120.97]:31827
-	"EHLO emea01-db3-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1759207Ab3KMJMg convert rfc822-to-8bit (ORCPT
+Received: from mail-bk0-f50.google.com ([209.85.214.50]:54762 "EHLO
+	mail-bk0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757292Ab3KMNu4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 13 Nov 2013 04:12:36 -0500
-Content-Description: Mail message body
+	Wed, 13 Nov 2013 08:50:56 -0500
+Content-Disposition: inline
+In-Reply-To: <1384178195-12218-2-git-send-email-jak@jak-linux.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <xmasloan0005@beakend.onmicrosoft.com>
+To: Julian Andres Klode <jak@jak-linux.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-Do you need a loan ? if yes contact fredrickplc@qq.com for more.
+On Mon, Nov 11, 2013 at 02:56:30PM +0100, Julian Andres Klode wrote:
+> +static int __init battery_init(struct ibm_init_struct *iibm)
+
+> +	for (i = 0; i < BATTERY_MAX_COUNT; i++) {
+> +		int j = 0;
+> +		if (!acpi_evalf(hkey_handle, &state, "BCTG", "qdd", i + 1))
+> +			continue;
+> +		/* If the sign bit was set, we could not get the start charge
+> +		 * threshold of that battery. Let's assume that this battery
+> +		 * (and all following ones) do not exist */
+> +		if (state < 0)
+> +			break;
+> +		/* Modify BATTERY_MAX_ATTRS if you add an attribute */
+> +		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
+> +			.attr = __ATTR(start_charge_tresh,
+> +				       S_IWUSR | S_IRUGO,
+> +				       battery_start_charge_thresh_show,
+> +				       battery_start_charge_thresh_store),
+> +			.var = (void *) (unsigned long) (i + 1)
+> +		};
+> +		batteries[i].attributes[j++] = (struct dev_ext_attribute) {
+> +			.attr = __ATTR(stop_charge_tresh,
+> +				       S_IWUSR | S_IRUGO,
+> +				       battery_stop_charge_thresh_show,
+> +				       battery_stop_charge_thresh_store),
+> +			.var = (void *) (unsigned long) (i + 1)
+> +		};
+> +
+> +		strncpy(batteries[i].name, "BAT", 3);
+> +		batteries[i].name[3] = '0' + i;
+> +		batteries[i].name[4] = '\0';
+> +		batteries[i].set = create_attr_set(j - 1, batteries[i].name);
+> +
+
+There's a bug here that I just noticed: It should be (j) attributes, not (j - 1)
+ones. The following patch fixes this. I can squash it into that patch and resubmit
+later on if requested.
+
+-- >8 --
+Subject: [PATCH] thinkpad_acpi: battery: Fix the size of the battery attribute sets
+
+There are not j - 1, but j attributes.
+
+Signed-off-by: Julian Andres Klode <jak@jak-linux.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index a9cba4e..6948141 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8613,7 +8613,7 @@ static int __init battery_init(struct ibm_init_struct *iibm)
+ 		strncpy(batteries[i].name, "BAT", 3);
+ 		batteries[i].name[3] = '0' + i;
+ 		batteries[i].name[4] = '\0';
+-		batteries[i].set = create_attr_set(j - 1, batteries[i].name);
++		batteries[i].set = create_attr_set(j, batteries[i].name);
+ 
+ 		for (j = j - 1; j >= 0; j--)
+ 			add_to_attr_set(batteries[i].set,
+-- 
+1.8.4.2
+
+
+-- 
+Julian Andres Klode  - Debian Developer, Ubuntu Member
+
+See http://wiki.debian.org/JulianAndresKlode and http://jak-linux.org/.
+
+Please do not top-post if possible.
