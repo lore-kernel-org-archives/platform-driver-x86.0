@@ -1,47 +1,191 @@
 From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: Re: [PATCH 3/3] ipc: Added support for IPC interrupt mode
-Date: Thu, 14 Nov 2013 13:31:56 -0800
-Message-ID: <5285414C.809@linux.intel.com>
-References: <1384373671-12814-1-git-send-email-david.a.cohen@linux.intel.com> <1384373671-12814-4-git-send-email-david.a.cohen@linux.intel.com> <20131114134842.7225c7f8@alan.etchedpixels.co.uk> <52850A12.3090900@linux.intel.com> <20131114210015.25dab122@alan.etchedpixels.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2 4/4] ipc: Added support for IPC interrupt mode
+Date: Thu, 14 Nov 2013 14:15:07 -0800
+Message-ID: <1384467307-18556-5-git-send-email-david.a.cohen@linux.intel.com>
+References: <1384373671-12814-1-git-send-email-david.a.cohen@linux.intel.com>
+ <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:57710 "EHLO mga11.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:63733 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753965Ab3KNV1Z (ORCPT
+	id S1754990Ab3KNWKy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Nov 2013 16:27:25 -0500
-In-Reply-To: <20131114210015.25dab122@alan.etchedpixels.co.uk>
+	Thu, 14 Nov 2013 17:10:54 -0500
+In-Reply-To: <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, eric.ernst@linux.intel.com, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, david.a.cohen@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, eric.ernst@linux.intel.com
 
-On 11/14/2013 01:00 PM, One Thousand Gnomes wrote:
-> On Thu, 14 Nov 2013 09:36:18 -0800
-> David Cohen <david.a.cohen@linux.intel.com> wrote:
->
->> Hi Alan,
->>
->> [snip]
->>
->>> So I think
->>>
->>> 1. Pass the informatio upon whether IRQ mode should be used in the
->>> platform information and remove all the ifdeffery
->>
->> I will double check with Sathya. But in case polling mode is left for
->> development purpose, make we can create a static variable to set irq
->> mode or not.
->
-> If its only for development it doesn't IMHO need to be upstream. If its
-> useful for debug and/or needed on real chipsets (as I believe is the case
-> for the older ones) then a module (and thus kernel command line) option
-> would be sensible yes.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Looks like this patch is keeping poll mode for Lincroft support, since
-interrupt mode was never tested there. We're sending new version of
-this patch set soon.
+This patch adds support for ipc command interrupt mode.
+Also added platform data option to select 'irq_mode'
 
-Br, David
+irq_mode = 1: configure the driver to receive IOC interrupt
+for each successful ipc_command.
+
+irq_mode = 0: makes driver use polling method to
+track the command completion status.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+---
+ drivers/platform/x86/intel_scu_ipc.c | 48 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index e26830f6c8dd..90521e9c6065 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -60,6 +60,7 @@
+ 
+ #define IPC_WWBUF_SIZE    20		/* IPC Write buffer Size */
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
++#define IPC_IOC	          0x100		/* IPC command register IOC bit */
+ 
+ enum {
+ 	SCU_IPC_LINCROFT,
+@@ -74,6 +75,7 @@ struct intel_scu_ipc_pdata_t {
+ 	u32 i2c_base;
+ 	u32 ipc_len;
+ 	u32 i2c_len;
++	u8 irq_mode;
+ };
+ 
+ static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
+@@ -82,24 +84,28 @@ static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
+ 		.i2c_base = 0xff12b000,
+ 		.ipc_len = 0x100,
+ 		.i2c_len = 0x10,
++		.irq_mode = 0,
+ 	},
+ 	[SCU_IPC_PENWELL] = {
+ 		.ipc_base = 0xff11c000,
+ 		.i2c_base = 0xff12b000,
+ 		.ipc_len = 0x100,
+ 		.i2c_len = 0x10,
++		.irq_mode = 1,
+ 	},
+ 	[SCU_IPC_CLOVERVIEW] = {
+ 		.ipc_base = 0xff11c000,
+ 		.i2c_base = 0xff12b000,
+ 		.ipc_len = 0x100,
+ 		.i2c_len = 0x10,
++		.irq_mode = 1,
+ 	},
+ 	[SCU_IPC_TANGIER] = {
+ 		.ipc_base = 0xff009000,
+ 		.i2c_base  = 0xff00d000,
+ 		.ipc_len  = 0x100,
+ 		.i2c_len = 0x10,
++		.irq_mode = 1,
+ 	},
+ };
+ 
+@@ -110,6 +116,8 @@ struct intel_scu_ipc_dev {
+ 	struct pci_dev *pdev;
+ 	void __iomem *ipc_base;
+ 	void __iomem *i2c_base;
++	struct completion cmd_complete;
++	u8 irq_mode;
+ };
+ 
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+@@ -136,6 +144,10 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+  */
+ static inline void ipc_command(u32 cmd) /* Send ipc command */
+ {
++	if (ipcdev.irq_mode) {
++		INIT_COMPLETION(ipcdev.cmd_complete);
++		writel(cmd | IPC_IOC, ipcdev.ipc_base);
++	}
+ 	writel(cmd, ipcdev.ipc_base);
+ }
+ 
+@@ -194,6 +206,30 @@ static inline int busy_loop(void) /* Wait till scu status is busy */
+ 	return 0;
+ }
+ 
++/* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
++static inline int ipc_wait_for_interrupt(void)
++{
++	int status;
++
++	if (!wait_for_completion_timeout(&ipcdev.cmd_complete, 3 * HZ)) {
++		struct device *dev = &ipcdev.pdev->dev;
++		dev_err(dev, "IPC timed out\n");
++		return -ETIMEDOUT;
++	}
++
++	status = ipc_read_status();
++
++	if ((status >> 1) & 1)
++		return -EIO;
++
++	return 0;
++}
++
++int intel_scu_ipc_check_status(void)
++{
++	return ipcdev.irq_mode ? ipc_wait_for_interrupt() : busy_loop();
++}
++
+ /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
+ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+ {
+@@ -234,7 +270,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+ 		ipc_command(4 << 16 |  id << 12 | 0 << 8 | op);
+ 	}
+ 
+-	err = busy_loop();
++	err = intel_scu_ipc_check_status();
+ 	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
+ 		/* Workaround: values are read as 0 without memcpy_fromio */
+ 		memcpy_fromio(cbuf, ipcdev.ipc_base + 0x90, 16);
+@@ -429,7 +465,7 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
+ 		return -ENODEV;
+ 	}
+ 	ipc_command(sub << 12 | cmd);
+-	err = busy_loop();
++	err = intel_scu_ipc_check_status();
+ 	mutex_unlock(&ipclock);
+ 	return err;
+ }
+@@ -463,7 +499,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 		ipc_data_writel(*in++, 4 * i);
+ 
+ 	ipc_command((inlen << 16) | (sub << 12) | cmd);
+-	err = busy_loop();
++	err = intel_scu_ipc_check_status();
+ 
+ 	if (!err) {
+ 		for (i = 0; i < outlen; i++)
+@@ -531,6 +567,9 @@ EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
+  */
+ static irqreturn_t ioc(int irq, void *dev_id)
+ {
++	if (ipcdev.irq_mode)
++		complete(&ipcdev.cmd_complete);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -555,6 +594,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	pdata = &intel_scu_ipc_pdata[pid];
+ 
+ 	ipcdev.pdev = pci_dev_get(dev);
++	ipcdev.irq_mode = pdata->irq_mode;
+ 
+ 	err = pci_enable_device(dev);
+ 	if (err)
+@@ -568,6 +608,8 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (!pci_resource)
+ 		return -ENOMEM;
+ 
++	init_completion(&ipcdev.cmd_complete);
++
+ 	if (request_irq(dev->irq, ioc, 0, "intel_scu_ipc", &ipcdev))
+ 		return -EBUSY;
+ 
+-- 
+1.8.4.2
