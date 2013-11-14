@@ -1,15 +1,15 @@
 From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH v2 2/4] ipc: Enabled ipc support for additional intel platforms
-Date: Thu, 14 Nov 2013 14:15:05 -0800
-Message-ID: <1384467307-18556-3-git-send-email-david.a.cohen@linux.intel.com>
+Subject: [PATCH v2 3/4] ipc: Handle error conditions in ipc command
+Date: Thu, 14 Nov 2013 14:15:06 -0800
+Message-ID: <1384467307-18556-4-git-send-email-david.a.cohen@linux.intel.com>
 References: <1384373671-12814-1-git-send-email-david.a.cohen@linux.intel.com>
  <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:60295 "EHLO mga09.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:63733 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757254Ab3KNWKz (ORCPT
+	id S1757258Ab3KNWK4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Nov 2013 17:10:55 -0500
+	Thu, 14 Nov 2013 17:10:56 -0500
 In-Reply-To: <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -18,62 +18,40 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, gnomes@lx
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Enabled ipc support for penwell, clovertrail & tangier platforms.
+Handle error conditions in intel_scu_ipc_command() and
+pwr_reg_rdwr().
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: David Cohen <david.a.cohen@linux.intel.com>
+Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/platform/x86/intel_scu_ipc.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 39ff57bdf18f..86b6ce2a7a47 100644
+index 86b6ce2a7a47..e26830f6c8dd 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -63,6 +63,9 @@
+@@ -235,7 +235,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+ 	}
  
- enum {
- 	SCU_IPC_LINCROFT,
-+	SCU_IPC_PENWELL,
-+	SCU_IPC_CLOVERVIEW,
-+	SCU_IPC_TANGIER,
- };
+ 	err = busy_loop();
+-	if (id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
++	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
+ 		/* Workaround: values are read as 0 without memcpy_fromio */
+ 		memcpy_fromio(cbuf, ipcdev.ipc_base + 0x90, 16);
+ 		for (nc = 0; nc < count; nc++)
+@@ -465,8 +465,10 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 	ipc_command((inlen << 16) | (sub << 12) | cmd);
+ 	err = busy_loop();
  
- /* intel scu ipc driver data*/
-@@ -80,6 +83,24 @@ static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
- 		.ipc_len = 0x100,
- 		.i2c_len = 0x10,
- 	},
-+	[SCU_IPC_PENWELL] = {
-+		.ipc_base = 0xff11c000,
-+		.i2c_base = 0xff12b000,
-+		.ipc_len = 0x100,
-+		.i2c_len = 0x10,
-+	},
-+	[SCU_IPC_CLOVERVIEW] = {
-+		.ipc_base = 0xff11c000,
-+		.i2c_base = 0xff12b000,
-+		.ipc_len = 0x100,
-+		.i2c_len = 0x10,
-+	},
-+	[SCU_IPC_TANGIER] = {
-+		.ipc_base = 0xff009000,
-+		.i2c_base  = 0xff00d000,
-+		.ipc_len  = 0x100,
-+		.i2c_len = 0x10,
-+	},
- };
+-	for (i = 0; i < outlen; i++)
+-		*out++ = ipc_data_readl(4 * i);
++	if (!err) {
++		for (i = 0; i < outlen; i++)
++			*out++ = ipc_data_readl(4 * i);
++	}
  
- static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id);
-@@ -586,6 +607,9 @@ static void ipc_remove(struct pci_dev *pdev)
- 
- static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
- 	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
-+	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
-+	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
-+	{PCI_VDEVICE(INTEL, 0x11a0), SCU_IPC_TANGIER},
- 	{ 0,}
- };
- MODULE_DEVICE_TABLE(pci, pci_ids);
+ 	mutex_unlock(&ipclock);
+ 	return err;
 -- 
 1.8.4.2
