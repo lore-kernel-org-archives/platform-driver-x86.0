@@ -1,57 +1,214 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH v2 3/4] ipc: Handle error conditions in ipc command
-Date: Thu, 14 Nov 2013 14:15:06 -0800
-Message-ID: <1384467307-18556-4-git-send-email-david.a.cohen@linux.intel.com>
-References: <1384373671-12814-1-git-send-email-david.a.cohen@linux.intel.com>
- <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:63733 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757258Ab3KNWK4 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Nov 2013 17:10:56 -0500
-In-Reply-To: <1384467307-18556-1-git-send-email-david.a.cohen@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, david.a.cohen@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, eric.ernst@linux.intel.com
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: [PATCH v2] ACPI / video: Add systems that should favor
+ native backlight interface
+Date: Fri, 15 Nov 2013 14:07:52 +0800
+Message-ID: <5285BA38.6080804@intel.com>
+References: <1381498066-16011-1-git-send-email-aaron.lu@intel.com>
+	<2140073.U60XyxRqVZ@vostro.rjw.lan> <5268D6BB.3010207@intel.com>
+	<1382682925.3328.4.camel@ThinkPad-X230.localdomain>
+	<526DCFD7.7060002@intel.com> <87fvrl7r6g.fsf@intel.com>
+	<526F615D.2090602@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <526F615D.2090602@intel.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces@lists.freedesktop.org
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: James Hogan <james@albanarts.com>, Martin Steigerwald <Martin@lichtvoll.de>, Felipe Contreras <felipe.contreras@gmail.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, linux-acpi@vger.kernel.org, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, Mike Galbraith <bitbucket@online.de>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?UTF-8?B?SsO2cmcgT3R0ZQ==?= <jrg.otte@gmail.com>, intel-gfx@lists.freedesktop.org, Kevin Smith <thirdwiggin@gmail.com>, Peter Weber <bugs@ttyhoney.com>, Joerg Platte <jplatte@naasa.net>, Seth Forshee <seth.forshee@canonical.com>, Igor Gnatenko <i.gnatenko.brain@gmail.com>, Lennart Poettering <lennart@poettering.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Theodore Tso <tyts>
+List-Id: platform-driver-x86.vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Some system's ACPI video backlight control interface is broken and the
+native backlight control interface should be used by default. This patch
+sets the use_native_backlight parameter to true for those systems so
+that video backlight control interface will not be created. To be
+specific, the ThinkPad T430s/X230, Lenovo Yoga 13, Dell Inspiron 7520
+and Acer Aspire 5733Z are added here, if they appear in some other DMI
+table before, they are removed from there.
 
-Handle error conditions in intel_scu_ipc_command() and
-pwr_reg_rdwr().
+Note that the user specified kernel cmdline option will always have the
+highest priority, i.e. if use_native_backlight=0 is specified and the
+system is in the DMI table, the video module will not skip registering
+backlight interface for it.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+Thinkpad T430s:
+Reported-by: Theodore Tso <tytso@mit.edu>
+Reported-and-tested-by: Peter Weber <bugs@ttyhoney.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
+Thinkpad X230:
+Reported-and-tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
+Lenovo Yoga 13:
+Reported-by: Lennart Poettering <lennart@poettering.net>
+Reported-and-tested-by: Kevin Smith <thirdwiggin@gmail.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=63811
+Dell Inspiron 7520:
+Reported-by: Rinat Ibragimov <ibragimovrinat@mail.ru>
+Acer Aspire 5733Z:
+Reported-by: <sov.info@mail.ru>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=62941
+
+Signed-off-by: Aaron Lu <aaron.lu@intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+v2:
+Add Acer Aspire 5733Z, see bug #62941;
+Remove Inspiron 7520 from acpi_osi_dmi_table and Yoga 13 from
+video_detect_dmi_table.
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 86b6ce2a7a47..e26830f6c8dd 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -235,7 +235,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- 	}
+Based on top of Rafael's linux-next branch + the following patch:
+[PATCH] ACPI / video: clean up DMI table for initial black screen problem
+http://marc.info/?l=linux-acpi&m=138448583006432&w=2
+
+ drivers/acpi/blacklist.c    |  8 ------
+ drivers/acpi/video.c        | 65 +++++++++++++++++++++++++++++++++++++++++----
+ drivers/acpi/video_detect.c |  8 ------
+ 3 files changed, 60 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index 078c4f7fe2dd..2b6a76b6d59a 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -261,14 +261,6 @@ static struct dmi_system_id acpi_osi_dmi_table[] __initdata = {
+ 	},
+ 	{
+ 	.callback = dmi_disable_osi_win8,
+-	.ident = "Dell Inspiron 15R SE",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7520"),
+-		},
+-	},
+-	{
+-	.callback = dmi_disable_osi_win8,
+ 	.ident = "ThinkPad Edge E530",
+ 	.matches = {
+ 		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
+index 4ccb89e5c4ad..49abe0348b03 100644
+--- a/drivers/acpi/video.c
++++ b/drivers/acpi/video.c
+@@ -89,11 +89,12 @@ static bool use_bios_initial_backlight = 1;
+ module_param(use_bios_initial_backlight, bool, 0644);
  
- 	err = busy_loop();
--	if (id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
-+	if (!err && id == IPC_CMD_PCNTRL_R) { /* Read rbuf */
- 		/* Workaround: values are read as 0 without memcpy_fromio */
- 		memcpy_fromio(cbuf, ipcdev.ipc_base + 0x90, 16);
- 		for (nc = 0; nc < count; nc++)
-@@ -465,8 +465,10 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 	ipc_command((inlen << 16) | (sub << 12) | cmd);
- 	err = busy_loop();
+ /*
+- * For Windows 8 systems: if set ture and the GPU driver has
+- * registered a backlight interface, skip registering ACPI video's.
++ * For Windows 8 systems: used to decide if video module
++ * should skip registering backlight interface of its own.
+  */
+-static bool use_native_backlight = false;
+-module_param(use_native_backlight, bool, 0644);
++static int use_native_backlight_param = -1;
++module_param_named(use_native_backlight, use_native_backlight_param, int, 0444);
++static bool use_native_backlight_dmi = false;
  
--	for (i = 0; i < outlen; i++)
--		*out++ = ipc_data_readl(4 * i);
-+	if (!err) {
-+		for (i = 0; i < outlen; i++)
-+			*out++ = ipc_data_readl(4 * i);
-+	}
+ static int register_count;
+ static struct mutex video_list_lock;
+@@ -239,9 +240,17 @@ static int acpi_video_get_next_level(struct acpi_video_device *device,
+ static int acpi_video_switch_brightness(struct acpi_video_device *device,
+ 					 int event);
  
- 	mutex_unlock(&ipclock);
- 	return err;
++static bool acpi_video_use_native_backlight(void)
++{
++	if (use_native_backlight_param != -1)
++		return !!use_native_backlight_param;
++	else
++		return use_native_backlight_dmi;
++}
++
+ static bool acpi_video_verify_backlight_support(void)
+ {
+-	if (acpi_osi_is_win8() && use_native_backlight &&
++	if (acpi_osi_is_win8() && acpi_video_use_native_backlight() &&
+ 	    backlight_device_registered(BACKLIGHT_RAW))
+ 		return false;
+ 	return acpi_video_backlight_support();
+@@ -412,6 +421,12 @@ static int video_ignore_initial_backlight(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
++static int __init video_set_use_native_backlight(const struct dmi_system_id *d)
++{
++	use_native_backlight_dmi = true;
++	return 0;
++}
++
+ static struct dmi_system_id video_dmi_table[] __initdata = {
+ 	/*
+ 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
+@@ -456,6 +471,46 @@ static struct dmi_system_id video_dmi_table[] __initdata = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 7720"),
+ 		},
+ 	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "ThinkPad T430s",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T430s"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "ThinkPad X230",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X230"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Lenovo Yoga 13",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		 DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Dell Inspiron 7520",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++		 DMI_MATCH(DMI_PRODUCT_VERSION, "Inspiron 7520"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Acer Aspire 5733Z",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		 DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5733Z"),
++		},
++	},
+ 	{}
+ };
+ 
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 84875fd4c74f..b6399343de51 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -168,14 +168,6 @@ static struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "UL30A"),
+ 		},
+ 	},
+-	{
+-	.callback = video_detect_force_vendor,
+-	.ident = "Lenovo Yoga 13",
+-	.matches = {
+-		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
+-		},
+-	},
+ 	{ },
+ };
+ 
 -- 
-1.8.4.2
+1.8.3.1
