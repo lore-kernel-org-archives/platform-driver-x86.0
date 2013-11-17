@@ -1,55 +1,56 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 12/12] dell-laptop: Only enable rfkill functionality on laptops with a hw killswitch
-Date: Sun, 17 Nov 2013 14:00:27 +0100
-Message-ID: <1384693227-5859-13-git-send-email-hdegoede@redhat.com>
-References: <1384693227-5859-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH] radio-shark2: Mark shark_resume_leds() inline to kill compiler warning
+Date: Sun, 17 Nov 2013 14:50:44 +0100
+Message-ID: <1384696244-16954-1-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:29007 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:10910 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753972Ab3KQNAx (ORCPT
+	id S1752639Ab3KQNuy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Nov 2013 08:00:53 -0500
-In-Reply-To: <1384693227-5859-1-git-send-email-hdegoede@redhat.com>
+	Sun, 17 Nov 2013 08:50:54 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 
-All my testing has been on laptops with a hw killswitch, so to be on the
-safe side disable rfkill functionality on models without a hw killswitch for
-now. Once we gather some feedback on laptops without a hw killswitch this
-decision maybe reconsidered.
+This mirrors the patch to the radio-shark driver by Geert Uytterhoeven.
 
+If SHARK_USE_LEDS=3D1, but CONFIG_PM=3Dn:
+
+drivers/media/radio/radio-shark2.c:240: warning: =E2=80=98shark_resume_=
+leds=E2=80=99 defined but not used
+
+Instead of making the #ifdef logic even more complicated (there are alr=
+eady
+two definitions of shark_resume_leds()), mark shark_resume_leds() inlin=
+e to
+kill the compiler warning. shark_resume_leds() is small and it has only=
+ one
+caller.
+
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/dell-laptop.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/media/radio/radio-shark2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index bd67c89..c608b1d 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -580,11 +580,18 @@ static int __init dell_setup_rfkill(void)
- 	buffer->input[0] = 0x2;
- 	dell_send_request(buffer, 17, 11);
- 	hwswitch_state = buffer->output[1];
--	/* If there is no hwswitch, then clear all hw-controlled bits */
--	if (!(status & BIT(0)))
--		hwswitch_state &= ~7;
- 	release_buffer();
- 
-+	if (!(status & BIT(0))) {
-+		if (force_rfkill) {
-+			/* No hwsitch, clear all hw-controlled bits */
-+			hwswitch_state &= ~7;
-+		} else {
-+			/* rfkill is only tested on laptops with a hwswitch */
-+			return 0;
-+		}
-+	}
-+
- 	if ((status & (1<<2|1<<8)) == (1<<2|1<<8)) {
- 		wifi_rfkill = rfkill_alloc("dell-wifi", &platform_device->dev,
- 					   RFKILL_TYPE_WLAN,
--- 
+diff --git a/drivers/media/radio/radio-shark2.c b/drivers/media/radio/r=
+adio-shark2.c
+index 9fb6697..8654e0d 100644
+--- a/drivers/media/radio/radio-shark2.c
++++ b/drivers/media/radio/radio-shark2.c
+@@ -237,7 +237,7 @@ static void shark_unregister_leds(struct shark_devi=
+ce *shark)
+ 	cancel_work_sync(&shark->led_work);
+ }
+=20
+-static void shark_resume_leds(struct shark_device *shark)
++static inline void shark_resume_leds(struct shark_device *shark)
+ {
+ 	int i;
+=20
+--=20
 1.8.4.2
