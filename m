@@ -1,39 +1,52 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 10/12] dell-laptop: Wait less long before updating rfkill after an rfkill keypress
-Date: Sun, 17 Nov 2013 14:00:25 +0100
-Message-ID: <1384693227-5859-11-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 11/12] dell-laptop: Add a force_rfkill module parameter
+Date: Sun, 17 Nov 2013 14:00:26 +0100
+Message-ID: <1384693227-5859-12-git-send-email-hdegoede@redhat.com>
 References: <1384693227-5859-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:35301 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:39364 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753967Ab3KQNAt (ORCPT
+	id S1753972Ab3KQNAw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Nov 2013 08:00:49 -0500
+	Sun, 17 Nov 2013 08:00:52 -0500
 In-Reply-To: <1384693227-5859-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
 Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-Some time is needed for the BIOS to do its work, but 250ms should be plenty.
+Setting force_rfkill will cause the dell-laptop rfkill code to skip its
+whitelist checks, this will allow individual users to override the whitelist,
+as well as to gather info from users to improve the checks.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/dell-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/dell-laptop.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index b33b779..fe20f67 100644
+index fe20f67..bd67c89 100644
 --- a/drivers/platform/x86/dell-laptop.c
 +++ b/drivers/platform/x86/dell-laptop.c
-@@ -759,7 +759,7 @@ static bool dell_laptop_i8042_filter(unsigned char data, unsigned char str,
- 		switch (data) {
- 		case 0x8:
- 			schedule_delayed_work(&dell_rfkill_work,
--					      round_jiffies_relative(HZ));
-+					      round_jiffies_relative(HZ / 4));
- 			break;
- 		}
- 		extended = false;
+@@ -93,6 +93,10 @@ static struct backlight_device *dell_backlight_device;
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
++static bool force_rfkill;
++
++module_param(force_rfkill, bool, 0444);
++MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+ 
+ static const struct dmi_system_id dell_device_table[] __initconst = {
+ 	{
+@@ -567,7 +571,7 @@ static int __init dell_setup_rfkill(void)
+ 	 * actually testing the rfkill functionality is only done on Latitudes.
+ 	 */
+ 	product = dmi_get_system_info(DMI_PRODUCT_NAME);
+-	if (!product || strncmp(product, "Latitude", 8))
++	if (!force_rfkill && (!product || strncmp(product, "Latitude", 8)))
+ 		return 0;
+ 
+ 	get_buffer();
 -- 
 1.8.4.2
