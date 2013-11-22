@@ -1,102 +1,139 @@
-From: Karol Babioch <karol@babioch.de>
-Subject: Re: sony_laptop: Default values for keyboard backlight
-Date: Fri, 22 Nov 2013 00:05:10 +0100
-Message-ID: <528E91A6.1070403@babioch.de>
-References: <5289F067.40201@babioch.de> <20131118223008.GA4397@taihen.jp>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT] x86 platform driver upates
+Date: Fri, 22 Nov 2013 00:12:37 +0000
+Message-ID: <20131122001237.GA32643@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="fLni1AWxaV0VDk8IKB6qKUwA4rFH76gMv"
+	protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from babioch.de ([176.9.120.167]:52522 "EHLO babioch.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754973Ab3KUXFZ (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:38887 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751508Ab3KVAMn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Nov 2013 18:05:25 -0500
-In-Reply-To: <20131118223008.GA4397@taihen.jp>
+	Thu, 21 Nov 2013 19:12:43 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Mattia Dongili <malattia@linux.it>
+To: torvalds@linux-foundation.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fLni1AWxaV0VDk8IKB6qKUwA4rFH76gMv
-Content-Type: text/plain; charset=UTF-8
+
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Linus,
 
-Am 18.11.2013 23:30, schrieb Mattia Dongili:
-> I guess this is not the case on your
-> machine. If you don't load sony-laptop module you still have the 10
-> seconds timeout that you see in the BIOS? Only _after_ you load the
-> module the backlight never goes off?
+A moderate diffstat, but it's almost entirely just moving the chromebook=20
+driver into its own directory in order to ease ARM support, adding back=20
+rfkill support to the one Dell laptop model where it's expected to work,=20
+updates to the Intel IPC driver for hardware I've never actually seen=20
+and the usual set of small fixes.
 
-After playing around with this for a while I think that I narrowed the
-issue down (or at least one aspect of it):
+The following changes since commit 527d1511310a89650000081869260394e20c7013:
 
-So when actually rebooting and/or powering up the device for the first
-time, it works just fine by default without setting any module
-parameters explicitly. The keyboard backlight is enabled and the timeout
-is set to 10 seconds, which is the default.
+  Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/benh=
+/powerpc (2013-11-20 15:13:47 -0800)
 
-But as soon as I suspend the machine it absolutely makes a difference
-whether or not the module parameter is set. When it is not set
-explicitly (sysfs interface reporting "-1") the keyboard backlight will
-stay on from the moment I resume the machine and press a button. When
-the module parameters are set explicitly it works just fine and as
-expected.
-
-Does this make any sense from your perspective? Maybe it's not the whole
-story, but only one aspect of it. Is this something you can check and/or
-verify?
-
-> From the DSDTs I have hanging around these models may see the same
-> behaviour as you're seeing:
-
-Can't deny or confirm this, but this would be a reasonable guess.
-Personally I'm using a Sony Vaio VPCS12C5E. I might provide you the
-appropriate DSDT, if it can provide you any more insights.
-
-> One approach could be to make the default setting handle based with
-> again 0x137 being different from all others.
-
-Not sure what the right approach would be. When there is absolutely no
-way of reading the value before it was set at least once, then I don't
-see much of an alternative, but to set it explicitly for these models
-with an option to overwrite the default values using the appropriate
-module parameters.
-
-You'll definitely have more experience in this field, so it's your call.
-Furthermore there are a lot of other models you have to keep in mind ;).
-
-Let me know if you come up with something you might want to test ;).
-
-Best regards,
-Karol Babioch
+are available in the git repository at:
 
 
---fLni1AWxaV0VDk8IKB6qKUwA4rFH76gMv
+  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
+
+for you to fetch changes up to a80e1053aaa395d94fff5ab7c73c89bb0c28c3c5:
+
+  x86, wmi fix modalias_show return values (2013-11-20 20:16:22 -0500)
+
+----------------------------------------------------------------
+Alex Hung (2):
+      dell-wmi: Add KEY_MICMUTE to bios_to_linux_keycode
+      hp-wmi: detect "2009 BIOS or later" flag by WMI 0x0d for wireless cmd
+
+Hans de Goede (12):
+      Revert "dell-laptop: Remove rfkill code"
+      dell-laptop: Only enable rfkill on Latitudes
+      dell-laptop: If there is no hwswitch, then clear all hw-controlled bi=
+ts
+      dell-laptop: Only get status from BIOS once when updating
+      dell-laptop: Don't set sw_state from the query callback
+      dell-laptop: Don't read-back sw_state on machines with a hardware swi=
+tch
+      dell-laptop: Allow changing the sw_state while the radio is blocked b=
+y hw
+      dell-laptop: Sync current block state to BIOS on hw switch change
+      dell-laptop: Do not skip setting blocked bit rfkill_set while hw-bloc=
+ked
+      dell-laptop: Wait less long before updating rfkill after an rfkill ke=
+ypress
+      dell-laptop: Add a force_rfkill module parameter
+      dell-laptop: Only enable rfkill functionality on laptops with a hw ki=
+llswitch
+
+Joe Perches (1):
+      platform:x86: Remove OOM message after input_allocate_device
+
+Kuppuswamy Sathyanarayanan (4):
+      ipc: Added platform data structure
+      ipc: Enabled ipc support for additional intel platforms
+      ipc: Handle error conditions in ipc command
+      ipc: Added support for IPC interrupt mode
+
+Mattia Dongili (1):
+      sony-laptop: warn on multiple KBD backlight handles
+
+Olof Johansson (1):
+      platform: add chrome platform directory
+
+Prarit Bhargava (1):
+      x86, wmi fix modalias_show return values
+
+Stephen Gildea (1):
+      sony-laptop: fixe typos in sony_laptop_input_keycode_map
+
+Takashi Iwai (1):
+      thinkpad_acpi: Fix build error when CONFIG_SND_MAX_CARDS > 32
+
+ MAINTAINERS                                        |   5 +
+ drivers/platform/Kconfig                           |   1 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/chrome/Kconfig                    |  28 ++
+ drivers/platform/chrome/Makefile                   |   2 +
+ drivers/platform/{x86 =3D> chrome}/chromeos_laptop.c |   0
+ drivers/platform/x86/Kconfig                       |  11 -
+ drivers/platform/x86/Makefile                      |   1 -
+ drivers/platform/x86/asus-laptop.c                 |   5 +-
+ drivers/platform/x86/dell-laptop.c                 | 288 +++++++++++++++++=
+++++
+ drivers/platform/x86/dell-wmi.c                    |   7 +-
+ drivers/platform/x86/eeepc-laptop.c                |   4 +-
+ drivers/platform/x86/hp-wmi.c                      |  14 +-
+ drivers/platform/x86/ideapad-laptop.c              |   4 +-
+ drivers/platform/x86/intel_mid_powerbtn.c          |   4 +-
+ drivers/platform/x86/intel_scu_ipc.c               | 117 ++++++++-
+ drivers/platform/x86/panasonic-laptop.c            |   5 +-
+ drivers/platform/x86/sony-laptop.c                 |  20 +-
+ drivers/platform/x86/thinkpad_acpi.c               |   8 +-
+ drivers/platform/x86/topstar-laptop.c              |   4 +-
+ drivers/platform/x86/toshiba_acpi.c                |   4 +-
+ drivers/platform/x86/wmi.c                         |   6 +-
+ 22 files changed, 477 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/platform/chrome/Kconfig
+ create mode 100644 drivers/platform/chrome/Makefile
+ rename drivers/platform/{x86 =3D> chrome}/chromeos_laptop.c (100%)
+
+
+--LQksG6bCIzRHxTLp
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-iQIcBAEBAgAGBQJSjpGwAAoJEHSaZc1HnzIV1tcP/1ZPXxNIN7kke/iqeYoHkfDg
-QZIMqipc5oxzZUakFSZM2RoFmsDTQwMEQksadCwY8TFE1QDmI3D7k6JgLgQVEsXs
-86EkzuT6MAF8ycP01xohHy+HhlX/oBvqESidyhP0qmhRhi2QzvuGqJFQ18YPiGLl
-Xg4NhNJnPmXlaOFKvgbNwLi3lNmktiUtszfhdZrBbGWMb4pPCNYRuTMMDZegXkZh
-rJc9VSW34fLMecCDh0ZCFMjV2VQD0KSebjLw3dG3svgU0rl2hIrrBnKqP9RUZCJY
-u6hgb60140poYG6n71PfAP1+iW5sdRKZv+bfXk10ItjWCXRBy2NTYZrQxrFXyQbF
-lZK9QOMV7+xmlgsoUk6CQtGJ+H/UYSVv6UzhgZ4CG1krHtmm4bPCMNF4C9hfakvD
-fknfFSvuErwCqK/pFk9S5wBKlWFqRifei+mHphapDDPQe9GXp3I/syEtFRYJSTeW
-O+rLaUChb9EFOpw+OdSbOxhwPJux5CEBdHWXh4u8Wv65fokJPNtE/FXBLyTSvBXP
-u9GKdU6FUTHM9hZgLYw77fcSfFhqILjEM6QNVIF+e+AA2tpE3P5GVTfaie9j4K6c
-HelURAUbbd9umgx/RXh/HdEvOsWlQMrfnIf1M25fP/9Dgiq4Nd5YAVfRZl6wkuaO
-W6kvRZVdijR62/SCGVK8
-=qIp4
+iEYEARECAAYFAlKOoXUACgkQ7Hkv8l1YiTtFywCfbuiV9ZmpjaLxeVh7K1TedBaH
+B0oAnRHtCeH/Dbzoo3c8aMC9FKBAEzlk
+=r0N7
 -----END PGP SIGNATURE-----
 
---fLni1AWxaV0VDk8IKB6qKUwA4rFH76gMv--
+--LQksG6bCIzRHxTLp--
