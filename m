@@ -1,139 +1,61 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT] x86 platform driver upates
-Date: Fri, 22 Nov 2013 00:12:37 +0000
-Message-ID: <20131122001237.GA32643@srcf.ucam.org>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH] video: backlight: Remove backlight sysfs uevent
+Date: Fri, 22 Nov 2013 09:36:01 -0200
+Message-ID: <20131122113601.GB27196@khazad-dum.debian.net>
+References: <20131111235700.GA29987@july>
+ <002901cedf3c$a7e77a00$f7b66e00$%han@samsung.com>
+ <20131112005628.GA2914@khazad-dum.debian.net>
+ <1384990859.20536.4.camel@x230>
+ <20131121114332.GA23710@khazad-dum.debian.net>
+ <20131121143326.GA19773@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:38887 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751508Ab3KVAMn (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50026 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753064Ab3KVLgL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Nov 2013 19:12:43 -0500
+	Fri, 22 Nov 2013 06:36:11 -0500
 Content-Disposition: inline
+In-Reply-To: <20131121143326.GA19773@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Kyungmin Park' <kmpark@infradead.org>, 'Henrique de Moraes Holschuh' <ibm-acpi@hmh.eng.br>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, kay@vrfy.org, 'Richard Purdie' <rpurdie@rpsys.net>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
+On Thu, 21 Nov 2013, Matthew Garrett wrote:
+> On Thu, Nov 21, 2013 at 09:43:32AM -0200, Henrique de Moraes Holschuh wrote:
+> > With this patchset applied, as far as I can tell anything that used to be
+> > uevent-driven by the backlight class will break: when a process changes the
+> > backlight using sysfs, other processes will not be notified of the change
+> > anymore.  This patchset seems to break backlight uevent support in such a
+> > way that basically renders the entire thing useless and you might as well
+> > just remove uevent support entirely.
+> 
+> The uevent support was initially added to handle systems where pressing 
+> a hotkey generates an event (good) but the firmware automatically 
+> changes the brightness (bad). I have absolutely no idea why I added 
+> BACKLIGHT_UPDATE_SYSFS - BACKLIGHT_UPDATE_HOTKEY solves the problem I 
+> was trying to solve. I'm not aware of any userspace that relies on 
+> BACKLIGHT_UPDATE_SYSFS.
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, either we have userspace that rely on the uevents, or we don't. 
 
-Hi Linus,
+If we don't have any uevent users of the backlight notifications, we might
+as well just rip out the feature entirely and replace it with something with
+a proper design.  But that would mean all OSD is being done by time-based
+open-read-close polling of sysfs or keyed to input events (and therefore
+half-baked).
 
-A moderate diffstat, but it's almost entirely just moving the chromebook=20
-driver into its own directory in order to ease ARM support, adding back=20
-rfkill support to the one Dell laptop model where it's expected to work,=20
-updates to the Intel IPC driver for hardware I've never actually seen=20
-and the usual set of small fixes.
+However, if we do have anything that rely on the uevents, it needs
+BACKLIGHT_UPDATE_SYSFS.  Without it, there will be no notifications when the
+backlight level is changed through sysfs.  And we *DO* have applications
+that change the backlight level through sysfs.  From the top of my head, I
+know KDE does when it starts, and also as a response to power management
+events.  Also, userspace hotkey daemons do use the sysfs interface.
 
-The following changes since commit 527d1511310a89650000081869260394e20c7013:
-
-  Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/benh=
-/powerpc (2013-11-20 15:13:47 -0800)
-
-are available in the git repository at:
-
-
-  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
-
-for you to fetch changes up to a80e1053aaa395d94fff5ab7c73c89bb0c28c3c5:
-
-  x86, wmi fix modalias_show return values (2013-11-20 20:16:22 -0500)
-
-----------------------------------------------------------------
-Alex Hung (2):
-      dell-wmi: Add KEY_MICMUTE to bios_to_linux_keycode
-      hp-wmi: detect "2009 BIOS or later" flag by WMI 0x0d for wireless cmd
-
-Hans de Goede (12):
-      Revert "dell-laptop: Remove rfkill code"
-      dell-laptop: Only enable rfkill on Latitudes
-      dell-laptop: If there is no hwswitch, then clear all hw-controlled bi=
-ts
-      dell-laptop: Only get status from BIOS once when updating
-      dell-laptop: Don't set sw_state from the query callback
-      dell-laptop: Don't read-back sw_state on machines with a hardware swi=
-tch
-      dell-laptop: Allow changing the sw_state while the radio is blocked b=
-y hw
-      dell-laptop: Sync current block state to BIOS on hw switch change
-      dell-laptop: Do not skip setting blocked bit rfkill_set while hw-bloc=
-ked
-      dell-laptop: Wait less long before updating rfkill after an rfkill ke=
-ypress
-      dell-laptop: Add a force_rfkill module parameter
-      dell-laptop: Only enable rfkill functionality on laptops with a hw ki=
-llswitch
-
-Joe Perches (1):
-      platform:x86: Remove OOM message after input_allocate_device
-
-Kuppuswamy Sathyanarayanan (4):
-      ipc: Added platform data structure
-      ipc: Enabled ipc support for additional intel platforms
-      ipc: Handle error conditions in ipc command
-      ipc: Added support for IPC interrupt mode
-
-Mattia Dongili (1):
-      sony-laptop: warn on multiple KBD backlight handles
-
-Olof Johansson (1):
-      platform: add chrome platform directory
-
-Prarit Bhargava (1):
-      x86, wmi fix modalias_show return values
-
-Stephen Gildea (1):
-      sony-laptop: fixe typos in sony_laptop_input_keycode_map
-
-Takashi Iwai (1):
-      thinkpad_acpi: Fix build error when CONFIG_SND_MAX_CARDS > 32
-
- MAINTAINERS                                        |   5 +
- drivers/platform/Kconfig                           |   1 +
- drivers/platform/Makefile                          |   1 +
- drivers/platform/chrome/Kconfig                    |  28 ++
- drivers/platform/chrome/Makefile                   |   2 +
- drivers/platform/{x86 =3D> chrome}/chromeos_laptop.c |   0
- drivers/platform/x86/Kconfig                       |  11 -
- drivers/platform/x86/Makefile                      |   1 -
- drivers/platform/x86/asus-laptop.c                 |   5 +-
- drivers/platform/x86/dell-laptop.c                 | 288 +++++++++++++++++=
-++++
- drivers/platform/x86/dell-wmi.c                    |   7 +-
- drivers/platform/x86/eeepc-laptop.c                |   4 +-
- drivers/platform/x86/hp-wmi.c                      |  14 +-
- drivers/platform/x86/ideapad-laptop.c              |   4 +-
- drivers/platform/x86/intel_mid_powerbtn.c          |   4 +-
- drivers/platform/x86/intel_scu_ipc.c               | 117 ++++++++-
- drivers/platform/x86/panasonic-laptop.c            |   5 +-
- drivers/platform/x86/sony-laptop.c                 |  20 +-
- drivers/platform/x86/thinkpad_acpi.c               |   8 +-
- drivers/platform/x86/topstar-laptop.c              |   4 +-
- drivers/platform/x86/toshiba_acpi.c                |   4 +-
- drivers/platform/x86/wmi.c                         |   6 +-
- 22 files changed, 477 insertions(+), 62 deletions(-)
- create mode 100644 drivers/platform/chrome/Kconfig
- create mode 100644 drivers/platform/chrome/Makefile
- rename drivers/platform/{x86 =3D> chrome}/chromeos_laptop.c (100%)
-
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAlKOoXUACgkQ7Hkv8l1YiTtFywCfbuiV9ZmpjaLxeVh7K1TedBaH
-B0oAnRHtCeH/Dbzoo3c8aMC9FKBAEzlk
-=r0N7
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
