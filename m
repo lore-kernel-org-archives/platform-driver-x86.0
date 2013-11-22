@@ -1,117 +1,96 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: sony_laptop: Default values for keyboard backlight
-Date: Sat, 23 Nov 2013 07:11:56 +0900
-Message-ID: <20131122221156.GA8993@taihen.jp>
-References: <5289F067.40201@babioch.de>
- <20131118223008.GA4397@taihen.jp>
- <528E91A6.1070403@babioch.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jose Ignacio Naranjo <joseignacio.naranjo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Add hotkeys support for Toshiba Satellite U940
+Date: Sat, 23 Nov 2013 00:02:22 +0100
+Message-ID: <1385161342-8262-1-git-send-email-joseignacio.naranjo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:34157 "EHLO
-	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755311Ab3KVWL4 (ORCPT
+Received: from mail-wi0-f174.google.com ([209.85.212.174]:56707 "EHLO
+	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756259Ab3KVXGk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Nov 2013 17:11:56 -0500
-Content-Disposition: inline
-In-Reply-To: <528E91A6.1070403@babioch.de>
+	Fri, 22 Nov 2013 18:06:40 -0500
+Received: by mail-wi0-f174.google.com with SMTP id ez12so1425284wid.13
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Nov 2013 15:06:38 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Karol Babioch <karol@babioch.de>
-Cc: platform-driver-x86@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Jose Ignacio Naranjo <joseignacio.naranjo@gmail.com>
 
-On Fri, Nov 22, 2013 at 12:05:10AM +0100, Karol Babioch wrote:
-> Hi,
-> 
-> Am 18.11.2013 23:30, schrieb Mattia Dongili:
-> > I guess this is not the case on your
-> > machine. If you don't load sony-laptop module you still have the 10
-> > seconds timeout that you see in the BIOS? Only _after_ you load the
-> > module the backlight never goes off?
-> 
-> After playing around with this for a while I think that I narrowed the
-> issue down (or at least one aspect of it):
-> 
-> So when actually rebooting and/or powering up the device for the first
-> time, it works just fine by default without setting any module
-> parameters explicitly. The keyboard backlight is enabled and the timeout
-> is set to 10 seconds, which is the default.
-> 
-> But as soon as I suspend the machine it absolutely makes a difference
-> whether or not the module parameter is set. When it is not set
-> explicitly (sysfs interface reporting "-1") the keyboard backlight will
-> stay on from the moment I resume the machine and press a button. When
-> the module parameters are set explicitly it works just fine and as
-> expected.
+---
+ drivers/platform/x86/toshiba_acpi.c | 41 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 39 insertions(+), 2 deletions(-)
 
-Ha! good catch, I missed this bit in the patch that you already
-identified. Can you apply it and see if it makes a difference?
-
-commit 0d72d73e594828381d8ea0291bffa5770fe020a2
-Author: Mattia Dongili <malattia@linux.it>
-Date:   Sat Nov 23 06:55:40 2013 +0900
-
-    sony-laptop: do not poke the keyboard backlight on resume
-    
-    Follow-up to 294d31e8227c9892a89d6b3e58d17886b79ea4e6, avoid messing up
-    the state on resume leaving it to what was before suspending as it's
-    likely that we don't know what value we should write to the EC
-    registers.
-    
-    Signed-off-by: Mattia Dongili <malattia@linux.it>
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 8d80f2c..921b2a9 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -140,7 +140,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
- 		 "on the model (default: no change from current value)");
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 0cfadb6..ff711d5 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -54,6 +54,7 @@
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+ #include <linux/i8042.h>
++#include <linux/dmi.h>
  
- #ifdef CONFIG_PM_SLEEP
--static void sony_nc_kbd_backlight_resume(void);
- static void sony_nc_thermal_resume(void);
- #endif
- static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
-@@ -1487,13 +1486,6 @@ static void sony_nc_function_resume(void)
- 		case 0x0135:
- 			sony_nc_rfkill_update();
- 			break;
--		case 0x0137:
--		case 0x0143:
--		case 0x014b:
--		case 0x014c:
--		case 0x0163:
--			sony_nc_kbd_backlight_resume();
--			break;
- 		default:
- 			continue;
- 		}
-@@ -1902,25 +1894,6 @@ static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
- 	}
- }
+ #include <asm/uaccess.h>
  
--#ifdef CONFIG_PM_SLEEP
--static void sony_nc_kbd_backlight_resume(void)
--{
--	int ignore = 0;
--
--	if (!kbdbl_ctl)
--		return;
--
--	if (kbdbl_ctl->mode == 0)
--		sony_call_snc_handle(kbdbl_ctl->handle, kbdbl_ctl->base,
--				&ignore);
--
--	if (kbdbl_ctl->timeout != 0)
--		sony_call_snc_handle(kbdbl_ctl->handle,
--				(kbdbl_ctl->base + 0x200) |
--				(kbdbl_ctl->timeout << 0x10), &ignore);
--}
--#endif
--
- struct battery_care_control {
- 	struct device_attribute attrs[2];
- 	unsigned int handle;
+@@ -150,7 +151,7 @@ static const struct acpi_device_id toshiba_device_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, toshiba_device_ids);
+ 
+-static const struct key_entry toshiba_acpi_keymap[] = {
++static const struct key_entry toshiba_acpi_default_keymap[] = {
+ 	{ KE_KEY, 0x101, { KEY_MUTE } },
+ 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
+ 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
+@@ -178,6 +179,41 @@ static const struct key_entry toshiba_acpi_keymap[] = {
+ 	{ KE_END, 0 },
+ };
+ 
++static const struct key_entry *keymap = toshiba_acpi_default_keymap;
++
++static struct key_entry keymap_satellite_u940[] = {
++	{ KE_KEY, 0x13c, { KEY_BRIGHTNESSDOWN } },
++	{ KE_KEY, 0x13d, { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 0x13e, { KEY_SWITCHVIDEOMODE } },
++	{ KE_KEY, 0x13f, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY, 0x157, { KEY_MUTE} },
++	{ KE_KEY, 0x158, { KEY_WLAN } },
++	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
++	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
++	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
++	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
++	{ KE_END, 0 }
++};
++
++static int dmi_matched(const struct dmi_system_id *dmi)
++{
++	keymap = dmi->driver_data;
++	return 1;
++}
++
++static const struct dmi_system_id dmi_ids[] = {
++	{
++		/* Toshiba Satellite U940 */
++		.callback = dmi_matched,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SATELLITE U940"),
++		},
++		.driver_data = keymap_satellite_u940
++	},
++	{ NULL, }
++};
++
+ /* utility
+  */
+ 
+@@ -984,7 +1020,8 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 	dev->hotkey_dev->phys = "toshiba_acpi/input0";
+ 	dev->hotkey_dev->id.bustype = BUS_HOST;
+ 
+-	error = sparse_keymap_setup(dev->hotkey_dev, toshiba_acpi_keymap, NULL);
++	dmi_check_system(dmi_ids);
++	error = sparse_keymap_setup(dev->hotkey_dev, keymap, NULL);
+ 	if (error)
+ 		goto err_free_dev;
+ 
 -- 
-mattia
-:wq!
+1.8.3.2
