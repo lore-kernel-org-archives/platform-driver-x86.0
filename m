@@ -1,58 +1,85 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 0/6] Platform: x86: chromeos_laptop - Deferring and Haswell
-Date: Mon, 25 Nov 2013 13:13:26 -0800
-Message-ID: <CAOesGMipE-fa=fOf+zx5-Ygjiobc-grjAw3GesVKx7Enhq6D8A@mail.gmail.com>
-References: <1382327909-6140-1-git-send-email-bleung@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Mattia Dongili <malattia@linux.it>
+Subject: [PATCH] sony-laptop: do not scribble keyboard backlight registers on resume
+Date: Tue, 26 Nov 2013 07:43:50 +0900
+Message-ID: <1385419430-4817-1-git-send-email-malattia@linux.it>
+References: <52933DFD.8060206@babioch.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qe0-f53.google.com ([209.85.128.53]:59027 "EHLO
-	mail-qe0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752200Ab3KYVN3 (ORCPT
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:57172 "EHLO
+	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751964Ab3KYWoL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Nov 2013 16:13:29 -0500
-Received: by mail-qe0-f53.google.com with SMTP id nc12so3033596qeb.40
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2013 13:13:28 -0800 (PST)
-In-Reply-To: <1382327909-6140-1-git-send-email-bleung@chromium.org>
+	Mon, 25 Nov 2013 17:44:11 -0500
+In-Reply-To: <52933DFD.8060206@babioch.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Benson Leung <bleung@chromium.org>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, adurbin@chromium.org, Duncan Laurie <dlaurie@chromium.org>, Olof Johansson <olofj@chromium.org>, enselic@gmail.com
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, stable@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Benson,
+Follow-up to 294d31e8227c9892a89d6b3e58d17886b79ea4e6: avoid messing up
+the state on resume. Leave it to what was before suspending as it's
+anyway likely that we still don't know what value we should write to the
+EC registers.
+This fix is also required in 3.12
 
-On Sun, Oct 20, 2013 at 8:58 PM, Benson Leung <bleung@chromium.org> wrote:
-> The following patch series refactors the dmi check system and
-> returns -EPROBE_DEFER when an expected i2c adapter is not present
-> at probe time.
->
-> This will allow the touchpad, touchscreen, and light sensors on
-> Pixel to load even if the i915 DDC and PANEL buses are instantiated
-> after chromeos_laptop.
->
-> The deferred probing patches were sent previously, and have been cleaned up
-> slightly since.
->
-> Also one patch to clean up the placement of __initdata for the dmi_table.
->
-> Finally, add support for the Haswell generation Chromebook systems'
-> peripherals over the new native i2c-designware-pci busses.
->
-> The last three patches depend on this patch series :
-> https://lkml.org/lkml/2013/10/20/136
->
-> [PATCH 1/6] Platform: x86: chromeos_laptop - Restructure device associations
-> [PATCH 2/6] Platform: x86: chromeos_laptop - Use deferred probing
-> [PATCH 3/6] Platform: x86: chromeos_laptop - fix incorrect placement of __initdata tag
-> [PATCH 4/6] Platform: x86: chromeos_laptop - Add names of Haswell ULT i2c busses
-> [PATCH 5/6] Platform: x86: chromeos_laptop - Add HP Chromebook 14
-> [PATCH 6/6] Platform: x86: chromeos_laptop - Add Acer C720
+Cc: stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Tested-by: Karol Babioch <karol@babioch.de>
+Signed-off-by: Mattia Dongili <malattia@linux.it>
+---
+ drivers/platform/x86/sony-laptop.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
-I've applied patch 1-3. Since the naming seems to still be up in the
-air on the i2c side, I can't apply 4-6 yet.
-
-I also switched the subject to platform/chrome: ... since that's what
-I've picked to use on the other patches in the same directory.
-
-
--Olof
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 8d80f2c..921b2a9 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -140,7 +140,6 @@ MODULE_PARM_DESC(kbd_backlight_timeout,
+ 		 "on the model (default: no change from current value)");
+ 
+ #ifdef CONFIG_PM_SLEEP
+-static void sony_nc_kbd_backlight_resume(void);
+ static void sony_nc_thermal_resume(void);
+ #endif
+ static int sony_nc_kbd_backlight_setup(struct platform_device *pd,
+@@ -1487,13 +1486,6 @@ static void sony_nc_function_resume(void)
+ 		case 0x0135:
+ 			sony_nc_rfkill_update();
+ 			break;
+-		case 0x0137:
+-		case 0x0143:
+-		case 0x014b:
+-		case 0x014c:
+-		case 0x0163:
+-			sony_nc_kbd_backlight_resume();
+-			break;
+ 		default:
+ 			continue;
+ 		}
+@@ -1902,25 +1894,6 @@ static void sony_nc_kbd_backlight_cleanup(struct platform_device *pd,
+ 	}
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static void sony_nc_kbd_backlight_resume(void)
+-{
+-	int ignore = 0;
+-
+-	if (!kbdbl_ctl)
+-		return;
+-
+-	if (kbdbl_ctl->mode == 0)
+-		sony_call_snc_handle(kbdbl_ctl->handle, kbdbl_ctl->base,
+-				&ignore);
+-
+-	if (kbdbl_ctl->timeout != 0)
+-		sony_call_snc_handle(kbdbl_ctl->handle,
+-				(kbdbl_ctl->base + 0x200) |
+-				(kbdbl_ctl->timeout << 0x10), &ignore);
+-}
+-#endif
+-
+ struct battery_care_control {
+ 	struct device_attribute attrs[2];
+ 	unsigned int handle;
+-- 
+1.8.4.4
