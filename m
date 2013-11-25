@@ -1,62 +1,58 @@
-From: Julian Andres Klode <jak@jak-linux.org>
-Subject: Re: [PATCH 0/4] thinkpad_acpi: Add support for controlling charge
- thresholds
-Date: Mon, 25 Nov 2013 15:59:58 +0100
-Message-ID: <20131125145958.GA13564@jak-x230>
-References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/6] Platform: x86: chromeos_laptop - Deferring and Haswell
+Date: Mon, 25 Nov 2013 13:13:26 -0800
+Message-ID: <CAOesGMipE-fa=fOf+zx5-Ygjiobc-grjAw3GesVKx7Enhq6D8A@mail.gmail.com>
+References: <1382327909-6140-1-git-send-email-bleung@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bk0-f46.google.com ([209.85.214.46]:65359 "EHLO
-	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754137Ab3KYPAD (ORCPT
+Received: from mail-qe0-f53.google.com ([209.85.128.53]:59027 "EHLO
+	mail-qe0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752200Ab3KYVN3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Nov 2013 10:00:03 -0500
-Content-Disposition: inline
-In-Reply-To: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+	Mon, 25 Nov 2013 16:13:29 -0500
+Received: by mail-qe0-f53.google.com with SMTP id nc12so3033596qeb.40
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Nov 2013 13:13:28 -0800 (PST)
+In-Reply-To: <1382327909-6140-1-git-send-email-bleung@chromium.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julian Andres Klode <jak@jak-linux.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Benson Leung <bleung@chromium.org>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, adurbin@chromium.org, Duncan Laurie <dlaurie@chromium.org>, Olof Johansson <olofj@chromium.org>, enselic@gmail.com
 
-On Mon, Nov 11, 2013 at 02:56:29PM +0100, Julian Andres Klode wrote:
-> This patch series adds support for specifying charging thresholds,
-> forcing a battery to discharge, and inhibiting charging, on ThinkPad
-> Laptops using Sandy Bridge or newer processors.
-> 
-> The first two patches should be stable now, the third one does not work on
-> my test system (but I'd appreciate if anyone with something other than an
-> X230 tests it). 
-> 
-> The inhibit charging part is a bit unprecise, and I can obviously not test
-> that -1 really means permanently, but I assume it does. I don't know whether
-> this one should be merged.
-> 
-> Changes since the RFC PATCH:
->   - Define batteries more dynamically instead of statically using large
->     macros. Added support for up to 3 batteries, unsupported ones will not
->     be exported.
->   - Added 3 more new patches with more features
-> 
-> Julian Andres Klode (4):
->   thinkpad_acpi: Add support for controlling charge thresholds
->   thinkpad_acpi: battery: Add force_discharge attribute
->   thinkpad_acpi: battery: Add force_discharge_ac_break attribute
->   thinkpad_acpi: battery: Add inhibit_charge_minutes attribute
-> 
->  Documentation/laptops/thinkpad-acpi.txt |  37 ++++
->  drivers/platform/x86/thinkpad_acpi.c    | 300 ++++++++++++++++++++++++++++++++
->  2 files changed, 337 insertions(+)
-> 
+Hi Benson,
 
-I'd really like to get some comments on this series (especially by Henrique
-and Matthew, they're responsible); so I know what I have to fix and whether
-I should drop some of the later patches, and if the patch series has any
-chance of being accepted...
+On Sun, Oct 20, 2013 at 8:58 PM, Benson Leung <bleung@chromium.org> wrote:
+> The following patch series refactors the dmi check system and
+> returns -EPROBE_DEFER when an expected i2c adapter is not present
+> at probe time.
+>
+> This will allow the touchpad, touchscreen, and light sensors on
+> Pixel to load even if the i915 DDC and PANEL buses are instantiated
+> after chromeos_laptop.
+>
+> The deferred probing patches were sent previously, and have been cleaned up
+> slightly since.
+>
+> Also one patch to clean up the placement of __initdata for the dmi_table.
+>
+> Finally, add support for the Haswell generation Chromebook systems'
+> peripherals over the new native i2c-designware-pci busses.
+>
+> The last three patches depend on this patch series :
+> https://lkml.org/lkml/2013/10/20/136
+>
+> [PATCH 1/6] Platform: x86: chromeos_laptop - Restructure device associations
+> [PATCH 2/6] Platform: x86: chromeos_laptop - Use deferred probing
+> [PATCH 3/6] Platform: x86: chromeos_laptop - fix incorrect placement of __initdata tag
+> [PATCH 4/6] Platform: x86: chromeos_laptop - Add names of Haswell ULT i2c busses
+> [PATCH 5/6] Platform: x86: chromeos_laptop - Add HP Chromebook 14
+> [PATCH 6/6] Platform: x86: chromeos_laptop - Add Acer C720
 
--- 
-Julian Andres Klode  - Debian Developer, Ubuntu Member
+I've applied patch 1-3. Since the naming seems to still be up in the
+air on the i2c side, I can't apply 4-6 yet.
 
-See http://wiki.debian.org/JulianAndresKlode and http://jak-linux.org/.
+I also switched the subject to platform/chrome: ... since that's what
+I've picked to use on the other patches in the same directory.
 
-Please do not top-post if possible.
+
+-Olof
