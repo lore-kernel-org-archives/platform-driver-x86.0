@@ -1,67 +1,62 @@
-From: Karol Babioch <karol@babioch.de>
-Subject: Re: sony_laptop: Default values for keyboard backlight
-Date: Mon, 25 Nov 2013 13:09:33 +0100
-Message-ID: <52933DFD.8060206@babioch.de>
-References: <5289F067.40201@babioch.de> <20131118223008.GA4397@taihen.jp> <528E91A6.1070403@babioch.de> <20131122221156.GA8993@taihen.jp>
+From: Julian Andres Klode <jak@jak-linux.org>
+Subject: Re: [PATCH 0/4] thinkpad_acpi: Add support for controlling charge
+ thresholds
+Date: Mon, 25 Nov 2013 15:59:58 +0100
+Message-ID: <20131125145958.GA13564@jak-x230>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="4tVuwUUFffB5P8rQDkqunqm7A2PhkW70d"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from babioch.de ([176.9.120.167]:52545 "EHLO babioch.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754162Ab3KYMJo (ORCPT
+Received: from mail-bk0-f46.google.com ([209.85.214.46]:65359 "EHLO
+	mail-bk0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754137Ab3KYPAD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Nov 2013 07:09:44 -0500
-In-Reply-To: <20131122221156.GA8993@taihen.jp>
+	Mon, 25 Nov 2013 10:00:03 -0500
+Content-Disposition: inline
+In-Reply-To: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>
+To: Julian Andres Klode <jak@jak-linux.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4tVuwUUFffB5P8rQDkqunqm7A2PhkW70d
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 11, 2013 at 02:56:29PM +0100, Julian Andres Klode wrote:
+> This patch series adds support for specifying charging thresholds,
+> forcing a battery to discharge, and inhibiting charging, on ThinkPad
+> Laptops using Sandy Bridge or newer processors.
+> 
+> The first two patches should be stable now, the third one does not work on
+> my test system (but I'd appreciate if anyone with something other than an
+> X230 tests it). 
+> 
+> The inhibit charging part is a bit unprecise, and I can obviously not test
+> that -1 really means permanently, but I assume it does. I don't know whether
+> this one should be merged.
+> 
+> Changes since the RFC PATCH:
+>   - Define batteries more dynamically instead of statically using large
+>     macros. Added support for up to 3 batteries, unsupported ones will not
+>     be exported.
+>   - Added 3 more new patches with more features
+> 
+> Julian Andres Klode (4):
+>   thinkpad_acpi: Add support for controlling charge thresholds
+>   thinkpad_acpi: battery: Add force_discharge attribute
+>   thinkpad_acpi: battery: Add force_discharge_ac_break attribute
+>   thinkpad_acpi: battery: Add inhibit_charge_minutes attribute
+> 
+>  Documentation/laptops/thinkpad-acpi.txt |  37 ++++
+>  drivers/platform/x86/thinkpad_acpi.c    | 300 ++++++++++++++++++++++++++++++++
+>  2 files changed, 337 insertions(+)
+> 
 
-Hi,
+I'd really like to get some comments on this series (especially by Henrique
+and Matthew, they're responsible); so I know what I have to fix and whether
+I should drop some of the later patches, and if the patch series has any
+chance of being accepted...
 
-Am 22.11.2013 23:11, schrieb Mattia Dongili:
-Can you apply it and see if it makes a difference?
+-- 
+Julian Andres Klode  - Debian Developer, Ubuntu Member
 
-Yes, it seems to do the job just fine. Couldn't find any problems with
-it so far. I'm using it without setting any parameters explicitly, and
-it behaves just like beforehand (keyboard backlight on by default with a
-10 second timeout).
+See http://wiki.debian.org/JulianAndresKlode and http://jak-linux.org/.
 
-So thanks for the fast turn around. I'm sorry that it took me so long to
-actually test it. Hoping to see this being merged into the mainline kerne=
-l.
-
-Best regards,
-Karol Babioch
-
-
---4tVuwUUFffB5P8rQDkqunqm7A2PhkW70d
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSkz4DAAoJEHSaZc1HnzIVnMMP/iOAQrl9Kp+siulwwo2F7HN0
-48Fq4lSpvddYbRs9N2LMGRUyAaK/jgdgwU67pzLQ0RmRB4YrchjLtWoDrJ7OmOXq
-FVjZc+4ARAbnttHGb6T4IP4VcQzP8kmGW27NXzZPMixoDcQl7THz8Q9t0KNTvAMQ
-aH21w5dNJM+bAO4xHbbR2EIAB4ltK8oKM+suvmgFkDL/1GBrEDpS9bKWGhf2b08B
-rFxYtowLOxz9atb8QBDVZ15NmypRavO9BjOueykhAFGw+r2DpoJ/pW6cvKYaUF0Z
-tx277BOxn9kHYUsE0oTuWKoHQtiP5unMiuMmg+8MhEUXxZzOeQpDzbqgJwIkh5jp
-hjc/fpJlu914EDe94nPHB2A7VCBQkwO3YYPzTXXtIKhPw7kfZCyKaeAbwXrQuLRk
-edLFVwdCvN8nSvUh3U82CA7sb2+CbK2P/oxS9xYsKAJSzLQMm+A/7Si9hS2JC127
-5cQNbRYWRO3G8v0Q1FzxqonTSr5NrDhlJyM6qL3akQDUcKm2vt3Qz/UxEz3ODvJB
-Hgo3CJOkGySZ244sAjhICcRXyFzk16yDNhLlV5UhwnYKxaM5d7F2BZeATIAPMxnt
-Njxg1LZxwsdZ1DVTxho6NIz+aK+fMMx6UtlzmcZSaZcDSnBzMFVWA5M7rctdt0gR
-B8BLhGSEW3lVTB1IdU35
-=Cqds
------END PGP SIGNATURE-----
-
---4tVuwUUFffB5P8rQDkqunqm7A2PhkW70d--
+Please do not top-post if possible.
