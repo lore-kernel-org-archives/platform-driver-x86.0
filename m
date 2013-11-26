@@ -1,32 +1,29 @@
-From: Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH 0/6] Platform: x86: chromeos_laptop - Deferring and Haswell
-Date: Mon, 25 Nov 2013 15:05:23 -0800
-Message-ID: <CANLzEks9wiAa4s7L8JvGkr=VyNi6GUwJ6ufk_ntywyW6cBD0Dg@mail.gmail.com>
-References: <1382327909-6140-1-git-send-email-bleung@chromium.org>
-	<CAOesGMipE-fa=fOf+zx5-Ygjiobc-grjAw3GesVKx7Enhq6D8A@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] sony-laptop: do not scribble keyboard backlight registers
+ on resume
+Date: Mon, 25 Nov 2013 20:16:03 -0800
+Message-ID: <CA+55aFz89oqKmvaA-8OJK2=8d9sgjPYdgZznMGv4Kmbd5E=BNw@mail.gmail.com>
+References: <52933DFD.8060206@babioch.de>
+	<1385419430-4817-1-git-send-email-malattia@linux.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMipE-fa=fOf+zx5-Ygjiobc-grjAw3GesVKx7Enhq6D8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, adurbin@chromium.org, Duncan Laurie <dlaurie@chromium.org>, Olof Johansson <olofj@chromium.org>, Martin Nordholts <enselic@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ve0-f170.google.com ([209.85.128.170]:49642 "EHLO
+	mail-ve0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752092Ab3KZEQE (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 25 Nov 2013 23:16:04 -0500
+In-Reply-To: <1385419430-4817-1-git-send-email-malattia@linux.it>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Mattia Dongili <malattia@linux.it>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, stable <stable@vger.kernel.org>
 
-Hi Olof,
+On Mon, Nov 25, 2013 at 2:43 PM, Mattia Dongili <malattia@linux.it> wrote:
+> Follow-up to 294d31e8227c9892a89d6b3e58d17886b79ea4e6: avoid messing up
+> the state on resume.
 
+Tested fine here too, so I applied it directly to my tree since I have
+the hardware..
 
-On Mon, Nov 25, 2013 at 1:13 PM, Olof Johansson <olof@lixom.net> wrote:
-> I've applied patch 1-3. Since the naming seems to still be up in the
-> air on the i2c side, I can't apply 4-6 yet.
->
-> I also switched the subject to platform/chrome: ... since that's what
-> I've picked to use on the other patches in the same directory.
-
-
-Sounds good to me. Thanks for applying the patches.
-
--- 
-Benson Leung
-Software Engineer, Chrom* OS
-bleung@chromium.org
+              Linus
