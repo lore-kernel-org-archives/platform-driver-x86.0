@@ -1,40 +1,58 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] dell-laptop: Add back rfkill code
-Date: Mon, 2 Dec 2013 14:57:07 +0000
-Message-ID: <20131202145707.GA9914@srcf.ucam.org>
-References: <20131202121104.GA5687@redhat.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: PATCH 23/39] platform: x86: remove DEFINE_PCI_DEVICE_TABLE macro
+Date: Tue, 03 Dec 2013 08:21:55 +0900
+Message-ID: <002c01ceefb5$4a627a90$df276fb0$%han@samsung.com>
+References: <001501ceefb1$69c96820$3d5c3860$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:39368 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752098Ab3LBO5M (ORCPT
+Received: from mailout2.samsung.com ([203.254.224.25]:30058 "EHLO
+	mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751530Ab3LBXV6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Dec 2013 09:57:12 -0500
-Content-Disposition: inline
-In-Reply-To: <20131202121104.GA5687@redhat.com>
+	Mon, 2 Dec 2013 18:21:58 -0500
+In-reply-to: <001501ceefb1$69c96820$3d5c3860$%han@samsung.com>
+Content-language: ko
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stanislaw Gruszka <sgruszka@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>, 'Matthew Garrett' <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 02, 2013 at 01:11:05PM +0100, Stanislaw Gruszka wrote:
-> This is basically a revert of:
-> 
-> commit a6c2390cd6d2083d27a2359658e08f2d3df375ac
-> Author: Matthew Garrett <mjg@redhat.com>
-> Date:   Fri Jun 1 12:46:56 2012 -0400
-> 
->     dell-laptop: Remove rfkill code
-> 
-> Except that patch add whilelist of Dell systems where dell-laptop
-> specific RFKILL code is needed. For now, patch only add "Dell Latitude
-> 6430U" laptop to whitelist, in the future other systems probably
-> will be added.
+Don't use DEFINE_PCI_DEVICE_TABLE macro, because this macro
+is not preferred.
 
-It's already added back to 3.13, along with a whitelist entry for all 
-latitudes. I'm not going to add whitelisting for specific modules, and 
-I'm not enthusiastic about pushing to stable.
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+---
+ drivers/platform/x86/intel_ips.c     |    2 +-
+ drivers/platform/x86/intel_scu_ipc.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 18dcb58..a0d1f57 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1478,7 +1478,7 @@ ips_link_to_i915_driver(void)
+ }
+ EXPORT_SYMBOL_GPL(ips_link_to_i915_driver);
+ 
+-static DEFINE_PCI_DEVICE_TABLE(ips_id_table) = {
++static const struct pci_device_id ips_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+ 		     PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
+ 	{ 0, }
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 60ea476..6a39f03 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -649,7 +649,7 @@ static void ipc_remove(struct pci_dev *pdev)
+ 	intel_scu_devices_destroy();
+ }
+ 
+-static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
++static const struct pci_device_id pci_ids[] = {
+ 	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
+ 	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
+ 	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.10.4
