@@ -1,54 +1,22 @@
-From: Loan Services <info008@company313.onmicrosoft.com>
-Subject: LOAN FOR OFFER APPLY NOW
-Date: Sun, 1 Dec 2013 02:39:28 +0530
-Message-ID: <a9ff493c-ddbf-4e93-9a50-e19d1c9c2986@HKXPR06MB168.apcprd06.prod.outlook.com>
-Reply-To: <loansforoffer101@365trade.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+From: "Full Name" <5znllggplb@myway.com>
+Subject: Diploma?
+Date: Mon, 02 Dec 2013 06:34:22 -0500
+Message-ID: <20131202063422.6916@web002.roc2.bluetie.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from emea01-db3-ndr.ptr.protection.outlook.com ([157.56.120.98]:2874
-	"EHLO emea01-db3-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751196Ab3K3VJm convert rfc822-to-8bit (ORCPT
+Received: from outbound001.roc2.bluetie.com ([208.89.132.141]:56060 "EHLO
+	outbound001.roc2.bluetie.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753257Ab3LBLnp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 30 Nov 2013 16:09:42 -0500
-Content-Description: Mail message body
+	Mon, 2 Dec 2013 06:43:45 -0500
+Received: from web002.roc2.bluetie.com (localhost.localdomain [127.0.0.1])
+	by web002.roc2.bluetie.com (Postfix) with ESMTP id 2C7963F0158
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Dec 2013 06:35:37 -0500 (EST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <info008@company313.onmicrosoft.com>
+To: 5znllggplb@myway.com
 
-HEAD OFFICE: Plot 45 VASANT VIHAR NEAR PRIYA CLIMA NEW DELHI INDIA 110012
-PHONE: +918585918526
-Fax Number 01134917905376
-EMAIL:  loansforoffer101@365trade.net
+Diploma?
 
-
-LOAN SERVICES INVESTMENT COMPANY
-
-Our Ref: BL678/12/05
-
-Your Ref: LOAN
-
-
-We give out loans ranging from Home loans Auto Loans Car loans Mortgage loans
-Business Loans
-International Loans Personal Loans.
-
-I give out loans at 2% interest rate. The loan is opened to all no matter
-the
-Nationality. You can reach me via my email address for that special
-loan to get you started financial and help you get out of your financial
-doldrum.
-
-Full Name................
-Country...................
-Amount.....................
-Phone number........
-Loan Duration.........
-SEX.......................
-
-Thanks,
-DR. J P MORGANS
-CONTACT US TODAY AT
-EMAIL:  loansforoffer101@365trade.net
+http://tiny.cc/5znllggplb
