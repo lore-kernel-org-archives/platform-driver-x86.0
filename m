@@ -1,148 +1,75 @@
-From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH 1/2] ipc: simplify platform data approach
-Date: Mon,  2 Dec 2013 16:20:00 -0800
-Message-ID: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH] dell-wmi: Add quirk for Dell Inspiron 3138
+Date: Tue,  3 Dec 2013 14:50:07 +0800
+Message-ID: <1386053407-7972-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:4610 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751576Ab3LCAPa (ORCPT
+Received: from mail-pd0-f172.google.com ([209.85.192.172]:49624 "EHLO
+	mail-pd0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751938Ab3LCGuN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Dec 2013 19:15:30 -0500
+	Tue, 3 Dec 2013 01:50:13 -0500
+Received: by mail-pd0-f172.google.com with SMTP id g10so19599553pdj.17
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Dec 2013 22:50:13 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-This patch removes the unnecessary enum for platform type to handle the
-array of pdatas. We can set pdata directly to pci_device_id struct
-instead.
+The acpi_video0 interface doesn't not work on Dell Inspiron 3138,
+so using the vendor brightness interface, instead of the acpi one.
 
-Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 84 +++++++++++++++++-------------------
- 1 file changed, 40 insertions(+), 44 deletions(-)
+ drivers/platform/x86/dell-laptop.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 60ea476a9130..259969d31055 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -62,13 +62,6 @@
- #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
- #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index c608b1d..9d2a4af 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -62,6 +62,7 @@ struct calling_interface_structure {
  
--enum {
--	SCU_IPC_LINCROFT,
--	SCU_IPC_PENWELL,
--	SCU_IPC_CLOVERVIEW,
--	SCU_IPC_TANGIER,
--};
--
- /* intel scu ipc driver data*/
- struct intel_scu_ipc_pdata_t {
- 	u32 ipc_base;
-@@ -78,35 +71,29 @@ struct intel_scu_ipc_pdata_t {
- 	u8 irq_mode;
+ struct quirk_entry {
+ 	u8 touchpad_led;
++	u8 vendor_backlight;
  };
  
--static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
--	[SCU_IPC_LINCROFT] = {
--		.ipc_base = 0xff11c000,
--		.i2c_base = 0xff12b000,
--		.ipc_len = 0x100,
--		.i2c_len = 0x10,
--		.irq_mode = 0,
--	},
--	[SCU_IPC_PENWELL] = {
--		.ipc_base = 0xff11c000,
--		.i2c_base = 0xff12b000,
--		.ipc_len = 0x100,
--		.i2c_len = 0x10,
--		.irq_mode = 1,
--	},
--	[SCU_IPC_CLOVERVIEW] = {
--		.ipc_base = 0xff11c000,
--		.i2c_base = 0xff12b000,
--		.ipc_len = 0x100,
--		.i2c_len = 0x10,
--		.irq_mode = 1,
--	},
--	[SCU_IPC_TANGIER] = {
--		.ipc_base = 0xff009000,
--		.i2c_base  = 0xff00d000,
--		.ipc_len  = 0x100,
--		.i2c_len = 0x10,
--		.irq_mode = 0,
--	},
-+static struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
-+	.ipc_base = 0xff11c000,
-+	.i2c_base = 0xff12b000,
-+	.ipc_len = 0x100,
-+	.i2c_len = 0x10,
-+	.irq_mode = 0,
-+};
-+
-+/* Penwell and Cloverview */
-+static struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
-+	.ipc_base = 0xff11c000,
-+	.i2c_base = 0xff12b000,
-+	.ipc_len = 0x100,
-+	.i2c_len = 0x10,
-+	.irq_mode = 1,
-+};
-+
-+static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
-+	.ipc_base = 0xff009000,
-+	.i2c_base  = 0xff00d000,
-+	.ipc_len  = 0x100,
-+	.i2c_len = 0x10,
-+	.irq_mode = 0,
+ static struct quirk_entry *quirks;
+@@ -70,6 +71,10 @@ static struct quirk_entry quirk_dell_vostro_v130 = {
+ 	.touchpad_led = 1,
  };
  
- static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id);
-@@ -583,15 +570,14 @@ static irqreturn_t ioc(int irq, void *dev_id)
-  */
- static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
++static struct quirk_entry quirk_dell_inspiron_3138 = {
++	.vendor_backlight = 1,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
  {
--	int err, pid;
-+	int err;
- 	struct intel_scu_ipc_pdata_t *pdata;
- 	resource_size_t pci_resource;
- 
- 	if (ipcdev.pdev)		/* We support only one SCU */
- 		return -EBUSY;
- 
--	pid = id->driver_data;
--	pdata = &intel_scu_ipc_pdata[pid];
-+	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
- 
- 	ipcdev.pdev = pci_dev_get(dev);
- 	ipcdev.irq_mode = pdata->irq_mode;
-@@ -650,11 +636,21 @@ static void ipc_remove(struct pci_dev *pdev)
- }
- 
- static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
--	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
--	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
--	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
--	{PCI_VDEVICE(INTEL, 0x11a0), SCU_IPC_TANGIER},
--	{ 0,}
+ 	quirks = dmi->driver_data;
+@@ -268,6 +273,15 @@ static struct dmi_system_id dell_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_dell_vostro_v130,
+ 	},
 +	{
-+		PCI_VDEVICE(INTEL, 0x082a),
-+		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
-+	}, {
-+		PCI_VDEVICE(INTEL, 0x080e),
-+		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
-+	}, {
-+		PCI_VDEVICE(INTEL, 0x08ea),
-+		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
-+	}, {
-+		PCI_VDEVICE(INTEL, 0x11a0),
-+		(kernel_ulong_t)&intel_scu_ipc_tangier_pdata,
-+	}, {
-+		0,
-+	}
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron 3138",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 3138"),
++		},
++		.driver_data = &quirk_dell_inspiron_3138,
++	},
+ 	{ }
  };
- MODULE_DEVICE_TABLE(pci, pci_ids);
  
+@@ -843,6 +857,9 @@ static int __init dell_init(void)
+ 				    &dell_debugfs_fops);
+ 
+ #ifdef CONFIG_ACPI
++	if (quirks && quirks->vendor_backlight)
++		acpi_video_dmi_promote_vendor();
++
+ 	/* In the event of an ACPI backlight being available, don't
+ 	 * register the platform controller.
+ 	 */
 -- 
-1.8.4.2
+1.8.3.2
