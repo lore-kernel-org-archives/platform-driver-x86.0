@@ -1,58 +1,64 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: PATCH 23/39] platform: x86: remove DEFINE_PCI_DEVICE_TABLE macro
-Date: Tue, 03 Dec 2013 08:21:55 +0900
-Message-ID: <002c01ceefb5$4a627a90$df276fb0$%han@samsung.com>
-References: <001501ceefb1$69c96820$3d5c3860$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: David Cohen <david.a.cohen@linux.intel.com>
+Subject: [PATCH 2/2] ipc: add intel-mid's pci id macros
+Date: Mon,  2 Dec 2013 16:20:01 -0800
+Message-ID: <1386030001-18348-2-git-send-email-david.a.cohen@linux.intel.com>
+References: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.samsung.com ([203.254.224.25]:30058 "EHLO
-	mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751530Ab3LBXV6 (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:4610 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751191Ab3LCAPa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 2 Dec 2013 18:21:58 -0500
-In-reply-to: <001501ceefb1$69c96820$3d5c3860$%han@samsung.com>
-Content-language: ko
+	Mon, 2 Dec 2013 19:15:30 -0500
+In-Reply-To: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>, 'Matthew Garrett' <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+To: matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
 
-Don't use DEFINE_PCI_DEVICE_TABLE macro, because this macro
-is not preferred.
+For readability matters, this patch replaces the hardcoded pci ids by
+human readable macros.
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
 ---
- drivers/platform/x86/intel_ips.c     |    2 +-
- drivers/platform/x86/intel_scu_ipc.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 18dcb58..a0d1f57 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -1478,7 +1478,7 @@ ips_link_to_i915_driver(void)
- }
- EXPORT_SYMBOL_GPL(ips_link_to_i915_driver);
- 
--static DEFINE_PCI_DEVICE_TABLE(ips_id_table) = {
-+static const struct pci_device_id ips_id_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
- 		     PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
- 	{ 0, }
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 60ea476..6a39f03 100644
+index 259969d31055..76ca094ed012 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -649,7 +649,7 @@ static void ipc_remove(struct pci_dev *pdev)
- 	intel_scu_devices_destroy();
- }
+@@ -62,6 +62,11 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
--static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
-+static const struct pci_device_id pci_ids[] = {
- 	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
- 	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
- 	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
++#define PCI_DEVICE_ID_LINCROFT		0x082a
++#define PCI_DEVICE_ID_PENWELL		0x080e
++#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
++#define PCI_DEVICE_ID_TANGIER		0x11a0
++
+ /* intel scu ipc driver data*/
+ struct intel_scu_ipc_pdata_t {
+ 	u32 ipc_base;
+@@ -637,16 +642,16 @@ static void ipc_remove(struct pci_dev *pdev)
+ 
+ static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
+ 	{
+-		PCI_VDEVICE(INTEL, 0x082a),
++		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_LINCROFT),
+ 		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
+ 	}, {
+-		PCI_VDEVICE(INTEL, 0x080e),
++		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_PENWELL),
+ 		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
+ 	}, {
+-		PCI_VDEVICE(INTEL, 0x08ea),
++		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_CLOVERVIEW),
+ 		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
+ 	}, {
+-		PCI_VDEVICE(INTEL, 0x11a0),
++		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_TANGIER),
+ 		(kernel_ulong_t)&intel_scu_ipc_tangier_pdata,
+ 	}, {
+ 		0,
 -- 
-1.7.10.4
+1.8.4.2
