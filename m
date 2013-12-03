@@ -1,42 +1,36 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] dell-wmi: Add quirk for Dell Inspiron 3138
-Date: Tue, 3 Dec 2013 07:40:50 +0000
-Message-ID: <20131203074050.GA323@srcf.ucam.org>
-References: <1386053407-7972-1-git-send-email-acelan.kao@canonical.com>
- <20131203070746.GA32248@srcf.ucam.org>
- <CAMz9Wg-hQx17hBN=RUrrrwR+LfSwgq=XTzLihK4k0KeEn=BN2Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:52814 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751145Ab3LCHkx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 3 Dec 2013 02:40:53 -0500
-Content-Disposition: inline
-In-Reply-To: <CAMz9Wg-hQx17hBN=RUrrrwR+LfSwgq=XTzLihK4k0KeEn=BN2Q@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+From: "David E. Box" <david.e.box@linux.intel.com>
+Subject: [PATCHv2 0/2] New driver for Intel IOSF MBI access
+Date: Tue,  3 Dec 2013 15:59:36 -0800
+Message-ID: <1386115178-7559-1-git-send-email-david.e.box@linux.intel.com>
+References: <1385100357-5459-1-git-send-email-david.e.box@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1385100357-5459-1-git-send-email-david.e.box@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: mjg59@srcf.ucam.org, rjw@rjwysocki.net
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 03, 2013 at 03:31:45PM +0800, AceLan Kao wrote:
-> Hi Matthew,
-> 
-> Sorry, I don't understand what you mean.
-> 
-> Let me explain it again.
-> The BIOS engineer refuse to remove the ACPI functions(_BCM) in BIOS code,
-> so we'll have acpi_video0 interface be created under
-> /sys/class/backlight/ and that interface doesn't work.
-> This patch is equal to add this kernel command line "acpi_backlight=vendor"
-> So that, there will be no acpi_video0 be create, and we will use
-> intel_backlight interface instead.
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-Right. This isn't a Dell-specific problem. Windows 8 doesn't use the 
-ACPI backlight interface, so any system that calls _OSI("Windows 2012") 
-should use the Intel interface instead. It needs to be fixed in general, 
-not in the platform drivers.
+David E. Box (2):
+  New Driver for IOSF-SB MBI access on Intel SOCs
+  ACPI/platform: Add ACPI ID for Intel MBI device
+
+v2: Made modular as reasons for built-in only no longer a concern.
+    Moved to x86 platform driver, as suggested by Matthew Garrett <mjg59@srcf.ucam.org>
+    Changed initialization sequence to do probe during init, thereby forcing an
+        exit if the device does not exist. Module exit does not otherwise occur
+        if module_platform_driver() is used and the device doesn't exist.
+
+ drivers/acpi/acpi_platform.c    |    3 +-
+ drivers/platform/x86/Kconfig    |    8 ++
+ drivers/platform/x86/Makefile   |    2 +
+ drivers/platform/x86/iosf_mbi.c |  188 +++++++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/iosf_mbi.h |   89 ++++++++++++++++++
+ 5 files changed, 289 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/x86/iosf_mbi.c
+ create mode 100644 drivers/platform/x86/iosf_mbi.h
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.7.10.4
+
