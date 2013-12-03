@@ -1,64 +1,148 @@
 From: David Cohen <david.a.cohen@linux.intel.com>
-Subject: [PATCH 2/2] ipc: add intel-mid's pci id macros
-Date: Mon,  2 Dec 2013 16:20:01 -0800
-Message-ID: <1386030001-18348-2-git-send-email-david.a.cohen@linux.intel.com>
-References: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
+Subject: [PATCH 1/2] ipc: simplify platform data approach
+Date: Mon,  2 Dec 2013 16:20:00 -0800
+Message-ID: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
 Received: from mga09.intel.com ([134.134.136.24]:4610 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751191Ab3LCAPa (ORCPT
+	id S1751576Ab3LCAPa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Mon, 2 Dec 2013 19:15:30 -0500
-In-Reply-To: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: matthew.garrett@nebula.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Cohen <david.a.cohen@linux.intel.com>
 
-For readability matters, this patch replaces the hardcoded pci ids by
-human readable macros.
+This patch removes the unnecessary enum for platform type to handle the
+array of pdatas. We can set pdata directly to pci_device_id struct
+instead.
 
 Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 84 +++++++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 259969d31055..76ca094ed012 100644
+index 60ea476a9130..259969d31055 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -62,6 +62,11 @@
+@@ -62,13 +62,6 @@
  #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
  #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
-+#define PCI_DEVICE_ID_LINCROFT		0x082a
-+#define PCI_DEVICE_ID_PENWELL		0x080e
-+#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
-+#define PCI_DEVICE_ID_TANGIER		0x11a0
-+
+-enum {
+-	SCU_IPC_LINCROFT,
+-	SCU_IPC_PENWELL,
+-	SCU_IPC_CLOVERVIEW,
+-	SCU_IPC_TANGIER,
+-};
+-
  /* intel scu ipc driver data*/
  struct intel_scu_ipc_pdata_t {
  	u32 ipc_base;
-@@ -637,16 +642,16 @@ static void ipc_remove(struct pci_dev *pdev)
+@@ -78,35 +71,29 @@ struct intel_scu_ipc_pdata_t {
+ 	u8 irq_mode;
+ };
+ 
+-static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
+-	[SCU_IPC_LINCROFT] = {
+-		.ipc_base = 0xff11c000,
+-		.i2c_base = 0xff12b000,
+-		.ipc_len = 0x100,
+-		.i2c_len = 0x10,
+-		.irq_mode = 0,
+-	},
+-	[SCU_IPC_PENWELL] = {
+-		.ipc_base = 0xff11c000,
+-		.i2c_base = 0xff12b000,
+-		.ipc_len = 0x100,
+-		.i2c_len = 0x10,
+-		.irq_mode = 1,
+-	},
+-	[SCU_IPC_CLOVERVIEW] = {
+-		.ipc_base = 0xff11c000,
+-		.i2c_base = 0xff12b000,
+-		.ipc_len = 0x100,
+-		.i2c_len = 0x10,
+-		.irq_mode = 1,
+-	},
+-	[SCU_IPC_TANGIER] = {
+-		.ipc_base = 0xff009000,
+-		.i2c_base  = 0xff00d000,
+-		.ipc_len  = 0x100,
+-		.i2c_len = 0x10,
+-		.irq_mode = 0,
+-	},
++static struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
++	.ipc_base = 0xff11c000,
++	.i2c_base = 0xff12b000,
++	.ipc_len = 0x100,
++	.i2c_len = 0x10,
++	.irq_mode = 0,
++};
++
++/* Penwell and Cloverview */
++static struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
++	.ipc_base = 0xff11c000,
++	.i2c_base = 0xff12b000,
++	.ipc_len = 0x100,
++	.i2c_len = 0x10,
++	.irq_mode = 1,
++};
++
++static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
++	.ipc_base = 0xff009000,
++	.i2c_base  = 0xff00d000,
++	.ipc_len  = 0x100,
++	.i2c_len = 0x10,
++	.irq_mode = 0,
+ };
+ 
+ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id);
+@@ -583,15 +570,14 @@ static irqreturn_t ioc(int irq, void *dev_id)
+  */
+ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ {
+-	int err, pid;
++	int err;
+ 	struct intel_scu_ipc_pdata_t *pdata;
+ 	resource_size_t pci_resource;
+ 
+ 	if (ipcdev.pdev)		/* We support only one SCU */
+ 		return -EBUSY;
+ 
+-	pid = id->driver_data;
+-	pdata = &intel_scu_ipc_pdata[pid];
++	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+ 
+ 	ipcdev.pdev = pci_dev_get(dev);
+ 	ipcdev.irq_mode = pdata->irq_mode;
+@@ -650,11 +636,21 @@ static void ipc_remove(struct pci_dev *pdev)
+ }
  
  static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
- 	{
--		PCI_VDEVICE(INTEL, 0x082a),
-+		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_LINCROFT),
- 		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
- 	}, {
--		PCI_VDEVICE(INTEL, 0x080e),
-+		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_PENWELL),
- 		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
- 	}, {
--		PCI_VDEVICE(INTEL, 0x08ea),
-+		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_CLOVERVIEW),
- 		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
- 	}, {
--		PCI_VDEVICE(INTEL, 0x11a0),
-+		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_TANGIER),
- 		(kernel_ulong_t)&intel_scu_ipc_tangier_pdata,
- 	}, {
- 		0,
+-	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
+-	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
+-	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
+-	{PCI_VDEVICE(INTEL, 0x11a0), SCU_IPC_TANGIER},
+-	{ 0,}
++	{
++		PCI_VDEVICE(INTEL, 0x082a),
++		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
++	}, {
++		PCI_VDEVICE(INTEL, 0x080e),
++		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
++	}, {
++		PCI_VDEVICE(INTEL, 0x08ea),
++		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
++	}, {
++		PCI_VDEVICE(INTEL, 0x11a0),
++		(kernel_ulong_t)&intel_scu_ipc_tangier_pdata,
++	}, {
++		0,
++	}
+ };
+ MODULE_DEVICE_TABLE(pci, pci_ids);
+ 
 -- 
 1.8.4.2
