@@ -1,53 +1,72 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] dell-wmi: Add quirk for Dell Inspiron 3138
-Date: Wed, 4 Dec 2013 11:15:00 +0000
-Message-ID: <20131204111500.GA1613@srcf.ucam.org>
-References: <1386053407-7972-1-git-send-email-acelan.kao@canonical.com>
- <20131203070746.GA32248@srcf.ucam.org>
- <CAMz9Wg-hQx17hBN=RUrrrwR+LfSwgq=XTzLihK4k0KeEn=BN2Q@mail.gmail.com>
- <20131203074050.GA323@srcf.ucam.org>
- <CAMz9Wg_CF1un4i_FKhGkJ4=adB0VxennFDy+zrrMD_8bOYGoXg@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCHv2 2/2] ACPI/platform: Add ACPI ID for Intel MBI device
+Date: Wed, 04 Dec 2013 22:34:45 +0100
+Message-ID: <16922953.M8X8XT9eUD@vostro.rjw.lan>
+References: <1385100357-5459-1-git-send-email-david.e.box@linux.intel.com> <20131204024452.GB8282@linux.intel.com> <20131204025407.GA26448@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:47423 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755557Ab3LDLPD (ORCPT
+Received: from v094114.home.net.pl ([79.96.170.134]:56890 "HELO
+	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1753214Ab3LDVVs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 Dec 2013 06:15:03 -0500
-Content-Disposition: inline
-In-Reply-To: <CAMz9Wg_CF1un4i_FKhGkJ4=adB0VxennFDy+zrrMD_8bOYGoXg@mail.gmail.com>
+	Wed, 4 Dec 2013 16:21:48 -0500
+In-Reply-To: <20131204025407.GA26448@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: AceLan Kao <acelan.kao@canonical.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "David E. Box" <david.e.box@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
 
-On Wed, Dec 04, 2013 at 04:14:15PM +0800, AceLan Kao wrote:
+On Wednesday, December 04, 2013 02:54:07 AM Matthew Garrett wrote:
+> On Tue, Dec 03, 2013 at 06:44:52PM -0800, David E. Box wrote:
+> > On Wed, Dec 04, 2013 at 02:21:30AM +0000, Matthew Garrett wrote:
+> > > Well sure, but why do you need to be a platform device at all? This 
+> > > functionality was intended for cases where we already have a driver for 
+> > > the part that enumerated it via some other mechanism. If the driver's 
+> > > only intended for ACPI systems then why not just be an ACPI device?
 
-> It does what you say above.
-> But, the variable use_native_backlight is false by default, and user
-> has to enable this by adding one kernel parameter
-> video.use_native_backlight=1
-> I don't see this do any difference with acpi_backlight=vendor as user
-> has to add the kernel command line explicitly to get rid of the broken
-> acpi_video0.
+Because struct acpi_device things are firmawre objects that shouldn't be
+treated as devices.
 
-Right. The default needs to be changed.
+> > 
+> > It was my understanding that with ACPI 5.0 it was becoming more common to use
+> > ACPI ID's exclusively for device enumeration. I originally wrote this as an
+> > acpi_bus driver but Rafeal advised me that the model is being phased out and
+> > suggeted the platform model instead.
+> 
+> If you're not adding ACPI support to an existing platform driver, you 
+> shouldn't be adding entries to acpi_platform.c. I'm not actually happy 
+> that I merged the ideapad-laptop patch that did the same thing - I'm 
+> inclined to revert it, because this really is an ugly way to do things.
+> 
+> Rafael, why did we convert the AC driver this way? It means we have to 
+> keep track of ACPI IDs in multiple places,
 
-> We always encourage OEM BIOS to follow the ACPI spec., if not, we'll
-> ask them to remove _BCL, _BCM, _BQC functions.
-> And Dell Inspiron 3138 is the first one that they refuse our request,
-> so I would like to fix it in the kernel.
+Yes, in two places to be precise.
 
-The best thing to do is to send a patch that flips the default on 
-Windows 8 systems and get it pushed through the drm-next tree in order 
-to work out the remaining bugs in the intel backlight driver.
+> which is worth it when it avoids having to write a pile of new code (such as
+> the sdhci case) but doesn't seem to provide benefits otherwise.
 
-> So, I think we probably need some quirks to disable acpi_video0 by the
-> mean while before use_native_backlight is default true.
+Well, I thought we discussed that, but perhaps we didn't.
 
-Sorry, I'm not adding any machine-specific quirks to fix generic 
-problems.
+There's some confusion about what a struct acpi_device is, because sometimes it
+is treated as a "companion" of a physical device and sometimes it is treated as
+a physical device itself.  This leads to incorrect code as well sometimes,
+because ACPI drivers may attempt to bind to things that already have physical
+comapnions, for example.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+The approach to this I thought we could use, and that we've been using to some
+extent already, is to create "physical" companions for all struct acpi_device
+objects.  In this particular this "physical companion" is a platform device, so
+it needs to be added to the list in acpi_platform.c.  [Otherwise the ACPI PNP
+core would create a PNP device for it (unless an ACPI driver is bound to that
+struct acpi_device before, but that makes the correctness of the thing depend
+on the ordering of driver probing, which is not awesome).]
+
+In this approach device drivers bind to the "physical" devices (platform devices
+etc.) instead of struct acpi_device themselves and at least everything is
+consistent.
+
+Thanks,
+Rafael
