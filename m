@@ -1,44 +1,34 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
-Date: Thu,  5 Dec 2013 14:00:28 +0100
-Message-ID: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] toshiba_acpi: Add hotkeys support for Toshiba
+ Satellite U940
+Date: Thu, 5 Dec 2013 15:21:03 +0000
+Message-ID: <20131205152103.GA6345@srcf.ucam.org>
+References: <1385161342-8262-1-git-send-email-joseignacio.naranjo@gmail.com>
+ <CAO0y3r5tr2mN5D12kzGnZ-Mr_YSuCc9SG2AP8K0ZKhNAK=dJZw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.gmx.net ([212.227.15.18]:58204 "EHLO mout.gmx.net"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932215Ab3LENAm (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:41682 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752250Ab3LEPVH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 5 Dec 2013 08:00:42 -0500
-Received: from ultralex.lan ([93.218.116.213]) by mail.gmx.com (mrgmx103) with
- ESMTPSA (Nemesis) id 0M09Ee-1VaJwi1jH2-00uL6j for
- <platform-driver-x86@vger.kernel.org>; Thu, 05 Dec 2013 14:00:40 +0100
+	Thu, 5 Dec 2013 10:21:07 -0500
+Content-Disposition: inline
+In-Reply-To: <CAO0y3r5tr2mN5D12kzGnZ-Mr_YSuCc9SG2AP8K0ZKhNAK=dJZw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@suse.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
-Cc: Oleksij Rempel <linux@rempel-privat.de>
+To: Jose Ignacio Naranjo <joseignacio.naranjo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
----
- drivers/platform/x86/acer-wmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Thu, Dec 05, 2013 at 07:55:17AM +0100, Jose Ignacio Naranjo wrote:
+> Hello Matthew and list,
+> 
+> I didn't receive any feedback about this patch. Is there any problem?
+> I had to do it because I was lacking of a few scancodes and I couldn't
+> remap all the keys using udev
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index c9076bd..d5ca1648 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -572,6 +572,14 @@ static const struct dmi_system_id video_vendor_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
- 		},
- 	},
-+	{
-+		.callback = video_set_backlight_video_vendor,
-+		.ident = "Acer Aspire E1-572",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire E1-572"),
-+		},
-+	},
- 	{}
- };
- 
+I just haven't had a chance to review it yet. I'll take a look in the 
+next couple of days. Thanks for your patience!
+
 -- 
-1.8.3.2
+Matthew Garrett | mjg59@srcf.ucam.org
