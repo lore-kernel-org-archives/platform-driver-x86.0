@@ -1,61 +1,84 @@
-From: Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 2/2] drivers: platform: Include appropriate header file
- in mxm-wmi.c
-Date: Fri, 13 Dec 2013 00:59:32 -0800
-Message-ID: <20131213085932.GG4386@leaf>
-References: <89355c5023baba63de7d1313b3f52818b0fb9202.1386919194.git.rashika.kheria@gmail.com>
- <6614158e1dfcda1c77d22a2dd944a2e341346221.1386919194.git.rashika.kheria@gmail.com>
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>
+Subject: Re: [PATCH 1/2] drivers: platform: Mark functions as static in hp_accel.c
+Date: Fri, 13 Dec 2013 23:34:57 +0100
+Message-ID: <52AB8B91.1020608@tremplin-utc.net>
+References: <89355c5023baba63de7d1313b3f52818b0fb9202.1386919194.git.rashika.kheria@gmail.com> <20131213085839.GF4386@leaf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39772 "EHLO
-	relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751636Ab3LMI7i convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 13 Dec 2013 03:59:38 -0500
-Content-Disposition: inline
-In-Reply-To: <6614158e1dfcda1c77d22a2dd944a2e341346221.1386919194.git.rashika.kheria@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rashika Kheria <rashika.kheria@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20131213085839.GF4386@leaf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rashika Kheria <rashika.kheria@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Josh Triplett <josh@joshtriplett.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Dec 13, 2013 at 12:59:52PM +0530, Rashika Kheria wrote:
-> This patch includes appropriate header file linux/mxm-wmi.h in
-> x86/mxm-wmi.c because functions mxm_wmi_call_mxds(), mxm_wmi_call_mxm=
-x()
-> and mxm_wmi_supported() have their prototype declaration in
-> linux/mxm-wmi.h.
->=20
-> Thus, it also eliminates the following warnings in x86/mxm-wmi.c:
-> drivers/platform/x86/mxm-wmi.c:43:5: warning: no previous prototype f=
-or =E2=80=98mxm_wmi_call_mxds=E2=80=99 [-Wmissing-prototypes]
-> drivers/platform/x86/mxm-wmi.c:68:5: warning: no previous prototype f=
-or =E2=80=98mxm_wmi_call_mxmx=E2=80=99 [-Wmissing-prototypes]
-> drivers/platform/x86/mxm-wmi.c:93:6: warning: no previous prototype f=
-or =E2=80=98mxm_wmi_supported=E2=80=99 [-Wmissing-prototypes]
->=20
-> Signed-off-by: Rashika Kheria <rashika.kheria@gmail.com>
+On 13-12-13 09:58, Josh Triplett wrote:
+> On Fri, Dec 13, 2013 at 12:56:34PM +0530, Rashika Kheria wrote:
+>> This patch marks the functions lis3lv02d_acpi_init(),
+>> lis3lv02d_acpi_read() and lis3lv02d_acpi_write() as static in
+>> x86/hp_accel.c because they are not used outside this file.
+>>
+>> Thus, it also eliminates the following warnings in x86/hp_accel.c:
+>> drivers/platform/x86/hp_accel.c:91:5: warning: no previous prototype=
+ for =E2=80=98lis3lv02d_acpi_init=E2=80=99 [-Wmissing-prototypes]
+>> drivers/platform/x86/hp_accel.c:109:5: warning: no previous prototyp=
+e for =E2=80=98lis3lv02d_acpi_read=E2=80=99 [-Wmissing-prototypes]
+>> drivers/platform/x86/hp_accel.c:132:5: warning: no previous prototyp=
+e for =E2=80=98lis3lv02d_acpi_write=E2=80=99 [-Wmissing-prototypes]
+>>
+>> Signed-off-by: Rashika Kheria <rashika.kheria@gmail.com>
+>
+> Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+Yes, looks fine.
 
-Reviewed-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: =C3=89ric Piel <eric.piel@tremplin-utc.net>
 
->  drivers/platform/x86/mxm-wmi.c |    1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/platform/x86/mxm-wmi.c b/drivers/platform/x86/mx=
-m-wmi.c
-> index 0aea63b..7503d2b 100644
-> --- a/drivers/platform/x86/mxm-wmi.c
-> +++ b/drivers/platform/x86/mxm-wmi.c
-> @@ -20,6 +20,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
-> +#include <linux/mxm-wmi.h>
->  #include <acpi/acpi_bus.h>
->  #include <acpi/acpi_drivers.h>
-> =20
-> --=20
-> 1.7.9.5
->=20
+Matthew, could you pick this patch up in the platform-driver-x86 branch=
+?
+
+Cheers,
+=C3=89ric
+>
+>>   drivers/platform/x86/hp_accel.c |    6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/=
+hp_accel.c
+>> index a8e43cf..01b619e 100644
+>> --- a/drivers/platform/x86/hp_accel.c
+>> +++ b/drivers/platform/x86/hp_accel.c
+>> @@ -88,7 +88,7 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+>>    *
+>>    * Returns 0 on success.
+>>    */
+>> -int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+>> +static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+>>   {
+>>   	struct acpi_device *dev =3D lis3->bus_priv;
+>>   	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
+>> @@ -106,7 +106,7 @@ int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+>>    *
+>>    * Returns 0 on success.
+>>    */
+>> -int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int reg, u8 *ret)
+>> +static int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int reg, u8 =
+*ret)
+>>   {
+>>   	struct acpi_device *dev =3D lis3->bus_priv;
+>>   	union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+>> @@ -129,7 +129,7 @@ int lis3lv02d_acpi_read(struct lis3lv02d *lis3, =
+int reg, u8 *ret)
+>>    *
+>>    * Returns 0 on success.
+>>    */
+>> -int lis3lv02d_acpi_write(struct lis3lv02d *lis3, int reg, u8 val)
+>> +static int lis3lv02d_acpi_write(struct lis3lv02d *lis3, int reg, u8=
+ val)
+>>   {
+>>   	struct acpi_device *dev =3D lis3->bus_priv;
+>>   	unsigned long long ret; /* Not used when writting */
+>> --
+>> 1.7.9.5
+>>
