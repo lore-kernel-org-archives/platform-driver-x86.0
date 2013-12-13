@@ -1,41 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: add GPIO support for SMSC SCH311x
-Date: Thu, 12 Dec 2013 20:50:41 +0100
-Message-ID: <CACRpkdYU_AV=E67cGcqqwiq4byOeJx+J+XDST3Mo_s5xmfDTnQ@mail.gmail.com>
-References: <CACRpkdZxjKamJvOMqdgN5zG5DrZvDNTCaVSiyaHSawkLxvUrFA@mail.gmail.com>
-	<1395016599.620093.1386734749325.JavaMail.root@mail>
+From: Rashika Kheria <rashika.kheria@gmail.com>
+Subject: [PATCH 1/2] drivers: platform: Mark functions as static in hp_accel.c
+Date: Fri, 13 Dec 2013 12:56:34 +0530
+Message-ID: <89355c5023baba63de7d1313b3f52818b0fb9202.1386919194.git.rashika.kheria@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1395016599.620093.1386734749325.JavaMail.root@mail>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, David Cohen <david.a.cohen@intel.com>, Simon Guinot <simon.guinot@sequanux.org>, Bruno Randolf <br1@einfach.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Seth Heasley <seth.heasley@intel.com>, Darren Hart <dvhart@linux.intel.com>, kernel <kernel@savoirfairelinux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Eric Piel <eric.piel@tremplin-utc.net>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, josh@joshtriplett.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 11, 2013 at 5:05 AM, Vivien Didelot
-<vivien.didelot@savoirfairelinux.com> wrote:
->[Me]
->> drivers/gpio/gpio-ts5500.c - aha, created from
->>   arch/x86/platform/ts5500/ts5500.c, a "board file".
->
-> Because of the lack of mechanism such as DMI, there's no safe way to verify the
-> machine at the GPIO driver level. However, the board code (which registers the
-> platform device) does a safe check by looking for some magic in the RAM.
->
-> Would it be safer if we make GPIO_TS5500 depends on TS5500?
+This patch marks the functions lis3lv02d_acpi_init(),
+lis3lv02d_acpi_read() and lis3lv02d_acpi_write() as static in
+x86/hp_accel.c because they are not used outside this file.
 
-I don't know actually. How does it work with these x86 things?
-Is it so that the system comes up and then you modprobe this driver?
+Thus, it also eliminates the following warnings in x86/hp_accel.c:
+drivers/platform/x86/hp_accel.c:91:5: warning: no previous prototype fo=
+r =E2=80=98lis3lv02d_acpi_init=E2=80=99 [-Wmissing-prototypes]
+drivers/platform/x86/hp_accel.c:109:5: warning: no previous prototype f=
+or =E2=80=98lis3lv02d_acpi_read=E2=80=99 [-Wmissing-prototypes]
+drivers/platform/x86/hp_accel.c:132:5: warning: no previous prototype f=
+or =E2=80=98lis3lv02d_acpi_write=E2=80=99 [-Wmissing-prototypes]
 
-In that case, do you bring up a fully generic kernel or do you have
-to have it compiled with CONFIG_TS5500 set to 'y' and is that
-done of a say, typical distro kernel?
+Signed-off-by: Rashika Kheria <rashika.kheria@gmail.com>
+---
+ drivers/platform/x86/hp_accel.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If we don't know if it will be modprobed or not on a certain system
-we should keep it as is, but of the distro kernels all set
-CONFIG_TS5500 to 'n' then we should add a dependency
-like that.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_=
+accel.c
+index a8e43cf..01b619e 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -88,7 +88,7 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+  *
+  * Returns 0 on success.
+  */
+-int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
++static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+ {
+ 	struct acpi_device *dev =3D lis3->bus_priv;
+ 	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
+@@ -106,7 +106,7 @@ int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+  *
+  * Returns 0 on success.
+  */
+-int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int reg, u8 *ret)
++static int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int reg, u8 *re=
+t)
+ {
+ 	struct acpi_device *dev =3D lis3->bus_priv;
+ 	union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+@@ -129,7 +129,7 @@ int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int=
+ reg, u8 *ret)
+  *
+  * Returns 0 on success.
+  */
+-int lis3lv02d_acpi_write(struct lis3lv02d *lis3, int reg, u8 val)
++static int lis3lv02d_acpi_write(struct lis3lv02d *lis3, int reg, u8 va=
+l)
+ {
+ 	struct acpi_device *dev =3D lis3->bus_priv;
+ 	unsigned long long ret; /* Not used when writting */
+--=20
+1.7.9.5
