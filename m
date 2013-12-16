@@ -1,67 +1,58 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [lm-sensors] [PATCH 00/12] i8k patch series
-Date: Sat, 14 Dec 2013 11:50:13 -0800
-Message-ID: <52ACB675.6060304@roeck-us.net>
-References: <1387042221-3671-1-git-send-email-linux@roeck-us.net>	<201312141945.20348.arnd@arndb.de> <20131214200309.3a2007f4@endymion.delvare>
+From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Subject: Re: [PATCH] gpio: add GPIO support for SMSC SCH311x
+Date: Sun, 15 Dec 2013 21:46:04 -0500 (EST)
+Message-ID: <1962407133.2003.1387161964453.JavaMail.root@mail>
+References: <CACRpkdYU_AV=E67cGcqqwiq4byOeJx+J+XDST3Mo_s5xmfDTnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.active-venture.com ([67.228.131.205]:61217 "EHLO
-	mail.active-venture.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753954Ab3LNTuQ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Dec 2013 14:50:16 -0500
-In-Reply-To: <20131214200309.3a2007f4@endymion.delvare>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <khali@linux-fr.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYU_AV=E67cGcqqwiq4byOeJx+J+XDST3Mo_s5xmfDTnQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, David Cohen <david.a.cohen@intel.com>, Simon Guinot <simon.guinot@sequanux.org>, Bruno Randolf <br1@einfach.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Seth Heasley <seth.heasley@intel.com>, Darren Hart <dvhart@linux.intel.com>, kernel <kernel@savoirfairelinux.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/14/2013 11:03 AM, Jean Delvare wrote:
-> On Sat, 14 Dec 2013 19:45:19 +0100, Arnd Bergmann wrote:
->> On Saturday 14 December 2013, Guenter Roeck wrote:
->>> Clean up and simplify the driver, add support for additional temperature
->>> sensors, fix a problem seen with multi-core CPU, and add support
->>> for additional systems.
->>>
->>> ----------------------------------------------------------------
->>> Guenter Roeck (14):
->>>        i8k: Convert to use pr_ functions instead of printk
->>>        i8k: Fix various checkpatch warnings and errors
->>>        i8k: Convert to use to hwmon_device_register_with_groups hwmon API
->>>        i8k: Support additional temperature sensors
->>>        MAINTAINERS: Add myself as i8k maintainer
->>>        i8k: Remove obsolete link to out-of-tree driver
->>>        i8k: Drop driver version number and info message at startup
->>>        i8k: Force SMM to run on CPU 0
->>>        i8k: Add copyright
->>>        i8k: Add support for Dell Studio laptops
->>>        i8k: Add support for Dell XPS M140
->>>        i8k: Use driver_data field of dmi_system_id to override fan multiplier
->>>        i8k: Stop reading SMM BIOS version during driver probe
->>>        i8k: Implement hwmon based fan speed control
->>>
->>>   MAINTAINERS        |    2 +-
->>>   drivers/char/i8k.c |  358 +++++++++++++++++++++++++++++-----------------------
->>>   2 files changed, 201 insertions(+), 159 deletions(-)
->>>
->>
->> All changes in this patch set look good to me.
->>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>
->> I wonder if it makes sense to move the driver to drivers/platform/x86/, which
->> has a bunch of similar ones already.
->
-> That would be a good idea IMHO.
->
+Hi Linus,
 
-I agree; drivers/char doesn't seem to be a good location. Guess it is mostly historic
-that it is there in the first place. Maybe it can even use the API provided by the
-dell-laptop driver if I can ever figure out how that works.
+You wrote:
+> >> drivers/gpio/gpio-ts5500.c - aha, created from
+> >>   arch/x86/platform/ts5500/ts5500.c, a "board file".
+> >
+> > Because of the lack of mechanism such as DMI, there's no safe way
+> > to verify the
+> > machine at the GPIO driver level. However, the board code (which
+> > registers the
+> > platform device) does a safe check by looking for some magic in the
+> > RAM.
+> >
+> > Would it be safer if we make GPIO_TS5500 depends on TS5500?
+> 
+> I don't know actually. How does it work with these x86 things?
+> Is it so that the system comes up and then you modprobe this driver?
 
-Copying the platform-x86 mailing list and Matthew for additional input.
+With TS5500 selected, the board comes up, get probed reading the RAM
+(from the board code), then registers this GPIO platform device.
 
-Thanks,
-Guenter
+> In that case, do you bring up a fully generic kernel or do you have
+> to have it compiled with CONFIG_TS5500 set to 'y' and is that
+> done of a say, typical distro kernel?
+
+GPIO_TS5500 cannot probe the DIO blocks by itself. It needs a board
+code to fill and register the corresponding platform device structures.
+
+So a generic x86 kernel will work on the board, but we need TS5500 set
+to 'y' in order to have the GPIOs.
+
+> If we don't know if it will be modprobed or not on a certain system
+> we should keep it as is, but of the distro kernels all set
+> CONFIG_TS5500 to 'n' then we should add a dependency
+> like that.
+
+As it is an embedded platform, I don't think CONFIG_TS5500 is enabled
+on distro kernels.
+
+I hope it's a bit clearer. Let me know what is your advice on this.
+
+Best,
+Vivien
