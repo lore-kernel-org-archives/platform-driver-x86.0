@@ -1,58 +1,86 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: Re: [PATCH] gpio: add GPIO support for SMSC SCH311x
-Date: Sun, 15 Dec 2013 21:46:04 -0500 (EST)
-Message-ID: <1962407133.2003.1387161964453.JavaMail.root@mail>
-References: <CACRpkdYU_AV=E67cGcqqwiq4byOeJx+J+XDST3Mo_s5xmfDTnQ@mail.gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [ibm-acpi-devel] [PATCH] video: backlight: Remove backlight
+ sysfs uevent
+Date: Sun, 15 Dec 2013 23:53:36 -0800
+Message-ID: <20131215235336.49d49a25.akpm@linux-foundation.org>
+References: <20131111235700.GA29987@july>
+	<002901cedf3c$a7e77a00$f7b66e00$%han@samsung.com>
+	<20131112005628.GA2914@khazad-dum.debian.net>
+	<1384990859.20536.4.camel@x230>
+	<20131121114332.GA23710@khazad-dum.debian.net>
+	<20131121143326.GA19773@srcf.ucam.org>
+	<20131122113601.GB27196@khazad-dum.debian.net>
+	<20131122171556.GA15680@srcf.ucam.org>
+	<20131124004015.GA19499@khazad-dum.debian.net>
+	<20131124010257.GA6376@srcf.ucam.org>
+	<20131124035311.GC19499@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYU_AV=E67cGcqqwiq4byOeJx+J+XDST3Mo_s5xmfDTnQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Wim Van Sebroeck <wim@iguana.be>, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, David Cohen <david.a.cohen@intel.com>, Simon Guinot <simon.guinot@sequanux.org>, Bruno Randolf <br1@einfach.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Seth Heasley <seth.heasley@intel.com>, Darren Hart <dvhart@linux.intel.com>, kernel <kernel@savoirfairelinux.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.linuxfoundation.org ([140.211.169.12]:39409 "EHLO
+	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751329Ab3LPHwC (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 16 Dec 2013 02:52:02 -0500
+In-Reply-To: <20131124035311.GC19499@khazad-dum.debian.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-fbdev@vger.kernel.org, 'Kyungmin Park' <kmpark@infradead.org>, kay@vrfy.org, Jingoo Han <jg1.han@samsung.com>, 'Henrique de Moraes Holschuh' <ibm-acpi@hmh.eng.br>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 'Richard Purdie' <rpurdie@rpsys.net>
 
-Hi Linus,
+On Sun, 24 Nov 2013 01:53:11 -0200 Henrique de Moraes Holschuh <hmh@hmh.eng.br> wrote:
 
-You wrote:
-> >> drivers/gpio/gpio-ts5500.c - aha, created from
-> >>   arch/x86/platform/ts5500/ts5500.c, a "board file".
-> >
-> > Because of the lack of mechanism such as DMI, there's no safe way
-> > to verify the
-> > machine at the GPIO driver level. However, the board code (which
-> > registers the
-> > platform device) does a safe check by looking for some magic in the
-> > RAM.
-> >
-> > Would it be safer if we make GPIO_TS5500 depends on TS5500?
+> On Sun, 24 Nov 2013, Matthew Garrett wrote:
+> > On Sat, Nov 23, 2013 at 10:40:15PM -0200, Henrique de Moraes Holschuh wrote:
+> > > On Fri, 22 Nov 2013, Matthew Garrett wrote:
+> > > > We have userspace that relies on uevents of type 
+> > > > BACKLIGHT_UPDATE_HOTKEY. I don't know that we have userspace that relies 
+> > > > on uevents of type BACKLIGHT_UPDATE_SYSFS.
+> > > 
+> > > Any OSD application would have to rely on both uevent types, or it is broken
+> > > (and to test that, just write a level to sysfs and watch the OSD app fail to
+> > > tell you about the backlight level change...)
+> > 
+> > Right, OSDs are supposed to respond to keypresses, not arbitrary changes 
+> > of backlight. If the user's just echoed 8 into brightness, they know 
+> > they set the brightness to 8 - they don't need an OSD to tell them that. 
 > 
-> I don't know actually. How does it work with these x86 things?
-> Is it so that the system comes up and then you modprobe this driver?
+> It is not just the user that sets the brightness.
+> 
+> Still, if you're sure that all userspace users react only to the hotkey type
+> of event, removing the sysfs one won't break anything any further.
+> 
+> But it will be *really* annoying the day we revisit this because someone
+> started abusing the hotkey uevent and we have to deploy a proper fix (rate
+> limiting or switching to a proper event report interface that doesn't use
+> uevents).
+> 
+> > BACKLIGHT_UPDATE_HOTKEY is when the firmware itself has changed the 
+> > brightness in response to a keypress, and so reporting the keypress 
+> > would result in additional backlight changes.
+> 
+> Yeah, I know that bug quite well, thinkpads were the first victims of
+> idiotic feedback event loops caused by braindead userspace.
 
-With TS5500 selected, the board comes up, get probed reading the RAM
-(from the board code), then registers this GPIO platform device.
+I'm not seeing a lot of consensus here and afaict the v2 patch:
 
-> In that case, do you bring up a fully generic kernel or do you have
-> to have it compiled with CONFIG_TS5500 set to 'y' and is that
-> done of a say, typical distro kernel?
+--- a/drivers/video/backlight/backlight.c~drivers-video-backlight-backlightc-remove-backlight-sysfs-uevent
++++ a/drivers/video/backlight/backlight.c
+@@ -175,8 +175,6 @@ static ssize_t brightness_store(struct d
+ 	}
+ 	mutex_unlock(&bd->ops_lock);
+ 
+-	backlight_generate_event(bd, BACKLIGHT_UPDATE_SYSFS);
+-
+ 	return rc;
+ }
+ static DEVICE_ATTR_RW(brightness);
 
-GPIO_TS5500 cannot probe the DIO blocks by itself. It needs a board
-code to fill and register the corresponding platform device structures.
+will still break userspace which relies on BACKLIGHT_UPDATE_SYSFS
+uevents.  I see no way we can guarantee that there is no such userspace
+so the patch is worrying.
 
-So a generic x86 kernel will work on the board, but we need TS5500 set
-to 'y' in order to have the GPIOs.
-
-> If we don't know if it will be modprobed or not on a certain system
-> we should keep it as is, but of the distro kernels all set
-> CONFIG_TS5500 to 'n' then we should add a dependency
-> like that.
-
-As it is an embedded platform, I don't think CONFIG_TS5500 is enabled
-on distro kernels.
-
-I hope it's a bit clearer. Let me know what is your advice on this.
-
-Best,
-Vivien
+Should we instead be looking for a way of avoiding this risk?  Say, add
+a new knob which people can set if they don't want to generate this
+event?  Ugly, but that's the price we pay for mucking it up originally.
