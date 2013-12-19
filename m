@@ -1,16 +1,18 @@
 From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCHv5] X86 platform: New BayTrail IOSF-SB MBI driver
-Date: Thu, 19 Dec 2013 10:37:22 -0800
-Message-ID: <1387478242-28333-1-git-send-email-david.e.box@linux.intel.com>
+Subject: [PATCH v5][RESEND] X86 platform: New BayTrail IOSF-SB MBI driver
+Date: Thu, 19 Dec 2013 14:37:46 -0800
+Message-ID: <1387492666-5398-1-git-send-email-david.e.box@linux.intel.com>
+References: <1386363573-2008-1-git-send-email-david.e.box@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:8873 "EHLO mga09.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:36169 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750895Ab3LSSiv (ORCPT
+	id S1754249Ab3LSWjV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 19 Dec 2013 13:38:51 -0500
+	Thu, 19 Dec 2013 17:39:21 -0500
+In-Reply-To: <1386363573-2008-1-git-send-email-david.e.box@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com
+To: mjg59@srcf.ucam.org, rjw@rjwysocki.net
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>
 
 From: "David E. Box" <david.e.box@linux.intel.com>
