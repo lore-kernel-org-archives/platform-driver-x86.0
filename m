@@ -1,99 +1,59 @@
-From: Bradley Baetz <bbaetz@gmail.com>
-Subject: Re: [REGRESSION] [BISECTED] MM patch causes kernel lockup with 3.12
- and acpi_backlight=vendor
-Date: Fri, 27 Dec 2013 14:22:18 +1100
-Message-ID: <CAJrk0Bsz6VCcyxuR7-MLV7SjhXMJzvBqvuDbUsD+CLgHEF=j6Q@mail.gmail.com>
-References: <CAJrk0BuA2OTfMhmqZ-OFvtbdf_8+O3V77L0mDsoixN+t4A0ASA@mail.gmail.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
+Date: Fri, 27 Dec 2013 11:51:14 +0800
+Message-ID: <1388116274.3539.6046.camel@linux-s257.site>
+References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f176.google.com ([209.85.212.176]:49764 "EHLO
-	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754410Ab3L0DWT (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Dec 2013 22:22:19 -0500
-Received: by mail-wi0-f176.google.com with SMTP id hq4so13911374wib.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Dec 2013 19:22:18 -0800 (PST)
-In-Reply-To: <CAJrk0BuA2OTfMhmqZ-OFvtbdf_8+O3V77L0mDsoixN+t4A0ASA@mail.gmail.com>
+Received: from smtp.nue.novell.com ([195.135.221.5]:37646 "EHLO
+	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754205Ab3L0EMk (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Thu, 26 Dec 2013 23:12:40 -0500
+In-Reply-To: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org
-Cc: hdegoede@redhat.com
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
 
-Resending in plain text mode....
+Hi Oleksij,=20
 
-Bradley
+=E6=96=BC =E5=9B=9B=EF=BC=8C2013-12-05 =E6=96=BC 14:00 +0100=EF=BC=8COl=
+eksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
+> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
+cer-wmi.c
+> index c9076bd..d5ca1648 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -572,6 +572,14 @@ static const struct dmi_system_id video_vendor_d=
+mi_table[] =3D {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5750"),
+>  		},
+>  	},
+> +	{
+> +		.callback =3D video_set_backlight_video_vendor,
+> +		.ident =3D "Acer Aspire E1-572",
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire E1-572"),
+> +		},
+> +	},
+>  	{}
+>  };
+> =20
 
-On Fri, Dec 27, 2013 at 2:21 PM, Bradley Baetz <bbaetz@gmail.com> wrote:
-> Hi,
->
-> I have a Dell laptop (Vostro 3560). When I boot Fedora 20 with the
-> acpi_backlight=vendor option, the kernel locks up hard during the boot
-> proces, when systemd runs udevadm trigger. This is a hard lockup -
-> magic-sysrq doesn't work, and neither does caps lock/vt-change/etc.
->
-> I've bisected this to:
->
-> commit 81c0a2bb515fd4daae8cab64352877480792b515
-> Author: Johannes Weiner <hannes@cmpxchg.org>
-> Date:   Wed Sep 11 14:20:47 2013 -0700
->
->     mm: page_alloc: fair zone allocator policy
->
-> which seemed really unrelated, but I've confirmed that:
->
->  - the commit before this patch doesn't cause the problem, and the commit
-> afterwrads does
->  - reverting that patch from 3.12.0 fixes the problem
->  - reverting that patch (and the partial revert
-> fff4068cba484e6b0abe334ed6b15d5a215a3b25) from master also fixes the problem
->  - reverting that patch from the fedora 3.12.5-302.fc20 kernel fixes the
-> problem
->  - applying that patch to 3.11.0 causes the problem
->
-> so I'm pretty sure that that is the patch that causes (or at least triggers)
-> this issue
->
-> I'm using the acpi_backlight option to get the backlight working - without
-> this the backlight doesn't work at all. Removing 'acpi_backlight=vendor' (or
-> blacklisting the dell-laptop module, which is effectively the same thing)
-> fixes the issue.
->
-> The lockup happens when systemd runs "udevadm trigger", not when the module
-> is loaded - I can reproduce the issue by booting into emergency mode,
-> remounting the filesystem as rw, starting up systemd-udevd and running
-> udevadm trigger manually. It dies a few seconds after loading the
-> dell-laptop module.
->
-> This happens even if I don't boot into X (using
-> systemd.unit=multi-user.target)
->
-> Triggering udev individually for each item doesn't trigger the issue ie:
->
-> for i in `udevadm --debug trigger --type=devices --action=add --dry-run
-> --verbose`; do echo $i; udevadm --debug trigger --type=devices --action=add
-> --verbose --parent-match=$i; sleep 1; done
->
-> works, so I haven't been able to work out what specific combination of
-> actions are causing this.
->
-> With the acpi_backlight option, I can manually read/write to the sysfs
-> dell-laptop backlight file, and it works (and changes the backlight as
-> expected)
->
-> This is 100% reproducible. I've also tested by powering off the laptop and
-> pulling the battery just in case one of the previous boots with the bisect
-> left the hardware in a strange state - no change.
->
-> I did successfully boot a 3.12 kernel on F19 (before I upgraded to F20), so
-> there's presumably something that F20 is doing differently. It was only one
-> boot though.
->
-> I reported this to fedora
-> (https://bugzilla.redhat.com/show_bug.cgi?id=1045807) but it looks like this
-> is an upstream issue so I was asked to report it here.
->
-> This is an 8-core single i7 cpu (one numa node) - its a laptop, so nothing
-> fancy. DMI data is attached to the fedora bug.
->
-> Bradley
+I have applied this patch, build and load acer-wmi driver, didn't see
+problem.
+
+Acked-by: Lee, Chun-Yi <jlee@suse.com>
+
+
+Thanks for your patch!
+Joey Lee
