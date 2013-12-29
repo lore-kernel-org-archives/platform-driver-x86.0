@@ -1,23 +1,112 @@
-From: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: [PATCH 0/25] fix error return code
-Date: Sun, 29 Dec 2013 23:47:15 +0100
-Message-ID: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: cbe-oss-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-pcmcia-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: [PATCH 21/25] fujitsu-laptop: fix error return code
+Date: Sun, 29 Dec 2013 23:47:36 +0100
+Message-ID: <1388357260-4843-22-git-send-email-Julia.Lawall@lip6.fr>
+References: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: kernel-janitors@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These patches fix cases where the return variable is not set to an error
-code in an error case.
+From: Julia Lawall <Julia.Lawall@lip6.fr>
+
+These functions mix the use of result and error.  In acpi_fujitsu_add,
+result does not seem useful; it would seem reasonable to propagate the
+return value of acpi_bus_update_power in an error case.  On the other hand,
+in the case of acpi_fujitsu_hotkey_add, there is an initialization of
+result that can lead to what looks like a failure case, but that does not
+abort the function.  The variable result is kept for this case.
+
+A simplified version of the semantic match that finds this problem is as
+follows: (http://coccinelle.lip6.fr/)
+
+// <smpl>
+(
+if@p1 (\(ret < 0\|ret != 0\))
+ { ... return ret; }
+|
+ret@p1 = 0
+)
+... when != ret = e1
+    when != &ret
+*if(...)
+{
+  ... when != ret = e2
+      when forall
+ return ret;
+}
+
+// </smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+
+---
+Not tested.  Not sure to be doing the right thing with result in the second
+case.
+
+ drivers/platform/x86/fujitsu-laptop.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 9d30d69..be02bcc 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -633,7 +633,6 @@ static struct dmi_system_id fujitsu_dmi_table[] = {
+ 
+ static int acpi_fujitsu_add(struct acpi_device *device)
+ {
+-	int result = 0;
+ 	int state = 0;
+ 	struct input_dev *input;
+ 	int error;
+@@ -669,8 +668,8 @@ static int acpi_fujitsu_add(struct acpi_device *device)
+ 	if (error)
+ 		goto err_free_input_dev;
+ 
+-	result = acpi_bus_update_power(fujitsu->acpi_handle, &state);
+-	if (result) {
++	error = acpi_bus_update_power(fujitsu->acpi_handle, &state);
++	if (error) {
+ 		pr_err("Error reading power state\n");
+ 		goto err_unregister_input_dev;
+ 	}
+@@ -700,7 +699,7 @@ static int acpi_fujitsu_add(struct acpi_device *device)
+ 		fujitsu->max_brightness = FUJITSU_LCD_N_LEVELS;
+ 	get_lcd_level();
+ 
+-	return result;
++	return 0;
+ 
+ err_unregister_input_dev:
+ 	input_unregister_device(input);
+@@ -708,7 +707,7 @@ err_unregister_input_dev:
+ err_free_input_dev:
+ 	input_free_device(input);
+ err_stop:
+-	return result;
++	return error;
+ }
+ 
+ static int acpi_fujitsu_remove(struct acpi_device *device)
+@@ -831,8 +830,8 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
+ 	if (error)
+ 		goto err_free_input_dev;
+ 
+-	result = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
+-	if (result) {
++	error = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
++	if (error) {
+ 		pr_err("Error reading power state\n");
+ 		goto err_unregister_input_dev;
+ 	}
+@@ -907,7 +906,7 @@ err_free_input_dev:
+ err_free_fifo:
+ 	kfifo_free(&fujitsu_hotkey->fifo);
+ err_stop:
+-	return result;
++	return error;
+ }
+ 
+ static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
