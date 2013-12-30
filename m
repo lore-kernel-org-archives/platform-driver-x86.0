@@ -1,112 +1,66 @@
-From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 21/25] fujitsu-laptop: fix error return code
-Date: Sun, 29 Dec 2013 23:47:36 +0100
-Message-ID: <1388357260-4843-22-git-send-email-Julia.Lawall@lip6.fr>
-References: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: kernel-janitors@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Julian Andres Klode <jak@jak-linux.org>
+Subject: Re: [PATCH 0/4] thinkpad_acpi: Add support for controlling charge
+ thresholds
+Date: Mon, 30 Dec 2013 14:26:19 +0100
+Message-ID: <20131230132619.GA24241@jak-x230>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <20131228211026.GA14725@jak-x230>
+ <20131228221003.GA24911@khazad-dum.debian.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-bk0-f50.google.com ([209.85.214.50]:54114 "EHLO
+	mail-bk0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751511Ab3L3N0Z (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 30 Dec 2013 08:26:25 -0500
+Content-Disposition: inline
+In-Reply-To: <20131228221003.GA24911@khazad-dum.debian.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+On Sat, Dec 28, 2013 at 08:10:03PM -0200, Henrique de Moraes Holschuh wrote:
+> On Sat, 28 Dec 2013, Julian Andres Klode wrote:
+> > On Mon, Nov 11, 2013 at 02:56:29PM +0100, Julian Andres Klode wrote:
+> > > This patch series adds support for specifying charging thresholds,
+> > > forcing a battery to discharge, and inhibiting charging, on ThinkPad
+> > > Laptops using Sandy Bridge or newer processors.
+> > 
+[...]
+> > Henrique, it would be really great if you could take a look.
+> 
+> I did.  I just did not manage to finish looking over it, it is not really
+> okay as-is, mostly because it did not create a power-supply device and
+> properly extended that thing in a generic way, which would be vastly
+> preferable to adding yet another private interface.
 
-These functions mix the use of result and error.  In acpi_fujitsu_add,
-result does not seem useful; it would seem reasonable to propagate the
-return value of acpi_bus_update_power in an error case.  On the other hand,
-in the case of acpi_fujitsu_hotkey_add, there is an initialization of
-result that can lead to what looks like a failure case, but that does not
-abort the function.  The variable result is kept for this case.
+Thanks for the response.
 
-A simplified version of the semantic match that finds this problem is as
-follows: (http://coccinelle.lip6.fr/)
+I think that a more generic approach is a good idea, but
+I don't think creating a new power supply device would be the right
+choice because this controls existing supplies rather than being a
+supply in itself, and I am not aware of any other kind of power
+supply device that allows setting things.
 
-// <smpl>
-(
-if@p1 (\(ret < 0\|ret != 0\))
- { ... return ret; }
-|
-ret@p1 = 0
-)
-... when != ret = e1
-    when != &ret
-*if(...)
-{
-  ... when != ret = e2
-      when forall
- return ret;
-}
+We could extend the existing battery devices and then get paths like
+	/sys/class/power_supply/BAT0/start_charge_thresh
+which looks `natural'. There is one problem with that approach, though:
 
-// </smpl>
+A ThinkPad supports multiple batteries: In my case, I could add a slice
+battery. But the ACPI driver only exposes a BAT0 device without a slice
+being attached (I assume a BAT1 will pop-up if you add a slice battery,
+but can't test it, as I don't own one). This means that you can only
+configure the slice battery when it's plugged in. I don't know if its
+a good idea to work like this.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Another problem is that I don't know any other systems supporting charge
+thresholds, and I don't want to dictate interfaces built for ThinkPads
+as a generic way. 
+-- 
+Julian Andres Klode  - Debian Developer, Ubuntu Member
 
----
-Not tested.  Not sure to be doing the right thing with result in the second
-case.
+See http://wiki.debian.org/JulianAndresKlode and http://jak-linux.org/.
 
- drivers/platform/x86/fujitsu-laptop.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 9d30d69..be02bcc 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -633,7 +633,6 @@ static struct dmi_system_id fujitsu_dmi_table[] = {
- 
- static int acpi_fujitsu_add(struct acpi_device *device)
- {
--	int result = 0;
- 	int state = 0;
- 	struct input_dev *input;
- 	int error;
-@@ -669,8 +668,8 @@ static int acpi_fujitsu_add(struct acpi_device *device)
- 	if (error)
- 		goto err_free_input_dev;
- 
--	result = acpi_bus_update_power(fujitsu->acpi_handle, &state);
--	if (result) {
-+	error = acpi_bus_update_power(fujitsu->acpi_handle, &state);
-+	if (error) {
- 		pr_err("Error reading power state\n");
- 		goto err_unregister_input_dev;
- 	}
-@@ -700,7 +699,7 @@ static int acpi_fujitsu_add(struct acpi_device *device)
- 		fujitsu->max_brightness = FUJITSU_LCD_N_LEVELS;
- 	get_lcd_level();
- 
--	return result;
-+	return 0;
- 
- err_unregister_input_dev:
- 	input_unregister_device(input);
-@@ -708,7 +707,7 @@ err_unregister_input_dev:
- err_free_input_dev:
- 	input_free_device(input);
- err_stop:
--	return result;
-+	return error;
- }
- 
- static int acpi_fujitsu_remove(struct acpi_device *device)
-@@ -831,8 +830,8 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
- 	if (error)
- 		goto err_free_input_dev;
- 
--	result = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
--	if (result) {
-+	error = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
-+	if (error) {
- 		pr_err("Error reading power state\n");
- 		goto err_unregister_input_dev;
- 	}
-@@ -907,7 +906,7 @@ err_free_input_dev:
- err_free_fifo:
- 	kfifo_free(&fujitsu_hotkey->fifo);
- err_stop:
--	return result;
-+	return error;
- }
- 
- static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
+Please do not top-post if possible.
