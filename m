@@ -1,430 +1,76 @@
-From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH v6] X86 platform: New BayTrail IOSF-SB MBI driver
-Date: Mon, 30 Dec 2013 10:12:29 -0800
-Message-ID: <1388427149-25456-1-git-send-email-david.e.box@linux.intel.com>
-References: <1387492666-5398-1-git-send-email-david.e.box@linux.intel.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 0/4] thinkpad_acpi: Add support for controlling charge
+ thresholds
+Date: Mon, 30 Dec 2013 18:06:58 -0200
+Message-ID: <20131230200658.GA1808@khazad-dum.debian.net>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <20131228211026.GA14725@jak-x230>
+ <20131228221003.GA24911@khazad-dum.debian.net>
+ <20131230132619.GA24241@jak-x230>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:50806 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755867Ab3L3SN6 (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:48792 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S932146Ab3L3UHC (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Dec 2013 13:13:58 -0500
-In-Reply-To: <1387492666-5398-1-git-send-email-david.e.box@linux.intel.com>
+	Mon, 30 Dec 2013 15:07:02 -0500
+Received: from compute1.internal (compute1.nyi.mail.srv.osa [10.202.2.41])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 3301A218A4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Dec 2013 15:07:01 -0500 (EST)
+Content-Disposition: inline
+In-Reply-To: <20131230132619.GA24241@jak-x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, rjw@rjwysocki.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, "David E. Box" <david.e.box@linux.intel.com>
+To: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-From: "David E. Box" <david.e.box@linux.intel.com>
+On Mon, 30 Dec 2013, Julian Andres Klode wrote:
+> I think that a more generic approach is a good idea, but
+> I don't think creating a new power supply device would be the right
 
-Current Intel SOC cores use a MailBox Interface (MBI) to provide access to unit
-devices connected to the system fabric. This driver implements access to this
-interface on BayTrail platforms. This is a requirement for drivers that need
-access to unit registers on the platform (e.g. accessing the PUNIT for power
-management features such as RAPL). Serialized access is handled by all exported
-routines with spinlocks.
+...
 
-The API includes 3 functions for access to unit registers:
+> We could extend the existing battery devices and then get paths like
+> 	/sys/class/power_supply/BAT0/start_charge_thresh
+> which looks `natural'. There is one problem with that approach, though:
 
-int bt_mbi_read(u8 port, u8 opcode, u32 offset, u32 *mdr)
-int bt_mbi_write(u8 port, u8 opcode, u32 offset, u32 mdr)
-int bt_mbi_modify(u8 port, u8 opcode, u32 offset, u32 mdr, u32 mask)
+I'm fine with extending battery devices, in fact I agree that it would be a
+better place to add these attributes to.
 
-port:	indicating the unit being accessed
-opcode:	the read or write port specific opcode
-offset:	the register offset within the port
-mdr:	the register data to be read, written, or modified
-mask:	bit locations in mdr to change
+> A ThinkPad supports multiple batteries: In my case, I could add a slice
+> battery. But the ACPI driver only exposes a BAT0 device without a slice
+> being attached (I assume a BAT1 will pop-up if you add a slice battery,
 
-Returns nonzero on error
+Thinkpad batteries are static, BAT1 is always BAT1 for the firmware,
+regardless of whether BAT0 is present or not.  Their parameters can always
+be set as well, since they're stored in the EC and not in the battery pack
+uC.  And the EC doesn't care whether the battery is present or not.
 
-Note: GPU code handles access to the GFX unit. Therefore access to that unit
-with this driver is disallowed to avoid conflicts.
+> but can't test it, as I don't own one). This means that you can only
+> configure the slice battery when it's plugged in. I don't know if its
+> a good idea to work like this.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-v6: Changed BUG_ON to WARN_ON on attempted access to GFX port as suggested by
-    Rafael Wysocki <rjw@rjwysocki.net>
-    Added line to Kconfig noting available definitions in header.
-    Other cosmetic changes suggested by Rafael.
+We could change the ACPI battery driver to optionally allow a platform
+driver (or a dmi table) to order it to register batteries that are not
+present at boot, and set that flag for thinkpads.
 
-v5: Converted from pnpacpi/mmio driver to pci/config_space driver as
-    necessitated by firmware change.
+> Another problem is that I don't know any other systems supporting charge
+> thresholds, and I don't want to dictate interfaces built for ThinkPads
+> as a generic way. 
 
-v4: Define driver as platform specific to BayTrail as some platforms cannot
-    enumerate the MBI using ACPI as noted by Bin Gao <bin.gao@linux.intel.com>
-    Renamed register macros and API funcitons to platform specific names.
-    Changed dependency to PNPACPI as suggested by Rafael Wysocki <rjw@rjwysocki.net>
+All SBS batteries support it, which means most notebooks do.  Whether they
+expose it or not, and whether their platform drivers know about it or not in
+order to expose these parameters to the kernel and to userspace, is a
+separate issue.
 
-v3: Converted to PNP ACPI driver as suggested by Rafael Wysocki <rjw@rjwysocki.net>
-    Removed config visibility to user as suggested by Andi Kleen <andi@firstfloor.org>
+Refer to: http://www.sbs-forum.org/
 
-v2: Made modular since there was no longer a reason not to
-    Moved to x86 platform as suggested by Mathhew Garrett <mjg59@srcf.ucam.org>
-    Added probe to init to cause driver load to fail if device not detected.
+So yes, we can and should add these as generic *optional* parameters for
+generic batteries.  How to best add it to the ACPI battery driver is
+something to think about.
 
- drivers/platform/x86/Kconfig          |   10 ++
- drivers/platform/x86/Makefile         |    1 +
- drivers/platform/x86/intel_baytrail.c |  225 +++++++++++++++++++++++++++++++++
- drivers/platform/x86/intel_baytrail.h |   90 +++++++++++++
- 4 files changed, 326 insertions(+)
- create mode 100644 drivers/platform/x86/intel_baytrail.c
- create mode 100644 drivers/platform/x86/intel_baytrail.h
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b51a746..6e199a5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -819,4 +819,14 @@ config PVPANIC
- 	  a paravirtualized device provided by QEMU; it lets a virtual machine
- 	  (guest) communicate panic events to the host.
- 
-+config INTEL_BAYTRAIL_MBI
-+	tristate
-+	depends on PCI
-+	---help---
-+	  Needed on Baytrail platforms for access to the IOSF Sideband Mailbox
-+	  Interface. This is a requirement for systems that need to configure
-+	  the PUNIT for power management features such as RAPL. Register
-+	  addresses and r/w opcodes are defined in
-+	  drivers/platform/x86/intel_baytrail.c.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5dbe193..b3d4cfd 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -55,3 +55,4 @@ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
- obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
- 
- obj-$(CONFIG_PVPANIC)           += pvpanic.o
-+obj-$(CONFIG_INTEL_BAYTRAIL_MBI)	+= intel_baytrail.o
-diff --git a/drivers/platform/x86/intel_baytrail.c b/drivers/platform/x86/intel_baytrail.c
-new file mode 100644
-index 0000000..fcb49cc
---- /dev/null
-+++ b/drivers/platform/x86/intel_baytrail.c
-@@ -0,0 +1,225 @@
-+/*
-+ * Baytrail IOSF-SB MailBox Interface Driver
-+ * Copyright (c) 2013, Intel Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ *
-+ * The IOSF-SB is a fabric bus available on Atom based SOC's that uses a
-+ * mailbox interface (MBI) to communicate with mutiple devices. This
-+ * driver implements BayTrail-specific access to this interface.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/spinlock.h>
-+#include <linux/pci.h>
-+
-+#include "intel_baytrail.h"
-+
-+static DEFINE_SPINLOCK(iosf_mbi_lock);
-+
-+static inline u32 iosf_mbi_form_mcr(u8 op, u8 port, u8 offset)
-+{
-+	return (op << 24) | (port << 16) | (offset << 8) | BT_MBI_ENABLE;
-+}
-+
-+static struct pci_dev *mbi_pdev;	/* one mbi device */
-+
-+static int iosf_mbi_pci_read_mdr(u32 mcrx, u32 mcr, u32 *mdr)
-+{
-+	int result;
-+
-+	if (!mbi_pdev)
-+		return -ENODEV;
-+
-+	if (mcrx) {
-+		result = pci_write_config_dword(mbi_pdev, BT_MBI_MCRX_OFFSET,
-+						mcrx);
-+		if (result < 0)
-+			goto fail_read;
-+	}
-+
-+	result = pci_write_config_dword(mbi_pdev, BT_MBI_MCR_OFFSET, mcr);
-+	if (result < 0)
-+		goto fail_read;
-+
-+	result = pci_read_config_dword(mbi_pdev, BT_MBI_MDR_OFFSET, mdr);
-+	if (result < 0)
-+		goto fail_read;
-+
-+	return 0;
-+
-+fail_read:
-+	dev_err(&mbi_pdev->dev, "PCI config access failed with %d\n", result);
-+	return result;
-+}
-+
-+static int iosf_mbi_pci_write_mdr(u32 mcrx, u32 mcr, u32 mdr)
-+{
-+	int result;
-+
-+	if (!mbi_pdev)
-+		return -ENODEV;
-+
-+	result = pci_write_config_dword(mbi_pdev, BT_MBI_MDR_OFFSET, mdr);
-+	if (result < 0)
-+		goto fail_write;
-+
-+	if (mcrx) {
-+		result = pci_write_config_dword(mbi_pdev, BT_MBI_MCRX_OFFSET,
-+						mcrx);
-+		if (result < 0)
-+			goto fail_write;
-+	}
-+
-+	result = pci_write_config_dword(mbi_pdev, BT_MBI_MCR_OFFSET, mcr);
-+	if (result < 0)
-+		goto fail_write;
-+
-+	return 0;
-+
-+fail_write:
-+	dev_err(&mbi_pdev->dev, "PCI config access failed with %d\n", result);
-+	return result;
-+}
-+
-+int bt_mbi_read(u8 port, u8 opcode, u32 offset, u32 *mdr)
-+{
-+	u32 mcr, mcrx;
-+	unsigned long flags;
-+	int ret;
-+
-+	/*Access to the GFX unit is handled by GPU code */
-+	if (port == BT_MBI_UNIT_GFX) {
-+		WARN_ON(1);
-+		return -EPERM;
-+	}
-+
-+	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
-+	mcrx = offset & BT_MBI_MASK_HI;
-+
-+	spin_lock_irqsave(&iosf_mbi_lock, flags);
-+	ret = iosf_mbi_pci_read_mdr(mcrx, mcr, mdr);
-+	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bt_mbi_read);
-+
-+int bt_mbi_write(u8 port, u8 opcode, u32 offset, u32 mdr)
-+{
-+	u32 mcr, mcrx;
-+	unsigned long flags;
-+	int ret;
-+
-+	/*Access to the GFX unit is handled by GPU code */
-+	if (port == BT_MBI_UNIT_GFX) {
-+		WARN_ON(1);
-+		return -EPERM;
-+	}
-+
-+	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
-+	mcrx = offset & BT_MBI_MASK_HI;
-+
-+	spin_lock_irqsave(&iosf_mbi_lock, flags);
-+	ret = iosf_mbi_pci_write_mdr(mcrx, mcr, mdr);
-+	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bt_mbi_write);
-+
-+int bt_mbi_modify(u8 port, u8 opcode, u32 offset, u32 mdr, u32 mask)
-+{
-+	u32 mcr, mcrx;
-+	u32 value;
-+	unsigned long flags;
-+	int ret;
-+
-+	/*Access to the GFX unit is handled by GPU code */
-+	if (port == BT_MBI_UNIT_GFX) {
-+		WARN_ON(1);
-+		return -EPERM;
-+	}
-+
-+	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
-+	mcrx = offset & BT_MBI_MASK_HI;
-+
-+	spin_lock_irqsave(&iosf_mbi_lock, flags);
-+
-+	/* Read current mdr value */
-+	ret = iosf_mbi_pci_read_mdr(mcrx, mcr & BT_MBI_RD_MASK, &value);
-+	if (ret < 0) {
-+		spin_unlock_irqrestore(&iosf_mbi_lock, flags);
-+		return ret;
-+	}
-+
-+	/* Apply mask */
-+	value &= ~mask;
-+	mdr &= mask;
-+	value |= mdr;
-+
-+	/* Write back */
-+	ret = iosf_mbi_pci_write_mdr(mcrx, mcr | BT_MBI_WR_MASK, value);
-+
-+	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(bt_mbi_modify);
-+
-+static int iosf_mbi_probe(struct pci_dev *pdev,
-+			  const struct pci_device_id *unused)
-+{
-+	int ret;
-+
-+	ret = pci_enable_device(pdev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "error: could not enable device\n");
-+		return ret;
-+	}
-+
-+	mbi_pdev = pci_dev_get(pdev);
-+	return 0;
-+}
-+
-+static DEFINE_PCI_DEVICE_TABLE(iosf_mbi_pci_ids) = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x0F00) },
-+	{ 0, },
-+};
-+MODULE_DEVICE_TABLE(pci, iosf_mbi_pci_ids);
-+
-+static struct pci_driver iosf_mbi_pci_driver = {
-+	.name		= "iosf_mbi_pci",
-+	.probe		= iosf_mbi_probe,
-+	.id_table	= iosf_mbi_pci_ids,
-+};
-+
-+static int __init bt_mbi_init(void)
-+{
-+	return pci_register_driver(&iosf_mbi_pci_driver);
-+}
-+
-+static void __exit bt_mbi_exit(void)
-+{
-+	pci_unregister_driver(&iosf_mbi_pci_driver);
-+	if (mbi_pdev) {
-+		pci_dev_put(mbi_pdev);
-+		mbi_pdev = NULL;
-+	}
-+}
-+
-+module_init(bt_mbi_init);
-+module_exit(bt_mbi_exit);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("BayTrail Mailbox Interface accessor");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel_baytrail.h b/drivers/platform/x86/intel_baytrail.h
-new file mode 100644
-index 0000000..8bcc311
---- /dev/null
-+++ b/drivers/platform/x86/intel_baytrail.h
-@@ -0,0 +1,90 @@
-+/*
-+ * intel_baytrail.h: MailBox access support for Intel BayTrail platforms
-+ */
-+
-+#ifndef INTEL_BAYTRAIL_MBI_SYMS_H
-+#define INTEL_BAYTRAIL_MBI_SYMS_H
-+
-+#define BT_MBI_MCR_OFFSET	0xD0
-+#define BT_MBI_MDR_OFFSET	0xD4
-+#define BT_MBI_MCRX_OFFSET	0xD8
-+
-+#define BT_MBI_RD_MASK		0xFEFFFFFF
-+#define BT_MBI_WR_MASK		0X01000000
-+
-+#define BT_MBI_MASK_HI		0xFFFFFF00
-+#define BT_MBI_MASK_LO		0x000000FF
-+#define BT_MBI_ENABLE		0xF0
-+
-+/* BT-SB unit access methods */
-+#define BT_MBI_UNIT_AUNIT	0x00
-+#define BT_MBI_UNIT_SMC		0x01
-+#define BT_MBI_UNIT_CPU		0x02
-+#define BT_MBI_UNIT_BUNIT	0x03
-+#define BT_MBI_UNIT_PMC		0x04
-+#define BT_MBI_UNIT_GFX		0x06
-+#define BT_MBI_UNIT_SMI		0x0C
-+#define BT_MBI_UNIT_USB		0x43
-+#define BT_MBI_UNIT_SATA	0xA3
-+#define BT_MBI_UNIT_PCIE	0xA6
-+
-+/* Read/write opcodes */
-+#define BT_MBI_AUNIT_READ	0x10
-+#define BT_MBI_AUNIT_WRITE	0x11
-+#define BT_MBI_SMC_READ		0x10
-+#define BT_MBI_SMC_WRITE	0x11
-+#define BT_MBI_CPU_READ		0x10
-+#define BT_MBI_CPU_WRITE	0x11
-+#define BT_MBI_BUNIT_READ	0x10
-+#define BT_MBI_BUNIT_WRITE	0x11
-+#define BT_MBI_PMC_READ		0x06
-+#define BT_MBI_PMC_WRITE	0x07
-+#define BT_MBI_GFX_READ		0x00
-+#define BT_MBI_GFX_WRITE	0x01
-+#define BT_MBI_SMIO_READ	0x06
-+#define BT_MBI_SMIO_WRITE	0x07
-+#define BT_MBI_USB_READ		0x06
-+#define BT_MBI_USB_WRITE	0x07
-+#define BT_MBI_SATA_READ	0x00
-+#define BT_MBI_SATA_WRITE	0x01
-+#define BT_MBI_PCIE_READ	0x00
-+#define BT_MBI_PCIE_WRITE	0x01
-+
-+/**
-+ * bt_mbi_read() - MailBox Interface read command
-+ * @port:	port indicating subunit being accessed
-+ * @opcode:	port specific read or write opcode
-+ * @offset:	register address offset
-+ * @mdr:	register data to be read
-+ *
-+ * Locking is handled by spinlock - cannot sleep.
-+ * Return: Nonzero on error
-+ */
-+int bt_mbi_read(u8 port, u8 opcode, u32 offset, u32 *mdr);
-+
-+/**
-+ * bt_mbi_write() - MailBox unmasked write command
-+ * @port:	port indicating subunit being accessed
-+ * @opcode:	port specific read or write opcode
-+ * @offset:	register address offset
-+ * @mdr:	register data to be written
-+ *
-+ * Locking is handled by spinlock - cannot sleep.
-+ * Return: Nonzero on error
-+ */
-+int bt_mbi_write(u8 port, u8 opcode, u32 offset, u32 mdr);
-+
-+/**
-+ * bt_mbi_modify() - MailBox masked write command
-+ * @port:	port indicating subunit being accessed
-+ * @opcode:	port specific read or write opcode
-+ * @offset:	register address offset
-+ * @mdr:	register data being modified
-+ * @mask:	mask indicating bits in mdr to be modified
-+ *
-+ * Locking is handled by spinlock - cannot sleep.
-+ * Return: Nonzero on error
-+ */
-+int bt_mbi_modify(u8 port, u8 opcode, u32 offset, u32 mdr, u32 mask);
-+
-+#endif /* INTEL_BAYTRAIL_MBI_SYMS_H */
 -- 
-1.7.10.4
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
