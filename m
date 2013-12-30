@@ -1,47 +1,61 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 Subject: Re: [PATCH 1/4] thinkpad_acpi: Add support for controlling charge
  thresholds
-Date: Mon, 30 Dec 2013 19:58:43 -0200
-Message-ID: <20131230215843.GB4938@khazad-dum.debian.net>
+Date: Mon, 30 Dec 2013 20:40:45 -0200
+Message-ID: <20131230224045.GC4938@khazad-dum.debian.net>
 References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
  <1384178195-12218-2-git-send-email-jak@jak-linux.org>
  <20131230132915.GB24241@jak-x230>
+ <20131230215843.GB4938@khazad-dum.debian.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46869 "EHLO
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45595 "EHLO
 	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932332Ab3L3V6q (ORCPT
+	by vger.kernel.org with ESMTP id S932334Ab3L3Wks (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Dec 2013 16:58:46 -0500
-Received: from compute4.internal (compute4.nyi.mail.srv.osa [10.202.2.44])
-	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 8D76D20B62
-	for <platform-driver-x86@vger.kernel.org>; Mon, 30 Dec 2013 16:58:45 -0500 (EST)
+	Mon, 30 Dec 2013 17:40:48 -0500
 Content-Disposition: inline
-In-Reply-To: <20131230132915.GB24241@jak-x230>
+In-Reply-To: <20131230215843.GB4938@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-On Mon, 30 Dec 2013, Julian Andres Klode wrote:
-> On Mon, Nov 11, 2013 at 02:56:30PM +0100, Julian Andres Klode wrote:
-> > Add support for battery charge thresholds in new Sandy Bridge and Ivy Bridge
-> > ThinkPads. Based on the unofficial documentation in tpacpi-bat.
+On Mon, 30 Dec 2013, Henrique de Moraes Holschuh wrote:
+> On Mon, 30 Dec 2013, Julian Andres Klode wrote:
+> > On Mon, Nov 11, 2013 at 02:56:30PM +0100, Julian Andres Klode wrote:
+> > > Add support for battery charge thresholds in new Sandy Bridge and Ivy Bridge
+> > > ThinkPads. Based on the unofficial documentation in tpacpi-bat.
+> > > 
+> > > The threshold files support the values '0' for the controller's default,
+> > > and 1-99 as percentages. Values outside of that range are rejected. The
+> > > behaviour of '0' might be confusing, especially for the stop case where
+> > > it basically seems to mean '100'.
 > > 
-> > The threshold files support the values '0' for the controller's default,
-> > and 1-99 as percentages. Values outside of that range are rejected. The
-> > behaviour of '0' might be confusing, especially for the stop case where
-> > it basically seems to mean '100'.
+> > Thinking more about this, it might make more sense to simply accept a 100
+> > value and not accept a 0 value in the stop case (I tried multiple times to
+> > write 100 to a stop_charge_thresh file, because that feels more natural).
+> > 
+> > Having a 0 mean 100% is just odd. So stop_charge_thresh should simply
+> > accepts integer values in the range [1, 100] (and start_charge_thresh
+> > should continue accept [0, 99], as 0 really means 0 there).
 > 
-> Thinking more about this, it might make more sense to simply accept a 100
-> value and not accept a 0 value in the stop case (I tried multiple times to
-> write 100 to a stop_charge_thresh file, because that feels more natural).
-> 
-> Having a 0 mean 100% is just odd. So stop_charge_thresh should simply
-> accepts integer values in the range [1, 100] (and start_charge_thresh
-> should continue accept [0, 99], as 0 really means 0 there).
+> Indeed.  Just return EINVAL for a stop threshold of 0.
 
-Indeed.  Just return EINVAL for a stop threshold of 0.
+Actually, a stop threshold below the current start threshold is also invalid
+and what happens when you try that is implementation-specific.  And the
+kernel is not the only party who can change the thresholds, so you have to
+read them if you really need to know the current value.
+
+To correct myself, stop threshold being zero is also implementation-
+specific. on thinkpads it is not valid.
+
+For thinkpads, I believe the EC firmware changes the other threshold so that
+the boundary condition stop > start is always valid.  But I never tried it
+with a direct EC write to validate this.  If it becomes important, I can
+check -- but I'd still prefer to enforce sanity at the driver level just in
+case.  Don't tempt the gremilins, for they live at boundary conditions and
+their sleep is light indeed.
 
 -- 
   "One disk to rule them all, One disk to find them. One disk to bring
