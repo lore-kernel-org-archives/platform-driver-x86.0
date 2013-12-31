@@ -1,116 +1,68 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 21/25] fujitsu-laptop: fix error return code
-Date: Tue, 31 Dec 2013 23:35:12 +1030
-Message-ID: <20131231130512.GB20866@marvin.atrad.com.au>
-References: <1388357260-4843-1-git-send-email-Julia.Lawall@lip6.fr>
- <1388357260-4843-22-git-send-email-Julia.Lawall@lip6.fr>
+From: Julian Andres Klode <jak@jak-linux.org>
+Subject: Re: [ibm-acpi-devel] [PATCH 1/4] thinkpad_acpi: Add support for
+ controlling charge thresholds
+Date: Tue, 31 Dec 2013 23:46:05 +0100
+Message-ID: <20131231224605.GA32669@jak-x230>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <1384178195-12218-2-git-send-email-jak@jak-linux.org>
+ <20131230132915.GB24241@jak-x230>
+ <20131230215843.GB4938@khazad-dum.debian.net>
+ <20131230224045.GC4938@khazad-dum.debian.net>
+ <20131231000115.GA28120@jak-x230>
+ <20131231121231.GB25729@khazad-dum.debian.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:49103 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753610Ab3LaNGg (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 31 Dec 2013 08:06:36 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1388357260-4843-22-git-send-email-Julia.Lawall@lip6.fr>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: kernel-janitors@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jwoithe@just42.net
+In-Reply-To: <20131231121231.GB25729@khazad-dum.debian.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Dec 29, 2013 at 11:47:36PM +0100, Julia Lawall wrote:
-> These functions mix the use of result and error.  In acpi_fujitsu_add,
-> result does not seem useful; it would seem reasonable to propagate the
-> return value of acpi_bus_update_power in an error case.
-
-Agreed.
-
-> On the other hand, in the case of acpi_fujitsu_hotkey_add, there is an
-> initialization of result that can lead to what looks like a failure case,
-> but that does not abort the function.  The variable result is kept for
-> this case.
-
-The handling of result in acpi_fujitsu_hotkey_add() applies to machines
-which I don't have physical access to - the code was contributed by others. 
-My understanding is that on these machines the failure of the LED class
-registration is not necessarily grounds for aborting the function
-immediately.  That said, the change made to acpi_fujitsu_hotkey_add() in
-this patch look correct to me: the err_stop label should be returning
-"error", and consequently the acpi_bus_update_power() return should be saved
-to "error".
-
-Acked-off-by: Jonathan Woithe <jwoithe@just42.net>
-
-> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+On Tue, Dec 31, 2013 at 10:12:31AM -0200, Henrique de Moraes Holschuh wrote:
+> On Tue, 31 Dec 2013, Julian Andres Klode wrote:
+> > We might be able to work around this by simple setting stop = start
+> > if a new write causes the stop threshold to be below the start
+> > threshold. But this also seems ugly.
 > 
-> ---
-> Not tested.  Not sure to be doing the right thing with result in the second
-> case.
+> It is the safest way, but the correct pseudo-code would be, assuiming
+> unsigned:
 > 
->  drivers/platform/x86/fujitsu-laptop.c |   15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
+> when someone changes start:
 > 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 9d30d69..be02bcc 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -633,7 +633,6 @@ static struct dmi_system_id fujitsu_dmi_table[] = {
->  
->  static int acpi_fujitsu_add(struct acpi_device *device)
->  {
-> -	int result = 0;
->  	int state = 0;
->  	struct input_dev *input;
->  	int error;
-> @@ -669,8 +668,8 @@ static int acpi_fujitsu_add(struct acpi_device *device)
->  	if (error)
->  		goto err_free_input_dev;
->  
-> -	result = acpi_bus_update_power(fujitsu->acpi_handle, &state);
-> -	if (result) {
-> +	error = acpi_bus_update_power(fujitsu->acpi_handle, &state);
-> +	if (error) {
->  		pr_err("Error reading power state\n");
->  		goto err_unregister_input_dev;
->  	}
-> @@ -700,7 +699,7 @@ static int acpi_fujitsu_add(struct acpi_device *device)
->  		fujitsu->max_brightness = FUJITSU_LCD_N_LEVELS;
->  	get_lcd_level();
->  
-> -	return result;
-> +	return 0;
->  
->  err_unregister_input_dev:
->  	input_unregister_device(input);
-> @@ -708,7 +707,7 @@ err_unregister_input_dev:
->  err_free_input_dev:
->  	input_free_device(input);
->  err_stop:
-> -	return result;
-> +	return error;
->  }
->  
->  static int acpi_fujitsu_remove(struct acpi_device *device)
-> @@ -831,8 +830,8 @@ static int acpi_fujitsu_hotkey_add(struct acpi_device *device)
->  	if (error)
->  		goto err_free_input_dev;
->  
-> -	result = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
-> -	if (result) {
-> +	error = acpi_bus_update_power(fujitsu_hotkey->acpi_handle, &state);
-> +	if (error) {
->  		pr_err("Error reading power state\n");
->  		goto err_unregister_input_dev;
->  	}
-> @@ -907,7 +906,7 @@ err_free_input_dev:
->  err_free_fifo:
->  	kfifo_free(&fujitsu_hotkey->fifo);
->  err_stop:
-> -	return result;
-> +	return error;
->  }
->  
->  static int acpi_fujitsu_hotkey_remove(struct acpi_device *device)
-> 
-> --
+> if (start > 99)
+> 	start = 99;
+
+I think we should just return -EINVAL in such cases. Allowing users to
+write larger percentages is a bit pointless (we don't allow them to write
+negative ones either). And other promiment code (the backlight drivers)
+seem to reject out-of-range values.
+
+> set_thresholds(start, stop);
+
+I think there should not be some common set_thresholds, because we also
+need to write things in different orders for start / stop then:
+
+	DECREASE STOP  => Write new start if needed, then write stop
+	INCREASE START => Write new stop if needed, then write start
+
+Otherwise we might have a very very very short time in which start
+is greater than stop.
+
+I'll incorporate this in real code and test it tomorrow. 
+
+Sometimes after that, I'd like to tackle the integration with power_supply.
+This is a bit more complicated, there even appear to be two battery drivers
+in ACPI, namely battery and sbs, and battery is used on my system (I don't
+know if that's the generic case on ThinkPads, or if is the case because
+battery is builtin and sbs is not). How to do extend that is probably
+something best discussed with ACPI maintainers, as I can't see
+any mechanism for this.
+
+-- 
+Julian Andres Klode  - Debian Developer, Ubuntu Member
+
+See http://wiki.debian.org/JulianAndresKlode and http://jak-linux.org/.
+
+Please do not top-post if possible.
