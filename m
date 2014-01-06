@@ -1,116 +1,146 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
-Date: Mon, 06 Jan 2014 17:20:03 +0100
-Message-ID: <52CAD7B3.6060508@rempel-privat.de>
-References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>	 <1388116274.3539.6046.camel@linux-s257.site>	 <1388118336.3539.6055.camel@linux-s257.site>	 <52C42821.3020801@rempel-privat.de> <1388666346.3539.6065.camel@linux-s257.site>
+From: Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [REGRESSION] [BISECTED] MM patch causes kernel lockup with 3.12
+ and acpi_backlight=vendor
+Date: Mon, 6 Jan 2014 12:13:24 -0500
+Message-ID: <20140106171324.GA6963@cmpxchg.org>
+References: <CAJrk0BuA2OTfMhmqZ-OFvtbdf_8+O3V77L0mDsoixN+t4A0ASA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hHChWgoID9R9bX4vJTSXmts1o919RWPMu"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.gmx.net ([212.227.17.22]:56282 "EHLO mout.gmx.net"
+Received: from zene.cmpxchg.org ([85.214.230.12]:55827 "EHLO zene.cmpxchg.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754824AbaAFQUO (ORCPT
+	id S1754462AbaAFRN2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 Jan 2014 11:20:14 -0500
-Received: from [192.168.1.221] ([93.218.64.233]) by mail.gmx.com (mrgmx001)
- with ESMTPSA (Nemesis) id 0LdHeL-1VZylJ1mev-00iTEL for
- <platform-driver-x86@vger.kernel.org>; Mon, 06 Jan 2014 17:20:12 +0100
-In-Reply-To: <1388666346.3539.6065.camel@linux-s257.site>
+	Mon, 6 Jan 2014 12:13:28 -0500
+Content-Disposition: inline
+In-Reply-To: <CAJrk0BuA2OTfMhmqZ-OFvtbdf_8+O3V77L0mDsoixN+t4A0ASA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: joeyli <jlee@suse.com>
-Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
+To: Bradley Baetz <bbaetz@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, hdegoede@redhat.com
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hHChWgoID9R9bX4vJTSXmts1o919RWPMu
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Bradley,
 
-Am 02.01.2014 13:39, schrieb joeyli:
-> =E6=96=BC =E4=B8=89=EF=BC=8C2014-01-01 =E6=96=BC 15:37 +0100=EF=BC=8COl=
-eksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
->> Am 27.12.2013 05:25, schrieb joeyli:
-> [...]
->>>>>  		},
->>>>>  	},
->>>>> +	{
->>>>> +		.callback =3D video_set_backlight_video_vendor,
->>>>> +		.ident =3D "Acer Aspire E1-572",
->>>>> +		.matches =3D {
->>>>> +			DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
->>>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire E1-572"),
->>>>> +		},
->>>>> +	},
->>>>>  	{}
->>>>>  };
->>>>> =20
->>>>
->>>> I have applied this patch, build and load acer-wmi driver, didn't se=
-e
->>>> problem.
->>>>
->>>> Acked-by: Lee, Chun-Yi <jlee@suse.com>
->>>>
->>>>
->>>> Thanks for your patch!
->>>> Joey Lee
->>>
->>> I just aware Aspire E1-572 shipped with Windows 8. Before merge this
->>> patch. Could you please try v3.13-rc5 kernel with
->>> video.use_native_backlight=3D1 kernel parameter?
->>>
->>> Aaron Lu's "[PATCH v5 0/4] Fix Win8 backlight issue" merged to mainli=
-ne
->>> in v3.13-rc1, his patches works to me on a Gateway Windows 8 notebook=
-=2E
->>>
->>> Please try it, if Aaron's patches works on E1-572, then we don't need=
+On Fri, Dec 27, 2013 at 02:21:21PM +1100, Bradley Baetz wrote:
+> Hi,
+> 
+> I have a Dell laptop (Vostro 3560). When I boot Fedora 20 with the
+> acpi_backlight=vendor option, the kernel locks up hard during the boot
+> proces, when systemd runs udevadm trigger. This is a hard lockup -
+> magic-sysrq doesn't work, and neither does caps lock/vt-change/etc.
+> 
+> I've bisected this to:
+> 
+> commit 81c0a2bb515fd4daae8cab64352877480792b515
+> Author: Johannes Weiner <hannes@cmpxchg.org>
+> Date:   Wed Sep 11 14:20:47 2013 -0700
+> 
+>     mm: page_alloc: fair zone allocator policy
+> 
+> which seemed really unrelated, but I've confirmed that:
+> 
+>  - the commit before this patch doesn't cause the problem, and the commit
+> afterwrads does
+>  - reverting that patch from 3.12.0 fixes the problem
+>  - reverting that patch (and the partial revert
+> fff4068cba484e6b0abe334ed6b15d5a215a3b25) from master also fixes the problem
+>  - reverting that patch from the fedora 3.12.5-302.fc20 kernel fixes the
+> problem
+>  - applying that patch to 3.11.0 causes the problem
+> 
+> so I'm pretty sure that that is the patch that causes (or at least
+> triggers) this issue
+> 
+> I'm using the acpi_backlight option to get the backlight working - without
+> this the backlight doesn't work at all. Removing 'acpi_backlight=vendor'
+> (or blacklisting the dell-laptop module, which is effectively the same
+> thing) fixes the issue.
+> 
+> The lockup happens when systemd runs "udevadm trigger", not when the module
+> is loaded - I can reproduce the issue by booting into emergency mode,
+> remounting the filesystem as rw, starting up systemd-udevd and running
+> udevadm trigger manually. It dies a few seconds after loading the
+> dell-laptop module.
+> 
+> This happens even if I don't boot into X (using
+> systemd.unit=multi-user.target)
+> 
+> Triggering udev individually for each item doesn't trigger the issue ie:
+> 
+> for i in `udevadm --debug trigger --type=devices --action=add --dry-run
+> --verbose`; do echo $i; udevadm --debug trigger --type=devices --action=add
+> --verbose --parent-match=$i; sleep 1; done
+> 
+> works, so I haven't been able to work out what specific combination of
+> actions are causing this.
+> 
+> With the acpi_backlight option, I can manually read/write to the sysfs
+> dell-laptop backlight file, and it works (and changes the backlight as
+> expected)
+> 
+> This is 100% reproducible. I've also tested by powering off the laptop and
+> pulling the battery just in case one of the previous boots with the bisect
+> left the hardware in a strange state - no change.
 
->>> this patch.
->>
->> Hi,
->>
->> suddenly i do not have access to this Laptops any more. It was a
->> purchase for a friend. I tested it, provided some patch and gave it aw=
-ay :(
->>
->=20
-> I think Aaron's patches can fix it on E1-572. Let's wait until v3.13
-> version released then look at maybe someone report issue again.
->=20
-> Very appreciate for your patch.
->=20
-> Joey Lee
->=20
+My patch aggressively spreads allocations over all zones in the
+system, but it should still respect dell-laptop's requirements for
+DMA32 memory.
 
-Hi Joey,
+I wonder if the drastic change in allocation placement exposes an
+existing memory corruption.  In fact, the dell-laptop module is
+confused when it comes to the page allocator interface, it does
 
-i have access to this hardware for next two weeks. Theoretically this
-kernel should have patches you was talking about:
-http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/2014-01-06-trusty/
+  free_page((unsigned long)bufferpage);
 
-it works with video.use_native_backlight=3D1.
+in the error path, where bufferpage is a page pointer that came out of
+alloc_page(), which will cause the page allocator to try to free the
+mem_map(!) page that backs the bufferpage page struct.  So one failed
+load attempt of the module could plausibly corrupt internal state.
 
-If you need more testing, you have two weeks ;)
+Does the following resolve the problem?  And if not, what are the
+"dell-laptop:" lines in the good and the bad kernel, and does the bad
+kernel trigger the WARNING?
 
---=20
-Regards,
-Oleksij
+---
 
-
---hHChWgoID9R9bX4vJTSXmts1o919RWPMu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlLK17gACgkQHwImuRkmbWllOAEAjLMqpUnmL4pTw+U7cnbBt5JP
-lcvl+svM0OLhAUbP6EMBAIyzjlYczP+yFneMD+sBCa+VN3Zw0jaOqgueZj7MjAyn
-=32bP
------END PGP SIGNATURE-----
-
---hHChWgoID9R9bX4vJTSXmts1o919RWPMu--
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index c608b1d33f4a..92088b228573 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -819,6 +819,18 @@ static int __init dell_init(void)
+ 		ret = -ENOMEM;
+ 		goto fail_buffer;
+ 	}
++
++	{
++		struct zone *zone = page_zone(bufferpage);
++		int idx = zone_idx(zone);
++
++		printk("dell-laptop: bufferpage (%p) in node %d zone %d (%s)\n", bufferpage, zone->node, idx, zone->name);
++		if (WARN_ON(idx > ZONE_DMA32)) {
++			ret = -EINVAL;
++			goto fail_rfkill;
++		}
++	}
++
+ 	buffer = page_address(bufferpage);
+ 
+ 	ret = dell_setup_rfkill();
+@@ -888,7 +900,7 @@ fail_backlight:
+ fail_filter:
+ 	dell_cleanup_rfkill();
+ fail_rfkill:
+-	free_page((unsigned long)bufferpage);
++	__free_page(bufferpage);
+ fail_buffer:
+ 	platform_device_del(platform_device);
+ fail_platform_device2:
+@@ -914,7 +926,7 @@ static void __exit dell_exit(void)
+ 		platform_driver_unregister(&platform_driver);
+ 	}
+ 	kfree(da_tokens);
+-	free_page((unsigned long)buffer);
++	__free_page(bufferpage);
+ }
+ 
+ module_init(dell_init);
