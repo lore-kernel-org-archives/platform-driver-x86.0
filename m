@@ -1,60 +1,33 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
-Date: Thu, 09 Jan 2014 15:06:37 +0800
-Message-ID: <1389251197.24105.20.camel@linux-s257.site>
-References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
-	 <1388116274.3539.6046.camel@linux-s257.site>
-	 <1388118336.3539.6055.camel@linux-s257.site>
-	 <52C42821.3020801@rempel-privat.de>
-	 <1388666346.3539.6065.camel@linux-s257.site>
-	 <52CAD7B3.6060508@rempel-privat.de>
+From: Steven Johnson <stevenjohnson@mypowersystem.com>
+Subject: From: Joseph
+Date: Thu, 9 Jan 2014 01:06:14 -0600 (CST)
+Message-ID: <453334510.9996813.1389251174436.JavaMail.root@mypowersystem.com>
+Reply-To: Joseph Martins <joemartins527@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:42853 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751183AbaAIHJN (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Thu, 9 Jan 2014 02:09:13 -0500
-In-Reply-To: <52CAD7B3.6060508@rempel-privat.de>
+Received: from x.mailservicemail.com ([199.255.114.3]:56592 "EHLO
+	ecelserver-b.rallypointpro.com" rhost-flags-OK-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1751183AbaAIH00 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 9 Jan 2014 02:26:26 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
 
-=E6=96=BC =E4=B8=80=EF=BC=8C2014-01-06 =E6=96=BC 17:20 +0100=EF=BC=8COl=
-eksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
-> > I think Aaron's patches can fix it on E1-572. Let's wait until v3.1=
-3
-> > version released then look at maybe someone report issue again.
-> >=20
-> > Very appreciate for your patch.
-> >=20
-> > Joey Lee
-> >=20
->=20
-> Hi Joey,
->=20
-> i have access to this hardware for next two weeks. Theoretically this
-> kernel should have patches you was talking about:
-> http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/2014-01-06-trusty=
-/
->=20
-> it works with video.use_native_backlight=3D1.
->=20
-> If you need more testing, you have two weeks ;)
->=20
-> --=20
-> Regards,
-> Oleksij
->=20
+Greetings
 
-Thanks for your testing, then I think just use
-video.use_native_backlight to fix issue on Aspire E1-572. Don't need ad=
-d
-quirk to acer-wmi driver.
+I am a US Army officer currently on military 
+assignment in Iraq, I humbly ask of your assistance secure and invest 
+some money for me in your country. As a matter of fact, I have the sum 
+of US$5 Million which I would like you to help me to invest.
+
+I will appreciate it if you can assist me urgently in securing and 
+investing the money in your country pending when I will disengage from 
+my military assignment. I promise to compensate you with 10% of the 
+funds for your assistance while hoping that you assist me as soon as 
+possible. I await your urgent response.
 
 
-Thanks a lot!
-Joey Lee
+Best Regards,
+Joseph
