@@ -1,52 +1,60 @@
-From: "Dr. Musa Hamed" <dr.musahamed1@gmail.com>
-Subject: I have a very lucrative Business
-Date: Wed, 8 Jan 2014 22:21:51 +0100
-Message-ID: <CAOj8Sc_tkrQHJ3U3HQ=14ttWa2mW-1bH=OLMtcF857tgYBTbkw@mail.gmail.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
+Date: Thu, 09 Jan 2014 15:06:37 +0800
+Message-ID: <1389251197.24105.20.camel@linux-s257.site>
+References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
+	 <1388116274.3539.6046.camel@linux-s257.site>
+	 <1388118336.3539.6055.camel@linux-s257.site>
+	 <52C42821.3020801@rempel-privat.de>
+	 <1388666346.3539.6065.camel@linux-s257.site>
+	 <52CAD7B3.6060508@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f194.google.com ([209.85.217.194]:49380 "EHLO
-	mail-lb0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756896AbaAHVVw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 8 Jan 2014 16:21:52 -0500
-Received: by mail-lb0-f194.google.com with SMTP id u14so484642lbd.9
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jan 2014 13:21:51 -0800 (PST)
+Received: from smtp.nue.novell.com ([195.135.221.5]:42853 "EHLO
+	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751183AbaAIHJN (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Thu, 9 Jan 2014 02:09:13 -0500
+In-Reply-To: <52CAD7B3.6060508@rempel-privat.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
 
-ATTN: Dear,
+=E6=96=BC =E4=B8=80=EF=BC=8C2014-01-06 =E6=96=BC 17:20 +0100=EF=BC=8COl=
+eksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
+> > I think Aaron's patches can fix it on E1-572. Let's wait until v3.1=
+3
+> > version released then look at maybe someone report issue again.
+> >=20
+> > Very appreciate for your patch.
+> >=20
+> > Joey Lee
+> >=20
+>=20
+> Hi Joey,
+>=20
+> i have access to this hardware for next two weeks. Theoretically this
+> kernel should have patches you was talking about:
+> http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/2014-01-06-trusty=
+/
+>=20
+> it works with video.use_native_backlight=3D1.
+>=20
+> If you need more testing, you have two weeks ;)
+>=20
+> --=20
+> Regards,
+> Oleksij
+>=20
 
-I am Dr. Musa Hamed Executive Director of the Bank of Africa
-Plc B.O.A,Cotonou Benin Rep. I have a very lucrative Business proposal
-worth of 21,500,000.00 USD.
+Thanks for your testing, then I think just use
+video.use_native_backlight to fix issue on Aspire E1-572. Don't need ad=
+d
+quirk to acer-wmi driver.
 
-An Iraqi named Hamadi Hashem a business man made a fixed deposit of
-21,500,000.00 USD . Upon maturity several notices was sent to him,
-even during the war,eleven years ago (2003) up till this date. Again
-after the war another notification was sent and still no response came
-from him. it has been found out that Hamadi Hashem and his family had
-been killed during the war in bomb blast that hit their home at
-Mukaradeeb where his personal oil well was. I am prepared to split the
-funds with you 50%:50%.By placing you as the NEXT OF KIN to his
-deposit.
 
-Should you be interested in doing this deal with me, please send me
-the following information:
-
-(1) Your Name
-(2) Resident Address
-(3) Your Occupation
-(4) Your Phone Number
-(5) Date of Birth
-(6) Resident Country
-
-And I will prefer you to reach me privately and securely on my personal
-email address: dr.musahamed30@yahoo.fr
-Tel: +229-988-400-97
-
-I will provide you with further information as soon as I hear
-positively from you.
-
-Regards,
-Dr. Musa Hamed
+Thanks a lot!
+Joey Lee
