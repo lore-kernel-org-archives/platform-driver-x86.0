@@ -1,59 +1,38 @@
-From: franklinbuthelezi1@yahoo.com
-Subject: =?UTF-8?Q?DiePresse.com_Mein_Freund,_der_Fahrradh=C3=A4ndler?=
-Date: Fri, 10 Jan 2014 13:33:08 +0100 (CET)
-Message-ID: <476012162.1389357188781.JavaMail.root@dpoportal4.diepresse.apa.net>
-Reply-To: franklinbuthelezi1@yahoo.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH] sony-laptop: remove unnecessary assigment of len
+Date: Fri, 10 Jan 2014 14:04:24 +0000
+Message-ID: <1389362664-15612-1-git-send-email-colin.king@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from dpocron.diepresse.apa.net ([194.232.102.6]:41749 "EHLO
-	dpocron.diepresse.apa.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751952AbaAJMju convert rfc822-to-8bit (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:33926 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750910AbaAJOE2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 10 Jan 2014 07:39:50 -0500
-Received: from dpoportal4.diepresse.apa.net (dpoportal4.diepresse.local [192.168.0.20])
-	by dpocron.diepresse.apa.net (Postfix) with ESMTP id C1AC14457A
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jan 2014 13:33:08 +0100 (CET)
+	Fri, 10 Jan 2014 09:04:28 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
-=46olgender Artikel auf http://diepresse.com wird Ihnen von Franklin Bu=
-thelezi empfohlen:
+From: Colin Ian King <colin.king@canonical.com>
 
-Mein Freund, der Fahrradh=C3=A4ndler
-Manche Dinge ver=C3=A4ndern sich =C3=BCber die langen Wintermonate hinw=
-eg.=20
+The assignment of len = len is unnecessary, so remove it.
 
-http://diepresse.com/home/leben/mode/kolumnezumtag/548717/index.do
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/sony-laptop.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Notiz:
-Dear friend,
-=20
-I am the international operations manager of ABSA bank South Africa. My=
- name is Franklin Buthelezi. I have a sensitive and private offer from =
-the top executive to seek your partnership in re-profiling some offshor=
-e investment funds worth 11.5M U.S.D (Eleven Million five hundred thous=
-and United States Dollars) I am constrained however to withhold most of=
- the details for now. This is a legitimate transaction.=20
-=20
-If we agree on the terms you will be given 15% of the total funds, if y=
-ou are interested please write back via email providing me your persona=
-l details and phone number for further directives.
-=20
-If you are interested and willing to render your assistance please resp=
-ond via my private email address stated below.
-=20
-I look forward to your response.
-=20
-Best regards
-=46ranklin Buthelezi
-Email: franklinbuthelezi1@yahoo.com
-
-
-------------------------------------
-DiePresse.com =C3=BCbernimmt keine Haftung f=C3=BCr den Inhalt der pers=
-=C3=B6nlichen Nachricht.
-
-=C2=A9 DiePresse.com - http://diepresse.com
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index fb233ae..61fa755 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -791,7 +791,7 @@ static int sony_nc_buffer_call(acpi_handle handle, char *name, u64 *value,
+ 		void *buffer, size_t buflen)
+ {
+ 	int ret = 0;
+-	size_t len = len;
++	size_t len;
+ 	union acpi_object *object = __call_snc_method(handle, name, value);
+ 
+ 	if (!object)
+-- 
+1.7.9.5
