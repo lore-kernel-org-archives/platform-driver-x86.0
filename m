@@ -1,80 +1,59 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
-Date: Thu, 09 Jan 2014 17:05:10 +0800
-Message-ID: <1389258310.24105.82.camel@linux-s257.site>
-References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>
-	 <1388116274.3539.6046.camel@linux-s257.site>
-	 <1388118336.3539.6055.camel@linux-s257.site>
-	 <52C42821.3020801@rempel-privat.de>
-	 <1388666346.3539.6065.camel@linux-s257.site>
-	 <52CAD7B3.6060508@rempel-privat.de>
-	 <1389251197.24105.20.camel@linux-s257.site>
-	 <52CE59CD.7070805@rempel-privat.de>
+From: franklinbuthelezi1@yahoo.com
+Subject: =?UTF-8?Q?DiePresse.com_Mein_Freund,_der_Fahrradh=C3=A4ndler?=
+Date: Fri, 10 Jan 2014 13:33:08 +0100 (CET)
+Message-ID: <476012162.1389357188781.JavaMail.root@dpoportal4.diepresse.apa.net>
+Reply-To: franklinbuthelezi1@yahoo.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:44108 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754028AbaAIJGr (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Thu, 9 Jan 2014 04:06:47 -0500
-In-Reply-To: <52CE59CD.7070805@rempel-privat.de>
+Received: from dpocron.diepresse.apa.net ([194.232.102.6]:41749 "EHLO
+	dpocron.diepresse.apa.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751952AbaAJMju convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 10 Jan 2014 07:39:50 -0500
+Received: from dpoportal4.diepresse.apa.net (dpoportal4.diepresse.local [192.168.0.20])
+	by dpocron.diepresse.apa.net (Postfix) with ESMTP id C1AC14457A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jan 2014 13:33:08 +0100 (CET)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
+To: platform-driver-x86@vger.kernel.org
 
-=E6=96=BC =E5=9B=9B=EF=BC=8C2014-01-09 =E6=96=BC 09:11 +0100=EF=BC=8COl=
-eksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
-> Am 09.01.2014 08:06, schrieb joeyli:
-> > =E6=96=BC =E4=B8=80=EF=BC=8C2014-01-06 =E6=96=BC 17:20 +0100=EF=BC=8C=
-Oleksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
-> >>> I think Aaron's patches can fix it on E1-572. Let's wait until v3=
-=2E13
-> >>> version released then look at maybe someone report issue again.
-> >>>
-> >>> Very appreciate for your patch.
-> >>>
-> >>> Joey Lee
-> >>>
-> >>
-> >> Hi Joey,
-> >>
-> >> i have access to this hardware for next two weeks. Theoretically t=
-his
-> >> kernel should have patches you was talking about:
-> >> http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/2014-01-06-tru=
-sty/
-> >>
-> >> it works with video.use_native_backlight=3D1.
-> >>
-> >> If you need more testing, you have two weeks ;)
-> >>
-> >> --=20
-> >> Regards,
-> >> Oleksij
-> >>
-> >=20
-> > Thanks for your testing, then I think just use
-> > video.use_native_backlight to fix issue on Aspire E1-572. Don't nee=
-d add
-> > quirk to acer-wmi driver.
->=20
-> You mean editing grub and adding kernel option?
+=46olgender Artikel auf http://diepresse.com wird Ihnen von Franklin Bu=
+thelezi empfohlen:
 
-Good point!
+Mein Freund, der Fahrradh=C3=A4ndler
+Manche Dinge ver=C3=A4ndern sich =C3=BCber die langen Wintermonate hinw=
+eg.=20
 
-Looks we need add Aspire E1-572 to the video_dmi_table in
-drivers/acpi/video.c, like:
-http://lists.freedesktop.org/archives/dri-devel/2013-November/049427.ht=
-ml
+http://diepresse.com/home/leben/mode/kolumnezumtag/548717/index.do
 
-But this patch doesn't in mainline.=20
-
-Do you want send a patch to Aaron Lu for add Aspire E1-572 to list? or
-maybe we can ping Aaron to direct add it.
+Notiz:
+Dear friend,
+=20
+I am the international operations manager of ABSA bank South Africa. My=
+ name is Franklin Buthelezi. I have a sensitive and private offer from =
+the top executive to seek your partnership in re-profiling some offshor=
+e investment funds worth 11.5M U.S.D (Eleven Million five hundred thous=
+and United States Dollars) I am constrained however to withhold most of=
+ the details for now. This is a legitimate transaction.=20
+=20
+If we agree on the terms you will be given 15% of the total funds, if y=
+ou are interested please write back via email providing me your persona=
+l details and phone number for further directives.
+=20
+If you are interested and willing to render your assistance please resp=
+ond via my private email address stated below.
+=20
+I look forward to your response.
+=20
+Best regards
+=46ranklin Buthelezi
+Email: franklinbuthelezi1@yahoo.com
 
 
-Thanks a lot!
-Joey Lee
+------------------------------------
+DiePresse.com =C3=BCbernimmt keine Haftung f=C3=BCr den Inhalt der pers=
+=C3=B6nlichen Nachricht.
+
+=C2=A9 DiePresse.com - http://diepresse.com
