@@ -1,200 +1,82 @@
-From: Bradley Baetz <bbaetz@gmail.com>
-Subject: Re: [REGRESSION] [BISECTED] MM patch causes kernel lockup with 3.12
- and acpi_backlight=vendor
-Date: Sat, 11 Jan 2014 13:59:14 +1100
-Message-ID: <CAJrk0Bs-deK06YUFk3j7tBx0hoBVa+BKNJSCMCnRJM38Tjpdhg@mail.gmail.com>
-References: <CAJrk0BuA2OTfMhmqZ-OFvtbdf_8+O3V77L0mDsoixN+t4A0ASA@mail.gmail.com>
-	<20140106171324.GA6963@cmpxchg.org>
-	<CAJrk0BsiQ6R5utmvQ4NLUKkVg40NtiP2oMStZk-ejt8thbUTdA@mail.gmail.com>
-	<CAJrk0BuksDgE7UqF1knfNoxbvtm_-zrjw2M85tE49gT-M9bX9A@mail.gmail.com>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: Re: [PATCH] acer-wmi: add video_vendor quirk for Acer Aspire E1-572
+Date: Mon, 13 Jan 2014 10:49:40 +0800
+Message-ID: <52D35444.4060301@intel.com>
+References: <1386248428-5767-1-git-send-email-linux@rempel-privat.de>	 <1388116274.3539.6046.camel@linux-s257.site>	 <1388118336.3539.6055.camel@linux-s257.site>	 <52C42821.3020801@rempel-privat.de>	 <1388666346.3539.6065.camel@linux-s257.site>	 <52CAD7B3.6060508@rempel-privat.de>	 <1389251197.24105.20.camel@linux-s257.site>	 <52CE59CD.7070805@rempel-privat.de> <1389258310.24105.82.camel@linux-s257.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <CAJrk0BuksDgE7UqF1knfNoxbvtm_-zrjw2M85tE49gT-M9bX9A@mail.gmail.com>
-Sender: owner-linux-mm@kvack.org
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Hans De Goede <hdegoede@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:18040 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751118AbaAMCtX (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 12 Jan 2014 21:49:23 -0500
+In-Reply-To: <1389258310.24105.82.camel@linux-s257.site>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: joeyli <jlee@suse.com>, Oleksij Rempel <linux@rempel-privat.de>
+Cc: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
 
-On Thu, Jan 9, 2014 at 1:51 AM, Bradley Baetz <bbaetz@gmail.com> wrote:
-> On Tue, Jan 7, 2014 at 11:06 PM, Bradley Baetz <bbaetz@gmail.com> wrote:
->> Hi,
->>
->> On Tue, Jan 7, 2014 at 4:13 AM, Johannes Weiner <hannes@cmpxchg.org> wrote:
->>> Hi Bradley,
+On 01/09/2014 05:05 PM, joeyli wrote:
+> =E6=96=BC =E5=9B=9B=EF=BC=8C2014-01-09 =E6=96=BC 09:11 +0100=EF=BC=8C=
+Oleksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
+>> Am 09.01.2014 08:06, schrieb joeyli:
+>>> =E6=96=BC =E4=B8=80=EF=BC=8C2014-01-06 =E6=96=BC 17:20 +0100=EF=BC=8C=
+Oleksij Rempel =E6=8F=90=E5=88=B0=EF=BC=9A
+>>>>> I think Aaron's patches can fix it on E1-572. Let's wait until v3=
+=2E13
+>>>>> version released then look at maybe someone report issue again.
+>>>>>
+>>>>> Very appreciate for your patch.
+>>>>>
+>>>>> Joey Lee
+>>>>>
+>>>>
+>>>> Hi Joey,
+>>>>
+>>>> i have access to this hardware for next two weeks. Theoretically t=
+his
+>>>> kernel should have patches you was talking about:
+>>>> http://kernel.ubuntu.com/~kernel-ppa/mainline/daily/2014-01-06-tru=
+sty/
+>>>>
+>>>> it works with video.use_native_backlight=3D1.
+>>>>
+>>>> If you need more testing, you have two weeks ;)
+>>>>
+>>>> --=20
+>>>> Regards,
+>>>> Oleksij
+>>>>
 >>>
->>> On Fri, Dec 27, 2013 at 02:21:21PM +1100, Bradley Baetz wrote:
->>>> Hi,
->>>>
->>>> I have a Dell laptop (Vostro 3560). When I boot Fedora 20 with the
->>>> acpi_backlight=vendor option, the kernel locks up hard during the boot
->>>> proces, when systemd runs udevadm trigger. This is a hard lockup -
->>>> magic-sysrq doesn't work, and neither does caps lock/vt-change/etc.
->>>>
->>>> I've bisected this to:
->>>>
->>>> commit 81c0a2bb515fd4daae8cab64352877480792b515
->>>> Author: Johannes Weiner <hannes@cmpxchg.org>
->>>> Date:   Wed Sep 11 14:20:47 2013 -0700
->>>>
->>>>     mm: page_alloc: fair zone allocator policy
->>>>
->>>> which seemed really unrelated, but I've confirmed that:
->>>>
->>>>  - the commit before this patch doesn't cause the problem, and the commit
->>>> afterwrads does
->>>>  - reverting that patch from 3.12.0 fixes the problem
->>>>  - reverting that patch (and the partial revert
->>>> fff4068cba484e6b0abe334ed6b15d5a215a3b25) from master also fixes the problem
->>>>  - reverting that patch from the fedora 3.12.5-302.fc20 kernel fixes the
->>>> problem
->>>>  - applying that patch to 3.11.0 causes the problem
->>>>
->>>> so I'm pretty sure that that is the patch that causes (or at least
->>>> triggers) this issue
->>>>
->>>> I'm using the acpi_backlight option to get the backlight working - without
->>>> this the backlight doesn't work at all. Removing 'acpi_backlight=vendor'
->>>> (or blacklisting the dell-laptop module, which is effectively the same
->>>> thing) fixes the issue.
->>>>
->>>> The lockup happens when systemd runs "udevadm trigger", not when the module
->>>> is loaded - I can reproduce the issue by booting into emergency mode,
->>>> remounting the filesystem as rw, starting up systemd-udevd and running
->>>> udevadm trigger manually. It dies a few seconds after loading the
->>>> dell-laptop module.
->>>>
->>>> This happens even if I don't boot into X (using
->>>> systemd.unit=multi-user.target)
->>>>
->>>> Triggering udev individually for each item doesn't trigger the issue ie:
->>>>
->>>> for i in `udevadm --debug trigger --type=devices --action=add --dry-run
->>>> --verbose`; do echo $i; udevadm --debug trigger --type=devices --action=add
->>>> --verbose --parent-match=$i; sleep 1; done
->>>>
->>>> works, so I haven't been able to work out what specific combination of
->>>> actions are causing this.
->>>>
->>>> With the acpi_backlight option, I can manually read/write to the sysfs
->>>> dell-laptop backlight file, and it works (and changes the backlight as
->>>> expected)
->>>>
->>>> This is 100% reproducible. I've also tested by powering off the laptop and
->>>> pulling the battery just in case one of the previous boots with the bisect
->>>> left the hardware in a strange state - no change.
->>>
->>> My patch aggressively spreads allocations over all zones in the
->>> system, but it should still respect dell-laptop's requirements for
->>> DMA32 memory.
->>>
->>> I wonder if the drastic change in allocation placement exposes an
->>> existing memory corruption.  In fact, the dell-laptop module is
->>> confused when it comes to the page allocator interface, it does
->>>
->>>   free_page((unsigned long)bufferpage);
->>>
->>> in the error path, where bufferpage is a page pointer that came out of
->>> alloc_page(), which will cause the page allocator to try to free the
->>> mem_map(!) page that backs the bufferpage page struct.  So one failed
->>> load attempt of the module could plausibly corrupt internal state.
->>>
->>> Does the following resolve the problem?  And if not, what are the
->>> "dell-laptop:" lines in the good and the bad kernel, and does the bad
->>> kernel trigger the WARNING?
+>>> Thanks for your testing, then I think just use
+>>> video.use_native_backlight to fix issue on Aspire E1-572. Don't nee=
+d add
+>>> quirk to acer-wmi driver.
 >>
->> Nope, no luck. I added some more printk's arround the use of SMI. I've
->> transcribed the logs from a screenshot for the failing kernel (ie
->> master+your patch) ("Sending command" logs class, select, and
->> &command.ebx (with the %pa format string):
->>
->> dell-laptop: bufferpage (ffffea000263c680) in node 0 zone 1 (DMA32)
->> Sending command: 0, 2, 0x4253493198f1a000
->> Command sent
->> dell-laptop: getting intensity
->> Sending command: 0, 2, 0x4253493198f1a000
->> Command sent
->> dell-laptop: got intensity
->> dell-laptop: Setting intensity
->> Sending command: 1, 2, 0x4253493198f1a000
->>
->> and then it locks up before returning from the SMI
->>
->> So some of the commands work, and they also return the same value for
->> the brightness, AND have parsed the same value from the SMBIOS table
->> for the ioport/value to use. (I added that later, but didn't take a
->> photo - they all return brightness of 2, which is the at-boot default
->> value)
->>
->> Without acpi_backlight=vendor:
->>
->> dell-laptop: bufferpage (ffffea0000fa0dc0) in node 0 zone 1 (DMA32)
->>
->> (no other logs, because the module's backlight interface isn't used
->> without that boot param)
->>
->> With your mm patches reverted:
->>
->> [   12.773884] dell-laptop: bufferpage (ffffea0000fe0180) in node 0
->> zone 1 (DMA32)
->> [   12.775502] Sending command: 0, 2, 0x425349313f806000
->> [   12.777293] Command sent
->> [   12.778950] dell-laptop: getting intensity
->> [   12.780589] Sending command: 0, 2, 0x425349313f806000
->> [   12.782185] Command sent
->> [   12.783679] dell-laptop: got intensity
->> [   12.785202] dell-laptop: Setting intensity
->> [   12.786715] Sending command: 1, 2, 0x425349313f806000
->> [   12.788892] Command sent
->> [   12.790379] dell-laptop: set intensity
->>
->> (with the get/set repeated a bit later when X starts up)
->>
->> And on the broken kernel, when I boot into 'emergency' mode, manually
->> load dell-laptop, I get the same logs as the 'working' bit (including
->> the getting/got/setting/set lines).
->>
->> Looking at the code, I notice a few things odd with the dcdbas code,
->> although I don't think that they're the issue here
->>
->> 1. dcdbas_smi_request does outb/inb, and marks eax as an input, but
->> doesn't mark it as clobbered (I think; I don't have much experience
->> with gcc's asm). In practice, I can't see that being an issue
->> 2. dcdbas_smi_request says that it is "Called with smi_data_lock" but
->> that's only true for the calls *within* dcdbas.c. I think that that's
->> only a documentation issue, since is protecting a buffer that isn't
->> used here. (Dell-laptop has its own buffer and mutex).
->>
->> I'm still unable to manually reproduce this - the only way to repro is
->> 'try to boot normally', and while that's 100% reliable, it makes it a
->> bit hard to narrow a trigger down...
->
-> So if I boot into 'emergency' mode and modprobe dell-laptop, it only
-> locks up about 50% of the time. And if I boot with init=/bin/bash, and
-> then load the module, it doesn't lock up at all (tried 5 times)
->
-> I also tried making dell-laptop use the DMA zone (instead of DMA32),
-> and that didn't help.
+>> You mean editing grub and adding kernel option?
+>=20
+> Good point!
+>=20
+> Looks we need add Aspire E1-572 to the video_dmi_table in
+> drivers/acpi/video.c, like:
+> http://lists.freedesktop.org/archives/dri-devel/2013-November/049427.=
+html
+>=20
+> But this patch doesn't in mainline.=20
+>=20
+> Do you want send a patch to Aaron Lu for add Aspire E1-572 to list? o=
+r
+> maybe we can ping Aaron to direct add it.
 
-I played around with memmap= boot options to try to work out what bits
-of memory were being used that shouldn't be. Unfortunately I ran into
-trouble reserving the EFI areas, because any memory areas marked as
-reserved don't end up with the execute bit set, and the early calls
-into EFI crash due to the NX checks.
+Since it is shipped with Win8, I think the following patch should take
+care of it:
+[PATCH] ACPI / video: Use native backlight control interface by default
+http://www.spinics.net/lists/linux-acpi/msg47755.html
 
-I hacked efi_free_boot_services to just return without freeing
-anything, and it seems to not lock up. Whether that's just because the
-memory allocation ends up being different, or because the SMI way of
-adjusting the backlight isn't meant to be used with EFI is another
-story...
+Last time Daniel seems to agree to merge it for test purpose, but I
+didn't see it get merged somewhere yet.
 
-So looks like this would always have been a problem, but the
-allocation schema changes just exposed it early?
-
-Bradley
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Thanks,
+Aaron
