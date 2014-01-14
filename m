@@ -1,24 +1,159 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH] toshiba_acpi: Support RFKILL hotkey scancode
-Date: Tue, 14 Jan 2014 15:54:13 +0000
-Message-ID: <1389714852.3720.0.camel@x230>
-References: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
+From: David Cohen <david.a.cohen@linux.intel.com>
+Subject: Re: [PATCH 1/2] ipc: simplify platform data approach
+Date: Tue, 14 Jan 2014 14:57:35 -0800
+Message-ID: <20140114225735.GC9834@psi-dev26.jf.intel.com>
+References: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
-Content-Language: en-US
-Content-ID: <4AB87F1E2DB9BD4EB70B4338C8892E4C@namprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "unaiur@gmail.com" <unaiur@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:37994 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750906AbaANWwb (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 14 Jan 2014 17:52:31 -0500
+Content-Disposition: inline
+In-Reply-To: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE0LTAxLTE0IGF0IDExOjA2ICswMTAwLCBVbmFpIFVyaWJhcnJpIHdyb3RlOg0K
-PiBUaGlzIHNjYW5jb2RlIGlzIHVzZWQgaW4gbmV3IDIwMTMgbW9kZWxzIGxpa2UgU2F0ZWxsaXRl
-IFA3NS1BNzIwMC4NCg0KSnVzdCB0byBjaGVjayAtIHRoaXMgaXMgZ2VuZXJhdGVkIGJ5IGEga2V5
-IHRoYXQgb3RoZXJ3aXNlIGRvZXMgbm90aGluZywNCnJpZ2h0PyBJZSwgaGl0dGluZyB0aGUga2V5
-IGdlbmVyYXRlcyB0aGUgc2NhbmNvZGUgYnV0IGRvZXNuJ3QNCmF1dG9tYXRpY2FsbHkgY2hhbmdl
-IHRoZSB3aXJlbGVzcyBzdGF0ZT8NCg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgPG1hdHRoZXcuZ2Fy
-cmV0dEBuZWJ1bGEuY29tPg0K
+On Mon, Dec 02, 2013 at 04:20:00PM -0800, David Cohen wrote:
+> This patch removes the unnecessary enum for platform type to handle the
+> array of pdatas. We can set pdata directly to pci_device_id struct
+> instead.
+
+Ping. comments here? :)
+
+Br, David Cohen
+
+> 
+> Signed-off-by: David Cohen <david.a.cohen@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_scu_ipc.c | 84 +++++++++++++++++-------------------
+>  1 file changed, 40 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index 60ea476a9130..259969d31055 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -62,13 +62,6 @@
+>  #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+>  #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+>  
+> -enum {
+> -	SCU_IPC_LINCROFT,
+> -	SCU_IPC_PENWELL,
+> -	SCU_IPC_CLOVERVIEW,
+> -	SCU_IPC_TANGIER,
+> -};
+> -
+>  /* intel scu ipc driver data*/
+>  struct intel_scu_ipc_pdata_t {
+>  	u32 ipc_base;
+> @@ -78,35 +71,29 @@ struct intel_scu_ipc_pdata_t {
+>  	u8 irq_mode;
+>  };
+>  
+> -static struct intel_scu_ipc_pdata_t intel_scu_ipc_pdata[] = {
+> -	[SCU_IPC_LINCROFT] = {
+> -		.ipc_base = 0xff11c000,
+> -		.i2c_base = 0xff12b000,
+> -		.ipc_len = 0x100,
+> -		.i2c_len = 0x10,
+> -		.irq_mode = 0,
+> -	},
+> -	[SCU_IPC_PENWELL] = {
+> -		.ipc_base = 0xff11c000,
+> -		.i2c_base = 0xff12b000,
+> -		.ipc_len = 0x100,
+> -		.i2c_len = 0x10,
+> -		.irq_mode = 1,
+> -	},
+> -	[SCU_IPC_CLOVERVIEW] = {
+> -		.ipc_base = 0xff11c000,
+> -		.i2c_base = 0xff12b000,
+> -		.ipc_len = 0x100,
+> -		.i2c_len = 0x10,
+> -		.irq_mode = 1,
+> -	},
+> -	[SCU_IPC_TANGIER] = {
+> -		.ipc_base = 0xff009000,
+> -		.i2c_base  = 0xff00d000,
+> -		.ipc_len  = 0x100,
+> -		.i2c_len = 0x10,
+> -		.irq_mode = 0,
+> -	},
+> +static struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+> +	.ipc_base = 0xff11c000,
+> +	.i2c_base = 0xff12b000,
+> +	.ipc_len = 0x100,
+> +	.i2c_len = 0x10,
+> +	.irq_mode = 0,
+> +};
+> +
+> +/* Penwell and Cloverview */
+> +static struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+> +	.ipc_base = 0xff11c000,
+> +	.i2c_base = 0xff12b000,
+> +	.ipc_len = 0x100,
+> +	.i2c_len = 0x10,
+> +	.irq_mode = 1,
+> +};
+> +
+> +static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+> +	.ipc_base = 0xff009000,
+> +	.i2c_base  = 0xff00d000,
+> +	.ipc_len  = 0x100,
+> +	.i2c_len = 0x10,
+> +	.irq_mode = 0,
+>  };
+>  
+>  static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id);
+> @@ -583,15 +570,14 @@ static irqreturn_t ioc(int irq, void *dev_id)
+>   */
+>  static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  {
+> -	int err, pid;
+> +	int err;
+>  	struct intel_scu_ipc_pdata_t *pdata;
+>  	resource_size_t pci_resource;
+>  
+>  	if (ipcdev.pdev)		/* We support only one SCU */
+>  		return -EBUSY;
+>  
+> -	pid = id->driver_data;
+> -	pdata = &intel_scu_ipc_pdata[pid];
+> +	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+>  
+>  	ipcdev.pdev = pci_dev_get(dev);
+>  	ipcdev.irq_mode = pdata->irq_mode;
+> @@ -650,11 +636,21 @@ static void ipc_remove(struct pci_dev *pdev)
+>  }
+>  
+>  static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
+> -	{PCI_VDEVICE(INTEL, 0x082a), SCU_IPC_LINCROFT},
+> -	{PCI_VDEVICE(INTEL, 0x080e), SCU_IPC_PENWELL},
+> -	{PCI_VDEVICE(INTEL, 0x08ea), SCU_IPC_CLOVERVIEW},
+> -	{PCI_VDEVICE(INTEL, 0x11a0), SCU_IPC_TANGIER},
+> -	{ 0,}
+> +	{
+> +		PCI_VDEVICE(INTEL, 0x082a),
+> +		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
+> +	}, {
+> +		PCI_VDEVICE(INTEL, 0x080e),
+> +		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
+> +	}, {
+> +		PCI_VDEVICE(INTEL, 0x08ea),
+> +		(kernel_ulong_t)&intel_scu_ipc_penwell_pdata,
+> +	}, {
+> +		PCI_VDEVICE(INTEL, 0x11a0),
+> +		(kernel_ulong_t)&intel_scu_ipc_tangier_pdata,
+> +	}, {
+> +		0,
+> +	}
+>  };
+>  MODULE_DEVICE_TABLE(pci, pci_ids);
+>  
+> -- 
+> 1.8.4.2
