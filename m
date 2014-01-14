@@ -1,36 +1,24 @@
-From: Unai Uribarri <unaiur@gmail.com>
-Subject: [PATCH] toshiba_acpi: Support RFKILL hotkey scancode
-Date: Tue, 14 Jan 2014 11:06:47 +0100
-Message-ID: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ig0-f174.google.com ([209.85.213.174]:56012 "EHLO
-	mail-ig0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751306AbaANKG4 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 14 Jan 2014 05:06:56 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Unai Uribarri <unaiur@gmail.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH] toshiba_acpi: Support RFKILL hotkey scancode
+Date: Tue, 14 Jan 2014 15:54:13 +0000
+Message-ID: <1389714852.3720.0.camel@x230>
+References: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
+Content-Language: en-US
+Content-ID: <4AB87F1E2DB9BD4EB70B4338C8892E4C@namprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "unaiur@gmail.com" <unaiur@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This scancode is used in new 2013 models like Satellite P75-A7200.
-
-Signed-off-by: Unai Uribarri <unaiur@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 7fce391..5d23ca2 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -151,6 +151,7 @@ static const struct acpi_device_id toshiba_device_ids[] = {
- MODULE_DEVICE_TABLE(acpi, toshiba_device_ids);
- 
- static const struct key_entry toshiba_acpi_keymap[] = {
-+	{ KE_KEY, 0x9e, { KEY_RFKILL } },
- 	{ KE_KEY, 0x101, { KEY_MUTE } },
- 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
- 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
--- 
-1.7.9.5
+T24gVHVlLCAyMDE0LTAxLTE0IGF0IDExOjA2ICswMTAwLCBVbmFpIFVyaWJhcnJpIHdyb3RlOg0K
+PiBUaGlzIHNjYW5jb2RlIGlzIHVzZWQgaW4gbmV3IDIwMTMgbW9kZWxzIGxpa2UgU2F0ZWxsaXRl
+IFA3NS1BNzIwMC4NCg0KSnVzdCB0byBjaGVjayAtIHRoaXMgaXMgZ2VuZXJhdGVkIGJ5IGEga2V5
+IHRoYXQgb3RoZXJ3aXNlIGRvZXMgbm90aGluZywNCnJpZ2h0PyBJZSwgaGl0dGluZyB0aGUga2V5
+IGdlbmVyYXRlcyB0aGUgc2NhbmNvZGUgYnV0IGRvZXNuJ3QNCmF1dG9tYXRpY2FsbHkgY2hhbmdl
+IHRoZSB3aXJlbGVzcyBzdGF0ZT8NCg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgPG1hdHRoZXcuZ2Fy
+cmV0dEBuZWJ1bGEuY29tPg0K
