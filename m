@@ -1,31 +1,36 @@
-From: gift <khadymoses@yahoo.com>
-Subject: Hello!
-Date: Mon, 13 Jan 2014 19:06:34 +0100 (CET)
-Message-ID: <2026248272.7592011389636394746.JavaMail.defaultUser__20612.5154313215$1389636413$gmane$org@defaultHost>
-Reply-To: gift <khadymoses@yahoo.com>
-Mime-Version: 1.0
-Content-Type: text/plain;charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Unai Uribarri <unaiur@gmail.com>
+Subject: [PATCH] toshiba_acpi: Support RFKILL hotkey scancode
+Date: Tue, 14 Jan 2014 11:06:47 +0100
+Message-ID: <1389694007-8342-1-git-send-email-unaiur@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outrelay02.libero.it ([212.52.84.102]:55009 "EHLO
-	outrelay02.libero.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751707AbaAMSGh (ORCPT
+Received: from mail-ig0-f174.google.com ([209.85.213.174]:56012 "EHLO
+	mail-ig0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751306AbaANKG4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 Jan 2014 13:06:37 -0500
+	Tue, 14 Jan 2014 05:06:56 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Unai Uribarri <unaiur@gmail.com>
 
-Hello!
+This scancode is used in new 2013 models like Satellite P75-A7200.
 
+Signed-off-by: Unai Uribarri <unaiur@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-I looked through your profile and decided to write you a message to inform you 
-that i am interested in knowing more about you please you can contact me true 
-my email so that i can tell you all about me ok 
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 7fce391..5d23ca2 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -151,6 +151,7 @@ static const struct acpi_device_id toshiba_device_ids[] = {
+ MODULE_DEVICE_TABLE(acpi, toshiba_device_ids);
  
-Regards
-
-Miss.....
-
-
-
-             khadymoses@yahoo.com
+ static const struct key_entry toshiba_acpi_keymap[] = {
++	{ KE_KEY, 0x9e, { KEY_RFKILL } },
+ 	{ KE_KEY, 0x101, { KEY_MUTE } },
+ 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
+ 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
+-- 
+1.7.9.5
