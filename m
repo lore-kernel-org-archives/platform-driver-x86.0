@@ -1,29 +1,45 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
+From: Alex Hung <alex.hung@canonical.com>
 Subject: Re: [PATCH] hp-wireless: new driver for hp wireless button for
  Windows 8
-Date: Wed, 15 Jan 2014 13:21:59 +0000
-Message-ID: <1389792119.3720.5.camel@x230>
+Date: Thu, 16 Jan 2014 17:34:59 +0800
+Message-ID: <CAJ=jqubF8QFf2zR8aT-0g4HYrmNVW-gK+fBxiVZMJx5h+J64AQ@mail.gmail.com>
 References: <1389767381-10211-1-git-send-email-alex.hung@canonical.com>
+	<1389792119.3720.5.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-bl2lp0204.outbound.protection.outlook.com ([207.46.163.204]:47148
-	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751037AbaAONWV (ORCPT
+Received: from mail-oa0-f45.google.com ([209.85.219.45]:44691 "EHLO
+	mail-oa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751520AbaAPJfA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 15 Jan 2014 08:22:21 -0500
-In-Reply-To: <1389767381-10211-1-git-send-email-alex.hung@canonical.com>
-Content-Language: en-US
-Content-ID: <C12348C6545D254AB59FC6A20FB6989C@namprd05.prod.outlook.com>
+	Thu, 16 Jan 2014 04:35:00 -0500
+Received: by mail-oa0-f45.google.com with SMTP id j17so2640735oag.32
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jan 2014 01:34:59 -0800 (PST)
+In-Reply-To: <1389792119.3720.5.camel@x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "alex.hung@canonical.com" <alex.hung@canonical.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-QWN0dWFsbHksIGp1c3QgZm91bmQgYW4gZXhhbXBsZSAtIGxvb2tzIGxpa2UgSSdtIHdyb25nIGFu
-ZCBpdCdzIHB1cmVseQ0KdXNlZCBmb3Igc2VuZGluZyB0aGlzIGV2ZW50LiBJbiB0aGF0IGNhc2Us
-IGRvbid0IGJvdGhlciB3aXRoIHRoZSBrZXltYXANCmF0IGFsbCBhbmQganVzdCBoYXJkY29kZSBL
-RVlfUkZLSUxMLg0KLS0gDQpNYXR0aGV3IEdhcnJldHQgPG1hdHRoZXcuZ2FycmV0dEBuZWJ1bGEu
-Y29tPg0K
+Hi Matthew,
+
+It is confirmed by manufacturer that "the primary function of this
+device will be to send an ACPI notify (0x80)".
+
+I will re-send a patch with hardcode of KEY_RFKILL.
+
+
+
+On Wed, Jan 15, 2014 at 9:21 PM, Matthew Garrett
+<matthew.garrett@nebula.com> wrote:
+> Actually, just found an example - looks like I'm wrong and it's purely
+> used for sending this event. In that case, don't bother with the keymap
+> at all and just hardcode KEY_RFKILL.
+> --
+> Matthew Garrett <matthew.garrett@nebula.com>
+
+
+
+-- 
+Cheers,
+Alex Hung
