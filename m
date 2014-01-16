@@ -1,45 +1,196 @@
 From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] hp-wireless: new driver for hp wireless button for
- Windows 8
-Date: Thu, 16 Jan 2014 17:34:59 +0800
-Message-ID: <CAJ=jqubF8QFf2zR8aT-0g4HYrmNVW-gK+fBxiVZMJx5h+J64AQ@mail.gmail.com>
-References: <1389767381-10211-1-git-send-email-alex.hung@canonical.com>
-	<1389792119.3720.5.camel@x230>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Subject: [PATCH][RESEND] hp-wireless: new driver for hp wireless button for Windows 8
+Date: Thu, 16 Jan 2014 17:50:31 +0800
+Message-ID: <1389865831-10636-1-git-send-email-alex.hung@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f45.google.com ([209.85.219.45]:44691 "EHLO
-	mail-oa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751520AbaAPJfA (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:44445 "EHLO
+	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752326AbaAPJuh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 16 Jan 2014 04:35:00 -0500
-Received: by mail-oa0-f45.google.com with SMTP id j17so2640735oag.32
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jan 2014 01:34:59 -0800 (PST)
-In-Reply-To: <1389792119.3720.5.camel@x230>
+	Thu, 16 Jan 2014 04:50:37 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
 
-Hi Matthew,
+Signed-off-by: Alex Hung <alex.hung@canonical.com>
+---
+ drivers/platform/x86/Kconfig       |  11 ++++
+ drivers/platform/x86/Makefile      |   1 +
+ drivers/platform/x86/hp-wireless.c | 132 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 144 insertions(+)
+ create mode 100644 drivers/platform/x86/hp-wireless.c
 
-It is confirmed by manufacturer that "the primary function of this
-device will be to send an ACPI notify (0x80)".
-
-I will re-send a patch with hardcode of KEY_RFKILL.
-
-
-
-On Wed, Jan 15, 2014 at 9:21 PM, Matthew Garrett
-<matthew.garrett@nebula.com> wrote:
-> Actually, just found an example - looks like I'm wrong and it's purely
-> used for sending this event. In that case, don't bother with the keymap
-> at all and just hardcode KEY_RFKILL.
-> --
-> Matthew Garrett <matthew.garrett@nebula.com>
-
-
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d9dcd37..aee5f72 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -197,6 +197,17 @@ config HP_ACCEL
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called hp_accel.
+ 
++config HP_WIRELESS
++	tristate "HP WIRELESS"
++	depends on ACPI
++	depends on INPUT
++	help
++	 This driver provides supports for new HP wireless button for Windows 8.
++	 On such systems the driver should load automatically (via ACPI alias).
++
++	 To compile this driver as a module, choose M here: the module will
++	 be called hp-wireless.
++
+ config HP_WMI
+ 	tristate "HP WMI extras"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index f0e6aa4..b8c36f7 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
+ obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+ obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+ obj-$(CONFIG_HP_ACCEL)		+= hp_accel.o
++obj-$(CONFIG_HP_WIRELESS)	+= hp-wireless.o
+ obj-$(CONFIG_HP_WMI)		+= hp-wmi.o
+ obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
+ obj-$(CONFIG_TC1100_WMI)	+= tc1100-wmi.o
+diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
+new file mode 100644
+index 0000000..415348f
+--- /dev/null
++++ b/drivers/platform/x86/hp-wireless.c
+@@ -0,0 +1,132 @@
++/*
++ *  hp-wireless button for Windows 8
++ *
++ *  Copyright (C) 2014 Alex Hung <alex.hung@canonical.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License along
++ *  with this program; if not, write to the Free Software Foundation, Inc.,
++ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/platform_device.h>
++#include <linux/acpi.h>
++#include <acpi/acpi_bus.h>
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Alex Hung");
++MODULE_ALIAS("acpi*:HPQ6001:*");
++
++static struct input_dev *hpwl_input_dev;
++
++static const struct acpi_device_id hpwl_ids[] = {
++	{"HPQ6001", 0},
++	{"", 0},
++};
++
++static int hp_wireless_input_setup(void)
++{
++	int err;
++
++	hpwl_input_dev = input_allocate_device();
++	if (!hpwl_input_dev)
++		return -ENOMEM;
++
++	hpwl_input_dev->name = "HP Wireless hotkeys";
++	hpwl_input_dev->phys = "hpq6001/input0";
++	hpwl_input_dev->id.bustype = BUS_HOST;
++	hpwl_input_dev->evbit[0] = BIT(EV_KEY);
++	set_bit(KEY_RFKILL, hpwl_input_dev->keybit);
++
++	err = input_register_device(hpwl_input_dev);
++	if (err)
++		goto err_free_dev;
++
++	return 0;
++
++err_free_dev:
++	input_free_device(hpwl_input_dev);
++	return err;
++}
++
++static void hp_wireless_input_destroy(void)
++{
++	input_unregister_device(hpwl_input_dev);
++}
++
++static void hpwl_notify(struct acpi_device *acpi_dev, u32 event)
++{
++	if (event != 0x80) {
++		pr_info("Received unknown event (0x%x)\n", event);
++		return;
++	}
++
++	input_report_key(hpwl_input_dev, KEY_RFKILL, 1);
++	input_sync(hpwl_input_dev);
++	input_report_key(hpwl_input_dev, KEY_RFKILL, 0);
++	input_sync(hpwl_input_dev);
++}
++
++static int hpwl_add(struct acpi_device *device)
++{
++	int err;
++
++	err = hp_wireless_input_setup();
++	return err;
++}
++
++static int hpwl_remove(struct acpi_device *device)
++{
++	hp_wireless_input_destroy();
++	return 0;
++}
++
++static struct acpi_driver hpwl_driver = {
++	.name	= "hp-wireless",
++	.owner	= THIS_MODULE,
++	.ids	= hpwl_ids,
++	.ops	= {
++		.add	= hpwl_add,
++		.remove	= hpwl_remove,
++		.notify	= hpwl_notify,
++	},
++};
++
++static int __init hpwl_init(void)
++{
++	int err;
++
++	pr_info("Initializing HPQ6001 module\n");
++	err = acpi_bus_register_driver(&hpwl_driver);
++	if (err) {
++		pr_err("Unable to register HP wireless control driver.\n");
++		goto error_acpi_register;
++	}
++
++	return 0;
++
++error_acpi_register:
++	return err;
++}
++
++static void __exit hpwl_exit(void)
++{
++	pr_info("Exiting HPQ6001 module\n");
++	acpi_bus_unregister_driver(&hpwl_driver);
++}
++
++module_init(hpwl_init);
++module_exit(hpwl_exit);
 -- 
-Cheers,
-Alex Hung
+1.8.1.2
