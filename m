@@ -1,196 +1,223 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH][RESEND] hp-wireless: new driver for hp wireless button for Windows 8
-Date: Thu, 16 Jan 2014 17:50:31 +0800
-Message-ID: <1389865831-10636-1-git-send-email-alex.hung@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:44445 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752326AbaAPJuh (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 16 Jan 2014 04:50:37 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Subject: [PATCH v3] ACPI / video: Add systems that should favor
+	native backlight interface
+Date: Sat, 18 Jan 2014 17:54:09 +0400
+Message-ID: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces@lists.freedesktop.org
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+To: linux-acpi@vger.kernel.org
+Cc: James Hogan <james@albanarts.com>, Mike Galbraith <bitbucket@online.de>, Felipe Contreras <felipe.contreras@gmail.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, Kalle Valo <kvalo@adurom.com>, Yves-Alexis Perez <corsac@debian.org>, Martin Steigerwald <Martin@lichtvoll.de>, Lee Chun-Yi <joeyli.kernel@gmail.com>, Ben Jencks <ben@bjencks.net>, =?UTF-8?q?J=C3=B6rg=20Otte?= <jrg.otte@gmail.com>, intel-gfx@lists.freedesktop.org, Kevin Smith <thirdwiggin@gmail.com>, Peter Weber <bugs@ttyhoney.com>, Joerg Platte <jplatte@naasa.net>, Seth Forshee <seth.forshee@canonical.com>, Lennart Poettering <lennart@poettering.net>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Theodore Tso <tytso@mit.edu>, "Rafael J. Wysocki" <rjw@rjwys>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
+From: Aaron Lu <aaron.lu@intel.com>
+
+Some system's ACPI video backlight control interface is broken and the
+native backlight control interface should be used by default. This patch
+sets the use_native_backlight parameter to true for those systems so
+that video backlight control interface will not be created. To be
+specific, the ThinkPad T430s/X230/X1 Carbon, Lenovo Yoga 13, Dell
+Inspiron 7520, Acer Aspire 5733Z and HP ProBook 4340s are added here,
+if they appear in some other DMI table before, they are removed from there.
+
+Note that the user specified kernel cmdline option will always have the
+highest priority, i.e. if use_native_backlight=0 is specified and the
+system is in the DMI table, the video module will not skip registering
+backlight interface for it.
+
+Thinkpad T430s:
+Reported-by: Theodore Tso <tytso@mit.edu>
+Reported-and-tested-by: Peter Weber <bugs@ttyhoney.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
+Thinkpad X230:
+Reported-and-tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=51231
+ThinkPad X1 Carbon:
+Reported-and-tested-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Lenovo Yoga 13:
+Reported-by: Lennart Poettering <lennart@poettering.net>
+Reported-and-tested-by: Kevin Smith <thirdwiggin@gmail.com>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=63811
+Dell Inspiron 7520:
+Reported-by: Rinat Ibragimov <ibragimovrinat@mail.ru>
+Acer Aspire 5733Z:
+Reported-by: <sov.info@mail.ru>
+Reference: https://bugzilla.kernel.org/show_bug.cgi?id=62941
+HP ProBook 4340s:
+Reported-and-tested-by: Vladimir Sherenkov <a_12300@mail.ru>
+Reference: http://redmine.russianfedora.pro/issues/1258
+
+Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
 ---
- drivers/platform/x86/Kconfig       |  11 ++++
- drivers/platform/x86/Makefile      |   1 +
- drivers/platform/x86/hp-wireless.c | 132 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
- create mode 100644 drivers/platform/x86/hp-wireless.c
+ drivers/acpi/blacklist.c    |  8 -----
+ drivers/acpi/video.c        | 81 ++++++++++++++++++++++++++++++++++++++++++---
+ drivers/acpi/video_detect.c |  8 -----
+ 3 files changed, 76 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index d9dcd37..aee5f72 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -197,6 +197,17 @@ config HP_ACCEL
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called hp_accel.
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index 078c4f7..2b6a76b 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -261,14 +261,6 @@ static struct dmi_system_id acpi_osi_dmi_table[] __initdata = {
+ 	},
+ 	{
+ 	.callback = dmi_disable_osi_win8,
+-	.ident = "Dell Inspiron 15R SE",
+-	.matches = {
+-		     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+-		     DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7520"),
+-		},
+-	},
+-	{
+-	.callback = dmi_disable_osi_win8,
+ 	.ident = "ThinkPad Edge E530",
+ 	.matches = {
+ 		     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
+index 995e91b..2d2fb84 100644
+--- a/drivers/acpi/video.c
++++ b/drivers/acpi/video.c
+@@ -82,11 +82,12 @@ static bool allow_duplicates;
+ module_param(allow_duplicates, bool, 0644);
  
-+config HP_WIRELESS
-+	tristate "HP WIRELESS"
-+	depends on ACPI
-+	depends on INPUT
-+	help
-+	 This driver provides supports for new HP wireless button for Windows 8.
-+	 On such systems the driver should load automatically (via ACPI alias).
-+
-+	 To compile this driver as a module, choose M here: the module will
-+	 be called hp-wireless.
-+
- config HP_WMI
- 	tristate "HP WMI extras"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index f0e6aa4..b8c36f7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
- obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
- obj-$(CONFIG_HP_ACCEL)		+= hp_accel.o
-+obj-$(CONFIG_HP_WIRELESS)	+= hp-wireless.o
- obj-$(CONFIG_HP_WMI)		+= hp-wmi.o
- obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
- obj-$(CONFIG_TC1100_WMI)	+= tc1100-wmi.o
-diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
-new file mode 100644
-index 0000000..415348f
---- /dev/null
-+++ b/drivers/platform/x86/hp-wireless.c
-@@ -0,0 +1,132 @@
-+/*
-+ *  hp-wireless button for Windows 8
-+ *
-+ *  Copyright (C) 2014 Alex Hung <alex.hung@canonical.com>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License along
-+ *  with this program; if not, write to the Free Software Foundation, Inc.,
-+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/platform_device.h>
-+#include <linux/acpi.h>
-+#include <acpi/acpi_bus.h>
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Alex Hung");
-+MODULE_ALIAS("acpi*:HPQ6001:*");
-+
-+static struct input_dev *hpwl_input_dev;
-+
-+static const struct acpi_device_id hpwl_ids[] = {
-+	{"HPQ6001", 0},
-+	{"", 0},
-+};
-+
-+static int hp_wireless_input_setup(void)
+ /*
+- * For Windows 8 systems: if set ture and the GPU driver has
+- * registered a backlight interface, skip registering ACPI video's.
++ * For Windows 8 systems: used to decide if video module
++ * should skip registering backlight interface of its own.
+  */
+-static bool use_native_backlight = false;
+-module_param(use_native_backlight, bool, 0644);
++static int use_native_backlight_param = -1;
++module_param_named(use_native_backlight, use_native_backlight_param, int, 0444);
++static bool use_native_backlight_dmi = false;
+ 
+ static int register_count;
+ static struct mutex video_list_lock;
+@@ -232,9 +233,17 @@ static int acpi_video_get_next_level(struct acpi_video_device *device,
+ static int acpi_video_switch_brightness(struct acpi_video_device *device,
+ 					 int event);
+ 
++static bool acpi_video_use_native_backlight(void)
 +{
-+	int err;
-+
-+	hpwl_input_dev = input_allocate_device();
-+	if (!hpwl_input_dev)
-+		return -ENOMEM;
-+
-+	hpwl_input_dev->name = "HP Wireless hotkeys";
-+	hpwl_input_dev->phys = "hpq6001/input0";
-+	hpwl_input_dev->id.bustype = BUS_HOST;
-+	hpwl_input_dev->evbit[0] = BIT(EV_KEY);
-+	set_bit(KEY_RFKILL, hpwl_input_dev->keybit);
-+
-+	err = input_register_device(hpwl_input_dev);
-+	if (err)
-+		goto err_free_dev;
-+
-+	return 0;
-+
-+err_free_dev:
-+	input_free_device(hpwl_input_dev);
-+	return err;
++	if (use_native_backlight_param != -1)
++		return use_native_backlight_param;
++	else
++		return use_native_backlight_dmi;
 +}
 +
-+static void hp_wireless_input_destroy(void)
+ static bool acpi_video_verify_backlight_support(void)
+ {
+-	if (acpi_osi_is_win8() && use_native_backlight &&
++	if (acpi_osi_is_win8() && acpi_video_use_native_backlight() &&
+ 	    backlight_device_registered(BACKLIGHT_RAW))
+ 		return false;
+ 	return acpi_video_backlight_support();
+@@ -399,6 +408,12 @@ static int __init video_set_bqc_offset(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
++static int __init video_set_use_native_backlight(const struct dmi_system_id *d)
 +{
-+	input_unregister_device(hpwl_input_dev);
-+}
-+
-+static void hpwl_notify(struct acpi_device *acpi_dev, u32 event)
-+{
-+	if (event != 0x80) {
-+		pr_info("Received unknown event (0x%x)\n", event);
-+		return;
-+	}
-+
-+	input_report_key(hpwl_input_dev, KEY_RFKILL, 1);
-+	input_sync(hpwl_input_dev);
-+	input_report_key(hpwl_input_dev, KEY_RFKILL, 0);
-+	input_sync(hpwl_input_dev);
-+}
-+
-+static int hpwl_add(struct acpi_device *device)
-+{
-+	int err;
-+
-+	err = hp_wireless_input_setup();
-+	return err;
-+}
-+
-+static int hpwl_remove(struct acpi_device *device)
-+{
-+	hp_wireless_input_destroy();
++	use_native_backlight_dmi = true;
 +	return 0;
 +}
 +
-+static struct acpi_driver hpwl_driver = {
-+	.name	= "hp-wireless",
-+	.owner	= THIS_MODULE,
-+	.ids	= hpwl_ids,
-+	.ops	= {
-+		.add	= hpwl_add,
-+		.remove	= hpwl_remove,
-+		.notify	= hpwl_notify,
+ static struct dmi_system_id video_dmi_table[] __initdata = {
+ 	/*
+ 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
+@@ -443,6 +458,62 @@ static struct dmi_system_id video_dmi_table[] __initdata = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 7720"),
+ 		},
+ 	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "ThinkPad T430s",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad T430s"),
++		},
 +	},
-+};
-+
-+static int __init hpwl_init(void)
-+{
-+	int err;
-+
-+	pr_info("Initializing HPQ6001 module\n");
-+	err = acpi_bus_register_driver(&hpwl_driver);
-+	if (err) {
-+		pr_err("Unable to register HP wireless control driver.\n");
-+		goto error_acpi_register;
-+	}
-+
-+	return 0;
-+
-+error_acpi_register:
-+	return err;
-+}
-+
-+static void __exit hpwl_exit(void)
-+{
-+	pr_info("Exiting HPQ6001 module\n");
-+	acpi_bus_unregister_driver(&hpwl_driver);
-+}
-+
-+module_init(hpwl_init);
-+module_exit(hpwl_exit);
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "ThinkPad X230",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X230"),
++		},
++	},
++	{
++		.callback = video_set_use_native_backlight,
++		.ident = "ThinkPad X1 Carbon",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X1 Carbon"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Lenovo Yoga 13",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		 DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Dell Inspiron 7520",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++		 DMI_MATCH(DMI_PRODUCT_VERSION, "Inspiron 7520"),
++		},
++	},
++	{
++	 .callback = video_set_use_native_backlight,
++	 .ident = "Acer Aspire 5733Z",
++	 .matches = {
++		 DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++		 DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5733Z"),
++		},
++	},
++	{
++		.callback = video_set_use_native_backlight,
++		.ident = "HP ProBook 4340s",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "HP ProBook 4340s"),
++		},
++	},
+ 	{}
+ };
+ 
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 84875fd..b639934 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -168,14 +168,6 @@ static struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "UL30A"),
+ 		},
+ 	},
+-	{
+-	.callback = video_detect_force_vendor,
+-	.ident = "Lenovo Yoga 13",
+-	.matches = {
+-		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga 13"),
+-		},
+-	},
+ 	{ },
+ };
+ 
 -- 
-1.8.1.2
+1.8.4.2
