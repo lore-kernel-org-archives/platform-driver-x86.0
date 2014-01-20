@@ -1,37 +1,37 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH v3] ACPI / video: Add systems that should
- favor native backlight interface
-Date: Mon, 20 Jan 2014 13:34:18 +0000
-Message-ID: <1390224857.10605.0.camel@x230>
-References: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>
-	<52DCDA75.2000108@intel.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 0/4] thinkpad_acpi: Add support for controlling charge
+ thresholds
+Date: Mon, 20 Jan 2014 22:22:03 +0100
+Message-ID: <20140120212203.GA28847@amd.pavel.ucw.cz>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <20131228211026.GA14725@jak-x230>
+ <20131228221003.GA24911@khazad-dum.debian.net>
+ <20131230132619.GA24241@jak-x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <52DCDA75.2000108@intel.com>
-Content-Language: en-US
-Content-ID: <39399BBE48CA7F4E974FA23107E05D63@namprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces@lists.freedesktop.org
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-To: "aaron.lu@intel.com" <aaron.lu@intel.com>
-Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "thirdwiggin@gmail.com" <thirdwiggin@gmail.com>, "bugs@ttyhoney.com" <bugs@ttyhoney.com>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <se>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:48802 "EHLO
+	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751127AbaATVWH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 20 Jan 2014 16:22:07 -0500
+Content-Disposition: inline
+In-Reply-To: <20131230132619.GA24241@jak-x230>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
-On Mon, 2014-01-20 at 16:12 +0800, Aaron Lu wrote:
+Hi!
 
-> 1 remove the win8 OSI check, I've seen win7 laptops that also needs to
->   have only the GPU interface left and checking win8 doesn't make much
->   sense now;
+> Another problem is that I don't know any other systems supporting charge
+> thresholds, and I don't want to dictate interfaces built for ThinkPads
+> as a generic way. 
 
-Are we sure that those aren't simply some other bug?
-
+On systems like Sharp Zaurus, Nokia N900, charging is controlled by
+Linux. As charge thresholds should extend Li-ION battery life under
+anticipated light usage, they are probably good idea on all systems
+that can support them.
+									Pavel
 -- 
-Matthew Garrett <matthew.garrett@nebula.com>
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
