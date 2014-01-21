@@ -1,32 +1,60 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH 1/2] ipc: simplify platform data approach
-Date: Tue, 21 Jan 2014 13:30:02 +0000
-Message-ID: <1390311001.5320.5.camel@x230>
-References: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
-	 <20140114225735.GC9834@psi-dev26.jf.intel.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH] toshiba_acpi: Add hotkeys support for Toshiba Satellite
+ U940
+Date: Tue, 21 Jan 2014 08:38:26 -0500
+Message-ID: <1390311506.5320.8.camel@x230>
+References: <1385161342-8262-1-git-send-email-joseignacio.naranjo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0242.outbound.protection.outlook.com ([207.46.163.242]:56545
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1754354AbaAUNaG (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:47839 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751789AbaAUNib (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jan 2014 08:30:06 -0500
-In-Reply-To: <20140114225735.GC9834@psi-dev26.jf.intel.com>
-Content-Language: en-US
-Content-ID: <E790673F379A9F4590C4C7B1D2A488A3@namprd05.prod.outlook.com>
+	Tue, 21 Jan 2014 08:38:31 -0500
+In-Reply-To: <1385161342-8262-1-git-send-email-joseignacio.naranjo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "david.a.cohen@linux.intel.com" <david.a.cohen@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jose Ignacio Naranjo <joseignacio.naranjo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-T24gVHVlLCAyMDE0LTAxLTE0IGF0IDE0OjU3IC0wODAwLCBEYXZpZCBDb2hlbiB3cm90ZToNCj4g
-T24gTW9uLCBEZWMgMDIsIDIwMTMgYXQgMDQ6MjA6MDBQTSAtMDgwMCwgRGF2aWQgQ29oZW4gd3Jv
-dGU6DQo+ID4gVGhpcyBwYXRjaCByZW1vdmVzIHRoZSB1bm5lY2Vzc2FyeSBlbnVtIGZvciBwbGF0
-Zm9ybSB0eXBlIHRvIGhhbmRsZSB0aGUNCj4gPiBhcnJheSBvZiBwZGF0YXMuIFdlIGNhbiBzZXQg
-cGRhdGEgZGlyZWN0bHkgdG8gcGNpX2RldmljZV9pZCBzdHJ1Y3QNCj4gPiBpbnN0ZWFkLg0KPiAN
-Cj4gUGluZy4gY29tbWVudHMgaGVyZT8gOikNCg0KVGhlc2UgbG9vayBmaW5lLiBUaGFua3MsIERh
-dmlkIQ0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
-DQo=
+On Sat, 2013-11-23 at 00:02 +0100, Jose Ignacio Naranjo wrote:
+
+First, I'm really sorry that it's taken me so long to get around to
+reviewing this.
+
+> +static struct key_entry keymap_satellite_u940[] = {
+> +	{ KE_KEY, 0x13c, { KEY_BRIGHTNESSDOWN } },
+> +	{ KE_KEY, 0x13d, { KEY_BRIGHTNESSUP } },
+> +	{ KE_KEY, 0x13e, { KEY_SWITCHVIDEOMODE } },
+> +	{ KE_KEY, 0x13f, { KEY_TOUCHPAD_TOGGLE } },
+> +	{ KE_KEY, 0x157, { KEY_MUTE} },
+> +	{ KE_KEY, 0x158, { KEY_WLAN } },
+> +	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
+> +	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
+> +	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
+> +	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
+> +	{ KE_END, 0 }
+
+Yeah, that's pretty distinct from the original map. Boo.
+
+> +
+> +static int dmi_matched(const struct dmi_system_id *dmi)
+> +{
+> +	keymap = dmi->driver_data;
+> +	return 1;
+>+}
+
+But I'm not a fan of doing this with DMI - if Toshiba are doing this for
+some newer machines then it's possible that the map's changed for all of
+them. Things that spring to mind:
+
+1) The map may be different on all systems that support Windows 8?
+2) There's some ACPI call that distinguishes between them?
+
+Can you send me the output of acpidump for this system?
+
+Thanks,
+-- 
+Matthew Garrett <matthew.garrett@nebula.com>
