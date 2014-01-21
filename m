@@ -1,77 +1,48 @@
-From: anastasia96959@googlemail.com
-Subject: RE: LOCAL MAP OPTIMIZATION FOR : mail-archive.com (Less Than
- $99/Month)
-Date: Tue, 21 Jan 2014 17:22:53 +0530
-Message-ID: <52de5f93.0458440a.588d.2932@mx.google.com>
-Reply-To: Lova43432@gmail.com
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pb0-f67.google.com ([209.85.160.67]:40678 "EHLO
-	mail-pb0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754504AbaAULwz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jan 2014 06:52:55 -0500
-Received: by mail-pb0-f67.google.com with SMTP id jt11so4248614pbb.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jan 2014 03:52:53 -0800 (PST)
-Received: from localhost.localdomain ([124.253.246.183])
-        by mx.google.com with ESMTPSA id bc4sm5860723pbb.2.2014.01.21.03.52.49
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLSv1 cipher=RC4-SHA bits=128/128);
-        Tue, 21 Jan 2014 03:52:51 -0800 (PST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH v3] ACPI / video: Add systems that should
+ favor native backlight interface
+Date: Tue, 21 Jan 2014 12:11:12 +0000
+Message-ID: <1390306271.5320.4.camel@x230>
+References: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>
+	<52DCDA75.2000108@intel.com> <1390224857.10605.0.camel@x230>
+	<52DDDA64.90407@intel.com> <1390274270.5320.2.camel@x230>
+	<52DE067A.60400@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <52DE067A.60400@intel.com>
+Content-Language: en-US
+Content-ID: <AFF98283EBF9814E920F026255E917C9@namprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces@lists.freedesktop.org
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+To: "aaron.lu@intel.com" <aaron.lu@intel.com>
+Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "thirdwiggin@gmail.com" <thirdwiggin@gmail.com>, "bugs@ttyhoney.com" <bugs@ttyhoney.com>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <se>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Good Morning Sir / Mam
+On Tue, 2014-01-21 at 13:32 +0800, Aaron Lu wrote:
+> On 01/21/2014 11:17 AM, Matthew Garrett wrote:
+> > We know that Windows 8 graphics drivers don't use the ACPI interface,
+> > and that systems change their behaviour as a result, in some cases with
+> > absolutely no way for the ACPI interface could possibly work. I haven't
+> > seen any cases where that's obviously true for any non-Windows 8
+> 
+> Perhaps I'm not clear, I didn't mean non-Windows 8 systems will all favor
+> GPU's interface, I just meant for one specific win7 laptop I could re-use
+> the existing code to make the GPU's interface as the only one left. And to
+> achieve this, the Win8 OSI check in acpi_video_verify_backlight_support
+> has to be gone.
 
-Is your business ranking in local maps shown on PAGE 1 of google ? With new
-google policies they have specifically asked local business owners to
-optimize their website for local maps rather than JUST organics. Do you know
-the reason why you are not ranked well on google MAPs or why there is drop
-in your website rankings? Prime reason for bad rankings for a busniess is
-lack of local presence and local citations ie getting your business listed
-on directories like YELP, MANTA & Many more. These websites not just give
-your business a push but also help you Maintain a good Online Reputation.
+We could do that, but why do we think that's the correct fix? The plan
+is to remove the native list entirely and do this for all Windows 8
+systems, so the Win8 OSI check is the right thing to do.
 
-Why you need to optimize your website for local MAP Listings ?
-
-- MAP listings get 10 times more clicks than organic listings
-- Increased conversions because of real reviews posted on your Google Plus
-Page
-- Every year there is 30% increase in searches for local keywords
-- Increases legitimacy of a Business
-
-We will help you get your website ranked well on google for the related
-keywords in your niche. We specialize in LOCAL SEARCH ENGINE OPTIMIZATION
-increasing visibility for small businesses by ranking them for
-geographically-related keywords. Say for eg-: you want to search a plumber
-in your city, You will be typing in keywords like Plumbers + City Or
-Plumbers + IN + City. We make sure your website comes in google MAP listings
-shown on page 1 for each such keyword.
-
-Now Google believes in - BE ORIGINAL, HAVE ORIGINAL AND GIVE ORIGINAL which
-means that google wants to end up that frustrating experience of users who
-are searching for Service Or Product and seeing the results that are not
-even close to what they are looking for. Google only wants to give their
-user original and relevant results. This makes it even more important that
-we showcase our business in the best possible way and make sure our website
-in valued high by google.
-
-We at TheLOCALIST will make google feel the importance of your business by
-following their guidelines thus ranking your website higher in serach
-results. We are presently offering LOCAL OPTIMIZATION to more than 400
-websites and they all rank page 1 for all possible keywords !!! Each month
-your website is submitted to more than 50 citations and social presence is
-controlled by posting videos and blogs all over the web.
-
-Email us back with your website & phone number so we can discuss this
-further with you. Our Packages start from as low as 99$/month.
-
-
-Thanks For Taking Time To Read Our Email
-
-Polly Martin
-Local SEO Manager ( THE Localist )
-Address : 24 ST Suite 32 Downtown Provo Utah
-
--------------------
-NOT INTERESTED ? REPLY WITH NOT INTERESTED IN THE SUBJECT LINE 
+-- 
+Matthew Garrett <matthew.garrett@nebula.com>
