@@ -1,48 +1,32 @@
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH v3] ACPI / video: Add systems that should
- favor native backlight interface
-Date: Tue, 21 Jan 2014 12:11:12 +0000
-Message-ID: <1390306271.5320.4.camel@x230>
-References: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>
-	<52DCDA75.2000108@intel.com> <1390224857.10605.0.camel@x230>
-	<52DDDA64.90407@intel.com> <1390274270.5320.2.camel@x230>
-	<52DE067A.60400@intel.com>
+Subject: Re: [PATCH 1/2] ipc: simplify platform data approach
+Date: Tue, 21 Jan 2014 13:30:02 +0000
+Message-ID: <1390311001.5320.5.camel@x230>
+References: <1386030001-18348-1-git-send-email-david.a.cohen@linux.intel.com>
+	 <20140114225735.GC9834@psi-dev26.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <52DE067A.60400@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-by2lp0242.outbound.protection.outlook.com ([207.46.163.242]:56545
+	"EHLO na01-by2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1754354AbaAUNaG (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 21 Jan 2014 08:30:06 -0500
+In-Reply-To: <20140114225735.GC9834@psi-dev26.jf.intel.com>
 Content-Language: en-US
-Content-ID: <AFF98283EBF9814E920F026255E917C9@namprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces@lists.freedesktop.org
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-To: "aaron.lu@intel.com" <aaron.lu@intel.com>
-Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "thirdwiggin@gmail.com" <thirdwiggin@gmail.com>, "bugs@ttyhoney.com" <bugs@ttyhoney.com>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <se>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-ID: <E790673F379A9F4590C4C7B1D2A488A3@namprd05.prod.outlook.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "david.a.cohen@linux.intel.com" <david.a.cohen@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Tue, 2014-01-21 at 13:32 +0800, Aaron Lu wrote:
-> On 01/21/2014 11:17 AM, Matthew Garrett wrote:
-> > We know that Windows 8 graphics drivers don't use the ACPI interface,
-> > and that systems change their behaviour as a result, in some cases with
-> > absolutely no way for the ACPI interface could possibly work. I haven't
-> > seen any cases where that's obviously true for any non-Windows 8
-> 
-> Perhaps I'm not clear, I didn't mean non-Windows 8 systems will all favor
-> GPU's interface, I just meant for one specific win7 laptop I could re-use
-> the existing code to make the GPU's interface as the only one left. And to
-> achieve this, the Win8 OSI check in acpi_video_verify_backlight_support
-> has to be gone.
-
-We could do that, but why do we think that's the correct fix? The plan
-is to remove the native list entirely and do this for all Windows 8
-systems, so the Win8 OSI check is the right thing to do.
-
--- 
-Matthew Garrett <matthew.garrett@nebula.com>
+T24gVHVlLCAyMDE0LTAxLTE0IGF0IDE0OjU3IC0wODAwLCBEYXZpZCBDb2hlbiB3cm90ZToNCj4g
+T24gTW9uLCBEZWMgMDIsIDIwMTMgYXQgMDQ6MjA6MDBQTSAtMDgwMCwgRGF2aWQgQ29oZW4gd3Jv
+dGU6DQo+ID4gVGhpcyBwYXRjaCByZW1vdmVzIHRoZSB1bm5lY2Vzc2FyeSBlbnVtIGZvciBwbGF0
+Zm9ybSB0eXBlIHRvIGhhbmRsZSB0aGUNCj4gPiBhcnJheSBvZiBwZGF0YXMuIFdlIGNhbiBzZXQg
+cGRhdGEgZGlyZWN0bHkgdG8gcGNpX2RldmljZV9pZCBzdHJ1Y3QNCj4gPiBpbnN0ZWFkLg0KPiAN
+Cj4gUGluZy4gY29tbWVudHMgaGVyZT8gOikNCg0KVGhlc2UgbG9vayBmaW5lLiBUaGFua3MsIERh
+dmlkIQ0KDQotLSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
+DQo=
