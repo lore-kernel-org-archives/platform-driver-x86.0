@@ -1,199 +1,53 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH 63/73] drivers/platform: delete non-required instances of include <linux/init.h>
-Date: Tue, 21 Jan 2014 16:23:06 -0500
-Message-ID: <1390339396-3479-64-git-send-email-paul.gortmaker@windriver.com>
-References: <1390339396-3479-1-git-send-email-paul.gortmaker@windriver.com>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: Re: [PATCH v3] ACPI / video: Add systems that should
+ favor native backlight interface
+Date: Wed, 22 Jan 2014 09:58:38 +0800
+Message-ID: <52DF25CE.7090402@intel.com>
+References: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>	
+	<52DCDA75.2000108@intel.com> <1390224857.10605.0.camel@x230>	
+	<52DDDA64.90407@intel.com> <1390274270.5320.2.camel@x230>	
+	<52DE067A.60400@intel.com> <1390306271.5320.4.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1390339396-3479-1-git-send-email-paul.gortmaker@windriver.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Daniel Oliveira Nascimento <don@syst.com.br>, Matthew Garrett <matthew.garrett@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+In-Reply-To: <1390306271.5320.4.camel@x230>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Sender: intel-gfx-bounces@lists.freedesktop.org
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+To: Matthew Garrett <matthew.garrett@nebula.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "bugs@ttyhoney.com" <bugs@ttyhoney.com>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <seth.forshee@canonical.com>, lennart@poettering.ne
 List-Id: platform-driver-x86.vger.kernel.org
 
-None of these files are actually using any __init type directives
-and hence don't need to include <linux/init.h>.  Most are just a
-left over from __devinit and __cpuinit removal, or simply due to
-code getting copied from one driver to the next.
+On 01/21/2014 08:11 PM, Matthew Garrett wrote:
+> On Tue, 2014-01-21 at 13:32 +0800, Aaron Lu wrote:
+>> On 01/21/2014 11:17 AM, Matthew Garrett wrote:
+>>> We know that Windows 8 graphics drivers don't use the ACPI interface,
+>>> and that systems change their behaviour as a result, in some cases with
+>>> absolutely no way for the ACPI interface could possibly work. I haven't
+>>> seen any cases where that's obviously true for any non-Windows 8
+>>
+>> Perhaps I'm not clear, I didn't mean non-Windows 8 systems will all favor
+>> GPU's interface, I just meant for one specific win7 laptop I could re-use
+>> the existing code to make the GPU's interface as the only one left. And to
+>> achieve this, the Win8 OSI check in acpi_video_verify_backlight_support
+>> has to be gone.
+> 
+> We could do that, but why do we think that's the correct fix? The plan
+> is to remove the native list entirely and do this for all Windows 8
 
-Cc: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-Cc: Daniel Oliveira Nascimento <don@syst.com.br>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
----
- drivers/platform/goldfish/pdev_bus.c      | 1 -
- drivers/platform/x86/classmate-laptop.c   | 1 -
- drivers/platform/x86/hp_accel.c           | 1 -
- drivers/platform/x86/ideapad-laptop.c     | 1 -
- drivers/platform/x86/intel-rst.c          | 1 -
- drivers/platform/x86/intel-smartconnect.c | 1 -
- drivers/platform/x86/intel_mid_powerbtn.c | 1 -
- drivers/platform/x86/intel_mid_thermal.c  | 1 -
- drivers/platform/x86/panasonic-laptop.c   | 1 -
- drivers/platform/x86/pvpanic.c            | 1 -
- drivers/platform/x86/topstar-laptop.c     | 1 -
- drivers/platform/x86/toshiba_bluetooth.c  | 1 -
- drivers/platform/x86/xo15-ebook.c         | 1 -
- 13 files changed, 13 deletions(-)
+What do you mean by native list, systems that are Win8 based but don't
+work with the GPU's backlight interface?
+If so, it doesn't seem we have such a native list now and if we don't
+make use_native_backlight=1 by default, we couldn't generate such a
+list to start with...
 
-diff --git a/drivers/platform/goldfish/pdev_bus.c b/drivers/platform/goldfish/pdev_bus.c
-index e4e999f..4f426b2 100644
---- a/drivers/platform/goldfish/pdev_bus.c
-+++ b/drivers/platform/goldfish/pdev_bus.c
-@@ -15,7 +15,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 70d355a..790267b 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -17,7 +17,6 @@
-  */
- 
- 
--#include <linux/init.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index aff4d06..3fb7672 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -23,7 +23,6 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/kernel.h>
--#include <linux/init.h>
- #include <linux/dmi.h>
- #include <linux/module.h>
- #include <linux/types.h>
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 6dd060a..6242ac8 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -24,7 +24,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/types.h>
- #include <linux/acpi.h>
- #include <linux/rfkill.h>
-diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel-rst.c
-index d45bca3..da64aee 100644
---- a/drivers/platform/x86/intel-rst.c
-+++ b/drivers/platform/x86/intel-rst.c
-@@ -17,7 +17,6 @@
-  */
- 
- 
--#include <linux/init.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel-smartconnect.c
-index 04cf5df..01215fc 100644
---- a/drivers/platform/x86/intel-smartconnect.c
-+++ b/drivers/platform/x86/intel-smartconnect.c
-@@ -17,7 +17,6 @@
-  */
- 
- 
--#include <linux/init.h>
- #include <linux/module.h>
- #include <linux/acpi.h>
- 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 8d67752..7d1f27f4 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -18,7 +18,6 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index 93fab8b..e7a79b1 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -25,7 +25,6 @@
- #define pr_fmt(fmt) "intel_mid_thermal: " fmt
- 
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/err.h>
- #include <linux/param.h>
- #include <linux/device.h>
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 609d387..1c04871 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -118,7 +118,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/types.h>
- #include <linux/backlight.h>
- #include <linux/ctype.h>
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-index c9f6e51..b91aad2 100644
---- a/drivers/platform/x86/pvpanic.c
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -22,7 +22,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/types.h>
- #include <linux/acpi.h>
- 
-diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
-index e597de0..d3b27e1 100644
---- a/drivers/platform/x86/topstar-laptop.c
-+++ b/drivers/platform/x86/topstar-laptop.c
-@@ -15,7 +15,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/input.h>
-diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
-index 2cb1ea6..ff21318 100644
---- a/drivers/platform/x86/toshiba_bluetooth.c
-+++ b/drivers/platform/x86/toshiba_bluetooth.c
-@@ -21,7 +21,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/types.h>
- #include <linux/acpi.h>
- 
-diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
-index 49cbcce..4d4bb4c 100644
---- a/drivers/platform/x86/xo15-ebook.c
-+++ b/drivers/platform/x86/xo15-ebook.c
-@@ -15,7 +15,6 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/types.h>
- #include <linux/input.h>
- #include <linux/acpi.h>
--- 
-1.8.4.1
+BTW, it doesn't seem everyone agrees with this plan. May I ask, Rafael
+and Daniel, what's your opinion please? We need to agree with something
+to move things forward.
