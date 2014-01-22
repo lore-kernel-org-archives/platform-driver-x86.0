@@ -1,53 +1,85 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [PATCH v3] ACPI / video: Add systems that should
- favor native backlight interface
-Date: Wed, 22 Jan 2014 09:58:38 +0800
-Message-ID: <52DF25CE.7090402@intel.com>
-References: <1390053249-18919-1-git-send-email-i.gnatenko.brain@gmail.com>	
-	<52DCDA75.2000108@intel.com> <1390224857.10605.0.camel@x230>	
-	<52DDDA64.90407@intel.com> <1390274270.5320.2.camel@x230>	
-	<52DE067A.60400@intel.com> <1390306271.5320.4.camel@x230>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: hp-wmi rfkill change breaks systems
+Date: Wed, 22 Jan 2014 16:29:32 +0800
+Message-ID: <CAJ=jquZZcB9stcYn7cTnQZvTZkq+VZvvTTVCvA0zAOv+Yd2qbg@mail.gmail.com>
+References: <20140121151702.GA2566@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <1390306271.5320.4.camel@x230>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
-	<mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Sender: intel-gfx-bounces@lists.freedesktop.org
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-To: Matthew Garrett <matthew.garrett@nebula.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "james@albanarts.com" <james@albanarts.com>, "bitbucket@online.de" <bitbucket@online.de>, "felipe.contreras@gmail.com" <felipe.contreras@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "hmh@hmh.eng.br" <hmh@hmh.eng.br>, "kvalo@adurom.com" <kvalo@adurom.com>, "corsac@debian.org" <corsac@debian.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joeyli.kernel@gmail.com" <joeyli.kernel@gmail.com>, "ben@bjencks.net" <ben@bjencks.net>, "jrg.otte@gmail.com" <jrg.otte@gmail.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "Martin@lichtvoll.de" <Martin@lichtvoll.de>, "bugs@ttyhoney.com" <bugs@ttyhoney.com>, "jplatte@naasa.net" <jplatte@naasa.net>, "seth.forshee@canonical.com" <seth.forshee@canonical.com>, lennart@poettering.ne
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oa0-f48.google.com ([209.85.219.48]:54220 "EHLO
+	mail-oa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751806AbaAVI3d (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 22 Jan 2014 03:29:33 -0500
+Received: by mail-oa0-f48.google.com with SMTP id l6so71331oag.21
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jan 2014 00:29:32 -0800 (PST)
+In-Reply-To: <20140121151702.GA2566@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 01/21/2014 08:11 PM, Matthew Garrett wrote:
-> On Tue, 2014-01-21 at 13:32 +0800, Aaron Lu wrote:
->> On 01/21/2014 11:17 AM, Matthew Garrett wrote:
->>> We know that Windows 8 graphics drivers don't use the ACPI interface,
->>> and that systems change their behaviour as a result, in some cases with
->>> absolutely no way for the ACPI interface could possibly work. I haven't
->>> seen any cases where that's obviously true for any non-Windows 8
->>
->> Perhaps I'm not clear, I didn't mean non-Windows 8 systems will all favor
->> GPU's interface, I just meant for one specific win7 laptop I could re-use
->> the existing code to make the GPU's interface as the only one left. And to
->> achieve this, the Win8 OSI check in acpi_video_verify_backlight_support
->> has to be gone.
-> 
-> We could do that, but why do we think that's the correct fix? The plan
-> is to remove the native list entirely and do this for all Windows 8
+Hi Matthew,
 
-What do you mean by native list, systems that are Win8 based but don't
-work with the GPU's backlight interface?
-If so, it doesn't seem we have such a native list now and if we don't
-make use_native_backlight=1 by default, we couldn't generate such a
-list to start with...
+From the above code, I supposehp_wmi_rfkill_setup(device) successes
+and hp_wmi_rfkill2_setup(device) fails. As hp_wmi_rfkill_setup(device)
+does not run with 997daa1bd9aca412ab97955a35b26c460c0ec7a4.
 
-BTW, it doesn't seem everyone agrees with this plan. May I ask, Rafael
-and Daniel, what's your opinion please? We need to agree with something
-to move things forward.
+From HP, it was claimed that HP WMI 0x05 is deprecated and replaced by
+HP WMI 0x1B after 2009; however, this claim seems not true on on
+nx6325. I would say this is a BIOS bug on either HP WMI 0x0D or WMI
+0x1B.
+
+The above code looks great on this bug except one problem:
+
+On newer systems, WMI 0x1B (used in hp_wmi_rfkill2_setup) is also
+depreciated with _OSI("Windows 2012") = TRUE, and it will return 04h
+(invalid command type)*.
+
+However, The Get for WMI 0x05 (used in hp_wmi_rfkill_setup) works but
+Set for WMI 0x05 does not. If we are using
++       if (hp_wmi_rfkill2_setup(device))
++               hp_wmi_rfkill_setup(device);
+we will have hp-wifi / hp-bluetooth in rfkill but we cannot change
+their status on those systems.
+
+I think a better solution may need to include testing both Set and Get
+for HP WMI 0x05 in hp_wmi_rfkill_setup. We may be able to revert
+997daa1bd9aca412ab97955a35b26c460c0ec7a4.
+
+I will verify the above theory and update accordingly.
+
+PS*: There needs no HP WMI for wireless. The wireless control is moved
+to "HPQ6001" that I previous sent.
+
+On Tue, Jan 21, 2014 at 11:17 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> Hi Alex,
+>
+> 997daa1bd9aca412ab97955a35b26c460c0ec7a4 seems to break some systems
+> (https://bugzilla.kernel.org/show_bug.cgi?id=69131 for example). The
+> simplest approach seems to be to simply do something like the following:
+>
+> @@ -883,8 +883,8 @@ static int __init hp_wmi_bios_setup(struct
+> platform_device *device)
+>         gps_rfkill = NULL;
+>         rfkill2_count = 0;
+>
+> -       if (hp_wmi_bios_2009_later() || hp_wmi_rfkill_setup(device))
+> -               hp_wmi_rfkill2_setup(device);
+> +       if (hp_wmi_rfkill2_setup(device))
+> +               hp_wmi_rfkill_setup(device);
+>
+> Do you know if there are any cases that would be broken by this?
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Cheers,
+Alex Hung
