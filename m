@@ -1,45 +1,51 @@
-From: Hanjun Guo <hanjun.guo@linaro.org>
-Subject: [PATCH] Platform / wmi: Fix potential memory leak in parse_wdg()
-Date: Sat, 25 Jan 2014 00:14:35 +0800
-Message-ID: <1390580075-14342-1-git-send-email-hanjun.guo@linaro.org>
+From: Mattia Dongili <malattia@linux.it>
+Subject: Re: Sony Vaio Duo 11: getting middle mouse button to work
+Date: Sat, 25 Jan 2014 12:17:13 +0900
+Message-ID: <20140125031713.GA30047@taihen.jp>
+References: <1674012.xCMptsh8XR@myon.chronox.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f47.google.com ([209.85.220.47]:43106 "EHLO
-	mail-pa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750978AbaAXQPI (ORCPT
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:55202 "EHLO
+	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751416AbaAYD0W (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 24 Jan 2014 11:15:08 -0500
-Received: by mail-pa0-f47.google.com with SMTP id kp14so3442456pab.20
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jan 2014 08:15:07 -0800 (PST)
+	Fri, 24 Jan 2014 22:26:22 -0500
+Content-Disposition: inline
+In-Reply-To: <1674012.xCMptsh8XR@myon.chronox.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, patches@linaro.org, linux-kernel@vger.kernel.org, linaro-kernel@lists.linaro.org, linaro-acpi@lists.linaro.org, platform-driver-x86@vger.kernel.org, Hanjun Guo <hanjun.guo@linaro.org>
+To: Stephan Mueller <smueller@chronox.de>
+Cc: platform-driver-x86@vger.kernel.org
 
-we forgot to call wmi_free_devices() and free out.pointer
-when alloc mamory failed.
+On Thu, Jan 23, 2014 at 05:21:10PM +0100, Stephan Mueller wrote:
+...
+> Bus 001 Device 005: ID 26e1:c1a0
 
-Signed-off-by: Hanjun Guo <hanjun.guo@linaro.org>
----
- drivers/platform/x86/wmi.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Ciao!
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 43d1329..e1338b5 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -797,8 +797,11 @@ static int parse_wdg(acpi_handle handle)
- 			wmi_dump_wdg(&gblock[i]);
- 
- 		wblock = kzalloc(sizeof(struct wmi_block), GFP_KERNEL);
--		if (!wblock)
--			return -ENOMEM;
-+		if (!wblock) {
-+			wmi_free_devices();
-+			retval = -ENOMEM;
-+			goto out_free_pointer;
-+		}
- 
- 		wblock->handle = handle;
- 		wblock->gblock = gblock[i];
+...
+> - playing around with debug modes of the sony_laptop does not indicate that it 
+> records any events for special keys
+
+I have never seen a vaio where touchpad buttons where dependent on the
+devices controlled with sony-laptop.ko.
+
+...
+> As I am out of ideas. Does anybody have an idea on how to identify where the 
+> problem is? Would I need to send some "enabling" events to the mouse before it 
+> activates the middle mouse button? Or is there anything in Linux that could 
+> help me debug the situation?
+
+I'd try with the input subsystem and the synaptics_usb driver first but
+it's just a wild guess. Your kernel log should give you more hints about
+which driver is bound to the device and the sysfs tree under
+/sys/class/input/event*/device/* has all the capabilities and
+identifiers.
+
+Hope this helps.
 -- 
-1.7.9.5
+mattia
+:wq!
+
+PS: Could you send me your laptop's DSDT off-list?
