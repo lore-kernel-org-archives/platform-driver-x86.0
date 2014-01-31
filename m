@@ -1,77 +1,50 @@
-From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+From: Stephan Mueller <smueller@chronox.de>
 Subject: Re: Sony Vaio Duo 11: getting middle mouse button to work
-Date: Fri, 31 Jan 2014 11:20:10 -0500
-Message-ID: <CAN+gG=EB5DguOQ7+ZdUbRFcBt3qj3qeW6kiq-eJP7SCFjrsriA@mail.gmail.com>
-References: <1674012.xCMptsh8XR@myon.chronox.de>
-	<2193004.SWLhWZ2AvA@tauon>
-	<CAN+gG=HAXE4LT_tN+3tE8-T_L5g+2HAE35CN+z8KCEQcmJ=JWw@mail.gmail.com>
-	<13914184.mVhhUrzN60@myon.chronox.de>
+Date: Fri, 31 Jan 2014 22:02:18 +0100
+Message-ID: <5545347.HoO9G4Y1gL@myon.chronox.de>
+References: <1674012.xCMptsh8XR@myon.chronox.de> <CAN+gG=HAXE4LT_tN+3tE8-T_L5g+2HAE35CN+z8KCEQcmJ=JWw@mail.gmail.com> <13914184.mVhhUrzN60@myon.chronox.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f172.google.com ([209.85.217.172]:57342 "EHLO
-	mail-lb0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932271AbaAaQUO (ORCPT
+Received: from mail.eperm.de ([89.247.134.16]:38246 "EHLO mail.eperm.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754426AbaBADya (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 31 Jan 2014 11:20:14 -0500
+	Fri, 31 Jan 2014 22:54:30 -0500
+Received: from myon.chronox.de
+	by mail.eperm.de with [XMail 1.27 ESMTP Server]
+	id <S3FE> for <platform-driver-x86@vger.kernel.org> from <smueller@chronox.de>;
+	Sat, 1 Feb 2014 04:54:21 +0100
 In-Reply-To: <13914184.mVhhUrzN60@myon.chronox.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Stephan Mueller <smueller@chronox.de>
+To: Benjamin Tissoires <benjamin.tissoires@gmail.com>
 Cc: Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>, linux-input <linux-input@vger.kernel.org>
 
-On Thu, Jan 30, 2014 at 11:31 PM, Stephan Mueller <smueller@chronox.de> wrote:
-> Am Donnerstag, 30. Januar 2014, 22:50:25 schrieb Benjamin Tissoires:
->
-> Hi Benjamin,
->
->> > Can you please help me how to do that? I install Windows in a KVM with
->> > the mouse device as a USB-passthrough device -- shall I detach the Linux
->> > USB driver?
->>
->> No, you don't have to detach the Linux USB driver (it's done for you
->> by KVM IIRC).
->
-> Correct, libvirtd is the one that detaches the driver when I start the VM.
->>
->> > Now, shall I use hid-recorder on that device or rather usbmon while
->> > Windows is booting?
->>
->> usbmon is the tool you need. hid-recorder will not work because the
->> hid subsystem will be disconnected as the device is used by Windows.
->>
->> You can even use wireshark now. It gives you a nice interface and
->> interpretation of the USB packets :)
->
-> Please see attached for the USB sniffing on the USB bus with the Crucialtec
-> touch pad when Windows starts up and shuts down. To drive the device, Windows
-> uses the Crucialtec driver according to its device settings display.
->
-> The attached log contains the log information for the mouse (device 001:005)
-> and the USB bridge (device 001:002). I cut out the listing for the touch pad
-> which is also attached to that bridge.
->
-> The strange thing, however, is the following: the mouse works in Windows when
-> I do not sniff on the USB bus using usbmon. But as soon as I start sniffing,
-> it does not work any more.
->
-> Is that log helpful?
+Am Freitag, 31. Januar 2014, 05:31:53 schrieb Stephan Mueller:
 
-Not really :(
-I would have expected to see something like that:
-XXXXXXXXXXXXXXXX XXXXXXXXXX S Co:1:XXX:0 s 21 09 0202 0002 0004 4 = XXXXXXXX
-XXXXXXXXXXXXXXXX XXXXXXXXXX C Co:1:XXX:0 0 4 >
+Hi,
 
-(SET_REPORT on the report ID 02 with a data length of 4)
+The middle mouse button works in Linux, but very differently than you may 
+expect: I still do not see any events when only pressing the middle mouse 
+button.
 
-The capture seems to confuse the windows driver and it is not
-initialized correctly.
+Out of luck, I pressed the middle button and moved the mouse. And there you 
+see, the mouse returns button 4 and 5.That means that pressing the middle 
+mouse button seems to morph the mouse into an implicit wheel.
 
-Long shot: maybe if you start the capture before attaching the device
-to the Windows VM (or launching it) it will be in a better shape.
+Thus, when I press the middle button and move my mouse, X11 applies the zoom 
+in and zoom out operations.
 
-I would say that as long as the device do not work under the VM with
-the capture, we are really screwed.
+I think I can remap the button 4 / 5 to button 2 for the middle mouse. But 
+then, the button 2 would only work when hitting the middle mouse button and 
+move the mouse pointer.
 
-Cheers,
-Benjamin
+This is not what I want. Do you see any other way of turning the middle mouse 
+button into a real useful button?
+
+Ciao
+Stephan
+-- 
+| Cui bono? |
