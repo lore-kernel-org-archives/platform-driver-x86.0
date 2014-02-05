@@ -1,42 +1,32 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] x86, platform: Make HP_WIRELESS option text more descriptive
-Date: Mon,  3 Feb 2014 15:23:40 +0100
-Message-ID: <1391437420-5943-1-git-send-email-bp@alien8.de>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Re: [PATCH 0/1] Add new driver for AlienFX control
+Date: Wed, 5 Feb 2014 16:24:44 +0000
+Message-ID: <1391617484.1248.0.camel@x230>
+References: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.skyhub.de ([78.46.96.112]:38675 "EHLO mail.skyhub.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751134AbaBCOXo (ORCPT
+Received: from [207.46.163.154] ([207.46.163.154]:46835 "EHLO
+	na01-bn1-obe.outbound.protection.outlook.com"
+	rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+	id S1752399AbaBEQ0m (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Feb 2014 09:23:44 -0500
+	Wed, 5 Feb 2014 11:26:42 -0500
+In-Reply-To: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com>
+Content-Language: en-US
+Content-ID: <C2DAC7300FFDDC4087612E464A22CA72@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Borislav Petkov <bp@suse.de>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+To: "mario_limonciello@dell.com" <mario_limonciello@dell.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-From: Borislav Petkov <bp@suse.de>
-
-... so that one can know what this option is about without opening the
-long help text.
-
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5ae65c11d544..b022d66e897b 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -198,7 +198,7 @@ config HP_ACCEL
- 	  be called hp_accel.
- 
- config HP_WIRELESS
--	tristate "HP WIRELESS"
-+	tristate "HP wireless button"
- 	depends on ACPI
- 	depends on INPUT
- 	help
--- 
-1.8.5.2.192.g7794a68
+T24gV2VkLCAyMDE0LTAyLTA1IGF0IDEwOjIyIC0wNjAwLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90
+ZToNCg0KPiBBZnRlciBkaWdnaW5nIGZ1cnRoZXIgaW4sIHRoZXJlIGFjdHVhbGx5IGlzIGNvbnRy
+b2wgZm9yIHNldHRpbmcgdXAgdGhlIExFRHMgdG8gDQo+IHBlcmZvcm0gZGlmZmVyZW50IHRhc2tz
+IGluIFMwIGFuZCBTMyBwb3dlciBzdGF0ZXMgd2hpY2ggYmVjb21lcyBtb3JlIGRpZmZpY3VsdCAN
+Cj4gdG8gcmVwcmVzZW50IGluIHRoZSBMRUQgY2xhc3MuICBTbyBpbnN0ZWFkIEkndmUgY3JlYXRl
+ZCBhIHNlcmllcyBvZiBzeXNmcyBub2Rlcw0KPiB0byByZXByZXNlbnQgdGhlIGRpZmZlcmVudCBj
+b2xvcnMgaW4gdGhlIGRpZmZlcmVudCB6b25lcy4NCg0KSGF2ZSB5b3UgZGlzY3Vzc2VkIHRoZSBi
+ZXN0IHdheSB0byByZXByZXNlbnQgdGhpcyB3aXRoIHRoZSBMRUQgY2xhc3MNCm1haW50YWluZXI/
+DQoNCi0tIA0KTWF0dGhldyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRAbmVidWxhLmNvbT4NCg==
