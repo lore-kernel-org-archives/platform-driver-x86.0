@@ -1,49 +1,36 @@
 From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH 0/1] Add new driver for AlienFX control
-Date: Wed,  5 Feb 2014 10:22:22 -0600
-Message-ID: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com>
+Subject: Re: [PATCH 0/1] Add new driver for AlienFX control
+Date: Wed, 05 Feb 2014 10:34:02 -0600
+Message-ID: <52F267FA.8020001@dell.com>
+References: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com> <1391617484.1248.0.camel@x230>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60ps301.us.dell.com ([143.166.148.206]:49507 "EHLO
-	ausc60ps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752723AbaBEQcc (ORCPT
+Received: from ausxipps301.us.dell.com ([143.166.148.223]:21307 "EHLO
+	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752508AbaBEQeT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 5 Feb 2014 11:32:32 -0500
+	Wed, 5 Feb 2014 11:34:19 -0500
+In-Reply-To: <1391617484.1248.0.camel@x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: matthew.garrett@nebula.com
-Cc: platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Alienware is known for being able to control the lighting zones around the 
-machine independently.  Previously this was done via an MCU.
+On 02/05/2014 10:24 AM, Matthew Garrett wrote:
+> On Wed, 2014-02-05 at 10:22 -0600, Mario Limonciello wrote:
+>
+>> After digging further in, there actually is control for setting up the LEDs to
+>> perform different tasks in S0 and S3 power states which becomes more difficult
+>> to represent in the LED class.  So instead I've created a series of sysfs nodes
+>> to represent the different colors in the different zones.
+> Have you discussed the best way to represent this with the LED class
+> maintainer?
+No I haven't yet.  I initially coded it using the LED class, but I kept finding more details for it that didn't seem to match what the LED class provided properly.
 
-The Alienware X51 R2 (as well as a few others) no longer uses an MCU to control
-it's different lighting zones.  It does however have a WMI interface.
+The LED class is intended to represent the "brightness" of an individual LED.
+There is a single brightness setting for each zone, but you can also individually choose the shade of every color.
+Eg. you can pick from 0x00 to 0xFF for each color in the zone and brightness from 0x00 to 0xFF for the brightness of the zone.
 
-At a first glance it seems reasonable to set up each LED for each zone 
-individually using the kernel's LED infrastructure.
-
-After digging further in, there actually is control for setting up the LEDs to 
-perform different tasks in S0 and S3 power states which becomes more difficult 
-to represent in the LED class.  So instead I've created a series of sysfs nodes
-to represent the different colors in the different zones.
-
-Normally the system will be in the RUNNING lighting control state and 
-immediately change based on the values (0-255) that you place in these sysfs nodes.
-
-If you change the lighting control state to SUSPEND or BOOTING then modifying 
-the nodes will set up the lights for those alternate states.
-
-Later platforms will be adding support for an HDMI mux.  I've included some 
-skeleton code here for this, but will add more as they get closer to launching.
-
-Mario Limonciello (1):
-  Add WMI driver for controlling AlienFX on Alienware
-
- drivers/platform/x86/Kconfig         |   13 ++
- drivers/platform/x86/Makefile        |    1 +
- drivers/platform/x86/alienware-wmi.c |  345 ++++++++++++++++++++++++++++++++++
- 3 files changed, 359 insertions(+)
- create mode 100644 drivers/platform/x86/alienware-wmi.c
-
--- 
-1.7.9.5
+I also mocked up having individual controls for each possible state and color in the LED class but it turned into about 36 different nodes in /sys/class/led/alienware-wmi and really confusing.
