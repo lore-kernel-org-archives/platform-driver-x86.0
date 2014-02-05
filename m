@@ -1,36 +1,43 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH 0/1] Add new driver for AlienFX control
-Date: Wed, 05 Feb 2014 10:34:02 -0600
-Message-ID: <52F267FA.8020001@dell.com>
-References: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com> <1391617484.1248.0.camel@x230>
+Date: Wed, 5 Feb 2014 17:57:11 +0000
+Message-ID: <1391623031.1248.2.camel@x230>
+References: <1391617343-2743-1-git-send-email-mario_limonciello@dell.com>
+	 <1391617484.1248.0.camel@x230> <52F267FA.8020001@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxipps301.us.dell.com ([143.166.148.223]:21307 "EHLO
-	ausxipps301.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752508AbaBEQeT (ORCPT
+Received: from mail-bl2lp0205.outbound.protection.outlook.com ([207.46.163.205]:32856
+	"EHLO na01-bl2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1753310AbaBER5g (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 5 Feb 2014 11:34:19 -0500
-In-Reply-To: <1391617484.1248.0.camel@x230>
+	Wed, 5 Feb 2014 12:57:36 -0500
+In-Reply-To: <52F267FA.8020001@dell.com>
+Content-Language: en-US
+Content-ID: <5F11AAE2D3FC5244B808E6B406085584@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
+To: "mario_limonciello@dell.com" <mario_limonciello@dell.com>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 02/05/2014 10:24 AM, Matthew Garrett wrote:
-> On Wed, 2014-02-05 at 10:22 -0600, Mario Limonciello wrote:
->
->> After digging further in, there actually is control for setting up the LEDs to
->> perform different tasks in S0 and S3 power states which becomes more difficult
->> to represent in the LED class.  So instead I've created a series of sysfs nodes
->> to represent the different colors in the different zones.
-> Have you discussed the best way to represent this with the LED class
-> maintainer?
-No I haven't yet.  I initially coded it using the LED class, but I kept finding more details for it that didn't seem to match what the LED class provided properly.
-
-The LED class is intended to represent the "brightness" of an individual LED.
-There is a single brightness setting for each zone, but you can also individually choose the shade of every color.
-Eg. you can pick from 0x00 to 0xFF for each color in the zone and brightness from 0x00 to 0xFF for the brightness of the zone.
-
-I also mocked up having individual controls for each possible state and color in the LED class but it turned into about 36 different nodes in /sys/class/led/alienware-wmi and really confusing.
+T24gV2VkLCAyMDE0LTAyLTA1IGF0IDEwOjM0IC0wNjAwLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90
+ZToNCj4gT24gMDIvMDUvMjAxNCAxMDoyNCBBTSwgTWF0dGhldyBHYXJyZXR0IHdyb3RlOg0KPiA+
+IE9uIFdlZCwgMjAxNC0wMi0wNSBhdCAxMDoyMiAtMDYwMCwgTWFyaW8gTGltb25jaWVsbG8gd3Jv
+dGU6DQo+ID4NCj4gPj4gQWZ0ZXIgZGlnZ2luZyBmdXJ0aGVyIGluLCB0aGVyZSBhY3R1YWxseSBp
+cyBjb250cm9sIGZvciBzZXR0aW5nIHVwIHRoZSBMRURzIHRvDQo+ID4+IHBlcmZvcm0gZGlmZmVy
+ZW50IHRhc2tzIGluIFMwIGFuZCBTMyBwb3dlciBzdGF0ZXMgd2hpY2ggYmVjb21lcyBtb3JlIGRp
+ZmZpY3VsdA0KPiA+PiB0byByZXByZXNlbnQgaW4gdGhlIExFRCBjbGFzcy4gIFNvIGluc3RlYWQg
+SSd2ZSBjcmVhdGVkIGEgc2VyaWVzIG9mIHN5c2ZzIG5vZGVzDQo+ID4+IHRvIHJlcHJlc2VudCB0
+aGUgZGlmZmVyZW50IGNvbG9ycyBpbiB0aGUgZGlmZmVyZW50IHpvbmVzLg0KPiA+IEhhdmUgeW91
+IGRpc2N1c3NlZCB0aGUgYmVzdCB3YXkgdG8gcmVwcmVzZW50IHRoaXMgd2l0aCB0aGUgTEVEIGNs
+YXNzDQo+ID4gbWFpbnRhaW5lcj8NCj4gTm8gSSBoYXZlbid0IHlldC4gIEkgaW5pdGlhbGx5IGNv
+ZGVkIGl0IHVzaW5nIHRoZSBMRUQgY2xhc3MsIGJ1dCBJIGtlcHQgZmluZGluZyBtb3JlIGRldGFp
+bHMgZm9yIGl0IHRoYXQgZGlkbid0IHNlZW0gdG8gbWF0Y2ggd2hhdCB0aGUgTEVEIGNsYXNzIHBy
+b3ZpZGVkIHByb3Blcmx5Lg0KPiANCj4gVGhlIExFRCBjbGFzcyBpcyBpbnRlbmRlZCB0byByZXBy
+ZXNlbnQgdGhlICJicmlnaHRuZXNzIiBvZiBhbiBpbmRpdmlkdWFsIExFRC4NCg0KU3VyZSwgdGhh
+dCdzIHRoZSBjdXJyZW50IHN0YXRlLiBCdXQgaXQgbWFrZXMgc2Vuc2UgdG8gd29yayBvbiBleHRl
+bmRpbmcNCmFuIGV4aXN0aW5nIGNsYXNzIHJhdGhlciB0aGFuIGltcGxlbWVudGluZyBhIGN1c3Rv
+bSBpbnRlcmZhY2UuDQoNCi0tIA0KTWF0dGhldyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRAbmVi
+dWxhLmNvbT4NCg==
