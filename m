@@ -1,14 +1,14 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 3/7] sony-laptop: add panel_id function
-Date: Mon, 10 Feb 2014 08:07:30 +0900
-Message-ID: <1391987254-3103-4-git-send-email-malattia@linux.it>
+Subject: [PATCH 2/7] sony-laptop: Add support for lid resume settings on Vaio Pro
+Date: Mon, 10 Feb 2014 08:07:29 +0900
+Message-ID: <1391987254-3103-3-git-send-email-malattia@linux.it>
 References: <1391987254-3103-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:46369 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:46366 "EHLO
 	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751859AbaBIXNw (ORCPT
+	id S1751979AbaBIXNv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 9 Feb 2014 18:13:52 -0500
+	Sun, 9 Feb 2014 18:13:51 -0500
 In-Reply-To: <1391987254-3103-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -17,102 +17,212 @@ Cc: platform-driver-x86@vger.kernel.org, Javier Achirica <jachirica@gmail.com>, 
 
 From: Javier Achirica <jachirica@gmail.com>
 
+Vaio Pro uses a different handle and doesn't support all the options as
+other models (only S5 setting v/s S3/4/5).
+
+Minor code rework to generalize functions by Mattia Dongili.
+
 Signed-off-by: Javier Achirica <jachirica@gmail.com>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c | 59 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/platform/x86/sony-laptop.c | 110 +++++++++++++++++++++----------------
+ 1 file changed, 62 insertions(+), 48 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index de17390..d1f712e 100644
+index fe5424c..de17390 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -164,6 +164,9 @@ static int __sony_nc_gfx_switch_status_get(void);
- static int sony_nc_highspeed_charging_setup(struct platform_device *pd);
- static void sony_nc_highspeed_charging_cleanup(struct platform_device *pd);
+@@ -152,7 +152,8 @@ static void sony_nc_battery_care_cleanup(struct platform_device *pd);
+ static int sony_nc_thermal_setup(struct platform_device *pd);
+ static void sony_nc_thermal_cleanup(struct platform_device *pd);
  
-+static int sony_nc_panelid_setup(struct platform_device *pd);
-+static void sony_nc_panelid_cleanup(struct platform_device *pd);
-+
- static int sony_nc_touchpad_setup(struct platform_device *pd,
- 				  unsigned int handle);
- static void sony_nc_touchpad_cleanup(struct platform_device *pd);
-@@ -1385,6 +1388,12 @@ static void sony_nc_function_setup(struct acpi_device *device,
- 				pr_err("couldn't set up keyboard backlight function (%d)\n",
+-static int sony_nc_lid_resume_setup(struct platform_device *pd);
++static int sony_nc_lid_resume_setup(struct platform_device *pd,
++				    unsigned int handle);
+ static void sony_nc_lid_resume_cleanup(struct platform_device *pd);
+ 
+ static int sony_nc_gfx_switch_setup(struct platform_device *pd,
+@@ -1341,7 +1342,8 @@ static void sony_nc_function_setup(struct acpi_device *device,
  						result);
  			break;
-+		case 0x011D:
-+			result = sony_nc_panelid_setup(pf_device);
-+			if (result)
-+				pr_err("couldn't set up panel ID function (%d)\n",
-+				       result);
-+			break;
- 		default:
- 			continue;
- 		}
-@@ -1449,6 +1458,9 @@ static void sony_nc_function_cleanup(struct platform_device *pd)
- 		case 0x0163:
- 			sony_nc_kbd_backlight_cleanup(pd, handle);
+ 		case 0x0119:
+-			result = sony_nc_lid_resume_setup(pf_device);
++		case 0x015D:
++			result = sony_nc_lid_resume_setup(pf_device, handle);
+ 			if (result)
+ 				pr_err("couldn't set up lid resume function (%d)\n",
+ 						result);
+@@ -1422,6 +1424,7 @@ static void sony_nc_function_cleanup(struct platform_device *pd)
+ 			sony_nc_battery_care_cleanup(pd);
  			break;
-+		case 0x011D:
-+			sony_nc_panelid_cleanup(pd);
+ 		case 0x0119:
++		case 0x015D:
+ 			sony_nc_lid_resume_cleanup(pd);
+ 			break;
+ 		case 0x0122:
+@@ -2223,9 +2226,14 @@ static void sony_nc_thermal_resume(void)
+ #endif
+ 
+ /* resume on LID open */
++#define LID_RESUME_S5	0
++#define LID_RESUME_S4	1
++#define LID_RESUME_S3	2
++#define LID_RESUME_MAX	3
+ struct snc_lid_resume_control {
+-	struct device_attribute attrs[3];
++	struct device_attribute attrs[LID_RESUME_MAX];
+ 	unsigned int status;
++	int handle;
+ };
+ static struct snc_lid_resume_control *lid_ctl;
+ 
+@@ -2233,8 +2241,9 @@ static ssize_t sony_nc_lid_resume_store(struct device *dev,
+ 					struct device_attribute *attr,
+ 					const char *buffer, size_t count)
+ {
+-	unsigned int result, pos;
++	unsigned int result;
+ 	unsigned long value;
++	unsigned int pos = LID_RESUME_S5;
+ 	if (count > 31)
+ 		return -EINVAL;
+ 
+@@ -2247,21 +2256,21 @@ static ssize_t sony_nc_lid_resume_store(struct device *dev,
+ 	 * +--------------+
+ 	 *   2    1    0
+ 	 */
+-	if (strcmp(attr->attr.name, "lid_resume_S3") == 0)
+-		pos = 2;
+-	else if (strcmp(attr->attr.name, "lid_resume_S4") == 0)
+-		pos = 1;
+-	else if (strcmp(attr->attr.name, "lid_resume_S5") == 0)
+-		pos = 0;
+-	else
+-               return -EINVAL;
++	while (pos < LID_RESUME_MAX) {
++		if (&lid_ctl->attrs[pos].attr == &attr->attr)
 +			break;
- 		default:
- 			continue;
- 		}
-@@ -2540,6 +2552,53 @@ static void sony_nc_highspeed_charging_cleanup(struct platform_device *pd)
- 	}
++		pos++;
++	}
++	if (pos == LID_RESUME_MAX)
++		return -EINVAL;
+ 
+ 	if (value)
+ 		value = lid_ctl->status | (1 << pos);
+ 	else
+ 		value = lid_ctl->status & ~(1 << pos);
+ 
+-	if (sony_call_snc_handle(0x0119, value << 0x10 | 0x0100, &result))
++	if (sony_call_snc_handle(lid_ctl->handle, value << 0x10 | 0x0100,
++				&result))
+ 		return -EIO;
+ 
+ 	lid_ctl->status = value;
+@@ -2270,29 +2279,27 @@ static ssize_t sony_nc_lid_resume_store(struct device *dev,
  }
  
-+/* Panel ID function */
-+static struct device_attribute *panel_handle;
+ static ssize_t sony_nc_lid_resume_show(struct device *dev,
+-				       struct device_attribute *attr, char *buffer)
++					struct device_attribute *attr,
++					char *buffer)
+ {
+-	unsigned int pos;
+-
+-	if (strcmp(attr->attr.name, "lid_resume_S3") == 0)
+-		pos = 2;
+-	else if (strcmp(attr->attr.name, "lid_resume_S4") == 0)
+-		pos = 1;
+-	else if (strcmp(attr->attr.name, "lid_resume_S5") == 0)
+-		pos = 0;
+-	else
+-		return -EINVAL;
+-	       
+-	return snprintf(buffer, PAGE_SIZE, "%d\n",
+-			(lid_ctl->status >> pos) & 0x01);
++	unsigned int pos = LID_RESUME_S5;
 +
-+static ssize_t sony_nc_panelid_show(struct device *dev,
-+		struct device_attribute *attr, char *buffer)
-+{
-+	unsigned int result;
-+
-+	if (sony_call_snc_handle(0x011D, 0x0000, &result))
-+		return -EIO;
-+
-+	return snprintf(buffer, PAGE_SIZE, "%d\n", result);
-+}
-+
-+static int sony_nc_panelid_setup(struct platform_device *pd)
-+{
-+	unsigned int result;
-+
-+	panel_handle = kzalloc(sizeof(struct device_attribute), GFP_KERNEL);
-+	if (!panel_handle)
-+		return -ENOMEM;
-+
-+	sysfs_attr_init(&panel_handle->attr);
-+	panel_handle->attr.name = "panel_id";
-+	panel_handle->attr.mode = S_IRUGO;
-+	panel_handle->show = sony_nc_panelid_show;
-+	panel_handle->store = NULL;
-+
-+	result = device_create_file(&pd->dev, panel_handle);
-+	if (result) {
-+		kfree(panel_handle);
-+		panel_handle = NULL;
-+		return result;
++	while (pos < LID_RESUME_MAX) {
++		if (&lid_ctl->attrs[pos].attr == &attr->attr)
++			return snprintf(buffer, PAGE_SIZE, "%d\n",
++					(lid_ctl->status >> pos) & 0x01);
++		pos++;
 +	}
++	return -EINVAL;
+ }
+ 
+-static int sony_nc_lid_resume_setup(struct platform_device *pd)
++static int sony_nc_lid_resume_setup(struct platform_device *pd,
++					unsigned int handle)
+ {
+ 	unsigned int result;
+ 	int i;
+ 
+-	if (sony_call_snc_handle(0x0119, 0x0000, &result))
++	if (sony_call_snc_handle(handle, 0x0000, &result))
+ 		return -EIO;
+ 
+ 	lid_ctl = kzalloc(sizeof(struct snc_lid_resume_control), GFP_KERNEL);
+@@ -2300,26 +2307,29 @@ static int sony_nc_lid_resume_setup(struct platform_device *pd)
+ 		return -ENOMEM;
+ 
+ 	lid_ctl->status = result & 0x7;
++	lid_ctl->handle = handle;
+ 
+ 	sysfs_attr_init(&lid_ctl->attrs[0].attr);
+-	lid_ctl->attrs[0].attr.name = "lid_resume_S3";
+-	lid_ctl->attrs[0].attr.mode = S_IRUGO | S_IWUSR;
+-	lid_ctl->attrs[0].show = sony_nc_lid_resume_show;
+-	lid_ctl->attrs[0].store = sony_nc_lid_resume_store;
+-
+-	sysfs_attr_init(&lid_ctl->attrs[1].attr);
+-	lid_ctl->attrs[1].attr.name = "lid_resume_S4";
+-	lid_ctl->attrs[1].attr.mode = S_IRUGO | S_IWUSR;
+-	lid_ctl->attrs[1].show = sony_nc_lid_resume_show;
+-	lid_ctl->attrs[1].store = sony_nc_lid_resume_store;
+-
+-	sysfs_attr_init(&lid_ctl->attrs[2].attr);
+-	lid_ctl->attrs[2].attr.name = "lid_resume_S5";
+-	lid_ctl->attrs[2].attr.mode = S_IRUGO | S_IWUSR;
+-	lid_ctl->attrs[2].show = sony_nc_lid_resume_show;
+-	lid_ctl->attrs[2].store = sony_nc_lid_resume_store;
+-
+-	for (i = 0; i < 3; i++) {
++	lid_ctl->attrs[LID_RESUME_S5].attr.name = "lid_resume_S5";
++	lid_ctl->attrs[LID_RESUME_S5].attr.mode = S_IRUGO | S_IWUSR;
++	lid_ctl->attrs[LID_RESUME_S5].show = sony_nc_lid_resume_show;
++	lid_ctl->attrs[LID_RESUME_S5].store = sony_nc_lid_resume_store;
 +
-+	return 0;
-+}
++	if (handle == 0x0119) {
++		sysfs_attr_init(&lid_ctl->attrs[1].attr);
++		lid_ctl->attrs[LID_RESUME_S4].attr.name = "lid_resume_S4";
++		lid_ctl->attrs[LID_RESUME_S4].attr.mode = S_IRUGO | S_IWUSR;
++		lid_ctl->attrs[LID_RESUME_S4].show = sony_nc_lid_resume_show;
++		lid_ctl->attrs[LID_RESUME_S4].store = sony_nc_lid_resume_store;
 +
-+static void sony_nc_panelid_cleanup(struct platform_device *pd)
-+{
-+	if (panel_handle) {
-+		device_remove_file(&pd->dev, panel_handle);
-+		kfree(panel_handle);
-+		panel_handle = NULL;
++		sysfs_attr_init(&lid_ctl->attrs[2].attr);
++		lid_ctl->attrs[LID_RESUME_S3].attr.name = "lid_resume_S3";
++		lid_ctl->attrs[LID_RESUME_S3].attr.mode = S_IRUGO | S_IWUSR;
++		lid_ctl->attrs[LID_RESUME_S3].show = sony_nc_lid_resume_show;
++		lid_ctl->attrs[LID_RESUME_S3].store = sony_nc_lid_resume_store;
 +	}
-+}
++	for (i = 0; i < LID_RESUME_MAX &&
++			lid_ctl->attrs[LID_RESUME_S3].attr.name; i++) {
+ 		result = device_create_file(&pd->dev, &lid_ctl->attrs[i]);
+ 		if (result)
+ 			goto liderror;
+@@ -2342,8 +2352,12 @@ static void sony_nc_lid_resume_cleanup(struct platform_device *pd)
+ 	int i;
+ 
+ 	if (lid_ctl) {
+-		for (i = 0; i < 3; i++)
++		for (i = 0; i < LID_RESUME_MAX; i++) {
++			if (!lid_ctl->attrs[i].attr.name)
++				break;
 +
- /* Touchpad enable/disable */
- struct touchpad_control {
- 	struct device_attribute attr;
+ 			device_remove_file(&pd->dev, &lid_ctl->attrs[i]);
++		}
+ 
+ 		kfree(lid_ctl);
+ 		lid_ctl = NULL;
 -- 
 1.9.rc1
