@@ -1,33 +1,36 @@
-From: Al Viro <viro@ZenIV.linux.org.uk>
-Subject: Re: [PATCH] x86, acpi: LLVMLinux: Remove nested functions from
- Thinkpad ACPI
-Date: Wed, 12 Feb 2014 22:01:16 +0000
-Message-ID: <20140212220116.GR18016@ZenIV.linux.org.uk>
-References: <1392238726-18787-1-git-send-email-dl9pf@gmx.de>
- <alpine.DEB.2.02.1402121351510.27082@chino.kir.corp.google.com>
+From: ECOLE PRIMAIRE PUBLIQUE Maxime LAOPE <ce.9740491R@ac-reunion.fr>
+Subject: G20 Global Award
+Date: Wed, 12 Feb 2014 23:52:28 +0100
+Message-ID: <3c5d610513190b06.52fc093c@ac-reunion.fr>
+Reply-To: rldcast@yahoo.co.jp
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45598 "EHLO
-	ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751933AbaBLWBa (ORCPT
+Received: from smtpout1.ac-reunion.fr ([195.98.231.112]:57798 "EHLO
+	smtpout1.ac-reunion.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751185AbaBLXiK convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 12 Feb 2014 17:01:30 -0500
+	Wed, 12 Feb 2014 18:38:10 -0500
+Content-Language: en
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1402121351510.27082@chino.kir.corp.google.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Rientjes <rientjes@google.com>
-Cc: dl9pf@gmx.de, Behan Webster <behanw@converseincode.com>, David Woodhouse <David.Woodhouse@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2014 at 01:54:43PM -0800, David Rientjes wrote:
 
-> So this patch is only as a courtesy to clang and you're not complaining 
-> about things like __builtin() functions, typeof, or a ? : b conditional 
-> operators because clang happens to support them?
 
-That patch removes a disgusting construct; who cares how they'd discovered
-it?  Consider it courtesy to reviewers, clang or no clang...
+Date: 12 February, 2014.
+Our Ref: G20/CT02-14
 
-Folks, it's C; no need to bring Pascal misfeatures in, even if gcc happens
-to accept them.
+We are pleased to inform you that your e-mail address have been selecte=
+d by=20
+the G20 Group International to receive her 2014 award prize of $3,500,0=
+00.00.
+Additional information on the award will be released to you on your res=
+ponse.=20
+We anticipate receiving a prompt response from you.
+
+Respectfully,
+Milena Pepe.
+(Award Coodinator)
+IT COULD BE YOU=AE is a registered trade mark of the G20 Group.
