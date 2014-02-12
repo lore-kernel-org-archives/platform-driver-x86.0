@@ -1,21 +1,52 @@
-From: 2014 Heritage Foundation Board <sifi.bouaziz@iresa.agrinet.tn>
-Subject: Cash Awaiting Pick Up..
-Date: Wed, 12 Feb 2014 10:13:00 +0100 (CET)
-Message-ID: <a0e7879a-4cf2-4fcf-966b-5fe677b6fbde__42691.6227130734$1392198917$gmane$org@mbox12>
-Reply-To: Mrs Hillary Florence <heritdept@xtra.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] thinkpad_acpi: Fix inconsistent mute LED after resume
+Date: Wed, 12 Feb 2014 16:32:45 +0100
+Message-ID: <1392219165-20888-1-git-send-email-tiwai@suse.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from agrinetmail21.outgw.tn ([196.203.250.101]:50495 "EHLO
-	agrinetmail21.outgw.tn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750932AbaBLJyl (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:44592 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751269AbaBLPcq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 12 Feb 2014 04:54:41 -0500
+	Wed, 12 Feb 2014 10:32:46 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, David Henningsson <david.henningsson@canonical.com>
 
+The mute LED states have to be restored after resume.
 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=70351
+Cc: <stable@vger.kernel.org> [v3.13+]
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-This is to re-notify you that you have $500,000.00 waiting for pick-up at Money Gram, Contact 
-Mrs Hillary Florence via email : heritdept@xtra.co.nz for claims.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index defb6afc1409..e2a91c845ac9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8447,9 +8447,21 @@ static void mute_led_exit(void)
+ 		tpacpi_led_set(i, false);
+ }
+ 
++static void mute_led_resume(void)
++{
++	int i;
++
++	for (i = 0; i < TPACPI_LED_MAX; i++) {
++		struct tp_led_table *t = &led_tables[i];
++		if (t->state >= 0)
++			mute_led_on_off(t, t->state);
++	}
++}
++
+ static struct ibm_struct mute_led_driver_data = {
+ 	.name = "mute_led",
+ 	.exit = mute_led_exit,
++	.resume = mute_led_resume,
+ };
+ 
+ /****************************************************************************
+-- 
+1.8.5.2
