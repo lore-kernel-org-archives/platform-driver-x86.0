@@ -1,61 +1,21 @@
-From: "Luis G.F" <luisgf@luisgf.es>
-Subject: [PATCH 1/2] platform / x86: Fix incorrect sscanf() string datatype.
-Date: Mon, 10 Feb 2014 11:44:47 +0100
-Message-ID: <1392029087-21441-1-git-send-email-luisgf@luisgf.es>
+From: 2014 Heritage Foundation Board <sifi.bouaziz@iresa.agrinet.tn>
+Subject: Cash Awaiting Pick Up..
+Date: Wed, 12 Feb 2014 10:13:00 +0100 (CET)
+Message-ID: <a0e7879a-4cf2-4fcf-966b-5fe677b6fbde__42691.6227130734$1392198917$gmane$org@mbox12>
+Reply-To: Mrs Hillary Florence <heritdept@xtra.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.domainsvm.com ([37.77.82.227]:41085 "EHLO
-	cp-nl-1.domainsvm.com" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-	with ESMTP id S1752107AbaBJLnE (ORCPT
+Received: from agrinetmail21.outgw.tn ([196.203.250.101]:50495 "EHLO
+	agrinetmail21.outgw.tn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750932AbaBLJyl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 10 Feb 2014 06:43:04 -0500
+	Wed, 12 Feb 2014 04:54:41 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: "Luis G.F" <luisgf@luisgf.es>
 
-Fix incorrect sscanf() string datatype in following functions:
 
-- cmos_write()
-- beep_write()
-- volume_writter().
 
-Change from 'unsigned int *' to 'int *'
-
-Signed-off-by: Luis G.F <luisgf@luisgf.es>
----
- drivers/platform/x86/thinkpad_acpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index defb6af..1646300 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4962,7 +4962,7 @@ static int cmos_write(char *buf)
- 	int cmos_cmd, res;
- 
- 	while ((cmd = next_cmd(&buf))) {
--		if (sscanf(cmd, "%u", &cmos_cmd) == 1 &&
-+		if (sscanf(cmd, "%d", &cmos_cmd) == 1 &&
- 		    cmos_cmd >= 0 && cmos_cmd <= 21) {
- 			/* cmos_cmd set */
- 		} else
-@@ -5467,7 +5467,7 @@ static int beep_write(char *buf)
- 		return -ENODEV;
- 
- 	while ((cmd = next_cmd(&buf))) {
--		if (sscanf(cmd, "%u", &beep_cmd) == 1 &&
-+		if (sscanf(cmd, "%d", &beep_cmd) == 1 &&
- 		    beep_cmd >= 0 && beep_cmd <= 17) {
- 			/* beep_cmd set */
- 		} else
-@@ -7047,7 +7047,7 @@ static int volume_write(char *buf)
- 				else if (new_level > 0)
- 					new_level--;
- 				continue;
--			} else if (sscanf(cmd, "level %u", &l) == 1 &&
-+			} else if (sscanf(cmd, "level %d", &l) == 1 &&
- 				   l >= 0 && l <= TP_EC_VOLUME_MAX) {
- 					new_level = l;
- 				continue;
--- 
-1.8.4.5
+This is to re-notify you that you have $500,000.00 waiting for pick-up at Money Gram, Contact 
+Mrs Hillary Florence via email : heritdept@xtra.co.nz for claims.
