@@ -1,58 +1,67 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] x86, acpi: LLVMLinux: Remove nested functions from
- Thinkpad ACPI
-Date: Thu, 13 Feb 2014 11:03:44 -0200
-Message-ID: <20140213130343.GA25725@khazad-dum.debian.net>
-References: <1392238726-18787-1-git-send-email-dl9pf@gmx.de>
+From: rauchwolke@gmx.net
+Subject: Re: [PATCH] thinkpad_acpi: Fix inconsistent mute LED after resume
+Date: Thu, 13 Feb 2014 19:02:46 +0100
+Message-ID: <0MGWR2-1W0rTh1wUC-00DE8E@mail.gmx.com>
+References: <1392219165-20888-1-git-send-email-tiwai@suse.de>
+	<1392237456.1201.2.camel@x230>
+	<s5h7g8zfm0d.wl%tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:48066 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753910AbaBMNDw (ORCPT
+Received: from mout.gmx.net ([212.227.15.15]:59356 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752208AbaBMSDD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Feb 2014 08:03:52 -0500
-Content-Disposition: inline
-In-Reply-To: <1392238726-18787-1-git-send-email-dl9pf@gmx.de>
+	Thu, 13 Feb 2014 13:03:03 -0500
+Received: from rolle.lan ([80.109.73.20]) by mail.gmx.com (mrgmx101) with
+ ESMTPSA (Nemesis) id 0LpwZn-1VZkSB3Kch-00fizx for
+ <platform-driver-x86@vger.kernel.org>; Thu, 13 Feb 2014 19:03:01 +0100
+In-Reply-To: <s5h7g8zfm0d.wl%tiwai@suse.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dl9pf@gmx.de
-Cc: Behan Webster <behanw@converseincode.com>, David Woodhouse <David.Woodhouse@intel.com>, Matthew Garrett <matthew.garrett@nebula.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, "david.henningsson@canonical.com" <david.henningsson@canonical.com>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, 12 Feb 2014, dl9pf@gmx.de wrote:
-> From: Behan Webster <behanw@converseincode.com>
-> The only real change is passing in event_mask to the formerly nested =
-functions.
-> Otherwise it's just moving around function and macro code.
->=20
-> This is the only place in the Linux kernel where nested functions are=
- still in
-> use. Nested functions aren't part of the C standards, and complicate =
-the
-> generated code. Although the Linux Kernel has never set out to be ent=
-irely C
-> standard compliant, it is increasingly compliant to the standard whic=
-h is
-> supported by other compilers such as Clang. The LLVMLinux project is =
-working on
-> being able to compile the Linux kernel with Clang. The use of nested =
-functions
-> blocks this effort.
->=20
-> Signed-off-by: Behan Webster <behanw@converseincode.com>
-> Signed-off-by: Jan-Simon M=F6ller <dl9pf@gmx.de>
->=20
-> CC: David Woodhouse <David.Woodhouse@intel.com>
-> CC: Matthew Garrett <matthew.garrett@nebula.com>
-> CC: ibm-acpi-devel@lists.sourceforge.net
-> CC: platform-driver-x86@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
+Hi,
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+this patch doesn't work. The sound is now muted after the resume (light is on). 
+But the userspace knows nothing about it. (kmix shows the volume as umuted)
 
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Peter
+
+
+On Thu, 13 Feb 2014 09:35:30 +0100
+Takashi Iwai <tiwai@suse.de> wrote:
+
+> At Wed, 12 Feb 2014 20:37:36 +0000,
+> Matthew Garrett wrote:
+> > 
+> > On Wed, 2014-02-12 at 16:32 +0100, Takashi Iwai wrote:
+> > > The mute LED states have to be restored after resume.
+> > 
+> > Oh, never mind, we're not doing this through the LED class, are we?
+> 
+> Good point.  It seems that leds_class has pm_ops but it's enabled only
+> when a flag is set.
+> 
+> I added the original bug reporter to Cc.  (Don't know the name,
+> Bugzilla shows only the email address.)
+> Could you check the patch below works instead of the previous fix?
+> 
+> 
+> Takashi
+> 
+> ---
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index defb6afc1409..16edf75d9c00 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -4796,6 +4796,7 @@ static struct tpacpi_led_classdev tpacpi_led_thinklight = {
+>  		.name		= "tpacpi::thinklight",
+>  		.brightness_set	= &light_sysfs_set,
+>  		.brightness_get	= &light_sysfs_get,
+> +		.flags		= LED_CORE_SUSPENDRESUME,
+>  	}
+>  };
+>  
