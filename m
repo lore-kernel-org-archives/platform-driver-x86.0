@@ -1,52 +1,63 @@
-From: "Dr.William Davies" <purchase@veltechuniv.edu.in>
-Subject: Re: Instructions to release your payment.
-Date: Fri, 14 Feb 2014 18:07:21 +0530
-Message-ID: <4b908d91382e8e4f0d5b1c8dc90da8bc@127.0.0.1>
-Reply-To: williamdavies54@yahoo.co.uk
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: Wireless key on Fujitsu E753 not working since
+ a57f7f9175b8ccbc9df83ac13860488913115de4
+Date: Mon, 17 Feb 2014 09:36:33 +1030
+Message-ID: <20140216230633.GC29134@marvin.atrad.com.au>
+References: <CAO_aot5FJb1v6-CztDeuAPS7=-byULP-tMzF_DZhw6aG4A+vVw@mail.gmail.com>
+ <CAO_aot4Ye=YwSvi6P2Nn=3r4N8OY03mPxXLj+mTd_ziRxb5LXA@mail.gmail.com>
+ <20130812144212.GA20923@marvin.atrad.com.au>
+ <CAO_aot5117jj+sGCR2UXt2_kqH-j5VxcdQbuTrGMRewDVwPbiQ@mail.gmail.com>
+ <20130924001149.GH12939@marvin.atrad.com.au>
+ <CAO_aot6FkZBerjGKHfsjM03PVECM_cn3C+QirSojTg7AdOOAOA@mail.gmail.com>
+ <20131130103023.GB1610@marvin.atrad.com.au>
+ <CAO_aot4ys3uK3ftBRvV5fMSqVKwupwBRTUU_Gf2AFcEgcw1VDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from webmail.veltechuniv.edu.in ([202.71.145.3]:47062 "EHLO
-	server.veltechuniv.edu.in" rhost-flags-OK-OK-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1752334AbaBNOFF (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:48556 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750938AbaBPXNA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 14 Feb 2014 09:05:05 -0500
+	Sun, 16 Feb 2014 18:13:00 -0500
+Content-Disposition: inline
+In-Reply-To: <CAO_aot4ys3uK3ftBRvV5fMSqVKwupwBRTUU_Gf2AFcEgcw1VDw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jan Hinnerk Stosch <janhinnerk.stosch@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, jwoithe@just42.net
 
-Attention
+On Mon, Feb 10, 2014 at 09:42:07AM +0100, Jan Hinnerk Stosch wrote:
+> Thanks for your answer and sorry for the delay.
 
-Sir,
+No problem.
 
-Following an application brought, seeking the release of your due payment
-through British bank, I am directed to inform you that the application has
-been approved and Natwest bank of London has been mandated to make transfer
-of your payment to the bank account you will nominate. Please kindly reply
-for immediate release of your US$6.2 Million to you nominates account.
+> I finally got some time to look into this:
+> When I boot with the named boot option the key does work with and
+> without fujitsu_laptop being loaded.
+> Additionally I found a bug report at launchpad:
+> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1159690 with some
+> more people affected by this, who are using notebooks from different
+> manufacturers, so this doesn't really seem to be related to
+> fujitsu_laptop module, does it?
 
-Sir, for the avoidance of doubts, reconfirm the following information to
-me to enable us forward same to Natwest bank to contact you for your
-payment.
+I tend to agree.  The fact that the named boot option makes this work
+regardless of whether fujitsu_laptop is loaded or not indicates to me that
+the mechanism driving this key on your laptop does not involve
+fujitsu_laptop.  My guess at present is that on your laptop the key is
+implemented in a standard way and therefore the handling of it is taken care
+of by generic code.  By and large the code in fujitsu_laptop exists to deal
+with features on laptops which were implemented in non-standard ways. 
+Affected laptops tend to be older (newer ones tend to comply more closely
+with what we'll call standards for the purposes of this discussion).  This
+would explain why fujitsu_laptop doesn't have any effect on the key.
 
-Name:
+As to why the named boot option seems to affect the key, I don't know and
+can't offer any sugestions due to a lack of knowledge about the acpi_osi
+option and how it affects the ACPI subsystem.
 
-Address:
+To summarise: based on the tests you have done I don't think this is related
+to the fujitsu_laptop module since the key's behaviour is not affected by
+the presence or absence of this module.
 
-Tel/Fax No.:
-
-Nationality:
-
-Occupation:
-
-Date of birth: 
-
-As soon as I received the above information, I will forward them to
-Natwest bank to contact you for your approved payment. Please see in the
-attachment, letter I wrote to Natwest bank informing them of the
-transaction
-
-Yours faithfully
-
-Dr.William Davies
-Chairman,British Banking Regulatory Board.
+Regards
+  jonathan
