@@ -1,31 +1,42 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: Re: [PATCH] thinkpad_acpi: Add mappings for F9 - F12 hotkeys on
- T440s
-Date: Tue, 18 Feb 2014 16:00:57 +0000
-Message-ID: <1392739256.29766.2.camel@x230>
-References: <1392726999-30382-1-git-send-email-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] thinkpad_acpi: Add mappings for F9 - F12 hotkeys on T440s
+Date: Tue, 18 Feb 2014 18:11:06 +0100
+Message-ID: <5303942A.4070602@redhat.com>
+References: <1392726999-30382-1-git-send-email-hdegoede@redhat.com> <1392739256.29766.2.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0242.outbound.protection.outlook.com ([207.46.163.242]:24350
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1755949AbaBRQA7 (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:20968 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751355AbaBRRLY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 18 Feb 2014 11:00:59 -0500
-In-Reply-To: <1392726999-30382-1-git-send-email-hdegoede@redhat.com>
-Content-Language: en-US
-Content-ID: <7F59C307C3363F49978AE35D7AB088ED@namprd05.prod.outlook.com>
+	Tue, 18 Feb 2014 12:11:24 -0500
+In-Reply-To: <1392739256.29766.2.camel@x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "hdegoede@redhat.com" <hdegoede@redhat.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
 Cc: "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "btissoir@redhat.com" <btissoir@redhat.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-T24gVHVlLCAyMDE0LTAyLTE4IGF0IDEzOjM2ICswMTAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOg0K
-PiAvKiBFeHRyYSBrZXlzIGZvdW5kIG9uIHRoZSBUNDQwKHMpICovDQo+ICsJCUtFWV9DT05GSUcs
-IEtFWV9TRUFSQ0gsIEtFWV9TQ0FMRSwgS0VZX0NPTVBVVEVSLA0KDQpNeSByZWNvbGxlY3Rpb24g
-aXMgdGhhdCBLRVlfU0NBTEUgd2FzIGluaXRpYWxseSBpbnRlbmRlZCBmb3IgIlRvZ2dsZQ0Kd2hl
-dGhlciBteSA2NDB4NDgwIGRlc2t0b3AgaXMgc2NhbGVkIG9yIGxldHRlcmJveGVkIG9uIG15IDEy
-ODB4MTAyNA0KZGlzcGxheSIuIElzIHRoaXMgdGhlIG1vc3QgYXBwcm9wcmlhdGUga2V5Pw0KDQot
-LSANCk1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+DQo=
+Hi,
+
+On 02/18/2014 05:00 PM, Matthew Garrett wrote:
+> On Tue, 2014-02-18 at 13:36 +0100, Hans de Goede wrote:
+>> /* Extra keys found on the T440(s) */
+>> +		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_COMPUTER,
+>
+> My recollection is that KEY_SCALE was initially intended for "Toggle
+> whether my 640x480 desktop is scaled or letterboxed on my 1280x1024
+> display". Is this the most appropriate key?
+
+linux/input.h says:
+
+#define KEY_SCALE		120	/* AL Compiz Scale (Expose) */
+
+And Lenovo describes the purpose of the key as "show all programs"
+which is exactly what expose does. With that said I'm open to
+suggestions for a better mapping.
+
+Regards,
+
+Hans
