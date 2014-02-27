@@ -1,34 +1,28 @@
-From: Matthew Garrett <matthew.garrett@nebula.com>
+From: Mario Limonciello <mario_limonciello@dell.com>
 Subject: Re: [PATCH v3 0/1] alienware-wmi: Update HDMI control methods
-Date: Thu, 27 Feb 2014 00:03:46 +0000
-Message-ID: <1393459426.14900.56.camel@x230>
-References: <1393458459-29353-1-git-send-email-mario_limonciello@dell.com>
+Date: Wed, 26 Feb 2014 18:16:55 -0600
+Message-ID: <530E83F7.5060801@dell.com>
+References: <1393458459-29353-1-git-send-email-mario_limonciello@dell.com> <1393459426.14900.56.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-by2lp0236.outbound.protection.outlook.com ([207.46.163.236]:55131
-	"EHLO na01-by2-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1752066AbaB0ADt (ORCPT
+Received: from ausc60pc101.us.dell.com ([143.166.85.206]:44641 "EHLO
+	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754261AbaB0AQ4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Feb 2014 19:03:49 -0500
-In-Reply-To: <1393458459-29353-1-git-send-email-mario_limonciello@dell.com>
-Content-Language: en-US
-Content-ID: <295283729D63F8459588AF4C0595BB32@namprd05.prod.outlook.com>
+	Wed, 26 Feb 2014 19:16:56 -0500
+In-Reply-To: <1393459426.14900.56.camel@x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "mario_limonciello@dell.com" <mario_limonciello@dell.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-T24gV2VkLCAyMDE0LTAyLTI2IGF0IDE3OjQ3IC0wNjAwLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90
-ZToNCj4gQ2hhbmdlcyBmb3IgdjM6DQo+ICAqIEFkZCBIRE1JIGNvbnRyb2wgbWV0aG9kcy4gIFdp
-bGwgYmUgcmVzdHJpY3RlZCBieSBETUkgZGF0YSBiZWNhdXNlIGl0IA0KPiAgICB1c2VzIGNvbW1v
-biBHVUlEIGFuZCBXTUkgbWV0aG9kIGFzIGxpZ2h0aW5nIGNvbnRyb2wuICBBbGwgcGxhdGZvcm1z
-IA0KPiAgICB3aXRoIHRoYXQgR1VJRCBzaG91bGQgc3VwcG9ydCBsaWdodGluZyBjb250cm9sLg0K
-PiAgKiBETUkgZGF0YSBmb3IgSERNSSBzdXBwb3J0ZWQgcGxhdGZvcm1zIG5vdCB5ZXQgbG9ja2Vk
-Lg0KDQpDb3VsZCB5b3UgY2xhcmlmeSB3aGF0IHRoZSBIRE1JIG11eCBpcyBmb3I/IElzIHRoZXJl
-IGFueSBtZXRob2QgaW4gdGhlDQpIRE1JIFdNSSBjYWxsIHRvIGRldGVybWluZSB3aGV0aGVyIGl0
-J3Mgc3VwcG9ydGVkIHJhdGhlciB0aGFuIHJlbHlpbmcgb24NCkRNST8gKEkgYXBwcmVjaWF0ZSB0
-aGF0IGluIHRoaXMga2luZCBvZiBjYXNlIHRoZXJlIG1heSBub3QgYmUpDQoNCi0tIA0KTWF0dGhl
-dyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRAbmVidWxhLmNvbT4NCg==
+On 02/26/2014 06:03 PM, Matthew Garrett wrote
+> Could you clarify what the HDMI mux is for? Is there any method in the
+> HDMI WMI call to determine whether it's supported rather than relying on
+> DMI? (I appreciate that in this kind of case there may not be)
+>
+The HDMI mux will control what's displayed on the HDMI output port. It can toggle between an HDMI input device and the system's standard video output.
+
+Since the same GUID and WMI method are used both on platforms that support HDMI mux as well as platforms that support just lighting control I don't think it will be possible to determine if it's supported.  You could possibly make a WMI call and attempting to toggle or query, however the behavior is undefined for those arguments on firmware for other systems.  While I was initially putting this driver together I made mistakes with the arguments early on that caused very colorful corruption all over the display, so I think it would be better to restrict it by DMI data if possible.
