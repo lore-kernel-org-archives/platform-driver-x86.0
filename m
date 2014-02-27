@@ -1,28 +1,41 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH v3 0/1] alienware-wmi: Update HDMI control methods
-Date: Wed, 26 Feb 2014 18:16:55 -0600
-Message-ID: <530E83F7.5060801@dell.com>
-References: <1393458459-29353-1-git-send-email-mario_limonciello@dell.com> <1393459426.14900.56.camel@x230>
+From: =?UTF-8?B?VG9yYWxmIEbDtnJzdGVy?= <toralf.foerster@gmx.de>
+Subject: ThinkPad T420 : 8 versus 16 brightness level steps
+Date: Thu, 27 Feb 2014 18:25:35 +0100
+Message-ID: <530F750F.3010806@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60pc101.us.dell.com ([143.166.85.206]:44641 "EHLO
-	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754261AbaB0AQ4 (ORCPT
+Received: from mout.gmx.net ([212.227.15.18]:49710 "EHLO mout.gmx.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753076AbaB0RZi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Feb 2014 19:16:56 -0500
-In-Reply-To: <1393459426.14900.56.camel@x230>
+	Thu, 27 Feb 2014 12:25:38 -0500
+Received: from [192.168.178.21] ([85.177.19.251]) by mail.gmx.com (mrgmx103)
+ with ESMTPSA (Nemesis) id 0MO7Ca-1WMLxs2ykG-005V0G for
+ <platform-driver-x86@vger.kernel.org>; Thu, 27 Feb 2014 18:25:36 +0100
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: ibm-acpi-devel@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org
 
-On 02/26/2014 06:03 PM, Matthew Garrett wrote
-> Could you clarify what the HDMI mux is for? Is there any method in the
-> HDMI WMI call to determine whether it's supported rather than relying on
-> DMI? (I appreciate that in this kind of case there may not be)
->
-The HDMI mux will control what's displayed on the HDMI output port. It can toggle between an HDMI input device and the system's standard video output.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Since the same GUID and WMI method are used both on platforms that support HDMI mux as well as platforms that support just lighting control I don't think it will be possible to determine if it's supported.  You could possibly make a WMI call and attempting to toggle or query, however the behavior is undefined for those arguments on firmware for other systems.  While I was initially putting this driver together I made mistakes with the arguments early on that caused very colorful corruption all over the display, so I think it would be better to restrict it by DMI data if possible.
+/'m wondering why under a 64 bit RedHat 6.4 Linux with kernel 2.6.32+X
+I do have 16 levels in dimming the display brightness with Fn+Pos1/End
+whereas under a 32 bit Gentoo Linux with recent 3.1x.y kernels I do
+just have 8 steps from min to max.
+
+- --=20
+MfG/Sincerely
+Toralf F=C3=B6rster
+pgp finger print:1A37 6F99 4A9D 026F 13E2 4DCF C4EA CDDE 0076 E94E
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlMPdQ8ACgkQxOrN3gB26U6HdAD/dspALBg8U7of/wHKTtgeXzpo
+9uzCgXQImcc+6TJqMDABAI8CvyUGNxIG0D8vmYLSW+MauLLt4+3lhHwZbpHSgeOk
+=3DAPEh
+-----END PGP SIGNATURE-----
