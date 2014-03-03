@@ -1,106 +1,169 @@
-From: Stefan Seyfried <stefan.seyfried@googlemail.com>
-Subject: Fix sleep / suspend keys for Toughbook CF-51
-Date: Sun, 02 Mar 2014 18:01:19 +0100
-Message-ID: <531363DF.7080507@message-id.googlemail.com>
+From: Shuduo Sang <shuduo.sang@canonical.com>
+Subject: [RFC PATCH] support Thinkpad X1 Carbon's adaptive keyboard
+Date: Mon, 03 Mar 2014 15:20:49 +0800
+Message-ID: <53142D51.3010403@canonical.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------000307090701090909020701"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f178.google.com ([209.85.215.178]:56762 "EHLO
-	mail-ea0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751370AbaCBRBY (ORCPT
+Received: from mail-pd0-f175.google.com ([209.85.192.175]:47752 "EHLO
+	mail-pd0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753867AbaCCHU5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 2 Mar 2014 12:01:24 -0500
-Received: by mail-ea0-f178.google.com with SMTP id a15so3850255eae.23
-        for <platform-driver-x86@vger.kernel.org>; Sun, 02 Mar 2014 09:01:23 -0800 (PST)
+	Mon, 3 Mar 2014 02:20:57 -0500
+Received: by mail-pd0-f175.google.com with SMTP id x10so3354543pdj.20
+        for <platform-driver-x86@vger.kernel.org>; Sun, 02 Mar 2014 23:20:56 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Harald Welte <laforge@gnumonks.org>
-
-This is a multi-part message in MIME format.
---------------000307090701090909020701
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: ibm-acpi-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, ibm-acpi@hmh.eng.br, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
+Cc: bruce.ma@canonical.com
 
 Hi all,
 
-my panasonic cf-51 does no longer react to the suspend and hibernate
-keys. I cannot tell when this started since I no longer use the machine
-on a daily basis, but I suspect it started when userspace switched from
-using /proc/acpi/event to the input layer, wich was quite some time ago ;-)
+We are working together with Lenovo to enable thinkpad X1 Carbon's
+fancy feature, Adaptive Keyboard[1] for Linux. Adaptive keyboard has
+five modes on Windows including Home mode, Web browser mode, Web
+conference mode, Function mode and Lay-flat mode. We enabled Home
+mode and Function mode currently. Will try to find out how to enable
+other modes later. Please review and comment attached patch.
 
-Today I investigated the issue and found that the firmware simply does
-not generate any event on "key down" for those keys, but only on "key up".
+Thanks,
+Shuduo
 
-The attached patch works around the problem.
+[1]:http://shop.lenovo.com/us/en/laptops/thinkpad/x-series/x1-carbon/#features
 
-Best regards,
 
-	Stefan
--- 
-Stefan Seyfried
-Linux Consultant & Developer -- GPG Key: 0x731B665B
+From da9d43beaa23071558a8031950cc21cc93946ec6 Mon Sep 17 00:00:00 2001
+From: Shuduo Sang <sangshuduo@gmail.com>
+Date: Mon, 3 Mar 2014 14:29:32 +0800
+Subject: [PATCH] support thinkpad X1 Carbon's adaptive keyboard
 
-B1 Systems GmbH
-Osterfeldstraße 7 / 85088 Vohburg / http://www.b1-systems.de
-GF: Ralph Dehner / Unternehmenssitz: Vohburg / AG: Ingolstadt,HRB 3537
+Thinkpad X1 Carbon's adaptive keyboard has five modes including Home
+mode, Web browser mode, Web conference mode, Function mode and Lay-flat
+mode. We support Home mode and Function mode currently.
 
---------------000307090701090909020701
-Content-Type: text/x-patch;
- name="0001-panasonic-laptop-fix-sleep-keys-on-CF-51.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-panasonic-laptop-fix-sleep-keys-on-CF-51.patch"
-
-From 7c96fee748cfd3e64732a7ac142f5dea07d7379f Mon Sep 17 00:00:00 2001
-From: Stefan Seyfried <seife+kernel@b1-systems.com>
-Date: Sun, 2 Mar 2014 17:50:01 +0100
-Subject: [PATCH] panasonic-laptop: fix sleep keys on CF-51
-
-At least on my CF-51, both sleep and hibernate keys do not
-generate "key down" events, only "key up". Because of this,
-the input layer does ignore both keys. The work around is
-to generate a key down event before the key up. To avoid
-double events on non-broken firmware, this is only done if
-no key down is ever seen for those keys.
-
-Signed-off-by: Stefan Seyfried <seife+kernel@b1-systems.com>
+Signed-off-by: Bruce Ma <bruce.ma@canonical.com>
+Signed-off-by: Shuduo Sang <shuduo.sang@canonical.com>
 ---
- drivers/platform/x86/panasonic-laptop.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/platform/x86/thinkpad_acpi.c | 97
+++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 609d387..9fc3bf5 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -449,6 +449,7 @@ static struct attribute_group pcc_attr_group = {
- 
- /* hotkey input device driver */
- 
-+static int sleep_keydown_seen;
- static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
- {
- 	struct input_dev *hotk_input_dev = pcc->input_dev;
-@@ -462,6 +463,16 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
- 				 "error getting hotkey status\n"));
- 		return;
- 	}
+diff --git a/drivers/platform/x86/thinkpad_acpi.c
+b/drivers/platform/x86/thinkpad_acpi.c
+index defb6af..fcb738e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3437,6 +3437,101 @@ err_exit:
+ 	return (res < 0)? res : 1;
+ }
+
++/* Thinkpad X1 Carbon support 5 modes including Home mode, Web browser
++ * mode, Web conference mode, Function mode and Lay-flat mode.
++ * We support Home mode and Function mode currently.
++ *
++ * Will consider support rest of modes in future.
++ *
++ */
++enum ADAPTIVE_KEY_MODE {
++	HOME_MODE,
++	WEB_BROWSER_MODE,
++	WEB_CONFERENCE_MODE,
++	FUNCTION_MODE,
++	LAYFLAT_MODE
++};
 +
-+	/* hack: some firmware sends no key down for sleep / hibernate */
-+	if ((result & 0xf) == 0x7 || (result & 0xf) == 0xa) {
-+		if (result & 0x80)
-+			sleep_keydown_seen = 1;
-+		if (! sleep_keydown_seen)
-+			sparse_keymap_report_event(hotk_input_dev,
-+					result & 0xf, 0x80, false);
++int adaptive_keyboard_modes[] = {
++	HOME_MODE,
++/*	WEB_BROWSER_MODE = 2,
++	WEB_CONFERENCE_MODE = 3, */
++	FUNCTION_MODE
++};
++
++#define DFR_CHANGE_ROW			0x101
++#define DFR_SHOW_QUICKVIEW_ROW		0x102
++
++/* press Fn key a while second, it will switch to Function Mode. Then
++ * release Fn key, previous mode be restored.
++ */
++bool adaptive_keyboard_mode_is_saved;
++int adaptive_keybarod_prev_mode;
++
++static int adaptive_keyboard_get_next_mode(int mode)
++{
++	int i;
++	int max_mode = sizeof(adaptive_keyboard_modes)/sizeof(int) - 1;
++
++	for (i = 0; i <= max_mode; i++) {
++		if (adaptive_keyboard_modes[i] == mode)
++			break;
 +	}
 +
- 	if (!sparse_keymap_report_event(hotk_input_dev,
- 					result & 0xf, result & 0x80, false))
- 		ACPI_DEBUG_PRINT((ACPI_DB_ERROR,
++	if (i >= max_mode)
++		i = 0;
++	else
++		i++;
++
++	return adaptive_keyboard_modes[i];
++}
++
++static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
++{
++	u32 current_mode = 0;
++	int new_mode = 0;
++
++	switch (scancode) {
++	case DFR_CHANGE_ROW:
++		if (adaptive_keyboard_mode_is_saved) {
++			new_mode = adaptive_keybarod_prev_mode;
++			adaptive_keyboard_mode_is_saved = false;
++		} else {
++			if (!acpi_evalf(
++					hkey_handle, &current_mode,
++					"GTRW", "dd", 0)) {
++				pr_err("Cannot read adaptive keyboard mode\n");
++				return false;
++			} else {
++				new_mode = adaptive_keyboard_get_next_mode(
++						current_mode);
++			}
++		}
++
++		if (!acpi_evalf(hkey_handle, NULL, "STRW", "vd", new_mode))
++			pr_err("Cannot set adaptive keyboard mode\n");
++
++		return true;
++
++	case DFR_SHOW_QUICKVIEW_ROW:
++		if (!acpi_evalf(hkey_handle,
++				&adaptive_keybarod_prev_mode,
++				"GTRW", "dd", 0)) {
++			pr_err("Cannot read adaptive keyboard mode\n");
++		} else {
++			adaptive_keyboard_mode_is_saved = true;
++
++			if (!acpi_evalf(hkey_handle,
++					NULL, "STRW", "vd", FUNCTION_MODE))
++				pr_err("Cannot set adaptive keyboard mode\n");
++		}
++		return true;
++
++	default:
++		return false;
++	}
++}
++
+ static bool hotkey_notify_hotkey(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+@@ -3456,6 +3551,8 @@ static bool hotkey_notify_hotkey(const u32 hkey,
+ 			*ignore_acpi_ev = true;
+ 		}
+ 		return true;
++	} else {
++		return adaptive_keyboard_hotkey_notify_hotkey(scancode);
+ 	}
+ 	return false;
+ }
 -- 
 1.9.0
-
-
---------------000307090701090909020701--
