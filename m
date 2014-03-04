@@ -1,88 +1,384 @@
-From: Valerio Passini <valerio.passini@unicam.it>
-Subject: PROBLEM: boot takes more time with hp_accel driver
-Date: Mon, 03 Mar 2014 22:32:29 +0100
-Message-ID: <3474055.60QkjLD89x@asterix>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: "David E. Box" <david.e.box@linux.intel.com>
+Subject: [PATCH] Revert "X86 platform: New BayTrail IOSF-SB MBI driver"
+Date: Mon,  3 Mar 2014 21:41:43 -0800
+Message-ID: <1393911703-31691-1-git-send-email-david.e.box@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ea0-f180.google.com ([209.85.215.180]:36947 "EHLO
-	mail-ea0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753590AbaCCVcc (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:17502 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750990AbaCDFnb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Mar 2014 16:32:32 -0500
-Received: by mail-ea0-f180.google.com with SMTP id m10so4851714eaj.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Mar 2014 13:32:31 -0800 (PST)
-Received: from asterix.localnet (net-93-147-13-222.cust.dsl.teletu.it. [93.147.13.222])
-        by mx.google.com with ESMTPSA id x3sm54968521eep.17.2014.03.03.13.32.30
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-        Mon, 03 Mar 2014 13:32:30 -0800 (PST)
+	Tue, 4 Mar 2014 00:43:31 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: matthew.garrett@nebula.com
+Cc: "David E. Box" <david.e.box@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-Hello,
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-I have met this problem a long ago (about at 3.8 kernel release) and never had 
-the time to dig it. The problem is that at boot time the system seems to hang 
-for a while (ranging from 20 to 50 seconds) and then it completes the boot 
-process.
-bootchart2 points out that udev was taking a lot of time at boot
-during the loading of hp_accel. Putting this driver and lis3lv02d from which 
-it depends into a blacklist turns the boot process back to normal (around 40 
-seconds). I don't need so much this driver, since I don't move around my 
-laptop while it's on, but I would like to help improving it because a fast 
-boot time is considered to be important for a good user experience. What do 
-you to solve this rather small problem? Bye
+This reverts commit 997ab407d2b4e7d7ce2788d2de68435eb94fcfec. This driver is
+replaced by the more general SOC IOSF driver in commit 46184415368a.
 
-Valerio
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig          |    8 --
+ drivers/platform/x86/Makefile         |    1 -
+ drivers/platform/x86/intel_baytrail.c |  224 ---------------------------------
+ drivers/platform/x86/intel_baytrail.h |   90 -------------
+ 4 files changed, 323 deletions(-)
+ delete mode 100644 drivers/platform/x86/intel_baytrail.c
+ delete mode 100644 drivers/platform/x86/intel_baytrail.h
 
-
-
-If some fields are empty or look unusual you may have an old version.
-Compare to the current minimal requirements in Documentation/Changes.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 5ae65c1..aee5f72 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -819,12 +819,4 @@ config PVPANIC
+ 	  a paravirtualized device provided by QEMU; it lets a virtual machine
+ 	  (guest) communicate panic events to the host.
  
-Linux Asterix 3.13.5 #1 SMP PREEMPT Mon Feb 24 15:56:00 CET 2014 x86_64 
-GNU/Linux
+-config INTEL_BAYTRAIL_MBI
+-	tristate
+-	depends on PCI
+-	---help---
+-	  Needed on Baytrail platforms for access to the IOSF Sideband Mailbox
+-	  Interface. This is a requirement for systems that need to configure
+-	  the PUNIT for power management features such as RAPL.
+-
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9b87cfc..b8c36f7 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -55,4 +55,3 @@ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
  
-Gnu C                  4.8
-Gnu make               3.81
-binutils               2.24
-util-linux             2.20.1
-mount                  support
-module-init-tools      16
-e2fsprogs              1.42.9
-jfsutils               1.1.15
-reiserfsprogs          3.6.24
-xfsprogs               3.1.9
-pcmciautils            018
-PPP                    2.4.5
-Linux C Library        2.18
-Dynamic linker (ldd)   2.18
-Procps                 3.3.9
-Net-tools              1.60
-Kbd                    [opzione...]
-Console-tools          0.2.3
-Sh-utils               8.21
-wireless-tools         30
-Modules Loaded         hp_accel lis3lv02d input_polldev ctr ccm promethean 
-ip6table_filter ip6_tables iptable_filter ip_tables x_tables rfcomm bnep 
-bluetooth cpufreq_userspace cpufreq_stats cpufreq_powersave 
-cpufreq_conservative pci_stub vboxpci vboxnetadp vboxnetflt vboxdrv binfmt_misc 
-uinput nfsd auth_rpcgss oid_registry nfs_acl nfs lockd fscache sunrpc ext3 jbd 
-fuse loop parport_pc ppdev lp parport snd_hda_codec_hdmi snd_hda_codec_idt 
-fglrx x86_pkg_temp_thermal coretemp uvcvideo videobuf2_vmalloc 
-videobuf2_memops videobuf2_core videodev media kvm_intel kvm snd_hda_intel 
-snd_hda_codec snd_hwdep snd_pcm_oss i915 snd_mixer_oss joydev 
-ghash_clmulni_intel snd_pcm snd_page_alloc radeon snd_seq_midi arc4 
-snd_seq_midi_event aesni_intel intel_agp fbcon snd_rawmidi brcmsmac cordic 
-brcmutil snd_seq ttm mac80211 aes_x86_64 bitblit fbcon_rotate fbcon_ccw 
-fbcon_ud fbcon_cw softcursor font intel_gtt hp_wmi drm_kms_helper drm 
-snd_timer snd_seq_device snd psmouse sparse_keymap cfg80211 rfkill iTCO_wdt 
-evdev iTCO_vendor_support microcode serio_raw i2c_i801 pcspkr battery 
-rtsx_pci_ms wmi bcma i2c_algo_bit mei_me memstick processor ac button video 
-lpc_ich soundcore ext4 crc16 jbd2 mbcache hid_generic usbhid hid sg sd_mod 
-sr_mod crc_t10dif cdrom crct10dif_common rtsx_pci_sdmmc mmc_core rtsx_pci 
-mfd_core r8169 mii ahci libahci ehci_pci ehci_hcd usbcore usb_common thermal 
-thermal_sys
+ obj-$(CONFIG_PVPANIC)           += pvpanic.o
+-obj-$(CONFIG_INTEL_BAYTRAIL_MBI)	+= intel_baytrail.o
+diff --git a/drivers/platform/x86/intel_baytrail.c b/drivers/platform/x86/intel_baytrail.c
+deleted file mode 100644
+index f96626b..0000000
+--- a/drivers/platform/x86/intel_baytrail.c
++++ /dev/null
+@@ -1,224 +0,0 @@
+-/*
+- * Baytrail IOSF-SB MailBox Interface Driver
+- * Copyright (c) 2013, Intel Corporation.
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms and conditions of the GNU General Public License,
+- * version 2, as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope it will be useful, but WITHOUT
+- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+- * more details.
+- *
+- *
+- * The IOSF-SB is a fabric bus available on Atom based SOC's that uses a
+- * mailbox interface (MBI) to communicate with mutiple devices. This
+- * driver implements BayTrail-specific access to this interface.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/spinlock.h>
+-#include <linux/pci.h>
+-
+-#include "intel_baytrail.h"
+-
+-static DEFINE_SPINLOCK(iosf_mbi_lock);
+-
+-static inline u32 iosf_mbi_form_mcr(u8 op, u8 port, u8 offset)
+-{
+-	return (op << 24) | (port << 16) | (offset << 8) | BT_MBI_ENABLE;
+-}
+-
+-static struct pci_dev *mbi_pdev;	/* one mbi device */
+-
+-/* Hold lock before calling */
+-static int iosf_mbi_pci_read_mdr(u32 mcrx, u32 mcr, u32 *mdr)
+-{
+-	int result;
+-
+-	if (!mbi_pdev)
+-		return -ENODEV;
+-
+-	if (mcrx) {
+-		result = pci_write_config_dword(mbi_pdev,
+-						BT_MBI_MCRX_OFFSET, mcrx);
+-		if (result < 0)
+-			goto iosf_mbi_read_err;
+-	}
+-
+-	result = pci_write_config_dword(mbi_pdev,
+-					BT_MBI_MCR_OFFSET, mcr);
+-	if (result < 0)
+-		goto iosf_mbi_read_err;
+-
+-	result = pci_read_config_dword(mbi_pdev,
+-				       BT_MBI_MDR_OFFSET, mdr);
+-	if (result < 0)
+-		goto iosf_mbi_read_err;
+-
+-	return 0;
+-
+-iosf_mbi_read_err:
+-	dev_err(&mbi_pdev->dev, "error: PCI config operation returned %d\n",
+-		result);
+-	return result;
+-}
+-
+-/* Hold lock before calling */
+-static int iosf_mbi_pci_write_mdr(u32 mcrx, u32 mcr, u32 mdr)
+-{
+-	int result;
+-
+-	if (!mbi_pdev)
+-		return -ENODEV;
+-
+-	result = pci_write_config_dword(mbi_pdev,
+-					BT_MBI_MDR_OFFSET, mdr);
+-	if (result < 0)
+-		goto iosf_mbi_write_err;
+-
+-	if (mcrx) {
+-		result = pci_write_config_dword(mbi_pdev,
+-			 BT_MBI_MCRX_OFFSET, mcrx);
+-		if (result < 0)
+-			goto iosf_mbi_write_err;
+-	}
+-
+-	result = pci_write_config_dword(mbi_pdev,
+-					BT_MBI_MCR_OFFSET, mcr);
+-	if (result < 0)
+-		goto iosf_mbi_write_err;
+-
+-	return 0;
+-
+-iosf_mbi_write_err:
+-	dev_err(&mbi_pdev->dev, "error: PCI config operation returned %d\n",
+-		result);
+-	return result;
+-}
+-
+-int bt_mbi_read(u8 port, u8 opcode, u32 offset, u32 *mdr)
+-{
+-	u32 mcr, mcrx;
+-	unsigned long flags;
+-	int ret;
+-
+-	/*Access to the GFX unit is handled by GPU code */
+-	BUG_ON(port == BT_MBI_UNIT_GFX);
+-
+-	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
+-	mcrx = offset & BT_MBI_MASK_HI;
+-
+-	spin_lock_irqsave(&iosf_mbi_lock, flags);
+-	ret = iosf_mbi_pci_read_mdr(mcrx, mcr, mdr);
+-	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL(bt_mbi_read);
+-
+-int bt_mbi_write(u8 port, u8 opcode, u32 offset, u32 mdr)
+-{
+-	u32 mcr, mcrx;
+-	unsigned long flags;
+-	int ret;
+-
+-	/*Access to the GFX unit is handled by GPU code */
+-	BUG_ON(port == BT_MBI_UNIT_GFX);
+-
+-	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
+-	mcrx = offset & BT_MBI_MASK_HI;
+-
+-	spin_lock_irqsave(&iosf_mbi_lock, flags);
+-	ret = iosf_mbi_pci_write_mdr(mcrx, mcr, mdr);
+-	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL(bt_mbi_write);
+-
+-int bt_mbi_modify(u8 port, u8 opcode, u32 offset, u32 mdr, u32 mask)
+-{
+-	u32 mcr, mcrx;
+-	u32 value;
+-	unsigned long flags;
+-	int ret;
+-
+-	/*Access to the GFX unit is handled by GPU code */
+-	BUG_ON(port == BT_MBI_UNIT_GFX);
+-
+-	mcr = iosf_mbi_form_mcr(opcode, port, offset & BT_MBI_MASK_LO);
+-	mcrx = offset & BT_MBI_MASK_HI;
+-
+-	spin_lock_irqsave(&iosf_mbi_lock, flags);
+-
+-	/* Read current mdr value */
+-	ret = iosf_mbi_pci_read_mdr(mcrx, mcr & BT_MBI_RD_MASK, &value);
+-	if (ret < 0) {
+-		spin_unlock_irqrestore(&iosf_mbi_lock, flags);
+-		return ret;
+-	}
+-
+-	/* Apply mask */
+-	value &= ~mask;
+-	mdr &= mask;
+-	value |= mdr;
+-
+-	/* Write back */
+-	ret = iosf_mbi_pci_write_mdr(mcrx, mcr | BT_MBI_WR_MASK, value);
+-
+-	spin_unlock_irqrestore(&iosf_mbi_lock, flags);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL(bt_mbi_modify);
+-
+-static int iosf_mbi_probe(struct pci_dev *pdev,
+-			  const struct pci_device_id *unused)
+-{
+-	int ret;
+-
+-	ret = pci_enable_device(pdev);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "error: could not enable device\n");
+-		return ret;
+-	}
+-
+-	mbi_pdev = pci_dev_get(pdev);
+-	return 0;
+-}
+-
+-static DEFINE_PCI_DEVICE_TABLE(iosf_mbi_pci_ids) = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x0F00) },
+-	{ 0, },
+-};
+-MODULE_DEVICE_TABLE(pci, iosf_mbi_pci_ids);
+-
+-static struct pci_driver iosf_mbi_pci_driver = {
+-	.name		= "iosf_mbi_pci",
+-	.probe		= iosf_mbi_probe,
+-	.id_table	= iosf_mbi_pci_ids,
+-};
+-
+-static int __init bt_mbi_init(void)
+-{
+-	return pci_register_driver(&iosf_mbi_pci_driver);
+-}
+-
+-static void __exit bt_mbi_exit(void)
+-{
+-	pci_unregister_driver(&iosf_mbi_pci_driver);
+-	if (mbi_pdev) {
+-		pci_dev_put(mbi_pdev);
+-		mbi_pdev = NULL;
+-	}
+-}
+-
+-module_init(bt_mbi_init);
+-module_exit(bt_mbi_exit);
+-
+-MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
+-MODULE_DESCRIPTION("BayTrail Mailbox Interface accessor");
+-MODULE_LICENSE("GPL v2");
+diff --git a/drivers/platform/x86/intel_baytrail.h b/drivers/platform/x86/intel_baytrail.h
+deleted file mode 100644
+index 8bcc311..0000000
+--- a/drivers/platform/x86/intel_baytrail.h
++++ /dev/null
+@@ -1,90 +0,0 @@
+-/*
+- * intel_baytrail.h: MailBox access support for Intel BayTrail platforms
+- */
+-
+-#ifndef INTEL_BAYTRAIL_MBI_SYMS_H
+-#define INTEL_BAYTRAIL_MBI_SYMS_H
+-
+-#define BT_MBI_MCR_OFFSET	0xD0
+-#define BT_MBI_MDR_OFFSET	0xD4
+-#define BT_MBI_MCRX_OFFSET	0xD8
+-
+-#define BT_MBI_RD_MASK		0xFEFFFFFF
+-#define BT_MBI_WR_MASK		0X01000000
+-
+-#define BT_MBI_MASK_HI		0xFFFFFF00
+-#define BT_MBI_MASK_LO		0x000000FF
+-#define BT_MBI_ENABLE		0xF0
+-
+-/* BT-SB unit access methods */
+-#define BT_MBI_UNIT_AUNIT	0x00
+-#define BT_MBI_UNIT_SMC		0x01
+-#define BT_MBI_UNIT_CPU		0x02
+-#define BT_MBI_UNIT_BUNIT	0x03
+-#define BT_MBI_UNIT_PMC		0x04
+-#define BT_MBI_UNIT_GFX		0x06
+-#define BT_MBI_UNIT_SMI		0x0C
+-#define BT_MBI_UNIT_USB		0x43
+-#define BT_MBI_UNIT_SATA	0xA3
+-#define BT_MBI_UNIT_PCIE	0xA6
+-
+-/* Read/write opcodes */
+-#define BT_MBI_AUNIT_READ	0x10
+-#define BT_MBI_AUNIT_WRITE	0x11
+-#define BT_MBI_SMC_READ		0x10
+-#define BT_MBI_SMC_WRITE	0x11
+-#define BT_MBI_CPU_READ		0x10
+-#define BT_MBI_CPU_WRITE	0x11
+-#define BT_MBI_BUNIT_READ	0x10
+-#define BT_MBI_BUNIT_WRITE	0x11
+-#define BT_MBI_PMC_READ		0x06
+-#define BT_MBI_PMC_WRITE	0x07
+-#define BT_MBI_GFX_READ		0x00
+-#define BT_MBI_GFX_WRITE	0x01
+-#define BT_MBI_SMIO_READ	0x06
+-#define BT_MBI_SMIO_WRITE	0x07
+-#define BT_MBI_USB_READ		0x06
+-#define BT_MBI_USB_WRITE	0x07
+-#define BT_MBI_SATA_READ	0x00
+-#define BT_MBI_SATA_WRITE	0x01
+-#define BT_MBI_PCIE_READ	0x00
+-#define BT_MBI_PCIE_WRITE	0x01
+-
+-/**
+- * bt_mbi_read() - MailBox Interface read command
+- * @port:	port indicating subunit being accessed
+- * @opcode:	port specific read or write opcode
+- * @offset:	register address offset
+- * @mdr:	register data to be read
+- *
+- * Locking is handled by spinlock - cannot sleep.
+- * Return: Nonzero on error
+- */
+-int bt_mbi_read(u8 port, u8 opcode, u32 offset, u32 *mdr);
+-
+-/**
+- * bt_mbi_write() - MailBox unmasked write command
+- * @port:	port indicating subunit being accessed
+- * @opcode:	port specific read or write opcode
+- * @offset:	register address offset
+- * @mdr:	register data to be written
+- *
+- * Locking is handled by spinlock - cannot sleep.
+- * Return: Nonzero on error
+- */
+-int bt_mbi_write(u8 port, u8 opcode, u32 offset, u32 mdr);
+-
+-/**
+- * bt_mbi_modify() - MailBox masked write command
+- * @port:	port indicating subunit being accessed
+- * @opcode:	port specific read or write opcode
+- * @offset:	register address offset
+- * @mdr:	register data being modified
+- * @mask:	mask indicating bits in mdr to be modified
+- *
+- * Locking is handled by spinlock - cannot sleep.
+- * Return: Nonzero on error
+- */
+-int bt_mbi_modify(u8 port, u8 opcode, u32 offset, u32 mdr, u32 mask);
+-
+-#endif /* INTEL_BAYTRAIL_MBI_SYMS_H */
+-- 
+1.7.10.4
