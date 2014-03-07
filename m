@@ -1,178 +1,151 @@
-From: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH V4] support Thinkpad X1 Carbon 2nd
-	generation's adaptive keyboard
-Date: Thu, 06 Mar 2014 18:20:46 +0800
-Message-ID: <53184BFE.5080007@canonical.com>
-References: <5314AE4C.4090502@canonical.com> <20140304091916.GE1883@distanz.ch>
+From: "Peter F. Patel-Schneider" <pfpschneider@gmail.com>
+Subject: proposed patch to ideapad-laptop module for Yoga 2 Pro
+Date: Fri, 07 Mar 2014 10:22:36 -0800
+Message-ID: <531A0E6C.2070203@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20140304091916.GE1883-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, bjorn-yOkvZcmFvRU@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, matthew.garrett-+LlxwbBB2+6sTnJN9+BGXg@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qg0-f42.google.com ([209.85.192.42]:51982 "EHLO
+	mail-qg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752574AbaCGSWl (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 7 Mar 2014 13:22:41 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: ike.pan@canonical.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+The Lenovo Ideapad Yoga laptops have a VPC2004 ACPI device, so the
+ideapad-laptop module loads for them.  The module enables the Airplane Mode
+and Novo keys of the laptop.  Most of the other features of this module
+are harmless for these laptops.  However, the laptops do not have hardware
+RF kill switches and when the module loads it turns off the WiFi.
 
-Submit patch V4 to support Adaptive Keyboard on Thinkpad X1 Carbon 2nd
-generation according to Tobias's comments.
+This patch adds a flag (rfkill_present) to the ideapad_private data
+indicating whether the laptop has an RF kill switch.   On initialization,
+there is a check whether the laptop is a Yoga 2 Pro by matching against the
+DMI product version of the system information.  If there is a match the flag
+is set to false, otherwise it is set to true.  All manipulations of the
+rfkill structures are conditioned on this flag being true.
 
-Thanks,
-Shuduo
+This is a minimal change to make the ideapad-laptop module work correctly
+for Yoga 2 Pro Ideapads.  The initialization check should be generalized for
+other Ideapads that do not have RF kill switches, particularly other Yogas,
+but I do not have precise information on their DMI version information.
 
+What should be done to get this patchapplied?
 
-From b153a7b14791c6e01892c0e274e23eefd625fb8d Mon Sep 17 00:00:00 2001
-From: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Date: Mon, 3 Mar 2014 14:29:32 +0800
-Subject: [PATCH] support thinkpad X1 Carbon's adaptive keyboard
+Peter F. Patel-Schneider
 
-Thinkpad X1 Carbon's adaptive keyboard has five modes including Home
-mode, Web browser mode, Web conference mode, Function mode and Lay-flat
-mode. We support Home mode and Function mode currently.
-
-Signed-off-by: Bruce Ma <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Signed-off-by: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 102
-+++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c
-b/drivers/platform/x86/thinkpad_acpi.c
-index defb6af..f4978fa 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3437,6 +3437,106 @@ err_exit:
- 	return (res < 0)? res : 1;
- }
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -27,6 +27,7 @@
+  #include <linux/init.h>
+  #include <linux/types.h>
+  #include <linux/acpi.h>
++#include <linux/dmi.h>
+  #include <linux/rfkill.h>
+  #include <linux/platform_device.h>
+  #include <linux/input.h>
+@@ -84,6 +85,7 @@ struct ideapad_private {
+      struct input_dev *inputdev;
+      struct backlight_device *blightdev;
+      struct dentry *debug;
++        bool rfkill_present;
+      unsigned long cfg;
+  };
 
-+/* Thinkpad X1 Carbon support 5 modes including Home mode, Web browser
-+ * mode, Web conference mode, Function mode and Lay-flat mode.
-+ * We support Home mode and Function mode currently.
-+ *
-+ * Will consider support rest of modes in future.
-+ *
-+ */
-+enum ADAPTIVE_KEY_MODE {
-+	HOME_MODE,
-+	WEB_BROWSER_MODE,
-+	WEB_CONFERENCE_MODE,
-+	FUNCTION_MODE,
-+	LAYFLAT_MODE
-+};
-+
-+const int adaptive_keyboard_modes[] = {
-+	HOME_MODE,
-+/*	WEB_BROWSER_MODE = 2,
-+	WEB_CONFERENCE_MODE = 3, */
-+	FUNCTION_MODE
-+};
-+
-+#define DFR_CHANGE_ROW			0x101
-+#define DFR_SHOW_QUICKVIEW_ROW		0x102
-+
-+/* press Fn key a while second, it will switch to Function Mode. Then
-+ * release Fn key, previous mode be restored.
-+ */
-+static bool adaptive_keyboard_mode_is_saved;
-+static int adaptive_keyboard_prev_mode;
-+
-+static int adaptive_keyboard_get_next_mode(int mode)
-+{
-+	size_t i;
-+	size_t max_mode = ARRAY_SIZE(adaptive_keyboard_modes) - 1;
-+
-+	for (i = 0; i <= max_mode; i++) {
-+		if (adaptive_keyboard_modes[i] == mode)
-+			break;
-+	}
-+
-+	if (i >= max_mode)
-+		i = 0;
-+	else
-+		i++;
-+
-+	return adaptive_keyboard_modes[i];
-+}
-+
-+static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
-+{
-+	u32 current_mode = 0;
-+	int new_mode = 0;
-+
-+	switch (scancode) {
-+	case DFR_CHANGE_ROW:
-+		if (adaptive_keyboard_mode_is_saved) {
-+			new_mode = adaptive_keyboard_prev_mode;
-+			adaptive_keyboard_mode_is_saved = false;
-+		} else {
-+			if (!acpi_evalf(
-+					hkey_handle, &current_mode,
-+					"GTRW", "dd", 0)) {
-+				pr_err("Cannot read adaptive keyboard mode\n");
-+				return false;
-+			} else {
-+				new_mode = adaptive_keyboard_get_next_mode(
-+						current_mode);
-+			}
-+		}
-+
-+		if (!acpi_evalf(hkey_handle, NULL, "STRW", "vd", new_mode)) {
-+			pr_err("Cannot set adaptive keyboard mode\n");
-+			return false;
-+		}
-+
-+		return true;
-+
-+	case DFR_SHOW_QUICKVIEW_ROW:
-+		if (!acpi_evalf(hkey_handle,
-+				&adaptive_keyboard_prev_mode,
-+				"GTRW", "dd", 0)) {
-+			pr_err("Cannot read adaptive keyboard mode\n");
-+			return false;
-+		} else {
-+			adaptive_keyboard_mode_is_saved = true;
-+
-+			if (!acpi_evalf(hkey_handle,
-+					NULL, "STRW", "vd", FUNCTION_MODE)) {
-+				pr_err("Cannot set adaptive keyboard mode\n");
-+				return false;
-+			}
-+		}
-+		return true;
-+
-+	default:
-+		return false;
-+	}
-+}
-+
- static bool hotkey_notify_hotkey(const u32 hkey,
- 				 bool *send_acpi_ev,
- 				 bool *ignore_acpi_ev)
-@@ -3456,6 +3556,8 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 			*ignore_acpi_ev = true;
- 		}
- 		return true;
-+	} else {
-+		return adaptive_keyboard_hotkey_notify_hotkey(scancode);
- 	}
- 	return false;
- }
--- 
-1.9.0
+@@ -474,13 +476,15 @@ static void ideapad_sync_rfk_state(struct 
+ideapad_private *priv)
+      unsigned long hw_blocked;
+      int i;
 
+-    if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
+-        return;
+-    hw_blocked = !hw_blocked;
++    if (priv->rfkill_present) {
++        if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
++            return;
++        hw_blocked = !hw_blocked;
 
-------------------------------------------------------------------------------
-Subversion Kills Productivity. Get off Subversion & Make the Move to Perforce.
-With Perforce, you get hassle-free workflows. Merge that actually works. 
-Faster operations. Version large binaries.  Built-in WAN optimization and the
-freedom to use Git, Perforce or both. Make the move to Perforce.
-http://pubads.g.doubleclick.net/gampad/clk?id=122218951&iu=/4140/ostg.clktrk
+-    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+-        if (priv->rfk[i])
+-            rfkill_set_hw_state(priv->rfk[i], hw_blocked);
++        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
++            if (priv->rfk[i])
++                rfkill_set_hw_state(priv->rfk[i], hw_blocked);
++    }
+  }
+
+  static int ideapad_register_rfkill(struct ideapad_private *priv, int dev)
+@@ -825,6 +829,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+      int cfg;
+      struct ideapad_private *priv;
+      struct acpi_device *adev;
++    char const *s;
+
+      ret = acpi_bus_get_device(ACPI_HANDLE(&pdev->dev), &adev);
+      if (ret)
+@@ -842,6 +847,15 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+      priv->adev = adev;
+      priv->platform_device = pdev;
+
++    /*  check for Yoga 2 Pro, which has no rfkill switches */
++    s = dmi_get_system_info(DMI_PRODUCT_VERSION);
++    if (s && !(strncmp(s, "Lenovo Yoga 2 Pro", 17)) ) {
++        priv->rfkill_present = false;
++    } else {
++        priv->rfkill_present = true;
++    }
++
++
+      ret = ideapad_sysfs_init(priv);
+      if (ret)
+          goto sysfs_failed;
+@@ -854,11 +868,13 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+      if (ret)
+          goto input_failed;
+
+-    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++) {
+-        if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
+-            ideapad_register_rfkill(priv, i);
+-        else
+-            priv->rfk[i] = NULL;
++    if (priv->rfkill_present) {
++        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++) {
++            if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
++                ideapad_register_rfkill(priv, i);
++            else
++                priv->rfk[i] = NULL;
++        }
+      }
+      ideapad_sync_rfk_state(priv);
+      ideapad_sync_touchpad_state(priv);
+@@ -877,8 +893,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+  notification_failed:
+      ideapad_backlight_exit(priv);
+  backlight_failed:
+-    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+-        ideapad_unregister_rfkill(priv, i);
++    if (priv->rfkill_present) {
++        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
++            ideapad_unregister_rfkill(priv, i);
++    }
+      ideapad_input_exit(priv);
+  input_failed:
+      ideapad_debugfs_exit(priv);
+@@ -897,8 +915,10 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
+      acpi_remove_notify_handler(priv->adev->handle,
+          ACPI_DEVICE_NOTIFY, ideapad_acpi_notify);
+      ideapad_backlight_exit(priv);
+-    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+-        ideapad_unregister_rfkill(priv, i);
++    if (priv->rfkill_present) {
++        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
++            ideapad_unregister_rfkill(priv, i);
++    }
+      ideapad_input_exit(priv);
+      ideapad_debugfs_exit(priv);
+      ideapad_sysfs_exit(priv);
