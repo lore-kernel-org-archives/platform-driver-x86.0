@@ -1,151 +1,38 @@
-From: "Peter F. Patel-Schneider" <pfpschneider@gmail.com>
-Subject: proposed patch to ideapad-laptop module for Yoga 2 Pro
-Date: Fri, 07 Mar 2014 10:22:36 -0800
-Message-ID: <531A0E6C.2070203@gmail.com>
+From: "Williams Moore" <williamsmoore@q.com>
+Subject: Re: Very Important
+Date: Sat, 08 Mar 2014 11:08:05 -0600
+Message-ID: <20140308170714.123C4A4E3310@webmail.pmm.edu.my>
+Reply-To: williamsmoore@qq.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qg0-f42.google.com ([209.85.192.42]:51982 "EHLO
-	mail-qg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752574AbaCGSWl (ORCPT
+Received: from [122.129.124.231] ([122.129.124.231]:53367 "EHLO
+	webmail.pmm.edu.my" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+	with ESMTP id S1751086AbaCHRVa convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 7 Mar 2014 13:22:41 -0500
+	Sat, 8 Mar 2014 12:21:30 -0500
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Recipients <williamsmoore@q.com>
 
-The Lenovo Ideapad Yoga laptops have a VPC2004 ACPI device, so the
-ideapad-laptop module loads for them.  The module enables the Airplane Mode
-and Novo keys of the laptop.  Most of the other features of this module
-are harmless for these laptops.  However, the laptops do not have hardware
-RF kill switches and when the module loads it turns off the WiFi.
+Dear Sir,
 
-This patch adds a flag (rfkill_present) to the ideapad_private data
-indicating whether the laptop has an RF kill switch.   On initialization,
-there is a check whether the laptop is a Yoga 2 Pro by matching against the
-DMI product version of the system information.  If there is a match the flag
-is set to false, otherwise it is set to true.  All manipulations of the
-rfkill structures are conditioned on this flag being true.
+  I know this mail might come to you as a surprise due to the fact we have not met or seen before, but i want you to pay attention to my business proposal with no risk but only needs your confidentiality and honesty
 
-This is a minimal change to make the ideapad-laptop module work correctly
-for Yoga 2 Pro Ideapads.  The initialization check should be generalized for
-other Ideapads that do not have RF kill switches, particularly other Yogas,
-but I do not have precise information on their DMI version information.
+I am Mr. Williams Moore a citizen of United Kingdom. I have in my bank the existence of a big amount of money that belongs to a customer, Mr. Daniel who happen to come from your country.The fund is now without any claim because Mr. Daniel died in a deadly earthquake in China in 2008 . I want your cooperation so as to make the bank send you the fund as the beneficiary and next of kin to the fund.
 
-What should be done to get this patchapplied?
+This proposal will be of a great mutual benefit to us
 
-Peter F. Patel-Schneider
+Send me your reply of interest so that I will give you the details .
 
----
+Strictly send it to my private email account : williamsmoore@qq.com or send me your private email address to send you details of this transaction. 
 
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -27,6 +27,7 @@
-  #include <linux/init.h>
-  #include <linux/types.h>
-  #include <linux/acpi.h>
-+#include <linux/dmi.h>
-  #include <linux/rfkill.h>
-  #include <linux/platform_device.h>
-  #include <linux/input.h>
-@@ -84,6 +85,7 @@ struct ideapad_private {
-      struct input_dev *inputdev;
-      struct backlight_device *blightdev;
-      struct dentry *debug;
-+        bool rfkill_present;
-      unsigned long cfg;
-  };
+At the receipt of your reply, I will give you details of the transaction.
+I look forward to hearing from you.
 
-@@ -474,13 +476,15 @@ static void ideapad_sync_rfk_state(struct 
-ideapad_private *priv)
-      unsigned long hw_blocked;
-      int i;
 
--    if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
--        return;
--    hw_blocked = !hw_blocked;
-+    if (priv->rfkill_present) {
-+        if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
-+            return;
-+        hw_blocked = !hw_blocked;
-
--    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
--        if (priv->rfk[i])
--            rfkill_set_hw_state(priv->rfk[i], hw_blocked);
-+        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
-+            if (priv->rfk[i])
-+                rfkill_set_hw_state(priv->rfk[i], hw_blocked);
-+    }
-  }
-
-  static int ideapad_register_rfkill(struct ideapad_private *priv, int dev)
-@@ -825,6 +829,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-      int cfg;
-      struct ideapad_private *priv;
-      struct acpi_device *adev;
-+    char const *s;
-
-      ret = acpi_bus_get_device(ACPI_HANDLE(&pdev->dev), &adev);
-      if (ret)
-@@ -842,6 +847,15 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-      priv->adev = adev;
-      priv->platform_device = pdev;
-
-+    /*  check for Yoga 2 Pro, which has no rfkill switches */
-+    s = dmi_get_system_info(DMI_PRODUCT_VERSION);
-+    if (s && !(strncmp(s, "Lenovo Yoga 2 Pro", 17)) ) {
-+        priv->rfkill_present = false;
-+    } else {
-+        priv->rfkill_present = true;
-+    }
-+
-+
-      ret = ideapad_sysfs_init(priv);
-      if (ret)
-          goto sysfs_failed;
-@@ -854,11 +868,13 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-      if (ret)
-          goto input_failed;
-
--    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++) {
--        if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
--            ideapad_register_rfkill(priv, i);
--        else
--            priv->rfk[i] = NULL;
-+    if (priv->rfkill_present) {
-+        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++) {
-+            if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
-+                ideapad_register_rfkill(priv, i);
-+            else
-+                priv->rfk[i] = NULL;
-+        }
-      }
-      ideapad_sync_rfk_state(priv);
-      ideapad_sync_touchpad_state(priv);
-@@ -877,8 +893,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-  notification_failed:
-      ideapad_backlight_exit(priv);
-  backlight_failed:
--    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
--        ideapad_unregister_rfkill(priv, i);
-+    if (priv->rfkill_present) {
-+        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
-+            ideapad_unregister_rfkill(priv, i);
-+    }
-      ideapad_input_exit(priv);
-  input_failed:
-      ideapad_debugfs_exit(priv);
-@@ -897,8 +915,10 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
-      acpi_remove_notify_handler(priv->adev->handle,
-          ACPI_DEVICE_NOTIFY, ideapad_acpi_notify);
-      ideapad_backlight_exit(priv);
--    for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
--        ideapad_unregister_rfkill(priv, i);
-+    if (priv->rfkill_present) {
-+        for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
-+            ideapad_unregister_rfkill(priv, i);
-+    }
-      ideapad_input_exit(priv);
-      ideapad_debugfs_exit(priv);
-      ideapad_sysfs_exit(priv);
+Best Regards,
+Wiliams Moore
+williamsmoore@qq.com
