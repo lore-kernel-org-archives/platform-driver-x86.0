@@ -1,74 +1,53 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 2/2] fujitsu-laptop: Clear build warnings
-Date: Mon, 17 Mar 2014 22:27:32 +1030
-Message-ID: <20140317115732.GB1258@marvin.atrad.com.au>
-References: <20140317120206.3e4404cc@endymion.delvare>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: [PATCH 1/4] ACPI: fix ACPI_VIDEO dependencies
+Date: Mon, 17 Mar 2014 15:46:44 +0100
+Message-ID: <20140317154644.15065deb@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:48440 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932767AbaCQL5v (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:41907 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932954AbaCQOqq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 Mar 2014 07:57:51 -0400
-Content-Disposition: inline
-In-Reply-To: <20140317120206.3e4404cc@endymion.delvare>
+	Mon, 17 Mar 2014 10:46:46 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, jwoithe@just42.net
+To: linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>, Jani Nikula <jani.nikula@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>
 
-Looks reasonable to me - thanks.
+From: Jean Delvare <jdelvare@suse.de>
+Subject: ACPI: fix ACPI_VIDEO dependencies
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+ACPI_VIDEO stopped depending on VIDEO_OUTPUT_CONTROL over 3 years ago
+(see commit 677bd810, "ACPI video: remove output switching control".)
+So it's about time to remove the Kconfig dependency between these two
+options.
 
-On Mon, Mar 17, 2014 at 12:02:06PM +0100, Jean Delvare wrote:
-> When CONFIG_FUJITSU_LAPTOP_DEBUG is disabled and W=1, the
-> fujitsu-laptop driver builds with the following warnings:
-> 
-> drivers/platform/x86/fujitsu-laptop.c: In function "bl_update_status":
-> drivers/platform/x86/fujitsu-laptop.c:409:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
->     ret);
->         ^
-> drivers/platform/x86/fujitsu-laptop.c:418:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
->     ret);
->         ^
-> 
-> Rework the debug printk helper macro to get rid of these. I verified
-> that this change has no effect on the generated binary, both in the
-> debug and non-debug case.
-> 
-> Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> Cc: Jonathan Woithe <jwoithe@just42.net>
-> Cc: Matthew Garrett <matthew.garrett@nebula.com>
-> ---
->  drivers/platform/x86/fujitsu-laptop.c |    9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> --- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
-> +++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:46:56.242465978 +0100
-> @@ -129,15 +129,14 @@
->  #define FUJLAPTOP_DBG_INFO	  0x0004
->  #define FUJLAPTOP_DBG_TRACE	  0x0008
->  
-> -#define dbg_printk(a_dbg_level, format, arg...) \
-> +#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
-> +#define vdbg_printk(a_dbg_level, format, arg...) \
->  	do { if (dbg_level & a_dbg_level) \
->  		printk(FUJLAPTOP_DEBUG "%s: " format, __func__ , ## arg); \
->  	} while (0)
-> -#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
-> -#define vdbg_printk(a_dbg_level, format, arg...) \
-> -	dbg_printk(a_dbg_level, format, ## arg)
->  #else
-> -#define vdbg_printk(a_dbg_level, format, arg...)
-> +#define vdbg_printk(a_dbg_level, format, arg...) \
-> +	do { } while (0)
->  #endif
->  
->  /* Device controlling the backlight and associated keys */
-> 
-> 
-> -- 
-> Jean Delvare
-> SUSE L3 Support
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+---
+It would be great if this patch could go upstream quickly, as
+system-wide cleanups depend on it.
+
+ drivers/acpi/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- linux-3.14-rc7.orig/drivers/acpi/Kconfig	2014-01-20 03:40:07.000000000 +0100
++++ linux-3.14-rc7/drivers/acpi/Kconfig	2014-03-17 14:13:33.312716554 +0100
+@@ -115,7 +115,7 @@ config ACPI_BUTTON
+ 
+ config ACPI_VIDEO
+ 	tristate "Video"
+-	depends on X86 && BACKLIGHT_CLASS_DEVICE && VIDEO_OUTPUT_CONTROL
++	depends on X86 && BACKLIGHT_CLASS_DEVICE
+ 	depends on INPUT
+ 	select THERMAL
+ 	help
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
