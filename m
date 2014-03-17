@@ -1,67 +1,49 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: [PATCH 2/2] fujitsu-laptop: Clear build warnings
-Date: Mon, 17 Mar 2014 12:02:06 +0100
-Message-ID: <20140317120206.3e4404cc@endymion.delvare>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 1/2] fujitsu-laptop: Drop unneeded include
+Date: Mon, 17 Mar 2014 22:24:15 +1030
+Message-ID: <20140317115415.GA1258@marvin.atrad.com.au>
+References: <20140317120022.538264f9@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:36527 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932477AbaCQLCI (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:56417 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932672AbaCQLyh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 Mar 2014 07:02:08 -0400
+	Mon, 17 Mar 2014 07:54:37 -0400
+Content-Disposition: inline
+In-Reply-To: <20140317120022.538264f9@endymion.delvare>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Jonathan Woithe <jwoithe@just42.net>, Matthew Garrett <matthew.garrett@nebula.com>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, jwoithe@just42.net
 
-When CONFIG_FUJITSU_LAPTOP_DEBUG is disabled and W=1, the
-fujitsu-laptop driver builds with the following warnings:
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-drivers/platform/x86/fujitsu-laptop.c: In function "bl_update_status":
-drivers/platform/x86/fujitsu-laptop.c:409:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
-    ret);
-        ^
-drivers/platform/x86/fujitsu-laptop.c:418:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
-    ret);
-        ^
-
-Rework the debug printk helper macro to get rid of these. I verified
-that this change has no effect on the generated binary, both in the
-debug and non-debug case.
-
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: Jonathan Woithe <jwoithe@just42.net>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
----
- drivers/platform/x86/fujitsu-laptop.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
---- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
-+++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:46:56.242465978 +0100
-@@ -129,15 +129,14 @@
- #define FUJLAPTOP_DBG_INFO	  0x0004
- #define FUJLAPTOP_DBG_TRACE	  0x0008
- 
--#define dbg_printk(a_dbg_level, format, arg...) \
-+#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
-+#define vdbg_printk(a_dbg_level, format, arg...) \
- 	do { if (dbg_level & a_dbg_level) \
- 		printk(FUJLAPTOP_DEBUG "%s: " format, __func__ , ## arg); \
- 	} while (0)
--#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
--#define vdbg_printk(a_dbg_level, format, arg...) \
--	dbg_printk(a_dbg_level, format, ## arg)
- #else
--#define vdbg_printk(a_dbg_level, format, arg...)
-+#define vdbg_printk(a_dbg_level, format, arg...) \
-+	do { } while (0)
- #endif
- 
- /* Device controlling the backlight and associated keys */
-
-
--- 
-Jean Delvare
-SUSE L3 Support
+On Mon, Mar 17, 2014 at 12:00:22PM +0100, Jean Delvare wrote:
+> The fujitsu-laptop driver includes <linux/video_output.h> but doesn't
+> call any of its functions. Drop the unneeded include to avoid
+> unnecessary driver rebuilds.
+> 
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: Jonathan Woithe <jwoithe@just42.net>
+> Cc: Matthew Garrett <matthew.garrett@nebula.com>
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> --- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:04.273862743 +0100
+> +++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
+> @@ -66,7 +66,6 @@
+>  #include <linux/backlight.h>
+>  #include <linux/input.h>
+>  #include <linux/kfifo.h>
+> -#include <linux/video_output.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>  #if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
+> 
+> 
+> -- 
+> Jean Delvare
+> SUSE L3 Support
