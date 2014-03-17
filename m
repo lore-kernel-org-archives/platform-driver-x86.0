@@ -1,80 +1,93 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: [PATCH 2/4 v2] gpu/drm: Stop selecting VIDEO_OUTPUT_CONTROL
-Date: Mon, 17 Mar 2014 16:17:49 +0100
-Message-ID: <20140317161749.4e884581@endymion.delvare>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/4 v2] gpu/drm: Stop selecting VIDEO_OUTPUT_CONTROL
+Date: Mon, 17 Mar 2014 18:19:31 +0100
+Message-ID: <20140317171931.GW30571@phenom.ffwll.local>
 References: <20140317154733.173b78ce@endymion.delvare>
+ <20140317161749.4e884581@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:42823 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933452AbaCQPRw (ORCPT
+Received: from mail-ee0-f46.google.com ([74.125.83.46]:33123 "EHLO
+	mail-ee0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755673AbaCQRTg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 17 Mar 2014 11:17:52 -0400
-In-Reply-To: <20140317154733.173b78ce@endymion.delvare>
+	Mon, 17 Mar 2014 13:19:36 -0400
+Received: by mail-ee0-f46.google.com with SMTP id t10so4380291eei.33
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Mar 2014 10:19:35 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20140317161749.4e884581@endymion.delvare>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>, Jani Nikula <jani.nikula@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>, Jani Nikula <jani.nikula@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>
 
-ACPI_VIDEO no longer depends on VIDEO_OUTPUT_CONTROL, so drivers which
-want to select ACPI_VIDEO no longer have to select
-VIDEO_OUTPUT_CONTROL.
+On Mon, Mar 17, 2014 at 04:17:49PM +0100, Jean Delvare wrote:
+> ACPI_VIDEO no longer depends on VIDEO_OUTPUT_CONTROL, so drivers which
+> want to select ACPI_VIDEO no longer have to select
+> VIDEO_OUTPUT_CONTROL.
+> 
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
----
-Changes since v1:
- * Chunk missing for the nouveau driver, sorry.
+Ack.
+-Daniel
 
- drivers/gpu/drm/gma500/Kconfig  |    1 -
- drivers/gpu/drm/i915/Kconfig    |    1 -
- drivers/gpu/drm/nouveau/Kconfig |    3 +--
- 3 files changed, 1 insertion(+), 4 deletions(-)
-
---- linux-3.14-rc7.orig/drivers/gpu/drm/gma500/Kconfig	2014-03-17 15:47:47.522826767 +0100
-+++ linux-3.14-rc7/drivers/gpu/drm/gma500/Kconfig	2014-03-17 16:04:15.310821089 +0100
-@@ -10,7 +10,6 @@ config DRM_GMA500
- 	# GMA500 depends on ACPI_VIDEO when ACPI is enabled, just like i915
- 	select ACPI_VIDEO if ACPI
- 	select BACKLIGHT_CLASS_DEVICE if ACPI
--	select VIDEO_OUTPUT_CONTROL if ACPI
- 	select INPUT if ACPI
- 	help
- 	  Say yes for an experimental 2D KMS framebuffer driver for the
---- linux-3.14-rc7.orig/drivers/gpu/drm/i915/Kconfig	2014-03-17 15:47:47.522826767 +0100
-+++ linux-3.14-rc7/drivers/gpu/drm/i915/Kconfig	2014-03-17 16:04:15.311821112 +0100
-@@ -14,7 +14,6 @@ config DRM_I915
- 	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
- 	select BACKLIGHT_LCD_SUPPORT if ACPI
- 	select BACKLIGHT_CLASS_DEVICE if ACPI
--	select VIDEO_OUTPUT_CONTROL if ACPI
- 	select INPUT if ACPI
- 	select ACPI_VIDEO if ACPI
- 	select ACPI_BUTTON if ACPI
---- linux-3.14-rc7.orig/drivers/gpu/drm/nouveau/Kconfig	2014-03-17 15:47:47.522826767 +0100
-+++ linux-3.14-rc7/drivers/gpu/drm/nouveau/Kconfig	2014-03-17 16:15:52.335899212 +0100
-@@ -11,7 +11,7 @@ config DRM_NOUVEAU
- 	select FB
- 	select FRAMEBUFFER_CONSOLE if !EXPERT
- 	select FB_BACKLIGHT if DRM_NOUVEAU_BACKLIGHT
--	select ACPI_VIDEO if ACPI && X86 && BACKLIGHT_CLASS_DEVICE && VIDEO_OUTPUT_CONTROL && INPUT
-+	select ACPI_VIDEO if ACPI && X86 && BACKLIGHT_CLASS_DEVICE && INPUT
- 	select X86_PLATFORM_DEVICES if ACPI && X86
- 	select ACPI_WMI if ACPI && X86
- 	select MXM_WMI if ACPI && X86
-@@ -19,7 +19,6 @@ config DRM_NOUVEAU
- 	# Similar to i915, we need to select ACPI_VIDEO and it's dependencies
- 	select BACKLIGHT_LCD_SUPPORT if ACPI && X86
- 	select BACKLIGHT_CLASS_DEVICE if ACPI && X86
--	select VIDEO_OUTPUT_CONTROL if ACPI && X86
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
+> ---
+> Changes since v1:
+>  * Chunk missing for the nouveau driver, sorry.
+> 
+>  drivers/gpu/drm/gma500/Kconfig  |    1 -
+>  drivers/gpu/drm/i915/Kconfig    |    1 -
+>  drivers/gpu/drm/nouveau/Kconfig |    3 +--
+>  3 files changed, 1 insertion(+), 4 deletions(-)
+> 
+> --- linux-3.14-rc7.orig/drivers/gpu/drm/gma500/Kconfig	2014-03-17 15:47:47.522826767 +0100
+> +++ linux-3.14-rc7/drivers/gpu/drm/gma500/Kconfig	2014-03-17 16:04:15.310821089 +0100
+> @@ -10,7 +10,6 @@ config DRM_GMA500
+>  	# GMA500 depends on ACPI_VIDEO when ACPI is enabled, just like i915
+>  	select ACPI_VIDEO if ACPI
+>  	select BACKLIGHT_CLASS_DEVICE if ACPI
+> -	select VIDEO_OUTPUT_CONTROL if ACPI
+>  	select INPUT if ACPI
+>  	help
+>  	  Say yes for an experimental 2D KMS framebuffer driver for the
+> --- linux-3.14-rc7.orig/drivers/gpu/drm/i915/Kconfig	2014-03-17 15:47:47.522826767 +0100
+> +++ linux-3.14-rc7/drivers/gpu/drm/i915/Kconfig	2014-03-17 16:04:15.311821112 +0100
+> @@ -14,7 +14,6 @@ config DRM_I915
+>  	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
+>  	select BACKLIGHT_LCD_SUPPORT if ACPI
+>  	select BACKLIGHT_CLASS_DEVICE if ACPI
+> -	select VIDEO_OUTPUT_CONTROL if ACPI
+>  	select INPUT if ACPI
+>  	select ACPI_VIDEO if ACPI
+>  	select ACPI_BUTTON if ACPI
+> --- linux-3.14-rc7.orig/drivers/gpu/drm/nouveau/Kconfig	2014-03-17 15:47:47.522826767 +0100
+> +++ linux-3.14-rc7/drivers/gpu/drm/nouveau/Kconfig	2014-03-17 16:15:52.335899212 +0100
+> @@ -11,7 +11,7 @@ config DRM_NOUVEAU
+>  	select FB
+>  	select FRAMEBUFFER_CONSOLE if !EXPERT
+>  	select FB_BACKLIGHT if DRM_NOUVEAU_BACKLIGHT
+> -	select ACPI_VIDEO if ACPI && X86 && BACKLIGHT_CLASS_DEVICE && VIDEO_OUTPUT_CONTROL && INPUT
+> +	select ACPI_VIDEO if ACPI && X86 && BACKLIGHT_CLASS_DEVICE && INPUT
+>  	select X86_PLATFORM_DEVICES if ACPI && X86
+>  	select ACPI_WMI if ACPI && X86
+>  	select MXM_WMI if ACPI && X86
+> @@ -19,7 +19,6 @@ config DRM_NOUVEAU
+>  	# Similar to i915, we need to select ACPI_VIDEO and it's dependencies
+>  	select BACKLIGHT_LCD_SUPPORT if ACPI && X86
+>  	select BACKLIGHT_CLASS_DEVICE if ACPI && X86
+> -	select VIDEO_OUTPUT_CONTROL if ACPI && X86
+>  	select INPUT if ACPI && X86
+>  	select THERMAL if ACPI && X86
+>  	select ACPI_VIDEO if ACPI && X86
+> 
+> -- 
+> Jean Delvare
+> SUSE L3 Support
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
