@@ -1,66 +1,43 @@
 From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH 1/4] ACPI: fix ACPI_VIDEO dependencies
-Date: Wed, 19 Mar 2014 14:35:30 +0100
-Message-ID: <20140319143530.06af48e5@endymion.delvare>
-References: <20140317154644.15065deb@endymion.delvare>
-	<3419553.dABDqM4501@vostro.rjw.lan>
-	<20140319075145.2954e06f@endymion.delvare>
-	<24496062.xxuyBC0FZJ@vostro.rjw.lan>
+Subject: Re: [PATCH 4/4] output: Drop display output class support
+Date: Wed, 19 Mar 2014 19:36:51 +0100
+Message-ID: <20140319193651.3cd089dc@endymion.delvare>
+References: <20140317154910.2016bf57@endymion.delvare>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:59586 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932996AbaCSNfe (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 19 Mar 2014 09:35:34 -0400
-In-Reply-To: <24496062.xxuyBC0FZJ@vostro.rjw.lan>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140317154910.2016bf57@endymion.delvare>
+Sender: linux-acpi-owner@vger.kernel.org
 To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>, Jani Nikula <jani.nikula@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 19 Mar 2014 14:10:53 +0100, Rafael J. Wysocki wrote:
-> On Wednesday, March 19, 2014 07:51:45 AM Jean Delvare wrote:
-> > Hi Rafael,
-> > 
-> > On Wed, 19 Mar 2014 02:26:52 +0100, Rafael J. Wysocki wrote:
-> > > On Monday, March 17, 2014 03:46:44 PM Jean Delvare wrote:
-> > > > From: Jean Delvare <jdelvare@suse.de>
-> > > > Subject: ACPI: fix ACPI_VIDEO dependencies
-> > > > 
-> > > > ACPI_VIDEO stopped depending on VIDEO_OUTPUT_CONTROL over 3 years ago
-> > > > (see commit 677bd810, "ACPI video: remove output switching control".)
-> > > > So it's about time to remove the Kconfig dependency between these two
-> > > > options.
-> > > > 
-> > > > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > > > Cc: Zhang Rui <rui.zhang@intel.com>
-> > > > Cc: Len Brown <lenb@kernel.org>
-> > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > 
-> > > Do you want me to take this series?
-> > 
-> > If other maintainers are OK with it, yes, I think that would be the
-> > easiest way. Thanks for proposing. All these patches depend on each
-> > other and must be applied in the right order, so pushing them through
-> > different trees would be slow at best, and risky.
+On Mon, 17 Mar 2014 15:49:10 +0100, Jean Delvare wrote:
+> It was only ever used by the ACPI video driver, and that only use case
+> vanished over 3 years ago (see commit 677bd810, "ACPI video: remove
+> output switching control".) So this is dead code and I guess we can
+> remove it now.
 > 
-> OK, I'll queue them up for 3.15 then, as I haven't seen any objections.
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> ---
+>  drivers/video/Kconfig        |    6 -
+>  drivers/video/Makefile       |    2 
+>  drivers/video/output.c       |  133 -------------------------------------------
+>  include/linux/video_output.h |   57 ------------------
+>  4 files changed, 198 deletions(-)
+> (...)
 
-Thank you :-)
+Rafael, wait a minute. I just remembered that this last patch depends
+on another clean-up patch of mine which is not upstream yet:
+[PATCH 1/2] fujitsu-laptop: Drop unneeded include
 
-> > Also, thinking about it, I wonder if the first 3 patches of the series
-> > could go to longterm kernel series? While they do not fix any build
-> > breakage nor run-time bug, without them everyone (on x86 at least) is
-> > forced to build dead code. This is kind of frustrating. They are simple
-> > and obvious enough that hopefully there won't be any objection.
-> 
-> I think it'll be best if you request the -stable people to pick
-> up those commits once they have reached the Linus' tree.
-
-Sure, I can do that.
+List platform-driver-x86 doesn't seem to be archived anywhere so I
+can't point you to it. I will resend the patch with you in Cc so that
+you can include it in the series.
 
 Thanks,
 -- 
