@@ -1,45 +1,47 @@
 From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH 4/4] output: Drop display output class support
-Date: Wed, 19 Mar 2014 19:36:51 +0100
-Message-ID: <20140319193651.3cd089dc@endymion.delvare>
-References: <20140317154910.2016bf57@endymion.delvare>
+Subject: [PATCH RESEND] fujitsu-laptop: Drop unneeded include
+Date: Wed, 19 Mar 2014 19:38:46 +0100
+Message-ID: <20140319193846.22821b12@endymion.delvare>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20140317154910.2016bf57@endymion.delvare>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, David Airlie <airlied@linux.ie>, Jani Nikula <jani.nikula@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Zhang Rui <rui.zhang@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:36799 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751230AbaCSSit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 19 Mar 2014 14:38:49 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Jonathan Woithe <jwoithe@just42.net>, Matthew Garrett <matthew.garrett@nebula.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-On Mon, 17 Mar 2014 15:49:10 +0100, Jean Delvare wrote:
-> It was only ever used by the ACPI video driver, and that only use case
-> vanished over 3 years ago (see commit 677bd810, "ACPI video: remove
-> output switching control".) So this is dead code and I guess we can
-> remove it now.
-> 
-> Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> ---
->  drivers/video/Kconfig        |    6 -
->  drivers/video/Makefile       |    2 
->  drivers/video/output.c       |  133 -------------------------------------------
->  include/linux/video_output.h |   57 ------------------
->  4 files changed, 198 deletions(-)
-> (...)
+The fujitsu-laptop driver includes <linux/video_output.h> but doesn't
+call any of its functions. Drop the unneeded include to avoid
+unnecessary driver rebuilds.
 
-Rafael, wait a minute. I just remembered that this last patch depends
-on another clean-up patch of mine which is not upstream yet:
-[PATCH 1/2] fujitsu-laptop: Drop unneeded include
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
+---
+Resending with Rafael in Cc so that he can include it in a larger
+clean-up patch series.
 
-List platform-driver-x86 doesn't seem to be archived anywhere so I
-can't point you to it. I will resend the patch with you in Cc so that
-you can include it in the series.
+ drivers/platform/x86/fujitsu-laptop.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
+--- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:04.273862743 +0100
++++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
+@@ -66,7 +66,6 @@
+ #include <linux/backlight.h>
+ #include <linux/input.h>
+ #include <linux/kfifo.h>
+-#include <linux/video_output.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
+
+
 -- 
 Jean Delvare
 SUSE L3 Support
