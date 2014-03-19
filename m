@@ -1,47 +1,112 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: [PATCH RESEND] fujitsu-laptop: Drop unneeded include
-Date: Wed, 19 Mar 2014 19:38:46 +0100
-Message-ID: <20140319193846.22821b12@endymion.delvare>
+From: Scott K Logan <logans@cottsay.net>
+Subject: [PATCH] fujitsu-tablet: add support for Lifebook T901 and T902
+Date: Wed, 19 Mar 2014 13:15:30 -0600
+Message-ID: <5329ECD2.9020707@cottsay.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:36799 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751230AbaCSSit (ORCPT
+Received: from ns1.cottsay.net ([74.94.84.57]:40250 "EHLO smtp.cottsay.net"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1750934AbaCSTV1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 19 Mar 2014 14:38:49 -0400
+	Wed, 19 Mar 2014 15:21:27 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Jonathan Woithe <jwoithe@just42.net>, Matthew Garrett <matthew.garrett@nebula.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Robert Gerlach <khnz@gmx.de>, platform-driver-x86@vger.kernel.org
 
-The fujitsu-laptop driver includes <linux/video_output.h> but doesn't
-call any of its functions. Drop the unneeded include to avoid
-unnecessary driver rebuilds.
+The button mappings for the Fujitsu Lifebook T901 and T902 are quite different
+from the generic Lifebook T mappings that are defined. This patch adds
+mappings that are specific to the hardware on these machines, and allows
+users to take advantage of features like screen rotation.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>
+Signed-off-by: Scott K Logan <logans@cottsay.net>
 ---
-Resending with Rafael in Cc so that he can include it in a larger
-clean-up patch series.
+  drivers/platform/x86/fujitsu-tablet.c | 65 +++++++++++++++++++++++++++++++++++
+  1 file changed, 65 insertions(+)
 
- drivers/platform/x86/fujitsu-laptop.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:04.273862743 +0100
-+++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
-@@ -66,7 +66,6 @@
- #include <linux/backlight.h>
- #include <linux/input.h>
- #include <linux/kfifo.h>
--#include <linux/video_output.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
-
-
+diff --git a/drivers/platform/x86/fujitsu-tablet.c b/drivers/platform/x86/fujitsu-tablet.c
+index 570926c..c3784ba 100644
+--- a/drivers/platform/x86/fujitsu-tablet.c
++++ b/drivers/platform/x86/fujitsu-tablet.c
+@@ -71,6 +71,44 @@ struct fujitsu_config {
+  	KEY_LEFTALT
+  };
+  
++static unsigned short keymap_Lifebook_T901[KEYMAP_LEN] __initdata = {
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_SCROLLDOWN,
++	KEY_SCROLLUP,
++	KEY_CYCLEWINDOWS,
++	KEY_LEFTCTRL,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_LEFTMETA
++};
++
++static unsigned short keymap_Lifebook_T902[KEYMAP_LEN] __initdata = {
++	KEY_RESERVED,
++	KEY_VOLUMEDOWN,
++	KEY_VOLUMEUP,
++	KEY_CYCLEWINDOWS,
++	KEY_PROG1,
++	KEY_PROG2,
++	KEY_LEFTMETA,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++	KEY_RESERVED,
++};
++
+  static unsigned short keymap_Lifebook_U810[KEYMAP_LEN] __initdata = {
+  	KEY_RESERVED,
+  	KEY_RESERVED,
+@@ -302,6 +340,33 @@ static int fujitsu_dmi_stylistic(const struct dmi_system_id *dmi)
+  static const struct dmi_system_id dmi_ids[] __initconst = {
+  	{
+  		.callback = fujitsu_dmi_lifebook,
++		.ident = "Fujitsu Lifebook T901",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "LifeBook T901")
++		},
++		.driver_data = keymap_Lifebook_T901
++	},
++	{
++		.callback = fujitsu_dmi_lifebook,
++		.ident = "Fujitsu Lifebook T901",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK T901")
++		},
++		.driver_data = keymap_Lifebook_T901
++	},
++	{
++		.callback = fujitsu_dmi_lifebook,
++		.ident = "Fujitsu Lifebook T902",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "LIFEBOOK T902")
++		},
++		.driver_data = keymap_Lifebook_T902
++	},
++	{
++		.callback = fujitsu_dmi_lifebook,
+  		.ident = "Fujitsu Siemens P/T Series",
+  		.matches = {
+  			DMI_MATCH(DMI_SYS_VENDOR, "FUJITSU"),
 -- 
-Jean Delvare
-SUSE L3 Support
+1.8.5.5
