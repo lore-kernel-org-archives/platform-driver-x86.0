@@ -1,60 +1,90 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH RESEND] fujitsu-laptop: Drop unneeded include
-Date: Thu, 20 Mar 2014 09:22:11 +0100
-Message-ID: <1395303731.4532.4.camel@chaos.site>
-References: <20140319193846.22821b12@endymion.delvare>
-	 <1770609.RsqzMFrygU@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:45156 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750743AbaCTIWN (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Mar 2014 04:22:13 -0400
-In-Reply-To: <1770609.RsqzMFrygU@vostro.rjw.lan>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: platform-driver-x86@vger.kernel.org, Jonathan Woithe <jwoithe@just42.net>, Matthew Garrett <matthew.garrett@nebula.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 1/2] input/serio: Add a firmware_id sysfs attribute
+Date: Thu, 20 Mar 2014 11:12:09 +0100
+Message-ID: <1395310330-3232-2-git-send-email-hdegoede@redhat.com>
+References: <1395310330-3232-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1395310330-3232-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Benjamin Tissoires <btissoir@redhat.com>, Peter Hutterer <peter.hutterer@redhat.com>, platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Rafael,
+serio devices exposed via platform firmware interfaces such as ACPI
+may provide additional identifying information of use to userspace.
 
-Le Wednesday 19 March 2014 =C3=A0 23:33 +0100, Rafael J. Wysocki a =C3=A9=
-crit :
-> On Wednesday, March 19, 2014 07:38:46 PM Jean Delvare wrote:
-> > The fujitsu-laptop driver includes <linux/video_output.h> but doesn=
-'t
-> > call any of its functions. Drop the unneeded include to avoid
-> > unnecessary driver rebuilds.
-> >=20
-> > Signed-off-by: Jean Delvare <jdelvare@suse.de>
-> > Acked-by: Jonathan Woithe <jwoithe@just42.net>
-> > Cc: Matthew Garrett <matthew.garrett@nebula.com>
->=20
-> Well, thanks, but why didn't you send it to the same CC list as the o=
-riginal
-> patch set?  This doesn't make it particularly convenient to handle ..=
-=2E
+We don't associate the serio devices with the firmware device (we don't
+set it as parent), so there's no way for userspace to make use of this
+information.
 
-Sorry, I resent that one in a hurry and did not put enough thoughts int=
-o
-it, I'm afraid.
+We cannot change the parent for serio devices instantiated though a firmware
+interface as that would break suspend / resume ordering.
 
-That being said, I don't think it is really a big problem. This is a
-minor clean up, obviously correct and needed, so nobody is going to
-argue against it. If you are the one applying the patch set then the
-only important thing is that you have this extra patch available so tha=
-t
-you don't break the build.
+Therefor this patch adds a new firmware_id sysfs attribute so that userspace
+can get a string from there with any additional identifying information the
+firmware interface may provide.
 
-If anyone else is really interested, well, I have explained the problem
-in the other thread so they are at least aware of it, and they can
-always contact me (or you) to get the missing piece. If they really
-care, that is, which I somehow doubt.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/input/serio/serio.c | 12 ++++++++++++
+ include/linux/serio.h       |  1 +
+ 2 files changed, 13 insertions(+)
 
-Thanks,
---=20
-Jean Delvare
-SUSE L3 Support
+diff --git a/drivers/input/serio/serio.c b/drivers/input/serio/serio.c
+index 8f4c4ab..1788a4d 100644
+--- a/drivers/input/serio/serio.c
++++ b/drivers/input/serio/serio.c
+@@ -451,6 +451,13 @@ static ssize_t serio_set_bind_mode(struct device *dev, struct device_attribute *
+ 	return retval;
+ }
+ 
++static ssize_t firmware_id_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct serio *serio = to_serio_port(dev);
++
++	return sprintf(buf, "%s\n", serio->firmware_id);
++}
++
+ static DEVICE_ATTR_RO(type);
+ static DEVICE_ATTR_RO(proto);
+ static DEVICE_ATTR_RO(id);
+@@ -473,12 +480,14 @@ static DEVICE_ATTR_RO(modalias);
+ static DEVICE_ATTR_WO(drvctl);
+ static DEVICE_ATTR(description, S_IRUGO, serio_show_description, NULL);
+ static DEVICE_ATTR(bind_mode, S_IWUSR | S_IRUGO, serio_show_bind_mode, serio_set_bind_mode);
++static DEVICE_ATTR_RO(firmware_id);
+ 
+ static struct attribute *serio_device_attrs[] = {
+ 	&dev_attr_modalias.attr,
+ 	&dev_attr_description.attr,
+ 	&dev_attr_drvctl.attr,
+ 	&dev_attr_bind_mode.attr,
++	&dev_attr_firmware_id.attr,
+ 	NULL
+ };
+ 
+@@ -923,6 +932,9 @@ static int serio_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	SERIO_ADD_UEVENT_VAR("SERIO_EXTRA=%02x", serio->id.extra);
+ 	SERIO_ADD_UEVENT_VAR("MODALIAS=serio:ty%02Xpr%02Xid%02Xex%02X",
+ 				serio->id.type, serio->id.proto, serio->id.id, serio->id.extra);
++	if (serio->firmware_id[0])
++		SERIO_ADD_UEVENT_VAR("SERIO_FIRMWARE_ID=%s",
++				     serio->firmware_id);
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/serio.h b/include/linux/serio.h
+index 36aac73..9f779c7 100644
+--- a/include/linux/serio.h
++++ b/include/linux/serio.h
+@@ -23,6 +23,7 @@ struct serio {
+ 
+ 	char name[32];
+ 	char phys[32];
++	char firmware_id[128];
+ 
+ 	bool manual_bind;
+ 
+-- 
+1.9.0
+
