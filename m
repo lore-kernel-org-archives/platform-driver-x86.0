@@ -1,71 +1,75 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 07/11] sony-laptop: adjust keyboard backlight values for off/auto/on
-Date: Fri, 21 Mar 2014 08:01:18 +0900
-Message-ID: <1395356482-7446-8-git-send-email-malattia@linux.it>
+Subject: [PATCH 09/11] backlight: introduce inter-driver notification of changes
+Date: Fri, 21 Mar 2014 08:01:20 +0900
+Message-ID: <1395356482-7446-10-git-send-email-malattia@linux.it>
 References: <1395356482-7446-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:42142 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:42140 "EHLO
 	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1759458AbaCTXJM (ORCPT
+	id S1759504AbaCTXJM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Thu, 20 Mar 2014 19:09:12 -0400
 In-Reply-To: <1395356482-7446-1-git-send-email-malattia@linux.it>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Javier Achirica <jachirica@gmail.com>, Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, Jingoo Han <jg1.han@samsung.com>
 
-From: Javier Achirica <jachirica@gmail.com>
+Allow registered backlight drivers to receive a notification when a
+backlight change is triggered via one of the siblings.
+sony-laptop needs this notification to be able to set backlight when ALS
+is enabled and setting brightness via _BCM becomes a no-op and only
+notifies SNC that "a change to the brightness level" was requested
+without giving any actual value.
 
-Keyboard backlight can be always off, use some automatic trigger
-(activity and light sensor), always on.
-The behaviour of the driver changes whereby previously when passed 1 it
-tried to turn on backlight immediately now it does nothing. This is
-however a bug fix since (a) it makes little sense to turn on the
-backlight when control is automatic and (b) this behaviour is
-consistent with what the windows driver does.
-
-Signed-off-by: Javier Achirica <jachirica@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/video/backlight/backlight.c | 10 ++++++++++
+ include/linux/backlight.h           |  3 +++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index ba39a29..48e7e5b 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -129,7 +129,8 @@ static int kbd_backlight = -1;
- module_param(kbd_backlight, int, 0444);
- MODULE_PARM_DESC(kbd_backlight,
- 		 "set this to 0 to disable keyboard backlight, "
--		 "1 to enable it (default: no change from current value)");
-+		 "1 to enable it with automatic control and 2 to have it always "
-+		 "on (default: no change from current value)");
- 
- static int kbd_backlight_timeout = -1;
- module_param(kbd_backlight_timeout, int, 0444);
-@@ -1772,7 +1773,7 @@ static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
+diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+index 5d05555..0f9d6ce 100644
+--- a/drivers/video/backlight/backlight.c
++++ b/drivers/video/backlight/backlight.c
+@@ -88,6 +88,7 @@ static inline void backlight_unregister_fb(struct backlight_device *bd)
+ static void backlight_generate_event(struct backlight_device *bd,
+ 				     enum backlight_update_reason reason)
  {
- 	int result;
++	struct backlight_device *obd;
+ 	char *envp[2];
  
--	if (value > 1)
-+	if (value > 2)
- 		return -EINVAL;
+ 	switch (reason) {
+@@ -104,6 +105,15 @@ static void backlight_generate_event(struct backlight_device *bd,
+ 	envp[1] = NULL;
+ 	kobject_uevent_env(&bd->dev.kobj, KOBJ_CHANGE, envp);
+ 	sysfs_notify(&bd->dev.kobj, NULL, "actual_brightness");
++
++	/* notify other bl devices */
++	list_for_each_entry(obd, &backlight_dev_list, entry) {
++		if (bd == obd || !obd->ops || !obd->ops->brightness_changed)
++			continue;
++
++		obd->ops->brightness_changed(obd, bd->props.brightness,
++				bd->props.max_brightness);
++	}
+ }
  
- 	if (sony_call_snc_handle(kbdbl_ctl->handle,
-@@ -1780,8 +1781,10 @@ static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
- 		return -EIO;
+ static ssize_t bl_power_show(struct device *dev, struct device_attribute *attr,
+diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+index 5f9cd96..974ae3c 100644
+--- a/include/linux/backlight.h
++++ b/include/linux/backlight.h
+@@ -55,6 +55,9 @@ struct backlight_ops {
+ 	/* Check if given framebuffer device is the one bound to this backlight;
+ 	   return 0 if not, !=0 if it is. If NULL, backlight always matches the fb. */
+ 	int (*check_fb)(struct backlight_device *, struct fb_info *);
++	/* Callback to receive notification of a backlight change triggered by
++	   a different backlight driver */
++	void (*brightness_changed)(struct backlight_device *, int, int);
+ };
  
- 	/* Try to turn the light on/off immediately */
--	sony_call_snc_handle(kbdbl_ctl->handle,
--			(value << 0x10) | (kbdbl_ctl->base + 0x100), &result);
-+	if (value != 1)
-+		sony_call_snc_handle(kbdbl_ctl->handle,
-+				(value << 0x0f) | (kbdbl_ctl->base + 0x100),
-+				&result);
- 
- 	kbdbl_ctl->mode = value;
- 
+ /* This structure defines all the properties of a backlight */
 -- 
 1.9.0
