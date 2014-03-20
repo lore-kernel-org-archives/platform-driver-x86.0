@@ -1,12 +1,12 @@
 From: Mattia Dongili <malattia@linux.it>
-Subject: [PATCH 06/11] sony-laptop: add hibernate on low battery function
-Date: Fri, 21 Mar 2014 08:01:17 +0900
-Message-ID: <1395356482-7446-7-git-send-email-malattia@linux.it>
+Subject: [PATCH 07/11] sony-laptop: adjust keyboard backlight values for off/auto/on
+Date: Fri, 21 Mar 2014 08:01:18 +0900
+Message-ID: <1395356482-7446-8-git-send-email-malattia@linux.it>
 References: <1395356482-7446-1-git-send-email-malattia@linux.it>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:42143 "EHLO
+Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:42142 "EHLO
 	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1759587AbaCTXJM (ORCPT
+	id S1759458AbaCTXJM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
 	Thu, 20 Mar 2014 19:09:12 -0400
 In-Reply-To: <1395356482-7446-1-git-send-email-malattia@linux.it>
@@ -17,121 +17,55 @@ Cc: platform-driver-x86@vger.kernel.org, Javier Achirica <jachirica@gmail.com>, 
 
 From: Javier Achirica <jachirica@gmail.com>
 
+Keyboard backlight can be always off, use some automatic trigger
+(activity and light sensor), always on.
+The behaviour of the driver changes whereby previously when passed 1 it
+tried to turn on backlight immediately now it does nothing. This is
+however a bug fix since (a) it makes little sense to turn on the
+backlight when control is automatic and (b) this behaviour is
+consistent with what the windows driver does.
+
 Signed-off-by: Javier Achirica <jachirica@gmail.com>
 Signed-off-by: Mattia Dongili <malattia@linux.it>
 ---
- drivers/platform/x86/sony-laptop.c | 78 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ drivers/platform/x86/sony-laptop.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 7b5a56d..ba39a29 100644
+index ba39a29..48e7e5b 100644
 --- a/drivers/platform/x86/sony-laptop.c
 +++ b/drivers/platform/x86/sony-laptop.c
-@@ -164,6 +164,9 @@ static int __sony_nc_gfx_switch_status_get(void);
- static int sony_nc_highspeed_charging_setup(struct platform_device *pd);
- static void sony_nc_highspeed_charging_cleanup(struct platform_device *pd);
+@@ -129,7 +129,8 @@ static int kbd_backlight = -1;
+ module_param(kbd_backlight, int, 0444);
+ MODULE_PARM_DESC(kbd_backlight,
+ 		 "set this to 0 to disable keyboard backlight, "
+-		 "1 to enable it (default: no change from current value)");
++		 "1 to enable it with automatic control and 2 to have it always "
++		 "on (default: no change from current value)");
  
-+static int sony_nc_lowbatt_setup(struct platform_device *pd);
-+static void sony_nc_lowbatt_cleanup(struct platform_device *pd);
-+
- static int sony_nc_fanspeed_setup(struct platform_device *pd);
- static void sony_nc_fanspeed_cleanup(struct platform_device *pd);
+ static int kbd_backlight_timeout = -1;
+ module_param(kbd_backlight_timeout, int, 0444);
+@@ -1772,7 +1773,7 @@ static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
+ {
+ 	int result;
  
-@@ -1394,6 +1397,12 @@ static void sony_nc_function_setup(struct acpi_device *device,
- 				pr_err("couldn't set up keyboard backlight function (%d)\n",
- 						result);
- 			break;
-+		case 0x0121:
-+			result = sony_nc_lowbatt_setup(pf_device);
-+			if (result)
-+				pr_err("couldn't set up low battery function (%d)\n",
-+				       result);
-+			break;
- 		case 0x0149:
- 			result = sony_nc_fanspeed_setup(pf_device);
- 			if (result)
-@@ -1476,6 +1485,9 @@ static void sony_nc_function_cleanup(struct platform_device *pd)
- 		case 0x0163:
- 			sony_nc_kbd_backlight_cleanup(pd, handle);
- 			break;
-+		case 0x0121:
-+			sony_nc_lowbatt_cleanup(pd);
-+			break;
- 		case 0x0149:
- 			sony_nc_fanspeed_cleanup(pd);
- 			break;
-@@ -2576,6 +2588,72 @@ static void sony_nc_highspeed_charging_cleanup(struct platform_device *pd)
- 	}
- }
+-	if (value > 1)
++	if (value > 2)
+ 		return -EINVAL;
  
-+/* low battery function */
-+static struct device_attribute *lowbatt_handle;
-+
-+static ssize_t sony_nc_lowbatt_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buffer, size_t count)
-+{
-+	unsigned int result;
-+	unsigned long value;
-+
-+	if (count > 31)
-+		return -EINVAL;
-+
-+	if (kstrtoul(buffer, 10, &value) || value > 1)
-+		return -EINVAL;
-+
-+	if (sony_call_snc_handle(0x0121, value << 8, &result))
-+		return -EIO;
-+
-+	return count;
-+}
-+
-+static ssize_t sony_nc_lowbatt_show(struct device *dev,
-+		struct device_attribute *attr, char *buffer)
-+{
-+	unsigned int result;
-+
-+	if (sony_call_snc_handle(0x0121, 0x0200, &result))
-+		return -EIO;
-+
-+	return snprintf(buffer, PAGE_SIZE, "%d\n", result & 1);
-+}
-+
-+static int sony_nc_lowbatt_setup(struct platform_device *pd)
-+{
-+	unsigned int result;
-+
-+	lowbatt_handle = kzalloc(sizeof(struct device_attribute), GFP_KERNEL);
-+	if (!lowbatt_handle)
-+		return -ENOMEM;
-+
-+	sysfs_attr_init(&lowbatt_handle->attr);
-+	lowbatt_handle->attr.name = "lowbatt_hibernate";
-+	lowbatt_handle->attr.mode = S_IRUGO | S_IWUSR;
-+	lowbatt_handle->show = sony_nc_lowbatt_show;
-+	lowbatt_handle->store = sony_nc_lowbatt_store;
-+
-+	result = device_create_file(&pd->dev, lowbatt_handle);
-+	if (result) {
-+		kfree(lowbatt_handle);
-+		lowbatt_handle = NULL;
-+		return result;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sony_nc_lowbatt_cleanup(struct platform_device *pd)
-+{
-+	if (lowbatt_handle) {
-+		device_remove_file(&pd->dev, lowbatt_handle);
-+		kfree(lowbatt_handle);
-+		lowbatt_handle = NULL;
-+	}
-+}
-+
- /* fan speed function */
- static struct device_attribute *fan_handle, *hsf_handle;
+ 	if (sony_call_snc_handle(kbdbl_ctl->handle,
+@@ -1780,8 +1781,10 @@ static ssize_t __sony_nc_kbd_backlight_mode_set(u8 value)
+ 		return -EIO;
+ 
+ 	/* Try to turn the light on/off immediately */
+-	sony_call_snc_handle(kbdbl_ctl->handle,
+-			(value << 0x10) | (kbdbl_ctl->base + 0x100), &result);
++	if (value != 1)
++		sony_call_snc_handle(kbdbl_ctl->handle,
++				(value << 0x0f) | (kbdbl_ctl->base + 0x100),
++				&result);
+ 
+ 	kbdbl_ctl->mode = value;
  
 -- 
 1.9.0
