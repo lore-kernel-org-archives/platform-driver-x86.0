@@ -1,343 +1,340 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Javier Achirica <jachirica@gmail.com>
 Subject: Re: [PATCH 10/11] sony-laptop: als support
-Date: Tue, 25 Mar 2014 06:50:51 +0000
-Message-ID: <d9aa97dc-cfdb-4394-b71d-ea1ed281ba00@email.android.com>
-References: <1395356482-7446-1-git-send-email-malattia@linux.it> <1395356482-7446-11-git-send-email-malattia@linux.it> <532F36D2.4020701@kernel.org> <20140324230607.GA2035@taihen.jp>
+Date: Tue, 25 Mar 2014 12:57:59 +0100
+Message-ID: <CACixm22UHoMDzv8r+C2r-8RoVXnpqkaefT9ucLRJSyvx9g517A@mail.gmail.com>
+References: <1395356482-7446-1-git-send-email-malattia@linux.it>
+	<1395356482-7446-11-git-send-email-malattia@linux.it>
+	<532F36D2.4020701@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140324230607.GA2035-K/RcPn9UbNN4Eiagz67IpQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mattia Dongili <malattia-k2GhghHVRtY@public.gmane.org>
-Cc: Matthew Garrett <mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Achirica <jachirica-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marco Chiappero <marco-YK5v5TwyeXionA0d6jMUrA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qa0-f53.google.com ([209.85.216.53]:63769 "EHLO
+	mail-qa0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751293AbaCYL6A (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 25 Mar 2014 07:58:00 -0400
+In-Reply-To: <532F36D2.4020701@kernel.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Mattia Dongili <malattia@linux.it>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-iio@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Marco Chiappero <marco@absence.it>
 
+Hello,
 
+Jumping in the skipped part...
 
-On March 24, 2014 11:06:07 PM GMT+00:00, Mattia Dongili <malattia-k2GhghHVRtY@public.gmane.org> wrote:
->On Sun, Mar 23, 2014 at 07:32:34PM +0000, Jonathan Cameron wrote:
->> On 20/03/14 23:01, Mattia Dongili wrote:
->> >From: Javier Achirica <jachirica-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> >vaios come with two different type of ACPI based ALS controls. The
->...
+On Sun, Mar 23, 2014 at 8:32 PM, Jonathan Cameron <jic23@kernel.org> wrote:
+>> +Ambient Light Sensor:
+>> +---------------------
+>> +On models equipped with ALS, sony-laptop will create an IIO device
+>> available
+>> +under:
+>> +       /sys/bus/iio/devices/
+>> +In addition to the sensor's readings, a number of other attributes are
+>> exposed
+>> +for userspace to consume:
+>> +       typical_illuminance     Typical illuminance level for brightness
+>> +                               control in lux.
 >
->Hi Jonathan,
->thanks for the extensive review.
->I can answer some of your questions, those related to the taos driver
->in
->particular need to wait for Javier as large part of the work was plain
->reverse engineering the windows code that he did.
->
->> I hate to say it but my first reaction to this was, 'What are so
->> many functions doing in one file in the first place?'
->> 
->> The embedded world has been busy splitting up and reparcelling large
->> files like this so the various devices end up within the correct
->> subsystems. I won't even go into all the reasons for this as they
->> are listed everywhere else?  Is this just a case of modifying old
->> code no one wants to touch on a larger scale or is there actually
->> resistance to breaking new functionality out of this file and
->> into nice clean small chunks?
->
->I don't think there is any resistance per-se and to some extent it has
->been done in the past (see meye.ko).
->On the other hand there is no documentation on the devices this driver
->is about and any abstraction you put in place to generalize access and
->to allow splitting functionalities, will break. I have to admit that
->things have somehow settled recently (and the Vaio brand has just been
->buried, we'll see what happens) so making an attempt may make sense
->now.
->But then again, I'm not sure that making a mini-subsystem out of an
->undocumented device/interface is going to pay out.
->
->> So my first request is can we at least split this new functionality
->> out?
->
->we can certainly try. :)
->Though some functionalities are so interdependent from each other that
->I'm not sure it makes much sense (backlight Fn-keys, panel backlight
->and
->als are the worst).
->
->> As I look through what we have here, it looks like we ought to have
->> this functionality alone split into the ALS sensor and a backlight
->> driver (which can by all means use the standard interfaces to
->> talk to the ALS)... (event support for in kernel users isn't there
->> yet, but this might motivate us to hurry up with it).
->> 
->> The bulk of this driver is actually just a set of nasty access
->routines
->> and then functionality that already exists in the existing tsl2563
->driver.
->> Hence, unless there are very good reasons why not I would suggest the
->> following.
->> 
->> 1) Convert the existing tsl2563 driver over to using regmap.
->> 2) Add regmap support for the access routines we have here then add
->the
->>    little bit of code needed to make the tsl2563 register
->appopriately.  This
->>    may require a small amount of magic mfd like code in here.
->> (plan b on this is to perhaps create an i2c bus driver using the sony
->> specific calls).
->
->I need to figure out what regmaps are about (a quick look in
->include/linux/regmap.h reveals a lot), this is going to be a piece of
->work.
->
->> 3) Figure out what extra bits are that are needed by the ALS driver
->we have
->>    here and add them on (kelvin support and perhaps a few other
->bits).
->> 4) Then and only then take on any non ALS elements in here (such as
->the
->>    back light).
->
->most of the backlight code here is really a workaround to a sick
->behaviour that vaios have once you enable the als device. It's
->generally
->unrelated to the als portion of the driver except that once you
->introduce the latter, the former will break. The code is folded
->together
->to avoid being broken at any stage but it can be split to different
->changes if it makes more sense.
->
->> The other als driver (one where all the clever stuff is hidden)
->should ideally
->> be a completely separate als driver (be it a very simple one.
->> 
->> Anyhow, your code is reasonably clean but I think some of these
->questions about
->> the fundamental approach need addressing to avoid getting ourselves
->into a
->> nasty mess in the long term.   Sorry if this review seems a little
->negative.
->
->it does indeed but I wasn't expecting this enourmous blob to go through
->unnoticed and this is the type of feedback I wanted to get this code
->unstuck and finally ready for inclusion.
->
->I'll go through your comments in a few iterations to clean up the
->obvious first and evaluate the larger rework (i.e. merging with the
->current taos driver and splitting the als portion of sony-laptop) with
->more stable code at hand.
->
->Most of the questions you have about the driver itself will need to be
->answered by Javier though, I have only a few comments below about
->generic code in sony-laptop.c.
->
->> I appreciate that you've only taken the approach taken throughout
->this file!
->> 
->> Just as an aside, is there any interest in cleaning this whole file
->up?
->> The sonypi device looks like it should registering a whole host of
->standard
->> interfaces...
->
->iirc, sonypi doesn't have enough known functionality to cover the
->standard interfaces, it largely predates most of them. It's quite
->some time I don't look into it and it's actually a legacy device that
->is likely better be deprecated than worked on. If anybody wants to take
->it on, I'm not opposed though.
->
->> Jonathan
->> >Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> >Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >Cc: Marco Chiappero <marco-YK5v5TwyeXionA0d6jMUrA@public.gmane.org>
->> >Signed-off-by: Javier Achirica <jachirica-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >Signed-off-by: Mattia Dongili <malattia-k2GhghHVRtY@public.gmane.org>
->> >---
->> >  Documentation/laptops/sony-laptop.txt |   31 +
->> >  drivers/platform/x86/Kconfig          |    1 +
->> >  drivers/platform/x86/sony-laptop.c    | 1111
->++++++++++++++++++++++++++++++++-
->> >  3 files changed, 1128 insertions(+), 15 deletions(-)
->> >
->> >diff --git a/Documentation/laptops/sony-laptop.txt
->b/Documentation/laptops/sony-laptop.txt
->...
->> >diff --git a/drivers/platform/x86/Kconfig
->b/drivers/platform/x86/Kconfig
->...
->> >diff --git a/drivers/platform/x86/sony-laptop.c
->b/drivers/platform/x86/sony-laptop.c
->...
->
->[large chop, I'll let Javier comment on those questions]
->
->> >@@ -1065,20 +1206,43 @@ static int sony_nc_get_brightness_ng(struct
->backlight_device *bd)
->> >  	return (result & 0xff) - sdev->offset;
->> >  }
->> >
->> >-static int sony_nc_update_status_ng(struct backlight_device *bd)
->> >+static int __sony_nc_set_brightness_ng(struct sony_backlight_props
->*bl,
->> >+		int brightness)
->> >  {
->> >-	int value, result;
->> >-	struct sony_backlight_props *sdev =
->> >-		(struct sony_backlight_props *)bl_get_data(bd);
->> >+	int result = 0;
->> >+	int value = brightness + bl->offset;
->> >
->> >-	value = bd->props.brightness + sdev->offset;
->> >-	if (sony_call_snc_handle(sdev->handle, sdev->cmd_base | (value <<
->0x10),
->> >+	if (sony_call_snc_handle(bl->handle, bl->cmd_base | (value <<
->0x10),
->> >  				&result))
->> >  		return -EIO;
->> >
->> >  	return value;
->> >  }
->> Whilst this stuff is presumably being driver from the ALS it is
->decidedly
->> back light specific. Perhaps I'm idealistic in thinking it should be
->> a different driver.
->
->err, this hunk should not have made it here at all. Part of the other
->backlight work is in this patch for the reason I explained above but
->this one is really extraneous.
->
->> >
->> >+
->> >+static int sony_nc_update_status_ng(struct backlight_device *bd)
->> >+{
->> >+	struct sony_backlight_props *sdev =
->> >+		(struct sony_backlight_props *)bl_get_data(bd);
->> >+
->> >+	return __sony_nc_set_brightness_ng(sdev, bd->props.brightness);
->> >+}
->> >+
->> >+static void sony_nc_brightness_changed_ng(struct backlight_device
->*bd,
->> >+		int brightness, int max_brightness)
->> >+{
->> >+	int new_brightness =
->> >+		brightness * bd->props.max_brightness / max_brightness;
->> >+	struct sony_backlight_props *sdev =
->> >+		(struct sony_backlight_props *)bl_get_data(bd);
->> >+
->> >+	dprintk("brightness changed cur: %d, max: %d -> new: %d\n",
->brightness,
->> >+			max_brightness, new_brightness);
->> >+
->> >+	__sony_nc_set_brightness_ng(sdev, new_brightness);
->> >+	backlight_force_update(bd, BACKLIGHT_UPDATE_HOTKEY);
->> >+}
->> >+
->> >  static const struct backlight_ops sony_backlight_ops = {
->> >  	.options = BL_CORE_SUSPENDRESUME,
->> >  	.update_status = sony_backlight_update_status,
->> >@@ -1088,6 +1252,7 @@ static const struct backlight_ops
->sony_backlight_ng_ops = {
->> >  	.options = BL_CORE_SUSPENDRESUME,
->> >  	.update_status = sony_nc_update_status_ng,
->> >  	.get_brightness = sony_nc_get_brightness_ng,
->> >+	.brightness_changed = &sony_nc_brightness_changed_ng,
->> >  };
->> >
->> >  /*
->> >@@ -1201,7 +1366,8 @@ static int sony_nc_hotkeys_decode(u32 event,
->unsigned int handle)
->> >  enum event_types {
->> >  	HOTKEY = 1,
->> >  	KILLSWITCH,
->> >-	GFX_SWITCH
->> >+	GFX_SWITCH,
->> >+	ALS
->> >  };
->> Hmm. I don't suppose suggesting this should be an mfd with a nice
->clean
->> event hook up interface will go down to well?
->
->ah, a multi function device. Again I'd need to look how it would look
->like adding that to sony-laptop but these are essentially for
->triggering
->acpi events.
->Would it make it that much more clean than decoding the event from the
->GPE notification callback and sending it via ACPI's netlink interface
->(which is all we are doing here)?
->
->> >  static void sony_nc_notify(struct acpi_device *device, u32 event)
->> >  {
->> >@@ -1276,6 +1442,38 @@ static void sony_nc_notify(struct acpi_device
->*device, u32 event)
->> >  			ev_type = GFX_SWITCH;
->> >  			real_ev = __sony_nc_gfx_switch_status_get();
->> >  			break;
->> >+
->> >+		case 0x0143:
->> >+		case 0x014b:
->> >+		case 0x014c:
->> >+		case 0x0163:
->> Could you document what these different events are here?  Would make
->> it easier to review.
->
->yes, I can add documentation but this is not als specific.
->In general SNC exposes a number of "handles" (those you see above) in
->an
->indexed table (see find_snc_handle). All event notifications and calls
->into the device methods (SN06 and SN07 are the entry points) specify
->the
->offset at which the desired handle is.
->Each handle cover one or more functionality based on the arguments
->provided.
->Different handle may cover similar functionalities and are different
->from model to model. 
->
->The functionalities are easier to see in sony_nc_function_setup where
->each handle has it's corresponding setup function called.
->
->The event decoding here (sony_nc_notify) have to look at what handle is
->associated to it and decide accordingly (map a hotkey, read a switch
->position, read additional "light" event information).
->
->...
->
->> You are pushing events without any direct control interface for
->them...
->> >+	iio_push_event(als_handle->indio_dev,
->> >+		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
->> >+					    0,
->> >+					    IIO_EV_TYPE_THRESH,
->> >+					    IIO_EV_DIR_EITHER),
->> >+		       iio_get_time_ns());
->...
->> Again, you are pushing without there being any sysfs elements to
->control them..
->> With those missing there is no way for userspace to know that the
->device
->> might spit out events, or what they might be...
->> 
->> >+	iio_push_event(als_handle->indio_dev,
->> >+		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
->> >+					    0,
->> >+					    IIO_EV_TYPE_THRESH,
->> >+					    IIO_EV_DIR_EITHER),
->> >+		       iio_get_time_ns());
->...
->> >+static const struct iio_event_spec sony_events[] = {
->> >+	{
->> >+		.type = IIO_EV_TYPE_THRESH,
->> >+		.dir = IIO_EV_DIR_EITHER
->> Would expect some control stuff in here as well...
->> >+	}
->
->what do you mean? do you have an example I can look at?
-As it is somewhat relevant how about the tsl2563 driver...
+> Is this a target value?  Need a better description for this as it's not
+> immediately
+> obvious what it is.
 
-https://git.kernel.org/cgit/linux/kernel/git/jic23/iio.git/tree/drivers/iio/light/tsl2563.c?h=togreg&id=239670ef48dfff9cf07675acdb3bb7deee4853e1
+All these names come from the names that Sony used in Windows, but in
+some cases we don't really fully understand its meaning. I
+reverse-engineered Windows control module, and Sony uses these values
+in quite sophisticated algorithms to calculate brightness, which I've
+been able to partially replicate, but I'm not covering all cases.
 
-See the mask separate elements and event related callbacks.
+In this specific case, this is the illuminance value used as a "middle
+point" from where all brightness variations are calculated.
+
+>> +       backlight_illuminance   Threshold in lux for keyboard backlight.
+>> +       lux_correction_percent  Correction factor to apply to brightness
+>> in
+>> +                               percentage.
 >
->Thanks
+> If applied to the measurement before exposed to userspace then it should
+> be handled using the iio info_mask element calibscale. If it's a value that
+> should be applied in userspace then the scale infomask element.
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+It should be applied in userspace.
+
+>> +       low_threshold_percent   Percentage from current lux level to
+>> trigger
+>> +                               event (low).
+>
+> Interesting.  These are a new one :)
+> Anyhow the should be handled through additions to iio's iio_event_info
+> enum and all the stuff that goes with that.
+> Perhaps
+> IIO_EV_INFO_PERCENT, with sysfs attributes
+> events/in_illuminance_thresh_rising_percent
+> events/in_illuminance_thresh_falling_percent
+>
+> Actually you don't seem to have any IIO_EV_INFO stuff in here yet you
+> are still pushing out events via IIO. Interesting...
+
+In fact, I implemented it, but only for the older Vaios (the
+TAOS-based ones), but we couldn't figure out how to get this
+information in the newer ones, as everything is hidden, so we ended up
+removing it. Of course we could add it back, but what should we do
+with the hidden ones?
+
+>> +       high_threshold_percent  Percentage from current lux level to
+>> trigger
+>> +                               event (high).
+>> +       als_event_rate          Time in milliseconds between brightness
+>> changes
+>> +                               when triggered by light change.
+>
+> The naming is not nearly descriptive enough as I'd read that as being how
+> often an event (e.g. it going dark) is checked from the als.
+
+As I said above, we took Sony names. Of course we can change them to anything.
+
+>> +       als_event_delay         Percentage of brightness changes when
+>> triggered
+>> +                               by light change.
+>> +       key_event_rate          Time in milliseconds between brightness
+>> changes
+>> +                               when triggered by keypress.
+>> +       key_event_delay         Percentage of brightness changes when
+>> triggered
+>> +                               by keypress.
+>
+> These are so device dependent we'll probably just let them go.  Might be
+> something that's worth checking with the input guys to discover if they
+> have an interface already defined for this sort of thing.
+>
+>> +       interrupt_rate          Light sensor interrupt rate in
+>> milliseconds.
+>> +       light_compensation_x10  Light compensation needed due to sensor
+>> cover.
+>
+> Offset, or a scale factor?  Either way there are well defined abi elements
+> for
+> this already.
+
+Scale factor.
+
+>> +       minimum_illuminance     Minimum expected illuminance level in lux.
+>
+> Expected in what sense?
+
+Once again, is something that it's used in Sony code. This range is
+the illuminance range where the backlight change is meaningful
+(outside of it, backlight change is almost unnoticeable).
+
+>> +       maximum_illuminance     Maximum expected illuminance level in lux.
+>> +       algorithm               Brightness calculation algorithm to be
+>> used.
+>
+> That's a lot of new abi as far as IIO is concerned.  It will all need
+> documenting in
+> Documentation/ABI/testing/sysfs-bus-iio-sony-laptop or the generic files if
+> appropriate.
+> Also, no units for some of the above.
+
+I think we documented units every we know about them, but surely we'll recheck.
+
+>> +static ssize_t sony_nc_als_kelvin_show(struct device *dev,
+>> +               struct device_attribute *attr, char *buffer);
+>
+> Are we talking actual temperature or colour temperature here?
+> Either way, I missed the documentation...
+
+Colour temperature.
+
+>> +static struct attribute *ngals_attributes[] = {
+>> +       &als_attr_backlight_sensibility_table.attr,
+>> +       &als_attr_minimum_illuminance.attr,
+>> +       &als_attr_maximum_illuminance.attr,
+>> +       &als_attr_als_event_rate.attr,
+>> +       &als_attr_als_event_delay.attr,
+>> +       &als_attr_key_event_rate.attr,
+>> +       &als_attr_key_event_delay.attr,
+>> +       &als_attr_algorithm.attr,
+>
+> So is algorithm going to give me a magic number?  Please convert this
+> to something human readable if so.
+
+Yes. From the code looks like right now the magic number can go from 0
+to 3, but we don't really know how to name them (apart from
+"first_algorithm", "new_algorithm", "nice_algorithm" or something
+similar). Any suggestion?
+
+>> +static const struct tsl256x_coeff tsl256x_coeff_fn[] = {
+>> +       {
+>> +               .ratio  = SCALE(12500), /* 0.125 * 2^LUX_SHIFT_BITS  */
+>> +               .ch0    = SCALE(3040),  /* 0.0304 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(2720),  /* 0.0272 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(313550000),
+>> +               .kb     = -10651,
+>> +       }, {
+>> +               .ratio  = SCALE(25000), /* 0.250 * 2^LUX_SHIFT_BITS  */
+>> +               .ch0    = SCALE(3250),  /* 0.0325 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(4400),  /* 0.0440 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(203390000),
+>> +               .kb     = -2341,
+>> +       }, {
+>> +               .ratio  = SCALE(37500), /* 0.375 * 2^LUX_SHIFT_BITS  */
+>> +               .ch0    = SCALE(3510),  /* 0.0351 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(5440),  /* 0.0544 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(152180000),
+>> +               .kb     = 157,
+>> +       }, {
+>> +               .ratio  = SCALE(50000), /* 0.50 * 2^LUX_SHIFT_BITS   */
+>> +               .ch0    = SCALE(3810),  /* 0.0381 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(6240),  /* 0.0624 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(163580000),
+>> +               .kb     = -145,
+>> +       }, {
+>> +               .ratio  = SCALE(61000), /* 0.61 * 2^LUX_SHIFT_BITS   */
+>> +               .ch0    = SCALE(2240),  /* 0.0224 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(3100),  /* 0.0310 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(180800000),
+>> +               .kb     = -495,
+>> +       }, {
+>> +               .ratio  = SCALE(80000), /* 0.80 * 2^LUX_SHIFT_BITS   */
+>> +               .ch0    = SCALE(1280),  /* 0.0128 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(1530),  /* 0.0153 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(197340000),
+>> +               .kb     = -765
+>> +       }, {
+>> +               .ratio  = SCALE(130000),/* 1.3 * 2^LUX_SHIFT_BITS     */
+>> +               .ch0    = SCALE(146),   /* 0.00146 * 2^LUX_SHIFT_BITS */
+>> +               .ch1    = SCALE(112),   /* 0.00112 * 2^LUX_SHIFT_BITS */
+>> +               .ka     = SCALE(182900000),
+>> +               .kb     = -608,
+>> +       }, {
+>> +               .ratio  = UINT_MAX,     /* for higher ratios */
+>> +               .ch0    = 0,
+>> +               .ch1    = 0,
+>> +               .ka     = 0,
+>> +               .kb     = 830,
+>> +       }
+>> +};
+>>
+> So what are _fn and _cs?
+
+Different chips with different tables. Chip model names end in FN and CS.
+
+[Lots of nice code cleaning suggestions removed...]
+
+> Prefix this appropriately. SONY_LAPTOP_TSL256X_MAX_LUX or similar.
+>>
+>> +#define MAX_LUX 700000
+>
+> I'd like to know how this differs form the function in tsl2563.c...
+>
+> This takes a few more things into account perhaps, but they are
+> fundamentally
+> the same and we should only have one...
+
+It uses multiple ranges available in the chip, it surely can be merged
+in the tsl2563.c code.
+
+>> +static unsigned int tsl256x_calculate_lux(const u32 ch0, const u32 ch1)
+>> +{
+>> +       /* the raw output from the sensor is just a "count" value, as it
+>> is the
+>> +        * result of the integration of the analog sensor signal, the
+>> +        * counts-to-lux curve (and its approximation can be found on the
+>> +        * datasheet).
+>> +        */
+>> +       const struct tsl256x_coeff *coeff = tsl256x_handle->coeff_table;
+>> +       u32 ratio, temp, integer;
+>> +
+>> +       if (ch0 >= 65535 || ch1 >= 65535)
+>> +               return MAX_LUX;
+>> +
+>> +       /* STEP 1: ratio calculation, for ch0 & ch1 coeff selection */
+>> +
+>> +       /* protect against division by 0 */
+>> +       ratio = ch0 ? ((ch1 << (LUX_SHIFT_BITS + 1)) / ch0) : UINT_MAX -
+>> 1;
+>> +       /* round the ratio value */
+>> +       ratio = (ratio + 1) >> 1;
+>> +
+>> +       /* coeff selection rule */
+>> +       while (coeff->ratio < ratio)
+>> +               coeff++;
+>> +
+>> +       /* STEP 2: lux calculation formula using the right coeffcients */
+>> +       temp = (ch0 * coeff->ch0) - (ch1 * coeff->ch1);
+>> +       temp *= tsl256x_handle->gain->scale;
+>> +       /* the sensor is placed under a plastic or glass cover which
+>> filters
+>> +        * a certain ammount of light (depending on that particular
+>> material).
+>> +        * To have an accurate reading, we need to compensate for this
+>> loss,
+>> +        * multiplying for compensation parameter, taken from the DSDT.
+>> +        */
+>> +       temp *= tsl256x_handle->defaults[3] / 10;
+>> +
+>> +       /* round fractional portion to obtain the integer part */
+>> +       integer = (temp + (1 << (LUX_SHIFT_BITS - 1))) >> LUX_SHIFT_BITS;
+>> +
+>> +       if (integer > MAX_LUX)
+>> +               return MAX_LUX;
+>> +
+>> +       return integer;
+>> +}
+>> +
+>
+> This is new for a tsl256x chip..  Hmm. approximate temperature form the
+> infrared channel?  How accurate is it? (just currious as I wouldn't have
+> through these were really suitable for use as thermopiles)
+
+It's reasonable accurate while using black-body light sources
+(incandescent, halogen, sunlight), not so good with sodium, mercury,
+fluorescent or LEDs.
+
+The temperature is obtained comparing the relative level of visible
+and infrared channels. In fact this is a correction that has to be
+than to determine the visible illuminance level, so I just mapped it
+to temperature in kelvins.
+
+> integ?  Why that variable name?
+>
+>> +static int tsl256x_get_lux(unsigned int *integ)
+>> +{
+>> +       int ret = 0;
+>> +       unsigned int ch0, ch1;
+>> +
+>> +       if (!integ)
+>> +               return -1;
+>> +
+>> +       ret = tsl256x_get_raw_data(&ch0, &ch1);
+>> +       if (!ret)
+
+Used to be integer and fractional part, but as the fractional part
+wasn't available in the newer versions, we just removed it.
+
+> I'd argue this is just a temperature reading and hence should be done
+> via a temperature channel. Irritatingly they are in celcius, but
+> the conversion is at least nice and easy ;)
+>
+>> +static ssize_t sony_nc_als_kelvin_show(struct device *dev,
+>> +               struct device_attribute *attr, char *buffer)
+>> +{
+>> +       ssize_t count = 0;
+>> +       unsigned int kelvin = 0;
+>> +
+>> +       if (als_handle->ops->get_kelvin)
+>> +               als_handle->ops->get_kelvin(&kelvin);
+>> +
+>> +       count = snprintf(buffer, PAGE_SIZE, "%d\n", kelvin);
+>> +
+>> +       return count;
+>> +}
+
+In kelvin, not exactly celsius. That's what happens when you're
+european and have a physics background :-)
+
+Anyway, thank you very much for all the work you've put into reviewing
+all this code and all useful comments.
+
+Javier
