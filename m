@@ -1,26 +1,49 @@
-From: Steiner Manuela <Manuela.Steiner@edulu.ch>
-Subject: =?windows-1256?Q?Send_informations_to_Email:_freloto12@yahoo.co.uk_for_mo?=
- =?windows-1256?Q?re_info=FE?=
-Date: Wed, 26 Mar 2014 02:28:41 +0000
-Message-ID: <2C3ECBBCAA9ED74FAB7BA87D5D97F161139F21ED@mxm-v106.kt.lunet.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1256
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: [PATCH v5 0/1] Add WMI driver to control AlienFX features
+Date: Wed, 26 Mar 2014 08:57:27 -0500
+Message-ID: <1395842248-27868-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.lu.ch ([194.40.144.253]:22102 "EHLO mx1.lu.ch"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754672AbaCZClW convert rfc822-to-8bit (ORCPT
+Received: from ausc60pc101.us.dell.com ([143.166.85.206]:62808 "EHLO
+	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753716AbaCZN55 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Mar 2014 22:41:22 -0400
-Content-Language: de-CH
+	Wed, 26 Mar 2014 09:57:57 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: matthew.garrett@nebula.com
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 
-You have won 560,000:00 GBP in Free Lotto without the sale of any ticke=
-ts.Send Full Names:. Mobile Number and Alternative Email Address via e-=
-mail to freloto12@yahoo.co.uk<mailto:freloto12@yahoo.co.uk>
+This is a driver for the Alienware X51, X51 R2 and some future HW.
+ - For the X51 / X51 R2 it allows control of the color and brightness
+   of each zone via a sysfs interface for the color and a LED interface
+   for the brightness
+ - For the future HW it allows control of color and brightness as well
+   as an HDMI mux that's included in the HW.
 
-Regards,
-Mrs. Laura borgotti
-=46reeLotto Director of Information
-Copyright 2014=A9 Free Lotto Inc.
+Changes from v4 to v5:
+ - Make zone control more like the thingm RGB LED in the kernel.  Brightness
+   control is independent of the RGB adjustment.  RGB adjustment takes a 24-bit
+   hexadecimal triplet.
+ - Introduced a new WMAX method for platforms that use HDMI as well as a new
+   lighting control interface.  This removes the present necessity of having
+   to do a DMI match on HDMI for now.
+ - Dynamically create number of sysfs zone nodes based on DMI data. Present
+   platforms have 3 nodes, but some future ones will have anywhere from 2
+   to 32 nodes.
+ - Make lighting control state and HDMI more readable and usable for 
+   interacting. Rather than having to know numbers, cat'ing the nodes will
+   output the available options and the presently selected option (in a 
+   single line)
+
+Mario Limonciello (1):
+  Add WMI driver for controlling AlienFX features on some Alienware
+    products
+
+ drivers/platform/x86/Kconfig         |  12 +
+ drivers/platform/x86/Makefile        |   2 +
+ drivers/platform/x86/alienware-wmi.c | 557 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 571 insertions(+)
+ create mode 100644 drivers/platform/x86/alienware-wmi.c
+
+-- 
+1.9.0
