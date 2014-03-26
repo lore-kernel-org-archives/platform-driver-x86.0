@@ -1,173 +1,146 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 4/7] toshiba_acpi: Add touchpad enable/disable support-
-Date: Tue, 25 Mar 2014 20:38:32 -0600
-Message-ID: <1395801515-2333-5-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 5/7] toshiba_acpi: Add ECO mode led support
+Date: Tue, 25 Mar 2014 20:38:33 -0600
+Message-ID: <1395801515-2333-6-git-send-email-coproscefalo@gmail.com>
 References: <1395801515-2333-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f47.google.com ([209.85.219.47]:63889 "EHLO
-	mail-oa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751314AbaCZCjO (ORCPT
+Received: from mail-oa0-f44.google.com ([209.85.219.44]:55998 "EHLO
+	mail-oa0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751314AbaCZCjP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Mar 2014 22:39:14 -0400
-Received: by mail-oa0-f47.google.com with SMTP id i11so1750407oag.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2014 19:39:14 -0700 (PDT)
+	Tue, 25 Mar 2014 22:39:15 -0400
+Received: by mail-oa0-f44.google.com with SMTP id n16so1755971oag.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Mar 2014 19:39:15 -0700 (PDT)
 In-Reply-To: <1395801515-2333-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Toshiba laptops have two ways of letting userspace
-know the touchpad has changed state, one with a
-button on top of the touchpad that simply emmits
-scancodes whenever enabled/disabled, and another one
-by pressing Fn-F9 (touchpad toggle) hotkey.
+Newer Toshiba laptops now come with a feature called
+ECO Mode, where the system is put in low power consupmtion
+state and a green (world shaped with leaves) icon illuminates
+indicating that the system is in such power state.
 
-This patch adds support to enable/disable the touchpad
-by exposing the _touchpad_ file in sysfs that simply
-makes a call to a SCI register, imitating what
-Toshiba provided software does on Windows.
+This patch adds support to turn on/off the ECO led by
+creating and registering the toshiba::eco_mode led.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 81 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+ drivers/platform/x86/toshiba_acpi.c | 66 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 95ae1ff..08c5376 100644
+index 08c5376..c8e8bfb 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
+@@ -112,6 +112,7 @@ MODULE_LICENSE("GPL");
+ #define HCI_LCD_BRIGHTNESS		0x002a
+ #define HCI_WIRELESS			0x0056
  #define HCI_KBD_ILLUMINATION		0x0095
++#define HCI_ECO_MODE			0x0097
  #define SCI_ILLUMINATION		0x014e
  #define SCI_KBD_ILLUM_STATUS		0x015c
-+#define SCI_TOUCHPAD			0x050e
+ #define SCI_TOUCHPAD			0x050e
+@@ -142,6 +143,7 @@ struct toshiba_acpi_dev {
+ 	struct backlight_device *backlight_dev;
+ 	struct led_classdev led_dev;
+ 	struct led_classdev kbd_led;
++	struct led_classdev eco_led;
  
- /* field definitions */
- #define HCI_HOTKEY_DISABLE		0x0b
-@@ -157,6 +158,7 @@ struct toshiba_acpi_dev {
- 	unsigned int tr_backlight_supported:1;
+ 	int force_fan;
+ 	int last_key_event;
+@@ -159,6 +161,7 @@ struct toshiba_acpi_dev {
  	unsigned int kbd_illum_supported:1;
  	unsigned int kbd_led_registered:1;
-+	unsigned int touchpad_supported:1;
+ 	unsigned int touchpad_supported:1;
++	unsigned int eco_supported:1;
  	unsigned int sysfs_created:1;
  
  	struct mutex mutex;
-@@ -527,6 +529,47 @@ static void toshiba_kbd_backlight_set(struct led_classdev *cdev,
- 		return;
- 	}
+@@ -571,6 +574,57 @@ static int toshiba_touchpad_get(struct toshiba_acpi_dev *dev, u32 *state)
+ 	return 0;
  }
-+ 
-+/* TouchPad support */
-+static int toshiba_touchpad_set(struct toshiba_acpi_dev *dev, u32 state)
-+{
-+	u32 result;
-+	acpi_status status;
-+
-+	if (!sci_open(dev))
-+		return -EIO;
-+
-+	status = sci_write(dev, SCI_TOUCHPAD, state, &result);
-+	sci_close(dev);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to set the touchpad failed\n");
-+		return -EIO;
-+	} else if (result == HCI_NOT_SUPPORTED) {
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int toshiba_touchpad_get(struct toshiba_acpi_dev *dev, u32 *state)
-+{
-+	u32 result;
-+	acpi_status status;
-+
-+	if (!sci_open(dev))
-+		return -EIO;
-+
-+	status = sci_read(dev, SCI_TOUCHPAD, state, &result);
-+	sci_close(dev);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to query the touchpad failed\n");
-+		return -EIO;
-+	} else if (result == HCI_NOT_SUPPORTED) {
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
  
++/* Eco Mode support */
++static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
++{
++	acpi_status status;
++	u32 in[HCI_WORDS] = { HCI_GET, HCI_ECO_MODE, 0, 1, 0, 0 };
++	u32 out[HCI_WORDS];
++
++	status = hci_raw(dev, in, out);
++	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
++		pr_info("ACPI call to get ECO led failed\n");
++		return 0;
++	}
++
++	return 1;
++}
++
++static enum led_brightness toshiba_eco_mode_get_status(struct led_classdev *cdev)
++{
++	struct toshiba_acpi_dev *dev = container_of(cdev,
++			struct toshiba_acpi_dev, eco_led);
++	u32 in[HCI_WORDS] = { HCI_GET, HCI_ECO_MODE, 0, 1, 0, 0 };
++	u32 out[HCI_WORDS];
++	acpi_status status;
++
++	status = hci_raw(dev, in, out);
++	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
++		pr_err("ACPI call to get ECO led failed\n");
++		return LED_OFF;
++	}
++
++	return out[2] ? LED_FULL : LED_OFF;
++}
++
++static void toshiba_eco_mode_set_status(struct led_classdev *cdev,
++				     enum led_brightness brightness)
++{
++	struct toshiba_acpi_dev *dev = container_of(cdev,
++			struct toshiba_acpi_dev, eco_led);
++	u32 in[HCI_WORDS] = { HCI_SET, HCI_ECO_MODE, 0, 1, 0, 0 };
++	u32 out[HCI_WORDS];
++	acpi_status status;
++
++	/* Switch the Eco Mode led on/off */
++	in[2] = (brightness) ? 1 : 0;
++	status = hci_raw(dev, in, out);
++	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
++		pr_err("ACPI call to set ECO led failed\n");
++		return;
++	}
++}
++
  /* Bluetooth rfkill handlers */
  
-@@ -1130,15 +1173,48 @@ static ssize_t toshiba_kbd_bl_timeout_show(struct device *dev,
- 
- 	return sprintf(buf, "%i\n", time >> HCI_MISC_SHIFT);
- }
+ static u32 hci_get_bt_present(struct toshiba_acpi_dev *dev, bool *present)
+@@ -1469,6 +1523,9 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+  
+ 	if (dev->kbd_led_registered)
+ 		led_classdev_unregister(&dev->kbd_led);
 + 
-+static ssize_t toshiba_touchpad_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int state;
-+
-+	/* Set the TouchPad on/off, 0 - Disable | 1 - Enable */
-+	if (sscanf(buf, "%i", &state) == 1 && (state == 0 || state == 1)) {
-+		if (toshiba_touchpad_set(toshiba, state) < 0)
-+			return -EIO;
-+	}
-+
-+	return count;
-+}
-+
-+static ssize_t toshiba_touchpad_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	u32 state;
-+	int ret;
-+
-+	ret = toshiba_touchpad_get(toshiba, &state);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%i\n", state);
-+}
++	if (dev->eco_supported)
++		led_classdev_unregister(&dev->eco_led);
  
- static DEVICE_ATTR(kbd_backlight_mode, S_IRUGO | S_IWUSR,
- 		   toshiba_kbd_bl_mode_show, toshiba_kbd_bl_mode_store);
- static DEVICE_ATTR(kbd_backlight_timeout, S_IRUGO | S_IWUSR,
- 		   toshiba_kbd_bl_timeout_show, toshiba_kbd_bl_timeout_store);
-+static DEVICE_ATTR(touchpad, S_IRUGO | S_IWUSR,
-+		   toshiba_touchpad_show, toshiba_touchpad_store);
- 
- static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_kbd_backlight_mode.attr,
- 	&dev_attr_kbd_backlight_timeout.attr,
-+	&dev_attr_touchpad.attr,
- 	NULL,
- };
- 
-@@ -1153,6 +1229,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 		exists = (drv->kbd_illum_supported) ? true : false;
- 	else if (attr == &dev_attr_kbd_backlight_timeout.attr)
- 		exists = (drv->kbd_mode == SCI_KBD_MODE_AUTO) ? true : false;
-+	else if (attr == &dev_attr_touchpad.attr)
-+		exists = (drv->touchpad_supported) ? true : false;
- 
- 	return exists ? attr->mode : 0;
- }
-@@ -1496,6 +1574,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 		if (!led_classdev_register(&dev->acpi_dev->dev, &dev->kbd_led))
- 			dev->kbd_led_registered = 1;
+ 	if (toshiba_acpi)
+ 		toshiba_acpi = NULL;
+@@ -1556,6 +1613,15 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 			dev->illumination_supported = 1;
  	}
+  
++	if (toshiba_eco_mode_available(dev)) {
++		dev->eco_led.name = "toshiba::eco_mode";
++		dev->eco_led.max_brightness = 1;
++		dev->eco_led.brightness_set = toshiba_eco_mode_set_status;
++		dev->eco_led.brightness_get = toshiba_eco_mode_get_status;
++		if (!led_classdev_register(&dev->acpi_dev->dev, &dev->eco_led))
++			dev->eco_supported = 1;
++	}
 + 
-+	ret = toshiba_touchpad_get(dev, &dummy);
-+	dev->touchpad_supported = !ret;
- 
- 	/* Determine whether or not BIOS supports fan and video interfaces */
- 
+ 	ret = toshiba_kbd_illum_status_get(dev, &dummy);
+ 	if (!ret) {
+ 		dev->kbd_time = dummy >> HCI_MISC_SHIFT;
 -- 
 1.9.1
