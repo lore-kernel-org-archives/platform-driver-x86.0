@@ -1,40 +1,43 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: [PATCH 00/11] ALS and other new functions
-Date: Fri, 28 Mar 2014 06:23:31 +0900
-Message-ID: <20140327212331.GA6203@taihen.jp>
-References: <1395356482-7446-1-git-send-email-malattia@linux.it>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 0/2] input/serio: Add a firmware_id sysfs attribute
+Date: Fri, 28 Mar 2014 00:56:55 -0700
+Message-ID: <20140328075655.GE22093@core.coreip.homeip.net>
+References: <1395310330-3232-1-git-send-email-hdegoede@redhat.com>
+ <20140320172159.GA27400@srcf.ucam.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ac250205.ppp.asahi-net.or.jp ([183.77.250.205]:59199 "EHLO
-	smtp.taihen.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756794AbaC0VXe (ORCPT
+Received: from mail-pd0-f172.google.com ([209.85.192.172]:48812 "EHLO
+	mail-pd0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751145AbaC1H47 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 27 Mar 2014 17:23:34 -0400
+	Fri, 28 Mar 2014 03:56:59 -0400
 Content-Disposition: inline
-In-Reply-To: <1395356482-7446-1-git-send-email-malattia@linux.it>
+In-Reply-To: <20140320172159.GA27400@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <btissoir@redhat.com>, Peter Hutterer <peter.hutterer@redhat.com>, platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
 
-On Fri, Mar 21, 2014 at 08:01:11AM +0900, Mattia Dongili wrote:
-> Matthew,
+On Thu, Mar 20, 2014 at 05:21:59PM +0000, Matthew Garrett wrote:
+> On Thu, Mar 20, 2014 at 11:12:08AM +0100, Hans de Goede wrote:
 > 
-> This is partially a resend of the previous patch-set (first 7  patches) plus
-> additional changes to queue up for 3.15.
+> > Which in the end turns out to be much nicer too, since it gets rid of needing
+> > a udev-helper too. After this much too long introduction I'll let the patches
+> > speak for themselves.
+> 
+> Yeah, I was coming to the conclusion that this was probably the best we 
+> could do. It's unfortunate that "id" is already in use - we'd be able to 
+> get away without any X server modifications otherwise.
+> 
+> Long term we probably still want to tie serio devices to the ACPI 
+> devices in case the vendor provides power management calls there, but we 
+> can leave that until there's an actual example.
 
-could you pick up everything but patch 9 and 10? I'll resend those when
-ready with the changes that Jonathan suggested.
+I am still unsure if we shoudl be adding these new IDs to serio core...
+Can't the X driver take a peek at ACPI devices on it's own?
 
-Essentially these two should be skipped for now:
->   sony-laptop: als support
->   backlight: introduce inter-driver notification of changes
+Thanks.
 
-the latter could actually go by itself but without any real use it's a
-bit gratuitous.
-
-Thanks
 -- 
-mattia
-:wq!
+Dmitry
