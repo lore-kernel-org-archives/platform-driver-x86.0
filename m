@@ -1,39 +1,18 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 0/2] input/serio: Add a firmware_id sysfs attribute
-Date: Fri, 28 Mar 2014 09:04:22 -0700
-Message-ID: <20140328160421.GA22658@core.coreip.homeip.net>
-References: <1395310330-3232-1-git-send-email-hdegoede@redhat.com>
- <20140320172159.GA27400@srcf.ucam.org>
- <20140328075655.GE22093@core.coreip.homeip.net>
- <53352EFB.8000309@redhat.com>
- <20140328081739.GG22093@core.coreip.homeip.net>
- <533532FE.2000304@redhat.com>
- <20140328085207.GN22093@core.coreip.homeip.net>
- <20140328090053.GA10597@srcf.ucam.org>
+From: "Linux parisc" <csanders@sefcoelectric.com>
+Subject: My husband loves Jacob & Co
+Date: Sun, 30 Mar 2014 09:24:41 +0200
+Message-ID: <AF12BDC1.1DB94AAD@sefcoelectric.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42]:36685 "EHLO
-	mail-pa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751926AbaC1QE1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 Mar 2014 12:04:27 -0400
-Content-Disposition: inline
-In-Reply-To: <20140328090053.GA10597@srcf.ucam.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <btissoir@redhat.com>, Peter Hutterer <peter.hutterer@redhat.com>, platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-parisc@vger.kernel.org
+Cc: linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-ppp@vger.kernel.org, linux-ppp-owner@vger.kernel.org, linux-raid@vger.kernel.org, linux-raid-owner@vger.kernel.org, linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org, linux-sh@vger.kernel.org, linux-smp@vger.kernel.org, linux-smp-owner@vger.kernel.org, linux-sound-owner@vger.kernel.org, linux-usb@vger.kernel.org, linux-userfs@vger.kernel.org, linux-wireless@vger.kernel.org, majordomo@vger.kernel.org, net@vger.kernel.org, netdev@vger.kernel.org, netfilter@vger.kernel.org, netfilter-devel@vger.kernel.org, platform-driver-x86@vger.kernel.org, postmaster@vger.kernel.org, reiserfs-devel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 28, 2014 at 09:00:53AM +0000, Matthew Garrett wrote:
-> On Fri, Mar 28, 2014 at 01:52:07AM -0700, Dmitry Torokhov wrote:
-> > 
-> > Are we even certain that they will be consistent in use of these special
-> > PNP ID's? Maybe you should really do DMI match...
-> 
-> The Windows drivers bind on PNP IDs, not DMI.
+Give her the gift of her lifetime without using your lifetime's savings.
+http://stalvandriel.com/umyvxyp.php
 
-OK, fair enough.
 
--- 
-Dmitry
