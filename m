@@ -1,58 +1,31 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH v5 0/1] Add WMI driver to control AlienFX features
-Date: Tue, 01 Apr 2014 17:18:00 -0500
-Message-ID: <533B3B18.1030000@dell.com>
+Date: Tue, 1 Apr 2014 22:24:40 +0000
+Message-ID: <1396391080.2824.0.camel@x230>
 References: <1395842248-27868-1-git-send-email-mario_limonciello@dell.com>
+	 <533B3B18.1030000@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausc60pc101.us.dell.com ([143.166.85.206]:16348 "EHLO
-	ausc60pc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751626AbaDAWSY (ORCPT
+Received: from mail-by2lp0241.outbound.protection.outlook.com ([207.46.163.241]:1932
+	"EHLO na01-by2-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1751349AbaDAWYn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 1 Apr 2014 18:18:24 -0400
-In-Reply-To: <1395842248-27868-1-git-send-email-mario_limonciello@dell.com>
+	Tue, 1 Apr 2014 18:24:43 -0400
+In-Reply-To: <533B3B18.1030000@dell.com>
+Content-Language: en-US
+Content-ID: <13DD1B188BB4D5469B53FB89B1E55BB4@namprd05.prod.outlook.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: "mario_limonciello@dell.com" <mario_limonciello@dell.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 03/26/2014 08:57 AM, Limonciello, Mario wrote:
-> This is a driver for the Alienware X51, X51 R2 and some future HW.
->   - For the X51 / X51 R2 it allows control of the color and brightness
->     of each zone via a sysfs interface for the color and a LED interface
->     for the brightness
->   - For the future HW it allows control of color and brightness as well
->     as an HDMI mux that's included in the HW.
->
-> Changes from v4 to v5:
->   - Make zone control more like the thingm RGB LED in the kernel.  Brightness
->     control is independent of the RGB adjustment.  RGB adjustment takes a 24-bit
->     hexadecimal triplet.
->   - Introduced a new WMAX method for platforms that use HDMI as well as a new
->     lighting control interface.  This removes the present necessity of having
->     to do a DMI match on HDMI for now.
->   - Dynamically create number of sysfs zone nodes based on DMI data. Present
->     platforms have 3 nodes, but some future ones will have anywhere from 2
->     to 32 nodes.
->   - Make lighting control state and HDMI more readable and usable for
->     interacting. Rather than having to know numbers, cat'ing the nodes will
->     output the available options and the presently selected option (in a
->     single line)
->
-> Mario Limonciello (1):
->    Add WMI driver for controlling AlienFX features on some Alienware
->      products
->
->   drivers/platform/x86/Kconfig         |  12 +
->   drivers/platform/x86/Makefile        |   2 +
->   drivers/platform/x86/alienware-wmi.c | 557 +++++++++++++++++++++++++++++++++++
->   3 files changed, 571 insertions(+)
->   create mode 100644 drivers/platform/x86/alienware-wmi.c
->
-Matthew,
-
-Any feedback to apply on this?
-
-Thanks,
+T24gVHVlLCAyMDE0LTA0LTAxIGF0IDE3OjE4IC0wNTAwLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90
+ZToNCg0KPiBNYXR0aGV3LA0KPiANCj4gQW55IGZlZWRiYWNrIHRvIGFwcGx5IG9uIHRoaXM/DQoN
+CkkgdGhpbmsgdGhpcyBhcHByb2FjaCAobm90IG92ZXJsb2FkaW5nIHRoZSBicmlnaHRuZXNzIGF0
+dHJpYnV0ZSkgaXMgYQ0KbXVjaCBiZXR0ZXIgb25lLCB0aGFua3MuIEkgaGF2ZSB0aGlzIHF1ZXVl
+ZCwgSSdsbCBzZW5kIExpbnVzIGEgUFIgaW4gYQ0KY291cGxlIG9mIGRheXMgb25jZSBJJ3ZlIHNv
+cnRlZCBvdXQgYSBjb3VwbGUgb2YgdW5yZWxhdGVkIHRoaW5ncy4NCg0KLS0gDQpNYXR0aGV3IEdh
+cnJldHQgPG1hdHRoZXcuZ2FycmV0dEBuZWJ1bGEuY29tPg0K
