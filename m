@@ -1,60 +1,27 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: [PATCH 1/1] alienware-wmi: cover some scenarios where memory allocations would fail
-Date: Fri,  4 Apr 2014 14:40:20 -0500
-Message-ID: <1396640420-9777-2-git-send-email-mario_limonciello@dell.com>
-References: <1396640420-9777-1-git-send-email-mario_limonciello@dell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1396640420-9777-1-git-send-email-mario_limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthew.garrett@nebula.com
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: "Kalifah" <hamed@emirates.net.ae>
+Subject: Hello from Mr. Kalifa
+Date: Thu, 3 Apr 2014 12:05:19 +0900
+Message-ID: <23e133fbcf573f2e7639e1bbb3623729.squirrel@27.120.111.13>
+Reply-To: groll_8@rediffmail.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from v-27-120-111-13.ub-freebit.net ([27.120.111.13]:35087 "EHLO
+	ns.cpanel.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1753512AbaDEDgd (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 4 Apr 2014 23:36:33 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-Intel test builder caught a few instances that should test if kzalloc failed to
-allocate memory as well as a scenario that platform_driver wasn't properly
-initialized.
 
-Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
----
- drivers/platform/x86/alienware-wmi.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 3e17e99..541f951 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -368,12 +368,20 @@ static int alienware_zone_init(struct platform_device *dev)
- 	zone_dev_attrs =
- 	    kzalloc(sizeof(struct device_attribute) * (quirks->num_zones + 1),
- 		    GFP_KERNEL);
-+	if (!zone_dev_attrs)
-+		return -ENOMEM;
-+
- 	zone_attrs =
- 	    kzalloc(sizeof(struct attribute *) * (quirks->num_zones + 2),
- 		    GFP_KERNEL);
-+	if (!zone_attrs)
-+		return -ENOMEM;
-+
- 	zone_data =
- 	    kzalloc(sizeof(struct platform_zone) * (quirks->num_zones),
- 		    GFP_KERNEL);
-+	if (!zone_data)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < quirks->num_zones; i++) {
- 		sprintf(buffer, "zone%02X", i);
-@@ -546,9 +554,9 @@ module_init(alienware_wmi_init);
- 
- static void __exit alienware_wmi_exit(void)
- {
--	alienware_zone_exit(platform_device);
--	remove_hdmi(platform_device);
- 	if (platform_device) {
-+		alienware_zone_exit(platform_device);
-+		remove_hdmi(platform_device);
- 		platform_device_unregister(platform_device);
- 		platform_driver_unregister(&platform_driver);
- 	}
--- 
-1.9.1
+
+Good day,
+Please can I talk to you about interesting business deal?
+I will be happy if you permit.
+I wait to hear from you soon.
+
+Regards,
+Kalifah
