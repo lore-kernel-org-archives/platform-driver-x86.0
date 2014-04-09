@@ -1,41 +1,26 @@
-From: "Webmail" <Administrador@matinhos.pr.gov.br>
-Subject: =?utf-8?q?atualiza=C3=A7=C3=A3o_conta_de_e-mail?=
-Date: Mon, 07 Apr 2014 13:15:22 -0400
-Message-ID: <20140407171423.52F99A91C325__20671.4352396832$1396892325$gmane$org@srvmail.pinhais.pr.gov.br>
-Reply-To: kayamutlu@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2 0/1] thinkpad_acpi: Add mappings for F9 - F12 hotkeys on X240 / T440 / T540
+Date: Wed,  9 Apr 2014 11:46:45 +0200
+Message-ID: <1397036806-31106-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from srvmail.pinhais.pr.gov.br ([177.21.245.69]:63731 "EHLO
-	srvmail.pinhais.pr.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753162AbaDGRiM convert rfc822-to-8bit (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:30784 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932755AbaDIJqu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Apr 2014 13:38:12 -0400
-Content-Description: Mail message body
+	Wed, 9 Apr 2014 05:46:50 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <Administrador@matinhos.pr.gov.br>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org
 
-Aten=E7=E3o do usu=E1rio,
+Hi,
 
-Voc=EA excedeu o limite de armazenamento para mensagens, =E9 importante=
- que voc=EA renovar o seu armazenamento de e-mail para o novo 5.0GB par=
-a o uso efetivo das novas funcionalidades do webmail.
-Para renovar e aumentar o armazenamento, voc=EA deve validar o seu webm=
-ail. Sem essa valida=E7=E3o, voc=EA n=E3o pode enviar e receber novas m=
-ensagens mais rapidamente.
+This patch seems to have fallen through the cracks, so here is a resend.
 
-Por favor, validar suas informa=E7=F5es no link abaixo;
+While at it I've also updated the comment / commit msg to reflect that these
+new keys can not just be found on the T440 but also on the X240 and T540,
+hence the v2.
 
-http://accountupdateonlines.weebly.com/
+Regards,
 
-Esta mensagem =E9 a partir do departamento de manuten=E7=E3o de webmail=
- e estamos ansiosos para atend=EA-lo melhor.
-
-Obrigado por utilizar nossos servi=E7os
-
-gest=E3o web
-
-Email: webmaster@webmail.br
-Tel: +55 (11) 3509 8200
+Hans
