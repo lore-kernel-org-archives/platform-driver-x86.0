@@ -1,54 +1,51 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: Add WMI driver for controlling AlienFX features on some Alienware
- products
-Date: Wed, 09 Apr 2014 10:50:49 -0500
-Message-ID: <53456C59.9080300@dell.com>
-References: <20140409152001.GA24536@mwanda>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH 1/4] thinkpad_acpi: Add support for
+ controlling charge thresholds
+Date: Wed, 9 Apr 2014 15:00:49 -0300
+Message-ID: <20140409180048.GA22476@khazad-dum.debian.net>
+References: <1384178195-12218-1-git-send-email-jak@jak-linux.org>
+ <1384178195-12218-2-git-send-email-jak@jak-linux.org>
+ <20131230132915.GB24241@jak-x230>
+ <20131230215843.GB4938@khazad-dum.debian.net>
+ <20131230224045.GC4938@khazad-dum.debian.net>
+ <20131231000115.GA28120@jak-x230>
+ <20131231121231.GB25729@khazad-dum.debian.net>
+ <20131231224605.GA32669@jak-x230>
+ <20140406121456.GA8980@jak-x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ausxippc101.us.dell.com ([143.166.85.207]:46542 "EHLO
-	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933129AbaDIPvC (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:58729 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1758261AbaDISBG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Apr 2014 11:51:02 -0400
-In-Reply-To: <20140409152001.GA24536@mwanda>
+	Wed, 9 Apr 2014 14:01:06 -0400
+Received: from compute3.internal (compute3.nyi.mail.srv.osa [10.202.2.43])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 5F62B212BC
+	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Apr 2014 14:01:00 -0400 (EDT)
+Content-Disposition: inline
+In-Reply-To: <20140406121456.GA8980@jak-x230>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Julian Andres Klode <jak@jak-linux.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>, "open list:THINKPAD ACPI EXT..." <ibm-acpi-devel@lists.sourceforge.net>, "open list:THINKPAD ACPI EXT..." <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 
+On Sun, 06 Apr 2014, Julian Andres Klode wrote:
+> OK, tommorow is now, 4 months later. I was to busy with
+> lectures. An updated patch is below that passes my small
+> test suite.
+> 
+> The next step is to integrate this properly with power supply
+> and/or acpi battery. One way would be to add additional power
+> supply properties and then add get/set_property() pointers to
+> the acpi battery which it can fall back to if it does not support
+> a requested property (and we would locate the ACPI battery and
+> set those pointers to new thinkpad_acpi functions).
 
-On 04/09/2014 10:20 AM, Dan Carpenter wrote:
-> Hello Mario Limonciello,
->
-> This is a semi-automatic email about new static checker warnings.
->
-> The patch d17a5ee12973: "Add WMI driver for controlling AlienFX
-> features on some Alienware products" from Apr 4, 2014, leads to the
-> following Smatch complaint:
->
-> drivers/platform/x86/alienware-wmi.c:551 alienware_wmi_exit()
-> 	 warn: variable dereferenced before check 'platform_device' (see line 549)
->
-> drivers/platform/x86/alienware-wmi.c
->     548	{
->     549		alienware_zone_exit(platform_device);
->                                      ^^^^^^^^^^^^^^^
->     550		remove_hdmi(platform_device);
->                              ^^^^^^^^^^^^^^^
->     551		if (platform_device) {
->                      ^^^^^^^^^^^^^^^
->     552			platform_device_unregister(platform_device);
->     553			platform_driver_unregister(&platform_driver);
->
-> regards,
-> dan carpenter
-Hi Dan,
+Well, when you feel it is ready enough, please send a new version of the
+entire changeset, with all changes (and label it v2 or something).
 
-Thanks for letting me know.  I did submit a follow up patch for this behavior here a few days ago:
-
-http://www.spinics.net/lists/platform-driver-x86/msg05233.html
-
-Thanks,
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
