@@ -1,53 +1,108 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 0/1] thinkpad_acpi: Add mappings for F9 - F12 hotkeys
- on X240 / T440 / T540
-Date: Thu, 10 Apr 2014 10:17:02 +0200
-Message-ID: <5346537E.6010201@redhat.com>
-References: <1397036806-31106-1-git-send-email-hdegoede@redhat.com> <20140409180300.GB22476@khazad-dum.debian.net> <20140409182758.GA3196@srcf.ucam.org> <20140410001221.GA23977@khazad-dum.debian.net>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [GIT PULL] X86 platform driver updates
+Date: Thu, 10 Apr 2014 17:19:27 +0100
+Message-ID: <20140410161927.GA29203@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:1390 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S965506AbaDJIRL (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 10 Apr 2014 04:17:11 -0400
-In-Reply-To: <20140410001221.GA23977@khazad-dum.debian.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: torvalds@linux-foundation.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 04/10/2014 02:12 AM, Henrique de Moraes Holschuh wrote:
-> On Wed, 09 Apr 2014, Matthew Garrett wrote:
->> On Wed, Apr 09, 2014 at 03:03:01PM -0300, Henrique de Moraes Holschuh wrote:
->>> On Wed, 09 Apr 2014, Hans de Goede wrote:
->>>> This patch seems to have fallen through the cracks, so here is a resend.
->>>
->>> Sort of.  There was a doubt about one of the keycodes.
->>
->> I think I'm ok with the keycode.
-> 
-> Ok.  Now, provided that it doesn't clash with the other thinkpads (in which
-> case we'd just add selective keymaps), we can merge.
+Support for the new keyboard features on the Thinkpad Carbon, a bunch of 
+updates for the Sony and Toshiba drivers, a new driver for upcoming 
+Alienware hardware and a few misc fixes. There's a couple of patches 
+that got Acked today but aren't invasive, so I'll send a further PR for 
+them next week.
 
-It does not clash with the new Carbon X1 2nd generation stuff, see:
-http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/drivers/platform/x86/thinkpad_acpi.c?id=8f5f86abc6593b6d600712435e2f24a7a098b951
+The following changes since commit 18a1a7a1d862ae0794a0179473d08a414dd49234:
 
-Basically the new stuff uses hotkey codes >= TPACPI_HOTKEY_MAP_LEN,
-where as my patch adds mappings for codes < TPACPI_HOTKEY_MAP_LEN.
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/cmetcalf/linux-tile (2014-04-06 08:11:57 -0700)
 
-(Where TPACPI_HOTKEY_MAP_LEN == 32)
+are available in the git repository at:
 
-> Heck, we can fix that later too, it doesn't count as an ABI break, these
-> keymaps are _already_ configurable from userspace _and_ usually reconfigured
-> by userspace, the driver just tries to provide sane defaults.  So...
-> 
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-Thanks & Regards,
+  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
 
-Hans
+for you to fetch changes up to 562c7cec1e92be85ade6f65fff107651e10ee2ed:
+
+  alienware-wmi: cover some scenarios where memory allocations would fail (2014-04-10 12:11:56 -0400)
+
+----------------------------------------------------------------
+Azael Avalos (7):
+      toshiba_acpi: Add System Configuration Interface
+      toshiba_acpi: Adapt Illumination code to use SCI
+      toshiba_acpi: Add keyboard backlight support
+      toshiba_acpi: Add touchpad enable/disable support-
+      toshiba_acpi: Add ECO mode led support
+      toshiba_acpi: Add accelerometer support
+      toshiba_acpi: Update version and copyright info
+
+Behan Webster (1):
+      x86, acpi: LLVMLinux: Remove nested functions from Thinkpad ACPI
+
+Borislav Petkov (1):
+      x86, platform: Make HP_WIRELESS option text more descriptive
+
+David E. Box (1):
+      Revert "X86 platform: New BayTrail IOSF-SB MBI driver"
+
+Javier Achirica (8):
+      sony-laptop: add support as Fn+1 as a hot key
+      sony-laptop: Add support for lid resume settings on Vaio Pro
+      sony-laptop: add panel_id function
+      sony-laptop: add usb charge function
+      sony-laptop: add fan speed regulation function
+      sony-laptop: add hibernate on low battery function
+      sony-laptop: adjust keyboard backlight values for off/auto/on
+      sony-laptop: add smart connect control function
+
+Jean Delvare (1):
+      sonypi: Simplify dependencies
+
+Mario Limonciello (2):
+      Add WMI driver for controlling AlienFX features on some Alienware products
+      alienware-wmi: cover some scenarios where memory allocations would fail
+
+Matthew Garrett (1):
+      toshiba_acpi: Fix whitespace
+
+Mattia Dongili (1):
+      sony-laptop: remove useless sony-laptop versioning
+
+Scott K Logan (1):
+      fujitsu-tablet: add support for Lifebook T901 and T902
+
+Shuduo Sang (2):
+      support Thinkpad X1 Carbon 2nd generation's adaptive keyboard
+      save and restore adaptive keyboard mode for suspend and,resume
+
+Stefan Seyfried (1):
+      Fix sleep / suspend keys for Toughbook CF-51
+
+Takashi Iwai (1):
+      thinkpad_acpi: Fix inconsistent mute LED after resume
+
+ drivers/char/Kconfig                    |   2 +-
+ drivers/platform/x86/Kconfig            |  22 +-
+ drivers/platform/x86/Makefile           |   2 +-
+ drivers/platform/x86/alienware-wmi.c    | 565 ++++++++++++++++++++++++++++
+ drivers/platform/x86/fujitsu-tablet.c   |  65 ++++
+ drivers/platform/x86/intel_baytrail.c   | 224 -----------
+ drivers/platform/x86/intel_baytrail.h   |  90 -----
+ drivers/platform/x86/panasonic-laptop.c |  11 +
+ drivers/platform/x86/sony-laptop.c      | 539 ++++++++++++++++++++++++---
+ drivers/platform/x86/thinkpad_acpi.c    | 227 +++++++++---
+ drivers/platform/x86/toshiba_acpi.c     | 635 +++++++++++++++++++++++++++++---
+ 11 files changed, 1901 insertions(+), 481 deletions(-)
+ create mode 100644 drivers/platform/x86/alienware-wmi.c
+ delete mode 100644 drivers/platform/x86/intel_baytrail.c
+ delete mode 100644 drivers/platform/x86/intel_baytrail.h
+
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
