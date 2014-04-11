@@ -1,108 +1,105 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PULL] X86 platform driver updates
-Date: Thu, 10 Apr 2014 17:19:27 +0100
-Message-ID: <20140410161927.GA29203@srcf.ucam.org>
+From: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH] support thinkpad HKEY interface
+	version 0x200
+Date: Fri, 11 Apr 2014 21:55:24 +0800
+Message-ID: <CA+BAWBTb6Z1g-kNsyeAKAGjoUR1vXu3ZC33R+BO3+WH=64USoQ@mail.gmail.com>
+References: <531F0073.7060103@canonical.com>
+	<20140403154427.GB32027@khazad-dum.debian.net>
+	<CANqatMD2F-XCSZHoFaOsDA3o1JkVG2kLccYLr-=Z7b-cmC-6oA@mail.gmail.com>
+	<1397223816.5276.34.camel@x230>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1468848482006853779=="
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1397223816.5276.34.camel@x230>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+Cc: "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Linus,
+--===============1468848482006853779==
+Content-Type: multipart/alternative; boundary=089e013d0502ddb76d04f6c4b119
 
-Support for the new keyboard features on the Thinkpad Carbon, a bunch of 
-updates for the Sony and Toshiba drivers, a new driver for upcoming 
-Alienware hardware and a few misc fixes. There's a couple of patches 
-that got Acked today but aren't invasive, so I'll send a further PR for 
-them next week.
+--089e013d0502ddb76d04f6c4b119
+Content-Type: text/plain; charset=UTF-8
 
-The following changes since commit 18a1a7a1d862ae0794a0179473d08a414dd49234:
+On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org
+> wrote:
 
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/cmetcalf/linux-tile (2014-04-06 08:11:57 -0700)
-
-are available in the git repository at:
-
-
-  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
-
-for you to fetch changes up to 562c7cec1e92be85ade6f65fff107651e10ee2ed:
-
-  alienware-wmi: cover some scenarios where memory allocations would fail (2014-04-10 12:11:56 -0400)
-
-----------------------------------------------------------------
-Azael Avalos (7):
-      toshiba_acpi: Add System Configuration Interface
-      toshiba_acpi: Adapt Illumination code to use SCI
-      toshiba_acpi: Add keyboard backlight support
-      toshiba_acpi: Add touchpad enable/disable support-
-      toshiba_acpi: Add ECO mode led support
-      toshiba_acpi: Add accelerometer support
-      toshiba_acpi: Update version and copyright info
-
-Behan Webster (1):
-      x86, acpi: LLVMLinux: Remove nested functions from Thinkpad ACPI
-
-Borislav Petkov (1):
-      x86, platform: Make HP_WIRELESS option text more descriptive
-
-David E. Box (1):
-      Revert "X86 platform: New BayTrail IOSF-SB MBI driver"
-
-Javier Achirica (8):
-      sony-laptop: add support as Fn+1 as a hot key
-      sony-laptop: Add support for lid resume settings on Vaio Pro
-      sony-laptop: add panel_id function
-      sony-laptop: add usb charge function
-      sony-laptop: add fan speed regulation function
-      sony-laptop: add hibernate on low battery function
-      sony-laptop: adjust keyboard backlight values for off/auto/on
-      sony-laptop: add smart connect control function
-
-Jean Delvare (1):
-      sonypi: Simplify dependencies
-
-Mario Limonciello (2):
-      Add WMI driver for controlling AlienFX features on some Alienware products
-      alienware-wmi: cover some scenarios where memory allocations would fail
-
-Matthew Garrett (1):
-      toshiba_acpi: Fix whitespace
-
-Mattia Dongili (1):
-      sony-laptop: remove useless sony-laptop versioning
-
-Scott K Logan (1):
-      fujitsu-tablet: add support for Lifebook T901 and T902
-
-Shuduo Sang (2):
-      support Thinkpad X1 Carbon 2nd generation's adaptive keyboard
-      save and restore adaptive keyboard mode for suspend and,resume
-
-Stefan Seyfried (1):
-      Fix sleep / suspend keys for Toughbook CF-51
-
-Takashi Iwai (1):
-      thinkpad_acpi: Fix inconsistent mute LED after resume
-
- drivers/char/Kconfig                    |   2 +-
- drivers/platform/x86/Kconfig            |  22 +-
- drivers/platform/x86/Makefile           |   2 +-
- drivers/platform/x86/alienware-wmi.c    | 565 ++++++++++++++++++++++++++++
- drivers/platform/x86/fujitsu-tablet.c   |  65 ++++
- drivers/platform/x86/intel_baytrail.c   | 224 -----------
- drivers/platform/x86/intel_baytrail.h   |  90 -----
- drivers/platform/x86/panasonic-laptop.c |  11 +
- drivers/platform/x86/sony-laptop.c      | 539 ++++++++++++++++++++++++---
- drivers/platform/x86/thinkpad_acpi.c    | 227 +++++++++---
- drivers/platform/x86/toshiba_acpi.c     | 635 +++++++++++++++++++++++++++++---
- 11 files changed, 1901 insertions(+), 481 deletions(-)
- create mode 100644 drivers/platform/x86/alienware-wmi.c
- delete mode 100644 drivers/platform/x86/intel_baytrail.c
- delete mode 100644 drivers/platform/x86/intel_baytrail.h
+> On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sang wrote:
+> > Hi Matthew,
+> >
+> > This patch is not in your recent for_linus branch. Why?
+>
+> I'm sorry, I'd somehow missed it. I'll get it in the next pull.
+>
+>
+Thanks!
 
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+>  --
+> Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+>
+
+--089e013d0502ddb76d04f6c4b119
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><br><div class=3D"gmail=
+_quote">On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett <span dir=3D"ltr">=
+&lt;<a href=3D"mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org" target=3D"_blank">matthew=
+.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sa=
+ng wrote:<br>
+&gt; Hi Matthew,<br>
+&gt;<br>
+&gt; This patch is not in your recent for_linus branch. Why?<br>
+<br>
+I&#39;m sorry, I&#39;d somehow missed it. I&#39;ll get it in the next pull.=
+<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br></font></span></blockquo=
+te><div><br></div><div>Thanks!</div><div>=C2=A0</div><blockquote class=3D"g=
+mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
+eft:1ex">
+
+<span class=3D"HOEnZb"><font color=3D"#888888">
+--<br>
+Matthew Garrett &lt;<a href=3D"mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org">matthew.g=
+arrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org</a>&gt;<br>
+</font></span></blockquote></div><br></div></div>
+
+--089e013d0502ddb76d04f6c4b119--
+
+
+--===============1468848482006853779==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+------------------------------------------------------------------------------
+Put Bad Developers to Shame
+Dominate Development with Jenkins Continuous Integration
+Continuously Automate Build, Test & Deployment 
+Start a new project now. Try Jenkins in the cloud.
+http://p.sf.net/sfu/13600_Cloudbees
+--===============1468848482006853779==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+ibm-acpi-devel mailing list
+ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
+
+--===============1468848482006853779==--
