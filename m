@@ -1,105 +1,51 @@
-From: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH] support thinkpad HKEY interface
-	version 0x200
-Date: Fri, 11 Apr 2014 21:55:24 +0800
-Message-ID: <CA+BAWBTb6Z1g-kNsyeAKAGjoUR1vXu3ZC33R+BO3+WH=64USoQ@mail.gmail.com>
-References: <531F0073.7060103@canonical.com>
-	<20140403154427.GB32027@khazad-dum.debian.net>
-	<CANqatMD2F-XCSZHoFaOsDA3o1JkVG2kLccYLr-=Z7b-cmC-6oA@mail.gmail.com>
-	<1397223816.5276.34.camel@x230>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1468848482006853779=="
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1397223816.5276.34.camel@x230>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
-Cc: "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 1/1] toshiba_acpi: Silence build testing warnings
+Date: Sun, 13 Apr 2014 16:30:23 -0600
+Message-ID: <1397428223-2880-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f178.google.com ([209.85.214.178]:44157 "EHLO
+	mail-ob0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750795AbaDMWbe (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 13 Apr 2014 18:31:34 -0400
+Received: by mail-ob0-f178.google.com with SMTP id wp18so8439436obc.9
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Apr 2014 15:31:33 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
---===============1468848482006853779==
-Content-Type: multipart/alternative; boundary=089e013d0502ddb76d04f6c4b119
+Intel test builder caught some warnings, one at the
+KBD backlight mode store while validating for
+correct parameters, and another one that might lead
+to not creating the sysfs group
 
---089e013d0502ddb76d04f6c4b119
-Content-Type: text/plain; charset=UTF-8
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org
-> wrote:
-
-> On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sang wrote:
-> > Hi Matthew,
-> >
-> > This patch is not in your recent for_linus branch. Why?
->
-> I'm sorry, I'd somehow missed it. I'll get it in the next pull.
->
->
-Thanks!
-
-
->  --
-> Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
->
-
---089e013d0502ddb76d04f6c4b119
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><br><div class=3D"gmail=
-_quote">On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett <span dir=3D"ltr">=
-&lt;<a href=3D"mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org" target=3D"_blank">matthew=
-.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org</a>&gt;</span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sa=
-ng wrote:<br>
-&gt; Hi Matthew,<br>
-&gt;<br>
-&gt; This patch is not in your recent for_linus branch. Why?<br>
-<br>
-I&#39;m sorry, I&#39;d somehow missed it. I&#39;ll get it in the next pull.=
-<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br></font></span></blockquo=
-te><div><br></div><div>Thanks!</div><div>=C2=A0</div><blockquote class=3D"g=
-mail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-l=
-eft:1ex">
-
-<span class=3D"HOEnZb"><font color=3D"#888888">
---<br>
-Matthew Garrett &lt;<a href=3D"mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org">matthew.g=
-arrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org</a>&gt;<br>
-</font></span></blockquote></div><br></div></div>
-
---089e013d0502ddb76d04f6c4b119--
-
-
---===============1468848482006853779==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-------------------------------------------------------------------------------
-Put Bad Developers to Shame
-Dominate Development with Jenkins Continuous Integration
-Continuously Automate Build, Test & Deployment 
-Start a new project now. Try Jenkins in the cloud.
-http://p.sf.net/sfu/13600_Cloudbees
---===============1468848482006853779==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ibm-acpi-devel mailing list
-ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
-
---===============1468848482006853779==--
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index fbbe46d..f397594 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1218,7 +1218,7 @@ static ssize_t toshiba_kbd_bl_mode_store(struct device *dev,
+ 	int mode = -1;
+ 	int time = -1;
+ 
+-	if (sscanf(buf, "%i", &mode) != 1 && (mode != 2 || mode != 1))
++	if (sscanf(buf, "%i", &mode) != 1 && (mode > 2 || mode < 1))
+ 		return -EINVAL;
+ 
+ 	/* Set the Keyboard Backlight Mode where:
+@@ -1741,7 +1741,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
+ 				 &toshiba_attr_group);
+-	if (ret) {
++	if (ret != 0) {
+ 		dev->sysfs_created = 0;
+ 		goto error;
+ 	}
+-- 
+1.9.1
