@@ -1,54 +1,48 @@
-From: Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH v2] platform-drivers-x86: intel_pmic_gpio: Fix off-by-one
- valid offset range check
-Date: Tue, 15 Apr 2014 10:54:11 +0800
-Message-ID: <1397530451.9964.0.camel@phoenix>
+From: "Du, Alek" <alek.du@intel.com>
+Subject: RE: [PATCH v2] platform-drivers-x86: intel_pmic_gpio: Fix
+ off-by-one valid offset range check
+Date: Tue, 15 Apr 2014 05:08:41 +0000
+Message-ID: <09F19C497AD02E4EA4E14917772649B7118F93ED@SHSMSX104.ccr.corp.intel.com>
+References: <1397530451.9964.0.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ve0-f171.google.com ([209.85.128.171]:57202 "EHLO
-	mail-ve0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750790AbaDOCyR (ORCPT
+Received: from mga02.intel.com ([134.134.136.20]:8718 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750791AbaDOFJI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Apr 2014 22:54:17 -0400
-Received: by mail-ve0-f171.google.com with SMTP id jy13so8435531veb.16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Apr 2014 19:54:16 -0700 (PDT)
+	Tue, 15 Apr 2014 01:09:08 -0400
+In-Reply-To: <1397530451.9964.0.camel@phoenix>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Alek Du <alek.du@intel.com>, platform-driver-x86@vger.kernel.org
+To: Axel Lin <axel.lin@ingics.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Only pin 0-7 support input, so the valid offset range should be 0 ~ 7.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
-This is v2 of "[PATCH] platform-drivers: x86: Fix off-by-one valid offset range checking"
-
- drivers/platform/x86/intel_pmic_gpio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
-index 2805988..40929e4 100644
---- a/drivers/platform/x86/intel_pmic_gpio.c
-+++ b/drivers/platform/x86/intel_pmic_gpio.c
-@@ -91,7 +91,7 @@ static void pmic_program_irqtype(int gpio, int type)
- 
- static int pmic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- {
--	if (offset > 8) {
-+	if (offset >= 8) {
- 		pr_err("only pin 0-7 support input\n");
- 		return -1;/* we only have 8 GPIO can use as input */
- 	}
-@@ -130,7 +130,7 @@ static int pmic_gpio_get(struct gpio_chip *chip, unsigned offset)
- 	int ret;
- 
- 	/* we only have 8 GPIO pins we can use as input */
--	if (offset > 8)
-+	if (offset >= 8)
- 		return -EOPNOTSUPP;
- 	ret = intel_scu_ipc_ioread8(GPIO0 + offset, &r);
- 	if (ret < 0)
--- 
-1.8.3.2
+VGhhbmtzISBMb29rcyBnb29kIGZvciBtZS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+CkZyb206IEF4ZWwgTGluIFttYWlsdG86YXhlbC5saW5AaW5naWNzLmNvbV0gDQpTZW50OiBUdWVz
+ZGF5LCBBcHJpbCAxNSwgMjAxNCAxMDo1NCBBTQ0KVG86IE1hdHRoZXcgR2FycmV0dA0KQ2M6IER1
+LCBBbGVrOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogW1BB
+VENIIHYyXSBwbGF0Zm9ybS1kcml2ZXJzLXg4NjogaW50ZWxfcG1pY19ncGlvOiBGaXggb2ZmLWJ5
+LW9uZSB2YWxpZCBvZmZzZXQgcmFuZ2UgY2hlY2sNCg0KT25seSBwaW4gMC03IHN1cHBvcnQgaW5w
+dXQsIHNvIHRoZSB2YWxpZCBvZmZzZXQgcmFuZ2Ugc2hvdWxkIGJlIDAgfiA3Lg0KDQpTaWduZWQt
+b2ZmLWJ5OiBBeGVsIExpbiA8YXhlbC5saW5AaW5naWNzLmNvbT4NCi0tLQ0KVGhpcyBpcyB2MiBv
+ZiAiW1BBVENIXSBwbGF0Zm9ybS1kcml2ZXJzOiB4ODY6IEZpeCBvZmYtYnktb25lIHZhbGlkIG9m
+ZnNldCByYW5nZSBjaGVja2luZyINCg0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtaWNf
+Z3Bpby5jIHwgNCArKy0tDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtaWNf
+Z3Bpby5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1pY19ncGlvLmMNCmluZGV4IDI4
+MDU5ODguLjQwOTI5ZTQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9w
+bWljX2dwaW8uYw0KKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1pY19ncGlvLmMN
+CkBAIC05MSw3ICs5MSw3IEBAIHN0YXRpYyB2b2lkIHBtaWNfcHJvZ3JhbV9pcnF0eXBlKGludCBn
+cGlvLCBpbnQgdHlwZSkNCiANCiBzdGF0aWMgaW50IHBtaWNfZ3Bpb19kaXJlY3Rpb25faW5wdXQo
+c3RydWN0IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgb2Zmc2V0KSAgew0KLQlpZiAob2Zmc2V0
+ID4gOCkgew0KKwlpZiAob2Zmc2V0ID49IDgpIHsNCiAJCXByX2Vycigib25seSBwaW4gMC03IHN1
+cHBvcnQgaW5wdXRcbiIpOw0KIAkJcmV0dXJuIC0xOy8qIHdlIG9ubHkgaGF2ZSA4IEdQSU8gY2Fu
+IHVzZSBhcyBpbnB1dCAqLw0KIAl9DQpAQCAtMTMwLDcgKzEzMCw3IEBAIHN0YXRpYyBpbnQgcG1p
+Y19ncGlvX2dldChzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBvZmZzZXQpDQogCWlu
+dCByZXQ7DQogDQogCS8qIHdlIG9ubHkgaGF2ZSA4IEdQSU8gcGlucyB3ZSBjYW4gdXNlIGFzIGlu
+cHV0ICovDQotCWlmIChvZmZzZXQgPiA4KQ0KKwlpZiAob2Zmc2V0ID49IDgpDQogCQlyZXR1cm4g
+LUVPUE5PVFNVUFA7DQogCXJldCA9IGludGVsX3NjdV9pcGNfaW9yZWFkOChHUElPMCArIG9mZnNl
+dCwgJnIpOw0KIAlpZiAocmV0IDwgMCkNCi0tDQoxLjguMy4yDQoNCg0KDQo=
