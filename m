@@ -1,57 +1,37 @@
-From: isabelle <contact_claude@isabelle.de>
-Subject: spende /Donation
-Date: Tue, 15 Apr 2014 21:47:38 +0200
-Message-ID: <yx4Sef42JyeoopbQKx5pAipXLBt1prSNuXPiRcWu1Nis__42740.1525936604$1397596573$gmane$org@isabelle.de>
-Reply-To: isabelle.claude654@laposte.net
+From: "Gillian and Adrain Bayford" <bayford@msn.com>
+Subject: Grant
+Date: Wed, 16 Apr 2014 06:15:49 -0600
+Message-ID: <201404161217.s3GBgBre014265@smtpb12.isg.siue.edu>
+Reply-To: gillianandadrianb@rogers.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1;
-	format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from vps22121.lws-hosting.com ([192.162.68.139]:47016 "EHLO
-	vps22121.lws-hosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750970AbaDOVPu convert rfc822-to-8bit (ORCPT
+Received: from oitdrs2.isg.siue.edu ([146.163.5.102]:45299 "EHLO
+	oitdrs2.isg.siue.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755300AbaDPMy3 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Apr 2014 17:15:50 -0400
+	Wed, 16 Apr 2014 08:54:29 -0400
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <bayford@msn.com>
 
-Hallo
-Wenn ich diese Nachricht zu senden wollte, ist dies nicht einfach Zufal=
-l. Dies ist, weil Ihre e-Mail vom elektronischen Roboter gesichert mein=
-e WX.7AR BW ausgew=E4hlt wurde.
-Zun=E4chst m=F6chte ich mich f=FCr dieses Eindringen in Ihr Leben zu en=
-tschuldigen, obwohl ich zugeben, dass es mir sehr wichtig. Ich bin Isab=
-elle Vasudev. Ich leide an Krebs im Hals seit nun mehr als 3 Jahre und =
-eine halbe und es leider, mein Arzt hat gerade informiert mich, dass ic=
-h bin voller unheilbar und, dass meine Tage, wegen meinen etwas gez=E4h=
-lt sind abgebaut Zustand. Ich bin eine Witwe und ich habe keine Kind, d=
-as ich beginne zu bedauern.
-In der Tat ist der Grund, warum ich Sie kontaktieren bin, m=F6chte ich =
-einen Teil von meinem Grundst=FCck zu spenden, weil ich niemand, wer di=
-e Erben konnte. Ich habe fast mein ganzes Zeug, darunter ein Unternehme=
-n der Export von Holz, Gummi und Stahl-Industrie in Afrika, wo ich wohn=
-e nun mehr 10 Jahren, verkauft. Ein gro=DFer Teil der Gelder gesammelt =
-wurde mit unterschiedlichen Verb=E4nden humanit=E4ren Charakter =FCbera=
-ll in der Welt, aber besonders hier in Afrika bezahlt.
-Im Hinblick auf den Rest der Summe genau in H=F6he von 750.000, 00euros=
- (sieben hundert und f=FCnfzig tausend Euro) auf eine gesperrte Mitarbe=
-iter-Account, meine letzte w=FCnschen w=FCrde Sie es spenden, so dass S=
-ie in Ihrer Branche und vor allem den humanit=E4ren investieren k=F6nne=
-n. Ich bin ganz bewusst was ich zu tun beabsichtigen, und ich denke, tr=
-otz der Tatsache, die wir nicht wissen, werdet ihr diese Summe gut nutz=
-en. Ich bitte Sie, bitte dieses Erbe zu akzeptieren, ohne jedoch Fragen=
- Sie alles, was in zur=FCckgeben wenn es nicht immer denken, gutes zu t=
-un, um dich herum, was ich nicht getan habe, in meiner Existenz.
-Das hei=DFt, wird auf einer verantwortlichen Person und besonders gutem=
- Glauben fallen zu lassen beruhigt, ich m=F6chte bitten, dass Sie bitte=
- mich bei den meisten schnell kontaktieren, um weitere Erkl=E4rung =FCb=
-er die Gr=FCnde f=FCr meine Geste und den Verlauf der Dinge zu geben. B=
-itte kontaktieren Sie mich so bald wie m=F6glich, wenn Sie mein Angebot=
- akzeptieren.
-Gott m=F6ge mit dir sein!
-Ich fordere Sie auf, mich =FCber meine pers=F6nliche e-Mail-Adresse zu =
-kontaktieren:
-Isabelle.claude654@laposte.net
-Der Frieden und Barmherzigkeit Gottes m=F6ge mit dir sein.
-Mrs Isabelle
+My wife and i won =A3148.6 Million Pounds last year, and we have done l=
+ot of=20
+
+charity donation, so we decide to give 1.5Million Pounds each to 5 luck=
+y=20
+
+people  2014, lucky for you, your email, was given to us by google mana=
+gment=20
+
+as one of our lucky receipants.=20
+
+=46or verification process see below
+Please read the article - http://www.bbc.co.uk/news/uk-england-19254228
+
+Send Name, Country, Age, Occupation and Phone Number for details
+
+Congratulations & Happy Celebrations in Advance,
+Gillian and Adrian Bayford
