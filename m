@@ -1,46 +1,26 @@
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+From: Matthew Garrett <matthew.garrett@nebula.com>
 Subject: Re: [PATCH v2] mba6x_bl: Backlight driver for mid 2013 MacBook Air
-Date: Mon, 5 May 2014 22:26:20 +0200
-Message-ID: <CAMeQTsZriJatEY7cd7BsrNfnQ7FhEFN_afbdDFuKjzwk7dxCDw@mail.gmail.com>
+Date: Mon, 5 May 2014 18:28:24 +0000
+Message-ID: <1399314503.17557.0.camel@x230.lan>
 References: <1398781312-3607-1-git-send-email-patrik.r.jakobsson@gmail.com>
-	<CAMeQTsYA0tGQ1SfhNhMctPW6H_y1NGjGXsM5ZcMSwOqE-bApyg@mail.gmail.com>
-	<1399314503.17557.0.camel@x230.lan>
+	 <CAMeQTsYA0tGQ1SfhNhMctPW6H_y1NGjGXsM5ZcMSwOqE-bApyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f47.google.com ([209.85.215.47]:36623 "EHLO
-	mail-la0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752411AbaEEU0W (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 5 May 2014 16:26:22 -0400
-In-Reply-To: <1399314503.17557.0.camel@x230.lan>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMeQTsYA0tGQ1SfhNhMctPW6H_y1NGjGXsM5ZcMSwOqE-bApyg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <54BB4096199C4146AB881DD6EA09B48C@namprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>
 Cc: "hdegoede@redhat.com" <hdegoede@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 5, 2014 at 8:28 PM, Matthew Garrett
-<matthew.garrett@nebula.com> wrote:
-> On Mon, 2014-05-05 at 16:49 +0200, Patrik Jakobsson wrote:
->> Hi Matthew,
->>
->> This seems to be in good shape. Do you have anything to add?
->> If not, can you pick this patch up through platform-drivers-x86?
->
-> I'm a bit reluctant. Do we have any evidence that this is the way OS X
-> behaves? What's the actual difference in state before and after suspend?
-
-I cannot see any change in state on either the LP8550 or on the Intel GPU side.
-Both me and Jani have twisted our heads around this but cannot see anything
-wrong. The ACPI methods only trigger the opregion so that's a dead end as well.
-My guess is that OSX is quirking this in the GPU driver which is something that
-doesn't belong in i915.
-
-So unfortunately, this is the best approach I can come up with without probing
-the signal or reversing the OSX GPU driver.
-
-Thanks
-Patrik
-
-> --
-> Matthew Garrett <matthew.garrett@nebula.com>
+T24gTW9uLCAyMDE0LTA1LTA1IGF0IDE2OjQ5ICswMjAwLCBQYXRyaWsgSmFrb2Jzc29uIHdyb3Rl
+Og0KPiBIaSBNYXR0aGV3LA0KPiANCj4gVGhpcyBzZWVtcyB0byBiZSBpbiBnb29kIHNoYXBlLiBE
+byB5b3UgaGF2ZSBhbnl0aGluZyB0byBhZGQ/DQo+IElmIG5vdCwgY2FuIHlvdSBwaWNrIHRoaXMg
+cGF0Y2ggdXAgdGhyb3VnaCBwbGF0Zm9ybS1kcml2ZXJzLXg4Nj8NCg0KSSdtIGEgYml0IHJlbHVj
+dGFudC4gRG8gd2UgaGF2ZSBhbnkgZXZpZGVuY2UgdGhhdCB0aGlzIGlzIHRoZSB3YXkgT1MgWA0K
+YmVoYXZlcz8gV2hhdCdzIHRoZSBhY3R1YWwgZGlmZmVyZW5jZSBpbiBzdGF0ZSBiZWZvcmUgYW5k
+IGFmdGVyIHN1c3BlbmQ/DQoNCi0tIA0KTWF0dGhldyBHYXJyZXR0IDxtYXR0aGV3LmdhcnJldHRA
+bmVidWxhLmNvbT4NCg==
