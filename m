@@ -1,22 +1,136 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
- & X550CA
-Date: Tue, 6 May 2014 15:48:00 +0100
-Message-ID: <20140506144800.GA29600@srcf.ucam.org>
-References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com>
- <53684CF9.8020305@gmail.com>
- <5368F58C.1040702@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5368F58C.1040702@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: poma <pomidorabelisima@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org, kernel@lists.fedoraproject.org, andreas.utterberg@thundera.se, jwboyer@fedoraproject.org, sgruszka@redhat.com
-List-Id: platform-driver-x86.vger.kernel.org
+From: scott.thrasher@gmail.com
+Subject: [PATCH] platform/x86: samsung-laptop: Add support for Samsung's NP7[34]0U3E models.
+Date: Tue,  6 May 2014 08:06:42 -0700
+Message-ID: <1399388802-21882-1-git-send-email-scott.thrasher@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oa0-f41.google.com ([209.85.219.41]:51345 "EHLO
+	mail-oa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751981AbaEFPHP (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 6 May 2014 11:07:15 -0400
+Received: by mail-oa0-f41.google.com with SMTP id m1so7860447oag.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 May 2014 08:07:15 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: corentin.chary@gmail.com
+Cc: matthew.garret@nebula.com, platform-driver-x86@vger.kernel.org, Scott Thrasher <scott.thrasher@gmail.com>
 
-That's not being merged without a Signed-off-by:.
+From: Scott Thrasher <scott.thrasher@gmail.com>
 
+These models have only 4 levels of keyboard backlight brightness and forget
+how to work the backlight after resuming from S3 sleep. I've added a quirk
+to set the appropriate number of backlight levels, and one to re-enable the
+keyboard backlight on resume.
+
+	Signed-of-by: Scott Thrasher <scott.thrasher@gmail.com>
+
+---
+ drivers/platform/x86/samsung-laptop.c | 37 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index d1f03005..37f0106 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -27,6 +27,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/ctype.h>
+ #include <linux/efi.h>
++#include <linux/suspend.h>
+ #include <acpi/video.h>
+ 
+ /*
+@@ -340,6 +341,8 @@ struct samsung_laptop {
+ 	struct samsung_laptop_debug debug;
+ 	struct samsung_quirks *quirks;
+ 
++	struct notifier_block pm_nb;
++  
+ 	bool handle_backlight;
+ 	bool has_stepping_quirk;
+ 
+@@ -348,6 +351,8 @@ struct samsung_laptop {
+ 
+ struct samsung_quirks {
+ 	bool broken_acpi_video;
++	bool four_kbd_backlight_levels;
++	bool enable_kbd_backlight;
+ };
+ 
+ static struct samsung_quirks samsung_unknown = {};
+@@ -356,6 +361,11 @@ static struct samsung_quirks samsung_broken_acpi_video = {
+ 	.broken_acpi_video = true,
+ };
+ 
++static struct samsung_quirks samsung_np740u3e = {
++	.four_kbd_backlight_levels = true,
++	.enable_kbd_backlight = true,
++};
++
+ static bool force;
+ module_param(force, bool, 0);
+ MODULE_PARM_DESC(force,
+@@ -1051,6 +1061,8 @@ static int __init samsung_leds_init(struct samsung_laptop *samsung)
+ 		samsung->kbd_led.brightness_set = kbd_led_set;
+ 		samsung->kbd_led.brightness_get = kbd_led_get;
+ 		samsung->kbd_led.max_brightness = 8;
++		if(samsung->quirks->four_kbd_backlight_levels)
++			samsung->kbd_led.max_brightness = 4;
+ 
+ 		ret = led_classdev_register(&samsung->platform_device->dev,
+ 					   &samsung->kbd_led);
+@@ -1414,6 +1426,18 @@ static void samsung_platform_exit(struct samsung_laptop *samsung)
+ 	}
+ }
+ 
++static int samsung_pm_notification(struct notifier_block *nb, unsigned long val,
++		void *ptr) 
++{
++	struct samsung_laptop *samsung;
++	samsung = container_of(nb, struct samsung_laptop, pm_nb);
++	
++	if (val == PM_POST_HIBERNATION && samsung->quirks->enable_kbd_backlight) 
++		kbd_backlight_enable(samsung);
++
++	return 0;
++}
++
+ static int __init samsung_platform_init(struct samsung_laptop *samsung)
+ {
+ 	struct platform_device *pdev;
+@@ -1534,6 +1558,15 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 		},
+ 	 .driver_data = &samsung_broken_acpi_video,
+ 	},
++	{
++	 .callback = samsung_dmi_matched,
++	 .ident = "730U3E/740U3E",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "730U3E/740U3E"),
++		},
++	 .driver_data = &samsung_np740u3e, 
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
+@@ -1608,6 +1641,9 @@ static int __init samsung_init(void)
+ 	if (ret)
+ 		goto error_debugfs;
+ 
++	samsung->pm_nb.notifier_call = samsung_pm_notification;
++	register_pm_notifier(&samsung->pm_nb);
++
+ 	samsung_platform_device = samsung->platform_device;
+ 	return ret;
+ 
+@@ -1633,6 +1669,7 @@ static void __exit samsung_exit(void)
+ 	struct samsung_laptop *samsung;
+ 
+ 	samsung = platform_get_drvdata(samsung_platform_device);
++	unregister_pm_notifier(&samsung->pm_nb);
+ 
+ 	samsung_debugfs_exit(samsung);
+ 	samsung_leds_exit(samsung);
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.9.1
