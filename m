@@ -1,45 +1,29 @@
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] pvpanic: Set high notifier priority
-Date: Tue,  6 May 2014 17:52:26 +0200
-Message-ID: <1399391546-32101-1-git-send-email-tiwai@suse.de>
+From: poma <pomidorabelisima@gmail.com>
+Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
+ & X550CA
+Date: Tue, 06 May 2014 16:45:32 +0200
+Message-ID: <5368F58C.1040702@gmail.com>
+References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:41729 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757840AbaEFPwa (ORCPT
+Received: from mail-we0-f181.google.com ([74.125.82.181]:33790 "EHLO
+	mail-we0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751570AbaEFOpg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 May 2014 11:52:30 -0400
+	Tue, 6 May 2014 10:45:36 -0400
+In-Reply-To: <53684CF9.8020305@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Bruce Rogers <brogers@suse.com>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org, kernel@lists.fedoraproject.org, andreas.utterberg@thundera.se, jwboyer@fedoraproject.org, sgruszka@redhat.com
 
-We've observed the missing pvpanic call at panic, and it turned out
-that this was blocked by the broken notifier of drm_fb_helper, where
-scheduling may be called during switching to the fb console.
-It's fairly difficult to fix the drm_fb problem and a quick fix isn't
-foreseen, a simpler solution for the missing pvpanic call would be
-just to call this earlier.
 
-In order to assure that, this patch sets a higher priority to pvpanic
-notifier_block.  Once when the issue of drm_fb is resolved, we can
-remove this priority again.
+> Corentin, care to pick up this one?
+> https://bugzilla.redhat.com/attachment.cgi?id=892751
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/platform/x86/pvpanic.c | 1 +
- 1 file changed, 1 insertion(+)
+Matthew, who actually maintains the Asus Notebooks WMI Hotkey Driver i.e. 'asus-nb-wmi'?
 
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
-index c9f6e511daa6..073a90a63dbc 100644
---- a/drivers/platform/x86/pvpanic.c
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -70,6 +70,7 @@ pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
- 
- static struct notifier_block pvpanic_panic_nb = {
- 	.notifier_call = pvpanic_panic_notify,
-+	.priority = 1, /* let this called before broken drm_fb_helper */
- };
- 
- 
--- 
-1.9.2
+
+poma
