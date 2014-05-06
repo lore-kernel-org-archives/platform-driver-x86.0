@@ -1,66 +1,45 @@
-From: poma <pomidorabelisima-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
-	& X550CA
-Date: Tue, 06 May 2014 04:46:17 +0200
-Message-ID: <53684CF9.8020305@gmail.com>
-References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <kernel-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
-In-Reply-To: <1398550344-3785-1-git-send-email-pomidorabelisima-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://admin.fedoraproject.org/mailman/options/kernel>,
-	<mailto:kernel-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.fedoraproject.org/pipermail/kernel/>
-List-Post: <mailto:kernel-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
-List-Help: <mailto:kernel-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=help>
-List-Subscribe: <https://admin.fedoraproject.org/mailman/listinfo/kernel>,
-	<mailto:kernel-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=subscribe>
-Sender: kernel-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
-Errors-To: kernel-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
-To: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Corentin Chary <corentincj-EjuBZuxMvz2sTnJN9+BGXg@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: andreas.utterberg-yPlDedsNh8cwFerOooGFRg@public.gmane.org, jwboyer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org, sgruszka-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] pvpanic: Set high notifier priority
+Date: Tue,  6 May 2014 17:52:26 +0200
+Message-ID: <1399391546-32101-1-git-send-email-tiwai@suse.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cantor2.suse.de ([195.135.220.15]:41729 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757840AbaEFPwa (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 6 May 2014 11:52:30 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Bruce Rogers <brogers@suse.com>
 
-T24gMjcuMDQuMjAxNCAwMDoxMiwgcG9tYSB3cm90ZToKPiBOZWVkIHRvIHNldCB3YXBmIHRvIDQg
-Zm9yIEFTVVNUZUsgQ09NUFVURVIgSU5DLiBYNzVWQlAgJiBYNTUwQ0EsIHNvIHRoYXQgdGhlIHdp
-cmVsZXNzIG5ldHdvcmsgYWRhcHRlciBpcyBlbmFibGVkLgo+IAo+IFJlZmVyZW5jZXM6Cj4gLSBh
-c3VzLW5iLXdtaTogc2V0IHdhcGY9NCBmb3IgQVNVU1RlSyBDT01QVVRFUiBJTkMuIFg3NVZCUAo+
-IGh0dHA6Ly9tYXJjLmluZm8vP2w9bGludXgta2VybmVsJm09MTM5ODE5OTE4MTI1MTEwCj4gLSBB
-dGg5ayBXaUZpIG5vdyBkaXNhYmxlZCBieSByYWRpbyBraWxsc3dpdGNoCj4gaHR0cHM6Ly9idWd6
-aWxsYS5yZWRoYXQuY29tL3Nob3dfYnVnLmNnaT9pZD0xMDg5NzMxCj4gCj4gUmVwb3J0ZWQtYnk6
-IHBvbWEgPHBvbWlkb3JhYmVsaXNpbWFAZ21haWwuY29tPgo+IFJlcG9ydGVkLWJ5OiBBbmRyZWFz
-IFV0dGVyYmVyZyA8YW5kcmVhcy51dHRlcmJlcmdAdGh1bmRlcmEuc2U+Cj4gVGVzdGVkLWJ5OiBw
-b21hIDxwb21pZG9yYWJlbGlzaW1hQGdtYWlsLmNvbT4KPiBUZXN0ZWQtYnk6IEFuZHJlYXMgVXR0
-ZXJiZXJnIDxhbmRyZWFzLnV0dGVyYmVyZ0B0aHVuZGVyYS5zZT4KPiBDYzogRmVkb3JhIGtlcm5l
-bCBkZXZlbG9wbWVudCA8a2VybmVsQGxpc3RzLmZlZG9yYXByb2plY3Qub3JnPgo+IENjOiBBbmRy
-ZWFzIFV0dGVyYmVyZyA8YW5kcmVhcy51dHRlcmJlcmdAdGh1bmRlcmEuc2U+Cj4gQ2M6IEpvc2gg
-Qm95ZXIgPGp3Ym95ZXJAZmVkb3JhcHJvamVjdC5vcmc+Cj4gQ2M6IFN0YW5pc2xhdyBHcnVzemth
-IDxzZ3J1c3prYUByZWRoYXQuY29tPgo+IAo+IC0tLQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9h
-c3VzLW5iLXdtaS5jIHwgMTggKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-OCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Fz
-dXMtbmItd21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3VzLW5iLXdtaS5jCj4gaW5kZXgg
-NTYzZjU5ZS4uZDM2NDFlMCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hc3Vz
-LW5iLXdtaS5jCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy1uYi13bWkuYwo+IEBA
-IC0xMzcsNiArMTM3LDE1IEBAIHN0YXRpYyBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBhc3VzX3F1aXJr
-c1tdID0gewo+ICAJfSwKPiAgCXsKPiAgCQkuY2FsbGJhY2sgPSBkbWlfbWF0Y2hlZCwKPiArCQku
-aWRlbnQgPSAiQVNVU1RlSyBDT01QVVRFUiBJTkMuIFg1NTBDQSIsCj4gKwkJLm1hdGNoZXMgPSB7
-Cj4gKwkJCURNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgIkFTVVNUZUsgQ09NUFVURVIgSU5DLiIp
-LAo+ICsJCQlETUlfTUFUQ0goRE1JX1BST0RVQ1RfTkFNRSwgIlg1NTBDQSIpLAo+ICsJCX0sCj4g
-KwkJLmRyaXZlcl9kYXRhID0gJnF1aXJrX2FzdXNfeDQwMXUsCj4gKwl9LAo+ICsJewo+ICsJCS5j
-YWxsYmFjayA9IGRtaV9tYXRjaGVkLAo+ICAJCS5pZGVudCA9ICJBU1VTVGVLIENPTVBVVEVSIElO
-Qy4gWDU1QSIsCj4gIAkJLm1hdGNoZXMgPSB7Cj4gIAkJCURNSV9NQVRDSChETUlfU1lTX1ZFTkRP
-UiwgIkFTVVNUZUsgQ09NUFVURVIgSU5DLiIpLAo+IEBAIC0xODIsNiArMTkxLDE1IEBAIHN0YXRp
-YyBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBhc3VzX3F1aXJrc1tdID0gewo+ICAJfSwKPiAgCXsKPiAg
-CQkuY2FsbGJhY2sgPSBkbWlfbWF0Y2hlZCwKPiArCQkuaWRlbnQgPSAiQVNVU1RlSyBDT01QVVRF
-UiBJTkMuIFg3NVZCUCIsCj4gKwkJLm1hdGNoZXMgPSB7Cj4gKwkJCURNSV9NQVRDSChETUlfU1lT
-X1ZFTkRPUiwgIkFTVVNUZUsgQ09NUFVURVIgSU5DLiIpLAo+ICsJCQlETUlfTUFUQ0goRE1JX1BS
-T0RVQ1RfTkFNRSwgIlg3NVZCUCIpLAo+ICsJCX0sCj4gKwkJLmRyaXZlcl9kYXRhID0gJnF1aXJr
-X2FzdXNfeDQwMXUsCj4gKwl9LAo+ICsJewo+ICsJCS5jYWxsYmFjayA9IGRtaV9tYXRjaGVkLAo+
-ICAJCS5pZGVudCA9ICJBU1VTVGVLIENPTVBVVEVSIElOQy4gMTAxNUUiLAo+ICAJCS5tYXRjaGVz
-ID0gewo+ICAJCQlETUlfTUFUQ0goRE1JX1NZU19WRU5ET1IsICJBU1VTVGVLIENPTVBVVEVSIElO
-Qy4iKSwKPiAKCkNvcmVudGluLCBjYXJlIHRvIHBpY2sgdXAgdGhpcyBvbmU/Cmh0dHBzOi8vYnVn
-emlsbGEucmVkaGF0LmNvbS9hdHRhY2htZW50LmNnaT9pZD04OTI3NTEKCgpwb21hCgoKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXJuZWwgbWFpbGlu
-ZyBsaXN0Cmtlcm5lbEBsaXN0cy5mZWRvcmFwcm9qZWN0Lm9yZwpodHRwczovL2FkbWluLmZlZG9y
-YXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8va2VybmVs
+We've observed the missing pvpanic call at panic, and it turned out
+that this was blocked by the broken notifier of drm_fb_helper, where
+scheduling may be called during switching to the fb console.
+It's fairly difficult to fix the drm_fb problem and a quick fix isn't
+foreseen, a simpler solution for the missing pvpanic call would be
+just to call this earlier.
+
+In order to assure that, this patch sets a higher priority to pvpanic
+notifier_block.  Once when the issue of drm_fb is resolved, we can
+remove this priority again.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/platform/x86/pvpanic.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+index c9f6e511daa6..073a90a63dbc 100644
+--- a/drivers/platform/x86/pvpanic.c
++++ b/drivers/platform/x86/pvpanic.c
+@@ -70,6 +70,7 @@ pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+ 
+ static struct notifier_block pvpanic_panic_nb = {
+ 	.notifier_call = pvpanic_panic_notify,
++	.priority = 1, /* let this called before broken drm_fb_helper */
+ };
+ 
+ 
+-- 
+1.9.2
