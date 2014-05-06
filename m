@@ -1,136 +1,73 @@
-From: scott.thrasher@gmail.com
-Subject: [PATCH] platform/x86: samsung-laptop: Add support for Samsung's NP7[34]0U3E models.
-Date: Tue,  6 May 2014 08:06:42 -0700
-Message-ID: <1399388802-21882-1-git-send-email-scott.thrasher@gmail.com>
+From: poma <pomidorabelisima@gmail.com>
+Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
+ & X550CA
+Date: Tue, 06 May 2014 22:17:14 +0200
+Message-ID: <5369434A.1020909@gmail.com>
+References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com> <5368F58C.1040702@gmail.com> <20140506144800.GA29600@srcf.ucam.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------080808000609080707090301"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f41.google.com ([209.85.219.41]:51345 "EHLO
-	mail-oa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751981AbaEFPHP (ORCPT
+Received: from mail-wi0-f179.google.com ([209.85.212.179]:53865 "EHLO
+	mail-wi0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754179AbaEFURS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 May 2014 11:07:15 -0400
-Received: by mail-oa0-f41.google.com with SMTP id m1so7860447oag.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 May 2014 08:07:15 -0700 (PDT)
+	Tue, 6 May 2014 16:17:18 -0400
+In-Reply-To: <20140506144800.GA29600@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: corentin.chary@gmail.com
-Cc: matthew.garret@nebula.com, platform-driver-x86@vger.kernel.org, Scott Thrasher <scott.thrasher@gmail.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org, kernel@lists.fedoraproject.org, andreas.utterberg@thundera.se, jwboyer@fedoraproject.org, sgruszka@redhat.com
 
-From: Scott Thrasher <scott.thrasher@gmail.com>
+This is a multi-part message in MIME format.
+--------------080808000609080707090301
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-These models have only 4 levels of keyboard backlight brightness and forget
-how to work the backlight after resuming from S3 sleep. I've added a quirk
-to set the appropriate number of backlight levels, and one to re-enable the
-keyboard backlight on resume.
 
-	Signed-of-by: Scott Thrasher <scott.thrasher@gmail.com>
 
+
+--------------080808000609080707090301
+Content-Type: text/x-patch;
+ name="0001-WAPF-4-for-ASUSTeK-COMPUTER-INC.-X75VBP-WLAN-ON.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-WAPF-4-for-ASUSTeK-COMPUTER-INC.-X75VBP-WLAN-ON.patch"
+
+From d39d3460f1ab36365a48b6815dd9a5d26613d3ec Mon Sep 17 00:00:00 2001
+From: poma <pomidorabelisima@gmail.com>
+Date: Tue, 6 May 2014 22:03:38 +0200
+Subject: [PATCH] WAPF 4 for ASUSTeK COMPUTER INC. X75VBP WLAN ON.
+
+Signed-off-by: poma <pomidorabelisima@gmail.com>
 ---
- drivers/platform/x86/samsung-laptop.c | 37 +++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index d1f03005..37f0106 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -27,6 +27,7 @@
- #include <linux/debugfs.h>
- #include <linux/ctype.h>
- #include <linux/efi.h>
-+#include <linux/suspend.h>
- #include <acpi/video.h>
- 
- /*
-@@ -340,6 +341,8 @@ struct samsung_laptop {
- 	struct samsung_laptop_debug debug;
- 	struct samsung_quirks *quirks;
- 
-+	struct notifier_block pm_nb;
-+  
- 	bool handle_backlight;
- 	bool has_stepping_quirk;
- 
-@@ -348,6 +351,8 @@ struct samsung_laptop {
- 
- struct samsung_quirks {
- 	bool broken_acpi_video;
-+	bool four_kbd_backlight_levels;
-+	bool enable_kbd_backlight;
- };
- 
- static struct samsung_quirks samsung_unknown = {};
-@@ -356,6 +361,11 @@ static struct samsung_quirks samsung_broken_acpi_video = {
- 	.broken_acpi_video = true,
- };
- 
-+static struct samsung_quirks samsung_np740u3e = {
-+	.four_kbd_backlight_levels = true,
-+	.enable_kbd_backlight = true,
-+};
-+
- static bool force;
- module_param(force, bool, 0);
- MODULE_PARM_DESC(force,
-@@ -1051,6 +1061,8 @@ static int __init samsung_leds_init(struct samsung_laptop *samsung)
- 		samsung->kbd_led.brightness_set = kbd_led_set;
- 		samsung->kbd_led.brightness_get = kbd_led_get;
- 		samsung->kbd_led.max_brightness = 8;
-+		if(samsung->quirks->four_kbd_backlight_levels)
-+			samsung->kbd_led.max_brightness = 4;
- 
- 		ret = led_classdev_register(&samsung->platform_device->dev,
- 					   &samsung->kbd_led);
-@@ -1414,6 +1426,18 @@ static void samsung_platform_exit(struct samsung_laptop *samsung)
- 	}
- }
- 
-+static int samsung_pm_notification(struct notifier_block *nb, unsigned long val,
-+		void *ptr) 
-+{
-+	struct samsung_laptop *samsung;
-+	samsung = container_of(nb, struct samsung_laptop, pm_nb);
-+	
-+	if (val == PM_POST_HIBERNATION && samsung->quirks->enable_kbd_backlight) 
-+		kbd_backlight_enable(samsung);
-+
-+	return 0;
-+}
-+
- static int __init samsung_platform_init(struct samsung_laptop *samsung)
- {
- 	struct platform_device *pdev;
-@@ -1534,6 +1558,15 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
- 		},
- 	 .driver_data = &samsung_broken_acpi_video,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 563f59e..674793d 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -182,6 +182,15 @@ static struct dmi_system_id asus_quirks[] = {
  	},
-+	{
-+	 .callback = samsung_dmi_matched,
-+	 .ident = "730U3E/740U3E",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "730U3E/740U3E"),
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X75VBP",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X75VBP"),
 +		},
-+	 .driver_data = &samsung_np740u3e, 
++		.driver_data = &quirk_asus_x401u,
 +	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(dmi, samsung_dmi_table);
-@@ -1608,6 +1641,9 @@ static int __init samsung_init(void)
- 	if (ret)
- 		goto error_debugfs;
- 
-+	samsung->pm_nb.notifier_call = samsung_pm_notification;
-+	register_pm_notifier(&samsung->pm_nb);
-+
- 	samsung_platform_device = samsung->platform_device;
- 	return ret;
- 
-@@ -1633,6 +1669,7 @@ static void __exit samsung_exit(void)
- 	struct samsung_laptop *samsung;
- 
- 	samsung = platform_get_drvdata(samsung_platform_device);
-+	unregister_pm_notifier(&samsung->pm_nb);
- 
- 	samsung_debugfs_exit(samsung);
- 	samsung_leds_exit(samsung);
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. 1015E",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
-1.9.1
+1.9.0
+
+
+
+
+--------------080808000609080707090301--
