@@ -1,31 +1,34 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
+From: poma <pomidorabelisima@gmail.com>
 Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
  & X550CA
-Date: Tue, 6 May 2014 22:42:24 +0100
-Message-ID: <20140506214224.GA2007@srcf.ucam.org>
-References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com>
- <53684CF9.8020305@gmail.com>
- <5368F58C.1040702@gmail.com>
- <20140506144800.GA29600@srcf.ucam.org>
- <5369434A.1020909@gmail.com>
- <20140506205525.GA30712@srcf.ucam.org>
- <53695443.6020004@gmail.com>
+Date: Tue, 06 May 2014 23:57:20 +0200
+Message-ID: <53695AC0.3070108@gmail.com>
+References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com> <5368F58C.1040702@gmail.com> <20140506144800.GA29600@srcf.ucam.org> <5369434A.1020909@gmail.com> <20140506205525.GA30712@srcf.ucam.org> <53695443.6020004@gmail.com> <20140506214709.GV16992@angus.ind.WPI.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:51882 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753374AbaEFVm0 (ORCPT
+Received: from mail-we0-f178.google.com ([74.125.82.178]:33955 "EHLO
+	mail-we0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750874AbaEFV5X (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 May 2014 17:42:26 -0400
-Content-Disposition: inline
-In-Reply-To: <53695443.6020004@gmail.com>
+	Tue, 6 May 2014 17:57:23 -0400
+Received: by mail-we0-f178.google.com with SMTP id u56so108099wes.37
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 May 2014 14:57:22 -0700 (PDT)
+In-Reply-To: <20140506214709.GV16992@angus.ind.WPI.EDU>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: poma <pomidorabelisima@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Corentin Chary <corentincj@iksaif.net>, linux-kernel@vger.kernel.org, kernel@lists.fedoraproject.org, andreas.utterberg@thundera.se, jwboyer@fedoraproject.org, sgruszka@redhat.com
+To: kernel@lists.fedoraproject.org
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Thanks, if there are no objections I'll apply that.
+On 06.05.2014 23:47, Chuck Anderson wrote:
+> poma, your last few messages came through blank on the fedora kernel
+> list.
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+This time I used MUA-SPECIFIC HINTS - Thunderbird - Approach #2 (configuration), 
+man 1 git-format-patch
+
+Anything specifically related to 'kernel@lists.fedoraproject.org'?
+
+
+poma
