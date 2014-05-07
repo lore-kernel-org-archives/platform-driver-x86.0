@@ -1,26 +1,112 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH] dell-laptop: Enable rfkill on Inspiron 3437
-Date: Wed, 7 May 2014 12:53:17 +0100
-Message-ID: <20140507115317.GA818@srcf.ucam.org>
-References: <1399446603-8467-1-git-send-email-yidi.lin@canonical.com>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH 1/2] platform: x86: dell-smo8800: Dell Latitude freefall
+ driver (ACPI SMO8800/SMO8810)
+Date: Wed, 7 May 2014 17:29:41 +0100
+Message-ID: <20140507172941.66aca8fa@alan.etchedpixels.co.uk>
+References: <1399114077-19314-1-git-send-email-pali.rohar@gmail.com>
+	<1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:57841 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932085AbaEGLxU (ORCPT
+Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:45417 "EHLO
+	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754493AbaEGQac (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 May 2014 07:53:20 -0400
-Content-Disposition: inline
-In-Reply-To: <1399446603-8467-1-git-send-email-yidi.lin@canonical.com>
+	Wed, 7 May 2014 12:30:32 -0400
+In-Reply-To: <1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Edward Lin <yidi.lin@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, yk@canonical.com
+To: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
 
-The information we had from Dell is that the rfkill functionality isn't 
-validated on Inspiron devices. How do we know this works under all 
-circumstances?
+> +static irqreturn_t smo8800_interrupt_quick(int irq, void *data)
+> +{
+> +	struct smo8800_device *smo8800 = data;
+> +	atomic_inc(&smo8800->count);
+> +	wake_up_interruptible(&smo8800->misc_wait);
+> +	return IRQ_WAKE_THREAD;
+> +}
+> +
+> +static irqreturn_t smo8800_interrupt_thread(int irq, void *data)
+> +{
+> +	struct smo8800_device *smo8800 = data;
+> +	dev_info(smo8800->dev, "detected free fall\n");
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+printk should be fast enough not to justify a thread, in fact the
+threaded IRQ overhead is going to be higher than the printk IMHO.
+
+I'm not entirely sure a printk is the useful response here either ?
+
+
+> +static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
+> +				 size_t count, loff_t *pos)
+> +{
+> +	struct smo8800_device *smo8800 = container_of(file->private_data,
+> +					 struct smo8800_device, miscdev);
+> +
+> +	DECLARE_WAITQUEUE(wait, current);
+> +	u32 data;
+> +	unsigned char byte_data;
+> +	ssize_t retval = 1;
+> +
+> +	if (count < 1)
+> +		return -EINVAL;
+
+How can this occur ??
+
+> +
+> +	add_wait_queue(&smo8800->misc_wait, &wait);
+> +	while (true) {
+> +		set_current_state(TASK_INTERRUPTIBLE);
+> +		data = atomic_xchg(&smo8800->count, 0);
+> +		if (data)
+> +			break;
+> +
+> +		if (file->f_flags & O_NONBLOCK) {
+> +			retval = -EAGAIN;
+> +			goto out;
+> +		}
+> +
+> +		if (signal_pending(current)) {
+> +			retval = -ERESTARTSYS;
+> +			goto out;
+> +		}
+> +
+> +		schedule();
+> +	}
+
+wait_event_interruptible ?
+
+> +	if (copy_to_user(buf, &byte_data, sizeof(byte_data)))
+> +		retval = -EFAULT;
+
+put_user
+
+
+> +static int smo8800_add(struct acpi_device *device)
+> +{
+> +	int err;
+> +	struct smo8800_device *smo8800;
+> +
+> +	if (!device)
+> +		return -EINVAL;
+
+How can this occur ??
+
+> +	atomic_set(&smo8800->count, 0);
+
+Not needed - you can't see a count until it is open
+
+> +	dev_info(&device->dev, "device /dev/freefall registered with IRQ %d\n",
+> +		 smo8800->irq);
+
+dev_dbg would be more appropriate. If every driver reported its
+registration we'd drown in logs
+
+> +	dev_info(&device->dev, "device /dev/freefall unregistered\n");
+
+Ditto
+
+
+Alan
