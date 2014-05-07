@@ -1,34 +1,58 @@
-From: poma <pomidorabelisima@gmail.com>
-Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
- & X550CA
-Date: Tue, 06 May 2014 23:57:20 +0200
-Message-ID: <53695AC0.3070108@gmail.com>
-References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com> <5368F58C.1040702@gmail.com> <20140506144800.GA29600@srcf.ucam.org> <5369434A.1020909@gmail.com> <20140506205525.GA30712@srcf.ucam.org> <53695443.6020004@gmail.com> <20140506214709.GV16992@angus.ind.WPI.EDU>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Edward Lin <yidi.lin@canonical.com>
+Subject: [PATCH] dell-laptop: Enable rfkill on Inspiron 3437
+Date: Wed,  7 May 2014 15:10:03 +0800
+Message-ID: <1399446603-8467-1-git-send-email-yidi.lin@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f178.google.com ([74.125.82.178]:33955 "EHLO
-	mail-we0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750874AbaEFV5X (ORCPT
+Received: from mail-vc0-f175.google.com ([209.85.220.175]:62305 "EHLO
+	mail-vc0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751129AbaEGHKV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 May 2014 17:57:23 -0400
-Received: by mail-we0-f178.google.com with SMTP id u56so108099wes.37
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 May 2014 14:57:22 -0700 (PDT)
-In-Reply-To: <20140506214709.GV16992@angus.ind.WPI.EDU>
+	Wed, 7 May 2014 03:10:21 -0400
+Received: by mail-vc0-f175.google.com with SMTP id lh4so717390vcb.34
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2014 00:10:20 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: kernel@lists.fedoraproject.org
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org
+Cc: yidi.lin@canonical.com, yk@canonical.com
 
-On 06.05.2014 23:47, Chuck Anderson wrote:
-> poma, your last few messages came through blank on the fedora kernel
-> list.
+Create a rfkill whitelist for the specific models.
+Add Inspiron 3437 to rfkill whitelist.
 
-This time I used MUA-SPECIFIC HINTS - Thunderbird - Approach #2 (configuration), 
-man 1 git-format-patch
+Signed-off-by: Edward Lin <yidi.lin@canonical.com>
+---
+ drivers/platform/x86/dell-laptop.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Anything specifically related to 'kernel@lists.fedoraproject.org'?
-
-
-poma
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index fed4111..4ead97e 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -271,6 +271,17 @@ static struct dmi_system_id dell_quirks[] = {
+ 	{ }
+ };
+ 
++static struct dmi_system_id dell_rfkill_whitelist[] = {
++	{
++		.ident = "Dell Inspiron 3437",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 3437"),
++		},
++	},
++	{}
++};
++
+ static struct calling_interface_buffer *buffer;
+ static struct page *bufferpage;
+ static DEFINE_MUTEX(buffer_mutex);
+@@ -597,7 +608,7 @@ static int __init dell_setup_rfkill(void)
+ 	if (product &&  (strncmp(product, "Latitude", 8) == 0 ||
+ 			 strncmp(product, "Precision", 9) == 0))
+ 		whitelisted = 1;
+-	if (!force_rfkill && !whitelisted)
++	if (!force_rfkill && !whitelisted && !dmi_check_system(dell_rfkill_whitelist))
+ 		return 0;
+ 
+ 	get_buffer();
+-- 
+1.7.9.5
