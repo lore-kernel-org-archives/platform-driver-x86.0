@@ -1,112 +1,73 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 1/2] platform: x86: dell-smo8800: Dell Latitude freefall
- driver (ACPI SMO8800/SMO8810)
-Date: Wed, 7 May 2014 17:29:41 +0100
-Message-ID: <20140507172941.66aca8fa@alan.etchedpixels.co.uk>
-References: <1399114077-19314-1-git-send-email-pali.rohar@gmail.com>
-	<1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
+From: Andreas Utterberg <andreas.utterberg@thundera.se>
+Subject: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
+ & X550CA
+Date: Wed, 07 May 2014 21:48:10 +0200
+Message-ID: <536A8DFA.40906@thundera.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+ boundary="------------080805040808040800060203"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lxorguk.ukuu.org.uk ([81.2.110.251]:45417 "EHLO
-	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754493AbaEGQac (ORCPT
+Received: from csmtp5.one.com ([195.47.247.105]:41319 "EHLO csmtp5.one.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750793AbaEGTsN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 May 2014 12:30:32 -0400
-In-Reply-To: <1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
+	Wed, 7 May 2014 15:48:13 -0400
+Received: from localhost.localdomain (c-3e53e155.414-3-64736c11.cust.bredbandsbolaget.se [85.225.83.62])
+	by csmtp5.one.com (Postfix) with ESMTPA id 6A0FB40000B40
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 May 2014 19:48:11 +0000 (UTC)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+To: platform-driver-x86@vger.kernel.org
 
-> +static irqreturn_t smo8800_interrupt_quick(int irq, void *data)
-> +{
-> +	struct smo8800_device *smo8800 = data;
-> +	atomic_inc(&smo8800->count);
-> +	wake_up_interruptible(&smo8800->misc_wait);
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static irqreturn_t smo8800_interrupt_thread(int irq, void *data)
-> +{
-> +	struct smo8800_device *smo8800 = data;
-> +	dev_info(smo8800->dev, "detected free fall\n");
-
-printk should be fast enough not to justify a thread, in fact the
-threaded IRQ overhead is going to be higher than the printk IMHO.
-
-I'm not entirely sure a printk is the useful response here either ?
+This is a multi-part message in MIME format.
+--------------080805040808040800060203
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-> +static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
-> +				 size_t count, loff_t *pos)
-> +{
-> +	struct smo8800_device *smo8800 = container_of(file->private_data,
-> +					 struct smo8800_device, miscdev);
-> +
-> +	DECLARE_WAITQUEUE(wait, current);
-> +	u32 data;
-> +	unsigned char byte_data;
-> +	ssize_t retval = 1;
-> +
-> +	if (count < 1)
-> +		return -EINVAL;
 
-How can this occur ??
+--------------080805040808040800060203
+Content-Type: text/x-patch;
+ name="0001-WAPF-4-for-ASUSTeK-COMPUTER-INC.-X75VBP-WLAN-ON.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-WAPF-4-for-ASUSTeK-COMPUTER-INC.-X75VBP-WLAN-ON.patch"
 
-> +
-> +	add_wait_queue(&smo8800->misc_wait, &wait);
-> +	while (true) {
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +		data = atomic_xchg(&smo8800->count, 0);
-> +		if (data)
-> +			break;
-> +
-> +		if (file->f_flags & O_NONBLOCK) {
-> +			retval = -EAGAIN;
-> +			goto out;
-> +		}
-> +
-> +		if (signal_pending(current)) {
-> +			retval = -ERESTARTSYS;
-> +			goto out;
-> +		}
-> +
-> +		schedule();
-> +	}
+From d39d3460f1ab36365a48b6815dd9a5d26613d3ec Mon Sep 17 00:00:00 2001
+From: poma <pomidorabelisima@gmail.com>
+Date: Tue, 6 May 2014 22:03:38 +0200
+Subject: [PATCH] WAPF 4 for ASUSTeK COMPUTER INC. X75VBP WLAN ON.
 
-wait_event_interruptible ?
+The 'asus-nb-wmi' WAPF parameter must be set to 4, so the internal Wireless LAN device is operational.
 
-> +	if (copy_to_user(buf, &byte_data, sizeof(byte_data)))
-> +		retval = -EFAULT;
+Signed-off-by: poma <pomidorabelisima@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-put_user
-
-
-> +static int smo8800_add(struct acpi_device *device)
-> +{
-> +	int err;
-> +	struct smo8800_device *smo8800;
-> +
-> +	if (!device)
-> +		return -EINVAL;
-
-How can this occur ??
-
-> +	atomic_set(&smo8800->count, 0);
-
-Not needed - you can't see a count until it is open
-
-> +	dev_info(&device->dev, "device /dev/freefall registered with IRQ %d\n",
-> +		 smo8800->irq);
-
-dev_dbg would be more appropriate. If every driver reported its
-registration we'd drown in logs
-
-> +	dev_info(&device->dev, "device /dev/freefall unregistered\n");
-
-Ditto
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 563f59e..674793d 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -182,6 +182,15 @@ static struct dmi_system_id asus_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X75VBP",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X75VBP"),
++		},
++		.driver_data = &quirk_asus_x401u,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. 1015E",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+1.9.0
 
 
-Alan
+
+--------------080805040808040800060203--
