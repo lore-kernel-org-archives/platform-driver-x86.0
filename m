@@ -1,32 +1,41 @@
-From: poma <pomidorabelisima@gmail.com>
-Subject: Re: [PATCH] WAPF 4 for ASUSTeK COMPUTER INC. X550CA WLAN ON
-Date: Wed, 07 May 2014 22:59:17 +0200
-Message-ID: <536A9EA5.2030903@gmail.com>
-References: <536A9933.9010905@thundera.se>
+From: Yidi Lin <yidi.lin@canonical.com>
+Subject: Re: [PATCH] dell-laptop: Enable rfkill on Inspiron 3437
+Date: Thu, 8 May 2014 15:19:37 +0800
+Message-ID: <CAFquV7XHmrP6eqQC-P_g43bY15iHF8dmfwkaSC58FhOHfO=iwA@mail.gmail.com>
+References: <1399446603-8467-1-git-send-email-yidi.lin@canonical.com>
+	<20140507115317.GA818@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f169.google.com ([74.125.82.169]:64481 "EHLO
-	mail-we0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750786AbaEGU7U (ORCPT
+Received: from mail-yh0-f42.google.com ([209.85.213.42]:64940 "EHLO
+	mail-yh0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752038AbaEHHTh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 May 2014 16:59:20 -0400
-Received: by mail-we0-f169.google.com with SMTP id u56so1617287wes.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 May 2014 13:59:19 -0700 (PDT)
-In-Reply-To: <536A9933.9010905@thundera.se>
+	Thu, 8 May 2014 03:19:37 -0400
+Received: by mail-yh0-f42.google.com with SMTP id t59so1978451yho.29
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 May 2014 00:19:37 -0700 (PDT)
+In-Reply-To: <20140507115317.GA818@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andreas Utterberg <andreas.utterberg@thundera.se>, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: platform-driver-x86@vger.kernel.org, yk@canonical.com
 
-On 07.05.2014 22:36, Andreas Utterberg wrote:
-> 
+Hi Mattew,
 
-The subject should be:
-[PATCH] WAPF 4 for ASUSTeK COMPUTER INC. X550CA WLAN ON.
-however to don't drag this further, 
+I only have Inspiron 7737 and Inspiron 3437 on hand to verify my patch.
+rfkill does not function on Inspiron 7737 with force_rfkill=1 boot parameter.
+But it works on Inspiron 3437.
+So I only whitelist Inspiron 3437 for rfkill functionality.
 
-Reviewed-by: poma <pomidorabelisima@gmail.com>
+Can you give me some advice for validation ?
+Thanks.
 
+Edward
 
-poma
+On Wed, May 7, 2014 at 7:53 PM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> The information we had from Dell is that the rfkill functionality isn't
+> validated on Inspiron devices. How do we know this works under all
+> circumstances?
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
