@@ -1,75 +1,221 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 1/2] asus-wmi: Add a no backlight quirk
-Date: Thu, 15 May 2014 11:39:38 +0200
-Message-ID: <1400146779-5607-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 1/4] acpi-video: Don't register acpi_video_resume notifier without backlight devices
+Date: Thu, 15 May 2014 13:22:33 +0200
+Message-ID: <1400152956-9053-2-git-send-email-hdegoede@redhat.com>
+References: <1400152956-9053-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:25837 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:23804 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752889AbaEOJj4 (ORCPT
+	id S1751455AbaEOLWv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 May 2014 05:39:56 -0400
+	Thu, 15 May 2014 07:22:51 -0400
+In-Reply-To: <1400152956-9053-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: karlitos <karel.macha@karlitos.net>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: Lee Chun-Yi <jlee@suse.com>, Aaron Lu <aaron.lu@intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Massimiliano <massi.ergosum@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-Some Asus motherboards for desktop PC-s export an acpi-video and
-an asus-wmi interface advertising backlight support. Add a quirk to allow
-to blacklist these so that desktop environments such as gnome don't start
-showing nonsense brightness controls.
-
-https://bugzilla.redhat.com/show_bug.cgi?id=1097436
+If we're not going to be registering any backlight devices then
+acpi_video_resume is always nop, so don't register it in that case.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-wmi.c | 8 ++++++--
- drivers/platform/x86/asus-wmi.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index c5e082f..6f73dc5 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1272,6 +1272,9 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
- 	int max;
- 	int power;
+--
+
+Note to reviewers the changes to acpi_video_dev_register_backlight() only
+remove the "if (!acpi_video_verify_backlight_support()) {" which surrounded
+the entire body of the function, as that is checked earlier now.
+---
+ drivers/acpi/video.c | 139 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 74 insertions(+), 65 deletions(-)
+
+diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
+index 6a2099d..f767eba 100644
+--- a/drivers/acpi/video.c
++++ b/drivers/acpi/video.c
+@@ -150,6 +150,7 @@ struct acpi_video_enumerated_device {
  
-+	if (asus->driver->quirks->no_backlight)
-+		return -ENODEV;
+ struct acpi_video_bus {
+ 	struct acpi_device *device;
++	bool backlight_registered;
+ 	u8 dos_setting;
+ 	struct acpi_video_enumerated_device *attached_array;
+ 	u8 attached_count;
+@@ -1770,88 +1771,89 @@ acpi_video_bus_match(acpi_handle handle, u32 level, void *context,
+ 
+ static void acpi_video_dev_register_backlight(struct acpi_video_device *device)
+ {
+-	if (acpi_video_verify_backlight_support()) {
+-		struct backlight_properties props;
+-		struct pci_dev *pdev;
+-		acpi_handle acpi_parent;
+-		struct device *parent = NULL;
+-		int result;
+-		static int count;
+-		char *name;
+-
+-		result = acpi_video_init_brightness(device);
+-		if (result)
+-			return;
+-		name = kasprintf(GFP_KERNEL, "acpi_video%d", count);
+-		if (!name)
+-			return;
+-		count++;
++	struct backlight_properties props;
++	struct pci_dev *pdev;
++	acpi_handle acpi_parent;
++	struct device *parent = NULL;
++	int result;
++	static int count;
++	char *name;
+ 
+-		acpi_get_parent(device->dev->handle, &acpi_parent);
++	result = acpi_video_init_brightness(device);
++	if (result)
++		return;
++	name = kasprintf(GFP_KERNEL, "acpi_video%d", count);
++	if (!name)
++		return;
++	count++;
+ 
+-		pdev = acpi_get_pci_dev(acpi_parent);
+-		if (pdev) {
+-			parent = &pdev->dev;
+-			pci_dev_put(pdev);
+-		}
++	acpi_get_parent(device->dev->handle, &acpi_parent);
+ 
+-		memset(&props, 0, sizeof(struct backlight_properties));
+-		props.type = BACKLIGHT_FIRMWARE;
+-		props.max_brightness = device->brightness->count - 3;
+-		device->backlight = backlight_device_register(name,
+-							      parent,
+-							      device,
+-							      &acpi_backlight_ops,
+-							      &props);
+-		kfree(name);
+-		if (IS_ERR(device->backlight))
+-			return;
++	pdev = acpi_get_pci_dev(acpi_parent);
++	if (pdev) {
++		parent = &pdev->dev;
++		pci_dev_put(pdev);
++	}
+ 
+-		/*
+-		 * Save current brightness level in case we have to restore it
+-		 * before acpi_video_device_lcd_set_level() is called next time.
+-		 */
+-		device->backlight->props.brightness =
+-				acpi_video_get_brightness(device->backlight);
++	memset(&props, 0, sizeof(struct backlight_properties));
++	props.type = BACKLIGHT_FIRMWARE;
++	props.max_brightness = device->brightness->count - 3;
++	device->backlight = backlight_device_register(name,
++						      parent,
++						      device,
++						      &acpi_backlight_ops,
++						      &props);
++	kfree(name);
++	if (IS_ERR(device->backlight))
++		return;
+ 
+-		device->cooling_dev = thermal_cooling_device_register("LCD",
+-					device->dev, &video_cooling_ops);
+-		if (IS_ERR(device->cooling_dev)) {
+-			/*
+-			 * Set cooling_dev to NULL so we don't crash trying to
+-			 * free it.
+-			 * Also, why the hell we are returning early and
+-			 * not attempt to register video output if cooling
+-			 * device registration failed?
+-			 * -- dtor
+-			 */
+-			device->cooling_dev = NULL;
+-			return;
+-		}
++	/*
++	 * Save current brightness level in case we have to restore it
++	 * before acpi_video_device_lcd_set_level() is called next time.
++	 */
++	device->backlight->props.brightness =
++			acpi_video_get_brightness(device->backlight);
+ 
+-		dev_info(&device->dev->dev, "registered as cooling_device%d\n",
+-			 device->cooling_dev->id);
+-		result = sysfs_create_link(&device->dev->dev.kobj,
+-				&device->cooling_dev->device.kobj,
+-				"thermal_cooling");
+-		if (result)
+-			printk(KERN_ERR PREFIX "Create sysfs link\n");
+-		result = sysfs_create_link(&device->cooling_dev->device.kobj,
+-				&device->dev->dev.kobj, "device");
+-		if (result)
+-			printk(KERN_ERR PREFIX "Create sysfs link\n");
++	device->cooling_dev = thermal_cooling_device_register("LCD",
++				device->dev, &video_cooling_ops);
++	if (IS_ERR(device->cooling_dev)) {
++		/*
++		 * Set cooling_dev to NULL so we don't crash trying to free it.
++		 * Also, why the hell we are returning early and not attempt to
++		 * register video output if cooling device registration failed?
++		 * -- dtor
++		 */
++		device->cooling_dev = NULL;
++		return;
+ 	}
 +
- 	max = read_brightness_max(asus);
++	dev_info(&device->dev->dev, "registered as cooling_device%d\n",
++		 device->cooling_dev->id);
++	result = sysfs_create_link(&device->dev->dev.kobj,
++			&device->cooling_dev->device.kobj,
++			"thermal_cooling");
++	if (result)
++		printk(KERN_ERR PREFIX "Create sysfs link\n");
++	result = sysfs_create_link(&device->cooling_dev->device.kobj,
++			&device->dev->dev.kobj, "device");
++	if (result)
++		printk(KERN_ERR PREFIX "Create sysfs link\n");
+ }
  
- 	if (max == -ENODEV)
-@@ -1370,7 +1373,7 @@ static void asus_wmi_notify(u32 value, void *context)
- 		code = ASUS_WMI_BRN_DOWN;
+ static int acpi_video_bus_register_backlight(struct acpi_video_bus *video)
+ {
+ 	struct acpi_video_device *dev;
  
- 	if (code == ASUS_WMI_BRN_DOWN || code == ASUS_WMI_BRN_UP) {
--		if (!acpi_video_backlight_support()) {
-+		if (asus->backlight_device) {
- 			asus_wmi_backlight_notify(asus, orig_code);
- 			goto exit;
- 		}
-@@ -1773,7 +1776,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_rfkill;
++	if (!acpi_video_verify_backlight_support())
++		return 0;
++
+ 	mutex_lock(&video->device_list_lock);
+ 	list_for_each_entry(dev, &video->video_device_list, entry)
+ 		acpi_video_dev_register_backlight(dev);
+ 	mutex_unlock(&video->device_list_lock);
  
--	if (asus->driver->quirks->wmi_backlight_power)
-+	if (asus->driver->quirks->wmi_backlight_power ||
-+			asus->driver->quirks->no_backlight)
- 		acpi_video_dmi_promote_vendor();
- 	if (!acpi_video_backlight_support()) {
- 		pr_info("Disabling ACPI video driver\n");
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 4da4c8b..cc47efe 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -42,6 +42,7 @@ struct quirk_entry {
- 	bool scalar_panel_brightness;
- 	bool store_backlight_power;
- 	bool wmi_backlight_power;
-+	bool no_backlight;
- 	int wapf;
- 	/*
- 	 * For machines with AMD graphic chips, it will send out WMI event
++	video->backlight_registered = true;
++
+ 	video->pm_nb.notifier_call = acpi_video_resume;
+ 	video->pm_nb.priority = 0;
+ 	return register_pm_notifier(&video->pm_nb);
+@@ -1879,13 +1881,20 @@ static void acpi_video_dev_unregister_backlight(struct acpi_video_device *device
+ static int acpi_video_bus_unregister_backlight(struct acpi_video_bus *video)
+ {
+ 	struct acpi_video_device *dev;
+-	int error = unregister_pm_notifier(&video->pm_nb);
++	int error;
++
++	if (!video->backlight_registered)
++		return 0;
++
++	error = unregister_pm_notifier(&video->pm_nb);
+ 
+ 	mutex_lock(&video->device_list_lock);
+ 	list_for_each_entry(dev, &video->video_device_list, entry)
+ 		acpi_video_dev_unregister_backlight(dev);
+ 	mutex_unlock(&video->device_list_lock);
+ 
++	video->backlight_registered = false;
++
+ 	return error;
+ }
+ 
 -- 
 1.9.0
