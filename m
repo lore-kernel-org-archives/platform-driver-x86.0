@@ -1,78 +1,86 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: Re: [RFC 1/3] acpi-video: Add an acpi_video_unregister_backlight
- function
-Date: Thu, 15 May 2014 09:48:23 +0800
-Message-ID: <53741CE7.402@intel.com>
-References: <1399917824-10341-1-git-send-email-hdegoede@redhat.com> <1399917824-10341-2-git-send-email-hdegoede@redhat.com> <53723633.4030709@intel.com> <53733281.6060707@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: RFC: Cleanup firmware backlight control method selection
+Date: Thu, 15 May 2014 11:04:50 +0200
+Message-ID: <53748332.50909@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <53733281.6060707@redhat.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Lee Chun-Yi <jlee@suse.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Aaron Lu <aaron.lu@intel.com>, Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 05/14/2014 05:08 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 05/13/2014 05:11 PM, Aaron Lu wrote:
->> On 05/13/2014 02:03 AM, Hans de Goede wrote:
->>> -static int acpi_video_bus_register_backlight(struct acpi_video_bus *video)
->>> +static void acpi_video_bus_register_backlight(struct acpi_video_bus *video)
->>>  {
->>>  	struct acpi_video_device *dev;
->>>  
->>> @@ -1851,10 +1851,6 @@ static int acpi_video_bus_register_backlight(struct acpi_video_bus *video)
->>>  	list_for_each_entry(dev, &video->video_device_list, entry)
->>>  		acpi_video_dev_register_backlight(dev);
->>>  	mutex_unlock(&video->device_list_lock);
->>> -
->>> -	video->pm_nb.notifier_call = acpi_video_resume;
->>> -	video->pm_nb.priority = 0;
->>> -	return register_pm_notifier(&video->pm_nb);
->>
->> Hmm, I don't understand this. The pm notifier is used to restore
->> backlight level on system resume, so should be there when we have
->> created the backlight interface and gone when we unregistered the
->> backlight interface. It doesn't have anything to do with hotkey
->> processing.
-> 
-> A valid point, I did things this way because I wanted the new
-> acpi_video_unregister_backlight to result in the same behavior as
-> having set the acpi_video=vendor / called acpi_video_dmi_promote_vendor()
-> before acpi_video_register runs.
-> 
-> So this means undoing what-ever acpi_video_register() does, which it
-> would not have done if acpi_video_dmi_promote_vendor() came first.
-> 
-> If you look at the current code (so without this patch) then
-> the pm notifier gets installed unconditionally by
-> acpi_video_bus_register_backlight() which gets called unconditionally
-> by acpi_video_bus_add(). So even with acpi_video=vendor it still gets
-> installed.
-> 
-> acpi_video=vendor / acpi_video_dmi_promote_vendor() influences
-> acpi_video_backlight_support() which only gets called by
-> acpi_video_verify_backlight_support() which only gets called by
-> acpi_video_dev_register_backlight(). So acpi_video=vendor only causes
-> the backlight devices to not register, the pm notifier will still be
-> installed. My intend was to behave the same independent of module
-> loading / init order hence I moved the pm notifier install / uninstall
-> to keep the pm notifier installed when calling the new
-> acpi_video_unregister_backlight().
-> 
-> Looking at the code you're right that this is not really sensible, since
-> the acpi_video_resume call done by the notifier will be a nop when there
-> are no backlight devices registered.
-> 
-> So I can split this patch into 2 patches, 1 to not install the pm notifier
-> if we're not going to register backlight devices anyways, and a 2nd patch
-> adding the new acpi_video_unregister_backlight().
-> 
-> Does that sound like a plan ?
+Hi All,
 
-Yes, sounds great, thanks!
+There are various issues with how the linux kernel currently select which
+firmware backlight control (*) method to use:
 
--Aaron
+1) There are various module loading ordering issues, leading to different
+behavior depending on module load ordering:
+
+* http://www.spinics.net/lists/linux-acpi/msg50443.html
+* Sometimes we register and immediately unregister the acpi_video# backlight
+  devices, some ACPI implementations don't like this, so we've special
+  quirks to avoid the register + unregister on some machines
+
+2) There are 2 main kernel commandline options involved acpi_backlight and
+video.use_native_backlight. With the latter only working if certain firmware
+checks succeed *and* the former has the right value. This is confusing not
+only for end users but also for people trying to read the code in question.
+Note some vendor specific firmware backlight drivers, ie thinkpad_acpi.c
+have their own related options, leading to 3 kernel cmdline options coming
+into play.
+
+3) We have quirks everywhere. I'm afraid we cannot get rid of these, but
+at least we should try to clean up where they live and how they interact
+with each other. acpi_backlight=vendor quirks mostly live in vendor specific
+firmware backlight drivers. But we also have a couple in acpi/video_detect.c.
+video.use_native_backlight=1 quirks otoh live in acpi/video.c.
+
+In the end all these options and quirks all work together in a complicated
+manor to achieve one simple goal: decide which firmware interface to use
+for backlight control (*). Which comes down to choosing between the
+following 3 options:
+
+1 Native (raw) backlight control (so no firmware backlight control)
+2 Control by the standard acpi-video firmware backlight driver
+3 Control by a vendor specific firmware backlight driver
+
+So I would like to propose to give the acpi_backlight= kernel commandline
+option which currently accepts values "vendor" and "video" a third value
+"native", and to get rid of the video.use_native_backlight option.
+
+This would be combined with a major cleanup of the existing code for
+firmware backlight control method selection:
+
+1) Replace the ACPI_VIDEO_BACKLIGHT_* flags with an enum listing the 3 options
+2) Replace the acpi_video_support variable with
+   acpi_backlight_method_cmdline and acpi_backlight_method_dmi variables,
+   both initialzed to -1
+3) Add an acpi_backlight_method() function which will:
+  - return acpi_backlight_method_cmdline if not -1; else
+  - return acpi_backlight_method_dmi if not -1; else
+  - return ACPI_BACKLIGHT_NATIVE if acpi_osi_is_win8(); else
+  - return ACPI_BACKLIGHT_VIDEO if supported; else
+  - return ACPI_BACKLIGHT_VENDOR
+4) Have all drivers that use acpi_video_dmi_promote_vendor move their
+   quirks for this to acpi/video_detect.c, removing the need for them to
+   call acpi_video_dmi_promote_vendor() and acpi_video_unregister(), removing
+   the load ordering issues and removing them depending on video.ko
+5) Switch all drivers from acpi_video_backlight_support() to
+   acpi_backlight_method()
+
+The plan would be to do 1-3 in a single patch and ASAP and then do 4 and 5
+driver by driver, and once done remove acpi_video_dmi_promote_vendor() and
+acpi_video_backlight_support(), and mark acpi_video_register /
+acpi_video_unregister as "only for i915 use".
+
+Regards,
+
+Hans
+
+
+*) Note I'm only talking about controlling the actual brightness of the
+backlight, not detecting brighness/backlight hotkey presses, there are
+similar issues there. But I believe that that should be treated as an
+orthogonal problem which should be fixed independently of this.
