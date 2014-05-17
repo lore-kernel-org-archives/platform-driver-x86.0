@@ -1,68 +1,49 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 2/3] acer-wmi: Switch to acpi_video_unregister_backlight
-Date: Sat, 17 May 2014 10:48:02 +0200
-Message-ID: <1400316483-6356-3-git-send-email-hdegoede@redhat.com>
-References: <1400316483-6356-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1400316483-6356-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Aaron Lu <aaron.lu@intel.com>, Lee Chun-Yi <jlee@suse.com>
-Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH 0/2] dell-wmi: Add support for Fn key combinations
+Date: Sat, 17 May 2014 16:43:35 +0200
+Message-ID: <1400337817-14473-1-git-send-email-pali.rohar@gmail.com>
+References: <201405171639.45722@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <201405171639.45722@pali>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-hotplug@vger.kernel.org, Matthew Garrett <mjg@redhat.com>, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Switch from acpi_video_unregister(), to acpi_video_unregister_backlight(),
-so that the hotkeys handler registered by acpi-video stays in place.
+This patch series add support for Fn key combinations to dell-wmi drive=
+r.
+I tested this patch series on laptop Dell Latitude E6440.
 
-Since there are no mappings for the atkbd raw codes for the brightness
-keys used by newer Acer models in /lib/udev/hwdb.d/60-keyboard.hwdb, and
-since we map the wmi events with a code of KE_IGNORE, we rely on acpi-video
-to do the hotkey handling for us.
+Here is Bios DMI table which contains scancode to keycode mapping:
 
-For laptops such as the Acer Aspire 5750 which uses intel gfx this works
-despite us calling acpi_video_unregister() because the following happens:
+Handle 0xB200, DMI type 178, 80 bytes
+OEM-specific Type
+        Header and Data:
+                B2 50 00 B2 07 01 0C 00 08 01 0A 00 09 01 0B 00
+                0A 01 12 00 3B 00 20 00 42 00 18 00 48 00 14 00
+                50 00 13 00 10 00 FF 00 11 00 FF 00 12 00 FF 00
+                13 00 FF 00 14 00 FF 00 1E 00 FF 00 1F 00 FF 00
+                20 00 FF 00 21 00 FF 00 22 00 FF 00 4D 00 16 00
+        Strings:
 
-1) acpi-video module gets loaded (as it is a dependency of acer-wmi and i915)
-2) acpi-video does NOT call acpi_video_register()
-3) acer-wmi loads (assume it loads before i915), calls
-acpi_video_dmi_promote_vendor(); which sets ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
-4) calls acpi_video_unregister -> not registered, nop
-5) i915 loads, calls acpi_video_register
-6) acpi_video_register registers the acpi_notifier for the hotkeys,
-   does NOT register a backlight device because of ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
+As you can see, more different keys are mapped to one keycode 0xFF.
 
-But on the Acer Aspire 5750G, which uses nvidia graphics the following happens:
-1) acpi-video module gets loaded (as it is a dependency of acer-wmi)
-2) acpi-video calls acpi_video_register()
-3) acpi_video_register registers the acpi_notifier for the hotkeys,
-   and a backlight device
-4) acer-wmi loads, calls acpi_video_dmi_promote_vendor()
-5) calls acpi_video_unregister, this unregisters BOTH the acpi_notifier for
-   the hotkeys AND the backlight device
+Pali Roh=C3=A1r (2):
+  Input: Add keycodes for some missing Fn key combinations
+  dell-wmi: Add support for Fn key combinations
 
-And we end up without any handler for the brightness hotkeys. This patch fixes
-this by switching over to acpi_video_unregister_backlight() which keeps the
-hotkey handler in place.
+ drivers/platform/x86/dell-wmi.c |   27 ++++++++++++++++++++++++++-
+ include/uapi/linux/input.h      |    6 ++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-https://bugzilla.kernel.org/show_bug.cgi?id=35622
+--=20
+1.7.9.5
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/acer-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index c91f69b3..3a74699 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -2228,7 +2228,7 @@ static int __init acer_wmi_init(void)
- 		pr_info("Brightness must be controlled by acpi video driver\n");
- 	} else {
- 		pr_info("Disabling ACPI video driver\n");
--		acpi_video_unregister();
-+		acpi_video_unregister_backlight();
- 	}
- 
- 	if (wmi_has_guid(WMID_GUID3)) {
--- 
-1.9.0
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
