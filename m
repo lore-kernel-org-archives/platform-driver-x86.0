@@ -1,34 +1,89 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 1/4] acpi-video: Don't register acpi_video_resume notifier without backlight devices
-Date: Tue, 20 May 2014 00:59:53 +0200
-Message-ID: <2307360.DSLu5vT7ji@vostro.rjw.lan>
-References: <1400152956-9053-1-git-send-email-hdegoede@redhat.com> <1400152956-9053-2-git-send-email-hdegoede@redhat.com> <53757730.4080101@intel.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH v2 2/3] acer-wmi: Switch to
+ acpi_video_unregister_backlight
+Date: Tue, 20 May 2014 07:30:03 +0800
+Message-ID: <20140519233003.GA2038@linux-rxt1.site>
+References: <1400316483-6356-1-git-send-email-hdegoede@redhat.com>
+ <1400316483-6356-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:56030 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1750868AbaESWnB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 19 May 2014 18:43:01 -0400
-In-Reply-To: <53757730.4080101@intel.com>
+Received: from smtp.nue.novell.com ([195.135.221.5]:50986 "EHLO
+	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751260AbaESXdY (ORCPT
+	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
+	Mon, 19 May 2014 19:33:24 -0400
+Content-Disposition: inline
+In-Reply-To: <1400316483-6356-3-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Lee Chun-Yi <jlee@suse.com>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, Massimiliano <massi.ergosum@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Aaron Lu <aaron.lu@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
-On Friday, May 16, 2014 10:25:52 AM Aaron Lu wrote:
-> On 05/15/2014 07:22 PM, Hans de Goede wrote:
-> > If we're not going to be registering any backlight devices then
-> > acpi_video_resume is always nop, so don't register it in that case.
-> > 
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Sat, May 17, 2014 at 10:48:02AM +0200, Hans de Goede wrote:
+> Switch from acpi_video_unregister(), to acpi_video_unregister_backlight(),
+> so that the hotkeys handler registered by acpi-video stays in place.
 > 
-> Reviewed-by: Aaron Lu <aaron.lu@intel.com>
+> Since there are no mappings for the atkbd raw codes for the brightness
+> keys used by newer Acer models in /lib/udev/hwdb.d/60-keyboard.hwdb, and
+> since we map the wmi events with a code of KE_IGNORE, we rely on acpi-video
+> to do the hotkey handling for us.
+> 
+> For laptops such as the Acer Aspire 5750 which uses intel gfx this works
+> despite us calling acpi_video_unregister() because the following happens:
+> 
+> 1) acpi-video module gets loaded (as it is a dependency of acer-wmi and i915)
+> 2) acpi-video does NOT call acpi_video_register()
+> 3) acer-wmi loads (assume it loads before i915), calls
+> acpi_video_dmi_promote_vendor(); which sets ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
+> 4) calls acpi_video_unregister -> not registered, nop
+> 5) i915 loads, calls acpi_video_register
+> 6) acpi_video_register registers the acpi_notifier for the hotkeys,
+>    does NOT register a backlight device because of ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
+> 
+> But on the Acer Aspire 5750G, which uses nvidia graphics the following happens:
+> 1) acpi-video module gets loaded (as it is a dependency of acer-wmi)
+> 2) acpi-video calls acpi_video_register()
+> 3) acpi_video_register registers the acpi_notifier for the hotkeys,
+>    and a backlight device
+> 4) acer-wmi loads, calls acpi_video_dmi_promote_vendor()
+> 5) calls acpi_video_unregister, this unregisters BOTH the acpi_notifier for
+>    the hotkeys AND the backlight device
+> 
+> And we end up without any handler for the brightness hotkeys. This patch fixes
+> this by switching over to acpi_video_unregister_backlight() which keeps the
+> hotkey handler in place.
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=35622
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Queued up for 3.16, thanks!
+This patch is good to me.
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+Reviewd-by: Lee, Chun-Yi <jlee@suse.com>
+
+
+Thanks for your patch.
+
+> ---
+>  drivers/platform/x86/acer-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index c91f69b3..3a74699 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -2228,7 +2228,7 @@ static int __init acer_wmi_init(void)
+>  		pr_info("Brightness must be controlled by acpi video driver\n");
+>  	} else {
+>  		pr_info("Disabling ACPI video driver\n");
+> -		acpi_video_unregister();
+> +		acpi_video_unregister_backlight();
+>  	}
+>  
+>  	if (wmi_has_guid(WMID_GUID3)) {
+> -- 
+> 1.9.0
+> 
+
+Joey Lee
