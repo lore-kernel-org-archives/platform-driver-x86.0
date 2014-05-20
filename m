@@ -1,103 +1,65 @@
-From: Valdis.Kletnieks@vt.edu
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH 1/2] platform: x86: dell-smo8800: Dell Latitude freefall driver (ACPI SMO8800/SMO8810)
-Date: Tue, 20 May 2014 14:02:41 -0400
-Message-ID: <20424.1400608961@turing-police.cc.vt.edu>
-References: <1399114077-19314-1-git-send-email-pali.rohar@gmail.com> <1399114077-19314-2-git-send-email-pali.rohar@gmail.com> <20135.1400569205@turing-police.cc.vt.edu>
-            <201405201056.47726@pali>
+Date: Tue, 20 May 2014 20:10:28 +0200
+Message-ID: <201405202010.28868@pali>
+References: <1399114077-19314-1-git-send-email-pali.rohar@gmail.com> <201405201056.47726@pali> <20424.1400608961@turing-police.cc.vt.edu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1400608961_1987P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Type: multipart/signed;
+  boundary="nextPart1898212.sOqooXxYZ6";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: Your message of "Tue, 20 May 2014 10:56:47 +0200."
-             <201405201056.47726@pali>
+In-Reply-To: <20424.1400608961@turing-police.cc.vt.edu>
 Sender: linux-doc-owner@vger.kernel.org
-To: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Valdis.Kletnieks@vt.edu
 Cc: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
---==_Exmh_1400608961_1987P
-Content-Type: text/plain; charset="UTF-8"
-Content-Id: <20406.1400608951.1@turing-police.cc.vt.edu>
-Content-Transfer-Encoding: 8bit
+--nextPart1898212.sOqooXxYZ6
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2014 10:56:47 +0200, Pali Rohár said:
+On Tuesday 20 May 2014 20:02:41 Valdis.Kletnieks@vt.edu wrote:
+> On Tue, 20 May 2014 10:56:47 +0200, Pali Roh=C3=A1r said:
+> > Hm? Which errors? Here is output from checkpacth:
+> >=20
+> > total: 0 errors, 0 warnings, 276 lines checked
+> >=20
+> > 0001-platform-x86-dell-smo8800-Dell-Latitude-freefall-dri.pa
+> > tch has no obvious style problems and is ready for
+> > submission.
+> >=20
+> > total: 0 errors, 0 warnings, 181 lines checked
+> >=20
+> > 0002-Documentation-Rename-hpfall.c-freefall.c-fixes-for-D.pa
+> > tch has no obvious style problems and is ready for
+> > submission.
+>=20
+> Hmm.. what tree are you building against?  I wonder if your
+> checkpatch is a different version than mine (next-20140519).=20
 
-> Hm? Which errors? Here is output from checkpacth:
->
-> total: 0 errors, 0 warnings, 276 lines checked
->
-> 0001-platform-x86-dell-smo8800-Dell-Latitude-freefall-dri.patch
-> has no obvious style problems and is ready for submission.
->
-> total: 0 errors, 0 warnings, 181 lines checked
->
-> 0002-Documentation-Rename-hpfall.c-freefall.c-fixes-for-D.patch
-> has no obvious style problems and is ready for submission.
+I'm using up-to-date linus tree, git rev=20
+60b5f90d0fac7585f1a43ccdad06787b97eda0ab
 
-Hmm.. what tree are you building against?  I wonder if your checkpatch is
-a different version than mine (next-20140519).  What I see:
+$ sha1sum scripts/checkpatch.pl
+979ad287faf59d84d78825595ec97513a9d46fba  scripts/checkpatch.pl
 
-[/usr/src/linux-next] scripts/checkpatch.pl patches/freefall.1
-WARNING: Missing a blank line after declarations
-#135: FILE: drivers/platform/x86/dell-smo8800.c:41:
-+       struct smo8800_device *smo8800 = data;
-+       atomic_inc(&smo8800->count);
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-WARNING: Missing a blank line after declarations
-#143: FILE: drivers/platform/x86/dell-smo8800.c:49:
-+       struct smo8800_device *smo8800 = data;
-+       dev_info(smo8800->dev, "detected free fall\n");
-
-WARNING: Missing a blank line after declarations
-#318: FILE: drivers/platform/x86/dell-smo8800.c:224:
-+       struct smo8800_device *smo8800 = device->driver_data;
-+       free_irq(smo8800->irq, smo8800);
-
-total: 0 errors, 3 warnings, 276 lines checked
-
-patches/freefall.1 has style problems, please review.
-
-[/usr/src/linux-next] scripts/checkpatch.pl patches/freefall.2
-WARNING: Missing a blank line after declarations
-#126: FILE: Documentation/laptops/freefall.c:47:
-+       int fd = open(unload_heads_path, O_RDONLY);
-+       if (fd < 0) {
-
-WARNING: Missing a blank line after declarations
-#139: FILE: Documentation/laptops/freefall.c:60:
-+       int fd = open(path, O_RDWR);
-+       if (fd < 0) {
-
-WARNING: Missing a blank line after declarations
-#161: FILE: Documentation/laptops/freefall.c:82:
-+       const char *str = (seconds == 0) ? "Unparked" : "Parked";
-+       write_int(unload_heads_path, seconds*1000);
-
-total: 0 errors, 3 warnings, 181 lines checked
-
-
-
---==_Exmh_1400608961_1987P
-Content-Type: application/pgp-signature
+--nextPart1898212.sOqooXxYZ6
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Exmh version 2.5 07/13/2001
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIVAwUBU3uYwAdmEQWDXROgAQKavw//Vkuz/l3x2frgWgZBNVFL03RQ1KQKK8y1
-EvdsavwUViKaHBRTdkLnhJpZ6bJBaOCdLM3G+8bwBQaBF7pjLx5kAhKuI27jKqGJ
-pLozWBW4EXhryX1bwX7R4BWU9m/qBoDJapEeqbkfhi3C2gSTX1Jsx5rpUN7drnj8
-ljQi+qd/wWgW5Ru+DEfqW87Be2PNhwve2HUeYn+9Df/yHE87+Kw45PMULAGPx5Dq
-oQwl1TzQm8duDFwno2EqGAfoSrcdr8/gppT1+gM4Htfodt+QxzfqXeRDGvvkUuR4
-7x1fON0CmCDMrefoTUvpeTZr4kJCRYFDAlS+6eJvnPDvpPclDBwVkSimI8Sa0Q7M
-CKJ3VGGSthaIlku89z3KJwq8a7g0x5wBGVrUCUoLS/BXebxqDBbccCI3UJEpCfWu
-MD8WZSczHEPyYlkmwsRKd9NmqHgdOHG0FtAfAWjaAcd4HUTIGZEc/10U0NFMawQz
-u6FclN3HvYgYCINhXJ57fxp0LiYNxX/35fGWhrzNs4pyqb+FBZHmFtTmo6lqYW6m
-fiwAwEYPLCevFUM1BrpFm3XVlG7s/S0DS6S/FH/VnmAEBVdAzsSI4B/lx9MUyd/G
-axQPTErqMoDqp8yH6mBKq7GJy85M8I5S+F0LSwr0IJZmF8yWHo3X8FKCS/SI99P5
-WfVwKKEUBog=
-=9Hwt
+iEYEABECAAYFAlN7mpQACgkQi/DJPQPkQ1KNpgCffrmqNvosQTCLLJodoR1xx4M2
+m7YAn08gnpKyJlk6mgJANKMXXq3BYoBE
+=s8je
 -----END PGP SIGNATURE-----
 
---==_Exmh_1400608961_1987P--
+--nextPart1898212.sOqooXxYZ6--
