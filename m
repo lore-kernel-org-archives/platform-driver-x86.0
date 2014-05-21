@@ -1,64 +1,129 @@
-From: Valdis.Kletnieks@vt.edu
-Subject: Re: [PATCH 1/2] platform: x86: dell-smo8800: Dell Latitude freefall driver (ACPI SMO8800/SMO8810)
-Date: Tue, 20 May 2014 14:36:18 -0400
-Message-ID: <22163.1400610978@turing-police.cc.vt.edu>
-References: <1399114077-19314-1-git-send-email-pali.rohar@gmail.com> <201405201056.47726@pali> <20424.1400608961@turing-police.cc.vt.edu>
-            <201405202010.28868@pali>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: Re: [PATCH v2 1/3] acpi-video: Add an acpi_video_unregister_backlight
+ function
+Date: Wed, 21 May 2014 09:30:55 +0800
+Message-ID: <537C01CF.5000007@intel.com>
+References: <1400316483-6356-1-git-send-email-hdegoede@redhat.com> <1400316483-6356-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1400610978_1987P";
-	 micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from lennier.cc.vt.edu ([198.82.162.213]:33562 "EHLO
-	lennier.cc.vt.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750826AbaETShs (ORCPT
+Received: from mga02.intel.com ([134.134.136.20]:12499 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750735AbaEUBbA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 20 May 2014 14:37:48 -0400
-In-Reply-To: Your message of "Tue, 20 May 2014 20:10:28 +0200."
-             <201405202010.28868@pali>
+	Tue, 20 May 2014 21:31:00 -0400
+In-Reply-To: <1400316483-6356-2-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lee Chun-Yi <jlee@suse.com>
+Cc: Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 
---==_Exmh_1400610978_1987P
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 05/17/2014 04:48 PM, Hans de Goede wrote:
+> Add an acpi_video_unregister_backlight function, which only unregisters
+> the backlight device, and leaves the acpi_notifier in place. Some acpi_vendor
+> driver need this as they don't want the acpi_video# backlight device, but do
+> need the acpi-video driver for hotkey handling.
+> 
+> Chances are that this new acpi_video_unregister_backlight() is actually
+> what existing acpi_vendor drivers have wanted all along. Currently acpi_vendor
+> drivers which want to disable the acpi_video# backlight device, make 2 calls:
+> 
+> acpi_video_dmi_promote_vendor();
+> acpi_video_unregister();
+> 
+> The intention here is to make things independent of when acpi_video_register()
+> gets called. As acpi_video_register() will get called on acpi-video load time
+> on non intel gfx machines, while it gets called on i915 load time on intel
+> gfx machines.
+> 
+> This leads to the following 2 interesting scenarios:
+> 
+> a) intel gfx:
+> 1) acpi-video module gets loaded (as it is a dependency of acpi_vendor and i915)
+> 2) acpi-video does NOT call acpi_video_register()
+> 3) acpi_vendor loads (lets assume it loads before i915), calls
+> acpi_video_dmi_promote_vendor(); which sets ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
+> 4) calls acpi_video_unregister -> not registered, nop
+> 5) i915 loads, calls acpi_video_register
+> 6) acpi_video_register registers the acpi_notifier for the hotkeys,
+>    does NOT register a backlight device because of ACPI_VIDEO_BACKLIGHT_DMI_VENDOR
+> 
+> b) non intel gfx
+> 1) acpi-video module gets loaded (as it is a dependency acpi_vendor)
+> 2) acpi-video calls acpi_video_register()
+> 3) acpi_video_register registers the acpi_notifier for the hotkeys,
+>    and a backlight device
+> 4) acpi_vendor loads, calls acpi_video_dmi_promote_vendor()
+> 5) calls acpi_video_unregister, this unregisters BOTH the acpi_notifier for
+>    the hotkeys AND the backlight device
+> 
+> So here we have possibly the same acpi_vendor module, making the same calls,
+> but with different results, in one cases acpi-video does handle hotkeys,
+> in the other it does not.
+> 
+> Note that the a) scenario turns into b) if we assume the i915 module loads
+> before the vendor_acpi module, so we also have different behavior depending
+> on module loading order!
+> 
+> So as said I believe that quite a few existing acpi_vendor modules really
+> always want the behavior of a), hence this patch adds a new
+> acpi_video_unregister_backlight() which gives the behavior of a) independent
+> of module loading order.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-On Tue, 20 May 2014 20:10:28 +0200, Pali Roh=E1r said:
+Reviewed-by: Aaron Lu <aaron.lu@intel.com>
 
-> > Hmm.. what tree are you building against?  I wonder if your
-> > checkpatch is a different version than mine (next-20140519).
->=20
-> I'm using up-to-date linus tree, git rev
-> 60b5f90d0fac7585f1a43ccdad06787b97eda0ab
+Thanks,
+Aaron
 
-Ah, OK.  Linux-next tree has a bunch of changes to checkpatch.pl that
-will probably go into the Linus tree during the next merge window, and
-several of them address the =22blank line after declarations=22 warning -=
- they
-roughly tripled the number of checks made for that case....
-
---==_Exmh_1400610978_1987P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Exmh version 2.5 07/13/2001
-
-iQIVAwUBU3ugoQdmEQWDXROgAQJJ5hAAvpMTr8zqfj9gIeG+S4plRv97MbCx3xDS
-c58vRyZJJCRmyY4r8e1dUYkd/OPdzUkMtirUUNMh/TfpmHOxGBlPNhzlxaZYhHVa
-/ODMhtHdhY0X/SGxdTfdQTQtcmUQHKD/WK3GnonQnXYysctYq8XINV+xXGSgN0qV
-PnAA+noGXjBwVd/LNTht8WxHPaEdSezZqB7sCagH6ljpADzcFJxwoakvGr9UWyG+
-wf6aaMRQEsT/8dAeF1M6S4CydJqNhIBDW9T37gxiGpYukQW2/5BL5OZ1zhvQhxkp
-WJVpcw97QKqXrF5PkXLvTvNhfS/Ddx3s7psTHXg9u6Cn7jYZf3UUJ3x3Sqyhd5tU
-uiTHMlRL5xgKmhq6p6uoXMegjO7/1e2InqgAyQmaGP7Ge+bzi5QvJbcvkJTZ4jpA
-aWZn/KpsmMUJbBvv2d94gNj1xAd82FegZjPTJFmubTU9EDb9DTDizzBoSbEixUBj
-i1ZNzf8MdqXOC/l1M70Np4x5+VYHknpEsQJDqJ9gtRAsDVWjrTg+rnkbcVUH6m+0
-XKDDn650yhPlX30uwDGR8sLWquQU9A+0DKXfLAWuTg0U0+dUGO0pzZeVa8svSwmM
-UY7PJu6P1T4gupdm/uVR7vmAv3E3331YfxIWfxhGiylFOxSYdMsKOTqfwImxW8Dw
-tfh3TuhXnsI=
-=oPgh
------END PGP SIGNATURE-----
-
---==_Exmh_1400610978_1987P--
+> ---
+>  drivers/acpi/video.c | 14 ++++++++++++++
+>  include/acpi/video.h |  2 ++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/acpi/video.c b/drivers/acpi/video.c
+> index 52176ad..ba6e4d7 100644
+> --- a/drivers/acpi/video.c
+> +++ b/drivers/acpi/video.c
+> @@ -2166,6 +2166,20 @@ void acpi_video_unregister(void)
+>  }
+>  EXPORT_SYMBOL(acpi_video_unregister);
+>  
+> +void acpi_video_unregister_backlight(void)
+> +{
+> +	struct acpi_video_bus *video;
+> +
+> +	if (!register_count)
+> +		return;
+> +
+> +	mutex_lock(&video_list_lock);
+> +	list_for_each_entry(video, &video_bus_head, entry)
+> +		acpi_video_bus_unregister_backlight(video);
+> +	mutex_unlock(&video_list_lock);
+> +}
+> +EXPORT_SYMBOL(acpi_video_unregister_backlight);
+> +
+>  /*
+>   * This is kind of nasty. Hardware using Intel chipsets may require
+>   * the video opregion code to be run first in order to initialise
+> diff --git a/include/acpi/video.h b/include/acpi/video.h
+> index 61109f2..ea4c7bb 100644
+> --- a/include/acpi/video.h
+> +++ b/include/acpi/video.h
+> @@ -19,11 +19,13 @@ struct acpi_device;
+>  #if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
+>  extern int acpi_video_register(void);
+>  extern void acpi_video_unregister(void);
+> +extern void acpi_video_unregister_backlight(void);
+>  extern int acpi_video_get_edid(struct acpi_device *device, int type,
+>  			       int device_id, void **edid);
+>  #else
+>  static inline int acpi_video_register(void) { return 0; }
+>  static inline void acpi_video_unregister(void) { return; }
+> +static inline void acpi_video_unregister_backlight(void) { return; }
+>  static inline int acpi_video_get_edid(struct acpi_device *device, int type,
+>  				      int device_id, void **edid)
+>  {
+> 
