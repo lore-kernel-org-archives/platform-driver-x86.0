@@ -1,70 +1,331 @@
-From: Ismael Luceno <ismael.luceno@gmail.com>
-Subject: [PATCHv2 2/2] platform x86 Kconfig: Refer to the laptop list in the Compal driver help
-Date: Wed, 21 May 2014 17:24:28 -0300
-Message-ID: <1400703868-17571-2-git-send-email-ismael.luceno@gmail.com>
-References: <1400703868-17571-1-git-send-email-ismael.luceno@gmail.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH v2] platform: x86: dell-smo8800: Dell Latitude freefall driver (ACPI SMO8800/SMO8810)
+Date: Thu, 22 May 2014 13:15:48 +0200
+Message-ID: <1400757348-5351-1-git-send-email-pali.rohar@gmail.com>
+References: <1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f51.google.com ([209.85.213.51]:51066 "EHLO
-	mail-yh0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752673AbaEUUZS (ORCPT
+Received: from mail-pd0-f181.google.com ([209.85.192.181]:56000 "EHLO
+	mail-pd0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751919AbaEVLRb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 May 2014 16:25:18 -0400
-Received: by mail-yh0-f51.google.com with SMTP id f73so2161414yha.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 May 2014 13:25:17 -0700 (PDT)
-In-Reply-To: <1400703868-17571-1-git-send-email-ismael.luceno@gmail.com>
+	Thu, 22 May 2014 07:17:31 -0400
+In-Reply-To: <1399114077-19314-2-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Ismael Luceno <ismael.luceno@gmail.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, Valdis.Kletnieks@vt.edu
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Sonal Santan <sonal.santan@gmail.com>
 
-Signed-off-by: Ismael Luceno <ismael.luceno@gmail.com>
+This acpi driver provide supports for freefall sensors SMO8800/SMO8810 =
+which
+can be found on Dell Latitude laptops. Driver register /dev/freefall mi=
+sc
+device which has same interface as driver hp_accel freefall driver. So =
+any
+existing applications for HP freefall sensor /dev/freefall will work fo=
+r with
+this new driver for Dell Latitude laptops too.
+
+Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Cc: Sonal Santan <sonal.santan@gmail.com>
+Tested-By: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Acked-By: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 ---
- drivers/platform/x86/Kconfig | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+Changes since v1:
+* Fixed warnings: Missing a blank line after declarations
+* Fixed Lowercase ON in Kconfig
+* Fixed Alan's review problems by Sonal Santan
+---
+ drivers/platform/x86/Kconfig        |   10 ++
+ drivers/platform/x86/Makefile       |    1 +
+ drivers/platform/x86/dell-smo8800.c |  233 +++++++++++++++++++++++++++=
+++++++++
+ 3 files changed, 244 insertions(+)
+ create mode 100644 drivers/platform/x86/dell-smo8800.c
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 27df2c5..3ba9c42 100644
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index 27df2c5..0e80401 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -102,7 +102,7 @@ config DELL_LAPTOP
- 	default n
- 	---help---
- 	This driver adds support for rfkill and backlight control to Dell
--	laptops.
-+	laptops (except for some models covered by the Compal driver).
- 
- config DELL_WMI
- 	tristate "Dell WMI extras"
-@@ -265,23 +265,21 @@ config PANASONIC_LAPTOP
- 	  R2, R3, R5, T2, W2 and Y2 series), say Y.
- 
- config COMPAL_LAPTOP
--	tristate "Compal Laptop Extras"
-+	tristate "Compal (and others) Laptop Extras"
- 	depends on ACPI
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on RFKILL
- 	depends on HWMON
- 	depends on POWER_SUPPLY
- 	---help---
--	  This is a driver for laptops built by Compal:
-+	  This is a driver for laptops built by Compal, and some models by
-+	  other brands (e.g. Dell, Toshiba).
- 
--	  Compal FL90/IFL90
--	  Compal FL91/IFL91
--	  Compal FL92/JFL92
--	  Compal FT00/IFT00
-+	  It adds support for rfkill, Bluetooth, WLAN and LCD brightness
-+	  control.
- 
--	  It adds support for Bluetooth, WLAN and LCD brightness control.
--
--	  If you have an Compal FL9x/IFL9x/FT00 laptop, say Y or M here.
-+	  For a (possibly incomplete) list of supported laptops, please refer
-+	  to: Documentation/platform/x86-laptop-drivers.txt
- 
- config SONY_LAPTOP
- 	tristate "Sony Laptop Extras"
--- 
-1.9.1
+@@ -127,6 +127,16 @@ config DELL_WMI_AIO
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-wmi-aio.
+=20
++config DELL_SMO8800
++	tristate "Dell Latitude freefall driver (ACPI SMO8800/SMO8810)"
++	depends on ACPI
++	---help---
++	  Say Y here if you want to support SMO8800/SMO8810 freefall device
++	  on Dell Latitude laptops.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-smo8800.
++
+=20
+ config FUJITSU_LAPTOP
+ 	tristate "Fujitsu Laptop Extras"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
+ile
+index 1a2eafc..c4ca428 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_COMPAL_LAPTOP)	+=3D compal-laptop.o
+ obj-$(CONFIG_DELL_LAPTOP)	+=3D dell-laptop.o
+ obj-$(CONFIG_DELL_WMI)		+=3D dell-wmi.o
+ obj-$(CONFIG_DELL_WMI_AIO)	+=3D dell-wmi-aio.o
++obj-$(CONFIG_DELL_SMO8800)	+=3D dell-smo8800.o
+ obj-$(CONFIG_ACER_WMI)		+=3D acer-wmi.o
+ obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
+ obj-$(CONFIG_HP_ACCEL)		+=3D hp_accel.o
+diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86=
+/dell-smo8800.c
+new file mode 100644
+index 0000000..a653716
+--- /dev/null
++++ b/drivers/platform/x86/dell-smo8800.c
+@@ -0,0 +1,233 @@
++/*
++ *  dell-smo8800.c - Dell Latitude ACPI SMO8800/SMO8810 freefall senso=
+r driver
++ *
++ *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
++ *  Copyright (C) 2014 Pali Roh=C3=A1r <pali.rohar@gmail.com>
++ *
++ *  This is loosely based on lis3lv02d driver.
++ *
++ *  This program is free software; you can redistribute it and/or modi=
+fy
++ *  it under the terms of the GNU General Public License as published =
+by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ */
++
++#define DRIVER_NAME "smo8800"
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/acpi.h>
++#include <linux/interrupt.h>
++#include <linux/miscdevice.h>
++
++struct smo8800_device {
++	u32 irq;                     /* acpi device irq */
++	atomic_t counter;            /* count after last read */
++	struct miscdevice miscdev;   /* for /dev/freefall */
++	unsigned long misc_opened;   /* whether the device is open */
++	wait_queue_head_t misc_wait; /* Wait queue for the misc dev */
++	struct device *dev;          /* acpi device */
++};
++
++static irqreturn_t smo8800_interrupt_quick(int irq, void *data)
++{
++	struct smo8800_device *smo8800 =3D data;
++
++	atomic_inc(&smo8800->counter);
++	wake_up_interruptible(&smo8800->misc_wait);
++	return IRQ_WAKE_THREAD;
++}
++
++static irqreturn_t smo8800_interrupt_thread(int irq, void *data)
++{
++	struct smo8800_device *smo8800 =3D data;
++
++	dev_info(smo8800->dev, "detected free fall\n");
++	return IRQ_HANDLED;
++}
++
++static acpi_status smo8800_get_resource(struct acpi_resource *resource=
+,
++					void *context)
++{
++	struct acpi_resource_extended_irq *irq;
++
++	if (resource->type !=3D ACPI_RESOURCE_TYPE_EXTENDED_IRQ)
++		return AE_OK;
++
++	irq =3D &resource->data.extended_irq;
++	if (!irq || !irq->interrupt_count)
++		return AE_OK;
++
++	*((u32 *)context) =3D irq->interrupts[0];
++	return AE_CTRL_TERMINATE;
++}
++
++static u32 smo8800_get_irq(struct acpi_device *device)
++{
++	u32 irq =3D 0;
++	acpi_status status;
++
++	status =3D acpi_walk_resources(device->handle, METHOD_NAME__CRS,
++				     smo8800_get_resource, &irq);
++	if (ACPI_FAILURE(status)) {
++		dev_err(&device->dev, "acpi_walk_resources failed\n");
++		return 0;
++	}
++
++	return irq;
++}
++
++static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
++				 size_t count, loff_t *pos)
++{
++	struct smo8800_device *smo8800 =3D container_of(file->private_data,
++					 struct smo8800_device, miscdev);
++
++	u32 data =3D 0;
++	unsigned char byte_data =3D 0;
++	ssize_t retval =3D 1;
++
++	if (count < 1)
++		return -EINVAL;
++
++	atomic_set(&smo8800->counter, 0);
++	retval =3D wait_event_interruptible(smo8800->misc_wait,
++				(data =3D atomic_xchg(&smo8800->counter, 0)));
++
++	if (retval)
++		return retval;
++
++	byte_data =3D 1;
++	retval =3D 1;
++
++	if (data < 255)
++		byte_data =3D data;
++	else
++		byte_data =3D 255;
++
++	if (put_user(byte_data, buf))
++		retval =3D -EFAULT;
++
++	return retval;
++}
++
++static int smo8800_misc_open(struct inode *inode, struct file *file)
++{
++	struct smo8800_device *smo8800 =3D container_of(file->private_data,
++					 struct smo8800_device, miscdev);
++
++	if (test_and_set_bit(0, &smo8800->misc_opened))
++		return -EBUSY; /* already open */
++
++	atomic_set(&smo8800->counter, 0);
++	return 0;
++}
++
++static int smo8800_misc_release(struct inode *inode, struct file *file=
+)
++{
++	struct smo8800_device *smo8800 =3D container_of(file->private_data,
++					 struct smo8800_device, miscdev);
++
++	clear_bit(0, &smo8800->misc_opened); /* release the device */
++	return 0;
++}
++
++static const struct file_operations smo8800_misc_fops =3D {
++	.owner =3D THIS_MODULE,
++	.read =3D smo8800_misc_read,
++	.open =3D smo8800_misc_open,
++	.release =3D smo8800_misc_release,
++};
++
++static int smo8800_add(struct acpi_device *device)
++{
++	int err;
++	struct smo8800_device *smo8800;
++
++	smo8800 =3D devm_kzalloc(&device->dev, sizeof(*smo8800), GFP_KERNEL);
++	if (!smo8800) {
++		dev_err(&device->dev, "failed to allocate device data\n");
++		return -ENOMEM;
++	}
++
++	smo8800->dev =3D &device->dev;
++	smo8800->miscdev.minor =3D MISC_DYNAMIC_MINOR;
++	smo8800->miscdev.name =3D "freefall";
++	smo8800->miscdev.fops =3D &smo8800_misc_fops;
++
++	init_waitqueue_head(&smo8800->misc_wait);
++
++	err =3D misc_register(&smo8800->miscdev);
++	if (err) {
++		dev_err(&device->dev, "failed to register misc dev: %d\n", err);
++		return err;
++	}
++
++	device->driver_data =3D smo8800;
++
++	smo8800->irq =3D smo8800_get_irq(device);
++	if (!smo8800->irq) {
++		dev_err(&device->dev, "failed to obtain IRQ\n");
++		err =3D -EINVAL;
++		goto error;
++	}
++
++	err =3D request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
++				   smo8800_interrupt_thread,
++				   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++				   DRIVER_NAME, smo8800);
++	if (err) {
++		dev_err(&device->dev,
++			"failed to request thread for IRQ %d: %d\n",
++			smo8800->irq, err);
++		goto error;
++	}
++
++	dev_dbg(&device->dev, "device /dev/freefall registered with IRQ %d\n"=
+,
++		 smo8800->irq);
++	return 0;
++
++error:
++	misc_deregister(&smo8800->miscdev);
++	return err;
++}
++
++static int smo8800_remove(struct acpi_device *device)
++{
++	struct smo8800_device *smo8800 =3D device->driver_data;
++
++	free_irq(smo8800->irq, smo8800);
++	misc_deregister(&smo8800->miscdev);
++	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
++	return 0;
++}
++
++static const struct acpi_device_id smo8800_ids[] =3D {
++	{ "SMO8800", 0 },
++	{ "SMO8810", 0 },
++	{ "", 0 },
++};
++
++MODULE_DEVICE_TABLE(acpi, smo8800_ids);
++
++static struct acpi_driver smo8800_driver =3D {
++	.name =3D DRIVER_NAME,
++	.class =3D "Latitude",
++	.ids =3D smo8800_ids,
++	.ops =3D {
++		.add =3D smo8800_add,
++		.remove =3D smo8800_remove,
++	},
++	.owner =3D THIS_MODULE,
++};
++
++module_acpi_driver(smo8800_driver);
++
++MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO8800/SMO881=
+0)");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Sonal Santan, Pali Roh=C3=A1r");
+--=20
+1.7.9.5
