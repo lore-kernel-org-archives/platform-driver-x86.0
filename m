@@ -1,114 +1,175 @@
-From: Himangi Saraogi <himangi774@gmail.com>
-Subject: [PATCH] ideapad_laptop: Introduce the use of the managed version of
- kzalloc
-Date: Sun, 25 May 2014 15:53:47 +0530
-Message-ID: <20140525102346.GA19485@himangi-Dell>
+From: Shuduo Sang <shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH] support thinkpad HKEY interface
+ version 0x200
+Date: Mon, 26 May 2014 19:10:37 +0800
+Message-ID: <5383212D.4040905@canonical.com>
+References: <531F0073.7060103@canonical.com>	<20140403154427.GB32027@khazad-dum.debian.net>	<CANqatMD2F-XCSZHoFaOsDA3o1JkVG2kLccYLr-=Z7b-cmC-6oA@mail.gmail.com>	<1397223816.5276.34.camel@x230>	<CA+BAWBTb6Z1g-kNsyeAKAGjoUR1vXu3ZC33R+BO3+WH=64USoQ@mail.gmail.com>
+	<CA+BAWBQdGn54LO50Z0iB=X2D0r40Xp8+ryu1=GP7Kzv6PTU9bQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f44.google.com ([209.85.220.44]:49958 "EHLO
-	mail-pa0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751375AbaEYKXx (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 25 May 2014 06:23:53 -0400
+Content-Type: multipart/mixed; boundary="===============5661449033160884345=="
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CA+BAWBQdGn54LO50Z0iB=X2D0r40Xp8+ryu1=GP7Kzv6PTU9bQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+Cc: "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bruce.ma-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
+
+This is a multi-part message in MIME format.
+--===============5661449033160884345==
+Content-Type: multipart/alternative;
+	boundary="------------030403080804090904070909"
+
+This is a multi-part message in MIME format.
+--------------030403080804090904070909
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Hi Matthew,
+
+Sorry for asking this again.
+Just realize previous email was blocked by mailling list rule.
+
+May I know when the platform driver tree will be pulled next time?
+
+Thanks,
+Shuduo
+
+On 2014年05月06日 20:32, Shuduo Sang wrote:
+> Hi Matthew,
+ >
+ > I see Linus tree version continue to increase but seems you did not 
+ask platform driver tree pull
+ > and my third patch for thinkpad_acpi did not be upstreamed. May I 
+know what cycle you used to
+ > ask Linus pull?
+ >
+ > Thanks,
+ > Shuduo
+ >
+ >
+ > On Fri, Apr 11, 2014 at 9:55 PM, Shuduo Sang 
+<shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+ >
+ >
+ >
+ >
+ >     On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett 
+<matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org> wrote:
+ >
+ >         On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sang wrote:
+ >         > Hi Matthew,
+ >         >
+ >         > This patch is not in your recent for_linus branch. Why?
+ >
+ >         I'm sorry, I'd somehow missed it. I'll get it in the next pull.
+ >
+ >
+ >     Thanks!
+ >
+ >
+ >         --
+ >         Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>
+ >
+ >
+ >
+
+
+
+--------------030403080804090904070909
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Hi Matthew,<br>
+    <br>
+    Sorry for asking this again.<br>
+    Just realize previous email was blocked by mailling list rule.<br>
+    <br>
+    May I know when the platform driver tree will be pulled next time?<br>
+    <br>
+    Thanks,<br>
+    Shuduo<br>
+    <br>
+    On 2014年05月06日 20:32, Shuduo Sang wrote:<br>
+    <span style="white-space: pre;">&gt; Hi Matthew,<br>
+      &gt;<br>
+      &gt; I see Linus tree version continue to increase but seems you
+      did not ask platform driver tree pull <br>
+      &gt; and my third patch for thinkpad_acpi did not be upstreamed.
+      May I know what cycle you used to<br>
+      &gt; ask Linus pull?<br>
+      &gt;<br>
+      &gt; Thanks,<br>
+      &gt; Shuduo<br>
+      &gt;<br>
+      &gt;<br>
+      &gt; On Fri, Apr 11, 2014 at 9:55 PM, Shuduo Sang
+      <a class="moz-txt-link-rfc2396E" href="mailto:shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org">&lt;shuduo.sang-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org&gt;</a> wrote:<br>
+      &gt;<br>
+      &gt;<br>
+      &gt;<br>
+      &gt;<br>
+      &gt;     On Fri, Apr 11, 2014 at 9:43 PM, Matthew Garrett
+      <a class="moz-txt-link-rfc2396E" href="mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org">&lt;matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org&gt;</a> wrote:<br>
+      &gt;<br>
+      &gt;         On Fri, 2014-04-11 at 21:10 +0800, Shuduo Sang wrote:<br>
+      &gt;         &gt; Hi Matthew,<br>
+      &gt;         &gt;<br>
+      &gt;         &gt; This patch is not in your recent for_linus
+      branch. Why?<br>
+      &gt;<br>
+      &gt;         I'm sorry, I'd somehow missed it. I'll get it in the
+      next pull.<br>
+      &gt;<br>
+      &gt;<br>
+      &gt;     Thanks!<br>
+      &gt;      <br>
+      &gt;<br>
+      &gt;         --<br>
+      &gt;         Matthew Garrett <a class="moz-txt-link-rfc2396E" href="mailto:matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org">&lt;matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org&gt;</a><br>
+      &gt;<br>
+      &gt;<br>
+      &gt;</span><br>
+    <br>
+    <br>
+  </body>
+</html>
+
+--------------030403080804090904070909--
+
+
+--===============5661449033160884345==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: julia.lawall@lip6.fr
 
-This patch moves data allocated using kzalloc to managed data allocated
-using devm_kzalloc and cleans now unnecessary kfrees in probe and remove
-functions. The label sysfs_failed is removed as it is no longer
-required.  Also, linux/device.h is added to make sure the devm_*()
-routine declarations are unambiguously available.
+------------------------------------------------------------------------------
+The best possible search technologies are now affordable for all companies.
+Download your FREE open source Enterprise Search Engine today!
+Our experts will assist you in its installation for $59/mo, no commitment.
+Test it for FREE on our Cloud platform anytime!
+http://pubads.g.doubleclick.net/gampad/clk?id=145328191&iu=/4140/ostg.clktrk
+--===============5661449033160884345==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-The following Coccinelle semantic patch was used for making the change:
+_______________________________________________
+ibm-acpi-devel mailing list
+ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
 
-@platform@
-identifier p, probefn, removefn;
-@@
-struct platform_driver p = {
-  .probe = probefn,
-  .remove = removefn,
-};
-
-@prb@
-identifier platform.probefn, pdev;
-expression e, e1, e2;
-@@
-probefn(struct platform_device *pdev, ...) {
-  <+...
-- e = kzalloc(e1, e2)
-+ e = devm_kzalloc(&pdev->dev, e1, e2)
-  ...
-?-kfree(e);
-  ...+>
-}
-
-@rem depends on prb@
-identifier platform.removefn;
-expression e;
-@@
-removefn(...) {
-  <...
-- kfree(e);
-  ...>
-}
-
-Signed-off-by: Himangi Saraogi <himangi774@gmail.com>
-Acked-by: Julia Lawall <julia.lawall@lip6.fr>
----
-Not compile tested due to incompatible architecture.
- drivers/platform/x86/ideapad-laptop.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 6dd060a..aadfb1f 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -36,6 +36,7 @@
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
- #include <linux/i8042.h>
-+#include <linux/device.h>
- 
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
-@@ -833,7 +834,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	if (read_method_int(adev->handle, "_CFG", &cfg))
- 		return -ENODEV;
- 
--	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
-@@ -844,7 +845,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 
- 	ret = ideapad_sysfs_init(priv);
- 	if (ret)
--		goto sysfs_failed;
-+		return ret;
- 
- 	ret = ideapad_debugfs_init(priv);
- 	if (ret)
-@@ -884,8 +885,6 @@ input_failed:
- 	ideapad_debugfs_exit(priv);
- debugfs_failed:
- 	ideapad_sysfs_exit(priv);
--sysfs_failed:
--	kfree(priv);
- 	return ret;
- }
- 
-@@ -903,7 +902,6 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
- 	ideapad_debugfs_exit(priv);
- 	ideapad_sysfs_exit(priv);
- 	dev_set_drvdata(&pdev->dev, NULL);
--	kfree(priv);
- 
- 	return 0;
- }
--- 
-1.9.1
+--===============5661449033160884345==--
