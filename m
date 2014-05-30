@@ -1,65 +1,60 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] gpio: removes all usage of gpiochip_remove retval
-Date: Fri, 30 May 2014 09:40:25 +1000
-Message-ID: <20140530094025.3b78301e@canb.auug.org.au>
-References: <1401400492-26175-1-git-send-email-berthe.ab@gmail.com>
-	<5387B149.20408@gmail.com>
-	<CABprBybQ-Jyk95zCqnoWjjyzhNyHVbsbEhb=vA5d=ZYp95_bFA@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH 0/2] backlight: remove trivial get_brightness implementations
+Date: Fri, 30 May 2014 12:10:48 +0200
+Message-ID: <1401444650-12267-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/852XE2D+8ii.R+aAPw7pJ16"; protocol="application/pgp-signature"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CABprBybQ-Jyk95zCqnoWjjyzhNyHVbsbEhb=vA5d=ZYp95_bFA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: abdoulaye berthe <berthe.ab@gmail.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, devel@driverdev.osuosl.org, Alexandre Courbot <gnurou@gmail.com>, patches@opensource.wolfsonmicro.com, linux-mips@linux-mips.org, netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sh@vger.kernel.org, linux-wireless@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, spear-devel@list.st.com, linux-samsungsoc@vger.kernel.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-leds@vger.kernel.org, m@bues.ch, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>
+Cc: Milo Kim <milo.kim@ti.com>, "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Yijing Wang <wangyijing@huawei.com>, Matthew Garrett <matthew.garrett@nebula.com>, Kukjin Kim <kgene.kim@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Dan Carpenter <dan.carpenter@oracle.com>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Mikulas Patocka <mpato>
 List-Id: platform-driver-x86.vger.kernel.org
 
---Sig_/852XE2D+8ii.R+aAPw7pJ16
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi abdoulaye,
-
-On Fri, 30 May 2014 01:16:22 +0200 abdoulaye berthe <berthe.ab@gmail.com> w=
-rote:
->
-> The aim of this patch is to make gpiochip_remove() behavior consistent,
-> especially when issuing a remove request while the chipio chip is
-> still requested. A patch has been submitted to change the return value of
-> gpiochip_remove() from int to void. This one updates users of the return
-> value:
-
-Then you need to keep these two patch in a series with this one first
-to make sure that the other patch is not applied without this one.
-
-And you should add the above explanation to the changelog for this
+This patchset makes get_brightness callback optional
+and removes trivial implementations.
+Driver changes are quite obvious so I have put them into single
 patch.
 
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
+The patchset is based on the current linux-next branch.
 
---Sig_/852XE2D+8ii.R+aAPw7pJ16
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
+Regards
+Andrzej
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Andrzej Hajda (2):
+  backlight: show brightness even if get_brightness is not implemented
+  backlight: remove trivial get_brightness implementations
 
-iQIcBAEBCAAGBQJTh8VuAAoJEMDTa8Ir7ZwV8iEQAICWaN/UMPsdzewqsMiXXSMh
-C5svkPpUj+qDUSm6Z89xsBlSrNn5iaa06uiZllN8KLoLbhGpZ5xdGqmMalys33zc
-Bh2lJNCtozIbI1fMW63+W94wMtWNSnUAbX4szSpxbbaZQ3ig9ixXegji8nvONTqw
-QWNjGORnMPvzrCsTrv8/hNYlmeT/9WZwAwVLr9++ldM0fow/SfF251WvmNjheAcq
-2YCd1vEk7ZZ9aFDr463CKP3eeTKDtWaSrdoXLdIvs627tRtfhSuqQF1q6d8B1Vbk
-HR9xx3bANosgA/Fa7rHcWxw8lLr5EDXeaHJieT0I05kXPM1rSIh9tTGAeXivG/LH
-j+FWHe7P3v2qN+mvgqRHIndi1axUhm4ZbqG3Wcg8uAV+rGxemlmkZMWzdMPwzcRA
-YJKTVoc+LbLp4Yb1HpZ4hYbKvxu7iEf8OQJsb9bY3lnm8Rnax4VhQtn15aKn2fLr
-b8xSfM9iGeL1bgEyh5pK4BVgE1+N7Z/7qGfD95EAT9v5cX7di9y+eU8zXb0fmXRh
-V1rV2n9RfrbH3wE8DoR4yC2SeDcQl5F/CwII/zHkymzWTgGvpN4mhk06q0CPhxxO
-nZD317b7OuLQbDbZJ+o/92/XMlOt6Sanno1I27C19ahUMynJAo32O+xHIDdv5AKI
-Dom8qI4Ex3DKkwqflJzw
-=RG4V
------END PGP SIGNATURE-----
+ drivers/macintosh/via-pmu-backlight.c      | 6 ------
+ drivers/platform/x86/samsung-q10.c         | 6 ------
+ drivers/video/backlight/aat2870_bl.c       | 6 ------
+ drivers/video/backlight/ams369fg06.c       | 6 ------
+ drivers/video/backlight/backlight.c        | 2 ++
+ drivers/video/backlight/bd6107.c           | 6 ------
+ drivers/video/backlight/gpio_backlight.c   | 6 ------
+ drivers/video/backlight/ld9040.c           | 6 ------
+ drivers/video/backlight/lp855x_bl.c        | 6 ------
+ drivers/video/backlight/lp8788_bl.c        | 6 ------
+ drivers/video/backlight/lv5207lp.c         | 6 ------
+ drivers/video/backlight/pandora_bl.c       | 6 ------
+ drivers/video/backlight/pwm_bl.c           | 6 ------
+ drivers/video/backlight/s6e63m0.c          | 6 ------
+ drivers/video/backlight/tps65217_bl.c      | 6 ------
+ drivers/video/fbdev/aty/aty128fb.c         | 6 ------
+ drivers/video/fbdev/aty/atyfb_base.c       | 6 ------
+ drivers/video/fbdev/aty/radeon_backlight.c | 6 ------
+ drivers/video/fbdev/exynos/s6e8ax0.c       | 6 ------
+ drivers/video/fbdev/nvidia/nv_backlight.c  | 6 ------
+ drivers/video/fbdev/riva/fbdev.c           | 6 ------
+ 21 files changed, 2 insertions(+), 120 deletions(-)
 
---Sig_/852XE2D+8ii.R+aAPw7pJ16--
+-- 
+1.9.1
