@@ -1,35 +1,50 @@
-From: Peter Senna Tschudin <peter.senna@gmail.com>
-Subject: toshiba_acpi: Unknown key 14b
-Date: Sun, 1 Jun 2014 07:02:20 -0300
-Message-ID: <CA+MoWDqj33fEmsppxqSE4LSu9C40mam=UAouHweDBwTD_BMfpg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] platform: x86: asus-wmi.c:  Cleaning up uninitialized variables
+Date: Sun,  1 Jun 2014 14:58:52 +0200
+Message-ID: <1401627532-16856-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qg0-f44.google.com ([209.85.192.44]:55144 "EHLO
-	mail-qg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751691AbaFAKCV (ORCPT
+Received: from mail-wi0-f173.google.com ([209.85.212.173]:46398 "EHLO
+	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751967AbaFAM6A (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 Jun 2014 06:02:21 -0400
+	Sun, 1 Jun 2014 08:58:00 -0400
+Received: by mail-wi0-f173.google.com with SMTP id bs8so3255729wib.6
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Jun 2014 05:57:59 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+There is a risk that the variable will be used without being initialized.
 
-I'm using:
+This was largely found by using a static code analysis program called cppcheck.
 
-3.15.0-rc7-next-20140530
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+---
+ drivers/platform/x86/asus-wmi.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On a:
-
-Toshiba R830-10p
-
-And dmesg started to show:
-
-toshiba_acpi: Unknown key 14b
-toshiba_acpi: Unknown key 14d
-
-How can I help make this useful?
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index c5e082f..3fc7f39 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -266,7 +266,7 @@ static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	acpi_status status;
+ 	union acpi_object *obj;
+-	u32 tmp;
++	u32 tmp = 0;
+ 
+ 	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1, method_id,
+ 				     &input, &output);
+@@ -277,8 +277,6 @@ static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+ 	obj = (union acpi_object *)output.pointer;
+ 	if (obj && obj->type == ACPI_TYPE_INTEGER)
+ 		tmp = (u32) obj->integer.value;
+-	else
+-		tmp = 0;
+ 
+ 	if (retval)
+ 		*retval = tmp;
 -- 
-Peter
+1.7.10.4
