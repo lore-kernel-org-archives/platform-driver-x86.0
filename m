@@ -1,34 +1,52 @@
-From: Announcer <freelotto22@freelotto973.onmicrosoft.com>
-Subject: Award Winning Reference:WIN-37-14-29-14
-Date: Sun, 1 Jun 2014 21:07:17 +0200
-Message-ID: <d51a7eb7-880b-4a18-bb34-fc7630fc4d2d@DB3PR05MB155.eurprd05.prod.outlook.com>
-Reply-To: <ffreel26@aol.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: [PATCH] platform/x86: Fix run-time dependencies of OLPC drivers
+Date: Sun, 1 Jun 2014 22:02:48 +0200
+Message-ID: <20140601220248.40e05438@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db3hn0247.outbound.protection.outlook.com ([157.55.234.247]:39760
-	"EHLO emea01-db3-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751507AbaFATIW convert rfc822-to-8bit (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:60540 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752560AbaFAUCx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 Jun 2014 15:08:22 -0400
-Content-Description: Mail message body
+	Sun, 1 Jun 2014 16:02:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <freelotto22@freelotto973.onmicrosoft.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
 
-=46rom claim=B4s processing office.
-=46ree Lotto Lottery Award Notification
-Confirmation Ticket No: 33-48-19-H5H
-Reference:WIN-37-14-29-14
-You have won( 1 Million Euros )in the Free Lotto Lottery Award 2014 hel=
-d in Madrid Spain
-This email was sent to notify you officially as you are advise to conta=
-ct the claim=B4s processing office with your details immediately for cl=
-aim,
-Contact Person: Martinez Adela
-Contact Email: freelottoaward066@gmail.com
-Signed (Announcer)
-Director, Cooperate HR and Communication.
-=46REE LOTTO LOTTERY AWARD
+Let the xo15-ebook driver depend on OLPC as all other OLPC drivers
+already do. Add COMPILE_TEST as an alternative for both xo1-rfkill
+and xo15-ebook, to increase the build testing coverage.
+
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
+---
+ drivers/platform/x86/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- linux-3.15-rc7.orig/drivers/platform/x86/Kconfig	2014-06-01 14:51:20.764590550 +0200
++++ linux-3.15-rc7/drivers/platform/x86/Kconfig	2014-06-01 15:39:41.048869044 +0200
+@@ -724,7 +724,7 @@ config IBM_RTL
+ 
+ config XO1_RFKILL
+ 	tristate "OLPC XO-1 software RF kill switch"
+-	depends on OLPC
++	depends on OLPC || COMPILE_TEST
+ 	depends on RFKILL
+ 	---help---
+ 	  Support for enabling/disabling the WLAN interface on the OLPC XO-1
+@@ -732,6 +732,7 @@ config XO1_RFKILL
+ 
+ config XO15_EBOOK
+ 	tristate "OLPC XO-1.5 ebook switch"
++	depends on OLPC || COMPILE_TEST
+ 	depends on ACPI && INPUT
+ 	---help---
+ 	  Support for the ebook switch on the OLPC XO-1.5 laptop.
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
