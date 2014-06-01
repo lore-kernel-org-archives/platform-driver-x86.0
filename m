@@ -1,173 +1,95 @@
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Subject: [PATCH 04/11] vga_switcheroo: Allow stashing of panel data
-Date: Sun,  1 Jun 2014 12:38:36 -0400
-Message-ID: <1401640723-2058-5-git-send-email-matthew.garrett@nebula.com>
+Subject: [PATCH 03/11] vga_switcheroo: Add command line option
+Date: Sun,  1 Jun 2014 12:38:35 -0400
+Message-ID: <1401640723-2058-4-git-send-email-matthew.garrett@nebula.com>
 References: <1401640723-2058-1-git-send-email-matthew.garrett@nebula.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:60062 "EHLO
+Received: from cavan.codon.org.uk ([93.93.128.6]:60048 "EHLO
 	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752614AbaFAQjF (ORCPT
+	with ESMTP id S1753353AbaFAQjA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 Jun 2014 12:39:05 -0400
+	Sun, 1 Jun 2014 12:39:00 -0400
 In-Reply-To: <1401640723-2058-1-git-send-email-matthew.garrett@nebula.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: airlied@gmail.com
 Cc: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>
 
-Not all MUXes allow us to connect the panel data channel to a GPU without
-handing over the entire panel and triggering additional flickering during
-boot. We only need to do this in order to probe for data that the first
-GPU driver has already identified, so add some functions for stashing that
-data in vga_switcheroo where it can be retrieved by the other driver later.
+Add a command line option in order to allow the user to provide a perferred
+GPU at boot time.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 ---
- drivers/gpu/vga/vga_switcheroo.c | 59 ++++++++++++++++++++++++++++++++++++++++
- include/linux/vga_switcheroo.h   | 12 ++++++++
- 2 files changed, 71 insertions(+)
+ Documentation/kernel-parameters.txt |  5 +++++
+ drivers/gpu/vga/vga_switcheroo.c    | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index 30a8ad0d..6e6d505 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -3486,6 +3486,11 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 			This is actually a boot loader parameter; the value is
+ 			passed to the kernel using a special protocol.
+ 
++	vga_switcheroo= [HW] Switches the enabled GPU at boot time.
++			Format: { IGD | DIS }
++			IGD -- enable the Integrated GPU
++			DIS -- enable the Discrete GPU
++
+ 	vmalloc=nn[KMG]	[KNL,BOOT] Forces the vmalloc area to have an exact
+ 			size of <nn>. This can be used to increase the
+ 			minimum size (128MB on x86). It can also be used to
 diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-index 6d95626..1a80b93 100644
+index c06ad5f..6d95626 100644
 --- a/drivers/gpu/vga/vga_switcheroo.c
 +++ b/drivers/gpu/vga/vga_switcheroo.c
-@@ -17,6 +17,8 @@
-  - switch_check  - check if the device is in a position to switch now
-  */
+@@ -67,6 +67,11 @@ struct vgasr_priv {
+ static int vga_switcheroo_debugfs_init(struct vgasr_priv *priv);
+ static void vga_switcheroo_debugfs_fini(struct vgasr_priv *priv);
  
-+#include <drm/drm_edid.h>
++static enum vga_switcheroo_client_id vga_switcheroo_default = -1;
 +
- #include <linux/module.h>
- #include <linux/seq_file.h>
- #include <linux/uaccess.h>
-@@ -39,6 +41,7 @@ struct vga_switcheroo_client {
- 	int id;
- 	bool active;
- 	bool driver_power_control;
-+	bool use_panel;
- 	struct list_head list;
- };
- 
-@@ -56,6 +59,9 @@ struct vgasr_priv {
- 	int registered_clients;
- 	struct list_head clients;
- 
-+	struct edid *edid;
-+	u8 *dpcd;
++static int vga_switchto_stage1(struct vga_switcheroo_client *new_client);
++static int vga_switchto_stage2(struct vga_switcheroo_client *new_client);
 +
- 	struct vga_switcheroo_handler *handler;
- };
- 
-@@ -107,7 +113,9 @@ static void vga_switcheroo_enable(void)
- 				VGA_SWITCHEROO_DIS : VGA_SWITCHEROO_IGD;
- 			if (vgasr_priv.handler->switch_ddc)
- 				vgasr_priv.handler->switch_ddc(client->id);
-+			client->use_panel = true;
- 			client->ops->reprobe_connectors(client->pdev);
-+			client->use_panel = false;
- 			if (vgasr_priv.handler->switch_ddc)
+ /* only one switcheroo per system */
+ static struct vgasr_priv vgasr_priv = {
+ 	.clients = LIST_HEAD_INIT(vgasr_priv.clients),
+@@ -107,6 +112,18 @@ static void vga_switcheroo_enable(void)
  				vgasr_priv.handler->switch_ddc(old_id);
  		}
-@@ -412,6 +420,9 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
- 	if (ret)
- 		goto restore_ddc;
- 
-+	new_client->use_panel = true;
-+	active->use_panel = false;
+ 	}
 +
- 	if (new_client->ops->reprobe)
- 		new_client->ops->reprobe(new_client->pdev);
- 
-@@ -766,6 +777,54 @@ int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct
++	list_for_each_entry(client, &vgasr_priv.clients, list) {
++		if (!client->active && client->id == vga_switcheroo_default) {
++			ret = vga_switchto_stage1(client);
++			if (ret)
++				printk(KERN_ERR "vga_switcheroo: switching failed stage 1 %d\n", ret);
++
++			ret = vga_switchto_stage2(client);
++			if (ret)
++				printk(KERN_ERR "vga_switcheroo: switching failed stage 2 %d\n", ret);
++		}
++	}
+ 	vga_switcheroo_debugfs_init(&vgasr_priv);
+ 	vgasr_priv.active = true;
+ }
+@@ -748,3 +765,15 @@ int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct
+ 	return -EINVAL;
  }
  EXPORT_SYMBOL(vga_switcheroo_init_domain_pm_optimus_hdmi_audio);
- 
-+int vga_switcheroo_set_dpcd(u8 *dpcd)
++
++static int __init vga_switcheroo_setup(char *str)
 +{
-+	if (vgasr_priv.dpcd)
-+		return -EEXIST;
++	if (!strcmp(str, "IGD"))
++		vga_switcheroo_default = VGA_SWITCHEROO_IGD;
++	else if (!strcmp(str, "DIS"))
++		vga_switcheroo_default = VGA_SWITCHEROO_DIS;
 +
-+	vgasr_priv.dpcd = kmalloc(8, GFP_KERNEL);
-+	memcpy(vgasr_priv.dpcd, dpcd, 8);
-+	return 0;
++	return 1;
 +}
-+EXPORT_SYMBOL(vga_switcheroo_set_dpcd);
 +
-+u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev)
-+{
-+	struct vga_switcheroo_client *client;
-+	client = find_client_from_pci(&vgasr_priv.clients, pdev);
-+
-+	if (!client || !client->use_panel)
-+		return NULL;
-+
-+	return vgasr_priv.dpcd;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_get_dpcd);
-+
-+int vga_switcheroo_set_edid(struct edid *edid)
-+{
-+	int size = EDID_LENGTH * (1 + edid->extensions);
-+
-+	if (vgasr_priv.edid)
-+		return -EEXIST;
-+
-+	vgasr_priv.edid = kmalloc(size, GFP_KERNEL);
-+	memcpy(vgasr_priv.edid, edid, size);
-+	return 0;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_set_edid);
-+
-+struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev)
-+{
-+	struct vga_switcheroo_client *client;
-+	client = find_client_from_pci(&vgasr_priv.clients, pdev);
-+
-+	if (!client || !client->use_panel)
-+		return NULL;
-+
-+	return vgasr_priv.edid;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_get_edid);
-+
- static int __init vga_switcheroo_setup(char *str)
- {
- 	if (!strcmp(str, "IGD"))
-diff --git a/include/linux/vga_switcheroo.h b/include/linux/vga_switcheroo.h
-index bae62fd..07b07fc 100644
---- a/include/linux/vga_switcheroo.h
-+++ b/include/linux/vga_switcheroo.h
-@@ -10,6 +10,7 @@
- #ifndef _LINUX_VGA_SWITCHEROO_H_
- #define _LINUX_VGA_SWITCHEROO_H_
- 
-+#include <drm/drm_edid.h>
- #include <linux/fb.h>
- 
- struct pci_dev;
-@@ -69,6 +70,12 @@ void vga_switcheroo_set_dynamic_switch(struct pci_dev *pdev, enum vga_switcheroo
- 
- int vga_switcheroo_init_domain_pm_ops(struct device *dev, struct dev_pm_domain *domain);
- int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct dev_pm_domain *domain);
-+
-+int vga_switcheroo_set_dpcd(u8 *dpcd);
-+u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev);
-+int vga_switcheroo_set_edid(struct edid *edid);
-+struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev);
-+
- #else
- 
- static inline void vga_switcheroo_unregister_client(struct pci_dev *dev) {}
-@@ -89,5 +96,10 @@ static inline void vga_switcheroo_set_dynamic_switch(struct pci_dev *pdev, enum
- static inline int vga_switcheroo_init_domain_pm_ops(struct device *dev, struct dev_pm_domain *domain) { return -EINVAL; }
- static inline int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct dev_pm_domain *domain) { return -EINVAL; }
- 
-+static inline int vga_switcheroo_set_dpcd(u8 *dpcd) { return 0 };
-+static inline u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev) { return NULL };
-+static inline int vga_switcheroo_set_edid(struct edid *edid) { return 0 };
-+static inline struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev) { return NULL };
-+
- #endif
- #endif /* _LINUX_VGA_SWITCHEROO_H_ */
++__setup("vga_switcheroo=", vga_switcheroo_setup);
 -- 
 1.8.5.3
