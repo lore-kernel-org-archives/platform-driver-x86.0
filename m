@@ -1,50 +1,25 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] platform: x86: asus-wmi.c:  Cleaning up uninitialized variables
-Date: Sun,  1 Jun 2014 14:58:52 +0200
-Message-ID: <1401627532-16856-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Matthew Garrett <matthew.garrett@nebula.com>
+Subject: Improve Apple GMUX support on switcheroo
+Date: Sun,  1 Jun 2014 12:38:32 -0400
+Message-ID: <1401640723-2058-1-git-send-email-matthew.garrett@nebula.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:46398 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751967AbaFAM6A (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:60018 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753120AbaFAQix (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 Jun 2014 08:58:00 -0400
-Received: by mail-wi0-f173.google.com with SMTP id bs8so3255729wib.6
-        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Jun 2014 05:57:59 -0700 (PDT)
+	Sun, 1 Jun 2014 12:38:53 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: airlied@gmail.com
+Cc: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
 
-There is a risk that the variable will be used without being initialized.
+The Apple GMUX switcheroo code doesn't really work that well - there's no
+straightforward way to ensure that drivers are loaded in the correct order,
+and no mechanism to probe displays without performing a full switch. This
+patchset adds infrastructural support to switcheroo and functionality to
+GMUX in order to fix things up. This won't actually *work* in its current
+form - it needs additional patches to the GPU drivers, which are currently
+in a somewhat hacky state.
 
-This was largely found by using a static code analysis program called cppcheck.
-
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
----
- drivers/platform/x86/asus-wmi.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index c5e082f..3fc7f39 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -266,7 +266,7 @@ static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	acpi_status status;
- 	union acpi_object *obj;
--	u32 tmp;
-+	u32 tmp = 0;
- 
- 	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID, 1, method_id,
- 				     &input, &output);
-@@ -277,8 +277,6 @@ static int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
- 	obj = (union acpi_object *)output.pointer;
- 	if (obj && obj->type == ACPI_TYPE_INTEGER)
- 		tmp = (u32) obj->integer.value;
--	else
--		tmp = 0;
- 
- 	if (retval)
- 		*retval = tmp;
 -- 
-1.7.10.4
+Matthew Garrett | matthew.garrett@nebula.com
