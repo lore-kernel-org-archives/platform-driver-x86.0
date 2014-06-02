@@ -1,25 +1,36 @@
-From: "Mrs. Aisha EI Umar" <priyaka1234@live.co.uk>
-Subject: Beloved
-Date: Mon, 02 Jun 2014 12:34:29 +1200
-Message-ID: <538bc695.37a.215a.5443@clear.net.nz>
-Reply-To: priyaka1234@live.co.uk
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp4.clear.net.nz ([203.97.37.64]:63649 "EHLO
-	smtp4.clear.net.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752539AbaFBAtd (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 1 Jun 2014 20:49:33 -0400
-Received: from mxin2-orange.clear.net.nz
- (lb2-srcnat.clear.net.nz [203.97.32.237])
- by smtp4.clear.net.nz (CLEAR Net Mail)
- with ESMTP id <0N6I00K68MXHVQ00@smtp4.clear.net.nz> for
- platform-driver-x86@vger.kernel.org; Mon, 02 Jun 2014 12:34:30 +1200 (NZST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: 1@email.gr
+From: Kyle Evans <kvans32@gmail.com>
+Subject: Re: toshiba_acpi: Unknown key 14b
+Date: Mon, 02 Jun 2014 10:05:15 -0400
+Message-ID: <538C849B.8080108@gmail.com>
+References: <CA+MoWDqj33fEmsppxqSE4LSu9C40mam=UAouHweDBwTD_BMfpg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+MoWDqj33fEmsppxqSE4LSu9C40mam=UAouHweDBwTD_BMfpg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Senna Tschudin <peter.senna@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
+What symbols go with the keys? Is it just one key, or two? I'm helping 
+out another guy who has key 160 unknown and was planning on putting up a 
+patch for that.
 
-
-Beloved, It's time for me to discuss my last wish before I
-depart to join my creator and I need to know I can trust you
-with this, please reply immediately.
+On 06/01/2014 06:02 AM, Peter Senna Tschudin wrote:
+> Hi,
+>
+> I'm using:
+>
+> 3.15.0-rc7-next-20140530
+>
+> On a:
+>
+> Toshiba R830-10p
+>
+> And dmesg started to show:
+>
+> toshiba_acpi: Unknown key 14b
+> toshiba_acpi: Unknown key 14d
+>
+> How can I help make this useful?
+>
