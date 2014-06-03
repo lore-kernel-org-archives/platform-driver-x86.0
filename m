@@ -1,139 +1,192 @@
 From: Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH 01/11] vga_switcheroo: Add support for switching only the DDC
-Date: Tue, 03 Jun 2014 16:26:38 +0300
-Message-ID: <87k38yf7jl.fsf@intel.com>
-References: <1401640723-2058-1-git-send-email-matthew.garrett@nebula.com> <1401640723-2058-2-git-send-email-matthew.garrett@nebula.com>
+Subject: Re: [PATCH 04/11] vga_switcheroo: Allow stashing of panel data
+Date: Tue, 03 Jun 2014 16:40:36 +0300
+Message-ID: <87d2eqf6wb.fsf@intel.com>
+References: <1401640723-2058-1-git-send-email-matthew.garrett@nebula.com> <1401640723-2058-5-git-send-email-matthew.garrett@nebula.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:25761 "EHLO mga11.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:4857 "EHLO mga01.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753304AbaFCN0l (ORCPT
+	id S1753135AbaFCNkj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 3 Jun 2014 09:26:41 -0400
-In-Reply-To: <1401640723-2058-2-git-send-email-matthew.garrett@nebula.com>
+	Tue, 3 Jun 2014 09:40:39 -0400
+In-Reply-To: <1401640723-2058-5-git-send-email-matthew.garrett@nebula.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, airlied@gmail.com
-Cc: Seth Forshee <seth.forshee@canonical.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+To: airlied@gmail.com
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
 
 On Sun, 01 Jun 2014, Matthew Garrett <matthew.garrett@nebula.com> wrote:
-> From: Seth Forshee <seth.forshee@canonical.com>
+> Not all MUXes allow us to connect the panel data channel to a GPU without
+> handing over the entire panel and triggering additional flickering during
+> boot. We only need to do this in order to probe for data that the first
+> GPU driver has already identified, so add some functions for stashing that
+> data in vga_switcheroo where it can be retrieved by the other driver later.
 >
-> During graphics driver initialization its useful to be able to mux only
-> the DDC to the inactive client in order to read the EDID. Add a
-> switch_ddc callback to allow capable handlers to provide this
-> functionality, and add vga_switcheroo_switch_ddc() to allow DRM to mux
-> only the DDC.
->
-> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
+> Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 > ---
->  drivers/gpu/vga/vga_switcheroo.c | 38 +++++++++++++++++++++++++++++++++++++-
->  include/linux/vga_switcheroo.h   |  4 ++++
->  2 files changed, 41 insertions(+), 1 deletion(-)
+>  drivers/gpu/vga/vga_switcheroo.c | 59 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/vga_switcheroo.h   | 12 ++++++++
+>  2 files changed, 71 insertions(+)
 >
 > diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-> index ec0ae2d..dd1d587 100644
+> index 6d95626..1a80b93 100644
 > --- a/drivers/gpu/vga/vga_switcheroo.c
 > +++ b/drivers/gpu/vga/vga_switcheroo.c
-> @@ -256,6 +256,28 @@ void vga_switcheroo_client_fb_set(struct pci_dev *pdev,
->  }
->  EXPORT_SYMBOL(vga_switcheroo_client_fb_set);
+> @@ -17,6 +17,8 @@
+>   - switch_check  - check if the device is in a position to switch now
+>   */
 >  
-> +int vga_switcheroo_switch_ddc(struct pci_dev *pdev)
-> +{
-> +	int ret = 0;
-> +	int id;
+> +#include <drm/drm_edid.h>
 > +
-> +	mutex_lock(&vgasr_mutex);
-> +
-> +	if (!vgasr_priv.handler) {
-> +		ret = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	if (vgasr_priv.handler->switch_ddc) {
-> +		id = vgasr_priv.handler->get_client_id(pdev);
-> +		ret = vgasr_priv.handler->switch_ddc(id);
-> +	}
-> +out:
-> +	mutex_unlock(&vgasr_mutex);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(vga_switcheroo_switch_ddc);
-> +
->  static int vga_switcheroo_show(struct seq_file *m, void *v)
->  {
->  	struct vga_switcheroo_client *client;
-> @@ -353,9 +375,15 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
->  		console_unlock();
->  	}
->  
-> +	if (vgasr_priv.handler->switch_ddc) {
-> +		ret = vgasr_priv.handler->switch_ddc(new_client->id);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	ret = vgasr_priv.handler->switchto(new_client->id);
->  	if (ret)
-> -		return ret;
-> +		goto restore_ddc;
->  
->  	if (new_client->ops->reprobe)
->  		new_client->ops->reprobe(new_client->pdev);
-> @@ -367,6 +395,14 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
->  
->  	new_client->active = true;
->  	return 0;
-> +
-> +restore_ddc:
-> +	if (vgasr_priv.handler->switch_ddc) {
-> +		int id = (new_client->id == VGA_SWITCHEROO_IGD) ?
-> +			VGA_SWITCHEROO_DIS : VGA_SWITCHEROO_IGD;
-> +		vgasr_priv.handler->switch_ddc(id);
-> +	}
-> +	return ret;
->  }
->  
->  static bool check_can_switch(void)
-> diff --git a/include/linux/vga_switcheroo.h b/include/linux/vga_switcheroo.h
-> index 502073a..37d6850 100644
-> --- a/include/linux/vga_switcheroo.h
-> +++ b/include/linux/vga_switcheroo.h
-> @@ -29,6 +29,7 @@ enum vga_switcheroo_client_id {
+>  #include <linux/module.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/uaccess.h>
+> @@ -39,6 +41,7 @@ struct vga_switcheroo_client {
+>  	int id;
+>  	bool active;
+>  	bool driver_power_control;
+> +	bool use_panel;
+>  	struct list_head list;
 >  };
 >  
->  struct vga_switcheroo_handler {
-> +	int (*switch_ddc)(enum vga_switcheroo_client_id id);
->  	int (*switchto)(enum vga_switcheroo_client_id id);
->  	int (*power_state)(enum vga_switcheroo_client_id id,
->  			   enum vga_switcheroo_state state);
-> @@ -54,6 +55,8 @@ int vga_switcheroo_register_audio_client(struct pci_dev *pdev,
->  void vga_switcheroo_client_fb_set(struct pci_dev *dev,
->  				  struct fb_info *info);
+> @@ -56,6 +59,9 @@ struct vgasr_priv {
+>  	int registered_clients;
+>  	struct list_head clients;
 >  
-> +int vga_switcheroo_switch_ddc(struct pci_dev *pdev);
+> +	struct edid *edid;
+> +	u8 *dpcd;
 > +
->  int vga_switcheroo_register_handler(struct vga_switcheroo_handler *handler);
->  void vga_switcheroo_unregister_handler(void);
+>  	struct vga_switcheroo_handler *handler;
+>  };
 >  
-> @@ -71,6 +74,7 @@ static inline void vga_switcheroo_unregister_client(struct pci_dev *dev) {}
->  static inline int vga_switcheroo_register_client(struct pci_dev *dev,
->  		const struct vga_switcheroo_client_ops *ops, bool driver_power_control) { return 0; }
->  static inline void vga_switcheroo_client_fb_set(struct pci_dev *dev, struct fb_info *info) {}
-> +static inline void vga_switcheroo_switch_ddc(struct pci_dev *pdev) { return NULL; }
+> @@ -107,7 +113,9 @@ static void vga_switcheroo_enable(void)
+>  				VGA_SWITCHEROO_DIS : VGA_SWITCHEROO_IGD;
+>  			if (vgasr_priv.handler->switch_ddc)
+>  				vgasr_priv.handler->switch_ddc(client->id);
+> +			client->use_panel = true;
+>  			client->ops->reprobe_connectors(client->pdev);
+> +			client->use_panel = false;
+>  			if (vgasr_priv.handler->switch_ddc)
+>  				vgasr_priv.handler->switch_ddc(old_id);
+>  		}
+> @@ -412,6 +420,9 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
+>  	if (ret)
+>  		goto restore_ddc;
+>  
+> +	new_client->use_panel = true;
+> +	active->use_panel = false;
+> +
+>  	if (new_client->ops->reprobe)
+>  		new_client->ops->reprobe(new_client->pdev);
+>  
+> @@ -766,6 +777,54 @@ int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct
+>  }
+>  EXPORT_SYMBOL(vga_switcheroo_init_domain_pm_optimus_hdmi_audio);
+>  
+> +int vga_switcheroo_set_dpcd(u8 *dpcd)
 
-Not really reviewing, but this three-way contradiction of return types
-caught my eye.
+Quite a few DPCD related things in drm_dp_helper.h expect
+DP_RECEIVER_CAP_SIZE bytes of DPCD. Might be helpful to conform to that.
+
+Can also be made const u8 *.
+
+> +{
+> +	if (vgasr_priv.dpcd)
+> +		return -EEXIST;
+> +
+> +	vgasr_priv.dpcd = kmalloc(8, GFP_KERNEL);
+> +	memcpy(vgasr_priv.dpcd, dpcd, 8);
+
+kmemdup.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(vga_switcheroo_set_dpcd);
+> +
+> +u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev)
+> +{
+> +	struct vga_switcheroo_client *client;
+> +	client = find_client_from_pci(&vgasr_priv.clients, pdev);
+> +
+> +	if (!client || !client->use_panel)
+> +		return NULL;
+> +
+> +	return vgasr_priv.dpcd;
+> +}
+> +EXPORT_SYMBOL(vga_switcheroo_get_dpcd);
+> +
+> +int vga_switcheroo_set_edid(struct edid *edid)
+> +{
+> +	int size = EDID_LENGTH * (1 + edid->extensions);
+> +
+> +	if (vgasr_priv.edid)
+> +		return -EEXIST;
+> +
+> +	vgasr_priv.edid = kmalloc(size, GFP_KERNEL);
+> +	memcpy(vgasr_priv.edid, edid, size);
+
+kmemdup.
 
 BR,
 Jani.
 
-
->  static inline int vga_switcheroo_register_handler(struct vga_switcheroo_handler *handler) { return 0; }
->  static inline int vga_switcheroo_register_audio_client(struct pci_dev *pdev,
->  	const struct vga_switcheroo_client_ops *ops,
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(vga_switcheroo_set_edid);
+> +
+> +struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev)
+> +{
+> +	struct vga_switcheroo_client *client;
+> +	client = find_client_from_pci(&vgasr_priv.clients, pdev);
+> +
+> +	if (!client || !client->use_panel)
+> +		return NULL;
+> +
+> +	return vgasr_priv.edid;
+> +}
+> +EXPORT_SYMBOL(vga_switcheroo_get_edid);
+> +
+>  static int __init vga_switcheroo_setup(char *str)
+>  {
+>  	if (!strcmp(str, "IGD"))
+> diff --git a/include/linux/vga_switcheroo.h b/include/linux/vga_switcheroo.h
+> index bae62fd..07b07fc 100644
+> --- a/include/linux/vga_switcheroo.h
+> +++ b/include/linux/vga_switcheroo.h
+> @@ -10,6 +10,7 @@
+>  #ifndef _LINUX_VGA_SWITCHEROO_H_
+>  #define _LINUX_VGA_SWITCHEROO_H_
+>  
+> +#include <drm/drm_edid.h>
+>  #include <linux/fb.h>
+>  
+>  struct pci_dev;
+> @@ -69,6 +70,12 @@ void vga_switcheroo_set_dynamic_switch(struct pci_dev *pdev, enum vga_switcheroo
+>  
+>  int vga_switcheroo_init_domain_pm_ops(struct device *dev, struct dev_pm_domain *domain);
+>  int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct dev_pm_domain *domain);
+> +
+> +int vga_switcheroo_set_dpcd(u8 *dpcd);
+> +u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev);
+> +int vga_switcheroo_set_edid(struct edid *edid);
+> +struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev);
+> +
+>  #else
+>  
+>  static inline void vga_switcheroo_unregister_client(struct pci_dev *dev) {}
+> @@ -89,5 +96,10 @@ static inline void vga_switcheroo_set_dynamic_switch(struct pci_dev *pdev, enum
+>  static inline int vga_switcheroo_init_domain_pm_ops(struct device *dev, struct dev_pm_domain *domain) { return -EINVAL; }
+>  static inline int vga_switcheroo_init_domain_pm_optimus_hdmi_audio(struct device *dev, struct dev_pm_domain *domain) { return -EINVAL; }
+>  
+> +static inline int vga_switcheroo_set_dpcd(u8 *dpcd) { return 0 };
+> +static inline u8 *vga_switcheroo_get_dpcd(struct pci_dev *pdev) { return NULL };
+> +static inline int vga_switcheroo_set_edid(struct edid *edid) { return 0 };
+> +static inline struct edid *vga_switcheroo_get_edid(struct pci_dev *pdev) { return NULL };
+> +
+>  #endif
+>  #endif /* _LINUX_VGA_SWITCHEROO_H_ */
 > -- 
 > 1.8.5.3
 >
