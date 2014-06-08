@@ -1,76 +1,57 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] platform: x86: dell-smo8800: Dell Latitude freefall driver (ACPI SMO8800/SMO8810)
-Date: Fri, 6 Jun 2014 12:24:01 +0200
-Message-ID: <201406061224.01615@pali>
-References: <1399114077-19314-2-git-send-email-pali.rohar@gmail.com> <1400757348-5351-1-git-send-email-pali.rohar@gmail.com> <201405281531.30298@pali>
+From: Axel Lin <axel.lin@ingics.com>
+Subject: [RESEND][PATCH v2] platform-drivers-x86: intel_pmic_gpio: Fix
+ off-by-one valid offset range check
+Date: Sun, 08 Jun 2014 20:54:05 +0800
+Message-ID: <1402232045.7195.0.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1608987.9lQ7NXdIOo";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201405281531.30298@pali>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f179.google.com ([209.85.214.179]:35284 "EHLO
+	mail-ob0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751907AbaFHMyL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 8 Jun 2014 08:54:11 -0400
+Received: by mail-ob0-f179.google.com with SMTP id nu7so2161652obb.38
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Jun 2014 05:54:10 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Valdis.Kletnieks@vt.edu, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Sonal Santan <sonal.santan@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Alek Du <alek.du@intel.com>, platform-driver-x86@vger.kernel.org
 
---nextPart1608987.9lQ7NXdIOo
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Only pin 0-7 support input, so the valid offset range should be 0 ~ 7.
 
-On Wednesday 28 May 2014 15:31:30 Pali Roh=C3=A1r wrote:
-> On Thursday 22 May 2014 13:15:48 Pali Roh=C3=A1r wrote:
-> > This acpi driver provide supports for freefall sensors
-> > SMO8800/SMO8810 which can be found on Dell Latitude laptops.
-> > Driver register /dev/freefall misc device which has same
-> > interface as driver hp_accel freefall driver. So any
-> > existing applications for HP freefall sensor /dev/freefall
-> > will work for with this new driver for Dell Latitude
-> > laptops too.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Cc: Sonal Santan <sonal.santan@gmail.com>
-> > Tested-By: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> > Acked-By: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> > ---
-> > Changes since v1:
-> > * Fixed warnings: Missing a blank line after declarations
-> > * Fixed Lowercase ON in Kconfig
-> > * Fixed Alan's review problems by Sonal Santan
-> > ---
-> >=20
-> >  drivers/platform/x86/Kconfig        |   10 ++
-> >  drivers/platform/x86/Makefile       |    1 +
-> >  drivers/platform/x86/dell-smo8800.c |  233
-> >=20
-> > +++++++++++++++++++++++++++++++++++ 3 files changed, 244
-> > insertions(+)
-> >=20
-> >  create mode 100644 drivers/platform/x86/dell-smo8800.c
->=20
-> After week there are no other objections.
->=20
-> Matthew Garrett, can you apply driver into platform tree?
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Alek Du <alek.du@intel.com>
+---
+Hi Matthew,
+This patch was sent on http://www.spinics.net/lists/platform-driver-x86/msg05259.html.
+Seems this patch is not applied yet. So here is a resend.
+Axel
+ drivers/platform/x86/intel_pmic_gpio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-PING.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1608987.9lQ7NXdIOo
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlORlsEACgkQi/DJPQPkQ1Lx9wCdG/zyFRNlMw9/WwxJfAD0Y4ec
-dKsAniWyYRHu2BcIwg4fEWgVRvGc9QcS
-=mlSw
------END PGP SIGNATURE-----
-
---nextPart1608987.9lQ7NXdIOo--
+diff --git a/drivers/platform/x86/intel_pmic_gpio.c b/drivers/platform/x86/intel_pmic_gpio.c
+index 2805988..40929e4 100644
+--- a/drivers/platform/x86/intel_pmic_gpio.c
++++ b/drivers/platform/x86/intel_pmic_gpio.c
+@@ -91,7 +91,7 @@ static void pmic_program_irqtype(int gpio, int type)
+ 
+ static int pmic_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+ {
+-	if (offset > 8) {
++	if (offset >= 8) {
+ 		pr_err("only pin 0-7 support input\n");
+ 		return -1;/* we only have 8 GPIO can use as input */
+ 	}
+@@ -130,7 +130,7 @@ static int pmic_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	int ret;
+ 
+ 	/* we only have 8 GPIO pins we can use as input */
+-	if (offset > 8)
++	if (offset >= 8)
+ 		return -EOPNOTSUPP;
+ 	ret = intel_scu_ipc_ioread8(GPIO0 + offset, &r);
+ 	if (ret < 0)
+-- 
+1.8.3.2
