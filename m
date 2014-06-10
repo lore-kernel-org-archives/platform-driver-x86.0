@@ -1,83 +1,66 @@
-From: Kyle Evans <kvans32@gmail.com>
-Subject: [PATCH] hp-wmi: Enable hotkeys on some systems
-Date: Mon,  9 Jun 2014 12:26:06 -0500
-Message-ID: <1402334766-6014-1-git-send-email-kvans32@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ig0-f175.google.com ([209.85.213.175]:42296 "EHLO
-	mail-ig0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754847AbaFIR1S (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Jun 2014 13:27:18 -0400
-Received: by mail-ig0-f175.google.com with SMTP id uq10so4108065igb.14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Jun 2014 10:27:17 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Kyle Evans <kvans32@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/2] gpio: gpiolib: set gpiochip_remove retval to void
+Date: Tue, 10 Jun 2014 08:57:32 +0200
+Message-ID: <5396AC5C.2080108@samsung.com>
+References: <20140530094025.3b78301e@canb.auug.org.au>
+ <1401449454-30895-1-git-send-email-berthe.ab@gmail.com>
+ <1401449454-30895-2-git-send-email-berthe.ab@gmail.com>
+ <CAMuHMdV6AtjD2aqO3buzj8Eo7A7xc_+ROYnxEi2sdjMaqFiAuA@mail.gmail.com>
+ <5388C0F1.90503@gmail.com> <5388CB1B.3090802@metafoo.de>
+ <20140608231823.GB10112@trinity.fluff.org> <53959A93.7080308@metafoo.de>
+ <5395B379.2010706@samsung.com>
+ <063D6719AE5E284EB5DD2968C1650D6D17259A1F@AcuExch.aculab.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-reply-to: <063D6719AE5E284EB5DD2968C1650D6D17259A1F@AcuExch.aculab.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: David Laight <David.Laight@ACULAB.COM>, Lars-Peter Clausen <lars@metafoo.de>, Ben Dooks <ben@trinity.fluff.org>
+Cc: driverdevel <devel@driverdev.osuosl.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, David Daney <ddaney.cavm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "m@bues.ch" <m@bues.ch>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-samsung-soc@vger
+List-Id: platform-driver-x86.vger.kernel.org
 
-This is a third attempt to enable these buttons. The new variable being
-commit 997daa1bd9aca412ab97955a35b26c460c0ec7a4 (i.e. hp-wmi: detect
-"2009 BIOS or later"). Older systems that do not have the 2009 BIOS query
-method respond with a dummy value, in this case 4. Using that, we can
-target a fairly narrow group of systems. i.e. old enough to not have
-HPWMI_FEATURE_QUERY 0xd, but new enough to have HPWMI_BIOS_QUERY 0x9.
-This group may be further limited if some systems respond with something
-other than 4 to non-existant feature queries.
+On 06/09/2014 03:43 PM, David Laight wrote:
+> From: Of Andrzej Hajda
+> ...
+>>> You can't error out on module unload, although that's not really relevant
+>>> here. gpiochip_remove() is typically called when the device that registered
+>>> the GPIO chip is unbound. And despite some remove() callbacks having a
+>>> return type of int you can not abort the removal of a device.
+>>
+>> It is a design flaw in many subsystems having providers and consumers,
+>> not only GPIO. The same situation is with clock providers, regulators,
+>> phys, drm_panels, ..., at least it was such last time I have tested it.
+>>
+>> The problem is that many frameworks assumes that lifetime of provider is
+>> always bigger than lifetime of its consumers, and this is wrong
+>> assumption - usually it is not possible to prevent unbinding driver from
+>> device, so if the device is a provider there is no way to inform
+>> consumers about his removal.
+>>
+>> Some solution for such problems is to use some kind of availability
+>> callbacks for requesting resources (gpios, clocks, regulators,...)
+>> instead of simple 'getters' (clk_get, gpiod_get). Callbacks should
+>> guarantee that the resource is always valid between callback reporting
+>> its availability and callback reporting its removal. Such approach seems
+>> to be complicated at the first sight but it should allow to make the
+>> code safe and as a bonus it will allow to avoid deferred probing.
+>> Btw I have send already RFC for such framework [1].
+> 
+> Callbacks for delete are generally a locking nightmare.
+> A two-way handshake is also usually needed to avoid problems
+> with concurrent disconnect requests.
 
-Signed-off-by: Kyle Evans <kvans32@gmail.com>
----
- drivers/platform/x86/hp-wmi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+The framework I have proposed is lock-less[1] and concurrent requests
+are serialized so both objections are invalid.
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 8ba8956..484a867 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -53,6 +53,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
- #define HPWMI_ALS_QUERY 0x3
- #define HPWMI_HARDWARE_QUERY 0x4
- #define HPWMI_WIRELESS_QUERY 0x5
-+#define HPWMI_BIOS_QUERY 0x9
- #define HPWMI_HOTKEY_QUERY 0xc
- #define HPWMI_FEATURE_QUERY 0xd
- #define HPWMI_WIRELESS2_QUERY 0x1b
-@@ -144,6 +145,7 @@ static const struct key_entry hp_wmi_keymap[] = {
- 	{ KE_KEY, 0x2142, { KEY_MEDIA } },
- 	{ KE_KEY, 0x213b, { KEY_INFO } },
- 	{ KE_KEY, 0x2169, { KEY_DIRECTION } },
-+	{ KE_KEY, 0x216a, { KEY_SETUP } },
- 	{ KE_KEY, 0x231b, { KEY_HELP } },
- 	{ KE_END, 0 }
- };
-@@ -304,6 +306,19 @@ static int hp_wmi_bios_2009_later(void)
- 	return (state & 0x10) ? 1 : 0;
- }
- 
-+static int hp_wmi_enable_hotkeys(void)
-+{
-+	int ret;
-+	int query = 0x6e;
-+
-+	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
-+				   0);
-+
-+	if (ret)
-+		return -EINVAL;
-+	return 0;
-+}
-+
- static int hp_wmi_set_block(void *data, bool blocked)
- {
- 	enum hp_wmi_radio r = (enum hp_wmi_radio) data;
-@@ -648,6 +663,9 @@ static int __init hp_wmi_input_setup(void)
- 			    hp_wmi_tablet_state());
- 	input_sync(hp_wmi_input_dev);
- 
-+	if (hp_wmi_bios_2009_later() == 4)
-+		hp_wmi_enable_hotkeys();
-+
- 	status = wmi_install_notify_handler(HPWMI_EVENT_GUID, hp_wmi_notify, NULL);
- 	if (ACPI_FAILURE(status)) {
- 		err = -EIO;
--- 
-1.8.3.2
+[1]: in fact the framework uses spinlock, but only to protect internal
+list simple operations, and even this could be converted to fully
+lock-less implementation.
+
+Andrzej
+
+> 
+> 	David
+> 
+
