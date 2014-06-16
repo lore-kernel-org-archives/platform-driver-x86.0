@@ -1,57 +1,70 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes
- for Dell
-Date: Sat, 14 Jun 2014 10:53:29 +0200
-Message-ID: <20140614085328.GC15326@Nokia-N900>
-References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com>
- <1402473727-5464-1-git-send-email-pali.rohar@gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: [PATCH RESEND] fujitsu-laptop: Clear build warnings
+Date: Mon, 16 Jun 2014 11:55:13 +0200
+Message-ID: <20140616115513.5d170041@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54849 "EHLO
-	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754119AbaFNIxg (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:54475 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754997AbaFPJzR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Jun 2014 04:53:36 -0400
-Content-Disposition: inline
-In-Reply-To: <1402473727-5464-1-git-send-email-pali.rohar@gmail.com>
+	Mon, 16 Jun 2014 05:55:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali Roh?r <pali.rohar@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Jonathan Woithe <jwoithe@just42.net>, Matthew Garrett <matthew.garrett@nebula.com>
 
-On Wed 2014-06-11 10:02:07, Pali Roh?r wrote:
-> Dell kernel driver dell-smo8800 provides same freefall interface as h=
-p_accel so
-> program hpfall.c works also on Dell laptops. So rename it to freefall=
-=2Ec.
->=20
-> Dell driver does not provide hp::hddprotect led so make sure that fre=
-efall.c
-> works also if hp::hddprotect does not exist in sysfs.
->=20
-> Additionally write info to syslog.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> Cc: Sonal Santan <sonal.santan@gmail.com>
-> ---
-> Changes since v1:
-> * Fixed warnings: Missing a blank line after declarations
-> ---
->  Documentation/laptops/00-INDEX   |    4 +-
->  Documentation/laptops/freefall.c |  177 ++++++++++++++++++++++++++++=
-++++++++++
->  Documentation/laptops/hpfall.c   |  146 ----------------------------=
+When CONFIG_FUJITSU_LAPTOP_DEBUG is disabled and W=1, the
+fujitsu-laptop driver builds with the following warnings:
+
+drivers/platform/x86/fujitsu-laptop.c: In function "bl_update_status":
+drivers/platform/x86/fujitsu-laptop.c:409:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
+    ret);
+        ^
+drivers/platform/x86/fujitsu-laptop.c:418:8: warning: suggest braces around empty body in an "if" statement [-Wempty-body]
+    ret);
+        ^
+
+Rework the debug printk helper macro to get rid of these. I verified
+that this change has no effect on the generated binary, both in the
+debug and non-debug case.
+
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>
 ---
->  3 files changed, 179 insertions(+), 148 deletions(-)
->  create mode 100644 Documentation/laptops/freefall.c
->  delete mode 100644 Documentation/laptops/hpfall.c
+Matthew, Jonathan acked this patch 3 months ago (March 17th), can you
+please apply it? Thanks.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+ drivers/platform/x86/fujitsu-laptop.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-						Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+--- linux-3.14-rc6.orig/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:31:19.961145958 +0100
++++ linux-3.14-rc6/drivers/platform/x86/fujitsu-laptop.c	2014-03-17 11:46:56.242465978 +0100
+@@ -129,15 +129,14 @@
+ #define FUJLAPTOP_DBG_INFO	  0x0004
+ #define FUJLAPTOP_DBG_TRACE	  0x0008
+ 
+-#define dbg_printk(a_dbg_level, format, arg...) \
++#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
++#define vdbg_printk(a_dbg_level, format, arg...) \
+ 	do { if (dbg_level & a_dbg_level) \
+ 		printk(FUJLAPTOP_DEBUG "%s: " format, __func__ , ## arg); \
+ 	} while (0)
+-#ifdef CONFIG_FUJITSU_LAPTOP_DEBUG
+-#define vdbg_printk(a_dbg_level, format, arg...) \
+-	dbg_printk(a_dbg_level, format, ## arg)
+ #else
+-#define vdbg_printk(a_dbg_level, format, arg...)
++#define vdbg_printk(a_dbg_level, format, arg...) \
++	do { } while (0)
+ #endif
+ 
+ /* Device controlling the backlight and associated keys */
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
