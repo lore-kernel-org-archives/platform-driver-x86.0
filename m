@@ -1,77 +1,76 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes for Dell
-Date: Mon, 16 Jun 2014 13:55:03 +0200
-Message-ID: <201406161355.03998@pali>
-References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <1402473727-5464-1-git-send-email-pali.rohar@gmail.com> <20140614085328.GC15326@Nokia-N900>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 0/2] backlight: remove trivial get_brightness
+ implementations
+Date: Mon, 16 Jun 2014 21:28:02 +0900
+Message-ID: <000701cf895e$6a648f20$3f2dad60$%han@samsung.com>
+References: <1401444650-12267-1-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1681691.FhSFYIcQoq";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140614085328.GC15326@Nokia-N900>
-Sender: linux-doc-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1401444650-12267-1-git-send-email-a.hajda@samsung.com>
+Content-language: ko
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Andrzej Hajda' <a.hajda@samsung.com>, 'Lee Jones' <lee.jones@linaro.org>, 'Bryan Wu' <cooloney@gmail.com>
+Cc: 'Milo Kim' <milo.kim@ti.com>, "'open list:FRAMEBUFFER LAYER'" <linux-fbdev@vger.kernel.org>, 'Benjamin Herrenschmidt' <benh@kernel.crashing.org>, "'open list:X86 PLATFORM DRIVERS'" <platform-driver-x86@vger.kernel.org>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>, 'Yijing Wang' <wangyijing@huawei.com>, 'Matthew Garrett' <matthew.garrett@nebula.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, 'Jingoo Han' <jg1.han@samsung.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Geert Uytterhoeven' <geert@linux-m68k.org>, 'Daniel Vetter' <daniel.vetter@ffwll.ch>, 'Jean-Christophe Plagniol-Villard' <plagnioj@jcrosoft.com>, 'Dan Carpenter' <dan.carpenter@oracle.com>, "'open list:PWM SUBSYSTEM'" <linux-pwm@vger.kernel.org>, "'moderated list:ARM/S5P EXYNOS AR...'" <linux-samsung-soc@vger.ker>
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart1681691.FhSFYIcQoq
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Friday, May 30, 2014 7:11 PM, Andrzej Hajda wrote:
+> 
+> This patchset makes get_brightness callback optional
+> and removes trivial implementations.
+> Driver changes are quite obvious so I have put them into single
+> patch.
+> 
+> The patchset is based on the current linux-next branch.
+> 
+> Regards
+> Andrzej
+> 
+> Andrzej Hajda (2):
+>   backlight: show brightness even if get_brightness is not implemented
+>   backlight: remove trivial get_brightness implementations
 
-On Saturday 14 June 2014 10:53:29 Pavel Machek wrote:
-> On Wed 2014-06-11 10:02:07, Pali Roh?r wrote:
-> > Dell kernel driver dell-smo8800 provides same freefall
-> > interface as hp_accel so program hpfall.c works also on
-> > Dell laptops. So rename it to freefall.c.
-> >=20
-> > Dell driver does not provide hp::hddprotect led so make sure
-> > that freefall.c works also if hp::hddprotect does not exist
-> > in sysfs.
-> >=20
-> > Additionally write info to syslog.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Cc: Sonal Santan <sonal.santan@gmail.com>
-> > ---
-> > Changes since v1:
-> > * Fixed warnings: Missing a blank line after declarations
-> > ---
-> >=20
-> >  Documentation/laptops/00-INDEX   |    4 +-
-> >  Documentation/laptops/freefall.c |  177
-> >  ++++++++++++++++++++++++++++++++++++++
-> >  Documentation/laptops/hpfall.c   |  146
-> >  ------------------------------- 3 files changed, 179
-> >  insertions(+), 148 deletions(-) create mode 100644
-> >  Documentation/laptops/freefall.c delete mode 100644
-> >  Documentation/laptops/hpfall.c
->=20
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->=20
-> 						Pavel
+These patches look good!
+Acked-by: Jingoo Han <jg1.han@samsung.com>
 
-Randy, Matthew: PING
+Lee Jones,
+Would you merge these patches into backlight git?
 
-first patch which implementing dell-smo8800.ko was merged, but=20
-this patch which updating documentation and fall daemon *not*.
+Best regards,
+Jingoo Han
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1681691.FhSFYIcQoq
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlOe2xcACgkQi/DJPQPkQ1Jz1gCdHVPTCUXqxvWDuz6AEBAdHNLx
-/E4AoKExeyy3RmxeC6SPh1xKaoj6wjiU
-=+7xf
------END PGP SIGNATURE-----
-
---nextPart1681691.FhSFYIcQoq--
+> 
+>  drivers/macintosh/via-pmu-backlight.c      | 6 ------
+>  drivers/platform/x86/samsung-q10.c         | 6 ------
+>  drivers/video/backlight/aat2870_bl.c       | 6 ------
+>  drivers/video/backlight/ams369fg06.c       | 6 ------
+>  drivers/video/backlight/backlight.c        | 2 ++
+>  drivers/video/backlight/bd6107.c           | 6 ------
+>  drivers/video/backlight/gpio_backlight.c   | 6 ------
+>  drivers/video/backlight/ld9040.c           | 6 ------
+>  drivers/video/backlight/lp855x_bl.c        | 6 ------
+>  drivers/video/backlight/lp8788_bl.c        | 6 ------
+>  drivers/video/backlight/lv5207lp.c         | 6 ------
+>  drivers/video/backlight/pandora_bl.c       | 6 ------
+>  drivers/video/backlight/pwm_bl.c           | 6 ------
+>  drivers/video/backlight/s6e63m0.c          | 6 ------
+>  drivers/video/backlight/tps65217_bl.c      | 6 ------
+>  drivers/video/fbdev/aty/aty128fb.c         | 6 ------
+>  drivers/video/fbdev/aty/atyfb_base.c       | 6 ------
+>  drivers/video/fbdev/aty/radeon_backlight.c | 6 ------
+>  drivers/video/fbdev/exynos/s6e8ax0.c       | 6 ------
+>  drivers/video/fbdev/nvidia/nv_backlight.c  | 6 ------
+>  drivers/video/fbdev/riva/fbdev.c           | 6 ------
+>  21 files changed, 2 insertions(+), 120 deletions(-)
+> 
+> --
+> 1.9.1
