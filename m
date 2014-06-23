@@ -1,45 +1,144 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] thinkpad_acpi: Update mapping for F12 hotkey on *40 models to KEY_FILE
-Date: Mon, 23 Jun 2014 13:38:23 +0200
-Message-ID: <1403523503-4266-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH] ideapad-laptop: Change Lenovo Yoga 2 series rfkill handling
+Date: Mon, 23 Jun 2014 16:45:51 +0200
+Message-ID: <1403534751-13298-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:7222 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:48984 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752443AbaFWLiu (ORCPT
+	id S1753835AbaFWOqB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jun 2014 07:38:50 -0400
+	Mon, 23 Jun 2014 10:46:01 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Jamie Lentin <jm@lentin.co.uk>
+To: Ike Panhc <ike.pan@canonical.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-The new keyboard found on the *40 models is also being sold as a standalone
-keyboard (with trackpoint):
-http://shop.lenovo.com/us/en/itemdetails/0B47189/460/60AC6A0372B14F5BA7B12F1FF88E33C7
+It seems that the same problems which lead to adding an rfkill blacklist and
+putting the Lenovo Yoga 2 11 on it are also present on the Lenovo Yoga 2 13
+and Lenovo Yoga 2 Pro too:
+https://bugzilla.redhat.com/show_bug.cgi?id=1021036
+https://forums.lenovo.com/t5/Linux-Discussion/Yoga-2-13-not-Pro-Linux-Warning/m-p/1517612
 
-This uses a standard HUT code for the F12 key with the 6 square boxes on it,
-which gets mapped to KEY_FILE by the kernel. Change the mapping done of
-identical laptop key done by thinkpad_acpi to also send KEY_FILE for
-consistency.
+Testing has shown that the firmware rfkill settings are persistent over
+reboots. So blacklisting the driver is not good enough, if the wifi is blocked
+at the firmware level the wifi needs to be explictly unblocked through the
+ideapad-laptop interface.
 
-Cc: Jamie Lentin <jm@lentin.co.uk>
+And at least on the Lenovo Yoga 2 13 the VPCCMD_RF register which on devices
+with hardware kill switch reports the hardware switch state, needs to be
+explictly set to 1 (radio enabled / not blocked).
+
+So this patch does 3 things to get proper rfkill handling on these models:
+
+1) Instead of blacklisting the rfkill functionality, which means that people
+with a firmware blocked wifi get stuck in that situation, ignore the value
+reported by the not present hardware rfkill switch, as this is what is causing
+ideapad-laptop to wrongly report all radios as hardware blocks. But do register
+the rfkill interfaces so that the user can soft [un]block them.
+
+2) On models without a hardware rfkill switch, explictly set VPCCMD_RF to 1
+
+3) Drop the " 11" postfix from the dmi match string, as the entire Yoga 2
+series is affected.
+
+Yoga 2 11:
+Reported-and-tested-by: Vincent Gerris <vgerris@gmail.com>
+
+Yoga 2 13:
+Tested-by: madls05 <http://ubuntuforums.org/showthread.php?t=2215044>
+
+Yoga 2 Pro:
+Reported-and-tested-by: Peter F. Patel-Schneider <pfpschneider@gmail.com>
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/ideapad-laptop.c | 41 +++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index d82f196..0fefb24 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3174,7 +3174,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN,
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index b4c495a..b0e3a2e 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -87,6 +87,7 @@ struct ideapad_private {
+ 	struct backlight_device *blightdev;
+ 	struct dentry *debug;
+ 	unsigned long cfg;
++	bool has_hw_rfkill_switch;
+ };
  
- 		/* Extra keys in use since the X240 / T440 / T540 */
--		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_COMPUTER,
-+		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_FILE,
+ static bool no_bt_rfkill;
+@@ -473,12 +474,14 @@ static struct rfkill_ops ideapad_rfk_ops = {
+ 
+ static void ideapad_sync_rfk_state(struct ideapad_private *priv)
+ {
+-	unsigned long hw_blocked;
++	unsigned long hw_blocked = 0;
+ 	int i;
+ 
+-	if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
+-		return;
+-	hw_blocked = !hw_blocked;
++	if (priv->has_hw_rfkill_switch) {
++		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
++			return;
++		hw_blocked = !hw_blocked;
++	}
+ 
+ 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+ 		if (priv->rfk[i])
+@@ -821,14 +824,17 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ 	}
+ }
+ 
+-/* Blacklist for devices where the ideapad rfkill interface does not work */
+-static struct dmi_system_id rfkill_blacklist[] = {
+-	/* The Lenovo Yoga 2 11 always reports everything as blocked */
++/*
++ * Some ideapads don't have a hardware rfkill switch, reading VPCCMD_R_RF
++ * always results in 0 on these models, causing ideapad_laptop to wrongly
++ * report all radios as hardware-blocked.
++ */
++static struct dmi_system_id no_hw_rfkill_list[] = {
+ 	{
+-		.ident = "Lenovo Yoga 2 11",
++		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2 11"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
  		},
- 	};
+ 	},
+ 	{}
+@@ -856,6 +862,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	priv->cfg = cfg;
+ 	priv->adev = adev;
+ 	priv->platform_device = pdev;
++	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
+ 
+ 	ret = ideapad_sysfs_init(priv);
+ 	if (ret)
+@@ -869,11 +876,17 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	if (ret)
+ 		goto input_failed;
+ 
+-	if (!dmi_check_system(rfkill_blacklist)) {
+-		for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+-			if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
+-				ideapad_register_rfkill(priv, i);
+-	}
++	/*
++	 * On some models without a hw-switch (the yoga 2 13 at least)
++	 * VPCCMD_W_RF must be explicitly set to 1 for the wifi to work.
++	 */
++	if (!priv->has_hw_rfkill_switch)
++		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
++
++	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
++		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
++			ideapad_register_rfkill(priv, i);
++
+ 	ideapad_sync_rfk_state(priv);
+ 	ideapad_sync_touchpad_state(priv);
  
 -- 
 2.0.0
