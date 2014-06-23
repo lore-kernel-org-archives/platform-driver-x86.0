@@ -1,35 +1,45 @@
-From: Chetal Patil <chetal.patil@gmail.com>
-Subject: ACPI Support for HP Pavillion laptops
-Date: Mon, 23 Jun 2014 08:31:30 +0530
-Message-ID: <CADHx-_GP8qbocMH+Rir+Y-k39iJNtRw+wuWXYaSB7eEk+LXRQQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] thinkpad_acpi: Update mapping for F12 hotkey on *40 models to KEY_FILE
+Date: Mon, 23 Jun 2014 13:38:23 +0200
+Message-ID: <1403523503-4266-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f47.google.com ([209.85.213.47]:59483 "EHLO
-	mail-yh0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751843AbaFWDBa (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:7222 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752443AbaFWLiu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 22 Jun 2014 23:01:30 -0400
-Received: by mail-yh0-f47.google.com with SMTP id v1so4599113yhn.20
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Jun 2014 20:01:30 -0700 (PDT)
+	Mon, 23 Jun 2014 07:38:50 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Jamie Lentin <jm@lentin.co.uk>
 
-Hi,
+The new keyboard found on the *40 models is also being sold as a standalone
+keyboard (with trackpoint):
+http://shop.lenovo.com/us/en/itemdetails/0B47189/460/60AC6A0372B14F5BA7B12F1FF88E33C7
 
-I recently joined the Linux Driver Development mailing list and would
-like to contribute to the Linux Driver Project. Specifically, I would
-like to contribute by working on ACPI Support for HP Pavillion
-laptops. Regarding this, I humbly seek answer to the following
-questions.
+This uses a standard HUT code for the F12 key with the 6 square boxes on it,
+which gets mapped to KEY_FILE by the kernel. Change the mapping done of
+identical laptop key done by thinkpad_acpi to also send KEY_FILE for
+consistency.
 
-1). Is anyone currently working on this project?
-2). If any kind of contribution is still needed, can anyone please
-provide me details?
+Cc: Jamie Lentin <jm@lentin.co.uk>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If this isn't appropriate mailing list, please direct me to
-appropriate mailing list.
-
-Thanks,
-Chetal
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d82f196..0fefb24 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3174,7 +3174,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 		KEY_UNKNOWN,
+ 
+ 		/* Extra keys in use since the X240 / T440 / T540 */
+-		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_COMPUTER,
++		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_FILE,
+ 		},
+ 	};
+ 
+-- 
+2.0.0
