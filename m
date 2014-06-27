@@ -1,88 +1,76 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes for Dell
-Date: Fri, 27 Jun 2014 21:08:10 +0200
-Message-ID: <201406272108.10901@pali>
-References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <20140614085328.GC15326@Nokia-N900> <201406161355.03998@pali>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes
+ for Dell
+Date: Fri, 27 Jun 2014 13:25:49 -0700
+Message-ID: <53ADD34D.4020709@infradead.org>
+References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <20140614085328.GC15326@Nokia-N900> <201406161355.03998@pali> <201406272108.10901@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2965064.AjOTh0FVDk";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f50.google.com ([74.125.82.50]:42268 "EHLO
-	mail-wg0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750990AbaF0TIP (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:47466 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751264AbaF0UZy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 Jun 2014 15:08:15 -0400
-In-Reply-To: <201406161355.03998@pali>
+	Fri, 27 Jun 2014 16:25:54 -0400
+In-Reply-To: <201406272108.10901@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+To: =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
 
---nextPart2965064.AjOTh0FVDk
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Monday 16 June 2014 13:55:03 Pali Roh=C3=A1r wrote:
-> On Saturday 14 June 2014 10:53:29 Pavel Machek wrote:
-> > On Wed 2014-06-11 10:02:07, Pali Roh?r wrote:
-> > > Dell kernel driver dell-smo8800 provides same freefall
-> > > interface as hp_accel so program hpfall.c works also on
-> > > Dell laptops. So rename it to freefall.c.
-> > >=20
-> > > Dell driver does not provide hp::hddprotect led so make
-> > > sure that freefall.c works also if hp::hddprotect does
-> > > not exist in sysfs.
-> > >=20
-> > > Additionally write info to syslog.
-> > >=20
-> > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > Cc: Sonal Santan <sonal.santan@gmail.com>
-> > > ---
-> > > Changes since v1:
-> > > * Fixed warnings: Missing a blank line after declarations
-> > > ---
-> > >=20
-> > >  Documentation/laptops/00-INDEX   |    4 +-
-> > >  Documentation/laptops/freefall.c |  177
-> > >  ++++++++++++++++++++++++++++++++++++++
-> > >  Documentation/laptops/hpfall.c   |  146
-> > >  ------------------------------- 3 files changed, 179
-> > >  insertions(+), 148 deletions(-) create mode 100644
-> > >  Documentation/laptops/freefall.c delete mode 100644
-> > >  Documentation/laptops/hpfall.c
-> >=20
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> >=20
-> > 						Pavel
+On 06/27/14 12:08, Pali Roh=E1r wrote:
+> On Monday 16 June 2014 13:55:03 Pali Roh=E1r wrote:
+>> On Saturday 14 June 2014 10:53:29 Pavel Machek wrote:
+>>> On Wed 2014-06-11 10:02:07, Pali Roh?r wrote:
+>>>> Dell kernel driver dell-smo8800 provides same freefall
+>>>> interface as hp_accel so program hpfall.c works also on
+>>>> Dell laptops. So rename it to freefall.c.
+>>>>
+>>>> Dell driver does not provide hp::hddprotect led so make
+>>>> sure that freefall.c works also if hp::hddprotect does
+>>>> not exist in sysfs.
+>>>>
+>>>> Additionally write info to syslog.
+>>>>
+>>>> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+>>>> Cc: Sonal Santan <sonal.santan@gmail.com>
+>>>> ---
+>>>> Changes since v1:
+>>>> * Fixed warnings: Missing a blank line after declarations
+>>>> ---
+>>>>
+>>>>  Documentation/laptops/00-INDEX   |    4 +-
+>>>>  Documentation/laptops/freefall.c |  177
+>>>>  ++++++++++++++++++++++++++++++++++++++
+>>>>  Documentation/laptops/hpfall.c   |  146
+>>>>  ------------------------------- 3 files changed, 179
+>>>>  insertions(+), 148 deletions(-) create mode 100644
+>>>>  Documentation/laptops/freefall.c delete mode 100644
+>>>>  Documentation/laptops/hpfall.c
+>>>
+>>> Acked-by: Pavel Machek <pavel@ucw.cz>
+>>>
+>>> 						Pavel
+>>
+>> Randy, Matthew: PING
+>>
+>> first patch which implementing dell-smo8800.ko was merged, but
+>> this patch which updating documentation and fall daemon *not*.
 >=20
-> Randy, Matthew: PING
+> PING.
 >=20
-> first patch which implementing dell-smo8800.ko was merged, but
-> this patch which updating documentation and fall daemon *not*.
+> What is with this patch? Why was still not set to Linus in doc or=20
+> platform pull request?
+>=20
 
-PING.
+Sorry, I was on vacation this week, but that does not explain the previ=
+ous
+delays.
 
-What is with this patch? Why was still not set to Linus in doc or=20
-platform pull request?
+I'll merge it sometime this weekend.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Thanks.
 
---nextPart2965064.AjOTh0FVDk
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlOtwRoACgkQi/DJPQPkQ1JfHQCfV+6xMdSIWowN/KrOL3iNzgeH
-el8AnjK4loQXhwbbtcXCnQ6wCYBuUJal
-=bvc0
------END PGP SIGNATURE-----
-
---nextPart2965064.AjOTh0FVDk--
+--=20
+~Randy
