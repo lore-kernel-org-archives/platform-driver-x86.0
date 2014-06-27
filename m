@@ -1,144 +1,88 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] ideapad-laptop: Change Lenovo Yoga 2 series rfkill handling
-Date: Mon, 23 Jun 2014 16:45:51 +0200
-Message-ID: <1403534751-13298-1-git-send-email-hdegoede@redhat.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes for Dell
+Date: Fri, 27 Jun 2014 21:08:10 +0200
+Message-ID: <201406272108.10901@pali>
+References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <20140614085328.GC15326@Nokia-N900> <201406161355.03998@pali>
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+  boundary="nextPart2965064.AjOTh0FVDk";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:48984 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753835AbaFWOqB (ORCPT
+Received: from mail-wg0-f50.google.com ([74.125.82.50]:42268 "EHLO
+	mail-wg0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750990AbaF0TIP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Jun 2014 10:46:01 -0400
+	Fri, 27 Jun 2014 15:08:15 -0400
+In-Reply-To: <201406161355.03998@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>, Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
 
-It seems that the same problems which lead to adding an rfkill blacklist and
-putting the Lenovo Yoga 2 11 on it are also present on the Lenovo Yoga 2 13
-and Lenovo Yoga 2 Pro too:
-https://bugzilla.redhat.com/show_bug.cgi?id=1021036
-https://forums.lenovo.com/t5/Linux-Discussion/Yoga-2-13-not-Pro-Linux-Warning/m-p/1517612
+--nextPart2965064.AjOTh0FVDk
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Testing has shown that the firmware rfkill settings are persistent over
-reboots. So blacklisting the driver is not good enough, if the wifi is blocked
-at the firmware level the wifi needs to be explictly unblocked through the
-ideapad-laptop interface.
+On Monday 16 June 2014 13:55:03 Pali Roh=C3=A1r wrote:
+> On Saturday 14 June 2014 10:53:29 Pavel Machek wrote:
+> > On Wed 2014-06-11 10:02:07, Pali Roh?r wrote:
+> > > Dell kernel driver dell-smo8800 provides same freefall
+> > > interface as hp_accel so program hpfall.c works also on
+> > > Dell laptops. So rename it to freefall.c.
+> > >=20
+> > > Dell driver does not provide hp::hddprotect led so make
+> > > sure that freefall.c works also if hp::hddprotect does
+> > > not exist in sysfs.
+> > >=20
+> > > Additionally write info to syslog.
+> > >=20
+> > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > > Cc: Sonal Santan <sonal.santan@gmail.com>
+> > > ---
+> > > Changes since v1:
+> > > * Fixed warnings: Missing a blank line after declarations
+> > > ---
+> > >=20
+> > >  Documentation/laptops/00-INDEX   |    4 +-
+> > >  Documentation/laptops/freefall.c |  177
+> > >  ++++++++++++++++++++++++++++++++++++++
+> > >  Documentation/laptops/hpfall.c   |  146
+> > >  ------------------------------- 3 files changed, 179
+> > >  insertions(+), 148 deletions(-) create mode 100644
+> > >  Documentation/laptops/freefall.c delete mode 100644
+> > >  Documentation/laptops/hpfall.c
+> >=20
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > 						Pavel
+>=20
+> Randy, Matthew: PING
+>=20
+> first patch which implementing dell-smo8800.ko was merged, but
+> this patch which updating documentation and fall daemon *not*.
 
-And at least on the Lenovo Yoga 2 13 the VPCCMD_RF register which on devices
-with hardware kill switch reports the hardware switch state, needs to be
-explictly set to 1 (radio enabled / not blocked).
+PING.
 
-So this patch does 3 things to get proper rfkill handling on these models:
+What is with this patch? Why was still not set to Linus in doc or=20
+platform pull request?
 
-1) Instead of blacklisting the rfkill functionality, which means that people
-with a firmware blocked wifi get stuck in that situation, ignore the value
-reported by the not present hardware rfkill switch, as this is what is causing
-ideapad-laptop to wrongly report all radios as hardware blocks. But do register
-the rfkill interfaces so that the user can soft [un]block them.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-2) On models without a hardware rfkill switch, explictly set VPCCMD_RF to 1
+--nextPart2965064.AjOTh0FVDk
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-3) Drop the " 11" postfix from the dmi match string, as the entire Yoga 2
-series is affected.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-Yoga 2 11:
-Reported-and-tested-by: Vincent Gerris <vgerris@gmail.com>
+iEYEABECAAYFAlOtwRoACgkQi/DJPQPkQ1JfHQCfV+6xMdSIWowN/KrOL3iNzgeH
+el8AnjK4loQXhwbbtcXCnQ6wCYBuUJal
+=bvc0
+-----END PGP SIGNATURE-----
 
-Yoga 2 13:
-Tested-by: madls05 <http://ubuntuforums.org/showthread.php?t=2215044>
-
-Yoga 2 Pro:
-Reported-and-tested-by: Peter F. Patel-Schneider <pfpschneider@gmail.com>
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/ideapad-laptop.c | 41 +++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index b4c495a..b0e3a2e 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -87,6 +87,7 @@ struct ideapad_private {
- 	struct backlight_device *blightdev;
- 	struct dentry *debug;
- 	unsigned long cfg;
-+	bool has_hw_rfkill_switch;
- };
- 
- static bool no_bt_rfkill;
-@@ -473,12 +474,14 @@ static struct rfkill_ops ideapad_rfk_ops = {
- 
- static void ideapad_sync_rfk_state(struct ideapad_private *priv)
- {
--	unsigned long hw_blocked;
-+	unsigned long hw_blocked = 0;
- 	int i;
- 
--	if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
--		return;
--	hw_blocked = !hw_blocked;
-+	if (priv->has_hw_rfkill_switch) {
-+		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
-+			return;
-+		hw_blocked = !hw_blocked;
-+	}
- 
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		if (priv->rfk[i])
-@@ -821,14 +824,17 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 	}
- }
- 
--/* Blacklist for devices where the ideapad rfkill interface does not work */
--static struct dmi_system_id rfkill_blacklist[] = {
--	/* The Lenovo Yoga 2 11 always reports everything as blocked */
-+/*
-+ * Some ideapads don't have a hardware rfkill switch, reading VPCCMD_R_RF
-+ * always results in 0 on these models, causing ideapad_laptop to wrongly
-+ * report all radios as hardware-blocked.
-+ */
-+static struct dmi_system_id no_hw_rfkill_list[] = {
- 	{
--		.ident = "Lenovo Yoga 2 11",
-+		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2 11"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
- 		},
- 	},
- 	{}
-@@ -856,6 +862,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->cfg = cfg;
- 	priv->adev = adev;
- 	priv->platform_device = pdev;
-+	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
- 
- 	ret = ideapad_sysfs_init(priv);
- 	if (ret)
-@@ -869,11 +876,17 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	if (ret)
- 		goto input_failed;
- 
--	if (!dmi_check_system(rfkill_blacklist)) {
--		for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
--			if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
--				ideapad_register_rfkill(priv, i);
--	}
-+	/*
-+	 * On some models without a hw-switch (the yoga 2 13 at least)
-+	 * VPCCMD_W_RF must be explicitly set to 1 for the wifi to work.
-+	 */
-+	if (!priv->has_hw_rfkill_switch)
-+		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
-+
-+	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
-+		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
-+			ideapad_register_rfkill(priv, i);
-+
- 	ideapad_sync_rfk_state(priv);
- 	ideapad_sync_touchpad_state(priv);
- 
--- 
-2.0.0
+--nextPart2965064.AjOTh0FVDk--
