@@ -1,57 +1,151 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes
- for Dell
-Date: Sat, 28 Jun 2014 19:12:17 -0700
-Message-ID: <53AF7601.5000205@infradead.org>
-References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <1402473727-5464-1-git-send-email-pali.rohar@gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: [PATCH] eeepc-laptop: simplify parse_arg()
+Date: Tue, 01 Jul 2014 12:32:31 +0200
+Message-ID: <1404210751.2010.4.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1402473727-5464-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cpsmtpb-ews03.kpnxchange.com ([213.75.39.6]:53516 "EHLO
+	cpsmtpb-ews03.kpnxchange.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751571AbaGAKce (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 1 Jul 2014 06:32:34 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+parse_arg() has three possible return values:
+    -EINVAL if sscanf(), in short, fails;
+    zero if "count" is zero; and
+    "count" in all other cases
 
-This should really be done as 2 separate patches:
-One to move/rename the file and one to make the changes/additions
-to it for DELL.
+But "count" will never be zero. See, parse_arg() is called by the
+various store functions. And the callchain of these functions starts
+with sysfs_kf_write(). And that function checks for a zero "count". So
+we can stop checking for a zero "count", drop the "count" argument
+entirely, and transform parse_arg() into a function that returns zero o=
+n
+success or a negative error. That, in turn, allows to make those store
+functions just return "count" on success. The net effect is that the
+code becomes a bit easier to understand.
 
-Can you resend it as 2 patches like that, please?
+A nice side effect is that this GCC warning is silenced too:
+    drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store_sys=
+_acpi=E2=80=99:
+    drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98value=
+=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitial=
+ized]
+      int rv, value;
 
-Thanks... and sorry for the delay.
+Which is, of course, the reason to have a look at parse_arg().
 
-
-On 06/11/14 01:02, Pali Roh=C3=A1r wrote:
-> Dell kernel driver dell-smo8800 provides same freefall interface as h=
-p_accel so
-> program hpfall.c works also on Dell laptops. So rename it to freefall=
-=2Ec.
->=20
-> Dell driver does not provide hp::hddprotect led so make sure that fre=
-efall.c
-> works also if hp::hddprotect does not exist in sysfs.
->=20
-> Additionally write info to syslog.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Cc: Sonal Santan <sonal.santan@gmail.com>
-> ---
-> Changes since v1:
-> * Fixed warnings: Missing a blank line after declarations
-> ---
->  Documentation/laptops/00-INDEX   |    4 +-
->  Documentation/laptops/freefall.c |  177 ++++++++++++++++++++++++++++=
-++++++++++
->  Documentation/laptops/hpfall.c   |  146 ----------------------------=
+Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
 ---
->  3 files changed, 179 insertions(+), 148 deletions(-)
->  create mode 100644 Documentation/laptops/freefall.c
->  delete mode 100644 Documentation/laptops/hpfall.c
+Compile tested. I don't own an eeepc.
 
+I do hope my reading of the code make sense. Ie, is it correct that
+sysfs_kf_write() is at the start of all the sysfs writes involved?
 
+ drivers/platform/x86/eeepc-laptop.c | 34 +++++++++++++++++------------=
+-----
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86=
+/eeepc-laptop.c
+index 9b0c57cd1d4a..a7ef834ffa39 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -263,13 +263,11 @@ static int acpi_setter_handle(struct eeepc_laptop=
+ *eeepc, int cm,
+ /*
+  * Sys helpers
+  */
+-static int parse_arg(const char *buf, unsigned long count, int *val)
++static int parse_arg(const char *buf, int *val)
+ {
+-	if (!count)
+-		return 0;
+ 	if (sscanf(buf, "%i", val) !=3D 1)
+ 		return -EINVAL;
+-	return count;
++	return 0;
+ }
+=20
+ static ssize_t store_sys_acpi(struct device *dev, int cm,
+@@ -278,12 +276,13 @@ static ssize_t store_sys_acpi(struct device *dev,=
+ int cm,
+ 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
+-	if (rv > 0)
+-		value =3D set_acpi(eeepc, cm, value);
++	rv =3D parse_arg(buf, &value);
++	if (rv < 0)
++		return rv;
++	value =3D set_acpi(eeepc, cm, value);
+ 	if (value < 0)
+ 		return -EIO;
+-	return rv;
++	return count;
+ }
+=20
+ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+@@ -377,13 +376,13 @@ static ssize_t store_cpufv(struct device *dev,
+ 		return -EPERM;
+ 	if (get_cpufv(eeepc, &c))
+ 		return -ENODEV;
+-	rv =3D parse_arg(buf, count, &value);
++	rv =3D parse_arg(buf, &value);
+ 	if (rv < 0)
+ 		return rv;
+-	if (!rv || value < 0 || value >=3D c.num)
++	if (value < 0 || value >=3D c.num)
+ 		return -EINVAL;
+ 	set_acpi(eeepc, CM_ASL_CPUFV, value);
+-	return rv;
++	return count;
+ }
+=20
+ static ssize_t show_cpufv_disabled(struct device *dev,
+@@ -402,7 +401,7 @@ static ssize_t store_cpufv_disabled(struct device *=
+dev,
+ 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
++	rv =3D parse_arg(buf, &value);
+ 	if (rv < 0)
+ 		return rv;
+=20
+@@ -412,7 +411,7 @@ static ssize_t store_cpufv_disabled(struct device *=
+dev,
+ 			pr_warn("cpufv enabled (not officially supported "
+ 				"on this model)\n");
+ 		eeepc->cpufv_disabled =3D false;
+-		return rv;
++		return count;
+ 	case 1:
+ 		return -EPERM;
+ 	default:
+@@ -1042,10 +1041,11 @@ static ssize_t store_sys_hwmon(void (*set)(int)=
+, const char *buf, size_t count)
+ {
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
+-	if (rv > 0)
+-		set(value);
+-	return rv;
++	rv =3D parse_arg(buf, &value);
++	if (rv < 0)
++		return rv;
++	set(value);
++	return count;
+ }
+=20
+ static ssize_t show_sys_hwmon(int (*get)(void), char *buf)
 --=20
-~Randy
+1.9.3
