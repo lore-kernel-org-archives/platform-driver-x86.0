@@ -1,85 +1,62 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] Documentation: Rename hpfall.c => freefall.c, fixes for Dell
-Date: Mon, 7 Jul 2014 20:15:32 +0200
-Message-ID: <201407072015.32497@pali>
-References: <1399114077-19314-3-git-send-email-pali.rohar@gmail.com> <1402473727-5464-1-git-send-email-pali.rohar@gmail.com> <53AF7601.5000205@infradead.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2521090.aZ6eBgeppJ";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2 1/2] asus-wmi: Disable acpi-video backlight on desktop machines
+Date: Tue,  8 Jul 2014 10:47:21 +0200
+Message-ID: <1404809242-8575-2-git-send-email-hdegoede@redhat.com>
+References: <1404809242-8575-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f175.google.com ([209.85.212.175]:43460 "EHLO
-	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751225AbaGGSPh (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:61477 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751931AbaGHIri (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Jul 2014 14:15:37 -0400
-In-Reply-To: <53AF7601.5000205@infradead.org>
+	Tue, 8 Jul 2014 04:47:38 -0400
+In-Reply-To: <1404809242-8575-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Pavel Machek <pavel@ucw.cz>, Valdis Kletnieks <valdis.kletnieks@vt.edu>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Sonal Santan <sonal.santan@gmail.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>
 
---nextPart2521090.aZ6eBgeppJ
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Some Asus motherboards for desktop PC-s export an acpi-video interface
+advertising backlight support. Test the dmi chassis-type and tell acpi-video
+to not register a backlight interface on desktops.
 
-Hello Randy, sorry but now I do not have any free time...
+https://bugzilla.redhat.com/show_bug.cgi?id=1097436
 
-On Sunday 29 June 2014 04:12:17 Randy Dunlap wrote:
-> Hi,
->=20
-> This should really be done as 2 separate patches:
-> One to move/rename the file and one to make the
-> changes/additions to it for DELL.
->=20
-> Can you resend it as 2 patches like that, please?
->=20
-> Thanks... and sorry for the delay.
->=20
-> On 06/11/14 01:02, Pali Roh=C3=A1r wrote:
-> > Dell kernel driver dell-smo8800 provides same freefall
-> > interface as hp_accel so program hpfall.c works also on
-> > Dell laptops. So rename it to freefall.c.
-> >=20
-> > Dell driver does not provide hp::hddprotect led so make sure
-> > that freefall.c works also if hp::hddprotect does not exist
-> > in sysfs.
-> >=20
-> > Additionally write info to syslog.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Cc: Sonal Santan <sonal.santan@gmail.com>
-> > ---
-> > Changes since v1:
-> > * Fixed warnings: Missing a blank line after declarations
-> > ---
-> >=20
-> >  Documentation/laptops/00-INDEX   |    4 +-
-> >  Documentation/laptops/freefall.c |  177
-> >  ++++++++++++++++++++++++++++++++++++++
-> >  Documentation/laptops/hpfall.c   |  146
-> >  ------------------------------- 3 files changed, 179
-> >  insertions(+), 148 deletions(-) create mode 100644
-> >  Documentation/laptops/freefall.c delete mode 100644
-> >  Documentation/laptops/hpfall.c
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-wmi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart2521090.aZ6eBgeppJ
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlO648QACgkQi/DJPQPkQ1ITEgCeIrB2OHagNnnLdOQZEuQrS8sp
-wDQAoLLsc2D/s3gf+InJZtD4Bmhd1ACk
-=B9C4
------END PGP SIGNATURE-----
-
---nextPart2521090.aZ6eBgeppJ--
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 3c6cced..70aec19 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -46,6 +46,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/thermal.h>
+ #include <linux/acpi.h>
++#include <linux/dmi.h>
+ #include <acpi/video.h>
+ 
+ #include "asus-wmi.h"
+@@ -1734,6 +1735,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	struct platform_driver *pdrv = to_platform_driver(pdev->dev.driver);
+ 	struct asus_wmi_driver *wdrv = to_asus_wmi_driver(pdrv);
+ 	struct asus_wmi *asus;
++	const char *chassis_type;
+ 	acpi_status status;
+ 	int err;
+ 	u32 result;
+@@ -1770,6 +1772,11 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_rfkill;
+ 
++	/* Some Asus desktop boards export an acpi-video backlight interface,
++	   stop this from showing up */
++	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	if (chassis_type && !strcmp(chassis_type, "3"))
++		acpi_video_dmi_promote_vendor();
+ 	if (asus->driver->quirks->wmi_backlight_power)
+ 		acpi_video_dmi_promote_vendor();
+ 	if (!acpi_video_backlight_support()) {
+-- 
+2.0.0
