@@ -1,31 +1,48 @@
-From: poma <pomidorabelisima@gmail.com>
-Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
-Date: Wed, 09 Jul 2014 07:04:34 +0200
-Message-ID: <53BCCD62.70605@gmail.com>
-References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com> <5368F58C.1040702@gmail.com> <20140506144800.GA29600@srcf.ucam.org> <5369434A.1020909@gmail.com> <20140506205525.GA30712@srcf.ucam.org> <53695443.6020004@gmail.com> <20140506214224.GA2007@srcf.ucam.org> <5397AAF3.30602@gmail.com> <20140611012432.GA30767@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: AceLan Kao <acelan.kao@canonical.com>
+Subject: [PATCH 1/2] asus-wmi: control wlan-led if wapf > 0
+Date: Wed,  9 Jul 2014 16:18:18 +0800
+Message-ID: <1404893899-10082-1-git-send-email-acelan.kao@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:37759 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751032AbaGIFEh (ORCPT
+Received: from mail-pa0-f46.google.com ([209.85.220.46]:55037 "EHLO
+	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751574AbaGIISY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Jul 2014 01:04:37 -0400
-Received: by mail-wi0-f178.google.com with SMTP id f8so1542640wiw.17
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Jul 2014 22:04:35 -0700 (PDT)
-In-Reply-To: <20140611012432.GA30767@srcf.ucam.org>
+	Wed, 9 Jul 2014 04:18:24 -0400
+Received: by mail-pa0-f46.google.com with SMTP id eu11so8713304pac.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Jul 2014 01:18:24 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Corentin Chary <corentin.chary@gmail.com>
 
-On 11.06.2014 03:24, Matthew Garrett wrote:
-> Hm. Sorry, I thought I'd picked that one up. I'll send it in a couple of
-> days.
->
+Wifi will be controlled by asus-wmi driver when wapf > 0
+So, controls the wifi-led when wapf > 0
 
-Matthew, any chance for X75VBP? :)
+Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/platform/x86/asus-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-poma
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 19c313b..cb22d3f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -558,7 +558,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 			goto error;
+ 	}
+ 
+-	if (wlan_led_presence(asus) && (asus->driver->quirks->wapf == 4)) {
++	if (wlan_led_presence(asus) && (asus->driver->quirks->wapf > 0)) {
+ 		INIT_WORK(&asus->wlan_led_work, wlan_led_update);
+ 
+ 		asus->wlan_led.name = "asus::wlan";
+@@ -887,7 +887,7 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+ 		return -EINVAL;
+ 
+ 	if ((dev_id == ASUS_WMI_DEVID_WLAN) &&
+-			(asus->driver->quirks->wapf == 4))
++			(asus->driver->quirks->wapf > 0))
+ 		rfkill_set_led_trigger_name(*rfkill, "asus-wlan");
+ 
+ 	rfkill_init_sw_state(*rfkill, !result);
+-- 
+1.8.3.2
