@@ -1,138 +1,37 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 1/2] asus-nb-wmi.c: Rename x401u quirk to wapf4
-Date: Mon, 14 Jul 2014 09:14:34 +0200
-Message-ID: <1405322075-2334-1-git-send-email-hdegoede@redhat.com>
+From: Andrey Utkin <andrey.krieger.utkin@gmail.com>
+Subject: [PATCH] drivers/platform/x86/thinkpad_acpi.c: don't test unsigned int for negativity
+Date: Tue, 15 Jul 2014 01:56:21 +0300
+Message-ID: <1405378581-12146-1-git-send-email-andrey.krieger.utkin@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:61615 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752861AbaGNHOx (ORCPT
+Received: from mail-lb0-f181.google.com ([209.85.217.181]:56662 "EHLO
+	mail-lb0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757340AbaGNW4h (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 14 Jul 2014 03:14:53 -0400
+	Mon, 14 Jul 2014 18:56:37 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>
+To: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, ibm-acpi@hmh.eng.br
+Cc: matthew.garrett@nebula.com, Andrey Utkin <andrey.krieger.utkin@gmail.com>
 
-The actual x401u does not use the so named x401u quirk but the x55u quirk.
-All that the x401u quirk does it setting wapf to 4, so rename it to wapf4 to
-stop the confusion.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=80231
+Reported-by: David Binderman <dcb314@hotmail.com>
+Signed-off-by: Andrey Utkin <andrey.krieger.utkin@gmail.com>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index ddf0eef..fd8e9d3 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -70,7 +70,7 @@ static struct quirk_entry quirk_asus_x55u = {
- 	.no_display_toggle = true,
- };
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d82f196..4d59b09 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6144,7 +6144,7 @@ static int brightness_set(unsigned int value)
+ {
+ 	int res;
  
--static struct quirk_entry quirk_asus_x401u = {
-+static struct quirk_entry quirk_asus_wapf4 = {
- 	.wapf = 4,
- };
+-	if (value > bright_maxlvl || value < 0)
++	if (value > bright_maxlvl)
+ 		return -EINVAL;
  
-@@ -97,7 +97,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X401A"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -106,7 +106,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X401A1"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -124,7 +124,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X501A"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -133,7 +133,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X501A1"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -142,7 +142,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X550CA"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -151,7 +151,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X55A"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -160,7 +160,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X55C"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -178,7 +178,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X55VD"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -187,7 +187,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X75A"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -196,7 +196,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "1015E"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{
- 		.callback = dmi_matched,
-@@ -205,7 +205,7 @@ static struct dmi_system_id asus_quirks[] = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "1015U"),
- 		},
--		.driver_data = &quirk_asus_x401u,
-+		.driver_data = &quirk_asus_wapf4,
- 	},
- 	{},
- };
+ 	vdbg_printk(TPACPI_DBG_BRGHT,
 -- 
-2.0.0
+1.8.5.5
