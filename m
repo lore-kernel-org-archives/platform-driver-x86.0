@@ -1,80 +1,211 @@
 From: Mathias Krause <minipli@googlemail.com>
-Subject: [PATCH 09/15] fujitsu-laptop: Mark fujitsu_dmi_table[] DMI table as __initconst
-Date: Wed, 16 Jul 2014 19:43:11 +0200
-Message-ID: <1405532597-28262-10-git-send-email-minipli@googlemail.com>
+Subject: [PATCH 02/15] acer-wmi: Mark init data and code as such
+Date: Wed, 16 Jul 2014 19:43:04 +0200
+Message-ID: <1405532597-28262-3-git-send-email-minipli@googlemail.com>
 References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:43626 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965428AbaGPRns (ORCPT
+Received: from mail-wg0-f41.google.com ([74.125.82.41]:43609 "EHLO
+	mail-wg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934741AbaGPRnm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Jul 2014 13:43:48 -0400
-Received: by mail-wi0-f170.google.com with SMTP id f8so5186793wiw.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:44 -0700 (PDT)
+	Wed, 16 Jul 2014 13:43:42 -0400
+Received: by mail-wg0-f41.google.com with SMTP id z12so1206609wgg.12
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:37 -0700 (PDT)
 In-Reply-To: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, Jonathan Woithe <jwoithe@just42.net>
+Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, "Lee, Chun-Yi" <jlee@suse.com>
 
-The DMI table is only ever used during initialization. Mark it as
-__initconst so its memory can be released afterwards -- roughly 1.5 kB.
-In turn, the callback functions can be marked with __init, too.
+Quite a lot of code and data of acer-wmi.c is only ever used during
+initialization. Mark those accordingly -- and constify, where
+appropriate -- so the memory can be released afterwards.
+
+All in all those changes move ~10 kB of code and data to the .init
+sections, marking them for release after initialization has finished.
 
 Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Cc: Jonathan Woithe <jwoithe@just42.net>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>
 ---
- drivers/platform/x86/fujitsu-laptop.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/acer-wmi.c |   41 ++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index e6f336270c..e9345f12ce 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -564,7 +564,7 @@ static struct platform_driver fujitsupf_driver = {
- 		   }
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index bbf78b2d6d..31f4da5061 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -294,7 +294,7 @@ struct quirk_entry {
+ 
+ static struct quirk_entry *quirks;
+ 
+-static void set_quirks(void)
++static void __init set_quirks(void)
+ {
+ 	if (!interface)
+ 		return;
+@@ -306,7 +306,7 @@ static void set_quirks(void)
+ 		interface->capability |= ACER_CAP_BRIGHTNESS;
+ }
+ 
+-static int dmi_matched(const struct dmi_system_id *dmi)
++static int __init dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+ 	return 1;
+@@ -337,7 +337,7 @@ static struct quirk_entry quirk_lenovo_ideapad_s205 = {
  };
  
--static void dmi_check_cb_common(const struct dmi_system_id *id)
-+static void __init dmi_check_cb_common(const struct dmi_system_id *id)
+ /* The Aspire One has a dummy ACPI-WMI interface - disable it */
+-static struct dmi_system_id acer_blacklist[] = {
++static const struct dmi_system_id acer_blacklist[] __initconst = {
+ 	{
+ 		.ident = "Acer Aspire One (SSD)",
+ 		.matches = {
+@@ -355,7 +355,7 @@ static struct dmi_system_id acer_blacklist[] = {
+ 	{}
+ };
+ 
+-static struct dmi_system_id acer_quirks[] = {
++static const struct dmi_system_id acer_quirks[] __initconst = {
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Acer Aspire 1360",
+@@ -530,14 +530,15 @@ static struct dmi_system_id acer_quirks[] = {
+ 	{}
+ };
+ 
+-static int video_set_backlight_video_vendor(const struct dmi_system_id *d)
++static int __init
++video_set_backlight_video_vendor(const struct dmi_system_id *d)
  {
- 	pr_info("Identified laptop model '%s'\n", id->ident);
- 	if (use_alt_lcd_levels == -1) {
-@@ -578,7 +578,7 @@ static void dmi_check_cb_common(const struct dmi_system_id *id)
+ 	interface->capability &= ~ACER_CAP_BRIGHTNESS;
+ 	pr_info("Brightness must be controlled by generic video driver\n");
+ 	return 0;
+ }
+ 
+-static const struct dmi_system_id video_vendor_dmi_table[] = {
++static const struct dmi_system_id video_vendor_dmi_table[] __initconst = {
+ 	{
+ 		.callback = video_set_backlight_video_vendor,
+ 		.ident = "Acer TravelMate 4750",
+@@ -582,7 +583,7 @@ static const struct dmi_system_id video_vendor_dmi_table[] = {
+ };
+ 
+ /* Find which quirks are needed for a particular vendor/ model pair */
+-static void find_quirks(void)
++static void __init find_quirks(void)
+ {
+ 	if (!force_series) {
+ 		dmi_check_system(acer_quirks);
+@@ -749,7 +750,7 @@ static acpi_status AMW0_set_u32(u32 value, u32 cap)
+ 	return wmab_execute(&args, NULL);
+ }
+ 
+-static acpi_status AMW0_find_mailled(void)
++static acpi_status __init AMW0_find_mailled(void)
+ {
+ 	struct wmab_args args;
+ 	struct wmab_ret ret;
+@@ -781,16 +782,16 @@ static acpi_status AMW0_find_mailled(void)
+ 	return AE_OK;
+ }
+ 
+-static int AMW0_set_cap_acpi_check_device_found;
++static int AMW0_set_cap_acpi_check_device_found __initdata;
+ 
+-static acpi_status AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
++static acpi_status __init AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
+ 	u32 level, void *context, void **retval)
+ {
+ 	AMW0_set_cap_acpi_check_device_found = 1;
+ 	return AE_OK;
+ }
+ 
+-static const struct acpi_device_id norfkill_ids[] = {
++static const struct acpi_device_id norfkill_ids[] __initconst = {
+ 	{ "VPC2004", 0},
+ 	{ "IBM0068", 0},
+ 	{ "LEN0068", 0},
+@@ -798,7 +799,7 @@ static const struct acpi_device_id norfkill_ids[] = {
+ 	{ "", 0},
+ };
+ 
+-static int AMW0_set_cap_acpi_check_device(void)
++static int __init AMW0_set_cap_acpi_check_device(void)
+ {
+ 	const struct acpi_device_id *id;
+ 
+@@ -808,7 +809,7 @@ static int AMW0_set_cap_acpi_check_device(void)
+ 	return AMW0_set_cap_acpi_check_device_found;
+ }
+ 
+-static acpi_status AMW0_set_capabilities(void)
++static acpi_status __init AMW0_set_capabilities(void)
+ {
+ 	struct wmab_args args;
+ 	struct wmab_ret ret;
+@@ -1184,7 +1185,7 @@ static acpi_status wmid_v2_set_u32(u32 value, u32 cap)
+ 	return wmid3_set_device_status(value, device);
+ }
+ 
+-static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
++static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
+ {
+ 	struct hotkey_function_type_aa *type_aa;
+ 
+@@ -1209,7 +1210,7 @@ static void type_aa_dmi_decode(const struct dmi_header *header, void *dummy)
+ 	commun_fn_key_number = type_aa->commun_fn_key_number;
+ }
+ 
+-static acpi_status WMID_set_capabilities(void)
++static acpi_status __init WMID_set_capabilities(void)
+ {
+ 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+ 	union acpi_object *obj;
+@@ -1777,7 +1778,7 @@ static void acer_wmi_notify(u32 value, void *context)
  	}
  }
  
--static int dmi_check_cb_s6410(const struct dmi_system_id *id)
-+static int __init dmi_check_cb_s6410(const struct dmi_system_id *id)
+-static acpi_status
++static acpi_status __init
+ wmid3_set_lm_mode(struct lm_input_params *params,
+ 		  struct lm_return_value *return_value)
  {
- 	dmi_check_cb_common(id);
- 	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
-@@ -586,7 +586,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
- 	return 1;
+@@ -1811,7 +1812,7 @@ wmid3_set_lm_mode(struct lm_input_params *params,
+ 	return status;
  }
  
--static int dmi_check_cb_s6420(const struct dmi_system_id *id)
-+static int __init dmi_check_cb_s6420(const struct dmi_system_id *id)
+-static int acer_wmi_enable_ec_raw(void)
++static int __init acer_wmi_enable_ec_raw(void)
  {
- 	dmi_check_cb_common(id);
- 	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
-@@ -594,7 +594,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
- 	return 1;
+ 	struct lm_return_value return_value;
+ 	acpi_status status;
+@@ -1834,7 +1835,7 @@ static int acer_wmi_enable_ec_raw(void)
+ 	return status;
  }
  
--static int dmi_check_cb_p8010(const struct dmi_system_id *id)
-+static int __init dmi_check_cb_p8010(const struct dmi_system_id *id)
+-static int acer_wmi_enable_lm(void)
++static int __init acer_wmi_enable_lm(void)
  {
- 	dmi_check_cb_common(id);
- 	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
-@@ -603,7 +603,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
- 	return 1;
+ 	struct lm_return_value return_value;
+ 	acpi_status status;
+@@ -2120,7 +2121,7 @@ static int remove_sysfs(struct platform_device *device)
+ 	return 0;
  }
  
--static struct dmi_system_id fujitsu_dmi_table[] = {
-+static const struct dmi_system_id fujitsu_dmi_table[] __initconst = {
- 	{
- 	 .ident = "Fujitsu Siemens S6410",
- 	 .matches = {
+-static int create_sysfs(void)
++static int __init create_sysfs(void)
+ {
+ 	int retval = -ENOMEM;
+ 
+@@ -2149,7 +2150,7 @@ static void remove_debugfs(void)
+ 	debugfs_remove(interface->debug.root);
+ }
+ 
+-static int create_debugfs(void)
++static int __init create_debugfs(void)
+ {
+ 	interface->debug.root = debugfs_create_dir("acer-wmi", NULL);
+ 	if (!interface->debug.root) {
 -- 
 1.7.10.4
