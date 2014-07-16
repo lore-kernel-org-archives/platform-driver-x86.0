@@ -1,61 +1,63 @@
-From: Himangi Saraogi <himangi774@gmail.com>
-Subject: [PATCH] WMI: Remove unnecessary null test
-Date: Tue, 15 Jul 2014 22:49:11 +0530
-Message-ID: <20140715171911.GA3038@himangi-Dell>
+From: Mathias Krause <minipli@googlemail.com>
+Subject: [PATCH 04/15] acer-wmi: Hide acer_{suspend,resume} for !CONFIG_PM_SLEEP
+Date: Wed, 16 Jul 2014 19:43:06 +0200
+Message-ID: <1405532597-28262-5-git-send-email-minipli@googlemail.com>
+References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f46.google.com ([209.85.220.46]:33236 "EHLO
-	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932196AbaGORTS (ORCPT
+Received: from mail-we0-f177.google.com ([74.125.82.177]:35249 "EHLO
+	mail-we0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934736AbaGPRnk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Jul 2014 13:19:18 -0400
-Content-Disposition: inline
+	Wed, 16 Jul 2014 13:43:40 -0400
+Received: by mail-we0-f177.google.com with SMTP id w62so1305418wes.36
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:39 -0700 (PDT)
+In-Reply-To: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: julia.lawall@lip6.fr
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, "Lee, Chun-Yi" <jlee@suse.com>
 
-This patch removes the null test on block. block is initialized at the
-beginning of the function to &wblock->gblock. Since wblock is
-dereferenced prior to the null test, wblock must be a valid pointer,
-and &wblock->gblock cannot be null.
+Encapsulate acer_suspend() and acer_resume with #ifdef CONFIG_PM_SLEEP
+to get rid of the following warnings:
 
-The following Coccinelle script is used for detecting the change:
+  ../acer-wmi.c:2046:12: warning: =E2=80=98acer_suspend=E2=80=99 define=
+d but not used [-Wunused-function]
+  ../acer-wmi.c:2068:12: warning: =E2=80=98acer_resume=E2=80=99 defined=
+ but not used [-Wunused-function]
 
-@r@
-expression e,f;
-identifier g,y;
-statement S1,S2;
-@@
-
-*e = &f->g
-<+...
- f->y
- ...+>
-*if (e != NULL || ...)
- S1 else S2
-
-Signed-off-by: Himangi Saraogi <himangi774@gmail.com>
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>
 ---
-To send to: Matthew Garrett <matthew.garrett@nebula.com>,platform-driver-x86@vger.kernel.org,linux-kernel@vger.kernel.org
- drivers/platform/x86/wmi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/platform/x86/acer-wmi.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 43d1329..737e56d 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -256,10 +256,6 @@ static acpi_status wmi_method_enable(struct wmi_block *wblock, int enable)
- 	block = &wblock->gblock;
- 	handle = wblock->handle;
- 
--	if (!block)
--		return AE_NOT_EXIST;
--
--
- 	snprintf(method, 5, "WE%02X", block->notify_id);
- 	status = acpi_execute_simple_method(handle, method, enable);
- 
--- 
-1.9.1
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+index fde69ee63f..0d18c23d66 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -2044,6 +2044,7 @@ static int acer_platform_remove(struct platform_d=
+evice *device)
+ 	return 0;
+ }
+=20
++#ifdef CONFIG_PM_SLEEP
+ static int acer_suspend(struct device *dev)
+ {
+ 	u32 value;
+@@ -2084,6 +2085,10 @@ static int acer_resume(struct device *dev)
+=20
+ 	return 0;
+ }
++#else
++#define acer_suspend	NULL
++#define acer_resume	NULL
++#endif
+=20
+ static SIMPLE_DEV_PM_OPS(acer_pm, acer_suspend, acer_resume);
+=20
+--=20
+1.7.10.4
