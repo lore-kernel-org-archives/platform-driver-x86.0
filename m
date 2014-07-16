@@ -1,67 +1,88 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 15/15] thinkpad_acpi: Mark volume_alsa_control_{vol,mute}
- as __initdata
-Date: Wed, 16 Jul 2014 16:03:54 -0300
-Message-ID: <20140716190354.GA19382@khazad-dum.debian.net>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 09/15] fujitsu-laptop: Mark fujitsu_dmi_table[] DMI table
+ as __initconst
+Date: Thu, 17 Jul 2014 08:29:20 +0930
+Message-ID: <20140716225920.GA29824@marvin.atrad.com.au>
 References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
- <1405532597-28262-16-git-send-email-minipli@googlemail.com>
+ <1405532597-28262-10-git-send-email-minipli@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46569 "EHLO
-	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S934924AbaGPTEG (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:52780 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753104AbaGPXF1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Jul 2014 15:04:06 -0400
-Received: from compute6.internal (compute6.nyi.mail.srv.osa [10.202.2.46])
-	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 3554C20EA5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 15:04:00 -0400 (EDT)
+	Wed, 16 Jul 2014 19:05:27 -0400
 Content-Disposition: inline
-In-Reply-To: <1405532597-28262-16-git-send-email-minipli@googlemail.com>
+In-Reply-To: <1405532597-28262-10-git-send-email-minipli@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Mathias Krause <minipli@googlemail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, jwoithe@just42.net
 
-On Wed, 16 Jul 2014, Mathias Krause wrote:
-> Mark volume_alsa_control_vol and volume_alsa_control_mute as __initdata,
-> as snd_ctl_new1() will copy the relevant parts, so there is no need to
-> keep the master copies around after initialization.
+Looks fine to me.
+
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+
+On Wed, Jul 16, 2014 at 07:43:11PM +0200, Mathias Krause wrote:
+> The DMI table is only ever used during initialization. Mark it as
+> __initconst so its memory can be released afterwards -- roughly 1.5 kB.
+> In turn, the callback functions can be marked with __init, too.
 > 
 > Signed-off-by: Mathias Krause <minipli@googlemail.com>
-> Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-
+> Cc: Jonathan Woithe <jwoithe@just42.net>
 > ---
->  drivers/platform/x86/thinkpad_acpi.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/fujitsu-laptop.c |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index d82f196e3c..0f48cade28 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6860,7 +6860,7 @@ static int volume_alsa_mute_put(struct snd_kcontrol *kcontrol,
->  	return volume_alsa_set_mute(!ucontrol->value.integer.value[0]);
->  }
->  
-> -static struct snd_kcontrol_new volume_alsa_control_vol = {
-> +static struct snd_kcontrol_new volume_alsa_control_vol __initdata = {
->  	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
->  	.name = "Console Playback Volume",
->  	.index = 0,
-> @@ -6869,7 +6869,7 @@ static struct snd_kcontrol_new volume_alsa_control_vol = {
->  	.get = volume_alsa_vol_get,
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index e6f336270c..e9345f12ce 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -564,7 +564,7 @@ static struct platform_driver fujitsupf_driver = {
+>  		   }
 >  };
 >  
-> -static struct snd_kcontrol_new volume_alsa_control_mute = {
-> +static struct snd_kcontrol_new volume_alsa_control_mute __initdata = {
->  	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
->  	.name = "Console Playback Switch",
->  	.index = 0,
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+> -static void dmi_check_cb_common(const struct dmi_system_id *id)
+> +static void __init dmi_check_cb_common(const struct dmi_system_id *id)
+>  {
+>  	pr_info("Identified laptop model '%s'\n", id->ident);
+>  	if (use_alt_lcd_levels == -1) {
+> @@ -578,7 +578,7 @@ static void dmi_check_cb_common(const struct dmi_system_id *id)
+>  	}
+>  }
+>  
+> -static int dmi_check_cb_s6410(const struct dmi_system_id *id)
+> +static int __init dmi_check_cb_s6410(const struct dmi_system_id *id)
+>  {
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+> @@ -586,7 +586,7 @@ static int dmi_check_cb_s6410(const struct dmi_system_id *id)
+>  	return 1;
+>  }
+>  
+> -static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+> +static int __init dmi_check_cb_s6420(const struct dmi_system_id *id)
+>  {
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_SCREENLOCK;	/* "Lock" */
+> @@ -594,7 +594,7 @@ static int dmi_check_cb_s6420(const struct dmi_system_id *id)
+>  	return 1;
+>  }
+>  
+> -static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+> +static int __init dmi_check_cb_p8010(const struct dmi_system_id *id)
+>  {
+>  	dmi_check_cb_common(id);
+>  	fujitsu->keycode1 = KEY_HELP;	/* "Support" */
+> @@ -603,7 +603,7 @@ static int dmi_check_cb_p8010(const struct dmi_system_id *id)
+>  	return 1;
+>  }
+>  
+> -static struct dmi_system_id fujitsu_dmi_table[] = {
+> +static const struct dmi_system_id fujitsu_dmi_table[] __initconst = {
+>  	{
+>  	 .ident = "Fujitsu Siemens S6410",
+>  	 .matches = {
+> -- 
+> 1.7.10.4
