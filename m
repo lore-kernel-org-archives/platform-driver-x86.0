@@ -1,60 +1,67 @@
-From: Mathias Krause <minipli@googlemail.com>
-Subject: [PATCH 14/15] intel_ips: Make ips_mcp_limits variables static
-Date: Wed, 16 Jul 2014 19:43:16 +0200
-Message-ID: <1405532597-28262-15-git-send-email-minipli@googlemail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 15/15] thinkpad_acpi: Mark volume_alsa_control_{vol,mute}
+ as __initdata
+Date: Wed, 16 Jul 2014 16:03:54 -0300
+Message-ID: <20140716190354.GA19382@khazad-dum.debian.net>
 References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
+ <1405532597-28262-16-git-send-email-minipli@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182]:47124 "EHLO
-	mail-wi0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965508AbaGPRnz (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46569 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S934924AbaGPTEG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Jul 2014 13:43:55 -0400
-Received: by mail-wi0-f182.google.com with SMTP id d1so1706468wiv.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:49 -0700 (PDT)
-In-Reply-To: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
+	Wed, 16 Jul 2014 15:04:06 -0400
+Received: from compute6.internal (compute6.nyi.mail.srv.osa [10.202.2.46])
+	by gateway1.nyi.mail.srv.osa (Postfix) with ESMTP id 3554C20EA5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 15:04:00 -0400 (EDT)
+Content-Disposition: inline
+In-Reply-To: <1405532597-28262-16-git-send-email-minipli@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>
+To: Mathias Krause <minipli@googlemail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-These variables don't need to be visible outside of this compilation
-unit, make them static.
+On Wed, 16 Jul 2014, Mathias Krause wrote:
+> Mark volume_alsa_control_vol and volume_alsa_control_mute as __initdata,
+> as snd_ctl_new1() will copy the relevant parts, so there is no need to
+> keep the master copies around after initialization.
+> 
+> Signed-off-by: Mathias Krause <minipli@googlemail.com>
+> Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
----
- drivers/platform/x86/intel_ips.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 18dcb58ba9..b3b49d516e 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -269,7 +269,7 @@ struct ips_mcp_limits {
- 
- /* Max temps are -10 degrees C to avoid PROCHOT# */
- 
--struct ips_mcp_limits ips_sv_limits = {
-+static struct ips_mcp_limits ips_sv_limits = {
- 	.mcp_power_limit = 35000,
- 	.core_power_limit = 29000,
- 	.mch_power_limit = 20000,
-@@ -277,7 +277,7 @@ struct ips_mcp_limits ips_sv_limits = {
- 	.mch_temp_limit = 90
- };
- 
--struct ips_mcp_limits ips_lv_limits = {
-+static struct ips_mcp_limits ips_lv_limits = {
- 	.mcp_power_limit = 25000,
- 	.core_power_limit = 21000,
- 	.mch_power_limit = 13000,
-@@ -285,7 +285,7 @@ struct ips_mcp_limits ips_lv_limits = {
- 	.mch_temp_limit = 90
- };
- 
--struct ips_mcp_limits ips_ulv_limits = {
-+static struct ips_mcp_limits ips_ulv_limits = {
- 	.mcp_power_limit = 18000,
- 	.core_power_limit = 14000,
- 	.mch_power_limit = 11000,
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d82f196e3c..0f48cade28 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6860,7 +6860,7 @@ static int volume_alsa_mute_put(struct snd_kcontrol *kcontrol,
+>  	return volume_alsa_set_mute(!ucontrol->value.integer.value[0]);
+>  }
+>  
+> -static struct snd_kcontrol_new volume_alsa_control_vol = {
+> +static struct snd_kcontrol_new volume_alsa_control_vol __initdata = {
+>  	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+>  	.name = "Console Playback Volume",
+>  	.index = 0,
+> @@ -6869,7 +6869,7 @@ static struct snd_kcontrol_new volume_alsa_control_vol = {
+>  	.get = volume_alsa_vol_get,
+>  };
+>  
+> -static struct snd_kcontrol_new volume_alsa_control_mute = {
+> +static struct snd_kcontrol_new volume_alsa_control_mute __initdata = {
+>  	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+>  	.name = "Console Playback Switch",
+>  	.index = 0,
+
 -- 
-1.7.10.4
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
