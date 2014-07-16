@@ -1,60 +1,53 @@
 From: Mathias Krause <minipli@googlemail.com>
-Subject: [PATCH 11/15] hp-wmi: Add missing __init annotations to initialization code
-Date: Wed, 16 Jul 2014 19:43:13 +0200
-Message-ID: <1405532597-28262-12-git-send-email-minipli@googlemail.com>
+Subject: [PATCH 15/15] thinkpad_acpi: Mark volume_alsa_control_{vol,mute} as __initdata
+Date: Wed, 16 Jul 2014 19:43:17 +0200
+Message-ID: <1405532597-28262-16-git-send-email-minipli@googlemail.com>
 References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f169.google.com ([209.85.212.169]:54053 "EHLO
-	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965508AbaGPRnt (ORCPT
+Received: from mail-we0-f174.google.com ([74.125.82.174]:46037 "EHLO
+	mail-we0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965508AbaGPRnw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 16 Jul 2014 13:43:49 -0400
-Received: by mail-wi0-f169.google.com with SMTP id n3so6147540wiv.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:48 -0700 (PDT)
+	Wed, 16 Jul 2014 13:43:52 -0400
+Received: by mail-we0-f174.google.com with SMTP id x48so1309614wes.33
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jul 2014 10:43:50 -0700 (PDT)
 In-Reply-To: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>
+Cc: platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-These functions are only called from other initialization routines, so
-can be marked __init, too.
+Mark volume_alsa_control_vol and volume_alsa_control_mute as __initdata,
+as snd_ctl_new1() will copy the relevant parts, so there is no need to
+keep the master copies around after initialization.
 
 Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 ---
- drivers/platform/x86/hp-wmi.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 484a8673b8..4c559640dc 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -295,7 +295,7 @@ static int hp_wmi_tablet_state(void)
- 	return (state & 0x4) ? 1 : 0;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index d82f196e3c..0f48cade28 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6860,7 +6860,7 @@ static int volume_alsa_mute_put(struct snd_kcontrol *kcontrol,
+ 	return volume_alsa_set_mute(!ucontrol->value.integer.value[0]);
  }
  
--static int hp_wmi_bios_2009_later(void)
-+static int __init hp_wmi_bios_2009_later(void)
- {
- 	int state = 0;
- 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, 0, &state,
-@@ -704,7 +704,7 @@ static void cleanup_sysfs(struct platform_device *device)
- 	device_remove_file(&device->dev, &dev_attr_postcode);
- }
+-static struct snd_kcontrol_new volume_alsa_control_vol = {
++static struct snd_kcontrol_new volume_alsa_control_vol __initdata = {
+ 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+ 	.name = "Console Playback Volume",
+ 	.index = 0,
+@@ -6869,7 +6869,7 @@ static struct snd_kcontrol_new volume_alsa_control_vol = {
+ 	.get = volume_alsa_vol_get,
+ };
  
--static int hp_wmi_rfkill_setup(struct platform_device *device)
-+static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- {
- 	int err;
- 	int wireless = 0;
-@@ -806,7 +806,7 @@ register_wifi_error:
- 	return err;
- }
- 
--static int hp_wmi_rfkill2_setup(struct platform_device *device)
-+static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- {
- 	int err, i;
- 	struct bios_rfkill2_state state;
+-static struct snd_kcontrol_new volume_alsa_control_mute = {
++static struct snd_kcontrol_new volume_alsa_control_mute __initdata = {
+ 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+ 	.name = "Console Playback Switch",
+ 	.index = 0,
 -- 
 1.7.10.4
