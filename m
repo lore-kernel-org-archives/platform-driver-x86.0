@@ -1,50 +1,43 @@
-From: Benoit Taine <benoit.taine@lip6.fr>
-Subject: [PATCH 6/25] x86: Replace DEFINE_PCI_DEVICE_TABLE macro use
-Date: Fri, 18 Jul 2014 17:26:53 +0200
-Message-ID: <1405697232-11785-7-git-send-email-benoit.taine@lip6.fr>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: Re: [PATCH 0/25] Replace DEFINE_PCI_DEVICE_TABLE macro use
+Date: Fri, 18 Jul 2014 09:28:54 -0700
+Message-ID: <1405700934.605.31.camel@jarvis.lan>
 References: <1405697232-11785-1-git-send-email-benoit.taine@lip6.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1405697232-11785-1-git-send-email-benoit.taine@lip6.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: benoit.taine@lip6.fr, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benoit Taine <benoit.taine@lip6.fr>
+Cc: linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, ath5k-devel@venema.h4ckr.net, linux-acenic@sunsite.dk, linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org, ath10k@lists.infradead.org, linux-hippi@sunsite.dk, industrypack-devel@lists.sourceforge.net, linux-mmc@vger.kernel.org, MPT-FusionLinux.pdl@avagotech.com, virtualization@lists.linux-foundation.org, ath9k-devel@venema.h4ckr.net, wil6210@qca.qualcomm.com, linux-pcmcia@lists.infradead.org, linux-can@vger.kernel.org, xen-devel@lists.xenproject.org, platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, users@rt2x00.serialmonkey.com, e1000-devel@lists.sourceforge.net, linux-crypto@vger.kernel.org, devel@linuxdriverproject.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We should prefer `struct pci_device_id` over `DEFINE_PCI_DEVICE_TABLE` to meet
-kernel coding style guidelines. This issue was reported by checkpatch.
+On Fri, 2014-07-18 at 17:26 +0200, Benoit Taine wrote:
+> We should prefer `const struct pci_device_id` over
+> `DEFINE_PCI_DEVICE_TABLE` to meet kernel coding style guidelines.
+> This issue was reported by checkpatch.
 
-Signed-off-by: Benoit Taine <benoit.taine@lip6.fr>
+What kernel coding style?  checkpatch isn't the arbiter of style, if
+that's the only problem.
 
----
-Tested by compilation without errors.
+The DEFINE_PCI macro was a well reasoned addition when it was added in
+2008.  The problem was most people were getting the definition wrong.
+When we converted away from CONFIG_HOTPLUG, having this DEFINE_ meant
+that only one place needed changing instead of hundreds for PCI tables.
 
- drivers/platform/x86/intel_ips.c     |    2 +-
- drivers/platform/x86/intel_scu_ipc.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The reason people were getting the PCI table wrong was mostly the init
+section specifiers which are now gone, but it has enough underlying
+utility (mostly constification) that I don't think we'd want to churn
+the kernel hugely to make a change to struct pci_table and then have to
+start detecting and fixing misuses.
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index 18dcb58..a0d1f57 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -1478,7 +1478,7 @@ ips_link_to_i915_driver(void)
- }
- EXPORT_SYMBOL_GPL(ips_link_to_i915_driver);
- 
--static DEFINE_PCI_DEVICE_TABLE(ips_id_table) = {
-+static const struct pci_device_id ips_id_table[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
- 		     PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
- 	{ 0, }
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 76ca094..66a4d32 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -640,7 +640,7 @@ static void ipc_remove(struct pci_dev *pdev)
- 	intel_scu_devices_destroy();
- }
- 
--static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
-+static const struct pci_device_id pci_ids[] = {
- 	{
- 		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_LINCROFT),
- 		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
+James
