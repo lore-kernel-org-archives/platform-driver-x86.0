@@ -1,46 +1,50 @@
 From: Benoit Taine <benoit.taine@lip6.fr>
-Subject: [PATCH 0/25] Replace DEFINE_PCI_DEVICE_TABLE macro use
-Date: Fri, 18 Jul 2014 17:26:47 +0200
-Message-ID: <1405697232-11785-1-git-send-email-benoit.taine@lip6.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: linux-pci@vger.kernel.org
-Cc: linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, benoit.taine@lip6.fr, ath5k-devel@venema.h4ckr.net, linux-acenic@sunsite.dk, linux-scsi@vger.kernel.org, linux-rdma@vger.kernel.org, ath10k@lists.infradead.org, linux-hippi@sunsite.dk, industrypack-devel@lists.sourceforge.net, xen-devel@lists.xenproject.org, MPT-FusionLinux.pdl@avagotech.com, virtualization@lists.linux-foundation.org, ath9k-devel@venema.h4ckr.net, wil6210@qca.qualcomm.com, linux-pcmcia@lists.infradead.org, linux-can@vger.kernel.org, platform-driver-x86@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, users@rt2x00.serialmonkey.com, e1000-devel@lists.sourceforge.net, linux-crypto@vger.kernel.org, devel@linuxdriverproject.org
+Subject: [PATCH 6/25] x86: Replace DEFINE_PCI_DEVICE_TABLE macro use
+Date: Fri, 18 Jul 2014 17:26:53 +0200
+Message-ID: <1405697232-11785-7-git-send-email-benoit.taine@lip6.fr>
+References: <1405697232-11785-1-git-send-email-benoit.taine@lip6.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1405697232-11785-1-git-send-email-benoit.taine@lip6.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: benoit.taine@lip6.fr, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We should prefer `const struct pci_device_id` over
-`DEFINE_PCI_DEVICE_TABLE` to meet kernel coding style guidelines.
-This issue was reported by checkpatch.
+We should prefer `struct pci_device_id` over `DEFINE_PCI_DEVICE_TABLE` to meet
+kernel coding style guidelines. This issue was reported by checkpatch.
 
-A simplified version of the semantic patch that makes this change is as
-follows (http://coccinelle.lip6.fr/):
+Signed-off-by: Benoit Taine <benoit.taine@lip6.fr>
 
-// <smpl>
+---
+Tested by compilation without errors.
 
-@@
-identifier i;
-declarer name DEFINE_PCI_DEVICE_TABLE;
-initializer z;
-@@
+ drivers/platform/x86/intel_ips.c     |    2 +-
+ drivers/platform/x86/intel_scu_ipc.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-- DEFINE_PCI_DEVICE_TABLE(i)
-+ const struct pci_device_id i[]
-= z;
-
-// </smpl>
-
-I have 103 patches ready, and will only send a few for you to judge if
-it is useful enough, and to prevent from spamming too much.
-
-Thanks.
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 18dcb58..a0d1f57 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1478,7 +1478,7 @@ ips_link_to_i915_driver(void)
+ }
+ EXPORT_SYMBOL_GPL(ips_link_to_i915_driver);
+ 
+-static DEFINE_PCI_DEVICE_TABLE(ips_id_table) = {
++static const struct pci_device_id ips_id_table[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+ 		     PCI_DEVICE_ID_INTEL_THERMAL_SENSOR), },
+ 	{ 0, }
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 76ca094..66a4d32 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -640,7 +640,7 @@ static void ipc_remove(struct pci_dev *pdev)
+ 	intel_scu_devices_destroy();
+ }
+ 
+-static DEFINE_PCI_DEVICE_TABLE(pci_ids) = {
++static const struct pci_device_id pci_ids[] = {
+ 	{
+ 		PCI_VDEVICE(INTEL, PCI_DEVICE_ID_LINCROFT),
+ 		(kernel_ulong_t)&intel_scu_ipc_lincroft_pdata,
