@@ -1,74 +1,50 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 04/15] acer-wmi: Hide acer_{suspend,resume} for
- !CONFIG_PM_SLEEP
-Date: Tue, 29 Jul 2014 11:21:59 +0800
-Message-ID: <20140729032159.GN24967@linux-rxt1.site>
-References: <1405532597-28262-1-git-send-email-minipli@googlemail.com>
- <1405532597-28262-5-git-send-email-minipli@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] asus-nb-wmi: Add wapf4 quirk for the U32U
+Date: Tue, 29 Jul 2014 11:59:57 +0200
+Message-ID: <1406627997-20311-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:37271 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751730AbaG2D12 (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Mon, 28 Jul 2014 23:27:28 -0400
-Content-Disposition: inline
-In-Reply-To: <1405532597-28262-5-git-send-email-minipli@googlemail.com>
+Received: from mx1.redhat.com ([209.132.183.28]:18937 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752171AbaG2KAS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 29 Jul 2014 06:00:18 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mathias Krause <minipli@googlemail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>
 
-On Wed, Jul 16, 2014 at 07:43:06PM +0200, Mathias Krause wrote:
-> Encapsulate acer_suspend() and acer_resume with #ifdef CONFIG_PM_SLEE=
-P
-> to get rid of the following warnings:
->=20
->   ../acer-wmi.c:2046:12: warning: =E2=80=98acer_suspend=E2=80=99 defi=
-ned but not used [-Wunused-function]
->   ../acer-wmi.c:2068:12: warning: =E2=80=98acer_resume=E2=80=99 defin=
-ed but not used [-Wunused-function]
->=20
-> Signed-off-by: Mathias Krause <minipli@googlemail.com>
-> Cc: "Lee, Chun-Yi" <jlee@suse.com>
+As reported here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1173681
+the U32U needs wapf=4 too.
 
-Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-
-Thanks a lot!
-Joey Lee
-
-> ---
->  drivers/platform/x86/acer-wmi.c |    5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> index fde69ee63f..0d18c23d66 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -2044,6 +2044,7 @@ static int acer_platform_remove(struct platform=
-_device *device)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_PM_SLEEP
->  static int acer_suspend(struct device *dev)
->  {
->  	u32 value;
-> @@ -2084,6 +2085,10 @@ static int acer_resume(struct device *dev)
-> =20
->  	return 0;
->  }
-> +#else
-> +#define acer_suspend	NULL
-> +#define acer_resume	NULL
-> +#endif
-> =20
->  static SIMPLE_DEV_PM_OPS(acer_pm, acer_suspend, acer_resume);
-> =20
-> --=20
-> 1.7.10.4
->=20
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 7196cd0..7a2c4cc 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -83,6 +83,20 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ static struct dmi_system_id asus_quirks[] = {
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. U32U",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "U32U"),
++		},
++		/*
++		 * Note this machine has a Brazos APU, and most Brazos Asus
++		 * machines need quirk_asus_x55u / wmi_backlight_power but
++		 * here acpi-video seems to work fine for backlight control.
++		 */
++		.driver_data = &quirk_asus_wapf4,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X401U",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+2.0.1
