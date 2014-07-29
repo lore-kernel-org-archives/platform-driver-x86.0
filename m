@@ -1,50 +1,22 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] asus-nb-wmi: Add wapf4 quirk for the U32U
-Date: Tue, 29 Jul 2014 11:59:57 +0200
-Message-ID: <1406627997-20311-1-git-send-email-hdegoede@redhat.com>
+From: "Noemi Alvarez" <nimvarez@gmail.com>
+Subject: Hello
+Date: Tue, 29 Jul 2014 10:23:08 +0200
+Message-ID: <12ff18cc1664079c349558e43e9b6748.squirrel__42437.9006879919$1406635930$gmane$org@acemedia.mk>
+Reply-To: nimvarez@live.com
+Mime-Version: 1.0
+Content-Type: text/plain;charset=UTF8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:18937 "EHLO mx1.redhat.com"
+Received: from inelhost.com ([37.26.96.2]:34051 "EHLO inelhost.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752171AbaG2KAS (ORCPT
+	id S1750825AbaG2MLu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Jul 2014 06:00:18 -0400
+	Tue, 29 Jul 2014 08:11:50 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>
 
-As reported here: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1173681
-the U32U needs wapf=4 too.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 7196cd0..7a2c4cc 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -83,6 +83,20 @@ static int dmi_matched(const struct dmi_system_id *dmi)
- static struct dmi_system_id asus_quirks[] = {
- 	{
- 		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. U32U",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK Computer Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "U32U"),
-+		},
-+		/*
-+		 * Note this machine has a Brazos APU, and most Brazos Asus
-+		 * machines need quirk_asus_x55u / wmi_backlight_power but
-+		 * here acpi-video seems to work fine for backlight control.
-+		 */
-+		.driver_data = &quirk_asus_wapf4,
-+	},
-+	{
-+		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. X401U",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--- 
-2.0.1
+I want to keep up with you with hope for friendship if you are interested.
+If you don't mind i will like you to write me back. I am waiting to read
+from you, because i have something important and urgent to discuss with
+you. I will also send some of my beautiful photos to you.
