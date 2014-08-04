@@ -1,60 +1,48 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 3/3] platform/x86: Enable build support for toshiba_haps
-Date: Mon,  4 Aug 2014 09:27:15 -0600
-Message-ID: <1407166035-2020-4-git-send-email-coproscefalo@gmail.com>
-References: <1407166035-2020-1-git-send-email-coproscefalo@gmail.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 1/2] toshiba_acpi: Add extra check to backlight code
+Date: Mon, 4 Aug 2014 11:19:43 -0700
+Message-ID: <20140804181943.GA15598@kroah.com>
+References: <1407165662-1971-1-git-send-email-coproscefalo@gmail.com>
+ <1407165662-1971-2-git-send-email-coproscefalo@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f45.google.com ([209.85.219.45]:63508 "EHLO
-	mail-oa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751499AbaHDP1X (ORCPT
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:52442 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750925AbaHDSTq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Aug 2014 11:27:23 -0400
-Received: by mail-oa0-f45.google.com with SMTP id i7so5152838oag.32
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Aug 2014 08:27:23 -0700 (PDT)
-In-Reply-To: <1407166035-2020-1-git-send-email-coproscefalo@gmail.com>
+	Mon, 4 Aug 2014 14:19:46 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by gateway1.nyi.internal (Postfix) with ESMTP id 9B684228D2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Aug 2014 14:19:44 -0400 (EDT)
+Content-Disposition: inline
+In-Reply-To: <1407165662-1971-2-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
 
-Makefile and Kconfig build support patch for the newly introduced
-kernel module toshiba_haps.
+On Mon, Aug 04, 2014 at 09:21:01AM -0600, Azael Avalos wrote:
+> Some Toshiba models (most notably Qosmios) come with an
+> incomplete backlight method where the AML code doesn't
+> check for write or read commands and always returns
+> HCI_SUCCESS and the actual brightness (and in some
+> cases the max brightness), thus allowing the backlight
+> interface to be registered without write support.
+> 
+> This patch changes the set_lcd_brightness function,
+> checking the returned values for values greater than
+> zero to avoid registering a broken backlight interface.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/Kconfig | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+<formletter>
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 172f26c..f9a8a29 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -652,6 +652,26 @@ config TOSHIBA_BT_RFKILL
- 	  If you have a modern Toshiba laptop with a Bluetooth and an
- 	  RFKill switch (such as the Portege R500), say Y.
- 
-+config TOSHIBA_HAPS
-+	tristate "Toshiba HDD Active Protection Sensor"
-+	depends on ACPI
-+	---help---
-+	  This driver adds support for the built-in accelerometer
-+	  found on recent Toshiba laptops equiped with HID TOS620A
-+	  device.
-+
-+	  This driver receives ACPI notify events 0x80 when the sensor
-+	  detects a sudden move or a harsh vibration, as well as an
-+	  ACPI notify event 0x81 whenever the movement or vibration has
-+	  been stabilized.
-+
-+	  Also provides sysfs entries to get/set the desired protection
-+	  level, reading the movement status of the sensor and resting the
-+	  HDD protection interface.
-+
-+	  If you have a recent Toshiba laptop with a built-in accelerometer
-+	  device, say Y.
-+
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on X86 && ACPI
--- 
-2.0.0
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read Documentation/stable_kernel_rules.txt
+for how to do this properly.
+
+</formletter>
