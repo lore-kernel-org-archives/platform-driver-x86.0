@@ -1,15 +1,15 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/3] platform/x86: Toshiba HDD Active Protection Sensor
-Date: Mon,  4 Aug 2014 09:27:13 -0600
-Message-ID: <1407166035-2020-2-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 2/3] Documentation: Add file about toshiba_haps module
+Date: Mon,  4 Aug 2014 09:27:14 -0600
+Message-ID: <1407166035-2020-3-git-send-email-coproscefalo@gmail.com>
 References: <1407166035-2020-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f172.google.com ([209.85.214.172]:35409 "EHLO
-	mail-ob0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751499AbaHDP1V (ORCPT
+Received: from mail-oa0-f48.google.com ([209.85.219.48]:60789 "EHLO
+	mail-oa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752242AbaHDP1Y (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Aug 2014 11:27:21 -0400
-Received: by mail-ob0-f172.google.com with SMTP id wn1so4591090obc.3
+	Mon, 4 Aug 2014 11:27:24 -0400
+Received: by mail-oa0-f48.google.com with SMTP id m1so5037206oag.7
         for <platform-driver-x86@vger.kernel.org>; Mon, 04 Aug 2014 08:27:21 -0700 (PDT)
 In-Reply-To: <1407166035-2020-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -17,312 +17,100 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-This driver adds support for the built-in accelereometer found
-on recent Toshiba laptops with HID TOS620A.
-
-This driver receives ACPI notify events 0x80 when the sensor
-detects a sudden move or a harsh vibration, as well as an
-ACPI notify event 0x81 whenever the movement or vibration has
-been stabilized.
-
-Also provides sysfs entries to get/set the desired protection
-level, reading the movement status of the sensor and reseting the
-HDD protection interface.
+This patch provides information about the Toshiba HDD
+Active Protection Sensor driver module toshiba_haps.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_haps.c | 283 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 283 insertions(+)
- create mode 100644 drivers/platform/x86/toshiba_haps.c
+ Documentation/laptops/toshiba_haps.txt | 80 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/laptops/toshiba_haps.txt
 
-diff --git a/drivers/platform/x86/toshiba_haps.c b/drivers/platform/x86/toshiba_haps.c
+diff --git a/Documentation/laptops/toshiba_haps.txt b/Documentation/laptops/toshiba_haps.txt
 new file mode 100644
-index 0000000..37ac78d
+index 0000000..5e41d60
 --- /dev/null
-+++ b/drivers/platform/x86/toshiba_haps.c
-@@ -0,0 +1,283 @@
-+/*
-+ * Toshiba HDD Active Protection Sensor (HAPS) driver
-+ *
-+ * Copyright (C) 2014 Azael Avalos <coproscefalo@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ * 
-+ */
++++ b/Documentation/laptops/toshiba_haps.txt
+@@ -0,0 +1,80 @@
++Kernel driver toshiba_haps
++Toshiba HDD Active Protection Sensor
++====================================
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++Author: Azael Avalos <coproscefalo@gmail.com>
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/acpi.h>
 +
-+MODULE_AUTHOR("Azael Avalos <coproscefalo@gmail.com>");
-+MODULE_DESCRIPTION("Toshiba HDD Active Protection Sensor");
-+MODULE_LICENSE("GPL");
++0. Contents
++-----------
 +
-+struct toshiba_haps_dev {
-+	struct acpi_device *acpi_dev;
-+	
-+	int protection_level;
-+	int movement;
-+};
++1. Description
++2. Interface
++3. Accelerometer axes
++4. Supported devices
++5. Usage
 +
-+static struct toshiba_haps_dev *toshiba_haps;
 +
-+/* HAPS functions */
-+static int toshiba_haps_reset_protection(acpi_handle handle)
-+{
-+	acpi_status status;
++1. Description
++--------------
 +
-+	status = acpi_evaluate_object(handle, "RSSS", NULL, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("Unable to reset the HDD protection\n");
-+		return -EIO;
-+	}
++This driver provides support for the accelerometer found in various Toshiba
++laptops, being called "Toshiba HDD Protection - Shock Sensor" officialy,
++and detects laptops automatically with this device.
++On Windows, Toshiba provided software monitors this device and provides
++automatic HDD protection (head unload) on sudden moves or harsh vibrations,
++however, this driver only provides a notification via a sysfs file to let
++userspace tools or daemons act accordingly, as well as providing a sysfs
++file to set the desired protection level or sensor sensibility.
 +
-+	return 0;
-+}
 +
-+static int toshiba_haps_protection_level(acpi_handle handle, int level)
-+{
-+	acpi_status status;
++2. Interface
++------------
 +
-+	status = acpi_execute_simple_method(handle, "PTLV", level);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("Error while setting the protection level\n");
-+		return -EIO;
-+	}
++This device comes with 3 methods:
++_STA -  Checks existence of the device, returning Zero if the device does not
++	exists or is not supported.
++PTLV -  Sets the desired protection level.
++RSSS -  Shuts down the HDD protection interface for a few seconds,
++	then restores normal operation.
 +
-+	pr_info("HDD protection level: %d\n", level);
++Note:
++The presence of Solid State Drives (SSD) can make this driver to fail loading,
++given the fact that such drives have no movable parts, and thus, not requiring
++any "protection" as well as failing during the evaluation of the _STA method
++found under this device.
 +
-+	return 0;
-+}
 +
-+/* sysfs files */
-+static ssize_t protection_level_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct toshiba_haps_dev *haps = dev_get_drvdata(dev);
-+	return sprintf(buf, "%i\n", haps->protection_level);
-+}
++3. Accelerometer axes
++---------------------
 +
-+static ssize_t protection_level_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct toshiba_haps_dev *haps = dev_get_drvdata(dev);
-+	int level, ret;
++This device does not report any axes, however, to query the sensor position
++a couple HCI (Hardware Configuration Interface) calls (0x6D and 0xA6) are
++provided to query such information, handled by the kernel module toshiba_acpi
++since kernel version 3.15.
 +
-+	if (sscanf(buf, "%d", &level) != 1 || level < 0 || level > 3)
-+		return -EINVAL;
 +
-+	/* Set the sensor level.
-+	 * Acceptable levels are:
-+	 * 0 - Disabled | 1 - Low | 2 - Medium | 3 - High
-+	 */
-+	ret = toshiba_haps_protection_level(haps->acpi_dev->handle, level);
-+	if (ret != 0)
-+		return ret;
++4. Supported devices
++--------------------
 +
-+	haps->protection_level = level;
++This driver binds itself to the ACPI device TOS620A, and any Toshiba laptop
++with this device is supported, given the fact that they have the presence of
++conventional HDD and not only SSD, or a combination of both HDD and SSD.
 +
-+	return count;
-+}
 +
-+static ssize_t reset_protection_store(struct device *dev,
-+				      struct device_attribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct toshiba_haps_dev *haps = dev_get_drvdata(dev);
-+	int reset, ret;
++5. Usage
++--------
 +
-+	if (sscanf(buf, "%d", &reset) != 1 || reset != 1)
-+		return -EINVAL;
-+
-+	/* Reset the protection interface */
-+	ret = toshiba_haps_reset_protection(haps->acpi_dev->handle);
-+	if (ret != 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t haps_movement_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct toshiba_haps_dev *haps = dev_get_drvdata(dev);
-+	return sprintf(buf, "%d\n", haps->movement);
-+}
-+
-+static DEVICE_ATTR(protection_level, S_IRUGO | S_IWUSR,
-+		   protection_level_show, protection_level_store);
-+static DEVICE_ATTR(reset_protection, S_IWUSR, NULL, reset_protection_store);
-+static DEVICE_ATTR(movement, S_IRUGO, haps_movement_show, NULL);
-+
-+static struct attribute *haps_attributes[] = {
-+	&dev_attr_protection_level.attr,
-+	&dev_attr_reset_protection.attr,
-+	&dev_attr_movement.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group haps_attr_group = {
-+	.attrs = haps_attributes,
-+};
-+
-+/*
-+ * ACPI stuff
-+ */
-+static void toshiba_haps_notify(struct acpi_device *device, u32 event)
-+{
-+	struct toshiba_haps_dev *haps = acpi_driver_data(device);
-+
-+	if (event == 0x80) {
-+		pr_info("Movement detected\n");
-+		haps->movement = 1;
-+	} else if (event == 0x81) {
-+		pr_info("Movement stabilized\n");
-+		haps->movement = 0;
-+	}
-+}
-+
-+static int toshiba_haps_remove(struct acpi_device *device)
-+{
-+	sysfs_remove_group(&device->dev.kobj, &haps_attr_group);
-+
-+	if (toshiba_haps)
-+		toshiba_haps = NULL;
-+
-+	return 0;
-+}
-+
-+/* Helper function */
-+static int toshiba_haps_available(acpi_handle handle)
-+{
-+	acpi_status status;
-+	u64 hdd_present;
-+
-+	/*
-+	 * A non existent device as well as having (only)
-+	 * Solid State Drives can cause the call to fail.
-+	 */
-+	status = acpi_evaluate_integer(handle, "_STA", NULL,
-+				       &hdd_present);
-+	if (ACPI_FAILURE(status) || !hdd_present) {
-+		pr_info("HDD protection not available or using SSD\n");
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
-+static int toshiba_haps_add(struct acpi_device *acpi_dev)
-+{
-+	struct toshiba_haps_dev *haps;
-+	int ret;
-+
-+	if (toshiba_haps)
-+		return -EBUSY;
-+
-+	if (!toshiba_haps_available(acpi_dev->handle))
-+		return -ENODEV;
-+
-+	pr_info("Toshiba HDD Active Protection Sensor device\n");
-+
-+	haps = kzalloc(sizeof(struct toshiba_haps_dev), GFP_KERNEL);
-+	if (!haps)
-+		return -ENOMEM;
-+
-+	haps->acpi_dev = acpi_dev;
-+	haps->protection_level = 2;
-+	haps->movement = 0;
-+	acpi_dev->driver_data = haps;
-+	dev_set_drvdata(&acpi_dev->dev, haps);
-+
-+	/* Set the protection level, currently at level 2 (Medium) */
-+	ret = toshiba_haps_protection_level(acpi_dev->handle, 2);
-+	if (ret != 0)
-+		return ret;
-+
-+	ret = sysfs_create_group(&acpi_dev->dev.kobj, &haps_attr_group);
-+	if (ret)
-+		return ret;
-+
-+	toshiba_haps = haps;
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int toshiba_haps_suspend(struct device *device)
-+{
-+	struct toshiba_haps_dev *haps;
-+	int ret;
-+
-+	haps = acpi_driver_data(to_acpi_device(device));
-+
-+	/* Deactivate the protection on suspend */
-+	ret = toshiba_haps_protection_level(haps->acpi_dev->handle, 0);
-+
-+	return ret;
-+}
-+
-+static int toshiba_haps_resume(struct device *device)
-+{
-+	struct toshiba_haps_dev *haps;
-+	int ret;
-+
-+	haps = acpi_driver_data(to_acpi_device(device));
-+
-+	/* Set the stored protection level */
-+	ret = toshiba_haps_protection_level(haps->acpi_dev->handle,
-+					    haps->protection_level);
-+
-+	/* Reset the protection on resume */
-+	ret = toshiba_haps_reset_protection(haps->acpi_dev->handle);
-+	if (ret != 0)
-+		return ret;
-+
-+	return ret;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(toshiba_haps_pm,
-+			 toshiba_haps_suspend, toshiba_haps_resume);
-+
-+static const struct acpi_device_id haps_device_ids[] = {
-+	{"TOS620A", 0},
-+	{"", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, haps_device_ids);
-+
-+static struct acpi_driver toshiba_haps_driver = {
-+	.name = "Toshiba HAPS",
-+	.owner = THIS_MODULE,
-+	.ids = haps_device_ids,
-+	.flags = ACPI_DRIVER_ALL_NOTIFY_EVENTS,
-+	.ops = {
-+		.add =		toshiba_haps_add,
-+		.remove =	toshiba_haps_remove,
-+		.notify =	toshiba_haps_notify,
-+	},
-+	.drv.pm = &toshiba_haps_pm,
-+};
-+
-+module_acpi_driver(toshiba_haps_driver);
++The sysfs files under /sys/devices/platform/toshiba_haps/ are:
++protection_level - The protection_level is readable and writeable, and
++		   provides a way to let userspace query the current protection
++		   level, as well as set the desired protection level, and the
++		   available protection levels are:
++		   0 - Disabled | 1 - Low | 2 - Medium | 3 - High
++reset_protection - The reset_protection entry is writeable only, being "1"
++		   the only parameter it accepts, it is used to trigger
++		   a reset of the protection interface.
++movement - The movement entry is readable only, it shows 1 whenever a
++	   "sudden movement" is detected, this being triggered by the ACPI
++	   notify event 0x80, and 0 whenever the device "stabilized" via the
++	   ACPI notify event 0x81.
 -- 
 2.0.0
