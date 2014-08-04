@@ -1,55 +1,37 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 2/2] toshiba_acpi: Add Qosmio X75-A to the alt keymap dmi list
-Date: Mon,  4 Aug 2014 09:21:02 -0600
-Message-ID: <1407165662-1971-3-git-send-email-coproscefalo@gmail.com>
-References: <1407165662-1971-1-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 0/3] platform/x86: Toshiba built-in accelerometer support
+Date: Mon,  4 Aug 2014 09:27:12 -0600
+Message-ID: <1407166035-2020-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oa0-f47.google.com ([209.85.219.47]:54232 "EHLO
-	mail-oa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751456AbaHDPVf (ORCPT
+Received: from mail-ob0-f176.google.com ([209.85.214.176]:55650 "EHLO
+	mail-ob0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751065AbaHDP1U (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Aug 2014 11:21:35 -0400
-In-Reply-To: <1407165662-1971-1-git-send-email-coproscefalo@gmail.com>
+	Mon, 4 Aug 2014 11:27:20 -0400
+Received: by mail-ob0-f176.google.com with SMTP id wo20so4599330obc.21
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Aug 2014 08:27:20 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-The Toshiba Qosmio X75-A series models also come with
-the new keymap layout.
+Up for review.
 
-This patch adds this model to the alt_keymap_dmi list,
-along with an extra key found on these models.
+The following series of patches add support for the
+built-in accelerometer found on recent Toshiba laptops
+with HID TOS620A.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Azael Avalos (3):
+  platform/x86: Toshiba HDD Active Protection Sensor
+  Documentation: Add file about toshiba_haps module
+  platform/x86: Enable build support for toshiba_haps
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 1ed2ffc..34b7303 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -222,6 +222,12 @@ static const struct dmi_system_id toshiba_alt_keymap_dmi[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Satellite M840"),
- 		},
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Qosmio X75-A"),
-+		},
-+	},
- 	{}
- };
- 
-@@ -229,6 +235,7 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
- 	{ KE_KEY, 0x157, { KEY_MUTE } },
- 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
- 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
-+	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
- 	{ KE_KEY, 0x13e, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 0x13c, { KEY_BRIGHTNESSDOWN } },
+ Documentation/laptops/toshiba_haps.txt |  80 ++++++++++
+ drivers/platform/x86/Kconfig           |  20 +++
+ drivers/platform/x86/toshiba_haps.c    | 283 +++++++++++++++++++++++++++++++++
+ 3 files changed, 383 insertions(+)
+ create mode 100644 Documentation/laptops/toshiba_haps.txt
+ create mode 100644 drivers/platform/x86/toshiba_haps.c
+
 -- 
 2.0.0
