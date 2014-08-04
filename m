@@ -1,36 +1,52 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH 0/2] toshiba_acpi: Qosmio backlight and keymap fixes
-Date: Mon, 4 Aug 2014 11:19:56 -0700
-Message-ID: <20140804181956.GC15598@kroah.com>
-References: <1407165662-1971-1-git-send-email-coproscefalo@gmail.com>
+From: John Marsden <john.d.marsden@gmail.com>
+Subject: Re: PROBLEM: [Toshiba Portege Z835] Brightness control lost after suspend
+Date: Mon, 4 Aug 2014 21:32:40 +0100
+Message-ID: <CACiopZBgyr0+81nz8fW_OvZtUg71r9tHutFLynHtHhDLxK5agQ@mail.gmail.com>
+References: <CACiopZBtRcixrXhHLB-6fc_Fvg5rhv+rqJjeSxkxDYBf0uu+kw@mail.gmail.com>
+	<53D7AF8F.7060401@intel.com>
+	<CACiopZCQpGeBw6V7qFpcV6u22stOQC8X9Aiwya3wE_cBZzL+PQ@mail.gmail.com>
+	<20140730083248.GA31763@aaronlu.sh.intel.com>
+	<CACiopZA=5wHsjjzOKrC7aqCp13g8vLwnegcdFrySoS-_kD60Aw@mail.gmail.com>
+	<20140731080947.GD20462@aaronlu.sh.intel.com>
+	<CACiopZCrfyqxgqS8NoF5Hi-K-0zM+8YHsyXqfhWKgjU65n4-Pg@mail.gmail.com>
+	<20140801024255.GF30211@aaronlu.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407165662-1971-1-git-send-email-coproscefalo@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140801024255.GF30211@aaronlu.sh.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Aaron Lu <aaron.lu@intel.com>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 04, 2014 at 09:21:00AM -0600, Azael Avalos wrote:
-> The following two patches fixes some issues regarding
-> the backlight method on Qosmios series X500/X505 and
-> X75-A (and probably others too), as well as adding
-> the latter to the new alternate keymap list.
-> 
-> Azael Avalos (2):
->   toshiba_acpi: Add extra check to backlight code
->   toshiba_acpi: Add Qosmio X75-A to the alt keymap dmi list
-> 
->  drivers/platform/x86/toshiba_acpi.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
-> 
+On 1 August 2014 03:42, Aaron Lu <aaron.lu@intel.com> wrote:
+> A workaround from user space is to specify the backlight interface you
+> want to use in xorg.conf, an example is here:
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?msg=78;att=0;bug=651741
+>
+> Section "Device"
+> Identifier  "Intel Graphics"
+> Driver      "intel"
+> Option      "AccelMethod"     "sna"
+> Option      "Backlight" "intel_backlight"
+> Driver      "intel"
+> BusID       "PCI:0:2:0"
+> EndSection
 
-<formletter>
+Thank you.  This works both in v3.16-rc and in the current Ubuntu
+14.04 latest update.  Now user-interface brightness controls work
+before AND after a suspend.  The only difference in the user
+experience is that now minimum brightness on the brightness sliders
+gives a completely dark screen rather than just a very dimly lit
+screen.  I can live with this.
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read Documentation/stable_kernel_rules.txt
-for how to do this properly.
+I'm guessing this should be regarded as a work-round rather than a
+final solution that might eventually form part of the kernel.  Should
+I report it as such back in the downstream Ubuntu/Launchpad bug?
 
-</formletter>
+If in future, when this is addressed in the kernel, further testing is
+required please let me know.  I'd be happy to assist.
+
+Thank you for your help,
+
+John Marsden
