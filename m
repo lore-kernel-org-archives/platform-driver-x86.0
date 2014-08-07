@@ -1,52 +1,37 @@
-From: John Marsden <john.d.marsden@gmail.com>
-Subject: Re: PROBLEM: [Toshiba Portege Z835] Brightness control lost after suspend
-Date: Mon, 4 Aug 2014 21:32:40 +0100
-Message-ID: <CACiopZBgyr0+81nz8fW_OvZtUg71r9tHutFLynHtHhDLxK5agQ@mail.gmail.com>
-References: <CACiopZBtRcixrXhHLB-6fc_Fvg5rhv+rqJjeSxkxDYBf0uu+kw@mail.gmail.com>
-	<53D7AF8F.7060401@intel.com>
-	<CACiopZCQpGeBw6V7qFpcV6u22stOQC8X9Aiwya3wE_cBZzL+PQ@mail.gmail.com>
-	<20140730083248.GA31763@aaronlu.sh.intel.com>
-	<CACiopZA=5wHsjjzOKrC7aqCp13g8vLwnegcdFrySoS-_kD60Aw@mail.gmail.com>
-	<20140731080947.GD20462@aaronlu.sh.intel.com>
-	<CACiopZCrfyqxgqS8NoF5Hi-K-0zM+8YHsyXqfhWKgjU65n4-Pg@mail.gmail.com>
-	<20140801024255.GF30211@aaronlu.sh.intel.com>
+From: poma <pomidorabelisima@gmail.com>
+Subject: Re: [PATCH] asus-nb-wmi: set wapf=4 for ASUSTeK COMPUTER INC. X75VBP
+Date: Thu, 07 Aug 2014 07:04:03 +0200
+Message-ID: <53E308C3.9060707@gmail.com>
+References: <1398550344-3785-1-git-send-email-pomidorabelisima@gmail.com> <53684CF9.8020305@gmail.com> <5368F58C.1040702@gmail.com> <20140506144800.GA29600@srcf.ucam.org> <5369434A.1020909@gmail.com> <20140506205525.GA30712@srcf.ucam.org> <53695443.6020004@gmail.com> <20140506214224.GA2007@srcf.ucam.org> <5397AAF3.30602@gmail.com> <20140611012432.GA30767@srcf.ucam.org> <53BCCD62.70605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20140801024255.GF30211@aaronlu.sh.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-we0-f177.google.com ([74.125.82.177]:52945 "EHLO
+	mail-we0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756945AbaHGFEH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 7 Aug 2014 01:04:07 -0400
+Received: by mail-we0-f177.google.com with SMTP id w62so3642666wes.36
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Aug 2014 22:04:05 -0700 (PDT)
+In-Reply-To: <53BCCD62.70605@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 1 August 2014 03:42, Aaron Lu <aaron.lu@intel.com> wrote:
-> A workaround from user space is to specify the backlight interface you
-> want to use in xorg.conf, an example is here:
-> https://bugs.debian.org/cgi-bin/bugreport.cgi?msg=78;att=0;bug=651741
->
-> Section "Device"
-> Identifier  "Intel Graphics"
-> Driver      "intel"
-> Option      "AccelMethod"     "sna"
-> Option      "Backlight" "intel_backlight"
-> Driver      "intel"
-> BusID       "PCI:0:2:0"
-> EndSection
+On 09.07.2014 07:04, poma wrote:
+> On 11.06.2014 03:24, Matthew Garrett wrote:
+>> Hm. Sorry, I thought I'd picked that one up. I'll send it in a couple of
+>> days.
+>>
+> 
+> Matthew, any chance for X75VBP? :)
+> 
+> 
 
-Thank you.  This works both in v3.16-rc and in the current Ubuntu
-14.04 latest update.  Now user-interface brightness controls work
-before AND after a suspend.  The only difference in the user
-experience is that now minimum brightness on the brightness sliders
-gives a completely dark screen rather than just a very dimly lit
-screen.  I can live with this.
+Hey, this is not a test. This is rock and roll.
+http://goo.gl/4NGn0P
 
-I'm guessing this should be regarded as a work-round rather than a
-final solution that might eventually form part of the kernel.  Should
-I report it as such back in the downstream Ubuntu/Launchpad bug?
 
-If in future, when this is addressed in the kernel, further testing is
-required please let me know.  I'd be happy to assist.
-
-Thank you for your help,
-
-John Marsden
+poma
