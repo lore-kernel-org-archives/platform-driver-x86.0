@@ -1,165 +1,99 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [GIT PATCH] x86 platform driver updates
-Date: Sat, 16 Aug 2014 09:31:59 +0100
-Message-ID: <20140816083159.GA2986@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+From: Edward Lin <yidi.lin@canonical.com>
+Subject: [PATCH] ideapad-laptop: Use intel_backlight only on Lenovo B470e
+Date: Mon, 18 Aug 2014 14:09:13 +0800
+Message-ID: <1408342153-16764-1-git-send-email-yidi.lin@canonical.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:33075 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750988AbaHPJN0 (ORCPT
+Received: from mail-pa0-f46.google.com ([209.85.220.46]:53356 "EHLO
+	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750911AbaHRGJ1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 16 Aug 2014 05:13:26 -0400
-Content-Disposition: inline
+	Mon, 18 Aug 2014 02:09:27 -0400
+Received: by mail-pa0-f46.google.com with SMTP id lj1so7079467pab.33
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Aug 2014 23:09:22 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: ike.pan@canonical.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
+Cc: yk@canonical.com
 
+ACPI video is not functional on Lenovo B470e.
+The brightness control is also broken with vendor mode.
+The brightness control only works with intel_backlight.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So, blacklist this machine for unregistering ACPI video driver and
+not using vendor backlight driver.
 
-Hi Linus,
+Signed-off-by: Edward Lin <yidi.lin@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c |   28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-A moderate number of changes, but nothing awfully significant. A lot of=20
-const cleanups, some reworking and additions to the rfkill quirks in the=20
-asus driver, a new driver for generating falling laptop events on=20
-Toshibas and some misc fixes. Maybe vendors have stopped inventing=20
-things.
-
-The following changes since commit 88ec63d6f85ccf40988ddae8b430dcb07355b29b:
-
-  Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/je=
-jb/scsi (2014-08-15 18:28:58 -0600)
-
-are available in the git repository at:
-
-
-  git://cavan.codon.org.uk/platform-drivers-x86.git for_linus
-
-for you to fetch changes up to 186e4e89a0922d75fba476f15b723e541cc34bea:
-
-  platform/x86: Enable build support for toshiba_haps (2014-08-16 01:23:56 =
--0700)
-
-----------------------------------------------------------------
-AceLan Kao (2):
-      asus-wmi: control wlan-led if wapf > 0
-      asus-nb-wmi: Add ASUSTeK COMPUTER INC. X200CA
-
-Andrey Utkin (1):
-      drivers/platform/x86/thinkpad_acpi.c: don't test unsigned int for neg=
-ativity
-
-Azael Avalos (5):
-      toshiba_acpi: Add extra check to backlight code
-      toshiba_acpi: Add Qosmio X75-A to the alt keymap dmi list
-      platform/x86: Toshiba HDD Active Protection Sensor
-      Documentation: Add file about toshiba_haps module
-      platform/x86: Enable build support for toshiba_haps
-
-Hans de Goede (9):
-      thinkpad_acpi: Update mapping for F12 hotkey on *40 models to KEY_FILE
-      ideapad-laptop: Change Lenovo Yoga 2 series rfkill handling
-      asus-wmi: Disable acpi-video backlight on desktop machines
-      asus-wmi: backlight_init: Stop treating -ENODEV as if its not an error
-      asus-nb-wmi: Add wapf4 quirk for the X550CL
-      asus-nb-wmi: Add wapf4 quirk for the X550CC
-      ideapad-laptop: Disable touchpad interface on Yoga models
-      asus-nb-wmi.c: Rename x401u quirk to wapf4
-      asus-nb-wmi: Add wapf4 quirk for the U32U
-
-Himangi Saraogi (1):
-      WMI: Remove unnecessary null test
-
-Jean Delvare (1):
-      fujitsu-laptop: Clear build warnings
-
-Mario Limonciello (1):
-      alienware-wmi: make hdmi_mux enabled on case-by-case basis
-
-Martin Kepplinger (1):
-      Fix log message about future removal of interface
-
-Mathias Krause (15):
-      MAINTAINERS: Update git URL for x86 platform drivers
-      acer-wmi: Mark acer_wmi_keymap[] as __initconst
-      acer-wmi: Hide acer_{suspend,resume} for !CONFIG_PM_SLEEP
-      alienware-wmi: Mark DMI table as __initconst
-      asus-nb-wmi: Constify asus_quirks[] DMI table
-      acer-wmi: Mark init data and code as such
-      eeepc-wmi: Constify asus_quirks[] DMI table
-      dell-laptop: Mark dell_quirks[] DMI table as __initconst
-      fujitsu-tablet: Mark DMI callbacks as __init code
-      hp_accel: Constify ACPI and DMI tables
-      hp-wmi: Add missing __init annotations to initialization code
-      fujitsu-laptop: Mark fujitsu_dmi_table[] DMI table as __initconst
-      thinkpad_acpi: Mark volume_alsa_control_{vol,mute} as __initdata
-      intel_ips: Make ips_mcp_limits variables static
-      ideapad-laptop: Constify DMI table and other r/o variables
-
-Nick (1):
-      platform/x86/toshiba-apci.c possible bad if test?
-
-Paul Bolle (1):
-      eeepc-laptop: rename _set and _get arguments in macro
-
-Roald Frederickx (1):
-      compal-laptop: correct invalid hwmon name
-
-mog422 (1):
-      sony-laptop: fix doesn't work lid resume settings on Vaio Pro
-
-poma (1):
-      WAPF 4 for ASUSTeK COMPUTER INC. X75VBP WLAN ON.
-
- Documentation/laptops/00-INDEX         |   2 +
- Documentation/laptops/toshiba_haps.txt |  76 ++++++++++
- MAINTAINERS                            |   2 +-
- drivers/platform/x86/Kconfig           |  19 +++
- drivers/platform/x86/Makefile          |   1 +
- drivers/platform/x86/acer-wmi.c        |  54 ++++---
- drivers/platform/x86/alienware-wmi.c   |  26 +++-
- drivers/platform/x86/asus-nb-wmi.c     |  80 ++++++++--
- drivers/platform/x86/asus-wmi.c        |  16 +-
- drivers/platform/x86/compal-laptop.c   |   2 +-
- drivers/platform/x86/dell-laptop.c     |   6 +-
- drivers/platform/x86/eeepc-laptop.c    |   8 +-
- drivers/platform/x86/eeepc-wmi.c       |   2 +-
- drivers/platform/x86/fujitsu-laptop.c  |  19 ++-
- drivers/platform/x86/fujitsu-tablet.c  |   6 +-
- drivers/platform/x86/hp-wmi.c          |   6 +-
- drivers/platform/x86/hp_accel.c        |   4 +-
- drivers/platform/x86/ideapad-laptop.c  |  72 +++++++--
- drivers/platform/x86/intel_ips.c       |   6 +-
- drivers/platform/x86/sony-laptop.c     |   2 +-
- drivers/platform/x86/thinkpad_acpi.c   |   8 +-
- drivers/platform/x86/toshiba_acpi.c    |  30 +++-
- drivers/platform/x86/toshiba_haps.c    | 265 +++++++++++++++++++++++++++++=
-++++
- drivers/platform/x86/wmi.c             |   4 -
- 24 files changed, 608 insertions(+), 108 deletions(-)
- create mode 100644 Documentation/laptops/toshiba_haps.txt
- create mode 100644 drivers/platform/x86/toshiba_haps.c
-
-
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlPvFv4ACgkQ7Hkv8l1YiTvBiQCgo0mSxKWkhb1jBkFSfQDtp1yb
-QIkAnRPBsIQT0LGzGURIwayAhcgrSec9
-=Ow0H
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index fc468a3..6ee7c20 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -38,6 +38,7 @@
+ #include <linux/i8042.h>
+ #include <linux/dmi.h>
+ #include <linux/device.h>
++#include <acpi/video.h>
+ 
+ #define IDEAPAD_RFKILL_DEV_NUM	(3)
+ 
+@@ -89,6 +90,7 @@ struct ideapad_private {
+ 	unsigned long cfg;
+ 	bool has_hw_rfkill_switch;
+ 	bool has_touchpad_control;
++	bool has_broken_backlight;
+ };
+ 
+ static bool no_bt_rfkill;
+@@ -866,6 +868,17 @@ static struct dmi_system_id no_touchpad_ctrl_list[] = {
+ 	{}
+ };
+ 
++static struct dmi_system_id broken_backlight_list[] = {
++	{
++	 .ident = "Lenovo B470e",
++	 .matches = {
++		DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo B470e"),
++		},
++	},
++	{},
++};
++
+ static int ideapad_acpi_add(struct platform_device *pdev)
+ {
+ 	int ret, i;
+@@ -890,6 +903,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	priv->platform_device = pdev;
+ 	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
+ 	priv->has_touchpad_control = !dmi_check_system(no_touchpad_ctrl_list);
++	priv->has_broken_backlight = dmi_check_system(broken_backlight_list);
+ 
+ 	ret = ideapad_sysfs_init(priv);
+ 	if (ret)
+@@ -917,10 +931,18 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	ideapad_sync_rfk_state(priv);
+ 	ideapad_sync_touchpad_state(priv);
+ 
++	if (priv->has_broken_backlight)
++		acpi_video_dmi_promote_vendor();
++
+ 	if (!acpi_video_backlight_support()) {
+-		ret = ideapad_backlight_init(priv);
+-		if (ret && ret != -ENODEV)
+-			goto backlight_failed;
++		pr_info("Disabling ACPI video driver\n");
++		acpi_video_unregister();
++
++		if (!priv->has_broken_backlight) {
++			ret = ideapad_backlight_init(priv);
++			if (ret && ret != -ENODEV)
++				goto backlight_failed;
++		}
+ 	}
+ 	ret = acpi_install_notify_handler(adev->handle,
+ 		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
+-- 
+1.7.9.5
