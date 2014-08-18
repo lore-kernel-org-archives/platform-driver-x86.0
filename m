@@ -1,99 +1,67 @@
-From: Edward Lin <yidi.lin@canonical.com>
-Subject: [PATCH] ideapad-laptop: Use intel_backlight only on Lenovo B470e
-Date: Mon, 18 Aug 2014 14:09:13 +0800
-Message-ID: <1408342153-16764-1-git-send-email-yidi.lin@canonical.com>
+From: Mathias Krause <minipli@googlemail.com>
+Subject: [PATCH] ideapad-laptop: Constify DMI tables for real!
+Date: Mon, 18 Aug 2014 21:52:50 +0200
+Message-ID: <1408391570-4560-1-git-send-email-minipli@googlemail.com>
+References: <CA+rthh-myi4kN2EQdcLAMGZxnJEVy8saDZTBfYtwveUKFcCGyg@mail.gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f46.google.com ([209.85.220.46]:53356 "EHLO
-	mail-pa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750911AbaHRGJ1 (ORCPT
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:49665 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750915AbaHRTxJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Aug 2014 02:09:27 -0400
-Received: by mail-pa0-f46.google.com with SMTP id lj1so7079467pab.33
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Aug 2014 23:09:22 -0700 (PDT)
+	Mon, 18 Aug 2014 15:53:09 -0400
+Received: by mail-wi0-f172.google.com with SMTP id n3so4331616wiv.17
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Aug 2014 12:53:08 -0700 (PDT)
+In-Reply-To: <CA+rthh-myi4kN2EQdcLAMGZxnJEVy8saDZTBfYtwveUKFcCGyg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org
-Cc: yk@canonical.com
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, Ike Panhc <ike.pan@canonical.com>
 
-ACPI video is not functional on Lenovo B470e.
-The brightness control is also broken with vendor mode.
-The brightness control only works with intel_backlight.
+This is a follow-up patch to commit 49458e83082d ("ideapad-laptop:
+Constify DMI table and other r/o variables") to do what its commit
+message says. The actual commit differs from the patch posted at
+https://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg05340.html
+significantly, probably due to a bad merge conflict resolution. Fix up
+the mess and constify the DMI tables (two by now) for real and fix the
+bogus double-const of ideapad_rfk_data[].
 
-So, blacklist this machine for unregistering ACPI video driver and
-not using vendor backlight driver.
-
-Signed-off-by: Edward Lin <yidi.lin@canonical.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Cc: Ike Panhc <ike.pan@canonical.com>
 ---
- drivers/platform/x86/ideapad-laptop.c |   28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index fc468a3..6ee7c20 100644
+index fc468a3d95..1f84ea3676 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -38,6 +38,7 @@
- #include <linux/i8042.h>
- #include <linux/dmi.h>
- #include <linux/device.h>
-+#include <acpi/video.h>
- 
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
-@@ -89,6 +90,7 @@ struct ideapad_private {
- 	unsigned long cfg;
- 	bool has_hw_rfkill_switch;
- 	bool has_touchpad_control;
-+	bool has_broken_backlight;
+@@ -456,7 +456,7 @@ struct ideapad_rfk_data {
+ 	int type;
  };
  
- static bool no_bt_rfkill;
-@@ -866,6 +868,17 @@ static struct dmi_system_id no_touchpad_ctrl_list[] = {
- 	{}
- };
- 
-+static struct dmi_system_id broken_backlight_list[] = {
-+	{
-+	 .ident = "Lenovo B470e",
-+	 .matches = {
-+		DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo B470e"),
-+		},
-+	},
-+	{},
-+};
-+
- static int ideapad_acpi_add(struct platform_device *pdev)
- {
- 	int ret, i;
-@@ -890,6 +903,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->platform_device = pdev;
- 	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
- 	priv->has_touchpad_control = !dmi_check_system(no_touchpad_ctrl_list);
-+	priv->has_broken_backlight = dmi_check_system(broken_backlight_list);
- 
- 	ret = ideapad_sysfs_init(priv);
- 	if (ret)
-@@ -917,10 +931,18 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	ideapad_sync_rfk_state(priv);
- 	ideapad_sync_touchpad_state(priv);
- 
-+	if (priv->has_broken_backlight)
-+		acpi_video_dmi_promote_vendor();
-+
- 	if (!acpi_video_backlight_support()) {
--		ret = ideapad_backlight_init(priv);
--		if (ret && ret != -ENODEV)
--			goto backlight_failed;
-+		pr_info("Disabling ACPI video driver\n");
-+		acpi_video_unregister();
-+
-+		if (!priv->has_broken_backlight) {
-+			ret = ideapad_backlight_init(priv);
-+			if (ret && ret != -ENODEV)
-+				goto backlight_failed;
-+		}
- 	}
- 	ret = acpi_install_notify_handler(adev->handle,
- 		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
+-const const struct ideapad_rfk_data ideapad_rfk_data[] = {
++static const struct ideapad_rfk_data ideapad_rfk_data[] = {
+ 	{ "ideapad_wlan",    CFG_WIFI_BIT, VPCCMD_W_WIFI, RFKILL_TYPE_WLAN },
+ 	{ "ideapad_bluetooth", CFG_BT_BIT, VPCCMD_W_BT, RFKILL_TYPE_BLUETOOTH },
+ 	{ "ideapad_3g",        CFG_3G_BIT, VPCCMD_W_3G, RFKILL_TYPE_WWAN },
+@@ -833,7 +833,7 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+  * always results in 0 on these models, causing ideapad_laptop to wrongly
+  * report all radios as hardware-blocked.
+  */
+-static struct dmi_system_id no_hw_rfkill_list[] = {
++static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 	{
+ 		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+ 		.matches = {
+@@ -848,7 +848,7 @@ static struct dmi_system_id no_hw_rfkill_list[] = {
+  * Some models don't offer touchpad ctrl through the ideapad interface, causing
+  * ideapad_sync_touchpad_state to send wrong touchpad enable/disable events.
+  */
+-static struct dmi_system_id no_touchpad_ctrl_list[] = {
++static const struct dmi_system_id no_touchpad_ctrl_list[] = {
+ 	{
+ 		.ident = "Lenovo Yoga 1 series",
+ 		.matches = {
 -- 
-1.7.9.5
+1.7.10.4
