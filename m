@@ -1,29 +1,41 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Looking for new x86 platform driver maintainer
-Date: Wed, 20 Aug 2014 16:22:26 +0100
-Message-ID: <20140820152226.GB3616@srcf.ucam.org>
-References: <20140820152034.GA3616@srcf.ucam.org>
+From: Ari Sundholm <asundhol@cs.hut.fi>
+Subject: [PATCH] Revert "platform/x86/toshiba-apci.c possible bad if test?"
+Date: Wed, 20 Aug 2014 20:03:26 +0300 (EEST)
+Message-ID: <alpine.GSO.2.00.1408201955290.8292@hutcs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:45113 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752557AbaHTP6W (ORCPT
+Received: from mail.cs.hut.fi ([130.233.192.7]:47621 "EHLO mail.cs.hut.fi"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751516AbaHTRM4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 Aug 2014 11:58:22 -0400
-Content-Disposition: inline
-In-Reply-To: <20140820152034.GA3616@srcf.ucam.org>
+	Wed, 20 Aug 2014 13:12:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: torvalds@linux-foundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>
 
-And I think this proves that I don't have time to do a good job of this 
-at the moment. It would be helpful if someone else were willing to take 
-over responsiblity for this tree - there's not a great deal of churn, 
-but it does require some familiarity with firmware and a sense of taste 
-(there's about two billion bad ways to implement most of these drivers, 
-along with a good way). Anybody willing to take it on?
+From: Ari Sundholm <ari@tuxera.com>
 
+This reverts commit bdc3ae7221213963f438faeaa69c8b4a2195f491.
+
+Signed-off-by: Ari Sundholm <ari@tuxera.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index e4da61b..b062d3d 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1258,7 +1258,7 @@ static ssize_t toshiba_kbd_bl_mode_store(struct device *dev,
+ 	int mode = -1;
+ 	int time = -1;
+ 
+-	if (sscanf(buf, "%i", &mode) != 1  || (mode != 2 || mode != 1))
++	if (sscanf(buf, "%i", &mode) != 1 && (mode != 2 || mode != 1))
+ 		return -EINVAL;
+ 
+ 	/* Set the Keyboard Backlight Mode where:
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+1.9.1
