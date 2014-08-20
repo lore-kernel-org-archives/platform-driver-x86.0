@@ -1,67 +1,52 @@
-From: Mathias Krause <minipli@googlemail.com>
-Subject: [PATCH] ideapad-laptop: Constify DMI tables for real!
-Date: Mon, 18 Aug 2014 21:52:50 +0200
-Message-ID: <1408391570-4560-1-git-send-email-minipli@googlemail.com>
-References: <CA+rthh-myi4kN2EQdcLAMGZxnJEVy8saDZTBfYtwveUKFcCGyg@mail.gmail.com>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: [PATCH] platform/x86/toshiba-apci.c possible bad if test?
+Date: Wed, 20 Aug 2014 15:33:17 +0200
+Message-ID: <CANq1E4SkBaSG2k2a0cFu=Ge97==LA7=8DDk4XbHxy3N4XMvyUA@mail.gmail.com>
+References: <1402628655-2904-1-git-send-email-nickkrause@sympatico.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:49665 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750915AbaHRTxJ (ORCPT
+Received: from mail-ie0-f179.google.com ([209.85.223.179]:32850 "EHLO
+	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751964AbaHTNdS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Aug 2014 15:53:09 -0400
-Received: by mail-wi0-f172.google.com with SMTP id n3so4331616wiv.17
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Aug 2014 12:53:08 -0700 (PDT)
-In-Reply-To: <CA+rthh-myi4kN2EQdcLAMGZxnJEVy8saDZTBfYtwveUKFcCGyg@mail.gmail.com>
+	Wed, 20 Aug 2014 09:33:18 -0400
+In-Reply-To: <1402628655-2904-1-git-send-email-nickkrause@sympatico.ca>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, Mathias Krause <minipli@googlemail.com>, Ike Panhc <ike.pan@canonical.com>
+To: matthew.garrett@nebula.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Nick <xerofoify@gmail.com>
 
-This is a follow-up patch to commit 49458e83082d ("ideapad-laptop:
-Constify DMI table and other r/o variables") to do what its commit
-message says. The actual commit differs from the patch posted at
-https://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg05340.html
-significantly, probably due to a bad merge conflict resolution. Fix up
-the mess and constify the DMI tables (two by now) for real and fix the
-bogus double-const of ideapad_rfk_data[].
+Hi
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Cc: Ike Panhc <ike.pan@canonical.com>
----
- drivers/platform/x86/ideapad-laptop.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Fri, Jun 13, 2014 at 5:04 AM, Nick <xerofoify@gmail.com> wrote:
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 76441dc..dfd2243 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -1238,7 +1238,7 @@ static ssize_t toshiba_kbd_bl_mode_store(struct device *dev,
+>         int mode = -1;
+>         int time = -1;
+>
+> -       if (sscanf(buf, "%i", &mode) != 1 && (mode != 2 || mode != 1))
+> +       if (sscanf(buf, "%i", &mode) != 1  || (mode != 2 || mode != 1))
+>                 return -EINVAL;
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index fc468a3d95..1f84ea3676 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -456,7 +456,7 @@ struct ideapad_rfk_data {
- 	int type;
- };
- 
--const const struct ideapad_rfk_data ideapad_rfk_data[] = {
-+static const struct ideapad_rfk_data ideapad_rfk_data[] = {
- 	{ "ideapad_wlan",    CFG_WIFI_BIT, VPCCMD_W_WIFI, RFKILL_TYPE_WLAN },
- 	{ "ideapad_bluetooth", CFG_BT_BIT, VPCCMD_W_BT, RFKILL_TYPE_BLUETOOTH },
- 	{ "ideapad_3g",        CFG_3G_BIT, VPCCMD_W_3G, RFKILL_TYPE_WWAN },
-@@ -833,7 +833,7 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
-  * always results in 0 on these models, causing ideapad_laptop to wrongly
-  * report all radios as hardware-blocked.
-  */
--static struct dmi_system_id no_hw_rfkill_list[] = {
-+static const struct dmi_system_id no_hw_rfkill_list[] = {
- 	{
- 		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
- 		.matches = {
-@@ -848,7 +848,7 @@ static struct dmi_system_id no_hw_rfkill_list[] = {
-  * Some models don't offer touchpad ctrl through the ideapad interface, causing
-  * ideapad_sync_touchpad_state to send wrong touchpad enable/disable events.
-  */
--static struct dmi_system_id no_touchpad_ctrl_list[] = {
-+static const struct dmi_system_id no_touchpad_ctrl_list[] = {
- 	{
- 		.ident = "Lenovo Yoga 1 series",
- 		.matches = {
--- 
-1.7.10.4
+This patch is wrong. Matthew, please revert this or fix it.
+
+(mode != 2 || mode != 1) is a tautology
+
+therefore, this will always return -EINVAL. Furthermore, it lacks a sign-off.
+
+Thanks
+David
+
+>         /* Set the Keyboard Backlight Mode where:
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
