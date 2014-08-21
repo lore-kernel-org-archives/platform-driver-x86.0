@@ -1,52 +1,42 @@
-From: Ari Sundholm <asundhol@cs.hut.fi>
-Subject: Re: [PATCH] toshiba_acpi.c - fix busted keyboard backlight logic
-Date: Thu, 21 Aug 2014 14:10:34 +0300 (EEST)
-Message-ID: <alpine.GSO.2.03.1408211406540.23797@mannerheim.cs.hut.fi>
-References: <17794.1408561003@turing-police.cc.vt.edu>
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: Re: Looking for new x86 platform driver maintainer
+Date: Thu, 21 Aug 2014 08:31:30 -0500
+Message-ID: <20140821133130.GA33878@snatar2-mobl.amr.corp.intel.com>
+References: <20140820152034.GA3616@srcf.ucam.org>
+ <20140820152226.GB3616@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <17794.1408561003@turing-police.cc.vt.edu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:28421 "EHLO mga11.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754875AbaHUNbv (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 21 Aug 2014 09:31:51 -0400
+Content-Disposition: inline
+In-Reply-To: <20140820152226.GB3616@srcf.ucam.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: torvalds@linux-foundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-
-On Wed, 20 Aug 2014, Valdis Kletnieks wrote:
-
-> Both the original and the first attempted patch managed to get the logic wrong.
-> So we fix it so we only continue if sscanf returns exactly one value, and it
-> has to be either 1 or 2.  Apparently, programmers are getting out and hacking
-> code without remembering de Morgan's Laws...
+On Wed, Aug 20, 2014 at 04:22:26PM +0100, Matthew Garrett wrote:
+> And I think this proves that I don't have time to do a good job of this 
+> at the moment. It would be helpful if someone else were willing to take 
+> over responsiblity for this tree - there's not a great deal of churn, 
+> but it does require some familiarity with firmware and a sense of taste 
+> (there's about two billion bad ways to implement most of these drivers, 
+> along with a good way). Anybody willing to take it on?
 > 
-> Patch is against the file that results from Ari's revert of the previous
-> patch.
-> 
-> Signed-Off-By: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> 
-> --
-> --- drivers/platform/x86/toshiba_acpi.c.orig	2014-08-20 14:45:52.159898938 -0400
-> +++ drivers/platform/x86/toshiba_acpi.c	2014-08-20 14:47:55.102444985 -0400
-> @@ -1258,7 +1258,7 @@ static ssize_t toshiba_kbd_bl_mode_store
->  	int mode = -1;
->  	int time = -1;
->  
-> -	if (sscanf(buf, "%i", &mode) != 1 && (mode != 2 || mode != 1))
-> +	if (sscanf(buf, "%i", &mode) != 1 || !(mode == 2 || mode == 1))
->  		return -EINVAL;
->  
->  	/* Set the Keyboard Backlight Mode where:
 
-Looks good to me.
+Hi Matthew,
 
-It seems Matthew already reverted the bad commit in mainline commit 
-8039aabb6c9f802bca04cc77ca210060a5b53916, but didn't fix the original 
-logic yet.
+I'll probably grow to regret this, but I'd be willing to take on
+maintenance of the x86 platform drivers. I'm here in Chicago if you want
+to take a few minutes and discuss in person and confirm it would be a good
+fit.
 
-Matthew, could you apply Valdis' patch so this gets fixed once and for 
-all?
+Thanks,
 
-Best regards,
-Ari Sundholm
-asundhol@cs.hut.fi
+--
+Darren Hart
+Intel Opensource Technology Center
