@@ -1,76 +1,33 @@
-From: Yidi Lin <yidi.lin@canonical.com>
-Subject: Re: [PATCH] ideapad-laptop: Use intel_backlight only on Lenovo B470e
-Date: Fri, 22 Aug 2014 14:18:10 +0800
-Message-ID: <CAFquV7USrY9Cmg104z9nfqTpUDhiKgahyyjAk5jOEw0T3imXBQ@mail.gmail.com>
-References: <1408342153-16764-1-git-send-email-yidi.lin@canonical.com>
-	<53F68245.20403@babioch.de>
+From: Abdul Nasser Sokariah <abdulsokariah10@gmail.com>
+Subject: Urgent Assistance from Syria
+Date: Sat, 23 Aug 2014 07:08:47 -0700
+Message-ID: <CAOCHuvxQ9wFBiw8LuhuLFYNbSFdtWYrEu-iSQA5MWQdCoA=_vQ@mail.gmail.com>
+Reply-To: nabdul247@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f42.google.com ([209.85.213.42]:59313 "EHLO
-	mail-yh0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752043AbaHVGSL (ORCPT
+Received: from mail-la0-f67.google.com ([209.85.215.67]:34899 "EHLO
+	mail-la0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750935AbaHWOeR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Aug 2014 02:18:11 -0400
-Received: by mail-yh0-f42.google.com with SMTP id a41so8854386yho.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 Aug 2014 23:18:11 -0700 (PDT)
-In-Reply-To: <53F68245.20403@babioch.de>
+	Sat, 23 Aug 2014 10:34:17 -0400
+Received: by mail-la0-f67.google.com with SMTP id gl10so3784384lab.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Aug 2014 07:34:16 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Karol Babioch <karol@babioch.de>
-Cc: platform-driver-x86@vger.kernel.org, mattia Dongili <malattia@linux.it>, YK <yk@canonical.com>
 
-Hi Karol Babioch,
+-- 
+Good Day From Syria,
 
-On Fri, Aug 22, 2014 at 7:35 AM, Karol Babioch <karol@babioch.de> wrote:
-> By looking at your description (and your patch) I'm wondering how
-> exactly this problem made itself apparent? I'm having a similar (the
-> same?) issue with my Sony Vaio VPCS12C5E. The backlight interface
-> registered by ACPI does not work and I have to boot with the command
-> line option "acpi_backlight=vendor". Even then two interfaces get
-> registered "nv_backlight" and "sony", only one of which (nv_backlight)
-> works.
->
+My name is Abdul Nasser Sokariah and I am writing you from Syria, I
+choose to contact you directly as I need a reliable person to trust
+who can help me make claims to my huge deposit with a vault company in
+AFRICA, and based on my present situation in Syria, I need you
+urgently to take  possession of everything and further
+modalities/directives will follow.
 
-My situation is that the brightness control on Lenovo B470e is broken on
-Ubuntu 12.04.5 but 12.04.2. Neither "acpi_backlight=vendor " nor
-"video.use_native_backlight=1" works for the brightness control.
+Contact me  only on my private Email:nabdul247@gmail.com for
+clarifications,I await your response.
 
-After bisecting, the regression happens in 3.10-rc1.
-
-Before 3.10-rc1, acpi/video.c fails to register backlight interface due to
-acpi_video_device_lcd_set_level() returns -EINVAL in
-acpi_video_init_brightness().
-Only "intel_backlight" is registered under /sys/class/backlight.
-So the brightness can be adjusted from UI.
-
-In 3.10-rc1, some changes make acpi/video.c able to register backlight
-for Lenovo B470e. "acpi_video0" is used as the default backlight interface.
-
-There is no BIOS update since 2012. And the vendor is unlikely to fix this bug.
-So I propose the patch for fixing the brightness control on Lenovo B470e.
-
-> Desktop environments (GNOME in particular) seem to be confused by this,
-> so I always have to change the brightness by writing directly into the
-> "actual_brightness" file. I've reported this back in 2012 [1], but was
-> told that it is an ACPI issue and so it never was fixed.
->
-
-Similar situation on Toshiba T130-15T
-https://bugzilla.kernel.org/show_bug.cgi?id=50551
-
-> Couldn't a similar patch be applied to the sony-laptop module? I've
-> added Mattia Dongili to the discussion, hopefully he doesn't mind to
-> take a look at this again. I'm glad to test any patches, but am not
-> familiar enough with all of the internal structs to mess around with
-> them for myself without breaking support for other users of this module,
-> especially since my model was shipped with in two different versions:
-> One with the internal Intel GPU and another with a dedicated Nvidia GPU.
-> I'm afraid a simple DMI match might not be good enough in this case?
->
-
-You may use dmidecode to see if there is any extra information which can
-differentiate between these two versions.
-
-Regards,
-Edward Lin
+Yours truly, Abdul Nasser Sokariah
+Contact Email:nabdul247@gmail.com
