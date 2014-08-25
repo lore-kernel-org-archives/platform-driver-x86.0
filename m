@@ -1,33 +1,96 @@
-From: Abdul Nasser Sokariah <abdulsokariah10@gmail.com>
-Subject: Urgent Assistance from Syria
-Date: Sat, 23 Aug 2014 07:08:47 -0700
-Message-ID: <CAOCHuvxQ9wFBiw8LuhuLFYNbSFdtWYrEu-iSQA5MWQdCoA=_vQ@mail.gmail.com>
-Reply-To: nabdul247@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [3.17 REGRESSION FIX] Revert "ideapad-laptop: Disable touchpad interface on Yoga models"
+Date: Mon, 25 Aug 2014 12:00:13 +0200
+Message-ID: <1408960813-12237-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f67.google.com ([209.85.215.67]:34899 "EHLO
-	mail-la0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750935AbaHWOeR (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:58072 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754975AbaHYKAX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 Aug 2014 10:34:17 -0400
-Received: by mail-la0-f67.google.com with SMTP id gl10so3784384lab.10
-        for <platform-driver-x86@vger.kernel.org>; Sat, 23 Aug 2014 07:34:16 -0700 (PDT)
+	Mon, 25 Aug 2014 06:00:23 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>
+Cc: GOESSEL Guillaume <g_goessel@outlook.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
+I've received a bug report from a user that the touchpad control part
+of the ideapad-laptop ACPI interface does work for him on his
+"Lenovo Yoga 2 13", and that this patch causes a regression for him.
+
+Since it did not work for me when I had a "Lenovo Yoga 2 11" in my own
+hands (loaned from a friend). It seems that this is a bit of hit and miss.
+
+Since the result of having a false positive here is worse, then the minor
+annoyance of a false touchpad disabled messages being shown after suspend /
+resume on models (or is it firmware versions?) where the interface does not
+work, simply revert the patch.
+
+This reverts commit f79a901331a823ae370584b15cd39dd110b95a0a.
+
+Reported-by: GOESSEL Guillaume <g_goessel@outlook.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index fc468a3..de1e0c3 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -88,7 +88,6 @@ struct ideapad_private {
+ 	struct dentry *debug;
+ 	unsigned long cfg;
+ 	bool has_hw_rfkill_switch;
+-	bool has_touchpad_control;
+ };
+ 
+ static bool no_bt_rfkill;
+@@ -767,9 +766,6 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
+ {
+ 	unsigned long value;
+ 
+-	if (!priv->has_touchpad_control)
+-		return;
+-
+ 	/* Without reading from EC touchpad LED doesn't switch state */
+ 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
+ 		/* Some IdeaPads don't really turn off touchpad - they only
+@@ -844,28 +840,6 @@ static struct dmi_system_id no_hw_rfkill_list[] = {
+ 	{}
+ };
+ 
+-/*
+- * Some models don't offer touchpad ctrl through the ideapad interface, causing
+- * ideapad_sync_touchpad_state to send wrong touchpad enable/disable events.
+- */
+-static struct dmi_system_id no_touchpad_ctrl_list[] = {
+-	{
+-		.ident = "Lenovo Yoga 1 series",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
+-		},
+-	},
+-	{}
+-};
+-
+ static int ideapad_acpi_add(struct platform_device *pdev)
+ {
+ 	int ret, i;
+@@ -889,7 +863,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	priv->adev = adev;
+ 	priv->platform_device = pdev;
+ 	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
+-	priv->has_touchpad_control = !dmi_check_system(no_touchpad_ctrl_list);
+ 
+ 	ret = ideapad_sysfs_init(priv);
+ 	if (ret)
 -- 
-Good Day From Syria,
-
-My name is Abdul Nasser Sokariah and I am writing you from Syria, I
-choose to contact you directly as I need a reliable person to trust
-who can help me make claims to my huge deposit with a vault company in
-AFRICA, and based on my present situation in Syria, I need you
-urgently to take  possession of everything and further
-modalities/directives will follow.
-
-Contact me  only on my private Email:nabdul247@gmail.com for
-clarifications,I await your response.
-
-Yours truly, Abdul Nasser Sokariah
-Contact Email:nabdul247@gmail.com
+2.1.0
