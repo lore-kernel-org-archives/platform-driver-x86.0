@@ -1,67 +1,77 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [3.17 REGRESSION FIX] Revert "ideapad-laptop: Disable touchpad
- interface on Yoga models"
-Date: Mon, 25 Aug 2014 20:38:38 -0500
-Message-ID: <D0214EE1.A54F3%dvhart@linux.intel.com>
-References: <1408960813-12237-1-git-send-email-hdegoede@redhat.com>
- <CA+5PVA7pEwu4amAn+gH3TS-a6CvsSH=TyE+3k07Uoz9BpcpRMA@mail.gmail.com>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: hp-wmi: wifi rfkill can't be reversed
+Date: Tue, 26 Aug 2014 00:50:42 -0700
+Message-ID: <1409039442.3033.65.camel@deadeye.wl.decadent.org.uk>
+References: <53ED47BA.60904@tnnn.pl>
+	 <1408389040.2618.31.camel@deadeye.wl.decadent.org.uk>
+	 <53F27EFC.3030409@tnnn.pl>
+	 <1408916663.12973.88.camel@deadeye.wl.decadent.org.uk>
+	 <1409018140.5921.3.camel@debian1>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-ZGgGCnHVRc5kTPgco1IC"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:57567 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755631AbaHZDin (ORCPT
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59212 "EHLO
+	shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S933952AbaHZHu4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Aug 2014 23:38:43 -0400
-In-Reply-To: <CA+5PVA7pEwu4amAn+gH3TS-a6CvsSH=TyE+3k07Uoz9BpcpRMA@mail.gmail.com>
+	Tue, 26 Aug 2014 03:50:56 -0400
+In-Reply-To: <1409018140.5921.3.camel@debian1>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Josh Boyer <jwboyer@fedoraproject.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>, GOESSEL Guillaume <g_goessel@outlook.com>, platform-driver-x86@vger.kernel.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-
-On Mon, Aug 25, 2014 at 6:44 AM, Josh Boyer <jwboyer@fedoraproject.org>
-wrote:
-> On Mon, Aug 25, 2014 at 6:00 AM, Hans de Goede <hdegoede@redhat.com>
->wrote:
->> I've received a bug report from a user that the touchpad control part
->> of the ideapad-laptop ACPI interface does work for him on his
->> "Lenovo Yoga 2 13", and that this patch causes a regression for him.
->>
->> Since it did not work for me when I had a "Lenovo Yoga 2 11" in my own
->> hands (loaned from a friend). It seems that this is a bit of hit and
->>miss.
->>
->> Since the result of having a false positive here is worse, then the
->>minor
->> annoyance of a false touchpad disabled messages being shown after
->>suspend /
->> resume on models (or is it firmware versions?) where the interface does
->>not
->> work, simply revert the patch.
->>
->> This reverts commit f79a901331a823ae370584b15cd39dd110b95a0a.
-
-Appears to be the right call to me. Please give me a couple of days to get
-trees mirrored and up to speed. I'll provide links to new trees and such
-shortly.
-
->>
->> Reported-by: GOESSEL Guillaume <g_goessel@outlook.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->
-> Adding Daren on CC.  He recently agreed to take over the platform
->drivers.
->
-
-Thanks. I'm still sorting out my email situation for this role (apologies
-for the last response to those getting this twice). I'll make that clear
-in the maintainers patch to follow soon.
-
-Thanks,
+To: platform-driver-x86@vger.kernel.org
+Cc: Tomasz Nitecki <tnnn@tnnn.pl>, 756947@bugs.debian.org, Alan Wilson <al_wilson@ns.sympatico.ca>
 
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+--=-ZGgGCnHVRc5kTPgco1IC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Alan Wilson (in cc) reported that rfkill doesn't work correctly on the
+HP Compaq nc6230.
+
+- Without the hp-wmi driver loaded, the hard rfkill switch controls both
+wifi and BT while soft rfkill only works for wifi.
+
+- With the hp-wmi driver loaded, soft and hard rfkill switches can be
+used to turn wifi and BT off and to turn BT back on, but wifi cannot be
+turned back on without using the BIOS setup program.
+
+(The full bug report is logged at <https://bugs.debian.org/756947>.)
+
+This was reported against Linux 3.2, but I don't think there have been
+relevant fixes since then.
+
+Perhaps the hp-wmi driver should blacklist this model for wifi rfkill
+(while leaving all the others features enabled).  Does that seem like a
+reasonable approach to fix this?
+
+Ben.
+
+--=20
+Ben Hutchings
+No political challenge can be met by shopping. - George Monbiot
+
+--=-ZGgGCnHVRc5kTPgco1IC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIVAwUAU/w8V+e/yOyVhhEJAQoicg//SYbNJMhDc/SmyGd7dtidlnZDGZVWKsJa
+nasAbT3HxsF34v6tGEHOk8bsDDVQ6tRzDymVcpf22wm5ZJhStyaBMoh3wc+HzSch
+PVfOCxu4fm/6MaKaMwTGW028IIbtDPfyo5Leyc2RiVIVeOgx9TzxYddpNI0KK1Bi
+MBOVinARKbveYJUTBfpM92UqUaoMYs5B2nqu+8VHxlYVRbT4UeBN9jT4Uvi+i4b1
+SeOEMjaJZVbHHxRH84E1s196VAZ3X5xsn/57bJLhDZKzBDuJHjpak6Th/J9TeXYb
+P9IVnPc7pDKy7Q3OYDuRpWMHxv3p1K5zyDjUdgyss1Z9HRm7qFOV9YirnbSXIK8D
+KnouyoKDUYwSZc1Bl6RO28PUQhzLUZCDfmko8QJ/DNk9Ytxh0olEBBkoHfQY6q4Q
+4GDM6MQ/u7nIMWOZkTpptmpbFQ1hm3BN6f85FNw2+1GUx4L+1WZrIk7TMwAHNxku
+zg1DU6xejdLHiQWjo19t2wtECa9l8pvZaCQ8lZQyKkVRSNuzsbpp8YJJrOFoBEYi
+Z5De/kwT/VJfQq73c6wTOts4QXqz8M3pElQIgpN5Zny4AcFV2nIAT+2xL+vnbLPY
+2PYbhWM793EIqagSfxS5wiY3jtF9vf4a7+SUXy2I0TQc7DljwwaxT04nt7PGldQn
+Ci+uvPIuO5Y=
+=mu4w
+-----END PGP SIGNATURE-----
+
+--=-ZGgGCnHVRc5kTPgco1IC--
