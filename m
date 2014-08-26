@@ -1,113 +1,67 @@
-From: Josh Boyer <jwboyer@fedoraproject.org>
+From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [3.17 REGRESSION FIX] Revert "ideapad-laptop: Disable touchpad
  interface on Yoga models"
-Date: Mon, 25 Aug 2014 09:44:24 -0400
-Message-ID: <CA+5PVA7pEwu4amAn+gH3TS-a6CvsSH=TyE+3k07Uoz9BpcpRMA@mail.gmail.com>
+Date: Mon, 25 Aug 2014 20:38:38 -0500
+Message-ID: <D0214EE1.A54F3%dvhart@linux.intel.com>
 References: <1408960813-12237-1-git-send-email-hdegoede@redhat.com>
+ <CA+5PVA7pEwu4amAn+gH3TS-a6CvsSH=TyE+3k07Uoz9BpcpRMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain;
+	charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f46.google.com ([209.85.218.46]:40485 "EHLO
-	mail-oi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754586AbaHYNoZ (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:57567 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755631AbaHZDin (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 25 Aug 2014 09:44:25 -0400
-In-Reply-To: <1408960813-12237-1-git-send-email-hdegoede@redhat.com>
+	Mon, 25 Aug 2014 23:38:43 -0400
+In-Reply-To: <CA+5PVA7pEwu4amAn+gH3TS-a6CvsSH=TyE+3k07Uoz9BpcpRMA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>, GOESSEL Guillaume <g_goessel@outlook.com>, platform-driver-x86@vger.kernel.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Darren Hart <darren@dvhart.com>
+To: Josh Boyer <jwboyer@fedoraproject.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Matthew Garrett <matthew.garrett@nebula.com>, Corentin Chary <corentin.chary@gmail.com>, GOESSEL Guillaume <g_goessel@outlook.com>, platform-driver-x86@vger.kernel.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
 
-On Mon, Aug 25, 2014 at 6:00 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> I've received a bug report from a user that the touchpad control part
-> of the ideapad-laptop ACPI interface does work for him on his
-> "Lenovo Yoga 2 13", and that this patch causes a regression for him.
->
-> Since it did not work for me when I had a "Lenovo Yoga 2 11" in my own
-> hands (loaned from a friend). It seems that this is a bit of hit and miss.
->
-> Since the result of having a false positive here is worse, then the minor
-> annoyance of a false touchpad disabled messages being shown after suspend /
-> resume on models (or is it firmware versions?) where the interface does not
-> work, simply revert the patch.
->
-> This reverts commit f79a901331a823ae370584b15cd39dd110b95a0a.
->
-> Reported-by: GOESSEL Guillaume <g_goessel@outlook.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Aug 25, 2014 at 6:44 AM, Josh Boyer <jwboyer@fedoraproject.org>
+wrote:
+> On Mon, Aug 25, 2014 at 6:00 AM, Hans de Goede <hdegoede@redhat.com>
+>wrote:
+>> I've received a bug report from a user that the touchpad control part
+>> of the ideapad-laptop ACPI interface does work for him on his
+>> "Lenovo Yoga 2 13", and that this patch causes a regression for him.
+>>
+>> Since it did not work for me when I had a "Lenovo Yoga 2 11" in my own
+>> hands (loaned from a friend). It seems that this is a bit of hit and
+>>miss.
+>>
+>> Since the result of having a false positive here is worse, then the
+>>minor
+>> annoyance of a false touchpad disabled messages being shown after
+>>suspend /
+>> resume on models (or is it firmware versions?) where the interface does
+>>not
+>> work, simply revert the patch.
+>>
+>> This reverts commit f79a901331a823ae370584b15cd39dd110b95a0a.
 
-Adding Daren on CC.  He recently agreed to take over the platform drivers.
+Appears to be the right call to me. Please give me a couple of days to get
+trees mirrored and up to speed. I'll provide links to new trees and such
+shortly.
 
-josh
+>>
+>> Reported-by: GOESSEL Guillaume <g_goessel@outlook.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Adding Daren on CC.  He recently agreed to take over the platform
+>drivers.
+>
 
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 27 ---------------------------
->  1 file changed, 27 deletions(-)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index fc468a3..de1e0c3 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -88,7 +88,6 @@ struct ideapad_private {
->         struct dentry *debug;
->         unsigned long cfg;
->         bool has_hw_rfkill_switch;
-> -       bool has_touchpad_control;
->  };
->
->  static bool no_bt_rfkill;
-> @@ -767,9 +766,6 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
->  {
->         unsigned long value;
->
-> -       if (!priv->has_touchpad_control)
-> -               return;
-> -
->         /* Without reading from EC touchpad LED doesn't switch state */
->         if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
->                 /* Some IdeaPads don't really turn off touchpad - they only
-> @@ -844,28 +840,6 @@ static struct dmi_system_id no_hw_rfkill_list[] = {
->         {}
->  };
->
-> -/*
-> - * Some models don't offer touchpad ctrl through the ideapad interface, causing
-> - * ideapad_sync_touchpad_state to send wrong touchpad enable/disable events.
-> - */
-> -static struct dmi_system_id no_touchpad_ctrl_list[] = {
-> -       {
-> -               .ident = "Lenovo Yoga 1 series",
-> -               .matches = {
-> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo IdeaPad Yoga"),
-> -               },
-> -       },
-> -       {
-> -               .ident = "Lenovo Yoga 2 11 / 13 / Pro",
-> -               .matches = {
-> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
-> -               },
-> -       },
-> -       {}
-> -};
-> -
->  static int ideapad_acpi_add(struct platform_device *pdev)
->  {
->         int ret, i;
-> @@ -889,7 +863,6 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->         priv->adev = adev;
->         priv->platform_device = pdev;
->         priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
-> -       priv->has_touchpad_control = !dmi_check_system(no_touchpad_ctrl_list);
->
->         ret = ideapad_sysfs_init(priv);
->         if (ret)
-> --
-> 2.1.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Thanks. I'm still sorting out my email situation for this role (apologies
+for the last response to those getting this twice). I'll make that clear
+in the maintainers patch to follow soon.
+
+Thanks,
+
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
