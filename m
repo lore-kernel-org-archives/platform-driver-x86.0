@@ -1,46 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCHv2] ideapad-laptop: Constify DMI table for real!
-Date: Tue, 2 Sep 2014 15:20:17 -0700
-Message-ID: <20140902222017.GA11195@vmdeb7>
-References: <1409223769-8660-1-git-send-email-minipli@googlemail.com>
+Subject: Re: [PATCH] platform/x86: toshiba: re-enable acpi hotkeys after
+ suspend to disk
+Date: Tue, 2 Sep 2014 15:50:57 -0700
+Message-ID: <20140902225057.GB11195@vmdeb7>
+References: <1409681059-6493-1-git-send-email-benjamin.tissoires@redhat.com>
+ <1409681238.11717.4.camel@nebula.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39403 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:49389 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755759AbaIBWUM (ORCPT
+	with ESMTP id S1752046AbaIBWuj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Sep 2014 18:20:12 -0400
+	Tue, 2 Sep 2014 18:50:39 -0400
 Content-Disposition: inline
-In-Reply-To: <1409223769-8660-1-git-send-email-minipli@googlemail.com>
+In-Reply-To: <1409681238.11717.4.camel@nebula.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mathias Krause <minipli@googlemail.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, Ike Panhc <ike.pan@canonical.com>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, Aug 28, 2014 at 01:02:49PM +0200, Mathias Krause wrote:
-> This is a follow-up patch to commit 49458e83082d ("ideapad-laptop:
-> Constify DMI table and other r/o variables") to do what its commit
-> message says. The actual commit differs from the patch posted at
-> https://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg05340.html
-> significantly, probably due to a bad merge conflict resolution. Fix up
-> the mess and constify the DMI table for real and fix the bogus
-> double-const of ideapad_rfk_data[].
+On Tue, Sep 02, 2014 at 06:07:19PM +0000, Matthew Garrett wrote:
+> On Tue, 2014-09-02 at 14:04 -0400, Benjamin Tissoires wrote:
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Mathias Krause <minipli@googlemail.com>
-> Cc: Matthew Garrett <matthew.garrett@nebula.com>
-> Cc: Ike Panhc <ike.pan@canonical.com>
-> ---
-> Initial patch was posted here but somehow has fallen through the cracks:
-> https://www.mail-archive.com/platform-driver-x86@vger.kernel.org/msg05398.html
+> > we noticed this problem on a Toshiba Z40. I kind of brute-forced the thing, and
+> > I ended up that calling "ENAB" was making the keys working again (rmmod/insmod 
+> > the driver was sufficient, and the only command which was different from the
+> > resume was this ACPI call).
+> > 
+> > I am really surprised some toshiba laptops do not need this, so I'd prefer that
+> > an ACPI expert (Matthew???) gives its wisdom regarding that.
 > 
-> v2:
-> - rebased to linux-platform-drivers-x86.git/for-linus
-> - removed the second DMI table constification as that code was reverted
->   by commit 3b264d279e72 ("Revert "ideapad-laptop: Disable touchpad...")
+> Looks good to me. I'd be surprised if this breaks anything.
+> 
+> Acked-by: Matthew Garrett <matthew.garrett@nebula.com>
 
-Queued, thanks.
+Queued. Thanks.
 
 --
 Darren Hart
