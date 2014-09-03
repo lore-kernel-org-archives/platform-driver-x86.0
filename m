@@ -1,36 +1,43 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch] toshiba_acpi: fix and cleanup toshiba_kbd_bl_mode_store()
-Date: Wed, 3 Sep 2014 10:48:15 -0700
-Message-ID: <20140903174815.GA7153@vmdeb7>
-References: <20140903114437.GA3359@mwanda>
+From: Husam Al Sayed <oscar55@post.sk>
+Subject: FROM: Husam Al Sayed
+Date: Wed, 3 Sep 2014 20:56:32 +0200 (CEST)
+Message-ID: <201862227.347304.1409770592327.JavaMail.root@mbox05>
+Reply-To: "alsayedhusa@hotmail.com" <alsayedhusa@hotmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140903114437.GA3359@mwanda>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp01.post.sk ([195.146.144.201]:52564 "EHLO smtp01.post.sk"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752564AbaICS4e convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 3 Sep 2014 14:56:34 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+Cc: m.hulsman@tudelft.nl, r.marek@assembler.cz, khali@linux-fr.org, lm-sensors@lm-sensors.org, pierre@ossman.eu, wim@iguana.be, linux-watchdog@vger.kernel.org, zaga@fly.cc.fer.hr, linux-scsi@vger.kernel.org, dh.herrmann@googlemail.com, david@hardeman.nu, inaky.perez-gonzalez@intel.com, linux-wimax@intel.com, wimax@linuxwimax.org, mitr@volny.cz, acme@ghostprotocols.net, broonie@kernel.org, lrg@slimlogic.co.uk, linux-input@vger.kernel.org, patches@opensource.wolfsonmicro.com, tj@kernel.org, andrew.hendry@gmail.com, linux-x25@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, matthew.garrett@nebula.com, platform-driver-x86@vger.kernel.org, tony.luck@intel.com
 
-On Wed, Sep 03, 2014 at 02:44:37PM +0300, Dan Carpenter wrote:
-> The current code just returns -EINVAL because mode can't be equal to
-> both 1 and 2.
-> 
-> Also this function is messy so I have cleaned it up:
-> 1) Remove initializers like "int time = -1".  Initializing variables to
->    garbage values turns off GCC's uninitialized variable warnings so it
->    can lead to bugs.
-> 2) Use kstrtoint() instead of sscanf().
-> 3) Use SCI_KBD_MODE_FNZ and SCI_KBD_MODE_AUTO instead of magic numbers 1
->    and 2.
-> 4) Don't check for "mode == -1" because that can't happen.
-> 5) Preserve the error code from toshiba_kbd_illum_status_set().
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+FROM: Husam Al Sayed.
 
-Queued, thanks.
+EMAIL:alsayedhusa@hotmail.com
+ 
+Hello,
+ 
+I decided to write you this proposal in good faith, believing that you will
+not betray me. I am Mr. Husam Al Sayed, a Bank officer here in U.A.E.
+ 
+One Mr. Peter Adams, a citizen of your country and Crude Oil dealer made a fixed deposit with my bank in 2005 for 108 calendar months, valued at US$30,000,000.00 (Thirty Million United State Dollars) the due date for this deposit contract was last 22nd of January 2014. Sadly Peter was among the death victims in the May 27 2006 Earthquake disaster in Java, Indonesia that killed over 5,000 people. He was in Indonesia on a business trip and that was how he met his untimely end. My bank management is yet to know about his death, I knew about it because he was my friend and I am his Account Officer. Peter did not mention any Next of Kin/ Heir when the account was opened, he was not married and no children. Last week my Bank Management requested that Peter should give instructions on what to do 
+ about his funds, if to renew the contract.
+ 
+I know this will happen and that is why I have been looking for a means to handle the situation, because if my Bank Directors happens to know that Peter is dead and do not have any Heir, they will take the funds for their personal use, so I don't want such to happen. That is why I am seeking your co-operation to present you as the Next of Kin/ Heir to the account, since you are a foreigner and my bank head quarters will release the account to you. There is no risk involved; the transaction will be executed under a legitimate arrangement that will protect us from any breach of law. It is better that we claim the money, than allowing the Bank Directors to take it, they are rich already. I am not a greedy person, so I am suggesting we share the funds in this ratio, 50/50%, equal sharing. Let 
+ me know your mind on this and please do treat this information highly confidential. We shall go over the details once I receive your urgent response. Please Urgently get back to me through this email address as soon as possible:
+ 
+ 
+ 
+Have a nice day and God bless. Anticipating your communication.
+ 
+Regards,
+FROM: Husam Al Sayed.
+EMAIL: alsayedhusa@hotmail.com
+_____________________________________________________________________
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Presny televizny program najdete na http://www.ahaho.sk
