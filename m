@@ -1,39 +1,35 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH] eeepc-laptop: remove possible use of uninitialized value
-Date: Thu, 04 Sep 2014 21:37:51 +0200
-Message-ID: <1409859471.5546.110.camel@x220>
-References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
-	 <20140904004947.GA17138@vmdeb7> <20140904011420.GA31350@kroah.com>
-	 <CAH6sp9OaqkdW82HOKMf8gxLLsBzXPCq2HYj7ya+C3YXiFwhgOQ@mail.gmail.com>
-	 <20140904141041.GB23299@kroah.com>
-	 <CAH6sp9P3NJBFS=ewJnY3jVJc_dDf7LQs2TwYKZu7=bFhdAZXxg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 0/5] toshiba_acpi: Various changes plus fixes
+Date: Fri,  5 Sep 2014 11:14:02 -0600
+Message-ID: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cpsmtpb-ews06.kpnxchange.com ([213.75.39.9]:65092 "EHLO
-	cpsmtpb-ews06.kpnxchange.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754688AbaIDThx (ORCPT
+Received: from mail-pd0-f176.google.com ([209.85.192.176]:58660 "EHLO
+	mail-pd0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751104AbaIEROY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Sep 2014 15:37:53 -0400
-In-Reply-To: <CAH6sp9P3NJBFS=ewJnY3jVJc_dDf7LQs2TwYKZu7=bFhdAZXxg@mail.gmail.com>
+	Fri, 5 Sep 2014 13:14:24 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Matthew Garrett <matthew.garrett@nebula.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Thu, 2014-09-04 at 16:40 +0200, Frans Klaver wrote:
-> I'll I fire up my eeepc and see what I can figure out. Should I take
-> Pauls patch and see how it fits into this?
+Up for review.
 
-I haven't followed the conversation you're having with Greg, but I would
-be grateful if you'd test _just_ my patch. Unless someone jumps in and
-points to flaws in my patch, that is.
+This series of patches introduce support for the new
+keyboard backlight type found on recent Toshiba laptops,
+removes the position sysfs entry and instead creates an
+input polled device (joystick), and a few fixes and
+additions to the keymap list.
 
-I suppose testing would mean writing some values to the related files
-under /sys. I have no idea whatsoever what those files actually do, so
-I'm afraid I can't tell you what values to write and what effects to
-expect, sorry. Perhaps someone else can help you there.
+Azael Avalos (5):
+  toshiba_acpi: Additional hotkey scancodes
+  toshiba_acpi: Fix illumination not available on certain models
+  toshiba_acpi: Add accelerometer input polled device
+  toshiba_acpi: Support new keyboard backlight type
+  toshiba_acpi: Change touchpad store to check for invalid values
 
+ drivers/platform/x86/toshiba_acpi.c | 277 ++++++++++++++++++++++++++----------
+ 1 file changed, 199 insertions(+), 78 deletions(-)
 
-Paul Bolle
+-- 
+2.0.0
