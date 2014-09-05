@@ -1,7 +1,7 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/5] toshiba_acpi: Additional hotkey scancodes
-Date: Fri,  5 Sep 2014 11:14:03 -0600
-Message-ID: <1409937247-2525-2-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 5/5] toshiba_acpi: Change touchpad store to check for invalid values
+Date: Fri,  5 Sep 2014 11:14:07 -0600
+Message-ID: <1409937247-2525-6-git-send-email-coproscefalo@gmail.com>
 References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
@@ -10,42 +10,42 @@ To: Matthew Garrett <matthew.garrett@nebula.com>, Darren Hart <dvhart@infradead.
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Appart from reporting hotkeys, the INFO method is used
-as a system wide event notifier for hardware or
-software changes.
+The function toshiba_touchpad_store is not checking
+for invalid values and simply returns silently.
 
-This patch adds additional "events" to the keymap list,
-ignored by now, until we find them a good use.
+This patch checks for invalid values and returns accordingly.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/platform/x86/toshiba_acpi.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index b062d3d..a149bc6 100644
+index 1738171..777fb3c 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -190,6 +190,7 @@ static const struct key_entry toshiba_acpi_keymap[] = {
- 	{ KE_KEY, 0x101, { KEY_MUTE } },
- 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
- 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
-+	{ KE_KEY, 0x10f, { KEY_TAB } },
- 	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
- 	{ KE_KEY, 0x13b, { KEY_COFFEE } },
-@@ -210,7 +211,11 @@ static const struct key_entry toshiba_acpi_keymap[] = {
- 	{ KE_KEY, 0xb32, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0xb33, { KEY_PLAYPAUSE } },
- 	{ KE_KEY, 0xb5a, { KEY_MEDIA } },
--	{ KE_IGNORE, 0x1430, { KEY_RESERVED } },
-+	{ KE_IGNORE, 0x1430, { KEY_RESERVED } }, /* Wake from sleep */
-+	{ KE_IGNORE, 0x1501, { KEY_RESERVED } }, /* Output changed */
-+	{ KE_IGNORE, 0x1502, { KEY_RESERVED } }, /* HDMI plugged/unplugged */
-+	{ KE_IGNORE, 0x1ABE, { KEY_RESERVED } }, /* Protection level set */
-+	{ KE_IGNORE, 0x1ABF, { KEY_RESERVED } }, /* Protection level off */
- 	{ KE_END, 0 },
- };
+@@ -1396,12 +1396,18 @@ static ssize_t toshiba_touchpad_store(struct device *dev,
+ {
+ 	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
+ 	int state;
++	int ret;
  
+ 	/* Set the TouchPad on/off, 0 - Disable | 1 - Enable */
+-	if (sscanf(buf, "%i", &state) == 1 && (state == 0 || state == 1)) {
+-		if (toshiba_touchpad_set(toshiba, state) < 0)
+-			return -EIO;
+-	}
++	ret = kstrtoint(buf, 0, &state);
++	if (ret)
++		return ret;
++	if (state != 0 || state != 1)
++		return -EINVAL;
++
++	ret = toshiba_touchpad_set(toshiba, state);
++	if (ret)
++		return ret;
+ 
+ 	return count;
+ }
 -- 
 2.0.0
