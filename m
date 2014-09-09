@@ -1,88 +1,59 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/5] toshiba_acpi: Add accelerometer input polled device
-Date: Mon, 8 Sep 2014 18:35:53 -0700
-Message-ID: <20140909013553.GC16363@kroah.com>
-References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
- <1409937247-2525-4-git-send-email-coproscefalo@gmail.com>
- <20140906024253.GB11389@vmdeb7>
- <CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ@mail.gmail.com>
- <20140909000429.GB5835@vmdeb7>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: Re: [PATCH] eeepc-laptop: remove possible use of uninitialized value
+Date: Tue, 09 Sep 2014 10:50:08 +0200
+Message-ID: <1410252608.22255.5.camel@x220>
+References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
+	 <1409814488.5546.63.camel@x220> <20140906021757.GA9197@vmdeb7>
+	 <7288841.ayNsq2yeGO@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:37142 "EHLO
-	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752911AbaIIBfy (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Sep 2014 21:35:54 -0400
-Content-Disposition: inline
-In-Reply-To: <20140909000429.GB5835@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7288841.ayNsq2yeGO@vostro.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Frans Klaver <fransklaver@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Rafael Wysocki <rafael.j.wysocki@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 08, 2014 at 05:04:30PM -0700, Darren Hart wrote:
-> On Fri, Sep 05, 2014 at 11:04:18PM -0600, Azael Avalos wrote:
-> > Hi there,
+Hi Darren,
+
+On Sat, 2014-09-06 at 23:17 +0200, Rafael J. Wysocki wrote:
+> On Friday, September 05, 2014 07:17:57 PM Darren Hart wrote:
+> > On Thu, Sep 04, 2014 at 09:08:08AM +0200, Paul Bolle wrote:
+> > [...]
+> > >  static ssize_t store_sys_acpi(struct device *dev, int cm,
+> > > @@ -278,12 +276,13 @@ static ssize_t store_sys_acpi(struct device *dev, int cm,
+> > >  	struct eeepc_laptop *eeepc = dev_get_drvdata(dev);
+> > >  	int rv, value;
+> > >  
+> > > -	rv = parse_arg(buf, count, &value);
+> > > -	if (rv > 0)
+> > > -		value = set_acpi(eeepc, cm, value);
+> > > +	rv = parse_arg(buf, &value);
+> > > +	if (rv < 0)
+> > > +		return rv;
+> > > +	value = set_acpi(eeepc, cm, value);
+> > >  	if (value < 0)
 > > 
-> > 2014-09-05 20:42 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> > > On Fri, Sep 05, 2014 at 11:14:05AM -0600, Azael Avalos wrote:
-> > >> The accelerometer sensor is very sensitive, and having userspace
-> > >> poll the sysfs position entry is not very battery friendly.
-> > >>
-> > >> This patch removes the sysfs entry and instead, it creates an
-> > >> input polled device (joystick) for the built-in accelerometer.
-> > >
-> > > Hrm, while sysfs details can change across kernel versions, usually due to
-> > > driver core changes, we try to keep them as consistent as possible so as not to
-> > > break userspace.
-> > >
-> > > That said, if we are going to try and come up with a better model for
-> > > representing an accelerometer, wouldn't treating it as an IIO device be the more
-> > > logical approach?
+> > I suppose it's harmless, but it would be more explicit to reuse rv here instead
+> > of value.
+
+Fine with me.
+ 
+> > >  		return -EIO;
 > > 
-> > Yes of course, but the actual accelerometer device (sensor?) is not
-> > really exposed,
-> > only certain "functions" it provides, and they are divided across two
-> > different ACPI devices,
-> > TOS620A exposes the protection, and the TOS1900 (and et. al.) only
-> > exposes the axes.
-> 
-> As I understand it, IIO defines an interface to a device, a standard sysfs set
-> of properties. I should think we could provide the appropriate callbacks even
-> for a partially implemented (or a pair of) accelerometer.
-> 
-> Jonathan, what are your thoughts here. Is such a "device" (ACPI accessors to
-> axis and threshold) a candidate for IIO, or is this input polled device more
-> appropriate?
-> 
+> > And as with Frans' version, I suggest propogating the error. We're talking about
+> > a missing/invalid ACPI control method name here, ENODEV seems approprirate.
 > > 
-> > I see your point in breaking userspace, but given the fact that it was
-> > recently introduced,
-> > I didn't thought it was already "adopted", that's why I decided to
-> > remove the sysfs entry.
+> > Rafael, do you have a strong preference about what to return in such an event?
 > 
-> Looks like since 3.15 if I read the log correctly. That is fairly recent and
-> this is not one of the "defined interfaces" in the sysfs documentation.
-> 
-> Greg, can you weigh in here - does this change count as "breaking userspace", or
-> is this more inline with the scheduler knobs in /proc/sched_debug which can
-> change from version to version.
-> 
-> > 
-> > Then we might as well keep the sysfs entry and have the input polled
-> > device as well.
-> 
-> Let's see what Greg has to say. If he isn't bothered by the change, I won't push
-> the issue.
+> No, I don't, although -ENXIO could be used here too.
 
-If it should be an IIO device, great, make it an IIO device, and move
-away from a custom sysfs interface that matches nothing else.
+If you could say what value you'd like best I'll resend using that
+value. (I don't know what the effect is of using a specific error here,
+so I guess I'll have to bluff about it in the commit explanation.)
 
-But I really doubt it should be a joystick device, that just doesn't
-make sense at all.
+Thanks,
 
-thanks,
 
-greg k-h
+Paul Bolle
