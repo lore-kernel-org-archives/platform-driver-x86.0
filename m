@@ -1,36 +1,88 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/5] toshiba_acpi: Additional hotkey scancodes
-Date: Mon, 8 Sep 2014 17:12:08 -0700
-Message-ID: <20140909001207.GE5835@vmdeb7>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 3/5] toshiba_acpi: Add accelerometer input polled device
+Date: Mon, 8 Sep 2014 18:35:53 -0700
+Message-ID: <20140909013553.GC16363@kroah.com>
 References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
- <1409937247-2525-2-git-send-email-coproscefalo@gmail.com>
+ <1409937247-2525-4-git-send-email-coproscefalo@gmail.com>
+ <20140906024253.GB11389@vmdeb7>
+ <CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ@mail.gmail.com>
+ <20140909000429.GB5835@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:50969 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753253AbaIIAML (ORCPT
+Received: from mail.linuxfoundation.org ([140.211.169.12]:37142 "EHLO
+	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752911AbaIIBfy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Sep 2014 20:12:11 -0400
+	Mon, 8 Sep 2014 21:35:54 -0400
 Content-Disposition: inline
-In-Reply-To: <1409937247-2525-2-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <20140909000429.GB5835@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Matthew Garrett <matthew.garrett@nebula.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
 
-On Fri, Sep 05, 2014 at 11:14:03AM -0600, Azael Avalos wrote:
-> Appart from reporting hotkeys, the INFO method is used
-> as a system wide event notifier for hardware or
-> software changes.
+On Mon, Sep 08, 2014 at 05:04:30PM -0700, Darren Hart wrote:
+> On Fri, Sep 05, 2014 at 11:04:18PM -0600, Azael Avalos wrote:
+> > Hi there,
+> > 
+> > 2014-09-05 20:42 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> > > On Fri, Sep 05, 2014 at 11:14:05AM -0600, Azael Avalos wrote:
+> > >> The accelerometer sensor is very sensitive, and having userspace
+> > >> poll the sysfs position entry is not very battery friendly.
+> > >>
+> > >> This patch removes the sysfs entry and instead, it creates an
+> > >> input polled device (joystick) for the built-in accelerometer.
+> > >
+> > > Hrm, while sysfs details can change across kernel versions, usually due to
+> > > driver core changes, we try to keep them as consistent as possible so as not to
+> > > break userspace.
+> > >
+> > > That said, if we are going to try and come up with a better model for
+> > > representing an accelerometer, wouldn't treating it as an IIO device be the more
+> > > logical approach?
+> > 
+> > Yes of course, but the actual accelerometer device (sensor?) is not
+> > really exposed,
+> > only certain "functions" it provides, and they are divided across two
+> > different ACPI devices,
+> > TOS620A exposes the protection, and the TOS1900 (and et. al.) only
+> > exposes the axes.
 > 
-> This patch adds additional "events" to the keymap list,
-> ignored by now, until we find them a good use.
+> As I understand it, IIO defines an interface to a device, a standard sysfs set
+> of properties. I should think we could provide the appropriate callbacks even
+> for a partially implemented (or a pair of) accelerometer.
 > 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> Jonathan, what are your thoughts here. Is such a "device" (ACPI accessors to
+> axis and threshold) a candidate for IIO, or is this input polled device more
+> appropriate?
+> 
+> > 
+> > I see your point in breaking userspace, but given the fact that it was
+> > recently introduced,
+> > I didn't thought it was already "adopted", that's why I decided to
+> > remove the sysfs entry.
+> 
+> Looks like since 3.15 if I read the log correctly. That is fairly recent and
+> this is not one of the "defined interfaces" in the sysfs documentation.
+> 
+> Greg, can you weigh in here - does this change count as "breaking userspace", or
+> is this more inline with the scheduler knobs in /proc/sched_debug which can
+> change from version to version.
+> 
+> > 
+> > Then we might as well keep the sysfs entry and have the input polled
+> > device as well.
+> 
+> Let's see what Greg has to say. If he isn't bothered by the change, I won't push
+> the issue.
 
-Queued, thanks.
+If it should be an IIO device, great, make it an IIO device, and move
+away from a custom sysfs interface that matches nothing else.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+But I really doubt it should be a joystick device, that just doesn't
+make sense at all.
+
+thanks,
+
+greg k-h
