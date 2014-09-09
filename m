@@ -1,69 +1,74 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] eeepc-laptop: remove disp attribute show function
-Date: Mon, 8 Sep 2014 16:32:20 -0700
-Message-ID: <20140908233219.GA5835@vmdeb7>
-References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
- <1409814488.5546.63.camel@x220>
- <20140906021757.GA9197@vmdeb7>
- <7288841.ayNsq2yeGO@vostro.rjw.lan>
- <1410210762-2487-1-git-send-email-fransklaver@gmail.com>
- <20140908211627.GA23619@kroah.com>
- <20140908212306.GA22145@gmail.com>
- <20140908214438.GB22145@gmail.com>
- <20140908215723.GA21556@kroah.com>
+From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] toshiba_acpi: Add accelerometer input polled device
+Date: Mon, 8 Sep 2014 17:04:30 -0700
+Message-ID: <20140909000429.GB5835@vmdeb7>
+References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
+ <1409937247-2525-4-git-send-email-coproscefalo@gmail.com>
+ <20140906024253.GB11389@vmdeb7>
+ <CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43664 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755526AbaIHXc3 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Sep 2014 19:32:29 -0400
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140908215723.GA21556@kroah.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matthew Garrett <matthew.garrett-05XSO3Yj/JvQT0dZR+AlfA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 08, 2014 at 02:57:23PM -0700, Greg Kroah-Hartman wrote:
-> On Mon, Sep 08, 2014 at 11:44:38PM +0200, Frans Klaver wrote:
-> > On Mon, Sep 08, 2014 at 11:23:06PM +0200, Frans Klaver wrote:
-> > > On Mon, Sep 08, 2014 at 02:16:27PM -0700, Greg Kroah-Hartman wrote:
-> > > > On Mon, Sep 08, 2014 at 11:12:42PM +0200, Frans Klaver wrote:
-> > > > >
-> > > > >  EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
-> > > > >  EEEPC_CREATE_DEVICE_ATTR(cardr, 0644, CM_ASL_CARDREADER);
-> > > > > -EEEPC_CREATE_DEVICE_ATTR(disp, 0200, CM_ASL_DISPLAYSWITCH);
-> > > > > +
-> > > > > +static ssize_t store_disp(struct device *dev,
-> > > > > +			  struct device_attribute *attr,
-> > > > > +			  const char *buf, size_t count)
-> > > > > +{
-> > > > > +	return store_sys_acpi(dev, CM_ASL_DISPLAYSWITCH, buf, count);
-> > > > > +}
-> > > > > +
-> > > > > +static struct device_attribute dev_attr_disp = {
-> > > > > +	.attr = {
-> > > > > +		.name = "disp",
-> > > > > +		.mode = 0200 },
-> > > > > +	.store  = store_disp,
-> > > > > +};
-> > > > 
-> > > > DEVICE_ATTR()?
-> > > 
-> > > That would make sense, wouldn't it? The only defense I have is that it
-> > > isn't used in EEEPC_CREATE_DEVICE_ATTR() either.
-> > 
-> > I might as well fix that as well, and the fact that the octal
-> > permissions are used instead of S_IRUGO and friends. Would you prefer
-> > that in a separate patch?
+On Fri, Sep 05, 2014 at 11:04:18PM -0600, Azael Avalos wrote:
+> Hi there,
+> 
+> 2014-09-05 20:42 GMT-06:00 Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>:
+> > On Fri, Sep 05, 2014 at 11:14:05AM -0600, Azael Avalos wrote:
+> >> The accelerometer sensor is very sensitive, and having userspace
+> >> poll the sysfs position entry is not very battery friendly.
+> >>
+> >> This patch removes the sysfs entry and instead, it creates an
+> >> input polled device (joystick) for the built-in accelerometer.
+> >
+> > Hrm, while sysfs details can change across kernel versions, usually due to
+> > driver core changes, we try to keep them as consistent as possible so as not to
+> > break userspace.
+> >
+> > That said, if we are going to try and come up with a better model for
+> > representing an accelerometer, wouldn't treating it as an IIO device be the more
+> > logical approach?
+> 
+> Yes of course, but the actual accelerometer device (sensor?) is not
+> really exposed,
+> only certain "functions" it provides, and they are divided across two
+> different ACPI devices,
+> TOS620A exposes the protection, and the TOS1900 (and et. al.) only
+> exposes the axes.
 
-If you're offering to fix it (thanks!), please do any necessary cleanup first
-(like switching to S_IRUGO and friends), and then follow up with a DEVICE_ATTR
-solution.
+As I understand it, IIO defines an interface to a device, a standard sysfs set
+of properties. I should think we could provide the appropriate callbacks even
+for a partially implemented (or a pair of) accelerometer.
 
-Thanks,
+Jonathan, what are your thoughts here. Is such a "device" (ACPI accessors to
+axis and threshold) a candidate for IIO, or is this input polled device more
+appropriate?
+
+> 
+> I see your point in breaking userspace, but given the fact that it was
+> recently introduced,
+> I didn't thought it was already "adopted", that's why I decided to
+> remove the sysfs entry.
+
+Looks like since 3.15 if I read the log correctly. That is fairly recent and
+this is not one of the "defined interfaces" in the sysfs documentation.
+
+Greg, can you weigh in here - does this change count as "breaking userspace", or
+is this more inline with the scheduler knobs in /proc/sched_debug which can
+change from version to version.
+
+> 
+> Then we might as well keep the sysfs entry and have the input polled
+> device as well.
+
+Let's see what Greg has to say. If he isn't bothered by the change, I won't push
+the issue.
 
 -- 
 Darren Hart
