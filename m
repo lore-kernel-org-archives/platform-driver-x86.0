@@ -1,72 +1,61 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH] eeepc-laptop: remove possible use of uninitialized value
-Date: Wed, 10 Sep 2014 16:42:49 +0200
-Message-ID: <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
-References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
-	<1409814488.5546.63.camel@x220>
-	<20140906021757.GA9197@vmdeb7>
-	<7288841.ayNsq2yeGO@vostro.rjw.lan>
-	<1410252608.22255.5.camel@x220>
-	<20140910033304.GB39541@vmdeb7>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH 3/5] toshiba_acpi: Add accelerometer input polled device
+Date: Wed, 10 Sep 2014 09:28:44 -0600
+Message-ID: <CAGdLNWEgJmNQ_F7kozn4tGCq_AseuE95xHKoxTWgtNqdBwSm5A@mail.gmail.com>
+References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
+	<1409937247-2525-4-git-send-email-coproscefalo@gmail.com>
+	<20140906024253.GB11389@vmdeb7>
+	<CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ@mail.gmail.com>
+	<20140909000429.GB5835@vmdeb7>
+	<20140909013553.GC16363@kroah.com>
+	<20140910033520.GC39541@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140910033304.GB39541@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-la0-f54.google.com ([209.85.215.54]:56241 "EHLO
+	mail-la0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751754AbaIJP2q (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 10 Sep 2014 11:28:46 -0400
+In-Reply-To: <20140910033520.GC39541@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Paul Bolle <pebolle@tiscali.nl>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corentin Chary <corentin.chary@gmail.com>, Matthew Garrett <matthew.garrett@nebula.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Rafael Wysocki <rafael.j.wysocki@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <jic23@kernel.org>, Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 5:33 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, Sep 09, 2014 at 10:50:08AM +0200, Paul Bolle wrote:
->> Hi Darren,
->>
->> On Sat, 2014-09-06 at 23:17 +0200, Rafael J. Wysocki wrote:
->> > On Friday, September 05, 2014 07:17:57 PM Darren Hart wrote:
->> > > On Thu, Sep 04, 2014 at 09:08:08AM +0200, Paul Bolle wrote:
->> > > [...]
->> > > >  static ssize_t store_sys_acpi(struct device *dev, int cm,
->> > > > @@ -278,12 +276,13 @@ static ssize_t store_sys_acpi(struct device *dev, int cm,
->> > > >         struct eeepc_laptop *eeepc = dev_get_drvdata(dev);
->> > > >         int rv, value;
->> > > >
->> > > > -       rv = parse_arg(buf, count, &value);
->> > > > -       if (rv > 0)
->> > > > -               value = set_acpi(eeepc, cm, value);
->> > > > +       rv = parse_arg(buf, &value);
->> > > > +       if (rv < 0)
->> > > > +               return rv;
->> > > > +       value = set_acpi(eeepc, cm, value);
->> > > >         if (value < 0)
->> > >
->> > > I suppose it's harmless, but it would be more explicit to reuse rv here instead
->> > > of value.
->>
->> Fine with me.
->>
->> > > >                 return -EIO;
->> > >
->> > > And as with Frans' version, I suggest propogating the error. We're talking about
->> > > a missing/invalid ACPI control method name here, ENODEV seems approprirate.
->> > >
->> > > Rafael, do you have a strong preference about what to return in such an event?
->> >
->> > No, I don't, although -ENXIO could be used here too.
->>
->> If you could say what value you'd like best I'll resend using that
->> value. (I don't know what the effect is of using a specific error here,
->> so I guess I'll have to bluff about it in the commit explanation.)
->
-> First, I would prefer we propogate the error code rather than remap it.
->
-> We could consider changing what the callee returns...
->
-> #define EIO              5      /* I/O error */
-> #define ENXIO            6      /* No such device or address */
-> #define ENODEV          19      /* No such device */
->
-> Of those, ENXIO seems like the most appropriate in this case.
+Hi there,
 
-Would it be fair to say that for consistency we should then also
-change the return values of acpi_setter_handle()? It has the same
-basic layout and checks as set_acpi() and get_acpi() have.
+2014-09-09 21:35 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+>
+> I immediately went to a tablet with a marble maze game and it didn't seem too
+> crazy, but I don't suppose that is what people are actually doing with it...
+>
+> What are people actually doing with this thing Azael?
+
+Gaming mostly (supertuxkart anyone?), but some others (including myself)
+want to use it as a movement detection (one exists for the IBM/Lenovo
+Thinkpads).
+
+Digging into platform drivers, I've found that the hdaps and also the lis3lv02d
+drivers report the axes via polldev, and since I don't want to break userspace,
+I'm left with two choices:
+
+1 - Keep sysfs entry and adapt it to properly report direction, and no
+polled device.
+
+2 - Keep sysfs entry and adapt it to properly report direction, and also
+a polled device.
+
+Let me know your decision so I can send an updated patch.
+
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+Cheers
+Azael
+
+
+-- 
+-- El mundo apesta y vosotros apestais tambien --
