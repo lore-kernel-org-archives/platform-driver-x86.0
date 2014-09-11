@@ -1,56 +1,63 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 5/5] toshiba_acpi: Change touchpad store to check for invalid values
-Date: Wed, 10 Sep 2014 21:01:57 -0600
-Message-ID: <1410404517-4209-2-git-send-email-coproscefalo@gmail.com>
-References: <1410404517-4209-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f54.google.com ([209.85.218.54]:55854 "EHLO
-	mail-oi0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751803AbaIKDCH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Sep 2014 23:02:07 -0400
-In-Reply-To: <1410404517-4209-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] eeepc-laptop: simplify parse_arg()
+Date: Thu, 11 Sep 2014 15:37:39 -0700
+Message-ID: <20140911223739.GB18425@vmdeb7>
+References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
+ <1409814488.5546.63.camel@x220>
+ <20140906021757.GA9197@vmdeb7>
+ <7288841.ayNsq2yeGO@vostro.rjw.lan>
+ <1410252608.22255.5.camel@x220>
+ <20140910033304.GB39541@vmdeb7>
+ <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
+ <20140910164916.GA48285@vmdeb7>
+ <1410379520.11097.18.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410379520.11097.18.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Frans Klaver <fransklaver@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-The function toshiba_touchpad_store is not checking
-for invalid values and simply returns silently.
+On Wed, Sep 10, 2014 at 10:05:20PM +0200, Paul Bolle wrote:
+> parse_arg() has three possible return values:
+>     -EINVAL if sscanf(), in short, fails;
+>     zero if "count" is zero; and
+>     "count" in all other cases
+>=20
+> But "count" will never be zero. See, parse_arg() is called by the
+> various store functions. And the callchain of these functions starts
+> with sysfs_kf_write(). And that function checks for a zero "count". S=
+o
+> we can stop checking for a zero "count", drop the "count" argument
+> entirely, and transform parse_arg() into a function that returns zero=
+ on
+> success or a negative error. That, in turn, allows to make those stor=
+e
+> functions just return "count" on success. The net effect is that the
+> code becomes a bit easier to understand.
+>=20
+> While we're at it, let store_sys_acpi() return whatever error set_acp=
+i()
+> returns instead of remapping it to EIO.
+>=20
+> A nice side effect is that this GCC warning is silenced too:
+>     drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store_s=
+ys_acpi=E2=80=99:
+>     drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98val=
+ue=E2=80=99 may be used uninitialized in this function [-Wmaybe-uniniti=
+alized]
+>       int rv, value;
+>=20
+> Which is, of course, the reason to have a look at parse_arg().
+>=20
+> Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
 
-This patch checks for invalid values and returns accordingly.
+Queued, thanks Paul.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 08147c5..5a2324d 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1429,12 +1429,18 @@ static ssize_t toshiba_touchpad_store(struct device *dev,
- {
- 	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
- 	int state;
-+	int ret;
- 
- 	/* Set the TouchPad on/off, 0 - Disable | 1 - Enable */
--	if (sscanf(buf, "%i", &state) == 1 && (state == 0 || state == 1)) {
--		if (toshiba_touchpad_set(toshiba, state) < 0)
--			return -EIO;
--	}
-+	ret = kstrtoint(buf, 0, &state);
-+	if (ret)
-+		return ret;
-+	if (state != 0 && state != 1)
-+		return -EINVAL;
-+
-+	ret = toshiba_touchpad_set(toshiba, state);
-+	if (ret)
-+		return ret;
- 
- 	return count;
- }
--- 
-2.0.0
+--=20
+Darren Hart
+Intel Open Source Technology Center
