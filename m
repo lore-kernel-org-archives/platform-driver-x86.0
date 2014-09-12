@@ -1,90 +1,70 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 05/13] eeepc-laptop: use DEVICE_ATTR to instantiate
- device_attributes
-Date: Fri, 12 Sep 2014 16:28:51 -0700
-Message-ID: <20140912232851.GA17095@kroah.com>
-References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
- <1410563212-31565-6-git-send-email-fransklaver@gmail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH v5] thinkpad-acpi: Improve hardware
+ volume controls
+Date: Fri, 12 Sep 2014 20:32:31 -0300
+Message-ID: <20140912233231.GA30851@khazad-dum.debian.net>
+References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
+ <CAObL_7F-w3f8R039JcenMeGpWx3dXrb6V3tVgxny7SJy717NNQ@mail.gmail.com>
+ <20140912230344.GA8502@khazad-dum.debian.net>
+ <CAObL_7EiSuP=vYo7sFF-0UxuO37Q_pNV6g5P5cwUe9oZuuTiFg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:57138 "EHLO
-	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750899AbaILX2v (ORCPT
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43812 "EHLO
+	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750899AbaILXco (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Sep 2014 19:28:51 -0400
+	Fri, 12 Sep 2014 19:32:44 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by gateway2.nyi.internal (Postfix) with ESMTP id 98BA120C83
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Sep 2014 19:32:43 -0400 (EDT)
 Content-Disposition: inline
-In-Reply-To: <1410563212-31565-6-git-send-email-fransklaver@gmail.com>
+In-Reply-To: <CAObL_7EiSuP=vYo7sFF-0UxuO37Q_pNV6g5P5cwUe9oZuuTiFg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lutomirski <luto@mit.edu>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Sat, Sep 13, 2014 at 01:06:44AM +0200, Frans Klaver wrote:
-> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
-> ---
->  drivers/platform/x86/eeepc-laptop.c | 35 +++++------------------------------
->  1 file changed, 5 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index f35d008..8225b1e 100644
-> --- a/drivers/platform/x86/eeepc-laptop.c
-> +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -308,13 +308,7 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
->  	{								\
->  		return store_sys_acpi(dev, _cm, buf, count);		\
->  	}								\
-> -	static struct device_attribute dev_attr_##_name = {		\
-> -		.attr = {						\
-> -			.name = __stringify(_name),			\
-> -			.mode = _mode },				\
-> -		.show   = show_##_name,					\
-> -		.store  = store_##_name,				\
-> -	}
-> +	static DEVICE_ATTR(_name, _mode, show_##_name, store_##_name)
->  
->  EEEPC_CREATE_DEVICE_ATTR(camera, S_IWUSR | S_IRUGO, CM_ASL_CAMERA);
->  EEEPC_CREATE_DEVICE_ATTR(cardr, S_IWUSR | S_IRUGO, CM_ASL_CARDREADER);
-> @@ -420,29 +414,10 @@ static ssize_t store_cpufv_disabled(struct device *dev,
->  }
->  
->  
-> -static struct device_attribute dev_attr_cpufv = {
-> -	.attr = {
-> -		.name = "cpufv",
-> -		.mode = S_IWUSR | S_IRUGO },
-> -	.show   = show_cpufv,
-> -	.store  = store_cpufv
-> -};
-> -
-> -static struct device_attribute dev_attr_available_cpufv = {
-> -	.attr = {
-> -		.name = "available_cpufv",
-> -		.mode = S_IRUGO },
-> -	.show   = show_available_cpufv
-> -};
-> -
-> -static struct device_attribute dev_attr_cpufv_disabled = {
-> -	.attr = {
-> -		.name = "cpufv_disabled",
-> -		.mode = S_IWUSR | S_IRUGO},
-> -	.show   = show_cpufv_disabled,
-> -	.store  = store_cpufv_disabled
-> -};
-> -
-> +static DEVICE_ATTR(cpufv, S_IWUSR | S_IRUGO, show_cpufv, store_cpufv);
+On Fri, 12 Sep 2014, Andrew Lutomirski wrote:
+> I think that v5 doesn't change behavior anywhere except for fixing
+> broken things.  I could easily be wrong, though.
 
-DEVICE_ATTR_RW()?
+Well, I can test it on a T43 (old-style hardware mixer), but not on anything
+else.  I'll need to port the patch to 3.10 for that, though.
 
-> +static DEVICE_ATTR(available_cpufv, S_IRUGO, show_available_cpufv, NULL);
+> I kind of suspect that all laptops that don't default to the "none"
+> mode are at least a little bit broken, though.  Any laptop on which
+> pressing mute mutes the hardware mixer *and* sends KEY_MUTE is going
+> to screw up if any modern GUI volume manager is running.
 
-DEVICE_ATTR_RO()?
+Ideed.
 
-> +static DEVICE_ATTR(cpufv_disabled, S_IWUSR | S_IRUGO,
-> +		   show_cpufv_disabled, store_cpufv_disabled);
+> Do you mean getting rid of latch mode and only keeping "none" and
+> "toggle"?  I don't think that would be much simpler.  The issue (from
 
-DEVICE_ATTR_RW()?
+Then let's not do it.  Latch mode is the sane one.
 
-thanks,
+> So most of the complexity is in the code that eats KEY_MUTE events and
+> does the right thing with them.  I think that this is needed to get
+> "latch" and "toggle" right.
 
-greg k-h
+Well, code complexity _is_ an acceptable price to get those right if we can
+manage it.
+
+> TBH, anyone running newish userspace probably wants the completely
+> non-magical "none" behavior.  PulseAudio seems to do the right thing
+> if the mute button generates KEY_MUTE and does nothing else.  I'm not
+> entirely convinced that there's any need to support the other modes,
+> but maybe I'm missing something, or maybe there are users with no
+> KEY_MUTE handler, or maybe there are users that just really like the
+> latching behavior where pressing the mute button never unmutes.
+
+Support for the other modes is optional, as long as the old thinkpads with
+full EC-driven behaviour still keep working in latch mode (which is the only
+one they support in firmware, anyway).
+
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
