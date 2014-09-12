@@ -1,60 +1,53 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] toshiba_acpi: Support new keyboard backlight type
-Date: Fri, 12 Sep 2014 13:48:23 -0700
-Message-ID: <20140912204823.GA23114@vmdeb7>
-References: <1410492145-9049-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH] eeepc-laptop: fix a Wuninitialized warning
+Date: Fri, 12 Sep 2014 13:53:37 -0700
+Message-ID: <20140912205337.GB23114@vmdeb7>
+References: <1410511466-1070-1-git-send-email-chenhanxiao@cn.fujitsu.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:50043 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:50718 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751530AbaILUsZ (ORCPT
+	with ESMTP id S1752817AbaILUxn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Sep 2014 16:48:25 -0400
+	Fri, 12 Sep 2014 16:53:43 -0400
 Content-Disposition: inline
-In-Reply-To: <1410492145-9049-1-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <1410511466-1070-1-git-send-email-chenhanxiao@cn.fujitsu.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
 
-On Thu, Sep 11, 2014 at 09:22:25PM -0600, Azael Avalos wrote:
-> Newer Toshiba models now come with a new (and different) keyboard
-> backlight implementation with three modes of operation: TIMER,
-> ON and OFF, and the LED is controlled internally by the firmware.
-> 
-> This patch adds support for that type of backlight, changing the
-> existing code to accomodate the new implementation.
-> 
-> The timeout value range is now 1-60 seconds, and the accepted
-> modes are now: 1 (FN-Z), 2 (AUTO or TIMER), 8(ON) and 10 (OFF),
-> this adds two new entries keyboard_type and available_kbd_modes,
+On Fri, Sep 12, 2014 at 04:44:26PM +0800, Chen Hanxiao wrote:
 
-                            ^ update for new naming
+Hi Chen,
 
-> the first shows the keyboard type and the latter shows the
-> supported modes depending on the type.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+I don't see such a warning with gcc 4.9.1. Which compiler are you using?
+
+Please include these sorts of details (which compiler, etc.) when submitting
+patches. I will never merge a patch without a complete commit message.
+
+
+> Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
 > ---
-
-Note you can update your v2,v3 changes here after the ---
-
-See Documentation/SubmittingPatches L639,649
-
-> @@ -1293,12 +1420,34 @@ static ssize_t toshiba_kbd_bl_mode_show(struct device *dev,
->  					char *buf)
+>  drivers/platform/x86/eeepc-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index bd533c2..738fc0c 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -276,7 +276,7 @@ static ssize_t store_sys_acpi(struct device *dev, int cm,
+>  			      const char *buf, size_t count)
 >  {
->  	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-> -	u32 time;
+>  	struct eeepc_laptop *eeepc = dev_get_drvdata(dev);
+> -	int rv, value;
+> +	int rv, value = -1;
 >  
-> -	if (toshiba_kbd_illum_status_get(toshiba, &time) < 0)
-> -		return -EIO;
-> +	if (toshiba == NULL)
-> +		return -ENXIO;
+>  	rv = parse_arg(buf, count, &value);
 
-If this testing is necessary for this sysfs callback, it is needed for all of them. Looking at the code more closely, I think this is out of scope for this patch. The entire file assumes a valid toshiba_acpi_dev. If this is a problem, it needs a separate patch to address it. So, let's drop this change, update the commit log to match the new sysfs filenames, and this should be ready to go.
-
+Inspecting the code, I don't see how this could possibly result in the use of an
+uninitialized variable.
 
 -- 
 Darren Hart
