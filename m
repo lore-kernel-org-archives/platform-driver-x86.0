@@ -1,80 +1,37 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 13/13] eeepc-laptop: return -ENXIO if acpi getter or setter fails
-Date: Sat, 13 Sep 2014 01:06:52 +0200
-Message-ID: <1410563212-31565-14-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 12/13] eeepc-laptop: store_cpufv: return error if set_acpi fails
+Date: Sat, 13 Sep 2014 01:06:51 +0200
+Message-ID: <1410563212-31565-13-git-send-email-fransklaver@gmail.com>
 References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f171.google.com ([209.85.212.171]:38108 "EHLO
-	mail-wi0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752708AbaILXHU (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Sep 2014 19:07:20 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-get_acpi() and set_acpi() return -ENODEV on error.  However, of the
-available options, ENXIO seems more appropriate, since we're dealing
-with both devices and addresses here:
-
-	#define EIO              5      /* I/O error */
-	#define ENXIO            6      /* No such device or address */
-	#define ENODEV          19      /* No such device */
-
-One could expect the same applies to acpi_setter_handle(), as this
-follows a similar setup. Changing the return values here triggers the
-error "Error removing rfkill notify handler" during boot, so we'll leave
-that as is.
+The result of set_acpi is left unchecked, but it may return errors. If
+one occurs, send the error to the caller.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
-Changing ENODEV to ENXIO in acpi_setter_handle() probably requires some extra
-work to get it working properly. I'd propose to dive into that after we finish
-this series, or we drop this patch from the series and move the whole return
-value issue into a separate patch set. Either way, with the sysfs fixes in
-place, I don't think this one is going to make a huge difference in the end.
-
- drivers/platform/x86/eeepc-laptop.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index ad221e0..064ab0d 100644
+index 732b012..ad221e0 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -215,9 +215,9 @@ static int set_acpi(struct eeepc_laptop *eeepc, int cm, int value)
- 	const char *method = cm_setv[cm];
+@@ -392,7 +392,9 @@ static ssize_t store_cpufv(struct device *dev,
+ 		return rv;
+ 	if (value < 0 || value >= c.num)
+ 		return -EINVAL;
+-	set_acpi(eeepc, CM_ASL_CPUFV, value);
++	rv = set_acpi(eeepc, CM_ASL_CPUFV, value);
++	if (rv)
++		return rv;
+ 	return count;
+ }
  
- 	if (method == NULL)
--		return -ENODEV;
-+		return -ENXIO;
- 	if ((eeepc->cm_supported & (0x1 << cm)) == 0)
--		return -ENODEV;
-+		return -ENXIO;
- 
- 	if (write_acpi_int(eeepc->handle, method, value))
- 		pr_warn("Error writing %s\n", method);
-@@ -230,9 +230,9 @@ static int get_acpi(struct eeepc_laptop *eeepc, int cm)
- 	int value;
- 
- 	if (method == NULL)
--		return -ENODEV;
-+		return -ENXIO;
- 	if ((eeepc->cm_supported & (0x1 << cm)) == 0)
--		return -ENODEV;
-+		return -ENXIO;
- 
- 	if (read_acpi_int(eeepc->handle, method, &value))
- 		pr_warn("Error reading %s\n", method);
-@@ -527,7 +527,7 @@ static int eeepc_led_init(struct eeepc_laptop *eeepc)
- {
- 	int rv;
- 
--	if (get_acpi(eeepc, CM_ASL_TPD) == -ENODEV)
-+	if (get_acpi(eeepc, CM_ASL_TPD) == -ENXIO)
- 		return 0;
- 
- 	eeepc->led_workqueue = create_singlethread_workqueue("led_workqueue");
 -- 
 2.1.0
