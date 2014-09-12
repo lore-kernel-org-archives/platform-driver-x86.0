@@ -1,90 +1,90 @@
-From: Andrew Lutomirski <luto@mit.edu>
-Subject: Re: [ibm-acpi-devel] [PATCH v5] thinkpad-acpi: Improve hardware
- volume controls
-Date: Fri, 12 Sep 2014 16:14:12 -0700
-Message-ID: <CAObL_7EiSuP=vYo7sFF-0UxuO37Q_pNV6g5P5cwUe9oZuuTiFg@mail.gmail.com>
-References: <f51437579321e4bc26282fdc747e6c0c7657d2ad.1305837576.git.luto@mit.edu>
- <CAObL_7F-w3f8R039JcenMeGpWx3dXrb6V3tVgxny7SJy717NNQ@mail.gmail.com> <20140912230344.GA8502@khazad-dum.debian.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 05/13] eeepc-laptop: use DEVICE_ATTR to instantiate
+ device_attributes
+Date: Fri, 12 Sep 2014 16:28:51 -0700
+Message-ID: <20140912232851.GA17095@kroah.com>
+References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
+ <1410563212-31565-6-git-send-email-fransklaver@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f173.google.com ([209.85.217.173]:33226 "EHLO
-	mail-lb0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752370AbaILXOe (ORCPT
+Received: from mail.linuxfoundation.org ([140.211.169.12]:57138 "EHLO
+	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750899AbaILX2v (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 12 Sep 2014 19:14:34 -0400
-Received: by mail-lb0-f173.google.com with SMTP id w7so1751829lbi.32
-        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Sep 2014 16:14:33 -0700 (PDT)
-In-Reply-To: <20140912230344.GA8502@khazad-dum.debian.net>
+	Fri, 12 Sep 2014 19:28:51 -0400
+Content-Disposition: inline
+In-Reply-To: <1410563212-31565-6-git-send-email-fransklaver@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, Sep 12, 2014 at 4:03 PM, Henrique de Moraes Holschuh
-<hmh@hmh.eng.br> wrote:
-> On Fri, 12 Sep 2014, Andrew Lutomirski wrote:
->> > This behavior is unfortunate, since modern userspace will also
->> > handle the hotkeys and change the other mixer.  If the software
->> > mixer is muted and the hardware mixer is unmuted and you push mute,
->> > hilarity ensues as they both switch state.
->>
->> This patch seems to have fallen into oblivion.  My X220s still has
->
-> Mostly because I was out of time to review it due to its size, and ended up
-> forgetting about it.  I am deeply sorry about that.
+On Sat, Sep 13, 2014 at 01:06:44AM +0200, Frans Klaver wrote:
+> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+> ---
+>  drivers/platform/x86/eeepc-laptop.c | 35 +++++------------------------------
+>  1 file changed, 5 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index f35d008..8225b1e 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -308,13 +308,7 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+>  	{								\
+>  		return store_sys_acpi(dev, _cm, buf, count);		\
+>  	}								\
+> -	static struct device_attribute dev_attr_##_name = {		\
+> -		.attr = {						\
+> -			.name = __stringify(_name),			\
+> -			.mode = _mode },				\
+> -		.show   = show_##_name,					\
+> -		.store  = store_##_name,				\
+> -	}
+> +	static DEVICE_ATTR(_name, _mode, show_##_name, store_##_name)
+>  
+>  EEEPC_CREATE_DEVICE_ATTR(camera, S_IWUSR | S_IRUGO, CM_ASL_CAMERA);
+>  EEEPC_CREATE_DEVICE_ATTR(cardr, S_IWUSR | S_IRUGO, CM_ASL_CARDREADER);
+> @@ -420,29 +414,10 @@ static ssize_t store_cpufv_disabled(struct device *dev,
+>  }
+>  
+>  
+> -static struct device_attribute dev_attr_cpufv = {
+> -	.attr = {
+> -		.name = "cpufv",
+> -		.mode = S_IWUSR | S_IRUGO },
+> -	.show   = show_cpufv,
+> -	.store  = store_cpufv
+> -};
+> -
+> -static struct device_attribute dev_attr_available_cpufv = {
+> -	.attr = {
+> -		.name = "available_cpufv",
+> -		.mode = S_IRUGO },
+> -	.show   = show_available_cpufv
+> -};
+> -
+> -static struct device_attribute dev_attr_cpufv_disabled = {
+> -	.attr = {
+> -		.name = "cpufv_disabled",
+> -		.mode = S_IWUSR | S_IRUGO},
+> -	.show   = show_cpufv_disabled,
+> -	.store  = store_cpufv_disabled
+> -};
+> -
+> +static DEVICE_ATTR(cpufv, S_IWUSR | S_IRUGO, show_cpufv, store_cpufv);
 
-No problem.
+DEVICE_ATTR_RW()?
 
->
-> We can bring this patch back into the light, though.
->
->> screwy mute controls.  (To reproduce in GNOME 3, get into an unmuted,
->> nonzero volume state, then press volume down a bunch of times until a
->> mute icon shows up, then press mute, then press volume up.  You are
->> now have no sound until you fiddle with the hardware controls a bunch
->> and undo it.)
->>
->> I can rebase this to 3.17-whatever, but I'm also somewhat inclined to
->> get rid of all the compatibility bits and just modify the driver to
->> force all Thinkpads into nonmagical software-only mode.  The latter
->> approach will be *much* simpler
->
-> Changing the behaviour on the newer ones is okay, but not the old ones
-> (where old == not broken).  That would be a regression.
+> +static DEVICE_ATTR(available_cpufv, S_IRUGO, show_available_cpufv, NULL);
 
-I think that v5 doesn't change behavior anywhere except for fixing
-broken things.  I could easily be wrong, though.
+DEVICE_ATTR_RO()?
 
-I kind of suspect that all laptops that don't default to the "none"
-mode are at least a little bit broken, though.  Any laptop on which
-pressing mute mutes the hardware mixer *and* sends KEY_MUTE is going
-to screw up if any modern GUI volume manager is running.
+> +static DEVICE_ATTR(cpufv_disabled, S_IWUSR | S_IRUGO,
+> +		   show_cpufv_disabled, store_cpufv_disabled);
 
->
-> Syncing the hardware and software mute gating is fine, though, as long as
-> they are always kept in sync.  If "toggle mode" is much easier to implement
-> than the v5 version of your patch, we could try that.
+DEVICE_ATTR_RW()?
 
-Do you mean getting rid of latch mode and only keeping "none" and
-"toggle"?  I don't think that would be much simpler.  The issue (from
-rather stale memory) is that, if the mute button is programmed in
-either of the EC-controlled modes, the only notification from the EC
-that it just twiddled the mute state is either nothing at all (in
-which case we have no way to notify ALSA that anything happened) or a
-KEY_MUTE event (which confuses volume managers and is annoying to
-handle in the driver).
+thanks,
 
-So most of the complexity is in the code that eats KEY_MUTE events and
-does the right thing with them.  I think that this is needed to get
-"latch" and "toggle" right.
-
-TBH, anyone running newish userspace probably wants the completely
-non-magical "none" behavior.  PulseAudio seems to do the right thing
-if the mute button generates KEY_MUTE and does nothing else.  I'm not
-entirely convinced that there's any need to support the other modes,
-but maybe I'm missing something, or maybe there are users with no
-KEY_MUTE handler, or maybe there are users that just really like the
-latching behavior where pressing the mute button never unmutes.
-
---Andy
+greg k-h
