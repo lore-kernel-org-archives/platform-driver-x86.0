@@ -1,46 +1,71 @@
-From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] toshiba_acpi: Fix accelerometer direction
- reporting
-Date: Mon, 15 Sep 2014 14:13:58 -0700
-Message-ID: <20140915211358.GA64909@vmdeb7>
-References: <1410569437-3066-1-git-send-email-coproscefalo@gmail.com>
- <1410569437-3066-2-git-send-email-coproscefalo@gmail.com>
- <20140915192923.GA61529@vmdeb7>
- <20140915195617.GA3652@kroah.com>
- <541753A3.8010102@linux.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 10/13] eeepc-laptop: compare proper return values in
+ get_cpufv
+Date: Mon, 15 Sep 2014 14:49:02 -0700
+Message-ID: <20140915214902.GB64909@vmdeb7>
+References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
+ <1410563212-31565-11-git-send-email-fransklaver@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:44139 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755757AbaIOVtK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 15 Sep 2014 17:49:10 -0400
 Content-Disposition: inline
-In-Reply-To: <541753A3.8010102-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Peter Anvin" <hpa-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1410563212-31565-11-git-send-email-fransklaver@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, "H. Peter Anvin" <hpa@linux.intel.com>
 
-On Mon, Sep 15, 2014 at 02:01:23PM -0700, H. Peter Anvin wrote:
-> On 09/15/2014 12:56 PM, Greg Kroah-Hartman wrote:
-> > 
-> >> I have also suggested this device (2 actually) would be better supported as an
-> >> IIO accelerometer device, but even that would change the sysfs interface by
-> >> removing these altogether and using the IIO standardized path and accelerometer
-> >> interface.
-> > 
-> > That's a better goal overall, then the "odd" sysfs files are now gone,
-> > to be replaced with the standard interface which all tools should
-> > already be using.
-> > 
+On Sat, Sep 13, 2014 at 01:06:49AM +0200, Frans Klaver wrote:
+> In get_cpufv the return value of get_acpi is stored in the cpufv struct.
+> Right before this value is checked for errors, it is and'ed with 0xff.
+> This means c->cur can never be less than zero. Besides that, the actual
+> error value is ignored.
 > 
-> I would definitely agree with that, although I understood there were
-> technical concerns with that?
+> c->num is also and'ed with 0xff, which means we can ignore values below
+> zero.
 > 
-> 	-hpa
+> Check the result of get_acpi() right away. While at it, propagate the
+> error if we got one.
+> 
+> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+> ---
+>  drivers/platform/x86/eeepc-laptop.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index 47488d3..828db56 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -332,9 +332,12 @@ struct eeepc_cpufv {
+>  static int get_cpufv(struct eeepc_laptop *eeepc, struct eeepc_cpufv *c)
+>  {
+>  	c->cur = get_acpi(eeepc, CM_ASL_CPUFV);
+> +	if (c->cur < 0)
+> +		return c->cur;
+> +
+>  	c->num = (c->cur >> 8) & 0xff;
+>  	c->cur &= 0xff;
+> -	if (c->cur < 0 || c->num <= 0 || c->num > 12)
+> +	if (c->num == 0 || c->num > 12)
+>  		return -ENODEV;
+>  	return 0;
 
-Yes, the accelerometer is hidden behind two ACPI HIDs with a very limited polled
-position and acceleration threshold interface. I've asked the IIO maintainer if
-this would be feasible to use as an IIO device, but have not yet heard back.
+This patch is fine as is. However, Greg has supported propogating the error code
+through to the sysfs interface (if I understand him correctly on an earlier post
+to this list). This would require an addition change to this patch would
+propogated the get_cpufv error code in show_available_cpuv(), show_cpuv(), and
+store_cpuv(). As it is, we return -ENODEV on any failure, where an ACPI call
+error should probably return -ENXIO as I understand it.
 
-Jonathan and linux-iio added to Cc.
+However, there was a rather famous change in error code handling in which pulse
+audio broke and Linus was very upset with one of his maintainers.
+
+How do we know when it is acceptable to change which error code is returned?
 
 -- 
 Darren Hart
