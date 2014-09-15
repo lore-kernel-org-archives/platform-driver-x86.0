@@ -1,93 +1,48 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH 05/13] eeepc-laptop: use DEVICE_ATTR to instantiate
- device_attributes
-Date: Mon, 15 Sep 2014 00:05:56 +0200
-Message-ID: <20140914220555.GA3401@gmail.com>
-References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
- <1410563212-31565-6-git-send-email-fransklaver@gmail.com>
- <20140912232851.GA17095@kroah.com>
+From: "Chen, Hanxiao" <chenhanxiao@cn.fujitsu.com>
+Subject: RE: [PATCH] eeepc-laptop: fix a Wuninitialized warning
+Date: Mon, 15 Sep 2014 02:16:35 +0000
+Message-ID: <5871495633F38949900D2BF2DC04883E5A8782@G08CNEXMBPEKD02.g08.fujitsu.local>
+References: <1410511466-1070-1-git-send-email-chenhanxiao@cn.fujitsu.com>
+ <20140912205337.GB23114@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:40944 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752765AbaINWGB (ORCPT
+Received: from cn.fujitsu.com ([59.151.112.132]:35943 "EHLO
+	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1753037AbaIOCQe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 14 Sep 2014 18:06:01 -0400
-Content-Disposition: inline
-In-Reply-To: <20140912232851.GA17095@kroah.com>
+	Sun, 14 Sep 2014 22:16:34 -0400
+In-Reply-To: <20140912205337.GB23114@vmdeb7>
+Content-Language: zh-CN
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>
 
-On Fri, Sep 12, 2014 at 04:28:51PM -0700, Greg Kroah-Hartman wrote:
-> On Sat, Sep 13, 2014 at 01:06:44AM +0200, Frans Klaver wrote:
-> > Signed-off-by: Frans Klaver <fransklaver@gmail.com>
-> > ---
-> >  drivers/platform/x86/eeepc-laptop.c | 35 +++++------------------------------
-> >  1 file changed, 5 insertions(+), 30 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> > index f35d008..8225b1e 100644
-> > --- a/drivers/platform/x86/eeepc-laptop.c
-> > +++ b/drivers/platform/x86/eeepc-laptop.c
-> > @@ -308,13 +308,7 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
-> >  	{								\
-> >  		return store_sys_acpi(dev, _cm, buf, count);		\
-> >  	}								\
-> > -	static struct device_attribute dev_attr_##_name = {		\
-> > -		.attr = {						\
-> > -			.name = __stringify(_name),			\
-> > -			.mode = _mode },				\
-> > -		.show   = show_##_name,					\
-> > -		.store  = store_##_name,				\
-> > -	}
-> > +	static DEVICE_ATTR(_name, _mode, show_##_name, store_##_name)
-> >  
-> >  EEEPC_CREATE_DEVICE_ATTR(camera, S_IWUSR | S_IRUGO, CM_ASL_CAMERA);
-> >  EEEPC_CREATE_DEVICE_ATTR(cardr, S_IWUSR | S_IRUGO, CM_ASL_CARDREADER);
-> > @@ -420,29 +414,10 @@ static ssize_t store_cpufv_disabled(struct device *dev,
-> >  }
-> >  
-> >  
-> > -static struct device_attribute dev_attr_cpufv = {
-> > -	.attr = {
-> > -		.name = "cpufv",
-> > -		.mode = S_IWUSR | S_IRUGO },
-> > -	.show   = show_cpufv,
-> > -	.store  = store_cpufv
-> > -};
-> > -
-> > -static struct device_attribute dev_attr_available_cpufv = {
-> > -	.attr = {
-> > -		.name = "available_cpufv",
-> > -		.mode = S_IRUGO },
-> > -	.show   = show_available_cpufv
-> > -};
-> > -
-> > -static struct device_attribute dev_attr_cpufv_disabled = {
-> > -	.attr = {
-> > -		.name = "cpufv_disabled",
-> > -		.mode = S_IWUSR | S_IRUGO},
-> > -	.show   = show_cpufv_disabled,
-> > -	.store  = store_cpufv_disabled
-> > -};
-> > -
-> > +static DEVICE_ATTR(cpufv, S_IWUSR | S_IRUGO, show_cpufv, store_cpufv);
-> 
-> DEVICE_ATTR_RW()?
-> 
-> > +static DEVICE_ATTR(available_cpufv, S_IRUGO, show_available_cpufv, NULL);
-> 
-> DEVICE_ATTR_RO()?
-> 
-> > +static DEVICE_ATTR(cpufv_disabled, S_IWUSR | S_IRUGO,
-> > +		   show_cpufv_disabled, store_cpufv_disabled);
-> 
-> DEVICE_ATTR_RW()?
-
-Yes, I could have expected that. v2 will use them across the board.
-
-Thanks,
-Frans
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFycmVuIEhhcnQgW21h
+aWx0bzpkdmhhcnRAaW5mcmFkZWFkLm9yZ10NCj4gT24gRnJpLCBTZXAgMTIsIDIwMTQgYXQgMDQ6
+NDQ6MjZQTSArMDgwMCwgQ2hlbiBIYW54aWFvIHdyb3RlOg0KPiANCj4gSGkgQ2hlbiwNCj4gDQo+
+IEkgZG9uJ3Qgc2VlIHN1Y2ggYSB3YXJuaW5nIHdpdGggZ2NjIDQuOS4xLiBXaGljaCBjb21waWxl
+ciBhcmUgeW91IHVzaW5nPw0KPiANCg0KSSdtIHVzaW5nIGdjYyA0LjguMiBvbiBGZWRvcmEyMC4N
+ClNob3VsZCB3ZSBpZ25vcmUgdGhlIHdhcm5pbmcgb2Ygb2xkIHZlcnNpb24gb2YgZ2NjPw0KDQpJ
+ZiBub3QsIEknbGwgcmVzZW5kIHRoaXMgd2l0aCBhIGRldGFpbCBjb21taXQgbWVzc2FnZS4NCg0K
+VGhhbmtzIGZvciB5b3VyIGhlbHAuDQoNCi0gQ2hlbg0KDQo+IFBsZWFzZSBpbmNsdWRlIHRoZXNl
+IHNvcnRzIG9mIGRldGFpbHMgKHdoaWNoIGNvbXBpbGVyLCBldGMuKSB3aGVuIHN1Ym1pdHRpbmcN
+Cj4gcGF0Y2hlcy4gSSB3aWxsIG5ldmVyIG1lcmdlIGEgcGF0Y2ggd2l0aG91dCBhIGNvbXBsZXRl
+IGNvbW1pdCBtZXNzYWdlLg0KPiANCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hlbiBIYW54aWFv
+IDxjaGVuaGFueGlhb0Bjbi5mdWppdHN1LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wbGF0
+Zm9ybS94ODYvZWVlcGMtbGFwdG9wLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2VlZXBjLWxhcHRvcC5jDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZWVl
+cGMtbGFwdG9wLmMNCj4gPiBpbmRleCBiZDUzM2MyLi43MzhmYzBjIDEwMDY0NA0KPiA+IC0tLSBh
+L2RyaXZlcnMvcGxhdGZvcm0veDg2L2VlZXBjLWxhcHRvcC5jDQo+ID4gKysrIGIvZHJpdmVycy9w
+bGF0Zm9ybS94ODYvZWVlcGMtbGFwdG9wLmMNCj4gPiBAQCAtMjc2LDcgKzI3Niw3IEBAIHN0YXRp
+YyBzc2l6ZV90IHN0b3JlX3N5c19hY3BpKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50IGNtLA0KPiA+
+ICAJCQkgICAgICBjb25zdCBjaGFyICpidWYsIHNpemVfdCBjb3VudCkNCj4gPiAgew0KPiA+ICAJ
+c3RydWN0IGVlZXBjX2xhcHRvcCAqZWVlcGMgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiAt
+CWludCBydiwgdmFsdWU7DQo+ID4gKwlpbnQgcnYsIHZhbHVlID0gLTE7DQo+ID4NCj4gPiAgCXJ2
+ID0gcGFyc2VfYXJnKGJ1ZiwgY291bnQsICZ2YWx1ZSk7DQo+IA0KPiBJbnNwZWN0aW5nIHRoZSBj
+b2RlLCBJIGRvbid0IHNlZSBob3cgdGhpcyBjb3VsZCBwb3NzaWJseSByZXN1bHQgaW4gdGhlIHVz
+ZSBvZg0KPiBhbg0KPiB1bmluaXRpYWxpemVkIHZhcmlhYmxlLg0KPiANCj4gLS0NCj4gRGFycmVu
+IEhhcnQNCj4gSW50ZWwgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCg==
