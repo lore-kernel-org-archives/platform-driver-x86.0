@@ -1,48 +1,89 @@
-From: "Chen, Hanxiao" <chenhanxiao@cn.fujitsu.com>
-Subject: RE: [PATCH] eeepc-laptop: fix a Wuninitialized warning
-Date: Mon, 15 Sep 2014 02:16:35 +0000
-Message-ID: <5871495633F38949900D2BF2DC04883E5A8782@G08CNEXMBPEKD02.g08.fujitsu.local>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] eeepc-laptop: fix a Wuninitialized warning
+Date: Mon, 15 Sep 2014 10:40:48 -0700
+Message-ID: <20140915174048.GA59389@vmdeb7>
 References: <1410511466-1070-1-git-send-email-chenhanxiao@cn.fujitsu.com>
  <20140912205337.GB23114@vmdeb7>
+ <5871495633F38949900D2BF2DC04883E5A8782@G08CNEXMBPEKD02.g08.fujitsu.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([59.151.112.132]:35943 "EHLO
-	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1753037AbaIOCQe (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:35833 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753549AbaIORkz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 14 Sep 2014 22:16:34 -0400
-In-Reply-To: <20140912205337.GB23114@vmdeb7>
-Content-Language: zh-CN
+	Mon, 15 Sep 2014 13:40:55 -0400
+Content-Disposition: inline
+In-Reply-To: <5871495633F38949900D2BF2DC04883E5A8782@G08CNEXMBPEKD02.g08.fujitsu.local>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
+To: "Chen, Hanxiao" <chenhanxiao@cn.fujitsu.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Corentin Chary <corentin.chary@gmail.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFycmVuIEhhcnQgW21h
-aWx0bzpkdmhhcnRAaW5mcmFkZWFkLm9yZ10NCj4gT24gRnJpLCBTZXAgMTIsIDIwMTQgYXQgMDQ6
-NDQ6MjZQTSArMDgwMCwgQ2hlbiBIYW54aWFvIHdyb3RlOg0KPiANCj4gSGkgQ2hlbiwNCj4gDQo+
-IEkgZG9uJ3Qgc2VlIHN1Y2ggYSB3YXJuaW5nIHdpdGggZ2NjIDQuOS4xLiBXaGljaCBjb21waWxl
-ciBhcmUgeW91IHVzaW5nPw0KPiANCg0KSSdtIHVzaW5nIGdjYyA0LjguMiBvbiBGZWRvcmEyMC4N
-ClNob3VsZCB3ZSBpZ25vcmUgdGhlIHdhcm5pbmcgb2Ygb2xkIHZlcnNpb24gb2YgZ2NjPw0KDQpJ
-ZiBub3QsIEknbGwgcmVzZW5kIHRoaXMgd2l0aCBhIGRldGFpbCBjb21taXQgbWVzc2FnZS4NCg0K
-VGhhbmtzIGZvciB5b3VyIGhlbHAuDQoNCi0gQ2hlbg0KDQo+IFBsZWFzZSBpbmNsdWRlIHRoZXNl
-IHNvcnRzIG9mIGRldGFpbHMgKHdoaWNoIGNvbXBpbGVyLCBldGMuKSB3aGVuIHN1Ym1pdHRpbmcN
-Cj4gcGF0Y2hlcy4gSSB3aWxsIG5ldmVyIG1lcmdlIGEgcGF0Y2ggd2l0aG91dCBhIGNvbXBsZXRl
-IGNvbW1pdCBtZXNzYWdlLg0KPiANCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hlbiBIYW54aWFv
-IDxjaGVuaGFueGlhb0Bjbi5mdWppdHN1LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wbGF0
-Zm9ybS94ODYvZWVlcGMtbGFwdG9wLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cGxhdGZvcm0veDg2L2VlZXBjLWxhcHRvcC5jDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZWVl
-cGMtbGFwdG9wLmMNCj4gPiBpbmRleCBiZDUzM2MyLi43MzhmYzBjIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvcGxhdGZvcm0veDg2L2VlZXBjLWxhcHRvcC5jDQo+ID4gKysrIGIvZHJpdmVycy9w
-bGF0Zm9ybS94ODYvZWVlcGMtbGFwdG9wLmMNCj4gPiBAQCAtMjc2LDcgKzI3Niw3IEBAIHN0YXRp
-YyBzc2l6ZV90IHN0b3JlX3N5c19hY3BpKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50IGNtLA0KPiA+
-ICAJCQkgICAgICBjb25zdCBjaGFyICpidWYsIHNpemVfdCBjb3VudCkNCj4gPiAgew0KPiA+ICAJ
-c3RydWN0IGVlZXBjX2xhcHRvcCAqZWVlcGMgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiAt
-CWludCBydiwgdmFsdWU7DQo+ID4gKwlpbnQgcnYsIHZhbHVlID0gLTE7DQo+ID4NCj4gPiAgCXJ2
-ID0gcGFyc2VfYXJnKGJ1ZiwgY291bnQsICZ2YWx1ZSk7DQo+IA0KPiBJbnNwZWN0aW5nIHRoZSBj
-b2RlLCBJIGRvbid0IHNlZSBob3cgdGhpcyBjb3VsZCBwb3NzaWJseSByZXN1bHQgaW4gdGhlIHVz
-ZSBvZg0KPiBhbg0KPiB1bmluaXRpYWxpemVkIHZhcmlhYmxlLg0KPiANCj4gLS0NCj4gRGFycmVu
-IEhhcnQNCj4gSW50ZWwgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCg==
+On Mon, Sep 15, 2014 at 02:16:35AM +0000, Chen, Hanxiao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Darren Hart [mailto:dvhart@infradead.org]
+> > On Fri, Sep 12, 2014 at 04:44:26PM +0800, Chen Hanxiao wrote:
+> > 
+> > Hi Chen,
+> > 
+> > I don't see such a warning with gcc 4.9.1. Which compiler are you using?
+> > 
+> 
+> I'm using gcc 4.8.2 on Fedora20.
+> Should we ignore the warning of old version of gcc?
+> 
+> If not, I'll resend this with a detail commit message.
+
+In my experience, we do not add workarounds for buggy compilers reporting bogus
+unitialized variable warnings because those workarounds effectively mask
+legitimate uninitialized variable cases.
+
+Rafael, do you agree?
+
+Thanks,
+
+Darren
+
+
+> 
+> Thanks for your help.
+> 
+> - Chen
+> 
+> > Please include these sorts of details (which compiler, etc.) when submitting
+> > patches. I will never merge a patch without a complete commit message.
+> > 
+> > 
+> > > Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+> > > ---
+> > >  drivers/platform/x86/eeepc-laptop.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/platform/x86/eeepc-laptop.c
+> > b/drivers/platform/x86/eeepc-laptop.c
+> > > index bd533c2..738fc0c 100644
+> > > --- a/drivers/platform/x86/eeepc-laptop.c
+> > > +++ b/drivers/platform/x86/eeepc-laptop.c
+> > > @@ -276,7 +276,7 @@ static ssize_t store_sys_acpi(struct device *dev, int cm,
+> > >  			      const char *buf, size_t count)
+> > >  {
+> > >  	struct eeepc_laptop *eeepc = dev_get_drvdata(dev);
+> > > -	int rv, value;
+> > > +	int rv, value = -1;
+> > >
+> > >  	rv = parse_arg(buf, count, &value);
+> > 
+> > Inspecting the code, I don't see how this could possibly result in the use of
+> > an
+> > uninitialized variable.
+> > 
+> > --
+> > Darren Hart
+> > Intel Open Source Technology Center
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
