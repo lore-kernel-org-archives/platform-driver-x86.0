@@ -1,90 +1,79 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 10/13] eeepc-laptop: compare proper return values in
- get_cpufv
-Date: Tue, 16 Sep 2014 16:39:46 -0700
-Message-ID: <20140916233946.GB18698@vmdeb7>
-References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
- <1410563212-31565-11-git-send-email-fransklaver@gmail.com>
- <20140915214902.GB64909@vmdeb7>
- <20140915215125.GA21435@kroah.com>
- <20140915215527.GC7867@gmail.com>
- <CAH6sp9N1y3=LLju85ZHgc05ENUYLgUdYBYpemc6_oNhbsZ+r6g@mail.gmail.com>
- <20140916205247.GA6856@vmdeb7>
- <20140916211001.GA23674@gmail.com>
+Subject: Re: [PATCH v2] eeepc-laptop: simplify parse_arg()
+Date: Tue, 16 Sep 2014 16:45:43 -0700
+Message-ID: <20140916234543.GA22408@vmdeb7>
+References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
+ <1409814488.5546.63.camel@x220>
+ <20140906021757.GA9197@vmdeb7>
+ <7288841.ayNsq2yeGO@vostro.rjw.lan>
+ <1410252608.22255.5.camel@x220>
+ <20140910033304.GB39541@vmdeb7>
+ <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
+ <20140910164916.GA48285@vmdeb7>
+ <1410379520.11097.18.camel@x220>
+ <20140911223739.GB18425@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:55428 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:55657 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754490AbaIPXjo (ORCPT
+	with ESMTP id S1753039AbaIPXpn (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Sep 2014 19:39:44 -0400
+	Tue, 16 Sep 2014 19:45:43 -0400
 Content-Disposition: inline
-In-Reply-To: <20140916211001.GA23674@gmail.com>
+In-Reply-To: <20140911223739.GB18425@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frans Klaver <fransklaver@gmail.com>, Paul Bolle <pebolle@tiscali.nl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-acpi <linux-acpi@vger.kernel.org>, "H. Peter Anvin" <hpa@linux.intel.com>
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Frans Klaver <fransklaver@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 11:10:01PM +0200, Frans Klaver wrote:
-> On Tue, Sep 16, 2014 at 01:52:47PM -0700, Darren Hart wrote:
-> > On Tue, Sep 16, 2014 at 01:54:25PM +0200, Frans Klaver wrote:
-> > > On Mon, Sep 15, 2014 at 11:55 PM, Frans Klaver <fransklaver@gmail.com> wrote:
-> > > > On Mon, Sep 15, 2014 at 02:51:25PM -0700, Greg Kroah-Hartman wrote:
-> > > >> On Mon, Sep 15, 2014 at 02:49:02PM -0700, Darren Hart wrote:
-> > > >> >
-> > > >> > This patch is fine as is. However, Greg has supported propogating the error code
-> > > >> > through to the sysfs interface (if I understand him correctly on an earlier post
-> > > >> > to this list). This would require an addition change to this patch would
-> > > >> > propogated the get_cpufv error code in show_available_cpuv(), show_cpuv(), and
-> > > >> > store_cpuv(). As it is, we return -ENODEV on any failure, where an ACPI call
-> > > >> > error should probably return -ENXIO as I understand it.
-> > > >>
-> > > >> I really have no idea at this point in time what to recommend.  How
-> > > >> about just stick with what is happening today so that:
-> > > >>
-> > > >> > However, there was a rather famous change in error code handling in which pulse
-> > > >> > audio broke and Linus was very upset with one of his maintainers.
-> > > >>
-> > > >> That doesn't happen :)
-> > > >
-> > > > So if I interpret that correctly, we're dropping the last patch
-> > > > (ENODEV -> ENXIO) from the series? That's fine by me. As mentioned
-> > > > earlier, I already saw something else break because I returned ENXIO
-> > > > instead of ENODEV.
-> > > >
-> > > > Maybe it's a good idea to try and document the expected behavior
-> > > > somewhere, if even Greg isn't sure what to do.
-> > > 
-> > > For good measure:
-> > > 
-> > > v2 will not change the return values at the sysfs interface, meaning
-> > > we will always return -ENODEV on error. I am going to try to keep as
-> > > much internal functions propagating errors as possible though, unless
-> > > someone strongly disagrees.
-> > > 
-> > > Thanks,
-> > > Frans
-> > 
-> > I cornered Linus today and asked about this specifically. The policy is this:
-> > 
-> > Don't change the sysfs return codes without good reason. A good reason could be
-> > a real bug or problem with the return codes. It could also be to consolidate
-> > error handling which makes things more uniform, etc.
-> > 
-> > If this results in broken userspace, the maintainer will revert the change.
-> 
-> Alright, that is basically what I was expecting it to be. As it happens,
-> this also means that we'll have to decide what to do about returning
-> -EIO/-ENODEV/rv in show_sys_acpi and store_sys_acpi. The latter was
-> changed by Paul Bolle's "eeepc-laptop: simplify parse_arg()". The return
-> value of these functions is propagated to the sysfs interface.
+On Thu, Sep 11, 2014 at 03:37:39PM -0700, Darren Hart wrote:
+> On Wed, Sep 10, 2014 at 10:05:20PM +0200, Paul Bolle wrote:
+> > parse_arg() has three possible return values:
+> >     -EINVAL if sscanf(), in short, fails;
+> >     zero if "count" is zero; and
+> >     "count" in all other cases
+> >=20
+> > But "count" will never be zero. See, parse_arg() is called by the
+> > various store functions. And the callchain of these functions start=
+s
+> > with sysfs_kf_write(). And that function checks for a zero "count".=
+ So
+> > we can stop checking for a zero "count", drop the "count" argument
+> > entirely, and transform parse_arg() into a function that returns ze=
+ro on
+> > success or a negative error. That, in turn, allows to make those st=
+ore
+> > functions just return "count" on success. The net effect is that th=
+e
+> > code becomes a bit easier to understand.
+> >=20
+> > While we're at it, let store_sys_acpi() return whatever error set_a=
+cpi()
+> > returns instead of remapping it to EIO.
+> >=20
+> > A nice side effect is that this GCC warning is silenced too:
+> >     drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store=
+_sys_acpi=E2=80=99:
+> >     drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98v=
+alue=E2=80=99 may be used uninitialized in this function [-Wmaybe-unini=
+tialized]
+> >       int rv, value;
+> >=20
+> > Which is, of course, the reason to have a look at parse_arg().
+> >=20
+> > Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+>=20
+> Queued, thanks Paul.
 
-Yes, that change to store_sys_acpi needs to be reverted. I don't think
-show_sys_acpi is actually changed in that patch.
+After discussion with Linus, I have had to drop this patch from the que=
+ue. We
+need to restore the -EIO error code mapping to store_sys_acpi().
 
-Paul, can you resend that patch with the store_sys_acpi() -EIO return restored?
+Apologies for the run around here, we had to define some policy around =
+this.
 
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
