@@ -1,28 +1,24 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 17/22] thinkpad_acpi: Replace strnicmp with strncasecmp
-Date: Tue, 16 Sep 2014 15:08:57 -0700
-Message-ID: <20140916220857.GA12780@vmdeb7>
-References: <1410900696-6481-1-git-send-email-linux@rasmusvillemoes.dk>
- <1410900696-6481-18-git-send-email-linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH] x86: thinkpad_acpi.c: fixed spacing coding style issue
+Date: Tue, 16 Sep 2014 15:12:36 -0700
+Message-ID: <20140916221236.GB12780@vmdeb7>
+References: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410900696-6481-18-git-send-email-linux@rasmusvillemoes.dk>
+In-Reply-To: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Jan van den Berg <janvdberg@gmail.com>
+Cc: ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 16, 2014 at 10:51:31PM +0200, Rasmus Villemoes wrote:
-> The kernel used to contain two functions for length-delimited,
-> case-insensitive string comparison, strnicmp with correct semantics
-> and a slightly buggy strncasecmp. The latter is the POSIX name, so
-> strnicmp was renamed to strncasecmp, and strnicmp made into a wrapper
-> for the new strncasecmp to avoid breaking existing users.
+On Wed, Sep 17, 2014 at 12:01:08AM +0200, Jan van den Berg wrote:
+> Fixed 22 similar coding style issues: "ERROR: spaces required around that '?'"
+> 
+> Signed-off-by: Jan van den Berg <janvdberg@gmail.com>
 
-When was this done? As of this morning I still see them as independent functions
-in lib/string.c.
+Queued, thanks.
 
 -- 
 Darren Hart
