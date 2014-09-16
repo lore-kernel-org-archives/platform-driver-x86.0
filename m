@@ -1,79 +1,70 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] intel-rst: Use ACPI_FAILURE() macro instead
- !ACPI_SUCCESS() for error checking
-Date: Tue, 16 Sep 2014 15:49:14 -0700
-Message-ID: <20140916224914.GA17720@vmdeb7>
+Subject: Re: [PATCH 2/2] intel-rst: Clean up ACPI add function
+Date: Tue, 16 Sep 2014 16:25:49 -0700
+Message-ID: <20140916232549.GA18698@vmdeb7>
 References: <1410902036-10282-1-git-send-email-peter.ujfalusi@gmail.com>
- <1410902036-10282-2-git-send-email-peter.ujfalusi@gmail.com>
+ <1410902036-10282-3-git-send-email-peter.ujfalusi@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410902036-10282-2-git-send-email-peter.ujfalusi@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1410902036-10282-3-git-send-email-peter.ujfalusi@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 17, 2014 at 12:13:55AM +0300, Peter Ujfalusi wrote:
-> ACPI_SUCCESS is defined as:
-> #define ACPI_SUCCESS(a)			(!(a))
+On Wed, Sep 17, 2014 at 12:13:56AM +0300, Peter Ujfalusi wrote:
+> There is no need to initialize the error since it is going to be assigned
+> with the return status of at least on of the device_create_file() call.
 > 
-> There is no need for the the double ! since there is already a macro
-> defined for failures: ACPI_FAILURE()
-> 
+> We can return directly in case the first file creation fails.
+> All the labels for goto can be removed (along with the gotos) as well.
+> Tell the compiler that the failures are unlikely so it can create better
+> binaries.
+
+Looks reasonable to me.
 
 Cc: linux-acpi
 
-Thanks,
 
-Darren
-
+> 
 > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 > ---
->  drivers/platform/x86/intel-rst.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/platform/x86/intel-rst.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel-rst.c
-> index d45bca3..8c6a8fe 100644
+> index 8c6a8fe..7344d84 100644
 > --- a/drivers/platform/x86/intel-rst.c
 > +++ b/drivers/platform/x86/intel-rst.c
-> @@ -35,7 +35,7 @@ static ssize_t irst_show_wakeup_events(struct device *dev,
->  	acpi = to_acpi_device(dev);
+> @@ -119,21 +119,16 @@ static struct device_attribute irst_timeout_attr = {
 >  
->  	status = acpi_evaluate_integer(acpi->handle, "GFFS", NULL, &value);
-> -	if (!ACPI_SUCCESS(status))
-> +	if (ACPI_FAILURE(status))
->  		return -EINVAL;
+>  static int irst_add(struct acpi_device *acpi)
+>  {
+> -	int error = 0;
+> +	int error;
 >  
->  	return sprintf(buf, "%lld\n", value);
-> @@ -59,7 +59,7 @@ static ssize_t irst_store_wakeup_events(struct device *dev,
+>  	error = device_create_file(&acpi->dev, &irst_timeout_attr);
+> -	if (error)
+> -		goto out;
+> +	if (unlikely(error))
+> +		return error;
 >  
->  	status = acpi_execute_simple_method(acpi->handle, "SFFS", value);
+>  	error = device_create_file(&acpi->dev, &irst_wakeup_attr);
+> -	if (error)
+> -		goto out_timeout;
+> +	if (unlikely(error))
+> +		device_remove_file(&acpi->dev, &irst_timeout_attr);
 >  
-> -	if (!ACPI_SUCCESS(status))
-> +	if (ACPI_FAILURE(status))
->  		return -EINVAL;
+> -	return 0;
+> -
+> -out_timeout:
+> -	device_remove_file(&acpi->dev, &irst_timeout_attr);
+> -out:
+>  	return error;
+>  }
 >  
->  	return count;
-> @@ -81,7 +81,7 @@ static ssize_t irst_show_wakeup_time(struct device *dev,
->  	acpi = to_acpi_device(dev);
->  
->  	status = acpi_evaluate_integer(acpi->handle, "GFTV", NULL, &value);
-> -	if (!ACPI_SUCCESS(status))
-> +	if (ACPI_FAILURE(status))
->  		return -EINVAL;
->  
->  	return sprintf(buf, "%lld\n", value);
-> @@ -105,7 +105,7 @@ static ssize_t irst_store_wakeup_time(struct device *dev,
->  
->  	status = acpi_execute_simple_method(acpi->handle, "SFTV", value);
->  
-> -	if (!ACPI_SUCCESS(status))
-> +	if (ACPI_FAILURE(status))
->  		return -EINVAL;
->  
->  	return count;
 > -- 
 > 2.1.0
 > 
