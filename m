@@ -1,24 +1,87 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] x86: thinkpad_acpi.c: fixed spacing coding style issue
-Date: Tue, 16 Sep 2014 15:12:36 -0700
-Message-ID: <20140916221236.GB12780@vmdeb7>
-References: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
+Subject: Re: [PATCH 1/2] intel-rst: Use ACPI_FAILURE() macro instead
+ !ACPI_SUCCESS() for error checking
+Date: Tue, 16 Sep 2014 15:49:14 -0700
+Message-ID: <20140916224914.GA17720@vmdeb7>
+References: <1410902036-10282-1-git-send-email-peter.ujfalusi@gmail.com>
+ <1410902036-10282-2-git-send-email-peter.ujfalusi@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
+In-Reply-To: <1410902036-10282-2-git-send-email-peter.ujfalusi@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan van den Berg <janvdberg@gmail.com>
-Cc: ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 17, 2014 at 12:01:08AM +0200, Jan van den Berg wrote:
-> Fixed 22 similar coding style issues: "ERROR: spaces required around that '?'"
+On Wed, Sep 17, 2014 at 12:13:55AM +0300, Peter Ujfalusi wrote:
+> ACPI_SUCCESS is defined as:
+> #define ACPI_SUCCESS(a)			(!(a))
 > 
-> Signed-off-by: Jan van den Berg <janvdberg@gmail.com>
+> There is no need for the the double ! since there is already a macro
+> defined for failures: ACPI_FAILURE()
+> 
 
-Queued, thanks.
+Cc: linux-acpi
+
+Thanks,
+
+Darren
+
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> ---
+>  drivers/platform/x86/intel-rst.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel-rst.c
+> index d45bca3..8c6a8fe 100644
+> --- a/drivers/platform/x86/intel-rst.c
+> +++ b/drivers/platform/x86/intel-rst.c
+> @@ -35,7 +35,7 @@ static ssize_t irst_show_wakeup_events(struct device *dev,
+>  	acpi = to_acpi_device(dev);
+>  
+>  	status = acpi_evaluate_integer(acpi->handle, "GFFS", NULL, &value);
+> -	if (!ACPI_SUCCESS(status))
+> +	if (ACPI_FAILURE(status))
+>  		return -EINVAL;
+>  
+>  	return sprintf(buf, "%lld\n", value);
+> @@ -59,7 +59,7 @@ static ssize_t irst_store_wakeup_events(struct device *dev,
+>  
+>  	status = acpi_execute_simple_method(acpi->handle, "SFFS", value);
+>  
+> -	if (!ACPI_SUCCESS(status))
+> +	if (ACPI_FAILURE(status))
+>  		return -EINVAL;
+>  
+>  	return count;
+> @@ -81,7 +81,7 @@ static ssize_t irst_show_wakeup_time(struct device *dev,
+>  	acpi = to_acpi_device(dev);
+>  
+>  	status = acpi_evaluate_integer(acpi->handle, "GFTV", NULL, &value);
+> -	if (!ACPI_SUCCESS(status))
+> +	if (ACPI_FAILURE(status))
+>  		return -EINVAL;
+>  
+>  	return sprintf(buf, "%lld\n", value);
+> @@ -105,7 +105,7 @@ static ssize_t irst_store_wakeup_time(struct device *dev,
+>  
+>  	status = acpi_execute_simple_method(acpi->handle, "SFTV", value);
+>  
+> -	if (!ACPI_SUCCESS(status))
+> +	if (ACPI_FAILURE(status))
+>  		return -EINVAL;
+>  
+>  	return count;
+> -- 
+> 2.1.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
 Darren Hart
