@@ -1,95 +1,159 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 3/5] toshiba_acpi: Add accelerometer input polled device
-Date: Wed, 17 Sep 2014 11:38:09 -0700
-Message-ID: <20140917183809.GA7517@vmdeb7>
-References: <1409937247-2525-1-git-send-email-coproscefalo@gmail.com>
- <1409937247-2525-4-git-send-email-coproscefalo@gmail.com>
- <20140906024253.GB11389@vmdeb7>
- <CAGdLNWGhdQU3Fpud9Zgvx3AQ5Lb=WdEkJb_wWTb1hJoHxXPXpQ@mail.gmail.com>
- <20140909000429.GB5835@vmdeb7>
- <10ee37dc-4645-48c4-9155-89b60b38f4cf@email.android.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: [PATCH v3] eeepc-laptop: simplify parse_arg()
+Date: Wed, 17 Sep 2014 21:02:51 +0200
+Message-ID: <1410980571.10248.6.camel@x220>
+References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
+	 <1409814488.5546.63.camel@x220> <20140906021757.GA9197@vmdeb7>
+	 <7288841.ayNsq2yeGO@vostro.rjw.lan> <1410252608.22255.5.camel@x220>
+	 <20140910033304.GB39541@vmdeb7>
+	 <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
+	 <20140910164916.GA48285@vmdeb7> <1410379520.11097.18.camel@x220>
+	 <20140911223739.GB18425@vmdeb7> <20140916234543.GA22408@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:53095 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755656AbaIQSiO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Sep 2014 14:38:14 -0400
-Content-Disposition: inline
-In-Reply-To: <10ee37dc-4645-48c4-9155-89b60b38f4cf@email.android.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140916234543.GA22408@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: Frans Klaver <fransklaver@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 17, 2014 at 05:36:31PM +0100, Jonathan Cameron wrote:
-> 
-> 
-> On September 9, 2014 1:04:30 AM GMT+01:00, Darren Hart <dvhart@infradead.org> wrote:
-> >On Fri, Sep 05, 2014 at 11:04:18PM -0600, Azael Avalos wrote:
-> >> Hi there,
-> >> 
-> >> 2014-09-05 20:42 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> >> > On Fri, Sep 05, 2014 at 11:14:05AM -0600, Azael Avalos wrote:
-> >> >> The accelerometer sensor is very sensitive, and having userspace
-> >> >> poll the sysfs position entry is not very battery friendly.
-> >> >>
-> >> >> This patch removes the sysfs entry and instead, it creates an
-> >> >> input polled device (joystick) for the built-in accelerometer.
-> >> >
-> >> > Hrm, while sysfs details can change across kernel versions, usually
-> >due to
-> >> > driver core changes, we try to keep them as consistent as possible
-> >so as not to
-> >> > break userspace.
-> >> >
-> >> > That said, if we are going to try and come up with a better model
-> >for
-> >> > representing an accelerometer, wouldn't treating it as an IIO
-> >device be the more
-> >> > logical approach?
-> >> 
-> >> Yes of course, but the actual accelerometer device (sensor?) is not
-> >> really exposed,
-> >> only certain "functions" it provides, and they are divided across two
-> >> different ACPI devices,
-> >> TOS620A exposes the protection, and the TOS1900 (and et. al.) only
-> >> exposes the axes.
-> >
-> >As I understand it, IIO defines an interface to a device, a standard
-> >sysfs set
-> >of properties. I should think we could provide the appropriate
-> >callbacks even
-> >for a partially implemented (or a pair of) accelerometer.
-> >
-> >Jonathan, what are your thoughts here. Is such a "device" (ACPI
-> >accessors to
-> >axis and threshold) a candidate for IIO, or is this input polled device
-> >more
-> >appropriate?
-> Absolutely fine in IIO.
-> 
-> Sorry I took so long to reply. Read the title and expected more detailed issue so queued
->  it up for when I had more time. Oops.
-> 
-> Only slight gotcha is that there is some debate over the iio timer trigger
->  configuration interface which would be equivalent of a polled input device.
-> 
-> Hence it hasn't merged yet.
-> Comes down to how these are instantiated. Lars-Peter Clausen is planning a configfs
->  proposal rather than how we do the user space trigger creation currently.
-> 
-> A user space trigger would work but then you loose lack of hitting sysfs files.
+parse_arg() has three possible return values:
+    -EINVAL if sscanf(), in short, fails;
+    zero if "count" is zero; and
+    "count" in all other cases
 
-Thanks Jonathan,
+But "count" will never be zero. See, parse_arg() is called by the
+various store functions. And the callchain of these functions starts
+with sysfs_kf_write(). And that function checks for a zero "count". So
+we can stop checking for a zero "count", drop the "count" argument
+entirely, and transform parse_arg() into a function that returns zero o=
+n
+success or a negative error. That, in turn, allows to make those store
+functions just return "count" on success. The net effect is that the
+code becomes a bit easier to understand.
 
-Azael, please follow-up with the IIO folks and if you want to modify the
-interface, please do so via IIO so it uses a consistent interface and we can
-eliminate these custom sysfs files.
+A nice side effect is that this GCC warning is silenced too:
+    drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store_sys=
+_acpi=E2=80=99:
+    drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98value=
+=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitial=
+ized]
+      int rv, value;
 
-Thanks,
+Which is, of course, the reason to have a look at parse_arg().
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+---
+Still build tested only, but now on top of v3.17-rc5. Has Frans tested
+writing zero length values to these sysfs files?
+
+v3: store_sys_acpi() again returns -EIO if set_acpi() fails.
+
+v2: let store_sys_acpi() return whatever error set_acpi() returns
+instead of remapping it to EIO. The new line about that in the commit
+explanation is silly, but I couldn't come up with a better explanation.
+
+ drivers/platform/x86/eeepc-laptop.c | 36 ++++++++++++++++++-----------=
+-------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86=
+/eeepc-laptop.c
+index bd533c22be57..3095d386c7f4 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -263,13 +263,11 @@ static int acpi_setter_handle(struct eeepc_laptop=
+ *eeepc, int cm,
+ /*
+  * Sys helpers
+  */
+-static int parse_arg(const char *buf, unsigned long count, int *val)
++static int parse_arg(const char *buf, int *val)
+ {
+-	if (!count)
+-		return 0;
+ 	if (sscanf(buf, "%i", val) !=3D 1)
+ 		return -EINVAL;
+-	return count;
++	return 0;
+ }
+=20
+ static ssize_t store_sys_acpi(struct device *dev, int cm,
+@@ -278,12 +276,13 @@ static ssize_t store_sys_acpi(struct device *dev,=
+ int cm,
+ 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
+-	if (rv > 0)
+-		value =3D set_acpi(eeepc, cm, value);
+-	if (value < 0)
++	rv =3D parse_arg(buf, &value);
++	if (rv < 0)
++		return rv;
++	rv =3D set_acpi(eeepc, cm, value);
++	if (rv < 0)
+ 		return -EIO;
+-	return rv;
++	return count;
+ }
+=20
+ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+@@ -377,13 +376,13 @@ static ssize_t store_cpufv(struct device *dev,
+ 		return -EPERM;
+ 	if (get_cpufv(eeepc, &c))
+ 		return -ENODEV;
+-	rv =3D parse_arg(buf, count, &value);
++	rv =3D parse_arg(buf, &value);
+ 	if (rv < 0)
+ 		return rv;
+-	if (!rv || value < 0 || value >=3D c.num)
++	if (value < 0 || value >=3D c.num)
+ 		return -EINVAL;
+ 	set_acpi(eeepc, CM_ASL_CPUFV, value);
+-	return rv;
++	return count;
+ }
+=20
+ static ssize_t show_cpufv_disabled(struct device *dev,
+@@ -402,7 +401,7 @@ static ssize_t store_cpufv_disabled(struct device *=
+dev,
+ 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
++	rv =3D parse_arg(buf, &value);
+ 	if (rv < 0)
+ 		return rv;
+=20
+@@ -412,7 +411,7 @@ static ssize_t store_cpufv_disabled(struct device *=
+dev,
+ 			pr_warn("cpufv enabled (not officially supported "
+ 				"on this model)\n");
+ 		eeepc->cpufv_disabled =3D false;
+-		return rv;
++		return count;
+ 	case 1:
+ 		return -EPERM;
+ 	default:
+@@ -1042,10 +1041,11 @@ static ssize_t store_sys_hwmon(void (*set)(int)=
+, const char *buf, size_t count)
+ {
+ 	int rv, value;
+=20
+-	rv =3D parse_arg(buf, count, &value);
+-	if (rv > 0)
+-		set(value);
+-	return rv;
++	rv =3D parse_arg(buf, &value);
++	if (rv < 0)
++		return rv;
++	set(value);
++	return count;
+ }
+=20
+ static ssize_t show_sys_hwmon(int (*get)(void), char *buf)
+--=20
+1.9.3
