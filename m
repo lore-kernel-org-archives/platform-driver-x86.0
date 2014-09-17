@@ -1,7 +1,7 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH v3] eeepc-laptop: simplify parse_arg()
-Date: Wed, 17 Sep 2014 13:14:36 -0700
-Message-ID: <20140917201435.GA8615@vmdeb7>
+Date: Wed, 17 Sep 2014 13:35:10 -0700
+Message-ID: <20140917203510.GA12682@vmdeb7>
 References: <20140906021757.GA9197@vmdeb7>
  <7288841.ayNsq2yeGO@vostro.rjw.lan>
  <1410252608.22255.5.camel@x220>
@@ -16,11 +16,11 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47260 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:39743 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756085AbaIQUOn (ORCPT
+	with ESMTP id S1756162AbaIQUfU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Sep 2014 16:14:43 -0400
+	Wed, 17 Sep 2014 16:35:20 -0400
 Content-Disposition: inline
 In-Reply-To: <1410980571.10248.6.camel@x220>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -61,15 +61,8 @@ alized]
 > Still build tested only, but now on top of v3.17-rc5. Has Frans teste=
 d
 > writing zero length values to these sysfs files?
->=20
-> v3: store_sys_acpi() again returns -EIO if set_acpi() fails.
->=20
-> v2: let store_sys_acpi() return whatever error set_acpi() returns
-> instead of remapping it to EIO. The new line about that in the commit
-> explanation is silly, but I couldn't come up with a better explanatio=
-n.
 
-Queued, thanks.
+=46rans, can you confirm testing when you get a chance please?
 
 --=20
 Darren Hart
