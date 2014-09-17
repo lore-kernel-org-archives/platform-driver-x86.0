@@ -1,44 +1,78 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] x86: thinkpad_acpi.c: fixed spacing coding style issue
-Date: Wed, 17 Sep 2014 09:48:35 -0300
-Message-ID: <20140917124835.GA30371@khazad-dum.debian.net>
-References: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
- <20140916221236.GB12780@vmdeb7>
- <20140917104550.GB8594@khazad-dum.debian.net>
- <CAA-PxD-e-SGQO3eO0PLn9GVdSwXOT=y+Ycsxkm7KtfKhbCcNdw@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 10/13] eeepc-laptop: compare proper return values in
+ get_cpufv
+Date: Wed, 17 Sep 2014 09:12:23 -0700
+Message-ID: <20140917161223.GA5697@vmdeb7>
+References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
+ <1410563212-31565-11-git-send-email-fransklaver@gmail.com>
+ <20140915214902.GB64909@vmdeb7>
+ <20140915215125.GA21435@kroah.com>
+ <20140915215527.GC7867@gmail.com>
+ <CAH6sp9N1y3=LLju85ZHgc05ENUYLgUdYBYpemc6_oNhbsZ+r6g@mail.gmail.com>
+ <20140916205247.GA6856@vmdeb7>
+ <20140916212715.GB6856@vmdeb7>
+ <20140917103446.GA8594@khazad-dum.debian.net>
+ <CAH6sp9N8uWaiuPtqqcEgnyqzR=AUg6i-RwWpij-GQ-fE9AS+9g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50209 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754416AbaIQMss (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Sep 2014 08:48:48 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by gateway2.nyi.internal (Postfix) with ESMTP id C9F6820AF8
-	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Sep 2014 08:48:47 -0400 (EDT)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAA-PxD-e-SGQO3eO0PLn9GVdSwXOT=y+Ycsxkm7KtfKhbCcNdw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan van den Berg <janvdberg@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAH6sp9N8uWaiuPtqqcEgnyqzR=AUg6i-RwWpij-GQ-fE9AS+9g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-acpi <linux-acpi@vger.kernel.org>, "H. Peter Anvin" <hpa@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 17 Sep 2014, Jan van den Berg wrote:
-> I will try and make _real_ contribution next time. (With this being my
-> first ever submission to the kernel: at least now I understand the kernel
-> workflow.)
+On Wed, Sep 17, 2014 at 01:57:33PM +0200, Frans Klaver wrote:
+> On Wed, Sep 17, 2014 at 12:34 PM, Henrique de Moraes Holschuh
+> <hmh@hmh.eng.br> wrote:
+> > On Tue, 16 Sep 2014, Darren Hart wrote:
+> >> - When reading and writing sysfs device attribute files, avoid dependency
+> >>   on specific error codes wherever possible. This minimizes coupling to
+> >>   the error handling implemementation within the kernel.
+> >>
+> >>   In general, failures to read or write sysfs device attributes shall
+> >>   propogate errors wherever possible. Common errors include, but are not
+> >>   limited to:
+> >>
+> >>   -EIO: The read or store operation is not supported, typically returned by
+> >>         the sysfs system itself if the read or store pointer is NULL.
+> >>
+> >>   -ENXIO: The read or store operation failed
+> >
+> > from errno(3):
+> >        EIO             Input/output error (POSIX.1)
+> >        ENXIO           No such device or address (POSIX.1)
+> >
+> > It makes sense to retry EIO.  ENXIO means there's nobody listening at the
+> > time, and isn't usually retried.
+> >
+> > The device-based interfaces get it right.  A typical example is the
+> > cpu-based devices, where ENXIO means "no such processor", while EIO means
+> > "whatever you're trying to do failed",  so a MSR read would return ENXIO if
+> > the processor core is offline/doesn't exist, and EIO if the processor core
+> > is there, but raised a #GP when the MSR read was attempted.
+> 
+> Here's something I don't quite understand. How should one then
+> distinguish between sysfs's use of EIO "can't (read from|write to)
+> this file", and this example's EIO "something went wrong, you might
+> want to try again"? Why not use EAGAIN "Resource temporarily
+> unavailable" in the case where trying again makes sense? I wouldn't
+> normally retry the last operation if I was just told something
+> actually went wrong.
+> 
+> I've only been at it for a couple of weeks, but I get the impression
+> that sysfs has never really been guided regarding error codes, or has
+> gone to live its own life now kept in check with "don't change the
+> errors, it may break userspace". Does that make sense?
 
-There's nothing wrong with your patch by itself.  And git does try to help
-us take such patches (there's "git blame -w")... but ignoring whitespace
-changes doesn't always work as well as one would like.
+Right, this was the distinction I was trying to make with the above description.
+Henrique's points are valid, but based on the sysfs subsystem already using EIO
+in the way that it does, I felt the above made sense.
 
-That said, Darren has already queued your patch, and I am _not_ going to ask
-him to drop it.  So, as far as I'm concerned, the patch has been accepted,
-and that's it.
+That said, I'm not personally tied to them, it's just what I have derived from
+recent discussions on the subject and what I observed in existing usage.
 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Darren Hart
+Intel Open Source Technology Center
