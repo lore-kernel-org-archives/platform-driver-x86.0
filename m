@@ -1,159 +1,76 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: [PATCH v3] eeepc-laptop: simplify parse_arg()
-Date: Wed, 17 Sep 2014 21:02:51 +0200
-Message-ID: <1410980571.10248.6.camel@x220>
-References: <1409784805-14190-1-git-send-email-fransklaver@gmail.com>
-	 <1409814488.5546.63.camel@x220> <20140906021757.GA9197@vmdeb7>
-	 <7288841.ayNsq2yeGO@vostro.rjw.lan> <1410252608.22255.5.camel@x220>
-	 <20140910033304.GB39541@vmdeb7>
-	 <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
-	 <20140910164916.GA48285@vmdeb7> <1410379520.11097.18.camel@x220>
-	 <20140911223739.GB18425@vmdeb7> <20140916234543.GA22408@vmdeb7>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v3] eeepc-laptop: simplify parse_arg()
+Date: Wed, 17 Sep 2014 13:14:36 -0700
+Message-ID: <20140917201435.GA8615@vmdeb7>
+References: <20140906021757.GA9197@vmdeb7>
+ <7288841.ayNsq2yeGO@vostro.rjw.lan>
+ <1410252608.22255.5.camel@x220>
+ <20140910033304.GB39541@vmdeb7>
+ <CAH6sp9NtLDG4AvpTF7KzxwxVhrj8ZzNLugwoU5=YrLp65AptQQ@mail.gmail.com>
+ <20140910164916.GA48285@vmdeb7>
+ <1410379520.11097.18.camel@x220>
+ <20140911223739.GB18425@vmdeb7>
+ <20140916234543.GA22408@vmdeb7>
+ <1410980571.10248.6.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140916234543.GA22408@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
-Cc: Frans Klaver <fransklaver@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:47260 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756085AbaIQUOn (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Sep 2014 16:14:43 -0400
+Content-Disposition: inline
+In-Reply-To: <1410980571.10248.6.camel@x220>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Frans Klaver <fransklaver@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-parse_arg() has three possible return values:
-    -EINVAL if sscanf(), in short, fails;
-    zero if "count" is zero; and
-    "count" in all other cases
+On Wed, Sep 17, 2014 at 09:02:51PM +0200, Paul Bolle wrote:
+> parse_arg() has three possible return values:
+>     -EINVAL if sscanf(), in short, fails;
+>     zero if "count" is zero; and
+>     "count" in all other cases
+>=20
+> But "count" will never be zero. See, parse_arg() is called by the
+> various store functions. And the callchain of these functions starts
+> with sysfs_kf_write(). And that function checks for a zero "count". S=
+o
+> we can stop checking for a zero "count", drop the "count" argument
+> entirely, and transform parse_arg() into a function that returns zero=
+ on
+> success or a negative error. That, in turn, allows to make those stor=
+e
+> functions just return "count" on success. The net effect is that the
+> code becomes a bit easier to understand.
+>=20
+> A nice side effect is that this GCC warning is silenced too:
+>     drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store_s=
+ys_acpi=E2=80=99:
+>     drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98val=
+ue=E2=80=99 may be used uninitialized in this function [-Wmaybe-uniniti=
+alized]
+>       int rv, value;
+>=20
+> Which is, of course, the reason to have a look at parse_arg().
+>=20
+> Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
+> ---
+> Still build tested only, but now on top of v3.17-rc5. Has Frans teste=
+d
+> writing zero length values to these sysfs files?
+>=20
+> v3: store_sys_acpi() again returns -EIO if set_acpi() fails.
+>=20
+> v2: let store_sys_acpi() return whatever error set_acpi() returns
+> instead of remapping it to EIO. The new line about that in the commit
+> explanation is silly, but I couldn't come up with a better explanatio=
+n.
 
-But "count" will never be zero. See, parse_arg() is called by the
-various store functions. And the callchain of these functions starts
-with sysfs_kf_write(). And that function checks for a zero "count". So
-we can stop checking for a zero "count", drop the "count" argument
-entirely, and transform parse_arg() into a function that returns zero o=
-n
-success or a negative error. That, in turn, allows to make those store
-functions just return "count" on success. The net effect is that the
-code becomes a bit easier to understand.
+Queued, thanks.
 
-A nice side effect is that this GCC warning is silenced too:
-    drivers/platform/x86/eeepc-laptop.c: In function =E2=80=98store_sys=
-_acpi=E2=80=99:
-    drivers/platform/x86/eeepc-laptop.c:279:10: warning: =E2=80=98value=
-=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitial=
-ized]
-      int rv, value;
-
-Which is, of course, the reason to have a look at parse_arg().
-
-Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
----
-Still build tested only, but now on top of v3.17-rc5. Has Frans tested
-writing zero length values to these sysfs files?
-
-v3: store_sys_acpi() again returns -EIO if set_acpi() fails.
-
-v2: let store_sys_acpi() return whatever error set_acpi() returns
-instead of remapping it to EIO. The new line about that in the commit
-explanation is silly, but I couldn't come up with a better explanation.
-
- drivers/platform/x86/eeepc-laptop.c | 36 ++++++++++++++++++-----------=
--------
- 1 file changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86=
-/eeepc-laptop.c
-index bd533c22be57..3095d386c7f4 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -263,13 +263,11 @@ static int acpi_setter_handle(struct eeepc_laptop=
- *eeepc, int cm,
- /*
-  * Sys helpers
-  */
--static int parse_arg(const char *buf, unsigned long count, int *val)
-+static int parse_arg(const char *buf, int *val)
- {
--	if (!count)
--		return 0;
- 	if (sscanf(buf, "%i", val) !=3D 1)
- 		return -EINVAL;
--	return count;
-+	return 0;
- }
-=20
- static ssize_t store_sys_acpi(struct device *dev, int cm,
-@@ -278,12 +276,13 @@ static ssize_t store_sys_acpi(struct device *dev,=
- int cm,
- 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
- 	int rv, value;
-=20
--	rv =3D parse_arg(buf, count, &value);
--	if (rv > 0)
--		value =3D set_acpi(eeepc, cm, value);
--	if (value < 0)
-+	rv =3D parse_arg(buf, &value);
-+	if (rv < 0)
-+		return rv;
-+	rv =3D set_acpi(eeepc, cm, value);
-+	if (rv < 0)
- 		return -EIO;
--	return rv;
-+	return count;
- }
-=20
- static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
-@@ -377,13 +376,13 @@ static ssize_t store_cpufv(struct device *dev,
- 		return -EPERM;
- 	if (get_cpufv(eeepc, &c))
- 		return -ENODEV;
--	rv =3D parse_arg(buf, count, &value);
-+	rv =3D parse_arg(buf, &value);
- 	if (rv < 0)
- 		return rv;
--	if (!rv || value < 0 || value >=3D c.num)
-+	if (value < 0 || value >=3D c.num)
- 		return -EINVAL;
- 	set_acpi(eeepc, CM_ASL_CPUFV, value);
--	return rv;
-+	return count;
- }
-=20
- static ssize_t show_cpufv_disabled(struct device *dev,
-@@ -402,7 +401,7 @@ static ssize_t store_cpufv_disabled(struct device *=
-dev,
- 	struct eeepc_laptop *eeepc =3D dev_get_drvdata(dev);
- 	int rv, value;
-=20
--	rv =3D parse_arg(buf, count, &value);
-+	rv =3D parse_arg(buf, &value);
- 	if (rv < 0)
- 		return rv;
-=20
-@@ -412,7 +411,7 @@ static ssize_t store_cpufv_disabled(struct device *=
-dev,
- 			pr_warn("cpufv enabled (not officially supported "
- 				"on this model)\n");
- 		eeepc->cpufv_disabled =3D false;
--		return rv;
-+		return count;
- 	case 1:
- 		return -EPERM;
- 	default:
-@@ -1042,10 +1041,11 @@ static ssize_t store_sys_hwmon(void (*set)(int)=
-, const char *buf, size_t count)
- {
- 	int rv, value;
-=20
--	rv =3D parse_arg(buf, count, &value);
--	if (rv > 0)
--		set(value);
--	return rv;
-+	rv =3D parse_arg(buf, &value);
-+	if (rv < 0)
-+		return rv;
-+	set(value);
-+	return count;
- }
-=20
- static ssize_t show_sys_hwmon(int (*get)(void), char *buf)
 --=20
-1.9.3
+Darren Hart
+Intel Open Source Technology Center
