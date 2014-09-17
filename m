@@ -1,7 +1,7 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 5/9] eeepc-laptop: tell sysfs that the disp attribute is write-only
-Date: Wed, 17 Sep 2014 23:47:23 +0200
-Message-ID: <1410990447-3210-6-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 2/9] eeepc-laptop: change sysfs function names to API expectations
+Date: Wed, 17 Sep 2014 23:47:20 +0200
+Message-ID: <1410990447-3210-3-git-send-email-fransklaver@gmail.com>
 References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
@@ -10,62 +10,121 @@ To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The disp attribute is write-only, but sysfs doesn't know this. Currently
-show_sys_acpi() is mimicking sysfs behavior, if the underlying acpi call
-should fail. This was introduced in 6dff29b63a5bf2eaf3 "eeepc-laptop:
-disp attribute should be write-only". This is not ideal; behaving like
-sysfs is better left to sysfs.
-
-Introduce EEEPC_CREATE_DEVICE_ATTR_WO() to instantiate a write-only
-attribute, and declare the disp attribute with it. Sysfs makes sure
-userspace can only write to disp at all times. This removes the need for
-mimicking the sysfs behavior in show_sys_acpi() and store_sys_acpi(),
-but we'll stick with -EIO, as changing sysfs return values should not be
-taken lightly.
-
-This change also causes EEEPC_CREATE_DEVICE_ATTR() to be used only for
-R/W attributes. This enables us to drop the _mode argument from the
-macro and use DEVICE_ATTR_RW() internally while we're at it. Append _RW
-to the name for readability.
+The eeepc-laptop driver follows the function naming convention
+<action>_<attrname>(), while the sysfs macros are built around the
+convention <attrname>_<action>(). Rename the sysfs functions to the
+convention used by sysfs. This makes it easier to use the available API
+later on.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
-Here we're sticking with -EIO as return values. It should be said that the
-commit mentioned above did change the error value from -ENODEV to -EIO. I'm
-still in two minds about whether the show_sys_acpi and store_sys_acpi should go
-back to returning ENODEV. We'll probably stick with -EIO, though, as there is
-no strong reason other than "it was like that before".
-
- drivers/platform/x86/eeepc-laptop.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index c6d765f..a85da4f 100644
+index 653999e..0094449 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -311,14 +311,18 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
- 		return store_sys_acpi(dev, _cm, buf, count);		\
+@@ -296,13 +296,13 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+ }
+ 
+ #define EEEPC_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
+-	static ssize_t show_##_name(struct device *dev,			\
++	static ssize_t _name##_show(struct device *dev,			\
+ 				    struct device_attribute *attr,	\
+ 				    char *buf)				\
+ 	{								\
+ 		return show_sys_acpi(dev, _cm, buf);			\
+ 	}								\
+-	static ssize_t store_##_name(struct device *dev,		\
++	static ssize_t _name##_store(struct device *dev,		\
+ 				     struct device_attribute *attr,	\
+ 				     const char *buf, size_t count)	\
+ 	{								\
+@@ -312,8 +312,8 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+ 		.attr = {						\
+ 			.name = __stringify(_name),			\
+ 			.mode = _mode },				\
+-		.show   = show_##_name,					\
+-		.store  = store_##_name,				\
++		.show   = _name##_show,					\
++		.store  = _name##_store,				\
  	}
  
--#define EEEPC_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
-+#define EEEPC_CREATE_DEVICE_ATTR_RW(_name, _cm)				\
- 	EEEPC_ACPI_SHOW_FUNC(_name, _cm)				\
- 	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
--	static DEVICE_ATTR(_name, _mode, _name##_show, _name##_store)
-+	static DEVICE_ATTR_RW(_name)
+ EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
+@@ -335,7 +335,7 @@ static int get_cpufv(struct eeepc_laptop *eeepc, struct eeepc_cpufv *c)
+ 	return 0;
+ }
  
--EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
--EEEPC_CREATE_DEVICE_ATTR(cardr, 0644, CM_ASL_CARDREADER);
--EEEPC_CREATE_DEVICE_ATTR(disp, 0200, CM_ASL_DISPLAYSWITCH);
-+#define EEEPC_CREATE_DEVICE_ATTR_WO(_name, _cm)				\
-+	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
-+	static DEVICE_ATTR_WO(_name)
-+
-+EEEPC_CREATE_DEVICE_ATTR_RW(camera, CM_ASL_CAMERA);
-+EEEPC_CREATE_DEVICE_ATTR_RW(cardr, CM_ASL_CARDREADER);
-+EEEPC_CREATE_DEVICE_ATTR_WO(disp, CM_ASL_DISPLAYSWITCH);
+-static ssize_t show_available_cpufv(struct device *dev,
++static ssize_t available_cpufv_show(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    char *buf)
+ {
+@@ -352,7 +352,7 @@ static ssize_t show_available_cpufv(struct device *dev,
+ 	return len;
+ }
  
- struct eeepc_cpufv {
- 	int num;
+-static ssize_t show_cpufv(struct device *dev,
++static ssize_t cpufv_show(struct device *dev,
+ 			  struct device_attribute *attr,
+ 			  char *buf)
+ {
+@@ -364,7 +364,7 @@ static ssize_t show_cpufv(struct device *dev,
+ 	return sprintf(buf, "%#x\n", (c.num << 8) | c.cur);
+ }
+ 
+-static ssize_t store_cpufv(struct device *dev,
++static ssize_t cpufv_store(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   const char *buf, size_t count)
+ {
+@@ -385,7 +385,7 @@ static ssize_t store_cpufv(struct device *dev,
+ 	return count;
+ }
+ 
+-static ssize_t show_cpufv_disabled(struct device *dev,
++static ssize_t cpufv_disabled_show(struct device *dev,
+ 			  struct device_attribute *attr,
+ 			  char *buf)
+ {
+@@ -394,7 +394,7 @@ static ssize_t show_cpufv_disabled(struct device *dev,
+ 	return sprintf(buf, "%d\n", eeepc->cpufv_disabled);
+ }
+ 
+-static ssize_t store_cpufv_disabled(struct device *dev,
++static ssize_t cpufv_disabled_store(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   const char *buf, size_t count)
+ {
+@@ -424,23 +424,23 @@ static struct device_attribute dev_attr_cpufv = {
+ 	.attr = {
+ 		.name = "cpufv",
+ 		.mode = 0644 },
+-	.show   = show_cpufv,
+-	.store  = store_cpufv
++	.show   = cpufv_show,
++	.store  = cpufv_store
+ };
+ 
+ static struct device_attribute dev_attr_available_cpufv = {
+ 	.attr = {
+ 		.name = "available_cpufv",
+ 		.mode = 0444 },
+-	.show   = show_available_cpufv
++	.show   = available_cpufv_show
+ };
+ 
+ static struct device_attribute dev_attr_cpufv_disabled = {
+ 	.attr = {
+ 		.name = "cpufv_disabled",
+ 		.mode = 0644 },
+-	.show   = show_cpufv_disabled,
+-	.store  = store_cpufv_disabled
++	.show   = cpufv_disabled_show,
++	.store  = cpufv_disabled_store
+ };
+ 
+ 
 -- 
 2.1.0
