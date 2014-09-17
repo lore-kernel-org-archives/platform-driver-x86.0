@@ -1,122 +1,57 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 1/9] eeepc-laptop: clean up coding style
-Date: Wed, 17 Sep 2014 15:06:52 -0700
-Message-ID: <1410991612.4290.10.camel@joe-AO725>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 3/9] eeepc-laptop: use DEVICE_ATTR* to instantiate
+ device_attributes
+Date: Wed, 17 Sep 2014 15:06:50 -0700
+Message-ID: <20140917220650.GA20915@kroah.com>
 References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
-	 <1410990447-3210-2-git-send-email-fransklaver@gmail.com>
+ <1410990447-3210-4-git-send-email-fransklaver@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410990447-3210-2-git-send-email-fransklaver@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.linuxfoundation.org ([140.211.169.12]:55300 "EHLO
+	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755998AbaIQWHj (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Sep 2014 18:07:39 -0400
+Content-Disposition: inline
+In-Reply-To: <1410990447-3210-4-git-send-email-fransklaver@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Frans Klaver <fransklaver@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, 2014-09-17 at 23:47 +0200, Frans Klaver wrote:
-> Correct indentation and brace usage to comply with
-> Documentation/CodingStyle.
+On Wed, Sep 17, 2014 at 11:47:21PM +0200, Frans Klaver wrote:
+> Device attributes are instantiated manually, while we have DEVICE_ATTR*
+> macros available to do much of the work for us. Let's use them.
 > 
 > Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 > ---
->  drivers/platform/x86/eeepc-laptop.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  drivers/platform/x86/eeepc-laptop.c | 34 ++++------------------------------
+>  1 file changed, 4 insertions(+), 30 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index 3095d38..653999e 100644
+> index 0094449..db26f78 100644
 > --- a/drivers/platform/x86/eeepc-laptop.c
 > +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -544,7 +544,7 @@ static int eeepc_led_init(struct eeepc_laptop *eeepc)
->  	eeepc->tpd_led.name = "eeepc::touchpad";
->  	eeepc->tpd_led.brightness_set = tpd_led_set;
->  	if (get_acpi(eeepc, CM_ASL_TPD) >= 0) /* if method is available */
-> -	  eeepc->tpd_led.brightness_get = tpd_led_get;
-> +		eeepc->tpd_led.brightness_get = tpd_led_get;
->  	eeepc->tpd_led.max_brightness = 1;
->  
->  	rv = led_classdev_register(&eeepc->platform_device->dev,
-> @@ -692,8 +692,9 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
->  		 * changed during setup.
->  		 */
->  		eeepc_rfkill_hotplug(eeepc, handle);
-> -	} else
-> +	} else {
->  		return -ENODEV;
-> +	}
->  
->  	return 0;
->  }
+> @@ -308,13 +308,7 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+>  	{								\
+>  		return store_sys_acpi(dev, _cm, buf, count);		\
+>  	}								\
+> -	static struct device_attribute dev_attr_##_name = {		\
+> -		.attr = {						\
+> -			.name = __stringify(_name),			\
+> -			.mode = _mode },				\
+> -		.show   = _name##_show,					\
+> -		.store  = _name##_store,				\
+> -	}
+> +	static DEVICE_ATTR(_name, _mode, _name##_show, _name##_store)
 
-This sort of code:
+Can you change this to be DEVICE_ATTR_RO()?
 
-	if (foo) {
-		[ do_something ]
-	} else
-		return -ERRVAL;
+If not, split it up into 2 different macros, one using the _RW and one
+_RO version, _never_ have the driver specify the mode of the sysfs file
+please.
 
-is generally better rewritten as:
+thanks,
 
-	if (!foo)
-		return -ERRVAL;
-
-	[ do_something ]
-
-This gives immediacy to the error handler and
-as well reduces unnecessary indentation.
-
-So instead of:
-
-static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
-					  char *node)
-{
-	acpi_status status;
-	acpi_handle handle;
-
-	status = acpi_get_handle(NULL, node, &handle);
-
-	if (ACPI_SUCCESS(status)) {
-		status = acpi_install_notify_handler(handle,
-						     ACPI_SYSTEM_NOTIFY,
-						     eeepc_rfkill_notify,
-						     eeepc);
-		if (ACPI_FAILURE(status))
-			pr_warn("Failed to register notify on %s\n", node);
-
-		/*
-		 * Refresh pci hotplug in case the rfkill state was
-		 * changed during setup.
-		 */
-		eeepc_rfkill_hotplug(eeepc, handle);
-	} else
-		return -ENODEV;
-
-	return 0;
-}
-
-try something like:
-
-static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
-					  char *node)
-{
-	acpi_handle handle;
-	acpi_status status = acpi_get_handle(NULL, node, &handle);
-
-	if (!ACPI_SUCCESS(status))
-		return -ENODEV;
-
-	status = acpi_install_notify_handler(handle,
-					     ACPI_SYSTEM_NOTIFY,
-					     eeepc_rfkill_notify,
-					     eeepc);
-	if (ACPI_FAILURE(status))
-		pr_warn("Failed to register notify on %s\n", node);
-
-	/*
-	 * Refresh pci hotplug in case the rfkill state was
-	 * changed during setup.
-	 */
-	eeepc_rfkill_hotplug(eeepc, handle);
-
-	return 0;
-}
+greg k-h
