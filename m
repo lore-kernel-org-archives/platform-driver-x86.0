@@ -1,7 +1,7 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 1/9] eeepc-laptop: clean up coding style
-Date: Wed, 17 Sep 2014 23:47:19 +0200
-Message-ID: <1410990447-3210-2-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 5/9] eeepc-laptop: tell sysfs that the disp attribute is write-only
+Date: Wed, 17 Sep 2014 23:47:23 +0200
+Message-ID: <1410990447-3210-6-git-send-email-fransklaver@gmail.com>
 References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
@@ -10,48 +10,62 @@ To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Correct indentation and brace usage to comply with
-Documentation/CodingStyle.
+The disp attribute is write-only, but sysfs doesn't know this. Currently
+show_sys_acpi() is mimicking sysfs behavior, if the underlying acpi call
+should fail. This was introduced in 6dff29b63a5bf2eaf3 "eeepc-laptop:
+disp attribute should be write-only". This is not ideal; behaving like
+sysfs is better left to sysfs.
+
+Introduce EEEPC_CREATE_DEVICE_ATTR_WO() to instantiate a write-only
+attribute, and declare the disp attribute with it. Sysfs makes sure
+userspace can only write to disp at all times. This removes the need for
+mimicking the sysfs behavior in show_sys_acpi() and store_sys_acpi(),
+but we'll stick with -EIO, as changing sysfs return values should not be
+taken lightly.
+
+This change also causes EEEPC_CREATE_DEVICE_ATTR() to be used only for
+R/W attributes. This enables us to drop the _mode argument from the
+macro and use DEVICE_ATTR_RW() internally while we're at it. Append _RW
+to the name for readability.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
- drivers/platform/x86/eeepc-laptop.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Here we're sticking with -EIO as return values. It should be said that the
+commit mentioned above did change the error value from -ENODEV to -EIO. I'm
+still in two minds about whether the show_sys_acpi and store_sys_acpi should go
+back to returning ENODEV. We'll probably stick with -EIO, though, as there is
+no strong reason other than "it was like that before".
+
+ drivers/platform/x86/eeepc-laptop.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index 3095d38..653999e 100644
+index c6d765f..a85da4f 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -544,7 +544,7 @@ static int eeepc_led_init(struct eeepc_laptop *eeepc)
- 	eeepc->tpd_led.name = "eeepc::touchpad";
- 	eeepc->tpd_led.brightness_set = tpd_led_set;
- 	if (get_acpi(eeepc, CM_ASL_TPD) >= 0) /* if method is available */
--	  eeepc->tpd_led.brightness_get = tpd_led_get;
-+		eeepc->tpd_led.brightness_get = tpd_led_get;
- 	eeepc->tpd_led.max_brightness = 1;
+@@ -311,14 +311,18 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
+ 		return store_sys_acpi(dev, _cm, buf, count);		\
+ 	}
  
- 	rv = led_classdev_register(&eeepc->platform_device->dev,
-@@ -692,8 +692,9 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
- 		 * changed during setup.
- 		 */
- 		eeepc_rfkill_hotplug(eeepc, handle);
--	} else
-+	} else {
- 		return -ENODEV;
-+	}
+-#define EEEPC_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
++#define EEEPC_CREATE_DEVICE_ATTR_RW(_name, _cm)				\
+ 	EEEPC_ACPI_SHOW_FUNC(_name, _cm)				\
+ 	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
+-	static DEVICE_ATTR(_name, _mode, _name##_show, _name##_store)
++	static DEVICE_ATTR_RW(_name)
  
- 	return 0;
- }
-@@ -1424,8 +1425,9 @@ static int eeepc_acpi_add(struct acpi_device *device)
- 		result = eeepc_backlight_init(eeepc);
- 		if (result)
- 			goto fail_backlight;
--	} else
-+	} else {
- 		pr_info("Backlight controlled by ACPI video driver\n");
-+	}
+-EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
+-EEEPC_CREATE_DEVICE_ATTR(cardr, 0644, CM_ASL_CARDREADER);
+-EEEPC_CREATE_DEVICE_ATTR(disp, 0200, CM_ASL_DISPLAYSWITCH);
++#define EEEPC_CREATE_DEVICE_ATTR_WO(_name, _cm)				\
++	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
++	static DEVICE_ATTR_WO(_name)
++
++EEEPC_CREATE_DEVICE_ATTR_RW(camera, CM_ASL_CAMERA);
++EEEPC_CREATE_DEVICE_ATTR_RW(cardr, CM_ASL_CARDREADER);
++EEEPC_CREATE_DEVICE_ATTR_WO(disp, CM_ASL_DISPLAYSWITCH);
  
- 	result = eeepc_input_init(eeepc);
- 	if (result)
+ struct eeepc_cpufv {
+ 	int num;
 -- 
 2.1.0
