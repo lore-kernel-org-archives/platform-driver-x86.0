@@ -1,74 +1,122 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 3/9] eeepc-laptop: use DEVICE_ATTR* to instantiate device_attributes
-Date: Wed, 17 Sep 2014 23:47:21 +0200
-Message-ID: <1410990447-3210-4-git-send-email-fransklaver@gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 1/9] eeepc-laptop: clean up coding style
+Date: Wed, 17 Sep 2014 15:06:52 -0700
+Message-ID: <1410991612.4290.10.camel@joe-AO725>
 References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
+	 <1410990447-3210-2-git-send-email-fransklaver@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
+In-Reply-To: <1410990447-3210-2-git-send-email-fransklaver@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Device attributes are instantiated manually, while we have DEVICE_ATTR*
-macros available to do much of the work for us. Let's use them.
+On Wed, 2014-09-17 at 23:47 +0200, Frans Klaver wrote:
+> Correct indentation and brace usage to comply with
+> Documentation/CodingStyle.
+> 
+> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+> ---
+>  drivers/platform/x86/eeepc-laptop.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> index 3095d38..653999e 100644
+> --- a/drivers/platform/x86/eeepc-laptop.c
+> +++ b/drivers/platform/x86/eeepc-laptop.c
+> @@ -544,7 +544,7 @@ static int eeepc_led_init(struct eeepc_laptop *eeepc)
+>  	eeepc->tpd_led.name = "eeepc::touchpad";
+>  	eeepc->tpd_led.brightness_set = tpd_led_set;
+>  	if (get_acpi(eeepc, CM_ASL_TPD) >= 0) /* if method is available */
+> -	  eeepc->tpd_led.brightness_get = tpd_led_get;
+> +		eeepc->tpd_led.brightness_get = tpd_led_get;
+>  	eeepc->tpd_led.max_brightness = 1;
+>  
+>  	rv = led_classdev_register(&eeepc->platform_device->dev,
+> @@ -692,8 +692,9 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+>  		 * changed during setup.
+>  		 */
+>  		eeepc_rfkill_hotplug(eeepc, handle);
+> -	} else
+> +	} else {
+>  		return -ENODEV;
+> +	}
+>  
+>  	return 0;
+>  }
 
-Signed-off-by: Frans Klaver <fransklaver@gmail.com>
----
- drivers/platform/x86/eeepc-laptop.c | 34 ++++------------------------------
- 1 file changed, 4 insertions(+), 30 deletions(-)
+This sort of code:
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index 0094449..db26f78 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -308,13 +308,7 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
- 	{								\
- 		return store_sys_acpi(dev, _cm, buf, count);		\
- 	}								\
--	static struct device_attribute dev_attr_##_name = {		\
--		.attr = {						\
--			.name = __stringify(_name),			\
--			.mode = _mode },				\
--		.show   = _name##_show,					\
--		.store  = _name##_store,				\
--	}
-+	static DEVICE_ATTR(_name, _mode, _name##_show, _name##_store)
- 
- EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
- EEEPC_CREATE_DEVICE_ATTR(cardr, 0644, CM_ASL_CARDREADER);
-@@ -420,29 +414,9 @@ static ssize_t cpufv_disabled_store(struct device *dev,
- }
- 
- 
--static struct device_attribute dev_attr_cpufv = {
--	.attr = {
--		.name = "cpufv",
--		.mode = 0644 },
--	.show   = cpufv_show,
--	.store  = cpufv_store
--};
--
--static struct device_attribute dev_attr_available_cpufv = {
--	.attr = {
--		.name = "available_cpufv",
--		.mode = 0444 },
--	.show   = available_cpufv_show
--};
--
--static struct device_attribute dev_attr_cpufv_disabled = {
--	.attr = {
--		.name = "cpufv_disabled",
--		.mode = 0644 },
--	.show   = cpufv_disabled_show,
--	.store  = cpufv_disabled_store
--};
--
-+static DEVICE_ATTR_RW(cpufv);
-+static DEVICE_ATTR_RO(available_cpufv);
-+static DEVICE_ATTR_RW(cpufv_disabled);
- 
- static struct attribute *platform_attributes[] = {
- 	&dev_attr_camera.attr,
--- 
-2.1.0
+	if (foo) {
+		[ do_something ]
+	} else
+		return -ERRVAL;
+
+is generally better rewritten as:
+
+	if (!foo)
+		return -ERRVAL;
+
+	[ do_something ]
+
+This gives immediacy to the error handler and
+as well reduces unnecessary indentation.
+
+So instead of:
+
+static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+					  char *node)
+{
+	acpi_status status;
+	acpi_handle handle;
+
+	status = acpi_get_handle(NULL, node, &handle);
+
+	if (ACPI_SUCCESS(status)) {
+		status = acpi_install_notify_handler(handle,
+						     ACPI_SYSTEM_NOTIFY,
+						     eeepc_rfkill_notify,
+						     eeepc);
+		if (ACPI_FAILURE(status))
+			pr_warn("Failed to register notify on %s\n", node);
+
+		/*
+		 * Refresh pci hotplug in case the rfkill state was
+		 * changed during setup.
+		 */
+		eeepc_rfkill_hotplug(eeepc, handle);
+	} else
+		return -ENODEV;
+
+	return 0;
+}
+
+try something like:
+
+static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+					  char *node)
+{
+	acpi_handle handle;
+	acpi_status status = acpi_get_handle(NULL, node, &handle);
+
+	if (!ACPI_SUCCESS(status))
+		return -ENODEV;
+
+	status = acpi_install_notify_handler(handle,
+					     ACPI_SYSTEM_NOTIFY,
+					     eeepc_rfkill_notify,
+					     eeepc);
+	if (ACPI_FAILURE(status))
+		pr_warn("Failed to register notify on %s\n", node);
+
+	/*
+	 * Refresh pci hotplug in case the rfkill state was
+	 * changed during setup.
+	 */
+	eeepc_rfkill_hotplug(eeepc, handle);
+
+	return 0;
+}
