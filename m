@@ -1,7 +1,7 @@
 From: Frans Klaver <fransklaver@gmail.com>
 Subject: Re: [PATCH v3] eeepc-laptop: simplify parse_arg()
-Date: Wed, 17 Sep 2014 22:36:40 +0200
-Message-ID: <20140917203640.GB4432@gmail.com>
+Date: Wed, 17 Sep 2014 23:39:34 +0200
+Message-ID: <20140917213934.GC4432@gmail.com>
 References: <7288841.ayNsq2yeGO@vostro.rjw.lan>
  <1410252608.22255.5.camel@x220>
  <20140910033304.GB39541@vmdeb7>
@@ -15,13 +15,18 @@ References: <7288841.ayNsq2yeGO@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f49.google.com ([74.125.82.49]:62984 "EHLO
+	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932170AbaIQVji (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Sep 2014 17:39:38 -0400
 Content-Disposition: inline
 In-Reply-To: <20140917203510.GA12682@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: Paul Bolle <pebolle@tiscali.nl>, Corentin Chary <corentin.chary@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthew Garrett <matthew.garrett@nebula.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
 On Wed, Sep 17, 2014 at 01:35:10PM -0700, Darren Hart wrote:
 > On Wed, Sep 17, 2014 at 09:02:51PM +0200, Paul Bolle wrote:
@@ -62,6 +67,6 @@ ted
 >=20
 > Frans, can you confirm testing when you get a chance please?
 
-Will do.
+Tested. Looks OK to me.
 
 =46rans
