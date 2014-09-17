@@ -1,52 +1,38 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 10/13] eeepc-laptop: compare proper return values in
- get_cpufv
-Date: Wed, 17 Sep 2014 07:34:47 -0300
-Message-ID: <20140917103446.GA8594@khazad-dum.debian.net>
-References: <1410563212-31565-1-git-send-email-fransklaver@gmail.com>
- <1410563212-31565-11-git-send-email-fransklaver@gmail.com>
- <20140915214902.GB64909@vmdeb7>
- <20140915215125.GA21435@kroah.com>
- <20140915215527.GC7867@gmail.com>
- <CAH6sp9N1y3=LLju85ZHgc05ENUYLgUdYBYpemc6_oNhbsZ+r6g@mail.gmail.com>
- <20140916205247.GA6856@vmdeb7>
- <20140916212715.GB6856@vmdeb7>
+Subject: Re: [PATCH] x86: thinkpad_acpi.c: fixed spacing coding style issue
+Date: Wed, 17 Sep 2014 07:45:50 -0300
+Message-ID: <20140917104550.GB8594@khazad-dum.debian.net>
+References: <1410904868-10406-1-git-send-email-janvdberg@gmail.com>
+ <20140916221236.GB12780@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:57590 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751564AbaIQKqD (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Sep 2014 06:46:03 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by gateway2.nyi.internal (Postfix) with ESMTP id D92DB20E52
+	for <platform-driver-x86@vger.kernel.org>; Wed, 17 Sep 2014 06:46:02 -0400 (EDT)
 Content-Disposition: inline
-In-Reply-To: <20140916212715.GB6856@vmdeb7>
-Sender: linux-acpi-owner@vger.kernel.org
+In-Reply-To: <20140916221236.GB12780@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Frans Klaver <fransklaver@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-acpi <linux-acpi@vger.kernel.org>, "H. Peter Anvin" <hpa@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Jan van den Berg <janvdberg@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
 On Tue, 16 Sep 2014, Darren Hart wrote:
-> - When reading and writing sysfs device attribute files, avoid dependency
->   on specific error codes wherever possible. This minimizes coupling to
->   the error handling implemementation within the kernel.
+> On Wed, Sep 17, 2014 at 12:01:08AM +0200, Jan van den Berg wrote:
+> > Fixed 22 similar coding style issues: "ERROR: spaces required around that '?'"
+> > 
+> > Signed-off-by: Jan van den Berg <janvdberg@gmail.com>
 > 
->   In general, failures to read or write sysfs device attributes shall
->   propogate errors wherever possible. Common errors include, but are not
->   limited to:
-> 
->   -EIO: The read or store operation is not supported, typically returned by
->         the sysfs system itself if the read or store pointer is NULL.
-> 
->   -ENXIO: The read or store operation failed
+> Queued, thanks.
 
-from errno(3):
-       EIO             Input/output error (POSIX.1)
-       ENXIO           No such device or address (POSIX.1)
-
-It makes sense to retry EIO.  ENXIO means there's nobody listening at the
-time, and isn't usually retried.
-
-The device-based interfaces get it right.  A typical example is the
-cpu-based devices, where ENXIO means "no such processor", while EIO means
-"whatever you're trying to do failed",  so a MSR read would return ENXIO if
-the processor core is offline/doesn't exist, and EIO if the processor core
-is there, but raised a #GP when the MSR read was attempted.
+I usually refuse "fix whitespace" patches because git blame is not smart
+enough to skip such commits.    They effectively pollute history for zero
+gain.
 
 -- 
   "One disk to rule them all, One disk to find them. One disk to bring
