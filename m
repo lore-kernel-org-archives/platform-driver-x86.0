@@ -1,39 +1,81 @@
-From: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
-Subject: [PATCH] intel_ips: fix a comment typo
-Date: Thu, 18 Sep 2014 11:59:05 +0800
-Message-ID: <1411012745-7066-1-git-send-email-chenhanxiao@cn.fujitsu.com>
+From: Frans Klaver <fransklaver@gmail.com>
+Subject: Re: [PATCH 1/9] eeepc-laptop: clean up coding style
+Date: Thu, 18 Sep 2014 07:01:25 +0200
+Message-ID: <642509cf-05f2-47f4-be2e-a3cfb9a93a04@email.android.com>
+References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com> <1410990447-3210-2-git-send-email-fransklaver@gmail.com> <1410991612.4290.10.camel@joe-AO725>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([59.151.112.132]:26137 "EHLO
-	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1757331AbaIRD6v (ORCPT
+Received: from mail-we0-f179.google.com ([74.125.82.179]:48187 "EHLO
+	mail-we0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751060AbaIRFBg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Sep 2014 23:58:51 -0400
+	Thu, 18 Sep 2014 01:01:36 -0400
+In-Reply-To: <1410991612.4290.10.camel@joe-AO725>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <matthew.garrett@nebula.com>
-Cc: platform-driver-x86@vger.kernel.org, Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+To: Joe Perches <joe@perches.com>
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-s/tempurature/temperature
+On 18 September 2014 00:06:52 CEST, Joe Perches <joe@perches.com> wrote:
+>On Wed, 2014-09-17 at 23:47 +0200, Frans Klaver wrote:
+>> Correct indentation and brace usage to comply with
+>> Documentation/CodingStyle.
+>> 
+>> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+>> ---
+>>  drivers/platform/x86/eeepc-laptop.c | 8 +++++---
+>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/platform/x86/eeepc-laptop.c
+>b/drivers/platform/x86/eeepc-laptop.c
+>> index 3095d38..653999e 100644
+>> --- a/drivers/platform/x86/eeepc-laptop.c
+>> +++ b/drivers/platform/x86/eeepc-laptop.c
+>> @@ -544,7 +544,7 @@ static int eeepc_led_init(struct eeepc_laptop
+>*eeepc)
+>>  	eeepc->tpd_led.name = "eeepc::touchpad";
+>>  	eeepc->tpd_led.brightness_set = tpd_led_set;
+>>  	if (get_acpi(eeepc, CM_ASL_TPD) >= 0) /* if method is available */
+>> -	  eeepc->tpd_led.brightness_get = tpd_led_get;
+>> +		eeepc->tpd_led.brightness_get = tpd_led_get;
+>>  	eeepc->tpd_led.max_brightness = 1;
+>>  
+>>  	rv = led_classdev_register(&eeepc->platform_device->dev,
+>> @@ -692,8 +692,9 @@ static int eeepc_register_rfkill_notifier(struct
+>eeepc_laptop *eeepc,
+>>  		 * changed during setup.
+>>  		 */
+>>  		eeepc_rfkill_hotplug(eeepc, handle);
+>> -	} else
+>> +	} else {
+>>  		return -ENODEV;
+>> +	}
+>>  
+>>  	return 0;
+>>  }
+>
+>This sort of code:
+>
+>	if (foo) {
+>		[ do_something ]
+>	} else
+>		return -ERRVAL;
+>
+>is generally better rewritten as:
+>
+>	if (!foo)
+>		return -ERRVAL;
+>
+>	[ do_something ]
+>
+>This gives immediacy to the error handler and
+>as well reduces unnecessary indentation.
 
-Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
----
- drivers/platform/x86/intel_ips.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I fully agree. 
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index c0242ed..3c03232 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -33,7 +33,7 @@
-  * performance by allocating more power or thermal budget to the CPU or GPU
-  * based on available headroom and activity.
-  *
-- * The basic algorithm is driven by a 5s moving average of tempurature.  If
-+ * The basic algorithm is driven by a 5s moving average of temperature.  If
-  * thermal headroom is available, the CPU and/or GPU power clamps may be
-  * adjusted upwards.  If we hit the thermal ceiling or a thermal trigger,
-  * we scale back the clamp.  Aside from trigger events (when we're critically
--- 
-1.9.0
+Darren, do you still take this in one patch? 
+
+Frans
