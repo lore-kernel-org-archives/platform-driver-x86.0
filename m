@@ -1,79 +1,39 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 5/9] eeepc-laptop: tell sysfs that the disp attribute is
- write-only
-Date: Wed, 17 Sep 2014 15:07:53 -0700
-Message-ID: <20140917220753.GB20915@kroah.com>
-References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com>
- <1410990447-3210-6-git-send-email-fransklaver@gmail.com>
+From: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+Subject: [PATCH] intel_ips: fix a comment typo
+Date: Thu, 18 Sep 2014 11:59:05 +0800
+Message-ID: <1411012745-7066-1-git-send-email-chenhanxiao@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410990447-3210-6-git-send-email-fransklaver@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cn.fujitsu.com ([59.151.112.132]:26137 "EHLO
+	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1757331AbaIRD6v (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 17 Sep 2014 23:58:51 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <matthew.garrett@nebula.com>
+Cc: platform-driver-x86@vger.kernel.org, Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
 
-On Wed, Sep 17, 2014 at 11:47:23PM +0200, Frans Klaver wrote:
-> The disp attribute is write-only, but sysfs doesn't know this. Currently
-> show_sys_acpi() is mimicking sysfs behavior, if the underlying acpi call
-> should fail. This was introduced in 6dff29b63a5bf2eaf3 "eeepc-laptop:
-> disp attribute should be write-only". This is not ideal; behaving like
-> sysfs is better left to sysfs.
-> 
-> Introduce EEEPC_CREATE_DEVICE_ATTR_WO() to instantiate a write-only
-> attribute, and declare the disp attribute with it. Sysfs makes sure
-> userspace can only write to disp at all times. This removes the need for
-> mimicking the sysfs behavior in show_sys_acpi() and store_sys_acpi(),
-> but we'll stick with -EIO, as changing sysfs return values should not be
-> taken lightly.
-> 
-> This change also causes EEEPC_CREATE_DEVICE_ATTR() to be used only for
-> R/W attributes. This enables us to drop the _mode argument from the
-> macro and use DEVICE_ATTR_RW() internally while we're at it. Append _RW
-> to the name for readability.
-> 
-> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
-> ---
-> Here we're sticking with -EIO as return values. It should be said that the
-> commit mentioned above did change the error value from -ENODEV to -EIO. I'm
-> still in two minds about whether the show_sys_acpi and store_sys_acpi should go
-> back to returning ENODEV. We'll probably stick with -EIO, though, as there is
-> no strong reason other than "it was like that before".
-> 
->  drivers/platform/x86/eeepc-laptop.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-> index c6d765f..a85da4f 100644
-> --- a/drivers/platform/x86/eeepc-laptop.c
-> +++ b/drivers/platform/x86/eeepc-laptop.c
-> @@ -311,14 +311,18 @@ static ssize_t show_sys_acpi(struct device *dev, int cm, char *buf)
->  		return store_sys_acpi(dev, _cm, buf, count);		\
->  	}
->  
-> -#define EEEPC_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
-> +#define EEEPC_CREATE_DEVICE_ATTR_RW(_name, _cm)				\
->  	EEEPC_ACPI_SHOW_FUNC(_name, _cm)				\
->  	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
-> -	static DEVICE_ATTR(_name, _mode, _name##_show, _name##_store)
-> +	static DEVICE_ATTR_RW(_name)
->  
-> -EEEPC_CREATE_DEVICE_ATTR(camera, 0644, CM_ASL_CAMERA);
-> -EEEPC_CREATE_DEVICE_ATTR(cardr, 0644, CM_ASL_CARDREADER);
-> -EEEPC_CREATE_DEVICE_ATTR(disp, 0200, CM_ASL_DISPLAYSWITCH);
-> +#define EEEPC_CREATE_DEVICE_ATTR_WO(_name, _cm)				\
-> +	EEEPC_ACPI_STORE_FUNC(_name, _cm)				\
-> +	static DEVICE_ATTR_WO(_name)
-> +
-> +EEEPC_CREATE_DEVICE_ATTR_RW(camera, CM_ASL_CAMERA);
-> +EEEPC_CREATE_DEVICE_ATTR_RW(cardr, CM_ASL_CARDREADER);
-> +EEEPC_CREATE_DEVICE_ATTR_WO(disp, CM_ASL_DISPLAYSWITCH);
->  
->  struct eeepc_cpufv {
->  	int num;
+s/tempurature/temperature
 
-Ah, you did what I asked on a previous patch here, nevermind :)
+Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+---
+ drivers/platform/x86/intel_ips.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index c0242ed..3c03232 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -33,7 +33,7 @@
+  * performance by allocating more power or thermal budget to the CPU or GPU
+  * based on available headroom and activity.
+  *
+- * The basic algorithm is driven by a 5s moving average of tempurature.  If
++ * The basic algorithm is driven by a 5s moving average of temperature.  If
+  * thermal headroom is available, the CPU and/or GPU power clamps may be
+  * adjusted upwards.  If we hit the thermal ceiling or a thermal trigger,
+  * we scale back the clamp.  Aside from trigger events (when we're critically
+-- 
+1.9.0
