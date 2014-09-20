@@ -1,53 +1,107 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH v2 0/9] eeepc cleanup
-Date: Fri, 19 Sep 2014 19:33:11 +0200
-Message-ID: <17894680-86be-41f3-8ee4-93704accd374@email.android.com>
-References: <1410990447-3210-1-git-send-email-fransklaver@gmail.com> <20140919172538.GC34042@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140919172538.GC34042@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH] eeepc-laptop: clean up control flow in *_rfkill_notifier
+Date: Sun, 21 Sep 2014 00:22:17 +0200
+Message-ID: <1411251737-16072-1-git-send-email-fransklaver@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-we0-f177.google.com ([74.125.82.177]:61601 "EHLO
+	mail-we0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750747AbaITWWc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 20 Sep 2014 18:22:32 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Rafael Wysocki <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 19 September 2014 19:25:38 CEST, Darren Hart <dvhart@infradead.org> wrote:
->On Wed, Sep 17, 2014 at 11:47:18PM +0200, Frans Klaver wrote:
->> Here's the second installment cleaning up some things in the eeepc
->laptop
->> driver.
->> 
->> This depends on "eeepc-laptop: simplify parse_arg()".
->> 
->> For those interested, I keep a copy based on Darren's testing branch
->on
->> github:
->
->Please note, "testing" is strictly for use with Fengguang's 0day robot.
->It
->*will* rebase and be recreated willy nilly.
->
->If you want to base on something I've queued, I suggest the "for-next"
->branch as
->I expect that to be far more stable. Rabses should be *very* rare
->there.
->
->Feel free to use "testing" if you need to, just be aware it will
->rebase.
->
+Handle errors immediately in eeepc_register_rfkill_notifier and
+eeepc_unregister_rfkill_notifier. This clears up the control flow for the
+reader. It also removes unnecessary indentation.
 
-I'll keep that in mind for the next batch ;) 
+Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+---
+This depends on the earlier eeepc cleanup series [1] to apply cleanly.
 
+[1] https://lkml.org/lkml/2014/9/17/654
 
->> 
->> 	https://github.com/fransklaver/linux.git tags/eeepc_cleanup_v2
->
->Queued for testing.
->
->Thanks Frans!
+ drivers/platform/x86/eeepc-laptop.c | 57 ++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 29 deletions(-)
 
-Thanks, 
-Frans 
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index 3f6c762..db79902 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -668,23 +668,21 @@ static int eeepc_register_rfkill_notifier(struct eeepc_laptop *eeepc,
+ 
+ 	status = acpi_get_handle(NULL, node, &handle);
+ 
+-	if (ACPI_SUCCESS(status)) {
+-		status = acpi_install_notify_handler(handle,
+-						     ACPI_SYSTEM_NOTIFY,
+-						     eeepc_rfkill_notify,
+-						     eeepc);
+-		if (ACPI_FAILURE(status))
+-			pr_warn("Failed to register notify on %s\n", node);
+-
+-		/*
+-		 * Refresh pci hotplug in case the rfkill state was
+-		 * changed during setup.
+-		 */
+-		eeepc_rfkill_hotplug(eeepc, handle);
+-	} else {
++	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
+-	}
+ 
++	status = acpi_install_notify_handler(handle,
++					     ACPI_SYSTEM_NOTIFY,
++					     eeepc_rfkill_notify,
++					     eeepc);
++	if (ACPI_FAILURE(status))
++		pr_warn("Failed to register notify on %s\n", node);
++
++	/*
++	 * Refresh pci hotplug in case the rfkill state was
++	 * changed during setup.
++	 */
++	eeepc_rfkill_hotplug(eeepc, handle);
+ 	return 0;
+ }
+ 
+@@ -696,20 +694,21 @@ static void eeepc_unregister_rfkill_notifier(struct eeepc_laptop *eeepc,
+ 
+ 	status = acpi_get_handle(NULL, node, &handle);
+ 
+-	if (ACPI_SUCCESS(status)) {
+-		status = acpi_remove_notify_handler(handle,
+-						     ACPI_SYSTEM_NOTIFY,
+-						     eeepc_rfkill_notify);
+-		if (ACPI_FAILURE(status))
+-			pr_err("Error removing rfkill notify handler %s\n",
+-				node);
+-			/*
+-			 * Refresh pci hotplug in case the rfkill
+-			 * state was changed after
+-			 * eeepc_unregister_rfkill_notifier()
+-			 */
+-		eeepc_rfkill_hotplug(eeepc, handle);
+-	}
++	if (ACPI_FAILURE(status))
++		return;
++
++	status = acpi_remove_notify_handler(handle,
++					     ACPI_SYSTEM_NOTIFY,
++					     eeepc_rfkill_notify);
++	if (ACPI_FAILURE(status))
++		pr_err("Error removing rfkill notify handler %s\n",
++			node);
++		/*
++		 * Refresh pci hotplug in case the rfkill
++		 * state was changed after
++		 * eeepc_unregister_rfkill_notifier()
++		 */
++	eeepc_rfkill_hotplug(eeepc, handle);
+ }
+ 
+ static int eeepc_get_adapter_status(struct hotplug_slot *hotplug_slot,
+-- 
+2.1.0
