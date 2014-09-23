@@ -1,32 +1,39 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] eeepc-laptop: clean up control flow in *_rfkill_notifier
-Date: Mon, 22 Sep 2014 14:20:09 -0700
-Message-ID: <20140922212008.GA49318@vmdeb7>
-References: <1411251737-16072-1-git-send-email-fransklaver@gmail.com>
+From: "Hon. Amirel Yakouba" <armellyacouba@gmail.com>
+Subject: Your Partnership and Trust
+Date: Tue, 23 Sep 2014 15:16:06 +0200
+Message-ID: <CAEZHpvyNxsxfLXOWi0chbj8PQFmSSuHL=x1W9qc+0ax7obeAxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:59999 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753825AbaIVVUO (ORCPT
+Received: from mail-we0-f193.google.com ([74.125.82.193]:42724 "EHLO
+	mail-we0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751601AbaIWNQI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Sep 2014 17:20:14 -0400
-Content-Disposition: inline
-In-Reply-To: <1411251737-16072-1-git-send-email-fransklaver@gmail.com>
+	Tue, 23 Sep 2014 09:16:08 -0400
+Received: by mail-we0-f193.google.com with SMTP id k48so1464688wev.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2014 06:16:06 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Sep 21, 2014 at 12:22:17AM +0200, Frans Klaver wrote:
-> Handle errors immediately in eeepc_register_rfkill_notifier and
-> eeepc_unregister_rfkill_notifier. This clears up the control flow for the
-> reader. It also removes unnecessary indentation.
-> 
-> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+Greetings,
 
-Queued, thanks Frans.
+I have emailed you earlier without a response. In my first email I
+mentioned about my late client whose relatives I cannot get in touch
+with, but both of you have the same last name so it will be very easy
+to make you become her official next of kin. I am compelled to do this
+because I would not want the bank to push my late client's funds
+amount $5.5 million dollars into the bank treasury as unclaimed
+inheritance. If you are interested you do let me know and get back to
+me with this bellow information's.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Your Full Names:....................
+Residential Address:................
+Private Email Address...............
+Telephone/fax Numbers:..............
+Age:................................
+Occupation:.........................
+Marital status......................
+
+Yours faithfully,
+Barrister.Amirel Yakouba
+Private Email Id : honamirelyakouba@outlook.fr
