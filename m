@@ -1,8 +1,11 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/4] toshiba_acpi: Rename hci_raw to tci_raw
-Date: Tue, 23 Sep 2014 18:24:25 -0600
-Message-ID: <1411518268-2773-2-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 4/4] toshiba_acpi: Adapt functions to the changes made to HCI/SCI
+Date: Tue, 23 Sep 2014 18:24:28 -0600
+Message-ID: <1411518268-2773-5-git-send-email-coproscefalo@gmail.com>
 References: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -10,191 +13,354 @@ To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lin
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The function name hci_raw was used before to reflect
-a raw (read/write) call to the Toshiba's Hardware
-Configuration Interface (HCI), however, since the
-introduction of the System Configuration Interface
-(SCI), that "name" no longer applies.
+The previous patch changed the return type for the HCI/SCI
+read/write functions.
 
-This patch changes the name of that function to
-tci_raw (for Toshiba Configuration Interface), and
-change the comments about it.
+This patch adapts the code for that change, as now the
+"result" parameter is returned by those functions, instead
+of the ACPI status call.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 77 ++++++++++++++++-------------=
+--------
+ 1 file changed, 34 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index edd8f3d..b7030dc 100644
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86=
+/toshiba_acpi.c
+index 43385f7..582563d 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -71,7 +71,7 @@ MODULE_LICENSE("GPL");
- /* Toshiba ACPI method paths */
- #define METHOD_VIDEO_OUT	"\\_SB_.VALX.DSSX"
- 
--/* Toshiba HCI interface definitions
-+/* Toshiba configuration interface definitions
-  *
-  * HCI is Toshiba's "Hardware Control Interface" which is supposed to
-  * be uniform across all their models.  Ideally we would just call
-@@ -274,10 +274,10 @@ static int write_acpi_int(const char *methodName, int val)
- 	return (status == AE_OK) ? 0 : -EIO;
- }
- 
--/* Perform a raw HCI call.  Here we don't care about input or output buffer
-- * format.
-+/* Perform a raw configuration call.  Here we don't care about input or output
-+ * buffer format.
-  */
--static acpi_status hci_raw(struct toshiba_acpi_dev *dev,
-+static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
- 			   const u32 in[HCI_WORDS], u32 out[HCI_WORDS])
- {
- 	struct acpi_object_list params;
-@@ -320,7 +320,7 @@ static acpi_status hci_write1(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { HCI_SET, reg, in1, 0, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*result = (status == AE_OK) ? out[0] : HCI_FAILURE;
- 	return status;
- }
-@@ -330,7 +330,7 @@ static acpi_status hci_read1(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { HCI_GET, reg, 0, 0, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*out1 = out[2];
- 	*result = (status == AE_OK) ? out[0] : HCI_FAILURE;
- 	return status;
-@@ -341,7 +341,7 @@ static acpi_status hci_write2(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { HCI_SET, reg, in1, in2, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*result = (status == AE_OK) ? out[0] : HCI_FAILURE;
- 	return status;
- }
-@@ -351,7 +351,7 @@ static acpi_status hci_read2(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { HCI_GET, reg, *out1, *out2, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*out1 = out[2];
- 	*out2 = out[3];
- 	*result = (status == AE_OK) ? out[0] : HCI_FAILURE;
-@@ -367,7 +367,7 @@ static int sci_open(struct toshiba_acpi_dev *dev)
- 	u32 out[HCI_WORDS];
- 	acpi_status status;
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if  (ACPI_FAILURE(status) || out[0] == HCI_FAILURE) {
- 		pr_err("ACPI call to open SCI failed\n");
- 		return 0;
-@@ -391,7 +391,7 @@ static void sci_close(struct toshiba_acpi_dev *dev)
- 	u32 out[HCI_WORDS];
- 	acpi_status status;
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == HCI_FAILURE) {
- 		pr_err("ACPI call to close SCI failed\n");
+@@ -459,7 +459,6 @@ static void toshiba_illumination_set(struct led_cla=
+ssdev *cdev,
+ 	struct toshiba_acpi_dev *dev =3D container_of(cdev,
+ 			struct toshiba_acpi_dev, led_dev);
+ 	u32 state, result;
+-	acpi_status status;
+=20
+ 	/* First request : initialize communication. */
+ 	if (!sci_open(dev))
+@@ -467,9 +466,9 @@ static void toshiba_illumination_set(struct led_cla=
+ssdev *cdev,
+=20
+ 	/* Switch the illumination on/off */
+ 	state =3D brightness ? 1 : 0;
+-	status =3D sci_write(dev, SCI_ILLUMINATION, state, &result);
++	result =3D sci_write(dev, SCI_ILLUMINATION, state);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status)) {
++	if (result =3D=3D TOS_FAILURE) {
+ 		pr_err("ACPI call for illumination failed\n");
  		return;
-@@ -410,7 +410,7 @@ static acpi_status sci_read(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { SCI_GET, reg, 0, 0, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*out1 = out[2];
- 	*result = (ACPI_SUCCESS(status)) ? out[0] : HCI_FAILURE;
- 	return status;
-@@ -421,7 +421,7 @@ static acpi_status sci_write(struct toshiba_acpi_dev *dev, u32 reg,
- {
- 	u32 in[HCI_WORDS] = { SCI_SET, reg, in1, 0, 0, 0 };
- 	u32 out[HCI_WORDS];
--	acpi_status status = hci_raw(dev, in, out);
-+	acpi_status status = tci_raw(dev, in, out);
- 	*result = (ACPI_SUCCESS(status)) ? out[0] : HCI_FAILURE;
- 	return status;
- }
-@@ -436,7 +436,7 @@ static int toshiba_illumination_available(struct toshiba_acpi_dev *dev)
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -483,16 +482,15 @@ static enum led_brightness toshiba_illumination_g=
+et(struct led_classdev *cdev)
+ 	struct toshiba_acpi_dev *dev =3D container_of(cdev,
+ 			struct toshiba_acpi_dev, led_dev);
+ 	u32 state, result;
+-	acpi_status status;
+=20
+ 	/*=C2=A0First request : initialize communication. */
  	if (!sci_open(dev))
- 		return 0;
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	sci_close(dev);
- 	if (ACPI_FAILURE(status) || out[0] == HCI_FAILURE) {
- 		pr_err("ACPI call to query Illumination support failed\n");
-@@ -509,7 +509,7 @@ static int toshiba_kbd_illum_available(struct toshiba_acpi_dev *dev)
- 	if (!sci_open(dev))
- 		return 0;
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	sci_close(dev);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to query kbd illumination support failed\n");
-@@ -666,7 +666,7 @@ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
- 	u32 in[HCI_WORDS] = { HCI_GET, HCI_ECO_MODE, 0, 1, 0, 0 };
- 	u32 out[HCI_WORDS];
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_info("ACPI call to get ECO led failed\n");
- 		return 0;
-@@ -683,7 +683,7 @@ static enum led_brightness toshiba_eco_mode_get_status(struct led_classdev *cdev
- 	u32 out[HCI_WORDS];
- 	acpi_status status;
- 
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to get ECO led failed\n");
  		return LED_OFF;
-@@ -703,7 +703,7 @@ static void toshiba_eco_mode_set_status(struct led_classdev *cdev,
- 
- 	/* Switch the Eco Mode led on/off */
- 	in[2] = (brightness) ? 1 : 0;
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to set ECO led failed\n");
+=20
+ 	/* Check the illumination */
+-	status =3D sci_read(dev, SCI_ILLUMINATION, &state, &result);
++	result =3D sci_read(dev, SCI_ILLUMINATION, &state);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status) || result =3D=3D TOS_INPUT_DATA_ERROR) {
++	if (result =3D=3D TOS_FAILURE || result =3D=3D TOS_INPUT_DATA_ERROR) =
+{
+ 		pr_err("ACPI call for illumination failed\n");
+ 		return LED_OFF;
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -543,14 +541,13 @@ static int toshiba_kbd_illum_available(struct tos=
+hiba_acpi_dev *dev)
+ static int toshiba_kbd_illum_status_set(struct toshiba_acpi_dev *dev, =
+u32 time)
+ {
+ 	u32 result;
+-	acpi_status status;
+=20
+ 	if (!sci_open(dev))
+ 		return -EIO;
+=20
+-	status =3D sci_write(dev, SCI_KBD_ILLUM_STATUS, time, &result);
++	result =3D sci_write(dev, SCI_KBD_ILLUM_STATUS, time);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status) || result =3D=3D TOS_INPUT_DATA_ERROR) {
++	if (result =3D=3D TOS_FAILURE || result =3D=3D TOS_INPUT_DATA_ERROR) =
+{
+ 		pr_err("ACPI call to set KBD backlight status failed\n");
+ 		return -EIO;
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -564,14 +561,13 @@ static int toshiba_kbd_illum_status_set(struct to=
+shiba_acpi_dev *dev, u32 time)
+ static int toshiba_kbd_illum_status_get(struct toshiba_acpi_dev *dev, =
+u32 *time)
+ {
+ 	u32 result;
+-	acpi_status status;
+=20
+ 	if (!sci_open(dev))
+ 		return -EIO;
+=20
+-	status =3D sci_read(dev, SCI_KBD_ILLUM_STATUS, time, &result);
++	result =3D sci_read(dev, SCI_KBD_ILLUM_STATUS, time);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status) || result =3D=3D TOS_INPUT_DATA_ERROR) {
++	if (result =3D=3D TOS_FAILURE || result =3D=3D TOS_INPUT_DATA_ERROR) =
+{
+ 		pr_err("ACPI call to get KBD backlight status failed\n");
+ 		return -EIO;
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -587,11 +583,10 @@ static enum led_brightness toshiba_kbd_backlight_=
+get(struct led_classdev *cdev)
+ 	struct toshiba_acpi_dev *dev =3D container_of(cdev,
+ 			struct toshiba_acpi_dev, kbd_led);
+ 	u32 state, result;
+-	acpi_status status;
+=20
+ 	/* Check the keyboard backlight state */
+-	status =3D hci_read1(dev, HCI_KBD_ILLUMINATION, &state, &result);
+-	if (ACPI_FAILURE(status) || result =3D=3D TOS_INPUT_DATA_ERROR) {
++	result =3D hci_read1(dev, HCI_KBD_ILLUMINATION, &state);
++	if (result =3D=3D TOS_FAILURE || result =3D=3D TOS_INPUT_DATA_ERROR) =
+{
+ 		pr_err("ACPI call to get the keyboard backlight failed\n");
+ 		return LED_OFF;
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -608,12 +603,11 @@ static void toshiba_kbd_backlight_set(struct led_=
+classdev *cdev,
+ 	struct toshiba_acpi_dev *dev =3D container_of(cdev,
+ 			struct toshiba_acpi_dev, kbd_led);
+ 	u32 state, result;
+-	acpi_status status;
+=20
+ 	/* Set the keyboard backlight state */
+ 	state =3D brightness ? 1 : 0;
+-	status =3D hci_write1(dev, HCI_KBD_ILLUMINATION, state, &result);
+-	if (ACPI_FAILURE(status) || result =3D=3D TOS_INPUT_DATA_ERROR) {
++	result =3D hci_write1(dev, HCI_KBD_ILLUMINATION, state);
++	if (result =3D=3D TOS_FAILURE || result =3D=3D TOS_INPUT_DATA_ERROR) =
+{
+ 		pr_err("ACPI call to set KBD Illumination mode failed\n");
  		return;
-@@ -720,7 +720,7 @@ static int toshiba_accelerometer_supported(struct toshiba_acpi_dev *dev)
- 	/* Check if the accelerometer call exists,
- 	 * this call also serves as initialization
- 	 */
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to query the accelerometer failed\n");
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -626,14 +620,13 @@ static void toshiba_kbd_backlight_set(struct led_=
+classdev *cdev,
+ static int toshiba_touchpad_set(struct toshiba_acpi_dev *dev, u32 stat=
+e)
+ {
+ 	u32 result;
+-	acpi_status status;
+=20
+ 	if (!sci_open(dev))
  		return -EIO;
-@@ -744,7 +744,7 @@ static int toshiba_accelerometer_get(struct toshiba_acpi_dev *dev,
- 	acpi_status status;
- 
- 	/* Check the Accelerometer status */
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == SCI_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to query the accelerometer failed\n");
+=20
+-	status =3D sci_write(dev, SCI_TOUCHPAD, state, &result);
++	result =3D sci_write(dev, SCI_TOUCHPAD, state);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status)) {
++	if (result =3D=3D TOS_FAILURE) {
+ 		pr_err("ACPI call to set the touchpad failed\n");
  		return -EIO;
-@@ -939,7 +939,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -646,14 +639,13 @@ static int toshiba_touchpad_set(struct toshiba_ac=
+pi_dev *dev, u32 state)
+ static int toshiba_touchpad_get(struct toshiba_acpi_dev *dev, u32 *sta=
+te)
+ {
+ 	u32 result;
+-	acpi_status status;
+=20
+ 	if (!sci_open(dev))
+ 		return -EIO;
+=20
+-	status =3D sci_read(dev, SCI_TOUCHPAD, state, &result);
++	result =3D sci_read(dev, SCI_TOUCHPAD, state);
+ 	sci_close(dev);
+-	if (ACPI_FAILURE(status)) {
++	if (result =3D=3D TOS_FAILURE) {
+ 		pr_err("ACPI call to query the touchpad failed\n");
+ 		return -EIO;
+ 	} else if (result =3D=3D TOS_NOT_SUPPORTED) {
+@@ -769,7 +761,7 @@ static u32 hci_get_bt_present(struct toshiba_acpi_d=
+ev *dev, bool *present)
+=20
+ 	value =3D 0;
+ 	value2 =3D 0;
+-	hci_read2(dev, HCI_WIRELESS, &value, &value2, &hci_result);
++	hci_result =3D hci_read2(dev, HCI_WIRELESS, &value, &value2);
+ 	if (hci_result =3D=3D TOS_SUCCESS)
+ 		*present =3D (value & HCI_WIRELESS_BT_PRESENT) ? true : false;
+=20
+@@ -783,7 +775,7 @@ static u32 hci_get_radio_state(struct toshiba_acpi_=
+dev *dev, bool *radio_state)
+=20
+ 	value =3D 0;
+ 	value2 =3D 0x0001;
+-	hci_read2(dev, HCI_WIRELESS, &value, &value2, &hci_result);
++	hci_result =3D hci_read2(dev, HCI_WIRELESS, &value, &value2);
+=20
+ 	*radio_state =3D value & HCI_WIRELESS_KILL_SWITCH;
+ 	return hci_result;
+@@ -810,8 +802,8 @@ static int bt_rfkill_set_block(void *data, bool blo=
+cked)
+ 		goto out;
  	}
- 
- 	in[2] = value << HCI_LCD_BRIGHTNESS_SHIFT;
--	status = hci_raw(dev, in, out);
-+	status = tci_raw(dev, in, out);
- 	if (ACPI_FAILURE(status) || out[0] == HCI_FAILURE) {
- 		pr_err("ACPI call to set brightness failed");
- 		return -EIO;
--- 
+=20
+-	hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_POWER, &result1)=
+;
+-	hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_ATTACH, &result2=
+);
++	result1 =3D hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_POWE=
+R);
++	result2 =3D hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_ATTA=
+CH);
+=20
+ 	if (result1 !=3D TOS_SUCCESS || result2 !=3D TOS_SUCCESS)
+ 		err =3D -EIO;
+@@ -856,7 +848,7 @@ static int get_tr_backlight_status(struct toshiba_a=
+cpi_dev *dev, bool *enabled)
+ 	u32 hci_result;
+ 	u32 status;
+=20
+-	hci_read1(dev, HCI_TR_BACKLIGHT, &status, &hci_result);
++	hci_result =3D hci_read1(dev, HCI_TR_BACKLIGHT, &status);
+ 	*enabled =3D !status;
+ 	return hci_result =3D=3D TOS_SUCCESS ? 0 : -EIO;
+ }
+@@ -866,7 +858,7 @@ static int set_tr_backlight_status(struct toshiba_a=
+cpi_dev *dev, bool enable)
+ 	u32 hci_result;
+ 	u32 value =3D !enable;
+=20
+-	hci_write1(dev, HCI_TR_BACKLIGHT, value, &hci_result);
++	hci_result =3D hci_write1(dev, HCI_TR_BACKLIGHT, value);
+ 	return hci_result =3D=3D TOS_SUCCESS ? 0 : -EIO;
+ }
+=20
+@@ -888,7 +880,7 @@ static int __get_lcd_brightness(struct toshiba_acpi=
+_dev *dev)
+ 		brightness++;
+ 	}
+=20
+-	hci_read1(dev, HCI_LCD_BRIGHTNESS, &value, &hci_result);
++	hci_result =3D hci_read1(dev, HCI_LCD_BRIGHTNESS, &value);
+ 	if (hci_result =3D=3D TOS_SUCCESS)
+ 		return brightness + (value >> HCI_LCD_BRIGHTNESS_SHIFT);
+=20
+@@ -1003,7 +995,7 @@ static int get_video_status(struct toshiba_acpi_de=
+v *dev, u32 *status)
+ {
+ 	u32 hci_result;
+=20
+-	hci_read1(dev, HCI_VIDEO_OUT, status, &hci_result);
++	hci_result =3D hci_read1(dev, HCI_VIDEO_OUT, status);
+ 	return hci_result =3D=3D TOS_SUCCESS ? 0 : -EIO;
+ }
+=20
+@@ -1107,7 +1099,7 @@ static int get_fan_status(struct toshiba_acpi_dev=
+ *dev, u32 *status)
+ {
+ 	u32 hci_result;
+=20
+-	hci_read1(dev, HCI_FAN, status, &hci_result);
++	hci_result =3D hci_read1(dev, HCI_FAN, status);
+ 	return hci_result =3D=3D TOS_SUCCESS ? 0 : -EIO;
+ }
+=20
+@@ -1147,7 +1139,7 @@ static ssize_t fan_proc_write(struct file *file, =
+const char __user *buf,
+=20
+ 	if (sscanf(cmd, " force_on : %i", &value) =3D=3D 1 &&
+ 	    value >=3D 0 && value <=3D 1) {
+-		hci_write1(dev, HCI_FAN, value, &hci_result);
++		hci_result =3D hci_write1(dev, HCI_FAN, value);
+ 		if (hci_result !=3D TOS_SUCCESS)
+ 			return -EIO;
+ 		else
+@@ -1175,7 +1167,7 @@ static int keys_proc_show(struct seq_file *m, voi=
+d *v)
+ 	u32 value;
+=20
+ 	if (!dev->key_event_valid && dev->system_event_supported) {
+-		hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
++		hci_result =3D hci_read1(dev, HCI_SYSTEM_EVENT, &value);
+ 		if (hci_result =3D=3D TOS_SUCCESS) {
+ 			dev->key_event_valid =3D 1;
+ 			dev->last_key_event =3D value;
+@@ -1185,7 +1177,7 @@ static int keys_proc_show(struct seq_file *m, voi=
+d *v)
+ 			/* This is a workaround for an unresolved issue on
+ 			 * some machines where system events sporadically
+ 			 * become disabled. */
+-			hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
++			hci_result =3D hci_write1(dev, HCI_SYSTEM_EVENT, 1);
+ 			pr_notice("Re-enabled hotkeys\n");
+ 		} else {
+ 			pr_err("Error reading hotkey status\n");
+@@ -1679,7 +1671,7 @@ static int toshiba_acpi_setup_keyboard(struct tos=
+hiba_acpi_dev *dev)
+ 	if (acpi_has_method(dev->acpi_dev->handle, "INFO"))
+ 		dev->info_supported =3D 1;
+ 	else {
+-		hci_write1(dev, HCI_SYSTEM_EVENT, 1, &hci_result);
++		hci_result =3D hci_write1(dev, HCI_SYSTEM_EVENT, 1);
+ 		if (hci_result =3D=3D TOS_SUCCESS)
+ 			dev->system_event_supported =3D 1;
+ 	}
+@@ -1702,7 +1694,7 @@ static int toshiba_acpi_setup_keyboard(struct tos=
+hiba_acpi_dev *dev)
+ 		goto err_remove_filter;
+ 	}
+=20
+-	hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE, &hci_result);
++	hci_result =3D hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE);
+ 	return 0;
+=20
+  err_remove_filter:
+@@ -1963,7 +1955,7 @@ static void toshiba_acpi_notify(struct acpi_devic=
+e *acpi_dev, u32 event)
+ 			toshiba_acpi_report_hotkey(dev, scancode);
+ 	} else if (dev->system_event_supported) {
+ 		do {
+-			hci_read1(dev, HCI_SYSTEM_EVENT, &value, &hci_result);
++			hci_result =3D hci_read1(dev, HCI_SYSTEM_EVENT, &value);
+ 			switch (hci_result) {
+ 			case TOS_SUCCESS:
+ 				toshiba_acpi_report_hotkey(dev, (int)value);
+@@ -1974,8 +1966,7 @@ static void toshiba_acpi_notify(struct acpi_devic=
+e *acpi_dev, u32 event)
+ 				 * issue on some machines where system events
+ 				 * sporadically become disabled.
+ 				 */
+-				hci_write1(dev, HCI_SYSTEM_EVENT, 1,
+-					   &hci_result);
++				hci_result =3D hci_write1(dev, HCI_SYSTEM_EVENT, 1);
+ 				pr_notice("Re-enabled hotkeys\n");
+ 				/* fall through */
+ 			default:
+@@ -1993,7 +1984,7 @@ static int toshiba_acpi_suspend(struct device *de=
+vice)
+ 	u32 result;
+=20
+ 	if (dev->hotkey_dev)
+-		hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE, &result);
++		result =3D hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE);
+=20
+ 	return 0;
+ }
+@@ -2010,7 +2001,7 @@ static int toshiba_acpi_resume(struct device *dev=
+ice)
+ 		if (ACPI_FAILURE(status))
+ 			pr_info("Unable to re-enable hotkeys\n");
+=20
+-		hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE, &result);
++		result =3D hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE);
+ 	}
+=20
+ 	return 0;
+--=20
 2.0.0
