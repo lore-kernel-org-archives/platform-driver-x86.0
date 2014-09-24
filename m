@@ -1,39 +1,36 @@
-From: "Hon. Amirel Yakouba" <armellyacouba@gmail.com>
-Subject: Your Partnership and Trust
-Date: Tue, 23 Sep 2014 15:16:06 +0200
-Message-ID: <CAEZHpvyNxsxfLXOWi0chbj8PQFmSSuHL=x1W9qc+0ax7obeAxw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 0/4] toshiba_acpi: Return codes cleanup
+Date: Tue, 23 Sep 2014 18:24:24 -0600
+Message-ID: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f193.google.com ([74.125.82.193]:42724 "EHLO
-	mail-we0-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751601AbaIWNQI (ORCPT
+Received: from mail-oi0-f44.google.com ([209.85.218.44]:56623 "EHLO
+	mail-oi0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750796AbaIXAYj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Sep 2014 09:16:08 -0400
-Received: by mail-we0-f193.google.com with SMTP id k48so1464688wev.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Sep 2014 06:16:06 -0700 (PDT)
+	Tue, 23 Sep 2014 20:24:39 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Greetings,
+Up for review.
 
-I have emailed you earlier without a response. In my first email I
-mentioned about my late client whose relatives I cannot get in touch
-with, but both of you have the same last name so it will be very easy
-to make you become her official next of kin. I am compelled to do this
-because I would not want the bank to push my late client's funds
-amount $5.5 million dollars into the bank treasury as unclaimed
-inheritance. If you are interested you do let me know and get back to
-me with this bellow information's.
+This series of patches are a cleanup thee Toshiba
+configuration interface return codes (unification),
+as well as changing the returned type of the HCI/SCI
+read/write functions from acpi_status to u32, since
+the "status" was never checked on most of the functions.
 
-Your Full Names:....................
-Residential Address:................
-Private Email Address...............
-Telephone/fax Numbers:..............
-Age:................................
-Occupation:.........................
-Marital status......................
+I would like these to be queued for 3.18 if possible.
 
-Yours faithfully,
-Barrister.Amirel Yakouba
-Private Email Id : honamirelyakouba@outlook.fr
+Azael Avalos (4):
+  toshiba_acpi: Rename hci_raw to tci_raw
+  toshiba_acpi: Unify return codes prefix to from HCI/SCI to TOS
+  toshiba_acpi: Change HCI/SCI functions return code type
+  toshiba_acpi: Adapt functions to the changes made to HCI/SCI
+
+ drivers/platform/x86/toshiba_acpi.c | 289 ++++++++++++++++++------------------
+ 1 file changed, 142 insertions(+), 147 deletions(-)
+
+-- 
+2.0.0
