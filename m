@@ -1,26 +1,63 @@
-From: officecontact@voila.fr
-Subject: From Gabriel Tekko
-Date: Thu, 25 Sep 2014 14:15:15 +0000
-Message-ID: <54242344.2a5bb40a.52a4.2f2a@mx.google.com>
-Reply-To: tekko.g@bip.net
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/4] toshiba_acpi: Rename hci_raw to tci_raw
+Date: Thu, 25 Sep 2014 20:01:26 -0700
+Message-ID: <20140926030126.GA40523@vmdeb7>
+References: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
+ <1411518268-2773-2-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f68.google.com ([74.125.82.68]:57086 "EHLO
-	mail-wg0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750821AbaIYOOb convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:33717 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753214AbaIZDBe (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 25 Sep 2014 10:14:31 -0400
-Received: by mail-wg0-f68.google.com with SMTP id x13so1635220wgg.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Sep 2014 07:14:29 -0700 (PDT)
-Content-Description: Mail message body
+	Thu, 25 Sep 2014 23:01:34 -0400
+Content-Disposition: inline
+In-Reply-To: <1411518268-2773-2-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Mr. Brian H. James" <tekko02@live.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-I am Gabriel Tekko from West Africa, I have a very credible financial business proposition of 4.5 Million Dollars to invest in your country that will attract an appreciable business gain. I would introduce you to my bank as my foreign partner for them to transfer the money to you for investment. Contact me for the tranferring of this money to your account.
+On Tue, Sep 23, 2014 at 06:24:25PM -0600, Azael Avalos wrote:
+> The function name hci_raw was used before to reflect
+> a raw (read/write) call to the Toshiba's Hardware
+> Configuration Interface (HCI), however, since the
+> introduction of the System Configuration Interface
+> (SCI), that "name" no longer applies.
+> 
+> This patch changes the name of that function to
+> tci_raw (for Toshiba Configuration Interface), and
+> change the comments about it.
 
-Regards.   
-Cell: +2250447266350 
-Email: tekko02@live.com  
+I'm not following the motivation for this change. The HCI clearly still exists,
+at least on the platforms this driver was written to support. When/Where was the
+"SCI" "introduced" in a way that requires a change here? Was this a change by
+Toshiba you are refering to?
+
+
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++-------------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index edd8f3d..b7030dc 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -71,7 +71,7 @@ MODULE_LICENSE("GPL");
+>  /* Toshiba ACPI method paths */
+>  #define METHOD_VIDEO_OUT	"\\_SB_.VALX.DSSX"
+>  
+> -/* Toshiba HCI interface definitions
+> +/* Toshiba configuration interface definitions
+>   *
+>   * HCI is Toshiba's "Hardware Control Interface" which is supposed to
+
+I'm not sure this patch is appropriate/necessary, but if so, you missed a spot
+here :)
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
