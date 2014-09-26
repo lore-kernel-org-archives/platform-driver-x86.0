@@ -1,89 +1,45 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 3/4] toshiba_acpi: Change HCI/SCI functions return code type
-Date: Thu, 25 Sep 2014 22:52:15 -0600
-Message-ID: <CAGdLNWEwkNxnebpTNz3bccLdJNSyuthPfB7ZSR5oYgKDLScsqg@mail.gmail.com>
-References: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
-	<1411518268-2773-4-git-send-email-coproscefalo@gmail.com>
-	<20140926031151.GB40523@vmdeb7>
+From: =?UTF-8?B?IkLDvGhtYW5uLCBSYWltYXIi?= <Raimar@Buehmann.de>
+Subject: ideapad-laptop: cat fan_mode incorrect value on Lenovo S20-30
+Date: Fri, 26 Sep 2014 22:38:03 +0200
+Message-ID: <5425CEAB.5040002@Buehmann.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f42.google.com ([209.85.213.42]:44243 "EHLO
-	mail-yh0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751430AbaIZEwQ (ORCPT
+Received: from relay2.mail.vrmd.de ([81.28.224.28]:59460 "EHLO
+	relay2.mail.vrmd.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755127AbaIZUxH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 26 Sep 2014 00:52:16 -0400
-In-Reply-To: <20140926031151.GB40523@vmdeb7>
+	Fri, 26 Sep 2014 16:53:07 -0400
+Received: from [89.182.117.104] (helo=[192.168.0.35])
+	by relay2.mail.vrmd.de with esmtpsa (TLS1.0:DHE_RSA_AES_128_CBC_SHA1:128)
+	(Exim 4.82)
+	(envelope-from <Raimar@Buehmann.de>)
+	id 1XXcGp-0005G0-8V
+	for platform-driver-x86@vger.kernel.org; Fri, 26 Sep 2014 22:37:39 +0200
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-2014-09-25 21:11 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Tue, Sep 23, 2014 at 06:24:27PM -0600, Azael Avalos wrote:
->> Currently the HCI/SCI read/write functions are returning
->> the status of the ACPI call and also assigning the
->> returned value of the HCI/SCI function.
->>
->> This patch changes such functions, returning the value
->> of the HCI/SCI function instead of the ACPI call status.
->>
->> The next patch will change all the HCI/SCI functions
->> to reflect the change made in this patch.
->
-> If you are changing what the functions return in this patch, you also need to
-> update the call sites at the same time (same patch).
+Hi all,
 
-Ok
+on my new Lenovo S20-30 with automatically loaded kernel module 
+ideapad_laptop I am able to start interval mode of fan with
 
->
->>
->> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> ---
->>  drivers/platform/x86/toshiba_acpi.c | 51 ++++++++++++++++++++-----------------
->>  1 file changed, 27 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 5b16d11..43385f7 100644
->> --- a/drivers/platform/x86/toshiba_acpi.c
->> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -316,47 +316,49 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
->>   * may be useful (such as "not supported").
->>   */
->
-> The full text of the comment above is:
->
-> /* common hci tasks (get or set one or two value)
->  *
->  * In addition to the ACPI status, the HCI system returns a result which
->  * may be useful (such as "not supported").
->  */
->
-> Is this no longer relevant?
+echo '1'>/sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/fan_mode
 
-On the contrary, the "result" parameter is the one being returned by the
-modified read/write functions now, and was (and still is) the only one
-being checked for support, error, or otherwise, depending on what the
-Toshiba method returns.
+It is also possible to change it back to normal mode with '0'. But the 
+result of
 
->
-> I agree that the return and status approach seems suboptimal, but I'm not clear on the motivation for the change. Is there something besides cleanup you're attempting to work toward with this series?
+cat /sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/fan_mode
 
-Cleanup mostly, what's the purpose of returning a value,
-if that value is never checked? Better return a value that
-indeed is being checked, and contains useful info about
-the status of the queried function (such as "not supported")
-:-)
+shows 133. All following executions of the same cat command show 5. This 
+happens every time after the fan_mode has been changed.
 
+This seams to be a bug for me. Here is more about my hardware: 
+https://wiki.archlinux.org/index.php/Lenovo_S20-30
 
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+Is it possible to fix this bug?
 
-Cheers
-Azael
-
-
--- 
--- El mundo apesta y vosotros apestais tambien --
+Kind regards,
+Raimar
