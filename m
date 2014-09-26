@@ -1,100 +1,89 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 1/4] toshiba_acpi: Rename hci_raw to tci_raw
-Date: Thu, 25 Sep 2014 22:35:04 -0600
-Message-ID: <CAGdLNWEWu6wo_oD9WZMM1pgTV94uRWvteukNr5XmACVOgdO=1Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] toshiba_acpi: Change HCI/SCI functions return code type
+Date: Thu, 25 Sep 2014 22:52:15 -0600
+Message-ID: <CAGdLNWEwkNxnebpTNz3bccLdJNSyuthPfB7ZSR5oYgKDLScsqg@mail.gmail.com>
 References: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
-	<1411518268-2773-2-git-send-email-coproscefalo@gmail.com>
-	<20140926030126.GA40523@vmdeb7>
+	<1411518268-2773-4-git-send-email-coproscefalo@gmail.com>
+	<20140926031151.GB40523@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yk0-f172.google.com ([209.85.160.172]:50075 "EHLO
-	mail-yk0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753449AbaIZEfF (ORCPT
+Received: from mail-yh0-f42.google.com ([209.85.213.42]:44243 "EHLO
+	mail-yh0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751430AbaIZEwQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 26 Sep 2014 00:35:05 -0400
-In-Reply-To: <20140926030126.GA40523@vmdeb7>
+	Fri, 26 Sep 2014 00:52:16 -0400
+In-Reply-To: <20140926031151.GB40523@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-2014-09-25 21:01 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Tue, Sep 23, 2014 at 06:24:25PM -0600, Azael Avalos wrote:
->> The function name hci_raw was used before to reflect
->> a raw (read/write) call to the Toshiba's Hardware
->> Configuration Interface (HCI), however, since the
->> introduction of the System Configuration Interface
->> (SCI), that "name" no longer applies.
+2014-09-25 21:11 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> On Tue, Sep 23, 2014 at 06:24:27PM -0600, Azael Avalos wrote:
+>> Currently the HCI/SCI read/write functions are returning
+>> the status of the ACPI call and also assigning the
+>> returned value of the HCI/SCI function.
 >>
->> This patch changes the name of that function to
->> tci_raw (for Toshiba Configuration Interface), and
->> change the comments about it.
+>> This patch changes such functions, returning the value
+>> of the HCI/SCI function instead of the ACPI call status.
+>>
+>> The next patch will change all the HCI/SCI functions
+>> to reflect the change made in this patch.
 >
-> I'm not following the motivation for this change. The HCI clearly still exists,
-> at least on the platforms this driver was written to support. When/Where was the
-> "SCI" "introduced" in a way that requires a change here? Was this a change by
-> Toshiba you are refering to?
+> If you are changing what the functions return in this patch, you also need to
+> update the call sites at the same time (same patch).
 
-The HCI and SCI form an integral part of the Toshiba configuration scheme,
-the SCI has been present on any Toshiba branded laptop to date, what
-was not present (at least on toshiba_acpi) was (propper) SCI support
-until the patches I sent.
+Ok
 
-Take a look at Jonathan Buzzard documentation [1], and also the toshiba
-module under char, the documentation was written in 1999, and the
-module has a (starting) date of 1996.
-
-By the time toshiba_acpi was written, only HCI functions were accessed,
-as well as the configuration handle was (and still is, depending on model)
-named GHCI, and so the comments refer to it, now that we have SCI
-(driver support) on board, the naming seems obsolete, or at least
-misguiding, as the HCI is not the only configuration interface.
-
-Hope this clears things a bit.
-
-[1] http://www.buzzard.me.uk/toshiba/docs.html
-
->
 >
 >>
 >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 >> ---
->>  drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++-------------------
->>  1 file changed, 20 insertions(+), 20 deletions(-)
+>>  drivers/platform/x86/toshiba_acpi.c | 51 ++++++++++++++++++++-----------------
+>>  1 file changed, 27 insertions(+), 24 deletions(-)
 >>
 >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index edd8f3d..b7030dc 100644
+>> index 5b16d11..43385f7 100644
 >> --- a/drivers/platform/x86/toshiba_acpi.c
 >> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -71,7 +71,7 @@ MODULE_LICENSE("GPL");
->>  /* Toshiba ACPI method paths */
->>  #define METHOD_VIDEO_OUT     "\\_SB_.VALX.DSSX"
->>
->> -/* Toshiba HCI interface definitions
->> +/* Toshiba configuration interface definitions
->>   *
->>   * HCI is Toshiba's "Hardware Control Interface" which is supposed to
+>> @@ -316,47 +316,49 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+>>   * may be useful (such as "not supported").
+>>   */
 >
-> I'm not sure this patch is appropriate/necessary, but if so, you missed a spot
-> here :)
+> The full text of the comment above is:
+>
+> /* common hci tasks (get or set one or two value)
+>  *
+>  * In addition to the ACPI status, the HCI system returns a result which
+>  * may be useful (such as "not supported").
+>  */
+>
+> Is this no longer relevant?
 
-Oh no, this is intentional, what I probably should have done here is be more
-verbose about it, perhaps something like:
+On the contrary, the "result" parameter is the one being returned by the
+modified read/write functions now, and was (and still is) the only one
+being checked for support, error, or otherwise, depending on what the
+Toshiba method returns.
 
-/*
- * The Toshiba configuration interface is composed of the HCI and the
- * SCI, which are defined as
-...
+>
+> I agree that the return and status approach seems suboptimal, but I'm not clear on the motivation for the change. Is there something besides cleanup you're attempting to work toward with this series?
+
+Cleanup mostly, what's the purpose of returning a value,
+if that value is never checked? Better return a value that
+indeed is being checked, and contains useful info about
+the status of the queried function (such as "not supported")
+:-)
+
 
 >
 > --
 > Darren Hart
 > Intel Open Source Technology Center
 
-
 Cheers
 Azael
+
 
 -- 
 -- El mundo apesta y vosotros apestais tambien --
