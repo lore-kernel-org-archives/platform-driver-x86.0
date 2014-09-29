@@ -1,81 +1,116 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi: Fix access out of memory
-Date: Mon, 29 Sep 2014 14:30:29 -0700
-Message-ID: <20140929213028.GB34181@vmdeb7>
-References: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/4] toshiba_acpi: Rename hci_raw to tci_raw
+Date: Mon, 29 Sep 2014 14:52:55 -0700
+Message-ID: <20140929215254.GC34181@vmdeb7>
+References: <1411518268-2773-1-git-send-email-coproscefalo@gmail.com>
+ <1411518268-2773-2-git-send-email-coproscefalo@gmail.com>
+ <20140926030126.GA40523@vmdeb7>
+ <CAGdLNWEWu6wo_oD9WZMM1pgTV94uRWvteukNr5XmACVOgdO=1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:51941 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751612AbaI2VxB (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 29 Sep 2014 17:53:01 -0400
 Content-Disposition: inline
-In-Reply-To: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, rjw@rjwysocki.net
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <CAGdLNWEWu6wo_oD9WZMM1pgTV94uRWvteukNr5XmACVOgdO=1Q@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Sep 29, 2014 at 03:10:51PM +0200, Pali Roh=E1r wrote:
-> Without this patch driver dell-wmi is trying to access elements of dy=
-namically
-> allocated array without checking array size. This can lead to memory =
-corruption
-> or kernel panic. This patch adds missing checks for array size.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+On Thu, Sep 25, 2014 at 10:35:04PM -0600, Azael Avalos wrote:
+> 2014-09-25 21:01 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> > On Tue, Sep 23, 2014 at 06:24:25PM -0600, Azael Avalos wrote:
+> >> The function name hci_raw was used before to reflect
+> >> a raw (read/write) call to the Toshiba's Hardware
+> >> Configuration Interface (HCI), however, since the
+> >> introduction of the System Configuration Interface
+> >> (SCI), that "name" no longer applies.
+> >>
+> >> This patch changes the name of that function to
+> >> tci_raw (for Toshiba Configuration Interface), and
+> >> change the comments about it.
+> >
+> > I'm not following the motivation for this change. The HCI clearly still exists,
+> > at least on the platforms this driver was written to support. When/Where was the
+> > "SCI" "introduced" in a way that requires a change here? Was this a change by
+> > Toshiba you are refering to?
+> 
+> The HCI and SCI form an integral part of the Toshiba configuration scheme,
+> the SCI has been present on any Toshiba branded laptop to date, what
+> was not present (at least on toshiba_acpi) was (propper) SCI support
+> until the patches I sent.
+> 
+> Take a look at Jonathan Buzzard documentation [1], and also the toshiba
+> module under char, the documentation was written in 1999, and the
+> module has a (starting) date of 1996.
+> 
+> By the time toshiba_acpi was written, only HCI functions were accessed,
+> as well as the configuration handle was (and still is, depending on model)
+> named GHCI, and so the comments refer to it, now that we have SCI
+> (driver support) on board, the naming seems obsolete, or at least
+> misguiding, as the HCI is not the only configuration interface.
+> 
+> Hope this clears things a bit.
+> 
+> [1] http://www.buzzard.me.uk/toshiba/docs.html
 
-Looks good to me. Rafael, any concerns?
+What I'm getting from a quick scan of the documents is that both SCI and HCI are
+enabled using the same read from B2, but SCI appears to be a superset of HCI (or
+perhaps better said we are now using SCI+HCI and not just HCI.
 
-Cc: linux-acpi
+This suggests to me that this driver has grown to include some SCI-specific
+commands/features and now it's time to rename the interface to reflect this more
+accurately.
 
-> ---
-> This patch should be probably applied to stable kernel trees as it fi=
-xing
-> possible memory corruption.
-> ---
->  drivers/platform/x86/dell-wmi.c |   12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index 390e8e3..25721bf 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -163,18 +163,24 @@ static void dell_wmi_notify(u32 value, void *co=
-ntext)
->  		const struct key_entry *key;
->  		int reported_key;
->  		u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
-> +		int buffer_size =3D obj->buffer.length/2;
-> =20
-> -		if (dell_new_hk_type && (buffer_entry[1] !=3D 0x10)) {
-> +		if (buffer_size >=3D 2 && dell_new_hk_type && buffer_entry[1] !=3D=
- 0x10) {
->  			pr_info("Received unknown WMI event (0x%x)\n",
->  				buffer_entry[1]);
->  			kfree(obj);
->  			return;
->  		}
-> =20
-> -		if (dell_new_hk_type || buffer_entry[1] =3D=3D 0x0)
-> +		if (buffer_size >=3D 3 && (dell_new_hk_type || buffer_entry[1] =3D=
-=3D 0x0))
->  			reported_key =3D (int)buffer_entry[2];
-> -		else
-> +		else if (buffer_size >=3D 2)
->  			reported_key =3D (int)buffer_entry[1] & 0xffff;
-> +		else {
-> +			pr_info("Received unknown WMI event\n");
-> +			kfree(obj);
-> +			return;
-> +		}
-> =20
->  		key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
->  							reported_key);
-> --=20
-> 1.7.9.5
->=20
->=20
+Is that more or less the situation?
 
---=20
+If this is more or less the lay of things, then please combine the function
+definition change and callsite update patch (note that things should always
+build at each patch to enable bisection, etc.), update the comments as you noted
+below, and submit a V2.
+
+It's a stretch for 3.18 as I'd prefer to have things in linux-next for two weeks
+prior to submitting to Linus. Let's see how it goes.
+
+Thanks,
+
+> 
+> >
+> >
+> >>
+> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++-------------------
+> >>  1 file changed, 20 insertions(+), 20 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> >> index edd8f3d..b7030dc 100644
+> >> --- a/drivers/platform/x86/toshiba_acpi.c
+> >> +++ b/drivers/platform/x86/toshiba_acpi.c
+> >> @@ -71,7 +71,7 @@ MODULE_LICENSE("GPL");
+> >>  /* Toshiba ACPI method paths */
+> >>  #define METHOD_VIDEO_OUT     "\\_SB_.VALX.DSSX"
+> >>
+> >> -/* Toshiba HCI interface definitions
+> >> +/* Toshiba configuration interface definitions
+> >>   *
+> >>   * HCI is Toshiba's "Hardware Control Interface" which is supposed to
+> >
+> > I'm not sure this patch is appropriate/necessary, but if so, you missed a spot
+> > here :)
+> 
+> Oh no, this is intentional, what I probably should have done here is be more
+> verbose about it, perhaps something like:
+> 
+> /*
+>  * The Toshiba configuration interface is composed of the HCI and the
+>  * SCI, which are defined as
+> ...
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
