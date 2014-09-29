@@ -1,45 +1,81 @@
-From: =?UTF-8?B?IkLDvGhtYW5uLCBSYWltYXIi?= <Raimar@Buehmann.de>
-Subject: ideapad-laptop: cat fan_mode incorrect value on Lenovo S20-30
-Date: Fri, 26 Sep 2014 22:38:03 +0200
-Message-ID: <5425CEAB.5040002@Buehmann.de>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH] dell-smo8800: Add more acpi ids and change description of driver
+Date: Mon, 29 Sep 2014 14:45:48 +0200
+Message-ID: <1411994748-11229-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay2.mail.vrmd.de ([81.28.224.28]:59460 "EHLO
-	relay2.mail.vrmd.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755127AbaIZUxH (ORCPT
+Received: from mail-wi0-f175.google.com ([209.85.212.175]:59424 "EHLO
+	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752182AbaI2MqC (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 26 Sep 2014 16:53:07 -0400
-Received: from [89.182.117.104] (helo=[192.168.0.35])
-	by relay2.mail.vrmd.de with esmtpsa (TLS1.0:DHE_RSA_AES_128_CBC_SHA1:128)
-	(Exim 4.82)
-	(envelope-from <Raimar@Buehmann.de>)
-	id 1XXcGp-0005G0-8V
-	for platform-driver-x86@vger.kernel.org; Fri, 26 Sep 2014 22:37:39 +0200
+	Mon, 29 Sep 2014 08:46:02 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-Hi all,
+Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+---
+ drivers/platform/x86/Kconfig        |    4 ++--
+ drivers/platform/x86/dell-smo8800.c |   10 ++++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-on my new Lenovo S20-30 with automatically loaded kernel module 
-ideapad_laptop I am able to start interval mode of fan with
-
-echo '1'>/sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/fan_mode
-
-It is also possible to change it back to normal mode with '0'. But the 
-result of
-
-cat /sys/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/VPC2004:00/fan_mode
-
-shows 133. All following executions of the same cat command show 5. This 
-happens every time after the fan_mode has been changed.
-
-This seams to be a bug for me. Here is more about my hardware: 
-https://wiki.archlinux.org/index.php/Lenovo_S20-30
-
-Is it possible to fix this bug?
-
-Kind regards,
-Raimar
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index 3bbcbf1..ba9ee4f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -128,10 +128,10 @@ config DELL_WMI_AIO
+ 	  be called dell-wmi-aio.
+=20
+ config DELL_SMO8800
+-	tristate "Dell Latitude freefall driver (ACPI SMO8800/SMO8810)"
++	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
+ 	depends on ACPI
+ 	---help---
+-	  Say Y here if you want to support SMO8800/SMO8810 freefall device
++	  Say Y here if you want to support SMO88XX freefall device
+ 	  on Dell Latitude laptops.
+=20
+ 	  To compile this driver as a module, choose M here: the module will
+diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86=
+/dell-smo8800.c
+index a653716..0aec4fd 100644
+--- a/drivers/platform/x86/dell-smo8800.c
++++ b/drivers/platform/x86/dell-smo8800.c
+@@ -1,5 +1,5 @@
+ /*
+- *  dell-smo8800.c - Dell Latitude ACPI SMO8800/SMO8810 freefall senso=
+r driver
++ *  dell-smo8800.c - Dell Latitude ACPI SMO88XX freefall sensor driver
+  *
+  *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
+  *  Copyright (C) 2014 Pali Roh=C3=A1r <pali.rohar@gmail.com>
+@@ -209,7 +209,13 @@ static int smo8800_remove(struct acpi_device *devi=
+ce)
+=20
+ static const struct acpi_device_id smo8800_ids[] =3D {
+ 	{ "SMO8800", 0 },
++	{ "SMO8801", 0 },
+ 	{ "SMO8810", 0 },
++	{ "SMO8811", 0 },
++	{ "SMO8820", 0 },
++	{ "SMO8821", 0 },
++	{ "SMO8830", 0 },
++	{ "SMO8831", 0 },
+ 	{ "", 0 },
+ };
+=20
+@@ -228,6 +234,6 @@ static struct acpi_driver smo8800_driver =3D {
+=20
+ module_acpi_driver(smo8800_driver);
+=20
+-MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO8800/SMO881=
+0)");
++MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO88XX)");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Sonal Santan, Pali Roh=C3=A1r");
+--=20
+1.7.9.5
