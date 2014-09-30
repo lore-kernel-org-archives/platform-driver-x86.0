@@ -1,77 +1,49 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH] toshiba_acpi: Adapt kbd_bl_timeout_store to the new kbd type
-Date: Mon, 29 Sep 2014 20:57:04 -0600
-Message-ID: <1412045824-3515-1-git-send-email-coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 0/3] Return codes cleanup
+Date: Tue, 30 Sep 2014 13:54:11 -0700
+Message-ID: <20140930205411.GA47302@vmdeb7>
+References: <1412044809-3366-1-git-send-email-coproscefalo@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f171.google.com ([209.85.214.171]:58882 "EHLO
-	mail-ob0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751906AbaI3C5J (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:54211 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750883AbaI3UyM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Sep 2014 22:57:09 -0400
+	Tue, 30 Sep 2014 16:54:12 -0400
+Content-Disposition: inline
+In-Reply-To: <1412044809-3366-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-With the introduccion of the new keyboard backlight
-implementation, the *_timeout_store function is
-broken, as it only supports the first kbd_type.
+On Mon, Sep 29, 2014 at 08:40:06PM -0600, Azael Avalos wrote:
+> Up for review.
+> 
+> This series of patches are a cleanup to the Toshiba
+> configuration interface return codes (unification),
+> since we are now using both the HCI and the SCI, as
+> well as changing the returned type of the HCI/SCI
+> read/write functions from acpi_status to u32, since
+> the "status" was never checked on most of the functions.
+> 
+> Changes since v1:
+> - Be a bit more verbose on patch 1 about the Toshiba
+>   configuration interface
+> - Merged patches 3 and 4 into a same patch
+> 
+> Azael Avalos (3):
+>   toshiba_acpi: Rename hci_raw to tci_raw
+>   toshiba_acpi: Unify return codes prefix from HCI/SCI to TOS
+>   toshiba_acpi: Change HCI/SCI functions return code type
+> 
+>  drivers/platform/x86/toshiba_acpi.c | 369 ++++++++++++++++++------------------
+>  1 file changed, 183 insertions(+), 186 deletions(-)
 
-This patch adapt such function for the new kbd_type,
-as well as convert from using sscanf to kstrtoint.
+Queued to the testing branch. As we are at rc7 for 3.17 at this point, and this is a
+cleanup, it is going to have to wait for the 3.18 merge window.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 33 +++++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 5d509ea..13ee56b 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1453,18 +1453,35 @@ static ssize_t toshiba_kbd_bl_timeout_store(struct device *dev,
- 					    const char *buf, size_t count)
- {
- 	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
--	int time = -1;
-+	int time;
-+	int ret;
-+
-+	ret = kstrtoint(buf, 0, &time);
-+	if (ret)
-+		return ret;
- 
--	if (sscanf(buf, "%i", &time) != 1 && (time < 0 || time > 60))
-+	if (time < 1 || time > 60)
- 		return -EINVAL;
- 
--	/* Set the Keyboard Backlight Timeout: 0-60 seconds */
--	if (time != -1 && toshiba->kbd_time != time) {
-+	/* Set the Keyboard Backlight Timeout: 1-60 seconds */
-+	
-+	/* Only make a change if the actual timeout has changed */
-+	if (toshiba->kbd_time != time) {
-+		/* Shift the time to "base time" (0x3c0000 == 60 seconds)*/
- 		time = time << HCI_MISC_SHIFT;
--		time = (toshiba->kbd_mode == SCI_KBD_MODE_AUTO) ?
--							time + 1 : time + 2;
--		if (toshiba_kbd_illum_status_set(toshiba, time) < 0)
--			return -EIO;
-+		/* OR the "base time" to the actual method format */
-+		if (toshiba->kbd_type == 1) {
-+			/* Type 1 requires the oposite mode */
-+			time |= SCI_KBD_MODE_FNZ;
-+		} else if (toshiba->kbd_type == 2) {
-+			/* Type 2 requires the actual mode */
-+			time |= SCI_KBD_MODE_AUTO;
-+		}
-+
-+		ret = toshiba_kbd_illum_status_set(toshiba, time);
-+		if (ret)
-+			return ret;
-+
- 		toshiba->kbd_time = time >> HCI_MISC_SHIFT;
- 	}
- 
 -- 
-2.0.0
+Darren Hart
+Intel Open Source Technology Center
