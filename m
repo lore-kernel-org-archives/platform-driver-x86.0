@@ -1,52 +1,36 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2 3/3] toshiba_acpi: Change HCI/SCI functions return code type
-Date: Wed, 01 Oct 2014 03:58:34 +0200
-Message-ID: <2951962.6yqkWfcajp@vostro.rjw.lan>
-References: <1412044809-3366-1-git-send-email-coproscefalo@gmail.com> <1412044809-3366-4-git-send-email-coproscefalo@gmail.com> <20140930205814.GB47302@vmdeb7>
+From: Michael Tokarev <mjt@tls.msk.ru>
+Subject: asus-nb-wmi: wifi & brightness keys does not work on asus x200la
+ laptop
+Date: Wed, 01 Oct 2014 14:15:00 +0400
+Message-ID: <542BD424.8010202@msgid.tls.msk.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:58918 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1750833AbaJABij (ORCPT
+Received: from isrv.corpit.ru ([86.62.121.231]:44422 "EHLO isrv.corpit.ru"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750997AbaJAKYR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 30 Sep 2014 21:38:39 -0400
-In-Reply-To: <20140930205814.GB47302@vmdeb7>
+	Wed, 1 Oct 2014 06:24:17 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: acpi4asus-user@lists.sourceforge.net, Corentin Chary <corentin.chary@gmail.com>
 
-On Tuesday, September 30, 2014 01:58:14 PM Darren Hart wrote:
-> On Mon, Sep 29, 2014 at 08:40:09PM -0600, Azael Avalos wrote:
-> > Currently the HCI/SCI read/write functions are returning
-> > the status of the ACPI call and also assigning the
-> > returned value of the HCI/SCI function, however, only
-> > the HCI/SCI status is being checked.
-> > 
-> > This patch changes such functions, returning the value
-> > of the HCI/SCI function instead of the ACPI call status,
-> > eliminating one parameter, and returning something
-> > useful that indeed is being checked.
-> > 
-> > Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> 
-> Cc linux-acpi
-> 
-> Rafael,
-> 
-> This follows a couple patches renaming interfaces and error codes. While
-> there is some information to be had in checking for ACPI specific errors, I
-> don't think it's significant to warrant asking Azael to go the other way and
-> check for them specifically and add errorcodes to the interface rather than
-> cleanup the functionality as it stands today and simplifiy the code as he does
-> here.
-> 
-> Any objection?
+Hello.
 
-Nope.
+It looks like asus-nb-wmi (or asus-wmi) does not handle some
+(acpi?) keys on some recent asus laptops.  In particular, on
+my x200la laptop, the mentioned keys does absolutely nothing
+(neither showkeys nor xev shows them).  Also, wifi led is
+always off.
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+Reportedly the same prob exists on another (but similar) series,
+x200ma (which is basically the same but is built on celeron/atom
+processor).
+
+How can I help in debugging/implementing this support?
+
+Thanks,
+
+/mjt
