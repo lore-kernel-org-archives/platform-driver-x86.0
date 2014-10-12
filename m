@@ -1,74 +1,74 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH] dell-wmi: Fix access out of memory
-Date: Sun, 12 Oct 2014 18:45:06 +0200
-Message-ID: <201410121845.07303@pali>
-References: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com> <3073358.myrKz9QbdW@vostro.rjw.lan> <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
+Date: Sun, 12 Oct 2014 15:32:38 -0700
+Message-ID: <20141012223238.GA28031@vmdeb7>
+References: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com>
+ <3073358.myrKz9QbdW@vostro.rjw.lan>
+ <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
+ <201410121845.07303@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart4762213.PqHB0Xv0p9";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:48132 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751880AbaJLWdB (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 12 Oct 2014 18:33:01 -0400
+Content-Disposition: inline
+In-Reply-To: <201410121845.07303@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart4762213.PqHB0Xv0p9
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 30 September 2014 01:16:23 Darren Hart wrote:
-> On September 29, 2014 4:26:03 PM PDT, "Rafael J. Wysocki"=20
-<rjw@rjwysocki.net> wrote:
-> >On Monday, September 29, 2014 02:30:29 PM Darren Hart wrote:
-> >> On Mon, Sep 29, 2014 at 03:10:51PM +0200, Pali Roh=C3=A1r wrote:
-> >> > Without this patch driver dell-wmi is trying to access
-> >> > elements of
-> >
-> >dynamically
-> >
-> >> > allocated array without checking array size. This can
-> >> > lead to
-> >
-> >memory corruption
-> >
-> >> > or kernel panic. This patch adds missing checks for array
-> >> > size.
-> >> >=20
-> >> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> >>=20
-> >> Looks good to me. Rafael, any concerns?
-> >
-> >Not anything obvious.
+On Sun, Oct 12, 2014 at 06:45:06PM +0200, Pali Roh=E1r wrote:
+> On Tuesday 30 September 2014 01:16:23 Darren Hart wrote:
+> > On September 29, 2014 4:26:03 PM PDT, "Rafael J. Wysocki"=20
+> <rjw@rjwysocki.net> wrote:
+> > >On Monday, September 29, 2014 02:30:29 PM Darren Hart wrote:
+> > >> On Mon, Sep 29, 2014 at 03:10:51PM +0200, Pali Roh=E1r wrote:
+> > >> > Without this patch driver dell-wmi is trying to access
+> > >> > elements of
+> > >
+> > >dynamically
+> > >
+> > >> > allocated array without checking array size. This can
+> > >> > lead to
+> > >
+> > >memory corruption
+> > >
+> > >> > or kernel panic. This patch adds missing checks for array
+> > >> > size.
+> > >> >=20
+> > >> > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+> > >>=20
+> > >> Looks good to me. Rafael, any concerns?
+> > >
+> > >Not anything obvious.
+> >=20
+> > Queued, thanks.
+> >=20
+> > >> Cc: linux-acpi
+> > >
+> > >Thanks!
+> > >
 >=20
-> Queued, thanks.
->=20
-> >> Cc: linux-acpi
-> >
-> >Thanks!
-> >
+> Now I see that this patch is in linus tree. Can you sent it to=20
+> stable trees too?
 
-Now I see that this patch is in linus tree. Can you sent it to=20
-stable trees too?
+Hi Pali,
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Please see Documentation/stable_kernel_rules.txt for details on how to =
+mark
+patches for stable when you submit them. Now that it is in mainline, th=
+e process
+is a bit more manual, you'll find instructions for how to go about that=
+ in the
+same document.
 
---nextPart4762213.PqHB0Xv0p9
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlQ6sBMACgkQi/DJPQPkQ1LYMACfVKJsRVG/XYXn/f6QoEy0SWiZ
-5tgAoMfd7zUV6Uu7HfnFJkclQl9h/jWH
-=iHgk
------END PGP SIGNATURE-----
-
---nextPart4762213.PqHB0Xv0p9--
+--=20
+Darren Hart
+Intel Open Source Technology Center
