@@ -1,132 +1,74 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] toshiba_acpi: Adapt kbd_bl_timeout_store to the new
- kbd type
-Date: Mon, 6 Oct 2014 17:44:35 -0700
-Message-ID: <20141007004434.GA26764@vmdeb7>
-References: <1412445741-7719-1-git-send-email-coproscefalo@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] dell-wmi: Fix access out of memory
+Date: Sun, 12 Oct 2014 18:45:06 +0200
+Message-ID: <201410121845.07303@pali>
+References: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com> <3073358.myrKz9QbdW@vostro.rjw.lan> <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:34225 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751213AbaJGAoh (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 6 Oct 2014 20:44:37 -0400
-Content-Disposition: inline
-In-Reply-To: <1412445741-7719-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart4762213.PqHB0Xv0p9";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Azael,
+--nextPart4762213.PqHB0Xv0p9
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Oct 04, 2014 at 12:02:21PM -0600, Azael Avalos wrote:
-> With the introduccion of the new keyboard backlight
+On Tuesday 30 September 2014 01:16:23 Darren Hart wrote:
+> On September 29, 2014 4:26:03 PM PDT, "Rafael J. Wysocki"=20
+<rjw@rjwysocki.net> wrote:
+> >On Monday, September 29, 2014 02:30:29 PM Darren Hart wrote:
+> >> On Mon, Sep 29, 2014 at 03:10:51PM +0200, Pali Roh=C3=A1r wrote:
+> >> > Without this patch driver dell-wmi is trying to access
+> >> > elements of
+> >
+> >dynamically
+> >
+> >> > allocated array without checking array size. This can
+> >> > lead to
+> >
+> >memory corruption
+> >
+> >> > or kernel panic. This patch adds missing checks for array
+> >> > size.
+> >> >=20
+> >> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> >>=20
+> >> Looks good to me. Rafael, any concerns?
+> >
+> >Not anything obvious.
+>=20
+> Queued, thanks.
+>=20
+> >> Cc: linux-acpi
+> >
+> >Thanks!
+> >
 
-introduction
+Now I see that this patch is in linus tree. Can you sent it to=20
+stable trees too?
 
-> implementation, the *_timeout_store function is
-> broken, as it only supports the first kbd_type.
-> 
-> This patch adapt such function for the new kbd_type,
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-adapts
+--nextPart4762213.PqHB0Xv0p9
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-> as well as convert from using sscanf to kstrtoint.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-converts
+iEYEABECAAYFAlQ6sBMACgkQi/DJPQPkQ1LYMACfVKJsRVG/XYXn/f6QoEy0SWiZ
+5tgAoMfd7zUV6Uu7HfnFJkclQl9h/jWH
+=iHgk
+-----END PGP SIGNATURE-----
 
->
-
-Functional changes look good to me, thank you.
-
-I've made a couple minor formatting corrections in the interest of time. In
-the future, please check your patches with checkpatch.pl and consider using a
-spell checker in your $EDITOR for commit messages. Using git am to apply your
-own patches would also have caught the whitespace error.
-
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-
-Queued to testing, I'll push to for-next tomorrow(ish), which should give us
-enough time to make 3.18 since Linus pushed out the merge window a bit.
-
-> ---
-> Changes since v1:
-> - Check for timeout values depending on kbd_type
-> - Removed some misleading comments
-> 
-> Note: I'll be out of town until the next weekend,
-> in case something else needs to be changed, I'll
-> catch up whenever I'm back.
-> 
->  drivers/platform/x86/toshiba_acpi.c | 38 ++++++++++++++++++++++++++++---------
->  1 file changed, 29 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 5d509ea..f360dac 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -1453,18 +1453,38 @@ static ssize_t toshiba_kbd_bl_timeout_store(struct device *dev,
->  					    const char *buf, size_t count)
->  {
->  	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-> -	int time = -1;
-> +	int time;
-> +	int ret;
->  
-> -	if (sscanf(buf, "%i", &time) != 1 && (time < 0 || time > 60))
-> -		return -EINVAL;
-> +	ret = kstrtoint(buf, 0, &time);
-> +	if (ret)
-> +		return ret;
->  
-> -	/* Set the Keyboard Backlight Timeout: 0-60 seconds */
-> -	if (time != -1 && toshiba->kbd_time != time) {
-> +	/* Check for supported values depending on kbd_type */
-> +	if (toshiba->kbd_type == 1) {
-> +		if (time < 0 || time > 60)
-> +			return -EINVAL;
-> +	} else if (toshiba->kbd_type == 2) {
-> +		if (time < 1 || time > 60)
-> +			return -EINVAL;
-> +	}
-> +
-> +	/* Set the Keyboard Backlight Timeout */
-> +	
-
- ^ Tab at beginning of otherwise empty line.
-
-Thanks,
-
-Darren
-
-> +	/* Only make a change if the actual timeout has changed */
-> +	if (toshiba->kbd_time != time) {
-> +		/* Shift the time to "base time" (0x3c0000 == 60 seconds) */
->  		time = time << HCI_MISC_SHIFT;
-> -		time = (toshiba->kbd_mode == SCI_KBD_MODE_AUTO) ?
-> -							time + 1 : time + 2;
-> -		if (toshiba_kbd_illum_status_set(toshiba, time) < 0)
-> -			return -EIO;
-> +		/* OR the "base time" to the actual method format */
-> +		if (toshiba->kbd_type == 1)
-> +			time |= SCI_KBD_MODE_FNZ;
-> +		else if (toshiba->kbd_type == 2)
-> +			time |= SCI_KBD_MODE_AUTO;
-> +
-> +		ret = toshiba_kbd_illum_status_set(toshiba, time);
-> +		if (ret)
-> +			return ret;
-> +
->  		toshiba->kbd_time = time >> HCI_MISC_SHIFT;
->  	}
->  
-> -- 
-> 2.0.0
-> 
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+--nextPart4762213.PqHB0Xv0p9--
