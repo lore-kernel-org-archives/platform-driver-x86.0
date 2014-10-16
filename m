@@ -1,44 +1,54 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] acer-wmi: Add acpi_backlight=video quirk for the Acer KAV80
-Date: Thu, 16 Oct 2014 14:36:31 +0200
-Message-ID: <1413462991-1463-2-git-send-email-hdegoede@redhat.com>
-References: <1413462991-1463-1-git-send-email-hdegoede@redhat.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1413462991-1463-1-git-send-email-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: [PATCH 0/2] Disable the ThinkPad HW mute/level control when possible
+Date: Thu, 16 Oct 2014 11:02:16 -0700
+Message-ID: <cover.1413481880.git.luto@amacapital.net>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pd0-f182.google.com ([209.85.192.182]:34724 "EHLO
+	mail-pd0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751433AbaJPSC0 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 16 Oct 2014 14:02:26 -0400
+Received: by mail-pd0-f182.google.com with SMTP id y10so3678778pdj.13
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Oct 2014 11:02:25 -0700 (PDT)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net
+Cc: Len Brown <len.brown@intel.com>, Jerone Young <jerone.young@canonical.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>
 
-https://bugzilla.redhat.com/show_bug.cgi?id=1128309
+This series is being resurrected after several years, and it's quite
+different from before, so I'm restarting the version number at 1 :)
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/acer-wmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ThinkPad volume and mute controls are a mess.  For whatever reason,
+ThinkPads have mute buttons that send KEY_MUTE *and* control an
+invisible-to-ALSA mute switch.  Some of them have volume controls that
+interact with this switch as well.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 96a0b75..26c4fd1 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -579,6 +579,17 @@ static const struct dmi_system_id video_vendor_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 5741"),
- 		},
- 	},
-+	{
-+		/*
-+		 * Note no video_set_backlight_video_vendor, we must use the
-+		 * acer interface, as there is no native backlight interface.
-+		 */
-+		.ident = "Acer KAV80",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "KAV80"),
-+		},
-+	},
- 	{}
- };
- 
+This is a perennial source of problems.  On most ThinkPads, if you press
+mute and then unmute using GUI controls, you have no sound, because
+userspace and ALSA state gets out of sync with the hardware switch.
+There's a separate "sound card" that exposes the hardware switch, but
+userspace code generally doesn't understand that.
+
+There are already a few _OSI(Linux) overrides to turn all the hardware
+buttons into regular buttons.  Rather than quirking ACPI everywhere,
+just teach thinkpad-acpi to program the buttons for full software
+control and to disable hardware controls.  That allows us to remove the
+ACPI quirks and have normal mute controls.  This approach should be
+much simpler than adding even more kludgey ALSA integration for
+questionable gain.
+
+I haven't tested on my X220 (which has a mute light in addition to a
+mute button), since that laptop's SATA controller died last week.  It
+should work, though, and if someone else could test this on a ThinkPad
+with a mute light, that would be great.
+
+Andy Lutomirski (2):
+  thinkpad-acpi: Try to use full software mute control
+  acpi: Remove _OSI(Linux) for ThinkPads
+
+ drivers/acpi/blacklist.c             |  54 ------------------
+ drivers/platform/x86/thinkpad_acpi.c | 107 +++++++++++++++++++++++++++++++----
+ 2 files changed, 97 insertions(+), 64 deletions(-)
+
 -- 
-2.1.0
+1.9.3
