@@ -1,74 +1,42 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi: Fix access out of memory
-Date: Sun, 12 Oct 2014 15:32:38 -0700
-Message-ID: <20141012223238.GA28031@vmdeb7>
-References: <1411996251-13455-1-git-send-email-pali.rohar@gmail.com>
- <3073358.myrKz9QbdW@vostro.rjw.lan>
- <55C20A75-AB0A-4A4E-9E91-3428B5F868BB@infradead.org>
- <201410121845.07303@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48132 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751880AbaJLWdB (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 12 Oct 2014 18:33:01 -0400
-Content-Disposition: inline
-In-Reply-To: <201410121845.07303@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 1/2] samsung-laptop: Add broken-acpi-video quirk for NC210/NC110
+Date: Thu, 16 Oct 2014 14:36:30 +0200
+Message-ID: <1413462991-1463-1-git-send-email-hdegoede@redhat.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Oct 12, 2014 at 06:45:06PM +0200, Pali Roh=E1r wrote:
-> On Tuesday 30 September 2014 01:16:23 Darren Hart wrote:
-> > On September 29, 2014 4:26:03 PM PDT, "Rafael J. Wysocki"=20
-> <rjw@rjwysocki.net> wrote:
-> > >On Monday, September 29, 2014 02:30:29 PM Darren Hart wrote:
-> > >> On Mon, Sep 29, 2014 at 03:10:51PM +0200, Pali Roh=E1r wrote:
-> > >> > Without this patch driver dell-wmi is trying to access
-> > >> > elements of
-> > >
-> > >dynamically
-> > >
-> > >> > allocated array without checking array size. This can
-> > >> > lead to
-> > >
-> > >memory corruption
-> > >
-> > >> > or kernel panic. This patch adds missing checks for array
-> > >> > size.
-> > >> >=20
-> > >> > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> > >>=20
-> > >> Looks good to me. Rafael, any concerns?
-> > >
-> > >Not anything obvious.
-> >=20
-> > Queued, thanks.
-> >=20
-> > >> Cc: linux-acpi
-> > >
-> > >Thanks!
-> > >
->=20
-> Now I see that this patch is in linus tree. Can you sent it to=20
-> stable trees too?
+Reported (and tested) here:
+https://bugzilla.redhat.com/show_bug.cgi?id=861573
 
-Hi Pali,
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/samsung-laptop.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Please see Documentation/stable_kernel_rules.txt for details on how to =
-mark
-patches for stable when you submit them. Now that it is in mainline, th=
-e process
-is a bit more manual, you'll find instructions for how to go about that=
- in the
-same document.
-
-Thanks,
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 5a59665..ff765d8 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1561,6 +1561,16 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 	},
+ 	{
+ 	 .callback = samsung_dmi_matched,
++	 .ident = "NC210",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++		DMI_MATCH(DMI_PRODUCT_NAME, "NC210/NC110"),
++		DMI_MATCH(DMI_BOARD_NAME, "NC210/NC110"),
++		},
++	 .driver_data = &samsung_broken_acpi_video,
++	},
++	{
++	 .callback = samsung_dmi_matched,
+ 	 .ident = "730U3E/740U3E",
+ 	 .matches = {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
+-- 
+2.1.0
