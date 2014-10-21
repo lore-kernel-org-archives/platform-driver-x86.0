@@ -1,90 +1,39 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] drivers: depend on instead of select
- BACKLIGHT_CLASS_DEVICE and ACPI_VIDEO
-Date: Tue, 21 Oct 2014 13:50:07 -0700
-Message-ID: <20141021205006.GC20951@vmdeb7>
-References: <1413580403-16225-1-git-send-email-jani.nikula@intel.com>
+Subject: Re: [PATCH] drivers: platform: change 0x20 to I8042_STR_AUXDATA in
+ i8042 filters
+Date: Tue, 21 Oct 2014 13:54:38 -0700
+Message-ID: <20141021205438.GD20951@vmdeb7>
+References: <1413590240-18762-1-git-send-email-giedriuswork@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:53655 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:54359 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933095AbaJUUty (ORCPT
+	with ESMTP id S932842AbaJUUyX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Oct 2014 16:49:54 -0400
+	Tue, 21 Oct 2014 16:54:23 -0400
 Content-Disposition: inline
-In-Reply-To: <1413580403-16225-1-git-send-email-jani.nikula@intel.com>
+In-Reply-To: <1413590240-18762-1-git-send-email-giedriuswork@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jens Frederich <jfrederich@gmail.com>, Daniel Drake <dsd@laptop.org>, Jon Nettleton <jon.nettleton@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Giedrius Statkevicius <giedriuswork@gmail.com>
+Cc: mjg59@srcf.ucam.org, jlee@suse.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sat, Oct 18, 2014 at 12:13:23AM +0300, Jani Nikula wrote:
-> Documentation/kbuild/kconfig-language.txt warns to use select with care,
-> and in general use select only for non-visible symbols and for symbols
-> with no dependencies, because select will force a symbol to a value
-> without visiting the dependencies.
-> 
-> Select has become particularly problematic, interdependently, with the
-> BACKLIGHT_CLASS_DEVICE and ACPI_VIDEO configs. For example:
-> 
-> scripts/kconfig/conf --randconfig Kconfig
-> KCONFIG_SEED=0x48312B00
-> warning: (DRM_RADEON && DRM_NOUVEAU && DRM_I915 && DRM_GMA500 &&
-> DRM_SHMOBILE && DRM_TILCDC && FB_BACKLIGHT && FB_MX3 && USB_APPLEDISPLAY
-> && FB_OLPC_DCON && ASUS_LAPTOP && SONY_LAPTOP && THINKPAD_ACPI &&
-> EEEPC_LAPTOP && ACPI_CMPC && SAMSUNG_Q10) selects BACKLIGHT_CLASS_DEVICE
-> which has unmet direct dependencies (HAS_IOMEM && BACKLIGHT_LCD_SUPPORT)
-> warning: (DRM_RADEON && DRM_NOUVEAU && DRM_I915 && DRM_GMA500 &&
-> DRM_SHMOBILE && DRM_TILCDC && FB_BACKLIGHT && FB_MX3 && USB_APPLEDISPLAY
-> && FB_OLPC_DCON && ASUS_LAPTOP && SONY_LAPTOP && THINKPAD_ACPI &&
-> EEEPC_LAPTOP && ACPI_CMPC && SAMSUNG_Q10) selects BACKLIGHT_CLASS_DEVICE
-> which has unmet direct dependencies (HAS_IOMEM && BACKLIGHT_LCD_SUPPORT)
-> 
-> With tristates it's possible to end up selecting FOO=y depending on
-> BAR=m in the config, which gets discovered at build time, not config
-> time, like reported in the thread referenced below.
-> 
-> Do the following to fix the dependencies:
-> 
-> * Depend on instead of select BACKLIGHT_CLASS_DEVICE everywhere. Drop
->   select BACKLIGHT_LCD_SUPPORT in such cases, as it's a dependency of
->   BACKLIGHT_CLASS_DEVICE.
-> 
-> * Remove config FB_BACKLIGHT altogether, and replace it with a
->   dependency on BACKLIGHT_CLASS_DEVICE. All configs selecting
->   FB_BACKLIGHT select or depend on FB anyway, so we can simplify.
-> 
-> * Depend on (ACPI && ACPI_VIDEO) || ACPI=n in several places instead of
->   selecting ACPI_VIDEO and a number of its dependencies if ACPI is
->   enabled. This is tied to backlight, as ACPI_VIDEO depends on
->   BACKLIGHT_CLASS_DEVICE.
-> 
-> * Replace a couple of select INPUT/VT with depends as it seemed to be
->   necessary.
-> 
-> Reference: http://lkml.kernel.org/r/CA+r1ZhhmT4DrWtf6MbRQo5EqXwx+LxCqh15Vsu_d9WpftLhnxw@mail.gmail.com
-> Reported-by: Jim Davis <jim.epost@gmail.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Jens Frederich <jfrederich@gmail.com>
-> Cc: Daniel Drake <dsd@laptop.org>
-> Cc: Jon Nettleton <jon.nettleton@gmail.com>
-> Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+On Sat, Oct 18, 2014 at 02:57:20AM +0300, Giedrius Statkevicius wrote:
+> From: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+>=20
+> Instead of using a magic constant 0x20 in some drivers to get data on=
+ly
+> from the KBC port we should use the constant defined in i8042.h with
+> the same value. Also, this makes these drivers uniform with what
+> constant the only other filter function uses in=20
+> drivers/input/misc/ideapad_slidebar.c.
+>=20
+> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
 
-As for the drivers/platform/x86/Kconfig:
+Queued, thanks Giedrius.
 
-Acked-by: Darren Hart <dvhart@linux.intel.com>
-
-Thanks,
-
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
