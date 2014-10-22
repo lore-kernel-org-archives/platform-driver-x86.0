@@ -1,61 +1,39 @@
-From: Giedrius Statkevicius <giedriuswork@gmail.com>
-Subject: Re: [PATCH RFC] platform: hp_accel: add a i8042 filter to remove
- accelerometer data
-Date: Wed, 22 Oct 2014 19:45:33 +0300
-Message-ID: <5447DF2D.7090109@gmail.com>
-References: <1413665962-3830-1-git-send-email-giedriuswork@gmail.com> <20141021214508.GF20951@vmdeb7> <5447AF1F.1060806@gmail.com> <5447BD06.70109@tremplin-utc.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5447BD06.70109@tremplin-utc.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Frans Klaver <fransklaver@gmail.com>
+Subject: [PATCH 0/8] More eeepc-laptop cleanup
+Date: Wed, 22 Oct 2014 21:12:35 +0200
+Message-ID: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:41300 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751342AbaJVTNV (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 22 Oct 2014 15:13:21 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 2014.10.22 17:19, =C3=89ric Piel wrote:
-> On the HP laptop I had (with HPQ0004), no fake keys were reported.
-I guess this is a new "feature", then.
+Hi,
 
-> It should be noted that on my laptop, the accelerometer is completely
-> decoupled from the hard disk. For example, when freefall is detected,
-> nothing else happens (that's why you need to run a daemon that will
-> listen to the event, and park the disk head). Looking at the bug repo=
-rt,
-> it seems your laptop does a lot behind the OS, because apparently the
-> disk head is parked automatically. So maybe the scancodes is a new
-
-I'm sorry if I made the impression that it happens automatically but
-actually I am running a daemon compiled from
-Documentation/laptops/freefall.c. Nothing else is running on top of
-linux to park the head when a free fall is detected.
-
-> "feature" they have added in order to more easily report what's
-> happening in the back.
-> Now, more related to your proposed solution: is this really what we
-> want? What's wrong with the current state excepted for some warning
-> messages in dmesg? Do we really want to plain drop this information
-
-Well, these are not just a few messages but a lot of them and they clog
-the system log, makes it hard to notice the actual useful information,
-wastes disk space, etc.
-
-> provided by the hardware? How about just associating the scancodes to
-> meaningful keycodes? (I guess one reason no to do that is that it'd
-> likely require creating new keycodes corresponding to these pretty
-> atypical events in the input layer).
-
-The free fall detection is already handled by lis3lv02d and hp_accel on
-hp laptops with this feature and information is provided through
-/dev/freefall so, in my opinion, the way to go is to completely drop
-these scancodes.
-
->=20
-> Is there maybe some general policy about what do to hardware that
-> generate such special scancodes?
-
-Really not sure. BTW, I wonder if the same stuff happens on HPQ6007.
+This is another round of cleanups in eeepc-laptop. It's mostly shuffling around
+stuff, no big things. It's been running on my eeepc for two or three weeks now
+without any apparent problems. Comments appreciated.
 
 Thanks,
-Giedrius
+Frans
+
+Frans Klaver (8):
+  eeepc-laptop: flatten control flow
+  eeepc-laptop: don't break user visible strings
+  eeepc-laptop: define rfkill notifier nodes only once
+  eeepc-laptop: pull out eeepc_destroy_rfkill
+  eeepc-laptop: clean up control flow in eeepc_acpi_notify
+  eeepc-laptop: replace magic numbers with defines
+  eeepc-laptop: document fan_pwm conversions
+  eeepc-laptop: don't assume get_acpi succeeds
+
+ drivers/platform/x86/eeepc-laptop.c | 244 +++++++++++++++++++-----------------
+ 1 file changed, 127 insertions(+), 117 deletions(-)
+
+-- 
+2.1.0
