@@ -1,67 +1,72 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 7/8] eeepc-laptop: document fan_pwm conversions
-Date: Wed, 22 Oct 2014 21:12:42 +0200
-Message-ID: <1414005163-3461-8-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 3/8] eeepc-laptop: define rfkill notifier nodes only once
+Date: Wed, 22 Oct 2014 21:12:38 +0200
+Message-ID: <1414005163-3461-4-git-send-email-fransklaver@gmail.com>
 References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f43.google.com ([74.125.82.43]:49619 "EHLO
-	mail-wg0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755033AbaJVTN1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Oct 2014 15:13:27 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-eeepc_get_fan_pwm and eeepc_set_fan_pwm convert the PWM value read from
-the fan to a range lmsensors understands. Unfortunately this is only
-clear if you are familiar with how lmsensors handles duty cycles.
-
-Introduce two conversion functions that document the goal of these
-conversions.
+The rfkill notifier node names are used in three different places. As a
+matter of style, it is better to store them somewhere and have the
+compiler warn us about typos in the function arguments.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
- drivers/platform/x86/eeepc-laptop.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index f820bb3..275a239 100644
+index 6e3be01..e92ea41 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -974,18 +974,28 @@ static struct platform_driver platform_driver = {
- #define EEEPC_EC_SFB0      0xD0
- #define EEEPC_EC_FAN_CTRL  (EEEPC_EC_SFB0 + 3) /* Byte containing SF25  */
- 
-+static inline int eeepc_pwm_to_lmsensors(int value)
-+{
-+	return value * 255 / 100;
-+}
-+
-+static inline int eeepc_lmsensors_to_pwm(int value)
-+{
-+	value = clamp_val(value, 0, 255);
-+	return value * 100 / 255;
-+}
-+
- static int eeepc_get_fan_pwm(void)
- {
- 	u8 value = 0;
- 
- 	ec_read(EEEPC_EC_FAN_PWM, &value);
--	return value * 255 / 100;
-+	return eeepc_pwm_to_lmsensors(value);
+@@ -819,11 +819,15 @@ static int eeepc_new_rfkill(struct eeepc_laptop *eeepc,
+ 	return 0;
  }
  
- static void eeepc_set_fan_pwm(int value)
++static char EEEPC_RFKILL_NODE_1[] = "\\_SB.PCI0.P0P5";
++static char EEEPC_RFKILL_NODE_2[] = "\\_SB.PCI0.P0P6";
++static char EEEPC_RFKILL_NODE_3[] = "\\_SB.PCI0.P0P7";
++
+ static void eeepc_rfkill_exit(struct eeepc_laptop *eeepc)
  {
--	value = clamp_val(value, 0, 255);
--	value = value * 100 / 255;
-+	value = eeepc_lmsensors_to_pwm(value);
- 	ec_write(EEEPC_EC_FAN_PWM, value);
- }
+-	eeepc_unregister_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P5");
+-	eeepc_unregister_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P6");
+-	eeepc_unregister_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P7");
++	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_1);
++	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_2);
++	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_3);
+ 	if (eeepc->wlan_rfkill) {
+ 		rfkill_unregister(eeepc->wlan_rfkill);
+ 		rfkill_destroy(eeepc->wlan_rfkill);
+@@ -895,9 +899,9 @@ static int eeepc_rfkill_init(struct eeepc_laptop *eeepc)
+ 	if (result == -EBUSY)
+ 		result = 0;
  
+-	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P5");
+-	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P6");
+-	eeepc_register_rfkill_notifier(eeepc, "\\_SB.PCI0.P0P7");
++	eeepc_register_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_1);
++	eeepc_register_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_2);
++	eeepc_register_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_3);
+ 
+ exit:
+ 	if (result && result != -ENODEV)
+@@ -933,9 +937,9 @@ static int eeepc_hotk_restore(struct device *device)
+ 
+ 	/* Refresh both wlan rfkill state and pci hotplug */
+ 	if (eeepc->wlan_rfkill) {
+-		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P5");
+-		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P6");
+-		eeepc_rfkill_hotplug_update(eeepc, "\\_SB.PCI0.P0P7");
++		eeepc_rfkill_hotplug_update(eeepc, EEEPC_RFKILL_NODE_1);
++		eeepc_rfkill_hotplug_update(eeepc, EEEPC_RFKILL_NODE_2);
++		eeepc_rfkill_hotplug_update(eeepc, EEEPC_RFKILL_NODE_3);
+ 	}
+ 
+ 	if (eeepc->bluetooth_rfkill)
 -- 
 2.1.0
