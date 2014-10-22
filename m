@@ -1,7 +1,7 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 8/8] eeepc-laptop: don't assume get_acpi succeeds
-Date: Wed, 22 Oct 2014 21:12:43 +0200
-Message-ID: <1414005163-3461-9-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 6/8] eeepc-laptop: replace magic numbers with defines
+Date: Wed, 22 Oct 2014 21:12:41 +0200
+Message-ID: <1414005163-3461-7-git-send-email-fransklaver@gmail.com>
 References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
@@ -10,39 +10,55 @@ To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In eeepc_hotk_thaw, we assume that get_acpi() will effectively return a
-bool. However, it is possible that get_acpi() returns an error instead.
-We should not be writing error values to the ACPI device, even though
-it's quite possible that we couldn't contact the ACPI device in the
-first place.
+eeepc_[gs]et_fan_ctrl uses some magic numbers. These numbers mean
+something more than just the number. Describe them with macros instead
+of comments in one of the functions.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
- drivers/platform/x86/eeepc-laptop.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index 275a239..14f79ef 100644
+index 21ffe1f..f820bb3 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -911,7 +911,7 @@ static int eeepc_hotk_thaw(struct device *device)
- 	struct eeepc_laptop *eeepc = dev_get_drvdata(device);
+@@ -999,15 +999,19 @@ static int eeepc_get_fan_rpm(void)
+ 	return high << 8 | low;
+ }
  
- 	if (eeepc->wlan_rfkill) {
--		bool wlan;
-+		int wlan;
++#define EEEPC_EC_FAN_CTRL_BIT	0x02
++#define EEEPC_FAN_CTRL_MANUAL	1
++#define EEEPC_FAN_CTRL_AUTO	2
++
+ static int eeepc_get_fan_ctrl(void)
+ {
+ 	u8 value = 0;
  
- 		/*
- 		 * Work around bios bug - acpi _PTS turns off the wireless led
-@@ -919,7 +919,8 @@ static int eeepc_hotk_thaw(struct device *device)
- 		 * we should kick it ourselves in case hibernation is aborted.
- 		 */
- 		wlan = get_acpi(eeepc, CM_ASL_WLAN);
--		set_acpi(eeepc, CM_ASL_WLAN, wlan);
-+		if (wlan >= 0)
-+			set_acpi(eeepc, CM_ASL_WLAN, wlan);
- 	}
+ 	ec_read(EEEPC_EC_FAN_CTRL, &value);
+-	if (value & 0x02)
+-		return 1; /* manual */
++	if (value & EEEPC_EC_FAN_CTRL_BIT)
++		return EEEPC_FAN_CTRL_MANUAL;
+ 	else
+-		return 2; /* automatic */
++		return EEEPC_FAN_CTRL_AUTO;
+ }
  
- 	return 0;
+ static void eeepc_set_fan_ctrl(int manual)
+@@ -1015,10 +1019,10 @@ static void eeepc_set_fan_ctrl(int manual)
+ 	u8 value = 0;
+ 
+ 	ec_read(EEEPC_EC_FAN_CTRL, &value);
+-	if (manual == 1)
+-		value |= 0x02;
++	if (manual == EEEPC_FAN_CTRL_MANUAL)
++		value |= EEEPC_EC_FAN_CTRL_BIT;
+ 	else
+-		value &= ~0x02;
++		value &= ~EEEPC_EC_FAN_CTRL_BIT;
+ 	ec_write(EEEPC_EC_FAN_CTRL, value);
+ }
+ 
 -- 
 2.1.0
