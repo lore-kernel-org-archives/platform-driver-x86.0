@@ -1,7 +1,7 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 4/8] eeepc-laptop: pull out eeepc_destroy_rfkill
-Date: Wed, 22 Oct 2014 21:12:39 +0200
-Message-ID: <1414005163-3461-5-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 2/8] eeepc-laptop: don't break user visible strings
+Date: Wed, 22 Oct 2014 21:12:37 +0200
+Message-ID: <1414005163-3461-3-git-send-email-fransklaver@gmail.com>
 References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
@@ -10,67 +10,64 @@ To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In eeepc_rfkill_exit, we implement the same code four times. Pull out a
-function that cleans up an rfkill object to get rid of the duplication.
+As per Documentation/CodingStyle ch. 2, it is preferred that we don't
+break user visible strings, in order to allow users to grep for them.
 
 Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 ---
- drivers/platform/x86/eeepc-laptop.c | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ drivers/platform/x86/eeepc-laptop.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index e92ea41..73e8d39 100644
+index bb098e5..6e3be01 100644
 --- a/drivers/platform/x86/eeepc-laptop.c
 +++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -823,35 +823,29 @@ static char EEEPC_RFKILL_NODE_1[] = "\\_SB.PCI0.P0P5";
- static char EEEPC_RFKILL_NODE_2[] = "\\_SB.PCI0.P0P6";
- static char EEEPC_RFKILL_NODE_3[] = "\\_SB.PCI0.P0P7";
+@@ -417,8 +417,7 @@ static ssize_t cpufv_disabled_store(struct device *dev,
+ 	switch (value) {
+ 	case 0:
+ 		if (eeepc->cpufv_disabled)
+-			pr_warn("cpufv enabled (not officially supported "
+-				"on this model)\n");
++			pr_warn("cpufv enabled (not officially supported on this model)\n");
+ 		eeepc->cpufv_disabled = false;
+ 		return count;
+ 	case 1:
+@@ -604,12 +603,10 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
+ 	absent = (l == 0xffffffff);
  
-+static inline void eeepc_destroy_rfkill(struct rfkill **rfkill)
-+{
-+	if (!*rfkill)
-+		return;
-+	rfkill_unregister(*rfkill);
-+	rfkill_destroy(*rfkill);
-+	*rfkill = NULL;
-+}
-+
- static void eeepc_rfkill_exit(struct eeepc_laptop *eeepc)
- {
- 	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_1);
- 	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_2);
- 	eeepc_unregister_rfkill_notifier(eeepc, EEEPC_RFKILL_NODE_3);
--	if (eeepc->wlan_rfkill) {
--		rfkill_unregister(eeepc->wlan_rfkill);
--		rfkill_destroy(eeepc->wlan_rfkill);
--		eeepc->wlan_rfkill = NULL;
--	}
-+
-+	eeepc_destroy_rfkill(&eeepc->wlan_rfkill);
+ 	if (blocked != absent) {
+-		pr_warn("BIOS says wireless lan is %s, "
+-			"but the pci device is %s\n",
++		pr_warn("BIOS says wireless lan is %s, but the pci device is %s\n",
+ 			blocked ? "blocked" : "unblocked",
+ 			absent ? "absent" : "present");
+-		pr_warn("skipped wireless hotplug as probably "
+-			"inappropriate for this model\n");
++		pr_warn("skipped wireless hotplug as probably inappropriate for this model\n");
+ 		goto out_put_dev;
+ 	}
  
- 	if (eeepc->hotplug_slot)
- 		pci_hp_deregister(eeepc->hotplug_slot);
+@@ -1295,8 +1292,8 @@ static void eeepc_dmi_check(struct eeepc_laptop *eeepc)
+ 	 */
+ 	if (strcmp(model, "701") == 0 || strcmp(model, "702") == 0) {
+ 		eeepc->cpufv_disabled = true;
+-		pr_info("model %s does not officially support setting cpu "
+-			"speed\n", model);
++		pr_info("model %s does not officially support setting cpu speed\n",
++			model);
+ 		pr_info("cpufv disabled to avoid instability\n");
+ 	}
  
--	if (eeepc->bluetooth_rfkill) {
--		rfkill_unregister(eeepc->bluetooth_rfkill);
--		rfkill_destroy(eeepc->bluetooth_rfkill);
--		eeepc->bluetooth_rfkill = NULL;
--	}
--	if (eeepc->wwan3g_rfkill) {
--		rfkill_unregister(eeepc->wwan3g_rfkill);
--		rfkill_destroy(eeepc->wwan3g_rfkill);
--		eeepc->wwan3g_rfkill = NULL;
--	}
--	if (eeepc->wimax_rfkill) {
--		rfkill_unregister(eeepc->wimax_rfkill);
--		rfkill_destroy(eeepc->wimax_rfkill);
--		eeepc->wimax_rfkill = NULL;
--	}
-+	eeepc_destroy_rfkill(&eeepc->bluetooth_rfkill);
-+	eeepc_destroy_rfkill(&eeepc->wwan3g_rfkill);
-+	eeepc_destroy_rfkill(&eeepc->wimax_rfkill);
+@@ -1322,8 +1319,8 @@ static void cmsg_quirk(struct eeepc_laptop *eeepc, int cm, const char *name)
+ 	   Check if cm_getv[cm] works and, if yes, assume cm should be set. */
+ 	if (!(eeepc->cm_supported & (1 << cm))
+ 	    && !read_acpi_int(eeepc->handle, cm_getv[cm], &dummy)) {
+-		pr_info("%s (%x) not reported by BIOS,"
+-			" enabling anyway\n", name, 1 << cm);
++		pr_info("%s (%x) not reported by BIOS, enabling anyway\n",
++			name, 1 << cm);
+ 		eeepc->cm_supported |= 1 << cm;
+ 	}
  }
- 
- static int eeepc_rfkill_init(struct eeepc_laptop *eeepc)
 -- 
 2.1.0
