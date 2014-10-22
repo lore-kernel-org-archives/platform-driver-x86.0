@@ -1,39 +1,67 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 0/8] More eeepc-laptop cleanup
-Date: Wed, 22 Oct 2014 21:12:35 +0200
-Message-ID: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
+Subject: [PATCH 7/8] eeepc-laptop: document fan_pwm conversions
+Date: Wed, 22 Oct 2014 21:12:42 +0200
+Message-ID: <1414005163-3461-8-git-send-email-fransklaver@gmail.com>
+References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f42.google.com ([74.125.82.42]:41300 "EHLO
-	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751342AbaJVTNV (ORCPT
+Received: from mail-wg0-f43.google.com ([74.125.82.43]:49619 "EHLO
+	mail-wg0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755033AbaJVTN1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Oct 2014 15:13:21 -0400
+	Wed, 22 Oct 2014 15:13:27 -0400
+In-Reply-To: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+eeepc_get_fan_pwm and eeepc_set_fan_pwm convert the PWM value read from
+the fan to a range lmsensors understands. Unfortunately this is only
+clear if you are familiar with how lmsensors handles duty cycles.
 
-This is another round of cleanups in eeepc-laptop. It's mostly shuffling around
-stuff, no big things. It's been running on my eeepc for two or three weeks now
-without any apparent problems. Comments appreciated.
+Introduce two conversion functions that document the goal of these
+conversions.
 
-Thanks,
-Frans
+Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+---
+ drivers/platform/x86/eeepc-laptop.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Frans Klaver (8):
-  eeepc-laptop: flatten control flow
-  eeepc-laptop: don't break user visible strings
-  eeepc-laptop: define rfkill notifier nodes only once
-  eeepc-laptop: pull out eeepc_destroy_rfkill
-  eeepc-laptop: clean up control flow in eeepc_acpi_notify
-  eeepc-laptop: replace magic numbers with defines
-  eeepc-laptop: document fan_pwm conversions
-  eeepc-laptop: don't assume get_acpi succeeds
-
- drivers/platform/x86/eeepc-laptop.c | 244 +++++++++++++++++++-----------------
- 1 file changed, 127 insertions(+), 117 deletions(-)
-
+diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+index f820bb3..275a239 100644
+--- a/drivers/platform/x86/eeepc-laptop.c
++++ b/drivers/platform/x86/eeepc-laptop.c
+@@ -974,18 +974,28 @@ static struct platform_driver platform_driver = {
+ #define EEEPC_EC_SFB0      0xD0
+ #define EEEPC_EC_FAN_CTRL  (EEEPC_EC_SFB0 + 3) /* Byte containing SF25  */
+ 
++static inline int eeepc_pwm_to_lmsensors(int value)
++{
++	return value * 255 / 100;
++}
++
++static inline int eeepc_lmsensors_to_pwm(int value)
++{
++	value = clamp_val(value, 0, 255);
++	return value * 100 / 255;
++}
++
+ static int eeepc_get_fan_pwm(void)
+ {
+ 	u8 value = 0;
+ 
+ 	ec_read(EEEPC_EC_FAN_PWM, &value);
+-	return value * 255 / 100;
++	return eeepc_pwm_to_lmsensors(value);
+ }
+ 
+ static void eeepc_set_fan_pwm(int value)
+ {
+-	value = clamp_val(value, 0, 255);
+-	value = value * 100 / 255;
++	value = eeepc_lmsensors_to_pwm(value);
+ 	ec_write(EEEPC_EC_FAN_PWM, value);
+ }
+ 
 -- 
 2.1.0
