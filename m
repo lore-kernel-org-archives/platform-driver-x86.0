@@ -1,50 +1,75 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: [PATCH] toshiba_acpi: Add Toshiba TECRA A50-A to the alt keymap dmi
- list
-Date: Thu, 23 Oct 2014 16:18:02 +0800
-Message-ID: <5448B9BA.9030003@intel.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] drivers: depend on instead of select BACKLIGHT_CLASS_DEVICE
+ and ACPI_VIDEO
+Date: Thu, 23 Oct 2014 14:38:54 +0300
+Message-ID: <5448E8CE.7040405@ti.com>
+References: <1413580403-16225-1-git-send-email-jani.nikula@intel.com> <54476492.6090105@ti.com> <20141023081034.GA26941@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="Nn26dT9qtJTf6VjBixu4iLbwGnd55SpBm"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:63141 "EHLO mga11.intel.com"
+Received: from arroyo.ext.ti.com ([192.94.94.40]:46869 "EHLO arroyo.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752244AbaJWI0q (ORCPT
+	id S1754377AbaJWLjs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Oct 2014 04:26:46 -0400
+	Thu, 23 Oct 2014 07:39:48 -0400
+In-Reply-To: <20141023081034.GA26941@phenom.ffwll.local>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Blindekinder <rafael.raccuia@blindekinder.com>, Azael Avalos <coproscefalo@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Jani Nikula <jani.nikula@intel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Daniel Drake <dsd@laptop.org>, Jens Frederich <jfrederich@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Nettleton <jon.nettleton@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Darren Hart <dvhart@infradead.org>, Daniel Vetter <daniel.vetter@intel.com>, Bryan Wu <cooloney@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Lee Jones <lee.jones@linaro.org>
 
-As bug #72551, the Toshiba TECRA A50-A series models also come with the
-new keymap layout as found out by Azael Avalos, so add it to the dmi
-table.
+--Nn26dT9qtJTf6VjBixu4iLbwGnd55SpBm
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=76971
-Reported-and-tested-by: Blindekinder <rafael.raccuia@blindekinder.com>
-Cc: Azael Avalos <coproscefalo@gmail.com>
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
----
- drivers/platform/x86/toshiba_acpi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 23/10/14 11:10, Daniel Vetter wrote:
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index ef3a1904e92f..ab6151f05420 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -240,6 +240,12 @@ static const struct dmi_system_id toshiba_alt_keymap_dmi[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Qosmio X75-A"),
- 		},
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TECRA A50-A"),
-+		},
-+	},
- 	{}
- };
- 
--- 
-1.9.3
+> If we want to make BACKLIGHT_CLASS_DEVICE into a library thing then I
+> guess we could do that, but we must then also drag it out of all the ot=
+her
+> meta options to make sure it's always available. No need I think to dit=
+ch
+
+BACKLIGHT_CLASS_DEVICE only depends on HAS_IOMEM and
+BACKLIGHT_LCD_SUPPORT so there are no other meta options to avoid.
+HAS_IOMEM comes from drivers/video/Kconfig's "Graphics support", and I
+guess we can ignore it.
+
+> the entire BACKLIGHT_LCD_SUPPORT meta option. And then everyone could
+> select it.
+
+I don't quite understand what purpose does BACKLIGHT_LCD_SUPPORT serve.
+It doesn't enable any code, it just opens up new Kconfig options. Why
+can't the Kconfig options be always available? It's just another option
+to 'select', without any reason I can see.
+
+ Tomi
+
+
+
+--Nn26dT9qtJTf6VjBixu4iLbwGnd55SpBm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUSOjOAAoJEPo9qoy8lh71ZtAP/R0WADvDaKCQZijK3sTtHI9a
+Ic7QSu772o5C2vybbt3iKEM7NA4mugQJJnvnN/SOyLpKmA8T0RWAJyhV9QYpp/UC
+a3/ULiGv7AB/I5V+GJUrsUevFTCdConhYDlXN4K2Q9r7aOYv41xiQkLfxb9LEy5t
+4NcrIDU+ycG/aqlXGbroVz3DV9PMVhbiRjFgxR92VCReXeoJ/zh6P2oIOAEWtdL5
+D2CK82WYO6EqVF1/RAeUA1k1XRHYFe3ogSxIZ+n04EMUZQ6ZFFx6FaBX5sgjUIp+
+CDxkcbRLjNx4Bgj4Pe6Qo3VdtOcubkXh8mkWqbiYr7cQ+o6ZhQfxmTili+wBQGPG
+84ylu0Kgvp5YG+1bAa5wew+mtf+szTucLar5a6dI2MMnB8yZkDO/Ku8y8Aj/cdmw
+/AZWRtvrvhJyzjbx5JSnoHEeUFZNYDS6h8Uxf7q/nBjDrvwXQ67Ldh3zCc3jYPnL
+8GQ/RC+e4ypxdxPf2FQmIpNqY4SHosoXxZ7zAPqqq5qUjP2Hry47a0etXrKp9bqa
+86Hrwj75xLCkLTd/btf573nx23Vh0b4+n5p5ZwLh1QfjtETtbVApJR/FgVkJQEU7
+d+3R63LoNDO0AO69WOJfyM7o2gIkr77faoh2dAoahMbZwwjG1r7UGmSxHxKMIrpW
+/DxSFIsy4aulA+U8ekEg
+=TpMx
+-----END PGP SIGNATURE-----
+
+--Nn26dT9qtJTf6VjBixu4iLbwGnd55SpBm--
