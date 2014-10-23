@@ -1,139 +1,125 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH 1/8] eeepc-laptop: flatten control flow
-Date: Wed, 22 Oct 2014 21:12:36 +0200
-Message-ID: <1414005163-3461-2-git-send-email-fransklaver@gmail.com>
-References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f48.google.com ([74.125.82.48]:58656 "EHLO
-	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753889AbaJVTNW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Oct 2014 15:13:22 -0400
-In-Reply-To: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drivers: depend on instead of select
+ BACKLIGHT_CLASS_DEVICE and ACPI_VIDEO
+Date: Thu, 23 Oct 2014 10:10:34 +0200
+Message-ID: <20141023081034.GA26941@phenom.ffwll.local>
+References: <1413580403-16225-1-git-send-email-jani.nikula@intel.com>
+ <54476492.6090105@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <54476492.6090105@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Daniel Drake <dsd@laptop.org>, Jens Frederich <jfrederich@gmail.com>, Jani Nikula <jani.nikula@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Nettleton <jon.nettleton@gmail.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Daniel Vetter <daniel.vetter@intel.com>, Darren Hart <dvhart@infradead.org>, Bryan Wu <cooloney@gmail.com>, linuxppc-dev@lists.ozlabs.org, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-In eeepc_rfkill_hotplug there's an if statement with a big tail that
-ends right before the out_unlock label. We might as well invert the
-condition and jump to out_unlock in that case, pretty much like the rest
-of the code does. This removes an indentation level for a large chunk of
-code and also stops suggesting there might be an else clause.
+On Wed, Oct 22, 2014 at 11:02:26AM +0300, Tomi Valkeinen wrote:
+> On 18/10/14 00:13, Jani Nikula wrote:
+> > Documentation/kbuild/kconfig-language.txt warns to use select with care,
+> > and in general use select only for non-visible symbols and for symbols
+> > with no dependencies, because select will force a symbol to a value
+> > without visiting the dependencies.
+> > 
+> > Select has become particularly problematic, interdependently, with the
+> > BACKLIGHT_CLASS_DEVICE and ACPI_VIDEO configs. For example:
+> > 
+> > scripts/kconfig/conf --randconfig Kconfig
+> > KCONFIG_SEED=0x48312B00
+> > warning: (DRM_RADEON && DRM_NOUVEAU && DRM_I915 && DRM_GMA500 &&
+> > DRM_SHMOBILE && DRM_TILCDC && FB_BACKLIGHT && FB_MX3 && USB_APPLEDISPLAY
+> > && FB_OLPC_DCON && ASUS_LAPTOP && SONY_LAPTOP && THINKPAD_ACPI &&
+> > EEEPC_LAPTOP && ACPI_CMPC && SAMSUNG_Q10) selects BACKLIGHT_CLASS_DEVICE
+> > which has unmet direct dependencies (HAS_IOMEM && BACKLIGHT_LCD_SUPPORT)
+> > warning: (DRM_RADEON && DRM_NOUVEAU && DRM_I915 && DRM_GMA500 &&
+> > DRM_SHMOBILE && DRM_TILCDC && FB_BACKLIGHT && FB_MX3 && USB_APPLEDISPLAY
+> > && FB_OLPC_DCON && ASUS_LAPTOP && SONY_LAPTOP && THINKPAD_ACPI &&
+> > EEEPC_LAPTOP && ACPI_CMPC && SAMSUNG_Q10) selects BACKLIGHT_CLASS_DEVICE
+> > which has unmet direct dependencies (HAS_IOMEM && BACKLIGHT_LCD_SUPPORT)
+> > 
+> > With tristates it's possible to end up selecting FOO=y depending on
+> > BAR=m in the config, which gets discovered at build time, not config
+> > time, like reported in the thread referenced below.
+> > 
+> > Do the following to fix the dependencies:
+> > 
+> > * Depend on instead of select BACKLIGHT_CLASS_DEVICE everywhere. Drop
+> >   select BACKLIGHT_LCD_SUPPORT in such cases, as it's a dependency of
+> >   BACKLIGHT_CLASS_DEVICE.
+> > 
+> > * Remove config FB_BACKLIGHT altogether, and replace it with a
+> >   dependency on BACKLIGHT_CLASS_DEVICE. All configs selecting
+> >   FB_BACKLIGHT select or depend on FB anyway, so we can simplify.
+> > 
+> > * Depend on (ACPI && ACPI_VIDEO) || ACPI=n in several places instead of
+> >   selecting ACPI_VIDEO and a number of its dependencies if ACPI is
+> >   enabled. This is tied to backlight, as ACPI_VIDEO depends on
+> >   BACKLIGHT_CLASS_DEVICE.
+> > 
+> > * Replace a couple of select INPUT/VT with depends as it seemed to be
+> >   necessary.
+> 
+> While doing 'depends on' instead of 'select' is an "easy" fix for this,
+> I do dislike it quite a bit. It's a major pain to go around the kernel
+> config, trying to find all the dependencies that a particular driver
+> wants. If I need fb-foobar, I should just be able to enable it, instead
+> of first searching and selecting its minor dependencies individually.
+> 
+> So, not a NACK, but a "isn't there an another way to fix this?".
+> 
+> Looking at backlight... BACKLIGHT_LCD_SUPPORT seems to be a "meta"
+> option, it only enables a Kconfig submenu.
+> 
+> So I think we could just remove the whole BACKLIGHT_LCD_SUPPORT option.
+> But if we do that, all the items in drivers/video/backlight/Kconfig with
+> default 'y' or 'm' would get enabled by default, so I think we should
+> remove the 'default's from that file. That makes sense in any case, as I
+> don't see why "HP Jornada 700 series LCD Driver" should be "default y".
+> 
+> BACKLIGHT_CLASS_DEVICE doesn't depend on anything except
+> BACKLIGHT_LCD_SUPPORT, so after removing BACKLIGHT_LCD_SUPPORT it should
+> be safe to 'select' BACKLIGHT_CLASS_DEVICE.
+> 
+> BACKLIGHT_CLASS_DEVICE could be made a hidden option, and the drivers in
+> drivers/video/backlight/Kconfig which are under BACKLIGHT_CLASS_DEVICE
+> could be made to select BACKLIGHT_CLASS_DEVICE instead.
+> 
+> That doesn't exactly fix anything, but I think it makes sense as
+> BACKLIGHT_CLASS_DEVICE is something that's selected from all around the
+> kernel, so it should be a selectable "library" instead of a Kconfig menu
+> option.
+> 
+> I didn't look at the ACPI_VIDEO side, so no idea how messy that is.
 
-Signed-off-by: Frans Klaver <fransklaver@gmail.com>
----
- drivers/platform/x86/eeepc-laptop.c | 89 +++++++++++++++++++------------------
- 1 file changed, 45 insertions(+), 44 deletions(-)
+If we want to make BACKLIGHT_CLASS_DEVICE into a library thing then I
+guess we could do that, but we must then also drag it out of all the other
+meta options to make sure it's always available. No need I think to ditch
+the entire BACKLIGHT_LCD_SUPPORT meta option. And then everyone could
+select it.
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index db79902..bb098e5 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -580,59 +580,60 @@ static void eeepc_rfkill_hotplug(struct eeepc_laptop *eeepc, acpi_handle handle)
- 	mutex_lock(&eeepc->hotplug_lock);
- 	pci_lock_rescan_remove();
- 
--	if (eeepc->hotplug_slot) {
--		port = acpi_get_pci_dev(handle);
--		if (!port) {
--			pr_warning("Unable to find port\n");
--			goto out_unlock;
--		}
-+	if (!eeepc->hotplug_slot)
-+		goto out_unlock;
- 
--		bus = port->subordinate;
-+	port = acpi_get_pci_dev(handle);
-+	if (!port) {
-+		pr_warning("Unable to find port\n");
-+		goto out_unlock;
-+	}
- 
--		if (!bus) {
--			pr_warn("Unable to find PCI bus 1?\n");
--			goto out_put_dev;
--		}
-+	bus = port->subordinate;
- 
--		if (pci_bus_read_config_dword(bus, 0, PCI_VENDOR_ID, &l)) {
--			pr_err("Unable to read PCI config space?\n");
--			goto out_put_dev;
--		}
-+	if (!bus) {
-+		pr_warn("Unable to find PCI bus 1?\n");
-+		goto out_put_dev;
-+	}
-+
-+	if (pci_bus_read_config_dword(bus, 0, PCI_VENDOR_ID, &l)) {
-+		pr_err("Unable to read PCI config space?\n");
-+		goto out_put_dev;
-+	}
- 
--		absent = (l == 0xffffffff);
-+	absent = (l == 0xffffffff);
- 
--		if (blocked != absent) {
--			pr_warn("BIOS says wireless lan is %s, "
--				"but the pci device is %s\n",
--				blocked ? "blocked" : "unblocked",
--				absent ? "absent" : "present");
--			pr_warn("skipped wireless hotplug as probably "
--				"inappropriate for this model\n");
-+	if (blocked != absent) {
-+		pr_warn("BIOS says wireless lan is %s, "
-+			"but the pci device is %s\n",
-+			blocked ? "blocked" : "unblocked",
-+			absent ? "absent" : "present");
-+		pr_warn("skipped wireless hotplug as probably "
-+			"inappropriate for this model\n");
-+		goto out_put_dev;
-+	}
-+
-+	if (!blocked) {
-+		dev = pci_get_slot(bus, 0);
-+		if (dev) {
-+			/* Device already present */
-+			pci_dev_put(dev);
- 			goto out_put_dev;
- 		}
--
--		if (!blocked) {
--			dev = pci_get_slot(bus, 0);
--			if (dev) {
--				/* Device already present */
--				pci_dev_put(dev);
--				goto out_put_dev;
--			}
--			dev = pci_scan_single_device(bus, 0);
--			if (dev) {
--				pci_bus_assign_resources(bus);
--				pci_bus_add_device(dev);
--			}
--		} else {
--			dev = pci_get_slot(bus, 0);
--			if (dev) {
--				pci_stop_and_remove_bus_device(dev);
--				pci_dev_put(dev);
--			}
-+		dev = pci_scan_single_device(bus, 0);
-+		if (dev) {
-+			pci_bus_assign_resources(bus);
-+			pci_bus_add_device(dev);
-+		}
-+	} else {
-+		dev = pci_get_slot(bus, 0);
-+		if (dev) {
-+			pci_stop_and_remove_bus_device(dev);
-+			pci_dev_put(dev);
- 		}
--out_put_dev:
--		pci_dev_put(port);
- 	}
-+out_put_dev:
-+	pci_dev_put(port);
- 
- out_unlock:
- 	pci_unlock_rescan_remove();
+The problem is if you mix depends and select Kconfig falls over and starts
+to see loops where there are none. So you really can't ever mix them for
+the same symbol.
+
+I think if we get the BACKLIGHT_CLASS_DEVICE out of the picture with that
+ACPI_VIDEO should be fixable with some
+
+	select ACPI_VIDEO if ACPI
+
+or so. Currently that doesn't work because of the backlight class knob and
+select being broken.
+-Daniel
 -- 
-2.1.0
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
