@@ -1,32 +1,43 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-nb-wmi: Add wapf4 quirk for the X550VB
-Date: Fri, 24 Oct 2014 22:11:16 -0700
-Message-ID: <20141025051116.GA53394@vmdeb7>
-References: <20141022123252.GC1876@redhat.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 1/2] thinkpad-acpi: Try to use full software mute control
+Date: Sat, 25 Oct 2014 19:46:41 -0200
+Message-ID: <20141025214641.GA13554@khazad-dum.debian.net>
+References: <cover.1413481880.git.luto@amacapital.net>
+ <72f375b46a34702fc9f8be419fa83c219fbc28c5.1413481880.git.luto@amacapital.net>
+ <20141016183130.GA15835@khazad-dum.debian.net>
+ <CALCETrXz_x7E5aVvr7S1aTtGLbE8PKpVJFrBCZTEXZKjdi0F3w@mail.gmail.com>
+ <20141016185455.GB15835@khazad-dum.debian.net>
+ <CALCETrXovzScXMWLTF4WqY9SjsL4+KPxmviYjQ-pDry8qZjZ1A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:40073 "EHLO
+	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1750895AbaJYVq4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 25 Oct 2014 17:46:56 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+	by mailout.nyi.internal (Postfix) with ESMTP id BA59F206EB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2014 17:46:55 -0400 (EDT)
 Content-Disposition: inline
-In-Reply-To: <20141022123252.GC1876@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanislaw Gruszka <sgruszka@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <CALCETrXovzScXMWLTF4WqY9SjsL4+KPxmviYjQ-pDry8qZjZ1A@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, Len Brown <len.brown@intel.com>, Jerone Young <jerone.young@canonical.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@mit.edu>
 
-On Wed, Oct 22, 2014 at 02:32:52PM +0200, Stanislaw Gruszka wrote:
-
-Hi Stanislaw,
-
-> As reported here: http://bugzilla.redhat.com/show_bug.cgi?id=1089731#c23
-> the X550VB needs wapf=4 too.
+On Sat, 25 Oct 2014, Andy Lutomirski wrote:
+> > I will only be able to do that during the weekend anyway, so feel free to
+> > send a v3 if you need :-)
+> >
 > 
+> Any update?
 
-Please provide a self sufficient changelog, that, independent of a bugzilla
-link, provides enough information to understand what the problem is, and why
-this is the correct fix.
-
-Thanks,
+Will test tomorrow, or with some luck, tonight... Had some nasty issues to
+deal with.
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
