@@ -1,43 +1,76 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 1/2] thinkpad-acpi: Try to use full software mute control
-Date: Sat, 25 Oct 2014 19:46:41 -0200
-Message-ID: <20141025214641.GA13554@khazad-dum.debian.net>
-References: <cover.1413481880.git.luto@amacapital.net>
- <72f375b46a34702fc9f8be419fa83c219fbc28c5.1413481880.git.luto@amacapital.net>
- <20141016183130.GA15835@khazad-dum.debian.net>
- <CALCETrXz_x7E5aVvr7S1aTtGLbE8PKpVJFrBCZTEXZKjdi0F3w@mail.gmail.com>
- <20141016185455.GB15835@khazad-dum.debian.net>
- <CALCETrXovzScXMWLTF4WqY9SjsL4+KPxmviYjQ-pDry8qZjZ1A@mail.gmail.com>
+From: Stephan Mueller <smueller@chronox.de>
+Subject: ideapad_laptop: rfkill quirk
+Date: Sun, 26 Oct 2014 04:07:42 +0100
+Message-ID: <26688268.oFvWOPa3fZ@tachyon.chronox.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:40073 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750895AbaJYVq4 (ORCPT
+Received: from mail.eperm.de ([89.247.134.16]:54130 "EHLO mail.eperm.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750935AbaJZDP6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 25 Oct 2014 17:46:56 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-	by mailout.nyi.internal (Postfix) with ESMTP id BA59F206EB
-	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Oct 2014 17:46:55 -0400 (EDT)
-Content-Disposition: inline
-In-Reply-To: <CALCETrXovzScXMWLTF4WqY9SjsL4+KPxmviYjQ-pDry8qZjZ1A@mail.gmail.com>
+	Sat, 25 Oct 2014 23:15:58 -0400
+Received: from tachyon.chronox.de
+	by mail.eperm.de with [XMail 1.27 ESMTP Server]
+	id <S314A> for <platform-driver-x86@vger.kernel.org> from <smueller@chronox.de>;
+	Sun, 26 Oct 2014 04:07:44 +0100
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, Len Brown <len.brown@intel.com>, Jerone Young <jerone.young@canonical.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@mit.edu>
+To: platform-driver-x86@vger.kernel.org
 
-On Sat, 25 Oct 2014, Andy Lutomirski wrote:
-> > I will only be able to do that during the weekend anyway, so feel free to
-> > send a v3 if you need :-)
-> >
-> 
-> Any update?
+Hi,
 
-Will test tomorrow, or with some luck, tonight... Had some nasty issues to
-deal with.
+I am working on a Lenovo Yoga Pro 3. This device does not have any physical 
+rfkill switch. In addition, it has a Broadcomm 4352 wireless device.
 
+I am using the proprietary Broadcomm wireless device driver as there is 
+currently no open source driver available.
+
+After booting the Broadcomm wireless driver is not loaded. ifconfig -a does 
+not display any wireless device. The status of rfkill is as follows:
+
+rfkill list all
+0: ideapad_wlan: Wireless LAN
+        Soft blocked: yes
+        Hard blocked: yes
+1: ideapad_bluetooth: Bluetooth
+        Soft blocked: yes
+        Hard blocked: yes
+
+You see, that there is a woreless LAN device reported with a hardware rfkill 
+switch.
+
+When insmoding the Broadcomm driver, the rfkill status is:
+
+rfkill list all
+0: ideapad_wlan: Wireless LAN
+        Soft blocked: yes
+        Hard blocked: yes
+1: ideapad_bluetooth: Bluetooth
+        Soft blocked: yes
+        Hard blocked: yes
+7: phy1: Wireless LAN
+        Soft blocked: yes
+        Hard blocked: no
+8: hci0: Bluetooth
+        Soft blocked: yes
+        Hard blocked: no
+
+Now, after calling rfkill unblock all, the soft blocked status is no, but the 
+hard blocked is still yes for the ideapad_wlan. This implies that the 
+NetworkManager keeps the Broadcomm phy1 device disabled. When I rmmod the 
+ideapad_laptop device driver, only phy1 and hci0 are left and NetworkManager 
+activates them to work normally.
+
+When insmoding the ideapad_laptop again, I see the hard blocked setting for 
+both ideapad_* devices is "no", which implies that I still have network 
+connection.
+
+I am wondering why is there an ideapad wlan rfkill hardware switch found after 
+boot, but after rmmod and insmod it is not found any more. 
+
+Thanks
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Ciao
+Stephan
