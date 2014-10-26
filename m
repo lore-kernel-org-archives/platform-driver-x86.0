@@ -1,76 +1,58 @@
-From: Stephan Mueller <smueller@chronox.de>
-Subject: ideapad_laptop: rfkill quirk
-Date: Sun, 26 Oct 2014 04:07:42 +0100
-Message-ID: <26688268.oFvWOPa3fZ@tachyon.chronox.de>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
+Subject: [PATCH v2] asus-nb-wmi: Add wapf4 quirk for the X550VB
+Date: Sun, 26 Oct 2014 11:23:55 +0100
+Message-ID: <20141026102354.GA2588@redhat.com>
+References: <20141022123252.GC1876@redhat.com>
+ <20141025051116.GA53394@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.eperm.de ([89.247.134.16]:54130 "EHLO mail.eperm.de"
+Received: from mx1.redhat.com ([209.132.183.28]:60812 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750935AbaJZDP6 (ORCPT
+	id S1751253AbaJZK0w (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 25 Oct 2014 23:15:58 -0400
-Received: from tachyon.chronox.de
-	by mail.eperm.de with [XMail 1.27 ESMTP Server]
-	id <S314A> for <platform-driver-x86@vger.kernel.org> from <smueller@chronox.de>;
-	Sun, 26 Oct 2014 04:07:44 +0100
+	Sun, 26 Oct 2014 06:26:52 -0400
+Content-Disposition: inline
+In-Reply-To: <20141025051116.GA53394@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+X550VB as many others Asus laptops need wapf4 quirk to make RFKILL
+switch be functional. Otherwise system boots with wireless card
+disabled and is only possible to enable it by suspend/resume.
 
-I am working on a Lenovo Yoga Pro 3. This device does not have any physical 
-rfkill switch. In addition, it has a Broadcomm 4352 wireless device.
+Bug report:
+http://bugzilla.redhat.com/show_bug.cgi?id=1089731#c23
 
-I am using the proprietary Broadcomm wireless device driver as there is 
-currently no open source driver available.
+Reported-and-tested-by: Vratislav Podzimek <vpodzime@redhat.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+---
+v1 -> v2: update changelog
 
-After booting the Broadcomm wireless driver is not loaded. ifconfig -a does 
-not display any wireless device. The status of rfkill is as follows:
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-rfkill list all
-0: ideapad_wlan: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: yes
-1: ideapad_bluetooth: Bluetooth
-        Soft blocked: yes
-        Hard blocked: yes
-
-You see, that there is a woreless LAN device reported with a hardware rfkill 
-switch.
-
-When insmoding the Broadcomm driver, the rfkill status is:
-
-rfkill list all
-0: ideapad_wlan: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: yes
-1: ideapad_bluetooth: Bluetooth
-        Soft blocked: yes
-        Hard blocked: yes
-7: phy1: Wireless LAN
-        Soft blocked: yes
-        Hard blocked: no
-8: hci0: Bluetooth
-        Soft blocked: yes
-        Hard blocked: no
-
-Now, after calling rfkill unblock all, the soft blocked status is no, but the 
-hard blocked is still yes for the ideapad_wlan. This implies that the 
-NetworkManager keeps the Broadcomm phy1 device disabled. When I rmmod the 
-ideapad_laptop device driver, only phy1 and hci0 are left and NetworkManager 
-activates them to work normally.
-
-When insmoding the ideapad_laptop again, I see the hard blocked setting for 
-both ideapad_* devices is "no", which implies that I still have network 
-connection.
-
-I am wondering why is there an ideapad wlan rfkill hardware switch found after 
-boot, but after rmmod and insmod it is not found any more. 
-
-Thanks
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 3a4951f..c1a6cd6 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -182,6 +182,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X550VB",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X550VB"),
++		},
++		.driver_data = &quirk_asus_wapf4,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X55A",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
-Ciao
-Stephan
+1.8.3.1
