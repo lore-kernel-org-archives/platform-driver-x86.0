@@ -1,58 +1,50 @@
-From: Stanislaw Gruszka <sgruszka@redhat.com>
-Subject: [PATCH v2] asus-nb-wmi: Add wapf4 quirk for the X550VB
-Date: Sun, 26 Oct 2014 11:23:55 +0100
-Message-ID: <20141026102354.GA2588@redhat.com>
-References: <20141022123252.GC1876@redhat.com>
- <20141025051116.GA53394@vmdeb7>
+From: Stephan Mueller <smueller@chronox.de>
+Subject: [PATCH] quirk for Lenovo Yoga 3: no rfkill switch
+Date: Mon, 27 Oct 2014 04:09:50 +0100
+Message-ID: <11408587.sP876r0cR3@tachyon.chronox.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:60812 "EHLO mx1.redhat.com"
+Received: from mail.eperm.de ([89.247.134.16]:54143 "EHLO mail.eperm.de"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751253AbaJZK0w (ORCPT
+	id S1752144AbaJ0DJ5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 26 Oct 2014 06:26:52 -0400
-Content-Disposition: inline
-In-Reply-To: <20141025051116.GA53394@vmdeb7>
+	Sun, 26 Oct 2014 23:09:57 -0400
+Received: from tachyon.chronox.de
+	by mail.eperm.de with [XMail 1.27 ESMTP Server]
+	id <S3218> for <platform-driver-x86@vger.kernel.org> from <smueller@chronox.de>;
+	Mon, 27 Oct 2014 04:09:52 +0100
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 
-X550VB as many others Asus laptops need wapf4 quirk to make RFKILL
-switch be functional. Otherwise system boots with wireless card
-disabled and is only possible to enable it by suspend/resume.
+The Yoga 3 does not contain any physical rfkill switch. Therefore
+disable the rfkill switch identically to the Yoga 2 approach. 
 
-Bug report:
-http://bugzilla.redhat.com/show_bug.cgi?id=1089731#c23
-
-Reported-and-tested-by: Vratislav Podzimek <vpodzime@redhat.com>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
 ---
-v1 -> v2: update changelog
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3a4951f..c1a6cd6 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -182,6 +182,15 @@ static const struct dmi_system_id asus_quirks[] = {
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 02152de..ed494f3 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -837,6 +837,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
+ 		},
  	},
- 	{
- 		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X550VB",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X550VB"),
-+		},
-+		.driver_data = &quirk_asus_wapf4,
-+	},
 +	{
-+		.callback = dmi_matched,
- 		.ident = "ASUSTeK COMPUTER INC. X55A",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		.ident = "Lenovo Yoga 3 Pro 1370",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
++		},
++	},
+ 	{}
+ };
+ 
 -- 
-1.8.3.1
+2.1.0
