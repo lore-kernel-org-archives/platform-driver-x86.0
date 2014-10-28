@@ -1,74 +1,51 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH 7/8] eeepc-laptop: document fan_pwm conversions
-Date: Tue, 28 Oct 2014 09:21:43 +0100
-Message-ID: <CAH6sp9P3rm86vq=Js1N6BN83-mYgxJEqCu4edEsKWvtyyFPXPQ@mail.gmail.com>
+Subject: Re: [PATCH 3/8] eeepc-laptop: define rfkill notifier nodes only once
+Date: Tue, 28 Oct 2014 09:28:30 +0100
+Message-ID: <CAH6sp9N0nrRHZ9GzdhKPEgUAqA58hY8NEjrpDxHQ9a-=ifCHeA@mail.gmail.com>
 References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-	<1414005163-3461-8-git-send-email-fransklaver@gmail.com>
-	<20141028053134.GH60814@vmdeb7>
+	<1414005163-3461-4-git-send-email-fransklaver@gmail.com>
+	<20141028051220.GE60814@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f175.google.com ([209.85.212.175]:60377 "EHLO
-	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751827AbaJ1IVo (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 28 Oct 2014 04:21:44 -0400
-In-Reply-To: <20141028053134.GH60814@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141028051220.GE60814@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
 Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 28, 2014 at 6:31 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Oct 22, 2014 at 09:12:42PM +0200, Frans Klaver wrote:
->> eeepc_get_fan_pwm and eeepc_set_fan_pwm convert the PWM value read from
->> the fan to a range lmsensors understands. Unfortunately this is only
->> clear if you are familiar with how lmsensors handles duty cycles.
->>
->> Introduce two conversion functions that document the goal of these
->> conversions.
+On Tue, Oct 28, 2014 at 6:12 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Wed, Oct 22, 2014 at 09:12:38PM +0200, Frans Klaver wrote:
+>> The rfkill notifier node names are used in three different places. As a
+>> matter of style, it is better to store them somewhere and have the
+>> compiler warn us about typos in the function arguments.
 >>
 >> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 >> ---
->>  drivers/platform/x86/eeepc-laptop.c | 16 +++++++++++++---
->>  1 file changed, 13 insertions(+), 3 deletions(-)
+>>  drivers/platform/x86/eeepc-laptop.c | 22 +++++++++++++---------
+>>  1 file changed, 13 insertions(+), 9 deletions(-)
 >>
 >> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
->> index f820bb3..275a239 100644
+>> index 6e3be01..e92ea41 100644
 >> --- a/drivers/platform/x86/eeepc-laptop.c
 >> +++ b/drivers/platform/x86/eeepc-laptop.c
->> @@ -974,18 +974,28 @@ static struct platform_driver platform_driver = {
->>  #define EEEPC_EC_SFB0      0xD0
->>  #define EEEPC_EC_FAN_CTRL  (EEEPC_EC_SFB0 + 3) /* Byte containing SF25  */
+>> @@ -819,11 +819,15 @@ static int eeepc_new_rfkill(struct eeepc_laptop *eeepc,
+>>       return 0;
+>>  }
 >>
->> +static inline int eeepc_pwm_to_lmsensors(int value)
->> +{
->> +     return value * 255 / 100;
->> +}
->> +
->> +static inline int eeepc_lmsensors_to_pwm(int value)
->> +{
->> +     value = clamp_val(value, 0, 255);
->> +     return value * 100 / 255;
+>> +static char EEEPC_RFKILL_NODE_1[] = "\\_SB.PCI0.P0P5";
+>> +static char EEEPC_RFKILL_NODE_2[] = "\\_SB.PCI0.P0P6";
+>> +static char EEEPC_RFKILL_NODE_3[] = "\\_SB.PCI0.P0P7";
 >
-> Says the guy cleaning up all the magic numbers.... ;-)
->
-> But yeah, this is fine IMO. Applied.
+> So, out of curiosity, any particular reason for static char[] instead of
+> #define? I see both used frequently and didn't see any advice in CodingStyle.
 
-Heh, I don't think this is any more or less magic than
+My expectation is that this is more likely to produce a smaller
+binary, but I have no measurements on that to back me up.
 
-    #define CONVERT_TO_LMSENSORS (255 / 100)
-
-    value = value * CONVERT_TO_LMSENSORS;
-
-or
-
-    #define lmify(v) v * 255 / 100
-
-    value = lmify(v);
-
-But since you've just applied it, I would say you have pretty much the
-same opinion.
+I was a bit annoyed by the fact that the acpi functions take a char*
+instead of a const char*. I would have preferred static const char[]
+in any case.
 
 Thanks,
 Frans
