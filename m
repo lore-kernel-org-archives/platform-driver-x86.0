@@ -1,64 +1,74 @@
 From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH 4/8] eeepc-laptop: pull out eeepc_destroy_rfkill
-Date: Tue, 28 Oct 2014 09:16:57 +0100
-Message-ID: <CAH6sp9N3_XZPrZvw25XrkyvCm5HccMmkgFiPrJgCnBqVhjLYjw@mail.gmail.com>
+Subject: Re: [PATCH 7/8] eeepc-laptop: document fan_pwm conversions
+Date: Tue, 28 Oct 2014 09:21:43 +0100
+Message-ID: <CAH6sp9P3rm86vq=Js1N6BN83-mYgxJEqCu4edEsKWvtyyFPXPQ@mail.gmail.com>
 References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-	<1414005163-3461-5-git-send-email-fransklaver@gmail.com>
-	<20141028051935.GF60814@vmdeb7>
+	<1414005163-3461-8-git-send-email-fransklaver@gmail.com>
+	<20141028053134.GH60814@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028051935.GF60814@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f175.google.com ([209.85.212.175]:60377 "EHLO
+	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751827AbaJ1IVo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Oct 2014 04:21:44 -0400
+In-Reply-To: <20141028053134.GH60814@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 28, 2014 at 6:19 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Oct 22, 2014 at 09:12:39PM +0200, Frans Klaver wrote:
->> In eeepc_rfkill_exit, we implement the same code four times. Pull out a
->> function that cleans up an rfkill object to get rid of the duplication.
+On Tue, Oct 28, 2014 at 6:31 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Wed, Oct 22, 2014 at 09:12:42PM +0200, Frans Klaver wrote:
+>> eeepc_get_fan_pwm and eeepc_set_fan_pwm convert the PWM value read from
+>> the fan to a range lmsensors understands. Unfortunately this is only
+>> clear if you are familiar with how lmsensors handles duty cycles.
+>>
+>> Introduce two conversion functions that document the goal of these
+>> conversions.
 >>
 >> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
 >> ---
->>  drivers/platform/x86/eeepc-laptop.c | 34 ++++++++++++++--------------------
->>  1 file changed, 14 insertions(+), 20 deletions(-)
+>>  drivers/platform/x86/eeepc-laptop.c | 16 +++++++++++++---
+>>  1 file changed, 13 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
->> index e92ea41..73e8d39 100644
+>> index f820bb3..275a239 100644
 >> --- a/drivers/platform/x86/eeepc-laptop.c
 >> +++ b/drivers/platform/x86/eeepc-laptop.c
->> @@ -823,35 +823,29 @@ static char EEEPC_RFKILL_NODE_1[] = "\\_SB.PCI0.P0P5";
->>  static char EEEPC_RFKILL_NODE_2[] = "\\_SB.PCI0.P0P6";
->>  static char EEEPC_RFKILL_NODE_3[] = "\\_SB.PCI0.P0P7";
+>> @@ -974,18 +974,28 @@ static struct platform_driver platform_driver = {
+>>  #define EEEPC_EC_SFB0      0xD0
+>>  #define EEEPC_EC_FAN_CTRL  (EEEPC_EC_SFB0 + 3) /* Byte containing SF25  */
 >>
->> +static inline void eeepc_destroy_rfkill(struct rfkill **rfkill)
+>> +static inline int eeepc_pwm_to_lmsensors(int value)
 >> +{
->> +     if (!*rfkill)
->> +             return;
->> +     rfkill_unregister(*rfkill);
->> +     rfkill_destroy(*rfkill);
->> +     *rfkill = NULL;
+>> +     return value * 255 / 100;
 >> +}
+>> +
+>> +static inline int eeepc_lmsensors_to_pwm(int value)
+>> +{
+>> +     value = clamp_val(value, 0, 255);
+>> +     return value * 100 / 255;
 >
-> In this case the savings is 6 lines at the cost of some legibility as double
-> pointers are arguably harder to read, and definitely easier to screw up ;-)
+> Says the guy cleaning up all the magic numbers.... ;-)
 >
-> I appreciate the goal, but I'm not convinced it is worth it.
+> But yeah, this is fine IMO. Applied.
 
-Fair enough. If anything the following would be slightly less complicated:
+Heh, I don't think this is any more or less magic than
 
-#define eeepc_destroy_rfkill(rfkill) \
-do { \
-        if (rfkill) { \
-                 rfkill_unregister(rfkill); \
-                 rfkill_destroy(rfkill); \
-                 rkfill = NULL; \
-        } \
-} while (0);
+    #define CONVERT_TO_LMSENSORS (255 / 100)
 
-I don't think any new eeepc's are being produced, so this code is
-unlikely to change anyway. Let's leave it as is.
+    value = value * CONVERT_TO_LMSENSORS;
+
+or
+
+    #define lmify(v) v * 255 / 100
+
+    value = lmify(v);
+
+But since you've just applied it, I would say you have pretty much the
+same opinion.
 
 Thanks,
 Frans
