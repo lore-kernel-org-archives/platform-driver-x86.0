@@ -1,38 +1,30 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 2/2] acer-wmi: Add acpi_backlight=video quirk for the
- Acer KAV80
-Date: Mon, 27 Oct 2014 21:29:08 -0700
-Message-ID: <20141028042907.GB60814@vmdeb7>
-References: <1413986798-27689-1-git-send-email-hdegoede@redhat.com>
- <1413986798-27689-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] quirk for Lenovo Yoga 3: no rfkill switch
+Date: Mon, 27 Oct 2014 21:37:19 -0700
+Message-ID: <20141028043719.GC60814@vmdeb7>
+References: <11408587.sP876r0cR3@tachyon.chronox.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:53446 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751191AbaJ1EhW (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Oct 2014 00:37:22 -0400
 Content-Disposition: inline
-In-Reply-To: <1413986798-27689-2-git-send-email-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <darren@dvhart.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <11408587.sP876r0cR3@tachyon.chronox.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Stephan Mueller <smueller@chronox.de>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 
-On Wed, Oct 22, 2014 at 04:06:38PM +0200, Hans de Goede wrote:
-> The acpi-video backlight interface on the Acer KAV80 is broken, and worse
-> it causes the entire machine to slow down significantly after a suspend/resume.
+On Mon, Oct 27, 2014 at 04:09:50AM +0100, Stephan Mueller wrote:
+> The Yoga 3 does not contain any physical rfkill switch. Therefore
+> disable the rfkill switch identically to the Yoga 2 approach. 
 > 
-> Blacklist it, and use the acer-wmi backlight interface instead. Note that
-> the KAV80 is somewhat unique in that it is the only Acer model where we
-> fall back to acer-wmi after blacklisting, rather then using the native
-> (e.g. intel) backlight driver. This is done because there is no native
-> backlight interface on this model.
-> 
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1128309
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> --
-> Changes in v2: Improve commit message
+> Signed-off-by: Stephan Mueller <smueller@chronox.de>
 
-Queued, thanks Hans.
+Queued, thanks Stephan.
 
 -- 
 Darren Hart
