@@ -1,51 +1,132 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [PATCH 3/8] eeepc-laptop: define rfkill notifier nodes only once
-Date: Tue, 28 Oct 2014 09:28:30 +0100
-Message-ID: <CAH6sp9N0nrRHZ9GzdhKPEgUAqA58hY8NEjrpDxHQ9a-=ifCHeA@mail.gmail.com>
-References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
-	<1414005163-3461-4-git-send-email-fransklaver@gmail.com>
-	<20141028051220.GE60814@vmdeb7>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] drivers: depend on instead of select BACKLIGHT_CLASS_DEVICE
+ and ACPI_VIDEO
+Date: Tue, 28 Oct 2014 13:29:05 -0700
+Message-ID: <544FFC91.9040104@infradead.org>
+References: <1413580403-16225-1-git-send-email-jani.nikula@intel.com> <54476492.6090105@ti.com> <87a94hu3j0.fsf@intel.com> <544E44E9.4040208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141028051220.GE60814@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from casper.infradead.org ([85.118.1.10]:37563 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751067AbaJ1U3V (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 28 Oct 2014 16:29:21 -0400
+In-Reply-To: <544E44E9.4040208@ti.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Jani Nikula <jani.nikula@intel.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linuxppc-dev@lists.ozlabs.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jens Frederich <jfrederich@gmail.com>, Daniel Drake <dsd@laptop.org>, Jon Nettleton <jon.nettleton@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>
 
-On Tue, Oct 28, 2014 at 6:12 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Wed, Oct 22, 2014 at 09:12:38PM +0200, Frans Klaver wrote:
->> The rfkill notifier node names are used in three different places. As a
->> matter of style, it is better to store them somewhere and have the
->> compiler warn us about typos in the function arguments.
+On 10/27/14 06:13, Tomi Valkeinen wrote:
+> On 27/10/14 13:59, Jani Nikula wrote:
+> 
+>>> While doing 'depends on' instead of 'select' is an "easy" fix for this,
+>>> I do dislike it quite a bit. It's a major pain to go around the kernel
+>>> config, trying to find all the dependencies that a particular driver
+>>> wants. If I need fb-foobar, I should just be able to enable it, instead
+>>> of first searching and selecting its minor dependencies individually.
 >>
->> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
->> ---
->>  drivers/platform/x86/eeepc-laptop.c | 22 +++++++++++++---------
->>  1 file changed, 13 insertions(+), 9 deletions(-)
+>> Agreed, but I don't think that's specific to this patch.
+> 
+> Well, no, the generic problem is not specific to this patch, but we can
+> avoid the issue with proper use of 'select' (at least in some cases),
+> which is specific to this patch.
+> 
+>>> So, not a NACK, but a "isn't there an another way to fix this?".
 >>
->> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
->> index 6e3be01..e92ea41 100644
->> --- a/drivers/platform/x86/eeepc-laptop.c
->> +++ b/drivers/platform/x86/eeepc-laptop.c
->> @@ -819,11 +819,15 @@ static int eeepc_new_rfkill(struct eeepc_laptop *eeepc,
->>       return 0;
->>  }
+>> I think the real answer would be to fix kconfig to also show menu items
+>> whose dependencies are not met, and then recursively enabling the
+>> dependencies when the item is enabled. Beyond my scope.
 >>
->> +static char EEEPC_RFKILL_NODE_1[] = "\\_SB.PCI0.P0P5";
->> +static char EEEPC_RFKILL_NODE_2[] = "\\_SB.PCI0.P0P6";
->> +static char EEEPC_RFKILL_NODE_3[] = "\\_SB.PCI0.P0P7";
->
-> So, out of curiosity, any particular reason for static char[] instead of
-> #define? I see both used frequently and didn't see any advice in CodingStyle.
+>>> Looking at backlight... BACKLIGHT_LCD_SUPPORT seems to be a "meta"
+>>> option, it only enables a Kconfig submenu.
+>>>
+>>> So I think we could just remove the whole BACKLIGHT_LCD_SUPPORT option.
+>>> But if we do that, all the items in drivers/video/backlight/Kconfig with
+>>> default 'y' or 'm' would get enabled by default, so I think we should
+>>> remove the 'default's from that file. That makes sense in any case, as I
+>>> don't see why "HP Jornada 700 series LCD Driver" should be "default y".
+>>>
+>>> BACKLIGHT_CLASS_DEVICE doesn't depend on anything except
+>>> BACKLIGHT_LCD_SUPPORT, so after removing BACKLIGHT_LCD_SUPPORT it should
+>>> be safe to 'select' BACKLIGHT_CLASS_DEVICE.
+>>>
+>>> BACKLIGHT_CLASS_DEVICE could be made a hidden option, and the drivers in
+>>> drivers/video/backlight/Kconfig which are under BACKLIGHT_CLASS_DEVICE
+>>> could be made to select BACKLIGHT_CLASS_DEVICE instead.
+>>
+>> I think it should be possible to choose between y and m when it's
+> 
+> If I'm not mistaken, if CONFIG_FOO is 'm', and it 'select's CONFIG_BAR,
+> and CONFIG_BAR is tristate, then CONFIG_BAR will be set to 'm'.
+> 
+>> selected, and it should be possible to enable it when it's not selected
+>> by any drivers. I'm not sure a hidden option is good for that.
+> 
+> Why would you want to enable it if no one uses it? Does
+> BACKLIGHT_CLASS_DEVICE enable something even if no driver uses it?
+> 
+>>> That doesn't exactly fix anything, but I think it makes sense as
+>>> BACKLIGHT_CLASS_DEVICE is something that's selected from all around the
+>>> kernel, so it should be a selectable "library" instead of a Kconfig menu
+>>> option.
+>>
+>> At least for drm/i915 BACKLIGHT_CLASS_DEVICE is "an option". We use it
+>> if it's enabled, but we are just fine if it's not. I've learned the way
+>> to express that is
+>>
+>> 	depends on BACKLIGHT_CLASS_DEVICE || BACKLIGHT_CLASS_DEVICE=n
+>>
+>> but I don't think there's a way to express that in terms of select, is
+>> there? The dependency above guarantees there's no DRM_I915=y and
+>> BACKLIGHT_CLASS_DEVICE=m combo which would fail. And this, btw, is where
+>> this whole patch got started, as select didn't handle that properly.
+> 
+> If backlight support is considered an option for drm/i915, then I think
+> there should be a Kconfig option for i915 to enable backlight support,
+> which in turn selects BACKLIGHT_CLASS_DEVICE. And that select will force
+> BACKLIGHT_CLASS_DEVICE to be built-in if drm/i915 is built-in.
+> 
+> Oh, but it doesn't work optimally with modules. The new option needed
+> for that would be boolean, so BACKLIGHT_CLASS_DEVICE would always be
+> either y or n. Sigh...
+> 
+>>> I didn't look at the ACPI_VIDEO side, so no idea how messy that is.
+>>
+>> Basically it's another dependency on BACKLIGHT_CLASS_DEVICE. I can only
+>> imagine trying to solve this problem with select is going to end up in
+>> recursive dependencies that spread out and need changing about as wide
+>> as this patch.
+> 
+> If ACPI_VIDEO uses select to enable BACKLIGHT_CLASS_DEVICE, then, I
+> think, selecting ACPI_VIDEO will also select BACKLIGHT_CLASS_DEVICE. So
+> I don't right away see any recursive dependencies. Or what did you have
+> in mind?
+> 
+>> In the end, I agree with the problem you have with this patch, but yet I
+>> think it's the right thing to do in terms of expressing the
+>> dependencies.
+> 
+> Well, dri/i915 doesn't exactly depend on backlight, if I understood you
+> correctly. Instead, backlight is an option for dri/i915, and you kind of
+> hack it to be implemented with that 'depends on BACKLIGHT_CLASS_DEVICE
+> || BACKLIGHT_CLASS_DEVICE=n'.
+> 
+> I guess it's debatable whether drivers should automatically use features
+> in the kernel if they happen to be enabled in the Kconfig, or should
+> they be individually enabled for that driver. I personally like the
+> latter option, as it allows more precise control, but it probably also
+> depends on the feature in question.
+> 
+> I also think the 'depends on BACKLIGHT_CLASS_DEVICE ||
+> BACKLIGHT_CLASS_DEVICE=n' pattern is quite... interesting (i.e. sounds
+> like a hack to me =).
 
-My expectation is that this is more likely to produce a smaller
-binary, but I have no measurements on that to back me up.
+It does exactly what is needed and it is used in many places in kernel
+Kconfig files.
 
-I was a bit annoyed by the fact that the acpi functions take a char*
-instead of a const char*. I would have preferred static const char[]
-in any case.
 
-Thanks,
-Frans
+-- 
+~Randy
