@@ -1,44 +1,39 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] drivers: depend on instead of select
- BACKLIGHT_CLASS_DEVICE and ACPI_VIDEO
-Date: Wed, 29 Oct 2014 19:27:42 +1100
-Message-ID: <1414571262.5922.0.camel@concordia>
-References: <1413580403-16225-1-git-send-email-jani.nikula@intel.com>
-	 <54476492.6090105@ti.com> <87a94hu3j0.fsf@intel.com>
-	 <544E44E9.4040208@ti.com> <544FFC91.9040104@infradead.org>
-	 <1414551853.7417.1.camel@concordia> <87tx2njooz.fsf@intel.com>
+From: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+Subject: [PATCH][trivial] intel_ips: fix a comment typo
+Date: Wed, 29 Oct 2014 17:38:03 +0800
+Message-ID: <1414575483-19346-1-git-send-email-chenhanxiao@cn.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87tx2njooz.fsf@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>, Daniel Drake <dsd@laptop.org>, Jens Frederich <jfrederich@gmail.com>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jon Nettleton <jon.nettleton@gmail.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Darren Hart <dvhart@infradead.org>, Daniel Vetter <daniel.vetter@intel.com>, Bryan Wu <cooloney@gmail.com>, linuxppc-dev@lists.ozlabs.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cn.fujitsu.com ([59.151.112.132]:32279 "EHLO
+	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+	with ESMTP id S932137AbaJ2JiH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 29 Oct 2014 05:38:07 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Jiri Kosina <trivial@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
 
-On Wed, 2014-10-29 at 09:54 +0200, Jani Nikula wrote:
-> On Wed, 29 Oct 2014, Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > On Tue, 2014-10-28 at 13:29 -0700, Randy Dunlap wrote:
-> >> On 10/27/14 06:13, Tomi Valkeinen wrote:
-> >> > I also think the 'depends on BACKLIGHT_CLASS_DEVICE ||
-> >> > BACKLIGHT_CLASS_DEVICE=n' pattern is quite... interesting (i.e. sounds
-> >> > like a hack to me =).
-> >> 
-> >> It does exactly what is needed and it is used in many places in kernel
-> >> Kconfig files.
-> >
-> > Is there any reason you can't do:
-> >
-> >   depends on BACKLIGHT_CLASS_DEVICE != m
-> 
-> That's not the same thing. The FOO || FOO=n allows for all options, but
-> forbids it being a module when the option depending on it is
-> built-in.
+s/tempurature/temperature
 
-OK right. Because "BAR depends on FOO" is short for "depends on FOO=y || FOO=m",
-but also adds the implicit condition that if FOO=m then BAR must also be m.
+Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+---
+ drivers/platform/x86/intel_ips.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for clueing me in.
-
-cheers
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index c0242ed..3c03232 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -33,7 +33,7 @@
+  * performance by allocating more power or thermal budget to the CPU or GPU
+  * based on available headroom and activity.
+  *
+- * The basic algorithm is driven by a 5s moving average of tempurature.  If
++ * The basic algorithm is driven by a 5s moving average of temperature.  If
+  * thermal headroom is available, the CPU and/or GPU power clamps may be
+  * adjusted upwards.  If we hit the thermal ceiling or a thermal trigger,
+  * we scale back the clamp.  Aside from trigger events (when we're critically
+-- 
+1.9.0
