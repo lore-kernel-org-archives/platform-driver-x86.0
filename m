@@ -1,39 +1,154 @@
-From: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
-Subject: [PATCH][trivial] intel_ips: fix a comment typo
-Date: Wed, 29 Oct 2014 17:38:03 +0800
-Message-ID: <1414575483-19346-1-git-send-email-chenhanxiao@cn.fujitsu.com>
+From: Giedrius Statkevicius <giedriuswork@gmail.com>
+Subject: [PATCH] platform: hp_accel: add a i8042 filter to remove HPQ6000 data from kb bus stream
+Date: Wed, 29 Oct 2014 21:16:22 +0200
+Message-ID: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cn.fujitsu.com ([59.151.112.132]:32279 "EHLO
-	heian.cn.fujitsu.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-	with ESMTP id S932137AbaJ2JiH (ORCPT
+Received: from mail-lb0-f179.google.com ([209.85.217.179]:64058 "EHLO
+	mail-lb0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754881AbaJ2TR7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Oct 2014 05:38:07 -0400
+	Wed, 29 Oct 2014 15:17:59 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Jiri Kosina <trivial@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+To: eric.piel@tremplin-utc.net
+Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedriuswork@gmail.com>
 
-s/tempurature/temperature
+Add a i8042 filter to hp_accel to remove accelerometer's data with acpi
+id HPQ6000 from keyboard bus stream. The codes sent by accelerometer ar=
+e
+e0 25, e0 26, e0 27 and e0 28. The relevant information is already
+passed through /dev/freefall so no need to send these undocumented weir=
+d
+signals through the keyboard bus. Also, unclogs `dmesg` because atkbd
+complained about weird scan codes, saves processing power and disk
+space.
 
-Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
 ---
- drivers/platform/x86/intel_ips.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+=46irst of all, any Tested-Bys are very welcome by people who also have=
+ a
+accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too we
+can easily modify this to install the filter when HPQ6007 is detected.
+=46or the time being the filter is only installed when HPQ6000 is
+detected.=20
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index c0242ed..3c03232 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -33,7 +33,7 @@
-  * performance by allocating more power or thermal budget to the CPU or GPU
-  * based on available headroom and activity.
-  *
-- * The basic algorithm is driven by a 5s moving average of tempurature.  If
-+ * The basic algorithm is driven by a 5s moving average of temperature.  If
-  * thermal headroom is available, the CPU and/or GPU power clamps may be
-  * adjusted upwards.  If we hit the thermal ceiling or a thermal trigger,
-  * we scale back the clamp.  Aside from trigger events (when we're critically
--- 
-1.9.0
+Now moving to what was changed since the RFC. I reworked the filter
+function to hopefully make it more clear what it is doing. Since the
+codes sent by the accelerometer are extended then we need to filter all
+of 0xe0's and then send one 0xe0 back when the actual key isn't in the
+range of 0x25-0x28. Also, I've removed the check for errors for
+i8042_install_filter() because it's unnecessary to check if it failed.
+If multiple HPQ6000's are in the system then no issue occurs even if
+multiple i8042_install_filter() are issued because this is handled by
+i8042 and it's smart enough not to install the same filter two or more
+times.
+
+ drivers/platform/x86/hp_accel.c | 45 +++++++++++++++++++++++++++++++++=
++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_=
+accel.c
+index 13e14ec..a751621 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -38,6 +38,8 @@
+ #include <linux/atomic.h>
+ #include <linux/acpi.h>
+ #include "../../misc/lis3lv02d/lis3lv02d.h"
++#include <linux/i8042.h>
++#include <linux/serio.h>
+=20
+ #define DRIVER_NAME     "hp_accel"
+ #define ACPI_MDPS_CLASS "accelerometer"
+@@ -73,6 +75,13 @@ static inline void delayed_sysfs_set(struct led_clas=
+sdev *led_cdev,
+=20
+ /* HP-specific accelerometer driver ----------------------------------=
+-- */
+=20
++/* e0 25, e0 26, e0 27, e0 28 are scan codes that the accelerometer wi=
+th acpi id
++ * HPQ6000 sends through the keyboard bus */
++#define ACCEL_1 0x25
++#define ACCEL_2 0x26
++#define ACCEL_3 0x27
++#define ACCEL_4 0x28
++
+ /* For automatic insertion of the module */
+ static const struct acpi_device_id lis3lv02d_device_ids[] =3D {
+ 	{"HPQ0004", 0}, /* HP Mobile Data Protection System PNP */
+@@ -82,7 +91,6 @@ static const struct acpi_device_id lis3lv02d_device_i=
+ds[] =3D {
+ };
+ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+=20
+-
+ /**
+  * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
+  * @lis3: pointer to the device struct
+@@ -294,6 +302,35 @@ static void lis3lv02d_enum_resources(struct acpi_d=
+evice *device)
+ 		printk(KERN_DEBUG DRIVER_NAME ": Error getting resources\n");
+ }
+=20
++static bool hp_accel_i8042_filter(unsigned char data, unsigned char st=
+r,
++				  struct serio *port)
++{
++	static bool extended;
++
++	if (str & I8042_STR_AUXDATA)
++		return false;
++
++	if (data =3D=3D 0xe0) {
++		extended =3D true;
++		return true;
++	} else if (unlikely(extended)) {
++		extended =3D false;
++
++		switch (data) {
++		case ACCEL_1:
++		case ACCEL_2:
++		case ACCEL_3:
++		case ACCEL_4:
++			return true;
++		default:
++			serio_interrupt(port, 0xe0, 0);
++			return false;
++		}
++	}
++
++	return false;
++}
++
+ static int lis3lv02d_add(struct acpi_device *device)
+ {
+ 	int ret;
+@@ -326,6 +363,11 @@ static int lis3lv02d_add(struct acpi_device *devic=
+e)
+ 	if (ret)
+ 		return ret;
+=20
++	/* filter to remove HPQ6000 accelerometer data
++	 * from keyboard bus stream */
++	if (strstr(dev_name(&device->dev), "HPQ6000"))
++		i8042_install_filter(hp_accel_i8042_filter);
++
+ 	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
+ 	ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
+ 	if (ret) {
+@@ -343,6 +385,7 @@ static int lis3lv02d_remove(struct acpi_device *dev=
+ice)
+ 	if (!device)
+ 		return -EINVAL;
+=20
++	i8042_remove_filter(hp_accel_i8042_filter);
+ 	lis3lv02d_joystick_disable(&lis3_dev);
+ 	lis3lv02d_poweroff(&lis3_dev);
+=20
+--=20
+2.1.2
