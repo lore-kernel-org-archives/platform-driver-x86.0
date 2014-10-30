@@ -1,102 +1,107 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Giedrius Statkevicius <giedriuswork@gmail.com>
 Subject: Re: [PATCH] platform: hp_accel: add a i8042 filter to remove HPQ6000
  data from kb bus stream
-Date: Thu, 30 Oct 2014 09:28:52 -0700
-Message-ID: <20141030162852.GA36444@dtor-ws>
-References: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com>
- <20141030014056.GD14609@vmdeb7>
+Date: Thu, 30 Oct 2014 18:33:38 +0200
+Message-ID: <54526862.4000700@gmail.com>
+References: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com> <20141030014056.GD14609@vmdeb7> <20141030162852.GA36444@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42]:59703 "EHLO
-	mail-pa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758128AbaJ3Q25 (ORCPT
+Received: from mail-la0-f52.google.com ([209.85.215.52]:33145 "EHLO
+	mail-la0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758867AbaJ3QeR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Oct 2014 12:28:57 -0400
-Content-Disposition: inline
-In-Reply-To: <20141030014056.GD14609@vmdeb7>
+	Thu, 30 Oct 2014 12:34:17 -0400
+In-Reply-To: <20141030162852.GA36444@dtor-ws>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Giedrius Statkevicius <giedriuswork@gmail.com>, eric.piel@tremplin-utc.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: eric.piel@tremplin-utc.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 06:40:56PM -0700, Darren Hart wrote:
-> On Wed, Oct 29, 2014 at 09:16:22PM +0200, Giedrius Statkevicius wrote=
-:
-> > Add a i8042 filter to hp_accel to remove accelerometer's data with =
+On 2014.10.30 18:28, Dmitry Torokhov wrote:
+> On Wed, Oct 29, 2014 at 06:40:56PM -0700, Darren Hart wrote:
+>> On Wed, Oct 29, 2014 at 09:16:22PM +0200, Giedrius Statkevicius wrot=
+e:
+>>> Add a i8042 filter to hp_accel to remove accelerometer's data with =
 acpi
-> > id HPQ6000 from keyboard bus stream. The codes sent by acceleromete=
+>>> id HPQ6000 from keyboard bus stream. The codes sent by acceleromete=
 r are
-> > e0 25, e0 26, e0 27 and e0 28. The relevant information is already
-> > passed through /dev/freefall so no need to send these undocumented =
+>>> e0 25, e0 26, e0 27 and e0 28. The relevant information is already
+>>> passed through /dev/freefall so no need to send these undocumented =
 weird
-> > signals through the keyboard bus. Also, unclogs `dmesg` because atk=
+>>> signals through the keyboard bus. Also, unclogs `dmesg` because atk=
 bd
-> > complained about weird scan codes, saves processing power and disk
-> > space.
-> >=20
-> > Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
-> > ---
-> > First of all, any Tested-Bys are very welcome by people who also ha=
+>>> complained about weird scan codes, saves processing power and disk
+>>> space.
+>>>
+>>> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+>>> ---
+>>> First of all, any Tested-Bys are very welcome by people who also ha=
 ve a
-> > accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too =
+>>> accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too =
 we
-> > can easily modify this to install the filter when HPQ6007 is detect=
+>>> can easily modify this to install the filter when HPQ6007 is detect=
 ed.
-> > For the time being the filter is only installed when HPQ6000 is
-> > detected.=20
-> >=20
-> > Now moving to what was changed since the RFC. I reworked the filter
-> > function to hopefully make it more clear what it is doing. Since th=
+>>> For the time being the filter is only installed when HPQ6000 is
+>>> detected.=20
+>>>
+>>> Now moving to what was changed since the RFC. I reworked the filter
+>>> function to hopefully make it more clear what it is doing. Since th=
 e
-> > codes sent by the accelerometer are extended then we need to filter=
+>>> codes sent by the accelerometer are extended then we need to filter=
  all
-> > of 0xe0's and then send one 0xe0 back when the actual key isn't in =
+>>> of 0xe0's and then send one 0xe0 back when the actual key isn't in =
 the
-> > range of 0x25-0x28. Also, I've removed the check for errors for
-> > i8042_install_filter() because it's unnecessary to check if it fail=
+>>> range of 0x25-0x28. Also, I've removed the check for errors for
+>>> i8042_install_filter() because it's unnecessary to check if it fail=
 ed.
-> > If multiple HPQ6000's are in the system then no issue occurs even i=
+>>> If multiple HPQ6000's are in the system then no issue occurs even i=
 f
-> > multiple i8042_install_filter() are issued because this is handled =
+>>> multiple i8042_install_filter() are issued because this is handled =
 by
-> > i8042 and it's smart enough not to install the same filter two or m=
+>>> i8042 and it's smart enough not to install the same filter two or m=
 ore
-> > times.
-> >=20
-> >  drivers/platform/x86/hp_accel.c | 45 +++++++++++++++++++++++++++++=
+>>> times.
+>>>
+>>>  drivers/platform/x86/hp_accel.c | 45 +++++++++++++++++++++++++++++=
 +++++++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86=
+>>>  1 file changed, 44 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86=
 /hp_accel.c
-> > index 13e14ec..a751621 100644
-> > --- a/drivers/platform/x86/hp_accel.c
-> > +++ b/drivers/platform/x86/hp_accel.c
-> > @@ -38,6 +38,8 @@
-> >  #include <linux/atomic.h>
-> >  #include <linux/acpi.h>
-> >  #include "../../misc/lis3lv02d/lis3lv02d.h"
-> > +#include <linux/i8042.h>
-> > +#include <linux/serio.h>
+>>> index 13e14ec..a751621 100644
+>>> --- a/drivers/platform/x86/hp_accel.c
+>>> +++ b/drivers/platform/x86/hp_accel.c
+>>> @@ -38,6 +38,8 @@
+>>>  #include <linux/atomic.h>
+>>>  #include <linux/acpi.h>
+>>>  #include "../../misc/lis3lv02d/lis3lv02d.h"
+>>> +#include <linux/i8042.h>
+>>> +#include <linux/serio.h>
+>>
+>> Please include before the relative path includes.
+>>
+>> Otherwise, I'm happy with this - but I'd like a serio / i8042 person=
+ to weigh
+>> in.... Dmitry?
 >=20
-> Please include before the relative path includes.
+> Yes, this is fine. Such uses with platform injecting weird bits into
+> keyboard/mouse data stream was the reason for introducing i8042 filte=
+r
+> facility.
 >=20
-> Otherwise, I'm happy with this - but I'd like a serio / i8042 person =
-to weigh
-> in.... Dmitry?
+> I ma not sure what is more efficient, a case with 5 branches or
+> strchr(), but regardless:
+>=20
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>=20
+> Thanks.
+>=20
 
-Yes, this is fine. Such uses with platform injecting weird bits into
-keyboard/mouse data stream was the reason for introducing i8042 filter
-facility.
+I'll resend the v2 in a minute. The changes in that patch:
+* Move the two new includes before the relative include of lis3lv02d.h
+* Remove a unnecessary deletion of a blank line
 
-I ma not sure what is more efficient, a case with 5 branches or
-strchr(), but regardless:
-
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Thanks.
-
---=20
-Dmitry
+Thanks,
+Giedrius
