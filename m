@@ -1,30 +1,178 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH][trivial] intel_ips: fix a comment typo
-Date: Wed, 29 Oct 2014 18:25:17 -0700
-Message-ID: <20141030012517.GC14609@vmdeb7>
-References: <1414575483-19346-1-git-send-email-chenhanxiao@cn.fujitsu.com>
+Subject: Re: [PATCH] platform: hp_accel: add a i8042 filter to remove HPQ6000
+ data from kb bus stream
+Date: Wed, 29 Oct 2014 18:40:56 -0700
+Message-ID: <20141030014056.GD14609@vmdeb7>
+References: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57297 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:57652 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751963AbaJ3BZV (ORCPT
+	with ESMTP id S1756050AbaJ3BlB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Oct 2014 21:25:21 -0400
+	Wed, 29 Oct 2014 21:41:01 -0400
 Content-Disposition: inline
-In-Reply-To: <1414575483-19346-1-git-send-email-chenhanxiao@cn.fujitsu.com>
+In-Reply-To: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
-Cc: Jiri Kosina <trivial@kernel.org>, platform-driver-x86@vger.kernel.org
+To: Giedrius Statkevicius <giedriuswork@gmail.com>, dmitry.torokhov@gmail.com
+Cc: eric.piel@tremplin-utc.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Oct 29, 2014 at 05:38:03PM +0800, Chen Hanxiao wrote:
-> s/tempurature/temperature
-> 
-> Signed-off-by: Chen Hanxiao <chenhanxiao@cn.fujitsu.com>
+On Wed, Oct 29, 2014 at 09:16:22PM +0200, Giedrius Statkevicius wrote:
+> Add a i8042 filter to hp_accel to remove accelerometer's data with ac=
+pi
+> id HPQ6000 from keyboard bus stream. The codes sent by accelerometer =
+are
+> e0 25, e0 26, e0 27 and e0 28. The relevant information is already
+> passed through /dev/freefall so no need to send these undocumented we=
+ird
+> signals through the keyboard bus. Also, unclogs `dmesg` because atkbd
+> complained about weird scan codes, saves processing power and disk
+> space.
+>=20
+> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+> ---
+> First of all, any Tested-Bys are very welcome by people who also have=
+ a
+> accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too we
+> can easily modify this to install the filter when HPQ6007 is detected=
+=2E
+> For the time being the filter is only installed when HPQ6000 is
+> detected.=20
+>=20
+> Now moving to what was changed since the RFC. I reworked the filter
+> function to hopefully make it more clear what it is doing. Since the
+> codes sent by the accelerometer are extended then we need to filter a=
+ll
+> of 0xe0's and then send one 0xe0 back when the actual key isn't in th=
+e
+> range of 0x25-0x28. Also, I've removed the check for errors for
+> i8042_install_filter() because it's unnecessary to check if it failed=
+=2E
+> If multiple HPQ6000's are in the system then no issue occurs even if
+> multiple i8042_install_filter() are issued because this is handled by
+> i8042 and it's smart enough not to install the same filter two or mor=
+e
+> times.
+>=20
+>  drivers/platform/x86/hp_accel.c | 45 +++++++++++++++++++++++++++++++=
++++++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/h=
+p_accel.c
+> index 13e14ec..a751621 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -38,6 +38,8 @@
+>  #include <linux/atomic.h>
+>  #include <linux/acpi.h>
+>  #include "../../misc/lis3lv02d/lis3lv02d.h"
+> +#include <linux/i8042.h>
+> +#include <linux/serio.h>
 
-Queued, thanks.
+Please include before the relative path includes.
 
--- 
+Otherwise, I'm happy with this - but I'd like a serio / i8042 person to=
+ weigh
+in.... Dmitry?
+
+> =20
+>  #define DRIVER_NAME     "hp_accel"
+>  #define ACPI_MDPS_CLASS "accelerometer"
+> @@ -73,6 +75,13 @@ static inline void delayed_sysfs_set(struct led_cl=
+assdev *led_cdev,
+> =20
+>  /* HP-specific accelerometer driver --------------------------------=
+---- */
+> =20
+> +/* e0 25, e0 26, e0 27, e0 28 are scan codes that the accelerometer =
+with acpi id
+> + * HPQ6000 sends through the keyboard bus */
+> +#define ACCEL_1 0x25
+> +#define ACCEL_2 0x26
+> +#define ACCEL_3 0x27
+> +#define ACCEL_4 0x28
+> +
+>  /* For automatic insertion of the module */
+>  static const struct acpi_device_id lis3lv02d_device_ids[] =3D {
+>  	{"HPQ0004", 0}, /* HP Mobile Data Protection System PNP */
+> @@ -82,7 +91,6 @@ static const struct acpi_device_id lis3lv02d_device=
+_ids[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+> =20
+> -
+>  /**
+>   * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
+>   * @lis3: pointer to the device struct
+> @@ -294,6 +302,35 @@ static void lis3lv02d_enum_resources(struct acpi=
+_device *device)
+>  		printk(KERN_DEBUG DRIVER_NAME ": Error getting resources\n");
+>  }
+> =20
+> +static bool hp_accel_i8042_filter(unsigned char data, unsigned char =
+str,
+> +				  struct serio *port)
+> +{
+> +	static bool extended;
+> +
+> +	if (str & I8042_STR_AUXDATA)
+> +		return false;
+> +
+> +	if (data =3D=3D 0xe0) {
+> +		extended =3D true;
+> +		return true;
+> +	} else if (unlikely(extended)) {
+> +		extended =3D false;
+> +
+> +		switch (data) {
+> +		case ACCEL_1:
+> +		case ACCEL_2:
+> +		case ACCEL_3:
+> +		case ACCEL_4:
+> +			return true;
+> +		default:
+> +			serio_interrupt(port, 0xe0, 0);
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int lis3lv02d_add(struct acpi_device *device)
+>  {
+>  	int ret;
+> @@ -326,6 +363,11 @@ static int lis3lv02d_add(struct acpi_device *dev=
+ice)
+>  	if (ret)
+>  		return ret;
+> =20
+> +	/* filter to remove HPQ6000 accelerometer data
+> +	 * from keyboard bus stream */
+> +	if (strstr(dev_name(&device->dev), "HPQ6000"))
+> +		i8042_install_filter(hp_accel_i8042_filter);
+> +
+>  	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
+>  	ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
+>  	if (ret) {
+> @@ -343,6 +385,7 @@ static int lis3lv02d_remove(struct acpi_device *d=
+evice)
+>  	if (!device)
+>  		return -EINVAL;
+> =20
+> +	i8042_remove_filter(hp_accel_i8042_filter);
+>  	lis3lv02d_joystick_disable(&lis3_dev);
+>  	lis3lv02d_poweroff(&lis3_dev);
+> =20
+> --=20
+> 2.1.2
+>=20
+>=20
+
+--=20
 Darren Hart
 Intel Open Source Technology Center
