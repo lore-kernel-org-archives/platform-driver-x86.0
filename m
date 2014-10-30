@@ -1,154 +1,78 @@
-From: Giedrius Statkevicius <giedriuswork@gmail.com>
-Subject: [PATCH] platform: hp_accel: add a i8042 filter to remove HPQ6000 data from kb bus stream
-Date: Wed, 29 Oct 2014 21:16:22 +0200
-Message-ID: <1414610182-28702-1-git-send-email-giedriuswork@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 8/8] eeepc-laptop: don't assume get_acpi succeeds
+Date: Wed, 29 Oct 2014 17:54:32 -0700
+Message-ID: <20141030005432.GA14609@vmdeb7>
+References: <1414005163-3461-1-git-send-email-fransklaver@gmail.com>
+ <1414005163-3461-9-git-send-email-fransklaver@gmail.com>
+ <20141028053429.GI60814@vmdeb7>
+ <CAH6sp9PUSbSj0jWNNv6q=rwqUnpkCoiUBxCUAHSVjP+qrUEa9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f179.google.com ([209.85.217.179]:64058 "EHLO
-	mail-lb0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754881AbaJ2TR7 (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:45563 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757901AbaJ3Ayg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Oct 2014 15:17:59 -0400
+	Wed, 29 Oct 2014 20:54:36 -0400
+Content-Disposition: inline
+In-Reply-To: <CAH6sp9PUSbSj0jWNNv6q=rwqUnpkCoiUBxCUAHSVjP+qrUEa9g@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: eric.piel@tremplin-utc.net
-Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedriuswork@gmail.com>
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Add a i8042 filter to hp_accel to remove accelerometer's data with acpi
-id HPQ6000 from keyboard bus stream. The codes sent by accelerometer ar=
-e
-e0 25, e0 26, e0 27 and e0 28. The relevant information is already
-passed through /dev/freefall so no need to send these undocumented weir=
-d
-signals through the keyboard bus. Also, unclogs `dmesg` because atkbd
-complained about weird scan codes, saves processing power and disk
-space.
+On Tue, Oct 28, 2014 at 09:09:03AM +0100, Frans Klaver wrote:
+> On Tue, Oct 28, 2014 at 6:34 AM, Darren Hart <dvhart@infradead.org> wrote:
+> > On Wed, Oct 22, 2014 at 09:12:43PM +0200, Frans Klaver wrote:
+> >> In eeepc_hotk_thaw, we assume that get_acpi() will effectively return a
+> >> bool. However, it is possible that get_acpi() returns an error instead.
+> >> We should not be writing error values to the ACPI device, even though
+> >> it's quite possible that we couldn't contact the ACPI device in the
+> >> first place.
+> >>
+> >> Signed-off-by: Frans Klaver <fransklaver@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/eeepc-laptop.c | 5 +++--
+> >>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
+> >> index 275a239..14f79ef 100644
+> >> --- a/drivers/platform/x86/eeepc-laptop.c
+> >> +++ b/drivers/platform/x86/eeepc-laptop.c
+> >> @@ -911,7 +911,7 @@ static int eeepc_hotk_thaw(struct device *device)
+> >>       struct eeepc_laptop *eeepc = dev_get_drvdata(device);
+> >>
+> >>       if (eeepc->wlan_rfkill) {
+> >> -             bool wlan;
+> >> +             int wlan;
+> >>
+> >>               /*
+> >>                * Work around bios bug - acpi _PTS turns off the wireless led
+> >> @@ -919,7 +919,8 @@ static int eeepc_hotk_thaw(struct device *device)
+> >>                * we should kick it ourselves in case hibernation is aborted.
+> >>                */
+> >>               wlan = get_acpi(eeepc, CM_ASL_WLAN);
+> >> -             set_acpi(eeepc, CM_ASL_WLAN, wlan);
+> >> +             if (wlan >= 0)
+> >> +                     set_acpi(eeepc, CM_ASL_WLAN, wlan);
+> >
+> > And if not? Seems like we should be passing the error code along.
+> 
+> Wouldn't that mean that you cannot thaw the system if the wlan acpi call fails?
 
-Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
----
-=46irst of all, any Tested-Bys are very welcome by people who also have=
- a
-accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too we
-can easily modify this to install the filter when HPQ6007 is detected.
-=46or the time being the filter is only installed when HPQ6000 is
-detected.=20
+Good question. I traced it back to the platform driver core, and it just
+propogates the error, so I'm not sure either.
 
-Now moving to what was changed since the RFC. I reworked the filter
-function to hopefully make it more clear what it is doing. Since the
-codes sent by the accelerometer are extended then we need to filter all
-of 0xe0's and then send one 0xe0 back when the actual key isn't in the
-range of 0x25-0x28. Also, I've removed the check for errors for
-i8042_install_filter() because it's unnecessary to check if it failed.
-If multiple HPQ6000's are in the system then no issue occurs even if
-multiple i8042_install_filter() are issued because this is handled by
-i8042 and it's smart enough not to install the same filter two or more
-times.
+> 
+> I'd rather have my system up and running without wlan, than I'd have
+> my system down because we couldn't start wlan. This is of course
+> assuming that returning an error from eeepc_hotk_thaw means the
+> thawing stops.
 
- drivers/platform/x86/hp_accel.c | 45 +++++++++++++++++++++++++++++++++=
-+++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+I agree, and this is what it does now, and acer-wmi thaw has similar behavior.
 
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_=
-accel.c
-index 13e14ec..a751621 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -38,6 +38,8 @@
- #include <linux/atomic.h>
- #include <linux/acpi.h>
- #include "../../misc/lis3lv02d/lis3lv02d.h"
-+#include <linux/i8042.h>
-+#include <linux/serio.h>
-=20
- #define DRIVER_NAME     "hp_accel"
- #define ACPI_MDPS_CLASS "accelerometer"
-@@ -73,6 +75,13 @@ static inline void delayed_sysfs_set(struct led_clas=
-sdev *led_cdev,
-=20
- /* HP-specific accelerometer driver ----------------------------------=
--- */
-=20
-+/* e0 25, e0 26, e0 27, e0 28 are scan codes that the accelerometer wi=
-th acpi id
-+ * HPQ6000 sends through the keyboard bus */
-+#define ACCEL_1 0x25
-+#define ACCEL_2 0x26
-+#define ACCEL_3 0x27
-+#define ACCEL_4 0x28
-+
- /* For automatic insertion of the module */
- static const struct acpi_device_id lis3lv02d_device_ids[] =3D {
- 	{"HPQ0004", 0}, /* HP Mobile Data Protection System PNP */
-@@ -82,7 +91,6 @@ static const struct acpi_device_id lis3lv02d_device_i=
-ds[] =3D {
- };
- MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
-=20
--
- /**
-  * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
-  * @lis3: pointer to the device struct
-@@ -294,6 +302,35 @@ static void lis3lv02d_enum_resources(struct acpi_d=
-evice *device)
- 		printk(KERN_DEBUG DRIVER_NAME ": Error getting resources\n");
- }
-=20
-+static bool hp_accel_i8042_filter(unsigned char data, unsigned char st=
-r,
-+				  struct serio *port)
-+{
-+	static bool extended;
-+
-+	if (str & I8042_STR_AUXDATA)
-+		return false;
-+
-+	if (data =3D=3D 0xe0) {
-+		extended =3D true;
-+		return true;
-+	} else if (unlikely(extended)) {
-+		extended =3D false;
-+
-+		switch (data) {
-+		case ACCEL_1:
-+		case ACCEL_2:
-+		case ACCEL_3:
-+		case ACCEL_4:
-+			return true;
-+		default:
-+			serio_interrupt(port, 0xe0, 0);
-+			return false;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static int lis3lv02d_add(struct acpi_device *device)
- {
- 	int ret;
-@@ -326,6 +363,11 @@ static int lis3lv02d_add(struct acpi_device *devic=
-e)
- 	if (ret)
- 		return ret;
-=20
-+	/* filter to remove HPQ6000 accelerometer data
-+	 * from keyboard bus stream */
-+	if (strstr(dev_name(&device->dev), "HPQ6000"))
-+		i8042_install_filter(hp_accel_i8042_filter);
-+
- 	INIT_WORK(&hpled_led.work, delayed_set_status_worker);
- 	ret =3D led_classdev_register(NULL, &hpled_led.led_classdev);
- 	if (ret) {
-@@ -343,6 +385,7 @@ static int lis3lv02d_remove(struct acpi_device *dev=
-ice)
- 	if (!device)
- 		return -EINVAL;
-=20
-+	i8042_remove_filter(hp_accel_i8042_filter);
- 	lis3lv02d_joystick_disable(&lis3_dev);
- 	lis3lv02d_poweroff(&lis3_dev);
-=20
---=20
-2.1.2
+I consider this an incremental improvement, so queued.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
