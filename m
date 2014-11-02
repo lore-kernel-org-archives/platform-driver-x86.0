@@ -1,110 +1,74 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: [PATCH v2] eeepc-laptop: clean up control flow in eeepc_acpi_notify
-Date: Sun,  2 Nov 2014 22:14:58 +0100
-Message-ID: <1414962898-13917-1-git-send-email-fransklaver@gmail.com>
-References: <20141028052517.GG60814@vmdeb7>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:46730 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751628AbaKBVPb (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 2 Nov 2014 16:15:31 -0500
-In-Reply-To: <20141028052517.GG60814@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Frans Klaver <fransklaver@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: =?UTF-8?B?w4lyaWMgUGllbA==?= <eric.piel@tremplin-utc.net>
+Subject: Re: [PATCH v2] platform: hp_accel: add a i8042 filter to remove HPQ6000
+ data from kb bus stream
+Date: Sun, 02 Nov 2014 23:19:30 +0100
+Message-ID: <5456ADF2.8080400@tremplin-utc.net>
+References: <1414688267-29676-1-git-send-email-giedriuswork@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1414688267-29676-1-git-send-email-giedriuswork@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Giedrius Statkevicius <giedriuswork@gmail.com>
+Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-eeepc_acpi_notify increases the indentation level to a whopping four. If
-we revise the conditions a bit, we can reduce that to a more soothing
-two and satisfy the indentation guidelines in Documentation/CodingStyle.
+On 30-10-14 17:57, Giedrius Statkevicius wrote:
+> Add a i8042 filter to hp_accel to remove accelerometer's data with ac=
+pi
+> id HPQ6000 from keyboard bus stream. The codes sent by accelerometer =
+are
+> e0 25, e0 26, e0 27 and e0 28. The relevant information is already
+> passed through /dev/freefall so no need to send these undocumented we=
+ird
+> signals through the keyboard bus. Also, unclogs `dmesg` because atkbd
+> complained about weird scan codes, saves processing power and disk
+> space.
+>
+> Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Hi,
+Looks fine with respect to the hp accel driver. If Dmitry thinks the=20
+behaviour is fine then I've got nothing more to say :-)
 
-Remove an unwanted space while we're in the neighbourhood.
+Reviewed-by: =C3=89ric Piel <eric.piel@tremplin-utc.net>
 
-Signed-off-by: Frans Klaver <fransklaver@gmail.com>
----
- drivers/platform/x86/eeepc-laptop.c | 53 ++++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 27 deletions(-)
+Darren, could you pick up this patch in your tree?
 
-diff --git a/drivers/platform/x86/eeepc-laptop.c b/drivers/platform/x86/eeepc-laptop.c
-index 73e8d39..03ffbce 100644
---- a/drivers/platform/x86/eeepc-laptop.c
-+++ b/drivers/platform/x86/eeepc-laptop.c
-@@ -1213,7 +1213,7 @@ static void eeepc_input_exit(struct eeepc_laptop *eeepc)
- static void eeepc_input_notify(struct eeepc_laptop *eeepc, int event)
- {
- 	if (!eeepc->inputdev)
--		return ;
-+		return;
- 	if (!sparse_keymap_report_event(eeepc->inputdev, event, 1, true))
- 		pr_info("Unknown key %x pressed\n", event);
- }
-@@ -1221,6 +1221,7 @@ static void eeepc_input_notify(struct eeepc_laptop *eeepc, int event)
- static void eeepc_acpi_notify(struct acpi_device *device, u32 event)
- {
- 	struct eeepc_laptop *eeepc = acpi_driver_data(device);
-+	int old_brightness, new_brightness;
- 	u16 count;
- 
- 	if (event > ACPI_MAX_SYS_NOTIFY)
-@@ -1231,34 +1232,32 @@ static void eeepc_acpi_notify(struct acpi_device *device, u32 event)
- 					count);
- 
- 	/* Brightness events are special */
--	if (event >= NOTIFY_BRN_MIN && event <= NOTIFY_BRN_MAX) {
--
--		/* Ignore them completely if the acpi video driver is used */
--		if (eeepc->backlight_device != NULL) {
--			int old_brightness, new_brightness;
--
--			/* Update the backlight device. */
--			old_brightness = eeepc_backlight_notify(eeepc);
--
--			/* Convert event to keypress (obsolescent hack) */
--			new_brightness = event - NOTIFY_BRN_MIN;
--
--			if (new_brightness < old_brightness) {
--				event = NOTIFY_BRN_MIN; /* brightness down */
--			} else if (new_brightness > old_brightness) {
--				event = NOTIFY_BRN_MAX; /* brightness up */
--			} else {
--				/*
--				* no change in brightness - already at min/max,
--				* event will be desired value (or else ignored)
--				*/
--			}
--			eeepc_input_notify(eeepc, event);
--		}
--	} else {
--		/* Everything else is a bona-fide keypress event */
-+	if (event < NOTIFY_BRN_MIN || event > NOTIFY_BRN_MAX) {
- 		eeepc_input_notify(eeepc, event);
-+		return;
-+	}
-+
-+	/* Ignore them completely if the acpi video driver is used */
-+	if (!eeepc->backlight_device)
-+		return;
-+
-+	/* Update the backlight device. */
-+	old_brightness = eeepc_backlight_notify(eeepc);
-+
-+	/* Convert event to keypress (obsolescent hack) */
-+	new_brightness = event - NOTIFY_BRN_MIN;
-+
-+	if (new_brightness < old_brightness) {
-+		event = NOTIFY_BRN_MIN; /* brightness down */
-+	} else if (new_brightness > old_brightness) {
-+		event = NOTIFY_BRN_MAX; /* brightness up */
-+	} else {
-+		/*
-+		 * no change in brightness - already at min/max,
-+		 * event will be desired value (or else ignored)
-+		 */
- 	}
-+	eeepc_input_notify(eeepc, event);
- }
- 
- static void eeepc_dmi_check(struct eeepc_laptop *eeepc)
--- 
-2.1.0
+Cheers,
+=C3=89ric
+
+
+> ---
+> Changes in v2:
+> * Remove a unnecessary deletion of a blank line
+> * Move #includes of i8042.h and serio.h before the relative path
+>    includes.
+>
+> First of all, any Tested-Bys are very welcome by people who also have=
+ a
+> accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too we
+> can easily modify this to install the filter when HPQ6007 is detected=
+=2E
+> For the time being the filter is only installed when HPQ6000 is
+> detected.
+>
+> Now moving to what was changed since the RFC. I reworked the filter
+> function to hopefully make it more clear what it is doing. Since the
+> codes sent by the accelerometer are extended then we need to filter a=
+ll
+> of 0xe0's and then send one 0xe0 back when the actual key isn't in th=
+e
+> range of 0x25-0x28. Also, I've removed the check for errors for
+> i8042_install_filter() because it's unnecessary to check if it failed=
+=2E
+> If multiple HPQ6000's are in the system then no issue occurs even if
+> multiple i8042_install_filter() are issued because this is handled by
+> i8042 and it's smart enough not to install the same filter two or mor=
+e
+> times.
+>
+> This fixes https://bugzilla.kernel.org/show_bug.cgi?id=3D84941.
+:
