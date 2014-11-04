@@ -1,50 +1,89 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH] toshiba_acpi: Fix regression caused by backlight extra  check code
-Date: Mon,  3 Nov 2014 20:58:34 -0700
-Message-ID: <1415073514-12555-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f177.google.com ([209.85.214.177]:45803 "EHLO
-	mail-ob0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751163AbaKDD64 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Nov 2014 22:58:56 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Nuno Lopes <nunoplopes@sapo.pt>, Azael Avalos <coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform: hp_accel: add a i8042 filter to remove
+ HPQ6000 data from kb bus stream
+Date: Mon, 3 Nov 2014 21:54:19 -0800
+Message-ID: <20141104055418.GA56751@vmdeb7>
+References: <1414688267-29676-1-git-send-email-giedriuswork@gmail.com>
+ <5456ADF2.8080400@tremplin-utc.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5456ADF2.8080400@tremplin-utc.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?=C9ric?= Piel <eric.piel@tremplin-utc.net>
+Cc: Giedrius Statkevicius <giedriuswork@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-Bug 86521 uncovered that some TOS6208 devices also return
-non zero values on a write call to the backlight method,
-thus getting caught and bailed out by the extra check code.
+On Sun, Nov 02, 2014 at 11:19:30PM +0100, =C3=89ric Piel wrote:
+> On 30-10-14 17:57, Giedrius Statkevicius wrote:
+> >Add a i8042 filter to hp_accel to remove accelerometer's data with a=
+cpi
+> >id HPQ6000 from keyboard bus stream. The codes sent by accelerometer=
+ are
+> >e0 25, e0 26, e0 27 and e0 28. The relevant information is already
+> >passed through /dev/freefall so no need to send these undocumented w=
+eird
+> >signals through the keyboard bus. Also, unclogs `dmesg` because atkb=
+d
+> >complained about weird scan codes, saves processing power and disk
+> >space.
+> >
+> >Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+> >Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Hi,
+> Looks fine with respect to the hp accel driver. If Dmitry thinks the
+> behaviour is fine then I've got nothing more to say :-)
+>=20
+> Reviewed-by: =C3=89ric Piel <eric.piel@tremplin-utc.net>
+>=20
+> Darren, could you pick up this patch in your tree?
 
-This patch makes sure that the extra check is being done
-on a TOS1900 device and then make the check for the broken
-backlight code.
+Yes, applied. It will make my 3.18-3 series to Linus by the end of the =
+week, I
+want it to spend a few days in next first.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+>=20
+> Cheers,
+> =C3=89ric
+>=20
+>=20
+> >---
+> >Changes in v2:
+> >* Remove a unnecessary deletion of a blank line
+> >* Move #includes of i8042.h and serio.h before the relative path
+> >   includes.
+> >
+> >First of all, any Tested-Bys are very welcome by people who also hav=
+e a
+> >accelerometer with acpi id HPQ6000. If it happens with HPQ6007 too w=
+e
+> >can easily modify this to install the filter when HPQ6007 is detecte=
+d.
+> >For the time being the filter is only installed when HPQ6000 is
+> >detected.
+> >
+> >Now moving to what was changed since the RFC. I reworked the filter
+> >function to hopefully make it more clear what it is doing. Since the
+> >codes sent by the accelerometer are extended then we need to filter =
+all
+> >of 0xe0's and then send one 0xe0 back when the actual key isn't in t=
+he
+> >range of 0x25-0x28. Also, I've removed the check for errors for
+> >i8042_install_filter() because it's unnecessary to check if it faile=
+d.
+> >If multiple HPQ6000's are in the system then no issue occurs even if
+> >multiple i8042_install_filter() are issued because this is handled b=
+y
+> >i8042 and it's smart enough not to install the same filter two or mo=
+re
+> >times.
+> >
+> >This fixes https://bugzilla.kernel.org/show_bug.cgi?id=3D84941.
+> :
+>=20
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index ef3a190..e3fed12 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -944,9 +944,13 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
- 	/* Extra check for "incomplete" backlight method, where the AML code
- 	 * doesn't check for HCI_SET or HCI_GET and returns TOS_SUCCESS,
- 	 * the actual brightness, and in some cases the max brightness.
-+	 * Use the SPFC method as an indicator that we're on a TOS1900 device,
-+	 * otherwise some TOS6208 devices might get bailed out, see bug 86521
- 	 */
--	if (out[2] > 0  || out[3] == 0xE000)
--		return -ENODEV;
-+	if (acpi_has_method(dev->acpi_dev->handle, "SPFC")) {
-+		if (out[2] > 0  || out[3] == 0xE000)
-+			return -ENODEV;
-+	}
- 
- 	return out[0] == TOS_SUCCESS ? 0 : -EIO;
- }
--- 
-2.1.1
+--=20
+Darren Hart
+Intel Open Source Technology Center
