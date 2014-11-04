@@ -1,56 +1,50 @@
-From: diane51527@gmail.com
-Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
-Date: Tue, 4 Nov 2014 00:45:20 +0530
-Message-ID: <5457d449.c17f460a.1875.4548@mx.google.com>
-Reply-To: seo.expert388@yahoo.com
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Fix regression caused by backlight extra  check code
+Date: Mon,  3 Nov 2014 20:58:34 -0700
+Message-ID: <1415073514-12555-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pd0-f196.google.com ([209.85.192.196]:62447 "EHLO
-	mail-pd0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751436AbaKCTPW (ORCPT
+Received: from mail-ob0-f177.google.com ([209.85.214.177]:45803 "EHLO
+	mail-ob0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751163AbaKDD64 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Nov 2014 14:15:22 -0500
-Received: by mail-pd0-f196.google.com with SMTP id r10so5281906pdi.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Nov 2014 11:15:21 -0800 (PST)
-Received: from localhost.localdomain ([124.253.1.123])
-        by mx.google.com with ESMTPSA id ni1sm17884970pdb.69.2014.11.03.11.15.20
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLSv1 cipher=RC4-SHA bits=128/128);
-        Mon, 03 Nov 2014 11:15:21 -0800 (PST)
+	Mon, 3 Nov 2014 22:58:56 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Nuno Lopes <nunoplopes@sapo.pt>, Azael Avalos <coproscefalo@gmail.com>
 
-Dear Sir
+Bug 86521 uncovered that some TOS6208 devices also return
+non zero values on a write call to the backlight method,
+thus getting caught and bailed out by the extra check code.
 
-Did your website get hit by Google Penguin update on October 17th 2014?=
- What basically is Google Penguin Update? It is actually a code name fo=
-r Google algorithm which aims at decreasing your websites search engine=
- rankings that violate Google=92s guidelines by using black hat SEO tec=
-hniques to rank your webpage by giving number of spammy links to the pa=
-ge.
-=20
-We are one of those few SEO companies that can help you avoid penalties=
- from Google Updates like Penguin and Panda. Our clients have survived =
-all the previous and present updates with ease. They have never been hi=
-t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
-e thing that we do to keep websites away from any Penguin or Panda pena=
-lties is follow Google guidelines and we give Google users the best ans=
-wers to their queries.
+This patch makes sure that the extra check is being done
+on a TOS1900 device and then make the check for the broken
+backlight code.
 
-If you are looking to increase the quality of your websites and to get =
-more targeted traffic or save your websites from these Google penalties=
- email us back with your interest.=20
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-We will be glad to serve you and help you grow your business.
-
-Regards
-
-Vince G
-
-SEO Manager ( TOB )
-B7 Green Avenue, Amritsar 143001 Punjab
-____________________________
-NO CLICK in the subject to STOP EMAILS
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index ef3a190..e3fed12 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -944,9 +944,13 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+ 	/* Extra check for "incomplete" backlight method, where the AML code
+ 	 * doesn't check for HCI_SET or HCI_GET and returns TOS_SUCCESS,
+ 	 * the actual brightness, and in some cases the max brightness.
++	 * Use the SPFC method as an indicator that we're on a TOS1900 device,
++	 * otherwise some TOS6208 devices might get bailed out, see bug 86521
+ 	 */
+-	if (out[2] > 0  || out[3] == 0xE000)
+-		return -ENODEV;
++	if (acpi_has_method(dev->acpi_dev->handle, "SPFC")) {
++		if (out[2] > 0  || out[3] == 0xE000)
++			return -ENODEV;
++	}
+ 
+ 	return out[0] == TOS_SUCCESS ? 0 : -EIO;
+ }
+-- 
+2.1.1
