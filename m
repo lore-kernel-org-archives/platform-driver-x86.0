@@ -1,71 +1,42 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba_acpi: Fix regression caused by backlight extra
-  check code
-Date: Mon, 3 Nov 2014 22:21:37 -0800
-Message-ID: <20141104062137.GC56751@vmdeb7>
-References: <1415073514-12555-1-git-send-email-coproscefalo@gmail.com>
+From: Giedrius Statkevicius <giedriuswork@gmail.com>
+Subject: [PATCH] platform: x86: remove redundant variable in hp-wireless.c
+Date: Wed,  5 Nov 2014 01:47:19 +0200
+Message-ID: <1415144839-2035-1-git-send-email-giedriuswork@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1415073514-12555-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>, rjw@rjwysocki.net, linux-acpi@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Nuno Lopes <nunoplopes@sapo.pt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedriuswork@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 03, 2014 at 08:58:34PM -0700, Azael Avalos wrote:
-> Bug 86521 uncovered that some TOS6208 devices also return
-> non zero values on a write call to the backlight method,
-> thus getting caught and bailed out by the extra check code.
-> 
-> This patch makes sure that the extra check is being done
-> on a TOS1900 device and then make the check for the broken
-> backlight code.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index ef3a190..e3fed12 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -944,9 +944,13 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
->  	/* Extra check for "incomplete" backlight method, where the AML code
->  	 * doesn't check for HCI_SET or HCI_GET and returns TOS_SUCCESS,
->  	 * the actual brightness, and in some cases the max brightness.
-> +	 * Use the SPFC method as an indicator that we're on a TOS1900 device,
-> +	 * otherwise some TOS6208 devices might get bailed out, see bug 86521
+Remove a variable because it only holds the results of a function call
+and then gets returned so instead just return the result of a function
+call.
 
-This needs a clearer description here in this comment, rather than redirecting
-the reader to a bug report (which may or may not exist when needed).
+Signed-off-by: Giedrius Statkevi=C4=8Dius <giedriuswork@gmail.com>
+---
+ drivers/platform/x86/hp-wireless.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
->  	 */
-> -	if (out[2] > 0  || out[3] == 0xE000)
-> -		return -ENODEV;
-> +	if (acpi_has_method(dev->acpi_dev->handle, "SPFC")) {
-
-Hrm, this checking for the existence of a specific method seems suspect to me.
-We would know if we are on a TOS1900 as we matches the acpi id already. Is the
-SPFC significant here, or is it just a "we only see SPFC on TOS1900 so it's a
-convenient test"? If the latter, it seems rather fragile and prone to other
-breakage to me.
-
-Rafael, any recommendations here?
-
-> +		if (out[2] > 0  || out[3] == 0xE000)
-> +			return -ENODEV;
-> +	}
->  
->  	return out[0] == TOS_SUCCESS ? 0 : -EIO;
->  }
-> -- 
-> 2.1.1
-> 
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/=
+hp-wireless.c
+index 415348f..670c62b 100644
+--- a/drivers/platform/x86/hp-wireless.c
++++ b/drivers/platform/x86/hp-wireless.c
+@@ -82,10 +82,7 @@ static void hpwl_notify(struct acpi_device *acpi_dev=
+, u32 event)
+=20
+ static int hpwl_add(struct acpi_device *device)
+ {
+-	int err;
+-
+-	err =3D hp_wireless_input_setup();
+-	return err;
++	return hp_wireless_input_setup();
+ }
+=20
+ static int hpwl_remove(struct acpi_device *device)
+--=20
+2.1.3
