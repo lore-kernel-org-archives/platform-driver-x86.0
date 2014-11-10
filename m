@@ -1,60 +1,44 @@
-From: Giedrius Statkevicius <giedrius.statkevicius@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
 Subject: Re: randconfig build error with next-20141110, in drivers/platform/x86/hp_accel.c
-Date: Mon, 10 Nov 2014 18:59:46 +0200
-Message-ID: <5460EF02.3000904@gmail.com>
-References: <CA+r1Zhio+KeBH0FFHwj=_fTFjqzebeE7Y2O_vsvMco49Sp56jw@mail.gmail.com>
+Date: Mon, 10 Nov 2014 09:19:15 -0800
+Message-ID: <56A55F6D-4EA5-4A54-8727-97D3E4A875A5@infradead.org>
+References: <CA+r1Zhio+KeBH0FFHwj=_fTFjqzebeE7Y2O_vsvMco49Sp56jw@mail.gmail.com> <5460EF02.3000904@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f176.google.com ([209.85.212.176]:33596 "EHLO
-	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753386AbaKJRHX (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 10 Nov 2014 12:07:23 -0500
-In-Reply-To: <CA+r1Zhio+KeBH0FFHwj=_fTFjqzebeE7Y2O_vsvMco49Sp56jw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, eric.piel@tremplin-utc.net, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <5460EF02.3000904@gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Giedrius Statkevicius <giedrius.statkevicius@gmail.com>, Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, eric.piel@tremplin-utc.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Jim,
 
-On 2014.11.10 18:20, Jim Davis wrote:
-> Building with the attached random configuration file,
-> 
-> drivers/built-in.o: In function `lis3lv02d_remove':
-> /home/jim/linux/drivers/platform/x86/hp_accel.c:389: undefined
-> reference to `i8042_remove_filter'
-> drivers/built-in.o: In function `lis3lv02d_add':
-> /home/jim/linux/drivers/platform/x86/hp_accel.c:370: undefined
-> reference to `i8042_install_filter'
-> make: *** [vmlinux] Error 1
-> 
 
-Oops, sorry. Forgot to add a depend on i8042 per this patch in Kconfig:
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a4c724d0723b078e4ab4670e557cda1795036a7a
+On November 10, 2014 8:59:46 AM PST, Giedrius Statkevicius <giedrius.statkevicius@gmail.com> wrote:
+>Hi Jim,
+>
+>On 2014.11.10 18:20, Jim Davis wrote:
+>> Building with the attached random configuration file,
+>> 
+>> drivers/built-in.o: In function `lis3lv02d_remove':
+>> /home/jim/linux/drivers/platform/x86/hp_accel.c:389: undefined
+>> reference to `i8042_remove_filter'
+>> drivers/built-in.o: In function `lis3lv02d_add':
+>> /home/jim/linux/drivers/platform/x86/hp_accel.c:370: undefined
+>> reference to `i8042_install_filter'
+>> make: *** [vmlinux] Error 1
+>> 
+>
+>Oops, sorry. Forgot to add a depend on i8042 per this patch in Kconfig:
+>https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a4c724d0723b078e4ab4670e557cda1795036a7a
+>
+>This patch should fix it. After applying and using your .config I
+>compiled the kernel without those undefined references. Should I make a
+>new thread where it's submitted in the proper form? 
 
-This patch should fix it. After applying and using your .config I
-compiled the kernel without those undefined references. Should I make a
-new thread where it's submitted in the proper form? 
+Yes please.
 
-thanks,
-Giedrius
----
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 4dcfb71..7d146e68 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -202,6 +202,7 @@ config TC1100_WMI
- config HP_ACCEL
- 	tristate "HP laptop accelerometer"
- 	depends on INPUT && ACPI
-+        depends on SERIO_I8042
- 	select SENSORS_LIS3LV02D
- 	select NEW_LEDS
- 	select LEDS_CLASS
 -- 
-2.1.3
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
