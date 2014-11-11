@@ -1,131 +1,252 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi: Update code for processing WMI events
-Date: Mon, 10 Nov 2014 22:02:43 -0800
-Message-ID: <20141111060243.GC56947@vmdeb7>
-References: <1413843324-13662-1-git-send-email-pali.rohar@gmail.com>
- <20141021213212.GE20951@vmdeb7>
- <201410221251.17977@pali>
- <201411091621.35634@pali>
+Subject: Re: [PATCH] dell-wireless: new driver for dell wireless button for
+ Windows 8
+Date: Mon, 10 Nov 2014 22:12:42 -0800
+Message-ID: <20141111061242.GD56947@vmdeb7>
+References: <1415685685-16953-1-git-send-email-alex.hung@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35605 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751898AbaKKGCs (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 11 Nov 2014 01:02:48 -0500
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201411091621.35634@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+In-Reply-To: <1415685685-16953-1-git-send-email-alex.hung@canonical.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Rafael Wysocki <rjw@rjwysocki.net>, Linux ACPI Mailing List <linux-acpi@vger.kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Nov 09, 2014 at 04:21:33PM +0100, Pali Roh=E1r wrote:
-> On Wednesday 22 October 2014 12:51:17 Pali Roh=E1r wrote:
-> > On Tuesday 21 October 2014 23:32:12 Darren Hart wrote:
-> > > On Tue, Oct 21, 2014 at 12:15:24AM +0200, Pali Roh=E1r wrote:
+On Tue, Nov 11, 2014 at 02:01:25PM +0800, Alex Hung wrote:
 
-Hi Pali,
+Please provide a proper git commit message.
 
-=2E..
-> > > > @@ -158,44 +182,117 @@ static void dell_wmi_notify(u32
-> > > > value, void *context)
-> > > >=20
-> > > >  	}
-> > > >  =09
-> > > >  	obj =3D (union acpi_object *)response.pointer;
-> > > >=20
-> > > > +	if (!obj) {
-> > > > +		pr_info("no response\n");
-> > > > +		return;
-> > > > +	}
-> > >=20
-> > > If you intend to print this, it should probably be a bit
-> > > more informative. Is "info" the right level here? I would
-> > > imagine either WARN if this was a bad thing, or DEBUG if
-> > > this is more for debugging the driver.
-> >=20
-> > So what you (or somebody else) prefer? warn or debug?
+Which devices present this button. There appears to be a button and a slider
+version? Is it necessary to add completely new driver for this one button in
+addition to the other dell-* drivers already here.
 
-I was leaving that up to you based on your interpretation of severity a=
-nd why
-you added this. If it was just for debug purporses, the I suggest debug=
-=2E If this
-will impact the user in an unexpected way, then WARN.
+Matthew?
 
-=2E..
-> > > > +	if (!dell_new_hk_type) {
-> > > > +		if (buffer_size >=3D 3 && buffer_entry[1] =3D=3D 0x0)
-> > > > +			dell_wmi_process_key(buffer_entry[2]);
-> > > >=20
-> > > >  		else if (buffer_size >=3D 2)
-> > > >=20
-> > > > -			reported_key =3D (int)buffer_entry[1] & 0xffff;
-> > > > -		else {
-> > > > +			dell_wmi_process_key(buffer_entry[1]);
-> > >=20
-> > > Why can we drop the 0xffff mask now?
-> >=20
-> > Because it is useless (or correct me if not!). Variable
-> > buffer_entry has type u16* so operation "AND 0xFFFF" on 16bit
-> > integer do nothing.
+As this is ACPI enumerated, does it belong in drivers/platform and not in
+drivers/acpi?
 
-Right, of course. Thanks,
+Rafael?
 
-> > > > +		else
-> > > >=20
-> > > >  			pr_info("Received unknown WMI event\n");
-> > > >=20
-> > > > -			kfree(obj);
-> > > > -			return;
-> > > > +		kfree(obj);
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	buffer_end =3D buffer_entry + buffer_size;
-> > > > +
-> > > > +	while (buffer_entry < buffer_end) {
-> > > > +
-> > > > +		len =3D buffer_entry[0];
-> > > > +		if (len =3D=3D 0)
-> > > > +			break;
-> > > > +
-> > > > +		len++;
-> > > > +
-> > >=20
-> > > Why increment len here? Are you trying to avoid a "len + 1"
-> > > in the comparisons below? If so, is using "len * 2" in the
-> > > debug message below correct? Please clarify.
-> >=20
-> > in buffer_entry[0] (16 bit integer) is stored length of event
-> > (in 16bit units) without first (length) value. And "%*ph"
-> > takes size in bytes (u8). So length in bytes (u8) units is 2
-> > * length in u16 units.
+Thanks,
 
-Right, got it - thanks.
+Darren
 
-> > > > +		if (buffer_entry+len > buffer_end) {
-> > >=20
-> > > See coding style documentation on operators. Please run
-> > > patches through checkpatch.
-> >=20
-> > checkpatch.pl does not show any problem for these lines.
+> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> ---
+>  drivers/platform/x86/Kconfig         |   12 +++
+>  drivers/platform/x86/Makefile        |    1 +
+>  drivers/platform/x86/dell-wireless.c |  159 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 172 insertions(+)
+>  create mode 100644 drivers/platform/x86/dell-wireless.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 172f26c..919df0b 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -228,6 +228,18 @@ config HP_WIRELESS
+>  	 To compile this driver as a module, choose M here: the module will
+>  	 be called hp-wireless.
+>  
+> +config DELL_WIRELESS
+> +	tristate "DELL wireless button"
 
-I thought we checked for that. Please see Documentation/CodingStyle 3.1=
-: Spaces
-with regard to spacing around binary and ternary operators. (one space =
-on each
-side of).
+> +	depends on ACPI
+> +	depends on INPUT
+> +	help
+> +	 This driver provides supports for new DELL wireless button for Windows
+> +         8. On such systems the driver should load automatically (via ACPI
+> +         alias).
+> +
+> +	 To compile this driver as a module, choose M here: the module will
+> +	 be called dell-wireless.
+> +
+>  config HP_WMI
+>  	tristate "HP WMI extras"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index c4ca428..09b382b 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_DELL_LAPTOP)	+= dell-laptop.o
+>  obj-$(CONFIG_DELL_WMI)		+= dell-wmi.o
+>  obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
+>  obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
+> +obj-$(CONFIG_DELL_WIRELESS)	+= dell-wireless.o
+>  obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+>  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+>  obj-$(CONFIG_HP_ACCEL)		+= hp_accel.o
+> diff --git a/drivers/platform/x86/dell-wireless.c b/drivers/platform/x86/dell-wireless.c
+> new file mode 100644
+> index 0000000..c1545fb
+> --- /dev/null
+> +++ b/drivers/platform/x86/dell-wireless.c
+> @@ -0,0 +1,159 @@
+> +/*
+> + *  dell-wireless button for Windows 8
+> + *
+> + *  Copyright (C) 2014 Alex Hung
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License as published by
+> + *  the Free Software Foundation; either version 2 of the License, or
+> + *  (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *  GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/input.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/acpi.h>
+> +#include <acpi/acpi_bus.h>
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Alex Hung");
+> +MODULE_ALIAS("acpi*:DELLABCE:*");
+> +
+> +#define DELL_TOGGLE_SWITCH	0
+> +#define DELL_SLIDER_SWITCH	1
+> +
+> +static int switch_type;
+> +
+> +static struct input_dev *dellwl_input_dev;
+> +
+> +static const struct acpi_device_id dellwl_ids[] = {
+> +	{"DELLABCE", 0},
+> +	{"", 0},
+> +};
+> +
+> +static int dell_wireless_input_setup(void)
+> +{
+> +	int err;
+> +
+> +	dellwl_input_dev = input_allocate_device();
+> +	if (!dellwl_input_dev)
+> +		return -ENOMEM;
+> +
+> +	dellwl_input_dev->name = "DELL Wireless hotkeys";
+> +	dellwl_input_dev->phys = "dellabce/input0";
+> +	dellwl_input_dev->id.bustype = BUS_HOST;
+> +	dellwl_input_dev->evbit[0] = BIT(EV_KEY);
+> +	set_bit(KEY_RFKILL, dellwl_input_dev->keybit);
+> +
+> +	err = input_register_device(dellwl_input_dev);
+> +	if (err)
+> +		goto err_free_dev;
+> +
+> +	return 0;
+> +
+> +err_free_dev:
+> +	input_free_device(dellwl_input_dev);
+> +	return err;
+> +}
+> +
+> +static void dell_wireless_input_destroy(void)
+> +{
+> +	input_unregister_device(dellwl_input_dev);
+> +}
+> +
+> +static void dellwl_notify(struct acpi_device *acpi_dev, u32 event)
+> +{
+> +	if (event != 0x80) {
+> +		pr_info("Received unknown event (0x%x)\n", event);
+> +		return;
+> +	}
+> +
+> +	if (switch_type != DELL_TOGGLE_SWITCH)
+> +		return;
+> +
+> +	input_report_key(dellwl_input_dev, KEY_RFKILL, 1);
+> +	input_sync(dellwl_input_dev);
+> +	input_report_key(dellwl_input_dev, KEY_RFKILL, 0);
+> +	input_sync(dellwl_input_dev);
+> +}
+> +
+> +static int dellwl_add(struct acpi_device *device)
+> +{
+> +	acpi_status status;
+> +	unsigned long long output;
+> +	int err = 0;
+> +
+> +	status = acpi_evaluate_integer(device->handle, "CRBT", NULL, &output);
+> +	if (!ACPI_SUCCESS(status))
+> +		return -EINVAL;
+> +
+> +	switch (output) {
+> +	case 0:
+> +	case 1:
+> +		switch_type = DELL_TOGGLE_SWITCH;
+> +		err = dell_wireless_input_setup();
+> +		break;
+> +	case 2:
+> +	case 3:
+> +		/* hard block is handled by module drivers */
+> +		switch_type = DELL_SLIDER_SWITCH;
+> +		break;
+> +	default:
+> +		err = -EINVAL;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static int dellwl_remove(struct acpi_device *device)
+> +{
+> +	if (switch_type == DELL_TOGGLE_SWITCH)
+> +		dell_wireless_input_destroy();
+> +
+> +	return 0;
+> +}
+> +
+> +static struct acpi_driver dellwl_driver = {
+> +	.name	= "dell-wireless",
+> +	.owner	= THIS_MODULE,
+> +	.ids	= dellwl_ids,
+> +	.ops	= {
+> +		.add	= dellwl_add,
+> +		.remove	= dellwl_remove,
+> +		.notify	= dellwl_notify,
+> +	},
+> +};
+> +
+> +static int __init dellwl_init(void)
+> +{
+> +	int err;
+> +
+> +	pr_info("Initializing DELLABCE module\n");
+> +	err = acpi_bus_register_driver(&dellwl_driver);
+> +	if (err) {
+> +		pr_err("Unable to register DELL wireless control driver.\n");
+> +		goto error_acpi_register;
+> +	}
+> +
+> +	return 0;
+> +
+> +error_acpi_register:
+> +	return err;
+> +}
+> +
+> +static void __exit dellwl_exit(void)
+> +{
+> +	pr_info("Exiting DELLABCE module\n");
+> +	acpi_bus_unregister_driver(&dellwl_driver);
+> +}
+> +
+> +module_init(dellwl_init);
+> +module_exit(dellwl_exit);
+> -- 
+> 1.7.9.5
+> 
+> 
 
-> Darren: PING. See my comments and questions.
-
-Thanks for the ping :)
-
-So please choose a loglevel and correct the whitespace and we should be=
- good.
-
---=20
+-- 
 Darren Hart
 Intel Open Source Technology Center
