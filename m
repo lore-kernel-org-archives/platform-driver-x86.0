@@ -1,171 +1,260 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Fix regression caused by backlight extra
- check code
-Date: Tue, 11 Nov 2014 09:01:51 -0700
-Message-ID: <CAGdLNWEnxUWKDKD6Wen+ytOQG+qqKq901auE5CDm-1_RGCe4tQ@mail.gmail.com>
-References: <1415073514-12555-1-git-send-email-coproscefalo@gmail.com>
-	<20141104062137.GC56751@vmdeb7>
-	<CAGdLNWH9OqBO1TgNm7ZRnX_wnGwe3rUuxaqwvLfq=HdYXNmMbw@mail.gmail.com>
-	<20141111054918.GB56947@vmdeb7>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH v2] dell-wmi: Update code for processing WMI events
+Date: Tue, 11 Nov 2014 20:21:22 +0100
+Message-ID: <1415733682-8699-1-git-send-email-pali.rohar@gmail.com>
+References: <20141111060243.GC56947@vmdeb7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:59710 "EHLO
-	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751086AbaKKQBx (ORCPT
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:34890 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751287AbaKKTVk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 11 Nov 2014 11:01:53 -0500
-In-Reply-To: <20141111054918.GB56947@vmdeb7>
+	Tue, 11 Nov 2014 14:21:40 -0500
+In-Reply-To: <20141111060243.GC56947@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: rjw@rjwysocki.net, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nuno Lopes <nunoplopes@sapo.pt>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-2014-11-10 22:49 GMT-07:00 Darren Hart <dvhart@infradead.org>:
-> On Mon, Nov 10, 2014 at 09:58:29AM -0700, Azael Avalos wrote:
->> Hi Darren,
->>
->> Sorry for the way late reply, I had to go out of town in a hurry.
->>
->> 2014-11-03 23:21 GMT-07:00 Darren Hart <dvhart@infradead.org>:
->> > On Mon, Nov 03, 2014 at 08:58:34PM -0700, Azael Avalos wrote:
->> >> Bug 86521 uncovered that some TOS6208 devices also return
->> >> non zero values on a write call to the backlight method,
->> >> thus getting caught and bailed out by the extra check code.
->> >>
->> >> This patch makes sure that the extra check is being done
->> >> on a TOS1900 device and then make the check for the broken
->> >> backlight code.
->> >>
->> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> >> ---
->> >>  drivers/platform/x86/toshiba_acpi.c | 8 ++++++--
->> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> >> index ef3a190..e3fed12 100644
->> >> --- a/drivers/platform/x86/toshiba_acpi.c
->> >> +++ b/drivers/platform/x86/toshiba_acpi.c
->> >> @@ -944,9 +944,13 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
->> >>       /* Extra check for "incomplete" backlight method, where the AML code
->> >>        * doesn't check for HCI_SET or HCI_GET and returns TOS_SUCCESS,
->> >>        * the actual brightness, and in some cases the max brightness.
->> >> +      * Use the SPFC method as an indicator that we're on a TOS1900 device,
->> >> +      * otherwise some TOS6208 devices might get bailed out, see bug 86521
->> >
->> > This needs a clearer description here in this comment, rather than redirecting
->> > the reader to a bug report (which may or may not exist when needed).
->>
->> Alright, will do whenever we reach an agreement below.
->>
->> >
->> >>        */
->> >> -     if (out[2] > 0  || out[3] == 0xE000)
->> >> -             return -ENODEV;
->> >> +     if (acpi_has_method(dev->acpi_dev->handle, "SPFC")) {
->> >
->> > Hrm, this checking for the existence of a specific method seems suspect to me.
->> > We would know if we are on a TOS1900 as we matches the acpi id already. Is the
->> > SPFC significant here, or is it just a "we only see SPFC on TOS1900 so it's a
->> > convenient test"? If the latter, it seems rather fragile and prone to other
->> > breakage to me.
->>
->> Yeah, its the latter, the "SPFC" method is specific to TOS1900 devices.
->>
->> All of the TOS1900 support the Toshiba specific backlight read-only,
->> and that test is just to get those implementations where the AML
->> code doesn't check for read/write registers, so far I've identified three
->> series of laptops with this issue (all Qosmios), X500, X505 and X75-A
->> (and there might be more around).
->>
->> We could dissable backlight on all TOS1900 or add those three models
->> to the (growing) DMI list on video.c, but of course, I would like to keep
->> the code in-house, but that's just me :-)
->>
->
-> I'm having some trouble grokking the whole picture I think.
->
-> So, let's try and clear it up. We have a function to set brightness. On model
-> citizen laptops, after the ACPI call, out[2] is 0 (TOS_SUCCESS) and we return 0.
+WMI buffer can contains more events. First value in buffer is length of=
+ event
+followed by data of specified length. After that is next length and nex=
+t data.
+When length is zero then there is no more events in bufffer.
 
-Yeah, at least on TOS1900 devices, all write calls set the out[n] to zero,
-and then assign the specified return status to out[0] (either success or error).
+This patch adds support for processing all events in buffer (not only f=
+irst)
+and parse more event types (not only hotkey events). Because of variabl=
+e length
+of events sometimes BIOS fills more hotkeys (or other values) into sing=
+le WMI
+event. In this case this patch process also these multiple hotkeys (and=
+ not
+only first one).
 
->
-> The extra check was added by f6aac65 to avoid registering certain badly behaved
-> machines (Qosmios) which always return HCI_SUCCESS, even the read/write commands
-> are missing. This was determined by checking for observed values in out[2]
-> greater than 0 and out[3] equal to 0xE000 (which presumably map to actual or max
-> brightness. I take it in a well behaved ACPI implementation, out[2] must be 0
-> and out[3] is .... what? I'll call this out[2] || out[3] state the "signature"
-> of a bad implementation.
+Some event types are just ignored because kernel is not interested for =
+them
+(e.g. NIC Link status, battery unplug, ...).
 
-Yeah, since TOS1900 set all out[n] values to zero, I was expecting that same
-behaviour from a TOS62XX device, however, bug 86521 proved me wrong.
+This patch is based on DSDT table from Dell Latitude E6440. Code should=
+ be
+backward compatible so will process other events of old types same as b=
+efore
+this patch.
 
->
-> Now, with bug 86521, we learn that these signatures are not necessarily bad,
-> some working laptops also populate these fields in this way.
+This patch also fixes problem when in kernel log are written messages a=
+bout
+unknown WMI events. Now all know events are parsed and those which are =
+not
+interesting for kernel are dropped without unknown message.
 
-For TOS1900 devices, they are, but for TOS62XX, that's another story,
-the methods
-are hidden and I can't see what they're doing... :-(
+Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+---
+Changes since v1:
+* change some pr_info calls with pr_warn
+* fix coding style
+---
+ drivers/platform/x86/dell-wmi.c |  159 +++++++++++++++++++++++++++++++=
+--------
+ 1 file changed, 128 insertions(+), 31 deletions(-)
 
->
-> Finally, while it is only TOS1900 devices that are known to be bad, all TOS1900
-> devices are not necessarily bad. So you don't want to block all TOS1900 devices
-> at probe time.
-
-We're doing it already, toshiba_acpi_setup_backlight checks for read and write
-support in order to register the backlight, and since all* TOS1900
-support it read-only
-they all get bailed out by these checks, except those badly behaved models,
-they simply return SUCCESS and thus pass that check, creating a broken backlight
-device with just read capabilities.
-
-* (Actually there are two TOS1900 devices, the ones that support it
-read only, and the
-ones that don't support it at all)
-
->
-> Do I have this right?
->
-> If so, this is looking more and more fragile to me. I'm inclined to push for a
-> blacklist of the known bad models and strip out both this and the precious extra
-> check, since they are based on circumstantial evidence of failure.
-
-Yeah, I thought that from the beginning, but I found that a bit
-cumbersome to add
-those models to the growing list, if we can do it in-house. But I'm
-fine with whatever
-decision is made here.
-
->
->> >
->> > Rafael, any recommendations here?
->
->
-> Rafael, what's your take on this? Does the above influence your position one way
-> or the other?
->
->
->
->> >
->> >> +             if (out[2] > 0  || out[3] == 0xE000)
->> >> +                     return -ENODEV;
->> >> +     }
->> >>
->> >>       return out[0] == TOS_SUCCESS ? 0 : -EIO;
->> >>  }
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-
-Cheers
-Azael
-
-
-
--- 
--- El mundo apesta y vosotros apestais tambien --
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-wmi.c
+index 25721bf..e2b6a64 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -145,57 +145,154 @@ static const u16 bios_to_linux_keycode[256] __in=
+itconst =3D {
+=20
+ static struct input_dev *dell_wmi_input_dev;
+=20
++static void dell_wmi_process_key(int reported_key)
++{
++	const struct key_entry *key;
++
++	key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
++						reported_key);
++	if (!key) {
++		pr_info("Unknown key %x pressed\n", reported_key);
++		return;
++	}
++
++	pr_debug("Key %x pressed\n", reported_key);
++
++	/* Don't report brightness notifications that will also come via ACPI=
+ */
++	if ((key->keycode =3D=3D KEY_BRIGHTNESSUP ||
++	     key->keycode =3D=3D KEY_BRIGHTNESSDOWN) && acpi_video)
++		return;
++
++	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
++}
++
+ static void dell_wmi_notify(u32 value, void *context)
+ {
+ 	struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+ 	acpi_status status;
++	acpi_size buffer_size;
++	u16 *buffer_entry, *buffer_end;
++	int len, i;
+=20
+ 	status =3D wmi_get_event_data(value, &response);
+ 	if (status !=3D AE_OK) {
+-		pr_info("bad event status 0x%x\n", status);
++		pr_warn("bad event status 0x%x\n", status);
+ 		return;
+ 	}
+=20
+ 	obj =3D (union acpi_object *)response.pointer;
++	if (!obj) {
++		pr_warn("no response\n");
++		return;
++	}
+=20
+-	if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER) {
+-		const struct key_entry *key;
+-		int reported_key;
+-		u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
+-		int buffer_size =3D obj->buffer.length/2;
+-
+-		if (buffer_size >=3D 2 && dell_new_hk_type && buffer_entry[1] !=3D 0=
+x10) {
+-			pr_info("Received unknown WMI event (0x%x)\n",
+-				buffer_entry[1]);
+-			kfree(obj);
+-			return;
+-		}
++	if (obj->type !=3D ACPI_TYPE_BUFFER) {
++		pr_warn("bad response type %x\n", obj->type);
++		kfree(obj);
++		return;
++	}
++
++	pr_debug("Received WMI event (%*ph)\n",
++		obj->buffer.length, obj->buffer.pointer);
+=20
+-		if (buffer_size >=3D 3 && (dell_new_hk_type || buffer_entry[1] =3D=3D=
+ 0x0))
+-			reported_key =3D (int)buffer_entry[2];
++	buffer_entry =3D (u16 *)obj->buffer.pointer;
++	buffer_size =3D obj->buffer.length/2;
++
++	if (!dell_new_hk_type) {
++		if (buffer_size >=3D 3 && buffer_entry[1] =3D=3D 0x0)
++			dell_wmi_process_key(buffer_entry[2]);
+ 		else if (buffer_size >=3D 2)
+-			reported_key =3D (int)buffer_entry[1] & 0xffff;
+-		else {
++			dell_wmi_process_key(buffer_entry[1]);
++		else
+ 			pr_info("Received unknown WMI event\n");
+-			kfree(obj);
+-			return;
++		kfree(obj);
++		return;
++	}
++
++	buffer_end =3D buffer_entry + buffer_size;
++
++	while (buffer_entry < buffer_end) {
++
++		len =3D buffer_entry[0];
++		if (len =3D=3D 0)
++			break;
++
++		len++;
++
++		if (buffer_entry + len > buffer_end) {
++			pr_warn("Invalid length of WMI event\n");
++			break;
+ 		}
+=20
+-		key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev,
+-							reported_key);
+-		if (!key) {
+-			pr_info("Unknown key %x pressed\n", reported_key);
+-		} else if ((key->keycode =3D=3D KEY_BRIGHTNESSUP ||
+-			    key->keycode =3D=3D KEY_BRIGHTNESSDOWN) && acpi_video) {
+-			/* Don't report brightness notifications that will also
+-			 * come via ACPI */
+-			;
+-		} else {
+-			sparse_keymap_report_entry(dell_wmi_input_dev, key,
+-						   1, true);
++		pr_debug("Process buffer (%*ph)\n", len*2, buffer_entry);
++
++		switch (buffer_entry[1]) {
++		case 0x00:
++			for (i =3D 2; i < len; ++i) {
++				switch (buffer_entry[i]) {
++				case 0xe043:
++					/* NIC Link is Up */
++					pr_debug("NIC Link is Up\n");
++					break;
++				case 0xe044:
++					/* NIC Link is Down */
++					pr_debug("NIC Link is Down\n");
++					break;
++				case 0xe045:
++					/* Unknown event but defined in DSDT */
++				default:
++					/* Unknown event */
++					pr_info("Unknown WMI event type 0x00: "
++						"0x%x\n", (int)buffer_entry[i]);
++					break;
++				}
++			}
++			break;
++		case 0x10:
++			/* Keys pressed */
++			for (i =3D 2; i < len; ++i)
++				dell_wmi_process_key(buffer_entry[i]);
++			break;
++		case 0x11:
++			for (i =3D 2; i < len; ++i) {
++				switch (buffer_entry[i]) {
++				case 0xfff0:
++					/* Battery unplugged */
++					pr_debug("Battery unplugged\n");
++					break;
++				case 0xfff1:
++					/* Battery inserted */
++					pr_debug("Battery inserted\n");
++					break;
++				case 0x01e1:
++				case 0x02ea:
++				case 0x02eb:
++				case 0x02ec:
++				case 0x02f6:
++					/* Keyboard backlight level changed */
++					pr_debug("Keyboard backlight level "
++						 "changed\n");
++					break;
++				default:
++					/* Unknown event */
++					pr_info("Unknown WMI event type 0x11: "
++						"0x%x\n", (int)buffer_entry[i]);
++					break;
++				}
++			}
++			break;
++		default:
++			/* Unknown event */
++			pr_info("Unknown WMI event type 0x%x\n",
++				(int)buffer_entry[1]);
++			break;
+ 		}
++
++		buffer_entry +=3D len;
++
+ 	}
++
+ 	kfree(obj);
+ }
+=20
+--=20
+1.7.9.5
