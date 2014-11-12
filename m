@@ -1,108 +1,58 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] dell-wmi: Update code for processing WMI events
-Date: Tue, 11 Nov 2014 12:43:41 -0800
-Message-ID: <20141111204341.GA13729@vmdeb7>
-References: <20141111060243.GC56947@vmdeb7>
- <1415733682-8699-1-git-send-email-pali.rohar@gmail.com>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH] dell-wireless: new driver for dell wireless button for
+ Windows 8
+Date: Wed, 12 Nov 2014 14:49:45 +0800
+Message-ID: <CAJ=jquZU7PiW1+JuVCCcWriLS6+RyBxEb2t==0K2S_ec+_v09w@mail.gmail.com>
+References: <1415685685-16953-1-git-send-email-alex.hung@canonical.com>
+	<20141111061242.GD56947@vmdeb7>
+	<20141111193556.GA18229@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:33586 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751086AbaKKUnn (ORCPT
+Received: from mail-qc0-f182.google.com ([209.85.216.182]:33196 "EHLO
+	mail-qc0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751249AbaKLGtq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 11 Nov 2014 15:43:43 -0500
-Content-Disposition: inline
-In-Reply-To: <1415733682-8699-1-git-send-email-pali.rohar@gmail.com>
+	Wed, 12 Nov 2014 01:49:46 -0500
+Received: by mail-qc0-f182.google.com with SMTP id m20so8959222qcx.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Nov 2014 22:49:45 -0800 (PST)
+In-Reply-To: <20141111193556.GA18229@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Darren Hart <dvhart@infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>, Linux ACPI Mailing List <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Tue, Nov 11, 2014 at 08:21:22PM +0100, Pali Roh=E1r wrote:
-> WMI buffer can contains more events. First value in buffer is length =
-of event
-> followed by data of specified length. After that is next length and n=
-ext data.
-> When length is zero then there is no more events in bufffer.
->=20
-> This patch adds support for processing all events in buffer (not only=
- first)
-> and parse more event types (not only hotkey events). Because of varia=
-ble length
-> of events sometimes BIOS fills more hotkeys (or other values) into si=
-ngle WMI
-> event. In this case this patch process also these multiple hotkeys (a=
-nd not
-> only first one).
->=20
-> Some event types are just ignored because kernel is not interested fo=
-r them
-> (e.g. NIC Link status, battery unplug, ...).
->=20
-> This patch is based on DSDT table from Dell Latitude E6440. Code shou=
-ld be
-> backward compatible so will process other events of old types same as=
- before
-> this patch.
->=20
-> This patch also fixes problem when in kernel log are written messages=
- about
-> unknown WMI events. Now all know events are parsed and those which ar=
-e not
-> interesting for kernel are dropped without unknown message.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> Tested-by: Pali Roh=E1r <pali.rohar@gmail.com>
+Hi Darren,
 
-Queued, thanks. I took the liberty of cleaning up the commit message ju=
-st a bit:
+Thanks for the comments. I will send a new version with more information.
 
-    dell-wmi: Update code for processing WMI events
+I believe it is better to have a new driver as it seems OEM can
+depreciate and (probably is depreciating) old features and existing
+IDs. Especially, a lot of BIOS features are moving to be handled by OS
+and userspace applications. I expect to see more simple ACPI devices
+to be handled by simple drivers. Combining devices with different
+purposes into a single complex driver can be misleading.
 
-    The WMI buffer can contain multiple events. First value in buffer i=
-s
-    length of event followed by data of specified length. After that is=
- next
-    length and next data.  When length is zero then there is no more ev=
-ents
-    in bufffer.
+Hi Matthew,
 
-    This patch adds support for processing all events in buffer (not on=
-ly
-    first) and parse more event types (not only hotkey events). Because=
- of
-    variable length of events sometimes BIOS fills more hotkeys (or oth=
-er
-    values) into single WMI event. In this case this patch also process=
-es
-    these multiple hotkeys (and not only first one).
+Thanks for clarifying it for me.
 
-    Some event types are just ignored because kernel is not interested =
-in
-    them (e.g. NIC Link status, battery unplug, ...).
+Cheers,
+Alex Hung
 
-    This patch is based on DSDT table from Dell Latitude E6440. Code sh=
-ould
-    be backward compatible so will process other events of old types sa=
-me as
-    before this patch.
+On Wed, Nov 12, 2014 at 3:35 AM, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> On Mon, Nov 10, 2014 at 10:12:42PM -0800, Darren Hart wrote:
+>
+>> As this is ACPI enumerated, does it belong in drivers/platform and not in
+>> drivers/acpi?
+>
+> Yeah, it's still a platform driver rather than a core ACPI driver.
+>
+> --
+> Matthew Garrett | mjg59@srcf.ucam.org
 
-    This patch also fixes a problem with unknown WMI event messages bei=
-ng
-    written to the log. Now all known events are parsed and those which=
- are
-    not interesting to the kernel are dropped without an unknown WMI ev=
-ent
-    message.
 
-    Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-    Tested-by: Pali Roh=E1r <pali.rohar@gmail.com>
-    Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 
-Thanks,
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+-- 
+Cheers,
+Alex Hung
