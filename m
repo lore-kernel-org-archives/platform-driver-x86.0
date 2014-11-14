@@ -1,41 +1,36 @@
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] hp_accel: Add support for HP ZBook 15
-Date: Thu, 13 Nov 2014 20:57:37 +0100
-Message-ID: <1415908657-26477-1-git-send-email-tiwai@suse.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH][v2] dell-wireless: new driver for dell wireless button
+ for Windows 8
+Date: Thu, 13 Nov 2014 18:45:46 -0800
+Message-ID: <20141114024546.GA3088@vmdeb7>
+References: <1415775104-25105-1-git-send-email-alex.hung@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cantor2.suse.de ([195.135.220.15]:46239 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933146AbaKMT5z (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:43287 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933518AbaKNCpu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 13 Nov 2014 14:57:55 -0500
+	Thu, 13 Nov 2014 21:45:50 -0500
+Content-Disposition: inline
+In-Reply-To: <1415775104-25105-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Eric Piel <eric.piel@tremplin-utc.net>, Dominique Leuenberger <dimstar@opensuse.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-From: Dominique Leuenberger <dimstar@opensuse.org>
+On Wed, Nov 12, 2014 at 02:51:44PM +0800, Alex Hung wrote:
+> This is for Dell's new ACPI device for radio switches with ACPI
+> ID "DELLABCE". This device is Dell's solution for Microsoft
+> Windows 8's new requirement for wireless hotkeys.
+> 
+> When wireless hotkey is pressed, BIOS issues a Notify(RBTN, 0x80)
+> which is tanslated to a keycode KEY_RFKILL to userspace.
+> 
+> Signed-off-by: Alex Hung <alex.hung@canonical.com>
 
-HP ZBook 15 laptop needs a non-standard mapping (x_inverted).
+Queued, thanks Alex.
 
-BugLink: http://bugzilla.opensuse.org/show_bug.cgi?id=905329
-Signed-off-by: Dominique Leuenberger <dimstar@opensuse.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/platform/x86/hp_accel.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index 13e14ec1d3d7..b268f4e48471 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -237,6 +237,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
- 	AXIS_DMI_MATCH("HPB64xx", "HP ProBook 64", xy_swap),
- 	AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
- 	AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
-+	AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
- 	{ NULL, }
- /* Laptop models without axis info (yet):
-  * "NC6910" "HP Compaq 6910"
 -- 
-2.1.3
+Darren Hart
+Intel Open Source Technology Center
