@@ -1,43 +1,45 @@
-From: Ondrej Zary <linux@rainbow-software.org>
-Subject: [PATCH] [RESEND] toshiba-acpi: Add missing ID (TOS6207)
-Date: Thu, 20 Nov 2014 23:14:36 +0100
-Message-ID: <1416521676-15084-1-git-send-email-linux@rainbow-software.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] asus-nb-wmi: Add another wapf=4 quirk
+Date: Fri, 21 Nov 2014 13:18:06 +0100
+Message-ID: <1416572286-8091-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ns.gsystem.sk ([62.176.172.50]:41164 "EHLO gsystem.sk"
+Received: from mx1.redhat.com ([209.132.183.28]:56823 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756063AbaKTWOs (ORCPT
+	id S1755075AbaKUMSg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Nov 2014 17:14:48 -0500
+	Fri, 21 Nov 2014 07:18:36 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>, Seth Forshee <seth.forshee@canonical.com>, Kernel development list <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-toshiba-acpi was always missing TOS6207 ID so it did not load automatically
-on some laptops (such as Portege R100). But it worked fine if loaded manually.
-Commit 135740de7764 ("toshiba_acpi: Convert to use acpi_driver") broke that
-and the driver does not work even when loaded manually since then.
+Reported through launchpad:
+https://bugs.launchpad.net/bugs/1173681
 
-Add TOS6207 ID to fix it.
-
-Tested on Toshiba Portege R100.
-
-Signed-off-by: Ondrej Zary <linux@rainbow-software.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/toshiba_acpi.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index ab6151f..0ce2129 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -186,6 +186,7 @@ static struct toshiba_acpi_dev *toshiba_acpi;
- 
- static const struct acpi_device_id toshiba_device_ids[] = {
- 	{"TOS6200", 0},
-+	{"TOS6207", 0},
- 	{"TOS6208", 0},
- 	{"TOS1900", 0},
- 	{"", 0},
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index c1a6cd6..abdaed3 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -191,6 +191,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X551CA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X551CA"),
++		},
++		.driver_data = &quirk_asus_wapf4,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X55A",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
-Ondrej Zary
+2.1.0
