@@ -1,82 +1,82 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: New dell-wireless driver
-Date: Sat, 22 Nov 2014 23:45:08 +0100
-Message-ID: <201411222345.08384@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: New dell-wireless driver
+Date: Fri, 21 Nov 2014 18:09:06 -0800
+Message-ID: <20141122020906.GB24951@vmdeb7>
+References: <201411222345.08384@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2124252.JxHauzJ5KX";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:60296 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750878AbaKVWpL (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:49976 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752444AbaKVXbA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 22 Nov 2014 17:45:11 -0500
-Received: by mail-wi0-f170.google.com with SMTP id bs8so5807572wib.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Nov 2014 14:45:10 -0800 (PST)
+	Sat, 22 Nov 2014 18:31:00 -0500
+Content-Disposition: inline
+In-Reply-To: <201411222345.08384@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
---nextPart2124252.JxHauzJ5KX
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Sat, Nov 22, 2014 at 11:45:08PM +0100, Pali Roh=E1r wrote:
+> Hello,
+>=20
+> I saw dell-wireless driver on platform-driver-x86 mailinglist [1]=20
+> which using DELLABCE acpi device and I do not like some parts in=20
+> this driver.
 
-Hello,
+Hi Pali,
 
-I saw dell-wireless driver on platform-driver-x86 mailinglist [1]=20
-which using DELLABCE acpi device and I do not like some parts in=20
-this driver.
+Thanks for reviewing and speaking up :)
 
-=46irst is that this driver export rfkill event as keypress which=20
-is also reported to userspace by keyboard controller. So then=20
-userspace receive two rfkill keypresses.
+>=20
+> First is that this driver export rfkill event as keypress which=20
+> is also reported to userspace by keyboard controller. So then=20
+> userspace receive two rfkill keypresses.
 
-Second is that DELLABCE acpi device can also control "soft"=20
-rfkill status and this driver does not enable it because it use=20
-input class instead rfkill.
+Alex, can you comment? Does the keyboard controller also see this event=
+?
 
-Anyway I have unfinished my version of DELLABCE acpi driver which=20
-will use rfkill interface and plus allow to use hw switch events=20
-in dell-laptop.ko driver.
+>=20
+> Second is that DELLABCE acpi device can also control "soft"=20
+> rfkill status and this driver does not enable it because it use=20
+> input class instead rfkill.
+>=20
+> Anyway I have unfinished my version of DELLABCE acpi driver which=20
+> will use rfkill interface and plus allow to use hw switch events=20
+> in dell-laptop.ko driver.
 
-Currently dell-laptop.ko driver is using i8042 hook function for=20
-detecting hw switch key press event. It is needed to detect if=20
-rfkill state was changed or not.
+Is this something that could be applied incrementally fo Alex's driver,=
+ or is it
+something we'd be best starting over with?
 
-My prepared patches for dell-laptop.ko allows to use acpi event=20
-from DELLABCE driver, so i8042 hook function can be dropped.=20
-Really it is not good idea to pass every PS/2 data from both=20
-keyboard, touchpad and trackpoint to dell-laptop driver and if=20
-there is alternative (DELLABCE) it is better to use it.
+We have some precedent for input drivers (there is one nearly identical=
+ to the
+dell driver for hp, also by Alex). Using rfkill does seem like the bett=
+er
+approach without digging into it.
 
-But now I would like to hear what do you think about it.
+>=20
+> Currently dell-laptop.ko driver is using i8042 hook function for=20
+> detecting hw switch key press event. It is needed to detect if=20
+> rfkill state was changed or not.
+>=20
+> My prepared patches for dell-laptop.ko allows to use acpi event=20
+> from DELLABCE driver, so i8042 hook function can be dropped.=20
+> Really it is not good idea to pass every PS/2 data from both=20
+> keyboard, touchpad and trackpoint to dell-laptop driver and if=20
+> there is alternative (DELLABCE) it is better to use it.
+>=20
+> But now I would like to hear what do you think about it.
+>=20
+> Because only one kernel driver can attach to DELLABCE acpi=20
+> device, I cannot use new dell-wireless driver. And I think only=20
+> one driver can hit mainline kernel.
 
-Because only one kernel driver can attach to DELLABCE acpi=20
-device, I cannot use new dell-wireless driver. And I think only=20
-one driver can hit mainline kernel.
+I would like to see your patch, it sounds like it might be a better opt=
+ion.
 
-[1] -=20
-http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/6036
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart2124252.JxHauzJ5KX
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlRxEfQACgkQi/DJPQPkQ1KzXACgmzwtDg+nvSkPcBxxnzuWy4Pt
-iFAAnjXpoD5QYNiisomsUgUdZ/mq5tTh
-=05uV
------END PGP SIGNATURE-----
-
---nextPart2124252.JxHauzJ5KX--
+--=20
+Darren Hart
+Intel Open Source Technology Center
