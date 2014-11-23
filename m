@@ -1,18 +1,18 @@
-From: "Callan, Paul" <Paul.Callan@itb.ie>
-Subject: FW: MAIL-BOX INCREASE
-Date: Sun, 23 Nov 2014 18:41:51 +0000
-Message-ID: <20CEEDB13F42ED459A712FBDA6E3E436A47D4098@Laguna-II.itb.org>
-References: <20CEEDB13F42ED459A712FBDA6E3E436A47D3942@Laguna-II.itb.org>
+From: "DuPriest, Barclay" <BarclayDuPriest@rmc.edu>
+Subject: =?windows-1256?Q?FW:_INCREASE_MAIL-BOX_SIZE=FE=FD?=
+Date: Sun, 23 Nov 2014 19:42:26 +0000
+Message-ID: <B1A64180C8F15241B46B8545AA0C0ABD01ED2F00CF@RMCMBX2.rmc.edu>
+References: <B1A64180C8F15241B46B8545AA0C0ABD01ED2ED81B@RMCMBX2.rmc.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset="windows-1256"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from proxy3.itb.ie ([193.1.36.25]:56588 "EHLO laguna.itb.ie"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751938AbaKWSwa convert rfc822-to-8bit (ORCPT
+Received: from barracuda.rmc.edu ([192.240.93.252]:20860 "EHLO
+	barracuda.rmc.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751958AbaKWUV5 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 23 Nov 2014 13:52:30 -0500
-In-Reply-To: <20CEEDB13F42ED459A712FBDA6E3E436A47D3942@Laguna-II.itb.org>
+	Sun, 23 Nov 2014 15:21:57 -0500
+In-Reply-To: <B1A64180C8F15241B46B8545AA0C0ABD01ED2ED81B@RMCMBX2.rmc.edu>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -32,4 +32,3 @@ IT-S ADMIN
 [X]
 [X]
 [X]
-View our Disclaimer<http://www.itb.ie/disclaimer/disclaimer.html>
