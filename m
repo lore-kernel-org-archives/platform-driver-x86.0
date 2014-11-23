@@ -1,61 +1,35 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: New dell-wireless driver
-Date: Sun, 23 Nov 2014 16:11:03 +0100
-Message-ID: <201411231611.03636@pali>
-References: <201411222345.08384@pali> <201411230152.46619@pali> <20141122034444.GA47826@vmdeb7>
+From: "Callan, Paul" <Paul.Callan@itb.ie>
+Subject: FW: MAIL-BOX INCREASE
+Date: Sun, 23 Nov 2014 18:41:51 +0000
+Message-ID: <20CEEDB13F42ED459A712FBDA6E3E436A47D4098@Laguna-II.itb.org>
+References: <20CEEDB13F42ED459A712FBDA6E3E436A47D3942@Laguna-II.itb.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1982077.Q4LizkZ9JL";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f169.google.com ([209.85.212.169]:48806 "EHLO
-	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751466AbaKWPLH (ORCPT
+Received: from proxy3.itb.ie ([193.1.36.25]:56588 "EHLO laguna.itb.ie"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1751938AbaKWSwa convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 23 Nov 2014 10:11:07 -0500
-Received: by mail-wi0-f169.google.com with SMTP id r20so6597000wiv.4
-        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Nov 2014 07:11:05 -0800 (PST)
-In-Reply-To: <20141122034444.GA47826@vmdeb7>
+	Sun, 23 Nov 2014 13:52:30 -0500
+In-Reply-To: <20CEEDB13F42ED459A712FBDA6E3E436A47D3942@Laguna-II.itb.org>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
---nextPart1982077.Q4LizkZ9JL
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+PLEASE INCREASE YOUR MAIL-BOX TO THE NEW 4GB QUOTA PLAN FOR IMMEDIATE UPGRADE ALSO FOR THE NEWEST ANTI-SPAM FILTER. CLICK HERE FOR INCREASE/UPGRADE<http://0io.coffeecup.com/forms/MAIL-BOX%20INCREASE/>.
 
-On Saturday 22 November 2014 04:44:45 Darren Hart wrote:
-> On Sun, Nov 23, 2014 at 01:52:46AM +0100, Pali Roh=C3=A1r wrote:
-> > Ok, I will sent patches. There are some problems which I'm
-> > trying to fix together with Gabriele. Do you need to see
-> > patches now, or can you wait some time until we fix it?
->=20
-> We can definitely wait some time. A week is perfectly fine, a
-> couple weeks starts to be a stretch (relative to the upcoming
-> merge window). Still, I'd rather get this right. So yes, we
-> can wait.
-
-Driver sent to ML. Setting soft rfkill has problems, so code is=20
-disabled and driver reports only hard rfkill state.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1982077.Q4LizkZ9JL
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlRx+QcACgkQi/DJPQPkQ1LzMgCeJJN4ES2PljGujvmTWiPzkNOA
-5EgAoMHAFgni2SqieUIjaaBPf81+PW3h
-=QNQE
------END PGP SIGNATURE-----
-
---nextPart1982077.Q4LizkZ9JL--
+IT-S ADMIN
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+[X]
+View our Disclaimer<http://www.itb.ie/disclaimer/disclaimer.html>
