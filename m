@@ -1,263 +1,61 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
-Date: Sun, 23 Nov 2014 16:09:19 +0100
-Message-ID: <1416755361-17357-2-git-send-email-pali.rohar@gmail.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: New dell-wireless driver
+Date: Sun, 23 Nov 2014 16:11:03 +0100
+Message-ID: <201411231611.03636@pali>
+References: <201411222345.08384@pali> <201411230152.46619@pali> <20141122034444.GA47826@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart1982077.Q4LizkZ9JL";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f169.google.com ([209.85.212.169]:48806 "EHLO
+	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751466AbaKWPLH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 23 Nov 2014 10:11:07 -0500
+Received: by mail-wi0-f169.google.com with SMTP id r20so6597000wiv.4
+        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Nov 2014 07:11:05 -0800 (PST)
+In-Reply-To: <20141122034444.GA47826@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-This is an ACPI driver for Dell laptops which receive HW switch events.
-It exports rfkill device dell-rbtn which provide correct hard rfkill st=
-ate.
+--nextPart1982077.Q4LizkZ9JL
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-It does not provide support for setting soft rfkill state yet.
+On Saturday 22 November 2014 04:44:45 Darren Hart wrote:
+> On Sun, Nov 23, 2014 at 01:52:46AM +0100, Pali Roh=C3=A1r wrote:
+> > Ok, I will sent patches. There are some problems which I'm
+> > trying to fix together with Gabriele. Do you need to see
+> > patches now, or can you wait some time until we fix it?
+>=20
+> We can definitely wait some time. A week is perfectly fine, a
+> couple weeks starts to be a stretch (relative to the upcoming
+> merge window). Still, I'd rather get this right. So yes, we
+> can wait.
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
----
- drivers/platform/x86/Kconfig     |   13 +++
- drivers/platform/x86/Makefile    |    1 +
- drivers/platform/x86/dell-rbtn.c |  179 ++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 193 insertions(+)
- create mode 100644 drivers/platform/x86/dell-rbtn.c
+Driver sent to ML. Setting soft rfkill has problems, so code is=20
+disabled and driver reports only hard rfkill state.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-index 4dcfb71..5a2ba64 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -137,6 +137,19 @@ config DELL_SMO8800
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-smo8800.
-=20
-+config DELL_RBTN
-+	tristate "Dell Airplane Mode Switch driver"
-+	depends on ACPI
-+	depends on RFKILL
-+	---help---
-+	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
-+	  device on Dell laptops. Sometimes it has names: DELLABCE or DELRBTN=
-=2E
-+	  This driver register rfkill device and receives HW rfkill events
-+	  (when wifi/bluetooth was enabled) and set correct hard rfkill state=
-=2E
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called dell-rbtn.
-+
-=20
- config FUJITSU_LAPTOP
- 	tristate "Fujitsu Laptop Extras"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-index f82232b..b3e54ed 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DELL_LAPTOP)	+=3D dell-laptop.o
- obj-$(CONFIG_DELL_WMI)		+=3D dell-wmi.o
- obj-$(CONFIG_DELL_WMI_AIO)	+=3D dell-wmi-aio.o
- obj-$(CONFIG_DELL_SMO8800)	+=3D dell-smo8800.o
-+obj-$(CONFIG_DELL_RBTN)		+=3D dell-rbtn.o
- obj-$(CONFIG_ACER_WMI)		+=3D acer-wmi.o
- obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
- obj-$(CONFIG_HP_ACCEL)		+=3D hp_accel.o
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
-ll-rbtn.c
-new file mode 100644
-index 0000000..f1f039a
---- /dev/null
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -0,0 +1,179 @@
-+/*
-+    Dell Airplane Mode Switch driver
-+    Copyright (C) 2014  Pali Roh=C3=A1r <pali.rohar@gmail.com>
-+
-+    This program is free software; you can redistribute it and/or modi=
-fy
-+    it under the terms of the GNU General Public License as published =
-by
-+    the Free Software Foundation; either version 2 of the License, or
-+    (at your option) any later version.
-+
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+*/
-+
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/rfkill.h>
-+
-+/*** helper functions ***/
-+
-+static int rbtn_check(struct acpi_device *device)
-+{
-+	acpi_status status;
-+	unsigned long long output;
-+
-+	status =3D acpi_evaluate_integer(device->handle, "CRBT", NULL, &outpu=
-t);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	if (output > 3)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+
-+/*** rfkill ops ***/
-+
-+static void rbtn_query(struct rfkill *rfkill, void *data)
-+{
-+	struct acpi_device *device =3D data;
-+	acpi_status status;
-+	unsigned long long output;
-+
-+	status =3D acpi_evaluate_integer(device->handle, "GRBT", NULL, &outpu=
-t);
-+	if (ACPI_FAILURE(status))
-+		return;
-+
-+	rfkill_set_states(rfkill, !output, !output);
-+}
-+
-+static int rbtn_set_block(void *data, bool blocked)
-+{
-+	/* FIXME: setting soft rfkill cause problems, so disable it for now *=
-/
-+	return -EINVAL;
-+}
-+
-+struct rfkill_ops rbtn_ops =3D {
-+	.query =3D rbtn_query,
-+	.set_block =3D rbtn_set_block,
-+};
-+
-+
-+/*** acpi driver ***/
-+
-+static int rbtn_add(struct acpi_device *device);
-+static int rbtn_remove(struct acpi_device *device);
-+static void rbtn_notify(struct acpi_device *device, u32 event);
-+
-+static const struct acpi_device_id rbtn_ids[] =3D {
-+	{ "DELRBTN", 0 },
-+	{ "DELLABCE", 0 },
-+	{ "", 0 },
-+};
-+
-+static struct acpi_driver rbtn_driver =3D {
-+	.name =3D "dell-rbtn",
-+	.ids =3D rbtn_ids,
-+	.ops =3D {
-+		.add =3D rbtn_add,
-+		.remove =3D rbtn_remove,
-+		.notify =3D rbtn_notify,
-+	},
-+	.owner =3D THIS_MODULE,
-+};
-+
-+
-+/*** rfkill enable/disable ***/
-+
-+static int rbtn_enable(struct acpi_device *device)
-+{
-+	struct rfkill *rfkill =3D device->driver_data;
-+	int ret;
-+
-+	if (rfkill)
-+		return 0;
-+
-+	/* NOTE: rbtn controls all radio devices, not only WLAN
-+	         but rfkill interface does not support "ANY" type
-+	         so "WLAN" type is used
-+	 */
-+	rfkill =3D rfkill_alloc("dell-rbtn", &device->dev, RFKILL_TYPE_WLAN,
-+			      &rbtn_ops, device);
-+	if (!rfkill)
-+		return -ENOMEM;
-+
-+	ret =3D rfkill_register(rfkill);
-+	if (ret) {
-+		rfkill_destroy(rfkill);
-+		return ret;
-+	}
-+
-+	device->driver_data =3D rfkill;
-+	return 0;
-+}
-+
-+static void rbtn_disable(struct acpi_device *device)
-+{
-+	struct rfkill *rfkill =3D device->driver_data;
-+
-+	if (!rfkill)
-+		return;
-+
-+	rfkill_unregister(rfkill);
-+	rfkill_destroy(rfkill);
-+	device->driver_data =3D NULL;
-+}
-+
-+
-+/*** acpi driver functions ***/
-+
-+static int rbtn_add(struct acpi_device *device)
-+{
-+	int ret;
-+
-+	ret =3D rbtn_check(device);
-+	if (ret < 0)
-+		return ret;
-+
-+	return rbtn_enable(device);
-+}
-+
-+static int rbtn_remove(struct acpi_device *device)
-+{
-+	rbtn_disable(device);
-+	return 0;
-+}
-+
-+static void rbtn_notify(struct acpi_device *device, u32 event)
-+{
-+	struct rfkill *rfkill =3D device->driver_data;
-+
-+	if (event =3D=3D 0x80)
-+		rbtn_query(rfkill, device);
-+	else
-+		dev_info(&device->dev, "Received unknown event (0x%x)\n", event);
-+}
-+
-+
-+/*** module functions ***/
-+
-+static int __init rbtn_init(void)
-+{
-+	return acpi_bus_register_driver(&rbtn_driver);
-+}
-+
-+static void __exit rbtn_exit(void)
-+{
-+	acpi_bus_unregister_driver(&rbtn_driver);
-+}
-+
-+module_init(rbtn_init);
-+module_exit(rbtn_exit);
-+
-+MODULE_DEVICE_TABLE(acpi, rbtn_ids);
-+MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
-+MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
-+MODULE_LICENSE("GPL");
---=20
-1.7.9.5
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1982077.Q4LizkZ9JL
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlRx+QcACgkQi/DJPQPkQ1LzMgCeJJN4ES2PljGujvmTWiPzkNOA
+5EgAoMHAFgni2SqieUIjaaBPf81+PW3h
+=QNQE
+-----END PGP SIGNATURE-----
+
+--nextPart1982077.Q4LizkZ9JL--
