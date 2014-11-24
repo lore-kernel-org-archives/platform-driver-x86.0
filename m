@@ -1,32 +1,48 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] asus-nb-wmi: Add another wapf=4 quirk
-Date: Mon, 24 Nov 2014 00:11:55 -0800
-Message-ID: <20141124081154.GA97532@vmdeb7>
-References: <1416824792-4842-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH v2] toshiba_acpi: Fix regression caused by backlight
+ extra check code
+Date: Mon, 24 Nov 2014 00:18:23 -0800
+Message-ID: <20141124081823.GB97532@vmdeb7>
+References: <1416882576-3203-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:49546 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:54982 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750852AbaKYGsu (ORCPT
+	with ESMTP id S1751209AbaKYGzR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Nov 2014 01:48:50 -0500
+	Tue, 25 Nov 2014 01:55:17 -0500
 Content-Disposition: inline
-In-Reply-To: <1416824792-4842-1-git-send-email-hdegoede@redhat.com>
+In-Reply-To: <1416882576-3203-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Nov 24, 2014 at 11:26:32AM +0100, Hans de Goede wrote:
-> Wifi on this laptop does not work unless asus-nb-wmi.wapf=4 is specified on
-> the kerne commandline, add a quirk for this.
+On Mon, Nov 24, 2014 at 07:29:36PM -0700, Azael Avalos wrote:
+> Bug 86521 uncovered that some TOS6208 devices also return
+> non zero values on a write call to the backlight method,
+> thus getting caught and bailed out by the extra check code.
 > 
-> Cc: stable@vger.kernel.org
-> BugLink: https://bugs.launchpad.net/bugs/1173681
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> This patch changes the set_lcd_brightness function to its
+> "original" state by just adapting it to the new function
+> format.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+> Changes since v1:
+> - Simply revert the commit to its original state by just
+>   adapting the code to the new function format
+> 
+> Darren,
+> 
+> This patch simply reverts the commit so the bug can be closed,
+> I'll send a few patches later which will include the change
+> needed to block the backlight on TOS1900 devices for review.
 
-Queued, thank you Hans.
+Queued.
+
+Thanks Azael,
 
 -- 
 Darren Hart
