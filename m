@@ -1,35 +1,65 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: Reported key not released
-Date: Mon, 24 Nov 2014 21:51:47 +0000
-Message-ID: <20141124215147.GB14361@srcf.ucam.org>
-References: <201411231413.30076@pali>
- <20141124200433.GA3459@srcf.ucam.org>
- <201411242158.33119@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+Date: Mon, 24 Nov 2014 23:01:54 +0100
+Message-ID: <201411242301.55012@pali>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <201411242155.48087@pali> <20141124215026.GA14361@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart1984965.SaYcFr637E";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:37334 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751587AbaKXVvu (ORCPT
+Received: from mail-wi0-f171.google.com ([209.85.212.171]:54329 "EHLO
+	mail-wi0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750729AbaKXWB6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Nov 2014 16:51:50 -0500
-Content-Disposition: inline
-In-Reply-To: <201411242158.33119@pali>
+	Mon, 24 Nov 2014 17:01:58 -0500
+In-Reply-To: <20141124215026.GA14361@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
 
-On Mon, Nov 24, 2014 at 09:58:32PM +0100, Pali Roh=E1r wrote:
+--nextPart1984965.SaYcFr637E
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> So kernel should filter i8042 atk key press events which=20
-> represent HW switch?
+On Monday 24 November 2014 22:50:26 Matthew Garrett wrote:
+> On Mon, Nov 24, 2014 at 09:55:47PM +0100, Pali Roh=C3=A1r wrote:
+> > This is complicated. HW switch controls all radio devices
+> > and you do not know which are present in specified running
+> > machine. Also list of devices which HW switch controls can
+> > be edited in BIOS (on some machines). So what to do? We
+> > only know that it controls some devices...
+>=20
+> Typically there'll be a firmware method that provides a mask
+> of the controlled devices. Do you have the ACPI tables for a
+> device that implements this? Registering an rfkill interface
+> that claims to only control wifi but which also kills other
+> devices is likely to confuse userspace - it would probably be
+> better to avoid registering the rfkill interface at all in
+> that case.
 
-Yeah - the firmware is sending an "Update rfkill state" message, not a=20
-real keypress. If you're already listening for those events through a=20
-filter then you should just drop them once you've done the state update=
-=2E
+Currently you cannot control soft state of rfkill. It receive=20
+events when hard state was changed and update hard rfkill status=20
+(if is enabled or disabled).
 
---=20
-Matthew Garrett | mjg59@srcf.ucam.org
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1984965.SaYcFr637E
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlRzqtMACgkQi/DJPQPkQ1LgAwCePI66O6RkHqKOhqVPa8eLju9/
+czcAoLiVkd0bx2TT9xm3/NqqLWV54h58
+=2ZFn
+-----END PGP SIGNATURE-----
+
+--nextPart1984965.SaYcFr637E--
