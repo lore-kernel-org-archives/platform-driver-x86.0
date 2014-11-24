@@ -1,48 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] toshiba_acpi: Fix regression caused by backlight
- extra check code
-Date: Mon, 24 Nov 2014 00:18:23 -0800
-Message-ID: <20141124081823.GB97532@vmdeb7>
-References: <1416882576-3203-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH 1/1] Sony-laptop: Deletion of an unnecessary check before
+ the function call "pci_dev_put"
+Date: Mon, 24 Nov 2014 00:28:20 -0800
+Message-ID: <20141124082820.GC97532@vmdeb7>
+References: <530C5E18.1020800@users.sourceforge.net>
+ <alpine.DEB.2.10.1402251014170.2080@hadrien>
+ <530CD2C4.4050903@users.sourceforge.net>
+ <alpine.DEB.2.10.1402251840450.7035@hadrien>
+ <530CF8FF.8080600@users.sourceforge.net>
+ <alpine.DEB.2.02.1402252117150.2047@localhost6.localdomain6>
+ <530DD06F.4090703@users.sourceforge.net>
+ <alpine.DEB.2.02.1402262129250.2221@localhost6.localdomain6>
+ <5317A59D.4@users.sourceforge.net>
+ <54739D50.5060104@users.sourceforge.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54982 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751209AbaKYGzR (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Nov 2014 01:55:17 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1416882576-3203-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <54739D50.5060104@users.sourceforge.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 24, 2014 at 07:29:36PM -0700, Azael Avalos wrote:
-> Bug 86521 uncovered that some TOS6208 devices also return
-> non zero values on a write call to the backlight method,
-> thus getting caught and bailed out by the extra check code.
+On Mon, Nov 24, 2014 at 10:04:16PM +0100, SF Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 24 Nov 2014 22:00:21 +0100
 > 
-> This patch changes the set_lcd_brightness function to its
-> "original" state by just adapting it to the new function
-> format.
+> The pci_dev_put() function tests whether its argument is NULL
+> and then returns immediately. Thus the test around the call
+> is not needed.
 > 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> ---
-> Changes since v1:
-> - Simply revert the commit to its original state by just
->   adapting the code to the new function format
+> This issue was detected by using the Coccinelle software.
 > 
-> Darren,
-> 
-> This patch simply reverts the commit so the bug can be closed,
-> I'll send a few patches later which will include the change
-> needed to block the backlight on TOS1900 devices for review.
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Queued.
-
-Thanks Azael,
+Thanks Markus, queued.
 
 -- 
 Darren Hart
