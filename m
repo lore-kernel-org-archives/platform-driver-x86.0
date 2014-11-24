@@ -1,34 +1,47 @@
-From: "DuPriest, Barclay" <BarclayDuPriest@rmc.edu>
-Subject: =?windows-1256?Q?FW:_INCREASE_MAIL-BOX_SIZE=FE=FD?=
-Date: Sun, 23 Nov 2014 19:42:26 +0000
-Message-ID: <B1A64180C8F15241B46B8545AA0C0ABD01ED2F00CF@RMCMBX2.rmc.edu>
-References: <B1A64180C8F15241B46B8545AA0C0ABD01ED2ED81B@RMCMBX2.rmc.edu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1256"
-Content-Transfer-Encoding: 8BIT
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] asus-nb-wmi: Add another wapf=4 quirk
+Date: Mon, 24 Nov 2014 11:26:32 +0100
+Message-ID: <1416824792-4842-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from barracuda.rmc.edu ([192.240.93.252]:20860 "EHLO
-	barracuda.rmc.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751958AbaKWUV5 convert rfc822-to-8bit (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:49749 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751062AbaKXK06 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 23 Nov 2014 15:21:57 -0500
-In-Reply-To: <B1A64180C8F15241B46B8545AA0C0ABD01ED2ED81B@RMCMBX2.rmc.edu>
-Content-Language: en-US
+	Mon, 24 Nov 2014 05:26:58 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, stable@vger.kernel.org
 
-PLEASE INCREASE YOUR MAIL-BOX TO THE NEW 4GB QUOTA PLAN FOR IMMEDIATE UPGRADE ALSO FOR THE NEWEST ANTI-SPAM FILTER. CLICK HERE FOR INCREASE/UPGRADE<http://0io.coffeecup.com/forms/MAIL-BOX%20INCREASE/>.
+Wifi on this laptop does not work unless asus-nb-wmi.wapf=4 is specified on
+the kerne commandline, add a quirk for this.
 
-IT-S ADMIN
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
-[X]
+Cc: stable@vger.kernel.org
+BugLink: https://bugs.launchpad.net/bugs/1173681
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index c1a6cd6..abdaed3 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -191,6 +191,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X551CA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X551CA"),
++		},
++		.driver_data = &quirk_asus_wapf4,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X55A",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+2.1.0
