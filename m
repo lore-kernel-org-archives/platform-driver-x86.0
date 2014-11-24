@@ -1,59 +1,52 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: Reported key not released
-Date: Mon, 24 Nov 2014 21:58:32 +0100
-Message-ID: <201411242158.33119@pali>
-References: <201411231413.30076@pali> <20141124200433.GA3459@srcf.ucam.org>
+From: SF Markus Elfring <elfring@users.sourceforge.net>
+Subject: [PATCH 1/1] Sony-laptop: Deletion of an unnecessary check before
+ the function call "pci_dev_put"
+Date: Mon, 24 Nov 2014 22:04:16 +0100
+Message-ID: <54739D50.5060104@users.sourceforge.net>
+References: <5307CAA2.8060406@users.sourceforge.net> <alpine.DEB.2.02.1402212321410.2043@localhost6.localdomain6> <530A086E.8010901@users.sourceforge.net> <alpine.DEB.2.02.1402231635510.1985@localhost6.localdomain6> <530A72AA.3000601@users.sourceforge.net> <alpine.DEB.2.02.1402240658210.2090@localhost6.localdomain6> <530B5FB6.6010207@users.sourceforge.net> <alpine.DEB.2.10.1402241710370.2074@hadrien> <530C5E18.1020800@users.sourceforge.net> <alpine.DEB.2.10.1402251014170.2080@hadrien> <530CD2C4.4050903@users.sourceforge.net> <alpine.DEB.2.10.1402251840450.7035@hadrien> <530CF8FF.8080600@users.sourceforge.net> <alpine.DEB.2.02.1402252117150.2047@localhost6.localdomain6> <530DD06F.4090703@users.sourceforge.net> <alpine.DEB.2.02.1402262129250.2221@localhost6.localdomain6> <5317A59D.4@users.so
+ urceforge.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart236147119.Rxt5re3Wyp";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f47.google.com ([74.125.82.47]:64043 "EHLO
-	mail-wg0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750828AbaKXU6i (ORCPT
+Received: from mout.web.de ([212.227.17.12]:61397 "EHLO mout.web.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750882AbaKXVE1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Nov 2014 15:58:38 -0500
-In-Reply-To: <20141124200433.GA3459@srcf.ucam.org>
+	Mon, 24 Nov 2014 16:04:27 -0500
+In-Reply-To: <5317A59D.4@users.sourceforge.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 
---nextPart236147119.Rxt5re3Wyp
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 24 Nov 2014 22:00:21 +0100
 
-On Monday 24 November 2014 21:04:33 Matthew Garrett wrote:
-> On Sun, Nov 23, 2014 at 02:13:30PM +0100, Pali Roh=C3=A1r wrote:
-> > When I enable or disable this switch it correctly enable or
-> > disable devices (and also hard rfkill status is set
-> > correctly).
->=20
-> If the switch changes the rfkill state, you shouldn't be
-> emitting any presses - the rfkill state change will notify
-> userspace. Consume the event in the filter and don't pass it
-> through.
+The pci_dev_put() function tests whether its argument is NULL
+and then returns immediately. Thus the test around the call
+is not needed.
 
-So kernel should filter i8042 atk key press events which=20
-represent HW switch?
+This issue was detected by using the Coccinelle software.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+---
+ drivers/platform/x86/sony-laptop.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---nextPart236147119.Rxt5re3Wyp
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlRzm/kACgkQi/DJPQPkQ1Li2gCgys+KtohZ3FXSXzMX2gJ+zQ/L
-/mgAn0WTgNxAnkjVXzDps8g+AEd2oJuY
-=6lxb
------END PGP SIGNATURE-----
-
---nextPart236147119.Rxt5re3Wyp--
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 26ad9ff..22b173d 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -3717,8 +3717,7 @@ static void sony_pic_detect_device_type(struct sony_pic_dev *dev)
+ 	dev->event_types = type2_events;
+ 
+ out:
+-	if (pcidev)
+-		pci_dev_put(pcidev);
++	pci_dev_put(pcidev);
+ 
+ 	pr_info("detected Type%d model\n",
+ 		dev->model == SONYPI_DEVICE_TYPE1 ? 1 :
+-- 
+2.1.3
