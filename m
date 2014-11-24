@@ -1,54 +1,38 @@
-From: Anisse Astier <anisse@astier.eu>
-Subject: Re: [PATCH 1/1] platform: x86: Deletion of checks before backlight_device_unregister()
-Date: Mon, 24 Nov 2014 22:28:32 +0100
-Message-ID: <3842367.ojrMxTW2rH@path>
-References: <5307CAA2.8060406@users.sourceforge.net> <5317A59D.4@users.sourceforge.net> <547389A6.9090106@users.sourceforge.net>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch
+ driver
+Date: Mon, 24 Nov 2014 21:50:26 +0000
+Message-ID: <20141124215026.GA14361@srcf.ucam.org>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1416755361-17357-2-git-send-email-pali.rohar@gmail.com>
+ <20141124200905.GB3459@srcf.ucam.org>
+ <201411242155.48087@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <547389A6.9090106@users.sourceforge.net>
+Content-Disposition: inline
+In-Reply-To: <201411242155.48087@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: SF Markus Elfring <elfring@users.sourceforge.net>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Jonathan Woithe <jwoithe@just42.net>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Markus,
+On Mon, Nov 24, 2014 at 09:55:47PM +0100, Pali Roh=E1r wrote:
 
-Le lundi 24 novembre 2014, 20:40:22 SF Markus Elfring a =E9crit :
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 24 Nov 2014 20:30:29 +0100
->=20
-> The backlight_device_unregister() function tests whether its argument=
- is
-> NULL and then returns immediately. Thus the test around the call is n=
-ot
-> needed.
->=20
-> This issue was detected by using the Coccinelle software.
+> This is complicated. HW switch controls all radio devices and you=20
+> do not know which are present in specified running machine. Also=20
+> list of devices which HW switch controls can be edited in BIOS=20
+> (on some machines). So what to do? We only know that it controls=20
+> some devices...
 
-What script was used ? Is it in scripts/coccinelle ?
+Typically there'll be a firmware method that provides a mask of the=20
+controlled devices. Do you have the ACPI tables for a device that=20
+implements this? Registering an rfkill interface that claims to only=20
+control wifi but which also kills other devices is likely to confuse=20
+userspace - it would probably be better to avoid registering the rfkill=
+=20
+interface at all in that case.
 
-
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/ms=
-i-wmi.c
-> index 70222f2..6d2bac0 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -354,8 +354,7 @@ static void __exit msi_wmi_exit(void)
->  		sparse_keymap_free(msi_wmi_input_dev);
->  		input_unregister_device(msi_wmi_input_dev);
->  	}
-> -	if (backlight)
-> -		backlight_device_unregister(backlight);
-> +	backlight_device_unregister(backlight);
->  }
->=20
->  module_init(msi_wmi_init);
-
-=46or this part:
-Acked-by: Anisse Astier <anisse@astier.eu>
-
-Regards,
-
-Anisse
+--=20
+Matthew Garrett | mjg59@srcf.ucam.org
