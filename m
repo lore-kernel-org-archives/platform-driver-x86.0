@@ -1,82 +1,68 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] platform: x86: dell-laptop: Add support for keyboard backlight
-Date: Mon, 1 Dec 2014 18:35:38 +0100
-Message-ID: <201412011835.38401@pali>
-References: <1415967813-7223-1-git-send-email-pali.rohar@gmail.com> <1416754245-15550-1-git-send-email-pali.rohar@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch
+ driver
+Date: Tue, 25 Nov 2014 13:58:06 -0800
+Message-ID: <20141125215804.GC116670@vmdeb7>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1416755361-17357-2-git-send-email-pali.rohar@gmail.com>
+ <20141128113328.GS1304@lahna.fi.intel.com>
+ <201411281245.55747@pali>
+ <20141128115457.GT1304@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart16878661.sfoixWO2OE";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:58298 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753015AbaLARfl (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:45445 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750860AbaLBGkV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 1 Dec 2014 12:35:41 -0500
-In-Reply-To: <1416754245-15550-1-git-send-email-pali.rohar@gmail.com>
+	Tue, 2 Dec 2014 01:40:21 -0500
+Content-Disposition: inline
+In-Reply-To: <20141128115457.GT1304@lahna.fi.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
 
---nextPart16878661.sfoixWO2OE
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sunday 23 November 2014 15:50:45 Pali Roh=C3=A1r wrote:
-> This patch adds support for configuring keyboard backlight
-> settings on supported Dell laptops. It exports kernel leds
-> interface and uses Dell SMBIOS tokens or keyboard class
-> interface.
+On Fri, Nov 28, 2014 at 01:54:57PM +0200, Mika Westerberg wrote:
+> On Fri, Nov 28, 2014 at 12:45:55PM +0100, Pali Roh=E1r wrote:
+> > Hello,
+> >=20
+> > I will fix all those style problems and add some comments.
+> >=20
+> > On Friday 28 November 2014 12:33:28 Mika Westerberg wrote:
+> > > > +	if (ACPI_FAILURE(status))
+> > > > +		return;
+> > > > +
+> > > > +	rfkill_set_states(rfkill, !output, !output);
+> > >=20
+> > > You can also write it like:
+> > >=20
+> > > 	if (ACPI_SUCCESS(status))
+> > > 		rfkill_set_states(rfkill, !output, !output);
+> > >=20
+> > > which looks better to me at least.
+> > >=20
+> >=20
+> > In whole module I'm using this style:
+> >=20
+> > f1();
+> > if (f1_failed)
+> > 	return;
+> > f2()
+> > if (f2_failed)
+> > 	return;
+> >=20
+> > So I would like not to change it for one function.
 >=20
-> With this patch it is possible to set:
-> * keyboard backlight level
-> * timeout after which will be backlight automatically turned
-> off * input activity triggers (keyboard, touchpad, mouse)
-> which enable backlight * ambient light settings
->=20
-> Settings are exported via sysfs:
-> /sys/class/leds/dell::kbd_backlight/
->=20
-> Code is based on newly released documentation by Dell in
-> libsmbios project.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> ---
-> Changes since v1:
-> * returns also -EIO/-ENXIO (with helper function
-> dell_smi_error) * simplify code to have less levels of
-> indentation
-> * style fixes
-> * add some comments
-> ---
->  drivers/platform/x86/dell-laptop.c | 1023
-> +++++++++++++++++++++++++++++++++++- 1 file changed, 1019
-> insertions(+), 4 deletions(-)
->=20
+> Fair enough.
 
-Darren, Matthew: can you review this v2 code?
+And, in my opinion, it is better to test for errors than to test for su=
+ccess.
+This keeps the main logic out of a nested block. Not so critical here, =
+but a
+good rule of thumb.
 
-I would like to see keyboard backlight support in 3.19 kernel.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart16878661.sfoixWO2OE
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlR8puoACgkQi/DJPQPkQ1I/kgCgmwAQWEGR+/Ex32Tqb4n+2GKZ
-WnMAmgO1HwoHEEzOwTzyLp+AWoOpXDbm
-=ydzw
------END PGP SIGNATURE-----
-
---nextPart16878661.sfoixWO2OE--
+--=20
+Darren Hart
+Intel Open Source Technology Center
