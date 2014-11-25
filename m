@@ -1,36 +1,72 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba-acpi: Add missing ID (TOS6207)
-Date: Tue, 25 Nov 2014 14:50:53 -0800
-Message-ID: <20141125225053.GE116670@vmdeb7>
-References: <1415574714-3847-1-git-send-email-linux@rainbow-software.org>
+Subject: Re: [PATCH] platform: x86: hp_wireless: Inform the user if
+ hp_wireless_input_setup()/add() fails
+Date: Tue, 25 Nov 2014 14:57:19 -0800
+Message-ID: <20141125225719.GA32102@vmdeb7>
+References: <1417212867-25187-1-git-send-email-giedriuswork@gmail.com>
+ <20141128231555.GA31468@pd.tnic>
+ <547909CF.8060907@gmail.com>
+ <20141129000417.GG30997@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54374 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:54888 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752909AbaLBHlR (ORCPT
+	with ESMTP id S1750869AbaLBHrr (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Dec 2014 02:41:17 -0500
+	Tue, 2 Dec 2014 02:47:47 -0500
 Content-Disposition: inline
-In-Reply-To: <1415574714-3847-1-git-send-email-linux@rainbow-software.org>
+In-Reply-To: <20141129000417.GG30997@pd.tnic>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ondrej Zary <linux@rainbow-software.org>
-Cc: platform-driver-x86@vger.kernel.org, Azael Avalos <coproscefalo@gmail.com>, Seth Forshee <seth.forshee@canonical.com>, Kernel development list <linux-kernel@vger.kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Giedrius Statkevicius <giedriuswork@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Hung <alex.hung@canonical.com>
 
-On Mon, Nov 10, 2014 at 12:11:54AM +0100, Ondrej Zary wrote:
-> toshiba-acpi was always missing TOS6207 ID so it did not load automatically
-> on some laptops (such as Portege R100). But it worked fine if loaded manually.
-> Commit 135740de7764 ("toshiba_acpi: Convert to use acpi_driver") broke that
-> and the driver does not work even when loaded manually since then.
-> 
-> Add TOS6207 ID to fix it.
-> 
-> Tested on Toshiba Portege R100.
-> 
-> Signed-off-by: Ondrej Zary <linux@rainbow-software.org>
+On Sat, Nov 29, 2014 at 01:04:17AM +0100, Borislav Petkov wrote:
+> On Sat, Nov 29, 2014 at 01:48:31AM +0200, Giedrius Statkevicius wrote:
+> > On 2014.11.29 01:15, Borislav Petkov wrote:
+> > > On Sat, Nov 29, 2014 at 12:14:27AM +0200, Giedrius Statkevicius wrote:
+> > >> In hpwl_add() there is a unused variable err to which we assign the
+> > >> result of hp_wireless_input_setup() but we don't do anything depending
+> > >> on the result so print out a message that informs the user if add()
+> > >> (hp_wireless_input_setup()) fails since acpi_device_probe() doesn't
+> > >> print anything in this case.
+> > >>
+> > >> Signed-off-by: Giedrius Statkevicius <giedriuswork@gmail.com>
+> > >> ---
+> > >>  drivers/platform/x86/hp-wireless.c | 3 +++
+> > >>  1 file changed, 3 insertions(+)
+> > >>
+> > >> diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
+> > >> index 415348f..4e4cc8b 100644
+> > >> --- a/drivers/platform/x86/hp-wireless.c
+> > >> +++ b/drivers/platform/x86/hp-wireless.c
+> > >> @@ -85,6 +85,9 @@ static int hpwl_add(struct acpi_device *device)
+> > >>  	int err;
+> > >>  
+> > >>  	err = hp_wireless_input_setup();
+> > >> +	if (err)
+> > >> +		pr_err("Failed to setup hp wireless hotkeys\n");
+> > >> +
+> > > 
+> > > I don't think there's need for that. Just do:
+> > > 
+> > > 	return hp_wireless_input_setup();
+> > > 
+> > > and drop err completely.
+> > > 
+> > > The upper layer which calls the ->add() method should propagate the
+> > > error properly.
 
-Queued, thanks!
+This is the key. If the caller already prints a message, we don't need to. If
+nothing is displayed and the user would be left confused, then an appropriate
+message should be displayed.
+
+If the upper level already handles this, then we can just drop the unused
+variable.
+
+Have a look and decide which is the most appropriate. And thanks for preparing a
+fix.
 
 -- 
 Darren Hart
