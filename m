@@ -1,43 +1,42 @@
-From: Dmitry Tunin <hanipouspilot@gmail.com>
-Subject: [PATCH] asus-nb-wmi: X200MA add wapf=4 quirk
-Date: Thu, 27 Nov 2014 20:05:23 +0300
-Message-ID: <547759D3.3010906@gmail.com>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH 1/1] platform: x86: Deletion of checks before
+ backlight_device_unregister()
+Date: Thu, 27 Nov 2014 19:13:10 +0100 (CET)
+Message-ID: <alpine.DEB.2.10.1411271908590.2571@hadrien>
+References: <5307CAA2.8060406@users.sourceforge.net> <5317A59D.4@users.sourceforge.net> <547389A6.9090106@users.sourceforge.net> <3842367.ojrMxTW2rH@path> <5473AD39.9010309@users.sourceforge.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5473AD39.9010309@users.sourceforge.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+To: SF Markus Elfring <elfring@users.sourceforge.net>
+Cc: Anisse Astier <anisse@astier.eu>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Jonathan Woithe <jwoithe@just42.net>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Wifi led does not follow wireless status, add quirk.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
----
-  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
-  1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index c1a6cd6..9ecf466 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -101,6 +101,15 @@ static const struct dmi_system_id asus_quirks[] = {
-  	},
-  	{
-  		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. X200MA",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
-+		},
-+		.driver_data = &quirk_asus_wapf4,
-+	},
-+	{
-+		.callback = dmi_matched,
-  		.ident = "ASUSTeK COMPUTER INC. X401U",
-  		.matches = {
-  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--- 
-1.9.1
+On Mon, 24 Nov 2014, SF Markus Elfring wrote:
+
+> >> This issue was detected by using the Coccinelle software.
+> >
+> > What script was used ?
+>
+> A semantic patch approach which I published on the mailing lists in March
+> is in action on my software development system for a while.
+>
+>
+> > Is it in scripts/coccinelle ?
+>
+> Not yet.
+>
+> I hope that the involved update suggestions got sufficient positive feedback
+> to integrate five scripts there.
+
+The current scripts are very complicated, involving the interaction
+between multiple scripts and a database, and I think they are not very
+suitable for make coccicheck.  Also, the idea of removing the null checks
+is not appropriate in all contexts.  Perhaps it could be possible to add
+a script to the Linux kernel that handles a number of common cases for
+which removing the null test is widely considered to be desirable.
+
+julia
