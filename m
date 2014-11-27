@@ -1,56 +1,114 @@
-From: overshoots58342@gmail.com
-Subject: Fix Penguin Penalty 17th October2014 ( mail-archive.com )
-Date: Tue, 25 Nov 2014 22:40:00 +0530
-Message-ID: <5474b7e6.6add440a.1459.4fc7@mx.google.com>
-Reply-To: julia.kites@yahoo.com
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: New dell-wireless driver
+Date: Thu, 27 Nov 2014 12:27:01 +0800
+Message-ID: <CAJ=jquYg88aoTW1RA7gRVmA8FQOJ7zU6DC2-sL9KAfzLT4afkA@mail.gmail.com>
+References: <201411222345.08384@pali>
+	<20141122020906.GB24951@vmdeb7>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pd0-f196.google.com ([209.85.192.196]:37667 "EHLO pdew10"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751110AbaKYRKC (ORCPT
+Received: from mail-qc0-f180.google.com ([209.85.216.180]:60237 "EHLO
+	mail-qc0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753528AbaK0E1C convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 25 Nov 2014 12:10:02 -0500
-Received: by pdew10 with SMTP id w10so392845pde.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Nov 2014 09:10:02 -0800 (PST)
-Received: from localhost.localdomain ([124.253.10.7])
-        by mx.google.com with ESMTPSA id qd10sm1885136pbc.86.2014.11.25.09.09.56
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLSv1 cipher=RC4-SHA bits=128/128);
-        Tue, 25 Nov 2014 09:09:58 -0800 (PST)
+	Wed, 26 Nov 2014 23:27:02 -0500
+Received: by mail-qc0-f180.google.com with SMTP id i8so3120124qcq.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Nov 2014 20:27:01 -0800 (PST)
+In-Reply-To: <20141122020906.GB24951@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-Dear Sir
+On Sat, Nov 22, 2014 at 10:09 AM, Darren Hart <dvhart@infradead.org> wr=
+ote:
+> On Sat, Nov 22, 2014 at 11:45:08PM +0100, Pali Roh=C3=A1r wrote:
+>> Hello,
+>>
+>> I saw dell-wireless driver on platform-driver-x86 mailinglist [1]
+>> which using DELLABCE acpi device and I do not like some parts in
+>> this driver.
+>
+> Hi Pali,
+>
+> Thanks for reviewing and speaking up :)
+>
+>>
+>> First is that this driver export rfkill event as keypress which
+>> is also reported to userspace by keyboard controller. So then
+>> userspace receive two rfkill keypresses.
+>
+> Alex, can you comment? Does the keyboard controller also see this eve=
+nt?
+>
+Hi Darrent and Pali,
 
-Did your website get hit by Google Penguin update on October 17th 2014?=
- What basically is Google Penguin Update? It is actually a code name fo=
-r Google algorithm which aims at decreasing your websites search engine=
- rankings that violate Google=92s guidelines by using black hat SEO tec=
-hniques to rank your webpage by giving number of spammy links to the pa=
-ge.
-=20
-We are one of those few SEO companies that can help you avoid penalties=
- from Google Updates like Penguin and Panda. Our clients have survived =
-all the previous and present updates with ease. They have never been hi=
-t because we use 100% white hat SEO techniques to rank Webpages.  Simpl=
-e thing that we do to keep websites away from any Penguin or Panda pena=
-lties is follow Google guidelines and we give Google users the best ans=
-wers to their queries.
+The internal KBC needs not to send any events in addition to the ACPI
+event Notify(RBTN, 0x80) according to the information I received from
+Dell. I did not received the same event on the Dell systems I tested.
 
-If you are looking to increase the quality of your websites and to get =
-more targeted traffic or save your websites from these Google penalties=
- email us back with your interest.=20
+Can I have more detailed information of the system and I can ask Dell
+for clarifications.
 
-We will be glad to serve you and help you grow your business.
+>>
+>> Second is that DELLABCE acpi device can also control "soft"
+>> rfkill status and this driver does not enable it because it use
+>> input class instead rfkill.
 
-Regards
+Yes DELLABCE could have a rkfkill device that providing soft-block
+interface; however, I did not see the benefit of introducing the extra
+interfaces when one is sufficient.
 
-Julia kites
+Prior to Windows 8, each OEM has wireless interfaces of its own.
+Microsoft introduces standard wireless interfaces and OEM starts to
+drop OEM's interfaces.
 
-SEO Manager ( TOB )
-B7 Green Avenue, Amritsar 143001 Punjab
-____________________________
-NO CLICK in the subject to STOP EMAILS
+I  used the same philosophy and remove rfkill devices if they do not
+add extra benefits, especially inconsistency between rfkill devices
+can and does causes problems according to past experiences.
+
+>>
+>> Anyway I have unfinished my version of DELLABCE acpi driver which
+>> will use rfkill interface and plus allow to use hw switch events
+>> in dell-laptop.ko driver.
+>
+> Is this something that could be applied incrementally fo Alex's drive=
+r, or is it
+> something we'd be best starting over with?
+>
+> We have some precedent for input drivers (there is one nearly identic=
+al to the
+> dell driver for hp, also by Alex). Using rfkill does seem like the be=
+tter
+> approach without digging into it.
+>
+>>
+>> Currently dell-laptop.ko driver is using i8042 hook function for
+>> detecting hw switch key press event. It is needed to detect if
+>> rfkill state was changed or not.
+>>
+>> My prepared patches for dell-laptop.ko allows to use acpi event
+>> from DELLABCE driver, so i8042 hook function can be dropped.
+>> Really it is not good idea to pass every PS/2 data from both
+>> keyboard, touchpad and trackpoint to dell-laptop driver and if
+>> there is alternative (DELLABCE) it is better to use it.
+>>
+>> But now I would like to hear what do you think about it.
+>>
+>> Because only one kernel driver can attach to DELLABCE acpi
+>> device, I cannot use new dell-wireless driver. And I think only
+>> one driver can hit mainline kernel.
+>
+> I would like to see your patch, it sounds like it might be a better o=
+ption.
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+
+
+--=20
+Cheers,
+Alex Hung
