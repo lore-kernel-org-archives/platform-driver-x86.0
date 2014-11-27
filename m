@@ -1,49 +1,43 @@
 From: Dmitry Tunin <hanipouspilot@gmail.com>
-Subject: [PATCH] ideapad_laptop: Lenovo G50-30 fix rfkill always reports wireless
- blocked
-Date: Thu, 27 Nov 2014 19:39:58 +0300
-Message-ID: <547753DE.9050809@gmail.com>
+Subject: [PATCH] asus-nb-wmi: X200MA add wapf=4 quirk
+Date: Thu, 27 Nov 2014 20:05:23 +0300
+Message-ID: <547759D3.3010906@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f53.google.com ([209.85.215.53]:46326 "EHLO
-	mail-la0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751077AbaK0QkC (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 27 Nov 2014 11:40:02 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: stable@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Rfkill always shows wireless blocked unless ideapad_laptop is blacklisted.
-Add a quirk.
+Wifi led does not follow wireless status, add quirk.
 
 Cc: stable@vger.kernel.org
-BugLink:https://bugs.launchpad.net/bugs/1397021
 Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
 ---
-  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
-  1 file changed, 7 insertions(+)
+  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
+  1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index ed494f3..9958de6 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -844,6 +844,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
-  			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
-  		},
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index c1a6cd6..9ecf466 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -101,6 +101,15 @@ static const struct dmi_system_id asus_quirks[] = {
   	},
-+	{
-+		.ident = "Lenovo G50-30",
+  	{
+  		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X200MA",
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
 +		},
++		.driver_data = &quirk_asus_wapf4,
 +	},
-  	{}
-  };
-  
++	{
++		.callback = dmi_matched,
+  		.ident = "ASUSTeK COMPUTER INC. X401U",
+  		.matches = {
+  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 -- 
 1.9.1
