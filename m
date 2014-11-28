@@ -1,64 +1,48 @@
 From: Peter Feuerer <peter@piie.net>
-Subject: [RESEND PATCH v5 4/5] acerhdf: added critical trip point
-Date: Fri, 28 Nov 2014 15:20:51 +0100
-Message-ID: <1417184452-11884-5-git-send-email-peter@piie.net>
+Subject: [RESEND PATCH v5 0/5] acerhdf: adding new models, appropriate governor and minor clean up
+Date: Fri, 28 Nov 2014 15:20:47 +0100
+Message-ID: <1417184452-11884-1-git-send-email-peter@piie.net>
 References: <1398561815-22033-1-git-send-email-peter@piie.net>
- <1417184452-11884-1-git-send-email-peter@piie.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417184452-11884-1-git-send-email-peter@piie.net>
+In-Reply-To: <1398561815-22033-1-git-send-email-peter@piie.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: LKML <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: Peter Feuerer <peter@piie.net>, Andrew Morton <akpm@linux-foundation.org>, Andreas Mohr <andi@lisas.de>, Borislav Petkov <bp@suse.de>, Javi Merino <javi.merino@arm.com>
+Cc: Peter Feuerer <peter@piie.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-added critical trip point which represents the temperature limit.
-Added return -EINVAL in case wrong trip point is provided.
+Hi Darren,
 
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Mohr <andi@lisas.de>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Javi Merino <javi.merino@arm.com>
-Signed-off-by: Peter Feuerer <peter@piie.net>
----
- drivers/platform/x86/acerhdf.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+please apply this series of patches.
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 7fe7dbf..91b16c8 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -443,6 +443,10 @@ static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
- {
- 	if (trip == 0)
- 		*type = THERMAL_TRIP_ACTIVE;
-+	else if (trip == 1)
-+		*type = THERMAL_TRIP_CRITICAL;
-+	else
-+		return -EINVAL;
- 
- 	return 0;
- }
-@@ -463,6 +467,10 @@ static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
- {
- 	if (trip == 0)
- 		*temp = fanon;
-+	else if (trip == 1)
-+		*temp = ACERHDF_TEMP_CRIT;
-+	else
-+		return -EINVAL;
- 
- 	return 0;
- }
-@@ -713,7 +721,7 @@ static int acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
--	thz_dev = thermal_zone_device_register("acerhdf", 1, 0, NULL,
-+	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
- 					      &acerhdf_dev_ops,
- 					      &acerhdf_zone_params, 0,
- 					      (kernelmode) ? interval*1000 : 0);
+It is intended to:
+
+  * Introduce "manual mode" support (Patch 1 & 2), which is needed to control
+    the fan of a few new models.
+
+  * Add an appropriate thermal governor (Patch 3).  Manipulating and
+    fiddling around with the step-wise governor has been a very fragile thing
+    in the past and as it broke again, I used the opportunity to add a two
+    point thermal governor which implements the actual fan handling required by
+    acerhdf and puts from my point of view things straight.
+
+  * Do some minor clean up like:
+      - adding second trip point for critical temperature (Patch 4)
+      - removing _t suffix from struct which isn't typedef and replace unsigned
+        char by u8 (Patch 5)
+
+Thanks and kind regards,
+peter 
+
+Peter Feuerer (5):
+  acerhdf: Adding support for "manual mode"
+  acerhdf: Adding support for new models
+  acerhdf: Use bang-bang thermal governor
+  acerhdf: added critical trip point
+  acerhdf: minor clean up
+
+ drivers/platform/x86/Kconfig   |   3 +-
+ drivers/platform/x86/acerhdf.c | 265 ++++++++++++++++++++++++++---------------
+ 2 files changed, 172 insertions(+), 96 deletions(-)
+
 -- 
 2.1.3
