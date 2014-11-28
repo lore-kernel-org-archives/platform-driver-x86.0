@@ -1,89 +1,74 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch
- driver
-Date: Fri, 28 Nov 2014 13:54:57 +0200
-Message-ID: <20141128115457.GT1304@lahna.fi.intel.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1416755361-17357-2-git-send-email-pali.rohar@gmail.com>
- <20141128113328.GS1304@lahna.fi.intel.com>
- <201411281245.55747@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Peter Feuerer <peter@piie.net>
+Subject: [RESEND PATCH v5 5/5] acerhdf: minor clean up
+Date: Fri, 28 Nov 2014 15:20:52 +0100
+Message-ID: <1417184452-11884-6-git-send-email-peter@piie.net>
+References: <1398561815-22033-1-git-send-email-peter@piie.net>
+ <1417184452-11884-1-git-send-email-peter@piie.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201411281245.55747@pali>
+In-Reply-To: <1417184452-11884-1-git-send-email-peter@piie.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
+To: LKML <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Peter Feuerer <peter@piie.net>, Andrew Morton <akpm@linux-foundation.org>, Andreas Mohr <andi@lisas.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 28, 2014 at 12:45:55PM +0100, Pali Roh=E1r wrote:
-> Hello,
->=20
-> I will fix all those style problems and add some comments.
->=20
-> On Friday 28 November 2014 12:33:28 Mika Westerberg wrote:
-> > > +	if (ACPI_FAILURE(status))
-> > > +		return;
-> > > +
-> > > +	rfkill_set_states(rfkill, !output, !output);
-> >=20
-> > You can also write it like:
-> >=20
-> > 	if (ACPI_SUCCESS(status))
-> > 		rfkill_set_states(rfkill, !output, !output);
-> >=20
-> > which looks better to me at least.
-> >=20
->=20
-> In whole module I'm using this style:
->=20
-> f1();
-> if (f1_failed)
-> 	return;
-> f2()
-> if (f2_failed)
-> 	return;
->=20
-> So I would like not to change it for one function.
+  * renamed bios_settings_t to bios_settings, as it is no typedef
+  * replaced "unsigned char" by u8 in bios_settings struct for better
+    readability.
 
-=46air enough.
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andreas Mohr <andi@lisas.de>
+Acked-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Peter Feuerer <peter@piie.net>
+---
+ drivers/platform/x86/acerhdf.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> > > +}
-> > > +
-> > > +static int rbtn_set_block(void *data, bool blocked)
-> > > +{
-> > > +	/* FIXME: setting soft rfkill cause problems, so disable
-> > > it for now */ +	return -EINVAL;
-> > > +}
-> > > +
-> > > +struct rfkill_ops rbtn_ops =3D {
-> >=20
-> > static? const?
-> >=20
->=20
-> Yes, static const should be used.
->=20
-> >=20
-> > > +/*** module functions ***/
-> > > +
-> > > +static int __init rbtn_init(void)
-> > > +{
-> > > +	return acpi_bus_register_driver(&rbtn_driver);
-> > > +}
-> > > +
-> > > +static void __exit rbtn_exit(void)
-> > > +{
-> > > +	acpi_bus_unregister_driver(&rbtn_driver);
-> > > +}
-> > > +
-> > > +module_init(rbtn_init);
-> > > +module_exit(rbtn_exit);
-> >=20
-> > module_acpi_driver()?
-> >=20
->=20
-> No, see PATCH 2/3.
-
-Yeah, I noticed it after I wrote the comment.
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 91b16c8..c07623c 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -131,18 +131,18 @@ static const struct manualcmd mcmd = {
+ };
+ 
+ /* BIOS settings */
+-struct bios_settings_t {
++struct bios_settings {
+ 	const char *vendor;
+ 	const char *product;
+ 	const char *version;
+-	unsigned char fanreg;
+-	unsigned char tempreg;
++	u8 fanreg;
++	u8 tempreg;
+ 	struct fancmd cmd;
+ 	int mcmd_enable;
+ };
+ 
+ /* Register addresses and values for different BIOS versions */
+-static const struct bios_settings_t bios_tbl[] = {
++static const struct bios_settings bios_tbl[] = {
+ 	/* AOA110 */
+ 	{"Acer", "AOA110", "v0.3109", 0x55, 0x58, {0x1f, 0x00}, 0},
+ 	{"Acer", "AOA110", "v0.3114", 0x55, 0x58, {0x1f, 0x00}, 0},
+@@ -256,7 +256,7 @@ static const struct bios_settings_t bios_tbl[] = {
+ 	{"", "", "", 0, 0, {0, 0}, 0}
+ };
+ 
+-static const struct bios_settings_t *bios_cfg __read_mostly;
++static const struct bios_settings *bios_cfg __read_mostly;
+ 
+ /*
+  * this struct is used to instruct thermal layer to use bang_bang instead of
+@@ -619,7 +619,7 @@ static int str_starts_with(const char *str, const char *start)
+ static int acerhdf_check_hardware(void)
+ {
+ 	char const *vendor, *version, *product;
+-	const struct bios_settings_t *bt = NULL;
++	const struct bios_settings *bt = NULL;
+ 
+ 	/* get BIOS data */
+ 	vendor  = dmi_get_system_info(DMI_SYS_VENDOR);
+-- 
+2.1.3
