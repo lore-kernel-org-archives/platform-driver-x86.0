@@ -1,30 +1,40 @@
 From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Thu,  4 Dec 2014 00:16:20 +0100
-Message-ID: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f51.google.com ([74.125.82.51]:52077 "EHLO
-	mail-wg0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750840AbaLCXQv (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Dec 2014 18:16:51 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH 1/3] dell-wmi: Use appropriate keycode for radio state changes
+Date: Thu,  4 Dec 2014 00:16:21 +0100
+Message-ID: <1417648583-9336-2-git-send-email-gabriele.mzt@gmail.com>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: mjg59@srcf.ucam.org, dvhart@infradead.org
 Cc: pavel@ucw.cz, pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Currently dell-wmi reports keypresses for WMI events that are
-notifications of changes performed by the BIOS.
-This patch series make sure that no keypresses are sent for those
-events so that nothing is done from userspace. 
+The WMI events associated to KEY_WLAN are for all the radio devices
+available. Use KEY_RFKILL instead since it's more appropriate.
 
-Gabriele Mazzotta (3):
-  dell-wmi: Use appropriate keycode for radio state changes
-  dell-wmi: Don't report keypresses for radio state changes
-  dell-wmi: Don't report keypresses on keybord illumination change
+Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+---
+ drivers/platform/x86/dell-wmi.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
- drivers/platform/x86/dell-wmi.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 25721bf..1e31fab 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -65,10 +65,9 @@ static const struct key_entry dell_wmi_legacy_keymap[] __initconst = {
+ 	/* Battery health status button */
+ 	{ KE_KEY, 0xe007, { KEY_BATTERY } },
+ 
+-	/* This is actually for all radios. Although physically a
+-	 * switch, the notification does not provide an indication of
+-	 * state and so it should be reported as a key */
+-	{ KE_KEY, 0xe008, { KEY_WLAN } },
++	/* Although physically a switch, the notification does not provide
++	 * an indication of state and so it should be reported as a key */
++	{ KE_KEY, 0xe008, { KEY_RFKILL } },
+ 
+ 	/* The next device is at offset 6, the active devices are at
+ 	   offset 8 and the attached devices at offset 10 */
 -- 
 2.1.3
