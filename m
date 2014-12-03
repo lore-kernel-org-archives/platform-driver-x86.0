@@ -1,182 +1,164 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: New dell-wireless driver
-Date: Wed, 3 Dec 2014 00:50:31 -0800
-Message-ID: <20141203085030.GB52608@vmdeb7>
-References: <201411222345.08384@pali>
- <CAJ=jquZqWJhh2eJu4W2xBP-E0mSKHmiTjiguvRLOZRH_5NeS_A@mail.gmail.com>
- <2045136.GvMxoAg5xi@xps13>
- <2647213.YkxFWdbPIe@xps13>
+Subject: Re: [RESEND PATCH v5 3/5] acerhdf: Use bang-bang thermal governor
+Date: Wed, 3 Dec 2014 01:04:36 -0800
+Message-ID: <20141203090436.GC52608@vmdeb7>
+References: <1398561815-22033-1-git-send-email-peter@piie.net>
+ <1417184452-11884-1-git-send-email-peter@piie.net>
+ <1417184452-11884-4-git-send-email-peter@piie.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:55624 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750933AbaLDFmO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 00:42:14 -0500
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2647213.YkxFWdbPIe@xps13>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <1417184452-11884-4-git-send-email-peter@piie.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Feuerer <peter@piie.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Zhang Rui <rui.zhang@intel.com>, Andreas Mohr <andi@lisas.de>, Javi Merino <javi.merino@arm.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 02, 2014 at 04:08:58PM +0100, Gabriele Mazzotta wrote:
-> On Tuesday 02 December 2014 12:06:45 Gabriele Mazzotta wrote:
-> > On Thursday 27 November 2014 12:41:19 Alex Hung wrote:
-> > > On Sun, Nov 23, 2014 at 8:52 AM, Pali Roh=E1r <pali.rohar@gmail.c=
-om> wrote:
-> > > > On Saturday 22 November 2014 03:09:06 Darren Hart wrote:
-> > > >> On Sat, Nov 22, 2014 at 11:45:08PM +0100, Pali Roh=E1r wrote:
-> > > >> > Hello,
-> > > >> >=20
-> > > >> > I saw dell-wireless driver on platform-driver-x86
-> > > >> > mailinglist [1] which using DELLABCE acpi device and I do
-> > > >> > not like some parts in this driver.
-> > > >>=20
-> > > >> Hi Pali,
-> > > >>=20
-> > > >> Thanks for reviewing and speaking up :)
-> > > >>=20
-> > > >> > First is that this driver export rfkill event as keypress
-> > > >> > which is also reported to userspace by keyboard controller.
-> > > >> > So then userspace receive two rfkill keypresses.
-> > > >>=20
-> > > >> Alex, can you comment? Does the keyboard controller also see
-> > > >> this event?
-> > > >=20
-> > > > Yes on my laptop E6440. But it looks like it does not have to b=
-e
-> > > > truth for all laptops...
-> > > >=20
-> > > >> > Second is that DELLABCE acpi device can also control "soft"
-> > > >> > rfkill status and this driver does not enable it because it
-> > > >> > use input class instead rfkill.
-> > > >> >=20
-> > > >> > Anyway I have unfinished my version of DELLABCE acpi driver
-> > > >> > which will use rfkill interface and plus allow to use hw
-> > > >> > switch events in dell-laptop.ko driver.
-> > > >>=20
-> > > >> Is this something that could be applied incrementally fo
-> > > >> Alex's driver, or is it something we'd be best starting over
-> > > >> with?
-> > > >=20
-> > > > Alex's driver is different. It registers input device. My
-> > > > approach register rfkill device plus add exported functions for
-> > > > registering atomic notifier (so other drivers like dell-laptop
-> > > > can use events too).
-> > > >=20
-> > > > First we need to know if input driver is really needed. And if
-> > > > yes determinate in which conditions and for which laptops. Real=
-ly
-> > > > duplicate key press are not good.
-> > > >=20
-> > > > In case when input driver is really needed I can just copy
-> > > > relevant input code and add it into my driver (in case when my
-> > > > driver will be used instead Alex's). This could be no problem,
-> > > > because my and Alex code doing different things and so could
-> > > > coexist in one driver (but cannot be split into more because on=
-ly
-> > > > one acpi driver can handle one acpi device).
-> > > >=20
-> > > >> We have some precedent for input drivers (there is one nearly
-> > > >> identical to the dell driver for hp, also by Alex). Using
-> > > >> rfkill does seem like the better approach without digging
-> > > >> into it.
-> > > >=20
-> > > > It is different from HP. Dell ACPI device on some machines can
-> > > > also control wifi switches (it can enable/disable it!).
-> > > >=20
-> > > > So it make sense to use rfkill. But on some machines that ACPI
-> > > > device can only receive events that HW switch was switched, but
-> > > > it is possible to ask for state (if is enabled or not). HP driv=
-er
-> > > > just report switch was changed, but does not report if is enabl=
-ed
-> > > > or disabled.
-> > > >=20
-> > > > So I think HP is not identical to this Dell one.
-> > >=20
-> > > I can provide a little more information on HP and Dell's design.
-> > >=20
-> > > Dell's design is more complex than HP's indeed.
-> > >=20
-> > > HP BIOS will send ACPI notification when hotkey is pressed;
-> > > especially HP uses buttons instead of hardware slider on their
-> > > systems.
-> > >=20
-> > > Dell has two design
-> > > 1. Button similar to HP. My patch targeted this type.
-> > > 2. Hardware slider. This handled will handled by Wireless device
-> > > drivers (ex. WLAN, BT and so on) by their rfkill hard-block. Ther=
-e
-> > > is
-> > > no need to handle this case.
-> > >=20
-> > > This can be distinguished by calling CRBT. I checked Pali's patch
-> > > and
-> > > it was used but the two types are not distinguished. You may want=
- to
-> > > use it as hard-block can be out-of-sync with soft-block on corner
-> > > cases for Type 2.
-> >=20
-> > Hi,
-> >=20
-> > my laptop (XPS13 9333) supports both the switch types taken into
-> > account in your patch. I can switch between them by calling a metho=
-d
-> > named ARBT.
-> >=20
-> > I can see that in your patch CRBT is called to determine the switch
-> > type. On my system, that method always returns 0, independently on
-> > the current mode. I have to verify this, but I think that would be =
-a
-> > problem on my system as by default the BIOS uses what you called
-> > "design 2" and there are currently no ways to change it. That means
-> > that with your driver KEY_RFKILL would be sent along with the rfkil=
-l
-> > event. To make things worse, dell-wmi is currently sending KEY_WLAN
-> > when I press the Fn key that toggles the state of WiFi and Bluetoot=
-h.
-> >=20
-> > I think that calling ARBT on driver init would solve all the proble=
-ms:
-> > the correct mode would get selected, the BIOS would stop sending th=
-e
-> > WMI events that make dell-wmi send KEY_WLAN and it would also no
-> > longer hard block the rfkill, letting userspace applications take
-> > care of everything.
-> >=20
-> > As I said, I have to look into this better and I'll do it as soon a=
-s I
-> > can. Sorry for being late.
-> >=20
-> > Gabriele
->=20
-> I confirm what I wrote in my previous mail.
->=20
-> I tried Alex's patch and every time I pressed Fn+WiFi I had an rfkill
-> event, a KEY_WLAN keypress and a KEY_RFKILL keypresses, all together.
->=20
-> Adding something like the following on module load:
->=20
-> 	acpi_execute_simple_method(device->handle, "ARBT", 1);
->=20
-> and something like the following on module exit:
->=20
-> 	acpi_execute_simple_method(device->handle, "ARBT", 0);
->=20
-> to his code solves the problem. Only KEY_RFKILL is sent to userspace
-> and nothing is done by the BIOS.
+On Fri, Nov 28, 2014 at 03:20:50PM +0100, Peter Feuerer wrote:
+> acerhdf has been doing an on-off fan control using hysteresis by
+> post-manipulating the outcome of thermal subsystem trip point handling.
+> This patch enables acerhdf to use the bang-bang governor, which is
+> intended for on-off controlled fans.
+> 
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> CC: Zhang Rui <rui.zhang@intel.com>
+> Cc: Andreas Mohr <andi@lisas.de>
+> Cc: Javi Merino <javi.merino@arm.com>
+> Acked-and-tested-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: Peter Feuerer <peter@piie.net>
+> ---
+>  drivers/platform/x86/Kconfig   |  3 ++-
+>  drivers/platform/x86/acerhdf.c | 36 +++++++++++++++++++++++++++++++-----
+>  2 files changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index a2eabe6..c173266 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -38,7 +38,8 @@ config ACER_WMI
+>  
+>  config ACERHDF
+>  	tristate "Acer Aspire One temperature and fan driver"
+> -	depends on THERMAL && ACPI
+> +	select THERMAL_GOV_BANG_BANG
 
-Will someone be sending a follow-up patch?
+So we use select sparingly as it does implicit things.
 
-With Gabriele's patch above, is there any objection to merging Alex's
-dell-wireless patch for 3.19? If Pali's driver adds broader support, we=
- can
-always merge them.
+I checked the THERMAL_GOV_BANG_BANG Kconfig entry, and the help says acerhdf
+already depends on it (which it doesn't appear to). Any particular reason to add
+select here instead of adding it as a depends.
 
---=20
+Why did you drop THERMAL?
+
+> +	depends on ACPI
+>  	---help---
+>  	  This is a driver for Acer Aspire One netbooks. It allows to access
+>  	  the temperature sensor and to control the fan.
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index f30767f..7fe7dbf 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -50,7 +50,7 @@
+>   */
+>  #undef START_IN_KERNEL_MODE
+>  
+> -#define DRV_VER "0.5.30"
+> +#define DRV_VER "0.7.0"
+>  
+>  /*
+>   * According to the Atom N270 datasheet,
+> @@ -258,6 +258,14 @@ static const struct bios_settings_t bios_tbl[] = {
+>  
+>  static const struct bios_settings_t *bios_cfg __read_mostly;
+>  
+> +/*
+> + * this struct is used to instruct thermal layer to use bang_bang instead of
+> + * default governor for acerhdf
+
+Please use sentence punctuation, particularly for block comments.
+
+/*
+ * This struct...
+ * default ... for acerhdf.
+ */
+
+> + */
+> +static struct thermal_zone_params acerhdf_zone_params = {
+> +	.governor_name = "bang_bang",
+> +};
+> +
+>  static int acerhdf_get_temp(int *temp)
+>  {
+>  	u8 read_temp;
+> @@ -439,6 +447,17 @@ static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
+>  	return 0;
+>  }
+>  
+> +static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
+> +				 unsigned long *temp)
+> +{
+> +	if (trip != 0)
+> +		return -EINVAL;
+> +
+> +	*temp = fanon - fanoff;
+> +
+> +	return 0;
+> +}
+> +
+>  static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
+>  				 unsigned long *temp)
+>  {
+> @@ -463,6 +482,7 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
+>  	.get_mode = acerhdf_get_mode,
+>  	.set_mode = acerhdf_set_mode,
+>  	.get_trip_type = acerhdf_get_trip_type,
+> +	.get_trip_hyst = acerhdf_get_trip_hyst,
+>  	.get_trip_temp = acerhdf_get_trip_temp,
+>  	.get_crit_temp = acerhdf_get_crit_temp,
+>  };
+> @@ -515,9 +535,7 @@ static int acerhdf_set_cur_state(struct thermal_cooling_device *cdev,
+>  	}
+>  
+>  	if (state == 0) {
+> -		/* turn fan off only if below fanoff temperature */
+> -		if ((cur_state == ACERHDF_FAN_AUTO) &&
+> -		    (cur_temp < fanoff))
+> +		if (cur_state == ACERHDF_FAN_AUTO)
+>  			acerhdf_change_fanstate(ACERHDF_FAN_OFF);
+>  	} else {
+>  		if (cur_state == ACERHDF_FAN_OFF)
+> @@ -696,11 +714,19 @@ static int acerhdf_register_thermal(void)
+>  		return -EINVAL;
+>  
+>  	thz_dev = thermal_zone_device_register("acerhdf", 1, 0, NULL,
+> -					      &acerhdf_dev_ops, NULL, 0,
+> +					      &acerhdf_dev_ops,
+> +					      &acerhdf_zone_params, 0,
+>  					      (kernelmode) ? interval*1000 : 0);
+>  	if (IS_ERR(thz_dev))
+>  		return -EINVAL;
+>  
+> +	if (strcmp(thz_dev->governor->name,
+> +				acerhdf_zone_params.governor_name)) {
+> +		pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
+> +				acerhdf_zone_params.governor_name);
+
+We've ensured it has to be compiled in, so that really can't be it. Right?
+
+> +		return -EINVAL;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.1.3
+> 
+> 
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
