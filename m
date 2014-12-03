@@ -1,52 +1,59 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: [PATCH 3/3] dell-wmi: Don't report keypresses on keybord illumination change
-Date: Thu,  4 Dec 2014 00:16:23 +0100
-Message-ID: <1417648583-9336-4-git-send-email-gabriele.mzt@gmail.com>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f46.google.com ([74.125.82.46]:59782 "EHLO
-	mail-wg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752257AbaLCXRC (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Dec 2014 18:17:02 -0500
-In-Reply-To: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: mjg59@srcf.ucam.org, dvhart@infradead.org
-Cc: pavel@ucw.cz, pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 3/3] dell-wmi: Don't report keypresses on keybord illumination change
+Date: Thu, 4 Dec 2014 00:31:39 +0100
+Message-ID: <201412040031.39891@pali>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <1417648583-9336-4-git-send-email-gabriele.mzt@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+  boundary="nextPart3127090.YpJQJOho5P";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417648583-9336-4-git-send-email-gabriele.mzt@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, pavel@ucw.cz, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Keyboard illumination level changes are performed by the BIOS, so no
-events should be reported on keypress. This is already done on systems
-using the legacy keymap, do it also for systems that don't use it.
+--nextPart3127090.YpJQJOho5P
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
----
- drivers/platform/x86/dell-wmi.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+On Thursday 04 December 2014 00:16:23 Gabriele Mazzotta wrote:
+> Keyboard illumination level changes are performed by the BIOS,
+> so no events should be reported on keypress. This is already
+> done on systems using the legacy keymap, do it also for
+> systems that don't use it.
+>=20
+> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> ---
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 9d3507c..0344b89 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -211,11 +211,16 @@ static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
- 	for (i = 0; i < hotkey_num; i++) {
- 		const struct dell_bios_keymap_entry *bios_entry =
- 					&dell_bios_hotkey_table->keymap[i];
--		keymap[i].type = KE_KEY;
--		keymap[i].code = bios_entry->scancode;
--		keymap[i].keycode = bios_entry->keycode < 256 ?
-+		u16 keycode = bios_entry->keycode < 256 ?
- 				    bios_to_linux_keycode[bios_entry->keycode] :
- 				    KEY_RESERVED;
-+
-+		if (keycode == KEY_KBDILLUMTOGGLE)
-+			keymap[i].type = KE_IGNORE;
-+		else
-+			keymap[i].type = KE_KEY;
-+		keymap[i].code = bios_entry->scancode;
-+		keymap[i].keycode = keycode;
- 	}
- 
- 	keymap[hotkey_num].type = KE_END;
--- 
-2.1.3
+Tested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+CC: stable@vger.kernel.org
+
+Tested on Latitude E6440 and now userspace does not receive=20
+KEY_KBDILLUMTOGGLE event, so does not try to change keyboard=20
+backlight (which is already done by BIOS when key is pressed).
+
+I suggest to backport this patch to stable kernels because this=20
+problem is in all kernel versions which have dell-wmi.c driver.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart3127090.YpJQJOho5P
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlR/nVsACgkQi/DJPQPkQ1KcsgCfYEbjT1sfxb5M8sjCKQ7WHr3I
+os0AoJ+l+50oM5EcD4+AYg4UsOY7p8DX
+=90J7
+-----END PGP SIGNATURE-----
+
+--nextPart3127090.YpJQJOho5P--
