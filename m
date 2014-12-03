@@ -1,130 +1,41 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 2/3] toshiba_acpi: Change notify funtion to handle more events
-Date: Thu,  4 Dec 2014 20:22:46 -0700
-Message-ID: <1417749767-3898-3-git-send-email-coproscefalo@gmail.com>
-References: <1417749767-3898-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417749767-3898-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
+Date: Wed, 3 Dec 2014 05:34:32 -0800
+Message-ID: <20141203133431.GG75099@vmdeb7>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:42443 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933139AbaLED2E (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 4 Dec 2014 22:28:04 -0500
+Content-Disposition: inline
+In-Reply-To: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: mjg59@srcf.ucam.org, pavel@ucw.cz, pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Currently the function toshiba_acpi_notify only takes care of hotkeys,
-however, the TOSXXXX devices receive more events that can be useful.
+On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele Mazzotta wrote:
+> Currently dell-wmi reports keypresses for WMI events that are
+> notifications of changes performed by the BIOS.
+> This patch series make sure that no keypresses are sent for those
+> events so that nothing is done from userspace. 
+> 
+> Gabriele Mazzotta (3):
+>   dell-wmi: Use appropriate keycode for radio state changes
+>   dell-wmi: Don't report keypresses for radio state changes
 
-This patch changes the function to be able to handle more events,
-and in the process, move all hotkey related code residing in it to
-a new function called toshiba_acpi_process_hotkeys.
+Merged into one patch, queued.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 85 ++++++++++++++++++++++---------------
- 1 file changed, 51 insertions(+), 34 deletions(-)
+>   dell-wmi: Don't report keypresses on keybord illumination change
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 8bb07c7..99db763 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1657,6 +1657,43 @@ static void toshiba_acpi_report_hotkey(struct toshiba_acpi_dev *dev,
- 		pr_info("Unknown key %x\n", scancode);
- }
- 
-+static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
-+{
-+	u32 hci_result, value;
-+	int retries = 3;
-+	int scancode;
-+
-+	if (dev->info_supported) {
-+		scancode = toshiba_acpi_query_hotkey(dev);
-+		if (scancode < 0)
-+			pr_err("Failed to query hotkey event\n");
-+		else if (scancode != 0)
-+			toshiba_acpi_report_hotkey(dev, scancode);
-+	} else if (dev->system_event_supported) {
-+		do {
-+			hci_result = hci_read1(dev, HCI_SYSTEM_EVENT, &value);
-+			switch (hci_result) {
-+			case TOS_SUCCESS:
-+				toshiba_acpi_report_hotkey(dev, (int)value);
-+				break;
-+			case TOS_NOT_SUPPORTED:
-+				/*
-+				 * This is a workaround for an unresolved
-+				 * issue on some machines where system events
-+				 * sporadically become disabled.
-+				 */
-+				hci_result =
-+					hci_write1(dev, HCI_SYSTEM_EVENT, 1);
-+				pr_notice("Re-enabled hotkeys\n");
-+				/* fall through */
-+			default:
-+				retries--;
-+				break;
-+			}
-+		} while (retries && hci_result != TOS_FIFO_EMPTY);
-+	}
-+}
-+
- static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- {
- 	acpi_handle ec_handle;
-@@ -1971,41 +2008,21 @@ error:
- static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
- {
- 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
--	u32 hci_result, value;
--	int retries = 3;
--	int scancode;
- 
--	if (event != 0x80)
--		return;
--
--	if (dev->info_supported) {
--		scancode = toshiba_acpi_query_hotkey(dev);
--		if (scancode < 0)
--			pr_err("Failed to query hotkey event\n");
--		else if (scancode != 0)
--			toshiba_acpi_report_hotkey(dev, scancode);
--	} else if (dev->system_event_supported) {
--		do {
--			hci_result = hci_read1(dev, HCI_SYSTEM_EVENT, &value);
--			switch (hci_result) {
--			case TOS_SUCCESS:
--				toshiba_acpi_report_hotkey(dev, (int)value);
--				break;
--			case TOS_NOT_SUPPORTED:
--				/*
--				 * This is a workaround for an unresolved
--				 * issue on some machines where system events
--				 * sporadically become disabled.
--				 */
--				hci_result =
--					hci_write1(dev, HCI_SYSTEM_EVENT, 1);
--				pr_notice("Re-enabled hotkeys\n");
--				/* fall through */
--			default:
--				retries--;
--				break;
--			}
--		} while (retries && hci_result != TOS_FIFO_EMPTY);
-+	switch (event) {
-+	case 0x80: /* Hotkeys and some system events */
-+		toshiba_acpi_process_hotkeys(dev);
-+		break;
-+	case 0x81: /* Unknown */
-+	case 0x82: /* Unknown */
-+	case 0x83: /* Unknown */
-+	case 0x8c: /* Unknown */
-+	case 0x8e: /* Unknown */
-+	case 0x8f: /* Unknown */
-+	case 0x90: /* Unknown */
-+	default:
-+		pr_info("Unknown event received %x\n", event);
-+		break;
- 	}
- }
- 
+Queued.
+
+Thanks Gabriele.
+
 -- 
-2.1.2
+Darren Hart
+Intel Open Source Technology Center
