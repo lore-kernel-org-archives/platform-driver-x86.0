@@ -1,159 +1,80 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RESEND PATCH v5 3/5] acerhdf: Use bang-bang thermal governor
-Date: Wed, 3 Dec 2014 01:04:36 -0800
-Message-ID: <20141203090436.GC52608@vmdeb7>
+Subject: Re: [RESEND PATCH v5 4/5] acerhdf: added critical trip point
+Date: Wed, 3 Dec 2014 01:08:46 -0800
+Message-ID: <20141203090846.GD52608@vmdeb7>
 References: <1398561815-22033-1-git-send-email-peter@piie.net>
  <1417184452-11884-1-git-send-email-peter@piie.net>
- <1417184452-11884-4-git-send-email-peter@piie.net>
+ <1417184452-11884-5-git-send-email-peter@piie.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1417184452-11884-4-git-send-email-peter@piie.net>
+In-Reply-To: <1417184452-11884-5-git-send-email-peter@piie.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Feuerer <peter@piie.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Zhang Rui <rui.zhang@intel.com>, Andreas Mohr <andi@lisas.de>, Javi Merino <javi.merino@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Andreas Mohr <andi@lisas.de>, Borislav Petkov <bp@suse.de>, Javi Merino <javi.merino@arm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 28, 2014 at 03:20:50PM +0100, Peter Feuerer wrote:
-> acerhdf has been doing an on-off fan control using hysteresis by
-> post-manipulating the outcome of thermal subsystem trip point handling.
-> This patch enables acerhdf to use the bang-bang governor, which is
-> intended for on-off controlled fans.
+On Fri, Nov 28, 2014 at 03:20:51PM +0100, Peter Feuerer wrote:
+> added critical trip point which represents the temperature limit.
+
+Nitpic, Add ^
+
+> Added return -EINVAL in case wrong trip point is provided.
+
+Add (we are going to add it with this patch, it wasn't added previously). It's a
+nitpic. But this is more consistent with typical commit message language.
+
+I might normally just fix that upon commit, but since I had a few questions on
+the last one, if that results in a V2, please correct this as well.
+
 > 
 > Cc: platform-driver-x86@vger.kernel.org
 > Cc: Darren Hart <dvhart@infradead.org>
 > Cc: Andrew Morton <akpm@linux-foundation.org>
-> CC: Zhang Rui <rui.zhang@intel.com>
 > Cc: Andreas Mohr <andi@lisas.de>
+> Cc: Borislav Petkov <bp@suse.de>
 > Cc: Javi Merino <javi.merino@arm.com>
-> Acked-and-tested-by: Borislav Petkov <bp@suse.de>
 > Signed-off-by: Peter Feuerer <peter@piie.net>
 > ---
->  drivers/platform/x86/Kconfig   |  3 ++-
->  drivers/platform/x86/acerhdf.c | 36 +++++++++++++++++++++++++++++++-----
->  2 files changed, 33 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/acerhdf.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index a2eabe6..c173266 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -38,7 +38,8 @@ config ACER_WMI
->  
->  config ACERHDF
->  	tristate "Acer Aspire One temperature and fan driver"
-> -	depends on THERMAL && ACPI
-> +	select THERMAL_GOV_BANG_BANG
-
-So we use select sparingly as it does implicit things.
-
-I checked the THERMAL_GOV_BANG_BANG Kconfig entry, and the help says acerhdf
-already depends on it (which it doesn't appear to). Any particular reason to add
-select here instead of adding it as a depends.
-
-Why did you drop THERMAL?
-
-> +	depends on ACPI
->  	---help---
->  	  This is a driver for Acer Aspire One netbooks. It allows to access
->  	  the temperature sensor and to control the fan.
 > diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index f30767f..7fe7dbf 100644
+> index 7fe7dbf..91b16c8 100644
 > --- a/drivers/platform/x86/acerhdf.c
 > +++ b/drivers/platform/x86/acerhdf.c
-> @@ -50,7 +50,7 @@
->   */
->  #undef START_IN_KERNEL_MODE
->  
-> -#define DRV_VER "0.5.30"
-> +#define DRV_VER "0.7.0"
->  
->  /*
->   * According to the Atom N270 datasheet,
-> @@ -258,6 +258,14 @@ static const struct bios_settings_t bios_tbl[] = {
->  
->  static const struct bios_settings_t *bios_cfg __read_mostly;
->  
-> +/*
-> + * this struct is used to instruct thermal layer to use bang_bang instead of
-> + * default governor for acerhdf
-
-Please use sentence punctuation, particularly for block comments.
-
-/*
- * This struct...
- * default ... for acerhdf.
- */
-
-> + */
-> +static struct thermal_zone_params acerhdf_zone_params = {
-> +	.governor_name = "bang_bang",
-> +};
-> +
->  static int acerhdf_get_temp(int *temp)
+> @@ -443,6 +443,10 @@ static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
 >  {
->  	u8 read_temp;
-> @@ -439,6 +447,17 @@ static int acerhdf_get_trip_type(struct thermal_zone_device *thermal, int trip,
+>  	if (trip == 0)
+>  		*type = THERMAL_TRIP_ACTIVE;
+> +	else if (trip == 1)
+> +		*type = THERMAL_TRIP_CRITICAL;
+> +	else
+> +		return -EINVAL;
+>  
 >  	return 0;
 >  }
->  
-> +static int acerhdf_get_trip_hyst(struct thermal_zone_device *thermal, int trip,
-> +				 unsigned long *temp)
-> +{
-> +	if (trip != 0)
-> +		return -EINVAL;
-> +
-> +	*temp = fanon - fanoff;
-> +
-> +	return 0;
-> +}
-> +
->  static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
->  				 unsigned long *temp)
+> @@ -463,6 +467,10 @@ static int acerhdf_get_trip_temp(struct thermal_zone_device *thermal, int trip,
 >  {
-> @@ -463,6 +482,7 @@ static struct thermal_zone_device_ops acerhdf_dev_ops = {
->  	.get_mode = acerhdf_get_mode,
->  	.set_mode = acerhdf_set_mode,
->  	.get_trip_type = acerhdf_get_trip_type,
-> +	.get_trip_hyst = acerhdf_get_trip_hyst,
->  	.get_trip_temp = acerhdf_get_trip_temp,
->  	.get_crit_temp = acerhdf_get_crit_temp,
->  };
-> @@ -515,9 +535,7 @@ static int acerhdf_set_cur_state(struct thermal_cooling_device *cdev,
->  	}
+>  	if (trip == 0)
+>  		*temp = fanon;
+> +	else if (trip == 1)
+> +		*temp = ACERHDF_TEMP_CRIT;
+> +	else
+> +		return -EINVAL;
 >  
->  	if (state == 0) {
-> -		/* turn fan off only if below fanoff temperature */
-> -		if ((cur_state == ACERHDF_FAN_AUTO) &&
-> -		    (cur_temp < fanoff))
-> +		if (cur_state == ACERHDF_FAN_AUTO)
->  			acerhdf_change_fanstate(ACERHDF_FAN_OFF);
->  	} else {
->  		if (cur_state == ACERHDF_FAN_OFF)
-> @@ -696,11 +714,19 @@ static int acerhdf_register_thermal(void)
+>  	return 0;
+>  }
+> @@ -713,7 +721,7 @@ static int acerhdf_register_thermal(void)
+>  	if (IS_ERR(cl_dev))
 >  		return -EINVAL;
 >  
->  	thz_dev = thermal_zone_device_register("acerhdf", 1, 0, NULL,
-> -					      &acerhdf_dev_ops, NULL, 0,
-> +					      &acerhdf_dev_ops,
-> +					      &acerhdf_zone_params, 0,
+> -	thz_dev = thermal_zone_device_register("acerhdf", 1, 0, NULL,
+> +	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
+>  					      &acerhdf_dev_ops,
+>  					      &acerhdf_zone_params, 0,
 >  					      (kernelmode) ? interval*1000 : 0);
->  	if (IS_ERR(thz_dev))
->  		return -EINVAL;
->  
-> +	if (strcmp(thz_dev->governor->name,
-> +				acerhdf_zone_params.governor_name)) {
-> +		pr_err("Didn't get thermal governor %s, perhaps not compiled into thermal subsystem.\n",
-> +				acerhdf_zone_params.governor_name);
-
-We've ensured it has to be compiled in, so that really can't be it. Right?
-
-> +		return -EINVAL;
-> +	}
-> +
->  	return 0;
->  }
->  
 > -- 
 > 2.1.3
 > 
