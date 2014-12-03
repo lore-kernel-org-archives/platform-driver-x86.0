@@ -1,40 +1,44 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Wed, 3 Dec 2014 05:34:32 -0800
-Message-ID: <20141203133431.GG75099@vmdeb7>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v3 0/3] toshiba_acpi: Hotkeys and event handling changes
+Date: Wed, 3 Dec 2014 05:38:33 -0800
+Message-ID: <20141203133833.GH75099@vmdeb7>
+References: <1417749767-3898-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42443 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:43270 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933139AbaLED2E (ORCPT
+	with ESMTP id S932098AbaLEDcE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 22:28:04 -0500
+	Thu, 4 Dec 2014 22:32:04 -0500
 Content-Disposition: inline
-In-Reply-To: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
+In-Reply-To: <1417749767-3898-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: mjg59@srcf.ucam.org, pavel@ucw.cz, pali.rohar@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele Mazzotta wrote:
-> Currently dell-wmi reports keypresses for WMI events that are
-> notifications of changes performed by the BIOS.
-> This patch series make sure that no keypresses are sent for those
-> events so that nothing is done from userspace. 
+On Thu, Dec 04, 2014 at 08:22:44PM -0700, Azael Avalos wrote:
+> These patches change the current code to accomodate the handling
+> of more events, since so far, it only handles hotkey events (0x80),
+> move the hotkey enabling code to a sub function to avoid duplication,
+> and add event 0x92 which indicates a change in the keyboard backlight
+> mode.
 > 
-> Gabriele Mazzotta (3):
->   dell-wmi: Use appropriate keycode for radio state changes
->   dell-wmi: Don't report keypresses for radio state changes
+> Changes since V3:
+> - Removed a left over variable from the split in patch 02 and
+>   moved it to patch 03 (where it belongs)
+> - A bit more verbose description on patch 03
+> 
+> Azael Avalos (3):
+>   toshiba_acpi: Move hotkey enabling code to own function
+>   toshiba_acpi: Change notify funtion to handle more events
+>   toshiba_acpi: Add keyboard backlight mode change event
 
-Merged into one patch, queued.
+Queued. Your 1/3 commit message reverted to the short line length, might want to
+update your tools. ;-) I took care of it.
 
->   dell-wmi: Don't report keypresses on keybord illumination change
-
-Queued.
-
-Thanks Gabriele.
+Thanks Azael,
 
 -- 
 Darren Hart
