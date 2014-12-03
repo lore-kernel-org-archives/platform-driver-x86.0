@@ -1,60 +1,60 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [patch] dell-laptop: fix kbd_timeout handling
-Date: Thu, 04 Dec 2014 11:58:27 +0100
-Message-ID: <1858088.hYJHB71vOy@xps13>
-References: <1417597233.14672.2.camel@Pali-Nokia-N900> <20141203073324.GA8568@vmdeb7> <201412041042.37888@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform: x86: dell-laptop: Add support for keyboard
+ backlight
+Date: Wed, 3 Dec 2014 03:51:37 -0800
+Message-ID: <20141203115135.GA42394@vmdeb7>
+References: <1415967813-7223-1-git-send-email-pali.rohar@gmail.com>
+ <1416754245-15550-1-git-send-email-pali.rohar@gmail.com>
+ <20141203084319.GA52608@vmdeb7>
+ <4874352.BarQGyiSH1@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f43.google.com ([74.125.82.43]:52999 "EHLO
-	mail-wg0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753210AbaLDK6m convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:49321 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933009AbaLEBpM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 05:58:42 -0500
-Received: by mail-wg0-f43.google.com with SMTP id l18so22163214wgh.30
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Dec 2014 02:58:41 -0800 (PST)
-In-Reply-To: <201412041042.37888@pali>
+	Thu, 4 Dec 2014 20:45:12 -0500
+Content-Disposition: inline
+In-Reply-To: <4874352.BarQGyiSH1@xps13>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, kbuild@01.org
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com
 
-On Thursday 04 December 2014 10:42:37 Pali Roh=E1r wrote:
-> On Wednesday 03 December 2014 08:33:25 Darren Hart wrote:
-> > On Wed, Dec 03, 2014 at 01:01:59PM +0300, Dan Carpenter wrote:
-> > > The original code had a static checker warning:
-> > > 	drivers/platform/x86/dell-laptop.c:1389
-> > > 	kbd_led_timeout_store() warn: this array is probably
-> > > 	non-NULL. 'quirks->kbd_timeouts'
-> > >=20
-> > > This warning does indicate a bug.  I have added a
-> > > .needs_kbd_timeouts flag which is true if the
-> > > .kbd_timeouts[] array has been declared. Otherwise, in the
-> > > original code the quirk_dell_vostro_v130 struct didn't
-> > >=20
-> > > have .kbd_timeouts[] declared so the loop:
-> > > 	for (i =3D 0; quirks->kbd_timeouts[i] !=3D -1; i++) {
-> > >=20
-> > > Would have read beyond the end of the struct with
-> > > unpredictable results.
-> > >=20
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> >=20
-> > Thanks Dan,
-> >=20
-> > Pali, any objections?
-> >=20
-> > Dan, any objection to Pali rolling this into another revision?
-> > No point in introducing the bug to next and mainline.
-> >=20
-> > Thanks,
->=20
-> No problem from my side. This quirks code was done by Gabriele to
-> fix BIOS problems on some laptops.
->=20
-> Gabriele, any objections?
+On Thu, Dec 04, 2014 at 09:50:02AM +0100, Gabriele Mazzotta wrote:
+> On Wednesday 03 December 2014 00:43:21 Darren Hart wrote:
+> > > +     int kbd_timeouts[];
+> > >
+> > >  };
+> > >  
+> > >  static struct quirk_entry *quirks;
+> > >
+> > > @@ -76,6 +89,10 @@ static int __init dmi_matched(const struct
+> > > dmi_system_id *dmi)>
+> > >       return 1;
+> > >  }
+> > >  
+> > >
+> > > +static struct quirk_entry quirk_dell_xps13_9333 = {
+> > > +     .kbd_timeouts = { 0, 5, 15, 60, 5*60, 15*60, -1 },
+> > 
+> > Where did these values come from? Were they documented in the
+> > libsmbios project? Can you provide a URL to that? These really should
+> > be described by the firmware, but if they aren't, nothing we can do
+> > about it.
+> 
+> I took those values from a Windows utility provided by Dell. I tried
+> to find a reason for that specific list to exist, but I couldn't. The
+> reason why it's there is that the BIOS of my laptop accepts any timeout,
+> but it silently sets the timeout to 0 (i.e. illumination never off)
+> if a value not in that list is given. So, given the wide range of
+> of possible input values, we added that quirk. This is something my
+> laptop does, Pali's behaves differently and such a list is not needed.
 
-No objections.
+Let's get a comment above the quirk describing the scenario.
 
-Gabriele.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
