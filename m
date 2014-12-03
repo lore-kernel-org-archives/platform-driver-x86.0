@@ -1,137 +1,30 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform: x86: hp_wireless: Inform the user if
- hp_wireless_input_setup()/add() fails
-Date: Tue, 2 Dec 2014 09:19:55 -0800
-Message-ID: <20141202171954.GB113527@vmdeb7>
-References: <1417212867-25187-1-git-send-email-giedriuswork@gmail.com>
- <20141128231555.GA31468@pd.tnic>
- <547909CF.8060907@gmail.com>
- <20141129000417.GG30997@pd.tnic>
- <20141125225719.GA32102@vmdeb7>
- <547DE5A4.4010506@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 0/2] toshiba_acpi: Hotkeys and event handling changes
+Date: Tue,  2 Dec 2014 22:36:30 -0700
+Message-ID: <1417584992-2524-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37567 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753974AbaLBRU2 (ORCPT
+Received: from mail-ob0-f173.google.com ([209.85.214.173]:44628 "EHLO
+	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750798AbaLCFgi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 2 Dec 2014 12:20:28 -0500
-Content-Disposition: inline
-In-Reply-To: <547DE5A4.4010506@gmail.com>
+	Wed, 3 Dec 2014 00:36:38 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Giedrius Statkevicius <giedrius.statkevicius@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>, Giedrius Statkevicius <giedriuswork@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Tue, Dec 02, 2014 at 06:15:32PM +0200, Giedrius Statkevicius wrote:
-> On 2014.11.26 00:57, Darren Hart wrote:
-> > On Sat, Nov 29, 2014 at 01:04:17AM +0100, Borislav Petkov wrote:
-> >> On Sat, Nov 29, 2014 at 01:48:31AM +0200, Giedrius Statkevicius wrote:
-> >>> On 2014.11.29 01:15, Borislav Petkov wrote:
-> >>>> On Sat, Nov 29, 2014 at 12:14:27AM +0200, Giedrius Statkevicius wrote:
-> >>>>> In hpwl_add() there is a unused variable err to which we assign the
-> >>>>> result of hp_wireless_input_setup() but we don't do anything depending
-> >>>>> on the result so print out a message that informs the user if add()
-> >>>>> (hp_wireless_input_setup()) fails since acpi_device_probe() doesn't
-> >>>>> print anything in this case.
-> >>>>>
-> >>>>> Signed-off-by: Giedrius Statkevicius <giedriuswork@gmail.com>
-> >>>>> ---
-> >>>>>  drivers/platform/x86/hp-wireless.c | 3 +++
-> >>>>>  1 file changed, 3 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
-> >>>>> index 415348f..4e4cc8b 100644
-> >>>>> --- a/drivers/platform/x86/hp-wireless.c
-> >>>>> +++ b/drivers/platform/x86/hp-wireless.c
-> >>>>> @@ -85,6 +85,9 @@ static int hpwl_add(struct acpi_device *device)
-> >>>>>  	int err;
-> >>>>>  
-> >>>>>  	err = hp_wireless_input_setup();
-> >>>>> +	if (err)
-> >>>>> +		pr_err("Failed to setup hp wireless hotkeys\n");
-> >>>>> +
-> >>>>
-> >>>> I don't think there's need for that. Just do:
-> >>>>
-> >>>> 	return hp_wireless_input_setup();
-> >>>>
-> >>>> and drop err completely.
-> >>>>
-> >>>> The upper layer which calls the ->add() method should propagate the
-> >>>> error properly.
-> > 
-> > This is the key. If the caller already prints a message, we don't need to. If
-> > nothing is displayed and the user would be left confused, then an appropriate
-> > message should be displayed.
-> > 
-> > If the upper level already handles this, then we can just drop the unused
-> > variable.
-> > 
-> > Have a look and decide which is the most appropriate. And thanks for preparing a
-> > fix.
-> > 
-> To start with I've looked at all modules in drivers/platform/x86 that
-> have a struct acpi_driver and calculated some statistics about
-> whether the module informs the user if add() fails or not to find out
-> the current policy on whether we should inform the user or not:
-> 
-> Module             Does it use any pr_/dev_ function to give info?
-> asus-laptop        Yes
-> classmate-laptop   No
-> dell-smo8800       Yes
-> dell-wireless      No
-> eeepc-laptop       Yes
-> fujitsu-laptop     Yes
-> hp-wireless        No
-> hp_accel           Yes
-> intel-rst          No
-> intel-smartconnect Yes
-> intel_menlow       No
-> panasonic-laptop   No (but it uses ACPI_DEBUG_PRINT)
-> pvpanic            No
-> sony-laptop        Yes (has a message for failing to setup input devices)
-> topstar-laptop     No
-> toshiba_acpi       Yes
-> toshiba_haps       Yes
-> toshiba_bluetooth  Yes
-> wmi                Yes
-> xo15-ebook         Yes
-> 
-> That being said it looks like most add()s inform the user. So maybe we
-> should make a patch that does it for other modules with struct
-> acpi_driver? That being said, I've also took a look at if any messages
-> are printed out about add() failing.
-> 
-> There is acpi_device_probe() that's hooked into acpi_bus_type which
-> defines names and some actions of a bus. There it simply returns any
-> non-zero value:
-> 
-> 990         ret = acpi_drv->ops.add(acpi_dev);
-> 991         if (ret)
-> 992                 return ret;
-> 
-> Delving a bit deeper I've found about driver_probe_device() and
-> really_probe(). And in these lines I think is what the user would get if
-> the probe failed:
-> 
-> 330         } else if (ret != -ENODEV && ret != -ENXIO) {
-> 331                 /* driver matched but the probe failed */
-> 332                 printk(KERN_WARNING
-> 333                        "%s: probe of %s failed with error %d\n",
-> 334                        drv->name, dev_name(dev), ret);
-> 
-> So the user would get only the numerical value of a error and thus a
-> pr_err or printing any other message in the add() is useful to make more
-> sense of what really happened and allow to quickly find where the issue
-> happened. In the end I think that this patch is better than the last one
-> (the one where add() simply returns the result of another function).
-> 
-> Please correct me if I'm wrong.
+These patches change the current code to accomodate
+the handling of more events, since so far, it only
+handles hotkey events (0x80), as well as move some
+hotkey enabling code to a sub function to avoid
+duplication.
 
-I'd agree. I'll queue it up, thanks for the detailed investigation Giedrius.
+Azael Avalos (2):
+  toshiba_acpi: Move hotkey enabling code to own function
+  toshiba_acpi: Change notify funtion to handle more events
+
+ drivers/platform/x86/toshiba_acpi.c | 139 ++++++++++++++++++++++--------------
+ 1 file changed, 86 insertions(+), 53 deletions(-)
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.1.2
