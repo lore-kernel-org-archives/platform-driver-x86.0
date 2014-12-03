@@ -1,58 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
-Date: Wed, 3 Dec 2014 04:56:43 -0800
-Message-ID: <20141203125642.GB75099@vmdeb7>
+Date: Wed, 3 Dec 2014 05:00:23 -0800
+Message-ID: <20141203130023.GC75099@vmdeb7>
 References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <20141125230527.GC32102@vmdeb7>
  <201412020942.47091@pali>
  <CAJ=jqua+xpXyhkjiLrxZ9Cy9D-kwXXP=hB1az+kC+RUn1PN0Bw@mail.gmail.com>
+ <201412041055.32689@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35689 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:35813 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932378AbaLECuQ (ORCPT
+	with ESMTP id S932378AbaLECx4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 21:50:16 -0500
+	Thu, 4 Dec 2014 21:53:56 -0500
 Content-Disposition: inline
-In-Reply-To: <CAJ=jqua+xpXyhkjiLrxZ9Cy9D-kwXXP=hB1az+kC+RUn1PN0Bw@mail.gmail.com>
+In-Reply-To: <201412041055.32689@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-On Thu, Dec 04, 2014 at 04:16:25PM +0800, Alex Hung wrote:
-> HI Darren and Pali,
-> 
-> It was great that we had a lot of discussion but it seems Dell BIOS
-> implementation varies from one series to another. Both work looks good
-> either one is fine with me.
-> 
-> But I think I can do a little more: I am collecting a number of
-> systems to try out these patches. This should help us determine which
-> one work better and probably we can integrate.
-> 
-> Currently I have found four systems (including two Latitude, an
-> Inspiron and a XPS with working method(ARBT) that Gabriele suggested).
-> I can get other, ex. a Vostro, if needed.
-> 
-> I will test dell-wireless.c with Gabriele's suggestion and Pali's
-> dell-rbtn.c (btw, will there be updates?). However, I will need a few
-> days to do the comparison.
+On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=E1r wrote:
+>=20
+> Darren, I think that if we do not solve problem with duplicate=20
+> key events (in dell-wireless.c) we should postpone these patches=20
+> to later kernel version. It is better to not have such regression=20
+> as it confuse software like NetworkManager which is widely used.
 
-OK, this is great, thanks for working together on this.
+OK, that's what I needed. Thanks. Ignore my previous request, you answe=
+red it
+here. I will drop dell-wireless.c and look for a combined solution from=
+ you and
+Alex for the next release.
 
-Pali - if I merge Alex's dell-wireless driver, does it BREAK your systems, or
-does it just not fully support them? If it BREAKS them, I'll drop Alex's patch
-from for-next and from the 3.19 pull requeust. If it just doesn't fully support
-them, I'll leave his patch in for-next and look forward to a set of patches from
-you both that completes support for the 3.20 merge window.
-
-Please let me know as soon as you can.
-
-If I don't hear back, I'll have to err on the side of caution and drop
-dell-wireless from for-next for this window.
-
--- 
+Thanks,
+--=20
 Darren Hart
 Intel Open Source Technology Center
