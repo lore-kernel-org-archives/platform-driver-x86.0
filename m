@@ -1,41 +1,50 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
-Date: Wed, 3 Dec 2014 05:00:23 -0800
-Message-ID: <20141203130023.GC75099@vmdeb7>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <201412020942.47091@pali>
- <CAJ=jqua+xpXyhkjiLrxZ9Cy9D-kwXXP=hB1az+kC+RUn1PN0Bw@mail.gmail.com>
- <201412041055.32689@pali>
+Subject: Re: [PATCH v2 2/3] toshiba_acpi: Change notify funtion to handle
+ more events
+Date: Wed, 3 Dec 2014 05:12:40 -0800
+Message-ID: <20141203131240.GD75099@vmdeb7>
+References: <1417675325-14921-1-git-send-email-coproscefalo@gmail.com>
+ <1417675325-14921-3-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35813 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:38499 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932378AbaLECx4 (ORCPT
+	with ESMTP id S932378AbaLEDGL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 21:53:56 -0500
+	Thu, 4 Dec 2014 22:06:11 -0500
 Content-Disposition: inline
-In-Reply-To: <201412041055.32689@pali>
+In-Reply-To: <1417675325-14921-3-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=E1r wrote:
->=20
-> Darren, I think that if we do not solve problem with duplicate=20
-> key events (in dell-wireless.c) we should postpone these patches=20
-> to later kernel version. It is better to not have such regression=20
-> as it confuse software like NetworkManager which is widely used.
+On Wed, Dec 03, 2014 at 11:42:04PM -0700, Azael Avalos wrote:
+> @@ -1971,41 +2008,22 @@ error:
+>  static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 ev=
+ent)
+>  {
+>  	struct toshiba_acpi_dev *dev =3D acpi_driver_data(acpi_dev);
+> -	u32 hci_result, value;
+> -	int retries =3D 3;
+> -	int scancode;
+> -
+> -	if (event !=3D 0x80)
+> -		return;
+> +	int ret;
 
-OK, that's what I needed. Thanks. Ignore my previous request, you answe=
-red it
-here. I will drop dell-wireless.c and look for a combined solution from=
- you and
-Alex for the next release.
+  CC      drivers/platform/x86/toshiba_acpi.o
+drivers/platform/x86/toshiba_acpi.c: In function =E2=80=98toshiba_acpi_=
+notify=E2=80=99:
+drivers/platform/x86/toshiba_acpi.c:2012:6: warning: unused variable =E2=
+=80=98ret=E2=80=99 [-Wunused-variable]
+    int ret;
+          ^
 
-Thanks,
+Please compile check each patch.
+
 --=20
 Darren Hart
 Intel Open Source Technology Center
