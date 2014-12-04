@@ -1,42 +1,35 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] toshiba_acpi: Move hotkey enabling code to own
- function
-Date: Wed, 3 Dec 2014 01:22:38 -0800
-Message-ID: <20141203092237.GF52608@vmdeb7>
-References: <1417584992-2524-1-git-send-email-coproscefalo@gmail.com>
- <1417584992-2524-2-git-send-email-coproscefalo@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v2 0/3] toshiba_acpi: Hotkeys and event handling changes
+Date: Wed,  3 Dec 2014 23:42:02 -0700
+Message-ID: <1417675325-14921-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39592 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751777AbaLDGNz (ORCPT
+Received: from mail-ob0-f182.google.com ([209.85.214.182]:49579 "EHLO
+	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751478AbaLDGmK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 01:13:55 -0500
-Content-Disposition: inline
-In-Reply-To: <1417584992-2524-2-git-send-email-coproscefalo@gmail.com>
+	Thu, 4 Dec 2014 01:42:10 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Tue, Dec 02, 2014 at 10:36:31PM -0700, Azael Avalos wrote:
-> The hotkey enabling code is being used by
-> *_setup_keyboard and also by *_resume.
-> 
-> This patch creates a new function called
-> toshiba_acpi_enable_hotkeys to be used by
-> these two functions to avoid duplicating
-> code.
+These patches change the current code to accomodate the handling
+of more events, since so far, it only handles hotkey events (0x80),
+move the hotkey enabling code to a sub function to avoid duplication,
+and add event 0x92 which indicates a change in the keyboard backlight
+mode.
 
-42 is a little bit narrow, even for us kernel types :-) 72 characters wide is
-fine.
+Changes since V1:
+- Split patch 02 in two patches
+- Some misc changes in the description of the patches (a bit wider now)
 
-Patch is fine, but since I had some questions on your others, please correct in
-V2.
+Azael Avalos (3):
+  toshiba_acpi: Move hotkey enabling code to own function
+  toshiba_acpi: Change notify funtion to handle more events
+  toshiba_acpi: Add keyboard backlight mode change event
 
-Thanks,
+ drivers/platform/x86/toshiba_acpi.c | 139 ++++++++++++++++++++++--------------
+ 1 file changed, 86 insertions(+), 53 deletions(-)
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.1.2
