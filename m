@@ -1,108 +1,59 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RESEND PATCH v5 3/5] acerhdf: Use bang-bang thermal governor
-Date: Thu, 4 Dec 2014 03:40:44 -0800
-Message-ID: <20141204114044.GB100190@vmdeb7>
-References: <1398561815-22033-1-git-send-email-peter@piie.net>
- <1417184452-11884-1-git-send-email-peter@piie.net>
- <1417184452-11884-4-git-send-email-peter@piie.net>
- <20141203090436.GC52608@vmdeb7>
- <cone.1417677032.220767.18692.1000@mups>
- <cone.1417677666.882029.18692.1000@mups>
+Subject: Re: [PATCH v3 1/2] thinkpad-acpi: Try to use full software mute
+ control
+Date: Thu, 4 Dec 2014 03:50:31 -0800
+Message-ID: <20141204115031.GC100190@vmdeb7>
+References: <cover.1413590510.git.luto@amacapital.net>
+ <378856925c5ceecd27a6490585ee60362a714ef6.1413590510.git.luto@amacapital.net>
+ <20141031230700.GA11745@khazad-dum.debian.net>
+ <CALCETrWbu6NUFo2gv+gNEPATm=1jnLRY16iEvv7ZV-3TicZR_A@mail.gmail.com>
+ <20141209195342.GC361@khazad-dum.debian.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:41052 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752861AbaLIWjp (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 9 Dec 2014 17:39:45 -0500
 Content-Disposition: inline
-In-Reply-To: <cone.1417677666.882029.18692.1000@mups>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Feuerer <peter@piie.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Zhang Rui <rui.zhang@intel.com>, Andreas Mohr <andi@lisas.de>, Javi Merino <javi.merino@arm.com>, linux-pm@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20141209195342.GC361@khazad-dum.debian.net>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Andy Lutomirski <luto@amacapital.net>, Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, Len Brown <len.brown@intel.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@mit.edu>
 
-On Thu, Dec 04, 2014 at 08:21:06AM +0100, Peter Feuerer wrote:
-> Hi again,
+On Tue, Dec 09, 2014 at 05:53:42PM -0200, Henrique de Moraes Holschuh wrote:
+> On Mon, 08 Dec 2014, Andy Lutomirski wrote:
+> > On Fri, Oct 31, 2014 at 4:07 PM, Henrique de Moraes Holschuh
+> > <hmh@hmh.eng.br> wrote:
 > 
-> Peter Feuerer writes:
+> ...
 > 
-> >Hi Darren,
-> >
-> >thank you very much for your reply.
-> >
-> >
-> >Darren Hart writes:
-> >
-> >>On Fri, Nov 28, 2014 at 03:20:50PM +0100, Peter Feuerer wrote:
-> >>>acerhdf has been doing an on-off fan control using hysteresis by
-> >>>post-manipulating the outcome of thermal subsystem trip point handling.
-> >>>This patch enables acerhdf to use the bang-bang governor, which is
-> >>>intended for on-off controlled fans.
-> >>>
-> >>>Cc: platform-driver-x86@vger.kernel.org
-> >>>Cc: Darren Hart <dvhart@infradead.org>
-> >>>Cc: Andrew Morton <akpm@linux-foundation.org>
-> >>>CC: Zhang Rui <rui.zhang@intel.com>
-> >>>Cc: Andreas Mohr <andi@lisas.de>
-> >>>Cc: Javi Merino <javi.merino@arm.com>
-> >>>Acked-and-tested-by: Borislav Petkov <bp@suse.de>
-> >>>Signed-off-by: Peter Feuerer <peter@piie.net>
-> >>>---
-> >>> drivers/platform/x86/Kconfig   |  3 ++-
-> >>> drivers/platform/x86/acerhdf.c | 36 +++++++++++++++++++++++++++++++-----
-> >>> 2 files changed, 33 insertions(+), 6 deletions(-)
-> >>>
-> >>>diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> >>>index a2eabe6..c173266 100644
-> >>>--- a/drivers/platform/x86/Kconfig
-> >>>+++ b/drivers/platform/x86/Kconfig
-> >>>@@ -38,7 +38,8 @@ config ACER_WMI
-> >>> config ACERHDF
-> >>> 	tristate "Acer Aspire One temperature and fan driver"
-> >>>-	depends on THERMAL && ACPI
-> >>>+	select THERMAL_GOV_BANG_BANG
-> >>
-> >>So we use select sparingly as it does implicit things.
-> >>
-> >>I checked the THERMAL_GOV_BANG_BANG Kconfig entry, and the help says acerhdf
-> >>already depends on it (which it doesn't appear to). Any particular reason to add
-> >>select here instead of adding it as a depends.
-> >>
-> >>Why did you drop THERMAL?
-> >
-> >I had it like this in my first version of patches:
-> >+ depends on THERMAL && ACPI && THERMAL_GOV_BANG_BANG
-> >
-> >But after some discussion with lkml community we ended up with the select
-> >line and dropped THERMAL dependency, as it is implied by
-> >THEMAL_GOV_BANG_BANG.  I'm not so experienced with Kconfig, so I must rely
-> >on the statements of the community in this case.
+> > >> Signed-off-by: Andy Lutomirski <luto@mit.edu>
+> > >
+> > > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> > 
+> > What tree do these go through?  I haven't spotted them in linux-next.
 > 
-> Just found the link about this discussion I had with Rui and Boris:
-> http://linux-kernel.2935.n7.nabble.com/PATCH-0-4-acerhdf-thermal-adding-new-models-and-appropriate-governor-tp848572p908256.html
+> X86 PLATFORM DRIVERS
+> M:      Darren Hart <dvhart@infradead.org>
+> L:      platform-driver-x86@vger.kernel.org
+> T:      git
+> git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git
+> S:      Maintained
+> F:      drivers/platform/x86/
 > 
-
-Rui,
-
-I see you said you agree with the approach to "select THERMAL_GOV_BANG_BANG",
-and I'm OK with that. But that doesn't ensure, as far as I can see, a
-sufficient set of Kconfig dependencies for ACERHDF as THERMAL_GOV_BANG_BANG
-doesn't in turn select THERMAL.
-
-While it's unlikely to get ACERHDF available without THERMAL enabled, it does
-look possible. Should this driver also select or depends on THERMAL?
-
-Maybe:
-
-depends on ACPI
-depends on THERMAL
-select THERMAL_GOV_BANG_BANG
-
-?
-
-> [...]
+> Darren, could you pick up this patch series, please?
 > 
-> -- 
-> kind regards,
-> --peter;
+> You were missing in the Cc list, and it seems to have fallen through the
+> cracks  :-(
 > 
+> Maybe we could use https://patchwork.kernel.org/ for platform-driver-x86 ?
+
+For the time being, please continue to Cc the maintainer on all patches. That's
+a minimum requirement anyway. I'm not opposed to discussing patchwork, but I
+don't want it to be a substitute to following standard mailing list practices.
 
 -- 
 Darren Hart
