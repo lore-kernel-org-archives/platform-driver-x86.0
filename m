@@ -1,93 +1,87 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
-Date: Fri, 5 Dec 2014 22:03:24 +0100
-Message-ID: <201412052203.25016@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <201412052138.17092@pali> <3160202.BXgrhrDjJo@xps13>
+Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
+Date: Fri, 5 Dec 2014 22:07:35 +0100
+Message-ID: <201412052207.35676@pali>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <201412052131.34455@pali> <20141205204122.GA11772@amd>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart4042801.SVanky5oWb";
+  boundary="nextPart15933937.J3mFbyvu6I";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182]:40448 "EHLO
-	mail-wi0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751915AbaLEVD2 (ORCPT
+Received: from mail-wi0-f173.google.com ([209.85.212.173]:44463 "EHLO
+	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751030AbaLEVHi (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Dec 2014 16:03:28 -0500
-In-Reply-To: <3160202.BXgrhrDjJo@xps13>
+	Fri, 5 Dec 2014 16:07:38 -0500
+In-Reply-To: <20141205204122.GA11772@amd>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
---nextPart4042801.SVanky5oWb
+--nextPart15933937.J3mFbyvu6I
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Friday 05 December 2014 21:53:10 Gabriele Mazzotta wrote:
-> On Friday 05 December 2014 21:38:17 Pali Roh=C3=A1r wrote:
-> > On Wednesday 03 December 2014 14:00:23 Darren Hart wrote:
-> > > On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=C3=A1r wrote:
-> > > > Darren, I think that if we do not solve problem with
-> > > > duplicate key events (in dell-wireless.c) we should
-> > > > postpone these patches to later kernel version. It is
-> > > > better to not have such regression as it confuse
-> > > > software like NetworkManager which is widely used.
-> > >=20
-> > > OK, that's what I needed. Thanks. Ignore my previous
-> > > request, you answered it here. I will drop
-> > > dell-wireless.c and look for a combined solution from you
-> > > and Alex for the next release.
-> > >=20
-> > > Thanks,
+On Friday 05 December 2014 21:41:22 Pavel Machek wrote:
+> On Fri 2014-12-05 21:31:34, Pali Roh=C3=A1r wrote:
+> > On Wednesday 03 December 2014 14:34:32 Darren Hart wrote:
+> > > On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele
+> > > Mazzotta
 > >=20
-> > And according to discussion about Side effect of pressing
-> > special keys at [1] [2] we should not report this wireless
-> > key event (as input device) to userspace. And Alex's driver
-> > is doing that.
+> > wrote:
+> > > > Currently dell-wmi reports keypresses for WMI events
+> > > > that are notifications of changes performed by the
+> > > > BIOS. This patch series make sure that no keypresses
+> > > > are sent for those events so that nothing is done from
+> > > > userspace.
+> > > >=20
+> > > > Gabriele Mazzotta (3):
+> > > >   dell-wmi: Use appropriate keycode for radio state
+> > > >   changes dell-wmi: Don't report keypresses for radio
+> > > >   state changes
+> > >=20
+> > > Merged into one patch, queued.
+> > >=20
+> > > >   dell-wmi: Don't report keypresses on keybord
+> > > >   illumination change
+> > >=20
+> > > Queued.
+> > >=20
+> > > Thanks Gabriele.
 > >=20
-> > [1] -
-> > http://www.spinics.net/lists/platform-driver-x86/msg05922.h
-> > tml [2] -
-> > http://www.spinics.net/lists/platform-driver-x86/msg05924.h
-> > tml
+> > Darren, what do you think about sending patch into stable
+> > kernel?
 >=20
-> Alex's patch is for those laptop whose BIOS only sends a
-> notification to DELLABCE when Fn keys are pressed. His patch
-> simply translates these ACPI notifications to KEY_RFKILL
-> keypresses.
+> I'd suggest against that. -stable is for "serious" bugs, and
+> we don't want to change this kind of behaviour in -stable
+> kernel.
 >=20
+> 								Pavel
 
-Yes, and your last patch disables sending such KEY events to=20
-userspace (in dell-wmi driver). BIOS already handle changes, so=20
-key press should not be reported to userspace... [1] (from=20
-previous email).
+Ok, I agree that it is subjective how serious it is...
+Just to remind that patch fixing problem described in
 
-> Correct if I'm wrong, but shouldn't his patch have no effects
-> on your laptop? If I'm not wrong, CRBT returns 2 on your
-> laptop, so the input device is not even created. Am I missing
-> something?
->=20
-> Gabriele
-
-Yes, it has no effect for my laptop.
+http://www.spinics.net/lists/platform-driver-x86/msg05922.html
+http://www.spinics.net/lists/platform-driver-x86/msg05924.html
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart4042801.SVanky5oWb
+--nextPart15933937.J3mFbyvu6I
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAlSCHZ0ACgkQi/DJPQPkQ1K6SgCglpOP8Ul65XIa8k1XjULg0Q6y
-1s0An24e0B3LZQZRgiRtwArQOHG0xq5S
-=kXrB
+iEYEABECAAYFAlSCHpcACgkQi/DJPQPkQ1KVUgCglrWCmHBBLq13mOX/X49VreO7
+s3wAoJgl2NZjiUsfFiFnaODU6LcIwhJu
+=HVIl
 -----END PGP SIGNATURE-----
 
---nextPart4042801.SVanky5oWb--
+--nextPart15933937.J3mFbyvu6I--
