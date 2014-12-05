@@ -1,61 +1,36 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 2/3] toshiba_acpi: Change notify funtion to handle
- more events
-Date: Wed, 3 Dec 2014 05:19:07 -0800
-Message-ID: <20141203131907.GF75099@vmdeb7>
-References: <1417675325-14921-1-git-send-email-coproscefalo@gmail.com>
- <1417675325-14921-3-git-send-email-coproscefalo@gmail.com>
- <20141203131240.GD75099@vmdeb7>
- <CAGdLNWFpvSLZorQ6WNpEBZ+rkxcP7CR0vxtW4ugmyxojNRWLVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v3 0/3] toshiba_acpi: Hotkeys and event handling changes
+Date: Thu,  4 Dec 2014 20:22:44 -0700
+Message-ID: <1417749767-3898-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40085 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932378AbaLEDMi (ORCPT
+Received: from mail-oi0-f50.google.com ([209.85.218.50]:49973 "EHLO
+	mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932098AbaLEDWx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 22:12:38 -0500
-Content-Disposition: inline
-In-Reply-To: <CAGdLNWFpvSLZorQ6WNpEBZ+rkxcP7CR0vxtW4ugmyxojNRWLVg@mail.gmail.com>
+	Thu, 4 Dec 2014 22:22:53 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Thu, Dec 04, 2014 at 08:10:49PM -0700, Azael Avalos wrote:
-> Hi Darren,
->=20
-> 2014-12-03 6:12 GMT-07:00 Darren Hart <dvhart@infradead.org>:
-> > On Wed, Dec 03, 2014 at 11:42:04PM -0700, Azael Avalos wrote:
-> >> @@ -1971,41 +2008,22 @@ error:
-> >>  static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32=
- event)
-> >>  {
-> >>       struct toshiba_acpi_dev *dev =3D acpi_driver_data(acpi_dev);
-> >> -     u32 hci_result, value;
-> >> -     int retries =3D 3;
-> >> -     int scancode;
-> >> -
-> >> -     if (event !=3D 0x80)
-> >> -             return;
-> >> +     int ret;
-> >
-> >   CC      drivers/platform/x86/toshiba_acpi.o
-> > drivers/platform/x86/toshiba_acpi.c: In function =E2=80=98toshiba_a=
-cpi_notify=E2=80=99:
-> > drivers/platform/x86/toshiba_acpi.c:2012:6: warning: unused variabl=
-e =E2=80=98ret=E2=80=99 [-Wunused-variable]
-> >     int ret;
-> >           ^
-> >
-> > Please compile check each patch.
->=20
-> Sorry about that, was a left over from the split.
-> Want me to send a V3? I can send them in few minutes.
+These patches change the current code to accomodate the handling
+of more events, since so far, it only handles hotkey events (0x80),
+move the hotkey enabling code to a sub function to avoid duplication,
+and add event 0x92 which indicates a change in the keyboard backlight
+mode.
 
-Yes please.
+Changes since V3:
+- Removed a left over variable from the split in patch 02 and
+  moved it to patch 03 (where it belongs)
+- A bit more verbose description on patch 03
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+Azael Avalos (3):
+  toshiba_acpi: Move hotkey enabling code to own function
+  toshiba_acpi: Change notify funtion to handle more events
+  toshiba_acpi: Add keyboard backlight mode change event
+
+ drivers/platform/x86/toshiba_acpi.c | 139 ++++++++++++++++++++++--------------
+ 1 file changed, 86 insertions(+), 53 deletions(-)
+
+-- 
+2.1.2
