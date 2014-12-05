@@ -1,84 +1,99 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH v2] platform: x86: dell-laptop: Add support for keyboard backlight
-Date: Fri, 5 Dec 2014 02:53:35 +0100
-Message-ID: <201412050253.35324@pali>
-References: <1415967813-7223-1-git-send-email-pali.rohar@gmail.com> <4874352.BarQGyiSH1@xps13> <20141203115135.GA42394@vmdeb7>
+Date: Fri, 5 Dec 2014 03:03:49 +0100
+Message-ID: <201412050303.49206@pali>
+References: <1415967813-7223-1-git-send-email-pali.rohar@gmail.com> <1416754245-15550-1-git-send-email-pali.rohar@gmail.com> <20141203084319.GA52608@vmdeb7>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart14772405.fP2IpgDxjI";
+  boundary="nextPart3027145.38HYxrhLTQ";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f47.google.com ([74.125.82.47]:43198 "EHLO
-	mail-wg0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754792AbaLEBxi (ORCPT
+Received: from mail-wi0-f175.google.com ([209.85.212.175]:59595 "EHLO
+	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754717AbaLECDw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 4 Dec 2014 20:53:38 -0500
-In-Reply-To: <20141203115135.GA42394@vmdeb7>
+	Thu, 4 Dec 2014 21:03:52 -0500
+In-Reply-To: <20141203084319.GA52608@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
---nextPart14772405.fP2IpgDxjI
+--nextPart3027145.38HYxrhLTQ
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 03 December 2014 12:51:37 Darren Hart wrote:
-> On Thu, Dec 04, 2014 at 09:50:02AM +0100, Gabriele Mazzotta=20
-wrote:
-> > On Wednesday 03 December 2014 00:43:21 Darren Hart wrote:
-> > > > +     int kbd_timeouts[];
-> > > >=20
-> > > >  };
-> > > > =20
-> > > >  static struct quirk_entry *quirks;
-> > > >=20
-> > > > @@ -76,6 +89,10 @@ static int __init dmi_matched(const
-> > > > struct dmi_system_id *dmi)>
-> > > >=20
-> > > >       return 1;
-> > > > =20
-> > > >  }
-> > > >=20
-> > > > +static struct quirk_entry quirk_dell_xps13_9333 =3D {
-> > > > +     .kbd_timeouts =3D { 0, 5, 15, 60, 5*60, 15*60, -1 },
-> > >=20
-> > > Where did these values come from? Were they documented in
-> > > the libsmbios project? Can you provide a URL to that?
-> > > These really should be described by the firmware, but if
-> > > they aren't, nothing we can do about it.
+On Wednesday 03 December 2014 09:43:21 Darren Hart wrote:
+> On Sun, Nov 23, 2014 at 03:50:45PM +0100, Pali Roh=C3=A1r wrote:
+> > This patch adds support for configuring keyboard backlight
+> > settings on supported Dell laptops. It exports kernel leds
+> > interface and uses Dell SMBIOS tokens or keyboard class
+> > interface.
 > >=20
-> > I took those values from a Windows utility provided by Dell.
-> > I tried to find a reason for that specific list to exist,
-> > but I couldn't. The reason why it's there is that the BIOS
-> > of my laptop accepts any timeout, but it silently sets the
-> > timeout to 0 (i.e. illumination never off) if a value not
-> > in that list is given. So, given the wide range of of
-> > possible input values, we added that quirk. This is
-> > something my laptop does, Pali's behaves differently and
-> > such a list is not needed.
+> > With this patch it is possible to set:
+> > * keyboard backlight level
+> > * timeout after which will be backlight automatically turned
+> > off * input activity triggers (keyboard, touchpad, mouse)
+> > which enable backlight * ambient light settings
+> >=20
+> > Settings are exported via sysfs:
+> > /sys/class/leds/dell::kbd_backlight/
+> >=20
+> > Code is based on newly released documentation by Dell in
+> > libsmbios project.
 >=20
-> Let's get a comment above the quirk describing the scenario.
+> Hi Pali,
+>=20
+> I would really like to see this broken up. Possibly adding
+> levels and timeouts as separate patches for example. It is
+> quite difficult to review this all at once in a reasonable
+> amount of time.
+>=20
 
-Ok, I will add comment above quirk.
+It is really hard to split this patch into more parts which every=20
+one will compile and ideally also work. In my opinion every=20
+single git commit should be possible to compile and should also=20
+work (it helps also other developers to use git bisect).
+
+And because we need to pass all (previous unchanged) values in=20
+smbios call we need to parse all of them.
+
+I understand that it could be hard to review long patch, but=20
+there are more parts which interacts and do not work without=20
+other. Also some of settings (e.g keyboard backlight level) could=20
+be changed via different ways (and on some machines only one is=20
+working) and also that smbios keyboard interface has complicated=20
+logic...
+
+> During this review I caught a few more CodingStyle violations,
+> and raised some questions about the timeout and levels
+> mechanisms.
+>=20
+
+I will fix style problems in next v3 patch.
+=20
+What to do with Dan Carpenter patch which fixing kbd_timeout=20
+handling? Should I integrate it into v3? It does not apply on top=20
+of next v3 patch, because there will be new comment about quirk=20
+plus style fixes...
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart14772405.fP2IpgDxjI
+--nextPart3027145.38HYxrhLTQ
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAlSBEB8ACgkQi/DJPQPkQ1JkfwCggygbi7y96IMnC3uPlXCv4IIz
-d3AAniNVVwv5w4V5489D5SXMera30F+L
-=HhRv
+iEYEABECAAYFAlSBEoUACgkQi/DJPQPkQ1JnbgCfbKF4MKaaCMH3KxWEn+1ARZ/i
+9ckAn07cmIRQOnX4OIc3nalixsjVzQDj
+=CQXl
 -----END PGP SIGNATURE-----
 
---nextPart14772405.fP2IpgDxjI--
+--nextPart3027145.38HYxrhLTQ--
