@@ -1,91 +1,68 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v2] dell-smo8800: Add more ACPI ids and change description of driver
-Date: Fri,  5 Dec 2014 13:05:46 +0100
-Message-ID: <1417781146-6261-1-git-send-email-pali.rohar@gmail.com>
-References: <20141203134323.GI75099@vmdeb7>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
+Date: Fri, 5 Dec 2014 21:31:34 +0100
+Message-ID: <201412052131.34455@pali>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <20141203133431.GG75099@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20141203134323.GI75099@vmdeb7>
-Sender: linux-acpi-owner@vger.kernel.org
+Content-Type: multipart/signed;
+  boundary="nextPart5085208.aQI5Aj11Yf";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:53995 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751081AbaLEUbh (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 5 Dec 2014 15:31:37 -0500
+In-Reply-To: <20141203133431.GG75099@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, pavel@ucw.cz, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This patch adds other ACPI ids from Windows inf driver which should be =
-handled
-by dell-smo8800 driver. ACPI devices have same structure -- one IRQ num=
-ber.
+--nextPart5085208.aQI5Aj11Yf
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch also updates description of module.
+On Wednesday 03 December 2014 14:34:32 Darren Hart wrote:
+> On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele Mazzotta=20
+wrote:
+> > Currently dell-wmi reports keypresses for WMI events that
+> > are notifications of changes performed by the BIOS.
+> > This patch series make sure that no keypresses are sent for
+> > those events so that nothing is done from userspace.
+> >=20
+> > Gabriele Mazzotta (3):
+> >   dell-wmi: Use appropriate keycode for radio state changes
+> >   dell-wmi: Don't report keypresses for radio state changes
+>=20
+> Merged into one patch, queued.
+>=20
+> >   dell-wmi: Don't report keypresses on keybord illumination
+> >   change
+>=20
+> Queued.
+>=20
+> Thanks Gabriele.
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
----
- drivers/platform/x86/Kconfig        |    4 ++--
- drivers/platform/x86/dell-smo8800.c |   10 ++++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+Darren, what do you think about sending patch into stable kernel?
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-index 3bbcbf1..4614f35 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -128,10 +128,10 @@ config DELL_WMI_AIO
- 	  be called dell-wmi-aio.
-=20
- config DELL_SMO8800
--	tristate "Dell Latitude freefall driver (ACPI SMO8800/SMO8810)"
-+	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
- 	depends on ACPI
- 	---help---
--	  Say Y here if you want to support SMO8800/SMO8810 freefall device
-+	  Say Y here if you want to support SMO88XX freefall devices
- 	  on Dell Latitude laptops.
-=20
- 	  To compile this driver as a module, choose M here: the module will
-diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86=
-/dell-smo8800.c
-index a653716..0aec4fd 100644
---- a/drivers/platform/x86/dell-smo8800.c
-+++ b/drivers/platform/x86/dell-smo8800.c
-@@ -1,5 +1,5 @@
- /*
-- *  dell-smo8800.c - Dell Latitude ACPI SMO8800/SMO8810 freefall senso=
-r driver
-+ *  dell-smo8800.c - Dell Latitude ACPI SMO88XX freefall sensor driver
-  *
-  *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
-  *  Copyright (C) 2014 Pali Roh=C3=A1r <pali.rohar@gmail.com>
-@@ -209,7 +209,13 @@ static int smo8800_remove(struct acpi_device *devi=
-ce)
-=20
- static const struct acpi_device_id smo8800_ids[] =3D {
- 	{ "SMO8800", 0 },
-+	{ "SMO8801", 0 },
- 	{ "SMO8810", 0 },
-+	{ "SMO8811", 0 },
-+	{ "SMO8820", 0 },
-+	{ "SMO8821", 0 },
-+	{ "SMO8830", 0 },
-+	{ "SMO8831", 0 },
- 	{ "", 0 },
- };
-=20
-@@ -228,6 +234,6 @@ static struct acpi_driver smo8800_driver =3D {
-=20
- module_acpi_driver(smo8800_driver);
-=20
--MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO8800/SMO881=
-0)");
-+MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO88XX)");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sonal Santan, Pali Roh=C3=A1r");
---=20
-1.7.9.5
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nextPart5085208.aQI5Aj11Yf
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlSCFiYACgkQi/DJPQPkQ1JOOgCeL2gHdDFO0WaRHPiORiGZyrwr
+hLEAn0K3u/Z7iIc8ccwW/3+RoFK7/ntu
+=HXYK
+-----END PGP SIGNATURE-----
+
+--nextPart5085208.aQI5Aj11Yf--
