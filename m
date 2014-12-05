@@ -1,55 +1,54 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Fri, 5 Dec 2014 21:41:22 +0100
-Message-ID: <20141205204122.GA11772@amd>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
- <20141203133431.GG75099@vmdeb7>
- <201412052131.34455@pali>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Fri, 05 Dec 2014 21:53:10 +0100
+Message-ID: <3160202.BXgrhrDjJo@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <20141203130023.GC75099@vmdeb7> <201412052138.17092@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60050 "EHLO
-	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751172AbaLEUlZ (ORCPT
+Received: from mail-wi0-f173.google.com ([209.85.212.173]:64501 "EHLO
+	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750748AbaLEUxN convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Dec 2014 15:41:25 -0500
-Content-Disposition: inline
-In-Reply-To: <201412052131.34455@pali>
+	Fri, 5 Dec 2014 15:53:13 -0500
+In-Reply-To: <201412052138.17092@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Fri 2014-12-05 21:31:34, Pali Roh=E1r wrote:
-> On Wednesday 03 December 2014 14:34:32 Darren Hart wrote:
-> > On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele Mazzotta=20
-> wrote:
-> > > Currently dell-wmi reports keypresses for WMI events that
-> > > are notifications of changes performed by the BIOS.
-> > > This patch series make sure that no keypresses are sent for
-> > > those events so that nothing is done from userspace.
-> > >=20
-> > > Gabriele Mazzotta (3):
-> > >   dell-wmi: Use appropriate keycode for radio state changes
-> > >   dell-wmi: Don't report keypresses for radio state changes
+On Friday 05 December 2014 21:38:17 Pali Roh=E1r wrote:
+> On Wednesday 03 December 2014 14:00:23 Darren Hart wrote:
+> > On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=E1r wrote:
+> > > Darren, I think that if we do not solve problem with
+> > > duplicate key events (in dell-wireless.c) we should
+> > > postpone these patches to later kernel version. It is
+> > > better to not have such regression as it confuse software
+> > > like NetworkManager which is widely used.
 > >=20
-> > Merged into one patch, queued.
+> > OK, that's what I needed. Thanks. Ignore my previous request,
+> > you answered it here. I will drop dell-wireless.c and look
+> > for a combined solution from you and Alex for the next
+> > release.
 > >=20
-> > >   dell-wmi: Don't report keypresses on keybord illumination
-> > >   change
-> >=20
-> > Queued.
-> >=20
-> > Thanks Gabriele.
+> > Thanks,
 >=20
-> Darren, what do you think about sending patch into stable kernel?
+> And according to discussion about Side effect of pressing special
+> keys at [1] [2] we should not report this wireless key event (as
+> input device) to userspace. And Alex's driver is doing that.
+>=20
+> [1] - http://www.spinics.net/lists/platform-driver-x86/msg05922.html
+> [2] - http://www.spinics.net/lists/platform-driver-x86/msg05924.html
 
-I'd suggest against that. -stable is for "serious" bugs, and we don't
-want to change this kind of behaviour in -stable kernel.
+Alex's patch is for those laptop whose BIOS only sends a notification t=
+o
+DELLABCE when Fn keys are pressed. His patch simply translates these AC=
+PI
+notifications to KEY_RFKILL keypresses.
 
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+Correct if I'm wrong, but shouldn't his patch have no effects on your
+laptop? If I'm not wrong, CRBT returns 2 on your laptop, so the input
+device is not even created. Am I missing something?
+
+Gabriele
