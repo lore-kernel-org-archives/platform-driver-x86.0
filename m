@@ -1,68 +1,67 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Fri, 5 Dec 2014 21:31:34 +0100
-Message-ID: <201412052131.34455@pali>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <20141203133431.GG75099@vmdeb7>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Fri, 5 Dec 2014 21:38:17 +0100
+Message-ID: <201412052138.17092@pali>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <201412041055.32689@pali> <20141203130023.GC75099@vmdeb7>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart5085208.aQI5Aj11Yf";
+  boundary="nextPart10130674.iXHPkGsaus";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f42.google.com ([74.125.82.42]:53995 "EHLO
-	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751081AbaLEUbh (ORCPT
+Received: from mail-wi0-f169.google.com ([209.85.212.169]:64207 "EHLO
+	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751168AbaLEUiU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 5 Dec 2014 15:31:37 -0500
-In-Reply-To: <20141203133431.GG75099@vmdeb7>
+	Fri, 5 Dec 2014 15:38:20 -0500
+In-Reply-To: <20141203130023.GC75099@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, pavel@ucw.cz, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
---nextPart5085208.aQI5Aj11Yf
+--nextPart10130674.iXHPkGsaus
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 03 December 2014 14:34:32 Darren Hart wrote:
-> On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele Mazzotta=20
-wrote:
-> > Currently dell-wmi reports keypresses for WMI events that
-> > are notifications of changes performed by the BIOS.
-> > This patch series make sure that no keypresses are sent for
-> > those events so that nothing is done from userspace.
-> >=20
-> > Gabriele Mazzotta (3):
-> >   dell-wmi: Use appropriate keycode for radio state changes
-> >   dell-wmi: Don't report keypresses for radio state changes
+On Wednesday 03 December 2014 14:00:23 Darren Hart wrote:
+> On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=C3=A1r wrote:
+> > Darren, I think that if we do not solve problem with
+> > duplicate key events (in dell-wireless.c) we should
+> > postpone these patches to later kernel version. It is
+> > better to not have such regression as it confuse software
+> > like NetworkManager which is widely used.
 >=20
-> Merged into one patch, queued.
+> OK, that's what I needed. Thanks. Ignore my previous request,
+> you answered it here. I will drop dell-wireless.c and look
+> for a combined solution from you and Alex for the next
+> release.
 >=20
-> >   dell-wmi: Don't report keypresses on keybord illumination
-> >   change
->=20
-> Queued.
->=20
-> Thanks Gabriele.
+> Thanks,
 
-Darren, what do you think about sending patch into stable kernel?
+And according to discussion about Side effect of pressing special
+keys at [1] [2] we should not report this wireless key event (as
+input device) to userspace. And Alex's driver is doing that.
+
+[1] - http://www.spinics.net/lists/platform-driver-x86/msg05922.html
+[2] - http://www.spinics.net/lists/platform-driver-x86/msg05924.html
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart5085208.aQI5Aj11Yf
+--nextPart10130674.iXHPkGsaus
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAlSCFiYACgkQi/DJPQPkQ1JOOgCeL2gHdDFO0WaRHPiORiGZyrwr
-hLEAn0K3u/Z7iIc8ccwW/3+RoFK7/ntu
-=HXYK
+iEYEABECAAYFAlSCF7kACgkQi/DJPQPkQ1LH8gCcDXKZgJoefRMF4tcP8jO/UuDE
+Y0wAoJ5oQdJU7M4mrDFmC6L15HB0C1jJ
+=bpxq
 -----END PGP SIGNATURE-----
 
---nextPart5085208.aQI5Aj11Yf--
+--nextPart10130674.iXHPkGsaus--
