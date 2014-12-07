@@ -1,38 +1,71 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] dell-smo8800: Add more ACPI ids and change
- description of driver
-Date: Wed, 3 Dec 2014 10:07:57 -0800
-Message-ID: <20141203180756.GC20370@vmdeb7>
-References: <20141203134323.GI75099@vmdeb7>
- <1417781146-6261-1-git-send-email-pali.rohar@gmail.com>
+From: Dmitry Tunin <hanipouspilot@gmail.com>
+Subject: [PATCH] acpi: Add "acpi_osi=" for ASUS X200MA to enable brightness
+Date: Sun, 07 Dec 2014 16:09:20 +0300
+Message-ID: <54845180.4060206@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417781146-6261-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lb0-f170.google.com ([209.85.217.170]:41790 "EHLO
+	mail-lb0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752490AbaLGNJX (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 7 Dec 2014 08:09:23 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 
-On Fri, Dec 05, 2014 at 01:05:46PM +0100, Pali Roh=E1r wrote:
-> This patch adds other ACPI ids from Windows inf driver which should b=
-e handled
-> by dell-smo8800 driver. ACPI devices have same structure -- one IRQ n=
-umber.
->=20
-> This patch also updates description of module.
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+Add "acpi_osi=" quirk for ASUS X200MA
+More information can be found in UX302LA bugreport
+https://bugzilla.kernel.org/show_bug.cgi?id=70241
 
-Queued to testing, thanks Pali.
+I reported it to launchpad too
+https://bugs.launchpad.net/ubuntu/bug/1400068
 
---=20
-Darren Hart
-Intel Open Source Technology Center
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc:stable@vger.kernel.org
+Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+---
+  drivers/acpi/blacklist.c | 20 ++++++++++++++++++++
+  1 file changed, 20 insertions(+)
+
+diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+index 7556e7c..f78ed08 100644
+--- a/drivers/acpi/blacklist.c
++++ b/drivers/acpi/blacklist.c
+@@ -162,6 +162,17 @@ static int __init dmi_disable_osi_win8(const struct dmi_system_id *d)
+  	acpi_osi_setup("!Windows 2012");
+  	return 0;
+  }
++/*
++ * Some ASUS models firmware declares 16 devices instead of 8
++ * 'acpi_osi=' kernel parameter fixes it
++ * Without this parameters brightness keys Fn+F5 and F6 do not work
++ */
++static int __init dmi_disable_osi_all(const struct dmi_system_id *d)
++{
++	printk(KERN_NOTICE PREFIX "DMI detected: %s\n", d->ident);
++	acpi_osi_setup("");
++	return 0;
++}
+  
+  static struct dmi_system_id acpi_osi_dmi_table[] __initdata = {
+  	{
+@@ -371,6 +382,15 @@ static struct dmi_system_id acpi_osi_dmi_table[] __initdata = {
+  		     DMI_MATCH(DMI_PRODUCT_NAME, "1015PX"),
+  		},
+  	},
++	/* Without this brightness keys do not work */	
++	{
++	.callback = dmi_disable_osi_all,
++	.ident = "ASUSTeK COMPUTER INC. X200MA",
++	.matches = {
++		     DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		     DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
++		},
++	},
+  	{}
+  };
+  
+-- 
+1.9.1
