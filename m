@@ -1,16 +1,18 @@
 From: Dmitry Tunin <hanipouspilot@gmail.com>
-Subject: [PATCH] acpi: Add "acpi_osi=" for ASUS X200MA to enable brightness
-Date: Sun, 07 Dec 2014 16:09:20 +0300
-Message-ID: <54845180.4060206@gmail.com>
+Subject: Re: [PATCH v2] acpi: Add "acpi_osi=" for ASUS X200MA to enable brightness
+Date: Sun, 07 Dec 2014 17:35:54 +0300
+Message-ID: <548465CA.8020905@gmail.com>
+References: <54845180.4060206@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f170.google.com ([209.85.217.170]:41790 "EHLO
-	mail-lb0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752490AbaLGNJX (ORCPT
+Received: from mail-lb0-f179.google.com ([209.85.217.179]:37566 "EHLO
+	mail-lb0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750912AbaLGOgD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 7 Dec 2014 08:09:23 -0500
+	Sun, 7 Dec 2014 09:36:03 -0500
+In-Reply-To: <54845180.4060206@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
@@ -23,7 +25,7 @@ https://bugzilla.kernel.org/show_bug.cgi?id=70241
 I reported it to launchpad too
 https://bugs.launchpad.net/ubuntu/bug/1400068
 
-Cc:stable@vger.kernel.org
+Cc: stable@vger.kernel.org
 Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
 ---
   drivers/acpi/blacklist.c | 20 ++++++++++++++++++++
