@@ -1,81 +1,74 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v3 0/2] Disable the ThinkPad HW mute/level control when possible
-Date: Tue, 9 Dec 2014 14:47:34 -0800
-Message-ID: <CALCETrX8E6ot=UF=4jRt=Ph5zjFsH-3An4-eMzdWyyiyxyArHA@mail.gmail.com>
-References: <cover.1413590510.git.luto@amacapital.net> <20141204115515.GD100190@vmdeb7>
+From: Dmitry Tunin <hanipouspilot@gmail.com>
+Subject: Re: [PATCH v2] acpi: Add "acpi_osi=" for ASUS X200MA to enable brightness
+Date: Wed, 10 Dec 2014 17:29:11 +0300
+Message-ID: <548858B7.1020307@gmail.com>
+References: <54845180.4060206@gmail.com> <548465CA.8020905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f169.google.com ([209.85.217.169]:49237 "EHLO
-	mail-lb0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752072AbaLIWr4 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 9 Dec 2014 17:47:56 -0500
-Received: by mail-lb0-f169.google.com with SMTP id p9so1369059lbv.14
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Dec 2014 14:47:54 -0800 (PST)
-In-Reply-To: <20141204115515.GD100190@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, Len Brown <len.brown@intel.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <548465CA.8020905@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 4, 2014 at 3:55 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Fri, Oct 17, 2014 at 05:04:28PM -0700, Andy Lutomirski wrote:
->> This series is being resurrected after several years, and it's quite
->> different from before, so I'm restarting the version numbers :)
->>
->> ThinkPad volume and mute controls are a mess.  For whatever reason,
->> ThinkPads have mute buttons that send KEY_MUTE *and* control an
->> invisible-to-ALSA mute switch.  Some of them have volume controls that
->> interact with this switch as well.
->>
->> This is a perennial source of problems.  On most ThinkPads, if you press
->> mute and then unmute using GUI controls, you have no sound, because
->> userspace and ALSA state gets out of sync with the hardware switch.
->> There's a separate "sound card" that exposes the hardware switch, but
->> userspace code generally doesn't understand that.
->>
->> There are already a few _OSI(Linux) overrides to turn all the hardware
->> buttons into regular buttons.  Rather than quirking ACPI everywhere,
->> just teach thinkpad-acpi to program the buttons for full software
->> control and to disable hardware controls.  That allows us to remove the
->> ACPI quirks and have normal mute controls.  This approach should be
->> much simpler than adding even more kludgey ALSA integration for
->> questionable gain.
->>
->> Tested on an X200s (with latching mute by default) and an X220 (with
->> a mute light and toggle mute by default).  Everything works as expected.
->>
->> Changes from v2:
->>  - Don't try to change the mute mode on IBM ThinkPads.
->>  - Further minor cleanups.
->>  - Try to restore the mode on module unload.
->>
->> Changes from v1:
->>  - Simplified the code a bit.
->>  - Improved suspend/hibernate behavior.
->>
->> Andy Lutomirski (2):
->>   thinkpad-acpi: Try to use full software mute control
->>   acpi: Remove _OSI(Linux) for ThinkPads
->>
->>  drivers/acpi/blacklist.c             |  54 ----------------
->>  drivers/platform/x86/thinkpad_acpi.c | 116 ++++++++++++++++++++++++++++++++---
->>  2 files changed, 106 insertions(+), 64 deletions(-)
+This patch is only a temporary hack. This issue should be fixed by othe=
+r ways.
+See https://bugzilla.kernel.org/show_bug.cgi?id=3D70241#c70
+
+07.12.2014 17:35, Dmitry Tunin =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> Add "acpi_osi=3D" quirk for ASUS X200MA
+> More information can be found in UX302LA bugreport
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D70241
 >
-> Andy, is this the latest version?
-
-Yes.
-
---Andy
-
+> I reported it to launchpad too
+> https://bugs.launchpad.net/ubuntu/bug/1400068
 >
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-
-
-
--- 
-Andy Lutomirski
-AMA Capital Management, LLC
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+> ---
+>   drivers/acpi/blacklist.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>
+> diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/blacklist.c
+> index 7556e7c..f78ed08 100644
+> --- a/drivers/acpi/blacklist.c
+> +++ b/drivers/acpi/blacklist.c
+> @@ -162,6 +162,17 @@ static int __init dmi_disable_osi_win8(const str=
+uct dmi_system_id *d)
+>       acpi_osi_setup("!Windows 2012");
+>       return 0;
+>   }
+> +/*
+> + * Some ASUS models firmware declares 16 devices instead of 8
+> + * 'acpi_osi=3D' kernel parameter fixes it
+> + * Without this parameters brightness keys Fn+F5 and F6 do not work
+> + */
+> +static int __init dmi_disable_osi_all(const struct dmi_system_id *d)
+> +{
+> +    printk(KERN_NOTICE PREFIX "DMI detected: %s\n", d->ident);
+> +    acpi_osi_setup("");
+> +    return 0;
+> +}
+>
+>   static struct dmi_system_id acpi_osi_dmi_table[] __initdata =3D {
+>       {
+> @@ -371,6 +382,15 @@ static struct dmi_system_id acpi_osi_dmi_table[]=
+ __initdata =3D {
+>                DMI_MATCH(DMI_PRODUCT_NAME, "1015PX"),
+>           },
+>       },
+> +    /* Without this brightness keys do not work */
+> +    {
+> +    .callback =3D dmi_disable_osi_all,
+> +    .ident =3D "ASUSTeK COMPUTER INC. X200MA",
+> +    .matches =3D {
+> +             DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +             DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
+> +        },
+> +    },
+>       {}
+>   };
+>
