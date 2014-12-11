@@ -1,77 +1,57 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 0/2] Disable the ThinkPad HW mute/level control when
- possible
-Date: Wed, 10 Dec 2014 20:58:16 -0800
-Message-ID: <20141211045816.GA82668@vmdeb7>
-References: <cover.1413590510.git.luto@amacapital.net>
- <20141204115515.GD100190@vmdeb7>
- <CALCETrX8E6ot=UF=4jRt=Ph5zjFsH-3An4-eMzdWyyiyxyArHA@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 0/5] acerhdf: adding new models, appropriate
+ governor and minor clean up
+Date: Wed, 10 Dec 2014 20:59:03 -0800
+Message-ID: <20141211045903.GB82668@vmdeb7>
+References: <1398561815-22033-1-git-send-email-peter@piie.net>
+ <1417184452-11884-1-git-send-email-peter@piie.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40445 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:40455 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933717AbaLKE6u (ORCPT
+	with ESMTP id S1751817AbaLKE73 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Dec 2014 23:58:50 -0500
+	Wed, 10 Dec 2014 23:59:29 -0500
 Content-Disposition: inline
-In-Reply-To: <CALCETrX8E6ot=UF=4jRt=Ph5zjFsH-3An4-eMzdWyyiyxyArHA@mail.gmail.com>
+In-Reply-To: <1417184452-11884-1-git-send-email-peter@piie.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Matthew Garrett <mjg59@srcf.ucam.org>, ibm-acpi-devel@lists.sourceforge.net, Len Brown <len.brown@intel.com>, David Henningsson <david.henningsson@canonical.com>, Takashi Iwai <tiwai@suse.de>, Grant Diffey <gdiffey@gmail.com>, ALSA development <alsa-devel@alsa-project.org>, platform-driver-x86@vger.kernel.org
+To: Peter Feuerer <peter@piie.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Tue, Dec 09, 2014 at 02:47:34PM -0800, Andy Lutomirski wrote:
-> On Thu, Dec 4, 2014 at 3:55 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Fri, Oct 17, 2014 at 05:04:28PM -0700, Andy Lutomirski wrote:
-> >> This series is being resurrected after several years, and it's quite
-> >> different from before, so I'm restarting the version numbers :)
-> >>
-> >> ThinkPad volume and mute controls are a mess.  For whatever reason,
-> >> ThinkPads have mute buttons that send KEY_MUTE *and* control an
-> >> invisible-to-ALSA mute switch.  Some of them have volume controls that
-> >> interact with this switch as well.
-> >>
-> >> This is a perennial source of problems.  On most ThinkPads, if you press
-> >> mute and then unmute using GUI controls, you have no sound, because
-> >> userspace and ALSA state gets out of sync with the hardware switch.
-> >> There's a separate "sound card" that exposes the hardware switch, but
-> >> userspace code generally doesn't understand that.
-> >>
-> >> There are already a few _OSI(Linux) overrides to turn all the hardware
-> >> buttons into regular buttons.  Rather than quirking ACPI everywhere,
-> >> just teach thinkpad-acpi to program the buttons for full software
-> >> control and to disable hardware controls.  That allows us to remove the
-> >> ACPI quirks and have normal mute controls.  This approach should be
-> >> much simpler than adding even more kludgey ALSA integration for
-> >> questionable gain.
-> >>
-> >> Tested on an X200s (with latching mute by default) and an X220 (with
-> >> a mute light and toggle mute by default).  Everything works as expected.
-> >>
-> >> Changes from v2:
-> >>  - Don't try to change the mute mode on IBM ThinkPads.
-> >>  - Further minor cleanups.
-> >>  - Try to restore the mode on module unload.
-> >>
-> >> Changes from v1:
-> >>  - Simplified the code a bit.
-> >>  - Improved suspend/hibernate behavior.
-> >>
-> >> Andy Lutomirski (2):
-> >>   thinkpad-acpi: Try to use full software mute control
-> >>   acpi: Remove _OSI(Linux) for ThinkPads
-> >>
-> >>  drivers/acpi/blacklist.c             |  54 ----------------
-> >>  drivers/platform/x86/thinkpad_acpi.c | 116 ++++++++++++++++++++++++++++++++---
-> >>  2 files changed, 106 insertions(+), 64 deletions(-)
-> >
-> > Andy, is this the latest version?
+On Fri, Nov 28, 2014 at 03:20:47PM +0100, Peter Feuerer wrote:
+> Hi Darren,
 > 
-> Yes.
+> please apply this series of patches.
+> 
+> It is intended to:
+> 
+>   * Introduce "manual mode" support (Patch 1 & 2), which is needed to control
+>     the fan of a few new models.
+> 
+>   * Add an appropriate thermal governor (Patch 3).  Manipulating and
+>     fiddling around with the step-wise governor has been a very fragile thing
+>     in the past and as it broke again, I used the opportunity to add a two
+>     point thermal governor which implements the actual fan handling required by
+>     acerhdf and puts from my point of view things straight.
+> 
+>   * Do some minor clean up like:
+>       - adding second trip point for critical temperature (Patch 4)
+>       - removing _t suffix from struct which isn't typedef and replace unsigned
+>         char by u8 (Patch 5)
+> 
+> Thanks and kind regards,
+> peter 
+> 
+> Peter Feuerer (5):
+>   acerhdf: Adding support for "manual mode"
+>   acerhdf: Adding support for new models
+>   acerhdf: Use bang-bang thermal governor
+>   acerhdf: added critical trip point
+>   acerhdf: minor clean up
 
-Queued to for-next. Pending anything unforseen, I'll attempt to get this into
-3.19.
+Queued to for-next. Thanks!
 
 -- 
 Darren Hart
