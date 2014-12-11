@@ -1,57 +1,25 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RESEND PATCH v5 0/5] acerhdf: adding new models, appropriate
- governor and minor clean up
-Date: Wed, 10 Dec 2014 20:59:03 -0800
-Message-ID: <20141211045903.GB82668@vmdeb7>
-References: <1398561815-22033-1-git-send-email-peter@piie.net>
- <1417184452-11884-1-git-send-email-peter@piie.net>
+From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH] Documentation: Add entry for dell-laptop sysfs interface
+Date: Wed, 10 Dec 2014 21:08:47 -0800
+Message-ID: <20141211050847.GC82668@vmdeb7>
+References: <1417628493-29323-1-git-send-email-gabriele.mzt@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40455 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751817AbaLKE73 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Dec 2014 23:59:29 -0500
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417184452-11884-1-git-send-email-peter@piie.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Peter Feuerer <peter@piie.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <1417628493-29323-1-git-send-email-gabriele.mzt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriele Mazzotta <gabriele.mzt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, libsmbios-devel-XtjxT7Vmt5ZskZv2Y/7f+AC/G2K4zDHf@public.gmane.org, Srinivas_G_Gowda-8PEkshWhKlo@public.gmane.org, Michael_E_Brown-8PEkshWhKlo@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 28, 2014 at 03:20:47PM +0100, Peter Feuerer wrote:
-> Hi Darren,
-> 
-> please apply this series of patches.
-> 
-> It is intended to:
-> 
->   * Introduce "manual mode" support (Patch 1 & 2), which is needed to control
->     the fan of a few new models.
-> 
->   * Add an appropriate thermal governor (Patch 3).  Manipulating and
->     fiddling around with the step-wise governor has been a very fragile thing
->     in the past and as it broke again, I used the opportunity to add a two
->     point thermal governor which implements the actual fan handling required by
->     acerhdf and puts from my point of view things straight.
-> 
->   * Do some minor clean up like:
->       - adding second trip point for critical temperature (Patch 4)
->       - removing _t suffix from struct which isn't typedef and replace unsigned
->         char by u8 (Patch 5)
-> 
-> Thanks and kind regards,
-> peter 
-> 
-> Peter Feuerer (5):
->   acerhdf: Adding support for "manual mode"
->   acerhdf: Adding support for new models
->   acerhdf: Use bang-bang thermal governor
->   acerhdf: added critical trip point
->   acerhdf: minor clean up
+On Wed, Dec 03, 2014 at 06:41:33PM +0100, Gabriele Mazzotta wrote:
+> Add the documentation for the new sysfs interface of dell-laptop
+> that allows to configure the keyboard illumination on Dell systems.
 
-Queued to for-next. Thanks!
+Queued to for-next.
+
+Thanks,
 
 -- 
 Darren Hart
