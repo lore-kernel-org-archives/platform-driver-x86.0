@@ -1,36 +1,102 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH -next] platform/x86/acerhdf: still depends on THERMAL
-Date: Mon, 15 Dec 2014 09:33:52 -0800
-Message-ID: <20141215173351.GA104292@vmdeb7>
-References: <548F139D.4090901@infradead.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
+Date: Sat, 20 Dec 2014 10:10:17 +0100
+Message-ID: <201412201010.18151@pali>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <201412052207.35676@pali> <20141203180329.GB20370@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed;
+  boundary="nextPart1657903.OEBXyi7mYS";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35662 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750770AbaLORjM (ORCPT
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:59227 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752784AbaLTJKX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Dec 2014 12:39:12 -0500
-Content-Disposition: inline
-In-Reply-To: <548F139D.4090901@infradead.org>
+	Sat, 20 Dec 2014 04:10:23 -0500
+In-Reply-To: <20141203180329.GB20370@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Peter Feuerer <peter@piie.net>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 09:00:13AM -0800, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> acerhdf uses thermal interfaces so it should depend on THERMAL.
-> It also should not select a thermal driver without checking that
-> THERMAL is enabled.
-> 
-> This fixes the following build errors when THERMAL=m and
-> ACERHDF=y.
+--nextPart1657903.OEBXyi7mYS
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you Randy, I'll include this in my pull request later this week. Now in
-for-next.
+On Wednesday 03 December 2014 19:03:37 Darren Hart wrote:
+> On Fri, Dec 05, 2014 at 10:07:35PM +0100, Pali Roh=C3=A1r wrote:
+> > On Friday 05 December 2014 21:41:22 Pavel Machek wrote:
+> > > On Fri 2014-12-05 21:31:34, Pali Roh=C3=A1r wrote:
+> > > > On Wednesday 03 December 2014 14:34:32 Darren Hart wrote:
+> > > > > On Thu, Dec 04, 2014 at 12:16:20AM +0100, Gabriele
+> > > > > Mazzotta
+> > > >=20
+> > > > wrote:
+> > > > > > Currently dell-wmi reports keypresses for WMI events
+> > > > > > that are notifications of changes performed by the
+> > > > > > BIOS. This patch series make sure that no keypresses
+> > > > > > are sent for those events so that nothing is done
+> > > > > > from userspace.
+> > > > > >=20
+> > > > > > Gabriele Mazzotta (3):
+> > > > > >   dell-wmi: Use appropriate keycode for radio state
+> > > > > >   changes dell-wmi: Don't report keypresses for
+> > > > > >   radio state changes
+> > > > >=20
+> > > > > Merged into one patch, queued.
+> > > > >=20
+> > > > > >   dell-wmi: Don't report keypresses on keybord
+> > > > > >   illumination change
+> > > > >=20
+> > > > > Queued.
+> > > > >=20
+> > > > > Thanks Gabriele.
+> > > >=20
+> > > > Darren, what do you think about sending patch into
+> > > > stable kernel?
+> > >=20
+> > > I'd suggest against that. -stable is for "serious" bugs,
+> > > and we don't want to change this kind of behaviour in
+> > > -stable kernel.
+> > >=20
+> > > 								Pavel
+> >=20
+> > Ok, I agree that it is subjective how serious it is...
+> > Just to remind that patch fixing problem described in
+> >=20
+> > http://www.spinics.net/lists/platform-driver-x86/msg05922.ht
+> > ml
+> > http://www.spinics.net/lists/platform-driver-x86/msg05924.h
+> > tml
+>=20
+> I don't have any objection to sending this back to stable.
+> Stable is for fixing REAL bugs, as opposed to theorhetical
+> races, etc. This is a "real" bug.
+>=20
+> As to not chaning behavior, if it's OK for mainline, it's OK
+> for stable. At least that is my understanding of it. Folks
+> are free to verify with Greg if they disagree.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Darren, so how you decided? Now when patches are in linus tree,=20
+are you going to send them to stable tree?
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1657903.OEBXyi7mYS
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlSVPPoACgkQi/DJPQPkQ1LAFgCffZ3/2tVeqDMZOUMwfruWkPPg
+BdwAoIFtT9B82D8tXjf4RwmXcA6nqIUk
+=6BDc
+-----END PGP SIGNATURE-----
+
+--nextPart1657903.OEBXyi7mYS--
