@@ -1,62 +1,78 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Sat, 20 Dec 2014 08:58:32 -0800
-Message-ID: <833BBFBF-227B-43AE-9976-FEDB55226249@infradead.org>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <201412052207.35676@pali> <20141203180329.GB20370@vmdeb7> <201412201010.18151@pali> <20141220151108.GA11752@amd> <20141220162804.GA7872@khazad-dum.debian.net>
+Date: Sat, 20 Dec 2014 18:03:54 +0100
+Message-ID: <12450702.GivQvxRsLB@xps13>
+References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com> <20141220151108.GA11752@amd> <20141220161654.GA16404@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from casper.infradead.org ([85.118.1.10]:52974 "EHLO
-	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752448AbaLTRAJ (ORCPT
+Received: from mail-wi0-f173.google.com ([209.85.212.173]:43816 "EHLO
+	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753027AbaLTRD5 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 20 Dec 2014 12:00:09 -0500
-In-Reply-To: <20141220162804.GA7872@khazad-dum.debian.net>
+	Sat, 20 Dec 2014 12:03:57 -0500
+In-Reply-To: <20141220161654.GA16404@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Pavel Machek <pavel@ucw.cz>
-Cc: =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
+On Saturday 20 December 2014 08:16:54 Darren Hart wrote:
+> On Sat, Dec 20, 2014 at 04:11:08PM +0100, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > > > Ok, I agree that it is subjective how serious it is...
+> > > > > Just to remind that patch fixing problem described in
+> > > > > 
+> > > > > http://www.spinics.net/lists/platform-driver-x86/msg05922.ht
+> > > > > ml
+> > > > > http://www.spinics.net/lists/platform-driver-x86/msg05924.h
+> > > > > tml
+> > > > 
+> > > > I don't have any objection to sending this back to stable.
+> > > > Stable is for fixing REAL bugs, as opposed to theorhetical
+> > > > races, etc. This is a "real" bug.
+> > > > 
+> > > > As to not chaning behavior, if it's OK for mainline, it's OK
+> > > > for stable. At least that is my understanding of it. Folks
+> > > > are free to verify with Greg if they disagree.
+> > > 
+> > > Darren, so how you decided? Now when patches are in linus tree, 
+> > > are you going to send them to stable tree?
+> > 
+> > Please don't. -stable is for serious mainline bugs people are actually
+> > hitting. Null pointer dereference counts, if people actually hit
+> > it. This is more behaviour change, and yes, the new behaviour is
+> > better, but it is really different class.
+> 
+> In this case I agree with Pavel. While the patches are small enough, fix one
+> thing each, etc, it isn't clear from the description exactly how these patches
+> affect users.
+> 
+> If you can articulate how they are "real bugs that bother people" (see
+> stable_kernel_rules.txt) we can reconsider. I should have pushed for better
+> commit messages on these it appears as this should be obvious from those, but it
+> isn't - at least not to me at 8:15am ;-)
 
+The problem is that userspace programs responds to those keypresses when
+they shouldn't.
 
-On December 20, 2014 8:28:04 AM PST, Henrique de Moraes Holschuh <hmh@hmh.eng.br> wrote:
->On Sat, 20 Dec 2014, Pavel Machek wrote:
->> > > > Ok, I agree that it is subjective how serious it is...
->> > > > Just to remind that patch fixing problem described in
->> > > > 
->> > > > http://www.spinics.net/lists/platform-driver-x86/msg05922.ht
->> > > > ml
->> > > > http://www.spinics.net/lists/platform-driver-x86/msg05924.h
->> > > > tml
->> > > 
->> > > I don't have any objection to sending this back to stable.
->> > > Stable is for fixing REAL bugs, as opposed to theorhetical
->> > > races, etc. This is a "real" bug.
->> > > 
->> > > As to not chaning behavior, if it's OK for mainline, it's OK
->> > > for stable. At least that is my understanding of it. Folks
->> > > are free to verify with Greg if they disagree.
->> > 
->> > Darren, so how you decided? Now when patches are in linus tree, 
->> > are you going to send them to stable tree?
->> 
->> Please don't. -stable is for serious mainline bugs people are
->actually
->> hitting. Null pointer dereference counts, if people actually hit
->> it. This is more behaviour change, and yes, the new behaviour is
->> better, but it is really different class.
->
->Sometimes the old behavior is something that is a major pain for users
->and
->userspace.  In that case, where the new behavior fixes really annoying
->usecase bugs, the fix belongs in -stable IMHO.
->
->Broken behavior hits, by definition, every user of the feature after
->all.
+In case of KEY_KBDILLUMTOGGLE, the illumination level is changed by the
+BIOS, so if the keypress is reported, userspace programs will try to
+toggle the keyboard illumination after the BIOS changed the level.
+This is even more problematic if you consider that there could be
+multiple illumination levels that are not taken into account if a
+KEY_KBDILLUMTOGGLE is sent. Userspace will simply turn ON/OFF the
+illumination, interfering with the BIOS.
+This is shouldn't be a major problem since dell-laptop can control the
+keyboard illumination only now and I can't see what userspace
+application can misbehave without this change.
 
-How is this behavior affecting users with this hardware today? How does it manifest? Does it make for a bad or non-functional user experience? Again, I should have pressed for more complete commit messages, apologies for that.
+In the case of KEY_WLAN/KEY_RFKILL, the BIOS already takes care of
+everything when the key is pressed, so sending keypresses as if
+userspace programs have to do something is wrong. If for instance the
+WiFi rfkill is soft blocked and I press the Fn key twice, I want it
+to be soft blocked at the end. However, this is not the case.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Sorry for the brief commit messages.
