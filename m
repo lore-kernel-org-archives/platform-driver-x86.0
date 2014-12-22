@@ -1,57 +1,26 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: System automatically wakes up because of Intel Rapid Start Technology
-Date: Mon, 22 Dec 2014 14:59:38 +0100
-Message-ID: <9927036.n7iZq92iLW@xps13>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: System automatically wakes up because of Intel Rapid Start
+ Technology
+Date: Mon, 22 Dec 2014 14:44:00 +0000
+Message-ID: <20141222144400.GA11801@srcf.ucam.org>
+References: <9927036.n7iZq92iLW@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f46.google.com ([74.125.82.46]:39850 "EHLO
-	mail-wg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753184AbaLVN7m (ORCPT
+Received: from cavan.codon.org.uk ([93.93.128.6]:59423 "EHLO
+	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754560AbaLVOoG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Dec 2014 08:59:42 -0500
+	Mon, 22 Dec 2014 09:44:06 -0500
+Content-Disposition: inline
+In-Reply-To: <9927036.n7iZq92iLW@xps13>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: mjg59@srcf.ucam.org, linux-kernel@vger.kernel.org
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+Huh. Yeah, I actually see the same behaviour on my Thinkpad. Let me play 
+with this a little.
 
-I'd like to ask those of you who own a system that supports Intel Rapid 
-Start Technology (IRST) to perform a simple test to determine whether my 
-laptop (XPS13 9333) is the only system affected by a bug related to IRST 
-that I recently found or not.
-
-In the past months I noticed random transitions from S3 to S0 with no 
-apparent reason.
-After some recent tests I found a way to trigger those automatic state 
-transitions. It seems that the timer in charge of the resume of the 
-system for the transition to S4 is not re-initialized on resume/suspend. 
-Exactly "wakeup_time" minutes after the transition from S0 to S3, the 
-system will automatically transition from S3 to S0 instead of S4 if
-within that interval it transitioned to S0 at least once.
-Everything works as expected if the system is never resumed or if the 
-system is suspended after "wakeup_time" minutes have passed since the
-first suspension to ram.
-
-In addition to that, changing the values of wakeup_time and 
-wakeup_events seems to have no effect until the timer has expired.
-
-According to the Implementation Guide [1] there are no special 
-requirements other than the standard S3 ACPI support. Still, IRST works 
-as intended only on Windows. This makes me wonder whether the problem is 
-due to some vendor specific change or not.
-
-To quickly replicate the problem, follow the following steps: set the 
-timer to 1 minute and suspend the system. Immediately after that, resume 
-and suspend the system again. If it automatically wakes up after 1 
-minute has passed since the first suspension, then the system is
-affected by the bug. If this is the case, I'd suggest to default
-wakeup_events to 0 or 2 to prevent issues and add some sort of warning
-somewhere to let users know about this problem.
-
-Regards,
-Gabriele
-
-[1] http://downloadmirror.intel.com/22647/eng/Intel%20Rapid%20Start%20Technology%20Deployment%20Guide%20v1.0.pdf
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
