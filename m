@@ -1,67 +1,40 @@
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: System automatically wakes up because of Intel Rapid Start
- Technology
-Date: Mon, 22 Dec 2014 14:59:49 +0000
-Message-ID: <20141222145949.GB11844@srcf.ucam.org>
-References: <9927036.n7iZq92iLW@xps13>
+From: Darren Hart <dvhart@infradead.org>
+Subject: RE: [PATCH] TCO Watchdog warning interrupt driver creation
+Date: Mon, 22 Dec 2014 07:41:12 -0800
+Message-ID: <E73BFCB9-87CB-447D-839C-9ED4031FC6E2@infradead.org>
+References: <B9C02DB17496AC4197F41A146D371B9B075AF9DE@hasmsx107.ger.corp.intel.com> <20141211040404.GA28797@vmdeb7> <5489AA6B.9080802@roeck-us.net> <B9C02DB17496AC4197F41A146D371B9B075C5FE3@hasmsx107.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cavan.codon.org.uk ([93.93.128.6]:59548 "EHLO
-	cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754768AbaLVO7v (ORCPT
+Received: from casper.infradead.org ([85.118.1.10]:38671 "EHLO
+	casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754868AbaLVPlX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Dec 2014 09:59:51 -0500
-Content-Disposition: inline
-In-Reply-To: <9927036.n7iZq92iLW@xps13>
+	Mon, 22 Dec 2014 10:41:23 -0500
+In-Reply-To: <B9C02DB17496AC4197F41A146D371B9B075C5FE3@hasmsx107.ger.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-
-Can you try this diff?
-
-diff --git a/drivers/rtc/rtc-cmos.c b/drivers/rtc/rtc-cmos.c
-index 5b2e761..637f980 100644
---- a/drivers/rtc/rtc-cmos.c
-+++ b/drivers/rtc/rtc-cmos.c
-@@ -48,6 +48,7 @@ struct cmos_rtc {
- 	struct device		*dev;
- 	int			irq;
- 	struct resource		*iomem;
-+	struct rtc_wkalrm	alm;
- 
- 	void			(*wake_on)(struct device *);
- 	void			(*wake_off)(struct device *);
-@@ -59,6 +60,8 @@ struct cmos_rtc {
- 	u8			day_alrm;
- 	u8			mon_alrm;
- 	u8			century;
-+
-+	bool			valid_alarm;
- };
- 
- /* both platform and pnp busses use negative numbers for invalid irqs */
-@@ -879,6 +882,7 @@ static int cmos_suspend(struct device *dev)
- 
- 		cmos_checkintr(cmos, tmp);
- 	}
-+	cmos->valid_alarm = !!cmos_read_alarm(dev, &cmos->alm);
- 	spin_unlock_irq(&rtc_lock);
- 
- 	if (tmp & RTC_AIE) {
-@@ -949,6 +953,10 @@ static int cmos_resume(struct device *dev)
- 			hpet_mask_rtc_irq_bit(RTC_AIE);
- 		} while (mask & RTC_AIE);
- 	}
-+
-+	if (cmos->valid_alarm)
-+		cmos_set_alarm(dev, &cmos->alm);
-+
- 	spin_unlock_irq(&rtc_lock);
- 
- 	dev_dbg(dev, "resume, ctrl %02x\n", tmp);
+To: "Muller, Francois-nicolas" <francois-nicolas.muller@intel.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: "'platform-driver-x86@vger.kernel.org'" <platform-driver-x86@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Linux ACPI Mailing List <linux-acpi@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>
 
 
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
+
+On December 22, 2014 5:18:33 AM PST, "Muller, Francois-nicolas" <franco=
+is-nicolas.muller@intel.com> wrote:
+>Thanks Darren and Guenter for your review.
+>Here is a new patchset, including the feature in the watchdog driver
+>and using a boot parameter to be enabled.
+>Fran=C3=A7ois-Nicolas
+>
+>Subject: [PATCH] TCO watchdog warning interrupt handler
+>
+
+Please provide a complete commit message.
+
+>Signed-off-by: Francois-Nicolas Muller
+><francois-nicolas.muller@intel.com>
+
+--=20
+Darren Hart
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
