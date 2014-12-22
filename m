@@ -1,104 +1,165 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/3] dell-wmi: Don't send unneeded keypresses
-Date: Sat, 20 Dec 2014 12:18:01 -0800
-Message-ID: <20141220201801.GB16404@vmdeb7>
-References: <1417648583-9336-1-git-send-email-gabriele.mzt@gmail.com>
- <20141220151108.GA11752@amd>
- <20141220161654.GA16404@vmdeb7>
- <12450702.GivQvxRsLB@xps13>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Mon, 22 Dec 2014 15:27:57 +0800
+Message-ID: <CAJ=jqubEggcXs0kvegGUpVh8PNh-GmdcnXkXUjqv4fHD-zXdEA@mail.gmail.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+	<94523420.RuhoUzmTQs@xps13>
+	<201412052223.25059@pali>
+	<2697957.miSb4Rm7HK@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:55495 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751000AbaLTUSG (ORCPT
+Received: from mail-qa0-f42.google.com ([209.85.216.42]:57796 "EHLO
+	mail-qa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754002AbaLVH16 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 20 Dec 2014 15:18:06 -0500
-Content-Disposition: inline
-In-Reply-To: <12450702.GivQvxRsLB@xps13>
+	Mon, 22 Dec 2014 02:27:58 -0500
+Received: by mail-qa0-f42.google.com with SMTP id n8so2973014qaq.29
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Dec 2014 23:27:57 -0800 (PST)
+In-Reply-To: <2697957.miSb4Rm7HK@xps13>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, mjg59@srcf.ucam.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Sat, Dec 20, 2014 at 06:03:54PM +0100, Gabriele Mazzotta wrote:
-> On Saturday 20 December 2014 08:16:54 Darren Hart wrote:
-> > On Sat, Dec 20, 2014 at 04:11:08PM +0100, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > > > Ok, I agree that it is subjective how serious it is...
-> > > > > > Just to remind that patch fixing problem described in
-> > > > > > 
-> > > > > > http://www.spinics.net/lists/platform-driver-x86/msg05922.ht
-> > > > > > ml
-> > > > > > http://www.spinics.net/lists/platform-driver-x86/msg05924.h
-> > > > > > tml
-> > > > > 
-> > > > > I don't have any objection to sending this back to stable.
-> > > > > Stable is for fixing REAL bugs, as opposed to theorhetical
-> > > > > races, etc. This is a "real" bug.
-> > > > > 
-> > > > > As to not chaning behavior, if it's OK for mainline, it's OK
-> > > > > for stable. At least that is my understanding of it. Folks
-> > > > > are free to verify with Greg if they disagree.
-> > > > 
-> > > > Darren, so how you decided? Now when patches are in linus tree, 
-> > > > are you going to send them to stable tree?
-> > > 
-> > > Please don't. -stable is for serious mainline bugs people are actually
-> > > hitting. Null pointer dereference counts, if people actually hit
-> > > it. This is more behaviour change, and yes, the new behaviour is
-> > > better, but it is really different class.
-> > 
-> > In this case I agree with Pavel. While the patches are small enough, fix one
-> > thing each, etc, it isn't clear from the description exactly how these patches
-> > affect users.
-> > 
-> > If you can articulate how they are "real bugs that bother people" (see
-> > stable_kernel_rules.txt) we can reconsider. I should have pushed for better
-> > commit messages on these it appears as this should be obvious from those, but it
-> > isn't - at least not to me at 8:15am ;-)
-> 
-> The problem is that userspace programs responds to those keypresses when
-> they shouldn't.
-> 
-> In case of KEY_KBDILLUMTOGGLE, the illumination level is changed by the
-> BIOS, so if the keypress is reported, userspace programs will try to
-> toggle the keyboard illumination after the BIOS changed the level.
-> This is even more problematic if you consider that there could be
-> multiple illumination levels that are not taken into account if a
-> KEY_KBDILLUMTOGGLE is sent. Userspace will simply turn ON/OFF the
-> illumination, interfering with the BIOS.
-> This is shouldn't be a major problem since dell-laptop can control the
-> keyboard illumination only now and I can't see what userspace
-> application can misbehave without this change.
+=3D Testing =3D
 
-Agreed, this one should not go back to stable.
+I tested six Dell systems for two sets of patches for dell radio
+button - two system with radio slider and four with radio hotkey.
+There are also two systems with working ARBT method.
 
-> 
-> In the case of KEY_WLAN/KEY_RFKILL, the BIOS already takes care of
-> everything when the key is pressed, so sending keypresses as if
-> userspace programs have to do something is wrong. If for instance the
-> WiFi rfkill is soft blocked and I press the Fn key twice, I want it
-> to be soft blocked at the end. However, this is not the case.
+=3D=3D Basic Information =3D=3D
+Based OS: Ubuntu 14.10 (kernel 3.16 [1]) and kernel 3.18 [2]
 
-These sound like good candidates, real bugs that bother people. I would support
-sending them back to stable.
+Patches:
+1. dell-wireless v3 =3D original v2 + Gabriele's suggestion [3]
+2. dell-rbtn [4]
 
-Since we didn't have this discussion before they went mainline, sorry it's been
-a bad month for me :-/, these need to be sent manually. Pali, Gabriele, please
-have a look at stable_kernel_rules, determine how far back these should go, and
-submit the patches to the stable list.
+Method:
+1. run "rfkill list" and press hotkey / toggle slider during runtime
+2. run "rfkill list" and toggle slider during S3
 
-> Sorry for the brief commit messages.
-> 
+=3D=3D Results =3D=3D
 
-They didn't bother me at the time as I saw the improvement, but they weren't
-enough to make the stable decision and I need to watch out for that in the
-future. Lesson learned :-)
+I summarized the tests in Google sheet as below. Please advise if
+anyone has problem reading it.
 
-Thanks everyone,
+https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qfZ8=
+29CkJLPo06aI/edit?usp=3Dsharing
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+PS. The document will stay as long as possible for future references.
+
+=3D=3D Summary =3D=3D
+
+1. I did not observed a duplicated event. However, keycode 240
+(unknown) is generated on many UUT. It is not issued by dell-laptop or
+del-wmi. I am suspecting it is the other event Pali observes but it
+can be the result of different distro.
+
+2. Some system issues scancode "0xe0 0x73 0xe0 0xf3". It can also be
+used toggle wireless state but this can also be distro-dependent. This
+scancode does nothing on Ubuntu 14.10.
+
+2. There are two systems with working ARBT (XPS 13 9333 and Inspiron
+7447). Calling ARBT(1) changes BIOS behaviours, and this matches to
+Dell's document. We should include it in the patch for maximum
+capability.
+
+
+[1] dell-wireless is only tested 3.16.
+[2] dell-rbtn is tested on 3.16 and 3.18, but no differences are observ=
+ed.
+[3] http://people.canonical.com/~alexhung/dell-wireless/
+[4] http://people.canonical.com/~alexhung/dell-rbtn/
+
+On Sat, Dec 6, 2014 at 5:49 AM, Gabriele Mazzotta
+<gabriele.mzt@gmail.com> wrote:
+> On Friday 05 December 2014 22:23:25 Pali Roh=C3=A1r wrote:
+>> On Friday 05 December 2014 22:12:42 Gabriele Mazzotta wrote:
+>> > On Friday 05 December 2014 22:03:24 Pali Roh=C3=A1r wrote:
+>> > > On Friday 05 December 2014 21:53:10 Gabriele Mazzotta wrote:
+>> > > > On Friday 05 December 2014 21:38:17 Pali Roh=C3=A1r wrote:
+>> > > > > On Wednesday 03 December 2014 14:00:23 Darren Hart wrote:
+>> > > > > > On Thu, Dec 04, 2014 at 10:55:32AM +0100, Pali Roh=C3=A1r
+>> wrote:
+>> > > > > > > Darren, I think that if we do not solve problem with
+>> > > > > > > duplicate key events (in dell-wireless.c) we should
+>> > > > > > > postpone these patches to later kernel version. It
+>> > > > > > > is better to not have such regression as it confuse
+>> > > > > > > software like NetworkManager which is widely used.
+>> > > > > >
+>> > > > > > OK, that's what I needed. Thanks. Ignore my previous
+>> > > > > > request, you answered it here. I will drop
+>> > > > > > dell-wireless.c and look for a combined solution from
+>> > > > > > you and Alex for the next release.
+>> > > > > >
+>> > > > > > Thanks,
+>> > > > >
+>> > > > > And according to discussion about Side effect of
+>> > > > > pressing special keys at [1] [2] we should not report
+>> > > > > this wireless key event (as input device) to userspace.
+>> > > > > And Alex's driver is doing that.
+>> > > > >
+>> > > > > [1] -
+>> > > > > http://www.spinics.net/lists/platform-driver-x86/msg0592
+>> > > > > 2.h tml [2] -
+>> > > > > http://www.spinics.net/lists/platform-driver-x86/msg0592
+>> > > > > 4.h tml
+>> > > >
+>> > > > Alex's patch is for those laptop whose BIOS only sends a
+>> > > > notification to DELLABCE when Fn keys are pressed. His
+>> > > > patch simply translates these ACPI notifications to
+>> > > > KEY_RFKILL keypresses.
+>> > >
+>> > > Yes, and your last patch disables sending such KEY events to
+>> > > userspace (in dell-wmi driver). BIOS already handle changes,
+>> > > so key press should not be reported to userspace... [1]
+>> > > (from previous email).
+>> >
+>> > This is not true if ARBT (with 1 as parameter) is called. When
+>> > this is done, the BIOS stops managing the radio devices
+>> > completely and reporting KEY_RFKILL to userspace becomes a
+>> > necessity. I guess that the laptops on which this patch was
+>> > tested behaved like mine after ARBT is called, given that the
+>> > call was missing completely in the original patch.
+>> >
+>>
+>> Ok. It means that at least original Alex patch needs to be
+>> reworked (so we will do not see duplicate events problem and
+>> problem described in previous email).
+>>
+>> But my other question is... If ARBT(1) is called then it disables
+>> BIOS support for managing radio devices on your laptop. Why we
+>> need patch which disabling useful functionality (=3D ability to
+>> disable wifi rfkill)? We still do not have patch which can
+>> correctly set rfkill state by software on laptops of your fn key
+>> type.
+>
+> That's what happens on my laptop, but Alex said that the laptops on
+> which he worked, ARBT was empty, so I guess it's not always a choice.
+> In order not to break things, all the laptops that support both the
+> methods must be set to the correct mode through ARBT when the module
+> is loaded. If this is not done, then what you say is correct, we shou=
+ld
+> not report KEY_RFKILL, or at least do it selectively, but I guess tha=
+t
+> this is not be possible without a whitelist (that we don't have).
+>
+>> > > > Correct if I'm wrong, but shouldn't his patch have no
+>> > > > effects on your laptop? If I'm not wrong, CRBT returns 2
+>> > > > on your laptop, so the input device is not even created.
+>> > > > Am I missing something?
+>> > > >
+>> > > > Gabriele
+>> > >
+>> > > Yes, it has no effect for my laptop.
+>>
+>>
+>
+
+
+
+--=20
+Cheers,
+Alex Hung
