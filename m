@@ -1,100 +1,75 @@
 From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: System automatically wakes up because of Intel Rapid Start Technology
-Date: Mon, 22 Dec 2014 19:57:25 +0100
-Message-ID: <6760597.z8zpCLmhLz@xps13>
-References: <9927036.n7iZq92iLW@xps13> <20141222180254.GA13985@srcf.ucam.org> <2403684.tbaxlpZUxO@xps13>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Mon, 22 Dec 2014 20:16:58 +0100
+Message-ID: <1675821.m9zcYReJQs@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <2697957.miSb4Rm7HK@xps13> <CAJ=jqubEggcXs0kvegGUpVh8PNh-GmdcnXkXUjqv4fHD-zXdEA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f41.google.com ([74.125.82.41]:34626 "EHLO
-	mail-wg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754555AbaLVS52 (ORCPT
+Received: from mail-wg0-f49.google.com ([74.125.82.49]:51727 "EHLO
+	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754869AbaLVTRB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Dec 2014 13:57:28 -0500
-In-Reply-To: <2403684.tbaxlpZUxO@xps13>
+	Mon, 22 Dec 2014 14:17:01 -0500
+In-Reply-To: <CAJ=jqubEggcXs0kvegGUpVh8PNh-GmdcnXkXUjqv4fHD-zXdEA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>
+Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Monday 22 December 2014 19:41:52 Gabriele Mazzotta wrote:
-> On Monday 22 December 2014 18:02:54 Matthew Garrett wrote:
-> > Getting this right is a little bit annoying - if the timer would have 
-> > expired during the time we were suspended, we don't want to re-enable 
-> > it. I *think* this covers all cases, and does it in generic code rather 
-> > than special-casing it. Any chance you can give it a test?
+On Monday 22 December 2014 15:27:57 Alex Hung wrote:
+> = Testing =
 > 
-> I've done a quick test. has_persistent_clock() is false on my system,
-> so this patch has no effect as it is.
+> I tested six Dell systems for two sets of patches for dell radio
+> button - two system with radio slider and four with radio hotkey.
+> There are also two systems with working ARBT method.
+> 
+> == Basic Information ==
+> Based OS: Ubuntu 14.10 (kernel 3.16 [1]) and kernel 3.18 [2]
+> 
+> Patches:
+> 1. dell-wireless v3 = original v2 + Gabriele's suggestion [3]
+> 2. dell-rbtn [4]
+> 
+> Method:
+> 1. run "rfkill list" and press hotkey / toggle slider during runtime
+> 2. run "rfkill list" and toggle slider during S3
+> 
+> == Results ==
+> 
+> I summarized the tests in Google sheet as below. Please advise if
+> anyone has problem reading it.
+> 
+> https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qfZ829CkJLPo06aI/edit?usp=sharing
+> 
+> PS. The document will stay as long as possible for future references.
+> 
+> == Summary ==
+> 
+> 1. I did not observed a duplicated event. However, keycode 240
+> (unknown) is generated on many UUT. It is not issued by dell-laptop or
+> del-wmi. I am suspecting it is the other event Pali observes but it
+> can be the result of different distro.
+> 
+> 2. Some system issues scancode "0xe0 0x73 0xe0 0xf3". It can also be
+> used toggle wireless state but this can also be distro-dependent. This
+> scancode does nothing on Ubuntu 14.10.
+> 
+> 2. There are two systems with working ARBT (XPS 13 9333 and Inspiron
+> 7447). Calling ARBT(1) changes BIOS behaviours, and this matches to
+> Dell's document. We should include it in the patch for maximum
+> capability.
+> 
+> 
+> [1] dell-wireless is only tested 3.16.
+> [2] dell-rbtn is tested on 3.16 and 3.18, but no differences are observed.
+> [3] http://people.canonical.com/~alexhung/dell-wireless/
+> [4] http://people.canonical.com/~alexhung/dell-rbtn/
 
-I did another quick test and moved the code so that it is executed
-before has_persistent_clock() is checked. Everything seems to be
-working as intended. I tried to suspend and resume multiple times
-within one minute and exactly one minute after the last suspension
-the system transitioned from S3 to S4.
+I've just tried the last revision of dell-wireless and noticed that a
+notification (0x80) is sent to DELLABCE after a transition from S3 to
+S0, causing dell-wireless to send KEY_RFKILL. This shouldn't happen.
+Same thing for transitions from S4 to S0.
 
-I haven't checked properly whether it is OK or not to simply move
-the code or not, but I wanted to let you know that it works.
-
-> > diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-> > index 472a5ad..4e3a2a1 100644
-> > --- a/drivers/rtc/class.c
-> > +++ b/drivers/rtc/class.c
-> > @@ -91,6 +91,8 @@ static int rtc_suspend(struct device *dev)
-> >  		old_system = timespec64_sub(old_system, delta_delta);
-> >  	}
-> >  
-> > +	rtc->valid_alarm = !rtc_read_alarm(rtc, &rtc->alarm);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -145,6 +147,29 @@ static int rtc_resume(struct device *dev)
-> >  	if (sleep_time.tv_sec >= 0)
-> >  		timekeeping_inject_sleeptime64(&sleep_time);
-> >  	rtc_hctosys_ret = 0;
-> > +
-> > +	/*
-> > +	 * If there was an alarm set before suspend, make sure that the
-> > +	 * platform hasn't overwritten it
-> > +	 */
-> > +	if (rtc->valid_alarm) {
-> > +		struct rtc_time tm;
-> > +		long now, scheduled;
-> > +
-> > +		rtc_read_time(rtc, &tm);
-> > +		rtc_tm_to_time(&rtc->alarm.time, &scheduled);
-> > +		rtc_tm_to_time(&tm, &now);
-> > +
-> > +		/* Clear the alarm if it went off during suspend */
-> > +		if (scheduled <= now) {
-> > +			rtc_time_to_tm(0, &rtc->alarm.time);
-> > +			rtc->alarm.enabled = 0;
-> > +		}
-> > +
-> > +		if (rtc->ops && rtc->ops->set_alarm)
-> > +			rtc->ops->set_alarm(rtc->dev.parent, &rtc->alarm);
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-> > index 6d6be09..bc805ff 100644
-> > --- a/include/linux/rtc.h
-> > +++ b/include/linux/rtc.h
-> > @@ -133,6 +133,10 @@ struct rtc_device
-> >  	/* Some hardware can't support UIE mode */
-> >  	int uie_unsupported;
-> >  
-> > +#ifdef CONFIG_PM_SLEEP
-> > +	struct rtc_wkalrm alarm;
-> > +	bool valid_alarm;
-> > +#endif
-> >  #ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
-> >  	struct work_struct uie_task;
-> >  	struct timer_list uie_timer;
-> > 
-> > 
-> > 
+Gabriele
