@@ -1,75 +1,39 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
-Date: Mon, 22 Dec 2014 20:16:58 +0100
-Message-ID: <1675821.m9zcYReJQs@xps13>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <2697957.miSb4Rm7HK@xps13> <CAJ=jqubEggcXs0kvegGUpVh8PNh-GmdcnXkXUjqv4fHD-zXdEA@mail.gmail.com>
+From: =?UTF-8?B?UmFmYWVsIEpvc8Op?= <rjsilvestre@gmail.com>
+Subject: samsung-laptop module in UEFI
+Date: Wed, 24 Dec 2014 01:29:58 +0800
+Message-ID: <CAAuGQp=BV5n3_Cj1s-G=Xoai0Jxxf9qNfcQHk9kpmwouEE_XzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f49.google.com ([74.125.82.49]:51727 "EHLO
-	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754869AbaLVTRB (ORCPT
+Received: from mail-ie0-f182.google.com ([209.85.223.182]:46412 "EHLO
+	mail-ie0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751693AbaLWRaT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 22 Dec 2014 14:17:01 -0500
-In-Reply-To: <CAJ=jqubEggcXs0kvegGUpVh8PNh-GmdcnXkXUjqv4fHD-zXdEA@mail.gmail.com>
+	Tue, 23 Dec 2014 12:30:19 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Monday 22 December 2014 15:27:57 Alex Hung wrote:
-> = Testing =
-> 
-> I tested six Dell systems for two sets of patches for dell radio
-> button - two system with radio slider and four with radio hotkey.
-> There are also two systems with working ARBT method.
-> 
-> == Basic Information ==
-> Based OS: Ubuntu 14.10 (kernel 3.16 [1]) and kernel 3.18 [2]
-> 
-> Patches:
-> 1. dell-wireless v3 = original v2 + Gabriele's suggestion [3]
-> 2. dell-rbtn [4]
-> 
-> Method:
-> 1. run "rfkill list" and press hotkey / toggle slider during runtime
-> 2. run "rfkill list" and toggle slider during S3
-> 
-> == Results ==
-> 
-> I summarized the tests in Google sheet as below. Please advise if
-> anyone has problem reading it.
-> 
-> https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qfZ829CkJLPo06aI/edit?usp=sharing
-> 
-> PS. The document will stay as long as possible for future references.
-> 
-> == Summary ==
-> 
-> 1. I did not observed a duplicated event. However, keycode 240
-> (unknown) is generated on many UUT. It is not issued by dell-laptop or
-> del-wmi. I am suspecting it is the other event Pali observes but it
-> can be the result of different distro.
-> 
-> 2. Some system issues scancode "0xe0 0x73 0xe0 0xf3". It can also be
-> used toggle wireless state but this can also be distro-dependent. This
-> scancode does nothing on Ubuntu 14.10.
-> 
-> 2. There are two systems with working ARBT (XPS 13 9333 and Inspiron
-> 7447). Calling ARBT(1) changes BIOS behaviours, and this matches to
-> Dell's document. We should include it in the patch for maximum
-> capability.
-> 
-> 
-> [1] dell-wireless is only tested 3.16.
-> [2] dell-rbtn is tested on 3.16 and 3.18, but no differences are observed.
-> [3] http://people.canonical.com/~alexhung/dell-wireless/
-> [4] http://people.canonical.com/~alexhung/dell-rbtn/
+Hi,
 
-I've just tried the last revision of dell-wireless and noticed that a
-notification (0x80) is sent to DELLABCE after a transition from S3 to
-S0, causing dell-wireless to send KEY_RFKILL. This shouldn't happen.
-Same thing for transitions from S4 to S0.
+I know that some time ago the UEFI installation could brick Samsung
+laptops and one way to prevent this was to patch the kernel disabling
+the samsung-laptop module case it detect that was running in UEFI
+mode.
+As far as I know Samsung already fixed the firmware and other more
+permanent fixes were applied to the kernel.
 
-Gabriele
+For what I found from an internet search, the reason for keeping this
+blacklist is because this module still can cause some issues to the
+laptop.
+
+This is a bit frustrating, as similar Samsung Settings applications
+works perfectly under UEFI in Windows.
+
+So, I would like to ask you this: since it already passed some time
+from the initial issue and the kernel has some many Samsung employed
+contributors is there any plans to fix this module and re-enable it in
+UEFI?
+
+Regards,
+Rafael
