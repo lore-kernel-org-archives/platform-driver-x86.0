@@ -1,64 +1,114 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/2] x86: Add IMR support to Quark/Galileo
-Date: Wed, 31 Dec 2014 12:12:58 +0200
-Message-ID: <CAHp75VcRmm3raZ8juLJJOyuDpuxLLg44UHNprwQ=b2hhvqHOsA@mail.gmail.com>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH] Documentation: Add entry for dell-laptop sysfs interface
+Date: Wed, 31 Dec 2014 12:20:59 +0100
+Message-ID: <1636595.UbTko9mUNA@xps13>
+References: <1417628493-29323-1-git-send-email-gabriele.mzt@gmail.com> <20141231053149.GA3764@norris-Latitude-E6410>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f43.google.com ([209.85.213.43]:47294 "EHLO
-	mail-yh0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750734AbaLaKM7 (ORCPT
+Received: from mail-wi0-f169.google.com ([209.85.212.169]:47841 "EHLO
+	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750757AbaLaL1n convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 31 Dec 2014 05:12:59 -0500
-In-Reply-To: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
+	Wed, 31 Dec 2014 06:27:43 -0500
+In-Reply-To: <20141231053149.GA3764@norris-Latitude-E6410>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: dvhart@infradead.org, mjg59@srcf.ucam.org, linux-api@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com, pali.rohar@gmail.com, A.Sloman@cs.bham.ac.uk
 
-On Mon, Dec 29, 2014 at 7:23 PM, Bryan O'Donoghue
-<pure.logic@nexus-software.ie> wrote:
-> This patchset adds an IMR driver to the kernel plus platform code for
-> Intel Galileo Gen1/Gen2 boards.
+On Tuesday 30 December 2014 21:31:49 Brian Norris wrote:
+> Hi,
+>=20
+> On Wed, Dec 03, 2014 at 06:41:33PM +0100, Gabriele Mazzotta wrote:
+> > Add the documentation for the new sysfs interface of dell-laptop
+> > that allows to configure the keyboard illumination on Dell systems.
+> >=20
+> > Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+> > ---
+> >  .../ABI/testing/sysfs-platform-dell-laptop         | 60 ++++++++++=
+++++++++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-l=
+aptop
+> >=20
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-dell-laptop b=
+/Documentation/ABI/testing/sysfs-platform-dell-laptop
+> > new file mode 100644
+> > index 0000000..7969443
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-platform-dell-laptop
+> > @@ -0,0 +1,60 @@
+> > +What:		/sys/class/leds/dell::kbd_backlight/als_setting
+> > +Date:		December 2014
+> > +KernelVersion:	3.19
+> > +Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+> > +		Pali Roh=E1r <pali.rohar@gmail.com>
+> > +Description:
+> > +		This file allows to control the automatic keyboard
+> > +		illumination mode on some systems that have an ambient
+> > +		light sensor. Write 1 to this file to enable the auto
+> > +		mode, 0 to disable it.
+> [...]
+>=20
+> This entry appears wrong, or at least incomplete. My system boots wit=
+h a
+> default value of 18, and the 'set' implementation accepts any value f=
+rom
+> 0 to 255.
+>=20
+> According to the comments in dell-laptop.c, the value actually means
+> something different than on/off:
+>=20
+>   cbArg3, byte0  Desired setting of ALS value that turns the light on=
+ or off.
+>=20
+> Admittedly, I'm not clear on what the intended interface is, as I've
+> never had the ALS / keyboard backlight controls all working properly =
+on
+> my laptop in the first place, but I thought this would be the right
+> place to ask about getting the documentation and driver in sync.
 
-[]
+Hi,
 
-> Bryan O'Donoghue (2):
->   x86: Add Isolated Memory Regions for Quark X1000
->   platform/x86 Add Intel Galileo platform specific setup
+You are perfectly right, the documentation is wrong and I'm sorry for
+that. als_setting should allow you to define when the keyboard
+backlight has to be turned on or off depending on the value reported
+by the ambient light sensor.
 
-I'm going to review this soon, but here few comments below.
+Please note that not everything that is in libsmbios [1] is implemented
+in the kernel driver. Take a look at it, recently there have been few
+changes related to the ALS settings. Probably they are not needed given
+that you are able to set the threshold with the current kernel driver,
+but you might find something interesting.
 
->  arch/x86/Kconfig                     |  23 ++
->  arch/x86/include/asm/imr.h           |  79 ++++++
->  arch/x86/include/asm/intel-quark.h   |  31 ++
+I'll submit a patch to correct the documentation, thanks for reporting.
 
-Could it be just a quark.h? Like for ce4100.
-Those intel- prefixes in the modules looks awkward especially when
-pathname consists x86 already.
+[1] http://linux.dell.com/git/libsmbios.git
 
->  arch/x86/kernel/Makefile             |   1 +
->  arch/x86/kernel/imr.c                | 529 +++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/Kconfig         |  15 +
->  drivers/platform/x86/Makefile        |   1 +
->  drivers/platform/x86/intel_galileo.c | 175 ++++++++++++
-
-Here what about to make an hierarchy like:
-intel/galileo.c
-intel/mid/... would be those modules with intel_mid_ prefixes in
-future. See my proposal regarding to drivers/mfd [1]
-
->  8 files changed, 854 insertions(+)
->  create mode 100644 arch/x86/include/asm/imr.h
->  create mode 100644 arch/x86/include/asm/intel-quark.h
->  create mode 100644 arch/x86/kernel/imr.c
->  create mode 100644 drivers/platform/x86/intel_galileo.c
-
-
-[1] http://www.spinics.net/lists/kernel/msg1886819.html
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> NB: I came across this because
+>=20
+>    (1) I'd really like to be able to turn the keyboard backlight on, =
+the
+>    timeout off, and the ALS off; and
+>=20
+>    (2) I noticed there was a new driver patch in 3.19 (nice! thanks!)=
+,
+>    where previously there must have been some kind of half-functional
+>    working driver -- I could get backlight control, but it always tim=
+ed
+>    out too quickly.
+>=20
+> It seems like /sys/.../als_setting is documented to handle the latter
+> part of (1), but its implementation does not match.
+>=20
+> Thanks,
+> Brian
+>=20
+> P.S. The author of this page [1] might be interested in these new dri=
+ver
+> additions.
+>=20
+> [1] http://www.cs.bham.ac.uk/~axs/laptop/dell-e6410-fn-keys.html
