@@ -1,94 +1,64 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] Documentation: Add entry for dell-laptop sysfs interface
-Date: Tue, 30 Dec 2014 21:31:49 -0800
-Message-ID: <20141231053149.GA3764@norris-Latitude-E6410>
-References: <1417628493-29323-1-git-send-email-gabriele.mzt@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 0/2] x86: Add IMR support to Quark/Galileo
+Date: Wed, 31 Dec 2014 12:12:58 +0200
+Message-ID: <CAHp75VcRmm3raZ8juLJJOyuDpuxLLg44UHNprwQ=b2hhvqHOsA@mail.gmail.com>
+References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pd0-f178.google.com ([209.85.192.178]:62623 "EHLO
-	mail-pd0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750710AbaLaFb6 (ORCPT
+Received: from mail-yh0-f43.google.com ([209.85.213.43]:47294 "EHLO
+	mail-yh0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750734AbaLaKM7 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 31 Dec 2014 00:31:58 -0500
-Content-Disposition: inline
-In-Reply-To: <1417628493-29323-1-git-send-email-gabriele.mzt@gmail.com>
+	Wed, 31 Dec 2014 05:12:59 -0500
+In-Reply-To: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: dvhart@infradead.org, mjg59@srcf.ucam.org, linux-api@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, libsmbios-devel@lists.us.dell.com, Srinivas_G_Gowda@dell.com, Michael_E_Brown@dell.com, pali.rohar@gmail.com, A.Sloman@cs.bham.ac.uk
+To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi,
+On Mon, Dec 29, 2014 at 7:23 PM, Bryan O'Donoghue
+<pure.logic@nexus-software.ie> wrote:
+> This patchset adds an IMR driver to the kernel plus platform code for
+> Intel Galileo Gen1/Gen2 boards.
 
-On Wed, Dec 03, 2014 at 06:41:33PM +0100, Gabriele Mazzotta wrote:
-> Add the documentation for the new sysfs interface of dell-laptop
-> that allows to configure the keyboard illumination on Dell systems.
->=20
-> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> ---
->  .../ABI/testing/sysfs-platform-dell-laptop         | 60 ++++++++++++=
-++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-lap=
-top
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-laptop b/D=
-ocumentation/ABI/testing/sysfs-platform-dell-laptop
-> new file mode 100644
-> index 0000000..7969443
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-laptop
-> @@ -0,0 +1,60 @@
-> +What:		/sys/class/leds/dell::kbd_backlight/als_setting
-> +Date:		December 2014
-> +KernelVersion:	3.19
-> +Contact:	Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-> +		Pali Roh=E1r <pali.rohar@gmail.com>
-> +Description:
-> +		This file allows to control the automatic keyboard
-> +		illumination mode on some systems that have an ambient
-> +		light sensor. Write 1 to this file to enable the auto
-> +		mode, 0 to disable it.
-[...]
+[]
 
-This entry appears wrong, or at least incomplete. My system boots with =
-a
-default value of 18, and the 'set' implementation accepts any value fro=
-m
-0 to 255.
+> Bryan O'Donoghue (2):
+>   x86: Add Isolated Memory Regions for Quark X1000
+>   platform/x86 Add Intel Galileo platform specific setup
 
-According to the comments in dell-laptop.c, the value actually means
-something different than on/off:
+I'm going to review this soon, but here few comments below.
 
-  cbArg3, byte0  Desired setting of ALS value that turns the light on o=
-r off.
+>  arch/x86/Kconfig                     |  23 ++
+>  arch/x86/include/asm/imr.h           |  79 ++++++
+>  arch/x86/include/asm/intel-quark.h   |  31 ++
 
-Admittedly, I'm not clear on what the intended interface is, as I've
-never had the ALS / keyboard backlight controls all working properly on
-my laptop in the first place, but I thought this would be the right
-place to ask about getting the documentation and driver in sync.
+Could it be just a quark.h? Like for ce4100.
+Those intel- prefixes in the modules looks awkward especially when
+pathname consists x86 already.
 
-NB: I came across this because
+>  arch/x86/kernel/Makefile             |   1 +
+>  arch/x86/kernel/imr.c                | 529 +++++++++++++++++++++++++++++++++++
+>  drivers/platform/x86/Kconfig         |  15 +
+>  drivers/platform/x86/Makefile        |   1 +
+>  drivers/platform/x86/intel_galileo.c | 175 ++++++++++++
 
-   (1) I'd really like to be able to turn the keyboard backlight on, th=
-e
-   timeout off, and the ALS off; and
+Here what about to make an hierarchy like:
+intel/galileo.c
+intel/mid/... would be those modules with intel_mid_ prefixes in
+future. See my proposal regarding to drivers/mfd [1]
 
-   (2) I noticed there was a new driver patch in 3.19 (nice! thanks!),
-   where previously there must have been some kind of half-functional
-   working driver -- I could get backlight control, but it always timed
-   out too quickly.
+>  8 files changed, 854 insertions(+)
+>  create mode 100644 arch/x86/include/asm/imr.h
+>  create mode 100644 arch/x86/include/asm/intel-quark.h
+>  create mode 100644 arch/x86/kernel/imr.c
+>  create mode 100644 drivers/platform/x86/intel_galileo.c
 
-It seems like /sys/.../als_setting is documented to handle the latter
-part of (1), but its implementation does not match.
 
-Thanks,
-Brian
+[1] http://www.spinics.net/lists/kernel/msg1886819.html
 
-P.S. The author of this page [1] might be interested in these new drive=
-r
-additions.
 
-[1] http://www.cs.bham.ac.uk/~axs/laptop/dell-e6410-fn-keys.html
+-- 
+With Best Regards,
+Andy Shevchenko
