@@ -1,234 +1,65 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 1/2] x86: Add Isolated Memory Regions for Quark X1000
-Date: Thu, 01 Jan 2015 20:11:10 +0000
-Message-ID: <54A5A9DE.5060006@nexus-software.ie>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>	<1419873783-5161-2-git-send-email-pure.logic@nexus-software.ie> <CAHp75VeYg1oAp5x9OCKOyZGvkt9n4WBRuWV4QPBHbrq+vTzANg@mail.gmail.com>
-Reply-To: pure.logic@nexus-software.ie
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/2] x86: Add IMR support to Quark/Galileo
+Date: Thu, 1 Jan 2015 18:02:32 -0800
+Message-ID: <20150102020232.GA51121@vmdeb7>
+References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
+ <CAHp75VcRmm3raZ8juLJJOyuDpuxLLg44UHNprwQ=b2hhvqHOsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:49345 "EHLO
-	outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751430AbbAAULM (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:46120 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751522AbbABCCu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Jan 2015 15:11:12 -0500
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-	by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 9A1BF2101D1
-	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Jan 2015 20:11:10 +0000 (UTC)
-In-Reply-To: <CAHp75VeYg1oAp5x9OCKOyZGvkt9n4WBRuWV4QPBHbrq+vTzANg@mail.gmail.com>
+	Thu, 1 Jan 2015 21:02:50 -0500
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcRmm3raZ8juLJJOyuDpuxLLg44UHNprwQ=b2hhvqHOsA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Bryan O'Donoghue <pure.logic@nexus-software.ie>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On 31/12/14 15:05, Andy Shevchenko wrote:
+On Wed, Dec 31, 2014 at 12:12:58PM +0200, Andy Shevchenko wrote:
+> On Mon, Dec 29, 2014 at 7:23 PM, Bryan O'Donoghue
+> <pure.logic@nexus-software.ie> wrote:
+> > This patchset adds an IMR driver to the kernel plus platform code for
+> > Intel Galileo Gen1/Gen2 boards.
+> 
+> []
+> 
+> > Bryan O'Donoghue (2):
+> >   x86: Add Isolated Memory Regions for Quark X1000
+> >   platform/x86 Add Intel Galileo platform specific setup
+> 
+> I'm going to review this soon, but here few comments below.
 
-<snip>
->> +int imr_del(int reg, unsigned long base, unsigned long size);
->
-> Same comments as for add_range.
-> Could it be imr_remove_range() ?
+Thanks for your review Andy, good advice throughout.
 
-Can be. You've actually caught me out there, function name is "imr_del"
-function description says imr_del_range(). Amazing to think I proof read
-this file a number of times for exactly thing type of thing
+> 
+> >  arch/x86/Kconfig                     |  23 ++
+> >  arch/x86/include/asm/imr.h           |  79 ++++++
+> >  arch/x86/include/asm/intel-quark.h   |  31 ++
+> 
+> Could it be just a quark.h? Like for ce4100.
+> Those intel- prefixes in the modules looks awkward especially when
+> pathname consists x86 already.
+> 
+> >  arch/x86/kernel/Makefile             |   1 +
+> >  arch/x86/kernel/imr.c                | 529 +++++++++++++++++++++++++++++++++++
+> >  drivers/platform/x86/Kconfig         |  15 +
+> >  drivers/platform/x86/Makefile        |   1 +
+> >  drivers/platform/x86/intel_galileo.c | 175 ++++++++++++
+> 
+> Here what about to make an hierarchy like:
+> intel/galileo.c
+> intel/mid/... would be those modules with intel_mid_ prefixes in
+> future. See my proposal regarding to drivers/mfd [1]
 
-I'm happy with
+As Bryan is only adding one file to the platform/drivers/x86, let's skip the
+reorg as part of this patch series. We can consider that separately if someone
+wants to make the argument that the time has come to add another directory
+layer.
 
-imr_add_range();
-imr_remove_range();
-
->> +
->> +#endif /* _IMR_H */
->> diff --git a/arch/x86/include/asm/intel-quark.h
-b/arch/x86/include/asm/intel-quark.h
->> new file mode 100644
->> index 0000000..f51ac8c
->> --- /dev/null
->> +++ b/arch/x86/include/asm/intel-quark.h
-
-<snip>
-
->> +#ifdef CONFIG_X86_32
->> +static inline int cpu_is_quark(const struct cpuinfo_x86 *c)
->> +{
->> +       return (c->x86_vendor == X86_VENDOR_INTEL &&
->> +               c->x86 == 5 && c->x86_model == 9);
->> +}
->> +#else
->> +static inline int cpu_is_quark(const struct cpuinfo_x86 *c)
->> +{
->> +       return 0;
->> +}
->> +#endif
->> +
->> +#endif /* _ASM_X86_INTEL_QUARK_H */
->
-> Could we use x86_match_cpu() instead?
-
-I don't see why not. I'll kill this header and call out to
-x86_match_cpu() in the Galileo and IMR code.
-
->> +       ret = iosf_mbi_read(QRK_MBI_UNIT_MM, QRK_MBI_MM_READ,
->> +                               reg, &imr->addr_lo);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = iosf_mbi_read(QRK_MBI_UNIT_MM, QRK_MBI_MM_READ,
->> +                               ++reg, &imr->addr_hi);
->
-> Could you use reg++ in previous line and so on?
-
-Yes I could. Originally wrote the code with a pre-increment and then
-changed the flow later on. Post-increment will work just as good now and
-is more readable.
-
-> One more idea, if you make a union inside the structure you may do
-> this in a loop.
-> struct imr {
->  union {
->   struct imr {
->  ...
->   };
->   u32 regs[IMR_NUM_REGS];
->  };
-> }
-> Mostly same for _write().
-
-Since reg is incrementing on each iosf_mbi_dothing() that can work.
-
->> +       u32 reg = imr_dev.reg_base + (imr_id * IMR_NUM_REGS);
->> +       u32 reg_lock = reg;
->
-> Do we need a separate variable? Would (reg - IMR_NUM_REGS) work for you?
-
-Sure. A separate integer isn't required, I can make that change.
-
->> +done:
->> +       local_irq_restore(flags);
->
-> Could you do like
->
->       local_irq_restore(flags);
->       return 0;
-> done:
->       local_irq_restore(flags);
->       WARN(...)
->      return ret;
-> ?
-
-Doesn't change the logic so yeah, works for me.
-
->> +static int imr_dbgfs_state_show(struct seq_file *s, void *unused)
->> +{
->> +       int i, ret = -ENODEV;
->> +       struct imr imr;
->> +       u32 size;
->> +
->> +       mutex_lock(&imr_dev.lock);
->
-> It seems you may get the imr_dev via parameters. I suggest to avoid
-> using global variables as much as possible.
-
-Appreciated, you're right globals are bad.
-
-I think in this case the mutex at that scope is necessary though. Same
-with the debugfs handle.
-
->> +
->> +       for (i = 0; i <= imr_dev.num; i++) {
->
-> num is not num, but last one? Sounds confusing for me.
-
-Will change.
-
->> +
->> +       f = debugfs_create_file("state", S_IFREG | S_IRUGO,
->> +                               dir, imr_dev, &imr_state_ops);
->> +       if (!f)
->> +               goto err;
->
-> Are you planing to extend the debugfs contents? Would it be okay to
-> use only one file for now?
-
-No not planning to extend.
-OK with the one file.
-
->> +}
->
-> No need to put this function under ifdef  - debugfs has the stubs.
-
-Ah - wasn't aware of that.
-Great stuff - I'll kill the ifdefs - thanks !
-
-> Can you define pr_fmt() ?
->
-> 1 KiB.
-
-Yep will do
-:g/pr_info/s//pr_fmt/g
-
->
->> +                       base, size);
->> +               dump_stack();
->
-> dump_stack is really needed here? In that case why not to use WARN()?
-
-Hmm - I nope - dump_stack() isn't relevant since it's an in-kernel API.
-Did an unthinking copy/past from the mtrr code
-
-I'll zap that.
-
->> +       if (imr_check_range(base, size))
->> +               return -EINVAL;
->
-> ret = imr_();
-> if (ret)
->  return ret;
-
-Good catch.
-
->> +       for (i = 0; i <= imr_dev.num; i++) {
->> +               ret = imr_read(i, &imr);
->> +               if (ret)
->> +                       goto done;
->> +
->> +               /* Find overlap */
->> +               if (imr_enabled(&imr)) {
->> +                       if (base >= imr_to_phys(imr.addr_lo) &&
->> +                               base <= imr_to_phys(imr.addr_hi)) {
->
->> +                               overlap = 1;
->> +                               break;
->
-> Maybe
-> ret = -EINVAL;
-> goto done;
-
-Agree - I like that change.
-Waste of time to complete the loop if an overlap is detected.
-
-
->> +       if (reg >= 0) {
->> +               ret = imr_read(reg, &imr);
->> +               if (ret)
->> +                       goto done;
->> +
->> +               if (!imr_enabled(&imr) || imr.addr_lo & IMR_LOCK) {
->> +                       ret = -ENODEV;
->> +                       goto done;
->> +               }
->> +               found = 1;
->
-> You may put a loop to the else branch instead of checking found at
-> each iteration.
-
-Sure.
-
-> Happy New Year!
-
-Thanks for the feedback Andy !
-Best wishes in the New Year.
-
-BOD
+-- 
+Darren Hart
+Intel Open Source Technology Center
