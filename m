@@ -1,103 +1,192 @@
-From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH] Documentation: Add entry for dell-laptop sysfs interface
-Date: Thu, 1 Jan 2015 20:25:26 -0800
-Message-ID: <20150102042525.GC51121@vmdeb7>
-References: <1417628493-29323-1-git-send-email-gabriele.mzt@gmail.com>
- <20141231053149.GA3764@norris-Latitude-E6410>
- <1636595.UbTko9mUNA@xps13>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Mon, 5 Jan 2015 17:55:53 +0800
+Message-ID: <CAJ=jquZGL1bvRWvkxQp3bL2++_mYFduBOXdrdu1s1FSaLSBJzQ@mail.gmail.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+	<4278344.duCujNBB8t@xps13>
+	<CAJ=jqubG0ETuF_86M7=zbD4dDnaDcq-=4tGBL-PkoquNpWpwoA@mail.gmail.com>
+	<201412290932.49815@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1636595.UbTko9mUNA@xps13>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriele Mazzotta <gabriele.mzt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mjg59-1xO5oi07KQx4cg9Nei1l7Q@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, libsmbios-devel-XtjxT7Vmt5ZskZv2Y/7f+AC/G2K4zDHf@public.gmane.org, Srinivas_G_Gowda-8PEkshWhKlo@public.gmane.org, Michael_E_Brown-8PEkshWhKlo@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, A.Sloman-dxBOTFGcEFw2EctHIo1CcQ@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qg0-f46.google.com ([209.85.192.46]:65159 "EHLO
+	mail-qg0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751420AbbAEJzy convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 5 Jan 2015 04:55:54 -0500
+Received: by mail-qg0-f46.google.com with SMTP id q107so14959403qgd.33
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Jan 2015 01:55:53 -0800 (PST)
+In-Reply-To: <201412290932.49815@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Wed, Dec 31, 2014 at 12:20:59PM +0100, Gabriele Mazzotta wrote:
-> On Tuesday 30 December 2014 21:31:49 Brian Norris wrote:
-> > Hi,
-> >=20
-> > On Wed, Dec 03, 2014 at 06:41:33PM +0100, Gabriele Mazzotta wrote:
-> > > Add the documentation for the new sysfs interface of dell-laptop
-> > > that allows to configure the keyboard illumination on Dell system=
-s.
-> > >=20
-> > > Signed-off-by: Gabriele Mazzotta <gabriele.mzt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  .../ABI/testing/sysfs-platform-dell-laptop         | 60 ++++++++=
-++++++++++++++
-> > >  1 file changed, 60 insertions(+)
-> > >  create mode 100644 Documentation/ABI/testing/sysfs-platform-dell=
--laptop
-> > >=20
-> > > diff --git a/Documentation/ABI/testing/sysfs-platform-dell-laptop=
- b/Documentation/ABI/testing/sysfs-platform-dell-laptop
-> > > new file mode 100644
-> > > index 0000000..7969443
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/testing/sysfs-platform-dell-laptop
-> > > @@ -0,0 +1,60 @@
-> > > +What:		/sys/class/leds/dell::kbd_backlight/als_setting
-> > > +Date:		December 2014
-> > > +KernelVersion:	3.19
-> > > +Contact:	Gabriele Mazzotta <gabriele.mzt-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>,
-> > > +		Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > +Description:
-> > > +		This file allows to control the automatic keyboard
-> > > +		illumination mode on some systems that have an ambient
-> > > +		light sensor. Write 1 to this file to enable the auto
-> > > +		mode, 0 to disable it.
-> > [...]
-> >=20
-> > This entry appears wrong, or at least incomplete. My system boots w=
-ith a
-> > default value of 18, and the 'set' implementation accepts any value=
- from
-> > 0 to 255.
-> >=20
-> > According to the comments in dell-laptop.c, the value actually mean=
-s
-> > something different than on/off:
-> >=20
-> >   cbArg3, byte0  Desired setting of ALS value that turns the light =
-on or off.
-> >=20
-> > Admittedly, I'm not clear on what the intended interface is, as I'v=
-e
-> > never had the ALS / keyboard backlight controls all working properl=
-y on
-> > my laptop in the first place, but I thought this would be the right
-> > place to ask about getting the documentation and driver in sync.
->=20
-> Hi,
->=20
-> You are perfectly right, the documentation is wrong and I'm sorry for
-> that. als_setting should allow you to define when the keyboard
-> backlight has to be turned on or off depending on the value reported
-> by the ambient light sensor.
->=20
-> Please note that not everything that is in libsmbios [1] is implement=
-ed
-> in the kernel driver. Take a look at it, recently there have been few
-> changes related to the ALS settings. Probably they are not needed giv=
-en
-> that you are able to set the threshold with the current kernel driver=
-,
-> but you might find something interesting.
->=20
-> I'll submit a patch to correct the documentation, thanks for reportin=
-g.
+When a key is pressed and released, KBC sends a pair of corresponding
+scancode - a make and a break. In normal case, a make code and a break
+code differ in one bit - break =3D make | BIT7. Therefore, a scancode
+with BIT7 set is a break. There are special cases such as super key
+that maps to "0xe0 0x5b" and "0xe0 0xdb" where 0xe0 is present for
+both make and break, but 0x5b and 0xdb follow the same pattern.
 
-Thanks Gabriele, let's make sure to get this into this rc cycle, sooner=
- the
-better.
+Scancode 0x88 is a break code (i.e. release), and each scancode must
+be unique and should not used for different purposes.
 
-Thanks,
+I have not received any feedbacks but I don't think holiday is quite
+over for everybody. I will send updates when there is any.
+
+
+On Mon, Dec 29, 2014 at 4:32 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
+ wrote:
+> On Monday 29 December 2014 08:27:21 Alex Hung wrote:
+>> On Fri, Dec 26, 2014 at 5:55 AM, Gabriele Mazzotta
+>>
+>> <gabriele.mzt@gmail.com> wrote:
+>> > On Thursday 25 December 2014 21:11:05 Pali Roh=C3=A1r wrote:
+>> >> I will try to recap all information which we have...
+>> >>
+>> >> *) We should not send wireless key press to userspace when
+>> >> BIOS already handles wireless state (and enable/disable
+>> >> wifi):
+>> >> http://www.spinics.net/lists/platform-driver-x86/msg05922.
+>> >> html
+>> >>
+>> >> *) some tested dell machines does not implement GRBT method
+>> >> (or report constant value) which could return state of
+>> >> wireless (enabled/disabled) -- e.g. Inspiron 7447
+>> >>
+>> >> *) dell-wireless driver is doing nothing on devices which
+>> >> have wireless slider switch (except calling CRBT/ARBT
+>> >> methods)
+>> >>
+>> >> *) all tested machines emit key with keycode 240 (scancode
+>> >> is probably 136 =3D 0x88) to userspace via i8042 bus/AT
+>> >> keyboard when wireless button/slider is pressed/switched
+>> >>
+>> >> *) both drivers dell-wireless and dell-rbtn do not
+>> >> implement setting soft rfkill state (or change wifi state)
+>> >>
+>> >> So in my opinion: if we decide to use driver for acpi
+>> >> DELLABCE device we should use dell-rbnt for devices with
+>> >> hw slider switch and dell-wireless for devices with fn
+>> >> button. I think it does not make sense to use
+>> >> dell-wireless for devices with hw slider because it do
+>> >> nothing and dell-rbtn for devices with fn key button as
+>> >> GRBT does not working properly.
+>> >
+>> > Here the problem. We are determining which laptop has an
+>> > hardware slider and which doesn't calling CRBT. If the
+>> > returned value is 2 or 3, then the laptop has an hardware
+>> > slider. However, it cannot be assumed the opposite if the
+>> > returned value is 0 or 1.
+>>
+>> The spec defines as below:
+>> 1. When CRBT returns 0 or 1, a system has a toggle, ex.
+>> hotkey, radio button. 2. When CRBT returns 2 or 3, a system
+>> has a slider switch
+>>
+>> The only difference of 0 and 1 (or 2 and 3) is the presence of
+>> a wireless LED. However I believe this is defined according
+>> to Microsoft's hardware requirement.
+>>
+>> > See the acpidumps Alex uploaded. The Inspiron 3543 returns 0
+>> > when CRBT is called and so does the Inspiron 7447. However,
+>> > the former doesn't have a working ARBT method and, if I'm
+>> > not wrong, its BIOS doesn't handle radio devices. The BIOS
+>> > of the latter can handle radio and has a working ARBT
+>> > method to make it stop from doing that.
+>> >
+>> > Since we determine when the BIOS might not be able to
+>> > control radio devices through CRBT and we can't say it for
+>> > sure (in the example above, CRBT returned the same value),
+>> > we make sure that the BIOS doesn't handle radio devices by
+>> > calling ARBT. We can ensure this (e.g. Inspirong 7447), but
+>> > we can't ensure the opposite (e.g. Inspiron 3453).
+>> >
+>> > If there was a way to determine which laptop really needs
+>> > dell-wireless, calling ARBT wouldn't have been necessary,
+>> > but that's not the case. Users can always blacklist the
+>> > module if they know their laptop can work as expected
+>> > without it, but we have to ensure that everything always
+>> > works.
+>> >
+>> > This is what I understood by looking at the acpidumps, so I
+>> > could be wrong.
+>>
+>> I think ARBT acts as a switch for changing BIOS behaviours:
+>>
+>> When ARBT is not called or is called with ARBT(0), BIOS's
+>> default behaviour is to change wireless states by hardware
+>> pin. When ARBT(1) is called by driver or userspace
+>> application (ex. required in Windows 8), wireless state is
+>> controlled by OS. Similar functions are defined in ASUS ATK
+>> and HP WMI. Such implementation will provide maximum
+>> capability for different OS with / without dedicate drivers.
+>>
+>> The reality is never such wonderful; especially many systems
+>> are only tested with Win8 + driver (some may tested with Win7
+>> - and acpi_osi=3D!Windows 2012 / 2013 will probably work). In
+>> this case, we probably need to be more compatible with
+>> Windows 8 / 8.1.
+>>
+>> >> And second note: Do we need some driver for acpi DELLABCE
+>> >> device? Which problem is trying acpi DELLABCE device to
+>> >> solve? Is not everything working fine without driver for
+>> >> DELLABCE device?
+>> >
+>> > As I wrote above, DELLABCE is for those systems whose BIOS
+>> > doesn't handle radio devices and expects the OS do
+>> > everything when Fn keys are pressed.
+>> > (Well, it actually seems that something is done by the
+>> > keyboard controller, but this is not certain yet)
+>> >
+>> >> My dell-rbtn approach is trying to export rfkill interface
+>> >> from DELLABCE device and eliminate using i8042 hook
+>> >> function in smbios dell-laptop driver.
+>> >>
+>> >> Alex, can you check if scancode of wireless change
+>> >> generated by BIOS is on all machines same: 136 (0x88)? And
+>> >> is send by keyboard controller (not acpi/wmi)?
+>> >
+>> > I can say that on my XPS13 the scancode is 0x88 and it is
+>> > sent by the keyboard controller.
+>> >
+>> > Gabriele
+>>
+>> Just before I check the scancode, I looked up the scancode
+>> table
+>> (http://download.microsoft.com/download/1/6/1/161ba512-40e2-4
+>> cc9-843a-923143f3456c/translate.pdf) and found 0x88 is already
+>> used - it is the "break" ("release" in Linux term) code for
+>> "7" (the one above Y/U, not number pad). It can be verified
+>> by "showkey -s": 0x08 for press and 0x88 for release. It is
+>> not the best idea to map this scancode to anything else.
+>>
+>> I also sent emails for this scancode last week but it is a
+>> holiday season but I don't expect to receive any feedback
+>> this year...
+>
+> Just to note, that there is only press key event with scancode
+> 136 (0x88). Release event is not sent to AT keyboard which cause
+> problems (if you map this scancode to some well known keycode).
+>
+> Alex, but I wrote you about this problem (in private email which
+> you forwarded) together with other bios/fw problems for latitude
+> machines...
+>
+> Anyway I sent email to Matthew Garrett before Christmas and linux
+> kernel could generate proper release event by fixing commit
+> 61579ba83934d397a4fa2bb7372de9ae112587d5 (adding also 9 and 10 to
+> chassis_type). I believe Matthew Garrett will kernel provide
+> workaround until Dell fix their BIOSes...
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+
+
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+Cheers,
+Alex Hung
