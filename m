@@ -1,53 +1,47 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 0/2] x86: Add IMR support to Quark/Galileo
-Date: Tue, 06 Jan 2015 17:23:10 +0000
-Message-ID: <54AC19FE.3040906@nexus-software.ie>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie> <20150106055959.GA59754@vmdeb7> <54ABE989.8060701@nexus-software.ie> <20150106164805.GA27956@vmdeb7>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: LED: inform userspace about brightness change
+Date: Tue, 6 Jan 2015 09:55:41 -0800
+Message-ID: <CAK5ve-Ky=8JHs=d3FtYjk46O9uVUGKsfZ3cLwX-h3FckEpmT_g@mail.gmail.com>
+References: <201412242106.09959@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150106164805.GA27956@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ie0-f179.google.com ([209.85.223.179]:41795 "EHLO
+	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755544AbbAFR4G convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 6 Jan 2015 12:56:06 -0500
+In-Reply-To: <201412242106.09959@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Darren Hart <dvhart@infradead.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, platform-driver-x86@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
 
-On 06/01/15 16:48, Darren Hart wrote:
->> Correct. Firmware locks the IMRs around ACPI runtime data data.
->>
->> In the patch here, we cycle though every unlocked IMR and zap it - which
->> will include tear-down of the IMRs placed around the compressed kernel image
->> and boot params data structure. Firmware puts those IMRs in place to ensure
->> no invalid DMA, SMM access to the compressed kernel image during boot can
->> take place.
+On Wed, Dec 24, 2014 at 12:06 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com=
+> wrote:
+> Hello!
 >
-> Thanks Bryan, this clears these questions up for me.
+> What is preferred way from kernel driver to inform userspace
+> about LED device brightness change? In /sys/class/leds/<device>/
+> is file brightness which can be used to read current brightness
+> or set write new value. But sometimes also firmware (or device)
+> can change value on its own and thus userspace software which
+> provides slider for setting brightness will be incorrect.
 >
-> Are we confident that the tear-down of the IMRs around the compressed kernel
-> image happens early enough and deterministically, such that there is no race
-> condition in which a driver could get DMA into this memory?
+> For example on Dell laptops there is driver which support setting
+> and reading keyboard backlight (via leds kernel interface). But
+> firmware/BIOS can change brightness (when something happen) and
+> it can inform running system about this change via ACPI/WMI event
+> interface. But how to use kernel led interface to inform userpace
+> about this change? It is possible?
+>
 
-Yes confident :)
+Sorry for the delay, actually I don't find any possible existing way
+to send brightness change event from LED subsystem to user space.
 
-Tested by baking IMR-platform code + MMC into the kernel and mounting 
-the rootfs on Galileo from MMC.
+I think we can add an udev event in set_brightness API, then when we
+change the brightness, it will send out udev event to user space.
 
-Also tested the reverse case. Attempting to mount an SD kills every 
-version of the tip-of-tree I've used with an IMR reset.
-
-Just to be really sure, it's also been tested with the initial 0.7.5 and 
-0.8.0 release which didn't have DMI strings to identify the board.
-
-So - with this change in place tip-of-tree should work for everybody on 
-Galileo Gen1/Gen2.
-
-It should get the Galileo Debian people out of the business of needing 
-to have a separate kernel to boot - though obvious more enabling work 
-needs to happen in SoC space still.
-
-http://sourceforge.net/projects/galileodebian/
-
-Also I'm hoping - though I don't have the exact details of this - that 
-the crash/non-boot situation for CentOs on Galileo may be as a result of 
-IMRs, so hopefully will be of use there too.
+Thanks,
+-Bryan
