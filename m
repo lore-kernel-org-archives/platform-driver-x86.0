@@ -1,47 +1,79 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: LED: inform userspace about brightness change
-Date: Tue, 6 Jan 2015 09:55:41 -0800
-Message-ID: <CAK5ve-Ky=8JHs=d3FtYjk46O9uVUGKsfZ3cLwX-h3FckEpmT_g@mail.gmail.com>
-References: <201412242106.09959@pali>
+From: "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: RE: [PATCH 1/2] x86: Add Isolated Memory Regions for Quark X1000
+Date: Wed, 7 Jan 2015 23:45:52 +0000
+Message-ID: <AF233D1473C1364ABD51D28909A1B1B7326E0C25@PGSMSX105.gar.corp.intel.com>
+References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
+ <1419873783-5161-2-git-send-email-pure.logic@nexus-software.ie>
+ <20150106073634.GB59754@vmdeb7> <54ABE67B.1070706@nexus-software.ie>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ie0-f179.google.com ([209.85.223.179]:41795 "EHLO
-	mail-ie0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755544AbbAFR4G convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 6 Jan 2015 12:56:06 -0500
-In-Reply-To: <201412242106.09959@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Darren Hart <dvhart@infradead.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, platform-driver-x86@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54ABE67B.1070706@nexus-software.ie>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bryan O'Donoghue <pure.logic@nexus-software.ie>, Darren Hart <dvhart@infradead.org>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 24, 2014 at 12:06 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com=
-> wrote:
-> Hello!
+>>> +/**
+>>> + * imr_enabled
+>>> + * Determines if an IMR is enabled based on address range
+>>> + *
+>>> + * @imr:	Pointer to IMR descriptor
+>>> + * @return	true if IMR enabled false if disabled
+>>> + */
+>>> +static int imr_enabled(struct imr *imr) {
+>>> +	return (imr_to_phys(imr->addr_lo) && imr_to_phys(imr->addr_hi));
+>>
+>> What are testing here? You have bit 30 marked as "Enabled" above (but
+>> it isn't in the datasheet). With Reserved bits in each register, this
+>> test for non-zero doesn't seem robust.
 >
-> What is preferred way from kernel driver to inform userspace
-> about LED device brightness change? In /sys/class/leds/<device>/
-> is file brightness which can be used to read current brightness
-> or set write new value. But sometimes also firmware (or device)
-> can change value on its own and thus userspace software which
-> provides slider for setting brightness will be incorrect.
+>Good question.
 >
-> For example on Dell laptops there is driver which support setting
-> and reading keyboard backlight (via leds kernel interface). But
-> firmware/BIOS can change brightness (when something happen) and
-> it can inform running system about this change via ACPI/WMI event
-> interface. But how to use kernel led interface to inform userpace
-> about this change? It is possible?
+>Bit 30 is not present in X1000 silicon, though is present in the BSP code. Lets
+>forget about all non-X1000 cases for now since X1000 is the only processor
+>currently available.
 >
+>On X1000 the only means of determining if an IMR is enabled is if it's address
+>bits are set to some address everybody agrees means 'off', since the enable
+>bit doesn't exist. Everybody in this case is ROM, BIOS, 2nd stage bootloader
+>and kernel.
+>
+>In the BSP code, that address is zero. So in lieu of bit 30 'enable' we have
+>address 0x00000000.
+>
+>The kernel could define an alternative address to 0x00000000 but, then this
+>would break with the convention in BIOS etc.
+>
+>Since BIOS and grub code both use 0x00000000 as the 'off' address I think it
+>makes sense for the kernel to continue to use that address.
 
-Sorry for the delay, actually I don't find any possible existing way
-to send brightness change event from LED subsystem to user space.
+Just add on top of what Daren mentioned in another mail, based on the Quark document,
+the base address can start from zero. Say lo=0, hi=0, and WM & RM may be changed from default value, 
+1st 1KiB will be marked as IMR. It seems to me that there is no good way to test if an IMR is 'occupied' and/or 'enabled'
+since enable-bit is not available. But, what is benefit of testing against lo=0 & hi=0? The logic to calculate size will work under
+lo=0 & hi=0 anway.
 
-I think we can add an udev event in set_brightness API, then when we
-change the brightness, it will send out udev event to user space.
-
-Thanks,
--Bryan
+>
+>>> +	/* Error out if we have an overlap or no free IMR entries */
+>>
+>> According to the datasheet, overlapping ranges are valid, and access
+>> must be granted by all IMRs associated with a given address. Why
+>> declare an overlap as invalid here?
+>
+>Simplicity.
+>
+>It's more straight forward to define your IMR memory map if you don't allow
+>the address ranges to stomp all over each other.
+>
+>None of the BSP reference code does overlap.
+>
+>If there's an argument for an overlap use-case it can be supported pretty
+>simply by simply removing the overlap checks.
+>
+>My own view is that it's not really desirable and easier to debug IMRs
+>generally on a platform if overlaps aren't allowed.
+I do agree on the benefit listed above. Perhaps, you can add explanation here
+to mention the design decision.
