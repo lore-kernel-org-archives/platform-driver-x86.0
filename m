@@ -1,45 +1,64 @@
 From: "Ong, Boon Leong" <boon.leong.ong@intel.com>
 Subject: RE: [PATCH 1/2] x86: Add Isolated Memory Regions for Quark X1000
-Date: Thu, 8 Jan 2015 14:52:24 +0000
-Message-ID: <AF233D1473C1364ABD51D28909A1B1B7326E29B2@PGSMSX105.gar.corp.intel.com>
+Date: Thu, 8 Jan 2015 14:45:49 +0000
+Message-ID: <AF233D1473C1364ABD51D28909A1B1B7326E297E@PGSMSX105.gar.corp.intel.com>
 References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
  <1419873783-5161-2-git-send-email-pure.logic@nexus-software.ie>
- <20150106073634.GB59754@vmdeb7> <54ABE67B.1070706@nexus-software.ie>
- <AF233D1473C1364ABD51D28909A1B1B7326E0C25@PGSMSX105.gar.corp.intel.com>
- <54AE73C7.90009@nexus-software.ie>
+ <AF233D1473C1364ABD51D28909A1B1B7326E0CC8@PGSMSX105.gar.corp.intel.com>
+ <54AE8136.2060400@nexus-software.ie>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:32917 "EHLO mga02.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:24220 "EHLO mga09.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751569AbbAHOw3 convert rfc822-to-8bit (ORCPT
+	id S1753877AbbAHOqW convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Jan 2015 09:52:29 -0500
-In-Reply-To: <54AE73C7.90009@nexus-software.ie>
+	Thu, 8 Jan 2015 09:46:22 -0500
+In-Reply-To: <54AE8136.2060400@nexus-software.ie>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
 
->On 07/01/15 23:45, Ong, Boon Leong wrote:
->>> Since BIOS and grub code both use 0x00000000 as the 'off' address I
->>> think it makes sense for the kernel to continue to use that address.
+>>> +/**
+>>> + * imr_del_range - Delete an Isolated Memory Region
+>>> + * @reg: IMR index to remove
+>>> + * @base: Physical base address of region aligned to 4k
+>>> + * @size: Physical size of region in bytes
+>>> + * @return:	-EINVAL on invalid range or out or range id
+>>> + *		-ENODEV if reg is valid but no IMR exists or is locked
+>>> + *		0 on success
+>>> + */
+>>> +int imr_del(int reg, unsigned long base, unsigned long size);
 >>
->> Just add on top of what Daren mentioned in another mail, based on the
->> Quark document, the base address can start from zero. Say lo=0, hi=0,
->> and WM & RM may be changed from default value, 1st 1KiB will be marked as
->IMR. It seems to me that there is no good way to test if an IMR is 'occupied'
->and/or 'enabled'
->> since enable-bit is not available. But, what is benefit of testing
->> against lo=0 & hi=0? The logic to calculate size will work under
->> lo=0 & hi=0 anway.
+>> How about just offer imr delete based index-only as returned by imr_add()?
+>> We just need to check if that IMR is locked. If locked, then bail out.
+>> Else, we will zero-out IMR register for that index to remove it.
 >
->Hi Boon Leong.
+>Hmm.
 >
->I think it does make sense to add a check for rmask and wmask in the 'access all'
->state when determining if an IMR is enabled on X1000 or not
+>The MTRR API this is based on allows you to specific an address range and I think
+>that makes sense for an IMR API too because - say you want to tear down the
+>IMR around the kernel .text area - but you don't know which IMR it is.
+>
+>You'd just do
+>
+>unsigned long base  = virt_to_phys(&_text); unsigned long size =
+>virt_to_phys(&_sinittext) - base - IMR_ALIGN;
+>
+>imr_del(-1, base, size);
+>
+>Rather than having to know which specific index to kill. Also later silicon may
+>have more - or less IMR indices - so deleting based on an address range is a
+>valuable feature I think.
 
-Ya, checking against rmask & wmask whether they have been changed from default stage
-would help here. Thanks 
+imr_add() returns IMR index, so I would expect that I can use the index directly
+if I need to remove it. 
+
+Suggest to split the imr_del() into 2 functions:- 
+(1) by address + size 
+(2) by IMR index
+At current implementation, it does not support (2) only because it fails at 
+imr_check_range().
