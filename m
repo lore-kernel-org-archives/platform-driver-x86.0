@@ -1,55 +1,111 @@
-From: "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific
- setup
-Date: Fri, 9 Jan 2015 14:11:55 +0000
-Message-ID: <AF233D1473C1364ABD51D28909A1B1B7326E3F6C@PGSMSX105.gar.corp.intel.com>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
- <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie>
- <20150109044613.GB9311@vmdeb7> <54AFB8D7.6020306@nexus-software.ie>
- <54AFBB86.5040307@nexus-software.ie>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:30967 "EHLO mga14.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750852AbbAIOMA convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Jan 2015 09:12:00 -0500
-In-Reply-To: <54AFBB86.5040307@nexus-software.ie>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bryan O'Donoghue <pure.logic@nexus-software.ie>, Darren Hart <dvhart@infradead.org>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] samsung-laptop: Add use_native_backlight quirk, and enable it on some models
+Date: Fri,  9 Jan 2015 15:10:01 +0100
+Message-ID: <1420812601-7983-1-git-send-email-hdegoede@redhat.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, Bertrik Sikken <bertrik@sikken.nl>, Hans de Goede <hdegoede@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
->
->On 09/01/15 11:17, Bryan O'Donoghue wrote:
->>> So this will load on any Quark device, Galileo or not, that doesn't
->>> provide a system_id. Is there any reason we need to support 0.8.0 and
->>> earlier firmware?
->>
->> Every Galileo Gen1 device ships with firmware version 0.7.5. You can
->> do an EFI capsule update to 0.8.0 which still isn't DMI-enabled - or
->> you can go and get a firmware greater than 0.9.0 and get DMI strings.
->
->I should add to that. Hundreds of the Gen1 devices were given away @
->MakerFaire Rome 2013, and AFAIK thousands were given to universities. So
->there's probably a few thousands boards floating around with the 0.7.5
->firmware that we want to support.
->
->Like I say - I think the fall-back is the simplest option and is also safe. I can add in
->the old way of identifying the boards and we can review it for appropriateness.
->I didn't include that old method for the fallback because it involves mapping SPI
->flash and parsing custom headers but - it works - even if it is ugly.
->
+Since kernel 3.14 the backlight control has been broken on various Samsung
+Atom based netbooks. This has been bisected and this problem happens since
+commit b35684b8fa94 ("drm/i915: do full backlight setup at enable time")
 
-I agree with Bryan on his view-point. The logic to default to Galileo Gen-1 with older-firmware.
-seems reasonable to me too. We cannot for sure older Galileo Gen-1 user will upgrade to newer
-version of firmware. I suspect that many will not (because lack of understanding of how
-UEFI capsule can do that or lack of equipment to flash it too, especially university students). 
+This has been reported and discussed in detail here:
+http://lists.freedesktop.org/archives/intel-gfx/2014-July/049395.html
 
-So for the lack of better & robust approach, the default fallback when DMI string is not
-detectable to GENv1 seems reasonable.
+Unfortunately no-one has been able to fix this. This only affects Samsung
+Atom netbooks, and the Linux kernel and the BIOS of those laptops have never
+worked well together. All affected laptops already have a quirk to avoid using
+the standard acpi-video interface and instead use the samsung specific SABI
+interface which samsung-laptop uses. It seems that recent fixes to the i915
+driver have also broken backlight control through the SABI interface.
 
-My 2 cents.
+The intel_backlight driver OTOH works fine, and also allows for finer grained
+backlight control. So add a new use_native_backlight quirk, and replace the
+broken_acpi_video quirk with this quirk for affected models. This new quirk
+disables acpi-video as before and also stops samsung-laptop from registering
+the SABI based samsung_laptop backlight interface, leaving only the working
+intel_backlight interface.
+
+This commit enables this new quirk for 3 models which are known to be affected,
+chances are that it needs to be used on other models too.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1094948 # N145P
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1115713 # N250P
+Reported-by: Bertrik Sikken <bertrik@sikken.nl> # N150P
+Cc: stable@vger.kernel.org # 3.16
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/samsung-laptop.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index ff765d8..ce364a4 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -353,6 +353,7 @@ struct samsung_quirks {
+ 	bool broken_acpi_video;
+ 	bool four_kbd_backlight_levels;
+ 	bool enable_kbd_backlight;
++	bool use_native_backlight;
+ };
+ 
+ static struct samsung_quirks samsung_unknown = {};
+@@ -361,6 +362,10 @@ static struct samsung_quirks samsung_broken_acpi_video = {
+ 	.broken_acpi_video = true,
+ };
+ 
++static struct samsung_quirks samsung_use_native_backlight = {
++	.use_native_backlight = true,
++};
++
+ static struct samsung_quirks samsung_np740u3e = {
+ 	.four_kbd_backlight_levels = true,
+ 	.enable_kbd_backlight = true,
+@@ -1507,7 +1512,7 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "N150P"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "N150P"),
+ 		},
+-	 .driver_data = &samsung_broken_acpi_video,
++	 .driver_data = &samsung_use_native_backlight,
+ 	},
+ 	{
+ 	 .callback = samsung_dmi_matched,
+@@ -1517,7 +1522,7 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "N145P/N250P/N260P"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "N145P/N250P/N260P"),
+ 		},
+-	 .driver_data = &samsung_broken_acpi_video,
++	 .driver_data = &samsung_use_native_backlight,
+ 	},
+ 	{
+ 	 .callback = samsung_dmi_matched,
+@@ -1557,7 +1562,7 @@ static struct dmi_system_id __initdata samsung_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "N250P"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "N250P"),
+ 		},
+-	 .driver_data = &samsung_broken_acpi_video,
++	 .driver_data = &samsung_use_native_backlight,
+ 	},
+ 	{
+ 	 .callback = samsung_dmi_matched,
+@@ -1616,6 +1621,15 @@ static int __init samsung_init(void)
+ 		pr_info("Disabling ACPI video driver\n");
+ 		acpi_video_unregister();
+ 	}
++
++	if (samsung->quirks->use_native_backlight) {
++		pr_info("Using native backlight driver\n");
++		/* Tell acpi-video to not handle the backlight */
++		acpi_video_dmi_promote_vendor();
++		acpi_video_unregister();
++		/* And also do not handle it ourselves */
++		samsung->handle_backlight = false;
++	}
+ #endif
+ 
+ 	ret = samsung_platform_init(samsung);
+-- 
+2.1.0
