@@ -1,170 +1,70 @@
-From: "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Subject: RE: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Subject: Re: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific
  setup
-Date: Fri, 9 Jan 2015 01:00:17 +0000
-Message-ID: <AF233D1473C1364ABD51D28909A1B1B7326E3282@PGSMSX105.gar.corp.intel.com>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
- <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie>
+Date: Fri, 09 Jan 2015 02:11:54 +0000
+Message-ID: <54AF38EA.6090005@nexus-software.ie>
+References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie> <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie> <AF233D1473C1364ABD51D28909A1B1B7326E3282@PGSMSX105.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from outbound-smtp01.blacknight.com ([81.17.249.7]:37857 "EHLO
+	outbound-smtp01.blacknight.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751151AbbAICL4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 8 Jan 2015 21:11:56 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+	by outbound-smtp01.blacknight.com (Postfix) with ESMTPS id 903989911A
+	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jan 2015 02:11:54 +0000 (UTC)
+In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B7326E3282@PGSMSX105.gar.corp.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Ong, Boon Leong" <boon.leong.ong@intel.com>
 Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
->Subject: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific setup
+On 09/01/15 01:00, Ong, Boon Leong wrote:
+
+>> +static void __init
+>> +intel_galileo_imr_sanity(unsigned long base, unsigned long size) {
+>> +	/* Test zero zero */
+>> +	if (imr_add(0, 0, 0, 0, true) == 0)
+>> +		pr_err(SANITY "zero sized IMR @ 0x00000000\n");
 >
-[snippet removed]
+> A side-discussion on imr_add():
+> I would think that we should allow 1KiB IMR setting. Current imr_add() logic
+> is prohibiting it.
 
->Since the Quark EFI bringup code configures the system to reset on an IMR
-Typo: bring-up
+Hi Boon Leong. Ermm, it does allow 1 KiB IMR regions. The following code 
+works on the unmodifed V1 driver.
 
->violation, this means that common operations such as mouting an SD based root
-Typo: mounting
+/* Test 1 KiB works */
+idx = imr_add(0, IMR_ALIGN, IMR_READ_ACCESS_ALL,
+               IMR_WRITE_ACCESS_ALL,false);
+if (idx < 0)
+	pr_err(SANITY "Couldn't add an IMR @ 0x%04x bytes\n", IMR_ALIGN);
 
-[snippet removed]
+Note IMR_ALIGN is 0x400
 
->+config INTEL_GALILEO
->+	bool "Intel Galileo Platform Support"
->+	depends on X86_32 && PCI
->+	select IOSF_MBI
->+	select IMR
->+	---help---
->+	  Intel Galileo platform support. This code is used to tear-down
->+	  BIOS and Grub Isolated Memory Regions used during bootup.
-Missing dash. Should be "boot-up".
+I'll add that test to the set of sanity tests in V2 just to put your 
+mind at ease though.
 
-[snippet removed]
+ > So, the 'size' input should be at least 1KiB and imr_add()
+ > internal logic will adjust 'hi' by -1KiB. Please consider ..
 
->diff --git a/drivers/platform/x86/intel_galileo.c
->b/drivers/platform/x86/intel_galileo.c
->new file mode 100644
->index 0000000..2a555aa
->--- /dev/null
->+++ b/drivers/platform/x86/intel_galileo.c
->@@ -0,0 +1,175 @@
->+/*
->+ * intel_galileo.c - Intel Galileo platform support.
->+ *
->+ * Copyright(c) 2013 Intel Corporation.
->+ * Copyright(c) 2014 Bryan O'Donoghue <pure.logic@nexus-software.ie>
->+ *
->+ * This platform code provides an entry point to do Galileo specific
->+ * setup. Critically IMRs are policed to ensure the EFI provided memory
-Critically --> Critical
+Hmm.
 
->+ * map informing the kernel of it's available memory is consistent with
-It's --> its
+Actually I had a response all typed out for you why I didn't want an API 
+to presume to modify the size of my input from the user's POV but, 
+thinking about it twice - I agree with you.
 
-[snippet removed]
+V2 will subtract IMR_ALIGN (0x400) bytes from the size.
 
->+
->+enum {
->+	GALILEO_UNKNOWN = 0,
->+	GALILEO_QRK_GEN1,
->+	GALILEO_QRK_GEN2,
->+};
-Suggest to drop QRK to kill confusion that it is Quark Gen 1 & 2. 
+It's stupid to have to subtract IMR_ALIGN bytes on the input - and 
+assumes the user of the API understands how the hardware works - but, of 
+course the point of an API is so that the user of it doesn't *have* to 
+understand that.
 
-[snippet removed]
+Good call.
 
->+#ifdef DEBUG
->+#define SANITY "IMR : sanity error "
->+
->+/**
-Per coding style, please just use /* and kill the extra * above and below.
-
->+ * intel_galileo_imr_sanity
->+ * Verify IMR sanity with some simple tests to verify
->+ * overlap, zero sized allocations
->+ *
->+ * @base: Physical base address of the kernel text section
->+ * @size: Extent of kernel memory to be covered from &_text to
->+&_sinittext
->+ * @return: none
->+ */
->+static void __init
->+intel_galileo_imr_sanity(unsigned long base, unsigned long size) {
->+	/* Test zero zero */
->+	if (imr_add(0, 0, 0, 0, true) == 0)
->+		pr_err(SANITY "zero sized IMR @ 0x00000000\n");
-
-A side-discussion on imr_add():
-I would think that we should allow 1KiB IMR setting. Current imr_add() logic
-is prohibiting it. So, the 'size' input should be at least 1KiB and imr_add()
-internal logic will adjust 'hi' by -1KiB. Please consider ..  
-  
->+
->+	/* Test overlap */
->+	if (imr_add(base, size, IMR_NON_SMM, IMR_NON_SMM, true) == 0)
->+		pr_err(SANITY "overlapped IMR @ (0x%08lx - 0x%08lx)\n",
->+		       base, base + size);
->+
->+	/* Try overlap - IMR_ALIGN */
->+	base = base + size - IMR_ALIGN;
->+	if (imr_add(base, size, IMR_NON_SMM, IMR_NON_SMM, true) == 0)
->+		pr_err(SANITY "overlapped IMR @ (0x%08lx - 0x%08lx)\n",
->+		       base, base + size);
->+}
->+#endif
->+
->+/**
->+ * intel_galileo_imr_init
->+ *
->+ * Tear down IMRs used during bootup. BIOS and Grub
-boot-up.
-
->+ * both setup IMRs around compressed kernel, initrd memory
->+ * that need to be removed before the kernel hands out one
->+ * of the IMR encased addresses to a downstream DMA agent
->+ * such as the SD or Ethernet. IMRs on Galileo are setup to
->+ * immediately reset the system on violation - so if you're
->+ * running a root filesystem from SD - you'll need the IMRs
->+ * torn down or you'll find seemingly random resets when using
->+ * your filesystem.
->+ */
->+static void __init intel_galileo_imr_init(void) {
->+	unsigned long base  = virt_to_phys(&_text);
->+	unsigned long size = virt_to_phys(&_sinittext) - base - IMR_ALIGN;
->+	int i, ret;
->+
->+	/* Tear down all existing unlocked IMRs */
->+	for (i = 0; i <= QUARK_X1000_IMR_NUM; i++)
->+		imr_del(i, 0, 0);
->+
->+	/*
->+	 * Setup an IMR around the physical extent of the kernel
->+	 * Non-SMM mode core read/write from/to kernel physical region.
->+	 * IMR locked.
->+	 */
->+	ret = imr_add(base, size, IMR_NON_SMM, IMR_NON_SMM, true);
->+	if (ret)
->+		pr_err("Unable to setup IMR for kernel: (%p - %p)\n",
->+			&_text, &__init_begin);
->+	else
->+		pr_info("IMR protect kernel memory: %ldk (%p - %p)\n",
->+			size >> 10, &_text, &__init_begin);
-Perhaps we want to be consistent between using __init_begin & _sinittext?
-
->+#ifdef DEBUG
->+	intel_galileo_imr_sanity(base, size);
->+#endif
->+}
->+
->+/**
->+ * intel_galileo_init
->+ *
->+ * Identify a Galileo Gen1 or Gen2. If found run code to sanitise the
->+ * kernel memory space of IMRs that are inconsistent with the EFI memory
->map.
->+ */
->+static int __init intel_galileo_init(void) {
->+	int ret = 0, type = GALILEO_UNKNOWN;
-type is assigned to either GALILEO_GEN1|2 below anyway.
-So, we don't need to declare to UNKNOWN?
-
-[snippet removed]
+--
+BOD
