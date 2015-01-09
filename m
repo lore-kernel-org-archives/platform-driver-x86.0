@@ -1,70 +1,58 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific
- setup
-Date: Fri, 09 Jan 2015 02:11:54 +0000
-Message-ID: <54AF38EA.6090005@nexus-software.ie>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie> <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie> <AF233D1473C1364ABD51D28909A1B1B7326E3282@PGSMSX105.gar.corp.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/2] x86: Add Isolated Memory Regions for Quark X1000
+Date: Thu, 8 Jan 2015 19:44:40 -0800
+Message-ID: <20150109034439.GA9311@vmdeb7>
+References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie>
+ <1419873783-5161-2-git-send-email-pure.logic@nexus-software.ie>
+ <AF233D1473C1364ABD51D28909A1B1B7326E0CC8@PGSMSX105.gar.corp.intel.com>
+ <54AE8136.2060400@nexus-software.ie>
+ <AF233D1473C1364ABD51D28909A1B1B7326E297E@PGSMSX105.gar.corp.intel.com>
+ <54AE9E27.2050307@nexus-software.ie>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outbound-smtp01.blacknight.com ([81.17.249.7]:37857 "EHLO
-	outbound-smtp01.blacknight.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751151AbbAICL4 (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:51922 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753564AbbAIDo4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 8 Jan 2015 21:11:56 -0500
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-	by outbound-smtp01.blacknight.com (Postfix) with ESMTPS id 903989911A
-	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Jan 2015 02:11:54 +0000 (UTC)
-In-Reply-To: <AF233D1473C1364ABD51D28909A1B1B7326E3282@PGSMSX105.gar.corp.intel.com>
+	Thu, 8 Jan 2015 22:44:56 -0500
+Content-Disposition: inline
+In-Reply-To: <54AE9E27.2050307@nexus-software.ie>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Ong, Boon Leong" <boon.leong.ong@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Cc: "Ong, Boon Leong" <boon.leong.ong@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
 
-On 09/01/15 01:00, Ong, Boon Leong wrote:
+On Thu, Jan 08, 2015 at 03:11:35PM +0000, Bryan O'Donoghue wrote:
+> 
+> >Suggest to split the imr_del() into 2 functions:-
+> >(1) by address + size
+> >(2) by IMR index
+> >At current implementation, it does not support (2) only because it fails at
+> >imr_check_range().
+> 
+> Hi Boon Leong.
+> 
+> I'll have a think about that :)
+> 
+> Just on imr_del() though, it does support removal by way of index.
+> 
+> +static void __init intel_galileo_imr_init(void)
+> +{
+> +	unsigned long base  = virt_to_phys(&_text);
+> +	unsigned long size = virt_to_phys(&_sinittext) - base - IMR_ALIGN;
+> +	int i, ret;
+> +
+> +	/* Tear down all existing unlocked IMRs */
+> +	for (i = 0; i <= QUARK_X1000_IMR_NUM; i++)
+> +		imr_del(i, 0, 0);
+> 
+> That's what the platform code has to do for every unlocked IMR, to make sure
+> there are no stale IMRs left that could conflict with the EFI memory map !
 
->> +static void __init
->> +intel_galileo_imr_sanity(unsigned long base, unsigned long size) {
->> +	/* Test zero zero */
->> +	if (imr_add(0, 0, 0, 0, true) == 0)
->> +		pr_err(SANITY "zero sized IMR @ 0x00000000\n");
->
-> A side-discussion on imr_add():
-> I would think that we should allow 1KiB IMR setting. Current imr_add() logic
-> is prohibiting it.
+I'm OK with a single function so long as by index works without having to
+specify the address. Please update the kernel doc to describe this usage though.
 
-Hi Boon Leong. Ermm, it does allow 1 KiB IMR regions. The following code 
-works on the unmodifed V1 driver.
-
-/* Test 1 KiB works */
-idx = imr_add(0, IMR_ALIGN, IMR_READ_ACCESS_ALL,
-               IMR_WRITE_ACCESS_ALL,false);
-if (idx < 0)
-	pr_err(SANITY "Couldn't add an IMR @ 0x%04x bytes\n", IMR_ALIGN);
-
-Note IMR_ALIGN is 0x400
-
-I'll add that test to the set of sanity tests in V2 just to put your 
-mind at ease though.
-
- > So, the 'size' input should be at least 1KiB and imr_add()
- > internal logic will adjust 'hi' by -1KiB. Please consider ..
-
-Hmm.
-
-Actually I had a response all typed out for you why I didn't want an API 
-to presume to modify the size of my input from the user's POV but, 
-thinking about it twice - I agree with you.
-
-V2 will subtract IMR_ALIGN (0x400) bytes from the size.
-
-It's stupid to have to subtract IMR_ALIGN bytes on the input - and 
-assumes the user of the API understands how the hardware works - but, of 
-course the point of an API is so that the user of it doesn't *have* to 
-understand that.
-
-Good call.
-
---
-BOD
+-- 
+Darren Hart
+Intel Open Source Technology Center
