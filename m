@@ -1,45 +1,86 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 2/2] platform/x86: Add Intel Galileo platform specific
- setup
-Date: Sun, 11 Jan 2015 01:53:34 +0000
-Message-ID: <54B1D79E.3070602@nexus-software.ie>
-References: <1419873783-5161-1-git-send-email-pure.logic@nexus-software.ie> <1419873783-5161-3-git-send-email-pure.logic@nexus-software.ie> <20150109044613.GB9311@vmdeb7> <54AFB8D7.6020306@nexus-software.ie> <20150110065409.GA104814@vmdeb7>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] samsung-laptop: Add use_native_backlight quirk, and
+ enable it on some models
+Date: Mon, 12 Jan 2015 20:03:09 -0800
+Message-ID: <20150113040308.GA98306@vmdeb7>
+References: <1420812601-7983-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150110065409.GA104814@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Boon Leong Ong <boon.leong.ong@intel.com>, Mel Gorman <mgorman@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420812601-7983-1-git-send-email-hdegoede@redhat.com>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, Bertrik Sikken <bertrik@sikken.nl>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Fri, Jan 09, 2015 at 03:10:01PM +0100, Hans de Goede wrote:
+> Since kernel 3.14 the backlight control has been broken on various Samsung
+> Atom based netbooks. This has been bisected and this problem happens since
+> commit b35684b8fa94 ("drm/i915: do full backlight setup at enable time")
+> 
+> This has been reported and discussed in detail here:
+> http://lists.freedesktop.org/archives/intel-gfx/2014-July/049395.html
+> 
+> Unfortunately no-one has been able to fix this. This only affects Samsung
+> Atom netbooks, and the Linux kernel and the BIOS of those laptops have never
+> worked well together. All affected laptops already have a quirk to avoid using
+> the standard acpi-video interface and instead use the samsung specific SABI
+> interface which samsung-laptop uses. It seems that recent fixes to the i915
+> driver have also broken backlight control through the SABI interface.
+> 
+> The intel_backlight driver OTOH works fine, and also allows for finer grained
+> backlight control. So add a new use_native_backlight quirk, and replace the
+> broken_acpi_video quirk with this quirk for affected models. This new quirk
+> disables acpi-video as before and also stops samsung-laptop from registering
 
-> I'm wondering if there is a need for this to be a platform driver at
-> all. Could we, instead, tear down any unlocked IMRs at boot as part of the IMR
-> driver itself, as well as lock the kernel .text. Firmware has the option of
-> making an IMR mandatory by locking it. If it isn't locked, what use is it to the
-> OS without a lot more context? Any sort of policy enforced with IMRs is a
-> user-space decision, so clearing out the unlocked ones and then handing off to
-> user-space seems like a sane default mode to me.
->
-> I discussed this with Boon Leong this afternoon and we couldn't come up with a
-> justification for a platform-specific driver to do what this does.
 
-I think there's no technical reason impeding what you've just suggested 
-in the IMR init and I'm happy to move the code in there since basically 
-any platform with IMR registers could justifiably
+I take this to me this quirk is broken_acpi_video && use_native_backlight.
 
-a) Tear down everything that's unlocked
-b) Place a default IMR around the .text section
 
-No reason it the world that that policy needs to be Galileo specific - 
-and it's a valid argument to say - this behaviour can simply be an IMR 
-policy in the kernel and less code for the same functionality, that adds 
-consistency across x86 is a good thing.
+> the SABI based samsung_laptop backlight interface, leaving only the working
+> intel_backlight interface.
+> 
+> This commit enables this new quirk for 3 models which are known to be affected,
+> chances are that it needs to be used on other models too.
+> 
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1094948 # N145P
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1115713 # N250P
+> Reported-by: Bertrik Sikken <bertrik@sikken.nl> # N150P
+> Cc: stable@vger.kernel.org # 3.16
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/samsung-laptop.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+> index ff765d8..ce364a4 100644
+> --- a/drivers/platform/x86/samsung-laptop.c
+> +++ b/drivers/platform/x86/samsung-laptop.c
+> @@ -353,6 +353,7 @@ struct samsung_quirks {
+>  	bool broken_acpi_video;
+>  	bool four_kbd_backlight_levels;
+>  	bool enable_kbd_backlight;
+> +	bool use_native_backlight;
+>  };
+>  
+>  static struct samsung_quirks samsung_unknown = {};
+> @@ -361,6 +362,10 @@ static struct samsung_quirks samsung_broken_acpi_video = {
+>  	.broken_acpi_video = true,
+>  };
+>  
+> +static struct samsung_quirks samsung_use_native_backlight = {
+> +	.use_native_backlight = true,
 
-I'll zap the Galileo platform code entirely for V2 unless there's a 
-counter-argument from someone.
+Shouldn't this also set:
 
---
-BOD
+	.broken_acpi_video = true,
+?
+
+That's what I understood from the commit log.
+
+Thanks,
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
