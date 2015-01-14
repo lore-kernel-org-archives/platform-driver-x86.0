@@ -1,62 +1,47 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] TCO Watchdog warning interrupt driver creation
-Date: Wed, 14 Jan 2015 10:16:57 -0800
-Message-ID: <20150114181657.GB13907@roeck-us.net>
-References: <B9C02DB17496AC4197F41A146D371B9B075AF9DE@hasmsx107.ger.corp.intel.com>
- <20141211040404.GA28797@vmdeb7>
- <5489AA6B.9080802@roeck-us.net>
- <B9C02DB17496AC4197F41A146D371B9B075C5FE3@hasmsx107.ger.corp.intel.com>
- <E73BFCB9-87CB-447D-839C-9ED4031FC6E2@infradead.org>
- <B9C02DB17496AC4197F41A146D371B9B075C6189@hasmsx107.ger.corp.intel.com>
- <54AF6288.6040305@roeck-us.net>
- <B9C02DB17496AC4197F41A146D371B9B075CC9FA@hasmsx107.ger.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Change sci_open function return value
+Date: Wed, 14 Jan 2015 11:59:32 -0700
+Message-ID: <1421261972-3130-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bh-25.webhostbox.net ([208.91.199.152]:59635 "EHLO
-	bh-25.webhostbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751031AbbANSR0 (ORCPT
+Received: from mail-ob0-f176.google.com ([209.85.214.176]:45582 "EHLO
+	mail-ob0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751696AbbANS7v (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Jan 2015 13:17:26 -0500
-Received: from mailnull by bh-25.webhostbox.net with sa-checked (Exim 4.82)
-	(envelope-from <linux@roeck-us.net>)
-	id 1YBSVS-002LiG-Id
-	for platform-driver-x86@vger.kernel.org; Wed, 14 Jan 2015 18:17:26 +0000
-Content-Disposition: inline
-In-Reply-To: <B9C02DB17496AC4197F41A146D371B9B075CC9FA@hasmsx107.ger.corp.intel.com>
+	Wed, 14 Jan 2015 13:59:51 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Muller, Francois-nicolas" <francois-nicolas.muller@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, "'platform-driver-x86@vger.kernel.org'" <platform-driver-x86@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Linux ACPI Mailing List <linux-acpi@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Wed, Jan 14, 2015 at 04:32:33PM +0000, Muller, Francois-nicolas wrot=
-e:
-> Thanks for your review, my comments embedded below.
-> I'm sending the new version of the patch in the following email.
-> Fran=E7ois-Nicolas
->=20
-=2E..
-> >>
-> >> +static const struct acpi_device_id iTCO_wdt_ids[] =3D {
-> >> +	{"8086229C", 0},
-> >> +	{"", 0},
-> >> +};
-> >> +MODULE_DEVICE_TABLE(acpi, iTCO_wdt_ids);
-> >> +
-> >
-> >Doesn't that result in auto-loading the driver ?
->=20
-> The driver is loaded only when Bios exposes the acpi device and the b=
-oot param warn_irq is true.
-> Could you clarify ? I don't understand the issue.=20
->=20
-Unless I am missing something, you are making two changes
-in a single patch.
+Some Toshiba laptops have "poorly implemented" SCI calls on their
+BIOSes and are not checking for sci_{open, close} calls, therefore,
+the sci_open function is failing and making some of the supported
+features unavailable (kbd backlight, touchpad and illumination).
 
-- auto-load driver if acpi device is exposed by bios
-- Add interrupt handling support
+This patch changes the default return code of the sci_open function
+to return one instead of zero, making all those faulty laptops load
+all the supported features.
 
-I suggested to separate those changes into two patches.
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Guenter
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index fc34a71..71ac7c12 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -391,9 +391,10 @@ static int sci_open(struct toshiba_acpi_dev *dev)
+ 		return 1;
+ 	} else if (out[0] == TOS_NOT_PRESENT) {
+ 		pr_info("Toshiba SCI is not present\n");
++		return 0;
+ 	}
+ 
+-	return 0;
++	return 1;
+ }
+ 
+ static void sci_close(struct toshiba_acpi_dev *dev)
+-- 
+2.2.1
