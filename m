@@ -1,30 +1,42 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 0/4] toshiba_acpi: Add support for USB Sleep functions
-Date: Wed, 14 Jan 2015 14:40:17 -0700
-Message-ID: <1421271621-8330-1-git-send-email-coproscefalo@gmail.com>
+From: Julijonas Kikutis <julijonas.kikutis@gmail.com>
+Subject: samsung-laptop: enable better lid handling
+Date: Wed, 14 Jan 2015 23:26:25 +0000
+Message-ID: <1421277985.27643.22.camel@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f181.google.com ([209.85.214.181]:34596 "EHLO
-	mail-ob0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752050AbbANVk1 (ORCPT
+Received: from mail-wi0-f173.google.com ([209.85.212.173]:39201 "EHLO
+	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751221AbbANX02 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Jan 2015 16:40:27 -0500
+	Wed, 14 Jan 2015 18:26:28 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: Julijonas Kikutis <julijonas.kikutis@gmail.com>
 
-The following patches add support to several USB Sleep functions
-found on newer Toshiba laptops, allowing to use th USB ports while
-the laptop is asleep or turned off.
+Hello,
 
-Azael Avalos (4):
-  toshiba_acpi: Add support for USB Sleep and Charge function
-  toshiba_acpi: Add support for USB Sleep functions under battery
-  toshiba_acpi: Add support for USB Rapid Charge
-  toshiba_acpi: Add support for USB Sleep and Music
+I sent the patch <https://lkml.org/lkml/2014/12/11/414> to linux-kernel,
+platform-driver-x86, and to the maintainer of samsung-laptop a month ago
+and have not received any response. Any response would be welcome.
 
- drivers/platform/x86/toshiba_acpi.c | 449 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 449 insertions(+)
+I have some additional thoughts about the patch. I don't know whether it
+is a good idea to introduce a whitelist of laptops that the special
+command applies to like I did, or would it be better to enable that
+command for every laptop that reports having that command. I also
+thought that maybe the maintainer of the module has some more Samsung
+laptops to test.
 
--- 
-2.2.1
+Moreover, I was asked about the unavailability of this module which
+exposes some abilities of the laptop otherwise missing (e.g. the battery
+saving mode, SABI access for this lid handling issue, some LED
+functionality for other laptops) in UEFI mode. Unfortunately, I could
+not help about that. I see that he has asked about that himself
+<https://lkml.org/lkml/2014/12/23/341> but got no reply. I would be also
+interested in the state of this issue.
+
+Thank you.
+
+Julijonas
