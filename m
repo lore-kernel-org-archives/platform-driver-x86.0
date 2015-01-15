@@ -1,42 +1,87 @@
-From: Julijonas Kikutis <julijonas.kikutis@gmail.com>
-Subject: samsung-laptop: enable better lid handling
-Date: Wed, 14 Jan 2015 23:26:25 +0000
-Message-ID: <1421277985.27643.22.camel@gmail.com>
+From: "Muller, Francois-nicolas" <francois-nicolas.muller@intel.com>
+Subject: RE: [PATCH] TCO Watchdog warning interrupt driver creation
+Date: Thu, 15 Jan 2015 13:27:22 +0000
+Message-ID: <B9C02DB17496AC4197F41A146D371B9B075D41C0@hasmsx107.ger.corp.intel.com>
+References: <B9C02DB17496AC4197F41A146D371B9B075AF9DE@hasmsx107.ger.corp.intel.com>
+ <20141211040404.GA28797@vmdeb7> <5489AA6B.9080802@roeck-us.net>
+ <B9C02DB17496AC4197F41A146D371B9B075C5FE3@hasmsx107.ger.corp.intel.com>
+ <E73BFCB9-87CB-447D-839C-9ED4031FC6E2@infradead.org>
+ <B9C02DB17496AC4197F41A146D371B9B075C6189@hasmsx107.ger.corp.intel.com>
+ <54AF6288.6040305@roeck-us.net>
+ <B9C02DB17496AC4197F41A146D371B9B075CC9FA@hasmsx107.ger.corp.intel.com>
+ <20150114181657.GB13907@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:39201 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751221AbbANX02 (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:18830 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752012AbbAON11 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 14 Jan 2015 18:26:28 -0500
+	Thu, 15 Jan 2015 08:27:27 -0500
+In-Reply-To: <20150114181657.GB13907@roeck-us.net>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: Julijonas Kikutis <julijonas.kikutis@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Darren Hart <dvhart@infradead.org>, "'platform-driver-x86@vger.kernel.org'" <platform-driver-x86@vger.kernel.org>, Rafael Wysocki <rjw@rjwysocki.net>, Linux ACPI Mailing List <linux-acpi@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>
 
-Hello,
+TCO driver is anyway auto-loaded by mfd driver lpc_ich as a sub-functio=
+n of it.
 
-I sent the patch <https://lkml.org/lkml/2014/12/11/414> to linux-kernel,
-platform-driver-x86, and to the maintainer of samsung-laptop a month ago
-and have not received any response. Any response would be welcome.
+The aim of my patch is only to add warning interrupt support in TCO dri=
+ver.
+=46or this it need the GPE number which is exposed by Bios in acpi tabl=
+es.
+So the patch registers also the TCO driver as an acpi driver to be able=
+ to retrieve this value.
 
-I have some additional thoughts about the patch. I don't know whether it
-is a good idea to introduce a whitelist of laptops that the special
-command applies to like I did, or would it be better to enable that
-command for every laptop that reports having that command. I also
-thought that maybe the maintainer of the module has some more Samsung
-laptops to test.
+The acpi code part is only required by the interrupt handling support, =
+not needed for the loading of the driver itself (already done by lpc_ic=
+h).
 
-Moreover, I was asked about the unavailability of this module which
-exposes some abilities of the laptop otherwise missing (e.g. the battery
-saving mode, SABI access for this lid handling issue, some LED
-functionality for other laptops) in UEFI mode. Unfortunately, I could
-not help about that. I see that he has asked about that himself
-<https://lkml.org/lkml/2014/12/23/341> but got no reply. I would be also
-interested in the state of this issue.
+In this context I don't see the point of dissociating the driver part f=
+rom the loading, unless the loading would need to be reverted later.
 
-Thank you.
+Thanks,
+=46ran=E7ois-Nicolas
 
-Julijonas
+-----Original Message-----
+=46rom: Guenter Roeck [mailto:linux@roeck-us.net]=20
+Sent: Wednesday, January 14, 2015 7:17 PM
+To: Muller, Francois-nicolas
+Cc: Darren Hart; 'platform-driver-x86@vger.kernel.org'; Rafael Wysocki;=
+ Linux ACPI Mailing List; linux-watchdog@vger.kernel.org; Wim Van Sebro=
+eck
+Subject: Re: [PATCH] TCO Watchdog warning interrupt driver creation
+
+On Wed, Jan 14, 2015 at 04:32:33PM +0000, Muller, Francois-nicolas wrot=
+e:
+> Thanks for your review, my comments embedded below.
+> I'm sending the new version of the patch in the following email.
+> Fran=E7ois-Nicolas
+>=20
+=2E..
+> >>
+> >> +static const struct acpi_device_id iTCO_wdt_ids[] =3D {
+> >> +	{"8086229C", 0},
+> >> +	{"", 0},
+> >> +};
+> >> +MODULE_DEVICE_TABLE(acpi, iTCO_wdt_ids);
+> >> +
+> >
+> >Doesn't that result in auto-loading the driver ?
+>=20
+> The driver is loaded only when Bios exposes the acpi device and the b=
+oot param warn_irq is true.
+> Could you clarify ? I don't understand the issue.=20
+>=20
+Unless I am missing something, you are making two changes in a single p=
+atch.
+
+- auto-load driver if acpi device is exposed by bios
+- Add interrupt handling support
+
+I suggested to separate those changes into two patches.
+
+Guenter
