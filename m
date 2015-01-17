@@ -1,105 +1,51 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: [PATCH] asus-laptop: is_visible should not return a bool
-Date: Fri, 16 Jan 2015 09:29:19 -0500
-Message-ID: <1421418559-2058-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.savoirfairelinux.com ([209.172.62.77]:59825 "EHLO
-	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751465AbbAPOhO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 16 Jan 2015 09:37:14 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Subject: [PATCH 1/1] fujitsu-laptop: use FB_BLANK_* constants
+Date: Sun, 18 Jan 2015 00:32:59 +0100
+Message-ID: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Michael Karcher <karcher@physik.fu-berlin.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-With a Lucid platform, asus_sysfs_is_visible() returns a boolean for
-ls_switch and ls_level attributes. Fix that and also s/supported/ok/ and
-s/asus->handle/handle/ to avoid lines wider than 80 chars.
+From: Michael Karcher <karcher@physik.fu-berlin.de>
 
-Signed-off-by: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 ---
- drivers/platform/x86/asus-laptop.c | 46 ++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index f71700e..c7d1655 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -1605,55 +1605,47 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct asus_laptop *asus = platform_get_drvdata(pdev);
- 	acpi_handle handle = asus->handle;
--	bool supported;
-+	bool ok;
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 7c21c1c..2a9afa2 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -64,6 +64,7 @@
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+ #include <linux/backlight.h>
++#include <linux/fb.h>
+ #include <linux/input.h>
+ #include <linux/kfifo.h>
+ #include <linux/platform_device.h>
+@@ -398,7 +399,7 @@ static int bl_get_brightness(struct backlight_device *b)
+ static int bl_update_status(struct backlight_device *b)
+ {
+ 	int ret;
+-	if (b->props.power == 4)
++	if (b->props.power == FB_BLANK_POWERDOWN)
+ 		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
+ 	else
+ 		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+@@ -1139,9 +1140,9 @@ static int __init fujitsu_init(void)
  
--	if (asus->is_pega_lucid) {
--		/* no ls_level interface on the Lucid */
--		if (attr == &dev_attr_ls_switch.attr)
--			supported = true;
--		else if (attr == &dev_attr_ls_level.attr)
--			supported = false;
--		else
--			goto normal;
-+	if (asus->is_pega_lucid && attr == &dev_attr_ls_switch.attr) {
-+		ok = true;
- 
--		return supported;
--	}
-+	} else if (asus->is_pega_lucid && attr == &dev_attr_ls_level.attr) {
-+		ok = false; /* no ls_level interface on the Lucid */
- 
--normal:
--	if (attr == &dev_attr_wlan.attr) {
--		supported = !acpi_check_handle(handle, METHOD_WLAN, NULL);
-+	} else if (attr == &dev_attr_wlan.attr) {
-+		ok = !acpi_check_handle(handle, METHOD_WLAN, NULL);
- 
- 	} else if (attr == &dev_attr_bluetooth.attr) {
--		supported = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
- 
- 	} else if (attr == &dev_attr_display.attr) {
--		supported = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
- 
- 	} else if (attr == &dev_attr_wimax.attr) {
--		supported =
--			!acpi_check_handle(asus->handle, METHOD_WIMAX, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_WIMAX, NULL);
- 
- 	} else if (attr == &dev_attr_wwan.attr) {
--		supported = !acpi_check_handle(asus->handle, METHOD_WWAN, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_WWAN, NULL);
- 
- 	} else if (attr == &dev_attr_ledd.attr) {
--		supported = !acpi_check_handle(handle, METHOD_LEDD, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_LEDD, NULL);
- 
- 	} else if (attr == &dev_attr_ls_switch.attr ||
- 		   attr == &dev_attr_ls_level.attr) {
--		supported = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
-+		ok = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
- 			!acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
- 	} else if (attr == &dev_attr_ls_value.attr) {
--		supported = asus->is_pega_lucid;
-+		ok = asus->is_pega_lucid;
- 	} else if (attr == &dev_attr_gps.attr) {
--		supported = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
--			    !acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
--			    !acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
-+		ok = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
-+			!acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
-+			!acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
- 	} else {
--		supported = true;
-+		ok = true;
+ 	if (!acpi_video_backlight_support()) {
+ 		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
+-			fujitsu->bl_device->props.power = 4;
++			fujitsu->bl_device->props.power = FB_BLANK_POWERDOWN;
+ 		else
+-			fujitsu->bl_device->props.power = 0;
++			fujitsu->bl_device->props.power = FB_BLANK_UNBLANK;
  	}
  
--	return supported ? attr->mode : 0;
-+	return ok ? attr->mode : 0;
- }
- 
- 
+ 	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
 -- 
-2.2.2
+2.1.3
