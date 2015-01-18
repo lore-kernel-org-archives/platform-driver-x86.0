@@ -1,68 +1,46 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] fujitsu-laptop: use FB_BLANK_* constants
-Date: Sun, 18 Jan 2015 20:24:44 +1030
-Message-ID: <20150118095443.GB16157@marvin.atrad.com.au>
-References: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
- <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Dmitry Tunin <hanipouspilot@gmail.com>
+Subject: [PATCH] ideapad_laptop: Lenovo G50-30 fix rfkill reports wireless blocked
+Date: Sun, 18 Jan 2015 15:44:40 +0300
+Message-ID: <1421585080-8004-1-git-send-email-hanipouspilot@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:43627 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751341AbbARKLS (ORCPT
+Received: from mail-lb0-f181.google.com ([209.85.217.181]:43405 "EHLO
+	mail-lb0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751451AbbARMo6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 18 Jan 2015 05:11:18 -0500
-Content-Disposition: inline
-In-Reply-To: <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+	Sun, 18 Jan 2015 07:44:58 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Karcher <karcher@physik.fu-berlin.de>
+To: platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Dmitry Tunin <hanipouspilot@gmail.com>, stable@vger.kernel.org
 
-On Sun, Jan 18, 2015 at 01:02:11AM +0100, Michael Karcher wrote:
-> From: Michael Karcher <karcher@physik.fu-berlin.de>
+Lenovo G30-50 does not have a hardware wireless switch and wireless
+is always blocked.
 
-This looks ok to me.
+BugLink: https://bugs.launchpad.net/bugs/1397021
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 7c21c1c..2a9afa2 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -64,6 +64,7 @@
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
->  #include <linux/backlight.h>
-> +#include <linux/fb.h>
->  #include <linux/input.h>
->  #include <linux/kfifo.h>
->  #include <linux/platform_device.h>
-> @@ -398,7 +399,7 @@ static int bl_get_brightness(struct backlight_device *b)
->  static int bl_update_status(struct backlight_device *b)
->  {
->  	int ret;
-> -	if (b->props.power == 4)
-> +	if (b->props.power == FB_BLANK_POWERDOWN)
->  		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
->  	else
->  		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
-> @@ -1139,9 +1140,9 @@ static int __init fujitsu_init(void)
->  
->  	if (!acpi_video_backlight_support()) {
->  		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
-> -			fujitsu->bl_device->props.power = 4;
-> +			fujitsu->bl_device->props.power = FB_BLANK_POWERDOWN;
->  		else
-> -			fujitsu->bl_device->props.power = 0;
-> +			fujitsu->bl_device->props.power = FB_BLANK_UNBLANK;
->  	}
->  
->  	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
-> -- 
-> 2.1.3
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index b3d419a..4e42253 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -843,6 +843,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
+ 		},
+ 	},
++	{
++		.ident = "Lenovo G50-30",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+1.9.1
