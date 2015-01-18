@@ -1,67 +1,92 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/4] toshiba_acpi: Add support for USB Sleep and Charge
- function
-Date: Sun, 18 Jan 2015 10:55:51 -0800
-Message-ID: <20150118185551.GF56582@vmdeb7>
+Subject: Re: [PATCH 3/4] toshiba_acpi: Add support for USB Rapid Charge
+Date: Sun, 18 Jan 2015 11:00:12 -0800
+Message-ID: <20150118190012.GG56582@vmdeb7>
 References: <1421271621-8330-1-git-send-email-coproscefalo@gmail.com>
- <1421271621-8330-2-git-send-email-coproscefalo@gmail.com>
+ <1421271621-8330-4-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43288 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:43335 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750874AbbARSzw (ORCPT
+	with ESMTP id S1751119AbbARTAN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 18 Jan 2015 13:55:52 -0500
+	Sun, 18 Jan 2015 14:00:13 -0500
 Content-Disposition: inline
-In-Reply-To: <1421271621-8330-2-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <1421271621-8330-4-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Azael Avalos <coproscefalo@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 02:40:18PM -0700, Azael Avalos wrote:
-> Newer Toshiba models now come with a feature called Sleep and Charge,
-> where the computer USB ports remain powered when the computer is
-> asleep or turned off.
+On Wed, Jan 14, 2015 at 02:40:20PM -0700, Azael Avalos wrote:
+> Newer Toshiba laptops equipped with USB 3.0 ports now have the
+> functionality of rapid charging devices connected to their USB hubs.
 > 
-> This patch adds support to such feature, creating a sysfs entry
-> called "usb_sleep_charge" to set the desired charging mode or to
-> disable it.
-> 
-> The sysfs entry accepts three parameters, 0x0, 0x9 and 0x21, beign
-> disabled, alternate and auto respectively.
+> This patch adds support to use such feature by creating a sysfs entry
+> named "usb_rapid_charge", accepting only two values, 0 to disable and
+> one to enable, however, the machine needs a restart everytime the
+
+s/one/1//
+
+> function is toggled.
 > 
 > Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 > ---
->  drivers/platform/x86/toshiba_acpi.c | 112 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
-...
-
-> +static ssize_t toshiba_usb_sleep_charge_store(struct device *dev,
-> +					      struct device_attribute *attr,
-> +					      const char *buf, size_t count)
+>  drivers/platform/x86/toshiba_acpi.c | 107 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 107 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index 9e054c5..eba5f9e 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -155,6 +155,7 @@ MODULE_LICENSE("GPL");
+>  #define SCI_USB_CHARGE_BAT_LVL_OFF	0x1
+>  #define SCI_USB_CHARGE_BAT_LVL_ON	0x4
+>  #define SCI_USB_CHARGE_BAT_LVL		0x0200
+> +#define SCI_USB_CHARGE_RAPID_DSP	0x0300
+>  
+>  struct toshiba_acpi_dev {
+>  	struct acpi_device *acpi_dev;
+> @@ -188,6 +189,7 @@ struct toshiba_acpi_dev {
+>  	unsigned int eco_supported:1;
+>  	unsigned int accelerometer_supported:1;
+>  	unsigned int usb_sleep_charge_supported:1;
+> +	unsigned int usb_rapid_charge_supported:1;
+>  	unsigned int sysfs_created:1;
+>  
+>  	struct mutex mutex;
+> @@ -874,6 +876,60 @@ static int toshiba_sleep_functions_status_set(struct toshiba_acpi_dev *dev,
+>  	return 0;
+>  }
+>  
+> +static int toshiba_usb_rapid_charge_get(struct toshiba_acpi_dev *dev,
+> +					u32 *state)
 > +{
-> +	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-> +	int state;
-> +	int ret;
+> +	u32 in[TCI_WORDS] = { SCI_GET, SCI_USB_SLEEP_CHARGE, 0, 0, 0, 0 };
+> +	u32 out[TCI_WORDS];
+> +	acpi_status status;
 > +
-> +	ret = kstrtoint(buf, 0, &state);
-> +	if (ret)
-> +		return ret;
+> +	if (!sci_open(dev))
+> +		return -EIO;
 > +
-> +	/* Set the USB charging mode where:
-> +	 * 0x30000 - Disable
-> +	 * 0x30009 - Alternate
-> +	 * 0x30021 - Auto
-> +	 */
-> +	state |= 0x30000;
-> +	if (state != SCI_USB_CHARGE_DISABLED && state != SCI_USB_CHARGE_AUTO &&
-> +	    state != SCI_USB_CHARGE_ALTERNATE)
-> +		return -EINVAL;
+> +	in[5] = SCI_USB_CHARGE_RAPID_DSP;
+> +	status = tci_raw(dev, in, out);
+> +	sci_close(dev);
+> +	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
+> +		pr_err("ACPI call to get USB S&C battery level failed\n");
+> +		return -EIO;
+> +	} else if (out[0] == TOS_NOT_SUPPORTED ||
+> +		   out[0] == TOS_INPUT_DATA_ERROR) {
+> +		pr_info("USB Sleep and Charge not supported\n");
+> +		return -ENODEV;
+> +	}
+> +
 
-Sorry, I missed this as the input validation on my first pass. Looks good.
+Same comment on return codes.
 
+Although, on looking through the existing driver, I only see EIO, and internally
+consistency is important.... we can stick with EIO for this driver.
 -- 
 Darren Hart
 Intel Open Source Technology Center
