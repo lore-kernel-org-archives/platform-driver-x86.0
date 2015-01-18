@@ -1,8 +1,10 @@
 From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Subject: [PATCH 1/1] fujitsu-laptop: use FB_BLANK_* constants
-Date: Sun, 18 Jan 2015 00:32:59 +0100
-Message-ID: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+Subject: [PATCH] fujitsu-laptop: use FB_BLANK_* constants
+Date: Sun, 18 Jan 2015 01:02:11 +0100
+Message-ID: <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+References: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Michael Karcher <karcher@physik.fu-berlin.de>
@@ -10,6 +12,7 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Michael Karcher <karcher@physik.fu-berlin.de>
 
+Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 ---
  drivers/platform/x86/fujitsu-laptop.c | 7 ++++---
  1 file changed, 4 insertions(+), 3 deletions(-)
