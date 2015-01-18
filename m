@@ -1,38 +1,143 @@
 From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: [PATCH v2 1/3] asus-laptop: fix is_visible return value
-Date: Sun, 18 Jan 2015 18:25:24 -0500
-Message-ID: <1421623526-20555-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.savoirfairelinux.com ([209.172.62.77]:55744 "EHLO
-	mail.savoirfairelinux.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751221AbbARXZf (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 18 Jan 2015 18:25:35 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH v2 3/3] asus-laptop: cleanup is_visible
+Date: Sun, 18 Jan 2015 18:25:26 -0500
+Message-ID: <1421623526-20555-3-git-send-email-vivien.didelot@savoirfairelinux.com>
+References: <1421623526-20555-1-git-send-email-vivien.didelot@savoirfairelinux.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421623526-20555-1-git-send-email-vivien.didelot@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
 Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-With a Lucid platform, asus_sysfs_is_visible() returned a boolean for
-ls_switch and ls_level attributes.
+Use the attribute indexes and concise the if statements.
 
 Signed-off-by: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 ---
- drivers/platform/x86/asus-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/asus-laptop.c | 98 ++++++++++++++++----------------------
+ 1 file changed, 40 insertions(+), 58 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index f71700e..00f5e82 100644
+index 46b2746..b576929 100644
 --- a/drivers/platform/x86/asus-laptop.c
 +++ b/drivers/platform/x86/asus-laptop.c
-@@ -1616,7 +1616,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		else
- 			goto normal;
+@@ -1580,77 +1580,59 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
+ }
  
--		return supported;
-+		return supported ? attr->mode : 0;
+ static struct attribute *asus_attributes[] = {
+-	&dev_attr_infos.attr,
+-	&dev_attr_wlan.attr,
+-	&dev_attr_bluetooth.attr,
+-	&dev_attr_wimax.attr,
+-	&dev_attr_wwan.attr,
+-	&dev_attr_display.attr,
+-	&dev_attr_ledd.attr,
+-	&dev_attr_ls_value.attr,
+-	&dev_attr_ls_level.attr,
+-	&dev_attr_ls_switch.attr,
+-	&dev_attr_gps.attr,
++	&dev_attr_infos.attr,		/* 0 */
++	&dev_attr_wlan.attr,		/* 1 */
++	&dev_attr_bluetooth.attr,	/* 2 */
++	&dev_attr_wimax.attr,		/* 3 */
++	&dev_attr_wwan.attr,		/* 4 */
++	&dev_attr_display.attr,		/* 5 */
++	&dev_attr_ledd.attr,		/* 6 */
++	&dev_attr_ls_value.attr,	/* 7 */
++	&dev_attr_ls_level.attr,	/* 8 */
++	&dev_attr_ls_switch.attr,	/* 9 */
++	&dev_attr_gps.attr,		/* 10 */
+ 	NULL
+ };
+ 
+ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+-				    struct attribute *attr,
+-				    int idx)
++				     struct attribute *attr, int index)
+ {
+ 	struct device *dev = container_of(kobj, struct device, kobj);
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct asus_laptop *asus = platform_get_drvdata(pdev);
+ 	acpi_handle handle = asus->handle;
+-	bool supported;
+-
+-	if (asus->is_pega_lucid) {
++	bool ret = true;
++
++	if (index == 1) {
++		ret = !acpi_check_handle(handle, METHOD_WLAN, NULL);
++	} else if (index == 2) {
++		ret = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
++	} else if (index == 3) {
++		ret = !acpi_check_handle(handle, METHOD_WIMAX, NULL);
++	} else if (index == 4) {
++		ret = !acpi_check_handle(handle, METHOD_WWAN, NULL);
++	} else if (index == 5) {
++		ret = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
++	} else if (index == 6) {
++		ret = !acpi_check_handle(handle, METHOD_LEDD, NULL);
++	} else if (index == 7) {
++		ret = asus->is_pega_lucid;
++	} else if (index == 8) {
+ 		/* no ls_level interface on the Lucid */
+-		if (attr == &dev_attr_ls_switch.attr)
+-			supported = true;
+-		else if (attr == &dev_attr_ls_level.attr)
+-			supported = false;
+-		else
+-			goto normal;
+-
+-		return supported ? attr->mode : 0;
+-	}
+-
+-normal:
+-	if (attr == &dev_attr_wlan.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_WLAN, NULL);
+-
+-	} else if (attr == &dev_attr_bluetooth.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
+-
+-	} else if (attr == &dev_attr_display.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
+-
+-	} else if (attr == &dev_attr_wimax.attr) {
+-		supported =
+-			!acpi_check_handle(asus->handle, METHOD_WIMAX, NULL);
+-
+-	} else if (attr == &dev_attr_wwan.attr) {
+-		supported = !acpi_check_handle(asus->handle, METHOD_WWAN, NULL);
+-
+-	} else if (attr == &dev_attr_ledd.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_LEDD, NULL);
+-
+-	} else if (attr == &dev_attr_ls_switch.attr ||
+-		   attr == &dev_attr_ls_level.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
++		ret = !asus->is_pega_lucid &&
++			!acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
+ 			!acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
+-	} else if (attr == &dev_attr_ls_value.attr) {
+-		supported = asus->is_pega_lucid;
+-	} else if (attr == &dev_attr_gps.attr) {
+-		supported = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
+-			    !acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
+-			    !acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
+-	} else {
+-		supported = true;
++	} else if (index == 9) {
++		ret = asus->is_pega_lucid ||
++			(!acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
++			 !acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL));
++	} else if (index == 10) {
++		ret = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
++			!acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
++			!acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
  	}
  
- normal:
+-	return supported ? attr->mode : 0;
++	return ret ? attr->mode : 0;
+ }
+ 
+ 
 -- 
 2.2.2
