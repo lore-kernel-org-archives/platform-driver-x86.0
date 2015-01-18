@@ -1,54 +1,68 @@
-From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Subject: [PATCH] fujitsu-laptop: use FB_BLANK_* constants
-Date: Sun, 18 Jan 2015 01:02:11 +0100
-Message-ID: <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] fujitsu-laptop: use FB_BLANK_* constants
+Date: Sun, 18 Jan 2015 20:24:44 +1030
+Message-ID: <20150118095443.GB16157@marvin.atrad.com.au>
 References: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421537580-28554-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Michael Karcher <karcher@physik.fu-berlin.de>
-List-Id: platform-driver-x86.vger.kernel.org
+ <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from server.atrad.com.au ([150.101.241.2]:43627 "EHLO
+	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751341AbbARKLS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 18 Jan 2015 05:11:18 -0500
+Content-Disposition: inline
+In-Reply-To: <1421539331-32515-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Karcher <karcher@physik.fu-berlin.de>
 
-From: Michael Karcher <karcher@physik.fu-berlin.de>
+On Sun, Jan 18, 2015 at 01:02:11AM +0100, Michael Karcher wrote:
+> From: Michael Karcher <karcher@physik.fu-berlin.de>
 
-Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
----
- drivers/platform/x86/fujitsu-laptop.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+This looks ok to me.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 7c21c1c..2a9afa2 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -64,6 +64,7 @@
- #include <linux/acpi.h>
- #include <linux/dmi.h>
- #include <linux/backlight.h>
-+#include <linux/fb.h>
- #include <linux/input.h>
- #include <linux/kfifo.h>
- #include <linux/platform_device.h>
-@@ -398,7 +399,7 @@ static int bl_get_brightness(struct backlight_device *b)
- static int bl_update_status(struct backlight_device *b)
- {
- 	int ret;
--	if (b->props.power == 4)
-+	if (b->props.power == FB_BLANK_POWERDOWN)
- 		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
- 	else
- 		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
-@@ -1139,9 +1140,9 @@ static int __init fujitsu_init(void)
- 
- 	if (!acpi_video_backlight_support()) {
- 		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
--			fujitsu->bl_device->props.power = 4;
-+			fujitsu->bl_device->props.power = FB_BLANK_POWERDOWN;
- 		else
--			fujitsu->bl_device->props.power = 0;
-+			fujitsu->bl_device->props.power = FB_BLANK_UNBLANK;
- 	}
- 
- 	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
--- 
-2.1.3
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+
+> Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 7c21c1c..2a9afa2 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -64,6 +64,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>  #include <linux/backlight.h>
+> +#include <linux/fb.h>
+>  #include <linux/input.h>
+>  #include <linux/kfifo.h>
+>  #include <linux/platform_device.h>
+> @@ -398,7 +399,7 @@ static int bl_get_brightness(struct backlight_device *b)
+>  static int bl_update_status(struct backlight_device *b)
+>  {
+>  	int ret;
+> -	if (b->props.power == 4)
+> +	if (b->props.power == FB_BLANK_POWERDOWN)
+>  		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
+>  	else
+>  		ret = call_fext_func(FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
+> @@ -1139,9 +1140,9 @@ static int __init fujitsu_init(void)
+>  
+>  	if (!acpi_video_backlight_support()) {
+>  		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
+> -			fujitsu->bl_device->props.power = 4;
+> +			fujitsu->bl_device->props.power = FB_BLANK_POWERDOWN;
+>  		else
+> -			fujitsu->bl_device->props.power = 0;
+> +			fujitsu->bl_device->props.power = FB_BLANK_UNBLANK;
+>  	}
+>  
+>  	pr_info("driver " FUJITSU_DRIVER_VERSION " successfully loaded\n");
+> -- 
+> 2.1.3
