@@ -1,33 +1,35 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 1/1] fujitsu-laptop: use FB_BLANK_* constants
-Date: Mon, 19 Jan 2015 10:33:08 +1030
-Message-ID: <20150119000307.GA20491@marvin.atrad.com.au>
-References: <0150118191421.GJ56582@vmdeb7>
- <1421609326-3610-1-git-send-email-kernel@mkarcher.dialup.fu-berlin.de>
- <20150118222232.GA64157@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v2 0/4] toshiba_acpi: Add support for USB Sleep functions
+Date: Sun, 18 Jan 2015 18:30:21 -0700
+Message-ID: <1421631025-27895-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:41762 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751185AbbASADp (ORCPT
+Received: from mail-ob0-f170.google.com ([209.85.214.170]:63011 "EHLO
+	mail-ob0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751185AbbASBaz (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 18 Jan 2015 19:03:45 -0500
-Content-Disposition: inline
-In-Reply-To: <20150118222232.GA64157@vmdeb7>
+	Sun, 18 Jan 2015 20:30:55 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Sun, Jan 18, 2015 at 02:22:32PM -0800, Darren Hart wrote:
-> On Sun, Jan 18, 2015 at 08:28:46PM +0100, Michael Karcher wrote:
-> > Replace the magic numbers in fujitsu-laptop.c by the appropriate FB_BLANK
-> > constants, as indicated by the comment for backlight_properties.power in
-> > include/linux/backlight.h.
-> > 
-> > Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-> 
-> Thanks Michael, queued for 3.20.
+The following patches add support to several USB Sleep functions
+found on newer Toshiba laptops, allowing to use the USB ports while
+the laptop is asleep or turned off.
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Changes since v1:
+- Changed accepted parameters on first patch and added a short
+  description of what the auto and alternate charging modes mean
+- Some misc format and typo changes
+
+Azael Avalos (4):
+  toshiba_acpi: Add support for USB Sleep and Charge function
+  toshiba_acpi: Add support for USB Sleep functions under battery
+  toshiba_acpi: Add support for USB Rapid Charge
+  toshiba_acpi: Add support for USB Sleep and Music
+
+ drivers/platform/x86/toshiba_acpi.c | 455 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 455 insertions(+)
+
+-- 
+2.2.1
