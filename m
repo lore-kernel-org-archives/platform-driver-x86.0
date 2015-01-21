@@ -1,75 +1,108 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/3] intel_scu_ipc: move error check out of the loop
-Date: Wed, 21 Jan 2015 21:38:10 +0200
-Message-ID: <1421869091-11543-2-git-send-email-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/3] intel_scu_ipc: take resources from PCI configuration
+Date: Wed, 21 Jan 2015 21:38:11 +0200
+Message-ID: <1421869091-11543-3-git-send-email-andriy.shevchenko@linux.intel.com>
 References: <1421869091-11543-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:65377 "EHLO mga03.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:9683 "EHLO mga01.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752896AbbAUTkm (ORCPT
+	id S1752306AbbAUTlO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Jan 2015 14:40:42 -0500
+	Wed, 21 Jan 2015 14:41:14 -0500
 In-Reply-To: <1421869091-11543-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This is small performance optimization of the busy_loop().
-
-While here, use BIT() macro instead of plain integers when check the status.
+The patch makes driver to take the resources from PCI BAR0 instead of using
+hardcoded values.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 8938c31..e6430a3 100644
+index e6430a3..001b199 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -176,21 +176,21 @@ static inline u32 ipc_data_readl(u32 offset) /* Read ipc u32 data */
- /* Wait till scu status is busy */
- static inline int busy_loop(void)
+@@ -43,10 +43,9 @@
+ /*
+  * IPC register summary
+  *
+- * IPC register blocks are memory mapped at fixed address of 0xFF11C000
++ * IPC register blocks are memory mapped at fixed address of PCI BAR 0.
+  * To read or write information to the SCU, driver writes to IPC-1 memory
+- * mapped registers (base address 0xFF11C000). The following is the IPC
+- * mechanism
++ * mapped registers. The following is the IPC mechanism
+  *
+  * 1. IA core cDMI interface claims this transaction and converts it to a
+  *    Transaction Layer Packet (TLP) message which is sent across the cDMI.
+@@ -69,34 +68,26 @@
+ 
+ /* intel scu ipc driver data */
+ struct intel_scu_ipc_pdata_t {
+-	u32 ipc_base;
+ 	u32 i2c_base;
+-	u32 ipc_len;
+ 	u32 i2c_len;
+ 	u8 irq_mode;
+ };
+ 
+ static struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+-	.ipc_base = 0xff11c000,
+ 	.i2c_base = 0xff12b000,
+-	.ipc_len = 0x100,
+ 	.i2c_len = 0x10,
+ 	.irq_mode = 0,
+ };
+ 
+ /* Penwell and Cloverview */
+ static struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+-	.ipc_base = 0xff11c000,
+ 	.i2c_base = 0xff12b000,
+-	.ipc_len = 0x100,
+ 	.i2c_len = 0x10,
+ 	.irq_mode = 1,
+ };
+ 
+ static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+-	.ipc_base = 0xff009000,
+ 	.i2c_base  = 0xff00d000,
+-	.ipc_len  = 0x100,
+ 	.i2c_len = 0x10,
+ 	.irq_mode = 0,
+ };
+@@ -572,7 +563,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
  {
--	u32 status = 0;
--	u32 loop_count = 0;
-+	u32 status = ipc_read_status();
-+	u32 loop_count = 100000;
+ 	int err;
+ 	struct intel_scu_ipc_pdata_t *pdata;
+-	resource_size_t pci_resource;
++	resource_size_t base;
  
--	status = ipc_read_status();
--	while (status & 1) {
-+	/* break if scu doesn't reset busy bit after huge retry */
-+	while ((status & BIT(0)) && --loop_count) {
- 		udelay(1); /* scu processing time is in few u secods */
- 		status = ipc_read_status();
--		loop_count++;
--		/* break if scu doesn't reset busy bit after huge retry */
--		if (loop_count > 100000) {
--			dev_err(&ipcdev.pdev->dev, "IPC timed out");
--			return -ETIMEDOUT;
--		}
- 	}
--	if ((status >> 1) & 1)
-+
-+	if (status & BIT(0)) {
-+		dev_err(&ipcdev.pdev->dev, "IPC timed out");
-+		return -ETIMEDOUT;
-+	}
-+
-+	if (status & BIT(1))
- 		return -EIO;
+ 	if (ipcdev.pdev)		/* We support only one SCU */
+ 		return -EBUSY;
+@@ -590,8 +581,8 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (err)
+ 		return err;
  
- 	return 0;
-@@ -208,8 +208,7 @@ static inline int ipc_wait_for_interrupt(void)
- 	}
+-	pci_resource = pci_resource_start(dev, 0);
+-	if (!pci_resource)
++	base = pci_resource_start(dev, 0);
++	if (!base)
+ 		return -ENOMEM;
  
- 	status = ipc_read_status();
--
--	if ((status >> 1) & 1)
-+	if (status & BIT(1))
- 		return -EIO;
+ 	init_completion(&ipcdev.cmd_complete);
+@@ -599,7 +590,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (request_irq(dev->irq, ioc, 0, "intel_scu_ipc", &ipcdev))
+ 		return -EBUSY;
  
- 	return 0;
+-	ipcdev.ipc_base = ioremap_nocache(pdata->ipc_base, pdata->ipc_len);
++	ipcdev.ipc_base = ioremap_nocache(base, pci_resource_len(dev, 0));
+ 	if (!ipcdev.ipc_base)
+ 		return -ENOMEM;
+ 
 -- 
 2.1.4
