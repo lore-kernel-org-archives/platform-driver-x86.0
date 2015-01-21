@@ -1,58 +1,51 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/4] toshiba_acpi: Add support for USB Sleep functions
-Date: Wed, 21 Jan 2015 10:31:18 -0800
-Message-ID: <20150121183118.GD7386@vmdeb7>
-References: <1421631025-27895-1-git-send-email-coproscefalo@gmail.com>
- <1421752526.29486.18.camel@linux-0dmf.site>
- <CAGdLNWGJwXTS1GBkWeOZKfeACZhociMqSVrz-=7XFQTTxEf+TA@mail.gmail.com>
+Subject: Re: [PATCH] dell-laptop: use dedicated sysfs file for ALS
+Date: Wed, 21 Jan 2015 10:38:23 -0800
+Message-ID: <20150121183823.GE7386@vmdeb7>
+References: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com>
+ <9352624.oIKUSW0aDp@xps13>
+ <20150118180821.GB56582@vmdeb7>
+ <1663320.Wk1Y30OHLH@xps13>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:48811 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752144AbbAUSi2 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 21 Jan 2015 13:38:28 -0500
 Content-Disposition: inline
-In-Reply-To: <CAGdLNWGJwXTS1GBkWeOZKfeACZhociMqSVrz-=7XFQTTxEf+TA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Oliver Neukum <oneukum@suse.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1663320.Wk1Y30OHLH@xps13>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, A.Sloman@cs.bham.ac.uk, computersforpeace@gmail.com
 
-On Wed, Jan 21, 2015 at 11:21:06AM -0700, Azael Avalos wrote:
-> Hi there,
+On Sun, Jan 18, 2015 at 07:34:17PM +0100, Gabriele Mazzotta wrote:
+> On Sunday 18 January 2015 10:08:21 Darren Hart wrote:
+> > On Wed, Jan 14, 2015 at 03:07:21PM +0100, Gabriele Mazzotta wrote:
+> > > Hi,
+> > > 
+> > > I decided to remove "als" from input_triggers and created a dedicated
+> > > sysfs file for it. Having it there was wrong and misleading.
+> > > I also updated the documentation to reflect this change and fixed the
+> > > wrong description of als_setting, now used for als_enabled.
+> > 
+> > Given this is a significant functional change, as opposed to a bug fix, I'm
+> > leaning toward reverting the original and adding back the corrected version to
+> > 3.20. I'm going to look at the total impact first - let me know if you have a
+> > strong argument one way or the other.
 > 
-> Sorry for the late reply.
-> 
-> 2015-01-20 4:15 GMT-07:00 Oliver Neukum <oneukum@suse.de>:
-> > On Sun, 2015-01-18 at 18:30 -0700, Azael Avalos wrote:
-> >> The following patches add support to several USB Sleep functions
-> >> found on newer Toshiba laptops, allowing to use the USB ports while
-> >> the laptop is asleep or turned off.
-> >
-> > Hi,
-> >
-> > this is most interesting. But the interface is terrible. If
-> 
-> Well, I'm just providing the on/off switch on Toshiba specific hardware,
-> but I'm unaware/unfamiliar with how other vendors implement this
-> feature.
-> 
-> > possible we would like to have a generic interface for this,
-> > which should not depend on the specific platform in use and would
-> > have to be per bus or even per port (for example the ports on a
-> > Thunderbolt dock would not work with your module).
-> 
-> Sounds good, as not all ports carry such functionality, on my
-> current laptop only two ports provide this, the other two are just
-> normal USB 2/3 ports (configurable ;-) ).
-> 
-> > Do you think we could provide a hook from generic code into
-> > platform code to detect the capability for power control?
-> 
-> If there's an existing API already, I'll be glad to modify the code to
-> use it, if it doesn't exist yet, I'll simply adapt the code to the chosen
-> standard whenever becomes available.
+> I'm not against this decision.
+> If you do, please remember to also revert the commit that added the
+> documentation.
 
-Given the ACPI calls which are platform specific, a general purpose driver
-doesn't seem likely. I'm keeping this queued as is unless you ask me to drop it
-Azael.
+Then for my pull request to Linus this week, I'll be reverting:
+
+02b2aaa platform: x86: dell-laptop: Add support for keyboard backlight
+3161293 Documentation: Add entry for dell-laptop sysfs interface
+
+Am I missing anything?
 
 -- 
 Darren Hart
