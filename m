@@ -1,39 +1,68 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 3/3] asus-laptop: cleanup is_visible
-Date: Wed, 21 Jan 2015 10:19:55 -0800
-Message-ID: <20150121181955.GA7386@vmdeb7>
-References: <CAHR064jkFMd3FWxGvOrE0FfXzLHoQSb9LU8Mi_AZk-CST01Sqw@mail.gmail.com>
- <810077082.264036.1421778036663.JavaMail.root@mail>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v2 0/4] toshiba_acpi: Add support for USB Sleep functions
+Date: Wed, 21 Jan 2015 11:21:06 -0700
+Message-ID: <CAGdLNWGJwXTS1GBkWeOZKfeACZhociMqSVrz-=7XFQTTxEf+TA@mail.gmail.com>
+References: <1421631025-27895-1-git-send-email-coproscefalo@gmail.com>
+	<1421752526.29486.18.camel@linux-0dmf.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:46998 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751484AbbAUST7 (ORCPT
+Received: from mail-wg0-f52.google.com ([74.125.82.52]:37275 "EHLO
+	mail-wg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750868AbbAUSVI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Jan 2015 13:19:59 -0500
-Content-Disposition: inline
-In-Reply-To: <810077082.264036.1421778036663.JavaMail.root@mail>
+	Wed, 21 Jan 2015 13:21:08 -0500
+In-Reply-To: <1421752526.29486.18.camel@linux-0dmf.site>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, LKML <linux-kernel@vger.kernel.org>, kernel@savoirfairelinux.com
+To: Oliver Neukum <oneukum@suse.de>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 01:20:36PM -0500, Vivien Didelot wrote:
-> Hi Corentin,
-> 
-> > > Use the attribute indexes and concise the if statements.
-> > >
-> > Why ? I really don't see that as an improvement.
-> 
-> The improvement is code clarity and maintainability. I'm not use we want
-> to keep multiple returns and this goto thing. I think per-attribute 
-> if-statements are clearer.
+Hi there,
 
-I have to concur with Corentin, changing to numerical indices rather than the
-named atrributes makes the code harder to read in my opinion, and is more likely
-to lead to mistakes than not.
+Sorry for the late reply.
+
+2015-01-20 4:15 GMT-07:00 Oliver Neukum <oneukum@suse.de>:
+> On Sun, 2015-01-18 at 18:30 -0700, Azael Avalos wrote:
+>> The following patches add support to several USB Sleep functions
+>> found on newer Toshiba laptops, allowing to use the USB ports while
+>> the laptop is asleep or turned off.
+>
+> Hi,
+>
+> this is most interesting. But the interface is terrible. If
+
+Well, I'm just providing the on/off switch on Toshiba specific hardware,
+but I'm unaware/unfamiliar with how other vendors implement this
+feature.
+
+> possible we would like to have a generic interface for this,
+> which should not depend on the specific platform in use and would
+> have to be per bus or even per port (for example the ports on a
+> Thunderbolt dock would not work with your module).
+
+Sounds good, as not all ports carry such functionality, on my
+current laptop only two ports provide this, the other two are just
+normal USB 2/3 ports (configurable ;-) ).
+
+> Do you think we could provide a hook from generic code into
+> platform code to detect the capability for power control?
+
+If there's an existing API already, I'll be glad to modify the code to
+use it, if it doesn't exist yet, I'll simply adapt the code to the chosen
+standard whenever becomes available.
+
+>
+>         Regards
+>                 Oliver
+>
+>
+>
+
+Cheers
+Azael
+
+
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+-- El mundo apesta y vosotros apestais tambien --
