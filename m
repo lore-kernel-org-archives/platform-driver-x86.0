@@ -1,48 +1,85 @@
-From: Julijonas Kikutis <julijonas.kikutis@gmail.com>
-Subject: Re: [PATCH] samsung-laptop: enable better lid handling
-Date: Tue, 27 Jan 2015 13:35:30 +0000
-Message-ID: <1422365730.1634.3.camel@gmail.com>
-References: <1418332715-10547-1-git-send-email-julijonas.kikutis@gmail.com>
-	 <20150127025255.GA118747@vmdeb7>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [RFT PATCH 1/4] power_supply: twl4030_madc: Check return value of power_supply_register
+Date: Tue, 27 Jan 2015 22:06:12 +0100
+Message-ID: <CAAfyv34YoUG8dyq10mFZRQ-uf6-oT_KAbwZ1UQQ0FvFrs10BrQ@mail.gmail.com>
+References: <1422358221-13199-1-git-send-email-k.kozlowski@samsung.com>
+	<1422358221-13199-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f182.google.com ([74.125.82.182]:40411 "EHLO
-	mail-we0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751824AbbA0Nfd (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 27 Jan 2015 08:35:33 -0500
-In-Reply-To: <20150127025255.GA118747@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1422358221-13199-2-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Dmitry Artamonow <mad_soft@inbox.ru>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> > However, a user with another laptop in the bug report says that
-"power
-> > button has to be pressed twice to wake the machine" in this mode.
-> 
-> This is with this patch applied?
+Hi Krzystof,
 
-No, the commenter in bugzilla reports that it happened after manually
-outputting the command to debugfs. Of course, the same command is used
-by this patch only if the sysfs attribute is enabled.
+On Tue, Jan 27, 2015 at 12:30 PM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> The return value of power_supply_register() call was not checked and
+> even on error probe() function returned 0. If registering failed then
+> during unbind the driver tried to unregister power supply which was not
+> actually registered.
+>
+> This could lead to memory corruption because power_supply_unregister()
+> unconditionally cleans up given power supply.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Fixes: da0a00ebc239 ("power: Add twl4030_madc battery driver.")
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/power/twl4030_madc_battery.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl4030_madc_battery.c
+> index 7ef445a6cfa6..cf907609ec49 100644
+> --- a/drivers/power/twl4030_madc_battery.c
+> +++ b/drivers/power/twl4030_madc_battery.c
+> @@ -192,6 +192,7 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+>  {
+>         struct twl4030_madc_battery *twl4030_madc_bat;
+>         struct twl4030_madc_bat_platform_data *pdata = pdev->dev.platform_data;
+> +       int ret = 0;
+>
+>         twl4030_madc_bat = kzalloc(sizeof(*twl4030_madc_bat), GFP_KERNEL);
+>         if (!twl4030_madc_bat)
+> @@ -216,9 +217,11 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+>
+>         twl4030_madc_bat->pdata = pdata;
+>         platform_set_drvdata(pdev, twl4030_madc_bat);
+> -       power_supply_register(&pdev->dev, &twl4030_madc_bat->psy);
+> +       ret = power_supply_register(&pdev->dev, &twl4030_madc_bat->psy);
+> +       if (ret < 0)
+> +               kfree(twl4030_madc_bat);
+I post update twl4030_madc to iio some time ago [1] where this change
+was incorporated.
+I plan to respin in next week so we can drop this one (or take and
+I'll rebase on top).
+>
+> -       return 0;
+> +       return ret;
+>  }
+>
+>  static int twl4030_madc_battery_remove(struct platform_device *pdev)
+> --
+> 1.9.1
+>
 
-> > This mode is also needed in UEFI, but there samsung-laptop is
-> > unfortunately disabled.
-> 
-> I don't follow. What are you saying here?
+[1] - https://lkml.org/lkml/2014/3/5/284
 
-samsung_init returns -ENODEV if the computer boots in UEFI. Some
-functionality (e.g. the battery saving mode, SABI access for this lid
-handling issue, some LED functionality for other laptops) have no
-alternative ways to be accessed without this module. But this issue is
-only tangentially related to my patch.
+BR,
 
-> This can be one line.
+marek
 
-I have sent the revised patch as a reply to the first patch.
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
 
-Thank you.
-Julijonas
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
