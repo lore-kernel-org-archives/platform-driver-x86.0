@@ -1,105 +1,38 @@
-From: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Subject: [PATCH v3 2/2] asus-laptop: cleanup is_visible
-Date: Fri, 23 Jan 2015 09:01:11 -0500
-Message-ID: <1422021671-31861-2-git-send-email-vivien.didelot@savoirfairelinux.com>
-References: <1422021671-31861-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1422021671-31861-1-git-send-email-vivien.didelot@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 1/3] intel_scu_ipc: fix indentation in few places
+Date: Mon, 26 Jan 2015 16:50:03 -0800
+Message-ID: <20150127005003.GA21554@vmdeb7>
+References: <1421869091-11543-1-git-send-email-andriy.shevchenko@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:40854 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756846AbbA0AuG (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 26 Jan 2015 19:50:06 -0500
+Content-Disposition: inline
+In-Reply-To: <1421869091-11543-1-git-send-email-andriy.shevchenko@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Get rid of the "normal" label, use one if-statement per attribute for
-maintainability and change s/supported/ret/ and s/asus->handle/handle/
-to fix a coding style issue (lines with 80+ chars).
+On Wed, Jan 21, 2015 at 09:38:09PM +0200, Andy Shevchenko wrote:
+> While here, do couple of amendments:
+>  - move platform variable to the function where it's used
+>  - define intel_scu_ipc_check_status() static
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
----
- drivers/platform/x86/asus-laptop.c | 61 ++++++++++++++------------------------
- 1 file changed, 22 insertions(+), 39 deletions(-)
+Series applied and queued for 3.20.
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 46b2746..37a3a1f 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -1602,55 +1602,38 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct asus_laptop *asus = platform_get_drvdata(pdev);
- 	acpi_handle handle = asus->handle;
--	bool supported;
-+	bool ret = true;
- 
--	if (asus->is_pega_lucid) {
--		/* no ls_level interface on the Lucid */
--		if (attr == &dev_attr_ls_switch.attr)
--			supported = true;
--		else if (attr == &dev_attr_ls_level.attr)
--			supported = false;
--		else
--			goto normal;
--
--		return supported ? attr->mode : 0;
--	}
--
--normal:
- 	if (attr == &dev_attr_wlan.attr) {
--		supported = !acpi_check_handle(handle, METHOD_WLAN, NULL);
--
-+		ret = !acpi_check_handle(handle, METHOD_WLAN, NULL);
- 	} else if (attr == &dev_attr_bluetooth.attr) {
--		supported = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
--
--	} else if (attr == &dev_attr_display.attr) {
--		supported = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
--
-+		ret = !acpi_check_handle(handle, METHOD_BLUETOOTH, NULL);
- 	} else if (attr == &dev_attr_wimax.attr) {
--		supported =
--			!acpi_check_handle(asus->handle, METHOD_WIMAX, NULL);
--
-+		ret = !acpi_check_handle(handle, METHOD_WIMAX, NULL);
- 	} else if (attr == &dev_attr_wwan.attr) {
--		supported = !acpi_check_handle(asus->handle, METHOD_WWAN, NULL);
--
-+		ret = !acpi_check_handle(handle, METHOD_WWAN, NULL);
-+	} else if (attr == &dev_attr_display.attr) {
-+		ret = !acpi_check_handle(handle, METHOD_SWITCH_DISPLAY, NULL);
- 	} else if (attr == &dev_attr_ledd.attr) {
--		supported = !acpi_check_handle(handle, METHOD_LEDD, NULL);
--
--	} else if (attr == &dev_attr_ls_switch.attr ||
--		   attr == &dev_attr_ls_level.attr) {
--		supported = !acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
--			!acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
-+		ret = !acpi_check_handle(handle, METHOD_LEDD, NULL);
- 	} else if (attr == &dev_attr_ls_value.attr) {
--		supported = asus->is_pega_lucid;
-+		ret = asus->is_pega_lucid;
-+	} else if (attr == &dev_attr_ls_level.attr) {
-+		/* no ls_level interface on the Lucid */
-+		ret = !asus->is_pega_lucid &&
-+			!acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
-+			!acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL);
-+	} else if (attr == &dev_attr_ls_switch.attr) {
-+		ret = asus->is_pega_lucid ||
-+			(!acpi_check_handle(handle, METHOD_ALS_CONTROL, NULL) &&
-+			 !acpi_check_handle(handle, METHOD_ALS_LEVEL, NULL));
- 	} else if (attr == &dev_attr_gps.attr) {
--		supported = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
--			    !acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
--			    !acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
--	} else {
--		supported = true;
-+		ret = !acpi_check_handle(handle, METHOD_GPS_ON, NULL) &&
-+			!acpi_check_handle(handle, METHOD_GPS_OFF, NULL) &&
-+			!acpi_check_handle(handle, METHOD_GPS_STATUS, NULL);
- 	}
- 
--	return supported ? attr->mode : 0;
-+	return ret ? attr->mode : 0;
- }
- 
- 
+Minor wording change to 3/3 commit subject and log.
+
+Running through testing, will push to for-next tomorrow.
+
+Thank you Andy.
+
 -- 
-2.2.2
+Darren Hart
+Intel Open Source Technology Center
