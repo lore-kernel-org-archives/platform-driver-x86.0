@@ -1,89 +1,71 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFT PATCH 1/4] power_supply: twl4030_madc: Check return value of
- power_supply_register
-Date: Wed, 28 Jan 2015 08:58:41 +0100
-Message-ID: <1422431921.8854.4.camel@AMDC1943>
-References: <1422358221-13199-1-git-send-email-k.kozlowski@samsung.com>
- <1422358221-13199-2-git-send-email-k.kozlowski@samsung.com>
- <CAAfyv34YoUG8dyq10mFZRQ-uf6-oT_KAbwZ1UQQ0FvFrs10BrQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] samsung-laptop: enable better lid handling
+Date: Wed, 28 Jan 2015 21:20:22 -0800
+Message-ID: <20150129052021.GA115032@vmdeb7>
+References: <1418332715-10547-1-git-send-email-julijonas.kikutis@gmail.com>
+ <1422365168-2428-1-git-send-email-julijonas.kikutis@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <CAAfyv34YoUG8dyq10mFZRQ-uf6-oT_KAbwZ1UQQ0FvFrs10BrQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>
-Cc: Dmitry Artamonow <mad_soft@inbox.ru>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:40758 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752764AbbA2FUY (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 29 Jan 2015 00:20:24 -0500
+Content-Disposition: inline
+In-Reply-To: <1422365168-2428-1-git-send-email-julijonas.kikutis@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Julijonas Kikutis <julijonas.kikutis@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, "open list:ABI/API" <linux-api@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SAMSUNG LAPTOP DR..." <platform-driver-x86@vger.kernel.org>
 
-On wto, 2015-01-27 at 22:06 +0100, Belisko Marek wrote:
-> Hi Krzystof,
+On Tue, Jan 27, 2015 at 01:26:06PM +0000, Julijonas Kikutis wrote:
+> Some Samsung laptops with SABI3 delay the sleep for 10 seconds after
+> the lid is closed and do not wake up from sleep after the lid is opened.
+> A SABI command is needed to enable the better behavior.
 > 
-> On Tue, Jan 27, 2015 at 12:30 PM, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
-> > The return value of power_supply_register() call was not checked and
-> > even on error probe() function returned 0. If registering failed then
-> > during unbind the driver tried to unregister power supply which was not
-> > actually registered.
-> >
-> > This could lead to memory corruption because power_supply_unregister()
-> > unconditionally cleans up given power supply.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Fixes: da0a00ebc239 ("power: Add twl4030_madc battery driver.")
-> > Cc: <stable@vger.kernel.org>
-> > ---
-> >  drivers/power/twl4030_madc_battery.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/power/twl4030_madc_battery.c b/drivers/power/twl4030_madc_battery.c
-> > index 7ef445a6cfa6..cf907609ec49 100644
-> > --- a/drivers/power/twl4030_madc_battery.c
-> > +++ b/drivers/power/twl4030_madc_battery.c
-> > @@ -192,6 +192,7 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
-> >  {
-> >         struct twl4030_madc_battery *twl4030_madc_bat;
-> >         struct twl4030_madc_bat_platform_data *pdata = pdev->dev.platform_data;
-> > +       int ret = 0;
-> >
-> >         twl4030_madc_bat = kzalloc(sizeof(*twl4030_madc_bat), GFP_KERNEL);
-> >         if (!twl4030_madc_bat)
-> > @@ -216,9 +217,11 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
-> >
-> >         twl4030_madc_bat->pdata = pdata;
-> >         platform_set_drvdata(pdev, twl4030_madc_bat);
-> > -       power_supply_register(&pdev->dev, &twl4030_madc_bat->psy);
-> > +       ret = power_supply_register(&pdev->dev, &twl4030_madc_bat->psy);
-> > +       if (ret < 0)
-> > +               kfree(twl4030_madc_bat);
-> I post update twl4030_madc to iio some time ago [1] where this change
-> was incorporated.
-> I plan to respin in next week so we can drop this one (or take and
-> I'll rebase on top).
-
-Hi,
-
-I am fine with both solutions (especially that I am not able to test my
-change). However there is one benefit of my fix: after applying it could
-be backported to stable kernels (3.11+?).
-
-Best regards,
-Krzysztof
-
-> >
-> > -       return 0;
-> > +       return ret;
-> >  }
-> >
-> >  static int twl4030_madc_battery_remove(struct platform_device *pdev)
-> > --
-> > 1.9.1
-> >
+> Command = 0x6e, d0 = 0x81 enables this behavior. Returns d0 = 0x01.
+> Command = 0x6e, d0 = 0x80 disables this behavior. Returns d0 = 0x00.
 > 
-> [1] - https://lkml.org/lkml/2014/3/5/284
+> Command = 0x6d and any d0 queries the state. This returns:
+> d0 = 0x00000*01, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is enabled.
+> d0 = 0x00000*00, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is disabled.
+> Where * is 0 - laptop has never slept or hibernated after switch on,
+>            1 - laptop has hibernated just before,
+>            2 - laptop has slept just before.
 > 
-> BR,
+> Patch addresses bug https://bugzilla.kernel.org/show_bug.cgi?id=75901 .
+> It adds a sysfs attribute lid_handling with a description and also an
+> addition to the quirks structure to enable the mode by default.
 > 
-> marek
+> A user with another laptop in the bug report says that "power button has
+> to be pressed twice to wake the machine" when he or she enabled the mode
+> manually using the SABI command. Therefore, it is enabled by default
+> only for the single laptop that I have tested.
+> 
+> Signed-off-by: Julijonas Kikutis <julijonas.kikutis@gmail.com>
+> ---
+>  .../ABI/testing/sysfs-driver-samsung-laptop        |   8 ++
+>  drivers/platform/x86/samsung-laptop.c              | 120 ++++++++++++++++++++-
+>  2 files changed, 127 insertions(+), 1 deletion(-)
 > 
 
+Patch is generally fine, thanks for addressing my comments. Prior to merging I
+always run checkpatch.pl just in case I missed anything obvious:
+
+$ scripts/checkpatch.pl ~/samsung/01-lid-handling.patch 
+WARNING: Prefer kstrto<type> to single variable sscanf
+#219: FILE: drivers/platform/x86/samsung-laptop.c:900:
++       if (!count || sscanf(buf, "%i", &value) != 1)
++               return -EINVAL;
+
+total: 0 errors, 1 warnings, 219 lines checked
+
+Please always run checkpatch.pl. It isn't sufficient and doesn't catch
+everything, but it is a minimum bar kind of thing.
+
+Thanks,
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
