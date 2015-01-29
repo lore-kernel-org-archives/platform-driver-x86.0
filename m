@@ -1,68 +1,91 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] samsung-laptop: enable better lid handling
-Date: Wed, 28 Jan 2015 21:20:22 -0800
-Message-ID: <20150129052021.GA115032@vmdeb7>
-References: <1418332715-10547-1-git-send-email-julijonas.kikutis@gmail.com>
- <1422365168-2428-1-git-send-email-julijonas.kikutis@gmail.com>
+Subject: Re: [PATCH] toshiba_acpi: Add a check for TOS_NOT_SUPPORTED in the
+ sci_open function
+Date: Wed, 28 Jan 2015 22:19:07 -0800
+Message-ID: <20150129061907.GC115032@vmdeb7>
+References: <1421633832-28490-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40758 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:47189 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752764AbbA2FUY (ORCPT
+	with ESMTP id S1753758AbbA2GTK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 29 Jan 2015 00:20:24 -0500
+	Thu, 29 Jan 2015 01:19:10 -0500
 Content-Disposition: inline
-In-Reply-To: <1422365168-2428-1-git-send-email-julijonas.kikutis@gmail.com>
+In-Reply-To: <1421633832-28490-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julijonas Kikutis <julijonas.kikutis@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, "open list:ABI/API" <linux-api@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SAMSUNG LAPTOP DR..." <platform-driver-x86@vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Jan 27, 2015 at 01:26:06PM +0000, Julijonas Kikutis wrote:
-> Some Samsung laptops with SABI3 delay the sleep for 10 seconds after
-> the lid is closed and do not wake up from sleep after the lid is opened.
-> A SABI command is needed to enable the better behavior.
+On Sun, Jan 18, 2015 at 07:17:12PM -0700, Azael Avalos wrote:
+> This was "toshiba_acpi: Change sci_open function return value"
 > 
-> Command = 0x6e, d0 = 0x81 enables this behavior. Returns d0 = 0x01.
-> Command = 0x6e, d0 = 0x80 disables this behavior. Returns d0 = 0x00.
+> Some Toshiba laptops have "poorly implemented" SCI calls on their
+> BIOSes and are not checking for sci_{open, close} calls, therefore,
+> the sci_open function is failing and making some of the supported
+> features unavailable (kbd backlight, touchpad, illumination, etc.).
 > 
-> Command = 0x6d and any d0 queries the state. This returns:
-> d0 = 0x00000*01, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is enabled.
-> d0 = 0x00000*00, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is disabled.
-> Where * is 0 - laptop has never slept or hibernated after switch on,
->            1 - laptop has hibernated just before,
->            2 - laptop has slept just before.
+> This patch checks wheter we receive TOS_NOT_SUPPORTED and returns
+
+                   ^ whether
+
+(checkpatch.pl would catch this)
+
+Since I'm late in review, this one's on me ;-)
+
+> 1, making the supported features work on such laptops.
 > 
-> Patch addresses bug https://bugzilla.kernel.org/show_bug.cgi?id=75901 .
-> It adds a sysfs attribute lid_handling with a description and also an
-> addition to the quirks structure to enable the mode by default.
+> In the case that some laptops really do not support the SCI, all the
+> SCI dependent functions check for TOS_NOT_SUPPORTED, and thus, not
+> registering support for the queried feature.
 > 
-> A user with another laptop in the bug report says that "power button has
-> to be pressed twice to wake the machine" when he or she enabled the mode
-> manually using the SABI command. Therefore, it is enabled by default
-> only for the single laptop that I have tested.
-> 
-> Signed-off-by: Julijonas Kikutis <julijonas.kikutis@gmail.com>
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+
+Queued for 3.20.
+
 > ---
->  .../ABI/testing/sysfs-driver-samsung-laptop        |   8 ++
->  drivers/platform/x86/samsung-laptop.c              | 120 ++++++++++++++++++++-
->  2 files changed, 127 insertions(+), 1 deletion(-)
+> Darren,
 > 
+> Hopefully this new patch eases some of the concerns of the previous
+> patch, and this time I added a comment block explaining a bit, but of
+> course, let me know if there is something else that needs change.
+> 
+> Cheers
+> Azael
+> 
+>  drivers/platform/x86/toshiba_acpi.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index fc34a71..899ead6b 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -389,6 +389,19 @@ static int sci_open(struct toshiba_acpi_dev *dev)
+>  	} else if (out[0] == TOS_ALREADY_OPEN) {
+>  		pr_info("Toshiba SCI already opened\n");
+>  		return 1;
+> +	} else if (out[0] == TOS_NOT_SUPPORTED) {
+> +		/* Some BIOSes do not have the SCI open/close functions
+> +		 * implemented and return 0x8000 (Not Supported), failing to
+> +		 * register some supported features.
+> +		 *
+> +		 * Simply return 1 if we hit those affected laptops to make the
+> +		 * supported features work.
+> +		 *
+> +		 * In the case that some laptops really do not support the SCI,
+> +		 * all the SCI dependent functions check for TOS_NOT_SUPPORTED,
+> +		 * and thus, not registering support for the queried feature.
+> +		 */
 
-Patch is generally fine, thanks for addressing my comments. Prior to merging I
-always run checkpatch.pl just in case I missed anything obvious:
+This is great by the way, when things are just weird/broken, this is when we
+need really clear comments.
 
-$ scripts/checkpatch.pl ~/samsung/01-lid-handling.patch 
-WARNING: Prefer kstrto<type> to single variable sscanf
-#219: FILE: drivers/platform/x86/samsung-laptop.c:900:
-+       if (!count || sscanf(buf, "%i", &value) != 1)
-+               return -EINVAL;
-
-total: 0 errors, 1 warnings, 219 lines checked
-
-Please always run checkpatch.pl. It isn't sufficient and doesn't catch
-everything, but it is a minimum bar kind of thing.
+> +		return 1;
+>  	} else if (out[0] == TOS_NOT_PRESENT) {
+>  		pr_info("Toshiba SCI is not present\n");
+>  	}
 
 Thanks,
 
