@@ -1,72 +1,41 @@
-From: Adam Lee <adam.lee@canonical.com>
-Subject: [PATCH] thinkpad_acpi: support new BIOS version string pattern
-Date: Wed,  4 Feb 2015 17:00:19 +0800
-Message-ID: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42]:57736 "EHLO
-	mail-pa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754461AbbBDJA1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 Feb 2015 04:00:27 -0500
-Received: by mail-pa0-f42.google.com with SMTP id bj1so1101984pad.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Feb 2015 01:00:27 -0800 (PST)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 03/20] power_supply: Add API for safe access of power
+ supply function attrs
+Date: Wed, 4 Feb 2015 14:44:56 +0100
+Message-ID: <20150204134456.GA8312@amd>
+References: <1422629278-12202-1-git-send-email-k.kozlowski@samsung.com>
+ <1422629278-12202-4-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1422629278-12202-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Kosina <jkosina@suse.cz>, David Herrmann <dh.herrmann@googlemail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Milo Kim <milo.kim@ti.com>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, ac100@lists.launchpad.net, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, Linus Walleij <linus.walleij@linaro.org>, Samuel
+List-Id: platform-driver-x86.vger.kernel.org
 
-Latest ThinkPad models use a new string pattern of BIOS version,
-thinkpad_acpi won't be loaded automatically without this fix.
+On Fri 2015-01-30 15:47:41, Krzysztof Kozlowski wrote:
+> Add simple wrappers for accessing power supply's function attributes:
+>  - get_property -> power_supply_get_property
+>  - set_property -> power_supply_set_property
+>  - property_is_writeable -> power_supply_property_is_writeable
+>  - external_power_changed -> power_supply_external_power_changed
+> 
+> This API along with atomic usage counter adds a safe way of accessing a
+> power supply from another driver. If power supply is unregistered after
+> obtaining reference to it by some driver, then the API wrappers won't be
+> executed in invalid (freed) context.
+> 
+> Next patch changing the ownership of power supply class is still needed
+> to fully fix race conditions in accessing freed power supply.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Reviewed-by: Sebastian Reichel <sre@kernel.org>
 
-Signed-off-by: Adam Lee <adam.lee@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+For 1-3: Acked-by: Pavel Machek <pavel@ucw.cz>
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index c3d11fa..39a1017 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8883,17 +8883,38 @@ static bool __pure __init tpacpi_is_fw_digit(const char c)
- 	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z');
- }
- 
--/* Most models: xxyTkkWW (#.##c); Ancient 570/600 and -SL lacks (#.##c) */
- static bool __pure __init tpacpi_is_valid_fw_id(const char * const s,
- 						const char t)
- {
--	return s && strlen(s) >= 8 &&
-+	bool is_most = 0;
-+	bool is_new = 0;
-+
-+	/*
-+	 * Most models: xxyTkkWW (#.##c)
-+	 * Ancient 570/600 and -SL lacks (#.##c)
-+	 */
-+	is_most = s && strlen(s) >= 8 &&
- 		tpacpi_is_fw_digit(s[0]) &&
- 		tpacpi_is_fw_digit(s[1]) &&
- 		s[2] == t &&
- 		(s[3] == 'T' || s[3] == 'N') &&
- 		tpacpi_is_fw_digit(s[4]) &&
- 		tpacpi_is_fw_digit(s[5]);
-+
-+	if (is_most)
-+		return is_most;
-+
-+	/* New models: xxxyTkkW (#.##c); T550 and some others */
-+	is_new = s && strlen(s) >= 8 &&
-+		tpacpi_is_fw_digit(s[0]) &&
-+		tpacpi_is_fw_digit(s[1]) &&
-+		tpacpi_is_fw_digit(s[2]) &&
-+		s[3] == t &&
-+		(s[4] == 'T' || s[4] == 'N') &&
-+		tpacpi_is_fw_digit(s[5]) &&
-+		tpacpi_is_fw_digit(s[6]);
-+
-+	return is_new;
- }
- 
- /* returns 0 - probe ok, or < 0 - probe error.
 -- 
-2.1.4
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
