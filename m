@@ -1,44 +1,35 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] classmate-laptop: fix sparse warning
-Date: Thu,  5 Feb 2015 14:57:44 +0000
-Message-ID: <1423148264-6877-1-git-send-email-prabhakar.csengg@gmail.com>
+From: =?UTF-8?B?R2llZHJpdXMgU3RhdGtldmnEjWl1cw==?=
+	<giedrius.statkevicius@gmail.com>
+Subject: Re: [PATCH] Sony-laptop: fix sparse warning
+Date: Thu, 05 Feb 2015 17:55:47 +0200
+Message-ID: <54D39283.4070300@gmail.com>
+References: <1423147781-26018-1-git-send-email-prabhakar.csengg@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-we0-f172.google.com ([74.125.82.172]:63810 "EHLO
-	mail-we0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757383AbbBEO6E (ORCPT
+Received: from mail-wg0-f53.google.com ([74.125.82.53]:50997 "EHLO
+	mail-wg0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757786AbbBEPzw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 5 Feb 2015 09:58:04 -0500
+	Thu, 5 Feb 2015 10:55:52 -0500
+In-Reply-To: <1423147781-26018-1-git-send-email-prabhakar.csengg@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, Daniel Oliveira Nascimento <don@syst.com.br>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>, Mattia Dongili <malattia@linux.it>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+On 2015.02.05 16:49, Lad Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> 
+> this patch fixes following sparse warning:
+> 
+> sony-laptop.c:1035:29: warning: symbol 'sony_bl_props' was not declared. Should it be static?
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Don't put a comma between your first and last name, please. Also, is
+this your real name and surname?
 
-this patch fixes following sparse warning:
-
-classmate-laptop.c:523:61: warning: Using plain integer as NULL pointer
-
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- Found this issue on linux-next (gcc  version 4.9.2,
- sparse version  0.4.5-rc1) and applies on top linux-next.
-
- drivers/platform/x86/classmate-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 70d355a..55cf10b 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -520,7 +520,7 @@ static acpi_status cmpc_get_accel(acpi_handle handle,
- {
- 	union acpi_object param[2];
- 	struct acpi_object_list input;
--	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, 0 };
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	unsigned char *locs;
- 	acpi_status status;
- 
 -- 
-1.9.1
+Thanks,
+Giedrius
