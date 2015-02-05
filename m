@@ -1,41 +1,44 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 03/20] power_supply: Add API for safe access of power
- supply function attrs
-Date: Wed, 4 Feb 2015 14:44:56 +0100
-Message-ID: <20150204134456.GA8312@amd>
-References: <1422629278-12202-1-git-send-email-k.kozlowski@samsung.com>
- <1422629278-12202-4-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1422629278-12202-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Kosina <jkosina@suse.cz>, David Herrmann <dh.herrmann@googlemail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Milo Kim <milo.kim@ti.com>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, ac100@lists.launchpad.net, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, Linus Walleij <linus.walleij@linaro.org>, Samuel
-List-Id: platform-driver-x86.vger.kernel.org
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH] samsung-laptop: fix sparse warning
+Date: Thu,  5 Feb 2015 14:40:05 +0000
+Message-ID: <1423147205-20593-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f44.google.com ([74.125.82.44]:43008 "EHLO
+	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753354AbbBEOkU (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 5 Feb 2015 09:40:20 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-On Fri 2015-01-30 15:47:41, Krzysztof Kozlowski wrote:
-> Add simple wrappers for accessing power supply's function attributes:
->  - get_property -> power_supply_get_property
->  - set_property -> power_supply_set_property
->  - property_is_writeable -> power_supply_property_is_writeable
->  - external_power_changed -> power_supply_external_power_changed
-> 
-> This API along with atomic usage counter adds a safe way of accessing a
-> power supply from another driver. If power supply is unregistered after
-> obtaining reference to it by some driver, then the API wrappers won't be
-> executed in invalid (freed) context.
-> 
-> Next patch changing the ownership of power supply class is still needed
-> to fully fix race conditions in accessing freed power supply.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Reviewed-by: Sebastian Reichel <sre@kernel.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-For 1-3: Acked-by: Pavel Machek <pavel@ucw.cz>
+this patch fixes following sparse warning:
 
+samsung-laptop.c:1365:52: warning: Using plain integer as NULL pointer
+
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+---
+ Found this issue on linux-next (gcc  version 4.9.2,
+ sparse version  0.4.5-rc1)and applies on top linux-next.
+
+ drivers/platform/x86/samsung-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index ce364a4..c3c31e0 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1362,7 +1362,7 @@ static int __init samsung_sabi_init(struct samsung_laptop *samsung)
+ 	samsung_sabi_diag(samsung);
+ 
+ 	/* Try to find one of the signatures in memory to find the header */
+-	for (i = 0; sabi_configs[i].test_string != 0; ++i) {
++	for (i = 0; sabi_configs[i].test_string != NULL; ++i) {
+ 		samsung->config = &sabi_configs[i];
+ 		loca = find_signature(samsung->f0000_segment,
+ 				      samsung->config->test_string);
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.1
