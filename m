@@ -1,58 +1,61 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: unhandled hkey event
-Date: Fri, 6 Feb 2015 20:22:44 -0800
-Message-ID: <20150207042244.GD20934@fury.dvhart.com>
-References: <1422730323-14473-1-git-send-email-xnaveira@gmail.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [PATCH] Sony-laptop: fix sparse warning
+Date: Sat, 07 Feb 2015 12:33:16 +0100
+Message-ID: <87386irm6b.fsf@nemi.mork.no>
+References: <1423147781-26018-1-git-send-email-prabhakar.csengg@gmail.com>
+	<54D39283.4070300@gmail.com>
+	<CA+V-a8utKmCRLgWMEMSzPv01hQ5F_nXeyYQe5r9ZKiqTw_uddg@mail.gmail.com>
+	<20150207030827.GC20934@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57276 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751273AbbBGEXA (ORCPT
+Received: from canardo.mork.no ([148.122.252.1]:54911 "EHLO canardo.mork.no"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755490AbbBGLd6 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Feb 2015 23:23:00 -0500
-Content-Disposition: inline
-In-Reply-To: <1422730323-14473-1-git-send-email-xnaveira@gmail.com>
+	Sat, 7 Feb 2015 06:33:58 -0500
+In-Reply-To: <20150207030827.GC20934@fury.dvhart.com> (Darren Hart's message
+	of "Fri, 6 Feb 2015 19:08:27 -0800")
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Xavier Naveira <xnaveira@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Giedrius =?utf-8?Q?St?= =?utf-8?Q?atkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>, Mattia Dongili <malattia@linux.it>, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>
 
-On Sat, Jan 31, 2015 at 07:52:03PM +0100, Xavier Naveira wrote:
-> Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
-> an unhandled hkey event
-> 
-> Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c3d11fa..e61c43b 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -196,6 +196,7 @@ enum tpacpi_hkey_event_t {
->  	/* Key-related user-interface events */
->  	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
->  	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
-> +	TP_HKEY_EV_KEY_FN_ESC           = 0x6060, /* Fn+Esc key pressed X240 */
->  
->  	/* Thermal events */
->  	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
-> @@ -3717,6 +3718,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->  		*send_acpi_ev = false;
->  		*ignore_acpi_ev = true;
->  		return true;
-> +	case TP_HKEY_EV_KEY_FN_ESC:
-> +		/* key press events, we just ignore them as long as the EC
-> +		 * is still reporting them in the normal keyboard stream */
-> +		*send_acpi_ev = false;
-> +		*ignore_acpi_ev = true;
-> +		return true;
+Darren Hart <dvhart@infradead.org> writes:
+> On Thu, Feb 05, 2015 at 04:00:32PM +0000, Lad, Prabhakar wrote:
+>
+>> Lad, Prabhakar <prabhakar.lad@ti.com>
+>> Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>
+> I think there may be a problem with this in an unquoted email address=
+=2E The
+> unquoted local part, per RFC 2822 3.4.1, can only contain  !#$%'*+-/=3D=
+?^_`{|}~
+> and . separators.
 
-No need to duplicate the logic here, just add TP_HKEY_EV_KEY_FN_ESC to the list
-of fallthrough keys (right after TP_HKEY_EV_KEY_FN).
+Yes, but that is not applicable to the git commit tags.  They are not
+RFC2822 header fields.  Nothing will ever parse "Lad" as an unqualified
+local destination in a SOB, and therefore there is no problem using the
+comma there.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+Note that names using non-ascii characters are often written without
+quotes i SOBs (wonder how I know this? :-).  In practice I believe the
+character set is only limited by what you will allow in your git log.
+The only characters with a special meaning are :<>#, and the latter is
+somewhat dubious.  But it's often used as a comment separator in stable
+CCs, so I guess it should be avoided for other uses.
+
+Scripts etc trying to parse these tags into email headers must be
+prepared to do the necessary stripping and quoting of any text outside
+the <> brackets.
+
+Requiring a full name is of course good for accountability, but do let
+people format their names as they want them to appear in the log.
+Different cultures have different traditions. Wookey has collected a fe=
+w
+links on this subject if anyone is interested:
+http://wookware.org/name.html
+
+
+Bj=C3=B8rn
