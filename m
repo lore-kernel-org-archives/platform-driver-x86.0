@@ -1,33 +1,33 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] samsung-laptop: fix sparse warning
-Date: Fri, 6 Feb 2015 18:45:39 -0800
-Message-ID: <20150207024539.GA20934@fury.dvhart.com>
-References: <1423147205-20593-1-git-send-email-prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH] x86: thinkpad_acpi.c: fix sparse warning
+Date: Fri, 6 Feb 2015 19:02:18 -0800
+Message-ID: <20150207030218.GB20934@fury.dvhart.com>
+References: <1423147538-13377-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:44627 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754101AbbBGCpk (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Feb 2015 21:45:40 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1423147205-20593-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <1423147538-13377-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 05, 2015 at 02:40:05PM +0000, Lad Prabhakar wrote:
+On Thu, Feb 05, 2015 at 02:45:38PM +0000, Lad Prabhakar wrote:
 > From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
 > this patch fixes following sparse warning:
-> 
-> samsung-laptop.c:1365:52: warning: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Queued, thanks.
+Please use the imperative, command form, in the future:
+
+"Fix the following sparse warning:"
+
+For the subject, just the module name is sufficient, no need to preface with
+x86:. Always capitalize the first word after the filename:
+
+thinkpad_acpi: Fix sparse warning
+
+Corrected and applied, thanks!
 
 -- 
 Darren Hart
