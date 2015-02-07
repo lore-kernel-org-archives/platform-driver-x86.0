@@ -1,46 +1,75 @@
-From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v3] samsung-laptop: enable better lid handling
-Date: Fri, 6 Feb 2015 18:38:09 -0800
-Message-ID: <20150207023809.GA36295@fury.dvhart.com>
-References: <1418332715-10547-1-git-send-email-julijonas.kikutis@gmail.com>
- <1422536696-1718-1-git-send-email-julijonas.kikutis@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [RFT PATCH 2/4] compal-laptop: Check return value of
+ power_supply_register
+Date: Fri, 6 Feb 2015 18:42:45 -0800
+Message-ID: <20150207024245.GB36295@fury.dvhart.com>
+References: <1422358221-13199-1-git-send-email-k.kozlowski@samsung.com>
+ <1422358221-13199-3-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:44066 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751412AbbBGCm7 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 6 Feb 2015 21:42:59 -0500
 Content-Disposition: inline
-In-Reply-To: <1422536696-1718-1-git-send-email-julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julijonas Kikutis <julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ABI/API" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SAMSUNG LAPTOP DR..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1422358221-13199-3-git-send-email-k.kozlowski@samsung.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Dmitry Artamonow <mad_soft@inbox.ru>, Marek Belisko <marek@goldelico.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, stable@vger.kernel.org
 
-On Thu, Jan 29, 2015 at 01:04:37PM +0000, Julijonas Kikutis wrote:
-> Some Samsung laptops with SABI3 delay the sleep for 10 seconds after
-> the lid is closed and do not wake up from sleep after the lid is opened.
-> A SABI command is needed to enable the better behavior.
+On Tue, Jan 27, 2015 at 12:30:19PM +0100, Krzysztof Kozlowski wrote:
+> The return value of power_supply_register() call was not checked and
+> even on error probe() function returned 0. If registering failed then
+> during unbind the driver tried to unregister power supply which was not
+> actually registered.
 > 
-> Command = 0x6e, d0 = 0x81 enables this behavior. Returns d0 = 0x01.
-> Command = 0x6e, d0 = 0x80 disables this behavior. Returns d0 = 0x00.
+> This could lead to memory corruption because power_supply_unregister()
+> unconditionally cleans up given power supply.
 > 
-> Command = 0x6d and any d0 queries the state. This returns:
-> d0 = 0x00000*01, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is enabled.
-> d0 = 0x00000*00, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is disabled.
-> Where * is 0 - laptop has never slept or hibernated after switch on,
->            1 - laptop has hibernated just before,
->            2 - laptop has slept just before.
+> Fix this by checking return status of power_supply_register() call. In
+> case of failure, unregister the hwmon device and fail the probe. Add a
+> fixme note about missing hwmon_device_unregister() in driver removal.
 > 
-> Patch addresses bug https://bugzilla.kernel.org/show_bug.cgi?id=75901 .
-> It adds a sysfs attribute lid_handling with a description and also an
-> addition to the quirks structure to enable the mode by default.
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Fixes: 9be0fcb5ed46 ("compal-laptop: add JHL90, battery & hwmon interface")
+> Cc: <stable@vger.kernel.org>
+> ---
+>  drivers/platform/x86/compal-laptop.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> A user with another laptop in the bug report says that "power button has
-> to be pressed twice to wake the machine" when he or she enabled the mode
-> manually using the SABI command. Therefore, it is enabled by default
-> only for the single laptop that I have tested.
-> 
-> Signed-off-by: Julijonas Kikutis <julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+> index 15c0fab2bfa1..cf55a9246f12 100644
+> --- a/drivers/platform/x86/compal-laptop.c
+> +++ b/drivers/platform/x86/compal-laptop.c
+> @@ -1036,12 +1036,16 @@ static int compal_probe(struct platform_device *pdev)
+>  
+>  	/* Power supply */
+>  	initialize_power_supply_data(data);
+> -	power_supply_register(&compal_device->dev, &data->psy);
+> +	err = power_supply_register(&compal_device->dev, &data->psy);
+> +	if (err < 0)
+> +		goto psy_err;
+>  
+>  	platform_set_drvdata(pdev, data);
+>  
+>  	return 0;
+>  
+> +psy_err:
+> +	hwmon_device_unregister(hwmon_dev);
+>  remove:
+>  	sysfs_remove_group(&pdev->dev.kobj, &compal_platform_attr_group);
+>  	return err;
+> @@ -1072,6 +1076,7 @@ static int compal_remove(struct platform_device *pdev)
+>  
+>  	data = platform_get_drvdata(pdev);
+>  	power_supply_unregister(&data->psy);
+> +	/* FIXME: missing hwmon_device_unregister() */
 
-Queued up, thanks Jujijonas.
+Is this FIXME a leftover? Is there a reason we can't fix this now instead of
+adding a FIXME?
 
 -- 
 Darren Hart
