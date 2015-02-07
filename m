@@ -1,39 +1,47 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 02/20] power_supply: Move run-time configuration to
- separate structure
-Date: Fri, 6 Feb 2015 18:19:52 -0800
-Message-ID: <20150207021952.GA30250@fury.dvhart.com>
-References: <1422629278-12202-1-git-send-email-k.kozlowski@samsung.com>
- <1422629278-12202-3-git-send-email-k.kozlowski@samsung.com>
+From: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v3] samsung-laptop: enable better lid handling
+Date: Fri, 6 Feb 2015 18:38:09 -0800
+Message-ID: <20150207023809.GA36295@fury.dvhart.com>
+References: <1418332715-10547-1-git-send-email-julijonas.kikutis@gmail.com>
+ <1422536696-1718-1-git-send-email-julijonas.kikutis@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1422629278-12202-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Kosina <jkosina@suse.cz>, David Herrmann <dh.herrmann@googlemail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Support Opensource <support.opensource@diasemi.com>, Milo Kim <milo.kim@ti.com>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, ac100@lists.launchpad.net, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee
+In-Reply-To: <1422536696-1718-1-git-send-email-julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julijonas Kikutis <julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Corentin Chary <corentin.chary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ABI/API" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SAMSUNG LAPTOP DR..." <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 30, 2015 at 03:47:40PM +0100, Krzysztof Kozlowski wrote:
-> Add new structure 'power_supply_config' for holding run-time
-> initialization data like of_node, supplies and private driver data.
+On Thu, Jan 29, 2015 at 01:04:37PM +0000, Julijonas Kikutis wrote:
+> Some Samsung laptops with SABI3 delay the sleep for 10 seconds after
+> the lid is closed and do not wake up from sleep after the lid is opened.
+> A SABI command is needed to enable the better behavior.
 > 
-> The power_supply_register() function is changed so all power supply
-> drivers need updating.
+> Command = 0x6e, d0 = 0x81 enables this behavior. Returns d0 = 0x01.
+> Command = 0x6e, d0 = 0x80 disables this behavior. Returns d0 = 0x00.
 > 
-> When registering the power supply this new 'power_supply_config' should be
-> used instead of directly initializing 'struct power_supply'. This allows
-> changing the ownership of power_supply structure from driver to the
-> power supply core in next patches.
+> Command = 0x6d and any d0 queries the state. This returns:
+> d0 = 0x00000*01, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is enabled.
+> d0 = 0x00000*00, d1 = 0x00, d2 = 0x00, d3 = 0x0* when it is disabled.
+> Where * is 0 - laptop has never slept or hibernated after switch on,
+>            1 - laptop has hibernated just before,
+>            2 - laptop has slept just before.
 > 
-> When a driver does not use of_node or supplies then it should use NULL
-> as config. If driver uses of_node or supplies then it should allocate
-> config on stack and initialize it with proper values.
+> Patch addresses bug https://bugzilla.kernel.org/show_bug.cgi?id=75901 .
+> It adds a sysfs attribute lid_handling with a description and also an
+> addition to the quirks structure to enable the mode by default.
 > 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> A user with another laptop in the bug report says that "power button has
+> to be pressed twice to wake the machine" when he or she enabled the mode
+> manually using the SABI command. Therefore, it is enabled by default
+> only for the single laptop that I have tested.
+> 
+> Signed-off-by: Julijonas Kikutis <julijonas.kikutis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-For drivers/platform/x86/compal-laptop.c
+Queued up, thanks Jujijonas.
 
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+-- 
+Darren Hart
+Intel Open Source Technology Center
