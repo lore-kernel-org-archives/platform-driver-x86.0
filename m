@@ -1,110 +1,79 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: support new BIOS version string pattern
-Date: Mon, 9 Feb 2015 20:35:22 -0800
-Message-ID: <20150210043522.GE37927@fury.dvhart.com>
-References: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH resend 3/6] toshiba_acpi: Add support for Keyboard
+ functions mode
+Date: Mon, 9 Feb 2015 21:38:51 -0700
+Message-ID: <CAGdLNWEW38QPnTmKYA2zHXkOA5xTT28S6ngH1Tq5CBR9dtgfBw@mail.gmail.com>
+References: <1423539294-2941-1-git-send-email-coproscefalo@gmail.com>
+	<1423539294-2941-4-git-send-email-coproscefalo@gmail.com>
+	<20150210040809.GB37927@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42759 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752176AbbBJEfe (ORCPT
+Received: from mail-we0-f173.google.com ([74.125.82.173]:36496 "EHLO
+	mail-we0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755083AbbBJEiw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Feb 2015 23:35:34 -0500
-Content-Disposition: inline
-In-Reply-To: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
+	Mon, 9 Feb 2015 23:38:52 -0500
+In-Reply-To: <20150210040809.GB37927@fury.dvhart.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Adam Lee <adam.lee@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Feb 04, 2015 at 05:00:19PM +0800, Adam Lee wrote:
-> Latest ThinkPad models use a new string pattern of BIOS version,
-> thinkpad_acpi won't be loaded automatically without this fix.
-> 
+Hi Darren,
 
-Hi Adam,
+2015-02-09 21:08 GMT-07:00 Darren Hart <dvhart@infradead.org>:
+> On Mon, Feb 09, 2015 at 08:34:51PM -0700, Azael Avalos wrote:
+>> Recent Toshiba laptops that come with the new keyboard layout have
+>> the Special Functions (hotkeys) enabled by default, which, in order to
+>> access the F{1-12} keys, you need to press the FN-F{1-12} key to
+>> access such key.
+>>
+>> This patch adds support to toggle the Keyboard Functions operation
+>> mode by creating the sysfs entry "kbd_functions_keys", accepting only
+>> two parameters, 0 to set the "Normal Operation" mode and 1 to set the
+>> "Special Functions" mode, however, everytime the mode is toggled, a
+>> restart is needed.
+>
+> Erm... that's kinda horrible :-/
+>
+> A couple of questions then.
+>
+> 1) Does the system BIOS offer a way to select one mode or the other? If so, no
+> point in adding it here if a reboot is required.
 
-> Signed-off-by: Adam Lee <adam.lee@canonical.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c3d11fa..39a1017 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8883,17 +8883,38 @@ static bool __pure __init tpacpi_is_fw_digit(const char c)
->  	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z');
->  }
->  
-> -/* Most models: xxyTkkWW (#.##c); Ancient 570/600 and -SL lacks (#.##c) */
->  static bool __pure __init tpacpi_is_valid_fw_id(const char * const s,
->  						const char t)
->  {
-> -	return s && strlen(s) >= 8 &&
-> +	bool is_most = 0;
-> +	bool is_new = 0;
+Yes, I just wanted to make the driver on Linux on par with its Windows
+counterpart.
 
-The new variables aren't really necessary, you certainly do not need two of
-them.
+>
+> 2) Where Toshiba supports this (Windows?) is a reboot required?
 
-> +
-> +	/*
-> +	 * Most models: xxyTkkWW (#.##c)
-> +	 * Ancient 570/600 and -SL lacks (#.##c)
-> +	 */
-> +	is_most = s && strlen(s) >= 8 &&
+Windows 7 and up, and yes, a reboot is required on Windows too.
 
-Try:
+>
+> Rather than having to reboot, would a userspace mapping possibly be preferable?
+> Could be done without a reboot.
 
-if (s && strlen(s) >=8 &&
-	...
-	)
-	return true;
+Nope, it sets some value into a BIOS variable (register?), not even
+unloading/loading
+the module helps.
+
+>
+> Finally, if we keep this, we need to print something to the system log
+> indicating success - and that a reboot is required to take effect.
+
+Sure, that's no problem, its your call to keep it or drop it, just let me know
+as to send an updated version.
+
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+Cheers
+Azael
 
 
->  		tpacpi_is_fw_digit(s[0]) &&
->  		tpacpi_is_fw_digit(s[1]) &&
->  		s[2] == t &&
->  		(s[3] == 'T' || s[3] == 'N') &&
->  		tpacpi_is_fw_digit(s[4]) &&
->  		tpacpi_is_fw_digit(s[5]);
-> +
-> +	if (is_most)
-> +		return is_most;
-> +
-> +	/* New models: xxxyTkkW (#.##c); T550 and some others */
-
-Is the second W intentionally left off in xxxyTkkW ? We don't test for it, so I
-wasn't sure.
-
-> +	is_new = s && strlen(s) >= 8 &&
-> +		tpacpi_is_fw_digit(s[0]) &&
-> +		tpacpi_is_fw_digit(s[1]) &&
-> +		tpacpi_is_fw_digit(s[2]) &&
-
-As far as I can tell, the only significant difference here (compared to above)
-is an additional leading digit and the subsequent string indices?
-
-Seems to me this could be done fairly easily in the same block with only a minor
-adjustment at the beginning and the use of an incrementing index. Should be
-cleaner than duplicating 90% of the block?
-
-> +		s[3] == t &&
-> +		(s[4] == 'T' || s[4] == 'N') &&
-> +		tpacpi_is_fw_digit(s[5]) &&
-> +		tpacpi_is_fw_digit(s[6]);
-> +
-> +	return is_new;
->  }
->  
->  /* returns 0 - probe ok, or < 0 - probe error.
-> -- 
-> 2.1.4
-> 
-> 
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+-- El mundo apesta y vosotros apestais tambien --
