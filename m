@@ -1,201 +1,78 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH resend 3/6] toshiba_acpi: Add support for Keyboard functions mode
-Date: Mon,  9 Feb 2015 20:34:51 -0700
-Message-ID: <1423539294-2941-4-git-send-email-coproscefalo@gmail.com>
-References: <1423539294-2941-1-git-send-email-coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] thinkpad_acpi: unhandled hkey event
+Date: Mon, 9 Feb 2015 19:48:47 -0800
+Message-ID: <20150210034847.GA30257@fury.dvhart.com>
+References: <1422730323-14473-1-git-send-email-xnaveira@gmail.com>
+ <20150207042244.GD20934@fury.dvhart.com>
+ <54D90E1A.4090406@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423539294-2941-1-git-send-email-coproscefalo@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <54D90E1A.4090406@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Xavier Naveira <xnaveira@gmail.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Recent Toshiba laptops that come with the new keyboard layout have
-the Special Functions (hotkeys) enabled by default, which, in order to
-access the F{1-12} keys, you need to press the FN-F{1-12} key to
-access such key.
+On Mon, Feb 09, 2015 at 08:44:26PM +0100, Xavier Naveira wrote:
+> On 2015-02-07 05:22, Darren Hart wrote:
+> >On Sat, Jan 31, 2015 at 07:52:03PM +0100, Xavier Naveira wrote:
+> >>Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
+> >>an unhandled hkey event
+> >>
+> >>Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
+> >>---
+> >>  drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
+> >>  1 file changed, 7 insertions(+)
+> >>
+> >>diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> >>index c3d11fa..e61c43b 100644
+> >>--- a/drivers/platform/x86/thinkpad_acpi.c
+> >>+++ b/drivers/platform/x86/thinkpad_acpi.c
+> >>@@ -196,6 +196,7 @@ enum tpacpi_hkey_event_t {
+> >>  	/* Key-related user-interface events */
+> >>  	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
+> >>  	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
+> >>+	TP_HKEY_EV_KEY_FN_ESC           = 0x6060, /* Fn+Esc key pressed X240 */
+> >>
+> >>  	/* Thermal events */
+> >>  	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
+> >>@@ -3717,6 +3718,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+> >>  		*send_acpi_ev = false;
+> >>  		*ignore_acpi_ev = true;
+> >>  		return true;
+> >>+	case TP_HKEY_EV_KEY_FN_ESC:
+> >>+		/* key press events, we just ignore them as long as the EC
+> >>+		 * is still reporting them in the normal keyboard stream */
+> >>+		*send_acpi_ev = false;
+> >>+		*ignore_acpi_ev = true;
+> >>+		return true;
+> >
+> >No need to duplicate the logic here, just add TP_HKEY_EV_KEY_FN_ESC to the list
+> >of fallthrough keys (right after TP_HKEY_EV_KEY_FN).
+> >
+> I don't see the list that you are referring to?
 
-This patch adds support to toggle the Keyboard Functions operation
-mode by creating the sysfs entry "kbd_functions_keys", accepting only
-two parameters, 0 to set the "Normal Operation" mode and 1 to set the
-"Special Functions" mode, however, everytime the mode is toggled, a
-restart is needed.
+Just before where you add the new case, there is:
 
-In the "Normal Operation" mode, the F{1-12} keys are as usual and
-the hotkeys are accessed via FN-F{1-12}.
+		/* fallthrough */
 
-In the "Special Functions" mode, the F{1-12} keys trigger the hotkey
-and the F{1-12} keys are accessed via FN-F{1-12}.
+	case TP_HKEY_EV_KEY_NUMLOCK:
+	case TP_HKEY_EV_KEY_FN:
+		/* key press events, we just ignore them as long as the EC
+		 * is still reporting them in the normal keyboard stream */
+		*send_acpi_ev = false;
+		*ignore_acpi_ev = true;
+		return true;
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 98 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+You should just be able to do:
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 413af60..c79211a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -126,6 +126,7 @@ MODULE_LICENSE("GPL");
- #define SCI_KBD_ILLUM_STATUS		0x015c
- #define SCI_USB_SLEEP_MUSIC		0x015e
- #define SCI_TOUCHPAD			0x050e
-+#define SCI_KBD_FUNCTION_KEYS		0x0522
- 
- /* field definitions */
- #define HCI_ACCEL_MASK			0x7fff
-@@ -192,6 +193,7 @@ struct toshiba_acpi_dev {
- 	unsigned int usb_sleep_charge_supported:1;
- 	unsigned int usb_rapid_charge_supported:1;
- 	unsigned int usb_sleep_music_supported:1;
-+	unsigned int kbd_function_keys_supported:1;
- 	unsigned int sysfs_created:1;
- 
- 	struct mutex mutex;
-@@ -988,6 +990,47 @@ static int toshiba_usb_sleep_music_set(struct toshiba_acpi_dev *dev, u32 state)
- 	return 0;
- }
- 
-+/* Keyboard function keys */
-+static int toshiba_function_keys_get(struct toshiba_acpi_dev *dev, u32 *mode)
-+{
-+	u32 result;
-+
-+	if (!sci_open(dev))
-+		return -EIO;
-+
-+	result = sci_read(dev, SCI_KBD_FUNCTION_KEYS, mode);
-+	sci_close(dev);
-+	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
-+		pr_err("ACPI call to get KBD function keys failed\n");
-+		return -EIO;
-+	} else if (result == TOS_NOT_SUPPORTED) {
-+		pr_info("KBD function keys not supported\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int toshiba_function_keys_set(struct toshiba_acpi_dev *dev, u32 mode)
-+{
-+	u32 result;
-+
-+	if (!sci_open(dev))
-+		return -EIO;
-+
-+	result = sci_write(dev, SCI_KBD_FUNCTION_KEYS, mode);
-+	sci_close(dev);
-+	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
-+		pr_err("ACPI call to set KBD function keys failed\n");
-+		return -EIO;
-+	} else if (result == TOS_NOT_SUPPORTED) {
-+		pr_info("KBD function keys not supported\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- /* Bluetooth rfkill handlers */
- 
- static u32 hci_get_bt_present(struct toshiba_acpi_dev *dev, bool *present)
-@@ -1572,6 +1615,12 @@ static ssize_t toshiba_usb_sleep_music_show(struct device *dev,
- static ssize_t toshiba_usb_sleep_music_store(struct device *dev,
- 					     struct device_attribute *attr,
- 					     const char *buf, size_t count);
-+static ssize_t toshiba_kbd_function_keys_show(struct device *dev,
-+					      struct device_attribute *attr,
-+					      char *buf);
-+static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
-+					       struct device_attribute *attr,
-+					       const char *buf, size_t count);
- 
- static DEVICE_ATTR(version, S_IRUGO, toshiba_version_show, NULL);
- static DEVICE_ATTR(fan, S_IRUGO | S_IWUSR,
-@@ -1598,6 +1647,9 @@ static DEVICE_ATTR(usb_rapid_charge, S_IRUGO | S_IWUSR,
- static DEVICE_ATTR(usb_sleep_music, S_IRUGO | S_IWUSR,
- 		   toshiba_usb_sleep_music_show,
- 		   toshiba_usb_sleep_music_store);
-+static DEVICE_ATTR(kbd_function_keys, S_IRUGO | S_IWUSR,
-+		   toshiba_kbd_function_keys_show,
-+		   toshiba_kbd_function_keys_store);
- 
- static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_version.attr,
-@@ -1612,6 +1664,7 @@ static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_sleep_functions_on_battery.attr,
- 	&dev_attr_usb_rapid_charge.attr,
- 	&dev_attr_usb_sleep_music.attr,
-+	&dev_attr_kbd_function_keys.attr,
- 	NULL,
- };
- 
-@@ -2057,6 +2110,46 @@ static ssize_t toshiba_usb_sleep_music_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t toshiba_kbd_function_keys_show(struct device *dev,
-+					      struct device_attribute *attr,
-+					      char *buf)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int mode;
-+	int ret;
-+
-+	ret = toshiba_function_keys_get(toshiba, &mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", mode);
-+}
-+
-+static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
-+					       struct device_attribute *attr,
-+					       const char *buf, size_t count)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int mode;
-+	int ret;
-+
-+	ret = kstrtoint(buf, 0, &mode);
-+	if (ret)
-+		return ret;
-+	/* Check for the function keys mode where:
-+	 * 0 - Normal operation (F{1-12} as usual and hotkeys via FN-F{1-12})
-+	 * 1 - Special functions (Opposite of the above setting)
-+	 */
-+	if (mode != 0 && mode != 1)
-+		return -EINVAL;
-+
-+	ret = toshiba_function_keys_set(toshiba, mode);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
- static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 					struct attribute *attr, int idx)
- {
-@@ -2082,6 +2175,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 		exists = (drv->usb_rapid_charge_supported) ? true : false;
- 	else if (attr == &dev_attr_usb_sleep_music.attr)
- 		exists = (drv->usb_sleep_music_supported) ? true : false;
-+	else if (attr == &dev_attr_kbd_function_keys.attr)
-+		exists = (drv->kbd_function_keys_supported) ? true : false;
- 
- 	return exists ? attr->mode : 0;
- }
-@@ -2500,6 +2595,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = toshiba_usb_sleep_music_get(dev, &dummy);
- 	dev->usb_sleep_music_supported = !ret;
- 
-+	ret = toshiba_function_keys_get(dev, &dummy);
-+	dev->kbd_function_keys_supported = !ret;
-+
- 	/* Determine whether or not BIOS supports fan and video interfaces */
- 
- 	ret = get_video_status(dev, &dummy);
+  case TP_HKEY_EV_KEY_FN:
++ case TP_HKEY_EV_KEY_FN_ESC:
+
+Rather than duplicating the same logic below a new case block.
+
 -- 
-2.2.2
+Darren Hart
+Intel Open Source Technology Center
