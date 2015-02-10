@@ -1,45 +1,59 @@
-From: Xavier Naveira <xnaveira@gmail.com>
-Subject: [PATCH v2] thinkpad_acpi: unhandled hkey event
-Date: Tue, 10 Feb 2015 08:45:18 +0100
-Message-ID: <1423554318-5489-1-git-send-email-xnaveira@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] dell-laptop: use dedicated sysfs file for ALS
+Date: Tue, 10 Feb 2015 10:36:21 +0100
+Message-ID: <201502101036.21896@pali>
+References: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+  boundary="nextPart1684302.UJPWa41ATO";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f176.google.com ([209.85.217.176]:41070 "EHLO
-	mail-lb0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752484AbbBJHpc (ORCPT
+Received: from mail-wi0-f176.google.com ([209.85.212.176]:60663 "EHLO
+	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753486AbbBJJgZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 10 Feb 2015 02:45:32 -0500
+	Tue, 10 Feb 2015 04:36:25 -0500
+In-Reply-To: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Xavier Naveira <xnaveira@gmail.com>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, A.Sloman@cs.bham.ac.uk, computersforpeace@gmail.com
 
-Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
-an unhandled hkey event
+--nextPart1684302.UJPWa41ATO
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Wednesday 14 January 2015 15:05:57 Gabriele Mazzotta wrote:
+> The ambient light sensor doesn't act like an input trigger, so
+> it has to be kept separate. The sensor readings are used to
+> determine whether the conditions to change the keyboard
+> illumination are satisfied or not the moment an input trigger
+> is used. Ambient light changes alone can't change the
+> keyboard backlight illumination and don't restart the timer.
+>=20
+> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> ---
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cf0f893..ce63610 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -196,6 +196,7 @@ enum tpacpi_hkey_event_t {
- 	/* Key-related user-interface events */
- 	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
- 	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
-+	TP_HKEY_EV_KEY_FN_ESC           = 0x6060, /* Fn+Esc key pressed X240 */
- 
- 	/* Thermal events */
- 	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
-@@ -3714,6 +3715,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 
- 	case TP_HKEY_EV_KEY_NUMLOCK:
- 	case TP_HKEY_EV_KEY_FN:
-+	case TP_HKEY_EV_KEY_FN_ESC:
- 		/* key press events, we just ignore them as long as the EC
- 		 * is still reporting them in the normal keyboard stream */
- 		*send_acpi_ev = false;
--- 
-2.1.0
+Gabriele, can you look and integrate this patch into full=20
+keyboard backlight support? Ideally send new full one...
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart1684302.UJPWa41ATO
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlTZ0RUACgkQi/DJPQPkQ1KfHwCgm3YrDsmVYct22xgNzQggDGV2
+yCkAnigHTTJYLuRGtVzs0xAsut4YC00x
+=zUjf
+-----END PGP SIGNATURE-----
+
+--nextPart1684302.UJPWa41ATO--
