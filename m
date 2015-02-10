@@ -1,57 +1,39 @@
-From: Xavier Naveira <xnaveira@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: unhandled hkey event
-Date: Mon, 09 Feb 2015 20:44:26 +0100
-Message-ID: <54D90E1A.4090406@gmail.com>
-References: <1422730323-14473-1-git-send-email-xnaveira@gmail.com> <20150207042244.GD20934@fury.dvhart.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH resend 0/6] toshiba_acpi: Add new features plus some procfs ports
+Date: Mon,  9 Feb 2015 20:34:48 -0700
+Message-ID: <1423539294-2941-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f53.google.com ([209.85.215.53]:39173 "EHLO
-	mail-la0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751552AbbBITob (ORCPT
+Received: from mail-ob0-f181.google.com ([209.85.214.181]:50560 "EHLO
+	mail-ob0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751583AbbBJDfK (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 9 Feb 2015 14:44:31 -0500
-In-Reply-To: <20150207042244.GD20934@fury.dvhart.com>
+	Mon, 9 Feb 2015 22:35:10 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On 2015-02-07 05:22, Darren Hart wrote:
-> On Sat, Jan 31, 2015 at 07:52:03PM +0100, Xavier Naveira wrote:
->> Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
->> an unhandled hkey event
->>
->> Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
->> ---
->>   drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index c3d11fa..e61c43b 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -196,6 +196,7 @@ enum tpacpi_hkey_event_t {
->>   	/* Key-related user-interface events */
->>   	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
->>   	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
->> +	TP_HKEY_EV_KEY_FN_ESC           = 0x6060, /* Fn+Esc key pressed X240 */
->>
->>   	/* Thermal events */
->>   	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
->> @@ -3717,6 +3718,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->>   		*send_acpi_ev = false;
->>   		*ignore_acpi_ev = true;
->>   		return true;
->> +	case TP_HKEY_EV_KEY_FN_ESC:
->> +		/* key press events, we just ignore them as long as the EC
->> +		 * is still reporting them in the normal keyboard stream */
->> +		*send_acpi_ev = false;
->> +		*ignore_acpi_ev = true;
->> +		return true;
->
-> No need to duplicate the logic here, just add TP_HKEY_EV_KEY_FN_ESC to the list
-> of fallthrough keys (right after TP_HKEY_EV_KEY_FN).
->
-I don't see the list that you are referring to?
+These patches add five new files to sysfs.
+
+With the first two files we are paving the way to the (hopefully)
+future removal of the (now deprecated) proc entries. The remaining
+entries were not ported due to the fact that they duplicate existing
+kernel functionality (eg.: lcd <-> backlight, keys <-> input).
+
+The rest add support for new features found on recent Toshiba laptops.
+
+And the last one simply bump up the driver version.
+
+Azael Avalos (6):
+  toshiba_acpi: Add version entry to sysfs
+  toshiba_acpi: Add fan entry to sysfs
+  toshiba_acpi: Add support for Keyboard functions mode
+  toshiba_acpi: Add support for Panel Power ON
+  toshiba_acpi: Add support to enable/disable USB 3
+  toshiba_acpi: Bump version number to 0.21
+
+ drivers/platform/x86/toshiba_acpi.c | 364 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 360 insertions(+), 4 deletions(-)
+
+-- 
+2.2.2
