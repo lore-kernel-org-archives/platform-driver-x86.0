@@ -1,78 +1,93 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: unhandled hkey event
-Date: Mon, 9 Feb 2015 19:48:47 -0800
-Message-ID: <20150210034847.GA30257@fury.dvhart.com>
-References: <1422730323-14473-1-git-send-email-xnaveira@gmail.com>
- <20150207042244.GD20934@fury.dvhart.com>
- <54D90E1A.4090406@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54D90E1A.4090406@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xavier Naveira <xnaveira@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v2] toshiba_acpi: Make toshiba_eco_mode_available more robust
+Date: Mon,  9 Feb 2015 20:55:02 -0700
+Message-ID: <1423540502-3214-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f181.google.com ([209.85.214.181]:43838 "EHLO
+	mail-ob0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758615AbbBJDzU (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 9 Feb 2015 22:55:20 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Mon, Feb 09, 2015 at 08:44:26PM +0100, Xavier Naveira wrote:
-> On 2015-02-07 05:22, Darren Hart wrote:
-> >On Sat, Jan 31, 2015 at 07:52:03PM +0100, Xavier Naveira wrote:
-> >>Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
-> >>an unhandled hkey event
-> >>
-> >>Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
-> >>---
-> >>  drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
-> >>  1 file changed, 7 insertions(+)
-> >>
-> >>diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> >>index c3d11fa..e61c43b 100644
-> >>--- a/drivers/platform/x86/thinkpad_acpi.c
-> >>+++ b/drivers/platform/x86/thinkpad_acpi.c
-> >>@@ -196,6 +196,7 @@ enum tpacpi_hkey_event_t {
-> >>  	/* Key-related user-interface events */
-> >>  	TP_HKEY_EV_KEY_NUMLOCK		= 0x6000, /* NumLock key pressed */
-> >>  	TP_HKEY_EV_KEY_FN		= 0x6005, /* Fn key pressed? E420 */
-> >>+	TP_HKEY_EV_KEY_FN_ESC           = 0x6060, /* Fn+Esc key pressed X240 */
-> >>
-> >>  	/* Thermal events */
-> >>  	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
-> >>@@ -3717,6 +3718,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
-> >>  		*send_acpi_ev = false;
-> >>  		*ignore_acpi_ev = true;
-> >>  		return true;
-> >>+	case TP_HKEY_EV_KEY_FN_ESC:
-> >>+		/* key press events, we just ignore them as long as the EC
-> >>+		 * is still reporting them in the normal keyboard stream */
-> >>+		*send_acpi_ev = false;
-> >>+		*ignore_acpi_ev = true;
-> >>+		return true;
-> >
-> >No need to duplicate the logic here, just add TP_HKEY_EV_KEY_FN_ESC to the list
-> >of fallthrough keys (right after TP_HKEY_EV_KEY_FN).
-> >
-> I don't see the list that you are referring to?
+Some Toshiba laptops do not come with the ECO led installed, however,
+the driver is registering support for it when it should not.
 
-Just before where you add the new case, there is:
+This patch makes the toshiba_eco_mode_available function more robust
+in detecting ECO led capabilities, not registering the led on laptops
+that do not support it and registering the led when it really does.
 
-		/* fallthrough */
+The ECO led function now returns 0x8e00 (Not Installed) by querying
+with in[3] = 0, whenever theres no physical LED installed, and
+returning 0x8300 (Input Data Error) when it is, however, there are
+some BIOSes that have stub function calls not returning anything and
+and the LED device was being registered too, hence the change of the
+default return value from 1 to 0.
 
-	case TP_HKEY_EV_KEY_NUMLOCK:
-	case TP_HKEY_EV_KEY_FN:
-		/* key press events, we just ignore them as long as the EC
-		 * is still reporting them in the normal keyboard stream */
-		*send_acpi_ev = false;
-		*ignore_acpi_ev = true;
-		return true;
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+Changes since v1:
+- Removed the comment block from the TOS_NOT_INSTALLED check, the
+  error code as well as the pr_info message is self explanatory.
+- Expanded the comment block from the TOS_INPUT_DATA_ERROR check.
+- Expanded the commit log a bit explaining some of the changes made
+  in this patch
 
-You should just be able to do:
+ drivers/platform/x86/toshiba_acpi.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-  case TP_HKEY_EV_KEY_FN:
-+ case TP_HKEY_EV_KEY_FN_ESC:
-
-Rather than duplicating the same logic below a new case block.
-
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 8b4a78b..278b4bb 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -108,6 +108,7 @@ MODULE_LICENSE("GPL");
+ #define TOS_FIFO_EMPTY			0x8c00
+ #define TOS_DATA_NOT_AVAILABLE		0x8d20
+ #define TOS_NOT_INITIALIZED		0x8d50
++#define TOS_NOT_INSTALLED		0x8e00
+ 
+ /* registers */
+ #define HCI_FAN				0x0004
+@@ -701,16 +702,32 @@ static int toshiba_touchpad_get(struct toshiba_acpi_dev *dev, u32 *state)
+ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
+ {
+ 	acpi_status status;
+-	u32 in[TCI_WORDS] = { HCI_GET, HCI_ECO_MODE, 0, 1, 0, 0 };
++	u32 in[TCI_WORDS] = { HCI_GET, HCI_ECO_MODE, 0, 0, 0, 0 };
+ 	u32 out[TCI_WORDS];
+ 
+ 	status = tci_raw(dev, in, out);
+-	if (ACPI_FAILURE(status) || out[0] == TOS_INPUT_DATA_ERROR) {
+-		pr_info("ACPI call to get ECO led failed\n");
+-		return 0;
++	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
++		pr_err("ACPI call to get ECO led failed\n");
++	} else if (out[0] == TOS_NOT_INSTALLED) {
++		pr_info("ECO led not installed");
++	} else if (out[0] == TOS_INPUT_DATA_ERROR) {
++		/* If we receive 0x8300 (Input Data Error), it means that the
++		 * LED device is present, but that we just screwed the input
++		 * parameters.
++		 * 
++		 * Let's query the status of the LED to see if we really have a
++		 * success response, indicating the truly presense of the LED,
++		 * bail out otherwise.
++		 */
++		in[3] = 1;
++		status = tci_raw(dev, in, out);
++		if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE)
++			pr_err("ACPI call to get ECO led failed\n");
++		else if (out[0] == TOS_SUCCESS)
++			return 1;
+ 	}
+ 
+-	return 1;
++	return 0;
+ }
+ 
+ static enum led_brightness toshiba_eco_mode_get_status(struct led_classdev *cdev)
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.2.2
