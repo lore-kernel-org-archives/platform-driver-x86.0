@@ -1,59 +1,26 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] dell-laptop: use dedicated sysfs file for ALS
-Date: Tue, 10 Feb 2015 10:36:21 +0100
-Message-ID: <201502101036.21896@pali>
-References: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] thinkpad_acpi: unhandled hkey event
+Date: Tue, 10 Feb 2015 11:18:02 -0800
+Message-ID: <20150210191802.GA36814@vmdeb7>
+References: <1423554318-5489-1-git-send-email-xnaveira@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1684302.UJPWa41ATO";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f176.google.com ([209.85.212.176]:60663 "EHLO
-	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753486AbbBJJgZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 10 Feb 2015 04:36:25 -0500
-In-Reply-To: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, A.Sloman@cs.bham.ac.uk, computersforpeace@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1423554318-5489-1-git-send-email-xnaveira@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xavier Naveira <xnaveira@gmail.com>
+Cc: ibm-acpi@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart1684302.UJPWa41ATO
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 10, 2015 at 08:45:18AM +0100, Xavier Naveira wrote:
+> Pressing Fn+Esc in a Lenovo Thinkpad x240 to lock the Fn keys generates
+> an unhandled hkey event
+> 
+> Signed-off-by: Xavier Naveira <xnaveira@gmail.com>
 
-On Wednesday 14 January 2015 15:05:57 Gabriele Mazzotta wrote:
-> The ambient light sensor doesn't act like an input trigger, so
-> it has to be kept separate. The sensor readings are used to
-> determine whether the conditions to change the keyboard
-> illumination are satisfied or not the moment an input trigger
-> is used. Ambient light changes alone can't change the
-> keyboard backlight illumination and don't restart the timer.
->=20
-> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> ---
+Queued, thanks.
 
-Gabriele, can you look and integrate this patch into full=20
-keyboard backlight support? Ideally send new full one...
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1684302.UJPWa41ATO
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlTZ0RUACgkQi/DJPQPkQ1KfHwCgm3YrDsmVYct22xgNzQggDGV2
-yCkAnigHTTJYLuRGtVzs0xAsut4YC00x
-=zUjf
------END PGP SIGNATURE-----
-
---nextPart1684302.UJPWa41ATO--
+-- 
+Darren Hart
+Intel Open Source Technology Center
