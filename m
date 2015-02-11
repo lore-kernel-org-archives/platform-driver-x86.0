@@ -1,112 +1,87 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 2/6] toshiba_acpi: Add fan entry to sysfs
-Date: Tue, 10 Feb 2015 21:09:17 -0700
-Message-ID: <1423627761-3415-3-git-send-email-coproscefalo@gmail.com>
-References: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Adam Lee <adam.lee@canonical.com>
+Subject: Re: [PATCH] thinkpad_acpi: support new BIOS version string pattern
+Date: Wed, 11 Feb 2015 13:36:25 +0800
+Message-ID: <20150211053625.GA2617@adam-laptop>
+References: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
+ <20150210043522.GE37927@fury.dvhart.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-pa0-f52.google.com ([209.85.220.52]:61308 "EHLO
+	mail-pa0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750723AbbBKFgd (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 11 Feb 2015 00:36:33 -0500
+Received: by mail-pa0-f52.google.com with SMTP id ey11so1667399pad.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2015 21:36:33 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <20150210043522.GE37927@fury.dvhart.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 
-This patch adds a fan entry to sysfs, enabling the user to get and
-set the fan status.
+On Mon, Feb 09, 2015 at 08:35:22PM -0800, Darren Hart wrote:
+> >  static bool __pure __init tpacpi_is_valid_fw_id(const char * const s,
+> >  						const char t)
+> >  {
+> > -	return s && strlen(s) >= 8 &&
+> > +	bool is_most = 0;
+> > +	bool is_new = 0;
+> 
+> The new variables aren't really necessary, you certainly do not need two of
+> them.
+> 
+> > +
+> > +	/*
+> > +	 * Most models: xxyTkkWW (#.##c)
+> > +	 * Ancient 570/600 and -SL lacks (#.##c)
+> > +	 */
+> > +	is_most = s && strlen(s) >= 8 &&
+> 
+> Try:
+> 
+> if (s && strlen(s) >=8 &&
+> 	...
+> 	)
+> 	return true;
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 51 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+Yes, you are right.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 334b65e..413af60 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1516,6 +1516,11 @@ static const struct backlight_ops toshiba_backlight_data = {
-  */
- static ssize_t toshiba_version_show(struct device *dev,
- 				    struct device_attribute *attr, char *buf);
-+static ssize_t toshiba_fan_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count);
-+static ssize_t toshiba_fan_show(struct device *dev,
-+				struct device_attribute *attr, char *buf);
- static ssize_t toshiba_kbd_bl_mode_store(struct device *dev,
- 					 struct device_attribute *attr,
- 					 const char *buf, size_t count);
-@@ -1569,6 +1574,8 @@ static ssize_t toshiba_usb_sleep_music_store(struct device *dev,
- 					     const char *buf, size_t count);
- 
- static DEVICE_ATTR(version, S_IRUGO, toshiba_version_show, NULL);
-+static DEVICE_ATTR(fan, S_IRUGO | S_IWUSR,
-+		   toshiba_fan_show, toshiba_fan_store);
- static DEVICE_ATTR(kbd_backlight_mode, S_IRUGO | S_IWUSR,
- 		   toshiba_kbd_bl_mode_show, toshiba_kbd_bl_mode_store);
- static DEVICE_ATTR(kbd_type, S_IRUGO, toshiba_kbd_type_show, NULL);
-@@ -1594,6 +1601,7 @@ static DEVICE_ATTR(usb_sleep_music, S_IRUGO | S_IWUSR,
- 
- static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_version.attr,
-+	&dev_attr_fan.attr,
- 	&dev_attr_kbd_backlight_mode.attr,
- 	&dev_attr_kbd_type.attr,
- 	&dev_attr_available_kbd_modes.attr,
-@@ -1621,6 +1629,45 @@ static ssize_t toshiba_version_show(struct device *dev,
- 	return sprintf(buf, "%s\n", TOSHIBA_ACPI_VERSION);
- }
- 
-+static ssize_t toshiba_fan_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	u32 result;
-+	int state;
-+	int ret;
-+
-+	ret = kstrtoint(buf, 0, &state);
-+	if (ret)
-+		return ret;
-+
-+	if (state != 0 && state != 1)
-+		return -EINVAL;
-+
-+	result = hci_write1(toshiba, HCI_FAN, state);
-+	if (result == TOS_FAILURE)
-+		return -EIO;
-+	else if (result == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	return count;
-+}
-+
-+static ssize_t toshiba_fan_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	u32 value;
-+	int ret;
-+
-+	ret = get_fan_status(toshiba, &value);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", value);
-+}
-+
- static ssize_t toshiba_kbd_bl_mode_store(struct device *dev,
- 					 struct device_attribute *attr,
- 					 const char *buf, size_t count)
-@@ -2017,7 +2064,9 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
- 	struct toshiba_acpi_dev *drv = dev_get_drvdata(dev);
- 	bool exists = true;
- 
--	if (attr == &dev_attr_kbd_backlight_mode.attr)
-+	if (attr == &dev_attr_fan.attr)
-+		exists = (drv->fan_supported) ? true : false;
-+	else if (attr == &dev_attr_kbd_backlight_mode.attr)
- 		exists = (drv->kbd_illum_supported) ? true : false;
- 	else if (attr == &dev_attr_kbd_backlight_timeout.attr)
- 		exists = (drv->kbd_mode == SCI_KBD_MODE_AUTO) ? true : false;
+> >  		tpacpi_is_fw_digit(s[0]) &&
+> >  		tpacpi_is_fw_digit(s[1]) &&
+> >  		s[2] == t &&
+> >  		(s[3] == 'T' || s[3] == 'N') &&
+> >  		tpacpi_is_fw_digit(s[4]) &&
+> >  		tpacpi_is_fw_digit(s[5]);
+> > +
+> > +	if (is_most)
+> > +		return is_most;
+> > +
+> > +	/* New models: xxxyTkkW (#.##c); T550 and some others */
+> 
+> Is the second W intentionally left off in xxxyTkkW ? We don't test for it, so I
+> wasn't sure.
+
+Yes, we have the latest models, tested it.
+
+> > +	is_new = s && strlen(s) >= 8 &&
+> > +		tpacpi_is_fw_digit(s[0]) &&
+> > +		tpacpi_is_fw_digit(s[1]) &&
+> > +		tpacpi_is_fw_digit(s[2]) &&
+> 
+> As far as I can tell, the only significant difference here (compared to above)
+> is an additional leading digit and the subsequent string indices?
+> 
+> Seems to me this could be done fairly easily in the same block with only a minor
+> adjustment at the beginning and the use of an incrementing index. Should be
+> cleaner than duplicating 90% of the block?
+
+I'd like to separate them still, it will be more readable and
+extendible(Lenovo may release some BIOSes with other patterns for
+non-classic ThinkPad models in the near future).
+
+Thanks, Darren, will send the v2.
+
 -- 
-2.2.2
+Adam Lee
