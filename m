@@ -1,71 +1,40 @@
-From: Adam Lee <adam.lee@canonical.com>
-Subject: [PATCH v2] thinkpad_acpi: support new BIOS version string pattern
-Date: Wed, 11 Feb 2015 13:43:10 +0800
-Message-ID: <1423633390-7886-1-git-send-email-adam.lee@canonical.com>
-References: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH 0/5] toshiba_acpi: Clean file plus some function renames
+Date: Tue, 10 Feb 2015 23:43:55 -0700
+Message-ID: <1423637040-6813-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42]:52913 "EHLO
-	mail-pa0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751046AbbBKFnT (ORCPT
+Received: from mail-ob0-f173.google.com ([209.85.214.173]:52425 "EHLO
+	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750840AbbBKGoG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 Feb 2015 00:43:19 -0500
-Received: by mail-pa0-f42.google.com with SMTP id rd3so1797686pab.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Feb 2015 21:43:19 -0800 (PST)
-In-Reply-To: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
+	Wed, 11 Feb 2015 01:44:06 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Latest ThinkPad models use a new string pattern of BIOS version,
-thinkpad_acpi won't be loaded automatically without this fix.
+These patches are simply "cleaning" the file, making it more readable
+and in the process, make it comply according to coding style.
 
-Signed-off-by: Adam Lee <adam.lee@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+--->8---
+Darren,
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index c3d11fa..18b7594 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8883,17 +8883,31 @@ static bool __pure __init tpacpi_is_fw_digit(const char c)
- 	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z');
- }
- 
--/* Most models: xxyTkkWW (#.##c); Ancient 570/600 and -SL lacks (#.##c) */
- static bool __pure __init tpacpi_is_valid_fw_id(const char * const s,
- 						const char t)
- {
--	return s && strlen(s) >= 8 &&
-+	/*
-+	 * Most models: xxyTkkWW (#.##c)
-+	 * Ancient 570/600 and -SL lacks (#.##c)
-+	 */
-+	if (s && strlen(s) >= 8 &&
-+			tpacpi_is_fw_digit(s[0]) &&
-+			tpacpi_is_fw_digit(s[1]) &&
-+			s[2] == t &&
-+			(s[3] == 'T' || s[3] == 'N') &&
-+			tpacpi_is_fw_digit(s[4]) &&
-+			tpacpi_is_fw_digit(s[5]))
-+		return true;
-+
-+	/* New models: xxxyTkkW (#.##c); T550 and some others */
-+	return  s && strlen(s) >= 8 &&
- 		tpacpi_is_fw_digit(s[0]) &&
- 		tpacpi_is_fw_digit(s[1]) &&
--		s[2] == t &&
--		(s[3] == 'T' || s[3] == 'N') &&
--		tpacpi_is_fw_digit(s[4]) &&
--		tpacpi_is_fw_digit(s[5]);
-+		tpacpi_is_fw_digit(s[2]) &&
-+		s[3] == t &&
-+		(s[4] == 'T' || s[4] == 'N') &&
-+		tpacpi_is_fw_digit(s[5]) &&
-+		tpacpi_is_fw_digit(s[6]);
- }
- 
- /* returns 0 - probe ok, or < 0 - probe error.
+I'm sending these patches now and let you decide if you want them for
+3.20 as the merge window is still open or queue them up for 3.21 :-)
+---8<---
+
+Azael Avalos (5):
+  toshiba_acpi: Clean file according to coding style
+  Documentation/ABI: Add file describing the sysfs entries for
+    toshiba_acpi
+  toshiba_acpi: Move sysfs function and struct declarations further down
+  toshiba_acpi: Drop the toshiba_ prefix from sysfs function names
+  toshiba_acpi: Make use of DEVICE_ATTR_{RO, RW} macros
+
+ .../ABI/testing/sysfs-driver-toshiba_acpi          | 114 +++++++
+ drivers/platform/x86/toshiba_acpi.c                | 344 ++++++++-------------
+ 2 files changed, 237 insertions(+), 221 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_acpi
+
 -- 
-2.1.4
+2.2.2
