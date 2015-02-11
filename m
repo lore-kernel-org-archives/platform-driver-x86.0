@@ -1,7 +1,7 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 4/6] toshiba_acpi: Add support for Panel Power ON
-Date: Tue, 10 Feb 2015 21:09:19 -0700
-Message-ID: <1423627761-3415-5-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2 3/6] toshiba_acpi: Add support for Keyboard functions mode
+Date: Tue, 10 Feb 2015 21:09:18 -0700
+Message-ID: <1423627761-3415-4-git-send-email-coproscefalo@gmail.com>
 References: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
@@ -10,13 +10,22 @@ To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lin
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Toshiba laptops come with a feature called "Panel Open - Power ON",
-which makes the laptop turn on whenever the LID is opened.
+Recent Toshiba laptops that come with the new keyboard layout have
+the Special Functions (hotkeys) enabled by default, which, in order to
+access the F{1-12} keys, you need to press the FN-F{1-12} key to
+access such key.
 
-This patch adds support for such feature, by creating a sysfs entry
-named "panel_power_on", accepting only two values, 0 to disable and
-1 to enable such feature, however, a reboot is needed on every mode
-change.
+This patch adds support to toggle the Keyboard Functions operation
+mode by creating the sysfs entry "kbd_functions_keys", accepting only
+two parameters, 0 to set the "Normal Operation" mode and 1 to set the
+"Special Functions" mode, however, everytime the mode is toggled, a
+restart is needed.
+
+In the "Normal Operation" mode, the F{1-12} keys are as usual and
+the hotkeys are accessed via FN-F{1-12}.
+
+In the "Special Functions" mode, the F{1-12} keys trigger the hotkey
+and the F{1-12} keys are accessed via FN-F{1-12}.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
@@ -24,69 +33,65 @@ Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
  1 file changed, 100 insertions(+)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 13b4a2b..41f58f2 100644
+index 413af60..13b4a2b 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -121,6 +121,7 @@ MODULE_LICENSE("GPL");
- #define HCI_KBD_ILLUMINATION		0x0095
- #define HCI_ECO_MODE			0x0097
- #define HCI_ACCELEROMETER2		0x00a6
-+#define SCI_PANEL_POWER_ON		0x010d
- #define SCI_ILLUMINATION		0x014e
- #define SCI_USB_SLEEP_CHARGE		0x0150
+@@ -126,6 +126,7 @@ MODULE_LICENSE("GPL");
  #define SCI_KBD_ILLUM_STATUS		0x015c
-@@ -194,6 +195,7 @@ struct toshiba_acpi_dev {
+ #define SCI_USB_SLEEP_MUSIC		0x015e
+ #define SCI_TOUCHPAD			0x050e
++#define SCI_KBD_FUNCTION_KEYS		0x0522
+ 
+ /* field definitions */
+ #define HCI_ACCEL_MASK			0x7fff
+@@ -192,6 +193,7 @@ struct toshiba_acpi_dev {
+ 	unsigned int usb_sleep_charge_supported:1;
  	unsigned int usb_rapid_charge_supported:1;
  	unsigned int usb_sleep_music_supported:1;
- 	unsigned int kbd_function_keys_supported:1;
-+	unsigned int panel_power_on_supported:1;
++	unsigned int kbd_function_keys_supported:1;
  	unsigned int sysfs_created:1;
  
  	struct mutex mutex;
-@@ -1031,6 +1033,51 @@ static int toshiba_function_keys_set(struct toshiba_acpi_dev *dev, u32 mode)
+@@ -988,6 +990,47 @@ static int toshiba_usb_sleep_music_set(struct toshiba_acpi_dev *dev, u32 state)
  	return 0;
  }
  
-+/* Panel Power ON */
-+static int toshiba_panel_power_on_get(struct toshiba_acpi_dev *dev, u32 *state)
++/* Keyboard function keys */
++static int toshiba_function_keys_get(struct toshiba_acpi_dev *dev, u32 *mode)
 +{
 +	u32 result;
 +
 +	if (!sci_open(dev))
 +		return -EIO;
 +
-+	result = sci_read(dev, SCI_PANEL_POWER_ON, state);
++	result = sci_read(dev, SCI_KBD_FUNCTION_KEYS, mode);
 +	sci_close(dev);
-+	if (result == TOS_FAILURE) {
-+		pr_err("ACPI call to get Panel Power ON failed\n");
++	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
++		pr_err("ACPI call to get KBD function keys failed\n");
 +		return -EIO;
 +	} else if (result == TOS_NOT_SUPPORTED) {
-+		pr_info("Panel Power on not supported\n");
++		pr_info("KBD function keys not supported\n");
 +		return -ENODEV;
-+	} else if (result == TOS_INPUT_DATA_ERROR) {
-+		return -EIO;
 +	}
 +
 +	return 0;
 +}
 +
-+static int toshiba_panel_power_on_set(struct toshiba_acpi_dev *dev, u32 state)
++static int toshiba_function_keys_set(struct toshiba_acpi_dev *dev, u32 mode)
 +{
 +	u32 result;
 +
 +	if (!sci_open(dev))
 +		return -EIO;
 +
-+	result = sci_write(dev, SCI_PANEL_POWER_ON, state);
++	result = sci_write(dev, SCI_KBD_FUNCTION_KEYS, mode);
 +	sci_close(dev);
-+	if (result == TOS_FAILURE) {
-+		pr_err("ACPI call to set Panel Power ON failed\n");
++	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
++		pr_err("ACPI call to set KBD function keys failed\n");
 +		return -EIO;
 +	} else if (result == TOS_NOT_SUPPORTED) {
-+		pr_info("Panel Power ON not supported\n");
++		pr_info("KBD function keys not supported\n");
 +		return -ENODEV;
-+	} else if (result == TOS_INPUT_DATA_ERROR) {
-+		return -EIO;
 +	}
 +
 +	return 0;
@@ -95,75 +100,79 @@ index 13b4a2b..41f58f2 100644
  /* Bluetooth rfkill handlers */
  
  static u32 hci_get_bt_present(struct toshiba_acpi_dev *dev, bool *present)
-@@ -1621,6 +1668,12 @@ static ssize_t toshiba_kbd_function_keys_show(struct device *dev,
- static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
- 					       struct device_attribute *attr,
- 					       const char *buf, size_t count);
-+static ssize_t toshiba_panel_power_on_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf);
-+static ssize_t toshiba_panel_power_on_store(struct device *dev,
-+					    struct device_attribute *attr,
-+					    const char *buf, size_t count);
+@@ -1572,6 +1615,12 @@ static ssize_t toshiba_usb_sleep_music_show(struct device *dev,
+ static ssize_t toshiba_usb_sleep_music_store(struct device *dev,
+ 					     struct device_attribute *attr,
+ 					     const char *buf, size_t count);
++static ssize_t toshiba_kbd_function_keys_show(struct device *dev,
++					      struct device_attribute *attr,
++					      char *buf);
++static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
++					       struct device_attribute *attr,
++					       const char *buf, size_t count);
  
  static DEVICE_ATTR(version, S_IRUGO, toshiba_version_show, NULL);
  static DEVICE_ATTR(fan, S_IRUGO | S_IWUSR,
-@@ -1650,6 +1703,9 @@ static DEVICE_ATTR(usb_sleep_music, S_IRUGO | S_IWUSR,
- static DEVICE_ATTR(kbd_function_keys, S_IRUGO | S_IWUSR,
- 		   toshiba_kbd_function_keys_show,
- 		   toshiba_kbd_function_keys_store);
-+static DEVICE_ATTR(panel_power_on, S_IRUGO | S_IWUSR,
-+		   toshiba_panel_power_on_show,
-+		   toshiba_panel_power_on_store);
+@@ -1598,6 +1647,9 @@ static DEVICE_ATTR(usb_rapid_charge, S_IRUGO | S_IWUSR,
+ static DEVICE_ATTR(usb_sleep_music, S_IRUGO | S_IWUSR,
+ 		   toshiba_usb_sleep_music_show,
+ 		   toshiba_usb_sleep_music_store);
++static DEVICE_ATTR(kbd_function_keys, S_IRUGO | S_IWUSR,
++		   toshiba_kbd_function_keys_show,
++		   toshiba_kbd_function_keys_store);
  
  static struct attribute *toshiba_attributes[] = {
  	&dev_attr_version.attr,
-@@ -1665,6 +1721,7 @@ static struct attribute *toshiba_attributes[] = {
+@@ -1612,6 +1664,7 @@ static struct attribute *toshiba_attributes[] = {
+ 	&dev_attr_sleep_functions_on_battery.attr,
  	&dev_attr_usb_rapid_charge.attr,
  	&dev_attr_usb_sleep_music.attr,
- 	&dev_attr_kbd_function_keys.attr,
-+	&dev_attr_panel_power_on.attr,
++	&dev_attr_kbd_function_keys.attr,
  	NULL,
  };
  
-@@ -2152,6 +2209,44 @@ static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
+@@ -2057,6 +2110,48 @@ static ssize_t toshiba_usb_sleep_music_store(struct device *dev,
  	return count;
  }
  
-+static ssize_t toshiba_panel_power_on_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
++static ssize_t toshiba_kbd_function_keys_show(struct device *dev,
++					      struct device_attribute *attr,
++					      char *buf)
 +{
 +	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	u32 state;
++	int mode;
 +	int ret;
 +
-+	ret = toshiba_panel_power_on_get(toshiba, &state);
++	ret = toshiba_function_keys_get(toshiba, &mode);
 +	if (ret < 0)
 +		return ret;
 +
-+	return sprintf(buf, "%d\n", state);
++	return sprintf(buf, "%d\n", mode);
 +}
 +
-+static ssize_t toshiba_panel_power_on_store(struct device *dev,
-+					    struct device_attribute *attr,
-+					    const char *buf, size_t count)
++static ssize_t toshiba_kbd_function_keys_store(struct device *dev,
++					       struct device_attribute *attr,
++					       const char *buf, size_t count)
 +{
 +	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
-+	int state;
++	int mode;
 +	int ret;
 +
-+	ret = kstrtoint(buf, 0, &state);
++	ret = kstrtoint(buf, 0, &mode);
 +	if (ret)
 +		return ret;
-+	if (state != 0 && state != 1)
++	/* Check for the function keys mode where:
++	 * 0 - Normal operation (F{1-12} as usual and hotkeys via FN-F{1-12})
++	 * 1 - Special functions (Opposite of the above setting)
++	 */
++	if (mode != 0 && mode != 1)
 +		return -EINVAL;
 +
-+	ret = toshiba_panel_power_on_set(toshiba, state);
++	ret = toshiba_function_keys_set(toshiba, mode);
 +	if (ret)
 +		return ret;
 +
-+	pr_info("Reboot for changes to Panel Power ON to take effect");
++	pr_info("Reboot for changes to KBD Function Keys to take effect");
 +
 +	return count;
 +}
@@ -171,21 +180,21 @@ index 13b4a2b..41f58f2 100644
  static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
  					struct attribute *attr, int idx)
  {
-@@ -2179,6 +2274,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
+@@ -2082,6 +2177,8 @@ static umode_t toshiba_sysfs_is_visible(struct kobject *kobj,
+ 		exists = (drv->usb_rapid_charge_supported) ? true : false;
+ 	else if (attr == &dev_attr_usb_sleep_music.attr)
  		exists = (drv->usb_sleep_music_supported) ? true : false;
- 	else if (attr == &dev_attr_kbd_function_keys.attr)
- 		exists = (drv->kbd_function_keys_supported) ? true : false;
-+	else if (attr == &dev_attr_panel_power_on.attr)
-+		exists = (drv->panel_power_on_supported) ? true : false;
++	else if (attr == &dev_attr_kbd_function_keys.attr)
++		exists = (drv->kbd_function_keys_supported) ? true : false;
  
  	return exists ? attr->mode : 0;
  }
-@@ -2600,6 +2697,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = toshiba_function_keys_get(dev, &dummy);
- 	dev->kbd_function_keys_supported = !ret;
+@@ -2500,6 +2597,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 	ret = toshiba_usb_sleep_music_get(dev, &dummy);
+ 	dev->usb_sleep_music_supported = !ret;
  
-+	ret = toshiba_panel_power_on_get(dev, &dummy);
-+	dev->panel_power_on_supported = !ret;
++	ret = toshiba_function_keys_get(dev, &dummy);
++	dev->kbd_function_keys_supported = !ret;
 +
  	/* Determine whether or not BIOS supports fan and video interfaces */
  
