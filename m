@@ -1,36 +1,43 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH resend 5/6] toshiba_acpi: Add support to enable/disable
- USB 3
-Date: Tue, 10 Feb 2015 11:20:23 -0800
-Message-ID: <20150210192023.GC36814@vmdeb7>
-References: <1423539294-2941-1-git-send-email-coproscefalo@gmail.com>
- <1423539294-2941-6-git-send-email-coproscefalo@gmail.com>
- <20150210041138.GC37927@fury.dvhart.com>
- <CAGdLNWGvqcTX09_kqZWScJFj96+L3=kjKE1d0aQKnQ_wrawazQ@mail.gmail.com>
- <20150210045552.GF37927@fury.dvhart.com>
- <20150210052456.GA19985@srcf.ucam.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150210052456.GA19985@srcf.ucam.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Len Brown <len.brown@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v2 0/6] toshiba_acpi: Add new features plus some procfs ports
+Date: Tue, 10 Feb 2015 21:09:15 -0700
+Message-ID: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f181.google.com ([209.85.214.181]:51576 "EHLO
+	mail-ob0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750993AbbBKEJ2 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 10 Feb 2015 23:09:28 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Tue, Feb 10, 2015 at 05:24:56AM +0000, Matthew Garrett wrote:
-> On Mon, Feb 09, 2015 at 08:55:52PM -0800, Darren Hart wrote:
-> 
-> > I'd welcome the thoughts of the previous maintainers as to whether we want to
-> > include these kinds of OS-parity changes in the kernel. I'm probably leaning
-> > toward taking them.
-> 
-> The only real thing is whether there's any way to create a generic 
-> interface for it. In this case, I suspect not and that this is fine.
+These patches add five new files to sysfs.
 
-Agreed, thanks Matthew.
+With the first two files we are paving the way to the (hopefully)
+future removal of the (now deprecated) proc entries. The remaining
+entries were not ported due to the fact that they duplicate existing
+kernel functionality (eg.: lcd <-> backlight, keys <-> input).
+
+The rest add support for new features found on recent Toshiba laptops.
+
+And the last one simply bump up the driver version.
+
+Changes since v1:
+- Added a pr_info message informing the user that the laptop needs to
+  reboot
+
+Azael Avalos (6):
+  toshiba_acpi: Add version entry to sysfs
+  toshiba_acpi: Add fan entry to sysfs
+  toshiba_acpi: Add support for Keyboard functions mode
+  toshiba_acpi: Add support for Panel Power ON
+  toshiba_acpi: Add support to enable/disable USB 3
+  toshiba_acpi: Bump version number to 0.21
+
+ drivers/platform/x86/toshiba_acpi.c | 370 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 366 insertions(+), 4 deletions(-)
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.2.2
