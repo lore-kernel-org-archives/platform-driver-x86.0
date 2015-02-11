@@ -1,178 +1,192 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 5/5] toshiba_acpi: Make use of DEVICE_ATTR_{RO, RW} macros
-Date: Tue, 10 Feb 2015 23:44:00 -0700
-Message-ID: <1423637040-6813-6-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 1/5] toshiba_acpi: Clean file according to coding style
+Date: Tue, 10 Feb 2015 23:43:56 -0700
+Message-ID: <1423637040-6813-2-git-send-email-coproscefalo@gmail.com>
 References: <1423637040-6813-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f44.google.com ([209.85.218.44]:63250 "EHLO
-	mail-oi0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751853AbbBKGoN (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 Feb 2015 01:44:13 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1423637040-6813-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch makes use of the DEVICE_ATTR_{RO, RW} macros to simplify
-sysfs attributes declarations.
+This patch simply cleans the the driver out of 2 errors and 17
+warnings according to "checkpatch -f", no functionality was changed,
+simply a cleanup.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 42 +++++++++++++------------------------
- 1 file changed, 15 insertions(+), 27 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 38 ++++++++++++++++++++++---------------
+ 1 file changed, 23 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 0b5614c..eea3447 100644
+index 52e4647..016d7ab 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1664,6 +1664,7 @@ static ssize_t version_show(struct device *dev,
+@@ -57,7 +57,7 @@
+ #include <linux/i8042.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+-#include <asm/uaccess.h>
++#include <linux/uaccess.h>
+ 
+ MODULE_AUTHOR("John Belmonte");
+ MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+@@ -288,7 +288,7 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
+ /* utility
+  */
+ 
+-static __inline__ void _set_bit(u32 * word, u32 mask, int value)
++static inline void _set_bit(u32 *word, u32 mask, int value)
  {
- 	return sprintf(buf, "%s\n", TOSHIBA_ACPI_VERSION);
+ 	*word = (*word & ~mask) | (mask * value);
  }
-+static DEVICE_ATTR_RO(version);
+@@ -331,9 +331,8 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+ 				      (char *)dev->method_hci, &params,
+ 				      &results);
+ 	if ((status == AE_OK) && (out_objs->package.count <= TCI_WORDS)) {
+-		for (i = 0; i < out_objs->package.count; ++i) {
++		for (i = 0; i < out_objs->package.count; ++i)
+ 			out[i] = out_objs->package.elements[i].integer.value;
+-		}
+ 	}
  
- static ssize_t fan_store(struct device *dev,
- 			 struct device_attribute *attr,
-@@ -1703,6 +1704,7 @@ static ssize_t fan_show(struct device *dev,
+ 	return status;
+@@ -359,6 +358,7 @@ static u32 hci_read1(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ 	u32 in[TCI_WORDS] = { HCI_GET, reg, 0, 0, 0, 0 };
+ 	u32 out[TCI_WORDS];
+ 	acpi_status status = tci_raw(dev, in, out);
++
+ 	if (ACPI_FAILURE(status))
+ 		return TOS_FAILURE;
  
- 	return sprintf(buf, "%d\n", value);
+@@ -376,11 +376,13 @@ static u32 hci_write2(struct toshiba_acpi_dev *dev, u32 reg, u32 in1, u32 in2)
+ 	return ACPI_SUCCESS(status) ? out[0] : TOS_FAILURE;
  }
-+static DEVICE_ATTR_RW(fan);
  
- static ssize_t kbd_backlight_mode_store(struct device *dev,
- 					struct device_attribute *attr,
-@@ -1773,6 +1775,7 @@ static ssize_t kbd_backlight_mode_show(struct device *dev,
+-static u32 hci_read2(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1, u32 *out2)
++static u32 hci_read2(struct toshiba_acpi_dev *dev,
++		     u32 reg, u32 *out1, u32 *out2)
+ {
+ 	u32 in[TCI_WORDS] = { HCI_GET, reg, *out1, *out2, 0, 0 };
+ 	u32 out[TCI_WORDS];
+ 	acpi_status status = tci_raw(dev, in, out);
++
+ 	if (ACPI_FAILURE(status))
+ 		return TOS_FAILURE;
  
- 	return sprintf(buf, "%i\n", time & SCI_KBD_MODE_MASK);
+@@ -455,6 +457,7 @@ static u32 sci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ 	u32 in[TCI_WORDS] = { SCI_GET, reg, 0, 0, 0, 0 };
+ 	u32 out[TCI_WORDS];
+ 	acpi_status status = tci_raw(dev, in, out);
++
+ 	if (ACPI_FAILURE(status))
+ 		return TOS_FAILURE;
+ 
+@@ -713,7 +716,8 @@ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
+ 	return 1;
  }
-+static DEVICE_ATTR_RW(kbd_backlight_mode);
  
- static ssize_t kbd_type_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
-@@ -1781,6 +1784,7 @@ static ssize_t kbd_type_show(struct device *dev,
- 
- 	return sprintf(buf, "%d\n", toshiba->kbd_type);
+-static enum led_brightness toshiba_eco_mode_get_status(struct led_classdev *cdev)
++static enum led_brightness
++toshiba_eco_mode_get_status(struct led_classdev *cdev)
+ {
+ 	struct toshiba_acpi_dev *dev = container_of(cdev,
+ 			struct toshiba_acpi_dev, eco_led);
+@@ -1235,7 +1239,7 @@ static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
+ 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
  }
-+static DEVICE_ATTR_RO(kbd_type);
  
- static ssize_t available_kbd_modes_show(struct device *dev,
- 					struct device_attribute *attr, 
-@@ -1795,6 +1799,7 @@ static ssize_t available_kbd_modes_show(struct device *dev,
- 	return sprintf(buf, "%x %x %x\n",
- 		       SCI_KBD_MODE_AUTO, SCI_KBD_MODE_ON, SCI_KBD_MODE_OFF);
+-static struct proc_dir_entry *toshiba_proc_dir /*= 0*/ ;
++static struct proc_dir_entry *toshiba_proc_dir /*= 0*/;
+ 
+ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ {
+@@ -1246,6 +1250,7 @@ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ 	if (dev->tr_backlight_supported) {
+ 		bool enabled;
+ 		int ret = get_tr_backlight_status(dev, &enabled);
++
+ 		if (ret)
+ 			return ret;
+ 		if (enabled)
+@@ -1263,6 +1268,7 @@ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ static int get_lcd_brightness(struct backlight_device *bd)
+ {
+ 	struct toshiba_acpi_dev *dev = bl_get_data(bd);
++
+ 	return __get_lcd_brightness(dev);
  }
-+static DEVICE_ATTR_RO(available_kbd_modes);
  
- static ssize_t kbd_backlight_timeout_store(struct device *dev,
- 					   struct device_attribute *attr,
-@@ -1851,6 +1856,7 @@ static ssize_t kbd_backlight_timeout_show(struct device *dev,
- 
- 	return sprintf(buf, "%i\n", time >> HCI_MISC_SHIFT);
+@@ -1299,6 +1305,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+ 	if (dev->tr_backlight_supported) {
+ 		bool enable = !value;
+ 		int ret = set_tr_backlight_status(dev, enable);
++
+ 		if (ret)
+ 			return ret;
+ 		if (value)
+@@ -1313,6 +1320,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+ static int set_lcd_status(struct backlight_device *bd)
+ {
+ 	struct toshiba_acpi_dev *dev = bl_get_data(bd);
++
+ 	return set_lcd_brightness(dev, bd->props.brightness);
  }
-+static DEVICE_ATTR_RW(kbd_backlight_timeout);
  
- static ssize_t touchpad_store(struct device *dev,
- 			      struct device_attribute *attr,
-@@ -1887,6 +1893,7 @@ static ssize_t touchpad_show(struct device *dev,
+@@ -1370,6 +1378,7 @@ static int video_proc_show(struct seq_file *m, void *v)
+ 		int is_lcd = (value & HCI_VIDEO_OUT_LCD) ? 1 : 0;
+ 		int is_crt = (value & HCI_VIDEO_OUT_CRT) ? 1 : 0;
+ 		int is_tv = (value & HCI_VIDEO_OUT_TV) ? 1 : 0;
++
+ 		seq_printf(m, "lcd_out:                 %d\n", is_lcd);
+ 		seq_printf(m, "crt_out:                 %d\n", is_crt);
+ 		seq_printf(m, "tv_out:                  %d\n", is_tv);
+@@ -1422,8 +1431,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 		do {
+ 			++buffer;
+ 			--remain;
+-		}
+-		while (remain && *(buffer - 1) != ';');
++		} while (remain && *(buffer - 1) != ';');
+ 	}
  
- 	return sprintf(buf, "%i\n", state);
- }
-+static DEVICE_ATTR_RW(touchpad);
+ 	kfree(cmd);
+@@ -1431,6 +1439,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 	ret = get_video_status(dev, &video_out);
+ 	if (!ret) {
+ 		unsigned int new_video_out = video_out;
++
+ 		if (lcd_out != -1)
+ 			_set_bit(&new_video_out, HCI_VIDEO_OUT_LCD, lcd_out);
+ 		if (crt_out != -1)
+@@ -1500,10 +1509,10 @@ static ssize_t fan_proc_write(struct file *file, const char __user *buf,
+ 	if (sscanf(cmd, " force_on : %i", &value) == 1 &&
+ 	    value >= 0 && value <= 1) {
+ 		hci_result = hci_write1(dev, HCI_FAN, value);
+-		if (hci_result != TOS_SUCCESS)
+-			return -EIO;
+-		else
++		if (hci_result == TOS_SUCCESS)
+ 			dev->force_fan = value;
++		else
++			return -EIO;
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -1568,11 +1577,10 @@ static ssize_t keys_proc_write(struct file *file, const char __user *buf,
+ 		return -EFAULT;
+ 	cmd[len] = '\0';
  
- static ssize_t position_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
-@@ -1908,6 +1915,7 @@ static ssize_t position_show(struct device *dev,
- 
- 	return sprintf(buf, "%d %d %d\n", x, y, z);
- }
-+static DEVICE_ATTR_RO(position);
- 
- static ssize_t usb_sleep_charge_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
-@@ -1957,6 +1965,7 @@ static ssize_t usb_sleep_charge_store(struct device *dev,
+-	if (sscanf(cmd, " hotkey_ready : %i", &value) == 1 && value == 0) {
++	if (sscanf(cmd, " hotkey_ready : %i", &value) == 1 && value == 0)
+ 		dev->key_event_valid = 0;
+-	} else {
++	else
+ 		return -EINVAL;
+-	}
  
  	return count;
  }
-+static DEVICE_ATTR_RW(usb_sleep_charge);
- 
- static ssize_t sleep_functions_on_battery_show(struct device *dev,
- 					       struct device_attribute *attr,
-@@ -2018,6 +2027,7 @@ static ssize_t sleep_functions_on_battery_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(sleep_functions_on_battery);
- 
- static ssize_t usb_rapid_charge_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
-@@ -2053,6 +2063,7 @@ static ssize_t usb_rapid_charge_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(usb_rapid_charge);
- 
- static ssize_t usb_sleep_music_show(struct device *dev,
- 				    struct device_attribute *attr, char *buf)
-@@ -2088,6 +2099,7 @@ static ssize_t usb_sleep_music_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(usb_sleep_music);
- 
- static ssize_t kbd_function_keys_show(struct device *dev,
- 				      struct device_attribute *attr, char *buf)
-@@ -2129,6 +2141,7 @@ static ssize_t kbd_function_keys_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(kbd_function_keys);
- 
- static ssize_t panel_power_on_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-@@ -2166,6 +2179,7 @@ static ssize_t panel_power_on_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(panel_power_on);
- 
- static ssize_t usb_three_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
-@@ -2207,33 +2221,7 @@ static ssize_t usb_three_store(struct device *dev,
- 
- 	return count;
- }
--
--static DEVICE_ATTR(version, S_IRUGO, version_show, NULL);
--static DEVICE_ATTR(fan, S_IRUGO | S_IWUSR, fan_show, fan_store);
--static DEVICE_ATTR(kbd_backlight_mode, S_IRUGO | S_IWUSR,
--		   kbd_backlight_mode_show, kbd_backlight_mode_store);
--static DEVICE_ATTR(kbd_type, S_IRUGO, kbd_type_show, NULL);
--static DEVICE_ATTR(available_kbd_modes, S_IRUGO, 
--		   available_kbd_modes_show, NULL);
--static DEVICE_ATTR(kbd_backlight_timeout, S_IRUGO | S_IWUSR,
--		   kbd_backlight_timeout_show, kbd_backlight_timeout_store);
--static DEVICE_ATTR(touchpad, S_IRUGO | S_IWUSR, touchpad_show, touchpad_store);
--static DEVICE_ATTR(position, S_IRUGO, position_show, NULL);
--static DEVICE_ATTR(usb_sleep_charge, S_IRUGO | S_IWUSR,
--		   usb_sleep_charge_show, usb_sleep_charge_store);
--static DEVICE_ATTR(sleep_functions_on_battery, S_IRUGO | S_IWUSR,
--		   sleep_functions_on_battery_show,
--		   sleep_functions_on_battery_store);
--static DEVICE_ATTR(usb_rapid_charge, S_IRUGO | S_IWUSR,
--		   usb_rapid_charge_show, usb_rapid_charge_store);
--static DEVICE_ATTR(usb_sleep_music, S_IRUGO | S_IWUSR,
--		   usb_sleep_music_show, usb_sleep_music_store);
--static DEVICE_ATTR(kbd_function_keys, S_IRUGO | S_IWUSR,
--		   kbd_function_keys_show, kbd_function_keys_store);
--static DEVICE_ATTR(panel_power_on, S_IRUGO | S_IWUSR,
--		   panel_power_on_show, panel_power_on_store);
--static DEVICE_ATTR(usb_three, S_IRUGO | S_IWUSR,
--		   usb_three_show, usb_three_store);
-+static DEVICE_ATTR_RW(usb_three);
- 
- static struct attribute *toshiba_attributes[] = {
- 	&dev_attr_version.attr,
 -- 
 2.2.2
