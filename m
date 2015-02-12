@@ -1,97 +1,41 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] thinkpad_acpi: support new BIOS version string pattern
-Date: Wed, 11 Feb 2015 20:32:29 -0800
-Message-ID: <20150212043229.GA30527@fury.dvhart.com>
-References: <1423040419-25113-1-git-send-email-adam.lee@canonical.com>
- <1423633390-7886-1-git-send-email-adam.lee@canonical.com>
+Subject: Re: [PATCH v2 0/6] toshiba_acpi: Add new features plus some procfs
+ ports
+Date: Wed, 11 Feb 2015 20:52:18 -0800
+Message-ID: <20150212045218.GB30527@fury.dvhart.com>
+References: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:34629 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:45503 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754750AbbBLEcb (ORCPT
+	with ESMTP id S1753655AbbBLEwT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 Feb 2015 23:32:31 -0500
+	Wed, 11 Feb 2015 23:52:19 -0500
 Content-Disposition: inline
-In-Reply-To: <1423633390-7886-1-git-send-email-adam.lee@canonical.com>
+In-Reply-To: <1423627761-3415-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Adam Lee <adam.lee@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Feb 11, 2015 at 01:43:10PM +0800, Adam Lee wrote:
-> Latest ThinkPad models use a new string pattern of BIOS version,
-> thinkpad_acpi won't be loaded automatically without this fix.
+On Tue, Feb 10, 2015 at 09:09:15PM -0700, Azael Avalos wrote:
+> These patches add five new files to sysfs.
 > 
-> Signed-off-by: Adam Lee <adam.lee@canonical.com>
-> ---
-
-When sending updated versions of a patch or series, please include a changelog
-after the ---, see Documentation/SubmittingPatches.
-
->  drivers/platform/x86/thinkpad_acpi.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
+> With the first two files we are paving the way to the (hopefully)
+> future removal of the (now deprecated) proc entries. The remaining
+> entries were not ported due to the fact that they duplicate existing
+> kernel functionality (eg.: lcd <-> backlight, keys <-> input).
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c3d11fa..18b7594 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8883,17 +8883,31 @@ static bool __pure __init tpacpi_is_fw_digit(const char c)
->  	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z');
->  }
->  
-> -/* Most models: xxyTkkWW (#.##c); Ancient 570/600 and -SL lacks (#.##c) */
->  static bool __pure __init tpacpi_is_valid_fw_id(const char * const s,
->  						const char t)
->  {
-> -	return s && strlen(s) >= 8 &&
-> +	/*
-> +	 * Most models: xxyTkkWW (#.##c)
-> +	 * Ancient 570/600 and -SL lacks (#.##c)
-> +	 */
-> +	if (s && strlen(s) >= 8 &&
-> +			tpacpi_is_fw_digit(s[0]) &&
-> +			tpacpi_is_fw_digit(s[1]) &&
-> +			s[2] == t &&
-> +			(s[3] == 'T' || s[3] == 'N') &&
-> +			tpacpi_is_fw_digit(s[4]) &&
-> +			tpacpi_is_fw_digit(s[5]))
-
-I'm not wild about these big boolean statements, but I also don't see something
-that is obviously better. Typically we want to see indentation with tabs and
-alignment with the initial line's arguments with spaces... but here that just
-looks ugly as the too seemingly similar blocks end up with different
-indentations due to the if and return... anyway, subjective and all that. So I'm
-leaving it mostly alone, but I dropped one set of tabs from the above lines and
-queued it.
-
-Thanks Adam.
-
-> +		return true;
-> +
-> +	/* New models: xxxyTkkW (#.##c); T550 and some others */
-> +	return  s && strlen(s) >= 8 &&
->  		tpacpi_is_fw_digit(s[0]) &&
->  		tpacpi_is_fw_digit(s[1]) &&
-> -		s[2] == t &&
-> -		(s[3] == 'T' || s[3] == 'N') &&
-> -		tpacpi_is_fw_digit(s[4]) &&
-> -		tpacpi_is_fw_digit(s[5]);
-> +		tpacpi_is_fw_digit(s[2]) &&
-> +		s[3] == t &&
-> +		(s[4] == 'T' || s[4] == 'N') &&
-> +		tpacpi_is_fw_digit(s[5]) &&
-> +		tpacpi_is_fw_digit(s[6]);
-
-
-
->  }
->  
->  /* returns 0 - probe ok, or < 0 - probe error.
-> -- 
-> 2.1.4
+> The rest add support for new features found on recent Toshiba laptops.
 > 
+> And the last one simply bump up the driver version.
 > 
+> Changes since v1:
+> - Added a pr_info message informing the user that the laptop needs to
+>   reboot
+
+Thanks Azael, queued.
 
 -- 
 Darren Hart
