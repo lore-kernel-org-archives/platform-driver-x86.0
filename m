@@ -1,180 +1,271 @@
-From: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5] Documentation/ABI: Add file describing the sysfs
- entries for toshiba_acpi
-Date: Wed, 11 Feb 2015 22:42:53 -0700
-Message-ID: <CAGdLNWE=oYhk+GXUJSoE9KuLA=Lm0V9tjdsnL6YyV7AAk8u3ig@mail.gmail.com>
-References: <1423637040-6813-1-git-send-email-coproscefalo@gmail.com>
-	<1423637040-6813-3-git-send-email-coproscefalo@gmail.com>
-	<20150212053807.GD30527@fury.dvhart.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150212053807.GD30527-JIrPihikzLEQaXB9iyTzyw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: [PATCH 1/2] toshiba_acpi: Cleanup comment blocks and capitalization
+Date: Wed, 11 Feb 2015 21:57:07 -0800
+Message-ID: <e0769fe6f28b500868c2b1059f74ab1177ff41db.1423720561.git.dvhart@linux.intel.com>
+References: <1423720628-26313-1-git-send-email-dvhart@linux.intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:56560 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750881AbbBLF5T (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 12 Feb 2015 00:57:19 -0500
+In-Reply-To: <1423720628-26313-1-git-send-email-dvhart@linux.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, coproscefalo@gmail.com, Darren Hart <dvhart@linux.intel.com>
 
-Hi Darren,
+Ensure multiline comments start with /* and */ each on its own line.
+Capitalize the first word of comments.
 
-2015-02-11 22:38 GMT-07:00 Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>:
-> On Tue, Feb 10, 2015 at 11:43:57PM -0700, Azael Avalos wrote:
->> This patch adds a new file describing the sysfs entries for the
->> toshiba_acpi driver.
->>
->
-> +linux-api list
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 75 +++++++++++++++++++++++--------------
+ 1 file changed, 47 insertions(+), 28 deletions(-)
 
-Just CC me, because I'm not subscribed to that list, in case something
-needs to be changed.
-
->
-> I've queued this for 3.20 through platform-drivers-x86. Any objections?
-
-Not at all, and given that this patch is managed on another list,
-let's see if there are any problems with this file.
-
-Cheers
-Azael
-
->
->
->> Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../ABI/testing/sysfs-driver-toshiba_acpi          | 114 +++++++++++++++++++++
->>  1 file changed, 114 insertions(+)
->>  create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_acpi
->>
->> diff --git a/Documentation/ABI/testing/sysfs-driver-toshiba_acpi b/Documentation/ABI/testing/sysfs-driver-toshiba_acpi
->> new file mode 100644
->> index 0000000..ca9c71a
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-driver-toshiba_acpi
->> @@ -0,0 +1,114 @@
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_backlight_mode
->> +Date:                June 8, 2014
->> +KernelVersion:       3.15
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls the keyboard backlight operation mode, valid
->> +             values are:
->> +                     * 0x1  -> FN-Z
->> +                     * 0x2  -> AUTO (also called TIMER)
->> +                     * 0x8  -> ON
->> +                     * 0x10 -> OFF
->> +             Note that the kernel 3.16 onwards this file accepts all listed
->> +             parameters, kernel 3.15 only accepts the first two (FN-Z and
->> +             AUTO).
->> +Users:               KToshiba
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_backlight_timeout
->> +Date:                June 8, 2014
->> +KernelVersion:       3.15
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls the timeout of the keyboard backlight
->> +             whenever the operation mode is set to AUTO (or TIMER),
->> +             valid values range from 0-60.
->> +             Note that the kernel 3.15 only had support for the first
->> +             keyboard type, the kernel 3.16 added support for the second
->> +             type and the range accepted for type 2 is 1-60.
->> +             See the entry named "kbd_type"
->> +Users:               KToshiba
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/position
->> +Date:                June 8, 2014
->> +KernelVersion:       3.15
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file shows the absolute position of the built-in
->> +             accelereometer.
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/touchpad
->> +Date:                June 8, 2014
->> +KernelVersion:       3.15
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This files controls the status of the touchpad and pointing
->> +             stick (if available), valid values are:
->> +                     * 0 -> OFF
->> +                     * 1 -> ON
->> +Users:               KToshiba
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/available_kbd_modes
->> +Date:                August 3, 2014
->> +KernelVersion:       3.16
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file shows the supported keyboard backlight modes
->> +             the system supports, which can be:
->> +                     * 0x1  -> FN-Z
->> +                     * 0x2  -> AUTO (also called TIMER)
->> +                     * 0x8  -> ON
->> +                     * 0x10 -> OFF
->> +             Note that not all keyboard types support the listed modes.
->> +             See the entry named "available_kbd_modes"
->> +Users:               KToshiba
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_type
->> +Date:                August 3, 2014
->> +KernelVersion:       3.16
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file shows the current keyboard backlight type,
->> +             which can be:
->> +                     * 1 -> Type 1, supporting modes FN-Z and AUTO
->> +                     * 2 -> Type 2, supporting modes TIMER, ON and OFF
->> +Users:               KToshiba
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/version
->> +Date:                February, 2015
->> +KernelVersion:       3.20
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file shows the current version of the driver
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/fan
->> +Date:                February, 2015
->> +KernelVersion:       3.20
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls the state of the internal fan, valid
->> +             values are:
->> +                     * 0 -> OFF
->> +                     * 1 -> ON
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_function_keys
->> +Date:                February, 2015
->> +KernelVersion:       3.20
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls the Special Functions (hotkeys) operation
->> +             mode, valid values are:
->> +                     * 0 -> Normal Operation
->> +                     * 1 -> Special Functions
->> +             In the "Normal Operation" mode, the F{1-12} keys are as usual
->> +             and the hotkeys are accessed via FN-F{1-12}.
->> +             In the "Special Functions" mode, the F{1-12} keys trigger the
->> +             hotkey and the F{1-12} keys are accessed via FN-F{1-12}.
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/panel_power_on
->> +Date:                February, 2015
->> +KernelVersion:       3.20
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls whether the laptop should turn ON whenever
->> +             the LID is opened, valid values are:
->> +                     * 0 -> Disabled
->> +                     * 1 -> Enabled
->> +
->> +What:                /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/usb_three
->> +Date:                February, 2015
->> +KernelVersion:       3.20
->> +Contact:     Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +Description: This file controls whether the USB 3 functionality, valid
->> +             values are:
->> +                     * 0 -> Disabled (Acts as a regular USB 2)
->> +                     * 1 -> Enabled (Full USB 3 functionality)
->> --
->> 2.2.2
->>
->>
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-
-
-
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 1cfc443..07be889 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -71,7 +71,8 @@ MODULE_LICENSE("GPL");
+ /* Toshiba ACPI method paths */
+ #define METHOD_VIDEO_OUT	"\\_SB_.VALX.DSSX"
+ 
+-/* The Toshiba configuration interface is composed of the HCI and the SCI,
++/*
++ * The Toshiba configuration interface is composed of the HCI and the SCI,
+  * which are defined as follows:
+  *
+  * HCI is Toshiba's "Hardware Control Interface" which is supposed to
+@@ -286,7 +287,8 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
+ 	{ KE_END, 0 },
+ };
+ 
+-/* utility
++/*
++ * Utility
+  */
+ 
+ static inline void _set_bit(u32 *word, u32 mask, int value)
+@@ -294,7 +296,8 @@ static inline void _set_bit(u32 *word, u32 mask, int value)
+ 	*word = (*word & ~mask) | (mask * value);
+ }
+ 
+-/* acpi interface wrappers
++/*
++ * ACPI interface wrappers
+  */
+ 
+ static int write_acpi_int(const char *methodName, int val)
+@@ -305,7 +308,8 @@ static int write_acpi_int(const char *methodName, int val)
+ 	return (status == AE_OK) ? 0 : -EIO;
+ }
+ 
+-/* Perform a raw configuration call.  Here we don't care about input or output
++/*
++ * Perform a raw configuration call.  Here we don't care about input or output
+  * buffer format.
+  */
+ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+@@ -339,7 +343,8 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+ 	return status;
+ }
+ 
+-/* common hci tasks (get or set one or two value)
++/*
++ * Common hci tasks (get or set one or two value)
+  *
+  * In addition to the ACPI status, the HCI system returns a result which
+  * may be useful (such as "not supported").
+@@ -393,7 +398,8 @@ static u32 hci_read2(struct toshiba_acpi_dev *dev,
+ 	return out[0];
+ }
+ 
+-/* common sci tasks
++/*
++ * Common sci tasks
+  */
+ 
+ static int sci_open(struct toshiba_acpi_dev *dev)
+@@ -414,7 +420,8 @@ static int sci_open(struct toshiba_acpi_dev *dev)
+ 		pr_info("Toshiba SCI already opened\n");
+ 		return 1;
+ 	} else if (out[0] == TOS_NOT_SUPPORTED) {
+-		/* Some BIOSes do not have the SCI open/close functions
++		/*
++		 * Some BIOSes do not have the SCI open/close functions
+ 		 * implemented and return 0x8000 (Not Supported), failing to
+ 		 * register some supported features.
+ 		 *
+@@ -567,10 +574,11 @@ static int toshiba_kbd_illum_available(struct toshiba_acpi_dev *dev)
+ 		return 0;
+ 	}
+ 
+-	/* Check for keyboard backlight timeout max value,
++	/*
++	 * Check for keyboard backlight timeout max value,
+ 	 * previous kbd backlight implementation set this to
+ 	 * 0x3c0003, and now the new implementation set this
+-	 * to 0x3c001a, use this to distinguish between them
++	 * to 0x3c001a, use this to distinguish between them.
+ 	 */
+ 	if (out[3] == SCI_KBD_TIME_MAX)
+ 		dev->kbd_type = 2;
+@@ -714,7 +722,8 @@ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
+ 	} else if (out[0] == TOS_NOT_INSTALLED) {
+ 		pr_info("ECO led not installed");
+ 	} else if (out[0] == TOS_INPUT_DATA_ERROR) {
+-		/* If we receive 0x8300 (Input Data Error), it means that the
++		/*
++		 * If we receive 0x8300 (Input Data Error), it means that the
+ 		 * LED device is present, but that we just screwed the input
+ 		 * parameters.
+ 		 *
+@@ -776,7 +785,8 @@ static int toshiba_accelerometer_supported(struct toshiba_acpi_dev *dev)
+ 	u32 out[TCI_WORDS];
+ 	acpi_status status;
+ 
+-	/* Check if the accelerometer call exists,
++	/*
++	 * Check if the accelerometer call exists,
+ 	 * this call also serves as initialization
+ 	 */
+ 	status = tci_raw(dev, in, out);
+@@ -1433,9 +1443,9 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 
+ 	buffer = cmd;
+ 
+-	/* scan expression.  Multiple expressions may be delimited with ;
+-	 *
+-	 *  NOTE: to keep scanning simple, invalid fields are ignored
++	/*
++	 * Scan expression.  Multiple expressions may be delimited with ;
++	 * NOTE: To keep scanning simple, invalid fields are ignored.
+ 	 */
+ 	while (remain) {
+ 		if (sscanf(buffer, " lcd_out : %i", &value) == 1)
+@@ -1444,7 +1454,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 			crt_out = value & 1;
+ 		else if (sscanf(buffer, " tv_out : %i", &value) == 1)
+ 			tv_out = value & 1;
+-		/* advance to one character past the next ; */
++		/* Advance to one character past the next ; */
+ 		do {
+ 			++buffer;
+ 			--remain;
+@@ -1463,7 +1473,8 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 			_set_bit(&new_video_out, HCI_VIDEO_OUT_CRT, crt_out);
+ 		if (tv_out != -1)
+ 			_set_bit(&new_video_out, HCI_VIDEO_OUT_TV, tv_out);
+-		/* To avoid unnecessary video disruption, only write the new
++		/*
++		 * To avoid unnecessary video disruption, only write the new
+ 		 * video setting if something changed. */
+ 		if (new_video_out != video_out)
+ 			ret = write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
+@@ -1558,11 +1569,13 @@ static int keys_proc_show(struct seq_file *m, void *v)
+ 			dev->key_event_valid = 1;
+ 			dev->last_key_event = value;
+ 		} else if (hci_result == TOS_FIFO_EMPTY) {
+-			/* better luck next time */
++			/* Better luck next time */
+ 		} else if (hci_result == TOS_NOT_SUPPORTED) {
+-			/* This is a workaround for an unresolved issue on
++			/*
++			 * This is a workaround for an unresolved issue on
+ 			 * some machines where system events sporadically
+-			 * become disabled. */
++			 * become disabled.
++			 */
+ 			hci_result = hci_write1(dev, HCI_SYSTEM_EVENT, 1);
+ 			pr_notice("Re-enabled hotkeys\n");
+ 		} else {
+@@ -1631,7 +1644,8 @@ static const struct file_operations version_proc_fops = {
+ 	.release	= single_release,
+ };
+ 
+-/* proc and module init
++/*
++ * Proc and module init
+  */
+ 
+ #define PROC_TOSHIBA		"toshiba"
+@@ -1749,7 +1763,8 @@ static ssize_t kbd_backlight_mode_store(struct device *dev,
+ 			return -EINVAL;
+ 	}
+ 
+-	/* Set the Keyboard Backlight Mode where:
++	/*
++	 * Set the Keyboard Backlight Mode where:
+ 	 *	Auto - KBD backlight turns off automatically in given time
+ 	 *	FN-Z - KBD backlight "toggles" when hotkey pressed
+ 	 *	ON   - KBD backlight is always on
+@@ -1960,7 +1975,8 @@ static ssize_t usb_sleep_charge_store(struct device *dev,
+ 	ret = kstrtoint(buf, 0, &state);
+ 	if (ret)
+ 		return ret;
+-	/* Check for supported values, where:
++	/*
++	 * Check for supported values, where:
+ 	 * 0 - Disabled
+ 	 * 1 - Alternate (Non USB conformant devices that require more power)
+ 	 * 2 - Auto (USB conformant devices)
+@@ -2022,7 +2038,8 @@ static ssize_t sleep_functions_on_battery_store(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Set the status of the function:
++	/*
++	 * Set the status of the function:
+ 	 * 0 - Disabled
+ 	 * 1-100 - Enabled
+ 	 */
+@@ -2143,7 +2160,8 @@ static ssize_t kbd_function_keys_store(struct device *dev,
+ 	ret = kstrtoint(buf, 0, &mode);
+ 	if (ret)
+ 		return ret;
+-	/* Check for the function keys mode where:
++	/*
++	 * Check for the function keys mode where:
+ 	 * 0 - Normal operation (F{1-12} as usual and hotkeys via FN-F{1-12})
+ 	 * 1 - Special functions (Opposite of the above setting)
+ 	 */
+@@ -2223,7 +2241,8 @@ static ssize_t usb_three_store(struct device *dev,
+ 	ret = kstrtoint(buf, 0, &state);
+ 	if (ret)
+ 		return ret;
+-	/* Check for USB 3 mode where:
++	/*
++	 * Check for USB 3 mode where:
+ 	 * 0 - Disabled (Acts like a USB 2 port, saving power)
+ 	 * 1 - Enabled
+ 	 */
+@@ -2375,7 +2394,7 @@ static void toshiba_acpi_report_hotkey(struct toshiba_acpi_dev *dev,
+ 	if (scancode == 0x100)
+ 		return;
+ 
+-	/* act on key press; ignore key release */
++	/* Act on key press; ignore key release */
+ 	if (scancode & 0x80)
+ 		return;
+ 
+@@ -2411,7 +2430,7 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ 				hci_result =
+ 					hci_write1(dev, HCI_SYSTEM_EVENT, 1);
+ 				pr_notice("Re-enabled hotkeys\n");
+-				/* fall through */
++				/* Fall through */
+ 			default:
+ 				retries--;
+ 				break;
+@@ -2533,7 +2552,7 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
+ 
+-	/* adding an extra level and having 0 change to transflective mode */
++	/* Adding an extra level and having 0 change to transflective mode */
+ 	if (dev->tr_backlight_supported)
+ 		props.max_brightness++;
+ 
 -- 
--- El mundo apesta y vosotros apestais tambien --
+2.1.4
