@@ -1,39 +1,36 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: toshiba_acpi: Cleanup comments and file header
-Date: Thu, 12 Feb 2015 09:02:35 -0700
-Message-ID: <CAGdLNWGGYQsief=TFWC-2mGQegdE5nGN5UwGD8t-St5ntWPB7g@mail.gmail.com>
-References: <1423720628-26313-1-git-send-email-dvhart@linux.intel.com>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH] dell-laptop: use dedicated sysfs file for ALS
+Date: Fri, 13 Feb 2015 15:30:42 +0100
+Message-ID: <6193126.UlCB3asGVW@xps13>
+References: <1421244357-31103-1-git-send-email-gabriele.mzt@gmail.com> <201502101036.21896@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:59779 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755716AbbBLQCg (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 12 Feb 2015 11:02:36 -0500
-In-Reply-To: <1423720628-26313-1-git-send-email-dvhart@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201502101036.21896@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, A.Sloman@cs.bham.ac.uk, computersforpeace@gmail.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-2015-02-11 22:57 GMT-07:00 Darren Hart <dvhart@linux.intel.com>:
-> After Azael's various fixes and cleanups to toshiba_acpi.c, I've made some final
-> cleanups to comment formatting and the file header.
->
-> Azael, any objections?
+On Tuesday 10 February 2015 10:36:21 Pali Roh=E1r wrote:
+> On Wednesday 14 January 2015 15:05:57 Gabriele Mazzotta wrote:
+> > The ambient light sensor doesn't act like an input trigger, so
+> > it has to be kept separate. The sensor readings are used to
+> > determine whether the conditions to change the keyboard
+> > illumination are satisfied or not the moment an input trigger
+> > is used. Ambient light changes alone can't change the
+> > keyboard backlight illumination and don't restart the timer.
+> >=20
+> > Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> > ---
+>=20
+> Gabriele, can you look and integrate this patch into full=20
+> keyboard backlight support? Ideally send new full one...
 
-Nope, looks good to me.
+I will do that soon.
 
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
->
-
-Cheers
-Azael
-
-
--- 
--- El mundo apesta y vosotros apestais tambien --
+Darren, do you prefer one single patch or should I send Pali's patch
+and my changes in different patches (that can be later squashed) to mak=
+e
+the review easier?
