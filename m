@@ -1,43 +1,38 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH 3/7] thinkpad_acpi: Add adaptive_kbd_mode sysfs attr
-Date: Fri, 20 Feb 2015 16:31:47 +0100
-Message-ID: <1424446307.22910.24.camel@hadess.net>
-References: <1424443462.22910.15.camel@hadess.net>
-	 <20150220152032.GB1508@lahna.fi.intel.com>
-	 <1424445727.22910.20.camel@hadess.net>
-	 <20150220152729.GC1508@lahna.fi.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFT PATCH v3 1/2] compal-laptop: Fix leaking hwmon device
+Date: Fri, 20 Feb 2015 08:50:28 -0800
+Message-ID: <20150220165028.GD22752@roeck-us.net>
+References: <1424438015-3006-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:57543 "EHLO
-	relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753762AbbBTPdU (ORCPT
+Received: from bh-25.webhostbox.net ([208.91.199.152]:55934 "EHLO
+	bh-25.webhostbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752301AbbBTQu6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Feb 2015 10:33:20 -0500
-In-Reply-To: <20150220152729.GC1508@lahna.fi.intel.com>
+	Fri, 20 Feb 2015 11:50:58 -0500
+Received: from mailnull by bh-25.webhostbox.net with sa-checked (Exim 4.82)
+	(envelope-from <linux@roeck-us.net>)
+	id 1YOqn4-001xXh-1L
+	for platform-driver-x86@vger.kernel.org; Fri, 20 Feb 2015 16:50:58 +0000
+Content-Disposition: inline
+In-Reply-To: <1424438015-3006-1-git-send-email-k.kozlowski@samsung.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Matthew Garrett <matthew.garrett@nebula.com>, stable@vger.kernel.org
 
-On Fri, 2015-02-20 at 17:27 +0200, Mika Westerberg wrote:
-> On Fri, Feb 20, 2015 at 04:22:07PM +0100, Bastien Nocera wrote:
-> > On Fri, 2015-02-20 at 17:20 +0200, Mika Westerberg wrote:
-> > > On Fri, Feb 20, 2015 at 03:44:22PM +0100, Bastien Nocera wrote:
-> > > > Add a sysfs attribute to allow privileged users to change the keyboard
-> > > > mode. This could be used by desktop environments to change the keyboard
-> > > > mode depending on the application focused, as the Windows application
-> > > > does.
-> > > 
-> > > If you are adding new sysfs attributes, you should document them as well
-> > > in Documentation/ABI/*.
-> > 
-> > None of the thinkpad_acpi sysfs attributes are documented there, or I'm
-> > missing something obvious.
+On Fri, Feb 20, 2015 at 02:13:34PM +0100, Krzysztof Kozlowski wrote:
+> The commit c2be45f09bb0 ("compal-laptop: Use
+> devm_hwmon_device_register_with_groups") wanted to change the
+> registering of hwmon device to resource-managed version. It mostly did
+> it except the main thing - it forgot to use devm-like function so the
+> hwmon device leaked after device removal or probe failure.
 > 
-> Perhaps it is good time to start documenting them? :-)
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Fixes: c2be45f09bb0 ("compal-laptop: Use devm_hwmon_device_register_with_groups")
+> Cc: <stable@vger.kernel.org>
 
-I'm not going to do that. If I were, I would remove a large majority of
-them to cut down on the size of the driver. 10k lines of code and
-supporting 10+ years of ThinkPads turned the driver into a monster.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
