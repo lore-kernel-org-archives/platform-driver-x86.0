@@ -1,59 +1,55 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: [PATCH 6/7] thinkpad_acpi: More Carbon X1 2014 keys
-Date: Fri, 20 Feb 2015 15:44:37 +0100
-Message-ID: <1424443477.22910.18.camel@hadess.net>
+From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: Re: [PATCH 5/7] input: Add keycodes used by Lenovo Carbon X1 2014
+Date: Fri, 20 Feb 2015 10:04:04 -0500
+Message-ID: <CAN+gG=HxwAA=f2a-vS6-voCRNQO-2pwnK64qz0L_b6-R2bScvQ@mail.gmail.com>
+References: <1424443473.22910.17.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1424443473.22910.17.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add support for newly added evdev keycodes.
+On Fri, Feb 20, 2015 at 9:44 AM, Bastien Nocera <hadess@hadess.net> wrote:
+> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> ---
+>  include/uapi/linux/input.h | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
+> index b0a8130..affe40e 100644
+> --- a/include/uapi/linux/input.h
+> +++ b/include/uapi/linux/input.h
+> @@ -740,6 +740,16 @@ struct input_keymap_entry {
+>  #define KEY_BRIGHTNESS_MIN             0x250   /* Set Brightness to Minimum */
+>  #define KEY_BRIGHTNESS_MAX             0x251   /* Set Brightness to Maximum */
+>
+> +#define KEY_CLIPPING_TOOL              0x252   /* Screenshot clipping tool */
+> +#define KEY_CLOUD                      0x253   /* Cloud Settings */
+> +#define KEY_CAMERA_GESTURES            0x254   /* Toggle Camera gestures */
+> +#define KEY_NEW_TAB                    0x255   /* Open a new tab */
+> +#define KEY_MICUP                      0x256   /* Microphone Up */
+> +#define KEY_MICDOWN                    0x257   /* Microphone Down */
+> +#define KEY_MICCANCEL_MODE             0x258   /* Toggle Microphone cancellation mode */
+> +#define KEY_CAMERA_ZOOM_MODE           0x259   /* Toggle camera zoom mode */
+> +#define KEY_ROTATE_DISPLAY             0x25a   /* Rotate screen by 90 degrees */
+> +
 
-Signed-off-by: Bastien Nocera <hadess@hadess.net>
----
- drivers/platform/x86/thinkpad_acpi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+This one should be acked by Dmitry (in CC)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 57130a1..535095d 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3264,24 +3264,24 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		 */
- 		KEY_RESERVED,        /* Mute held, 0x103 */
- 		KEY_BRIGHTNESS_MIN,  /* Backlight off */
--		KEY_RESERVED,        /* Clipping tool */
--		KEY_RESERVED,        /* Cloud */
-+		KEY_CLIPPING_TOOL,   /* Clipping tool */
-+		KEY_CLOUD,           /* Cloud */
- 		KEY_RESERVED,
- 		KEY_VOICECOMMAND,    /* Voice */
- 		KEY_RESERVED,
--		KEY_RESERVED,        /* Gestures */
-+		KEY_CAMERA_GESTURES, /* Gestures */
- 		KEY_RESERVED,
- 		KEY_RESERVED,
- 		KEY_RESERVED,
- 		KEY_CONFIG,          /* Settings */
--		KEY_RESERVED,        /* New tab */
-+		KEY_NEW_TAB,         /* New tab */
- 		KEY_REFRESH,         /* Reload */
- 		KEY_BACK,            /* Back */
--		KEY_RESERVED,        /* Microphone down */
--		KEY_RESERVED,        /* Microphone up */
--		KEY_RESERVED,        /* Microphone cancellation */
--		KEY_RESERVED,        /* Camera mode */
--		KEY_RESERVED,        /* Rotate display, 0x116 */
-+		KEY_MICUP,           /* Microphone down */
-+		KEY_MICDOWN,         /* Microphone up */
-+		KEY_MICCANCEL_MODE,  /* Microphone cancellation */
-+		KEY_CAMERA_ZOOM_MODE,/* Camera mode */
-+		KEY_ROTATE_DISPLAY,  /* Rotate display, 0x116 */
- 		},
- 	};
- 
--- 
-2.1.0
+Cheers,
+Benjamin
+
+>  #define KEY_KBDINPUTASSIST_PREV                0x260
+>  #define KEY_KBDINPUTASSIST_NEXT                0x261
+>  #define KEY_KBDINPUTASSIST_PREVGROUP           0x262
+> --
+> 2.1.0
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
