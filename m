@@ -1,28 +1,29 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Bastien Nocera <hadess@hadess.net>
 Subject: Re: [PATCH 3/7] thinkpad_acpi: Add adaptive_kbd_mode sysfs attr
-Date: Fri, 20 Feb 2015 17:20:32 +0200
-Message-ID: <20150220152032.GB1508@lahna.fi.intel.com>
+Date: Fri, 20 Feb 2015 16:22:07 +0100
+Message-ID: <1424445727.22910.20.camel@hadess.net>
 References: <1424443462.22910.15.camel@hadess.net>
+	 <20150220152032.GB1508@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:1555 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752566AbbBTPUt (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Feb 2015 10:20:49 -0500
-Content-Disposition: inline
-In-Reply-To: <1424443462.22910.15.camel@hadess.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bastien Nocera <hadess@hadess.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150220152032.GB1508@lahna.fi.intel.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 20, 2015 at 03:44:22PM +0100, Bastien Nocera wrote:
-> Add a sysfs attribute to allow privileged users to change the keyboard
-> mode. This could be used by desktop environments to change the keyboard
-> mode depending on the application focused, as the Windows application
-> does.
+On Fri, 2015-02-20 at 17:20 +0200, Mika Westerberg wrote:
+> On Fri, Feb 20, 2015 at 03:44:22PM +0100, Bastien Nocera wrote:
+> > Add a sysfs attribute to allow privileged users to change the keyboard
+> > mode. This could be used by desktop environments to change the keyboard
+> > mode depending on the application focused, as the Windows application
+> > does.
+> 
+> If you are adding new sysfs attributes, you should document them as well
+> in Documentation/ABI/*.
 
-If you are adding new sysfs attributes, you should document them as well
-in Documentation/ABI/*.
+None of the thinkpad_acpi sysfs attributes are documented there, or I'm
+missing something obvious.
+
