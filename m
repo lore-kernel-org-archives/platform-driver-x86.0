@@ -1,57 +1,121 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: toshiba_acpi.c
-Date: Thu, 19 Feb 2015 21:00:51 -0800
-Message-ID: <20150220050051.GA790@fury.dvhart.com>
-References: <1424291222.2455.3.camel@gmail.com>
- <CAGdLNWFy-awfrKEDZJ2paG3-R+xbVUYJ+JfPxpMExSdG_WrLAw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] thinkpad_acpi: Remember adaptive kbd presence
+Date: Thu, 19 Feb 2015 21:08:43 -0800
+Message-ID: <20150220050843.GB790@fury.dvhart.com>
+References: <1424292808.32581.45.camel@hadess.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:45765 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751553AbbBTFAw (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Feb 2015 00:00:52 -0500
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGdLNWFy-awfrKEDZJ2paG3-R+xbVUYJ+JfPxpMExSdG_WrLAw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Tom Mannerhagen <tom.mannerhagen@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+In-Reply-To: <1424292808.32581.45.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 18, 2015 at 02:07:43PM -0700, Azael Avalos wrote:
-> Hi there,
-> 
-> 2015-02-18 13:27 GMT-07:00 Tom Mannerhagen <tom.mannerhagen@gmail.com>:
-> > Hi
-> >
-> > My name is Tom Mannerhagen.
-> > I am writing to you because I can see you're somehow involved in the
-> > last version of toshiba_acpi.c
-> 
-> Well, right now I'm taking care of the driver (adding features, cleaning,
-> etc.), so I guess I'm the "maintainer" as of now ;-)
-> 
-> >
-> > I have some issues / suggestions to the driver, but since I am no coder,
-> > my ideas won't bear any fruit unless I get some help.
-> >
-> > Can I send my thoughts this way?
-> 
-> I have no problem, tho' I'm not sure if the mailing list is the right place
-> for this.
-> Darren, any input here?
+On Wed, Feb 18, 2015 at 09:53:28PM +0100, Bastien Nocera wrote:
+> Rather than checking on each suspend and resume whether the laptop
+> has an adaptive keyboard, check when the driver is initialised.
 
-Yup, this is the place. Everything happens on the mailing list :-) (I pointed
-Tom here).
+Reasonable.
 
 > 
-> As per your ideas/suggestions, it will depend if it is feasible/possible.
-> I any case, just send me your ideas/suggestions, and we can try to
-> work something out (again, if feasible/possible).
+> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 38 ++++++++++++++++++------------------
+>  1 file changed, 19 insertions(+), 19 deletions(-)
 > 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index c3d11fa..80db3ce 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+...
+> @@ -3226,6 +3227,13 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+>  	if (!tp_features.hotkey)
+>  		return 1;
+>  
+> +	/* does it have an adaptive keyboard, like
+> +	 * the Lenovo Carbon X1 2014 (2nd gen) */
 
-Yup, don't ask, just say what you have to say and we'll discuss it.
+Please follow CodingStyle here:
+
+/*
+ * Sentence formatting.
+ * Second line.
+ */
+
+The above is a question, just state what you're doing:
+
+/*
+ * Check if we have an adaptive keyboard, like on the
+ * Lenovo Carbon X1 2014 (2nd Gen).
+ */
+
+> +	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> +		if ((hkeyv >> 8) == 2)
+> +			tp_features.has_adaptive_kbd = true;
+> +	}
+> +
+>  	quirks = tpacpi_check_quirks(tpacpi_hotkey_qtable,
+>  				     ARRAY_SIZE(tpacpi_hotkey_qtable));
+>  
+> @@ -3834,28 +3842,22 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+>  
+>  static void hotkey_suspend(void)
+>  {
+> -	int hkeyv;
+> -
+>  	/* Do these on suspend, we get the events on early resume! */
+>  	hotkey_wakeup_reason = TP_ACPI_WAKEUP_NONE;
+>  	hotkey_autosleep_ack = 0;
+>  
+>  	/* save previous mode of adaptive keyboard of X1 Carbon */
+> -	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> -		if ((hkeyv >> 8) == 2) {
+> -			if (!acpi_evalf(hkey_handle,
+> -						&adaptive_keyboard_prev_mode,
+> -						"GTRW", "dd", 0)) {
+> -				pr_err("Cannot read adaptive keyboard mode.\n");
+> -			}
+> +	if (tp_features.has_adaptive_kbd) {
+> +		if (!acpi_evalf(hkey_handle,
+> +					&adaptive_keyboard_prev_mode,
+> +					"GTRW", "dd", 0)) {
+> +			pr_err("Cannot read adaptive keyboard mode.\n");
+>  		}
+>  	}
+>  }
+>  
+>  static void hotkey_resume(void)
+>  {
+> -	int hkeyv;
+> -
+>  	tpacpi_disable_brightness_delay();
+>  
+>  	if (hotkey_status_set(true) < 0 ||
+> @@ -3870,14 +3872,12 @@ static void hotkey_resume(void)
+>  	hotkey_poll_setup_safe(false);
+>  
+>  	/* restore previous mode of adapive keyboard of X1 Carbon */
+> -	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> -		if ((hkeyv >> 8) == 2) {
+> -			if (!acpi_evalf(hkey_handle,
+> -						NULL,
+> -						"STRW", "vd",
+> -						adaptive_keyboard_prev_mode)) {
+> -				pr_err("Cannot set adaptive keyboard mode.\n");
+> -			}
+> +	if (tp_features.has_adaptive_kbd) {
+> +		if (!acpi_evalf(hkey_handle,
+> +					NULL,
+> +					"STRW", "vd",
+> +					adaptive_keyboard_prev_mode)) {
+
+You've saved a level of indentation, please group the arguments into fewer
+lines, should be two instead of four.
+
+Otherwise, looks good.
+
 -- 
 Darren Hart
 Intel Open Source Technology Center
