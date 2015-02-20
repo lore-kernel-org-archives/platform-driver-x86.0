@@ -1,76 +1,57 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: Laptop Keyboard Backlight not turning off / not controllable
-Date: Fri, 20 Feb 2015 08:28:56 +0900
-Message-ID: <20150219232855.GA29569@taihen.jp>
-References: <BAY172-W15A4C40FEAA2F23CFEFAC0C22D0@phx.gbl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: toshiba_acpi.c
+Date: Thu, 19 Feb 2015 21:00:51 -0800
+Message-ID: <20150220050051.GA790@fury.dvhart.com>
+References: <1424291222.2455.3.camel@gmail.com>
+ <CAGdLNWFy-awfrKEDZJ2paG3-R+xbVUYJ+JfPxpMExSdG_WrLAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pa0-f41.google.com ([209.85.220.41]:34707 "EHLO
-	mail-pa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751834AbbBSX3D convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:45765 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751553AbbBTFAw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 19 Feb 2015 18:29:03 -0500
-Received: by pabrd3 with SMTP id rd3so3405318pab.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Feb 2015 15:29:02 -0800 (PST)
+	Fri, 20 Feb 2015 00:00:52 -0500
 Content-Disposition: inline
-In-Reply-To: <BAY172-W15A4C40FEAA2F23CFEFAC0C22D0@phx.gbl>
+In-Reply-To: <CAGdLNWFy-awfrKEDZJ2paG3-R+xbVUYJ+JfPxpMExSdG_WrLAw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dominik Matta <dominik@matta.sk>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: Tom Mannerhagen <tom.mannerhagen@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Thu, Feb 19, 2015 at 04:02:46PM +0000, Dominik Matta wrote:
-> Laptop Keyboard Backlight not turning off / not controllable
-=2E..
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
- If (LEqual (Local0, 0x0B))
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
- {
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 And (Local1, One, Local1)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 If (LEqual (Local1, Zero))
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 {
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 If (ECOK)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 {
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 If (LLess (Local2, 0x03))
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 {
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Store (Local2, ^^EC0.K=
-BBL)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Store (One, ^^EC0.KEXE=
-)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 }
->=20
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 Return (Arg0)
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 }
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
- }
->=20
+On Wed, Feb 18, 2015 at 02:07:43PM -0700, Azael Avalos wrote:
+> Hi there,
+> 
+> 2015-02-18 13:27 GMT-07:00 Tom Mannerhagen <tom.mannerhagen@gmail.com>:
+> > Hi
+> >
+> > My name is Tom Mannerhagen.
+> > I am writing to you because I can see you're somehow involved in the
+> > last version of toshiba_acpi.c
+> 
+> Well, right now I'm taking care of the driver (adding features, cleaning,
+> etc.), so I guess I'm the "maintainer" as of now ;-)
+> 
+> >
+> > I have some issues / suggestions to the driver, but since I am no coder,
+> > my ideas won't bear any fruit unless I get some help.
+> >
+> > Can I send my thoughts this way?
+> 
+> I have no problem, tho' I'm not sure if the mailing list is the right place
+> for this.
+> Darren, any input here?
 
-> [=A0=A0 19.205792] sony_laptop: caching handle 0x0153 (offset: 0x0b)
+Yup, this is the place. Everything happens on the mailing list :-) (I pointed
+Tom here).
 
-This is the method that controls backlight on your vaio model. I can
-attempt a patch over the weekend unless you want to give it a go first.
-I don't see any obvious method to control timeouts compared to other
-models and kbdbl_ctl->base needs to be 0 for your model.
+> 
+> As per your ideas/suggestions, it will depend if it is feasible/possible.
+> I any case, just send me your ideas/suggestions, and we can try to
+> work something out (again, if feasible/possible).
+> 
 
-What options to you have in windows to control backlight? Just always
-on/auto/off?
-
---=20
-mattia
-:wq!
+Yup, don't ask, just say what you have to say and we'll discuss it.
+-- 
+Darren Hart
+Intel Open Source Technology Center
