@@ -1,49 +1,128 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [RFT PATCH v3 1/2] compal-laptop: Fix leaking hwmon device
-Date: Fri, 20 Feb 2015 14:13:34 +0100
-Message-ID: <1424438015-3006-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Guenter Roeck <linux@roeck-us.net>, Matthew Garrett <matthew.garrett@nebula.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH 1/6] thinkpad_acpi: Remember adaptive kbd presence
+Date: Fri, 20 Feb 2015 14:51:06 +0100
+Message-ID: <1424440266.4347.5.camel@hadess.net>
+References: <1424292808.32581.45.camel@hadess.net>
+	 <20150220050843.GB790@fury.dvhart.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45958 "EHLO
+	relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754513AbbBTNxF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 20 Feb 2015 08:53:05 -0500
+In-Reply-To: <20150220050843.GB790@fury.dvhart.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 
-The commit c2be45f09bb0 ("compal-laptop: Use
-devm_hwmon_device_register_with_groups") wanted to change the
-registering of hwmon device to resource-managed version. It mostly did
-it except the main thing - it forgot to use devm-like function so the
-hwmon device leaked after device removal or probe failure.
+On Thu, 2015-02-19 at 21:08 -0800, Darren Hart wrote:
+> On Wed, Feb 18, 2015 at 09:53:28PM +0100, Bastien Nocera wrote:
+> > Rather than checking on each suspend and resume whether the laptop
+> > has an adaptive keyboard, check when the driver is initialised.
+> 
+> Reasonable.
+> 
+> > 
+> > Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> > ---
+> >  drivers/platform/x86/thinkpad_acpi.c | 38 ++++++++++++++++++------------------
+> >  1 file changed, 19 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> > index c3d11fa..80db3ce 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> ...
+> > @@ -3226,6 +3227,13 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+> >  	if (!tp_features.hotkey)
+> >  		return 1;
+> >  
+> > +	/* does it have an adaptive keyboard, like
+> > +	 * the Lenovo Carbon X1 2014 (2nd gen) */
+> 
+> Please follow CodingStyle here:
+> 
+> /*
+>  * Sentence formatting.
+>  * Second line.
+>  */
+> 
+> The above is a question, just state what you're doing:
+> 
+> /*
+>  * Check if we have an adaptive keyboard, like on the
+>  * Lenovo Carbon X1 2014 (2nd Gen).
+>  */
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Fixes: c2be45f09bb0 ("compal-laptop: Use devm_hwmon_device_register_with_groups")
-Cc: <stable@vger.kernel.org>
+Done.
 
----
-Changes since v2:
-1. None.
+> > +	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> > +		if ((hkeyv >> 8) == 2)
+> > +			tp_features.has_adaptive_kbd = true;
+> > +	}
+> > +
+> >  	quirks = tpacpi_check_quirks(tpacpi_hotkey_qtable,
+> >  				     ARRAY_SIZE(tpacpi_hotkey_qtable));
+> >  
+> > @@ -3834,28 +3842,22 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+> >  
+> >  static void hotkey_suspend(void)
+> >  {
+> > -	int hkeyv;
+> > -
+> >  	/* Do these on suspend, we get the events on early resume! */
+> >  	hotkey_wakeup_reason = TP_ACPI_WAKEUP_NONE;
+> >  	hotkey_autosleep_ack = 0;
+> >  
+> >  	/* save previous mode of adaptive keyboard of X1 Carbon */
+> > -	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> > -		if ((hkeyv >> 8) == 2) {
+> > -			if (!acpi_evalf(hkey_handle,
+> > -						&adaptive_keyboard_prev_mode,
+> > -						"GTRW", "dd", 0)) {
+> > -				pr_err("Cannot read adaptive keyboard mode.\n");
+> > -			}
+> > +	if (tp_features.has_adaptive_kbd) {
+> > +		if (!acpi_evalf(hkey_handle,
+> > +					&adaptive_keyboard_prev_mode,
+> > +					"GTRW", "dd", 0)) {
+> > +			pr_err("Cannot read adaptive keyboard mode.\n");
+> >  		}
+> >  	}
+> >  }
+> >  
+> >  static void hotkey_resume(void)
+> >  {
+> > -	int hkeyv;
+> > -
+> >  	tpacpi_disable_brightness_delay();
+> >  
+> >  	if (hotkey_status_set(true) < 0 ||
+> > @@ -3870,14 +3872,12 @@ static void hotkey_resume(void)
+> >  	hotkey_poll_setup_safe(false);
+> >  
+> >  	/* restore previous mode of adapive keyboard of X1 Carbon */
+> > -	if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> > -		if ((hkeyv >> 8) == 2) {
+> > -			if (!acpi_evalf(hkey_handle,
+> > -						NULL,
+> > -						"STRW", "vd",
+> > -						adaptive_keyboard_prev_mode)) {
+> > -				pr_err("Cannot set adaptive keyboard mode.\n");
+> > -			}
+> > +	if (tp_features.has_adaptive_kbd) {
+> > +		if (!acpi_evalf(hkey_handle,
+> > +					NULL,
+> > +					"STRW", "vd",
+> > +					adaptive_keyboard_prev_mode)) {
+> 
+> You've saved a level of indentation, please group the arguments into fewer
+> lines, should be two instead of four.
+> 
+> Otherwise, looks good.
 
-Changes since v1:
-1. New patch.
----
- drivers/platform/x86/compal-laptop.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 15c0fab2bfa1..eb9885e7fb0e 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -1026,9 +1026,9 @@ static int compal_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	hwmon_dev = hwmon_device_register_with_groups(&pdev->dev,
--						      "compal", data,
--						      compal_hwmon_groups);
-+	hwmon_dev = devm_hwmon_device_register_with_groups(&pdev->dev,
-+							   "compal", data,
-+							   compal_hwmon_groups);
- 	if (IS_ERR(hwmon_dev)) {
- 		err = PTR_ERR(hwmon_dev);
- 		goto remove;
--- 
-1.9.1
+Done.
