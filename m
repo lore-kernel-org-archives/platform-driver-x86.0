@@ -1,64 +1,46 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 5/6] input: Add keycodes used by Lenovo Carbon X1 2014
-Date: Mon, 23 Feb 2015 11:10:13 -0300
-Message-ID: <1424700613.3136058.231192293.03A600A7@webmail.messagingengine.com>
-References: <1424292832.32581.49.camel@hadess.net>
- <20150218233420.GB23265@khazad-dum.debian.net>
- <1424686542.28361.10.camel@hadess.net>
- <1424688591.3045289.231119453.42C70082@webmail.messagingengine.com>
- <1424691695.28361.15.camel@hadess.net>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 6/7] thinkpad_acpi: More Carbon X1 2014 keys
+Date: Mon, 23 Feb 2015 07:51:21 -0800
+Message-ID: <CALCETrV5QEitQg=czkejvvxCFa77pe+1osWPc0mdHdEZyBh3Yw@mail.gmail.com>
+References: <1424443477.22910.18.camel@hadess.net> <54E78AAB.2020604@mit.edu> <1424686145.28361.9.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1424691695.28361.15.camel@hadess.net>
-Sender: linux-input-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1424686145.28361.9.camel@hadess.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bastien Nocera <hadess@hadess.net>
-Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 23, 2015, at 08:41, Bastien Nocera wrote:
-> > You could opt to change some of those keypresses dinamically into
-> > driver-specific
-> > ACPI events, by setting the keymap entry to KEY_RESERVED.  The driver
-> > will
-> > issue HKEY events in that case. That will be an viable alternative for
-> > some of the new
-> > keys.
-> 
-> I don't understand what you mean here.
+On Mon, Feb 23, 2015 at 2:09 AM, Bastien Nocera <hadess@hadess.net> wrote:
+> On Fri, 2015-02-20 at 11:27 -0800, Andy Lutomirski wrote:
+>> On 02/20/2015 06:44 AM, Bastien Nocera wrote:
+>> > +           KEY_MICCANCEL_MODE,  /* Microphone cancellation */
+>>
+>> What's this?  We already have KEY_MICMUTE.  Is this different?  If so,
+>> can you improve the comment a bit?
+>
+> I don't think the comment needs improving. This is the device driver
+> part of the patch series. If comment was required, it would in the
+> commit adding the keycode to input.h. We're discussing that with Dmitry.
+>
 
-I mean please set anything that you don't have a keycode for in the new
-keymaps to either KEY_RESERVED (will issue an HKEY ACPI event) or
-KEY_UNKNOWN (will issue an input EV_KEY event for KEY_UNKNOWN grouped
-with an EV_MSC EV MSC_SCAN event that allows userspace to know which key
-was pressed/released even if it has no specific keycode).
+Right, sorry, I replied to the wrong patch.
 
-> > The beauty of it is that keymaps are configurable in run-time, so
-> > userspace can
-> > just set any key entries it wants to change to something else, and ACPI
-> > events will be
-> > suppressed if the entry is not set to KEY_RESERVED anymore.
-> 
-> Keymaps are already configurable at run-time, that's how udev changes
-> keymaps. Or did you mean something else?
+>> The answer may be obvious to anyone who has an awful X1 carbon gen 2
+>> keyboard, but these KEY_XYZ defines should IMO be clear enough that even
+>> people without the hardware can figure out what's going on.
+>
+> I'll make sure to link this in the input.h patch:
+> http://www.lenovo.com/shop/americas/content/user_guides/x1carbon_2_ug_en.pdf
+>
+> In any case, it doesn't look like this particular keycode will make it.
+>
 
-I mean if anyone wants to change something that is KEY_RESERVED or
-KEY_UNKNOWN they can configure the driver to do so at runtime through
-the input device interface, i.e. get udev to do it.
+Oh, it's microphone *noise* cancellation.  I assumed it somehow
+cancelled the microphone, and I was a bit confused.
 
-Nothing new, there.
+If the keycode ends up getting added, could you add the word "noise" somewhere?
 
-> > We need to be careful with tpacpi_input_send_key_masked(). If any of the
-> > codepaths
-> > could call it from the adaptative keyboard handling code,
-> 
-> But we're not calling it from there, are we?
-
-Probably not, but it would be a good idea to double-check.
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Thanks,
+Andy
