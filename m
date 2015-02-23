@@ -1,46 +1,51 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 6/7] thinkpad_acpi: More Carbon X1 2014 keys
-Date: Mon, 23 Feb 2015 07:51:21 -0800
-Message-ID: <CALCETrV5QEitQg=czkejvvxCFa77pe+1osWPc0mdHdEZyBh3Yw@mail.gmail.com>
-References: <1424443477.22910.18.camel@hadess.net> <54E78AAB.2020604@mit.edu> <1424686145.28361.9.camel@hadess.net>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 3/6] thinkpad_acpi: Add adaptive_kbd_mode sysfs attr
+Date: Mon, 23 Feb 2015 14:00:38 -0300
+Message-ID: <1424710838.3175803.231288777.556EDA1B@webmail.messagingengine.com>
+References: <1424292824.32581.47.camel@hadess.net>
+ <20150220052831.GD790@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424686145.28361.9.camel@hadess.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20150220052831.GD790@fury.dvhart.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Bastien Nocera <hadess@hadess.net>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 23, 2015 at 2:09 AM, Bastien Nocera <hadess@hadess.net> wrote:
-> On Fri, 2015-02-20 at 11:27 -0800, Andy Lutomirski wrote:
->> On 02/20/2015 06:44 AM, Bastien Nocera wrote:
->> > +           KEY_MICCANCEL_MODE,  /* Microphone cancellation */
->>
->> What's this?  We already have KEY_MICMUTE.  Is this different?  If so,
->> can you improve the comment a bit?
->
-> I don't think the comment needs improving. This is the device driver
-> part of the patch series. If comment was required, it would in the
-> commit adding the keycode to input.h. We're discussing that with Dmitry.
->
+On Fri, Feb 20, 2015, at 02:28, Darren Hart wrote:
+> On Wed, Feb 18, 2015 at 09:53:44PM +0100, Bastien Nocera wrote:
+> 
+> Commit message please.
+> 
+> > Signed-off-by: Bastien Nocera <hadess@hadess.net>
+> > ---
+> >  drivers/platform/x86/thinkpad_acpi.c | 71 +++++++++++++++++++++++++++++++-----
+> >  1 file changed, 62 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> > index a6dd017..562d958 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> 
+> ...
+> 
+> > +static struct device_attribute dev_attr_adaptive_kbd_mode =
+> > +	__ATTR(adaptive_kbd_mode, S_IWUSR | S_IRUGO,
+> > +		adaptive_kbd_mode_show, adaptive_kbd_mode_store);
+> > +
+> 
+> Please use DEVICE_ATTR_RW() macros for new sysfs files.
+> 
+> I'd very much like to see a cleanup of the driver to use these as well.
+> 
+> Henrique, your thoughts / preference?
 
-Right, sorry, I replied to the wrong patch.
+Converting to DEVICE_ATTR_RW/RO would be welcome.
 
->> The answer may be obvious to anyone who has an awful X1 carbon gen 2
->> keyboard, but these KEY_XYZ defines should IMO be clear enough that even
->> people without the hardware can figure out what's going on.
->
-> I'll make sure to link this in the input.h patch:
-> http://www.lenovo.com/shop/americas/content/user_guides/x1carbon_2_ug_en.pdf
->
-> In any case, it doesn't look like this particular keycode will make it.
->
-
-Oh, it's microphone *noise* cancellation.  I assumed it somehow
-cancelled the microphone, and I was a bit confused.
-
-If the keycode ends up getting added, could you add the word "noise" somewhere?
-
-Thanks,
-Andy
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
