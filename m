@@ -1,98 +1,148 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH 5/7] input: Add keycodes used by Lenovo Carbon X1 2014
-Date: Tue, 24 Feb 2015 10:00:34 +0100
-Message-ID: <1424768434.28361.18.camel@hadess.net>
-References: <1424443473.22910.17.camel@hadess.net>
-	 <CAN+gG=HxwAA=f2a-vS6-voCRNQO-2pwnK64qz0L_b6-R2bScvQ@mail.gmail.com>
-	 <20150220184000.GB20060@dtor-glaptop>
-	 <1424458467.22910.35.camel@hadess.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH] x86: wmi: Remove private %pUL implementation
+Date: Tue, 24 Feb 2015 15:15:30 +0100
+Message-ID: <1424787330-26770-1-git-send-email-linux@rasmusvillemoes.dk>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:47326 "EHLO
-	relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751225AbbBXJCO (ORCPT
+Received: from mail-la0-f52.google.com ([209.85.215.52]:38491 "EHLO
+	mail-la0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752942AbbBXOPu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 24 Feb 2015 04:02:14 -0500
-In-Reply-To: <1424458467.22910.35.camel@hadess.net>
+	Tue, 24 Feb 2015 09:15:50 -0500
+Received: by lamq1 with SMTP id q1so25910974lam.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Feb 2015 06:15:48 -0800 (PST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Fri, 2015-02-20 at 19:54 +0100, Bastien Nocera wrote:
-> Hey Dmitry,
-> 
-> On Fri, 2015-02-20 at 10:40 -0800, Dmitry Torokhov wrote:
-> > On Fri, Feb 20, 2015 at 10:04:04AM -0500, Benjamin Tissoires wrote:
-> > > On Fri, Feb 20, 2015 at 9:44 AM, Bastien Nocera <hadess@hadess.net> wrote:
-> > > > Signed-off-by: Bastien Nocera <hadess@hadess.net>
-> > > > ---
-> > > >  include/uapi/linux/input.h | 10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >
-> > > > diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
-> > > > index b0a8130..affe40e 100644
-> > > > --- a/include/uapi/linux/input.h
-> > > > +++ b/include/uapi/linux/input.h
-> > > > @@ -740,6 +740,16 @@ struct input_keymap_entry {
-> > > >  #define KEY_BRIGHTNESS_MIN             0x250   /* Set Brightness to Minimum */
-> > > >  #define KEY_BRIGHTNESS_MAX             0x251   /* Set Brightness to Maximum */
-> > > >
-> > > > +#define KEY_CLIPPING_TOOL              0x252   /* Screenshot clipping tool */
-> > 
-> > Do we have users for this?
-> 
-> Bearing in mind that most of those keys won't be usable in X11, but
-> should be in Wayland, it might take a little while to actually get used,
-> but I would add support for this "clipping tool" key in GNOME. Most
-> likely to start a screenshoting tool in selection mode.
-> 
-> > > > +#define KEY_CLOUD                      0x253   /* Cloud Settings */
-> > 
-> > Just no. What is cloud settings? Use KEY_VENDOR if you must for this vendor
-> > "added value" junk they come up on keyboards year after year. It used to be
-> > WWW, not cloud, I bet in 2016 someone will come up with "IoT"-dedicated key.
-> 
-> The button actually looks like a Cloud, see page 46 of this guide:
-> http://www.lenovo.com/shop/americas/content/user_guides/x1carbon_2_ug_en.pdf
-> 
-> In GNOME, I would make this start the "Online Accounts" configuration.
-> I'm fine with renaming it, but I would prefer something more precise
-> than KEY_VENDOR. KEY_WWW would be fine by me.
-> 
-> > > > +#define KEY_CAMERA_GESTURES            0x254   /* Toggle Camera gestures */
-> 
-> This wouldn't get used directly in GNOME.
-> 
-> > > > +#define KEY_NEW_TAB                    0x255   /* Open a new tab */
-> 
-> This would get used.
-> 
-> > > > +#define KEY_MICUP                      0x256   /* Microphone Up */
-> > > > +#define KEY_MICDOWN                    0x257   /* Microphone Down */
-> 
-> Those would get used as well.
-> 
-> > > > +#define KEY_MICCANCEL_MODE             0x258   /* Toggle Microphone cancellation mode */
-> > > > +#define KEY_CAMERA_ZOOM_MODE           0x259   /* Toggle camera zoom mode */
-> 
-> These 2 wouldn't get used directly in GNOME.
-> 
-> > > > +#define KEY_ROTATE_DISPLAY             0x25a   /* Rotate screen by 90 degrees */
-> > > > +
-> > > 
-> > > This one should be acked by Dmitry (in CC)
-> > > 
-> > 
-> > Some of these (like microphone volume up/down) are generic and reasonable, but
-> > I need to know if there will be any users for these newly defined keys.
-> 
-> Answers to this in-line above. I'm fine with replacing the keycodes for
-> those keys with something that more or less corresponds to the
-> pictograms, especially the "Toggle voice-recognition" and "Toggle
-> camera-gestures function" are present in all the keyboard modes.
+The work performed by wmi_gtoa is equivalent to simply sprintf(out,
+"%pUL", in), so one could replace its body by this. However, most
+users feed the result directly as a %s argument to some other function
+which also understands the %p extensions (they all ultimately use
+vsnprintf), so we can eliminate some stack buffers and quite a bit of
+code by just using %pUL directly.
 
-Any more ideas about which keycodes I should add and which ones I should
-replace?
+In wmi_dev_uevent I'm not sure whether there's room for a
+nul-terminator in env->buf, so I've just replaced wmi_gtoa with the
+equivalent sprintf call.
+
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/platform/x86/wmi.c | 51 ++++++----------------------------------------
+ 1 file changed, 6 insertions(+), 45 deletions(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 737e56d46f61..ebc92e964771 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -195,34 +195,6 @@ static bool wmi_parse_guid(const u8 *src, u8 *dest)
+ 	return true;
+ }
+ 
+-/*
+- * Convert a raw GUID to the ACII string representation
+- */
+-static int wmi_gtoa(const char *in, char *out)
+-{
+-	int i;
+-
+-	for (i = 3; i >= 0; i--)
+-		out += sprintf(out, "%02X", in[i] & 0xFF);
+-
+-	out += sprintf(out, "-");
+-	out += sprintf(out, "%02X", in[5] & 0xFF);
+-	out += sprintf(out, "%02X", in[4] & 0xFF);
+-	out += sprintf(out, "-");
+-	out += sprintf(out, "%02X", in[7] & 0xFF);
+-	out += sprintf(out, "%02X", in[6] & 0xFF);
+-	out += sprintf(out, "-");
+-	out += sprintf(out, "%02X", in[8] & 0xFF);
+-	out += sprintf(out, "%02X", in[9] & 0xFF);
+-	out += sprintf(out, "-");
+-
+-	for (i = 10; i <= 15; i++)
+-		out += sprintf(out, "%02X", in[i] & 0xFF);
+-
+-	*out = '\0';
+-	return 0;
+-}
+-
+ static bool find_guid(const char *guid_string, struct wmi_block **out)
+ {
+ 	char tmp[16], guid_input[16];
+@@ -458,11 +430,7 @@ EXPORT_SYMBOL_GPL(wmi_set_block);
+ 
+ static void wmi_dump_wdg(const struct guid_block *g)
+ {
+-	char guid_string[37];
+-
+-	wmi_gtoa(g->guid, guid_string);
+-
+-	pr_info("%s:\n", guid_string);
++	pr_info("%pUL:\n", g->guid);
+ 	pr_info("\tobject_id: %c%c\n", g->object_id[0], g->object_id[1]);
+ 	pr_info("\tnotify_id: %02X\n", g->notify_id);
+ 	pr_info("\treserved: %02X\n", g->reserved);
+@@ -662,7 +630,6 @@ EXPORT_SYMBOL_GPL(wmi_has_guid);
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	char guid_string[37];
+ 	struct wmi_block *wblock;
+ 
+ 	wblock = dev_get_drvdata(dev);
+@@ -671,9 +638,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 		return strlen(buf);
+ 	}
+ 
+-	wmi_gtoa(wblock->gblock.guid, guid_string);
+-
+-	return sprintf(buf, "wmi:%s\n", guid_string);
++	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ 
+@@ -696,7 +661,7 @@ static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	if (!wblock)
+ 		return -ENOMEM;
+ 
+-	wmi_gtoa(wblock->gblock.guid, guid_string);
++	sprintf(guid_string, "%pUL", wblock->gblock.guid);
+ 
+ 	strcpy(&env->buf[env->buflen - 1], "wmi:");
+ 	memcpy(&env->buf[env->buflen - 1 + 4], guid_string, 36);
+@@ -722,12 +687,9 @@ static struct class wmi_class = {
+ static int wmi_create_device(const struct guid_block *gblock,
+ 			     struct wmi_block *wblock, acpi_handle handle)
+ {
+-	char guid_string[37];
+-
+ 	wblock->dev.class = &wmi_class;
+ 
+-	wmi_gtoa(gblock->guid, guid_string);
+-	dev_set_name(&wblock->dev, "%s", guid_string);
++	dev_set_name(&wblock->dev, "%pUL", gblock->guid);
+ 
+ 	dev_set_drvdata(&wblock->dev, wblock);
+ 
+@@ -878,7 +840,6 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
+ 	struct guid_block *block;
+ 	struct wmi_block *wblock;
+ 	struct list_head *p;
+-	char guid_string[37];
+ 
+ 	list_for_each(p, &wmi_block_list) {
+ 		wblock = list_entry(p, struct wmi_block, list);
+@@ -889,8 +850,8 @@ static void acpi_wmi_notify(struct acpi_device *device, u32 event)
+ 			if (wblock->handler)
+ 				wblock->handler(event, wblock->handler_data);
+ 			if (debug_event) {
+-				wmi_gtoa(wblock->gblock.guid, guid_string);
+-				pr_info("DEBUG Event GUID: %s\n", guid_string);
++				pr_info("DEBUG Event GUID: %pUL\n",
++					wblock->gblock.guid);
+ 			}
+ 
+ 			acpi_bus_generate_netlink_event(
+-- 
+2.1.3
