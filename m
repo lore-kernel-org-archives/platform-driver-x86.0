@@ -1,32 +1,41 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: Re: [PATCH 1/7] thinkpad_acpi: Remember adaptive kbd presence
-Date: Thu, 26 Feb 2015 12:22:32 +0100
-Message-ID: <1424949752.2459.14.camel@hadess.net>
-References: <1424443450.22910.13.camel@hadess.net>
-	 <20150226061814.GC7331@fury.dvhart.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 11/20] power_supply: Change ownership from driver to core
+Date: Thu, 26 Feb 2015 12:28:17 +0100
+Message-ID: <1424950097.19456.4.camel@AMDC1943>
+References: <1424692061-30624-1-git-send-email-k.kozlowski@samsung.com>
+ <1424692061-30624-12-git-send-email-k.kozlowski@samsung.com>
+ <20150226004522.GB885@earth> <20150226061438.GB7331@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150226061814.GC7331@fury.dvhart.com>
-Sender: linux-input-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20150226061438.GB7331@fury.dvhart.com>
+Sender: linux-pm-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2015-02-25 at 22:18 -0800, Darren Hart wrote:
-> On Fri, Feb 20, 2015 at 03:44:10PM +0100, Bastien Nocera wrote:
-> > Rather than checking on each suspend and resume whether the laptop
-> > has an adaptive keyboard, check when the driver is initialised.
-> 
-> Bastien, am I awaiting another version of this from you to address comments from
-> Henrique?
+On =C5=9Bro, 2015-02-25 at 22:14 -0800, Darren Hart wrote:
+> On Thu, Feb 26, 2015 at 01:45:22AM +0100, Sebastian Reichel wrote:
 
-I was waiting for more comments on the additional keycodes from Dmitry
-and Jiri.
+(...)
 
-> Henrique, when you're satisfied, please provide a Reviewed-by for the series.
+> > I would like to merge this via the power supply subsystem. Some of
+> > the files being patched are not under my maintainence, though. It
+> > would be nice if I get an Acked-By from their maintainers.
+> >=20
+> > As far as I can see this patch is currently missing feedback from:
+> >=20
+> > arch/x86/platform/olpc: x86 Maintainers
+> > drivers/acpi: Rafael J. Wysocki, Len Brown
+> > drivers/hid: Jiri Kosina
+> > drivers/platform/x86: Darren Hart
+>=20
+> For compal-laptop.c:
+>=20
+> Acked-by: Darren Hart <dvhart@linux.intel.com>
 
-I can send the first 5 patches of that series if you want to land it
-soon.
+Hi Darren,
+
+Could you also look at my other fixes sent few days ago:
 
