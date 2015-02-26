@@ -1,60 +1,80 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 11/20] power_supply: Change ownership from driver to core
-Date: Thu, 26 Feb 2015 12:31:13 +0100
-Message-ID: <1424950273.19456.7.camel@AMDC1943>
-References: <1424692061-30624-1-git-send-email-k.kozlowski@samsung.com>
- <1424692061-30624-12-git-send-email-k.kozlowski@samsung.com>
- <20150226004522.GB885@earth> <20150226061438.GB7331@fury.dvhart.com>
- <1424950097.19456.4.camel@AMDC1943>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: toshiba_acpi.c
+Date: Thu, 26 Feb 2015 09:11:57 -0700
+Message-ID: <CAGdLNWHJw+_F6+ZU4vrpXNvbrq9eHpzpcrx2RrkqKMHRFq5BuA@mail.gmail.com>
+References: <1424291222.2455.3.camel@gmail.com>
+	<CAGdLNWFy-awfrKEDZJ2paG3-R+xbVUYJ+JfPxpMExSdG_WrLAw@mail.gmail.com>
+	<002b01d0513b$94f66380$bee32a80$@gmail.com>
+	<CAGdLNWG3QpDXb+4piAb6+JRwzV2SOf+TGi7MNUOXV__+pgeqWA@mail.gmail.com>
+	<002f01d05197$c95b4da0$5c11e8e0$@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:15561 "EHLO
-	mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932100AbbBZLbS (ORCPT
+Received: from mail-we0-f173.google.com ([74.125.82.173]:42347 "EHLO
+	mail-we0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754201AbbBZQL6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Feb 2015 06:31:18 -0500
-In-reply-to: <1424950097.19456.4.camel@AMDC1943>
+	Thu, 26 Feb 2015 11:11:58 -0500
+Received: by wesw62 with SMTP id w62so12274901wes.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Feb 2015 08:11:57 -0800 (PST)
+In-Reply-To: <002f01d05197$c95b4da0$5c11e8e0$@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Tom Mannerhagen <tom.mannerhagen@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On czw, 2015-02-26 at 12:28 +0100, Krzysztof Kozlowski wrote:
-> On =C5=9Bro, 2015-02-25 at 22:14 -0800, Darren Hart wrote:
-> > On Thu, Feb 26, 2015 at 01:45:22AM +0100, Sebastian Reichel wrote:
->=20
-> (...)
->=20
-> > > I would like to merge this via the power supply subsystem. Some o=
-f
-> > > the files being patched are not under my maintainence, though. It
-> > > would be nice if I get an Acked-By from their maintainers.
-> > >=20
-> > > As far as I can see this patch is currently missing feedback from=
-:
-> > >=20
-> > > arch/x86/platform/olpc: x86 Maintainers
-> > > drivers/acpi: Rafael J. Wysocki, Len Brown
-> > > drivers/hid: Jiri Kosina
-> > > drivers/platform/x86: Darren Hart
-> >=20
-> > For compal-laptop.c:
-> >=20
-> > Acked-by: Darren Hart <dvhart@linux.intel.com>
+Hi Tom,
 
-(previous mail sent by mistake)
+2015-02-26 0:42 GMT-07:00 Tom Mannerhagen <tom.mannerhagen@gmail.com>:
+> Hi Azael
+>
+> I see, but that concerns the alternative map, correct?
 
-Hi Darren,
+Yes
 
-Could you also look at my other fixes sent few days ago:
-https://lkml.org/lkml/2015/2/20/158
-compal-laptop: Check return value of power_supply_register
+> How does the driver tell if it should use the "standard" or alternative mapping?
 
-It touches the same line so the patchset power-supply-rework depends on
-it to avoid conflicts. If the fix looks OK, maybe it could go through
-Sebastian's tree with your ack?
+On the patches that I will send (hopefully later today),
+a call to an HCI function is made, which tells us the hotkey
+events type, so far, there are two types "normal" and "special",
+where "normal" covers all the old key mappings and the
+"special" covers the new one.
 
-Best regards,
-Krzysztof
+>
+> I think I can see some checks are made in the beginning of the driver, it checks for certain ACPI ID's (TOS6200, TOS6207, TOS6028, TOS1900).
+> Are they used to identify the system as a Toshiba or are they used to distinguish which Toshiba-platform it runs on?
+> Perhaps both?
+
+I'm not sure what you men by platform, but those HIDs represent the
+Toshiba Configuration Interface devices (or TVAP - Toshiba Value
+Added Package), and yes, they are used to identify the system
+as a Toshiba laptop, at least as hotkeys, backlight and some other
+system stuff concerns, as there are more IDs on the system, but they
+cover Bluetooth (TOS6205) and Accelerometer (TOS620A).
+
+>
+> If used to tell which Toshiba it runs on, is this somehow used to select mapping of the function-keys?
+>
+> BTW - I have access to a bunch of units and will happily test as time allow.
+> You may need to hand-hold me through the building of the driver and using it in a distro.
+
+Well, as long as you have installed the kernel sources, make and gcc,
+we are fine, I can provide you with a Makefile and the source to test,
+and a simple:
+
+make
+sudo make install
+sudo make load
+
+Will do the trick ;-)
+
+>
+> BR Tom
+>
+
+Cheers
+Azael
+
+
+-- 
+-- El mundo apesta y vosotros apestais tambien --
