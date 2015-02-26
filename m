@@ -1,47 +1,38 @@
-From: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] Documentation/ABI: Add file describing the sysfs entries for toshiba_haps
-Date: Thu, 26 Feb 2015 10:59:33 -0700
-Message-ID: <1424973573-3136-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] fujitsu-laptop: simplify show_brightness_changed()
+Date: Thu, 26 Feb 2015 23:41:43 +0300
+Message-ID: <20150226204143.GF6820@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch adds a new file describing the sysfs entries for the
-toshiba_haps driver.
+->brightness_changed is either 0 or 1, and never a negative.  We can
+just remove this code.
 
-Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/ABI/testing/sysfs-driver-toshiba_haps | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_haps
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-toshiba_haps b/Documentation/ABI/testing/sysfs-driver-toshiba_haps
-new file mode 100644
-index 0000000..a662370
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-toshiba_haps
-@@ -0,0 +1,20 @@
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level
-+Date:		August 16, 2014
-+KernelVersion:	3.17
-+Contact:	Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+Description:	This file controls the built-in accelerometer protection level,
-+		valid values are:
-+			* 0 -> Disabled
-+			* 1 -> Low
-+			* 2 -> Medium
-+			* 3 -> High
-+		The default potection value is set to 2 (Medium).
-+Users:		KToshiba
-+
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/reset_protection
-+Date:		August 16, 2014
-+KernelVersion:	3.17
-+Contact:	Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+Description:	This file turns off the built-in accelerometer for a few
-+		seconds and then restore normal operation. Accepting 1 as the
-+		only parameter.
--- 
-2.2.2
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 2a9afa2..aa5ee98 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -444,14 +444,7 @@ static ssize_t
+ show_brightness_changed(struct device *dev,
+ 			struct device_attribute *attr, char *buf)
+ {
+-
+-	int ret;
+-
+-	ret = fujitsu->brightness_changed;
+-	if (ret < 0)
+-		return ret;
+-
+-	return sprintf(buf, "%i\n", ret);
++	return sprintf(buf, "%i\n", fujitsu->brightness_changed);
+ }
+ 
+ static ssize_t show_lcd_level(struct device *dev,
