@@ -1,51 +1,47 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 2/3] toshiba_haps: Make use of DEVICE_ATTR_{RW, WO} macros
-Date: Thu, 26 Feb 2015 10:58:31 -0700
-Message-ID: <1424973511-3090-3-git-send-email-coproscefalo@gmail.com>
-References: <1424973511-3090-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f173.google.com ([209.85.214.173]:52940 "EHLO
-	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751472AbbBZR6p (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Feb 2015 12:58:45 -0500
-In-Reply-To: <1424973511-3090-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+From: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/3] Documentation/ABI: Add file describing the sysfs entries for toshiba_haps
+Date: Thu, 26 Feb 2015 10:59:33 -0700
+Message-ID: <1424973573-3136-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch makes use of DEVICE_ATTR_{RW, WO} macros, simplifying
-device attributes creation.
+This patch adds a new file describing the sysfs entries for the
+toshiba_haps driver.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/platform/x86/toshiba_haps.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/ABI/testing/sysfs-driver-toshiba_haps | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_haps
 
-diff --git a/drivers/platform/x86/toshiba_haps.c b/drivers/platform/x86/toshiba_haps.c
-index db6cc53..7f2afc6 100644
---- a/drivers/platform/x86/toshiba_haps.c
-+++ b/drivers/platform/x86/toshiba_haps.c
-@@ -100,6 +100,7 @@ static ssize_t protection_level_store(struct device *dev,
- 
- 	return count;
- }
-+static DEVICE_ATTR_RW(protection_level);
- 
- static ssize_t reset_protection_store(struct device *dev,
- 				      struct device_attribute *attr,
-@@ -123,10 +124,7 @@ static ssize_t reset_protection_store(struct device *dev,
- 
- 	return count;
- }
--
--static DEVICE_ATTR(protection_level, S_IRUGO | S_IWUSR,
--		   protection_level_show, protection_level_store);
--static DEVICE_ATTR(reset_protection, S_IWUSR, NULL, reset_protection_store);
-+static DEVICE_ATTR_WO(reset_protection);
- 
- static struct attribute *haps_attributes[] = {
- 	&dev_attr_protection_level.attr,
+diff --git a/Documentation/ABI/testing/sysfs-driver-toshiba_haps b/Documentation/ABI/testing/sysfs-driver-toshiba_haps
+new file mode 100644
+index 0000000..a662370
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-toshiba_haps
+@@ -0,0 +1,20 @@
++What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/protection_level
++Date:		August 16, 2014
++KernelVersion:	3.17
++Contact:	Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++Description:	This file controls the built-in accelerometer protection level,
++		valid values are:
++			* 0 -> Disabled
++			* 1 -> Low
++			* 2 -> Medium
++			* 3 -> High
++		The default potection value is set to 2 (Medium).
++Users:		KToshiba
++
++What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/reset_protection
++Date:		August 16, 2014
++KernelVersion:	3.17
++Contact:	Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++Description:	This file turns off the built-in accelerometer for a few
++		seconds and then restore normal operation. Accepting 1 as the
++		only parameter.
 -- 
 2.2.2
