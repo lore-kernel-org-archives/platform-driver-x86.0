@@ -1,66 +1,32 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 3/3] toshiba_acpi: Fix the enabling of the Special Functions
-Date: Thu, 26 Feb 2015 10:57:14 -0700
-Message-ID: <1424973434-3032-4-git-send-email-coproscefalo@gmail.com>
-References: <1424973434-3032-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1424973434-3032-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/3] toshiba_haps: Some misc changes plus sysfs entries documentation
+Date: Thu, 26 Feb 2015 10:58:29 -0700
+Message-ID: <1424973511-3090-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f177.google.com ([209.85.214.177]:52551 "EHLO
+	mail-ob0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751472AbbBZR6m (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 26 Feb 2015 12:58:42 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Some Toshiba laptops with the "Special Functions" feature enabled
-fail to properly enable such feature unless a specific value is
-used to enable the hotkey events.
+These patches make some misc chanes to the driver, replacing sscanf with
+kstrtoint, DEVICE_ATTR_{RW, WO} macros and adding documentation about
+the sysfs entries.
 
-This patch adds a new function called "*_enable_special_functions",
-that simply makes a call to the HCI_HOTKEY_EVENT call, but this time
-we are using a different parameter to make the "Special Functions"
-mode work as expected.
+Azael Avalos (3):
+  toshiba_haps: Replace sscanf with kstrtoint
+  toshiba_haps: Make use of DEVICE_ATTR_{RW, WO} macros
+  Documentation/ABI: Add file describing the sysfs entries for
+    toshiba_haps
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ .../ABI/testing/sysfs-driver-toshiba_haps          | 20 ++++++++++++++
+ drivers/platform/x86/toshiba_haps.c                | 32 ++++++++++++++--------
+ 2 files changed, 40 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_haps
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 10e0773..09c6a2f 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2336,6 +2336,20 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 	return 0;
- }
- 
-+static void toshiba_acpi_enable_special_functions(struct toshiba_acpi_dev *dev)
-+{
-+	u32 result;
-+
-+	/*
-+	 * Re-activate the hotkeys, but this time, we are using the
-+	 * "Special Functions" mode.
-+	 */
-+	result = hci_write1(dev, HCI_HOTKEY_EVENT,
-+		    HCI_HOTKEY_ENABLE_SPECIAL);
-+	if (result != TOS_SUCCESS)
-+		pr_err("Could not enable the Special Function mode\n");
-+}
-+
- static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned char str,
- 				      struct serio *port)
- {
-@@ -2738,6 +2752,12 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 
- 	ret = toshiba_function_keys_get(dev, &dummy);
- 	dev->kbd_function_keys_supported = !ret;
-+	/*
-+	 * Enable the "Special Functions" mode only if they are
-+	 * supported and if they are activated.
-+	 */
-+	if (dev->kbd_function_keys_supported && dummy == 1)
-+		toshiba_acpi_enable_special_functions(dev);
- 
- 	ret = toshiba_panel_power_on_get(dev, &dummy);
- 	dev->panel_power_on_supported = !ret;
 -- 
 2.2.2
