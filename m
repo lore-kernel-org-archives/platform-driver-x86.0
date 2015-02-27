@@ -1,51 +1,31 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [PATCH 1/7] thinkpad_acpi: Remember adaptive kbd
- presence
-Date: Fri, 27 Feb 2015 08:16:19 -0300
-Message-ID: <1425035779.2000837.233193809.65561A3E@webmail.messagingengine.com>
-References: <1424443450.22910.13.camel@hadess.net>
- <20150226061814.GC7331@fury.dvhart.com>
- <1425035130.1995042.233191101.57145444@webmail.messagingengine.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 20/20] arm: mach-pxa: Decrement the power supply's
+ device reference counter
+Date: Fri, 27 Feb 2015 20:26:59 +0100
+Message-ID: <20150227192659.GA13676@amd>
+References: <1425025201-15926-1-git-send-email-k.kozlowski@samsung.com>
+ <1425025201-15926-21-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38025 "EHLO
-	out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752389AbbB0LQU (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 Feb 2015 06:16:20 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.nyi.internal (Postfix) with ESMTP id C5C6220CD3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 27 Feb 2015 06:16:18 -0500 (EST)
-In-Reply-To: <1425035130.1995042.233191101.57145444@webmail.messagingengine.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Bastien Nocera <hadess@hadess.net>
-Cc: Jiri Kosina <jkosina@suse.cz>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-input@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1425025201-15926-21-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Kosina <jkosina@suse.cz>, David Herrmann <dh.herrmann@googlemail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Milo Kim <milo.kim@ti.com>, Julian Andres Klode <jak@jak-linux.org>, Marc Dietrich <marvin24@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-acpi@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, patches@opensource.wolfsonmicro.com, ac100@lists.launchpad.net, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, Linus Walleij <linus.walleij@linaro.org>, Samuel
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 27, 2015, at 08:05, Henrique de Moraes Holschuh wrote:
-> On Thu, Feb 26, 2015, at 03:18, Darren Hart wrote:
-> > On Fri, Feb 20, 2015 at 03:44:10PM +0100, Bastien Nocera wrote:
-> > > Rather than checking on each suspend and resume whether the laptop
-> > > has an adaptive keyboard, check when the driver is initialised.
-> > 
-> > Bastien, am I awaiting another version of this from you to address
-> > comments from
-> > Henrique?
-> > 
-> > Henrique, when you're satisfied, please provide a Reviewed-by for the
-> > series.
+On Fri 2015-02-27 09:20:01, Krzysztof Kozlowski wrote:
+> Use power_supply_put() to decrement the power supply's device reference
+> counter.
 > 
-> I usually provide a signed-off-by, as I am the thinkpad-acpi driver
-> maintainer... reviewed-by is implied in that case.
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Reviewed-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-Or an Acked-by, for that matter.  Which is what I'd use for this series,
-since there is no reason to gatekeep it and it is being sent to you
-directly.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
