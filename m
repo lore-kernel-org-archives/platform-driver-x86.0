@@ -1,179 +1,253 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 4/4] thinkpad_acpi: Add support for more adaptive kbd buttons
-Date: Mon, 02 Mar 2015 14:17:01 -0300
-Message-ID: <1425316621.517951.234432209.03ABFEFA@webmail.messagingengine.com>
-References: <1425303931.16791.35.camel@hadess.net>
+From: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH] thinkpad_acpi: use DEVICE_ATTR_* macros
+Date: Mon, 02 Mar 2015 18:40:50 +0100
+Message-ID: <1425318050.16791.39.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1425303931.16791.35.camel@hadess.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Bastien Nocera <hadess@hadess.net>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Kosina <jkosina-AlSwsSmVLrQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 2, 2015, at 10:45, Bastien Nocera wrote:
-> This commit adds new elements to the ThinkPad keymaps, and
-> will send key events for keys for which an input.h declaration
-> exists.
-> 
-> Signed-off-by: Bastien Nocera <hadess@hadess.net>
+Use the DEVICE_ATTR_* macros to reduce boiler plate.
 
-Reviewed-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 72 ++++++++++--------------------------
+ 1 file changed, 20 insertions(+), 52 deletions(-)
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 80
->  +++++++++++++++++++++++++++++++++++-
->  1 file changed, 79 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index ae528cf..5d76f18 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -1912,6 +1912,27 @@ enum {   /* hot key scan codes (derived from ACPI
-> DSDT) */
->  	TP_ACPI_HOTKEYSCAN_UNK7,
->  	TP_ACPI_HOTKEYSCAN_UNK8,
->  
-> +       TP_ACPI_HOTKEYSCAN_MUTE2,
-> +       TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
-> +       TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL,
-> +       TP_ACPI_HOTKEYSCAN_CLOUD,
-> +       TP_ACPI_HOTKEYSCAN_UNK9,
-> +       TP_ACPI_HOTKEYSCAN_VOICE,
-> +       TP_ACPI_HOTKEYSCAN_UNK10,
-> +       TP_ACPI_HOTKEYSCAN_GESTURES,
-> +       TP_ACPI_HOTKEYSCAN_UNK11,
-> +       TP_ACPI_HOTKEYSCAN_UNK12,
-> +       TP_ACPI_HOTKEYSCAN_UNK13,
-> +       TP_ACPI_HOTKEYSCAN_CONFIG,
-> +       TP_ACPI_HOTKEYSCAN_NEW_TAB,
-> +       TP_ACPI_HOTKEYSCAN_RELOAD,
-> +       TP_ACPI_HOTKEYSCAN_BACK,
-> +       TP_ACPI_HOTKEYSCAN_MIC_DOWN,
-> +       TP_ACPI_HOTKEYSCAN_MIC_UP,
-> +       TP_ACPI_HOTKEYSCAN_MIC_CANCELLATION,
-> +       TP_ACPI_HOTKEYSCAN_CAMERA_MODE,
-> +       TP_ACPI_HOTKEYSCAN_ROTATE_DISPLAY,
-> +
->  	/* Hotkey keymap size */
->  	TPACPI_HOTKEY_MAP_LEN
->  };
-> @@ -3170,6 +3191,13 @@ static int __init hotkey_init(struct
-> ibm_init_struct *iibm)
->  		/* (assignments unknown, please report if found) */
->  		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
->  		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-> +
-> +               /* No assignments, only used for Adaptive keyboards. */
-> +               KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-> +               KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-> +               KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-> +               KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-> +               KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
->  		},
->  
->  	/* Generic keymap for Lenovo ThinkPads */
-> @@ -3226,6 +3254,35 @@ static int __init hotkey_init(struct
-> ibm_init_struct *iibm)
->  
->  		/* Extra keys in use since the X240 / T440 / T540 */
->  		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_FILE,
-> +
-> +               /*
-> +                * These are the adaptive keyboard keycodes for Carbon X1
-> 2014.
-> +                * The first item in this list is the Mute button which
-> is
-> +                * emitted with 0x103 through
-> +                * adaptive_keyboard_hotkey_notify_hotkey() when the
-> sound
-> +                * symbol is held.
-> +                * We'll need to offset those by 0x20.
-> +                */
-> +               KEY_RESERVED,        /* Mute held, 0x103 */
-> +               KEY_BRIGHTNESS_MIN,  /* Backlight off */
-> +               KEY_RESERVED,        /* Clipping tool */
-> +               KEY_RESERVED,        /* Cloud */
-> +               KEY_RESERVED,
-> +               KEY_VOICECOMMAND,    /* Voice */
-> +               KEY_RESERVED,
-> +               KEY_RESERVED,        /* Gestures */
-> +               KEY_RESERVED,
-> +               KEY_RESERVED,
-> +               KEY_RESERVED,
-> +               KEY_CONFIG,          /* Settings */
-> +               KEY_RESERVED,        /* New tab */
-> +               KEY_REFRESH,         /* Reload */
-> +               KEY_BACK,            /* Back */
-> +               KEY_RESERVED,        /* Microphone down */
-> +               KEY_RESERVED,        /* Microphone up */
-> +               KEY_RESERVED,        /* Microphone cancellation */
-> +               KEY_RESERVED,        /* Camera mode */
-> +               KEY_RESERVED,        /* Rotate display, 0x116 */
->  		},
->  	};
->  
-> @@ -3527,6 +3584,8 @@ static const int adaptive_keyboard_modes[] = {
->  
->  #define DFR_CHANGE_ROW                  0x101
->  #define DFR_SHOW_QUICKVIEW_ROW          0x102
-> +#define FIRST_ADAPTIVE_KEY             0x103
-> +#define ADAPTIVE_KEY_OFFSET            0x020
->  
->  /* press Fn key a while second, it will switch to Function Mode. Then
->   * release Fn key, previous mode be restored.
-> @@ -3582,6 +3641,7 @@ static bool
-> adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
->  {
->  	u32 current_mode = 0;
->  	int new_mode = 0;
-> +       int keycode;
->  
->  	switch (scancode) {
->  	case DFR_CHANGE_ROW:
-> @@ -3614,7 +3674,25 @@ static bool
-> adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
->  		return true;
->  
->  	default:
-> -               return false;
-> +               if (scancode < FIRST_ADAPTIVE_KEY || scancode >
-> FIRST_ADAPTIVE_KEY +
-> +                               TPACPI_HOTKEY_MAP_LEN -
-> ADAPTIVE_KEY_OFFSET) {
-> +                       pr_info("Unhandled adaptive keyboard key:
-> 0x%x\n",
-> +                                       scancode);
-> +                       return false;
-> +               }
-> +               keycode = hotkey_keycode_map[scancode -
-> FIRST_ADAPTIVE_KEY + ADAPTIVE_KEY_OFFSET];
-> +               if (keycode != KEY_RESERVED) {
-> +                       mutex_lock(&tpacpi_inputdev_send_mutex);
-> +
-> +                       input_report_key(tpacpi_inputdev, keycode, 1);
-> +                       input_sync(tpacpi_inputdev);
-> +
-> +                       input_report_key(tpacpi_inputdev, keycode, 0);
-> +                       input_sync(tpacpi_inputdev);
-> +
-> +                       mutex_unlock(&tpacpi_inputdev_send_mutex);
-> +               }
-> +               return true;
->  	}
->  }
->  
-> -- 
-> 2.1.0
-> 
-> 
-
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 064992c..597c6d3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -2669,9 +2669,7 @@ static ssize_t hotkey_enable_store(struct device *dev,
+ 	return count;
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_enable =
+-	__ATTR(hotkey_enable, S_IWUSR | S_IRUGO,
+-		hotkey_enable_show, hotkey_enable_store);
++static DEVICE_ATTR_RW(hotkey_enable);
+ 
+ /* sysfs hotkey mask --------------------------------------------------- */
+ static ssize_t hotkey_mask_show(struct device *dev,
+@@ -2707,9 +2705,7 @@ static ssize_t hotkey_mask_store(struct device *dev,
+ 	return (res) ? res : count;
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_mask =
+-	__ATTR(hotkey_mask, S_IWUSR | S_IRUGO,
+-		hotkey_mask_show, hotkey_mask_store);
++static DEVICE_ATTR_RW(hotkey_mask);
+ 
+ /* sysfs hotkey bios_enabled ------------------------------------------- */
+ static ssize_t hotkey_bios_enabled_show(struct device *dev,
+@@ -2719,8 +2715,7 @@ static ssize_t hotkey_bios_enabled_show(struct device *dev,
+ 	return sprintf(buf, "0\n");
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_bios_enabled =
+-	__ATTR(hotkey_bios_enabled, S_IRUGO, hotkey_bios_enabled_show, NULL);
++static DEVICE_ATTR_RO(hotkey_bios_enabled);
+ 
+ /* sysfs hotkey bios_mask ---------------------------------------------- */
+ static ssize_t hotkey_bios_mask_show(struct device *dev,
+@@ -2732,8 +2727,7 @@ static ssize_t hotkey_bios_mask_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_orig_mask);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_bios_mask =
+-	__ATTR(hotkey_bios_mask, S_IRUGO, hotkey_bios_mask_show, NULL);
++static DEVICE_ATTR_RO(hotkey_bios_mask);
+ 
+ /* sysfs hotkey all_mask ----------------------------------------------- */
+ static ssize_t hotkey_all_mask_show(struct device *dev,
+@@ -2744,8 +2738,7 @@ static ssize_t hotkey_all_mask_show(struct device *dev,
+ 				hotkey_all_mask | hotkey_source_mask);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_all_mask =
+-	__ATTR(hotkey_all_mask, S_IRUGO, hotkey_all_mask_show, NULL);
++static DEVICE_ATTR_RO(hotkey_all_mask);
+ 
+ /* sysfs hotkey recommended_mask --------------------------------------- */
+ static ssize_t hotkey_recommended_mask_show(struct device *dev,
+@@ -2757,9 +2750,7 @@ static ssize_t hotkey_recommended_mask_show(struct device *dev,
+ 			& ~hotkey_reserved_mask);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_recommended_mask =
+-	__ATTR(hotkey_recommended_mask, S_IRUGO,
+-		hotkey_recommended_mask_show, NULL);
++static DEVICE_ATTR_RO(hotkey_recommended_mask);
+ 
+ #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+ 
+@@ -2814,9 +2805,7 @@ static ssize_t hotkey_source_mask_store(struct device *dev,
+ 	return (rc < 0) ? rc : count;
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_source_mask =
+-	__ATTR(hotkey_source_mask, S_IWUSR | S_IRUGO,
+-		hotkey_source_mask_show, hotkey_source_mask_store);
++static DEVICE_ATTR_RW(hotkey_source_mask);
+ 
+ /* sysfs hotkey hotkey_poll_freq --------------------------------------- */
+ static ssize_t hotkey_poll_freq_show(struct device *dev,
+@@ -2848,9 +2837,7 @@ static ssize_t hotkey_poll_freq_store(struct device *dev,
+ 	return count;
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_poll_freq =
+-	__ATTR(hotkey_poll_freq, S_IWUSR | S_IRUGO,
+-		hotkey_poll_freq_show, hotkey_poll_freq_store);
++static DEVICE_ATTR_RW(hotkey_poll_freq);
+ 
+ #endif /* CONFIG_THINKPAD_ACPI_HOTKEY_POLL */
+ 
+@@ -2871,8 +2858,7 @@ static ssize_t hotkey_radio_sw_show(struct device *dev,
+ 			(res == TPACPI_RFK_RADIO_OFF) ? 0 : 1);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_radio_sw =
+-	__ATTR(hotkey_radio_sw, S_IRUGO, hotkey_radio_sw_show, NULL);
++static DEVICE_ATTR_RO(hotkey_radio_sw);
+ 
+ static void hotkey_radio_sw_notify_change(void)
+ {
+@@ -2894,8 +2880,7 @@ static ssize_t hotkey_tablet_mode_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", !!s);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_tablet_mode =
+-	__ATTR(hotkey_tablet_mode, S_IRUGO, hotkey_tablet_mode_show, NULL);
++static DEVICE_ATTR_RO(hotkey_tablet_mode);
+ 
+ static void hotkey_tablet_mode_notify_change(void)
+ {
+@@ -2912,8 +2897,7 @@ static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_wakeup_reason);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_wakeup_reason =
+-	__ATTR(wakeup_reason, S_IRUGO, hotkey_wakeup_reason_show, NULL);
++static DEVICE_ATTR_RO(hotkey_wakeup_reason);
+ 
+ static void hotkey_wakeup_reason_notify_change(void)
+ {
+@@ -2929,9 +2913,7 @@ static ssize_t hotkey_wakeup_hotunplug_complete_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_autosleep_ack);
+ }
+ 
+-static struct device_attribute dev_attr_hotkey_wakeup_hotunplug_complete =
+-	__ATTR(wakeup_hotunplug_complete, S_IRUGO,
+-	       hotkey_wakeup_hotunplug_complete_show, NULL);
++static DEVICE_ATTR_RO(hotkey_wakeup_hotunplug_complete);
+ 
+ static void hotkey_wakeup_hotunplug_complete_notify_change(void)
+ {
+@@ -4222,9 +4204,7 @@ static ssize_t bluetooth_enable_store(struct device *dev,
+ 				attr, buf, count);
+ }
+ 
+-static struct device_attribute dev_attr_bluetooth_enable =
+-	__ATTR(bluetooth_enable, S_IWUSR | S_IRUGO,
+-		bluetooth_enable_show, bluetooth_enable_store);
++static DEVICE_ATTR_RW(bluetooth_enable);
+ 
+ /* --------------------------------------------------------------------- */
+ 
+@@ -4412,9 +4392,7 @@ static ssize_t wan_enable_store(struct device *dev,
+ 			attr, buf, count);
+ }
+ 
+-static struct device_attribute dev_attr_wan_enable =
+-	__ATTR(wwan_enable, S_IWUSR | S_IRUGO,
+-		wan_enable_show, wan_enable_store);
++static DEVICE_ATTR_RW(wan_enable);
+ 
+ /* --------------------------------------------------------------------- */
+ 
+@@ -5191,8 +5169,7 @@ static ssize_t cmos_command_store(struct device *dev,
+ 	return (res) ? res : count;
+ }
+ 
+-static struct device_attribute dev_attr_cmos_command =
+-	__ATTR(cmos_command, S_IWUSR, NULL, cmos_command_store);
++static DEVICE_ATTR_WO(cmos_command);
+ 
+ /* --------------------------------------------------------------------- */
+ 
+@@ -8160,9 +8137,7 @@ static ssize_t fan_pwm1_enable_store(struct device *dev,
+ 	return count;
+ }
+ 
+-static struct device_attribute dev_attr_fan_pwm1_enable =
+-	__ATTR(pwm1_enable, S_IWUSR | S_IRUGO,
+-		fan_pwm1_enable_show, fan_pwm1_enable_store);
++static DEVICE_ATTR_RW(fan_pwm1_enable);
+ 
+ /* sysfs fan pwm1 ------------------------------------------------------ */
+ static ssize_t fan_pwm1_show(struct device *dev,
+@@ -8222,9 +8197,7 @@ static ssize_t fan_pwm1_store(struct device *dev,
+ 	return (rc) ? rc : count;
+ }
+ 
+-static struct device_attribute dev_attr_fan_pwm1 =
+-	__ATTR(pwm1, S_IWUSR | S_IRUGO,
+-		fan_pwm1_show, fan_pwm1_store);
++static DEVICE_ATTR_RW(fan_pwm1);
+ 
+ /* sysfs fan fan1_input ------------------------------------------------ */
+ static ssize_t fan_fan1_input_show(struct device *dev,
+@@ -8241,9 +8214,7 @@ static ssize_t fan_fan1_input_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+-static struct device_attribute dev_attr_fan_fan1_input =
+-	__ATTR(fan1_input, S_IRUGO,
+-		fan_fan1_input_show, NULL);
++static DEVICE_ATTR_RO(fan_fan1_input);
+ 
+ /* sysfs fan fan2_input ------------------------------------------------ */
+ static ssize_t fan_fan2_input_show(struct device *dev,
+@@ -8260,9 +8231,7 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+-static struct device_attribute dev_attr_fan_fan2_input =
+-	__ATTR(fan2_input, S_IRUGO,
+-		fan_fan2_input_show, NULL);
++static DEVICE_ATTR_RO(fan_fan2_input);
+ 
+ /* sysfs fan fan_watchdog (hwmon driver) ------------------------------- */
+ static ssize_t fan_fan_watchdog_show(struct device_driver *drv,
+@@ -8878,8 +8847,7 @@ static ssize_t thinkpad_acpi_pdev_name_show(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%s\n", TPACPI_NAME);
+ }
+ 
+-static struct device_attribute dev_attr_thinkpad_acpi_pdev_name =
+-	__ATTR(name, S_IRUGO, thinkpad_acpi_pdev_name_show, NULL);
++static DEVICE_ATTR_RO(thinkpad_acpi_pdev_name);
+ 
+ /* --------------------------------------------------------------------- */
+ 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+2.1.0
+
+
+
+------------------------------------------------------------------------------
+Dive into the World of Parallel Programming The Go Parallel Website, sponsored
+by Intel and developed in partnership with Slashdot Media, is your hub for all
+things parallel software development, from weekly thought leadership blogs to
+news, videos, case studies, tutorials and more. Take a look and join the 
+conversation now. http://goparallel.sourceforge.net/
