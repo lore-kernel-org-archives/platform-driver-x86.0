@@ -1,151 +1,126 @@
-From: Bastien Nocera <hadess@hadess.net>
-Subject: [PATCH 4/4] thinkpad_acpi: Add support for more adaptive kbd buttons
-Date: Mon, 02 Mar 2015 14:45:31 +0100
-Message-ID: <1425303931.16791.35.camel@hadess.net>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 1/4] thinkpad_acpi: Remember adaptive kbd presence
+Date: Mon, 02 Mar 2015 14:11:31 -0300
+Message-ID: <1425316291.516850.234429205.7068CEE9@webmail.messagingengine.com>
+References: <1425303916.16791.32.camel@hadess.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1425303916.16791.32.camel@hadess.net>
 Sender: linux-input-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
+To: Bastien Nocera <hadess@hadess.net>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input <linux-input@vger.kernel.org>, Jiri Kosina <jkosina@suse.cz>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This commit adds new elements to the ThinkPad keymaps, and
-will send key events for keys for which an input.h declaration
-exists.
+On Mon, Mar 2, 2015, at 10:45, Bastien Nocera wrote:
+> Rather than checking on each suspend and resume whether the laptop
+> has an adaptive keyboard, check when the driver is initialised.
+> 
+> Signed-off-by: Bastien Nocera <hadess@hadess.net>
 
-Signed-off-by: Bastien Nocera <hadess@hadess.net>
----
- drivers/platform/x86/thinkpad_acpi.c | 80 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 79 insertions(+), 1 deletion(-)
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ae528cf..5d76f18 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1912,6 +1912,27 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 	TP_ACPI_HOTKEYSCAN_UNK7,
- 	TP_ACPI_HOTKEYSCAN_UNK8,
- 
-+	TP_ACPI_HOTKEYSCAN_MUTE2,
-+	TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
-+	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL,
-+	TP_ACPI_HOTKEYSCAN_CLOUD,
-+	TP_ACPI_HOTKEYSCAN_UNK9,
-+	TP_ACPI_HOTKEYSCAN_VOICE,
-+	TP_ACPI_HOTKEYSCAN_UNK10,
-+	TP_ACPI_HOTKEYSCAN_GESTURES,
-+	TP_ACPI_HOTKEYSCAN_UNK11,
-+	TP_ACPI_HOTKEYSCAN_UNK12,
-+	TP_ACPI_HOTKEYSCAN_UNK13,
-+	TP_ACPI_HOTKEYSCAN_CONFIG,
-+	TP_ACPI_HOTKEYSCAN_NEW_TAB,
-+	TP_ACPI_HOTKEYSCAN_RELOAD,
-+	TP_ACPI_HOTKEYSCAN_BACK,
-+	TP_ACPI_HOTKEYSCAN_MIC_DOWN,
-+	TP_ACPI_HOTKEYSCAN_MIC_UP,
-+	TP_ACPI_HOTKEYSCAN_MIC_CANCELLATION,
-+	TP_ACPI_HOTKEYSCAN_CAMERA_MODE,
-+	TP_ACPI_HOTKEYSCAN_ROTATE_DISPLAY,
-+
- 	/* Hotkey keymap size */
- 	TPACPI_HOTKEY_MAP_LEN
- };
-@@ -3170,6 +3191,13 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		/* (assignments unknown, please report if found) */
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+
-+		/* No assignments, only used for Adaptive keyboards. */
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		},
- 
- 	/* Generic keymap for Lenovo ThinkPads */
-@@ -3226,6 +3254,35 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 
- 		/* Extra keys in use since the X240 / T440 / T540 */
- 		KEY_CONFIG, KEY_SEARCH, KEY_SCALE, KEY_FILE,
-+
-+		/*
-+		 * These are the adaptive keyboard keycodes for Carbon X1 2014.
-+		 * The first item in this list is the Mute button which is
-+		 * emitted with 0x103 through
-+		 * adaptive_keyboard_hotkey_notify_hotkey() when the sound
-+		 * symbol is held.
-+		 * We'll need to offset those by 0x20.
-+		 */
-+		KEY_RESERVED,        /* Mute held, 0x103 */
-+		KEY_BRIGHTNESS_MIN,  /* Backlight off */
-+		KEY_RESERVED,        /* Clipping tool */
-+		KEY_RESERVED,        /* Cloud */
-+		KEY_RESERVED,
-+		KEY_VOICECOMMAND,    /* Voice */
-+		KEY_RESERVED,
-+		KEY_RESERVED,        /* Gestures */
-+		KEY_RESERVED,
-+		KEY_RESERVED,
-+		KEY_RESERVED,
-+		KEY_CONFIG,          /* Settings */
-+		KEY_RESERVED,        /* New tab */
-+		KEY_REFRESH,         /* Reload */
-+		KEY_BACK,            /* Back */
-+		KEY_RESERVED,        /* Microphone down */
-+		KEY_RESERVED,        /* Microphone up */
-+		KEY_RESERVED,        /* Microphone cancellation */
-+		KEY_RESERVED,        /* Camera mode */
-+		KEY_RESERVED,        /* Rotate display, 0x116 */
- 		},
- 	};
- 
-@@ -3527,6 +3584,8 @@ static const int adaptive_keyboard_modes[] = {
- 
- #define DFR_CHANGE_ROW			0x101
- #define DFR_SHOW_QUICKVIEW_ROW		0x102
-+#define FIRST_ADAPTIVE_KEY		0x103
-+#define ADAPTIVE_KEY_OFFSET		0x020
- 
- /* press Fn key a while second, it will switch to Function Mode. Then
-  * release Fn key, previous mode be restored.
-@@ -3582,6 +3641,7 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
- {
- 	u32 current_mode = 0;
- 	int new_mode = 0;
-+	int keycode;
- 
- 	switch (scancode) {
- 	case DFR_CHANGE_ROW:
-@@ -3614,7 +3674,25 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
- 		return true;
- 
- 	default:
--		return false;
-+		if (scancode < FIRST_ADAPTIVE_KEY || scancode > FIRST_ADAPTIVE_KEY +
-+				TPACPI_HOTKEY_MAP_LEN - ADAPTIVE_KEY_OFFSET) {
-+			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
-+					scancode);
-+			return false;
-+		}
-+		keycode = hotkey_keycode_map[scancode - FIRST_ADAPTIVE_KEY + ADAPTIVE_KEY_OFFSET];
-+		if (keycode != KEY_RESERVED) {
-+			mutex_lock(&tpacpi_inputdev_send_mutex);
-+
-+			input_report_key(tpacpi_inputdev, keycode, 1);
-+			input_sync(tpacpi_inputdev);
-+
-+			input_report_key(tpacpi_inputdev, keycode, 0);
-+			input_sync(tpacpi_inputdev);
-+
-+			mutex_unlock(&tpacpi_inputdev_send_mutex);
-+		}
-+		return true;
- 	}
- }
- 
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 37
+>  ++++++++++++++++++------------------
+>  1 file changed, 18 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index 3b8ceee..763aef0 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -319,6 +319,7 @@ static struct {
+>  	u32 sensors_pdrv_attrs_registered:1;
+>  	u32 sensors_pdev_attrs_registered:1;
+>  	u32 hotkey_poll_active:1;
+> +       u32 has_adaptive_kbd:1;
+>  } tp_features;
+>  
+>  static struct {
+> @@ -3227,6 +3228,15 @@ static int __init hotkey_init(struct
+> ibm_init_struct *iibm)
+>  	if (!tp_features.hotkey)
+>  		return 1;
+>  
+> +       /*
+> +        * Check if we have an adaptive keyboard, like on the
+> +        * Lenovo Carbon X1 2014 (2nd Gen).
+> +        */
+> +       if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> +               if ((hkeyv >> 8) == 2)
+> +                       tp_features.has_adaptive_kbd = true;
+> +       }
+> +
+>  	quirks = tpacpi_check_quirks(tpacpi_hotkey_qtable,
+>  				     ARRAY_SIZE(tpacpi_hotkey_qtable));
+>  
+> @@ -3836,28 +3846,21 @@ static void hotkey_notify(struct ibm_struct *ibm,
+> u32 event)
+>  
+>  static void hotkey_suspend(void)
+>  {
+> -       int hkeyv;
+> -
+>  	/* Do these on suspend, we get the events on early resume! */
+>  	hotkey_wakeup_reason = TP_ACPI_WAKEUP_NONE;
+>  	hotkey_autosleep_ack = 0;
+>  
+>  	/* save previous mode of adaptive keyboard of X1 Carbon */
+> -       if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> -               if ((hkeyv >> 8) == 2) {
+> -                       if (!acpi_evalf(hkey_handle,
+> -                                              
+> &adaptive_keyboard_prev_mode,
+> -                                               "GTRW", "dd", 0)) {
+> -                               pr_err("Cannot read adaptive keyboard
+> mode.\n");
+> -                       }
+> +       if (tp_features.has_adaptive_kbd) {
+> +               if (!acpi_evalf(hkey_handle,
+> &adaptive_keyboard_prev_mode,
+> +                                       "GTRW", "dd", 0)) {
+> +                       pr_err("Cannot read adaptive keyboard mode.\n");
+>  		}
+>  	}
+>  }
+>  
+>  static void hotkey_resume(void)
+>  {
+> -       int hkeyv;
+> -
+>  	tpacpi_disable_brightness_delay();
+>  
+>  	if (hotkey_status_set(true) < 0 ||
+> @@ -3872,14 +3875,10 @@ static void hotkey_resume(void)
+>  	hotkey_poll_setup_safe(false);
+>  
+>  	/* restore previous mode of adapive keyboard of X1 Carbon */
+> -       if (acpi_evalf(hkey_handle, &hkeyv, "MHKV", "qd")) {
+> -               if ((hkeyv >> 8) == 2) {
+> -                       if (!acpi_evalf(hkey_handle,
+> -                                               NULL,
+> -                                               "STRW", "vd",
+> -                                              
+> adaptive_keyboard_prev_mode)) {
+> -                               pr_err("Cannot set adaptive keyboard
+> mode.\n");
+> -                       }
+> +       if (tp_features.has_adaptive_kbd) {
+> +               if (!acpi_evalf(hkey_handle, NULL, "STRW", "vd",
+> +                                       adaptive_keyboard_prev_mode)) {
+> +                       pr_err("Cannot set adaptive keyboard mode.\n");
+>  		}
+>  	}
+>  }
+> -- 
+> 2.1.0
+> 
+> 
+
+
 -- 
-2.1.0
-
-
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
