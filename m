@@ -1,72 +1,63 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 11/20] power_supply: Change ownership from driver to
- core
-Date: Tue, 3 Mar 2015 08:44:01 -0800
-Message-ID: <20150303164401.GC83894@vmdeb7>
-References: <1424692061-30624-1-git-send-email-k.kozlowski@samsung.com>
- <1424692061-30624-12-git-send-email-k.kozlowski@samsung.com>
- <20150226004522.GB885@earth>
- <20150226061438.GB7331@fury.dvhart.com>
- <1424950097.19456.4.camel@AMDC1943>
- <1424950273.19456.7.camel@AMDC1943>
+Subject: Re: [ibm-acpi-devel] [PATCH 1/7] thinkpad_acpi: Remember adaptive
+ kbd presence
+Date: Tue, 3 Mar 2015 08:52:25 -0800
+Message-ID: <20150303165225.GD83894@vmdeb7>
+References: <1424443450.22910.13.camel@hadess.net>
+ <20150226061814.GC7331@fury.dvhart.com>
+ <1425035130.1995042.233191101.57145444@webmail.messagingengine.com>
+ <1425035779.2000837.233193809.65561A3E@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:41362 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:54786 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756354AbbCCQoB (ORCPT
+	with ESMTP id S1755707AbbCCQw1 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 3 Mar 2015 11:44:01 -0500
+	Tue, 3 Mar 2015 11:52:27 -0500
 Content-Disposition: inline
-In-Reply-To: <1424950273.19456.7.camel@AMDC1943>
+In-Reply-To: <1425035779.2000837.233193809.65561A3E@webmail.messagingengine.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-input@vger.kernel.org
 
-On Thu, Feb 26, 2015 at 12:31:13PM +0100, Krzysztof Kozlowski wrote:
-> On czw, 2015-02-26 at 12:28 +0100, Krzysztof Kozlowski wrote:
-> > On =C5=9Bro, 2015-02-25 at 22:14 -0800, Darren Hart wrote:
-> > > On Thu, Feb 26, 2015 at 01:45:22AM +0100, Sebastian Reichel wrote=
-:
-> >=20
-> > (...)
-> >=20
-> > > > I would like to merge this via the power supply subsystem. Some=
- of
-> > > > the files being patched are not under my maintainence, though. =
-It
-> > > > would be nice if I get an Acked-By from their maintainers.
-> > > >=20
-> > > > As far as I can see this patch is currently missing feedback fr=
-om:
-> > > >=20
-> > > > arch/x86/platform/olpc: x86 Maintainers
-> > > > drivers/acpi: Rafael J. Wysocki, Len Brown
-> > > > drivers/hid: Jiri Kosina
-> > > > drivers/platform/x86: Darren Hart
-> > >=20
-> > > For compal-laptop.c:
-> > >=20
-> > > Acked-by: Darren Hart <dvhart@linux.intel.com>
->=20
-> (previous mail sent by mistake)
->=20
-> Hi Darren,
->=20
-> Could you also look at my other fixes sent few days ago:
-> https://lkml.org/lkml/2015/2/20/158
-> compal-laptop: Check return value of power_supply_register
->=20
-> It touches the same line so the patchset power-supply-rework depends =
-on
-> it to avoid conflicts. If the fix looks OK, maybe it could go through
-> Sebastian's tree with your ack?
+On Fri, Feb 27, 2015 at 08:16:19AM -0300, Henrique de Moraes Holschuh wrote:
+> On Fri, Feb 27, 2015, at 08:05, Henrique de Moraes Holschuh wrote:
+> > On Thu, Feb 26, 2015, at 03:18, Darren Hart wrote:
+> > > On Fri, Feb 20, 2015 at 03:44:10PM +0100, Bastien Nocera wrote:
+> > > > Rather than checking on each suspend and resume whether the laptop
+> > > > has an adaptive keyboard, check when the driver is initialised.
+> > > 
+> > > Bastien, am I awaiting another version of this from you to address
+> > > comments from
+> > > Henrique?
+> > > 
+> > > Henrique, when you're satisfied, please provide a Reviewed-by for the
+> > > series.
+> > 
+> > I usually provide a signed-off-by, as I am the thinkpad-acpi driver
+> > maintainer... reviewed-by is implied in that case.
+> 
+> Or an Acked-by, for that matter.  Which is what I'd use for this series,
+> since there is no reason to gatekeep it and it is being sent to you
+> directly.
+> 
 
-Done, and apologies for the delay. Going through Sebastien is preferred=
-, thanks.
+Henrique, I believe I may have overstepped with thinkpad-acpi and dealt with it
+like the other drivers in platform/drivers/x86, when instead I should have been
+leaving it to you. My apologies, it was not intentional.
 
---=20
+Do you typically send pull-requests for the thinkpad-acpi driver
+directly to Linus? Geeze, I see that the tree listed in MAINTAINERS is not even
+mine. Ugh, my sincere apologies.
+
+I would be more than happy to basically ignore anything to thinkpad-acpi until
+after you have provided a review. I can also roll up pull requests from you if
+you prefer to integrate into the platform-drivers-x86 tree as the path to Linus.
+
+How do you want to handle your driver?
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
