@@ -1,38 +1,72 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [RFT PATCH v3 2/2] compal-laptop: Check return value of
- power_supply_register
-Date: Tue, 3 Mar 2015 08:43:14 -0800
-Message-ID: <20150303164314.GB83894@vmdeb7>
-References: <1424438015-3006-1-git-send-email-k.kozlowski@samsung.com>
- <1424438015-3006-2-git-send-email-k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 11/20] power_supply: Change ownership from driver to
+ core
+Date: Tue, 3 Mar 2015 08:44:01 -0800
+Message-ID: <20150303164401.GC83894@vmdeb7>
+References: <1424692061-30624-1-git-send-email-k.kozlowski@samsung.com>
+ <1424692061-30624-12-git-send-email-k.kozlowski@samsung.com>
+ <20150226004522.GB885@earth>
+ <20150226061438.GB7331@fury.dvhart.com>
+ <1424950097.19456.4.camel@AMDC1943>
+ <1424950273.19456.7.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:41362 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756354AbbCCQoB (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 3 Mar 2015 11:44:01 -0500
 Content-Disposition: inline
-In-Reply-To: <1424438015-3006-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1424950273.19456.7.camel@AMDC1943>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Matthew Garrett <matthew.garrett@nebula.com>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, platform-driver-x86@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 
-On Fri, Feb 20, 2015 at 02:13:35PM +0100, Krzysztof Kozlowski wrote:
-> The return value of power_supply_register() call was not checked and
-> even on error probe() function returned 0. If registering failed then
-> during unbind the driver tried to unregister power supply which was not
-> actually registered.
-> 
-> This could lead to memory corruption because power_supply_unregister()
-> unconditionally cleans up given power supply.
-> 
-> Fix this by checking return status of power_supply_register() call. In
-> case of failure, clean up sysfs entries and fail the probe.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Fixes: 9be0fcb5ed46 ("compal-laptop: add JHL90, battery & hwmon interface")
-> Cc: <stable@vger.kernel.org>
+On Thu, Feb 26, 2015 at 12:31:13PM +0100, Krzysztof Kozlowski wrote:
+> On czw, 2015-02-26 at 12:28 +0100, Krzysztof Kozlowski wrote:
+> > On =C5=9Bro, 2015-02-25 at 22:14 -0800, Darren Hart wrote:
+> > > On Thu, Feb 26, 2015 at 01:45:22AM +0100, Sebastian Reichel wrote=
+:
+> >=20
+> > (...)
+> >=20
+> > > > I would like to merge this via the power supply subsystem. Some=
+ of
+> > > > the files being patched are not under my maintainence, though. =
+It
+> > > > would be nice if I get an Acked-By from their maintainers.
+> > > >=20
+> > > > As far as I can see this patch is currently missing feedback fr=
+om:
+> > > >=20
+> > > > arch/x86/platform/olpc: x86 Maintainers
+> > > > drivers/acpi: Rafael J. Wysocki, Len Brown
+> > > > drivers/hid: Jiri Kosina
+> > > > drivers/platform/x86: Darren Hart
+> > >=20
+> > > For compal-laptop.c:
+> > >=20
+> > > Acked-by: Darren Hart <dvhart@linux.intel.com>
+>=20
+> (previous mail sent by mistake)
+>=20
+> Hi Darren,
+>=20
+> Could you also look at my other fixes sent few days ago:
+> https://lkml.org/lkml/2015/2/20/158
+> compal-laptop: Check return value of power_supply_register
+>=20
+> It touches the same line so the patchset power-supply-rework depends =
+on
+> it to avoid conflicts. If the fix looks OK, maybe it could go through
+> Sebastian's tree with your ack?
 
-Acked-by: Darren Hart <dvhart@linux.intel.com>
+Done, and apologies for the delay. Going through Sebastien is preferred=
+, thanks.
 
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
