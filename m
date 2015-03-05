@@ -1,46 +1,64 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 2/2] toshiba_acpi: Add Satellite P50W-B to alternative
- keymap and create new mappings.
-Date: Wed, 4 Mar 2015 17:05:08 -0700
-Message-ID: <CAGdLNWEb0yx4Fum8mMnivChFU8NsKkk9RtwmAd1kgQiZSBjk5A@mail.gmail.com>
-References: <f550a80e50ed5296cb8bc9b6a536c68c05dc66c6.1425502427.git.joseph.salisbury@canonical.com>
-	<2c7d7f26e69b6e28e1f97be2d5021c0c46427d86.1425502427.git.joseph.salisbury@canonical.com>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: git tree
+Date: Thu, 5 Mar 2015 07:47:18 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD01844B76@SHSMSX104.ccr.corp.intel.com>
+References: <C6287702A945AC47BE5DB5DFD4B5C6DD01844A1A@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:44701 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751462AbbCEAFJ (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:46391 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751346AbbCEHuX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 4 Mar 2015 19:05:09 -0500
-In-Reply-To: <2c7d7f26e69b6e28e1f97be2d5021c0c46427d86.1425502427.git.joseph.salisbury@canonical.com>
+	Thu, 5 Mar 2015 02:50:23 -0500
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD01844A1A@SHSMSX104.ccr.corp.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Joseph Salisbury <joseph.salisbury@canonical.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, stable@vger.kernel.org
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: 'Darren Hart' <dvhart@infradead.org>, 'Krzysztof Kozlowski' <k.kozlowski@samsung.com>
 
-Hi there,
-
-2015-03-04 14:52 GMT-07:00 Joseph Salisbury <joseph.salisbury@canonical.com>:
-...
-> +       { KE_KEY, 0x140, { KEY_BRIGHTNESSDOWN } },
-> +       { KE_KEY, 0x141, { KEY_BRIGHTNESSUP } },
-...
-
-These two are not neccesary, as they may collide with "previous song"
-and "playpause" in case Toshiba (or its manufacturers) decide to use
-those keys.
-
-If you can, please test the first two patches from the gmane archive [1],
-they eliminate the need of the DMI matching list. And it would be great
-to have more laptops tested.
-
-[1] http://comments.gmane.org/gmane.linux.drivers.platform.x86.devel/6602
-
-
-Cheers
-Azael
-
-
--- 
--- El mundo apesta y vosotros apestais tambien --
+SGkgRGVhcg0KDQpDb3VsZCB5b3UgY29uZmlybSB0aGUgZ2l0IHRyZWUgaXMgYmVsb3cgdG8gbWFp
+bnRhaW4gcGxhdGZvcm0geDg2IGRyaXZlciA/IElmIG5vdCAsIGNvdWxkIHlvdSB0ZWxsIG1lIHdo
+aWNoIG9uZSBUaGFua3MuDQpJdCByZXBvcnQgbm9uIHJlYWNoYWJsZSB3aGVuIEkgY2xvbmUgaXQu
+DQpnaXQgY2xvbmUgaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9n
+aXQvbWpnNTkvcGxhdGZvcm0tZHJpdmVycy14ODYuZ2l0DQoNCg0KDQpCZXN0IHdpc2hlcw0KUWlw
+ZW5nDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBwbGF0Zm9ybS1kcml2ZXIt
+eDg2LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtb3du
+ZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgRGFycmVuIEhhcnQNClNlbnQ6IFdlZG5l
+c2RheSwgTWFyY2ggMDQsIDIwMTUgMTI6NDQgQU0NClRvOiBLcnp5c3p0b2YgS296bG93c2tpDQpD
+YzogU2ViYXN0aWFuIFJlaWNoZWw7IERtaXRyeSBFcmVtaW4tU29sZW5pa292OyBEYXZpZCBXb29k
+aG91c2U7IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgQ2V6YXJ5IEphY2tpZXdpY3o7IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
+b3JnOyBLeXVuZ21pbiBQYXJrOyBNYXJlayBTenlwcm93c2tpDQpTdWJqZWN0OiBSZTogW1BBVENI
+IHY0IDExLzIwXSBwb3dlcl9zdXBwbHk6IENoYW5nZSBvd25lcnNoaXAgZnJvbSBkcml2ZXIgdG8g
+Y29yZQ0KDQpPbiBUaHUsIEZlYiAyNiwgMjAxNSBhdCAxMjozMToxM1BNICswMTAwLCBLcnp5c3p0
+b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBjencsIDIwMTUtMDItMjYgYXQgMTI6MjggKzAxMDAs
+IEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+ID4gT24gxZtybywgMjAxNS0wMi0yNSBhdCAy
+MjoxNCAtMDgwMCwgRGFycmVuIEhhcnQgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIEZlYiAyNiwgMjAx
+NSBhdCAwMTo0NToyMkFNICswMTAwLCBTZWJhc3RpYW4gUmVpY2hlbCB3cm90ZToNCj4gPiANCj4g
+PiAoLi4uKQ0KPiA+IA0KPiA+ID4gPiBJIHdvdWxkIGxpa2UgdG8gbWVyZ2UgdGhpcyB2aWEgdGhl
+IHBvd2VyIHN1cHBseSBzdWJzeXN0ZW0uIFNvbWUgDQo+ID4gPiA+IG9mIHRoZSBmaWxlcyBiZWlu
+ZyBwYXRjaGVkIGFyZSBub3QgdW5kZXIgbXkgbWFpbnRhaW5lbmNlLCANCj4gPiA+ID4gdGhvdWdo
+LiBJdCB3b3VsZCBiZSBuaWNlIGlmIEkgZ2V0IGFuIEFja2VkLUJ5IGZyb20gdGhlaXIgbWFpbnRh
+aW5lcnMuDQo+ID4gPiA+IA0KPiA+ID4gPiBBcyBmYXIgYXMgSSBjYW4gc2VlIHRoaXMgcGF0Y2gg
+aXMgY3VycmVudGx5IG1pc3NpbmcgZmVlZGJhY2sgZnJvbToNCj4gPiA+ID4gDQo+ID4gPiA+IGFy
+Y2gveDg2L3BsYXRmb3JtL29scGM6IHg4NiBNYWludGFpbmVycw0KPiA+ID4gPiBkcml2ZXJzL2Fj
+cGk6IFJhZmFlbCBKLiBXeXNvY2tpLCBMZW4gQnJvd24NCj4gPiA+ID4gZHJpdmVycy9oaWQ6IEpp
+cmkgS29zaW5hDQo+ID4gPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2OiBEYXJyZW4gSGFydA0KPiA+
+ID4gDQo+ID4gPiBGb3IgY29tcGFsLWxhcHRvcC5jOg0KPiA+ID4gDQo+ID4gPiBBY2tlZC1ieTog
+RGFycmVuIEhhcnQgPGR2aGFydEBsaW51eC5pbnRlbC5jb20+DQo+IA0KPiAocHJldmlvdXMgbWFp
+bCBzZW50IGJ5IG1pc3Rha2UpDQo+IA0KPiBIaSBEYXJyZW4sDQo+IA0KPiBDb3VsZCB5b3UgYWxz
+byBsb29rIGF0IG15IG90aGVyIGZpeGVzIHNlbnQgZmV3IGRheXMgYWdvOg0KPiBodHRwczovL2xr
+bWwub3JnL2xrbWwvMjAxNS8yLzIwLzE1OA0KPiBjb21wYWwtbGFwdG9wOiBDaGVjayByZXR1cm4g
+dmFsdWUgb2YgcG93ZXJfc3VwcGx5X3JlZ2lzdGVyDQo+IA0KPiBJdCB0b3VjaGVzIHRoZSBzYW1l
+IGxpbmUgc28gdGhlIHBhdGNoc2V0IHBvd2VyLXN1cHBseS1yZXdvcmsgZGVwZW5kcyANCj4gb24g
+aXQgdG8gYXZvaWQgY29uZmxpY3RzLiBJZiB0aGUgZml4IGxvb2tzIE9LLCBtYXliZSBpdCBjb3Vs
+ZCBnbyANCj4gdGhyb3VnaCBTZWJhc3RpYW4ncyB0cmVlIHdpdGggeW91ciBhY2s/DQoNCkRvbmUs
+IGFuZCBhcG9sb2dpZXMgZm9yIHRoZSBkZWxheS4gR29pbmcgdGhyb3VnaCBTZWJhc3RpZW4gaXMg
+cHJlZmVycmVkLCB0aGFua3MuDQoNCi0tDQpEYXJyZW4gSGFydA0KSW50ZWwgT3BlbiBTb3VyY2Ug
+VGVjaG5vbG9neSBDZW50ZXINCi0tDQpUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
+ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgcGxhdGZvcm0tZHJpdmVyLXg4NiIgaW4gdGhlIGJvZHkg
+b2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8g
+aW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sDQo=
