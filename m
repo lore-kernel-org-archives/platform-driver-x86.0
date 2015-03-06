@@ -1,62 +1,94 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [ibm-acpi-devel] [PATCH 1/7] thinkpad_acpi: Remember adaptive
- kbd presence
-Date: Fri, 6 Mar 2015 10:09:34 -0800
-Message-ID: <20150306180934.GE19001@vmdeb7>
-References: <1424443450.22910.13.camel@hadess.net>
- <20150226061814.GC7331@fury.dvhart.com>
- <1425035130.1995042.233191101.57145444@webmail.messagingengine.com>
- <1425035779.2000837.233193809.65561A3E@webmail.messagingengine.com>
- <20150303165225.GD83894@vmdeb7>
- <1425407994.1004750.235001957.08166EE5@webmail.messagingengine.com>
+Subject: Re: [PATCH 1/3] toshiba_acpi: Add Hotkey Event Type function and
+ definitions
+Date: Fri, 6 Mar 2015 10:21:02 -0800
+Message-ID: <20150306182102.GG19001@vmdeb7>
+References: <1424973434-3032-1-git-send-email-coproscefalo@gmail.com>
+ <1424973434-3032-2-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1425407994.1004750.235001957.08166EE5@webmail.messagingengine.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jkosina@suse.cz>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-input@vger.kernel.org
+In-Reply-To: <1424973434-3032-2-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 03, 2015 at 03:39:54PM -0300, Henrique de Moraes Holschuh wrote:
-> On Tue, Mar 3, 2015, at 13:52, Darren Hart wrote:
-> > Henrique, I believe I may have overstepped with thinkpad-acpi and dealt
-> > with it like the other drivers in platform/drivers/x86, when instead I should
-> > have been leaving it to you. My apologies, it was not intentional.
-> 
-> No harm done!  And I did appreciate the extra help :-)
-> 
-> > Do you typically send pull-requests for the thinkpad-acpi driver directly to Linus?
-> 
-> thinkpad-acpi is part of the platform-x86 subsystem, so IMHO it should
-> continue to be merged through your tree if you are okay with that.
-> 
-> I'd really appreciate if the typical patch approval flux would go
-> through me first.  However, I certainly don't mind if you merge patches
-> directly should I be unresponsible for some reason, or when they are
-> part of the usual tree-wide spot fixes for some pattern/anti-pattern,
-> etc.
-> 
-> > I would be more than happy to basically ignore anything to thinkpad-acpi until
-> > after you have provided a review. I can also roll up pull requests from
-> > you if you prefer to integrate into the platform-drivers-x86 tree as the path to
-> > Linus.
-> 
-> Well, if it is fine with you, I'd suggest we continue with the process
-> used in this patchset, where I will reply to patches in this ML with a
-> reviewed-by or acked-by before you merge them.
-> 
-> If you want to change that at some point, just drop me a note and I will
-> start pushing patches to you either through this ML or through signed
-> pull requests, whichever you prefer.
+On Thu, Feb 26, 2015 at 10:57:12AM -0700, Azael Avalos wrote:
 
-Great. Things are documented correctly in MAINTAINERS then and we can continue
-as before, only I will be more diligent making sure you are Cc'd and have
-responded to any thinkpad-acpi.c changes. I assume two weeks is sufficient, but
-may nag you after a week.
+Hi Azael,
 
-Thanks!
+I'm pretty behind on this one, apologies.
+
+> This patch adds support to query the "Hotkey Event Type" the system
+> supports.
+> 
+> There are two main event types (so far), 0x10 and 0x11, with the
+> first beign all those laptops that have the old keyboard layout, and
+
+being
+
+> the latter all those new laptops with the new keyboard layout.
+> 
+
+Some concern about this binary "new" and "old". What happens in 2 years when
+they decide to break^W change our keyboards again?
+
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index dbcb7a8..e6aa8f9 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -116,6 +116,7 @@ MODULE_LICENSE("GPL");
+>  #define HCI_KBD_ILLUMINATION		0x0095
+>  #define HCI_ECO_MODE			0x0097
+>  #define HCI_ACCELEROMETER2		0x00a6
+> +#define HCI_HOTKEY_EVENT_TYPE		0xc000
+>  #define SCI_PANEL_POWER_ON		0x010d
+>  #define SCI_ILLUMINATION		0x014e
+>  #define SCI_USB_SLEEP_CHARGE		0x0150
+> @@ -127,8 +128,11 @@ MODULE_LICENSE("GPL");
+>  
+>  /* field definitions */
+>  #define HCI_ACCEL_MASK			0x7fff
+> +#define HCI_HOTKEY_EVENT_NORMAL		0x10
+> +#define HCI_HOTKEY_EVENT_SPECIAL	0x11
+
+NORMAL and SPECIAL? Hrm... what comes after special? EXTRASPECIAL? ;-)
+
+Or am I not looking at this right? Is there reason to expect these two to be
+sufficient?
+
+>  #define HCI_HOTKEY_DISABLE		0x0b
+>  #define HCI_HOTKEY_ENABLE		0x09
+> +#define HCI_HOTKEY_ENABLE_SPECIAL	0x10
+>  #define HCI_LCD_BRIGHTNESS_BITS		3
+>  #define HCI_LCD_BRIGHTNESS_SHIFT	(16-HCI_LCD_BRIGHTNESS_BITS)
+>  #define HCI_LCD_BRIGHTNESS_LEVELS	(1 << HCI_LCD_BRIGHTNESS_BITS)
+> @@ -1149,6 +1153,28 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+>  	return 0;
+>  }
+>  
+> +/* Hotkey event type */
+> +static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+> +					 u32 *hotkey_event_type)
+> +{
+> +	u32 val1 = 0x03;
+> +	u32 val2 = 0;
+> +	u32 result;
+> +
+> +	result = hci_read2(dev, HCI_HOTKEY_EVENT_TYPE, &val1, &val2);
+> +	if (result == TOS_FAILURE) {
+> +		pr_err("ACPI callto get Hotkey Event type failed\n");
+
+call to
+
+Thanks,
 
 -- 
 Darren Hart
