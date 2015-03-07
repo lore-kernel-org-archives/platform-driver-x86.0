@@ -1,148 +1,81 @@
-From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
-Subject: Re: [Patch v2] apple-gmux: lock iGP IO to protect from vgaarb
- changes
-Date: Sat, 7 Mar 2015 01:15:46 +0100
-Message-ID: <20150307011546.0050279d@neptune.home>
-References: <20150223215155.18444386@neptune.home>
-	<20150303172753.GF83894@vmdeb7>
-	<20150305232038.1873d380@neptune.home>
-	<20150306174254.GB19001@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Update events in toshiba_acpi_notify
+Date: Fri,  6 Mar 2015 18:14:41 -0700
+Message-ID: <1425690882-2772-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from hygieia.santi-shop.eu ([78.46.175.2]:50410 "EHLO
-	hygieia.santi-shop.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756019AbbCGAP6 convert rfc822-to-8bit (ORCPT
+Received: from mail-ob0-f171.google.com ([209.85.214.171]:41607 "EHLO
+	mail-ob0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751346AbbCGBOs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Mar 2015 19:15:58 -0500
-In-Reply-To: <20150306174254.GB19001@vmdeb7>
+	Fri, 6 Mar 2015 20:14:48 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>, Matthew Garrett <matthew.garrett@nebula.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Fri, 06 March 2015 Darren Hart <dvhart@infradead.org> wrote:
-> On Thu, Mar 05, 2015 at 11:20:38PM +0100, Bruno Pr=C3=A9mont wrote:
-> > As GMUX depends on IO for iGP to be enabled and active, lock the IO=
- at
-> > vgaarb level. This should prevent GPU driver for dGPU to disable IO=
- for
-> > iGP while it tries to own legacy VGA IO.
-> >=20
-> > This fixes usage of backlight control combined with closed nvidia
-> > driver on some Apple dual-GPU (intel/nvidia) systems.
-> >=20
-> > On those systems loading nvidia driver disables intel IO decoding,
-> > disabling the gmux backlight controls as a side effect.
-> > Prior to commits moving boot_vga from (optional) efifb to less opti=
-onal
-> > vgaarb this mis-behavior could be avoided by using right kernel con=
-fig
-> > (efifb enabled but vgaarb disabled).
-> >=20
-> > This patch explicitly does not try to trigger vgaarb changes in ord=
-er
-> > to avoid confusing already running graphics drivers. If IO has been
-> > mis-configured by vgaarb gmux will thus fail to probe.
-> > It is expected to load/probe gmux prior to graphics drivers.
-> >=20
-> > Fixes: ce027dac592c0ada241ce0f95ae65856828ac450 # nvidia interactio=
-n
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D86121
-> > Reported-by: Petri Hodju <petrihodju@yahoo.com>
-> > Tested-by: Petri Hodju <petrihodju@yahoo.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Matthew Garrett <matthew.garrett@nebula.com>
-> > Signed-off-by: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
-> > ---
-> > Respinning, fixing Darren's nit.
-> >=20
-> > Changes since v1:
-> > - Dropped repeat of gmux in pr_info/pr_err calls
-> > - Mention PCI device we tried to lock IO for in case of error
+This patch adds a few more events sent to TOSXXXX devices, some of
+them are already identified, while some others simply print a message
+informing the type of event received.
 
-Hi Darren,
+Also, a netlink event is generated so that userspace apps, daemons,
+etc. act accordingly to these events.
 
-> Hi Bruno,
->=20
-> I don't know if this is on your end or mine (I've not seen this befor=
-e). Saving
-> off your patch (through mutt like I do everything else) to a file and=
- applying
-> works, build works, and git show and visual inspection look correct.
->=20
-> However, checkpatch sees a lot of =3D3D instead of just =3D, and comp=
-lains bitterly.
->=20
-> Can you check this patch (from the list) and let me know what you fin=
-d?
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-That smells like `Content-Transfer-Encoding: quoted-printable` not bein=
-g
-understood by check-patch when operating on a raw mail.
-No idea if mutt can recode the mail to plain 8-bit/UTF-8 when saving...
-patch from patch-utils might have the same issues with it while git-am =
-is
-fine (as it handles mail-patches including charset and other headers).
-
-I'm sending the mail via claws-mail which might encode it more
-conservatively than e.g. git-send-email. I can see if there's an option
-to prefer 8-bit over quoted-printable though.
-
-Bruno
-
-
-> ERROR: patch seems to be corrupt (line wrapped?)
-> #93: FILE: drivers/platform/x86/apple-gmux.c:27:
-> =3D20
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #108: FILE: drivers/platform/x86/apple-gmux.c:421:
-> +	struct pci_dev *pdev =3D3D NULL;
->  	                     ^
->=20
-> WARNING: Missing a blank line after declarations
-> #109: FILE: drivers/platform/x86/apple-gmux.c:422:
-> +	struct pci_dev *pdev =3D3D NULL;
-> +	while ((pdev =3D3D pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))=
-) {
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #109: FILE: drivers/platform/x86/apple-gmux.c:422:
-> +	while ((pdev =3D3D pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev))=
-) {
->  	             ^
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #130: FILE: drivers/platform/x86/apple-gmux.c:447:
-> +	struct pci_dev *pdev =3D3D NULL;
->  	                     ^
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #155: FILE: drivers/platform/x86/apple-gmux.c:510:
-> +	pdev =3D3D gmux_find_pdev();
->  	     ^
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #160: FILE: drivers/platform/x86/apple-gmux.c:515:
-> +		ret =3D3D -EBUSY;
->  		    ^
->=20
-> ERROR: need consistent spacing around '-' (ctx:WxV)
-> #160: FILE: drivers/platform/x86/apple-gmux.c:515:
-> +		ret =3D3D -EBUSY;
->  		        ^
->=20
-> ERROR: spaces required around that '=3D' (ctx:WxV)
-> #164: FILE: drivers/platform/x86/apple-gmux.c:519:
-> +	gmux_data->pdev =3D3D pdev;
->  	                ^
->=20
-> total: 8 errors, 1 warnings, 96 lines checked
->=20
-> /home/dvhart/apple.patch has style problems, please review.
->=20
-> If any of these errors are false positives, please report
-> them to the maintainer, see CHECKPATCH in MAINTAINERS.
->=20
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 09c6a2f..3a895a8 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -2801,6 +2801,21 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 	case 0x80: /* Hotkeys and some system events */
+ 		toshiba_acpi_process_hotkeys(dev);
+ 		break;
++	case 0x81: /* Dock events */
++	case 0x82:
++	case 0x83:
++		pr_info("Dock event received %x\n", event);
++		break;
++	case 0x88: /* Thermal events */
++		pr_info("Thermal event received\n");
++		break;
++	case 0x8f: /* LID closed */
++	case 0x90: /* LID is closed and Dock has been ejected */
++		break;
++	case 0x8c: /* SATA power events */
++	case 0x8b:
++		pr_info("SATA power event received %x\n", event);
++		break;
+ 	case 0x92: /* Keyboard backlight mode changed */
+ 		/* Update sysfs entries */
+ 		ret = sysfs_update_group(&acpi_dev->dev.kobj,
+@@ -2808,17 +2823,19 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 		if (ret)
+ 			pr_err("Unable to update sysfs entries\n");
+ 		break;
+-	case 0x81: /* Unknown */
+-	case 0x82: /* Unknown */
+-	case 0x83: /* Unknown */
+-	case 0x8c: /* Unknown */
++	case 0x85: /* Unknown */
++	case 0x8d: /* Unknown */
+ 	case 0x8e: /* Unknown */
+-	case 0x8f: /* Unknown */
+-	case 0x90: /* Unknown */
++	case 0x94: /* Unknown */
++	case 0x95: /* Unknown */
+ 	default:
+ 		pr_info("Unknown event received %x\n", event);
+ 		break;
+ 	}
++
++	acpi_bus_generate_netlink_event(acpi_dev->pnp.device_class,
++					dev_name(&acpi_dev->dev),
++					event, 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-- 
+2.2.2
