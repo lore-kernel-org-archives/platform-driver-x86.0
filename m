@@ -1,46 +1,38 @@
 From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch 1/2] thinkpad_acpi: signedness bugs getting current_mode
-Date: Wed, 11 Mar 2015 12:34:50 +0300
-Message-ID: <20150311093450.GA3564@mwanda>
+Subject: [patch 2/2] thinkpad_acpi: off by one in
+ adaptive_keyboard_hotkey_notify_hotkey()
+Date: Wed, 11 Mar 2015 12:36:07 +0300
+Message-ID: <20150311093607.GB3564@mwanda>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from aserp1040.oracle.com ([141.146.126.69]:23381 "EHLO
-	aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750980AbbCKJf7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 Mar 2015 05:35:59 -0400
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: kernel-janitors-owner@vger.kernel.org
 To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Bastien Nocera <hadess@hadess.net>
 Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-This needs to be signed for the error handling to work.  Valid modes are
-small positive integers.
+This should be >= instead of > because otherwise we read one element
+past the end of the hotkey_keycode_map[] array.
 
-Fixes: b790ceeb0fd9 ('thinkpad_acpi: Add adaptive_kbd_mode sysfs attr')
+The hotkey_keycode_map[] array has TPACPI_HOTKEY_MAP_LEN elements.
+
+Fixes: 6a68d8557084 ('thinkpad_acpi: Add support for more adaptive kbd buttons')
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 56eaddc..024861d 100644
+index 024861d..7769575 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -2938,7 +2938,7 @@ static ssize_t adaptive_kbd_mode_show(struct device *dev,
- 			   struct device_attribute *attr,
- 			   char *buf)
- {
--	u32 current_mode;
-+	int current_mode;
+@@ -3656,8 +3656,9 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
+ 		return true;
  
- 	current_mode = adaptive_keyboard_get_mode();
- 	if (current_mode < 0)
-@@ -3621,7 +3621,7 @@ static int adaptive_keyboard_get_next_mode(int mode)
- 
- static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
- {
--	u32 current_mode = 0;
-+	int current_mode = 0;
- 	int new_mode = 0;
- 	int keycode;
- 
+ 	default:
+-		if (scancode < FIRST_ADAPTIVE_KEY || scancode > FIRST_ADAPTIVE_KEY +
+-				TPACPI_HOTKEY_MAP_LEN - ADAPTIVE_KEY_OFFSET) {
++		if (scancode < FIRST_ADAPTIVE_KEY ||
++		    scancode >= FIRST_ADAPTIVE_KEY + TPACPI_HOTKEY_MAP_LEN -
++				ADAPTIVE_KEY_OFFSET) {
+ 			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
+ 					scancode);
+ 			return false;
