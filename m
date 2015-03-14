@@ -1,32 +1,36 @@
-From: Aaron Lu <aaron.lu@intel.com>
-Subject: HP Compaq 6510b FN keys for brightness not working after boot
-Date: Fri, 13 Mar 2015 13:33:25 +0800
-Message-ID: <20150313053325.GA22984@aaronlu.sh.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform: x86: Fix trivial typo in comment
+Date: Sat, 14 Mar 2015 11:41:58 -0700
+Message-ID: <20150314184158.GB16816@fury.dvhart.com>
+References: <1425678630-9332-1-git-send-email-yguerrini@tomshardware.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:62480 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750767AbbCMFes (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:54762 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751153AbbCNSmA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 13 Mar 2015 01:34:48 -0400
+	Sat, 14 Mar 2015 14:42:00 -0400
 Content-Disposition: inline
+In-Reply-To: <1425678630-9332-1-git-send-email-yguerrini@tomshardware.fr>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, Bertrand Vieille <vieille.bertrand@free.Fr>, linux-kernel-org@datahugger.de
+To: Yannick Guerrini <yguerrini@tomshardware.fr>
+Cc: trivial@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Kyle,
+On Fri, Mar 06, 2015 at 10:50:30PM +0100, Yannick Guerrini wrote:
+> Change 'disalbe' to 'disable'
+> 
+> Signed-off-by: Yannick Guerrini <yguerrini@tomshardware.fr>
 
-It seems that your commit:
+Queued, thanks.
 
-commit f82bdd0d77b6bf0dea08a1d957ab45d503f328b1
-Author: Kyle Evans <kvans32@gmail.com>
-Date:   Mon Jun 9 12:26:06 2014 -0500
+In the future, the following subject is preferred:
 
-    hp-wmi: Enable hotkeys on some systems
+intel-oaktrail: Fix trivial typo in comment
 
-has caused some trouble for some HP 6510b users as shown in this bug:
-https://bugzilla.kernel.org/show_bug.cgi?id=82451
+Thanks,
 
-Can you please take a look at that? Thanks.
+-- 
+Darren Hart
+Intel Open Source Technology Center
