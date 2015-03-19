@@ -1,67 +1,150 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb changes
-Date: Wed, 18 Mar 2015 20:46:18 -0700
-Message-ID: <20150319034618.GB22993@fury.dvhart.com>
-References: <20150223215155.18444386@neptune.home>
- <20150303172753.GF83894@vmdeb7>
- <20150305232038.1873d380@neptune.home>
- <20150306174254.GB19001@vmdeb7>
- <20150307011546.0050279d@neptune.home>
- <20150309225238.0b9ced4e@neptune.home>
- <CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
- <20150311223445.6af76f7c@neptune.home>
+Subject: Re: [PATCH 1/3] toshiba_acpi: Add Hotkey Event Type function and
+ definitions
+Date: Wed, 18 Mar 2015 20:56:12 -0700
+Message-ID: <20150319035612.GC22993@fury.dvhart.com>
+References: <1424973434-3032-1-git-send-email-coproscefalo@gmail.com>
+ <1424973434-3032-2-git-send-email-coproscefalo@gmail.com>
+ <20150306182102.GG19001@vmdeb7>
+ <CAGdLNWE5RoFJG19k514jphgcF=-=36es98kwHrNPa9Ex5v0j1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54169 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:33096 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752685AbbCSDqX (ORCPT
+	with ESMTP id S1750905AbbCSD4N (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 18 Mar 2015 23:46:23 -0400
+	Wed, 18 Mar 2015 23:56:13 -0400
 Content-Disposition: inline
-In-Reply-To: <20150311223445.6af76f7c@neptune.home>
+In-Reply-To: <CAGdLNWE5RoFJG19k514jphgcF=-=36es98kwHrNPa9Ex5v0j1A@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, Mar 11, 2015 at 10:34:45PM +0100, Bruno Pr=E9mont wrote:
-> As GMUX depends on IO for iGP to be enabled and active, lock the IO a=
-t
-> vgaarb level. This should prevent GPU driver for dGPU to disable IO f=
-or
-> iGP while it tries to own legacy VGA IO.
->=20
-> This fixes usage of backlight control combined with closed nvidia
-> driver on some Apple dual-GPU (intel/nvidia) systems.
->=20
-> On those systems loading nvidia driver disables intel IO decoding,
-> disabling the gmux backlight controls as a side effect.
-> Prior to commits moving boot_vga from (optional) efifb to less option=
-al
-> vgaarb this mis-behavior could be avoided by using right kernel confi=
-g
-> (efifb enabled but vgaarb disabled).
->=20
-> This patch explicitly does not try to trigger vgaarb changes in order
-> to avoid confusing already running graphics drivers. If IO has been
-> mis-configured by vgaarb gmux will thus fail to probe.
-> It is expected to load/probe gmux prior to graphics drivers.
->=20
-> Fixes: ce027dac592c0ada241ce0f95ae65856828ac450 # nvidia interaction
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D86121
-> Reported-by: Petri Hodju <petrihodju@yahoo.com>
-> Tested-by: Petri Hodju <petrihodju@yahoo.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Matthew Garrett <matthew.garrett@nebula.com>
-> Signed-off-by: Bruno Pr=E9mont <bonbons@linux-vserver.org>
-> ---
-> Resending v2 in the hope Darren won't hit quoted-printable.
-> Also adding linux-pci on CC by Bjorn's request in bugzilla.
+On Fri, Mar 06, 2015 at 11:42:50AM -0700, Azael Avalos wrote:
+> Hi Darren,
+> 
+> 2015-03-06 11:21 GMT-07:00 Darren Hart <dvhart@infradead.org>:
+> > On Thu, Feb 26, 2015 at 10:57:12AM -0700, Azael Avalos wrote:
+> >
+> > Hi Azael,
+> >
+> > I'm pretty behind on this one, apologies.
+> >
+> 
+> No wories, we still have plenty of time for 4.1 ;-)
+> I simply wanted to send these early to get as much tests as possible.
+> 
+> >> This patch adds support to query the "Hotkey Event Type" the system
+> >> supports.
+> >>
+> >> There are two main event types (so far), 0x10 and 0x11, with the
+> >> first beign all those laptops that have the old keyboard layout, and
+> >
+> > being
+> >
+> >> the latter all those new laptops with the new keyboard layout.
+> >>
+> >
+> > Some concern about this binary "new" and "old". What happens in 2 years when
+> > they decide to break^W change our keyboards again?
+> 
+> Well, a new key mapping will need to be added, and hopefully
+> a new value (other than 0x10 and 0x11) to identify the "newer"
+> layout, only time will tell.
 
-Much better, thanks. Queued.
+OK, anything else is just idle speculation I guess. So just fix the typos and
+resend please.
 
---=20
+--
+Darren
+
+> 
+> >
+> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/toshiba_acpi.c | 26 ++++++++++++++++++++++++++
+> >>  1 file changed, 26 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> >> index dbcb7a8..e6aa8f9 100644
+> >> --- a/drivers/platform/x86/toshiba_acpi.c
+> >> +++ b/drivers/platform/x86/toshiba_acpi.c
+> >> @@ -116,6 +116,7 @@ MODULE_LICENSE("GPL");
+> >>  #define HCI_KBD_ILLUMINATION         0x0095
+> >>  #define HCI_ECO_MODE                 0x0097
+> >>  #define HCI_ACCELEROMETER2           0x00a6
+> >> +#define HCI_HOTKEY_EVENT_TYPE                0xc000
+> >>  #define SCI_PANEL_POWER_ON           0x010d
+> >>  #define SCI_ILLUMINATION             0x014e
+> >>  #define SCI_USB_SLEEP_CHARGE         0x0150
+> >> @@ -127,8 +128,11 @@ MODULE_LICENSE("GPL");
+> >>
+> >>  /* field definitions */
+> >>  #define HCI_ACCEL_MASK                       0x7fff
+> >> +#define HCI_HOTKEY_EVENT_NORMAL              0x10
+> >> +#define HCI_HOTKEY_EVENT_SPECIAL     0x11
+> >
+> > NORMAL and SPECIAL? Hrm... what comes after special? EXTRASPECIAL? ;-)
+> 
+> Hehe, well, those can be changed to something like
+> HCI_HOTKEY_EVENT_TYPE{1, 2}
+> I just named them after the "special events" feature, as the value
+> returned from HCI_HOTKEY_EVENT_TYPE is related to.
+> 
+> >
+> > Or am I not looking at this right? Is there reason to expect these two to be
+> > sufficient?
+> 
+> We can use the SCI_KBD_FUNCTION_KEYS too, all newer laptops
+> that now come with the new layout support this feature.
+> I can test for its presence and also for the value returned by
+> HCI_HOTKEY_EVENT_TYPE.
+> 
+> >
+> >>  #define HCI_HOTKEY_DISABLE           0x0b
+> >>  #define HCI_HOTKEY_ENABLE            0x09
+> >> +#define HCI_HOTKEY_ENABLE_SPECIAL    0x10
+> >>  #define HCI_LCD_BRIGHTNESS_BITS              3
+> >>  #define HCI_LCD_BRIGHTNESS_SHIFT     (16-HCI_LCD_BRIGHTNESS_BITS)
+> >>  #define HCI_LCD_BRIGHTNESS_LEVELS    (1 << HCI_LCD_BRIGHTNESS_BITS)
+> >> @@ -1149,6 +1153,28 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+> >>       return 0;
+> >>  }
+> >>
+> >> +/* Hotkey event type */
+> >> +static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+> >> +                                      u32 *hotkey_event_type)
+> >> +{
+> >> +     u32 val1 = 0x03;
+> >> +     u32 val2 = 0;
+> >> +     u32 result;
+> >> +
+> >> +     result = hci_read2(dev, HCI_HOTKEY_EVENT_TYPE, &val1, &val2);
+> >> +     if (result == TOS_FAILURE) {
+> >> +             pr_err("ACPI callto get Hotkey Event type failed\n");
+> >
+> > call to
+> >
+> 
+> Caught this one after I sent the patches :-P
+> 
+> > Thanks,
+> >
+> > --
+> > Darren Hart
+> > Intel Open Source Technology Center
+> 
+> 
+> Cheers
+> Azael
+> 
+> 
+> -- 
+> -- El mundo apesta y vosotros apestais tambien --
+> 
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
