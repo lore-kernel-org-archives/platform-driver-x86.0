@@ -1,97 +1,38 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 3/3] toshiba_acpi: Fix the enabling of the Special Functions
-Date: Fri, 20 Mar 2015 16:55:18 -0600
-Message-ID: <1426892118-27678-4-git-send-email-coproscefalo@gmail.com>
-References: <1426892118-27678-1-git-send-email-coproscefalo@gmail.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [patch 1/2] thinkpad_acpi: signedness bugs getting
+ current_mode
+Date: Sun, 22 Mar 2015 15:58:15 -0300
+Message-ID: <1427050695.3946436.243707926.7D5B2C74@webmail.messagingengine.com>
+References: <20150311093450.GA3564@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f42.google.com ([209.85.218.42]:35000 "EHLO
-	mail-oi0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751196AbbCTWz3 (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59308 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751813AbbCVS6Q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Mar 2015 18:55:29 -0400
-In-Reply-To: <1426892118-27678-1-git-send-email-coproscefalo@gmail.com>
+	Sun, 22 Mar 2015 14:58:16 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 4E11C2097D
+	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2015 14:58:13 -0400 (EDT)
+In-Reply-To: <20150311093450.GA3564@mwanda>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Dan Carpenter <dan.carpenter@oracle.com>, Bastien Nocera <hadess@hadess.net>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
 
-Some Toshiba laptops with the "Special Functions" feature enabled
-fail to properly enable such feature unless a specific value is
-used to enable the hotkey events.
+On Wed, Mar 11, 2015, at 06:34, Dan Carpenter wrote:
+> This needs to be signed for the error handling to work.  Valid modes are
+> small positive integers.
+> 
+> Fixes: b790ceeb0fd9 ('thinkpad_acpi: Add adaptive_kbd_mode sysfs attr')
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-This patch adds a new function called "*_enable_special_functions",
-that simply makes a call to the HCI_HOTKEY_EVENT call, but this time
-we are using a different parameter to make the "Special Functions"
-mode work as expected.
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index d7dac48..49ac73a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -129,6 +129,7 @@ MODULE_LICENSE("GPL");
- #define HCI_ACCEL_MASK			0x7fff
- #define HCI_HOTKEY_DISABLE		0x0b
- #define HCI_HOTKEY_ENABLE		0x09
-+#define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
- #define HCI_LCD_BRIGHTNESS_BITS		3
- #define HCI_LCD_BRIGHTNESS_SHIFT	(16-HCI_LCD_BRIGHTNESS_BITS)
- #define HCI_LCD_BRIGHTNESS_LEVELS	(1 << HCI_LCD_BRIGHTNESS_BITS)
-@@ -2334,6 +2335,20 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 
- 	return 0;
- }
-+
-+static void toshiba_acpi_enable_special_functions(struct toshiba_acpi_dev *dev)
-+{
-+	u32 result;
-+
-+	/*
-+	 * Re-activate the hotkeys, but this time, we are using the
-+	 * "Special Functions" mode.
-+	 */
-+	result = hci_write1(dev, HCI_HOTKEY_EVENT,
-+			    HCI_HOTKEY_SPECIAL_FUNCTIONS);
-+	if (result != TOS_SUCCESS)
-+		pr_err("Could not enable the Special Function mode\n");
-+}
- 
- static bool toshiba_acpi_i8042_filter(unsigned char data, unsigned char str,
- 				      struct serio *port)
-@@ -2638,6 +2653,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- {
- 	struct toshiba_acpi_dev *dev;
- 	const char *hci_method;
-+	u32 special_functions;
- 	u32 dummy;
- 	bool bt_present;
- 	int ret = 0;
-@@ -2669,7 +2685,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	 * with the new keyboard layout, query for its presence to help
- 	 * determine the keymap layout to use.
- 	 */
--	ret = toshiba_function_keys_get(dev, &dummy);
-+	ret = toshiba_function_keys_get(dev, &special_functions);
- 	dev->kbd_function_keys_supported = !ret;
- 
- 	if (toshiba_acpi_setup_keyboard(dev))
-@@ -2761,6 +2777,13 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = get_fan_status(dev, &dummy);
- 	dev->fan_supported = !ret;
- 
-+	/*
-+	 * Enable the "Special Functions" mode only if they are
-+	 * supported and if they are activated.
-+	 */
-+	if (dev->kbd_function_keys_supported && special_functions)
-+		toshiba_acpi_enable_special_functions(dev);
-+
- 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
- 				 &toshiba_attr_group);
- 	if (ret) {
 -- 
-2.2.2
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
