@@ -1,42 +1,57 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [patch 2/2] thinkpad_acpi: off by one in
- adaptive_keyboard_hotkey_notify_hotkey()
-Date: Sun, 22 Mar 2015 16:01:09 -0300
-Message-ID: <1427050869.3946795.243708250.7D9CBED0@webmail.messagingengine.com>
-References: <20150311093607.GB3564@mwanda>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH] x86/wmi: delete unused wmi_data_lock mutex causing gcc warning
+Date: Mon, 23 Mar 2015 14:01:37 -0400
+Message-ID: <1427133697-7228-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:49177 "EHLO
-	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751874AbbCVTBK (ORCPT
+Received: from mail.windriver.com ([147.11.1.11]:37575 "EHLO
+	mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752221AbbCWSDT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 22 Mar 2015 15:01:10 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 2A7C8206E8
-	for <platform-driver-x86@vger.kernel.org>; Sun, 22 Mar 2015 15:01:07 -0400 (EDT)
-In-Reply-To: <20150311093607.GB3564@mwanda>
+	Mon, 23 Mar 2015 14:03:19 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>, Bastien Nocera <hadess@hadess.net>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>
 
-On Wed, Mar 11, 2015, at 06:36, Dan Carpenter wrote:
-> This should be >= instead of > because otherwise we read one element
-> past the end of the hotkey_keycode_map[] array.
-> 
-> The hotkey_keycode_map[] array has TPACPI_HOTKEY_MAP_LEN elements.
-> 
-> Fixes: 6a68d8557084 ('thinkpad_acpi: Add support for more adaptive kbd
-> buttons')
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+In commit bff431e49ff531a343fbb2b4426e313000844f32 ("ACPI: WMI: Add
+ACPI-WMI mapping driver") this mutex was added, but the rest of the
+final commit never actually made use of it, resulting in:
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+ In file included from include/linux/mutex.h:29:0,
+                  from include/linux/kernfs.h:13,
+                  from include/linux/sysfs.h:15,
+                  from include/linux/kobject.h:21,
+                  from include/linux/device.h:17,
+                  from drivers/platform/x86/wmi.c:35:
+ drivers/platform/x86/wmi.c:48:21: warning: =E2=80=98wmi_data_lock=E2=80=
+=99 defined but not used [-Wunused-variable]
+  static DEFINE_MUTEX(wmi_data_lock);
+                      ^
 
+A git grep shows no other instances/references to the wmi_data_lock.
+Delete it, assuming that the mutex addition was just a leftover from
+an earlier work in progress version of the change, since the original
+dates from 2008.
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+ drivers/platform/x86/wmi.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 737e56d46f61..26a0bd893b86 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -45,7 +45,6 @@ MODULE_LICENSE("GPL");
+=20
+ #define ACPI_WMI_CLASS "wmi"
+=20
+-static DEFINE_MUTEX(wmi_data_lock);
+ static LIST_HEAD(wmi_block_list);
+=20
+ struct guid_block {
+--=20
+2.2.1
