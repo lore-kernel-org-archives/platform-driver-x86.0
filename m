@@ -1,45 +1,122 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] x86/wmi: delete unused wmi_data_lock mutex causing gcc
- warning
-Date: Wed, 25 Mar 2015 10:26:35 -0700
-Message-ID: <20150325172635.GA19129@fury.dvhart.com>
-References: <1427133697-7228-1-git-send-email-paul.gortmaker@windriver.com>
+Subject: Re: [PATCH 4/4] toshiba_bluetooth: Remove BT enable code from
+ *_notify function
+Date: Wed, 25 Mar 2015 10:50:42 -0700
+Message-ID: <20150325175042.GB19129@fury.dvhart.com>
+References: <1426705979-11880-1-git-send-email-coproscefalo@gmail.com>
+ <1426705979-11880-6-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:52859 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752619AbbCYRun (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 25 Mar 2015 13:50:43 -0400
 Content-Disposition: inline
-In-Reply-To: <1427133697-7228-1-git-send-email-paul.gortmaker@windriver.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
+In-Reply-To: <1426705979-11880-6-git-send-email-coproscefalo@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>, Jes.Sorensen@gmail.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 23, 2015 at 02:01:37PM -0400, Paul Gortmaker wrote:
-> In commit bff431e49ff531a343fbb2b4426e313000844f32 ("ACPI: WMI: Add
-> ACPI-WMI mapping driver") this mutex was added, but the rest of the
-> final commit never actually made use of it, resulting in:
->=20
->  In file included from include/linux/mutex.h:29:0,
->                   from include/linux/kernfs.h:13,
->                   from include/linux/sysfs.h:15,
->                   from include/linux/kobject.h:21,
->                   from include/linux/device.h:17,
->                   from drivers/platform/x86/wmi.c:35:
->  drivers/platform/x86/wmi.c:48:21: warning: =E2=80=98wmi_data_lock=E2=
-=80=99 defined but not used [-Wunused-variable]
->   static DEFINE_MUTEX(wmi_data_lock);
->                       ^
->=20
-> A git grep shows no other instances/references to the wmi_data_lock.
-> Delete it, assuming that the mutex addition was just a leftover from
-> an earlier work in progress version of the change, since the original
-> dates from 2008.
->=20
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+On Wed, Mar 18, 2015 at 01:12:59PM -0600, Azael Avalos wrote:
+> Bug 93911 reported a broken handling of the BT device, causing the
+> driver to get stuck in a loop enabling/disabling the device whenever
+> the device is deactivated by the kill switch as follows:
+> 
+> 1. The user activated the kill switch, causing the system to generate
+>    a 0x90 (status change) event and disabling the BT device.
+> 2. The driver catches the event and re-enables the BT device.
 
-Queued, thank you Paul.
+It does? The toshiba_bluetooth_enable() call is supposed to exit silently if
+BTST is not on. Is this check not working on some systems?
 
---=20
+> 3. The system detects the device being activated, but since the kill
+>    switch is activated, disables the BT device (again) and generates
+>    a 0x90 event (again).
+> 4. Repeat from 2.
+> 
+> This patch removes the toshiba_bluetooth_enable call from the
+> toshiba_bluetooth_notify function, as we do not always need to
+> re-activate the device everytime we receive an event, we need to act
+> depending on the status of the BT device.
+> 
+> For now, we simply print the event received and the status of the BT
+> device, so we can later add code to handle special circumstances
+> depending on the status of the device.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_bluetooth.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
+> index 0343d20..07edded 100644
+> --- a/drivers/platform/x86/toshiba_bluetooth.c
+> +++ b/drivers/platform/x86/toshiba_bluetooth.c
+> @@ -2,6 +2,7 @@
+>   * Toshiba Bluetooth Enable Driver
+>   *
+>   * Copyright (C) 2009 Jes Sorensen <Jes.Sorensen@gmail.com>
+> + * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+>   *
+>   * Thanks to Matthew Garrett for background info on ACPI innards which
+>   * normal people aren't meant to understand :-)
+> @@ -25,6 +26,10 @@
+>  #include <linux/types.h>
+>  #include <linux/acpi.h>
+>  
+> +#define BT_KILLSWITCH_MASK	0x01
+> +#define BT_PLUGGED_MASK		0x40
+> +#define BT_POWER_MASK		0x80
+> +
+>  MODULE_AUTHOR("Jes Sorensen <Jes.Sorensen@gmail.com>");
+>  MODULE_DESCRIPTION("Toshiba Laptop ACPI Bluetooth Enable Driver");
+>  MODULE_LICENSE("GPL");
+> @@ -135,7 +140,20 @@ static int toshiba_bluetooth_disable(acpi_handle handle)
+>  
+>  static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event)
+>  {
+> -	toshiba_bluetooth_enable(device->handle);
+> +	int status;
+> +
+> +	pr_info("Received event %x\n", event);
+> +
+> +	/* Query the status of the Bluetooth device */
+> +	status = toshiba_bluetooth_status(device->handle);
+> +	if (status < 0)
+> +		return;
+> +
+> +	pr_info("Switch status %x\n", status & BT_KILLSWITCH_MASK);
+> +	pr_info("Power status %x\n", status & BT_POWER_MASK);
+> +	pr_info("Plug status %x\n", status & BT_PLUGGED_MASK);
+
+This seems a bit noisy for the info level as this information seems more aimed
+at a developer working to complete the TODO below... debug seems more
+appropriate.
+
+> +
+> +	/* TODO: Add event handling here depending on Bluetooth status */
+
+Before if the RFKILL was disabled, this would have called
+toshiba_bluetooth_enable() which would have checked BTST, found it on, and
+enabled the device. In addition to killing the call to
+toshiba_bluetooth_enable() when RFKILL is on, this also removes the call when
+it's switched off.
+
+I think I'm missing a path. Where does enable occur when the user turns the
+radio back on now?
+
+
+>  }
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> -- 
+> 2.2.2
+> 
+> 
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
