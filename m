@@ -1,73 +1,87 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 3/4] toshiba_bluetooth: Clean toshiba_bluetooth_enable function
-Date: Wed, 25 Mar 2015 14:19:16 -0600
-Message-ID: <1427314757-18232-4-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2 4/4] toshiba_bluetooth: Remove BT enable code from *_notify function
+Date: Wed, 25 Mar 2015 14:19:17 -0600
+Message-ID: <1427314757-18232-5-git-send-email-coproscefalo@gmail.com>
 References: <1427314757-18232-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f182.google.com ([209.85.214.182]:36861 "EHLO
-	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752164AbbCYUT2 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 25 Mar 2015 16:19:28 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1427314757-18232-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch cleans the toshiba_bluetooth_enable function, removing
-some unneeded code and returning appropriate error values.
+Bug 93911 reported a broken handling of the BT device, causing the
+driver to get stuck in a loop enabling/disabling the device whenever
+the device is deactivated by the kill switch as follows:
+
+1. The user activated the kill switch, causing the system to generate
+   a 0x90 (status change) event and disabling the BT device.
+2. The driver catches the event and re-enables the BT device.
+3. The system detects the device being activated, but since the kill
+   switch is activated, disables the BT device (again) and generates
+   a 0x90 event (again).
+4. Repeat from 2.
+
+This patch acts according to the BT device status, activating the
+device only when it is disabled and returning silently if the KS is
+activated, this way we retain the previous functionality but without
+affecting the newer devices that trigger the enable/disable loop.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_bluetooth.c | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ drivers/platform/x86/toshiba_bluetooth.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
-index b8404c7..0343d20 100644
+index 0343d20..94bec3c 100644
 --- a/drivers/platform/x86/toshiba_bluetooth.c
 +++ b/drivers/platform/x86/toshiba_bluetooth.c
-@@ -97,29 +97,21 @@ static int toshiba_bluetooth_status(acpi_handle handle)
+@@ -2,6 +2,7 @@
+  * Toshiba Bluetooth Enable Driver
+  *
+  * Copyright (C) 2009 Jes Sorensen <Jes.Sorensen@gmail.com>
++ * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+  *
+  * Thanks to Matthew Garrett for background info on ACPI innards which
+  * normal people aren't meant to understand :-)
+@@ -25,6 +26,10 @@
+ #include <linux/types.h>
+ #include <linux/acpi.h>
  
- static int toshiba_bluetooth_enable(acpi_handle handle)
++#define BT_KILLSWITCH_MASK	0x01
++#define BT_PLUGGED_MASK		0x40
++#define BT_POWER_MASK		0x80
++
+ MODULE_AUTHOR("Jes Sorensen <Jes.Sorensen@gmail.com>");
+ MODULE_DESCRIPTION("Toshiba Laptop ACPI Bluetooth Enable Driver");
+ MODULE_LICENSE("GPL");
+@@ -135,7 +140,26 @@ static int toshiba_bluetooth_disable(acpi_handle handle)
+ 
+ static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event)
  {
--	acpi_status res1, res2;
--	u64 result;
--
--	/*
--	 * Query ACPI to verify RFKill switch is set to 'on'.
--	 * If not, we return silently, no need to report it as
--	 * an error.
--	 */
--	res1 = acpi_evaluate_integer(handle, "BTST", NULL, &result);
--	if (ACPI_FAILURE(res1))
--		return res1;
--	if (!(result & 0x01))
--		return 0;
-+	acpi_status result;
- 
--	pr_info("Re-enabling Toshiba Bluetooth\n");
--	res1 = acpi_evaluate_object(handle, "AUSB", NULL, NULL);
--	res2 = acpi_evaluate_object(handle, "BTPO", NULL, NULL);
--	if (!ACPI_FAILURE(res1) || !ACPI_FAILURE(res2))
--		return 0;
-+	result = acpi_evaluate_object(handle, "AUSB", NULL, NULL);
-+	if (ACPI_FAILURE(result)) {
-+		pr_err("Could not attach USB Bluetooth device\n");
-+		return -ENXIO;
-+	}
- 
--	pr_warn("Failed to re-enable Toshiba Bluetooth\n");
-+	result = acpi_evaluate_object(handle, "BTPO", NULL, NULL);
-+	if (ACPI_FAILURE(result)) {
-+		pr_err("Could not power ON Bluetooth device\n");
-+		return -ENXIO;
-+	}
- 
--	return -ENODEV;
-+	return 0;
+-	toshiba_bluetooth_enable(device->handle);
++	bool killswitch;
++	bool powered;
++	bool plugged;
++	int status;
++
++	/* Query the status of the Bluetooth device */
++	status = toshiba_bluetooth_status(device->handle);
++	if (status < 0)
++		return;
++
++	killswitch = (status & BT_KILLSWITCH_MASK) ? true : false;
++	powered = (status & BT_POWER_MASK) ? true : false;
++	plugged = (status & BT_PLUGGED_MASK) ? true : false;
++
++	/* Verify RFKill switch is set to on, if not, we return silently. */
++	if (!killswitch)
++		return;
++	/* Check if the device is not powered or attached and the KS is off */
++	if (killswitch && (!powered || !plugged))
++		toshiba_bluetooth_enable(device->handle);
  }
  
- static int toshiba_bluetooth_disable(acpi_handle handle)
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.2.2
