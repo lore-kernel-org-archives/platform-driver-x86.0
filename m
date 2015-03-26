@@ -1,40 +1,90 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 0/3] toshiba_bluetooth: Clean up driver plus a bugfix
-Date: Thu, 26 Mar 2015 14:56:04 -0600
-Message-ID: <1427403367-18996-1-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v3 2/3] toshiba_bluetooth: Clean up *_add function and disable BT device at removal
+Date: Thu, 26 Mar 2015 14:56:06 -0600
+Message-ID: <1427403367-18996-3-git-send-email-coproscefalo@gmail.com>
+References: <1427403367-18996-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f50.google.com ([209.85.218.50]:34895 "EHLO
-	mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752510AbbCZU4S (ORCPT
+Received: from mail-ob0-f180.google.com ([209.85.214.180]:32777 "EHLO
+	mail-ob0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752510AbbCZU4X (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Mar 2015 16:56:18 -0400
+	Thu, 26 Mar 2015 16:56:23 -0400
+In-Reply-To: <1427403367-18996-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-These patches introduce three new functions, cleaning up the driver
-code, checking for errors and returning accordingly, and also fixes
-bug 93911.
+This patch cleans the toshiba_bluetooth_add function by using the
+recently introduced function toshiba_bluetooth_present, simplifying
+its code and returning appropriate error values.
 
-Changes since v2:
-- Merged patches 2-3 into one
-- Added a comment block explaining a bit why we added an extra check
-  to the status of the device
+Also, disables the BT device at the removal of the driver, by using
+the function toshiba_bluetooth_disable.
 
-Changes since v1:
-- Removed pr_info calls from *_notify function
-- Added checks to the status of the BT device removing the TODO
-  comment and retaining the previous functionality of the driver
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_bluetooth.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-Azael Avalos (3):
-  toshiba_bluetooth: Add three new functions to the driver
-  toshiba_bluetooth: Clean up *_add function and disable BT device at
-    removal
-  toshiba_bluetooth: Fix enabling/disabling loop on recent devices
-
- drivers/platform/x86/toshiba_bluetooth.c | 133 ++++++++++++++++++++++++-------
- 1 file changed, 104 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
+index b479a70..b8404c7 100644
+--- a/drivers/platform/x86/toshiba_bluetooth.c
++++ b/drivers/platform/x86/toshiba_bluetooth.c
+@@ -62,6 +62,11 @@ static int toshiba_bluetooth_present(acpi_handle handle)
+ 	acpi_status result;
+ 	u64 bt_present;
+ 
++	/*
++	 * Some Toshiba laptops may have a fake TOS6205 device in
++	 * their ACPI BIOS, so query the _STA method to see if there
++	 * is really anything there.
++	 */
+ 	result = acpi_evaluate_integer(handle, "_STA", NULL, &bt_present);
+ 	if (ACPI_FAILURE(result)) {
+ 		pr_err("ACPI call to query Bluetooth presence failed");
+@@ -150,23 +155,18 @@ static int toshiba_bt_resume(struct device *dev)
+ 
+ static int toshiba_bt_rfkill_add(struct acpi_device *device)
+ {
+-	acpi_status status;
+-	u64 bt_present;
+-	int result = -ENODEV;
++	int result;
+ 
+-	/*
+-	 * Some Toshiba laptops may have a fake TOS6205 device in
+-	 * their ACPI BIOS, so query the _STA method to see if there
+-	 * is really anything there, before trying to enable it.
+-	 */
+-	status = acpi_evaluate_integer(device->handle, "_STA", NULL,
+-				       &bt_present);
++	result = toshiba_bluetooth_present(device->handle);
++	if (result)
++		return result;
+ 
+-	if (!ACPI_FAILURE(status) && bt_present) {
+-		pr_info("Detected Toshiba ACPI Bluetooth device - "
+-			"installing RFKill handler\n");
+-		result = toshiba_bluetooth_enable(device->handle);
+-	}
++	pr_info("Toshiba ACPI Bluetooth device driver\n");
++
++	/* Enable the BT device */
++	result = toshiba_bluetooth_enable(device->handle);
++	if (result)
++		return result;
+ 
+ 	return result;
+ }
+@@ -174,7 +174,7 @@ static int toshiba_bt_rfkill_add(struct acpi_device *device)
+ static int toshiba_bt_rfkill_remove(struct acpi_device *device)
+ {
+ 	/* clean up */
+-	return 0;
++	return toshiba_bluetooth_disable(device->handle);
+ }
+ 
+ module_acpi_driver(toshiba_bt_rfkill_driver);
 -- 
 2.2.2
