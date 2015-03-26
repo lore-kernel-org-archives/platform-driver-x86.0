@@ -1,38 +1,40 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 4/4] toshiba_bluetooth: Remove BT enable code from
- *_notify function
-Date: Thu, 26 Mar 2015 13:00:24 -0700
-Message-ID: <20150326200024.GF19129@fury.dvhart.com>
-References: <1427314757-18232-1-git-send-email-coproscefalo@gmail.com>
- <1427314757-18232-5-git-send-email-coproscefalo@gmail.com>
- <20150325212425.GE19129@fury.dvhart.com>
- <CAGdLNWFMPims1ySYe3eVaHzMJ4pek+dMVieYAM_YALkcq+TD=Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGdLNWFMPims1ySYe3eVaHzMJ4pek+dMVieYAM_YALkcq+TD=Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v3 0/3] toshiba_bluetooth: Clean up driver plus a bugfix
+Date: Thu, 26 Mar 2015 14:56:04 -0600
+Message-ID: <1427403367-18996-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f50.google.com ([209.85.218.50]:34895 "EHLO
+	mail-oi0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752510AbbCZU4S (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 26 Mar 2015 16:56:18 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Wed, Mar 25, 2015 at 04:18:19PM -0600, Azael Avalos wrote:
-> > That suggests to me the checks for rfkill, powered, and plugged states should be
-> > done in the _enable() function itself, rather than at all the call sites.
-> >
-> > So... would a better fix be to push these two additional tests into
-> > toshiba_bluetooth_enable() before it calls AUSB and BTPO and then retain the
-> > call the _enable() here?
-> 
-> Sure, I can apply these changes there.
-> 
-> What I wanted was to isolate what each call does as a preparation for
-> upcoming patches where I will be purging toshiba_acpi from the BT
-> RFKill code and add it to toshiba_bluetooth (where it belongs).
+These patches introduce three new functions, cleaning up the driver
+code, checking for errors and returning accordingly, and also fixes
+bug 93911.
 
-OK, I'll wait for v3 and pull it in. Thanks Azael.
+Changes since v2:
+- Merged patches 2-3 into one
+- Added a comment block explaining a bit why we added an extra check
+  to the status of the device
+
+Changes since v1:
+- Removed pr_info calls from *_notify function
+- Added checks to the status of the BT device removing the TODO
+  comment and retaining the previous functionality of the driver
+
+Azael Avalos (3):
+  toshiba_bluetooth: Add three new functions to the driver
+  toshiba_bluetooth: Clean up *_add function and disable BT device at
+    removal
+  toshiba_bluetooth: Fix enabling/disabling loop on recent devices
+
+ drivers/platform/x86/toshiba_bluetooth.c | 133 ++++++++++++++++++++++++-------
+ 1 file changed, 104 insertions(+), 29 deletions(-)
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.2.2
