@@ -1,56 +1,34 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/3] toshiba_acpi: Fix typos in pr_* messages from USB
- Fleep Functions
-Date: Fri, 27 Mar 2015 19:58:55 -0700
-Message-ID: <20150328025855.GB37152@fury.dvhart.com>
-References: <1427490565-6363-1-git-send-email-coproscefalo@gmail.com>
- <1427490565-6363-3-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH 3/3] Documentation/ABI: Update sysfs-driver-toshiba_acpi
+ entry
+Date: Fri, 27 Mar 2015 20:01:56 -0700
+Message-ID: <20150328030156.GC37152@fury.dvhart.com>
+References: <1427490629-6415-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:32826 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752284AbbC1C64 (ORCPT
+Received: from [198.137.202.9] ([198.137.202.9]:38167 "EHLO
+	bombadil.infradead.org" rhost-flags-FAIL-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1752270AbbC1DCS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 27 Mar 2015 22:58:56 -0400
+	Fri, 27 Mar 2015 23:02:18 -0400
 Content-Disposition: inline
-In-Reply-To: <1427490565-6363-3-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <1427490629-6415-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
 
-On Fri, Mar 27, 2015 at 03:09:25PM -0600, Azael Avalos wrote:
-> This patch fixes typos in the pr_* messages from the USB Sleep
-> Functions.
+On Fri, Mar 27, 2015 at 03:10:29PM -0600, Azael Avalos wrote:
+> This patch updates the sysfs-driver-toshiba_acpi entry, adding the
+> missing entries for USB Sleep functions.
+> 
+> And also, while at the neighborhood, fix some typos and add a note
+> that some features require a reboot.
 > 
 > Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 595f12c..3bb456c 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -955,11 +955,11 @@ static int toshiba_usb_rapid_charge_get(struct toshiba_acpi_dev *dev,
->  	status = tci_raw(dev, in, out);
->  	sci_close(dev);
->  	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-> -		pr_err("ACPI call to get USB S&C battery level failed\n");
-> +		pr_err("ACPI call to get USB Rapid Charge failed\n");
->  		return -EIO;
->  	} else if (out[0] == TOS_NOT_SUPPORTED ||
->  		   out[0] == TOS_INPUT_DATA_ERROR) {
-> -		pr_info("USB Sleep and Charge not supported\n");
-> +		pr_info("USB Rapid Charge not supported\n");
 
-This is a name change, not a typo fix. You added a comment in 1/3 using Sleep
-and Charge, should this patch perhaps come first?
-
-Or... hrm... this is using the correct name for each state, and 1/3 added Sleep
-and Charge to the correct one... right, probably just need a better commit
-message. Not a type, but fixing the messages reporting the wrong states.
+Looks good. But I'll pull it in with the reset of the series in v2.
 
 -- 
 Darren Hart
