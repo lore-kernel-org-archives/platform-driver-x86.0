@@ -1,19 +1,20 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 1/3] toshiba_acpi: Update and fix USB Sleep and Charge modes
-Date: Sun, 29 Mar 2015 18:17:27 -0600
-Message-ID: <CAGdLNWFSZn9CyfRNhrBCrRH+2hq6YVVVSJreOQnHsEUGrqgsyg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] toshiba_acpi: Fix typos in pr_* messages from USB
+ Fleep Functions
+Date: Sun, 29 Mar 2015 18:19:05 -0600
+Message-ID: <CAGdLNWFALE02rENjRUC-UMhY6G+QFDRFf7gqnpzvVkUrz9XA9A@mail.gmail.com>
 References: <1427490565-6363-1-git-send-email-coproscefalo@gmail.com>
-	<1427490565-6363-2-git-send-email-coproscefalo@gmail.com>
-	<20150328025325.GA37152@fury.dvhart.com>
+	<1427490565-6363-3-git-send-email-coproscefalo@gmail.com>
+	<20150328025855.GB37152@fury.dvhart.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f44.google.com ([74.125.82.44]:33525 "EHLO
-	mail-wg0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751635AbbC3AR2 (ORCPT
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:37397 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751750AbbC3ATH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 29 Mar 2015 20:17:28 -0400
-In-Reply-To: <20150328025325.GA37152@fury.dvhart.com>
+	Sun, 29 Mar 2015 20:19:07 -0400
+In-Reply-To: <20150328025855.GB37152@fury.dvhart.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
@@ -21,163 +22,41 @@ Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
 
 Hi Darren,
 
-
-2015-03-27 20:53 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Fri, Mar 27, 2015 at 03:09:24PM -0600, Azael Avalos wrote:
->> This patch fixes the USB Sleep and Charge mode on certain models
->> where the value returned by the BIOS is different, and thus, making
->> this feature not to work for those models.
->>
->> Also, the "Typical" charging mode was added as a supported mode.
->
-> What does typical mean?
-
-Can't really help you here :-(
-
-Toshiba does not provide specifics as to what each mode does or
-represent, they simply state that if one mode does not work, try
-another...
-
-There are more charging modes but I will add them as soon as I
-find their values, the following list the charging modes currently
-not known.
-
-- Mode 1
-- Mode 2
-- Tablet
-
-One can infer what the "Tablet" mode does, but as for the rest...
-
->
+2015-03-27 20:58 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> On Fri, Mar 27, 2015 at 03:09:25PM -0600, Azael Avalos wrote:
+>> This patch fixes typos in the pr_* messages from the USB Sleep
+>> Functions.
 >>
 >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 >> ---
->>  drivers/platform/x86/toshiba_acpi.c | 61 +++++++++++++++++++++++++++++++------
->>  1 file changed, 52 insertions(+), 9 deletions(-)
+>>  drivers/platform/x86/toshiba_acpi.c | 16 ++++++++--------
+>>  1 file changed, 8 insertions(+), 8 deletions(-)
 >>
 >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 17a259e..595f12c 100644
+>> index 595f12c..3bb456c 100644
 >> --- a/drivers/platform/x86/toshiba_acpi.c
 >> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -150,9 +150,10 @@ MODULE_LICENSE("GPL");
->>  #define SCI_KBD_MODE_OFF             0x10
->>  #define SCI_KBD_TIME_MAX             0x3c001a
->>  #define SCI_USB_CHARGE_MODE_MASK     0xff
->> -#define SCI_USB_CHARGE_DISABLED              0x30000
->> -#define SCI_USB_CHARGE_ALTERNATE     0x30009
->> -#define SCI_USB_CHARGE_AUTO          0x30021
->> +#define SCI_USB_CHARGE_DISABLED              0x00
->> +#define SCI_USB_CHARGE_ALTERNATE     0x09
->> +#define SCI_USB_CHARGE_TYPICAL               0x11
->> +#define SCI_USB_CHARGE_AUTO          0x21
->>  #define SCI_USB_CHARGE_BAT_MASK              0x7
->>  #define SCI_USB_CHARGE_BAT_LVL_OFF   0x1
->>  #define SCI_USB_CHARGE_BAT_LVL_ON    0x4
->> @@ -177,6 +178,7 @@ struct toshiba_acpi_dev {
->>       int kbd_mode;
->>       int kbd_time;
->>       int usbsc_bat_level;
->> +     int usbsc_mode_base;
->>       int hotkey_event_type;
->>
->>       unsigned int illumination_supported:1;
->> @@ -800,6 +802,44 @@ static int toshiba_accelerometer_get(struct toshiba_acpi_dev *dev,
->>  }
->>
->>  /* Sleep (Charge and Music) utilities support */
->> +static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
->> +{
->> +     u32 in[TCI_WORDS] = { SCI_GET, SCI_USB_SLEEP_CHARGE, 0, 0, 0, 0 };
->> +     u32 out[TCI_WORDS];
->> +     acpi_status status;
->> +
->> +     if (!sci_open(dev))
->> +             return;
->> +
+>> @@ -955,11 +955,11 @@ static int toshiba_usb_rapid_charge_get(struct toshiba_acpi_dev *dev,
+>>       status = tci_raw(dev, in, out);
+>>       sci_close(dev);
+>>       if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
+>> -             pr_err("ACPI call to get USB S&C battery level failed\n");
+>> +             pr_err("ACPI call to get USB Rapid Charge failed\n");
+>>               return -EIO;
+>>       } else if (out[0] == TOS_NOT_SUPPORTED ||
+>>                  out[0] == TOS_INPUT_DATA_ERROR) {
+>> -             pr_info("USB Sleep and Charge not supported\n");
+>> +             pr_info("USB Rapid Charge not supported\n");
 >
-> Hrm, might be a good idea to set usb_sleep_charge_supported to 0 first so if we
-> error out here, it is disabled.
+> This is a name change, not a typo fix. You added a comment in 1/3 using Sleep
+> and Charge, should this patch perhaps come first?
+>
+> Or... hrm... this is using the correct name for each state, and 1/3 added Sleep
+> and Charge to the correct one... right, probably just need a better commit
+> message. Not a type, but fixing the messages reporting the wrong states.
 
-Ok, will do in v2.
+Ok, will change in v2 and resend in a few minutes.
 
->
->> +     status = tci_raw(dev, in, out);
->> +     if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
->> +             pr_err("ACPI call to get USB S&C mode failed\n");
->> +             sci_close(dev);
->> +             return;
->> +     } else if (out[0] == TOS_NOT_SUPPORTED) {
->> +             pr_info("USB Sleep and Charge not supported\n");
->> +             sci_close(dev);
->> +             return;
->> +     }
->> +     dev->usbsc_mode_base = out[4];
->> +
->> +     in[5] = SCI_USB_CHARGE_BAT_LVL;
->> +     status = tci_raw(dev, in, out);
->> +     if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
->> +             pr_err("ACPI call to get USB S&C battery level failed\n");
->
-> Sleep and Charge here too please. This keeps it consistent with the other
-> messages as well as explicit for those who may not map S&C to Sleep and Charge.
-
-Ok, will do in v2.
-
->
->> +             sci_close(dev);
->> +             return;
->> +     } else if (out[0] == TOS_NOT_SUPPORTED) {
->> +             pr_info("USB Sleep and Charge not supported\n");
->> +             sci_close(dev);
->> +             return;
->> +     }
->> +     dev->usbsc_bat_level = out[2];
->> +     dev->usb_sleep_charge_supported = 1;
->> +
->> +     sci_close(dev);
->> +}
->> +
->>  static int toshiba_usb_sleep_charge_get(struct toshiba_acpi_dev *dev,
->>                                       u32 *mode)
->>  {
->> @@ -1976,17 +2016,21 @@ static ssize_t usb_sleep_charge_store(struct device *dev,
->>        * 0 - Disabled
->>        * 1 - Alternate (Non USB conformant devices that require more power)
->>        * 2 - Auto (USB conformant devices)
->> +      * 3 - Typical
->>        */
->> -     if (state != 0 && state != 1 && state != 2)
->> +     if (state != 0 && state != 1 && state != 2 && state != 3)
->>               return -EINVAL;
->>
->>       /* Set the USB charging mode to internal value */
->> +     mode = toshiba->usbsc_mode_base;
->>       if (state == 0)
->> -             mode = SCI_USB_CHARGE_DISABLED;
->> +             mode |= SCI_USB_CHARGE_DISABLED;
->>       else if (state == 1)
->> -             mode = SCI_USB_CHARGE_ALTERNATE;
->> +             mode |= SCI_USB_CHARGE_ALTERNATE;
->>       else if (state == 2)
->> -             mode = SCI_USB_CHARGE_AUTO;
->> +             mode |= SCI_USB_CHARGE_AUTO;
->> +     else if (state == 3)
->> +             mode |= SCI_USB_CHARGE_TYPICAL;
->>
->>       ret = toshiba_usb_sleep_charge_set(toshiba, mode);
->>       if (ret)
->> @@ -2756,8 +2800,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->>       ret = toshiba_accelerometer_supported(dev);
->>       dev->accelerometer_supported = !ret;
->>
->> -     ret = toshiba_usb_sleep_charge_get(dev, &dummy);
->> -     dev->usb_sleep_charge_supported = !ret;
->> +     toshiba_usb_sleep_charge_available(dev);
->>
->>       ret = toshiba_usb_rapid_charge_get(dev, &dummy);
->>       dev->usb_rapid_charge_supported = !ret;
->
-> The rest looks good.
 >
 > --
 > Darren Hart
