@@ -1,89 +1,59 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] MAINTAINERS: Add me on list of Dell laptop drivers
-Date: Wed, 1 Apr 2015 22:10:27 -0700
-Message-ID: <20150402051027.GD37152@fury.dvhart.com>
-References: <1427636330-21091-1-git-send-email-pali.rohar@gmail.com>
+Subject: Re: [PATCH 59/86] x86/thinkpad_acpi: use uapi/linux/pci_ids.h
+ directly
+Date: Wed, 1 Apr 2015 22:14:49 -0700
+Message-ID: <20150402051449.GE37152@fury.dvhart.com>
+References: <1427635734-24786-1-git-send-email-mst@redhat.com>
+ <1427635734-24786-60-git-send-email-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:38328 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:42404 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751054AbbDBFKa (ORCPT
+	with ESMTP id S1750780AbbDBFOv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Apr 2015 01:10:30 -0400
+	Thu, 2 Apr 2015 01:14:51 -0400
 Content-Disposition: inline
-In-Reply-To: <1427636330-21091-1-git-send-email-pali.rohar@gmail.com>
+In-Reply-To: <1427635734-24786-60-git-send-email-mst@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Sun, Mar 29, 2015 at 03:38:50PM +0200, Pali Roh=E1r wrote:
+On Sun, Mar 29, 2015 at 03:41:54PM +0200, Michael S. Tsirkin wrote:
+> Header moved from linux/pci_ids.h to uapi/linux/pci_ids.h,
+> use the new header directly so we can drop
+> the wrapper in include/linux/pci_ids.h.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-Please include why. No empty commit messages please.
+This isn't in mainline yet, so I presume whoever is pushing the move to next
+will pick this up as well and keep it all together.
 
-=46or example, you've written nearly a third of the dell-wmi.c driver, =
-and all the
-dell-smo8800.c driver.
+Acked-by: Darren Hart <dvhart@linux.intel.com>
 
-Dell Laptop is still pending the keyboard backlight patches though I be=
-lieve
-(have I missed them?), so you don't currently have code ownership there=
-=2E I agree
-you should be on the MAINTAINERS list, but it would be good to get your=
- keyboard
-backlight changes in first.
-
-Gosh... sure seems like we should have merged that already... am I miss=
-ing
-something? The last thing I see in master, testing, and next is the rev=
-ert from
-Jan 21....
-
-Also, Matthew, you're the listed maintainer for these, do you agree to =
-adding
-Pali?
-
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
 > ---
->  MAINTAINERS |    7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 88c09ca..72a08ef 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3058,10 +3058,16 @@ F:	drivers/net/fddi/defxx.*
-> =20
->  DELL LAPTOP DRIVER
->  M:	Matthew Garrett <mjg59@srcf.ucam.org>
-> +M:	Pali Roh=E1r <pali.rohar@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  F:	drivers/platform/x86/dell-laptop.c
-> =20
-> +DELL LAPTOP FREEFALL DRIVER
-> +M:	Pali Roh=E1r <pali.rohar@gmail.com>
-> +S:	Maintained
-> +F:	drivers/platform/x86/dell-smo8800.c
-> +
->  DELL LAPTOP SMM DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  S:	Maintained
-> @@ -3076,6 +3082,7 @@ F:	drivers/firmware/dcdbas.*
-> =20
->  DELL WMI EXTRAS DRIVER
->  M:	Matthew Garrett <mjg59@srcf.ucam.org>
-> +M:	Pali Roh=E1r <pali.rohar@gmail.com>
->  S:	Maintained
->  F:	drivers/platform/x86/dell-wmi.c
-> =20
-> --=20
-> 1.7.9.5
->=20
->=20
+>  drivers/platform/x86/thinkpad_acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 3b8ceee..f1ac982 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -77,7 +77,7 @@
+>  #include <linux/jiffies.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/acpi.h>
+> -#include <linux/pci_ids.h>
+> +#include <uapi/linux/pci_ids.h>
+>  #include <linux/thinkpad_acpi.h>
+>  #include <sound/core.h>
+>  #include <sound/control.h>
+> -- 
+> MST
+> 
+> 
 
---=20
+-- 
 Darren Hart
 Intel Open Source Technology Center
