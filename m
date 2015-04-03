@@ -1,125 +1,40 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH v2 1/3] toshiba_acpi: Update and fix USB Sleep and Charge modes
-Date: Thu, 2 Apr 2015 19:19:25 -0600
-Message-ID: <CAGdLNWHPQq6s9BqZecgZ8AfdYCpQqxu0Fv5FmOAgTY+jSbAcEQ@mail.gmail.com>
-References: <1427678740-5459-1-git-send-email-coproscefalo@gmail.com>
-	<1427678740-5459-2-git-send-email-coproscefalo@gmail.com>
-	<20150402052125.GG37152@fury.dvhart.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v3 0/3] toshiba_acpi: Fix USB Sleep & Charge mode and documentation updates
+Date: Thu,  2 Apr 2015 19:26:19 -0600
+Message-ID: <1428024381-3823-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f180.google.com ([209.85.212.180]:35292 "EHLO
-	mail-wi0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752899AbbDCBT0 (ORCPT
+Received: from mail-ob0-f175.google.com ([209.85.214.175]:36617 "EHLO
+	mail-ob0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753041AbbDCB02 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Apr 2015 21:19:26 -0400
-In-Reply-To: <20150402052125.GG37152@fury.dvhart.com>
+	Thu, 2 Apr 2015 21:26:28 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Hi Darren,
+This patch fixes the USB Sleep & Charge charging mode on certain
+models, fixes pr_* messages and also adds the missing entries in the
+documentation file.
 
-2015-04-01 23:21 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Sun, Mar 29, 2015 at 07:25:39PM -0600, Azael Avalos wrote:
->> This patch fixes the USB Sleep and Charge mode on certain models
->> where the value returned by the BIOS is different, and thus, making
->> this feature not to work for those models.
->>
->> Also, the "Typical" charging mode was added as a supported mode.
->>
->> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> ---
->>  drivers/platform/x86/toshiba_acpi.c | 69 ++++++++++++++++++++++++++++++++-----
->>  1 file changed, 60 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 17a259e..c8ad61c 100644
->> --- a/drivers/platform/x86/toshiba_acpi.c
->> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -150,9 +150,10 @@ MODULE_LICENSE("GPL");
->>  #define SCI_KBD_MODE_OFF             0x10
->>  #define SCI_KBD_TIME_MAX             0x3c001a
->>  #define SCI_USB_CHARGE_MODE_MASK     0xff
->> -#define SCI_USB_CHARGE_DISABLED              0x30000
->> -#define SCI_USB_CHARGE_ALTERNATE     0x30009
->> -#define SCI_USB_CHARGE_AUTO          0x30021
->> +#define SCI_USB_CHARGE_DISABLED              0x00
->> +#define SCI_USB_CHARGE_ALTERNATE     0x09
->> +#define SCI_USB_CHARGE_TYPICAL               0x11
->> +#define SCI_USB_CHARGE_AUTO          0x21
->>  #define SCI_USB_CHARGE_BAT_MASK              0x7
->>  #define SCI_USB_CHARGE_BAT_LVL_OFF   0x1
->>  #define SCI_USB_CHARGE_BAT_LVL_ON    0x4
->> @@ -177,6 +178,7 @@ struct toshiba_acpi_dev {
->>       int kbd_mode;
->>       int kbd_time;
->>       int usbsc_bat_level;
->> +     int usbsc_mode_base;
->>       int hotkey_event_type;
->>
->>       unsigned int illumination_supported:1;
->> @@ -800,6 +802,52 @@ static int toshiba_accelerometer_get(struct toshiba_acpi_dev *dev,
->>  }
->>
->>  /* Sleep (Charge and Music) utilities support */
->> +static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
->> +{
->> +     u32 in[TCI_WORDS] = { SCI_GET, SCI_USB_SLEEP_CHARGE, 0, 0, 0, 0 };
->> +     u32 out[TCI_WORDS];
->> +     acpi_status status;
->> +
->> +     /* Set the feature to "not supported" in case of error */
->> +     dev->usb_sleep_charge_supported = 0;
->> +
->> +     if (!sci_open(dev))
->> +             return;
->> +
->> +     status = tci_raw(dev, in, out);
->> +     if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
->> +             pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
->> +             sci_close(dev);
->> +             return;
->> +     } else if (out[0] == TOS_NOT_SUPPORTED) {
->> +             pr_info("USB Sleep and Charge not supported\n");
->> +             sci_close(dev);
->> +             return;
->> +     }
->
-> Sorry Azael for not asking the first time, and maybe this is just how it is -
-> but it occurs to me that after the above tci_raw call, we check for 3 error
-> cases, but we never test for success. Can we not check for out[0] == TOS_SUCCESS
-> or similar? The above logic seems like the kind to lead to failure going
-> unnoticed as success is assumed and not confirmed.
->
+Changes since v2:
+- Check for TOS_SUCCESS to initialize and flag as supported on first
+  patch
 
-No problem, will send v3 in a few :-)
+Changes since v1:
+- Set the default supported value of sleep and charge to zero in case
+  of an error and added comments.
+- Updated the title and commit message of second patch to better
+  reflect what the patch is doing.
 
->> +     dev->usbsc_mode_base = out[4];
->> +
->> +     in[5] = SCI_USB_CHARGE_BAT_LVL;
->> +     status = tci_raw(dev, in, out);
->> +     if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
->> +             pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
->> +             sci_close(dev);
->> +             return;
->> +     } else if (out[0] == TOS_NOT_SUPPORTED) {
->> +             pr_info("USB Sleep and Charge not supported\n");
->> +             sci_close(dev);
->> +             return;
->> +     }
->
-> Here too.
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+Azael Avalos (3):
+  toshiba_acpi: Update and fix USB Sleep and Charge modes
+  toshiba_acpi: Fix pr_* messages from USB Sleep Functions
+  Documentation/ABI: Update sysfs-driver-toshiba_acpi entry
 
-
-Cheers
-Azael
-
+ .../ABI/testing/sysfs-driver-toshiba_acpi          | 93 +++++++++++++++++++---
+ drivers/platform/x86/toshiba_acpi.c                | 87 ++++++++++++++++----
+ 2 files changed, 150 insertions(+), 30 deletions(-)
 
 -- 
--- El mundo apesta y vosotros apestais tambien --
+2.3.4
