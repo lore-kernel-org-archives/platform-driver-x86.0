@@ -1,19 +1,12 @@
 From: Azael Avalos <coproscefalo@gmail.com>
 Subject: [PATCH v3 2/3] toshiba_acpi: Fix pr_* messages from USB Sleep Functions
-Date: Thu,  2 Apr 2015 19:26:21 -0600
-Message-ID: <1428024381-3823-3-git-send-email-coproscefalo@gmail.com>
-References: <1428024381-3823-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f172.google.com ([209.85.214.172]:34212 "EHLO
-	mail-ob0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752913AbbDCB0b (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Apr 2015 21:26:31 -0400
-In-Reply-To: <1428024381-3823-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu,  2 Apr 2015 19:27:18 -0600
+Message-ID: <1428024438-3876-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
 This patch fixes the messages displayed by the USB Sleep Functions,
 they were printing wrong messages not associated to the feature
