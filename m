@@ -1,169 +1,126 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 3/3] Documentation/ABI: Update sysfs-driver-toshiba_acpi entry
-Date: Thu,  2 Apr 2015 19:28:07 -0600
-Message-ID: <1428024487-3922-1-git-send-email-coproscefalo@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add me on list of Dell laptop drivers
+Date: Sun, 5 Apr 2015 23:11:49 +0200
+Message-ID: <201504052311.49832@pali>
+References: <1427636330-21091-1-git-send-email-pali.rohar@gmail.com> <20150402051027.GD37152@fury.dvhart.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+  boundary="nextPart9721009.SJYfShkFRR";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f173.google.com ([209.85.214.173]:36081 "EHLO
-	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753228AbbDCB2M (ORCPT
+Received: from mail-wi0-f174.google.com ([209.85.212.174]:38538 "EHLO
+	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752010AbbDEVLx (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 2 Apr 2015 21:28:12 -0400
+	Sun, 5 Apr 2015 17:11:53 -0400
+In-Reply-To: <20150402051027.GD37152@fury.dvhart.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>
 
-This patch updates the sysfs-driver-toshiba_acpi entry, adding the
-missing entries for USB Sleep functions.
+--nextPart9721009.SJYfShkFRR
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-And also, while at the neighborhood, fix some typos and add a note
-that some features require a reboot.
+On Thursday 02 April 2015 07:10:27 Darren Hart wrote:
+> On Sun, Mar 29, 2015 at 03:38:50PM +0200, Pali Roh=C3=A1r wrote:
+>=20
+> Please include why. No empty commit messages please.
+>=20
+> For example, you've written nearly a third of the dell-wmi.c
+> driver, and all the dell-smo8800.c driver.
+>=20
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- .../ABI/testing/sysfs-driver-toshiba_acpi          | 93 +++++++++++++++++++---
- 1 file changed, 80 insertions(+), 13 deletions(-)
+Ok. If you need description include this:
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-toshiba_acpi b/Documentation/ABI/testing/sysfs-driver-toshiba_acpi
-index ca9c71a..eed922e 100644
---- a/Documentation/ABI/testing/sysfs-driver-toshiba_acpi
-+++ b/Documentation/ABI/testing/sysfs-driver-toshiba_acpi
-@@ -8,9 +8,11 @@ Description:	This file controls the keyboard backlight operation mode, valid
- 			* 0x2  -> AUTO (also called TIMER)
- 			* 0x8  -> ON
- 			* 0x10 -> OFF
--		Note that the kernel 3.16 onwards this file accepts all listed
-+		Note that from kernel 3.16 onwards this file accepts all listed
- 		parameters, kernel 3.15 only accepts the first two (FN-Z and
- 		AUTO).
-+		Also note that toggling this value on type 1 devices, requires
-+		a reboot for changes to take effect.
- Users:		KToshiba
- 
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_backlight_timeout
-@@ -67,15 +69,72 @@ Description:	This file shows the current keyboard backlight type,
- 			* 2 -> Type 2, supporting modes TIMER, ON and OFF
- Users:		KToshiba
- 
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/usb_sleep_charge
-+Date:		January 23, 2015
-+KernelVersion:	4.0
-+Contact:	Azael Avalos <coproscefalo@gmail.com>
-+Description:	This file controls the USB Sleep & Charge charging mode, which
-+		can be:
-+			* 0 -> Disabled		(0x00)
-+			* 1 -> Alternate	(0x09)
-+			* 2 -> Auto		(0x21)
-+			* 3 -> Typical		(0x11)
-+		Note that from kernel 4.1 onwards this file accepts all listed
-+		values, kernel 4.0 only supports the first three.
-+		Note that this feature only works when connected to power, if
-+		you want to use it under battery, see the entry named
-+		"sleep_functions_on_battery"
-+Users:		KToshiba
-+
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/sleep_functions_on_battery
-+Date:		January 23, 2015
-+KernelVersion:	4.0
-+Contact:	Azael Avalos <coproscefalo@gmail.com>
-+Description:	This file controls the USB Sleep Functions under battery, and
-+		set the level at which point they will be disabled, accepted
-+		values can be:
-+			* 0	-> Disabled
-+			* 1-100	-> Battery level to disable sleep functions
-+		Currently it prints two values, the first one indicates if the
-+		feature is enabled or disabled, while the second one shows the
-+		current battery level set.
-+		Note that when the value is set to disabled, the sleep function
-+		will only work when connected to power.
-+Users:		KToshiba
-+
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/usb_rapid_charge
-+Date:		January 23, 2015
-+KernelVersion:	4.0
-+Contact:	Azael Avalos <coproscefalo@gmail.com>
-+Description:	This file controls the USB Rapid Charge state, which can be:
-+			* 0 -> Disabled
-+			* 1 -> Enabled
-+		Note that toggling this value requires a reboot for changes to
-+		take effect.
-+Users:		KToshiba
-+
-+What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/usb_sleep_music
-+Date:		January 23, 2015
-+KernelVersion:	4.0
-+Contact:	Azael Avalos <coproscefalo@gmail.com>
-+Description:	This file controls the Sleep & Music state, which values can be:
-+			* 0 -> Disabled
-+			* 1 -> Enabled
-+		Note that this feature only works when connected to power, if
-+		you want to use it under battery, see the entry named
-+		"sleep_functions_on_battery"
-+Users:		KToshiba
-+
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/version
--Date:		February, 2015
--KernelVersion:	3.20
-+Date:		February 12, 2015
-+KernelVersion:	4.0
- Contact:	Azael Avalos <coproscefalo@gmail.com>
- Description:	This file shows the current version of the driver
-+Users:		KToshiba
- 
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/fan
--Date:		February, 2015
--KernelVersion:	3.20
-+Date:		February 12, 2015
-+KernelVersion:	4.0
- Contact:	Azael Avalos <coproscefalo@gmail.com>
- Description:	This file controls the state of the internal fan, valid
- 		values are:
-@@ -83,8 +142,8 @@ Description:	This file controls the state of the internal fan, valid
- 			* 1 -> ON
- 
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/kbd_function_keys
--Date:		February, 2015
--KernelVersion:	3.20
-+Date:		February 12, 2015
-+KernelVersion:	4.0
- Contact:	Azael Avalos <coproscefalo@gmail.com>
- Description:	This file controls the Special Functions (hotkeys) operation
- 		mode, valid values are:
-@@ -94,21 +153,29 @@ Description:	This file controls the Special Functions (hotkeys) operation
- 		and the hotkeys are accessed via FN-F{1-12}.
- 		In the "Special Functions" mode, the F{1-12} keys trigger the
- 		hotkey and the F{1-12} keys are accessed via FN-F{1-12}.
-+		Note that toggling this value requires a reboot for changes to
-+		take effect.
-+Users:		KToshiba
- 
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/panel_power_on
--Date:		February, 2015
--KernelVersion:	3.20
-+Date:		February 12, 2015
-+KernelVersion:	4.0
- Contact:	Azael Avalos <coproscefalo@gmail.com>
- Description:	This file controls whether the laptop should turn ON whenever
- 		the LID is opened, valid values are:
- 			* 0 -> Disabled
- 			* 1 -> Enabled
-+		Note that toggling this value requires a reboot for changes to
-+		take effect.
-+Users:		KToshiba
- 
- What:		/sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS{1900,620{0,7,8}}:00/usb_three
--Date:		February, 2015
--KernelVersion:	3.20
-+Date:		February 12, 2015
-+KernelVersion:	4.0
- Contact:	Azael Avalos <coproscefalo@gmail.com>
--Description:	This file controls whether the USB 3 functionality, valid
--		values are:
-+Description:	This file controls the USB 3 functionality, valid values are:
- 			* 0 -> Disabled (Acts as a regular USB 2)
- 			* 1 -> Enabled (Full USB 3 functionality)
-+		Note that toggling this value requires a reboot for changes to
-+		take effect.
-+Users:		KToshiba
--- 
-2.3.4
+=3D=3D=3D
+MAINTAINERS: Add me on list of Dell laptop drivers
+
+I have written more parts of dell laptop drivers dell-laptop.c,=20
+dell-wmi.c and dell-smo8800.c
+=3D=3D=3D
+
+> Dell Laptop is still pending the keyboard backlight patches
+> though I believe (have I missed them?), so you don't
+> currently have code ownership there. I agree you should be on
+> the MAINTAINERS list, but it would be good to get your
+> keyboard backlight changes in first.
+>=20
+
+ok.
+
+> Gosh... sure seems like we should have merged that already...
+> am I missing something? The last thing I see in master,
+> testing, and next is the revert from Jan 21....
+>=20
+
+backlight support was merged for 3.19, but has small problem with=20
+ALS settings. And then you decided to revert it for 3.19. After=20
+that problem was fixed and last (2015-03-06) you wrote that you=20
+queued patch again for 4.1 release.
+
+> Also, Matthew, you're the listed maintainer for these, do you
+> agree to adding Pali?
+>=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > ---
+> >=20
+> >  MAINTAINERS |    7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 88c09ca..72a08ef 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -3058,10 +3058,16 @@ F:	drivers/net/fddi/defxx.*
+> >=20
+> >  DELL LAPTOP DRIVER
+> >  M:	Matthew Garrett <mjg59@srcf.ucam.org>
+> >=20
+> > +M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> >=20
+> >  L:	platform-driver-x86@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/platform/x86/dell-laptop.c
+> >=20
+> > +DELL LAPTOP FREEFALL DRIVER
+> > +M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > +S:	Maintained
+> > +F:	drivers/platform/x86/dell-smo8800.c
+> > +
+> >=20
+> >  DELL LAPTOP SMM DRIVER
+> >  M:	Guenter Roeck <linux@roeck-us.net>
+> >  S:	Maintained
+> >=20
+> > @@ -3076,6 +3082,7 @@ F:	drivers/firmware/dcdbas.*
+> >=20
+> >  DELL WMI EXTRAS DRIVER
+> >  M:	Matthew Garrett <mjg59@srcf.ucam.org>
+> >=20
+> > +M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> >=20
+> >  S:	Maintained
+> >  F:	drivers/platform/x86/dell-wmi.c
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart9721009.SJYfShkFRR
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlUhpRUACgkQi/DJPQPkQ1LDTgCfSXQE+Z91UtACujqqXtU+gr4r
+2dsAoJ+IJ8FcIHhSolbU1hrStspvOMfq
+=EyK5
+-----END PGP SIGNATURE-----
+
+--nextPart9721009.SJYfShkFRR--
