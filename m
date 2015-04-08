@@ -1,45 +1,76 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 0/3] toshiba_acpi: Fix USB Sleep & Charge mode and
- documentation updates
-Date: Tue, 7 Apr 2015 20:50:38 -0700
-Message-ID: <20150408035038.GA14618@fury.dvhart.com>
-References: <1428024381-3823-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add me on list of Dell laptop drivers
+Date: Tue, 7 Apr 2015 21:03:28 -0700
+Message-ID: <20150408040328.GB14618@fury.dvhart.com>
+References: <1427636330-21091-1-git-send-email-pali.rohar@gmail.com>
+ <20150402051027.GD37152@fury.dvhart.com>
+ <201504052311.49832@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:46617 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750993AbbDHEDa (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 8 Apr 2015 00:03:30 -0400
 Content-Disposition: inline
-In-Reply-To: <1428024381-3823-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <201504052311.49832@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>
 
-On Thu, Apr 02, 2015 at 07:26:19PM -0600, Azael Avalos wrote:
-> This patch fixes the USB Sleep & Charge charging mode on certain
-> models, fixes pr_* messages and also adds the missing entries in the
-> documentation file.
-> 
-> Changes since v2:
-> - Check for TOS_SUCCESS to initialize and flag as supported on first
->   patch
-> 
-> Changes since v1:
-> - Set the default supported value of sleep and charge to zero in case
->   of an error and added comments.
-> - Updated the title and commit message of second patch to better
->   reflect what the patch is doing.
-> 
-> Azael Avalos (3):
->   toshiba_acpi: Update and fix USB Sleep and Charge modes
->   toshiba_acpi: Fix pr_* messages from USB Sleep Functions
->   Documentation/ABI: Update sysfs-driver-toshiba_acpi entry
-> 
->  .../ABI/testing/sysfs-driver-toshiba_acpi          | 93 +++++++++++++++++++---
->  drivers/platform/x86/toshiba_acpi.c                | 87 ++++++++++++++++----
->  2 files changed, 150 insertions(+), 30 deletions(-)
+On Sun, Apr 05, 2015 at 11:11:49PM +0200, Pali Roh=E1r wrote:
+> On Thursday 02 April 2015 07:10:27 Darren Hart wrote:
+> > On Sun, Mar 29, 2015 at 03:38:50PM +0200, Pali Roh=E1r wrote:
+> >=20
+> > Please include why. No empty commit messages please.
+> >=20
+> > For example, you've written nearly a third of the dell-wmi.c
+> > driver, and all the dell-smo8800.c driver.
+> >=20
+>=20
+> Ok. If you need description include this:
+>=20
+> =3D=3D=3D
+> MAINTAINERS: Add me on list of Dell laptop drivers
+>=20
+> I have written more parts of dell laptop drivers dell-laptop.c,=20
+> dell-wmi.c and dell-smo8800.c
+> =3D=3D=3D
+>=20
+> > Dell Laptop is still pending the keyboard backlight patches
+> > though I believe (have I missed them?), so you don't
+> > currently have code ownership there. I agree you should be on
+> > the MAINTAINERS list, but it would be good to get your
+> > keyboard backlight changes in first.
+> >=20
+>=20
+> ok.
+>=20
+> > Gosh... sure seems like we should have merged that already...
+> > am I missing something? The last thing I see in master,
+> > testing, and next is the revert from Jan 21....
+> >=20
+>=20
+> backlight support was merged for 3.19, but has small problem with=20
+> ALS settings. And then you decided to revert it for 3.19. After=20
+> that problem was fixed and last (2015-03-06) you wrote that you=20
+> queued patch again for 4.1 release.
 
-Queued the series, thanks Azael.
+Right you are, and I appear to have dropped that ball. Found it, and it=
+'s now in
+my testing branch, and will run through the 0day testing, then into my =
+next
+tomorrow, still on track for 4.1.
 
--- 
+>=20
+> > Also, Matthew, you're the listed maintainer for these, do you
+> > agree to adding Pali?
+
+I'm accepted silence as acceptance :-)
+
+--=20
 Darren Hart
 Intel Open Source Technology Center
