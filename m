@@ -1,29 +1,104 @@
-From: "Transcon Finance Ltd" <rahul.chandra2014@tiss.edu>
-Subject: We Offer Financial Help
-Date: Mon, 13 Apr 2015 18:35:54 +0530
-Message-ID: <20150413131444.8FD1F110013C@mail.tiss.edu>
-Reply-To: transconfiinanceltd@outlook.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] toshiba_acpi: Do not register vendor backlight when acpi_video bl is available
+Date: Wed, 15 Apr 2015 16:11:57 +0200
+Message-ID: <1429107117-7608-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.tiss.edu ([103.36.84.25]:42160 "EHLO mail.tiss.edu"
+Received: from mx1.redhat.com ([209.132.183.28]:60987 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750999AbbDMNXm convert rfc822-to-8bit (ORCPT
+	id S1753659AbbDOOMA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 13 Apr 2015 09:23:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.tiss.edu (Postfix) with ESMTP id 8FD1F110013C
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Apr 2015 18:44:44 +0530 (IST)
-Received: from mail.tiss.edu ([127.0.0.1])
-	by localhost (mail.tiss.edu [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id PWyxMNkzu41A for <platform-driver-x86@vger.kernel.org>;
-	Mon, 13 Apr 2015 18:44:44 +0530 (IST)
-Content-Description: Mail message body
+	Wed, 15 Apr 2015 10:12:00 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <rahul.chandra2014@tiss.edu>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
 
-Transcon Finance Ltd, if you=E2=80=99re in need for financial help to s=
-olve your school, house, tax or business problems, contact us immediate=
-ly via email: transconfiinanceltd@outlook.com
+commit a39f46df33c6 ("toshiba_acpi: Fix regression caused by backlight extra
+check code") causes the backlight to no longer work on the Toshiba Z30,
+reverting that commit fixes this but restores the original issue fixed
+by that commit.
+
+Looking at the toshiba_acpi backlight code for a fix for this I noticed that
+the toshiba code is the only code under platform/x86 which unconditionally
+registers a vendor acpi backlight interface, without checking for acpi_video
+backlight support first.
+
+This commit adds the necessary checks bringing toshiba_acpi in line with the
+other drivers, and fixing the Z30 regression without needing to revert the
+commit causing it.
+
+Chances are that there will be some Toshiba models which have a non working
+acpi-video implementation while the toshiba vendor backlight interface does
+work, this commit adds an empty dmi_id table where such systems can be added,
+this is identical to how other drivers handle such systems.
+
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1206036
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=86521
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/Kconfig        |  1 +
+ drivers/platform/x86/toshiba_acpi.c | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9752761..f9f205c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -614,6 +614,7 @@ config ACPI_TOSHIBA
+ 	depends on INPUT
+ 	depends on RFKILL || RFKILL = n
+ 	depends on SERIO_I8042 || SERIO_I8042 = n
++	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	select INPUT_POLLDEV
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index dbcb7a8..2da716c 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -51,6 +51,7 @@
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+ #include <linux/uaccess.h>
++#include <acpi/video.h>
+ 
+ MODULE_AUTHOR("John Belmonte");
+ MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+@@ -281,6 +282,14 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
+ };
+ 
+ /*
++ * List of models which have a broken acpi-video backlight interface and thus
++ * need to use the toshiba (vendor) interface instead.
++ */
++static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
++	{}
++};
++
++/*
+  * Utility
+  */
+ 
+@@ -2541,6 +2550,20 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 	ret = get_tr_backlight_status(dev, &enabled);
+ 	dev->tr_backlight_supported = !ret;
+ 
++	/*
++	 * Tell acpi-video-detect code to prefer vendor backlight on all
++	 * systems with transflective backlight and on dmi matched systems.
++	 */
++	if (dev->tr_backlight_supported ||
++	    dmi_check_system(toshiba_vendor_backlight_dmi))
++		acpi_video_dmi_promote_vendor();
++
++	if (acpi_video_backlight_support())
++		return 0;
++
++	/* acpi-video may have loaded before we called dmi_promote_vendor() */
++	acpi_video_unregister_backlight();
++
+ 	memset(&props, 0, sizeof(props));
+ 	props.type = BACKLIGHT_PLATFORM;
+ 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
+-- 
+2.3.5
