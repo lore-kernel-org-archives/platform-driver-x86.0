@@ -1,375 +1,138 @@
-From: Gavin Li <gavinli@thegavinli.com>
-Subject: Re: [PATCH] platform: add samsung-wmi driver for newer Samsung laptops
-Date: Thu, 16 Apr 2015 03:33:30 -0700
-Message-ID: <CA+GxvY6VvimZO01aybweD5Qv_xcN+wrjoe-E-S1wN-2qC-Moig@mail.gmail.com>
-References: <1428429233-19568-1-git-send-email-gavinli@thegavinli.com>
-	<CAHR064hnwauzfRPQvBs0uRupCqSfpyK2f57oaYDVPPuFniXRBA@mail.gmail.com>
-	<CA+GxvY4t-DBeaYzzhWqV8OexikkYUdCaCwFc=z_1gjnj5bXUfg@mail.gmail.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH] toshiba_acpi: Do not register vendor backlight when
+ acpi_video bl is available
+Date: Fri, 17 Apr 2015 10:58:46 -0600
+Message-ID: <CAGdLNWF1KXJWzcREHU2d3KycdH3YGPYbkY4ccMa_xLf-7-MXkQ@mail.gmail.com>
+References: <1429107117-7608-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f177.google.com ([209.85.217.177]:36604 "EHLO
-	mail-lb0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757150AbbDPKdd (ORCPT
+Received: from mail-wi0-f176.google.com ([209.85.212.176]:38692 "EHLO
+	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932997AbbDQQ6r (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 16 Apr 2015 06:33:33 -0400
-Received: by lbbqq2 with SMTP id qq2so55031311lbb.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Apr 2015 03:33:32 -0700 (PDT)
-Received: from mail-lb0-f178.google.com (mail-lb0-f178.google.com. [209.85.217.178])
-        by mx.google.com with ESMTPSA id an8sm1582753lac.25.2015.04.16.03.33.31
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Apr 2015 03:33:31 -0700 (PDT)
-Received: by lbbqq2 with SMTP id qq2so55030886lbb.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Apr 2015 03:33:30 -0700 (PDT)
-In-Reply-To: <CA+GxvY4t-DBeaYzzhWqV8OexikkYUdCaCwFc=z_1gjnj5bXUfg@mail.gmail.com>
+	Fri, 17 Apr 2015 12:58:47 -0400
+Received: by wiun10 with SMTP id n10so27276332wiu.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Apr 2015 09:58:46 -0700 (PDT)
+In-Reply-To: <1429107117-7608-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Gavin Li <git@thegavinli.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Actually there is an issue that affects the functionality of the
-driver; I will have to work on this a bit more first. Thanks for the
-feedback.
+Hi there,
 
-Gavin
+Sorry for the late reply, I've been a bit overwhelmed with work related stuff,
+and to top it off I was having issues with one of my systems, but anyway,
+on to the patch :-)
 
-On Thu, Apr 16, 2015 at 3:30 AM, Gavin Li <gavinli@thegavinli.com> wrote:
-> Actually there is an issue that affects the functionality of the driver; I
-> will have to work on this a bit more first. Thanks for the feedback.
+2015-04-15 8:11 GMT-06:00 Hans de Goede <hdegoede@redhat.com>:
+> commit a39f46df33c6 ("toshiba_acpi: Fix regression caused by backlight extra
+> check code") causes the backlight to no longer work on the Toshiba Z30,
+> reverting that commit fixes this but restores the original issue fixed
+> by that commit.
 >
-> Gavin
+> Looking at the toshiba_acpi backlight code for a fix for this I noticed that
+> the toshiba code is the only code under platform/x86 which unconditionally
+> registers a vendor acpi backlight interface, without checking for acpi_video
+> backlight support first.
 >
-> On Thu, Apr 16, 2015 at 12:04 AM, Corentin Chary <corentin.chary@gmail.com>
-> wrote:
->>
->> On Tue, Apr 7, 2015 at 6:53 PM,  <gavinli@thegavinli.com> wrote:
->> > From: Gavin Li <git@thegavinli.com>
->> >
->> > This driver adds support for coarse (on or off) fan control and
->> > the keyboard backlight on newer Samsung laptops.
->> > ---
->> >  drivers/platform/x86/Kconfig       |  10 ++
->> >  drivers/platform/x86/Makefile      |   1 +
->> >  drivers/platform/x86/samsung-wmi.c | 221
->> > +++++++++++++++++++++++++++++++++++++
->> >  3 files changed, 232 insertions(+)
->> >  create mode 100644 drivers/platform/x86/samsung-wmi.c
->> >
->> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> > index 9752761..96f4620 100644
->> > --- a/drivers/platform/x86/Kconfig
->> > +++ b/drivers/platform/x86/Kconfig
->> > @@ -813,6 +813,16 @@ config SAMSUNG_LAPTOP
->> >           To compile this driver as a module, choose M here: the module
->> >           will be called samsung-laptop.
->> >
->> > +config SAMSUNG_WMI
->> > +       tristate "Samsung WMI driver (for newer Samsung laptops)"
->> > +       depends on ACPI
->> > +       depends on ACPI_WMI
->> > +       select LEDS_CLASS
->> > +       select NEW_LEDS
->> > +         ---help---
->> > +         This driver adds support for coarse (on or off) fan control
->> > +         and the keyboard backlight for newer Samsung laptops.
->> > +
->> >  config MXM_WMI
->> >         tristate "WMI support for MXM Laptop Graphics"
->> >         depends on ACPI_WMI
->> > diff --git a/drivers/platform/x86/Makefile
->> > b/drivers/platform/x86/Makefile
->> > index f82232b..4c65e51 100644
->> > --- a/drivers/platform/x86/Makefile
->> > +++ b/drivers/platform/x86/Makefile
->> > @@ -48,6 +48,7 @@ obj-$(CONFIG_XO1_RFKILL)      += xo1-rfkill.o
->> >  obj-$(CONFIG_XO15_EBOOK)       += xo15-ebook.o
->> >  obj-$(CONFIG_IBM_RTL)          += ibm_rtl.o
->> >  obj-$(CONFIG_SAMSUNG_LAPTOP)   += samsung-laptop.o
->> > +obj-$(CONFIG_SAMSUNG_WMI)      += samsung-wmi.o
->> >  obj-$(CONFIG_MXM_WMI)          += mxm-wmi.o
->> >  obj-$(CONFIG_INTEL_MID_POWER_BUTTON)   += intel_mid_powerbtn.o
->> >  obj-$(CONFIG_INTEL_OAKTRAIL)   += intel_oaktrail.o
->> > diff --git a/drivers/platform/x86/samsung-wmi.c
->> > b/drivers/platform/x86/samsung-wmi.c
->> > new file mode 100644
->> > index 0000000..c93cfe4
->> > --- /dev/null
->> > +++ b/drivers/platform/x86/samsung-wmi.c
->> > @@ -0,0 +1,221 @@
->> > +/*
->> > + *  Samsung WMI driver
->> > + *
->> > + *  Copyright (C) 2015 Gavin Li <git@thegavinli.com>
->> > + *
->> > + *  This program is free software; you can redistribute it and/or
->> > modify
->> > + *  it under the terms of the GNU General Public License as published
->> > by
->> > + *  the Free Software Foundation; either version 2 of the License, or
->> > + *  (at your option) any later version.
->> > + *
->> > + *  This program is distributed in the hope that it will be useful,
->> > + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
->> > + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> > + *  GNU General Public License for more details.
->> > + *
->> > + *  You should have received a copy of the GNU General Public License
->> > along
->> > + *  with this program; if not, write to the Free Software Foundation,
->> > Inc.,
->> > + *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
->> > + */
->> > +
->> > +#include <linux/init.h>
->> > +#include <linux/module.h>
->> > +#include <linux/acpi.h>
->> > +#include <linux/leds.h>
->> > +#include <linux/platform_device.h>
->> > +
->> > +#define DRIVER_NAME "samsung-wmi"
->> > +#define WMI_GUID "C16C47BA-50E3-444A-AF3A-B1C348380001"
->> > +
->> > +struct samsung_wmi_packet {
->> > +       uint16_t magic;
->> > +       uint16_t opcode;
->> > +       uint8_t reqres;
->> > +       uint8_t data[16];
->> > +} __packed;
->> > +
->> > +static struct platform_device *samsung_wmi_device;
->> > +
->> > +static inline bool string_matches(const char *str, const char *kwd) {
->> > +       size_t len = strlen(kwd);
->> > +       if (strncmp(str, kwd, len) != 0)
->> > +               return false;
->> > +       return str[len] == '\0' || str[len] == '\n';
->> > +}
->> > +
->> > +static int samsung_wmi_method_call(uint16_t opcode, void *data, size_t
->> > len) {
->> > +       struct samsung_wmi_packet inpkt = {
->> > +               .magic = 0x5843,
->>
->> Please use a constant instead of a magic number here.
->>
->> > +               .opcode = opcode,
->> > +       };
->> > +       struct acpi_buffer inbuf = { sizeof(inpkt), &inpkt };
->> > +       struct acpi_buffer outbuf = { ACPI_ALLOCATE_BUFFER, NULL };
->> > +       union acpi_object *outobj;
->> > +       struct samsung_wmi_packet *outpkt;
->> > +       acpi_status st;
->> > +       int ret = -EIO;
->> > +       /********/
->> > +       if (len > 16) {
->>
->> Please use a constant instead of 16 here.
->>
->> > +               ret = -EINVAL;
->> > +               goto err0;
->> > +       }
->> > +       memcpy(inpkt.data, data, len);
->> > +       st = wmi_evaluate_method(WMI_GUID, 1, 0, &inbuf, &outbuf);
->> > +       if (ACPI_FAILURE(st)) {
->> > +               dev_err(&samsung_wmi_device->dev, "opcode 0x%x failed:
->> > %s\n",
->> > +                               opcode, acpi_format_exception(st));
->> > +               goto err0;
->> > +       }
->> > +       outobj = outbuf.pointer;
->> > +       if (outobj->type != ACPI_TYPE_BUFFER) {
->> > +               goto err1;
->> > +       }
->> > +       if (outobj->buffer.length < sizeof(outpkt)) {
->> > +               goto err1;
->> > +       }
->> > +       outpkt = (struct samsung_wmi_packet *)outobj->buffer.pointer;
->> > +       memcpy(data, outpkt->data, len);
->> > +       ret = 0;
->> > +err1:
->> > +       kfree(outobj);
->> > +err0:
->> > +       return ret;
->> > +}
->> > +
->> > +static int samsung_wmi_method_call_with_unlock(
->> > +               uint16_t unlock_opcode,
->> > +               uint16_t opcode, void *data, size_t len) {
->> > +       unsigned int unlock_data = 0xAABB;
->>
->> Same
->>
->> > +       int ret;
->> > +       /********/
->> > +       ret = samsung_wmi_method_call(unlock_opcode, &unlock_data,
->> > sizeof(unlock_data));
->> > +       if (ret)
->> > +               goto err0;
->> > +       if (unlock_data != 0xCCDD) {
->> > +               dev_err(&samsung_wmi_device->dev, "incorrect unlock
->> > response!\n");
->> > +               ret = -EIO;
->> > +               goto err0;
->> > +       }
->> > +       ret = samsung_wmi_method_call(opcode, data, len);
->> > +err0:
->> > +       return ret;
->> > +}
->> > +
->> > +static ssize_t samsung_wmi_fan_mode_show(struct device *dev, struct
->> > device_attribute *attr,
->> > +               char *buf) {
->> > +       uint32_t data = 0;
->> > +       if (samsung_wmi_method_call_with_unlock(0x31, 0x31, &data,
->> > sizeof(data)))
->> > +               return -EIO;
->> > +       if (data)
->> > +               strcpy(buf, "[auto off] on\n");
->> > +       else
->> > +               strcpy(buf, "auto off [on]\n");
->> > +       return strlen(buf);
->> > +}
->> > +
->> > +static ssize_t samsung_wmi_fan_mode_store(struct device *dev, struct
->> > device_attribute *attr,
->> > +               const char *buf, size_t count) {
->> > +       uint32_t data;
->> > +       if (string_matches(buf, "auto"))
->> > +               data = 0x810001;
->>
->> Same, and other places
->>
->> > +       else if (string_matches(buf, "on"))
->> > +               data = 0;
->> > +       else if (string_matches(buf, "off"))
->> > +               data = 0x800001;
->> > +       else
->> > +               return -EINVAL;
->> > +       if (samsung_wmi_method_call_with_unlock(0x31, 0x32, &data,
->> > sizeof(data)))
->> > +               return -EIO;
->> > +       else
->> > +               return count;
->> > +}
->> > +
->> > +static void samsung_wmi_kbd_backlight_led_brightness_set(
->> > +               struct led_classdev *cdev, enum led_brightness
->> > brightness) {
->> > +       unsigned int data = brightness;
->>
->> Why sometime uint32_t and sometime unsigned int ?
->>
->> > +       if (data > 4)
->> > +               data = 4;
->> > +       data = (data << 8) | 0x82;
->> > +       /********/
->> > +       samsung_wmi_method_call_with_unlock(0x78, 0x78, &data,
->> > sizeof(data));
->> > +}
->> > +
->> > +static DEVICE_ATTR(fan_mode, S_IRUGO | S_IWUSR,
->> > samsung_wmi_fan_mode_show, samsung_wmi_fan_mode_store);
->> > +
->> > +static struct platform_driver samsung_wmi_driver = {
->> > +       .driver = {
->> > +               .name = DRIVER_NAME,
->> > +               .owner = THIS_MODULE,
->> > +       },
->> > +};
->> > +
->> > +static struct led_classdev samsung_wmi_kbd_backlight_led = {
->> > +       .name = DRIVER_NAME "::kbd_backlight",
->> > +       .max_brightness = 4,
->> > +       .brightness_set = samsung_wmi_kbd_backlight_led_brightness_set,
->> > +};
->> > +
->> > +static int kb_default_brightness = -1;
->> > +module_param(kb_default_brightness, int, S_IRUGO);
->> > +MODULE_PARM_DESC(kb_default_brightness,
->> > +               "Default keyboard backlight brightness right after
->> > initialization");
->> > +
->> > +static int samsung_wmi_init(void) {
->> > +       int ret;
->> > +       // check whether method is present
->> > +       if (!wmi_has_guid(WMI_GUID))
->> > +               return -ENODEV;
->> > +       // we're good to go
->> > +       ret = platform_driver_register(&samsung_wmi_driver);
->> > +       if (ret) {
->> > +               goto err0;
->> > +       }
->> > +       samsung_wmi_device = platform_device_alloc(DRIVER_NAME, -1);
->> > +       if (!samsung_wmi_device) {
->> > +               ret = -ENOMEM;
->> > +               goto err1;
->> > +       }
->> > +       ret = platform_device_add(samsung_wmi_device);
->> > +       if (ret) {
->> > +               goto err2;
->> > +       }
->> > +       ret = device_create_file(&samsung_wmi_device->dev,
->> > &dev_attr_fan_mode);
->> > +       if (ret) {
->> > +               goto err3;
->> > +       }
->> > +       ret = led_classdev_register(&samsung_wmi_device->dev,
->> > +                       &samsung_wmi_kbd_backlight_led);
->> > +       if (ret) {
->> > +               goto err4;
->> > +       }
->> > +       if (kb_default_brightness >= 0) {
->> > +               led_set_brightness(&samsung_wmi_kbd_backlight_led,
->> > kb_default_brightness);
->> > +       }
->> > +       return 0;
->> > +//err5:
->> > +       led_classdev_unregister(&samsung_wmi_kbd_backlight_led);
->> > +err4:
->>
->> Instead of 'errX' please give a name related to what happen after the
->> label (or what failed just before)
->>
->> > +       device_remove_file(&samsung_wmi_device->dev,
->> > &dev_attr_fan_mode);
->> > +err3:
->> > +       platform_device_del(samsung_wmi_device);
->> > +err2:
->> > +       platform_device_put(samsung_wmi_device);
->> > +err1:
->> > +       platform_driver_unregister(&samsung_wmi_driver);
->> > +err0:
->> > +       return ret;
->> > +}
->> > +
->> > +static void samsung_wmi_exit(void) {
->> > +       led_classdev_unregister(&samsung_wmi_kbd_backlight_led);
->> > +       device_remove_file(&samsung_wmi_device->dev,
->> > &dev_attr_fan_mode);
->> > +       platform_device_unregister(samsung_wmi_device);
->> > +       platform_driver_unregister(&samsung_wmi_driver);
->> > +}
->> > +
->> > +MODULE_LICENSE("GPL");
->> > +MODULE_AUTHOR("Gavin Li");
->> > +MODULE_DESCRIPTION("WMI driver for some Samsung laptops.");
->> > +MODULE_ALIAS("wmi:" WMI_GUID);
->> > +module_init(samsung_wmi_init);
->> > +module_exit(samsung_wmi_exit);
->> > --
->> > 2.3.5
->> >
->> > --
->> > To unsubscribe from this list: send the line "unsubscribe
->> > platform-driver-x86" in
->> > the body of a message to majordomo@vger.kernel.org
->> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->>
->> --
->> Corentin Chary
->> http://xf.iksaif.net
+> This commit adds the necessary checks bringing toshiba_acpi in line with the
+> other drivers, and fixing the Z30 regression without needing to revert the
+> commit causing it.
 >
+> Chances are that there will be some Toshiba models which have a non working
+> acpi-video implementation while the toshiba vendor backlight interface does
+> work, this commit adds an empty dmi_id table where such systems can be added,
+> this is identical to how other drivers handle such systems.
 >
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1206036
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=86521
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/Kconfig        |  1 +
+>  drivers/platform/x86/toshiba_acpi.c | 23 +++++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 9752761..f9f205c 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -614,6 +614,7 @@ config ACPI_TOSHIBA
+>         depends on INPUT
+>         depends on RFKILL || RFKILL = n
+>         depends on SERIO_I8042 || SERIO_I8042 = n
+> +       depends on ACPI_VIDEO || ACPI_VIDEO = n
+>         select INPUT_POLLDEV
+>         select INPUT_SPARSEKMAP
+>         ---help---
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index dbcb7a8..2da716c 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -51,6 +51,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>  #include <linux/uaccess.h>
+> +#include <acpi/video.h>
+>
+
+Is this patch intended for 4.1 (or later)? If so, you will need to
+re-include <linux/dmi.h> as
+commit a2b3471b5b13b81c5975d8f88db65694d7b69f56 dropped it.
+
+
+>  MODULE_AUTHOR("John Belmonte");
+>  MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
+> @@ -281,6 +282,14 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
+>  };
+>
+>  /*
+> + * List of models which have a broken acpi-video backlight interface and thus
+> + * need to use the toshiba (vendor) interface instead.
+> + */
+> +static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
+> +       {}
+> +};
+> +
+> +/*
+>   * Utility
+>   */
+>
+> @@ -2541,6 +2550,20 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+>         ret = get_tr_backlight_status(dev, &enabled);
+>         dev->tr_backlight_supported = !ret;
+>
+> +       /*
+> +        * Tell acpi-video-detect code to prefer vendor backlight on all
+> +        * systems with transflective backlight and on dmi matched systems.
+> +        */
+> +       if (dev->tr_backlight_supported ||
+> +           dmi_check_system(toshiba_vendor_backlight_dmi))
+> +               acpi_video_dmi_promote_vendor();
+> +
+> +       if (acpi_video_backlight_support())
+> +               return 0;
+> +
+> +       /* acpi-video may have loaded before we called dmi_promote_vendor() */
+> +       acpi_video_unregister_backlight();
+> +
+>         memset(&props, 0, sizeof(props));
+>         props.type = BACKLIGHT_PLATFORM;
+>         props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
+> --
+> 2.3.5
+>
+
+I've tested this on my (current) devices (Satellite X205, Qosmio X505 & X75),
+an taking the above comment into consideration, you can add:
+
+Reviewed-and-Tested-by: Azael Avalos <coproscefalo@gmail.com>
+
+
+Cheers
+Azael
+
+
+-- 
+-- El mundo apesta y vosotros apestais tambien --
