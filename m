@@ -1,111 +1,54 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] toshiba_acpi: Do not register vendor backlight when acpi_video bl is available
-Date: Tue, 21 Apr 2015 12:01:32 +0200
-Message-ID: <1429610492-22333-1-git-send-email-hdegoede@redhat.com>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] platform:x86: add Intel Broxton PMC IPC driver
+Date: Tue, 21 Apr 2015 12:58:48 +0100
+Message-ID: <20150421125848.179725f4@lxorguk.ukuu.org.uk>
+References: <1429571069-55055-1-git-send-email-qipeng.zha@intel.com>
+	<20150420182603.7d469d06@lxorguk.ukuu.org.uk>
+	<C6287702A945AC47BE5DB5DFD4B5C6DD0187F65D@SHSMSX104.ccr.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:50333 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751586AbbDUKB7 (ORCPT
+Received: from 251.110.2.81.in-addr.arpa ([81.2.110.251]:50405 "EHLO
+	lxorguk.ukuu.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752667AbbDUL7Z (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Apr 2015 06:01:59 -0400
+	Tue, 21 Apr 2015 07:59:25 -0400
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD0187F65D@SHSMSX104.ccr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "Yang, Fei" <fei.yang@intel.com>, "Zhong, Huiquan" <huiquan.zhong@intel.com>, "Chen, Jason CJ" <jason.cj.chen@intel.com>, "Zheng, Qi" <qi.zheng@intel.com>
 
-commit a39f46df33c6 ("toshiba_acpi: Fix regression caused by backlight extra
-check code") causes the backlight to no longer work on the Toshiba Z30,
-reverting that commit fixes this but restores the original issue fixed
-by that commit.
+On Tue, 21 Apr 2015 00:59:35 +0000
+"Zha, Qipeng" <qipeng.zha@intel.com> wrote:
 
-Looking at the toshiba_acpi backlight code for a fix for this I noticed that
-the toshiba code is the only code under platform/x86 which unconditionally
-registers a vendor acpi backlight interface, without checking for acpi_video
-backlight support first.
+> Hi Alan
+> 
+> Fei, owner of intel_scu_ipc.c, suggested separate these two, since they are different hw,
+> Not prefer to manage them in one driver.
 
-This commit adds the necessary checks bringing toshiba_acpi in line with the
-other drivers, and fixing the Z30 regression without needing to revert the
-commit causing it.
+They don't look that different to me except that it lacks some of the
+cleanups as well as the naming to make it more Linxulike
+(intel_scu_ipc_iowrite16 etc) that were done to the scu_ipc code.
 
-Chances are that there will be some Toshiba models which have a non working
-acpi-video implementation while the toshiba vendor backlight interface does
-work, this commit adds an empty dmi_id table where such systems can be added,
-this is identical to how other drivers handle such systems.
+What we really want to avoid is code elsewhere that ends up doing
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1206036
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=86521
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-and-tested-by: Azael Avalos <coproscefalo@gmail.com>
----
-Changes in v2:
--Rebase on top of linux-platform-drivers-x86/for-next
--Add Azael's Reviewed-and-tested-by
----
- drivers/platform/x86/Kconfig        |  1 +
- drivers/platform/x86/toshiba_acpi.c | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+	if (broxton)
+		intel_pmc_ipc_foo(x)
+	else
+		intel_scu_ipc_foo(x);
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9752761..f9f205c 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -614,6 +614,7 @@ config ACPI_TOSHIBA
- 	depends on INPUT
- 	depends on RFKILL || RFKILL = n
- 	depends on SERIO_I8042 || SERIO_I8042 = n
-+	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_POLLDEV
- 	select INPUT_SPARSEKMAP
- 	---help---
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index f624dd5..9956b990 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -49,7 +49,9 @@
- #include <linux/workqueue.h>
- #include <linux/i8042.h>
- #include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/uaccess.h>
-+#include <acpi/video.h>
- 
- MODULE_AUTHOR("John Belmonte");
- MODULE_DESCRIPTION("Toshiba Laptop ACPI Extras Driver");
-@@ -264,6 +266,14 @@ static const struct key_entry toshiba_acpi_alt_keymap[] = {
- };
- 
- /*
-+ * List of models which have a broken acpi-video backlight interface and thus
-+ * need to use the toshiba (vendor) interface instead.
-+ */
-+static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
-+	{}
-+};
-+
-+/*
-  * Utility
-  */
- 
-@@ -2624,6 +2634,20 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
- 	ret = get_tr_backlight_status(dev, &enabled);
- 	dev->tr_backlight_supported = !ret;
- 
-+	/*
-+	 * Tell acpi-video-detect code to prefer vendor backlight on all
-+	 * systems with transflective backlight and on dmi matched systems.
-+	 */
-+	if (dev->tr_backlight_supported ||
-+	    dmi_check_system(toshiba_vendor_backlight_dmi))
-+		acpi_video_dmi_promote_vendor();
-+
-+	if (acpi_video_backlight_support())
-+		return 0;
-+
-+	/* acpi-video may have loaded before we called dmi_promote_vendor() */
-+	acpi_video_unregister_backlight();
-+
- 	memset(&props, 0, sizeof(props));
- 	props.type = BACKLIGHT_PLATFORM;
- 	props.max_brightness = HCI_LCD_BRIGHTNESS_LEVELS - 1;
--- 
-2.3.5
+I guess to judge that really means seeing who uses these routines. At the
+moment the user you've posted takes the existing not very pretty API and
+wraps it up again in another one with no obvious reason for all the
+layering, but it does at least then provide the upper layer as a sort of
+abstraction.
+
+For the code itself
+
+- there are quite a few things that could be const
+- you keep the register bases in both the platform resources of the
+  subdevices and directly, yet don't seem to use them directly ?
+
+Alan
