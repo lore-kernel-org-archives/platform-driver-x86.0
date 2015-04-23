@@ -1,27 +1,41 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
+From: "Yang, Fei" <fei.yang@intel.com>
 Subject: RE: [PATCH] platform:x86: add Intel Broxton PMC IPC driver
-Date: Thu, 23 Apr 2015 01:06:59 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD0188BC92@SHSMSX104.ccr.corp.intel.com>
+Date: Thu, 23 Apr 2015 04:30:20 +0000
+Message-ID: <02E7334B1630744CBDC55DA858622583492E0C09@ORSMSX102.amr.corp.intel.com>
 References: <1429571069-55055-1-git-send-email-qipeng.zha@intel.com>
 	<20150420182603.7d469d06@lxorguk.ukuu.org.uk>
 	<C6287702A945AC47BE5DB5DFD4B5C6DD0187F65D@SHSMSX104.ccr.corp.intel.com>
 	<20150421125848.179725f4@lxorguk.ukuu.org.uk>
 	<C6287702A945AC47BE5DB5DFD4B5C6DD0188B916@SHSMSX104.ccr.corp.intel.com>
  <20150422113631.301079a1@lxorguk.ukuu.org.uk>
+  <C6287702A945AC47BE5DB5DFD4B5C6DD0188BC92@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:41713 "EHLO mga11.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:4959 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750771AbbDWBIN convert rfc822-to-8bit (ORCPT
+	id S1754169AbbDWEaW convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Apr 2015 21:08:13 -0400
+	Thu, 23 Apr 2015 00:30:22 -0400
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD0188BC92@SHSMSX104.ccr.corp.intel.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: "Zheng, Qi" <qi.zheng@intel.com>, "Zhong, Huiquan" <huiquan.zhong@intel.com>, "Chen, Jason CJ" <jason.cj.chen@intel.com>, "Yang, Fei" <fei.yang@intel.com>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: "Zheng, Qi" <qi.zheng@intel.com>, "Zhong, Huiquan" <huiquan.zhong@intel.com>, "Chen, Jason CJ" <jason.cj.chen@intel.com>
+
+Qipeng,
+I think what Alan suggested is to implement regmap without PMC IPC driver, in other words, combine the regmap and pmc_ipc into one driver. That seems to make a lot of sense to me, we really don't need another set of driver APIs to be exposed when there is already regmap in place.
+
+-Fei
+
+-----Original Message-----
+From: Zha, Qipeng 
+Sent: Wednesday, April 22, 2015 6:07 PM
+To: platform-driver-x86@vger.kernel.org; dvhart@infradead.org; One Thousand Gnomes
+Cc: Zheng, Qi; Zhong, Huiquan; Chen, Jason CJ; Yang, Fei
+Subject: RE: [PATCH] platform:x86: add Intel Broxton PMC IPC driver
 
 Hi Alan
 
