@@ -1,32 +1,237 @@
-From: "Powell, Michael" <Michael_Powell@mentor.com>
-Subject: [PATCH] acer-wmi: No rfkill on HP wifi
-Date: Thu, 23 Apr 2015 21:36:19 +0000
-Message-ID: <1429824979.3169.58.camel@mentor.com>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH 0/3] Dell Airplane Mode Switch driver
+Date: Fri, 24 Apr 2015 15:39:15 +0800
+Message-ID: <CAJ=jqubcFPk5mrGu_XMKQifXkfGP4gaF-NOhybe7EXbm6TAiqQ@mail.gmail.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+	<5019255.GNGyxISxsX@xps13>
+	<CAJ=jquaeyz4NnT2Wg7MaLHrLF1+ARXfds-Z-hRvYyk8SvQGTKQ@mail.gmail.com>
+	<201412252111.06004@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay1.mentorg.com ([192.94.38.131]:34285 "EHLO
-	relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758208AbbDWVgW (ORCPT
+Received: from mail-qg0-f52.google.com ([209.85.192.52]:34859 "EHLO
+	mail-qg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754994AbbDXHjQ convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 23 Apr 2015 17:36:22 -0400
-Content-Language: en-US
-Content-ID: <DCB005A2689CD644B86479A3342E546E@mentor.com>
+	Fri, 24 Apr 2015 03:39:16 -0400
+Received: by qgej70 with SMTP id j70so19218773qge.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Apr 2015 00:39:15 -0700 (PDT)
+In-Reply-To: <201412252111.06004@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "jlee@suse.com" <jlee@suse.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-UHJldmVudHMgYWNlci13bWkgZnJvbSBibG9ja2luZyB3aWZpIG9uIEhQIE9tZW4gMTUgbGFwdG9w
-cw0KDQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIFBvd2VsbCA8bWljaGFlbF9wb3dlbGxAbWVudG9y
-LmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FjZXItd21pLmMgfCAxICsNCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2FjZXItd21pLmMNCmIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWNlci13bWkuYw0KaW5k
-ZXggM2FjMjlhMS4uM2FkODA3NyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Fj
-ZXItd21pLmMNCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FjZXItd21pLmMNCkBAIC04MDcs
-NiArODA3LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBub3Jma2lsbF9p
-ZHNbXQ0KX19pbml0Y29uc3QgPSB7DQogCXsgIklCTTAwNjgiLCAwfSwNCiAJeyAiTEVOMDA2OCIs
-IDB9LA0KIAl7ICJTTlk1MDAxIiwgMH0sCS8qIHNvbnktbGFwdG9wIGluIGNoYXJnZSAqLw0KKyAg
-ICAgICAgeyAiSFBRNjAwMSIsIDB9LA0KIAl7ICIiLCAwfSwNCiB9Ow0KIA0KLS0gDQoyLjEuMA0K
-DQo=
+I encountered a Dell Latitude machine whose wireless hotkey will not
+work with dell-rbtn alone, and therefore I merged functions from
+dell-wireless and it worked quite well.  I also tested it on 7 other
+Dell machines, and only Inspiron 7437 failed because of a firmware bug
+(see http://permalink.gmane.org/gmane.linux.acpi.devel/74915)
+
+I am going to send the new patch for review.
+
+On Fri, Dec 26, 2014 at 4:11 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
+ wrote:
+> I will try to recap all information which we have...
+>
+> *) We should not send wireless key press to userspace when BIOS
+> already handles wireless state (and enable/disable wifi):
+> http://www.spinics.net/lists/platform-driver-x86/msg05922.html
+>
+> *) some tested dell machines does not implement GRBT method (or
+> report constant value) which could return state of wireless
+> (enabled/disabled) -- e.g. Inspiron 7447
+>
+> *) dell-wireless driver is doing nothing on devices which have
+> wireless slider switch (except calling CRBT/ARBT methods)
+>
+> *) all tested machines emit key with keycode 240 (scancode is
+> probably 136 =3D 0x88) to userspace via i8042 bus/AT keyboard when
+> wireless button/slider is pressed/switched
+>
+> *) both drivers dell-wireless and dell-rbtn do not implement
+> setting soft rfkill state (or change wifi state)
+>
+> So in my opinion: if we decide to use driver for acpi DELLABCE
+> device we should use dell-rbnt for devices with hw slider switch
+> and dell-wireless for devices with fn button. I think it does not
+> make sense to use dell-wireless for devices with hw slider
+> because it do nothing and dell-rbtn for devices with fn key
+> button as GRBT does not working properly.
+>
+> And second note: Do we need some driver for acpi DELLABCE device?
+> Which problem is trying acpi DELLABCE device to solve? Is not
+> everything working fine without driver for DELLABCE device?
+>
+> My dell-rbtn approach is trying to export rfkill interface from
+> DELLABCE device and eliminate using i8042 hook function in smbios
+> dell-laptop driver.
+>
+> Alex, can you check if scancode of wireless change generated by
+> BIOS is on all machines same: 136 (0x88)? And is send by keyboard
+> controller (not acpi/wmi)?
+>
+> On Thursday 25 December 2014 04:13:02 Alex Hung wrote:
+>> I usually prefer to stick with formal document as everything
+>> else can be changed without reasons.
+>>
+>> I am not certain whether the keypress is defined in Dell's
+>> document, and I will confirm with Dell. If this keypress is
+>> well defined, it is a good idea to use it.
+>>
+>>
+>> On Wed, Dec 24, 2014 at 7:40 PM, Gabriele Mazzotta
+>>
+>> <gabriele.mzt@gmail.com> wrote:
+>> > On Wednesday 24 December 2014 17:13:45 Alex Hung wrote:
+>> >> I uploaded acpidump files [1] (except for XPS 13 which is
+>> >> not available), and this should help clarify what has been
+>> >> tested.
+>> >>
+>> >> Does Inspirion 5721 does not have either DELLABCE or
+>> >> DELRBTN. It is used for comparison. My apologies that I
+>> >> did not point this out in previous email.
+>> >>
+>> >> When calling ARBT(1), BIOS will no longer issue scancode
+>> >> and will not pull low hardware pin "W_DISABLE#" on mini
+>> >> card. This essentially gives all wireless control to OS.
+>> >> This is likely the answer to Microsoft's Windows
+>> >> Certification Program
+>> >> System.Client.RadioManagement.HardwareButton [2] as below:
+>> >>
+>> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >> If a PC has a physical (hardware) button switch on a PC
+>> >> that turns wireless radios on and off, it must be software
+>> >> controllable and interact appropriately with the Radio
+>> >> Management UI
+>> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>
+>> >> Dell's BIOS does issue a notify(RBTN, 0x80). This is done
+>> >> purposely to re-enumerate the state of radio switch which
+>> >> may be changed when system is in S3 or S4. I think this
+>> >> should not occur when CRBT returns 0 or 1 (for hotkey that
+>> >> cannot be changed during S3 or S4), but that's how it is
+>> >> done currently.
+>> >
+>> > The notification is sent on my XPS13 (CRBT returns 0),
+>> > toggling the WiFi state on resume.
+>> >
+>> >> dell-wireless does not handle this notification in S3 or S4
+>> >> for following reasons:
+>> >>
+>> >> 1. dell-wireless does not handle slider (i.e. CRBT =3D 2 or
+>> >> 3). Device drivers should read the hardware pin,
+>> >> "W_DISABLE#" on mini spec and change hard block
+>> >> accordingly. This pin is commonly used by OEM today.
+>> >>
+>> >> 2. it is not possible to distinguish the notification
+>> >> (0x80) from hotkey press or S3/S4. I also concerned this
+>> >> may mis-trigger state change when resuming from S3 or S4,
+>> >> but it does not. Does any know how to ignore this
+>> >> notification during resume only?
+>> >>
+>> >> dell-rbtn can use this notification + method (GRBT) [2] to
+>> >> solve the problem that slider state.
+>> >
+>> > Unfortunately this won't solve the problem for me. After
+>> > ARBT is called with 1 as parameter, it seems that GRBT
+>> > always returns 1.
+>> >
+>> > I don't know how to ignore the notification on resume, if
+>> > not through a flag set by a PM callback.
+>> >
+>> > Given that all the tested laptops reported a keypress on the
+>> > i8042 bus, isn't it better to rely on that instead?
+>> >
+>> >> [1] http://people.canonical.com/~alexhung/dell-acpidump/
+>> >> [2]
+>> >> http://msdn.microsoft.com/en-us/library/windows/hardware/j
+>> >> j128256.aspx [3] It seems GRBT may not always be
+>> >> implemented...
+>> >>
+>> >> I'd love to do more tests and share the results on any
+>> >> particular systems, but I may need some more detailed
+>> >> instructions.
+>> >>
+>> >>
+>> >>
+>> >> On Tue, Dec 23, 2014 at 3:16 AM, Gabriele Mazzotta
+>> >>
+>> >> <gabriele.mzt@gmail.com> wrote:
+>> >> > On Monday 22 December 2014 15:27:57 Alex Hung wrote:
+>> >> >> =3D Testing =3D
+>> >> >>
+>> >> >> I tested six Dell systems for two sets of patches for
+>> >> >> dell radio button - two system with radio slider and
+>> >> >> four with radio hotkey. There are also two systems with
+>> >> >> working ARBT method.
+>> >> >>
+>> >> >> =3D=3D Basic Information =3D=3D
+>> >> >> Based OS: Ubuntu 14.10 (kernel 3.16 [1]) and kernel 3.18
+>> >> >> [2]
+>> >> >>
+>> >> >> Patches:
+>> >> >> 1. dell-wireless v3 =3D original v2 + Gabriele's
+>> >> >> suggestion [3] 2. dell-rbtn [4]
+>> >> >>
+>> >> >> Method:
+>> >> >> 1. run "rfkill list" and press hotkey / toggle slider
+>> >> >> during runtime 2. run "rfkill list" and toggle slider
+>> >> >> during S3
+>> >> >>
+>> >> >> =3D=3D Results =3D=3D
+>> >> >>
+>> >> >> I summarized the tests in Google sheet as below. Please
+>> >> >> advise if anyone has problem reading it.
+>> >> >>
+>> >> >> https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSG
+>> >> >> h3UmG__UAO2qfZ829CkJLPo06aI/edit?usp=3Dsharing
+>> >> >>
+>> >> >> PS. The document will stay as long as possible for
+>> >> >> future references.
+>> >> >>
+>> >> >> =3D=3D Summary =3D=3D
+>> >> >>
+>> >> >> 1. I did not observed a duplicated event. However,
+>> >> >> keycode 240 (unknown) is generated on many UUT. It is
+>> >> >> not issued by dell-laptop or del-wmi. I am suspecting
+>> >> >> it is the other event Pali observes but it can be the
+>> >> >> result of different distro.
+>> >> >>
+>> >> >> 2. Some system issues scancode "0xe0 0x73 0xe0 0xf3". It
+>> >> >> can also be used toggle wireless state but this can
+>> >> >> also be distro-dependent. This scancode does nothing on
+>> >> >> Ubuntu 14.10.
+>> >> >>
+>> >> >> 2. There are two systems with working ARBT (XPS 13 9333
+>> >> >> and Inspiron 7447). Calling ARBT(1) changes BIOS
+>> >> >> behaviours, and this matches to Dell's document. We
+>> >> >> should include it in the patch for maximum capability.
+>> >> >>
+>> >> >>
+>> >> >> [1] dell-wireless is only tested 3.16.
+>> >> >> [2] dell-rbtn is tested on 3.16 and 3.18, but no
+>> >> >> differences are observed. [3]
+>> >> >> http://people.canonical.com/~alexhung/dell-wireless/
+>> >> >> [4] http://people.canonical.com/~alexhung/dell-rbtn/
+>> >> >
+>> >> > I've just tried the last revision of dell-wireless and
+>> >> > noticed that a notification (0x80) is sent to DELLABCE
+>> >> > after a transition from S3 to S0, causing dell-wireless
+>> >> > to send KEY_RFKILL. This shouldn't happen. Same thing
+>> >> > for transitions from S4 to S0.
+>> >> >
+>> >> > Gabriele
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
+
+
+
+--=20
+Cheers,
+Alex Hung
