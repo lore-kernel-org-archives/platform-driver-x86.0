@@ -1,221 +1,63 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v2 2/3] platform: x86: dell-rbtn: Export notifier for other kernel modules
-Date: Wed, 29 Apr 2015 11:51:05 +0200
-Message-ID: <1430301066-22870-3-git-send-email-pali.rohar@gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 2/3] platform: x86: dell-rbtn: Export notifier for other
+ kernel modules
+Date: Wed, 29 Apr 2015 11:55:36 +0200
+Message-ID: <20150429095536.GE24346@pali>
 References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
+ <1416755361-17357-3-git-send-email-pali.rohar@gmail.com>
+ <20141125223936.GD116670@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f54.google.com ([74.125.82.54]:36158 "EHLO
+	mail-wg0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031647AbbD2Jzj (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 29 Apr 2015 05:55:39 -0400
+Content-Disposition: inline
+In-Reply-To: <20141125223936.GD116670@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
 
-This patch exports notifier functions so other modules can receive HW s=
-witch
-events. By default when some module register notifier, dell-rbtn driver
-automatically remove rfkill interfaces from system (it is expected that=
- other
-module will use events for other rfkill interface). This behaviour can =
-be
-changed with new module parameter "auto_remove_rfkill".
+On Tuesday 25 November 2014 14:39:37 Darren Hart wrote:
+> On Sun, Nov 23, 2014 at 04:09:20PM +0100, Pali Roh=C3=A1r wrote:
+> > This patch exports notifier functions so other modules can receive =
+HW switch
+> > events. By default when some module register notifier, dell-rbtn dr=
+iver
+>=20
+> The commit message needs to describe the problem being addressed as w=
+ell. Why is
+> this necessary?
+>=20
 
-This patch is designed for dell-laptop module for receiving those event=
-s.
+Needed for next patch (3/3). All 3 patches are one series, so I do no
+think that everything is needed to describe...
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
----
- drivers/platform/x86/dell-rbtn.c |   90 ++++++++++++++++++++++++++++++=
-+++++++-
- drivers/platform/x86/dell-rbtn.h |   35 +++++++++++++++
- 2 files changed, 123 insertions(+), 2 deletions(-)
- create mode 100644 drivers/platform/x86/dell-rbtn.h
+> > automatically remove rfkill interfaces from system (it is expected =
+that other
+> > module will use events for other rfkill interface). This behaviour =
+can be
+> > changed with new module parameter "auto_remove_rfkill".
+>=20
+> We try to avoid using such parameters to define behavior when possibl=
+e.
+>=20
+> Why is it justified to use auto_remove_rfkill here? When is it needed=
+? As
+> opposed to doing something that works based on the detected hardware?=
+ (It could
+> be this is the right thing, but we have to justify it).
+>=20
 
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
-ll-rbtn.c
-index 894cd9a..07dfd8f 100644
---- a/drivers/platform/x86/dell-rbtn.c
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -232,6 +232,80 @@ static struct acpi_driver rbtn_driver =3D {
-=20
-=20
- /*
-+ * notifier export functions
-+ */
-+
-+static bool auto_remove_rfkill =3D true;
-+
-+static ATOMIC_NOTIFIER_HEAD(rbtn_chain_head);
-+
-+static int rbtn_inc_count(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	int *count =3D data;
-+
-+	if (rbtn_data->type =3D=3D RBTN_SLIDER)
-+		(*count)++;
-+
-+	return 0;
-+}
-+
-+static int rbtn_switch_dev(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	bool enable =3D data;
-+
-+	if (enable)
-+		rbtn_rfkill_init(device);
-+	else
-+		rbtn_rfkill_exit(device);
-+
-+	return 0;
-+}
-+
-+int dell_rbtn_notifier_register(struct notifier_block *nb)
-+{
-+	bool first;
-+	int ret;
-+
-+	ret =3D 0;
-+	driver_for_each_device(&rbtn_driver.drv, NULL, &ret, rbtn_inc_count);
-+	if (ret =3D=3D 0)
-+		return -ENODEV;
-+
-+	first =3D !rbtn_chain_head.head;
-+
-+	ret =3D atomic_notifier_chain_register(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && first)
-+		driver_for_each_device(&rbtn_driver.drv, NULL, (void *)false,
-+				       rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_register);
-+
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret =3D atomic_notifier_chain_unregister(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && !rbtn_chain_head.head)
-+		driver_for_each_device(&rbtn_driver.drv, NULL, (void *)true,
-+				       rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_unregister);
-+
-+
-+/*
-  * acpi driver functions
-  */
-=20
-@@ -265,7 +339,10 @@ static int rbtn_add(struct acpi_device *device)
- 		ret =3D rbtn_input_init(rbtn_data);
- 		break;
- 	case RBTN_SLIDER:
--		ret =3D rbtn_rfkill_init(device);
-+		if (auto_remove_rfkill && rbtn_chain_head.head)
-+			ret =3D 0;
-+		else
-+			ret =3D rbtn_rfkill_init(device);
- 		break;
- 	default:
- 		ret =3D -EINVAL;
-@@ -314,6 +391,7 @@ static void rbtn_notify(struct acpi_device *device,=
- u32 event)
- 		break;
- 	case RBTN_SLIDER:
- 		rbtn_rfkill_event(device);
-+		atomic_notifier_call_chain(&rbtn_chain_head, event, device);
- 		break;
- 	default:
- 		break;
-@@ -327,7 +405,9 @@ static void rbtn_notify(struct acpi_device *device,=
- u32 event)
-=20
- static int __init rbtn_init(void)
- {
--	return acpi_bus_register_driver(&rbtn_driver);
-+	/* ignore errors so module always loads and exports needed functions =
-*/
-+	acpi_bus_register_driver(&rbtn_driver);
-+	return 0;
- }
-=20
- static void __exit rbtn_exit(void)
-@@ -335,9 +415,15 @@ static void __exit rbtn_exit(void)
- 	acpi_bus_unregister_driver(&rbtn_driver);
- }
-=20
-+module_param(auto_remove_rfkill, bool, 0444);
- module_init(rbtn_init);
- module_exit(rbtn_exit);
-=20
-+MODULE_PARM_DESC(auto_remove_rfkill, "automatically remove rfkill devi=
-ces when "
-+				     "other module start receiving events from "
-+				     "this module and re-add them when last "
-+				     "module stop receving events "
-+				     "(default true)");
- MODULE_DEVICE_TABLE(acpi, rbtn_ids);
- MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
- MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
-diff --git a/drivers/platform/x86/dell-rbtn.h b/drivers/platform/x86/de=
-ll-rbtn.h
-new file mode 100644
-index 0000000..d6b44b0
---- /dev/null
-+++ b/drivers/platform/x86/dell-rbtn.h
-@@ -0,0 +1,35 @@
-+/*
-+    Dell Airplane Mode Switch driver
-+    Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
-+
-+    This program is free software; you can redistribute it and/or modi=
-fy
-+    it under the terms of the GNU General Public License as published =
-by
-+    the Free Software Foundation; either version 2 of the License, or
-+    (at your option) any later version.
-+
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+*/
-+
-+#ifndef _DELL_RBTN_H_
-+#define _DELL_RBTN_H_
-+
-+struct notifier_block;
-+
-+#if defined(CONFIG_DELL_RBTN) || defined(CONFIG_DELL_RBTN_MODULE)
-+int dell_rbtn_notifier_register(struct notifier_block *nb);
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb);
-+#else
-+static inline int dell_rbtn_notifier_register(struct notifier_block *n=
-b)
-+{
-+	return -ENODEV;
-+}
-+static inline int dell_rbtn_notifier_unregister(struct notifier_block =
-*nb)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
-+#endif
+Just for future if something goes wrong and new Dell BIOS stopped
+working. So users would be able to "hotfix" unexpected problems.
+
+As Alex wrote, some machine has already BIOS bug...
+
 --=20
-1.7.9.5
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
