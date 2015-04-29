@@ -1,63 +1,103 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 2/3] platform: x86: dell-rbtn: Export notifier for other
- kernel modules
-Date: Wed, 29 Apr 2015 11:55:36 +0200
-Message-ID: <20150429095536.GE24346@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1416755361-17357-3-git-send-email-pali.rohar@gmail.com>
- <20141125223936.GD116670@vmdeb7>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+Date: Wed, 29 Apr 2015 12:30:32 +0200
+Message-ID: <37641224.OJKZVtGCPV@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <1430301066-22870-1-git-send-email-pali.rohar@gmail.com> <1430301066-22870-2-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f54.google.com ([74.125.82.54]:36158 "EHLO
-	mail-wg0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1031647AbbD2Jzj (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Apr 2015 05:55:39 -0400
-Content-Disposition: inline
-In-Reply-To: <20141125223936.GD116670@vmdeb7>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1430301066-22870-2-git-send-email-pali.rohar@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alex Hung <alex.hung@canonical.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 25 November 2014 14:39:37 Darren Hart wrote:
-> On Sun, Nov 23, 2014 at 04:09:20PM +0100, Pali Roh=C3=A1r wrote:
-> > This patch exports notifier functions so other modules can receive =
-HW switch
-> > events. By default when some module register notifier, dell-rbtn dr=
-iver
+On Wednesday 29 April 2015 11:51:04 Pali Roh=E1r wrote:
+> This is an ACPI driver for Dell laptops which receive HW switch event=
+s.
+> It exports rfkill device dell-rbtn which provide correct hard rfkill =
+state.
 >=20
-> The commit message needs to describe the problem being addressed as w=
-ell. Why is
-> this necessary?
+> Alex Hung added code for supporting Dell laptops which have toggle bu=
+tton
+> instead HW slider switch. On these laptops toggle button event is rep=
+orted
+> by new input device (instead rfkill) as they do not have hw radio swi=
+tch.
 >=20
+> It looks like those are two different functions (rfkill, input device=
+), but
+> Dell BIOS exports them via same ACPI device and uses same ACPI functi=
+ons.
+> So code is in one kernel driver.
 
-Needed for next patch (3/3). All 3 patches are one series, so I do no
-think that everything is needed to describe...
+I made a patch some time ago that I've just adapted. It allows to
+prefer RBTN_SLIDER over RBTN_TOGGLE. The main reason why I'd like to
+have the hardware switch is that the BIOS doesn't alter the soft state
+of the devices. This comes in handy when the function key controls
+multiple radio devices.
 
-> > automatically remove rfkill interfaces from system (it is expected =
-that other
-> > module will use events for other rfkill interface). This behaviour =
-can be
-> > changed with new module parameter "auto_remove_rfkill".
->=20
-> We try to avoid using such parameters to define behavior when possibl=
-e.
->=20
-> Why is it justified to use auto_remove_rfkill here? When is it needed=
-? As
-> opposed to doing something that works based on the detected hardware?=
- (It could
-> be this is the right thing, but we have to justify it).
->=20
+Here below the simple patch. Maybe I could improve it and allow a
+dynamic switch between RBTN_TOGGLE and RBTN_SLIDER.
 
-Just for future if something goes wrong and new Dell BIOS stopped
-working. So users would be able to "hotfix" unexpected problems.
 
-As Alex wrote, some machine has already BIOS bug...
+=46rom 35d39a4ad079489147b4ce22651c5e4e18856cf0 Mon Sep 17 00:00:00 200=
+1
+=46rom: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Date: Wed, 29 Apr 2015 12:24:52 +0200
+Subject: [PATCH] dell-rbtn: Add module param to force the radio hardwar=
+e
+ switch
 
+dell-rbtn determines whether the BIOS controls the radio devices when
+function keys are pressed by calling the ACPI method CRBT. As long as
+the ACPI method ARBT is called with 1 as argument, we are sure that
+what is returned by CRBT holds.
+
+This patch adds the possibility to pass a parameter that will make
+dell-rbtn ignore the value returned by CRBT and call ARBT with 0 as
+argument. This will allow users to have the BIOS control the radio
+devices. Since there is no way to know when this is possible, it's
+up to the user to force the mode. This guarantees the correct
+functionality of the driver except when the user forces the mode.
+---
+ drivers/platform/x86/dell-rbtn.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
+ll-rbtn.c
+index 07dfd8f..8f8d62b 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -30,6 +30,8 @@ struct rbtn_data {
+ 	struct input_dev *input_dev;
+ };
+=20
++static bool force_hw_switch;
++module_param(force_hw_switch, bool, S_IRUGO);
+=20
+ /*
+  * acpi functions
+@@ -44,6 +46,9 @@ static enum rbtn_type rbtn_check(struct acpi_device *=
+device)
+ 	if (ACPI_FAILURE(status))
+ 		return RBTN_UNKNOWN;
+=20
++	if (force_hw_switch)
++		return RBTN_SLIDER;
++
+ 	switch (output) {
+ 	case 0:
+ 	case 1:
+@@ -321,7 +326,7 @@ static int rbtn_add(struct acpi_device *device)
+ 		return -EINVAL;
+ 	}
+=20
+-	ret =3D rbtn_radio_enable(device, true);
++	ret =3D rbtn_radio_enable(device, !force_hw_switch);
+ 	if (ret < 0) {
+ 		dev_err(&device->dev, "Cannot enable device\n");
+ 		return ret;
 --=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+2.1.4
