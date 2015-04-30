@@ -1,83 +1,103 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode
- Switch driver
-Date: Thu, 30 Apr 2015 09:44:29 +0200
-Message-ID: <20150430074429.GT24346@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <20150429181606.GR24346@pali>
- <1662732.6WCXK4FVmN@xps13>
- <201504292059.26585@pali>
- <CAJ=jquYEEZ928A=eL158p38s4EEX32BZB5mOv5-841bRkKr_UQ@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform:x86: add Intel Broxton PMC IPC driver
+Date: Thu, 30 Apr 2015 10:55:32 -0700
+Message-ID: <20150430175532.GA40200@fury.dvhart.com>
+References: <1429571069-55055-1-git-send-email-qipeng.zha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:35285 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750887AbbD3Hod (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:49565 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752013AbbD3Rzc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 30 Apr 2015 03:44:33 -0400
+	Thu, 30 Apr 2015 13:55:32 -0400
 Content-Disposition: inline
-In-Reply-To: <CAJ=jquYEEZ928A=eL158p38s4EEX32BZB5mOv5-841bRkKr_UQ@mail.gmail.com>
+In-Reply-To: <1429571069-55055-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: "qipeng.zha" <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com
 
-On Thursday 30 April 2015 14:06:27 Alex Hung wrote:
-> Method ABRT is to be used by driver to disable BIOS handling of radio
-> button. So the changes in behaviours observed by Gabriele is expected=
-=2E
-> I have seen other systems behave the same way.
->=20
+On Tue, Apr 21, 2015 at 07:04:29AM +0800, qipeng.zha wrote:
+> From: "qipeng.zha" <qipeng.zha@intel.com>
+> 
+> This driver provides support for PMC control on Broxton platforms,
+> PMC is ARC processor which defined some IPC commands for communication
+> with other entities running in IA
+> 
 
-Right, that after that ARBT call operating system get full control over
-radio devices and ACPI/BIOS will not automatically enable/disable them.
-I think this is OK.
+Hi Qipeng,
 
-But for that we need also support for manually enable/disable radio
-devices and code for this support is missing. Or do DELLABCE/RBTN acpi
-devices somehow support enabling/disabling it via system/kernel request=
-?
+After the responses from Alan, Fei, and Jacob, I assume a second version of this
+patch is in the works.
 
-> I do also see firmware only sends Notify(RBTN, 0x80) and no hard bloc=
-k
-> whether ABRT(1) is called or not.  Thus keycode are the only option o=
-n
-> those machines.
->=20
+A few points I do want to call out before that one lands here.
 
-Key is ok, but we *must* have ability to hard block it via some
-ACPI/WMI/BIOS/FW/etc... call. Otherwise ARBT(1) is no go as users shoul=
-d
-be able to enable/disable their radio devices (bluetooth for powersave)
+1) There are a number of whitespace errors throughout this patch which make it
+harder to review and focus on the technical implementation. Please abide by
+coding style and when in doubt, compare with the SCU driver this so closely
+resembles.
 
-> The idea to have an option (kernel parameter) for calling ABRT is
-> great. I can help verify on more machines. Is Gabriele's patch above =
-a
-> final version that I should test?
->=20
+2) There are a number of undocumented functions which have well documented
+parallels in the SCU driver, please pull those in.
 
-No, I do not think so. This looks like hack or pure design. Kernel
-option could be there, but just for buggy BIOSes (and future changed
-design).
+3) Alan mentioned a number of cleanups for the SCU driver that are missing from
+this one. I wasn't around for those, but I did notice a few rather severe
+differences. See the commentary below regarding the ipclock mutex for an
+example.
 
-But now it looks like for correct work is specifying that param
-required -- which is bad.
+4) As a general rule, and when possible, please order your local variable
+declarations in decreasing line length:
 
-Alex, can you ask Dell people how should system turn off e.g bluetooth
-or wifi device if ARTB(1) is called and system/kernel (instead ACPI) is
-expected to turn off/on blueooth (and wifi) devices?
+	int really_log_variable;
+	int a_shorter_one;
+	int ret;
 
-I think that without this information (and working driver for it) we
-should not enable ARTB(1) or including this driver into kernel tree as
-it will break some existing machines...
+Please consider these in your second version.
 
-Darren, I do not know what is better, but it looks like that some dell
-machines working fine now and some not (since begining). And after
-loading this driver some machines are fixed, but some which worked are
-broken... What do you think as maintainer?
+> Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
+> ---
+>  arch/x86/include/asm/intel_pmc_ipc.h |  79 ++++
+>  drivers/platform/x86/Kconfig         |   7 +
+>  drivers/platform/x86/Makefile        |   1 +
+>  drivers/platform/x86/intel_pmc_ipc.c | 740 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 827 insertions(+)
+>  create mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+>  create mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> 
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+...
+
+> +
+> +int intel_pmc_ipc_simple_command(int cmd, int sub)
+> +{
+> +	int ret;
+> +
+> +	if (ipcdev.dev == NULL)
+> +		return -ENODEV;
+> +
+> +	mutex_lock(&ipclock);
+
+In the SCU driver, the check for ipcdev.dev == NULL is done with ipclock held. I
+suspect this is because the assignment of ipcdev.ipc is done with the lock held.
+While you can catch NULL and exit here without serious detriment in the case of
+a race, if you continued after the check and it was set to NULL just before
+acquiring the lock, you will end up with a kernel panic.
+
+Other examples of this exist as well.
+
+> +	ipc_send_command(sub << IPC_CMD_SUBCMD | cmd);
+> +	ret = intel_pmc_ipc_check_status();
+> +	mutex_unlock(&ipclock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(intel_pmc_ipc_simple_command);
+
+...
+
+Thanks,
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
