@@ -1,52 +1,108 @@
-From: Philippe Coval <philippe.coval@open.eurogiciel.org>
-Subject: [PATCH] ideapad_laptop: Add Lenovo G40-30 to devices without radio switch
-Date: Sat,  2 May 2015 15:14:08 +0200
-Message-ID: <1430572448-32552-1-git-send-email-philippe.coval@open.eurogiciel.org>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+Date: Sat, 02 May 2015 15:51:50 +0200
+Message-ID: <10520902.uqZDZn6tkf@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <CAJ=jquYEEZ928A=eL158p38s4EEX32BZB5mOv5-841bRkKr_UQ@mail.gmail.com> <20150430074429.GT24346@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtpfb2-g21.free.fr ([212.27.42.10]:37077 "EHLO
-	smtpfb2-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750866AbbEBNOg (ORCPT
+Received: from mail-wg0-f49.google.com ([74.125.82.49]:36645 "EHLO
+	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751305AbbEBNvy convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 2 May 2015 09:14:36 -0400
+	Sat, 2 May 2015 09:51:54 -0400
+In-Reply-To: <20150430074429.GT24346@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: ike.pan@canonical.com, dvhart@infradead.org
-Cc: Philippe Coval <philippe.coval@open.eurogiciel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Philippe Coval <rzr@gna.org>
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Alex Hung <alex.hung@canonical.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-Lenovo G40-30 does not provide any physical radio switch to user.
-Therefore disable the rfkill switch identically to the Yoga 2 approach.
-(Note for later, models ids are sorted alphabetically).
+On Thursday 30 April 2015 09:44:29 Pali Roh=E1r wrote:
+> On Thursday 30 April 2015 14:06:27 Alex Hung wrote:
+> > Method ABRT is to be used by driver to disable BIOS handling of rad=
+io
+> > button. So the changes in behaviours observed by Gabriele is expect=
+ed.
+> > I have seen other systems behave the same way.
+> >=20
+>=20
+> Right, that after that ARBT call operating system get full control ov=
+er
+> radio devices and ACPI/BIOS will not automatically enable/disable the=
+m.
+> I think this is OK.
+>=20
+> But for that we need also support for manually enable/disable radio
+> devices and code for this support is missing. Or do DELLABCE/RBTN acp=
+i
+> devices somehow support enabling/disabling it via system/kernel reque=
+st?
+>=20
+> > I do also see firmware only sends Notify(RBTN, 0x80) and no hard bl=
+ock
+> > whether ABRT(1) is called or not.  Thus keycode are the only option=
+ on
+> > those machines.
+> >=20
+>=20
+> Key is ok, but we *must* have ability to hard block it via some
+> ACPI/WMI/BIOS/FW/etc... call. Otherwise ARBT(1) is no go as users sho=
+uld
+> be able to enable/disable their radio devices (bluetooth for powersav=
+e)
+>=20
+> > The idea to have an option (kernel parameter) for calling ABRT is
+> > great. I can help verify on more machines. Is Gabriele's patch abov=
+e a
+> > final version that I should test?
+> >=20
+>=20
+> No, I do not think so. This looks like hack or pure design. Kernel
+> option could be there, but just for buggy BIOSes (and future changed
+> design).
+>=20
+> But now it looks like for correct work is specifying that param
+> required -- which is bad.
+>=20
+> Alex, can you ask Dell people how should system turn off e.g bluetoot=
+h
+> or wifi device if ARTB(1) is called and system/kernel (instead ACPI) =
+is
+> expected to turn off/on blueooth (and wifi) devices?
 
-Benefit is to make wireless available again without unloading module.
+I completely forgot that libsmbios comes with smbios-wireless-ctl.
+It allows me to control the hardware slider.
 
-It was tested successfully on 4.1.0-rc1 base with this model:
-(LENOVO_MT_80FY_BU_idea_FM_Lenovo G40-30).
+> I think that without this information (and working driver for it) we
+> should not enable ARTB(1) or including this driver into kernel tree a=
+s
+> it will break some existing machines...
 
-BugLink: https://bugs.launchpad.net/ideapad-laptop/+bug/1450946
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Philippe Coval <rzr@gna.org>
----
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Alex, could you test smbios-wireless-ctl and see what it says about the
+laptops with no hardware slider? For instance on mine it says:
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index b3d419a..b496db8 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -830,6 +830,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
-  */
- static const struct dmi_system_id no_hw_rfkill_list[] = {
- 	{
-+		.ident = "Lenovo G40-30",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G40-30"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--- 
-2.1.4
+Radio Status for WLAN:
+        WLAN enabled at boot
+        WLAN supported
+        WLAN enabled
+        WLAN installed
+        WLAN boot-time wireless switch setting not present
+        WLAN runtime switch control currently enabled
+        Status Code: 0
+
+You can find the utility here: http://linux.dell.com/git/libsmbios.git
+
+The code to check for the presence of an hardware slider is even
+already implemented in dell-laptop and works on my laptop, it says the
+slider is present.
+
+
+Pali, you have a Latitude, right? Is "whitelisted" true when you load
+dell-laptop? I'm asking because when I load dell-laptop with
+force_rfkill, my function key stops working. Radio devices get disabled
+the moment dell-laptop is loaded and I must use smbios-wireless-ctl to
+re-enable them. Once I re-enabled them, the function keys starts
+working again.
+I don't know exactly what happens on your laptop, but I was wondering
+if dell-laptop is messing things up on your laptop too.
