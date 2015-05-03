@@ -1,92 +1,55 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
-Date: Sun, 3 May 2015 12:38:14 +0200
-Message-ID: <201505031238.14772@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [RFC 1/2] ACPI: activate&export acpi_os_get_physical_address
+Date: Sun, 3 May 2015 10:57:04 -0700
+Message-ID: <20150503175704.GA16105@fury.dvhart.com>
+References: <cover.1429653764.git.kastbernd@gmx.de>
+ <20150430181025.GC40200@fury.dvhart.com>
+ <4189370.scsJsnLdx0@vostro.rjw.lan>
+ <2766179.6BuP3vhKAH@vostro.rjw.lan>
+ <20150501045618.GA22054@srcf.ucam.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1788559.zIUCDIMGM2";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f169.google.com ([209.85.212.169]:32910 "EHLO
-	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752482AbbECKiS (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:33788 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751409AbbECR5P (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 3 May 2015 06:38:18 -0400
-In-Reply-To: <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
+	Sun, 3 May 2015 13:57:15 -0400
+Content-Disposition: inline
+In-Reply-To: <20150501045618.GA22054@srcf.ucam.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kast Bernd <kastbernd@gmx.de>, corentin.chary@gmail.com, lenb@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
---nextPart1788559.zIUCDIMGM2
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 01, 2015 at 05:56:19AM +0100, Matthew Garrett wrote:
+> On Fri, May 01, 2015 at 03:45:52AM +0200, Rafael J. Wysocki wrote:
+> 
+> > And I don't really understand the Matthew's comment regarding limiting
+> > operation regions to system memory.  This is about a specific operation
+> > region (which BTW only seems to be used as a means to access system memory
+> > at the location pointed to by the arg) in that particular method.
+> 
+> My feeling was that it really ought to have been the ACPI code dealing 
+> with this in some way, but having looked at it again I accept that this 
+> is really something that's limited by the vendor implementation. 
+> virt_to_phys() isn't the worst thing to do here.
 
-On Wednesday 29 April 2015 11:51:03 Pali Roh=C3=A1r wrote:
-> This patch series add new acpi Dell Airplane Mode Switch
-> driver (DELLABCE and DELRBTN acpi devices). It provides radio
-> HW switch events (together with current state of radio
-> devices) and export them via rfkill interface. These events
-> are also used in dell-laptop driver instead i8042 filter hook
-> function (when acpi device is available).
->=20
-> In v2 was added support for laptops which have toggle button
-> instead HW slider switch. For that I reused code done by Alex
-> Hung.
->=20
-> Pali Roh=C3=A1r (3):
->   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
->   platform: x86: dell-rbtn: Export notifier for other kernel
-> modules platform: x86: dell-laptop: Use dell-rbtn instead
-> i8042 filter when possible
->=20
->  drivers/platform/x86/Kconfig       |   14 ++
->  drivers/platform/x86/Makefile      |    1 +
->  drivers/platform/x86/dell-laptop.c |   67 +++++-
->  drivers/platform/x86/dell-rbtn.c   |  430
-> ++++++++++++++++++++++++++++++++++++
-> drivers/platform/x86/dell-rbtn.h   |   35 +++
->  5 files changed, 542 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/platform/x86/dell-rbtn.c
->  create mode 100644 drivers/platform/x86/dell-rbtn.h
+Thank you both for the follow-up here.
 
-Alex, can you rested this patch series on all your machines like=20
-you did previous in this sheet?
+Kast,
 
-https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qfZ829Ck=
-JLPo06aI/edit?usp=3Dsharing
+You have some feedback from Corentin and myself on the basic driver, mostly
+around cleanups for legibility and future maintainability. You also have
+agreement to move forward with virt_to_phys() in the driver due to limitations
+imposed by the vendor AML.
 
-Ideally do more tests:
-1) only with first patch 1/3
-2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
-3) same as 2) but without loaded dell-laptop
+Please incorporate these changes in a v2 and resubmit the patch. Please keep all
+those who have provided feedback on Cc, and include them in the Cc lines of the
+patch itself (below your Signed-off-by).
 
-If everything pass then this patch series is OK from my side.
+Thanks,
 
-Looks like Gabriele's problem is irrelevant to this patch series,=20
-but we probably hit some rfkill bug in dell-laptop.ko :-(
-
-Matthew or Darren, can you review code in this patch series? So=20
-if everything will be fine, dell-rbtn could be ready for 4.2.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1788559.zIUCDIMGM2
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlVF+pYACgkQi/DJPQPkQ1J4LwCbBz7CL//m7kOY5y8dKgyNkPTt
-clQAoKht/n9khk217rDAIHOAIUNGASJV
-=G3fK
------END PGP SIGNATURE-----
-
---nextPart1788559.zIUCDIMGM2--
+-- 
+Darren Hart
+Intel Open Source Technology Center
