@@ -1,7 +1,7 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 4/4] toshiba_bluetooth: Change BT status message to debug
-Date: Sun,  3 May 2015 17:42:09 -0600
-Message-ID: <1430696532-12315-5-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 1/3] toshiba_acpi: Remove no longer needed hci_{read, write}2 functions
+Date: Sun,  3 May 2015 17:42:10 -0600
+Message-ID: <1430696532-12315-6-git-send-email-coproscefalo@gmail.com>
 References: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
@@ -10,41 +10,81 @@ To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lin
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The function toshiba_bluetooth_status is currently printing the
-status of the device whenever it is queried, but since the
-introduction of the rfkill poll code, this value will get printed
-everytime the poll occurs.
+This patch removes the hci_{read, write}2 functions from the driver,
+and the toshiba_hotkey_event_type_get function was adapted to use the
+tci_raw function.
 
-This patch removes the status message from the *_status function, and
-adds a debug message to the *_sync_status function printing the
-bluetooth device raw status, killswitch, plug and power states of the
-device as well.
+The hci_write2 function was only used by the bluetooth rfkill code,
+but since its removal, it was causing build warnings, and the
+hci_read2 function was only used by the toshiba_hotkey_event_type_get
+function.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_bluetooth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 39 +++++++------------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
-index 9867ccd..f84cd6f 100644
---- a/drivers/platform/x86/toshiba_bluetooth.c
-+++ b/drivers/platform/x86/toshiba_bluetooth.c
-@@ -99,8 +99,6 @@ static int toshiba_bluetooth_status(acpi_handle handle)
- 		return -ENXIO;
- 	}
- 
--	pr_info("Bluetooth status %llu\n", status);
--
- 	return status;
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 8ee7c24..e593762 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -355,31 +355,6 @@ static u32 hci_read1(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ 	return out[0];
  }
  
-@@ -156,6 +154,9 @@ static int toshiba_bluetooth_sync_status(struct toshiba_bluetooth_dev *bt_dev)
- 	bt_dev->killswitch = (status & BT_KILLSWITCH_MASK) ? true : false;
- 	bt_dev->plugged = (status & BT_PLUGGED_MASK) ? true : false;
- 	bt_dev->powered = (status & BT_POWER_MASK) ? true : false;
-+
-+	pr_debug("Bluetooth status %llu killswitch %d plugged %d powered %d\n",
-+		 status, bt_dev->killswitch, bt_dev->plugged, bt_dev->powered);
+-static u32 hci_write2(struct toshiba_acpi_dev *dev, u32 reg, u32 in1, u32 in2)
+-{
+-	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, in2, 0, 0 };
+-	u32 out[TCI_WORDS];
+-	acpi_status status = tci_raw(dev, in, out);
+-
+-	return ACPI_SUCCESS(status) ? out[0] : TOS_FAILURE;
+-}
+-
+-static u32 hci_read2(struct toshiba_acpi_dev *dev,
+-		     u32 reg, u32 *out1, u32 *out2)
+-{
+-	u32 in[TCI_WORDS] = { HCI_GET, reg, *out1, *out2, 0, 0 };
+-	u32 out[TCI_WORDS];
+-	acpi_status status = tci_raw(dev, in, out);
+-
+-	if (ACPI_FAILURE(status))
+-		return TOS_FAILURE;
+-
+-	*out1 = out[2];
+-	*out2 = out[3];
+-
+-	return out[0];
+-}
+-
+ /*
+  * Common sci tasks
+  */
+@@ -1190,20 +1165,20 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ 					 u32 *type)
+ {
+-	u32 val1 = 0x03;
+-	u32 val2 = 0;
+-	u32 result;
++	u32 in[TCI_WORDS] = { HCI_GET, HCI_SYSTEM_INFO, 0x03, 0, 0, 0 };
++	u32 out[TCI_WORDS];
++	acpi_status status;
+ 
+-	result = hci_read2(dev, HCI_SYSTEM_INFO, &val1, &val2);
+-	if (result == TOS_FAILURE) {
++	status = tci_raw(dev, in, out);
++	if (ACPI_FAILURE(status)) {
+ 		pr_err("ACPI call to get System type failed\n");
+ 		return -EIO;
+-	} else if (result == TOS_NOT_SUPPORTED) {
++	} else if (out[0] == TOS_NOT_SUPPORTED) {
+ 		pr_info("System type not supported\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	*type = val2;
++	*type = out[3];
  
  	return 0;
  }
