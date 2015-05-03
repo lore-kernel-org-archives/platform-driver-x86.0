@@ -1,101 +1,184 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 3/4] toshiba_bluetooth: Adapt *_enable, *_notify and *_resume functions to rfkill
-Date: Sun,  3 May 2015 17:42:08 -0600
-Message-ID: <1430696532-12315-4-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 3/3] toshiba_acpi: Cleanup blank lines after comment blocks
+Date: Sun,  3 May 2015 17:42:12 -0600
+Message-ID: <1430696532-12315-8-git-send-email-coproscefalo@gmail.com>
 References: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f172.google.com ([209.85.214.172]:35375 "EHLO
-	mail-ob0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751481AbbECXmY (ORCPT
+Received: from mail-ob0-f170.google.com ([209.85.214.170]:34025 "EHLO
+	mail-ob0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751663AbbECXmb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 3 May 2015 19:42:24 -0400
+	Sun, 3 May 2015 19:42:31 -0400
 In-Reply-To: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-This patch adapts toshiba_bluetooth_enable, toshiba_bt_rfkill_notify
-and toshiba_bt_resume functions to rfkill.
-
-The *_enable function was cleaned from code that the rfkill code now
-provides, and the other two functions were modified to update the rfkill
-switch status, as they were only calling toshiba_bluetooth_enable.
+This patch removes some blank lines after comment blocks, capitalizes
+some comments first words and adds a few comments to the beggining
+of some functions.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_bluetooth.c | 47 ++++++++++++--------------------
- 1 file changed, 18 insertions(+), 29 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
-index a3b2d38..9867ccd 100644
---- a/drivers/platform/x86/toshiba_bluetooth.c
-+++ b/drivers/platform/x86/toshiba_bluetooth.c
-@@ -107,33 +107,6 @@ static int toshiba_bluetooth_status(acpi_handle handle)
- static int toshiba_bluetooth_enable(acpi_handle handle)
- {
- 	acpi_status result;
--	bool killswitch;
--	bool powered;
--	bool plugged;
--	int status;
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 19efb05..dca3dd2 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -78,10 +78,9 @@ MODULE_LICENSE("GPL");
+  * SCI stands for "System Configuration Interface" which aim is to
+  * conceal differences in hardware between different models.
+  */
 -
--	/*
--	 * Query ACPI to verify RFKill switch is set to 'on'.
--	 * If not, we return silently, no need to report it as
--	 * an error.
--	 */
--	status = toshiba_bluetooth_status(handle);
--	if (status < 0)
--		return status;
--
--	killswitch = (status & BT_KILLSWITCH_MASK) ? true : false;
--	powered = (status & BT_POWER_MASK) ? true : false;
--	plugged = (status & BT_PLUGGED_MASK) ? true : false;
--
--	if (!killswitch)
--		return 0;
--	/*
--	 * This check ensures to only enable the device if it is powered
--	 * off or detached, as some recent devices somehow pass the killswitch
--	 * test, causing a loop enabling/disabling the device, see bug 93911.
--	 */
--	if (powered || plugged)
--		return 0;
+ #define TCI_WORDS			6
  
- 	result = acpi_evaluate_object(handle, "AUSB", NULL, NULL);
- 	if (ACPI_FAILURE(result)) {
-@@ -233,13 +206,29 @@ static const struct rfkill_ops rfk_ops = {
- /* ACPI driver functions */
- static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event)
+-/* operations */
++/* Operations */
+ #define HCI_SET				0xff00
+ #define HCI_GET				0xfe00
+ #define SCI_OPEN			0xf100
+@@ -89,7 +88,7 @@ MODULE_LICENSE("GPL");
+ #define SCI_GET				0xf300
+ #define SCI_SET				0xf400
+ 
+-/* return codes */
++/* Return codes */
+ #define TOS_SUCCESS			0x0000
+ #define TOS_OPEN_CLOSE_OK		0x0044
+ #define TOS_FAILURE			0x1000
+@@ -104,7 +103,7 @@ MODULE_LICENSE("GPL");
+ #define TOS_NOT_INITIALIZED		0x8d50
+ #define TOS_NOT_INSTALLED		0x8e00
+ 
+-/* registers */
++/* Registers */
+ #define HCI_FAN				0x0004
+ #define HCI_TR_BACKLIGHT		0x0005
+ #define HCI_SYSTEM_EVENT		0x0016
+@@ -126,7 +125,7 @@ MODULE_LICENSE("GPL");
+ #define SCI_TOUCHPAD			0x050e
+ #define SCI_KBD_FUNCTION_KEYS		0x0522
+ 
+-/* field definitions */
++/* Field definitions */
+ #define HCI_ACCEL_MASK			0x7fff
+ #define HCI_HOTKEY_DISABLE		0x0b
+ #define HCI_HOTKEY_ENABLE		0x09
+@@ -272,7 +271,6 @@ static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
+ /*
+  * Utility
+  */
+-
+ static inline void _set_bit(u32 *word, u32 mask, int value)
  {
--	toshiba_bluetooth_enable(device->handle);
-+	struct toshiba_bluetooth_dev *bt_dev = acpi_driver_data(device);
-+
-+	if (toshiba_bluetooth_sync_status(bt_dev))
-+		return;
-+
-+	rfkill_set_hw_state(bt_dev->rfk, !bt_dev->killswitch);
+ 	*word = (*word & ~mask) | (mask * value);
+@@ -281,7 +279,6 @@ static inline void _set_bit(u32 *word, u32 mask, int value)
+ /*
+  * ACPI interface wrappers
+  */
+-
+ static int write_acpi_int(const char *methodName, int val)
+ {
+ 	acpi_status status;
+@@ -331,7 +328,6 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+  * In addition to the ACPI status, the HCI system returns a result which
+  * may be useful (such as "not supported").
+  */
+-
+ static u32 hci_write(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
+ {
+ 	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, 0, 0, 0 };
+@@ -358,7 +354,6 @@ static u32 hci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ /*
+  * Common sci tasks
+  */
+-
+ static int sci_open(struct toshiba_acpi_dev *dev)
+ {
+ 	u32 in[TCI_WORDS] = { SCI_OPEN, 0, 0, 0, 0, 0 };
+@@ -1183,6 +1178,7 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ 	return 0;
  }
  
- #ifdef CONFIG_PM_SLEEP
- static int toshiba_bt_resume(struct device *dev)
++/* Transflective Backlight */
+ static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
  {
--	return toshiba_bluetooth_enable(to_acpi_device(dev)->handle);
-+	struct toshiba_bluetooth_dev *bt_dev;
-+	int ret;
-+
-+	bt_dev = acpi_driver_data(to_acpi_device(dev));
-+
-+	ret = toshiba_bluetooth_sync_status(bt_dev);
-+	if (ret)
-+		return ret;
-+
-+	rfkill_set_hw_state(bt_dev->rfk, !bt_dev->killswitch);
-+
-+	return 0;
- }
- #endif
+ 	u32 hci_result;
+@@ -1204,6 +1200,7 @@ static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
  
+ static struct proc_dir_entry *toshiba_proc_dir /*= 0*/;
+ 
++/* LCD Brightness */
+ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ {
+ 	u32 hci_result;
+@@ -1322,6 +1319,7 @@ static const struct file_operations lcd_proc_fops = {
+ 	.write		= lcd_proc_write,
+ };
+ 
++/* Video-Out */
+ static int get_video_status(struct toshiba_acpi_dev *dev, u32 *status)
+ {
+ 	u32 hci_result;
+@@ -1411,7 +1409,8 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 			_set_bit(&new_video_out, HCI_VIDEO_OUT_TV, tv_out);
+ 		/*
+ 		 * To avoid unnecessary video disruption, only write the new
+-		 * video setting if something changed. */
++		 * video setting if something changed.
++		 */
+ 		if (new_video_out != video_out)
+ 			ret = write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
+ 	}
+@@ -1428,6 +1427,7 @@ static const struct file_operations video_proc_fops = {
+ 	.write		= video_proc_write,
+ };
+ 
++/* Fan status */
+ static int get_fan_status(struct toshiba_acpi_dev *dev, u32 *status)
+ {
+ 	u32 hci_result;
+@@ -1583,7 +1583,6 @@ static const struct file_operations version_proc_fops = {
+ /*
+  * Proc and module init
+  */
+-
+ #define PROC_TOSHIBA		"toshiba"
+ 
+ static void create_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
+@@ -2324,9 +2323,7 @@ static void toshiba_acpi_hotkey_work(struct work_struct *work)
+ 		pr_err("ACPI NTFY method execution failed\n");
+ }
+ 
+-/*
+- * Returns hotkey scancode, or < 0 on failure.
+- */
++/* Returns hotkey scancode, or < 0 on failure */
+ static int toshiba_acpi_query_hotkey(struct toshiba_acpi_dev *dev)
+ {
+ 	unsigned long long value;
+@@ -2488,6 +2485,9 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 	return error;
+ }
+ 
++/*
++ * Backlight
++ */
+ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ {
+ 	struct backlight_properties props;
+@@ -2552,6 +2552,9 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 	return 0;
+ }
+ 
++/*
++ * ACPI driver functions
++ */
+ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+ {
+ 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
 -- 
 2.3.6
