@@ -1,131 +1,92 @@
 From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
-Date: Sat, 2 May 2015 17:13:11 +0200
-Message-ID: <201505021713.11503@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <20150430074429.GT24346@pali> <10520902.uqZDZn6tkf@xps13>
+Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
+Date: Sun, 3 May 2015 12:38:14 +0200
+Message-ID: <201505031238.14772@pali>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
-  boundary="nextPart3091102.6aEOuiv9ZC";
+  boundary="nextPart1788559.zIUCDIMGM2";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f177.google.com ([209.85.212.177]:37355 "EHLO
-	mail-wi0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752106AbbEBPNP (ORCPT
+Received: from mail-wi0-f169.google.com ([209.85.212.169]:32910 "EHLO
+	mail-wi0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752482AbbECKiS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 2 May 2015 11:13:15 -0400
-In-Reply-To: <10520902.uqZDZn6tkf@xps13>
+	Sun, 3 May 2015 06:38:18 -0400
+In-Reply-To: <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
---nextPart3091102.6aEOuiv9ZC
+--nextPart1788559.zIUCDIMGM2
 Content-Type: Text/Plain;
   charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Saturday 02 May 2015 15:51:50 Gabriele Mazzotta wrote:
-> On Thursday 30 April 2015 09:44:29 Pali Roh=C3=A1r wrote:
-> > On Thursday 30 April 2015 14:06:27 Alex Hung wrote:
-> > > Method ABRT is to be used by driver to disable BIOS
-> > > handling of radio button. So the changes in behaviours
-> > > observed by Gabriele is expected. I have seen other
-> > > systems behave the same way.
-> >=20
-> > Right, that after that ARBT call operating system get full
-> > control over radio devices and ACPI/BIOS will not
-> > automatically enable/disable them. I think this is OK.
-> >=20
-> > But for that we need also support for manually
-> > enable/disable radio devices and code for this support is
-> > missing. Or do DELLABCE/RBTN acpi devices somehow support
-> > enabling/disabling it via system/kernel request?
-> >=20
-> > > I do also see firmware only sends Notify(RBTN, 0x80) and
-> > > no hard block whether ABRT(1) is called or not.  Thus
-> > > keycode are the only option on those machines.
-> >=20
-> > Key is ok, but we *must* have ability to hard block it via
-> > some ACPI/WMI/BIOS/FW/etc... call. Otherwise ARBT(1) is no
-> > go as users should be able to enable/disable their radio
-> > devices (bluetooth for powersave)
-> >=20
-> > > The idea to have an option (kernel parameter) for calling
-> > > ABRT is great. I can help verify on more machines. Is
-> > > Gabriele's patch above a final version that I should
-> > > test?
-> >=20
-> > No, I do not think so. This looks like hack or pure design.
-> > Kernel option could be there, but just for buggy BIOSes
-> > (and future changed design).
-> >=20
-> > But now it looks like for correct work is specifying that
-> > param required -- which is bad.
-> >=20
-> > Alex, can you ask Dell people how should system turn off e.g
-> > bluetooth or wifi device if ARTB(1) is called and
-> > system/kernel (instead ACPI) is expected to turn off/on
-> > blueooth (and wifi) devices?
+On Wednesday 29 April 2015 11:51:03 Pali Roh=C3=A1r wrote:
+> This patch series add new acpi Dell Airplane Mode Switch
+> driver (DELLABCE and DELRBTN acpi devices). It provides radio
+> HW switch events (together with current state of radio
+> devices) and export them via rfkill interface. These events
+> are also used in dell-laptop driver instead i8042 filter hook
+> function (when acpi device is available).
 >=20
-> I completely forgot that libsmbios comes with
-> smbios-wireless-ctl. It allows me to control the hardware
-> slider.
+> In v2 was added support for laptops which have toggle button
+> instead HW slider switch. For that I reused code done by Alex
+> Hung.
 >=20
-> > I think that without this information (and working driver
-> > for it) we should not enable ARTB(1) or including this
-> > driver into kernel tree as it will break some existing
-> > machines...
+> Pali Roh=C3=A1r (3):
+>   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+>   platform: x86: dell-rbtn: Export notifier for other kernel
+> modules platform: x86: dell-laptop: Use dell-rbtn instead
+> i8042 filter when possible
 >=20
-> Alex, could you test smbios-wireless-ctl and see what it says
-> about the laptops with no hardware slider? For instance on
-> mine it says:
->=20
-> Radio Status for WLAN:
->         WLAN enabled at boot
->         WLAN supported
->         WLAN enabled
->         WLAN installed
->         WLAN boot-time wireless switch setting not present
->         WLAN runtime switch control currently enabled
->         Status Code: 0
->=20
-> You can find the utility here:
-> http://linux.dell.com/git/libsmbios.git
->=20
-> The code to check for the presence of an hardware slider is
-> even already implemented in dell-laptop and works on my
-> laptop, it says the slider is present.
->=20
->=20
-> Pali, you have a Latitude, right? Is "whitelisted" true when
-> you load dell-laptop? I'm asking because when I load
-> dell-laptop with force_rfkill, my function key stops working.
-> Radio devices get disabled the moment dell-laptop is loaded
-> and I must use smbios-wireless-ctl to re-enable them. Once I
-> re-enabled them, the function keys starts working again.
-> I don't know exactly what happens on your laptop, but I was
-> wondering if dell-laptop is messing things up on your laptop
-> too.
+>  drivers/platform/x86/Kconfig       |   14 ++
+>  drivers/platform/x86/Makefile      |    1 +
+>  drivers/platform/x86/dell-laptop.c |   67 +++++-
+>  drivers/platform/x86/dell-rbtn.c   |  430
+> ++++++++++++++++++++++++++++++++++++
+> drivers/platform/x86/dell-rbtn.h   |   35 +++
+>  5 files changed, 542 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/platform/x86/dell-rbtn.c
+>  create mode 100644 drivers/platform/x86/dell-rbtn.h
 
-Hi, on my Latitude E6440 machine dell-laptop (with rfkill)=20
-working fine. There is no problem with it.
+Alex, can you rested this patch series on all your machines like=20
+you did previous in this sheet?
+
+https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qfZ829Ck=
+JLPo06aI/edit?usp=3Dsharing
+
+Ideally do more tests:
+1) only with first patch 1/3
+2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
+3) same as 2) but without loaded dell-laptop
+
+If everything pass then this patch series is OK from my side.
+
+Looks like Gabriele's problem is irrelevant to this patch series,=20
+but we probably hit some rfkill bug in dell-laptop.ko :-(
+
+Matthew or Darren, can you review code in this patch series? So=20
+if everything will be fine, dell-rbtn could be ready for 4.2.
 
 =2D-=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nextPart3091102.6aEOuiv9ZC
+--nextPart1788559.zIUCDIMGM2
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAlVE6YcACgkQi/DJPQPkQ1Lc1wCgmtSisvrZNCpEnoAibeO2LuPS
-6EsAn10wYvZg54HyrbUOkLaZ/sDlAdfH
-=WktD
+iEYEABECAAYFAlVF+pYACgkQi/DJPQPkQ1J4LwCbBz7CL//m7kOY5y8dKgyNkPTt
+clQAoKht/n9khk217rDAIHOAIUNGASJV
+=G3fK
 -----END PGP SIGNATURE-----
 
---nextPart3091102.6aEOuiv9ZC--
+--nextPart1788559.zIUCDIMGM2--
