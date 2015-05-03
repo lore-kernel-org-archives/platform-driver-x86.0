@@ -1,226 +1,167 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2] toshiba_acpi: Remove bluetooth rfkill code
-Date: Sun,  3 May 2015 17:42:05 -0600
-Message-ID: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2 2/4] toshiba_bluetooth: Add RFKill handler functions
+Date: Sun,  3 May 2015 17:42:07 -0600
+Message-ID: <1430696532-12315-3-git-send-email-coproscefalo@gmail.com>
+References: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f173.google.com ([209.85.214.173]:33964 "EHLO
-	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750933AbbECXmT (ORCPT
+Received: from mail-ob0-f169.google.com ([209.85.214.169]:32783 "EHLO
+	mail-ob0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751252AbbECXmW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 3 May 2015 19:42:19 -0400
+	Sun, 3 May 2015 19:42:22 -0400
+In-Reply-To: <1430696532-12315-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-This patch removes all bluetooth rfkill related code residing in
-the toshiba_acpi driver.
+This patch adds RFKill handler functions to the driver, allowing it
+to register and update the rfkill switch status.
 
-Separate patches will add (and adapt) the code to toshiba_bluetooth
-(where it belongs).
+Also, a comment block was moved from the header to the poll function,
+as it explains why we need to poll the killswitch on older devices.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
-Changes since v1:
-- Merged the two patches into one
-- Removed a leftover boolean variable
-
- drivers/platform/x86/Kconfig        |   1 -
- drivers/platform/x86/toshiba_acpi.c | 124 ------------------------------------
- 2 files changed, 125 deletions(-)
+ drivers/platform/x86/Kconfig             |  1 +
+ drivers/platform/x86/toshiba_bluetooth.c | 77 ++++++++++++++++++++++++++++----
+ 2 files changed, 69 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f9f205c..822171c 100644
+index 822171c..399085d 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -612,7 +612,6 @@ config ACPI_TOSHIBA
- 	select NEW_LEDS
- 	depends on BACKLIGHT_CLASS_DEVICE
- 	depends on INPUT
--	depends on RFKILL || RFKILL = n
- 	depends on SERIO_I8042 || SERIO_I8042 = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_POLLDEV
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 9956b990..8ee7c24 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -41,7 +41,6 @@
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- #include <linux/backlight.h>
--#include <linux/rfkill.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/leds.h>
-@@ -165,7 +164,6 @@ MODULE_LICENSE("GPL");
- struct toshiba_acpi_dev {
- 	struct acpi_device *acpi_dev;
- 	const char *method_hci;
--	struct rfkill *bt_rfk;
- 	struct input_dev *hotkey_dev;
- 	struct work_struct hotkey_work;
- 	struct backlight_device *backlight_dev;
-@@ -202,8 +200,6 @@ struct toshiba_acpi_dev {
- 	unsigned int panel_power_on_supported:1;
- 	unsigned int usb_three_supported:1;
- 	unsigned int sysfs_created:1;
--
--	struct mutex mutex;
- };
+@@ -642,6 +642,7 @@ config ACPI_TOSHIBA
+ config TOSHIBA_BT_RFKILL
+ 	tristate "Toshiba Bluetooth RFKill switch support"
+ 	depends on ACPI
++	depends on RFKILL || RFKILL = n
+ 	---help---
+ 	  This driver adds support for Bluetooth events for the RFKill
+ 	  switch on modern Toshiba laptops with full ACPI support and
+diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
+index a619ba6..a3b2d38 100644
+--- a/drivers/platform/x86/toshiba_bluetooth.c
++++ b/drivers/platform/x86/toshiba_bluetooth.c
+@@ -10,12 +10,6 @@
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+- *
+- * Note the Toshiba Bluetooth RFKill switch seems to be a strange
+- * fish. It only provides a BT event when the switch is flipped to
+- * the 'on' position. When flipping it to 'off', the USB device is
+- * simply pulled away underneath us, without any BT event being
+- * delivered.
+  */
  
- static struct toshiba_acpi_dev *toshiba_acpi;
-@@ -1212,97 +1208,6 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -25,6 +19,7 @@
+ #include <linux/init.h>
+ #include <linux/types.h>
+ #include <linux/acpi.h>
++#include <linux/rfkill.h>
+ 
+ #define BT_KILLSWITCH_MASK	0x01
+ #define BT_PLUGGED_MASK		0x40
+@@ -36,6 +31,7 @@ MODULE_LICENSE("GPL");
+ 
+ struct toshiba_bluetooth_dev {
+ 	struct acpi_device *acpi_dev;
++	struct rfkill *rfk;
+ 
+ 	bool killswitch;
+ 	bool plugged;
+@@ -191,6 +187,49 @@ static int toshiba_bluetooth_sync_status(struct toshiba_bluetooth_dev *bt_dev)
  	return 0;
  }
  
--/* Bluetooth rfkill handlers */
--
--static u32 hci_get_bt_present(struct toshiba_acpi_dev *dev, bool *present)
--{
--	u32 hci_result;
--	u32 value, value2;
--
--	value = 0;
--	value2 = 0;
--	hci_result = hci_read2(dev, HCI_WIRELESS, &value, &value2);
--	if (hci_result == TOS_SUCCESS)
--		*present = (value & HCI_WIRELESS_BT_PRESENT) ? true : false;
--
--	return hci_result;
--}
--
--static u32 hci_get_radio_state(struct toshiba_acpi_dev *dev, bool *radio_state)
--{
--	u32 hci_result;
--	u32 value, value2;
--
--	value = 0;
--	value2 = 0x0001;
--	hci_result = hci_read2(dev, HCI_WIRELESS, &value, &value2);
--
--	*radio_state = value & HCI_WIRELESS_KILL_SWITCH;
--	return hci_result;
--}
--
--static int bt_rfkill_set_block(void *data, bool blocked)
--{
--	struct toshiba_acpi_dev *dev = data;
--	u32 result1, result2;
--	u32 value;
--	int err;
--	bool radio_state;
--
--	value = (blocked == false);
--
--	mutex_lock(&dev->mutex);
--	if (hci_get_radio_state(dev, &radio_state) != TOS_SUCCESS) {
--		err = -EIO;
--		goto out;
--	}
--
--	if (!radio_state) {
--		err = 0;
--		goto out;
--	}
--
--	result1 = hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_POWER);
--	result2 = hci_write2(dev, HCI_WIRELESS, value, HCI_WIRELESS_BT_ATTACH);
--
--	if (result1 != TOS_SUCCESS || result2 != TOS_SUCCESS)
--		err = -EIO;
--	else
--		err = 0;
-- out:
--	mutex_unlock(&dev->mutex);
--	return err;
--}
--
--static void bt_rfkill_poll(struct rfkill *rfkill, void *data)
--{
--	bool new_rfk_state;
--	bool value;
--	u32 hci_result;
--	struct toshiba_acpi_dev *dev = data;
--
--	mutex_lock(&dev->mutex);
--
--	hci_result = hci_get_radio_state(dev, &value);
--	if (hci_result != TOS_SUCCESS) {
--		/* Can't do anything useful */
--		mutex_unlock(&dev->mutex);
--		return;
--	}
--
--	new_rfk_state = value;
--
--	mutex_unlock(&dev->mutex);
--
--	if (rfkill_set_hw_state(rfkill, !new_rfk_state))
--		bt_rfkill_set_block(data, true);
--}
--
--static const struct rfkill_ops toshiba_rfk_ops = {
--	.set_block = bt_rfkill_set_block,
--	.poll = bt_rfkill_poll,
--};
--
- static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
++/* RFKill handlers */
++static int bt_rfkill_set_block(void *data, bool blocked)
++{
++	struct toshiba_bluetooth_dev *bt_dev = data;
++	int ret;
++
++	ret = toshiba_bluetooth_sync_status(bt_dev);
++	if (ret)
++		return ret;
++
++	if (!bt_dev->killswitch)
++		return 0;
++
++	if (blocked)
++		ret = toshiba_bluetooth_disable(bt_dev->acpi_dev->handle);
++	else
++		ret = toshiba_bluetooth_enable(bt_dev->acpi_dev->handle);
++
++	return ret;
++}
++
++static void bt_rfkill_poll(struct rfkill *rfkill, void *data)
++{
++	struct toshiba_bluetooth_dev *bt_dev = data;
++
++	if (toshiba_bluetooth_sync_status(bt_dev))
++		return;
++
++	/*
++	 * Note the Toshiba Bluetooth RFKill switch seems to be a strange
++	 * fish. It only provides a BT event when the switch is flipped to
++	 * the 'on' position. When flipping it to 'off', the USB device is
++	 * simply pulled away underneath us, without any BT event being
++	 * delivered.
++	 */
++	rfkill_set_hw_state(bt_dev->rfk, !bt_dev->killswitch);
++}
++
++static const struct rfkill_ops rfk_ops = {
++	.set_block = bt_rfkill_set_block,
++	.poll = bt_rfkill_poll,
++};
++
+ /* ACPI driver functions */
+ static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event)
  {
- 	u32 hci_result;
-@@ -2692,11 +2597,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
- 		sparse_keymap_free(dev->hotkey_dev);
+@@ -228,10 +267,25 @@ static int toshiba_bt_rfkill_add(struct acpi_device *device)
+ 		return result;
  	}
  
--	if (dev->bt_rfk) {
--		rfkill_unregister(dev->bt_rfk);
--		rfkill_destroy(dev->bt_rfk);
--	}
--
- 	backlight_device_unregister(dev->backlight_dev);
+-	/* Enable the BT device */
+-	result = toshiba_bluetooth_enable(device->handle);
+-	if (result)
++	bt_dev->rfk = rfkill_alloc("Toshiba Bluetooth",
++				   &device->dev,
++				   RFKILL_TYPE_BLUETOOTH,
++				   &rfk_ops,
++				   bt_dev);
++	if (!bt_dev->rfk) {
++		pr_err("Unable to allocate rfkill device\n");
++		kfree(bt_dev);
++		return -ENOMEM;
++	}
++
++	rfkill_set_hw_state(bt_dev->rfk, !bt_dev->killswitch);
++
++	result = rfkill_register(bt_dev->rfk);
++	if (result) {
++		pr_err("Unable to register rfkill device\n");
++		rfkill_destroy(bt_dev->rfk);
+ 		kfree(bt_dev);
++	}
  
- 	if (dev->illumination_supported)
-@@ -2733,7 +2633,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	const char *hci_method;
- 	u32 special_functions;
- 	u32 dummy;
--	bool bt_present;
- 	int ret = 0;
+ 	return result;
+ }
+@@ -241,6 +295,11 @@ static int toshiba_bt_rfkill_remove(struct acpi_device *device)
+ 	struct toshiba_bluetooth_dev *bt_dev = acpi_driver_data(device);
  
- 	if (toshiba_acpi)
-@@ -2769,33 +2668,10 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	if (toshiba_acpi_setup_keyboard(dev))
- 		pr_info("Unable to activate hotkeys\n");
+ 	/* clean up */
++	if (bt_dev->rfk) {
++		rfkill_unregister(bt_dev->rfk);
++		rfkill_destroy(bt_dev->rfk);
++	}
++
+ 	kfree(bt_dev);
  
--	mutex_init(&dev->mutex);
--
- 	ret = toshiba_acpi_setup_backlight(dev);
- 	if (ret)
- 		goto error;
- 
--	/* Register rfkill switch for Bluetooth */
--	if (hci_get_bt_present(dev, &bt_present) == TOS_SUCCESS && bt_present) {
--		dev->bt_rfk = rfkill_alloc("Toshiba Bluetooth",
--					   &acpi_dev->dev,
--					   RFKILL_TYPE_BLUETOOTH,
--					   &toshiba_rfk_ops,
--					   dev);
--		if (!dev->bt_rfk) {
--			pr_err("unable to allocate rfkill device\n");
--			ret = -ENOMEM;
--			goto error;
--		}
--
--		ret = rfkill_register(dev->bt_rfk);
--		if (ret) {
--			pr_err("unable to register rfkill device\n");
--			rfkill_destroy(dev->bt_rfk);
--			goto error;
--		}
--	}
--
- 	if (toshiba_illumination_available(dev)) {
- 		dev->led_dev.name = "toshiba::illumination";
- 		dev->led_dev.max_brightness = 1;
+ 	return toshiba_bluetooth_disable(device->handle);
 -- 
 2.3.6
