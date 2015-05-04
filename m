@@ -1,123 +1,184 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 4/5] toshiba_acpi: Remove TOS_FAILURE check from some functions
-Date: Mon,  4 May 2015 11:15:57 -0600
-Message-ID: <1430759758-4026-5-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2 3/5] toshiba_acpi: Cleanup blank lines after comment blocks
+Date: Mon,  4 May 2015 11:15:56 -0600
+Message-ID: <1430759758-4026-4-git-send-email-coproscefalo@gmail.com>
 References: <1430759758-4026-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f47.google.com ([209.85.218.47]:34508 "EHLO
-	mail-oi0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750899AbbEDRQO (ORCPT
+Received: from mail-ob0-f179.google.com ([209.85.214.179]:33993 "EHLO
+	mail-ob0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751548AbbEDRQL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 May 2015 13:16:14 -0400
+	Mon, 4 May 2015 13:16:11 -0400
 In-Reply-To: <1430759758-4026-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-This patch removes the check for TOS_FAILURE whenever we are using
-the tci_raw function call, as that code is only returned by the
-{hci, sci}_{read, write} functions and never by the tci_raw, and
-thus making that check irrelevant.
+This patch removes some blank lines after comment blocks, capitalizes
+some comments first words and adds a few comments to the beggining
+of some functions.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index dca3dd2..dc38204 100644
+index 19efb05..dca3dd2 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -361,7 +361,7 @@ static int sci_open(struct toshiba_acpi_dev *dev)
+@@ -78,10 +78,9 @@ MODULE_LICENSE("GPL");
+  * SCI stands for "System Configuration Interface" which aim is to
+  * conceal differences in hardware between different models.
+  */
+-
+ #define TCI_WORDS			6
+ 
+-/* operations */
++/* Operations */
+ #define HCI_SET				0xff00
+ #define HCI_GET				0xfe00
+ #define SCI_OPEN			0xf100
+@@ -89,7 +88,7 @@ MODULE_LICENSE("GPL");
+ #define SCI_GET				0xf300
+ #define SCI_SET				0xf400
+ 
+-/* return codes */
++/* Return codes */
+ #define TOS_SUCCESS			0x0000
+ #define TOS_OPEN_CLOSE_OK		0x0044
+ #define TOS_FAILURE			0x1000
+@@ -104,7 +103,7 @@ MODULE_LICENSE("GPL");
+ #define TOS_NOT_INITIALIZED		0x8d50
+ #define TOS_NOT_INSTALLED		0x8e00
+ 
+-/* registers */
++/* Registers */
+ #define HCI_FAN				0x0004
+ #define HCI_TR_BACKLIGHT		0x0005
+ #define HCI_SYSTEM_EVENT		0x0016
+@@ -126,7 +125,7 @@ MODULE_LICENSE("GPL");
+ #define SCI_TOUCHPAD			0x050e
+ #define SCI_KBD_FUNCTION_KEYS		0x0522
+ 
+-/* field definitions */
++/* Field definitions */
+ #define HCI_ACCEL_MASK			0x7fff
+ #define HCI_HOTKEY_DISABLE		0x0b
+ #define HCI_HOTKEY_ENABLE		0x09
+@@ -272,7 +271,6 @@ static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
+ /*
+  * Utility
+  */
+-
+ static inline void _set_bit(u32 *word, u32 mask, int value)
+ {
+ 	*word = (*word & ~mask) | (mask * value);
+@@ -281,7 +279,6 @@ static inline void _set_bit(u32 *word, u32 mask, int value)
+ /*
+  * ACPI interface wrappers
+  */
+-
+ static int write_acpi_int(const char *methodName, int val)
+ {
  	acpi_status status;
+@@ -331,7 +328,6 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
+  * In addition to the ACPI status, the HCI system returns a result which
+  * may be useful (such as "not supported").
+  */
+-
+ static u32 hci_write(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
+ {
+ 	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, 0, 0, 0 };
+@@ -358,7 +354,6 @@ static u32 hci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ /*
+  * Common sci tasks
+  */
+-
+ static int sci_open(struct toshiba_acpi_dev *dev)
+ {
+ 	u32 in[TCI_WORDS] = { SCI_OPEN, 0, 0, 0, 0, 0 };
+@@ -1183,6 +1178,7 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ 	return 0;
+ }
  
- 	status = tci_raw(dev, in, out);
--	if  (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if  (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to open SCI failed\n");
- 		return 0;
++/* Transflective Backlight */
+ static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
+ {
+ 	u32 hci_result;
+@@ -1204,6 +1200,7 @@ static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
+ 
+ static struct proc_dir_entry *toshiba_proc_dir /*= 0*/;
+ 
++/* LCD Brightness */
+ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ {
+ 	u32 hci_result;
+@@ -1322,6 +1319,7 @@ static const struct file_operations lcd_proc_fops = {
+ 	.write		= lcd_proc_write,
+ };
+ 
++/* Video-Out */
+ static int get_video_status(struct toshiba_acpi_dev *dev, u32 *status)
+ {
+ 	u32 hci_result;
+@@ -1411,7 +1409,8 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+ 			_set_bit(&new_video_out, HCI_VIDEO_OUT_TV, tv_out);
+ 		/*
+ 		 * To avoid unnecessary video disruption, only write the new
+-		 * video setting if something changed. */
++		 * video setting if something changed.
++		 */
+ 		if (new_video_out != video_out)
+ 			ret = write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
  	}
-@@ -399,7 +399,7 @@ static void sci_close(struct toshiba_acpi_dev *dev)
- 	acpi_status status;
+@@ -1428,6 +1427,7 @@ static const struct file_operations video_proc_fops = {
+ 	.write		= video_proc_write,
+ };
  
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to close SCI failed\n");
- 		return;
- 	}
-@@ -447,7 +447,7 @@ static int toshiba_illumination_available(struct toshiba_acpi_dev *dev)
++/* Fan status */
+ static int get_fan_status(struct toshiba_acpi_dev *dev, u32 *status)
+ {
+ 	u32 hci_result;
+@@ -1583,7 +1583,6 @@ static const struct file_operations version_proc_fops = {
+ /*
+  * Proc and module init
+  */
+-
+ #define PROC_TOSHIBA		"toshiba"
  
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to query Illumination support failed\n");
- 		return 0;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -669,7 +669,7 @@ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
- 	u32 out[TCI_WORDS];
+ static void create_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
+@@ -2324,9 +2323,7 @@ static void toshiba_acpi_hotkey_work(struct work_struct *work)
+ 		pr_err("ACPI NTFY method execution failed\n");
+ }
  
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get ECO led failed\n");
- 	} else if (out[0] == TOS_NOT_INSTALLED) {
- 		pr_info("ECO led not installed");
-@@ -791,7 +791,7 @@ static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
- 		return;
+-/*
+- * Returns hotkey scancode, or < 0 on failure.
+- */
++/* Returns hotkey scancode, or < 0 on failure */
+ static int toshiba_acpi_query_hotkey(struct toshiba_acpi_dev *dev)
+ {
+ 	unsigned long long value;
+@@ -2488,6 +2485,9 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 	return error;
+ }
  
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
- 		sci_close(dev);
- 		return;
-@@ -805,7 +805,7 @@ static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
++/*
++ * Backlight
++ */
+ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ {
+ 	struct backlight_properties props;
+@@ -2552,6 +2552,9 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 	return 0;
+ }
  
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
- 		sci_close(dev);
- 		return;
-@@ -885,7 +885,7 @@ static int toshiba_sleep_functions_status_get(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB S&C battery level failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -914,7 +914,7 @@ static int toshiba_sleep_functions_status_set(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to set USB S&C battery level failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -940,7 +940,7 @@ static int toshiba_usb_rapid_charge_get(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_RAPID_DSP;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Rapid Charge failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED ||
-@@ -968,7 +968,7 @@ static int toshiba_usb_rapid_charge_set(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_RAPID_DSP;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to set USB Rapid Charge failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
++/*
++ * ACPI driver functions
++ */
+ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+ {
+ 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
 -- 
 2.3.6
