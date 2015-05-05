@@ -1,96 +1,102 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
-Date: Tue, 5 May 2015 13:37:10 -0700
-Message-ID: <20150505203710.GC33977@fury.dvhart.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
- <201505031238.14772@pali>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+Date: Tue, 05 May 2015 23:23:05 +0200
+Message-ID: <1828808.mVmCDTOvJh@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <CAJ=jquYEEZ928A=eL158p38s4EEX32BZB5mOv5-841bRkKr_UQ@mail.gmail.com> <20150430074429.GT24346@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:41661 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751158AbbEEUhT (ORCPT
+Received: from mail-wi0-f171.google.com ([209.85.212.171]:33196 "EHLO
+	mail-wi0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031448AbbEEVXI convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 May 2015 16:37:19 -0400
-Content-Disposition: inline
-In-Reply-To: <201505031238.14772@pali>
+	Tue, 5 May 2015 17:23:08 -0400
+In-Reply-To: <20150430074429.GT24346@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2015 at 12:38:14PM +0200, Pali Roh=E1r wrote:
-> On Wednesday 29 April 2015 11:51:03 Pali Roh=E1r wrote:
-> > This patch series add new acpi Dell Airplane Mode Switch
-> > driver (DELLABCE and DELRBTN acpi devices). It provides radio
-> > HW switch events (together with current state of radio
-> > devices) and export them via rfkill interface. These events
-> > are also used in dell-laptop driver instead i8042 filter hook
-> > function (when acpi device is available).
+On Thursday 30 April 2015 09:44:29 Pali Roh=E1r wrote:
+> On Thursday 30 April 2015 14:06:27 Alex Hung wrote:
+> > Method ABRT is to be used by driver to disable BIOS handling of rad=
+io
+> > button. So the changes in behaviours observed by Gabriele is expect=
+ed.
+> > I have seen other systems behave the same way.
 > >=20
-> > In v2 was added support for laptops which have toggle button
-> > instead HW slider switch. For that I reused code done by Alex
-> > Hung.
+>=20
+> Right, that after that ARBT call operating system get full control ov=
+er
+> radio devices and ACPI/BIOS will not automatically enable/disable the=
+m.
+> I think this is OK.
+>=20
+> But for that we need also support for manually enable/disable radio
+> devices and code for this support is missing. Or do DELLABCE/RBTN acp=
+i
+> devices somehow support enabling/disabling it via system/kernel reque=
+st?
+>=20
+> > I do also see firmware only sends Notify(RBTN, 0x80) and no hard bl=
+ock
+> > whether ABRT(1) is called or not.  Thus keycode are the only option=
+ on
+> > those machines.
 > >=20
-> > Pali Roh=E1r (3):
-> >   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
-> >   platform: x86: dell-rbtn: Export notifier for other kernel
-> > modules platform: x86: dell-laptop: Use dell-rbtn instead
-> > i8042 filter when possible
+>=20
+> Key is ok, but we *must* have ability to hard block it via some
+> ACPI/WMI/BIOS/FW/etc... call. Otherwise ARBT(1) is no go as users sho=
+uld
+> be able to enable/disable their radio devices (bluetooth for powersav=
+e)
+
+Does it really matter in the end? As I understand it, radio devices are
+off either way.
+
+> > The idea to have an option (kernel parameter) for calling ABRT is
+> > great. I can help verify on more machines. Is Gabriele's patch abov=
+e a
+> > final version that I should test?
 > >=20
-> >  drivers/platform/x86/Kconfig       |   14 ++
-> >  drivers/platform/x86/Makefile      |    1 +
-> >  drivers/platform/x86/dell-laptop.c |   67 +++++-
-> >  drivers/platform/x86/dell-rbtn.c   |  430
-> > ++++++++++++++++++++++++++++++++++++
-> > drivers/platform/x86/dell-rbtn.h   |   35 +++
-> >  5 files changed, 542 insertions(+), 5 deletions(-)
-> >  create mode 100644 drivers/platform/x86/dell-rbtn.c
-> >  create mode 100644 drivers/platform/x86/dell-rbtn.h
 >=20
-> Alex, can you rested this patch series on all your machines like=20
-> you did previous in this sheet?
+> No, I do not think so. This looks like hack or pure design. Kernel
+> option could be there, but just for buggy BIOSes (and future changed
+> design).
 >=20
-> https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qf=
-Z829CkJLPo06aI/edit?usp=3Dsharing
+> But now it looks like for correct work is specifying that param
+> required -- which is bad.
 >=20
-> Ideally do more tests:
-> 1) only with first patch 1/3
-> 2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
-> 3) same as 2) but without loaded dell-laptop
+> Alex, can you ask Dell people how should system turn off e.g bluetoot=
+h
+> or wifi device if ARTB(1) is called and system/kernel (instead ACPI) =
+is
+> expected to turn off/on blueooth (and wifi) devices?
 >=20
-> If everything pass then this patch series is OK from my side.
->=20
-> Looks like Gabriele's problem is irrelevant to this patch series,=20
-> but we probably hit some rfkill bug in dell-laptop.ko :-(
->=20
-> Matthew or Darren, can you review code in this patch series? So=20
-> if everything will be fine, dell-rbtn could be ready for 4.2.
+> I think that without this information (and working driver for it) we
+> should not enable ARTB(1) or including this driver into kernel tree a=
+s
+> it will break some existing machines...
 
-Yes - but I need some additional context.
+I disagree. If we skip ARBT(1), userspace will get confused on laptops
+like mine as it would receive two events: an rfkill event (because of
+the BIOS shutting down radios) and a keypress (because of Alex's patch)=
+=2E
+If we call ARBT(1), userspace will only receive the keypress and
+userspace will correctly handle the devices.
 
-There wasn't a "Since v1..." changelog below the --- line in the patche=
-s. It's
-always good practice to include it - but especially after this much tim=
-e has
-passed - it really helps page back in all the relevant issues.
+That's why I suggested the use of a kernel parameter. It was just a way
+to allow users to choose one mode over another when they know they're
+both available. It's not something users are required to do.
 
-After the discussion on this list, I'm not sure where we are with how t=
-his patch
-series impacts the machines that Alex and Garbiele are working on.
+I believe that in the end what really matters is that when function
+keys are pressed something happens, be it the BIOS turning off radio
+devices or the kernel telling userspace to do it, but not both.
 
-What I would like is this: amongst yourselves, please agree on a soluti=
-on and
-provide a patch series with a Signed-off-by from the author(s) and at l=
-east a
-Tested-by from the others.
-
-If this is it, each of you please reply here stating as much.
-
-Thanks,
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+> Darren, I do not know what is better, but it looks like that some del=
+l
+> machines working fine now and some not (since begining). And after
+> loading this driver some machines are fixed, but some which worked ar=
+e
+> broken... What do you think as maintainer?
