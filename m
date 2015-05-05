@@ -1,207 +1,93 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 3/5] toshiba_acpi: Cleanup blank lines after comment
- blocks
-Date: Tue, 5 May 2015 14:24:16 -0700
-Message-ID: <20150505212416.GB33724@fury.dvhart.com>
-References: <1430759758-4026-1-git-send-email-coproscefalo@gmail.com>
- <1430759758-4026-4-git-send-email-coproscefalo@gmail.com>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
+Date: Tue, 05 May 2015 23:24:38 +0200
+Message-ID: <4277283.fWFKbPXFCj@xps13>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <201505031238.14772@pali> <20150505203710.GC33977@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:50630 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1945943AbbEEVYR (ORCPT
+Received: from mail-wg0-f42.google.com ([74.125.82.42]:35849 "EHLO
+	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1945970AbbEEVYl convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 May 2015 17:24:17 -0400
-Content-Disposition: inline
-In-Reply-To: <1430759758-4026-4-git-send-email-coproscefalo@gmail.com>
+	Tue, 5 May 2015 17:24:41 -0400
+In-Reply-To: <20150505203710.GC33977@fury.dvhart.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2015 at 11:15:56AM -0600, Azael Avalos wrote:
-> This patch removes some blank lines after comment blocks, capitalizes
-> some comments first words and adds a few comments to the beggining
-> of some functions.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 31 +++++++++++++++++--------------
->  1 file changed, 17 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 19efb05..dca3dd2 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -78,10 +78,9 @@ MODULE_LICENSE("GPL");
->   * SCI stands for "System Configuration Interface" which aim is to
->   * conceal differences in hardware between different models.
->   */
-> -
->  #define TCI_WORDS			6
->  
-> -/* operations */
-> +/* Operations */
+On Tuesday 05 May 2015 13:37:10 Darren Hart wrote:
+> On Sun, May 03, 2015 at 12:38:14PM +0200, Pali Roh=E1r wrote:
+> > On Wednesday 29 April 2015 11:51:03 Pali Roh=E1r wrote:
+> > > This patch series add new acpi Dell Airplane Mode Switch
+> > > driver (DELLABCE and DELRBTN acpi devices). It provides radio
+> > > HW switch events (together with current state of radio
+> > > devices) and export them via rfkill interface. These events
+> > > are also used in dell-laptop driver instead i8042 filter hook
+> > > function (when acpi device is available).
+> > >=20
+> > > In v2 was added support for laptops which have toggle button
+> > > instead HW slider switch. For that I reused code done by Alex
+> > > Hung.
+> > >=20
+> > > Pali Roh=E1r (3):
+> > >   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+> > >   platform: x86: dell-rbtn: Export notifier for other kernel
+> > > modules platform: x86: dell-laptop: Use dell-rbtn instead
+> > > i8042 filter when possible
+> > >=20
+> > >  drivers/platform/x86/Kconfig       |   14 ++
+> > >  drivers/platform/x86/Makefile      |    1 +
+> > >  drivers/platform/x86/dell-laptop.c |   67 +++++-
+> > >  drivers/platform/x86/dell-rbtn.c   |  430
+> > > ++++++++++++++++++++++++++++++++++++
+> > > drivers/platform/x86/dell-rbtn.h   |   35 +++
+> > >  5 files changed, 542 insertions(+), 5 deletions(-)
+> > >  create mode 100644 drivers/platform/x86/dell-rbtn.c
+> > >  create mode 100644 drivers/platform/x86/dell-rbtn.h
+> >=20
+> > Alex, can you rested this patch series on all your machines like=20
+> > you did previous in this sheet?
+> >=20
+> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2=
+qfZ829CkJLPo06aI/edit?usp=3Dsharing
+> >=20
+> > Ideally do more tests:
+> > 1) only with first patch 1/3
+> > 2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
+> > 3) same as 2) but without loaded dell-laptop
+> >=20
+> > If everything pass then this patch series is OK from my side.
+> >=20
+> > Looks like Gabriele's problem is irrelevant to this patch series,=20
+> > but we probably hit some rfkill bug in dell-laptop.ko :-(
+> >=20
+> > Matthew or Darren, can you review code in this patch series? So=20
+> > if everything will be fine, dell-rbtn could be ready for 4.2.
+>=20
+> Yes - but I need some additional context.
+>=20
+> There wasn't a "Since v1..." changelog below the --- line in the patc=
+hes. It's
+> always good practice to include it - but especially after this much t=
+ime has
+> passed - it really helps page back in all the relevant issues.
+>=20
+> After the discussion on this list, I'm not sure where we are with how=
+ this patch
+> series impacts the machines that Alex and Garbiele are working on.
+>=20
+> What I would like is this: amongst yourselves, please agree on a solu=
+tion and
+> provide a patch series with a Signed-off-by from the author(s) and at=
+ least a
+> Tested-by from the others.
+>=20
+> If this is it, each of you please reply here stating as much.
 
-I don't object - but just for the record. I care about Sentence formatting when
-using sentences and multiline comments, not so much for single word or one line
-phrases.
+Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-Be consistent within the file, that matters most.
-
->  #define HCI_SET				0xff00
->  #define HCI_GET				0xfe00
->  #define SCI_OPEN			0xf100
-> @@ -89,7 +88,7 @@ MODULE_LICENSE("GPL");
->  #define SCI_GET				0xf300
->  #define SCI_SET				0xf400
->  
-> -/* return codes */
-> +/* Return codes */
->  #define TOS_SUCCESS			0x0000
->  #define TOS_OPEN_CLOSE_OK		0x0044
->  #define TOS_FAILURE			0x1000
-> @@ -104,7 +103,7 @@ MODULE_LICENSE("GPL");
->  #define TOS_NOT_INITIALIZED		0x8d50
->  #define TOS_NOT_INSTALLED		0x8e00
->  
-> -/* registers */
-> +/* Registers */
->  #define HCI_FAN				0x0004
->  #define HCI_TR_BACKLIGHT		0x0005
->  #define HCI_SYSTEM_EVENT		0x0016
-> @@ -126,7 +125,7 @@ MODULE_LICENSE("GPL");
->  #define SCI_TOUCHPAD			0x050e
->  #define SCI_KBD_FUNCTION_KEYS		0x0522
->  
-> -/* field definitions */
-> +/* Field definitions */
->  #define HCI_ACCEL_MASK			0x7fff
->  #define HCI_HOTKEY_DISABLE		0x0b
->  #define HCI_HOTKEY_ENABLE		0x09
-> @@ -272,7 +271,6 @@ static const struct dmi_system_id toshiba_vendor_backlight_dmi[] = {
->  /*
->   * Utility
->   */
-> -
-
-I'd keep the space, just as you will keep a space between _set_bit and functions
-that follow it.
-
->  static inline void _set_bit(u32 *word, u32 mask, int value)
->  {
->  	*word = (*word & ~mask) | (mask * value);
-> @@ -281,7 +279,6 @@ static inline void _set_bit(u32 *word, u32 mask, int value)
->  /*
->   * ACPI interface wrappers
->   */
-> -
->  static int write_acpi_int(const char *methodName, int val)
->  {
->  	acpi_status status;
-> @@ -331,7 +328,6 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
->   * In addition to the ACPI status, the HCI system returns a result which
->   * may be useful (such as "not supported").
->   */
-> -
->  static u32 hci_write(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
->  {
->  	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, 0, 0, 0 };
-> @@ -358,7 +354,6 @@ static u32 hci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
->  /*
->   * Common sci tasks
->   */
-> -
->  static int sci_open(struct toshiba_acpi_dev *dev)
->  {
->  	u32 in[TCI_WORDS] = { SCI_OPEN, 0, 0, 0, 0, 0 };
-> @@ -1183,6 +1178,7 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
->  	return 0;
->  }
->  
-> +/* Transflective Backlight */
->  static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
->  {
->  	u32 hci_result;
-> @@ -1204,6 +1200,7 @@ static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
->  
->  static struct proc_dir_entry *toshiba_proc_dir /*= 0*/;
->  
-> +/* LCD Brightness */
->  static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
->  {
->  	u32 hci_result;
-> @@ -1322,6 +1319,7 @@ static const struct file_operations lcd_proc_fops = {
->  	.write		= lcd_proc_write,
->  };
->  
-> +/* Video-Out */
->  static int get_video_status(struct toshiba_acpi_dev *dev, u32 *status)
->  {
->  	u32 hci_result;
-> @@ -1411,7 +1409,8 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
->  			_set_bit(&new_video_out, HCI_VIDEO_OUT_TV, tv_out);
->  		/*
->  		 * To avoid unnecessary video disruption, only write the new
-> -		 * video setting if something changed. */
-> +		 * video setting if something changed.
-> +		 */
->  		if (new_video_out != video_out)
->  			ret = write_acpi_int(METHOD_VIDEO_OUT, new_video_out);
->  	}
-> @@ -1428,6 +1427,7 @@ static const struct file_operations video_proc_fops = {
->  	.write		= video_proc_write,
->  };
->  
-> +/* Fan status */
->  static int get_fan_status(struct toshiba_acpi_dev *dev, u32 *status)
->  {
->  	u32 hci_result;
-> @@ -1583,7 +1583,6 @@ static const struct file_operations version_proc_fops = {
->  /*
->   * Proc and module init
->   */
-> -
->  #define PROC_TOSHIBA		"toshiba"
->  
->  static void create_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
-> @@ -2324,9 +2323,7 @@ static void toshiba_acpi_hotkey_work(struct work_struct *work)
->  		pr_err("ACPI NTFY method execution failed\n");
->  }
->  
-> -/*
-> - * Returns hotkey scancode, or < 0 on failure.
-> - */
-> +/* Returns hotkey scancode, or < 0 on failure */
->  static int toshiba_acpi_query_hotkey(struct toshiba_acpi_dev *dev)
->  {
->  	unsigned long long value;
-> @@ -2488,6 +2485,9 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
->  	return error;
->  }
->  
-> +/*
-> + * Backlight
-> + */
->  static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
->  {
->  	struct backlight_properties props;
-> @@ -2552,6 +2552,9 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
->  	return 0;
->  }
->  
-> +/*
-> + * ACPI driver functions
-> + */
->  static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
->  {
->  	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
-> -- 
-> 2.3.6
-> 
-> 
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+There's room for improvement, but I think the proposed patches are
+good as they are.
