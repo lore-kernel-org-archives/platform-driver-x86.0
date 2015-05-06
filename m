@@ -1,73 +1,50 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH v2 0/5] toshiba_acpi: Driver cleanup
-Date: Wed, 6 May 2015 09:08:52 -0600
-Message-ID: <CAGdLNWGxZ59RHuvqkjuXnMQELyh7BLsgO=NQi2U4-c9a+vRHxw@mail.gmail.com>
-References: <1430759758-4026-1-git-send-email-coproscefalo@gmail.com>
-	<20150506060035.GB7523@vmdeb7>
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Subject: Re: [PATCH 0/2] x86/quark: Add eSRAM driver and test code
+Date: Wed, 06 May 2015 08:27:07 -0700
+Message-ID: <554A32CB.6070509@nexus-software.ie>
+References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <20150506095235.GA16272@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150506060035.GB7523@vmdeb7>
+In-Reply-To: <20150506095235.GA16272@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Ingo Molnar <mingo2.kernel.org@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
-
-2015-05-06 0:00 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Mon, May 04, 2015 at 11:15:53AM -0600, Azael Avalos wrote:
->> These patches cleanup the driver from some no longer needed
->> functions, renames hci_{read, write}1 functions, some comment
->> blocks were changed, unneeded error checks removed and the driver
->> version was bumped to 0.22.
+On 06/05/15 02:52, Ingo Molnar wrote:
+>
+> * Bryan O'Donoghue <pure.logic@nexus-software.ie> wrote:
+>
+>> Quark X1000 SoC contains a 512 KiB embedded SRAM (eSRAM) memory that can
+>> be mapped onto an area of DRAM in block or on per-page overlay mode where a
+>> 4 KiB aligned region can be overlayed - allowing for broken up mappings
+>> with a 4 KiB individual granularity.
 >>
->> Changes since v1:
->> - Added two new patches to the series, one containing error check
->>   removals and another bumping the driver version.
+>> eSRAM has access times similar to an L1 cache. The following patchset
+>> adds a gen_pool driver and automatic test routine to exercise eSRAM. The
+>> intent of the eSRAM driver is to allow other drivers to allocate SRAM
+>> buffers. In contrast to the original BSP code no attempt will be made to
+>> map kernel .data section code, this is a simple SRAM buffer allocation/free
+>> mechanism and a sanity test to ensure it's ongoing correctness.
 >>
->> Darren:
->> Sorry for this, I totally forgot to include the patch to remove
->> the function error check :-(
->> Now this patchset is complete now :-)
->>
+>> Bryan O'Donoghue (2):
+>>    x86/quark: Add Quark embedded SRAM support
+>>    x86/quark: Add Quark embedded SRAM self-test
 >
-> So I'm a little confused :-) I have staged the patches locally as follows
-> (newest first):
->
-> <top>
-> f6ea7d1 toshiba_acpi: Bump driver version to 0.22
-> dd8b682 toshiba_acpi: Remove TOS_FAILURE check from some functions
-> 60d9349 toshiba_acpi: Cleanup blank lines after comment blocks
-> c62377a toshiba_acpi: Rename hci_{read, write}1 functions
-> cbed7e3 toshiba_acpi: Remove no longer needed hci_{read, write}2 functions
-> 8f163a9 toshiba_acpi: Remove bluetooth rfkill code
-> 0a4c28f toshiba_bluetooth: Change BT status message to debug
-> 3ad2df6 toshiba_bluetooth: Adapt *_enable, *_notify and *_resume functions to rfkill
-> 9eb4797 toshiba_bluetooth: Add RFKill handler functions
-> 1ae8cb3 toshiba_bluetooth: Add a container struct named toshiba_bluetooth_dev
-> ...
->
-> Is this what you had in mind?
-
-The BT code removal from toshiba_acpi should come first, then the rfkill
-to the toshiba_bluetooth driver, then all the rest :-)
-
->
-> As for the comment cleanup (blank lines, etc.). Joe raised some points, I think I did too - is there another version of that patch coming?
-
-Yeah, I'll send a v3 shortly, was in a meeting most of the day yesterday
-and didn't had time to send it.
-
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+> So I'm wondering what the primary usecase is for this. The eSRAM API
+> is purely in-kernel, right? The only user seems to be the self-test.
+> What other users will there be?
 
 
-Cheers
-Azael
+I see three to four users.
 
+1. UART with DMA enabled.
+2. Ethernet/STMMAC
+3. SPI/I2C buffers
+4. Potentially UIO
 
--- 
--- El mundo apesta y vosotros apestais tambien --
+I'm working on a good use-case for UIO but rather than patch-bomb eSRAM 
++ other drivers in one go, I thought I'd get the core in and then do 
+some modifications in other drivers to utilize the changes.
