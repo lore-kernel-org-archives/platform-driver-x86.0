@@ -1,94 +1,58 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 1/2] x86/quark: Add Quark embedded SRAM support
-Date: Wed, 06 May 2015 08:46:48 -0700
-Message-ID: <554A3768.9070405@nexus-software.ie>
-References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <1430705875-6990-2-git-send-email-pure.logic@nexus-software.ie> <20150506095858.GA16458@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
+Date: Wed, 6 May 2015 14:57:44 -0700
+Message-ID: <20150506215744.GA22096@fury.dvhart.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
+ <201505031238.14772@pali>
+ <CAJ=jquY=QG9j1ppYBbbp5WQTVHVfsUHr8NjX5fuH+4mMWeEkdQ@mail.gmail.com>
+ <20150506113119.GH30910@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:50118 "EHLO
-	outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751116AbbEFPqz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 May 2015 11:46:55 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-	by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 2620A98B08
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2015 15:46:54 +0000 (UTC)
-In-Reply-To: <20150506095858.GA16458@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ingo Molnar <mingo2.kernel.org@gmail.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150506113119.GH30910@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/05/15 02:58, Ingo Molnar wrote:
->
-> * Bryan O'Donoghue <pure.logic@nexus-software.ie> wrote:
->
->> +/**
->> + * esram_page_overlay - Overlay a page with fast access eSRAM.
->> + *
->> + * This function takes a 4 KiB aligned physical address and programs an
->> + * eSRAM page to overlay that 4 KiB region. We require and verify that the
->> + * target memory is read-write - since we don't support overlay of read-only
->> + * memory regions - such as kernel .text areas. Overlay of .text areas is
->> + * not supported because eSRAM isn't self-populating and we cannot guarantee
->> + * atomicity of the overlay operation. It is assumed and required that the
->> + * caller of the overlay function is overlaying a data buffer not kernel
->> + * code.
->
-> So if this SRAM truly has L1 speeds then overlaying kernel text would
-> sure be a lovely usecase!
+On Wed, May 06, 2015 at 01:31:19PM +0200, Pali Roh=E1r wrote:
+> Looks like everything is OK. Test3 is expected to not work correctly =
+as
+> driver is not loaded...
+>=20
+> On Wednesday 06 May 2015 17:11:08 Alex Hung wrote:
+> > The test was updated @
+> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2=
+qfZ829CkJLPo06aI/edit?usp=3Dsharing.
+> > Please check the tab "Dell-rbtnv2"
+> >=20
+> > Notes:
+> > 1. The systems come and go and I can find some of original ones but=
+ I
+> > tests some others
+> > 2. Test 3 was done by Test 2 + "rmmod dell-laptop". All were run wi=
+th
+> > all wireless devices are ON
+> >=20
+> > Summary:
+> > From external behaves such as Desktop's viewpoint (Unity was used a=
+nd
+> > hope that's not surprising), the wireless devices are ON/OFF
+> > correctly. Other details are listed in the report.
 
-Yes it would. The original BSP code does support overlay of kernel .text 
-areas - and there's no reason why careful and intelligent mapping of 
-.text areas would be precluded.....
+What am I to make of Sheet1:Row25 vs. Row27?
+This appears to me that for the Inspiron 3542, Dell Wireless for 3.16 h=
+as a
+functional soft block, while there is no change for Dell RBNT.
 
-However we would need to be very careful about which pieces of code we 
-overlay - because
+Rows36 and 37... these are tellin gme that the ARBT method is broken on=
+ this
+machine?
 
-1. Enable overlay @ address X
-2. eSRAM enables the overlay - with a buffer containing junk
-3. Kernel needs to repopulate the overlayed page
-
-
-> Which part of the overlay operation is inatomic?
-
-Since the overlay page doesn't populate itself what happens is
-
-1. Issue command to overlay via IOSF-MBI - returning almost instantly
-2. eSRAM overlay operation starts and a number of cycles later completes
-3. Kernel needs to poll for completion
-3. Overlayed page now contains the data in the SRAM buffer (junk)
-4. Kernel needs to repopulate the overlayed page with the original data
-
-So between the command to enable the page and the time the memcpy() 
-finishes the target page for overlay cannot be relied on.
-
-Any code necessary to do the overlay (memcpy, any address in the esram 
-driver, any address in the MBI driver, any address in the PCI code) 
-couldn't be overlayed. This may mean maintaining a blacklist of 
-addresses which is a pain or just judicious use of the overlay by code 
-that the knowledgeable of what can and can't be overlayed. I think the 
-latter option is best and a pretty obvious way of doing it.
-
-> Could we solve it by
-> double buffering: first creating a temporary buffer, mapping the eSRAM
-> pages there and copying kernel text to it?
-
-I think that depends on which pieces of code we are talking about.
-
-> Now that we've populated it, we only have to remap the eSRAM to the
-> real kernel text pages.
->
-> Its inatomicity should not matter: whether the CPU fetches from DRAM
-> or from eSRAM, it should be the same content.
->
-> Once the remapping is done, the double buffer can be freed.
->
-> Likewise, the text of kernel modules could be eSRAM cached as well,
-> although core kernel text is probably even more beneficial.
-
-Hmm. You know that's a good suggestion.... I think it's worth a try.
-
-Bryan
+> --=20
+> Pali Roh=E1r
+> pali.rohar@gmail.com
+>=20
