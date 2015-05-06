@@ -1,103 +1,51 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
-Date: Wed, 6 May 2015 13:31:19 +0200
-Message-ID: <20150506113119.GH30910@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
- <201505031238.14772@pali>
- <CAJ=jquY=QG9j1ppYBbbp5WQTVHVfsUHr8NjX5fuH+4mMWeEkdQ@mail.gmail.com>
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Subject: Re: [PATCH 2/2] x86/quark: Add Quark embedded SRAM self-test
+Date: Wed, 06 May 2015 07:27:06 -0700
+Message-ID: <554A24BA.80605@nexus-software.ie>
+References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <1430705875-6990-3-git-send-email-pure.logic@nexus-software.ie> <20150506100211.GB16458@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f42.google.com ([74.125.82.42]:36093 "EHLO
-	mail-wg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750968AbbEFLbW (ORCPT
+Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:55621 "EHLO
+	outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751116AbbEFO1P (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 May 2015 07:31:22 -0400
-Content-Disposition: inline
-In-Reply-To: <CAJ=jquY=QG9j1ppYBbbp5WQTVHVfsUHr8NjX5fuH+4mMWeEkdQ@mail.gmail.com>
+	Wed, 6 May 2015 10:27:15 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+	by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id 4959898A0D
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2015 14:27:14 +0000 (UTC)
+In-Reply-To: <20150506100211.GB16458@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Ingo Molnar <mingo2.kernel.org@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
 
-Looks like everything is OK. Test3 is expected to not work correctly as
-driver is not loaded...
+On 06/05/15 03:02, Ingo Molnar wrote:
 
-On Wednesday 06 May 2015 17:11:08 Alex Hung wrote:
-> The test was updated @
-> https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2qf=
-Z829CkJLPo06aI/edit?usp=3Dsharing.
-> Please check the tab "Dell-rbtnv2"
->=20
-> Notes:
-> 1. The systems come and go and I can find some of original ones but I
-> tests some others
-> 2. Test 3 was done by Test 2 + "rmmod dell-laptop". All were run with
-> all wireless devices are ON
->=20
-> Summary:
-> From external behaves such as Desktop's viewpoint (Unity was used and
-> hope that's not surprising), the wireless devices are ON/OFF
-> correctly. Other details are listed in the report.
->=20
-> On Sun, May 3, 2015 at 6:38 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com=
-> wrote:
-> > On Wednesday 29 April 2015 11:51:03 Pali Roh=C3=A1r wrote:
-> >> This patch series add new acpi Dell Airplane Mode Switch
-> >> driver (DELLABCE and DELRBTN acpi devices). It provides radio
-> >> HW switch events (together with current state of radio
-> >> devices) and export them via rfkill interface. These events
-> >> are also used in dell-laptop driver instead i8042 filter hook
-> >> function (when acpi device is available).
-> >>
-> >> In v2 was added support for laptops which have toggle button
-> >> instead HW slider switch. For that I reused code done by Alex
-> >> Hung.
-> >>
-> >> Pali Roh=C3=A1r (3):
-> >>   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
-> >>   platform: x86: dell-rbtn: Export notifier for other kernel
-> >> modules platform: x86: dell-laptop: Use dell-rbtn instead
-> >> i8042 filter when possible
-> >>
-> >>  drivers/platform/x86/Kconfig       |   14 ++
-> >>  drivers/platform/x86/Makefile      |    1 +
-> >>  drivers/platform/x86/dell-laptop.c |   67 +++++-
-> >>  drivers/platform/x86/dell-rbtn.c   |  430
-> >> ++++++++++++++++++++++++++++++++++++
-> >> drivers/platform/x86/dell-rbtn.h   |   35 +++
-> >>  5 files changed, 542 insertions(+), 5 deletions(-)
-> >>  create mode 100644 drivers/platform/x86/dell-rbtn.c
-> >>  create mode 100644 drivers/platform/x86/dell-rbtn.h
-> >
-> > Alex, can you rested this patch series on all your machines like
-> > you did previous in this sheet?
-> >
-> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2=
-qfZ829CkJLPo06aI/edit?usp=3Dsharing
-> >
-> > Ideally do more tests:
-> > 1) only with first patch 1/3
-> > 2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
-> > 3) same as 2) but without loaded dell-laptop
-> >
-> > If everything pass then this patch series is OK from my side.
-> >
-> > Looks like Gabriele's problem is irrelevant to this patch series,
-> > but we probably hit some rfkill bug in dell-laptop.ko :-(
-> >
-> > Matthew or Darren, can you review code in this patch series? So
-> > if everything will be fine, dell-rbtn could be ready for 4.2.
-> >
-> > --
-> > Pali Roh=C3=A1r
-> > pali.rohar@gmail.com
->=20
->=20
->=20
+>> + * This function is carefully constructed to measure and verify the
+>> + * performance boost provided by eSRAM. We invalidate the cache with a
+>> + * wbinvd() and then perform a series of reads - each of which will cause a
+>> + * cacheline miss. We measure the aggregate time it takes to complete the
+>> + * series of reads and return the delta in cycles. The calling function will
+>> + * pass either a pointer to DRAM or a pointer to eSRAM.
+>> + *
+>> + * @param walker:	Pointer to RAM area to test.
+>> + * @return:		Number of cycles to complete test.
+>> + */
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+<snip>
+
+>
+> So I don't see the wbinvd() that the description mentions.
+
+wbinvd(); isn't required to make the test do it's job. Missed scrubbing 
+from the description - damn :(
+
+>
+>> + * esram_self_test_init - entry point for IMR driver.
+>> + * esram_self_test_exit - exit point for IMR code.
+>
+> Stale 'IMR' references left over from copy & paste?
+
+Yep
