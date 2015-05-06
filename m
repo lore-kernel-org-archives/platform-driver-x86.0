@@ -1,215 +1,94 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 2/5] toshiba_acpi: Rename hci_{read, write}1 functions
-Date: Wed,  6 May 2015 09:35:10 -0600
-Message-ID: <1430926513-6264-3-git-send-email-coproscefalo@gmail.com>
-References: <1430926513-6264-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1430926513-6264-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Subject: Re: [PATCH 1/2] x86/quark: Add Quark embedded SRAM support
+Date: Wed, 06 May 2015 08:46:48 -0700
+Message-ID: <554A3768.9070405@nexus-software.ie>
+References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <1430705875-6990-2-git-send-email-pure.logic@nexus-software.ie> <20150506095858.GA16458@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:50118 "EHLO
+	outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751116AbbEFPqz (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 6 May 2015 11:46:55 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+	by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id 2620A98B08
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2015 15:46:54 +0000 (UTC)
+In-Reply-To: <20150506095858.GA16458@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Ingo Molnar <mingo2.kernel.org@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
 
-This patch simply renames the hci_{read, write}1 functions to
-hci_{read, write}.
+On 06/05/15 02:58, Ingo Molnar wrote:
+>
+> * Bryan O'Donoghue <pure.logic@nexus-software.ie> wrote:
+>
+>> +/**
+>> + * esram_page_overlay - Overlay a page with fast access eSRAM.
+>> + *
+>> + * This function takes a 4 KiB aligned physical address and programs an
+>> + * eSRAM page to overlay that 4 KiB region. We require and verify that the
+>> + * target memory is read-write - since we don't support overlay of read-only
+>> + * memory regions - such as kernel .text areas. Overlay of .text areas is
+>> + * not supported because eSRAM isn't self-populating and we cannot guarantee
+>> + * atomicity of the overlay operation. It is assumed and required that the
+>> + * caller of the overlay function is overlaying a data buffer not kernel
+>> + * code.
+>
+> So if this SRAM truly has L1 speeds then overlaying kernel text would
+> sure be a lovely usecase!
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 44 ++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+Yes it would. The original BSP code does support overlay of kernel .text 
+areas - and there's no reason why careful and intelligent mapping of 
+.text areas would be precluded.....
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index e593762..19efb05 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -326,13 +326,13 @@ static acpi_status tci_raw(struct toshiba_acpi_dev *dev,
- }
- 
- /*
-- * Common hci tasks (get or set one or two value)
-+ * Common hci tasks
-  *
-  * In addition to the ACPI status, the HCI system returns a result which
-  * may be useful (such as "not supported").
-  */
- 
--static u32 hci_write1(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
-+static u32 hci_write(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
- {
- 	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, 0, 0, 0 };
- 	u32 out[TCI_WORDS];
-@@ -341,7 +341,7 @@ static u32 hci_write1(struct toshiba_acpi_dev *dev, u32 reg, u32 in1)
- 	return ACPI_SUCCESS(status) ? out[0] : TOS_FAILURE;
- }
- 
--static u32 hci_read1(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
-+static u32 hci_read(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
- {
- 	u32 in[TCI_WORDS] = { HCI_GET, reg, 0, 0, 0, 0 };
- 	u32 out[TCI_WORDS];
-@@ -596,7 +596,7 @@ static enum led_brightness toshiba_kbd_backlight_get(struct led_classdev *cdev)
- 	u32 state, result;
- 
- 	/* Check the keyboard backlight state */
--	result = hci_read1(dev, HCI_KBD_ILLUMINATION, &state);
-+	result = hci_read(dev, HCI_KBD_ILLUMINATION, &state);
- 	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to get the keyboard backlight failed\n");
- 		return LED_OFF;
-@@ -617,7 +617,7 @@ static void toshiba_kbd_backlight_set(struct led_classdev *cdev,
- 
- 	/* Set the keyboard backlight state */
- 	state = brightness ? 1 : 0;
--	result = hci_write1(dev, HCI_KBD_ILLUMINATION, state);
-+	result = hci_write(dev, HCI_KBD_ILLUMINATION, state);
- 	if (result == TOS_FAILURE || result == TOS_INPUT_DATA_ERROR) {
- 		pr_err("ACPI call to set KBD Illumination mode failed\n");
- 		return;
-@@ -1188,7 +1188,7 @@ static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
- 	u32 hci_result;
- 	u32 status;
- 
--	hci_result = hci_read1(dev, HCI_TR_BACKLIGHT, &status);
-+	hci_result = hci_read(dev, HCI_TR_BACKLIGHT, &status);
- 	*enabled = !status;
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
-@@ -1198,7 +1198,7 @@ static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
- 	u32 hci_result;
- 	u32 value = !enable;
- 
--	hci_result = hci_write1(dev, HCI_TR_BACKLIGHT, value);
-+	hci_result = hci_write(dev, HCI_TR_BACKLIGHT, value);
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
-@@ -1221,7 +1221,7 @@ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
- 		brightness++;
- 	}
- 
--	hci_result = hci_read1(dev, HCI_LCD_BRIGHTNESS, &value);
-+	hci_result = hci_read(dev, HCI_LCD_BRIGHTNESS, &value);
- 	if (hci_result == TOS_SUCCESS)
- 		return brightness + (value >> HCI_LCD_BRIGHTNESS_SHIFT);
- 
-@@ -1276,7 +1276,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
- 	}
- 
- 	value = value << HCI_LCD_BRIGHTNESS_SHIFT;
--	hci_result = hci_write1(dev, HCI_LCD_BRIGHTNESS, value);
-+	hci_result = hci_write(dev, HCI_LCD_BRIGHTNESS, value);
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
-@@ -1326,7 +1326,7 @@ static int get_video_status(struct toshiba_acpi_dev *dev, u32 *status)
- {
- 	u32 hci_result;
- 
--	hci_result = hci_read1(dev, HCI_VIDEO_OUT, status);
-+	hci_result = hci_read(dev, HCI_VIDEO_OUT, status);
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
-@@ -1432,7 +1432,7 @@ static int get_fan_status(struct toshiba_acpi_dev *dev, u32 *status)
- {
- 	u32 hci_result;
- 
--	hci_result = hci_read1(dev, HCI_FAN, status);
-+	hci_result = hci_read(dev, HCI_FAN, status);
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
-@@ -1472,7 +1472,7 @@ static ssize_t fan_proc_write(struct file *file, const char __user *buf,
- 
- 	if (sscanf(cmd, " force_on : %i", &value) == 1 &&
- 	    value >= 0 && value <= 1) {
--		hci_result = hci_write1(dev, HCI_FAN, value);
-+		hci_result = hci_write(dev, HCI_FAN, value);
- 		if (hci_result == TOS_SUCCESS)
- 			dev->force_fan = value;
- 		else
-@@ -1500,7 +1500,7 @@ static int keys_proc_show(struct seq_file *m, void *v)
- 	u32 value;
- 
- 	if (!dev->key_event_valid && dev->system_event_supported) {
--		hci_result = hci_read1(dev, HCI_SYSTEM_EVENT, &value);
-+		hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
- 		if (hci_result == TOS_SUCCESS) {
- 			dev->key_event_valid = 1;
- 			dev->last_key_event = value;
-@@ -1512,7 +1512,7 @@ static int keys_proc_show(struct seq_file *m, void *v)
- 			 * some machines where system events sporadically
- 			 * become disabled.
- 			 */
--			hci_result = hci_write1(dev, HCI_SYSTEM_EVENT, 1);
-+			hci_result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
- 			pr_notice("Re-enabled hotkeys\n");
- 		} else {
- 			pr_err("Error reading hotkey status\n");
-@@ -1649,7 +1649,7 @@ static ssize_t fan_store(struct device *dev,
- 	if (state != 0 && state != 1)
- 		return -EINVAL;
- 
--	result = hci_write1(toshiba, HCI_FAN, state);
-+	result = hci_write(toshiba, HCI_FAN, state);
- 	if (result == TOS_FAILURE)
- 		return -EIO;
- 	else if (result == TOS_NOT_SUPPORTED)
-@@ -2271,7 +2271,7 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	result = hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE);
-+	result = hci_write(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_ENABLE);
- 	if (result == TOS_FAILURE)
- 		return -EIO;
- 	else if (result == TOS_NOT_SUPPORTED)
-@@ -2288,8 +2288,8 @@ static void toshiba_acpi_enable_special_functions(struct toshiba_acpi_dev *dev)
- 	 * Re-activate the hotkeys, but this time, we are using the
- 	 * "Special Functions" mode.
- 	 */
--	result = hci_write1(dev, HCI_HOTKEY_EVENT,
--			    HCI_HOTKEY_SPECIAL_FUNCTIONS);
-+	result = hci_write(dev, HCI_HOTKEY_EVENT,
-+			   HCI_HOTKEY_SPECIAL_FUNCTIONS);
- 	if (result != TOS_SUCCESS)
- 		pr_err("Could not enable the Special Function mode\n");
- }
-@@ -2370,7 +2370,7 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
- 			toshiba_acpi_report_hotkey(dev, scancode);
- 	} else if (dev->system_event_supported) {
- 		do {
--			hci_result = hci_read1(dev, HCI_SYSTEM_EVENT, &value);
-+			hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
- 			switch (hci_result) {
- 			case TOS_SUCCESS:
- 				toshiba_acpi_report_hotkey(dev, (int)value);
-@@ -2382,7 +2382,7 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
- 				 * sporadically become disabled.
- 				 */
- 				hci_result =
--					hci_write1(dev, HCI_SYSTEM_EVENT, 1);
-+					hci_write(dev, HCI_SYSTEM_EVENT, 1);
- 				pr_notice("Re-enabled hotkeys\n");
- 				/* Fall through */
- 			default:
-@@ -2459,7 +2459,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	if (acpi_has_method(dev->acpi_dev->handle, "INFO"))
- 		dev->info_supported = 1;
- 	else {
--		hci_result = hci_write1(dev, HCI_SYSTEM_EVENT, 1);
-+		hci_result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
- 		if (hci_result == TOS_SUCCESS)
- 			dev->system_event_supported = 1;
- 	}
-@@ -2784,7 +2784,7 @@ static int toshiba_acpi_suspend(struct device *device)
- 	u32 result;
- 
- 	if (dev->hotkey_dev)
--		result = hci_write1(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE);
-+		result = hci_write(dev, HCI_HOTKEY_EVENT, HCI_HOTKEY_DISABLE);
- 
- 	return 0;
- }
--- 
-2.3.6
+However we would need to be very careful about which pieces of code we 
+overlay - because
+
+1. Enable overlay @ address X
+2. eSRAM enables the overlay - with a buffer containing junk
+3. Kernel needs to repopulate the overlayed page
+
+
+> Which part of the overlay operation is inatomic?
+
+Since the overlay page doesn't populate itself what happens is
+
+1. Issue command to overlay via IOSF-MBI - returning almost instantly
+2. eSRAM overlay operation starts and a number of cycles later completes
+3. Kernel needs to poll for completion
+3. Overlayed page now contains the data in the SRAM buffer (junk)
+4. Kernel needs to repopulate the overlayed page with the original data
+
+So between the command to enable the page and the time the memcpy() 
+finishes the target page for overlay cannot be relied on.
+
+Any code necessary to do the overlay (memcpy, any address in the esram 
+driver, any address in the MBI driver, any address in the PCI code) 
+couldn't be overlayed. This may mean maintaining a blacklist of 
+addresses which is a pain or just judicious use of the overlay by code 
+that the knowledgeable of what can and can't be overlayed. I think the 
+latter option is best and a pretty obvious way of doing it.
+
+> Could we solve it by
+> double buffering: first creating a temporary buffer, mapping the eSRAM
+> pages there and copying kernel text to it?
+
+I think that depends on which pieces of code we are talking about.
+
+> Now that we've populated it, we only have to remap the eSRAM to the
+> real kernel text pages.
+>
+> Its inatomicity should not matter: whether the CPU fetches from DRAM
+> or from eSRAM, it should be the same content.
+>
+> Once the remapping is done, the double buffer can be freed.
+>
+> Likewise, the text of kernel modules could be eSRAM cached as well,
+> although core kernel text is probably even more beneficial.
+
+Hmm. You know that's a good suggestion.... I think it's worth a try.
+
+Bryan
