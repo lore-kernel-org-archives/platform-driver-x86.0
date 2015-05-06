@@ -1,7 +1,7 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 4/5] toshiba_acpi: Remove TOS_FAILURE check from some functions
-Date: Wed,  6 May 2015 09:35:12 -0600
-Message-ID: <1430926513-6264-5-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v3 1/5] toshiba_acpi: Remove no longer needed hci_{read, write}2 functions
+Date: Wed,  6 May 2015 09:35:09 -0600
+Message-ID: <1430926513-6264-2-git-send-email-coproscefalo@gmail.com>
 References: <1430926513-6264-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1430926513-6264-1-git-send-email-coproscefalo@gmail.com>
@@ -10,109 +10,83 @@ To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lin
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch removes the check for TOS_FAILURE whenever we are using
-the tci_raw function call, as that code is only returned by the
-{hci, sci}_{read, write} functions and never by the tci_raw, and
-thus making that check irrelevant.
+This patch removes the hci_{read, write}2 functions from the driver,
+and the toshiba_hotkey_event_type_get function was adapted to use the
+tci_raw function.
+
+The hci_write2 function was only used by the bluetooth rfkill code,
+but since its removal, it was causing build warnings, and the
+hci_read2 function was only used by the toshiba_hotkey_event_type_get
+function.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 39 +++++++------------------------------
+ 1 file changed, 7 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 8a9dacc..2667192 100644
+index 8ee7c24..e593762 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -366,7 +366,7 @@ static int sci_open(struct toshiba_acpi_dev *dev)
- 	acpi_status status;
+@@ -355,31 +355,6 @@ static u32 hci_read1(struct toshiba_acpi_dev *dev, u32 reg, u32 *out1)
+ 	return out[0];
+ }
  
- 	status = tci_raw(dev, in, out);
--	if  (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if  (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to open SCI failed\n");
- 		return 0;
+-static u32 hci_write2(struct toshiba_acpi_dev *dev, u32 reg, u32 in1, u32 in2)
+-{
+-	u32 in[TCI_WORDS] = { HCI_SET, reg, in1, in2, 0, 0 };
+-	u32 out[TCI_WORDS];
+-	acpi_status status = tci_raw(dev, in, out);
+-
+-	return ACPI_SUCCESS(status) ? out[0] : TOS_FAILURE;
+-}
+-
+-static u32 hci_read2(struct toshiba_acpi_dev *dev,
+-		     u32 reg, u32 *out1, u32 *out2)
+-{
+-	u32 in[TCI_WORDS] = { HCI_GET, reg, *out1, *out2, 0, 0 };
+-	u32 out[TCI_WORDS];
+-	acpi_status status = tci_raw(dev, in, out);
+-
+-	if (ACPI_FAILURE(status))
+-		return TOS_FAILURE;
+-
+-	*out1 = out[2];
+-	*out2 = out[3];
+-
+-	return out[0];
+-}
+-
+ /*
+  * Common sci tasks
+  */
+@@ -1190,20 +1165,20 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ 					 u32 *type)
+ {
+-	u32 val1 = 0x03;
+-	u32 val2 = 0;
+-	u32 result;
++	u32 in[TCI_WORDS] = { HCI_GET, HCI_SYSTEM_INFO, 0x03, 0, 0, 0 };
++	u32 out[TCI_WORDS];
++	acpi_status status;
+ 
+-	result = hci_read2(dev, HCI_SYSTEM_INFO, &val1, &val2);
+-	if (result == TOS_FAILURE) {
++	status = tci_raw(dev, in, out);
++	if (ACPI_FAILURE(status)) {
+ 		pr_err("ACPI call to get System type failed\n");
+ 		return -EIO;
+-	} else if (result == TOS_NOT_SUPPORTED) {
++	} else if (out[0] == TOS_NOT_SUPPORTED) {
+ 		pr_info("System type not supported\n");
+ 		return -ENODEV;
  	}
-@@ -404,7 +404,7 @@ static void sci_close(struct toshiba_acpi_dev *dev)
- 	acpi_status status;
  
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to close SCI failed\n");
- 		return;
- 	}
-@@ -452,7 +452,7 @@ static int toshiba_illumination_available(struct toshiba_acpi_dev *dev)
+-	*type = val2;
++	*type = out[3];
  
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to query Illumination support failed\n");
- 		return 0;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -674,7 +674,7 @@ static int toshiba_eco_mode_available(struct toshiba_acpi_dev *dev)
- 	u32 out[TCI_WORDS];
- 
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get ECO led failed\n");
- 	} else if (out[0] == TOS_NOT_INSTALLED) {
- 		pr_info("ECO led not installed");
-@@ -796,7 +796,7 @@ static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
- 		return;
- 
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
- 		sci_close(dev);
- 		return;
-@@ -810,7 +810,7 @@ static void toshiba_usb_sleep_charge_available(struct toshiba_acpi_dev *dev)
- 
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Sleep and Charge mode failed\n");
- 		sci_close(dev);
- 		return;
-@@ -890,7 +890,7 @@ static int toshiba_sleep_functions_status_get(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB S&C battery level failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -919,7 +919,7 @@ static int toshiba_sleep_functions_status_set(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_BAT_LVL;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to set USB S&C battery level failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
-@@ -945,7 +945,7 @@ static int toshiba_usb_rapid_charge_get(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_RAPID_DSP;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to get USB Rapid Charge failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED ||
-@@ -973,7 +973,7 @@ static int toshiba_usb_rapid_charge_set(struct toshiba_acpi_dev *dev,
- 	in[5] = SCI_USB_CHARGE_RAPID_DSP;
- 	status = tci_raw(dev, in, out);
- 	sci_close(dev);
--	if (ACPI_FAILURE(status) || out[0] == TOS_FAILURE) {
-+	if (ACPI_FAILURE(status)) {
- 		pr_err("ACPI call to set USB Rapid Charge failed\n");
- 		return -EIO;
- 	} else if (out[0] == TOS_NOT_SUPPORTED) {
+ 	return 0;
+ }
 -- 
 2.3.6
