@@ -1,94 +1,109 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform: x86: dell-rbtn: Dell Airplane Mode
- Switch driver
-Date: Wed, 6 May 2015 09:49:22 +0200
-Message-ID: <20150506074922.GB30910@pali>
+Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
+Date: Wed, 6 May 2015 09:58:04 +0200
+Message-ID: <20150506075804.GC30910@pali>
 References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <CAJ=jquYEEZ928A=eL158p38s4EEX32BZB5mOv5-841bRkKr_UQ@mail.gmail.com>
- <20150430074429.GT24346@pali>
- <1828808.mVmCDTOvJh@xps13>
- <20150506055546.GA7523@vmdeb7>
+ <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
+ <201505031238.14772@pali>
+ <20150505203710.GC33977@fury.dvhart.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f180.google.com ([209.85.212.180]:35647 "EHLO
-	mail-wi0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756428AbbEFHt0 (ORCPT
+Received: from mail-wg0-f48.google.com ([74.125.82.48]:34006 "EHLO
+	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750770AbbEFH6I (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 May 2015 03:49:26 -0400
+	Wed, 6 May 2015 03:58:08 -0400
 Content-Disposition: inline
-In-Reply-To: <20150506055546.GA7523@vmdeb7>
+In-Reply-To: <20150505203710.GC33977@fury.dvhart.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-On Tuesday 05 May 2015 22:55:46 Darren Hart wrote:
-> On Tue, May 05, 2015 at 11:23:05PM +0200, Gabriele Mazzotta wrote:
-> > On Thursday 30 April 2015 09:44:29 Pali Roh=C3=A1r wrote:
-> > > On Thursday 30 April 2015 14:06:27 Alex Hung wrote:
-> > > > Method ABRT is to be used by driver to disable BIOS handling of=
- radio
-> > > > button. So the changes in behaviours observed by Gabriele is ex=
-pected.
-> > > > I have seen other systems behave the same way.
-> > > >=20
+On Tuesday 05 May 2015 13:37:10 Darren Hart wrote:
+> On Sun, May 03, 2015 at 12:38:14PM +0200, Pali Roh=C3=A1r wrote:
+> > On Wednesday 29 April 2015 11:51:03 Pali Roh=C3=A1r wrote:
+> > > This patch series add new acpi Dell Airplane Mode Switch
+> > > driver (DELLABCE and DELRBTN acpi devices). It provides radio
+> > > HW switch events (together with current state of radio
+> > > devices) and export them via rfkill interface. These events
+> > > are also used in dell-laptop driver instead i8042 filter hook
+> > > function (when acpi device is available).
 > > >=20
-> > > Right, that after that ARBT call operating system get full contro=
-l over
-> > > radio devices and ACPI/BIOS will not automatically enable/disable=
- them.
-> > > I think this is OK.
+> > > In v2 was added support for laptops which have toggle button
+> > > instead HW slider switch. For that I reused code done by Alex
+> > > Hung.
 > > >=20
-> > > But for that we need also support for manually enable/disable rad=
-io
-> > > devices and code for this support is missing. Or do DELLABCE/RBTN=
- acpi
-> > > devices somehow support enabling/disabling it via system/kernel r=
-equest?
+> > > Pali Roh=C3=A1r (3):
+> > >   platform: x86: dell-rbtn: Dell Airplane Mode Switch driver
+> > >   platform: x86: dell-rbtn: Export notifier for other kernel
+> > > modules platform: x86: dell-laptop: Use dell-rbtn instead
+> > > i8042 filter when possible
 > > >=20
-> > > > I do also see firmware only sends Notify(RBTN, 0x80) and no har=
-d block
-> > > > whether ABRT(1) is called or not.  Thus keycode are the only op=
-tion on
-> > > > those machines.
-> > > >=20
-> > >=20
-> > > Key is ok, but we *must* have ability to hard block it via some
-> > > ACPI/WMI/BIOS/FW/etc... call. Otherwise ARBT(1) is no go as users=
- should
-> > > be able to enable/disable their radio devices (bluetooth for powe=
-rsave)
+> > >  drivers/platform/x86/Kconfig       |   14 ++
+> > >  drivers/platform/x86/Makefile      |    1 +
+> > >  drivers/platform/x86/dell-laptop.c |   67 +++++-
+> > >  drivers/platform/x86/dell-rbtn.c   |  430
+> > > ++++++++++++++++++++++++++++++++++++
+> > > drivers/platform/x86/dell-rbtn.h   |   35 +++
+> > >  5 files changed, 542 insertions(+), 5 deletions(-)
+> > >  create mode 100644 drivers/platform/x86/dell-rbtn.c
+> > >  create mode 100644 drivers/platform/x86/dell-rbtn.h
 > >=20
-> > Does it really matter in the end? As I understand it, radio devices=
- are
-> > off either way.
+> > Alex, can you rested this patch series on all your machines like=20
+> > you did previous in this sheet?
+> >=20
+> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2=
+qfZ829CkJLPo06aI/edit?usp=3Dsharing
+> >=20
+> > Ideally do more tests:
+> > 1) only with first patch 1/3
+> > 2) with full patch series 1/3, 2/3, 3/3 *with* loaded dell-laptop
+> > 3) same as 2) but without loaded dell-laptop
+> >=20
+> > If everything pass then this patch series is OK from my side.
+> >=20
+> > Looks like Gabriele's problem is irrelevant to this patch series,=20
+> > but we probably hit some rfkill bug in dell-laptop.ko :-(
+> >=20
+> > Matthew or Darren, can you review code in this patch series? So=20
+> > if everything will be fine, dell-rbtn could be ready for 4.2.
 >=20
-> As a point of reference for consideration, we recently dropped the Th=
-inkpad
-> hardware mute button because it seriously complicated everything in w=
-hat appears
-> to be a similar sort of situation. By eliminating the hardware mute a=
-nd relying
-> purely on software mute, we were able to provide a much more consiste=
-ntly
-> functional driver.
+> Yes - but I need some additional context.
 >=20
-> Also note that this driver provided a "software_mute" module paramete=
-r to allow
-> the user to control this.
->=20
-> I believe this provides some relevant precedent for your consideratio=
-n. I don't
-> want to add parameters casually, but it could be one is warranted her=
-e.
+> There wasn't a "Since v1..." changelog below the --- line in the patc=
+hes. It's
+> always good practice to include it - but especially after this much t=
+ime has
+> passed - it really helps page back in all the relevant issues.
 >=20
 
-Yes, this driver transfter hardware function (implemented in EC ACPI
-firmware) into software kernel solution. But my point was that software
-solution must be able to call all those "functions" which was called
-previously by ACPI/firmware.
+2/3 and 3/3 patches were not changed (just rebased). And to patch 1/3
+was added input device for reporting wireless toggle button (for laptop=
+s
+which have toggle button instead hw slider switch). Plus patch contains
+some code cleanup.
+
+> After the discussion on this list, I'm not sure where we are with how=
+ this patch
+> series impacts the machines that Alex and Garbiele are working on.
+>=20
+
+As wrote in previous email, now we are waiting for Alex's tests to make
+sure that everything is working fine as expected.
+
+> What I would like is this: amongst yourselves, please agree on a solu=
+tion and
+> provide a patch series with a Signed-off-by from the author(s) and at=
+ least a
+> Tested-by from the others.
+>=20
+> If this is it, each of you please reply here stating as much.
+>=20
+> Thanks,
+>=20
 
 --=20
 Pali Roh=C3=A1r
