@@ -1,51 +1,73 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 2/2] x86/quark: Add Quark embedded SRAM self-test
-Date: Wed, 06 May 2015 07:27:06 -0700
-Message-ID: <554A24BA.80605@nexus-software.ie>
-References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <1430705875-6990-3-git-send-email-pure.logic@nexus-software.ie> <20150506100211.GB16458@gmail.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v2 0/5] toshiba_acpi: Driver cleanup
+Date: Wed, 6 May 2015 09:08:52 -0600
+Message-ID: <CAGdLNWGxZ59RHuvqkjuXnMQELyh7BLsgO=NQi2U4-c9a+vRHxw@mail.gmail.com>
+References: <1430759758-4026-1-git-send-email-coproscefalo@gmail.com>
+	<20150506060035.GB7523@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:55621 "EHLO
-	outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751116AbbEFO1P (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 May 2015 10:27:15 -0400
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-	by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id 4959898A0D
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 May 2015 14:27:14 +0000 (UTC)
-In-Reply-To: <20150506100211.GB16458@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ingo Molnar <mingo2.kernel.org@gmail.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150506060035.GB7523@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/05/15 03:02, Ingo Molnar wrote:
+Hi Darren,
 
->> + * This function is carefully constructed to measure and verify the
->> + * performance boost provided by eSRAM. We invalidate the cache with a
->> + * wbinvd() and then perform a series of reads - each of which will cause a
->> + * cacheline miss. We measure the aggregate time it takes to complete the
->> + * series of reads and return the delta in cycles. The calling function will
->> + * pass either a pointer to DRAM or a pointer to eSRAM.
->> + *
->> + * @param walker:	Pointer to RAM area to test.
->> + * @return:		Number of cycles to complete test.
->> + */
+2015-05-06 0:00 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> On Mon, May 04, 2015 at 11:15:53AM -0600, Azael Avalos wrote:
+>> These patches cleanup the driver from some no longer needed
+>> functions, renames hci_{read, write}1 functions, some comment
+>> blocks were changed, unneeded error checks removed and the driver
+>> version was bumped to 0.22.
+>>
+>> Changes since v1:
+>> - Added two new patches to the series, one containing error check
+>>   removals and another bumping the driver version.
+>>
+>> Darren:
+>> Sorry for this, I totally forgot to include the patch to remove
+>> the function error check :-(
+>> Now this patchset is complete now :-)
+>>
+>
+> So I'm a little confused :-) I have staged the patches locally as follows
+> (newest first):
+>
+> <top>
+> f6ea7d1 toshiba_acpi: Bump driver version to 0.22
+> dd8b682 toshiba_acpi: Remove TOS_FAILURE check from some functions
+> 60d9349 toshiba_acpi: Cleanup blank lines after comment blocks
+> c62377a toshiba_acpi: Rename hci_{read, write}1 functions
+> cbed7e3 toshiba_acpi: Remove no longer needed hci_{read, write}2 functions
+> 8f163a9 toshiba_acpi: Remove bluetooth rfkill code
+> 0a4c28f toshiba_bluetooth: Change BT status message to debug
+> 3ad2df6 toshiba_bluetooth: Adapt *_enable, *_notify and *_resume functions to rfkill
+> 9eb4797 toshiba_bluetooth: Add RFKill handler functions
+> 1ae8cb3 toshiba_bluetooth: Add a container struct named toshiba_bluetooth_dev
+> ...
+>
+> Is this what you had in mind?
 
-<snip>
+The BT code removal from toshiba_acpi should come first, then the rfkill
+to the toshiba_bluetooth driver, then all the rest :-)
 
 >
-> So I don't see the wbinvd() that the description mentions.
+> As for the comment cleanup (blank lines, etc.). Joe raised some points, I think I did too - is there another version of that patch coming?
 
-wbinvd(); isn't required to make the test do it's job. Missed scrubbing 
-from the description - damn :(
+Yeah, I'll send a v3 shortly, was in a meeting most of the day yesterday
+and didn't had time to send it.
 
 >
->> + * esram_self_test_init - entry point for IMR driver.
->> + * esram_self_test_exit - exit point for IMR code.
->
-> Stale 'IMR' references left over from copy & paste?
+> --
+> Darren Hart
+> Intel Open Source Technology Center
 
-Yep
+
+Cheers
+Azael
+
+
+-- 
+-- El mundo apesta y vosotros apestais tambien --
