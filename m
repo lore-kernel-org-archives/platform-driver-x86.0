@@ -1,50 +1,40 @@
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Subject: Re: [PATCH 0/2] x86/quark: Add eSRAM driver and test code
-Date: Wed, 06 May 2015 08:27:07 -0700
-Message-ID: <554A32CB.6070509@nexus-software.ie>
-References: <1430705875-6990-1-git-send-email-pure.logic@nexus-software.ie> <20150506095235.GA16272@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150506095235.GA16272@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo2.kernel.org@gmail.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy.schevchenko@gmail.com, boon.leong.ong@intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, derek.browne@intel.com, josef.ahmad@intel.com, erik.nyquist@intel.com
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH v3 0/5] toshiba_acpi: Driver cleanup
+Date: Wed,  6 May 2015 09:35:08 -0600
+Message-ID: <1430926513-6264-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f42.google.com ([209.85.218.42]:34363 "EHLO
+	mail-oi0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751197AbbEFPfY (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 6 May 2015 11:35:24 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On 06/05/15 02:52, Ingo Molnar wrote:
->
-> * Bryan O'Donoghue <pure.logic@nexus-software.ie> wrote:
->
->> Quark X1000 SoC contains a 512 KiB embedded SRAM (eSRAM) memory that can
->> be mapped onto an area of DRAM in block or on per-page overlay mode where a
->> 4 KiB aligned region can be overlayed - allowing for broken up mappings
->> with a 4 KiB individual granularity.
->>
->> eSRAM has access times similar to an L1 cache. The following patchset
->> adds a gen_pool driver and automatic test routine to exercise eSRAM. The
->> intent of the eSRAM driver is to allow other drivers to allocate SRAM
->> buffers. In contrast to the original BSP code no attempt will be made to
->> map kernel .data section code, this is a simple SRAM buffer allocation/free
->> mechanism and a sanity test to ensure it's ongoing correctness.
->>
->> Bryan O'Donoghue (2):
->>    x86/quark: Add Quark embedded SRAM support
->>    x86/quark: Add Quark embedded SRAM self-test
->
-> So I'm wondering what the primary usecase is for this. The eSRAM API
-> is purely in-kernel, right? The only user seems to be the self-test.
-> What other users will there be?
+These patches cleanup the driver from some no longer needed
+functions, renames hci_{read, write}1 functions, some comment
+blocks were changed, unneeded error checks removed and the driver
+version was bumped to 0.22.
 
+Changes since v2:
+- Refactor third patch according to ml comments
+- Typo on fifth patch
 
-I see three to four users.
+Changes since v1:
+- Added two new patches to the series, one containing error check
+  removals and another bumping the driver version.
 
-1. UART with DMA enabled.
-2. Ethernet/STMMAC
-3. SPI/I2C buffers
-4. Potentially UIO
+Azael Avalos (5):
+  toshiba_acpi: Remove no longer needed hci_{read, write}2 functions
+  toshiba_acpi: Rename hci_{read, write}1 functions
+  toshiba_acpi: Comments cleanup
+  toshiba_acpi: Remove TOS_FAILURE check from some functions
+  toshiba_acpi: Bump driver version to 0.22
 
-I'm working on a good use-case for UIO but rather than patch-bomb eSRAM 
-+ other drivers in one go, I thought I'd get the core in and then do 
-some modifications in other drivers to utilize the changes.
+ drivers/platform/x86/toshiba_acpi.c | 122 +++++++++++++++---------------------
+ 1 file changed, 50 insertions(+), 72 deletions(-)
+
+-- 
+2.3.6
