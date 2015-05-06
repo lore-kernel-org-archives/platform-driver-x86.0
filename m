@@ -1,58 +1,56 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
-Date: Wed, 6 May 2015 14:57:44 -0700
-Message-ID: <20150506215744.GA22096@fury.dvhart.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
- <201505031238.14772@pali>
- <CAJ=jquY=QG9j1ppYBbbp5WQTVHVfsUHr8NjX5fuH+4mMWeEkdQ@mail.gmail.com>
- <20150506113119.GH30910@pali>
+Subject: Re: [PATCH 0/3] toshiba_haps: Some misc changes plus sysfs entries
+ documentation
+Date: Wed, 6 May 2015 15:08:39 -0700
+Message-ID: <20150506220839.GB22096@fury.dvhart.com>
+References: <1424973511-3090-1-git-send-email-coproscefalo@gmail.com>
+ <20150306183246.GJ19001@vmdeb7>
+ <CAGdLNWGUWzqnyZqFpPpzHYG4zv4pjKc8FcT2aGUcNsJRZyoOhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:40719 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750876AbbEFWIl (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 6 May 2015 18:08:41 -0400
 Content-Disposition: inline
-In-Reply-To: <20150506113119.GH30910@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <CAGdLNWGUWzqnyZqFpPpzHYG4zv4pjKc8FcT2aGUcNsJRZyoOhg@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Wed, May 06, 2015 at 01:31:19PM +0200, Pali Roh=E1r wrote:
-> Looks like everything is OK. Test3 is expected to not work correctly =
-as
-> driver is not loaded...
->=20
-> On Wednesday 06 May 2015 17:11:08 Alex Hung wrote:
-> > The test was updated @
-> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO2=
-qfZ829CkJLPo06aI/edit?usp=3Dsharing.
-> > Please check the tab "Dell-rbtnv2"
-> >=20
-> > Notes:
-> > 1. The systems come and go and I can find some of original ones but=
- I
-> > tests some others
-> > 2. Test 3 was done by Test 2 + "rmmod dell-laptop". All were run wi=
-th
-> > all wireless devices are ON
-> >=20
-> > Summary:
-> > From external behaves such as Desktop's viewpoint (Unity was used a=
-nd
-> > hope that's not surprising), the wireless devices are ON/OFF
-> > correctly. Other details are listed in the report.
+On Mon, May 04, 2015 at 12:10:41PM -0600, Azael Avalos wrote:
+> Hi Darren,
+> 
+> 
+> 2015-03-06 11:32 GMT-07:00 Darren Hart <dvhart@infradead.org>:
+> > On Thu, Feb 26, 2015 at 10:58:29AM -0700, Azael Avalos wrote:
+> >> These patches make some misc chanes to the driver, replacing sscanf with
+> >> kstrtoint, DEVICE_ATTR_{RW, WO} macros and adding documentation about
+> >> the sysfs entries.
+> >>
+> >> Azael Avalos (3):
+> >>   toshiba_haps: Replace sscanf with kstrtoint
+> >>   toshiba_haps: Make use of DEVICE_ATTR_{RW, WO} macros
+> >>   Documentation/ABI: Add file describing the sysfs entries for
+> >>     toshiba_haps
+> >>
+> >>  .../ABI/testing/sysfs-driver-toshiba_haps          | 20 ++++++++++++++
+> >>  drivers/platform/x86/toshiba_haps.c                | 32 ++++++++++++++--------
+> >>  2 files changed, 40 insertions(+), 12 deletions(-)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-driver-toshiba_haps
+> >
+> > Queued for 4.1, thanks Azael.
+> 
+> These patches were supposed to be included in 4.1,
+> but somehow they didn't, can you re-queue for 4.2?
 
-What am I to make of Sheet1:Row25 vs. Row27?
-This appears to me that for the Inspiron 3542, Dell Wireless for 3.16 h=
-as a
-functional soft block, while there is no change for Dell RBNT.
+So sorry, I honestly have no idea what happened :/ I don't reply with queued
+until I have them in a branch... apologies. You should see them in for-next by
+tomorrow.
 
-Rows36 and 37... these are tellin gme that the ARBT method is broken on=
- this
-machine?
-
-> --=20
-> Pali Roh=E1r
-> pali.rohar@gmail.com
->=20
+-- 
+Darren Hart
+Intel Open Source Technology Center
