@@ -1,79 +1,40 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH v2 0/3] Dell Airplane Mode Switch driver
-Date: Thu, 7 May 2015 10:24:37 +0800
-Message-ID: <CAJ=jquaA5iZmGTjTCNdaUjYkPpE_XgOHELghcjyHMLPcO+Wc0w@mail.gmail.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
-	<1430301066-22870-1-git-send-email-pali.rohar@gmail.com>
-	<201505031238.14772@pali>
-	<CAJ=jquY=QG9j1ppYBbbp5WQTVHVfsUHr8NjX5fuH+4mMWeEkdQ@mail.gmail.com>
-	<20150506113119.GH30910@pali>
-	<20150506215744.GA22096@fury.dvhart.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_bluetooth: Fix build warning
+Date: Fri,  8 May 2015 10:15:29 -0600
+Message-ID: <1431101729-4372-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f175.google.com ([209.85.220.175]:33242 "EHLO
-	mail-qk0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750947AbbEGCYi convert rfc822-to-8bit (ORCPT
+Received: from mail-ob0-f179.google.com ([209.85.214.179]:35978 "EHLO
+	mail-ob0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753114AbbEHQPf (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 6 May 2015 22:24:38 -0400
-Received: by qkx62 with SMTP id 62so19339911qkx.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 May 2015 19:24:37 -0700 (PDT)
-In-Reply-To: <20150506215744.GA22096@fury.dvhart.com>
+	Fri, 8 May 2015 12:15:35 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Darren,
+This patch fixes the build warning caused by the BT status variable,
+it was previously printing a u64 value, but since it was moved to
+another function, the value is now an int, and thus causing such
+warning.
 
-I guess you were looking at "Sheet1" that was comparison between
-dell-rbtn and dell-wireless quite a while ago. The updated results for
-dell-rbtn v2 are in the tab of "Dell-rbtnv2"
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/toshiba_bluetooth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Thu, May 7, 2015 at 5:57 AM, Darren Hart <dvhart@infradead.org> wrot=
-e:
-> On Wed, May 06, 2015 at 01:31:19PM +0200, Pali Roh=C3=A1r wrote:
->> Looks like everything is OK. Test3 is expected to not work correctly=
- as
->> driver is not loaded...
->>
->> On Wednesday 06 May 2015 17:11:08 Alex Hung wrote:
->> > The test was updated @
->> > https://docs.google.com/spreadsheets/d/1voffS6dNglwAExSGh3UmG__UAO=
-2qfZ829CkJLPo06aI/edit?usp=3Dsharing.
->> > Please check the tab "Dell-rbtnv2"
->> >
->> > Notes:
->> > 1. The systems come and go and I can find some of original ones bu=
-t I
->> > tests some others
->> > 2. Test 3 was done by Test 2 + "rmmod dell-laptop". All were run w=
-ith
->> > all wireless devices are ON
->> >
->> > Summary:
->> > From external behaves such as Desktop's viewpoint (Unity was used =
-and
->> > hope that's not surprising), the wireless devices are ON/OFF
->> > correctly. Other details are listed in the report.
->
-> What am I to make of Sheet1:Row25 vs. Row27?
-> This appears to me that for the Inspiron 3542, Dell Wireless for 3.16=
- has a
-> functional soft block, while there is no change for Dell RBNT.
->
-> Rows36 and 37... these are tellin gme that the ARBT method is broken =
-on this
-> machine?
->
->> --
->> Pali Roh=C3=A1r
->> pali.rohar@gmail.com
->>
-
-
-
---=20
-Cheers,
-Alex Hung
+diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x86/toshiba_bluetooth.c
+index 220645a..c5e4508 100644
+--- a/drivers/platform/x86/toshiba_bluetooth.c
++++ b/drivers/platform/x86/toshiba_bluetooth.c
+@@ -155,7 +155,7 @@ static int toshiba_bluetooth_sync_status(struct toshiba_bluetooth_dev *bt_dev)
+ 	bt_dev->plugged = (status & BT_PLUGGED_MASK) ? true : false;
+ 	bt_dev->powered = (status & BT_POWER_MASK) ? true : false;
+ 
+-	pr_debug("Bluetooth status %llu killswitch %d plugged %d powered %d\n",
++	pr_debug("Bluetooth status %d killswitch %d plugged %d powered %d\n",
+ 		 status, bt_dev->killswitch, bt_dev->plugged, bt_dev->powered);
+ 
+ 	return 0;
+-- 
+2.3.6
