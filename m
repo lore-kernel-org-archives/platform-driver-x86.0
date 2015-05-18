@@ -1,472 +1,918 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v3 1/3] dell-rbtn: Dell Airplane Mode Switch driver
-Date: Thu, 14 May 2015 12:54:25 +0200
-Message-ID: <1431600868-11737-2-git-send-email-pali.rohar@gmail.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1431600868-11737-1-git-send-email-pali.rohar@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1431600868-11737-1-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: "qipeng.zha" <qipeng.zha@intel.com>
+Subject: [PATCH v2] platform:x86: add Intel Broxton PMC IPC driver
+Date: Mon, 18 May 2015 22:08:50 +0800
+Message-ID: <1431958130-75816-1-git-send-email-qipeng.zha@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:51167 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751625AbbERGFt (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 18 May 2015 02:05:49 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com, "qipeng.zha" <qipeng.zha@intel.com>
 
-This is an ACPI driver for Dell laptops which receive HW switch events.
-It exports rfkill device dell-rbtn which provide correct hard rfkill st=
-ate.
+From: "qipeng.zha" <qipeng.zha@intel.com>
 
-Alex Hung added code for supporting Dell laptops which have toggle butt=
-on
-instead HW slider switch. On these laptops toggle button event is repor=
-ted
-by new input device (instead rfkill) as they do not have hw radio switc=
-h.
+This driver provides support for PMC control on Broxton platforms,
+PMC is ARC processor which defined some IPC commands for communication
+with other entities running in IA
 
-It looks like those are two different functions (rfkill, input device),=
- but
-Dell BIOS exports them via same ACPI device and uses same ACPI function=
-s.
-So code is in one kernel driver.
-
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Alex Hung <alex.hung@canonical.com>
-
-Correct multi-line comment formatting and line length issues.
-
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-
-[Fengguang Wu <fengguang.wu@intel.com>: rbtn_ops can be static]
+Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
 ---
-Changes since v2:
- - rbtn_ops is static
- - added MAINTAINERS
- - fixed checkpatch.pl warnings
----
- MAINTAINERS                      |    5 +
- drivers/platform/x86/Kconfig     |   13 ++
- drivers/platform/x86/Makefile    |    1 +
- drivers/platform/x86/dell-rbtn.c |  345 ++++++++++++++++++++++++++++++=
-++++++++
- 4 files changed, 364 insertions(+)
- create mode 100644 drivers/platform/x86/dell-rbtn.c
+ arch/x86/include/asm/intel_pmc_ipc.h |  82 ++++
+ drivers/platform/x86/Kconfig         |   7 +
+ drivers/platform/x86/Makefile        |   1 +
+ drivers/platform/x86/intel_pmc_ipc.c | 766 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 856 insertions(+)
+ create mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+ create mode 100644 drivers/platform/x86/intel_pmc_ipc.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2e5bbc0..5808066 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3071,6 +3071,11 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/dell-laptop.c
-=20
-+DELL LAPTOP RBTN DRIVER
-+M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
-+S:	Maintained
-+F:	drivers/platform/x86/dell-rbtn.*
-+
- DELL LAPTOP FREEFALL DRIVER
- M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
- S:	Maintained
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
-g
-index 399085d..8c03223 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -138,6 +138,19 @@ config DELL_SMO8800
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-smo8800.
-=20
-+config DELL_RBTN
-+	tristate "Dell Airplane Mode Switch driver"
-+	depends on ACPI
-+	depends on RFKILL
-+	---help---
-+	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
-+	  device on Dell laptops. Sometimes it has names: DELLABCE or DELRBTN=
-=2E
-+	  This driver register rfkill device and receives HW rfkill events
-+	  (when wifi/bluetooth was enabled) and set correct hard rfkill state=
-=2E
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called dell-rbtn.
-+
-=20
- config FUJITSU_LAPTOP
- 	tristate "Fujitsu Laptop Extras"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
-index f82232b..b3e54ed 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DELL_LAPTOP)	+=3D dell-laptop.o
- obj-$(CONFIG_DELL_WMI)		+=3D dell-wmi.o
- obj-$(CONFIG_DELL_WMI_AIO)	+=3D dell-wmi-aio.o
- obj-$(CONFIG_DELL_SMO8800)	+=3D dell-smo8800.o
-+obj-$(CONFIG_DELL_RBTN)		+=3D dell-rbtn.o
- obj-$(CONFIG_ACER_WMI)		+=3D acer-wmi.o
- obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
- obj-$(CONFIG_HP_ACCEL)		+=3D hp_accel.o
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
-ll-rbtn.c
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
 new file mode 100644
-index 0000000..af89f91
+index 0000000..a78f7cf
 --- /dev/null
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -0,0 +1,345 @@
-+/*
-+    Dell Airplane Mode Switch driver
-+    Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -0,0 +1,82 @@
++#ifndef _ASM_X86_INTEL_PMC_IPC_H_
++#define  _ASM_X86_INTEL_PMC_IPC_H_
 +
-+    This program is free software; you can redistribute it and/or modi=
-fy
-+    it under the terms of the GNU General Public License as published =
-by
-+    the Free Software Foundation; either version 2 of the License, or
-+    (at your option) any later version.
++/* Commands */
++#define PMC_IPC_PMIC_ACCESS		0xFF
++#define		PMC_IPC_PMIC_ACCESS_READ	0x0
++#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
++#define PMC_IPC_USB_PWR_CTRL		0xF0
++#define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
++#define PMC_IPC_PHY_CONFIG		0xEE
++#define PMC_IPC_NORTHPEAK_CTRL		0xED
++#define PMC_IPC_PM_DEBUG		0xEC
++#define PMC_IPC_PMC_TELEMTRY		0xEB
++#define PMC_IPC_PMC_FW_MSG_CTRL		0xEA
 +
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+*/
++/* IPC return code */
++#define IPC_ERR_NONE			0
++#define IPC_ERR_CMD_NOT_SUPPORTED	1
++#define IPC_ERR_CMD_NOT_SERVICED	2
++#define IPC_ERR_UNABLE_TO_SERVICE	3
++#define IPC_ERR_CMD_INVALID		4
++#define IPC_ERR_CMD_FAILED		5
++#define IPC_ERR_EMSECURITY		6
++#define IPC_ERR_UNSIGNEDKERNEL		7
 +
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/rfkill.h>
-+#include <linux/input.h>
-+
-+enum rbtn_type {
-+	RBTN_UNKNOWN,
-+	RBTN_TOGGLE,
-+	RBTN_SLIDER,
-+};
-+
-+struct rbtn_data {
-+	enum rbtn_type type;
-+	struct rfkill *rfkill;
-+	struct input_dev *input_dev;
-+};
-+
++#ifdef CONFIG_INTEL_PMC_IPC
 +
 +/*
-+ * acpi functions
++ * intel_pmc_ipc_simple_command
++ * @cmd: command
++ * @sub: sub type
 + */
-+
-+static enum rbtn_type rbtn_check(struct acpi_device *device)
-+{
-+	unsigned long long output;
-+	acpi_status status;
-+
-+	status =3D acpi_evaluate_integer(device->handle, "CRBT", NULL, &outpu=
-t);
-+	if (ACPI_FAILURE(status))
-+		return RBTN_UNKNOWN;
-+
-+	switch (output) {
-+	case 0:
-+	case 1:
-+		return RBTN_TOGGLE;
-+	case 2:
-+	case 3:
-+		return RBTN_SLIDER;
-+	default:
-+		return RBTN_UNKNOWN;
-+	}
-+}
-+
-+static int rbtn_get(struct acpi_device *device)
-+{
-+	unsigned long long output;
-+	acpi_status status;
-+
-+	status =3D acpi_evaluate_integer(device->handle, "GRBT", NULL, &outpu=
-t);
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	return !output;
-+}
-+
-+static int rbtn_radio_enable(struct acpi_device *device, bool enable)
-+{
-+	struct acpi_object_list input;
-+	union acpi_object param;
-+	acpi_status status;
-+
-+	param.type =3D ACPI_TYPE_INTEGER;
-+	param.integer.value =3D enable;
-+	input.count =3D 1;
-+	input.pointer =3D &param;
-+
-+	status =3D acpi_evaluate_object(device->handle, "ARBT", &input, NULL)=
-;
-+	if (ACPI_FAILURE(status))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
++int intel_pmc_ipc_simple_command(int cmd, int sub);
 +
 +/*
-+ * rfkill device
++ * intel_pmc_ipc_raw_cmd
++ * @cmd: command
++ * @sub: sub type
++ * @in: input data
++ * @inlen: input length in bytes
++ * @out: output data
++ * @outlen: output length in dwords
++ * @sptr: data writing to SPTR register
++ * @dptr: data writing to DPTR register
 + */
++int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
++		u32 *out, u32 outlen, u32 dptr, u32 sptr);
 +
-+static void rbtn_rfkill_query(struct rfkill *rfkill, void *data)
++/*
++ * intel_pmc_ipc_command
++ * @cmd: command
++ * @sub: sub type
++ * @in: input data
++ * @inlen: input length in bytes
++ * @out: output data
++ * @outlen: output length in dwords
++ */
++int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
++		u32 *out, u32 outlen);
++
++#else
++
++static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
 +{
-+	struct acpi_device *device =3D data;
-+	int state;
-+
-+	state =3D rbtn_get(device);
-+	if (state < 0)
-+		return;
-+
-+	rfkill_set_states(rfkill, state, state);
-+}
-+
-+static int rbtn_rfkill_set_block(void *data, bool blocked)
-+{
-+	/* NOTE: setting soft rfkill state is not supported */
 +	return -EINVAL;
 +}
 +
-+static struct rfkill_ops rbtn_ops =3D {
-+	.query =3D rbtn_rfkill_query,
-+	.set_block =3D rbtn_rfkill_set_block,
++static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
++		u32 *out, u32 outlen, u32 dptr, u32 sptr)
++{
++	return -EINVAL;
++}
++
++static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
++		u32 *out, u32 outlen)
++{
++	return -EINVAL;
++}
++
++#endif /*CONFIG_INTEL_PMC_IPC*/
++
++#endif
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9752761..4eb15eb 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -884,4 +884,11 @@ config PVPANIC
+ 	  a paravirtualized device provided by QEMU; it lets a virtual machine
+ 	  (guest) communicate panic events to the host.
+ 
++config INTEL_PMC_IPC
++	tristate "Intel PMC IPC Driver"
++	---help---
++	This driver provides support for PMC control on some Intel platforms,
++	PMC is ARC processor which defined some IPC commands for communication
++	with other entities which running in IA.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index f82232b..1051372 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -58,3 +58,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ 
+ obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
++obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+new file mode 100644
+index 0000000..e92b6c3
+--- /dev/null
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -0,0 +1,766 @@
++/*
++ * intel_pmc_ipc.c: Driver for the Intel PMC IPC mechanism
++ *
++ * (C) Copyright 2014 Intel Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * PMC running in ARC processor communicates with other entity running in IA
++ * core through IPC mechanism which in turn messaging between IA core ad PMC.
++ */
++
++#include <linux/module.h>
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/pm.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/interrupt.h>
++#include <linux/pm_qos.h>
++#include <linux/kernel.h>
++#include <linux/bitops.h>
++#include <linux/sched.h>
++#include <linux/atomic.h>
++#include <linux/notifier.h>
++#include <linux/suspend.h>
++#include <linux/acpi.h>
++#include <asm/intel_pmc_ipc.h>
++#include <linux/mfd/lpc_ich.h>
++
++/*
++ * IPC registers
++ * The IA write to IPC_CMD command register triggers aninterrupt to the ARC,
++ * The ARC handles the interrupt and services it, writing optional data to
++ * the IPC1 registers, updates the IPC_STS response register with the status.
++ */
++#define IPC_CMD			0x0
++#define		IPC_CMD_MSI		0x100
++#define		IPC_CMD_SIZE		16
++#define		IPC_CMD_SUBCMD		12
++#define IPC_STATUS		0x04
++#define		IPC_STATUS_IRQ		0x4
++#define		IPC_STATUS_ERR		0x2
++#define		IPC_STATUS_BUSY		0x1
++#define IPC_SPTR		0x08
++#define IPC_DPTR		0x0C
++#define IPC_WRITE_BUFFER	0x80
++#define IPC_READ_BUFFER		0x90
++
++#define IPC_LOOP_CNT		3000000
++#define IPC_MAX_SEC		3
++
++#define IPC_TRIGGER_MODE_IRQ		true
++
++/* exported resources from IFWI */
++#define PLAT_RESOURCE_IPC_INDEX		0
++#define PLAT_RESOURCE_IPC_SIZE		0x1000
++#define PLAT_RESOURCE_GCR_SIZE		0x1000
++#define PLAT_RESOURCE_PUNIT_DATA_INDEX	1
++#define PLAT_RESOURCE_PUNIT_INTER_INDEX	2
++#define PLAT_RESOURCE_ACPI_IO_INDEX	0
++
++/*
++ * BIOS don't create ACPI device for each PMC function,
++ * but export multi resoures on one ACPI device(IPC) for
++ * multi functions, so this driver is responsible to create
++ * platform device and to export resource for those functions
++ */
++#define TCO_DEVICE_NAME			"iTCO_wdt"
++#define SMI_EN_OFFSET			0x30
++#define SMI_EN_SIZE			4
++#define TCO_BASE_OFFSET			0x60
++#define TCO_REGS_SIZE			16
++#define PUNIT_DEVICE_NAME		"intel_punit_ipc"
++
++static const int iTCO_version = 3;
++
++static struct intel_pmc_ipc_dev {
++	struct device *dev;
++	void __iomem *ipc_base;
++	bool irq_mode;
++	int irq;
++	int cmd;
++	struct completion cmd_complete;
++
++	/* Below bars in PMC share same ACPI device with IPC */
++	void *acpi_io_base;
++	int acpi_io_size;
++	struct platform_device *tco_dev;
++
++	/* gcr */
++	void __iomem *gcr_base;
++	int gcr_size;
++
++	/* punit */
++	void *punit_base;
++	int punit_size;
++	void *punit_base2;
++	int punit_size2;
++	struct platform_device *punit_dev;
++} ipcdev;
++
++static char *ipc_err_sources[] = {
++	[IPC_ERR_NONE] =
++		"no error",
++	[IPC_ERR_CMD_NOT_SUPPORTED] =
++		"command not supported",
++	[IPC_ERR_CMD_NOT_SERVICED] =
++		"command not serviced",
++	[IPC_ERR_UNABLE_TO_SERVICE] =
++		"unable to service",
++	[IPC_ERR_CMD_INVALID] =
++		"command invalid",
++	[IPC_ERR_CMD_FAILED] =
++		"command failed",
++	[IPC_ERR_EMSECURITY] =
++		"Invalid Battery",
++	[IPC_ERR_UNSIGNEDKERNEL] =
++		"Unsigned kernel",
 +};
 +
-+static int rbtn_rfkill_init(struct acpi_device *device)
++/* Prevent multiple call to PMC */
++static DEFINE_MUTEX(ipclock);
++
++static inline void ipc_send_command(u32 cmd)
 +{
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	int ret;
++	ipcdev.cmd = cmd;
++	if (ipcdev.irq_mode) {
++		reinit_completion(&ipcdev.cmd_complete);
++		cmd |= IPC_CMD_MSI;
++	}
++	writel(cmd, ipcdev.ipc_base + IPC_CMD);
++}
 +
-+	if (rbtn_data->rfkill)
-+		return 0;
++static inline u32 ipc_read_status(void)
++{
++	return readl(ipcdev.ipc_base + IPC_STATUS);
++}
 +
-+	/* NOTE: rbtn controls all radio devices, not only WLAN
-+	 *       but rfkill interface does not support "ANY" type
-+	 *       so "WLAN" type is used
-+	 */
-+	rbtn_data->rfkill =3D rfkill_alloc("dell-rbtn", &device->dev,
-+					 RFKILL_TYPE_WLAN, &rbtn_ops, device);
-+	if (!rbtn_data->rfkill)
-+		return -ENOMEM;
++/*
++ * 16-byte buffer for sending data associated with IPC command
++ * Size of the data is specified in the IPC_CMD[size]
++ */
++static inline void ipc_data_writel(u32 data, u32 offset)
++{
++	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
++}
 +
-+	ret =3D rfkill_register(rbtn_data->rfkill);
-+	if (ret) {
-+		rfkill_destroy(rbtn_data->rfkill);
-+		rbtn_data->rfkill =3D NULL;
++static inline u8 ipc_data_readb(u32 offset)
++{
++	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
++}
++
++static inline u32 ipc_data_readl(u32 offset)
++{
++	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
++}
++
++int intel_pmc_ipc_check_status(void)
++{
++	int status;
++	int ret = 0;
++
++	if (ipcdev.irq_mode) {
++		if (0 == wait_for_completion_timeout(
++				&ipcdev.cmd_complete, IPC_MAX_SEC * HZ))
++			ret = -ETIMEDOUT;
++	} else {
++		int loop_count = IPC_LOOP_CNT;
++
++		while ((ipc_read_status() & IPC_STATUS_BUSY) && --loop_count)
++			udelay(1);
++		if (loop_count == 0)
++			ret = -ETIMEDOUT;
++	}
++
++	status = ipc_read_status();
++	if (ret == -ETIMEDOUT) {
++		dev_err(ipcdev.dev,
++			"IPC timed out, TS=0x%x, CMD=0x%x\n",
++			status, ipcdev.cmd);
 +		return ret;
 +	}
 +
-+	return 0;
-+}
++	if (status & IPC_STATUS_ERR) {
++		int i;
 +
-+static void rbtn_rfkill_exit(struct acpi_device *device)
-+{
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+
-+	if (!rbtn_data->rfkill)
-+		return;
-+
-+	rfkill_unregister(rbtn_data->rfkill);
-+	rfkill_destroy(rbtn_data->rfkill);
-+	rbtn_data->rfkill =3D NULL;
-+}
-+
-+static void rbtn_rfkill_event(struct acpi_device *device)
-+{
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+
-+	if (rbtn_data->rfkill)
-+		rbtn_rfkill_query(rbtn_data->rfkill, device);
-+}
-+
-+
-+/*
-+ * input device
-+ */
-+
-+static int rbtn_input_init(struct rbtn_data *rbtn_data)
-+{
-+	int ret;
-+
-+	rbtn_data->input_dev =3D input_allocate_device();
-+	if (!rbtn_data->input_dev)
-+		return -ENOMEM;
-+
-+	rbtn_data->input_dev->name =3D "DELL Wireless hotkeys";
-+	rbtn_data->input_dev->phys =3D "dellabce/input0";
-+	rbtn_data->input_dev->id.bustype =3D BUS_HOST;
-+	rbtn_data->input_dev->evbit[0] =3D BIT(EV_KEY);
-+	set_bit(KEY_RFKILL, rbtn_data->input_dev->keybit);
-+
-+	ret =3D input_register_device(rbtn_data->input_dev);
-+	if (ret) {
-+		input_free_device(rbtn_data->input_dev);
-+		rbtn_data->input_dev =3D NULL;
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rbtn_input_exit(struct rbtn_data *rbtn_data)
-+{
-+	input_unregister_device(rbtn_data->input_dev);
-+	rbtn_data->input_dev =3D NULL;
-+}
-+
-+static void rbtn_input_event(struct rbtn_data *rbtn_data)
-+{
-+	input_report_key(rbtn_data->input_dev, KEY_RFKILL, 1);
-+	input_sync(rbtn_data->input_dev);
-+	input_report_key(rbtn_data->input_dev, KEY_RFKILL, 0);
-+	input_sync(rbtn_data->input_dev);
-+}
-+
-+
-+/*
-+ * acpi driver
-+ */
-+
-+static int rbtn_add(struct acpi_device *device);
-+static int rbtn_remove(struct acpi_device *device);
-+static void rbtn_notify(struct acpi_device *device, u32 event);
-+
-+static const struct acpi_device_id rbtn_ids[] =3D {
-+	{ "DELRBTN", 0 },
-+	{ "DELLABCE", 0 },
-+	{ "", 0 },
-+};
-+
-+static struct acpi_driver rbtn_driver =3D {
-+	.name =3D "dell-rbtn",
-+	.ids =3D rbtn_ids,
-+	.ops =3D {
-+		.add =3D rbtn_add,
-+		.remove =3D rbtn_remove,
-+		.notify =3D rbtn_notify,
-+	},
-+	.owner =3D THIS_MODULE,
-+};
-+
-+
-+/*
-+ * acpi driver functions
-+ */
-+
-+static int rbtn_add(struct acpi_device *device)
-+{
-+	struct rbtn_data *rbtn_data;
-+	enum rbtn_type type;
-+	int ret =3D 0;
-+
-+	type =3D rbtn_check(device);
-+	if (type =3D=3D RBTN_UNKNOWN) {
-+		dev_info(&device->dev, "Unknown device type\n");
-+		return -EINVAL;
-+	}
-+
-+	ret =3D rbtn_radio_enable(device, true);
-+	if (ret < 0) {
-+		dev_err(&device->dev, "Cannot enable device\n");
-+		return ret;
-+	}
-+
-+	rbtn_data =3D devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERN=
-EL);
-+	if (!rbtn_data)
-+		return -ENOMEM;
-+
-+	rbtn_data->type =3D type;
-+	device->driver_data =3D rbtn_data;
-+
-+	switch (rbtn_data->type) {
-+	case RBTN_TOGGLE:
-+		ret =3D rbtn_input_init(rbtn_data);
-+		break;
-+	case RBTN_SLIDER:
-+		ret =3D rbtn_rfkill_init(device);
-+		break;
-+	default:
-+		ret =3D -EINVAL;
++		ret = -EIO;
++		i = (status >> IPC_CMD_SIZE) & 0xFF;
++		if (i < ARRAY_SIZE(ipc_err_sources))
++			dev_err(ipcdev.dev,
++				"IPC failed: %s, STS=0x%x, CMD=0x%x\n",
++				ipc_err_sources[i], status, ipcdev.cmd);
++		else
++			dev_err(ipcdev.dev,
++				"IPC failed: unknown, STS=0x%x, CMD=0x%x\n",
++				 status, ipcdev.cmd);
++		if ((i == IPC_ERR_UNSIGNEDKERNEL) || (i == IPC_ERR_EMSECURITY))
++			ret = -EACCES;
 +	}
 +
 +	return ret;
-+
 +}
 +
-+static int rbtn_remove(struct acpi_device *device)
++/*
++ * intel_pmc_ipc_simple_command
++ * @cmd: command
++ * @sub: sub type
++ */
++int intel_pmc_ipc_simple_command(int cmd, int sub)
 +{
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
 +	int ret;
 +
-+	switch (rbtn_data->type) {
-+	case RBTN_TOGGLE:
-+		rbtn_input_exit(rbtn_data);
-+		break;
-+	case RBTN_SLIDER:
-+		rbtn_rfkill_exit(device);
-+		break;
-+	default:
-+		break;
++	mutex_lock(&ipclock);
++	if (ipcdev.dev == NULL) {
++		mutex_unlock(&ipclock);
++		return -ENODEV;
 +	}
++	ipc_send_command(sub << IPC_CMD_SUBCMD | cmd);
++	ret = intel_pmc_ipc_check_status();
++	mutex_unlock(&ipclock);
 +
-+	ret =3D rbtn_radio_enable(device, false);
-+	if (ret < 0)
++	return ret;
++}
++EXPORT_SYMBOL(intel_pmc_ipc_simple_command);
++
++/*
++ * intel_pmc_ipc_raw_cmd
++ * @cmd: command
++ * @sub: sub type
++ * @in: input data
++ * @inlen: input length in bytes
++ * @out: output data
++ * @outlen: output length in dwords
++ * @sptr: data writing to SPTR register
++ * @dptr: data writing to DPTR register
++ */
++int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
++		u32 outlen, u32 dptr, u32 sptr)
++{
++	u32 wbuf[4] = { 0 };
++	int ret;
++	int i;
++
++	if (inlen > 16)
++		return -EINVAL;
++
++	mutex_lock(&ipclock);
++	if (ipcdev.dev == NULL) {
++		mutex_unlock(&ipclock);
++		return -ENODEV;
++	}
++	memcpy(wbuf, in, inlen);
++	writel(dptr, ipcdev.ipc_base + IPC_DPTR);
++	writel(sptr, ipcdev.ipc_base + IPC_SPTR);
++	/* The input data register is 32bit register and inlen is in Byte */
++	for (i = 0; i < ((inlen + 3) / 4); i++)
++		ipc_data_writel(wbuf[i], 4 * i);
++	ipc_send_command((inlen << IPC_CMD_SIZE) |
++			(sub << IPC_CMD_SUBCMD) | cmd);
++	ret = intel_pmc_ipc_check_status();
++	if (!ret) {
++		/* out is read from 32bit register and outlen is in 32bit */
++		for (i = 0; i < outlen; i++)
++			*out++ = ipc_data_readl(4 * i);
++	}
++	mutex_unlock(&ipclock);
++
++	return ret;
++}
++EXPORT_SYMBOL(intel_pmc_ipc_raw_cmd);
++
++/*
++ * intel_pmc_ipc_command
++ * @cmd: command
++ * @sub: sub type
++ * @in: input data
++ * @inlen: input length in bytes
++ * @out: output data
++ * @outlen: output length in dwords
++ */
++int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
++		u32 *out, u32 outlen)
++{
++	return intel_pmc_ipc_raw_cmd(cmd, sub, in, inlen, out, outlen, 0, 0);
++}
++EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
++
++static irqreturn_t ioc(int irq, void *dev_id)
++{
++	int status;
++
++	if (ipcdev.irq_mode) {
++		status = ipc_read_status();
++		writel(status | IPC_STATUS_IRQ, ipcdev.ipc_base + IPC_STATUS);
++	}
++	complete(&ipcdev.cmd_complete);
++
++	return IRQ_HANDLED;
++}
++
++static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	resource_size_t pci_resource;
++	int ret;
++	int len;
++
++	ipcdev.dev = &pci_dev_get(pdev)->dev;
++	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
++
++	ret = pci_enable_device(pdev);
++	if (ret)
 +		return ret;
 +
-+	device->driver_data =3D NULL;
++	ret = pci_request_regions(pdev, "intel_pmc_ipc");
++	if (ret)
++		return ret;
++
++	pci_resource = pci_resource_start(pdev, 0);
++	len = pci_resource_len(pdev, 0);
++	if (!pci_resource || !len) {
++		dev_err(&pdev->dev, "Fail to get resource\n");
++		return -ENOMEM;
++	}
++
++	init_completion(&ipcdev.cmd_complete);
++
++	if (request_irq(pdev->irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
++		dev_err(&pdev->dev, "Fail to request irq\n");
++		return -EBUSY;
++	}
++
++	ipcdev.ipc_base = ioremap_nocache(pci_resource, len);
++	if (!ipcdev.ipc_base) {
++		dev_err(&pdev->dev, "Fail to ioremap ipc base\n");
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	return 0;
++err:
++	free_irq(pdev->irq, &ipcdev);
++	return ret;
++}
++
++static void ipc_pci_remove(struct pci_dev *pdev)
++{
++	free_irq(pdev->irq, &ipcdev);
++	pci_release_regions(pdev);
++	pci_dev_put(pdev);
++	iounmap(ipcdev.ipc_base);
++	ipcdev.dev = NULL;
++}
++
++static const struct pci_device_id ipc_pci_ids[] = {
++	{PCI_VDEVICE(INTEL, 0x0a94), 0},
++	{PCI_VDEVICE(INTEL, 0x1a94), 0},
++	{ 0,}
++};
++MODULE_DEVICE_TABLE(pci, ipc_pci_ids);
++
++static struct pci_driver ipc_pci_driver = {
++	.name = "intel_pmc_ipc",
++	.id_table = ipc_pci_ids,
++	.probe = ipc_pci_probe,
++	.remove = ipc_pci_remove,
++};
++
++static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
++	struct device_attribute *attr, const char *buf, size_t count)
++{
++	int subcmd;
++	int cmd;
++	int ret;
++
++	ret = sscanf(buf, "%d %d", &cmd, &subcmd);
++	if (ret != 2) {
++		dev_err(dev, "Error args\n");
++		return -EINVAL;
++	}
++
++	ret = intel_pmc_ipc_simple_command(cmd, subcmd);
++	if (ret) {
++		dev_err(dev, "command %d error with %d\n", cmd, ret);
++		return ret;
++	}
++	return  count;
++}
++
++static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
++	struct device_attribute *attr, const char *buf, size_t count)
++{
++	unsigned long val;
++	int subcmd;
++	int ret;
++
++	if (kstrtoul(buf, 0, &val))
++		return -EINVAL;
++
++	if (val)
++		subcmd = 1;
++	else
++		subcmd = 0;
++	ret = intel_pmc_ipc_simple_command(PMC_IPC_NORTHPEAK_CTRL, subcmd);
++	if (ret) {
++		dev_err(dev, "command north %d error with %d\n", subcmd, ret);
++		return ret;
++	}
++	return count;
++}
++
++static DEVICE_ATTR(simplecmd, S_IWUSR | S_IRUSR,
++		NULL,
++		intel_pmc_ipc_simple_cmd_store);
++static DEVICE_ATTR(northpeak, S_IWUSR | S_IRUSR,
++		NULL,
++		intel_pmc_ipc_northpeak_store);
++
++static struct attribute *intel_ipc_attrs[] = {
++	&dev_attr_northpeak.attr,
++	&dev_attr_simplecmd.attr,
++	NULL
++};
++
++static const struct attribute_group intel_ipc_group = {
++	.attrs = intel_ipc_attrs,
++};
++
++#define PUNIT_RESOURCE_INTER		1
++static struct resource punit_res[] = {
++	/* Punit */
++	{
++		.flags = IORESOURCE_MEM,
++	},
++	{
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++#define TCO_RESOURCE_ACPI_IO		0
++#define TCO_RESOURCE_SMI_EN_IO		1
++#define TCO_RESOURCE_GCR_MEM		2
++static struct resource tco_res[] = {
++	/* ACPI - TCO */
++	{
++		.flags = IORESOURCE_IO,
++	},
++	/* ACPI - SMI */
++	{
++		.flags = IORESOURCE_IO,
++	},
++	/* GCS */
++	{
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++static struct lpc_ich_info tco_info = {
++	.name = "Broxton SoC",
++	.iTCO_version = 3,
++};
++
++static int ipc_create_punit_device(void)
++{
++	struct platform_device *pdev;
++	struct resource *res;
++	int ret;
++
++	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
++	if (!pdev) {
++		dev_err(ipcdev.dev, "Fail to alloc punit platform device\n");
++		return -ENOMEM;
++	}
++
++	pdev->dev.parent = ipcdev.dev;
++
++	res = punit_res;
++	res->start = (resource_size_t)ipcdev.punit_base;
++	res->end = res->start + ipcdev.punit_size - 1;
++
++	res = punit_res + PUNIT_RESOURCE_INTER;
++	res->start = (resource_size_t)ipcdev.punit_base2;
++	res->end = res->start + ipcdev.punit_size2 - 1;
++
++	ret = platform_device_add_resources(pdev,
++				punit_res, ARRAY_SIZE(punit_res));
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add platform punit resources\n");
++		goto err;
++	}
++
++	ret = platform_device_add(pdev);
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add punit platform devcie\n");
++		goto err;
++	}
++	ipcdev.punit_dev = pdev;
++
++	return 0;
++err:
++	platform_device_put(pdev);
++	return ret;
++}
++
++static int ipc_create_tco_device(void)
++{
++	struct platform_device *pdev;
++	struct resource *res;
++	int ret;
++
++	pdev = platform_device_alloc(TCO_DEVICE_NAME, -1);
++	if (!pdev) {
++		dev_err(ipcdev.dev, "Fail to alloc tco platform device\n");
++		return -ENOMEM;
++	}
++
++	pdev->dev.parent = ipcdev.dev;
++
++	res = tco_res + TCO_RESOURCE_ACPI_IO;
++	res->start = (resource_size_t)ipcdev.acpi_io_base + TCO_BASE_OFFSET;
++	res->end = res->start + TCO_REGS_SIZE - 1;
++
++	res = tco_res + TCO_RESOURCE_SMI_EN_IO;
++	res->start = (resource_size_t)ipcdev.acpi_io_base + SMI_EN_OFFSET;
++	res->end = res->start + SMI_EN_SIZE - 1;
++
++	res = tco_res + TCO_RESOURCE_GCR_MEM;
++	res->start = (resource_size_t)ipcdev.gcr_base;
++	res->end = res->start + ipcdev.gcr_size - 1;
++
++	ret = platform_device_add_resources(pdev, tco_res, ARRAY_SIZE(tco_res));
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add tco platform resources\n");
++		goto err;
++	}
++
++	ret = platform_device_add_data(pdev, &tco_info,
++					sizeof(struct lpc_ich_info));
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add tco platform data\n");
++		goto err;
++	}
++
++	ret = platform_device_add(pdev);
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add tco platform devcie\n");
++		goto err;
++	}
++	ipcdev.tco_dev = pdev;
++
++	return 0;
++err:
++	platform_device_put(pdev);
++	return ret;
++}
++
++static int ipc_create_pmc_devices(void)
++{
++	int ret;
++
++	ret = ipc_create_tco_device();
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add tco platform device\n");
++		return ret;
++	}
++	ret = ipc_create_punit_device();
++	if (ret) {
++		dev_err(ipcdev.dev, "Fail to add punit platform device\n");
++		platform_device_unregister(ipcdev.tco_dev);
++	}
++	return ret;
++}
++
++static int ipc_plat_get_res(struct platform_device *pdev)
++{
++	struct resource *res;
++	void __iomem *addr;
++	int size;
++
++	res = platform_get_resource(pdev, IORESOURCE_IO,
++				PLAT_RESOURCE_ACPI_IO_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Fail to get io resource\n");
++		return -ENXIO;
++	}
++	size = resource_size(res);
++	ipcdev.acpi_io_base = (void *)res->start;
++	ipcdev.acpi_io_size = size;
++	dev_info(&pdev->dev, "io res: %llx %x\n",
++			res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				PLAT_RESOURCE_PUNIT_DATA_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Fail to get punit resource\n");
++		return -ENXIO;
++	}
++	size = resource_size(res);
++	ipcdev.punit_base = (void *)res->start;
++	ipcdev.punit_size = size;
++	dev_info(&pdev->dev, "punit data res: %llx %x\n",
++			res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				PLAT_RESOURCE_PUNIT_INTER_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Fail to get punit inter resource\n");
++		return -ENXIO;
++	}
++	size = resource_size(res);
++	ipcdev.punit_base2 = (void *)res->start;
++	ipcdev.punit_size2 = size;
++	dev_info(&pdev->dev, "punit interface res: %llx %x\n",
++			res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				PLAT_RESOURCE_IPC_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Fail to get ipc resource\n");
++		return -ENXIO;
++	}
++	size = PLAT_RESOURCE_IPC_SIZE;
++	if (!request_mem_region(res->start, size, pdev->name)) {
++		dev_err(&pdev->dev, "Fail to request ipc resouce\n");
++		return -EBUSY;
++	}
++	addr = ioremap_nocache(res->start, size);
++	if (!addr) {
++		dev_err(&pdev->dev, "I/O memory remapping failed\n");
++		release_mem_region(res->start, size);
++		return -ENOMEM;
++	}
++	ipcdev.ipc_base = addr;
++
++	ipcdev.gcr_base = (void *)(res->start + size);
++	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
++	dev_info(&pdev->dev, "ipc res: %llx %x\n",
++			res->start, (int)resource_size(res));
++
 +	return 0;
 +}
 +
-+static void rbtn_notify(struct acpi_device *device, u32 event)
-+{
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id ipc_acpi_ids[] = {
++	{ "INT34D2", 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, ipc_acpi_ids);
++#endif
 +
-+	if (event !=3D 0x80) {
-+		dev_info(&device->dev, "Received unknown event (0x%x)\n",
-+			 event);
-+		return;
++static int ipc_plat_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	int ret;
++
++	ipcdev.dev = &pdev->dev;
++	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
++	init_completion(&ipcdev.cmd_complete);
++
++	ipcdev.irq = platform_get_irq(pdev, 0);
++	if (ipcdev.irq < 0) {
++		dev_err(&pdev->dev, "Fail to get irq\n");
++		return -EINVAL;
 +	}
 +
-+	switch (rbtn_data->type) {
-+	case RBTN_TOGGLE:
-+		rbtn_input_event(rbtn_data);
-+		break;
-+	case RBTN_SLIDER:
-+		rbtn_rfkill_event(device);
-+		break;
-+	default:
-+		break;
++	ret = ipc_plat_get_res(pdev);
++	if (ret) {
++		dev_err(&pdev->dev, "Fail to request resource\n");
++		return ret;
 +	}
++
++	ret = ipc_create_pmc_devices();
++	if (ret) {
++		dev_err(&pdev->dev, "Fail to create pmc devices\n");
++		goto err_device;
++	}
++
++	if (request_irq(ipcdev.irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
++		dev_err(&pdev->dev, "Fail to request irq\n");
++		ret = -EBUSY;
++		goto err_irq;
++	}
++
++	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
++	if (ret) {
++		dev_err(&pdev->dev, "Fail to create sysfs group %d\n",
++			ret);
++		goto err_sys;
++	}
++
++	return 0;
++err_sys:
++	free_irq(ipcdev.irq, &ipcdev);
++err_irq:
++	platform_device_unregister(ipcdev.tco_dev);
++	platform_device_unregister(ipcdev.punit_dev);
++err_device:
++	iounmap(ipcdev.ipc_base);
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				PLAT_RESOURCE_IPC_INDEX);
++	if (res)
++		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
++	return ret;
 +}
 +
-+
-+/*
-+ * module functions
-+ */
-+
-+static int __init rbtn_init(void)
++static int ipc_plat_remove(struct platform_device *pdev)
 +{
-+	return acpi_bus_register_driver(&rbtn_driver);
++	struct resource *res;
++
++	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
++	free_irq(ipcdev.irq, &ipcdev);
++	platform_device_unregister(ipcdev.tco_dev);
++	platform_device_unregister(ipcdev.punit_dev);
++	iounmap(ipcdev.ipc_base);
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				PLAT_RESOURCE_IPC_INDEX);
++	if (res)
++		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
++	ipcdev.dev = NULL;
++	return 0;
 +}
 +
-+static void __exit rbtn_exit(void)
++static struct platform_driver ipc_plat_driver = {
++	.remove = ipc_plat_remove,
++	.probe = ipc_plat_probe,
++	.driver = {
++		.name = "pmc-ipc-plat",
++		.owner = THIS_MODULE,
++		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
++	},
++};
++
++static int __init intel_pmc_ipc_init(void)
 +{
-+	acpi_bus_unregister_driver(&rbtn_driver);
++	int ret;
++
++	ret = platform_driver_register(&ipc_plat_driver);
++	if (ret) {
++		pr_err("Fail to register PMC ipc platform driver\n");
++		return ret;
++	}
++	ret = pci_register_driver(&ipc_pci_driver);
++	if (ret) {
++		pr_err("Fail to register PMC ipc pci driver\n");
++		platform_driver_unregister(&ipc_plat_driver);
++		return ret;
++	}
++	return ret;
 +}
 +
-+module_init(rbtn_init);
-+module_exit(rbtn_exit);
++static void __exit intel_pmc_ipc_exit(void)
++{
++	pci_unregister_driver(&ipc_pci_driver);
++	platform_driver_unregister(&ipc_plat_driver);
++}
 +
-+MODULE_DEVICE_TABLE(acpi, rbtn_ids);
-+MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
-+MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
++MODULE_AUTHOR("qipeng <qipeng.zha@intel.com>");
++MODULE_DESCRIPTION("Intel PMC IPC driver");
 +MODULE_LICENSE("GPL");
---=20
-1.7.10.4
++
++fs_initcall(intel_pmc_ipc_init);
++module_exit(intel_pmc_ipc_exit);
+-- 
+1.8.3.2
