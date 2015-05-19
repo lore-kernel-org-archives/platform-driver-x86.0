@@ -1,61 +1,68 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: revert unintentional device attribute
- renaming
-Date: Tue, 19 May 2015 12:13:59 -0300
-Message-ID: <1432048439.3106362.272800449.45A5D8AC@webmail.messagingengine.com>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>
+Subject: Re: [PATCH] thinkpad_acpi: revert unintentional
+	device attribute renaming
+Date: Tue, 19 May 2015 17:26:57 +0200
+Message-ID: <87pp5wpozi.fsf@nemi.mork.no>
 References: <1432044821-16340-1-git-send-email-bjorn@mork.no>
+	<1432048439.3106362.272800449.45A5D8AC@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:53105 "EHLO
-	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753336AbbESPOA convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 May 2015 11:14:00 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 2EBB820DDD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2015 11:14:00 -0400 (EDT)
-In-Reply-To: <1432044821-16340-1-git-send-email-bjorn@mork.no>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?ISO-8859-1?Q?Bj=F8rn=20Mork?= <bjorn@mork.no>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Bastien Nocera <hadess@hadess.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1432048439.3106362.272800449.45A5D8AC-2RFepEojUI2N1INw9kWLP6GC3tUn3ZHUQQ4Iyu8u01E@public.gmane.org>
+	(Henrique de Moraes Holschuh's message of "Tue, 19 May 2015 12:13:59
+	-0300")
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 19, 2015, at 11:13, Bj=F8rn Mork wrote:
-> The conversion to DEVICE_ATTR_* macros failed to fixup a few cases wh=
-ere
-> the old attribute names didn't match the show/store function names.
-> Instead of renaming the functions, the attributes were renamed. This
-> caused an unintentional API change.  The hwmon required 'name' attrib=
-ute
-> were among the renamed attribute, causing libsensors to fail to detec=
-t
-> the hwmon device at all.
->=20
-> Fixes: b4dd04ac6ef8 ("thinkpad_acpi: use DEVICE_ATTR_* macros")
-> Cc: Bastien Nocera <hadess@hadess.net>
-> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> Signed-off-by: Bj=F8rn Mork <bjorn@mork.no>
-
-=2E..
-
-> -static ssize_t hotkey_wakeup_reason_show(struct device *dev,
-> +static ssize_t wakeup_reason_show(struct device *dev,
-
-Before, all "hotkey subdriver" functions had the hotkey_ prefix.  Now,
-we have to intrude into whatever "namespace" an attribute name happens
-to clash (in this case, the "wakeup" namespace).
-
-If this is the least horrible way to fix the issue, I will ack it even
-if I don't like it.  However, if there's a way to do it that would keep
-the "hotkey_" prefix in the C side, and only change the rest of the C
-function name (if required), I'd rather the fix did that.
-
-Also, the fix needs to go to stable (4.0+).
-
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+SGVucmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIDxobWhAaG1oLmVuZy5icj4gd3JpdGVzOgoKPiBP
+biBUdWUsIE1heSAxOSwgMjAxNSwgYXQgMTE6MTMsIEJqw7hybiBNb3JrIHdyb3RlOgo+PiBUaGUg
+Y29udmVyc2lvbiB0byBERVZJQ0VfQVRUUl8qIG1hY3JvcyBmYWlsZWQgdG8gZml4dXAgYSBmZXcg
+Y2FzZXMgd2hlcmUKPj4gdGhlIG9sZCBhdHRyaWJ1dGUgbmFtZXMgZGlkbid0IG1hdGNoIHRoZSBz
+aG93L3N0b3JlIGZ1bmN0aW9uIG5hbWVzLgo+PiBJbnN0ZWFkIG9mIHJlbmFtaW5nIHRoZSBmdW5j
+dGlvbnMsIHRoZSBhdHRyaWJ1dGVzIHdlcmUgcmVuYW1lZC4gVGhpcwo+PiBjYXVzZWQgYW4gdW5p
+bnRlbnRpb25hbCBBUEkgY2hhbmdlLiAgVGhlIGh3bW9uIHJlcXVpcmVkICduYW1lJyBhdHRyaWJ1
+dGUKPj4gd2VyZSBhbW9uZyB0aGUgcmVuYW1lZCBhdHRyaWJ1dGUsIGNhdXNpbmcgbGlic2Vuc29y
+cyB0byBmYWlsIHRvIGRldGVjdAo+PiB0aGUgaHdtb24gZGV2aWNlIGF0IGFsbC4KPj4gCj4+IEZp
+eGVzOiBiNGRkMDRhYzZlZjggKCJ0aGlua3BhZF9hY3BpOiB1c2UgREVWSUNFX0FUVFJfKiBtYWNy
+b3MiKQo+PiBDYzogQmFzdGllbiBOb2NlcmEgPGhhZGVzc0BoYWRlc3MubmV0Pgo+PiBDYzogSGVu
+cmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIDxobWhAaG1oLmVuZy5icj4KPj4gU2lnbmVkLW9mZi1i
+eTogQmrDuHJuIE1vcmsgPGJqb3JuQG1vcmsubm8+Cj4KPiAuLi4KPgo+PiAtc3RhdGljIHNzaXpl
+X3QgaG90a2V5X3dha2V1cF9yZWFzb25fc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+ICtzdGF0
+aWMgc3NpemVfdCB3YWtldXBfcmVhc29uX3Nob3coc3RydWN0IGRldmljZSAqZGV2LAo+Cj4gQmVm
+b3JlLCBhbGwgImhvdGtleSBzdWJkcml2ZXIiIGZ1bmN0aW9ucyBoYWQgdGhlIGhvdGtleV8gcHJl
+Zml4LiAgTm93LAo+IHdlIGhhdmUgdG8gaW50cnVkZSBpbnRvIHdoYXRldmVyICJuYW1lc3BhY2Ui
+IGFuIGF0dHJpYnV0ZSBuYW1lIGhhcHBlbnMKPiB0byBjbGFzaCAoaW4gdGhpcyBjYXNlLCB0aGUg
+Indha2V1cCIgbmFtZXNwYWNlKS4KPgo+IElmIHRoaXMgaXMgdGhlIGxlYXN0IGhvcnJpYmxlIHdh
+eSB0byBmaXggdGhlIGlzc3VlLCBJIHdpbGwgYWNrIGl0IGV2ZW4KPiBpZiBJIGRvbid0IGxpa2Ug
+aXQuICBIb3dldmVyLCBpZiB0aGVyZSdzIGEgd2F5IHRvIGRvIGl0IHRoYXQgd291bGQga2VlcAo+
+IHRoZSAiaG90a2V5XyIgcHJlZml4IGluIHRoZSBDIHNpZGUsIGFuZCBvbmx5IGNoYW5nZSB0aGUg
+cmVzdCBvZiB0aGUgQwo+IGZ1bmN0aW9uIG5hbWUgKGlmIHJlcXVpcmVkKSwgSSdkIHJhdGhlciB0
+aGUgZml4IGRpZCB0aGF0LgoKV2UgY291bGQgdXNlIHRoZSBERVZJQ0VfQVRUUihfbmFtZSwgX21v
+ZGUsIF9zaG93LCBfc3RvcmUpIG1hY3JvIGluc3RlYWQKZm9yIHRoZSBhZmZlY3RlZCBhdHRyaWJ1
+dGVzIGlmIHlvdSBwcmVmZXIgdGhhdC4KCkkgZGlkbid0IHRoaW5rIHRoZSBuYW1lcyBvZiB0aGVz
+ZSBzdGF0aWMgZnVuY3Rpb25zIG1hdHRlcmVkIHRoYXQgbXVjaCwKYnV0IEkgZG8gc2VlIHRoYXQg
+eW91dCBoYXZlIGEgcG9pbnQgZm9yIGEgMTBrbG9jIHNvdXJjZSBmaWxlIGxpa2UKdGhpbmtwYWRf
+YWNwaS5jLiAgWW91IGhhdmVuJ3QgZXZlciBjb25zaWRlcmVkIHNwbGl0dGluZyBpdD8gOi0pCgo+
+IEFsc28sIHRoZSBmaXggbmVlZHMgdG8gZ28gdG8gc3RhYmxlICg0LjArKS4KCkkgZG9uJ3QgdGhp
+bmsgc28uICBUaGUgYnVnIHdhcyBpbnRyb2R1Y2VkIGluIHY0LjEtcmMxIEFGQUlDUy4gIEFtIEkK
+bWlzc2luZyBzb21ldGhpbmc/CgoKQmrDuHJuCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KT25lIGRh
+c2hib2FyZCBmb3Igc2VydmVycyBhbmQgYXBwbGljYXRpb25zIGFjcm9zcyBQaHlzaWNhbC1WaXJ0
+dWFsLUNsb3VkIApXaWRlc3Qgb3V0LW9mLXRoZS1ib3ggbW9uaXRvcmluZyBzdXBwb3J0IHdpdGgg
+NTArIGFwcGxpY2F0aW9ucwpQZXJmb3JtYW5jZSBtZXRyaWNzLCBzdGF0cyBhbmQgcmVwb3J0cyB0
+aGF0IGdpdmUgeW91IEFjdGlvbmFibGUgSW5zaWdodHMKRGVlcCBkaXZlIHZpc2liaWxpdHkgd2l0
+aCB0cmFuc2FjdGlvbiB0cmFjaW5nIHVzaW5nIEFQTSBJbnNpZ2h0LgpodHRwOi8vYWQuZG91Ymxl
+Y2xpY2submV0L2RkbS9jbGsvMjkwNDIwNTEwOzExNzU2NzI5Mjt5Cl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlz
+dAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3Vy
+Y2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
