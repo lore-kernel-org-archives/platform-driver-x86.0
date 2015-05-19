@@ -1,96 +1,200 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: revert unintentional device
- attribute renaming
-Date: Tue, 19 May 2015 14:03:17 -0300
-Message-ID: <1432054997.3131891.272907897.5DEBC139@webmail.messagingengine.com>
-References: <1432044821-16340-1-git-send-email-bjorn@mork.no>
- <1432048439.3106362.272800449.45A5D8AC@webmail.messagingengine.com>
- <87pp5wpozi.fsf@nemi.mork.no>
+From: =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
+Subject: [PATCH v2] thinkpad_acpi: revert unintentional device attribute renaming
+Date: Tue, 19 May 2015 19:45:03 +0200
+Message-ID: <1432057503-18089-1-git-send-email-bjorn@mork.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:48440 "EHLO
-	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751367AbbESRDS convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 May 2015 13:03:18 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E06C520EB3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2015 13:03:17 -0400 (EDT)
-In-Reply-To: <87pp5wpozi.fsf@nemi.mork.no>
+Received: from canardo.mork.no ([148.122.252.1]:55537 "EHLO canardo.mork.no"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755915AbbESRp4 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 19 May 2015 13:45:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?ISO-8859-1?Q?Bj=F8rn=20Mork?= <bjorn@mork.no>
-Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Bastien Nocera <hadess@hadess.net>, platform-driver-x86@vger.kernel.org
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>, Bastien Nocera <hadess@hadess.net>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-On Tue, May 19, 2015, at 12:26, Bj=F8rn Mork wrote:
-> Henrique de Moraes Holschuh <hmh@hmh.eng.br> writes:
-> >> -static ssize_t hotkey_wakeup_reason_show(struct device *dev,
-> >> +static ssize_t wakeup_reason_show(struct device *dev,
-> >
-> > Before, all "hotkey subdriver" functions had the hotkey_ prefix.  N=
-ow,
-> > we have to intrude into whatever "namespace" an attribute name happ=
-ens
-> > to clash (in this case, the "wakeup" namespace).
-> >
-> > If this is the least horrible way to fix the issue, I will ack it e=
-ven
-> > if I don't like it.  However, if there's a way to do it that would =
-keep
-> > the "hotkey_" prefix in the C side, and only change the rest of the=
- C
-> > function name (if required), I'd rather the fix did that.
->=20
-> We could use the DEVICE_ATTR(_name, _mode, _show, _store) macro inste=
-ad
-> for the affected attributes if you prefer that.
+The conversion to DEVICE_ATTR_* macros failed to fixup a few cases wher=
+e
+the old attribute names didn't match the show/store function names.
+Instead of renaming the functions, the attributes were renamed. This
+caused an unintentional API change.  The hwmon required 'name' attribut=
+e
+were among the renamed attribute, causing libsensors to fail to detect
+the hwmon device at all.
 
-Yes, please.  I'd rather have a bit more boilerplate than sacrifice the
-"subdriver prefix" in the C functions handling the sysfs nodes.
+=46ix by using the DEVICE_ATTR macro for these attributes, allowing the
+show/store functions to keep their system specific prefixes.
 
-> I didn't think the names of these static functions mattered that much=
-,
-> but I do see that yout have a point for a 10kloc source file like
-> thinkpad_acpi.c.  You haven't ever considered splitting it? :-)
+=46ixes: b4dd04ac6ef8 ("thinkpad_acpi: use DEVICE_ATTR_* macros")
+Cc: Bastien Nocera <hadess@hadess.net>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Signed-off-by: Bj=C3=B8rn Mork <bjorn@mork.no>
+---
+v2: kept the original function names, using the DEVICE_ATTR instead
 
-Heh, yeah, I did.  I was going to at least kick the hwmon and the
-alsa-related stuff to separate drivers.  But there are all sorts of tie=
-s
-between the separate functionalities due to a common firmware event
-interface, so the result looked worse than the monolithic driver.  And
-we often get more of those when new firmware/hardware functionality
-arrives...
+ drivers/platform/x86/thinkpad_acpi.c | 37 ++++++++++++++++++----------=
+--------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-A split-and-refactor might be in thinkpad-acpi's future, yes.  But the
-result would not be a bunch of independent modules due to the way the
-firmware interface works, so there is little reason to not have it as a
-monolitic module. This is not something you'd have in an embedded
-kernel, after all...
-
-Those 10k loc are mostly organized into highly modular blocks
-("subdrivers"), thus my dislike for the change on the C function
-prefixes for the sysfs attributes.  Those prefixes make it easier to
-maintain the driver ;-)
-
-When I last tried it several years ago, splitting the large C file into
-several smaller C files did not make that large a difference in
-maintainability, for a noticeable cost in lost compile-time
-optimizations.  So, I never published it.
-
-> > Also, the fix needs to go to stable (4.0+).
->=20
-> I don't think so.  The bug was introduced in v4.1-rc1 AFAICS.  Am I
-> missing something?
-
-Hmm, I screwed up when I was trying to locate which trees shipped the
-broken commit.  You're right, this fix does _not_ need to go to stable.=
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
+6/thinkpad_acpi.c
+index 9bb9ad6d4a1b..28f328136f0d 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -2897,7 +2897,7 @@ static ssize_t hotkey_wakeup_reason_show(struct d=
+evice *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_wakeup_reason);
+ }
 =20
-Sorry about that!
-
+-static DEVICE_ATTR_RO(hotkey_wakeup_reason);
++static DEVICE_ATTR(wakeup_reason, S_IRUGO, hotkey_wakeup_reason_show, =
+NULL);
+=20
+ static void hotkey_wakeup_reason_notify_change(void)
+ {
+@@ -2913,7 +2913,8 @@ static ssize_t hotkey_wakeup_hotunplug_complete_s=
+how(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_autosleep_ack);
+ }
+=20
+-static DEVICE_ATTR_RO(hotkey_wakeup_hotunplug_complete);
++static DEVICE_ATTR(wakeup_hotunplug_complete, S_IRUGO,
++		   hotkey_wakeup_hotunplug_complete_show, NULL);
+=20
+ static void hotkey_wakeup_hotunplug_complete_notify_change(void)
+ {
+@@ -2978,8 +2979,8 @@ static struct attribute *hotkey_attributes[] __in=
+itdata =3D {
+ 	&dev_attr_hotkey_enable.attr,
+ 	&dev_attr_hotkey_bios_enabled.attr,
+ 	&dev_attr_hotkey_bios_mask.attr,
+-	&dev_attr_hotkey_wakeup_reason.attr,
+-	&dev_attr_hotkey_wakeup_hotunplug_complete.attr,
++	&dev_attr_wakeup_reason.attr,
++	&dev_attr_wakeup_hotunplug_complete.attr,
+ 	&dev_attr_hotkey_mask.attr,
+ 	&dev_attr_hotkey_all_mask.attr,
+ 	&dev_attr_hotkey_recommended_mask.attr,
+@@ -4393,12 +4394,13 @@ static ssize_t wan_enable_store(struct device *=
+dev,
+ 			attr, buf, count);
+ }
+=20
+-static DEVICE_ATTR_RW(wan_enable);
++static DEVICE_ATTR(wwan_enable, S_IWUSR | S_IRUGO,
++		   wan_enable_show, wan_enable_store);
+=20
+ /* -------------------------------------------------------------------=
+-- */
+=20
+ static struct attribute *wan_attributes[] =3D {
+-	&dev_attr_wan_enable.attr,
++	&dev_attr_wwan_enable.attr,
+ 	NULL
+ };
+=20
+@@ -8138,7 +8140,8 @@ static ssize_t fan_pwm1_enable_store(struct devic=
+e *dev,
+ 	return count;
+ }
+=20
+-static DEVICE_ATTR_RW(fan_pwm1_enable);
++static DEVICE_ATTR(pwm1_enable, S_IWUSR | S_IRUGO,
++		   fan_pwm1_enable_show, fan_pwm1_enable_store);
+=20
+ /* sysfs fan pwm1 ----------------------------------------------------=
+-- */
+ static ssize_t fan_pwm1_show(struct device *dev,
+@@ -8198,7 +8201,7 @@ static ssize_t fan_pwm1_store(struct device *dev,
+ 	return (rc) ? rc : count;
+ }
+=20
+-static DEVICE_ATTR_RW(fan_pwm1);
++static DEVICE_ATTR(pwm1, S_IWUSR | S_IRUGO, fan_pwm1_show, fan_pwm1_st=
+ore);
+=20
+ /* sysfs fan fan1_input ----------------------------------------------=
+-- */
+ static ssize_t fan_fan1_input_show(struct device *dev,
+@@ -8215,7 +8218,7 @@ static ssize_t fan_fan1_input_show(struct device =
+*dev,
+ 	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+=20
+-static DEVICE_ATTR_RO(fan_fan1_input);
++static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+=20
+ /* sysfs fan fan2_input ----------------------------------------------=
+-- */
+ static ssize_t fan_fan2_input_show(struct device *dev,
+@@ -8232,7 +8235,7 @@ static ssize_t fan_fan2_input_show(struct device =
+*dev,
+ 	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+=20
+-static DEVICE_ATTR_RO(fan_fan2_input);
++static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+=20
+ /* sysfs fan fan_watchdog (hwmon driver) -----------------------------=
+-- */
+ static ssize_t fan_fan_watchdog_show(struct device_driver *drv,
+@@ -8265,8 +8268,8 @@ static DRIVER_ATTR(fan_watchdog, S_IWUSR | S_IRUG=
+O,
+=20
+ /* -------------------------------------------------------------------=
+-- */
+ static struct attribute *fan_attributes[] =3D {
+-	&dev_attr_fan_pwm1_enable.attr, &dev_attr_fan_pwm1.attr,
+-	&dev_attr_fan_fan1_input.attr,
++	&dev_attr_pwm1_enable.attr, &dev_attr_pwm1.attr,
++	&dev_attr_fan1_input.attr,
+ 	NULL, /* for fan2_input */
+ 	NULL
+ };
+@@ -8400,7 +8403,7 @@ static int __init fan_init(struct ibm_init_struct=
+ *iibm)
+ 		if (tp_features.second_fan) {
+ 			/* attach second fan tachometer */
+ 			fan_attributes[ARRAY_SIZE(fan_attributes)-2] =3D
+-					&dev_attr_fan_fan2_input.attr;
++					&dev_attr_fan2_input.attr;
+ 		}
+ 		rc =3D sysfs_create_group(&tpacpi_sensors_pdev->dev.kobj,
+ 					 &fan_attr_group);
+@@ -8848,7 +8851,7 @@ static ssize_t thinkpad_acpi_pdev_name_show(struc=
+t device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%s\n", TPACPI_NAME);
+ }
+=20
+-static DEVICE_ATTR_RO(thinkpad_acpi_pdev_name);
++static DEVICE_ATTR(name, S_IRUGO, thinkpad_acpi_pdev_name_show, NULL);
+=20
+ /* -------------------------------------------------------------------=
+-- */
+=20
+@@ -9390,8 +9393,7 @@ static void thinkpad_acpi_module_exit(void)
+ 		hwmon_device_unregister(tpacpi_hwmon);
+=20
+ 	if (tp_features.sensors_pdev_attrs_registered)
+-		device_remove_file(&tpacpi_sensors_pdev->dev,
+-				   &dev_attr_thinkpad_acpi_pdev_name);
++		device_remove_file(&tpacpi_sensors_pdev->dev, &dev_attr_name);
+ 	if (tpacpi_sensors_pdev)
+ 		platform_device_unregister(tpacpi_sensors_pdev);
+ 	if (tpacpi_pdev)
+@@ -9512,8 +9514,7 @@ static int __init thinkpad_acpi_module_init(void)
+ 		thinkpad_acpi_module_exit();
+ 		return ret;
+ 	}
+-	ret =3D device_create_file(&tpacpi_sensors_pdev->dev,
+-				 &dev_attr_thinkpad_acpi_pdev_name);
++	ret =3D device_create_file(&tpacpi_sensors_pdev->dev, &dev_attr_name)=
+;
+ 	if (ret) {
+ 		pr_err("unable to create sysfs hwmon device attributes\n");
+ 		thinkpad_acpi_module_exit();
 --=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+2.1.4
