@@ -1,68 +1,96 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn-yOkvZcmFvRU@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: revert unintentional
-	device attribute renaming
-Date: Tue, 19 May 2015 17:26:57 +0200
-Message-ID: <87pp5wpozi.fsf@nemi.mork.no>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: revert unintentional device
+ attribute renaming
+Date: Tue, 19 May 2015 14:03:17 -0300
+Message-ID: <1432054997.3131891.272907897.5DEBC139@webmail.messagingengine.com>
 References: <1432044821-16340-1-git-send-email-bjorn@mork.no>
-	<1432048439.3106362.272800449.45A5D8AC@webmail.messagingengine.com>
+ <1432048439.3106362.272800449.45A5D8AC@webmail.messagingengine.com>
+ <87pp5wpozi.fsf@nemi.mork.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1432048439.3106362.272800449.45A5D8AC-2RFepEojUI2N1INw9kWLP6GC3tUn3ZHUQQ4Iyu8u01E@public.gmane.org>
-	(Henrique de Moraes Holschuh's message of "Tue, 19 May 2015 12:13:59
-	-0300")
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:48440 "EHLO
+	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751367AbbESRDS convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 19 May 2015 13:03:18 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id E06C520EB3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2015 13:03:17 -0400 (EDT)
+In-Reply-To: <87pp5wpozi.fsf@nemi.mork.no>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?ISO-8859-1?Q?Bj=F8rn=20Mork?= <bjorn@mork.no>
+Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Bastien Nocera <hadess@hadess.net>, platform-driver-x86@vger.kernel.org
 
-SGVucmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIDxobWhAaG1oLmVuZy5icj4gd3JpdGVzOgoKPiBP
-biBUdWUsIE1heSAxOSwgMjAxNSwgYXQgMTE6MTMsIEJqw7hybiBNb3JrIHdyb3RlOgo+PiBUaGUg
-Y29udmVyc2lvbiB0byBERVZJQ0VfQVRUUl8qIG1hY3JvcyBmYWlsZWQgdG8gZml4dXAgYSBmZXcg
-Y2FzZXMgd2hlcmUKPj4gdGhlIG9sZCBhdHRyaWJ1dGUgbmFtZXMgZGlkbid0IG1hdGNoIHRoZSBz
-aG93L3N0b3JlIGZ1bmN0aW9uIG5hbWVzLgo+PiBJbnN0ZWFkIG9mIHJlbmFtaW5nIHRoZSBmdW5j
-dGlvbnMsIHRoZSBhdHRyaWJ1dGVzIHdlcmUgcmVuYW1lZC4gVGhpcwo+PiBjYXVzZWQgYW4gdW5p
-bnRlbnRpb25hbCBBUEkgY2hhbmdlLiAgVGhlIGh3bW9uIHJlcXVpcmVkICduYW1lJyBhdHRyaWJ1
-dGUKPj4gd2VyZSBhbW9uZyB0aGUgcmVuYW1lZCBhdHRyaWJ1dGUsIGNhdXNpbmcgbGlic2Vuc29y
-cyB0byBmYWlsIHRvIGRldGVjdAo+PiB0aGUgaHdtb24gZGV2aWNlIGF0IGFsbC4KPj4gCj4+IEZp
-eGVzOiBiNGRkMDRhYzZlZjggKCJ0aGlua3BhZF9hY3BpOiB1c2UgREVWSUNFX0FUVFJfKiBtYWNy
-b3MiKQo+PiBDYzogQmFzdGllbiBOb2NlcmEgPGhhZGVzc0BoYWRlc3MubmV0Pgo+PiBDYzogSGVu
-cmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIDxobWhAaG1oLmVuZy5icj4KPj4gU2lnbmVkLW9mZi1i
-eTogQmrDuHJuIE1vcmsgPGJqb3JuQG1vcmsubm8+Cj4KPiAuLi4KPgo+PiAtc3RhdGljIHNzaXpl
-X3QgaG90a2V5X3dha2V1cF9yZWFzb25fc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsCj4+ICtzdGF0
-aWMgc3NpemVfdCB3YWtldXBfcmVhc29uX3Nob3coc3RydWN0IGRldmljZSAqZGV2LAo+Cj4gQmVm
-b3JlLCBhbGwgImhvdGtleSBzdWJkcml2ZXIiIGZ1bmN0aW9ucyBoYWQgdGhlIGhvdGtleV8gcHJl
-Zml4LiAgTm93LAo+IHdlIGhhdmUgdG8gaW50cnVkZSBpbnRvIHdoYXRldmVyICJuYW1lc3BhY2Ui
-IGFuIGF0dHJpYnV0ZSBuYW1lIGhhcHBlbnMKPiB0byBjbGFzaCAoaW4gdGhpcyBjYXNlLCB0aGUg
-Indha2V1cCIgbmFtZXNwYWNlKS4KPgo+IElmIHRoaXMgaXMgdGhlIGxlYXN0IGhvcnJpYmxlIHdh
-eSB0byBmaXggdGhlIGlzc3VlLCBJIHdpbGwgYWNrIGl0IGV2ZW4KPiBpZiBJIGRvbid0IGxpa2Ug
-aXQuICBIb3dldmVyLCBpZiB0aGVyZSdzIGEgd2F5IHRvIGRvIGl0IHRoYXQgd291bGQga2VlcAo+
-IHRoZSAiaG90a2V5XyIgcHJlZml4IGluIHRoZSBDIHNpZGUsIGFuZCBvbmx5IGNoYW5nZSB0aGUg
-cmVzdCBvZiB0aGUgQwo+IGZ1bmN0aW9uIG5hbWUgKGlmIHJlcXVpcmVkKSwgSSdkIHJhdGhlciB0
-aGUgZml4IGRpZCB0aGF0LgoKV2UgY291bGQgdXNlIHRoZSBERVZJQ0VfQVRUUihfbmFtZSwgX21v
-ZGUsIF9zaG93LCBfc3RvcmUpIG1hY3JvIGluc3RlYWQKZm9yIHRoZSBhZmZlY3RlZCBhdHRyaWJ1
-dGVzIGlmIHlvdSBwcmVmZXIgdGhhdC4KCkkgZGlkbid0IHRoaW5rIHRoZSBuYW1lcyBvZiB0aGVz
-ZSBzdGF0aWMgZnVuY3Rpb25zIG1hdHRlcmVkIHRoYXQgbXVjaCwKYnV0IEkgZG8gc2VlIHRoYXQg
-eW91dCBoYXZlIGEgcG9pbnQgZm9yIGEgMTBrbG9jIHNvdXJjZSBmaWxlIGxpa2UKdGhpbmtwYWRf
-YWNwaS5jLiAgWW91IGhhdmVuJ3QgZXZlciBjb25zaWRlcmVkIHNwbGl0dGluZyBpdD8gOi0pCgo+
-IEFsc28sIHRoZSBmaXggbmVlZHMgdG8gZ28gdG8gc3RhYmxlICg0LjArKS4KCkkgZG9uJ3QgdGhp
-bmsgc28uICBUaGUgYnVnIHdhcyBpbnRyb2R1Y2VkIGluIHY0LjEtcmMxIEFGQUlDUy4gIEFtIEkK
-bWlzc2luZyBzb21ldGhpbmc/CgoKQmrDuHJuCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KT25lIGRh
-c2hib2FyZCBmb3Igc2VydmVycyBhbmQgYXBwbGljYXRpb25zIGFjcm9zcyBQaHlzaWNhbC1WaXJ0
-dWFsLUNsb3VkIApXaWRlc3Qgb3V0LW9mLXRoZS1ib3ggbW9uaXRvcmluZyBzdXBwb3J0IHdpdGgg
-NTArIGFwcGxpY2F0aW9ucwpQZXJmb3JtYW5jZSBtZXRyaWNzLCBzdGF0cyBhbmQgcmVwb3J0cyB0
-aGF0IGdpdmUgeW91IEFjdGlvbmFibGUgSW5zaWdodHMKRGVlcCBkaXZlIHZpc2liaWxpdHkgd2l0
-aCB0cmFuc2FjdGlvbiB0cmFjaW5nIHVzaW5nIEFQTSBJbnNpZ2h0LgpodHRwOi8vYWQuZG91Ymxl
-Y2xpY2submV0L2RkbS9jbGsvMjkwNDIwNTEwOzExNzU2NzI5Mjt5Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlz
-dAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3Vy
-Y2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
+On Tue, May 19, 2015, at 12:26, Bj=F8rn Mork wrote:
+> Henrique de Moraes Holschuh <hmh@hmh.eng.br> writes:
+> >> -static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+> >> +static ssize_t wakeup_reason_show(struct device *dev,
+> >
+> > Before, all "hotkey subdriver" functions had the hotkey_ prefix.  N=
+ow,
+> > we have to intrude into whatever "namespace" an attribute name happ=
+ens
+> > to clash (in this case, the "wakeup" namespace).
+> >
+> > If this is the least horrible way to fix the issue, I will ack it e=
+ven
+> > if I don't like it.  However, if there's a way to do it that would =
+keep
+> > the "hotkey_" prefix in the C side, and only change the rest of the=
+ C
+> > function name (if required), I'd rather the fix did that.
+>=20
+> We could use the DEVICE_ATTR(_name, _mode, _show, _store) macro inste=
+ad
+> for the affected attributes if you prefer that.
+
+Yes, please.  I'd rather have a bit more boilerplate than sacrifice the
+"subdriver prefix" in the C functions handling the sysfs nodes.
+
+> I didn't think the names of these static functions mattered that much=
+,
+> but I do see that yout have a point for a 10kloc source file like
+> thinkpad_acpi.c.  You haven't ever considered splitting it? :-)
+
+Heh, yeah, I did.  I was going to at least kick the hwmon and the
+alsa-related stuff to separate drivers.  But there are all sorts of tie=
+s
+between the separate functionalities due to a common firmware event
+interface, so the result looked worse than the monolithic driver.  And
+we often get more of those when new firmware/hardware functionality
+arrives...
+
+A split-and-refactor might be in thinkpad-acpi's future, yes.  But the
+result would not be a bunch of independent modules due to the way the
+firmware interface works, so there is little reason to not have it as a
+monolitic module. This is not something you'd have in an embedded
+kernel, after all...
+
+Those 10k loc are mostly organized into highly modular blocks
+("subdrivers"), thus my dislike for the change on the C function
+prefixes for the sysfs attributes.  Those prefixes make it easier to
+maintain the driver ;-)
+
+When I last tried it several years ago, splitting the large C file into
+several smaller C files did not make that large a difference in
+maintainability, for a noticeable cost in lost compile-time
+optimizations.  So, I never published it.
+
+> > Also, the fix needs to go to stable (4.0+).
+>=20
+> I don't think so.  The bug was introduced in v4.1-rc1 AFAICS.  Am I
+> missing something?
+
+Hmm, I screwed up when I was trying to locate which trees shipped the
+broken commit.  You're right, this fix does _not_ need to go to stable.=
+=20
+Sorry about that!
+
+--=20
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
