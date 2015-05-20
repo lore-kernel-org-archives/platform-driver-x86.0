@@ -1,40 +1,46 @@
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Subject: Re: [PATCH v3] platform:x86: add Intel Broxton PMC IPC driver
-Date: Wed, 20 May 2015 12:56:37 +0200
-Message-ID: <87d21vo6u2.fsf@nemi.mork.no>
-References: <1432144085-49223-1-git-send-email-qipeng.zha@intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/7][RFC] FUJITSU Extended Socket network device driver
+Date: Wed, 20 May 2015 16:47:11 +0200
+Message-ID: <20150520144711.GE22037@vmdeb7>
+References: <E86EADE93E2D054CBCD4E708C38D364A5422D803@G01JPEXMBYT01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from canardo.mork.no ([148.122.252.1]:59172 "EHLO canardo.mork.no"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751341AbbETK5P convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 May 2015 06:57:15 -0400
-In-Reply-To: <1432144085-49223-1-git-send-email-qipeng.zha@intel.com> (qipeng
-	zha's message of "Thu, 21 May 2015 01:48:05 +0800")
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "qipeng.zha" <qipeng.zha@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <E86EADE93E2D054CBCD4E708C38D364A5422D803@G01JPEXMBYT01>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Hart, Darren" <darren.hart@intel.com>, "rkhan@redhat.com" <rkhan@redhat.com>, "alexander.h.duyck@redhat.com" <alexander.h.duyck@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-"qipeng.zha" <qipeng.zha@intel.com> writes:
+On Wed, May 20, 2015 at 08:04:07AM +0000, Izumi, Taku wrote:
+> Hi All,
+> 
+> This patchsets add support for FUJITSU Extended Socket network
+> device. Extended Socket network device is a shared memory
+> based high-speed network interface between Extended Partitions of
+> PRIMEQUEST 2000 E2 series.
 
-> +#ifdef CONFIG_INTEL_PMC_IPC
+Hi Taku,
 
-=2E.
+A few things to keep in mind.
 
-> +config INTEL_PMC_IPC
-> +	tristate "Intel PMC IPC Driver"
+1) Always Cc the maintainer using the email address in the MAINTAINERS file,
+   in this case, dvhart at infradead.org.
 
+2) See Documentation/email-clients.txt regarding charset (you sent ISO-2022,JP):
 
-This still won't work.  Hint:  Use the IS_ENABLED macro.  See
-include/linux/kconfig.h for details.
+   Email clients should not modify the character set encoding of the text.
+   Emailed patches should be in ASCII or UTF-8 encoding only.
+   If you configure your email client to send emails with UTF-8 encoding,
+   you avoid some possible charset problems.
 
-Or simply test your new tristate driver with *both* the 'y' and 'm'
-alternatives....
+3) A new driver should be functional at each patch point, so committing a
+   skeleton that does nothing is not what we're looking for by "small functional
+   changes".
 
+Thanks,
 
-
-Bj=C3=B8rn
+-- 
+Darren Hart
+Intel Open Source Technology Center
