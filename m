@@ -1,76 +1,81 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform:x86: add Intel Broxton PMC IPC driver
-Date: Wed, 20 May 2015 11:28:53 +0200
-Message-ID: <20150520092853.GC22037@vmdeb7>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: RE: [PATCH v2] platform:x86: add Intel Broxton PMC IPC driver
+Date: Wed, 20 May 2015 09:42:01 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD018B892B@SHSMSX104.ccr.corp.intel.com>
 References: <1431958130-75816-1-git-send-email-qipeng.zha@intel.com>
+ <20150520092853.GC22037@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:49653 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751504AbbETJ3B (ORCPT
+Received: from mga01.intel.com ([192.55.52.88]:2831 "EHLO mga01.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752660AbbETJmG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 May 2015 05:29:01 -0400
-Content-Disposition: inline
-In-Reply-To: <1431958130-75816-1-git-send-email-qipeng.zha@intel.com>
+	Wed, 20 May 2015 05:42:06 -0400
+In-Reply-To: <20150520092853.GC22037@vmdeb7>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "qipeng.zha" <qipeng.zha@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Yang, Fei" <fei.yang@intel.com>, "Zhong, Huiquan" <huiquan.zhong@intel.com>, "Chen, Jason CJ" <jason.cj.chen@intel.com>, "Zheng, Qi" <qi.zheng@intel.com>
 
-On Mon, May 18, 2015 at 10:08:50PM +0800, qipeng.zha wrote:
-> From: "qipeng.zha" <qipeng.zha@intel.com>
->=20
-> This driver provides support for PMC control on Broxton platforms,
-> PMC is ARC processor which defined some IPC commands for communicatio=
-n
-> with other entities running in IA
->=20
-> Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
-
-Please run through checkpatch.pl and correct errors.
-
-Compilation fails:
-
-  CC [M]  drivers/platform/x86/intel_pmc_ipc.o
-drivers/platform/x86/intel_pmc_ipc.c:214:5: error: redefinition of =E2=80=
-=98intel_pmc_ipc_simple_command=E2=80=99
- int intel_pmc_ipc_simple_command(int cmd, int sub)
-     ^
-In file included from drivers/platform/x86/intel_pmc_ipc.c:32:0:
-=2E/arch/x86/include/asm/intel_pmc_ipc.h:63:19: note: previous definiti=
-on of =E2=80=98intel_pmc_ipc_simple_command=E2=80=99 was here
- static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
-                   ^
-drivers/platform/x86/intel_pmc_ipc.c:242:5: error: redefinition of =E2=80=
-=98intel_pmc_ipc_raw_cmd=E2=80=99
- int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *ou=
-t,
-     ^
-In file included from drivers/platform/x86/intel_pmc_ipc.c:32:0:
-=2E/arch/x86/include/asm/intel_pmc_ipc.h:68:19: note: previous definiti=
-on of =E2=80=98intel_pmc_ipc_raw_cmd=E2=80=99 was here
- static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 =
-inlen,
-                   ^
-drivers/platform/x86/intel_pmc_ipc.c:286:5: error: redefinition of =E2=80=
-=98intel_pmc_ipc_command=E2=80=99
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
-     ^
-In file included from drivers/platform/x86/intel_pmc_ipc.c:32:0:
-=2E/arch/x86/include/asm/intel_pmc_ipc.h:74:19: note: previous definiti=
-on of =E2=80=98intel_pmc_ipc_command=E2=80=99 was here
- static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 =
-inlen,
-                   ^
-scripts/Makefile.build:264: recipe for target 'drivers/platform/x86/int=
-el_pmc_ipc.o' failed
-make[1]: *** [drivers/platform/x86/intel_pmc_ipc.o] Error 1
-Makefile:1552: recipe for target 'drivers/platform/x86/intel_pmc_ipc.ko=
-' failed
-make: *** [drivers/platform/x86/intel_pmc_ipc.ko] Error 2
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+SGkgRGFycmVuIEhhcnQNCg0KSSBkb3VibGUgY2hlY2tlZCBubyBjb21waWxlIGZhaWwgb24gbXkg
+c2lkZS4NCkFuZCBjb3VsZCB5b3UgY2hlY2sgaWYgZW5hYmxlIGNvbmZpZyAgb3B0aW9uICIgQ09O
+RklHX0lOVEVMX1BNQ19JUEMiLA0KU2VlbXMgdGhlIGVycm9yIGlzIGR1ZSB0byB0aGlzLCBwbGVh
+c2UgY2hlY2sgaW50ZWxfcG1jX2lwYy5oIGZvciBkZXRhaWwNClRoYW5rcw0KDQpBbmQgYnkgdXNp
+bmcgY2hlY2twYXRjaC5wbCwgZm91bmQgdGhlcmUgaXMgcmVhbGx5IHdhcm5pbmcgYXMgYmVsb3cN
+Ckkgd2lsbCBzZW50IHVwZGF0ZSBvbmUNCkdyZWF0IHRoYW5rczopDQoNCg0KcXpoYSAkIHNjcmlw
+dHMvY2hlY2twYXRjaC5wbCAwMDAxLXBsYXRmb3JtLXg4Ni1hZGQtSW50ZWwtQnJveHRvbi1QTUMt
+SVBDLWRyaXZlci5wYXRjaA0KV0FSTklORzogYWRkZWQsIG1vdmVkIG9yIGRlbGV0ZWQgZmlsZShz
+KSwgZG9lcyBNQUlOVEFJTkVSUyBuZWVkIHVwZGF0aW5nPw0KIzIxOg0KbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCg0KV0FSTklORzogJ3Jlc291cmVzJyBtYXkgYmUgbWlzc3BlbGxlZCAtIHBlcmhhcHMg
+J3Jlc291cmNlcyc/DQojMjA3OiBGSUxFOiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNf
+aXBjLmM6Njk6DQorICogYnV0IGV4cG9ydCBtdWx0aSByZXNvdXJlcyBvbiBvbmUgQUNQSSBkZXZp
+Y2UoSVBDKSBmb3INCg0KdG90YWw6IDAgZXJyb3JzLCAyIHdhcm5pbmdzLCA4NjMgbGluZXMgY2hl
+Y2tlZA0KDQowMDAxLXBsYXRmb3JtLXg4Ni1hZGQtSW50ZWwtQnJveHRvbi1QTUMtSVBDLWRyaXZl
+ci5wYXRjaCBoYXMgc3R5bGUgcHJvYmxlbXMsIHBsZWFzZSByZXZpZXcuDQoNCg0KDQpCZXN0IHdp
+c2hlcw0KUWlwZW5nDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBEYXJyZW4g
+SGFydCBbbWFpbHRvOmR2aGFydEBpbmZyYWRlYWQub3JnXSANClNlbnQ6IFdlZG5lc2RheSwgTWF5
+IDIwLCAyMDE1IDU6MjkgUE0NClRvOiBaaGEsIFFpcGVuZw0KQ2M6IHBsYXRmb3JtLWRyaXZlci14
+ODZAdmdlci5rZXJuZWwub3JnOyBZYW5nLCBGZWk7IFpob25nLCBIdWlxdWFuOyBDaGVuLCBKYXNv
+biBDSjsgWmhlbmcsIFFpDQpTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9ybTp4ODY6IGFk
+ZCBJbnRlbCBCcm94dG9uIFBNQyBJUEMgZHJpdmVyDQoNCk9uIE1vbiwgTWF5IDE4LCAyMDE1IGF0
+IDEwOjA4OjUwUE0gKzA4MDAsIHFpcGVuZy56aGEgd3JvdGU6DQo+IEZyb206ICJxaXBlbmcuemhh
+IiA8cWlwZW5nLnpoYUBpbnRlbC5jb20+DQo+IA0KPiBUaGlzIGRyaXZlciBwcm92aWRlcyBzdXBw
+b3J0IGZvciBQTUMgY29udHJvbCBvbiBCcm94dG9uIHBsYXRmb3JtcywgUE1DIA0KPiBpcyBBUkMg
+cHJvY2Vzc29yIHdoaWNoIGRlZmluZWQgc29tZSBJUEMgY29tbWFuZHMgZm9yIGNvbW11bmljYXRp
+b24gDQo+IHdpdGggb3RoZXIgZW50aXRpZXMgcnVubmluZyBpbiBJQQ0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogcWlwZW5nLnpoYSA8cWlwZW5nLnpoYUBpbnRlbC5jb20+DQoNClBsZWFzZSBydW4gdGhy
+b3VnaCBjaGVja3BhdGNoLnBsIGFuZCBjb3JyZWN0IGVycm9ycy4NCg0KQ29tcGlsYXRpb24gZmFp
+bHM6DQoNCiAgQ0MgW01dICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfaXBjLm8NCmRy
+aXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19pcGMuYzoyMTQ6NTogZXJyb3I6IHJlZGVmaW5p
+dGlvbiBvZiDigJhpbnRlbF9wbWNfaXBjX3NpbXBsZV9jb21tYW5k4oCZDQogaW50IGludGVsX3Bt
+Y19pcGNfc2ltcGxlX2NvbW1hbmQoaW50IGNtZCwgaW50IHN1YikNCiAgICAgXg0KSW4gZmlsZSBp
+bmNsdWRlZCBmcm9tIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19pcGMuYzozMjowOg0K
+Li9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pbnRlbF9wbWNfaXBjLmg6NjM6MTk6IG5vdGU6IHByZXZp
+b3VzIGRlZmluaXRpb24gb2Yg4oCYaW50ZWxfcG1jX2lwY19zaW1wbGVfY29tbWFuZOKAmSB3YXMg
+aGVyZSAgc3RhdGljIGlubGluZSBpbnQgaW50ZWxfcG1jX2lwY19zaW1wbGVfY29tbWFuZChpbnQg
+Y21kLCBpbnQgc3ViKQ0KICAgICAgICAgICAgICAgICAgIF4NCmRyaXZlcnMvcGxhdGZvcm0veDg2
+L2ludGVsX3BtY19pcGMuYzoyNDI6NTogZXJyb3I6IHJlZGVmaW5pdGlvbiBvZiDigJhpbnRlbF9w
+bWNfaXBjX3Jhd19jbWTigJkNCiBpbnQgaW50ZWxfcG1jX2lwY19yYXdfY21kKHUzMiBjbWQsIHUz
+MiBzdWIsIHU4ICppbiwgdTMyIGlubGVuLCB1MzIgKm91dCwNCiAgICAgXg0KSW4gZmlsZSBpbmNs
+dWRlZCBmcm9tIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19pcGMuYzozMjowOg0KLi9h
+cmNoL3g4Ni9pbmNsdWRlL2FzbS9pbnRlbF9wbWNfaXBjLmg6Njg6MTk6IG5vdGU6IHByZXZpb3Vz
+IGRlZmluaXRpb24gb2Yg4oCYaW50ZWxfcG1jX2lwY19yYXdfY21k4oCZIHdhcyBoZXJlICBzdGF0
+aWMgaW5saW5lIGludCBpbnRlbF9wbWNfaXBjX3Jhd19jbWQodTMyIGNtZCwgdTMyIHN1YiwgdTgg
+KmluLCB1MzIgaW5sZW4sDQogICAgICAgICAgICAgICAgICAgXg0KZHJpdmVycy9wbGF0Zm9ybS94
+ODYvaW50ZWxfcG1jX2lwYy5jOjI4Njo1OiBlcnJvcjogcmVkZWZpbml0aW9uIG9mIOKAmGludGVs
+X3BtY19pcGNfY29tbWFuZOKAmQ0KIGludCBpbnRlbF9wbWNfaXBjX2NvbW1hbmQodTMyIGNtZCwg
+dTMyIHN1YiwgdTggKmluLCB1MzIgaW5sZW4sDQogICAgIF4NCkluIGZpbGUgaW5jbHVkZWQgZnJv
+bSBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfaXBjLmM6MzI6MDoNCi4vYXJjaC94ODYv
+aW5jbHVkZS9hc20vaW50ZWxfcG1jX2lwYy5oOjc0OjE5OiBub3RlOiBwcmV2aW91cyBkZWZpbml0
+aW9uIG9mIOKAmGludGVsX3BtY19pcGNfY29tbWFuZOKAmSB3YXMgaGVyZSAgc3RhdGljIGlubGlu
+ZSBpbnQgaW50ZWxfcG1jX2lwY19jb21tYW5kKHUzMiBjbWQsIHUzMiBzdWIsIHU4ICppbiwgdTMy
+IGlubGVuLA0KICAgICAgICAgICAgICAgICAgIF4NCnNjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6MjY0
+OiByZWNpcGUgZm9yIHRhcmdldCAnZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2lwYy5v
+JyBmYWlsZWQNCm1ha2VbMV06ICoqKiBbZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2lw
+Yy5vXSBFcnJvciAxDQpNYWtlZmlsZToxNTUyOiByZWNpcGUgZm9yIHRhcmdldCAnZHJpdmVycy9w
+bGF0Zm9ybS94ODYvaW50ZWxfcG1jX2lwYy5rbycgZmFpbGVkDQptYWtlOiAqKiogW2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2ludGVsX3BtY19pcGMua29dIEVycm9yIDINCg0KLS0NCkRhcnJlbiBIYXJ0
+DQpJbnRlbCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0K
