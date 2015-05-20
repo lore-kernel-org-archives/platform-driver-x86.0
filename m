@@ -1,46 +1,30 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/7][RFC] FUJITSU Extended Socket network device driver
-Date: Wed, 20 May 2015 16:47:11 +0200
-Message-ID: <20150520144711.GE22037@vmdeb7>
-References: <E86EADE93E2D054CBCD4E708C38D364A5422D803@G01JPEXMBYT01>
+From: Alexander Duyck <alexander.h.duyck@redhat.com>
+Subject: Re: [PATCH 1/7] Introduce FUJITSU Extended Socket Network Device
+ driver
+Date: Wed, 20 May 2015 09:58:18 -0700
+Message-ID: <555CBD2A.9030001@redhat.com>
+References: <E86EADE93E2D054CBCD4E708C38D364A5422D82D@G01JPEXMBYT01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <E86EADE93E2D054CBCD4E708C38D364A5422D803@G01JPEXMBYT01>
+In-Reply-To: <E86EADE93E2D054CBCD4E708C38D364A5422D82D@G01JPEXMBYT01>
 Sender: linux-acpi-owner@vger.kernel.org
-To: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Hart, Darren" <darren.hart@intel.com>, "rkhan@redhat.com" <rkhan@redhat.com>, "alexander.h.duyck@redhat.com" <alexander.h.duyck@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+To: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "Hart, Darren" <darren.hart@intel.com>, "rkhan@redhat.com" <rkhan@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 20, 2015 at 08:04:07AM +0000, Izumi, Taku wrote:
-> Hi All,
+On 05/20/2015 01:17 AM, Izumi, Taku wrote:
 > 
-> This patchsets add support for FUJITSU Extended Socket network
-> device. Extended Socket network device is a shared memory
-> based high-speed network interface between Extended Partitions of
-> PRIMEQUEST 2000 E2 series.
+> This patch adds the skelton code of FUJITSU Extended Socket
+> Network Device driver.
+> At this stage, this driver just outputs its driver name at
+> loading time.
+> 
+> Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
 
-Hi Taku,
+This patch and the second one can probably be combined.  There isn't
+much point in splitting the two up since this one doesn't really do
+anything without at least the second one.
 
-A few things to keep in mind.
-
-1) Always Cc the maintainer using the email address in the MAINTAINERS file,
-   in this case, dvhart at infradead.org.
-
-2) See Documentation/email-clients.txt regarding charset (you sent ISO-2022,JP):
-
-   Email clients should not modify the character set encoding of the text.
-   Emailed patches should be in ASCII or UTF-8 encoding only.
-   If you configure your email client to send emails with UTF-8 encoding,
-   you avoid some possible charset problems.
-
-3) A new driver should be functional at each patch point, so committing a
-   skeleton that does nothing is not what we're looking for by "small functional
-   changes".
-
-Thanks,
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+- Alex
