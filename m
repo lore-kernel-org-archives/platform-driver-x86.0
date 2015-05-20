@@ -1,30 +1,215 @@
 From: Alexander Duyck <alexander.h.duyck@redhat.com>
-Subject: Re: [PATCH 1/7] Introduce FUJITSU Extended Socket Network Device
- driver
-Date: Wed, 20 May 2015 09:58:18 -0700
-Message-ID: <555CBD2A.9030001@redhat.com>
-References: <E86EADE93E2D054CBCD4E708C38D364A5422D82D@G01JPEXMBYT01>
+Subject: Re: [PATCH 2/7] fjes: Implement acpi_driver functionality
+Date: Wed, 20 May 2015 10:11:01 -0700
+Message-ID: <555CC025.8040506@redhat.com>
+References: <E86EADE93E2D054CBCD4E708C38D364A5422D83E@G01JPEXMBYT01>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-2022-jp
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <E86EADE93E2D054CBCD4E708C38D364A5422D82D@G01JPEXMBYT01>
-Sender: linux-acpi-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx1.redhat.com ([209.132.183.28]:59004 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752068AbbETRLD (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 20 May 2015 13:11:03 -0400
+In-Reply-To: <E86EADE93E2D054CBCD4E708C38D364A5422D83E@G01JPEXMBYT01>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 Cc: "Hart, Darren" <darren.hart@intel.com>, "rkhan@redhat.com" <rkhan@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On 05/20/2015 01:17 AM, Izumi, Taku wrote:
+On 05/20/2015 01:18 AM, Izumi, Taku wrote:
 > 
-> This patch adds the skelton code of FUJITSU Extended Socket
-> Network Device driver.
-> At this stage, this driver just outputs its driver name at
-> loading time.
+> This patch adds implementation of "PNP0C02" acpi_device driver
+> to FUJITSU Extended Socket Network Device driver.
+> 
+> When "PNP0C02" is found in ACPI DSDT, it evaluates "_STR"
+> to check if "PNP0C02" is for Extended Socket device driver
+> and retrieves ACPI resource information.
 > 
 > Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> ---
+>   drivers/platform/x86/fjes/fjes.h      |   4 ++
+>   drivers/platform/x86/fjes/fjes_main.c | 116 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 120 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/fjes/fjes.h b/drivers/platform/x86/fjes/fjes.h
+> index f12fe11..5586305 100644
+> --- a/drivers/platform/x86/fjes/fjes.h
+> +++ b/drivers/platform/x86/fjes/fjes.h
+> @@ -23,6 +23,10 @@
+>   #ifndef FJES_H_
+>   #define FJES_H_
+>   
+> +#include <linux/acpi.h>
+> +
+> +#define FJES_ACPI_SYMBOL	"Extended Socket"
+> +
+>   extern char fjes_driver_name[];
+>   extern char fjes_driver_version[];
+>   extern u32 fjes_support_mtu[];
+> diff --git a/drivers/platform/x86/fjes/fjes_main.c b/drivers/platform/x86/fjes/fjes_main.c
+> index f1e2fa0..3454098 100644
+> --- a/drivers/platform/x86/fjes/fjes_main.c
+> +++ b/drivers/platform/x86/fjes/fjes_main.c
+> @@ -21,6 +21,7 @@
+>   
+>   #include <linux/module.h>
+>   #include <linux/types.h>
+> +#include <linux/nls.h>
+>   
+>   #include "fjes.h"
+>   
+> @@ -42,6 +43,42 @@ MODULE_LICENSE("GPL");
+>   MODULE_VERSION(DRV_VERSION);
+>   
+>   
+> +static int fjes_acpi_add(struct acpi_device *);
+> +static int fjes_acpi_remove(struct acpi_device *);
+> +static acpi_status fjes_get_acpi_resource(struct acpi_resource *, void*);
+> +
+> +
+> +static const struct acpi_device_id fjes_acpi_ids[] = {
+> +	{"PNP0C02", 0},
+> +	{"", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, fjes_acpi_ids);
+> +
+> +static struct acpi_driver fjes_acpi_driver = {
+> +	.name = DRV_NAME,
+> +	.class = DRV_NAME,
+> +	.owner = THIS_MODULE,
+> +	.ids = fjes_acpi_ids,
+> +	.ops = {
+> +		.add = fjes_acpi_add,
+> +		.remove = fjes_acpi_remove,
+> +	},
+> +};
+> +
+> +static struct resource fjes_resource[] = {
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +		.start = 0,
+> +		.end = 0,
+> +	},
+> +	{
+> +		.flags = IORESOURCE_IRQ,
+> +		.start = 0,
+> +		.end = 0,
+> +	},
+> +};
+> +
+> +
+>   /*
+>    *  fjes_init_module - Driver Registration Routine
+>    *
+> @@ -50,11 +87,20 @@ MODULE_VERSION(DRV_VERSION);
+>    */
+>   static int __init fjes_init_module(void)
+>   {
+> +	int result;
+> +
+>   	pr_info("%s - version %s\n",
+>   			fjes_driver_string, fjes_driver_version);
+>   	pr_info("%s\n", fjes_copyright);
+>   
+> +	result = acpi_bus_register_driver(&fjes_acpi_driver);
+> +	if (result < 0)
+> +		goto fail_acpi_driver;
+> +
+>   	return 0;
+> +
+> +fail_acpi_driver:
+> +	return result;
+>   }
+>   
+>   module_init(fjes_init_module);
+> @@ -67,8 +113,78 @@ module_init(fjes_init_module);
+>    */
+>   static void __exit fjes_exit_module(void)
+>   {
+> +	acpi_bus_unregister_driver(&fjes_acpi_driver);
+>   }
+>   
+>   module_exit(fjes_exit_module);
 
-This patch and the second one can probably be combined.  There isn't
-much point in splitting the two up since this one doesn't really do
-anything without at least the second one.
+Generally you want to place the module_init and module_exit functions at
+the end of the your file.  That way you can avoid some of the function
+prototypes that will tend to build up as you add more functions to the path.
 
-- Alex
+> +static int fjes_acpi_add(struct acpi_device *device)
+> +{
+> +	acpi_status status;
+> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL};
+> +	union acpi_object *str;
+> +	char str_buf[sizeof(FJES_ACPI_SYMBOL) + 1];
+> +	int result;
+> +
+> +	status = acpi_evaluate_object(device->handle, "_STR", NULL, &buffer);
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	str = buffer.pointer;
+> +	result = utf16s_to_utf8s((wchar_t *)str->string.pointer,
+> +				str->string.length, UTF16_LITTLE_ENDIAN,
+> +				str_buf, sizeof(str_buf) - 1);
+> +	str_buf[result] = 0;
+> +
+> +	if (strncmp(FJES_ACPI_SYMBOL, str_buf, strlen(FJES_ACPI_SYMBOL)) != 0) {
+> +		kfree(buffer.pointer);
+> +		return -ENODEV;
+> +	}
+> +	kfree(buffer.pointer);
+> +
+> +	status = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> +				fjes_get_acpi_resource, fjes_resource);
+> +	if (ACPI_FAILURE(status))
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
+> +
+> +static int fjes_acpi_remove(struct acpi_device *device)
+> +{
+> +	return 0;
+> +}
+> +
+
+This doesn't seem correct.  Won't there end up being things like a
+netdevice that need to be unregistered if your remove the interface?
+Seems like this should probably return an error if you don't expect it
+to ever be called.
+
+> +static acpi_status fjes_get_acpi_resource(struct acpi_resource *acpi_res,
+> +		void *data)
+> +{
+> +	struct resource *res = data;
+> +	struct acpi_resource_address32 *addr;
+> +	struct acpi_resource_irq *irq;
+> +
+> +	switch (acpi_res->type) {
+> +	case ACPI_RESOURCE_TYPE_ADDRESS32:
+> +		addr = &acpi_res->data.address32;
+> +		res[0].start = addr->address.minimum;
+> +		res[0].end = addr->address.minimum +
+> +			addr->address.address_length;
+> +		break;
+> +
+> +	case ACPI_RESOURCE_TYPE_IRQ:
+> +		irq = &acpi_res->data.irq;
+> +		if (irq->interrupt_count != 1)
+> +			return AE_ERROR;
+> +		res[1].start = irq->interrupts[0];
+> +		res[1].end = irq->interrupts[0];
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +
+> +
+> 
