@@ -1,72 +1,60 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: dell_rbtn - kernel panic at boot...
-Date: Sat, 23 May 2015 22:08:38 +0200
-Message-ID: <201505232208.38978@pali>
-References: <5875.1432260403@turing-police.cc.vt.edu> <CAKdAkRQRdFBsgCmvL-aTKL=1xxPN-YYVEa0nTVkEV9jHMbzgYA@mail.gmail.com> <201505230305.36633@pali>
+From: Valdis.Kletnieks@vt.edu
+Subject: Re: [PATCH v3 2/3] dell-rbtn: Export notifier for other kernel modules
+Date: Sun, 24 May 2015 01:07:36 -0400
+Message-ID: <220947.1432444056@turing-police.cc.vt.edu>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <1431600868-11737-3-git-send-email-pali.rohar@gmail.com> <CAKdAkRRHZc3qk=gz7_KUwCNJup54gAjdmFn+V0=hQJ-bqkrWsA@mail.gmail.com>
+            <201505230305.50655@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart4008862.2oGq7YGgdf";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
+Content-Type: multipart/signed; boundary="==_Exmh_1432444056_2099P";
+	 micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:38544 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932279AbbEWUIm (ORCPT
+Received: from omr1.cc.vt.edu ([198.82.141.52]:42485 "EHLO omr1.cc.vt.edu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751312AbbEXFIm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 23 May 2015 16:08:42 -0400
-In-Reply-To: <201505230305.36633@pali>
+	Sun, 24 May 2015 01:08:42 -0400
+In-Reply-To: Your message of "Sat, 23 May 2015 03:05:50 +0200."
+             <201505230305.50655@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Darren Hart <dvhart@infradead.org>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@linux.intel.com>
 
---nextPart4008862.2oGq7YGgdf
-Content-Type: Text/Plain;
-  charset="utf-8"
+--==_Exmh_1432444056_2099P
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Saturday 23 May 2015 03:05:36 Pali Roh=C3=A1r wrote:
-> On Saturday 23 May 2015 00:53:16 Dmitry Torokhov wrote:
-> > On Thu, May 21, 2015 at 7:06 PM, Valdis Kletnieks
-> >=20
-> > <Valdis.Kletnieks@vt.edu> wrote:
-> > > So after I made both config variables =3Dy, the resulting kernel
-> > > built, but died a glorious death at boot.
-> >=20
-> > I guess if both are built-in then, according to link order,
-> > dell-laptop starts first, before dell-rbtn, and dies in
-> > dell_rbtn_notifier_register() in call to
-> > driver_for_each_device(&rbtn_driver.drv, ...) because rbtn_driver
-> > has not been registered yet and thus half-initlalized.
-> >=20
-> > Thanks.
->=20
-> pr_debug() messages could be useful... but no idea if we can get
-> them.
->=20
-> Is there any way to fix that dependency race condition? Could
-> driver_attach() function call help?
+On Sat, 23 May 2015 03:05:50 +0200, Pali Roh=E1r said:
 
-Or what about using late_initcall() instead module_init() for driver=20
-dell-laptop.ko? By default module_init() for static linked modules is=20
-macro for device_initcall() which is called before late_initcall(),=20
-right?
+> I'm thinking about using symbol_request() in dell-laptop.c (instead har=
+d=3D20
+> dependency) and then not ignoring error here... It could fix this=3D20
+> problem.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+That would also address the problem of a build
+that has DELL_LAPTOP=3D=5Bym=5D but DELL_RBTN=3Dn.
 
---nextPart4008862.2oGq7YGgdf
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+--==_Exmh_1432444056_2099P
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Version: GnuPG v1
+Comment: Exmh version 2.5 07/13/2001
 
-iEYEABECAAYFAlVg3kYACgkQi/DJPQPkQ1ItQwCffOriso9XMd3+AuZjvwb7V7k/
-iZYAoKx1SLb357orsfCsuy9BocCKggv3
-=YEn+
+iQIVAwUBVWFcmAdmEQWDXROgAQK+2BAAuRMszm4hQ1qc1gpQ1RGRkojNFlkuXS2f
+ZPsSDldc0nfEI/1ox93YYloKAnJ7VPv7yxAXflwlcJi1JQA45+803mCxEBmcidQ+
+UzoqOAoLIkJOma5K5jqjdACiJIUFYNySj6H9SHjeKKp02qvimt7OwLA++uTSG46o
+TbwfdyTtzCSKftwxUo82ZC8luKUjAi0uquh5dIC2rKyMPpdBX++7TCtL1+DOkErG
+tIbJsORsu40JVIove06oDTqBT16AsIJOZgHUnItDF1jCpI7Ez9IRng9Nsyj5GGsn
+WTKcoE2y8Cn7oPn4rt+CnkJ16l9P5UjuYTs456fpOHRyXVBoEuCB+Ps8VOXBM+cf
+m14WiRCsLMt3OytPsOLFM8TxocF6pC7/8cVmx+5f9c8TJcORiyq8Y4JyFrqLorfS
+hVZAxaXgb9pVoTdJMe6fsuGK6MXn6s39bcxewERN/grP3yYB9tcRIugEgiQ9IRhp
+pvJqYE98mW7JbU1VgNNVqm6CTNw64eNDlRN/yXNZ28CUW+FUDpcIbLz1ydhwKUO0
+2js6IZNkv0M9ge/T1cV8/gkBddh6VllnAo7g9jJ20Jxgd9dRaWEvYa4TGbd1JBL0
+XDDoEl7TGrwyXywwJ9fLrAei0y/x+XiTtD3FURkkQVpdDzlbLxGnpBhT19o2OmSr
+GDnYbi9DZNQ=
+=QXl7
 -----END PGP SIGNATURE-----
 
---nextPart4008862.2oGq7YGgdf--
+--==_Exmh_1432444056_2099P--
