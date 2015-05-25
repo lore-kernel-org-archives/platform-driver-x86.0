@@ -1,86 +1,67 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: randconfig build error with next-20150521, in
- drivers/platform/x86/dell-rbtn.c
-Date: Sun, 24 May 2015 21:20:18 -0700
-Message-ID: <20150525042018.GA26644@fury.dvhart.com>
-References: <CA+r1Zhij2wUuLK6cdhr44NFW+okW4YuyFoo2_58mR6yncsXo3w@mail.gmail.com>
- <20150521195615.GF22037@vmdeb7>
- <201505212207.11872@pali>
+Subject: Re: dell_rbtn - kernel panic at boot...
+Date: Sun, 24 May 2015 21:44:32 -0700
+Message-ID: <20150525044432.GA38428@fury.dvhart.com>
+References: <5875.1432260403@turing-police.cc.vt.edu>
+ <CAKdAkRQRdFBsgCmvL-aTKL=1xxPN-YYVEa0nTVkEV9jHMbzgYA@mail.gmail.com>
+ <201505230305.36633@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:35380 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751099AbbEYEof (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 25 May 2015 00:44:35 -0400
 Content-Disposition: inline
-In-Reply-To: <201505212207.11872@pali>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <201505230305.36633@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On Thu, May 21, 2015 at 10:07:11PM +0200, Pali Roh=E1r wrote:
-> On Thursday 21 May 2015 21:56:15 Darren Hart wrote:
-> > On Thu, May 21, 2015 at 10:36:15AM -0700, Jim Davis wrote:
-> > > Building with the attached random configuration file,
-> > >=20
-> > > drivers/built-in.o: In function `rbtn_remove':
-> > > dell-rbtn.c:(.text+0x31d7f4): undefined reference to
-> > > `input_unregister_device' drivers/built-in.o: In function
-> > > `rbtn_notify':
-> > > dell-rbtn.c:(.text+0x31d8e5): undefined reference to `input_event=
-'
-> > > dell-rbtn.c:(.text+0x31d8f8): undefined reference to `input_event=
-'
-> > > dell-rbtn.c:(.text+0x31d911): undefined reference to `input_event=
-'
-> > > dell-rbtn.c:(.text+0x31d924): undefined reference to `input_event=
-'
-> > > drivers/built-in.o: In function `rbtn_add':
-> > > dell-rbtn.c:(.text+0x31da11): undefined reference to
-> > > `input_allocate_device' dell-rbtn.c:(.text+0x31da4a): undefined
-> > > reference to `input_register_device' dell-rbtn.c:(.text+0x31da5e)=
-:
-> > > undefined reference to `input_free_device' Makefile:938: recipe
-> > > for target 'vmlinux' failed
+On Sat, May 23, 2015 at 03:05:36AM +0200, Pali Roh=E1r wrote:
+> On Saturday 23 May 2015 00:53:16 Dmitry Torokhov wrote:
+> > On Thu, May 21, 2015 at 7:06 PM, Valdis Kletnieks
 > >=20
-> > Thanks Jim,
+> > <Valdis.Kletnieks@vt.edu> wrote:
+> > > So after I made both config variables =3Dy, the resulting kernel
+> > > built, but died a glorious death at boot.
 > >=20
-> > Pali, the DELL_RBTN needs to ensure if it it's built-in, that INPUT
-> > is too. ...
+> > I guess if both are built-in then, according to link order,
+> > dell-laptop starts first, before dell-rbtn, and dies in
+> > dell_rbtn_notifier_register() in call to
+> > driver_for_each_device(&rbtn_driver.drv, ...) because rbtn_driver h=
+as
+> > not been registered yet and thus half-initlalized.
 > >=20
-> > > CONFIG_INPUT=3Dm
-> > > CONFIG_INPUT_FF_MEMLESS=3Dm
-> > > CONFIG_INPUT_POLLDEV=3Dm
-> > > CONFIG_INPUT_SPARSEKMAP=3Dm
-> > > CONFIG_INPUT_MATRIXKMAP=3Dm
-> >=20
-> > ...
-> >=20
-> > > CONFIG_DELL_RBTN=3Dy
-> >=20
-> > Please submit a fix as a new patch.
+> > Thanks.
 >=20
-> I believe that this patch is needed:
+> pr_debug() messages could be useful... but no idea if we can get them=
+=2E
 >=20
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
-> index 8c03223..d025fd8 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -141,6 +141,7 @@ config DELL_SMO8800
->  config DELL_RBTN
->  	tristate "Dell Airplane Mode Switch driver"
->  	depends on ACPI
-> +	depends on INPUT
->  	depends on RFKILL
->  	---help---
->  	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
->=20
-> I did not tested it yet, but all other drivers depends on INPUT.
+> Is there any way to fix that dependency race condition? Could=20
+> driver_attach() function call help?
 
-This looks reasonable to me. Please test it with the various configs an=
-d send
-the patch if it passes the tests.
+I believe you can avoid this by moving dell-rbtn earlier in the Makefil=
+e than
+dell-laptop - but this is fragile and a hack to resolve a dependency pr=
+oblem.
 
+I suppose this is why thinkpad-acpi.c is huge, and why having separate =
+drivers
+talk to eachother is discouraged.
+
+dell-laptop seems to be the base, while dell-rbtn is the more specific =
+of the
+two - which makes dell-laptop calling a dell-rbtn function which requir=
+es
+dell-rbtn to have been initialized prior a poor approach.
+
+Greg, Matthew, I'm tempted to recommend this 434 line driver be rolled =
+into
+dell-laptop.c. Any strong opinions?
 
 --=20
 Darren Hart
