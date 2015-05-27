@@ -1,7 +1,7 @@
 From: Michael Marineau <michael.marineau@coreos.com>
 Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb changes
-Date: Tue, 26 May 2015 23:28:14 -0700
-Message-ID: <CAGr1u3sBpENgVL9zF_LCFXtBv6S2FS5o1bRtFxwyn3P_kx=s-A@mail.gmail.com>
+Date: Tue, 26 May 2015 23:41:21 -0700
+Message-ID: <CAGr1u3sbMe4Qj2bfvsuEBu=EwkfS9reUMVZdq7-5oK4o+VTgKQ@mail.gmail.com>
 References: <20150223215155.18444386@neptune.home>
 	<20150303172753.GF83894@vmdeb7>
 	<20150305232038.1873d380@neptune.home>
@@ -12,81 +12,127 @@ References: <20150223215155.18444386@neptune.home>
 	<20150311223445.6af76f7c@neptune.home>
 	<CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
 	<20150527044749.GB21644@fury.dvhart.com>
-	<20150527075329.6df43854@pluto.restena.lu>
+	<CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
+	<20150527081323.35a3cf88@pluto.restena.lu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150527075329.6df43854@pluto.restena.lu>
-Sender: linux-pci-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:32794 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751003AbbE0GlX convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 May 2015 02:41:23 -0400
+Received: by wicmx19 with SMTP id mx19so83848461wic.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 May 2015 23:41:21 -0700 (PDT)
+In-Reply-To: <20150527081323.35a3cf88@pluto.restena.lu>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>
 Cc: Darren Hart <dvhart@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 26, 2015 at 10:53 PM, Bruno Pr=C3=A9mont
+On Tue, May 26, 2015 at 11:13 PM, Bruno Pr=C3=A9mont
 <bonbons@linux-vserver.org> wrote:
-> Hi Michael,
+> On Tue, 26 May 2015 22:35:46 -0700 Michael Marineau wrote:
+>> On Tue, May 26, 2015 at 9:47 PM, Darren Hart <dvhart@infradead.org> =
+wrote:
+>> > On Tue, May 26, 2015 at 12:10:48PM -0700, Michael Marineau wrote:
+>> >> FYI, this actually broke backlight controls on my MBP11,3 because=
+ the
+>> >> assumption the patch makes that gmux is always loaded before grap=
+hics
+>> >> drivers didn't hold true. At least for me dracut included the nou=
+veau
+>> >> module in the initrd but not gmux, ensuring the ordering was wron=
+g. No
+>> >> errors were reporting, and gmux still offered the backlight devic=
+e, it
+>> >> just became inoperable. I worked around this for my kernel by bui=
+lding
+>> >> gmux into vmlinuz instead of as a module but that isn't going to =
+in
+>> >> more general configs because there is an apple backlight driver w=
+hich
+>> >> cannot be built at all in that configuration.
+>> >>
+>> >
+>> > Thank you for reporting this Michael,
+>> >
+>> > That is tough as nouveau doesn't have an explicit dependency on gm=
+ux, so we
+>> > could do something like a passive request_module(), but if it isn'=
+t in the
+>> > initrd image, it would still fail as you describe.
+>> >
+>> >> Is there a way to make the ordering between nouveau and gmux more
+>> >> explicit/reliable? Can gmux complain loudly if the ordering is ev=
+er
+>> >> wrong?
+>> >
+>> > It should print an error if the probe fails due to the IO already =
+being in use
+>> > or if it can't be allocated. The disabled IO case is only info lev=
+el though,
+>> > perhaps that should be higher priority. Printing something when fa=
+iling to probe
+>> > seems like a reasonable thing to do.
+>> >
+>> > Michael, which message do you get if you boot with "debug" or "log=
+level=3D6" when
+>> > apple-gmux is not built-in?
+>>
+>> No error, gmux claims it worked:
+>> [   13.693379] apple_gmux: Found gmux version 4.0.8 [indexed]
+>> [   13.693400] vgaarb: device changed decodes:
+>> PCI:0000:01:00.0,olddecodes=3Dio+mem,decodes=3Dio+mem:owns=3Dnone
+>> [   13.693404] apple_gmux: locked IO for PCI:0000:01:00.0
+>>
+>> Full dmesg: https://gist.github.com/marineam/0e5a23548e8b3b2e1d50
 >
-> On Tue, 26 May 2015 21:47:49 -0700 Darren Hart wrote:
->> On Tue, May 26, 2015 at 12:10:48PM -0700, Michael Marineau wrote:
->> > FYI, this actually broke backlight controls on my MBP11,3 because =
-the
->> > assumption the patch makes that gmux is always loaded before graph=
-ics
->> > drivers didn't hold true. At least for me dracut included the nouv=
-eau
->> > module in the initrd but not gmux, ensuring the ordering was wrong=
-=2E No
->> > errors were reporting, and gmux still offered the backlight device=
-, it
->> > just became inoperable. I worked around this for my kernel by buil=
-ding
->> > gmux into vmlinuz instead of as a module but that isn't going to i=
-n
->> > more general configs because there is an apple backlight driver wh=
-ich
->> > cannot be built at all in that configuration.
->>
->> Thank you for reporting this Michael,
->>
->> That is tough as nouveau doesn't have an explicit dependency on gmux=
-, so we
->> could do something like a passive request_module(), but if it isn't =
-in the
->> initrd image, it would still fail as you describe.
->>
->> > Is there a way to make the ordering between nouveau and gmux more
->> > explicit/reliable? Can gmux complain loudly if the ordering is eve=
-r
->> > wrong?
->>
->> It should print an error if the probe fails due to the IO already be=
-ing in use
->> or if it can't be allocated. The disabled IO case is only info level=
- though,
->> perhaps that should be higher priority. Printing something when fail=
-ing to probe
->> seems like a reasonable thing to do.
->>
->> Michael, which message do you get if you boot with "debug" or "logle=
-vel=3D6" when
->> apple-gmux is not built-in?
+> What GPUs are there in your MBP11,3? From your dmesg it looks like al=
+l
+> you have is NVIDIA GPU 0000:01:00.0 (lspci?).
 >
-> A full kernel log up to including post-initrd loading of gmux would b=
-e
-> useful.
->
-> As far as I have seen nouveau should not be doing unneeded vgaarb
-> operations by itself (though userspace might be) as opposed to closed
-> nvidia driver.
->
-> If your systems allows, try booting to init=3D/bin/bash, then check f=
-or
-> backlight, load nouveau, check for backlight and finally load gmux an=
-d
-> check backlight (putting i915 in the mix where initrd/userspace puts
-> it would be nice).
+> Is there a somehow hidden intel GPU around doing the backlight?
 
-Both before and after loading nouveau there is a working acpi_video
-backlight control. Then after loading gmux it is the only backlight
-control and it doesn't do anything.
+On this system if you don't futz with the firmware in just the right
+way it hides the Intel GPU:
+
+https://github.com/marineam/linux/commit/1f2fcbbca18176e2e6c862774428da=
+d878bbac51
+
+Exposing the Intel GPU isn't particularly great because power
+management gets wonky and I've never figured out how to switch between
+the GPUs, reconfiguring the eDP link never works right. Even when
+running with the Intel hidden the current nouveau driver cannot redo
+the eDP link so I have a hack to prevent modesetting from ever
+powering the link down:
+
+https://github.com/marineam/linux/commit/4b7e27ba268755963e24886e26e198=
+531aa4da68
+
+In short this machine is frickin weird.
+
+> If so my locking does the wrong thing for your system as:
+>
+> [    0.393298] vgaarb: device added: PCI:0000:01:00.0,decodes=3Dio+me=
+m,owns=3Dnone,locks=3Dnone
+> [    0.393299] vgaarb: loaded
+> [    0.393300] vgaarb: setting as boot device: PCI:0000:01:00.0
+> [    0.393301] vgaarb: bridge control possible 0000:01:00.0
+> ...
+> [   13.693379] apple_gmux: Found gmux version 4.0.8 [indexed]
+> [   13.693400] vgaarb: device changed decodes: PCI:0000:01:00.0,oldde=
+codes=3Dio+mem,decodes=3Dio+mem:owns=3Dnone
+> [   13.693404] apple_gmux: locked IO for PCI:0000:01:00.0
+>
+> Here it triggers "olddecodes=3Dnone -> io+mem".
+>
+> Making sure to lock only the intel GPU when present and especially pr=
+otecting
+> against nvidia driver will be hard if legacy-IO is being processed by=
+ a hidden
+> device!
+
+I had assumed that the Intel GPU was completely out of the game when
+hidden but if that isn't the case this sounds complicated. :(
