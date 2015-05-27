@@ -1,49 +1,84 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: dell_rbtn - kernel panic at boot...
-Date: Tue, 26 May 2015 21:16:58 -0700
-Message-ID: <20150527041658.GB14480@fury.dvhart.com>
+Date: Tue, 26 May 2015 21:24:38 -0700
+Message-ID: <20150527042438.GA21644@fury.dvhart.com>
 References: <5875.1432260403@turing-police.cc.vt.edu>
+ <CAKdAkRQRdFBsgCmvL-aTKL=1xxPN-YYVEa0nTVkEV9jHMbzgYA@mail.gmail.com>
+ <201505230305.36633@pali>
  <20150525044432.GA38428@fury.dvhart.com>
- <20150525050121.GA28810@srcf.ucam.org>
- <201505250803.42410@pali>
+ <20150525144014.GC23037@pali>
+ <20150527040930.GA14480@fury.dvhart.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:56624 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751676AbbE0EYk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 27 May 2015 00:24:40 -0400
 Content-Disposition: inline
-In-Reply-To: <201505250803.42410@pali>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20150527040930.GA14480@fury.dvhart.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On Mon, May 25, 2015 at 08:03:42AM +0200, Pali Roh=E1r wrote:
-> On Monday 25 May 2015 07:01:21 Matthew Garrett wrote:
-> > On Sun, May 24, 2015 at 09:44:32PM -0700, Darren Hart wrote:
-> > > Greg, Matthew, I'm tempted to recommend this 434 line driver be
-> > > rolled into dell-laptop.c. Any strong opinions?
+On Tue, May 26, 2015 at 09:09:30PM -0700, Darren Hart wrote:
+> On Mon, May 25, 2015 at 04:40:14PM +0200, Pali Roh=E1r wrote:
+> > On Sunday 24 May 2015 21:44:32 Darren Hart wrote:
+> > > On Sat, May 23, 2015 at 03:05:36AM +0200, Pali Roh=E1r wrote:
+> > > > On Saturday 23 May 2015 00:53:16 Dmitry Torokhov wrote:
+> > > > > On Thu, May 21, 2015 at 7:06 PM, Valdis Kletnieks
+> > > > >=20
+> > > > > <Valdis.Kletnieks@vt.edu> wrote:
+> > > > > > So after I made both config variables =3Dy, the resulting k=
+ernel
+> > > > > > built, but died a glorious death at boot.
+> > > > >=20
+> > > > > I guess if both are built-in then, according to link order,
+> > > > > dell-laptop starts first, before dell-rbtn, and dies in
+> > > > > dell_rbtn_notifier_register() in call to
+> > > > > driver_for_each_device(&rbtn_driver.drv, ...) because rbtn_dr=
+iver has
+> > > > > not been registered yet and thus half-initlalized.
+> > > > >=20
+> > > > > Thanks.
+> > > >=20
+> > > > pr_debug() messages could be useful... but no idea if we can ge=
+t them.
+> > > >=20
+> > > > Is there any way to fix that dependency race condition? Could=20
+> > > > driver_attach() function call help?
+> > >=20
+> > > I believe you can avoid this by moving dell-rbtn earlier in the M=
+akefile than
+> > > dell-laptop - but this is fragile and a hack to resolve a depende=
+ncy problem.
+> > >=20
 > >=20
-> > Mrm. It's slightly conceptually nasty in that one's an ACPI driver
-> > and one's calling a Dell custom interface, but I think merging them
-> > is probably the last bad answer.
+> > And what about that late_initcall() instead module_init() in dell-l=
+aptop?
+> > Will it fix this problem?
+> >=20
 >=20
-> I think merging does not fix our problem. dell laptop rfkill driver=20
-> needs to be initialized after dell-rbtn acpi driver register itself.
+> No, because late_initcall() for modules is module_init(). See
+> include/linux/init.h.
 
-If they were the same driver, you could control this ordering.
+Apologies, in this context we're concerned about built-in, not module.
 
->=20
-> And dell-laptop and dell-rbtn are two different devices (one dell smb=
-ios=20
-> and one acpi) and it for me it sounds like bad idea too...
+This might function as desired.
 
-We all agree it's a bad idea - the point Mathew and I made was it may b=
-e the
-"least bad" idea (all the others may be worse).
+module_init() is defined as device_initcall (level 6) for built-in
+late_initcall() is level 7
 
-I'm looking into this, but I don't have an easy answer for you. This on=
-e is
-going to take some research on your part to get to the right answer.
+There is precedent for this under drivers/ - although not in anything t=
+hat stood
+out to me as a good exemplar. See:
+
+b233020 Input: gpio_keys - move to late_initcall
+
+for an example with a similar purpose.
 
 --=20
 Darren Hart
