@@ -1,138 +1,65 @@
-From: Michael Marineau <michael.marineau@coreos.com>
-Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb changes
-Date: Tue, 26 May 2015 23:41:21 -0700
-Message-ID: <CAGr1u3sbMe4Qj2bfvsuEBu=EwkfS9reUMVZdq7-5oK4o+VTgKQ@mail.gmail.com>
-References: <20150223215155.18444386@neptune.home>
-	<20150303172753.GF83894@vmdeb7>
-	<20150305232038.1873d380@neptune.home>
-	<20150306174254.GB19001@vmdeb7>
-	<20150307011546.0050279d@neptune.home>
-	<20150309225238.0b9ced4e@neptune.home>
-	<CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
-	<20150311223445.6af76f7c@neptune.home>
-	<CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
-	<20150527044749.GB21644@fury.dvhart.com>
-	<CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
-	<20150527081323.35a3cf88@pluto.restena.lu>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: dell_rbtn - kernel panic at boot...
+Date: Wed, 27 May 2015 09:28:23 +0200
+Message-ID: <20150527072823.GC30798@pali>
+References: <5875.1432260403@turing-police.cc.vt.edu>
+ <20150525044432.GA38428@fury.dvhart.com>
+ <20150525050121.GA28810@srcf.ucam.org>
+ <201505250803.42410@pali>
+ <20150527041658.GB14480@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:32794 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751003AbbE0GlX convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 May 2015 02:41:23 -0400
-Received: by wicmx19 with SMTP id mx19so83848461wic.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 May 2015 23:41:21 -0700 (PDT)
-In-Reply-To: <20150527081323.35a3cf88@pluto.restena.lu>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>
-Cc: Darren Hart <dvhart@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150527041658.GB14480@fury.dvhart.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 26, 2015 at 11:13 PM, Bruno Pr=C3=A9mont
-<bonbons@linux-vserver.org> wrote:
-> On Tue, 26 May 2015 22:35:46 -0700 Michael Marineau wrote:
->> On Tue, May 26, 2015 at 9:47 PM, Darren Hart <dvhart@infradead.org> =
-wrote:
->> > On Tue, May 26, 2015 at 12:10:48PM -0700, Michael Marineau wrote:
->> >> FYI, this actually broke backlight controls on my MBP11,3 because=
- the
->> >> assumption the patch makes that gmux is always loaded before grap=
-hics
->> >> drivers didn't hold true. At least for me dracut included the nou=
-veau
->> >> module in the initrd but not gmux, ensuring the ordering was wron=
-g. No
->> >> errors were reporting, and gmux still offered the backlight devic=
-e, it
->> >> just became inoperable. I worked around this for my kernel by bui=
-lding
->> >> gmux into vmlinuz instead of as a module but that isn't going to =
-in
->> >> more general configs because there is an apple backlight driver w=
-hich
->> >> cannot be built at all in that configuration.
->> >>
->> >
->> > Thank you for reporting this Michael,
->> >
->> > That is tough as nouveau doesn't have an explicit dependency on gm=
-ux, so we
->> > could do something like a passive request_module(), but if it isn'=
-t in the
->> > initrd image, it would still fail as you describe.
->> >
->> >> Is there a way to make the ordering between nouveau and gmux more
->> >> explicit/reliable? Can gmux complain loudly if the ordering is ev=
-er
->> >> wrong?
->> >
->> > It should print an error if the probe fails due to the IO already =
-being in use
->> > or if it can't be allocated. The disabled IO case is only info lev=
-el though,
->> > perhaps that should be higher priority. Printing something when fa=
-iling to probe
->> > seems like a reasonable thing to do.
->> >
->> > Michael, which message do you get if you boot with "debug" or "log=
-level=3D6" when
->> > apple-gmux is not built-in?
->>
->> No error, gmux claims it worked:
->> [   13.693379] apple_gmux: Found gmux version 4.0.8 [indexed]
->> [   13.693400] vgaarb: device changed decodes:
->> PCI:0000:01:00.0,olddecodes=3Dio+mem,decodes=3Dio+mem:owns=3Dnone
->> [   13.693404] apple_gmux: locked IO for PCI:0000:01:00.0
->>
->> Full dmesg: https://gist.github.com/marineam/0e5a23548e8b3b2e1d50
->
-> What GPUs are there in your MBP11,3? From your dmesg it looks like al=
-l
-> you have is NVIDIA GPU 0000:01:00.0 (lspci?).
->
-> Is there a somehow hidden intel GPU around doing the backlight?
+On Tuesday 26 May 2015 21:16:58 Darren Hart wrote:
+> On Mon, May 25, 2015 at 08:03:42AM +0200, Pali Roh=C3=A1r wrote:
+> > On Monday 25 May 2015 07:01:21 Matthew Garrett wrote:
+> > > On Sun, May 24, 2015 at 09:44:32PM -0700, Darren Hart wrote:
+> > > > Greg, Matthew, I'm tempted to recommend this 434 line driver be
+> > > > rolled into dell-laptop.c. Any strong opinions?
+> > >=20
+> > > Mrm. It's slightly conceptually nasty in that one's an ACPI drive=
+r
+> > > and one's calling a Dell custom interface, but I think merging th=
+em
+> > > is probably the last bad answer.
+> >=20
+> > I think merging does not fix our problem. dell laptop rfkill driver=
+=20
+> > needs to be initialized after dell-rbtn acpi driver register itself=
+=2E
+>=20
+> If they were the same driver, you could control this ordering.
+>=20
 
-On this system if you don't futz with the firmware in just the right
-way it hides the Intel GPU:
+Yes, I see, you are right. I can call acpi driver register function and
+after that initializing dell laptop rfkill code.
 
-https://github.com/marineam/linux/commit/1f2fcbbca18176e2e6c862774428da=
-d878bbac51
+> >=20
+> > And dell-laptop and dell-rbtn are two different devices (one dell s=
+mbios=20
+> > and one acpi) and it for me it sounds like bad idea too...
+>=20
+> We all agree it's a bad idea - the point Mathew and I made was it may=
+ be the
+> "least bad" idea (all the others may be worse).
+>=20
+> I'm looking into this, but I don't have an easy answer for you. This =
+one is
+> going to take some research on your part to get to the right answer.
+>=20
 
-Exposing the Intel GPU isn't particularly great because power
-management gets wonky and I've never figured out how to switch between
-the GPUs, reconfiguring the eDP link never works right. Even when
-running with the Intel hidden the current nouveau driver cannot redo
-the eDP link so I have a hack to prevent modesetting from ever
-powering the link down:
+I still think that changing module_init() could work... Do you know who
+can help us with those _ini*() macros (and ideally answer how to do tha=
+t)?
 
-https://github.com/marineam/linux/commit/4b7e27ba268755963e24886e26e198=
-531aa4da68
-
-In short this machine is frickin weird.
-
-> If so my locking does the wrong thing for your system as:
->
-> [    0.393298] vgaarb: device added: PCI:0000:01:00.0,decodes=3Dio+me=
-m,owns=3Dnone,locks=3Dnone
-> [    0.393299] vgaarb: loaded
-> [    0.393300] vgaarb: setting as boot device: PCI:0000:01:00.0
-> [    0.393301] vgaarb: bridge control possible 0000:01:00.0
-> ...
-> [   13.693379] apple_gmux: Found gmux version 4.0.8 [indexed]
-> [   13.693400] vgaarb: device changed decodes: PCI:0000:01:00.0,oldde=
-codes=3Dio+mem,decodes=3Dio+mem:owns=3Dnone
-> [   13.693404] apple_gmux: locked IO for PCI:0000:01:00.0
->
-> Here it triggers "olddecodes=3Dnone -> io+mem".
->
-> Making sure to lock only the intel GPU when present and especially pr=
-otecting
-> against nvidia driver will be hard if legacy-IO is being processed by=
- a hidden
-> device!
-
-I had assumed that the Intel GPU was completely out of the game when
-hidden but if that isn't the case this sounds complicated. :(
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
