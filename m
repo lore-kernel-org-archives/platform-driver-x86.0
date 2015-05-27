@@ -1,191 +1,118 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v4 2/3] dell-rbtn: Export notifier for other kernel modules
-Date: Wed, 27 May 2015 23:28:24 +0200
-Message-ID: <1432762105-13723-3-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH v4 1/3] dell-rbtn: Dell Airplane Mode Switch driver
+Date: Wed, 27 May 2015 23:28:23 +0200
+Message-ID: <1432762105-13723-2-git-send-email-pali.rohar@gmail.com>
 References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
  <1432762105-13723-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f175.google.com ([209.85.212.175]:35273 "EHLO
-	mail-wi0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753454AbbE0V3C (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 May 2015 17:29:02 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1432762105-13723-1-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Fengguang Wu <fengguang.wu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch exports notifier functions so other modules can receive HW
-switch events. By default when some module register notifier, dell-rbtn
-driver automatically remove rfkill interfaces from system (it is expect=
-ed
-that other module will use events for other rfkill interface). This
-behaviour can be changed with new module parameter "auto_remove_rfkill"=
-=2E
+This is an ACPI driver for Dell laptops which receive HW slider radio s=
+witch
+or hotkey toggle wifi button events. It exports rfkill device dell-rbtn
+(which provide correct hard rfkill state) or hotkey input device.
 
-This patch is designed for dell-laptop module for receiving those event=
-s.
+Alex Hung is author of original hotkey input device code.
 
 Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>
 
-Cleanup MODULE_PARM_DESC formatting and grammar.
+rbtn_ops can be static
+
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+
+Correct multi-line comment formatting.
 
 Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 ---
 Changes for v4:
- - check for RBTN_SLIDER in rbtn_switch_dev()
- - remove #ifdef CONFIG_DELL_RBTN guards in dell-rbtn.h (not needed any=
-more)
- - do not ignore error code in module_init() (now in module_acpi_driver=
-())
+ - depends on INPUT
+ - rename rbtn_radio_enable() to rbtn_acquire()
+ - never fail in rbtn_remove() return value in acpi is ignored!
+ - use module_acpi_driver() instead module_init()/module_exit()
+ - change description in commit message in Kconfig
 ---
- drivers/platform/x86/dell-rbtn.c |   93 ++++++++++++++++++++++++++++++=
-+++++++-
- drivers/platform/x86/dell-rbtn.h |   24 ++++++++++
- 2 files changed, 116 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/dell-rbtn.h
+ MAINTAINERS                      |    5 +
+ drivers/platform/x86/Kconfig     |   16 ++
+ drivers/platform/x86/Makefile    |    1 +
+ drivers/platform/x86/dell-rbtn.c |  332 ++++++++++++++++++++++++++++++=
+++++++++
+ 4 files changed, 354 insertions(+)
+ create mode 100644 drivers/platform/x86/dell-rbtn.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2e5bbc0..5808066 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3071,6 +3071,11 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell-laptop.c
+=20
++DELL LAPTOP RBTN DRIVER
++M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
++S:	Maintained
++F:	drivers/platform/x86/dell-rbtn.*
++
+ DELL LAPTOP FREEFALL DRIVER
+ M:	Pali Roh=C3=A1r <pali.rohar@gmail.com>
+ S:	Maintained
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index 399085d..bca0aee 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -138,6 +138,22 @@ config DELL_SMO8800
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-smo8800.
+=20
++config DELL_RBTN
++	tristate "Dell Airplane Mode Switch driver"
++	depends on ACPI
++	depends on INPUT
++	depends on RFKILL
++	---help---
++	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
++	  device on Dell laptops. Sometimes it has names: DELLABCE or DELRBTN=
+=2E
++	  This driver register rfkill device or input hotkey device depending
++	  on hardware type (hw switch slider or keyboard toggle button). For
++	  rfkill devices it receive HW switch events and set correct hard
++	  rfkill state.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-rbtn.
++
+=20
+ config FUJITSU_LAPTOP
+ 	tristate "Fujitsu Laptop Extras"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
+ile
+index f82232b..b3e54ed 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_DELL_LAPTOP)	+=3D dell-laptop.o
+ obj-$(CONFIG_DELL_WMI)		+=3D dell-wmi.o
+ obj-$(CONFIG_DELL_WMI_AIO)	+=3D dell-wmi-aio.o
+ obj-$(CONFIG_DELL_SMO8800)	+=3D dell-smo8800.o
++obj-$(CONFIG_DELL_RBTN)		+=3D dell-rbtn.o
+ obj-$(CONFIG_ACER_WMI)		+=3D acer-wmi.o
+ obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
+ obj-$(CONFIG_HP_ACCEL)		+=3D hp_accel.o
 diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
 ll-rbtn.c
-index 1c19fff..cd410e3 100644
---- a/drivers/platform/x86/dell-rbtn.c
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -233,6 +233,86 @@ static struct acpi_driver rbtn_driver =3D {
-=20
-=20
- /*
-+ * notifier export functions
-+ */
-+
-+static bool auto_remove_rfkill =3D true;
-+
-+static ATOMIC_NOTIFIER_HEAD(rbtn_chain_head);
-+
-+static int rbtn_inc_count(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	int *count =3D data;
-+
-+	if (rbtn_data->type =3D=3D RBTN_SLIDER)
-+		(*count)++;
-+
-+	return 0;
-+}
-+
-+static int rbtn_switch_dev(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	bool enable =3D data;
-+
-+	if (rbtn_data->type !=3D RBTN_SLIDER)
-+		return 0;
-+
-+	if (enable)
-+		rbtn_rfkill_init(device);
-+	else
-+		rbtn_rfkill_exit(device);
-+
-+	return 0;
-+}
-+
-+int dell_rbtn_notifier_register(struct notifier_block *nb)
-+{
-+	bool first;
-+	int count;
-+	int ret;
-+
-+	count =3D 0;
-+	ret =3D driver_for_each_device(&rbtn_driver.drv, NULL, &count,
-+				     rbtn_inc_count);
-+	if (ret || count =3D=3D 0)
-+		return -ENODEV;
-+
-+	first =3D !rbtn_chain_head.head;
-+
-+	ret =3D atomic_notifier_chain_register(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && first)
-+		ret =3D driver_for_each_device(&rbtn_driver.drv, NULL,
-+					     (void *)false, rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_register);
-+
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret =3D atomic_notifier_chain_unregister(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && !rbtn_chain_head.head)
-+		ret =3D driver_for_each_device(&rbtn_driver.drv, NULL,
-+					     (void *)true, rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_unregister);
-+
-+
-+/*
-  * acpi driver functions
-  */
-=20
-@@ -266,7 +346,10 @@ static int rbtn_add(struct acpi_device *device)
- 		ret =3D rbtn_input_init(rbtn_data);
- 		break;
- 	case RBTN_SLIDER:
--		ret =3D rbtn_rfkill_init(device);
-+		if (auto_remove_rfkill && rbtn_chain_head.head)
-+			ret =3D 0;
-+		else
-+			ret =3D rbtn_rfkill_init(device);
- 		break;
- 	default:
- 		ret =3D -EINVAL;
-@@ -313,6 +396,7 @@ static void rbtn_notify(struct acpi_device *device,=
- u32 event)
- 		break;
- 	case RBTN_SLIDER:
- 		rbtn_rfkill_event(device);
-+		atomic_notifier_call_chain(&rbtn_chain_head, event, device);
- 		break;
- 	default:
- 		break;
-@@ -326,6 +410,13 @@ static void rbtn_notify(struct acpi_device *device=
-, u32 event)
-=20
- module_acpi_driver(rbtn_driver);
-=20
-+module_param(auto_remove_rfkill, bool, 0444);
-+
-+MODULE_PARM_DESC(auto_remove_rfkill, "Automatically remove rfkill devi=
-ces when "
-+				     "other modules start receiving events "
-+				     "from this module and re-add them when "
-+				     "the last module stops receiving events "
-+				     "(default true)");
- MODULE_DEVICE_TABLE(acpi, rbtn_ids);
- MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
- MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
-diff --git a/drivers/platform/x86/dell-rbtn.h b/drivers/platform/x86/de=
-ll-rbtn.h
 new file mode 100644
-index 0000000..c59cc6b
+index 0000000..1c19fff
 --- /dev/null
-+++ b/drivers/platform/x86/dell-rbtn.h
-@@ -0,0 +1,24 @@
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -0,0 +1,332 @@
 +/*
 +    Dell Airplane Mode Switch driver
 +    Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
@@ -203,14 +130,326 @@ by
 +    GNU General Public License for more details.
 +*/
 +
-+#ifndef _DELL_RBTN_H_
-+#define _DELL_RBTN_H_
++#include <linux/module.h>
++#include <linux/acpi.h>
++#include <linux/rfkill.h>
++#include <linux/input.h>
 +
-+struct notifier_block;
++enum rbtn_type {
++	RBTN_UNKNOWN,
++	RBTN_TOGGLE,
++	RBTN_SLIDER,
++};
 +
-+int dell_rbtn_notifier_register(struct notifier_block *nb);
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb);
++struct rbtn_data {
++	enum rbtn_type type;
++	struct rfkill *rfkill;
++	struct input_dev *input_dev;
++};
 +
-+#endif
++
++/*
++ * acpi functions
++ */
++
++static enum rbtn_type rbtn_check(struct acpi_device *device)
++{
++	unsigned long long output;
++	acpi_status status;
++
++	status =3D acpi_evaluate_integer(device->handle, "CRBT", NULL, &outpu=
+t);
++	if (ACPI_FAILURE(status))
++		return RBTN_UNKNOWN;
++
++	switch (output) {
++	case 0:
++	case 1:
++		return RBTN_TOGGLE;
++	case 2:
++	case 3:
++		return RBTN_SLIDER;
++	default:
++		return RBTN_UNKNOWN;
++	}
++}
++
++static int rbtn_get(struct acpi_device *device)
++{
++	unsigned long long output;
++	acpi_status status;
++
++	status =3D acpi_evaluate_integer(device->handle, "GRBT", NULL, &outpu=
+t);
++	if (ACPI_FAILURE(status))
++		return -EINVAL;
++
++	return !output;
++}
++
++static int rbtn_acquire(struct acpi_device *device, bool enable)
++{
++	struct acpi_object_list input;
++	union acpi_object param;
++	acpi_status status;
++
++	param.type =3D ACPI_TYPE_INTEGER;
++	param.integer.value =3D enable;
++	input.count =3D 1;
++	input.pointer =3D &param;
++
++	status =3D acpi_evaluate_object(device->handle, "ARBT", &input, NULL)=
+;
++	if (ACPI_FAILURE(status))
++		return -EINVAL;
++
++	return 0;
++}
++
++
++/*
++ * rfkill device
++ */
++
++static void rbtn_rfkill_query(struct rfkill *rfkill, void *data)
++{
++	struct acpi_device *device =3D data;
++	int state;
++
++	state =3D rbtn_get(device);
++	if (state < 0)
++		return;
++
++	rfkill_set_states(rfkill, state, state);
++}
++
++static int rbtn_rfkill_set_block(void *data, bool blocked)
++{
++	/* NOTE: setting soft rfkill state is not supported */
++	return -EINVAL;
++}
++
++static struct rfkill_ops rbtn_ops =3D {
++	.query =3D rbtn_rfkill_query,
++	.set_block =3D rbtn_rfkill_set_block,
++};
++
++static int rbtn_rfkill_init(struct acpi_device *device)
++{
++	struct rbtn_data *rbtn_data =3D device->driver_data;
++	int ret;
++
++	if (rbtn_data->rfkill)
++		return 0;
++
++	/*
++	 * NOTE: rbtn controls all radio devices, not only WLAN
++	 *       but rfkill interface does not support "ANY" type
++	 *       so "WLAN" type is used
++	 */
++	rbtn_data->rfkill =3D rfkill_alloc("dell-rbtn", &device->dev,
++					 RFKILL_TYPE_WLAN, &rbtn_ops, device);
++	if (!rbtn_data->rfkill)
++		return -ENOMEM;
++
++	ret =3D rfkill_register(rbtn_data->rfkill);
++	if (ret) {
++		rfkill_destroy(rbtn_data->rfkill);
++		rbtn_data->rfkill =3D NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
++static void rbtn_rfkill_exit(struct acpi_device *device)
++{
++	struct rbtn_data *rbtn_data =3D device->driver_data;
++
++	if (!rbtn_data->rfkill)
++		return;
++
++	rfkill_unregister(rbtn_data->rfkill);
++	rfkill_destroy(rbtn_data->rfkill);
++	rbtn_data->rfkill =3D NULL;
++}
++
++static void rbtn_rfkill_event(struct acpi_device *device)
++{
++	struct rbtn_data *rbtn_data =3D device->driver_data;
++
++	if (rbtn_data->rfkill)
++		rbtn_rfkill_query(rbtn_data->rfkill, device);
++}
++
++
++/*
++ * input device
++ */
++
++static int rbtn_input_init(struct rbtn_data *rbtn_data)
++{
++	int ret;
++
++	rbtn_data->input_dev =3D input_allocate_device();
++	if (!rbtn_data->input_dev)
++		return -ENOMEM;
++
++	rbtn_data->input_dev->name =3D "DELL Wireless hotkeys";
++	rbtn_data->input_dev->phys =3D "dellabce/input0";
++	rbtn_data->input_dev->id.bustype =3D BUS_HOST;
++	rbtn_data->input_dev->evbit[0] =3D BIT(EV_KEY);
++	set_bit(KEY_RFKILL, rbtn_data->input_dev->keybit);
++
++	ret =3D input_register_device(rbtn_data->input_dev);
++	if (ret) {
++		input_free_device(rbtn_data->input_dev);
++		rbtn_data->input_dev =3D NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
++static void rbtn_input_exit(struct rbtn_data *rbtn_data)
++{
++	input_unregister_device(rbtn_data->input_dev);
++	rbtn_data->input_dev =3D NULL;
++}
++
++static void rbtn_input_event(struct rbtn_data *rbtn_data)
++{
++	input_report_key(rbtn_data->input_dev, KEY_RFKILL, 1);
++	input_sync(rbtn_data->input_dev);
++	input_report_key(rbtn_data->input_dev, KEY_RFKILL, 0);
++	input_sync(rbtn_data->input_dev);
++}
++
++
++/*
++ * acpi driver
++ */
++
++static int rbtn_add(struct acpi_device *device);
++static int rbtn_remove(struct acpi_device *device);
++static void rbtn_notify(struct acpi_device *device, u32 event);
++
++static const struct acpi_device_id rbtn_ids[] =3D {
++	{ "DELRBTN", 0 },
++	{ "DELLABCE", 0 },
++	{ "", 0 },
++};
++
++static struct acpi_driver rbtn_driver =3D {
++	.name =3D "dell-rbtn",
++	.ids =3D rbtn_ids,
++	.ops =3D {
++		.add =3D rbtn_add,
++		.remove =3D rbtn_remove,
++		.notify =3D rbtn_notify,
++	},
++	.owner =3D THIS_MODULE,
++};
++
++
++/*
++ * acpi driver functions
++ */
++
++static int rbtn_add(struct acpi_device *device)
++{
++	struct rbtn_data *rbtn_data;
++	enum rbtn_type type;
++	int ret =3D 0;
++
++	type =3D rbtn_check(device);
++	if (type =3D=3D RBTN_UNKNOWN) {
++		dev_info(&device->dev, "Unknown device type\n");
++		return -EINVAL;
++	}
++
++	ret =3D rbtn_acquire(device, true);
++	if (ret < 0) {
++		dev_err(&device->dev, "Cannot enable device\n");
++		return ret;
++	}
++
++	rbtn_data =3D devm_kzalloc(&device->dev, sizeof(*rbtn_data), GFP_KERN=
+EL);
++	if (!rbtn_data)
++		return -ENOMEM;
++
++	rbtn_data->type =3D type;
++	device->driver_data =3D rbtn_data;
++
++	switch (rbtn_data->type) {
++	case RBTN_TOGGLE:
++		ret =3D rbtn_input_init(rbtn_data);
++		break;
++	case RBTN_SLIDER:
++		ret =3D rbtn_rfkill_init(device);
++		break;
++	default:
++		ret =3D -EINVAL;
++	}
++
++	return ret;
++
++}
++
++static int rbtn_remove(struct acpi_device *device)
++{
++	struct rbtn_data *rbtn_data =3D device->driver_data;
++
++	switch (rbtn_data->type) {
++	case RBTN_TOGGLE:
++		rbtn_input_exit(rbtn_data);
++		break;
++	case RBTN_SLIDER:
++		rbtn_rfkill_exit(device);
++		break;
++	default:
++		break;
++	}
++
++	rbtn_acquire(device, false);
++	device->driver_data =3D NULL;
++
++	return 0;
++}
++
++static void rbtn_notify(struct acpi_device *device, u32 event)
++{
++	struct rbtn_data *rbtn_data =3D device->driver_data;
++
++	if (event !=3D 0x80) {
++		dev_info(&device->dev, "Received unknown event (0x%x)\n",
++			 event);
++		return;
++	}
++
++	switch (rbtn_data->type) {
++	case RBTN_TOGGLE:
++		rbtn_input_event(rbtn_data);
++		break;
++	case RBTN_SLIDER:
++		rbtn_rfkill_event(device);
++		break;
++	default:
++		break;
++	}
++}
++
++
++/*
++ * module functions
++ */
++
++module_acpi_driver(rbtn_driver);
++
++MODULE_DEVICE_TABLE(acpi, rbtn_ids);
++MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
++MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
++MODULE_LICENSE("GPL");
 --=20
 1.7.9.5
