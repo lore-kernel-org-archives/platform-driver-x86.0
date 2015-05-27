@@ -1,76 +1,106 @@
-From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
-Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb
- changes
-Date: Wed, 27 May 2015 07:53:29 +0200
-Message-ID: <20150527075329.6df43854@pluto.restena.lu>
-References: <20150223215155.18444386@neptune.home>
-	<20150303172753.GF83894@vmdeb7>
-	<20150305232038.1873d380@neptune.home>
-	<20150306174254.GB19001@vmdeb7>
-	<20150307011546.0050279d@neptune.home>
-	<20150309225238.0b9ced4e@neptune.home>
-	<CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
-	<20150311223445.6af76f7c@neptune.home>
-	<CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
-	<20150527044749.GB21644@fury.dvhart.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v4] platform:x86: add Intel Broxton PMC IPC driver
+Date: Tue, 26 May 2015 23:02:40 -0700
+Message-ID: <20150527060240.GA2681@fury.dvhart.com>
+References: <1432216020-21643-1-git-send-email-qipeng.zha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay.restena.lu ([158.64.1.62]:45518 "EHLO
-	smtprelay.restena.lu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751236AbbE0GCY (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:38135 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752027AbbE0GCm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 27 May 2015 02:02:24 -0400
-In-Reply-To: <20150527044749.GB21644@fury.dvhart.com>
+	Wed, 27 May 2015 02:02:42 -0400
+Content-Disposition: inline
+In-Reply-To: <1432216020-21643-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Michael Marineau <michael.marineau@coreos.com>
-Cc: Darren Hart <dvhart@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: "qipeng.zha" <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Jacob Pan <jacob.jun.pan@intel.com>
 
-Hi Michael,
-
-On Tue, 26 May 2015 21:47:49 -0700 Darren Hart wrote:
-> On Tue, May 26, 2015 at 12:10:48PM -0700, Michael Marineau wrote:
-> > FYI, this actually broke backlight controls on my MBP11,3 because the
-> > assumption the patch makes that gmux is always loaded before graphics
-> > drivers didn't hold true. At least for me dracut included the nouveau
-> > module in the initrd but not gmux, ensuring the ordering was wrong. No
-> > errors were reporting, and gmux still offered the backlight device, it
-> > just became inoperable. I worked around this for my kernel by building
-> > gmux into vmlinuz instead of as a module but that isn't going to in
-> > more general configs because there is an apple backlight driver which
-> > cannot be built at all in that configuration.
+On Thu, May 21, 2015 at 09:47:00PM +0800, qipeng.zha wrote:
+> From: "qipeng.zha" <qipeng.zha@intel.com>
 > 
-> Thank you for reporting this Michael,
-> 
-> That is tough as nouveau doesn't have an explicit dependency on gmux, so we
-> could do something like a passive request_module(), but if it isn't in the
-> initrd image, it would still fail as you describe.
-> 
-> > Is there a way to make the ordering between nouveau and gmux more
-> > explicit/reliable? Can gmux complain loudly if the ordering is ever
-> > wrong?
-> 
-> It should print an error if the probe fails due to the IO already being in use
-> or if it can't be allocated. The disabled IO case is only info level though,
-> perhaps that should be higher priority. Printing something when failing to probe
-> seems like a reasonable thing to do.
-> 
-> Michael, which message do you get if you boot with "debug" or "loglevel=6" when
-> apple-gmux is not built-in?
+> This driver provides support for PMC control on Broxton platforms,
+> PMC is ARC processor which defined some IPC commands for communication
+> with other entities running in IA
 
-A full kernel log up to including post-initrd loading of gmux would be
-useful.
+A credit to intel_scu_ipc.c is probably in order here - I presume you modeled
+this heavily on that driver?
 
-As far as I have seen nouveau should not be doing unneeded vgaarb
-operations by itself (though userspace might be) as opposed to closed
-nvidia driver.
+> 
+> Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
+> ---
 
-If your systems allows, try booting to init=/bin/bash, then check for
-backlight, load nouveau, check for backlight and finally load gmux and
-check backlight (putting i915 in the mix where initrd/userspace puts
-it would be nice).
+Please provide a change log for the various bersions
 
-Thanks,
-Bruno
+It really helps to get code reviews if you will take the time to provide your
+reviewers with the context they need review the delta from what they have
+previously reviewed. See Documentation/SubmittingPatches. This is especially
+critical for a 1000 line patch.
+
+Specifically, Alan gave some broad feeback which is generally difficult to
+determine if you followed.
+
+Also, Jacob and Fei discussed the regmap interface, and that possibly that would
+come later. Is this in the works for this driver?
+
+A few minor nits below, spelling, DEVICE_ATTR_RW usage, etc.
+
+>  arch/x86/include/asm/intel_pmc_ipc.h |  82 ++++
+>  drivers/platform/x86/Kconfig         |   7 +
+>  drivers/platform/x86/Makefile        |   1 +
+>  drivers/platform/x86/intel_pmc_ipc.c | 766 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 856 insertions(+)
+>  create mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+>  create mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+
+
+> +	pci_resource = pci_resource_start(pdev, 0);
+> +	len = pci_resource_len(pdev, 0);
+> +	if (!pci_resource || !len) {
+> +		dev_err(&pdev->dev, "Fail to get resource\n");
+
+
+Here and elsewhere, please use the past tense: "Failed"
+
+
+> +static DEVICE_ATTR(simplecmd, S_IWUSR | S_IRUSR,
+> +		NULL,
+> +		intel_pmc_ipc_simple_cmd_store);
+> +static DEVICE_ATTR(northpeak, S_IWUSR | S_IRUSR,
+> +		NULL,
+> +		intel_pmc_ipc_northpeak_store);
+> +
+> +static struct attribute *intel_ipc_attrs[] = {
+> +	&dev_attr_northpeak.attr,
+> +	&dev_attr_simplecmd.attr,
+> +	NULL
+> +};
+
+
+Please use the DEVICE_ATTR_RW macro.
+
+
+> +	ret = platform_device_add(pdev);
+> +	if (ret) {
+> +		dev_err(ipcdev.dev, "Fail to add punit platform devcie\n");
+
+
+s/devcie/device/
+
+
+> +
+> +MODULE_AUTHOR("qipeng <qipeng.zha@intel.com>");
+> +MODULE_DESCRIPTION("Intel PMC IPC driver");
+> +MODULE_LICENSE("GPL");
+> +
+> +fs_initcall(intel_pmc_ipc_init);
+
+If not using module_init(), please document why you need an alternate init
+priority.
+
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
