@@ -1,85 +1,106 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH 3/3] Capture cable events created by Alienware GFX
- Amplifier.
-Date: Thu, 28 May 2015 13:34:50 -0700
-Message-ID: <20150528203450.GA26895@kroah.com>
-References: <1432755422-26024-1-git-send-email-mario_limonciello@dell.com>
- <1432755422-26024-4-git-send-email-mario_limonciello@dell.com>
- <5566573D.4000300@dell.com>
- <20150528183036.GB25345@kroah.com>
- <5567635A.9060607@dell.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: dell_rbtn - kernel panic at boot...
+Date: Thu, 28 May 2015 20:15:24 -0700
+Message-ID: <20150529031524.GA31158@fury.dvhart.com>
+References: <5875.1432260403@turing-police.cc.vt.edu>
+ <20150525044432.GA38428@fury.dvhart.com>
+ <20150525050121.GA28810@srcf.ucam.org>
+ <201505250803.42410@pali>
+ <20150527041658.GB14480@fury.dvhart.com>
+ <20150527072823.GC30798@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58298 "EHLO
-	out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754530AbbE1UfA (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:58581 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754566AbbE2DPk (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 28 May 2015 16:35:00 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id AA4AF20E9B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 28 May 2015 16:34:59 -0400 (EDT)
+	Thu, 28 May 2015 23:15:40 -0400
 Content-Disposition: inline
-In-Reply-To: <5567635A.9060607@dell.com>
+In-Reply-To: <20150527072823.GC30798@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>, LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, lkml <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On Thu, May 28, 2015 at 01:50:02PM -0500, Mario Limonciello wrote:
-> 
-> 
-> On 05/28/2015 01:30 PM, Greg KH wrote:
-> >On Wed, May 27, 2015 at 06:46:05PM -0500, Mario Limonciello wrote:
-> >Then fix the GPU drivers.
-> >
-> >Fix the GPU drivers.
-> >
-> >Fix the GPU drivers.
-> >
-> >Nope, fix the GPU drivers.
-> >
-> >With a fix for the GPU drivers?  Great, that's the only acceptable
-> >solution.
-> >
-> >thanks,
-> >
-> >greg k-h
-> Thanks for the feedback, point taken that you don't want to see the system
-> restart when the xGPU is removed from the system.  Can you please help to
-> advise me the flow you would realistically like to see here?  I'm looking
-> for the best experience for the end user with what the situation is with the
-> Xorg architecture.
+On Wed, May 27, 2015 at 09:28:23AM +0200, Pali Roh=E1r wrote:
+> On Tuesday 26 May 2015 21:16:58 Darren Hart wrote:
+> > On Mon, May 25, 2015 at 08:03:42AM +0200, Pali Roh=E1r wrote:
+> > > On Monday 25 May 2015 07:01:21 Matthew Garrett wrote:
+> > > > On Sun, May 24, 2015 at 09:44:32PM -0700, Darren Hart wrote:
+> > > > > Greg, Matthew, I'm tempted to recommend this 434 line driver =
+be
+> > > > > rolled into dell-laptop.c. Any strong opinions?
+> > > >=20
+> > > > Mrm. It's slightly conceptually nasty in that one's an ACPI dri=
+ver
+> > > > and one's calling a Dell custom interface, but I think merging =
+them
+> > > > is probably the last bad answer.
+> > >=20
+> > > I think merging does not fix our problem. dell laptop rfkill driv=
+er=20
+> > > needs to be initialized after dell-rbtn acpi driver register itse=
+lf.
+> >=20
+> > If they were the same driver, you could control this ordering.
+> >=20
+>=20
+> Yes, I see, you are right. I can call acpi driver register function a=
+nd
+> after that initializing dell laptop rfkill code.
+>=20
+> > >=20
+> > > And dell-laptop and dell-rbtn are two different devices (one dell=
+ smbios=20
+> > > and one acpi) and it for me it sounds like bad idea too...
+> >=20
+> > We all agree it's a bad idea - the point Mathew and I made was it m=
+ay be the
+> > "least bad" idea (all the others may be worse).
+> >=20
+> > I'm looking into this, but I don't have an easy answer for you. Thi=
+s one is
+> > going to take some research on your part to get to the right answer=
+=2E
+> >=20
+>=20
+> I still think that changing module_init() could work... Do you know w=
+ho
+> can help us with those _ini*() macros (and ideally answer how to do t=
+hat)?
 
-I suggest asking about xorg specifics to the xorg developers, they know
-this much better than kernel developers do :)
+You sent the patches implementing that, I'd suggest providing complete =
+details
+on what you tested to add confidence to this working.
 
-> Also, there's two factors I'd like to draw attention to that the Other OS
-> can support.
-> 
-> 1) It supports something called Heterogenous graphics.  That means that you
-> can actually have a GPU from Intel, NVIDIA, and AMD all in the system at the
-> same time with acceleration active.  If one drops off the bus, the OS moves
-> the apps rendering to that GPU over (or kills them if they can't be moved).
-> Xorg supports having multiple GPU's via Xinerama, but HW acceleration is
-> disabled.  No one on a gaming PC would actually use Xinerama.
-> So you can-not simultaneously use an NVIDIA, AMD and Intel GPU in a gaming
-> PC on Linux's Xorg architecture.  Even if you got to the ideal scenario of
-> using all 3 GPU's with open source drivers, this is still a problem for
-> Linux w/ Xorg.
+Greg, on Cc, is likely the best one to say if this is a reasonable appr=
+oach, or
+an abuse of the *_init APIs. I suspect he'll say it's the a hack to wor=
+karound a
+fundamentally flawed design.
 
-Take it up with the xorg developers, but I think this might already
-work, as there are laptops that do allow switching between gpus pretty
-easily.  Well, "easily" is relative, it depends on the specific laptop.
+I'd suggest spending some time thinking about how this could be written=
+ such
+that the individual drivers do not talk back and forth to eachother, bu=
+t instead
+talk to a subsystem (rfkill?) in a way that can tolerate the ordering i=
+ssue.
 
-But in no case is the solution "reboot the box", never do that.
+If you simply cannot reasonably avoid the ordering issue, then I suspec=
+t the
+least bad approach is to merge the drivers.
 
-> 2) If the xGPU is the active GPU on the system and someone removes the cable
-> what should happen?  Remember, you can only have one GPU active in Xorg.
+Greg - from a general driver development best practices perspective, wo=
+uld you
+disagree with anything I've said here?
 
-Again, take this up with the xorg developers, this isn't a kernel
-limitation from what I can tell.
+Quick summary to save Greg the search: dell-laptop calls a function in
+dell-rbtn. If both are built-in, if dell-rbtn hasn't completed init yet=
+, the
+dell-laptop init will crash.
 
-best of luck,
-
-greg k-h
+--=20
+Darren Hart
+Intel Open Source Technology Center
