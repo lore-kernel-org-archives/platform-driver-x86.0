@@ -1,51 +1,38 @@
-From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH] pvpanic: handle missing _STA correctly
-Date: Fri, 29 May 2015 22:18:52 +0200
-Message-ID: <1432930732-16568-1-git-send-email-rkrcmar@redhat.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: ASUS PU551LD, fan stuck at full speed after waking up from S3
+Date: Sat, 30 May 2015 14:14:06 +0200
+Message-ID: <4235637.TmQrMxa1o1@vostro.rjw.lan>
+References: <1949840.6Csghk90X0@sakuya>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:56248 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756391AbbE2U1K (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 29 May 2015 16:27:10 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Igor Mammedov <imammedo@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1949840.6Csghk90X0@sakuya>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Martin Herkt <lachs0r@srsfckn.biz>
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-pm@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-pvpanic was not properly detected when _STA was missing.
+On Friday, May 29, 2015 01:51:57 PM Martin Herkt wrote:
+> My ASUS PU551LD laptop has a problem with its fan state when resuming from S3. 
+> In particular, the fan goes to full speed a second or two after waking up and 
+> cannot be reset without turning off the laptop. For example, rebooting to 
+> Windows and doing a suspend/resume cycle while the fan is in bad state will 
+> not reset it. I have observed this behavior with all kernel versions I have 
+> used on this laptop (oldest being 3.16, newest 4.1-rc5).
+> 
+> sensors(1) does not show any fans, but asus-nb-wmi exposes 
+> /sys/class/hwmon/hwmon2/pwm1, which shows values like 85 during normal 
+> operation but goes to the expected 255 when the fan is running at full speed 
+> after waking up from S3.
 
-ACPI 6.0 April 2015, 6.3.7 _STA (Status)
-  If a device object (including the processor object) does not have an
-  _STA object, then OSPM assumes that all of the above bits are set
-  (i.e., the device is present, enabled, shown in the UI, and
-  functioning).
+Can you please check if applying the patch at
 
-Not adhering to the specification made pvpanic dormant under QEMU 2.3.
+https://patchwork.kernel.org/patch/6451241/
 
-Suggested-by: Igor Mammedov <imammedo@redhat.com>
-Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
----
- drivers/platform/x86/pvpanic.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+on top of 4.1-rc5 makes any difference?
 
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpa=
-nic.c
-index 073a90a63dbc..7b6860333267 100644
---- a/drivers/platform/x86/pvpanic.c
-+++ b/drivers/platform/x86/pvpanic.c
-@@ -95,8 +95,7 @@ static int pvpanic_add(struct acpi_device *device)
- 	acpi_status status;
- 	u64 ret;
-=20
--	status =3D acpi_evaluate_integer(device->handle, "_STA", NULL,
--				       &ret);
-+	status =3D acpi_bus_get_status_handle(device->handle, &ret);
-=20
- 	if (ACPI_FAILURE(status) || (ret & 0x0B) !=3D 0x0B)
- 		return -ENODEV;
---=20
-2.4.2
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
