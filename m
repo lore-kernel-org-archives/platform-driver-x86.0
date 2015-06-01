@@ -1,69 +1,51 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [RFC 07/24] x86/thinkpad_acpi: Use arch_nvram_ops methods
- instead of nvram_read_byte() and nvram_write_byte()
-Date: Sun, 31 May 2015 11:34:22 -0300
-Message-ID: <20150531143422.GA12337@khazad-dum.debian.net>
-References: <20150531010132.289674310@telegraphics.com.au>
- <20150531010134.129479218@telegraphics.com.au>
- <20150531041114.GA30431@khazad-dum.debian.net>
- <alpine.LNX.2.00.1505311605420.23528@nippy.intranet>
+From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
+Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb
+ changes
+Date: Mon, 1 Jun 2015 08:22:27 +0200
+Message-ID: <20150601082227.01663ac8@pluto.restena.lu>
+References: <20150305232038.1873d380@neptune.home>
+	<20150306174254.GB19001@vmdeb7>
+	<20150307011546.0050279d@neptune.home>
+	<20150309225238.0b9ced4e@neptune.home>
+	<CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
+	<20150311223445.6af76f7c@neptune.home>
+	<CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
+	<20150527044749.GB21644@fury.dvhart.com>
+	<CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
+	<20150527081323.35a3cf88@pluto.restena.lu>
+	<20150529163650.GA94698@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-m68k-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.00.1505311605420.23528@nippy.intranet>
-Sender: linux-m68k-owner@vger.kernel.org
-To: Finn Thain <fthain@telegraphics.com.au>
-Cc: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtprelay.restena.lu ([158.64.1.62]:48294 "EHLO
+	smtprelay.restena.lu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753064AbbFAGXB (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 1 Jun 2015 02:23:01 -0400
+In-Reply-To: <20150529163650.GA94698@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Michael Marineau <michael.marineau@coreos.com>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 
-On Sun, 31 May 2015, Finn Thain wrote:
-> On Sun, 31 May 2015, Henrique de Moraes Holschuh wrote:
-> > On Sun, 31 May 2015, Finn Thain wrote:
-> > > Make use of arch_nvram_ops in the thinkpad_acpi driver so that the 
-> > > nvram_* function exports can be removed.
-> > > 
-> > > This patch series was tested on a ThinkPad T43.
-> > 
-> > Can you describe how you did the testing?  A specific procedure is 
-> > required to test the hotkey NVRAM polling codepaths (which will read 
-> > several NVRAM bytes @10Hz by default) in a T43...
-> > 
-> > > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > 
-> > The patch looks correct, so I don't expect any problems.
-> > 
-> > Provided that your test procedure did enable hotkey NVRAM polling in the 
-> > T43 and your hotkeys all still worked fine, you have my Acked-by.
+On Fri, 29 May 2015 18:36:50 +0200 Darren Hart wrote:
+> > Making sure to lock only the intel GPU when present and especially protecting
+> > against nvidia driver will be hard if legacy-IO is being processed by a hidden
+> > device!
 > 
-> The procedure I used was this,
-> 
-> 1. $ xev
-> 2. # rmmod thinkpad_acpi
-> 3. Press <Access IBM> key and confirm that xev does not report any
->    events.
-> 4. # modprobe thinkpad_acpi
-> 5. Press <Access IBM> key and confirm that xev now reports the key press 
->    events.
-> 
-> Is this sufficient?
+> Ugh indeed. Worst case we can special case via dmi strings. Is this Apple device
+> significantly different from others? Bruno, what are you testing on?
 
-No.  Please try:
+I only own a pretty old MacBook Air with just NVIDIA IGP and had to
+rely on BUG reports and testing from affected users.
 
-modprobe thinkpad_acpi
-echo 0xfb88c0 > /sys/devices/platform/thinkpad_acpi/hotkey_source_mask
+Not doing anything on apple-gmux when only a single GPU is visible
+should be easy, but denying any vgaarb operation when Intel IGP is
+hidden and just discrete GPU present is much harder (if one does not
+want to risk opening the next can of worms).
 
-test the hotkeys.  Please test several of them, as not all of them are
-available through NVRAM polling... at least Fn+SPACE, Fn+F1..FN+F12
+DMI based special-casing would work but will it uncover the next issue
+with the same device configured differently?
 
-Please test the brightness keys. In the T43 we use "direct EC mode", which
-depends on the NVRAM to sync with the SMBIOS firmware.
-
-to reset the driver to normal mode, it is enough to do this:
-echo 0 > /sys/devices/platform/thinkpad_acpi/hotkey_source_mask
-
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Bruno
