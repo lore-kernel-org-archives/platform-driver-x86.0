@@ -1,59 +1,46 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb changes
-Date: Mon, 1 Jun 2015 19:31:58 +0200
-Message-ID: <20150601173158.GA87111@vmdeb7>
-References: <20150307011546.0050279d@neptune.home>
- <20150309225238.0b9ced4e@neptune.home>
- <CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
- <20150311223445.6af76f7c@neptune.home>
- <CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
- <20150527044749.GB21644@fury.dvhart.com>
- <CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
- <20150527081323.35a3cf88@pluto.restena.lu>
- <20150529163650.GA94698@vmdeb7>
- <20150601082227.01663ac8@pluto.restena.lu>
+Subject: Re: [PATCH] pvpanic: handle missing _STA correctly'
+Date: Mon, 1 Jun 2015 19:38:32 +0200
+Message-ID: <20150601173832.GB87111@vmdeb7>
+References: <1432930732-16568-1-git-send-email-rkrcmar@redhat.com>
+ <20150601093322.4ec8de60@nial.brq.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:39913 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751888AbbFARiR (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 1 Jun 2015 13:38:17 -0400
 Content-Disposition: inline
-In-Reply-To: <20150601082227.01663ac8@pluto.restena.lu>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
-Cc: Michael Marineau <michael.marineau@coreos.com>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20150601093322.4ec8de60@nial.brq.redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 01, 2015 at 08:22:27AM +0200, Bruno Pr=E9mont wrote:
-> On Fri, 29 May 2015 18:36:50 +0200 Darren Hart wrote:
-> > > Making sure to lock only the intel GPU when present and especiall=
-y protecting
-> > > against nvidia driver will be hard if legacy-IO is being processe=
-d by a hidden
-> > > device!
+On Mon, Jun 01, 2015 at 09:33:22AM +0200, Igor Mammedov wrote:
+> On Fri, 29 May 2015 22:18:52 +0200
+> Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com> wrote:
+>=20
+> > pvpanic was not properly detected when _STA was missing.
 > >=20
-> > Ugh indeed. Worst case we can special case via dmi strings. Is this=
- Apple device
-> > significantly different from others? Bruno, what are you testing on=
-?
->=20
-> I only own a pretty old MacBook Air with just NVIDIA IGP and had to
-> rely on BUG reports and testing from affected users.
->=20
-> Not doing anything on apple-gmux when only a single GPU is visible
-> should be easy, but denying any vgaarb operation when Intel IGP is
-> hidden and just discrete GPU present is much harder (if one does not
-> want to risk opening the next can of worms).
->=20
-> DMI based special-casing would work but will it uncover the next issu=
-e
-> with the same device configured differently?
+> > ACPI 6.0 April 2015, 6.3.7 _STA (Status)
+> >   If a device object (including the processor object) does not have=
+ an
+> >   _STA object, then OSPM assumes that all of the above bits are set
+> >   (i.e., the device is present, enabled, shown in the UI, and
+> >   functioning).
+> >=20
+> > Not adhering to the specification made pvpanic dormant under QEMU 2=
+=2E3.
+> >=20
+> > Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> > Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 
-No, we would need a combination. I presume "configured differently" wou=
-ld mean
-the Intel GPU present - which would be detectable.
-
-DMI + Nvidia =3D do A
-DMI + Intel =3D do B
+Queued, thanks.
 
 --=20
 Darren Hart
