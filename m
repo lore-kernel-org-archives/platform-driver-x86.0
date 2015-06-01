@@ -1,51 +1,58 @@
-From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@linux-vserver.org>
-Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb
- changes
-Date: Mon, 1 Jun 2015 08:22:27 +0200
-Message-ID: <20150601082227.01663ac8@pluto.restena.lu>
-References: <20150305232038.1873d380@neptune.home>
-	<20150306174254.GB19001@vmdeb7>
-	<20150307011546.0050279d@neptune.home>
-	<20150309225238.0b9ced4e@neptune.home>
-	<CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
-	<20150311223445.6af76f7c@neptune.home>
-	<CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
-	<20150527044749.GB21644@fury.dvhart.com>
-	<CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
-	<20150527081323.35a3cf88@pluto.restena.lu>
-	<20150529163650.GA94698@vmdeb7>
+From: Igor Mammedov <imammedo@redhat.com>
+Subject: Re: [PATCH] pvpanic: handle missing _STA correctly
+Date: Mon, 1 Jun 2015 09:33:22 +0200
+Message-ID: <20150601093322.4ec8de60@nial.brq.redhat.com>
+References: <1432930732-16568-1-git-send-email-rkrcmar@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtprelay.restena.lu ([158.64.1.62]:48294 "EHLO
-	smtprelay.restena.lu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753064AbbFAGXB (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:33037 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751003AbbFAHdZ convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 1 Jun 2015 02:23:01 -0400
-In-Reply-To: <20150529163650.GA94698@vmdeb7>
+	Mon, 1 Jun 2015 03:33:25 -0400
+In-Reply-To: <1432930732-16568-1-git-send-email-rkrcmar@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Michael Marineau <michael.marineau@coreos.com>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Fri, 29 May 2015 18:36:50 +0200 Darren Hart wrote:
-> > Making sure to lock only the intel GPU when present and especially protecting
-> > against nvidia driver will be hard if legacy-IO is being processed by a hidden
-> > device!
-> 
-> Ugh indeed. Worst case we can special case via dmi strings. Is this Apple device
-> significantly different from others? Bruno, what are you testing on?
+On Fri, 29 May 2015 22:18:52 +0200
+Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com> wrote:
 
-I only own a pretty old MacBook Air with just NVIDIA IGP and had to
-rely on BUG reports and testing from affected users.
+> pvpanic was not properly detected when _STA was missing.
+>=20
+> ACPI 6.0 April 2015, 6.3.7 _STA (Status)
+>   If a device object (including the processor object) does not have a=
+n
+>   _STA object, then OSPM assumes that all of the above bits are set
+>   (i.e., the device is present, enabled, shown in the UI, and
+>   functioning).
+>=20
+> Not adhering to the specification made pvpanic dormant under QEMU 2.3=
+=2E
+>=20
+> Suggested-by: Igor Mammedov <imammedo@redhat.com>
+> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 
-Not doing anything on apple-gmux when only a single GPU is visible
-should be easy, but denying any vgaarb operation when Intel IGP is
-hidden and just discrete GPU present is much harder (if one does not
-want to risk opening the next can of worms).
-
-DMI based special-casing would work but will it uncover the next issue
-with the same device configured differently?
-
-Bruno
+> ---
+>  drivers/platform/x86/pvpanic.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pv=
+panic.c
+> index 073a90a63dbc..7b6860333267 100644
+> --- a/drivers/platform/x86/pvpanic.c
+> +++ b/drivers/platform/x86/pvpanic.c
+> @@ -95,8 +95,7 @@ static int pvpanic_add(struct acpi_device *device)
+>  	acpi_status status;
+>  	u64 ret;
+> =20
+> -	status =3D acpi_evaluate_integer(device->handle, "_STA", NULL,
+> -				       &ret);
+> +	status =3D acpi_bus_get_status_handle(device->handle, &ret);
+> =20
+>  	if (ACPI_FAILURE(status) || (ret & 0x0B) !=3D 0x0B)
+>  		return -ENODEV;
