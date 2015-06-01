@@ -1,96 +1,59 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: randconfig build error with next-20150521, in
- drivers/platform/x86/dell-rbtn.c
-Date: Mon, 1 Jun 2015 19:26:50 +0200
-Message-ID: <20150601172650.GA80980@vmdeb7>
-References: <CA+r1Zhij2wUuLK6cdhr44NFW+okW4YuyFoo2_58mR6yncsXo3w@mail.gmail.com>
- <20150521195615.GF22037@vmdeb7>
- <201505212207.11872@pali>
- <556C8B10.8040000@infradead.org>
+Subject: Re: [Patch v3] apple-gmux: lock iGP IO to protect from vgaarb changes
+Date: Mon, 1 Jun 2015 19:31:58 +0200
+Message-ID: <20150601173158.GA87111@vmdeb7>
+References: <20150307011546.0050279d@neptune.home>
+ <20150309225238.0b9ced4e@neptune.home>
+ <CAErSpo61r-_hy1hfUMm2ooXZVLTBhtjd-x5uXbyEg=WcG=itnQ@mail.gmail.com>
+ <20150311223445.6af76f7c@neptune.home>
+ <CAGr1u3tKVtQno=hUrKemLFYG12dtvPjFVR7oFwDG5cewJGCnJQ@mail.gmail.com>
+ <20150527044749.GB21644@fury.dvhart.com>
+ <CAGr1u3t1+ktKG_v74nQ2H6txGcWSwBBfsWS74k0Ao2pNTvgAng@mail.gmail.com>
+ <20150527081323.35a3cf88@pluto.restena.lu>
+ <20150529163650.GA94698@vmdeb7>
+ <20150601082227.01663ac8@pluto.restena.lu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <556C8B10.8040000@infradead.org>
-Sender: linux-next-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Jim Davis <jim.epost@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20150601082227.01663ac8@pluto.restena.lu>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
+Cc: Michael Marineau <michael.marineau@coreos.com>, Bjorn Helgaas <bhelgaas@google.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Matthew Garrett <matthew.garrett@nebula.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 01, 2015 at 09:40:48AM -0700, Randy Dunlap wrote:
-> On 05/21/15 13:07, Pali Roh=E1r wrote:
-> > On Thursday 21 May 2015 21:56:15 Darren Hart wrote:
-> >> On Thu, May 21, 2015 at 10:36:15AM -0700, Jim Davis wrote:
-> >>> Building with the attached random configuration file,
-> >>>
-> >>> drivers/built-in.o: In function `rbtn_remove':
-> >>> dell-rbtn.c:(.text+0x31d7f4): undefined reference to
-> >>> `input_unregister_device' drivers/built-in.o: In function
-> >>> `rbtn_notify':
-> >>> dell-rbtn.c:(.text+0x31d8e5): undefined reference to `input_event=
-'
-> >>> dell-rbtn.c:(.text+0x31d8f8): undefined reference to `input_event=
-'
-> >>> dell-rbtn.c:(.text+0x31d911): undefined reference to `input_event=
-'
-> >>> dell-rbtn.c:(.text+0x31d924): undefined reference to `input_event=
-'
-> >>> drivers/built-in.o: In function `rbtn_add':
-> >>> dell-rbtn.c:(.text+0x31da11): undefined reference to
-> >>> `input_allocate_device' dell-rbtn.c:(.text+0x31da4a): undefined
-> >>> reference to `input_register_device' dell-rbtn.c:(.text+0x31da5e)=
-:
-> >>> undefined reference to `input_free_device' Makefile:938: recipe
-> >>> for target 'vmlinux' failed
-> >>
-> >> Thanks Jim,
-> >>
-> >> Pali, the DELL_RBTN needs to ensure if it it's built-in, that INPU=
-T
-> >> is too. ...
-> >>
-> >>> CONFIG_INPUT=3Dm
-> >>> CONFIG_INPUT_FF_MEMLESS=3Dm
-> >>> CONFIG_INPUT_POLLDEV=3Dm
-> >>> CONFIG_INPUT_SPARSEKMAP=3Dm
-> >>> CONFIG_INPUT_MATRIXKMAP=3Dm
-> >>
-> >> ...
-> >>
-> >>> CONFIG_DELL_RBTN=3Dy
-> >>
-> >> Please submit a fix as a new patch.
+On Mon, Jun 01, 2015 at 08:22:27AM +0200, Bruno Pr=E9mont wrote:
+> On Fri, 29 May 2015 18:36:50 +0200 Darren Hart wrote:
+> > > Making sure to lock only the intel GPU when present and especiall=
+y protecting
+> > > against nvidia driver will be hard if legacy-IO is being processe=
+d by a hidden
+> > > device!
 > >=20
-> > I believe that this patch is needed:
-> >=20
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kc=
-onfig
-> > index 8c03223..d025fd8 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -141,6 +141,7 @@ config DELL_SMO8800
-> >  config DELL_RBTN
-> >  	tristate "Dell Airplane Mode Switch driver"
-> >  	depends on ACPI
-> > +	depends on INPUT
-> >  	depends on RFKILL
-> >  	---help---
-> >  	  Say Y here if you want to support Dell Airplane Mode Switch ACP=
-I
-> >=20
-> > I did not tested it yet, but all other drivers depends on INPUT.
-> >=20
+> > Ugh indeed. Worst case we can special case via dmi strings. Is this=
+ Apple device
+> > significantly different from others? Bruno, what are you testing on=
+?
 >=20
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> I only own a pretty old MacBook Air with just NVIDIA IGP and had to
+> rely on BUG reports and testing from affected users.
 >=20
-> Please get the patch merged.
+> Not doing anything on apple-gmux when only a single GPU is visible
+> should be easy, but denying any vgaarb operation when Intel IGP is
+> hidden and just discrete GPU present is much harder (if one does not
+> want to risk opening the next can of worms).
+>=20
+> DMI based special-casing would work but will it uncover the next issu=
+e
+> with the same device configured differently?
 
-I was waiting on a new version from Pali, but it hasn't appeared quite =
-yet. I've
-dropped the dell-rbtn and associated dell-laptop changes from my next b=
-ranch for
-now to avoid the breakage.
+No, we would need a combination. I presume "configured differently" wou=
+ld mean
+the Intel GPU present - which would be detectable.
+
+DMI + Nvidia =3D do A
+DMI + Intel =3D do B
 
 --=20
 Darren Hart
