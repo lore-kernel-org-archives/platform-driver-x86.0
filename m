@@ -1,60 +1,85 @@
-From: Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH 0/3] Use acpi_video_unregister_backlight instead of acpi_video_unregister in platfrom backlight drivers
-Date: Tue, 02 Jun 2015 12:59:10 +0300
-Message-ID: <87zj4ie8i9.fsf@intel.com>
-References: <1433150708-8498-1-git-send-email-hdegoede@redhat.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [RFC 07/24] x86/thinkpad_acpi: Use
+ arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
+Date: Tue, 02 Jun 2015 07:09:28 -0300
+Message-ID: <1433239768.902135.284523153.1200C3E3@webmail.messagingengine.com>
+References: <20150531010132.289674310@telegraphics.com.au>
+	<20150531010134.129479218@telegraphics.com.au>
+	<20150531041114.GA30431@khazad-dum.debian.net>
+	<alpine.LNX.2.00.1505311605420.23528@nippy.intranet>
+	<20150531143422.GA12337@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1433150708-8498-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>
-Cc: Aaron Lu <aaron.lu@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20150531143422.GA12337-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Finn Thain <fthain-PnMVE5gNl/W9dxLkCovUHLpzq4S04n8Q@public.gmane.org>
+Cc: linux-m68k-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 01 Jun 2015, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi All,
->
-> I'm working on cleaning up the currently somewhat convoluted logic to
-> select which backlight interfaces to register on x86 systems, see:
-> http://lists.freedesktop.org/archives/dri-devel/2014-December/074687.html
->
-> For a rought outline (details will change in the actual patch-set).
->
-> These 3 patches are a preparation for that work, as the behavior of the
-> current code is not always consistent (it changes depending on module
-> loading order in some cases). These 3 patches remove this inconsistency
-> which in some cases may result in a behavior change.
->
-> This way the cleanup can have a consistent base to build upon, and I can
-> ensure that the cleanup itself does not cause any functional changes.
+Test results were sent to me privately, and they are correct, so...
 
-Thanks for doing this.
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 
-Slightly unrelated, but you'll end up calling:
-
-acpi_video_unregister_backlight
-	acpi_video_bus_unregister_backlight
-		acpi_video_dev_unregister_backlight
-			thermal_cooling_device_unregister
-
-Uhm, err, what? What business does *that* have in the backlight
-unregister call chain?! Should that be untangled from the mess too?
-
-BR,
-Jani.
-
-
->
-> I hope to post a v1 of the actual cleanup patch-set in 1-2 weeks.
->
-> Regards,
->
-> Hans
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+On Sun, May 31, 2015, at 11:34, Henrique de Moraes Holschuh wrote:
+> On Sun, 31 May 2015, Finn Thain wrote:
+> > On Sun, 31 May 2015, Henrique de Moraes Holschuh wrote:
+> > > On Sun, 31 May 2015, Finn Thain wrote:
+> > > > Make use of arch_nvram_ops in the thinkpad_acpi driver so that the 
+> > > > nvram_* function exports can be removed.
+> > > > 
+> > > > This patch series was tested on a ThinkPad T43.
+> > > 
+> > > Can you describe how you did the testing?  A specific procedure is 
+> > > required to test the hotkey NVRAM polling codepaths (which will read 
+> > > several NVRAM bytes @10Hz by default) in a T43...
+> > > 
+> > > > Signed-off-by: Finn Thain <fthain-PnMVE5gNl/W9dxLkCovUHLpzq4S04n8Q@public.gmane.org>
+> > > 
+> > > The patch looks correct, so I don't expect any problems.
+> > > 
+> > > Provided that your test procedure did enable hotkey NVRAM polling in the 
+> > > T43 and your hotkeys all still worked fine, you have my Acked-by.
+> > 
+> > The procedure I used was this,
+> > 
+> > 1. $ xev
+> > 2. # rmmod thinkpad_acpi
+> > 3. Press <Access IBM> key and confirm that xev does not report any
+> >    events.
+> > 4. # modprobe thinkpad_acpi
+> > 5. Press <Access IBM> key and confirm that xev now reports the key press 
+> >    events.
+> > 
+> > Is this sufficient?
+> 
+> No.  Please try:
+> 
+> modprobe thinkpad_acpi
+> echo 0xfb88c0 > /sys/devices/platform/thinkpad_acpi/hotkey_source_mask
+> 
+> test the hotkeys.  Please test several of them, as not all of them are
+> available through NVRAM polling... at least Fn+SPACE, Fn+F1..FN+F12
+> 
+> Please test the brightness keys. In the T43 we use "direct EC mode",
+> which
+> depends on the NVRAM to sync with the SMBIOS firmware.
+> 
+> to reset the driver to normal mode, it is enough to do this:
+> echo 0 > /sys/devices/platform/thinkpad_acpi/hotkey_source_mask
 
 -- 
-Jani Nikula, Intel Open Source Technology Center
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
+
+------------------------------------------------------------------------------
