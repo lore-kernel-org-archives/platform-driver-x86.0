@@ -1,13 +1,13 @@
 From: "qipeng.zha" <qipeng.zha@intel.com>
 Subject: [PATCH v5] platform:x86: add Intel Broxton PMC IPC driver
-Date: Wed,  3 Jun 2015 23:43:38 +0800
-Message-ID: <1433346218-131001-1-git-send-email-qipeng.zha@intel.com>
+Date: Wed,  3 Jun 2015 23:47:13 +0800
+Message-ID: <1433346433-379-1-git-send-email-qipeng.zha@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:39615 "EHLO mga09.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:61168 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751042AbbFCHkc (ORCPT
+	id S1753219AbbFCHok (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Jun 2015 03:40:32 -0400
+	Wed, 3 Jun 2015 03:44:40 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
@@ -22,19 +22,19 @@ with other entities running in IA
 Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
 
 Changes for v5:
- add credit to intel_scu_ipc.c in driver description
- replace Fail with Failed in error messages
- fix typos
- remove read access of attribute device
- add comment for fs_initcall
+ add credit to intel_scu_ipc.c in driver description;
+ replace Fail with Failed in error messages;
+ fix typos;
+ remove read access of attribute device;
+ add comment for fs_initcall.
 
 Changes for before versions:
- fix compile errors when build as module
- fix typos
- use iplock mutex to sync access of command APIs
- confirm to be applicable of regmap APIs
- add comments for exported APIs
- order local variable declaration
+ fix compile errors when build as module;
+ fix typos;
+ use iplock mutex to sync access of command APIs;
+ confirm to be applicable of regmap APIs;
+ add comments for exported APIs;
+ order local variable declaration.
 ---
  arch/x86/include/asm/intel_pmc_ipc.h |  82 ++++
  drivers/platform/x86/Kconfig         |   7 +
