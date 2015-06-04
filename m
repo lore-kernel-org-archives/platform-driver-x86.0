@@ -1,45 +1,49 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH 0/3] Add support for X51-R3 to alienware-wmi
-Date: Wed, 03 Jun 2015 18:17:23 -0500
-Message-ID: <556F8B03.4060802@dell.com>
-References: <1432755422-26024-1-git-send-email-mario_limonciello@dell.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [RFC 07/24] x86/thinkpad_acpi: Use arch_nvram_ops methods
+ instead of nvram_read_byte() and nvram_write_byte()
+Date: Wed, 3 Jun 2015 22:14:11 -0700
+Message-ID: <20150604051411.GB31158@fury.dvhart.com>
+References: <20150531010132.289674310@telegraphics.com.au>
+ <20150531010134.129479218@telegraphics.com.au>
+ <20150531041114.GA30431@khazad-dum.debian.net>
+ <alpine.LNX.2.00.1505311605420.23528@nippy.intranet>
+ <20150531143422.GA12337@khazad-dum.debian.net>
+ <1433239768.902135.284523153.1200C3E3@webmail.messagingengine.com>
+ <20150603033401.GB49670@vmdeb7>
+ <1433327833.2629421.285594817.4B21A0BD@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from AUSXIPPC110.us.dell.com ([143.166.85.200]:60216 "EHLO
-	ausxippc110.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751558AbbFCX1A (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 3 Jun 2015 19:27:00 -0400
-In-Reply-To: <1432755422-26024-1-git-send-email-mario_limonciello@dell.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-m68k-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1433327833.2629421.285594817.4B21A0BD@webmail.messagingengine.com>
+Sender: linux-m68k-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Finn Thain <fthain@telegraphics.com.au>, linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
+On Wed, Jun 03, 2015 at 07:37:13AM -0300, Henrique de Moraes Holschuh wrote:
+> On Wed, Jun 3, 2015, at 00:34, Darren Hart wrote:
+> > On Tue, Jun 02, 2015 at 07:09:28AM -0300, Henrique de Moraes Holschuh
+> > wrote:
+> > > Test results were sent to me privately, and they are correct, so...
+> > 
+> > Finn, unless there is some compelling reason not to - like they are MBs
+> > worth of
+> > data, please submit these to the list in the future so we have them for
+> > reference.
+> 
+> After I told him which exact bitmask to use on a T43 to test
+> hotkey_source_mask, his test results can be summarized as "I could see
+> no difference in behavior", which is *exactly* what I expected to
+> happen.
+> 
+> If anything went wrong with the thinkpad-acpi NVRAM code, you'd notice a
+> very large change in behavior (typical: hotkeys don't work, less
+> typical: random hotkey keypresses, hotkey press bursts, low responsivity
+> of hotkeys).
 
+Perfect, thanks for the update so we have it recorded here on the list.
 
-On 05/27/2015 02:36 PM, Limonciello, Mario wrote:
-> An upcoming Alienware platform, X51-R3 will support some new features in the
-> WMI BIOS control API as well as emit some scan codes when particular hardware
-> is used in conjunction.
->
-> Mario Limonciello (3):
->    Add support for X51-R3
->    Add support for Alienware graphics amplifier.
->    Capture cable events created by Alienware GFX Amplifier.
->
->   drivers/platform/x86/Kconfig         |   1 +
->   drivers/platform/x86/alienware-wmi.c | 179 ++++++++++++++++++++++++++++++-----
->   2 files changed, 156 insertions(+), 24 deletions(-)
->
-
-Matthew,
-
-Aside from the third patch which has unfavorable feedback from Greg, any 
-thoughts on the first two?  I purposefully broke them up and would like 
-to get the first two included even if some variation of the third ends 
-up not landing.
-
-Thanks,
+-- 
+Darren Hart
+Intel Open Source Technology Center
