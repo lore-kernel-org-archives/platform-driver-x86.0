@@ -1,58 +1,213 @@
 From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v5 0/3] Dell Airplane Mode Switch driver
-Date: Sat,  6 Jun 2015 10:23:27 +0200
-Message-ID: <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
+Subject: [PATCH v5 3/3] dell-laptop: Use dell-rbtn instead i8042 filter when possible
+Date: Sat,  6 Jun 2015 10:23:30 +0200
+Message-ID: <1433579010-10509-4-git-send-email-pali.rohar@gmail.com>
 References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f48.google.com ([74.125.82.48]:34186 "EHLO
-	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750901AbbFFIX5 (ORCPT
+Received: from mail-wg0-f41.google.com ([74.125.82.41]:33274 "EHLO
+	mail-wg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751774AbbFFIYB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 6 Jun 2015 04:23:57 -0400
-In-Reply-To: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+	Sat, 6 Jun 2015 04:24:01 -0400
+In-Reply-To: <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@linux.intel.com>
 
-This patch series add new acpi Dell Airplane Mode Switch driver (DELLAB=
-CE and
-DELRBTN acpi devices). It provides radio HW switch events (together wit=
-h current
-state of radio devices) and export them via rfkill interface. These eve=
-nts are
-also used in dell-laptop driver instead i8042 filter hook function (whe=
-n acpi
-device is available).
+Until now module dell-laptop registered rfkill device which used i8042
+filter function for receiving HW switch rfkill events (handling special
+keycode).
 
-In v2 was added support for laptops which have toggle button instead HW=
- slider
-switch. For that I reused code done by Alex Hung.
+But for some dell laptops there is native ACPI driver dell-rbtn which c=
+an
+receive rfkill events (without i8042 hooks).
 
-v3 is just cleanup.
+So this patch will combine best from both sides. It will use native ACP=
+I
+driver dell-rbtn for receiving events and dell-laptop SMBIOS interface =
+for
+enabling or disabling radio devices. If ACPI driver or device will not =
+be
+available fallback to i8042 filter function will be used.
 
-In v4 was fixed dependency problems.
+Patch also changes module_init() to late_initcall() to ensure that init
+function will be called after initializing dell-rbtn.c driver.
 
-In v5 was fixed checkpatch.pl problems.
+Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+---
+Changes vor v5:
+* fixed long lines
+---
+ drivers/platform/x86/dell-laptop.c |   94 ++++++++++++++++++++++++++++=
++++++---
+ 1 file changed, 86 insertions(+), 8 deletions(-)
 
-Pali Roh=C3=A1r (3):
-  dell-rbtn: Dell Airplane Mode Switch driver
-  dell-rbtn: Export notifier for other kernel modules
-  dell-laptop: Use dell-rbtn instead i8042 filter when possible
-
- MAINTAINERS                        |    5 +
- drivers/platform/x86/Kconfig       |   16 ++
- drivers/platform/x86/Makefile      |    1 +
- drivers/platform/x86/dell-laptop.c |   94 +++++++-
- drivers/platform/x86/dell-rbtn.c   |  423 ++++++++++++++++++++++++++++=
-++++++++
- drivers/platform/x86/dell-rbtn.h   |   24 ++
- 6 files changed, 555 insertions(+), 8 deletions(-)
- create mode 100644 drivers/platform/x86/dell-rbtn.c
- create mode 100644 drivers/platform/x86/dell-rbtn.h
-
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
+dell-laptop.c
+index d688d80..83e3d7f 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -32,6 +32,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+ #include "../../firmware/dcdbas.h"
++#include "dell-rbtn.h"
+=20
+ #define BRIGHTNESS_TOKEN 0x7d
+ #define KBD_LED_OFF_TOKEN 0x01E1
+@@ -642,6 +643,20 @@ static bool dell_laptop_i8042_filter(unsigned char=
+ data, unsigned char str,
+ 	return false;
+ }
+=20
++static int (*dell_rbtn_notifier_register_func)(struct notifier_block *=
+);
++static int (*dell_rbtn_notifier_unregister_func)(struct notifier_block=
+ *);
++
++static int dell_laptop_rbtn_notifier_call(struct notifier_block *nb,
++					  unsigned long action, void *data)
++{
++	schedule_delayed_work(&dell_rfkill_work, 0);
++	return NOTIFY_OK;
++}
++
++static struct notifier_block dell_laptop_rbtn_notifier =3D {
++	.notifier_call =3D dell_laptop_rbtn_notifier_call,
++};
++
+ static int __init dell_setup_rfkill(void)
+ {
+ 	int status, ret, whitelisted;
+@@ -718,10 +733,62 @@ static int __init dell_setup_rfkill(void)
+ 			goto err_wwan;
+ 	}
+=20
+-	ret =3D i8042_install_filter(dell_laptop_i8042_filter);
+-	if (ret) {
+-		pr_warn("Unable to install key filter\n");
++	/*
++	 * Dell Airplane Mode Switch driver (dell-rbtn) supports ACPI devices
++	 * which can receive events from HW slider switch.
++	 *
++	 * Dell SMBIOS on whitelisted models supports controlling radio devic=
+es
++	 * but does not support receiving HW button switch events. We can use
++	 * i8042 filter hook function to receive keyboard data and handle
++	 * keycode for HW button.
++	 *
++	 * So if it is possible we will use Dell Airplane Mode Switch ACPI
++	 * driver for receiving HW events and Dell SMBIOS for setting rfkill
++	 * states. If ACPI driver or device is not available we will fallback=
+ to
++	 * i8042 filter hook function.
++	 *
++	 * To prevent duplicate rfkill devices which control and do same thin=
+g,
++	 * dell-rbtn driver will automatically remove its own rfkill devices
++	 * once function dell_rbtn_notifier_register() is called.
++	 */
++
++	dell_rbtn_notifier_register_func =3D
++		symbol_request(dell_rbtn_notifier_register);
++	if (dell_rbtn_notifier_register_func) {
++		dell_rbtn_notifier_unregister_func =3D
++			symbol_request(dell_rbtn_notifier_unregister);
++		if (!dell_rbtn_notifier_unregister_func) {
++			symbol_put(dell_rbtn_notifier_register);
++			dell_rbtn_notifier_register_func =3D NULL;
++		}
++	}
++
++	if (dell_rbtn_notifier_register_func) {
++		ret =3D dell_rbtn_notifier_register_func(
++			&dell_laptop_rbtn_notifier);
++		symbol_put(dell_rbtn_notifier_register);
++		dell_rbtn_notifier_register_func =3D NULL;
++		if (ret !=3D 0) {
++			symbol_put(dell_rbtn_notifier_unregister);
++			dell_rbtn_notifier_unregister_func =3D NULL;
++		}
++	} else {
++		pr_info("Symbols from dell-rbtn acpi driver are not available\n");
++		ret =3D -ENODEV;
++	}
++
++	if (ret =3D=3D 0) {
++		pr_info("Using dell-rbtn acpi driver for receiving events\n");
++	} else if (ret !=3D -ENODEV) {
++		pr_warn("Unable to register dell rbtn notifier\n");
+ 		goto err_filter;
++	} else {
++		ret =3D i8042_install_filter(dell_laptop_i8042_filter);
++		if (ret) {
++			pr_warn("Unable to install key filter\n");
++			goto err_filter;
++		}
++		pr_info("Using i8042 filter function for receiving events\n");
+ 	}
+=20
+ 	return 0;
+@@ -744,6 +811,14 @@ err_wifi:
+=20
+ static void dell_cleanup_rfkill(void)
+ {
++	if (dell_rbtn_notifier_unregister_func) {
++		dell_rbtn_notifier_unregister_func(&dell_laptop_rbtn_notifier);
++		symbol_put(dell_rbtn_notifier_unregister);
++		dell_rbtn_notifier_unregister_func =3D NULL;
++	} else {
++		i8042_remove_filter(dell_laptop_i8042_filter);
++	}
++	cancel_delayed_work_sync(&dell_rfkill_work);
+ 	if (wifi_rfkill) {
+ 		rfkill_unregister(wifi_rfkill);
+ 		rfkill_destroy(wifi_rfkill);
+@@ -1961,8 +2036,6 @@ static int __init dell_init(void)
+ 	return 0;
+=20
+ fail_backlight:
+-	i8042_remove_filter(dell_laptop_i8042_filter);
+-	cancel_delayed_work_sync(&dell_rfkill_work);
+ 	dell_cleanup_rfkill();
+ fail_rfkill:
+ 	free_page((unsigned long)bufferpage);
+@@ -1983,8 +2056,6 @@ static void __exit dell_exit(void)
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_exit();
+ 	kbd_led_exit();
+-	i8042_remove_filter(dell_laptop_i8042_filter);
+-	cancel_delayed_work_sync(&dell_rfkill_work);
+ 	backlight_device_unregister(dell_backlight_device);
+ 	dell_cleanup_rfkill();
+ 	if (platform_device) {
+@@ -1995,7 +2066,14 @@ static void __exit dell_exit(void)
+ 	free_page((unsigned long)buffer);
+ }
+=20
+-module_init(dell_init);
++/* dell-rbtn.c driver export functions which will not work correctly (=
+and could
++ * cause kernel crash) if they are called before dell-rbtn.c init code=
+=2E This is
++ * not problem when dell-rbtn.c is compiled as external module. When b=
+oth files
++ * (dell-rbtn.c and dell-laptop.c) are compiled statically into kernel=
+, then we
++ * need to ensure that dell_init() will be called after initializing d=
+ell-rbtn.
++ * This can be achieved by late_initcall() instead module_init().
++ */
++late_initcall(dell_init);
+ module_exit(dell_exit);
+=20
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
 --=20
 1.7.9.5
