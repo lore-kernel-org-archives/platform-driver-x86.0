@@ -1,54 +1,58 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH] asus-nb-wmi: Add wapf4 quirk for X200MA
-Date: Thu, 4 Jun 2015 15:43:31 +0100
-Message-ID: <CAHR064jjjOc77vSKRwOTe_OLOMOqQtm984XyA96rtysn17XNrw@mail.gmail.com>
-References: <1432930483-16861-1-git-send-email-hanipouspilot@gmail.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH v5 0/3] Dell Airplane Mode Switch driver
+Date: Sat,  6 Jun 2015 10:23:27 +0200
+Message-ID: <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1432930483-16861-1-git-send-email-hanipouspilot@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Dmitry Tunin <hanipouspilot@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@linux.intel.com>, stable@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wg0-f48.google.com ([74.125.82.48]:34186 "EHLO
+	mail-wg0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750901AbbFFIX5 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 6 Jun 2015 04:23:57 -0400
+In-Reply-To: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 
-On Fri, May 29, 2015 at 9:14 PM, Dmitry Tunin <hanipouspilot@gmail.com> wrote:
-> Wireless is not blocked without this quirk, but
-> wireless LED does not follow wireless status.
-> With this quirk it accurately reflects if wireless is on or off.
->
-> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index abdaed3..bc86a71 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -101,6 +101,15 @@ static const struct dmi_system_id asus_quirks[] = {
->         },
->         {
->                 .callback = dmi_matched,
-> +               .ident = "ASUSTeK COMPUTER INC. X200MA",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
-> +               },
-> +               .driver_data = &quirk_asus_wapf4,
-> +       },
-> +       {
-> +               .callback = dmi_matched,
->                 .ident = "ASUSTeK COMPUTER INC. X401U",
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> --
-> 1.9.1
->
+This patch series add new acpi Dell Airplane Mode Switch driver (DELLAB=
+CE and
+DELRBTN acpi devices). It provides radio HW switch events (together wit=
+h current
+state of radio devices) and export them via rfkill interface. These eve=
+nts are
+also used in dell-laptop driver instead i8042 filter hook function (whe=
+n acpi
+device is available).
 
-Acked-by: Corentin Chary <corentin.chary@gmail.com)
+In v2 was added support for laptops which have toggle button instead HW=
+ slider
+switch. For that I reused code done by Alex Hung.
 
--- 
-Corentin Chary
-http://xf.iksaif.net
+v3 is just cleanup.
+
+In v4 was fixed dependency problems.
+
+In v5 was fixed checkpatch.pl problems.
+
+Pali Roh=C3=A1r (3):
+  dell-rbtn: Dell Airplane Mode Switch driver
+  dell-rbtn: Export notifier for other kernel modules
+  dell-laptop: Use dell-rbtn instead i8042 filter when possible
+
+ MAINTAINERS                        |    5 +
+ drivers/platform/x86/Kconfig       |   16 ++
+ drivers/platform/x86/Makefile      |    1 +
+ drivers/platform/x86/dell-laptop.c |   94 +++++++-
+ drivers/platform/x86/dell-rbtn.c   |  423 ++++++++++++++++++++++++++++=
+++++++++
+ drivers/platform/x86/dell-rbtn.h   |   24 ++
+ 6 files changed, 555 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/platform/x86/dell-rbtn.c
+ create mode 100644 drivers/platform/x86/dell-rbtn.h
+
+--=20
+1.7.9.5
