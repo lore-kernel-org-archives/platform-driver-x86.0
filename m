@@ -1,209 +1,99 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v5 2/3] dell-rbtn: Export notifier for other kernel modules
-Date: Sat,  6 Jun 2015 10:23:29 +0200
-Message-ID: <1433579010-10509-3-git-send-email-pali.rohar@gmail.com>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v4 3/3] dell-laptop: Use dell-rbtn instead i8042 filter when possible
+Date: Sat, 6 Jun 2015 10:24:35 +0200
+Message-ID: <201506061024.35859@pali>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <20150603081509.GA14980@pali> <20150604051655.GC31158@fury.dvhart.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f53.google.com ([74.125.82.53]:34202 "EHLO
-	mail-wg0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751617AbbFFIYA (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 6 Jun 2015 04:24:00 -0400
-In-Reply-To: <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Content-Type: multipart/signed;
+  boundary="nextPart7884745.WkMyIXHVRg";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150604051655.GC31158@fury.dvhart.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, Darren Hart <dvhart@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This patch exports notifier functions so other modules can receive HW
-switch events. By default when some module register notifier, dell-rbtn
-driver automatically remove rfkill interfaces from system (it is expect=
-ed
-that other module will use events for other rfkill interface). This
-behaviour can be changed with new module parameter "auto_remove_rfkill"=
-=2E
+--nextPart7884745.WkMyIXHVRg
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch is designed for dell-laptop module for receiving those event=
-s.
+On Thursday 04 June 2015 07:16:55 Darren Hart wrote:
+> On Wed, Jun 03, 2015 at 10:15:09AM +0200, Pali Roh=C3=A1r wrote:
+> > On Tuesday 02 June 2015 20:55:05 Darren Hart wrote:
+> > > On Wed, May 27, 2015 at 07:52:13PM -0700, Darren Hart wrote:
+> > > > On Wed, May 27, 2015 at 11:28:25PM +0200, Pali Roh=C3=A1r wrote:
+> > > > > Until now module dell-laptop registered rfkill device which
+> > > > > used i8042 filter function for receiving HW switch rfkill
+> > > > > events (handling special keycode).
+> > > > >=20
+> > > > > But for some dell laptops there is native ACPI driver
+> > > > > dell-rbtn which can receive rfkill events (without i8042
+> > > > > hooks).
+> > > > >=20
+> > > > > So this patch will combine best from both sides. It will use
+> > > > > native ACPI driver dell-rbtn for receiving events and
+> > > > > dell-laptop SMBIOS interface for enabling or disabling radio
+> > > > > devices. If ACPI driver or device will not be available
+> > > > > fallback to i8042 filter function will be used.
+> > > > >=20
+> > > > > Patch also changes module_init() to late_initcall() to ensure
+> > > > > that init function will be called after initializing
+> > > > > dell-rbtn.c driver.
+> > > > >=20
+> > > > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > > > > Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> > > > > Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+> > > >=20
+> > > > Several basic checkpatch.pl errors in this one. Please always
+> > > > run checkpatch.pl before submitting patches, these sorts of
+> > > > issues should be caught before hitting the mailing list.
+> > > >=20
+> > > > Please provide some details on the scenarios you have tested to
+> > > > verify you have addressed the build and runtime issues
+> > > > reported.
+> > >=20
+> > > Checking in so this doesn't fall through the cracks. Do you have
+> > > a v5 in the works for the 4.2 merge window?
+> > >=20
+> > > Thanks,
+> >=20
+> > In last days I did not have time to look at it... When do you need
+> > to see v5 if it could go to 4.2?
+>=20
+> No rush in general, I just wanted to make sure you weren't waiting on
+> me while I was waiting for you.
+>=20
+> We're at the mercy of Linus' decision regarding how many RCs before
+> he releases 4.1. I suspect we have another week, but it could be
+> this weekend.
+>=20
+> I like to have new functionality in linux-next for two weeks prior to
+> sending a pull to Linus. To meet that, you should really have it in
+> this weekend. If Linus releases 4.1 this weekend, that will just
+> barely make two weeks before the end of the merge window.
+>=20
+> Thanks,
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+v5 with fixed checkpatch.pl problems was sent.
 
-Cleanup MODULE_PARM_DESC formatting and grammar.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
----
- drivers/platform/x86/dell-rbtn.c |   93 ++++++++++++++++++++++++++++++=
-+++++++-
- drivers/platform/x86/dell-rbtn.h |   24 ++++++++++
- 2 files changed, 116 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/dell-rbtn.h
+--nextPart7884745.WkMyIXHVRg
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
-ll-rbtn.c
-index 1c19fff..cd410e3 100644
---- a/drivers/platform/x86/dell-rbtn.c
-+++ b/drivers/platform/x86/dell-rbtn.c
-@@ -233,6 +233,86 @@ static struct acpi_driver rbtn_driver =3D {
-=20
-=20
- /*
-+ * notifier export functions
-+ */
-+
-+static bool auto_remove_rfkill =3D true;
-+
-+static ATOMIC_NOTIFIER_HEAD(rbtn_chain_head);
-+
-+static int rbtn_inc_count(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	int *count =3D data;
-+
-+	if (rbtn_data->type =3D=3D RBTN_SLIDER)
-+		(*count)++;
-+
-+	return 0;
-+}
-+
-+static int rbtn_switch_dev(struct device *dev, void *data)
-+{
-+	struct acpi_device *device =3D to_acpi_device(dev);
-+	struct rbtn_data *rbtn_data =3D device->driver_data;
-+	bool enable =3D data;
-+
-+	if (rbtn_data->type !=3D RBTN_SLIDER)
-+		return 0;
-+
-+	if (enable)
-+		rbtn_rfkill_init(device);
-+	else
-+		rbtn_rfkill_exit(device);
-+
-+	return 0;
-+}
-+
-+int dell_rbtn_notifier_register(struct notifier_block *nb)
-+{
-+	bool first;
-+	int count;
-+	int ret;
-+
-+	count =3D 0;
-+	ret =3D driver_for_each_device(&rbtn_driver.drv, NULL, &count,
-+				     rbtn_inc_count);
-+	if (ret || count =3D=3D 0)
-+		return -ENODEV;
-+
-+	first =3D !rbtn_chain_head.head;
-+
-+	ret =3D atomic_notifier_chain_register(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && first)
-+		ret =3D driver_for_each_device(&rbtn_driver.drv, NULL,
-+					     (void *)false, rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_register);
-+
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret =3D atomic_notifier_chain_unregister(&rbtn_chain_head, nb);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (auto_remove_rfkill && !rbtn_chain_head.head)
-+		ret =3D driver_for_each_device(&rbtn_driver.drv, NULL,
-+					     (void *)true, rbtn_switch_dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dell_rbtn_notifier_unregister);
-+
-+
-+/*
-  * acpi driver functions
-  */
-=20
-@@ -266,7 +346,10 @@ static int rbtn_add(struct acpi_device *device)
- 		ret =3D rbtn_input_init(rbtn_data);
- 		break;
- 	case RBTN_SLIDER:
--		ret =3D rbtn_rfkill_init(device);
-+		if (auto_remove_rfkill && rbtn_chain_head.head)
-+			ret =3D 0;
-+		else
-+			ret =3D rbtn_rfkill_init(device);
- 		break;
- 	default:
- 		ret =3D -EINVAL;
-@@ -313,6 +396,7 @@ static void rbtn_notify(struct acpi_device *device,=
- u32 event)
- 		break;
- 	case RBTN_SLIDER:
- 		rbtn_rfkill_event(device);
-+		atomic_notifier_call_chain(&rbtn_chain_head, event, device);
- 		break;
- 	default:
- 		break;
-@@ -326,6 +410,13 @@ static void rbtn_notify(struct acpi_device *device=
-, u32 event)
-=20
- module_acpi_driver(rbtn_driver);
-=20
-+module_param(auto_remove_rfkill, bool, 0444);
-+
-+MODULE_PARM_DESC(auto_remove_rfkill, "Automatically remove rfkill devi=
-ces when "
-+				     "other modules start receiving events "
-+				     "from this module and re-add them when "
-+				     "the last module stops receiving events "
-+				     "(default true)");
- MODULE_DEVICE_TABLE(acpi, rbtn_ids);
- MODULE_DESCRIPTION("Dell Airplane Mode Switch driver");
- MODULE_AUTHOR("Pali Roh=C3=A1r <pali.rohar@gmail.com>");
-diff --git a/drivers/platform/x86/dell-rbtn.h b/drivers/platform/x86/de=
-ll-rbtn.h
-new file mode 100644
-index 0000000..c59cc6b
---- /dev/null
-+++ b/drivers/platform/x86/dell-rbtn.h
-@@ -0,0 +1,24 @@
-+/*
-+    Dell Airplane Mode Switch driver
-+    Copyright (C) 2014-2015  Pali Roh=C3=A1r <pali.rohar@gmail.com>
-+
-+    This program is free software; you can redistribute it and/or modi=
-fy
-+    it under the terms of the GNU General Public License as published =
-by
-+    the Free Software Foundation; either version 2 of the License, or
-+    (at your option) any later version.
-+
-+    This program is distributed in the hope that it will be useful,
-+    but WITHOUT ANY WARRANTY; without even the implied warranty of
-+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+    GNU General Public License for more details.
-+*/
-+
-+#ifndef _DELL_RBTN_H_
-+#define _DELL_RBTN_H_
-+
-+struct notifier_block;
-+
-+int dell_rbtn_notifier_register(struct notifier_block *nb);
-+int dell_rbtn_notifier_unregister(struct notifier_block *nb);
-+
-+#endif
---=20
-1.7.9.5
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlVyrkMACgkQi/DJPQPkQ1JfUACfcyunQMJWgOrpHE61UQ64vUiL
+QLgAn2VrHW/OJumxo2SAeJhVzz6xNF9x
+=pCG9
+-----END PGP SIGNATURE-----
+
+--nextPart7884745.WkMyIXHVRg--
