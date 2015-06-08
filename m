@@ -1,99 +1,54 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v4 3/3] dell-laptop: Use dell-rbtn instead i8042 filter when possible
-Date: Sat, 6 Jun 2015 10:24:35 +0200
-Message-ID: <201506061024.35859@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com> <20150603081509.GA14980@pali> <20150604051655.GC31158@fury.dvhart.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 0/3] Dell Airplane Mode Switch driver
+Date: Sun, 7 Jun 2015 21:12:38 -0700
+Message-ID: <20150608041238.GA9930@fury.dvhart.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart7884745.WkMyIXHVRg";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150604051655.GC31158@fury.dvhart.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu, Darren Hart <dvhart@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:32938 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750815AbbFHEMj (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 8 Jun 2015 00:12:39 -0400
+Content-Disposition: inline
+In-Reply-To: <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu
 
---nextPart7884745.WkMyIXHVRg
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thursday 04 June 2015 07:16:55 Darren Hart wrote:
-> On Wed, Jun 03, 2015 at 10:15:09AM +0200, Pali Roh=C3=A1r wrote:
-> > On Tuesday 02 June 2015 20:55:05 Darren Hart wrote:
-> > > On Wed, May 27, 2015 at 07:52:13PM -0700, Darren Hart wrote:
-> > > > On Wed, May 27, 2015 at 11:28:25PM +0200, Pali Roh=C3=A1r wrote:
-> > > > > Until now module dell-laptop registered rfkill device which
-> > > > > used i8042 filter function for receiving HW switch rfkill
-> > > > > events (handling special keycode).
-> > > > >=20
-> > > > > But for some dell laptops there is native ACPI driver
-> > > > > dell-rbtn which can receive rfkill events (without i8042
-> > > > > hooks).
-> > > > >=20
-> > > > > So this patch will combine best from both sides. It will use
-> > > > > native ACPI driver dell-rbtn for receiving events and
-> > > > > dell-laptop SMBIOS interface for enabling or disabling radio
-> > > > > devices. If ACPI driver or device will not be available
-> > > > > fallback to i8042 filter function will be used.
-> > > > >=20
-> > > > > Patch also changes module_init() to late_initcall() to ensure
-> > > > > that init function will be called after initializing
-> > > > > dell-rbtn.c driver.
-> > > > >=20
-> > > > > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > > > > Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> > > > > Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-> > > >=20
-> > > > Several basic checkpatch.pl errors in this one. Please always
-> > > > run checkpatch.pl before submitting patches, these sorts of
-> > > > issues should be caught before hitting the mailing list.
-> > > >=20
-> > > > Please provide some details on the scenarios you have tested to
-> > > > verify you have addressed the build and runtime issues
-> > > > reported.
-> > >=20
-> > > Checking in so this doesn't fall through the cracks. Do you have
-> > > a v5 in the works for the 4.2 merge window?
-> > >=20
-> > > Thanks,
-> >=20
-> > In last days I did not have time to look at it... When do you need
-> > to see v5 if it could go to 4.2?
+On Sat, Jun 06, 2015 at 10:23:27AM +0200, Pali Roh=E1r wrote:
+> This patch series add new acpi Dell Airplane Mode Switch driver (DELL=
+ABCE and
+> DELRBTN acpi devices). It provides radio HW switch events (together w=
+ith current
+> state of radio devices) and export them via rfkill interface. These e=
+vents are
+> also used in dell-laptop driver instead i8042 filter hook function (w=
+hen acpi
+> device is available).
 >=20
-> No rush in general, I just wanted to make sure you weren't waiting on
-> me while I was waiting for you.
+> In v2 was added support for laptops which have toggle button instead =
+HW slider
+> switch. For that I reused code done by Alex Hung.
 >=20
-> We're at the mercy of Linus' decision regarding how many RCs before
-> he releases 4.1. I suspect we have another week, but it could be
-> this weekend.
+> v3 is just cleanup.
 >=20
-> I like to have new functionality in linux-next for two weeks prior to
-> sending a pull to Linus. To meet that, you should really have it in
-> this weekend. If Linus releases 4.1 this weekend, that will just
-> barely make two weeks before the end of the merge window.
->=20
-> Thanks,
+> In v4 was fixed dependency problems.
 
-v5 with fixed checkpatch.pl problems was sent.
+Please be more specific in the future. You want people that haven't loo=
+ked at
+this for a couple of weeks to be able to quickly identify what changed =
+and
+confirm they agree. You want people to review your code, you want to re=
+duce the
+barrier to do so. Easy to do while it's fresh in your mind.
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Thanks for the update, I have these qeueud to testing.
 
---nextPart7884745.WkMyIXHVRg
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlVyrkMACgkQi/DJPQPkQ1JfUACfcyunQMJWgOrpHE61UQ64vUiL
-QLgAn2VrHW/OJumxo2SAeJhVzz6xNF9x
-=pCG9
------END PGP SIGNATURE-----
-
---nextPart7884745.WkMyIXHVRg--
+--=20
+Darren Hart
+Intel Open Source Technology Center
