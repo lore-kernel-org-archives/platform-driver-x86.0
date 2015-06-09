@@ -1,61 +1,92 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v5 0/3] Dell Airplane Mode Switch driver
-Date: Mon, 8 Jun 2015 09:30:36 +0200
-Message-ID: <20150608073022.GA12078@pali>
-References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
- <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
- <20150608041238.GA9930@fury.dvhart.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] acpi-video: Add a parameter to not register the backlight
+ sysfs interface
+Date: Tue,  9 Jun 2015 09:48:09 +0200
+Message-ID: <1433836089-6620-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f47.google.com ([74.125.82.47]:35163 "EHLO
-	mail-wg0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751133AbbFHHan (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 8 Jun 2015 03:30:43 -0400
-Content-Disposition: inline
-In-Reply-To: <20150608041238.GA9930@fury.dvhart.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Aaron Lu <aaron.lu@intel.com>, Sylvain Pasche <sylvain.pasche@gmail.com>, Hans de Goede <hdegoede@redhat.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sunday 07 June 2015 21:12:38 Darren Hart wrote:
-> On Sat, Jun 06, 2015 at 10:23:27AM +0200, Pali Roh=C3=A1r wrote:
-> > This patch series add new acpi Dell Airplane Mode Switch driver (DE=
-LLABCE and
-> > DELRBTN acpi devices). It provides radio HW switch events (together=
- with current
-> > state of radio devices) and export them via rfkill interface. These=
- events are
-> > also used in dell-laptop driver instead i8042 filter hook function =
-(when acpi
-> > device is available).
-> >=20
-> > In v2 was added support for laptops which have toggle button instea=
-d HW slider
-> > switch. For that I reused code done by Alex Hung.
-> >=20
-> > v3 is just cleanup.
-> >=20
-> > In v4 was fixed dependency problems.
->=20
-> Please be more specific in the future. You want people that haven't l=
-ooked at
-> this for a couple of weeks to be able to quickly identify what change=
-d and
-> confirm they agree. You want people to review your code, you want to =
-reduce the
-> barrier to do so. Easy to do while it's fresh in your mind.
->=20
-> Thanks for the update, I have these qeueud to testing.
->=20
-
-I wrote more details into individual patches above diffstat lines. But
-if you want detailed description also to cover letter email, I can do
-that in the future...
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+T24gc29tZSBzeXN0ZW1zIGFjcGktdmlkZW8gYmFja2xpZ2h0IGlzIGJyb2tlbiBpbiB0aGUgc2Vu
+c2UgdGhhdCBpdCBjYW5ub3QKY29udHJvbCB0aGUgYnJpZ2h0bmVzcyBvZiB0aGUgYmFja2xpZ2h0
+LCBidXQgaXQgbXVzdCBzdGlsbCBiZSBjYWxsZWQgb24KcmVzdW1lIHRvIHBvd2VyLXVwIHRoZSBi
+YWNrbGlnaHQgYWZ0ZXIgcmVzdW1lLgoKVGhpcyBjb21taXQgYWxsb3dzIHRoZXNlIHN5c3RlbXMg
+dG8gd29yayBieSBnb2luZyB0aHJvdWdoIGFsbCB0aGUgdXN1YWwKYmFja2xpZ2h0IGNvbnRyb2wg
+bW92ZXMsIHdoaWxlIG5vdCByZWdpc3RlcmluZyBhIHN5c2ZzIGJhY2tsaWdodAppbnRlcmZhY2Uu
+CgpUaGlzIGNvbW1pdCBhbHNvIGFkZHMgYSBxdWlyayBlbmFibGluZyB0aGlzIHBhcmFtZXRlciBv
+biBUb3NoaWJhIFBvcnRlZ2UKUjgzMCBzeXN0ZW1zIHdoaWNoIGFyZSBrbm93biB0byBiZSBhZmZl
+Y3RlZCBieSB0aGlzLgoKSSB3aXNoIHRoZXJlIHdhcyBhIGJldHRlciB3YXkgdG8gZGVhbCB3aXRo
+IHRoaXMsIGJ1dCB3ZSd2ZSBiZWVuIHVuYWJsZSB0bwpmaW5kIG9uZS4KCkJ1Z2xpbms6IGh0dHBz
+Oi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjEwMTIKQnVnbGluazogaHR0
+cHM6Ly9idWdzLmZyZWVkZXNrdG9wLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9ODI2MzQKUmVwb3J0ZWQt
+YW5kLXRlc3RlZC1ieTogU3lsdmFpbiBQYXNjaGUgPHN5bHZhaW4ucGFzY2hlQGdtYWlsLmNvbT4K
+U2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KLS0tCiBk
+cml2ZXJzL2FjcGkvdmlkZW8uYyB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
+CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL3ZpZGVvLmMgYi9kcml2ZXJzL2FjcGkvdmlkZW8u
+YwppbmRleCA1MThmMGUxLi4zNTFmNTJjIDEwMDY0NAotLS0gYS9kcml2ZXJzL2FjcGkvdmlkZW8u
+YworKysgYi9kcml2ZXJzL2FjcGkvdmlkZW8uYwpAQCAtOTIsNiArOTIsOSBAQCBzdGF0aWMgaW50
+IHVzZV9uYXRpdmVfYmFja2xpZ2h0X3BhcmFtID0gTkFUSVZFX0JBQ0tMSUdIVF9OT1RfU0VUOwog
+bW9kdWxlX3BhcmFtX25hbWVkKHVzZV9uYXRpdmVfYmFja2xpZ2h0LCB1c2VfbmF0aXZlX2JhY2ts
+aWdodF9wYXJhbSwgaW50LCAwNDQ0KTsKIHN0YXRpYyBpbnQgdXNlX25hdGl2ZV9iYWNrbGlnaHRf
+ZG1pID0gTkFUSVZFX0JBQ0tMSUdIVF9OT1RfU0VUOwogCitzdGF0aWMgaW50IGRpc2FibGVfYmFj
+a2xpZ2h0X3N5c2ZzX2lmID0gLTE7Cittb2R1bGVfcGFyYW0oZGlzYWJsZV9iYWNrbGlnaHRfc3lz
+ZnNfaWYsIGludCwgMDQ0NCk7CisKIHN0YXRpYyBpbnQgcmVnaXN0ZXJfY291bnQ7CiBzdGF0aWMg
+c3RydWN0IG11dGV4IHZpZGVvX2xpc3RfbG9jazsKIHN0YXRpYyBzdHJ1Y3QgbGlzdF9oZWFkIHZp
+ZGVvX2J1c19oZWFkOwpAQCAtNDMxLDYgKzQzNCwxNCBAQCBzdGF0aWMgaW50IF9faW5pdCB2aWRl
+b19lbmFibGVfbmF0aXZlX2JhY2tsaWdodChjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCAqZCkK
+IAlyZXR1cm4gMDsKIH0KIAorc3RhdGljIGludCBfX2luaXQgdmlkZW9fZGlzYWJsZV9iYWNrbGln
+aHRfc3lzZnNfaWYoCisJY29uc3Qgc3RydWN0IGRtaV9zeXN0ZW1faWQgKmQpCit7CisJaWYgKGRp
+c2FibGVfYmFja2xpZ2h0X3N5c2ZzX2lmID09IC0xKQorCQlkaXNhYmxlX2JhY2tsaWdodF9zeXNm
+c19pZiA9IDE7CisJcmV0dXJuIDA7Cit9CisKIHN0YXRpYyBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCB2
+aWRlb19kbWlfdGFibGVbXSBfX2luaXRkYXRhID0gewogCS8qCiAJICogQnJva2VuIF9CUUMgd29y
+a2Fyb3VuZCBodHRwOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTMxMjEK
+QEAgLTU5Miw2ICs2MDMsMjMgQEAgc3RhdGljIHN0cnVjdCBkbWlfc3lzdGVtX2lkIHZpZGVvX2Rt
+aV90YWJsZVtdIF9faW5pdGRhdGEgPSB7CiAJCURNSV9NQVRDSChETUlfUFJPRFVDVF9OQU1FLCAi
+TWFjQm9va1BybzEyLDEiKSwKIAkJfSwKIAl9LAorCisJLyoKKwkgKiBTb21lIG1hY2hpbmVzIGhh
+dmUgYSBicm9rZW4gYWNwaS12aWRlbyBpbnRlcmZhY2UgZm9yIGJyaWdodG5lc3MKKwkgKiBjb250
+cm9sLCBidXQgc3RpbGwgbmVlZCBhbiBhY3BpX3ZpZGVvX2RldmljZV9sY2Rfc2V0X2xldmVsKCkg
+Y2FsbAorCSAqIG9uIHJlc3VtZSB0byB0dXJuIHRoZSBiYWNrbGlnaHQgcG93ZXIgb24uICBXZSBF
+bmFibGUgYmFja2xpZ2h0CisJICogY29udHJvbCBvbiB0aGVzZSBzeXN0ZW1zLCBidXQgZG8gbm90
+IHJlZ2lzdGVyIGEgYmFja2xpZ2h0IHN5c2ZzCisJICogYXMgYnJpZ2h0bmVzcyBjb250cm9sIGRv
+ZXMgbm90IHdvcmsuCisJICovCisJeworCSAvKiBodHRwczovL2J1Z3MuZnJlZWRlc2t0b3Aub3Jn
+L3Nob3dfYnVnLmNnaT9pZD04MjYzNCAqLworCSAuY2FsbGJhY2sgPSB2aWRlb19kaXNhYmxlX2Jh
+Y2tsaWdodF9zeXNmc19pZiwKKwkgLmlkZW50ID0gIlRvc2hpYmEgUG9ydGVnZSBSODMwIiwKKwkg
+Lm1hdGNoZXMgPSB7CisJCURNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgIlRPU0hJQkEiKSwKKwkJ
+RE1JX01BVENIKERNSV9QUk9EVUNUX05BTUUsICJQT1JURUdFIFI4MzAiKSwKKwkJfSwKKwl9LAog
+CXt9CiB9OwogCkBAIC0xMzkxLDcgKzE0MTksNyBAQCBhY3BpX3ZpZGVvX3N3aXRjaF9icmlnaHRu
+ZXNzKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykKIAlpbnQgcmVzdWx0ID0gLUVJTlZBTDsKIAog
+CS8qIG5vIHdhcm5pbmcgbWVzc2FnZSBpZiBhY3BpX2JhY2tsaWdodD12ZW5kb3Igb3IgYSBxdWly
+ayBpcyB1c2VkICovCi0JaWYgKCFhY3BpX3ZpZGVvX3ZlcmlmeV9iYWNrbGlnaHRfc3VwcG9ydCgp
+KQorCWlmICghYWNwaV92aWRlb192ZXJpZnlfYmFja2xpZ2h0X3N1cHBvcnQoKSB8fCAhZGV2aWNl
+LT5iYWNrbGlnaHQpCiAJCXJldHVybjsKIAogCWlmICghZGV2aWNlLT5icmlnaHRuZXNzKQpAQCAt
+MTY2Niw4ICsxNjk0LDkgQEAgc3RhdGljIGludCBhY3BpX3ZpZGVvX3Jlc3VtZShzdHJ1Y3Qgbm90
+aWZpZXJfYmxvY2sgKm5iLAogCiAJZm9yIChpID0gMDsgaSA8IHZpZGVvLT5hdHRhY2hlZF9jb3Vu
+dDsgaSsrKSB7CiAJCXZpZGVvX2RldmljZSA9IHZpZGVvLT5hdHRhY2hlZF9hcnJheVtpXS5iaW5k
+X2luZm87Ci0JCWlmICh2aWRlb19kZXZpY2UgJiYgdmlkZW9fZGV2aWNlLT5iYWNrbGlnaHQpCi0J
+CQlhY3BpX3ZpZGVvX3NldF9icmlnaHRuZXNzKHZpZGVvX2RldmljZS0+YmFja2xpZ2h0KTsKKwkJ
+aWYgKHZpZGVvX2RldmljZSAmJiB2aWRlb19kZXZpY2UtPmJyaWdodG5lc3MpCisJCQlhY3BpX3Zp
+ZGVvX2RldmljZV9sY2Rfc2V0X2xldmVsKHZpZGVvX2RldmljZSwKKwkJCQkJdmlkZW9fZGV2aWNl
+LT5icmlnaHRuZXNzLT5jdXJyKTsKIAl9CiAKIAlyZXR1cm4gTk9USUZZX09LOwpAQCAtMTcxNiw2
+ICsxNzQ1LDEwIEBAIHN0YXRpYyB2b2lkIGFjcGlfdmlkZW9fZGV2X3JlZ2lzdGVyX2JhY2tsaWdo
+dChzdHJ1Y3QgYWNwaV92aWRlb19kZXZpY2UgKmRldmljZSkKIAlyZXN1bHQgPSBhY3BpX3ZpZGVv
+X2luaXRfYnJpZ2h0bmVzcyhkZXZpY2UpOwogCWlmIChyZXN1bHQpCiAJCXJldHVybjsKKworCWlm
+IChkaXNhYmxlX2JhY2tsaWdodF9zeXNmc19pZiA+IDApCisJCXJldHVybjsKKwogCW5hbWUgPSBr
+YXNwcmludGYoR0ZQX0tFUk5FTCwgImFjcGlfdmlkZW8lZCIsIGNvdW50KTsKIAlpZiAoIW5hbWUp
+CiAJCXJldHVybjsKLS0gCjIuNC4yCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
