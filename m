@@ -1,61 +1,84 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 29/32] thinkpad-acpi: Port to new backlight interface
- selection API
-Date: Wed, 10 Jun 2015 10:59:04 -0300
-Message-ID: <1433944744.203111.291880497.150C6869@webmail.messagingengine.com>
-References: <1433941292-21530-1-git-send-email-hdegoede@redhat.com>
- <1433941292-21530-30-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1433941292-21530-30-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Ike Panhc <ike.pan@canonical.com>, linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Azael Avalos <coproscefalo@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Mattia Dongili <malattia@linux.it>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Ben Skeggs <bskeggs@redhat.com>, Corentin Chary <corentin.chary@gmail.com>, =?ISO-8859-1?Q?Pali=20Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Dmitry Tunin <hanipouspilot@gmail.com>
+Subject: [PATCH] Add wapf1 quirk for Asus X550VC
+Date: Wed, 10 Jun 2015 20:44:22 +0300
+Message-ID: <1433958262-25228-1-git-send-email-hanipouspilot@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lb0-f171.google.com ([209.85.217.171]:35567 "EHLO
+	mail-lb0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933568AbbFJRot (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 10 Jun 2015 13:44:49 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Tunin <hanipouspilot@gmail.com>, stable@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTAsIDIwMTUsIGF0IDEwOjAxLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+IFBv
-cnQgdGhlIGJhY2tsaWdodCBzZWxlY3Rpb24gbG9naWMgdG8gdGhlIG5ldyBiYWNrbGlnaHQgaW50
-ZXJmYWNlCj4gc2VsZWN0aW9uIEFQSS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRl
-IDxoZGVnb2VkZUByZWRoYXQuY29tPgoKQWNrZWQtYnk6IEhlbnJpcXVlIGRlIE1vcmFlcyBIb2xz
-Y2h1aCA8aG1oQGhtaC5lbmcuYnI+Cgo+IC0tLQo+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlu
-a3BhZF9hY3BpLmMgfCA1ICsrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyks
-IDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3Ro
-aW5rcGFkX2FjcGkuYwo+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4g
-aW5kZXggMjhmMzI4MS4uMzNlNDg4YyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni90aGlua3BhZF9hY3BpLmMKPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9h
-Y3BpLmMKPiBAQCAtODMsNiArODMsNyBAQAo+ICAjaW5jbHVkZSA8c291bmQvY29udHJvbC5oPgo+
-ICAjaW5jbHVkZSA8c291bmQvaW5pdHZhbC5oPgo+ICAjaW5jbHVkZSA8YXNtL3VhY2Nlc3MuaD4K
-PiArI2luY2x1ZGUgPGFjcGkvdmlkZW8uaD4KPiAgCj4gIC8qIFRoaW5rUGFkIENNT1MgY29tbWFu
-ZHMgKi8KPiAgI2RlZmluZSBUUF9DTU9TX1ZPTFVNRV9ET1dOICAgICAwCj4gQEAgLTM0ODcsNyAr
-MzQ4OCw3IEBAIHN0YXRpYyBpbnQgX19pbml0IGhvdGtleV9pbml0KHN0cnVjdAo+IGlibV9pbml0
-X3N0cnVjdCAqaWlibSkKPiAgCS8qIERvIG5vdCBpc3N1ZSBkdXBsaWNhdGUgYnJpZ2h0bmVzcyBj
-aGFuZ2UgZXZlbnRzIHRvCj4gIAkgKiB1c2Vyc3BhY2UuIHRwYWNwaV9kZXRlY3RfYnJpZ2h0bmVz
-c19jYXBhYmlsaXRpZXMoKSBtdXN0IGhhdmUKPiAgCSAqIGJlZW4gY2FsbGVkIGJlZm9yZSB0aGlz
-IHBvaW50ICAqLwo+IC0gICAgICAgaWYgKGFjcGlfdmlkZW9fYmFja2xpZ2h0X3N1cHBvcnQoKSkg
-ewo+ICsgICAgICAgaWYgKGFjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90eXBlKCkgIT0gYWNwaV9i
-YWNrbGlnaHRfdmVuZG9yKSB7Cj4gIAkJcHJfaW5mbygiVGhpcyBUaGlua1BhZCBoYXMgc3RhbmRh
-cmQgQUNQSSBiYWNrbGlnaHQgIgo+ICAJCQkiYnJpZ2h0bmVzcyBjb250cm9sLCBzdXBwb3J0ZWQg
-YnkgdGhlIEFDUEkgIgo+ICAJCQkidmlkZW8gZHJpdmVyXG4iKTsKPiBAQCAtNjQ5MSw3ICs2NDky
-LDcgQEAgc3RhdGljIGludCBfX2luaXQgYnJpZ2h0bmVzc19pbml0KHN0cnVjdAo+IGlibV9pbml0
-X3N0cnVjdCAqaWlibSkKPiAgCQlyZXR1cm4gMTsKPiAgCX0KPiAgCj4gLSAgICAgICBpZiAoYWNw
-aV92aWRlb19iYWNrbGlnaHRfc3VwcG9ydCgpKSB7Cj4gKyAgICAgICBpZiAoYWNwaV92aWRlb19n
-ZXRfYmFja2xpZ2h0X3R5cGUoKSAhPSBhY3BpX2JhY2tsaWdodF92ZW5kb3IpIHsKPiAgCQlpZiAo
-YnJpZ2h0bmVzc19lbmFibGUgPiAxKSB7Cj4gIAkJCXByX2luZm8oIlN0YW5kYXJkIEFDUEkgYmFj
-a2xpZ2h0IGludGVyZmFjZSAiCj4gIAkJCQkiYXZhaWxhYmxlLCBub3QgbG9hZGluZyBuYXRpdmUg
-b25lXG4iKTsKPiAtLSAKPiAyLjQuMgoKLS0gCiAgIk9uZSBkaXNrIHRvIHJ1bGUgdGhlbSBhbGws
-IE9uZSBkaXNrIHRvIGZpbmQgdGhlbS4gT25lIGRpc2sgdG8gYnJpbmcKICB0aGVtIGFsbCBhbmQg
-aW4gdGhlIGRhcmtuZXNzIGdyaW5kIHRoZW0uIEluIHRoZSBMYW5kIG9mIFJlZG1vbmQKICB3aGVy
-ZSB0aGUgc2hhZG93cyBsaWUuIiAtLSBUaGUgU2lsaWNvbiBWYWxsZXkgVGFyb3QKICBIZW5yaXF1
-ZSBIb2xzY2h1aApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Wireless is always blocked on this device.
+There is no way to unblock by software or hardware.
+
+1: asus-wlan: Wireless LAN
+   Soft blocked: no
+   Hard blocked: no
+2: asus-bluetooth: Bluetooth
+   Soft blocked: yes
+   Hard blocked: no
+3: phy0: Wireless LAN
+   Soft blocked: no
+   Hard blocked: yes
+
+With wapf=4 bluetooth unblocks but wifi stays blocked
+
+1: asus-wlan: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+2: asus-bluetooth: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+3: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: yes
+7: hci0: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+
+Only with wapf=1 everything works OK.
+
+Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index abdaed3..cf5ba28 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -78,6 +78,10 @@ static struct quirk_entry quirk_asus_x200ca = {
+ 	.wapf = 2,
+ };
+ 
++static struct quirk_entry quirk_asus_wapf1 = {
++	.wapf = 1,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	quirks = dmi->driver_data;
+@@ -191,6 +195,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 	},
+ 	{
+ 		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. X550VC",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "X550VC"),
++		},
++		.driver_data = &quirk_asus_wapf1,
++	},
++	{
++		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. X551CA",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-- 
+1.9.1
