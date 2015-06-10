@@ -1,37 +1,27 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH] hp_wireless: remove unused header files
-Date: Wed, 10 Jun 2015 17:26:27 +0800
-Message-ID: <1433928387-2818-1-git-send-email-alex.hung@canonical.com>
+From: "Klientskie bazi tel +79133913837 Yznaite podrobnee!!!"
+	<platform-driver-x86@vger.kernel.org>
+Subject: Klientskie bazi tel +79133913837 Yznaite podrobnee!!!
+Date: Wed, 10 Jun 2015 16:53:43 +0400
+Message-ID: <B64C0F47934769DA06034AF78399BE47@vger.kernel.org>
+Reply-To: "Klientskie bazi tel +79133913837 Yznaite podrobnee!!!"
+	  <lidiaaksenov@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+	format=flowed;
+	charset="utf-8";
+	reply-type=original
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:59677 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933121AbbFJJ0d (ORCPT
+Received: from [5.196.219.74] ([5.196.219.74]:58701 "EHLO
+	localhost.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
+	by vger.kernel.org with ESMTP id S932859AbbFJMnb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Jun 2015 05:26:33 -0400
+	Wed, 10 Jun 2015 08:43:31 -0400
+Received: from 5.196.219.74 (localhost [IPv6:::1])
+	by localhost.localdomain (Postfix) with SMTP id 61CE91EB9C8
+	for <platform-driver-x86@vger.kernel.org>; Sat, 30 May 2015 23:57:00 -0400 (EDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com
+To: platform-driver-x86@vger.kernel.org
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- drivers/platform/x86/hp-wireless.c |    3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
-index 4e4cc8b..731c69b 100644
---- a/drivers/platform/x86/hp-wireless.c
-+++ b/drivers/platform/x86/hp-wireless.c
-@@ -18,11 +18,8 @@
-  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-  */
- 
--#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
- #include <linux/input.h>
--#include <linux/platform_device.h>
- #include <linux/acpi.h>
- #include <acpi/acpi_bus.h>
- 
--- 
-1.7.9.5
+Klientskie bazi tel +79133913837 Yznaite podrobnee!!!
