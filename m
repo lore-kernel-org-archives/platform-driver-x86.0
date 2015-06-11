@@ -1,68 +1,44 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 22/32] fujitsu-laptop: Port to new backlight interface
- selection API
-Date: Thu, 11 Jun 2015 08:34:51 +0930
-Message-ID: <20150610230451.GA7684@marvin.atrad.com.au>
-References: <1433941292-21530-1-git-send-email-hdegoede@redhat.com>
- <1433941292-21530-23-git-send-email-hdegoede@redhat.com>
+From: Aaron Lu <aaron.lu@intel.com>
+Subject: Re: [PATCH v2] acpi-video: Add a parameter to not register the
+ backlight sysfs interface
+Date: Thu, 11 Jun 2015 09:43:15 +0800
+Message-ID: <20150611014315.GA26277@aaronlu.sh.intel.com>
+References: <1433838745-8857-1-git-send-email-hdegoede@redhat.com>
+ <20150609091042.GA1280@aaronlu.sh.intel.com>
+ <557760A5.9000404@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:40295 "EHLO
-	server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751359AbbFJXaz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 10 Jun 2015 19:30:55 -0400
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1433941292-21530-23-git-send-email-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <557760A5.9000404@redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ben Skeggs <bskeggs@redhat.com>, platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org, Sylvain Pasche <sylvain.pasche@gmail.com>, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 10, 2015 at 03:01:22PM +0200, Hans de Goede wrote:
-> Port the backlight selection logic to the new backlight interface
-> selection API.
-
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+On Tue, Jun 09, 2015 at 11:54:45PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 2a9afa2..1c62caf 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -72,6 +72,7 @@
->  #if defined(CONFIG_LEDS_CLASS) || defined(CONFIG_LEDS_CLASS_MODULE)
->  #include <linux/leds.h>
->  #endif
-> +#include <acpi/video.h>
->  
->  #define FUJITSU_DRIVER_VERSION "0.6.0"
->  
-> @@ -1099,7 +1100,7 @@ static int __init fujitsu_init(void)
->  
->  	/* Register backlight stuff */
->  
-> -	if (!acpi_video_backlight_support()) {
-> +	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->  		struct backlight_properties props;
->  
->  		memset(&props, 0, sizeof(struct backlight_properties));
-> @@ -1137,8 +1138,7 @@ static int __init fujitsu_init(void)
->  	}
->  
->  	/* Sync backlight power status (needs FUJ02E3 device, hence deferred) */
-> -
-> -	if (!acpi_video_backlight_support()) {
-> +	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->  		if (call_fext_func(FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
->  			fujitsu->bl_device->props.power = FB_BLANK_POWERDOWN;
->  		else
-> -- 
-> 2.4.2
+> On 06/09/2015 11:10 AM, Aaron Lu wrote:
+> >On Tue, Jun 09, 2015 at 10:32:25AM +0200, Hans de Goede wrote:
+> >>On some systems acpi-video backlight is broken in the sense that it cannot
+> >>control the brightness of the backlight, but it must still be called on
+> >>resume to power-up the backlight after resume.
+> >
+> >All the video module does on resume is a backlight set operation, it
+> >can't control backlight but can turn on the screen on resume? Hmm...
+> >
+> >I'll ask Sylvain to attach acpidump, let's see if there is anything
+> >special there.
 > 
-> --
+> Ok, lets see what comes out of that. Note in the mean time Sylvain has
+> attached his acpidump.
+
+Thanks.
+According to the discussion in the bugzilla place, it doesn't seem we
+have any other way to handle this at the moment.
+
+Acked-by: Aaron Lu <aaron.lu@intel.com>
+
+Best wishes,
+Aaron
