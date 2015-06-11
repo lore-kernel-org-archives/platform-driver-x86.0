@@ -1,112 +1,73 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 19/32] dell-laptop: Port to new backlight interface
- selection API
-Date: Thu, 11 Jun 2015 15:06:31 +0200
-Message-ID: <20150611130631.GG19820@pali>
-References: <1433941292-21530-1-git-send-email-hdegoede@redhat.com>
- <1433941292-21530-20-git-send-email-hdegoede@redhat.com>
- <20150611114709.GD19820@pali>
- <55797F24.8060500@redhat.com>
+From: Marcus Pollice <marcus.pollice@gmail.com>
+Subject: Re: [PATCH] hp-wmi: limit hotkey enable
+Date: Fri, 12 Jun 2015 00:08:33 +0200
+Message-ID: <557A06E1.6010201@gmail.com>
+References: <20150313053325.GA22984@aaronlu.sh.intel.com> <1427481191-4475-1-git-send-email-kvans32@gmail.com> <5522ACD1.1070202@gmail.com> <13CD30DA-0450-4879-89ED-9B5C6D434652@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f181.google.com ([209.85.212.181]:34020 "EHLO
-	mail-wi0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752647AbbFKNGe (ORCPT
+Received: from mail-wg0-f49.google.com ([74.125.82.49]:33844 "EHLO
+	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754652AbbFKWIh (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 11 Jun 2015 09:06:34 -0400
-Content-Disposition: inline
-In-Reply-To: <55797F24.8060500@redhat.com>
+	Thu, 11 Jun 2015 18:08:37 -0400
+Received: by wgv5 with SMTP id 5so12381780wgv.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2015 15:08:36 -0700 (PDT)
+In-Reply-To: <13CD30DA-0450-4879-89ED-9B5C6D434652@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
+To: Kyle Evans <kvans32@gmail.com>, platform-driver-x86@vger.kernel.org
 
-On Thursday 11 June 2015 14:29:24 Hans de Goede wrote:
-> Hi,
->=20
-> On 11-06-15 13:47, Pali Roh=C3=A1r wrote:
-> >On Wednesday 10 June 2015 15:01:19 Hans de Goede wrote:
-> >>Port the backlight selection logic to the new backlight interface
-> >>selection API.
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>---
-> >>  drivers/platform/x86/dell-laptop.c | 6 ++----
-> >>  1 file changed, 2 insertions(+), 4 deletions(-)
-> >>
-> >>diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/=
-x86/dell-laptop.c
-> >>index d688d80..db2e031 100644
-> >>--- a/drivers/platform/x86/dell-laptop.c
-> >>+++ b/drivers/platform/x86/dell-laptop.c
-> >>@@ -31,6 +31,7 @@
-> >>  #include <linux/slab.h>
-> >>  #include <linux/debugfs.h>
-> >>  #include <linux/seq_file.h>
-> >>+#include <acpi/video.h>
-> >>  #include "../../firmware/dcdbas.h"
-> >>
-> >>  #define BRIGHTNESS_TOKEN 0x7d
-> >>@@ -1921,10 +1922,7 @@ static int __init dell_init(void)
-> >>  				    &dell_debugfs_fops);
-> >>
-> >>  #ifdef CONFIG_ACPI
-> >>-	/* In the event of an ACPI backlight being available, don't
-> >>-	 * register the platform controller.
-> >>-	 */
-> >>-	if (acpi_video_backlight_support())
-> >>+	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
-> >>  		return 0;
-> >>  #endif
-> >>
-> >
-> >Now I'm thinking... Is this correct condition? And do we need it? Th=
-is
-> >Dell backlight interface works even if ACPI or intel i915 driver
-> >controls backlight. Why we should prevent dell-laptop.ko to register
-> >Dell backlight interface if ACPI video already register one? And why=
- not
-> >prevent when intel i915 driver register another?
->=20
-> 3 things:
->=20
-> 1) This is mostly a cleanup series, it does not make any behavioral
-> changes (other then renaming the kernelcmdline option and we've
-> already discussed fixing that).
->=20
-> 2) All 3 drivers ultimately bit-bang the same hardware, we really sho=
-uld
-> have only one driver banging the hardware, so
-> 	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
-> 		return 0;
->=20
-> Definitely is the right thing todo here.
->=20
-> 3) You're right that the intel_backlight still registering even if
-> acpi_video_get_backlight_type() !=3D acpi_backlight_native is weird, =
-but
-> that is how it was before this series, and userspace prefers firmware
-> type backlight sysfs entries over platform /raw ones so it will
-> automatically pick the right one.  We should consider not registering
-> the backlight sysfs class interface from the intel code when
-> acpi_video_get_backlight_type() !=3D acpi_backlight_native but that i=
-s
-> something for later...
->=20
-> Regards,
->=20
-> Hans
+Out of curiosity, when will this patch be mainlined?
 
-Ok. This patch series is just refactor/cleanup which does not change
-functional behavior. I'm ok with this dell-laptop change, so you can ad=
-d
-my Acked-By.
+Marcus Pollice
 
-Once you will create new patches for backlight (maybe for intel i915),
-please CC me, so I can discuss about them too.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+On 07.04.2015 20:37, Kyle Evans wrote:
+> Did you CC the author, in this case me. If you did I am sorry for not
+> catching it. If not, that would be the ticket.
+>
+> On April 6, 2015 11:57:05 AM EDT, Marcus Pollice
+> <marcus.pollice@gmail.com> wrote:
+>
+>     Patch tested successfully on a HP Compaq nx6310 with kernel 3.19, that
+>     had the same issue introduced by the same commit.
+>
+>     I wonder what I did wrong when reporting the issue to this list almost 3
+>     months prior to Bertrand. I went through the same bisection steps and
+>     since he had another issue as well it would have saved him some time.
+>     I'd like to know how I can improve reporting such issues in the future.
+>
+>     Marcus Pollice
+>
+>     On 27.03.2015 19:33, Kyle Evans wrote:
+>
+>         Do not attempt to initialize hotkeys if the query returns a
+>         value. Furthermore, do not write initialize magic on systems
+>         that do not have feature query 0xb. Signed-off-by: Kyle Evans
+>         <kvans32@gmail.com> --- drivers/platform/x86/hp-wmi.c | 15
+>         ++++++++++++--- 1 file changed, 12 insertions(+), 3
+>         deletions(-) diff --git a/drivers/platform/x86/hp-wmi.c
+>         b/drivers/platform/x86/hp-wmi.c index 0ab2b37..4a4d6e3 100644
+>         --- a/drivers/platform/x86/hp-wmi.c +++
+>         b/drivers/platform/x86/hp-wmi.c @@ -54,6 +54,7 @@
+>         MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>         #define HPWMI_HARDWARE_QUERY 0x4 #define HPWMI_WIRELESS_QUERY
+>         0x5 #define HPWMI_BIOS_QUERY 0x9 +#define HPWMI_FEATURE2_QUERY
+>         0xb #define HPWMI_HOTKEY_QUERY 0xc #define HPWMI_FEATURE_QUERY
+>         0xd #define HPWMI_WIRELESS2_QUERY 0x1b @@ -309,10 +310,18 @@
+>         static int __init hp_wmi_bios_2009_later(void) static int
+>         hp_wmi_enable_hotkeys(void) { int ret; - int query = 0x6e; +
+>         int query; + int value = 0x6e; - ret =
+>         hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query,
+>         sizeof(query), - 0); + ret =
+>         hp_wmi_perform_query(HPWMI_BIOS_QUERY, 0, &query, + 0,
+>         sizeof(query)); + + if (!ret && !query) { + if
+>         (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query, + 0,
+>         sizeof(query))) + ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY,
+>         1, &value, + sizeof(value), 0); + } if (ret) return -EINVAL; 
+>
+>
+>
+> -- 
+> Sent from my Android device with K-9 Mail. 
