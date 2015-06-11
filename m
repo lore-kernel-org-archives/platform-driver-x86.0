@@ -1,63 +1,78 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 14/32] acer-wmi: Port to new backlight interface
- selection API
-Date: Thu, 11 Jun 2015 11:01:48 +0800
-Message-ID: <20150611030147.GC22631@linux-rxt1.site>
-References: <1433941292-21530-1-git-send-email-hdegoede@redhat.com>
- <1433941292-21530-15-git-send-email-hdegoede@redhat.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 0/3] Dell Airplane Mode Switch driver
+Date: Wed, 10 Jun 2015 21:55:08 -0700
+Message-ID: <20150611045508.GA17170@fury.dvhart.com>
+References: <1416755361-17357-1-git-send-email-pali.rohar@gmail.com>
+ <1433579010-10509-1-git-send-email-pali.rohar@gmail.com>
+ <20150608041238.GA9930@fury.dvhart.com>
+ <20150608073022.GA12078@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:42574 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750718AbbFKEzK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 11 Jun 2015 00:55:10 -0400
 Content-Disposition: inline
-In-Reply-To: <1433941292-21530-15-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20150608073022.GA12078@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Valdis.Kletnieks@vt.edu
 
-On Wed, Jun 10, 2015 at 03:01:14PM +0200, Hans de Goede wrote:
-> Port the backlight selection logic to the new backlight interface
-> selection API.
-> 
-> This commit also removes various obsolete pr_xxx messages related to
-> backlight interface selection. These are obsolete because they assume
-> there is only a vendor or acpi backlight driver and no other choice.
-> Also they are not necessary, if the user wants to know which backlight
-> interfaces are registered a simple "ls /sys/class/backlight" suffices.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Jun 08, 2015 at 09:30:36AM +0200, Pali Roh=E1r wrote:
+> On Sunday 07 June 2015 21:12:38 Darren Hart wrote:
+> > On Sat, Jun 06, 2015 at 10:23:27AM +0200, Pali Roh=E1r wrote:
+> > > This patch series add new acpi Dell Airplane Mode Switch driver (=
+DELLABCE and
+> > > DELRBTN acpi devices). It provides radio HW switch events (togeth=
+er with current
+> > > state of radio devices) and export them via rfkill interface. The=
+se events are
+> > > also used in dell-laptop driver instead i8042 filter hook functio=
+n (when acpi
+> > > device is available).
+> > >=20
+> > > In v2 was added support for laptops which have toggle button inst=
+ead HW slider
+> > > switch. For that I reused code done by Alex Hung.
+> > >=20
+> > > v3 is just cleanup.
+> > >=20
+> > > In v4 was fixed dependency problems.
+> >=20
+> > Please be more specific in the future. You want people that haven't=
+ looked at
+> > this for a couple of weeks to be able to quickly identify what chan=
+ged and
+> > confirm they agree. You want people to review your code, you want t=
+o reduce the
+> > barrier to do so. Easy to do while it's fresh in your mind.
+> >=20
+> > Thanks for the update, I have these qeueud to testing.
+> >=20
+>=20
+> I wrote more details into individual patches above diffstat lines. Bu=
+t
+> if you want detailed description also to cover letter email, I can do
+> that in the future...
 
-Reviewed-by: Lee, Chun-Yi <jlee@suse.com>
+The individual patches is better. It's typical to leave the entire chan=
+gelog
+after the ---, and not just the current version. I found what I was act=
+ually
+looking for was in the v4 changelog.
 
-Thanks a lot!
-Joey Lee
+It's not a huge deal, but if the goal is to get people (and not just me=
+) to
+review the code, we want to make it as easy for them as possible to get=
+ the
+necessary context to start reviewing. No doubt certain maintainer may f=
+eel
+differently.
 
-> ---
->  drivers/platform/x86/acer-wmi.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 3ac29a1..f6b280d 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -2246,14 +2246,10 @@ static int __init acer_wmi_init(void)
->  	set_quirks();
->  
->  	if (dmi_check_system(video_vendor_dmi_table))
-> -		acpi_video_dmi_promote_vendor();
-> -	if (acpi_video_backlight_support()) {
-> +		acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
-> +
-> +	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		interface->capability &= ~ACER_CAP_BRIGHTNESS;
-> -		pr_info("Brightness must be controlled by acpi video driver\n");
-> -	} else {
-> -		pr_info("Disabling ACPI video driver\n");
-> -		acpi_video_unregister_backlight();
-> -	}
->  
->  	if (wmi_has_guid(WMID_GUID3)) {
->  		if (ec_raw_mode) {
-> -- 
-> 2.4.2
-> 
+--=20
+Darren Hart
+Intel Open Source Technology Center
