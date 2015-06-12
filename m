@@ -1,73 +1,64 @@
-From: Marcus Pollice <marcus.pollice@gmail.com>
-Subject: Re: [PATCH] hp-wmi: limit hotkey enable
-Date: Fri, 12 Jun 2015 00:08:33 +0200
-Message-ID: <557A06E1.6010201@gmail.com>
-References: <20150313053325.GA22984@aaronlu.sh.intel.com> <1427481191-4475-1-git-send-email-kvans32@gmail.com> <5522ACD1.1070202@gmail.com> <13CD30DA-0450-4879-89ED-9B5C6D434652@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 28/32] sony-laptop: Port to new backlight interface selection
+ API
+Date: Fri, 12 Jun 2015 10:18:52 +0200
+Message-ID: <557A95EC.5060607@redhat.com>
+References: <1433941292-21530-1-git-send-email-hdegoede@redhat.com> <1433941292-21530-29-git-send-email-hdegoede@redhat.com> <20150610213037.GB7272@taihen.jp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f49.google.com ([74.125.82.49]:33844 "EHLO
-	mail-wg0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754652AbbFKWIh (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 11 Jun 2015 18:08:37 -0400
-Received: by wgv5 with SMTP id 5so12381780wgv.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2015 15:08:36 -0700 (PDT)
-In-Reply-To: <13CD30DA-0450-4879-89ED-9B5C6D434652@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20150610213037.GB7272@taihen.jp>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>
+Cc: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?windows-1252?Q?Pali_Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Out of curiosity, when will this patch be mainlined?
+Hi,
 
-Marcus Pollice
+On 10-06-15 23:30, Mattia Dongili wrote:
+> On Wed, Jun 10, 2015 at 03:01:28PM +0200, Hans de Goede wrote:
+>> Port the backlight selection logic to the new backlight interface
+>> selection API.
+>>
+>> This commit also removes various obsolete pr_xxx messages related to
+>> backlight interface selection. These are obsolete because they assume
+>> there is only a vendor or acpi backlight driver and no other choice.
+>> Also they are not necessary, if the user wants to know which backlight
+>> interfaces are registered a simple "ls /sys/class/backlight" suffices.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Acked-by: Mattia Dongili <malattia@linux.it>
+>
+>> ---
+>>   drivers/platform/x86/sony-laptop.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+>> index e51c1e7..6207be6 100644
+>> --- a/drivers/platform/x86/sony-laptop.c
+>> +++ b/drivers/platform/x86/sony-laptop.c
+>> @@ -69,6 +69,7 @@
+>>   #include <linux/miscdevice.h>
+>>   #endif
+>>   #include <asm/uaccess.h>
+>> +#include <acpi/video.h>
+>>
+>>   #define dprintk(fmt, ...)			\
+>>   do {						\
+>> @@ -3199,11 +3200,8 @@ static int sony_nc_add(struct acpi_device *device)
+>>   	}
+>>
+>>   	/* setup input devices and helper fifo */
+>> -	if (acpi_video_backlight_support()) {
+>
+> The comment above is really misplaced. I wouldn'd mind if you got rid of
+> that too.
 
-On 07.04.2015 20:37, Kyle Evans wrote:
-> Did you CC the author, in this case me. If you did I am sorry for not
-> catching it. If not, that would be the ticket.
->
-> On April 6, 2015 11:57:05 AM EDT, Marcus Pollice
-> <marcus.pollice@gmail.com> wrote:
->
->     Patch tested successfully on a HP Compaq nx6310 with kernel 3.19, that
->     had the same issue introduced by the same commit.
->
->     I wonder what I did wrong when reporting the issue to this list almost 3
->     months prior to Bertrand. I went through the same bisection steps and
->     since he had another issue as well it would have saved him some time.
->     I'd like to know how I can improve reporting such issues in the future.
->
->     Marcus Pollice
->
->     On 27.03.2015 19:33, Kyle Evans wrote:
->
->         Do not attempt to initialize hotkeys if the query returns a
->         value. Furthermore, do not write initialize magic on systems
->         that do not have feature query 0xb. Signed-off-by: Kyle Evans
->         <kvans32@gmail.com> --- drivers/platform/x86/hp-wmi.c | 15
->         ++++++++++++--- 1 file changed, 12 insertions(+), 3
->         deletions(-) diff --git a/drivers/platform/x86/hp-wmi.c
->         b/drivers/platform/x86/hp-wmi.c index 0ab2b37..4a4d6e3 100644
->         --- a/drivers/platform/x86/hp-wmi.c +++
->         b/drivers/platform/x86/hp-wmi.c @@ -54,6 +54,7 @@
->         MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
->         #define HPWMI_HARDWARE_QUERY 0x4 #define HPWMI_WIRELESS_QUERY
->         0x5 #define HPWMI_BIOS_QUERY 0x9 +#define HPWMI_FEATURE2_QUERY
->         0xb #define HPWMI_HOTKEY_QUERY 0xc #define HPWMI_FEATURE_QUERY
->         0xd #define HPWMI_WIRELESS2_QUERY 0x1b @@ -309,10 +310,18 @@
->         static int __init hp_wmi_bios_2009_later(void) static int
->         hp_wmi_enable_hotkeys(void) { int ret; - int query = 0x6e; +
->         int query; + int value = 0x6e; - ret =
->         hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query,
->         sizeof(query), - 0); + ret =
->         hp_wmi_perform_query(HPWMI_BIOS_QUERY, 0, &query, + 0,
->         sizeof(query)); + + if (!ret && !query) { + if
->         (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query, + 0,
->         sizeof(query))) + ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY,
->         1, &value, + sizeof(value), 0); + } if (ret) return -EINVAL; 
->
->
->
-> -- 
-> Sent from my Android device with K-9 Mail. 
+I've removed it and squashed the removal of it into this patch. I plan to do
+a v2 of this patch-set later today, that will have this change.
+
+Regards,
+
+Hans
