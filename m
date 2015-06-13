@@ -1,66 +1,46 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 32/32] acpi-video: Make acpi_video_unregister_backlight()
- private
-Date: Fri, 12 Jun 2015 13:23:51 +0200
-Message-ID: <1434108231-12323-33-git-send-email-hdegoede@redhat.com>
-References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/2] ideapad: fix software rfkill setting
+Date: Sat, 13 Jun 2015 15:23:33 +0200
+Message-ID: <5498848.9yV42J8a1L@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Darren Hart <dvhart@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>, linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, dri-devel@lists.freedesktop.org, Azael Avalos <coproscefalo@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Mattia Dongili <malattia@linux.it>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Ben Skeggs <bskeggs@redhat.com>, Corentin Chary <corentin.chary@gmail.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mout.kundenserver.de ([212.227.126.131]:62090 "EHLO
+	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753319AbbFMNXk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 13 Jun 2015 09:23:40 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@linux.intel.com>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-YWNwaV92aWRlb191bnJlZ2lzdGVyX2JhY2tsaWdodCgpIGlzIG5vdyBvbmx5IHVzZWQgYnkgdmlk
-ZW9fZGV0ZWN0LmMKd2hpY2ggaXMgcGFydCBvZiB0aGUgc2FtZSBhY3BpX3ZpZGVvIG1vZHVsZSBh
-cyB2aWRlby5jLCBtYWtlCmFjcGlfdmlkZW9fdW5yZWdpc3Rlcl9iYWNrbGlnaHQoKSBwcml2YXRl
-IHRvIHRoaXMgbW9kdWxlLgoKU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVA
-cmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2FjcGkvYWNwaV92aWRlby5jICAgfCAxIC0KIGRyaXZl
-cnMvYWNwaS92aWRlb19kZXRlY3QuYyB8IDIgKysKIGluY2x1ZGUvYWNwaS92aWRlby5oICAgICAg
-ICB8IDIgLS0KIDMgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9hY3BpX3ZpZGVvLmMgYi9kcml2ZXJzL2FjcGkv
-YWNwaV92aWRlby5jCmluZGV4IGZjYzdjMmUuLjc5MDYyZmYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-YWNwaS9hY3BpX3ZpZGVvLmMKKysrIGIvZHJpdmVycy9hY3BpL2FjcGlfdmlkZW8uYwpAQCAtMTk4
-OCw3ICsxOTg4LDYgQEAgdm9pZCBhY3BpX3ZpZGVvX3VucmVnaXN0ZXJfYmFja2xpZ2h0KHZvaWQp
-CiAJfQogCW11dGV4X3VubG9jaygmcmVnaXN0ZXJfY291bnRfbXV0ZXgpOwogfQotRVhQT1JUX1NZ
-TUJPTChhY3BpX3ZpZGVvX3VucmVnaXN0ZXJfYmFja2xpZ2h0KTsKIAogLyoKICAqIFRoaXMgaXMg
-a2luZCBvZiBuYXN0eS4gSGFyZHdhcmUgdXNpbmcgSW50ZWwgY2hpcHNldHMgbWF5IHJlcXVpcmUK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS92aWRlb19kZXRlY3QuYyBiL2RyaXZlcnMvYWNwaS92
-aWRlb19kZXRlY3QuYwppbmRleCA3NGQ0YTE2Li5jYWNjOWViNiAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9hY3BpL3ZpZGVvX2RldGVjdC5jCisrKyBiL2RyaXZlcnMvYWNwaS92aWRlb19kZXRlY3QuYwpA
-QCAtMzcsNiArMzcsOCBAQAogQUNQSV9NT0RVTEVfTkFNRSgidmlkZW8iKTsKICNkZWZpbmUgX0NP
-TVBPTkVOVAkJQUNQSV9WSURFT19DT01QT05FTlQKIAordm9pZCBhY3BpX3ZpZGVvX3VucmVnaXN0
-ZXJfYmFja2xpZ2h0KHZvaWQpOworCiBzdGF0aWMgYm9vbCBiYWNrbGlnaHRfbm90aWZpZXJfcmVn
-aXN0ZXJlZDsKIHN0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgYmFja2xpZ2h0X25iOwogCmRp
-ZmYgLS1naXQgYS9pbmNsdWRlL2FjcGkvdmlkZW8uaCBiL2luY2x1ZGUvYWNwaS92aWRlby5oCmlu
-ZGV4IDQ3YzdhZDYuLmE3ZDdmMTAgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvYWNwaS92aWRlby5oCisr
-KyBiL2luY2x1ZGUvYWNwaS92aWRlby5oCkBAIC0yNyw3ICsyNyw2IEBAIGVudW0gYWNwaV9iYWNr
-bGlnaHRfdHlwZSB7CiAjaWYgKGRlZmluZWQgQ09ORklHX0FDUElfVklERU8gfHwgZGVmaW5lZCBD
-T05GSUdfQUNQSV9WSURFT19NT0RVTEUpCiBleHRlcm4gaW50IGFjcGlfdmlkZW9fcmVnaXN0ZXIo
-dm9pZCk7CiBleHRlcm4gdm9pZCBhY3BpX3ZpZGVvX3VucmVnaXN0ZXIodm9pZCk7Ci1leHRlcm4g
-dm9pZCBhY3BpX3ZpZGVvX3VucmVnaXN0ZXJfYmFja2xpZ2h0KHZvaWQpOwogZXh0ZXJuIGludCBh
-Y3BpX3ZpZGVvX2dldF9lZGlkKHN0cnVjdCBhY3BpX2RldmljZSAqZGV2aWNlLCBpbnQgdHlwZSwK
-IAkJCSAgICAgICBpbnQgZGV2aWNlX2lkLCB2b2lkICoqZWRpZCk7CiBleHRlcm4gZW51bSBhY3Bp
-X2JhY2tsaWdodF90eXBlIGFjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90eXBlKHZvaWQpOwpAQCAt
-MzUsNyArMzQsNiBAQCBleHRlcm4gdm9pZCBhY3BpX3ZpZGVvX3NldF9kbWlfYmFja2xpZ2h0X3R5
-cGUoZW51bSBhY3BpX2JhY2tsaWdodF90eXBlIHR5cGUpOwogI2Vsc2UKIHN0YXRpYyBpbmxpbmUg
-aW50IGFjcGlfdmlkZW9fcmVnaXN0ZXIodm9pZCkgeyByZXR1cm4gMDsgfQogc3RhdGljIGlubGlu
-ZSB2b2lkIGFjcGlfdmlkZW9fdW5yZWdpc3Rlcih2b2lkKSB7IHJldHVybjsgfQotc3RhdGljIGlu
-bGluZSB2b2lkIGFjcGlfdmlkZW9fdW5yZWdpc3Rlcl9iYWNrbGlnaHQodm9pZCkgeyByZXR1cm47
-IH0KIHN0YXRpYyBpbmxpbmUgaW50IGFjcGlfdmlkZW9fZ2V0X2VkaWQoc3RydWN0IGFjcGlfZGV2
-aWNlICpkZXZpY2UsIGludCB0eXBlLAogCQkJCSAgICAgIGludCBkZXZpY2VfaWQsIHZvaWQgKipl
-ZGlkKQogewotLSAKMi40LjIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+This fixes a several year old regression that I found while trying
+to get the Yoga 3 11 to work. The ideapad_rfk_set function is meant
+to send a command to the embedded controller through ACPI, but
+as of c1f73658ed, it sends the index of the rfkill device instead
+of the command, and ignores the opcode field.
+
+This changes it back to the original behavior, which indeed
+flips the rfkill state as seen in the debugfs interface.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: c1f73658ed ("ideapad: pass ideapad_priv as argument (part 2)")
+Cc: stable@vger.kernel.org # v2.6.38+
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 6e825201f09a..cb7cd8d79329 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -464,8 +464,9 @@ static const struct ideapad_rfk_data ideapad_rfk_data[] = {
+ static int ideapad_rfk_set(void *data, bool blocked)
+ {
+ 	struct ideapad_rfk_priv *priv = data;
++	int opcode = ideapad_rfk_data[priv->dev].opcode;
+ 
+-	return write_ec_cmd(priv->priv->adev->handle, priv->dev, !blocked);
++	return write_ec_cmd(priv->priv->adev->handle, opcode, !blocked);
+ }
+ 
+ static struct rfkill_ops ideapad_rfk_ops = {
