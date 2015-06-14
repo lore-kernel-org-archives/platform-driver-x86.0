@@ -1,113 +1,108 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Possible broken MM code in dell-laptop.c?
-Date: Sun, 14 Jun 2015 11:05:07 +0200
-Message-ID: <201506141105.07171@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart4151917.2Ma5RsCSLe";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-Sender: owner-linux-mm@kvack.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.cz>
-Cc: platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+From: Finn Thain <fthain@telegraphics.com.au>
+Subject: [RFC v2 07/24] x86/thinkpad_acpi: Use arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
+Date: Sun, 14 Jun 2015 17:46:14 +1000
+Message-ID: <20150614074609.036850762@telegraphics.com.au>
+References: <20150614074607.242676098@telegraphics.com.au>
+Return-path: <linux-m68k-owner@vger.kernel.org>
+Content-Disposition: inline; filename=pc-rtc-replace-exported-nvram-functions
+Sender: linux-m68k-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 List-Id: platform-driver-x86.vger.kernel.org
 
---nextPart4151917.2Ma5RsCSLe
-Content-Type: text/plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
+nvram_* function exports can be removed.
 
-Hello,
+This patch series was tested on a ThinkPad T43.
 
-in drivers/platform/x86/dell-laptop.c is this part of code:
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
 
-static int __init dell_init(void)
-{
-=2E..
-	/*
-	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
-	 * is passed to SMI handler.
-	 */
-	bufferpage =3D alloc_page(GFP_KERNEL | GFP_DMA32);
-	if (!bufferpage) {
-		ret =3D -ENOMEM;
-		goto fail_buffer;
-	}
-	buffer =3D page_address(bufferpage);
+---
+ drivers/platform/x86/thinkpad_acpi.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-	ret =3D dell_setup_rfkill();
-
-	if (ret) {
-		pr_warn("Unable to setup rfkill\n");
-		goto fail_rfkill;
-	}
-=2E..
-fail_rfkill:
-	free_page((unsigned long)bufferpage);
-fail_buffer:
-=2E..
-}
-
-Then there is another part:
-
-static void __exit dell_exit(void)
-{
-=2E..
-	free_page((unsigned long)buffer);
-}
-
-I suspect that there is some problem with free_page() call. In dell_init=20
-is called free_page() on bufferpage and in dell_exit() on buffer.
-
-Matthew and Stuart, you introduced this inconsistency in commit:
-
-=2D------------------------------------------------
-commit 116ee77b2858d9c89c0327f3a47c8ba864bf4a96
-Author: Stuart Hayes <stuart_hayes@dell.com>
-Committer: Matthew Garrett <mjg@redhat.com>
-Date:   Wed Feb 10 14:12:13 2010 -0500
-
-    dell-laptop: Use buffer with 32-bit physical address
-
-    Calls to communicate with system firmware via a SMI (using dcdbas)
-    need to use a buffer that has a physical address of 4GB or less.
-    Currently the dell-laptop driver does not guarantee this, and when=20
-the
-    buffer address is higher than 4GB, the address is truncated to 32=20
-bits
-    and the SMI handler writes to the wrong memory address.
-   =20
-    Signed-off-by: Stuart Hayes <stuart_hayes@dell.com>
-    Acked-by: Matthew Garrett <mjg@redhat.com>
-=2D------------------------------------------------
-
-Can you or somebody else (CCed linux-mm) look at this page related code?=20
-I think it is wrong, but somebody authoritative should provide answer.
-
-Thanks.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart4151917.2Ma5RsCSLe
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlV9Q8MACgkQi/DJPQPkQ1J0UACdHR0APSrYqgL+780YeaHg5762
-rN4AoKgqmDBEOE0OFNDra9d8ZG+anJ5z
-=cav6
------END PGP SIGNATURE-----
-
---nextPart4151917.2Ma5RsCSLe--
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Index: linux/drivers/platform/x86/thinkpad_acpi.c
+===================================================================
+--- linux.orig/drivers/platform/x86/thinkpad_acpi.c	2015-06-14 17:45:34.000000000 +1000
++++ linux/drivers/platform/x86/thinkpad_acpi.c	2015-06-14 17:45:42.000000000 +1000
+@@ -2311,30 +2311,30 @@ static void hotkey_read_nvram(struct tp_
+ 	u8 d;
+ 
+ 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
+ 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
+ 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
+ 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
+ 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
+ 	}
+ 	if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
+ 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
+ 	}
+ 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
+ 		n->displayexp_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 		n->brightness_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
+ 				>> TP_NVRAM_POS_LEVEL_VOLUME;
+ 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
+@@ -6155,7 +6155,7 @@ static unsigned int tpacpi_brightness_nv
+ {
+ 	u8 lnvram;
+ 
+-	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
++	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
+ 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 	lnvram &= bright_maxlvl;
+@@ -6180,7 +6180,7 @@ static void tpacpi_brightness_checkpoint
+ 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
+ 		goto unlock;
+ 	lec &= TP_EC_BACKLIGHT_LVLMSK;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 
+ 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
+@@ -6188,7 +6188,7 @@ static void tpacpi_brightness_checkpoint
+ 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
+ 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
+ 		dbg_printk(TPACPI_DBG_BRGHT,
+ 			   "updated NVRAM backlight level to %u (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
+@@ -6796,13 +6796,13 @@ static void tpacpi_volume_checkpoint_nvr
+ 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
+ 		goto unlock;
+ 	lec &= ec_mask;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 
+ 	if (lec != (b_nvram & ec_mask)) {
+ 		/* NVRAM needs update */
+ 		b_nvram &= ~ec_mask;
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
+ 		dbg_printk(TPACPI_DBG_MIXER,
+ 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
