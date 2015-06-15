@@ -1,89 +1,72 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 1/1] thinkpad-acpi: Reduce screen brightness user visible
- noise.
-Date: Mon, 15 Jun 2015 14:06:42 -0300
-Message-ID: <1434388002.1043361.296101137.662E7FE3@webmail.messagingengine.com>
-References: <20150614022755.GB26753@khazad-dum.debian.net>
- <1434382154-3046-1-git-send-email-cramm0@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] ideapad: add rfkill whitelist entry for Yoga 3 1170
+Date: Mon, 15 Jun 2015 13:26:47 -0700
+Message-ID: <20150615202647.GB83198@vmdeb7>
+References: <5498848.9yV42J8a1L@wuerfel>
+ <4113282.CaC1reWxk0@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:52951 "EHLO
-	out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754427AbbFORGm (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:57994 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754117AbbFOU0t (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Jun 2015 13:06:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 6274720C26
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2015 13:06:42 -0400 (EDT)
-In-Reply-To: <1434382154-3046-1-git-send-email-cramm0@gmail.com>
+	Mon, 15 Jun 2015 16:26:49 -0400
+Content-Disposition: inline
+In-Reply-To: <4113282.CaC1reWxk0@wuerfel>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ramiro Morales <cramm0@gmail.com>, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@linux.intel.com>, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Mon, Jun 15, 2015, at 12:29, Ramiro Morales wrote:
-> Implement change in logging during screen brightness capabilities
-> detection as suggested in
-> https://www.mail-archive.com/ibm-acpi-devel%40lists.sourceforge.net/msg03484.html
+On Sat, Jun 13, 2015 at 03:24:32PM +0200, Arnd Bergmann wrote:
+> This adds one more entry to the whitelist of machines that do not have
+> a physical rfkill switch. Unfortunately, the Yoga 3 generation seems
+> to use upper-case letters for the YOGA 3 Pro-1370, while it uses normal
+> capitalization for its Yoga 3 1170 sibling.
 > 
-> Signed-off-by: Ramiro Morales <cramm0@gmail.com>
-
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> In order to catch all variants of the Yoga 3, I'm now using both strings
+> as wildcards here, which should also cover the 1470 model, and possible
+> changes in the string that could happen in firmware updates.
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> b/drivers/platform/x86/thinkpad_acpi.c
-> index 28f3281..b48efc9 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -6450,19 +6450,16 @@ static void __init
-> tpacpi_detect_brightness_capabilities(void)
->  	switch (b) {
->  	case 16:
->  		bright_maxlvl = 15;
-> -               pr_info("detected a 16-level brightness capable
-> ThinkPad\n");
->  		break;
->  	case 8:
->  	case 0:
->  		bright_maxlvl = 7;
-> -               pr_info("detected a 8-level brightness capable
-> ThinkPad\n");
->  		break;
->  	default:
-> -               pr_err("Unsupported brightness interface, "
-> -                      "please contact %s\n", TPACPI_MAIL);
->  		tp_features.bright_unkfw = 1;
->  		bright_maxlvl = b - 1;
->  	}
-> +       pr_debug("firmware reports %d brightness levels\n",
-> bright_maxlvl);
->  }
->  
->  static int __init brightness_init(struct ibm_init_struct *iibm)
-> @@ -6482,6 +6479,9 @@ static int __init brightness_init(struct
-> ibm_init_struct *iibm)
->  
->  	/* if it is unknown, we don't handle it: it wouldn't be safe */
->  	if (tp_features.bright_unkfw)
-> +               dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_BRGHT,
-> +                          "Unsupported brightness mode, use acpi video "
-> +                          "or gpu drivers");
->  		return 1;
->  
->  	if (!brightness_enable) {
-> -- 
-> 1.9.1
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index cb7cd8d79329..8e455c1429ee 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -855,7 +855,14 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>  		.ident = "Lenovo Yoga 3 Pro 1370",
 
+I believe we should also update the ident to indicate the inclusion of the 1470
+model since you dropped the 1370 specifier from the product version.
+
+(Also, please use my infradead ID specified in MAINTAINERS for
+platform-drivers-x86)
+
+Thanks,
+
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
+> +		},
+> +	},
+> +	{
+> +		.ident = "Lenovo Yoga 3 1170 / 1470",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 3"),
+>  		},
+>  	},
+>  	{}
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+Darren Hart
+Intel Open Source Technology Center
