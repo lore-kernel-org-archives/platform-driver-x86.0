@@ -1,39 +1,67 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] ideapad: fix software rfkill setting
-Date: Mon, 15 Jun 2015 13:29:03 -0700
-Message-ID: <20150615202903.GC83198@vmdeb7>
-References: <5498848.9yV42J8a1L@wuerfel>
+Subject: Re: Possible broken MM code in dell-laptop.c?
+Date: Mon, 15 Jun 2015 13:36:45 -0700
+Message-ID: <20150615203645.GD83198@vmdeb7>
+References: <201506141105.07171@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:58777 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:32876 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755876AbbFOU3E (ORCPT
+	with ESMTP id S1752160AbbFOUgw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Jun 2015 16:29:04 -0400
+	Mon, 15 Jun 2015 16:36:52 -0400
 Content-Disposition: inline
-In-Reply-To: <5498848.9yV42J8a1L@wuerfel>
+In-Reply-To: <201506141105.07171@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@linux.intel.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.cz>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 
-On Sat, Jun 13, 2015 at 03:23:33PM +0200, Arnd Bergmann wrote:
-> This fixes a several year old regression that I found while trying
-> to get the Yoga 3 11 to work. The ideapad_rfk_set function is meant
-> to send a command to the embedded controller through ACPI, but
-> as of c1f73658ed, it sends the index of the rfkill device instead
-> of the command, and ignores the opcode field.
-> 
-> This changes it back to the original behavior, which indeed
-> flips the rfkill state as seen in the debugfs interface.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Fixes: c1f73658ed ("ideapad: pass ideapad_priv as argument (part 2)")
-> Cc: stable@vger.kernel.org # v2.6.38+
+On Sun, Jun 14, 2015 at 11:05:07AM +0200, Pali Roh=E1r wrote:
+> Hello,
+>=20
+> in drivers/platform/x86/dell-laptop.c is this part of code:
+>=20
+> static int __init dell_init(void)
+> {
+> ...
+> 	/*
+> 	 * Allocate buffer below 4GB for SMI data--only 32-bit physical addr
+> 	 * is passed to SMI handler.
+> 	 */
+> 	bufferpage =3D alloc_page(GFP_KERNEL | GFP_DMA32);
+> 	if (!bufferpage) {
+> 		ret =3D -ENOMEM;
+> 		goto fail_buffer;
+> 	}
+> 	buffer =3D page_address(bufferpage);
+>=20
+> 	ret =3D dell_setup_rfkill();
+>=20
+> 	if (ret) {
+> 		pr_warn("Unable to setup rfkill\n");
+> 		goto fail_rfkill;
+> 	}
+> ...
+> fail_rfkill:
+> 	free_page((unsigned long)bufferpage);
+> fail_buffer:
+> ...
+> }
+>=20
+> Then there is another part:
+>=20
+> static void __exit dell_exit(void)
+> {
+> ...
+> 	free_page((unsigned long)buffer);
 
-Queued for 4.2. Thanks!
+I believe you are correct, and this should be bufferpage. Have you obse=
+rved any
+failures?
 
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
