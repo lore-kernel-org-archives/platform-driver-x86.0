@@ -1,105 +1,83 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: Possible broken MM code in dell-laptop.c?
-Date: Mon, 15 Jun 2015 22:42:30 +0200
-Message-ID: <201506152242.30732@pali>
-References: <201506141105.07171@pali> <20150615203645.GD83198@vmdeb7>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/1] thinkpad-acpi: Reduce screen brightness user visible
+ noise.
+Date: Mon, 15 Jun 2015 13:43:31 -0700
+Message-ID: <20150615204331.GF83198@vmdeb7>
+References: <20150614022755.GB26753@khazad-dum.debian.net>
+ <1434382154-3046-1-git-send-email-cramm0@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2946010.OgYTOazmK5";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f172.google.com ([209.85.212.172]:35421 "EHLO
-	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751909AbbFOUme (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:34484 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752151AbbFOUne (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Jun 2015 16:42:34 -0400
-In-Reply-To: <20150615203645.GD83198@vmdeb7>
+	Mon, 15 Jun 2015 16:43:34 -0400
+Content-Disposition: inline
+In-Reply-To: <1434382154-3046-1-git-send-email-cramm0@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.cz>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+To: Ramiro Morales <cramm0@gmail.com>
+Cc: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
---nextPart2946010.OgYTOazmK5
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 15, 2015 at 12:29:14PM -0300, Ramiro Morales wrote:
+> Implement change in logging during screen brightness capabilities
+> detection as suggested in
+> https://www.mail-archive.com/ibm-acpi-devel%40lists.sourceforge.net/msg03484.html
+> 
 
-On Monday 15 June 2015 22:36:45 Darren Hart wrote:
-> On Sun, Jun 14, 2015 at 11:05:07AM +0200, Pali Roh=C3=A1r wrote:
-> > Hello,
-> >=20
-> > in drivers/platform/x86/dell-laptop.c is this part of code:
-> >=20
-> > static int __init dell_init(void)
-> > {
-> > ...
-> >=20
-> > 	/*
-> > =09
-> > 	 * Allocate buffer below 4GB for SMI data--only 32-bit physical
-> > 	 addr * is passed to SMI handler.
-> > 	 */
-> > =09
-> > 	bufferpage =3D alloc_page(GFP_KERNEL | GFP_DMA32);
-> > 	if (!bufferpage) {
-> > =09
-> > 		ret =3D -ENOMEM;
-> > 		goto fail_buffer;
-> > =09
-> > 	}
-> > 	buffer =3D page_address(bufferpage);
-> > =09
-> > 	ret =3D dell_setup_rfkill();
-> > =09
-> > 	if (ret) {
-> > =09
-> > 		pr_warn("Unable to setup rfkill\n");
-> > 		goto fail_rfkill;
-> > =09
-> > 	}
-> >=20
-> > ...
-> >=20
-> > fail_rfkill:
-> > 	free_page((unsigned long)bufferpage);
-> >=20
-> > fail_buffer:
-> > ...
-> > }
-> >=20
-> > Then there is another part:
-> >=20
-> > static void __exit dell_exit(void)
-> > {
-> > ...
-> >=20
-> > 	free_page((unsigned long)buffer);
->=20
-> I believe you are correct, and this should be bufferpage. Have you
-> observed any failures?
+Summarize the rationale here, the change log needs to stand alone. You can
+reference a link, but the justification cannot depend on it.
 
-Rmmoding dell-laptop.ko works fine. There is no error in dmesg. I think=20
-that buffer (and not bufferpage) should be passed to free_page(). So in=20
-my opinion problem is at fail_rfkill: label and not in dell_exit().
+> Signed-off-by: Ramiro Morales <cramm0@gmail.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 28f3281..b48efc9 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6450,19 +6450,16 @@ static void __init tpacpi_detect_brightness_capabilities(void)
+>  	switch (b) {
+>  	case 16:
+>  		bright_maxlvl = 15;
+> -		pr_info("detected a 16-level brightness capable ThinkPad\n");
+>  		break;
+>  	case 8:
+>  	case 0:
+>  		bright_maxlvl = 7;
+> -		pr_info("detected a 8-level brightness capable ThinkPad\n");
+>  		break;
+>  	default:
+> -		pr_err("Unsupported brightness interface, "
+> -		       "please contact %s\n", TPACPI_MAIL);
+>  		tp_features.bright_unkfw = 1;
+>  		bright_maxlvl = b - 1;
+>  	}
+> +	pr_debug("firmware reports %d brightness levels\n", bright_maxlvl);
+>  }
+>  
+>  static int __init brightness_init(struct ibm_init_struct *iibm)
+> @@ -6482,6 +6479,9 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+>  
+>  	/* if it is unknown, we don't handle it: it wouldn't be safe */
+>  	if (tp_features.bright_unkfw)
+> +		dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_BRGHT,
+> +			   "Unsupported brightness mode, use acpi video "
+> +			   "or gpu drivers");
 
-But somebody from linux-mm should look at it...
+Please run checkpatch on your patch (don't break quoted strings - it makes it
+hard to find them with grep).
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+>  		return 1;
+>  
+>  	if (!brightness_enable) {
+> -- 
+> 1.9.1
+> 
+> 
 
---nextPart2946010.OgYTOazmK5
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlV/OLYACgkQi/DJPQPkQ1Jk0ACeIGd6oijZXI+02KCAq3JSNibE
-TXQAn2qfELLHG8KWLj2yFeTv/L/aR46T
-=FGp/
------END PGP SIGNATURE-----
-
---nextPart2946010.OgYTOazmK5--
+-- 
+Darren Hart
+Intel Open Source Technology Center
