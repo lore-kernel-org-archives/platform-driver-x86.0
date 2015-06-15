@@ -1,83 +1,51 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2] acpi-video: Add a parameter to not register the backlight sysfs interface
-Date: Tue, 16 Jun 2015 01:18:35 +0200
-Message-ID: <1457636.70KYTLePgN@vostro.rjw.lan>
-References: <1433838745-8857-1-git-send-email-hdegoede@redhat.com> <87mw065wls.fsf@intel.com> <55797B83.7010903@redhat.com>
+Subject: Re: [PATCH v2 00/32] acpi-video: Rewrite backlight interface selection logic
+Date: Tue, 16 Jun 2015 01:22:40 +0200
+Message-ID: <4163515.a4pVZ0oOei@vostro.rjw.lan>
+References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <55797B83.7010903@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from v094114.home.net.pl ([79.96.170.134]:41689 "HELO
+	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1750812AbbFOW4n (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 15 Jun 2015 18:56:43 -0400
+In-Reply-To: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Sylvain Pasche <sylvain.pasche@gmail.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
 
-On Thursday, June 11, 2015 02:13:55 PM Hans de Goede wrote:
-> Hi,
+On Friday, June 12, 2015 01:23:19 PM Hans de Goede wrote:
+> Hi All,
 > 
-> On 11-06-15 13:10, Jani Nikula wrote:
-> > On Thu, 11 Jun 2015, Hans de Goede <hdegoede@redhat.com> wrote:
-> >> Hi,
-> >>
-> >> On 11-06-15 03:43, Aaron Lu wrote:
-> >>> On Tue, Jun 09, 2015 at 11:54:45PM +0200, Hans de Goede wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On 06/09/2015 11:10 AM, Aaron Lu wrote:
-> >>>>> On Tue, Jun 09, 2015 at 10:32:25AM +0200, Hans de Goede wrote:
-> >>>>>> On some systems acpi-video backlight is broken in the sense that it cannot
-> >>>>>> control the brightness of the backlight, but it must still be called on
-> >>>>>> resume to power-up the backlight after resume.
-> >>>>>
-> >>>>> All the video module does on resume is a backlight set operation, it
-> >>>>> can't control backlight but can turn on the screen on resume? Hmm...
-> >>>>>
-> >>>>> I'll ask Sylvain to attach acpidump, let's see if there is anything
-> >>>>> special there.
-> >>>>
-> >>>> Ok, lets see what comes out of that. Note in the mean time Sylvain has
-> >>>> attached his acpidump.
-> >>>
-> >>> Thanks.
-> >>> According to the discussion in the bugzilla place, it doesn't seem we
-> >>> have any other way to handle this at the moment.
-> >>>
-> >>> Acked-by: Aaron Lu <aaron.lu@intel.com>
-> >>
-> >> Thanks. So that only leaves Jani's remark:
-> >>
-> >>   > Nitpick, I'd prefer positively named variables, like enable_foo to avoid
-> >>   > the double negative !disable_foo. enable_foo and !enable_foo read much
-> >>   > better. But up to Aaron and friends.
-> >>
-> >> I personally believe that having the option named disable_backlight_sysfs_if
-> >> is better here since I believe that things which are always enabled except
-> >> on a few broken model laptops the option name should be disable_foo so
-> >> that people can clearly see in /proc/cmdline / dmesg that the user is passing
-> >> an option to disable something which is normally enabled.
-> >
-> > Fair enough.
-> >
-> >>
-> >> As for the (!disabled) argument, the code in question here actually is:
-> >>
-> >> if (disabled)
-> >> 	return 0;
-> >>
-> >> :)
-> >>
-> >> Still if people want me to change the option to a default-on
-> >> enable_backlight_sysfs_if option I can do a v3...
-> >
-> > I'm not insisting.
+> Here is v2 of my rewrite / cleanup of the acpi-video (and platform/x86)
+> backlight interface selection logic.
 > 
-> Great, thanks :)
+> The major change in v2 of this set are 2 changes to the patch titled
+> "acpi-video-detect: video: Make video_detect code part of the video module":
 > 
-> So I'm going to assume this v2 patch is ready for merging then, if anyone
-> wants me to make any changes please let me know.
+> 1) The __setup call for the acpi_backlight= handling is moved to
+>    acpi/util.c as __setup may only be used by code which is always builtin
+> 2) video.c is renamed to acpi_video.c so that it can be combined with
+>    video_detect.c into video.ko
+> 
+> These 2 changes result in the backlight kernel commandline options after this
+> patch-set being 100% compatible with the old options, with the exception of
+> the removal of the video.use_native_backlight option as that now is folded
+> into acpi_backlight=[video|vendor|native|none] rather then having 2 options
+> which influence each other in interesting ways.
+> 
+> Besides that there is a small change to the dell-laptop port to the new API
+> removing an unnecessary #ifdef ACPI.
 
-The v2 queued up for 4.2, thanks!
+I tried to queue this series up for 4.2, but patch [06/32] didn't apply for me,
+so I decided to apply another patch I've got recently instead and which is now
+in my linux-next branch.
+
+Can you please rebase the series on top of linux-pm.git/linux-next and resend it?
 
 
 -- 
