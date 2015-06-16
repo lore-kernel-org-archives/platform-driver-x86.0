@@ -1,23 +1,26 @@
 From: Dalton Fury <daltonfury42@gmail.com>
 Subject: Re: sony_laptop bug - Can't change usb_charge attribute
-Date: Tue, 16 Jun 2015 22:18:33 +0530
-Message-ID: <CALH0Xhmo6V=WXW0LzEC5rrY9kapM24W4_XBn5JUgRUY2o6utbg@mail.gmail.com>
+Date: Tue, 16 Jun 2015 22:31:10 +0530
+Message-ID: <CALH0Xh=RTXtLOoESJmRzq9xPfvmGHtPO=JAvmn_OG7AbRnm1eQ@mail.gmail.com>
 References: <CALH0XhkxrWw7dps6=+KSfiJ6NQtf=1Hu_NqtGydK3amjvUHG5g@mail.gmail.com>
 	<20150610212218.GA7272@taihen.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f48.google.com ([209.85.213.48]:33927 "EHLO
-	mail-yh0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756584AbbFPQsd (ORCPT
+Received: from mail-yh0-f45.google.com ([209.85.213.45]:35288 "EHLO
+	mail-yh0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753014AbbFPRBL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Jun 2015 12:48:33 -0400
-Received: by yhid80 with SMTP id d80so15512597yhi.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2015 09:48:33 -0700 (PDT)
+	Tue, 16 Jun 2015 13:01:11 -0400
+Received: by yhak3 with SMTP id k3so15711971yha.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2015 10:01:11 -0700 (PDT)
 In-Reply-To: <20150610212218.GA7272@taihen.jp>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org
+
+Here is the link:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1461986/+attachment/4413186/+files/dsdt.dat
 
 On Thu, Jun 11, 2015 at 2:52 AM, Mattia Dongili <malattia@linux.it> wrote:
 > Hi Dalton,
