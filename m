@@ -1,71 +1,62 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 35/35] acpi-video: Make acpi_video_unregister_backlight() private
-Date: Tue, 16 Jun 2015 16:28:13 +0200
-Message-ID: <1434464893-3529-36-git-send-email-hdegoede@redhat.com>
-References: <1434464893-3529-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1434464893-3529-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>
-Cc: Aaron Lu <aaron.lu@intel.com>, Ben Skeggs <bskeggs@redhat.com>, Lee Chun-Yi <jlee@suse.com>, Peter Feuerer <peter@piie.net>, Corentin Chary <corentin.chary@gmail.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Jonathan Woithe <jwoithe@just42.net>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Azael Avalos <coproscefalo@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net, Hans de Goede <hdegoede@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Dalton Fury <daltonfury42@gmail.com>
+Subject: Re: sony_laptop bug - Can't change usb_charge attribute
+Date: Tue, 16 Jun 2015 22:18:33 +0530
+Message-ID: <CALH0Xhmo6V=WXW0LzEC5rrY9kapM24W4_XBn5JUgRUY2o6utbg@mail.gmail.com>
+References: <CALH0XhkxrWw7dps6=+KSfiJ6NQtf=1Hu_NqtGydK3amjvUHG5g@mail.gmail.com>
+	<20150610212218.GA7272@taihen.jp>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yh0-f48.google.com ([209.85.213.48]:33927 "EHLO
+	mail-yh0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756584AbbFPQsd (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 16 Jun 2015 12:48:33 -0400
+Received: by yhid80 with SMTP id d80so15512597yhi.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2015 09:48:33 -0700 (PDT)
+In-Reply-To: <20150610212218.GA7272@taihen.jp>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
 
-acpi_video_unregister_backlight() is now only used by video_detect.c
-which is part of the same acpi_video module as video.c, make
-acpi_video_unregister_backlight() private to this module.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/acpi_video.c   | 1 -
- drivers/acpi/video_detect.c | 2 ++
- include/acpi/video.h        | 2 --
- 3 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 5b877a1..8c2fe2f 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2021,7 +2021,6 @@ void acpi_video_unregister_backlight(void)
- 	}
- 	mutex_unlock(&register_count_mutex);
- }
--EXPORT_SYMBOL(acpi_video_unregister_backlight);
- 
- /*
-  * This is kind of nasty. Hardware using Intel chipsets may require
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index c392579..815f75e 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -37,6 +37,8 @@
- ACPI_MODULE_NAME("video");
- #define _COMPONENT		ACPI_VIDEO_COMPONENT
- 
-+void acpi_video_unregister_backlight(void);
-+
- static bool backlight_notifier_registered;
- static struct notifier_block backlight_nb;
- 
-diff --git a/include/acpi/video.h b/include/acpi/video.h
-index 47c7ad6..a7d7f10 100644
---- a/include/acpi/video.h
-+++ b/include/acpi/video.h
-@@ -27,7 +27,6 @@ enum acpi_backlight_type {
- #if (defined CONFIG_ACPI_VIDEO || defined CONFIG_ACPI_VIDEO_MODULE)
- extern int acpi_video_register(void);
- extern void acpi_video_unregister(void);
--extern void acpi_video_unregister_backlight(void);
- extern int acpi_video_get_edid(struct acpi_device *device, int type,
- 			       int device_id, void **edid);
- extern enum acpi_backlight_type acpi_video_get_backlight_type(void);
-@@ -35,7 +34,6 @@ extern void acpi_video_set_dmi_backlight_type(enum acpi_backlight_type type);
- #else
- static inline int acpi_video_register(void) { return 0; }
- static inline void acpi_video_unregister(void) { return; }
--static inline void acpi_video_unregister_backlight(void) { return; }
- static inline int acpi_video_get_edid(struct acpi_device *device, int type,
- 				      int device_id, void **edid)
- {
--- 
-2.3.6
-
+On Thu, Jun 11, 2015 at 2:52 AM, Mattia Dongili <malattia@linux.it> wrote:
+> Hi Dalton,
+>
+> On Wed, Jun 10, 2015 at 03:30:32AM +0530, Dalton Fury wrote:
+>> [1.] [Sony VAIO SVF14212SNB] Can't change usb_charge attribute in
+>> /sys/devices/platform/sony-laptop
+>>
+>> [2.] I am on a Sony VAIO svf43142sn. My laptop has the ability to
+> ...
+>> echo -n 0 | sudo tee -a /sys/devices/platform/sony-laptop/usb_charge
+>>
+>> these are the curresponding kernel log entries:
+>>
+>> [  495.400140] sony_laptop: found handle 0x0155 (offset: 0x07)
+>> [  495.400955] sony_laptop: __call_snc_method: [SN07:0x0000000000000107]
+>> [  495.400961] sony_laptop: called SN07 with 0x0107 (result: 0x0000)
+>>
+>> After attempting to change, and when I cat the value of usb_charge, I
+>> find that it is unchanged. But when the cat cammand is executed, I get
+>> these kernel messages:
+>>
+>> [  683.170315] sony_laptop: found handle 0x0155 (offset: 0x07)
+>> [  683.170458] sony_laptop: __call_snc_method: [SN07:0x0000000000000007]
+>> [  683.170462] sony_laptop: called SN07 with 0x0007 (result: 0x0001)
+>
+> I have the same behaviour on my laptop (a Pro11), I believe usb_charge
+> was working correctly sometime in the past.
+> It may take me some time but I should be able to take a look. In the
+> meantime it would be good if you could attach the DSDT from your model
+> to the Ubuntu bug report and send a link here too.
+>
+>> I don't know if it is relevent, but for writing this bug report, when
+>> I booted into the latest upstream kernel, I could not boot. The second
+>> time it booted successfully.
+>
+> I don't think it is.
+>
+> Thanks
+> --
+> mattia
+> :wq!
