@@ -1,54 +1,84 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH 0/3] Add support for X51-R3 to alienware-wmi
-Date: Tue, 16 Jun 2015 00:25:00 -0500
-Message-ID: <557FB32C.7090807@dell.com>
-References: <1432755422-26024-1-git-send-email-mario_limonciello@dell.com> <556F8B03.4060802@dell.com>
+From: Michal Hocko <mhocko@suse.cz>
+Subject: Re: Possible broken MM code in dell-laptop.c?
+Date: Tue, 16 Jun 2015 08:33:46 +0200
+Message-ID: <20150616063346.GA24296@dhcp22.suse.cz>
+References: <201506141105.07171@pali>
+ <20150615211816.GC16138@dhcp22.suse.cz>
+ <201506152327.59907@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from AUSXIPPC110.us.dell.com ([143.166.85.200]:2433 "EHLO
-	ausxippc110.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751350AbbFPF1G (ORCPT
+Received: from cantor2.suse.de ([195.135.220.15]:40504 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751486AbbFPGdw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Jun 2015 01:27:06 -0400
-In-Reply-To: <556F8B03.4060802@dell.com>
+	Tue, 16 Jun 2015 02:33:52 -0400
+Content-Disposition: inline
+In-Reply-To: <201506152327.59907@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 
+On Mon 15-06-15 23:27:59, Pali Roh=E1r wrote:
+> On Monday 15 June 2015 23:18:16 Michal Hocko wrote:
+> > On Sun 14-06-15 11:05:07, Pali Roh=E1r wrote:
+> > > Hello,
+> > >=20
+> > > in drivers/platform/x86/dell-laptop.c is this part of code:
+> > >=20
+> > > static int __init dell_init(void)
+> > > {
+> > > ...
+> > >=20
+> > > 	/*
+> > > =09
+> > > 	 * Allocate buffer below 4GB for SMI data--only 32-bit physical
+> > > 	 addr * is passed to SMI handler.
+> > > 	 */
+> > > =09
+> > > 	bufferpage =3D alloc_page(GFP_KERNEL | GFP_DMA32);
+> >=20
+> > [...]
+> >=20
+> > > 	buffer =3D page_address(bufferpage);
+> >=20
+> > [...]
+> >=20
+> > > fail_rfkill:
+> > > 	free_page((unsigned long)bufferpage);
+> >=20
+> > This one should be __free_page because it consumes struct page* and
+> > it is the proper counter part for alloc_page. free_page, just to
+> > make it confusing, consumes an address which has to be translated t=
+o
+> > a struct page.
+> >=20
+> > I have no idea why the API has been done this way and yeah, it is
+> > really confusing.
+> >=20
+> > [...]
+> >=20
+> > > static void __exit dell_exit(void)
+> > > {
+> > > ...
+> > >=20
+> > > 	free_page((unsigned long)buffer);
+>=20
+> So both, either:
+>=20
+>  free_page((unsigned long)buffer);
+>=20
+> or
+>=20
+>  __free_page(bufferpage);
+>=20
+> is correct?
 
+Yes. Although I would use __free_page variant as both seem to be
+globally visible.
 
-On 06/03/2015 06:17 PM, Mario Limonciello wrote:
->
-> On 05/27/2015 02:36 PM, Limonciello, Mario wrote:
->> An upcoming Alienware platform, X51-R3 will support some new features in the
->> WMI BIOS control API as well as emit some scan codes when particular hardware
->> is used in conjunction.
->>
->> Mario Limonciello (3):
->>     Add support for X51-R3
->>     Add support for Alienware graphics amplifier.
->>     Capture cable events created by Alienware GFX Amplifier.
->>
->>    drivers/platform/x86/Kconfig         |   1 +
->>    drivers/platform/x86/alienware-wmi.c | 179 ++++++++++++++++++++++++++++++-----
->>    2 files changed, 156 insertions(+), 24 deletions(-)
->>
-> Matthew,
->
-> Aside from the third patch which has unfavorable feedback from Greg, any
-> thoughts on the first two?  I purposefully broke them up and would like
-> to get the first two included even if some variation of the third ends
-> up not landing.
->
-> Thanks,
->
-Hi Matthew,
-
-I wanted to check in once more on the first two patches.  If you've got 
-them queued up for inclusion in a future kernel already please let me 
-know.  If any changes are needed I'd like to get them taken care of.
-
-Thanks,
+--=20
+Michal Hocko
+SUSE Labs
