@@ -1,53 +1,54 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2 00/32] acpi-video: Rewrite backlight interface selection logic
-Date: Tue, 16 Jun 2015 01:22:40 +0200
-Message-ID: <4163515.a4pVZ0oOei@vostro.rjw.lan>
-References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: Re: [PATCH 0/3] Add support for X51-R3 to alienware-wmi
+Date: Tue, 16 Jun 2015 00:25:00 -0500
+Message-ID: <557FB32C.7090807@dell.com>
+References: <1432755422-26024-1-git-send-email-mario_limonciello@dell.com> <556F8B03.4060802@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:41689 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1750812AbbFOW4n (ORCPT
+Received: from AUSXIPPC110.us.dell.com ([143.166.85.200]:2433 "EHLO
+	ausxippc110.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751350AbbFPF1G (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 15 Jun 2015 18:56:43 -0400
-In-Reply-To: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
+	Tue, 16 Jun 2015 01:27:06 -0400
+In-Reply-To: <556F8B03.4060802@dell.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
-
-On Friday, June 12, 2015 01:23:19 PM Hans de Goede wrote:
-> Hi All,
-> 
-> Here is v2 of my rewrite / cleanup of the acpi-video (and platform/x86)
-> backlight interface selection logic.
-> 
-> The major change in v2 of this set are 2 changes to the patch titled
-> "acpi-video-detect: video: Make video_detect code part of the video module":
-> 
-> 1) The __setup call for the acpi_backlight= handling is moved to
->    acpi/util.c as __setup may only be used by code which is always builtin
-> 2) video.c is renamed to acpi_video.c so that it can be combined with
->    video_detect.c into video.ko
-> 
-> These 2 changes result in the backlight kernel commandline options after this
-> patch-set being 100% compatible with the old options, with the exception of
-> the removal of the video.use_native_backlight option as that now is folded
-> into acpi_backlight=[video|vendor|native|none] rather then having 2 options
-> which influence each other in interesting ways.
-> 
-> Besides that there is a small change to the dell-laptop port to the new API
-> removing an unnecessary #ifdef ACPI.
-
-I tried to queue this series up for 4.2, but patch [06/32] didn't apply for me,
-so I decided to apply another patch I've got recently instead and which is now
-in my linux-next branch.
-
-Can you please rebase the series on top of linux-pm.git/linux-next and resend it?
+To: "matthew.garrett@nebula.com" <matthew.garrett@nebula.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+
+On 06/03/2015 06:17 PM, Mario Limonciello wrote:
+>
+> On 05/27/2015 02:36 PM, Limonciello, Mario wrote:
+>> An upcoming Alienware platform, X51-R3 will support some new features in the
+>> WMI BIOS control API as well as emit some scan codes when particular hardware
+>> is used in conjunction.
+>>
+>> Mario Limonciello (3):
+>>     Add support for X51-R3
+>>     Add support for Alienware graphics amplifier.
+>>     Capture cable events created by Alienware GFX Amplifier.
+>>
+>>    drivers/platform/x86/Kconfig         |   1 +
+>>    drivers/platform/x86/alienware-wmi.c | 179 ++++++++++++++++++++++++++++++-----
+>>    2 files changed, 156 insertions(+), 24 deletions(-)
+>>
+> Matthew,
+>
+> Aside from the third patch which has unfavorable feedback from Greg, any
+> thoughts on the first two?  I purposefully broke them up and would like
+> to get the first two included even if some variation of the third ends
+> up not landing.
+>
+> Thanks,
+>
+Hi Matthew,
+
+I wanted to check in once more on the first two patches.  If you've got 
+them queued up for inclusion in a future kernel already please let me 
+know.  If any changes are needed I'd like to get them taken care of.
+
+Thanks,
