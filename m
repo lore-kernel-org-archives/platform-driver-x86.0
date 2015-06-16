@@ -1,14 +1,14 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 18/35] apple-gmux: Port to new backlight interface selection API
-Date: Tue, 16 Jun 2015 16:27:56 +0200
-Message-ID: <1434464893-3529-19-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v3 19/35] asus-laptop: Port to new backlight interface selection API
+Date: Tue, 16 Jun 2015 16:27:57 +0200
+Message-ID: <1434464893-3529-20-git-send-email-hdegoede@redhat.com>
 References: <1434464893-3529-1-git-send-email-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:56392 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:51233 "EHLO mx1.redhat.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754349AbbFPO3f (ORCPT
+	id S1754349AbbFPO3j (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Jun 2015 10:29:35 -0400
+	Tue, 16 Jun 2015 10:29:39 -0400
 In-Reply-To: <1434464893-3529-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -18,24 +18,43 @@ Cc: Aaron Lu <aaron.lu@intel.com>, Ben Skeggs <bskeggs@redhat.com>, Lee Chun-Yi 
 Port the backlight selection logic to the new backlight interface
 selection API.
 
+This commit also removes various obsolete pr_xxx messages related to
+backlight interface selection. These are obsolete because they assume
+there is only a vendor or acpi backlight driver and no other choice.
+Also they are not necessary, if the user wants to know which backlight
+interfaces are registered a simple "ls /sys/class/backlight" suffices.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/apple-gmux.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/platform/x86/asus-laptop.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index a7f6412..0dec3f5 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -550,8 +550,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	 * backlight control and supports more levels than other options.
- 	 * Disable the other backlight choices.
- 	 */
--	acpi_video_dmi_promote_vendor();
--	acpi_video_unregister_backlight();
-+	acpi_video_set_dmi_backlight_type(acpi_backlight_vendor);
- 	apple_bl_unregister();
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 46b2746..58d29c4 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -54,6 +54,7 @@
+ #include <linux/slab.h>
+ #include <linux/dmi.h>
+ #include <linux/acpi.h>
++#include <acpi/video.h>
  
- 	gmux_data->power_state = VGA_SWITCHEROO_ON;
+ #define ASUS_LAPTOP_VERSION	"0.42"
+ 
+@@ -1884,12 +1885,11 @@ static int asus_acpi_add(struct acpi_device *device)
+ 	if (result)
+ 		goto fail_platform;
+ 
+-	if (!acpi_video_backlight_support()) {
++	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 		result = asus_backlight_init(asus);
+ 		if (result)
+ 			goto fail_backlight;
+-	} else
+-		pr_info("Backlight controlled by ACPI video driver\n");
++	}
+ 
+ 	result = asus_input_init(asus);
+ 	if (result)
 -- 
 2.3.6
