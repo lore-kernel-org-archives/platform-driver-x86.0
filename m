@@ -1,65 +1,58 @@
-From: Dalton Fury <daltonfury42@gmail.com>
-Subject: Re: sony_laptop bug - Can't change usb_charge attribute
-Date: Tue, 16 Jun 2015 22:31:10 +0530
-Message-ID: <CALH0Xh=RTXtLOoESJmRzq9xPfvmGHtPO=JAvmn_OG7AbRnm1eQ@mail.gmail.com>
-References: <CALH0XhkxrWw7dps6=+KSfiJ6NQtf=1Hu_NqtGydK3amjvUHG5g@mail.gmail.com>
-	<20150610212218.GA7272@taihen.jp>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH] acer-wmi: update removal notice for sysfs interface
+Date: Wed, 17 Jun 2015 03:36:24 +0200
+Message-ID: <1434504984-4918-1-git-send-email-martink@posteo.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yh0-f45.google.com ([209.85.213.45]:35288 "EHLO
-	mail-yh0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753014AbbFPRBL (ORCPT
+Received: from mx02.posteo.de ([89.146.194.165]:40931 "EHLO mx02.posteo.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754418AbbFQBh6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Jun 2015 13:01:11 -0400
-Received: by yhak3 with SMTP id k3so15711971yha.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2015 10:01:11 -0700 (PDT)
-In-Reply-To: <20150610212218.GA7272@taihen.jp>
+	Tue, 16 Jun 2015 21:37:58 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+To: jlee@suse.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martink@posteo.de>
 
-Here is the link:
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1461986/+attachment/4413186/+files/dsdt.dat
+Signed-off-by: Martin Kepplinger <martink@posteo.de>
+---
+These just look odd when out of date. The proper fix would probably be
+to create a Documentation/ABI/testing/sysfs-platform-acer-wmi file and
+remove the deprecated ones.
 
-On Thu, Jun 11, 2015 at 2:52 AM, Mattia Dongili <malattia@linux.it> wrote:
-> Hi Dalton,
->
-> On Wed, Jun 10, 2015 at 03:30:32AM +0530, Dalton Fury wrote:
->> [1.] [Sony VAIO SVF14212SNB] Can't change usb_charge attribute in
->> /sys/devices/platform/sony-laptop
->>
->> [2.] I am on a Sony VAIO svf43142sn. My laptop has the ability to
-> ...
->> echo -n 0 | sudo tee -a /sys/devices/platform/sony-laptop/usb_charge
->>
->> these are the curresponding kernel log entries:
->>
->> [  495.400140] sony_laptop: found handle 0x0155 (offset: 0x07)
->> [  495.400955] sony_laptop: __call_snc_method: [SN07:0x0000000000000107]
->> [  495.400961] sony_laptop: called SN07 with 0x0107 (result: 0x0000)
->>
->> After attempting to change, and when I cat the value of usb_charge, I
->> find that it is unchanged. But when the cat cammand is executed, I get
->> these kernel messages:
->>
->> [  683.170315] sony_laptop: found handle 0x0155 (offset: 0x07)
->> [  683.170458] sony_laptop: __call_snc_method: [SN07:0x0000000000000007]
->> [  683.170462] sony_laptop: called SN07 with 0x0007 (result: 0x0001)
->
-> I have the same behaviour on my laptop (a Pro11), I believe usb_charge
-> was working correctly sometime in the past.
-> It may take me some time but I should be able to take a look. In the
-> meantime it would be good if you could attach the DSDT from your model
-> to the Ubuntu bug report and send a link here too.
->
->> I don't know if it is relevent, but for writing this bug report, when
->> I booted into the latest upstream kernel, I could not boot. The second
->> time it booted successfully.
->
-> I don't think it is.
->
-> Thanks
-> --
-> mattia
-> :wq!
+
+ drivers/platform/x86/acer-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 3ac29a1..83c4850 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1670,7 +1670,7 @@ static ssize_t show_bool_threeg(struct device *dev,
+ 	u32 result; \
+ 	acpi_status status;
+ 
+-	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This threeg sysfs will be removed in 2015 - used by: %s\n",
+ 		current->comm);
+ 	status = get_u32(&result, ACER_CAP_THREEG);
+ 	if (ACPI_SUCCESS(status))
+@@ -1683,7 +1683,7 @@ static ssize_t set_bool_threeg(struct device *dev,
+ {
+ 	u32 tmp = simple_strtoul(buf, NULL, 10);
+ 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
+-	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This threeg sysfs will be removed in 2015 - used by: %s\n",
+ 		current->comm);
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+@@ -1695,7 +1695,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
+ 	char *buf)
+ {
+-	pr_info("This interface sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This interface sysfs will be removed in 2015 - used by: %s\n",
+ 		current->comm);
+ 	switch (interface->type) {
+ 	case ACER_AMW0:
+-- 
+2.1.4
