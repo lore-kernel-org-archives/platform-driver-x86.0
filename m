@@ -1,58 +1,57 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: [PATCH] acer-wmi: update removal notice for sysfs interface
-Date: Wed, 17 Jun 2015 03:36:24 +0200
-Message-ID: <1434504984-4918-1-git-send-email-martink@posteo.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 00/32] acpi-video: Rewrite backlight interface
+ selection logic
+Date: Tue, 16 Jun 2015 20:39:21 -0700
+Message-ID: <20150617033921.GA29788@vmdeb7>
+References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
+ <4163515.a4pVZ0oOei@vostro.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx02.posteo.de ([89.146.194.165]:40931 "EHLO mx02.posteo.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754418AbbFQBh6 (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:57418 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750971AbbFQDjj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 16 Jun 2015 21:37:58 -0400
+	Tue, 16 Jun 2015 23:39:39 -0400
+Content-Disposition: inline
+In-Reply-To: <4163515.a4pVZ0oOei@vostro.rjw.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: jlee@suse.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martink@posteo.de>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, linux-acpi@vger.kernel.org
 
-Signed-off-by: Martin Kepplinger <martink@posteo.de>
----
-These just look odd when out of date. The proper fix would probably be
-to create a Documentation/ABI/testing/sysfs-platform-acer-wmi file and
-remove the deprecated ones.
+On Tue, Jun 16, 2015 at 01:22:40AM +0200, Rafael Wysocki wrote:
+> On Friday, June 12, 2015 01:23:19 PM Hans de Goede wrote:
+> > Hi All,
+> > 
+> > Here is v2 of my rewrite / cleanup of the acpi-video (and platform/x86)
+> > backlight interface selection logic.
+> > 
+> > The major change in v2 of this set are 2 changes to the patch titled
+> > "acpi-video-detect: video: Make video_detect code part of the video module":
+> > 
+> > 1) The __setup call for the acpi_backlight= handling is moved to
+> >    acpi/util.c as __setup may only be used by code which is always builtin
+> > 2) video.c is renamed to acpi_video.c so that it can be combined with
+> >    video_detect.c into video.ko
+> > 
+> > These 2 changes result in the backlight kernel commandline options after this
+> > patch-set being 100% compatible with the old options, with the exception of
+> > the removal of the video.use_native_backlight option as that now is folded
+> > into acpi_backlight=[video|vendor|native|none] rather then having 2 options
+> > which influence each other in interesting ways.
+> > 
+> > Besides that there is a small change to the dell-laptop port to the new API
+> > removing an unnecessary #ifdef ACPI.
+> 
+> I tried to queue this series up for 4.2, but patch [06/32] didn't apply for me,
+> so I decided to apply another patch I've got recently instead and which is now
+> in my linux-next branch.
+> 
+> Can you please rebase the series on top of linux-pm.git/linux-next and resend it?
 
+Rafael, do you intent to carry this entire series and submit via linux-pm?
 
- drivers/platform/x86/acer-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 3ac29a1..83c4850 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1670,7 +1670,7 @@ static ssize_t show_bool_threeg(struct device *dev,
- 	u32 result; \
- 	acpi_status status;
- 
--	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
-+	pr_info("This threeg sysfs will be removed in 2015 - used by: %s\n",
- 		current->comm);
- 	status = get_u32(&result, ACER_CAP_THREEG);
- 	if (ACPI_SUCCESS(status))
-@@ -1683,7 +1683,7 @@ static ssize_t set_bool_threeg(struct device *dev,
- {
- 	u32 tmp = simple_strtoul(buf, NULL, 10);
- 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
--	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
-+	pr_info("This threeg sysfs will be removed in 2015 - used by: %s\n",
- 		current->comm);
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
-@@ -1695,7 +1695,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
- static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
- 	char *buf)
- {
--	pr_info("This interface sysfs will be removed in 2014 - used by: %s\n",
-+	pr_info("This interface sysfs will be removed in 2015 - used by: %s\n",
- 		current->comm);
- 	switch (interface->type) {
- 	case ACER_AMW0:
 -- 
-2.1.4
+Darren Hart
+Intel Open Source Technology Center
