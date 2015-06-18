@@ -1,69 +1,65 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 00/32] acpi-video: Rewrite backlight interface
- selection logic
-Date: Thu, 18 Jun 2015 14:05:47 -0700
-Message-ID: <20150618210547.GA70097@vmdeb7>
-References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
- <4163515.a4pVZ0oOei@vostro.rjw.lan>
- <20150617033921.GA29788@vmdeb7>
- <CAJZ5v0hyct5tSGAAjw=Gt1H60=jsQFgA+=baQqsWi4Hjvqk4mw@mail.gmail.com>
+Subject: Re: Possible broken MM code in dell-laptop.c?
+Date: Thu, 18 Jun 2015 14:14:46 -0700
+Message-ID: <20150618211446.GB70097@vmdeb7>
+References: <201506141105.07171@pali>
+ <20150615211816.GC16138@dhcp22.suse.cz>
+ <201506152327.59907@pali>
+ <20150616063346.GA24296@dhcp22.suse.cz>
+ <20150616071523.GB5863@pali>
+ <20150617034334.GB29788@vmdeb7>
+ <20150617071939.GA25056@dhcp22.suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:35276 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750791AbbFRVGD (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Jun 2015 17:06:03 -0400
+Return-path: <owner-linux-mm@kvack.org>
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hyct5tSGAAjw=Gt1H60=jsQFgA+=baQqsWi4Hjvqk4mw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+In-Reply-To: <20150617071939.GA25056@dhcp22.suse.cz>
+Sender: owner-linux-mm@kvack.org
+To: Michal Hocko <mhocko@suse.cz>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 17, 2015 at 11:36:13AM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jun 17, 2015 at 5:39 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Tue, Jun 16, 2015 at 01:22:40AM +0200, Rafael Wysocki wrote:
-> >> On Friday, June 12, 2015 01:23:19 PM Hans de Goede wrote:
-> >> > Hi All,
-> >> >
-> >> > Here is v2 of my rewrite / cleanup of the acpi-video (and platform/x86)
-> >> > backlight interface selection logic.
-> >> >
-> >> > The major change in v2 of this set are 2 changes to the patch titled
-> >> > "acpi-video-detect: video: Make video_detect code part of the video module":
-> >> >
-> >> > 1) The __setup call for the acpi_backlight= handling is moved to
-> >> >    acpi/util.c as __setup may only be used by code which is always builtin
-> >> > 2) video.c is renamed to acpi_video.c so that it can be combined with
-> >> >    video_detect.c into video.ko
-> >> >
-> >> > These 2 changes result in the backlight kernel commandline options after this
-> >> > patch-set being 100% compatible with the old options, with the exception of
-> >> > the removal of the video.use_native_backlight option as that now is folded
-> >> > into acpi_backlight=[video|vendor|native|none] rather then having 2 options
-> >> > which influence each other in interesting ways.
-> >> >
-> >> > Besides that there is a small change to the dell-laptop port to the new API
-> >> > removing an unnecessary #ifdef ACPI.
-> >>
-> >> I tried to queue this series up for 4.2, but patch [06/32] didn't apply for me,
-> >> so I decided to apply another patch I've got recently instead and which is now
-> >> in my linux-next branch.
-> >>
-> >> Can you please rebase the series on top of linux-pm.git/linux-next and resend it?
-> >
-> > Rafael, do you intent to carry this entire series and submit via linux-pm?
+On Wed, Jun 17, 2015 at 09:19:39AM +0200, Michal Hocko wrote:
+> On Tue 16-06-15 20:43:34, Darren Hart wrote:
+> [...]
+> > Michal - thanks for the context.
+> > 
+> > I'm surprised by your recommendation to use __free_page() out here in platform
+> > driver land.
+> > 
+> > I'd also prefer that the driver consistently free the same address to avoid
+> > confusion.
+> > 
+> > For these reasons, free_page((unsigned long)buffer) seems like the better
+> > option.
+> > 
+> > Can you elaborate on why you feel __free_page() is a better choice?
 > 
-> Yes, I do.
+> Well the allocation uses alloc_page and __free_page is the freeing
+> counterpart so it is natural to use it if the allocated page is
+> available. Which is the case here.
+> 
+> Anyway the code can be cleaned up by using __get_free_page for the
+> allocation, then you do not have to care about the struct page and get
+> the address right away without an additional code. free_page would be a
+> natural freeing path.
+> __get_free_page would be even a better API because it enforces that
+> the allocation is not from the highmem - which the driver already does
+> by not using __GFP_HIGHMEM.
+> 
 
-In that case,
+Thank you Michal, I guess I'm just tripping over an API with mismatched __ and
+no __ prefix paired calls. Thanks for the clarification.
 
-Acked-by: Darren Hart <dvhart@linux.intel.com>
-
-For the platform/drivers/x86 patches.
+Pali, I'm fine with any of these options - it sounds as though __get_free_page()
+may be a general improvement.
 
 -- 
 Darren Hart
 Intel Open Source Technology Center
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
