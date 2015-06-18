@@ -1,65 +1,39 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Possible broken MM code in dell-laptop.c?
-Date: Thu, 18 Jun 2015 14:14:46 -0700
-Message-ID: <20150618211446.GB70097@vmdeb7>
-References: <201506141105.07171@pali>
- <20150615211816.GC16138@dhcp22.suse.cz>
- <201506152327.59907@pali>
- <20150616063346.GA24296@dhcp22.suse.cz>
- <20150616071523.GB5863@pali>
- <20150617034334.GB29788@vmdeb7>
- <20150617071939.GA25056@dhcp22.suse.cz>
+Subject: Re: [PATCH 00/22] FUJITSU Extended Socket network device driver
+Date: Thu, 18 Jun 2015 14:22:10 -0700
+Message-ID: <20150618212210.GA121898@vmdeb7>
+References: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <owner-linux-mm@kvack.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:39601 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751110AbbFRVWL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 18 Jun 2015 17:22:11 -0400
 Content-Disposition: inline
-In-Reply-To: <20150617071939.GA25056@dhcp22.suse.cz>
-Sender: owner-linux-mm@kvack.org
-To: Michal Hocko <mhocko@suse.cz>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Stuart Hayes <stuart_hayes@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: platform-driver-x86@vger.kernel.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, netdev@vger.kernel.org, linux-acpi@vger.kernel.org
 
-On Wed, Jun 17, 2015 at 09:19:39AM +0200, Michal Hocko wrote:
-> On Tue 16-06-15 20:43:34, Darren Hart wrote:
-> [...]
-> > Michal - thanks for the context.
-> > 
-> > I'm surprised by your recommendation to use __free_page() out here in platform
-> > driver land.
-> > 
-> > I'd also prefer that the driver consistently free the same address to avoid
-> > confusion.
-> > 
-> > For these reasons, free_page((unsigned long)buffer) seems like the better
-> > option.
-> > 
-> > Can you elaborate on why you feel __free_page() is a better choice?
+On Thu, Jun 18, 2015 at 09:45:59AM +0900, Taku Izumi wrote:
+> This patchsets adds FUJITSU Extended Socket network device driver.
+> Extended Socket network device is a shared memory based high-speed network 
+> interface between Extended Partitions of PRIMEQUEST 2000 E2 series.
 > 
-> Well the allocation uses alloc_page and __free_page is the freeing
-> counterpart so it is natural to use it if the allocated page is
-> available. Which is the case here.
+> You can get some information about Extended Partition and Extended
+> Socket by referring the following manual.
 > 
-> Anyway the code can be cleaned up by using __get_free_page for the
-> allocation, then you do not have to care about the struct page and get
-> the address right away without an additional code. free_page would be a
-> natural freeing path.
-> __get_free_page would be even a better API because it enforces that
-> the allocation is not from the highmem - which the driver already does
-> by not using __GFP_HIGHMEM.
+> http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
+>  3.2.1 Extended Partitioning
+>  3.2.2 Extended Socket
 > 
 
-Thank you Michal, I guess I'm just tripping over an API with mismatched __ and
-no __ prefix paired calls. Thanks for the clarification.
-
-Pali, I'm fine with any of these options - it sounds as though __get_free_page()
-may be a general improvement.
+As Alex mentioned earlier, I suspect this is more appropriate for drivers/net.
+If David objects, we can consider for platform/drivers/x86.
 
 -- 
 Darren Hart
 Intel Open Source Technology Center
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
