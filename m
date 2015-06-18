@@ -1,38 +1,53 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 00/22] FUJITSU Extended Socket network device driver
-Date: Thu, 18 Jun 2015 14:22:10 -0700
-Message-ID: <20150618212210.GA121898@vmdeb7>
-References: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
+Subject: Re: [PATCH] Add wapf1 quirk for Asus X550VC
+Date: Thu, 18 Jun 2015 14:39:24 -0700
+Message-ID: <20150618213924.GC121898@vmdeb7>
+References: <1433958262-25228-1-git-send-email-hanipouspilot@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39601 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751110AbbFRVWL (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Jun 2015 17:22:11 -0400
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: platform-driver-x86@vger.kernel.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, netdev@vger.kernel.org, linux-acpi@vger.kernel.org
+In-Reply-To: <1433958262-25228-1-git-send-email-hanipouspilot@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Dmitry Tunin <hanipouspilot@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 18, 2015 at 09:45:59AM +0900, Taku Izumi wrote:
-> This patchsets adds FUJITSU Extended Socket network device driver.
-> Extended Socket network device is a shared memory based high-speed network 
-> interface between Extended Partitions of PRIMEQUEST 2000 E2 series.
+On Wed, Jun 10, 2015 at 08:44:22PM +0300, Dmitry Tunin wrote:
+> Wireless is always blocked on this device.
+> There is no way to unblock by software or hardware.
 > 
-> You can get some information about Extended Partition and Extended
-> Socket by referring the following manual.
+> 1: asus-wlan: Wireless LAN
+>    Soft blocked: no
+>    Hard blocked: no
+> 2: asus-bluetooth: Bluetooth
+>    Soft blocked: yes
+>    Hard blocked: no
+> 3: phy0: Wireless LAN
+>    Soft blocked: no
+>    Hard blocked: yes
 > 
-> http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
->  3.2.1 Extended Partitioning
->  3.2.2 Extended Socket
+> With wapf=4 bluetooth unblocks but wifi stays blocked
 > 
+> 1: asus-wlan: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 2: asus-bluetooth: Bluetooth
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 3: phy0: Wireless LAN
+> 	Soft blocked: no
+> 	Hard blocked: yes
+> 7: hci0: Bluetooth
+> 	Soft blocked: no
+> 	Hard blocked: no
+> 
+> Only with wapf=1 everything works OK.
+> 
+> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
+> Cc: stable@vger.kernel.org
 
-As Alex mentioned earlier, I suspect this is more appropriate for drivers/net.
-If David objects, we can consider for platform/drivers/x86.
+Thanks Dmitry, queued.
 
 -- 
 Darren Hart
