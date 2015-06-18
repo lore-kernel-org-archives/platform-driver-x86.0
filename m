@@ -1,59 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 12/22] fjes: net_device_ops.ndo_get_stats64
-Date: Thu, 18 Jun 2015 17:00:52 +0300
-Message-ID: <5582CF14.3040507@cogentembedded.com>
-References: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com> <1434588587-25655-1-git-send-email-izumi.taku@jp.fujitsu.com> <1434588587-25655-12-git-send-email-izumi.taku@jp.fujitsu.com>
+From: "Michela Petersonn" <upudelko@wiplast.pl>
+Subject: Michela
+Date: Thu, 18 Jun 2015 08:20:25 -0000
+Message-ID: <E1Z5V3k-00053j-O3@tvw-france.tvw.atm.pl>
+Reply-To: <michelapeterson@foxmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=Windows-1251
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f54.google.com ([209.85.215.54]:36573 "EHLO
-	mail-la0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755303AbbFROAz (ORCPT
+Received: from poczta.tvw.atm.pl ([195.154.45.130]:35363 "EHLO
+	tvw-france.tvw.atm.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753408AbbFRSMC convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 18 Jun 2015 10:00:55 -0400
-Received: by lacny3 with SMTP id ny3so55002135lac.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jun 2015 07:00:54 -0700 (PDT)
-In-Reply-To: <1434588587-25655-12-git-send-email-izumi.taku@jp.fujitsu.com>
+	Thu, 18 Jun 2015 14:12:02 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Taku Izumi <izumi.taku@jp.fujitsu.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org
-Cc: rkhan@redhat.com, alexander.h.duyck@redhat.com, netdev@vger.kernel.org, linux-acpi@vger.kernel.org
 
-Hello.
+Hei rakas,
 
-On 6/18/2015 3:49 AM, Taku Izumi wrote:
+Nimeni on Michela, olen 26yrs vanha, olen vapaa ajattelevia, avoin syd=E4=
+mest=E4 tytt=F6, haluan ottaa el=E4m=E4n niin helppoa kuin pystyin, ole=
+n yksi niist=E4 harvoista, joka uskoo edelleen yst=E4vyys, rakkaus, luo=
+ttamus ja merkkej=E4 , olen hyvin paljon yhden ja valmis seurustella. m=
+in=E4 haluan olla yst=E4v=E4si ja tiet=E4=E4 enemm=E4n, jos sinulla ei =
+ole mieless=E4, toivon ette ota pyynt=F6ni itsest=E4=E4nselvyyten=E4, o=
+ta yhteytt=E4 s=E4hk=F6postitse minulle kautta (michelapeterson@foxmail=
+=2Ecom), i arvostavat sit=E4, jos voit l=E4het=E4 minulle joitakin kuvi=
+a minun yksityiseen s=E4hk=F6postiosoitteeseen, min=E4 odotan kuulla si=
+nusta pian.
 
-> This patch adds net_device_ops.ndo_get_stats64 callback.
+Michela.
 
-> Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> ---
->   drivers/platform/x86/fjes/fjes_main.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
+Hello dear,
 
-> diff --git a/drivers/platform/x86/fjes/fjes_main.c b/drivers/platform/x86/fjes/fjes_main.c
-> index 97bf487..eeda824 100644
-> --- a/drivers/platform/x86/fjes/fjes_main.c
-> +++ b/drivers/platform/x86/fjes/fjes_main.c
-> @@ -57,6 +57,8 @@ static netdev_tx_t fjes_xmit_frame(struct sk_buff *,
->   static void fjes_raise_intr_rxdata_task(struct work_struct *);
->   static void fjes_tx_stall_task(struct work_struct *);
->   static irqreturn_t fjes_intr(int, void*);
-> +static struct rtnl_link_stats64
-> +*fjes_get_stats64(struct net_device *, struct rtnl_link_stats64 *);
+My name is Michela, i am 26yrs old, i'm a free minded,open hearted girl=
+, i like to take life as easy as i could, i'm one of the few that still=
+ believes in friendship, love, trust and signs, am very much single and=
+ ready to mingle. i will like to be your friend and know you more if yo=
+u don't mind, i hope you will not take my request for granted,feel free=
+ to email me through (michelapeterson@foxmail.com),i will appreciate it=
+ if you can send me some pics to my private email address, i look forwa=
+rd to hear from you soon.
 
-    I'd leave * on the first line, otherwise it looks quite ugly..
+Michela.=20
 
-[...]
-> @@ -734,6 +737,17 @@ static netdev_tx_t fjes_xmit_frame(struct sk_buff *skb,
->   	return ret;
->   }
->
-> +static struct rtnl_link_stats64
-> +*fjes_get_stats64(struct net_device *netdev,
-
-    Same here.
-
-[...]
-
-WBR, Sergei
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
