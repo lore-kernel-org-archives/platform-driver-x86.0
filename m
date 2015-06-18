@@ -1,59 +1,71 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 00/32] acpi-video: Rewrite backlight interface
- selection logic
-Date: Wed, 17 Jun 2015 11:36:13 +0200
-Message-ID: <CAJZ5v0hyct5tSGAAjw=Gt1H60=jsQFgA+=baQqsWi4Hjvqk4mw@mail.gmail.com>
-References: <1434108231-12323-1-git-send-email-hdegoede@redhat.com>
-	<4163515.a4pVZ0oOei@vostro.rjw.lan>
-	<20150617033921.GA29788@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Subject: [PATCH 00/22] FUJITSU Extended Socket network device driver
+Date: Thu, 18 Jun 2015 09:45:59 +0900
+Message-ID: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f179.google.com ([209.85.212.179]:34377 "EHLO
-	mail-wi0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751095AbbFQJgP (ORCPT
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169]:14649 "EHLO
+	mgwkm02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751406AbbFRAtI (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 17 Jun 2015 05:36:15 -0400
-In-Reply-To: <20150617033921.GA29788@vmdeb7>
+	Wed, 17 Jun 2015 20:49:08 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>, Ben Skeggs <bskeggs@redhat.com>, Azael Avalos <coproscefalo@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Lee Chun-Yi <jlee@suse.com>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Anisse Astier <anisse@astier.eu>, Mattia Dongili <malattia@linux.it>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, acpi4asus-user@lists.sourceforge.net, dri-devel@lists.freedesktop.org, Aaron Lu <aaron.lu@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, dvhart@infradead.org
+Cc: rkhan@redhat.com, alexander.h.duyck@redhat.com, netdev@vger.kernel.org, linux-acpi@vger.kernel.org, Taku Izumi <izumi.taku@jp.fujitsu.com>
 
-On Wed, Jun 17, 2015 at 5:39 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Tue, Jun 16, 2015 at 01:22:40AM +0200, Rafael Wysocki wrote:
->> On Friday, June 12, 2015 01:23:19 PM Hans de Goede wrote:
->> > Hi All,
->> >
->> > Here is v2 of my rewrite / cleanup of the acpi-video (and platform/x86)
->> > backlight interface selection logic.
->> >
->> > The major change in v2 of this set are 2 changes to the patch titled
->> > "acpi-video-detect: video: Make video_detect code part of the video module":
->> >
->> > 1) The __setup call for the acpi_backlight= handling is moved to
->> >    acpi/util.c as __setup may only be used by code which is always builtin
->> > 2) video.c is renamed to acpi_video.c so that it can be combined with
->> >    video_detect.c into video.ko
->> >
->> > These 2 changes result in the backlight kernel commandline options after this
->> > patch-set being 100% compatible with the old options, with the exception of
->> > the removal of the video.use_native_backlight option as that now is folded
->> > into acpi_backlight=[video|vendor|native|none] rather then having 2 options
->> > which influence each other in interesting ways.
->> >
->> > Besides that there is a small change to the dell-laptop port to the new API
->> > removing an unnecessary #ifdef ACPI.
->>
->> I tried to queue this series up for 4.2, but patch [06/32] didn't apply for me,
->> so I decided to apply another patch I've got recently instead and which is now
->> in my linux-next branch.
->>
->> Can you please rebase the series on top of linux-pm.git/linux-next and resend it?
->
-> Rafael, do you intent to carry this entire series and submit via linux-pm?
+This patchsets adds FUJITSU Extended Socket network device driver.
+Extended Socket network device is a shared memory based high-speed network 
+interface between Extended Partitions of PRIMEQUEST 2000 E2 series.
 
-Yes, I do.
+You can get some information about Extended Partition and Extended
+Socket by referring the following manual.
 
-Thanks,
-Rafael
+http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
+ 3.2.1 Extended Partitioning
+ 3.2.2 Extended Socket
+
+
+Taku Izumi (22):
+  fjes: Introduce FUJITSU Extended Socket Network Device driver
+  fjes: Hardware initialization routine
+  fjes: Hardware cleanup routine
+  fjes: platform_driver's .probe and .remove routine
+  fjes: ES information acquisition routine
+  fjes: buffer address regist/unregistration routine
+  fjes: net_device_ops.ndo_open and .ndo_stop
+  fjes: net_device_ops.ndo_start_xmit
+  fjes: raise_intr_rxdata_task
+  fjes: tx_stall_task
+  fjes: NAPI polling function
+  fjes: net_device_ops.ndo_get_stats64
+  fjes: net_device_ops.ndo_change_mtu
+  fjes: net_device_ops.ndo_tx_timeout
+  fjes: net_device_ops.ndo_vlan_rx_add/kill_vid
+  fjes: interrupt_watch_task
+  fjes: force_close_task
+  fjes: unshare_watch_task
+  fjes: update_zone_task
+  fjes: epstop_task
+  fjes: handle receive cancellation request interrupt
+  fjes: ethtool support
+
+ drivers/platform/x86/Kconfig             |    7 +
+ drivers/platform/x86/Makefile            |    2 +
+ drivers/platform/x86/fjes/Makefile       |   31 +
+ drivers/platform/x86/fjes/fjes.h         |   79 ++
+ drivers/platform/x86/fjes/fjes_ethtool.c |  135 +++
+ drivers/platform/x86/fjes/fjes_hw.c      | 1159 +++++++++++++++++++++++
+ drivers/platform/x86/fjes/fjes_hw.h      |  338 +++++++
+ drivers/platform/x86/fjes/fjes_main.c    | 1485 ++++++++++++++++++++++++++++++
+ drivers/platform/x86/fjes/fjes_regs.h    |  149 +++
+ 9 files changed, 3385 insertions(+)
+ create mode 100644 drivers/platform/x86/fjes/Makefile
+ create mode 100644 drivers/platform/x86/fjes/fjes.h
+ create mode 100644 drivers/platform/x86/fjes/fjes_ethtool.c
+ create mode 100644 drivers/platform/x86/fjes/fjes_hw.c
+ create mode 100644 drivers/platform/x86/fjes/fjes_hw.h
+ create mode 100644 drivers/platform/x86/fjes/fjes_main.c
+ create mode 100644 drivers/platform/x86/fjes/fjes_regs.h
+
+-- 
+1.8.3.1
