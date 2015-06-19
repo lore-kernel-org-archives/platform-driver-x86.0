@@ -1,774 +1,756 @@
-From: Yasuaki Ishimatsu <yasu.isimatu@gmail.com>
-Subject: Re: [PATCH 02/22] fjes: Hardware initialization routine
-Date: Fri, 19 Jun 2015 12:37:25 -0700 (PDT)
-Message-ID: <55846f75.0b32370a.b153c.4fbc@mx.google.com>
-References: <1434588359-25589-1-git-send-email-izumi.taku@jp.fujitsu.com>
-	<1434588587-25655-1-git-send-email-izumi.taku@jp.fujitsu.com>
-	<1434588587-25655-2-git-send-email-izumi.taku@jp.fujitsu.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5] platform:x86: add Intel Broxton PMC IPC driver
+Date: Fri, 19 Jun 2015 16:35:34 -0700
+Message-ID: <20150619233534.GB70769@vmdeb7>
+References: <1433346433-379-1-git-send-email-qipeng.zha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f171.google.com ([209.85.220.171]:35549 "EHLO
-	mail-qk0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752885AbbFSTh0 (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:41860 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752334AbbFSXfg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 19 Jun 2015 15:37:26 -0400
-In-Reply-To: <1434588587-25655-2-git-send-email-izumi.taku@jp.fujitsu.com>
+	Fri, 19 Jun 2015 19:35:36 -0400
+Content-Disposition: inline
+In-Reply-To: <1433346433-379-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, netdev@vger.kernel.org, linux-acpi@vger.kernel.org
+To: "qipeng.zha" <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com
 
-Hi Izumi-san,
-
-On Thu, 18 Jun 2015 09:49:27 +0900
-Taku Izumi <izumi.taku@jp.fujitsu.com> wrote:
-
-> This patch adds hardware initialization routine to be
-> invoked at driver's .probe routine.
+On Wed, Jun 03, 2015 at 11:47:13PM +0800, qipeng.zha wrote:
+> From: "qipeng.zha" <qipeng.zha@intel.com>
 > 
-> Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> This driver provides support for PMC control on Broxton platforms,
+> PMC is ARC processor which defined some IPC commands for communication
+> with other entities running in IA
+> 
+> Signed-off-by: qipeng.zha <qipeng.zha@intel.com>
+
+
+Sorry for the long delay here, I needed a block of time to review.
+
+I had queued this to testing with some grammatical fixes, but then
+ran into some problems and am going to need you to resend.
+
+Please incorporate the grammatical fixes below as well as the few functional
+changes.
+
+In particular, if built with ARCH=i386, you generate 4 warnings.
+
+> 
+> Changes for v5:
+>  add credit to intel_scu_ipc.c in driver description;
+>  replace Fail with Failed in error messages;
+>  fix typos;
+>  remove read access of attribute device;
+>  add comment for fs_initcall.
+> 
+> Changes for before versions:
+>  fix compile errors when build as module;
+>  fix typos;
+>  use iplock mutex to sync access of command APIs;
+>  confirm to be applicable of regmap APIs;
+>  add comments for exported APIs;
+>  order local variable declaration.
 > ---
->  drivers/platform/x86/fjes/Makefile    |   2 +-
->  drivers/platform/x86/fjes/fjes_hw.c   | 305 ++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/fjes/fjes_hw.h   | 254 ++++++++++++++++++++++++++++
->  drivers/platform/x86/fjes/fjes_regs.h | 110 ++++++++++++
->  4 files changed, 670 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/platform/x86/fjes/fjes_hw.c
->  create mode 100644 drivers/platform/x86/fjes/fjes_hw.h
->  create mode 100644 drivers/platform/x86/fjes/fjes_regs.h
+
+In the future, place the changelog (v5, v4, v3, etc.) below the "---". This
+automatically gets dropped from the git commit along with the diffstat. This
+information is only useful during the review process and should not be part of
+the commit message.
+
+>  arch/x86/include/asm/intel_pmc_ipc.h |  82 ++++
+>  drivers/platform/x86/Kconfig         |   7 +
+>  drivers/platform/x86/Makefile        |   1 +
+>  drivers/platform/x86/intel_pmc_ipc.c | 770 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 860 insertions(+)
+>  create mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+>  create mode 100644 drivers/platform/x86/intel_pmc_ipc.c
 > 
-> diff --git a/drivers/platform/x86/fjes/Makefile b/drivers/platform/x86/fjes/Makefile
-> index 98e59cb..a67f65d8 100644
-> --- a/drivers/platform/x86/fjes/Makefile
-> +++ b/drivers/platform/x86/fjes/Makefile
-> @@ -27,5 +27,5 @@
->  
->  obj-$(CONFIG_FUJITSU_ES) += fjes.o
->  
-> -fjes-objs := fjes_main.o
-> +fjes-objs := fjes_main.o fjes_hw.o
->  
-> diff --git a/drivers/platform/x86/fjes/fjes_hw.c b/drivers/platform/x86/fjes/fjes_hw.c
+> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
 > new file mode 100644
-> index 0000000..1731827
+> index 0000000..200ec2e
 > --- /dev/null
-> +++ b/drivers/platform/x86/fjes/fjes_hw.c
-> @@ -0,0 +1,305 @@
+> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
+> @@ -0,0 +1,82 @@
+> +#ifndef _ASM_X86_INTEL_PMC_IPC_H_
+> +#define  _ASM_X86_INTEL_PMC_IPC_H_
+> +
+> +/* Commands */
+> +#define PMC_IPC_PMIC_ACCESS		0xFF
+> +#define		PMC_IPC_PMIC_ACCESS_READ	0x0
+> +#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
+> +#define PMC_IPC_USB_PWR_CTRL		0xF0
+> +#define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
+> +#define PMC_IPC_PHY_CONFIG		0xEE
+> +#define PMC_IPC_NORTHPEAK_CTRL		0xED
+> +#define PMC_IPC_PM_DEBUG		0xEC
+> +#define PMC_IPC_PMC_TELEMTRY		0xEB
+> +#define PMC_IPC_PMC_FW_MSG_CTRL		0xEA
+> +
+> +/* IPC return code */
+> +#define IPC_ERR_NONE			0
+> +#define IPC_ERR_CMD_NOT_SUPPORTED	1
+> +#define IPC_ERR_CMD_NOT_SERVICED	2
+> +#define IPC_ERR_UNABLE_TO_SERVICE	3
+> +#define IPC_ERR_CMD_INVALID		4
+> +#define IPC_ERR_CMD_FAILED		5
+> +#define IPC_ERR_EMSECURITY		6
+> +#define IPC_ERR_UNSIGNEDKERNEL		7
+> +
+> +#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+> +
 > +/*
-> + *  FUJITSU Extended Socket Network Device driver
-> + *  Copyright (c) 2015 FUJITSU LIMITED
+> + * intel_pmc_ipc_simple_command
+> + * @cmd: command
+> + * @sub: sub type
+> + */
+> +int intel_pmc_ipc_simple_command(int cmd, int sub);
+> +
+> +/*
+> + * intel_pmc_ipc_raw_cmd
+> + * @cmd: command
+> + * @sub: sub type
+> + * @in: input data
+> + * @inlen: input length in bytes
+> + * @out: output data
+> + * @outlen: output length in dwords
+> + * @sptr: data writing to SPTR register
+> + * @dptr: data writing to DPTR register
+> + */
+> +int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen, u32 dptr, u32 sptr);
+> +
+> +/*
+> + * intel_pmc_ipc_command
+> + * @cmd: command
+> + * @sub: sub type
+> + * @in: input data
+> + * @inlen: input length in bytes
+> + * @out: output data
+> + * @outlen: output length in dwords
+> + */
+> +int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen);
+> +
+> +#else
+> +
+> +static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +#endif /*CONFIG_INTEL_PMC_IPC*/
+> +
+> +#endif
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 9752761..4eb15eb 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -884,4 +884,11 @@ config PVPANIC
+>  	  a paravirtualized device provided by QEMU; it lets a virtual machine
+>  	  (guest) communicate panic events to the host.
+>  
+> +config INTEL_PMC_IPC
+> +	tristate "Intel PMC IPC Driver"
+> +	---help---
+> +	This driver provides support for PMC control on some Intel platforms,
+> +	PMC is ARC processor which defined some IPC commands for communication
+> +	with other entities which running in IA.
+
+I've reworded as:
+
+This driver provides support for PMC control on some Intel platforms.
+The PMC is an ARC processor which defines IPC commands for communication
+with other entities in the CPU.
+
+> +
+>  endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index f82232b..1051372 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -58,3 +58,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+>  
+>  obj-$(CONFIG_PVPANIC)           += pvpanic.o
+>  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+> +obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> new file mode 100644
+> index 0000000..011fb75
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -0,0 +1,770 @@
+> +/*
+> + * intel_pmc_ipc.c: Driver for the Intel PMC IPC mechanism
 > + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
+> + * (C) Copyright 2014 Intel Corporation
 > + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
+> + * This driver is based on Intel SCU IPC driver(intel_scu_opc.c) by
+> + *     Sreedhara DS <sreedhara.ds@intel.com>
 > + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program; if not, see <http://www.gnu.org/licenses/>.
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; version 2
+> + * of the License.
 > + *
-> + * The full GNU General Public License is included in this distribution in
-> + * the file called "COPYING".
-> + *
+> + * PMC running in ARC processor communicates with other entity running in IA
+> + * core through IPC mechanism which in turn messaging between IA core ad PMC.
 > + */
 > +
-> +#include "fjes_hw.h"
-> +#include "fjes.h"
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/device.h>
+> +#include <linux/pm.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/pm_qos.h>
+> +#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/sched.h>
+> +#include <linux/atomic.h>
+> +#include <linux/notifier.h>
+> +#include <linux/suspend.h>
+> +#include <linux/acpi.h>
+> +#include <asm/intel_pmc_ipc.h>
+> +#include <linux/mfd/lpc_ich.h>
 > +
-> +/* supported MTU list */
-> +u32 fjes_support_mtu[] = {
-> +	FJES_MTU_DEFINE(8 * 1024),
-> +	FJES_MTU_DEFINE(16 * 1024),
-> +	FJES_MTU_DEFINE(32 * 1024),
-> +	FJES_MTU_DEFINE(64 * 1024),
-> +	0
+> +/*
+> + * IPC registers
+> + * The IA write to IPC_CMD command register triggers an interrupt to the ARC,
+> + * The ARC handles the interrupt and services it, writing optional data to
+> + * the IPC1 registers, updates the IPC_STS response register with the status.
+> + */
+> +#define IPC_CMD			0x0
+> +#define		IPC_CMD_MSI		0x100
+> +#define		IPC_CMD_SIZE		16
+> +#define		IPC_CMD_SUBCMD		12
+> +#define IPC_STATUS		0x04
+> +#define		IPC_STATUS_IRQ		0x4
+> +#define		IPC_STATUS_ERR		0x2
+> +#define		IPC_STATUS_BUSY		0x1
+> +#define IPC_SPTR		0x08
+> +#define IPC_DPTR		0x0C
+> +#define IPC_WRITE_BUFFER	0x80
+> +#define IPC_READ_BUFFER		0x90
+> +
+> +#define IPC_LOOP_CNT		3000000
+> +#define IPC_MAX_SEC		3
+> +
+> +#define IPC_TRIGGER_MODE_IRQ		true
+> +
+> +/* exported resources from IFWI */
+> +#define PLAT_RESOURCE_IPC_INDEX		0
+> +#define PLAT_RESOURCE_IPC_SIZE		0x1000
+> +#define PLAT_RESOURCE_GCR_SIZE		0x1000
+> +#define PLAT_RESOURCE_PUNIT_DATA_INDEX	1
+> +#define PLAT_RESOURCE_PUNIT_INTER_INDEX	2
+> +#define PLAT_RESOURCE_ACPI_IO_INDEX	0
+> +
+> +/*
+> + * BIOS don't create ACPI device for each PMC function,
+> + * but export multi resources on one ACPI device(IPC) for
+> + * multi functions, so this driver is responsible to create
+> + * platform device and to export resource for those functions
+> + */
+
+Reworded as:
+
+/*
+ * BIOS does not create an ACPI device for each PMC function,
+ * but exports multiple resources from one ACPI device(IPC) for
+ * multiple functions. This driver is responsible to create a
+ * platform device and to export resources for those functions.
+ */
+
+
+> +#define TCO_DEVICE_NAME			"iTCO_wdt"
+> +#define SMI_EN_OFFSET			0x30
+> +#define SMI_EN_SIZE			4
+> +#define TCO_BASE_OFFSET			0x60
+> +#define TCO_REGS_SIZE			16
+> +#define PUNIT_DEVICE_NAME		"intel_punit_ipc"
+> +
+> +static const int iTCO_version = 3;
+> +
+> +static struct intel_pmc_ipc_dev {
+> +	struct device *dev;
+> +	void __iomem *ipc_base;
+> +	bool irq_mode;
+> +	int irq;
+> +	int cmd;
+> +	struct completion cmd_complete;
+> +
+> +	/* Below bars in PMC share same ACPI device with IPC */
+
+Reworded as:
+
+/* The following PMC BARs share the same ACPI device with the IPC */
+
+> +	void *acpi_io_base;
+> +	int acpi_io_size;
+> +	struct platform_device *tco_dev;
+> +
+> +	/* gcr */
+> +	void __iomem *gcr_base;
+> +	int gcr_size;
+> +
+> +	/* punit */
+> +	void *punit_base;
+> +	int punit_size;
+> +	void *punit_base2;
+> +	int punit_size2;
+> +	struct platform_device *punit_dev;
+> +} ipcdev;
+> +
+> +static char *ipc_err_sources[] = {
+> +	[IPC_ERR_NONE] =
+> +		"no error",
+> +	[IPC_ERR_CMD_NOT_SUPPORTED] =
+> +		"command not supported",
+> +	[IPC_ERR_CMD_NOT_SERVICED] =
+> +		"command not serviced",
+> +	[IPC_ERR_UNABLE_TO_SERVICE] =
+> +		"unable to service",
+> +	[IPC_ERR_CMD_INVALID] =
+> +		"command invalid",
+> +	[IPC_ERR_CMD_FAILED] =
+> +		"command failed",
+> +	[IPC_ERR_EMSECURITY] =
+> +		"Invalid Battery",
+> +	[IPC_ERR_UNSIGNEDKERNEL] =
+> +		"Unsigned kernel",
 > +};
 > +
-> +u32 fjes_hw_rd32(struct fjes_hw *hw, u32 reg)
+> +/* Prevent multiple call to PMC */
+
+/* Prevent concurrent calls to the PMC */
+
+> +static DEFINE_MUTEX(ipclock);
+> +
+> +static inline void ipc_send_command(u32 cmd)
 > +{
-> +	u8 *base = hw->base;
-> +	u32 value = 0;
-> +
-> +	value = readl(&base[reg]);
-> +
-> +	return value;
+> +	ipcdev.cmd = cmd;
+> +	if (ipcdev.irq_mode) {
+> +		reinit_completion(&ipcdev.cmd_complete);
+> +		cmd |= IPC_CMD_MSI;
+> +	}
+> +	writel(cmd, ipcdev.ipc_base + IPC_CMD);
 > +}
 > +
-> +static u8 *fjes_hw_iomap(struct fjes_hw *hw)
+> +static inline u32 ipc_read_status(void)
 > +{
-> +	u8 *base;
+> +	return readl(ipcdev.ipc_base + IPC_STATUS);
+> +}
 > +
-> +	if (!request_mem_region(hw->hw_res.start, hw->hw_res.size,
-> +			fjes_driver_name)) {
-> +		pr_err("request_mem_region failed");
-> +		return NULL;
+> +/*
+> + * 16-byte buffer for sending data associated with IPC command
+> + * Size of the data is specified in the IPC_CMD[size]
+> + */
+
+This bit is rather unclear... reworded as:
+
+/*
+ * 16-byte buffer for sending data associated with IPC command.
+ * Size of the data is specified by IPC_CMD[size].
+ */
+
+> +static inline void ipc_data_writel(u32 data, u32 offset)
+> +{
+> +	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
+
+I'm thinking some input validation of offset is in order here, especially for
+the write.
+
+> +}
+> +
+> +static inline u8 ipc_data_readb(u32 offset)
+> +{
+> +	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+> +}
+> +
+> +static inline u32 ipc_data_readl(u32 offset)
+> +{
+> +	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+> +}
+> +
+> +int intel_pmc_ipc_check_status(void)
+> +{
+> +	int status;
+> +	int ret = 0;
+> +
+> +	if (ipcdev.irq_mode) {
+> +		if (0 == wait_for_completion_timeout(
+> +				&ipcdev.cmd_complete, IPC_MAX_SEC * HZ))
+> +			ret = -ETIMEDOUT;
+> +	} else {
+> +		int loop_count = IPC_LOOP_CNT;
+> +
+> +		while ((ipc_read_status() & IPC_STATUS_BUSY) && --loop_count)
+> +			udelay(1);
+> +		if (loop_count == 0)
+> +			ret = -ETIMEDOUT;
 > +	}
 > +
-> +	base = (u8 *)ioremap_nocache(hw->hw_res.start, hw->hw_res.size);
-> +
-> +	return base;
-> +}
-> +
-> +
-> +int fjes_hw_reset(struct fjes_hw *hw)
-> +{
-> +
-> +	int timeout;
-> +	union REG_DCTL dctl;
-> +
-> +	dctl.Reg = 0;
-> +	dctl.Bits.reset = 1;
-> +	wr32(XSCT_DCTL, dctl.Reg);
-> +
-> +
-> +	timeout = FJES_DEVICE_RESET_TIMEOUT * 1000;
-> +	dctl.Reg = rd32(XSCT_DCTL);
-
-> +	while ((dctl.Bits.reset == 1) && (timeout > 0)) {
-> +		msleep(1000);
-> +		dctl.Reg = rd32(XSCT_DCTL);
-> +		timeout -= 1000;
-> +	}
-> +
-
-> +	return timeout >= 0 ? 0 : -EIO;
-
-The while loop finishes when timeout becomes 0. So the
-funtion always returns 0.
-
-It should be "return dctl.Bits.reset =! 1 ? 0 : -EIO".
-
-> +
-> +}
-> +
-
-> +static int fjes_hw_get_max_epid(struct fjes_hw *hw)
-> +{
-> +	union REG_MAX_EP info;
-> +
-> +	info.Reg = rd32(XSCT_MAX_EP);
-> +
-> +	return info.Bits.maxep;
-> +}
-
-This is very difficut to read. Please add comment.
-When does info.Bits.maxep get value? The function just
-uses rd32(XSCT_MAX_EP).
-
-> +
-> +static int fjes_hw_get_my_epid(struct fjes_hw *hw)
-> +{
-> +	union REG_OWNER_EPID info;
-> +
-> +	info.Reg = rd32(XSCT_OWNER_EPID);
-> +
-> +	return info.Bits.epid;
-> +}
-
-Ditto.
-
-> +
-> +static int fjes_hw_alloc_shared_status_region(struct fjes_hw *hw)
-> +{
-> +	size_t size;
-> +
-> +	size = sizeof(struct fjes_device_shared_info) +
-> +	    (sizeof(u8) * hw->max_epid);
-> +	hw->hw_info.share = kzalloc(size, GFP_KERNEL);
-> +	if (!hw->hw_info.share)
-> +		return -ENOMEM;
-> +
-> +	hw->hw_info.share->epnum = hw->max_epid;
-> +
-> +	return 0;
-> +}
-> +
-> +static int fjes_hw_alloc_epbuf(struct epbuf_handler *epbh)
-> +{
-> +	void *mem;
-> +
-
-> +	mem = vmalloc(EP_BUFFER_SIZE);
-> +	if (!mem)
-> +		return -ENOMEM;
-> +	memset(mem, 0, EP_BUFFER_SIZE);
-
-How about use vzalloc().
-
-> +
-> +	epbh->buffer = mem;
-> +	epbh->size = EP_BUFFER_SIZE;
-> +
-> +	epbh->info = (union ep_buffer_info *)mem;
-> +	epbh->ring = (u8 *) (mem + sizeof(union ep_buffer_info));
-> +
-> +	return 0;
-> +}
-> +
-> +void fjes_hw_setup_epbuf(struct epbuf_handler *epbh, u8 *mac_addr, u32 mtu)
-> +{
-> +
-> +	union ep_buffer_info *info = epbh->info;
-> +	int i;
-> +	u16 vlan_id[EP_BUFFER_SUPPORT_VLAN_MAX];
-> +
-> +	for (i = 0; i < EP_BUFFER_SUPPORT_VLAN_MAX; i++)
-> +		vlan_id[i] = info->v1i.vlan_id[i];
-> +
-> +	memset((void *)info, 0, sizeof(union ep_buffer_info));
-> +
-> +	info->v1i.version = 0;  /* version 0 */
-> +
-> +	for (i = 0; i < ETH_ALEN; i++)
-> +		info->v1i.mac_addr[i] = mac_addr[i];
-> +
-> +	info->v1i.head = 0;
-> +	info->v1i.tail = 1;
-> +
-> +	info->v1i.info_size = sizeof(union ep_buffer_info);
-> +	info->v1i.buffer_size = epbh->size - info->v1i.info_size;
-> +
-> +	info->v1i.frame_max = FJES_MTU_TO_FRAME_SIZE(mtu);
-> +	info->v1i.count_max =
-> +	    EP_RING_NUM(info->v1i.buffer_size, info->v1i.frame_max);
-> +
-> +	for (i = 0; i < EP_BUFFER_SUPPORT_VLAN_MAX; i++)
-> +		info->v1i.vlan_id[i] = vlan_id[i];
-> +
-> +}
-> +
-> +
-> +void fjes_hw_init_command_registers(struct fjes_hw *hw,
-> +		struct fjes_device_command_param *param)
-> +{
-> +
-> +	/* Request Buffer length */
-> +	wr32(XSCT_REQBL, (__le32)(param->req_len));
-> +	/* Response Buffer Length */
-> +	wr32(XSCT_RESPBL, (__le32)(param->res_len));
-> +
-> +	/* Request Buffer Address */
-> +	wr32(XSCT_REQBAL,
-> +		(__le32)(param->req_start & GENMASK_ULL(31, 0)));
-> +	wr32(XSCT_REQBAH,
-> +		(__le32)((param->req_start & GENMASK_ULL(63, 32)) >> 32));
-> +
-> +	/* Response Buffer Address */
-> +	wr32(XSCT_RESPBAL,
-> +		(__le32)(param->res_start & GENMASK_ULL(31, 0)));
-> +	wr32(XSCT_RESPBAH,
-> +		(__le32)((param->res_start & GENMASK_ULL(63, 32)) >> 32));
-> +
-> +	/* Share status address */
-> +	wr32(XSCT_SHSTSAL,
-> +		(__le32)(param->share_start & GENMASK_ULL(31, 0)));
-> +	wr32(XSCT_SHSTSAH,
-> +		(__le32)((param->share_start & GENMASK_ULL(63, 32)) >> 32));
-> +}
-> +
-> +static int fjes_hw_setup(struct fjes_hw *hw)
-> +{
-> +	int epidx;
-> +	void *buf;
-> +	struct ep_share_mem_info *buf_pair;
-> +	size_t mem_size;
-> +	int result;
-> +	u8 mac[ETH_ALEN] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-> +	struct fjes_device_command_param param;
-> +
-> +	hw->hw_info.max_epid = &(hw->max_epid);
-> +	hw->hw_info.my_epid = &(hw->my_epid);
-> +
-> +
-> +	mem_size = sizeof(struct ep_share_mem_info) * (hw->max_epid);
-> +	buf = kzalloc(mem_size, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	hw->ep_shm_info = (struct ep_share_mem_info *)buf;
-> +
-> +	mem_size = FJES_DEV_REQ_BUF_SIZE(hw->max_epid);
-> +	hw->hw_info.req_buf = kzalloc(mem_size, GFP_KERNEL);
-> +	if (!(hw->hw_info.req_buf))
-> +		return -ENOMEM;
-> +
-> +	hw->hw_info.req_buf_size = mem_size;
-> +
-> +	mem_size = FJES_DEV_RES_BUF_SIZE(hw->max_epid);
-> +	hw->hw_info.res_buf = kzalloc(mem_size, GFP_KERNEL);
-> +	if (!(hw->hw_info.res_buf))
-> +		return -ENOMEM;
-> +
-> +	hw->hw_info.res_buf_size = mem_size;
-> +
-> +	result = fjes_hw_alloc_shared_status_region(hw);
-> +	if (result)
-> +		return result;
-> +
-> +	hw->hw_info.buffer_share_bit = 0;
-> +	hw->hw_info.buffer_unshare_reserve_bit = 0;
-> +
-> +	for (epidx = 0; epidx < hw->max_epid; epidx++) {
-> +		if (epidx != hw->my_epid) {
-> +			buf_pair = &(hw->ep_shm_info[epidx]);
-> +
-> +			result = fjes_hw_alloc_epbuf(&(buf_pair->tx));
-> +			if (result)
-> +				return result;
-> +
-> +			result = fjes_hw_alloc_epbuf(&(buf_pair->rx));
-> +			if (result)
-> +				return result;
-> +
-> +			fjes_hw_setup_epbuf(&(buf_pair->tx), mac,
-> +						  fjes_support_mtu[0]);
-> +			fjes_hw_setup_epbuf(&(buf_pair->rx), mac,
-> +						  fjes_support_mtu[0]);
-> +		}
-> +	}
-> +
-> +	memset((void *)&param, 0, sizeof(param));
-> +
-> +	param.req_len = hw->hw_info.req_buf_size;
-> +	param.req_start = __pa(hw->hw_info.req_buf);
-> +	param.res_len = hw->hw_info.res_buf_size;
-> +	param.res_start = __pa(hw->hw_info.res_buf);
-> +
-> +	param.share_start = __pa(hw->hw_info.share->ep_status);
-> +
-> +	fjes_hw_init_command_registers(hw, &param);
-> +
-> +	return 0;
-> +}
-
-The function returns -ENOMEM when it cannot allocate memory.
-Is it OK not to free allocated memory?
-
-Thanks,
-Yasuaki Ishimatsu
-
-> +
-> +int fjes_hw_init(struct fjes_hw *hw)
-> +{
-> +	int ret;
-> +
-> +	hw->base = fjes_hw_iomap(hw);
-> +	if (hw->base == NULL)
-> +		return -EIO;
-> +
-> +	ret = fjes_hw_reset(hw);
-> +	if (ret)
+> +	status = ipc_read_status();
+> +	if (ret == -ETIMEDOUT) {
+> +		dev_err(ipcdev.dev,
+> +			"IPC timed out, TS=0x%x, CMD=0x%x\n",
+> +			status, ipcdev.cmd);
 > +		return ret;
+> +	}
 > +
-> +	fjes_hw_set_irqmask(hw, REG_ICTL_MASK_ALL, true);
+> +	if (status & IPC_STATUS_ERR) {
+> +		int i;
 > +
-> +	mutex_init(&hw->hw_info.lock);
-> +
-> +	hw->max_epid = fjes_hw_get_max_epid(hw);
-> +	hw->my_epid = fjes_hw_get_my_epid(hw);
-> +
-> +	if ((hw->max_epid == 0) || (hw->my_epid >= hw->max_epid))
-> +		return -ENXIO;
-> +
-> +	ret = fjes_hw_setup(hw);
+> +		ret = -EIO;
+> +		i = (status >> IPC_CMD_SIZE) & 0xFF;
+> +		if (i < ARRAY_SIZE(ipc_err_sources))
+> +			dev_err(ipcdev.dev,
+> +				"IPC failed: %s, STS=0x%x, CMD=0x%x\n",
+> +				ipc_err_sources[i], status, ipcdev.cmd);
+> +		else
+> +			dev_err(ipcdev.dev,
+> +				"IPC failed: unknown, STS=0x%x, CMD=0x%x\n",
+> +				 status, ipcdev.cmd);
+> +		if ((i == IPC_ERR_UNSIGNEDKERNEL) || (i == IPC_ERR_EMSECURITY))
+> +			ret = -EACCES;
+> +	}
 > +
 > +	return ret;
 > +}
 > +
-> +void fjes_hw_set_irqmask(struct fjes_hw *hw, enum REG_ICTL_MASK intr_mask,
-> +		bool mask)
+> +/*
+> + * intel_pmc_ipc_simple_command
+> + * @cmd: command
+> + * @sub: sub type
+> + */
+> +int intel_pmc_ipc_simple_command(int cmd, int sub)
 > +{
-> +	if (mask)
-> +		wr32(XSCT_IMS, intr_mask);
-> +	else
-> +		wr32(XSCT_IMC, intr_mask);
+> +	int ret;
+> +
+> +	mutex_lock(&ipclock);
+> +	if (ipcdev.dev == NULL) {
+> +		mutex_unlock(&ipclock);
+> +		return -ENODEV;
+> +	}
+> +	ipc_send_command(sub << IPC_CMD_SUBCMD | cmd);
+> +	ret = intel_pmc_ipc_check_status();
+> +	mutex_unlock(&ipclock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(intel_pmc_ipc_simple_command);
+> +
+> +/*
+> + * intel_pmc_ipc_raw_cmd
+> + * @cmd: command
+> + * @sub: sub type
+> + * @in: input data
+> + * @inlen: input length in bytes
+> + * @out: output data
+> + * @outlen: output length in dwords
+> + * @sptr: data writing to SPTR register
+> + * @dptr: data writing to DPTR register
+> + */
+> +int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
+> +		u32 outlen, u32 dptr, u32 sptr)
+
+Indented second line to align with start of arg list
+
+> +{
+> +	u32 wbuf[4] = { 0 };
+> +	int ret;
+> +	int i;
+> +
+> +	if (inlen > 16)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&ipclock);
+> +	if (ipcdev.dev == NULL) {
+> +		mutex_unlock(&ipclock);
+> +		return -ENODEV;
+> +	}
+> +	memcpy(wbuf, in, inlen);
+> +	writel(dptr, ipcdev.ipc_base + IPC_DPTR);
+> +	writel(sptr, ipcdev.ipc_base + IPC_SPTR);
+> +	/* The input data register is 32bit register and inlen is in Byte */
+> +	for (i = 0; i < ((inlen + 3) / 4); i++)
+> +		ipc_data_writel(wbuf[i], 4 * i);
+> +	ipc_send_command((inlen << IPC_CMD_SIZE) |
+> +			(sub << IPC_CMD_SUBCMD) | cmd);
+> +	ret = intel_pmc_ipc_check_status();
+> +	if (!ret) {
+> +		/* out is read from 32bit register and outlen is in 32bit */
+> +		for (i = 0; i < outlen; i++)
+> +			*out++ = ipc_data_readl(4 * i);
+> +	}
+> +	mutex_unlock(&ipclock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(intel_pmc_ipc_raw_cmd);
+
+Is this intentionally not EXPORT_SYMBOL_GPL?
+
+> +
+> +/*
+> + * intel_pmc_ipc_command
+> + * @cmd: command
+> + * @sub: sub type
+> + * @in: input data
+> + * @inlen: input length in bytes
+> + * @out: output data
+> + * @outlen: output length in dwords
+> + */
+> +int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+> +		u32 *out, u32 outlen)
+
+Indented second line to align with start of arg list
+
+> +{
+> +	return intel_pmc_ipc_raw_cmd(cmd, sub, in, inlen, out, outlen, 0, 0);
+> +}
+> +EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
+> +
+> +static irqreturn_t ioc(int irq, void *dev_id)
+> +{
+> +	int status;
+> +
+> +	if (ipcdev.irq_mode) {
+> +		status = ipc_read_status();
+> +		writel(status | IPC_STATUS_IRQ, ipcdev.ipc_base + IPC_STATUS);
+> +	}
+> +	complete(&ipcdev.cmd_complete);
+> +
+> +	return IRQ_HANDLED;
 > +}
 > +
-> diff --git a/drivers/platform/x86/fjes/fjes_hw.h b/drivers/platform/x86/fjes/fjes_hw.h
-> new file mode 100644
-> index 0000000..02f4ee9
-> --- /dev/null
-> +++ b/drivers/platform/x86/fjes/fjes_hw.h
-> @@ -0,0 +1,254 @@
-> +/*
-> + *  FUJITSU Extended Socket Network Device driver
-> + *  Copyright (c) 2015 FUJITSU LIMITED
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program; if not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * The full GNU General Public License is included in this distribution in
-> + * the file called "COPYING".
-> + *
-> + */
+> +static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	resource_size_t pci_resource;
+> +	int ret;
+> +	int len;
 > +
-> +#ifndef FJES_HW_H_
-> +#define FJES_HW_H_
+> +	ipcdev.dev = &pci_dev_get(pdev)->dev;
+> +	ipcdev.irq_mode = IPC_TRIGGER_MODE_IRQ;
 > +
-> +#include <linux/netdevice.h>
-> +#include <linux/if_vlan.h>
+> +	ret = pci_enable_device(pdev);
+> +	if (ret)
+> +		return ret;
 > +
-> +#include "fjes_regs.h"
+> +	ret = pci_request_regions(pdev, "intel_pmc_ipc");
+> +	if (ret)
+> +		return ret;
 > +
-> +struct fjes_hw;
+> +	pci_resource = pci_resource_start(pdev, 0);
+> +	len = pci_resource_len(pdev, 0);
+> +	if (!pci_resource || !len) {
+> +		dev_err(&pdev->dev, "Failed to get resource\n");
+> +		return -ENOMEM;
+> +	}
 > +
-> +#define EP_BUFFER_SUPPORT_VLAN_MAX 4
-> +#define EP_BUFFER_INFO_SIZE 4096
+> +	init_completion(&ipcdev.cmd_complete);
 > +
-> +#define FJES_DEVICE_RESET_TIMEOUT  ((17 + 1) * 3) /* sec */
+> +	if (request_irq(pdev->irq, ioc, 0, "intel_pmc_ipc", &ipcdev)) {
+> +		dev_err(&pdev->dev, "Failed to request irq\n");
+> +		return -EBUSY;
+> +	}
 > +
-> +#define EP_BUFFER_SIZE \
-> +	(((sizeof(union ep_buffer_info) + (128 * (64 * 1024))) \
-> +		/ EP_BUFFER_INFO_SIZE) * EP_BUFFER_INFO_SIZE)
+> +	ipcdev.ipc_base = ioremap_nocache(pci_resource, len);
+> +	if (!ipcdev.ipc_base) {
+> +		dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
+> +		ret = -ENOMEM;
+> +		goto err;
+
+So here... just free_irq
+
+> +	}
 > +
-> +#define EP_RING_NUM(buffer_size, frame_size) \
-> +		(u32)((buffer_size) / (frame_size))
+> +	return 0;
+
+And here, return ret;
+
+> +err:
+> +	free_irq(pdev->irq, &ipcdev);
+> +	return ret;
+
+Then drop the err: and extra cleanup logic.
+
+I've incorporated this into the testing commit as well.
+
+> +}
 > +
-> +#define FJES_MTU_TO_BUFFER_SIZE(mtu) \
-> +	(ETH_HLEN + VLAN_HLEN + (mtu) + ETH_FCS_LEN)
-> +#define FJES_MTU_TO_FRAME_SIZE(mtu) \
-> +	(sizeof(struct esmem_frame_t) + FJES_MTU_TO_BUFFER_SIZE(mtu))
-> +#define FJES_MTU_DEFINE(size) \
-> +	((size) - sizeof(struct esmem_frame_t) - \
-> +	(ETH_HLEN + VLAN_HLEN + ETH_FCS_LEN))
+> +static void ipc_pci_remove(struct pci_dev *pdev)
+> +{
+> +	free_irq(pdev->irq, &ipcdev);
+> +	pci_release_regions(pdev);
+> +	pci_dev_put(pdev);
+> +	iounmap(ipcdev.ipc_base);
+> +	ipcdev.dev = NULL;
+> +}
 > +
-> +#define FJES_DEV_COMMAND_INFO_RES_LEN(epnum) (8 + 2*(epnum))
-> +#define FJES_DEV_COMMAND_SHARE_BUFFER_REQ_LEN(txb, rxb) \
-> +	(24 + (8 * ((txb)/EP_BUFFER_INFO_SIZE + (rxb)/EP_BUFFER_INFO_SIZE)))
+> +static const struct pci_device_id ipc_pci_ids[] = {
+> +	{PCI_VDEVICE(INTEL, 0x0a94), 0},
+> +	{PCI_VDEVICE(INTEL, 0x1a94), 0},
+> +	{ 0,}
+> +};
+> +MODULE_DEVICE_TABLE(pci, ipc_pci_ids);
 > +
-> +#define FJES_DEV_REQ_BUF_SIZE(maxep) \
-> +	FJES_DEV_COMMAND_SHARE_BUFFER_REQ_LEN(EP_BUFFER_SIZE, EP_BUFFER_SIZE)
-> +#define FJES_DEV_RES_BUF_SIZE(maxep) \
-> +	FJES_DEV_COMMAND_INFO_RES_LEN(maxep)
-> +
-> +
-> +/* Frame & MTU */
-> +struct esmem_frame_t {
-> +	__le32 frame_size;
-> +	u8 frame_data[];
+> +static struct pci_driver ipc_pci_driver = {
+> +	.name = "intel_pmc_ipc",
+> +	.id_table = ipc_pci_ids,
+> +	.probe = ipc_pci_probe,
+> +	.remove = ipc_pci_remove,
 > +};
 > +
-> +/* shared status region */
-> +struct fjes_device_shared_info {
-> +	int epnum;
-> +	u8 ep_status[];
+> +static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+> +	struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int subcmd;
+> +	int cmd;
+> +	int ret;
+> +
+> +	ret = sscanf(buf, "%d %d", &cmd, &subcmd);
+> +	if (ret != 2) {
+> +		dev_err(dev, "Error args\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = intel_pmc_ipc_simple_command(cmd, subcmd);
+> +	if (ret) {
+> +		dev_err(dev, "command %d error with %d\n", cmd, ret);
+> +		return ret;
+> +	}
+> +	return  count;
+
+Double space.
+
+Also, ssize_t can be either int or long depending on __BITS_PER_LONG, so your
+return type here can change based on arch.
+
+
+> +}
+> +
+> +static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+> +	struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	unsigned long val;
+> +	int subcmd;
+> +	int ret;
+> +
+> +	if (kstrtoul(buf, 0, &val))
+> +		return -EINVAL;
+> +
+> +	if (val)
+> +		subcmd = 1;
+> +	else
+> +		subcmd = 0;
+> +	ret = intel_pmc_ipc_simple_command(PMC_IPC_NORTHPEAK_CTRL, subcmd);
+> +	if (ret) {
+> +		dev_err(dev, "command north %d error with %d\n", subcmd, ret);
+> +		return ret;
+> +	}
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR(simplecmd, S_IWUSR,
+> +		NULL,
+> +		intel_pmc_ipc_simple_cmd_store);
+> +static DEVICE_ATTR(northpeak, S_IWUSR,
+> +		NULL,
+> +		intel_pmc_ipc_northpeak_store);
+> +
+> +static struct attribute *intel_ipc_attrs[] = {
+> +	&dev_attr_northpeak.attr,
+> +	&dev_attr_simplecmd.attr,
+> +	NULL
 > +};
 > +
-> +/* structures for command control request data*/
-> +union fjes_device_command_req {
-> +	struct {
-> +		__le32 length;
-> +	} info;
-> +	struct {
-> +		__le32 length;
-> +		__le32 epid;
-> +		__le64 buffer[];
-> +	} share_buffer;
-> +	struct {
-> +		__le32 length;
-> +		__le32 epid;
-> +	} unshare_buffer;
-> +	struct {
-> +		__le32 length;
-> +		__le32 mode;
-> +		__le64 buffer_len;
-> +		__le64 buffer[];
-> +	} start_trace;
-> +	struct {
-> +		__le32 length;
-> +	} stop_trace;
+> +static const struct attribute_group intel_ipc_group = {
+> +	.attrs = intel_ipc_attrs,
 > +};
 > +
-> +/* structures for command control response data */
-> +union fjes_device_command_res {
-> +	struct {
-> +		__le32 length;
-> +		__le32 code;
-> +		struct {
-> +			u8 es_status;
-> +			u8 zone;
-> +		} info[];
-> +	} info;
-> +	struct {
-> +		__le32 length;
-> +		__le32 code;
-> +	} share_buffer;
-> +	struct {
-> +		__le32 length;
-> +		__le32 code;
-> +	} unshare_buffer;
-> +	struct {
-> +		__le32 length;
-> +		__le32 code;
-> +	} start_trace;
-> +	struct {
-> +		__le32 length;
-> +		__le32 code;
-> +	} stop_trace;
+> +#define PUNIT_RESOURCE_INTER		1
+> +static struct resource punit_res[] = {
+> +	/* Punit */
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
 > +};
 > +
-> +/* parameter for command control */
-> +struct fjes_device_command_param {
-> +	u32 req_len;
-> +	phys_addr_t req_start;
-> +	u32 res_len;
-> +	phys_addr_t res_start;
-> +	phys_addr_t share_start;
+> +#define TCO_RESOURCE_ACPI_IO		0
+> +#define TCO_RESOURCE_SMI_EN_IO		1
+> +#define TCO_RESOURCE_GCR_MEM		2
+> +static struct resource tco_res[] = {
+> +	/* ACPI - TCO */
+> +	{
+> +		.flags = IORESOURCE_IO,
+> +	},
+> +	/* ACPI - SMI */
+> +	{
+> +		.flags = IORESOURCE_IO,
+> +	},
+> +	/* GCS */
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
 > +};
 > +
-> +/* EP buffer information */
-> +union ep_buffer_info {
-> +	u8 raw[EP_BUFFER_INFO_SIZE];
-> +
-> +	struct _ep_buffer_info_common_t {
-> +		u32 version;
-> +	} common;
-> +
-> +	struct _ep_buffer_info_v1_t {
-> +		u32 version;
-> +		u32 info_size;
-> +
-> +		u32 buffer_size;
-> +		u16 count_max;
-> +
-> +		u16 _rsv_1;
-> +
-> +		u32 frame_max;
-> +		u8 mac_addr[ETH_ALEN];
-> +
-> +		u16 _rsv_2;
-> +		u32 _rsv_3;
-> +
-> +		u16 tx_status;
-> +		u16 rx_status;
-> +
-> +		u32 head;
-> +		u32 tail;
-> +
-> +		u16 vlan_id[EP_BUFFER_SUPPORT_VLAN_MAX];
-> +
-> +	} v1i;
-> +
+> +static struct lpc_ich_info tco_info = {
+> +	.name = "Broxton SoC",
+> +	.iTCO_version = 3,
 > +};
 > +
-> +/* buffer pair for Extended Partition */
-> +struct ep_share_mem_info {
-> +	struct epbuf_handler {
-> +		void *buffer;
-> +		size_t size;
-> +		union ep_buffer_info *info;
-> +		u8 *ring;
-> +	} tx, rx;
+> +static int ipc_create_punit_device(void)
+> +{
+> +	struct platform_device *pdev;
+> +	struct resource *res;
+> +	int ret;
 > +
-> +	struct rtnl_link_stats64 net_stats;
+> +	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+> +	if (!pdev) {
+> +		dev_err(ipcdev.dev, "Failed to alloc punit platform device\n");
+> +		return -ENOMEM;
+> +	}
 > +
-> +	u16 tx_status_work;
+> +	pdev->dev.parent = ipcdev.dev;
 > +
-> +	u8 es_status;
-> +	u8 zone;
-> +};
+> +	res = punit_res;
+> +	res->start = (resource_size_t)ipcdev.punit_base;
+> +	res->end = res->start + ipcdev.punit_size - 1;
 > +
-> +struct es_device_trace {
-> +	u32 record_num;
-> +	u32 current_record;
-> +	u32 status_flag;
-> +	u32 _rsv;
+> +	res = punit_res + PUNIT_RESOURCE_INTER;
+> +	res->start = (resource_size_t)ipcdev.punit_base2;
+> +	res->end = res->start + ipcdev.punit_size2 - 1;
 > +
-> +	struct {
-> +			u16 epid;
-> +			u16 dir_offset;
-> +			u32 data;
-> +			u64 tsc;
-> +	} record[];
-> +};
-> +
-> +struct fjes_hw_info {
-> +	struct fjes_device_shared_info *share;
-> +	union fjes_device_command_req *req_buf;
-> +	u64 req_buf_size;
-> +	union fjes_device_command_res *res_buf;
-> +	u64 res_buf_size;
-> +
-> +	int *my_epid;
-> +	int *max_epid;
-> +
-> +	struct es_device_trace *trace;
-> +	u64 trace_size;
-> +
-> +	struct mutex lock;
-> +
-> +	unsigned long buffer_share_bit;
-> +	unsigned long buffer_unshare_reserve_bit;
-> +};
-> +
-> +
-> +struct fjes_hw {
-> +
-> +	void *back;
-> +
-> +	unsigned long txrx_stop_req_bit;
-> +	unsigned long epstop_req_bit;
-> +
-> +	int my_epid;
-> +	int max_epid;
-> +
-> +	struct ep_share_mem_info *ep_shm_info;
-> +
-> +	struct fjes_hw_resource {
-> +		u64 start;
-> +		u64 size;
-> +		int irq;
-> +	} hw_res;
-> +
-> +	u8 *base;
-> +
-> +	struct fjes_hw_info hw_info;
-> +};
-> +
-> +
-> +int fjes_hw_init(struct fjes_hw *);
-> +int fjes_hw_reset(struct fjes_hw *);
-> +
-> +void fjes_hw_init_command_registers(struct fjes_hw *,
-> +		struct fjes_device_command_param *);
-> +void fjes_hw_setup_epbuf(struct epbuf_handler *, u8 *, u32);
-> +void fjes_hw_set_irqmask(struct fjes_hw *, enum REG_ICTL_MASK, bool);
-> +
-> +#endif /* FJES_HW_H_ */
-> diff --git a/drivers/platform/x86/fjes/fjes_regs.h b/drivers/platform/x86/fjes/fjes_regs.h
-> new file mode 100644
-> index 0000000..1e79976
-> --- /dev/null
-> +++ b/drivers/platform/x86/fjes/fjes_regs.h
-> @@ -0,0 +1,110 @@
-> +/*
-> + *  FUJITSU Extended Socket Network Device driver
-> + *  Copyright (c) 2015 FUJITSU LIMITED
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program; if not, see <http://www.gnu.org/licenses/>.
-> + *
-> + * The full GNU General Public License is included in this distribution in
-> + * the file called "COPYING".
-> + *
-> + */
-> +
-> +#ifndef FJES_REGS_H_
-> +#define FJES_REGS_H_
-> +
-> +#include <linux/bitops.h>
-> +
-> +#define XSCT_DEVICE_REGISTER_SIZE 0x1000
-> +
-> +/*
-> + *  register offset
-> + */
-> +
-> +/* Information registers */
-> +#define XSCT_OWNER_EPID     0x0000  /* Owner EPID */
-> +#define XSCT_MAX_EP         0x0004  /* Maximum EP */
-> +
-> +/* Device Control registers */
-> +#define XSCT_DCTL           0x0010  /* Device Control */
-> +
-> +/* Command Control registers */
-> +#define XSCT_SHSTSAL        0x0028  /* Share status address Low */
-> +#define XSCT_SHSTSAH        0x002C  /* Share status address High */
-> +
-> +#define XSCT_REQBL          0x0034  /* Request Buffer length */
-> +#define XSCT_REQBAL         0x0038  /* Request Buffer Address Low */
-> +#define XSCT_REQBAH         0x003C  /* Request Buffer Address High */
-> +
-> +#define XSCT_RESPBL         0x0044  /* Response Buffer Length */
-> +#define XSCT_RESPBAL        0x0048  /* Response Buffer Address Low */
-> +#define XSCT_RESPBAH        0x004C  /* Response Buffer Address High */
-> +
-> +/* Interrupt Control registers */
-> +#define XSCT_IMS            0x0084  /* Interrupt mas set */
-> +#define XSCT_IMC            0x0088  /* Interrupt mask clear */
-> +
-> +
-> +/*
-> + * register structure
-> + */
-> +
-> +/* Information registers */
-> +union REG_OWNER_EPID {
-> +	struct {
-> +		__le32 epid:16;
-> +		__le32:16;
-> +	} Bits;
-> +	__le32 Reg;
-> +};
-> +
-> +union REG_MAX_EP {
-> +	struct {
-> +		__le32 maxep:16;
-> +		__le32:16;
-> +	} Bits;
-> +	__le32 Reg;
-> +};
-> +
-> +/* Device Control registers */
-> +union REG_DCTL {
-> +	struct {
-> +		__le32 reset:1;
-> +		__le32 rsv0:15;
-> +		__le32 rsv1:16;
-> +	} Bits;
-> +	__le32 Reg;
-> +};
-> +
-> +enum REG_ICTL_MASK {
-> +	REG_ICTL_MASK_INFO_UPDATE     = 1 << 20,
-> +	REG_ICTL_MASK_DEV_STOP_REQ    = 1 << 19,
-> +	REG_ICTL_MASK_TXRX_STOP_REQ   = 1 << 18,
-> +	REG_ICTL_MASK_TXRX_STOP_DONE  = 1 << 17,
-> +	REG_ICTL_MASK_RX_DATA         = 1 << 16,
-> +	REG_ICTL_MASK_ALL             = GENMASK(20, 16),
-> +};
-> +
-> +
-> +struct fjes_hw;
-> +
-> +u32 fjes_hw_rd32(struct fjes_hw *hw, u32 reg);
-> +
-> +#define wr32(reg, val) \
-> +do { \
-> +	u8 *base = hw->base; \
-> +	writel((val), &base[(reg)]); \
-> +} while (0)
-> +
-> +#define rd32(reg) (fjes_hw_rd32(hw, reg))
-> +
-> +#endif /* FJES_REGS_H_ */
-> -- 
-> 1.8.3.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	ret = platform_device_add_resources(pdev,
+> +				punit_res, ARRAY_SIZE(punit_res));
+
+Align start of arguments whenever feasible - it is here.
+Apply throughout please.
+
+Thanks,
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
