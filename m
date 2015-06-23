@@ -1,27 +1,27 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: Dell Vostro V131 hotkeys revisited
-Date: Tue, 23 Jun 2015 13:46:59 +0200
-Message-ID: <20150623114659.GM31818@pali>
+Date: Tue, 23 Jun 2015 14:18:27 +0200
+Message-ID: <20150623121827.GO31818@pali>
 References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f181.google.com ([209.85.212.181]:34673 "EHLO
-	mail-wi0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752527AbbFWLrD (ORCPT
+Received: from mail-wi0-f170.google.com ([209.85.212.170]:32884 "EHLO
+	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752734AbbFWMSa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Jun 2015 07:47:03 -0400
-Received: by wicnd19 with SMTP id nd19so103310356wic.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2015 04:47:02 -0700 (PDT)
+	Tue, 23 Jun 2015 08:18:30 -0400
+Received: by wiwl6 with SMTP id l6so64640923wiw.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2015 05:18:30 -0700 (PDT)
 Content-Disposition: inline
 In-Reply-To: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>
 
-Hi!
+CCing Alex
 
 On Tuesday 23 June 2015 13:26:21 Micha=C5=82 K=C4=99pie=C5=84 wrote:
 > Hi all,
@@ -92,17 +92,10 @@ IOS
 > [3] https://launchpadlibrarian.net/146038073/DSDT.dsl
 >=20
 
-=46irst make sure you have updated dell-wmi.c driver to last version (a=
+Alex, this looks like problem with Dell WMI. Maybe we will not be able
+to fix this problem with hotkeys without information/documentation abou=
 t
-least v3.19 kernel) and check that your ACPI code contains event WMI
-GUID 9DBB5994-A997-11DA-B012-B622A1EF5492
-
-Then compile dell-wmi.ko driver with debug messages, so pr_debug() call
-will print messages to dmesg. Press key and check if you see some info
-from dell-wmi.ko in dmesg.
-
-I fixed some problems with parsing WMI buffer in dell-wmi.c so maybe it
-could help...
+Dell WMI events... Do you have any idea about it?
 
 --=20
 Pali Roh=C3=A1r
