@@ -1,328 +1,365 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH][v2] asus-rbtn: new driver for asus radio button for Windows 8
-Date: Wed, 24 Jun 2015 10:57:51 +0800
-Message-ID: <1435114671-24380-1-git-send-email-alex.hung@canonical.com>
+From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Subject: [PATCH v2 01/22] fjes: Introduce FUJITSU Extended Socket Network Device driver
+Date: Wed, 24 Jun 2015 11:55:33 +0900
+Message-ID: <1435114554-7151-2-git-send-email-izumi.taku@jp.fujitsu.com>
+References: <1435114351-6961-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:52395 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752972AbbFXC57 (ORCPT
+Received: from mgwym02.jp.fujitsu.com ([211.128.242.41]:48156 "EHLO
+	mgwym02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755107AbbFXC7U (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Jun 2015 22:57:59 -0400
+	Tue, 23 Jun 2015 22:59:20 -0400
+In-Reply-To: <1435114351-6961-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org, corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, alex.hung@canonical.com
+To: netdev@vger.kernel.org, davem@davemloft.net
+Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com, Taku Izumi <izumi.taku@jp.fujitsu.com>
 
-ASUS introduced a new approach to handle wireless hotkey
-since Windows 8.  When the hotkey is pressed, BIOS generates
-a notification 0x88 to a new ACPI device, ATK4001.  This
-new driver not only translates the notification to KEY_RFKILL
-but also toggles its LED accordingly.
+This patch adds the basic code of FUJITSU Extended Socket
+Network Device driver.
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
+When "PNP0C02" is found in ACPI DSDT, it evaluates "_STR"
+to check if "PNP0C02" is for Extended Socket device driver
+and retrieves ACPI resource information. Then creates
+platform_device.
+
+Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
 ---
- MAINTAINERS                      |   6 +
- drivers/platform/x86/Kconfig     |  11 ++
- drivers/platform/x86/Makefile    |   1 +
- drivers/platform/x86/asus-rbtn.c | 240 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 258 insertions(+)
- create mode 100644 drivers/platform/x86/asus-rbtn.c
+ drivers/net/Kconfig          |   7 ++
+ drivers/net/Makefile         |   2 +
+ drivers/net/fjes/Makefile    |  31 +++++++
+ drivers/net/fjes/fjes.h      |  33 +++++++
+ drivers/net/fjes/fjes_main.c | 216 +++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 289 insertions(+)
+ create mode 100644 drivers/net/fjes/Makefile
+ create mode 100644 drivers/net/fjes/fjes.h
+ create mode 100644 drivers/net/fjes/fjes_main.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d8afd29..03711ce 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1673,6 +1673,12 @@ S:	Maintained
- F:	drivers/platform/x86/asus*.c
- F:	drivers/platform/x86/eeepc*.c
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index df51d60..57afbb6 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -379,6 +379,13 @@ config VMXNET3
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called vmxnet3.
  
-+ASUS RADIO BUTTON DRIVER
-+M:	Alex Hung <alex.hung@canonical.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/asus-rbtn.c
-+
- ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
- R:	Dan Williams <dan.j.williams@intel.com>
- W:	http://sourceforge.net/projects/xscaleiop
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f9f205c..a8ac885 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -516,6 +516,17 @@ config EEEPC_LAPTOP
- 	  If you have an Eee PC laptop, say Y or M here. If this driver
- 	  doesn't work on your Eee PC, try eeepc-wmi instead.
- 
-+config ASUS_RBTN
-+	tristate "ASUS radio button"
++config FUJITSU_ES
++	tristate "FUJITSU Extended Socket Network Device driver"
 +	depends on ACPI
-+	depends on INPUT
 +	help
-+	 This driver provides supports for new ASUS radio button for Windows 8.
-+	 On such systems the driver should load automatically (via ACPI alias).
++	  This driver provides support for Extended Socket network device
++          on Extended Partitioning of FUJITSU PRIMEQUEST 2000 E2 series.
 +
-+	 To compile this driver as a module, choose M here: the module will
-+	 be called asus-rbtn.
+ source "drivers/net/hyperv/Kconfig"
+ 
+ endif # NETDEVICES
+diff --git a/drivers/net/Makefile b/drivers/net/Makefile
+index e25fdd7..4cbc7a4 100644
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -66,3 +66,5 @@ obj-$(CONFIG_USB_NET_DRIVERS) += usb/
+ 
+ obj-$(CONFIG_HYPERV_NET) += hyperv/
+ obj-$(CONFIG_NTB_NETDEV) += ntb_netdev.o
 +
- config ASUS_WMI
- 	tristate "ASUS WMI Driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index f82232b..6710bb3 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -3,6 +3,7 @@
- # x86 Platform-Specific Drivers
- #
- obj-$(CONFIG_ASUS_LAPTOP)	+= asus-laptop.o
-+obj-$(CONFIG_ASUS_RBTN)		+= asus-rbtn.o
- obj-$(CONFIG_ASUS_WMI)		+= asus-wmi.o
- obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
- obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
-diff --git a/drivers/platform/x86/asus-rbtn.c b/drivers/platform/x86/asus-rbtn.c
++obj-$(CONFIG_FUJITSU_ES) += fjes/
+diff --git a/drivers/net/fjes/Makefile b/drivers/net/fjes/Makefile
 new file mode 100644
-index 0000000..a469881
+index 0000000..98e59cb
 --- /dev/null
-+++ b/drivers/platform/x86/asus-rbtn.c
-@@ -0,0 +1,240 @@
++++ b/drivers/net/fjes/Makefile
+@@ -0,0 +1,31 @@
++################################################################################
++#
++# FUJITSU Extended Socket Network Device driver
++# Copyright (c) 2015 FUJITSU LIMITED
++#
++# This program is free software; you can redistribute it and/or modify it
++# under the terms and conditions of the GNU General Public License,
++# version 2, as published by the Free Software Foundation.
++#
++# This program is distributed in the hope it will be useful, but WITHOUT
++# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++# more details.
++#
++# You should have received a copy of the GNU General Public License along with
++# this program; if not, see <http://www.gnu.org/licenses/>.
++#
++# The full GNU General Public License is included in this distribution in
++# the file called "COPYING".
++#
++################################################################################
++
++
++#
++# Makefile for the FUJITSU Extended Socket network device driver
++#
++
++obj-$(CONFIG_FUJITSU_ES) += fjes.o
++
++fjes-objs := fjes_main.o
++
+diff --git a/drivers/net/fjes/fjes.h b/drivers/net/fjes/fjes.h
+new file mode 100644
+index 0000000..4622da1
+--- /dev/null
++++ b/drivers/net/fjes/fjes.h
+@@ -0,0 +1,33 @@
 +/*
-+ *  asus-rbtn radio button for Windows 8
++ *  FUJITSU Extended Socket Network Device driver
++ *  Copyright (c) 2015 FUJITSU LIMITED
 + *
-+ *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
 + *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, see <http://www.gnu.org/licenses/>.
++ *
++ * The full GNU General Public License is included in this distribution in
++ * the file called "COPYING".
++ *
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/platform_device.h>
++#ifndef FJES_H_
++#define FJES_H_
++
 +#include <linux/acpi.h>
-+#include <acpi/acpi_bus.h>
-+#include <linux/rfkill.h>
 +
++#define FJES_ACPI_SYMBOL	"Extended Socket"
++
++extern char fjes_driver_name[];
++extern char fjes_driver_version[];
++extern u32 fjes_support_mtu[];
++
++#endif /* FJES_H_ */
+diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+new file mode 100644
+index 0000000..d20d515
+--- /dev/null
++++ b/drivers/net/fjes/fjes_main.c
+@@ -0,0 +1,216 @@
++/*
++ *  FUJITSU Extended Socket Network Device driver
++ *  Copyright (c) 2015 FUJITSU LIMITED
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, see <http://www.gnu.org/licenses/>.
++ *
++ * The full GNU General Public License is included in this distribution in
++ * the file called "COPYING".
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/types.h>
++#include <linux/nls.h>
++#include <linux/platform_device.h>
++
++#include "fjes.h"
++
++#define MAJ 1
++#define MIN 0
++#define DRV_VERSION __stringify(MAJ) "." __stringify(MIN)
++#define DRV_NAME	"fjes"
++char fjes_driver_name[] = DRV_NAME;
++char fjes_driver_version[] = DRV_VERSION;
++static const char fjes_driver_string[] =
++		"FUJITSU Extended Socket Network Device Driver";
++static const char fjes_copyright[] =
++		"Copyright (c) 2015 FUJITSU LIMITED";
++
++MODULE_AUTHOR("Taku Izumi <izumi.taku@jp.fujitsu.com>");
++MODULE_DESCRIPTION("FUJITSU Extended Socket Network Device Driver");
 +MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Alex Hung");
-+MODULE_ALIAS("acpi*:ATK4001:*");
++MODULE_VERSION(DRV_VERSION);
 +
-+#define ASUS_RBTN_NOTIFY	0x88
++static int fjes_acpi_add(struct acpi_device *);
++static int fjes_acpi_remove(struct acpi_device *);
++static acpi_status fjes_get_acpi_resource(struct acpi_resource *, void*);
 +
-+static struct platform_device *asuspl_dev;
-+static struct input_dev *asusrb_input_dev;
-+static struct rfkill *asus_rfkill;
-+static struct acpi_device *asus_rbtn_device;
-+static int radio_led_state;
++static int fjes_probe(struct platform_device *);
++static int fjes_remove(struct platform_device *);
 +
-+static const struct acpi_device_id asusrb_ids[] = {
-+	{"ATK4001", 0},
++static const struct acpi_device_id fjes_acpi_ids[] = {
++	{"PNP0C02", 0},
 +	{"", 0},
 +};
++MODULE_DEVICE_TABLE(acpi, fjes_acpi_ids);
 +
-+static int asus_radio_led_set(bool blocked)
++static struct acpi_driver fjes_acpi_driver = {
++	.name = DRV_NAME,
++	.class = DRV_NAME,
++	.owner = THIS_MODULE,
++	.ids = fjes_acpi_ids,
++	.ops = {
++		.add = fjes_acpi_add,
++		.remove = fjes_acpi_remove,
++	},
++};
++
++static struct platform_driver fjes_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++	},
++	.probe = fjes_probe,
++	.remove = fjes_remove,
++};
++
++static struct resource fjes_resource[] = {
++	{
++		.flags = IORESOURCE_MEM,
++		.start = 0,
++		.end = 0,
++	},
++	{
++		.flags = IORESOURCE_IRQ,
++		.start = 0,
++		.end = 0,
++	},
++};
++
++static int fjes_acpi_add(struct acpi_device *device)
 +{
 +	acpi_status status;
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+	unsigned long long output;
++	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL};
++	union acpi_object *str;
++	char str_buf[sizeof(FJES_ACPI_SYMBOL) + 1];
++	int result;
++	struct platform_device *plat_dev;
 +
-+	arg0.integer.value = blocked;
-+	status = acpi_evaluate_integer(asus_rbtn_device->handle, "HSWC",
-+				       &args, &output);
-+	if (!ACPI_SUCCESS(status) || output == 0) {
-+		pr_err("fail to change wireless LED.\n");
-+		return -EINVAL;
++	status = acpi_evaluate_object(device->handle, "_STR", NULL, &buffer);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	str = buffer.pointer;
++	result =
++	utf16s_to_utf8s((wchar_t *)str->string.pointer,
++			str->string.length, UTF16_LITTLE_ENDIAN,
++			str_buf, sizeof(str_buf) - 1);
++	str_buf[result] = 0;
++
++	if (strncmp(FJES_ACPI_SYMBOL, str_buf, strlen(FJES_ACPI_SYMBOL)) != 0) {
++		kfree(buffer.pointer);
++		return -ENODEV;
 +	}
++	kfree(buffer.pointer);
++
++	status = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
++				     fjes_get_acpi_resource, fjes_resource);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	/* create platform_device */
++	plat_dev =
++	platform_device_register_simple(DRV_NAME, 0, fjes_resource,
++					ARRAY_SIZE(fjes_resource));
++	device->driver_data = plat_dev;
 +
 +	return 0;
 +}
 +
-+static int asus_rfkill_set(void *data, bool blocked)
++static int fjes_acpi_remove(struct acpi_device *device)
 +{
-+	radio_led_state = blocked ? 0 : 1;
++	struct platform_device *plat_dev;
 +
-+	return asus_radio_led_set(radio_led_state);
-+}
-+
-+static const struct rfkill_ops asus_rfkill_ops = {
-+	.set_block = asus_rfkill_set,
-+};
-+
-+static int asusrb_rfkill_setup(struct acpi_device *device)
-+{
-+	int err;
-+
-+	asus_rfkill = rfkill_alloc("asus_rbtn",
-+				   &device->dev,
-+				   RFKILL_TYPE_WLAN,
-+				   &asus_rfkill_ops,
-+				   device);
-+	if (!asus_rfkill) {
-+		pr_err("unable to allocate rfkill device\n");
-+		return -ENOMEM;
-+	}
-+
-+	err = rfkill_register(asus_rfkill);
-+	if (err) {
-+		pr_err("unable to register rfkill device\n");
-+		rfkill_destroy(asus_rfkill);
-+	}
-+
-+	return err;
-+}
-+
-+static int asus_rbtn_input_setup(void)
-+{
-+	int err;
-+
-+	asusrb_input_dev = input_allocate_device();
-+	if (!asusrb_input_dev)
-+		return -ENOMEM;
-+
-+	asusrb_input_dev->name = "ASUS radio hotkeys";
-+	asusrb_input_dev->phys = "atk4001/input0";
-+	asusrb_input_dev->id.bustype = BUS_HOST;
-+	asusrb_input_dev->evbit[0] = BIT(EV_KEY);
-+	set_bit(KEY_RFKILL, asusrb_input_dev->keybit);
-+
-+	err = input_register_device(asusrb_input_dev);
-+	if (err)
-+		goto err_free_dev;
-+
-+	return 0;
-+
-+err_free_dev:
-+	input_free_device(asusrb_input_dev);
-+	return err;
-+}
-+
-+static void asus_rbtn_input_destroy(void)
-+{
-+	input_unregister_device(asusrb_input_dev);
-+}
-+
-+static void asusrb_notify(struct acpi_device *acpi_dev, u32 event)
-+{
-+	if (event != ASUS_RBTN_NOTIFY) {
-+		pr_err("received unknown event (0x%x)\n", event);
-+		return;
-+	}
-+
-+	input_report_key(asusrb_input_dev, KEY_RFKILL, 1);
-+	input_sync(asusrb_input_dev);
-+	input_report_key(asusrb_input_dev, KEY_RFKILL, 0);
-+	input_sync(asusrb_input_dev);
-+}
-+
-+static int asusrb_add(struct acpi_device *device)
-+{
-+	int err;
-+
-+	asus_rbtn_device = device;
-+
-+	err = asus_rbtn_input_setup();
-+	if (err) {
-+		pr_err("failed to setup asus_rbtn hotkeys\n");
-+		return err;
-+	}
-+
-+	err = asusrb_rfkill_setup(device);
-+	if (err)
-+		pr_err("failed to setup asus_rbtn rfkill\n");
-+
-+	return err;
-+}
-+
-+static int asusrb_remove(struct acpi_device *device)
-+{
-+	asus_rbtn_input_destroy();
-+
-+	if (asus_rfkill) {
-+		rfkill_unregister(asus_rfkill);
-+		rfkill_destroy(asus_rfkill);
-+	}
++	plat_dev = (struct platform_device *)acpi_driver_data(device);
++	platform_device_unregister(plat_dev);
 +
 +	return 0;
 +}
 +
-+static struct acpi_driver asusrb_driver = {
-+	.name	= "asus acpi radio button",
-+	.owner	= THIS_MODULE,
-+	.ids	= asusrb_ids,
-+	.ops	= {
-+		.add	= asusrb_add,
-+		.remove	= asusrb_remove,
-+		.notify	= asusrb_notify,
-+	},
-+};
-+
-+static int asusrb_resume_handler(struct device *device)
++static acpi_status
++fjes_get_acpi_resource(struct acpi_resource *acpi_res, void *data)
 +{
-+	return asus_radio_led_set(radio_led_state);
++	struct resource *res = data;
++	struct acpi_resource_address32 *addr;
++	struct acpi_resource_irq *irq;
++
++	switch (acpi_res->type) {
++	case ACPI_RESOURCE_TYPE_ADDRESS32:
++		addr = &acpi_res->data.address32;
++		res[0].start = addr->address.minimum;
++		res[0].end = addr->address.minimum +
++			addr->address.address_length - 1;
++		break;
++
++	case ACPI_RESOURCE_TYPE_IRQ:
++		irq = &acpi_res->data.irq;
++		if (irq->interrupt_count != 1)
++			return AE_ERROR;
++		res[1].start = irq->interrupts[0];
++		res[1].end = irq->interrupts[0];
++		break;
++
++	default:
++		break;
++	}
++
++	return AE_OK;
 +}
 +
-+static const struct dev_pm_ops asuspl_pm_ops = {
-+	.resume  = asusrb_resume_handler,
-+};
-+
-+static struct platform_driver asuspl_driver = {
-+	.driver = {
-+		.name = "asus-rbtn",
-+		.pm = &asuspl_pm_ops,
-+	},
-+};
-+
-+static int __init asusrb_init(void)
++/* fjes_probe - Device Initialization Routine */
++static int fjes_probe(struct platform_device *plat_dev)
 +{
-+	int err;
++	return 0;
++}
 +
-+	pr_info("Initializing ATK4001 module\n");
-+	err = acpi_bus_register_driver(&asusrb_driver);
-+	if (err)
-+		goto err_driver_reg;
++/* fjes_remove - Device Removal Routine */
++static int fjes_remove(struct platform_device *plat_dev)
++{
++	return 0;
++}
 +
-+	err = platform_driver_register(&asuspl_driver);
-+	if (err)
-+		goto err_driver_reg;
++/* fjes_init_module - Driver Registration Routine */
++static int __init fjes_init_module(void)
++{
++	int result;
 +
-+	asuspl_dev = platform_device_alloc("asus-rbtn", -1);
-+	if (!asuspl_dev) {
-+		err = -ENOMEM;
-+		goto err_device_alloc;
-+	}
-+	err = platform_device_add(asuspl_dev);
-+	if (err)
-+		goto err_device_add;
++	pr_info("%s - version %s - %s\n",
++		fjes_driver_string, fjes_driver_version, fjes_copyright);
++
++	result = platform_driver_register(&fjes_driver);
++	if (result < 0)
++		return result;
++
++	result = acpi_bus_register_driver(&fjes_acpi_driver);
++	if (result < 0)
++		goto fail_acpi_driver;
 +
 +	return 0;
 +
-+err_device_add:
-+	platform_device_put(asuspl_dev);
-+err_device_alloc:
-+	platform_driver_unregister(&asuspl_driver);
-+err_driver_reg:
-+	return err;
++fail_acpi_driver:
++	platform_driver_unregister(&fjes_driver);
++	return result;
 +}
 +
-+static void __exit asusrb_exit(void)
++module_init(fjes_init_module);
++
++/* fjes_exit_module - Driver Exit Cleanup Routine */
++static void __exit fjes_exit_module(void)
 +{
-+	pr_info("Exiting ATK4001 module\n");
-+	acpi_bus_unregister_driver(&asusrb_driver);
-+
-+	if (asuspl_dev) {
-+		platform_device_unregister(asuspl_dev);
-+		platform_driver_unregister(&asuspl_driver);
-+	}
++	acpi_bus_unregister_driver(&fjes_acpi_driver);
++	platform_driver_unregister(&fjes_driver);
 +}
 +
-+module_init(asusrb_init);
-+module_exit(asusrb_exit);
++module_exit(fjes_exit_module);
++
 -- 
-1.9.1
+1.8.3.1
