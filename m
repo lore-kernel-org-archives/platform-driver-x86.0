@@ -1,378 +1,91 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] asus-radio: new driver for asus radio button for Windows 8
-Date: Wed, 24 Jun 2015 11:03:02 +0800
-Message-ID: <CAJ=jquaES6yS-EhuH5UMm-Uae=6CRUJc9p67cV7dqW4_OHz0Bg@mail.gmail.com>
-References: <1434964805-18088-1-git-send-email-alex.hung@canonical.com>
-	<20150622204745.GG58421@vmdeb7>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 01/22] fjes: Introduce FUJITSU Extended Socket
+ Network Device driver
+Date: Tue, 23 Jun 2015 23:50:37 -0700
+Message-ID: <1435128637.2504.51.camel@perches.com>
+References: <1435114351-6961-1-git-send-email-izumi.taku@jp.fujitsu.com>
+	 <1435114554-7151-2-git-send-email-izumi.taku@jp.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f179.google.com ([209.85.220.179]:36420 "EHLO
-	mail-qk0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933853AbbFXDDE (ORCPT
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:49989 "EHLO
+	smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1750775AbbFXGum (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 23 Jun 2015 23:03:04 -0400
-Received: by qkfe185 with SMTP id e185so15318863qkf.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2015 20:03:02 -0700 (PDT)
-In-Reply-To: <20150622204745.GG58421@vmdeb7>
+	Wed, 24 Jun 2015 02:50:42 -0400
+In-Reply-To: <1435114554-7151-2-git-send-email-izumi.taku@jp.fujitsu.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: corentin.chary@gmail.com, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user@lists.sourceforge.net
+To: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com
 
-Hi Darren,
+On Wed, 2015-06-24 at 11:55 +0900, Taku Izumi wrote:
+> This patch adds the basic code of FUJITSU Extended Socket
+> Network Device driver.
 
-Thanks for the comments. I sent v2 patch that addresses your feedbacks.
+trivial notes:
 
-I tested ASUS systems and the driver is able to toggle ON/OFF of
-wireless devices.  That's all ASUS systems I can get my hands on right
-now.  If more are available I will test them too and fix bugs if there
-is any.
+> diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+[]
+> +static int fjes_acpi_add(struct acpi_device *device)
+> +{
+[]
+> +	result =
+> +	utf16s_to_utf8s((wchar_t *)str->string.pointer,
+> +			str->string.length, UTF16_LITTLE_ENDIAN,
+> +			str_buf, sizeof(str_buf) - 1);
 
-On Tue, Jun 23, 2015 at 4:47 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Mon, Jun 22, 2015 at 05:20:05PM +0800, Alex Hung wrote:
->> ASUS introduced a new approach to handle wireless hotkey
->> since Windows 8.  When the hotkey is pressed, BIOS generates
->> a notification 0x88 to a new ACPI device, ATK4001.  This
->> new driver not only translates the notification to KEY_RFKILL
->> but also toggles its LED accordingly.
->>
->> Signed-off-by: Alex Hung <alex.hung@canonical.com>
->
->
-> Hi Alex,
->
-> Will you be maintaining this driver? If so, please add it to MAINTAINERS as part
-> of this patch. If not.... why not? ;-)
->
-> Would you object to renaming it to "asus-rbtn.c" and using CONFIG_ASUS_RBTN,
-> just to keep it similar to the recently added dell-rbtn - also the rbtn suffix
-> is a bit more descriptive of the driver function in my opinion.
->
-> Couple minor things below, otherwise appears to be in pretty good shape. How
-> many systems have you tested this on?
->
->
->> ---
->>  drivers/platform/x86/Kconfig      |   11 ++
->>  drivers/platform/x86/Makefile     |    1 +
->>  drivers/platform/x86/asus-radio.c |  238 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 250 insertions(+)
->>  create mode 100644 drivers/platform/x86/asus-radio.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 638e7970..d2adc79 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -516,6 +516,17 @@ config EEEPC_LAPTOP
->>         If you have an Eee PC laptop, say Y or M here. If this driver
->>         doesn't work on your Eee PC, try eeepc-wmi instead.
->>
->> +config ASUS_RADIO
->> +     tristate "ASUS radio button"
->> +     depends on ACPI
->> +     depends on INPUT
->> +     help
->> +      This driver provides supports for new ASUS radio button for Windows 8.
->> +      On such systems the driver should load automatically (via ACPI alias).
->> +
->> +      To compile this driver as a module, choose M here: the module will
->> +      be called hp-wireless.
->> +
->>  config ASUS_WMI
->>       tristate "ASUS WMI Driver"
->>       depends on ACPI_WMI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index f82232b..aecd403 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -3,6 +3,7 @@
->>  # x86 Platform-Specific Drivers
->>  #
->>  obj-$(CONFIG_ASUS_LAPTOP)    += asus-laptop.o
->> +obj-$(CONFIG_ASUS_RADIO)     += asus-radio.o
->>  obj-$(CONFIG_ASUS_WMI)               += asus-wmi.o
->>  obj-$(CONFIG_ASUS_NB_WMI)    += asus-nb-wmi.o
->>  obj-$(CONFIG_EEEPC_LAPTOP)   += eeepc-laptop.o
->> diff --git a/drivers/platform/x86/asus-radio.c b/drivers/platform/x86/asus-radio.c
->> new file mode 100644
->> index 0000000..4d519ce
->> --- /dev/null
->> +++ b/drivers/platform/x86/asus-radio.c
->> @@ -0,0 +1,238 @@
->> +/*
->> + *  asus-radio button for Windows 8
->> + *
->> + *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
->> + *
->> + *  This program is free software; you can redistribute it and/or modify
->> + *  it under the terms of the GNU General Public License as published by
->> + *  the Free Software Foundation; either version 2 of the License, or
->> + *  (at your option) any later version.
->> + *
->> + *  This program is distributed in the hope that it will be useful,
->> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + *  GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/init.h>
->> +#include <linux/input.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/acpi.h>
->> +#include <acpi/acpi_bus.h>
->> +#include <linux/rfkill.h>
->> +
->> +MODULE_LICENSE("GPL");
->> +MODULE_AUTHOR("Alex Hung");
->> +MODULE_ALIAS("acpi*:ATK4001:*");
->> +
->> +static struct platform_device *asuspl_dev;
->> +static struct input_dev *asusrb_input_dev;
->> +static struct rfkill *asus_rfkill;
->> +static struct acpi_device *asus_radio_device;
->> +static int radio_led_state;
->> +
->> +static const struct acpi_device_id asusrb_ids[] = {
->> +     {"ATK4001", 0},
->> +     {"", 0},
->> +};
->> +
->> +static int asus_led_set(bool blocked)
->> +{
->> +     acpi_status status;
->> +     union acpi_object arg0 = { ACPI_TYPE_INTEGER };
->> +     struct acpi_object_list args = { 1, &arg0 };
->> +     unsigned long long output;
->> +
->> +     arg0.integer.value = blocked;
->> +     status = acpi_evaluate_integer(asus_radio_device->handle, "HSWC",
->> +                                    &args, &output);
->> +     if (!ACPI_SUCCESS(status) || output == 0) {
->> +             pr_err("fail to change wireless LED.\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int asus_rfk_set(void *data, bool blocked)
->
-> *rfkill_set is more common and is more explicit
->
->> +{
->> +     radio_led_state = blocked ? 0 : 1;
->> +
->> +     return asus_led_set(radio_led_state);
->> +}
->> +
->> +static const struct rfkill_ops asus_rfk_ops = {
->
-> asus_rfkill_ops is more common and more explicit (I'd prefer rfkill to rfk
-> wherever possible).
->
->> +     .set_block = asus_rfk_set,
->> +};
->> +
->> +static int asusrb_rfkill_setup(struct acpi_device *device)
->> +{
->> +     int err = 0;
->
-> err is never used before it is assigned, no need to initialize to 0 here.
->
->> +
->> +     asus_rfkill = rfkill_alloc("asus_radio",
->> +                                &device->dev,
->> +                                RFKILL_TYPE_WLAN,
->> +                                &asus_rfk_ops,
->> +                                device);
->> +     if (!asus_rfkill) {
->> +             pr_err("unable to allocate rfkill device\n");
->> +             return -ENOMEM;
->> +     }
->> +
->> +     err = rfkill_register(asus_rfkill);
->> +     if (err) {
->> +             pr_err("unable to register rfkill device\n");
->> +             rfkill_destroy(asus_rfkill);
->> +     }
->> +
->> +     return err;
->> +}
->> +
->> +static int asus_radio_input_setup(void)
->> +{
->> +     int err;
->> +
->> +     asusrb_input_dev = input_allocate_device();
->> +     if (!asusrb_input_dev)
->> +             return -ENOMEM;
->> +
->> +     asusrb_input_dev->name = "ASUS radio hotkeys";
->> +     asusrb_input_dev->phys = "atk4001/input0";
->> +     asusrb_input_dev->id.bustype = BUS_HOST;
->> +     asusrb_input_dev->evbit[0] = BIT(EV_KEY);
->> +     set_bit(KEY_RFKILL, asusrb_input_dev->keybit);
->> +
->> +     err = input_register_device(asusrb_input_dev);
->> +     if (err)
->> +             goto err_free_dev;
->> +
->> +     return 0;
->> +
->> +err_free_dev:
->> +     input_free_device(asusrb_input_dev);
->> +     return err;
->> +}
->> +
->> +static void asus_radio_input_destroy(void)
->> +{
->> +     input_unregister_device(asusrb_input_dev);
->> +}
->> +
->> +static void asusrb_notify(struct acpi_device *acpi_dev, u32 event)
->> +{
->> +     if (event != 0x88) {
->
-> Prefer a define to a magic number, even if it is only used the once.
->
->> +             pr_err("received unknown event (0x%x)\n", event);
->> +             return;
->> +     }
->> +
->> +     input_report_key(asusrb_input_dev, KEY_RFKILL, 1);
->> +     input_sync(asusrb_input_dev);
->> +     input_report_key(asusrb_input_dev, KEY_RFKILL, 0);
->> +     input_sync(asusrb_input_dev);
->> +}
->> +
->> +static int asusrb_add(struct acpi_device *device)
->> +{
->> +     int err;
->> +
->> +     asus_radio_device = device;
->> +
->> +     err = asus_radio_input_setup();
->> +     if (err) {
->> +             pr_err("failed to setup asus_radio hotkeys\n");
->> +             goto failed;
->> +     }
->> +
->> +     err = asusrb_rfkill_setup(device);
->> +     if (err)
->> +             pr_err("failed to setup asus_radio rfkill\n");
->> + failed:
->
-> Please be consistent with your label indentation throughout the driver. I don't
-> see established precedent for with or without a space. Some argue using a space
-> improves debugability and patch legibility - but I don't enforce one or the
-> other - just be consistent in the file.
->
-> Also, this label isn't really necessary, just return err in the one location
-> used above and drop it.
->
->> +     return err;
->> +}
->> +
->> +static int asusrb_remove(struct acpi_device *device)
->> +{
->> +     asus_radio_input_destroy();
->> +
->> +     if (asus_rfkill) {
->> +             rfkill_unregister(asus_rfkill);
->> +             rfkill_destroy(asus_rfkill);
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static struct acpi_driver asusrb_driver = {
->> +     .name   = "asus acpi radio",
->> +     .owner  = THIS_MODULE,
->> +     .ids    = asusrb_ids,
->> +     .ops    = {
->> +             .add    = asusrb_add,
->> +             .remove = asusrb_remove,
->> +             .notify = asusrb_notify,
->> +     },
->> +};
->> +
->> +static int asusrb_resume_handler(struct device *device)
->> +{
->> +     return asus_led_set(radio_led_state);
->> +}
->> +
->> +static const struct dev_pm_ops asuspl_pm_ops = {
->> +     .resume  = asusrb_resume_handler,
->> +};
->> +
->> +static struct platform_driver asuspl_driver = {
->> +     .driver = {
->> +             .name = "asus-radio",
->> +             .pm = &asuspl_pm_ops,
->> +     },
->> +};
->> +
->> +static int __init asusrb_init(void)
->> +{
->> +     int err;
->> +
->> +     pr_info("Initializing ATK4001 module\n");
->> +     err = acpi_bus_register_driver(&asusrb_driver);
->> +     if (err)
->> +             goto err_driver_reg;
->> +
->> +     err = platform_driver_register(&asuspl_driver);
->> +     if (err)
->> +             goto err_driver_reg;
->> +
->> +     asuspl_dev = platform_device_alloc("asus-radio", -1);
->> +     if (!asuspl_dev) {
->> +             err = -ENOMEM;
->> +             goto err_device_alloc;
->> +     }
->> +     err = platform_device_add(asuspl_dev);
->> +     if (err)
->> +             goto err_device_add;
->> +
->> +     return 0;
->> +
->> +err_device_add:
->> +     platform_device_put(asuspl_dev);
->> +err_device_alloc:
->> +     platform_driver_unregister(&asuspl_driver);
->> +err_driver_reg:
->> +     return err;
->> +}
->> +
->> +static void __exit asusrb_exit(void)
->> +{
->> +     pr_info("Exiting ATK4001 module\n");
->> +     acpi_bus_unregister_driver(&asusrb_driver);
->> +
->> +     if (asuspl_dev) {
->> +             platform_device_unregister(asuspl_dev);
->> +             platform_driver_unregister(&asuspl_driver);
->> +     }
->> +}
->> +
->> +module_init(asusrb_init);
->> +module_exit(asusrb_exit);
->> --
->> 1.7.9.5
->>
->>
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+I dislike this style as it's not normally used in the kernel.
+Most would use another tab indent on the utf16s_to_utf8s line
+if the line didn't fit, but this would is more common:
 
+	result = utf16s_to_utf8s((wchar_t *)str->string.pointer,
+				 str->string.length, UTF16_LITTLE_ENDIAN,
+				 str_buf, sizeof(str_buf) - 1);
+> 
+> +	/* create platform_device */
+> +	plat_dev =
+> +	platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+> +					ARRAY_SIZE(fjes_resource));
 
+	plat_dev = platform_device_register_simple(DRV_NAME, 0, fjes_resource,
+						   ARRAY_SIZE(fjes_resource));
 
--- 
-Cheers,
-Alex Hung
+etc...
+
+> +static acpi_status
+> +fjes_get_acpi_resource(struct acpi_resource *acpi_res, void *data)
+> +{
+> +	struct resource *res = data;
+> +	struct acpi_resource_address32 *addr;
+> +	struct acpi_resource_irq *irq;
+> +
+> +	switch (acpi_res->type) {
+> +	case ACPI_RESOURCE_TYPE_ADDRESS32:
+> +		addr = &acpi_res->data.address32;
+> +		res[0].start = addr->address.minimum;
+> +		res[0].end = addr->address.minimum +
+> +			addr->address.address_length - 1;
+> +		break;
+> +
+> +	case ACPI_RESOURCE_TYPE_IRQ:
+> +		irq = &acpi_res->data.irq;
+> +		if (irq->interrupt_count != 1)
+> +			return AE_ERROR;
+> +		res[1].start = irq->interrupts[0];
+> +		res[1].end = irq->interrupts[0];
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return AE_OK;
+> +}
+
+Is this function used in this compilation?
+If not, it's odd to add code that isn't used.
+
+Is it better to make the 2nd argument a
+struct resource * rather than a void * ?
