@@ -1,128 +1,92 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Paul Bolle <pebolle@tiscali.nl>
 Subject: Re: [PATCH][v2] asus-rbtn: new driver for asus radio button for
  Windows 8
-Date: Wed, 24 Jun 2015 21:04:56 -0700
-Message-ID: <20150625040456.GC18285@vmdeb7>
+Date: Thu, 25 Jun 2015 08:58:04 +0200
+Message-ID: <1435215484.4528.96.camel@tiscali.nl>
 References: <1435114671-24380-1-git-send-email-alex.hung@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:41780 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751196AbbFYEE7 (ORCPT
+Received: from lb1-smtp-cloud6.xs4all.net ([194.109.24.24]:34768 "EHLO
+	lb1-smtp-cloud6.xs4all.net" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751017AbbFYG6Q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 25 Jun 2015 00:04:59 -0400
-Content-Disposition: inline
+	Thu, 25 Jun 2015 02:58:16 -0400
 In-Reply-To: <1435114671-24380-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>
-Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
+To: Alex Hung <alex.hung@canonical.com>, dvhart@infradead.org, corentin.chary@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2015 at 10:57:51AM +0800, Alex Hung wrote:
-> ASUS introduced a new approach to handle wireless hotkey
-> since Windows 8.  When the hotkey is pressed, BIOS generates
-> a notification 0x88 to a new ACPI device, ATK4001.  This
-> new driver not only translates the notification to KEY_RFKILL
-> but also toggles its LED accordingly.
-> 
-> Signed-off-by: Alex Hung <alex.hung@canonical.com>
-> ---
->  MAINTAINERS                      |   6 +
->  drivers/platform/x86/Kconfig     |  11 ++
->  drivers/platform/x86/Makefile    |   1 +
->  drivers/platform/x86/asus-rbtn.c | 240 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 258 insertions(+)
->  create mode 100644 drivers/platform/x86/asus-rbtn.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d8afd29..03711ce 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1673,6 +1673,12 @@ S:	Maintained
->  F:	drivers/platform/x86/asus*.c
->  F:	drivers/platform/x86/eeepc*.c
->  
-> +ASUS RADIO BUTTON DRIVER
-> +M:	Alex Hung <alex.hung@canonical.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/asus-rbtn.c
-> +
->  ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
->  R:	Dan Williams <dan.j.williams@intel.com>
->  W:	http://sourceforge.net/projects/xscaleiop
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index f9f205c..a8ac885 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -516,6 +516,17 @@ config EEEPC_LAPTOP
->  	  If you have an Eee PC laptop, say Y or M here. If this driver
->  	  doesn't work on your Eee PC, try eeepc-wmi instead.
->  
-> +config ASUS_RBTN
-> +	tristate "ASUS radio button"
-> +	depends on ACPI
-> +	depends on INPUT
-> +	help
-> +	 This driver provides supports for new ASUS radio button for Windows 8.
+On Wed, 2015-06-24 at 10:57 +0800, Alex Hung wrote:
+> --- /dev/null
+> +++ b/drivers/platform/x86/asus-rbtn.c
 
-s/supports/support/
+> +MODULE_ALIAS("acpi*:ATK4001:*");
 
-Also, avoid using "new" in the Kconfig as this lives forever, in 10 years, it
-won't be so new :-)
+This looked odd. It turned out this is the pattern that
+scripts/mod/file2alias.c::do_acpi_entry() creates. 
 
-Consider:
+> +static const struct acpi_device_id asusrb_ids[] = {
+> +	{"ATK4001", 0},
+> +	{"", 0},
+> +};
 
-"This driver supports the ASUS radio button for Windows 8."
+I think you should just put
+    MODULE_DEVICE_TABLE(acpi, asusrb_ids);
 
-(And maybe fix the entry for HP_WIRELESS while you're at it in a separate patch)
+here, like all other drivers do, and drop the odd looking alias.
 
-...
+All others drivers except drivers/platform/x86/hp-wireless.c, that is.
+(I noticed that you also wrote that driver.) It should just use
+MODULE_DEVICE_TABLE() too
 
-> +static int asus_rbtn_input_setup(void)
+> +static int __init asusrb_init(void)
 > +{
 > +	int err;
 > +
-> +	asusrb_input_dev = input_allocate_device();
-> +	if (!asusrb_input_dev)
-> +		return -ENOMEM;
+> +	[...]
 > +
-> +	asusrb_input_dev->name = "ASUS radio hotkeys";
-> +	asusrb_input_dev->phys = "atk4001/input0";
-> +	asusrb_input_dev->id.bustype = BUS_HOST;
-> +	asusrb_input_dev->evbit[0] = BIT(EV_KEY);
-> +	set_bit(KEY_RFKILL, asusrb_input_dev->keybit);
-> +
-> +	err = input_register_device(asusrb_input_dev);
+> +	asuspl_dev = platform_device_alloc("asus-rbtn", -1);
+> +	if (!asuspl_dev) {
+> +		err = -ENOMEM;
+> +		goto err_device_alloc;
+> +	}
+> +	err = platform_device_add(asuspl_dev);
 > +	if (err)
-> +		goto err_free_dev;
+> +		goto err_device_add;
 > +
 > +	return 0;
 > +
-> +err_free_dev:
-> +	input_free_device(asusrb_input_dev);
+> +err_device_add:
+> +	platform_device_put(asuspl_dev);
+> +err_device_alloc:
+> +	platform_driver_unregister(&asuspl_driver);
+> +err_driver_reg:
 > +	return err;
+> +}
+> +
+> +static void __exit asusrb_exit(void)
+> +{
+> +	pr_info("Exiting ATK4001 module\n");
+> +	acpi_bus_unregister_driver(&asusrb_driver);
+> +
+> +	if (asuspl_dev) {
 
-I missed this on the first round. There is no need for a goto here at all:
+If asusrb_exit() will be run asusrb_init() must have completed
+successfully before, right? And is there a way for asuspl_dev to be
+NULL after asusrb_init() succeeded?
 
-int ret;
-...
-ret = input_register_Device(asusrb_input_dev);
-if (ret)
-	input_free_device(asusrb_input_dev);
-return ret;
+> +		platform_device_unregister(asuspl_dev);
+> +		platform_driver_unregister(&asuspl_driver);
+> +	}
+> +}
+> +
+> +module_init(asusrb_init);
+> +module_exit(asusrb_exit);
 
-Much nicer IMHO.
+Thanks,
 
-Do you have a strong preference for err over ret? In most cases in this driver,
-ret would be the more typical choice in my experience.
 
-I suppose this is modeled after hp-wireless which has the same error path in
-hp_wireless_input_setup I mentioned above and uses err throughout - consistency
-is a good thing. I won't argue over the ret/err thing as there is precedent in
-this subsystem for similar drivers.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+Paul Bolle
