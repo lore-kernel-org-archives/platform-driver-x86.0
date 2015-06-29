@@ -1,113 +1,103 @@
-From: Finn Thain <fthain@telegraphics.com.au>
-Subject: [RFC v3 06/24] x86/thinkpad_acpi: Use arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
-Date: Sun, 28 Jun 2015 11:42:05 +1000
-Message-ID: <20150628014201.192729746@telegraphics.com.au>
-References: <20150628014159.732792697@telegraphics.com.au>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH][v2] asus-rbtn: new driver for asus radio button for
+ Windows 8
+Date: Mon, 29 Jun 2015 14:29:53 +0200
+Message-ID: <20150629122953.GF16230@pali>
+References: <1435114671-24380-1-git-send-email-alex.hung@canonical.com>
+ <20150626145621.GU2890@pali>
+ <CAJ=jqub8adCQBWPsmg+Wov0G4WqZbhsjxttWq6CA8Uddqmj4Cw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:43632 "EHLO
-	kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752053AbbF1Bun (ORCPT
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:37608 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752625AbbF2M35 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 27 Jun 2015 21:50:43 -0400
-Content-Disposition: inline; filename=pc-rtc-replace-exported-nvram-functions
+	Mon, 29 Jun 2015 08:29:57 -0400
+Content-Disposition: inline
+In-Reply-To: <CAJ=jqub8adCQBWPsmg+Wov0G4WqZbhsjxttWq6CA8Uddqmj4Cw@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
-nvram_* function exports can be removed.
+On Friday 26 June 2015 23:24:10 Alex Hung wrote:
+> On Fri, Jun 26, 2015 at 10:56 PM, Pali Roh=C3=A1r <pali.rohar@gmail.c=
+om> wrote:
+> > Hi!
+> >
+> > On Wednesday 24 June 2015 10:57:51 Alex Hung wrote:
+> >> ASUS introduced a new approach to handle wireless hotkey
+> >> since Windows 8.  When the hotkey is pressed, BIOS generates
+> >> a notification 0x88 to a new ACPI device, ATK4001.  This
+> >> new driver not only translates the notification to KEY_RFKILL
+> >> but also toggles its LED accordingly.
+> >>
+> >> Signed-off-by: Alex Hung <alex.hung@canonical.com>
+> >
+> > ...
+> >
+> >> +static int asus_radio_led_set(bool blocked)
+> >> +{
+> >> +     acpi_status status;
+> >> +     union acpi_object arg0 =3D { ACPI_TYPE_INTEGER };
+> >> +     struct acpi_object_list args =3D { 1, &arg0 };
+> >> +     unsigned long long output;
+> >> +
+> >> +     arg0.integer.value =3D blocked;
+> >> +     status =3D acpi_evaluate_integer(asus_rbtn_device->handle, "=
+HSWC",
+> >> +                                    &args, &output);
+> >
+> > What is this ACPI call doing? Just set LED control? Or something mo=
+re?
+> >
+> >> +     if (!ACPI_SUCCESS(status) || output =3D=3D 0) {
+> >> +             pr_err("fail to change wireless LED.\n");
+> >> +             return -EINVAL;
+> >> +     }
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int asus_rfkill_set(void *data, bool blocked)
+> >> +{
+> >> +     radio_led_state =3D blocked ? 0 : 1;
+> >> +
+> >> +     return asus_radio_led_set(radio_led_state);
+> >> +}
+> >
+> > In my opinion this is not good idea that "rfkill block" call from
+> > userspace just change LED on/off state and nothing more...
+> >
+> > If above ACPI call just change LED, then should not be this in LED
+> > subsystem instead rfkill one? Or why do you prefer to use rfkill
+> > interface instead led?
+>=20
+> It indeed controls LED only at the moment.  My intention was to have
+> have everything work without the need to modify any userspace
+> applications.  Current it is 1) aus-rbtn issues KEY_RFKILL 2) an
+> userspace application changes rfkill states, and 3) both radio and LE=
+D
+> work.  It will also work when a user enable/disable wireless devices
+> on a user application which uses rfkill interface.
+>=20
+> Come to think about it now, I may have to handle LED with WLAN and BT
+> but I will have to find a system with both devices later.
+>=20
+> I am not too familiar with userspace applications v.s. LED.  Is it
+> possible to do the same (i.e. without touching userspace)? I think
+> rfkill is good interface to handle whatever needs doing when changing
+> wireless states, such as LED controls.  However, if other approach ca=
+n
+> meet the need I am happy to investigate.
+>=20
 
-This patch series was tested on a ThinkPad T43.
+There are triggers for led which automatically enable/disable led. I
+think that configuring default wifi/bluetooth trigger for that new led
+could work...
 
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-
----
- drivers/platform/x86/thinkpad_acpi.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-Index: linux/drivers/platform/x86/thinkpad_acpi.c
-===================================================================
---- linux.orig/drivers/platform/x86/thinkpad_acpi.c	2015-06-28 11:41:28.000000000 +1000
-+++ linux/drivers/platform/x86/thinkpad_acpi.c	2015-06-28 11:41:35.000000000 +1000
-@@ -2311,30 +2311,30 @@ static void hotkey_read_nvram(struct tp_
- 	u8 d;
- 
- 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
- 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
- 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
- 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
- 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
- 	}
- 	if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
- 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
- 	}
- 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
- 		n->displayexp_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 		n->brightness_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
- 				>> TP_NVRAM_POS_LEVEL_VOLUME;
- 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
-@@ -6155,7 +6155,7 @@ static unsigned int tpacpi_brightness_nv
- {
- 	u8 lnvram;
- 
--	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
-+	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
- 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 	lnvram &= bright_maxlvl;
-@@ -6180,7 +6180,7 @@ static void tpacpi_brightness_checkpoint
- 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
- 		goto unlock;
- 	lec &= TP_EC_BACKLIGHT_LVLMSK;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 
- 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
-@@ -6188,7 +6188,7 @@ static void tpacpi_brightness_checkpoint
- 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
- 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
- 		dbg_printk(TPACPI_DBG_BRGHT,
- 			   "updated NVRAM backlight level to %u (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
-@@ -6796,13 +6796,13 @@ static void tpacpi_volume_checkpoint_nvr
- 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
- 		goto unlock;
- 	lec &= ec_mask;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 
- 	if (lec != (b_nvram & ec_mask)) {
- 		/* NVRAM needs update */
- 		b_nvram &= ~ec_mask;
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
- 		dbg_printk(TPACPI_DBG_MIXER,
- 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
