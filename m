@@ -1,56 +1,108 @@
-From: Dmitry Tunin <hanipouspilot@gmail.com>
-Subject: Re: [RESEND] asus-nb-wmi: Add wapf4 quirk for X200MA
-Date: Mon, 29 Jun 2015 18:37:04 +0300
-Message-ID: <CANoib0EjQE5YyDeby=P1_C+DpbvMFQh4A_Bhj0Z9uJZ4OTYv-w@mail.gmail.com>
-References: <1435591785-14133-1-git-send-email-hanipouspilot@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] dell-laptop: Check return value of all SMBIOS calls
+ and do not cache hwswitch state
+Date: Mon, 29 Jun 2015 16:02:40 -0700
+Message-ID: <20150629230240.GE57818@vmdeb7>
+References: <1434875967-13370-3-git-send-email-pali.rohar@gmail.com>
+ <1435390483-10694-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f46.google.com ([209.85.215.46]:36589 "EHLO
-	mail-la0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752732AbbF2PhG (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:44760 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752879AbbF2XCp (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Jun 2015 11:37:06 -0400
-In-Reply-To: <1435591785-14133-1-git-send-email-hanipouspilot@gmail.com>
+	Mon, 29 Jun 2015 19:02:45 -0400
+Content-Disposition: inline
+In-Reply-To: <1435390483-10694-1-git-send-email-pali.rohar@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@linux.intel.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Dmitry Tunin <hanipouspilot@gmail.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-This patch was sent by a mistake. I rebased it and there was an error. Sent v2.
+On Sat, Jun 27, 2015 at 09:34:43AM +0200, Pali Roh=E1r wrote:
+> Make sure that return value of all SMBIOS calls are properly checked =
+and
+> do not continue of processing (received) information if call failed.
+>=20
+> Also do not chache hwswitch wireless state as it can be changed at ru=
+ntime
+> (e.g from userspace smbios applications).
 
-2015-06-29 18:29 GMT+03:00 Dmitry Tunin <hanipouspilot@gmail.com>:
-> Wireless is not blocked without this quirk, but
-> wireless LED does not follow wireless status.
-> With this quirk it accurately reflects if wireless is on or off.
->
-> Signed-off-by: Dmitry Tunin <hanipouspilot@gmail.com>
-> Acked-by: Corentin Chary <corentin.chary@gmail.com>
-> Cc: stable@vger.kernel.org
+This "Also do.." tripled the size of the patch. This should really be t=
+wo
+patches.
+
+>=20
+> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
 > ---
->  drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 3a4951f..4b1c13d 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -104,6 +104,15 @@ static const struct dmi_system_id asus_quirks[] = {
->                 .ident = "ASUSTeK COMPUTER INC. X401U",
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "X200MA"),
-> +               },
-> +               .driver_data = &quirk_asus_wapf4,
-> +       },
-> +       {
-> +               .callback = dmi_matched,
-> +               .ident = "ASUSTeK COMPUTER INC. X401U",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->                         DMI_MATCH(DMI_PRODUCT_NAME, "X401U"),
->                 },
->                 .driver_data = &quirk_asus_x55u,
-> --
-> 1.9.1
->
+> Changes since v1:
+>  * Call clear_buffer before each sequential SMBIOS call (we expect ze=
+ro-filled buffer)
+
+Another good independent patch candidate
+
+>  * Do not cache hwswitch state as it can be modified at runtime by us=
+erspace
+>  * simplify some conditions
+> ---
+>  drivers/platform/x86/dell-laptop.c |  173 ++++++++++++++++++++++++++=
+----------
+>  1 file changed, 127 insertions(+), 46 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x8=
+6/dell-laptop.c
+> index 35758cb..99f28d3 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+
+=2E..
+
+>  static void dell_update_rfkill(struct work_struct *ignored)
+>  {
+> +	int hwswitch;
+>  	int status;
+> +	int ret;
+> =20
+>  	get_buffer();
+> +
+>  	dell_send_request(buffer, 17, 11);
+> +	ret =3D buffer->output[0];
+>  	status =3D buffer->output[1];
+> =20
+> +	if (ret !=3D 0)
+> +		goto out;
+> +
+> +	clear_buffer();
+> +
+> +	buffer->input[0] =3D 0x2;
+> +	dell_send_request(buffer, 17, 11);
+> +	ret =3D buffer->output[0];
+> +
+> +	if (ret =3D=3D 0 && (status & BIT(0)))
+> +		hwswitch =3D buffer->output[1];
+> +	else
+> +		hwswitch =3D 0;
+
+Initializing hwswitch to 0 above saves the else and assignment line her=
+e.
+Generally preferred.
+
+=2E..
+
+> =20
+>  static int dell_get_intensity(struct backlight_device *bd)
+>  {
+> -	int ret =3D 0;
+> +	int ret;
+> +	int token;
+
+Since we're talking respin, declare in order of descending line length =
+please,
+just as you did later when adding token to a function.
+
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
