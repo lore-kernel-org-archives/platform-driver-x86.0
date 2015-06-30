@@ -1,108 +1,73 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] dell-laptop: Check return value of all SMBIOS calls
- and do not cache hwswitch state
-Date: Mon, 29 Jun 2015 16:02:40 -0700
-Message-ID: <20150629230240.GE57818@vmdeb7>
-References: <1434875967-13370-3-git-send-email-pali.rohar@gmail.com>
- <1435390483-10694-1-git-send-email-pali.rohar@gmail.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Tue, 30 Jun 2015 09:38:35 +0200
+Message-ID: <20150630073835.GA3612@eudyptula.hq.kempniu.pl>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <20150624132303.GK21149@pali>
+ <20150625090206.GA2554@eudyptula.hq.kempniu.pl>
+ <201506272050.24352@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:44760 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752879AbbF2XCp (ORCPT
+Received: from mail-la0-f52.google.com ([209.85.215.52]:33348 "EHLO
+	mail-la0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750718AbbF3Hii (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 29 Jun 2015 19:02:45 -0400
+	Tue, 30 Jun 2015 03:38:38 -0400
+Received: by laar3 with SMTP id r3so2422364laa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2015 00:38:37 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <1435390483-10694-1-git-send-email-pali.rohar@gmail.com>
+In-Reply-To: <201506272050.24352@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Sat, Jun 27, 2015 at 09:34:43AM +0200, Pali Roh=E1r wrote:
-> Make sure that return value of all SMBIOS calls are properly checked =
-and
-> do not continue of processing (received) information if call failed.
->=20
-> Also do not chache hwswitch wireless state as it can be changed at ru=
-ntime
-> (e.g from userspace smbios applications).
+> now I looked deeply at your problem. I read that part of ACPI code an=
+d=20
+> it really looks like that NEVT method does not handle all possible=20
+> events.
 
-This "Also do.." tripled the size of the patch. This should really be t=
-wo
-patches.
+Thank you for taking your time to review my findings.
 
->=20
-> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> ---
-> Changes since v1:
->  * Call clear_buffer before each sequential SMBIOS call (we expect ze=
-ro-filled buffer)
+> But how can windows driver handle that? In my opinion it either do so=
+me
+> init magic so NEVT will receive event with mask 0x0800 or it overwrit=
+e
+> some ACPI method and handle it locally...
 
-Another good independent patch candidate
+I have no idea, but Kyle Evans had a few in a message I referenced
+earlier in this thread [1].
 
->  * Do not cache hwswitch state as it can be modified at runtime by us=
-erspace
->  * simplify some conditions
-> ---
->  drivers/platform/x86/dell-laptop.c |  173 ++++++++++++++++++++++++++=
-----------
->  1 file changed, 127 insertions(+), 46 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x8=
-6/dell-laptop.c
-> index 35758cb..99f28d3 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
+> You can try to play with overwriting ACPI function NEVT at runtime an=
+d=20
+> patch it to call WMIA also for other masks.
 
-=2E..
+I already tried that before writing the first message in this thread,
+which includes the following quote:
 
->  static void dell_update_rfkill(struct work_struct *ignored)
->  {
-> +	int hwswitch;
->  	int status;
-> +	int ret;
-> =20
->  	get_buffer();
-> +
->  	dell_send_request(buffer, 17, 11);
-> +	ret =3D buffer->output[0];
->  	status =3D buffer->output[1];
-> =20
-> +	if (ret !=3D 0)
-> +		goto out;
-> +
-> +	clear_buffer();
-> +
-> +	buffer->input[0] =3D 0x2;
-> +	dell_send_request(buffer, 17, 11);
-> +	ret =3D buffer->output[0];
-> +
-> +	if (ret =3D=3D 0 && (status & BIT(0)))
-> +		hwswitch =3D buffer->output[1];
-> +	else
-> +		hwswitch =3D 0;
+"However, even when I customized the NEVT method to call WMIA for value=
+s
+0x1000 and 0x2000, the dell-wmi driver reported all zeros for the event
+data retrieved using _WED."
 
-Initializing hwswitch to 0 above saves the else and assignment line her=
-e.
-Generally preferred.
+> Are you 100% sure that keypress is not sent to i8042 controller and t=
+hat=20
+> linux kbd driver does not filter it somehow? Ideally test events with=
+=20
+> userspace application input-events and not with some X utility (to be=
+=20
+> sure that X does not consume that keypress too).
 
-=2E..
+Yes, I'm sure. First I booted the kernel with i8042.debug=3D1. Interrup=
+ts
+were raised as expected for hotkey #2, but not for hotkey #3. Then I
+enabled CONFIG_INPUT_EVBUG. As expected, events were generated for
+hotkey #2, but not for hotkey #3.
 
-> =20
->  static int dell_get_intensity(struct backlight_device *bd)
->  {
-> -	int ret =3D 0;
-> +	int ret;
-> +	int token;
-
-Since we're talking respin, declare in order of descending line length =
-please,
-just as you did later when adding token to a function.
-
+[1] http://www.spinics.net/lists/linux-acpi/msg34577.html=20
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
