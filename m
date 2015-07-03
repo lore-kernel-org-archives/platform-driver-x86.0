@@ -1,110 +1,66 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/3] dell-laptop: Clear buffer before each SMBIOS call
-Date: Fri, 3 Jul 2015 10:10:38 +0200
-Message-ID: <20150703081038.GF1841@pali>
-References: <201507012004.45275@pali>
- <1435774101-12329-1-git-send-email-pali.rohar@gmail.com>
- <20150702004544.GD27795@vmdeb7>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Fri, 3 Jul 2015 13:26:11 +0200
+Message-ID: <20150703112611.GA3030@eudyptula.hq.kempniu.pl>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <20150701105544.GD17577@pali>
+ <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f176.google.com ([209.85.212.176]:37788 "EHLO
-	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754811AbbGCIKl (ORCPT
+Received: from mail-la0-f45.google.com ([209.85.215.45]:32901 "EHLO
+	mail-la0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755061AbbGCL0Q (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jul 2015 04:10:41 -0400
+	Fri, 3 Jul 2015 07:26:16 -0400
+Received: by laar3 with SMTP id r3so81723521laa.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2015 04:26:15 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <20150702004544.GD27795@vmdeb7>
+In-Reply-To: <20150703074813.GD1841@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-On Wednesday 01 July 2015 17:45:44 Darren Hart wrote:
-> On Wed, Jul 01, 2015 at 08:08:19PM +0200, Pali Roh=C3=A1r wrote:
-> > Make sure that before initializing SMBIOS call input buffer does no=
-t contain
-> > any garbage (e.g values from previous SMBIOS call). This fix proble=
-m with
-> > passing undefined/random parameters to SMBIOS functions.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > ---
-> >  drivers/platform/x86/dell-laptop.c |   11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/=
-x86/dell-laptop.c
-> > index 35758cb..6728487 100644
-> > --- a/drivers/platform/x86/dell-laptop.c
-> > +++ b/drivers/platform/x86/dell-laptop.c
-> > @@ -310,10 +310,15 @@ static DEFINE_MUTEX(buffer_mutex);
-> > =20
-> >  static int hwswitch_state;
-> > =20
-> > +static void clear_buffer(void)
-> > +{
-> > +	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> > +}
-> > +
-> >  static void get_buffer(void)
-> >  {
-> >  	mutex_lock(&buffer_mutex);
-> > -	memset(buffer, 0, sizeof(struct calling_interface_buffer));
-> > +	clear_buffer();
-> >  }
-> > =20
-> >  static void release_buffer(void)
-> > @@ -557,6 +562,8 @@ static int dell_rfkill_set(void *data, bool blo=
-cked)
-> >  	    !(buffer->output[1] & BIT(16)))
-> >  		disable =3D 1;
-> > =20
-> > +	clear_buffer();
-> > +
-> >  	buffer->input[0] =3D (1 | (radio<<8) | (disable << 16));
-> >  	dell_send_request(buffer, 17, 11);
-> > =20
-> > @@ -571,6 +578,7 @@ static void dell_rfkill_update_sw_state(struct =
-rfkill *rfkill, int radio,
-> >  	if (status & BIT(0)) {
-> >  		/* Has hw-switch, sync sw_state to BIOS */
-> >  		int block =3D rfkill_blocked(rfkill);
-> > +		clear_buffer();
-> >  		buffer->input[0] =3D (1 | (radio << 8) | (block << 16));
-> >  		dell_send_request(buffer, 17, 11);
-> >  	} else {
-> > @@ -774,6 +782,7 @@ static int __init dell_setup_rfkill(void)
-> >  	dell_send_request(buffer, 17, 11);
-> >  	status =3D buffer->output[1];
-> >  	buffer->input[0] =3D 0x2;
-> > +	clear_buffer();
-> >  	dell_send_request(buffer, 17, 11);
+> It looks like above buffer has format of *new* event (0002 - length o=
+f
+> event, 0000 - type of event, e025 - data). But when using legacy keym=
+ap
+> then dell-wmi.c parse events with old format (which means type=3D0000=
+ is
+> dropped and data=3De025 is translated to some key).
 >=20
-> This clears the buffer after modifying input[0] and right before
-> dell_send_request... so you're sending a completely empty buffer? Is =
-that
-> intentional here? I guess I would have expected the clear_buffer to b=
-e one line
-> earlier.
->=20
+> This is even harder as I thought. Looks like big mess and now I would
+> say, without documentation for Dell WMI events we are not able to fix
+> this correctly without breaking other laptops...
 
-Yes, now I see. I split that one patch into tree and I checked that
-every one compiles fine and cumulative change of all patches is same...
-Because that part (sending 0x2) is deleted in patch 3/3 it missed in my
-eyes...
+As far as I understand, the specific case that we're dealing with here
+is that on one laptop model a certain WMI event is generated along with
+a keycode while another mothel generates the same WMI event without an
+accompanying keycode. Currently the Dell WMI driver ignores the WMI
+event in question, but it is processed by i8042.
 
-I will fix these problems and sent patch series again.
+Could we perhaps do the opposite for this specific event, i.e. filter i=
+t
+out using the i8042 filter in dell-laptop.c and translate the WMI event
+into a keycode in dell-wmi.c? This shouldn't conflict with the dell-rbt=
+n
+driver as there are no ACPI devices on an XPS L502X that could be
+handled by that driver [1] and thus the i8042 filter should be
+installed. However, that i8042 keycode could potentially be generated o=
+n
+other, WMI-less models and such a change would break them, rendering it
+unacceptable. I also assumed pressing the hotkey in question on an XPS
+L502X produces the same i8042 keycode as the WMI event code indicates..=
+=2E
 
-> >  	hwswitch_state =3D buffer->output[1];
-> >  	release_buffer();
-> > --=20
-> > 1.7.9.5
-> >=20
-> >=20
->=20
+[1] this statement is based on the DSDT dump from a Dell XPS L502X that
+    I found here: https://launchpadlibrarian.net/68880655/DSDT.dsl
 
 --=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
