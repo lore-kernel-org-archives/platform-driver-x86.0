@@ -1,135 +1,149 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: Dell Vostro V131 hotkeys revisited
-Date: Fri, 3 Jul 2015 22:55:42 +0200
-Message-ID: <20150703205542.GB2408@eudyptula.hq.kempniu.pl>
-References: <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
- <201507022258.32104@pali>
- <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
- <20150703074813.GD1841@pali>
- <20150703112611.GA3030@eudyptula.hq.kempniu.pl>
- <20150703114356.GL1841@pali>
- <20150703132341.GA3129@eudyptula.hq.kempniu.pl>
- <20150703133227.GM1841@pali>
- <20150703135047.GA3530@eudyptula.hq.kempniu.pl>
- <20150703140901.GN1841@pali>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Incorrect key code parsing in dell-wmi.c since 5ea2559
+Date: Sat, 4 Jul 2015 19:06:48 +0200
+Message-ID: <201507041906.48648@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart2208749.jj6e4udj3U";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f53.google.com ([209.85.215.53]:35819 "EHLO
-	mail-la0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755362AbbGCUzr (ORCPT
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:36486 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753394AbbGEI3z (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 3 Jul 2015 16:55:47 -0400
-Received: by lagh6 with SMTP id h6so96340386lag.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2015 13:55:45 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20150703140901.GN1841@pali>
+	Sun, 5 Jul 2015 04:29:55 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Islam Amer <pharon@gmail.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario_limonciello@dell.com>
 
-> Then in your case, I would need to know format of *all* events which =
-can
-> your laptop via WMI receive. If we collect as more as possible events
-> from different laptops we can try to abstract format/interface.
+--nextPart2208749.jj6e4udj3U
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Here's a list of all WMI events I could come up with on a Vostro V131. =
-I
-also put the generated keycode in parentheses next to each entry.
+Hello,
 
-  * AC power connected (keycode: none)
-    Note: No WMI event is generated when AC power is disconnected.
+I found another problem in dell-wmi.c code which is still partially in
+mainline kernel since commit 5ea2559726b786283236835dc2905c23b36ac91c:
 
-dell_wmi: Received WMI event (06 00 00 00 00 00 01 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Unknown key 0 pressed
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=
+=3D5ea2559726b786283236835dc2905c23b36ac91c
 
-  * Hotkey #2: Dell Support Center (keycode: 0xe06e)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit 5ea2559726b786283236835dc2905c23b36ac91c
+Author: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
+Date:   Mon Nov 2 12:00:42 2009 -0500
 
-dell_wmi: Received WMI event (02 00 00 00 6e e0 00 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Unknown key e06e pressed
+    dell-wmi: Add support for new Dell systems
+   =20
+    Newer Dell systems support HotKey features differently from legacy
+    systems.  A new vendor specifc HotKey SMBIOS table (Type 0xB2) is
+    defined. This table contains a mapping between scancode and the
+    corresponding predefined keyfunction ( i.e. keycode).. Also, a new
+    ACPI-WMI event type (called KeyIDList) with a value of 0x0010 is
+    defined. Any BIOS containing 0xB2 table will send hotkey notifications
+    using KeyIDList event.
+   =20
+    This is Rezwanul's patch, updated to ensure that brightness events are
+    not sent if the backlight is controlled via ACPI and with the default
+    keycode for the display output switching altered to match desktop
+    expectations.
+   =20
+    Signed-off-by: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
+    Signed-off-by: Matthew Garrett <mjg@redhat.com>
+    Signed-off-by: Len Brown <len.brown@intel.com>
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-  * Hotkey #3: Dell Instant Launch Manager (keycode: none)
+Before this commit WMI event buffer was parsed as:
 
-dell_wmi: Received WMI event (02 00 00 00 25 e0 00 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e025 pressed
+  int *buffer =3D (int *)obj->buffer.pointer;
+  key =3D dell_wmi_get_entry_by_scancode(buffer[1] & 0xFFFF);
 
-  * Fn + F2: Wireless on -> off (keycode: none)
+So basically 4th-7th bytes are parsed.
 
-dell_wmi: Received WMI event (06 00 00 00 08 e0 1d 03 2e 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e008 pressed
-=20
-  * Fn + F2: Wireless off -> on (keycode: none)
+After this commit WMI event buffer is parsed as:
 
-dell_wmi: Received WMI event (06 00 00 00 08 e0 1d 03 21 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e008 pressed
+  u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
+  reported_key =3D (int)buffer_entry[1] & 0xffff;
+  key =3D dell_wmi_get_entry_by_scancode(reported_key);
 
-  * Fn + F4: LCD brightness down (keycode: none)
+Which means that 2nd and 3rd bytes are parsed.
 
-dell_wmi: Received WMI event (03 00 00 00 05 e0 05 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e005 pressed
+Apparently this commit changed what kernel parse as keycode. And I bet
+this is some copy-paste error and not correct code. Variable buffer was
+changed from (int*) to (u16*) and which change could be "hidden" at time
+of code review.
 
-  * Fn + F5: LCD brightness up (keycode: none)
+Next there is commit which somehow is trying to fix user problems:
 
-dell_wmi: Received WMI event (03 00 00 00 06 e0 07 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e006 pressed
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=
+=3Dd5164dbf1f651d1e955b158fb70a9c844cc91cd1
 
-  * Fn + F6: Cycle keyboard backlight brightness (keycode: none)
-    Note: Exact same event for all backlight brightness levels.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+commit d5164dbf1f651d1e955b158fb70a9c844cc91cd1
+Author: Islam Amer <pharon@gmail.com>
+Date:   Thu Jun 24 13:39:47 2010 -0400
 
-dell_wmi: Received WMI event (03 00 00 00 0c e0 01 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e00c pressed
+    dell-wmi: Add support for eject key on Dell Studio 1555
+   =20
+    Fixes pressing the eject key on Dell Studio 1555 does not work and prod=
+uces
+    message :
+   =20
+    dell-wmi: Unknown key 0 pressed
+   =20
+    Signed-off-by: Islam Amer <pharon@gmail.com>
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-  * Fn + F11: Volume down (keycode: 0xe02e)
+It changes parsing WMI event buffer to:
 
-dell_wmi: Received WMI event (02 00 00 00 2e e0 00 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e02e pressed
+  u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
+  if (buffer_entry[1] =3D=3D 0x0)
+    reported_key =3D (int)buffer_entry[2] & 0xffff;
+  else
+    reported_key =3D (int)buffer_entry[1] & 0xffff;
+  key =3D dell_wmi_get_entry_by_scancode(reported_key);
 
-  * Fn + F12: Volume up (keycode: 0xe030)
+My idea is that Islam Amer tried to fix problem introduced in commit
+5ea2559726b786283236835dc2905c23b36ac91c.
 
-dell_wmi: Received WMI event (02 00 00 00 30 e0 00 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Key e030 pressed
+According to some available very-very old Dell ACPI-WMI documentation at
 
-  * Fn + Mute (keycode: 0xe020)
-    Note: Yes, all event data bytes are zeros (sigh).
+http://vpsservice1.sampo.com.tw/sampo_update/document/jimmy/ACPI-WMI%20.pdf
 
-dell_wmi: Received WMI event (00 00 00 00 00 00 00 00 00 00 00 00 00 00=
- 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00)
-dell_wmi: Unknown key 0 pressed
+and also from information from commit message 5ea2559 format of WMI is
+(u16*)[length, type, data, ...].
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+Because type for hotkey is 0x0000 then it expected that kernel reported
+always key 0x0000...
+
+So I would propose to drop parsing "buffer_entry[1]" as key code and
+rewrite dell_wmi_notify function to always process WMI buffer as
+[length, type, data...].
+
+What do you think about it? It also simplify notify code as there is one
+branch for dell_new_hk_type and one for old parsing (with that entry[1]).
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2208749.jj6e4udj3U
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlWYEqgACgkQi/DJPQPkQ1LhGwCgzWRnjtueWz1XnRapoLi54Eir
+ADkAnRm6XNs6lKDxmABO5MZJrjFArCHT
+=g2ud
+-----END PGP SIGNATURE-----
+
+--nextPart2208749.jj6e4udj3U--
