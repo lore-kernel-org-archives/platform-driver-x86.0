@@ -1,82 +1,42 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: BUG? Duplicate key code 0xe045 in dell-wmi.c
-Date: Sat, 4 Jul 2015 18:34:03 +0200
-Message-ID: <201507041834.03944@pali>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Sun, 5 Jul 2015 06:51:16 +0200
+Message-ID: <20150705045116.GA2401@eudyptula.hq.kempniu.pl>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <201507042324.57768@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1472484.o6VjLdEdCs";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f181.google.com ([209.85.212.181]:32836 "EHLO
-	mail-wi0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756122AbbGEIxS (ORCPT
+Received: from mail-la0-f42.google.com ([209.85.215.42]:33299 "EHLO
+	mail-la0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751712AbbGEIz2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Jul 2015 04:53:18 -0400
+	Sun, 5 Jul 2015 04:55:28 -0400
+Received: by laar3 with SMTP id r3so124057950laa.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Jul 2015 01:55:26 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <201507042324.57768@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Len Brown <len.brown@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
---nextPart1472484.o6VjLdEdCs
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+> OK, and can you write what is needed to fill into buffer?
 
-Hello,
+Here is the critical part of a working patch I prepared for
+dell-laptop.c:
 
-I'm looking at dell-wmi.c driver and its history in git and I found=20
-problem with handling WMI key code 0xe045. In current dell-wmi.c code is
+    get_buffer();
+    buffer->input[0] =3D 0x10000;
+    buffer->input[1] =3D 0x51534554;
+    buffer->input[3] =3D 0x1;
+    dell_send_request(buffer, 17, 3);
+    ret =3D buffer->output[0];
+    release_buffer();
 
-{KE_KEY, 0xe045, KEY_PROG1},
-{KE_IGNORE, 0xe045, KEY_NUMLOCK},
-
-I bet this is some copy-paste error as one code can be translated only=20
-to one input key event.
-
-In git history I found that above change was added by commit:
-
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=
-=3D5cab0098171712a9fd51399b06181c8dfdebe9c9
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-commit 5cab0098171712a9fd51399b06181c8dfdebe9c9
-Author: Mario Limonciello <mario_limonciello@dell.com>
-Date:   Wed Jun 10 19:40:47 2009 +0000
-
-    dell-wmi: add additional keyboard events
-   =20
-    Upcoming Dell hardware will send more keyboard events via WMI.  Add
-    support for them.
-   =20
-    Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
-    Signed-off-by: Matthew Garrett <mjg@redhat.com>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Len Brown <len.brown@intel.com>
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Sending email to all signers of this commit. Problematic code is still=20
-in upstream kernel, so it needs to be fixed.
-
-Mario Limonciello: Do you know if code 0xe045 is some PROG1 or NUMLOCK?
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart1472484.o6VjLdEdCs
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlWYCvsACgkQi/DJPQPkQ1JQjACguDZpQsDkAvA3jJ7gINPg0BMZ
-/V4AoMLJkY0KWl3HaiMOT9csCkBIOjue
-=YEQ9
------END PGP SIGNATURE-----
-
---nextPart1472484.o6VjLdEdCs--
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
