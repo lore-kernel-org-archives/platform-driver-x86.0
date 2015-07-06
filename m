@@ -1,246 +1,115 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v2 2/3] dell-laptop: Check return value of each SMBIOS call
-Date: Mon,  6 Jul 2015 12:08:56 +0200
-Message-ID: <1436177337-13654-2-git-send-email-pali.rohar@gmail.com>
-References: <1435774101-12329-1-git-send-email-pali.rohar@gmail.com>
- <1436177337-13654-1-git-send-email-pali.rohar@gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: [PATCH] thermal: consistently use int for temperatures
+Date: Mon, 6 Jul 2015 12:25:15 +0200
+Message-ID: <20150706122515.4580521c@endymion.delvare>
+References: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1436177337-13654-1-git-send-email-pali.rohar@gmail.com>
+In-Reply-To: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, Peter Feuerer <peter@piie.net>, Heiko Stuebner <heiko@sntech.de>, Lukasz Majewski <l.majewski@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Darren Hart <dvhart@infradead.org>, lm-sensors@lm-sensors.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Make sure that return value of each SMBIOS call is properly checked and=
- do
-not continue of processing (received) information if call failed.
-
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
----
- drivers/platform/x86/dell-laptop.c |   83 +++++++++++++++++++++++++---=
---------
- 1 file changed, 58 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index 2caefb2..d9710c1 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -552,9 +552,15 @@ static int dell_rfkill_set(void *data, bool blocke=
-d)
- 	int disable =3D blocked ? 1 : 0;
- 	unsigned long radio =3D (unsigned long)data;
- 	int hwswitch_bit =3D (unsigned long)data - 1;
-+	int ret;
-=20
- 	get_buffer();
-+
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
-+
-+	if (ret !=3D 0)
-+		goto out;
-=20
- 	/* If the hardware switch controls this radio, and the hardware
- 	   switch is disabled, always disable the radio */
-@@ -566,9 +572,11 @@ static int dell_rfkill_set(void *data, bool blocke=
-d)
-=20
- 	buffer->input[0] =3D (1 | (radio<<8) | (disable << 16));
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
-=20
-+ out:
- 	release_buffer();
--	return 0;
-+	return dell_smi_error(ret);
- }
-=20
- /* Must be called with the buffer held */
-@@ -597,14 +605,18 @@ static void dell_rfkill_update_hw_state(struct rf=
-kill *rfkill, int radio,
- static void dell_rfkill_query(struct rfkill *rfkill, void *data)
- {
- 	int status;
-+	int ret;
-=20
- 	get_buffer();
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-+	release_buffer();
-=20
--	dell_rfkill_update_hw_state(rfkill, (unsigned long)data, status);
-+	if (ret !=3D 0)
-+		return;
-=20
--	release_buffer();
-+	dell_rfkill_update_hw_state(rfkill, (unsigned long)data, status);
- }
-=20
- static const struct rfkill_ops dell_rfkill_ops =3D {
-@@ -617,12 +629,15 @@ static struct dentry *dell_laptop_dir;
- static int dell_debugfs_show(struct seq_file *s, void *data)
- {
- 	int status;
-+	int ret;
-=20
- 	get_buffer();
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
- 	release_buffer();
-=20
-+	seq_printf(s, "return:\t%d\n", ret);
- 	seq_printf(s, "status:\t0x%X\n", status);
- 	seq_printf(s, "Bit 0 : Hardware switch supported:   %lu\n",
- 		   status & BIT(0));
-@@ -701,11 +716,17 @@ static const struct file_operations dell_debugfs_=
-fops =3D {
- static void dell_update_rfkill(struct work_struct *ignored)
- {
- 	int status;
-+	int ret;
-=20
- 	get_buffer();
-+
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-=20
-+	if (ret !=3D 0)
-+		goto out;
-+
- 	if (wifi_rfkill) {
- 		dell_rfkill_update_hw_state(wifi_rfkill, 1, status);
- 		dell_rfkill_update_sw_state(wifi_rfkill, 1, status);
-@@ -719,6 +740,7 @@ static void dell_update_rfkill(struct work_struct *=
-ignored)
- 		dell_rfkill_update_sw_state(wwan_rfkill, 3, status);
- 	}
-=20
-+ out:
- 	release_buffer();
- }
- static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
-@@ -780,6 +802,7 @@ static int __init dell_setup_rfkill(void)
-=20
- 	get_buffer();
- 	dell_send_request(buffer, 17, 11);
-+	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
- 	clear_buffer();
- 	buffer->input[0] =3D 0x2;
-@@ -787,6 +810,10 @@ static int __init dell_setup_rfkill(void)
- 	hwswitch_state =3D buffer->output[1];
- 	release_buffer();
-=20
-+	/* dell wireless info smbios call is not supported */
-+	if (ret !=3D 0)
-+		return 0;
-+
- 	if (!(status & BIT(0))) {
- 		if (force_rfkill) {
- 			/* No hwsitch, clear all hw-controlled bits */
-@@ -940,47 +967,50 @@ static void dell_cleanup_rfkill(void)
-=20
- static int dell_send_intensity(struct backlight_device *bd)
- {
--	int ret =3D 0;
-+	int token;
-+	int ret;
-+
-+	token =3D find_token_location(BRIGHTNESS_TOKEN);
-+	if (token =3D=3D -1)
-+		return -ENODEV;
-=20
- 	get_buffer();
--	buffer->input[0] =3D find_token_location(BRIGHTNESS_TOKEN);
-+	buffer->input[0] =3D token;
- 	buffer->input[1] =3D bd->props.brightness;
-=20
--	if (buffer->input[0] =3D=3D -1) {
--		ret =3D -ENODEV;
--		goto out;
--	}
+On Mon,  6 Jul 2015 09:19:49 +0200, Sascha Hauer wrote:
+> The thermal code uses int, long and unsigned long for temperatures
+> in different places.
+>=20
+> Using an unsigned type limits the thermal framework to positive
+> temperatures without need. Also several drivers currently will report
+> temperatures near UINT_MAX for temperatures below 0=C2=B0C. This will=
+ probably
+> immediately shut the machine down due to overtemperature if started b=
+elow
+> 0=C2=B0C.
+>=20
+> 'long' is 64bit on several architectures. This is not needed since IN=
+T_MAX =C2=B0mC
+> is above the melting point of all known materials.
+>=20
+> Consistently use a plain 'int' for temperatures throughout the therma=
+l code and
+> the drivers. This only changes the places in the drivers where the te=
+mperature
+> is passed around as pointer, when drivers internally use another type=
+ this is
+> not changed.
+>=20
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Jean Delvare <jdelvare@suse.de>
+> Cc: Peter Feuerer <peter@piie.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: lm-sensors@lm-sensors.org
+> ---
+>  drivers/acpi/thermal.c                             | 12 +++++-----
+>  drivers/hwmon/lm75.c                               |  2 +-
+>  drivers/hwmon/ntc_thermistor.c                     |  2 +-
+>  drivers/hwmon/tmp102.c                             |  2 +-
+>  drivers/input/touchscreen/sun4i-ts.c               |  8 +++----
+>  drivers/platform/x86/acerhdf.c                     |  9 ++++----
+>  drivers/platform/x86/intel_mid_thermal.c           |  9 ++++----
+>  drivers/power/power_supply_core.c                  |  2 +-
+>  drivers/thermal/armada_thermal.c                   |  2 +-
+>  drivers/thermal/db8500_thermal.c                   |  7 +++---
+>  drivers/thermal/dove_thermal.c                     |  2 +-
+>  drivers/thermal/fair_share.c                       |  2 +-
+>  drivers/thermal/gov_bang_bang.c                    |  5 ++--
+>  drivers/thermal/hisi_thermal.c                     |  4 ++--
+>  drivers/thermal/imx_thermal.c                      | 27 +++++++++++-=
+----------
+>  drivers/thermal/int340x_thermal/int3400_thermal.c  |  2 +-
+>  .../thermal/int340x_thermal/int340x_thermal_zone.c | 10 ++++----
+>  .../thermal/int340x_thermal/int340x_thermal_zone.h |  8 +++----
+>  .../int340x_thermal/processor_thermal_device.c     |  4 ++--
+>  drivers/thermal/intel_quark_dts_thermal.c          | 13 +++++------
+>  drivers/thermal/intel_soc_dts_iosf.c               |  8 +++----
+>  drivers/thermal/kirkwood_thermal.c                 |  2 +-
+>  drivers/thermal/of-thermal.c                       | 14 +++++------
+>  drivers/thermal/power_allocator.c                  | 16 ++++++------=
 -
- 	if (power_supply_is_system_supplied() > 0)
- 		dell_send_request(buffer, 1, 2);
- 	else
- 		dell_send_request(buffer, 1, 1);
-=20
-- out:
-+	ret =3D dell_smi_error(buffer->output[0]);
-+
- 	release_buffer();
- 	return ret;
- }
-=20
- static int dell_get_intensity(struct backlight_device *bd)
- {
--	int ret =3D 0;
-+	int token;
-+	int ret;
-=20
--	get_buffer();
--	buffer->input[0] =3D find_token_location(BRIGHTNESS_TOKEN);
-+	token =3D find_token_location(BRIGHTNESS_TOKEN);
-+	if (token =3D=3D -1)
-+		return -ENODEV;
-=20
--	if (buffer->input[0] =3D=3D -1) {
--		ret =3D -ENODEV;
--		goto out;
--	}
-+	get_buffer();
-+	buffer->input[0] =3D token;
-=20
- 	if (power_supply_is_system_supplied() > 0)
- 		dell_send_request(buffer, 0, 2);
- 	else
- 		dell_send_request(buffer, 0, 1);
-=20
--	ret =3D buffer->output[1];
-+	if (buffer->output[0])
-+		ret =3D dell_smi_error(buffer->output[0]);
-+	else
-+		ret =3D buffer->output[1];
-=20
-- out:
- 	release_buffer();
- 	return ret;
- }
-@@ -2044,6 +2074,7 @@ static void kbd_led_exit(void)
- static int __init dell_init(void)
- {
- 	int max_intensity =3D 0;
-+	int token;
- 	int ret;
-=20
- 	if (!dmi_check_system(dell_device_table))
-@@ -2107,13 +2138,15 @@ static int __init dell_init(void)
- 		return 0;
- #endif
-=20
--	get_buffer();
--	buffer->input[0] =3D find_token_location(BRIGHTNESS_TOKEN);
--	if (buffer->input[0] !=3D -1) {
-+	token =3D find_token_location(BRIGHTNESS_TOKEN);
-+	if (token !=3D -1) {
-+		get_buffer();
-+		buffer->input[0] =3D token;
- 		dell_send_request(buffer, 0, 2);
--		max_intensity =3D buffer->output[3];
-+		if (buffer->output[0] =3D=3D 0)
-+			max_intensity =3D buffer->output[3];
-+		release_buffer();
- 	}
--	release_buffer();
-=20
- 	if (max_intensity) {
- 		struct backlight_properties props;
+>  drivers/thermal/qcom-spmi-temp-alarm.c             |  2 +-
+>  drivers/thermal/rcar_thermal.c                     |  7 +++---
+>  drivers/thermal/rockchip_thermal.c                 | 10 ++++----
+>  drivers/thermal/samsung/exynos_tmu.c               | 23 +++++++++---=
+------
+>  drivers/thermal/spear_thermal.c                    |  2 +-
+>  drivers/thermal/st/st_thermal.c                    |  5 ++--
+>  drivers/thermal/step_wise.c                        |  4 ++--
+>  drivers/thermal/tegra_soctherm.c                   |  4 ++--
+>  drivers/thermal/thermal_core.c                     | 26 ++++++++++--=
+---------
+>  drivers/thermal/thermal_hwmon.c                    | 10 ++++----
+>  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 10 ++++----
+>  drivers/thermal/x86_pkg_temp_thermal.c             | 10 ++++----
+>  include/linux/thermal.h                            | 26 +++++++++---=
+---------
+>  37 files changed, 148 insertions(+), 163 deletions(-)
+> (...)
+
+No objection from me.
+
+=46or the hwmon parts:
+
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+
 --=20
-1.7.9.5
+Jean Delvare
+SUSE L3 Support
