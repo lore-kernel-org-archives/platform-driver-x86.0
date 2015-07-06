@@ -1,249 +1,92 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: Dell Vostro V131 hotkeys revisited
-Date: Sat, 4 Jul 2015 21:13:14 +0200
-Message-ID: <201507042113.14902@pali>
-References: <20150701105544.GD17577@pali> <20150703135047.GA3530@eudyptula.hq.kempniu.pl> <20150703140901.GN1841@pali>
+From: Alex Hung <alex.hung@canonical.com>
+Subject: Re: [PATCH][v2] asus-rbtn: new driver for asus radio button for
+ Windows 8
+Date: Mon, 6 Jul 2015 09:35:40 +0800
+Message-ID: <CAJ=jquYo018MiO8V+jjkr778vuuXjoQ9AWrKW=z5dpRuw1DwtQ@mail.gmail.com>
+References: <1435114671-24380-1-git-send-email-alex.hung@canonical.com>
+	<20150626145621.GU2890@pali>
+	<CAJ=jqub8adCQBWPsmg+Wov0G4WqZbhsjxttWq6CA8Uddqmj4Cw@mail.gmail.com>
+	<20150629122953.GF16230@pali>
+	<CAJ=jquZr8tPOcL-vr3Q_pYaQZf73-BPvBAoaVjoMALj_sF4rfw@mail.gmail.com>
+	<20150630085814.GE27720@pali>
+	<CAJ=jquYNQ=R0K+OR538_Tm-E0sNbL6VcAvN_zc99-Z5X1WmCmA@mail.gmail.com>
+	<20150701114849.GE17577@pali>
+	<CAJ=jquaDCaGv8PXuib7CFZAWUCTCZhkju0RZn-6v4MRCJhfgkA@mail.gmail.com>
+	<20150703072523.GB1841@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart25219968.Z9VGI2qMnv";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wg0-f45.google.com ([74.125.82.45]:35629 "EHLO
-	mail-wg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755121AbbGELrk (ORCPT
+Received: from mail-qg0-f51.google.com ([209.85.192.51]:35943 "EHLO
+	mail-qg0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753115AbbGFBfl convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 5 Jul 2015 07:47:40 -0400
-Received: by wgjx7 with SMTP id x7so118756516wgj.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Jul 2015 04:47:39 -0700 (PDT)
-In-Reply-To: <20150703140901.GN1841@pali>
+	Sun, 5 Jul 2015 21:35:41 -0400
+Received: by qgeg89 with SMTP id g89so63223043qge.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 05 Jul 2015 18:35:41 -0700 (PDT)
+In-Reply-To: <20150703072523.GB1841@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
---nextPart25219968.Z9VGI2qMnv
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+ATK4001 is an ACPI device for wireless hotkey, similar to how Dell and
+HP are doing it.  It is just ASUS who decides LED should be controlled
+by software unlike HP whose LED is driven by hardware pins on mini
+card.
 
-On Friday 03 July 2015 16:09:01 Pali Roh=C3=A1r wrote:
-> Then in your case, I would need to know format of *all* events which
-> can your laptop via WMI receive. If we collect as more as possible
-> events from different laptops we can try to abstract
-> format/interface.
-
-To have list of events "more" complete, here are dumps from my Latitude E64=
-40:
-(dell_new_hk_type is true)
-
-(brightness up)
-[41389.833588] dell_wmi: Received WMI event (02 00 10 00 48 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41389.833591] dell_wmi: Process buffer (02 00 10 00 48 00)
-[41389.833592] dell_wmi: Key 48 pressed
-
-(brightness down)
-[41393.984812] dell_wmi: Received WMI event (02 00 10 00 50 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41393.984815] dell_wmi: Process buffer (02 00 10 00 50 00)
-[41393.984816] dell_wmi: Key 50 pressed
-
-(toggle keyboard backlight)
-[41396.660972] dell_wmi: Received WMI event (02 00 10 00 4d 00 02 00 11 00 =
-e1 01 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41396.660975] dell_wmi: Process buffer (02 00 10 00 4d 00)
-[41396.660977] dell_wmi: Key 4d pressed
-[41396.660977] dell_wmi: Process buffer (02 00 11 00 e1 01)
-[41396.660978] dell_wmi: Keyboard backlight level changed
-
-(toggle keyboard backlight again)
-[41408.872213] dell_wmi: Received WMI event (02 00 10 00 4d 00 02 00 11 00 =
-ea 02 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41408.872215] dell_wmi: Process buffer (02 00 10 00 4d 00)
-[41408.872217] dell_wmi: Key 4d pressed
-[41408.872218] dell_wmi: Process buffer (02 00 11 00 ea 02)
-[41408.872218] dell_wmi: Keyboard backlight level changed
-
-(again)
-[41410.604351] dell_wmi: Received WMI event (02 00 10 00 4d 00 02 00 11 00 =
-eb 02 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41410.604354] dell_wmi: Process buffer (02 00 10 00 4d 00)
-[41410.604355] dell_wmi: Key 4d pressed
-[41410.604356] dell_wmi: Process buffer (02 00 11 00 eb 02)
-[41410.604357] dell_wmi: Keyboard backlight level changed
-
-(and again)
-[41411.313732] dell_wmi: Received WMI event (02 00 10 00 4d 00 02 00 11 00 =
-ec 02 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41411.313735] dell_wmi: Process buffer (02 00 10 00 4d 00)
-[41411.313736] dell_wmi: Key 4d pressed
-[41411.313737] dell_wmi: Process buffer (02 00 11 00 ec 02)
-[41411.313737] dell_wmi: Keyboard backlight level changed
-
-(and again)
-[41412.046983] dell_wmi: Received WMI event (02 00 10 00 4d 00 02 00 11 00 =
-f6 02 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41412.046986] dell_wmi: Process buffer (02 00 10 00 4d 00)
-[41412.046988] dell_wmi: Key 4d pressed
-[41412.046989] dell_wmi: Process buffer (02 00 11 00 f6 02)
-[41412.046989] dell_wmi: Keyboard backlight level changed
-
-(Fn+Q)
-[41471.644347] dell_wmi: Received WMI event (02 00 10 00 10 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41471.644350] dell_wmi: Process buffer (02 00 10 00 10 00)
-[41471.644351] dell_wmi: Key 10 pressed
-
-(Fn+W)
-[41482.965057] dell_wmi: Received WMI event (02 00 10 00 11 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41482.965062] dell_wmi: Process buffer (02 00 10 00 11 00)
-[41482.965064] dell_wmi: Key 11 pressed
-
-(Fn+E)
-[41485.619605] dell_wmi: Received WMI event (02 00 10 00 12 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41485.619608] dell_wmi: Process buffer (02 00 10 00 12 00)
-[41485.619609] dell_wmi: Key 12 pressed
-
-(Fn+R)
-[41486.537823] dell_wmi: Received WMI event (02 00 10 00 13 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41486.537827] dell_wmi: Process buffer (02 00 10 00 13 00)
-[41486.537828] dell_wmi: Key 13 pressed
-
-(Fn+T)
-[41487.090608] dell_wmi: Received WMI event (02 00 10 00 14 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41487.090610] dell_wmi: Process buffer (02 00 10 00 14 00)
-[41487.090612] dell_wmi: Key 14 pressed
-
-(Fn+A)
-[41491.910608] dell_wmi: Received WMI event (02 00 10 00 1e 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41491.910611] dell_wmi: Process buffer (02 00 10 00 1e 00)
-[41491.910613] dell_wmi: Key 1e pressed
-
-(Fn+S)
-[41492.645035] dell_wmi: Received WMI event (02 00 10 00 1f 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41492.645039] dell_wmi: Process buffer (02 00 10 00 1f 00)
-[41492.645040] dell_wmi: Key 1f pressed
-
-(Fn+D)
-[41493.132750] dell_wmi: Received WMI event (02 00 10 00 20 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41493.132753] dell_wmi: Process buffer (02 00 10 00 20 00)
-[41493.132755] dell_wmi: Key 20 pressed
-
-(Fn+F)
-[41493.624070] dell_wmi: Received WMI event (02 00 10 00 21 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41493.624073] dell_wmi: Process buffer (02 00 10 00 21 00)
-[41493.624074] dell_wmi: Key 21 pressed
-
-(Fn+G)
-[41494.603007] dell_wmi: Received WMI event (02 00 10 00 22 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41494.603010] dell_wmi: Process buffer (02 00 10 00 22 00)
-[41494.603011] dell_wmi: Key 22 pressed
+On Fri, Jul 3, 2015 at 3:25 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> =
+wrote:
+> On Thursday 02 July 2015 15:10:39 Alex Hung wrote:
+>> Thanks for the support.  I will create v3 based with LED triggers.
+>>
+>> Just for information.  ASUS's wording is as below:
+>>
+>> Fn+F2 can be used to turn on or off all radio capabilities in the
+>> device (as known as airplane mode switch).  I don't have any
+>> preferences on the name.  We may use the term airplane-mode do if
+>> asus-rbtn is not preferred.  Let me know if there are any suggestion=
+s.
+>>
+>
+> This is OK, but I though that ACPI ATK4001 device is some
+> multifunctional device, which is doing more then LED control... (At
+> least I understand it from your comments). So in this case I would no=
+t
+> call driver led/radio related. Right?
+>
+>>
+>> On Wed, Jul 1, 2015 at 7:48 PM, Pali Roh=C3=A1r <pali.rohar@gmail.co=
+m> wrote:
+>> > On Wednesday 01 July 2015 00:09:41 Alex Hung wrote:
+>> >> ATK4001 is an independent ACPI device, and Method(HSWC) is its me=
+thod
+>> >> to control LED (actually it has other functions but only LED is n=
+eeded
+>> >> so far).
+>> >
+>> > If this driver is for supporting ACPI ATK4001 device (which has co=
+uple
+>> > of methods, not only LED) it is really good idea to name it asus-r=
+btn?
+>> >
+>> > Darren, you as maintainer of platform drivers, what do you think? =
+I
+>> > believe in future this driver will be extended to support more fun=
+ctions
+>> > and so name asus-rbtn will be confusing.
+>> >
+>> > --
+>> > Pali Roh=C3=A1r
+>> > pali.rohar@gmail.com
+>>
+>
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
 
 
-(now pressed brightness down key more times, but very very quickly)
-[41566.295409] dell_wmi: Received WMI event (03 00 10 00 50 00 50 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41566.295413] dell_wmi: Process buffer (03 00 10 00 50 00 50 00)
-[41566.295415] dell_wmi: Key 50 pressed
-[41566.295429] dell_wmi: Key 50 pressed
 
-[41566.418593] dell_wmi: Received WMI event (02 00 10 00 50 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41566.418595] dell_wmi: Process buffer (02 00 10 00 50 00)
-[41566.418597] dell_wmi: Key 50 pressed
-
-[41566.448279] dell_wmi: Received WMI event (00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-
-(so sometimes double key is received in one event! and sometimes empty even=
-t is received)
-
-
-(and now via /sys dell-laptop.ko I changed keyboard backlight, very very qu=
-ickly all 5 levels)
-[41602.300604] dell_wmi: Received WMI event (06 00 11 00 f6 02 ec 02 eb 02 =
-ea 02 e1 01 00 00 00 00 00 00 00 00 00 00 00=20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00 00 00 00 00 00 00 00 00 00 00 00 00 00)
-[41602.300607] dell_wmi: Process buffer (06 00 11 00 f6 02 ec 02 eb 02 ea 0=
-2 e1 01)
-[41602.300608] dell_wmi: Keyboard backlight level changed
-[41602.300608] dell_wmi: Keyboard backlight level changed
-[41602.300609] dell_wmi: Keyboard backlight level changed
-[41602.300609] dell_wmi: Keyboard backlight level changed
-[41602.300610] dell_wmi: Keyboard backlight level changed
-
-(and all five events were received in one WMI buffer)
-
-
-So what is important: Dell BIOS send via one WMI buffer more events and als=
-o with different types!
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart25219968.Z9VGI2qMnv
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlWYMEoACgkQi/DJPQPkQ1LbWQCgvhomZGYmwNRd7rqiyJ61Ioze
-GCIAn1S6l7st1qdxPvDG8I7sWVRUP0DE
-=03D2
------END PGP SIGNATURE-----
-
---nextPart25219968.Z9VGI2qMnv--
+--=20
+Cheers,
+Alex Hung
