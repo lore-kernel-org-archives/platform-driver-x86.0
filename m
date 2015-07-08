@@ -1,89 +1,61 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: sysfs charge thresholds for ThinkPads (and possibly others),
- preparation for second try
-Date: Wed, 8 Jul 2015 01:51:10 +0200
-Message-ID: <20150707235110.GA19748@earth>
-References: <20150707210728.GA7524@jak-x230>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Wed, 8 Jul 2015 05:21:07 +0200
+Message-ID: <20150708032107.GA2413@eudyptula.hq.kempniu.pl>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <20150701105544.GD17577@pali>
+ <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
+ <559C1C17.3060009@dell.com>
+ <20150707210141.GA20901@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-la0-f48.google.com ([209.85.215.48]:35040 "EHLO
+	mail-la0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753991AbbGHDVM (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 7 Jul 2015 23:21:12 -0400
+Received: by labgy5 with SMTP id gy5so64208392lab.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jul 2015 20:21:10 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <20150707210728.GA7524@jak-x230>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Julian Andres Klode <jak@jak-linux.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, evgeni@debian.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20150707210141.GA20901@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Mario Limonciello <mario_limonciello@dell.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jul 07, 2015 at 11:07:28PM +0200, Julian Andres Klode wrote:
-> Hi everyone (Thinkpad-ACPI, ACPI, and Power supply maintainers),
+> I tried to send smbios request with:
 >=20
-> some might know that I presented a patch set adding support for
-> charge thresholds to thinkpad_acpi about 1.5 years ago.=20
-
-Can you provide a link to the patch set?
-
-> Back then, one of the major rejections was that the functionality
-> for setting charge thresholds should be integrated into the
-> power supply stack somehow. I did not know who to contact back
-> then, but know I re-read MAINTAINERS and found all your addresses,
-> so I give it a second try.
+> class=3D4
+> selector=3D11
+> arg1=3D64
 >=20
-> One issue with just integrating it in the current battery
-> directories would be that ThinkPads are able to set charge
-> thresholds for batteries that are currently not inserted.
-
-So the power supply device should be kept with
-POWER_SUPPLY_PROP_PRESENT being disabled (and most properties
-returning -ENODATA). The ACPI SBS driver seems to implement
-POWER_SUPPLY_PROP_PRESENT, but I didn't test it.
-
-> Back then I wrote:
-> > The next step is to integrate this properly with power supply
-> > and/or acpi battery. One way would be to add additional power
-> > supply properties and then add get/set_property() pointers to
-> > the acpi battery which it can fall back to if it does not support
-> > a requested property (and we would locate the ACPI battery and
-> > set those pointers to new thinkpad_acpi functions).
+> (0x40 hex =3D 64 dec)
 >=20
-> If you, the ACPI and power supply people, have any preferred
-> way (or any idea at all how) to proceed, that would be useful,
-> so I don't start working on it again, and then somebody does
-> not like it.
+> And it disabled keyboard backlight on my E6440 machine, then it set
+> keyboard backlight inactivity timeout to 5 seconds and call returned:
+>=20
+> Res1=3D-2
+>=20
+> So this smbios query is not safe :-( as it set some keyboard backligh=
+t
+> default values and return "error not supported".
 
-Adding charging thresholds as power_supply_property sounds
-fine to me.
+What a shame. My Vostro V131 returns 0 in both Res1 and Res2, as
+anticipated, without the ill effects you described.
 
--- Sebastian
+> So are you sure that 4, 11, 64 is call correct? Or is above side-effe=
+ct
+> of setting keyboard backlight values expected?
 
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I second these questions. And if the side effects Pali wrote about are
+not expected, perhaps there is a well-known subset of devices this call
+can be whitelisted or blacklisted on?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVnGXrAAoJENju1/PIO/qaRkAP/R3PgbPDriyUHIG8HYOmMtqG
-UJ/DczwgzBcDrqTMkYP/h6Fb8MNq+YjMdAAn2kgGcETTOUXStOCVQGfVsrwm1lae
-xoluqLCtLLAv+j09b1AKjaMpL74YwOddUOX0j8mAJuyIvi8YHIUs8f3lEA7bdffN
-GxSsHP5eBvTUEuHCpysaD7hihQ9LLRKTeTb8nUGvEv0HwBkQV/hdE8SM9wPZvISF
-rVb9ZK8tcoFqs/MwFcpzDTm2QnCputBCngiJTtY2Jy6q0vTyL0SKjJ1s1W09fisy
-fkTqOkNVGuPNab/AJlPfKDn6Pgu0ArWkwGsrhfWceDcLJdZPQDm1QUX3E4CASau4
-cVPqVeytdQldgbZ5PPUQVPdiwuAUhnquFDrS4opz02d/7HD2OU7Bn8LJQ4UhZlZC
-eazYtqlNF+vDbXMESPzuK5BWykdS1L7cqnLlHyep2q0x/DDPAeCyCxtyscR8Gg66
-8j8AO0G0PfSHLjS0ns8wqE8OAYBB95BISx0CHRveR1HHCrxx4Kq/nn78viS3/oPV
-hUhUfx3CUhhozo+gy4g/LgXbsmUnocuM2Pbh4AAShzRi6LVzU9KuOXX3pnUppW79
-GpOM+RqQOxf958lqXmNdxvQw555n1w4dBP2GDtWqiE8pVvVJyLyIsCAcZOfsQjNf
-RNXH8fzVOva83OCToN42
-=FLtA
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
