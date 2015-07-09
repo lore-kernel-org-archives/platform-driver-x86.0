@@ -1,110 +1,102 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: sysfs charge thresholds for ThinkPads (and possibly others),
- preparation for second try
-Date: Thu, 9 Jul 2015 06:46:49 +0200
-Message-ID: <20150709044649.GB13805@earth>
-References: <20150707210728.GA7524@jak-x230>
- <20150707235110.GA19748@earth>
- <20150708113624.GA25015@debian.org>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH][v2] asus-rbtn: new driver for asus radio button for
+ Windows 8
+Date: Thu, 9 Jul 2015 13:52:03 -0700
+Message-ID: <20150709205203.GD111846@vmdeb7>
+References: <20150629122953.GF16230@pali>
+ <CAJ=jquZr8tPOcL-vr3Q_pYaQZf73-BPvBAoaVjoMALj_sF4rfw@mail.gmail.com>
+ <20150630085814.GE27720@pali>
+ <CAJ=jquYNQ=R0K+OR538_Tm-E0sNbL6VcAvN_zc99-Z5X1WmCmA@mail.gmail.com>
+ <20150701114849.GE17577@pali>
+ <CAJ=jquaDCaGv8PXuib7CFZAWUCTCZhkju0RZn-6v4MRCJhfgkA@mail.gmail.com>
+ <20150703072523.GB1841@pali>
+ <CAJ=jquYo018MiO8V+jjkr778vuuXjoQ9AWrKW=z5dpRuw1DwtQ@mail.gmail.com>
+ <20150706224328.GB111639@vmdeb7>
+ <20150707142518.GI12087@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:44726 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750814AbbGIEqy (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:56706 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753668AbbGIUwG (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 9 Jul 2015 00:46:54 -0400
+	Thu, 9 Jul 2015 16:52:06 -0400
 Content-Disposition: inline
-In-Reply-To: <20150708113624.GA25015@debian.org>
+In-Reply-To: <20150707142518.GI12087@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Julian Andres Klode <jak@jak-linux.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, evgeni@debian.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Corentin Chary <corentin.chary@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-
---/WwmFnJnmDyWGHa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Jul 08, 2015 at 11:40:00AM +0200, Julian Andres Klode wrote:
-> On Wed, Jul 08, 2015 at 01:51:10AM +0200, Sebastian Reichel wrote:
-> > Hi,
+On Tue, Jul 07, 2015 at 04:25:18PM +0200, Pali Roh=E1r wrote:
+> On Monday 06 July 2015 15:43:28 Darren Hart wrote:
+> > On Mon, Jul 06, 2015 at 09:35:40AM +0800, Alex Hung wrote:
+> > > ATK4001 is an ACPI device for wireless hotkey, similar to how Del=
+l and
+> > > HP are doing it.  It is just ASUS who decides LED should be contr=
+olled
+> > > by software unlike HP whose LED is driven by hardware pins on min=
+i
+> > > card.
 > >=20
-> > On Tue, Jul 07, 2015 at 11:07:28PM +0200, Julian Andres Klode wrote:
-> > > Hi everyone (Thinkpad-ACPI, ACPI, and Power supply maintainers),
-> > >=20
-> > > some might know that I presented a patch set adding support for
-> > > charge thresholds to thinkpad_acpi about 1.5 years ago.=20
+> > Alex, please refrain from top posting on Linux kernel mailing lists=
+, it breaks
+> > the established practice the readers are setup for.
 > >=20
-> > Can you provide a link to the patch set?
->=20
-> Sure:
-> http://thread.gmane.org/gmane.linux.acpi.ibm-acpi.devel/3175
->=20
-> (it was not on the ACPI and Power MLs back then)
-
-Thanks.
-
-> [...]
-
-> > > Back then I wrote:
-> > > > The next step is to integrate this properly with power supply
-> > > > and/or acpi battery. One way would be to add additional power
-> > > > supply properties and then add get/set_property() pointers to
-> > > > the acpi battery which it can fall back to if it does not support
-> > > > a requested property (and we would locate the ACPI battery and
-> > > > set those pointers to new thinkpad_acpi functions).
-> > >=20
-> > > If you, the ACPI and power supply people, have any preferred
-> > > way (or any idea at all how) to proceed, that would be useful,
-> > > so I don't start working on it again, and then somebody does
-> > > not like it.
+> > Regarding the ATK4001 device, it did sound like it did more than co=
+ntrol the
+> > radios and the associcated LED. If that is all it does, then asus-r=
+btn is fine.
+> > If it does something beyond that, we need understand what that is, =
+as a more
+> > platform-centric name would be more appropriate.
 > >=20
-> > Adding charging thresholds as power_supply_property sounds
-> > fine to me.
+> > Thanks,
 >=20
-> Right, it gets a bit more complicated though: Since the code is
-> platform-specific, it should live in the platform driver, so a
-> way is needed to extend the existing device with new properties
-> from the platform driver.
+> Yes, I understand too that ATK4001 device has more functions as one f=
+or
+> LED control. And in this case it is not good to use name from one
+> specific functionality.
+>=20
+> And about name:
+>=20
+> I chose name rbtn for dell driver because ACPI device in DSDT table i=
+s
+> named RBTN and acpi id is DELRBTN.
+>=20
+> I think that acpi-rbtn.c (radio button) is not ideal name for driver
+> which at SW level controls LED device associated with wireless device=
+s.
+>=20
+> I would rather follow acpi device name, but in this case ATK4001 is e=
+ven
+> worse name which does not say anything...
+>=20
+> Maybe better name could be asus-wireless? Still I do not have any goo=
+d
+> name, so choose something...
 
-Yes, my answer was only from the power supply subsystem's point of
-view, since I do not know much about the thinkpad-acpi and SBS
-driver. It seems the SBS driver has already minimal support for
-handling platform specifics via the acpi_sbs_dmi_table, though. I
-suggest to add a Thinkpad entry and modify the SBS driver, so that
-it calls your additional code.
+I suggested rbtn to try and start showing some kind of consistency in t=
+he
+directory - however, it's no better than many of the other existing opt=
+ions,
+including -rfkill -wireless -laptop, etc.
 
-It would be nice, if the Thinkpad specific code could also be used
-to add a label to the batteries, so that it's easier to distinguish
-batteries in case of multiple ones being available.
+Speaking of -laptop, the asus-laptop driver supports ATK0100 and ATK010=
+1. This
+ATK4001 device appears to perform the same type of features. The questi=
+on is
+whether or not it can be reasonably incorporated into the existing asus=
+-laptop
+driver or not.
 
--- Sebastian
+(I intended to do that review myself, but I haven't found the time in 4=
+8 hours,
+so I'm just going to send this out and ask that Alex have a look and pr=
+ovide his
+thoughts on asus-laptop)
 
---/WwmFnJnmDyWGHa4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJVnfy2AAoJENju1/PIO/qa4WkP/3tM2pfcYf8NPq8x04VemjnZ
-2HheAFSjWfidXFFZ+M1mYTyW1PQPgJQ5g+qELYl/qKlZFWdGW73PQVmQtfS1yTIZ
-njrULoqlAWx/oRxIEbnSE0TU5ObhVIgJKoQXDb5t8JUmbohZIruoFDFa/s5JxdHp
-RTRV+z28ZauyziFgXz++QbGfnN0HnAm68DQEmM8F/kzE3IQY8PHBeERDMOuWB9HM
-wblVTKRqk3Gd7HDGRfaeyl3ypHUSdoSjQJc1v4/uXMXn95gqYv6FJCEDVXNj5UZH
-+ohzY2/hedpiFlDWMBMNyDvKv6YwJ+IXl2NvN32ZfgBkC14iwkxvM0FvJV5g4qrM
-Qjjk5fG9+bK9NNF5PuitKxLlq/TGKYldW/s8EcAHSUPUUuB4ZIrGGQXLYhM3fbcB
-mKIgYKNKKEAcRarhk96ZzbPdRunw9qVau5gYNUy3XJVzyTG+3eqy1TFErS6mR7h2
-xn3rGpi660L6NXUF4yPyoYhqKQFGoh/smzhcT8qudsMbMCcR4b2unMWnKWYoQjyC
-g5TXmexP0WjITbeEcaPb3SzJOQKUez0M8+pOlF/TS2/QG/GKZlyYEbEW/PlZXk2O
-3g8WTVJxB8tdvZmzmxRx1dnMU0zssgRbqC71j/PTnOAtOCJj8x1NzxhCxHUeA69J
-mkB/lXLfonlWkZrQbiRr
-=+/mi
------END PGP SIGNATURE-----
-
---/WwmFnJnmDyWGHa4--
+--=20
+Darren Hart
+Intel Open Source Technology Center
