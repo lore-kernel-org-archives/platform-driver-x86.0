@@ -1,108 +1,124 @@
-From: Finn Thain <fthain@telegraphics.com.au>
-Subject: [RFC v4 07/25] x86/thinkpad_acpi: Use arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
-Date: Sun, 12 Jul 2015 20:25:34 +1000
-Message-ID: <20150712102529.085904274@telegraphics.com.au>
-References: <20150712102527.356151908@telegraphics.com.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline; filename=pc-rtc-replace-exported-nvram-functions
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: Re: [PATCH][v2] asus-rbtn: new driver for asus radio button for
+ Windows 8
+Date: Sun, 12 Jul 2015 15:02:30 +0200
+Message-ID: <CAHR064iMUsLNqX=B-8R3GpWe3aNznSOQrZMyUTb2YG=Zhv2-8Q@mail.gmail.com>
+References: <20150629122953.GF16230@pali>
+	<CAJ=jquZr8tPOcL-vr3Q_pYaQZf73-BPvBAoaVjoMALj_sF4rfw@mail.gmail.com>
+	<20150630085814.GE27720@pali>
+	<CAJ=jquYNQ=R0K+OR538_Tm-E0sNbL6VcAvN_zc99-Z5X1WmCmA@mail.gmail.com>
+	<20150701114849.GE17577@pali>
+	<CAJ=jquaDCaGv8PXuib7CFZAWUCTCZhkju0RZn-6v4MRCJhfgkA@mail.gmail.com>
+	<20150703072523.GB1841@pali>
+	<CAJ=jquYo018MiO8V+jjkr778vuuXjoQ9AWrKW=z5dpRuw1DwtQ@mail.gmail.com>
+	<20150706224328.GB111639@vmdeb7>
+	<20150707142518.GI12087@pali>
+	<20150709205203.GD111846@vmdeb7>
+	<CAJ=jquYMukmDoGE0Y=e8MBGEGmBZ2NjZdkZ=G3YVdTUM7p=fQQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lb0-f171.google.com ([209.85.217.171]:34883 "EHLO
+	mail-lb0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751352AbbGLNCc convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 12 Jul 2015 09:02:32 -0400
+In-Reply-To: <CAJ=jquYMukmDoGE0Y=e8MBGEGmBZ2NjZdkZ=G3YVdTUM7p=fQQ@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: Darren Hart <dvhart@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, LKML <linux-kernel@vger.kernel.org>
 
-Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
-nvram_* function exports can be removed.
+On Fri, Jul 10, 2015 at 3:52 AM, Alex Hung <alex.hung@canonical.com> wr=
+ote:
+> On Fri, Jul 10, 2015 at 4:52 AM, Darren Hart <dvhart@infradead.org> w=
+rote:
+>> On Tue, Jul 07, 2015 at 04:25:18PM +0200, Pali Roh=C3=A1r wrote:
+>>> On Monday 06 July 2015 15:43:28 Darren Hart wrote:
+>>> > On Mon, Jul 06, 2015 at 09:35:40AM +0800, Alex Hung wrote:
+>>> > > ATK4001 is an ACPI device for wireless hotkey, similar to how D=
+ell and
+>>> > > HP are doing it.  It is just ASUS who decides LED should be con=
+trolled
+>>> > > by software unlike HP whose LED is driven by hardware pins on m=
+ini
+>>> > > card.
+>>> >
+>>> > Alex, please refrain from top posting on Linux kernel mailing lis=
+ts, it breaks
+>>> > the established practice the readers are setup for.
+>>> >
+>>> > Regarding the ATK4001 device, it did sound like it did more than =
+control the
+>>> > radios and the associcated LED. If that is all it does, then asus=
+-rbtn is fine.
+>>> > If it does something beyond that, we need understand what that is=
+, as a more
+>>> > platform-centric name would be more appropriate.
+>>> >
+>>> > Thanks,
+>>>
+>>> Yes, I understand too that ATK4001 device has more functions as one=
+ for
+>>> LED control. And in this case it is not good to use name from one
+>>> specific functionality.
+>>>
+>>> And about name:
+>>>
+>>> I chose name rbtn for dell driver because ACPI device in DSDT table=
+ is
+>>> named RBTN and acpi id is DELRBTN.
+>>>
+>>> I think that acpi-rbtn.c (radio button) is not ideal name for drive=
+r
+>>> which at SW level controls LED device associated with wireless devi=
+ces.
+>>>
+>>> I would rather follow acpi device name, but in this case ATK4001 is=
+ even
+>>> worse name which does not say anything...
+>>>
+>>> Maybe better name could be asus-wireless? Still I do not have any g=
+ood
+>>> name, so choose something...
+>>
+>> I suggested rbtn to try and start showing some kind of consistency i=
+n the
+>> directory - however, it's no better than many of the other existing =
+options,
+>> including -rfkill -wireless -laptop, etc.
+>>
+>> Speaking of -laptop, the asus-laptop driver supports ATK0100 and ATK=
+0101. This
+>> ATK4001 device appears to perform the same type of features. The que=
+stion is
+>> whether or not it can be reasonably incorporated into the existing a=
+sus-laptop
+>> driver or not.
+>>
+>> (I intended to do that review myself, but I haven't found the time i=
+n 48 hours,
+>> so I'm just going to send this out and ask that Alex have a look and=
+ provide his
+>> thoughts on asus-laptop)
+>>
+>> --
+>> Darren Hart
+>> Intel Open Source Technology Center
+>
+> Certainly, I should have time to look into asus-laptop next week.
+>
+>
+> --
+> Cheers,
+> Alex Hung
 
-This patch series was tested on a ThinkPad T43.
+asus-laptop has some assumption regarding the methosd provided by the
+ACPI device, but you may be able to integrate with it.
+Hard to know if it make sense though, really depend how similar these
+interfaces are.
 
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-
----
- drivers/platform/x86/thinkpad_acpi.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-Index: linux/drivers/platform/x86/thinkpad_acpi.c
-===================================================================
---- linux.orig/drivers/platform/x86/thinkpad_acpi.c	2015-07-12 20:24:53.000000000 +1000
-+++ linux/drivers/platform/x86/thinkpad_acpi.c	2015-07-12 20:25:01.000000000 +1000
-@@ -2311,30 +2311,30 @@ static void hotkey_read_nvram(struct tp_
- 	u8 d;
- 
- 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
- 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
- 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
- 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
- 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
- 	}
- 	if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
- 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
- 	}
- 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
- 		n->displayexp_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 		n->brightness_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
- 				>> TP_NVRAM_POS_LEVEL_VOLUME;
- 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
-@@ -6155,7 +6155,7 @@ static unsigned int tpacpi_brightness_nv
- {
- 	u8 lnvram;
- 
--	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
-+	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
- 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 	lnvram &= bright_maxlvl;
-@@ -6180,7 +6180,7 @@ static void tpacpi_brightness_checkpoint
- 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
- 		goto unlock;
- 	lec &= TP_EC_BACKLIGHT_LVLMSK;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 
- 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
-@@ -6188,7 +6188,7 @@ static void tpacpi_brightness_checkpoint
- 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
- 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
- 		dbg_printk(TPACPI_DBG_BRGHT,
- 			   "updated NVRAM backlight level to %u (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
-@@ -6796,13 +6796,13 @@ static void tpacpi_volume_checkpoint_nvr
- 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
- 		goto unlock;
- 	lec &= ec_mask;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 
- 	if (lec != (b_nvram & ec_mask)) {
- 		/* NVRAM needs update */
- 		b_nvram &= ~ec_mask;
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
- 		dbg_printk(TPACPI_DBG_MIXER,
- 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
+--=20
+Corentin Chary
+http://xf.iksaif.net
