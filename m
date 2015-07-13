@@ -1,41 +1,172 @@
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] intel_scu_ipc: move local memory initialization out of a mutex
-Date: Mon, 13 Jul 2015 16:44:54 +0200
-Message-ID: <1436798694-6907-1-git-send-email-christophe.jaillet@wanadoo.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Yasuaki Ishimatsu <yasu.isimatu@gmail.com>
+Subject: Re: [PATCH v2 10/22] fjes: tx_stall_task
+Date: Mon, 13 Jul 2015 09:03:24 -0700 (PDT)
+Message-ID: <55a3e14c.53918c0a.fe0e.6179@mx.google.com>
+References: <1435114351-6961-1-git-send-email-izumi.taku@jp.fujitsu.com>
+	<1435114554-7151-11-git-send-email-izumi.taku@jp.fujitsu.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1435114554-7151-11-git-send-email-izumi.taku@jp.fujitsu.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, Yasuaki Ishimatsu <yasu.isimatu@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-'{ }' and memset will both reset the cbuf buffer.
-Only once is enough and this can be done outside fo the mutex.
+Hi Izum-san,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/platform/x86/intel_scu_ipc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Wed, 24 Jun 2015 11:55:42 +0900
+Taku Izumi <izumi.taku@jp.fujitsu.com> wrote:
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 001b199..187d108 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -216,13 +216,13 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- 	int nc;
- 	u32 offset = 0;
- 	int err;
--	u8 cbuf[IPC_WWBUF_SIZE] = { };
-+	u8 cbuf[IPC_WWBUF_SIZE];
- 	u32 *wbuf = (u32 *)&cbuf;
- 
--	mutex_lock(&ipclock);
--
- 	memset(cbuf, 0, sizeof(cbuf));
- 
-+	mutex_lock(&ipclock);
-+
- 	if (ipcdev.pdev == NULL) {
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
--- 
-2.1.4
+> This patch adds tx_stall_task.
+> When receiver's buffer is full, sender stops
+> its tx queue. This task is used to monitor
+> receiver's status and when receiver's buffer
+> is avairable, it resumes tx queue.
+> 
+> Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> ---
+>  drivers/net/fjes/fjes.h      |  2 ++
+>  drivers/net/fjes/fjes_main.c | 63 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/net/fjes/fjes.h b/drivers/net/fjes/fjes.h
+> index 8e9899e..b04ea9d 100644
+> --- a/drivers/net/fjes/fjes.h
+> +++ b/drivers/net/fjes/fjes.h
+> @@ -30,6 +30,7 @@
+>  #define FJES_MAX_QUEUES		1
+>  #define FJES_TX_RETRY_INTERVAL	(20 * HZ)
+>  #define FJES_TX_RETRY_TIMEOUT	(100)
+> +#define FJES_TX_TX_STALL_TIMEOUT	(FJES_TX_RETRY_INTERVAL / 2)
+>  #define FJES_OPEN_ZONE_UPDATE_WAIT	(300) /* msec */
+>  
+>  /* board specific private data structure */
+> @@ -52,6 +53,7 @@ struct fjes_adapter {
+>  
+>  	struct workqueue_struct *txrx_wq;
+>  
+> +	struct work_struct tx_stall_task;
+>  	struct work_struct raise_intr_rxdata_task;
+>  
+>  	struct fjes_hw hw;
+> diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+> index 735aa5e..f4c2445 100644
+> --- a/drivers/net/fjes/fjes_main.c
+> +++ b/drivers/net/fjes/fjes_main.c
+> @@ -53,6 +53,7 @@ static int fjes_setup_resources(struct fjes_adapter *);
+>  static void fjes_free_resources(struct fjes_adapter *);
+>  static netdev_tx_t fjes_xmit_frame(struct sk_buff *, struct net_device *);
+>  static void fjes_raise_intr_rxdata_task(struct work_struct *);
+> +static void fjes_tx_stall_task(struct work_struct *);
+>  static irqreturn_t fjes_intr(int, void*);
+>  
+>  static int fjes_acpi_add(struct acpi_device *);
+> @@ -281,6 +282,7 @@ static int fjes_close(struct net_device *netdev)
+>  	fjes_free_irq(adapter);
+>  
+>  	cancel_work_sync(&adapter->raise_intr_rxdata_task);
+> +	cancel_work_sync(&adapter->tx_stall_task);
+>  
+>  	fjes_hw_wait_epstop(hw);
+>  
+> @@ -410,6 +412,61 @@ static void fjes_free_resources(struct fjes_adapter *adapter)
+>  	}
+>  }
+>  
+> +static void fjes_tx_stall_task(struct work_struct *work)
+> +{
+> +	struct fjes_adapter *adapter = container_of(work,
+> +			struct fjes_adapter, tx_stall_task);
+> +	struct fjes_hw *hw = &adapter->hw;
+> +	struct net_device *netdev = adapter->netdev;
+> +	enum ep_partner_status pstatus;
+> +	int epid;
+> +	int max_epid, my_epid;
+> +	union ep_buffer_info *info;
+> +	int all_queue_available;
+> +	int i;
+> +	int sendable;
+> +
+> +	if (((long)jiffies -
+> +		(long)(netdev->trans_start)) > FJES_TX_TX_STALL_TIMEOUT) {
+> +		netif_wake_queue(netdev);
+> +		return;
+> +	}
+> +
+> +	my_epid = hw->my_epid;
+> +	max_epid = hw->max_epid;
+> +
+
+> +	for (i = 0; i < 5; i++) {
+
+Why do you loop 5 times?
+
+Thanks,
+Yasuaki Ishimatsu
+
+> +		all_queue_available = 1;
+> +
+> +		for (epid = 0; epid < max_epid; epid++) {
+> +			if (my_epid == epid)
+> +				continue;
+> +
+> +			pstatus = fjes_hw_get_partner_ep_status(hw, epid);
+> +			sendable = (pstatus == EP_PARTNER_SHARED);
+> +			if (!sendable)
+> +				continue;
+> +
+> +			info = adapter->hw.ep_shm_info[epid].tx.info;
+> +
+> +			if (EP_RING_FULL(info->v1i.head, info->v1i.tail,
+> +					 info->v1i.count_max)) {
+> +				all_queue_available = 0;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (all_queue_available) {
+> +			netif_wake_queue(netdev);
+> +			return;
+> +		}
+> +	}
+> +
+> +	usleep_range(50, 100);
+> +
+> +	queue_work(adapter->txrx_wq, &adapter->tx_stall_task);
+> +}
+> +
+>  static void fjes_raise_intr_rxdata_task(struct work_struct *work)
+>  {
+>  	struct fjes_adapter *adapter = container_of(work,
+> @@ -606,6 +663,10 @@ fjes_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
+>  					netdev->trans_start = jiffies;
+>  					netif_tx_stop_queue(cur_queue);
+>  
+> +					if (!work_pending(&adapter->tx_stall_task))
+> +						queue_work(adapter->txrx_wq,
+> +							   &adapter->tx_stall_task);
+> +
+>  					ret = NETDEV_TX_BUSY;
+>  				}
+>  			} else {
+> @@ -690,6 +751,7 @@ static int fjes_probe(struct platform_device *plat_dev)
+>  
+>  	adapter->txrx_wq = create_workqueue(DRV_NAME "/txrx");
+>  
+> +	INIT_WORK(&adapter->tx_stall_task, fjes_tx_stall_task);
+>  	INIT_WORK(&adapter->raise_intr_rxdata_task,
+>  		  fjes_raise_intr_rxdata_task);
+>  
+> @@ -734,6 +796,7 @@ static int fjes_remove(struct platform_device *plat_dev)
+>  	struct fjes_hw *hw = &adapter->hw;
+>  
+>  	cancel_work_sync(&adapter->raise_intr_rxdata_task);
+> +	cancel_work_sync(&adapter->tx_stall_task);
+>  	if (adapter->txrx_wq)
+>  		destroy_workqueue(adapter->txrx_wq);
+>  
+> -- 
+> 1.8.3.1
+> 
