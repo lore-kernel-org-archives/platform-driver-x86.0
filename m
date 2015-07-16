@@ -1,236 +1,115 @@
-From: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] toshiba_acpi: Add /dev/toshiba_acpi device
-Date: Thu, 16 Jul 2015 17:32:44 -0600
-Message-ID: <1437089564-4242-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jonathan Buzzard <jonathan-kE54VaY6i3ADXYZnReoRVg@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Transflective backlight updates
+Date: Thu, 16 Jul 2015 17:33:52 -0600
+Message-ID: <1437089632-4293-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f51.google.com ([209.85.218.51]:36293 "EHLO
+	mail-oi0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751927AbbGPXd7 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 16 Jul 2015 19:33:59 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-There were previous attempts to "merge" the toshiba SMM module to the
-toshiba_acpi one, they were trying to imitate what the old toshiba
-module does, however, some models (TOS1900 devices) come with a
-"crippled" implementation and do not provide all the "features" a
-"genuine" Toshiba BIOS does.
+This patch changes the tr function seconf parameter from bool to u32,
+to be in par with the rest of the TCI functions of the driver, and the
+code was updated accordingly.
 
-This patch adds a new device called toshiba_acpi, which aim is to
-enable userspace to access the SMM on Toshiba laptops via ACPI calls.
+Also, the check for translective support was moved to the *add
+function, as the {__get, set}_lcd_brightness functions amke use of it.
 
-Creating a new convenience _IOWR command to access the SCI functions
-by opening/closing the SCI internally to avoid buggy BIOS, while at
-the same time providing backwards compatibility.
-
-Older programs who wish to access the SMM on newer models can do it
-without much code change, as the toshiba.h header was modified to
-reflect these changes as well as adds all the toshiba_acpi paths
-and commands.
-
-Signed-off-by: Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- Documentation/ioctl/ioctl-number.txt |  2 +-
- drivers/platform/x86/toshiba_acpi.c  | 91 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/toshiba.h         | 32 +++++++++++--
- 3 files changed, 121 insertions(+), 4 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-index 51f4221..18babaf 100644
---- a/Documentation/ioctl/ioctl-number.txt
-+++ b/Documentation/ioctl/ioctl-number.txt
-@@ -263,7 +263,7 @@ Code  Seq#(hex)	Include File		Comments
- 's'	all	linux/cdk.h
- 't'	00-7F	linux/ppp-ioctl.h
- 't'	80-8F	linux/isdn_ppp.h
--'t'	90	linux/toshiba.h
-+'t'	90-91	linux/toshiba.h		toshiba and toshiba_acpi SMM
- 'u'	00-1F	linux/smb_fs.h		gone
- 'u'	20-3F	linux/uvcvideo.h	USB video class host driver
- 'v'	00-1F	linux/ext2_fs.h		conflict!
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 58d6119..dc4255b 100644
+index 3ad7b1f..15d8f0d 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -50,6 +50,8 @@
- #include <linux/acpi.h>
- #include <linux/dmi.h>
- #include <linux/uaccess.h>
-+#include <linux/miscdevice.h>
-+#include <linux/toshiba.h>
- #include <acpi/video.h>
+@@ -1184,22 +1184,17 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
+ }
  
- MODULE_AUTHOR("John Belmonte");
-@@ -170,6 +172,7 @@ struct toshiba_acpi_dev {
- 	struct led_classdev led_dev;
- 	struct led_classdev kbd_led;
- 	struct led_classdev eco_led;
-+	struct miscdevice miscdev;
- 
- 	int force_fan;
- 	int last_key_event;
-@@ -2262,6 +2265,81 @@ static struct attribute_group toshiba_attr_group = {
- };
- 
- /*
-+ * Misc device
-+ */
-+static int toshiba_acpi_smm_bridge(SMMRegisters *regs)
-+{
-+	u32 in[TCI_WORDS] = { regs->eax, regs->ebx, regs->ecx,
-+			      regs->edx, regs->esi, regs->edi };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	status = tci_raw(toshiba_acpi, in, out);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to query TCI registers failed\n");
-+		return -EIO;
-+	}
-+
-+	/* Fillout the SMM struct with the TCI call results */
-+	regs->eax = out[0];
-+	regs->ebx = out[1];
-+	regs->ecx = out[2];
-+	regs->edx = out[3];
-+	regs->esi = out[4];
-+	regs->edi = out[5];
-+
-+	return 0;
-+}
-+
-+static long toshiba_acpi_ioctl(struct file *fp, unsigned int cmd,
-+			       unsigned long arg)
-+{
-+	SMMRegisters __user *argp = (SMMRegisters __user *)arg;
-+	SMMRegisters regs;
-+	int ret;
-+
-+	if (!argp)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case TOSH_SMM:
-+		if (copy_from_user(&regs, argp, sizeof(SMMRegisters)))
-+			return -EFAULT;
-+		ret = toshiba_acpi_smm_bridge(&regs);
-+		if (ret)
-+			return ret;
-+		if (copy_to_user(argp, &regs, sizeof(SMMRegisters)))
-+			return -EFAULT;
-+		break;
-+	case TOSHIBA_ACPI_SCI:
-+		if (copy_from_user(&regs, argp, sizeof(SMMRegisters)))
-+			return -EFAULT;
-+		/* Ensure we are being called with a SCI_{GET, SET} register */
-+		if (regs.eax != SCI_GET && regs.eax != SCI_SET)
-+			return -EINVAL;
-+		if (!sci_open(toshiba_acpi))
-+			return -EIO;
-+		ret = toshiba_acpi_smm_bridge(&regs);
-+		sci_close(toshiba_acpi);
-+		if (ret)
-+			return ret;
-+		if (copy_to_user(argp, &regs, sizeof(SMMRegisters)))
-+			return -EFAULT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct file_operations toshiba_acpi_fops = {
-+	.owner		= THIS_MODULE,
-+	.unlocked_ioctl = toshiba_acpi_ioctl,
-+	.llseek		= noop_llseek,
-+};
-+
-+/*
-  * Hotkeys
-  */
- static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
-@@ -2559,6 +2637,8 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+ /* Transflective Backlight */
+-static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
++static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
  {
- 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
+-	u32 hci_result;
+-	u32 status;
++	u32 hci_result = hci_read(dev, HCI_TR_BACKLIGHT, status);
  
-+	misc_deregister(&dev->miscdev);
-+
- 	remove_toshiba_proc_entries(dev);
+-	hci_result = hci_read(dev, HCI_TR_BACKLIGHT, &status);
+-	*enabled = !status;
+ 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
+ }
  
- 	if (dev->sysfs_created)
-@@ -2630,6 +2710,17 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 		return -ENOMEM;
- 	dev->acpi_dev = acpi_dev;
- 	dev->method_hci = hci_method;
-+	dev->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	dev->miscdev.name = "toshiba_acpi";
-+	dev->miscdev.fops = &toshiba_acpi_fops;
-+
-+	ret = misc_register(&dev->miscdev);
-+	if (ret) {
-+		pr_err("Failed to register miscdevice\n");
-+		kfree(dev);
-+		return ret;
-+	}
-+
- 	acpi_dev->driver_data = dev;
- 	dev_set_drvdata(&acpi_dev->dev, dev);
+-static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
++static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 status)
+ {
+-	u32 hci_result;
+-	u32 value = !enable;
++	u32 hci_result = hci_write(dev, HCI_TR_BACKLIGHT, !status);
  
-diff --git a/include/uapi/linux/toshiba.h b/include/uapi/linux/toshiba.h
-index e9bef5b..c58bf4b 100644
---- a/include/uapi/linux/toshiba.h
-+++ b/include/uapi/linux/toshiba.h
-@@ -1,6 +1,7 @@
- /* toshiba.h -- Linux driver for accessing the SMM on Toshiba laptops 
-  *
-  * Copyright (c) 1996-2000  Jonathan A. Buzzard (jonathan-kE54VaY6i3ADXYZnReoRVg@public.gmane.org)
-+ * Copyright (c) 2015  Azael Avalos <coproscefalo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  *
-  * Thanks to Juergen Heinzl <juergen-f29ozuUdGaZwQVkoCiQKlSp2UmYkHbXO@public.gmane.org> for the pointers
-  * on making sure the structure is aligned and packed.
-@@ -20,9 +21,18 @@
- #ifndef _UAPI_LINUX_TOSHIBA_H
- #define _UAPI_LINUX_TOSHIBA_H
+-	hci_result = hci_write(dev, HCI_TR_BACKLIGHT, value);
+ 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
+ }
  
--#define TOSH_PROC "/proc/toshiba"
--#define TOSH_DEVICE "/dev/toshiba"
--#define TOSH_SMM _IOWR('t', 0x90, int)	/* broken: meant 24 bytes */
-+/*
-+ * Toshiba modules paths
-+ */
-+
-+#define TOSH_PROC		"/proc/toshiba"
-+#define TOSH_DEVICE		"/dev/toshiba"
-+#define TOSHIBA_ACPI_PROC	"/proc/acpi/toshiba"
-+#define TOSHIBA_ACPI_DEVICE	"/dev/toshiba_acpi"
-+
-+/*
-+ * Toshiba SMM structure
-+ */
+@@ -1213,12 +1208,11 @@ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
+ 	int brightness = 0;
  
- typedef struct {
- 	unsigned int eax;
-@@ -33,5 +43,21 @@ typedef struct {
- 	unsigned int edi __attribute__ ((packed));
- } SMMRegisters;
+ 	if (dev->tr_backlight_supported) {
+-		bool enabled;
+-		int ret = get_tr_backlight_status(dev, &enabled);
++		int ret = get_tr_backlight_status(dev, &value);
  
-+/*
-+ * IOCTLs (0x90 - 0x91)
-+ */
-+
-+#define TOSH_SMM		_IOWR('t', 0x90, SMMRegisters)
-+/*
-+ * Convenience toshiba_acpi command.
-+ *
-+ * The System Configuration Interface (SCI) is opened/closed internally
-+ * to avoid userspace of buggy BIOSes.
-+ *
-+ * The toshiba_acpi module checks whether the eax register is set with
-+ * SCI_GET (0xf300) or SCI_SET (0xf400), returning -EINVAL if not.
-+ */
-+#define TOSHIBA_ACPI_SCI	_IOWR('t', 0x91, SMMRegisters)
-+
+ 		if (ret)
+ 			return ret;
+-		if (enabled)
++		if (value)
+ 			return 0;
+ 		brightness++;
+ 	}
+@@ -1268,8 +1262,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+ 	u32 hci_result;
  
- #endif /* _UAPI_LINUX_TOSHIBA_H */
+ 	if (dev->tr_backlight_supported) {
+-		bool enable = !value;
+-		int ret = set_tr_backlight_status(dev, enable);
++		int ret = set_tr_backlight_status(dev, !value);
+ 
+ 		if (ret)
+ 			return ret;
+@@ -2496,7 +2489,6 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 	struct backlight_properties props;
+ 	int brightness;
+ 	int ret;
+-	bool enabled;
+ 
+ 	/*
+ 	 * Some machines don't support the backlight methods at all, and
+@@ -2513,10 +2505,6 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
+ 		return 0;
+ 	}
+ 
+-	/* Determine whether or not BIOS supports transflective backlight */
+-	ret = get_tr_backlight_status(dev, &enabled);
+-	dev->tr_backlight_supported = !ret;
+-
+ 	/*
+ 	 * Tell acpi-video-detect code to prefer vendor backlight on all
+ 	 * systems with transflective backlight and on dmi matched systems.
+@@ -2643,6 +2631,10 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 	if (toshiba_acpi_setup_keyboard(dev))
+ 		pr_info("Unable to activate hotkeys\n");
+ 
++	/* Determine whether or not BIOS supports transflective backlight */
++	ret = get_tr_backlight_status(dev, &dummy);
++	dev->tr_backlight_supported = !ret;
++
+ 	ret = toshiba_acpi_setup_backlight(dev);
+ 	if (ret)
+ 		goto error;
 -- 
-2.4.2
+2.4.3
