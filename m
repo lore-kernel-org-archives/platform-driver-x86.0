@@ -1,111 +1,135 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH] thermal: consistently use int for temperatures
-Date: Fri, 17 Jul 2015 12:14:36 +0100
-Message-ID: <9hhd1zrc9yb.fsf@e105922-lin.cambridge.arm.com>
-References: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
- (Sascha Hauer's message of "Mon, 6 Jul 2015 09:19:49 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Lukasz Majewski <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lm-sensors@lm-sensors.org, Stephen Warren <swarren@wwwdotorg.org>, Peter Feuerer <peter@piie.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, linux-acpi@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, linux-omap@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean Delvare <jdelvare@suse.de>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] toshiba_acpi: Adapt /proc/acpi/toshiba/keys to TOS1900 devices
+Date: Fri, 17 Jul 2015 15:21:26 -0600
+Message-ID: <1437168086-4197-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f179.google.com ([209.85.214.179]:35076 "EHLO
+	mail-ob0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753169AbbGQVVc (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 17 Jul 2015 17:21:32 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-SGkgU2FzY2hhLAoKU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPiB3cml0ZXM6
-Cgo+IFRoZSB0aGVybWFsIGNvZGUgdXNlcyBpbnQsIGxvbmcgYW5kIHVuc2lnbmVkIGxvbmcgZm9y
-IHRlbXBlcmF0dXJlcwo+IGluIGRpZmZlcmVudCBwbGFjZXMuCj4KPiBVc2luZyBhbiB1bnNpZ25l
-ZCB0eXBlIGxpbWl0cyB0aGUgdGhlcm1hbCBmcmFtZXdvcmsgdG8gcG9zaXRpdmUKPiB0ZW1wZXJh
-dHVyZXMgd2l0aG91dCBuZWVkLiBBbHNvIHNldmVyYWwgZHJpdmVycyBjdXJyZW50bHkgd2lsbCBy
-ZXBvcnQKPiB0ZW1wZXJhdHVyZXMgbmVhciBVSU5UX01BWCBmb3IgdGVtcGVyYXR1cmVzIGJlbG93
-IDDCsEMuIFRoaXMgd2lsbCBwcm9iYWJseQo+IGltbWVkaWF0ZWx5IHNodXQgdGhlIG1hY2hpbmUg
-ZG93biBkdWUgdG8gb3ZlcnRlbXBlcmF0dXJlIGlmIHN0YXJ0ZWQgYmVsb3cKPiAwwrBDLgo+Cj4g
-J2xvbmcnIGlzIDY0Yml0IG9uIHNldmVyYWwgYXJjaGl0ZWN0dXJlcy4gVGhpcyBpcyBub3QgbmVl
-ZGVkIHNpbmNlIElOVF9NQVggwrBtQwo+IGlzIGFib3ZlIHRoZSBtZWx0aW5nIHBvaW50IG9mIGFs
-bCBrbm93biBtYXRlcmlhbHMuCj4KPiBDb25zaXN0ZW50bHkgdXNlIGEgcGxhaW4gJ2ludCcgZm9y
-IHRlbXBlcmF0dXJlcyB0aHJvdWdob3V0IHRoZSB0aGVybWFsIGNvZGUgYW5kCj4gdGhlIGRyaXZl
-cnMuIFRoaXMgb25seSBjaGFuZ2VzIHRoZSBwbGFjZXMgaW4gdGhlIGRyaXZlcnMgd2hlcmUgdGhl
-IHRlbXBlcmF0dXJlCj4gaXMgcGFzc2VkIGFyb3VuZCBhcyBwb2ludGVyLCB3aGVuIGRyaXZlcnMg
-aW50ZXJuYWxseSB1c2UgYW5vdGhlciB0eXBlIHRoaXMgaXMKPiBub3QgY2hhbmdlZC4KPgo+IFNp
-Z25lZC1vZmYtYnk6IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4KClRoYW5r
-cyBmb3IgbW92aW5nIG92ZXIgdGhlIHRoZXJtYWwgc3ViLXN5c3RlbSBpbiBMaW51eCB0byBjb25z
-aXN0ZW50bHkKdXNlIGEgc2luZ2xlIHR5cGUuCgpJbiB5b3VyIHBhdGNoLCB5b3UgbWlzc2VkIG1p
-Z3JhdGluZyBvdmVyIHBvd2VyX2FsbG9jYXRvciBnb3Zlcm5vciBhbmQKaXQncyBhc3NvY2lhdGVk
-IHRyYWNlIGV2ZW50cy4gSXQgZ290IG1lcmdlZCBmb3IgdjQuMi4KCkNvdWxkIHlvdSBpbmNvcnBv
-cmF0ZSBzb21ldGhpbmcgbGlrZSBiZWxvdyBpbiB5b3VyIG5leHQgdmVyc2lvbj8KClRoYW5rcywK
-UHVuaXQKClsuLi5dCgotLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tClN1
-YmplY3Q6IFtQQVRDSF0gVXNlIGludCBmb3IgdGVtcGVyYXR1cmUgaW4gcG93ZXJfYWxsb2NhdG9y
-IGdvdmVybm9yCgotLS0KIGRyaXZlcnMvdGhlcm1hbC9wb3dlcl9hbGxvY2F0b3IuYyAgICAgICAg
-ICAgICAgfCAxMCArKysrLS0tLS0tCiBpbmNsdWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2Vy
-X2FsbG9jYXRvci5oIHwgIDYgKysrLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygr
-KSwgOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvcG93ZXJfYWxs
-b2NhdG9yLmMgYi9kcml2ZXJzL3RoZXJtYWwvcG93ZXJfYWxsb2NhdG9yLmMKaW5kZXggNDY3MjI1
-MC4uMWJiN2Q3ZiAxMDA2NDQKLS0tIGEvZHJpdmVycy90aGVybWFsL3Bvd2VyX2FsbG9jYXRvci5j
-CisrKyBiL2RyaXZlcnMvdGhlcm1hbC9wb3dlcl9hbGxvY2F0b3IuYwpAQCAtOTIsOCArOTIsNyBA
-QCBzdHJ1Y3QgcG93ZXJfYWxsb2NhdG9yX3BhcmFtcyB7CiAgKiBSZXR1cm46IFRoZSBwb3dlciBi
-dWRnZXQgZm9yIHRoZSBuZXh0IHBlcmlvZC4KICAqLwogc3RhdGljIHUzMiBwaWRfY29udHJvbGxl
-cihzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCi0JCQkgIHVuc2lnbmVkIGxvbmcgY3Vy
-cmVudF90ZW1wLAotCQkJICB1bnNpZ25lZCBsb25nIGNvbnRyb2xfdGVtcCwKKwkJCSAgaW50IGN1
-cnJlbnRfdGVtcCwgaW50IGNvbnRyb2xfdGVtcCwKIAkJCSAgdTMyIG1heF9hbGxvY2F0YWJsZV9w
-b3dlcikKIHsKIAlzNjQgcCwgaSwgZCwgcG93ZXJfcmFuZ2U7CkBAIC0yMjMsOCArMjIyLDcgQEAg
-c3RhdGljIHZvaWQgZGl2dnlfdXBfcG93ZXIodTMyICpyZXFfcG93ZXIsIHUzMiAqbWF4X3Bvd2Vy
-LCBpbnQgbnVtX2FjdG9ycywKIH0KIAogc3RhdGljIGludCBhbGxvY2F0ZV9wb3dlcihzdHJ1Y3Qg
-dGhlcm1hbF96b25lX2RldmljZSAqdHosCi0JCQkgIHVuc2lnbmVkIGxvbmcgY3VycmVudF90ZW1w
-LAotCQkJICB1bnNpZ25lZCBsb25nIGNvbnRyb2xfdGVtcCkKKwkJCSAgaW50IGN1cnJlbnRfdGVt
-cCwgaW50IGNvbnRyb2xfdGVtcCkKIHsKIAlzdHJ1Y3QgdGhlcm1hbF9pbnN0YW5jZSAqaW5zdGFu
-Y2U7CiAJc3RydWN0IHBvd2VyX2FsbG9jYXRvcl9wYXJhbXMgKnBhcmFtcyA9IHR6LT5nb3Zlcm5v
-cl9kYXRhOwpAQCAtNDExLDcgKzQwOSw3IEBAIHN0YXRpYyBpbnQgcG93ZXJfYWxsb2NhdG9yX2Jp
-bmQoc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6KQogewogCWludCByZXQ7CiAJc3RydWN0
-IHBvd2VyX2FsbG9jYXRvcl9wYXJhbXMgKnBhcmFtczsKLQl1bnNpZ25lZCBsb25nIHN3aXRjaF9v
-bl90ZW1wLCBjb250cm9sX3RlbXA7CisJaW50IHN3aXRjaF9vbl90ZW1wLCBjb250cm9sX3RlbXA7
-CiAJdTMyIHRlbXBlcmF0dXJlX3RocmVzaG9sZDsKIAogCWlmICghdHotPnR6cCB8fCAhdHotPnR6
-cC0+c3VzdGFpbmFibGVfcG93ZXIpIHsKQEAgLTQ3Niw3ICs0NzQsNyBAQCBzdGF0aWMgdm9pZCBw
-b3dlcl9hbGxvY2F0b3JfdW5iaW5kKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0eikKIHN0
-YXRpYyBpbnQgcG93ZXJfYWxsb2NhdG9yX3Rocm90dGxlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2
-aWNlICp0eiwgaW50IHRyaXApCiB7CiAJaW50IHJldDsKLQl1bnNpZ25lZCBsb25nIHN3aXRjaF9v
-bl90ZW1wLCBjb250cm9sX3RlbXAsIGN1cnJlbnRfdGVtcDsKKwlpbnQgc3dpdGNoX29uX3RlbXAs
-IGNvbnRyb2xfdGVtcCwgY3VycmVudF90ZW1wOwogCXN0cnVjdCBwb3dlcl9hbGxvY2F0b3JfcGFy
-YW1zICpwYXJhbXMgPSB0ei0+Z292ZXJub3JfZGF0YTsKIAogCS8qCmRpZmYgLS1naXQgYS9pbmNs
-dWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2VyX2FsbG9jYXRvci5oIGIvaW5jbHVkZS90cmFj
-ZS9ldmVudHMvdGhlcm1hbF9wb3dlcl9hbGxvY2F0b3IuaAppbmRleCAxMmUxMzIxLi41YWZhZThm
-IDEwMDY0NAotLS0gYS9pbmNsdWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2VyX2FsbG9jYXRv
-ci5oCisrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL3RoZXJtYWxfcG93ZXJfYWxsb2NhdG9yLmgK
-QEAgLTExLDcgKzExLDcgQEAgVFJBQ0VfRVZFTlQodGhlcm1hbF9wb3dlcl9hbGxvY2F0b3IsCiAJ
-CSB1MzIgdG90YWxfcmVxX3Bvd2VyLCB1MzIgKmdyYW50ZWRfcG93ZXIsCiAJCSB1MzIgdG90YWxf
-Z3JhbnRlZF9wb3dlciwgc2l6ZV90IG51bV9hY3RvcnMsCiAJCSB1MzIgcG93ZXJfcmFuZ2UsIHUz
-MiBtYXhfYWxsb2NhdGFibGVfcG93ZXIsCi0JCSB1bnNpZ25lZCBsb25nIGN1cnJlbnRfdGVtcCwg
-czMyIGRlbHRhX3RlbXApLAorCQkgaW50IGN1cnJlbnRfdGVtcCwgczMyIGRlbHRhX3RlbXApLAog
-CVRQX0FSR1ModHosIHJlcV9wb3dlciwgdG90YWxfcmVxX3Bvd2VyLCBncmFudGVkX3Bvd2VyLAog
-CQl0b3RhbF9ncmFudGVkX3Bvd2VyLCBudW1fYWN0b3JzLCBwb3dlcl9yYW5nZSwKIAkJbWF4X2Fs
-bG9jYXRhYmxlX3Bvd2VyLCBjdXJyZW50X3RlbXAsIGRlbHRhX3RlbXApLApAQCAtMjQsNyArMjQs
-NyBAQCBUUkFDRV9FVkVOVCh0aGVybWFsX3Bvd2VyX2FsbG9jYXRvciwKIAkJX19maWVsZChzaXpl
-X3QsICAgICAgICBudW1fYWN0b3JzICAgICAgICAgICAgICAgKQogCQlfX2ZpZWxkKHUzMiwgICAg
-ICAgICAgIHBvd2VyX3JhbmdlICAgICAgICAgICAgICApCiAJCV9fZmllbGQodTMyLCAgICAgICAg
-ICAgbWF4X2FsbG9jYXRhYmxlX3Bvd2VyICAgICkKLQkJX19maWVsZCh1bnNpZ25lZCBsb25nLCBj
-dXJyZW50X3RlbXAgICAgICAgICAgICAgKQorCQlfX2ZpZWxkKGludCwgICAgICAgICAgIGN1cnJl
-bnRfdGVtcCAgICAgICAgICAgICApCiAJCV9fZmllbGQoczMyLCAgICAgICAgICAgZGVsdGFfdGVt
-cCAgICAgICAgICAgICAgICkKIAkpLAogCVRQX2Zhc3RfYXNzaWduKApAQCAtNDIsNyArNDIsNyBA
-QCBUUkFDRV9FVkVOVCh0aGVybWFsX3Bvd2VyX2FsbG9jYXRvciwKIAkJX19lbnRyeS0+ZGVsdGFf
-dGVtcCA9IGRlbHRhX3RlbXA7CiAJKSwKIAotCVRQX3ByaW50aygidGhlcm1hbF96b25lX2lkPSVk
-IHJlcV9wb3dlcj17JXN9IHRvdGFsX3JlcV9wb3dlcj0ldSBncmFudGVkX3Bvd2VyPXslc30gdG90
-YWxfZ3JhbnRlZF9wb3dlcj0ldSBwb3dlcl9yYW5nZT0ldSBtYXhfYWxsb2NhdGFibGVfcG93ZXI9
-JXUgY3VycmVudF90ZW1wZXJhdHVyZT0lbHUgZGVsdGFfdGVtcGVyYXR1cmU9JWQiLAorCVRQX3By
-aW50aygidGhlcm1hbF96b25lX2lkPSVkIHJlcV9wb3dlcj17JXN9IHRvdGFsX3JlcV9wb3dlcj0l
-dSBncmFudGVkX3Bvd2VyPXslc30gdG90YWxfZ3JhbnRlZF9wb3dlcj0ldSBwb3dlcl9yYW5nZT0l
-dSBtYXhfYWxsb2NhdGFibGVfcG93ZXI9JXUgY3VycmVudF90ZW1wZXJhdHVyZT0lZCBkZWx0YV90
-ZW1wZXJhdHVyZT0lZCIsCiAJCV9fZW50cnktPnR6X2lkLAogCQlfX3ByaW50X2FycmF5KF9fZ2V0
-X2R5bmFtaWNfYXJyYXkocmVxX3Bvd2VyKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IF9fZW50cnktPm51bV9hY3RvcnMsIDQpLAotLSAKMi4xLjIKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Since the introduction of TOS1900 devices support to the driver, the
+"keys" entry under the proc directory was broken, given that it only
+handled TOS620X devices accordingly.
+
+This patch adapts the code to show the hotkey values of TOS1900
+devices too, and in case some programs are still using that interface,
+hotkeys reporting should now work on these devices.
+
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+Darren:
+
+While checking the driver for the ninja-check report you sent me,
+it remiended me of the changes made on this patch, and while I was
+at it, "solved" a couple of the issues reported by such check ;-)
+
+I'm still digging into the code, and will provide a patch later on
+with all the needed changes :-)
+
+ drivers/platform/x86/toshiba_acpi.c | 56 +++++++++++++------------------------
+ 1 file changed, 20 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index a3c6ea2..ac71c82 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1492,32 +1492,10 @@ static const struct file_operations fan_proc_fops = {
+ static int keys_proc_show(struct seq_file *m, void *v)
+ {
+ 	struct toshiba_acpi_dev *dev = m->private;
+-	u32 hci_result;
+-	u32 value;
+-
+-	if (!dev->key_event_valid && dev->system_event_supported) {
+-		hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
+-		if (hci_result == TOS_SUCCESS) {
+-			dev->key_event_valid = 1;
+-			dev->last_key_event = value;
+-		} else if (hci_result == TOS_FIFO_EMPTY) {
+-			/* Better luck next time */
+-		} else if (hci_result == TOS_NOT_SUPPORTED) {
+-			/*
+-			 * This is a workaround for an unresolved issue on
+-			 * some machines where system events sporadically
+-			 * become disabled.
+-			 */
+-			hci_result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
+-			pr_notice("Re-enabled hotkeys\n");
+-		} else {
+-			pr_err("Error reading hotkey status\n");
+-			return -EIO;
+-		}
+-	}
+ 
+ 	seq_printf(m, "hotkey_ready:            %d\n", dev->key_event_valid);
+ 	seq_printf(m, "hotkey:                  0x%04x\n", dev->last_key_event);
++
+ 	return 0;
+ }
+ 
+@@ -2354,22 +2332,28 @@ static void toshiba_acpi_report_hotkey(struct toshiba_acpi_dev *dev,
+ 
+ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ {
+-	u32 hci_result, value;
+-	int retries = 3;
+-	int scancode;
+-
+ 	if (dev->info_supported) {
+-		scancode = toshiba_acpi_query_hotkey(dev);
+-		if (scancode < 0)
++		int scancode = toshiba_acpi_query_hotkey(dev);
++
++		if (scancode < 0) {
+ 			pr_err("Failed to query hotkey event\n");
+-		else if (scancode != 0)
++		} else if (scancode != 0) {
+ 			toshiba_acpi_report_hotkey(dev, scancode);
++			dev->key_event_valid = 1;
++			dev->last_key_event = scancode;
++		}
+ 	} else if (dev->system_event_supported) {
++		u32 result;
++		u32 value;
++		int retries = 3;
++
+ 		do {
+-			hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
+-			switch (hci_result) {
++			result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
++			switch (result) {
+ 			case TOS_SUCCESS:
+ 				toshiba_acpi_report_hotkey(dev, (int)value);
++				dev->key_event_valid = 1;
++				dev->last_key_event = value;
+ 				break;
+ 			case TOS_NOT_SUPPORTED:
+ 				/*
+@@ -2377,15 +2361,15 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ 				 * issue on some machines where system events
+ 				 * sporadically become disabled.
+ 				 */
+-				hci_result =
+-					hci_write(dev, HCI_SYSTEM_EVENT, 1);
+-				pr_notice("Re-enabled hotkeys\n");
++				result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
++				if (result == TOS_SUCCESS)
++					pr_notice("Re-enabled hotkeys\n");
+ 				/* Fall through */
+ 			default:
+ 				retries--;
+ 				break;
+ 			}
+-		} while (retries && hci_result != TOS_FIFO_EMPTY);
++		} while (retries && result != TOS_FIFO_EMPTY);
+ 	}
+ }
+ 
+-- 
+2.4.5
