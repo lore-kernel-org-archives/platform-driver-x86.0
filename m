@@ -1,73 +1,48 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH] toshiba_acpi: Avoid registering input device on WMI event laptops
-Date: Thu, 16 Jul 2015 17:38:57 -0600
-Message-ID: <1437089937-4383-1-git-send-email-coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] toshiba_acpi: Add /dev/toshiba_acpi device
+Date: Thu, 16 Jul 2015 23:42:19 -0700
+Message-ID: <20150717064219.GA128212@vmdeb7>
+References: <1437089564-4242-1-git-send-email-coproscefalo@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1437089564-4242-1-git-send-email-coproscefalo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jonathan Buzzard <jonathan@buzzard.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
-buggy INFO implementations") denied loading on laptops with a WMI Event
-GUID given that such laptops manage the hotkeys via that interface,
-however, such laptops have a working Toshiba Configuration Interface
-(TCI), and thus, such commit denied several supported features.
+On Thu, Jul 16, 2015 at 05:32:44PM -0600, Azael Avalos wrote:
+> There were previous attempts to "merge" the toshiba SMM module to the
+> toshiba_acpi one, they were trying to imitate what the old toshiba
+> module does, however, some models (TOS1900 devices) come with a
+> "crippled" implementation and do not provide all the "features" a
+> "genuine" Toshiba BIOS does.
+> 
+> This patch adds a new device called toshiba_acpi, which aim is to
+> enable userspace to access the SMM on Toshiba laptops via ACPI calls.
+> 
+> Creating a new convenience _IOWR command to access the SCI functions
+> by opening/closing the SCI internally to avoid buggy BIOS, while at
+> the same time providing backwards compatibility.
+> 
+> Older programs who wish to access the SMM on newer models can do it
+> without much code change, as the toshiba.h header was modified to
+> reflect these changes as well as adds all the toshiba_acpi paths
+> and commands.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 
-This patch avoids registering the input device and ignores all hotkey
-events on laptops with such WMI Event GUI, making the supported
-features found in those laptops to work.
+This and the other 2 are queued to for-review. They will remain there for a few
+days to give others a chance to review. After that, I will provide a thorough
+review and move them into for-next for 4.3
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+They do pass all my preliminary tests, checkpatch, build, and ninja-check.
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 15d8f0d..a3c6ea2 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	u32 hci_result;
- 	int error;
- 
-+	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
-+		pr_info("WMI event detected, hotkeys won't be monitored\n");
-+		return 0;
-+	}
-+
- 	error = toshiba_acpi_enable_hotkeys(dev);
- 	if (error)
- 		return error;
-@@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
- 
- 	switch (event) {
- 	case 0x80: /* Hotkeys and some system events */
-+		/*
-+		 * Machines with this WMI guid aren't supported due to bugs in
-+		 * their AML.
-+		 *
-+		 * Return silently to avoid triggering a netlink event.
-+		 */
-+		if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+			return;
- 		toshiba_acpi_process_hotkeys(dev);
- 		break;
- 	case 0x81: /* Dock events */
-@@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
- {
- 	int ret;
- 
--	/*
--	 * Machines with this WMI guid aren't supported due to bugs in
--	 * their AML. This check relies on wmi initializing before
--	 * toshiba_acpi to guarantee guids have been identified.
--	 */
--	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
--		return -ENODEV;
--
- 	toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
- 	if (!toshiba_proc_dir) {
- 		pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
+As this is the first series that I've received since enabling a lot of new
+automation, I wanted to say thanks for clean series that is ready review. Nice.
+
 -- 
-2.4.3
+Darren Hart
+Intel Open Source Technology Center
