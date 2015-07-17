@@ -1,48 +1,111 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba_acpi: Add /dev/toshiba_acpi device
-Date: Thu, 16 Jul 2015 23:42:19 -0700
-Message-ID: <20150717064219.GA128212@vmdeb7>
-References: <1437089564-4242-1-git-send-email-coproscefalo@gmail.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH] thermal: consistently use int for temperatures
+Date: Fri, 17 Jul 2015 12:14:36 +0100
+Message-ID: <9hhd1zrc9yb.fsf@e105922-lin.cambridge.arm.com>
+References: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437089564-4242-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jonathan Buzzard <jonathan@buzzard.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
+ (Sascha Hauer's message of "Mon, 6 Jul 2015 09:19:49 +0200")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Lukasz Majewski <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, lm-sensors@lm-sensors.org, Stephen Warren <swarren@wwwdotorg.org>, Peter Feuerer <peter@piie.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, linux-acpi@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, linux-omap@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean Delvare <jdelvare@suse.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jul 16, 2015 at 05:32:44PM -0600, Azael Avalos wrote:
-> There were previous attempts to "merge" the toshiba SMM module to the
-> toshiba_acpi one, they were trying to imitate what the old toshiba
-> module does, however, some models (TOS1900 devices) come with a
-> "crippled" implementation and do not provide all the "features" a
-> "genuine" Toshiba BIOS does.
-> 
-> This patch adds a new device called toshiba_acpi, which aim is to
-> enable userspace to access the SMM on Toshiba laptops via ACPI calls.
-> 
-> Creating a new convenience _IOWR command to access the SCI functions
-> by opening/closing the SCI internally to avoid buggy BIOS, while at
-> the same time providing backwards compatibility.
-> 
-> Older programs who wish to access the SMM on newer models can do it
-> without much code change, as the toshiba.h header was modified to
-> reflect these changes as well as adds all the toshiba_acpi paths
-> and commands.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-
-This and the other 2 are queued to for-review. They will remain there for a few
-days to give others a chance to review. After that, I will provide a thorough
-review and move them into for-next for 4.3
-
-They do pass all my preliminary tests, checkpatch, build, and ninja-check.
-
-As this is the first series that I've received since enabling a lot of new
-automation, I wanted to say thanks for clean series that is ready review. Nice.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+SGkgU2FzY2hhLAoKU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPiB3cml0ZXM6
+Cgo+IFRoZSB0aGVybWFsIGNvZGUgdXNlcyBpbnQsIGxvbmcgYW5kIHVuc2lnbmVkIGxvbmcgZm9y
+IHRlbXBlcmF0dXJlcwo+IGluIGRpZmZlcmVudCBwbGFjZXMuCj4KPiBVc2luZyBhbiB1bnNpZ25l
+ZCB0eXBlIGxpbWl0cyB0aGUgdGhlcm1hbCBmcmFtZXdvcmsgdG8gcG9zaXRpdmUKPiB0ZW1wZXJh
+dHVyZXMgd2l0aG91dCBuZWVkLiBBbHNvIHNldmVyYWwgZHJpdmVycyBjdXJyZW50bHkgd2lsbCBy
+ZXBvcnQKPiB0ZW1wZXJhdHVyZXMgbmVhciBVSU5UX01BWCBmb3IgdGVtcGVyYXR1cmVzIGJlbG93
+IDDCsEMuIFRoaXMgd2lsbCBwcm9iYWJseQo+IGltbWVkaWF0ZWx5IHNodXQgdGhlIG1hY2hpbmUg
+ZG93biBkdWUgdG8gb3ZlcnRlbXBlcmF0dXJlIGlmIHN0YXJ0ZWQgYmVsb3cKPiAwwrBDLgo+Cj4g
+J2xvbmcnIGlzIDY0Yml0IG9uIHNldmVyYWwgYXJjaGl0ZWN0dXJlcy4gVGhpcyBpcyBub3QgbmVl
+ZGVkIHNpbmNlIElOVF9NQVggwrBtQwo+IGlzIGFib3ZlIHRoZSBtZWx0aW5nIHBvaW50IG9mIGFs
+bCBrbm93biBtYXRlcmlhbHMuCj4KPiBDb25zaXN0ZW50bHkgdXNlIGEgcGxhaW4gJ2ludCcgZm9y
+IHRlbXBlcmF0dXJlcyB0aHJvdWdob3V0IHRoZSB0aGVybWFsIGNvZGUgYW5kCj4gdGhlIGRyaXZl
+cnMuIFRoaXMgb25seSBjaGFuZ2VzIHRoZSBwbGFjZXMgaW4gdGhlIGRyaXZlcnMgd2hlcmUgdGhl
+IHRlbXBlcmF0dXJlCj4gaXMgcGFzc2VkIGFyb3VuZCBhcyBwb2ludGVyLCB3aGVuIGRyaXZlcnMg
+aW50ZXJuYWxseSB1c2UgYW5vdGhlciB0eXBlIHRoaXMgaXMKPiBub3QgY2hhbmdlZC4KPgo+IFNp
+Z25lZC1vZmYtYnk6IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4KClRoYW5r
+cyBmb3IgbW92aW5nIG92ZXIgdGhlIHRoZXJtYWwgc3ViLXN5c3RlbSBpbiBMaW51eCB0byBjb25z
+aXN0ZW50bHkKdXNlIGEgc2luZ2xlIHR5cGUuCgpJbiB5b3VyIHBhdGNoLCB5b3UgbWlzc2VkIG1p
+Z3JhdGluZyBvdmVyIHBvd2VyX2FsbG9jYXRvciBnb3Zlcm5vciBhbmQKaXQncyBhc3NvY2lhdGVk
+IHRyYWNlIGV2ZW50cy4gSXQgZ290IG1lcmdlZCBmb3IgdjQuMi4KCkNvdWxkIHlvdSBpbmNvcnBv
+cmF0ZSBzb21ldGhpbmcgbGlrZSBiZWxvdyBpbiB5b3VyIG5leHQgdmVyc2lvbj8KClRoYW5rcywK
+UHVuaXQKClsuLi5dCgotLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tClN1
+YmplY3Q6IFtQQVRDSF0gVXNlIGludCBmb3IgdGVtcGVyYXR1cmUgaW4gcG93ZXJfYWxsb2NhdG9y
+IGdvdmVybm9yCgotLS0KIGRyaXZlcnMvdGhlcm1hbC9wb3dlcl9hbGxvY2F0b3IuYyAgICAgICAg
+ICAgICAgfCAxMCArKysrLS0tLS0tCiBpbmNsdWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2Vy
+X2FsbG9jYXRvci5oIHwgIDYgKysrLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygr
+KSwgOSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvcG93ZXJfYWxs
+b2NhdG9yLmMgYi9kcml2ZXJzL3RoZXJtYWwvcG93ZXJfYWxsb2NhdG9yLmMKaW5kZXggNDY3MjI1
+MC4uMWJiN2Q3ZiAxMDA2NDQKLS0tIGEvZHJpdmVycy90aGVybWFsL3Bvd2VyX2FsbG9jYXRvci5j
+CisrKyBiL2RyaXZlcnMvdGhlcm1hbC9wb3dlcl9hbGxvY2F0b3IuYwpAQCAtOTIsOCArOTIsNyBA
+QCBzdHJ1Y3QgcG93ZXJfYWxsb2NhdG9yX3BhcmFtcyB7CiAgKiBSZXR1cm46IFRoZSBwb3dlciBi
+dWRnZXQgZm9yIHRoZSBuZXh0IHBlcmlvZC4KICAqLwogc3RhdGljIHUzMiBwaWRfY29udHJvbGxl
+cihzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCi0JCQkgIHVuc2lnbmVkIGxvbmcgY3Vy
+cmVudF90ZW1wLAotCQkJICB1bnNpZ25lZCBsb25nIGNvbnRyb2xfdGVtcCwKKwkJCSAgaW50IGN1
+cnJlbnRfdGVtcCwgaW50IGNvbnRyb2xfdGVtcCwKIAkJCSAgdTMyIG1heF9hbGxvY2F0YWJsZV9w
+b3dlcikKIHsKIAlzNjQgcCwgaSwgZCwgcG93ZXJfcmFuZ2U7CkBAIC0yMjMsOCArMjIyLDcgQEAg
+c3RhdGljIHZvaWQgZGl2dnlfdXBfcG93ZXIodTMyICpyZXFfcG93ZXIsIHUzMiAqbWF4X3Bvd2Vy
+LCBpbnQgbnVtX2FjdG9ycywKIH0KIAogc3RhdGljIGludCBhbGxvY2F0ZV9wb3dlcihzdHJ1Y3Qg
+dGhlcm1hbF96b25lX2RldmljZSAqdHosCi0JCQkgIHVuc2lnbmVkIGxvbmcgY3VycmVudF90ZW1w
+LAotCQkJICB1bnNpZ25lZCBsb25nIGNvbnRyb2xfdGVtcCkKKwkJCSAgaW50IGN1cnJlbnRfdGVt
+cCwgaW50IGNvbnRyb2xfdGVtcCkKIHsKIAlzdHJ1Y3QgdGhlcm1hbF9pbnN0YW5jZSAqaW5zdGFu
+Y2U7CiAJc3RydWN0IHBvd2VyX2FsbG9jYXRvcl9wYXJhbXMgKnBhcmFtcyA9IHR6LT5nb3Zlcm5v
+cl9kYXRhOwpAQCAtNDExLDcgKzQwOSw3IEBAIHN0YXRpYyBpbnQgcG93ZXJfYWxsb2NhdG9yX2Jp
+bmQoc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6KQogewogCWludCByZXQ7CiAJc3RydWN0
+IHBvd2VyX2FsbG9jYXRvcl9wYXJhbXMgKnBhcmFtczsKLQl1bnNpZ25lZCBsb25nIHN3aXRjaF9v
+bl90ZW1wLCBjb250cm9sX3RlbXA7CisJaW50IHN3aXRjaF9vbl90ZW1wLCBjb250cm9sX3RlbXA7
+CiAJdTMyIHRlbXBlcmF0dXJlX3RocmVzaG9sZDsKIAogCWlmICghdHotPnR6cCB8fCAhdHotPnR6
+cC0+c3VzdGFpbmFibGVfcG93ZXIpIHsKQEAgLTQ3Niw3ICs0NzQsNyBAQCBzdGF0aWMgdm9pZCBw
+b3dlcl9hbGxvY2F0b3JfdW5iaW5kKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0eikKIHN0
+YXRpYyBpbnQgcG93ZXJfYWxsb2NhdG9yX3Rocm90dGxlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2
+aWNlICp0eiwgaW50IHRyaXApCiB7CiAJaW50IHJldDsKLQl1bnNpZ25lZCBsb25nIHN3aXRjaF9v
+bl90ZW1wLCBjb250cm9sX3RlbXAsIGN1cnJlbnRfdGVtcDsKKwlpbnQgc3dpdGNoX29uX3RlbXAs
+IGNvbnRyb2xfdGVtcCwgY3VycmVudF90ZW1wOwogCXN0cnVjdCBwb3dlcl9hbGxvY2F0b3JfcGFy
+YW1zICpwYXJhbXMgPSB0ei0+Z292ZXJub3JfZGF0YTsKIAogCS8qCmRpZmYgLS1naXQgYS9pbmNs
+dWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2VyX2FsbG9jYXRvci5oIGIvaW5jbHVkZS90cmFj
+ZS9ldmVudHMvdGhlcm1hbF9wb3dlcl9hbGxvY2F0b3IuaAppbmRleCAxMmUxMzIxLi41YWZhZThm
+IDEwMDY0NAotLS0gYS9pbmNsdWRlL3RyYWNlL2V2ZW50cy90aGVybWFsX3Bvd2VyX2FsbG9jYXRv
+ci5oCisrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL3RoZXJtYWxfcG93ZXJfYWxsb2NhdG9yLmgK
+QEAgLTExLDcgKzExLDcgQEAgVFJBQ0VfRVZFTlQodGhlcm1hbF9wb3dlcl9hbGxvY2F0b3IsCiAJ
+CSB1MzIgdG90YWxfcmVxX3Bvd2VyLCB1MzIgKmdyYW50ZWRfcG93ZXIsCiAJCSB1MzIgdG90YWxf
+Z3JhbnRlZF9wb3dlciwgc2l6ZV90IG51bV9hY3RvcnMsCiAJCSB1MzIgcG93ZXJfcmFuZ2UsIHUz
+MiBtYXhfYWxsb2NhdGFibGVfcG93ZXIsCi0JCSB1bnNpZ25lZCBsb25nIGN1cnJlbnRfdGVtcCwg
+czMyIGRlbHRhX3RlbXApLAorCQkgaW50IGN1cnJlbnRfdGVtcCwgczMyIGRlbHRhX3RlbXApLAog
+CVRQX0FSR1ModHosIHJlcV9wb3dlciwgdG90YWxfcmVxX3Bvd2VyLCBncmFudGVkX3Bvd2VyLAog
+CQl0b3RhbF9ncmFudGVkX3Bvd2VyLCBudW1fYWN0b3JzLCBwb3dlcl9yYW5nZSwKIAkJbWF4X2Fs
+bG9jYXRhYmxlX3Bvd2VyLCBjdXJyZW50X3RlbXAsIGRlbHRhX3RlbXApLApAQCAtMjQsNyArMjQs
+NyBAQCBUUkFDRV9FVkVOVCh0aGVybWFsX3Bvd2VyX2FsbG9jYXRvciwKIAkJX19maWVsZChzaXpl
+X3QsICAgICAgICBudW1fYWN0b3JzICAgICAgICAgICAgICAgKQogCQlfX2ZpZWxkKHUzMiwgICAg
+ICAgICAgIHBvd2VyX3JhbmdlICAgICAgICAgICAgICApCiAJCV9fZmllbGQodTMyLCAgICAgICAg
+ICAgbWF4X2FsbG9jYXRhYmxlX3Bvd2VyICAgICkKLQkJX19maWVsZCh1bnNpZ25lZCBsb25nLCBj
+dXJyZW50X3RlbXAgICAgICAgICAgICAgKQorCQlfX2ZpZWxkKGludCwgICAgICAgICAgIGN1cnJl
+bnRfdGVtcCAgICAgICAgICAgICApCiAJCV9fZmllbGQoczMyLCAgICAgICAgICAgZGVsdGFfdGVt
+cCAgICAgICAgICAgICAgICkKIAkpLAogCVRQX2Zhc3RfYXNzaWduKApAQCAtNDIsNyArNDIsNyBA
+QCBUUkFDRV9FVkVOVCh0aGVybWFsX3Bvd2VyX2FsbG9jYXRvciwKIAkJX19lbnRyeS0+ZGVsdGFf
+dGVtcCA9IGRlbHRhX3RlbXA7CiAJKSwKIAotCVRQX3ByaW50aygidGhlcm1hbF96b25lX2lkPSVk
+IHJlcV9wb3dlcj17JXN9IHRvdGFsX3JlcV9wb3dlcj0ldSBncmFudGVkX3Bvd2VyPXslc30gdG90
+YWxfZ3JhbnRlZF9wb3dlcj0ldSBwb3dlcl9yYW5nZT0ldSBtYXhfYWxsb2NhdGFibGVfcG93ZXI9
+JXUgY3VycmVudF90ZW1wZXJhdHVyZT0lbHUgZGVsdGFfdGVtcGVyYXR1cmU9JWQiLAorCVRQX3By
+aW50aygidGhlcm1hbF96b25lX2lkPSVkIHJlcV9wb3dlcj17JXN9IHRvdGFsX3JlcV9wb3dlcj0l
+dSBncmFudGVkX3Bvd2VyPXslc30gdG90YWxfZ3JhbnRlZF9wb3dlcj0ldSBwb3dlcl9yYW5nZT0l
+dSBtYXhfYWxsb2NhdGFibGVfcG93ZXI9JXUgY3VycmVudF90ZW1wZXJhdHVyZT0lZCBkZWx0YV90
+ZW1wZXJhdHVyZT0lZCIsCiAJCV9fZW50cnktPnR6X2lkLAogCQlfX3ByaW50X2FycmF5KF9fZ2V0
+X2R5bmFtaWNfYXJyYXkocmVxX3Bvd2VyKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IF9fZW50cnktPm51bV9hY3RvcnMsIDQpLAotLSAKMi4xLjIKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
