@@ -1,36 +1,52 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba_acpi: Adapt /proc/acpi/toshiba/keys to TOS1900
- devices
-Date: Fri, 17 Jul 2015 14:46:57 -0700
-Message-ID: <20150717214657.GA99388@vmdeb7>
-References: <1437168086-4197-1-git-send-email-coproscefalo@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Krzyszkowiak <dos@dosowisko.net>
+Subject: [PATCH] ideapad-laptop: add alternative representation for Yoga 2 to DMI table
+Date: Sun, 19 Jul 2015 01:10:21 +0200
+Message-ID: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:50395 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751964AbbGQVq6 (ORCPT
+Received: from mail-la0-f41.google.com ([209.85.215.41]:34927 "EHLO
+	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751917AbbGRXLA (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 17 Jul 2015 17:46:58 -0400
-Content-Disposition: inline
-In-Reply-To: <1437168086-4197-1-git-send-email-coproscefalo@gmail.com>
+	Sat, 18 Jul 2015 19:11:00 -0400
+Received: by lahh5 with SMTP id h5so78254692lah.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2015 16:10:59 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org, Sebastian Krzyszkowiak <dos@dosowisko.net>
 
-On Fri, Jul 17, 2015 at 03:21:26PM -0600, Azael Avalos wrote:
-> Since the introduction of TOS1900 devices support to the driver, the
-> "keys" entry under the proc directory was broken, given that it only
-> handled TOS620X devices accordingly.
-> 
-> This patch adapts the code to show the hotkey values of TOS1900
-> devices too, and in case some programs are still using that interface,
-> hotkeys reporting should now work on these devices.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+There is at least one (mine) Yoga 2 Pro in existence that has incorrect
+product version stored in DMI (reading as "INVALID"), causing it to not be
+recognized as Yoga 2 by ideapad-laptop module, which in turn causes
+non-existent hardware rfkills to be always reported as blocked.
 
-Thanks, queued to for-review.
+This change adds a second check by board name, which is "Yoga2".
+Looks like it also happens to be "INVALID" on some other Yoga 2 machines
+where product version is correct instead, so the original check is left
+intact to catch both cases.
+
+Signed-off-by: Sebastian Krzyszkowiak <dos@dosowisko.net>
+---
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 76b5738..4241262 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -853,6 +853,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		},
+ 	},
+ 	{
++		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
++		},
++	},
++	{
+ 		.ident = "Lenovo Yoga 3 Pro 1370",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.4.6
