@@ -1,124 +1,63 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Avoid registering input device on WMI event laptops
-Date: Mon, 20 Jul 2015 16:49:51 -0600
-Message-ID: <CAGdLNWE2=jeafsxnNr4uxAFrV702jdH_h_G1vM4ciRS7WPf=6Q@mail.gmail.com>
-References: <1437089937-4383-1-git-send-email-coproscefalo@gmail.com>
-	<20150720215503.GC34611@vmdeb7>
+From: DIAMOND SWISS LOAN COMPANY <rocio.suarez@dpss.gob.ec>
+Subject: =?utf-8?Q?paskolos_pasi=C5=ABlymas?=
+Date: Mon, 20 Jul 2015 18:28:09 -0500 (ECT)
+Message-ID: <578322082.3968683.1437434889087.JavaMail.root__41950.138731818$1437441241$gmane$org@dpss.gob.ec>
+Reply-To: "diamondswissloans2@gmail.com" <diamondswissloans2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f176.google.com ([209.85.212.176]:38529 "EHLO
-	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757065AbbGTWtx (ORCPT
+Received: from server.dpss.gob.ec ([190.152.151.93]:38623 "EHLO
+	mail.dpss.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757422AbbGUBN1 convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 20 Jul 2015 18:49:53 -0400
-In-Reply-To: <20150720215503.GC34611@vmdeb7>
+	Mon, 20 Jul 2015 21:13:27 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-
-Hi Darren,
-
-2015-07-20 15:55 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Thu, Jul 16, 2015 at 05:38:57PM -0600, Azael Avalos wrote:
->> Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
->> buggy INFO implementations") denied loading on laptops with a WMI Event
->> GUID given that such laptops manage the hotkeys via that interface,
->> however, such laptops have a working Toshiba Configuration Interface
->> (TCI), and thus, such commit denied several supported features.
->>
->> This patch avoids registering the input device and ignores all hotkey
->> events on laptops with such WMI Event GUI, making the supported
->
-> GUID
->
->> features found in those laptops to work.
->>
->> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> ---
->>  drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
->>  1 file changed, 13 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 15d8f0d..a3c6ea2 100644
->> --- a/drivers/platform/x86/toshiba_acpi.c
->> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
->>       u32 hci_result;
->>       int error;
->>
->> +     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
->> +             pr_info("WMI event detected, hotkeys won't be monitored\n");
->
-> It's best practice to avoid contractions in any form of technical writing. (See
-> what I did there? ;-)
->
-> While this is good for comments, I feel it's more important for kernel messages.
->
->> +             return 0;
->> +     }
->> +
->>       error = toshiba_acpi_enable_hotkeys(dev);
->>       if (error)
->>               return error;
->> @@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
->>
->>       switch (event) {
->>       case 0x80: /* Hotkeys and some system events */
->> +             /*
->> +              * Machines with this WMI guid aren't supported due to bugs in
->> +              * their AML.
->> +              *
->> +              * Return silently to avoid triggering a netlink event.
->> +              */
->> +             if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
->> +                     return;
->>               toshiba_acpi_process_hotkeys(dev);
->>               break;
->>       case 0x81: /* Dock events */
->> @@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
->>  {
->>       int ret;
->>
->> -     /*
->> -      * Machines with this WMI guid aren't supported due to bugs in
->
-> Good idea to capitalize acronyms like GUID.
->
->> -      * their AML. This check relies on wmi initializing before
->> -      * toshiba_acpi to guarantee guids have been identified.
->> -      */
->> -     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
->> -             return -ENODEV;
->> -
->>       toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
->>       if (!toshiba_proc_dir) {
->>               pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
->> --
->> 2.4.3
->>
->>
->
-> Functional content looks good. No need to resend, just please keep the above in
-> mind for the future. I'll make the minor updates and merge all three after your
-> response to the first regarding user:kernel interface - unless of course you
-> choose to resend the 3 at the same time, and I'll pick those up.
-
-OK, will keep those things in mind, will wait for comments on first patch and
-send a v2.
-
->
-> Thanks Azael,
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
 
 
-Cheers
-Azael
 
 
--- 
--- El mundo apesta y vosotros apestais tambien --
+Gera diena,
+
+ Tai DIAMOND =C5=A0VEICARIJOS paskola bendrovei Paskolos pasi=C5=ABlyma=
+s.
+
+   DIAMOND =C5=A0VEICARIJOS paskola bendrovei si=C5=ABlo lanks=C4=8Dias=
+ ir prieinamas paskolas bet kokiam tikslui, siekiant pad=C4=97ti jums p=
+asiekti savo tikslus. mes paskola ma=C5=BEomis pal=C5=ABkan=C5=B3 norma=
+ 1,5%. =C5=A0tai keletas svarbi=C5=B3 bruo=C5=BEai asmenin=C4=97s pasko=
+los si=C5=ABlo DIAMOND =C5=A0VEICARIJOS paskola bendrovei. =C5=A0tai Pa=
+skol=C5=B3 Veiksniai Mes dirbame su pirmaujan=C4=8Di=C5=B3 JK tarpinink=
+us, kurie turi prieig=C4=85 prie geriausi=C5=B3 skolintoj=C5=B3 ir suge=
+ba rasti geriausi=C4=85 finansin=C4=AF sprendim=C4=85 u=C5=BE prieinam=C4=
+=85 price.Please, jei jus domina, maloniai susisiekite su mumis per =C5=
+=A1=C4=AF El.pa=C5=A1tas: diamon_dswissloans@hotmail.com
+
+
+Po reakcijos, gausite paskol=C5=B3 u=C5=BEpildyti parai=C5=A1k=C4=85. N=
+r socialinio draudimo ir ne kredito patikrinimas, 100% garantija.
+
+Tai bus m=C5=ABs=C5=B3 garb=C4=97, jei j=C5=ABs leisti mums b=C5=ABti J=
+=C5=ABs=C5=B3 paslaugoms.
+
+
+Informacij=C4=85, reikaling=C4=85
+
+J=C5=ABs=C5=B3 pavadinimai:
+Adresas: ...........
+Telefonas: ...........
+Reikalinga suma: ........
+Trukm=C4=97: ...............
+Pareigos: ...........
+M=C4=97nesio pajamos Lygis: ........
+Lytis: ...............
+Gimimo data: ........
+Valstyb=C4=97: ..................
+=C5=A0alis: ..........
+Paskirtis: .........
+
+Susitikimas j=C5=ABs=C5=B3 finansinius poreikius yra m=C5=ABs=C5=B3 pas=
+idid=C5=BEiavimas.
+
+Mr.Diamond Petersas
