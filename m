@@ -1,52 +1,137 @@
-From: Sebastian Krzyszkowiak <dos@dosowisko.net>
-Subject: [PATCH] ideapad-laptop: add alternative representation for Yoga 2 to DMI table
-Date: Sun, 19 Jul 2015 01:10:21 +0200
-Message-ID: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f41.google.com ([209.85.215.41]:34927 "EHLO
-	mail-la0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751917AbbGRXLA (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 18 Jul 2015 19:11:00 -0400
-Received: by lahh5 with SMTP id h5so78254692lah.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2015 16:10:59 -0700 (PDT)
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, Sebastian Krzyszkowiak <dos@dosowisko.net>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: BUG? Duplicate key code 0xe045 in dell-wmi.c
+Date: Mon, 20 Jul 2015 16:51:00 +0200
+Message-ID: <20150720145100.GI25910@pali>
+References: <201507041834.03944@pali>
+ <559C1CB1.4040509@dell.com>
+ <20150707211848.GB20901@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150707211848.GB20901@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Len Brown <len.brown@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+List-Id: platform-driver-x86.vger.kernel.org
 
-There is at least one (mine) Yoga 2 Pro in existence that has incorrect
-product version stored in DMI (reading as "INVALID"), causing it to not be
-recognized as Yoga 2 by ideapad-laptop module, which in turn causes
-non-existent hardware rfkills to be always reported as blocked.
+On Tuesday 07 July 2015 23:18:48 Pali Roh=C3=A1r wrote:
+> On Tuesday 07 July 2015 13:38:41 Mario Limonciello wrote:
+> >=20
+> >=20
+> > On 07/04/2015 11:34 AM, Pali Roh=C3=A1r wrote:
+> > > Hello,
+> > >
+> > > I'm looking at dell-wmi.c driver and its history in git and I fou=
+nd=20
+> > > problem with handling WMI key code 0xe045. In current dell-wmi.c =
+code is
+> > >
+> > > {KE_KEY, 0xe045, KEY_PROG1},
+> > > {KE_IGNORE, 0xe045, KEY_NUMLOCK},
+> > >
+> > > I bet this is some copy-paste error as one code can be translated=
+ only=20
+> > > to one input key event.
+> > >
+> > > In git history I found that above change was added by commit:
+> > >
+> > > http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D5cab0098171712a9fd51399b06181c8dfdebe9c9
+> > >
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > > commit 5cab0098171712a9fd51399b06181c8dfdebe9c9
+> > > Author: Mario Limonciello <mario_limonciello@dell.com>
+> > > Date:   Wed Jun 10 19:40:47 2009 +0000
+> > >
+> > >     dell-wmi: add additional keyboard events
+> > >    =20
+> > >     Upcoming Dell hardware will send more keyboard events via WMI=
+=2E  Add
+> > >     support for them.
+> > >    =20
+> > >     Signed-off-by: Mario Limonciello <mario_limonciello@dell.com>
+> > >     Signed-off-by: Matthew Garrett <mjg@redhat.com>
+> > >     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> > >     Signed-off-by: Len Brown <len.brown@intel.com>
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > >
+> > > Sending email to all signers of this commit. Problematic code is =
+still=20
+> > > in upstream kernel, so it needs to be fixed.
+> > >
+> > > Mario Limonciello: Do you know if code 0xe045 is some PROG1 or NU=
+MLOCK?
+> > >
+> > Hi Pali,
+> >=20
+> > Yes this looks like a mistake and that the KEY_PROG1 item should ha=
+ve
+> > been removed in that patch.  It should be a notification (KEY_IGNOR=
+E)
+> > for numlock.
+> >=20
+> > Thanks,
+>=20
+> Hi, I looked into git history of dell-wmi more deeply... into first
+> commit of dell-wmi.c source code. It is this one from year 2009:
+>=20
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commi=
+t/?id=3D0b3f6109f0c9ff926b5ffc80dc1cebb24f192b35
+>=20
+> Here Matthew Garrett says:
+>=20
+> ... send a generic input event when a button with a picture of a batt=
+ery
+> on it is pressed ...
+>=20
+> and adds code:
+>=20
+> +static struct key_entry dell_wmi_keymap[] =3D {
+> +	{KE_KEY, 0xe045, KEY_PROG1},
+> +	{KE_END, 0}
+> +};
+>=20
+> So basically when "picture of a battery" is pressed WMI send event
+> 0xe045 which is translated to KEY_PROG1.
+>=20
+> Matthew Garrett is original author of that code and I believe that on
+> some his machine 0xe045 code from DELL WMI really could be sent when
+> battery button is pressed.
+>=20
+> Mario, if you as Dell authority says that 0xe045 is sent when numlock=
+ is
+> pressed, it means either code 0xe045 is ambiguous :-( and has differe=
+nt
+> meaning for different machines or there is error in (your) documentat=
+ion
+> or bios... or Matthew cannot differ between picture of battery and
+> picture of numlock on his dell machine :-)
+>=20
+> Matthew: If you still reading this email thread, do you know for whic=
+h
+> Dell machine did you write this dell-wmi.c driver originally?
+>=20
+> Mario: Do you know more about this problem?
+>=20
+>=20
+> From function sparse_keymap_setup() called by dell-wmi.c this structu=
+re:
+>=20
+>   {KE_KEY, 0xe045, KEY_PROG1},
+>   {KE_IGNORE, 0xe045, KEY_NUMLOCK},
+>=20
+> is decoded that 0xe045 event is *not* ignored and reports KEY_PROG1 k=
+ey.
+>=20
 
-This change adds a second check by board name, which is "Yoga2".
-Looks like it also happens to be "INVALID" on some other Yoga 2 machines
-where product version is correct instead, so the original check is left
-intact to catch both cases.
+Mario & Matthew: ping
 
-Signed-off-by: Sebastian Krzyszkowiak <dos@dosowisko.net>
----
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 76b5738..4241262 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -853,6 +853,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo Yoga 3 Pro 1370",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--- 
-2.4.6
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
