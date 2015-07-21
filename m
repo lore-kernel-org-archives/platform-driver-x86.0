@@ -1,150 +1,74 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: Incorrect key code parsing in dell-wmi.c since 5ea2559
-Date: Tue, 21 Jul 2015 09:31:18 +0200
-Message-ID: <20150721073118.GC27290@pali>
-References: <201507041906.48648@pali>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] thermal: consistently use int for temperatures
+Date: Tue, 21 Jul 2015 09:31:11 +0200
+Message-ID: <20150721073111.GH5161@pengutronix.de>
+References: <1436167189-29835-1-git-send-email-s.hauer@pengutronix.de>
+ <9hhd1zrc9yb.fsf@e105922-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174]:38286 "EHLO
-	mail-wi0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750771AbbGUHbW (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 21 Jul 2015 03:31:22 -0400
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201507041906.48648@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Islam Amer <pharon@gmail.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario_limonciello@dell.com>
+In-Reply-To: <9hhd1zrc9yb.fsf@e105922-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Punit Agrawal <punit.agrawal@arm.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.de>, Peter Feuerer <peter@piie.net>, Heiko Stuebner <heiko@sntech.de>, Lukasz Majewski <l.majewski@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Darren Hart <dvhart@infradead.org>, lm-sensors@lm-sensors.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Saturday 04 July 2015 19:06:48 Pali Roh=C3=A1r wrote:
-> Hello,
+Hi Punit,
+
+On Fri, Jul 17, 2015 at 12:14:36PM +0100, Punit Agrawal wrote:
+> Hi Sascha,
 >=20
-> I found another problem in dell-wmi.c code which is still partially i=
-n
-> mainline kernel since commit 5ea2559726b786283236835dc2905c23b36ac91c=
-:
+> Sascha Hauer <s.hauer@pengutronix.de> writes:
 >=20
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D5ea2559726b786283236835dc2905c23b36ac91c
+> > The thermal code uses int, long and unsigned long for temperatures
+> > in different places.
+> >
+> > Using an unsigned type limits the thermal framework to positive
+> > temperatures without need. Also several drivers currently will repo=
+rt
+> > temperatures near UINT_MAX for temperatures below 0=B0C. This will =
+probably
+> > immediately shut the machine down due to overtemperature if started=
+ below
+> > 0=B0C.
+> >
+> > 'long' is 64bit on several architectures. This is not needed since =
+INT_MAX =B0mC
+> > is above the melting point of all known materials.
+> >
+> > Consistently use a plain 'int' for temperatures throughout the ther=
+mal code and
+> > the drivers. This only changes the places in the drivers where the =
+temperature
+> > is passed around as pointer, when drivers internally use another ty=
+pe this is
+> > not changed.
+> >
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 >=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> commit 5ea2559726b786283236835dc2905c23b36ac91c
-> Author: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
-> Date:   Mon Nov 2 12:00:42 2009 -0500
->=20
->     dell-wmi: Add support for new Dell systems
->    =20
->     Newer Dell systems support HotKey features differently from legac=
+> Thanks for moving over the thermal sub-system in Linux to consistentl=
 y
->     systems.  A new vendor specifc HotKey SMBIOS table (Type 0xB2) is
->     defined. This table contains a mapping between scancode and the
->     corresponding predefined keyfunction ( i.e. keycode).. Also, a ne=
-w
->     ACPI-WMI event type (called KeyIDList) with a value of 0x0010 is
->     defined. Any BIOS containing 0xB2 table will send hotkey notifica=
-tions
->     using KeyIDList event.
->    =20
->     This is Rezwanul's patch, updated to ensure that brightness event=
-s are
->     not sent if the backlight is controlled via ACPI and with the def=
-ault
->     keycode for the display output switching altered to match desktop
->     expectations.
->    =20
->     Signed-off-by: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
->     Signed-off-by: Matthew Garrett <mjg@redhat.com>
->     Signed-off-by: Len Brown <len.brown@intel.com>
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> use a single type.
 >=20
-> Before this commit WMI event buffer was parsed as:
+> In your patch, you missed migrating over power_allocator governor and
+> it's associated trace events. It got merged for v4.2.
 >=20
->   int *buffer =3D (int *)obj->buffer.pointer;
->   key =3D dell_wmi_get_entry_by_scancode(buffer[1] & 0xFFFF);
->=20
-> So basically 4th-7th bytes are parsed.
->=20
-> After this commit WMI event buffer is parsed as:
->=20
->   u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
->   reported_key =3D (int)buffer_entry[1] & 0xffff;
->   key =3D dell_wmi_get_entry_by_scancode(reported_key);
->=20
-> Which means that 2nd and 3rd bytes are parsed.
->=20
-> Apparently this commit changed what kernel parse as keycode. And I be=
-t
-> this is some copy-paste error and not correct code. Variable buffer w=
-as
-> changed from (int*) to (u16*) and which change could be "hidden" at t=
-ime
-> of code review.
->=20
-> Next there is commit which somehow is trying to fix user problems:
->=20
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd5164dbf1f651d1e955b158fb70a9c844cc91cd1
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> commit d5164dbf1f651d1e955b158fb70a9c844cc91cd1
-> Author: Islam Amer <pharon@gmail.com>
-> Date:   Thu Jun 24 13:39:47 2010 -0400
->=20
->     dell-wmi: Add support for eject key on Dell Studio 1555
->    =20
->     Fixes pressing the eject key on Dell Studio 1555 does not work an=
-d produces
->     message :
->    =20
->     dell-wmi: Unknown key 0 pressed
->    =20
->     Signed-off-by: Islam Amer <pharon@gmail.com>
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> It changes parsing WMI event buffer to:
->=20
->   u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
->   if (buffer_entry[1] =3D=3D 0x0)
->     reported_key =3D (int)buffer_entry[2] & 0xffff;
->   else
->     reported_key =3D (int)buffer_entry[1] & 0xffff;
->   key =3D dell_wmi_get_entry_by_scancode(reported_key);
->=20
-> My idea is that Islam Amer tried to fix problem introduced in commit
-> 5ea2559726b786283236835dc2905c23b36ac91c.
->=20
-> According to some available very-very old Dell ACPI-WMI documentation=
- at
->=20
-> http://vpsservice1.sampo.com.tw/sampo_update/document/jimmy/ACPI-WMI%=
-20.pdf
->=20
-> and also from information from commit message 5ea2559 format of WMI i=
-s
-> (u16*)[length, type, data, ...].
->=20
-> Because type for hotkey is 0x0000 then it expected that kernel report=
-ed
-> always key 0x0000...
->=20
-> So I would propose to drop parsing "buffer_entry[1]" as key code and
-> rewrite dell_wmi_notify function to always process WMI buffer as
-> [length, type, data...].
->=20
-> What do you think about it? It also simplify notify code as there is =
-one
-> branch for dell_new_hk_type and one for old parsing (with that entry[=
-1]).
->=20
+> Could you incorporate something like below in your next version?
 
-BUMP!
+It seems I have changed drivers/thermal/power_allocator.c but missed
+include/trace/events/thermal_power_allocator.h. Please check out the v2
+patch I just sent.
+
+Sascha
 
 --=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
