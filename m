@@ -1,87 +1,124 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: Dell Vostro V131 hotkeys revisited
-Date: Wed, 22 Jul 2015 09:35:13 +0200
-Message-ID: <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
-References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
- <20150701105544.GD17577@pali>
- <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
- <201507022258.32104@pali>
- <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
- <20150703074813.GD1841@pali>
- <559C1C17.3060009@dell.com>
- <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] toshiba_acpi: Avoid registering input device on WMI
+ event laptops
+Date: Wed, 22 Jul 2015 13:54:59 -0700
+Message-ID: <20150722205459.GA102536@vmdeb7>
+References: <1437089937-4383-1-git-send-email-coproscefalo@gmail.com>
+ <20150720215503.GC34611@vmdeb7>
+ <CAGdLNWE2=jeafsxnNr4uxAFrV702jdH_h_G1vM4ciRS7WPf=6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-la0-f53.google.com ([209.85.215.53]:36176 "EHLO
-	mail-la0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755982AbbGVHfS (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:45292 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752024AbbGVUy6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jul 2015 03:35:18 -0400
-Received: by lagw2 with SMTP id w2so132602830lag.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2015 00:35:15 -0700 (PDT)
+	Wed, 22 Jul 2015 16:54:58 -0400
 Content-Disposition: inline
-In-Reply-To: <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
+In-Reply-To: <CAGdLNWE2=jeafsxnNr4uxAFrV702jdH_h_G1vM4ciRS7WPf=6Q@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-> > Now as for actually simulating a keypress, it can be programmed usi=
-ng
-> > the following calling interface (on receiving the e025 WMI notifica=
-tion).
-> > To actually simulate the keypress:
-> > Arg1=3D0x41
-> > Arg2 Byte [1:0]: Scan code to simulate
-> > Byte [3:2]
-> > * Bit0 - L Alt
-> > * Bit1 - R Alt
-> > * Bit2 - L Ctrl
-> > * Bit3 - R Ctrl
-> > * Bit4 - L Shift
-> > * Bit5 - R shift
-> > * Bit6 - L Win
-> > * Bit7 - R Win
-> > * Bit8 - Fn key
->=20
-> And is it possible to disable keypress simulation on systems that hav=
-e
-> that capability?
->=20
-> My understanding is that all hardware equipped with an Instant Launch
-> button is capable of generating a WMI event upon its press, but not a=
-ll
-> models can generate a keypress at the same time, correct? If that's t=
-he
-> case, then the arguably cleanest solution would be to change the keym=
-ap
-> entry for event 0xe025 in dell-wmi.c to KE_KEY and ensure (probably i=
-n
-> dell-laptop.c) no i8042 interrupt is raised when the Instant Launch
-> button is pressed. Though that would still leave us with the question=
- of
-> how to determine (ideally without side effects) whether a given model
-> needs disabling keypress simulation. I imagine the pseudocode would b=
-e
-> like:
->=20
->     if (ec_can_simulate_keypresses)
->         disable_keypress_simulation();
->     else
->         enable_wmi_event_generation();
->=20
-> If disabling keypress simulation is not possible, dell-wmi.c has to
-> somehow determine whether a 0xe025 WMI event should be ignored or not=
-=2E
->=20
-> Am I making any sense here?
+On Mon, Jul 20, 2015 at 04:49:51PM -0600, Azael Avalos wrote:
+> Hi Darren,
+> 
+> 2015-07-20 15:55 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> > On Thu, Jul 16, 2015 at 05:38:57PM -0600, Azael Avalos wrote:
+> >> Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
+> >> buggy INFO implementations") denied loading on laptops with a WMI Event
+> >> GUID given that such laptops manage the hotkeys via that interface,
+> >> however, such laptops have a working Toshiba Configuration Interface
+> >> (TCI), and thus, such commit denied several supported features.
+> >>
+> >> This patch avoids registering the input device and ignores all hotkey
+> >> events on laptops with such WMI Event GUI, making the supported
+> >
+> > GUID
+> >
+> >> features found in those laptops to work.
+> >>
+> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> >> ---
+> >>  drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
+> >>  1 file changed, 13 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> >> index 15d8f0d..a3c6ea2 100644
+> >> --- a/drivers/platform/x86/toshiba_acpi.c
+> >> +++ b/drivers/platform/x86/toshiba_acpi.c
+> >> @@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+> >>       u32 hci_result;
+> >>       int error;
+> >>
+> >> +     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
+> >> +             pr_info("WMI event detected, hotkeys won't be monitored\n");
+> >
+> > It's best practice to avoid contractions in any form of technical writing. (See
+> > what I did there? ;-)
+> >
+> > While this is good for comments, I feel it's more important for kernel messages.
+> >
+> >> +             return 0;
+> >> +     }
+> >> +
+> >>       error = toshiba_acpi_enable_hotkeys(dev);
+> >>       if (error)
+> >>               return error;
+> >> @@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+> >>
+> >>       switch (event) {
+> >>       case 0x80: /* Hotkeys and some system events */
+> >> +             /*
+> >> +              * Machines with this WMI guid aren't supported due to bugs in
+> >> +              * their AML.
+> >> +              *
+> >> +              * Return silently to avoid triggering a netlink event.
+> >> +              */
+> >> +             if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
+> >> +                     return;
+> >>               toshiba_acpi_process_hotkeys(dev);
+> >>               break;
+> >>       case 0x81: /* Dock events */
+> >> @@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
+> >>  {
+> >>       int ret;
+> >>
+> >> -     /*
+> >> -      * Machines with this WMI guid aren't supported due to bugs in
+> >
+> > Good idea to capitalize acronyms like GUID.
+> >
+> >> -      * their AML. This check relies on wmi initializing before
+> >> -      * toshiba_acpi to guarantee guids have been identified.
+> >> -      */
+> >> -     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
+> >> -             return -ENODEV;
+> >> -
+> >>       toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
+> >>       if (!toshiba_proc_dir) {
+> >>               pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
+> >> --
+> >> 2.4.3
+> >>
+> >>
+> >
+> > Functional content looks good. No need to resend, just please keep the above in
+> > mind for the future. I'll make the minor updates and merge all three after your
+> > response to the first regarding user:kernel interface - unless of course you
+> > choose to resend the 3 at the same time, and I'll pick those up.
+> 
+> OK, will keep those things in mind, will wait for comments on first patch and
+> send a v2.
+> 
 
-Mario,
+I believe I've responded to all the patches in my queue from you. If I'm missing
+one, please let me know which one. I have 4 pending from you. If you send a v2,
+would you just send all 4 to avoid any confusion?
 
-Just pinging; any chance you could comment on these issues? Thanks,
+Thanks,
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+-- 
+Darren Hart
+Intel Open Source Technology Center
