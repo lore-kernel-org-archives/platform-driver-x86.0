@@ -1,139 +1,129 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Avoid registering input device on WMI event laptops
-Date: Wed, 22 Jul 2015 17:30:30 -0600
-Message-ID: <CAGdLNWHP0W75=XT+HJN0gzCDE+LJ+8SKNf92jB24_FNaNAuCiw@mail.gmail.com>
-References: <1437089937-4383-1-git-send-email-coproscefalo@gmail.com>
-	<20150720215503.GC34611@vmdeb7>
-	<CAGdLNWE2=jeafsxnNr4uxAFrV702jdH_h_G1vM4ciRS7WPf=6Q@mail.gmail.com>
-	<20150722205459.GA102536@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v2] toshiba_acpi: Adapt /proc/acpi/toshiba/keys to TOS1900 devices
+Date: Wed, 22 Jul 2015 18:09:10 -0600
+Message-ID: <1437610153-26382-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f179.google.com ([209.85.212.179]:37057 "EHLO
-	mail-wi0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752704AbbGVXac (ORCPT
+Received: from mail-oi0-f51.google.com ([209.85.218.51]:34207 "EHLO
+	mail-oi0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750779AbbGWAJZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jul 2015 19:30:32 -0400
-In-Reply-To: <20150722205459.GA102536@vmdeb7>
+	Wed, 22 Jul 2015 20:09:25 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-Hi Darren,
+Since the introduction of TOS1900 devices support to the driver, the
+"keys" entry under the proc directory was broken, given that it only
+handled TOS620X devices accordingly.
 
-2015-07-22 14:54 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Mon, Jul 20, 2015 at 04:49:51PM -0600, Azael Avalos wrote:
->> Hi Darren,
->>
->> 2015-07-20 15:55 GMT-06:00 Darren Hart <dvhart@infradead.org>:
->> > On Thu, Jul 16, 2015 at 05:38:57PM -0600, Azael Avalos wrote:
->> >> Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
->> >> buggy INFO implementations") denied loading on laptops with a WMI Event
->> >> GUID given that such laptops manage the hotkeys via that interface,
->> >> however, such laptops have a working Toshiba Configuration Interface
->> >> (TCI), and thus, such commit denied several supported features.
->> >>
->> >> This patch avoids registering the input device and ignores all hotkey
->> >> events on laptops with such WMI Event GUI, making the supported
->> >
->> > GUID
->> >
->> >> features found in those laptops to work.
->> >>
->> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> >> ---
->> >>  drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
->> >>  1 file changed, 13 insertions(+), 8 deletions(-)
->> >>
->> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> >> index 15d8f0d..a3c6ea2 100644
->> >> --- a/drivers/platform/x86/toshiba_acpi.c
->> >> +++ b/drivers/platform/x86/toshiba_acpi.c
->> >> @@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
->> >>       u32 hci_result;
->> >>       int error;
->> >>
->> >> +     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
->> >> +             pr_info("WMI event detected, hotkeys won't be monitored\n");
->> >
->> > It's best practice to avoid contractions in any form of technical writing. (See
->> > what I did there? ;-)
->> >
->> > While this is good for comments, I feel it's more important for kernel messages.
->> >
->> >> +             return 0;
->> >> +     }
->> >> +
->> >>       error = toshiba_acpi_enable_hotkeys(dev);
->> >>       if (error)
->> >>               return error;
->> >> @@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
->> >>
->> >>       switch (event) {
->> >>       case 0x80: /* Hotkeys and some system events */
->> >> +             /*
->> >> +              * Machines with this WMI guid aren't supported due to bugs in
->> >> +              * their AML.
->> >> +              *
->> >> +              * Return silently to avoid triggering a netlink event.
->> >> +              */
->> >> +             if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
->> >> +                     return;
->> >>               toshiba_acpi_process_hotkeys(dev);
->> >>               break;
->> >>       case 0x81: /* Dock events */
->> >> @@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
->> >>  {
->> >>       int ret;
->> >>
->> >> -     /*
->> >> -      * Machines with this WMI guid aren't supported due to bugs in
->> >
->> > Good idea to capitalize acronyms like GUID.
->> >
->> >> -      * their AML. This check relies on wmi initializing before
->> >> -      * toshiba_acpi to guarantee guids have been identified.
->> >> -      */
->> >> -     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
->> >> -             return -ENODEV;
->> >> -
->> >>       toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
->> >>       if (!toshiba_proc_dir) {
->> >>               pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
->> >> --
->> >> 2.4.3
->> >>
->> >>
->> >
->> > Functional content looks good. No need to resend, just please keep the above in
->> > mind for the future. I'll make the minor updates and merge all three after your
->> > response to the first regarding user:kernel interface - unless of course you
->> > choose to resend the 3 at the same time, and I'll pick those up.
->>
->> OK, will keep those things in mind, will wait for comments on first patch and
->> send a v2.
->>
->
-> I believe I've responded to all the patches in my queue from you. If I'm missing
-> one, please let me know which one. I have 4 pending from you. If you send a v2,
-> would you just send all 4 to avoid any confusion?
+This patch adapts the code to show the hotkey values of TOS1900
+devices too, and in case some programs are still using that interface,
+hotkeys reporting should now work on these devices.
 
-I was waiting for some feedback on the first patch, tho' if there is
-no problem with
-it, I'll send v2 in a few for you to queue, plus a few others for-review.
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+Changes since v1:
+- No changes were made, this is simply a resend
 
->
-> Thanks,
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
+ drivers/platform/x86/toshiba_acpi.c | 56 +++++++++++++------------------------
+ 1 file changed, 20 insertions(+), 36 deletions(-)
 
-
-Cheers
-Azael
-
-
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 0aaf3ed..649786d 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -1495,32 +1495,10 @@ static const struct file_operations fan_proc_fops = {
+ static int keys_proc_show(struct seq_file *m, void *v)
+ {
+ 	struct toshiba_acpi_dev *dev = m->private;
+-	u32 hci_result;
+-	u32 value;
+-
+-	if (!dev->key_event_valid && dev->system_event_supported) {
+-		hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
+-		if (hci_result == TOS_SUCCESS) {
+-			dev->key_event_valid = 1;
+-			dev->last_key_event = value;
+-		} else if (hci_result == TOS_FIFO_EMPTY) {
+-			/* Better luck next time */
+-		} else if (hci_result == TOS_NOT_SUPPORTED) {
+-			/*
+-			 * This is a workaround for an unresolved issue on
+-			 * some machines where system events sporadically
+-			 * become disabled.
+-			 */
+-			hci_result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
+-			pr_notice("Re-enabled hotkeys\n");
+-		} else {
+-			pr_err("Error reading hotkey status\n");
+-			return -EIO;
+-		}
+-	}
+ 
+ 	seq_printf(m, "hotkey_ready:            %d\n", dev->key_event_valid);
+ 	seq_printf(m, "hotkey:                  0x%04x\n", dev->last_key_event);
++
+ 	return 0;
+ }
+ 
+@@ -2432,22 +2410,28 @@ static void toshiba_acpi_report_hotkey(struct toshiba_acpi_dev *dev,
+ 
+ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ {
+-	u32 hci_result, value;
+-	int retries = 3;
+-	int scancode;
+-
+ 	if (dev->info_supported) {
+-		scancode = toshiba_acpi_query_hotkey(dev);
+-		if (scancode < 0)
++		int scancode = toshiba_acpi_query_hotkey(dev);
++
++		if (scancode < 0) {
+ 			pr_err("Failed to query hotkey event\n");
+-		else if (scancode != 0)
++		} else if (scancode != 0) {
+ 			toshiba_acpi_report_hotkey(dev, scancode);
++			dev->key_event_valid = 1;
++			dev->last_key_event = scancode;
++		}
+ 	} else if (dev->system_event_supported) {
++		u32 result;
++		u32 value;
++		int retries = 3;
++
+ 		do {
+-			hci_result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
+-			switch (hci_result) {
++			result = hci_read(dev, HCI_SYSTEM_EVENT, &value);
++			switch (result) {
+ 			case TOS_SUCCESS:
+ 				toshiba_acpi_report_hotkey(dev, (int)value);
++				dev->key_event_valid = 1;
++				dev->last_key_event = value;
+ 				break;
+ 			case TOS_NOT_SUPPORTED:
+ 				/*
+@@ -2455,15 +2439,15 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ 				 * issue on some machines where system events
+ 				 * sporadically become disabled.
+ 				 */
+-				hci_result =
+-					hci_write(dev, HCI_SYSTEM_EVENT, 1);
+-				pr_notice("Re-enabled hotkeys\n");
++				result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
++				if (result == TOS_SUCCESS)
++					pr_notice("Re-enabled hotkeys\n");
+ 				/* Fall through */
+ 			default:
+ 				retries--;
+ 				break;
+ 			}
+-		} while (retries && hci_result != TOS_FIFO_EMPTY);
++		} while (retries && result != TOS_FIFO_EMPTY);
+ 	}
+ }
+ 
 -- 
--- El mundo apesta y vosotros apestais tambien --
+2.4.5
