@@ -1,7 +1,7 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2] toshiba_acpi: Transflective backlight updates
-Date: Wed, 22 Jul 2015 18:09:13 -0600
-Message-ID: <1437610153-26382-4-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2] toshiba_acpi: Avoid registering input device on WMI event laptops
+Date: Wed, 22 Jul 2015 18:09:12 -0600
+Message-ID: <1437610153-26382-3-git-send-email-coproscefalo@gmail.com>
 References: <1437610153-26382-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1437610153-26382-1-git-send-email-coproscefalo@gmail.com>
@@ -10,106 +10,70 @@ To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, lin
 Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch changes the tr function second parameter from bool to u32,
-to be on par with the rest of the TCI functions of the driver, and the
-code was updated accordingly.
+Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
+buggy INFO implementations") denied loading on laptops with a WMI Event
+GUID given that such laptops manage the hotkeys via that interface,
+however, such laptops have a working Toshiba Configuration Interface
+(TCI), and thus, such commit denied several supported features.
 
-Also, the check for translective support was moved to the *add
-function, as the {__get, set}_lcd_brightness functions make use of it.
+This patch avoids registering the input device and ignores all hotkey
+events on laptops with such WMI Event GUID, making the supported
+features found in those laptops to work.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
 Changes since v1:
 - Minor typographical corrections in patch description
+- Avoid word contractions in kernel messages
 
- drivers/platform/x86/toshiba_acpi.c | 30 +++++++++++-------------------
- 1 file changed, 11 insertions(+), 19 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 3ad7b1f..15d8f0d 100644
+index 15d8f0d..871b6d6 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1184,22 +1184,17 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
- }
- 
- /* Transflective Backlight */
--static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, bool *enabled)
-+static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
- {
--	u32 hci_result;
--	u32 status;
-+	u32 hci_result = hci_read(dev, HCI_TR_BACKLIGHT, status);
- 
--	hci_result = hci_read(dev, HCI_TR_BACKLIGHT, &status);
--	*enabled = !status;
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
--static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, bool enable)
-+static int set_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 status)
- {
--	u32 hci_result;
--	u32 value = !enable;
-+	u32 hci_result = hci_write(dev, HCI_TR_BACKLIGHT, !status);
- 
--	hci_result = hci_write(dev, HCI_TR_BACKLIGHT, value);
- 	return hci_result == TOS_SUCCESS ? 0 : -EIO;
- }
- 
-@@ -1213,12 +1208,11 @@ static int __get_lcd_brightness(struct toshiba_acpi_dev *dev)
- 	int brightness = 0;
- 
- 	if (dev->tr_backlight_supported) {
--		bool enabled;
--		int ret = get_tr_backlight_status(dev, &enabled);
-+		int ret = get_tr_backlight_status(dev, &value);
- 
- 		if (ret)
- 			return ret;
--		if (enabled)
-+		if (value)
- 			return 0;
- 		brightness++;
- 	}
-@@ -1268,8 +1262,7 @@ static int set_lcd_brightness(struct toshiba_acpi_dev *dev, int value)
+@@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
  	u32 hci_result;
+ 	int error;
  
- 	if (dev->tr_backlight_supported) {
--		bool enable = !value;
--		int ret = set_tr_backlight_status(dev, enable);
-+		int ret = set_tr_backlight_status(dev, !value);
- 
- 		if (ret)
- 			return ret;
-@@ -2496,7 +2489,6 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
- 	struct backlight_properties props;
- 	int brightness;
- 	int ret;
--	bool enabled;
- 
- 	/*
- 	 * Some machines don't support the backlight methods at all, and
-@@ -2513,10 +2505,6 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
- 		return 0;
- 	}
- 
--	/* Determine whether or not BIOS supports transflective backlight */
--	ret = get_tr_backlight_status(dev, &enabled);
--	dev->tr_backlight_supported = !ret;
--
- 	/*
- 	 * Tell acpi-video-detect code to prefer vendor backlight on all
- 	 * systems with transflective backlight and on dmi matched systems.
-@@ -2643,6 +2631,10 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	if (toshiba_acpi_setup_keyboard(dev))
- 		pr_info("Unable to activate hotkeys\n");
- 
-+	/* Determine whether or not BIOS supports transflective backlight */
-+	ret = get_tr_backlight_status(dev, &dummy);
-+	dev->tr_backlight_supported = !ret;
++	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
++		pr_info("WMI event detected, hotkeys will not be monitored\n");
++		return 0;
++	}
 +
- 	ret = toshiba_acpi_setup_backlight(dev);
- 	if (ret)
- 		goto error;
+ 	error = toshiba_acpi_enable_hotkeys(dev);
+ 	if (error)
+ 		return error;
+@@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 
+ 	switch (event) {
+ 	case 0x80: /* Hotkeys and some system events */
++		/*
++		 * Machines with this WMI GUID aren't supported due to bugs in
++		 * their AML.
++		 *
++		 * Return silently to avoid triggering a netlink event.
++		 */
++		if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
++			return;
+ 		toshiba_acpi_process_hotkeys(dev);
+ 		break;
+ 	case 0x81: /* Dock events */
+@@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
+ {
+ 	int ret;
+ 
+-	/*
+-	 * Machines with this WMI guid aren't supported due to bugs in
+-	 * their AML. This check relies on wmi initializing before
+-	 * toshiba_acpi to guarantee guids have been identified.
+-	 */
+-	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
+-		return -ENODEV;
+-
+ 	toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
+ 	if (!toshiba_proc_dir) {
+ 		pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
 -- 
 2.4.5
