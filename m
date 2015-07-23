@@ -1,50 +1,40 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/1] toshiba_acpi: Reorder toshiba_acpi_alt_keymap entries
-Date: Wed, 22 Jul 2015 19:37:46 -0600
-Message-ID: <1437615474-27936-1-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH 4/4] toshiba_acpi: Bump driver version to 0.23
+Date: Wed, 22 Jul 2015 19:37:54 -0600
+Message-ID: <1437615474-27936-9-git-send-email-coproscefalo@gmail.com>
+References: <1437615474-27936-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f52.google.com ([209.85.218.52]:35366 "EHLO
-	mail-oi0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753196AbbGWBiA (ORCPT
+Received: from mail-ob0-f176.google.com ([209.85.214.176]:33482 "EHLO
+	mail-ob0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753604AbbGWBiP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 22 Jul 2015 21:38:00 -0400
+	Wed, 22 Jul 2015 21:38:15 -0400
+In-Reply-To: <1437615474-27936-1-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
 
-This patch simply reorders the entries found in the new keymap by
-ascending order, this is simply a cosmetic change, no functionality
-was modified.
+Given that some features were added (/dev/toshiba_acpi device), some
+clean-ups and minor changes, bump the driver version to 0.23.
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 649786d..b550be2 100644
+index c099137..ea1bd6d 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -251,16 +251,16 @@ static const struct key_entry toshiba_acpi_keymap[] = {
- };
+@@ -31,7 +31,7 @@
  
- static const struct key_entry toshiba_acpi_alt_keymap[] = {
--	{ KE_KEY, 0x157, { KEY_MUTE } },
- 	{ KE_KEY, 0x102, { KEY_ZOOMOUT } },
- 	{ KE_KEY, 0x103, { KEY_ZOOMIN } },
- 	{ KE_KEY, 0x12c, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_KEY, 0x139, { KEY_ZOOMRESET } },
--	{ KE_KEY, 0x13e, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 0x13c, { KEY_BRIGHTNESSDOWN } },
- 	{ KE_KEY, 0x13d, { KEY_BRIGHTNESSUP } },
--	{ KE_KEY, 0x158, { KEY_WLAN } },
-+	{ KE_KEY, 0x13e, { KEY_SWITCHVIDEOMODE } },
- 	{ KE_KEY, 0x13f, { KEY_TOUCHPAD_TOGGLE } },
-+	{ KE_KEY, 0x157, { KEY_MUTE } },
-+	{ KE_KEY, 0x158, { KEY_WLAN } },
- 	{ KE_END, 0 },
- };
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
+-#define TOSHIBA_ACPI_VERSION	"0.22"
++#define TOSHIBA_ACPI_VERSION	"0.23"
+ #define PROC_INTERFACE_VERSION	1
+ 
+ #include <linux/kernel.h>
 -- 
 2.4.5
