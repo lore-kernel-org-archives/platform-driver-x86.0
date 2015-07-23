@@ -1,57 +1,84 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2] thermal: consistently use int for temperatures
-Date: Thu, 23 Jul 2015 14:07:59 +0200
-Message-ID: <20150723120759.GA17690@amd>
-References: <1437463292-24844-1-git-send-email-s.hauer@pengutronix.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2.1 21/22] fjes: handle receive cancellation request
+ interrupt
+Date: Thu, 23 Jul 2015 16:06:01 +0300
+Message-ID: <55B0E6B9.3070301@cogentembedded.com>
+References: <1437610142-12439-1-git-send-email-izumi.taku@jp.fujitsu.com>
+ <1437610236-12490-1-git-send-email-izumi.taku@jp.fujitsu.com>
+ <1437610236-12490-21-git-send-email-izumi.taku@jp.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1437463292-24844-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, Jean Delvare <jdelvare@suse.de>, Peter Feuerer <peter@piie.net>, Heiko Stuebner <heiko@sntech.de>, Lukasz Majewski <l.majewski@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Darren Hart <dvhart@infradead.org>, lm-sensors@lm-sensors.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-la0-f43.google.com ([209.85.215.43]:32823 "EHLO
+	mail-la0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753424AbbGWNGF (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 23 Jul 2015 09:06:05 -0400
+Received: by laah7 with SMTP id h7so25722156laa.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2015 06:06:03 -0700 (PDT)
+In-Reply-To: <1437610236-12490-21-git-send-email-izumi.taku@jp.fujitsu.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Taku Izumi <izumi.taku@jp.fujitsu.com>, netdev@vger.kernel.org, davem@davemloft.net
+Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, stephen@networkplumber.org, yasu.isimatu@gmail.com
 
-On Tue 2015-07-21 09:21:32, Sascha Hauer wrote:
-> The thermal code uses int, long and unsigned long for temperatures
-> in different places.
->=20
-> Using an unsigned type limits the thermal framework to positive
-> temperatures without need. Also several drivers currently will report
-> temperatures near UINT_MAX for temperatures below 0=B0C. This will pr=
-obably
-> immediately shut the machine down due to overtemperature if started b=
-elow
-> 0=B0C.
->=20
-> 'long' is 64bit on several architectures. This is not needed since IN=
-T_MAX =B0mC
-> is above the melting point of all known materials.
+Hello.
 
-Can we do something like
+On 7/23/2015 3:10 AM, Taku Izumi wrote:
 
-typedef millicelsius_t int;
+> This patch adds implementation of handling IRQ
+> of other receiver's receive cancellation request.
 
-=2E..to document the units?
+> Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> ---
+>   drivers/net/fjes/fjes_main.c | 79 ++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 79 insertions(+)
+>
+> diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
+> index faaf2ed..b21ad68 100644
+> --- a/drivers/net/fjes/fjes_main.c
+> +++ b/drivers/net/fjes/fjes_main.c
+> @@ -822,6 +822,75 @@ static int fjes_vlan_rx_kill_vid(struct net_device *netdev,
+>   	return 0;
+>   }
+>
+> +static void fjes_txrx_stop_req_irq(struct fjes_adapter *adapter,
+> +				   int src_epid)
+> +{
+> +	struct fjes_hw *hw = &adapter->hw;
+> +	enum ep_partner_status status;
+> +
+> +	status = fjes_hw_get_partner_ep_status(hw, src_epid);
+> +	switch (status) {
+> +	case EP_PARTNER_UNSHARE:
+> +	default:
+> +		break;
+> +	case EP_PARTNER_COMPLETE:
+> +		break;
 
-> Consistently use a plain 'int' for temperatures throughout the therma=
-l code and
-> the drivers. This only changes the places in the drivers where the te=
-mperature
-> is passed around as pointer, when drivers internally use another type=
- this is
-> not changed.
+    Why this *case* isn't merged with the above ones?
 
-									Pavel
+> +	case EP_PARTNER_WAITING:
+> +		if (src_epid < hw->my_epid) {
+> +			hw->ep_shm_info[src_epid].tx.info->v1i.rx_status |=
+> +				FJES_RX_STOP_REQ_DONE;
+> +
+> +			clear_bit(src_epid, &hw->txrx_stop_req_bit);
+> +			set_bit(src_epid, &adapter->unshare_watch_bitmask);
+> +
+> +			if (!work_pending(&adapter->unshare_watch_task))
+> +				queue_work(adapter->control_wq,
+> +					   &adapter->unshare_watch_task);
+> +		}
+> +		break;
+> +	case EP_PARTNER_SHARED:
+> +		if (hw->ep_shm_info[src_epid].rx.info->v1i.rx_status
+> +				& FJES_RX_STOP_REQ_REQUEST) {
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Please leave the & operator on the first line and start the second line 
+right under 'hw' on the first.
+
+[...]
+
+MBR, Sergei
