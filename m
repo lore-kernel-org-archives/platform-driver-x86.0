@@ -1,79 +1,74 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2] toshiba_acpi: Avoid registering input device on WMI event laptops
-Date: Wed, 22 Jul 2015 18:09:12 -0600
-Message-ID: <1437610153-26382-3-git-send-email-coproscefalo@gmail.com>
-References: <1437610153-26382-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1437610153-26382-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Subject: [PATCH v2.1 00/22] FUJITSU Extended Socket network device driver
+Date: Thu, 23 Jul 2015 09:09:02 +0900
+Message-ID: <1437610142-12439-1-git-send-email-izumi.taku@jp.fujitsu.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mgwym04.jp.fujitsu.com ([211.128.242.43]:13830 "EHLO
+	mgwym04.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752491AbbGWANH (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 22 Jul 2015 20:13:07 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: netdev@vger.kernel.org, davem@davemloft.net
+Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com, Taku Izumi <izumi.taku@jp.fujitsu.com>
 
-Commit f11f999e9890 ("toshiba_acpi: Refuse to load on machines with
-buggy INFO implementations") denied loading on laptops with a WMI Event
-GUID given that such laptops manage the hotkeys via that interface,
-however, such laptops have a working Toshiba Configuration Interface
-(TCI), and thus, such commit denied several supported features.
+This patchsets adds FUJITSU Extended Socket network device driver.
+Extended Socket network device is a shared memory based high-speed network
+interface between Extended Partitions of PRIMEQUEST 2000 E2 series.
 
-This patch avoids registering the input device and ignores all hotkey
-events on laptops with such WMI Event GUID, making the supported
-features found in those laptops to work.
+You can get some information about Extended Partition and Extended
+Socket by referring the following manual.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
-Changes since v1:
-- Minor typographical corrections in patch description
-- Avoid word contractions in kernel messages
+http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
+  3.2.1 Extended Partitioning
+  3.2.2 Extended Socke
 
- drivers/platform/x86/toshiba_acpi.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+v2 -> v2.1:
+  - Rebase (Add missing vmalloc.h inclusion)
+  - Change some coding style
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 15d8f0d..871b6d6 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2397,6 +2397,11 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	u32 hci_result;
- 	int error;
- 
-+	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
-+		pr_info("WMI event detected, hotkeys will not be monitored\n");
-+		return 0;
-+	}
-+
- 	error = toshiba_acpi_enable_hotkeys(dev);
- 	if (error)
- 		return error;
-@@ -2730,6 +2735,14 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
- 
- 	switch (event) {
- 	case 0x80: /* Hotkeys and some system events */
-+		/*
-+		 * Machines with this WMI GUID aren't supported due to bugs in
-+		 * their AML.
-+		 *
-+		 * Return silently to avoid triggering a netlink event.
-+		 */
-+		if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+			return;
- 		toshiba_acpi_process_hotkeys(dev);
- 		break;
- 	case 0x81: /* Dock events */
-@@ -2816,14 +2829,6 @@ static int __init toshiba_acpi_init(void)
- {
- 	int ret;
- 
--	/*
--	 * Machines with this WMI guid aren't supported due to bugs in
--	 * their AML. This check relies on wmi initializing before
--	 * toshiba_acpi to guarantee guids have been identified.
--	 */
--	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
--		return -ENODEV;
--
- 	toshiba_proc_dir = proc_mkdir(PROC_TOSHIBA, acpi_root_dir);
- 	if (!toshiba_proc_dir) {
- 		pr_err("Unable to create proc dir " PROC_TOSHIBA "\n");
+Taku Izumi (22):
+  fjes: Introduce FUJITSU Extended Socket Network Device driver
+  fjes: Hardware initialization routine
+  fjes: Hardware cleanup routine
+  fjes: platform_driver's .probe and .remove routine
+  fjes: ES information acquisition routine
+  fjes: buffer address regist/unregistration routine
+  fjes: net_device_ops.ndo_open and .ndo_stop
+  fjes: net_device_ops.ndo_start_xmit
+  fjes: raise_intr_rxdata_task
+  fjes: tx_stall_task
+  fjes: NAPI polling function
+  fjes: net_device_ops.ndo_get_stats64
+  fjes: net_device_ops.ndo_change_mtu
+  fjes: net_device_ops.ndo_tx_timeout
+  fjes: net_device_ops.ndo_vlan_rx_add/kill_vid
+  fjes: interrupt_watch_task
+  fjes: force_close_task
+  fjes: unshare_watch_task
+  fjes: update_zone_task
+  fjes: epstop_task
+  fjes: handle receive cancellation request interrupt
+  fjes: ethtool support
+
+ drivers/net/Kconfig             |    7 +
+ drivers/net/Makefile            |    2 +
+ drivers/net/fjes/Makefile       |   31 +
+ drivers/net/fjes/fjes.h         |   77 +++
+ drivers/net/fjes/fjes_ethtool.c |  135 ++++
+ drivers/net/fjes/fjes_hw.c      | 1117 +++++++++++++++++++++++++++++++
+ drivers/net/fjes/fjes_hw.h      |  334 ++++++++++
+ drivers/net/fjes/fjes_main.c    | 1389 +++++++++++++++++++++++++++++++++++++++
+ drivers/net/fjes/fjes_regs.h    |  142 ++++
+ 9 files changed, 3234 insertions(+)
+ create mode 100644 drivers/net/fjes/Makefile
+ create mode 100644 drivers/net/fjes/fjes.h
+ create mode 100644 drivers/net/fjes/fjes_ethtool.c
+ create mode 100644 drivers/net/fjes/fjes_hw.c
+ create mode 100644 drivers/net/fjes/fjes_hw.h
+ create mode 100644 drivers/net/fjes/fjes_main.c
+ create mode 100644 drivers/net/fjes/fjes_regs.h
+
 -- 
-2.4.5
+1.8.3.1
