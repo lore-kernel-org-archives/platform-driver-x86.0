@@ -1,52 +1,33 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] thermal: consistently use int for temperatures
-Date: Fri, 24 Jul 2015 06:59:26 -0700
-Message-ID: <55B244BE.1060203@roeck-us.net>
-References: <1437463292-24844-1-git-send-email-s.hauer@pengutronix.de> <20150723120759.GA17690@amd> <20150724062948.GK18700@pengutronix.de>
+From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <stlman@poczta.fm>
+Subject: [PATCH] asus-laptop: Add key found on Asus F3M
+Date: Fri, 24 Jul 2015 19:17:11 +0200
+Message-ID: <1437758231-5909-1-git-send-email-stlman@poczta.fm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20150724062948.GK18700@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, Jean Delvare <jdelvare@suse.de>, Peter Feuerer <peter@piie.net>, Heiko Stuebner <heiko@sntech.de>, Lukasz Majewski <l.majewski@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Darren Hart <dvhart@infradead.org>, lm-sensors@lm-sensors.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <stlman@poczta.fm>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07/23/2015 11:29 PM, Sascha Hauer wrote:
-> On Thu, Jul 23, 2015 at 02:07:59PM +0200, Pavel Machek wrote:
->> On Tue 2015-07-21 09:21:32, Sascha Hauer wrote:
->>> The thermal code uses int, long and unsigned long for temperatures
->>> in different places.
->>>
->>> Using an unsigned type limits the thermal framework to positive
->>> temperatures without need. Also several drivers currently will repo=
-rt
->>> temperatures near UINT_MAX for temperatures below 0=B0C. This will =
-probably
->>> immediately shut the machine down due to overtemperature if started=
- below
->>> 0=B0C.
->>>
->>> 'long' is 64bit on several architectures. This is not needed since =
-INT_MAX =B0mC
->>> is above the melting point of all known materials.
->>
->> Can we do something like
->>
->> typedef millicelsius_t int;
->>
->> ...to document the units?
->
-> I am not very fond of typedefs and I am not sure this adds any value.=
- I
-> could change it when more people ask for it, but I just sent the new
-> version without this.
->
+Signed-off-by: =C5=81ukasz Stelmach <stlman@poczta.fm>
+---
+ drivers/platform/x86/asus-laptop.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I thought we are supposed to not introduce new typedefs anyway.
-
-Guenter
-
-
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/=
+asus-laptop.c
+index 58d29c4..f2b5d0a 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -332,6 +332,7 @@ static const struct key_entry asus_keymap[] =3D {
+ 	{KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
+ 	{KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
+ 	{KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
++	{KE_KEY, 0x6A, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad Fn + F9 */
+ 	{KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
+ 	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
+ 	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
+--=20
+2.1.4
