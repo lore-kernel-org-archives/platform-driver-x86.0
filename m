@@ -1,84 +1,108 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2] thermal: consistently use int for temperatures
-Date: Sat, 25 Jul 2015 09:01:32 +0200
-Message-ID: <20150725070132.GA18328@amd>
-References: <1437463292-24844-1-git-send-email-s.hauer@pengutronix.de>
- <20150723120759.GA17690@amd>
- <20150724062948.GK18700@pengutronix.de>
- <55B244BE.1060203@roeck-us.net>
- <20150724221102.GA31517@amd>
- <55B2C105.3040600@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:49716 "EHLO
-	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754943AbbGYHBf (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 25 Jul 2015 03:01:35 -0400
-Content-Disposition: inline
-In-Reply-To: <55B2C105.3040600@roeck-us.net>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-kernel@vger.kernel.org, Punit Agrawal <punit.agrawal@arm.com>, Jean Delvare <jdelvare@suse.de>, Peter Feuerer <peter@piie.net>, Heiko Stuebner <heiko@sntech.de>, Lukasz Majewski <l.majewski@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Darren Hart <dvhart@infradead.org>, lm-sensors@lm-sensors.org
+From: Finn Thain <fthain@telegraphics.com.au>
+Subject: [RFC v5 07/26] x86/thinkpad_acpi: Use arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
+Date: Sat, 25 Jul 2015 17:46:06 +1000
+Message-ID: <20150725074601.243339467@telegraphics.com.au>
+References: <20150725074559.543547894@telegraphics.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline; filename=pc-rtc-replace-exported-nvram-functions
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri 2015-07-24 15:49:41, Guenter Roeck wrote:
-> On 07/24/2015 03:11 PM, Pavel Machek wrote:
-> >On Fri 2015-07-24 06:59:26, Guenter Roeck wrote:
-> >>On 07/23/2015 11:29 PM, Sascha Hauer wrote:
-> >>>On Thu, Jul 23, 2015 at 02:07:59PM +0200, Pavel Machek wrote:
-> >>>>On Tue 2015-07-21 09:21:32, Sascha Hauer wrote:
-> >>>>>The thermal code uses int, long and unsigned long for temperatur=
-es
-> >>>>>in different places.
-> >>>>>
-> >>>>>Using an unsigned type limits the thermal framework to positive
-> >>>>>temperatures without need. Also several drivers currently will r=
-eport
-> >>>>>temperatures near UINT_MAX for temperatures below 0=B0C. This wi=
-ll probably
-> >>>>>immediately shut the machine down due to overtemperature if star=
-ted below
-> >>>>>0=B0C.
-> >>>>>
-> >>>>>'long' is 64bit on several architectures. This is not needed sin=
-ce INT_MAX =B0mC
-> >>>>>is above the melting point of all known materials.
-> >>>>
-> >>>>Can we do something like
-> >>>>
-> >>>>typedef millicelsius_t int;
-> >>>>
-> >>>>...to document the units?
-> >>>
-> >>>I am not very fond of typedefs and I am not sure this adds any val=
-ue. I
-> >>>could change it when more people ask for it, but I just sent the n=
-ew
-> >>>version without this.
-> >>>
-> >>
-> >>I thought we are supposed to not introduce new typedefs anyway.
-> >
-> >You are not supposed to typedef struct, but typedef for millicelsius=
-_t
-> >would be ok. And it is your only chance if you want people to pay
-> >attention. If you make it int, someone will pass it to long or
-> >something else..
->=20
-> Seems to me that would be just lazyness. The same person might use 'l=
-ong'
-> even if millicelsius_t is defined. A typedef doesn't preclude people
-> from ignoring it.
+Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
+nvram_* function exports can be removed.
 
-Well,  millicelsius_t will tell people that this is temperature, and
-being "special" type, they'll try to preserve it. (And you could check
-with sparse if you really wanted). int and long are common enough so
-that people will not notice...
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+This patch series was tested on a ThinkPad T43.
+
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+
+---
+ drivers/platform/x86/thinkpad_acpi.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+Index: linux/drivers/platform/x86/thinkpad_acpi.c
+===================================================================
+--- linux.orig/drivers/platform/x86/thinkpad_acpi.c	2015-07-25 17:42:34.000000000 +1000
++++ linux/drivers/platform/x86/thinkpad_acpi.c	2015-07-25 17:45:32.000000000 +1000
+@@ -2312,30 +2312,30 @@ static void hotkey_read_nvram(struct tp_
+ 	u8 d;
+ 
+ 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
+ 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
+ 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
+ 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
+ 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
+ 	}
+ 	if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
+ 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
+ 	}
+ 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
+ 		n->displayexp_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 		n->brightness_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
+ 				>> TP_NVRAM_POS_LEVEL_VOLUME;
+ 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
+@@ -6156,7 +6156,7 @@ static unsigned int tpacpi_brightness_nv
+ {
+ 	u8 lnvram;
+ 
+-	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
++	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
+ 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 	lnvram &= bright_maxlvl;
+@@ -6181,7 +6181,7 @@ static void tpacpi_brightness_checkpoint
+ 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
+ 		goto unlock;
+ 	lec &= TP_EC_BACKLIGHT_LVLMSK;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 
+ 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
+@@ -6189,7 +6189,7 @@ static void tpacpi_brightness_checkpoint
+ 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
+ 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
+ 		dbg_printk(TPACPI_DBG_BRGHT,
+ 			   "updated NVRAM backlight level to %u (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
+@@ -6797,13 +6797,13 @@ static void tpacpi_volume_checkpoint_nvr
+ 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
+ 		goto unlock;
+ 	lec &= ec_mask;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 
+ 	if (lec != (b_nvram & ec_mask)) {
+ 		/* NVRAM needs update */
+ 		b_nvram &= ~ec_mask;
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
+ 		dbg_printk(TPACPI_DBG_MIXER,
+ 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
