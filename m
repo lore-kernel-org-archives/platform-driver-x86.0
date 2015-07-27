@@ -1,103 +1,53 @@
-From: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>
-Subject: RE: [PATCH v2.1 21/22] fjes: handle receive cancellation request
- interrupt
-Date: Mon, 27 Jul 2015 01:59:12 +0000
-Message-ID: <E86EADE93E2D054CBCD4E708C38D364A54263FA5@G01JPEXMBYT01>
-References: <1437610142-12439-1-git-send-email-izumi.taku@jp.fujitsu.com>
- <1437610236-12490-1-git-send-email-izumi.taku@jp.fujitsu.com>
- <1437610236-12490-21-git-send-email-izumi.taku@jp.fujitsu.com>
- <55B0E6B9.3070301@cogentembedded.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Mon, 27 Jul 2015 21:27:54 +0200
+Message-ID: <20150727192754.GA5650@eudyptula.hq.kempniu.pl>
+References: <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
+ <20150703112611.GA3030@eudyptula.hq.kempniu.pl>
+ <20150703114356.GL1841@pali>
+ <20150703132341.GA3129@eudyptula.hq.kempniu.pl>
+ <20150703133227.GM1841@pali>
+ <20150703135047.GA3530@eudyptula.hq.kempniu.pl>
+ <20150703140901.GN1841@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mgwkm04.jp.fujitsu.com ([202.219.69.171]:13427 "EHLO
-	mgwkm04.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751431AbbG0B7V (ORCPT
+Received: from mail-la0-f48.google.com ([209.85.215.48]:35560 "EHLO
+	mail-la0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751587AbbG0T16 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 26 Jul 2015 21:59:21 -0400
-In-Reply-To: <55B0E6B9.3070301@cogentembedded.com>
-Content-Language: ja-JP
+	Mon, 27 Jul 2015 15:27:58 -0400
+Received: by lahh5 with SMTP id h5so55284394lah.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2015 12:27:56 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20150703140901.GN1841@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "rkhan@redhat.com" <rkhan@redhat.com>, "alexander.h.duyck@redhat.com" <alexander.h.duyck@redhat.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joe@perches.com" <joe@perches.com>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "yasu.isimatu@gmail.com" <yasu.isimatu@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Mario Limonciello <mario_limonciello@dell.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-Hi Sergei,
+> Yes, "vendor does not say anything" is also what could happen...
+>=20
+> Then in your case, I would need to know format of *all* events which =
+can
+> your laptop via WMI receive. If we collect as more as possible events
+> from different laptops we can try to abstract format/interface.
 
- Thanks for revewing.
+Darek Stojaczyk reported [1] that his Dell Inspiron M5110 (Q15R) needs
+the same special SMI as the Vostro V131 in order for the Instant Launch
+hotkey to be reported using WMI. He also prepared a WMI event listing
+for his machine [2]. It's worth noting that in his case the Instant
+Launch hotkey produces yet another WMI event, 0xe029, which isn't
+currently handled by dell-wmi.c.
 
-> -----Original Message-----
-> From: Sergei Shtylyov [mailto:sergei.shtylyov@cogentembedded.com]
-> Sent: Thursday, July 23, 2015 10:06 PM
-> To: Izumi, Taku/泉 拓; netdev@vger.kernel.org; davem@davemloft.net
-> Cc: platform-driver-x86@vger.kernel.org; dvhart@infradead.org; rkhan@redhat.com; alexander.h.duyck@redhat.com;
-> linux-acpi@vger.kernel.org; joe@perches.com; stephen@networkplumber.org; yasu.isimatu@gmail.com
-> Subject: Re: [PATCH v2.1 21/22] fjes: handle receive cancellation request interrupt
-> 
-> Hello.
-> 
-> On 7/23/2015 3:10 AM, Taku Izumi wrote:
-> 
-> > This patch adds implementation of handling IRQ
-> > of other receiver's receive cancellation request.
-> 
-> > Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> > ---
-> >   drivers/net/fjes/fjes_main.c | 79 ++++++++++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 79 insertions(+)
-> >
-> > diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
-> > index faaf2ed..b21ad68 100644
-> > --- a/drivers/net/fjes/fjes_main.c
-> > +++ b/drivers/net/fjes/fjes_main.c
-> > @@ -822,6 +822,75 @@ static int fjes_vlan_rx_kill_vid(struct net_device *netdev,
-> >   	return 0;
-> >   }
-> >
-> > +static void fjes_txrx_stop_req_irq(struct fjes_adapter *adapter,
-> > +				   int src_epid)
-> > +{
-> > +	struct fjes_hw *hw = &adapter->hw;
-> > +	enum ep_partner_status status;
-> > +
-> > +	status = fjes_hw_get_partner_ep_status(hw, src_epid);
-> > +	switch (status) {
-> > +	case EP_PARTNER_UNSHARE:
-> > +	default:
-> > +		break;
-> > +	case EP_PARTNER_COMPLETE:
-> > +		break;
-> 
->     Why this *case* isn't merged with the above ones?
+[1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1205791/commen=
+ts/12
+[2] https://launchpadlibrarian.net/212841338/M5110_wmi_events.txt
 
-  Oh... You are right.
-
-> 
-> > +	case EP_PARTNER_WAITING:
-> > +		if (src_epid < hw->my_epid) {
-> > +			hw->ep_shm_info[src_epid].tx.info->v1i.rx_status |=
-> > +				FJES_RX_STOP_REQ_DONE;
-> > +
-> > +			clear_bit(src_epid, &hw->txrx_stop_req_bit);
-> > +			set_bit(src_epid, &adapter->unshare_watch_bitmask);
-> > +
-> > +			if (!work_pending(&adapter->unshare_watch_task))
-> > +				queue_work(adapter->control_wq,
-> > +					   &adapter->unshare_watch_task);
-> > +		}
-> > +		break;
-> > +	case EP_PARTNER_SHARED:
-> > +		if (hw->ep_shm_info[src_epid].rx.info->v1i.rx_status
-> > +				& FJES_RX_STOP_REQ_REQUEST) {
-> 
->     Please leave the & operator on the first line and start the second line
-> right under 'hw' on the first.
-
-   OK.
-> 
-> [...]
-> 
-> MBR, Sergei
-
- Sincerely,
- Taku Izumi
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
