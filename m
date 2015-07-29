@@ -1,74 +1,69 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: add alternative representation for Yoga
- 2 to DMI table
-Date: Tue, 28 Jul 2015 21:35:29 -0700
-Message-ID: <20150729043529.GA76828@vmdeb7>
-References: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
+Subject: Re: [PATCH] asus-laptop: Add key found on Asus F3M
+Date: Tue, 28 Jul 2015 21:43:29 -0700
+Message-ID: <20150729044329.GA80946@vmdeb7>
+References: <1437758231-5909-1-git-send-email-stlman@poczta.fm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48017 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:49385 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752414AbbG2FwL (ORCPT
+	with ESMTP id S1751384AbbG2PXa (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jul 2015 01:52:11 -0400
+	Wed, 29 Jul 2015 11:23:30 -0400
 Content-Disposition: inline
-In-Reply-To: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
+In-Reply-To: <1437758231-5909-1-git-send-email-stlman@poczta.fm>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sebastian Krzyszkowiak <dos@dosowisko.net>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org
+To: =?utf-8?Q?=C5=81ukasz?= Stelmach <stlman@poczta.fm>
+Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2015 at 01:10:21AM +0200, Sebastian Krzyszkowiak wrote:
-> There is at least one (mine) Yoga 2 Pro in existence that has incorrect
-> product version stored in DMI (reading as "INVALID"), causing it to not be
-> recognized as Yoga 2 by ideapad-laptop module, which in turn causes
-> non-existent hardware rfkills to be always reported as blocked.
-> 
-> This change adds a second check by board name, which is "Yoga2".
-> Looks like it also happens to be "INVALID" on some other Yoga 2 machines
-> where product version is correct instead, so the original check is left
-> intact to catch both cases.
-> 
-> Signed-off-by: Sebastian Krzyszkowiak <dos@dosowisko.net>
+Thanks =C5=81ukasz,
 
-Hi Sebastien,
+The following change seems reasonable.
 
-Please Cc the full list reported by get_maintainer in the future.
+While it's trivial, please provide some context in your commit message.=
+ I do not
+merge commits with empty messages. There is always something to say. Di=
+d you see
+a dmesg error, the key just didn't work, the 0x6A is new on model XYZ b=
+ut you
+don't know if others have it, it's from your personal experience, or ca=
+me from
+an ASUS manual, etc. There is always something to provide context which=
+ will be
+useful to someone looking at this change - or looking for this fix when=
+ they hit
+this problem on an older kernel.
 
-Ike, any concerns from you if I pull this in?
+Thanks,
 
+On Fri, Jul 24, 2015 at 07:17:11PM +0200, =C5=81ukasz Stelmach wrote:
+> Signed-off-by: =C5=81ukasz Stelmach <stlman@poczta.fm>
 > ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 76b5738..4241262 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -853,6 +853,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->  		},
->  	},
->  	{
-> +		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
-> +		},
-> +	},
-> +	{
->  		.ident = "Lenovo Yoga 3 Pro 1370",
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> -- 
-> 2.4.6
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>  drivers/platform/x86/asus-laptop.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
+6/asus-laptop.c
+> index 58d29c4..f2b5d0a 100644
+> --- a/drivers/platform/x86/asus-laptop.c
+> +++ b/drivers/platform/x86/asus-laptop.c
+> @@ -332,6 +332,7 @@ static const struct key_entry asus_keymap[] =3D {
+>  	{KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
+>  	{KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
+>  	{KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
+> +	{KE_KEY, 0x6A, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad Fn + F9 =
+*/
+>  	{KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
+>  	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
+>  	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
+> --=20
+> 2.1.4
+>=20
+>=20
 
--- 
+--=20
 Darren Hart
 Intel Open Source Technology Center
