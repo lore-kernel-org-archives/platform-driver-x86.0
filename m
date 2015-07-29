@@ -1,40 +1,40 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] toshiba_acpi: Add set_fan_status function
-Date: Tue, 28 Jul 2015 20:37:30 -0700
-Message-ID: <20150729033730.GB3171@vmdeb7>
+Subject: Re: [PATCH v2 1/4] toshiba_acpi: Change *available functions return
+ type
+Date: Tue, 28 Jul 2015 20:46:21 -0700
+Message-ID: <20150729034621.GC3171@vmdeb7>
 References: <1438046548-3081-1-git-send-email-coproscefalo@gmail.com>
+ <1438046548-3081-3-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:34907 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:36879 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750839AbbG2EyK (ORCPT
+	with ESMTP id S1751836AbbG2FDC (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jul 2015 00:54:10 -0400
+	Wed, 29 Jul 2015 01:03:02 -0400
 Content-Disposition: inline
-In-Reply-To: <1438046548-3081-1-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <1438046548-3081-3-git-send-email-coproscefalo@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Azael Avalos <coproscefalo@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2015 at 07:22:23PM -0600, Azael Avalos wrote:
-> This patch adds a new function named "set_fan_status" to complement
-> its get* counterpart, as well as to avoid code duplication between
-> "fan_proc_write" and "fan_store".
+On Mon, Jul 27, 2015 at 07:22:25PM -0600, Azael Avalos wrote:
+> This patch changes the *available functions return type from int to
+> void.
 > 
-> Also, both functions (get*, set*) are now checking for TOS_FAILURE,
-> TOS_NOT_SUPPORTED and TOS_SUCCESS (to be on par with the rest of the
-> HCI/SCI functions), printing an error message, returning -ENODEV and
-> zero respectively.
+> The checks for support of their respective features are done inside
+> such functions and there was no need to return anything as we can
+> flag the queried feature as supported inside these functions.
 > 
-> The proc and sysfs functions were updated to reflect these changes as
-> well, returning -EIO for proc, and propagating the error value on the
-> sysfs functions.
+> The code was adapted accordingly to these changes and two new
+> variables were created and another was changed from uint to bool.
 > 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> While at the neighborhood, some of the functions were cleaned from
 
-Queued, thanks Azael!
+Please consider this a red flag in the future. "While in the neighborhood" means
+you need to split the patch across distinct functional boundaries.
 
 -- 
 Darren Hart
