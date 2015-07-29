@@ -1,59 +1,73 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 2/4] toshiba_acpi: Remove "*not supported" feature
- prints
-Date: Tue, 28 Jul 2015 20:50:10 -0700
-Message-ID: <20150729035010.GD3171@vmdeb7>
-References: <1438046548-3081-1-git-send-email-coproscefalo@gmail.com>
- <1438046548-3081-4-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH] ideapad-laptop: add alternative representation for Yoga
+ 2 to DMI table
+Date: Tue, 28 Jul 2015 21:35:29 -0700
+Message-ID: <20150729043529.GA76828@vmdeb7>
+References: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37126 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:48017 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751010AbbG2FGv (ORCPT
+	with ESMTP id S1752414AbbG2FwL (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 29 Jul 2015 01:06:51 -0400
+	Wed, 29 Jul 2015 01:52:11 -0400
 Content-Disposition: inline
-In-Reply-To: <1438046548-3081-4-git-send-email-coproscefalo@gmail.com>
+In-Reply-To: <1437261021-25632-1-git-send-email-dos@dosowisko.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastian Krzyszkowiak <dos@dosowisko.net>
+Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org
 
-Hi Azael,
+On Sun, Jul 19, 2015 at 01:10:21AM +0200, Sebastian Krzyszkowiak wrote:
+> There is at least one (mine) Yoga 2 Pro in existence that has incorrect
+> product version stored in DMI (reading as "INVALID"), causing it to not be
+> recognized as Yoga 2 by ideapad-laptop module, which in turn causes
+> non-existent hardware rfkills to be always reported as blocked.
+> 
+> This change adds a second check by board name, which is "Yoga2".
+> Looks like it also happens to be "INVALID" on some other Yoga 2 machines
+> where product version is correct instead, so the original check is left
+> intact to catch both cases.
+> 
+> Signed-off-by: Sebastian Krzyszkowiak <dos@dosowisko.net>
 
-On Mon, Jul 27, 2015 at 07:22:26PM -0600, Azael Avalos wrote:
-> Currently the driver prints "*not supported" if any of the features
-> queried are in fact not supported, let us print the available
-> features instead.
-> 
-> This patch removes all instances pr_info printing "*not supported",
-> and add a new function called "print_supported_features", which will
-> print the available laptop features.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+Hi Sebastien,
+
+Please Cc the full list reported by get_maintainer in the future.
+
+Ike, any concerns from you if I pull this in?
+
 > ---
->  drivers/platform/x86/toshiba_acpi.c | 69 +++++++++++++++++++++++--------------
->  1 file changed, 44 insertions(+), 25 deletions(-)
+>  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index e164926..e24f0f5 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -477,13 +477,10 @@ static void toshiba_illumination_set(struct led_classdev *cdev,
->  	state = brightness ? 1 : 0;
->  	result = sci_write(dev, SCI_ILLUMINATION, state);
->  	sci_close(dev);
-> -	if (result == TOS_FAILURE) {
-> +	if (result == TOS_FAILURE)
->  		pr_err("ACPI call for illumination failed\n");
-> +	else if (result == TOS_NOT_SUPPORTED)
->  		return;
-
-And otherwise.... return. So this last if test doesn't do anything. If you feel
-the context is relevant, consider just including it as a comment.
-
-Thanks,
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 76b5738..4241262 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -853,6 +853,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>  		},
+>  	},
+>  	{
+> +		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
+> +		},
+> +	},
+> +	{
+>  		.ident = "Lenovo Yoga 3 Pro 1370",
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> -- 
+> 2.4.6
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
 Darren Hart
