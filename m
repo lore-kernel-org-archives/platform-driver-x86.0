@@ -1,34 +1,49 @@
-From: "Powell, Michael" <Michael_Powell@mentor.com>
-Subject: [PATCH RESEND] acer-wmi: No rfkill on HP wifi
-Date: Sun, 2 Aug 2015 22:59:29 +0000
-Message-ID: <1438556369.2931.153.camel@mentor.com>
-References: <1429824979.3169.58.camel@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] MAINTAINERS: Remove Toshiba Linux mailing list address
+Date: Mon,  3 Aug 2015 11:44:08 -0600
+Message-ID: <1438623848-3707-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from relay1.mentorg.com ([192.94.38.131]:52907 "EHLO
-	relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751868AbbHBXAw (ORCPT
+Received: from mail-oi0-f45.google.com ([209.85.218.45]:33351 "EHLO
+	mail-oi0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754195AbbHCRoP (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 2 Aug 2015 19:00:52 -0400
-In-Reply-To: <1429824979.3169.58.camel@mentor.com>
-Content-Language: en-US
-Content-ID: <008DF046B359E34784ABF8EDB8D479EC@mentor.com>
+	Mon, 3 Aug 2015 13:44:15 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "jlee@suse.com" <jlee@suse.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-UHJldmVudHMgYWNlci13bWkgZnJvbSBibG9ja2luZyB3aWZpIG9uIEhQIE9tZW4gMTUgbGFwdG9w
-cw0KDQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIFBvd2VsbCA8bWljaGFlbF9wb3dlbGxAbWVudG9y
-LmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FjZXItd21pLmMgfCAxICsNCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2FjZXItd21pLmMNCmIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYWNlci13bWkuYw0KaW5k
-ZXggM2FjMjlhMS4uM2FkODA3NyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Fj
-ZXItd21pLmMNCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FjZXItd21pLmMNCkBAIC04MDcs
-NiArODA3LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBub3Jma2lsbF9p
-ZHNbXQ0KX19pbml0Y29uc3QgPSB7DQogICAgICAgIHsgIklCTTAwNjgiLCAwfSwNCiAgICAgICAg
-eyAiTEVOMDA2OCIsIDB9LA0KICAgICAgICB7ICJTTlk1MDAxIiwgMH0sICAgICAgICAvKiBzb255
-LWxhcHRvcCBpbiBjaGFyZ2UgKi8NCisJeyAiSFBRNjAwMSIsIDB9LA0KICAgICAgICB7ICIiLCAw
-fSwNCiB9Ow0KIA0KLS0gDQoyLjEuMA0KDQo=
+As of March 31th 2015, the mailing-list service finished [1].
+
+This patch simply removes such address.
+
+[1] http://goo.gl/F6jS5r
+
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+Hi Darren,
+
+I hope you can queue this patch through your tree, I ran the
+"get_maintainer.pl" script but didn't come up w/ a defined
+maintainer (other than the general mailing list).
+
+I wanted to send this patch since April, but somehow I kept
+delaying/forgeting it.
+
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8133cef..87e5d0c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10296,7 +10296,6 @@ F:	drivers/platform/x86/toshiba_haps.c
+ 
+ TOSHIBA SMM DRIVER
+ M:	Jonathan Buzzard <jonathan@buzzard.org.uk>
+-L:	tlinux-users@tce.toshiba-dme.co.jp
+ W:	http://www.buzzard.org.uk/toshiba/
+ S:	Maintained
+ F:	drivers/char/toshiba.c
+-- 
+2.4.5
