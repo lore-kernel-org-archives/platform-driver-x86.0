@@ -1,62 +1,56 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] asus-laptop: Add key found on Asus F3M
-Date: Wed, 5 Aug 2015 13:29:07 -0700
-Message-ID: <20150805202907.GD12131@vmdeb7>
-References: <20150729044329.GA80946@vmdeb7>
- <1438198283-2180-1-git-send-email-stlman@poczta.fm>
+Subject: Re: [PATCH RESEND] acer-wmi: No rfkill on HP wifi
+Date: Wed, 5 Aug 2015 13:54:21 -0700
+Message-ID: <20150805205421.GA38348@vmdeb7>
+References: <1429824979.3169.58.camel@mentor.com>
+ <1438556369.2931.153.camel@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:35264 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752806AbbHEUxn (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Wed, 5 Aug 2015 16:53:43 -0400
 Content-Disposition: inline
-In-Reply-To: <1438198283-2180-1-git-send-email-stlman@poczta.fm>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <stlman@poczta.fm>
-Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1438556369.2931.153.camel@mentor.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: "Powell, Michael" <Michael_Powell@mentor.com>
+Cc: "jlee@suse.com" <jlee@suse.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Wed, Jul 29, 2015 at 09:31:23PM +0200, =C5=81ukasz Stelmach wrote:
-> Asus F3M has two keys labeled with an icon of a touchpad. The first,
-> reported as 0x6B is next to the power key and the second, reported as
-> 0x6A, is F9 combined with Fn button. When I was pressing the latter, =
-I was
-> getting "Unknown key 6a pressed" message before applying this patch.
->=20
-> Asus F3M does not support WMI so the commit does not update key mappi=
-ngs
-> in the asus-nb-wmi.c file.
->=20
-> I have not tested this mapping on any other Asus laptop.
->=20
-> Signed-off-by: =C5=81ukasz Stelmach <stlman@poczta.fm>
+On Sun, Aug 02, 2015 at 10:59:29PM +0000, Powell, Michael wrote:
+> Prevents acer-wmi from blocking wifi on HP Omen 15 laptops
 
-Thanks =C5=81ukasz.
+Wow, you managed to miss both my automated scans for patches that fail
+to Cc the maintainer :-) Patchwork caught it though.
 
-Corentin, any concerns?
+Please Cc the maintainer listed in MAINTAINERS in the future per
+Documentation/SubmittingPatches, section 5.
 
+> 
+> Signed-off-by: Michael Powell <michael_powell@mentor.com>
 > ---
->  drivers/platform/x86/asus-laptop.c | 1 +
+>  drivers/platform/x86/acer-wmi.c | 1 +
 >  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x8=
-6/asus-laptop.c
-> index 58d29c4..f2b5d0a 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -332,6 +332,7 @@ static const struct key_entry asus_keymap[] =3D {
->  	{KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
->  	{KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
->  	{KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
-> +	{KE_KEY, 0x6A, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad Fn + F9 =
-*/
->  	{KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
->  	{KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
->  	{KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
-> --=20
-> 2.1.4
->=20
->=20
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c
+> b/drivers/platform/x86/acer-wmi.c
+> index 3ac29a1..3ad8077 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -807,6 +807,7 @@ static const struct acpi_device_id norfkill_ids[]
+> __initconst = {
+>         { "IBM0068", 0},
+>         { "LEN0068", 0},
+>         { "SNY5001", 0},        /* sony-laptop in charge */
+> +	{ "HPQ6001", 0},
+>         { "", 0},
+>  };
 
---=20
+I haven't determined the reason yet, but when saving this to apply, I get an
+encoded blob of text instead of the patch. How did you send this email?
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
