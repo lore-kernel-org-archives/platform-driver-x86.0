@@ -1,79 +1,67 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 2/5] toshiba_acpi: Remove "*not supported" feature
- prints
-Date: Wed, 5 Aug 2015 15:22:48 -0700
-Message-ID: <20150805222248.GB74817@vmdeb7>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v3 4/5] toshiba_acpi: Remove unnecessary checks and
+ returns in HCI/SCI functions
+Date: Wed, 5 Aug 2015 16:23:49 -0600
+Message-ID: <CAGdLNWFwvVWdTuYfYKgEj7E_9H66ncGpkhQszif2vdVi75xcQQ@mail.gmail.com>
 References: <1438401496-27744-1-git-send-email-coproscefalo@gmail.com>
- <1438401496-27744-3-git-send-email-coproscefalo@gmail.com>
- <20150805093800.GA12131@vmdeb7>
- <CAGdLNWG0HCsXivhQeWsNJfnSf0vNTiapf=XBOx2Mnezj8TgZpQ@mail.gmail.com>
+	<1438401496-27744-5-git-send-email-coproscefalo@gmail.com>
+	<20150805202134.GB12131@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48909 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932209AbbHEWWK (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 5 Aug 2015 18:22:10 -0400
-Content-Disposition: inline
-In-Reply-To: <CAGdLNWG0HCsXivhQeWsNJfnSf0vNTiapf=XBOx2Mnezj8TgZpQ@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150805202134.GB12131@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 05, 2015 at 04:15:13PM -0600, Azael Avalos wrote:
-> Hi Darren,
-> 
-> 2015-08-05 3:38 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> > On Fri, Jul 31, 2015 at 09:58:13PM -0600, Azael Avalos wrote:
-> >> Currently the driver prints "*not supported" if any of the features
-> >> queried are in fact not supported, let us print the available
-> >> features instead.
-> >>
-> >> This patch removes all instances pr_info printing "*not supported",
-> >> and add a new function called "print_supported_features", which will
-> >> print the available laptop features.
-> >>
-> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
-> >> ---
-> >>  drivers/platform/x86/toshiba_acpi.c | 72 +++++++++++++++++++++++--------------
-> >>  1 file changed, 46 insertions(+), 26 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> >> index d983dc4..66b596a 100644
-> >> --- a/drivers/platform/x86/toshiba_acpi.c
-> >> +++ b/drivers/platform/x86/toshiba_acpi.c
-> >> @@ -459,7 +459,7 @@ static void toshiba_illumination_available(struct toshiba_acpi_dev *dev)
-> >>       if (ACPI_FAILURE(status))
-> >>               pr_err("ACPI call to query Illumination support failed\n");
-> >>       else if (out[0] == TOS_NOT_SUPPORTED)
-> >> -             pr_info("Illumination device not available\n");
-> >> +             return;
-> >>       else if (out[0] == TOS_SUCCESS)
-> >>               dev->illumination_supported = 1;
-> >>  }
-> >> @@ -483,7 +483,6 @@ static void toshiba_illumination_set(struct led_classdev *cdev,
-> >>               pr_err("ACPI call for illumination failed\n");
-> >>               return;
-> >>       } else if (result == TOS_NOT_SUPPORTED) {
-> >> -             pr_info("Illumination not supported\n");
-> >>               return;
-> >>       }
-> >
-> > I mentioned this in the previous review. For several of these, we have an if
-> > statement that checks for a condition, and then returns, which is exactly what
-> > would happen if we didn't have the if statement at all.
-> >
-> > If the context is important, a comment should be sufficient. Is there a
-> > compelling reason to add the redundant check?
-> 
-> The "offending" lines are removed by patch 04, that's why I didn't included
-> a comment or removed the lines on this patch, as I was trying to "abstract"
-> what each patch do, which in this patch, only removes the pr_info.
+Hi Darren,
 
-Apologies, I missed that. OK, we're good on this one.
+2015-08-05 14:21 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+>> @@ -1131,14 +1055,10 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+>>
+>>       result = sci_write(dev, SCI_USB_THREE, state);
+>>       sci_close(dev);
+>> -     if (result == TOS_FAILURE) {
+>> +     if (result == TOS_FAILURE)
+>>               pr_err("ACPI call to set USB 3 failed\n");
+>> -             return -EIO;
+>> -     } else if (result == TOS_NOT_SUPPORTED) {
+>> +     else if (result == TOS_NOT_SUPPORTED)
+>>               return -ENODEV;
+>> -     } else if (result == TOS_INPUT_DATA_ERROR) {
+>> -             return -EIO;
+>> -     }
+>>
+>>       return (result == TOS_SUCCESS || result == TOS_SUCCESS2) 0 : -EIO;
+>
+> Hrm... the above line cause patch application failure via git (note the
+> missing ? before the '0 : -EIO;'). This never existed upstream so far as
+> I can determine.
+
+I've spotted that while compile-checking my changes locally, but I might
+have sent you the wrong patch here, I'll double check in the future to avoid
+these embarrassments :-(
+
+>
+> It applied with some fuzz manually, but I'm concerned about how this
+> happened.  Did you have a dirty tree when you prepared these patches
+> perhaps?
+
+This is weird, all these patches applied cleanly on my local copy, I'll fetch
+a new copy from your "for-next" tree and check w/ it.
+
+In the mean time, thanks for your observations, I'll try to keep a closer look
+on future patches.
+
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+
+Cheers
+Azael
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+-- El mundo apesta y vosotros apestais tambien --
