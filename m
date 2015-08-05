@@ -1,49 +1,62 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH] MAINTAINERS: Remove Toshiba Linux mailing list address
-Date: Mon,  3 Aug 2015 11:44:08 -0600
-Message-ID: <1438623848-3707-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f45.google.com ([209.85.218.45]:33351 "EHLO
-	mail-oi0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754195AbbHCRoP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 3 Aug 2015 13:44:15 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v3 2/5] toshiba_acpi: Remove "*not supported" feature
+ prints
+Date: Wed, 5 Aug 2015 02:38:00 -0700
+Message-ID: <20150805093800.GA12131@vmdeb7>
+References: <1438401496-27744-1-git-send-email-coproscefalo@gmail.com>
+ <1438401496-27744-3-git-send-email-coproscefalo@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1438401496-27744-3-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-As of March 31th 2015, the mailing-list service finished [1].
+On Fri, Jul 31, 2015 at 09:58:13PM -0600, Azael Avalos wrote:
+> Currently the driver prints "*not supported" if any of the features
+> queried are in fact not supported, let us print the available
+> features instead.
+> 
+> This patch removes all instances pr_info printing "*not supported",
+> and add a new function called "print_supported_features", which will
+> print the available laptop features.
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 72 +++++++++++++++++++++++--------------
+>  1 file changed, 46 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index d983dc4..66b596a 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -459,7 +459,7 @@ static void toshiba_illumination_available(struct toshiba_acpi_dev *dev)
+>  	if (ACPI_FAILURE(status))
+>  		pr_err("ACPI call to query Illumination support failed\n");
+>  	else if (out[0] == TOS_NOT_SUPPORTED)
+> -		pr_info("Illumination device not available\n");
+> +		return;
+>  	else if (out[0] == TOS_SUCCESS)
+>  		dev->illumination_supported = 1;
+>  }
+> @@ -483,7 +483,6 @@ static void toshiba_illumination_set(struct led_classdev *cdev,
+>  		pr_err("ACPI call for illumination failed\n");
+>  		return;
+>  	} else if (result == TOS_NOT_SUPPORTED) {
+> -		pr_info("Illumination not supported\n");
+>  		return;
+>  	}
 
-This patch simply removes such address.
+I mentioned this in the previous review. For several of these, we have an if
+statement that checks for a condition, and then returns, which is exactly what
+would happen if we didn't have the if statement at all.
 
-[1] http://goo.gl/F6jS5r
+If the context is important, a comment should be sufficient. Is there a
+compelling reason to add the redundant check?
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
-Hi Darren,
-
-I hope you can queue this patch through your tree, I ran the
-"get_maintainer.pl" script but didn't come up w/ a defined
-maintainer (other than the general mailing list).
-
-I wanted to send this patch since April, but somehow I kept
-delaying/forgeting it.
-
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8133cef..87e5d0c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10296,7 +10296,6 @@ F:	drivers/platform/x86/toshiba_haps.c
- 
- TOSHIBA SMM DRIVER
- M:	Jonathan Buzzard <jonathan@buzzard.org.uk>
--L:	tlinux-users@tce.toshiba-dme.co.jp
- W:	http://www.buzzard.org.uk/toshiba/
- S:	Maintained
- F:	drivers/char/toshiba.c
 -- 
-2.4.5
+Darren Hart
+Intel Open Source Technology Center
