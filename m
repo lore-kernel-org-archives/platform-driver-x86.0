@@ -1,67 +1,61 @@
-From: Joe Perches <joe@perches.com>
+From: "Chen, Yu C" <yu.c.chen@intel.com>
 Subject: Re: [PATCH] surface pro 3: Add support driver for Surface Pro 3
  buttons
-Date: Wed, 05 Aug 2015 22:30:22 -0700
-Message-ID: <1438839022.2679.49.camel@perches.com>
+Date: Thu, 6 Aug 2015 11:20:44 +0000
+Message-ID: <1438860256.2127.37.camel@localhost>
 References: <1438838165-3791-1-git-send-email-yu.c.chen@intel.com>
+	 <1438839022.2679.49.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438838165-3791-1-git-send-email-yu.c.chen@intel.com>
+In-Reply-To: <1438839022.2679.49.camel@perches.com>
+Content-Language: en-US
+Content-ID: <A294C89AEF86DD4D96D304E7FD15F156@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: dvhart@infradead.org, akpm@linux-foundation.org, arnd@arndb.de, mchehab@osg.samsung.com, gregkh@linuxfoundation.org, jslaby@suse.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, rui.zhang@intel.com, rafael.j.wysocki@intel.com, mika.westerberg@intel.com
+To: "joe@perches.com" <joe@perches.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "jslaby@suse.com" <jslaby@suse.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2015-08-06 at 13:16 +0800, Chen Yu wrote:
-> Since Surface Pro 3 does not follow the specs of "Windows ACPI Design
-> Guide for SoC Platform", code in drivers/input/misc/soc_array.c can
-> not detect these buttons on it.
-
-style trivia:
-
-> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
-[]
-> +static void surface_button_notify(struct acpi_device *device, u32 event)
-> +{
-[]
-> +	switch (event) {
-> +	case SURFACE_BUTTON_NOTIFY_PRESS_POWER:
-> +		pressed = true;
-> +		/*go through*/
-
-/* fall through */ is more common
-
-> +	case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
-> +		pressed = true;
-> +	case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
-> +		key_code = KEY_LEFTMETA;
-> +		break;
-
-It may be better to add a comment about the style or
-maybe add a macro like
-
-#define HANDLE_SURFACE_BUTTON_NOTIFY(type, code)	\
-	case SURFACE_BUTTON_NOTIFY_PRESS_##type:	\
-		pressed = true;	/* and fall-through */	\
-	case SURFACE_BUTTON_NOTIFY_RELEASE_##type:	\
-		key_code = code;			\
-		break;
-
-> +	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP:
-> +		pressed = true;
-> +	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP:
-> +		key_code = KEY_VOLUMEUP;
-> +		break;
-
-> +	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN:
-> +		pressed = true;
-> +	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
-> +		key_code = KEY_VOLUMEDOWN;
-> +		break;
-> +	default:
-> +		dev_info(&device->dev,
-> +				  "Unsupported event [0x%x]\n", event);
-
-It might be useful to ratelimit this
+VGhhbmtzIEpvZSwNCk9uIFdlZCwgMjAxNS0wOC0wNSBhdCAyMjozMCAtMDcwMCwgSm9lIFBlcmNo
+ZXMgd3JvdGU6DQo+IE9uIFRodSwgMjAxNS0wOC0wNiBhdCAxMzoxNiArMDgwMCwgQ2hlbiBZdSB3
+cm90ZToNCj4gPiBTaW5jZSBTdXJmYWNlIFBybyAzIGRvZXMgbm90IGZvbGxvdyB0aGUgc3BlY3Mg
+b2YgIldpbmRvd3MgQUNQSSBEZXNpZ24NCj4gPiBHdWlkZSBmb3IgU29DIFBsYXRmb3JtIiwgY29k
+ZSBpbiBkcml2ZXJzL2lucHV0L21pc2Mvc29jX2FycmF5LmMgY2FuDQo+ID4gbm90IGRldGVjdCB0
+aGVzZSBidXR0b25zIG9uIGl0Lg0KPiANCj4gc3R5bGUgdHJpdmlhOg0KPiANCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvc3VyZmFjZXBybzNfYnV0dG9uLmMgYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9zdXJmYWNlcHJvM19idXR0b24uYw0KPiBbXQ0KPiA+ICtzdGF0aWMgdm9p
+ZCBzdXJmYWNlX2J1dHRvbl9ub3RpZnkoc3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UsIHUzMiBl
+dmVudCkNCj4gPiArew0KPiBbXQ0KPiA+ICsJc3dpdGNoIChldmVudCkgew0KPiA+ICsJY2FzZSBT
+VVJGQUNFX0JVVFRPTl9OT1RJRllfUFJFU1NfUE9XRVI6DQo+ID4gKwkJcHJlc3NlZCA9IHRydWU7
+DQo+ID4gKwkJLypnbyB0aHJvdWdoKi8NCj4gDQo+IC8qIGZhbGwgdGhyb3VnaCAqLyBpcyBtb3Jl
+IGNvbW1vbg0KPiANCk9LLg0KPiA+ICsJY2FzZSBTVVJGQUNFX0JVVFRPTl9OT1RJRllfUFJFU1Nf
+SE9NRToNCj4gPiArCQlwcmVzc2VkID0gdHJ1ZTsNCj4gPiArCWNhc2UgU1VSRkFDRV9CVVRUT05f
+Tk9USUZZX1JFTEVBU0VfSE9NRToNCj4gPiArCQlrZXlfY29kZSA9IEtFWV9MRUZUTUVUQTsNCj4g
+PiArCQlicmVhazsNCj4gDQo+IEl0IG1heSBiZSBiZXR0ZXIgdG8gYWRkIGEgY29tbWVudCBhYm91
+dCB0aGUgc3R5bGUgb3INCj4gbWF5YmUgYWRkIGEgbWFjcm8gbGlrZQ0KPiANCj4gI2RlZmluZSBI
+QU5ETEVfU1VSRkFDRV9CVVRUT05fTk9USUZZKHR5cGUsIGNvZGUpCVwNCj4gCWNhc2UgU1VSRkFD
+RV9CVVRUT05fTk9USUZZX1BSRVNTXyMjdHlwZToJXA0KPiAJCXByZXNzZWQgPSB0cnVlOwkvKiBh
+bmQgZmFsbC10aHJvdWdoICovCVwNCj4gCWNhc2UgU1VSRkFDRV9CVVRUT05fTk9USUZZX1JFTEVB
+U0VfIyN0eXBlOglcDQo+IAkJa2V5X2NvZGUgPSBjb2RlOwkJCVwNCj4gCQlicmVhazsNCj4gDQpX
+UlQgbWFjcm8gSEFORExFX1NVUkZBQ0VfQlVUVE9OX05PVElGWSwgdGhlIGNoZWNrcGF0Y2gucGwN
+CmNvbXBsYWlucyB0aGF0IG11bHRpIGxpbmVzIG9mIGNvZGVzIHNob3VsZCBiZSB3cmFwcGVkIGlu
+ICdkbw0Kd2hpbGUnc3RhdGUsIGJ1dCBkb2luZyBsaWtlIHRoaXMgbWlnaHQgbGVhZCB0byBpbmNv
+cnJlY3Qgc2VtYW50aWMuDQpJcyBpdCBvayB0byBrZWVwIHRoZXNlIGNvZGVzIGFuZCBhZGQgY29t
+bWVudHMgbGlrZToNCi8qDQogKiBXaGVuIGEgYnV0dG9uKHBvd2VyIGJ1dHRvbi92b2x1bWUgYnV0
+dG9uL2hvbWUgYnV0dG9uKSBpcyANCiAqIHByZXNzZWQgZG93biBvciByZWxlYXNlZCwgZGlmZmVy
+ZW50IEFDUEkgbm90aWZpY2F0aW9uIGNvZGVzIA0KICogd2lsbCBiZSBnZW5lcmF0ZWQuIFdlIGNh
+biBkaXN0aW5ndWlzaCBkaWZmZXJlbnQgZXZlbnQgY29kZSANCiAqIGFuZCB2YWx1ZSBvZiBidXR0
+b25zIGJ5IHRoZXNlIG5vdGlmaWNhdGlvbiBjb2RlcywgdGhlbiBwYXNzDQogKiAoRVZfS0VZLCBl
+dmVudCBjb2RlKGtleV9jb2RlKSwgdmFsdWUocHJlc3NlZCkpIHRvIGlucHV0IGxheWVyLg0KICov
+DQoNCj4gPiArCWNhc2UgU1VSRkFDRV9CVVRUT05fTk9USUZZX1BSRVNTX1ZPTFVNRV9VUDoNCj4g
+PiArCQlwcmVzc2VkID0gdHJ1ZTsNCj4gPiArCWNhc2UgU1VSRkFDRV9CVVRUT05fTk9USUZZX1JF
+TEVBU0VfVk9MVU1FX1VQOg0KPiA+ICsJCWtleV9jb2RlID0gS0VZX1ZPTFVNRVVQOw0KPiA+ICsJ
+CWJyZWFrOw0KPiANCj4gPiArCWNhc2UgU1VSRkFDRV9CVVRUT05fTk9USUZZX1BSRVNTX1ZPTFVN
+RV9ET1dOOg0KPiA+ICsJCXByZXNzZWQgPSB0cnVlOw0KPiA+ICsJY2FzZSBTVVJGQUNFX0JVVFRP
+Tl9OT1RJRllfUkVMRUFTRV9WT0xVTUVfRE9XTjoNCj4gPiArCQlrZXlfY29kZSA9IEtFWV9WT0xV
+TUVET1dOOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQlkZXZfaW5mbygm
+ZGV2aWNlLT5kZXYsDQo+ID4gKwkJCQkgICJVbnN1cHBvcnRlZCBldmVudCBbMHgleF1cbiIsIGV2
+ZW50KTsNCj4gDQo+IEl0IG1pZ2h0IGJlIHVzZWZ1bCB0byByYXRlbGltaXQgdGhpcw0KPiANCk9L
+LCBjaGFuZ2VkIHRvIGRldl9pbmZvX3JhdGVsaW1pdGVkDQo+IA0KDQpCZXN0IFJlZ2FyZHMsDQpZ
+dQ0KDQo=
