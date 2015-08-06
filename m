@@ -1,46 +1,80 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] surface pro 3: Add support driver for Surface Pro 3
- buttons
-Date: Thu, 06 Aug 2015 07:54:37 -0700
-Message-ID: <1438872877.2679.56.camel@perches.com>
-References: <1438838165-3791-1-git-send-email-yu.c.chen@intel.com>
-	 <1438839022.2679.49.camel@perches.com> <1438860256.2127.37.camel@localhost>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v3 4/5] toshiba_acpi: Remove unnecessary checks and
+ returns in HCI/SCI functions
+Date: Thu, 6 Aug 2015 10:21:15 -0600
+Message-ID: <CAGdLNWGS-iQhkfMqzPrMAYw11XVYx_grobr53Qqa2-US4w3pTg@mail.gmail.com>
+References: <1438401496-27744-1-git-send-email-coproscefalo@gmail.com>
+	<1438401496-27744-5-git-send-email-coproscefalo@gmail.com>
+	<20150805202134.GB12131@vmdeb7>
+	<CAGdLNWFwvVWdTuYfYKgEj7E_9H66ncGpkhQszif2vdVi75xcQQ@mail.gmail.com>
+	<20150805232105.GC74817@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1438860256.2127.37.camel@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "jslaby@suse.com" <jslaby@suse.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "arnd@arndb.de" <arnd@arndb.de>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f177.google.com ([209.85.212.177]:38079 "EHLO
+	mail-wi0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753911AbbHFQVR (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 6 Aug 2015 12:21:17 -0400
+In-Reply-To: <20150805232105.GC74817@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Thu, 2015-08-06 at 11:20 +0000, Chen, Yu C wrote:
-> On Wed, 2015-08-05 at 22:30 -0700, Joe Perches wrote:
-[]
-> > > +	case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
-> > > +		pressed = true;
-> > > +	case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
-> > > +		key_code = KEY_LEFTMETA;
-> > > +		break;
-> > 
-> > It may be better to add a comment about the style or
-> > maybe add a macro like
-> > 
-> > #define HANDLE_SURFACE_BUTTON_NOTIFY(type, code)	\
-> > 	case SURFACE_BUTTON_NOTIFY_PRESS_##type:	\
-> > 		pressed = true;	/* and fall-through */	\
-> > 	case SURFACE_BUTTON_NOTIFY_RELEASE_##type:	\
-> > 		key_code = code;			\
-> > 		break;
-> > 
-> WRT macro HANDLE_SURFACE_BUTTON_NOTIFY, the checkpatch.pl
-> complains that multi lines of codes should be wrapped in 'do
-> while'state, but doing like this might lead to incorrect semantic.
+Hi Darren,
 
-checkpatch is a brainless tool that should be ignored
-whenever you want.
+2015-08-05 17:21 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> On Wed, Aug 05, 2015 at 04:23:49PM -0600, Azael Avalos wrote:
+>> Hi Darren,
+>>
+>> 2015-08-05 14:21 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+>> >> @@ -1131,14 +1055,10 @@ static int toshiba_usb_three_set(struct toshiba_acpi_dev *dev, u32 state)
+>> >>
+>> >>       result = sci_write(dev, SCI_USB_THREE, state);
+>> >>       sci_close(dev);
+>> >> -     if (result == TOS_FAILURE) {
+>> >> +     if (result == TOS_FAILURE)
+>> >>               pr_err("ACPI call to set USB 3 failed\n");
+>> >> -             return -EIO;
+>> >> -     } else if (result == TOS_NOT_SUPPORTED) {
+>> >> +     else if (result == TOS_NOT_SUPPORTED)
+>> >>               return -ENODEV;
+>> >> -     } else if (result == TOS_INPUT_DATA_ERROR) {
+>> >> -             return -EIO;
+>> >> -     }
+>> >>
+>> >>       return (result == TOS_SUCCESS || result == TOS_SUCCESS2) 0 : -EIO;
+>> >
+>> > Hrm... the above line cause patch application failure via git (note the
+>> > missing ? before the '0 : -EIO;'). This never existed upstream so far as
+>> > I can determine.
+>>
+>> I've spotted that while compile-checking my changes locally, but I might
+>> have sent you the wrong patch here, I'll double check in the future to avoid
+>> these embarrassments :-(
+>>
+>> >
+>> > It applied with some fuzz manually, but I'm concerned about how this
+>> > happened.  Did you have a dirty tree when you prepared these patches
+>> > perhaps?
+>>
+>> This is weird, all these patches applied cleanly on my local copy, I'll fetch
+>> a new copy from your "for-next" tree and check w/ it.
+>
+> Please verify what I have in "testing", if that's right, then we're good. It has
+> already passed my checks and 0day's.
 
-> Is it ok to keep these codes and add comments like:
+I just checked it, and it's good, sorry for all the fuzz :-)
 
-Up to you.  It'd OK to do nothing too.
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+Cheers
+Azael
+
+
+-- 
+-- El mundo apesta y vosotros apestais tambien --
