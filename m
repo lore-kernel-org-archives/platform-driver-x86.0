@@ -1,84 +1,69 @@
-From: Corentin Chary <corentin.chary@gmail.com>
-Subject: Re: [PATCH v2] asus-laptop: Add key found on Asus F3M
-Date: Wed, 12 Aug 2015 09:06:08 +0200
-Message-ID: <CAHR064g5YRt-ru=3wTzkrPFgNUPABmCuf9Lv086Pu=j7pfR7uQ@mail.gmail.com>
-References: <20150729044329.GA80946@vmdeb7>
-	<1438198283-2180-1-git-send-email-stlman@poczta.fm>
-	<20150805202907.GD12131@vmdeb7>
+From: Dalton Fury <daltonfury42@gmail.com>
+Subject: Re: sony_laptop bug - Can't change usb_charge attribute
+Date: Thu, 13 Aug 2015 00:21:42 +0530
+Message-ID: <CALH0XhnzXjmRjuFu4bpS9UeFLHWa6sF-9EHM0989Gsn+0+RjXw@mail.gmail.com>
+References: <CALH0XhkxrWw7dps6=+KSfiJ6NQtf=1Hu_NqtGydK3amjvUHG5g@mail.gmail.com>
+ <20150610212218.GA7272@taihen.jp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182]:33318 "EHLO
-	mail-wi0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754017AbbHLHGJ convert rfc822-to-8bit (ORCPT
+Received: from mail-oi0-f46.google.com ([209.85.218.46]:33282 "EHLO
+	mail-oi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751236AbbHLSwW (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 12 Aug 2015 03:06:09 -0400
-In-Reply-To: <20150805202907.GD12131@vmdeb7>
+	Wed, 12 Aug 2015 14:52:22 -0400
+Received: by oio137 with SMTP id 137so14335756oio.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2015 11:52:21 -0700 (PDT)
+In-Reply-To: <20150610212218.GA7272@taihen.jp>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <stlman@poczta.fm>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Mattia Dongili <malattia@linux.it>
+Cc: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 5, 2015 at 10:29 PM, Darren Hart <dvhart@infradead.org> wro=
-te:
-> On Wed, Jul 29, 2015 at 09:31:23PM +0200, =C5=81ukasz Stelmach wrote:
->> Asus F3M has two keys labeled with an icon of a touchpad. The first,
->> reported as 0x6B is next to the power key and the second, reported a=
-s
->> 0x6A, is F9 combined with Fn button. When I was pressing the latter,=
- I was
->> getting "Unknown key 6a pressed" message before applying this patch.
->>
->> Asus F3M does not support WMI so the commit does not update key mapp=
-ings
->> in the asus-nb-wmi.c file.
->>
->> I have not tested this mapping on any other Asus laptop.
->>
->> Signed-off-by: =C5=81ukasz Stelmach <stlman@poczta.fm>
->
-> Thanks =C5=81ukasz.
->
-> Corentin, any concerns?
+Hi Mattia Dongili,
 
-Acked-by: Corentin Chary <corentin.chary@gmail.com>
+What is the status of this bug? Is it fixed? I still have the same
+issue on my 4.1.3-1-ARCH kernel. Will it ever be fixed in the near
+future?
 
-Sorry for the delay, I won't really have a stable internet connection
-until October.
-
+On Thu, Jun 11, 2015 at 2:52 AM, Mattia Dongili <malattia@linux.it> wrote:
+> Hi Dalton,
 >
->> ---
->>  drivers/platform/x86/asus-laptop.c | 1 +
->>  1 file changed, 1 insertion(+)
+> On Wed, Jun 10, 2015 at 03:30:32AM +0530, Dalton Fury wrote:
+>> [1.] [Sony VAIO SVF14212SNB] Can't change usb_charge attribute in
+>> /sys/devices/platform/sony-laptop
 >>
->> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x=
-86/asus-laptop.c
->> index 58d29c4..f2b5d0a 100644
->> --- a/drivers/platform/x86/asus-laptop.c
->> +++ b/drivers/platform/x86/asus-laptop.c
->> @@ -332,6 +332,7 @@ static const struct key_entry asus_keymap[] =3D =
-{
->>       {KE_KEY, 0x65, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + TV */
->>       {KE_KEY, 0x66, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV */
->>       {KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + =
-TV */
->> +     {KE_KEY, 0x6A, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad Fn =
-+ F9 */
->>       {KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } }, /* Lock Touchpad */
->>       {KE_KEY, 0x6C, { KEY_SLEEP } }, /* Suspend */
->>       {KE_KEY, 0x6D, { KEY_SLEEP } }, /* Hibernate */
->> --
->> 2.1.4
+>> [2.] I am on a Sony VAIO svf43142sn. My laptop has the ability to
+> ...
+>> echo -n 0 | sudo tee -a /sys/devices/platform/sony-laptop/usb_charge
 >>
+>> these are the curresponding kernel log entries:
 >>
+>> [  495.400140] sony_laptop: found handle 0x0155 (offset: 0x07)
+>> [  495.400955] sony_laptop: __call_snc_method: [SN07:0x0000000000000107]
+>> [  495.400961] sony_laptop: called SN07 with 0x0107 (result: 0x0000)
+>>
+>> After attempting to change, and when I cat the value of usb_charge, I
+>> find that it is unchanged. But when the cat cammand is executed, I get
+>> these kernel messages:
+>>
+>> [  683.170315] sony_laptop: found handle 0x0155 (offset: 0x07)
+>> [  683.170458] sony_laptop: __call_snc_method: [SN07:0x0000000000000007]
+>> [  683.170462] sony_laptop: called SN07 with 0x0007 (result: 0x0001)
 >
+> I have the same behaviour on my laptop (a Pro11), I believe usb_charge
+> was working correctly sometime in the past.
+> It may take me some time but I should be able to take a look. In the
+> meantime it would be good if you could attach the DSDT from your model
+> to the Ubuntu bug report and send a link here too.
+>
+>> I don't know if it is relevent, but for writing this bug report, when
+>> I booted into the latest upstream kernel, I could not boot. The second
+>> time it booted successfully.
+>
+> I don't think it is.
+>
+> Thanks
 > --
-> Darren Hart
-> Intel Open Source Technology Center
-
-
-
---=20
-Corentin Chary
-http://xf.iksaif.net
+> mattia
+> :wq!
