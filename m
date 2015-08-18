@@ -1,39 +1,37 @@
-From: Mattia Dongili <malattia@linux.it>
-Subject: Re: sony_laptop bug - Can't change usb_charge attribute
-Date: Mon, 17 Aug 2015 07:07:01 +0900
-Message-ID: <20150816220700.GA12702@taihen.jp>
-References: <CALH0XhkxrWw7dps6=+KSfiJ6NQtf=1Hu_NqtGydK3amjvUHG5g@mail.gmail.com>
- <20150610212218.GA7272@taihen.jp>
- <CALH0XhnzXjmRjuFu4bpS9UeFLHWa6sF-9EHM0989Gsn+0+RjXw@mail.gmail.com>
+From: Yu Chen <yu.c.chen@intel.com>
+Subject: Re: [PATCH] [v2] surface pro 3: Add support driver for Surface Pro
+ 3 buttons
+Date: Tue, 18 Aug 2015 09:42:31 +0800
+Message-ID: <55D28D87.2080800@intel.com>
+References: <1438934272-17959-1-git-send-email-yu.c.chen@intel.com> <1438936078.2322.29.camel@perches.com> <1438937513.2723.10.camel@localhost> <20150811024524.GA3095@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-pd0-f180.google.com ([209.85.192.180]:33233 "EHLO
-	mail-pd0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751307AbbHPWHH (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 16 Aug 2015 18:07:07 -0400
-Received: by pdrh1 with SMTP id h1so49043451pdr.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2015 15:07:07 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <CALH0XhnzXjmRjuFu4bpS9UeFLHWa6sF-9EHM0989Gsn+0+RjXw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dalton Fury <daltonfury42@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150811024524.GA3095@vmdeb7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "joe@perches.com" <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, "jslaby@suse.com" <jslaby@suse.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mchehab@osg.samsung.com" <mchehab@osg.samsung.com>, "arnd@arndb.de" <arnd@arndb.de>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Aug 13, 2015 at 12:21:42AM +0530, Dalton Fury wrote:
-> Hi Mattia Dongili,
-> 
-> What is the status of this bug? Is it fixed? I still have the same
-> issue on my 4.1.3-1-ARCH kernel. Will it ever be fixed in the near
-> future?
+On 08/11/2015 10:45 AM, Darren Hart wrote:
+> On Fri, Aug 07, 2015 at 08:48:18AM +0000, Chen, Yu C wrote:
+>> On Fri, 2015-08-07 at 01:27 -0700, Joe Perches wrote:
+>>> On Fri, 2015-08-07 at 15:57 +0800, Chen Yu wrote:					\
+>>>
+>>> I think the older switch/case was easier to understand.
+>>>
+>> OK, then let's keep the switch/case.
+>> thanks.
+>
+> Agreed.
+>
+Hi, Darren and Joe, I'll send a V4 of this patch to
+add a method to exclude the load of Surface 3(no Pro),
+since Surface 3 also has a device name of MSHW0028, but
+it is not used for buttons.
+Thanks
 
-I'm afraid I don't have a fix at the moment. I've been extremely busy
-for the past few weeks and I will even busier at least until the end of
-the year.
-
-Regards,
--- 
-mattia
-:wq!
+Best Regards,
+Yu
+>
