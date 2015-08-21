@@ -1,43 +1,65 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2.2 04/22] fjes: platform_driver's .probe and .remove
- routine
-Date: Thu, 20 Aug 2015 15:51:28 -0700 (PDT)
-Message-ID: <20150820.155128.302382371842900422.davem@davemloft.net>
+From: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>
+Subject: RE: [PATCH v2.2 01/22] fjes: Introduce FUJITSU Extended Socket
+ Network Device driver
+Date: Fri, 21 Aug 2015 06:11:12 +0000
+Message-ID: <E86EADE93E2D054CBCD4E708C38D364A54269C80@G01JPEXMBYT01>
 References: <1440060306-13040-1-git-send-email-izumi.taku@jp.fujitsu.com>
 	<1440060386-13189-1-git-send-email-izumi.taku@jp.fujitsu.com>
-	<1440060386-13189-4-git-send-email-izumi.taku@jp.fujitsu.com>
+ <20150820.154901.1696097888673162441.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-2022-jp"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from shards.monkeyblade.net ([149.20.54.216]:57707 "EHLO
-	shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752083AbbHTWva (ORCPT
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169]:52286 "EHLO
+	mgwkm02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752002AbbHUGLS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 20 Aug 2015 18:51:30 -0400
-In-Reply-To: <1440060386-13189-4-git-send-email-izumi.taku@jp.fujitsu.com>
+	Fri, 21 Aug 2015 02:11:18 -0400
+In-Reply-To: <20150820.154901.1696097888673162441.davem@davemloft.net>
+Content-Language: ja-JP
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: izumi.taku@jp.fujitsu.com
-Cc: netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com
+To: David Miller <davem@davemloft.net>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "rkhan@redhat.com" <rkhan@redhat.com>, "alexander.h.duyck@redhat.com" <alexander.h.duyck@redhat.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joe@perches.com" <joe@perches.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "yasu.isimatu@gmail.com" <yasu.isimatu@gmail.com>
 
-From: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Date: Thu, 20 Aug 2015 17:46:08 +0900
+Dear David,
 
-> +
-> +err_register:
-> +	fjes_hw_exit(&adapter->hw);
-> +err_hw_init:
-> +err_sw_init:
-> +	free_netdev(netdev);
-> +err_alloc_netdev:
-> +	return err;
+ Thank you for reviewing.
+ I'll update patchset according to your comment.
 
-Having multiple code labels in the same exact spot is suboptimal.
+ Sincerely,
+ Taku Izumi
 
-Instead, name the labels such that they describe the first cleanup
-action they will perform, instead of the context in which they are
-jumped to from.
-
-So "err_hw_exit:", "err_free_netdev", and "err_out:" would be
-appropriate.
+> -----Original Message-----
+> From: David Miller [mailto:davem@davemloft.net]
+> Sent: Friday, August 21, 2015 7:49 AM
+> To: Izumi, Taku/泉 拓
+> Cc: netdev@vger.kernel.org; platform-driver-x86@vger.kernel.org; dvhart@infradead.org; rkhan@redhat.com;
+> alexander.h.duyck@redhat.com; linux-acpi@vger.kernel.org; joe@perches.com; sergei.shtylyov@cogentembedded.com;
+> stephen@networkplumber.org; yasu.isimatu@gmail.com
+> Subject: Re: [PATCH v2.2 01/22] fjes: Introduce FUJITSU Extended Socket Network Device driver
+> 
+> From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+> Date: Thu, 20 Aug 2015 17:46:05 +0900
+> 
+> > +obj-$(CONFIG_FUJITSU_ES) += fjes.o
+> > +
+> > +fjes-objs := fjes_main.o
+> > +
+> 
+> Please do not have trailing empty lines in any files you add
+> or edit, 'git' warns about this even when applying patches.
+> 
+> > +static int fjes_acpi_add(struct acpi_device *device)
+> > +{
+> > +	acpi_status status;
+> > +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL};
+> > +	union acpi_object *str;
+> > +	char str_buf[sizeof(FJES_ACPI_SYMBOL) + 1];
+> > +	int result;
+> > +	struct platform_device *plat_dev;
+> 
+> Please order your local variables in "reverse christmas tree" order, which
+> means longer lines come before shorter ones.
+> 
+> Please correct this problem in your entire submission, as I am not going
+> to point out each and every other place where this problem exists.
