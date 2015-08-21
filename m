@@ -1,195 +1,551 @@
-From: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Subject: [PATCH v3 04/22] fjes: platform_driver's .probe and .remove routine
-Date: Fri, 21 Aug 2015 17:29:20 +0900
-Message-ID: <1440145778-15941-4-git-send-email-izumi.taku@jp.fujitsu.com>
-References: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
- <1440145778-15941-1-git-send-email-izumi.taku@jp.fujitsu.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1440145778-15941-1-git-send-email-izumi.taku@jp.fujitsu.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, davem@davemloft.net
-Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com, Taku Izumi <izumi.taku@jp.fujitsu.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Qipeng Zha <qipeng.zha@intel.com>
+Subject: [PATCH v2] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Sat, 22 Aug 2015 01:04:19 +0800
+Message-ID: <1440176659-83769-1-git-send-email-qipeng.zha@intel.com>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga09.intel.com ([134.134.136.24]:11608 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752550AbbHUJAi (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 21 Aug 2015 05:00:38 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com, qipeng.zha@intel.com
 
-This patch implements platform_driver's .probe and .remove
-routine, and also adds board specific private data structure.
+This driver provides support for P-Unit mailbox IPC on Intel platforms.
+The heart of the P-Unit is the Foxton microcontroller and its firmware,
+which provide mailbox interface for power management usage.
 
-This driver registers net_device at platform_driver's .probe
-routine and unregisters net_device at its .remove routine.
+Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
 
-Signed-off-by: Taku Izumi <izumi.taku@jp.fujitsu.com>
 ---
- drivers/net/fjes/fjes.h      | 25 ++++++++++++
- drivers/net/fjes/fjes_main.c | 94 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 119 insertions(+)
+change in v2
+ Fix issues in code style and comments;
+ Remove "default y" in Kconfig;
+ Remove some header files;
+ Replace request_mem_region with devm_request_mem_region,
+and same for request_irq;
+ Change to use prefix of IPC_PUNIT_ to define commands;
+---
+ MAINTAINERS                            |   4 +-
+ arch/x86/include/asm/intel_punit_ipc.h | 101 ++++++++++
+ drivers/platform/x86/Kconfig           |   6 +
+ drivers/platform/x86/Makefile          |   1 +
+ drivers/platform/x86/intel_punit_ipc.c | 353 +++++++++++++++++++++++++++++++++
+ 5 files changed, 464 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/include/asm/intel_punit_ipc.h
+ create mode 100644 drivers/platform/x86/intel_punit_ipc.c
 
-diff --git a/drivers/net/fjes/fjes.h b/drivers/net/fjes/fjes.h
-index 15ded96..54bc189 100644
---- a/drivers/net/fjes/fjes.h
-+++ b/drivers/net/fjes/fjes.h
-@@ -24,7 +24,32 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 13ac861..cf71387 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5207,12 +5207,14 @@ F:	include/uapi/linux/mei.h
+ F:	drivers/misc/mei/*
+ F:	Documentation/misc-devices/mei/*
  
- #include <linux/acpi.h>
+-INTEL PMC IPC DRIVER
++INTEL PMC/P-Unit IPC DRIVER
+ M:	Zha Qipeng<qipeng.zha@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_pmc_ipc.c
++F:	drivers/platform/x86/intel_punit_ipc.c
+ F:	arch/x86/include/asm/intel_pmc_ipc.h
++F:	arch/x86/include/asm/intel_punit_ipc.h
  
-+#include "fjes_hw.h"
+ IOC3 ETHERNET DRIVER
+ M:	Ralf Baechle <ralf@linux-mips.org>
+diff --git a/arch/x86/include/asm/intel_punit_ipc.h b/arch/x86/include/asm/intel_punit_ipc.h
+new file mode 100644
+index 0000000..e15a829
+--- /dev/null
++++ b/arch/x86/include/asm/intel_punit_ipc.h
+@@ -0,0 +1,101 @@
++#ifndef _ASM_X86_INTEL_PUNIT_IPC_H_
++#define  _ASM_X86_INTEL_PUNIT_IPC_H_
 +
- #define FJES_ACPI_SYMBOL	"Extended Socket"
-+#define FJES_MAX_QUEUES		1
-+#define FJES_TX_RETRY_INTERVAL	(20 * HZ)
++/* Commands supported on CPU core, are handled by different bars,
++ * unify these commands together here
++ */
++#define IPC_PUNIT_BIOS_CMD_BASE			0x00
++#define IPC_PUNIT_GTD_CMD_BASE			0x20
++#define IPC_PUNIT_ISPD_CMD_BASE			0x40
 +
-+/* board specific private data structure */
-+struct fjes_adapter {
-+	struct net_device *netdev;
-+	struct platform_device *plat_dev;
++/* BIOS => Pcode commands */
++#define IPC_PUNIT_BIOS_CMD_ZERO			(IPC_PUNIT_BIOS_CMD_BASE + 0x00)
++#define IPC_PUNIT_BIOS_CMD_VR_INTERFACE		(IPC_PUNIT_BIOS_CMD_BASE + 0x01)
++#define IPC_PUNIT_BIOS_CMD_READ_PCS		(IPC_PUNIT_BIOS_CMD_BASE + 0x02)
++#define IPC_PUNIT_BIOS_CMD_WRITE_PCS		(IPC_PUNIT_BIOS_CMD_BASE + 0x03)
++#define IPC_PUNIT_BIOS_CMD_READ_PCU_CONFIG	(IPC_PUNIT_BIOS_CMD_BASE + 0x04)
++#define IPC_PUNIT_BIOS_CMD_WRITE_PCU_CONFIG	(IPC_PUNIT_BIOS_CMD_BASE + 0x05)
++#define IPC_PUNIT_BIOS_CMD_READ_PL1_SETTING	(IPC_PUNIT_BIOS_CMD_BASE + 0x06)
++#define IPC_PUNIT_BIOS_WRITE_PL1_SETTING	(IPC_PUNIT_BIOS_CMD_BASE + 0x07)
++#define IPC_PUNIT_BIOS_CMD_TRIGGER_VDD_RAM	(IPC_PUNIT_BIOS_CMD_BASE + 0x08)
++#define IPC_PUNIT_BIOS_CMD_READ_TELE_INFO	(IPC_PUNIT_BIOS_CMD_BASE + 0x09)
++#define IPC_PUNIT_BIOS_CMD_READ_TELE_TRACE_CTRL	(IPC_PUNIT_BIOS_CMD_BASE + 0x0a)
++#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_TRACE_CTRL \
++						(IPC_PUNIT_BIOS_CMD_BASE + 0x0b)
++#define IPC_PUNIT_BIOS_CMD_READ_TELE_EVENT_CTRL	(IPC_PUNIT_BIOS_CMD_BASE + 0x0c)
++#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_EVENT_CTRL \
++						(IPC_PUNIT_BIOS_CMD_BASE + 0x0d)
++#define IPC_PUNIT_BIOS_CMD_READ_TELE_TRACE	(IPC_PUNIT_BIOS_CMD_BASE + 0x0e)
++#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_TRACE	(IPC_PUNIT_BIOS_CMD_BASE + 0x0f)
++#define IPC_PUNIT_BIOS_CMD_READ_TELE_EVENT	(IPC_PUNIT_BIOS_CMD_BASE + 0x10)
++#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_EVENT	(IPC_PUNIT_BIOS_CMD_BASE + 0x11)
++#define IPC_PUNIT_BIOS_CMD_READ_MODULE_TEMP	(IPC_PUNIT_BIOS_CMD_BASE + 0x12)
++#define IPC_PUNIT_BIOS_CMD_RESERVED		(IPC_PUNIT_BIOS_CMD_BASE + 0x13)
++#define IPC_PUNIT_BIOS_CMD_READ_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE + 0x14)
++#define IPC_PUNIT_BIOS_CMD_WRITE_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE + 0x15)
++#define IPC_PUNIT_BIOS_CMD_READ_RATIO_OVER	(IPC_PUNIT_BIOS_CMD_BASE + 0x16)
++#define IPC_PUNIT_BIOS_CMD_WRITE_RATIO_OVER	(IPC_PUNIT_BIOS_CMD_BASE + 0x17)
++#define IPC_PUNIT_BIOS_CMD_READ_VF_GL_CTRL	(IPC_PUNIT_BIOS_CMD_BASE + 0x18)
++#define IPC_PUNIT_BIOS_CMD_WRITE_VF_GL_CTRL	(IPC_PUNIT_BIOS_CMD_BASE + 0x19)
++#define IPC_PUNIT_BIOS_CMD_READ_FM_SOC_TEMP_THRESH \
++						(IPC_PUNIT_BIOS_CMD_BASE + 0x1a)
++#define IPC_PUNIT_BIOS_CMD_WRITE_FM_SOC_TEMP_THRESH \
++						(IPC_PUNIT_BIOS_CMD_BASE + 0x1b)
 +
-+	struct napi_struct napi;
-+	struct rtnl_link_stats64 stats64;
++/*GT Driver => Pcode commands*/
++#define IPC_PUNIT_GTD_CMD_ZERO			(IPC_PUNIT_GTD_CMD_BASE + 0x00)
++#define IPC_PUNIT_GTD_CMD_CONFIG		(IPC_PUNIT_GTD_CMD_BASE + 0x01)
++#define IPC_PUNIT_GTD_CMD_READ_ICCP_LIC_CDYN_SCAL \
++						(IPC_PUNIT_GTD_CMD_BASE + 0x02)
++#define IPC_PUNIT_GTD_CMD_WRITE_ICCP_LIC_CDYN_SCAL \
++						(IPC_PUNIT_GTD_CMD_BASE + 0x03)
++#define IPC_PUNIT_GTD_CMD_GET_WM_VAL		(IPC_PUNIT_GTD_CMD_BASE + 0x06)
++#define IPC_PUNIT_GTD_CMD_WRITE_CONFIG_WISHREQ	(IPC_PUNIT_GTD_CMD_BASE + 0x07)
++#define IPC_PUNIT_GTD_CMD_READ_REQ_DUTY_CYCLE	(IPC_PUNIT_GTD_CMD_BASE + 0x16)
++#define IPC_PUNIT_GTD_CMD_DIS_VOL_FREQ_CHANGE_REQUEST \
++						(IPC_PUNIT_GTD_CMD_BASE + 0x17)
++#define IPC_PUNIT_GTD_CMD_DYNA_DUTY_CYCLE_CTRL	(IPC_PUNIT_GTD_CMD_BASE + 0x1a)
++#define IPC_PUNIT_GTD_CMD_DYNA_DUTY_CYCLE_TUNING \
++						(IPC_PUNIT_GTD_CMD_BASE + 0x1c)
 +
-+	unsigned int tx_retry_count;
-+	unsigned long tx_start_jiffies;
-+	unsigned long rx_last_jiffies;
-+	bool unset_rx_last;
++/* ISP Driver => Pcode commands */
++#define IPC_PUNIT_ISPD_CMD_ZERO			(IPC_PUNIT_ISPD_CMD_BASE + 0x00)
++#define IPC_PUNIT_ISPD_CMD_CONFIG		(IPC_PUNIT_ISPD_CMD_BASE + 0x01)
++#define IPC_PUNIT_ISPD_CMD_GET_ISP_LTR_VAL	(IPC_PUNIT_ISPD_CMD_BASE + 0x02)
++#define IPC_PUNIT_ISPD_CMD_ACCESS_IU_FREQ_BOUNDS \
++						(IPC_PUNIT_ISPD_CMD_BASE + 0x03)
++#define IPC_PUNIT_ISPD_CMD_READ_CDYN_LEVEL	(IPC_PUNIT_ISPD_CMD_BASE + 0x04)
++#define IPC_PUNIT_ISPD_CMD_WRITE_CDYN_LEVEL	(IPC_PUNIT_ISPD_CMD_BASE + 0x05)
++#define IPC_PUNIT_ISPD_CMD_MAX			(IPC_PUNIT_ISPD_CMD_BASE + 0x06)
 +
-+	bool force_reset;
-+	bool open_guard;
++/* Error codes */
++#define IPC_PUNIT_ERR_SUCCESS			0
++#define IPC_PUNIT_ERR_INVALID_CMD		1
++#define IPC_PUNIT_ERR_INVALID_PARAMETER		2
++#define IPC_PUNIT_ERR_CMD_TIMEOUT		3
++#define IPC_PUNIT_ERR_CMD_LOCKED		4
++#define IPC_PUNIT_ERR_INVALID_VR_ID		5
++#define IPC_PUNIT_ERR_VR_ERR			6
 +
-+	bool irq_registered;
++#if IS_ENABLED(CONFIG_INTEL_PUNIT_IPC)
 +
-+	struct fjes_hw hw;
-+};
- 
- extern char fjes_driver_name[];
- extern char fjes_driver_version[];
-diff --git a/drivers/net/fjes/fjes_main.c b/drivers/net/fjes/fjes_main.c
-index 9517666..45a8b9c 100644
---- a/drivers/net/fjes/fjes_main.c
-+++ b/drivers/net/fjes/fjes_main.c
-@@ -23,6 +23,7 @@
- #include <linux/types.h>
- #include <linux/nls.h>
- #include <linux/platform_device.h>
-+#include <linux/netdevice.h>
- 
- #include "fjes.h"
- 
-@@ -49,6 +50,9 @@ static acpi_status fjes_get_acpi_resource(struct acpi_resource *, void*);
- static int fjes_probe(struct platform_device *);
- static int fjes_remove(struct platform_device *);
- 
-+static int fjes_sw_init(struct fjes_adapter *);
-+static void fjes_netdev_setup(struct net_device *);
++int intel_punit_ipc_simple_command(int cmd, int para1, int para2);
++int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out);
 +
- static const struct acpi_device_id fjes_acpi_ids[] = {
- 	{"PNP0C02", 0},
- 	{"", 0},
-@@ -166,18 +170,108 @@ fjes_get_acpi_resource(struct acpi_resource *acpi_res, void *data)
- 	return AE_OK;
- }
- 
-+static const struct net_device_ops fjes_netdev_ops = {
-+};
++#else
 +
- /* fjes_probe - Device Initialization Routine */
- static int fjes_probe(struct platform_device *plat_dev)
- {
-+	struct fjes_adapter *adapter;
-+	struct net_device *netdev;
-+	struct resource *res;
-+	struct fjes_hw *hw;
-+	int err;
-+
-+	err = -ENOMEM;
-+	netdev = alloc_netdev_mq(sizeof(struct fjes_adapter), "es%d",
-+				 NET_NAME_UNKNOWN, fjes_netdev_setup,
-+				 FJES_MAX_QUEUES);
-+
-+	if (!netdev)
-+		goto err_out;
-+
-+	SET_NETDEV_DEV(netdev, &plat_dev->dev);
-+
-+	dev_set_drvdata(&plat_dev->dev, netdev);
-+	adapter = netdev_priv(netdev);
-+	adapter->netdev = netdev;
-+	adapter->plat_dev = plat_dev;
-+	hw = &adapter->hw;
-+	hw->back = adapter;
-+
-+	/* setup the private structure */
-+	err = fjes_sw_init(adapter);
-+	if (err)
-+		goto err_free_netdev;
-+
-+	adapter->force_reset = false;
-+	adapter->open_guard = false;
-+
-+	res = platform_get_resource(plat_dev, IORESOURCE_MEM, 0);
-+	hw->hw_res.start = res->start;
-+	hw->hw_res.size = res->end - res->start + 1;
-+	hw->hw_res.irq = platform_get_irq(plat_dev, 0);
-+	err = fjes_hw_init(&adapter->hw);
-+	if (err)
-+		goto err_free_netdev;
-+
-+	/* setup MAC address (02:00:00:00:00:[epid])*/
-+	netdev->dev_addr[0] = 2;
-+	netdev->dev_addr[1] = 0;
-+	netdev->dev_addr[2] = 0;
-+	netdev->dev_addr[3] = 0;
-+	netdev->dev_addr[4] = 0;
-+	netdev->dev_addr[5] = hw->my_epid; /* EPID */
-+
-+	err = register_netdev(netdev);
-+	if (err)
-+		goto err_hw_exit;
-+
-+	netif_carrier_off(netdev);
-+
- 	return 0;
-+
-+err_hw_exit:
-+	fjes_hw_exit(&adapter->hw);
-+err_free_netdev:
-+	free_netdev(netdev);
-+err_out:
-+	return err;
- }
- 
- /* fjes_remove - Device Removal Routine */
- static int fjes_remove(struct platform_device *plat_dev)
- {
-+	struct net_device *netdev = dev_get_drvdata(&plat_dev->dev);
-+	struct fjes_adapter *adapter = netdev_priv(netdev);
-+	struct fjes_hw *hw = &adapter->hw;
-+
-+	unregister_netdev(netdev);
-+
-+	fjes_hw_exit(hw);
-+
-+	free_netdev(netdev);
-+
- 	return 0;
- }
- 
-+static int fjes_sw_init(struct fjes_adapter *adapter)
++static intline int intel_punit_ipc_simple_command(int cmd,
++						  int para1, int para2);
 +{
++	return -EINVAL;
++}
++
++static inline int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2,
++					  u32 *in, u32 *out);
++{
++	return -EINVAL;
++}
++
++#endif /*CONFIG_INTEL_PUNIT_IPC*/
++
++#endif
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 346f1fd..9948369 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -891,4 +891,10 @@ config INTEL_PMC_IPC
+ 	The PMC is an ARC processor which defines IPC commands for communication
+ 	with other entities in the CPU.
+ 
++config INTEL_PUNIT_IPC
++	tristate "Intel P-Unit IPC Driver"
++	---help---
++	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
++	  which is used to bridge the communications between kernel and P-Unit.
++
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1051372..eea765f 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -59,3 +59,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
++obj-$(CONFIG_INTEL_PUNIT_IPC)	+= intel_punit_ipc.o
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+new file mode 100644
+index 0000000..2d48bc0
+--- /dev/null
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -0,0 +1,353 @@
++/*
++ * Driver for the Intel P-Unit Mailbox IPC mechanism
++ *
++ * (C) Copyright 2015 Intel Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * The heart of the P-Unit is the Foxton microcontroller and its firmware,
++ * which provide mailbox interface for power management usage.
++ */
++
++#include <linux/module.h>
++#include <linux/acpi.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/interrupt.h>
++#include <linux/platform_device.h>
++#include <asm/intel_punit_ipc.h>
++
++/* Mailbox registers */
++#define MAILBOX_DATA_LOW		0x0
++#define MAILBOX_INTERFACE		0x4
++#define		CMD_RUN			(1 << 31)
++#define		CMD_ERRCODE_MASK	0xFF
++#define		CMD_PARA1_SHIFT		8
++#define		CMD_PARA2_SHIFT		16
++#define		CMD_MASK		0xFF
++#define MAILBOX_DATA_HIGH		0x8
++
++#define MAILBOX_REGISTER_SPACE		0x10
++
++#define CMD_TIMEOUT_SECONDS		3
++
++/* Three external mailbox */
++enum mailbox_type {
++	BIOS_MAILBOX,
++	GTDRIVER_MAILBOX,
++	ISPDRIVER_MAILBOX,
++	RESERVED_MAILBOX,
++};
++
++static char *ipc_err_sources[] = {
++	[IPC_PUNIT_ERR_SUCCESS] =
++		"no error",
++	[IPC_PUNIT_ERR_INVALID_CMD] =
++		"invalid command",
++	[IPC_PUNIT_ERR_INVALID_PARAMETER] =
++		"invalid parameter",
++	[IPC_PUNIT_ERR_CMD_TIMEOUT] =
++		"command timeout",
++	[IPC_PUNIT_ERR_CMD_LOCKED] =
++		"command locked",
++	[IPC_PUNIT_ERR_INVALID_VR_ID] =
++		"invalid vr id",
++	[IPC_PUNIT_ERR_VR_ERR] =
++		"vr error",
++};
++
++struct intel_punit_ipc_controller {
++	struct platform_device *pdev;
++	struct mutex lock;
++	void __iomem *base[RESERVED_MAILBOX];
++	struct completion cmd_complete;
++	int irq;
++
++	int cmd;
++	enum mailbox_type type;
++} ipcdev;
++
++static inline u32 ipc_read_status(void)
++{
++	return readl(ipcdev.base[ipcdev.type] + MAILBOX_INTERFACE);
++}
++
++static inline void ipc_write_cmd(u32 cmd)
++{
++	writel(cmd, ipcdev.base[ipcdev.type] + MAILBOX_INTERFACE);
++}
++
++static inline u32 ipc_read_data_low(void)
++{
++	return readl(ipcdev.base[ipcdev.type] + MAILBOX_DATA_LOW);
++}
++
++static inline u32 ipc_read_data_high(void)
++{
++	return readl(ipcdev.base[ipcdev.type] + MAILBOX_DATA_HIGH);
++}
++
++static inline void ipc_write_data_low(u32 data)
++{
++	writel(data, ipcdev.base[ipcdev.type] + MAILBOX_DATA_LOW);
++}
++
++static inline void ipc_write_data_high(u32 data)
++{
++	writel(data, ipcdev.base[ipcdev.type] + MAILBOX_DATA_HIGH);
++}
++
++static int intel_punit_ipc_send_command(u32 cmd)
++{
++	ipcdev.cmd = cmd;
++
++	cmd &= CMD_MASK;
++	if (cmd < IPC_PUNIT_BIOS_CMD_BASE)
++		return -EINVAL;
++	else if (cmd < IPC_PUNIT_GTD_CMD_BASE)
++		ipcdev.type = BIOS_MAILBOX;
++	else if (cmd < IPC_PUNIT_ISPD_CMD_BASE) {
++		ipcdev.type = GTDRIVER_MAILBOX;
++		ipcdev.cmd -= IPC_PUNIT_GTD_CMD_BASE;
++	} else if (cmd < IPC_PUNIT_ISPD_CMD_MAX) {
++		ipcdev.type = ISPDRIVER_MAILBOX;
++		ipcdev.cmd -= IPC_PUNIT_ISPD_CMD_BASE;
++	} else
++		return -EINVAL;
++
++	reinit_completion(&ipcdev.cmd_complete);
++	ipc_write_cmd(ipcdev.cmd);
++
 +	return 0;
 +}
 +
-+/* fjes_netdev_setup - netdevice initialization routine */
-+static void fjes_netdev_setup(struct net_device *netdev)
++static int intel_punit_ipc_check_status(void)
 +{
-+	ether_setup(netdev);
++	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
++	int errcode;
++	int status;
 +
-+	netdev->watchdog_timeo = FJES_TX_RETRY_INTERVAL;
-+	netdev->netdev_ops = &fjes_netdev_ops;
-+	netdev->mtu = fjes_support_mtu[0];
-+	netdev->flags |= IFF_BROADCAST;
-+	netdev->features |= NETIF_F_HW_CSUM | NETIF_F_HW_VLAN_CTAG_FILTER;
++	if (ipcdev.irq) {
++		if (!wait_for_completion_timeout(
++				&ipcdev.cmd_complete,
++				CMD_TIMEOUT_SECONDS * HZ)) {
++			dev_err(&ipcdev.pdev->dev,
++				"IPC timed out, IPC_CMD=0x%x\n", ipcdev.cmd);
++			return -ETIMEDOUT;
++		}
++	} else {
++		while ((ipc_read_status() & CMD_RUN) && --loops)
++			udelay(1);
++		if (!loops) {
++			dev_err(&ipcdev.pdev->dev,
++				"IPC timed out, IPC_CMD=0x%x\n", ipcdev.cmd);
++			return -ETIMEDOUT;
++		}
++	}
++
++	status = ipc_read_status();
++	errcode = status & CMD_ERRCODE_MASK;
++	if (errcode) {
++		if (errcode < ARRAY_SIZE(ipc_err_sources))
++			dev_err(&ipcdev.pdev->dev,
++				"IPC failed: %s, IPC_STS=0x%x, IPC_CMD=0x%x\n",
++				ipc_err_sources[errcode], status, ipcdev.cmd);
++		else
++			dev_err(&ipcdev.pdev->dev,
++				"IPC failed: unknown err,STS=0x%x, CMD=0x%x\n",
++				status, ipcdev.cmd);
++		return -EIO;
++	}
++
++	return 0;
 +}
 +
- /* fjes_init_module - Driver Registration Routine */
- static int __init fjes_init_module(void)
- {
++/**
++ * intel_punit_ipc_simple_command() - Simple IPC command
++ * @cmd:	IPC command code.
++ * @para1:	First 8bit parameter, set 0 if invalid.
++ * @para2:	Second 8bit parameter, set 0 if invalid.
++ *
++ * Send a IPC command to P-Unit when there is no data transaction
++ *
++ * Return:	IPC error code or 0 on success.
++ */
++int intel_punit_ipc_simple_command(int cmd, int para1, int para2)
++{
++	int ret;
++
++	mutex_lock(&ipcdev.lock);
++	ret = intel_punit_ipc_send_command(CMD_RUN |
++					   para2 << CMD_PARA2_SHIFT |
++					   para1 << CMD_PARA1_SHIFT | cmd);
++	if (ret)
++		goto out;
++	ret = intel_punit_ipc_check_status();
++out:
++	mutex_unlock(&ipcdev.lock);
++	return ret;
++}
++EXPORT_SYMBOL(intel_punit_ipc_simple_command);
++
++/**
++ * intel_punit_ipc_command() - IPC command with data and pointers
++ * @cmd:	IPC command code.
++ * @para1:	First 8bit parameter, set 0 if invalid.
++ * @para2:	Second 8bit parameter, set 0 if invalid.
++ * @in:		Input data, 32bit for BIOS cmd, two 32bit for GTD and ISPD.
++ * @out:	Output data.
++ *
++ * Send a IPC command to P-Unit with data transaction
++ *
++ * Return:	IPC error code or 0 on success.
++ */
++int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
++{
++	int ret;
++
++	mutex_lock(&ipcdev.lock);
++	ipc_write_data_low(*in);
++	if (ipcdev.type == GTDRIVER_MAILBOX ||
++			ipcdev.type == ISPDRIVER_MAILBOX) {
++		in++;
++		ipc_write_data_high(*in);
++	}
++	ret = intel_punit_ipc_send_command(CMD_RUN |
++					   para2 << CMD_PARA2_SHIFT |
++					   para1 << CMD_PARA1_SHIFT | cmd);
++	if (ret)
++		goto out;
++	ret = intel_punit_ipc_check_status();
++	if (ret)
++		goto out;
++	*out = ipc_read_data_low();
++	if (ipcdev.type == GTDRIVER_MAILBOX ||
++			ipcdev.type == ISPDRIVER_MAILBOX) {
++		out++;
++		*out = ipc_read_data_high();
++	}
++out:
++	mutex_unlock(&ipcdev.lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(intel_punit_ipc_command);
++
++static irqreturn_t intel_punit_ioc(int irq, void *dev_id)
++{
++	complete(&ipcdev.cmd_complete);
++	return IRQ_HANDLED;
++}
++
++static int intel_punit_get_bars(struct platform_device *pdev)
++{
++	struct resource *res0, *res1;
++	void __iomem *addr;
++	int size;
++
++	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res0) {
++		dev_err(&pdev->dev, "Failed to get iomem resource\n");
++		return -EINVAL;
++	}
++	size = resource_size(res0);
++	if (!devm_request_mem_region(&pdev->dev, res0->start,
++				     size, pdev->name)) {
++		dev_err(&pdev->dev, "Failed to request iomem resouce\n");
++		return -EBUSY;
++	}
++
++	res1 = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res1) {
++		dev_err(&pdev->dev, "Failed to get iomem resource1\n");
++		return -EINVAL;
++	}
++	size = resource_size(res1);
++	if (!devm_request_mem_region(&pdev->dev, res1->start,
++				     size, pdev->name)) {
++		dev_err(&pdev->dev, "Failed to request iomem resouce1\n");
++		return -EBUSY;
++	}
++
++	addr = ioremap_nocache(res0->start,
++			       resource_size(res0) + resource_size(res1));
++	if (!addr) {
++		dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
++		return  -ENOMEM;
++	}
++	ipcdev.base[BIOS_MAILBOX] = addr;
++	addr += MAILBOX_REGISTER_SPACE;
++	ipcdev.base[GTDRIVER_MAILBOX] = addr;
++	addr += MAILBOX_REGISTER_SPACE;
++	ipcdev.base[ISPDRIVER_MAILBOX] = addr;
++
++	return 0;
++}
++
++static int intel_punit_ipc_probe(struct platform_device *pdev)
++{
++	int irq, ret;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		ipcdev.irq = 0;
++		dev_warn(&pdev->dev, "Invalid IRQ\n");
++	} else {
++		if (devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
++				     IRQF_NO_SUSPEND, "intel_punit_ipc",
++				     &ipcdev)) {
++			dev_err(&pdev->dev, "Failed to request irq: %d\n", irq);
++			return -EBUSY;
++		}
++		ipcdev.irq = irq;
++	}
++
++	ret = intel_punit_get_bars(pdev);
++	if (ret)
++		return ret;
++
++	ipcdev.pdev = pdev;
++	mutex_init(&ipcdev.lock);
++	init_completion(&ipcdev.cmd_complete);
++
++	return ret;
++}
++
++static int intel_punit_ipc_remove(struct platform_device *pdev)
++{
++	iounmap(ipcdev.base[BIOS_MAILBOX]);
++
++	return 0;
++}
++
++static const struct acpi_device_id punit_ipc_acpi_ids[] = {
++	{"INT34D4", 0}
++};
++
++static struct platform_driver intel_punit_ipc_driver = {
++	.probe = intel_punit_ipc_probe,
++	.remove = intel_punit_ipc_remove,
++	.driver = {
++		.name = "intel_punit_ipc",
++		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
++	},
++};
++
++static int __init intel_punit_ipc_init(void)
++{
++	return platform_driver_register(&intel_punit_ipc_driver);
++}
++
++static void __exit intel_punit_ipc_exit(void)
++{
++	platform_driver_unregister(&intel_punit_ipc_driver);
++}
++
++MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
++MODULE_DESCRIPTION("Intel P-Unit IPC driver");
++MODULE_LICENSE("GPL v2");
++
++/* Some modules are dependent on this, so init earlier */
++fs_initcall(intel_punit_ipc_init);
++module_exit(intel_punit_ipc_exit);
 -- 
-1.8.3.1
+1.8.3.2
