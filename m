@@ -1,65 +1,70 @@
-From: "Izumi, Taku" <izumi.taku@jp.fujitsu.com>
-Subject: RE: [PATCH v2.2 01/22] fjes: Introduce FUJITSU Extended Socket
- Network Device driver
-Date: Fri, 21 Aug 2015 06:11:12 +0000
-Message-ID: <E86EADE93E2D054CBCD4E708C38D364A54269C80@G01JPEXMBYT01>
-References: <1440060306-13040-1-git-send-email-izumi.taku@jp.fujitsu.com>
-	<1440060386-13189-1-git-send-email-izumi.taku@jp.fujitsu.com>
- <20150820.154901.1696097888673162441.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-2022-jp"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169]:52286 "EHLO
-	mgwkm02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752002AbbHUGLS (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 21 Aug 2015 02:11:18 -0400
-In-Reply-To: <20150820.154901.1696097888673162441.davem@davemloft.net>
-Content-Language: ja-JP
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: David Miller <davem@davemloft.net>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "dvhart@infradead.org" <dvhart@infradead.org>, "rkhan@redhat.com" <rkhan@redhat.com>, "alexander.h.duyck@redhat.com" <alexander.h.duyck@redhat.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "joe@perches.com" <joe@perches.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "stephen@networkplumber.org" <stephen@networkplumber.org>, "yasu.isimatu@gmail.com" <yasu.isimatu@gmail.com>
+From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Subject: [PATCH v3 00/22] FUJITSU Extended Socket network device driver
+Date: Fri, 21 Aug 2015 17:28:00 +0900
+Message-ID: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, davem@davemloft.net
+Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com, Taku Izumi <izumi.taku@jp.fujitsu.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Dear David,
+This patchsets adds FUJITSU Extended Socket network device driver.
+Extended Socket network device is a shared memory based high-speed
+network interface between Extended Partitions of PRIMEQUEST 2000 E2
+series.
 
- Thank you for reviewing.
- I'll update patchset according to your comment.
+You can get some information about Extended Partition and Extended
+Socket by referring the following manual.
 
- Sincerely,
- Taku Izumi
+http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
+    3.2.1 Extended Partitioning
+    3.2.2 Extended Socke
 
-> -----Original Message-----
-> From: David Miller [mailto:davem@davemloft.net]
-> Sent: Friday, August 21, 2015 7:49 AM
-> To: Izumi, Taku/泉 拓
-> Cc: netdev@vger.kernel.org; platform-driver-x86@vger.kernel.org; dvhart@infradead.org; rkhan@redhat.com;
-> alexander.h.duyck@redhat.com; linux-acpi@vger.kernel.org; joe@perches.com; sergei.shtylyov@cogentembedded.com;
-> stephen@networkplumber.org; yasu.isimatu@gmail.com
-> Subject: Re: [PATCH v2.2 01/22] fjes: Introduce FUJITSU Extended Socket Network Device driver
-> 
-> From: Taku Izumi <izumi.taku@jp.fujitsu.com>
-> Date: Thu, 20 Aug 2015 17:46:05 +0900
-> 
-> > +obj-$(CONFIG_FUJITSU_ES) += fjes.o
-> > +
-> > +fjes-objs := fjes_main.o
-> > +
-> 
-> Please do not have trailing empty lines in any files you add
-> or edit, 'git' warns about this even when applying patches.
-> 
-> > +static int fjes_acpi_add(struct acpi_device *device)
-> > +{
-> > +	acpi_status status;
-> > +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL};
-> > +	union acpi_object *str;
-> > +	char str_buf[sizeof(FJES_ACPI_SYMBOL) + 1];
-> > +	int result;
-> > +	struct platform_device *plat_dev;
-> 
-> Please order your local variables in "reverse christmas tree" order, which
-> means longer lines come before shorter ones.
-> 
-> Please correct this problem in your entire submission, as I am not going
-> to point out each and every other place where this problem exists.
+v2.2 -> v3:
+   - Fix up according to David's comment (No functional change)
+
+
+Taku Izumi (22):
+  fjes: Introduce FUJITSU Extended Socket Network Device driver
+  fjes: Hardware initialization routine
+  fjes: Hardware cleanup routine
+  fjes: platform_driver's .probe and .remove routine
+  fjes: ES information acquisition routine
+  fjes: buffer address regist/unregistration routine
+  fjes: net_device_ops.ndo_open and .ndo_stop
+  fjes: net_device_ops.ndo_start_xmit
+  fjes: raise_intr_rxdata_task
+  fjes: tx_stall_task
+  fjes: NAPI polling function
+  fjes: net_device_ops.ndo_get_stats64
+  fjes: net_device_ops.ndo_change_mtu
+  fjes: net_device_ops.ndo_tx_timeout
+  fjes: net_device_ops.ndo_vlan_rx_add/kill_vid
+  fjes: interrupt_watch_task
+  fjes: force_close_task
+  fjes: unshare_watch_task
+  fjes: update_zone_task
+  fjes: epstop_task
+  fjes: handle receive cancellation request interrupt
+  fjes: ethtool support
+
+ drivers/net/Kconfig             |    7 +
+ drivers/net/Makefile            |    2 +
+ drivers/net/fjes/Makefile       |   30 +
+ drivers/net/fjes/fjes.h         |   77 +++
+ drivers/net/fjes/fjes_ethtool.c |  137 ++++
+ drivers/net/fjes/fjes_hw.c      | 1125 +++++++++++++++++++++++++++++++
+ drivers/net/fjes/fjes_hw.h      |  334 ++++++++++
+ drivers/net/fjes/fjes_main.c    | 1383 +++++++++++++++++++++++++++++++++++++++
+ drivers/net/fjes/fjes_regs.h    |  142 ++++
+ 9 files changed, 3237 insertions(+)
+ create mode 100644 drivers/net/fjes/Makefile
+ create mode 100644 drivers/net/fjes/fjes.h
+ create mode 100644 drivers/net/fjes/fjes_ethtool.c
+ create mode 100644 drivers/net/fjes/fjes_hw.c
+ create mode 100644 drivers/net/fjes/fjes_hw.h
+ create mode 100644 drivers/net/fjes/fjes_main.c
+ create mode 100644 drivers/net/fjes/fjes_regs.h
+
+-- 
+1.8.3.1
