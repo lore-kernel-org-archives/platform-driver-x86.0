@@ -1,56 +1,39 @@
-From: =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?=
-	<giedrius.statkevicius@gmail.com>
-Subject: [PATCH] hp-wireless: remove unneeded goto/label in hpwl_init
-Date: Sun, 23 Aug 2015 14:41:09 +0300
-Message-ID: <1440330069-16537-1-git-send-email-giedrius.statkevicius@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 00/22] FUJITSU Extended Socket network device driver
+Date: Mon, 24 Aug 2015 14:10:32 -0700 (PDT)
+Message-ID: <20150824.141032.405416417791540419.davem@davemloft.net>
+References: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:33537 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752100AbbHWLmS (ORCPT
+Received: from shards.monkeyblade.net ([149.20.54.216]:52715 "EHLO
+	shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754441AbbHXVKj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 23 Aug 2015 07:42:18 -0400
-Received: by wijp15 with SMTP id p15so53630292wij.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2015 04:42:17 -0700 (PDT)
+	Mon, 24 Aug 2015 17:10:39 -0400
+In-Reply-To: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, =?UTF-8?q?Giedrius=20Statkevi=C4=8Dius?= <giedrius.statkevicius@gmail.com>
+To: izumi.taku@jp.fujitsu.com
+Cc: netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com
 
-acpi_bus_register_driver() already returns an appropriate value (0 on
-success, and some negative value on error) to be used in __init functio=
-ns
-so the goto/label is redundant in hpwl_init thus remove it and directly
-return the value
+From: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Date: Fri, 21 Aug 2015 17:28:00 +0900
 
-Signed-off-by: Giedrius Statkevi=C4=8Dius <giedrius.statkevicius@gmail.=
-com>
----
- drivers/platform/x86/hp-wireless.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> This patchsets adds FUJITSU Extended Socket network device driver.
+> Extended Socket network device is a shared memory based high-speed
+> network interface between Extended Partitions of PRIMEQUEST 2000 E2
+> series.
+> 
+> You can get some information about Extended Partition and Extended
+> Socket by referring the following manual.
+> 
+> http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
+>     3.2.1 Extended Partitioning
+>     3.2.2 Extended Socke
+> 
+> v2.2 -> v3:
+>    - Fix up according to David's comment (No functional change)
 
-diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/=
-hp-wireless.c
-index 4e4cc8b..988eedb 100644
---- a/drivers/platform/x86/hp-wireless.c
-+++ b/drivers/platform/x86/hp-wireless.c
-@@ -114,14 +114,9 @@ static int __init hpwl_init(void)
-=20
- 	pr_info("Initializing HPQ6001 module\n");
- 	err =3D acpi_bus_register_driver(&hpwl_driver);
--	if (err) {
-+	if (err)
- 		pr_err("Unable to register HP wireless control driver.\n");
--		goto error_acpi_register;
--	}
--
--	return 0;
-=20
--error_acpi_register:
- 	return err;
- }
-=20
---=20
-2.5.0
+Series applied, thank you.
