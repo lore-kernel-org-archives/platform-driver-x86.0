@@ -1,39 +1,42 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 00/22] FUJITSU Extended Socket network device driver
-Date: Mon, 24 Aug 2015 14:10:32 -0700 (PDT)
-Message-ID: <20150824.141032.405416417791540419.davem@davemloft.net>
-References: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform:x86: add Intel Punit mailbox IPC driver
+Date: Tue, 25 Aug 2015 13:33:07 -0700
+Message-ID: <20150825203307.GA50910@vmdeb7>
+References: <1438358336-79179-1-git-send-email-qipeng.zha@intel.com>
+ <20150805212512.GD38348@vmdeb7>
+ <1439219049.29746.222.camel@intel.com>
+ <1439913056.3505.95.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from shards.monkeyblade.net ([149.20.54.216]:52715 "EHLO
-	shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754441AbbHXVKj (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:44383 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753566AbbHZGTg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 24 Aug 2015 17:10:39 -0400
-In-Reply-To: <1440145680-15851-1-git-send-email-izumi.taku@jp.fujitsu.com>
+	Wed, 26 Aug 2015 02:19:36 -0400
+Content-Disposition: inline
+In-Reply-To: <1439913056.3505.95.camel@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: izumi.taku@jp.fujitsu.com
-Cc: netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, rkhan@redhat.com, alexander.h.duyck@redhat.com, linux-acpi@vger.kernel.org, joe@perches.com, sergei.shtylyov@cogentembedded.com, stephen@networkplumber.org, yasu.isimatu@gmail.com
+To: Matt Fleming <matt.fleming@intel.com>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-From: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Date: Fri, 21 Aug 2015 17:28:00 +0900
+On Tue, Aug 18, 2015 at 04:50:56PM +0100, Matt Fleming wrote:
+> On Mon, 2015-08-10 at 16:04 +0100, Shevchenko, Andriy wrote:
+> > 
+> > Matt, by the way intel_pmc_ipc.c module creates iTCO device (LPC bus).
+> > Does it look correct?
+> 
+> Yeah, it looks OK to me. Note there are changes queued up in Lee Jones'
+> tree for changing the lpc_ich_info into itco_wdt_platform_data.
+> 
+> Btw, is there a reason that intel_pmc_ipc doesn't use the mfd_* API
+> since it's concerned with multiple functions?
 
-> This patchsets adds FUJITSU Extended Socket network device driver.
-> Extended Socket network device is a shared memory based high-speed
-> network interface between Extended Partitions of PRIMEQUEST 2000 E2
-> series.
-> 
-> You can get some information about Extended Partition and Extended
-> Socket by referring the following manual.
-> 
-> http://globalsp.ts.fujitsu.com/dmsp/Publications/public/CA92344-0537.pdf
->     3.2.1 Extended Partitioning
->     3.2.2 Extended Socke
-> 
-> v2.2 -> v3:
->    - Fix up according to David's comment (No functional change)
+Qipeng?
 
-Series applied, thank you.
+I saw the v2 come in, but didn't see this question addressed in the changelog.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
