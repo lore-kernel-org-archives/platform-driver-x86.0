@@ -1,64 +1,51 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Wed, 26 Aug 2015 00:36:20 -0700
-Message-ID: <20150826073620.GA105700@vmdeb7>
-References: <1440176659-83769-1-git-send-email-qipeng.zha@intel.com>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: RE: [PATCH] platform:x86: add Intel Punit mailbox IPC driver
+Date: Wed, 26 Aug 2015 08:22:33 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD01949DAE@SHSMSX104.ccr.corp.intel.com>
+References: <1438358336-79179-1-git-send-email-qipeng.zha@intel.com>
+ <20150805212512.GD38348@vmdeb7> <1439219049.29746.222.camel@intel.com>
+ <1439913056.3505.95.camel@intel.com> <20150825203307.GA50910@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:56986 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753974AbbHZHgW (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:20709 "EHLO mga11.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756072AbbHZIWj convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Aug 2015 03:36:22 -0400
-Content-Disposition: inline
-In-Reply-To: <1440176659-83769-1-git-send-email-qipeng.zha@intel.com>
+	Wed, 26 Aug 2015 04:22:39 -0400
+In-Reply-To: <20150825203307.GA50910@vmdeb7>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Qipeng Zha <qipeng.zha@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, fei.yang@intel.com, huiquan.zhong@intel.com, jason.cj.chen@intel.com, qi.zheng@intel.com
+To: Darren Hart <dvhart@infradead.org>, "Fleming, Matt" <matt.fleming@intel.com>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-On Sat, Aug 22, 2015 at 01:04:19AM +0800, Qipeng Zha wrote:
-> This driver provides support for P-Unit mailbox IPC on Intel platform=
-s.
-> The heart of the P-Unit is the Foxton microcontroller and its firmwar=
-e,
-> which provide mailbox interface for power management usage.
->=20
-> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+On Tue, Aug 18, 2015 at 04:50:56PM +0100, Matt Fleming wrote:
+> On Mon, 2015-08-10 at 16:04 +0100, Shevchenko, Andriy wrote:
+> > 
+> > Matt, by the way intel_pmc_ipc.c module creates iTCO device (LPC bus).
+> > Does it look correct?
+> 
+> Yeah, it looks OK to me. Note there are changes queued up in Lee Jones'
+> tree for changing the lpc_ich_info into itco_wdt_platform_data.
+> 
+> Btw, is there a reason that intel_pmc_ipc doesn't use the mfd_* API 
+> since it's concerned with multiple functions?
 
-Hi Qipeng,
+> Qipeng?
 
-0-day/lkp raised a couple of issues please review that report.
+> I saw the v2 come in, but didn't see this question addressed in the changelog.
 
-I immediately hit a build failure:
+When design P-unit driver, we got feedback from BIOS that there will allocate a dedicate
+ACPI id for P-unit controller, and finally BIOS decide not do that, just put some necessary 
+Resource in PMC acpi table.
+After that, we got request to do same thing for iTco.
 
-$ make allmodconfig
-$ make drivers/platform/x86/intel_punit_ipc.ko
+I agree it's better to update pmc driver to use mfd_add_devices to create punit and iTco device.
 
-  CC      drivers/platform/x86/intel_punit_ipc.o
-In file included from drivers/platform/x86/intel_punit_ipc.c:20:0:
-=2E/arch/x86/include/asm/intel_punit_ipc.h:87:16: error: expected =E2=80=
-=98=3D=E2=80=99, =E2=80=98,=E2=80=99, =E2=80=98;=E2=80=99, =E2=80=98asm=
-=E2=80=99 or =E2=80=98__attribute__=E2=80=99 before =E2=80=98int=E2=80=99
- static intline int intel_punit_ipc_simple_command(int cmd,
-                ^
-=2E/arch/x86/include/asm/intel_punit_ipc.h:89:1: error: expected identi=
-fier or =E2=80=98(=E2=80=99 before =E2=80=98{=E2=80=99 token
- {
- ^
-=2E/arch/x86/include/asm/intel_punit_ipc.h:95:1: error: expected identi=
-fier or =E2=80=98(=E2=80=99 before =E2=80=98{=E2=80=99 token
- {
- ^
-scripts/Makefile.build:258: recipe for target 'drivers/platform/x86/int=
-el_punit_ipc.o' failed
-make[1]: *** [drivers/platform/x86/intel_punit_ipc.o] Error 1
-Makefile:1550: recipe for target 'drivers/platform/x86/intel_punit_ipc.=
-ko' failed
-make: *** [drivers/platform/x86/intel_punit_ipc.ko] Error 2
-
---=20
+--
 Darren Hart
 Intel Open Source Technology Center
+--
+To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in the body of a message to majordomo@vger.kernel.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
