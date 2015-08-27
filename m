@@ -1,18 +1,18 @@
 From: "Mrs. Linda Yong" <spam@practicenet.co.uk>
-Subject: Pls provide the following details
-Date: Wed, 26 Aug 2015 17:41:29 +0200
-Message-ID: <DEXSERV1DdQcp0TkYtV0000307c@dexam.co.uk>
+Subject: Pls provide the following details  ..
+Date: Thu, 27 Aug 2015 07:00:48 +0200
+Message-ID: <DEXSERV1QYFgPGksocL00010137@dexam.co.uk>
 Reply-To: <bencook551127@yahoo.co.id>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-db3hn0251.outbound.protection.outlook.com ([157.55.234.251]:4425
-	"EHLO emea01-db3-obe.outbound.protection.outlook.com"
+Received: from mail-am1hn0248.outbound.protection.outlook.com ([157.56.112.248]:19785
+	"EHLO emea01-am1-obe.outbound.protection.outlook.com"
 	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1756569AbbHZTT5 (ORCPT
+	id S1751421AbbH0FAw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 26 Aug 2015 15:19:57 -0400
+	Thu, 27 Aug 2015 01:00:52 -0400
 Content-Class: urn:content-classes:message
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
