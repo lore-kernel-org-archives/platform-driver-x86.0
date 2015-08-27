@@ -1,68 +1,40 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: Remove side effects
- from vdbg_printk -> no_printk macro
-Date: Thu, 27 Aug 2015 14:33:06 -0300
-Message-ID: <20150827173306.GB17280@khazad-dum.debian.net>
-References: <1440612818.2780.24.camel@perches.com>
+From: Ben cook <spam@practicenet.co.uk>
+Subject: Best regards, TO NEXT OF KIN.........
+Date: Thu, 27 Aug 2015 21:15:50 +0200
+Message-ID: <DEXSERV1YUimAxP9ZoL00001eda@dexam.co.uk>
+Reply-To: <ben.cook5511@yahoo.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="Windows-1251"
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1440612818.2780.24.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-am1hn0250.outbound.protection.outlook.com ([157.56.112.250]:58464
+	"EHLO emea01-am1-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1751231AbbH0TPz (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 27 Aug 2015 15:15:55 -0400
+Content-Class: urn:content-classes:message
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-On Wed, 26 Aug 2015, Joe Perches wrote:
-> vdbg_printk when not using CONFIG_THINKPAD_ACPI_DEBUG uses
-> no_printk which produces no logging output but always
-> evaluates arguments.
-> 
-> Change the macro to surround the no_printk call with
-> 	do { if (0) no_printk(...); } while (0)
-> to avoid the unnecessary argument evaluations.
-> 
-> $ size drivers/platform/x86/thinkpad_acpi.o*
->    text	   data	    bss	    dec	    hex	filename
->   60918	   6184	    824	  67926	  10956	drivers/platform/x86/thinkpad_acpi.o.new
->   60927	   6184	    824	  67935	  1095f	drivers/platform/x86/thinkpad_acpi.o.old
-> 
-> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Barrister Ben Cook
+La Sagrada Familia Calle Mallorca,
+601 08713 Seville Spain.
+Mobil: +34 631 093 714
 
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+> Attn: Dear Friend,
+>
+I am Barrister Ben Cook a solicitor at law. I am the personal attorney to late Mr. Robert a national of your country, who was an official contractor (category D) with REPSOL YPF, SPAIN (RY) an oil firm in Spain. Here in after shall be referred to as my client. On the 11th of March 2010, my client, his wife and their two only sons were involved in a car accident on holiday trip along Las Palmas express way. All occupants of the vehicle unfortunately lost their lives. Since then I have made several enquiries and presentations to locate any of my client's extended relatives, this has also proved abortive. It is after these several unsuccessful attempts to locate any member of his family failed that I decided to contact you since coincidentally you have your last name believing that you can in
+ variably be of help in this situation to stands as the next of kin to this my client. I am contacting you to assist in repatriating the money and property left behind by my client before th!
+!ey get confiscated or declared uns
+>
+Already, the finance company where the deceased had an account valued at about 1 Million Euros has issued me a notice/ultimatum to provide the next of kin or have the account confiscated within the next one Month. Since It has been unsuccessful in locating the relatives for over 2 years now, I seek your consent to present you as the next of kin of the deceased, so that the proceeds of this account valued at 1 Million Euros can be paid to your account and there after we can share the fund (money) in the ratio of 7:3. That is, I will have 70% of the proceed while you have 30% for your assistance. I have all necessary legal documents that can be used to back up any claim we may make. All I require is your honest co-operation to enable us see this transaction through .I guarantee that this wil
+ l be executed under a legitimate arrangement that will protect you from any breach of the law.
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 33e488c..131dd74 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -402,7 +402,7 @@ static const char *str_supported(int is_supported);
->  #else
->  static inline const char *str_supported(int is_supported) { return ""; }
->  #define vdbg_printk(a_dbg_level, format, arg...)	\
-> -	no_printk(format, ##arg)
-> +	do { if (0) no_printk(format, ##arg); } while (0)
->  #endif
->  
->  static void tpacpi_log_usertask(const char * const what)
-> 
+Please get in touch with me by my email and send to me your telephone and fax numbers to enable us discuss further about this transaction.
+>
+Best regards,
+Barrister Ben Cook
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
 
-------------------------------------------------------------------------------
+=============MAX============= 
