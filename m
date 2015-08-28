@@ -1,77 +1,58 @@
-From: "Ward, David - 0665 - MITLL" <david.ward@ll.mit.edu>
-Subject: Re: hp-wmi rfkill change breaks systems
-Date: Fri, 28 Aug 2015 03:49:46 +0000
-Message-ID: <55DFDA55.8020608@ll.mit.edu>
-References: <20140121151702.GA2566@srcf.ucam.org>
- <CAJ=jquZZcB9stcYn7cTnQZvTZkq+VZvvTTVCvA0zAOv+Yd2qbg@mail.gmail.com>
- <CAJ=jquYnfW14zHBHnY4WZDiX0jakuFVLDUQ6BnjVZQjo1hOr8g@mail.gmail.com>
+From: "Central Trust Loan Limited " <enrico.bovi@studenti.univr.it>
+Subject: =?utf-8?Q?L=C3=A5netilbud_1,5%?=
+Date: Fri, 28 Aug 2015 19:12:06 +0200 (CEST)
+Message-ID: <1984717523.1605882.1440781926622.JavaMail.root@studenti.univr.it>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from MX1.LL.MIT.EDU ([129.55.12.45]:54674 "EHLO mx1.ll.mit.edu"
+Received: from smtp2.cineca.it ([130.186.31.170]:38363 "EHLO smtp2.cineca.it"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750896AbbH1EfR (ORCPT
+	id S1752890AbbH1RUW convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 Aug 2015 00:35:17 -0400
-In-Reply-To: <CAJ=jquYnfW14zHBHnY4WZDiX0jakuFVLDUQ6BnjVZQjo1hOr8g@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <D8A2493766B4904099069C9E2EC99AB0@ll.mit.edu>
+	Fri, 28 Aug 2015 13:20:22 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-T24gMDEvMjMvMjAxNCAwMjoyNSBBTSwgQWxleCBIdW5nIHdyb3RlOg0KPiBIaSBNYXR0aGV3LA0K
-Pg0KPiBJIHJldmVydGVkIDk5N2RhYTFiZDlhY2E0MTJhYjk3OTU1YTM1YjI2YzQ2MGMwZWM3YTQg
-YW5kIGFkZCBhIGNoZWNrIGluDQo+IGhwX3dtaV9yZmtpbGxfc2V0dXAgYXMgYmVsb3c6DQo+DQo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC13bWkuYyBiL2RyaXZlcnMvcGxh
-dGZvcm0veDg2L2hwLXdtaS5jDQo+IGluZGV4IDhiYTg5NTYuLjY1ZmVlOGEgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwLXdtaS5jDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2hwLXdtaS5jDQo+IEBAIC01NCw3ICs1NCw2IEBAIE1PRFVMRV9BTElBUygid21pOjVG
-QjdGMDM0LTJDNjMtNDVlOS1CRTkxLTNENDRFMkM3MDdFNCIpOw0KPiAgICNkZWZpbmUgSFBXTUlf
-SEFSRFdBUkVfUVVFUlkgMHg0DQo+ICAgI2RlZmluZSBIUFdNSV9XSVJFTEVTU19RVUVSWSAweDUN
-Cj4gICAjZGVmaW5lIEhQV01JX0hPVEtFWV9RVUVSWSAweGMNCj4gLSNkZWZpbmUgSFBXTUlfRkVB
-VFVSRV9RVUVSWSAweGQNCj4gICAjZGVmaW5lIEhQV01JX1dJUkVMRVNTMl9RVUVSWSAweDFiDQo+
-ICAgI2RlZmluZSBIUFdNSV9QT1NUQ09ERUVSUk9SX1FVRVJZIDB4MmENCj4NCj4gQEAgLTI5Mywx
-NyArMjkyLDYgQEAgc3RhdGljIGludCBocF93bWlfdGFibGV0X3N0YXRlKHZvaWQpDQo+ICAgICAg
-ICAgIHJldHVybiAoc3RhdGUgJiAweDQpID8gMSA6IDA7DQo+ICAgfQ0KPg0KPiAtc3RhdGljIGlu
-dCBocF93bWlfYmlvc18yMDA5X2xhdGVyKHZvaWQpDQo+IC17DQo+IC0gICAgICAgaW50IHN0YXRl
-ID0gMDsNCj4gLSAgICAgICBpbnQgcmV0ID0gaHBfd21pX3BlcmZvcm1fcXVlcnkoSFBXTUlfRkVB
-VFVSRV9RVUVSWSwgMCwgJnN0YXRlLA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBzaXplb2Yoc3RhdGUpLCBzaXplb2Yoc3RhdGUpKTsNCj4gLSAgICAgICBpZiAocmV0
-KQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gLQ0KPiAtICAgICAgIHJldHVybiAo
-c3RhdGUgJiAweDEwKSA/IDEgOiAwOw0KPiAtfQ0KPiAtDQo+ICAgc3RhdGljIGludCBocF93bWlf
-c2V0X2Jsb2NrKHZvaWQgKmRhdGEsIGJvb2wgYmxvY2tlZCkNCj4gICB7DQo+ICAgICAgICAgIGVu
-dW0gaHBfd21pX3JhZGlvIHIgPSAoZW51bSBocF93bWlfcmFkaW8pIGRhdGE7DQo+IEBAIC02OTYs
-NiArNjg0LDExIEBAIHN0YXRpYyBpbnQgaHBfd21pX3Jma2lsbF9zZXR1cChzdHJ1Y3QNCj4gcGxh
-dGZvcm1fZGV2aWNlICpkZXZpY2UpDQo+ICAgICAgICAgIGlmIChlcnIpDQo+ICAgICAgICAgICAg
-ICAgICAgcmV0dXJuIGVycjsNCj4NCj4gKyAgICAgICBlcnIgPSBocF93bWlfcGVyZm9ybV9xdWVy
-eShIUFdNSV9XSVJFTEVTU19RVUVSWSwgMSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAmd2lyZWxlc3MsIHNpemVvZih3aXJlbGVzcyksIDApOw0KPiArICAgICAgIGlmIChl
-cnIpDQo+ICsgICAgICAgICAgICAgICByZXR1cm4gZXJyOw0KPiArDQo+ICAgICAgICAgIGlmICh3
-aXJlbGVzcyAmIDB4MSkgew0KPiAgICAgICAgICAgICAgICAgIHdpZmlfcmZraWxsID0gcmZraWxs
-X2FsbG9jKCJocC13aWZpIiwgJmRldmljZS0+ZGV2LA0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIFJGS0lMTF9UWVBFX1dMQU4sDQo+IEBAIC04ODMsNyArODc2
-LDcgQEAgc3RhdGljIGludCBfX2luaXQgaHBfd21pX2Jpb3Nfc2V0dXAoc3RydWN0DQo+IHBsYXRm
-b3JtX2RldmljZSAqZGV2aWNlKQ0KPiAgICAgICAgICBncHNfcmZraWxsID0gTlVMTDsNCj4gICAg
-ICAgICAgcmZraWxsMl9jb3VudCA9IDA7DQo+DQo+IC0gICAgICAgaWYgKGhwX3dtaV9iaW9zXzIw
-MDlfbGF0ZXIoKSB8fCBocF93bWlfcmZraWxsX3NldHVwKGRldmljZSkpDQo+ICsgICAgICAgaWYg
-KGhwX3dtaV9yZmtpbGxfc2V0dXAoZGV2aWNlKSkNCj4gICAgICAgICAgICAgICAgICBocF93bWlf
-cmZraWxsMl9zZXR1cChkZXZpY2UpOw0KPg0KPiAgICAgICAgICBlcnIgPSBkZXZpY2VfY3JlYXRl
-X2ZpbGUoJmRldmljZS0+ZGV2LCAmZGV2X2F0dHJfZGlzcGxheSk7DQo+DQo+DQo+DQo+IEl0IGFj
-dHVhbGx5IHdvcmtzIGJldHRlciB0aGFuIDk5N2RhYTFiZDlhY2E0MTJhYjk3OTU1YTM1YjI2YzQ2
-MGMwZWM3YTQNCj4gb24gbmV3IHN5c3RlbXMsIGJ1dCBJIGRvbid0IGhhdmUgb2xkIGhwIHN5c3Rl
-bXMgZm9yIHRlc3RpbmcgZ29vZCBIUA0KPiBXTUkgMHgwNSBTZXQgY29tbWFuZC4NCj4NCj4gQW55
-IHN1Z2dlc3Rpb25zIGFyZSBhcHByZWNpYXRlZC4NCg0KQWxleCwgTWF0dGhldywgYW55IHVwZGF0
-ZSBvbiB0aGlzPw0KDQpDb21taXQgZjgyYmRkMCAiaHAtd21pOiBFbmFibGUgaG90a2V5cyBvbiBz
-b21lIHN5c3RlbXMiIGFkZGVkIGFub3RoZXIgDQp1c2Ugb2YgdGhlIGZ1bmN0aW9uIGhwX3dtaV9i
-aW9zXzIwMDlfbGF0ZXIoKS4gSXMgdGhlIHJlYXNvbiB5b3UgcmVtb3ZlZCANCnRoZSBmdW5jdGlv
-biBhYm92ZSBqdXN0IGJlY2F1c2UgaXQgd2Fzbid0IGNhbGxlZCBhbnltb3JlLCBvciBpcyB0aGlz
-IA0KcHJvYmxlbWF0aWM/DQoNCklmIHlvdSBhcmUgbG9va2luZyBmb3IgdGVzdGluZywgbWF5YmUg
-eW91IHNob3VsZCBwb3N0IChhIHJldmlzZWQgdmVyc2lvbiANCm9mKSB0aGlzIHBhdGNoIHRvIHRo
-ZXNlIGJ1ZyByZXBvcnRzLCB3aGVyZSB1c2VycyB3aXRoIG9sZGVyIEhQIHN5c3RlbXMgDQpoYXZl
-IGluZGljYXRlZCB0aGV5IGFyZSBzcGVjaWZpY2FsbHkgYWZmZWN0ZWQgYnkgdGhpczoNCg0KaHR0
-cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD02OTEzMQ0KaHR0cHM6Ly9i
-dWdzLmxhdW5jaHBhZC5uZXQvdWJ1bnR1Lytzb3VyY2UvbGludXgvK2J1Zy8xMjkwNDE4DQoNClRo
-YW5rcywNCg0KRGF2aWQNCg0K
+
+
+
+God dag,
+
+Dette er CENTRAL TRUST l=C3=A5n selskaper tilbyr l=C3=A5n.
+
+CENTRAL TRUST L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
+til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
+nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 1,5%. Her er noen v=
+iktige trekk ved personlig l=C3=A5n fra sentral stoler p=C3=A5 utl=C3=A5=
+n selskaper blir tilbudt. Her er de L=C3=A5ne Faktorer vi samarbeider m=
+ed de ledende britiske meglere som har tilgang til toppen l=C3=A5ngiver=
+e og v=C3=A6re i stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8=
+sningen til en rimelig price.Please, hvis du er interessert kan du kont=
+akte oss via denne e-post: centraltrustlltd@gmail.com
+
+
+Etter reaksjonen, vil du motta en s=C3=B8knad om kreditt fyll. Ingen so=
+sial sikkerhet og ingen kredittsjekk, 100% garantert.
+
+Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
+
+
+Informasjon Needed
+
+Dine navn:
+Adresse: ...........
+Telefon: ...........
+N=C3=B8dvendig Antall: ........
+Varighet: ...............
+Okkupasjon: ...........
+M=C3=A5nedlig inntekt: ........
+Kj=C3=B8nn: ...............
+=46=C3=B8dselsdato: ........
+Status: ..................
+Land: ..........
+=46orm=C3=A5let: .........
+
+Oppfylle dine =C3=B8konomiske behov er v=C3=A5r stolthet.
+
+David Donald
