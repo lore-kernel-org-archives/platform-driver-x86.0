@@ -1,45 +1,45 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: Remove side effects from vdbg_printk ->
- no_printk macro
-Date: Fri, 28 Aug 2015 10:50:50 -0700
-Message-ID: <20150828175050.GA33809@vmdeb7>
-References: <1440612818.2780.24.camel@perches.com>
- <20150827173306.GB17280@khazad-dum.debian.net>
+Subject: Re: [PATCH] [v4] surface pro 3: Add support driver for Surface Pro 3
+ buttons
+Date: Fri, 28 Aug 2015 10:56:45 -0700
+Message-ID: <20150828175645.GC33809@vmdeb7>
+References: <1439911825-23536-1-git-send-email-yu.c.chen@intel.com>
+ <20150826072221.GD50910@vmdeb7>
+ <1440590641.2670.187.camel@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47514 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:54255 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752483AbbH1RvH (ORCPT
+	with ESMTP id S1752634AbbH1R45 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 Aug 2015 13:51:07 -0400
+	Fri, 28 Aug 2015 13:56:57 -0400
 Content-Disposition: inline
-In-Reply-To: <20150827173306.GB17280@khazad-dum.debian.net>
+In-Reply-To: <1440590641.2670.187.camel@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Joe Perches <joe@perches.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: Chen Yu <yu.c.chen@intel.com>, akpm@linux-foundation.org, arnd@arndb.de, gregkh@linuxfoundation.org, mchehab@osg.samsung.com, davem@davemloft.net, jslaby@suse.com, tj@kernel.org, rjw@rjwysocki.net, rui.zhang@intel.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2015 at 02:33:06PM -0300, Henrique de Moraes Holschuh wrote:
-> On Wed, 26 Aug 2015, Joe Perches wrote:
-> > vdbg_printk when not using CONFIG_THINKPAD_ACPI_DEBUG uses
-> > no_printk which produces no logging output but always
-> > evaluates arguments.
-> > 
-> > Change the macro to surround the no_printk call with
-> > 	do { if (0) no_printk(...); } while (0)
-> > to avoid the unnecessary argument evaluations.
-> > 
-> > $ size drivers/platform/x86/thinkpad_acpi.o*
-> >    text	   data	    bss	    dec	    hex	filename
-> >   60918	   6184	    824	  67926	  10956	drivers/platform/x86/thinkpad_acpi.o.new
-> >   60927	   6184	    824	  67935	  1095f	drivers/platform/x86/thinkpad_acpi.o.old
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
+On Wed, Aug 26, 2015 at 05:04:01AM -0700, Joe Perches wrote:
+> On Wed, 2015-08-26 at 00:22 -0700, Darren Hart wrote:
+> > On Tue, Aug 18, 2015 at 11:30:25PM +0800, Chen Yu wrote:
+> > > Since Surface Pro 3 does not follow the specs of "Windows ACPI Design
+> > > Guide for SoC Platform", code in drivers/input/misc/soc_array.c can
+> > > not detect these buttons on it. According to bios implementation,
+> > > Surface Pro 3 encapsulates these buttons in a device named "VGBI",
+> > > with _HID "MSHW0028". When any of the buttons is pressed, a specify
+> > > ACPI notification code for this button will be delivered to "VGBI". For
+> > > example, if power button is pressed down, ACPI notification code of 0xc6
+> > > will be sent by Notify(VGBI, 0xc6).
+> []
+> > Joe, you provided a lot of review, are you happy with this version?
 > 
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> It looks fine.
+> 
+> Thanks for picking the other little nits too Darren.
 
-Queued, thanks.
+This is not queued for next.
 
 -- 
 Darren Hart
