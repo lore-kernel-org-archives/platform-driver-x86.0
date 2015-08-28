@@ -1,58 +1,46 @@
-From: "Central Trust Loan Limited " <enrico.bovi@studenti.univr.it>
-Subject: =?utf-8?Q?L=C3=A5netilbud_1,5%?=
-Date: Fri, 28 Aug 2015 19:12:06 +0200 (CEST)
-Message-ID: <1984717523.1605882.1440781926622.JavaMail.root@studenti.univr.it>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] thinkpad_acpi: Remove side effects from vdbg_printk ->
+ no_printk macro
+Date: Fri, 28 Aug 2015 10:50:50 -0700
+Message-ID: <20150828175050.GA33809@vmdeb7>
+References: <1440612818.2780.24.camel@perches.com>
+ <20150827173306.GB17280@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp2.cineca.it ([130.186.31.170]:38363 "EHLO smtp2.cineca.it"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752890AbbH1RUW convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:47514 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752483AbbH1RvH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 28 Aug 2015 13:20:22 -0400
+	Fri, 28 Aug 2015 13:51:07 -0400
+Content-Disposition: inline
+In-Reply-To: <20150827173306.GB17280@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Joe Perches <joe@perches.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 
+On Thu, Aug 27, 2015 at 02:33:06PM -0300, Henrique de Moraes Holschuh wrote:
+> On Wed, 26 Aug 2015, Joe Perches wrote:
+> > vdbg_printk when not using CONFIG_THINKPAD_ACPI_DEBUG uses
+> > no_printk which produces no logging output but always
+> > evaluates arguments.
+> > 
+> > Change the macro to surround the no_printk call with
+> > 	do { if (0) no_printk(...); } while (0)
+> > to avoid the unnecessary argument evaluations.
+> > 
+> > $ size drivers/platform/x86/thinkpad_acpi.o*
+> >    text	   data	    bss	    dec	    hex	filename
+> >   60918	   6184	    824	  67926	  10956	drivers/platform/x86/thinkpad_acpi.o.new
+> >   60927	   6184	    824	  67935	  1095f	drivers/platform/x86/thinkpad_acpi.o.old
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> 
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
+Queued, thanks.
 
-
-God dag,
-
-Dette er CENTRAL TRUST l=C3=A5n selskaper tilbyr l=C3=A5n.
-
-CENTRAL TRUST L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
-til ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine fina=
-nsielle m=C3=A5l. vi l=C3=A5n med lav rente p=C3=A5 1,5%. Her er noen v=
-iktige trekk ved personlig l=C3=A5n fra sentral stoler p=C3=A5 utl=C3=A5=
-n selskaper blir tilbudt. Her er de L=C3=A5ne Faktorer vi samarbeider m=
-ed de ledende britiske meglere som har tilgang til toppen l=C3=A5ngiver=
-e og v=C3=A6re i stand til =C3=A5 finne den beste =C3=B8konomiske l=C3=B8=
-sningen til en rimelig price.Please, hvis du er interessert kan du kont=
-akte oss via denne e-post: centraltrustlltd@gmail.com
-
-
-Etter reaksjonen, vil du motta en s=C3=B8knad om kreditt fyll. Ingen so=
-sial sikkerhet og ingen kredittsjekk, 100% garantert.
-
-Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
-
-
-Informasjon Needed
-
-Dine navn:
-Adresse: ...........
-Telefon: ...........
-N=C3=B8dvendig Antall: ........
-Varighet: ...............
-Okkupasjon: ...........
-M=C3=A5nedlig inntekt: ........
-Kj=C3=B8nn: ...............
-=46=C3=B8dselsdato: ........
-Status: ..................
-Land: ..........
-=46orm=C3=A5let: .........
-
-Oppfylle dine =C3=B8konomiske behov er v=C3=A5r stolthet.
-
-David Donald
+-- 
+Darren Hart
+Intel Open Source Technology Center
