@@ -1,40 +1,77 @@
-From: Ben cook <spam@practicenet.co.uk>
-Subject: Best regards, TO NEXT OF KIN.........
-Date: Thu, 27 Aug 2015 21:15:50 +0200
-Message-ID: <DEXSERV1YUimAxP9ZoL00001eda@dexam.co.uk>
-Reply-To: <ben.cook5511@yahoo.co.nz>
+From: "Ward, David - 0665 - MITLL" <david.ward@ll.mit.edu>
+Subject: Re: hp-wmi rfkill change breaks systems
+Date: Fri, 28 Aug 2015 03:49:46 +0000
+Message-ID: <55DFDA55.8020608@ll.mit.edu>
+References: <20140121151702.GA2566@srcf.ucam.org>
+ <CAJ=jquZZcB9stcYn7cTnQZvTZkq+VZvvTTVCvA0zAOv+Yd2qbg@mail.gmail.com>
+ <CAJ=jquYnfW14zHBHnY4WZDiX0jakuFVLDUQ6BnjVZQjo1hOr8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-am1hn0250.outbound.protection.outlook.com ([157.56.112.250]:58464
-	"EHLO emea01-am1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751231AbbH0TPz (ORCPT
+Received: from MX1.LL.MIT.EDU ([129.55.12.45]:54674 "EHLO mx1.ll.mit.edu"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1750896AbbH1EfR (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 27 Aug 2015 15:15:55 -0400
-Content-Class: urn:content-classes:message
+	Fri, 28 Aug 2015 00:35:17 -0400
+In-Reply-To: <CAJ=jquYnfW14zHBHnY4WZDiX0jakuFVLDUQ6BnjVZQjo1hOr8g@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <D8A2493766B4904099069C9E2EC99AB0@ll.mit.edu>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Barrister Ben Cook
-La Sagrada Familia Calle Mallorca,
-601 08713 Seville Spain.
-Mobil: +34 631 093 714
-
-> Attn: Dear Friend,
->
-I am Barrister Ben Cook a solicitor at law. I am the personal attorney to late Mr. Robert a national of your country, who was an official contractor (category D) with REPSOL YPF, SPAIN (RY) an oil firm in Spain. Here in after shall be referred to as my client. On the 11th of March 2010, my client, his wife and their two only sons were involved in a car accident on holiday trip along Las Palmas express way. All occupants of the vehicle unfortunately lost their lives. Since then I have made several enquiries and presentations to locate any of my client's extended relatives, this has also proved abortive. It is after these several unsuccessful attempts to locate any member of his family failed that I decided to contact you since coincidentally you have your last name believing that you can in
- variably be of help in this situation to stands as the next of kin to this my client. I am contacting you to assist in repatriating the money and property left behind by my client before th!
-!ey get confiscated or declared uns
->
-Already, the finance company where the deceased had an account valued at about 1 Million Euros has issued me a notice/ultimatum to provide the next of kin or have the account confiscated within the next one Month. Since It has been unsuccessful in locating the relatives for over 2 years now, I seek your consent to present you as the next of kin of the deceased, so that the proceeds of this account valued at 1 Million Euros can be paid to your account and there after we can share the fund (money) in the ratio of 7:3. That is, I will have 70% of the proceed while you have 30% for your assistance. I have all necessary legal documents that can be used to back up any claim we may make. All I require is your honest co-operation to enable us see this transaction through .I guarantee that this wil
- l be executed under a legitimate arrangement that will protect you from any breach of the law.
-
-Please get in touch with me by my email and send to me your telephone and fax numbers to enable us discuss further about this transaction.
->
-Best regards,
-Barrister Ben Cook
-
-
-=============MAX============= 
+T24gMDEvMjMvMjAxNCAwMjoyNSBBTSwgQWxleCBIdW5nIHdyb3RlOg0KPiBIaSBNYXR0aGV3LA0K
+Pg0KPiBJIHJldmVydGVkIDk5N2RhYTFiZDlhY2E0MTJhYjk3OTU1YTM1YjI2YzQ2MGMwZWM3YTQg
+YW5kIGFkZCBhIGNoZWNrIGluDQo+IGhwX3dtaV9yZmtpbGxfc2V0dXAgYXMgYmVsb3c6DQo+DQo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9ocC13bWkuYyBiL2RyaXZlcnMvcGxh
+dGZvcm0veDg2L2hwLXdtaS5jDQo+IGluZGV4IDhiYTg5NTYuLjY1ZmVlOGEgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2hwLXdtaS5jDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2hwLXdtaS5jDQo+IEBAIC01NCw3ICs1NCw2IEBAIE1PRFVMRV9BTElBUygid21pOjVG
+QjdGMDM0LTJDNjMtNDVlOS1CRTkxLTNENDRFMkM3MDdFNCIpOw0KPiAgICNkZWZpbmUgSFBXTUlf
+SEFSRFdBUkVfUVVFUlkgMHg0DQo+ICAgI2RlZmluZSBIUFdNSV9XSVJFTEVTU19RVUVSWSAweDUN
+Cj4gICAjZGVmaW5lIEhQV01JX0hPVEtFWV9RVUVSWSAweGMNCj4gLSNkZWZpbmUgSFBXTUlfRkVB
+VFVSRV9RVUVSWSAweGQNCj4gICAjZGVmaW5lIEhQV01JX1dJUkVMRVNTMl9RVUVSWSAweDFiDQo+
+ICAgI2RlZmluZSBIUFdNSV9QT1NUQ09ERUVSUk9SX1FVRVJZIDB4MmENCj4NCj4gQEAgLTI5Mywx
+NyArMjkyLDYgQEAgc3RhdGljIGludCBocF93bWlfdGFibGV0X3N0YXRlKHZvaWQpDQo+ICAgICAg
+ICAgIHJldHVybiAoc3RhdGUgJiAweDQpID8gMSA6IDA7DQo+ICAgfQ0KPg0KPiAtc3RhdGljIGlu
+dCBocF93bWlfYmlvc18yMDA5X2xhdGVyKHZvaWQpDQo+IC17DQo+IC0gICAgICAgaW50IHN0YXRl
+ID0gMDsNCj4gLSAgICAgICBpbnQgcmV0ID0gaHBfd21pX3BlcmZvcm1fcXVlcnkoSFBXTUlfRkVB
+VFVSRV9RVUVSWSwgMCwgJnN0YXRlLA0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBzaXplb2Yoc3RhdGUpLCBzaXplb2Yoc3RhdGUpKTsNCj4gLSAgICAgICBpZiAocmV0
+KQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gLQ0KPiAtICAgICAgIHJldHVybiAo
+c3RhdGUgJiAweDEwKSA/IDEgOiAwOw0KPiAtfQ0KPiAtDQo+ICAgc3RhdGljIGludCBocF93bWlf
+c2V0X2Jsb2NrKHZvaWQgKmRhdGEsIGJvb2wgYmxvY2tlZCkNCj4gICB7DQo+ICAgICAgICAgIGVu
+dW0gaHBfd21pX3JhZGlvIHIgPSAoZW51bSBocF93bWlfcmFkaW8pIGRhdGE7DQo+IEBAIC02OTYs
+NiArNjg0LDExIEBAIHN0YXRpYyBpbnQgaHBfd21pX3Jma2lsbF9zZXR1cChzdHJ1Y3QNCj4gcGxh
+dGZvcm1fZGV2aWNlICpkZXZpY2UpDQo+ICAgICAgICAgIGlmIChlcnIpDQo+ICAgICAgICAgICAg
+ICAgICAgcmV0dXJuIGVycjsNCj4NCj4gKyAgICAgICBlcnIgPSBocF93bWlfcGVyZm9ybV9xdWVy
+eShIUFdNSV9XSVJFTEVTU19RVUVSWSwgMSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAmd2lyZWxlc3MsIHNpemVvZih3aXJlbGVzcyksIDApOw0KPiArICAgICAgIGlmIChl
+cnIpDQo+ICsgICAgICAgICAgICAgICByZXR1cm4gZXJyOw0KPiArDQo+ICAgICAgICAgIGlmICh3
+aXJlbGVzcyAmIDB4MSkgew0KPiAgICAgICAgICAgICAgICAgIHdpZmlfcmZraWxsID0gcmZraWxs
+X2FsbG9jKCJocC13aWZpIiwgJmRldmljZS0+ZGV2LA0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIFJGS0lMTF9UWVBFX1dMQU4sDQo+IEBAIC04ODMsNyArODc2
+LDcgQEAgc3RhdGljIGludCBfX2luaXQgaHBfd21pX2Jpb3Nfc2V0dXAoc3RydWN0DQo+IHBsYXRm
+b3JtX2RldmljZSAqZGV2aWNlKQ0KPiAgICAgICAgICBncHNfcmZraWxsID0gTlVMTDsNCj4gICAg
+ICAgICAgcmZraWxsMl9jb3VudCA9IDA7DQo+DQo+IC0gICAgICAgaWYgKGhwX3dtaV9iaW9zXzIw
+MDlfbGF0ZXIoKSB8fCBocF93bWlfcmZraWxsX3NldHVwKGRldmljZSkpDQo+ICsgICAgICAgaWYg
+KGhwX3dtaV9yZmtpbGxfc2V0dXAoZGV2aWNlKSkNCj4gICAgICAgICAgICAgICAgICBocF93bWlf
+cmZraWxsMl9zZXR1cChkZXZpY2UpOw0KPg0KPiAgICAgICAgICBlcnIgPSBkZXZpY2VfY3JlYXRl
+X2ZpbGUoJmRldmljZS0+ZGV2LCAmZGV2X2F0dHJfZGlzcGxheSk7DQo+DQo+DQo+DQo+IEl0IGFj
+dHVhbGx5IHdvcmtzIGJldHRlciB0aGFuIDk5N2RhYTFiZDlhY2E0MTJhYjk3OTU1YTM1YjI2YzQ2
+MGMwZWM3YTQNCj4gb24gbmV3IHN5c3RlbXMsIGJ1dCBJIGRvbid0IGhhdmUgb2xkIGhwIHN5c3Rl
+bXMgZm9yIHRlc3RpbmcgZ29vZCBIUA0KPiBXTUkgMHgwNSBTZXQgY29tbWFuZC4NCj4NCj4gQW55
+IHN1Z2dlc3Rpb25zIGFyZSBhcHByZWNpYXRlZC4NCg0KQWxleCwgTWF0dGhldywgYW55IHVwZGF0
+ZSBvbiB0aGlzPw0KDQpDb21taXQgZjgyYmRkMCAiaHAtd21pOiBFbmFibGUgaG90a2V5cyBvbiBz
+b21lIHN5c3RlbXMiIGFkZGVkIGFub3RoZXIgDQp1c2Ugb2YgdGhlIGZ1bmN0aW9uIGhwX3dtaV9i
+aW9zXzIwMDlfbGF0ZXIoKS4gSXMgdGhlIHJlYXNvbiB5b3UgcmVtb3ZlZCANCnRoZSBmdW5jdGlv
+biBhYm92ZSBqdXN0IGJlY2F1c2UgaXQgd2Fzbid0IGNhbGxlZCBhbnltb3JlLCBvciBpcyB0aGlz
+IA0KcHJvYmxlbWF0aWM/DQoNCklmIHlvdSBhcmUgbG9va2luZyBmb3IgdGVzdGluZywgbWF5YmUg
+eW91IHNob3VsZCBwb3N0IChhIHJldmlzZWQgdmVyc2lvbiANCm9mKSB0aGlzIHBhdGNoIHRvIHRo
+ZXNlIGJ1ZyByZXBvcnRzLCB3aGVyZSB1c2VycyB3aXRoIG9sZGVyIEhQIHN5c3RlbXMgDQpoYXZl
+IGluZGljYXRlZCB0aGV5IGFyZSBzcGVjaWZpY2FsbHkgYWZmZWN0ZWQgYnkgdGhpczoNCg0KaHR0
+cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD02OTEzMQ0KaHR0cHM6Ly9i
+dWdzLmxhdW5jaHBhZC5uZXQvdWJ1bnR1Lytzb3VyY2UvbGludXgvK2J1Zy8xMjkwNDE4DQoNClRo
+YW5rcywNCg0KRGF2aWQNCg0K
