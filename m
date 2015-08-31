@@ -1,146 +1,100 @@
-From: Kyle Evans <kvans32@gmail.com>
-Subject: Re: [PATCH] hp-wmi: limit hotkey enable
-Date: Sat, 29 Aug 2015 10:26:40 -0500
-Message-ID: <55E1CF30.10501@gmail.com>
-References: <1438959360-20901-1-git-send-email-kvans32@gmail.com> <20150828184228.GA64484@vmdeb7>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Mon, 31 Aug 2015 11:51:07 +0200
+Message-ID: <20150831095107.GA2397@eudyptula.hq.kempniu.pl>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <20150701105544.GD17577@pali>
+ <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
+ <559C1C17.3060009@dell.com>
+ <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
+ <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-io0-f179.google.com ([209.85.223.179]:32826 "EHLO
-	mail-io0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753030AbbH2P0m (ORCPT
+Received: from mail-la0-f43.google.com ([209.85.215.43]:34625 "EHLO
+	mail-la0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751322AbbHaJvN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 29 Aug 2015 11:26:42 -0400
-Received: by iods203 with SMTP id s203so120847706iod.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2015 08:26:42 -0700 (PDT)
-In-Reply-To: <20150828184228.GA64484@vmdeb7>
+	Mon, 31 Aug 2015 05:51:13 -0400
+Received: by laba3 with SMTP id a3so67297432lab.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2015 02:51:11 -0700 (PDT)
+Content-Disposition: inline
+In-Reply-To: <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>
+To: Mario Limonciello <mario_limonciello@dell.com>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On 08/28/2015 01:42 PM, Darren Hart wrote:
-> On Fri, Aug 07, 2015 at 09:56:00AM -0500, Kyle Evans wrote:
->> Do not attempt to initialize hotkeys if the query returns a value.
->> Furthermore, do not write initialize magic on systems that do not have
->> feature query 0xb. Fixes Bug #82451.
->>
->> Signed-off-by: Kyle Evans <kvans32@gmail.com>
->
-> Hi Kyle,
->
-> Please always include the maintainer from MAINTAINERS on Cc when submitting
-> kernel patches. See Documentation/SubmittingPatches.
->
-> For example:
->
-> $ scripts/get_maintainer.pl -f drivers/platform/x86/hp-wmi.c
-> Darren Hart <dvhart@infradead.org> (maintainer:X86 PLATFORM DRIVERS)
-> platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
-> linux-kernel@vger.kernel.org (open list)
->
-> This will ensure a more timely response.
->
->> ---
->>   drivers/platform/x86/hp-wmi.c | 17 +++++++++++++----
->>   1 file changed, 13 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
->> index 0669731..557650f 100644
->> --- a/drivers/platform/x86/hp-wmi.c
->> +++ b/drivers/platform/x86/hp-wmi.c
->> @@ -54,6 +54,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
->>   #define HPWMI_HARDWARE_QUERY 0x4
->>   #define HPWMI_WIRELESS_QUERY 0x5
->>   #define HPWMI_BIOS_QUERY 0x9
->> +#define HPWMI_FEATURE2_QUERY 0xb
->>   #define HPWMI_HOTKEY_QUERY 0xc
->>   #define HPWMI_FEATURE_QUERY 0xd
->>   #define HPWMI_WIRELESS2_QUERY 0x1b
->> @@ -309,10 +310,18 @@ static int __init hp_wmi_bios_2009_later(void)
->>   static int hp_wmi_enable_hotkeys(void)
->>   {
->>   	int ret;
->> -	int query = 0x6e;
->> +	int query = 0xff;
->> +	int value = 0x6e;
->>
->> -	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
->> -				   0);
->> +	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 0, &query,
->> +				   0, sizeof(query));
->> +
->> +	if (!query) {
->
-> I suspect this should come after the test for ret. If there is a more
-> fundamental error, it would make sense to exit with -EINVAL first. Despite query
-> being initialized to 0xff, we have no guarantee the firmware won't set it to 0
-> and still return an error.
+> > > Now as for actually simulating a keypress, it can be programmed u=
+sing
+> > > the following calling interface (on receiving the e025 WMI notifi=
+cation).
+> > > To actually simulate the keypress:
+> > > Arg1=3D0x41
+> > > Arg2 Byte [1:0]: Scan code to simulate
+> > > Byte [3:2]
+> > > * Bit0 - L Alt
+> > > * Bit1 - R Alt
+> > > * Bit2 - L Ctrl
+> > > * Bit3 - R Ctrl
+> > > * Bit4 - L Shift
+> > > * Bit5 - R shift
+> > > * Bit6 - L Win
+> > > * Bit7 - R Win
+> > > * Bit8 - Fn key
+> >=20
+> > And is it possible to disable keypress simulation on systems that h=
+ave
+> > that capability?
+> >=20
+> > My understanding is that all hardware equipped with an Instant Laun=
+ch
+> > button is capable of generating a WMI event upon its press, but not=
+ all
+> > models can generate a keypress at the same time, correct? If that's=
+ the
+> > case, then the arguably cleanest solution would be to change the ke=
+ymap
+> > entry for event 0xe025 in dell-wmi.c to KE_KEY and ensure (probably=
+ in
+> > dell-laptop.c) no i8042 interrupt is raised when the Instant Launch
+> > button is pressed. Though that would still leave us with the questi=
+on of
+> > how to determine (ideally without side effects) whether a given mod=
+el
+> > needs disabling keypress simulation. I imagine the pseudocode would=
+ be
+> > like:
+> >=20
+> >     if (ec_can_simulate_keypresses)
+> >         disable_keypress_simulation();
+> >     else
+> >         enable_wmi_event_generation();
+> >=20
+> > If disabling keypress simulation is not possible, dell-wmi.c has to
+> > somehow determine whether a 0xe025 WMI event should be ignored or n=
+ot.
+> >=20
+> > Am I making any sense here?
 
-That makes sense. Another sticky bit is, do we want to fail on a device 
-that doesn't need this? Not really.
+As the holiday season is coming to an end, I'm taking my last shot at
+reviving this thread. Could anyone please tell us:
 
-How about I throw out the initial read, because, the test for 
-FEATURE2_QUERY is the bit that actually fixes the bug. The read is just 
-fearful bug prevention. How is this?
+  * Is there a way to determine whether the EC is capable of simulating
+    keypresses without the side effects that the SMBIOS call 4, 11 with
+    argument 64 causes on certain hardware (e.g. disabling keyboard
+    backlight on an E6440)? Or is there perhaps a well-defined list of
+    machines that SMBIOS call is (un)safe on?
 
-@@ -309,10 +310,13 @@ static int __init hp_wmi_bios_2009_later(void)
-  static int hp_wmi_enable_hotkeys(void)
-  {
-  	int ret;
--	int query = 0x6e;
-+	int query;
-+	int value = 0x6e;
+  * Is it possible to disable keypress simulation on machines on which
+    the EC supports it? If so, how would one do that?
 
--	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
--				   0);
-+	if (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query,
-+				  0, sizeof(query)))
-+		ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
-+					   sizeof(value), 0);
+Thanks!
 
-  	if (ret)
-  		return -EINVAL;
-
-
->
-> Rafael, would you agree?
->
-> And technically, EINVAL isn't the right error for a general error (but that's a
-> preexisting problem). You don't have to fix that to get this in.
->
->
->> +		if (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query,
->> +					  0, sizeof(query)))
->> +		    ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
->
-> Careful with indentation, use tabs please. checkpatch.pl would have caught this.
->
->
->> +					       sizeof(value), 0);
->> +	}
->>
->>   	if (ret)
->>   		return -EINVAL;
->> @@ -663,7 +672,7 @@ static int __init hp_wmi_input_setup(void)
->>   			    hp_wmi_tablet_state());
->>   	input_sync(hp_wmi_input_dev);
->>
->> -	if (hp_wmi_bios_2009_later() == 4)
->> +	if (hp_wmi_bios_2009_later() == HPWMI_RET_UNKNOWN_CMDTYPE)
->>   		hp_wmi_enable_hotkeys();
->
-> This bit is fine, but no magic number cleanup is mentioned in the change log.
-> Was this change intentional?
-
-It was intentional but I didn't think it was worth a patch request. I 
-had forgot that I made the change when creating a new patch and was on 
-the fence about what to do about it so I didn't do anything. I'll be 
-sure to call out that sort of thing in the future.
-
->
-> Thanks,
->
-
-Thank you for the comments. I'm taking it in.
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
