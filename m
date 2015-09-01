@@ -1,154 +1,118 @@
-From: Darren Hart <dvhart@infradead.org>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
 Subject: Re: [PATCH v3] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Mon, 31 Aug 2015 12:38:07 -0700
-Message-ID: <20150831193807.GB88873@vmdeb7>
+Date: Tue, 1 Sep 2015 08:11:26 +0000
+Message-ID: <1441095084.28746.42.camel@intel.com>
 References: <1440607117-57683-1-git-send-email-qipeng.zha@intel.com>
+	 <20150831193807.GB88873@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:59371 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752128AbbHaXzQ (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:7097 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753561AbbIAIL3 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 31 Aug 2015 19:55:16 -0400
-Content-Disposition: inline
-In-Reply-To: <1440607117-57683-1-git-send-email-qipeng.zha@intel.com>
+	Tue, 1 Sep 2015 04:11:29 -0400
+In-Reply-To: <20150831193807.GB88873@vmdeb7>
+Content-Language: en-US
+Content-ID: <536927B1650FCD4F8C1B96A5B6B978C7@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Qipeng Zha <qipeng.zha@intel.com>, Mika Westerberg <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: "Zha, Qipeng" <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Thu, Aug 27, 2015 at 12:38:37AM +0800, Qipeng Zha wrote:
-> This driver provides support for P-Unit mailbox IPC on Intel platforms.
-> The heart of the P-Unit is the Foxton microcontroller and its firmware,
-> which provide mailbox interface for power management usage.
-> 
-> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
-> 
-
-Thanks Qipeng. In the future, please remember to Cc the people who have reviewed
-previous versions so they can provide their Reviewed-by if they are satisfied
-with the changes.
-
-> ---
-> change in v3
->  Fix compile issue in intel_punit_ipc.h, it happened when built-in
-> and the header file is included in other source file.
-> 
-> change in v2
->  Fix issues in code style and comments;
->  Remove "default y" in Kconfig;
->  Remove some header files;
->  Replace request_mem_region with devm_request_mem_region,
-> and same for request_irq;
->  Change to use prefix of IPC_PUNIT_ to define commands;
-
-Thanks for including the changelog.
-
-...
-
->  IOC3 ETHERNET DRIVER
->  M:	Ralf Baechle <ralf@linux-mips.org>
-> diff --git a/arch/x86/include/asm/intel_punit_ipc.h b/arch/x86/include/asm/intel_punit_ipc.h
-> new file mode 100644
-> index 0000000..0537434
-> --- /dev/null
-> +++ b/arch/x86/include/asm/intel_punit_ipc.h
-> @@ -0,0 +1,101 @@
-> +#ifndef _ASM_X86_INTEL_PUNIT_IPC_H_
-> +#define  _ASM_X86_INTEL_PUNIT_IPC_H_
-> +
-> +/* Commands supported on CPU core, are handled by different bars,
-> + * unify these commands together here
-> + */
-
-Always include a leading /* empty line for multi-line comments please, this is
-in CodingStyle, but checkpatch missed it - likely because /net has its own
-rules. I've fixed this in the version I queued to "testing".
-
-...
-
-> +static int intel_punit_get_bars(struct platform_device *pdev)
-> +{
-> +	struct resource *res0, *res1;
-> +	void __iomem *addr;
-> +	int size;
-> +
-> +	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res0) {
-> +		dev_err(&pdev->dev, "Failed to get iomem resource\n");
-> +		return -EINVAL;
-> +	}
-> +	size = resource_size(res0);
-> +	if (!devm_request_mem_region(&pdev->dev, res0->start,
-> +				     size, pdev->name)) {
-> +		dev_err(&pdev->dev, "Failed to request iomem resouce\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	res1 = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res1) {
-> +		dev_err(&pdev->dev, "Failed to get iomem resource1\n");
-> +		return -EINVAL;
-> +	}
-> +	size = resource_size(res1);
-> +	if (!devm_request_mem_region(&pdev->dev, res1->start,
-> +				     size, pdev->name)) {
-> +		dev_err(&pdev->dev, "Failed to request iomem resouce1\n");
-> +		return -EBUSY;
-> +	}
-
-These return codes, -EINVAL and -EBUSY caught my eye. -EINVAL in particular
-seemed odd, I would have expected -ENXIO or -EIO. Checking intel_pmc_ipc.c, I
-see it uses -ENXIO for the comparable routine. Is there a justification for the
-variability here? If not, I'd prefer to see continuity across these similar
-drivers.
-
-> +
-> +	addr = ioremap_nocache(res0->start,
-> +			       resource_size(res0) + resource_size(res1));
-> +	if (!addr) {
-> +		dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
-> +		return  -ENOMEM;
-> +	}
-> +	ipcdev.base[BIOS_MAILBOX] = addr;
-> +	addr += MAILBOX_REGISTER_SPACE;
-> +	ipcdev.base[GTDRIVER_MAILBOX] = addr;
-> +	addr += MAILBOX_REGISTER_SPACE;
-> +	ipcdev.base[ISPDRIVER_MAILBOX] = addr;
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_punit_ipc_probe(struct platform_device *pdev)
-> +{
-> +	int irq, ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		ipcdev.irq = 0;
-> +		dev_warn(&pdev->dev, "Invalid IRQ\n");
-> +	} else {
-> +		if (devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
-> +				     IRQF_NO_SUSPEND, "intel_punit_ipc",
-> +				     &ipcdev)) {
-> +			dev_err(&pdev->dev, "Failed to request irq: %d\n", irq);
-> +			return -EBUSY;
-> +		}
-> +		ipcdev.irq = irq;
-> +	}
-> +
-> +	ret = intel_punit_get_bars(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-
-This white space usage of the ret, if(ret) return ret block is typical and
-nicely separates the logical blocks of the function. There are many throughout
-this file that do not use any whitespace. This is fairly minor, but if we're
-respinning, please do a pass and add some newlines around similar blocks.
-
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+T24gTW9uLCAyMDE1LTA4LTMxIGF0IDEyOjM4IC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4g
+T24gVGh1LCBBdWcgMjcsIDIwMTUgYXQgMTI6Mzg6MzdBTSArMDgwMCwgUWlwZW5nIFpoYSB3cm90
+ZToNCj4gPiBUaGlzIGRyaXZlciBwcm92aWRlcyBzdXBwb3J0IGZvciBQLVVuaXQgbWFpbGJveCBJ
+UEMgb24gSW50ZWwgDQo+ID4gcGxhdGZvcm1zLg0KPiA+IFRoZSBoZWFydCBvZiB0aGUgUC1Vbml0
+IGlzIHRoZSBGb3h0b24gbWljcm9jb250cm9sbGVyIGFuZCBpdHMgDQo+ID4gZmlybXdhcmUsDQo+
+ID4gd2hpY2ggcHJvdmlkZSBtYWlsYm94IGludGVyZmFjZSBmb3IgcG93ZXIgbWFuYWdlbWVudCB1
+c2FnZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBRaXBlbmcgWmhhIDxxaXBlbmcuemhhQGlu
+dGVsLmNvbT4NCj4gPiANCj4gDQo+IFRoYW5rcyBRaXBlbmcuIEluIHRoZSBmdXR1cmUsIHBsZWFz
+ZSByZW1lbWJlciB0byBDYyB0aGUgcGVvcGxlIHdobyANCj4gaGF2ZSByZXZpZXdlZA0KPiBwcmV2
+aW91cyB2ZXJzaW9ucyBzbyB0aGV5IGNhbiBwcm92aWRlIHRoZWlyIFJldmlld2VkLWJ5IGlmIHRo
+ZXkgYXJlIA0KPiBzYXRpc2ZpZWQNCj4gd2l0aCB0aGUgY2hhbmdlcy4NCg0KSXQgd291bGQgYmUg
+bmljZSB0byBzZWUgdGhlIGZ1bGwgdmVyc2lvbiBiZWZvcmUgcHVzaGluZyBhbnl3aGVyZS4NCg0K
+PiANCj4gPiAtLS0NCj4gPiBjaGFuZ2UgaW4gdjMNCj4gPiAgRml4IGNvbXBpbGUgaXNzdWUgaW4g
+aW50ZWxfcHVuaXRfaXBjLmgsIGl0IGhhcHBlbmVkIHdoZW4gYnVpbHQtaW4NCj4gPiBhbmQgdGhl
+IGhlYWRlciBmaWxlIGlzIGluY2x1ZGVkIGluIG90aGVyIHNvdXJjZSBmaWxlLg0KPiA+IA0KPiA+
+IGNoYW5nZSBpbiB2Mg0KPiA+ICBGaXggaXNzdWVzIGluIGNvZGUgc3R5bGUgYW5kIGNvbW1lbnRz
+Ow0KPiA+ICBSZW1vdmUgImRlZmF1bHQgeSIgaW4gS2NvbmZpZzsNCj4gPiAgUmVtb3ZlIHNvbWUg
+aGVhZGVyIGZpbGVzOw0KPiA+ICBSZXBsYWNlIHJlcXVlc3RfbWVtX3JlZ2lvbiB3aXRoIGRldm1f
+cmVxdWVzdF9tZW1fcmVnaW9uLA0KPiA+IGFuZCBzYW1lIGZvciByZXF1ZXN0X2lycTsNCj4gPiAg
+Q2hhbmdlIHRvIHVzZSBwcmVmaXggb2YgSVBDX1BVTklUXyB0byBkZWZpbmUgY29tbWFuZHM7DQo+
+IA0KPiBUaGFua3MgZm9yIGluY2x1ZGluZyB0aGUgY2hhbmdlbG9nLg0KPiANCj4gLi4uDQo+IA0K
+PiA+ICBJT0MzIEVUSEVSTkVUIERSSVZFUg0KPiA+ICBNOglSYWxmIEJhZWNobGUgPHJhbGZAbGlu
+dXgtbWlwcy5vcmc+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2ludGVs
+X3B1bml0X2lwYy5oIA0KPiA+IGIvYXJjaC94ODYvaW5jbHVkZS9hc20vaW50ZWxfcHVuaXRfaXBj
+LmgNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjA1Mzc0MzQN
+Cj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vaW50ZWxf
+cHVuaXRfaXBjLmgNCj4gPiBAQCAtMCwwICsxLDEwMSBAQA0KPiA+ICsjaWZuZGVmIF9BU01fWDg2
+X0lOVEVMX1BVTklUX0lQQ19IXw0KPiA+ICsjZGVmaW5lICBfQVNNX1g4Nl9JTlRFTF9QVU5JVF9J
+UENfSF8NCj4gPiArDQo+ID4gKy8qIENvbW1hbmRzIHN1cHBvcnRlZCBvbiBDUFUgY29yZSwgYXJl
+IGhhbmRsZWQgYnkgZGlmZmVyZW50IGJhcnMsDQo+ID4gKyAqIHVuaWZ5IHRoZXNlIGNvbW1hbmRz
+IHRvZ2V0aGVyIGhlcmUNCj4gPiArICovDQo+IA0KPiBBbHdheXMgaW5jbHVkZSBhIGxlYWRpbmcg
+LyogZW1wdHkgbGluZSBmb3IgbXVsdGktbGluZSBjb21tZW50cyANCj4gcGxlYXNlLCB0aGlzIGlz
+DQo+IGluIENvZGluZ1N0eWxlLCBidXQgY2hlY2twYXRjaCBtaXNzZWQgaXQgLSBsaWtlbHkgYmVj
+YXVzZSAvbmV0IGhhcyANCj4gaXRzIG93bg0KPiBydWxlcy4gSSd2ZSBmaXhlZCB0aGlzIGluIHRo
+ZSB2ZXJzaW9uIEkgcXVldWVkIHRvICJ0ZXN0aW5nIi4NCj4gDQo+IC4uLg0KPiANCj4gPiArc3Rh
+dGljIGludCBpbnRlbF9wdW5pdF9nZXRfYmFycyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgcmVzb3VyY2UgKnJlczAsICpyZXMxOw0KPiA+ICsJdm9p
+ZCBfX2lvbWVtICphZGRyOw0KPiA+ICsJaW50IHNpemU7DQo+ID4gKw0KPiA+ICsJcmVzMCA9IHBs
+YXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+ID4gKwlpZiAo
+IXJlczApIHsNCj4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gZ2V0IGlvbWVt
+IA0KPiA+IHJlc291cmNlXG4iKTsNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArCX0NCj4g
+PiArCXNpemUgPSByZXNvdXJjZV9zaXplKHJlczApOw0KPiA+ICsJaWYgKCFkZXZtX3JlcXVlc3Rf
+bWVtX3JlZ2lvbigmcGRldi0+ZGV2LCByZXMwLT5zdGFydCwNCj4gPiArCQkJCSAgICAgc2l6ZSwg
+cGRldi0+bmFtZSkpIHsNCg0KU2hvdWxkbid0IGJlIGRldm1faW9yZW1hcF9yZXNvdXJjZSgpIGlu
+IGJvdGggY2FzZXM/DQoNCj4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gcmVx
+dWVzdCBpb21lbSANCj4gPiByZXNvdWNlXG4iKTsNCj4gPiArCQlyZXR1cm4gLUVCVVNZOw0KPiA+
+ICsJfQ0KPiA+ICsNCj4gPiArCXJlczEgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9S
+RVNPVVJDRV9NRU0sIDEpOw0KPiA+ICsJaWYgKCFyZXMxKSB7DQo+ID4gKwkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiRmFpbGVkIHRvIGdldCBpb21lbSANCj4gPiByZXNvdXJjZTFcbiIpOw0KPiA+ICsJ
+CXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsJc2l6ZSA9IHJlc291cmNlX3NpemUocmVz
+MSk7DQo+ID4gKwlpZiAoIWRldm1fcmVxdWVzdF9tZW1fcmVnaW9uKCZwZGV2LT5kZXYsIHJlczEt
+PnN0YXJ0LA0KPiA+ICsJCQkJICAgICBzaXplLCBwZGV2LT5uYW1lKSkgew0KPiA+ICsJCWRldl9l
+cnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0byByZXF1ZXN0IGlvbWVtIA0KPiA+IHJlc291Y2UxXG4i
+KTsNCj4gPiArCQlyZXR1cm4gLUVCVVNZOw0KPiA+ICsJfQ0KPiANCj4gVGhlc2UgcmV0dXJuIGNv
+ZGVzLCAtRUlOVkFMIGFuZCAtRUJVU1kgY2F1Z2h0IG15IGV5ZS4gLUVJTlZBTCBpbiANCj4gcGFy
+dGljdWxhcg0KPiBzZWVtZWQgb2RkLCBJIHdvdWxkIGhhdmUgZXhwZWN0ZWQgLUVOWElPIG9yIC1F
+SU8uIENoZWNraW5nIA0KPiBpbnRlbF9wbWNfaXBjLmMsIEkNCj4gc2VlIGl0IHVzZXMgLUVOWElP
+IGZvciB0aGUgY29tcGFyYWJsZSByb3V0aW5lLiBJcyB0aGVyZSBhIA0KPiBqdXN0aWZpY2F0aW9u
+IGZvciB0aGUNCj4gdmFyaWFiaWxpdHkgaGVyZT8gSWYgbm90LCBJJ2QgcHJlZmVyIHRvIHNlZSBj
+b250aW51aXR5IGFjcm9zcyB0aGVzZSANCj4gc2ltaWxhcg0KPiBkcml2ZXJzLg0KPiANCj4gPiAr
+DQo+ID4gKwlhZGRyID0gaW9yZW1hcF9ub2NhY2hlKHJlczAtPnN0YXJ0LA0KPiA+ICsJCQkgICAg
+ICAgcmVzb3VyY2Vfc2l6ZShyZXMwKSArIA0KPiA+IHJlc291cmNlX3NpemUocmVzMSkpOw0KPiA+
+ICsJaWYgKCFhZGRyKSB7DQo+ID4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGlv
+cmVtYXAgaXBjIA0KPiA+IGJhc2VcbiIpOw0KPiA+ICsJCXJldHVybiAgLUVOT01FTTsNCj4gPiAr
+CX0NCj4gPiArCWlwY2Rldi5iYXNlW0JJT1NfTUFJTEJPWF0gPSBhZGRyOw0KPiA+ICsJYWRkciAr
+PSBNQUlMQk9YX1JFR0lTVEVSX1NQQUNFOw0KPiA+ICsJaXBjZGV2LmJhc2VbR1REUklWRVJfTUFJ
+TEJPWF0gPSBhZGRyOw0KPiA+ICsJYWRkciArPSBNQUlMQk9YX1JFR0lTVEVSX1NQQUNFOw0KPiA+
+ICsJaXBjZGV2LmJhc2VbSVNQRFJJVkVSX01BSUxCT1hdID0gYWRkcjsNCj4gPiArDQo+ID4gKwly
+ZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBpbnRlbF9wdW5pdF9pcGNf
+cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0KPiA+ICsJaW50IGly
+cSwgcmV0Ow0KPiA+ICsNCj4gPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+
+ID4gKwlpZiAoaXJxIDwgMCkgew0KPiA+ICsJCWlwY2Rldi5pcnEgPSAwOw0KPiA+ICsJCWRldl93
+YXJuKCZwZGV2LT5kZXYsICJJbnZhbGlkIElSUVxuIik7DQo+ID4gKwl9IGVsc2Ugew0KPiA+ICsJ
+CWlmIChkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYsIGlycSwgDQo+ID4gaW50ZWxfcHVuaXRf
+aW9jLA0KPiA+ICsJCQkJICAgICBJUlFGX05PX1NVU1BFTkQsIA0KPiA+ICJpbnRlbF9wdW5pdF9p
+cGMiLA0KPiA+ICsJCQkJICAgICAmaXBjZGV2KSkgew0KPiA+ICsJCQlkZXZfZXJyKCZwZGV2LT5k
+ZXYsICJGYWlsZWQgdG8gcmVxdWVzdCANCj4gPiBpcnE6ICVkXG4iLCBpcnEpOw0KPiA+ICsJCQly
+ZXR1cm4gLUVCVVNZOw0KPiA+ICsJCX0NCj4gPiArCQlpcGNkZXYuaXJxID0gaXJxOw0KPiA+ICsJ
+fQ0KPiA+ICsNCj4gPiArCXJldCA9IGludGVsX3B1bml0X2dldF9iYXJzKHBkZXYpOw0KPiA+ICsJ
+aWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gDQo+IFRoaXMgd2hpdGUgc3Bh
+Y2UgdXNhZ2Ugb2YgdGhlIHJldCwgaWYocmV0KSByZXR1cm4gcmV0IGJsb2NrIGlzIA0KPiB0eXBp
+Y2FsIGFuZA0KPiBuaWNlbHkgc2VwYXJhdGVzIHRoZSBsb2dpY2FsIGJsb2NrcyBvZiB0aGUgZnVu
+Y3Rpb24uIFRoZXJlIGFyZSBtYW55IA0KPiB0aHJvdWdob3V0DQo+IHRoaXMgZmlsZSB0aGF0IGRv
+IG5vdCB1c2UgYW55IHdoaXRlc3BhY2UuIFRoaXMgaXMgZmFpcmx5IG1pbm9yLCBidXQgDQo+IGlm
+IHdlJ3JlDQo+IHJlc3Bpbm5pbmcsIHBsZWFzZSBkbyBhIHBhc3MgYW5kIGFkZCBzb21lIG5ld2xp
+bmVzIGFyb3VuZCBzaW1pbGFyIA0KPiBibG9ja3MuDQo+IA0KPiANCg0KLS0gDQpBbmR5IFNoZXZj
+aGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kKLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCkludGVsIEZpbmxhbmQgT3kKUmVnaXN0ZXJlZCBBZGRyZXNzOiBQTCAyODEsIDAw
+MTgxIEhlbHNpbmtpIApCdXNpbmVzcyBJZGVudGl0eSBDb2RlOiAwMzU3NjA2IC0gNCAKRG9taWNp
+bGVkIGluIEhlbHNpbmtpIAoKVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29u
+dGFpbiBjb25maWRlbnRpYWwgbWF0ZXJpYWwgZm9yCnRoZSBzb2xlIHVzZSBvZiB0aGUgaW50ZW5k
+ZWQgcmVjaXBpZW50KHMpLiBBbnkgcmV2aWV3IG9yIGRpc3RyaWJ1dGlvbgpieSBvdGhlcnMgaXMg
+c3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkCnJlY2lwaWVu
+dCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciBhbmQgZGVsZXRlIGFsbCBjb3BpZXMuCg==
