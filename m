@@ -1,56 +1,70 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] [v4] surface pro 3: Add support driver for Surface Pro 3
- buttons
-Date: Thu, 3 Sep 2015 12:19:57 -0700
-Message-ID: <20150903191957.GA55382@vmdeb7>
-References: <1439911825-23536-1-git-send-email-yu.c.chen@intel.com>
- <20150826072221.GD50910@vmdeb7>
- <1440590641.2670.187.camel@perches.com>
- <20150828175645.GC33809@vmdeb7>
- <CA+5PVA7a6adkEA=MApM5o=ohu47kh_srKQq27O5RoT5TOg8_1Q@mail.gmail.com>
+Subject: Re: [PATCH] asus-nb-wmi: Add wapf=4 quirk for X456UA/X456UF
+Date: Thu, 3 Sep 2015 15:54:52 -0700
+Message-ID: <20150903225452.GA60159@vmdeb7>
+References: <1441231834-12873-1-git-send-email-drake@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:47904 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:49809 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750851AbbICTUM (ORCPT
+	with ESMTP id S1752903AbbICWy4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 3 Sep 2015 15:20:12 -0400
+	Thu, 3 Sep 2015 18:54:56 -0400
 Content-Disposition: inline
-In-Reply-To: <CA+5PVA7a6adkEA=MApM5o=ohu47kh_srKQq27O5RoT5TOg8_1Q@mail.gmail.com>
+In-Reply-To: <1441231834-12873-1-git-send-email-drake@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Josh Boyer <jwboyer@fedoraproject.org>
-Cc: Joe Perches <joe@perches.com>, Chen Yu <yu.c.chen@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, mchehab@osg.samsung.com, David Miller <davem@davemloft.net>, Jiri Slaby <jslaby@suse.com>, Tejun Heo <tj@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, platform-driver-x86@vger.kernel.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+To: Daniel Drake <drake@endlessm.com>
+Cc: corentin.chary@gmail.com, acelan.kao@canonical.com, carlo@endlessm.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-On Tue, Sep 01, 2015 at 01:30:27PM -0400, Josh Boyer wrote:
-> On Fri, Aug 28, 2015 at 1:56 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Wed, Aug 26, 2015 at 05:04:01AM -0700, Joe Perches wrote:
-> >> On Wed, 2015-08-26 at 00:22 -0700, Darren Hart wrote:
-> >> > On Tue, Aug 18, 2015 at 11:30:25PM +0800, Chen Yu wrote:
-> >> > > Since Surface Pro 3 does not follow the specs of "Windows ACPI Design
-> >> > > Guide for SoC Platform", code in drivers/input/misc/soc_array.c can
-> >> > > not detect these buttons on it. According to bios implementation,
-> >> > > Surface Pro 3 encapsulates these buttons in a device named "VGBI",
-> >> > > with _HID "MSHW0028". When any of the buttons is pressed, a specify
-> >> > > ACPI notification code for this button will be delivered to "VGBI". For
-> >> > > example, if power button is pressed down, ACPI notification code of 0xc6
-> >> > > will be sent by Notify(VGBI, 0xc6).
-> >> []
-> >> > Joe, you provided a lot of review, are you happy with this version?
-> >>
-> >> It looks fine.
-> >>
-> >> Thanks for picking the other little nits too Darren.
-> >
-> > This is not queued for next.
+On Wed, Sep 02, 2015 at 04:10:34PM -0600, Daniel Drake wrote:
+> These laptops boot with wifi as hard-blocked, with no obvious way to
+> enable it. Using a quirk to set wapf=4 solves the problem.
 > 
-> Not or now?  If not, why not?
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
 
-Sorry, typo :-)
+Looks good.
 
-It is queued for next, you'll find it in my "for-next" branch as well as in
-linux-next currently.
+Corentin, any concerns?
+
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index abdaed3..131fee2 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -128,6 +128,24 @@ static const struct dmi_system_id asus_quirks[] = {
+>  	},
+>  	{
+>  		.callback = dmi_matched,
+> +		.ident = "ASUSTeK COMPUTER INC. X456UA",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "X456UA"),
+> +		},
+> +		.driver_data = &quirk_asus_wapf4,
+> +	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUSTeK COMPUTER INC. X456UF",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "X456UF"),
+> +		},
+> +		.driver_data = &quirk_asus_wapf4,
+> +	},
+> +	{
+> +		.callback = dmi_matched,
+>  		.ident = "ASUSTeK COMPUTER INC. X501U",
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> -- 
+> 2.1.4
+> 
+> 
 
 -- 
 Darren Hart
