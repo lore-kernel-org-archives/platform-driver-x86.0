@@ -1,727 +1,192 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: RE: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Tue, 8 Sep 2015 10:42:38 +0000
-Message-ID: <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
-References: <1441708182-66875-1-git-send-email-qipeng.zha@intel.com>
+From: Kyle Evans <kvans32@gmail.com>
+Subject: Re: [PATCH] hp-wmi: limit hotkey enable
+Date: Tue, 08 Sep 2015 10:58:47 -0500
+Message-ID: <55EF05B7.2020206@gmail.com>
+References: <1438959360-20901-1-git-send-email-kvans32@gmail.com> <20150828184228.GA64484@vmdeb7> <55E1CF30.10501@gmail.com> <20150906180339.GC90062@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:46344 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754330AbbIHKnF convert rfc822-to-8bit (ORCPT
+Received: from mail-io0-f179.google.com ([209.85.223.179]:35055 "EHLO
+	mail-io0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755405AbbIHP6u (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 8 Sep 2015 06:43:05 -0400
-In-Reply-To: <1441708182-66875-1-git-send-email-qipeng.zha@intel.com>
-Content-Language: en-US
+	Tue, 8 Sep 2015 11:58:50 -0400
+Received: by ioiz6 with SMTP id z6so123231386ioi.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2015 08:58:49 -0700 (PDT)
+In-Reply-To: <20150906180339.GC90062@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Zha, Qipeng" <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>
 
-My comments below.
+On 09/06/2015 01:03 PM, Darren Hart wrote:
+> On Sat, Aug 29, 2015 at 10:26:40AM -0500, Kyle Evans wrote:
+>> On 08/28/2015 01:42 PM, Darren Hart wrote:
+>>> On Fri, Aug 07, 2015 at 09:56:00AM -0500, Kyle Evans wrote:
+>>>> Do not attempt to initialize hotkeys if the query returns a value.
+>>>> Furthermore, do not write initialize magic on systems that do not have
+>>>> feature query 0xb. Fixes Bug #82451.
+>>>>
+>>>> Signed-off-by: Kyle Evans <kvans32@gmail.com>
+>>>
+>>> Hi Kyle,
+>>>
+>>> Please always include the maintainer from MAINTAINERS on Cc when submitting
+>>> kernel patches. See Documentation/SubmittingPatches.
+>>>
+>>> For example:
+>>>
+>>> $ scripts/get_maintainer.pl -f drivers/platform/x86/hp-wmi.c
+>>> Darren Hart <dvhart@infradead.org> (maintainer:X86 PLATFORM DRIVERS)
+>>> platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
+>>> linux-kernel@vger.kernel.org (open list)
+>>>
+>>> This will ensure a more timely response.
+>>>
+>>>> ---
+>>>>   drivers/platform/x86/hp-wmi.c | 17 +++++++++++++----
+>>>>   1 file changed, 13 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+>>>> index 0669731..557650f 100644
+>>>> --- a/drivers/platform/x86/hp-wmi.c
+>>>> +++ b/drivers/platform/x86/hp-wmi.c
+>>>> @@ -54,6 +54,7 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>>>>   #define HPWMI_HARDWARE_QUERY 0x4
+>>>>   #define HPWMI_WIRELESS_QUERY 0x5
+>>>>   #define HPWMI_BIOS_QUERY 0x9
+>>>> +#define HPWMI_FEATURE2_QUERY 0xb
+>>>>   #define HPWMI_HOTKEY_QUERY 0xc
+>>>>   #define HPWMI_FEATURE_QUERY 0xd
+>>>>   #define HPWMI_WIRELESS2_QUERY 0x1b
+>>>> @@ -309,10 +310,18 @@ static int __init hp_wmi_bios_2009_later(void)
+>>>>   static int hp_wmi_enable_hotkeys(void)
+>>>>   {
+>>>>   	int ret;
+>>>> -	int query = 0x6e;
+>>>> +	int query = 0xff;
+>>>> +	int value = 0x6e;
+>>>>
+>>>> -	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
+>>>> -				   0);
+>>>> +	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 0, &query,
+>>>> +				   0, sizeof(query));
+>>>> +
+>>>> +	if (!query) {
+>>>
+>>> I suspect this should come after the test for ret. If there is a more
+>>> fundamental error, it would make sense to exit with -EINVAL first. Despite query
+>>> being initialized to 0xff, we have no guarantee the firmware won't set it to 0
+>>> and still return an error.
+>>
+>> That makes sense. Another sticky bit is, do we want to fail on a device that
+>> doesn't need this? Not really.
+>>
+>> How about I throw out the initial read, because, the test for FEATURE2_QUERY
+>> is the bit that actually fixes the bug. The read is just fearful bug
+>> prevention. How is this?
+>>
+>> @@ -309,10 +310,13 @@ static int __init hp_wmi_bios_2009_later(void)
+>>   static int hp_wmi_enable_hotkeys(void)
+>>   {
+>>   	int ret;
+>> -	int query = 0x6e;
+>> +	int query;
+>> +	int value = 0x6e;
+>
+> "Reverse Christmas Tree" ordering please (longest to shortest, and it's OK to
+> group like types:
+>
+> int value = 0x6e;
+> int query;
+> int ret;
+>
+> It's also fine to group like types, preferred by some maintainers, I'm not
+> particular, but do appreciate consistency.
+>
+> int value = 0x6e;
+> int query, ret;
+>
+> Both are acceptable.
+>
+> Is there a reason 0x6e doesn't merit some kind of a HP_WMI_QUERY_XYZ define?
+>
 
--- 
-Andy Shevchenko <andriy.shevchenko@intel.com>
+Probably not. 0x6e is a magic value that goes into a magic EC register, 
+0xe6. There are a small handful of laptop models that need this value 
+for hotkeys to work. I think these all came out in the 2008 time frame. 
+Models after that period seem to have a different values, but as far as 
+I know, the value is present at boot and the hotkeys just work. I've not 
+heard of anyone else having a broken laptop and needing to write a 
+different value. If one crops up then that is something that should be 
+done, but it does not fit into the context of any existing enum.
 
+>>
+>> -	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
+>> -				   0);
+>> +	if (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query,
+>> +				  0, sizeof(query)))
+>> +		ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
+>> +					   sizeof(value), 0);
+>>
+>>   	if (ret)
+>>   		return -EINVAL;
+>
+> The problem with this is it doesn't distinguish between the feature not being
+> present, and an actual failure, since it doesn't capture the ret of
+> FEATURE2_QUERY.
+>
+> Consider the possible return values for FEATURE2_QUERY on devices with the
+> feature and devices without, does the above code do the right thing in all
+> cases?
+>
 
-> -----Original Message-----
-> From: Zha, Qipeng
-> Sent: Tuesday, September 08, 2015 1:30 PM
-> To: platform-driver-x86@vger.kernel.org
-> Cc: dvhart@infradead.org; Zha, Qipeng; Shevchenko, Andriy; Westerberg,
-> Mika
-> Subject: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
-> 
-> This driver provides support for P-Unit mailbox IPC on Intel platforms.
-> The heart of the P-Unit is the Foxton microcontroller and its firmware, which
-> provide mailbox interface for power management usage.
-> 
-> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
-> 
-> ---
-> change in v4
->  Fix two code style issues: make /* as a whole line and replace "return ret"
-> with "goto out";  Replace -EINVAL with -ENXIO for failures due to resource.
-> 
-> change in v3
->  Fix compile issue in intel_punit_ipc.h, it happened when built-in and the
-> header file is included in other source file.
-> 
-> change in v2
->  Fix issues in code style and comments;
->  Remove "default y" in Kconfig;
->  Remove some header files;
->  Replace request_mem_region with devm_request_mem_region, and same
-> for request_irq;  Change to use prefix of IPC_PUNIT_ to define commands;
-> 
-> ---
->  MAINTAINERS                            |   4 +-
->  arch/x86/include/asm/intel_punit_ipc.h | 102 ++++++++++
->  drivers/platform/x86/Kconfig           |   6 +
->  drivers/platform/x86/Makefile          |   1 +
->  drivers/platform/x86/intel_punit_ipc.c | 354
-> +++++++++++++++++++++++++++++++++
->  5 files changed, 466 insertions(+), 1 deletion(-)  create mode 100644
-> arch/x86/include/asm/intel_punit_ipc.h
->  create mode 100644 drivers/platform/x86/intel_punit_ipc.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 13ac861..cf71387 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5207,12 +5207,14 @@ F:	include/uapi/linux/mei.h
->  F:	drivers/misc/mei/*
->  F:	Documentation/misc-devices/mei/*
-> 
-> -INTEL PMC IPC DRIVER
-> +INTEL PMC/P-Unit IPC DRIVER
->  M:	Zha Qipeng<qipeng.zha@intel.com>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  F:	drivers/platform/x86/intel_pmc_ipc.c
-> +F:	drivers/platform/x86/intel_punit_ipc.c
->  F:	arch/x86/include/asm/intel_pmc_ipc.h
-> +F:	arch/x86/include/asm/intel_punit_ipc.h
-> 
->  IOC3 ETHERNET DRIVER
->  M:	Ralf Baechle <ralf@linux-mips.org>
-> diff --git a/arch/x86/include/asm/intel_punit_ipc.h
-> b/arch/x86/include/asm/intel_punit_ipc.h
-> new file mode 100644
-> index 0000000..6a94443
-> --- /dev/null
-> +++ b/arch/x86/include/asm/intel_punit_ipc.h
-> @@ -0,0 +1,102 @@
-> +#ifndef _ASM_X86_INTEL_PUNIT_IPC_H_
-> +#define  _ASM_X86_INTEL_PUNIT_IPC_H_
-> +
-> +/*
-> + * Commands supported on CPU core, are handled by different bars,
-> + * unify these commands together here
+My line of thinking was that if the feature query fails for any reason 
+then we probably don't want to perform the write. But I do understand 
+building code for future use. How about I break that query out into it's 
+own function like the 2009_later query. I'm not sure what it should be 
+called because I'm not sure what it's actually for or when it actually 
+appeared, but how about hp_wmi_bios_2008_later?
 
-"here" -> "here."
-
-> + */
-> +#define IPC_PUNIT_BIOS_CMD_BASE			0x00
-> +#define IPC_PUNIT_GTD_CMD_BASE			0x20
-> +#define IPC_PUNIT_ISPD_CMD_BASE			0x40
-> +
-> +/* BIOS => Pcode commands */
-> +#define IPC_PUNIT_BIOS_CMD_ZERO
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x00)
-> +#define IPC_PUNIT_BIOS_CMD_VR_INTERFACE
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x01)
-> +#define IPC_PUNIT_BIOS_CMD_READ_PCS
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x02)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_PCS
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x03)
-> +#define IPC_PUNIT_BIOS_CMD_READ_PCU_CONFIG
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x04)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_PCU_CONFIG
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x05)
-> +#define IPC_PUNIT_BIOS_CMD_READ_PL1_SETTING
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x06)
-> +#define IPC_PUNIT_BIOS_WRITE_PL1_SETTING
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x07)
-> +#define IPC_PUNIT_BIOS_CMD_TRIGGER_VDD_RAM
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x08)
-> +#define IPC_PUNIT_BIOS_CMD_READ_TELE_INFO
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x09)
-> +#define IPC_PUNIT_BIOS_CMD_READ_TELE_TRACE_CTRL
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0a)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_TRACE_CTRL \
-> +
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0b)
-> +#define IPC_PUNIT_BIOS_CMD_READ_TELE_EVENT_CTRL
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0c)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_EVENT_CTRL \
-> +
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0d)
-> +#define IPC_PUNIT_BIOS_CMD_READ_TELE_TRACE
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0e)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_TRACE
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x0f)
-> +#define IPC_PUNIT_BIOS_CMD_READ_TELE_EVENT
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x10)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_TELE_EVENT
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x11)
-> +#define IPC_PUNIT_BIOS_CMD_READ_MODULE_TEMP
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x12)
-> +#define IPC_PUNIT_BIOS_CMD_RESERVED
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x13)
-> +#define IPC_PUNIT_BIOS_CMD_READ_VOLTAGE_OVER
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x14)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_VOLTAGE_OVER
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x15)
-> +#define IPC_PUNIT_BIOS_CMD_READ_RATIO_OVER
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x16)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_RATIO_OVER
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x17)
-> +#define IPC_PUNIT_BIOS_CMD_READ_VF_GL_CTRL
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x18)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_VF_GL_CTRL
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x19)
-> +#define IPC_PUNIT_BIOS_CMD_READ_FM_SOC_TEMP_THRESH \
-> +
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x1a)
-> +#define IPC_PUNIT_BIOS_CMD_WRITE_FM_SOC_TEMP_THRESH \
-> +
-> 	(IPC_PUNIT_BIOS_CMD_BASE + 0x1b)
-> +
-
-> +/*GT Driver => Pcode commands*/
-
-Fix style.
-
-> +#define IPC_PUNIT_GTD_CMD_ZERO
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x00)
-> +#define IPC_PUNIT_GTD_CMD_CONFIG
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x01)
-> +#define IPC_PUNIT_GTD_CMD_READ_ICCP_LIC_CDYN_SCAL \
-> +
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x02)
-> +#define IPC_PUNIT_GTD_CMD_WRITE_ICCP_LIC_CDYN_SCAL \
-> +
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x03)
-> +#define IPC_PUNIT_GTD_CMD_GET_WM_VAL
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x06)
-> +#define IPC_PUNIT_GTD_CMD_WRITE_CONFIG_WISHREQ
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x07)
-> +#define IPC_PUNIT_GTD_CMD_READ_REQ_DUTY_CYCLE
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x16)
-> +#define IPC_PUNIT_GTD_CMD_DIS_VOL_FREQ_CHANGE_REQUEST \
-> +
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x17)
-> +#define IPC_PUNIT_GTD_CMD_DYNA_DUTY_CYCLE_CTRL
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x1a)
-> +#define IPC_PUNIT_GTD_CMD_DYNA_DUTY_CYCLE_TUNING \
-> +
-> 	(IPC_PUNIT_GTD_CMD_BASE + 0x1c)
-> +
-> +/* ISP Driver => Pcode commands */
-> +#define IPC_PUNIT_ISPD_CMD_ZERO
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x00)
-> +#define IPC_PUNIT_ISPD_CMD_CONFIG
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x01)
-> +#define IPC_PUNIT_ISPD_CMD_GET_ISP_LTR_VAL
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x02)
-> +#define IPC_PUNIT_ISPD_CMD_ACCESS_IU_FREQ_BOUNDS \
-> +
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x03)
-> +#define IPC_PUNIT_ISPD_CMD_READ_CDYN_LEVEL
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x04)
-> +#define IPC_PUNIT_ISPD_CMD_WRITE_CDYN_LEVEL
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x05)
-> +#define IPC_PUNIT_ISPD_CMD_MAX
-> 	(IPC_PUNIT_ISPD_CMD_BASE + 0x06)
-> +
-> +/* Error codes */
-> +#define IPC_PUNIT_ERR_SUCCESS			0
-> +#define IPC_PUNIT_ERR_INVALID_CMD		1
-> +#define IPC_PUNIT_ERR_INVALID_PARAMETER		2
-> +#define IPC_PUNIT_ERR_CMD_TIMEOUT		3
-> +#define IPC_PUNIT_ERR_CMD_LOCKED		4
-> +#define IPC_PUNIT_ERR_INVALID_VR_ID		5
-> +#define IPC_PUNIT_ERR_VR_ERR			6
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PUNIT_IPC)
-> +
-> +int intel_punit_ipc_simple_command(int cmd, int para1, int para2); int
-> +intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32
-> +*out);
-> +
-> +#else
-> +
-> +static inline int intel_punit_ipc_simple_command(int cmd,
-> +
-> 	  int para1, int para2)
-> +{
-> +	return -EINVAL;
-
-Better -ENODEV, I think.
-
-> +}
-> +
-> +static inline int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2,
-> +					  u32
-> *in, u32 *out)
-> +{
-> +	return -EINVAL;
-
-Ditto.
-
-> +}
-> +
-> +#endif /*CONFIG_INTEL_PUNIT_IPC*/
-
-Fix style.
-
-> +
-> +#endif
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 346f1fd..9948369 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -891,4 +891,10 @@ config INTEL_PMC_IPC
->  	The PMC is an ARC processor which defines IPC commands for
-> communication
->  	with other entities in the CPU.
-> 
-> +config INTEL_PUNIT_IPC
-> +	tristate "Intel P-Unit IPC Driver"
-> +	---help---
-> +	  This driver provides support for Intel P-Unit Mailbox IPC
-> mechanism,
-> +	  which is used to bridge the communications between kernel
-> and P-Unit.
-> +
->  endif # X86_PLATFORM_DEVICES
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1051372..eea765f 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -59,3 +59,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+=
-> intel-smartconnect.o
->  obj-$(CONFIG_PVPANIC)           += pvpanic.o
->  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
->  obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
-> +obj-$(CONFIG_INTEL_PUNIT_IPC)	+= intel_punit_ipc.o
-> diff --git a/drivers/platform/x86/intel_punit_ipc.c
-> b/drivers/platform/x86/intel_punit_ipc.c
-> new file mode 100644
-> index 0000000..b0fe1ff
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_punit_ipc.c
-> @@ -0,0 +1,354 @@
-> +/*
-> + * Driver for the Intel P-Unit Mailbox IPC mechanism
-> + *
-> + * (C) Copyright 2015 Intel Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * The heart of the P-Unit is the Foxton microcontroller and its
-> +firmware,
-> + * which provide mailbox interface for power management usage.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <asm/intel_punit_ipc.h>
-> +
-> +/* Mailbox registers */
-> +#define MAILBOX_DATA_LOW		0x0
-> +#define MAILBOX_INTERFACE		0x4
-> +#define		CMD_RUN			(1 <<
-> 31)
-> +#define		CMD_ERRCODE_MASK	0xFF
-> +#define		CMD_PARA1_SHIFT		8
-> +#define		CMD_PARA2_SHIFT		16
-> +#define		CMD_MASK		0xFF
-> +#define MAILBOX_DATA_HIGH		0x8
-> +
-> +#define MAILBOX_REGISTER_SPACE		0x10
-> +
-> +#define CMD_TIMEOUT_SECONDS		3
-> +
-> +/* Three external mailbox */
-> +enum mailbox_type {
-> +	BIOS_MAILBOX,
-> +	GTDRIVER_MAILBOX,
-> +	ISPDRIVER_MAILBOX,
-> +	RESERVED_MAILBOX,
-> +};
-> +
-> +static char *ipc_err_sources[] = {
-> +	[IPC_PUNIT_ERR_SUCCESS] =
-> +		"no error",
-> +	[IPC_PUNIT_ERR_INVALID_CMD] =
-> +		"invalid command",
-> +	[IPC_PUNIT_ERR_INVALID_PARAMETER] =
-> +		"invalid parameter",
-> +	[IPC_PUNIT_ERR_CMD_TIMEOUT] =
-> +		"command timeout",
-> +	[IPC_PUNIT_ERR_CMD_LOCKED] =
-> +		"command locked",
-> +	[IPC_PUNIT_ERR_INVALID_VR_ID] =
-> +		"invalid vr id",
-> +	[IPC_PUNIT_ERR_VR_ERR] =
-> +		"vr error",
-> +};
-> +
-> +struct intel_punit_ipc_controller {
-> +	struct platform_device *pdev;
-
-Usually we keep pointer to struct device. Any specific reason to hold platform_device here?
-
-> +	struct mutex lock;
-> +	void __iomem *base[RESERVED_MAILBOX];
-> +	struct completion cmd_complete;
-> +	int irq;
-> +
-> +	int cmd;
-> +	enum mailbox_type type;
-> +} ipcdev;
-> +
-> +static inline u32 ipc_read_status(void) {
-> +	return readl(ipcdev.base[ipcdev.type] +
-> MAILBOX_INTERFACE); }
-> +
-> +static inline void ipc_write_cmd(u32 cmd) {
-> +	writel(cmd, ipcdev.base[ipcdev.type] +
-> MAILBOX_INTERFACE); }
-> +
-> +static inline u32 ipc_read_data_low(void) {
-> +	return readl(ipcdev.base[ipcdev.type] +
-> MAILBOX_DATA_LOW); }
-> +
-> +static inline u32 ipc_read_data_high(void) {
-> +	return readl(ipcdev.base[ipcdev.type] +
-> MAILBOX_DATA_HIGH); }
-> +
-> +static inline void ipc_write_data_low(u32 data) {
-> +	writel(data, ipcdev.base[ipcdev.type] +
-> MAILBOX_DATA_LOW); }
-> +
-> +static inline void ipc_write_data_high(u32 data) {
-> +	writel(data, ipcdev.base[ipcdev.type] +
-> MAILBOX_DATA_HIGH); }
-> +
-> +static int intel_punit_ipc_send_command(u32 cmd) {
-> +	ipcdev.cmd = cmd;
-> +
-> +	cmd &= CMD_MASK;
-> +	if (cmd < IPC_PUNIT_BIOS_CMD_BASE)
-> +		return -EINVAL;
-> +	else if (cmd < IPC_PUNIT_GTD_CMD_BASE)
-> +		ipcdev.type = BIOS_MAILBOX;
-> +	else if (cmd < IPC_PUNIT_ISPD_CMD_BASE) {
-> +		ipcdev.type = GTDRIVER_MAILBOX;
-> +		ipcdev.cmd -= IPC_PUNIT_GTD_CMD_BASE;
-> +	} else if (cmd < IPC_PUNIT_ISPD_CMD_MAX) {
-> +		ipcdev.type = ISPDRIVER_MAILBOX;
-> +		ipcdev.cmd -= IPC_PUNIT_ISPD_CMD_BASE;
-> +	} else
-> +		return -EINVAL;
-> +
-> +	reinit_completion(&ipcdev.cmd_complete);
-> +	ipc_write_cmd(ipcdev.cmd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_punit_ipc_check_status(void)
-> +{
-> +	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
-
-From where is this timeout in *seconds* coming? Sounds too
- big for me.
-
-> +	int errcode;
-> +	int status;
-> +
-> +	if (ipcdev.irq) {
-> +		if (!wait_for_completion_timeout(
-> +
-> 	&ipcdev.cmd_complete,
-> +
-> 	CMD_TIMEOUT_SECONDS * HZ)) {
-> +			dev_err(&ipcdev.pdev->dev,
-> +				"IPC timed out,
-> IPC_CMD=0x%x\n", ipcdev.cmd);
-> +			return -ETIMEDOUT;
-> +		}
-> +	} else {
-> +		while ((ipc_read_status() & CMD_RUN) && --
-> loops)
-> +			udelay(1);
-> +		if (!loops) {
-> +			dev_err(&ipcdev.pdev->dev,
-> +				"IPC timed out,
-> IPC_CMD=0x%x\n", ipcdev.cmd);
-> +			return -ETIMEDOUT;
-> +		}
-> +	}
-> +
-> +	status = ipc_read_status();
-> +	errcode = status & CMD_ERRCODE_MASK;
-> +	if (errcode) {
-> +		if (errcode < ARRAY_SIZE(ipc_err_sources))
-> +			dev_err(&ipcdev.pdev->dev,
-> +				"IPC failed: %s,
-> IPC_STS=0x%x, IPC_CMD=0x%x\n",
-> +
-> 	ipc_err_sources[errcode], status, ipcdev.cmd);
-> +		else
-> +			dev_err(&ipcdev.pdev->dev,
-> +				"IPC failed:
-> unknown err,STS=0x%x, CMD=0x%x\n",
-> +				status,
-> ipcdev.cmd);
-
-Why not to convert ipc_err_sources to a function which returns string based on error code and put this condition there?
-
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * intel_punit_ipc_simple_command() - Simple IPC command
-> + * @cmd:	IPC command code.
-> + * @para1:	First 8bit parameter, set 0 if invalid.
-
-Perhaps set 0 if not used?
-Otherwise what does it mean 'invalid' for sending command?
-
-> + * @para2:	Second 8bit parameter, set 0 if invalid.
-
-Ditto.
-
-> + *
-> + * Send a IPC command to P-Unit when there is no data transaction
-> + *
-> + * Return:	IPC error code or 0 on success.
-> + */
-> +int intel_punit_ipc_simple_command(int cmd, int para1, int para2) {
-> +	int ret;
-> +
-> +	mutex_lock(&ipcdev.lock);
-> +	ret = intel_punit_ipc_send_command(CMD_RUN |
-> +
-> para2 << CMD_PARA2_SHIFT |
-> +
-> para1 << CMD_PARA1_SHIFT | cmd);
-> +	if (ret)
-> +		goto out;
-> +	ret = intel_punit_ipc_check_status();
-> +out:
-> +	mutex_unlock(&ipcdev.lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(intel_punit_ipc_simple_command);
-> +
-> +/**
-> + * intel_punit_ipc_command() - IPC command with data and pointers
-> + * @cmd:	IPC command code.
-
-
-> + * @para1:	First 8bit parameter, set 0 if invalid.
-> + * @para2:	Second 8bit parameter, set 0 if invalid.
-
-Ditto.
-
-> + * @in:		Input data, 32bit for BIOS cmd, two 32bit for GTD
-> and ISPD.
-> + * @out:	Output data.
-> + *
-> + * Send a IPC command to P-Unit with data transaction
-> + *
-> + * Return:	IPC error code or 0 on success.
-> + */
-> +int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32
-> +*out) {
-> +	int ret;
-> +
-> +	mutex_lock(&ipcdev.lock);
-> +	ipc_write_data_low(*in);
-> +	if (ipcdev.type == GTDRIVER_MAILBOX ||
-> +			ipcdev.type ==
-> ISPDRIVER_MAILBOX) {
-> +		in++;
-> +		ipc_write_data_high(*in);
-> +	}
-> +	ret = intel_punit_ipc_send_command(CMD_RUN |
-> +
-> para2 << CMD_PARA2_SHIFT |
-> +
-> para1 << CMD_PARA1_SHIFT | cmd);
-> +	if (ret)
-> +		goto out;
-> +	ret = intel_punit_ipc_check_status();
-> +	if (ret)
-> +		goto out;
-> +	*out = ipc_read_data_low();
-> +	if (ipcdev.type == GTDRIVER_MAILBOX ||
-> +			ipcdev.type ==
-> ISPDRIVER_MAILBOX) {
-> +		out++;
-> +		*out = ipc_read_data_high();
-> +	}
-> +out:
-> +	mutex_unlock(&ipcdev.lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(intel_punit_ipc_command);
-> +
-> +static irqreturn_t intel_punit_ioc(int irq, void *dev_id) {
-> +	complete(&ipcdev.cmd_complete);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int intel_punit_get_bars(struct platform_device *pdev) {
-> +	struct resource *res0, *res1;
-> +	void __iomem *addr;
-> +	int size;
-> +
-> +	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res0) {
-> +		dev_err(&pdev->dev, "Failed to get iomem
-> resource\n");
-> +		return -ENXIO;
-> +	}
-> +	size = resource_size(res0);
-> +	if (!devm_request_mem_region(&pdev->dev, res0->start,
-> +				     size, pdev-
-> >name)) {
-
-Why not to use devm_ioremap_resource() ?
-
-> +		dev_err(&pdev->dev, "Failed to request iomem
-> resouce\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	res1 = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res1) {
-> +		dev_err(&pdev->dev, "Failed to get iomem
-> resource1\n");
-> +		return -ENXIO;
-> +	}
-> +	size = resource_size(res1);
-> +	if (!devm_request_mem_region(&pdev->dev, res1->start,
-> +				     size, pdev-
-> >name)) {
-
-Ditto.
-
-> +		dev_err(&pdev->dev, "Failed to request iomem
-> resouce1\n");
-> +		return -EBUSY;
-> +	}
-> +
-> +	addr = ioremap_nocache(res0->start,
-> +			       resource_size(res0) +
-> resource_size(res1));
-> +	if (!addr) {
-> +		dev_err(&pdev->dev, "Failed to ioremap ipc
-> base\n");
-> +		return  -ENOMEM;
-> +	}
-
-> +	ipcdev.base[BIOS_MAILBOX] = addr;
-> +	addr += MAILBOX_REGISTER_SPACE;
-> +	ipcdev.base[GTDRIVER_MAILBOX] = addr;
-> +	addr += MAILBOX_REGISTER_SPACE;
-> +	ipcdev.base[ISPDRIVER_MAILBOX] = addr;
-
-Looks akward, does the platform have the several resources for different purpose? Why do you unify them (who does guarantee the non-breakable segment for all resources?) first and then split up?
-
-Please, refactor.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_punit_ipc_probe(struct platform_device *pdev) {
-> +	int irq, ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		ipcdev.irq = 0;
-> +		dev_warn(&pdev->dev, "Invalid IRQ\n");
-> +	} else {
-> +		if (devm_request_irq(&pdev->dev, irq,
-> intel_punit_ioc,
-> +
-> IRQF_NO_SUSPEND, "intel_punit_ipc",
-> +				     &ipcdev)) {
-
-Don't use conditions like this.
-
-ret = call_func();
-if (ret) {
- ...
- return ret;
-}
-
-You have to propagate an error, not just hide it.
-
-> +			dev_err(&pdev->dev, "Failed to
-> request irq: %d\n", irq);
-> +			return -EBUSY;
-> +		}
-> +		ipcdev.irq = irq;
-> +	}
-> +
-> +	ret = intel_punit_get_bars(pdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ipcdev.pdev = pdev;
-> +	mutex_init(&ipcdev.lock);
-> +	init_completion(&ipcdev.cmd_complete);
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int intel_punit_ipc_remove(struct platform_device *pdev) {
-> +	iounmap(ipcdev.base[BIOS_MAILBOX]);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id punit_ipc_acpi_ids[] = {
-> +	{"INT34D4", 0}
-> +};
-> +
-> +static struct platform_driver intel_punit_ipc_driver = {
-> +	.probe = intel_punit_ipc_probe,
-> +	.remove = intel_punit_ipc_remove,
-> +	.driver = {
-> +		.name = "intel_punit_ipc",
-> +		.acpi_match_table =
-> ACPI_PTR(punit_ipc_acpi_ids),
-> +	},
-> +};
-> +
-> +static int __init intel_punit_ipc_init(void) {
-> +	return platform_driver_register(&intel_punit_ipc_driver);
-> +}
-> +
-> +static void __exit intel_punit_ipc_exit(void) {
-> +	platform_driver_unregister(&intel_punit_ipc_driver);
-> +}
-> +
-> +MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
-> +MODULE_DESCRIPTION("Intel P-Unit IPC driver"); MODULE_LICENSE("GPL
-> +v2");
-> +
-> +/* Some modules are dependent on this, so init earlier */
-> +fs_initcall(intel_punit_ipc_init);
-
-So, what exactly requires this?
-
-> +module_exit(intel_punit_ipc_exit);
-> --
-> 1.8.3.2
-
----------------------------------------------------------------------
-Intel Finland Oy
-Registered Address: PL 281, 00181 Helsinki 
-Business Identity Code: 0357606 - 4 
-Domiciled in Helsinki 
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+>
+>>
+>>
+>>>
+>>> Rafael, would you agree?
+>>>
+>>> And technically, EINVAL isn't the right error for a general error (but that's a
+>>> preexisting problem). You don't have to fix that to get this in.
+>>>
+>>>
+>>>> +		if (!hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &query,
+>>>> +					  0, sizeof(query)))
+>>>> +		    ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
+>>>
+>>> Careful with indentation, use tabs please. checkpatch.pl would have caught this.
+>>>
+>>>
+>>>> +					       sizeof(value), 0);
+>>>> +	}
+>>>>
+>>>>   	if (ret)
+>>>>   		return -EINVAL;
+>>>> @@ -663,7 +672,7 @@ static int __init hp_wmi_input_setup(void)
+>>>>   			    hp_wmi_tablet_state());
+>>>>   	input_sync(hp_wmi_input_dev);
+>>>>
+>>>> -	if (hp_wmi_bios_2009_later() == 4)
+>>>> +	if (hp_wmi_bios_2009_later() == HPWMI_RET_UNKNOWN_CMDTYPE)
+>>>>   		hp_wmi_enable_hotkeys();
+>>>
+>>> This bit is fine, but no magic number cleanup is mentioned in the change log.
+>>> Was this change intentional?
+>>
+>> It was intentional but I didn't think it was worth a patch request. I had
+>> forgot that I made the change when creating a new patch and was on the fence
+>> about what to do about it so I didn't do anything. I'll be sure to call out
+>> that sort of thing in the future.
+>
+> Right, rolling it together with a semi-related change is OK for things like in
+> my opinion. But do make note of it in the changelog.
+>
