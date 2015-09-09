@@ -1,91 +1,240 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/1] toshiba_acpi: Remove unneeded u32 variables from *setup_keyboard
-Date: Wed,  9 Sep 2015 11:30:08 -0600
-Message-ID: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f171.google.com ([209.85.214.171]:35663 "EHLO
-	mail-ob0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751545AbbIIRaP (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Sep 2015 13:30:15 -0400
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Subject: [PATCH] platform/x86: Toshiba WMI Hotkey Driver
+Date: Wed,  9 Sep 2015 11:30:10 -0600
+Message-ID: <1441819810-11762-3-git-send-email-coproscefalo@gmail.com>
+References: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Azael Avalos <coproscefalo@gmail.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The function toshiba_acpi_setup_keyboard currently has two u32 variables
-used to store the Hotkey Event Type and the result of the HCI_SYSTEM_EVENT
-query.
+Toshiba laptops that feature WMI events for hotkeys were left unsupported
+by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
+Avoid registering input device on WMI event laptops") added hardware
+support for such laptops, but the hotkeys are not handled there.
 
-This patch removes those two variables, as we already have a global
-variable named "hotkey_event_type" and the result of the HCI_SYSTEM_EVENT
-query can be checked directly from the function.
+This driver adds support for hotkey monitoring on certain Toshiba laptops
+that manage the hotkeys via WMI events instead of the Toshiba
+Configuration Interface (TCI).
+
+The toshiba_acpi driver and this one can co-exist, as this only takes
+care of hotkeys, while the propper takes care of hardware related stuff.
+
+Currently the driver is under the EXPERIMENTAL flag, as the keymap
+and the notify function are incomplete (due to lack of hardware to test).
 
 Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ MAINTAINERS                        |   6 ++
+ drivers/platform/x86/Kconfig       |  18 +++++
+ drivers/platform/x86/Makefile      |   1 +
+ drivers/platform/x86/toshiba-wmi.c | 138 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 163 insertions(+)
+ create mode 100644 drivers/platform/x86/toshiba-wmi.c
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 803e967..9f7ced1 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2381,8 +2381,6 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- {
- 	const struct key_entry *keymap = toshiba_acpi_keymap;
- 	acpi_handle ec_handle;
--	u32 events_type;
--	u32 hci_result;
- 	int error;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 884d398..07f4446 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10318,6 +10318,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/toshiba_haps.c
  
- 	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID)) {
-@@ -2394,11 +2392,9 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	if (error)
- 		return error;
++TOSHIBA WMI HOTKEYS DRIVER
++M:	Azael Avalos <coproscefalo@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/toshiba-wmi.c
++
+ TOSHIBA SMM DRIVER
+ M:	Jonathan Buzzard <jonathan@buzzard.org.uk>
+ W:	http://www.buzzard.org.uk/toshiba/
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c69bb70..9ae1e89 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -700,6 +700,24 @@ config TOSHIBA_HAPS
+ 	  If you have a recent Toshiba laptop with a built-in accelerometer
+ 	  device, say Y.
  
--	if (toshiba_hotkey_event_type_get(dev, &events_type))
-+	if (toshiba_hotkey_event_type_get(dev, &dev->hotkey_event_type))
- 		pr_notice("Unable to query Hotkey Event Type\n");
++config TOSHIBA_WMI
++	tristate "Toshiba WMI Hotkeys Driver (EXPERIMENTAL)"
++	default n
++	depends on ACPI_WMI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	---help---
++	  This driver adds hotkey monitoring support to some Toshiba models
++	  that manage the hotkeys via WMI events.
++
++	  WARNING: This driver is incomplete as it lacks a propper keymap and the
++	  *notify function only prints the ACPI event type value. Be warned that
++	  you will need to provide some information if you have a Toshiba model
++	  with WMI event hotkeys and want to help with the develpment of this
++	  driver.
++
++	  If you have a WMI-based hotkeys Toshiba laptop, say Y or M here.
++
+ config ACPI_CMPC
+ 	tristate "CMPC Laptop Extras"
+ 	depends on X86 && ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index ada5128..8f077cb 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
  
--	dev->hotkey_event_type = events_type;
--
- 	dev->hotkey_dev = input_allocate_device();
- 	if (!dev->hotkey_dev)
- 		return -ENOMEM;
-@@ -2407,14 +2403,15 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	dev->hotkey_dev->phys = "toshiba_acpi/input0";
- 	dev->hotkey_dev->id.bustype = BUS_HOST;
- 
--	if (events_type == HCI_SYSTEM_TYPE1 ||
-+	if (dev->hotkey_event_type == HCI_SYSTEM_TYPE1 ||
- 	    !dev->kbd_function_keys_supported)
- 		keymap = toshiba_acpi_keymap;
--	else if (events_type == HCI_SYSTEM_TYPE2 ||
-+	else if (dev->hotkey_event_type == HCI_SYSTEM_TYPE2 ||
- 		 dev->kbd_function_keys_supported)
- 		keymap = toshiba_acpi_alt_keymap;
- 	else
--		pr_info("Unknown event type received %x\n", events_type);
-+		pr_info("Unknown event type received %x\n",
-+			dev->hotkey_event_type);
- 	error = sparse_keymap_setup(dev->hotkey_dev, keymap, NULL);
- 	if (error)
- 		goto err_free_dev;
-@@ -2443,12 +2440,10 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
- 	 * Determine hotkey query interface. Prefer using the INFO
- 	 * method when it is available.
- 	 */
--	if (acpi_has_method(dev->acpi_dev->handle, "INFO"))
-+	if (acpi_has_method(dev->acpi_dev->handle, "INFO")) {
- 		dev->info_supported = 1;
--	else {
--		hci_result = hci_write(dev, HCI_SYSTEM_EVENT, 1);
--		if (hci_result == TOS_SUCCESS)
--			dev->system_event_supported = 1;
-+	} else if (hci_write(dev, HCI_SYSTEM_EVENT, 1) == TOS_SUCCESS)
-+		dev->system_event_supported = 1;
- 	}
- 
- 	if (!dev->info_supported && !dev->system_event_supported) {
+ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
+ obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
++obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba-wmi.o
+ obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
+ obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+ obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
+new file mode 100644
+index 0000000..8cf62a1
+--- /dev/null
++++ b/drivers/platform/x86/toshiba-wmi.c
+@@ -0,0 +1,138 @@
++/*
++ * toshiba_wmi.c - Toshiba WMI Hotkey Driver
++ *
++ * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/acpi.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++
++MODULE_AUTHOR("Azael Avalos");
++MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
++MODULE_LICENSE("GPL");
++
++#define TOSHIBA_WMI_EVENT_GUID	"59142400-C6A3-40FA-BADB-8A2652834100"
++
++MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
++
++struct input_dev *toshiba_wmi_input_dev;
++
++static const struct key_entry toshiba_wmi_keymap[] __initconst = {
++	/* TODO: Add keymap values once found... */
++	/*{ KE_KEY, 0x00, { KEY_ } },*/
++	{ KE_END, 0 }
++};
++
++static void toshiba_wmi_notify(u32 value, void *context)
++{
++	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *obj;
++	acpi_status status;
++
++	status = wmi_get_event_data(value, &response);
++	if (ACPI_FAILURE(status)) {
++		pr_err("Bad event status 0x%x\n", status);
++		return;
++	}
++
++	obj = (union acpi_object *)response.pointer;
++	if (!obj)
++		return;
++
++	/* TODO: Add propper checks once we have data */
++	pr_info("Unknown event received, obj type %x\n", obj->type);
++
++	kfree(response.pointer);
++}
++
++static int __init toshiba_wmi_input_setup(void)
++{
++	acpi_status status;
++	int err;
++
++	toshiba_wmi_input_dev = input_allocate_device();
++	if (!toshiba_wmi_input_dev)
++		return -ENOMEM;
++
++	toshiba_wmi_input_dev->name = "Toshiba WMI hotkeys";
++	toshiba_wmi_input_dev->phys = "wmi/input0";
++	toshiba_wmi_input_dev->id.bustype = BUS_HOST;
++
++	err = sparse_keymap_setup(toshiba_wmi_input_dev,
++				  toshiba_wmi_keymap, NULL);
++	if (err)
++		goto err_free_dev;
++
++	status = wmi_install_notify_handler(TOSHIBA_WMI_EVENT_GUID,
++					    toshiba_wmi_notify, NULL);
++	if (ACPI_FAILURE(status)) {
++		err = -EIO;
++		goto err_free_keymap;
++	}
++
++	err = input_register_device(toshiba_wmi_input_dev);
++	if (err)
++		goto err_remove_notifier;
++
++	return 0;
++
++ err_remove_notifier:
++	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
++ err_free_keymap:
++	sparse_keymap_free(toshiba_wmi_input_dev);
++ err_free_dev:
++	input_free_device(toshiba_wmi_input_dev);
++	return err;
++}
++
++static void toshiba_wmi_input_destroy(void)
++{
++	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
++	sparse_keymap_free(toshiba_wmi_input_dev);
++	input_unregister_device(toshiba_wmi_input_dev);
++}
++
++static int __init toshiba_wmi_init(void)
++{
++	int ret;
++
++	if (!wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
++		return -ENODEV;
++
++	ret = toshiba_wmi_input_setup();
++	if (ret) {
++		pr_err("Failed to setup input device\n");
++		return ret;
++	}
++
++	pr_info("Toshiba WMI Hotkey Driver\n");
++
++	return 0;
++}
++
++static void __exit toshiba_wmi_exit(void)
++{
++	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
++		toshiba_wmi_input_destroy();
++}
++
++module_init(toshiba_wmi_init);
++module_exit(toshiba_wmi_exit);
 -- 
 2.5.1
