@@ -1,48 +1,170 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH 1/1] toshiba_acpi: Add 0x prefix to available_kbd_modes_show funtion
-Date: Wed,  9 Sep 2015 11:30:09 -0600
-Message-ID: <1441819810-11762-2-git-send-email-coproscefalo@gmail.com>
-References: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+From: Kyle Evans <kvans32@gmail.com>
+Subject: Re: [PATCH] hp-wmi: limit hotkey enable
+Date: Wed, 9 Sep 2015 16:32:34 -0400
+Message-ID: <55F09762.3070101@gmail.com>
+References: <1438959360-20901-1-git-send-email-kvans32@gmail.com>
+ <20150828184228.GA64484@vmdeb7> <55E1CF30.10501@gmail.com>
+ <20150906180339.GC90062@vmdeb7> <55EF2913.2090902@gmail.com>
+ <20150908202232.GD90062@vmdeb7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f172.google.com ([209.85.214.172]:33941 "EHLO
-	mail-ob0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751055AbbIIRaQ (ORCPT
+Received: from mail-ig0-f177.google.com ([209.85.213.177]:33021 "EHLO
+	mail-ig0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752281AbbIIUcg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Sep 2015 13:30:16 -0400
-In-Reply-To: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+	Wed, 9 Sep 2015 16:32:36 -0400
+Received: by igbkq10 with SMTP id kq10so4013958igb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Sep 2015 13:32:35 -0700 (PDT)
+In-Reply-To: <20150908202232.GD90062@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, Rafael Wysocki <rjw@rjwysocki.net>
 
-This patch adds the 0x prefix to the values printed by such function, the
-values are already being printed in hex, but without the prefix, causing
-confussion, even though the file under Documentation/ABI clearly states
-that hey are hex values.
 
-Simply add the 0x prefix to avoid such confussion.
 
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 09/08/2015 04:22 PM, Darren Hart wrote:
+> On Tue, Sep 08, 2015 at 01:29:39PM -0500, Kyle Evans wrote:
+>>  From 7d11e942d2c84919ded37b46a72be59f34141c5d Mon Sep 17 00:00:00 2001
+>> From: Kyle Evans <kvans32@gmail.com>
+>> Date: Tue, 1 Sep 2015 18:50:45 -0500
+>> Subject: [PATCH] hp-wmi: limit hotkey enable
+>
+> In the future, please submit as [PATCH v2] as a separate thread. This one took a
+> little bit of minor wrangling to apply coming in as it did.
+>
+>>
+>> Do not write initialize magic on systems that do not have
+>> feature query 0xb. Fixes Bug #82451.
+>>
+>> Define a new feature query to differentiate older systems and rename
+>> FEATURE_QUERY, 0xd, to FEATURE2_QUERY for code consistency.
+>> Also, some return value magic number cleanup.
+>> ---
+>
+> In the future, this is where you should include a changelog:
+>
+> Since v1:
+>   - Refactored FEATURE2 test into separate function
+>
+> Or similar. See Documentation/SubmittingPatches section 14.
+>
+>
+>>   drivers/platform/x86/hp-wmi.c | 28 +++++++++++++++++++---------
+>>   1 file changed, 19 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+>> index 0669731..c0a7817 100644
+>> --- a/drivers/platform/x86/hp-wmi.c
+>> +++ b/drivers/platform/x86/hp-wmi.c
+>> @@ -54,8 +54,9 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>>   #define HPWMI_HARDWARE_QUERY 0x4
+>>   #define HPWMI_WIRELESS_QUERY 0x5
+>>   #define HPWMI_BIOS_QUERY 0x9
+>> +#define HPWMI_FEATURE_QUERY 0xb
+>>   #define HPWMI_HOTKEY_QUERY 0xc
+>> -#define HPWMI_FEATURE_QUERY 0xd
+>> +#define HPWMI_FEATURE2_QUERY 0xd
+>
+> I didn't understand why you renamed FEATURE to FEATURE2 and then used FEATURE
+> for the new one - rather than just adding FEATURE2. It seems like unecessary
+> churn.
+>
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 9f7ced1..50a2116 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1669,10 +1669,10 @@ static ssize_t available_kbd_modes_show(struct device *dev,
- 	struct toshiba_acpi_dev *toshiba = dev_get_drvdata(dev);
- 
- 	if (toshiba->kbd_type == 1)
--		return sprintf(buf, "%x %x\n",
-+		return sprintf(buf, "0x%x 0x%x\n",
- 			       SCI_KBD_MODE_FNZ, SCI_KBD_MODE_AUTO);
- 
--	return sprintf(buf, "%x %x %x\n",
-+	return sprintf(buf, "0x%x 0x%x 0x%x\n",
- 		       SCI_KBD_MODE_AUTO, SCI_KBD_MODE_ON, SCI_KBD_MODE_OFF);
- }
- static DEVICE_ATTR_RO(available_kbd_modes);
--- 
-2.5.1
+It is just proactive code cleanup. Since 0xb comes before 0xd it would 
+follow that FEATURE should come before FEATURE2. I wasn't happy being 
+the one to blame for it being jumbled around.
+
+>>   #define HPWMI_WIRELESS2_QUERY 0x1b
+>>   #define HPWMI_POSTCODEERROR_QUERY 0x2a
+>>
+>> @@ -295,7 +296,7 @@ static int hp_wmi_tablet_state(void)
+>>   	return (state & 0x4) ? 1 : 0;
+>>   }
+>>
+>> -static int __init hp_wmi_bios_2009_later(void)
+>> +static int __init hp_wmi_bios_2008_later(void)
+>>   {
+>>   	int state = 0;
+>>   	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, 0, &state,
+>> @@ -306,14 +307,22 @@ static int __init hp_wmi_bios_2009_later(void)
+>>   	return (state & 0x10) ? 1 : 0;
+>>   }
+>>
+>> -static int hp_wmi_enable_hotkeys(void)
+>> +static int __init hp_wmi_bios_2009_later(void)
+>>   {
+>> -	int ret;
+>> -	int query = 0x6e;
+>> +	int state = 0;
+>> +	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &state,
+>> +				       sizeof(state), sizeof(state));
+>> +	if (ret)
+>> +		return ret;
+>>
+>> -	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
+>> -				   0);
+>> +	return (state & 0x10) ? 1 : 0;
+>> +}
+>>
+>> +static int hp_wmi_enable_hotkeys(void)
+>> +{
+>> +	int value = 0x6e;
+>> +	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
+>> +				       sizeof(value), 0);
+>>   	if (ret)
+>>   		return -EINVAL;
+
+Would -EIO be a better error code?
+
+>>   	return 0;
+>> @@ -663,8 +672,9 @@ static int __init hp_wmi_input_setup(void)
+>>   			    hp_wmi_tablet_state());
+>>   	input_sync(hp_wmi_input_dev);
+>>
+>> -	if (hp_wmi_bios_2009_later() == 4)
+>> -		hp_wmi_enable_hotkeys();
+>> +	if (hp_wmi_bios_2009_later() == HPWMI_RET_UNKNOWN_CMDTYPE)
+>> +		if !(hp_wmi_2008_later() == HPWMI_RET_UNKNOWN_CMDTYPE)
+>> +			hp_wmi_enable_hotkeys();
+>
+> I really don't like the semantics behind these hp_wmi_bios_200*_later() calls.
+> They read as though they should be boolean functions, but we test for bizarre
+> magic return codes, and are actually testing for a specific feature. For the
+> uninitiated, the above block is quite difficult to understand what it's testing
+> for. At the very least, it needs a comment describing what is going on.
+>
+> I believe the logic we're looking for is:
+>
+> if older than 2009 (doesn't have FEATURE 0xd)
+> 	if newer than 2008 (does have FEATURE2 0xb)
+> 		attempt BIOS_QUERY 0x9
+>
+> Which one might expect to read as:
+>
+> if (!hp_wmi_bios_2009_later() && hp_wmi_bios_2008_later())
+> 	hp_wmi_enable_hotkeys();
+>
+> Which would involve rewriting the 2009 function and the new 2008 function to
+> return 1 if later, 0 if not, or <0 on error. The ugly details of
+> HPWMI_RET_UNKNOWN_CMDTYPE can be contained within those wrappers, which is
+> arguably the point of a wrapper function - to abstract away things like that.
+>
+> For the original use of hp_wmi_bios_2009_later, only the == 4 case would need to
+> be updated to deal with the boolean logic.
+>
+> Perhaps I'm missing something about how these work, or some corner case, but the
+> above seems far cleaner to me.
+>
+> Would you agree or not?
+
+Yes, I agree. I was also confused by the bitwise return logic. However, 
+I did not inspect the DSDT to see what it was doing with state. I only 
+tested the usefulness of the function. Since this now is looking to be 
+the only use for these functions, I am happy to clear them up.
+
+>
+> Thanks,
+>
