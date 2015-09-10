@@ -1,153 +1,111 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Incorrect key code parsing in dell-wmi.c since 5ea2559
-Date: Wed, 9 Sep 2015 21:34:53 -0700
-Message-ID: <20150910043453.GA108260@vmdeb7>
-References: <201507041906.48648@pali>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Wed, 9 Sep 2015 21:38:12 -0700
+Message-ID: <20150910043812.GB108260@vmdeb7>
+References: <20150623112621.GA3071@eudyptula.hq.kempniu.pl>
+ <20150701105544.GD17577@pali>
+ <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
+ <559C1C17.3060009@dell.com>
+ <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
+ <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
+ <20150831095107.GA2397@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:48490 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750843AbbIJEiQ (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 10 Sep 2015 00:38:16 -0400
 Content-Disposition: inline
-In-Reply-To: <201507041906.48648@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Rezwanul Kabir <Rezwanul_Kabir@dell.com>, Matthew Garrett <mjg@redhat.com>, Len Brown <len.brown@intel.com>, Islam Amer <pharon@gmail.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Mario Limonciello <mario_limonciello@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20150831095107.GA2397@eudyptula.hq.kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Sat, Jul 04, 2015 at 07:06:48PM +0200, Pali Roh=E1r wrote:
-> Hello,
+On Mon, Aug 31, 2015 at 11:51:07AM +0200, Micha=C5=82 K=C4=99pie=C5=84 =
+wrote:
+> > > > Now as for actually simulating a keypress, it can be programmed=
+ using
+> > > > the following calling interface (on receiving the e025 WMI noti=
+fication).
+> > > > To actually simulate the keypress:
+> > > > Arg1=3D0x41
+> > > > Arg2 Byte [1:0]: Scan code to simulate
+> > > > Byte [3:2]
+> > > > * Bit0 - L Alt
+> > > > * Bit1 - R Alt
+> > > > * Bit2 - L Ctrl
+> > > > * Bit3 - R Ctrl
+> > > > * Bit4 - L Shift
+> > > > * Bit5 - R shift
+> > > > * Bit6 - L Win
+> > > > * Bit7 - R Win
+> > > > * Bit8 - Fn key
+> > >=20
+> > > And is it possible to disable keypress simulation on systems that=
+ have
+> > > that capability?
+> > >=20
+> > > My understanding is that all hardware equipped with an Instant La=
+unch
+> > > button is capable of generating a WMI event upon its press, but n=
+ot all
+> > > models can generate a keypress at the same time, correct? If that=
+'s the
+> > > case, then the arguably cleanest solution would be to change the =
+keymap
+> > > entry for event 0xe025 in dell-wmi.c to KE_KEY and ensure (probab=
+ly in
+> > > dell-laptop.c) no i8042 interrupt is raised when the Instant Laun=
+ch
+> > > button is pressed. Though that would still leave us with the ques=
+tion of
+> > > how to determine (ideally without side effects) whether a given m=
+odel
+> > > needs disabling keypress simulation. I imagine the pseudocode wou=
+ld be
+> > > like:
+> > >=20
+> > >     if (ec_can_simulate_keypresses)
+> > >         disable_keypress_simulation();
+> > >     else
+> > >         enable_wmi_event_generation();
+> > >=20
+> > > If disabling keypress simulation is not possible, dell-wmi.c has =
+to
+> > > somehow determine whether a 0xe025 WMI event should be ignored or=
+ not.
+> > >=20
+> > > Am I making any sense here?
 >=20
-> I found another problem in dell-wmi.c code which is still partially i=
-n
-> mainline kernel since commit 5ea2559726b786283236835dc2905c23b36ac91c=
-:
+> As the holiday season is coming to an end, I'm taking my last shot at
+> reviving this thread. Could anyone please tell us:
 >=20
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3D5ea2559726b786283236835dc2905c23b36ac91c
+>   * Is there a way to determine whether the EC is capable of simulati=
+ng
+>     keypresses without the side effects that the SMBIOS call 4, 11 wi=
+th
+>     argument 64 causes on certain hardware (e.g. disabling keyboard
+>     backlight on an E6440)? Or is there perhaps a well-defined list o=
+f
+>     machines that SMBIOS call is (un)safe on?
 >=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> commit 5ea2559726b786283236835dc2905c23b36ac91c
-> Author: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
-> Date:   Mon Nov 2 12:00:42 2009 -0500
->=20
->     dell-wmi: Add support for new Dell systems
->    =20
->     Newer Dell systems support HotKey features differently from legac=
-y
->     systems.  A new vendor specifc HotKey SMBIOS table (Type 0xB2) is
->     defined. This table contains a mapping between scancode and the
->     corresponding predefined keyfunction ( i.e. keycode).. Also, a ne=
-w
->     ACPI-WMI event type (called KeyIDList) with a value of 0x0010 is
->     defined. Any BIOS containing 0xB2 table will send hotkey notifica=
-tions
->     using KeyIDList event.
->    =20
->     This is Rezwanul's patch, updated to ensure that brightness event=
-s are
->     not sent if the backlight is controlled via ACPI and with the def=
-ault
->     keycode for the display output switching altered to match desktop
->     expectations.
->    =20
->     Signed-off-by: Rezwanul Kabir <Rezwanul_Kabir@dell.com>
->     Signed-off-by: Matthew Garrett <mjg@redhat.com>
->     Signed-off-by: Len Brown <len.brown@intel.com>
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> Before this commit WMI event buffer was parsed as:
->=20
->   int *buffer =3D (int *)obj->buffer.pointer;
->   key =3D dell_wmi_get_entry_by_scancode(buffer[1] & 0xFFFF);
->=20
-> So basically 4th-7th bytes are parsed.
->=20
-> After this commit WMI event buffer is parsed as:
->=20
->   u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
->   reported_key =3D (int)buffer_entry[1] & 0xffff;
->   key =3D dell_wmi_get_entry_by_scancode(reported_key);
->=20
-> Which means that 2nd and 3rd bytes are parsed.
->=20
-> Apparently this commit changed what kernel parse as keycode. And I be=
-t
-> this is some copy-paste error and not correct code. Variable buffer w=
-as
-> changed from (int*) to (u16*) and which change could be "hidden" at t=
-ime
-> of code review.
->=20
-> Next there is commit which somehow is trying to fix user problems:
->=20
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd5164dbf1f651d1e955b158fb70a9c844cc91cd1
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> commit d5164dbf1f651d1e955b158fb70a9c844cc91cd1
-> Author: Islam Amer <pharon@gmail.com>
-> Date:   Thu Jun 24 13:39:47 2010 -0400
->=20
->     dell-wmi: Add support for eject key on Dell Studio 1555
->    =20
->     Fixes pressing the eject key on Dell Studio 1555 does not work an=
-d produces
->     message :
->    =20
->     dell-wmi: Unknown key 0 pressed
->    =20
->     Signed-off-by: Islam Amer <pharon@gmail.com>
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> It changes parsing WMI event buffer to:
->=20
->   u16 *buffer_entry =3D (u16 *)obj->buffer.pointer;
->   if (buffer_entry[1] =3D=3D 0x0)
->     reported_key =3D (int)buffer_entry[2] & 0xffff;
->   else
->     reported_key =3D (int)buffer_entry[1] & 0xffff;
->   key =3D dell_wmi_get_entry_by_scancode(reported_key);
->=20
-> My idea is that Islam Amer tried to fix problem introduced in commit
-> 5ea2559726b786283236835dc2905c23b36ac91c.
->=20
-> According to some available very-very old Dell ACPI-WMI documentation=
- at
->=20
-> http://vpsservice1.sampo.com.tw/sampo_update/document/jimmy/ACPI-WMI%=
-20.pdf
->=20
-> and also from information from commit message 5ea2559 format of WMI i=
-s
-> (u16*)[length, type, data, ...].
->=20
-> Because type for hotkey is 0x0000 then it expected that kernel report=
-ed
-> always key 0x0000...
->=20
-> So I would propose to drop parsing "buffer_entry[1]" as key code and
-> rewrite dell_wmi_notify function to always process WMI buffer as
-> [length, type, data...].
->=20
-> What do you think about it? It also simplify notify code as there is =
-one
-> branch for dell_new_hk_type and one for old parsing (with that entry[=
-1]).
->=20
+>   * Is it possible to disable keypress simulation on machines on whic=
+h
+>     the EC supports it? If so, how would one do that?
 
-Without documentation for the older as well as newer laptops, it's poss=
-ible the
-driver evolved to support newer ones while breaking older models. As yo=
-u
-mentioned to me, getting some current documentation would be ideal.
-
-Without it, the best approach is a functional patch which we can ask us=
-ers to
-help us test.
+I certainly don't know myself, not what you were hoping to hear back I'=
+m sure.
+Some of that requires documentation, which I don't know if we have. Doe=
+s anyone
+from Dell on Cc have documentation they can share to help answer these
+questions?
 
 --=20
 Darren Hart
