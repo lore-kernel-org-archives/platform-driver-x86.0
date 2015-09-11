@@ -1,77 +1,120 @@
 From: Kyle Evans <kvans32@gmail.com>
-Subject: Re: [PATCHv4] hp-wmi: limit hotkey enable
-Date: Fri, 11 Sep 2015 10:05:42 -0500
-Message-ID: <55F2EDC6.9090504@gmail.com>
-References: <20150910030330.GE90062@vmdeb7> <1441907100-4141-1-git-send-email-kvans32@gmail.com> <20150910212147.GA117960@vmdeb7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCHv5] hp-wmi: limit hotkey enable
+Date: Fri, 11 Sep 2015 10:40:17 -0500
+Message-ID: <1441986017-1680-1-git-send-email-kvans32@gmail.com>
+References: <20150910030330.GE90062@vmdeb7>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ig0-f175.google.com ([209.85.213.175]:36080 "EHLO
-	mail-ig0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752444AbbIKPM2 (ORCPT
+Received: from mail-ig0-f172.google.com ([209.85.213.172]:33850 "EHLO
+	mail-ig0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752114AbbIKPka (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Sep 2015 11:12:28 -0400
-Received: by igcrk20 with SMTP id rk20so43924991igc.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2015 08:12:27 -0700 (PDT)
-In-Reply-To: <20150910212147.GA117960@vmdeb7>
+	Fri, 11 Sep 2015 11:40:30 -0400
+Received: by igcpb10 with SMTP id pb10so47786220igc.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2015 08:40:29 -0700 (PDT)
+In-Reply-To: <20150910030330.GE90062@vmdeb7>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net
+To: dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net, Kyle Evans <kvans32@gmail.com>
 
-On 09/10/2015 04:21 PM, Darren Hart wrote:
-> On Thu, Sep 10, 2015 at 12:45:00PM -0500, Kyle Evans wrote:
->> Do not write initialize magic on systems that do not have
->> feature query 0xb. Fixes Bug #82451.
->>
->> Redefine FEATURE_QUERY to align with 0xb and FEATURE2 with 0xd
->> for code clearity.
->>
->> Add a new test function, hp_wmi_bios_2008_later() & simplify
->> hp_wmi_bios_2009_later(), which fixes a bug in cases where
->> an improper value is returned. Probably also fixes Bug #69131.
->>
->> Signed-off-by: Kyle Evans <kvans32@gmail.com>
->> ---
->>   Since v1:
->>   - Refactored feature query 0xb into separate function
->>   - Redefine FEATURE_QUERY to align with 0xb and FEATURE2 with 0xd
->>
->>   Since v2:
->>   - Simplify hp_wmi_bios_200x_later functions. No longer returns tru=
-e
->>   (4) when the test fails. However, if state is somehow useful, that=
- is lost.
->>
->>   Since v3:
->>   - Fix whitespace, email client reformatting.
->
-> Thanks, this one applies cleanly, however:
->
-> drivers/platform/x86/hp-wmi.c: In function =E2=80=98hp_wmi_input_setu=
-p=E2=80=99:
-> drivers/platform/x86/hp-wmi.c:675:2: error: implicit declaration of f=
-unction =E2=80=98hp_wmi_2008_later=E2=80=99 [-Werror=3Dimplicit-functio=
-n-declaration]
->    if (!hp_wmi_bios_2009_later() && hp_wmi_2008_later())
->    ^
-> drivers/platform/x86/hp-wmi.c: At top level:
-> drivers/platform/x86/hp-wmi.c:299:19: warning: =E2=80=98hp_wmi_bios_2=
-008_later=E2=80=99 defined but not used [-Wunused-function]
->   static int __init hp_wmi_bios_2008_later(void)
->
-> Looks like you missed "bios" in the call to hp_wmi_bios_2008_later. W=
-hich
-> suggests this version was not compile tested. As I cannot test the co=
-de myself
-> without hardware, I depend on submitters even more to do the testing,=
- so it is
-> really important that you have tested the exact patch that I send to =
-Linus.
->
-Sorry for all the rookie mistakes.
-I did run a compile and reboot script. Unfortunately, the error logic=20
-was commented out when I was debugging the reboot code and never=20
-re-enabled. Lesson learned. I'm on it.
+Do not write initialize magic on systems that do not have
+feature query 0xb. Fixes Bug #82451.
+
+Redefine FEATURE_QUERY to align with 0xb and FEATURE2 with 0xd
+for code clearity.
+
+Add a new test function, hp_wmi_bios_2008_later() & simplify
+hp_wmi_bios_2009_later(), which fixes a bug in cases where
+an improper value is returned. Probably also fixes Bug #69131.
+
+Add missing __init tag.
+
+Signed-off-by: Kyle Evans <kvans32@gmail.com>
+---
+ Since v1:
+ - Refactored feature query 0xb into separate function
+ - Redefine FEATURE_QUERY to align with 0xb and FEATURE2 with 0xd
+
+ Since v2:
+ - Simplify hp_wmi_bios_200x_later functions. No longer returns true 
+ (4) when the test fails. However, if state is somehow useful, that is lost.
+
+ Since v3:
+ - Fix whitespace, email client reformatting.
+
+ Since v4:
+ - Fix "bios" typo.
+ - Add __init tag.
+
+ drivers/platform/x86/hp-wmi.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 0669731..fb4dd7b 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -54,8 +54,9 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+ #define HPWMI_HARDWARE_QUERY 0x4
+ #define HPWMI_WIRELESS_QUERY 0x5
+ #define HPWMI_BIOS_QUERY 0x9
++#define HPWMI_FEATURE_QUERY 0xb
+ #define HPWMI_HOTKEY_QUERY 0xc
+-#define HPWMI_FEATURE_QUERY 0xd
++#define HPWMI_FEATURE2_QUERY 0xd
+ #define HPWMI_WIRELESS2_QUERY 0x1b
+ #define HPWMI_POSTCODEERROR_QUERY 0x2a
+ 
+@@ -295,25 +296,33 @@ static int hp_wmi_tablet_state(void)
+ 	return (state & 0x4) ? 1 : 0;
+ }
+ 
+-static int __init hp_wmi_bios_2009_later(void)
++static int __init hp_wmi_bios_2008_later(void)
+ {
+ 	int state = 0;
+ 	int ret = hp_wmi_perform_query(HPWMI_FEATURE_QUERY, 0, &state,
+ 				       sizeof(state), sizeof(state));
+-	if (ret)
+-		return ret;
++	if (!ret)
++		return 1;
+ 
+-	return (state & 0x10) ? 1 : 0;
++	return (ret == HPWMI_RET_UNKNOWN_CMDTYPE) ? 0 : -ENXIO;
+ }
+ 
+-static int hp_wmi_enable_hotkeys(void)
++static int __init hp_wmi_bios_2009_later(void)
+ {
+-	int ret;
+-	int query = 0x6e;
++	int state = 0;
++	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, 0, &state,
++				       sizeof(state), sizeof(state));
++	if (!ret)
++		return 1;
+ 
+-	ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &query, sizeof(query),
+-				   0);
++	return (ret == HPWMI_RET_UNKNOWN_CMDTYPE) ? 0 : -ENXIO;
++}
+ 
++static int __init hp_wmi_enable_hotkeys(void)
++{
++	int value = 0x6e;
++	int ret = hp_wmi_perform_query(HPWMI_BIOS_QUERY, 1, &value,
++				       sizeof(value), 0);
+ 	if (ret)
+ 		return -EINVAL;
+ 	return 0;
+@@ -663,7 +672,7 @@ static int __init hp_wmi_input_setup(void)
+ 			    hp_wmi_tablet_state());
+ 	input_sync(hp_wmi_input_dev);
+ 
+-	if (hp_wmi_bios_2009_later() == 4)
++	if (!hp_wmi_bios_2009_later() && hp_wmi_bios_2008_later())
+ 		hp_wmi_enable_hotkeys();
+ 
+ 	status = wmi_install_notify_handler(HPWMI_EVENT_GUID, hp_wmi_notify, NULL);
+-- 
+1.8.5.5
