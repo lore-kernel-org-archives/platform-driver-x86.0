@@ -1,41 +1,136 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCHv5] hp-wmi: limit hotkey enable
-Date: Fri, 11 Sep 2015 08:55:36 -0700
-Message-ID: <20150911155536.GA1888@vmdeb7>
-References: <20150910030330.GE90062@vmdeb7>
- <1441986017-1680-1-git-send-email-kvans32@gmail.com>
+From: Roald Frederickx <roald.frederickx@gmail.com>
+Subject: [PATCH] compal-laptop: add charge control limit
+Date: Sat, 12 Sep 2015 22:00:16 +0200
+Message-ID: <20150912200016.GA17822@Compal.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:44837 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752856AbbIKPzj (ORCPT
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:35679 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754085AbbILTyU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Sep 2015 11:55:39 -0400
+	Sat, 12 Sep 2015 15:54:20 -0400
 Content-Disposition: inline
-In-Reply-To: <1441986017-1680-1-git-send-email-kvans32@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Kyle Evans <kvans32@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2015 at 10:40:17AM -0500, Kyle Evans wrote:
-> Do not write initialize magic on systems that do not have
-> feature query 0xb. Fixes Bug #82451.
-> 
-> Redefine FEATURE_QUERY to align with 0xb and FEATURE2 with 0xd
-> for code clearity.
-> 
-> Add a new test function, hp_wmi_bios_2008_later() & simplify
-> hp_wmi_bios_2009_later(), which fixes a bug in cases where
-> an improper value is returned. Probably also fixes Bug #69131.
-> 
-> Add missing __init tag.
-> 
-> Signed-off-by: Kyle Evans <kvans32@gmail.com>
+Add charge control limit to the power supply subsystem of the Compal
+platform driver.
+This apparently was present in the original driver by Cezary Jackiewicz
+at http://eko.one.pl/index.php?page=compal-laptop but it seems to have been
+overlooked.
 
-Thanks Kyle, pushed to "testing".
+The Kconfig description is updated to reflect this addition. It now also
+mentions the hwmon interface that was already present.
 
+Signed-off-by: Roald Frederickx <roald.frederickx@gmail.com>
+---
+ drivers/platform/x86/Kconfig         |  4 ++--
+ drivers/platform/x86/compal-laptop.c | 43 +++++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c69bb70..2f9026d 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -309,8 +309,8 @@ config COMPAL_LAPTOP
+ 	  This is a driver for laptops built by Compal, and some models by
+ 	  other brands (e.g. Dell, Toshiba).
+ 
+-	  It adds support for rfkill, Bluetooth, WLAN and LCD brightness
+-	  control.
++	  It adds support for rfkill, Bluetooth, WLAN, LCD brightness, hwmon
++	  and battery charging level control.
+ 
+ 	  For a (possibly incomplete) list of supported laptops, please refer
+ 	  to: Documentation/platform/x86-laptop-drivers.txt
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index f2706d2..e1c2b6d 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -151,6 +151,8 @@
+ #define BAT_STATUS2			0xF1
+ #define BAT_STOP_CHARGE1		0xF2
+ #define BAT_STOP_CHARGE2		0xF3
++#define BAT_CHARGE_LIMIT		0x03
++#define BAT_CHARGE_LIMIT_MAX		100
+ 
+ #define BAT_S0_DISCHARGE		(1 << 0)
+ #define BAT_S0_DISCHRG_CRITICAL		(1 << 2)
+@@ -601,6 +603,12 @@ static int bat_get_property(struct power_supply *psy,
+ 	case POWER_SUPPLY_PROP_CHARGE_NOW:
+ 		val->intval = ec_read_u16(BAT_CHARGE_NOW) * 1000;
+ 		break;
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
++		val->intval = ec_read_u8(BAT_CHARGE_LIMIT);
++		break;
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX:
++		val->intval = BAT_CHARGE_LIMIT_MAX;
++		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY:
+ 		val->intval = ec_read_u8(BAT_CAPACITY);
+ 		break;
+@@ -634,6 +642,36 @@ static int bat_get_property(struct power_supply *psy,
+ 	return 0;
+ }
+ 
++static int bat_set_property(struct power_supply *psy,
++				enum power_supply_property psp,
++				const union power_supply_propval *val)
++{
++	int level;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
++		level = val->intval;
++		if (level < 0 || level > BAT_CHARGE_LIMIT_MAX)
++			return -EINVAL;
++		if (ec_write(BAT_CHARGE_LIMIT, level) < 0)
++			return -EIO;
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static int bat_writeable_property(struct power_supply *psy,
++				enum power_supply_property psp)
++{
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
++		return 1;
++	default:
++		return 0;
++	}
++}
+ 
+ 
+ 
+@@ -726,6 +764,8 @@ static enum power_supply_property compal_bat_properties[] = {
+ 	POWER_SUPPLY_PROP_POWER_NOW,
+ 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+ 	POWER_SUPPLY_PROP_CHARGE_NOW,
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+ 	POWER_SUPPLY_PROP_CAPACITY,
+ 	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
+ 	POWER_SUPPLY_PROP_TEMP,
+@@ -880,11 +920,12 @@ static const struct power_supply_desc psy_bat_desc = {
+ 	.properties	= compal_bat_properties,
+ 	.num_properties	= ARRAY_SIZE(compal_bat_properties),
+ 	.get_property	= bat_get_property,
++	.set_property	= bat_set_property,
++	.property_is_writeable = bat_writeable_property,
+ };
+ 
+ static void initialize_power_supply_data(struct compal_data *data)
+ {
+-
+ 	ec_read_sequence(BAT_MANUFACTURER_NAME_ADDR,
+ 					data->bat_manufacturer_name,
+ 					BAT_MANUFACTURER_NAME_LEN);
 -- 
-Darren Hart
-Intel Open Source Technology Center
+1.9.2
