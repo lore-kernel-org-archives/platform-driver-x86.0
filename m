@@ -1,69 +1,85 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Mon, 14 Sep 2015 02:42:53 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD0195E6D4@SHSMSX104.ccr.corp.intel.com>
-References: <1441708182-66875-1-git-send-email-qipeng.zha@intel.com>
- <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: [PATCH] asus-wmi: restore kbd led level after resume
+Date: Mon, 14 Sep 2015 11:16:30 +0200
+Message-ID: <1442222190-8591-1-git-send-email-linux@rempel-privat.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:17227 "EHLO mga01.intel.com"
+Received: from mout.gmx.net ([212.227.15.18]:64902 "EHLO mout.gmx.net"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753738AbbINCp2 convert rfc822-to-8bit (ORCPT
+	id S1752588AbbINJQ4 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 13 Sep 2015 22:45:28 -0400
-In-Reply-To: <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
-Content-Language: en-US
+	Mon, 14 Sep 2015 05:16:56 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Oleksij Rempel <linux@rempel-privat.de>
 
->> +struct intel_punit_ipc_controller {
->> +	struct platform_device *pdev;
+Afters suspend/resume cycle with closed lid the kbd backlight level
+is lost. This patch will will restore this value to last known level.
 
->Usually we keep pointer to struct device. Any specific reason to hold platform_device here?
-Because intel_punit_get_bars() need to use platform_device pointer to get resources.
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+---
+ drivers/platform/x86/asus-wmi.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
->> +
->> +static int intel_punit_ipc_check_status(void)
->> +{
->> +	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
-
-From where is this timeout in *seconds* coming? Sounds too
-> big for me.
-Empirical value from SCU ipc driver.
-
-> +	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res0) {
-> +		dev_err(&pdev->dev, "Failed to get iomem
-> resource\n");
-> +		return -ENXIO;
-> +	}
-> +	size = resource_size(res0);
-> +	if (!devm_request_mem_region(&pdev->dev, res0->start,
-> +				     size, pdev-
-> >name)) {
-
->Why not to use devm_ioremap_resource() ?
-
->> +	ipcdev.base[BIOS_MAILBOX] = addr;
->> +	addr += MAILBOX_REGISTER_SPACE;
->> +	ipcdev.base[GTDRIVER_MAILBOX] = addr;
->> +	addr += MAILBOX_REGISTER_SPACE;
->> +	ipcdev.base[ISPDRIVER_MAILBOX] = addr;
-
->Looks akward, does the platform have the several resources for different purpose? Why do you unify them (who does guarantee the non-breakable segment for all resources?) first and then split up?
-
->Please, refactor.
-From spec, these three parts are consecutive, so only define one acpi resource entry is reasonable way,
-But BIOS maintainer finally make the resource like this due to request from Window os driver,
-So can't treat these three as three separate parts.
-
->> +
->> +/* Some modules are dependent on this, so init earlier */
->> +fs_initcall(intel_punit_ipc_init);
-
->So, what exactly requires this?
-Those drivers which need to use this Punit APIs in its Probe when do module init.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index efbc3f0..1f7d80f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -582,7 +582,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+ 
+ static int asus_wmi_led_init(struct asus_wmi *asus)
+ {
+-	int rv = 0;
++	int rv = 0, led_val;
+ 
+ 	asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+ 	if (!asus->led_workqueue)
+@@ -602,9 +602,11 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 			goto error;
+ 	}
+ 
+-	if (kbd_led_read(asus, NULL, NULL) >= 0) {
++	led_val = kbd_led_read(asus, NULL, NULL);
++	if (led_val >= 0) {
+ 		INIT_WORK(&asus->kbd_led_work, kbd_led_update);
+ 
++		asus->kbd_led_wk = led_val;
+ 		asus->kbd_led.name = "asus::kbd_backlight";
+ 		asus->kbd_led.brightness_set = kbd_led_set;
+ 		asus->kbd_led.brightness_get = kbd_led_get;
+@@ -2160,6 +2162,16 @@ static int asus_hotk_thaw(struct device *device)
+ 	return 0;
+ }
+ 
++static int asus_hotk_resume(struct device *device)
++{
++	struct asus_wmi *asus = dev_get_drvdata(device);
++
++	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
++		queue_work(asus->led_workqueue, &asus->kbd_led_work);
++
++	return 0;
++}
++
+ static int asus_hotk_restore(struct device *device)
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(device);
+@@ -2190,6 +2202,8 @@ static int asus_hotk_restore(struct device *device)
+ 		bl = !asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_UWB);
+ 		rfkill_set_sw_state(asus->uwb.rfkill, bl);
+ 	}
++	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
++		queue_work(asus->led_workqueue, &asus->kbd_led_work);
+ 
+ 	return 0;
+ }
+@@ -2197,6 +2211,7 @@ static int asus_hotk_restore(struct device *device)
+ static const struct dev_pm_ops asus_pm_ops = {
+ 	.thaw = asus_hotk_thaw,
+ 	.restore = asus_hotk_restore,
++	.resume = asus_hotk_resume,
+ };
+ 
+ static int asus_wmi_probe(struct platform_device *pdev)
+-- 
+2.5.0
