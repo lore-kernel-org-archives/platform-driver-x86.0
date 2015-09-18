@@ -1,55 +1,34 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/4] platform:x86: Add Intel Telemetry Core Driver
-Date: Thu, 17 Sep 2015 10:54:41 -0700
-Message-ID: <20150917175441.GB12959@vmdeb7>
-References: <5F7315E704FA0841B5DFCE90329B2BB42ACFE57A@BGSMSX102.gar.corp.intel.com>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: RE: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Fri, 18 Sep 2015 01:29:11 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD019678BE@SHSMSX104.ccr.corp.intel.com>
+References: <1441708182-66875-1-git-send-email-qipeng.zha@intel.com>
+ <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD0195E6D4@SHSMSX104.ccr.corp.intel.com>
+ <20150917174504.GA12959@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37548 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751059AbbIQRyn (ORCPT
+Received: from mga09.intel.com ([134.134.136.24]:29037 "EHLO mga09.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751702AbbIRB3U convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 17 Sep 2015 13:54:43 -0400
-Content-Disposition: inline
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB42ACFE57A@BGSMSX102.gar.corp.intel.com>
+	Thu, 17 Sep 2015 21:29:20 -0400
+In-Reply-To: <20150917174504.GA12959@vmdeb7>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-On Mon, Sep 14, 2015 at 10:12:28AM +0000, Chakravarty, Souvik K wrote:
-> Intel PM Telemetry is a software mechanism via which various SoC
-> PM and performance related parameters like PM counters, firmware
-> trace verbosity, the status of different devices inside the SoC, etc
-> can be monitored and analyzed. The different samples that may be
-> monitored can be configured at runtime via exported APIs.
-> 
-> This patch adds the telemetry core driver that implements basic
-> exported APIs.
-> 
-> CC: Srinidhi Kasagar <srinidhi.kasagar@intel.com>
-> 
-> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+>> >> +/* Some modules are dependent on this, so init earlier */ 
+>> >> +fs_initcall(intel_punit_ipc_init);
+>> 
+>> >So, what exactly requires this?
+>> Those drivers which need to use this Punit APIs in its Probe when do module init.
 
-Hi Souvik,
+>As you know, cross driver calls is something we work to avoid specifically for the issues of load order, etc. As this is a new driver, there shouldn't be in users of this currently. Is it expected there will be in the near future?
 
-These all fail initial tests and application due to some strange character
-encoding or something. Please try to download these from the mailing list and
-apply them yourself to determine what's wrong and resubmit.
-
-For example:
-
-ERROR: patch seems to be corrupt (line wrapped?)
-#72: FILE: arch/x86/include/asm/intel_telemetry.h:11:
-or
-
-ERROR: spaces required around that '=' (ctx:WxV)
-#83: FILE: arch/x86/include/asm/intel_telemetry.h:22:
-+       TELEM_PSS =3D 0,
-
-the 3D after every = character repeats many many times.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+No users currently,  Telemetry driver will use Punit APIs.
+So you suggest don't support Punit calls for other modules in init stage ?
