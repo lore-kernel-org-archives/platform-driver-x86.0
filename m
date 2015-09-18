@@ -1,55 +1,120 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH 2/2] toshiba_acpi: Change default Hotkey enabling value
-Date: Fri, 18 Sep 2015 16:18:39 -0600
-Message-ID: <CAGdLNWG_KuC=1AcuFV=cwL04hpEe7MkaJOjHXAC4eUK70jaBFA@mail.gmail.com>
-References: <1441819700-11678-1-git-send-email-coproscefalo@gmail.com>
-	<1441819700-11678-3-git-send-email-coproscefalo@gmail.com>
-	<20150918213717.GJ66179@vmdeb7>
-	<CAGdLNWFAfWsqz1XJWngEdR=SHzvHA2yRKq7vKWHnHmOvkMks2w@mail.gmail.com>
-	<20150918221416.GN66179@vmdeb7>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] asus-wmi: restore kbd led level after resume
+Date: Fri, 18 Sep 2015 15:31:44 -0700
+Message-ID: <20150918223144.GO66179@vmdeb7>
+References: <1442222190-8591-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150918221416.GN66179@vmdeb7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:41115 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753375AbbIRWbu (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 18 Sep 2015 18:31:50 -0400
+Content-Disposition: inline
+In-Reply-To: <1442222190-8591-1-git-send-email-linux@rempel-privat.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-Hi Darren,
+On Mon, Sep 14, 2015 at 11:16:30AM +0200, Oleksij Rempel wrote:
+> Afters suspend/resume cycle with closed lid the kbd backlight level
+> is lost. This patch will will restore this value to last known level.
+> 
+> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 
-2015-09-18 16:14 GMT-06:00 Darren Hart <dvhart@infradead.org>:
-> On Fri, Sep 18, 2015 at 03:45:05PM -0600, Azael Avalos wrote:
->> Hi Darren,
->>
->> 2015-09-18 15:37 GMT-06:00 Darren Hart <dvhart@infradead.org>:
->> > On Wed, Sep 09, 2015 at 11:28:20AM -0600, Azael Avalos wrote:
->> >> The driver currently uses the hotkey enabling value of 0x09 to enable
->> >> hotkey events, but windows uses a different value (0x01).
->> >>
->> >> All Toshiba laptops accept the following "hotkey" parameters:
->> >> 0x01 - Enable hotkey and system events.
->> >> 0x03 - Enable system events only.
->> >> 0x09 - Enable hotkey events only.
->> >> 0x0b - Disable (hotkey and system) events.
->> >>
->> >> This patch changes the default hotkey enabling value from 0x09 to 0x01,
->> >> enabling both the hotkey and system events.
->> >>
->> >> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->> >
->> > Queued to testing for 4.4.
->> >
->> > Let me know if you were expecting 4.3....
->>
->> Nope, just the first two fixes were meant for 4.3, the rest
->> is 4.4 material, I just wanted to send them early.
->
-> OK, check mainline please, everything I plan to push for 4.3 is now there.
-> Please confirm it has all you expected.
+Hi Oleksij,
 
-Yup, everything is in there, thanks.
+Please always run scripts/get_maintainer.pl -f path/to/files/changed
 
+And include *all* the maintainers and lists on Cc. This will ensure a faster
+response.
+
+> ---
+>  drivers/platform/x86/asus-wmi.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index efbc3f0..1f7d80f 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -582,7 +582,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  
+>  static int asus_wmi_led_init(struct asus_wmi *asus)
+>  {
+> -	int rv = 0;
+> +	int rv = 0, led_val;
+>  
+>  	asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+>  	if (!asus->led_workqueue)
+> @@ -602,9 +602,11 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  			goto error;
+>  	}
+>  
+> -	if (kbd_led_read(asus, NULL, NULL) >= 0) {
+> +	led_val = kbd_led_read(asus, NULL, NULL);
+> +	if (led_val >= 0) {
+>  		INIT_WORK(&asus->kbd_led_work, kbd_led_update);
+>  
+> +		asus->kbd_led_wk = led_val;
+>  		asus->kbd_led.name = "asus::kbd_backlight";
+>  		asus->kbd_led.brightness_set = kbd_led_set;
+>  		asus->kbd_led.brightness_get = kbd_led_get;
+> @@ -2160,6 +2162,16 @@ static int asus_hotk_thaw(struct device *device)
+>  	return 0;
+>  }
+>  
+> +static int asus_hotk_resume(struct device *device)
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(device);
+> +
+> +	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+
+	if (asus->kbd_led.dev)
+
+	should be sufficient, I don't see the dev pointer being stored as an
+	errno.
+
+	Corentin?
+
+> +		queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +
+> +	return 0;
+> +}
+> +
+>  static int asus_hotk_restore(struct device *device)
+>  {
+>  	struct asus_wmi *asus = dev_get_drvdata(device);
+> @@ -2190,6 +2202,8 @@ static int asus_hotk_restore(struct device *device)
+>  		bl = !asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_UWB);
+>  		rfkill_set_sw_state(asus->uwb.rfkill, bl);
+>  	}
+> +	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> +		queue_work(asus->led_workqueue, &asus->kbd_led_work);
+
+Ditto
+
+>  
+>  	return 0;
+>  }
+> @@ -2197,6 +2211,7 @@ static int asus_hotk_restore(struct device *device)
+>  static const struct dev_pm_ops asus_pm_ops = {
+>  	.thaw = asus_hotk_thaw,
+>  	.restore = asus_hotk_restore,
+> +	.resume = asus_hotk_resume,
+>  };
+>  
+>  static int asus_wmi_probe(struct platform_device *pdev)
+> -- 
+> 2.5.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
--- El mundo apesta y vosotros apestais tambien --
+Darren Hart
+Intel Open Source Technology Center
