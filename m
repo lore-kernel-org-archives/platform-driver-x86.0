@@ -1,176 +1,278 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] compal-laptop: add charge control limit
-Date: Fri, 18 Sep 2015 16:06:24 -0700
-Message-ID: <20150918230624.GA23644@vmdeb7>
-References: <20150912200016.GA17822@Compal.home>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH] platform/x86: Toshiba WMI Hotkey Driver
+Date: Fri, 18 Sep 2015 22:21:28 -0600
+Message-ID: <CAGdLNWGmHNnz1J7Sr8KVXsjn_yY7n6Pe=P3NMqw=3wKfRApkUw@mail.gmail.com>
+References: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+	<1441819810-11762-3-git-send-email-coproscefalo@gmail.com>
+	<20150918215920.GM66179@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150912200016.GA17822@Compal.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roald Frederickx <roald.frederickx@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f178.google.com ([209.85.212.178]:37945 "EHLO
+	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751365AbbISEVa (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 19 Sep 2015 00:21:30 -0400
+In-Reply-To: <20150918215920.GM66179@vmdeb7>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-On Sat, Sep 12, 2015 at 10:00:16PM +0200, Roald Frederickx wrote:
-> Add charge control limit to the power supply subsystem of the Compal
-> platform driver.
-> This apparently was present in the original driver by Cezary Jackiewicz
-> at http://eko.one.pl/index.php?page=compal-laptop but it seems to have been
-> overlooked.
-> 
-> The Kconfig description is updated to reflect this addition. It now also
-> mentions the hwmon interface that was already present.
-> 
+Hi Darren,
 
-Hi Roald,
+2015-09-18 15:59 GMT-06:00 Darren Hart <dvhart@infradead.org>:
+> On Wed, Sep 09, 2015 at 11:30:10AM -0600, Azael Avalos wrote:
+>> Toshiba laptops that feature WMI events for hotkeys were left unsupported
+>> by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
+>> Avoid registering input device on WMI event laptops") added hardware
+>> support for such laptops, but the hotkeys are not handled there.
+>>
+>> This driver adds support for hotkey monitoring on certain Toshiba laptops
+>> that manage the hotkeys via WMI events instead of the Toshiba
+>> Configuration Interface (TCI).
+>>
+>> The toshiba_acpi driver and this one can co-exist, as this only takes
+>> care of hotkeys, while the propper takes care of hardware related stuff.
+>>
+>> Currently the driver is under the EXPERIMENTAL flag, as the keymap
+>> and the notify function are incomplete (due to lack of hardware to test).
+>>
+>> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+>
+> +Dmitry - Are you interested in being Cc'd on new users of input outside
+> drivers/input ?
+>
+>> ---
+>>  MAINTAINERS                        |   6 ++
+>>  drivers/platform/x86/Kconfig       |  18 +++++
+>>  drivers/platform/x86/Makefile      |   1 +
+>>  drivers/platform/x86/toshiba-wmi.c | 138 +++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 163 insertions(+)
+>>  create mode 100644 drivers/platform/x86/toshiba-wmi.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 884d398..07f4446 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -10318,6 +10318,12 @@ L:   platform-driver-x86@vger.kernel.org
+>>  S:   Maintained
+>>  F:   drivers/platform/x86/toshiba_haps.c
+>>
+>> +TOSHIBA WMI HOTKEYS DRIVER
+>> +M:   Azael Avalos <coproscefalo@gmail.com>
+>> +L:   platform-driver-x86@vger.kernel.org
+>> +S:   Maintained
+>> +F:   drivers/platform/x86/toshiba-wmi.c
+>> +
+>>  TOSHIBA SMM DRIVER
+>>  M:   Jonathan Buzzard <jonathan@buzzard.org.uk>
+>>  W:   http://www.buzzard.org.uk/toshiba/
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index c69bb70..9ae1e89 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -700,6 +700,24 @@ config TOSHIBA_HAPS
+>>         If you have a recent Toshiba laptop with a built-in accelerometer
+>>         device, say Y.
+>>
+>> +config TOSHIBA_WMI
+>> +     tristate "Toshiba WMI Hotkeys Driver (EXPERIMENTAL)"
+>> +     default n
+>> +     depends on ACPI_WMI
+>> +     depends on INPUT
+>> +     select INPUT_SPARSEKMAP
+>> +     ---help---
+>> +       This driver adds hotkey monitoring support to some Toshiba models
+>> +       that manage the hotkeys via WMI events.
+>> +
+>> +       WARNING: This driver is incomplete as it lacks a propper keymap and the
+>> +       *notify function only prints the ACPI event type value. Be warned that
+>> +       you will need to provide some information if you have a Toshiba model
+>> +       with WMI event hotkeys and want to help with the develpment of this
+>> +       driver.
+>> +
+>> +       If you have a WMI-based hotkeys Toshiba laptop, say Y or M here.
+>> +
+>>  config ACPI_CMPC
+>>       tristate "CMPC Laptop Extras"
+>>       depends on X86 && ACPI
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>> index ada5128..8f077cb 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -40,6 +40,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)  += toshiba_acpi.o
+>>
+>>  obj-$(CONFIG_TOSHIBA_BT_RFKILL)      += toshiba_bluetooth.o
+>>  obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba_haps.o
+>> +obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba-wmi.o
+>>  obj-$(CONFIG_INTEL_SCU_IPC)  += intel_scu_ipc.o
+>>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+>>  obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+>> diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
+>> new file mode 100644
+>> index 0000000..8cf62a1
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/toshiba-wmi.c
+>> @@ -0,0 +1,138 @@
+>> +/*
+>> + * toshiba_wmi.c - Toshiba WMI Hotkey Driver
+>> + *
+>> + * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + */
+>> +
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/types.h>
+>> +#include <linux/acpi.h>
+>> +#include <linux/input.h>
+>> +#include <linux/input/sparse-keymap.h>
+>> +
+>> +MODULE_AUTHOR("Azael Avalos");
+>> +MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
+>> +MODULE_LICENSE("GPL");
+>> +
+>> +#define TOSHIBA_WMI_EVENT_GUID       "59142400-C6A3-40FA-BADB-8A2652834100"
+>> +
+>> +MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
+>> +
+>> +struct input_dev *toshiba_wmi_input_dev;
+>> +
+>> +static const struct key_entry toshiba_wmi_keymap[] __initconst = {
+>> +     /* TODO: Add keymap values once found... */
+>> +     /*{ KE_KEY, 0x00, { KEY_ } },*/
+>> +     { KE_END, 0 }
+>> +};
+>> +
+>> +static void toshiba_wmi_notify(u32 value, void *context)
+>> +{
+>> +     struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+>> +     union acpi_object *obj;
+>> +     acpi_status status;
+>> +
+>> +     status = wmi_get_event_data(value, &response);
+>> +     if (ACPI_FAILURE(status)) {
+>> +             pr_err("Bad event status 0x%x\n", status);
+>> +             return;
+>> +     }
+>> +
+>> +     obj = (union acpi_object *)response.pointer;
+>> +     if (!obj)
+>> +             return;
+>> +
+>> +     /* TODO: Add propper checks once we have data */
+>> +     pr_info("Unknown event received, obj type %x\n", obj->type);
+>
+> Since this will print all the time, perhaps a pr_dbg is more appropraite here...
 
-Please run scripts/get_maintainer.pl -f path/to/files/changed and include all
-maintainers and lists to ensure the fastest response.
+OK, will change in v2, along with a static warning caught by the build test.
 
-+ Cezary
-
-+ Andy, Joe
-This patch triggered a false positive in checkpatch. This patch does not modify
-this line, nor is this line intended to be an email address.
-
-$ scripts/checkpatch.pl ~/incoming/PATCH_compal-laptop_add_charge_control_limit.mbox 
-WARNING: Do not use whitespace before To:
-#56: FILE: drivers/platform/x86/Kconfig:316:
-          to: Documentation/platform/x86-laptop-drivers.txt
-
-ERROR: Unrecognized email address: 'Documentation/platform/x86-laptop-drivers.txt'
-#56: FILE: drivers/platform/x86/Kconfig:316:
-          to: Documentation/platform/x86-laptop-drivers.txt
-
-total: 1 errors, 1 warnings, 87 lines checked
-
-/home/dvhart/incoming/PATCH_compal-laptop_add_charge_control_limit.mbox has style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-
-> Signed-off-by: Roald Frederickx <roald.frederickx@gmail.com>
-
-This looks reasonable Roald, queued to testing - pending ack from Cezary.
-
-> ---
->  drivers/platform/x86/Kconfig         |  4 ++--
->  drivers/platform/x86/compal-laptop.c | 43 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 44 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index c69bb70..2f9026d 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -309,8 +309,8 @@ config COMPAL_LAPTOP
->  	  This is a driver for laptops built by Compal, and some models by
->  	  other brands (e.g. Dell, Toshiba).
->  
-> -	  It adds support for rfkill, Bluetooth, WLAN and LCD brightness
-> -	  control.
-> +	  It adds support for rfkill, Bluetooth, WLAN, LCD brightness, hwmon
-> +	  and battery charging level control.
->  
->  	  For a (possibly incomplete) list of supported laptops, please refer
->  	  to: Documentation/platform/x86-laptop-drivers.txt
-> diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-> index f2706d2..e1c2b6d 100644
-> --- a/drivers/platform/x86/compal-laptop.c
-> +++ b/drivers/platform/x86/compal-laptop.c
-> @@ -151,6 +151,8 @@
->  #define BAT_STATUS2			0xF1
->  #define BAT_STOP_CHARGE1		0xF2
->  #define BAT_STOP_CHARGE2		0xF3
-> +#define BAT_CHARGE_LIMIT		0x03
-> +#define BAT_CHARGE_LIMIT_MAX		100
->  
->  #define BAT_S0_DISCHARGE		(1 << 0)
->  #define BAT_S0_DISCHRG_CRITICAL		(1 << 2)
-> @@ -601,6 +603,12 @@ static int bat_get_property(struct power_supply *psy,
->  	case POWER_SUPPLY_PROP_CHARGE_NOW:
->  		val->intval = ec_read_u16(BAT_CHARGE_NOW) * 1000;
->  		break;
-> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
-> +		val->intval = ec_read_u8(BAT_CHARGE_LIMIT);
-> +		break;
-> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX:
-> +		val->intval = BAT_CHARGE_LIMIT_MAX;
-> +		break;
->  	case POWER_SUPPLY_PROP_CAPACITY:
->  		val->intval = ec_read_u8(BAT_CAPACITY);
->  		break;
-> @@ -634,6 +642,36 @@ static int bat_get_property(struct power_supply *psy,
->  	return 0;
->  }
->  
-> +static int bat_set_property(struct power_supply *psy,
-> +				enum power_supply_property psp,
-> +				const union power_supply_propval *val)
-> +{
-> +	int level;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
-> +		level = val->intval;
-> +		if (level < 0 || level > BAT_CHARGE_LIMIT_MAX)
-> +			return -EINVAL;
-> +		if (ec_write(BAT_CHARGE_LIMIT, level) < 0)
-> +			return -EIO;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int bat_writeable_property(struct power_supply *psy,
-> +				enum power_supply_property psp)
-> +{
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT:
-> +		return 1;
-> +	default:
-> +		return 0;
-> +	}
-> +}
->  
->  
->  
-> @@ -726,6 +764,8 @@ static enum power_supply_property compal_bat_properties[] = {
->  	POWER_SUPPLY_PROP_POWER_NOW,
->  	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
->  	POWER_SUPPLY_PROP_CHARGE_NOW,
-> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
-> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
->  	POWER_SUPPLY_PROP_CAPACITY,
->  	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
->  	POWER_SUPPLY_PROP_TEMP,
-> @@ -880,11 +920,12 @@ static const struct power_supply_desc psy_bat_desc = {
->  	.properties	= compal_bat_properties,
->  	.num_properties	= ARRAY_SIZE(compal_bat_properties),
->  	.get_property	= bat_get_property,
-> +	.set_property	= bat_set_property,
-> +	.property_is_writeable = bat_writeable_property,
->  };
->  
->  static void initialize_power_supply_data(struct compal_data *data)
->  {
-> -
->  	ec_read_sequence(BAT_MANUFACTURER_NAME_ADDR,
->  					data->bat_manufacturer_name,
->  					BAT_MANUFACTURER_NAME_LEN);
-> -- 
-> 1.9.2
-> 
+>
+>
+>> +
+>> +     kfree(response.pointer);
+>> +}
+>> +
+>> +static int __init toshiba_wmi_input_setup(void)
+>> +{
+>> +     acpi_status status;
+>> +     int err;
+>> +
+>> +     toshiba_wmi_input_dev = input_allocate_device();
+>> +     if (!toshiba_wmi_input_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     toshiba_wmi_input_dev->name = "Toshiba WMI hotkeys";
+>> +     toshiba_wmi_input_dev->phys = "wmi/input0";
+>> +     toshiba_wmi_input_dev->id.bustype = BUS_HOST;
+>> +
+>> +     err = sparse_keymap_setup(toshiba_wmi_input_dev,
+>> +                               toshiba_wmi_keymap, NULL);
+>> +     if (err)
+>> +             goto err_free_dev;
+>> +
+>> +     status = wmi_install_notify_handler(TOSHIBA_WMI_EVENT_GUID,
+>> +                                         toshiba_wmi_notify, NULL);
+>> +     if (ACPI_FAILURE(status)) {
+>> +             err = -EIO;
+>> +             goto err_free_keymap;
+>> +     }
+>> +
+>> +     err = input_register_device(toshiba_wmi_input_dev);
+>> +     if (err)
+>> +             goto err_remove_notifier;
+>> +
+>> +     return 0;
+>> +
+>> + err_remove_notifier:
+>> +     wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
+>> + err_free_keymap:
+>> +     sparse_keymap_free(toshiba_wmi_input_dev);
+>> + err_free_dev:
+>> +     input_free_device(toshiba_wmi_input_dev);
+>> +     return err;
+>> +}
+>> +
+>> +static void toshiba_wmi_input_destroy(void)
+>> +{
+>> +     wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
+>> +     sparse_keymap_free(toshiba_wmi_input_dev);
+>> +     input_unregister_device(toshiba_wmi_input_dev);
+>> +}
+>> +
+>> +static int __init toshiba_wmi_init(void)
+>> +{
+>> +     int ret;
+>> +
+>> +     if (!wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
+>> +             return -ENODEV;
+>> +
+>> +     ret = toshiba_wmi_input_setup();
+>> +     if (ret) {
+>> +             pr_err("Failed to setup input device\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     pr_info("Toshiba WMI Hotkey Driver\n");
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static void __exit toshiba_wmi_exit(void)
+>> +{
+>> +     if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
+>> +             toshiba_wmi_input_destroy();
+>> +}
+>> +
+>> +module_init(toshiba_wmi_init);
+>> +module_exit(toshiba_wmi_exit);
+>> --
+>> 2.5.1
+>>
+>>
+>
 > --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Darren Hart
+> Intel Open Source Technology Center
+
+
+Cheers
+Azael
+
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+-- El mundo apesta y vosotros apestais tambien --
