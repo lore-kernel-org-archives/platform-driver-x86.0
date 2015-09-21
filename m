@@ -1,71 +1,102 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 05/17] platform: x86: remove misuse of IRQF_NO_SUSPEND flag
-Date: Mon, 21 Sep 2015 16:47:01 +0100
-Message-ID: <1442850433-5903-6-git-send-email-sudeep.holla@arm.com>
-References: <1442850433-5903-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1442850433-5903-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] asus-wmi: restore kbd led level after resume
+Date: Mon, 21 Sep 2015 10:12:43 -0700
+Message-ID: <20150921171243.GB117557@vmdeb7>
+References: <1442222190-8591-1-git-send-email-linux@rempel-privat.de>
+ <20150918223144.GO66179@vmdeb7>
+ <55FCF67B.4020201@rempel-privat.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:55577 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932611AbbIURMr (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 21 Sep 2015 13:12:47 -0400
+Content-Disposition: inline
+In-Reply-To: <55FCF67B.4020201@rempel-privat.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 
-The IRQF_NO_SUSPEND flag is used to identify the interrupts that should
-be left enabled so as to allow them to work as expected during the
-suspend-resume cycle, but doesn't guarantee that it will wake the system
-from a suspended state, enable_irq_wake is recommended to be used for
-the wakeup.
+On Sat, Sep 19, 2015 at 07:45:31AM +0200, Oleksij Rempel wrote:
+> Hi,
+> 
+> Am 19.09.2015 um 00:31 schrieb Darren Hart:
+> > On Mon, Sep 14, 2015 at 11:16:30AM +0200, Oleksij Rempel wrote:
+> >> Afters suspend/resume cycle with closed lid the kbd backlight level
+> >> is lost. This patch will will restore this value to last known level.
+> >>
+> >> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+> > 
+> > Hi Oleksij,
+> > 
+> > Please always run scripts/get_maintainer.pl -f path/to/files/changed
+> > 
+> > And include *all* the maintainers and lists on Cc. This will ensure a faster
+> > response.
+> > 
+> >> ---
+> >>  drivers/platform/x86/asus-wmi.c | 19 +++++++++++++++++--
+> >>  1 file changed, 17 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> >> index efbc3f0..1f7d80f 100644
+> >> --- a/drivers/platform/x86/asus-wmi.c
+> >> +++ b/drivers/platform/x86/asus-wmi.c
+> >> @@ -582,7 +582,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+> >>  
+> >>  static int asus_wmi_led_init(struct asus_wmi *asus)
+> >>  {
+> >> -	int rv = 0;
+> >> +	int rv = 0, led_val;
+> >>  
+> >>  	asus->led_workqueue = create_singlethread_workqueue("led_workqueue");
+> >>  	if (!asus->led_workqueue)
+> >> @@ -602,9 +602,11 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+> >>  			goto error;
+> >>  	}
+> >>  
+> >> -	if (kbd_led_read(asus, NULL, NULL) >= 0) {
+> >> +	led_val = kbd_led_read(asus, NULL, NULL);
+> >> +	if (led_val >= 0) {
+> >>  		INIT_WORK(&asus->kbd_led_work, kbd_led_update);
+> >>  
+> >> +		asus->kbd_led_wk = led_val;
+> >>  		asus->kbd_led.name = "asus::kbd_backlight";
+> >>  		asus->kbd_led.brightness_set = kbd_led_set;
+> >>  		asus->kbd_led.brightness_get = kbd_led_get;
+> >> @@ -2160,6 +2162,16 @@ static int asus_hotk_thaw(struct device *device)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +static int asus_hotk_resume(struct device *device)
+> >> +{
+> >> +	struct asus_wmi *asus = dev_get_drvdata(device);
+> >> +
+> >> +	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> > 
+> > 	if (asus->kbd_led.dev)
+> > 
+> > 	should be sufficient, I don't see the dev pointer being stored as an
+> > 	errno.
+> > 
+> > 	Corentin?
+> 
+> led_classdev_register
+>   led_classdev_next_name
+>     device_create_with_groups
+>       device_create_groups_vargs
+>         retval = -ENODEV;
+>         retval = -ENOMEM;
+>         return ERR_PTR(retval);
+>   if (IS_ERR(led_cdev->dev))
+> 
+> this is how dev pointer is stored as errno.
 
-This patch removes the use of IRQF_NO_SUSPEND flags and uses newly
-introduce PM wakeup APIs dev_pm_{set,clear}_wake_irq.
+Ah! Thank you for the correction. Noted.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 22606d6b2af3..1fc0de870ff8 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/input.h>
- #include <linux/mfd/intel_msic.h>
-+#include <linux/pm_wakeirq.h>
- 
- #define DRIVER_NAME "msic_power_btn"
- 
-@@ -76,14 +77,17 @@ static int mfld_pb_probe(struct platform_device *pdev)
- 
- 	input_set_capability(input, EV_KEY, KEY_POWER);
- 
--	error = request_threaded_irq(irq, NULL, mfld_pb_isr, IRQF_NO_SUSPEND,
--			DRIVER_NAME, input);
-+	error = request_threaded_irq(irq, NULL, mfld_pb_isr, 0,
-+				     DRIVER_NAME, input);
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to request irq %d for mfld power"
- 				"button\n", irq);
- 		goto err_free_input;
- 	}
- 
-+	device_init_wakeup(&pdev->dev, true);
-+	dev_pm_set_wake_irq(&pdev->dev, irq);
-+
- 	error = input_register_device(input);
- 	if (error) {
- 		dev_err(&pdev->dev, "Unable to register input dev, error "
-@@ -124,6 +128,8 @@ static int mfld_pb_remove(struct platform_device *pdev)
- 	struct input_dev *input = platform_get_drvdata(pdev);
- 	int irq = platform_get_irq(pdev, 0);
- 
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
- 	free_irq(irq, input);
- 	input_unregister_device(input);
- 
 -- 
-1.9.1
+Darren Hart
+Intel Open Source Technology Center
