@@ -1,84 +1,183 @@
-From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Subject: [PATCH v2 4/4] platform:x86: Makefile/Kconfig/MAINTAINERS changes for Intel Telemetry
-Date: Tue, 22 Sep 2015 14:31:40 +0530
-Message-ID: <1442912500-1878-1-git-send-email-souvik.k.chakravarty@intel.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH] platform/x86: Toshiba WMI Hotkey Driver
+Date: Tue, 22 Sep 2015 10:08:47 -0600
+Message-ID: <CAGdLNWE_o1OJVfh-p77UDsdd3ZOYPZ0wn-oLo0599xZdcYc6kA@mail.gmail.com>
+References: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
+	<1441819810-11762-3-git-send-email-coproscefalo@gmail.com>
+	<20150918215920.GM66179@vmdeb7>
+	<CAKdAkRR5n1eUFeHY=5E-RBj6wTyOSmkU_zYzKw+PBzcGFsMD-w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:26496 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756627AbbIVItp (ORCPT
+Received: from mail-wi0-f170.google.com ([209.85.212.170]:33058 "EHLO
+	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752332AbbIVQIs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Sep 2015 04:49:45 -0400
+	Tue, 22 Sep 2015 12:08:48 -0400
+In-Reply-To: <CAKdAkRR5n1eUFeHY=5E-RBj6wTyOSmkU_zYzKw+PBzcGFsMD-w@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: srinidhi.kasagar@intel.com, qipeng.zha@intel.com, dvhart@infradead.org, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 
-Makefile, Kconfig & MAINTAINERS changes for compiling Telemetry.
-It depends on PUNIT and PMC IPC drivers.
+Hi there
 
-Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+2015-09-19 10:48 GMT-06:00 Dmitry Torokhov <dmitry.torokhov@gmail.com>:
+> On Fri, Sep 18, 2015 at 2:59 PM, Darren Hart <dvhart@infradead.org> wrote:
+>> On Wed, Sep 09, 2015 at 11:30:10AM -0600, Azael Avalos wrote:
+>>> Toshiba laptops that feature WMI events for hotkeys were left unsupported
+>>> by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
+>>> Avoid registering input device on WMI event laptops") added hardware
+>>> support for such laptops, but the hotkeys are not handled there.
+>>>
+>>> This driver adds support for hotkey monitoring on certain Toshiba laptops
+>>> that manage the hotkeys via WMI events instead of the Toshiba
+>>> Configuration Interface (TCI).
+>>>
+>>> The toshiba_acpi driver and this one can co-exist, as this only takes
+>>> care of hotkeys, while the propper takes care of hardware related stuff.
+>>>
+>>> Currently the driver is under the EXPERIMENTAL flag, as the keymap
+>>> and the notify function are incomplete (due to lack of hardware to test).
+>>>
+>>> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+>>
+>> +Dmitry - Are you interested in being Cc'd on new users of input outside
+>> drivers/input ?
+>
+> Yes, please.
+>
+>>
+>>> ---
+>>>  MAINTAINERS                        |   6 ++
+>>>  drivers/platform/x86/Kconfig       |  18 +++++
+>>>  drivers/platform/x86/Makefile      |   1 +
+>>>  drivers/platform/x86/toshiba-wmi.c | 138 +++++++++++++++++++++++++++++++++++++
+>>>  4 files changed, 163 insertions(+)
+>>>  create mode 100644 drivers/platform/x86/toshiba-wmi.c
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 884d398..07f4446 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -10318,6 +10318,12 @@ L:   platform-driver-x86@vger.kernel.org
+>>>  S:   Maintained
+>>>  F:   drivers/platform/x86/toshiba_haps.c
+>>>
+>>> +TOSHIBA WMI HOTKEYS DRIVER
+>>> +M:   Azael Avalos <coproscefalo@gmail.com>
+>>> +L:   platform-driver-x86@vger.kernel.org
+>>> +S:   Maintained
+>>> +F:   drivers/platform/x86/toshiba-wmi.c
+>>> +
+>>>  TOSHIBA SMM DRIVER
+>>>  M:   Jonathan Buzzard <jonathan@buzzard.org.uk>
+>>>  W:   http://www.buzzard.org.uk/toshiba/
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index c69bb70..9ae1e89 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -700,6 +700,24 @@ config TOSHIBA_HAPS
+>>>         If you have a recent Toshiba laptop with a built-in accelerometer
+>>>         device, say Y.
+>>>
+>>> +config TOSHIBA_WMI
+>>> +     tristate "Toshiba WMI Hotkeys Driver (EXPERIMENTAL)"
+>>> +     default n
+>>> +     depends on ACPI_WMI
+>>> +     depends on INPUT
+>>> +     select INPUT_SPARSEKMAP
+>>> +     ---help---
+>>> +       This driver adds hotkey monitoring support to some Toshiba models
+>>> +       that manage the hotkeys via WMI events.
+>>> +
+>>> +       WARNING: This driver is incomplete as it lacks a propper keymap and the
+>
+> s/propper/proper/
+>
+>>> +       *notify function only prints the ACPI event type value. Be warned that
+>>> +       you will need to provide some information if you have a Toshiba model
+>>> +       with WMI event hotkeys and want to help with the develpment of this
+>>> +       driver.
+>>> +
+>>> +       If you have a WMI-based hotkeys Toshiba laptop, say Y or M here.
+>>> +
+>>>  config ACPI_CMPC
+>>>       tristate "CMPC Laptop Extras"
+>>>       depends on X86 && ACPI
+>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>>> index ada5128..8f077cb 100644
+>>> --- a/drivers/platform/x86/Makefile
+>>> +++ b/drivers/platform/x86/Makefile
+>>> @@ -40,6 +40,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)  += toshiba_acpi.o
+>>>
+>>>  obj-$(CONFIG_TOSHIBA_BT_RFKILL)      += toshiba_bluetooth.o
+>>>  obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba_haps.o
+>>> +obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba-wmi.o
+>>>  obj-$(CONFIG_INTEL_SCU_IPC)  += intel_scu_ipc.o
+>>>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+>>>  obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+>>> diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
+>>> new file mode 100644
+>>> index 0000000..8cf62a1
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/toshiba-wmi.c
+>>> @@ -0,0 +1,138 @@
+>>> +/*
+>>> + * toshiba_wmi.c - Toshiba WMI Hotkey Driver
+>>> + *
+>>> + * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License as published by
+>>> + * the Free Software Foundation; either version 2 of the License, or
+>>> + * (at your option) any later version.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + *
+>>> + */
+>>> +
+>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>> +
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/types.h>
+>>> +#include <linux/acpi.h>
+>>> +#include <linux/input.h>
+>>> +#include <linux/input/sparse-keymap.h>
+>>> +
+>>> +MODULE_AUTHOR("Azael Avalos");
+>>> +MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
+>>> +MODULE_LICENSE("GPL");
+>>> +
+>>> +#define TOSHIBA_WMI_EVENT_GUID       "59142400-C6A3-40FA-BADB-8A2652834100"
+>>> +
+>>> +MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
+>>> +
+>>> +struct input_dev *toshiba_wmi_input_dev;
+>
+> static?
 
----
-Changes in v2:
-* Change bool to tristate in Kconfig to enable support as module
-* Remove PUNIT_IPC specific additions. These will be merged separately
-  by Qipeng's PUNIT_IPC patch.
----
- MAINTAINERS                   |    9 +++++++++
- drivers/platform/x86/Kconfig  |   11 +++++++++++
- drivers/platform/x86/Makefile |    3 +++
- 3 files changed, 23 insertions(+)
+Already done in v2 :-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4d8c8e1..a7f3c1f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5548,6 +5548,15 @@ S:	Maintained
- F:	drivers/platform/x86/intel_pmc_ipc.c
- F:	arch/x86/include/asm/intel_pmc_ipc.h
- 
-+INTEL TELEMETRY DRIVER
-+M:	Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel_telemetry_core.c
-+F:	drivers/platform/x86/intel_telemetry_pltdrv.c
-+F:	drivers/platform/x86/intel_telemetry_debugfs.c
-+F:	arch/x86/include/asm/intel_telemetry.h
-+
- IOC3 ETHERNET DRIVER
- M:	Ralf Baechle <ralf@linux-mips.org>
- L:	linux-mips@linux-mips.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 6dc13e4..eb8f024 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -919,4 +919,15 @@ config INTEL_PMC_IPC
- 	The PMC is an ARC processor which defines IPC commands for communication
- 	with other entities in the CPU.
- 
-+config INTEL_TELEMETRY
-+	tristate "Intel SoC Telemetry Driver"
-+	default n
-+        depends on INTEL_PMC_IPC && INTEL_PUNIT_IPC && X86_64
-+	---help---
-+	  This driver provides interfaces to configure and use
-+	  telemetry for INTEL SoC from APL onwards. It is also
-+	  used to get various SoC events and parameters
-+	  directly via debugfs files. Various tools may use
-+	  this interface for SoC state monitoring.
-+
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index dda95a9..34f6ebf 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -60,3 +60,6 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
- obj-$(CONFIG_PVPANIC)           += pvpanic.o
- obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
- obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
-+obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
-+				   intel_telemetry_pltdrv.o \
-+				   intel_telemetry_debugfs.o
+I'll wait for more comments on this and send a v3 correcting the typo
+and whatever comes up.
+
+>
+> Thanks.
+>
+> --
+> Dmitry
+
+
+Cheers
+Azael
+
+
+
 -- 
-1.7.9.5
+-- El mundo apesta y vosotros apestais tambien --
