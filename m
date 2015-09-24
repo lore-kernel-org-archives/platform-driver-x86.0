@@ -1,183 +1,48 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] platform/x86: Toshiba WMI Hotkey Driver
-Date: Tue, 22 Sep 2015 10:08:47 -0600
-Message-ID: <CAGdLNWE_o1OJVfh-p77UDsdd3ZOYPZ0wn-oLo0599xZdcYc6kA@mail.gmail.com>
-References: <1441819810-11762-1-git-send-email-coproscefalo@gmail.com>
-	<1441819810-11762-3-git-send-email-coproscefalo@gmail.com>
-	<20150918215920.GM66179@vmdeb7>
-	<CAKdAkRR5n1eUFeHY=5E-RBj6wTyOSmkU_zYzKw+PBzcGFsMD-w@mail.gmail.com>
+From: Central Trust Loan Limited <info@gmail.com>
+Subject: =?UTF-8?Q?L=C3=A5netilbud=20=31=2C=35=25?=
+Date: Thu, 24 Sep 2015 10:03:53 +0100
+Message-ID: <fc905e8705c887741fbd5a6c77f1d32a@multivision.com.ve>
+Reply-To: <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:33058 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752332AbbIVQIs (ORCPT
+Received: from mvx1.ifxnw.com.ve ([200.62.27.83]:56232 "EHLO mvx1.ifxnw.com.ve"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751187AbbIXJKO (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Sep 2015 12:08:48 -0400
-In-Reply-To: <CAKdAkRR5n1eUFeHY=5E-RBj6wTyOSmkU_zYzKw+PBzcGFsMD-w@mail.gmail.com>
+	Thu, 24 Sep 2015 05:10:14 -0400
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
-
-Hi there
-
-2015-09-19 10:48 GMT-06:00 Dmitry Torokhov <dmitry.torokhov@gmail.com>:
-> On Fri, Sep 18, 2015 at 2:59 PM, Darren Hart <dvhart@infradead.org> wrote:
->> On Wed, Sep 09, 2015 at 11:30:10AM -0600, Azael Avalos wrote:
->>> Toshiba laptops that feature WMI events for hotkeys were left unsupported
->>> by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
->>> Avoid registering input device on WMI event laptops") added hardware
->>> support for such laptops, but the hotkeys are not handled there.
->>>
->>> This driver adds support for hotkey monitoring on certain Toshiba laptops
->>> that manage the hotkeys via WMI events instead of the Toshiba
->>> Configuration Interface (TCI).
->>>
->>> The toshiba_acpi driver and this one can co-exist, as this only takes
->>> care of hotkeys, while the propper takes care of hardware related stuff.
->>>
->>> Currently the driver is under the EXPERIMENTAL flag, as the keymap
->>> and the notify function are incomplete (due to lack of hardware to test).
->>>
->>> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->>
->> +Dmitry - Are you interested in being Cc'd on new users of input outside
->> drivers/input ?
->
-> Yes, please.
->
->>
->>> ---
->>>  MAINTAINERS                        |   6 ++
->>>  drivers/platform/x86/Kconfig       |  18 +++++
->>>  drivers/platform/x86/Makefile      |   1 +
->>>  drivers/platform/x86/toshiba-wmi.c | 138 +++++++++++++++++++++++++++++++++++++
->>>  4 files changed, 163 insertions(+)
->>>  create mode 100644 drivers/platform/x86/toshiba-wmi.c
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 884d398..07f4446 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -10318,6 +10318,12 @@ L:   platform-driver-x86@vger.kernel.org
->>>  S:   Maintained
->>>  F:   drivers/platform/x86/toshiba_haps.c
->>>
->>> +TOSHIBA WMI HOTKEYS DRIVER
->>> +M:   Azael Avalos <coproscefalo@gmail.com>
->>> +L:   platform-driver-x86@vger.kernel.org
->>> +S:   Maintained
->>> +F:   drivers/platform/x86/toshiba-wmi.c
->>> +
->>>  TOSHIBA SMM DRIVER
->>>  M:   Jonathan Buzzard <jonathan@buzzard.org.uk>
->>>  W:   http://www.buzzard.org.uk/toshiba/
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->>> index c69bb70..9ae1e89 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -700,6 +700,24 @@ config TOSHIBA_HAPS
->>>         If you have a recent Toshiba laptop with a built-in accelerometer
->>>         device, say Y.
->>>
->>> +config TOSHIBA_WMI
->>> +     tristate "Toshiba WMI Hotkeys Driver (EXPERIMENTAL)"
->>> +     default n
->>> +     depends on ACPI_WMI
->>> +     depends on INPUT
->>> +     select INPUT_SPARSEKMAP
->>> +     ---help---
->>> +       This driver adds hotkey monitoring support to some Toshiba models
->>> +       that manage the hotkeys via WMI events.
->>> +
->>> +       WARNING: This driver is incomplete as it lacks a propper keymap and the
->
-> s/propper/proper/
->
->>> +       *notify function only prints the ACPI event type value. Be warned that
->>> +       you will need to provide some information if you have a Toshiba model
->>> +       with WMI event hotkeys and want to help with the develpment of this
->>> +       driver.
->>> +
->>> +       If you have a WMI-based hotkeys Toshiba laptop, say Y or M here.
->>> +
->>>  config ACPI_CMPC
->>>       tristate "CMPC Laptop Extras"
->>>       depends on X86 && ACPI
->>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->>> index ada5128..8f077cb 100644
->>> --- a/drivers/platform/x86/Makefile
->>> +++ b/drivers/platform/x86/Makefile
->>> @@ -40,6 +40,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)  += toshiba_acpi.o
->>>
->>>  obj-$(CONFIG_TOSHIBA_BT_RFKILL)      += toshiba_bluetooth.o
->>>  obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba_haps.o
->>> +obj-$(CONFIG_TOSHIBA_HAPS)   += toshiba-wmi.o
->>>  obj-$(CONFIG_INTEL_SCU_IPC)  += intel_scu_ipc.o
->>>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
->>>  obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
->>> diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
->>> new file mode 100644
->>> index 0000000..8cf62a1
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/toshiba-wmi.c
->>> @@ -0,0 +1,138 @@
->>> +/*
->>> + * toshiba_wmi.c - Toshiba WMI Hotkey Driver
->>> + *
->>> + * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License as published by
->>> + * the Free Software Foundation; either version 2 of the License, or
->>> + * (at your option) any later version.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + *
->>> + */
->>> +
->>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/init.h>
->>> +#include <linux/types.h>
->>> +#include <linux/acpi.h>
->>> +#include <linux/input.h>
->>> +#include <linux/input/sparse-keymap.h>
->>> +
->>> +MODULE_AUTHOR("Azael Avalos");
->>> +MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
->>> +MODULE_LICENSE("GPL");
->>> +
->>> +#define TOSHIBA_WMI_EVENT_GUID       "59142400-C6A3-40FA-BADB-8A2652834100"
->>> +
->>> +MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
->>> +
->>> +struct input_dev *toshiba_wmi_input_dev;
->
-> static?
-
-Already done in v2 :-)
-
-I'll wait for more comments on this and send a v3 correcting the typo
-and whatever comes up.
-
->
-> Thanks.
->
-> --
-> Dmitry
-
-
-Cheers
-Azael
 
 
 
--- 
--- El mundo apesta y vosotros apestais tambien --
+--=20
+CENTRAL TRUST L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
+til=20
+ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine finansie=
+lle m=C3=A5l. vi l=C3=A5n med=20
+lav rente p=C3=A5 1,5%. Kontakt oss for mer informasjon:=20
+centraltrust_ltd@webadicta.org
+
+informasjon Needed
+
+Dine navn:
+Adresse: ...........
+Telefon: ...........
+N=C3=B8dvendig Antall: ........
+Varighet: ...............
+Okkupasjon: ...........
+M=C3=A5nedlig inntekt: ........
+Kj=C3=B8nn: ...............
+=46=C3=B8dselsdato: ........
+Status: ..................
+Land: ..........
+=46orm=C3=A5let: .........
+
+Otheriwise, Apply online: http://cen-tral1.mw.lt/
+
+M=C3=B8te dine finansielle behov er v=C3=A5r stolthet.
+
+David Donald
