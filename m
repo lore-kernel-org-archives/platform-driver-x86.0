@@ -1,42 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] asus-wmi: restore kbd led level after resume
-Date: Fri, 25 Sep 2015 17:41:28 +0200
-Message-ID: <20150925154128.GB38748@vmdeb7>
-References: <1442222190-8591-1-git-send-email-linux@rempel-privat.de>
- <20150918223144.GO66179@vmdeb7>
- <55FCF67B.4020201@rempel-privat.de>
- <20150921171243.GB117557@vmdeb7>
- <56003E5B.8040402@rempel-privat.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH] platform: x86: PMC IPC depends on ACPI
+Date: Fri, 25 Sep 2015 17:38:43 +0100
+Message-ID: <1443199123-13979-1-git-send-email-lee.jones@linaro.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:52571 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756713AbbIYPlt (ORCPT
+Received: from mail-pa0-f50.google.com ([209.85.220.50]:33008 "EHLO
+	mail-pa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756344AbbIYQiv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Sep 2015 11:41:49 -0400
-Content-Disposition: inline
-In-Reply-To: <56003E5B.8040402@rempel-privat.de>
+	Fri, 25 Sep 2015 12:38:51 -0400
+Received: by pacex6 with SMTP id ex6so110148055pac.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2015 09:38:50 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Oleksij Rempel <linux@rempel-privat.de>
-Cc: corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: rdunlap@infradead.org, qipeng.zha@intel.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 
-On Mon, Sep 21, 2015 at 07:28:59PM +0200, Oleksij Rempel wrote:
-> Am 21.09.2015 um 19:12 schrieb Darren Hart:
-> > On Sat, Sep 19, 2015 at 07:45:31AM +0200, Oleksij Rempel wrote:
-> >> Hi,
-> >>
-> >> Am 19.09.2015 um 00:31 schrieb Darren Hart:
-> >>> On Mon, Sep 14, 2015 at 11:16:30AM +0200, Oleksij Rempel wrote:
-> >>>> Afters suspend/resume cycle with closed lid the kbd backlight level
-> >>>> is lost. This patch will will restore this value to last known level.
-> >>>>
-> >>>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+This patch solves:
 
-Queued to testing, will be in -next next week unless Corentin raises an
-objection.
+on x86_64:
 
+when CONFIG_ACPI is not enabled:
+
+../drivers/mfd/intel_soc_pmic_bxtwc.c: In function 'bxtwc_probe':
+../drivers/mfd/intel_soc_pmic_bxtwc.c:342:2:
+    error: implicit declaration of function 'acpi_evaluate_integer' [-Werror=implicit-function-declaration]
+        status = acpi_evaluate_integer(handle, "_HRV", NULL, &hrv);
+        ^
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c69bb70..744cb80 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -914,6 +914,7 @@ config PVPANIC
+ 
+ config INTEL_PMC_IPC
+ 	tristate "Intel PMC IPC Driver"
++	depends on ACPI
+ 	---help---
+ 	This driver provides support for PMC control on some Intel platforms.
+ 	The PMC is an ARC processor which defines IPC commands for communication
 -- 
-Darren Hart
-Intel Open Source Technology Center
+1.9.1
