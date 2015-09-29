@@ -1,75 +1,35 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] platform: acer-wmi: update notice about deprecated user
- interface
-Date: Tue, 29 Sep 2015 17:50:32 +0800
-Message-ID: <20150929095032.GF2115@linux-rxt1.site>
-References: <1443509198-11655-1-git-send-email-martink@posteo.de>
+From: Corentin Chary <corentin.chary@gmail.com>
+Subject: thinkpad-wmi
+Date: Tue, 29 Sep 2015 15:51:16 +0200
+Message-ID: <CAHR064j-m+THDoJjBG-g+=g8nHuWfMptJndjkwmT2Lw_54Vpuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:56729 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933869AbbI2Juo (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Tue, 29 Sep 2015 05:50:44 -0400
-Content-Disposition: inline
-In-Reply-To: <1443509198-11655-1-git-send-email-martink@posteo.de>
+Received: from mail-wi0-f177.google.com ([209.85.212.177]:37893 "EHLO
+	mail-wi0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965350AbbI2NvR (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 29 Sep 2015 09:51:17 -0400
+Received: by wiclk2 with SMTP id lk2so17035678wic.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2015 06:51:16 -0700 (PDT)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Martin Kepplinger <martink@posteo.de>
-Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-Hi Martin, 
+Hello people interested in platform drivers,
 
-On Tue, Sep 29, 2015 at 08:46:38AM +0200, Martin Kepplinger wrote:
-> Signed-off-by: Martin Kepplinger <martink@posteo.de>
-> ---
-> This just looks odd in the logs. Feel free to ignore it or act on it
-> differently ;)
-> 
-> 
+I just implemented thinkpad-wmi which gives access to
+http://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkcentre_pdf/hrdeploy_en.pdf.
+Some could argue that this should probably be done in userspace, but I
+don't think we have a clean and secure way to expose WMI devices to
+userspace yet.
 
-Thanks for your patch and it reminds me to remove those interfaces in acer-wmi.
-Please let me check and I am thinking direct remove those interfaces.
+The code is still living here: https://github.com/iksaif/thinkpad-wmi
+and I will need to test it on a few models before sending it for
+review, but feel free to test and look at it.
 
+Thanks,
 
-Thanks a lot!
-Joey Lee
-
->  drivers/platform/x86/acer-wmi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index d773b9d..43d992e 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1671,7 +1671,7 @@ static ssize_t show_bool_threeg(struct device *dev,
->  	u32 result; \
->  	acpi_status status;
->  
-> -	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
-> +	pr_info("This threeg sysfs will be removed in 2016 - used by: %s\n",
->  		current->comm);
->  	status = get_u32(&result, ACER_CAP_THREEG);
->  	if (ACPI_SUCCESS(status))
-> @@ -1684,7 +1684,7 @@ static ssize_t set_bool_threeg(struct device *dev,
->  {
->  	u32 tmp = simple_strtoul(buf, NULL, 10);
->  	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
-> -	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
-> +	pr_info("This threeg sysfs will be removed in 2016 - used by: %s\n",
->  		current->comm);
->  	if (ACPI_FAILURE(status))
->  		return -EINVAL;
-> @@ -1696,7 +1696,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
->  static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
->  	char *buf)
->  {
-> -	pr_info("This interface sysfs will be removed in 2014 - used by: %s\n",
-> +	pr_info("This interface sysfs will be removed in 2016 - used by: %s\n",
->  		current->comm);
->  	switch (interface->type) {
->  	case ACER_AMW0:
-> -- 
-> 2.1.4
-> 
+-- 
+Corentin Chary
+http://xf.iksaif.net
