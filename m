@@ -1,256 +1,60 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v4] platform/x86: Toshiba WMI Hotkey Driver
-Date: Mon, 28 Sep 2015 20:32:28 -0600
-Message-ID: <1443493948-2643-1-git-send-email-coproscefalo@gmail.com>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: [PATCH] platform: acer-wmi: update notice about deprecated user interface
+Date: Tue, 29 Sep 2015 08:46:38 +0200
+Message-ID: <1443509198-11655-1-git-send-email-martink@posteo.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f48.google.com ([209.85.218.48]:35933 "EHLO
-	mail-oi0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932191AbbI2Ccj (ORCPT
+Received: from mout01.posteo.de ([185.67.36.65]:60654 "EHLO mout01.posteo.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755304AbbI2GtQ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 28 Sep 2015 22:32:39 -0400
+	Tue, 29 Sep 2015 02:49:16 -0400
+Received: from dovecot03.posteo.de (dovecot03.posteo.de [172.16.0.13])
+	by mout01.posteo.de (Postfix) with ESMTPS id DDF4C20972
+	for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2015 08:49:11 +0200 (CEST)
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>
+To: jlee@suse.com, dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kepplinger <martink@posteo.de>
 
-Toshiba laptops that feature WMI events for hotkeys were left unsupported
-by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
-Avoid registering input device on WMI event laptops") added hardware
-support for such laptops, but the hotkeys are not handled there.
-
-This driver adds support for hotkey monitoring on certain Toshiba laptops
-that manage the hotkeys via WMI events instead of the Toshiba
-Configuration Interface (TCI).
-
-The toshiba_acpi driver and this one can co-exist, as this only takes
-care of hotkeys, while the proper takes care of hardware related stuff.
-
-Currently the driver is under the EXPERIMENTAL flag, as the keymap
-and the notify function are incomplete (due to lack of hardware to test).
-
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+Signed-off-by: Martin Kepplinger <martink@posteo.de>
 ---
-Changes since v3:
-- Fixed Makefile entry, CONFIG_TOSHIBA_HAPS was doubled instead of one
-  of them being CONFIG_TOSHIBA_WMI (this should fix the kbuild errors
-  reported)
+This just looks odd in the logs. Feel free to ignore it or act on it
+differently ;)
 
-Changes since v2:
-- Fixed typo in patch and Kconfig description as well as in a comment
 
-Changes since v1:
-- Changed the printed log level of the ACPI event type value from info
-  to debug
-- Make the input_dev struct declaration static
+ drivers/platform/x86/acer-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- MAINTAINERS                        |   6 ++
- drivers/platform/x86/Kconfig       |  18 +++++
- drivers/platform/x86/Makefile      |   1 +
- drivers/platform/x86/toshiba-wmi.c | 138 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 163 insertions(+)
- create mode 100644 drivers/platform/x86/toshiba-wmi.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 884d398..07f4446 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10318,6 +10318,12 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/toshiba_haps.c
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index d773b9d..43d992e 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1671,7 +1671,7 @@ static ssize_t show_bool_threeg(struct device *dev,
+ 	u32 result; \
+ 	acpi_status status;
  
-+TOSHIBA WMI HOTKEYS DRIVER
-+M:	Azael Avalos <coproscefalo@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/toshiba-wmi.c
-+
- TOSHIBA SMM DRIVER
- M:	Jonathan Buzzard <jonathan@buzzard.org.uk>
- W:	http://www.buzzard.org.uk/toshiba/
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c69bb70..242b5d8 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -700,6 +700,24 @@ config TOSHIBA_HAPS
- 	  If you have a recent Toshiba laptop with a built-in accelerometer
- 	  device, say Y.
- 
-+config TOSHIBA_WMI
-+	tristate "Toshiba WMI Hotkeys Driver (EXPERIMENTAL)"
-+	default n
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	---help---
-+	  This driver adds hotkey monitoring support to some Toshiba models
-+	  that manage the hotkeys via WMI events.
-+
-+	  WARNING: This driver is incomplete as it lacks a proper keymap and the
-+	  *notify function only prints the ACPI event type value. Be warned that
-+	  you will need to provide some information if you have a Toshiba model
-+	  with WMI event hotkeys and want to help with the develpment of this
-+	  driver.
-+
-+	  If you have a WMI-based hotkeys Toshiba laptop, say Y or M here.
-+
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on X86 && ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index ada5128..3ca78a3 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- 
- obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
-+obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
- obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
-diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/toshiba-wmi.c
-new file mode 100644
-index 0000000..feac457
---- /dev/null
-+++ b/drivers/platform/x86/toshiba-wmi.c
-@@ -0,0 +1,138 @@
-+/*
-+ * toshiba_wmi.c - Toshiba WMI Hotkey Driver
-+ *
-+ * Copyright (C) 2015 Azael Avalos <coproscefalo@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/acpi.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+
-+MODULE_AUTHOR("Azael Avalos");
-+MODULE_DESCRIPTION("Toshiba WMI Hotkey Driver");
-+MODULE_LICENSE("GPL");
-+
-+#define TOSHIBA_WMI_EVENT_GUID	"59142400-C6A3-40FA-BADB-8A2652834100"
-+
-+MODULE_ALIAS("wmi:"TOSHIBA_WMI_EVENT_GUID);
-+
-+static struct input_dev *toshiba_wmi_input_dev;
-+
-+static const struct key_entry toshiba_wmi_keymap[] __initconst = {
-+	/* TODO: Add keymap values once found... */
-+	/*{ KE_KEY, 0x00, { KEY_ } },*/
-+	{ KE_END, 0 }
-+};
-+
-+static void toshiba_wmi_notify(u32 value, void *context)
-+{
-+	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object *obj;
-+	acpi_status status;
-+
-+	status = wmi_get_event_data(value, &response);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("Bad event status 0x%x\n", status);
-+		return;
-+	}
-+
-+	obj = (union acpi_object *)response.pointer;
-+	if (!obj)
-+		return;
-+
-+	/* TODO: Add proper checks once we have data */
-+	pr_debug("Unknown event received, obj type %x\n", obj->type);
-+
-+	kfree(response.pointer);
-+}
-+
-+static int __init toshiba_wmi_input_setup(void)
-+{
-+	acpi_status status;
-+	int err;
-+
-+	toshiba_wmi_input_dev = input_allocate_device();
-+	if (!toshiba_wmi_input_dev)
-+		return -ENOMEM;
-+
-+	toshiba_wmi_input_dev->name = "Toshiba WMI hotkeys";
-+	toshiba_wmi_input_dev->phys = "wmi/input0";
-+	toshiba_wmi_input_dev->id.bustype = BUS_HOST;
-+
-+	err = sparse_keymap_setup(toshiba_wmi_input_dev,
-+				  toshiba_wmi_keymap, NULL);
-+	if (err)
-+		goto err_free_dev;
-+
-+	status = wmi_install_notify_handler(TOSHIBA_WMI_EVENT_GUID,
-+					    toshiba_wmi_notify, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		err = -EIO;
-+		goto err_free_keymap;
-+	}
-+
-+	err = input_register_device(toshiba_wmi_input_dev);
-+	if (err)
-+		goto err_remove_notifier;
-+
-+	return 0;
-+
-+ err_remove_notifier:
-+	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
-+ err_free_keymap:
-+	sparse_keymap_free(toshiba_wmi_input_dev);
-+ err_free_dev:
-+	input_free_device(toshiba_wmi_input_dev);
-+	return err;
-+}
-+
-+static void toshiba_wmi_input_destroy(void)
-+{
-+	wmi_remove_notify_handler(TOSHIBA_WMI_EVENT_GUID);
-+	sparse_keymap_free(toshiba_wmi_input_dev);
-+	input_unregister_device(toshiba_wmi_input_dev);
-+}
-+
-+static int __init toshiba_wmi_init(void)
-+{
-+	int ret;
-+
-+	if (!wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+		return -ENODEV;
-+
-+	ret = toshiba_wmi_input_setup();
-+	if (ret) {
-+		pr_err("Failed to setup input device\n");
-+		return ret;
-+	}
-+
-+	pr_info("Toshiba WMI Hotkey Driver\n");
-+
-+	return 0;
-+}
-+
-+static void __exit toshiba_wmi_exit(void)
-+{
-+	if (wmi_has_guid(TOSHIBA_WMI_EVENT_GUID))
-+		toshiba_wmi_input_destroy();
-+}
-+
-+module_init(toshiba_wmi_init);
-+module_exit(toshiba_wmi_exit);
+-	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This threeg sysfs will be removed in 2016 - used by: %s\n",
+ 		current->comm);
+ 	status = get_u32(&result, ACER_CAP_THREEG);
+ 	if (ACPI_SUCCESS(status))
+@@ -1684,7 +1684,7 @@ static ssize_t set_bool_threeg(struct device *dev,
+ {
+ 	u32 tmp = simple_strtoul(buf, NULL, 10);
+ 	acpi_status status = set_u32(tmp, ACER_CAP_THREEG);
+-	pr_info("This threeg sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This threeg sysfs will be removed in 2016 - used by: %s\n",
+ 		current->comm);
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+@@ -1696,7 +1696,7 @@ static DEVICE_ATTR(threeg, S_IRUGO | S_IWUSR, show_bool_threeg,
+ static ssize_t show_interface(struct device *dev, struct device_attribute *attr,
+ 	char *buf)
+ {
+-	pr_info("This interface sysfs will be removed in 2014 - used by: %s\n",
++	pr_info("This interface sysfs will be removed in 2016 - used by: %s\n",
+ 		current->comm);
+ 	switch (interface->type) {
+ 	case ACER_AMW0:
 -- 
-2.5.1
+2.1.4
