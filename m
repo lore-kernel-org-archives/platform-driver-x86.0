@@ -1,28 +1,30 @@
-From: no_reply@gtb.db.com
-Subject: urgent
-Date: Thu, 01 Oct 2015 14:15:12 -0700
-Message-ID: <E1ZhlCP-0007X5-Om@s02.spamexperts.axc.nl>
-Reply-To: stephlincorn45@gmail.com
+From: Darren Hart <dvhart@infradead.org>
+Subject: Darren traveling / ill / traveling - sorry for the delays
+Date: Thu, 1 Oct 2015 23:35:28 -0700
+Message-ID: <20151002063528.GA79088@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from s02.spamexperts.axc.nl ([159.253.1.250]:56087 "EHLO
-	s02.spamexperts.axc.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750904AbbJAWoe convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:54378 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750795AbbJBGf2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 1 Oct 2015 18:44:34 -0400
-Content-Description: Mail message body
+	Fri, 2 Oct 2015 02:35:28 -0400
+Received: from dvhart by bombadil.infradead.org with local (Exim 4.80.1 #2 (Red Hat Linux))
+	id 1ZhtwG-00038c-2Y
+	for platform-driver-x86@vger.kernel.org; Fri, 02 Oct 2015 06:35:28 +0000
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients <no_reply@gtb.db.com>
+To: platform-driver-x86@vger.kernel.org
 
-Sir/Madam,
-I would like to take this brief opportunity to advise you that I have certain amount for immediate Investment in your country. The areas of interest for any viable project such as Real Estate Projects, Hotel/ Resort Projects, Merger/Acquisition Projects, Business Start-up and Expansion Projects, Oil/Gas Projects, Mining Projects, Government/Municipal Projects, Motion Picture/Entertainment Projects, and many other types of projects, to name a few.
+For those of you with patches or queries in to me and wondering why I have not
+responded, I apologize. I was traveling last week and unexpectedly with next to
+no connectivity, fell ill while trying to catch up on my backlog, and am
+traveling this coming week. Fates permitting, I should be getting caught up on
+platform-driver-x86 work over the weekend and throughout the week. My apologies
+folks.
 
-Please feel free to contact me with your Serious Inquiries Only for further details and information at your earliest convenience. I look forward to receiving your reply to my email: (aprilamanda35@gmail.com)
-
-Thank you.
-Your Name
-Your Business names
-Your Email address
+-- 
+Darren Hart
+Intel Open Source Technology Center
