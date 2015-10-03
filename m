@@ -1,51 +1,37 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform: x86: PMC IPC depends on ACPI
-Date: Sat, 3 Oct 2015 09:57:26 -0700
-Message-ID: <20151003165726.GC110874@vmdeb7>
-References: <1443199123-13979-1-git-send-email-lee.jones@linaro.org>
- <5605FAB4.9000606@infradead.org>
+Subject: Re: [PATCH v4] platform/x86: Toshiba WMI Hotkey Driver
+Date: Sat, 3 Oct 2015 10:18:33 -0700
+Message-ID: <20151003171833.GE110874@vmdeb7>
+References: <1443493948-2643-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:38810 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750745AbbJCQ5z (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 3 Oct 2015 12:57:55 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5605FAB4.9000606@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, qipeng.zha@intel.com, platform-driver-x86@vger.kernel.org
+In-Reply-To: <1443493948-2643-1-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 25, 2015 at 06:53:56PM -0700, Randy Dunlap wrote:
-> On 09/25/15 09:38, Lee Jones wrote:
-> > This patch solves:
-> > 
-> > on x86_64:
-> > 
-> > when CONFIG_ACPI is not enabled:
-> > 
-> > ../drivers/mfd/intel_soc_pmic_bxtwc.c: In function 'bxtwc_probe':
-> > ../drivers/mfd/intel_soc_pmic_bxtwc.c:342:2:
-> >     error: implicit declaration of function 'acpi_evaluate_integer' [-Werror=implicit-function-declaration]
-> >         status = acpi_evaluate_integer(handle, "_HRV", NULL, &hrv);
-> >         ^
-> > 
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+On Mon, Sep 28, 2015 at 08:32:28PM -0600, Azael Avalos wrote:
+> Toshiba laptops that feature WMI events for hotkeys were left unsupported
+> by the toshiba_acpi driver, however, commit a88bc06e5aec ("toshiba_acpi:
+> Avoid registering input device on WMI event laptops") added hardware
+> support for such laptops, but the hotkeys are not handled there.
 > 
-> Works for me.  Thanks.
+> This driver adds support for hotkey monitoring on certain Toshiba laptops
+> that manage the hotkeys via WMI events instead of the Toshiba
+> Configuration Interface (TCI).
 > 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> The toshiba_acpi driver and this one can co-exist, as this only takes
+> care of hotkeys, while the proper takes care of hardware related stuff.
+> 
+> Currently the driver is under the EXPERIMENTAL flag, as the keymap
+> and the notify function are incomplete (due to lack of hardware to test).
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 
-Lee,
-
-Since this appears to be the result of a patch applied to the mfd tree, would
-you like to pick up this patch?
-
-Acked-by: Darren Hart <dvhart@linux.intel.com>
+Queued to testing, thanks Azael.
 
 
 -- 
