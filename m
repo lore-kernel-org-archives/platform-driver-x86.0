@@ -1,29 +1,35 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Darren traveling / ill / traveling - sorry for the delays
-Date: Thu, 1 Oct 2015 23:35:28 -0700
-Message-ID: <20151002063528.GA79088@vmdeb7>
+Subject: Re: [PATCH 05/17] platform: x86: remove misuse of IRQF_NO_SUSPEND
+ flag
+Date: Sat, 3 Oct 2015 09:09:12 -0700
+Message-ID: <20151003160912.GA110874@vmdeb7>
+References: <1442850433-5903-1-git-send-email-sudeep.holla@arm.com>
+ <1442850433-5903-6-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:54378 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750795AbbJBGf2 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 2 Oct 2015 02:35:28 -0400
-Received: from dvhart by bombadil.infradead.org with local (Exim 4.80.1 #2 (Red Hat Linux))
-	id 1ZhtwG-00038c-2Y
-	for platform-driver-x86@vger.kernel.org; Fri, 02 Oct 2015 06:35:28 +0000
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
+In-Reply-To: <1442850433-5903-6-git-send-email-sudeep.holla@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-For those of you with patches or queries in to me and wondering why I have not
-responded, I apologize. I was traveling last week and unexpectedly with next to
-no connectivity, fell ill while trying to catch up on my backlog, and am
-traveling this coming week. Fates permitting, I should be getting caught up on
-platform-driver-x86 work over the weekend and throughout the week. My apologies
-folks.
+On Mon, Sep 21, 2015 at 04:47:01PM +0100, Sudeep Holla wrote:
+> The IRQF_NO_SUSPEND flag is used to identify the interrupts that should
+> be left enabled so as to allow them to work as expected during the
+> suspend-resume cycle, but doesn't guarantee that it will wake the system
+> from a suspended state, enable_irq_wake is recommended to be used for
+> the wakeup.
+> 
+> This patch removes the use of IRQF_NO_SUSPEND flags and uses newly
+> introduce PM wakeup APIs dev_pm_{set,clear}_wake_irq.
+> 
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+Queued to testing, thanks Sudeep.
 
 -- 
 Darren Hart
