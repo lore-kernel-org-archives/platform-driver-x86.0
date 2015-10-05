@@ -1,64 +1,24 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] platform: acer-wmi: update notice about deprecated user
- interface
-Date: Mon, 5 Oct 2015 21:04:42 +0800
-Message-ID: <20151005130442.GE2151@linux-rxt1.site>
-References: <1443509198-11655-1-git-send-email-martink@posteo.de>
- <20150929095032.GF2115@linux-rxt1.site>
- <20151003172052.GF110874@vmdeb7>
- <20151005103002.GC2151@linux-rxt1.site>
- <56125247.1020204@posteo.de>
+From: "Liliane H Bettencourt" <ideguchi@yamaguchi-u.ac.jp>
+Subject: GREETINGS
+Date: Tue, 6 Oct 2015 05:02:47 +0900 (JST)
+Message-ID: <56673.41.71.176.236.1444075367.risu__26770.298186648$1444093048$gmane$org@webmail2p.cc.yamaguchi-u.ac.jp>
+Reply-To: lil_bettencourt_1@yahoo.fr
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56125247.1020204@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from smtp3p.cc.yamaguchi-u.ac.jp ([133.62.137.22]:50066 "EHLO
+	smtp3p.cc.yamaguchi-u.ac.jp" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751344AbbJFA5G (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 5 Oct 2015 20:57:06 -0400
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 
-On Mon, Oct 05, 2015 at 12:34:47PM +0200, Martin Kepplinger wrote:
-> Am 2015-10-05 um 12:30 schrieb joeyli:
-> > Hi Darren, 
-> > 
-> > On Sat, Oct 03, 2015 at 10:20:52AM -0700, Darren Hart wrote:
-> >> On Tue, Sep 29, 2015 at 05:50:32PM +0800, joeyli wrote:
-> >>> Hi Martin, 
-> >>>
-> >>> On Tue, Sep 29, 2015 at 08:46:38AM +0200, Martin Kepplinger wrote:
-> >>>> Signed-off-by: Martin Kepplinger <martink@posteo.de>
-> >>>> ---
-> >>>> This just looks odd in the logs. Feel free to ignore it or act on it
-> >>>> differently ;)
-> >>>>
-> >>>>
-> >>>
-> >>> Thanks for your patch and it reminds me to remove those interfaces in acer-wmi.
-> >>> Please let me check and I am thinking direct remove those interfaces.
-> >>
-> >> Joey, I will wait to hear from you on this patch (or a replacement).
-> >>
-> >> Thanks,
-> >>
-> > 
-> > Thanks for your reminding. I just sent patch to remove sysfs interface of acer-wmi.
-> > 
-> > Joey Lee
-> > 
-> 
-> I have to leave the estimation whether this old interface won't have
-> users to you and others, but if it's ok, it's nice to see dead code
-> removed! thanks,
-> 
->                   martin
+I, Liliane authenticate this email, you can read about me on:
+http://en.wikipedia.org/wiki/Liliane_Bettencourt  I write to you because I
+intend to give you a portion of my Net-worth which I have been banking. I
+want to cede it out as gift hoping it would be of help to you and others
+too. Respond for confirmation.
 
-User space should uses rfkill interface instead of sysfs. The original date of
-removal is 2012, then we extended the deadline to 2014. I think 3 years is enough
-to user space application for changing to rfkill.
-
-Still very thanks for your help on acer-wmi driver.
-
-
-Regards
-Joey Lee
+My Private Email: lil_bettencourt12@yahoo.fr
