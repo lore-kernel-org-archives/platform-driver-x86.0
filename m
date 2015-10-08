@@ -1,43 +1,59 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Thu, 8 Oct 2015 03:16:02 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD0196B567@SHSMSX104.ccr.corp.intel.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v4] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Thu, 8 Oct 2015 12:18:42 +0000
+Message-ID: <1444306721.8361.470.camel@intel.com>
 References: <1441708182-66875-1-git-send-email-qipeng.zha@intel.com>
- <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD0195E6D4@SHSMSX104.ccr.corp.intel.com>
+	 <40786695AB8ED34B85C0BFEA910C834433C576F1@IRSMSX103.ger.corp.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD0195E6D4@SHSMSX104.ccr.corp.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD0196B567@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:50462 "EHLO mga09.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:8171 "EHLO mga14.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750730AbbJHDQF convert rfc822-to-8bit (ORCPT
+	id S1755474AbbJHMTj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 7 Oct 2015 23:16:05 -0400
-In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD0195E6D4@SHSMSX104.ccr.corp.intel.com>
+	Thu, 8 Oct 2015 08:19:39 -0400
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD0196B567@SHSMSX104.ccr.corp.intel.com>
 Content-Language: en-US
+Content-ID: <83ECCB369A361E4C9E2B296CEF40E120@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Zha, Qipeng" <qipeng.zha@intel.com>
 Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-
->>> +	ipcdev.base[BIOS_MAILBOX] = addr;
->>> +	addr += MAILBOX_REGISTER_SPACE;
->>> +	ipcdev.base[GTDRIVER_MAILBOX] = addr;
->>> +	addr += MAILBOX_REGISTER_SPACE;
->>> +	ipcdev.base[ISPDRIVER_MAILBOX] = addr;
-
->>Looks akward, does the platform have the several resources for different purpose? Why do you unify them (who does guarantee the non-breakable segment for all resources?) first and then split up?
->>Please, refactor.
-
-From spec, these three parts are consecutive, so only define one acpi resource entry is reasonable way,
->But BIOS maintainer finally make the resource like this due to request from Window os driver,
->So can't treat these three as three separate parts.
-
- Andriy, Darren:  this is my before feedback, and
-a) Punit function is configured as ACPI device in BIOS, not PCI device(seems can't configure as PCI).
-b) To make it compatible(same acpi entry) for WOS, BIOS define Punit mem resource as res0,  so this driver is coding as this.
-     So this driver is depend on acpi entry in BIOS to get device resource like all acpi device drivers.
-     In future, I don't think BIOS will change current defined resource for Punit function.
- 
+T24gVGh1LCAyMDE1LTEwLTA4IGF0IDAzOjE2ICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4g
+PiANCj4gPiA+ID4gKwlpcGNkZXYuYmFzZVtCSU9TX01BSUxCT1hdID0gYWRkcjsNCj4gPiA+ID4g
+KwlhZGRyICs9IE1BSUxCT1hfUkVHSVNURVJfU1BBQ0U7DQo+ID4gPiA+ICsJaXBjZGV2LmJhc2Vb
+R1REUklWRVJfTUFJTEJPWF0gPSBhZGRyOw0KPiA+ID4gPiArCWFkZHIgKz0gTUFJTEJPWF9SRUdJ
+U1RFUl9TUEFDRTsNCj4gPiA+ID4gKwlpcGNkZXYuYmFzZVtJU1BEUklWRVJfTUFJTEJPWF0gPSBh
+ZGRyOw0KPiANCj4gPiA+IExvb2tzIGFrd2FyZCwgZG9lcyB0aGUgcGxhdGZvcm0gaGF2ZSB0aGUg
+c2V2ZXJhbCByZXNvdXJjZXMgZm9yIA0KPiA+ID4gZGlmZmVyZW50IHB1cnBvc2U/IFdoeSBkbyB5
+b3UgdW5pZnkgdGhlbSAod2hvIGRvZXMgZ3VhcmFudGVlIHRoZSANCj4gPiA+IG5vbi1icmVha2Fi
+bGUgc2VnbWVudCBmb3IgYWxsIHJlc291cmNlcz8pIGZpcnN0IGFuZCB0aGVuIHNwbGl0IA0KPiA+
+ID4gdXA/DQo+ID4gPiBQbGVhc2UsIHJlZmFjdG9yLg0KPiANCj4gPiBGcm9tIHNwZWMsIHRoZXNl
+IHRocmVlIHBhcnRzIGFyZSBjb25zZWN1dGl2ZSwgc28gb25seSBkZWZpbmUgb25lIA0KPiA+IGFj
+cGkgcmVzb3VyY2UgZW50cnkgaXMgcmVhc29uYWJsZSB3YXksDQo+ID4gQnV0IEJJT1MgbWFpbnRh
+aW5lciBmaW5hbGx5IG1ha2UgdGhlIHJlc291cmNlIGxpa2UgdGhpcyBkdWUgdG8gDQo+ID4gcmVx
+dWVzdCBmcm9tIFdpbmRvdyBvcyBkcml2ZXIsDQo+ID4gU28gY2FuJ3QgdHJlYXQgdGhlc2UgdGhy
+ZWUgYXMgdGhyZWUgc2VwYXJhdGUgcGFydHMuDQo+IA0KPiAgQW5kcml5LCBEYXJyZW46ICB0aGlz
+IGlzIG15IGJlZm9yZSBmZWVkYmFjaywgYW5kDQo+IGEpIFB1bml0IGZ1bmN0aW9uIGlzIGNvbmZp
+Z3VyZWQgYXMgQUNQSSBkZXZpY2UgaW4gQklPUywgbm90IFBDSSANCj4gZGV2aWNlKHNlZW1zIGNh
+bid0IGNvbmZpZ3VyZSBhcyBQQ0kpLg0KPiBiKSBUbyBtYWtlIGl0IGNvbXBhdGlibGUoc2FtZSBh
+Y3BpIGVudHJ5KSBmb3IgV09TLCBCSU9TIGRlZmluZSBQdW5pdCANCj4gbWVtIHJlc291cmNlIGFz
+IHJlczAsICBzbyB0aGlzIGRyaXZlciBpcyBjb2RpbmcgYXMgdGhpcy4NCj4gICAgICBTbyB0aGlz
+IGRyaXZlciBpcyBkZXBlbmQgb24gYWNwaSBlbnRyeSBpbiBCSU9TIHRvIGdldCBkZXZpY2UgDQo+
+IHJlc291cmNlIGxpa2UgYWxsIGFjcGkgZGV2aWNlIGRyaXZlcnMuDQo+ICAgICAgSW4gZnV0dXJl
+LCBJIGRvbid0IHRoaW5rIEJJT1Mgd2lsbCBjaGFuZ2UgY3VycmVudCBkZWZpbmVkIA0KPiByZXNv
+dXJjZSBmb3IgUHVuaXQgZnVuY3Rpb24uDQoNCkNhbiB5b3Ugc2hvdyB0aGUgZXhjZXJwdCBmcm9t
+IERTRFQgdGhlbj8NCg0KPiAgDQo+IA0KPiANCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJp
+eS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kKLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCklu
+dGVsIEZpbmxhbmQgT3kKUmVnaXN0ZXJlZCBBZGRyZXNzOiBQTCAyODEsIDAwMTgxIEhlbHNpbmtp
+IApCdXNpbmVzcyBJZGVudGl0eSBDb2RlOiAwMzU3NjA2IC0gNCAKRG9taWNpbGVkIGluIEhlbHNp
+bmtpIAoKVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29udGFpbiBjb25maWRl
+bnRpYWwgbWF0ZXJpYWwgZm9yCnRoZSBzb2xlIHVzZSBvZiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50
+KHMpLiBBbnkgcmV2aWV3IG9yIGRpc3RyaWJ1dGlvbgpieSBvdGhlcnMgaXMgc3RyaWN0bHkgcHJv
+aGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkCnJlY2lwaWVudCwgcGxlYXNlIGNv
+bnRhY3QgdGhlIHNlbmRlciBhbmQgZGVsZXRlIGFsbCBjb3BpZXMuCg==
