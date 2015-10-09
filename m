@@ -1,178 +1,191 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 3/5] intel_scu_ipc: convert to use struct device *
-Date: Fri,  9 Oct 2015 17:11:34 +0300
-Message-ID: <1444399896-78599-3-git-send-email-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 5/5] intel_scu_ipc: move ipclock to struct
+ intel_scu_ipc_dev
+Date: Fri, 09 Oct 2015 18:21:37 +0300
+Message-ID: <1444404097.8361.551.camel@linux.intel.com>
 References: <1444399896-78599-1-git-send-email-andriy.shevchenko@linux.intel.com>
+	 <1444399896-78599-5-git-send-email-andriy.shevchenko@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:30977 "EHLO mga02.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:4010 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754194AbbJIOLl (ORCPT
+	id S1751266AbbJIPVm (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 9 Oct 2015 10:11:41 -0400
-In-Reply-To: <1444399896-78599-1-git-send-email-andriy.shevchenko@linux.intel.com>
+	Fri, 9 Oct 2015 11:21:42 -0400
+In-Reply-To: <1444399896-78599-5-git-send-email-andriy.shevchenko@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Switch the code to use struct device * instead of struct pci_dev * since there
-is no reason to accee PCI related features in the driver.
+On Fri, 2015-10-09 at 17:11 +0300, Andy Shevchenko wrote:
+> No need to use global variable for a mutex. Move it to be a member of 
+> SCU IPC
+> device structure.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_scu_ipc.c | 41 ++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 23 deletions(-)
+This one is wrong, sorry.
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 6c9367f..69e39cb 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -92,11 +92,8 @@ static struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
- 	.irq_mode = 0,
- };
- 
--static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id);
--static void ipc_remove(struct pci_dev *pdev);
--
- struct intel_scu_ipc_dev {
--	struct pci_dev *pdev;
-+	struct device *dev;
- 	void __iomem *ipc_base;
- 	void __iomem *i2c_base;
- 	struct completion cmd_complete;
-@@ -181,7 +178,7 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- 	}
- 
- 	if (status & BIT(0)) {
--		dev_err(&scu->pdev->dev, "IPC timed out");
-+		dev_err(scu->dev, "IPC timed out");
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -197,8 +194,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- 	int status;
- 
- 	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
--		struct device *dev = &scu->pdev->dev;
--		dev_err(dev, "IPC timed out\n");
-+		dev_err(scu->dev, "IPC timed out\n");
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -228,7 +224,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
- 
- 	mutex_lock(&ipclock);
- 
--	if (scu->pdev == NULL) {
-+	if (scu->dev == NULL) {
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-@@ -445,7 +441,7 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
- 	int err;
- 
- 	mutex_lock(&ipclock);
--	if (scu->pdev == NULL) {
-+	if (scu->dev == NULL) {
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-@@ -475,7 +471,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 	int i, err;
- 
- 	mutex_lock(&ipclock);
--	if (scu->pdev == NULL) {
-+	if (scu->dev == NULL) {
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-@@ -518,7 +514,7 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
- 	u32 cmd = 0;
- 
- 	mutex_lock(&ipclock);
--	if (scu->pdev == NULL) {
-+	if (scu->dev == NULL) {
- 		mutex_unlock(&ipclock);
- 		return -ENODEV;
- 	}
-@@ -533,7 +529,7 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
- 		mdelay(1);
- 		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
- 	} else {
--		dev_err(&scu->pdev->dev,
-+		dev_err(scu->dev,
- 			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
- 
- 		mutex_unlock(&ipclock);
-@@ -563,42 +559,42 @@ static irqreturn_t ioc(int irq, void *dev_id)
- 
- /**
-  *	ipc_probe	-	probe an Intel SCU IPC
-- *	@dev: the PCI device matching
-+ *	@pdev: the PCI device matching
-  *	@id: entry in the match table
-  *
-  *	Enable and install an intel SCU IPC. This appears in the PCI space
-  *	but uses some hard coded addresses as well.
-  */
--static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	int err;
- 	struct intel_scu_ipc_dev *scu = &ipcdev;
- 	struct intel_scu_ipc_pdata_t *pdata;
- 
--	if (scu->pdev)		/* We support only one SCU */
-+	if (scu->dev)		/* We support only one SCU */
- 		return -EBUSY;
- 
- 	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
- 
--	scu->pdev = pci_dev_get(dev);
-+	scu->dev = &pdev->dev;
- 	scu->irq_mode = pdata->irq_mode;
- 
--	err = pcim_enable_device(dev);
-+	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
- 
--	err = pcim_iomap_regions(dev, 1 << 0, pci_name(dev));
-+	err = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
- 	if (err)
- 		return err;
- 
- 	init_completion(&scu->cmd_complete);
- 
--	err = devm_request_irq(&dev->dev, dev->irq, ioc, 0, "intel_scu_ipc",
-+	err = devm_request_irq(&pdev->dev, dev->irq, ioc, 0, "intel_scu_ipc",
- 			       scu);
- 	if (err)
- 		return err;
- 
--	scu->ipc_base = pcim_iomap_table(dev)[0];
-+	scu->ipc_base = pcim_iomap_table(pdev)[0];
- 
- 	scu->i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
- 	if (!scu->i2c_base)
-@@ -606,7 +602,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	intel_scu_devices_create();
- 
--	pci_set_drvdata(dev, scu);
-+	pci_set_drvdata(pdev, scu);
- 	return 0;
- }
- 
-@@ -624,8 +620,7 @@ static void ipc_remove(struct pci_dev *pdev)
- {
- 	struct intel_scu_ipc_dev *scu = pci_get_drvdata(pdev);
- 
--	pci_dev_put(scu->pdev);
--	scu->pdev = NULL;
-+	scu->dev = NULL;
- 	iounmap(scu->i2c_base);
- 	intel_scu_devices_destroy();
- }
+> 
+> While here, protect dev member assignment in ->remove() since user 
+> may
+> potentially call unbind from sysfs even if driver is built-in.
+
+This part is still right.
+
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_scu_ipc.c | 34 +++++++++++++++++++-------
+> --------
+>  1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c 
+> b/drivers/platform/x86/intel_scu_ipc.c
+> index 9de2029..16f1621 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -92,11 +92,13 @@ static struct intel_scu_ipc_pdata_t 
+> intel_scu_ipc_tangier_pdata = {
+>  	.irq_mode = 0,
+>  };
+>  
+> +/* @lock: lock used to prevent multiple call to SCU */
+>  struct intel_scu_ipc_dev {
+>  	struct device *dev;
+>  	void __iomem *ipc_base;
+>  	void __iomem *i2c_base;
+>  	struct completion cmd_complete;
+> +	struct mutex lock;
+>  	u8 irq_mode;
+>  };
+>  
+> @@ -112,8 +114,6 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only 
+> one for now */
+>  #define IPC_I2C_CNTRL_ADDR	0
+>  #define I2C_DATA_ADDR		0x04
+>  
+> -static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call 
+> to SCU */
+> -
+>  /*
+>   * Send ipc command
+>   * Command Register (Write Only):
+> @@ -222,10 +222,10 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, 
+> u32 count, u32 op, u32 id)
+>  
+>  	memset(cbuf, 0, sizeof(cbuf));
+>  
+> -	mutex_lock(&ipclock);
+> +	mutex_lock(&scu->lock);
+>  
+>  	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> +		mutex_unlock(&scu->lock);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -258,7 +258,7 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 
+> count, u32 op, u32 id)
+>  		for (nc = 0; nc < count; nc++)
+>  			data[nc] = ipc_data_readb(scu, nc);
+>  	}
+> -	mutex_unlock(&ipclock);
+> +	mutex_unlock(&scu->lock);
+>  	return err;
+>  }
+>  
+> @@ -440,14 +440,14 @@ int intel_scu_ipc_simple_command(int cmd, int 
+> sub)
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  	int err;
+>  
+> -	mutex_lock(&ipclock);
+> +	mutex_lock(&scu->lock);
+>  	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> +		mutex_unlock(&scu->lock);
+>  		return -ENODEV;
+>  	}
+>  	ipc_command(scu, sub << 12 | cmd);
+>  	err = intel_scu_ipc_check_status(scu);
+> -	mutex_unlock(&ipclock);
+> +	mutex_unlock(&scu->lock);
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(intel_scu_ipc_simple_command);
+> @@ -470,9 +470,9 @@ int intel_scu_ipc_command(int cmd, int sub, u32 
+> *in, int inlen,
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  	int i, err;
+>  
+> -	mutex_lock(&ipclock);
+> +	mutex_lock(&scu->lock);
+>  	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> +		mutex_unlock(&scu->lock);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -487,7 +487,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 
+> *in, int inlen,
+>  			*out++ = ipc_data_readl(scu, 4 * i);
+>  	}
+>  
+> -	mutex_unlock(&ipclock);
+> +	mutex_unlock(&scu->lock);
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(intel_scu_ipc_command);
+> @@ -513,9 +513,9 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  	u32 cmd = 0;
+>  
+> -	mutex_lock(&ipclock);
+> +	mutex_lock(&scu->lock);
+>  	if (scu->dev == NULL) {
+> -		mutex_unlock(&ipclock);
+> +		mutex_unlock(&scu->lock);
+>  		return -ENODEV;
+>  	}
+>  	cmd = (addr >> 24) & 0xFF;
+> @@ -532,10 +532,10 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 
+> *data)
+>  		dev_err(scu->dev,
+>  			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", 
+> cmd);
+>  
+> -		mutex_unlock(&ipclock);
+> +		mutex_unlock(&scu->lock);
+>  		return -EIO;
+>  	}
+> -	mutex_unlock(&ipclock);
+> +	mutex_unlock(&scu->lock);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
+> @@ -593,6 +593,7 @@ static int ipc_probe(struct pci_dev *pdev, const 
+> struct pci_device_id *id)
+>  		return err;
+>  
+>  	init_completion(&scu->cmd_complete);
+> +	mutex_init(&scu->lock);
+>  
+>  	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, 
+> "intel_scu_ipc",
+>  			       scu);
+> @@ -625,7 +626,10 @@ static void ipc_remove(struct pci_dev *pdev)
+>  {
+>  	struct intel_scu_ipc_dev *scu = pci_get_drvdata(pdev);
+>  
+> +	mutex_lock(&scu->lock);
+>  	scu->dev = NULL;
+> +	mutex_unlock(&scu->lock);
+> +
+>  	iounmap(scu->i2c_base);
+>  	intel_scu_devices_destroy();
+>  }
+
 -- 
-2.5.3
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
