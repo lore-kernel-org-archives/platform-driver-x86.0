@@ -1,43 +1,86 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 5/5] intel_scu_ipc: protect dev member assignment on ->remove()
-Date: Mon, 12 Oct 2015 14:19:48 +0300
-Message-ID: <1444648788-74265-6-git-send-email-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/5] intel_scu_ipc: fix error path by turning to devm_* / pcim_*
+Date: Mon, 12 Oct 2015 14:19:44 +0300
+Message-ID: <1444648788-74265-2-git-send-email-andriy.shevchenko@linux.intel.com>
 References: <1444648788-74265-1-git-send-email-andriy.shevchenko@linux.intel.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:59220 "EHLO mga02.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751858AbbJLLT5 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 12 Oct 2015 07:19:57 -0400
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1444648788-74265-1-git-send-email-andriy.shevchenko@linux.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Protect the dev member assignment in ->remove() since user may potentially call
-unbind from a sysfs even if the driver is built-in. The latter might be racy
-with ongoing SCU communication.
+The error handling is broken right now since it leaves resources unfreed.
+Convert the code to use managed resources to fix the error handling.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/platform/x86/intel_scu_ipc.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 9de2029..f94b730 100644
+index 187d108..7148535 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -625,7 +625,10 @@ static void ipc_remove(struct pci_dev *pdev)
+@@ -563,7 +563,6 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
  {
- 	struct intel_scu_ipc_dev *scu = pci_get_drvdata(pdev);
+ 	int err;
+ 	struct intel_scu_ipc_pdata_t *pdata;
+-	resource_size_t base;
  
-+	mutex_lock(&ipclock);
- 	scu->dev = NULL;
-+	mutex_unlock(&ipclock);
-+
- 	iounmap(scu->i2c_base);
+ 	if (ipcdev.pdev)		/* We support only one SCU */
+ 		return -EBUSY;
+@@ -573,32 +572,26 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	ipcdev.pdev = pci_dev_get(dev);
+ 	ipcdev.irq_mode = pdata->irq_mode;
+ 
+-	err = pci_enable_device(dev);
++	err = pcim_enable_device(dev);
+ 	if (err)
+ 		return err;
+ 
+-	err = pci_request_regions(dev, "intel_scu_ipc");
++	err = pcim_iomap_regions(dev, 1 << 0, pci_name(dev));
+ 	if (err)
+ 		return err;
+ 
+-	base = pci_resource_start(dev, 0);
+-	if (!base)
+-		return -ENOMEM;
+-
+ 	init_completion(&ipcdev.cmd_complete);
+ 
+-	if (request_irq(dev->irq, ioc, 0, "intel_scu_ipc", &ipcdev))
+-		return -EBUSY;
++	err = devm_request_irq(&dev->dev, dev->irq, ioc, 0, "intel_scu_ipc",
++			       &ipcdev);
++	if (err)
++		return err;
+ 
+-	ipcdev.ipc_base = ioremap_nocache(base, pci_resource_len(dev, 0));
+-	if (!ipcdev.ipc_base)
+-		return -ENOMEM;
++	ipcdev.ipc_base = pcim_iomap_table(dev)[0];
+ 
+ 	ipcdev.i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
+-	if (!ipcdev.i2c_base) {
+-		iounmap(ipcdev.ipc_base);
++	if (!ipcdev.i2c_base)
+ 		return -ENOMEM;
+-	}
+ 
+ 	intel_scu_devices_create();
+ 
+@@ -617,10 +610,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+  */
+ static void ipc_remove(struct pci_dev *pdev)
+ {
+-	free_irq(pdev->irq, &ipcdev);
+-	pci_release_regions(pdev);
+ 	pci_dev_put(ipcdev.pdev);
+-	iounmap(ipcdev.ipc_base);
+ 	iounmap(ipcdev.i2c_base);
+ 	ipcdev.pdev = NULL;
  	intel_scu_devices_destroy();
- }
 -- 
 2.5.3
