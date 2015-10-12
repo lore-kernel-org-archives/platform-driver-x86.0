@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/5] intel_scu_ipc: fix error path by turning to devm_* / pcim_*
-Date: Mon, 12 Oct 2015 14:19:44 +0300
-Message-ID: <1444648788-74265-2-git-send-email-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 4/5] intel_scu_ipc: switch to use module_pci_driver() macro
+Date: Mon, 12 Oct 2015 14:19:47 +0300
+Message-ID: <1444648788-74265-5-git-send-email-andriy.shevchenko@linux.intel.com>
 References: <1444648788-74265-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1444648788-74265-1-git-send-email-andriy.shevchenko@linux.intel.com>
@@ -10,77 +10,59 @@ To: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, lin
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The error handling is broken right now since it leaves resources unfreed.
-Convert the code to use managed resources to fix the error handling.
+Eliminate some boilerplate code by using module_pci_driver() instead of
+init/exit, moving the salient bits from init into probe.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 187d108..7148535 100644
+index 5087485..9de2029 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -563,7 +563,6 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
- {
- 	int err;
- 	struct intel_scu_ipc_pdata_t *pdata;
--	resource_size_t base;
- 
- 	if (ipcdev.pdev)		/* We support only one SCU */
- 		return -EBUSY;
-@@ -573,32 +572,26 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	ipcdev.pdev = pci_dev_get(dev);
- 	ipcdev.irq_mode = pdata->irq_mode;
- 
--	err = pci_enable_device(dev);
-+	err = pcim_enable_device(dev);
- 	if (err)
- 		return err;
- 
--	err = pci_request_regions(dev, "intel_scu_ipc");
-+	err = pcim_iomap_regions(dev, 1 << 0, pci_name(dev));
- 	if (err)
- 		return err;
- 
--	base = pci_resource_start(dev, 0);
--	if (!base)
--		return -ENOMEM;
--
- 	init_completion(&ipcdev.cmd_complete);
- 
--	if (request_irq(dev->irq, ioc, 0, "intel_scu_ipc", &ipcdev))
--		return -EBUSY;
-+	err = devm_request_irq(&dev->dev, dev->irq, ioc, 0, "intel_scu_ipc",
-+			       &ipcdev);
-+	if (err)
-+		return err;
- 
--	ipcdev.ipc_base = ioremap_nocache(base, pci_resource_len(dev, 0));
--	if (!ipcdev.ipc_base)
--		return -ENOMEM;
-+	ipcdev.ipc_base = pcim_iomap_table(dev)[0];
- 
- 	ipcdev.i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
--	if (!ipcdev.i2c_base) {
--		iounmap(ipcdev.ipc_base);
-+	if (!ipcdev.i2c_base)
- 		return -ENOMEM;
--	}
- 
- 	intel_scu_devices_create();
- 
-@@ -617,10 +610,7 @@ static int ipc_probe(struct pci_dev *dev, const struct pci_device_id *id)
+@@ -567,10 +567,15 @@ static irqreturn_t ioc(int irq, void *dev_id)
   */
- static void ipc_remove(struct pci_dev *pdev)
+ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  {
--	free_irq(pdev->irq, &ipcdev);
--	pci_release_regions(pdev);
- 	pci_dev_put(ipcdev.pdev);
--	iounmap(ipcdev.ipc_base);
- 	iounmap(ipcdev.i2c_base);
- 	ipcdev.pdev = NULL;
- 	intel_scu_devices_destroy();
++	int platform;		/* Platform type */
+ 	int err;
+ 	struct intel_scu_ipc_dev *scu = &ipcdev;
+ 	struct intel_scu_ipc_pdata_t *pdata;
+ 
++	platform = intel_mid_identify_cpu();
++	if (platform == 0)
++		return -ENODEV;
++
+ 	if (scu->dev)		/* We support only one SCU */
+ 		return -EBUSY;
+ 
+@@ -651,24 +656,8 @@ static struct pci_driver ipc_driver = {
+ 	.remove = ipc_remove,
+ };
+ 
+-static int __init intel_scu_ipc_init(void)
+-{
+-	int platform;		/* Platform type */
+-
+-	platform = intel_mid_identify_cpu();
+-	if (platform == 0)
+-		return -ENODEV;
+-	return  pci_register_driver(&ipc_driver);
+-}
+-
+-static void __exit intel_scu_ipc_exit(void)
+-{
+-	pci_unregister_driver(&ipc_driver);
+-}
++module_pci_driver(ipc_driver);
+ 
+ MODULE_AUTHOR("Sreedhara DS <sreedhara.ds@intel.com>");
+ MODULE_DESCRIPTION("Intel SCU IPC driver");
+ MODULE_LICENSE("GPL");
+-
+-module_init(intel_scu_ipc_init);
+-module_exit(intel_scu_ipc_exit);
 -- 
 2.5.3
