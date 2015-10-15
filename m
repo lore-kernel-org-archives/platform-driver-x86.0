@@ -1,71 +1,137 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Thu, 15 Oct 2015 10:39:35 +0000
-Message-ID: <1444905573.8361.647.camel@intel.com>
+Date: Thu, 15 Oct 2015 08:29:31 -0700
+Message-ID: <20151015152931.GA3049@malice.jf.intel.com>
 References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
-	 <1444397622.8361.544.camel@intel.com>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
-	 <1444905355.8361.644.camel@intel.com>
+ <1444397622.8361.544.camel@intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+ <1444905355.8361.644.camel@intel.com>
+ <1444905573.8361.647.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:9238 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751048AbbJOKjj (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:49454 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753255AbbJOP3d (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Oct 2015 06:39:39 -0400
-In-Reply-To: <1444905355.8361.644.camel@intel.com>
-Content-Language: en-US
-Content-ID: <19C175B90211D145B33A27D031B5296E@intel.com>
+	Thu, 15 Oct 2015 11:29:33 -0400
+Content-Disposition: inline
+In-Reply-To: <1444905573.8361.647.camel@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Zha, Qipeng" <qipeng.zha@intel.com>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-T24gVGh1LCAyMDE1LTEwLTE1IGF0IDEzOjM1ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IE9uIFNhdCwgMjAxNS0xMC0xMCBhdCAwMzowNyArMDAwMCwgWmhhLCBRaXBlbmcgd3JvdGU6
-DQo+ID4gPiANCj4gPiA+IEV2ZXJ5dGhpbmcgaXMgcXVpdGUgb2theSwgZXhjZXB0IHRoaXMgQkFS
-IHRoaW5neS4NCj4gPiANCj4gPiA+IENhbiB5b3UgcHJvdmlkZSBhIERTRFQgZXhjZXJwdCBmb3Ig
-dGhlIGRldmljZSB0byBzZWUgd2hhdCBpcyANCj4gPiA+IHRoZXJlPw0KPiA+IA0KPiA+ID4gSSBj
-YW4ndCBmaW5kIHN1Y2ggZGV2aWNlIChieSBBQ1BJIGlkKSBpbiB0aGUgdGFibGVzIG9mIHRoZSAN
-Cj4gPiA+IGFjY2Vzc2libGUgaGFyZHdhcmUgaW4gb3VyIGxhYi4NCj4gPiANCj4gPiBQbGVhc2Ug
-Y2hlY2sgYmVsb3cgYWNwaSBkZXZpY2UgZGVmaW5pdGlvbiBmcm9tIEJJT1MuDQo+ID4gUHVuaXQg
-ZGV2aWNlIGlzIGNyZWF0ZWQgaW4gcG1jIGRyaXZlciwgc2luY2UgQklPUyBmaW5hbGx5IHJlamVj
-dCB0byANCj4gPiANCj4gPiBjcmVhdGUgYSBzZXBhcmF0ZSBkZXZpY2UgZm9yIFB1bml0Lg0KPiAN
-Cj4gVGhhbmsgeW91IGZvciBtZW50aW9uIHRoaXMgb25lLiBJdCdzIHVuZm9ydHVuYXRlbHkgYSBz
-aG93IHN0b3BwZXIgZm9yDQo+IHVzaW5nIHRoaXMgbW9kdWxlIGFzIGEgZHJpdmVyICh5b3UgY2Fu
-J3QgYXNzaWduIHR3byBkcml2ZXJzIHRvIHRoZSANCj4gc2FtZQ0KPiBkZXZpY2UpLiBZb3UgaGF2
-ZSB0byBjb252ZXJ0IGlzIHRvIGEgbGlicmFyeS4NCg0KT2gsIEknbSBzb3JyeSwgSSByZWFsbHkg
-bWlzc2VkIHRoYXQgdGhlIElEcyBhcmUgZGlmZmVyZW50Lg0KU28sIGRpc2NhcmQgdGhpcyBwYXJ0
-Lg0KDQo+IA0KPiBNb3Jlb3ZlciwgSSBicmllZmx5IGxvb2tlZCBhdCB0aGUgaW50ZWxfcG1jX2lw
-YyBhbmQgaXQgc2hvdWxkIGJlDQo+IHJlZmFjdG9yZWQgYSBpbiBhIGZldyB3YXlzOiBhKSBzcGxp
-dCB0byBjb3JlIHBhcnQsIFBDSSBkcml2ZXIsIGFuZCANCj4gQUNQSQ0KPiBkcml2ZXIsIGIpIGlt
-cHJvdmVkIHJlZ2FyZGluZyB0byBjb21tZW50cyB5b3UgZ290IGluIHRoaXMgcmV2aWV3IA0KPiAo
-bWFueQ0KPiBjb21tZW50cyBhcmUgYXBwbGllZCB0byB3aGF0IHdlIGhhdmUgdGhlcmUpLg0KPiAN
-Cj4gRGFycmVuLCB5b3VyIG9waW5pb24/DQoNClRoaXMgYnkgdGhlIHdheSBzdGlsbCB2YWxpZC4N
-Cg0KPiANCj4gPiANCj4gPiAgIFNjb3BlIChcX1NCKSB7DQo+ID4gICAgIERldmljZShJUEMxKQ0K
-PiA+ICAgICB7DQo+ID4gICAgICAg4oCmDQo+ID4gICAgICAgTmFtZSAoUkJVRiwgUmVzb3VyY2VU
-ZW1wbGF0ZSAoKQ0KPiA+ICAgICAgIHsNCj4gPiAgICAgICAgIE1lbW9yeTMyRml4ZWQgKFJlYWRX
-cml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgQkFSMCkgICANCj4gPiAgLy8gDQo+ID4gSVBD
-MSBCYXINCj4gPiAgICAgIC8vICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRlLCAweDAwMDAwMDAw
-LCAweDAwMDAxMDAwLCBCQVIxKSANCj4gPiAgLy8gDQo+ID4gU1NSQU0NCj4gPiAgICAgICAgIE1l
-bW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTURBVCkgICAN
-Cj4gPiAgLy8gDQo+ID4gUFVuaXQgQklPUyBtYWlsYm94IERhdGENCj4gPiAgICAgICAgIE1lbW9y
-eTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTUlORikgICANCj4g
-PiAgLy8gDQo+ID4gUFVuaXQgQklPUyBtYWlsYm94IEludGVyZmFjZSBhbmQgR1REL0lTUEQgbWFp
-bGJveA0KPiA+ICAgICAgICAgSU8gKERlY29kZTE2LCAweDQwMCwgMHg0ODAsIDB4NCwgMHg4MCkg
-ICAgICAgICAgICAgICAgICAgIA0KPiA+ICAvLyANCj4gPiBBQ1BJIElPIEJhc2UgYWRkcmVzcw0K
-PiA+ICAgICAgICAgSW50ZXJydXB0IChSZXNvdXJjZUNvbnN1bWVyLCBMZXZlbCwgQWN0aXZlTG93
-LCBFeGNsdXNpdmUsICwgDQo+ID4gLCANCj4gPiApIHs0MH0gIC8vIElQQzEgSVJRICANCj4gPiAg
-ICAgICB9KQ0KPiA+IA0KPiA+ICAgICAgIOKApg0KPiA+ICAgICB9DQo+ID4gICB9Ly9lbmQgc2Nv
-cGUNCj4gDQoNCi0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5j
-b20+DQpJbnRlbCBGaW5sYW5kIE95Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lz
-dGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkg
-Q29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFu
-ZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0
-aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBk
-aXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUg
-bm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5k
-IGRlbGV0ZSBhbGwgY29waWVzLgo=
+On Thu, Oct 15, 2015 at 10:39:35AM +0000, Shevchenko, Andriy wrote:
+> On Thu, 2015-10-15 at 13:35 +0300, Andy Shevchenko wrote:
+> > On Sat, 2015-10-10 at 03:07 +0000, Zha, Qipeng wrote:
+> > > >=20
+> > > > Everything is quite okay, except this BAR thingy.
+> > >=20
+> > > > Can you provide a DSDT excerpt for the device to see what is=20
+> > > > there?
+> > >=20
+> > > > I can't find such device (by ACPI id) in the tables of the=20
+> > > > accessible hardware in our lab.
+> > >=20
+> > > Please check below acpi device definition from BIOS.
+> > > Punit device is created in pmc driver, since BIOS finally reject =
+to=20
+> > >=20
+> > > create a separate device for Punit.
+> >=20
+> > Thank you for mention this one. It's unfortunately a show stopper f=
+or
+> > using this module as a driver (you can't assign two drivers to the=20
+> > same
+> > device). You have to convert is to a library.
+>=20
+> Oh, I'm sorry, I really missed that the IDs are different.
+> So, discard this part.
+>=20
+> >=20
+> > Moreover, I briefly looked at the intel_pmc_ipc and it should be
+> > refactored a in a few ways: a) split to core part, PCI driver, and=20
+> > ACPI
+> > driver, b) improved regarding to comments you got in this review=20
+> > (many
+> > comments are applied to what we have there).
+> >=20
+> > Darren, your opinion?
+>=20
+> This by the way still valid.
+
+I'm a bit confused. Are you just bringing up that the intel_pmc_ipc dri=
+ver could
+also be improved? Or are you sugesting that this driver needs to be ref=
+actored
+together with the intel_pmc_ipc driver?
+
+With respect to the intel_punit_ipc driver, I've tried to parse/map the=
+ DSDT to
+the BAR mapping in the driver which you raised concerns about. Can you =
+review
+that bit and help us come to a conclusion on that since you asked for t=
+he DSDT?
+(See separate response to Qipeng on that).
+
+Thanks,
+
+>=20
+> >=20
+> > >=20
+> > >   Scope (\_SB) {
+> > >     Device(IPC1)
+> > >     {
+> > >       =E2=80=A6
+> > >       Name (RBUF, ResourceTemplate ()
+> > >       {
+> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR0)  =
+=20
+> > >  //=20
+> > > IPC1 Bar
+> > >      //   Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR1)=
+=20
+> > >  //=20
+> > > SSRAM
+> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MDAT)  =
+=20
+> > >  //=20
+> > > PUnit BIOS mailbox Data
+> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MINF)  =
+=20
+> > >  //=20
+> > > PUnit BIOS mailbox Interface and GTD/ISPD mailbox
+> > >         IO (Decode16, 0x400, 0x480, 0x4, 0x80)                   =
+=20
+> > >  //=20
+> > > ACPI IO Base address
+> > >         Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive,=
+ ,=20
+> > > ,=20
+> > > ) {40}  // IPC1 IRQ =20
+> > >       })
+> > >=20
+> > >       =E2=80=A6
+> > >     }
+> > >   }//end scope
+> >=20
+>=20
+> --=20
+> Andy Shevchenko <andriy.shevchenko@intel.com>
+> Intel Finland Oy
+> ---------------------------------------------------------------------
+> Intel Finland Oy
+> Registered Address: PL 281, 00181 Helsinki=20
+> Business Identity Code: 0357606 - 4=20
+> Domiciled in Helsinki=20
+>=20
+> This e-mail and any attachments may contain confidential material for
+> the sole use of the intended recipient(s). Any review or distribution
+> by others is strictly prohibited. If you are not the intended
+> recipient, please contact the sender and delete all copies.
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
