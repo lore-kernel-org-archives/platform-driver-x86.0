@@ -1,166 +1,64 @@
-From: Darren Hart <dvhart@infradead.org>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
 Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Wed, 14 Oct 2015 22:16:06 -0700
-Message-ID: <20151015051606.GD2592@malice.jf.intel.com>
+Date: Thu, 15 Oct 2015 10:35:57 +0000
+Message-ID: <1444905355.8361.644.camel@intel.com>
 References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
- <1444397622.8361.544.camel@intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+	 <1444397622.8361.544.camel@intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:59346 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752813AbbJOFQH (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:30901 "EHLO mga11.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752629AbbJOKgg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Oct 2015 01:16:07 -0400
-Content-Disposition: inline
+	Thu, 15 Oct 2015 06:36:36 -0400
 In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <B0B55393630C31409BE4EF208A1FBE3E@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Zha, Qipeng" <qipeng.zha@intel.com>
-Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Zha, Qipeng" <qipeng.zha@intel.com>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-On Sat, Oct 10, 2015 at 03:07:53AM +0000, Zha, Qipeng wrote:
->=20
-> >Everything is quite okay, except this BAR thingy.
->=20
-> >Can you provide a DSDT excerpt for the device to see what is there?
->=20
-> >I can't find such device (by ACPI id) in the tables of the accessibl=
-e hardware in our lab.
->=20
-> Please check below acpi device definition from BIOS.
-> Punit device is created in pmc driver, since BIOS finally reject to c=
-reate a separate device for Punit.
->=20
-
-Qipeng, sorry for the delay. I've been under a rather absurd load. I'd =
-like to
-close on this so we can get this into -next ASAP. Thank you for posting=
- the
-DSDT.
-
-Help us parse what this means so we're all seeing the same thing. I see=
- a total
-of 3 memory addresses and the following IO base address. Unfortunately,=
- the
-comments don't map directly to the driver code, so I need to piece this
-together.
-
-The code in question from the driver is:
-
-#define MAILBOX_REGISTER_SPACE 0x10
-
-+static int intel_punit_get_bars(struct platform_device *pdev)
-+{
-+       struct resource *res0, *res1;
-+       void __iomem *addr;
-+       int size;
-+
-+       res0 =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+       if (!res0) {
-+               dev_err(&pdev->dev, "Failed to get iomem resource\n");
-+               return -ENXIO;
-+       }
-+       size =3D resource_size(res0);
-+       if (!devm_request_mem_region(&pdev->dev, res0->start,
-+                                    size, pdev->name)) {
-+               dev_err(&pdev->dev, "Failed to request iomem resouce\n"=
-);
-+               return -EBUSY;
-+       }
-+
-+       res1 =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+       if (!res1) {
-+               dev_err(&pdev->dev, "Failed to get iomem resource1\n");
-+               return -ENXIO;
-+       }
-+       size =3D resource_size(res1);
-+       if (!devm_request_mem_region(&pdev->dev, res1->start,
-+                                    size, pdev->name)) {
-+               dev_err(&pdev->dev, "Failed to request iomem resouce1\n=
-");
-+               return -EBUSY;
-+       }
-+
-+       addr =3D ioremap_nocache(res0->start,
-+                              resource_size(res0) + resource_size(res1=
-));
-+       if (!addr) {
-+               dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
-+               return  -ENOMEM;
-+       }
-+       punit_ipcdev->base[BIOS_IPC] =3D addr;
-+       addr +=3D MAILBOX_REGISTER_SPACE;
-+       punit_ipcdev->base[GTDRIVER_IPC] =3D addr;
-+       addr +=3D MAILBOX_REGISTER_SPACE;
-+       punit_ipcdev->base[ISPDRIVER_IPC] =3D addr;
-+
-+       return 0;
-+}
-
-
->   Scope (\_SB) {
->     Device(IPC1)
->     {
->       =E2=80=A6
->       Name (RBUF, ResourceTemplate ()
->       {
->         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR0)    //=
- IPC1 Bar
-
-size: 0x1000
-IPC1 BAR, I presume this maps to res0 in the driver?
-
-Then the start of this 4096 byte region is assigned by:
-
-punit_ipcdev->base[BIOS_IPC] =3D addr;
-
-And everything else assigned by intel_punit_get_bards is contained with=
-in this
-addr since MAILBOX_REGISTER_SPACE is only 0x10.
-
-Do I have that correct?
-
->      //   Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR1)  //=
- SSRAM
->         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MDAT)    //=
- PUnit BIOS mailbox Data
-
-size: 0x1000
-And this would be res1 in the driver?
-
->         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MINF)    //=
- PUnit BIOS mailbox Interface and GTD/ISPD mailbox
-
-size: 0x1000
-
-This seems odd, especially with the comments in the DSD. A more natural=
- mapping would have been each of the Memory32Fixed macros mapping to th=
-e BIOS_IPC, GTDRIVER_IPC, and ISPDRIVER_IPC BARs in the driver. This wo=
-uld indeed be the case if MAILBOX_REGISTER_SPACE was 0x1000 instead of =
-0x10. Also, if that were the case, then those BARs should be set by usi=
-ng the mapped addr for the 3 separate resources - which is what Andy wa=
-s getting at.
-
-Qipeng, I assume I misinterpretted something above. Can you point out w=
-here I've got this wrong and how the driver is doing the only thing it =
-can given the resources provided by the DSDT?
-
-Thanks,
-
-
->         IO (Decode16, 0x400, 0x480, 0x4, 0x80)                     //=
- ACPI IO Base address
->         Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, , ,=
- ) {40}  // IPC1 IRQ =20
->       })
->=20
->       =E2=80=A6
->     }
->   }//end scope
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+T24gU2F0LCAyMDE1LTEwLTEwIGF0IDAzOjA3ICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4g
+PiANCj4gPiBFdmVyeXRoaW5nIGlzIHF1aXRlIG9rYXksIGV4Y2VwdCB0aGlzIEJBUiB0aGluZ3ku
+DQo+IA0KPiA+IENhbiB5b3UgcHJvdmlkZSBhIERTRFQgZXhjZXJwdCBmb3IgdGhlIGRldmljZSB0
+byBzZWUgd2hhdCBpcyB0aGVyZT8NCj4gDQo+ID4gSSBjYW4ndCBmaW5kIHN1Y2ggZGV2aWNlIChi
+eSBBQ1BJIGlkKSBpbiB0aGUgdGFibGVzIG9mIHRoZSANCj4gPiBhY2Nlc3NpYmxlIGhhcmR3YXJl
+IGluIG91ciBsYWIuDQo+IA0KPiBQbGVhc2UgY2hlY2sgYmVsb3cgYWNwaSBkZXZpY2UgZGVmaW5p
+dGlvbiBmcm9tIEJJT1MuDQo+IFB1bml0IGRldmljZSBpcyBjcmVhdGVkIGluIHBtYyBkcml2ZXIs
+IHNpbmNlIEJJT1MgZmluYWxseSByZWplY3QgdG8gDQo+IGNyZWF0ZSBhIHNlcGFyYXRlIGRldmlj
+ZSBmb3IgUHVuaXQuDQoNClRoYW5rIHlvdSBmb3IgbWVudGlvbiB0aGlzIG9uZS4gSXQncyB1bmZv
+cnR1bmF0ZWx5IGEgc2hvdyBzdG9wcGVyIGZvcg0KdXNpbmcgdGhpcyBtb2R1bGUgYXMgYSBkcml2
+ZXIgKHlvdSBjYW4ndCBhc3NpZ24gdHdvIGRyaXZlcnMgdG8gdGhlIHNhbWUNCmRldmljZSkuIFlv
+dSBoYXZlIHRvIGNvbnZlcnQgaXMgdG8gYSBsaWJyYXJ5Lg0KDQpNb3Jlb3ZlciwgSSBicmllZmx5
+IGxvb2tlZCBhdCB0aGUgaW50ZWxfcG1jX2lwYyBhbmQgaXQgc2hvdWxkIGJlDQpyZWZhY3RvcmVk
+IGEgaW4gYSBmZXcgd2F5czogYSkgc3BsaXQgdG8gY29yZSBwYXJ0LCBQQ0kgZHJpdmVyLCBhbmQg
+QUNQSQ0KZHJpdmVyLCBiKSBpbXByb3ZlZCByZWdhcmRpbmcgdG8gY29tbWVudHMgeW91IGdvdCBp
+biB0aGlzIHJldmlldyAobWFueQ0KY29tbWVudHMgYXJlIGFwcGxpZWQgdG8gd2hhdCB3ZSBoYXZl
+IHRoZXJlKS4NCg0KRGFycmVuLCB5b3VyIG9waW5pb24/DQoNCj4gDQo+ICAgU2NvcGUgKFxfU0Ip
+IHsNCj4gICAgIERldmljZShJUEMxKQ0KPiAgICAgew0KPiAgICAgICDigKYNCj4gICAgICAgTmFt
+ZSAoUkJVRiwgUmVzb3VyY2VUZW1wbGF0ZSAoKQ0KPiAgICAgICB7DQo+ICAgICAgICAgTWVtb3J5
+MzJGaXhlZCAoUmVhZFdyaXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBCQVIwKSAgICAvLyAN
+Cj4gSVBDMSBCYXINCj4gICAgICAvLyAgIE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAw
+MDAwMCwgMHgwMDAwMTAwMCwgQkFSMSkgIC8vIA0KPiBTU1JBTQ0KPiAgICAgICAgIE1lbW9yeTMy
+Rml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTURBVCkgICAgLy8gDQo+
+IFBVbml0IEJJT1MgbWFpbGJveCBEYXRhDQo+ICAgICAgICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdy
+aXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBNSU5GKSAgICAvLyANCj4gUFVuaXQgQklPUyBt
+YWlsYm94IEludGVyZmFjZSBhbmQgR1REL0lTUEQgbWFpbGJveA0KPiAgICAgICAgIElPIChEZWNv
+ZGUxNiwgMHg0MDAsIDB4NDgwLCAweDQsIDB4ODApICAgICAgICAgICAgICAgICAgICAgLy8gDQo+
+IEFDUEkgSU8gQmFzZSBhZGRyZXNzDQo+ICAgICAgICAgSW50ZXJydXB0IChSZXNvdXJjZUNvbnN1
+bWVyLCBMZXZlbCwgQWN0aXZlTG93LCBFeGNsdXNpdmUsICwgLCANCj4gKSB7NDB9ICAvLyBJUEMx
+IElSUSAgDQo+ICAgICAgIH0pDQo+IA0KPiAgICAgICDigKYNCj4gICAgIH0NCj4gICB9Ly9lbmQg
+c2NvcGUNCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNv
+bT4NCkludGVsIEZpbmxhbmQgT3kKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkludGVsIEZpbmxhbmQgT3kKUmVnaXN0
+ZXJlZCBBZGRyZXNzOiBQTCAyODEsIDAwMTgxIEhlbHNpbmtpIApCdXNpbmVzcyBJZGVudGl0eSBD
+b2RlOiAwMzU3NjA2IC0gNCAKRG9taWNpbGVkIGluIEhlbHNpbmtpIAoKVGhpcyBlLW1haWwgYW5k
+IGFueSBhdHRhY2htZW50cyBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgbWF0ZXJpYWwgZm9yCnRo
+ZSBzb2xlIHVzZSBvZiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBBbnkgcmV2aWV3IG9yIGRp
+c3RyaWJ1dGlvbgpieSBvdGhlcnMgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBu
+b3QgdGhlIGludGVuZGVkCnJlY2lwaWVudCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciBhbmQg
+ZGVsZXRlIGFsbCBjb3BpZXMuCg==
