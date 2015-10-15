@@ -1,137 +1,86 @@
-From: Darren Hart <dvhart@infradead.org>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
 Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Thu, 15 Oct 2015 08:29:31 -0700
-Message-ID: <20151015152931.GA3049@malice.jf.intel.com>
+Date: Thu, 15 Oct 2015 15:36:01 +0000
+Message-ID: <1444923359.8361.653.camel@intel.com>
 References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
- <1444397622.8361.544.camel@intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
- <1444905355.8361.644.camel@intel.com>
- <1444905573.8361.647.camel@intel.com>
+	 <1444397622.8361.544.camel@intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+	 <1444905355.8361.644.camel@intel.com> <1444905573.8361.647.camel@intel.com>
+	 <20151015152931.GA3049@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:49454 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753255AbbJOP3d (ORCPT
+Received: from mga11.intel.com ([192.55.52.93]:43393 "EHLO mga11.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753447AbbJOPgH (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 15 Oct 2015 11:29:33 -0400
-Content-Disposition: inline
-In-Reply-To: <1444905573.8361.647.camel@intel.com>
+	Thu, 15 Oct 2015 11:36:07 -0400
+In-Reply-To: <20151015152931.GA3049@malice.jf.intel.com>
+Content-Language: en-US
+Content-ID: <1C9E9BE723F95D47BEA890698CDE06CC@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To: "dvhart@infradead.org" <dvhart@infradead.org>
 Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-On Thu, Oct 15, 2015 at 10:39:35AM +0000, Shevchenko, Andriy wrote:
-> On Thu, 2015-10-15 at 13:35 +0300, Andy Shevchenko wrote:
-> > On Sat, 2015-10-10 at 03:07 +0000, Zha, Qipeng wrote:
-> > > >=20
-> > > > Everything is quite okay, except this BAR thingy.
-> > >=20
-> > > > Can you provide a DSDT excerpt for the device to see what is=20
-> > > > there?
-> > >=20
-> > > > I can't find such device (by ACPI id) in the tables of the=20
-> > > > accessible hardware in our lab.
-> > >=20
-> > > Please check below acpi device definition from BIOS.
-> > > Punit device is created in pmc driver, since BIOS finally reject =
-to=20
-> > >=20
-> > > create a separate device for Punit.
-> >=20
-> > Thank you for mention this one. It's unfortunately a show stopper f=
-or
-> > using this module as a driver (you can't assign two drivers to the=20
-> > same
-> > device). You have to convert is to a library.
->=20
-> Oh, I'm sorry, I really missed that the IDs are different.
-> So, discard this part.
->=20
-> >=20
-> > Moreover, I briefly looked at the intel_pmc_ipc and it should be
-> > refactored a in a few ways: a) split to core part, PCI driver, and=20
-> > ACPI
-> > driver, b) improved regarding to comments you got in this review=20
-> > (many
-> > comments are applied to what we have there).
-> >=20
-> > Darren, your opinion?
->=20
-> This by the way still valid.
-
-I'm a bit confused. Are you just bringing up that the intel_pmc_ipc dri=
-ver could
-also be improved? Or are you sugesting that this driver needs to be ref=
-actored
-together with the intel_pmc_ipc driver?
-
-With respect to the intel_punit_ipc driver, I've tried to parse/map the=
- DSDT to
-the BAR mapping in the driver which you raised concerns about. Can you =
-review
-that bit and help us come to a conclusion on that since you asked for t=
-he DSDT?
-(See separate response to Qipeng on that).
-
-Thanks,
-
->=20
-> >=20
-> > >=20
-> > >   Scope (\_SB) {
-> > >     Device(IPC1)
-> > >     {
-> > >       =E2=80=A6
-> > >       Name (RBUF, ResourceTemplate ()
-> > >       {
-> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR0)  =
-=20
-> > >  //=20
-> > > IPC1 Bar
-> > >      //   Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR1)=
-=20
-> > >  //=20
-> > > SSRAM
-> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MDAT)  =
-=20
-> > >  //=20
-> > > PUnit BIOS mailbox Data
-> > >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MINF)  =
-=20
-> > >  //=20
-> > > PUnit BIOS mailbox Interface and GTD/ISPD mailbox
-> > >         IO (Decode16, 0x400, 0x480, 0x4, 0x80)                   =
-=20
-> > >  //=20
-> > > ACPI IO Base address
-> > >         Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive,=
- ,=20
-> > > ,=20
-> > > ) {40}  // IPC1 IRQ =20
-> > >       })
-> > >=20
-> > >       =E2=80=A6
-> > >     }
-> > >   }//end scope
-> >=20
->=20
-> --=20
-> Andy Shevchenko <andriy.shevchenko@intel.com>
-> Intel Finland Oy
-> ---------------------------------------------------------------------
-> Intel Finland Oy
-> Registered Address: PL 281, 00181 Helsinki=20
-> Business Identity Code: 0357606 - 4=20
-> Domiciled in Helsinki=20
->=20
-> This e-mail and any attachments may contain confidential material for
-> the sole use of the intended recipient(s). Any review or distribution
-> by others is strictly prohibited. If you are not the intended
-> recipient, please contact the sender and delete all copies.
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+T24gVGh1LCAyMDE1LTEwLTE1IGF0IDA4OjI5IC0wNzAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4g
+T24gVGh1LCBPY3QgMTUsIDIwMTUgYXQgMTA6Mzk6MzVBTSArMDAwMCwgU2hldmNoZW5rbywgQW5k
+cml5IHdyb3RlOg0KPiA+IE9uIFRodSwgMjAxNS0xMC0xNSBhdCAxMzozNSArMDMwMCwgQW5keSBT
+aGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gT24gU2F0LCAyMDE1LTEwLTEwIGF0IDAzOjA3ICswMDAw
+LCBaaGEsIFFpcGVuZyB3cm90ZToNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBFdmVyeXRoaW5nIGlz
+IHF1aXRlIG9rYXksIGV4Y2VwdCB0aGlzIEJBUiB0aGluZ3kuDQo+ID4gPiA+IA0KPiA+ID4gPiA+
+IENhbiB5b3UgcHJvdmlkZSBhIERTRFQgZXhjZXJwdCBmb3IgdGhlIGRldmljZSB0byBzZWUgd2hh
+dCBpcyANCj4gPiA+ID4gPiB0aGVyZT8NCj4gPiA+ID4gDQo+ID4gPiA+ID4gSSBjYW4ndCBmaW5k
+IHN1Y2ggZGV2aWNlIChieSBBQ1BJIGlkKSBpbiB0aGUgdGFibGVzIG9mIHRoZSANCj4gPiA+ID4g
+PiBhY2Nlc3NpYmxlIGhhcmR3YXJlIGluIG91ciBsYWIuDQo+ID4gPiA+IA0KPiA+ID4gPiBQbGVh
+c2UgY2hlY2sgYmVsb3cgYWNwaSBkZXZpY2UgZGVmaW5pdGlvbiBmcm9tIEJJT1MuDQo+ID4gPiA+
+IFB1bml0IGRldmljZSBpcyBjcmVhdGVkIGluIHBtYyBkcml2ZXIsIHNpbmNlIEJJT1MgZmluYWxs
+eSANCj4gPiA+ID4gcmVqZWN0IHRvIA0KPiA+ID4gPiANCj4gPiA+ID4gY3JlYXRlIGEgc2VwYXJh
+dGUgZGV2aWNlIGZvciBQdW5pdC4NCj4gPiA+IA0KPiA+ID4gDQo+ID4gPiBNb3Jlb3ZlciwgSSBi
+cmllZmx5IGxvb2tlZCBhdCB0aGUgaW50ZWxfcG1jX2lwYyBhbmQgaXQgc2hvdWxkIGJlDQo+ID4g
+PiByZWZhY3RvcmVkIGEgaW4gYSBmZXcgd2F5czogYSkgc3BsaXQgdG8gY29yZSBwYXJ0LCBQQ0kg
+ZHJpdmVyLCANCj4gPiA+IGFuZCANCj4gPiA+IEFDUEkNCj4gPiA+IGRyaXZlciwgYikgaW1wcm92
+ZWQgcmVnYXJkaW5nIHRvIGNvbW1lbnRzIHlvdSBnb3QgaW4gdGhpcyByZXZpZXcgDQo+ID4gPiAo
+bWFueQ0KPiA+ID4gY29tbWVudHMgYXJlIGFwcGxpZWQgdG8gd2hhdCB3ZSBoYXZlIHRoZXJlKS4N
+Cj4gPiA+IA0KPiA+ID4gRGFycmVuLCB5b3VyIG9waW5pb24/DQo+ID4gDQo+ID4gVGhpcyBieSB0
+aGUgd2F5IHN0aWxsIHZhbGlkLg0KPiANCj4gSSdtIGEgYml0IGNvbmZ1c2VkLg0KDQpTb3JyeSBm
+b3IgdGhpcy4NCg0KPiAgQXJlIHlvdSBqdXN0IGJyaW5naW5nIHVwIHRoYXQgdGhlIGludGVsX3Bt
+Y19pcGMgZHJpdmVyIGNvdWxkDQo+IGFsc28gYmUgaW1wcm92ZWQ/DQo+IA0KDQpUaGF0IGlzLCBi
+dXQgZm9yIGZ1dHVyZS4gSXQncyBub3QgYSBjb25jZXJuIHJpZ2h0IG5vdy4NCg0KPiANCj4gV2l0
+aCByZXNwZWN0IHRvIHRoZSBpbnRlbF9wdW5pdF9pcGMgZHJpdmVyLCBJJ3ZlIHRyaWVkIHRvIHBh
+cnNlL21hcCANCj4gdGhlIERTRFQgdG8NCj4gdGhlIEJBUiBtYXBwaW5nIGluIHRoZSBkcml2ZXIg
+d2hpY2ggeW91IHJhaXNlZCBjb25jZXJucyBhYm91dC4gQ2FuIA0KPiB5b3UgcmV2aWV3DQo+IHRo
+YXQgYml0IGFuZCBoZWxwIHVzIGNvbWUgdG8gYSBjb25jbHVzaW9uIG9uIHRoYXQgc2luY2UgeW91
+IGFza2VkIGZvciANCj4gdGhlIERTRFQ/DQo+IChTZWUgc2VwYXJhdGUgcmVzcG9uc2UgdG8gUWlw
+ZW5nIG9uIHRoYXQpLg0KDQpZZXMsIEknbSBmb2xsb3cgdGhlIGRpc2N1c3Npb24uIEkgd291bGQg
+bGlrZSB0byB1bmRlcnN0YW5kIHdoYXQgdGhvc2UNCnRocmVlIHJlc291cmNlcyBmb3I/IEFuZCB0
+aGVyZSBpcyBvbmUgSU8gKElPIHJlc291cmNlKSBmb3IgdW5jbGVhcg0KcmVhc29uLg0KDQo+IA0K
+PiBUaGFua3MsDQo+IA0KPiA+IA0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAgIFNjb3BlIChc
+X1NCKSB7DQo+ID4gPiA+ICAgICBEZXZpY2UoSVBDMSkNCj4gPiA+ID4gICAgIHsNCj4gPiA+ID4g
+ICAgICAg4oCmDQo+ID4gPiA+ICAgICAgIE5hbWUgKFJCVUYsIFJlc291cmNlVGVtcGxhdGUgKCkN
+Cj4gPiA+ID4gICAgICAgew0KPiA+ID4gPiAgICAgICAgIE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0
+ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgQkFSMCkNCj4gPiA+ID4gICAgDQo+ID4gPiA+ICAv
+LyANCj4gPiA+ID4gSVBDMSBCYXINCj4gPiA+ID4gICAgICAvLyAgIE1lbW9yeTMyRml4ZWQgKFJl
+YWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgDQo+ID4gPiA+IEJBUjEpIA0KPiA+ID4g
+PiAgLy8gDQo+ID4gPiA+IFNTUkFNDQo+ID4gPiA+ICAgICAgICAgTWVtb3J5MzJGaXhlZCAoUmVh
+ZFdyaXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBNREFUKQ0KPiA+ID4gPiAgICANCj4gPiA+
+ID4gIC8vIA0KPiA+ID4gPiBQVW5pdCBCSU9TIG1haWxib3ggRGF0YQ0KPiA+ID4gPiAgICAgICAg
+IE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTUlORikN
+Cj4gPiA+ID4gICAgDQo+ID4gPiA+ICAvLyANCj4gPiA+ID4gUFVuaXQgQklPUyBtYWlsYm94IElu
+dGVyZmFjZSBhbmQgR1REL0lTUEQgbWFpbGJveA0KPiA+ID4gPiAgICAgICAgIElPIChEZWNvZGUx
+NiwgMHg0MDAsIDB4NDgwLCAweDQsIDB4ODApICAgICAgICAgICAgICAgICANCj4gPiA+ID4gICAg
+DQo+ID4gPiA+ICAvLyANCj4gPiA+ID4gQUNQSSBJTyBCYXNlIGFkZHJlc3MNCj4gPiA+ID4gICAg
+ICAgICBJbnRlcnJ1cHQgKFJlc291cmNlQ29uc3VtZXIsIExldmVsLCBBY3RpdmVMb3csIA0KPiA+
+ID4gPiBFeGNsdXNpdmUsICwgDQo+ID4gPiA+ICwgDQo+ID4gPiA+ICkgezQwfSAgLy8gSVBDMSBJ
+UlEgIA0KPiA+ID4gPiAgICAgICB9KQ0KPiA+ID4gPiANCj4gPiA+ID4gICAgICAg4oCmDQo+ID4g
+PiA+ICAgICB9DQo+ID4gPiA+ICAgfS8vZW5kIHNjb3BlDQo+ID4gPiANCg0KDQotLSANCkFuZHkg
+U2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AaW50ZWwuY29tPg0KSW50ZWwgRmlubGFuZCBP
+eQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4
+MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAzNTc2MDYgLSA0IApE
+b21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1h
+eSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBp
+bnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVy
+cyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVj
+aXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
