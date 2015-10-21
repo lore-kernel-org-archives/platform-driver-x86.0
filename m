@@ -1,94 +1,178 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Wed, 21 Oct 2015 13:42:25 +0200
-Message-ID: <CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
-References: <bug-106031-5380@https.bugzilla.kernel.org/>
-	<bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
-	<20151021085724.GA87951@vmdeb7>
-	<20151021091954.GD15219@pali>
-	<20151021110059.GF15219@pali>
-	<20151021111243.GB87951@vmdeb7>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Wed, 21 Oct 2015 14:51:43 +0200
+Message-ID: <20151021125143.GA29166@vmdeb7>
+References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
+ <1444397622.8361.544.camel@intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+ <20151015051606.GD2592@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f169.google.com ([209.85.220.169]:34381 "EHLO
-	mail-qk0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753822AbbJULm1 convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:33249 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754507AbbJUMvy (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Oct 2015 07:42:27 -0400
-Received: by qkfm62 with SMTP id m62so29732453qkf.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2015 04:42:25 -0700 (PDT)
-In-Reply-To: <20151021111243.GB87951@vmdeb7>
+	Wed, 21 Oct 2015 08:51:54 -0400
+Content-Disposition: inline
+In-Reply-To: <20151015051606.GD2592@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-2015-10-21 13:12 GMT+02:00 Darren Hart <dvhart@infradead.org>:
-> On Wed, Oct 21, 2015 at 01:00:59PM +0200, Pali Roh=C3=A1r wrote:
->> On Wednesday 21 October 2015 11:19:54 Pali Roh=C3=A1r wrote:
->> > On Wednesday 21 October 2015 10:57:24 Darren Hart wrote:
->> > > On Sun, Oct 18, 2015 at 09:34:56AM +0000, bugzilla-daemon@bugzil=
-la.kernel.org wrote:
->> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
->> > > >
->> > > > --- Comment #2 from Britt Yazel <bwyazel@gmail.com> ---
->> > > > Confirmed. Blacklisting the dell_rbtn module solves this issue
->> > >
->> > > Pali,
->> > >
->> > > Can you take a look at this bug report regarding a 4.2 regressio=
-n for rfkill
->> > > after the introduction of the dell-rbtn driver please.
->> > >
->> >
->> > Hi! This looks strange. Driver dell_rbnt is just receiver of BIOS/=
-ACPI
->> > events. It receive hotkey or slide switch event and translate it i=
-nto
->> > either linux input keypress or rfkill block event. But dell_rbnt d=
-river
->> > itself cannot set or change wireless rfkill or airplane mode.
->> >
->> > So my opinion is that BIOS/ACPI could send such event, dell_rbnt t=
-hen
->> > propagate it into userspace and some application process it and do
->> > something...
->> >
->>
->> CCing Gabriele, owner of XPS machine too. Have you seen similar prob=
-lems
->> with dell_rbtn as described in above bug report?
+Qipeng, can you comment on my understanding of the DSDT and the driver?
 
-I'll look into this ASAP. I haven't been using dell_rbtn not to disable
-the hardware switch, but I didn't notice anything strange the last time
-I tested it.
-
-> Here's some context I've gathered. I haven't drawn any conclusions fr=
-om this,
-> but perhaps you will find it useful:
->
-> From what I can tell, the XPS 13 has a TOGGLE type rfkill button (Fn-=
-PrtScrn):
->
-> http://www.trustedreviews.com/dell-xps-13-2015-photos-11
->
-> I see in the journal that systemd is working with two rfkill devices =
-(8 and 9),
-> and that dell-wmi is emitting unknown key events (e00e). This key is =
-of course
-> not in the dell_wmi_legacy_keymap, but it would land right after 0xe0=
-0d, labeled
-> as a BIOS error.
-
-e00e is some battery related event that is sent when some ACPI methods
-are executed. I know it's sent upon resume. I thought about adding it
-to the ignore list, but then I completely forgot. I'm not sure it has
-the same meaning on all the laptops, but I don't think it's something
-we care about.
-
-> --
+On Wed, Oct 14, 2015 at 10:16:06PM -0700, Darren Hart wrote:
+> On Sat, Oct 10, 2015 at 03:07:53AM +0000, Zha, Qipeng wrote:
+> >=20
+> > >Everything is quite okay, except this BAR thingy.
+> >=20
+> > >Can you provide a DSDT excerpt for the device to see what is there=
+?
+> >=20
+> > >I can't find such device (by ACPI id) in the tables of the accessi=
+ble hardware in our lab.
+> >=20
+> > Please check below acpi device definition from BIOS.
+> > Punit device is created in pmc driver, since BIOS finally reject to=
+ create a separate device for Punit.
+> >=20
+>=20
+> Qipeng, sorry for the delay. I've been under a rather absurd load. I'=
+d like to
+> close on this so we can get this into -next ASAP. Thank you for posti=
+ng the
+> DSDT.
+>=20
+> Help us parse what this means so we're all seeing the same thing. I s=
+ee a total
+> of 3 memory addresses and the following IO base address. Unfortunatel=
+y, the
+> comments don't map directly to the driver code, so I need to piece th=
+is
+> together.
+>=20
+> The code in question from the driver is:
+>=20
+> #define MAILBOX_REGISTER_SPACE 0x10
+>=20
+> +static int intel_punit_get_bars(struct platform_device *pdev)
+> +{
+> +       struct resource *res0, *res1;
+> +       void __iomem *addr;
+> +       int size;
+> +
+> +       res0 =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!res0) {
+> +               dev_err(&pdev->dev, "Failed to get iomem resource\n")=
+;
+> +               return -ENXIO;
+> +       }
+> +       size =3D resource_size(res0);
+> +       if (!devm_request_mem_region(&pdev->dev, res0->start,
+> +                                    size, pdev->name)) {
+> +               dev_err(&pdev->dev, "Failed to request iomem resouce\=
+n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       res1 =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       if (!res1) {
+> +               dev_err(&pdev->dev, "Failed to get iomem resource1\n"=
+);
+> +               return -ENXIO;
+> +       }
+> +       size =3D resource_size(res1);
+> +       if (!devm_request_mem_region(&pdev->dev, res1->start,
+> +                                    size, pdev->name)) {
+> +               dev_err(&pdev->dev, "Failed to request iomem resouce1=
+\n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       addr =3D ioremap_nocache(res0->start,
+> +                              resource_size(res0) + resource_size(re=
+s1));
+> +       if (!addr) {
+> +               dev_err(&pdev->dev, "Failed to ioremap ipc base\n");
+> +               return  -ENOMEM;
+> +       }
+> +       punit_ipcdev->base[BIOS_IPC] =3D addr;
+> +       addr +=3D MAILBOX_REGISTER_SPACE;
+> +       punit_ipcdev->base[GTDRIVER_IPC] =3D addr;
+> +       addr +=3D MAILBOX_REGISTER_SPACE;
+> +       punit_ipcdev->base[ISPDRIVER_IPC] =3D addr;
+> +
+> +       return 0;
+> +}
+>=20
+>=20
+> >   Scope (\_SB) {
+> >     Device(IPC1)
+> >     {
+> >       =E2=80=A6
+> >       Name (RBUF, ResourceTemplate ()
+> >       {
+> >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR0)    =
+// IPC1 Bar
+>=20
+> size: 0x1000
+> IPC1 BAR, I presume this maps to res0 in the driver?
+>=20
+> Then the start of this 4096 byte region is assigned by:
+>=20
+> punit_ipcdev->base[BIOS_IPC] =3D addr;
+>=20
+> And everything else assigned by intel_punit_get_bards is contained wi=
+thin this
+> addr since MAILBOX_REGISTER_SPACE is only 0x10.
+>=20
+> Do I have that correct?
+>=20
+> >      //   Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, BAR1)  =
+// SSRAM
+> >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MDAT)    =
+// PUnit BIOS mailbox Data
+>=20
+> size: 0x1000
+> And this would be res1 in the driver?
+>=20
+> >         Memory32Fixed (ReadWrite, 0x00000000, 0x00001000, MINF)    =
+// PUnit BIOS mailbox Interface and GTD/ISPD mailbox
+>=20
+> size: 0x1000
+>=20
+> This seems odd, especially with the comments in the DSD. A more natur=
+al mapping would have been each of the Memory32Fixed macros mapping to =
+the BIOS_IPC, GTDRIVER_IPC, and ISPDRIVER_IPC BARs in the driver. This =
+would indeed be the case if MAILBOX_REGISTER_SPACE was 0x1000 instead o=
+f 0x10. Also, if that were the case, then those BARs should be set by u=
+sing the mapped addr for the 3 separate resources - which is what Andy =
+was getting at.
+>=20
+> Qipeng, I assume I misinterpretted something above. Can you point out=
+ where I've got this wrong and how the driver is doing the only thing i=
+t can given the resources provided by the DSDT?
+>=20
+> Thanks,
+>=20
+>=20
+> >         IO (Decode16, 0x400, 0x480, 0x4, 0x80)                     =
+// ACPI IO Base address
+> >         Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, ,=
+ , ) {40}  // IPC1 IRQ =20
+> >       })
+> >=20
+> >       =E2=80=A6
+> >     }
+> >   }//end scope
+>=20
+> --=20
 > Darren Hart
 > Intel Open Source Technology Center
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
