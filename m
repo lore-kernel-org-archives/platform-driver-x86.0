@@ -1,50 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
  open my laptop lid
-Date: Thu, 22 Oct 2015 10:35:59 +0200
-Message-ID: <20151022083559.GA23490@malice.jf.intel.com>
+Date: Thu, 22 Oct 2015 10:51:17 +0200
+Message-ID: <20151022085117.GQ15219@pali>
 References: <bug-106031-5380@https.bugzilla.kernel.org/>
  <bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
  <20151021085724.GA87951@vmdeb7>
  <20151021091954.GD15219@pali>
  <20151021110059.GF15219@pali>
  <20151021111243.GB87951@vmdeb7>
- <20151022081725.GC2581@malice.jf.intel.com>
- <CABFtUbQi-x8DCwm1gSC6ifAZec-n==xh_dTM79PhQSEsxNJ9CA@mail.gmail.com>
+ <CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
+ <CABFtUbTF5k1Jm_pG6XiG1_9H8EwZQfvbXFuGWUjNZHd5YDgvXg@mail.gmail.com>
+ <20151022074937.GA2581@malice.jf.intel.com>
+ <CABFtUbTKUTfkeqE5nWKdNyrpbs3d2edNhMb8aSmSG_fBsMvcBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:36261 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755915AbbJVIgE (ORCPT
+Received: from mail-wi0-f176.google.com ([209.85.212.176]:35017 "EHLO
+	mail-wi0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753832AbbJVIvU (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Oct 2015 04:36:04 -0400
+	Thu, 22 Oct 2015 04:51:20 -0400
+Received: by wicll6 with SMTP id ll6so125142444wic.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2015 01:51:19 -0700 (PDT)
 Content-Disposition: inline
-In-Reply-To: <CABFtUbQi-x8DCwm1gSC6ifAZec-n==xh_dTM79PhQSEsxNJ9CA@mail.gmail.com>
+In-Reply-To: <CABFtUbTKUTfkeqE5nWKdNyrpbs3d2edNhMb8aSmSG_fBsMvcBg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
 
-On Thu, Oct 22, 2015 at 10:28:21AM +0200, Gabriele Mazzotta wrote:
-> 2015-10-22 10:17 GMT+02:00 Darren Hart <dvhart@infradead.org>:
-> > On Wed, Oct 21, 2015 at 01:12:43PM +0200, Darren Hart wrote:
-> >> From what I can tell, the XPS 13 has a TOGGLE type rfkill button (Fn-PrtScrn):
-> >>
-> >> http://www.trustedreviews.com/dell-xps-13-2015-photos-11
-> >
-> > The reporter states his radio toggle is on F2, so it is not the above machine,
-> > probably this one:
-> >
-> > http://www.ibtimes.co.uk/dell-xps-13-review-ultrabook-341773
-> >
-> > In any case, his logs confirm we are seeing a TOGGLE type which is using the
-> > input mechanism.
-> 
-> According to the dmesg it's an XPS13 9333, which is the one I own.
+On Thursday 22 October 2015 10:26:47 Gabriele Mazzotta wrote:
+> I'll see if I can find a batter way to deal with this problem,
+> dell-laptop can detect the presence of an hardware switch.
 
-Oh excellent! That should help considerably!
+dell-rbtn.ko has acpi method CRBT which returns if notebook has hw swit=
+ch or
+toggle key.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+And rfkill implementation in dell-laptop.ko does not work correctly on
+XPS machines. And because userspace implementation of smbios works fine=
+,
+I think that problem is in kernel driver rather in BIOS/firmware...
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
