@@ -1,81 +1,50 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: RE: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Thu, 22 Oct 2015 08:35:27 +0000
-Message-ID: <40786695AB8ED34B85C0BFEA910C834433C822AF@IRSMSX103.ger.corp.intel.com>
-References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
- <1444397622.8361.544.camel@intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
- <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
- <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
- <20151022080430.GB2581@malice.jf.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
+ open my laptop lid
+Date: Thu, 22 Oct 2015 10:35:59 +0200
+Message-ID: <20151022083559.GA23490@malice.jf.intel.com>
+References: <bug-106031-5380@https.bugzilla.kernel.org/>
+ <bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
+ <20151021085724.GA87951@vmdeb7>
+ <20151021091954.GD15219@pali>
+ <20151021110059.GF15219@pali>
+ <20151021111243.GB87951@vmdeb7>
+ <20151022081725.GC2581@malice.jf.intel.com>
+ <CABFtUbQi-x8DCwm1gSC6ifAZec-n==xh_dTM79PhQSEsxNJ9CA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:25522 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756834AbbJVIfb (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:36261 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755915AbbJVIgE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Oct 2015 04:35:31 -0400
-In-Reply-To: <20151022080430.GB2581@malice.jf.intel.com>
-Content-Language: en-US
+	Thu, 22 Oct 2015 04:36:04 -0400
+Content-Disposition: inline
+In-Reply-To: <CABFtUbQi-x8DCwm1gSC6ifAZec-n==xh_dTM79PhQSEsxNJ9CA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, "Zha, Qipeng" <qipeng.zha@intel.com>, Rafael Wysocki <rjw@rjwysocki.net>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXJyZW4gSGFydCBbbWFpbHRv
-OmR2aGFydEBpbmZyYWRlYWQub3JnXQ0KPiBTZW50OiBUaHVyc2RheSwgT2N0b2JlciAyMiwgMjAx
-NSAxMTowNSBBTQ0KPiBUbzogWmhhLCBRaXBlbmc7IFJhZmFlbCBXeXNvY2tpDQo+IENjOiBTaGV2
-Y2hlbmtvLCBBbmRyaXk7IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBXZXN0
-ZXJiZXJnLA0KPiBNaWthDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjddIHBsYXRmb3JtOng4Njog
-YWRkIEludGVsIFAtVW5pdCBtYWlsYm94IElQQyBkcml2ZXINCj4gDQo+IE9uIFRodSwgT2N0IDIy
-LCAyMDE1IGF0IDAxOjAxOjMyQU0gKzAwMDAsIFpoYSwgUWlwZW5nIHdyb3RlOg0KPiA+ID4+UWlw
-ZW5nLCBjYW4geW91IGNvbW1lbnQgb24gbXkgdW5kZXJzdGFuZGluZyBvZiB0aGUgRFNEVCBhbmQg
-dGhlDQo+IGRyaXZlcj8NCj4gPiA+PiA+ICAgICAgLy8gICBNZW1vcnkzMkZpeGVkIChSZWFkV3Jp
-dGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAsIEJBUjEpICAvLw0KPiBTU1JBTQ0KPiA+ID4+ID4g
-ICAgICAgICBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAs
-IE1EQVQpICAgIC8vDQo+IFBVbml0IEJJT1MgbWFpbGJveCBEYXRhDQo+ID4gPj4gc2l6ZTogMHgx
-MDAwDQo+ID4gPj4gQW5kIHRoaXMgd291bGQgYmUgcmVzMSBpbiB0aGUgZHJpdmVyPw0KPiA+ID4+
-ID4gICAgICAgICBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEw
-MDAsIE1JTkYpICAgIC8vDQo+IFBVbml0IEJJT1MgbWFpbGJveCBJbnRlcmZhY2UgYW5kIEdURC9J
-U1BEIG1haWxib3gNCj4gPg0KPiA+IFdoZW4gYm9vdCB1cCwgQklPUyB3aWxsIHJld3JpdGUgdGhl
-IHNpemUgb2YgdGhlc2UgZW50cmllcywgIGFjdHVhbGx5IHRoZSBzaXplDQo+IGZvciB0aGlzIGVu
-dHJ5IHdpbGwgY2hhbmdlIHRvIDRCLCBub3QgdGhlIGRlZmF1bHQgMHgxMDAwLg0KPiA+IFRoaXMg
-aXMgcmVhbCBzdHJhbmdlIGltcGxlbWVudGF0aW9uIGZvciB1cywgYXMgYmVmb3JlIG1lbnRpb25l
-ZCwgQklPUw0KPiBpbXBsZW1lbnQgbGlrZSB0aGlzIHRvIG1ha2UgaXQgY29tcGF0aWJsZSBmb3Ig
-d29zIGRyaXZlci4NCj4gPg0KPiANCj4gK1JhZmFlbCAtIHdlJ3JlIGhhdmluZyBzb21lIHRyb3Vi
-bGUgbWFwcGluZyB0aGUgQUNQSSBkZWNsYXJlZCByZXNvdXJjZXMNCj4gK3RvIHRoZQ0KPiBkcml2
-ZXIgY29kZSB1c2luZyB0aGVtLiBRaXBlbmcgaGFzIGluZGljYXRlZCB0aGF0IHRoZSBCSU9TIHRl
-YW0gaXMgZG9pbmcNCj4gc29tZXRoaW5nIHJhdGhlciBiaXphcnJlIHRvIG1lZXQgc29tZSByZXF1
-aXJlbWVudCBmcm9tIHRoZSBXT1MgZHJpdmVycy4NCj4gQ2FuIHlvdSBoYXZlIGEgbG9vayBhdCB0
-aGlzIHRocmVhZD8gSSBoYXZlbid0IGJlZW4gYWJsZSB0byBtYXAgdGhlIEFDUEkNCj4gcmVzb3Vy
-Y2VzIHRvIHRoZSBkcml2ZXIgcmVzb3VyY2VzIGluIGEgd2F5IHRoYXQgbWFrZXMgc2Vuc2UgdG8g
-bWUsIGFuZCB0aGlzIGlzDQo+IGhvbGRpbmcgdXAgbWVyZ2luZyB0aGUgZHJpdmVyLg0KPiANCj4g
-UWlwZW5nLCB0aGlzIGlzIHZlcnkgc3RyYW5nZSBpbmRlZWQuIEhvdyBkb2VzIEJJT1MgY2hhbmdl
-IHRoaXMgaW4gYSB3YXkgdGhhdA0KPiBkb2Vzbid0IGNoYW5nZSB0aGUgcmVzb3VyY2VzIEFDUEkg
-cmVwb3J0cyB0byB0aGUgT1M/DQo+IA0KPiBJcyB0aGUgQVNMIGZyYWdtZW50IHlvdSBwcm92aWRl
-ZCBjb2xsZWN0ZWQgZnJvbSBhIHJ1bm5pbmcgTGludXggc3lzdGVtDQo+IHVzaW5nIGFjcGlkdW1w
-PyBJZiBzbywgdGhlbiB0aGUgcmVzb3VyY2VzIEFDUEkgYWR2ZXJ0aXNlcyB0byB0aGUgT1MgYXJl
-IG5vdA0KPiBhY3R1YWxseSBhdmFpbGFibGUuLi4gYW5kIHRoYXQgY2FuJ3QgYmUgYWNjZXB0YWJs
-ZS4NCg0KKzEuIFBsZWFzZSBjb25maXJtIHRoYXQgdGhlIGV4Y2VycHQgaGFzIGJlZW4gY29waWVk
-IGZyb20gcnVubmluZyBMaW51eCBPUyBtYWNoaW5lLCBvdGhlcndpc2UgcGxlYXNlIHByb3ZpZGUg
-dGhlICpyZWFsKiAocnVuLXRpbWUpIGV4Y2VycHQgZnJvbSBEU0RUIHVzaW5nIGVpdGhlciBhY3Bp
-ZHVtcCBvciBtYW51YWxseSBjb3BpZWQgZnJvbSAvc3lzL2Zpcm13YXJlL2FjcGkvdGFibGVzL0RT
-RFQgKElJUkMpLg0KDQo+IA0KPiBRaXBlbmcsIEkgd2FudCB0byBnZXQgdGhpcyBkcml2ZXIgbWVy
-Z2VkLCBidXQgd2UgaGF2ZSB0byBkbyB0aGUgZHVlIGRpbGlnZW5jZQ0KPiB0byB1bmRlcnN0YW5k
-IGhvdyB0aGVzZSByZXNvdXJjZXMgYXJlIGJlaW5nIHVzZWQuIEkndmUgYXNrZWQgc2V2ZXJhbA0K
-PiBxdWVzdGlvbnMgdG8gdHJ5IGFuZCBjbGFyaWZ5IHRoaXMsIGJ1dCB5b3VyIHJlc3BvbnNlcyBo
-YXZlIGJlZW4gdmVyeSBzaG9ydCBhbmQNCj4gZG8gbm90IGZ1bGx5IGFkZHJlc3MgdGhlIHF1ZXN0
-aW9ucy4gSSBuZWVkIHlvdXIgaGVscCB0byBmdWxseSBkZXNjcmliZSB3aGF0IGlzDQo+IGdvaW5n
-IG9uIHdpdGggdGhlIEJBUnMgYmVmb3JlIEkgY2FuIHNpZ24gdGhpcyBvZmYgYW5kIGFzayBMaW51
-cyB0byBtZXJnZSBpdC4NCg0KDQotLSANCkFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVu
-a29AaW50ZWwuY29tPg0KDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVy
-ZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29k
-ZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBh
-bnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUg
-c29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0
-cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90
-IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRl
-bGV0ZSBhbGwgY29waWVzLgo=
+On Thu, Oct 22, 2015 at 10:28:21AM +0200, Gabriele Mazzotta wrote:
+> 2015-10-22 10:17 GMT+02:00 Darren Hart <dvhart@infradead.org>:
+> > On Wed, Oct 21, 2015 at 01:12:43PM +0200, Darren Hart wrote:
+> >> From what I can tell, the XPS 13 has a TOGGLE type rfkill button (Fn-PrtScrn):
+> >>
+> >> http://www.trustedreviews.com/dell-xps-13-2015-photos-11
+> >
+> > The reporter states his radio toggle is on F2, so it is not the above machine,
+> > probably this one:
+> >
+> > http://www.ibtimes.co.uk/dell-xps-13-review-ultrabook-341773
+> >
+> > In any case, his logs confirm we are seeing a TOGGLE type which is using the
+> > input mechanism.
+> 
+> According to the dmesg it's an XPS13 9333, which is the one I own.
+
+Oh excellent! That should help considerably!
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
