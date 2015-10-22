@@ -1,70 +1,88 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [Bug 105051] Radeon sets max_brightness to -1, breaking GNOME
- backlight control on Macbook Pro mid-2015 11,5
-Date: Thu, 22 Oct 2015 11:36:52 +0200
-Message-ID: <20151022093652.GA25192@malice.jf.intel.com>
-References: <bug-105051-5380@https.bugzilla.kernel.org/>
- <bug-105051-5380-RlJ9dZd1ch@https.bugzilla.kernel.org/>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
+ open my laptop lid
+Date: Thu, 22 Oct 2015 12:44:08 +0200
+Message-ID: <5628BDF8.9030506@gmail.com>
+References: <bug-106031-5380@https.bugzilla.kernel.org/>
+ <bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
+ <20151021085724.GA87951@vmdeb7> <20151021091954.GD15219@pali>
+ <20151021110059.GF15219@pali> <20151021111243.GB87951@vmdeb7>
+ <CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
+ <CABFtUbTF5k1Jm_pG6XiG1_9H8EwZQfvbXFuGWUjNZHd5YDgvXg@mail.gmail.com>
+ <20151022074937.GA2581@malice.jf.intel.com>
+ <CABFtUbTKUTfkeqE5nWKdNyrpbs3d2edNhMb8aSmSG_fBsMvcBg@mail.gmail.com>
+ <20151022085117.GQ15219@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bug-105051-5380-RlJ9dZd1ch@https.bugzilla.kernel.org/>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
-Cc: platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Petri Hodju <petrihodju@yahoo.com>, Bjorn Helgaas <bhelgaas@google.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:38675 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751235AbbJVKoL (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 22 Oct 2015 06:44:11 -0400
+Received: by wicll6 with SMTP id ll6so112849844wic.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2015 03:44:10 -0700 (PDT)
+In-Reply-To: <20151022085117.GQ15219@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
 
-Bruno, can you please have a look at the following regression attribute=
-d to:
+On 22/10/2015 10:51, Pali Roh=C3=A1r wrote:
+> On Thursday 22 October 2015 10:26:47 Gabriele Mazzotta wrote:
+>> I'll see if I can find a batter way to deal with this problem,
+>> dell-laptop can detect the presence of an hardware switch.
+>
+> dell-rbtn.ko has acpi method CRBT which returns if notebook has hw sw=
+itch or
+> toggle key.
+>
+> And rfkill implementation in dell-laptop.ko does not work correctly o=
+n
+> XPS machines. And because userspace implementation of smbios works fi=
+ne,
+> I think that problem is in kernel driver rather in BIOS/firmware...
 
-4eebd5a apple-gmux: lock iGP IO to protect from vgaarb changes
- 2015-03-18 (7 months ago), Bruno Pr=E9mont <bonbons@linux-vserver.org>
+I was thinking about something such as the following, which should favo=
+r
+the hardware slider when available. This should work if my assumption i=
+s
+correct, that is the laptops with a working RBTN method are the ones
+having problems.
 
+diff --git a/drivers/platform/x86/dell-rbtn.c=20
+b/drivers/platform/x86/dell-rbtn.c
+index cd410e3..cf3c11c 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -321,6 +321,7 @@ static int rbtn_add(struct acpi_device *device)
+  	struct rbtn_data *rbtn_data;
+  	enum rbtn_type type;
+  	int ret =3D 0;
++	bool has_hardware_slider; /* get this with SMI */
 
-On Thu, Oct 15, 2015 at 04:47:13AM +0000, bugzilla-daemon@bugzilla.kern=
-el.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D105051
->=20
-> Felipe Ortiz <fortizc@gmail.com> changed:
->=20
->            What    |Removed                     |Added
-> ---------------------------------------------------------------------=
--------
->                  CC|                            |fortizc@gmail.com
->=20
-> --- Comment #14 from Felipe Ortiz <fortizc@gmail.com> ---
-> I can confirm the problem with 4eebd5a4e72697aac25a8a57d3f888a9d5f803=
-70. I have
-> a MPB 11,5 with AMD/Intel graphics. I recompile the module (a previou=
-s version
-> of 4eebd5a4e72697aac25a8a57d3f888a9d5f80370) and brightness adjusts i=
-s working
-> again.
->=20
-> I see two problems:=20
->=20
-> 1) If someone uses gpu-switch (https://github.com/0xbb/gpu-switch) wi=
-th this
-> bug screen seem not work, after severals reboots (with different kern=
-els) I can
-> access a terminal and execute gpu-switch -d and then screen seems wor=
-k again.
->=20
-> 2) If you use a Intel card (swiched with gpu-switch) the OSD (activat=
-ed with
-> functions keys) is so slow and chromium have the same problem (tempor=
-ary fix is
-> deactivate chromium hw acceleration) is this a intel driver bug?
->=20
-> --=20
-> You are receiving this mail because:
-> You are on the CC list for the bug.
->=20
+  	type =3D rbtn_check(device);
+  	if (type =3D=3D RBTN_UNKNOWN) {
+@@ -328,7 +329,7 @@ static int rbtn_add(struct acpi_device *device)
+  		return -EINVAL;
+  	}
 
-Thanks,
+-	ret =3D rbtn_acquire(device, true);
++	ret =3D rbtn_acquire(device, !has_hardware_slider);
+  	if (ret < 0) {
+  		dev_err(&device->dev, "Cannot enable device\n");
+  		return ret;
+@@ -343,7 +344,10 @@ static int rbtn_add(struct acpi_device *device)
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+  	switch (rbtn_data->type) {
+  	case RBTN_TOGGLE:
+-		ret =3D rbtn_input_init(rbtn_data);
++		if (has_hardware_slider)
++			ret =3D 0;
++		else
++			ret =3D rbtn_input_init(rbtn_data);
+  		break;
+  	case RBTN_SLIDER:
+  		if (auto_remove_rfkill && rbtn_chain_head.head)
