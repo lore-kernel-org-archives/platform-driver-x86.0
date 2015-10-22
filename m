@@ -1,87 +1,121 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Wed, 21 Oct 2015 20:53:36 +0200
-Message-ID: <CABFtUbTF5k1Jm_pG6XiG1_9H8EwZQfvbXFuGWUjNZHd5YDgvXg@mail.gmail.com>
-References: <bug-106031-5380@https.bugzilla.kernel.org/>
-	<bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
-	<20151021085724.GA87951@vmdeb7>
-	<20151021091954.GD15219@pali>
-	<20151021110059.GF15219@pali>
-	<20151021111243.GB87951@vmdeb7>
-	<CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: RE: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Thu, 22 Oct 2015 01:01:32 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
+References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
+ <1444397622.8361.544.camel@intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+ <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qg0-f41.google.com ([209.85.192.41]:36001 "EHLO
-	mail-qg0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755491AbbJUSxh convert rfc822-to-8bit (ORCPT
+Received: from mga02.intel.com ([134.134.136.20]:35812 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753233AbbJVBBg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 21 Oct 2015 14:53:37 -0400
-Received: by qgad10 with SMTP id d10so35860693qga.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Oct 2015 11:53:36 -0700 (PDT)
-In-Reply-To: <CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
+	Wed, 21 Oct 2015 21:01:36 -0400
+In-Reply-To: <20151021125143.GA29166@vmdeb7>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-2015-10-21 13:42 GMT+02:00 Gabriele Mazzotta <gabriele.mzt@gmail.com>:
-> 2015-10-21 13:12 GMT+02:00 Darren Hart <dvhart@infradead.org>:
->> On Wed, Oct 21, 2015 at 01:00:59PM +0200, Pali Roh=C3=A1r wrote:
->>> On Wednesday 21 October 2015 11:19:54 Pali Roh=C3=A1r wrote:
->>> > On Wednesday 21 October 2015 10:57:24 Darren Hart wrote:
->>> > > On Sun, Oct 18, 2015 at 09:34:56AM +0000, bugzilla-daemon@bugzi=
-lla.kernel.org wrote:
->>> > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
->>> > > >
->>> > > > --- Comment #2 from Britt Yazel <bwyazel@gmail.com> ---
->>> > > > Confirmed. Blacklisting the dell_rbtn module solves this issu=
-e
->>> > >
->>> > > Pali,
->>> > >
->>> > > Can you take a look at this bug report regarding a 4.2 regressi=
-on for rfkill
->>> > > after the introduction of the dell-rbtn driver please.
->>> > >
->>> >
->>> > Hi! This looks strange. Driver dell_rbnt is just receiver of BIOS=
-/ACPI
->>> > events. It receive hotkey or slide switch event and translate it =
-into
->>> > either linux input keypress or rfkill block event. But dell_rbnt =
-driver
->>> > itself cannot set or change wireless rfkill or airplane mode.
->>> >
->>> > So my opinion is that BIOS/ACPI could send such event, dell_rbnt =
-then
->>> > propagate it into userspace and some application process it and d=
-o
->>> > something...
->>> >
->>>
->>> CCing Gabriele, owner of XPS machine too. Have you seen similar pro=
-blems
->>> with dell_rbtn as described in above bug report?
->
-> I'll look into this ASAP. I haven't been using dell_rbtn not to disab=
-le
-> the hardware switch, but I didn't notice anything strange the last ti=
-me
-> I tested it.
-
-I went back to see the old thread about dell-rbtn and apparently I was
-aware of this problem [1]. So yes, I confirm the bug.
-
-We are assuming that RBTN receives notifications only when a button
-function keys are pressed, but this is true only for some laptops, whil=
-e
-others, such as my XPS13, send a notification also on resume [2].
-This makes things a bit more complicated.
-
-CCed Alex since he might be interested in this.
-
-[1] https://marc.info/?l=3Dlinux-kernel&m=3D141927583032180
-[2] https://marc.info/?l=3Dlinux-kernel&m=3D141941243829713
+Pj5RaXBlbmcsIGNhbiB5b3UgY29tbWVudCBvbiBteSB1bmRlcnN0YW5kaW5nIG9mIHRoZSBEU0RU
+IGFuZCB0aGUgZHJpdmVyPw0KPj4gPiAgICAgIC8vICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRl
+LCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBCQVIxKSAgLy8gU1NSQU0NCj4+ID4gICAgICAgICBN
+ZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAsIE1EQVQpICAg
+IC8vIFBVbml0IEJJT1MgbWFpbGJveCBEYXRhDQo+PiBzaXplOiAweDEwMDANCj4+IEFuZCB0aGlz
+IHdvdWxkIGJlIHJlczEgaW4gdGhlIGRyaXZlcj8NCj4+ID4gICAgICAgICBNZW1vcnkzMkZpeGVk
+IChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAsIE1JTkYpICAgIC8vIFBVbml0IEJJ
+T1MgbWFpbGJveCBJbnRlcmZhY2UgYW5kIEdURC9JU1BEIG1haWxib3gNCg0KV2hlbiBib290IHVw
+LCBCSU9TIHdpbGwgcmV3cml0ZSB0aGUgc2l6ZSBvZiB0aGVzZSBlbnRyaWVzLCAgYWN0dWFsbHkg
+dGhlIHNpemUgZm9yIHRoaXMgZW50cnkgd2lsbCBjaGFuZ2UgdG8gNEIsIG5vdCB0aGUgZGVmYXVs
+dCAweDEwMDAuDQpUaGlzIGlzIHJlYWwgc3RyYW5nZSBpbXBsZW1lbnRhdGlvbiBmb3IgdXMsIGFz
+IGJlZm9yZSBtZW50aW9uZWQsIEJJT1MgaW1wbGVtZW50IGxpa2UgdGhpcyB0byBtYWtlIGl0IGNv
+bXBhdGlibGUgZm9yIHdvcyBkcml2ZXIuDQoNCk9uIFdlZCwgT2N0IDE0LCAyMDE1IGF0IDEwOjE2
+OjA2UE0gLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiBPbiBTYXQsIE9jdCAxMCwgMjAxNSBh
+dCAwMzowNzo1M0FNICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4gPiANCj4gPiA+RXZlcnl0
+aGluZyBpcyBxdWl0ZSBva2F5LCBleGNlcHQgdGhpcyBCQVIgdGhpbmd5Lg0KPiA+IA0KPiA+ID5D
+YW4geW91IHByb3ZpZGUgYSBEU0RUIGV4Y2VycHQgZm9yIHRoZSBkZXZpY2UgdG8gc2VlIHdoYXQg
+aXMgdGhlcmU/DQo+ID4gDQo+ID4gPkkgY2FuJ3QgZmluZCBzdWNoIGRldmljZSAoYnkgQUNQSSBp
+ZCkgaW4gdGhlIHRhYmxlcyBvZiB0aGUgYWNjZXNzaWJsZSBoYXJkd2FyZSBpbiBvdXIgbGFiLg0K
+PiA+IA0KPiA+IFBsZWFzZSBjaGVjayBiZWxvdyBhY3BpIGRldmljZSBkZWZpbml0aW9uIGZyb20g
+QklPUy4NCj4gPiBQdW5pdCBkZXZpY2UgaXMgY3JlYXRlZCBpbiBwbWMgZHJpdmVyLCBzaW5jZSBC
+SU9TIGZpbmFsbHkgcmVqZWN0IHRvIGNyZWF0ZSBhIHNlcGFyYXRlIGRldmljZSBmb3IgUHVuaXQu
+DQo+ID4gDQo+IA0KPiBRaXBlbmcsIHNvcnJ5IGZvciB0aGUgZGVsYXkuIEkndmUgYmVlbiB1bmRl
+ciBhIHJhdGhlciBhYnN1cmQgbG9hZC4gSSdkIA0KPiBsaWtlIHRvIGNsb3NlIG9uIHRoaXMgc28g
+d2UgY2FuIGdldCB0aGlzIGludG8gLW5leHQgQVNBUC4gVGhhbmsgeW91IA0KPiBmb3IgcG9zdGlu
+ZyB0aGUgRFNEVC4NCj4gDQo+IEhlbHAgdXMgcGFyc2Ugd2hhdCB0aGlzIG1lYW5zIHNvIHdlJ3Jl
+IGFsbCBzZWVpbmcgdGhlIHNhbWUgdGhpbmcuIEkgDQo+IHNlZSBhIHRvdGFsIG9mIDMgbWVtb3J5
+IGFkZHJlc3NlcyBhbmQgdGhlIGZvbGxvd2luZyBJTyBiYXNlIGFkZHJlc3MuIA0KPiBVbmZvcnR1
+bmF0ZWx5LCB0aGUgY29tbWVudHMgZG9uJ3QgbWFwIGRpcmVjdGx5IHRvIHRoZSBkcml2ZXIgY29k
+ZSwgc28gDQo+IEkgbmVlZCB0byBwaWVjZSB0aGlzIHRvZ2V0aGVyLg0KPiANCj4gVGhlIGNvZGUg
+aW4gcXVlc3Rpb24gZnJvbSB0aGUgZHJpdmVyIGlzOg0KPiANCj4gI2RlZmluZSBNQUlMQk9YX1JF
+R0lTVEVSX1NQQUNFIDB4MTANCj4gDQo+ICtzdGF0aWMgaW50IGludGVsX3B1bml0X2dldF9iYXJz
+KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gKyAgICAgICBzdHJ1Y3QgcmVzb3Vy
+Y2UgKnJlczAsICpyZXMxOw0KPiArICAgICAgIHZvaWQgX19pb21lbSAqYWRkcjsNCj4gKyAgICAg
+ICBpbnQgc2l6ZTsNCj4gKw0KPiArICAgICAgIHJlczAgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2Uo
+cGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOw0KPiArICAgICAgIGlmICghcmVzMCkgew0KPiArICAg
+ICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGdldCBpb21lbSByZXNv
+dXJjZVxuIik7DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOWElPOw0KPiArICAgICAgIH0N
+Cj4gKyAgICAgICBzaXplID0gcmVzb3VyY2Vfc2l6ZShyZXMwKTsNCj4gKyAgICAgICBpZiAoIWRl
+dm1fcmVxdWVzdF9tZW1fcmVnaW9uKCZwZGV2LT5kZXYsIHJlczAtPnN0YXJ0LA0KPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZSwgcGRldi0+bmFtZSkpIHsNCj4gKyAg
+ICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0byByZXF1ZXN0IGlvbWVt
+IHJlc291Y2VcbiIpOw0KPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FQlVTWTsNCj4gKyAgICAg
+ICB9DQo+ICsNCj4gKyAgICAgICByZXMxID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
+UkVTT1VSQ0VfTUVNLCAxKTsNCj4gKyAgICAgICBpZiAoIXJlczEpIHsNCj4gKyAgICAgICAgICAg
+ICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0byBnZXQgaW9tZW0gcmVzb3VyY2UxXG4i
+KTsNCj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5YSU87DQo+ICsgICAgICAgfQ0KPiArICAg
+ICAgIHNpemUgPSByZXNvdXJjZV9zaXplKHJlczEpOw0KPiArICAgICAgIGlmICghZGV2bV9yZXF1
+ZXN0X21lbV9yZWdpb24oJnBkZXYtPmRldiwgcmVzMS0+c3RhcnQsDQo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBzaXplLCBwZGV2LT5uYW1lKSkgew0KPiArICAgICAgICAg
+ICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIHJlcXVlc3QgaW9tZW0gcmVzb3Vj
+ZTFcbiIpOw0KPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FQlVTWTsNCj4gKyAgICAgICB9DQo+
+ICsNCj4gKyAgICAgICBhZGRyID0gaW9yZW1hcF9ub2NhY2hlKHJlczAtPnN0YXJ0LA0KPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2Vfc2l6ZShyZXMwKSArIHJlc291cmNl
+X3NpemUocmVzMSkpOw0KPiArICAgICAgIGlmICghYWRkcikgew0KPiArICAgICAgICAgICAgICAg
+ZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGlvcmVtYXAgaXBjIGJhc2VcbiIpOw0KPiAr
+ICAgICAgICAgICAgICAgcmV0dXJuICAtRU5PTUVNOw0KPiArICAgICAgIH0NCj4gKyAgICAgICBw
+dW5pdF9pcGNkZXYtPmJhc2VbQklPU19JUENdID0gYWRkcjsNCj4gKyAgICAgICBhZGRyICs9IE1B
+SUxCT1hfUkVHSVNURVJfU1BBQ0U7DQo+ICsgICAgICAgcHVuaXRfaXBjZGV2LT5iYXNlW0dURFJJ
+VkVSX0lQQ10gPSBhZGRyOw0KPiArICAgICAgIGFkZHIgKz0gTUFJTEJPWF9SRUdJU1RFUl9TUEFD
+RTsNCj4gKyAgICAgICBwdW5pdF9pcGNkZXYtPmJhc2VbSVNQRFJJVkVSX0lQQ10gPSBhZGRyOw0K
+PiArDQo+ICsgICAgICAgcmV0dXJuIDA7DQo+ICt9DQo+IA0KPiANCj4gPiAgIFNjb3BlIChcX1NC
+KSB7DQo+ID4gICAgIERldmljZShJUEMxKQ0KPiA+ICAgICB7DQo+ID4gICAgICAg4oCmDQo+ID4g
+ICAgICAgTmFtZSAoUkJVRiwgUmVzb3VyY2VUZW1wbGF0ZSAoKQ0KPiA+ICAgICAgIHsNCj4gPiAg
+ICAgICAgIE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwg
+QkFSMCkgICAgLy8gSVBDMSBCYXINCj4gDQo+IHNpemU6IDB4MTAwMA0KPiBJUEMxIEJBUiwgSSBw
+cmVzdW1lIHRoaXMgbWFwcyB0byByZXMwIGluIHRoZSBkcml2ZXI/DQo+IA0KPiBUaGVuIHRoZSBz
+dGFydCBvZiB0aGlzIDQwOTYgYnl0ZSByZWdpb24gaXMgYXNzaWduZWQgYnk6DQo+IA0KPiBwdW5p
+dF9pcGNkZXYtPmJhc2VbQklPU19JUENdID0gYWRkcjsNCj4gDQo+IEFuZCBldmVyeXRoaW5nIGVs
+c2UgYXNzaWduZWQgYnkgaW50ZWxfcHVuaXRfZ2V0X2JhcmRzIGlzIGNvbnRhaW5lZCANCj4gd2l0
+aGluIHRoaXMgYWRkciBzaW5jZSBNQUlMQk9YX1JFR0lTVEVSX1NQQUNFIGlzIG9ubHkgMHgxMC4N
+Cj4gDQo+IERvIEkgaGF2ZSB0aGF0IGNvcnJlY3Q/DQo+IA0KPiA+ICAgICAgLy8gICBNZW1vcnkz
+MkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAsIEJBUjEpICAvLyBTU1JB
+TQ0KPiA+ICAgICAgICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRlLCAweDAwMDAwMDAwLCAweDAw
+MDAxMDAwLCBNREFUKSAgICAvLyBQVW5pdCBCSU9TIG1haWxib3ggRGF0YQ0KPiANCj4gc2l6ZTog
+MHgxMDAwDQo+IEFuZCB0aGlzIHdvdWxkIGJlIHJlczEgaW4gdGhlIGRyaXZlcj8NCj4gDQo+ID4g
+ICAgICAgICBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAs
+IE1JTkYpICAgIC8vIFBVbml0IEJJT1MgbWFpbGJveCBJbnRlcmZhY2UgYW5kIEdURC9JU1BEIG1h
+aWxib3gNCj4gDQo+IHNpemU6IDB4MTAwMA0KPiANCj4gVGhpcyBzZWVtcyBvZGQsIGVzcGVjaWFs
+bHkgd2l0aCB0aGUgY29tbWVudHMgaW4gdGhlIERTRC4gQSBtb3JlIG5hdHVyYWwgbWFwcGluZyB3
+b3VsZCBoYXZlIGJlZW4gZWFjaCBvZiB0aGUgTWVtb3J5MzJGaXhlZCBtYWNyb3MgbWFwcGluZyB0
+byB0aGUgQklPU19JUEMsIEdURFJJVkVSX0lQQywgYW5kIElTUERSSVZFUl9JUEMgQkFScyBpbiB0
+aGUgZHJpdmVyLiBUaGlzIHdvdWxkIGluZGVlZCBiZSB0aGUgY2FzZSBpZiBNQUlMQk9YX1JFR0lT
+VEVSX1NQQUNFIHdhcyAweDEwMDAgaW5zdGVhZCBvZiAweDEwLiBBbHNvLCBpZiB0aGF0IHdlcmUg
+dGhlIGNhc2UsIHRoZW4gdGhvc2UgQkFScyBzaG91bGQgYmUgc2V0IGJ5IHVzaW5nIHRoZSBtYXBw
+ZWQgYWRkciBmb3IgdGhlIDMgc2VwYXJhdGUgcmVzb3VyY2VzIC0gd2hpY2ggaXMgd2hhdCBBbmR5
+IHdhcyBnZXR0aW5nIGF0Lg0KPiANCj4gUWlwZW5nLCBJIGFzc3VtZSBJIG1pc2ludGVycHJldHRl
+ZCBzb21ldGhpbmcgYWJvdmUuIENhbiB5b3UgcG9pbnQgb3V0IHdoZXJlIEkndmUgZ290IHRoaXMg
+d3JvbmcgYW5kIGhvdyB0aGUgZHJpdmVyIGlzIGRvaW5nIHRoZSBvbmx5IHRoaW5nIGl0IGNhbiBn
+aXZlbiB0aGUgcmVzb3VyY2VzIHByb3ZpZGVkIGJ5IHRoZSBEU0RUPw0KPiANCj4gVGhhbmtzLA0K
+PiANCj4gDQo+ID4gICAgICAgICBJTyAoRGVjb2RlMTYsIDB4NDAwLCAweDQ4MCwgMHg0LCAweDgw
+KSAgICAgICAgICAgICAgICAgICAgIC8vIEFDUEkgSU8gQmFzZSBhZGRyZXNzDQo+ID4gICAgICAg
+ICBJbnRlcnJ1cHQgKFJlc291cmNlQ29uc3VtZXIsIExldmVsLCBBY3RpdmVMb3csIEV4Y2x1c2l2
+ZSwgLCAsICkgezQwfSAgLy8gSVBDMSBJUlEgIA0KPiA+ICAgICAgIH0pDQo+ID4gDQo+ID4gICAg
+ICAg4oCmDQo+ID4gICAgIH0NCj4gPiAgIH0vL2VuZCBzY29wZQ0KPiANCj4gLS0NCj4gRGFycmVu
+IEhhcnQNCj4gSW50ZWwgT3BlbiBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXINCg0KLS0NCkRhcnJl
+biBIYXJ0DQpJbnRlbCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0K
