@@ -1,59 +1,47 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
  open my laptop lid
-Date: Thu, 22 Oct 2015 10:27:22 +0200
-Message-ID: <20151022082722.GP15219@pali>
+Date: Thu, 22 Oct 2015 10:28:21 +0200
+Message-ID: <CABFtUbQi-x8DCwm1gSC6ifAZec-n==xh_dTM79PhQSEsxNJ9CA@mail.gmail.com>
 References: <bug-106031-5380@https.bugzilla.kernel.org/>
- <bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
- <20151021085724.GA87951@vmdeb7>
- <20151021091954.GD15219@pali>
- <20151021110059.GF15219@pali>
- <20151021111243.GB87951@vmdeb7>
- <20151022081725.GC2581@malice.jf.intel.com>
+	<bug-106031-5380-zVXKHiyrZU@https.bugzilla.kernel.org/>
+	<20151021085724.GA87951@vmdeb7>
+	<20151021091954.GD15219@pali>
+	<20151021110059.GF15219@pali>
+	<20151021111243.GB87951@vmdeb7>
+	<20151022081725.GC2581@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:36077 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751338AbbJVI1Z (ORCPT
+Received: from mail-qg0-f42.google.com ([209.85.192.42]:32880 "EHLO
+	mail-qg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751768AbbJVI2W (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Oct 2015 04:27:25 -0400
-Received: by wicfx6 with SMTP id fx6so124591308wic.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2015 01:27:24 -0700 (PDT)
-Content-Disposition: inline
+	Thu, 22 Oct 2015 04:28:22 -0400
+Received: by qgeo38 with SMTP id o38so50185462qge.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2015 01:28:21 -0700 (PDT)
 In-Reply-To: <20151022081725.GC2581@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Alex Hung <alex.hung@canonical.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-On Thursday 22 October 2015 10:17:25 Darren Hart wrote:
+2015-10-22 10:17 GMT+02:00 Darren Hart <dvhart@infradead.org>:
 > On Wed, Oct 21, 2015 at 01:12:43PM +0200, Darren Hart wrote:
-> > From what I can tell, the XPS 13 has a TOGGLE type rfkill button (F=
-n-PrtScrn):
-> >=20
-> > http://www.trustedreviews.com/dell-xps-13-2015-photos-11
->=20
-> The reporter states his radio toggle is on F2, so it is not the above=
- machine,
+>> From what I can tell, the XPS 13 has a TOGGLE type rfkill button (Fn-PrtScrn):
+>>
+>> http://www.trustedreviews.com/dell-xps-13-2015-photos-11
+>
+> The reporter states his radio toggle is on F2, so it is not the above machine,
 > probably this one:
->=20
+>
 > http://www.ibtimes.co.uk/dell-xps-13-review-ultrabook-341773
->=20
-> In any case, his logs confirm we are seeing a TOGGLE type which is us=
-ing the
+>
+> In any case, his logs confirm we are seeing a TOGGLE type which is using the
 > input mechanism.
->=20
 
-So my assumption that turning rfkill on (airplane mode) is done by
-userspace (and not by kernel itself) is correct.
+According to the dmesg it's an XPS13 9333, which is the one I own.
 
-Now we need to know if we can drop that event input key after resuming
-from suspend on all dell machines which has toggle key.
-
-Alex, do you know more? Can you help us?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+> --
+> Darren Hart
+> Intel Open Source Technology Center
