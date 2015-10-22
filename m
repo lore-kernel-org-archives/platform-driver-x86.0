@@ -1,99 +1,167 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Thu, 22 Oct 2015 16:17:10 +0200
-Message-ID: <20151022141710.GD15219@pali>
-References: <CABFtUbTZ6M4FQ3bAjKp1iKhkoybs9-RiL6B6sCgTVvEsdXJSrw@mail.gmail.com>
- <CABFtUbTF5k1Jm_pG6XiG1_9H8EwZQfvbXFuGWUjNZHd5YDgvXg@mail.gmail.com>
- <20151022074937.GA2581@malice.jf.intel.com>
- <CABFtUbTKUTfkeqE5nWKdNyrpbs3d2edNhMb8aSmSG_fBsMvcBg@mail.gmail.com>
- <20151022085117.GQ15219@pali>
- <5628BDF8.9030506@gmail.com>
- <20151022105018.GX15219@pali>
- <5628C069.8040902@gmail.com>
- <20151022130211.GA110029@vmdeb7>
- <5628E812.2070708@gmail.com>
+From: "Zha, Qipeng" <qipeng.zha@intel.com>
+Subject: RE: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Thu, 22 Oct 2015 15:18:16 +0000
+Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com>
+References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
+ <1444397622.8361.544.camel@intel.com>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+ <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
+ <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
+ <20151022080430.GB2581@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f179.google.com ([209.85.212.179]:35515 "EHLO
-	mail-wi0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757761AbbJVORN (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:13685 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753405AbbJVPSV (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 22 Oct 2015 10:17:13 -0400
-Received: by wicll6 with SMTP id ll6so137609758wic.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Oct 2015 07:17:12 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <5628E812.2070708@gmail.com>
+	Thu, 22 Oct 2015 11:18:21 -0400
+In-Reply-To: <20151022080430.GB2581@malice.jf.intel.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>, Rafael Wysocki <rjw@rjwysocki.net>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Xue, Gavin" <gavin.xue@intel.com>
 
-On Thursday 22 October 2015 15:43:46 Gabriele Mazzotta wrote:
-> It's the F2 key. Depending on the value passed to the RBTN, it acts a=
-s
-> hw slider or sw toggle.
-
-Ok, we have differences in terminology and everybody understood this
-problem differently.
-
-
-To correct this situation, first define about what we are talking about=
-:
-
-* HW slider: It is hardware slider switch which as two positions ON and
-             OFF. Position exactly defines hardware state of wireless
-             radio devices. Not possible (or should not) to remap.
-
-* SW hotkey toggle button: It is button or key, act in same way as any
-                           other key on keyboard, controlled by SW
-                           (if all drivers are installed, etc).
-
-
-Next I think that this hypothesis is truth:
-
-* Every machine on which is binded ACPI dell-rbtn.ko driver has either
-  HW slider or SW toggle. Not both!
-
-Correct?
-
-
-Then follows my expected behaviour for HW slider:
-
-* State of HW slider position is exported by kernel as rfkill device.
-
-* In any case HW slider position (ON/OFF) match hard rfkill state devic=
-e
-  (rfkill device state is correct also after resume, wake from hibernat=
-e).
-
-* Immediately after user change position of HW slider, rfkill device
-  reflect it.
-
-
-And then expected behaviour for SW toggle button:
-
-* Every time when user press it, kernel just send input event "wireless
-  key pressed" to userspace.
-
-* Kernel does not send event "wireless key pressed" when user did not
-  pressed it (e.g. after resuming from suspend, waking from hibernate).
-
-* Kernel should provide rfkill devices to "soft" block appropriate
-  wireless cards.
-
-* Make sure that BIOS/firmware in any case does not change radio rfkill
-  state of any wireless card and wireless cards stay in same state as
-  before (no enable/disable or changing hard/soft rfkill state).
-
-If last sentence is not truth, then kernel must not send "wireless key
-pressed" event to userspace and act like "no key was pressed".
-
-
-Make this sense? Or are there any objections about this behaviour?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+RGFycmVuLCBBbmRyaXk6DQpUaGFua3MgZm9yIHlvdXIga2luZCByZXZpZXcsIHRyeSB0byBtYWtl
+IGNsZWFyIGFzIGJlbG93Lg0KDQorR2F2aW4sIE91ciBCSU9TIGRldmVsb3Blci4NCg0KT24gVGh1
+LCBPY3QgMjIsIDIwMTUgYXQgMDE6MDE6MzJBTSArMDAwMCwgWmhhLCBRaXBlbmcgd3JvdGU6DQo+
+ID4+UWlwZW5nLCBjYW4geW91IGNvbW1lbnQgb24gbXkgdW5kZXJzdGFuZGluZyBvZiB0aGUgRFNE
+VCBhbmQgdGhlIGRyaXZlcj8NCj4gPj4gPiAgICAgIC8vICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdy
+aXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBCQVIxKSAgLy8gU1NSQU0NCj4gPj4gPiAgICAg
+ICAgIE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTURB
+VCkgICAgLy8gUFVuaXQgQklPUyBtYWlsYm94IERhdGENCj4gPj4gc2l6ZTogMHgxMDAwDQo+ID4+
+IEFuZCB0aGlzIHdvdWxkIGJlIHJlczEgaW4gdGhlIGRyaXZlcj8NCj4gPj4gPiAgICAgICAgIE1l
+bW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTUlORikgICAg
+Ly8gUFVuaXQgQklPUyBtYWlsYm94IEludGVyZmFjZSBhbmQgR1REL0lTUEQgbWFpbGJveA0KPiAN
+Cj4gV2hlbiBib290IHVwLCBCSU9TIHdpbGwgcmV3cml0ZSB0aGUgc2l6ZSBvZiB0aGVzZSBlbnRy
+aWVzLCAgYWN0dWFsbHkgdGhlIHNpemUgZm9yIHRoaXMgZW50cnkgd2lsbCBjaGFuZ2UgdG8gNEIs
+IG5vdCB0aGUgZGVmYXVsdCAweDEwMDAuDQo+IFRoaXMgaXMgcmVhbCBzdHJhbmdlIGltcGxlbWVu
+dGF0aW9uIGZvciB1cywgYXMgYmVmb3JlIG1lbnRpb25lZCwgQklPUyBpbXBsZW1lbnQgbGlrZSB0
+aGlzIHRvIG1ha2UgaXQgY29tcGF0aWJsZSBmb3Igd29zIGRyaXZlci4NCj4gDQoNCj4rUmFmYWVs
+IC0gd2UncmUgaGF2aW5nIHNvbWUgdHJvdWJsZSBtYXBwaW5nIHRoZSBBQ1BJIGRlY2xhcmVkIHJl
+c291cmNlcyANCj4rdG8gdGhlDQo+ZHJpdmVyIGNvZGUgdXNpbmcgdGhlbS4gUWlwZW5nIGhhcyBp
+bmRpY2F0ZWQgdGhhdCB0aGUgQklPUyB0ZWFtIGlzIGRvaW5nIHNvbWV0aGluZyByYXRoZXIgYml6
+YXJyZSB0byBtZWV0IHNvbWUgcmVxdWlyZW1lbnQgZnJvbSB0aGUgV09TIGRyaXZlcnMuIENhbiB5
+b3UgaGF2ZSBhIGxvb2sgYXQgdGhpcyB0aHJlYWQ/IEkgaGF2ZW4ndCBiZWVuIGFibGUgdG8gbWFw
+IHRoZSBBQ1BJIHJlc291cmNlcyB0byB0aGUgZHJpdmVyIHJlc291cmNlcyBpbiBhIHdheSB0aGF0
+IG1ha2VzIHNlbnNlIHRvIG1lLCBhbmQgdGhpcyBpcyBob2xkaW5nIHVwIG1lcmdpbmcgdGhlIGRy
+aXZlci4NCg0KPlFpcGVuZywgdGhpcyBpcyB2ZXJ5IHN0cmFuZ2UgaW5kZWVkLiBIb3cgZG9lcyBC
+SU9TIGNoYW5nZSB0aGlzIGluIGEgd2F5IHRoYXQgZG9lc24ndCBjaGFuZ2UgdGhlIHJlc291cmNl
+cyBBQ1BJIHJlcG9ydHMgdG8gdGhlIE9TPw0KDQo+SXMgdGhlIEFTTCBmcmFnbWVudCB5b3UgcHJv
+dmlkZWQgY29sbGVjdGVkIGZyb20gYSBydW5uaW5nIExpbnV4IHN5c3RlbSB1c2luZyBhY3BpZHVt
+cD8gSWYgc28sIHRoZW4gdGhlIHJlc291cmNlcyBBQ1BJIGFkdmVydGlzZXMgdG8gdGhlIE9TIGFy
+ZSBub3QgYWN0dWFsbHkgYXZhaWxhYmxlLi4uIGFuZCB0aGF0IGNhbid0IGJlIGFjY2VwdGFibGUu
+DQoNCj5RaXBlbmcsIEkgd2FudCB0byBnZXQgdGhpcyBkcml2ZXIgbWVyZ2VkLCBidXQgd2UgaGF2
+ZSB0byBkbyB0aGUgZHVlIGRpbGlnZW5jZSB0byB1bmRlcnN0YW5kIGhvdyB0aGVzZSByZXNvdXJj
+ZXMgYXJlIGJlaW5nIHVzZWQuIEkndmUgYXNrZWQgc2V2ZXJhbCBxdWVzdGlvbnMgdG8gdHJ5IGFu
+ZCBjbGFyaWZ5IHRoaXMsIGJ1dCB5b3VyIHJlc3BvbnNlcyBoYXZlIGJlZW4gdmVyeSBzaG9ydCBh
+bmQgZG8gbm90IGZ1bGx5IGFkZHJlc3MgdGhlIHF1ZXN0aW9ucy4gSSBuZWVkIHlvdXIgaGVscCB0
+byBmdWxseSBkZXNjcmliZSB3aGF0IGlzIGdvaW5nIG9uIHdpdGggdGhlIEJBUnMgYmVmb3JlIEkg
+Y2FuIHNpZ24gdGhpcyBvZmYgYW5kIGFzayBMaW51cyB0byBtZXJnZSBpdC4NCg0KID5NZW1vcnkz
+MkZpeGVkIChSZWFkV3JpdGUsIDB4MDAwMDAwMDAsIDB4MDAwMDEwMDAsIE1EQVQpICAgIC8vIFBV
+bml0IEJJT1MgbWFpbGJveCBEYXRhDQpUaGlzIGlzIG1hcCB0byByZXMwDQo+IE1lbW9yeTMyRml4
+ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwgMHgwMDAwMTAwMCwgTUlORikgICAgLy8gUFVuaXQg
+QklPUyBtYWlsYm94IEludGVyZmFjZSBhbmQgR1REL0lTUEQgbWFpbGJveA0KVGhpcyBpcyBtYXAg
+dG8gcmVzMQ0KVGhlc2UgdHdvIGVudHJpZXMgYXJlIGZpcnN0bHkgcGFyc2VkIGluIHBtYyBkcml2
+ZXIgZmlyc3RseSBhbmQgcmVwb3J0ZWQgdG8gcHVuaXQgZHJpdmVyLg0KDQo+SXMgdGhlIEFTTCBm
+cmFnbWVudCB5b3UgcHJvdmlkZWQgY29sbGVjdGVkIGZyb20gYSBydW5uaW5nIExpbnV4IHN5c3Rl
+bSB1c2luZyBhY3BpZHVtcD8gSWYgc28sIHRoZW4gdGhlIHJlc291cmNlcyBBQ1BJIGFkdmVydGlz
+ZXMgdG8gdGhlIE9TIGFyZSBub3QgYWN0dWFsbHkgYXZhaWxhYmxlLi4uIGFuZCB0aGF0IGNhbid0
+IGJlIGFjY2VwdGFibGUuDQpUaGlzIGlzIHJlYWwgQVNMIGNvZGUgSSBnb3QgZnJvbSBCSU9TIHRl
+YW0gYW5kIHZhbGlkYXRlZCBvbiBieHQgcGxhdGZvcm0uDQpDb25maXJtZWQgQklPUyBydW50aW1l
+IGNvZGUgd2lsbCB1cGRhdGUgImFjcGkgdGFibGUiIGluIG1lbW9yeSBiZWZvcmUgc3dpdGNoIHRv
+IG9zLCAgZm9yIHRob3NlIHJlc291cmNlIHdoaWNoIG5lZWQgdG8gZ2V0L3JlYWQgZnJvbSBoYXJk
+d2FyZSBkeW5hbWljYWxseSwgaW4gdGhpcyBjYXNlLCBNSU5GIGFuZCBNREFUIGlzIHNldCBpbiBy
+dW50aW1lIHdoZW4gYm9vdCBCSU9TIGFuZCBzaXplIG9mIHJlczAgaXMgc2V0IGFzIDRCLg0KDQo+
+IE9uIFdlZCwgT2N0IDE0LCAyMDE1IGF0IDEwOjE2OjA2UE0gLTA3MDAsIERhcnJlbiBIYXJ0IHdy
+b3RlOg0KPiA+IE9uIFNhdCwgT2N0IDEwLCAyMDE1IGF0IDAzOjA3OjUzQU0gKzAwMDAsIFpoYSwg
+UWlwZW5nIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+RXZlcnl0aGluZyBpcyBxdWl0ZSBva2F5LCBl
+eGNlcHQgdGhpcyBCQVIgdGhpbmd5Lg0KPiA+ID4gDQo+ID4gPiA+Q2FuIHlvdSBwcm92aWRlIGEg
+RFNEVCBleGNlcnB0IGZvciB0aGUgZGV2aWNlIHRvIHNlZSB3aGF0IGlzIHRoZXJlPw0KPiA+ID4g
+DQo+ID4gPiA+SSBjYW4ndCBmaW5kIHN1Y2ggZGV2aWNlIChieSBBQ1BJIGlkKSBpbiB0aGUgdGFi
+bGVzIG9mIHRoZSBhY2Nlc3NpYmxlIGhhcmR3YXJlIGluIG91ciBsYWIuDQo+ID4gPiANCj4gPiA+
+IFBsZWFzZSBjaGVjayBiZWxvdyBhY3BpIGRldmljZSBkZWZpbml0aW9uIGZyb20gQklPUy4NCj4g
+PiA+IFB1bml0IGRldmljZSBpcyBjcmVhdGVkIGluIHBtYyBkcml2ZXIsIHNpbmNlIEJJT1MgZmlu
+YWxseSByZWplY3QgdG8gY3JlYXRlIGEgc2VwYXJhdGUgZGV2aWNlIGZvciBQdW5pdC4NCj4gPiA+
+IA0KPiA+IA0KPiA+IFFpcGVuZywgc29ycnkgZm9yIHRoZSBkZWxheS4gSSd2ZSBiZWVuIHVuZGVy
+IGEgcmF0aGVyIGFic3VyZCBsb2FkLiANCj4gPiBJJ2QgbGlrZSB0byBjbG9zZSBvbiB0aGlzIHNv
+IHdlIGNhbiBnZXQgdGhpcyBpbnRvIC1uZXh0IEFTQVAuIFRoYW5rIA0KPiA+IHlvdSBmb3IgcG9z
+dGluZyB0aGUgRFNEVC4NCj4gPiANCj4gPiBIZWxwIHVzIHBhcnNlIHdoYXQgdGhpcyBtZWFucyBz
+byB3ZSdyZSBhbGwgc2VlaW5nIHRoZSBzYW1lIHRoaW5nLiBJIA0KPiA+IHNlZSBhIHRvdGFsIG9m
+IDMgbWVtb3J5IGFkZHJlc3NlcyBhbmQgdGhlIGZvbGxvd2luZyBJTyBiYXNlIGFkZHJlc3MuDQo+
+ID4gVW5mb3J0dW5hdGVseSwgdGhlIGNvbW1lbnRzIGRvbid0IG1hcCBkaXJlY3RseSB0byB0aGUg
+ZHJpdmVyIGNvZGUsIA0KPiA+IHNvIEkgbmVlZCB0byBwaWVjZSB0aGlzIHRvZ2V0aGVyLg0KPiA+
+IA0KPiA+IFRoZSBjb2RlIGluIHF1ZXN0aW9uIGZyb20gdGhlIGRyaXZlciBpczoNCj4gPiANCj4g
+PiAjZGVmaW5lIE1BSUxCT1hfUkVHSVNURVJfU1BBQ0UgMHgxMA0KPiA+IA0KPiA+ICtzdGF0aWMg
+aW50IGludGVsX3B1bml0X2dldF9iYXJzKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsN
+Cj4gPiArICAgICAgIHN0cnVjdCByZXNvdXJjZSAqcmVzMCwgKnJlczE7DQo+ID4gKyAgICAgICB2
+b2lkIF9faW9tZW0gKmFkZHI7DQo+ID4gKyAgICAgICBpbnQgc2l6ZTsNCj4gPiArDQo+ID4gKyAg
+ICAgICByZXMwID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAw
+KTsNCj4gPiArICAgICAgIGlmICghcmVzMCkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJy
+KCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gZ2V0IGlvbWVtIHJlc291cmNlXG4iKTsNCj4gPiArICAg
+ICAgICAgICAgICAgcmV0dXJuIC1FTlhJTzsNCj4gPiArICAgICAgIH0NCj4gPiArICAgICAgIHNp
+emUgPSByZXNvdXJjZV9zaXplKHJlczApOw0KPiA+ICsgICAgICAgaWYgKCFkZXZtX3JlcXVlc3Rf
+bWVtX3JlZ2lvbigmcGRldi0+ZGV2LCByZXMwLT5zdGFydCwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgc2l6ZSwgcGRldi0+bmFtZSkpIHsNCj4gPiArICAgICAgICAg
+ICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIHJlcXVlc3QgaW9tZW0gcmVzb3Vj
+ZVxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUJVU1k7DQo+ID4gKyAgICAgICB9
+DQo+ID4gKw0KPiA+ICsgICAgICAgcmVzMSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJ
+T1JFU09VUkNFX01FTSwgMSk7DQo+ID4gKyAgICAgICBpZiAoIXJlczEpIHsNCj4gPiArICAgICAg
+ICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGdldCBpb21lbSByZXNvdXJj
+ZTFcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOWElPOw0KPiA+ICsgICAgICAg
+fQ0KPiA+ICsgICAgICAgc2l6ZSA9IHJlc291cmNlX3NpemUocmVzMSk7DQo+ID4gKyAgICAgICBp
+ZiAoIWRldm1fcmVxdWVzdF9tZW1fcmVnaW9uKCZwZGV2LT5kZXYsIHJlczEtPnN0YXJ0LA0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXplLCBwZGV2LT5uYW1lKSkg
+ew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gcmVx
+dWVzdCBpb21lbSByZXNvdWNlMVxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUJV
+U1k7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgYWRkciA9IGlvcmVtYXBfbm9j
+YWNoZShyZXMwLT5zdGFydCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVz
+b3VyY2Vfc2l6ZShyZXMwKSArIHJlc291cmNlX3NpemUocmVzMSkpOw0KPiA+ICsgICAgICAgaWYg
+KCFhZGRyKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxl
+ZCB0byBpb3JlbWFwIGlwYyBiYXNlXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuICAt
+RU5PTUVNOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsgICAgICAgcHVuaXRfaXBjZGV2LT5iYXNlW0JJ
+T1NfSVBDXSA9IGFkZHI7DQo+ID4gKyAgICAgICBhZGRyICs9IE1BSUxCT1hfUkVHSVNURVJfU1BB
+Q0U7DQo+ID4gKyAgICAgICBwdW5pdF9pcGNkZXYtPmJhc2VbR1REUklWRVJfSVBDXSA9IGFkZHI7
+DQo+ID4gKyAgICAgICBhZGRyICs9IE1BSUxCT1hfUkVHSVNURVJfU1BBQ0U7DQo+ID4gKyAgICAg
+ICBwdW5pdF9pcGNkZXYtPmJhc2VbSVNQRFJJVkVSX0lQQ10gPSBhZGRyOw0KPiA+ICsNCj4gPiAr
+ICAgICAgIHJldHVybiAwOw0KPiA+ICt9DQo+ID4gDQo+ID4gDQo+ID4gPiAgIFNjb3BlIChcX1NC
+KSB7DQo+ID4gPiAgICAgRGV2aWNlKElQQzEpDQo+ID4gPiAgICAgew0KPiA+ID4gICAgICAg4oCm
+DQo+ID4gPiAgICAgICBOYW1lIChSQlVGLCBSZXNvdXJjZVRlbXBsYXRlICgpDQo+ID4gPiAgICAg
+ICB7DQo+ID4gPiAgICAgICAgIE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwgMHgwMDAwMDAwMCwg
+MHgwMDAwMTAwMCwgQkFSMCkgICAgLy8gSVBDMSBCYXINCj4gPiANCj4gPiBzaXplOiAweDEwMDAN
+Cj4gPiBJUEMxIEJBUiwgSSBwcmVzdW1lIHRoaXMgbWFwcyB0byByZXMwIGluIHRoZSBkcml2ZXI/
+DQo+ID4gDQo+ID4gVGhlbiB0aGUgc3RhcnQgb2YgdGhpcyA0MDk2IGJ5dGUgcmVnaW9uIGlzIGFz
+c2lnbmVkIGJ5Og0KPiA+IA0KPiA+IHB1bml0X2lwY2Rldi0+YmFzZVtCSU9TX0lQQ10gPSBhZGRy
+Ow0KPiA+IA0KPiA+IEFuZCBldmVyeXRoaW5nIGVsc2UgYXNzaWduZWQgYnkgaW50ZWxfcHVuaXRf
+Z2V0X2JhcmRzIGlzIGNvbnRhaW5lZCANCj4gPiB3aXRoaW4gdGhpcyBhZGRyIHNpbmNlIE1BSUxC
+T1hfUkVHSVNURVJfU1BBQ0UgaXMgb25seSAweDEwLg0KPiA+IA0KPiA+IERvIEkgaGF2ZSB0aGF0
+IGNvcnJlY3Q/DQo+ID4gDQo+ID4gPiAgICAgIC8vICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRl
+LCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBCQVIxKSAgLy8gU1NSQU0NCj4gPiA+ICAgICAgICAg
+TWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBNREFUKSAg
+ICAvLyBQVW5pdCBCSU9TIG1haWxib3ggRGF0YQ0KPiA+IA0KPiA+IHNpemU6IDB4MTAwMA0KPiA+
+IEFuZCB0aGlzIHdvdWxkIGJlIHJlczEgaW4gdGhlIGRyaXZlcj8NCj4gPiANCj4gPiA+ICAgICAg
+ICAgTWVtb3J5MzJGaXhlZCAoUmVhZFdyaXRlLCAweDAwMDAwMDAwLCAweDAwMDAxMDAwLCBNSU5G
+KSAgICAvLyBQVW5pdCBCSU9TIG1haWxib3ggSW50ZXJmYWNlIGFuZCBHVEQvSVNQRCBtYWlsYm94
+DQo+ID4gDQo+ID4gc2l6ZTogMHgxMDAwDQo+ID4gDQo+ID4gVGhpcyBzZWVtcyBvZGQsIGVzcGVj
+aWFsbHkgd2l0aCB0aGUgY29tbWVudHMgaW4gdGhlIERTRC4gQSBtb3JlIG5hdHVyYWwgbWFwcGlu
+ZyB3b3VsZCBoYXZlIGJlZW4gZWFjaCBvZiB0aGUgTWVtb3J5MzJGaXhlZCBtYWNyb3MgbWFwcGlu
+ZyB0byB0aGUgQklPU19JUEMsIEdURFJJVkVSX0lQQywgYW5kIElTUERSSVZFUl9JUEMgQkFScyBp
+biB0aGUgZHJpdmVyLiBUaGlzIHdvdWxkIGluZGVlZCBiZSB0aGUgY2FzZSBpZiBNQUlMQk9YX1JF
+R0lTVEVSX1NQQUNFIHdhcyAweDEwMDAgaW5zdGVhZCBvZiAweDEwLiBBbHNvLCBpZiB0aGF0IHdl
+cmUgdGhlIGNhc2UsIHRoZW4gdGhvc2UgQkFScyBzaG91bGQgYmUgc2V0IGJ5IHVzaW5nIHRoZSBt
+YXBwZWQgYWRkciBmb3IgdGhlIDMgc2VwYXJhdGUgcmVzb3VyY2VzIC0gd2hpY2ggaXMgd2hhdCBB
+bmR5IHdhcyBnZXR0aW5nIGF0Lg0KPiA+IA0KPiA+IFFpcGVuZywgSSBhc3N1bWUgSSBtaXNpbnRl
+cnByZXR0ZWQgc29tZXRoaW5nIGFib3ZlLiBDYW4geW91IHBvaW50IG91dCB3aGVyZSBJJ3ZlIGdv
+dCB0aGlzIHdyb25nIGFuZCBob3cgdGhlIGRyaXZlciBpcyBkb2luZyB0aGUgb25seSB0aGluZyBp
+dCBjYW4gZ2l2ZW4gdGhlIHJlc291cmNlcyBwcm92aWRlZCBieSB0aGUgRFNEVD8NCj4gPiANCj4g
+PiBUaGFua3MsDQo+ID4gDQo+ID4gDQo+ID4gPiAgICAgICAgIElPIChEZWNvZGUxNiwgMHg0MDAs
+IDB4NDgwLCAweDQsIDB4ODApICAgICAgICAgICAgICAgICAgICAgLy8gQUNQSSBJTyBCYXNlIGFk
+ZHJlc3MNCj4gPiA+ICAgICAgICAgSW50ZXJydXB0IChSZXNvdXJjZUNvbnN1bWVyLCBMZXZlbCwg
+QWN0aXZlTG93LCBFeGNsdXNpdmUsICwgLCApIHs0MH0gIC8vIElQQzEgSVJRICANCj4gPiA+ICAg
+ICAgIH0pDQo+ID4gPiANCj4gPiA+ICAgICAgIOKApg0KPiA+ID4gICAgIH0NCj4gPiA+ICAgfS8v
+ZW5kIHNjb3BlDQo+ID4gDQo+ID4gLS0NCj4gPiBEYXJyZW4gSGFydA0KPiA+IEludGVsIE9wZW4g
+U291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo+IA0KPiAtLQ0KPiBEYXJyZW4gSGFydA0KPiBJbnRl
+bCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0KDQotLQ0KRGFycmVuIEhhcnQNCkludGVs
+IE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo=
