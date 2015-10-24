@@ -1,116 +1,45 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Fri, 23 Oct 2015 20:03:19 +0200
-Message-ID: <562A7667.3050208@gmail.com>
-References: <20151022085117.GQ15219@pali> <5628BDF8.9030506@gmail.com>
- <20151022105018.GX15219@pali> <5628C069.8040902@gmail.com>
- <20151022130211.GA110029@vmdeb7> <5628E812.2070708@gmail.com>
- <20151022141710.GD15219@pali> <56297148.6060605@gmail.com>
- <20151023090027.GG15219@pali> <562A022D.1020302@gmail.com>
- <20151023111445.GH15219@pali>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Sat, 24 Oct 2015 15:35:54 +0200
+Message-ID: <1708740.AuEbmq20Do@vostro.rjw.lan>
+References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com> <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com> <20151022154307.GB4289@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178]:36002 "EHLO
-	mail-wi0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S964888AbbJWSDW (ORCPT
+Received: from v094114.home.net.pl ([79.96.170.134]:41604 "HELO
+	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1751461AbbJXNHB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 23 Oct 2015 14:03:22 -0400
-Received: by wicfx6 with SMTP id fx6so41740863wic.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Oct 2015 11:03:21 -0700 (PDT)
-In-Reply-To: <20151023111445.GH15219@pali>
+	Sat, 24 Oct 2015 09:07:01 -0400
+In-Reply-To: <20151022154307.GB4289@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
+To: Darren Hart <dvhart@infradead.org>, "Zha, Qipeng" <qipeng.zha@intel.com>
+Cc: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Xue, Gavin" <gavin.xue@intel.com>
 
-On 23/10/2015 13:14, Pali Roh=C3=A1r wrote:
-> On Friday 23 October 2015 11:47:25 Gabriele Mazzotta wrote:
->>> In my opinion it is better to ignore user key press after resume, i=
-f it
->>> fix our problem. Better as false-positive event.
->>
->> The following appears to work really well. The notification arrives
->> before rbtn_resume() has been executed, so the extra event is ignore=
-d.
->>
->> diff --git a/drivers/platform/x86/dell-rbtn.c
->> b/drivers/platform/x86/dell-rbtn.c
->> index cd410e3..1d64b72 100644
->> --- a/drivers/platform/x86/dell-rbtn.c
->> +++ b/drivers/platform/x86/dell-rbtn.c
->> @@ -28,6 +28,7 @@ struct rbtn_data {
->>   	enum rbtn_type type;
->>   	struct rfkill *rfkill;
->>   	struct input_dev *input_dev;
->> +	bool suspended;
->>   };
->>
->>
->> @@ -220,9 +221,33 @@ static const struct acpi_device_id rbtn_ids[] =3D=
- {
->>   	{ "", 0 },
->>   };
->>
->> +#ifdef CONFIG_PM_SLEEP
->> +static int rbtn_suspend(struct device *dev)
->> +{
->> +	struct acpi_device *device =3D to_acpi_device(dev);
->> +	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
->> +
->> +	rbtn_data->suspended =3D true;
->> +
->> +	return 0;
->> +}
->> +
->> +static int rbtn_resume(struct device *dev)
->> +{
->> +	struct acpi_device *device =3D to_acpi_device(dev);
->> +	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
->> +
->> +	rbtn_data->suspended =3D false;
->> +
->> +	return 0;
->> +}
->> +#endif
->> +static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
->> +
->>   static struct acpi_driver rbtn_driver =3D {
->>   	.name =3D "dell-rbtn",
->>   	.ids =3D rbtn_ids,
->> +	.drv.pm =3D &rbtn_pm_ops,
->>   	.ops =3D {
->>   		.add =3D rbtn_add,
->>   		.remove =3D rbtn_remove,
->> @@ -384,6 +409,9 @@ static void rbtn_notify(struct acpi_device *devi=
-ce, u32
->> event)
->>   {
->>   	struct rbtn_data *rbtn_data =3D device->driver_data;
->>
->> +	if (rbtn_data->suspended)
->> +		return;
->> +
->>   	if (event !=3D 0x80) {
->>   		dev_info(&device->dev, "Received unknown event (0x%x)\n",
->>   			 event);
->>
->
-> Great, but is not there a better way to turn off .notify ACPI functio=
-n
-> when that ACPI device is suspended?
->
-> Is not this ACPI device driver bug that it allows to call .notify met=
-hod
-> even if device is suspended?
+On Thursday, October 22, 2015 05:43:07 PM Darren Hart wrote:
+> On Thu, Oct 22, 2015 at 03:18:16PM +0000, Zha, Qipeng wrote:
+> > >Is the ASL fragment you provided collected from a running Linux system using
+> > >acpidump? If so, then the resources ACPI advertises to the OS are not
+> > >actually available... and that can't be acceptable.
+> > This is real ASL code I got from BIOS team and validated on bxt platform.
+> > Confirmed BIOS runtime code will update "acpi table" in memory before switch
+> > to os,  for those resource which need to get/read from hardware dynamically,
+> > in this case, MINF and MDAT is set in runtime when boot BIOS and size of res0
+> > is set as 4B.
+> 
+> So the ASL you provided was not what the Linux kernel is seeing, correct?
+> 
+> Can you please provide a DSDT disassembly from the running Linux system please,
+> such as:
+> 
+> # cp /sys/firmware/acpi/tables/DSDT DSDT.dat
+> # iasl -d DSDT.dat
+> 
+> Then find this device in DSDT.dsl and paste it here please.
 
-I was surprised this worked, I was assuming that nothing could run
-before the resume callback, but I was wrong. I think it makes sense to
-treat ACPI devices in a special way, but I really don't know, we need
-someone more knowledgeable to answer these questions. However, while I
-was trying to figure things out, I stumbled upon the following:
-e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend even=
-ts").
+Or even better send the full output of acpidump from that system (when running).
+
+Thanks,
+Rafael
