@@ -1,83 +1,140 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
- open my laptop lid
-Date: Mon, 26 Oct 2015 15:58:20 +0100
-Message-ID: <20151026145820.GI27266@pali>
-References: <5628C069.8040902@gmail.com>
- <20151022130211.GA110029@vmdeb7>
- <5628E812.2070708@gmail.com>
- <20151022141710.GD15219@pali>
- <56297148.6060605@gmail.com>
- <20151023090027.GG15219@pali>
- <562A022D.1020302@gmail.com>
- <20151023111445.GH15219@pali>
- <562A7667.3050208@gmail.com>
- <20151026143813.GA27580@malice.jf.intel.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Tue, 27 Oct 2015 12:30:31 +0000
+Message-ID: <1445949030.6332.26.camel@intel.com>
+References: <1444380548-17366-1-git-send-email-qipeng.zha@intel.com>
+	 <1444397622.8361.544.camel@intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+	 <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
+	 <20151022080430.GB2581@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com>
+	 <20151022154307.GB4289@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD0381485F@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wi0-f170.google.com ([209.85.212.170]:37090 "EHLO
-	mail-wi0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753772AbbJZO6Z (ORCPT
+Received: from mga14.intel.com ([192.55.52.115]:12809 "EHLO mga14.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932203AbbJ0Mae (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 26 Oct 2015 10:58:25 -0400
-Received: by wicfv8 with SMTP id fv8so120162787wic.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2015 07:58:24 -0700 (PDT)
-Content-Disposition: inline
-In-Reply-To: <20151026143813.GA27580@malice.jf.intel.com>
+	Tue, 27 Oct 2015 08:30:34 -0400
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD0381485F@SHSMSX104.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <171BA4498A4C0A49BDC6D44BDFBD0015@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>
+Cc: "Xue, Gavin" <gavin.xue@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "Westerberg, Mika" <mika.westerberg@intel.com>
 
-On Monday 26 October 2015 23:38:13 Darren Hart wrote:
-> My understanding here though is that laptops with a Fn+RBTN key which=
- changes
-> the state of the radio in firmware should be handled via the rfkill i=
-nterface
-> rather than the inpu interface - so while this patch may appear to wo=
-rk, it's
-> using the input interface to copy the rfkill interface/state.
->=20
-
-Here is problem: ACPI device ABCE/RBTN (handled by dell-rbtn.ko) just
-receive events. It cannot set or change wireless state.
-
-=46or changing rfkill/wireless state is there Dell SMBIOS api and it is
-implemented in dell-laptop.ko. But due to bugs in that module, it is
-disabled for XPS machines.
-
-And problem is that on machines without HW switch you do not know if
-wifi switch is in ON or OFF mode. ACPI tell you just "key pressed". So
-for this reason Alex decided to export that event via input layer,
-because it is really just key press, not changing state.
-
-> The proper solution, if I'm understanding this correctly - and apolog=
-ies if not,
-> some of this is new territory for me as well - would be for this devi=
-ce to be
-> detected as firmware controlled (what we refer to as a SLIDER in the =
-code -
-> which needs to be renamed IMHO).
->=20
-
-I understood that if you blacklist dell-rbtn.ko on that XPS machine,
-then firmware takes control and automatically turn ON/OFF wifi card.
-
-> Let's sort out this point, then we can pull in Rafael to make sure th=
-is is how
-> to best deal with the spurious event on resume.
->=20
-
-=46or me solution (=3Dignore events when ACPI device is suspended) soun=
-ds
-good. I do not know if there is better way to implement it, maybe
-general linux device model should provide function "am_i_suspended?"
-instead tracking "suspend" state internally in each driver. But if such
-support in linux device or acpi model is not implemented, I'm fine with
-provided patch if it really works.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+T24gTW9uLCAyMDE1LTEwLTI2IGF0IDA4OjUxICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4g
+PiBTbyB0aGUgQVNMIHlvdSBwcm92aWRlZCB3YXMgbm90IHdoYXQgdGhlIExpbnV4IGtlcm5lbCBp
+cyBzZWVpbmcsDQo+ID4gY29ycmVjdD8NCj4gDQo+ID4gQ2FuIHlvdSBwbGVhc2UgcHJvdmlkZSBh
+IERTRFQgZGlzYXNzZW1ibHkgZnJvbSB0aGUgcnVubmluZyBMaW51eA0KPiA+IHN5c3RlbSBwbGVh
+c2UsIHN1Y2ggYXM6DQo+IA0KPiA+ICMgY3AgL3N5cy9maXJtd2FyZS9hY3BpL3RhYmxlcy9EU0RU
+IERTRFQuZGF0ICMgaWFzbCAtZCBEU0RULmRhdA0KPiANCj4gPiBUaGVuIGZpbmQgdGhpcyBkZXZp
+Y2UgaW4gRFNEVC5kc2wgYW5kIHBhc3RlIGl0IGhlcmUgcGxlYXNlLg0KPiANCj4gU29ycnkgZm9y
+IGxhdGUgZmVlZGJhY2sswqDCoGdvdCBkc2R0IGZyb20gbGFiIG1hY2hpbmUgc2luY2UgbXkgYm9h
+cmQNCj4gZ290IGJyb2tlbiwNCj4gUGxlYXNlIGNoZWNrLg0KPiANCj4gU2NvcGUgKFxfU0IpDQo+
+IMKgwqDCoMKgwqDCoMKgwqB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoERldmljZSAoSVBD
+MSkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoE5hbWUgKF9BRFIsIFplcm8pwqDCoC8vIF9BRFI6IEFkZHJlc3MNCj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChfSElELCAiSU5UMzREMiIpwqDCoC8vIF9I
+SUQ6IEhhcmR3YXJlIElEDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgTmFtZSAo
+X0NJRCwgIklOVDM0RDIiKcKgwqAvLyBfQ0lEOiBDb21wYXRpYmxlIElEDQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgTmFtZSAoX0RETiwgIkludGVsKFIpIElQQ0kgY29udHJvbGxl
+ciAiKcKgwqAvLyBfREROOg0KPiBET1MgRGV2aWNlIE5hbWUNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBOYW1lIChfVUlELCBPbmUpwqDCoC8vIF9VSUQ6IFVuaXF1ZSBJRA0KPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE5hbWUgKFJCVUYsIFJlc291cmNlVGVtcGxh
+dGUgKCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB7DQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAwMDAw
+MDAswqDCoMKgwqDCoMKgwqDCoMKgLy8gQWRkcmVzcyBCYXNlDQo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAwMDIwMDAswqDCoMKgwqDCoMKgwqDC
+oMKgLy8gQWRkcmVzcyBMZW5ndGgNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgX1kwOCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoE1lbW9yeTMyRml4ZWQgKFJlYWRXcml0ZSwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgwMDAwMDAwMCzCoMKgwqDCoMKgwqDCoMKgwqAv
+LyBBZGRyZXNzIEJhc2UNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgMHgwMDAwMDAwNCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0K
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBfWTA5KQ0K
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgTWVtb3J5MzJGaXhlZCAo
+UmVhZFdyaXRlLA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgQmFzZQ0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAwMDQwLMKg
+wqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgTGVuZ3RoDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoF9ZMEEpDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBJTyAoRGVjb2RlMTYsDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDQwMCzCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoC8vIFJhbmdlIE1pbmltdW0NCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgMHgwNDgwLMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLy8gUmFuZ2Ug
+TWF4aW11bQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAweDA0LMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFsaWdubWVudA0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDgwLMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8vIExlbmd0aA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqApDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAwMDAwMDAswqDCoMKgwqDCoMKg
+wqDCoMKgLy8gQWRkcmVzcyBCYXNlDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoDB4MDAwMDIwMDAswqDCoMKgwqDCoMKgwqDCoMKgLy8gQWRkcmVzcyBM
+ZW5ndGgNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+X1kwQikNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoEludGVycnVw
+dCAoUmVzb3VyY2VDb25zdW1lciwgTGV2ZWwsIEFjdGl2ZUxvdywNCj4gRXhjbHVzaXZlLCAsLCAp
+DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB7DQo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDB4MDAwMDAwMjgsDQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9DQo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgfSkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBN
+ZXRob2QgKF9DUlMsIDAsIE5vdFNlcmlhbGl6ZWQpwqDCoC8vIF9DUlM6IEN1cnJlbnQNCj4gUmVz
+b3VyY2UgU2V0dGluZ3MNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB7DQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChS
+QlVGLCBcX1NCLklQQzEuX1kwOC5fQkFTLA0KPiBCMEJBKcKgwqAvLyBfQkFTOiBCYXNlIEFkZHJl
+c3MNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3Jk
+RmllbGQgKFJCVUYsIFxfU0IuSVBDMS5fWTA4Ll9MRU4sDQo+IEIwTE4pwqDCoC8vIF9MRU46IExl
+bmd0aA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKERE
+MUEsIEIwQkEpDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9y
+ZSAoREQxTCwgQjBMTikNCg0KZGQxYSwgZGQxbCBoYXMgYmVlbiBzdG9yZWQgdG8gUmVzb3VyY2Ug
+MA0KDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVhdGVEV29y
+ZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwOS5fQkFTLA0KPiBCTTAxKcKgwqAvLyBfQkFTOiBC
+YXNlIEFkZHJlc3MNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENy
+ZWF0ZURXb3JkRmllbGQgKFJCVUYsIFxfU0IuSVBDMS5fWTA5Ll9MRU4sDQo+IEJNTDEpwqDCoC8v
+IF9MRU46IExlbmd0aA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+Q3JlYXRlRFdvcmRGaWVsZCAoUkJVRiwgXF9TQi5JUEMxLl9ZMEEuX0JBUywNCj4gQk0wMinCoMKg
+Ly8gX0JBUzogQmFzZSBBZGRyZXNzDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwQS5fTEVOLA0KPiBC
+TUwyKcKgwqAvLyBfTEVOOiBMZW5ndGgNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoFN0b3JlIChCTURBLCBCTTAxKQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgU3RvcmUgKDB4MDQsIEJNTDEpDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoQk1JQSwgQk0wMikNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFN0b3JlICgweDQwLCBCTUwyKQ0KDQpibWRhLCAweDA0
+IC0+IFJlc291cmNlIDENCmJtaWEsIDB4NDAgLT4gUmVzb3VyY2UgMg0KDQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NC
+LklQQzEuX1kwQi5fQkFTLA0KPiBCMUJBKcKgwqAvLyBfQkFTOiBCYXNlIEFkZHJlc3MNCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3JkRmllbGQgKFJC
+VUYsIFxfU0IuSVBDMS5fWTBCLl9MRU4sDQo+IEIxTE4pwqDCoC8vIF9MRU46IExlbmd0aA0KPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKEREM0EsIEIxQkEp
+DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoREQzTCwg
+QjFMTikNCg0KZGQzYSwgZGQzbCAtPiBSZXNvdXJjZSAzDQoNCg0KQ2FuIHlvdSBjcmVhdGUgYSB0
+ZW1wb3JhcnkgbWV0aG9kIGluIHRoZSAtPnByb2JlKCkgb2YgdGhpcyBkcml2ZXIgdG8NCml0ZXJh
+dGUgb3ZlciByZXNvdXJjZXMgYW5kIHByaW50IHRoZW0gb3V0PyBPciB0ZWxsIHRoZSB2YWx1ZXMg
+QklPUyBzZXQNCnBlciB2YWx1ZXMgZGQxYSwgZGQxbCwgZGQzYSwgZGQzbCwgYm1kYSwgYm1pYS4N
+Cg0KQUZBSVUgeW91IGFyZSB1c2luZyBvbmx5IHJlc291cmNlcyAwIGFuZCAxLiBDYW4geW91IHB1
+dCBoZXJlIHNtYWxsDQpkZXNjcmlwdGlvbiBvZiB3aGF0IGVhY2ggcmVzb3VyY2UgaXMgbWVhbnQg
+Zm9yPyAoSSBndWVzcyBjb3VwbGUgb2YgdGhlbQ0KdG8gUC1Vbml0LCBhbmQgY291cGxlIHJlbGF0
+ZWQgdG8gd2hhdCB5b3UgYXJlIHRyeWluZyB0byBnZXQsIHJpZ2h0PykNCg0KQWxzbywgaXQncyBu
+b3QgY2xlYXIgdGhlIHB1cnBvc2Ugb2YgSU8gcmVzb3VyY2UuIFdoYXQgaXMgZm9yPw0KDQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBSZXR1cm4gKFJCVUYpDQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQ0KPiANCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBNZXRob2QgKF9TVEEsIDAsIE5vdFNlcmlhbGl6ZWQpwqDCoC8vIF9TVEE6
+IFN0YXR1cw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsNCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFJldHVybiAoMHgwRikNCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9DQoNCi0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXku
+c2hldmNoZW5rb0BpbnRlbC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50
+ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kg
+CkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lu
+a2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVu
+dGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQo
+cykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9o
+aWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29u
+dGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
