@@ -1,223 +1,177 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Fri, 30 Oct 2015 06:11:58 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD03815A2E@SHSMSX104.ccr.corp.intel.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
+Date: Fri, 30 Oct 2015 09:56:09 +0000
+Message-ID: <1446198970.6332.65.camel@intel.com>
 References: <1444397622.8361.544.camel@intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
- <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
- <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
- <20151022080430.GB2581@malice.jf.intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com>
- <20151022154307.GB4289@malice.jf.intel.com>
- <C6287702A945AC47BE5DB5DFD4B5C6DD0381485F@SHSMSX104.ccr.corp.intel.com>
- <1445949030.6332.26.camel@intel.com>
- <20151028012735.GA1854@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
+	 <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
+	 <20151022080430.GB2581@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com>
+	 <20151022154307.GB4289@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD0381485F@SHSMSX104.ccr.corp.intel.com>
+	 <1445949030.6332.26.camel@intel.com>
+	 <20151028012735.GA1854@malice.jf.intel.com>
+	 <C6287702A945AC47BE5DB5DFD4B5C6DD03815A2E@SHSMSX104.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:29073 "EHLO mga01.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:37262 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758304AbbJ3GMD convert rfc822-to-8bit (ORCPT
+	id S1758486AbbJ3J6l (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 30 Oct 2015 02:12:03 -0400
-In-Reply-To: <20151028012735.GA1854@malice.jf.intel.com>
+	Fri, 30 Oct 2015 05:58:41 -0400
+In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD03815A2E@SHSMSX104.ccr.corp.intel.com>
 Content-Language: en-US
+Content-ID: <58269219001B3649B15DB3DBC86E78F3@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "Xue, Gavin" <gavin.xue@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "Westerberg, Mika" <mika.westerberg@intel.com>
+To: "Zha, Qipeng" <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>
+Cc: "Westerberg, Mika" <mika.westerberg@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Xue, Gavin" <gavin.xue@intel.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>
 
-> On Mon, 2015-10-26 at 08:51 +0000, Zha, Qipeng wrote:
-> > > So the ASL you provided was not what the Linux kernel is seeing,=20
-> > > correct?
-> >=20
-> > > Can you please provide a DSDT disassembly from the running Linux=20
-> > > system please, such as:
-> >=20
-> > > # cp /sys/firmware/acpi/tables/DSDT DSDT.dat # iasl -d DSDT.dat
-> >=20
-> > > Then find this device in DSDT.dsl and paste it here please.
-> >=20
-> > Sorry for late feedback,=A0=A0got dsdt from lab machine since my bo=
-ard=20
-> > got broken, Please check.
-> >=20
-> > Scope (\_SB)
-> > =A0=A0=A0=A0=A0=A0=A0=A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Device (IPC1)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (_ADR, Zero)=A0=
-=A0// _ADR: Address
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (_HID, "INT34D=
-2")=A0=A0// _HID: Hardware ID
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (_CID, "INT34D=
-2")=A0=A0// _CID: Compatible ID
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (_DDN, "Intel(=
-R) IPCI controller ")=A0=A0// _DDN:
-> > DOS Device Name
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (_UID, One)=A0=
-=A0// _UID: Unique ID
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Name (RBUF, Resourc=
-eTemplate ()
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Memory3=
-2Fixed (ReadWrite,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Base
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00002000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0_Y08)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Memory3=
-2Fixed (ReadWrite,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Base
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000004,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0_Y09)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Memory3=
-2Fixed (ReadWrite,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Base
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000040,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0_Y0A)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0IO (Dec=
-ode16,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x0400,=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0// Range Minimum
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x0480,=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0// Range Maximum
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x04,=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0// Alignment
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x80,=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0// Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Memory3=
-2Fixed (ReadWrite,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Base
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00002000,=A0=A0=A0=A0=A0=A0=A0=A0=A0// Address Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0_Y0B)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Interru=
-pt (ResourceConsumer, Level, ActiveLow,=20
-> > Exclusive, ,, )
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A00x00000028,
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0}
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0})
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Method (_CRS, 0, No=
-tSerialized)=A0=A0// _CRS: Current=20
-> > Resource Settings
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0{
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y08._BAS,
-> > B0BA)=A0=A0// _BAS: Base Address
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y08._LEN,
-> > B0LN)=A0=A0// _LEN: Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-DD1A, B0BA)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-DD1L, B0LN)
->=20
-> dd1a, dd1l has been stored to Resource 0
->=20
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y09._BAS,
-> > BM01)=A0=A0// _BAS: Base Address
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y09._LEN,
-> > BML1)=A0=A0// _LEN: Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y0A._BAS,
-> > BM02)=A0=A0// _BAS: Base Address
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y0A._LEN,
-> > BML2)=A0=A0// _LEN: Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-BMDA, BM01)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-0x04, BML1)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-BMIA, BM02)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-0x40, BML2)
->=20
-> bmda, 0x04 -> Resource 1
-> bmia, 0x40 -> Resource 2
->=20
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y0B._BAS,
-> > B1BA)=A0=A0// _BAS: Base Address
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CreateD=
-WordField (RBUF, \_SB.IPC1._Y0B._LEN,
-> > B1LN)=A0=A0// _LEN: Length
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-DD3A, B1BA)
-> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0Store (=
-DD3L, B1LN)
->=20
-> dd3a, dd3l -> Resource 3
->=20
->=20
-> Can you create a temporary method in the ->probe() of this driver to=20
-> iterate over resources and print them out? Or tell the values BIOS se=
-t=20
-> per values dd1a, dd1l, dd3a, dd3l, bmda, bmia.
->=20
-> AFAIU you are using only resources 0 and 1. Can you put here small=20
-> description of what each resource is meant for? (I guess couple of=20
-> them to P-Unit, and couple related to what you are trying to get,=20
-> right?)
-
->While the driver code merges the ranges of res0 and res1:
-
->line 244-245:
-	addr =3D ioremap_nocache(res0->start,
-			       resource_size(res0) + resource_size(res1));
-
->It appears that we're using very little of this:
-
->	punit_ipcdev->base[BIOS_IPC] =3D addr;
->	addr +=3D MAILBOX_REGISTER_SPACE;
->	punit_ipcdev->base[GTDRIVER_IPC] =3D addr;
->	addr +=3D MAILBOX_REGISTER_SPACE;
->	punit_ipcdev->base[ISPDRIVER_IPC] =3D addr;
-
->MAILBOX_REGISTER_SPACE is 0x10, but I don't know how long ISPDRIVER_IP=
-C is expected to be, but it apears to be 4 bytes. This would mean we're=
- using a total of 0x24 starting res0->start. res0 has a length of 0x200=
-0 per the ASL above, and we're only referencing 0x24 of it.
-
->Why, then, do we merge the lengths of res0 and res1, presumably to 0x2=
-004, when we only use 0x24?
-
->Or, am I misreading this?
-
->Also, Qipeng, you mentioned earlier that the firmware reported a lengt=
-h of 0x4B I believe? I don't see that in this ASL.
-
-
- Memory32Fixed (ReadWrite,
-                         0x00000000,         // Address Base
-                         0x00002000,         // Address Length
-                         _Y08)
-dd1a, dd1l -> Resource 0
-This is  PMC controller memory space, not related to Punit.
-
- bmda, 0x04 -> Resource 1
- bmia, 0x40 -> Resource 2
-These two are for Punit memory space, and bmia =3D bmda + 4,
-They are mapped to res0,res1 in Punit driver, size of res0 is set as 4B=
-(Store (0x04, BML1)).
-
-Other resource are for other PMC functions, not related to Punit either=
-=2E
+T24gRnJpLCAyMDE1LTEwLTMwIGF0IDA2OjExICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4g
+PiBPbiBNb24sIDIwMTUtMTAtMjYgYXQgMDg6NTEgKzAwMDAsIFpoYSwgUWlwZW5nIHdyb3RlOg0K
+PiA+ID4gPiBTbyB0aGUgQVNMIHlvdSBwcm92aWRlZCB3YXMgbm90IHdoYXQgdGhlIExpbnV4IGtl
+cm5lbCBpcw0KPiA+ID4gPiBzZWVpbmcsIA0KPiA+ID4gPiBjb3JyZWN0Pw0KPiA+ID4gDQo+ID4g
+PiA+IENhbiB5b3UgcGxlYXNlIHByb3ZpZGUgYSBEU0RUIGRpc2Fzc2VtYmx5IGZyb20gdGhlIHJ1
+bm5pbmcNCj4gPiA+ID4gTGludXggDQo+ID4gPiA+IHN5c3RlbSBwbGVhc2UsIHN1Y2ggYXM6DQo+
+ID4gPiANCj4gPiA+ID4gIyBjcCAvc3lzL2Zpcm13YXJlL2FjcGkvdGFibGVzL0RTRFQgRFNEVC5k
+YXQgIyBpYXNsIC1kIERTRFQuZGF0DQo+ID4gPiANCj4gPiA+ID4gVGhlbiBmaW5kIHRoaXMgZGV2
+aWNlIGluIERTRFQuZHNsIGFuZCBwYXN0ZSBpdCBoZXJlIHBsZWFzZS4NCj4gPiA+IA0KPiA+ID4g
+U29ycnkgZm9yIGxhdGUgZmVlZGJhY2sswqDCoGdvdCBkc2R0IGZyb20gbGFiIG1hY2hpbmUgc2lu
+Y2UgbXkNCj4gPiA+IGJvYXJkIA0KPiA+ID4gZ290IGJyb2tlbiwgUGxlYXNlIGNoZWNrLg0KPiA+
+ID4gDQo+ID4gPiBTY29wZSAoXF9TQikNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqB7DQo+ID4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBEZXZpY2UgKElQQzEpDQo+ID4gPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqB7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE5hbWUg
+KF9BRFIsIFplcm8pwqDCoC8vIF9BRFI6IEFkZHJlc3MNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgTmFtZSAoX0hJRCwgIklOVDM0RDIiKcKgwqAvLyBfSElEOiBIYXJkd2Fy
+ZSBJRA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChfQ0lELCAi
+SU5UMzREMiIpwqDCoC8vIF9DSUQ6IENvbXBhdGlibGUgSUQNCj4gPiA+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgTmFtZSAoX0RETiwgIkludGVsKFIpIElQQ0kgY29udHJvbGxlciAi
+KcKgwqAvLw0KPiA+ID4gX0RETjoNCj4gPiA+IERPUyBEZXZpY2UgTmFtZQ0KPiA+ID4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChfVUlELCBPbmUpwqDCoC8vIF9VSUQ6IFVu
+aXF1ZSBJRA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChSQlVG
+LCBSZXNvdXJjZVRlbXBsYXRlICgpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1v
+cnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJl
+c3MgQmFzZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgMHgwMDAwMjAwMCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwOCkN
+Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZp
+eGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgQmFz
+ZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+MHgwMDAwMDAwNCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwOSkNCj4gPiA+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZpeGVkIChS
+ZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgQmFzZQ0KPiA+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgwMDAw
+MDA0MCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+ID4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwQSkNCj4gPiA+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJTyAoRGVjb2RlMTYsDQo+ID4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0MDAswqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvLyBSYW5nZSBNaW5pbXVtDQo+ID4gPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0ODAswqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAvLyBSYW5nZSBNYXhpbXVtDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0LMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoC8vIEFsaWdubWVudA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgMHg4MCzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvLyBM
+ZW5ndGgNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCkNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1v
+cnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJl
+c3MgQmFzZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgMHgwMDAwMjAwMCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwQikN
+Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJbnRlcnJ1cHQg
+KFJlc291cmNlQ29uc3VtZXIsIExldmVsLA0KPiA+ID4gQWN0aXZlTG93LCANCj4gPiA+IEV4Y2x1
+c2l2ZSwgLCwgKQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oDB4MDAwMDAwMjgsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgfQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9KQ0KPiA+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZXRob2QgKF9DUlMsIDAsIE5vdFNlcmlhbGl6
+ZWQpwqDCoC8vIF9DUlM6IEN1cnJlbnQNCj4gPiA+IFJlc291cmNlIFNldHRpbmdzDQo+ID4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEu
+X1kwOC5fQkFTLA0KPiA+ID4gQjBCQSnCoMKgLy8gX0JBUzogQmFzZSBBZGRyZXNzDQo+ID4gPiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQ3JlYXRlRFdvcmRGaWVsZCAo
+UkJVRiwgXF9TQi5JUEMxLl9ZMDguX0xFTiwNCj4gPiA+IEIwTE4pwqDCoC8vIF9MRU46IExlbmd0
+aA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFN0b3JlIChE
+RDFBLCBCMEJBKQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oFN0b3JlIChERDFMLCBCMExOKQ0KPiA+IA0KPiA+IGRkMWEsIGRkMWwgaGFzIGJlZW4gc3RvcmVk
+IHRvIFJlc291cmNlIDANCj4gPiANCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwOS5fQkFTLA0K
+PiA+ID4gQk0wMSnCoMKgLy8gX0JBUzogQmFzZSBBZGRyZXNzDQo+ID4gPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQ3JlYXRlRFdvcmRGaWVsZCAoUkJVRiwgXF9TQi5J
+UEMxLl9ZMDkuX0xFTiwNCj4gPiA+IEJNTDEpwqDCoC8vIF9MRU46IExlbmd0aA0KPiA+ID4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3JkRmllbGQgKFJC
+VUYsIFxfU0IuSVBDMS5fWTBBLl9CQVMsDQo+ID4gPiBCTTAyKcKgwqAvLyBfQkFTOiBCYXNlIEFk
+ZHJlc3MNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVh
+dGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwQS5fTEVOLA0KPiA+ID4gQk1MMinCoMKg
+Ly8gX0xFTjogTGVuZ3RoDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgU3RvcmUgKEJNREEsIEJNMDEpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgU3RvcmUgKDB4MDQsIEJNTDEpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKEJNSUEsIEJNMDIpDQo+ID4gPiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKDB4NDAsIEJNTDIpDQo+ID4g
+DQo+ID4gYm1kYSwgMHgwNCAtPiBSZXNvdXJjZSAxDQo+ID4gYm1pYSwgMHg0MCAtPiBSZXNvdXJj
+ZSAyDQo+ID4gDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+Q3JlYXRlRFdvcmRGaWVsZCAoUkJVRiwgXF9TQi5JUEMxLl9ZMEIuX0JBUywNCj4gPiA+IEIxQkEp
+wqDCoC8vIF9CQVM6IEJhc2UgQWRkcmVzcw0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3JkRmllbGQgKFJCVUYsIFxfU0IuSVBDMS5fWTBCLl9M
+RU4sDQo+ID4gPiBCMUxOKcKgwqAvLyBfTEVOOiBMZW5ndGgNCj4gPiA+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoREQzQSwgQjFCQSkNCj4gPiA+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoREQzTCwgQjFMTikNCj4g
+PiANCj4gPiBkZDNhLCBkZDNsIC0+IFJlc291cmNlIDMNCj4gPiANCj4gPiANCj4gPiBDYW4geW91
+IGNyZWF0ZSBhIHRlbXBvcmFyeSBtZXRob2QgaW4gdGhlIC0+cHJvYmUoKSBvZiB0aGlzIGRyaXZl
+cg0KPiA+IHRvIA0KPiA+IGl0ZXJhdGUgb3ZlciByZXNvdXJjZXMgYW5kIHByaW50IHRoZW0gb3V0
+PyBPciB0ZWxsIHRoZSB2YWx1ZXMgQklPUw0KPiA+IHNldCANCj4gPiBwZXIgdmFsdWVzIGRkMWEs
+IGRkMWwsIGRkM2EsIGRkM2wsIGJtZGEsIGJtaWEuDQo+ID4gDQo+ID4gQUZBSVUgeW91IGFyZSB1
+c2luZyBvbmx5IHJlc291cmNlcyAwIGFuZCAxLiBDYW4geW91IHB1dCBoZXJlIHNtYWxsIA0KPiA+
+IGRlc2NyaXB0aW9uIG9mIHdoYXQgZWFjaCByZXNvdXJjZSBpcyBtZWFudCBmb3I/IChJIGd1ZXNz
+IGNvdXBsZSBvZiANCj4gPiB0aGVtIHRvIFAtVW5pdCwgYW5kIGNvdXBsZSByZWxhdGVkIHRvIHdo
+YXQgeW91IGFyZSB0cnlpbmcgdG8gZ2V0LCANCj4gPiByaWdodD8pDQo+IA0KPiA+IFdoaWxlIHRo
+ZSBkcml2ZXIgY29kZSBtZXJnZXMgdGhlIHJhbmdlcyBvZiByZXMwIGFuZCByZXMxOg0KPiANCj4g
+PiBsaW5lIDI0NC0yNDU6DQo+IAlhZGRyID0gaW9yZW1hcF9ub2NhY2hlKHJlczAtPnN0YXJ0LA0K
+PiAJCQnCoMKgwqDCoMKgwqDCoHJlc291cmNlX3NpemUocmVzMCkgKw0KPiByZXNvdXJjZV9zaXpl
+KHJlczEpKTsNCj4gDQo+ID4gSXQgYXBwZWFycyB0aGF0IHdlJ3JlIHVzaW5nIHZlcnkgbGl0dGxl
+IG9mIHRoaXM6DQo+IA0KPiA+IAlwdW5pdF9pcGNkZXYtPmJhc2VbQklPU19JUENdID0gYWRkcjsN
+Cj4gPiAJYWRkciArPSBNQUlMQk9YX1JFR0lTVEVSX1NQQUNFOw0KPiA+IAlwdW5pdF9pcGNkZXYt
+PmJhc2VbR1REUklWRVJfSVBDXSA9IGFkZHI7DQo+ID4gCWFkZHIgKz0gTUFJTEJPWF9SRUdJU1RF
+Ul9TUEFDRTsNCj4gPiAJcHVuaXRfaXBjZGV2LT5iYXNlW0lTUERSSVZFUl9JUENdID0gYWRkcjsN
+Cj4gDQo+ID4gTUFJTEJPWF9SRUdJU1RFUl9TUEFDRSBpcyAweDEwLCBidXQgSSBkb24ndCBrbm93
+IGhvdyBsb25nDQo+ID4gSVNQRFJJVkVSX0lQQyBpcyBleHBlY3RlZCB0byBiZSwgYnV0IGl0IGFw
+ZWFycyB0byBiZSA0IGJ5dGVzLiBUaGlzDQo+ID4gd291bGQgbWVhbiB3ZSdyZSB1c2luZyBhIHRv
+dGFsIG9mIDB4MjQgc3RhcnRpbmcgcmVzMC0+c3RhcnQuIHJlczANCj4gPiBoYXMgYSBsZW5ndGgg
+b2YgMHgyMDAwIHBlciB0aGUgQVNMIGFib3ZlLCBhbmQgd2UncmUgb25seQ0KPiA+IHJlZmVyZW5j
+aW5nIDB4MjQgb2YgaXQuDQo+IA0KPiA+IFdoeSwgdGhlbiwgZG8gd2UgbWVyZ2UgdGhlIGxlbmd0
+aHMgb2YgcmVzMCBhbmQgcmVzMSwgcHJlc3VtYWJseSB0bw0KPiA+IDB4MjAwNCwgd2hlbiB3ZSBv
+bmx5IHVzZSAweDI0Pw0KPiANCj4gPiBPciwgYW0gSSBtaXNyZWFkaW5nIHRoaXM/DQo+IA0KPiA+
+IEFsc28sIFFpcGVuZywgeW91IG1lbnRpb25lZCBlYXJsaWVyIHRoYXQgdGhlIGZpcm13YXJlIHJl
+cG9ydGVkIGENCj4gPiBsZW5ndGggb2YgMHg0QiBJIGJlbGlldmU/IEkgZG9uJ3Qgc2VlIHRoYXQg
+aW4gdGhpcyBBU0wuDQo+IA0KPiANCj4gwqBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgwMDAwMDAw
+MCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIEJhc2UNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAyMDAwLMKgwqDCoMKgwqDCoMKg
+wqDCoC8vIEFkZHJlc3MgTGVuZ3RoDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgX1kwOCkNCj4gZGQxYSwgZGQxbCAtPiBSZXNvdXJjZSAwDQo+IFRo
+aXMgaXPCoMKgUE1DIGNvbnRyb2xsZXIgbWVtb3J5IHNwYWNlLCBub3QgcmVsYXRlZCB0byBQdW5p
+dC4NCj4gDQo+IMKgYm1kYSwgMHgwNCAtPiBSZXNvdXJjZSAxDQo+IMKgYm1pYSwgMHg0MCAtPiBS
+ZXNvdXJjZSAyDQo+IFRoZXNlIHR3byBhcmUgZm9yIFB1bml0IG1lbW9yeSBzcGFjZSwgYW5kIGJt
+aWEgPSBibWRhICsgNCwNCj4gVGhleSBhcmUgbWFwcGVkIHRvIHJlczAscmVzMSBpbiBQdW5pdCBk
+cml2ZXIsIHNpemUgb2YgcmVzMCBpcyBzZXQgYXMNCj4gNEIoU3RvcmUgKDB4MDQsIEJNTDEpKS4N
+Cj4gDQo+IE90aGVyIHJlc291cmNlIGFyZSBmb3Igb3RoZXIgUE1DIGZ1bmN0aW9ucywgbm90IHJl
+bGF0ZWQgdG8gUHVuaXQNCj4gZWl0aGVyLg0KDQpBcmUgdGhlIHZhbHVlcyB0b3Agc2VjcmV0PyBD
+YW4geW91IHBsZWFzZSBwcm92aWRlIGFsbCBudW1iZXJzLA0KaW5jbHVkaW5nIG5vdCByZWxldmFu
+dD8NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4N
+CkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVy
+ZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29k
+ZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBh
+bnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUg
+c29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0
+cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90
+IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRl
+bGV0ZSBhbGwgY29waWVzLgo=
