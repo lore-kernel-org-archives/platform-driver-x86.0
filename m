@@ -1,177 +1,108 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v7] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Fri, 30 Oct 2015 09:56:09 +0000
-Message-ID: <1446198970.6332.65.camel@intel.com>
-References: <1444397622.8361.544.camel@intel.com>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD01981358@SHSMSX104.ccr.corp.intel.com>
-	 <20151015051606.GD2592@malice.jf.intel.com> <20151021125143.GA29166@vmdeb7>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD02CE122D@SHSMSX104.ccr.corp.intel.com>
-	 <20151022080430.GB2581@malice.jf.intel.com>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD03813AD0@SHSMSX104.ccr.corp.intel.com>
-	 <20151022154307.GB4289@malice.jf.intel.com>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD0381485F@SHSMSX104.ccr.corp.intel.com>
-	 <1445949030.6332.26.camel@intel.com>
-	 <20151028012735.GA1854@malice.jf.intel.com>
-	 <C6287702A945AC47BE5DB5DFD4B5C6DD03815A2E@SHSMSX104.ccr.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga11.intel.com ([192.55.52.93]:37262 "EHLO mga11.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758486AbbJ3J6l (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 30 Oct 2015 05:58:41 -0400
-In-Reply-To: <C6287702A945AC47BE5DB5DFD4B5C6DD03815A2E@SHSMSX104.ccr.corp.intel.com>
-Content-Language: en-US
-Content-ID: <58269219001B3649B15DB3DBC86E78F3@intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Zha, Qipeng" <qipeng.zha@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>
-Cc: "Westerberg, Mika" <mika.westerberg@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Xue, Gavin" <gavin.xue@intel.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+From: Finn Thain <fthain@telegraphics.com.au>
+Subject: [PATCH v7 06/26] x86/thinkpad_acpi: Use arch_nvram_ops methods instead of nvram_read_byte() and nvram_write_byte()
+Date: Sun, 01 Nov 2015 21:42:08 +1100
+Message-ID: <20151101104203.801701049@telegraphics.com.au>
+References: <20151101104202.301856132@telegraphics.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline; filename=pc-rtc-replace-exported-nvram-functions
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+List-Id: platform-driver-x86.vger.kernel.org
 
-T24gRnJpLCAyMDE1LTEwLTMwIGF0IDA2OjExICswMDAwLCBaaGEsIFFpcGVuZyB3cm90ZToNCj4g
-PiBPbiBNb24sIDIwMTUtMTAtMjYgYXQgMDg6NTEgKzAwMDAsIFpoYSwgUWlwZW5nIHdyb3RlOg0K
-PiA+ID4gPiBTbyB0aGUgQVNMIHlvdSBwcm92aWRlZCB3YXMgbm90IHdoYXQgdGhlIExpbnV4IGtl
-cm5lbCBpcw0KPiA+ID4gPiBzZWVpbmcsIA0KPiA+ID4gPiBjb3JyZWN0Pw0KPiA+ID4gDQo+ID4g
-PiA+IENhbiB5b3UgcGxlYXNlIHByb3ZpZGUgYSBEU0RUIGRpc2Fzc2VtYmx5IGZyb20gdGhlIHJ1
-bm5pbmcNCj4gPiA+ID4gTGludXggDQo+ID4gPiA+IHN5c3RlbSBwbGVhc2UsIHN1Y2ggYXM6DQo+
-ID4gPiANCj4gPiA+ID4gIyBjcCAvc3lzL2Zpcm13YXJlL2FjcGkvdGFibGVzL0RTRFQgRFNEVC5k
-YXQgIyBpYXNsIC1kIERTRFQuZGF0DQo+ID4gPiANCj4gPiA+ID4gVGhlbiBmaW5kIHRoaXMgZGV2
-aWNlIGluIERTRFQuZHNsIGFuZCBwYXN0ZSBpdCBoZXJlIHBsZWFzZS4NCj4gPiA+IA0KPiA+ID4g
-U29ycnkgZm9yIGxhdGUgZmVlZGJhY2sswqDCoGdvdCBkc2R0IGZyb20gbGFiIG1hY2hpbmUgc2lu
-Y2UgbXkNCj4gPiA+IGJvYXJkIA0KPiA+ID4gZ290IGJyb2tlbiwgUGxlYXNlIGNoZWNrLg0KPiA+
-ID4gDQo+ID4gPiBTY29wZSAoXF9TQikNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqB7DQo+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBEZXZpY2UgKElQQzEpDQo+ID4gPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqB7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE5hbWUg
-KF9BRFIsIFplcm8pwqDCoC8vIF9BRFI6IEFkZHJlc3MNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgTmFtZSAoX0hJRCwgIklOVDM0RDIiKcKgwqAvLyBfSElEOiBIYXJkd2Fy
-ZSBJRA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChfQ0lELCAi
-SU5UMzREMiIpwqDCoC8vIF9DSUQ6IENvbXBhdGlibGUgSUQNCj4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgTmFtZSAoX0RETiwgIkludGVsKFIpIElQQ0kgY29udHJvbGxlciAi
-KcKgwqAvLw0KPiA+ID4gX0RETjoNCj4gPiA+IERPUyBEZXZpY2UgTmFtZQ0KPiA+ID4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChfVUlELCBPbmUpwqDCoC8vIF9VSUQ6IFVu
-aXF1ZSBJRA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOYW1lIChSQlVG
-LCBSZXNvdXJjZVRlbXBsYXRlICgpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1v
-cnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJl
-c3MgQmFzZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgMHgwMDAwMjAwMCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwOCkN
-Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZp
-eGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgQmFz
-ZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-MHgwMDAwMDAwNCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwOSkNCj4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1vcnkzMkZpeGVkIChS
-ZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJlc3MgQmFzZQ0KPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgwMDAw
-MDA0MCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+ID4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwQSkNCj4gPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJTyAoRGVjb2RlMTYsDQo+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0MDAswqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvLyBSYW5nZSBNaW5pbXVtDQo+ID4gPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0ODAswqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAvLyBSYW5nZSBNYXhpbXVtDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDA0LMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoC8vIEFsaWdubWVudA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgMHg4MCzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvLyBM
-ZW5ndGgNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCkNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZW1v
-cnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAwMDAwLMKgwqDCoMKgwqDCoMKgwqDCoC8vIEFkZHJl
-c3MgQmFzZQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgMHgwMDAwMjAwMCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIExlbmd0aA0KPiA+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgX1kwQikN
-Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJbnRlcnJ1cHQg
-KFJlc291cmNlQ29uc3VtZXIsIExldmVsLA0KPiA+ID4gQWN0aXZlTG93LCANCj4gPiA+IEV4Y2x1
-c2l2ZSwgLCwgKQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oDB4MDAwMDAwMjgsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgfQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9KQ0KPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBNZXRob2QgKF9DUlMsIDAsIE5vdFNlcmlhbGl6
-ZWQpwqDCoC8vIF9DUlM6IEN1cnJlbnQNCj4gPiA+IFJlc291cmNlIFNldHRpbmdzDQo+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEu
-X1kwOC5fQkFTLA0KPiA+ID4gQjBCQSnCoMKgLy8gX0JBUzogQmFzZSBBZGRyZXNzDQo+ID4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQ3JlYXRlRFdvcmRGaWVsZCAo
-UkJVRiwgXF9TQi5JUEMxLl9ZMDguX0xFTiwNCj4gPiA+IEIwTE4pwqDCoC8vIF9MRU46IExlbmd0
-aA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFN0b3JlIChE
-RDFBLCBCMEJBKQ0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oFN0b3JlIChERDFMLCBCMExOKQ0KPiA+IA0KPiA+IGRkMWEsIGRkMWwgaGFzIGJlZW4gc3RvcmVk
-IHRvIFJlc291cmNlIDANCj4gPiANCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBDcmVhdGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwOS5fQkFTLA0K
-PiA+ID4gQk0wMSnCoMKgLy8gX0JBUzogQmFzZSBBZGRyZXNzDQo+ID4gPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgQ3JlYXRlRFdvcmRGaWVsZCAoUkJVRiwgXF9TQi5J
-UEMxLl9ZMDkuX0xFTiwNCj4gPiA+IEJNTDEpwqDCoC8vIF9MRU46IExlbmd0aA0KPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3JkRmllbGQgKFJC
-VUYsIFxfU0IuSVBDMS5fWTBBLl9CQVMsDQo+ID4gPiBCTTAyKcKgwqAvLyBfQkFTOiBCYXNlIEFk
-ZHJlc3MNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBDcmVh
-dGVEV29yZEZpZWxkIChSQlVGLCBcX1NCLklQQzEuX1kwQS5fTEVOLA0KPiA+ID4gQk1MMinCoMKg
-Ly8gX0xFTjogTGVuZ3RoDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgU3RvcmUgKEJNREEsIEJNMDEpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgU3RvcmUgKDB4MDQsIEJNTDEpDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKEJNSUEsIEJNMDIpDQo+ID4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU3RvcmUgKDB4NDAsIEJNTDIpDQo+ID4g
-DQo+ID4gYm1kYSwgMHgwNCAtPiBSZXNvdXJjZSAxDQo+ID4gYm1pYSwgMHg0MCAtPiBSZXNvdXJj
-ZSAyDQo+ID4gDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-Q3JlYXRlRFdvcmRGaWVsZCAoUkJVRiwgXF9TQi5JUEMxLl9ZMEIuX0JBUywNCj4gPiA+IEIxQkEp
-wqDCoC8vIF9CQVM6IEJhc2UgQWRkcmVzcw0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoENyZWF0ZURXb3JkRmllbGQgKFJCVUYsIFxfU0IuSVBDMS5fWTBCLl9M
-RU4sDQo+ID4gPiBCMUxOKcKgwqAvLyBfTEVOOiBMZW5ndGgNCj4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoREQzQSwgQjFCQSkNCj4gPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTdG9yZSAoREQzTCwgQjFMTikNCj4g
-PiANCj4gPiBkZDNhLCBkZDNsIC0+IFJlc291cmNlIDMNCj4gPiANCj4gPiANCj4gPiBDYW4geW91
-IGNyZWF0ZSBhIHRlbXBvcmFyeSBtZXRob2QgaW4gdGhlIC0+cHJvYmUoKSBvZiB0aGlzIGRyaXZl
-cg0KPiA+IHRvIA0KPiA+IGl0ZXJhdGUgb3ZlciByZXNvdXJjZXMgYW5kIHByaW50IHRoZW0gb3V0
-PyBPciB0ZWxsIHRoZSB2YWx1ZXMgQklPUw0KPiA+IHNldCANCj4gPiBwZXIgdmFsdWVzIGRkMWEs
-IGRkMWwsIGRkM2EsIGRkM2wsIGJtZGEsIGJtaWEuDQo+ID4gDQo+ID4gQUZBSVUgeW91IGFyZSB1
-c2luZyBvbmx5IHJlc291cmNlcyAwIGFuZCAxLiBDYW4geW91IHB1dCBoZXJlIHNtYWxsIA0KPiA+
-IGRlc2NyaXB0aW9uIG9mIHdoYXQgZWFjaCByZXNvdXJjZSBpcyBtZWFudCBmb3I/IChJIGd1ZXNz
-IGNvdXBsZSBvZiANCj4gPiB0aGVtIHRvIFAtVW5pdCwgYW5kIGNvdXBsZSByZWxhdGVkIHRvIHdo
-YXQgeW91IGFyZSB0cnlpbmcgdG8gZ2V0LCANCj4gPiByaWdodD8pDQo+IA0KPiA+IFdoaWxlIHRo
-ZSBkcml2ZXIgY29kZSBtZXJnZXMgdGhlIHJhbmdlcyBvZiByZXMwIGFuZCByZXMxOg0KPiANCj4g
-PiBsaW5lIDI0NC0yNDU6DQo+IAlhZGRyID0gaW9yZW1hcF9ub2NhY2hlKHJlczAtPnN0YXJ0LA0K
-PiAJCQnCoMKgwqDCoMKgwqDCoHJlc291cmNlX3NpemUocmVzMCkgKw0KPiByZXNvdXJjZV9zaXpl
-KHJlczEpKTsNCj4gDQo+ID4gSXQgYXBwZWFycyB0aGF0IHdlJ3JlIHVzaW5nIHZlcnkgbGl0dGxl
-IG9mIHRoaXM6DQo+IA0KPiA+IAlwdW5pdF9pcGNkZXYtPmJhc2VbQklPU19JUENdID0gYWRkcjsN
-Cj4gPiAJYWRkciArPSBNQUlMQk9YX1JFR0lTVEVSX1NQQUNFOw0KPiA+IAlwdW5pdF9pcGNkZXYt
-PmJhc2VbR1REUklWRVJfSVBDXSA9IGFkZHI7DQo+ID4gCWFkZHIgKz0gTUFJTEJPWF9SRUdJU1RF
-Ul9TUEFDRTsNCj4gPiAJcHVuaXRfaXBjZGV2LT5iYXNlW0lTUERSSVZFUl9JUENdID0gYWRkcjsN
-Cj4gDQo+ID4gTUFJTEJPWF9SRUdJU1RFUl9TUEFDRSBpcyAweDEwLCBidXQgSSBkb24ndCBrbm93
-IGhvdyBsb25nDQo+ID4gSVNQRFJJVkVSX0lQQyBpcyBleHBlY3RlZCB0byBiZSwgYnV0IGl0IGFw
-ZWFycyB0byBiZSA0IGJ5dGVzLiBUaGlzDQo+ID4gd291bGQgbWVhbiB3ZSdyZSB1c2luZyBhIHRv
-dGFsIG9mIDB4MjQgc3RhcnRpbmcgcmVzMC0+c3RhcnQuIHJlczANCj4gPiBoYXMgYSBsZW5ndGgg
-b2YgMHgyMDAwIHBlciB0aGUgQVNMIGFib3ZlLCBhbmQgd2UncmUgb25seQ0KPiA+IHJlZmVyZW5j
-aW5nIDB4MjQgb2YgaXQuDQo+IA0KPiA+IFdoeSwgdGhlbiwgZG8gd2UgbWVyZ2UgdGhlIGxlbmd0
-aHMgb2YgcmVzMCBhbmQgcmVzMSwgcHJlc3VtYWJseSB0bw0KPiA+IDB4MjAwNCwgd2hlbiB3ZSBv
-bmx5IHVzZSAweDI0Pw0KPiANCj4gPiBPciwgYW0gSSBtaXNyZWFkaW5nIHRoaXM/DQo+IA0KPiA+
-IEFsc28sIFFpcGVuZywgeW91IG1lbnRpb25lZCBlYXJsaWVyIHRoYXQgdGhlIGZpcm13YXJlIHJl
-cG9ydGVkIGENCj4gPiBsZW5ndGggb2YgMHg0QiBJIGJlbGlldmU/IEkgZG9uJ3Qgc2VlIHRoYXQg
-aW4gdGhpcyBBU0wuDQo+IA0KPiANCj4gwqBNZW1vcnkzMkZpeGVkIChSZWFkV3JpdGUsDQo+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgMHgwMDAwMDAw
-MCzCoMKgwqDCoMKgwqDCoMKgwqAvLyBBZGRyZXNzIEJhc2UNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAweDAwMDAyMDAwLMKgwqDCoMKgwqDCoMKg
-wqDCoC8vIEFkZHJlc3MgTGVuZ3RoDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgX1kwOCkNCj4gZGQxYSwgZGQxbCAtPiBSZXNvdXJjZSAwDQo+IFRo
-aXMgaXPCoMKgUE1DIGNvbnRyb2xsZXIgbWVtb3J5IHNwYWNlLCBub3QgcmVsYXRlZCB0byBQdW5p
-dC4NCj4gDQo+IMKgYm1kYSwgMHgwNCAtPiBSZXNvdXJjZSAxDQo+IMKgYm1pYSwgMHg0MCAtPiBS
-ZXNvdXJjZSAyDQo+IFRoZXNlIHR3byBhcmUgZm9yIFB1bml0IG1lbW9yeSBzcGFjZSwgYW5kIGJt
-aWEgPSBibWRhICsgNCwNCj4gVGhleSBhcmUgbWFwcGVkIHRvIHJlczAscmVzMSBpbiBQdW5pdCBk
-cml2ZXIsIHNpemUgb2YgcmVzMCBpcyBzZXQgYXMNCj4gNEIoU3RvcmUgKDB4MDQsIEJNTDEpKS4N
-Cj4gDQo+IE90aGVyIHJlc291cmNlIGFyZSBmb3Igb3RoZXIgUE1DIGZ1bmN0aW9ucywgbm90IHJl
-bGF0ZWQgdG8gUHVuaXQNCj4gZWl0aGVyLg0KDQpBcmUgdGhlIHZhbHVlcyB0b3Agc2VjcmV0PyBD
-YW4geW91IHBsZWFzZSBwcm92aWRlIGFsbCBudW1iZXJzLA0KaW5jbHVkaW5nIG5vdCByZWxldmFu
-dD8NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4N
-CkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVy
-ZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29k
-ZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBh
-bnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUg
-c29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0
-cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90
-IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRl
-bGV0ZSBhbGwgY29waWVzLgo=
+Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
+nvram_* function exports can be removed.
+
+This patch series was tested on a ThinkPad T43.
+
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+
+---
+ drivers/platform/x86/thinkpad_acpi.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+Index: linux/drivers/platform/x86/thinkpad_acpi.c
+===================================================================
+--- linux.orig/drivers/platform/x86/thinkpad_acpi.c	2015-11-01 21:41:24.000000000 +1100
++++ linux/drivers/platform/x86/thinkpad_acpi.c	2015-11-01 21:41:31.000000000 +1100
+@@ -2312,30 +2312,30 @@ static void hotkey_read_nvram(struct tp_
+ 	u8 d;
+ 
+ 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
+ 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
+ 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
+ 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
+ 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
+ 	}
+ 	if (m & TP_ACPI_HKEY_THNKLGHT_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
+ 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
+ 	}
+ 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
+ 		n->displayexp_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 		n->brightness_toggle =
+ 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
+ 	}
+ 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
+-		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
+ 				>> TP_NVRAM_POS_LEVEL_VOLUME;
+ 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
+@@ -6156,7 +6156,7 @@ static unsigned int tpacpi_brightness_nv
+ {
+ 	u8 lnvram;
+ 
+-	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
++	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
+ 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
+ 	lnvram &= bright_maxlvl;
+@@ -6181,7 +6181,7 @@ static void tpacpi_brightness_checkpoint
+ 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
+ 		goto unlock;
+ 	lec &= TP_EC_BACKLIGHT_LVLMSK;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 
+ 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
+ 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
+@@ -6189,7 +6189,7 @@ static void tpacpi_brightness_checkpoint
+ 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
+ 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
+ 		dbg_printk(TPACPI_DBG_BRGHT,
+ 			   "updated NVRAM backlight level to %u (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
+@@ -6797,13 +6797,13 @@ static void tpacpi_volume_checkpoint_nvr
+ 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
+ 		goto unlock;
+ 	lec &= ec_mask;
+-	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
++	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
+ 
+ 	if (lec != (b_nvram & ec_mask)) {
+ 		/* NVRAM needs update */
+ 		b_nvram &= ~ec_mask;
+ 		b_nvram |= lec;
+-		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
++		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
+ 		dbg_printk(TPACPI_DBG_MIXER,
+ 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
+ 			   (unsigned int) lec, (unsigned int) b_nvram);
