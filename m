@@ -1,76 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ideapad-laptop: include Yoga 3 1170 in add rfkill whitelist
-Date: Fri, 06 Nov 2015 23:26:59 +0100
-Message-ID: <4760270.MzzySUYc0g@wuerfel>
-References: <3945339.hkrnUBKIiS@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mout.kundenserver.de ([212.227.17.10]:58906 "EHLO
-	mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030298AbbKFW1Z (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 6 Nov 2015 17:27:25 -0500
-In-Reply-To: <3945339.hkrnUBKIiS@wuerfel>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] ideapad-laptop: Add Lenovo Yoga 900 to no_hw_rfkill dmi list
+Date: Mon,  9 Nov 2015 17:09:05 +0100
+Message-ID: <1447085345-32455-1-git-send-email-hdegoede@redhat.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>
+Cc: stable@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-This changes the entry to the whitelist of machines that do not have
-a physical rfkill switch. Unfortunately, the Yoga 3 generation seems
-to use upper-case letters for the YOGA 3 Pro-1370, while it uses normal
-capitalization for its Yoga 3 1170 and 1470 siblings.
+Like some of the other Yoga models the Lenovo Yoga 900 does not have a
+hw rfkill switch, and trying to read the hw rfkill switch through the
+ideapad module causes it to always reported blocking breaking wifi.
 
-In order to catch all variants of the Yoga 3, I'm changing both
-the entry for the 1470 (using "Yoga" as the name) and the entry for
-the Pro 1370 (using all-caps "YOGA") to not match the exact model number
-but only the generation. This way, the 1170 and 1470 models share one
-entry, but if the firmware changes from one format to the other, it will
-still work.
+This commit adds the Lenovo Yoga 900 to the no_hw_rfkill dmi list, fixing
+the wifi breakage.
 
-The second entry for Yoga 2 Pro that was recently added for some
-reason ended up not being added in alphanumeric order, and I'm
-moving the Yoga 3 1470 entry down while making the change, so they
-are sorted more logically.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1275490
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Kevin Fenzi <kevin@scrye.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-I realized that this patch didn't make it in when I sent it back in may.
-I have adapted it to the changes that happened since.
+ drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index db76d011bedd..c11f40f37bd0 100644
+index fce49f3..d4a48b4 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -872,24 +872,24 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+@@ -873,6 +873,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
  		},
  	},
- 	{
--		.ident = "Lenovo Yoga 3 14",
-+		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 3 14"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
- 		},
- 	},
- 	{
--		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
-+		.ident = "Lenovo Yoga 3 1170 / 1470",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 3"),
- 		},
- 	},
- 	{
- 		.ident = "Lenovo Yoga 3 Pro 1370",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3 Pro-1370"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
- 		},
- 	},
++	{
++		.ident = "Lenovo Yoga 900",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
++		},
++	},
  	{}
+ };
+ 
+-- 
+2.5.0
