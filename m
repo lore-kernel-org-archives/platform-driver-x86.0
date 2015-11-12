@@ -1,38 +1,19 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch] asus-wmi: fix error handling in store_sys_wmi()
-Date: Tue, 10 Nov 2015 22:22:57 -0800
-Message-ID: <20151111062257.GL18221@malice.jf.intel.com>
-References: <20151110221816.GC30281@mwanda>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: =?utf-8?B?dmlw5biQ5Y+35YiG5Lqr576k?= <jiaweixue@jidisec.com>
+Subject: =?utf-8?B?55yL54Ot6Zeo5aSn54mH5LiN6Iqx6ZKxKEFEKQ==?=
+Date: Thu, 12 Nov 2015 08:21:34 +0800
+Message-ID: <201511120821488542172@jidisec.com>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:48992 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750780AbbKKGXA (ORCPT
+Received: from [58.30.240.167] ([58.30.240.167]:1730 "HELO jidisec.com"
+	rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with SMTP
+	id S1752438AbbKLA1B (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 11 Nov 2015 01:23:00 -0500
-Content-Disposition: inline
-In-Reply-To: <20151110221816.GC30281@mwanda>
+	Wed, 11 Nov 2015 19:27:01 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
 
-On Wed, Nov 11, 2015 at 01:18:16AM +0300, Dan Carpenter wrote:
-> The asus_wmi_get_devstate_simple() returns 0-1 on success.  In theory
-> according to static checkers, it can return either -EIO or -ENODEV on
-> failure.  Currently the error handling code only handles -ENODEV and
-> -EIO is treated as success.  Let's make it handle the -EIO error as
-> well.
-> 
-> It's possible that it can't actually return -EIO and this patch is not
-> needed but in that case this patch is harmless and silences a static
-> checker warning so it's still worth it.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-Thank you Dan, queued to testing.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+54ix5aWH6Im6dmlw5YiG5LqrUVHnvqTvvJo1NjUwMDQ35q+P5aSp5YiG5Lqr5LiA5aSn5rOi54ix
+5aWH6Im65Lya5ZGY5biQ5Y+377yM55yL54Ot6Zeo5aSn54mH5LiN6Iqx6ZKx77yBIA==
