@@ -1,29 +1,31 @@
-From: Mystery Shopper <marial.bermejo.ext@juntadeandalucia.es>
-Subject: Working an extra job.
-Date: Sat, 14 Nov 2015 22:40:29 +0000
-Message-ID: <6c74387954588c41c4428e9d0372522e__26594.5817962804$1447541857$gmane$org@juntadeandalucia.es>
-Reply-To: <shopfstest0014@gmail.com>
+From: zhongjun@asia.com
+Subject: Greetings.
+Date: Sun, 15 Nov 2015 11:57:03 +0100
+Message-ID: <20151115145218.DEDF014894B@ampsrv1.comunidad-ameripol.org>
+Reply-To: fuzhong348@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mta5.juntadeandalucia.es ([217.12.26.60]:11888 "EHLO
-	mta.juntadeandalucia.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1751887AbbKNW40 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 14 Nov 2015 17:56:26 -0500
+Received: from Static-IP-cr200118122217.cable.net.co ([200.118.122.217]:57021
+	"EHLO ampsrv1.comunidad-ameripol.org" rhost-flags-OK-FAIL-OK-OK)
+	by vger.kernel.org with ESMTP id S1751876AbbKOPmv convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 15 Nov 2015 10:42:51 -0500
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients <zhongjun@asia.com>
+
+Good Day,
+
+I need a foreign partner for a proposed mutual business, which refers to the transfer of a large sum of money to an account abroad, as the beneficiary of the funds. Everything about this operation, will be legally done without any bridge financial authority, both in my country and yours.I wil indulge you exercise the utmost discretion in all matters concerning this issue. If you are interested, please reply back through my private email address written down, I'll give you more information about myself with the financial institution I represented and the actual amounts involved about the project so I receive your positive response.
+
+Private E-mail: fu.zhong@hotmail.com
 
 
+Friendly greeting,
 
--- 
-To whom it may concern:
-I am writing to both Unemployed and employed, that if you are interest 
-in working an extra job, non-stressful work online as our mystery 
-shopper should not hesitate to contact me Via This E-mail ( 
-shopfstest0014@gmail.com ) for further information.
+Executive director.
 
-Sincerely yours.
-Mr.Sean Anderson.
+China Bank.
