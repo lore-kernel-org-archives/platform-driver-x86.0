@@ -1,35 +1,211 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] toshiba_bluetooth: Add missing newline in
- toshiba_bluetooth_present function
-Date: Fri, 20 Nov 2015 15:24:19 -0800
-Message-ID: <20151120232419.GE7413@malice.jf.intel.com>
-References: <1447644827-404-1-git-send-email-coproscefalo@gmail.com>
- <1447644827-404-2-git-send-email-coproscefalo@gmail.com>
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v2 2/2] toshiba_acpi: Add WWAN RFKill support
+Date: Fri, 20 Nov 2015 16:29:09 -0700
+Message-ID: <CAGdLNWFiSWQa2HCvD8c_h5_aGYbcXitjqKtqxeDB_wBGsPBSBA@mail.gmail.com>
+References: <1447948165-2343-1-git-send-email-coproscefalo@gmail.com>
+	<1447948165-2343-3-git-send-email-coproscefalo@gmail.com>
+	<20151120225040.GB7413@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:57354 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751506AbbKTXYU (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Nov 2015 18:24:20 -0500
-Content-Disposition: inline
-In-Reply-To: <1447644827-404-2-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151120225040.GB7413@malice.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabian Koester <fabian.koester@bringnow.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Nov 15, 2015 at 08:33:47PM -0700, Azael Avalos wrote:
-> This patch simply adds a missing newline in the error string printed
-> by the toshiba_bluetooth_present function.
-> 
-> This is just a cosmetic change, no functionality was changed.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+Hi Darren,
 
-Thanks, applied.
+2015-11-20 15:50 GMT-07:00 Darren Hart <dvhart@infradead.org>:
+> On Thu, Nov 19, 2015 at 08:49:25AM -0700, Azael Avalos wrote:
+>
+> Hi Azael,
+>
+>> A previuos patch added WWAN support to the driver, allowing to query
+>> and set the device status.
+>>
+>> This patch adds RFKill support for the recently introduced WWAN device,
+>> making use of the WWAN and *wireless_status functions to query the
+>> killswitch and (de)activate the device accordingly to its status.
+>>
+>> Signed-off-by: Fabian Koester <fabian.koester@bringnow.com>
+>
+> So this is Fabian's code which he sent to you and you are submitting on his
+> behalf?
+
+Yes, he sent me the code for review, but made some changes to the
+actual code he sent me (mostly patch 01), sent back to him the resulting
+changes for testing, and I told him I was gonna submmit the changes :-)
+
+>
+>> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+>
+>
+> A couple minor nits below.
+>
+>> ---
+>>  drivers/platform/x86/toshiba_acpi.c | 79 +++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+>> index 60d1ad9..d1315c5 100644
+>> --- a/drivers/platform/x86/toshiba_acpi.c
+>> +++ b/drivers/platform/x86/toshiba_acpi.c
+>> @@ -51,6 +51,7 @@
+>>  #include <linux/dmi.h>
+>>  #include <linux/uaccess.h>
+>>  #include <linux/miscdevice.h>
+>> +#include <linux/rfkill.h>
+>>  #include <linux/toshiba.h>
+>>  #include <acpi/video.h>
+>>
+>> @@ -174,6 +175,7 @@ struct toshiba_acpi_dev {
+>>       struct led_classdev kbd_led;
+>>       struct led_classdev eco_led;
+>>       struct miscdevice miscdev;
+>> +     struct rfkill *wwan_rfk;
+>>
+>>       int force_fan;
+>>       int last_key_event;
+>> @@ -2330,6 +2332,67 @@ static const struct file_operations toshiba_acpi_fops = {
+>>  };
+>>
+>>  /*
+>> + * WWAN RFKill handlers
+>> + */
+>> +static int toshiba_acpi_wwan_set_block(void *data, bool blocked)
+>> +{
+>> +     struct toshiba_acpi_dev *dev = data;
+>> +     int ret;
+>> +
+>> +     ret = toshiba_wireless_status(dev);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     if (!dev->killswitch)
+>> +             return 0;
+>> +
+>> +     return toshiba_wwan_set(dev, blocked ? 0 : 1);
+>
+> You can avoid the ternary operation with binary output and just invert the
+> bool.
+>
+> !blocked
+
+OK, will do.
+
+>
+>
+>> +}
+>> +
+>> +static void toshiba_acpi_wwan_poll(struct rfkill *rfkill, void *data)
+>> +{
+>> +     struct toshiba_acpi_dev *dev = data;
+>> +
+>> +     if (toshiba_wireless_status(dev))
+>> +             return;
+>> +
+>> +     rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+>> +}
+>> +
+>> +static const struct rfkill_ops wwan_rfk_ops = {
+>> +     .set_block = toshiba_acpi_wwan_set_block,
+>> +     .poll = toshiba_acpi_wwan_poll,
+>> +};
+>> +
+>> +static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
+>> +{
+>> +     int ret = toshiba_wireless_status(dev);
+>> +
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     dev->wwan_rfk = rfkill_alloc("Toshiba WWAN",
+>> +                                  &dev->acpi_dev->dev,
+>> +                                  RFKILL_TYPE_WWAN,
+>> +                                  &wwan_rfk_ops,
+>> +                                  dev);
+>> +     if (!dev->wwan_rfk) {
+>> +             pr_err("Unable to allocate WWAN rfkill device\n");
+>> +             return -ENOMEM;
+>> +     }
+>> +
+>> +     rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+>> +
+>> +     ret = rfkill_register(dev->wwan_rfk);
+>> +     if (ret) {
+>> +             pr_err("Unable to register WWAN rfkill device\n");
+>> +             rfkill_destroy(dev->wwan_rfk);
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +/*
+>>   * Hotkeys
+>>   */
+>>  static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
+>> @@ -2688,6 +2751,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>>       if (dev->eco_led_registered)
+>>               led_classdev_unregister(&dev->eco_led);
+>>
+>> +     if (dev->wwan_rfk) {
+>> +             rfkill_unregister(dev->wwan_rfk);
+>> +             rfkill_destroy(dev->wwan_rfk);
+>> +     }
+>> +
+>>       if (toshiba_acpi)
+>>               toshiba_acpi = NULL;
+>>
+>> @@ -2827,6 +2895,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>>       dev->fan_supported = !ret;
+>>
+>>       toshiba_wwan_available(dev);
+>> +     if (dev->wwan_supported)
+>> +             toshiba_acpi_setup_wwan_rfkill(dev);
+>>
+>>       print_supported_features(dev);
+>>
+>> @@ -2930,6 +3000,15 @@ static int toshiba_acpi_resume(struct device *device)
+>>                       pr_info("Unable to re-enable hotkeys\n");
+>>       }
+>>
+>> +     if (dev->wwan_rfk) {
+>> +             int error = toshiba_wireless_status(dev);
+>> +
+>> +             if (error)
+>> +                     return error;
+>
+> For consistency, please use ret. You can just initialize it to 0 outside the if
+> block, use it inside, and return it outside as well. We don't buy much by
+> declaring inside the if block on a resume function.
+
+Here "error" was used on the previous if, that's why I chose the same name,
+
+I will rename the variable to "ret" for consistency and adapt the
+function on v3.
+
+>
+>> +
+>> +             rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+>> +     }
+>> +
+>>       return 0;
+>>  }
+>>  #endif
+>> --
+>> 2.6.2
+>>
+>>
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
+
+
+Cheers
+Azael
+
 
 -- 
-Darren Hart
-Intel Open Source Technology Center
+-- El mundo apesta y vosotros apestais tambien --
