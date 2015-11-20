@@ -1,66 +1,58 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH] toshiba_acpi: Fix blank screen at boot if transflective
- backlight is supported
-Date: Fri, 20 Nov 2015 16:46:07 -0700
-Message-ID: <CAGdLNWE8XJZ_EZwKU0HeH5-37qxOubPzVyGZj+=dFazXxg=pjA@mail.gmail.com>
-References: <1447644767-356-1-git-send-email-coproscefalo@gmail.com>
-	<20151120231632.GC7413@malice.jf.intel.com>
+Subject: Re: [PATCH] toshiba_acpi: Fix keyboard backight sysfs entries not
+ being updated
+Date: Fri, 20 Nov 2015 16:55:06 -0700
+Message-ID: <CAGdLNWF66_R1DB3mQDqTMQMxUMLv9zidOc+upa-AabFQBzkqGA@mail.gmail.com>
+References: <1447703971-8079-1-git-send-email-coproscefalo@gmail.com>
+	<20151120233956.GF7413@malice.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151120231632.GC7413@malice.jf.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f47.google.com ([74.125.82.47]:33196 "EHLO
+	mail-wm0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1761217AbbKTXzI (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 20 Nov 2015 18:55:08 -0500
+In-Reply-To: <20151120233956.GF7413@malice.jf.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, Fabian Koester <fabian.koester@bringnow.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
 Hi Darren,
 
-2015-11-20 16:16 GMT-07:00 Darren Hart <dvhart@infradead.org>:
-> On Sun, Nov 15, 2015 at 08:32:47PM -0700, Azael Avalos wrote:
->> If transflective backlight is supported and the brightness is zero
->> (lowest brightness level), the set_lcd_brightness function will activate
->> the transflective backlight, making the LCD appear to be turned off.
+2015-11-20 16:39 GMT-07:00 Darren Hart <dvhart@infradead.org>:
+> On Mon, Nov 16, 2015 at 12:59:31PM -0700, Azael Avalos wrote:
+>> Certain Toshiba models with the second generation keyboard backlight
+>> (type 2) do not generate the keyboard backlight changed event (0x92),
+>> and thus, the sysfs entries are never being updated.
 >>
->> This patch fixes the issue by incrementing the brightness level, and
->> by doing so, avoiding the activation of the tranflective backlight.
+>> This patch adds a workquee and a global boolean variable to address
+>> the issue.
+>>
+>> For those models that do generate the event, the sysfs entries are
+>> being updated via the *notify function and the boolean is set to
+>> true to avoid a second call to update the entries.
+>>
+>> For those models that do not generate the event, the workquee is
+>> used to update the sysfs entries and also to emulate the event via
+>> netlink, to make userspace aware of such change.
 >
-> So... I'm not sure this is a bug or even wrong behavior. The lowest setting on
-> my Thinkpad Yoga 12 is also "off" in Linux. Same is true for my Mac Book Pro (in
-> Mac OS X).
-
-Yeah, and even on "regular" (with non transflective backlight) Toshibas
-zero is also "off" and no problem is observed.
-
+> Thanks Azael,
 >
-> From what I can tell, what this patch does is merely disable the lowest setting.
+> Rather than ask you to wait while I research workqueues and their use more, what
+> is it about this task that requires a workqueue? Why can we not call what's in
+> the workqueue below directly from the kbd_backlight_mode_store sysfs write
+> callback?
 
-Nope, we are just not letting the driver enable transflective backlight
-and continue using the "normal" brightness range.
+I used the workquee to let the sysfs *store function to finish w/o affecting
+the "refresh" of the sysfs entries.
 
->
-> What is it about this behavior that is considered to be wrong?
->
-
-The problem is with laptops with transflective backlight support.
-
-The code for transflective backlight is fused with the LCD backlight
-code (go figure...), so if a Toshiba laptop with transflective support
-is detected, the max brightness levels are raised by one.
-
-A regular laptop's brightness levels are 0-7, but on a laptop with
-transflective support, the brightness levels are 0-8, zero being
-"activate transflective backlight" and 1-8 the regular brightness
-levels.
-
-So, when a laptop with transflective support AND an initial
-brightness level of zero gets probed for backlight support,
-the set_lcd_brightness function activates the transfective
-backlight, as the brightness levels are still not incremented,
-and thus, the screen goes dark.
-
-
-I hope this clarifies a bit the situation here.
+Previously the sysfs_update_group resided inside the *store function,
+but caused a lock everytime the keyboard mode was changed, and the
+sysfs entries were never updated, this was fixed by moving such function
+to the *notify function, but turns out that some models do not fire such
+event.
 
 
 Cheers
