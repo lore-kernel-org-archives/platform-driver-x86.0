@@ -1,238 +1,181 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 1/2] toshiba_acpi: Add support for WWAN devices
-Date: Fri, 20 Nov 2015 14:49:29 -0800
-Message-ID: <20151120224929.GA7413@malice.jf.intel.com>
+Subject: Re: [PATCH v2 2/2] toshiba_acpi: Add WWAN RFKill support
+Date: Fri, 20 Nov 2015 14:50:40 -0800
+Message-ID: <20151120225040.GB7413@malice.jf.intel.com>
 References: <1447948165-2343-1-git-send-email-coproscefalo@gmail.com>
- <1447948165-2343-2-git-send-email-coproscefalo@gmail.com>
+ <1447948165-2343-3-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:53114 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759452AbbKTWta (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Nov 2015 17:49:30 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1447948165-2343-2-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <1447948165-2343-3-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Azael Avalos <coproscefalo@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabian Koester <fabian.koester@bringnow.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 19, 2015 at 08:49:24AM -0700, Azael Avalos wrote:
-> Toshiba laptops with WWAN devices installed cannot use the device unless
-> it is attached and powered, similar to how Toshiba Bluetooth devices
-> work.
+On Thu, Nov 19, 2015 at 08:49:25AM -0700, Azael Avalos wrote:
+
+Hi Azael,
+
+> A previuos patch added WWAN support to the driver, allowing to query
+> and set the device status.
 > 
-> This patch adds support to WWAN devices, introducing three functions,
-> one to query the overall status of the wireless devices (RFKill, WLAN,
-> BT, WWAN), the second queries WWAN support, and finally the third
-> (de)activates the device.
+> This patch adds RFKill support for the recently introduced WWAN device,
+> making use of the WWAN and *wireless_status functions to query the
+> killswitch and (de)activate the device accordingly to its status.
 > 
 > Signed-off-by: Fabian Koester <fabian.koester@bringnow.com>
+
+So this is Fabian's code which he sent to you and you are submitting on his
+behalf?
+
 > Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 
-Thanks Azael,
 
-A few comments on code flow and one bug I think below.
+A couple minor nits below.
 
 > ---
->  drivers/platform/x86/toshiba_acpi.c | 92 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
+>  drivers/platform/x86/toshiba_acpi.c | 79 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index c013029..60d1ad9 100644
+> index 60d1ad9..d1315c5 100644
 > --- a/drivers/platform/x86/toshiba_acpi.c
 > +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
->  #define HCI_VIDEO_OUT			0x001c
->  #define HCI_HOTKEY_EVENT		0x001e
->  #define HCI_LCD_BRIGHTNESS		0x002a
-> +#define HCI_WIRELESS			0x0056
->  #define HCI_ACCELEROMETER		0x006d
->  #define HCI_KBD_ILLUMINATION		0x0095
->  #define HCI_ECO_MODE			0x0097
-> @@ -148,6 +149,10 @@ MODULE_LICENSE("GPL");
->  #define SCI_KBD_MODE_ON			0x8
->  #define SCI_KBD_MODE_OFF		0x10
->  #define SCI_KBD_TIME_MAX		0x3c001a
-> +#define HCI_WIRELESS_STATUS		0x1
-> +#define HCI_WIRELESS_WWAN		0x3
-> +#define HCI_WIRELESS_WWAN_STATUS	0x2000
-> +#define HCI_WIRELESS_WWAN_POWER		0x4000
->  #define SCI_USB_CHARGE_MODE_MASK	0xff
->  #define SCI_USB_CHARGE_DISABLED		0x00
->  #define SCI_USB_CHARGE_ALTERNATE	0x09
-> @@ -197,12 +202,14 @@ struct toshiba_acpi_dev {
->  	unsigned int kbd_function_keys_supported:1;
->  	unsigned int panel_power_on_supported:1;
->  	unsigned int usb_three_supported:1;
-> +	unsigned int wwan_supported:1;
->  	unsigned int sysfs_created:1;
->  	unsigned int special_functions;
+> @@ -51,6 +51,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/miscdevice.h>
+> +#include <linux/rfkill.h>
+>  #include <linux/toshiba.h>
+>  #include <acpi/video.h>
 >  
->  	bool kbd_led_registered;
->  	bool illumination_led_registered;
->  	bool eco_led_registered;
-> +	bool killswitch;
+> @@ -174,6 +175,7 @@ struct toshiba_acpi_dev {
+>  	struct led_classdev kbd_led;
+>  	struct led_classdev eco_led;
+>  	struct miscdevice miscdev;
+> +	struct rfkill *wwan_rfk;
+>  
+>  	int force_fan;
+>  	int last_key_event;
+> @@ -2330,6 +2332,67 @@ static const struct file_operations toshiba_acpi_fops = {
 >  };
 >  
->  static struct toshiba_acpi_dev *toshiba_acpi;
-> @@ -1085,6 +1092,87 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
->  	return -EIO;
->  }
->  
-> +/* Wireless status (RFKill, WLAN, BT, WWAN) */
-> +static int toshiba_wireless_status(struct toshiba_acpi_dev *dev)
+>  /*
+> + * WWAN RFKill handlers
+> + */
+> +static int toshiba_acpi_wwan_set_block(void *data, bool blocked)
 > +{
-> +	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-> +	u32 out[TCI_WORDS];
-> +	acpi_status status;
+> +	struct toshiba_acpi_dev *dev = data;
+> +	int ret;
 > +
-> +	in[3] = HCI_WIRELESS_STATUS;
-> +	status = tci_raw(dev, in, out);
-> +	if (ACPI_FAILURE(status)) {
-> +		pr_err("ACPI call to get Wireless status failed\n");
-> +	} else if (out[0] == TOS_NOT_SUPPORTED) {
-> +		return -ENODEV;
-> +	} else if (out[0] == TOS_SUCCESS) {
-> +		dev->killswitch =
-> +			    (out[2] & HCI_WIRELESS_STATUS) ? true : false;
-
-This should assign successfully without the need for the ternary operator. You
-can also then drop the extra newline. You can always use:
-
-!!(out[2] & HCI_WIRELESS_STATUS)
-
-To ensure a 1 or 0 assignment.
-
+> +	ret = toshiba_wireless_status(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!dev->killswitch)
 > +		return 0;
+> +
+> +	return toshiba_wwan_set(dev, blocked ? 0 : 1);
+
+You can avoid the ternary operation with binary output and just invert the
+bool.
+
+!blocked
+
+
+> +}
+> +
+> +static void toshiba_acpi_wwan_poll(struct rfkill *rfkill, void *data)
+> +{
+> +	struct toshiba_acpi_dev *dev = data;
+> +
+> +	if (toshiba_wireless_status(dev))
+> +		return;
+> +
+> +	rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+> +}
+> +
+> +static const struct rfkill_ops wwan_rfk_ops = {
+> +	.set_block = toshiba_acpi_wwan_set_block,
+> +	.poll = toshiba_acpi_wwan_poll,
+> +};
+> +
+> +static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
+> +{
+> +	int ret = toshiba_wireless_status(dev);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev->wwan_rfk = rfkill_alloc("Toshiba WWAN",
+> +				     &dev->acpi_dev->dev,
+> +				     RFKILL_TYPE_WWAN,
+> +				     &wwan_rfk_ops,
+> +				     dev);
+> +	if (!dev->wwan_rfk) {
+> +		pr_err("Unable to allocate WWAN rfkill device\n");
+> +		return -ENOMEM;
 > +	}
 > +
-> +	return -EIO;
-
-Also, we should be testing for error and do the expected path outside the if
-blocks.
-
-
-	if (ACPI_FAILURE(status) {
-		pr_err("ACPI call to get Wireless status failed\n");
-		return -EIO;
-	}
-
-	if (out[0] == TOS_NOT_SUPPORTED)
-		return -ENODEV;
-	
-	if (out[0] != TOS_SUCCESS)
-		return -EIO;
-	
-	dev->killswitch = !!(out[2] & HCI_WIRELESS_STATUS);
-
-	return 0;
-
-> +}
+> +	rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
 > +
-> +/* WWAN */
-> +static void toshiba_wwan_available(struct toshiba_acpi_dev *dev)
-> +{
-> +	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-> +	u32 out[TCI_WORDS];
-> +	acpi_status status;
-> +
-> +	dev->wwan_supported = 0;
-> +
-> +	/*
-> +	 * WWAN support can be queried by setting the in[3] value to
-> +	 * HCI_WIRELESS_WWAN (0x03).
-> +	 *
-> +	 * If supported, out[0] contains TOS_SUCCESS and out[2] contains
-> +	 * HCI_WIRELESS_WWAN_STATUS (0x2000).
-> +	 *
-> +	 * If not supported, out[0] contains TOS_INPUT_DATA_ERROR (0x8300)
-> +	 * or TOS_NOT_SUPPORTED (0x8000).
-> +	 */
-> +	in[3] = HCI_WIRELESS_WWAN;
-> +	status = tci_raw(dev, in, out);
-> +	if (ACPI_FAILURE(status))
-> +		pr_err("ACPI call to get WWAN status failed\n");
-> +	else if (out[0] == TOS_SUCCESS && out[2] == HCI_WIRELESS_WWAN_STATUS)
-> +		dev->wwan_supported = 1;
-
-This block similarly intermixes error checking with the primary functional
-logic, making it less legible in my opinion. Consider:
-
-
-	in[3] = HCI_WIRELESS_WWAN;
-	status = tci_raw(dev, in, out);
-
-	if (ACPI_FAILURE(status) || (out[0] != TOS_SUCCESS)) {
-		pr_err("ACPI call to get WWAN status failed\n");
-		return;
-	}
-
-	dev->wwan_supported = (out[2] == HCI_WIRELESS_WWAN_STATUS);
-
-> +}
-> +
-> +static int toshiba_wwan_set(struct toshiba_acpi_dev *dev, u32 state)
-> +{
-> +	u32 in[TCI_WORDS] = { HCI_SET, HCI_WIRELESS, state, 0, 0, 0 };
-> +	u32 out[TCI_WORDS];
-> +	acpi_status status;
-> +
-> +	in[3] = HCI_WIRELESS_WWAN_STATUS;
-> +	status = tci_raw(dev, in, out);
-> +	if (ACPI_FAILURE(status)) {
-> +		pr_err("ACPI call to set WWAN status failed\n");
-> +		return -EIO;
-> +	} else if (out[0] == TOS_NOT_SUPPORTED) {
-> +		return -ENODEV;
-> +	} else if (out[0] != TOS_SUCCESS) {
-> +		return -EIO;
+> +	ret = rfkill_register(dev->wwan_rfk);
+> +	if (ret) {
+> +		pr_err("Unable to register WWAN rfkill device\n");
+> +		rfkill_destroy(dev->wwan_rfk);
 > +	}
 > +
-> +	/*
-> +	 * Some devices only need to call HCI_WIRELESS_WWAN_STATUS to
-> +	 * (de)activate the device, but some others need the
-> +	 * HCI_WIRELESS_WWAN_POWER call as well.
-> +	 */
-> +	in[3] = HCI_WIRELESS_WWAN_POWER;
-> +	status = tci_raw(dev, in, out);
-> +	if (ACPI_FAILURE(status))
-> +		pr_err("ACPI call to set WWAN power failed\n");
-
-I believe you want a return -EIO here?
-
-> +	else if (out[0] == TOS_NOT_SUPPORTED)
-> +		return -ENODEV;
-> +
-> +	return out[0] == TOS_SUCCESS ? 0 : -EIO;
-
-So much ternary! :-) I suppose this one is OK.
-
+> +	return ret;
 > +}
 > +
->  /* Transflective Backlight */
->  static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
->  {
-> @@ -2561,6 +2649,8 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
->  		pr_cont(" panel-power-on");
->  	if (dev->usb_three_supported)
->  		pr_cont(" usb3");
-> +	if (dev->wwan_supported)
-> +		pr_cont(" wwan");
+> +/*
+>   * Hotkeys
+>   */
+>  static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
+> @@ -2688,6 +2751,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>  	if (dev->eco_led_registered)
+>  		led_classdev_unregister(&dev->eco_led);
 >  
->  	pr_cont("\n");
->  }
-> @@ -2736,6 +2826,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  	ret = get_fan_status(dev, &dummy);
+> +	if (dev->wwan_rfk) {
+> +		rfkill_unregister(dev->wwan_rfk);
+> +		rfkill_destroy(dev->wwan_rfk);
+> +	}
+> +
+>  	if (toshiba_acpi)
+>  		toshiba_acpi = NULL;
+>  
+> @@ -2827,6 +2895,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
 >  	dev->fan_supported = !ret;
 >  
-> +	toshiba_wwan_available(dev);
-> +
+>  	toshiba_wwan_available(dev);
+> +	if (dev->wwan_supported)
+> +		toshiba_acpi_setup_wwan_rfkill(dev);
+>  
 >  	print_supported_features(dev);
 >  
->  	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
+> @@ -2930,6 +3000,15 @@ static int toshiba_acpi_resume(struct device *device)
+>  			pr_info("Unable to re-enable hotkeys\n");
+>  	}
+>  
+> +	if (dev->wwan_rfk) {
+> +		int error = toshiba_wireless_status(dev);
+> +
+> +		if (error)
+> +			return error;
+
+For consistency, please use ret. You can just initialize it to 0 outside the if
+block, use it inside, and return it outside as well. We don't buy much by
+declaring inside the if block on a resume function.
+
+> +
+> +		rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
+> +	}
+> +
+>  	return 0;
+>  }
+>  #endif
 > -- 
 > 2.6.2
 > 
