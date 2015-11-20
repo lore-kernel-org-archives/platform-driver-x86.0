@@ -1,173 +1,134 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v2 1/2] toshiba_acpi: Add support for WWAN devices
-Date: Thu, 19 Nov 2015 08:49:24 -0700
-Message-ID: <1447948165-2343-2-git-send-email-coproscefalo@gmail.com>
-References: <1447948165-2343-1-git-send-email-coproscefalo@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1447948165-2343-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Fabian Koester <fabian.koester@bringnow.com>, Azael Avalos <coproscefalo@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [Bug 106031] Regression in 4.2.x: in airplane mode each time I
+ open my laptop lid
+Date: Fri, 20 Nov 2015 15:44:25 +0100
+Message-ID: <20151120144425.GI29966@pali>
+References: <20151022105018.GX15219@pali>
+ <5628C069.8040902@gmail.com>
+ <20151022130211.GA110029@vmdeb7>
+ <5628E812.2070708@gmail.com>
+ <20151022141710.GD15219@pali>
+ <56297148.6060605@gmail.com>
+ <20151023090027.GG15219@pali>
+ <562A022D.1020302@gmail.com>
+ <20151023111445.GH15219@pali>
+ <562A7667.3050208@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:35829 "EHLO
+	mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751593AbbKTOo2 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 20 Nov 2015 09:44:28 -0500
+Received: by wmdw130 with SMTP id w130so22342320wmd.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2015 06:44:27 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <562A7667.3050208@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>
 
-Toshiba laptops with WWAN devices installed cannot use the device unless
-it is attached and powered, similar to how Toshiba Bluetooth devices
-work.
+On Friday 23 October 2015 20:03:19 Gabriele Mazzotta wrote:
+> On 23/10/2015 13:14, Pali Roh=C3=A1r wrote:
+> >On Friday 23 October 2015 11:47:25 Gabriele Mazzotta wrote:
+> >>>In my opinion it is better to ignore user key press after resume, =
+if it
+> >>>fix our problem. Better as false-positive event.
+> >>
+> >>The following appears to work really well. The notification arrives
+> >>before rbtn_resume() has been executed, so the extra event is ignor=
+ed.
+> >>
+> >>diff --git a/drivers/platform/x86/dell-rbtn.c
+> >>b/drivers/platform/x86/dell-rbtn.c
+> >>index cd410e3..1d64b72 100644
+> >>--- a/drivers/platform/x86/dell-rbtn.c
+> >>+++ b/drivers/platform/x86/dell-rbtn.c
+> >>@@ -28,6 +28,7 @@ struct rbtn_data {
+> >>  	enum rbtn_type type;
+> >>  	struct rfkill *rfkill;
+> >>  	struct input_dev *input_dev;
+> >>+	bool suspended;
+> >>  };
+> >>
+> >>
+> >>@@ -220,9 +221,33 @@ static const struct acpi_device_id rbtn_ids[] =
+=3D {
+> >>  	{ "", 0 },
+> >>  };
+> >>
+> >>+#ifdef CONFIG_PM_SLEEP
+> >>+static int rbtn_suspend(struct device *dev)
+> >>+{
+> >>+	struct acpi_device *device =3D to_acpi_device(dev);
+> >>+	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
+> >>+
+> >>+	rbtn_data->suspended =3D true;
+> >>+
+> >>+	return 0;
+> >>+}
+> >>+
+> >>+static int rbtn_resume(struct device *dev)
+> >>+{
+> >>+	struct acpi_device *device =3D to_acpi_device(dev);
+> >>+	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
+> >>+
+> >>+	rbtn_data->suspended =3D false;
+> >>+
+> >>+	return 0;
+> >>+}
+> >>+#endif
+> >>+static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
+> >>+
+> >>  static struct acpi_driver rbtn_driver =3D {
+> >>  	.name =3D "dell-rbtn",
+> >>  	.ids =3D rbtn_ids,
+> >>+	.drv.pm =3D &rbtn_pm_ops,
+> >>  	.ops =3D {
+> >>  		.add =3D rbtn_add,
+> >>  		.remove =3D rbtn_remove,
+> >>@@ -384,6 +409,9 @@ static void rbtn_notify(struct acpi_device *dev=
+ice, u32
+> >>event)
+> >>  {
+> >>  	struct rbtn_data *rbtn_data =3D device->driver_data;
+> >>
+> >>+	if (rbtn_data->suspended)
+> >>+		return;
+> >>+
+> >>  	if (event !=3D 0x80) {
+> >>  		dev_info(&device->dev, "Received unknown event (0x%x)\n",
+> >>  			 event);
+> >>
+> >
+> >Great, but is not there a better way to turn off .notify ACPI functi=
+on
+> >when that ACPI device is suspended?
+> >
+> >Is not this ACPI device driver bug that it allows to call .notify me=
+thod
+> >even if device is suspended?
+>=20
+> I was surprised this worked, I was assuming that nothing could run
+> before the resume callback, but I was wrong. I think it makes sense t=
+o
+> treat ACPI devices in a special way, but I really don't know, we need
+> someone more knowledgeable to answer these questions. However, while =
+I
+> was trying to figure things out, I stumbled upon the following:
+> e71eeb2a6bcc ("ACPI / button: Do not propagate wakeup-from-suspend ev=
+ents").
 
-This patch adds support to WWAN devices, introducing three functions,
-one to query the overall status of the wireless devices (RFKill, WLAN,
-BT, WWAN), the second queries WWAN support, and finally the third
-(de)activates the device.
+Gabriele, are you going to send this patch?
 
-Signed-off-by: Fabian Koester <fabian.koester@bringnow.com>
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
----
- drivers/platform/x86/toshiba_acpi.c | 92 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+I think that patch should be OK as it drop events when device is in
+suspend state (when it should not receive events)...
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index c013029..60d1ad9 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
- #define HCI_VIDEO_OUT			0x001c
- #define HCI_HOTKEY_EVENT		0x001e
- #define HCI_LCD_BRIGHTNESS		0x002a
-+#define HCI_WIRELESS			0x0056
- #define HCI_ACCELEROMETER		0x006d
- #define HCI_KBD_ILLUMINATION		0x0095
- #define HCI_ECO_MODE			0x0097
-@@ -148,6 +149,10 @@ MODULE_LICENSE("GPL");
- #define SCI_KBD_MODE_ON			0x8
- #define SCI_KBD_MODE_OFF		0x10
- #define SCI_KBD_TIME_MAX		0x3c001a
-+#define HCI_WIRELESS_STATUS		0x1
-+#define HCI_WIRELESS_WWAN		0x3
-+#define HCI_WIRELESS_WWAN_STATUS	0x2000
-+#define HCI_WIRELESS_WWAN_POWER		0x4000
- #define SCI_USB_CHARGE_MODE_MASK	0xff
- #define SCI_USB_CHARGE_DISABLED		0x00
- #define SCI_USB_CHARGE_ALTERNATE	0x09
-@@ -197,12 +202,14 @@ struct toshiba_acpi_dev {
- 	unsigned int kbd_function_keys_supported:1;
- 	unsigned int panel_power_on_supported:1;
- 	unsigned int usb_three_supported:1;
-+	unsigned int wwan_supported:1;
- 	unsigned int sysfs_created:1;
- 	unsigned int special_functions;
- 
- 	bool kbd_led_registered;
- 	bool illumination_led_registered;
- 	bool eco_led_registered;
-+	bool killswitch;
- };
- 
- static struct toshiba_acpi_dev *toshiba_acpi;
-@@ -1085,6 +1092,87 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
- 	return -EIO;
- }
- 
-+/* Wireless status (RFKill, WLAN, BT, WWAN) */
-+static int toshiba_wireless_status(struct toshiba_acpi_dev *dev)
-+{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	in[3] = HCI_WIRELESS_STATUS;
-+	status = tci_raw(dev, in, out);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to get Wireless status failed\n");
-+	} else if (out[0] == TOS_NOT_SUPPORTED) {
-+		return -ENODEV;
-+	} else if (out[0] == TOS_SUCCESS) {
-+		dev->killswitch =
-+			    (out[2] & HCI_WIRELESS_STATUS) ? true : false;
-+		return 0;
-+	}
-+
-+	return -EIO;
-+}
-+
-+/* WWAN */
-+static void toshiba_wwan_available(struct toshiba_acpi_dev *dev)
-+{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	dev->wwan_supported = 0;
-+
-+	/*
-+	 * WWAN support can be queried by setting the in[3] value to
-+	 * HCI_WIRELESS_WWAN (0x03).
-+	 *
-+	 * If supported, out[0] contains TOS_SUCCESS and out[2] contains
-+	 * HCI_WIRELESS_WWAN_STATUS (0x2000).
-+	 *
-+	 * If not supported, out[0] contains TOS_INPUT_DATA_ERROR (0x8300)
-+	 * or TOS_NOT_SUPPORTED (0x8000).
-+	 */
-+	in[3] = HCI_WIRELESS_WWAN;
-+	status = tci_raw(dev, in, out);
-+	if (ACPI_FAILURE(status))
-+		pr_err("ACPI call to get WWAN status failed\n");
-+	else if (out[0] == TOS_SUCCESS && out[2] == HCI_WIRELESS_WWAN_STATUS)
-+		dev->wwan_supported = 1;
-+}
-+
-+static int toshiba_wwan_set(struct toshiba_acpi_dev *dev, u32 state)
-+{
-+	u32 in[TCI_WORDS] = { HCI_SET, HCI_WIRELESS, state, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	in[3] = HCI_WIRELESS_WWAN_STATUS;
-+	status = tci_raw(dev, in, out);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to set WWAN status failed\n");
-+		return -EIO;
-+	} else if (out[0] == TOS_NOT_SUPPORTED) {
-+		return -ENODEV;
-+	} else if (out[0] != TOS_SUCCESS) {
-+		return -EIO;
-+	}
-+
-+	/*
-+	 * Some devices only need to call HCI_WIRELESS_WWAN_STATUS to
-+	 * (de)activate the device, but some others need the
-+	 * HCI_WIRELESS_WWAN_POWER call as well.
-+	 */
-+	in[3] = HCI_WIRELESS_WWAN_POWER;
-+	status = tci_raw(dev, in, out);
-+	if (ACPI_FAILURE(status))
-+		pr_err("ACPI call to set WWAN power failed\n");
-+	else if (out[0] == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	return out[0] == TOS_SUCCESS ? 0 : -EIO;
-+}
-+
- /* Transflective Backlight */
- static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
- {
-@@ -2561,6 +2649,8 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
- 		pr_cont(" panel-power-on");
- 	if (dev->usb_three_supported)
- 		pr_cont(" usb3");
-+	if (dev->wwan_supported)
-+		pr_cont(" wwan");
- 
- 	pr_cont("\n");
- }
-@@ -2736,6 +2826,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = get_fan_status(dev, &dummy);
- 	dev->fan_supported = !ret;
- 
-+	toshiba_wwan_available(dev);
-+
- 	print_supported_features(dev);
- 
- 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
--- 
-2.6.2
+Darren, what do you think about it?
+
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
