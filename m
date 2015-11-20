@@ -1,211 +1,145 @@
-From: Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH v2 2/2] toshiba_acpi: Add WWAN RFKill support
-Date: Fri, 20 Nov 2015 16:29:09 -0700
-Message-ID: <CAGdLNWFiSWQa2HCvD8c_h5_aGYbcXitjqKtqxeDB_wBGsPBSBA@mail.gmail.com>
-References: <1447948165-2343-1-git-send-email-coproscefalo@gmail.com>
-	<1447948165-2343-3-git-send-email-coproscefalo@gmail.com>
-	<20151120225040.GB7413@malice.jf.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] toshiba_acpi: Fix keyboard backight sysfs entries not
+ being updated
+Date: Fri, 20 Nov 2015 15:39:56 -0800
+Message-ID: <20151120233956.GF7413@malice.jf.intel.com>
+References: <1447703971-8079-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151120225040.GB7413@malice.jf.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1447703971-8079-1-git-send-email-coproscefalo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabian Koester <fabian.koester@bringnow.com>
+To: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
+On Mon, Nov 16, 2015 at 12:59:31PM -0700, Azael Avalos wrote:
+> Certain Toshiba models with the second generation keyboard backlight
+> (type 2) do not generate the keyboard backlight changed event (0x92),
+> and thus, the sysfs entries are never being updated.
+> 
+> This patch adds a workquee and a global boolean variable to address
+> the issue.
+> 
+> For those models that do generate the event, the sysfs entries are
+> being updated via the *notify function and the boolean is set to
+> true to avoid a second call to update the entries.
+> 
+> For those models that do not generate the event, the workquee is
+> used to update the sysfs entries and also to emulate the event via
+> netlink, to make userspace aware of such change.
 
-2015-11-20 15:50 GMT-07:00 Darren Hart <dvhart@infradead.org>:
-> On Thu, Nov 19, 2015 at 08:49:25AM -0700, Azael Avalos wrote:
->
-> Hi Azael,
->
->> A previuos patch added WWAN support to the driver, allowing to query
->> and set the device status.
->>
->> This patch adds RFKill support for the recently introduced WWAN device,
->> making use of the WWAN and *wireless_status functions to query the
->> killswitch and (de)activate the device accordingly to its status.
->>
->> Signed-off-by: Fabian Koester <fabian.koester@bringnow.com>
->
-> So this is Fabian's code which he sent to you and you are submitting on his
-> behalf?
+Thanks Azael,
 
-Yes, he sent me the code for review, but made some changes to the
-actual code he sent me (mostly patch 01), sent back to him the resulting
-changes for testing, and I told him I was gonna submmit the changes :-)
+Rather than ask you to wait while I research workqueues and their use more, what
+is it about this task that requires a workqueue? Why can we not call what's in
+the workqueue below directly from the kbd_backlight_mode_store sysfs write
+callback?
 
->
->> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
->
->
-> A couple minor nits below.
->
->> ---
->>  drivers/platform/x86/toshiba_acpi.c | 79 +++++++++++++++++++++++++++++++++++++
->>  1 file changed, 79 insertions(+)
->>
->> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
->> index 60d1ad9..d1315c5 100644
->> --- a/drivers/platform/x86/toshiba_acpi.c
->> +++ b/drivers/platform/x86/toshiba_acpi.c
->> @@ -51,6 +51,7 @@
->>  #include <linux/dmi.h>
->>  #include <linux/uaccess.h>
->>  #include <linux/miscdevice.h>
->> +#include <linux/rfkill.h>
->>  #include <linux/toshiba.h>
->>  #include <acpi/video.h>
->>
->> @@ -174,6 +175,7 @@ struct toshiba_acpi_dev {
->>       struct led_classdev kbd_led;
->>       struct led_classdev eco_led;
->>       struct miscdevice miscdev;
->> +     struct rfkill *wwan_rfk;
->>
->>       int force_fan;
->>       int last_key_event;
->> @@ -2330,6 +2332,67 @@ static const struct file_operations toshiba_acpi_fops = {
->>  };
->>
->>  /*
->> + * WWAN RFKill handlers
->> + */
->> +static int toshiba_acpi_wwan_set_block(void *data, bool blocked)
->> +{
->> +     struct toshiba_acpi_dev *dev = data;
->> +     int ret;
->> +
->> +     ret = toshiba_wireless_status(dev);
->> +     if (ret)
->> +             return ret;
->> +
->> +     if (!dev->killswitch)
->> +             return 0;
->> +
->> +     return toshiba_wwan_set(dev, blocked ? 0 : 1);
->
-> You can avoid the ternary operation with binary output and just invert the
-> bool.
->
-> !blocked
-
-OK, will do.
-
->
->
->> +}
->> +
->> +static void toshiba_acpi_wwan_poll(struct rfkill *rfkill, void *data)
->> +{
->> +     struct toshiba_acpi_dev *dev = data;
->> +
->> +     if (toshiba_wireless_status(dev))
->> +             return;
->> +
->> +     rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
->> +}
->> +
->> +static const struct rfkill_ops wwan_rfk_ops = {
->> +     .set_block = toshiba_acpi_wwan_set_block,
->> +     .poll = toshiba_acpi_wwan_poll,
->> +};
->> +
->> +static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
->> +{
->> +     int ret = toshiba_wireless_status(dev);
->> +
->> +     if (ret)
->> +             return ret;
->> +
->> +     dev->wwan_rfk = rfkill_alloc("Toshiba WWAN",
->> +                                  &dev->acpi_dev->dev,
->> +                                  RFKILL_TYPE_WWAN,
->> +                                  &wwan_rfk_ops,
->> +                                  dev);
->> +     if (!dev->wwan_rfk) {
->> +             pr_err("Unable to allocate WWAN rfkill device\n");
->> +             return -ENOMEM;
->> +     }
->> +
->> +     rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
->> +
->> +     ret = rfkill_register(dev->wwan_rfk);
->> +     if (ret) {
->> +             pr_err("Unable to register WWAN rfkill device\n");
->> +             rfkill_destroy(dev->wwan_rfk);
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->> +/*
->>   * Hotkeys
->>   */
->>  static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
->> @@ -2688,6 +2751,11 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
->>       if (dev->eco_led_registered)
->>               led_classdev_unregister(&dev->eco_led);
->>
->> +     if (dev->wwan_rfk) {
->> +             rfkill_unregister(dev->wwan_rfk);
->> +             rfkill_destroy(dev->wwan_rfk);
->> +     }
->> +
->>       if (toshiba_acpi)
->>               toshiba_acpi = NULL;
->>
->> @@ -2827,6 +2895,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->>       dev->fan_supported = !ret;
->>
->>       toshiba_wwan_available(dev);
->> +     if (dev->wwan_supported)
->> +             toshiba_acpi_setup_wwan_rfkill(dev);
->>
->>       print_supported_features(dev);
->>
->> @@ -2930,6 +3000,15 @@ static int toshiba_acpi_resume(struct device *device)
->>                       pr_info("Unable to re-enable hotkeys\n");
->>       }
->>
->> +     if (dev->wwan_rfk) {
->> +             int error = toshiba_wireless_status(dev);
->> +
->> +             if (error)
->> +                     return error;
->
-> For consistency, please use ret. You can just initialize it to 0 outside the if
-> block, use it inside, and return it outside as well. We don't buy much by
-> declaring inside the if block on a resume function.
-
-Here "error" was used on the previous if, that's why I chose the same name,
-
-I will rename the variable to "ret" for consistency and adapt the
-function on v3.
-
->
->> +
->> +             rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
->> +     }
->> +
->>       return 0;
->>  }
->>  #endif
->> --
->> 2.6.2
->>
->>
->
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-
-
-Cheers
-Azael
-
+> 
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 45 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 41 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index c013029..3e2702b 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -200,6 +200,7 @@ struct toshiba_acpi_dev {
+>  	unsigned int sysfs_created:1;
+>  	unsigned int special_functions;
+>  
+> +	bool kbd_event_generated;
+>  	bool kbd_led_registered;
+>  	bool illumination_led_registered;
+>  	bool eco_led_registered;
+> @@ -516,6 +517,7 @@ static void toshiba_kbd_illum_available(struct toshiba_acpi_dev *dev)
+>  
+>  	dev->kbd_illum_supported = 0;
+>  	dev->kbd_led_registered = false;
+> +	dev->kbd_event_generated = false;
+>  
+>  	if (!sci_open(dev))
+>  		return;
+> @@ -1535,6 +1537,24 @@ static const struct backlight_ops toshiba_backlight_data = {
+>  	.update_status  = set_lcd_status,
+>  };
+>  
+> +/* Keyboard backlight work */
+> +static void toshiba_acpi_kbd_bl_work(struct work_struct *work)
+> +{
+> +	struct acpi_device *acpi_dev = toshiba_acpi->acpi_dev;
+> +
+> +	/* Update the sysfs entries */
+> +	if (sysfs_update_group(&acpi_dev->dev.kobj,
+> +			       &toshiba_attr_group))
+> +		pr_err("Unable to update sysfs entries\n");
+> +
+> +	/* Emulate the keyboard backlight event */
+> +	acpi_bus_generate_netlink_event(acpi_dev->pnp.device_class,
+> +					dev_name(&acpi_dev->dev),
+> +					0x92, 0);
+> +}
+> +
+> +static DECLARE_WORK(kbd_bl_work, toshiba_acpi_kbd_bl_work);
+> +
+>  /*
+>   * Sysfs files
+>   */
+> @@ -1634,6 +1654,24 @@ static ssize_t kbd_backlight_mode_store(struct device *dev,
+>  			return ret;
+>  
+>  		toshiba->kbd_mode = mode;
+> +
+> +		/*
+> +		 * Some laptop models with the second generation backlit
+> +		 * keyboard (type 2) do not generate the keyboard backlight
+> +		 * changed event (0x92), and thus, the driver will never update
+> +		 * the sysfs entries.
+> +		 *
+> +		 * The event is generated right when changing the keyboard
+> +		 * backlight mode and the *notify function will set the
+> +		 * kbd_event_generated to true.
+> +		 *
+> +		 * In case the event is not generated, schedule the keyboard
+> +		 * backlight work to update the sysfs entries and emulate the
+> +		 * event via genetlink.
+> +		 */
+> +		if (toshiba->kbd_type == 2 &&
+> +		    !toshiba_acpi->kbd_event_generated)
+> +			schedule_work(&kbd_bl_work);
+>  	}
+>  
+>  	return count;
+> @@ -2760,7 +2798,6 @@ error:
+>  static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+>  {
+>  	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
+> -	int ret;
+>  
+>  	switch (event) {
+>  	case 0x80: /* Hotkeys and some system events */
+> @@ -2790,10 +2827,10 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+>  		pr_info("SATA power event received %x\n", event);
+>  		break;
+>  	case 0x92: /* Keyboard backlight mode changed */
+> +		toshiba_acpi->kbd_event_generated = true;
+>  		/* Update sysfs entries */
+> -		ret = sysfs_update_group(&acpi_dev->dev.kobj,
+> -					 &toshiba_attr_group);
+> -		if (ret)
+> +		if (sysfs_update_group(&acpi_dev->dev.kobj,
+> +				       &toshiba_attr_group))
+>  			pr_err("Unable to update sysfs entries\n");
+>  		break;
+>  	case 0x85: /* Unknown */
+> -- 
+> 2.6.3
+> 
+> 
 
 -- 
--- El mundo apesta y vosotros apestais tambien --
+Darren Hart
+Intel Open Source Technology Center
