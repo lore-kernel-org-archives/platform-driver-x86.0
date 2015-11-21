@@ -1,61 +1,91 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+From: Andy Lutomirski <luto@amacapital.net>
 Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
-Date: Sat, 21 Nov 2015 01:11:55 +0100
-Message-ID: <201511210111.55932@pali>
-References: <cover.1447479930.git.luto@kernel.org> <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org> <20151121000636.GG7413@malice.jf.intel.com>
+Date: Fri, 20 Nov 2015 16:12:58 -0800
+Message-ID: <CALCETrVz+4CX=rjY5OZfCSGQDcgW1oQe6t8d9940ubQKDv-Eqg@mail.gmail.com>
+References: <cover.1447479930.git.luto@kernel.org> <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org>
+ <20151121000636.GG7413@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart1828530.BTCeMg2ylm";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f42.google.com ([74.125.82.42]:37160 "EHLO
-	mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759721AbbKUAL6 (ORCPT
+Received: from mail-ob0-f174.google.com ([209.85.214.174]:34119 "EHLO
+	mail-ob0-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1760692AbbKUANS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Nov 2015 19:11:58 -0500
-Received: by wmww144 with SMTP id w144so40425294wmw.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2015 16:11:57 -0800 (PST)
+	Fri, 20 Nov 2015 19:13:18 -0500
+Received: by obbbj7 with SMTP id bj7so99001024obb.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2015 16:13:18 -0800 (PST)
 In-Reply-To: <20151121000636.GG7413@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Andy Lutomirski <luto@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Jared_Dominguez@dell.com
 
---nextPart1828530.BTCeMg2ylm
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 20, 2015 at 4:06 PM, Darren Hart <dvhart@infradead.org> wrote:
+> On Fri, Nov 13, 2015 at 09:49:30PM -0800, Andy Lutomirski wrote:
+>> The XPS 13 Skylake has an rfkill button and a switchvideomode button
+>> that aren't enumerated in the DMI table AFAICT.  Add a table listing
+>> extra un-enumerated hotkeys.  To avoid breaking things that worked
+>> before, these un-enumerated hotkeys won't be used if the DMI table
+>> maps them to something else.
+>>
+>> This also adds the Fn-lock key as a KE_IGNORE entry.
+>>
+>> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> ---
+>>  drivers/platform/x86/dell-wmi.c | 48 +++++++++++++++++++++++++++++++++++------
+>>  1 file changed, 41 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+>> index f2d77fe696ac..5be1abec4f64 100644
+>> --- a/drivers/platform/x86/dell-wmi.c
+>> +++ b/drivers/platform/x86/dell-wmi.c
+>> @@ -142,6 +142,16 @@ static const u16 bios_to_linux_keycode[256] __initconst = {
+>>       0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_PROG3
+>>  };
+>>
+>> +/* These are applied if the hk table is present and doesn't override them. */
+>> +static const struct key_entry dell_wmi_extra_keymap[] __initconst = {
+>> +     /* Fn-lock -- no action is required by the kernel. */
+>> +     { KE_IGNORE, 0x151, { KEY_RESERVED } },
+>> +
+>> +     /* Keys that need our help (on XPS 13 Skylake and maybe others. */
+>> +     { KE_KEY, 0x152, { KEY_SWITCHVIDEOMODE } },
+>> +     { KE_KEY, 0x153, { KEY_RFKILL } },
+>> +};
+>> +
+>>  static struct input_dev *dell_wmi_input_dev;
+>>
+>>  static void dell_wmi_process_key(int reported_key)
+>> @@ -300,9 +310,10 @@ static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
+>>       int hotkey_num = (dell_bios_hotkey_table->header.length - 4) /
+>>                               sizeof(struct dell_bios_keymap_entry);
+>>       struct key_entry *keymap;
+>> -     int i;
+>> +     int i, pos = 0, num_bios_keys;
+>
+> Just a nit, "reverse christmas tree" order (longest line length first) please.
+> (only if you resend after this review for other reasons)
 
-On Saturday 21 November 2015 01:06:36 Darren Hart wrote:
-> > -	keymap =3D kcalloc(hotkey_num + 1, sizeof(struct key_entry),
-> > GFP_KERNEL); +	keymap =3D kcalloc(hotkey_num +
-> > ARRAY_SIZE(dell_wmi_extra_keymap),
->=20
-> This previously allocated kotkey_num + 1, but you dropeed the +1,
-> making it eactly the size of hotkey_num + the new entries you added.
->=20
-> Why don't we need the +1 anymore? (it isn't clear to me why we needed
-> to before actually, but I want to confirm you considered it).
->=20
+Will do if I resubmit.
 
-Last entry in keymap array must be KE_END, right? So this is that +1.
+>
+>>
+>> -     keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
+>> +     keymap = kcalloc(hotkey_num + ARRAY_SIZE(dell_wmi_extra_keymap),
+>
+> This previously allocated kotkey_num + 1, but you dropeed the +1, making it
+> eactly the size of hotkey_num + the new entries you added.
+>
+> Why don't we need the +1 anymore? (it isn't clear to me why we needed to before
+> actually, but I want to confirm you considered it).
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+Whoops!  It's for the KE_END entry.
 
---nextPart1828530.BTCeMg2ylm
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+Jared, want to give us some guidance as to whether this code is
+correct at all and, if so, whether we should actually send a
+KEY_RFKILL event from dell-wmi when the key is pressed?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+IOW, should we allow dell-wmi to handle rfkill or should we wait for
+the other mechanism?
 
-iEYEABECAAYFAlZPtssACgkQi/DJPQPkQ1LX+gCgnnAponXHrguPZasOYzDYdqAJ
-nRoAn3hem17BcarRvz5Cu1C+HRTQc9JN
-=VUBB
------END PGP SIGNATURE-----
-
---nextPart1828530.BTCeMg2ylm--
+--Andy
