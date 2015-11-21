@@ -1,128 +1,61 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/3] dell_wmi: Use a C99-style array for
- bios_to_linux_keycode
-Date: Fri, 20 Nov 2015 16:09:39 -0800
-Message-ID: <20151121000939.GH7413@malice.jf.intel.com>
-References: <cover.1447479930.git.luto@kernel.org>
- <c97f6a3b8c48eef0312db51e06a266e3ffeca620.1447479930.git.luto@kernel.org>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
+Date: Sat, 21 Nov 2015 01:11:55 +0100
+Message-ID: <201511210111.55932@pali>
+References: <cover.1447479930.git.luto@kernel.org> <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org> <20151121000636.GG7413@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed;
+  boundary="nextPart1828530.BTCeMg2ylm";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:51103 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759225AbbKUAJl (ORCPT
+Received: from mail-wm0-f42.google.com ([74.125.82.42]:37160 "EHLO
+	mail-wm0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759721AbbKUAL6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Nov 2015 19:09:41 -0500
-Content-Disposition: inline
-In-Reply-To: <c97f6a3b8c48eef0312db51e06a266e3ffeca620.1447479930.git.luto@kernel.org>
+	Fri, 20 Nov 2015 19:11:58 -0500
+Received: by wmww144 with SMTP id w144so40425294wmw.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2015 16:11:57 -0800 (PST)
+In-Reply-To: <20151121000636.GG7413@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Fri, Nov 13, 2015 at 09:49:31PM -0800, Andy Lutomirski wrote:
-> It's currently hard to follow what maps to what, and it's hard to edit
-> the array.  Redo it as a C99-style array.
-> 
-> I generated this using emacs regexes and a python one-liner.
-> 
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+--nextPart1828530.BTCeMg2ylm
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Indeed, this is much nicer.
+On Saturday 21 November 2015 01:06:36 Darren Hart wrote:
+> > -	keymap =3D kcalloc(hotkey_num + 1, sizeof(struct key_entry),
+> > GFP_KERNEL); +	keymap =3D kcalloc(hotkey_num +
+> > ARRAY_SIZE(dell_wmi_extra_keymap),
+>=20
+> This previously allocated kotkey_num + 1, but you dropeed the +1,
+> making it eactly the size of hotkey_num + the new entries you added.
+>=20
+> Why don't we need the +1 anymore? (it isn't clear to me why we needed
+> to before actually, but I want to confirm you considered it).
+>=20
 
-Please include all the maintainers listed in MAINTAINERS in the future for a
-faster response.
+Last entry in keymap array must be KE_END, right? So this is that +1.
 
-Pali or Matthew, do either of you care to comment? I'm queueing to testing, will
-merge to next shortly if I don't hear from you.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
-Thanks,
+--nextPart1828530.BTCeMg2ylm
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-> ---
->  drivers/platform/x86/dell-wmi.c | 61 +++++++++++++++++++++++++++--------------
->  1 file changed, 40 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 5be1abec4f64..92b0149fa4a7 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -119,27 +119,46 @@ struct dell_bios_hotkey_table {
->  static const struct dell_bios_hotkey_table *dell_bios_hotkey_table;
->  
->  static const u16 bios_to_linux_keycode[256] __initconst = {
-> -
-> -	KEY_MEDIA,	KEY_NEXTSONG,	KEY_PLAYPAUSE, KEY_PREVIOUSSONG,
-> -	KEY_STOPCD,	KEY_UNKNOWN,	KEY_UNKNOWN,	KEY_UNKNOWN,
-> -	KEY_WWW,	KEY_UNKNOWN,	KEY_VOLUMEDOWN, KEY_MUTE,
-> -	KEY_VOLUMEUP,	KEY_UNKNOWN,	KEY_BATTERY,	KEY_EJECTCD,
-> -	KEY_UNKNOWN,	KEY_SLEEP,	KEY_PROG1, KEY_BRIGHTNESSDOWN,
-> -	KEY_BRIGHTNESSUP,	KEY_UNKNOWN,	KEY_KBDILLUMTOGGLE,
-> -	KEY_UNKNOWN,	KEY_SWITCHVIDEOMODE,	KEY_UNKNOWN, KEY_UNKNOWN,
-> -	KEY_SWITCHVIDEOMODE,	KEY_UNKNOWN,	KEY_UNKNOWN, KEY_PROG2,
-> -	KEY_UNKNOWN,	KEY_UNKNOWN,	KEY_UNKNOWN,	KEY_UNKNOWN,
-> -	KEY_UNKNOWN,	KEY_UNKNOWN,	KEY_UNKNOWN,	KEY_MICMUTE,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -	0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_PROG3
-> +	[0]	= KEY_MEDIA,
-> +	[1]	= KEY_NEXTSONG,
-> +	[2]	= KEY_PLAYPAUSE,
-> +	[3]	= KEY_PREVIOUSSONG,
-> +	[4]	= KEY_STOPCD,
-> +	[5]	= KEY_UNKNOWN,
-> +	[6]	= KEY_UNKNOWN,
-> +	[7]	= KEY_UNKNOWN,
-> +	[8]	= KEY_WWW,
-> +	[9]	= KEY_UNKNOWN,
-> +	[10]	= KEY_VOLUMEDOWN,
-> +	[11]	= KEY_MUTE,
-> +	[12]	= KEY_VOLUMEUP,
-> +	[13]	= KEY_UNKNOWN,
-> +	[14]	= KEY_BATTERY,
-> +	[15]	= KEY_EJECTCD,
-> +	[16]	= KEY_UNKNOWN,
-> +	[17]	= KEY_SLEEP,
-> +	[18]	= KEY_PROG1,
-> +	[19]	= KEY_BRIGHTNESSDOWN,
-> +	[20]	= KEY_BRIGHTNESSUP,
-> +	[21]	= KEY_UNKNOWN,
-> +	[22]	= KEY_KBDILLUMTOGGLE,
-> +	[23]	= KEY_UNKNOWN,
-> +	[24]	= KEY_SWITCHVIDEOMODE,
-> +	[25]	= KEY_UNKNOWN,
-> +	[26]	= KEY_UNKNOWN,
-> +	[27]	= KEY_SWITCHVIDEOMODE,
-> +	[28]	= KEY_UNKNOWN,
-> +	[29]	= KEY_UNKNOWN,
-> +	[30]	= KEY_PROG2,
-> +	[31]	= KEY_UNKNOWN,
-> +	[32]	= KEY_UNKNOWN,
-> +	[33]	= KEY_UNKNOWN,
-> +	[34]	= KEY_UNKNOWN,
-> +	[35]	= KEY_UNKNOWN,
-> +	[36]	= KEY_UNKNOWN,
-> +	[37]	= KEY_UNKNOWN,
-> +	[38]	= KEY_MICMUTE,
-> +	[255]	= KEY_PROG3,
->  };
->  
->  /* These are applied if the hk table is present and doesn't override them. */
-> -- 
-> 2.5.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+iEYEABECAAYFAlZPtssACgkQi/DJPQPkQ1LX+gCgnnAponXHrguPZasOYzDYdqAJ
+nRoAn3hem17BcarRvz5Cu1C+HRTQc9JN
+=VUBB
+-----END PGP SIGNATURE-----
+
+--nextPart1828530.BTCeMg2ylm--
