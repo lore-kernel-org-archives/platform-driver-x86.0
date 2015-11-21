@@ -1,125 +1,54 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] dell-rbtn: Ignore ACPI notifications if device is suspended
-Date: Sat, 21 Nov 2015 20:18:04 +0100
-Message-ID: <201511212018.04685@pali>
-References: <1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com>
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
+ to RAM
+Date: Sat, 21 Nov 2015 23:39:47 +0300
+Message-ID: <5650D693.6050808@gmail.com>
+References: <5650BE8E.2080506@gmail.com> <201511212008.46761@pali>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart2096723.Qf7KcyUCc1";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f43.google.com ([74.125.82.43]:36602 "EHLO
-	mail-wm0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752280AbbKUTSI (ORCPT
+Received: from mail-lf0-f53.google.com ([209.85.215.53]:34996 "EHLO
+	mail-lf0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751305AbbKUUjv (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 21 Nov 2015 14:18:08 -0500
-In-Reply-To: <1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com>
+	Sat, 21 Nov 2015 15:39:51 -0500
+Received: by lfdl133 with SMTP id l133so6584686lfd.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2015 12:39:50 -0800 (PST)
+In-Reply-To: <201511212008.46761@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, dvhart@infradead.org
 
---nextPart2096723.Qf7KcyUCc1
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+21.11.2015 22:08, Pali Roh=C3=A1r =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> On Saturday 21 November 2015 19:57:18 Andrei Borzenkov wrote:
+>> After installing 4.2 on Dell Latitude E5450 I found that wireless wa=
+s
+>> disabled every second resume from suspend to RAM. Blacklisting
+>> dell-rbtn "fixed" it.
+>>
+>> This is probably the same as discussed in this Arch forum and relate=
+d
+>> bug report: https://bbs.archlinux.org/viewtopic.php?id=3D203404. I
+>> myself hit it on Ubuntu.
+>>
+>> I am not familiar with other models, but E5450 does have DELLABCE an=
+d
+>> so is using dell-rbtn driver.
+>>
+>> I am happy to test patches if need. Please let me know if formal bug
+>> report is required.
+>>
+>> -andrei
+>
+> Hi Andrei!
+>
+> About five hours ago Gabriele sent patch which fixing this problem to
+> LKML. You can find it on: https://lkml.org/lkml/2015/11/21/57
+>
+> Can you test that patch and confirm it fix also for you?
+>
 
-On Saturday 21 November 2015 15:16:15 Gabriele Mazzotta wrote:
-> Some BIOSes unconditionally send an ACPI notification to RBTN when
-> the system is resuming from suspend. This makes dell-rbtn send an
-> input event to userspace as if a function key was pressed. Prevent
-> this by ignoring all the notifications received while the device is
-> suspended.
->=20
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
-> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-
-Looks like we need to ignore ACPI events when RBTN device is suspended.=20
-So for me it is OK. If ACPI people are OK with implementation, add my=20
-Acked-By: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-> ---
->  drivers/platform/x86/dell-rbtn.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-rbtn.c
-> b/drivers/platform/x86/dell-rbtn.c index cd410e3..1d64b72 100644
-> --- a/drivers/platform/x86/dell-rbtn.c
-> +++ b/drivers/platform/x86/dell-rbtn.c
-> @@ -28,6 +28,7 @@ struct rbtn_data {
->  	enum rbtn_type type;
->  	struct rfkill *rfkill;
->  	struct input_dev *input_dev;
-> +	bool suspended;
->  };
->=20
->=20
-> @@ -220,9 +221,33 @@ static const struct acpi_device_id rbtn_ids[] =3D
-> { { "", 0 },
->  };
->=20
-> +#ifdef CONFIG_PM_SLEEP
-> +static int rbtn_suspend(struct device *dev)
-> +{
-> +	struct acpi_device *device =3D to_acpi_device(dev);
-> +	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
-> +
-> +	rbtn_data->suspended =3D true;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rbtn_resume(struct device *dev)
-> +{
-> +	struct acpi_device *device =3D to_acpi_device(dev);
-> +	struct rbtn_data *rbtn_data =3D acpi_driver_data(device);
-> +
-> +	rbtn_data->suspended =3D false;
-> +
-> +	return 0;
-> +}
-> +#endif
-> +static SIMPLE_DEV_PM_OPS(rbtn_pm_ops, rbtn_suspend, rbtn_resume);
-> +
->  static struct acpi_driver rbtn_driver =3D {
->  	.name =3D "dell-rbtn",
->  	.ids =3D rbtn_ids,
-> +	.drv.pm =3D &rbtn_pm_ops,
->  	.ops =3D {
->  		.add =3D rbtn_add,
->  		.remove =3D rbtn_remove,
-> @@ -384,6 +409,9 @@ static void rbtn_notify(struct acpi_device
-> *device, u32 event) {
->  	struct rbtn_data *rbtn_data =3D device->driver_data;
->=20
-> +	if (rbtn_data->suspended)
-> +		return;
-> +
->  	if (event !=3D 0x80) {
->  		dev_info(&device->dev, "Received unknown event (0x%x)\n",
->  			 event);
-
-CCing Rafael & linux-acpi.
-
-Is this correct way (via "suspended" variable and hooks in PM) how to=20
-ignore ACPI events when device is suspended?
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart2096723.Qf7KcyUCc1
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlZQw2wACgkQi/DJPQPkQ1LppQCfYB5yyxT/Xmol59xGdKMzKXnC
-qkUAnRrAmPoKyPk2s8qGdKiUpD31rOgD
-=W1SI
------END PGP SIGNATURE-----
-
---nextPart2096723.Qf7KcyUCc1--
+Yes, it does. Can add Tested-By me. Thank you!
