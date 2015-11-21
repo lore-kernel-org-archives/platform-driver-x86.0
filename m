@@ -1,41 +1,100 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 2/3] dell_wmi: Use a C99-style array for bios_to_linux_keycode
-Date: Fri, 20 Nov 2015 16:28:16 -0800
-Message-ID: <CALCETrV5uSshacdyKcQAF4fq91J8FNha8N=PJiTGBSUNphXjfQ@mail.gmail.com>
-References: <cover.1447479930.git.luto@kernel.org> <c97f6a3b8c48eef0312db51e06a266e3ffeca620.1447479930.git.luto@kernel.org>
- <20151121000939.GH7413@malice.jf.intel.com> <201511210120.19840@pali> <20151121002638.GJ7413@malice.jf.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 3/3] dell_wmi: Improve unknown hotkey handling
+Date: Fri, 20 Nov 2015 16:29:04 -0800
+Message-ID: <20151121002904.GK7413@malice.jf.intel.com>
+References: <cover.1447479930.git.luto@kernel.org>
+ <b7fd494ac6d51c13a66fec20ec336080479b0f5f.1447479930.git.luto@kernel.org>
+ <20151114093341.GC25957@pali>
+ <CALCETrUXJfKEEAwk1-cBhDrEtgp6nP0pBGOhuoQc-XRohKtLwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f47.google.com ([209.85.218.47]:32996 "EHLO
-	mail-oi0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752011AbbKUA2g convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:52734 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752011AbbKUA3G (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 20 Nov 2015 19:28:36 -0500
-Received: by oixx65 with SMTP id x65so74267549oix.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Nov 2015 16:28:36 -0800 (PST)
-In-Reply-To: <20151121002638.GJ7413@malice.jf.intel.com>
+	Fri, 20 Nov 2015 19:29:06 -0500
+Content-Disposition: inline
+In-Reply-To: <CALCETrUXJfKEEAwk1-cBhDrEtgp6nP0pBGOhuoQc-XRohKtLwA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-On Fri, Nov 20, 2015 at 4:26 PM, Darren Hart <dvhart@infradead.org> wro=
-te:
-> On Sat, Nov 21, 2015 at 01:20:19AM +0100, Pali Roh=C3=A1r wrote:
->> On Saturday 21 November 2015 01:09:39 Darren Hart wrote:
->> > Pali or Matthew, do either of you care to comment?
->>
->> Already commented, email is in archive, see:
->>
->> http://thread.gmane.org/gmane.linux.drivers.platform.x86.devel/7936/=
-focus=3D7941
->
-> Right, sorry, I picked this up from my procmail auto-populated patche=
-s mbox
-> since I wasn't Cc'd - missed your response.
+On Mon, Nov 16, 2015 at 05:35:44PM -0800, Andy Lutomirski wrote:
+> On Sat, Nov 14, 2015 at 1:33 AM, Pali Roh=E1r <pali.rohar@gmail.com> =
+wrote:
+> > On Friday 13 November 2015 21:49:32 Andy Lutomirski wrote:
+> >> If DMI lists a hotkey that we don't recognize, log and ignore it
+> >> instead of trying to map it to keycode 0.  I haven't seen this hap=
+pen,
+> >> but it will help maintain the key map in the future and it will he=
+lp
+> >> avoid sending bogus events.
+> >>
+> >> This also improves the message that we log when we get an unknown =
+key
+> >> event.
+> >>
+> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> >> ---
+> >>  drivers/platform/x86/dell-wmi.c | 7 ++++++-
+> >>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x8=
+6/dell-wmi.c
+> >> index 92b0149fa4a7..e43228a35f6b 100644
+> >> --- a/drivers/platform/x86/dell-wmi.c
+> >> +++ b/drivers/platform/x86/dell-wmi.c
+> >> @@ -180,7 +180,7 @@ static void dell_wmi_process_key(int reported_=
+key)
+> >>       key =3D sparse_keymap_entry_from_scancode(dell_wmi_input_dev=
+,
+> >>                                               reported_key);
+> >>       if (!key) {
+> >> -             pr_info("Unknown key %x pressed\n", reported_key);
+> >> +             pr_info("Unknown key with scancode 0x%x pressed\n", =
+reported_key);
+> >>               return;
+> >>       }
+> >>
+> >> @@ -343,6 +343,11 @@ static const struct key_entry * __init dell_w=
+mi_prepare_new_keymap(void)
+> >>                                   bios_to_linux_keycode[bios_entry=
+->keycode] :
+> >>                                   KEY_RESERVED;
+> >>
+> >> +             if (keycode =3D=3D 0) {
+> >> +                     pr_info("firmware scancode %d maps to unreco=
+gnized keycode %d\n", bios_entry->keycode, bios_entry->scancode);
+> >> +                     continue;
+> >> +             }
+> >> +
+> >
+> > This line is too long and checkpatch.pl will probably blame you.
+>=20
+> I split it.  The first bit (with the quoted string) is still a bit
+> above 80, but that's better than splitting the string itself and
+> breaking grep.
 
-Sorry, I parsed MAINTAINERS by hand incorrectly.
+So I've taken care of this in my branch (and the one above too).
 
---Andy
+>=20
+> >
+> > Anyway, have you already found some missing mapping which comes fro=
+m
+> > bios/firmware (because your patches do not change that bios table)?
+> >
+>=20
+> I don't see a DMI entry that maps to something outside the table,
+> though, so this warning doesn't trigger.  My best guess is that Dell
+> simply didn't bother to update the DMI table and has it hardcoded in
+> their driver.  Admittedly, I've never played with the official driver
+> at all.
+
+Pali, was this something you wanted to discuss more before I merge it?
+
+--=20
+Darren Hart
+Intel Open Source Technology Center
