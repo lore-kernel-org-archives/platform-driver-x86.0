@@ -1,129 +1,66 @@
-From: "D. Jared Dominguez" <Jared_Dominguez@dell.com>
-Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
-Date: Sat, 21 Nov 2015 20:04:15 -0600
-Message-ID: <20151122020414.GR16374@dell.com>
-References: <cover.1447479930.git.luto@kernel.org>
- <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org>
- <20151121000636.GG7413@malice.jf.intel.com>
- <CALCETrVz+4CX=rjY5OZfCSGQDcgW1oQe6t8d9940ubQKDv-Eqg@mail.gmail.com>
+From: Andrei Borzenkov <arvidjaar@gmail.com>
+Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
+ to RAM
+Date: Sun, 22 Nov 2015 09:23:19 +0300
+Message-ID: <56515F57.8060801@gmail.com>
+References: <5650BE8E.2080506@gmail.com> <201511212008.46761@pali>
+ <5650D693.6050808@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1;
+Content-Type: text/plain; charset=utf-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from AUSXIPPS310.us.dell.com ([143.166.148.211]:4714 "EHLO
-	ausxipps310.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752116AbbKVCNt (ORCPT
+Received: from mail-lf0-f50.google.com ([209.85.215.50]:32979 "EHLO
+	mail-lf0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750914AbbKVGXX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 21 Nov 2015 21:13:49 -0500
-Content-Disposition: inline
-In-Reply-To: <CALCETrVz+4CX=rjY5OZfCSGQDcgW1oQe6t8d9940ubQKDv-Eqg@mail.gmail.com>
+	Sun, 22 Nov 2015 01:23:23 -0500
+Received: by lfaz4 with SMTP id z4so90780044lfa.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2015 22:23:22 -0800 (PST)
+In-Reply-To: <5650D693.6050808@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <Mario_Limonciello@Dell.com>
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, dvhart@infradead.org
 
-On Fri, Nov 20, 2015 at 06:12:58PM -0600, Andy Lutomirski wrote:
->On Fri, Nov 20, 2015 at 4:06 PM, Darren Hart <dvhart@infradead.org> wr=
-ote:
->> On Fri, Nov 13, 2015 at 09:49:30PM -0800, Andy Lutomirski wrote:
->>> The XPS 13 Skylake has an rfkill button and a switchvideomode butto=
-n
->>> that aren't enumerated in the DMI table AFAICT.  Add a table listin=
+21.11.2015 23:39, Andrei Borzenkov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> 21.11.2015 22:08, Pali Roh=C3=A1r =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On Saturday 21 November 2015 19:57:18 Andrei Borzenkov wrote:
+>>> After installing 4.2 on Dell Latitude E5450 I found that wireless w=
+as
+>>> disabled every second resume from suspend to RAM. Blacklisting
+>>> dell-rbtn "fixed" it.
+>>>
+>>> This is probably the same as discussed in this Arch forum and relat=
+ed
+>>> bug report: https://bbs.archlinux.org/viewtopic.php?id=3D203404. I
+>>> myself hit it on Ubuntu.
+>>>
+>>> I am not familiar with other models, but E5450 does have DELLABCE a=
+nd
+>>> so is using dell-rbtn driver.
+>>>
+>>> I am happy to test patches if need. Please let me know if formal bu=
 g
->>> extra un-enumerated hotkeys.  To avoid breaking things that worked
->>> before, these un-enumerated hotkeys won't be used if the DMI table
->>> maps them to something else.
+>>> report is required.
 >>>
->>> This also adds the Fn-lock key as a KE_IGNORE entry.
->>>
->>> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->>> ---
->>>  drivers/platform/x86/dell-wmi.c | 48 +++++++++++++++++++++++++++++=
-++++++------
->>>  1 file changed, 41 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86=
-/dell-wmi.c
->>> index f2d77fe696ac..5be1abec4f64 100644
->>> --- a/drivers/platform/x86/dell-wmi.c
->>> +++ b/drivers/platform/x86/dell-wmi.c
->>> @@ -142,6 +142,16 @@ static const u16 bios_to_linux_keycode[256] __=
-initconst =3D {
->>>       0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_PROG3
->>>  };
->>>
->>> +/* These are applied if the hk table is present and doesn't overri=
-de them. */
->>> +static const struct key_entry dell_wmi_extra_keymap[] __initconst =
-=3D {
->>> +     /* Fn-lock -- no action is required by the kernel. */
->>> +     { KE_IGNORE, 0x151, { KEY_RESERVED } },
->>> +
->>> +     /* Keys that need our help (on XPS 13 Skylake and maybe other=
-s. */
->>> +     { KE_KEY, 0x152, { KEY_SWITCHVIDEOMODE } },
->>> +     { KE_KEY, 0x153, { KEY_RFKILL } },
->>> +};
->>> +
->>>  static struct input_dev *dell_wmi_input_dev;
->>>
->>>  static void dell_wmi_process_key(int reported_key)
->>> @@ -300,9 +310,10 @@ static const struct key_entry * __init dell_wm=
-i_prepare_new_keymap(void)
->>>       int hotkey_num =3D (dell_bios_hotkey_table->header.length - 4=
-) /
->>>                               sizeof(struct dell_bios_keymap_entry)=
-;
->>>       struct key_entry *keymap;
->>> -     int i;
->>> +     int i, pos =3D 0, num_bios_keys;
+>>> -andrei
 >>
->> Just a nit, "reverse christmas tree" order (longest line length firs=
-t) please.
->> (only if you resend after this review for other reasons)
->
->Will do if I resubmit.
->
+>> Hi Andrei!
 >>
->>>
->>> -     keymap =3D kcalloc(hotkey_num + 1, sizeof(struct key_entry), =
-GFP_KERNEL);
->>> +     keymap =3D kcalloc(hotkey_num + ARRAY_SIZE(dell_wmi_extra_key=
-map),
+>> About five hours ago Gabriele sent patch which fixing this problem t=
+o
+>> LKML. You can find it on: https://lkml.org/lkml/2015/11/21/57
 >>
->> This previously allocated kotkey_num + 1, but you dropeed the +1, ma=
-king it
->> eactly the size of hotkey_num + the new entries you added.
+>> Can you test that patch and confirm it fix also for you?
 >>
->> Why don't we need the +1 anymore? (it isn't clear to me why we neede=
-d to before
->> actually, but I want to confirm you considered it).
 >
->Whoops!  It's for the KE_END entry.
->
->Jared, want to give us some guidance as to whether this code is
->correct at all and, if so, whether we should actually send a
->KEY_RFKILL event from dell-wmi when the key is pressed?
->
->IOW, should we allow dell-wmi to handle rfkill or should we wait for
->the other mechanism?
->
->--Andy
+> Yes, it does.
 
-I'm adding Mario since he's worked on our client systems much longer an=
-d=20
-knows more about the correct behavior for our hotkeys. I've not yet rea=
-d=20
-through any of our documentation about our hotkey behavior so wouldn't=20
-be as qualified to answer that. Note that both Mario and I are on=20
-vacation until the 30th, so he may not reply until then.
+Unfortunately it was too early. Today after resume I again got disable=20
+radio, and also several later attempts to suspend/resume. Then last tim=
+e=20
+I suddenly got radio working again after resume.
 
---Jared
-
-
---=20
-Jared Dom=EDnguez
-OS Architect
-Linux Engineering
-Dell | Client Software Group
+Patch looks racy; there is no guarantee we get notification before=20
+resetting in suspend flag.
