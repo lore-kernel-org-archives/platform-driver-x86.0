@@ -1,62 +1,41 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH 3/5] acer-wmi: Use acpi_dev_present
-Date: Mon, 23 Nov 2015 15:34:55 +0100
-Message-ID: <16567313cc5fe318e4738ecd9442c04432f7e8cb.1448282995.git.lukas@wunner.de>
-References: <cover.1448282995.git.lukas@wunner.de>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] dell-rbtn: Ignore ACPI notifications if device is
+ suspended
+Date: Mon, 23 Nov 2015 15:48:58 +0100
+Message-ID: <20151123144858.GE24147@pali>
+References: <1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout3.hostsharing.net ([176.9.242.54]:46745 "EHLO
-	mailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752420AbbKWOoz (ORCPT
+Received: from mail-wm0-f52.google.com ([74.125.82.52]:34811 "EHLO
+	mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753044AbbKWOtB (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 09:44:55 -0500
-In-Reply-To: <cover.1448282995.git.lukas@wunner.de>
+	Mon, 23 Nov 2015 09:49:01 -0500
+Content-Disposition: inline
+In-Reply-To: <1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: linux-acpi@vger.kernel.org, devel@acpica.org
-Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, "Lee, Chun-Yi" <jlee@suse.com>
+To: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Cc: dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei Borzenkov <arvidjaar@gmail.com>
 
-Use shiny new acpi_dev_present and remove all the boilerplate to search
-for a particular ACPI device. No functional change.
+On Saturday 21 November 2015 15:16:15 Gabriele Mazzotta wrote:
+> Some BIOSes unconditionally send an ACPI notification to RBTN when th=
+e
+> system is resuming from suspend. This makes dell-rbtn send an input
+> event to userspace as if a function key was pressed. Prevent this by
+> ignoring all the notifications received while the device is suspended=
+=2E
+>=20
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D106031
+> Signed-off-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-Cc: Lee, Chun-Yi <jlee@suse.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/platform/x86/acer-wmi.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Andrei Borzenkov (CCed) tested this patch and patch does not fix bug.
+Probably there is race condition and ACPI event is sent *after* functio=
+n
+rbtn_resume is called.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1062fa4..3deadd5 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -793,15 +793,6 @@ static acpi_status __init AMW0_find_mailled(void)
- 	return AE_OK;
- }
- 
--static int AMW0_set_cap_acpi_check_device_found __initdata;
--
--static acpi_status __init AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
--	u32 level, void *context, void **retval)
--{
--	AMW0_set_cap_acpi_check_device_found = 1;
--	return AE_OK;
--}
--
- static const struct acpi_device_id norfkill_ids[] __initconst = {
- 	{ "VPC2004", 0},
- 	{ "IBM0068", 0},
-@@ -816,9 +807,10 @@ static int __init AMW0_set_cap_acpi_check_device(void)
- 	const struct acpi_device_id *id;
- 
- 	for (id = norfkill_ids; id->id[0]; id++)
--		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
--				NULL, NULL);
--	return AMW0_set_cap_acpi_check_device_found;
-+		if (acpi_dev_present(id->id))
-+			return true;
-+
-+	return false;
- }
- 
- static acpi_status __init AMW0_set_capabilities(void)
--- 
-1.8.5.2 (Apple Git-48)
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
