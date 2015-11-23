@@ -1,108 +1,186 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
- to RAM
-Date: Mon, 23 Nov 2015 23:33:11 +0100
-Message-ID: <56539427.5090304@gmail.com>
-References: <5650BE8E.2080506@gmail.com> <201511212008.46761@pali>
- <5650D693.6050808@gmail.com> <56515F57.8060801@gmail.com>
- <20151123145026.GF24147@pali> <56532D6B.8040407@gmail.com>
- <56533D81.7070406@gmail.com> <20151123192943.GY7413@malice.jf.intel.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 1/5] ACPICA: Add acpi_dev_present
+Date: Tue, 24 Nov 2015 00:32:34 +0100
+Message-ID: <20151123233234.GA26361@wunner.de>
+References: <cover.1448282995.git.lukas@wunner.de>
+ <d66501819cfa8f3d3b07708d3f20e3e20d07e4f8.1448282995.git.lukas@wunner.de>
+ <2726545.001oM5V9lv@vostro.rjw.lan>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E37D998D0C@ORSMSX112.amr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f47.google.com ([74.125.82.47]:34806 "EHLO
-	mail-wm0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755316AbbKWWdP (ORCPT
+Received: from mailout2.hostsharing.net ([83.223.90.233]:53690 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752487AbbKWXcl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 17:33:15 -0500
-Received: by wmvv187 with SMTP id v187so183210016wmv.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2015 14:33:13 -0800 (PST)
-In-Reply-To: <20151123192943.GY7413@malice.jf.intel.com>
+	Mon, 23 Nov 2015 18:32:41 -0500
+Content-Disposition: inline
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E37D998D0C@ORSMSX112.amr.corp.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andrei Borzenkov <arvidjaar@gmail.com>
-Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: "Moore, Robert" <robert.moore@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>, Hui Wang <hui.wang@canonical.com>, Mark Brown <broonie@kernel.org>, "Zheng, Lv" <lv.zheng@intel.com>, David Box <david.e.box@linux.intel.com>
 
-On 23/11/2015 20:29, Darren Hart wrote:
+Hi Robert,
 
-[cut]
+On Mon, Nov 23, 2015 at 10:22:27PM +0000, Moore, Robert wrote:
+> >>acpi_dev_present
+> 
+> Do you really want to be walking the ACPICA namespace for every call?
 
->> I looked at what dell-rbtn does. My system (Latitude E5450) has RBTN of type
->> TOGGLE. In this case both del-laptop hooks itself into i8042 and dell-rbtn
->> delivers KEY_RFKILL event to input susbsystem. IOW dell-rbtn looks
->> completely redundant in this configuration.
->>
->> Can we detect that rfkill toggle is already avaiable via normal keyboard and
->> not activate dell-rbtn in this case?
->
-> Also dropping this one until we can arrive at a complete solution.
->
-> Pali, Gabriele, this one is in your hands. I will review and provide feedback
-> where I can - I confess I'm finding it difficult to keep all the pieces straight
-> in my head, and without any hardware, I have to rely entirely on what I can
-> piece together (a situation we are all in as this differs across many systems,
-> nobody has all the necessary bits).
->
-> It may be helpful for someone to put together a current status, known issues,
-> plan of attack to get this moving forward again.
->
+That's what the drivers currently do. Typically this is called only once
+on initialization by the driver's ->probe callback.
 
-I'll try to write a summary that should explain why dell-rbtn exists
-and what are the current problems.
+What did you have in mind instead, cache the result? Or store the HIDs
+in the namespace in a hash that can be queried faster?
 
-There are several mechanisms to control radio devices, so let's
-consider different categories/cases.
+Sorry for not cc'ing you right away, if you want to take a look at the
+patches for the drivers they're browsable on GitHub or in the acpica.org
+mailing list archive:
+https://github.com/l1k/linux/commits/acpi_dev_present
+https://lists.acpica.org/pipermail/devel/2015-November/000851.html
 
-A) The function keys of new Dell laptops do nothing on their own, but
-when pressed, the BIOS sends a notification to an ACPI device
-(DELLABCE/DELRBTN). One of the tasks of dell-rbtn is to catch those
-notifications and send an input event to userspace. Without dell-rbtn,
-the function keys of these laptops wouldn't work.
+Patches [0/5] and [1/5] are not visible in the mailing list archive:
+They landed in the moderation queue because they had too many recipients.
+I guess if I had cc'ed you all, none of the patches would have come
+through.
 
-B) There are then some other laptops which support two different
-mechanisms to control radio devices: the one here above (A) and
-"the old one", i.e. the BIOS does everything. (These are probably
-laptops that were released during the transition Windows 7 -> 8). These
-laptops can switch between the two modes through an ACPI method call.
-What we do with dell-rbtn is to make them behave like (A) since we
-can't tell apart laptops of (A) and (B) and we need to know how each
-laptop behaves. The function key of these laptops work perfectly
-without dell-rbtn.
+Thanks,
 
-C) There are then some other laptops for which it's required to use an
-i8042 filter to detect keypresses and do some SMI calls to toggle
-the state of radio devices. This filter is created by dell-laptop and
-has been there since a long time.
+Lukas
 
-D) This category is something in between (C) and (A) and exists only
-because of dell-rbtn. Some of the laptops of category (C) also have a
-DELLABCE/DELLRBTN device. When dell-rbtn is loaded, the i8042 filter is
-removed and dell-rbtn starts listening for ACPI notification. We do
-this instead because the i8042 filter doesn't work properly on some
-laptops.
-
-
-The problem reported in [1] is that some laptops of (A) and (B) send a
-notification on resume and some others don't. [2] should fix this
-problem, but we need to make sure that the extra notification is always
-caught before the resume of dell-rbtn. This seems to be what happens
-here on my laptop, but Andrei says otherwise. So we need to figure out
-if [2] doesn't fix the problem because it's not guaranteed that ACPI
-notifications sent while the system is resuming are received by device
-drivers before they are resumed (assumption that I made for the first
-patch and that dropped with the updated one I sent in this thread) or
-because Andrei's problem is something different.
-
-
-I hope this was clear enough.
-
-
-Andrei, as I wrote here above, dell-rbtn _should_ make dell-laptop
-remove the i8042 filter. Could you also provide your acpidump so that
-I can see it?
-
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=106031
-[2] 
-http://lkml.kernel.org/r/1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com
+> 
+> > -----Original Message-----
+> > From: Rafael J. Wysocki [mailto:rjw@rjwysocki.net]
+> > Sent: Monday, November 23, 2015 2:35 PM
+> > To: Lukas Wunner
+> > Cc: linux-acpi@vger.kernel.org; devel@acpica.org; platform-driver-
+> > x86@vger.kernel.org; Darren Hart; Corentin Chary; Lee, Chun-Yi; alsa-
+> > devel@alsa-project.org; Takashi Iwai; Hui Wang; Mark Brown; Zheng, Lv;
+> > Moore, Robert; David Box
+> > Subject: Re: [PATCH 1/5] ACPICA: Add acpi_dev_present
+> > 
+> > On Monday, November 23, 2015 03:34:55 PM Lukas Wunner wrote:
+> > > There are 7 drivers which call acpi_get_devices to check for the
+> > > presence of a particular ACPI HID, each defining its own copy of a
+> > > mostly identical callback.
+> > >
+> > > Add acpi_dev_present, the ACPI equivalent to pci_dev_present, allowing
+> > > us to deduplicate all that boilerplate in the drivers.
+> > >
+> > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > 
+> > We have a general rule for ACPICA patches that they go in through upstream
+> > ACPICA.
+> > 
+> > So if you really want this changes in ACPICA, this is the way to handle
+> > it.
+> > 
+> > Now, of course, for that to happen, you should have CCed the ACPICA
+> > maintainers too (now done).
+> > 
+> > Thanks,
+> > Rafael
+> > 
+> > 
+> > > ---
+> > >  drivers/acpi/acpica/nsxfeval.c | 46
+> > ++++++++++++++++++++++++++++++++++++++++++
+> > >  include/acpi/acpixf.h          |  7 +++++++
+> > >  2 files changed, 53 insertions(+)
+> > >
+> > > diff --git a/drivers/acpi/acpica/nsxfeval.c
+> > > b/drivers/acpi/acpica/nsxfeval.c index 6ee1e52..19293fa 100644
+> > > --- a/drivers/acpi/acpica/nsxfeval.c
+> > > +++ b/drivers/acpi/acpica/nsxfeval.c
+> > > @@ -828,6 +828,52 @@ ACPI_EXPORT_SYMBOL(acpi_get_devices)
+> > >
+> > >
+> > /*************************************************************************
+> > ******
+> > >   *
+> > > + * FUNCTION:    acpi_ns_dev_present_callback
+> > > + *
+> > > + * PARAMETERS:  Callback from acpi_get_devices
+> > > + *
+> > > + * RETURN:      Status
+> > > + *
+> > > + * DESCRIPTION: Minimal callback to be passed to acpi_get_devices which
+> > > + *              performs no further filtering and terminates the search
+> > > + *              immediately.
+> > > + *
+> > > +
+> > > +*********************************************************************
+> > > +*********/ static acpi_status
+> > > +acpi_ns_dev_present_callback(acpi_handle handle, u32 level,
+> > > +						void *context, void **retval)
+> > > +{
+> > > +	*(bool *)context = true;
+> > > +	return AE_CTRL_TERMINATE;
+> > > +}
+> > > +
+> > > +/********************************************************************
+> > > +***********
+> > > + *
+> > > + * FUNCTION:    acpi_dev_present
+> > > + *
+> > > + * PARAMETERS:  HID                 - HID to search for.
+> > > + *
+> > > + * RETURNS      True if a matching object of type Device was found.
+> > > + *
+> > > + * DESCRIPTION: Performs a walk of the namespace tree. When a matching
+> > object
+> > > + *              of type Device is found, the search is terminated
+> > immediately.
+> > > + *
+> > > +
+> > > +*********************************************************************
+> > > +*********/
+> > > +
+> > > +bool
+> > > +acpi_dev_present(const char *HID)
+> > > +{
+> > > +	acpi_status status;
+> > > +	bool found = false;
+> > > +
+> > > +	status = acpi_get_devices(HID, acpi_ns_dev_present_callback, &found,
+> > > +				  NULL);
+> > > +	return ACPI_SUCCESS(status) && found; }
+> > > +
+> > > +ACPI_EXPORT_SYMBOL(acpi_dev_present)
+> > > +
+> > > +/********************************************************************
+> > > +***********
+> > > + *
+> > >   * FUNCTION:    acpi_attach_data
+> > >   *
+> > >   * PARAMETERS:  obj_handle          - Namespace node
+> > > diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h index
+> > > 3aaaa86..f299347 100644
+> > > --- a/include/acpi/acpixf.h
+> > > +++ b/include/acpi/acpixf.h
+> > > @@ -115,6 +115,11 @@
+> > >  	prototype;
+> > >  #endif
+> > >
+> > > +#ifndef ACPI_EXTERNAL_RETURN_BOOL
+> > > +#define ACPI_EXTERNAL_RETURN_BOOL(prototype) \
+> > > +	prototype;
+> > > +#endif
+> > > +
+> > >
+> > /*************************************************************************
+> > ****
+> > >   *
+> > >   * Public globals and runtime configuration options @@ -483,6 +488,8
+> > > @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+> > >  					      acpi_walk_callback user_function,
+> > >  					      void *context,
+> > >  					      void **return_value))
+> > > +ACPI_EXTERNAL_RETURN_BOOL(bool
+> > > +			     acpi_dev_present(const char *HID))
+> > >  ACPI_EXTERNAL_RETURN_STATUS(acpi_status
+> > >  			     acpi_get_name(acpi_handle object, u32 name_type,
+> > >  					   struct acpi_buffer *ret_path_ptr))
+> > >
+> 
