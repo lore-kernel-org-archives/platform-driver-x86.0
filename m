@@ -1,38 +1,37 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] toshiba_acpi: Fix keyboard backight sysfs entries not
- being updated
-Date: Mon, 23 Nov 2015 10:58:08 -0800
-Message-ID: <20151123185808.GT7413@malice.jf.intel.com>
-References: <1448301090-5545-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH 2/5] eeepc-wmi: Use acpi_dev_present
+Date: Mon, 23 Nov 2015 11:04:13 -0800
+Message-ID: <20151123190413.GU7413@malice.jf.intel.com>
+References: <cover.1448282995.git.lukas@wunner.de>
+ <bdff67293ead344ccec77f55437085561b1ad88d.1448282995.git.lukas@wunner.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448301090-5545-1-git-send-email-coproscefalo@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <bdff67293ead344ccec77f55437085561b1ad88d.1448282995.git.lukas@wunner.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lukas Wunner <lukas@wunner.de>, Rafael Wysocki <rjw@rjwysocki.net>
+Cc: linux-acpi@vger.kernel.org, devel@acpica.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 23, 2015 at 10:51:30AM -0700, Azael Avalos wrote:
-> Certain Toshiba models with the second generation keyboard backlight
-> (type 2) do not generate the keyboard backlight changed event (0x92),
-> and thus, the sysfs entries are never being updated.
-> 
-> This patch adds a workquee and a global boolean variable to address
-> the issue.
-> 
-> For those models that do generate the event, the sysfs entries are
-> being updated via the *notify function and the boolean is set to
-> true to avoid a second call to update the entries.
-> 
-> For those models that do not generate the event, the workquee is
-> used to update the sysfs entries and also to emulate the event via
-> netlink, to make userspace aware of such change.
-> 
-> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+On Mon, Nov 23, 2015 at 03:34:55PM +0100, Lukas Wunner wrote:
+> Use shiny new acpi_dev_present and remove all the boilerplate to search
+> for a particular ACPI device. No functional change.
 
-Queued to testing, thanks!
+You did add a pr_warn, which is technically a functional change. Did you intend
+to leave that in?
+
+I have no objection for platform-drivers-x86, but please include all maintainers
+listed by get_maintainer.pl for the fastest response.
+
++Rafael
+
+Rafael, I assume you will pick this up along with the acpi_dev_present ACPI
+change if you take that. Pleaes let me know if not.
+
+Otherwise,
+
+Acked-by: Darren Hart <dvhart@linux.intel.com>
 
 -- 
 Darren Hart
