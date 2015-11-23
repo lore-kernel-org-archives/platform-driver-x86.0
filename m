@@ -1,45 +1,38 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 0/2] toshiba_acpi: Add WWAN support
-Date: Mon, 23 Nov 2015 10:56:11 -0800
-Message-ID: <20151123185611.GS7413@malice.jf.intel.com>
-References: <1448300951-5492-1-git-send-email-coproscefalo@gmail.com>
+Subject: Re: [PATCH v2] toshiba_acpi: Fix keyboard backight sysfs entries not
+ being updated
+Date: Mon, 23 Nov 2015 10:58:08 -0800
+Message-ID: <20151123185808.GT7413@malice.jf.intel.com>
+References: <1448301090-5545-1-git-send-email-coproscefalo@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:45087 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754984AbbKWS4N (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 13:56:13 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1448300951-5492-1-git-send-email-coproscefalo@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+In-Reply-To: <1448301090-5545-1-git-send-email-coproscefalo@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Azael Avalos <coproscefalo@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 23, 2015 at 10:49:09AM -0700, Azael Avalos wrote:
-> These two patches add WWAN support to the driver, the first adds the actual
-> support functions and the second adds RFKill handler functions to set the
-> device status according to the killswitch.
+On Mon, Nov 23, 2015 at 10:51:30AM -0700, Azael Avalos wrote:
+> Certain Toshiba models with the second generation keyboard backlight
+> (type 2) do not generate the keyboard backlight changed event (0x92),
+> and thus, the sysfs entries are never being updated.
 > 
-> Changes since v2:
-> - Changed code according to review comments
+> This patch adds a workquee and a global boolean variable to address
+> the issue.
 > 
-> Changes since v1:
-> - Added missing calls to rfkill_unregister and rfkill_destroy functions
+> For those models that do generate the event, the sysfs entries are
+> being updated via the *notify function and the boolean is set to
+> true to avoid a second call to update the entries.
 > 
-> Azael Avalos (2):
->   toshiba_acpi: Add support for WWAN devices
->   toshiba_acpi: Add WWAN RFKill support
+> For those models that do not generate the event, the workquee is
+> used to update the sysfs entries and also to emulate the event via
+> netlink, to make userspace aware of such change.
 > 
->  drivers/platform/x86/toshiba_acpi.c | 188 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 185 insertions(+), 3 deletions(-)
+> Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 
-Queued to testing, thanks Azael.
-
-In particular, thank you for the comments in the ACPI calls which document the
-expected firmware interface.
+Queued to testing, thanks!
 
 -- 
 Darren Hart
