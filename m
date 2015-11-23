@@ -1,97 +1,87 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] wmi: Set wmi devices' parents
-Date: Mon, 23 Nov 2015 11:25:30 -0800
-Message-ID: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2] dell-wmi: Improve unknown hotkey handling
+Date: Mon, 23 Nov 2015 11:29:18 -0800
+Message-ID: <CALCETrU2-F2EcdtwO8X63CW0umiuS+bqaDfWxDWJEVCg_D2OAg@mail.gmail.com>
+References: <a19a018252f8352a5d22934c98fba2954e9b1c6c.1448069061.git.luto@kernel.org>
+ <CALCETrW0A3rH-BAqTWUAOGhsERR+R5M4d9uCEcjNtJQZLW7zKA@mail.gmail.com>
+ <20151123145643.GH24147@pali> <20151123184740.GR7413@malice.jf.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:56080 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752714AbbKWTZe (ORCPT
+Received: from mail-ob0-f182.google.com ([209.85.214.182]:32935 "EHLO
+	mail-ob0-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752773AbbKWT3i convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 14:25:34 -0500
+	Mon, 23 Nov 2015 14:29:38 -0500
+Received: by obbww6 with SMTP id ww6so110673576obb.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2015 11:29:38 -0800 (PST)
+In-Reply-To: <20151123184740.GR7413@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-Without this patch, wmi devices are in /sys/virtual/wmi.  They're
-logically children of the ACPI WMI device, so slot them into the
-device hierarchy.  With this change, on my laptop, they end up in
-/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
-/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
+On Mon, Nov 23, 2015 at 10:47 AM, Darren Hart <dvhart@infradead.org> wr=
+ote:
+> On Mon, Nov 23, 2015 at 03:56:43PM +0100, Pali Roh=C3=A1r wrote:
+>> On Friday 20 November 2015 17:30:13 Andy Lutomirski wrote:
+>> > On Fri, Nov 20, 2015 at 5:27 PM, Andy Lutomirski <luto@kernel.org>=
+ wrote:
+>> > > If DMI lists a hotkey that we don't recognize, log and ignore it
+>> > > instead of trying to map it to keycode 0.  I haven't seen this h=
+appen,
+>> > > but it will help maintain the key map in the future and it will =
+help
+>> > > avoid sending bogus events.
+>> > >
+>> > > This also improves the message that we log when we get an unknow=
+n key
+>> > > event.
+>> > >
+>> > > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> > > ---
+>> > >
+>> > > Changes from v1:
+>> > >  - Use KEY_RESERVED instead of zero and document why that's okay
+>> > >  - Fix scancode vs keycode confusion in the log message (whoops!=
+)
+>> > >  - Switch from hardcoded 256 to ARRAY_SIZE
+>> > >
+>> > >  drivers/platform/x86/dell-wmi.c | 25 +++++++++++++++++++++----
+>> > >  1 file changed, 21 insertions(+), 4 deletions(-)
+>> > >
+>> > > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/=
+x86/dell-wmi.c
+>> > > index d2daf5417cd7..cb96ef03fa79 100644
+>> > > --- a/drivers/platform/x86/dell-wmi.c
+>> > > +++ b/drivers/platform/x86/dell-wmi.c
+>> >
+>> >
+>> > > +               /* Uninitialized entries are 0 aka KEY_RESERVED.=
+ */
+>> > > +               BUILD_BUG_ON(KEY_RESERVED !=3D 0);
+>> > > +               u16 keycode =3D (bios_entry->keycode <
+>> > > +                              ARRAY_SIZE(bios_to_linux_keycode)=
+) ?
+>> > > +                       bios_to_linux_keycode[bios_entry->keycod=
+e] :
+>> > > +                       KEY_RESERVED;
+>> >
+>> > Oops.  BUILD_BUG_ON should be below u16 keycode =3D ... to avoid a
+>> > warning.  Feel free to fix it up.  I can also send a v3.
+>>
+>> KEY_RESERVED is zero by definition and exported to user space. So th=
+is
+>> should not be redefined otherwise Linux ABI will be broken too.
+>>
+>> So I think BUILD_BUG_ON is not needed there.
+>
+> Queued to testing sans BUILD_BUG_ON. Pali, any further concerns? If n=
+ot, please
+> provide a reviewed-by.
+>
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
+Removing the BUILD_BUG_ON is fine with me.
 
-The WMI driver doesn't really play well with the driver model.  This
-helps a little.
-
-Depending on how much time I find, I may send some followups to turn
-it into a real bus driver since it really does work like a bus.
-
-drivers/platform/x86/wmi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index eb391a281833..e58768787677 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -684,9 +684,11 @@ static struct class wmi_class = {
- };
- 
- static int wmi_create_device(const struct guid_block *gblock,
--			     struct wmi_block *wblock, acpi_handle handle)
-+			     struct wmi_block *wblock,
-+			     struct acpi_device *device)
- {
- 	wblock->dev.class = &wmi_class;
-+	wblock->dev.parent = &device->dev;
- 
- 	dev_set_name(&wblock->dev, "%pUL", gblock->guid);
- 
-@@ -723,7 +725,7 @@ static bool guid_already_parsed(const char *guid_string)
- /*
-  * Parse the _WDG method for the GUID data blocks
-  */
--static int parse_wdg(acpi_handle handle)
-+static int parse_wdg(struct acpi_device *device)
- {
- 	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
- 	union acpi_object *obj;
-@@ -733,7 +735,7 @@ static int parse_wdg(acpi_handle handle)
- 	int retval;
- 	u32 i, total;
- 
--	status = acpi_evaluate_object(handle, "_WDG", NULL, &out);
-+	status = acpi_evaluate_object(device->handle, "_WDG", NULL, &out);
- 	if (ACPI_FAILURE(status))
- 		return -ENXIO;
- 
-@@ -757,7 +759,7 @@ static int parse_wdg(acpi_handle handle)
- 		if (!wblock)
- 			return -ENOMEM;
- 
--		wblock->handle = handle;
-+		wblock->handle = device->handle;
- 		wblock->gblock = gblock[i];
- 
- 		/*
-@@ -767,7 +769,7 @@ static int parse_wdg(acpi_handle handle)
- 		  for device creation.
- 		*/
- 		if (!guid_already_parsed(gblock[i].guid)) {
--			retval = wmi_create_device(&gblock[i], wblock, handle);
-+			retval = wmi_create_device(&gblock[i], wblock, device);
- 			if (retval) {
- 				wmi_free_devices();
- 				goto out_free_pointer;
-@@ -884,7 +886,7 @@ static int acpi_wmi_add(struct acpi_device *device)
- 		return -ENODEV;
- 	}
- 
--	error = parse_wdg(device->handle);
-+	error = parse_wdg(device);
- 	if (error) {
- 		acpi_remove_address_space_handler(device->handle,
- 						  ACPI_ADR_SPACE_EC,
--- 
-2.5.0
+--Andy
