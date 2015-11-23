@@ -1,37 +1,56 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 3/5] acer-wmi: Use acpi_dev_present
-Date: Mon, 23 Nov 2015 11:06:09 -0800
-Message-ID: <20151123190609.GV7413@malice.jf.intel.com>
-References: <cover.1448282995.git.lukas@wunner.de>
- <16567313cc5fe318e4738ecd9442c04432f7e8cb.1448282995.git.lukas@wunner.de>
+Subject: Re: [PATCH 1/1] apple-gmux: Assign apple_gmux_data before registering
+Date: Mon, 23 Nov 2015 11:17:16 -0800
+Message-ID: <20151123191716.GW7413@malice.jf.intel.com>
+References: <cover.1447097319.git.lukas@wunner.de>
+ <3e4150dc6507efe64cf8c3e03e24702c97565866.1447097319.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:60323 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753227AbbKWTGM (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 14:06:12 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <16567313cc5fe318e4738ecd9442c04432f7e8cb.1448282995.git.lukas@wunner.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lukas Wunner <lukas@wunner.de>, Rafael Wysocki <rjw@rjwysocki.net>
-Cc: linux-acpi@vger.kernel.org, devel@acpica.org, platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+In-Reply-To: <3e4150dc6507efe64cf8c3e03e24702c97565866.1447097319.git.lukas@wunner.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 23, 2015 at 03:34:55PM +0100, Lukas Wunner wrote:
-> Use shiny new acpi_dev_present and remove all the boilerplate to search
-> for a particular ACPI device. No functional change.
-> 
-> Cc: Lee, Chun-Yi <jlee@suse.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-
-Rafael, I presume you'll pick this one up as well?
-
-For platform-drivers-x86:
-
-Acked-by: Darren Hart <dvhart@linux.intel.com>
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+T24gTW9uLCBOb3YgMTYsIDIwMTUgYXQgMDk6Mzg6NDBQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
+b3RlOgo+IEZyb206IE1hdHRoZXcgR2FycmV0dCA8bWF0dGhldy5nYXJyZXR0QG5lYnVsYS5jb20+
+Cj4gCj4gUmVnaXN0ZXJpbmcgdGhlIGhhbmRsZXIgYWZ0ZXIgYm90aCBHUFVzIHdpbGwgdHJpZ2dl
+ciBhIEREQyBzd2l0Y2ggZm9yCj4gY29ubmVjdG9yIHJlcHJvYmluZy4gVGhpcyB3aWxsIG9vcHMg
+aWYgYXBwbGVfZ211eF9kYXRhIGhhc24ndCBhbHJlYWR5Cj4gYmVlbiBhc3NpZ25lZC4gUmVvcmRl
+ciB0aGUgY29kZSB0byBkbyB0aGF0Lgo+IAo+IFtMdWthczogTW9yZSBnZW5lcmFsbHksIHRoaXMg
+Y29tbWl0IGZpeGVzIGEgcmFjZSBjb25kaXRpb24gdGhhdAo+IGlzIHRyaWdnZXJlZCBieSBpbnZv
+a2luZyBhIGhhbmRsZXIgY2FsbGJhY2sgYmV0d2VlbiB0aGUgY2FsbCB0bwo+IHZnYV9zd2l0Y2hl
+cm9vX3JlZ2lzdGVyX2hhbmRsZXIoKSBhbmQgdGhlIGFzc2lnbm1lbnQgb2YKPiBhcHBsZV9nbXV4
+X2RhdGEuXQo+IAo+IFRlc3RlZC1ieTogUGllcnJlIE1vcmVhdSA8cGllcnJlLm1vcnJvd0BmcmVl
+LmZyPgo+ICAgICBbTUJQICA1LDMgMjAwOSAgbnZpZGlhIE1DUDc5ICsgRzk2ICAgICAgICBwcmUt
+cmV0aW5hICAxNSJdCj4gVGVzdGVkLWJ5OiBQYXVsIEhvcmRpaWVua28gPHB2dC5nb3JkQGdtYWls
+LmNvbT4KPiAgICAgW01CUCAgNiwyIDIwMTAgIGludGVsIElMSyArIG52aWRpYSBHVDIxNiAgcHJl
+LXJldGluYSAgMTUiXQo+IFRlc3RlZC1ieTogTHVrYXMgV3VubmVyIDxsdWthc0B3dW5uZXIuZGU+
+Cj4gICAgIFtNQlAgIDksMSAyMDEyICBpbnRlbCBJVkIgKyBudmlkaWEgR0sxMDcgIHByZS1yZXRp
+bmEgIDE1Il0KPiBUZXN0ZWQtYnk6IFdpbGxpYW0gQnJvd24gPHdpbGxpYW1AYmxhY2toYXRzLm5l
+dC5hdT4KPiAgICAgW01CUCAgOCwyIDIwMTEgIGludGVsIFNOQiArIGFtZCB0dXJrcyAgICAgcHJl
+LXJldGluYSAgMTUiXQo+IFRlc3RlZC1ieTogQnJ1bm8gQmllcmJhdW1lciA8YnJ1bm9AYmllcmJh
+dW1lci5uZXQ+Cj4gICAgIFtNQlAgMTEsMyAyMDEzICBpbnRlbCBIU1cgKyBudmlkaWEgR0sxMDcg
+IHJldGluYSAgICAgIDE1Il0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGV3IEdhcnJldHQgPG1h
+dHRoZXcuZ2FycmV0dEBuZWJ1bGEuY29tPgo+IFJldmlld2VkLWJ5OiBMdWthcyBXdW5uZXIgPGx1
+a2FzQHd1bm5lci5kZT4KPiBTaWduZWQtb2ZmLWJ5OiBMdWthcyBXdW5uZXIgPGx1a2FzQHd1bm5l
+ci5kZT4KCk15IGFwb2xvZ2llcyBmb3IgdGhlIGRlbGF5LiBUaGFuayB5b3UgZm9yIHRoZSB0ZXN0
+aW5nIGRhdGEgYW5kIHN1Ym1pdHRpbmcuCgpJIGhhdmUgcXVldWVkIHRoaXMgdG8gdGVzdGluZy4g
+UGVuZGluZyBzdWNjZXNzIG9uIDAtZGF5LCBpdCB3aWxsIGxhbmQgaW4KbGludXgtbmV4dCBzaG9y
+dGx5ICh0b21vcnJvdyBtb3N0IGxpa2VseSkgd2hlcmUgSSBob3BlIGl0IHdpbGwgcmVjZWl2ZQph
+ZGRpdGlvbmFsIHRlc3RpbmcuCgotLSAKRGFycmVuIEhhcnQKSW50ZWwgT3BlbiBTb3VyY2UgVGVj
+aG5vbG9neSBDZW50ZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
