@@ -1,66 +1,77 @@
-From: Andrei Borzenkov <arvidjaar@gmail.com>
-Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
- to RAM
-Date: Sun, 22 Nov 2015 09:23:19 +0300
-Message-ID: <56515F57.8060801@gmail.com>
-References: <5650BE8E.2080506@gmail.com> <201511212008.46761@pali>
- <5650D693.6050808@gmail.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH 0/5] Add acpi_dev_present
+Date: Mon, 23 Nov 2015 15:34:55 +0100
+Message-ID: <cover.1448282995.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f50.google.com ([209.85.215.50]:32979 "EHLO
-	mail-lf0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750914AbbKVGXX (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 22 Nov 2015 01:23:23 -0500
-Received: by lfaz4 with SMTP id z4so90780044lfa.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 21 Nov 2015 22:23:22 -0800 (PST)
-In-Reply-To: <5650D693.6050808@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, Gabriele Mazzotta <gabriele.mzt@gmail.com>, dvhart@infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-acpi@vger.kernel.org, devel@acpica.org
+Cc: Hui Wang <hui.wang@canonical.com>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, platform-driver-x86@vger.kernel.org, "Lee,
+ Chun-Yi" <jlee@suse.com>, Mark Brown <broonie@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-21.11.2015 23:39, Andrei Borzenkov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> 21.11.2015 22:08, Pali Roh=C3=A1r =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Saturday 21 November 2015 19:57:18 Andrei Borzenkov wrote:
->>> After installing 4.2 on Dell Latitude E5450 I found that wireless w=
-as
->>> disabled every second resume from suspend to RAM. Blacklisting
->>> dell-rbtn "fixed" it.
->>>
->>> This is probably the same as discussed in this Arch forum and relat=
-ed
->>> bug report: https://bbs.archlinux.org/viewtopic.php?id=3D203404. I
->>> myself hit it on Ubuntu.
->>>
->>> I am not familiar with other models, but E5450 does have DELLABCE a=
-nd
->>> so is using dell-rbtn driver.
->>>
->>> I am happy to test patches if need. Please let me know if formal bu=
-g
->>> report is required.
->>>
->>> -andrei
->>
->> Hi Andrei!
->>
->> About five hours ago Gabriele sent patch which fixing this problem t=
-o
->> LKML. You can find it on: https://lkml.org/lkml/2015/11/21/57
->>
->> Can you test that patch and confirm it fix also for you?
->>
->
-> Yes, it does.
+Hi everyone,
 
-Unfortunately it was too early. Today after resume I again got disable=20
-radio, and also several later attempts to suspend/resume. Then last tim=
-e=20
-I suddenly got radio working again after resume.
+I need to detect the presence of apple-gmux (ACPI HID "APP000B")
+in several DRM drivers to handle backlight, runtime pm and
+deferred probing properly.
 
-Patch looks racy; there is no guarantee we get notification before=20
-resetting in suspend flag.
+There's an idiom in use by 7 other drivers to detect presence of
+a particular ACPI HID which involves calling acpi_get_devices()
+and passing it a minimal callback that does no further filtering.
+However this approach results in lots of duplicate code.
+
+This series adds acpi_dev_present(), the ACPI equivalent to
+pci_dev_present(). It takes a HID string and returns a bool,
+allowing us to simplify the drivers considerably by removing
+all the duplicate callbacks and other boilerplate.
+
+I've pushed these patches to GitHub to ease reviewing:
+https://github.com/l1k/linux/commits/acpi_dev_present
+
+Should this series find acceptance, it would probably be best if
+we could agree to merge everything through a single repository,
+e.g. acpi (git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm).
+or alternatively alsa (which contains 5 of the 7 drivers involved).
+Consequently I would like to invite the driver maintainers to
+kindly provide acks (or raise objections, if any).
+
+The series should not result in any functional changes, however
+I lack the hardware to actually verify this for every driver
+involved. I did test it with apple-gmux though.
+
+Thanks,
+
+Lukas
+
+
+Lukas Wunner (5):
+  ACPICA: Add acpi_dev_present
+  eeepc-wmi: Use acpi_dev_present
+  acer-wmi: Use acpi_dev_present
+  ALSA: hda - Use acpi_dev_present
+  ASoC: Intel: Use acpi_dev_present
+
+ drivers/acpi/acpica/nsxfeval.c               | 46 ++++++++++++++++++++++++++++
+ drivers/platform/x86/acer-wmi.c              | 16 +++-------
+ drivers/platform/x86/eeepc-wmi.c             | 24 ++-------------
+ include/acpi/acpixf.h                        |  7 +++++
+ sound/pci/hda/thinkpad_helper.c              | 17 ++--------
+ sound/soc/intel/atom/sst/sst_acpi.c          | 12 +-------
+ sound/soc/intel/boards/cht_bsw_max98090_ti.c | 17 ++--------
+ sound/soc/intel/boards/cht_bsw_rt5645.c      | 13 +-------
+ sound/soc/intel/common/sst-acpi.c            | 12 +-------
+ 9 files changed, 66 insertions(+), 98 deletions(-)
+
+-- 
+1.8.5.2 (Apple Git-48)
