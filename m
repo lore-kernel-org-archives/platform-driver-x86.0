@@ -1,124 +1,127 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
- to RAM
-Date: Mon, 23 Nov 2015 11:29:43 -0800
-Message-ID: <20151123192943.GY7413@malice.jf.intel.com>
-References: <5650BE8E.2080506@gmail.com>
- <201511212008.46761@pali>
- <5650D693.6050808@gmail.com>
- <56515F57.8060801@gmail.com>
- <20151123145026.GF24147@pali>
- <56532D6B.8040407@gmail.com>
- <56533D81.7070406@gmail.com>
+From: Darren Hart <dvhart@infradead.org>,
+	Carlos Corbacho <carlos@strangeworlds.co.uk>,
+	Len Brown <len.brown@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] wmi: Set wmi devices' parents
+Date: Mon, 23 Nov 2015 11:37:09 -0800
+Message-ID: <20151123193709.GZ7413@malice.jf.intel.com>
+References: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:37775 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:40780 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753013AbbKWT3o (ORCPT
+	with ESMTP id S1751858AbbKWThM (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 14:29:44 -0500
+	Mon, 23 Nov 2015 14:37:12 -0500
 Content-Disposition: inline
-In-Reply-To: <56533D81.7070406@gmail.com>
+In-Reply-To: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andrei Borzenkov <arvidjaar@gmail.com>
-Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Mon, Nov 23, 2015 at 07:23:29PM +0300, Andrei Borzenkov wrote:
-> 23.11.2015 18:14, Gabriele Mazzotta =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >On 23/11/2015 15:50, Pali Roh=C3=A1r wrote:
-> >>On Sunday 22 November 2015 09:23:19 Andrei Borzenkov wrote:
-> >>>21.11.2015 23:39, Andrei Borzenkov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>21.11.2015 22:08, Pali Roh=C3=A1r =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>>On Saturday 21 November 2015 19:57:18 Andrei Borzenkov wrote:
-> >>>>>>After installing 4.2 on Dell Latitude E5450 I found that wirele=
-ss was
-> >>>>>>disabled every second resume from suspend to RAM. Blacklisting
-> >>>>>>dell-rbtn "fixed" it.
-> >>>>>>
-> >>>>>>This is probably the same as discussed in this Arch forum and r=
-elated
-> >>>>>>bug report: https://bbs.archlinux.org/viewtopic.php?id=3D203404=
-=2E I
-> >>>>>>myself hit it on Ubuntu.
-> >>>>>>
-> >>>>>>I am not familiar with other models, but E5450 does have DELLAB=
-CE and
-> >>>>>>so is using dell-rbtn driver.
-> >>>>>>
-> >>>>>>I am happy to test patches if need. Please let me know if forma=
-l bug
-> >>>>>>report is required.
-> >>>>>>
-> >>>>>>-andrei
-> >>>>>
-> >>>>>Hi Andrei!
-> >>>>>
-> >>>>>About five hours ago Gabriele sent patch which fixing this probl=
-em to
-> >>>>>LKML. You can find it on: https://lkml.org/lkml/2015/11/21/57
-> >>>>>
-> >>>>>Can you test that patch and confirm it fix also for you?
-> >>>>>
-> >>>>
-> >>>>Yes, it does.
-> >>>
-> >>>Unfortunately it was too early. Today after resume I again got dis=
-able
-> >>>radio, and also several later attempts to suspend/resume. Then las=
-t
-> >>>time I
-> >>>suddenly got radio working again after resume.
-> >>>
-> >>>Patch looks racy; there is no guarantee we get notification before
-> >>>resetting
-> >>>in suspend flag.
-> >>>
-> >>
-> >>Gabriele, any idea how to fix this?
-> >>
-> >
-> >I can't think of anything other than ignoring notifications that arr=
-ives
-> >within X seconds after the execution of the resume callback.
-> >Unfortunately, we have no idea on how to detect systems that misbeha=
-ve
-> >and creating a blacklist is not a feasible solution.
-> >
-> >Something such as the following should work, but maybe it's not a ni=
-ce
-> >solution.
-> >
->=20
-> I looked at what dell-rbtn does. My system (Latitude E5450) has RBTN =
-of type
-> TOGGLE. In this case both del-laptop hooks itself into i8042 and dell=
--rbtn
-> delivers KEY_RFKILL event to input susbsystem. IOW dell-rbtn looks
-> completely redundant in this configuration.
->=20
-> Can we detect that rfkill toggle is already avaiable via normal keybo=
-ard and
-> not activate dell-rbtn in this case?
+On Mon, Nov 23, 2015 at 11:25:30AM -0800, Andy Lutomirski wrote:
+> Without this patch, wmi devices are in /sys/virtual/wmi.  They're
+> logically children of the ACPI WMI device, so slot them into the
+> device hierarchy.  With this change, on my laptop, they end up in
+> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
+> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
 
-Also dropping this one until we can arrive at a complete solution.
+I'd like to hear from some of the main contributors to this driver:
 
-Pali, Gabriele, this one is in your hands. I will review and provide fe=
-edback
-where I can - I confess I'm finding it difficult to keep all the pieces=
- straight
-in my head, and without any hardware, I have to rely entirely on what I=
- can
-piece together (a situation we are all in as this differs across many s=
-ystems,
-nobody has all the necessary bits).
+Matthew?
+Carlos?
+Len?
 
-It may be helpful for someone to put together a current status, known i=
-ssues,
-plan of attack to get this moving forward again.
+Any cocnerns on this change?
 
---=20
+My initial concern is about changign how we expose this to userspace, but I
+believe where it appears in the /sys/devices FS is NOT part of the
+kernel-userspace interface commitment (per sysfs-rules.txt).
+
+Greg, is that correct?
+
+> ---
+> 
+> The WMI driver doesn't really play well with the driver model.  This
+> helps a little.
+> 
+> Depending on how much time I find, I may send some followups to turn
+> it into a real bus driver since it really does work like a bus.
+> 
+> drivers/platform/x86/wmi.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index eb391a281833..e58768787677 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -684,9 +684,11 @@ static struct class wmi_class = {
+>  };
+>  
+>  static int wmi_create_device(const struct guid_block *gblock,
+> -			     struct wmi_block *wblock, acpi_handle handle)
+> +			     struct wmi_block *wblock,
+> +			     struct acpi_device *device)
+>  {
+>  	wblock->dev.class = &wmi_class;
+> +	wblock->dev.parent = &device->dev;
+>  
+>  	dev_set_name(&wblock->dev, "%pUL", gblock->guid);
+>  
+> @@ -723,7 +725,7 @@ static bool guid_already_parsed(const char *guid_string)
+>  /*
+>   * Parse the _WDG method for the GUID data blocks
+>   */
+> -static int parse_wdg(acpi_handle handle)
+> +static int parse_wdg(struct acpi_device *device)
+>  {
+>  	struct acpi_buffer out = {ACPI_ALLOCATE_BUFFER, NULL};
+>  	union acpi_object *obj;
+> @@ -733,7 +735,7 @@ static int parse_wdg(acpi_handle handle)
+>  	int retval;
+>  	u32 i, total;
+>  
+> -	status = acpi_evaluate_object(handle, "_WDG", NULL, &out);
+> +	status = acpi_evaluate_object(device->handle, "_WDG", NULL, &out);
+>  	if (ACPI_FAILURE(status))
+>  		return -ENXIO;
+>  
+> @@ -757,7 +759,7 @@ static int parse_wdg(acpi_handle handle)
+>  		if (!wblock)
+>  			return -ENOMEM;
+>  
+> -		wblock->handle = handle;
+> +		wblock->handle = device->handle;
+>  		wblock->gblock = gblock[i];
+>  
+>  		/*
+> @@ -767,7 +769,7 @@ static int parse_wdg(acpi_handle handle)
+>  		  for device creation.
+>  		*/
+>  		if (!guid_already_parsed(gblock[i].guid)) {
+> -			retval = wmi_create_device(&gblock[i], wblock, handle);
+> +			retval = wmi_create_device(&gblock[i], wblock, device);
+>  			if (retval) {
+>  				wmi_free_devices();
+>  				goto out_free_pointer;
+> @@ -884,7 +886,7 @@ static int acpi_wmi_add(struct acpi_device *device)
+>  		return -ENODEV;
+>  	}
+>  
+> -	error = parse_wdg(device->handle);
+> +	error = parse_wdg(device);
+>  	if (error) {
+>  		acpi_remove_address_space_handler(device->handle,
+>  						  ACPI_ADR_SPACE_EC,
+> -- 
+> 2.5.0
+> 
+> 
+
+-- 
 Darren Hart
 Intel Open Source Technology Center
