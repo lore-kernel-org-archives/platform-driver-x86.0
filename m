@@ -1,100 +1,108 @@
-From: "Moore, Robert" <robert.moore@intel.com>
-Subject: RE: [PATCH 1/5] ACPICA: Add acpi_dev_present
-Date: Mon, 23 Nov 2015 22:22:27 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E37D998D0C@ORSMSX112.amr.corp.intel.com>
-References: <cover.1448282995.git.lukas@wunner.de>
- <d66501819cfa8f3d3b07708d3f20e3e20d07e4f8.1448282995.git.lukas@wunner.de>
- <2726545.001oM5V9lv@vostro.rjw.lan>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
+ to RAM
+Date: Mon, 23 Nov 2015 23:33:11 +0100
+Message-ID: <56539427.5090304@gmail.com>
+References: <5650BE8E.2080506@gmail.com> <201511212008.46761@pali>
+ <5650D693.6050808@gmail.com> <56515F57.8060801@gmail.com>
+ <20151123145026.GF24147@pali> <56532D6B.8040407@gmail.com>
+ <56533D81.7070406@gmail.com> <20151123192943.GY7413@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2726545.001oM5V9lv@vostro.rjw.lan>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lukas Wunner <lukas@wunner.de>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>, Hui Wang <hui.wang@canonical.com>, Mark Brown <broonie@kernel.org>, "Zheng, Lv" <lv.zheng@intel.com>, David Box <david.e.box@linux.intel.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f47.google.com ([74.125.82.47]:34806 "EHLO
+	mail-wm0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755316AbbKWWdP (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 23 Nov 2015 17:33:15 -0500
+Received: by wmvv187 with SMTP id v187so183210016wmv.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2015 14:33:13 -0800 (PST)
+In-Reply-To: <20151123192943.GY7413@malice.jf.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andrei Borzenkov <arvidjaar@gmail.com>
+Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 
-Pj5hY3BpX2Rldl9wcmVzZW50DQoNCkRvIHlvdSByZWFsbHkgd2FudCB0byBiZSB3YWxraW5nIHRo
-ZSBBQ1BJQ0EgbmFtZXNwYWNlIGZvciBldmVyeSBjYWxsPw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IFJhZmFlbCBKLiBXeXNvY2tpIFttYWlsdG86cmp3QHJqd3lzb2Nr
-aS5uZXRdDQo+IFNlbnQ6IE1vbmRheSwgTm92ZW1iZXIgMjMsIDIwMTUgMjozNSBQTQ0KPiBUbzog
-THVrYXMgV3VubmVyDQo+IENjOiBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgZGV2ZWxAYWNw
-aWNhLm9yZzsgcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnOyBEYXJyZW4g
-SGFydDsgQ29yZW50aW4gQ2hhcnk7IExlZSwgQ2h1bi1ZaTsgYWxzYS0NCj4gZGV2ZWxAYWxzYS1w
-cm9qZWN0Lm9yZzsgVGFrYXNoaSBJd2FpOyBIdWkgV2FuZzsgTWFyayBCcm93bjsgWmhlbmcsIEx2
-Ow0KPiBNb29yZSwgUm9iZXJ0OyBEYXZpZCBCb3gNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzVd
-IEFDUElDQTogQWRkIGFjcGlfZGV2X3ByZXNlbnQNCj4gDQo+IE9uIE1vbmRheSwgTm92ZW1iZXIg
-MjMsIDIwMTUgMDM6MzQ6NTUgUE0gTHVrYXMgV3VubmVyIHdyb3RlOg0KPiA+IFRoZXJlIGFyZSA3
-IGRyaXZlcnMgd2hpY2ggY2FsbCBhY3BpX2dldF9kZXZpY2VzIHRvIGNoZWNrIGZvciB0aGUNCj4g
-PiBwcmVzZW5jZSBvZiBhIHBhcnRpY3VsYXIgQUNQSSBISUQsIGVhY2ggZGVmaW5pbmcgaXRzIG93
-biBjb3B5IG9mIGENCj4gPiBtb3N0bHkgaWRlbnRpY2FsIGNhbGxiYWNrLg0KPiA+DQo+ID4gQWRk
-IGFjcGlfZGV2X3ByZXNlbnQsIHRoZSBBQ1BJIGVxdWl2YWxlbnQgdG8gcGNpX2Rldl9wcmVzZW50
-LCBhbGxvd2luZw0KPiA+IHVzIHRvIGRlZHVwbGljYXRlIGFsbCB0aGF0IGJvaWxlcnBsYXRlIGlu
-IHRoZSBkcml2ZXJzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTHVrYXMgV3VubmVyIDxsdWth
-c0B3dW5uZXIuZGU+DQo+IA0KPiBXZSBoYXZlIGEgZ2VuZXJhbCBydWxlIGZvciBBQ1BJQ0EgcGF0
-Y2hlcyB0aGF0IHRoZXkgZ28gaW4gdGhyb3VnaCB1cHN0cmVhbQ0KPiBBQ1BJQ0EuDQo+IA0KPiBT
-byBpZiB5b3UgcmVhbGx5IHdhbnQgdGhpcyBjaGFuZ2VzIGluIEFDUElDQSwgdGhpcyBpcyB0aGUg
-d2F5IHRvIGhhbmRsZQ0KPiBpdC4NCj4gDQo+IE5vdywgb2YgY291cnNlLCBmb3IgdGhhdCB0byBo
-YXBwZW4sIHlvdSBzaG91bGQgaGF2ZSBDQ2VkIHRoZSBBQ1BJQ0ENCj4gbWFpbnRhaW5lcnMgdG9v
-IChub3cgZG9uZSkuDQo+IA0KPiBUaGFua3MsDQo+IFJhZmFlbA0KPiANCj4gDQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvYWNwaS9hY3BpY2EvbnN4ZmV2YWwuYyB8IDQ2DQo+ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2FjcGkvYWNwaXhmLmgg
-ICAgICAgICAgfCAgNyArKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNTMgaW5zZXJ0aW9u
-cygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9hY3BpY2EvbnN4ZmV2YWwu
-Yw0KPiA+IGIvZHJpdmVycy9hY3BpL2FjcGljYS9uc3hmZXZhbC5jIGluZGV4IDZlZTFlNTIuLjE5
-MjkzZmEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9hY3BpL2FjcGljYS9uc3hmZXZhbC5jDQo+
-ID4gKysrIGIvZHJpdmVycy9hY3BpL2FjcGljYS9uc3hmZXZhbC5jDQo+ID4gQEAgLTgyOCw2ICs4
-MjgsNTIgQEAgQUNQSV9FWFBPUlRfU1lNQk9MKGFjcGlfZ2V0X2RldmljZXMpDQo+ID4NCj4gPg0K
-PiAvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKg0KPiAqKioqKioNCj4gPiAgICoNCj4gPiArICogRlVOQ1RJT046
-ICAgIGFjcGlfbnNfZGV2X3ByZXNlbnRfY2FsbGJhY2sNCj4gPiArICoNCj4gPiArICogUEFSQU1F
-VEVSUzogIENhbGxiYWNrIGZyb20gYWNwaV9nZXRfZGV2aWNlcw0KPiA+ICsgKg0KPiA+ICsgKiBS
-RVRVUk46ICAgICAgU3RhdHVzDQo+ID4gKyAqDQo+ID4gKyAqIERFU0NSSVBUSU9OOiBNaW5pbWFs
-IGNhbGxiYWNrIHRvIGJlIHBhc3NlZCB0byBhY3BpX2dldF9kZXZpY2VzIHdoaWNoDQo+ID4gKyAq
-ICAgICAgICAgICAgICBwZXJmb3JtcyBubyBmdXJ0aGVyIGZpbHRlcmluZyBhbmQgdGVybWluYXRl
-cyB0aGUgc2VhcmNoDQo+ID4gKyAqICAgICAgICAgICAgICBpbW1lZGlhdGVseS4NCj4gPiArICoN
-Cj4gPiArDQo+ID4gKyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKg0KPiA+ICsqKioqKioqKiovIHN0YXRpYyBhY3BpX3N0
-YXR1cw0KPiA+ICthY3BpX25zX2Rldl9wcmVzZW50X2NhbGxiYWNrKGFjcGlfaGFuZGxlIGhhbmRs
-ZSwgdTMyIGxldmVsLA0KPiA+ICsJCQkJCQl2b2lkICpjb250ZXh0LCB2b2lkICoqcmV0dmFsKQ0K
-PiA+ICt7DQo+ID4gKwkqKGJvb2wgKiljb250ZXh0ID0gdHJ1ZTsNCj4gPiArCXJldHVybiBBRV9D
-VFJMX1RFUk1JTkFURTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyoqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQo+ID4gKyoq
-KioqKioqKioqDQo+ID4gKyAqDQo+ID4gKyAqIEZVTkNUSU9OOiAgICBhY3BpX2Rldl9wcmVzZW50
-DQo+ID4gKyAqDQo+ID4gKyAqIFBBUkFNRVRFUlM6ICBISUQgICAgICAgICAgICAgICAgIC0gSElE
-IHRvIHNlYXJjaCBmb3IuDQo+ID4gKyAqDQo+ID4gKyAqIFJFVFVSTlMgICAgICBUcnVlIGlmIGEg
-bWF0Y2hpbmcgb2JqZWN0IG9mIHR5cGUgRGV2aWNlIHdhcyBmb3VuZC4NCj4gPiArICoNCj4gPiAr
-ICogREVTQ1JJUFRJT046IFBlcmZvcm1zIGEgd2FsayBvZiB0aGUgbmFtZXNwYWNlIHRyZWUuIFdo
-ZW4gYSBtYXRjaGluZw0KPiBvYmplY3QNCj4gPiArICogICAgICAgICAgICAgIG9mIHR5cGUgRGV2
-aWNlIGlzIGZvdW5kLCB0aGUgc2VhcmNoIGlzIHRlcm1pbmF0ZWQNCj4gaW1tZWRpYXRlbHkuDQo+
-ID4gKyAqDQo+ID4gKw0KPiA+ICsqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioNCj4gPiArKioqKioqKioqLw0KPiA+ICsN
-Cj4gPiArYm9vbA0KPiA+ICthY3BpX2Rldl9wcmVzZW50KGNvbnN0IGNoYXIgKkhJRCkNCj4gPiAr
-ew0KPiA+ICsJYWNwaV9zdGF0dXMgc3RhdHVzOw0KPiA+ICsJYm9vbCBmb3VuZCA9IGZhbHNlOw0K
-PiA+ICsNCj4gPiArCXN0YXR1cyA9IGFjcGlfZ2V0X2RldmljZXMoSElELCBhY3BpX25zX2Rldl9w
-cmVzZW50X2NhbGxiYWNrLCAmZm91bmQsDQo+ID4gKwkJCQkgIE5VTEwpOw0KPiA+ICsJcmV0dXJu
-IEFDUElfU1VDQ0VTUyhzdGF0dXMpICYmIGZvdW5kOyB9DQo+ID4gKw0KPiA+ICtBQ1BJX0VYUE9S
-VF9TWU1CT0woYWNwaV9kZXZfcHJlc2VudCkNCj4gPiArDQo+ID4gKy8qKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KPiA+
-ICsqKioqKioqKioqKg0KPiA+ICsgKg0KPiA+ICAgKiBGVU5DVElPTjogICAgYWNwaV9hdHRhY2hf
-ZGF0YQ0KPiA+ICAgKg0KPiA+ICAgKiBQQVJBTUVURVJTOiAgb2JqX2hhbmRsZSAgICAgICAgICAt
-IE5hbWVzcGFjZSBub2RlDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvYWNwaS9hY3BpeGYuaCBi
-L2luY2x1ZGUvYWNwaS9hY3BpeGYuaCBpbmRleA0KPiA+IDNhYWFhODYuLmYyOTkzNDcgMTAwNjQ0
-DQo+ID4gLS0tIGEvaW5jbHVkZS9hY3BpL2FjcGl4Zi5oDQo+ID4gKysrIGIvaW5jbHVkZS9hY3Bp
-L2FjcGl4Zi5oDQo+ID4gQEAgLTExNSw2ICsxMTUsMTEgQEANCj4gPiAgCXByb3RvdHlwZTsNCj4g
-PiAgI2VuZGlmDQo+ID4NCj4gPiArI2lmbmRlZiBBQ1BJX0VYVEVSTkFMX1JFVFVSTl9CT09MDQo+
-ID4gKyNkZWZpbmUgQUNQSV9FWFRFUk5BTF9SRVRVUk5fQk9PTChwcm90b3R5cGUpIFwNCj4gPiAr
-CXByb3RvdHlwZTsNCj4gPiArI2VuZGlmDQo+ID4gKw0KPiA+DQo+IC8qKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-DQo+ICoqKioNCj4gPiAgICoNCj4gPiAgICogUHVibGljIGdsb2JhbHMgYW5kIHJ1bnRpbWUgY29u
-ZmlndXJhdGlvbiBvcHRpb25zIEBAIC00ODMsNiArNDg4LDgNCj4gPiBAQCBBQ1BJX0VYVEVSTkFM
-X1JFVFVSTl9TVEFUVVMoYWNwaV9zdGF0dXMNCj4gPiAgCQkJCQkgICAgICBhY3BpX3dhbGtfY2Fs
-bGJhY2sgdXNlcl9mdW5jdGlvbiwNCj4gPiAgCQkJCQkgICAgICB2b2lkICpjb250ZXh0LA0KPiA+
-ICAJCQkJCSAgICAgIHZvaWQgKipyZXR1cm5fdmFsdWUpKQ0KPiA+ICtBQ1BJX0VYVEVSTkFMX1JF
-VFVSTl9CT09MKGJvb2wNCj4gPiArCQkJICAgICBhY3BpX2Rldl9wcmVzZW50KGNvbnN0IGNoYXIg
-KkhJRCkpDQo+ID4gIEFDUElfRVhURVJOQUxfUkVUVVJOX1NUQVRVUyhhY3BpX3N0YXR1cw0KPiA+
-ICAJCQkgICAgIGFjcGlfZ2V0X25hbWUoYWNwaV9oYW5kbGUgb2JqZWN0LCB1MzIgbmFtZV90eXBl
-LA0KPiA+ICAJCQkJCSAgIHN0cnVjdCBhY3BpX2J1ZmZlciAqcmV0X3BhdGhfcHRyKSkNCj4gPg0K
-DQo=
+On 23/11/2015 20:29, Darren Hart wrote:
+
+[cut]
+
+>> I looked at what dell-rbtn does. My system (Latitude E5450) has RBTN of type
+>> TOGGLE. In this case both del-laptop hooks itself into i8042 and dell-rbtn
+>> delivers KEY_RFKILL event to input susbsystem. IOW dell-rbtn looks
+>> completely redundant in this configuration.
+>>
+>> Can we detect that rfkill toggle is already avaiable via normal keyboard and
+>> not activate dell-rbtn in this case?
+>
+> Also dropping this one until we can arrive at a complete solution.
+>
+> Pali, Gabriele, this one is in your hands. I will review and provide feedback
+> where I can - I confess I'm finding it difficult to keep all the pieces straight
+> in my head, and without any hardware, I have to rely entirely on what I can
+> piece together (a situation we are all in as this differs across many systems,
+> nobody has all the necessary bits).
+>
+> It may be helpful for someone to put together a current status, known issues,
+> plan of attack to get this moving forward again.
+>
+
+I'll try to write a summary that should explain why dell-rbtn exists
+and what are the current problems.
+
+There are several mechanisms to control radio devices, so let's
+consider different categories/cases.
+
+A) The function keys of new Dell laptops do nothing on their own, but
+when pressed, the BIOS sends a notification to an ACPI device
+(DELLABCE/DELRBTN). One of the tasks of dell-rbtn is to catch those
+notifications and send an input event to userspace. Without dell-rbtn,
+the function keys of these laptops wouldn't work.
+
+B) There are then some other laptops which support two different
+mechanisms to control radio devices: the one here above (A) and
+"the old one", i.e. the BIOS does everything. (These are probably
+laptops that were released during the transition Windows 7 -> 8). These
+laptops can switch between the two modes through an ACPI method call.
+What we do with dell-rbtn is to make them behave like (A) since we
+can't tell apart laptops of (A) and (B) and we need to know how each
+laptop behaves. The function key of these laptops work perfectly
+without dell-rbtn.
+
+C) There are then some other laptops for which it's required to use an
+i8042 filter to detect keypresses and do some SMI calls to toggle
+the state of radio devices. This filter is created by dell-laptop and
+has been there since a long time.
+
+D) This category is something in between (C) and (A) and exists only
+because of dell-rbtn. Some of the laptops of category (C) also have a
+DELLABCE/DELLRBTN device. When dell-rbtn is loaded, the i8042 filter is
+removed and dell-rbtn starts listening for ACPI notification. We do
+this instead because the i8042 filter doesn't work properly on some
+laptops.
+
+
+The problem reported in [1] is that some laptops of (A) and (B) send a
+notification on resume and some others don't. [2] should fix this
+problem, but we need to make sure that the extra notification is always
+caught before the resume of dell-rbtn. This seems to be what happens
+here on my laptop, but Andrei says otherwise. So we need to figure out
+if [2] doesn't fix the problem because it's not guaranteed that ACPI
+notifications sent while the system is resuming are received by device
+drivers before they are resumed (assumption that I made for the first
+patch and that dropped with the updated one I sent in this thread) or
+because Andrei's problem is something different.
+
+
+I hope this was clear enough.
+
+
+Andrei, as I wrote here above, dell-rbtn _should_ make dell-laptop
+remove the i8042 filter. Could you also provide your acpidump so that
+I can see it?
+
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=106031
+[2] 
+http://lkml.kernel.org/r/1448115375-7315-1-git-send-email-gabriele.mzt@gmail.com
