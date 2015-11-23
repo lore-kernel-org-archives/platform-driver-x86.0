@@ -1,41 +1,59 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] dell-wmi: Improve unknown hotkey handling
-Date: Mon, 23 Nov 2015 20:47:10 +0100
-Message-ID: <20151123194710.GJ24147@pali>
-References: <a19a018252f8352a5d22934c98fba2954e9b1c6c.1448069061.git.luto@kernel.org>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 2/5] eeepc-wmi: Use acpi_dev_present
+Date: Mon, 23 Nov 2015 20:55:27 +0100
+Message-ID: <20151123195527.GA26288@wunner.de>
+References: <cover.1448282995.git.lukas@wunner.de>
+ <bdff67293ead344ccec77f55437085561b1ad88d.1448282995.git.lukas@wunner.de>
+ <20151123190413.GU7413@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f45.google.com ([74.125.82.45]:34968 "EHLO
-	mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753336AbbKWTrN (ORCPT
+Received: from mailout1.hostsharing.net ([83.223.95.204]:54821 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751910AbbKWTzb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 14:47:13 -0500
-Received: by wmuu63 with SMTP id u63so68842845wmu.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2015 11:47:12 -0800 (PST)
+	Mon, 23 Nov 2015 14:55:31 -0500
 Content-Disposition: inline
-In-Reply-To: <a19a018252f8352a5d22934c98fba2954e9b1c6c.1448069061.git.luto@kernel.org>
+In-Reply-To: <20151123190413.GU7413@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, devel@acpica.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Mark Brown <broonie@kernel.org>
 
-On Friday 20 November 2015 17:27:00 Andy Lutomirski wrote:
-> +		if (keycode =3D=3D KEY_RESERVED) {
-> +			pr_info("firmware scancode %d maps to unrecognized keycode %d\n",
-> +				bios_entry->scancode, bios_entry->keycode);
-> +			continue;
-> +		}
+Hi Darren,
 
-Please use "0x%x" instead "%d" for those scan and key codes. Other part=
-s
-in driver use "0x%x" so that new info message could be more confused if
-it has decimal codes...
+On Mon, Nov 23, 2015 at 11:04:13AM -0800, Darren Hart wrote:
+> On Mon, Nov 23, 2015 at 03:34:55PM +0100, Lukas Wunner wrote:
+> > Use shiny new acpi_dev_present and remove all the boilerplate to search
+> > for a particular ACPI device. No functional change.
+> 
+> You did add a pr_warn, which is technically a functional change. Did you intend
+> to leave that in?
 
-With that fix, you can add my:
-Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+That's not an addition of mine, I moved it from eeepc_wmi_parse_device()
+to eeepc_wmi_probe() so that everything behaves exactly as before.
+(See the deleted lines further up in the patch.)
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+
+> Rafael, I assume you will pick this up along with the acpi_dev_present ACPI
+> change if you take that. Pleaes let me know if not.
+
+The last patch in the series concerned Intel ASoC (sound/soc/intel/)
+and the maintainer Mark Brown <broonie@kernel.org> has replied that
+"This will collide with some other work done on the Intel code in -next I
+expect, probably best to merge this via ASoC (so pulling a shared branch
+for the new API) or just wait till 4.5 to do the conversion."
+[full quote of his message as it wasn't cc: platform-driver-x86]
+
+So I guess Mark might pull it in, haven't heard back from the ACPI
+maintainers yet.
+
+
+> Otherwise,
+> Acked-by: Darren Hart <dvhart@linux.intel.com>
+
+Awesome, thanks!
+
+Best regards,
+
+Lukas
