@@ -1,190 +1,137 @@
 From: Azael Avalos <coproscefalo@gmail.com>
-Subject: [PATCH v3 1/2] toshiba_acpi: Add support for WWAN devices
-Date: Mon, 23 Nov 2015 10:49:10 -0700
-Message-ID: <1448300951-5492-2-git-send-email-coproscefalo@gmail.com>
-References: <1448300951-5492-1-git-send-email-coproscefalo@gmail.com>
+Subject: [PATCH v2] toshiba_acpi: Fix keyboard backight sysfs entries not being updated
+Date: Mon, 23 Nov 2015 10:51:30 -0700
+Message-ID: <1448301090-5545-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1448300951-5492-1-git-send-email-coproscefalo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Azael Avalos <coproscefalo@gmail.com>, Fabian Koester <fabian.koester@bringnow.com>, Azael Avalos <coproscefalo@gmail.comZZ>
+Cc: Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Toshiba laptops with WWAN devices installed cannot use the device unless
-it is attached and powered, similar to how Toshiba Bluetooth devices
-work.
+Certain Toshiba models with the second generation keyboard backlight
+(type 2) do not generate the keyboard backlight changed event (0x92),
+and thus, the sysfs entries are never being updated.
 
-This patch adds support to WWAN devices, introducing three functions,
-one to query the overall status of the wireless devices (RFKill, WLAN,
-BT, WWAN), the second queries WWAN support, and finally the third
-(de)activates the device.
+This patch adds a workquee and a global boolean variable to address
+the issue.
 
-Signed-off-by: Fabian Koester <fabian.koester@bringnow.com>
-Signed-off-by: Azael Avalos <coproscefalo@gmail.com>ZZ
+For those models that do generate the event, the sysfs entries are
+being updated via the *notify function and the boolean is set to
+true to avoid a second call to update the entries.
+
+For those models that do not generate the event, the workquee is
+used to update the sysfs entries and also to emulate the event via
+netlink, to make userspace aware of such change.
+
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 109 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+Changes since v1:
+- Moved the implementation of the toshiba_acpi_kbd_bl_work function further down
+  to make the file compile
+
+ drivers/platform/x86/toshiba_acpi.c | 47 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index c013029..dfa760d 100644
+index df2612e..410bacc 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -114,6 +114,7 @@ MODULE_LICENSE("GPL");
- #define HCI_VIDEO_OUT			0x001c
- #define HCI_HOTKEY_EVENT		0x001e
- #define HCI_LCD_BRIGHTNESS		0x002a
-+#define HCI_WIRELESS			0x0056
- #define HCI_ACCELEROMETER		0x006d
- #define HCI_KBD_ILLUMINATION		0x0095
- #define HCI_ECO_MODE			0x0097
-@@ -148,6 +149,10 @@ MODULE_LICENSE("GPL");
- #define SCI_KBD_MODE_ON			0x8
- #define SCI_KBD_MODE_OFF		0x10
- #define SCI_KBD_TIME_MAX		0x3c001a
-+#define HCI_WIRELESS_STATUS		0x1
-+#define HCI_WIRELESS_WWAN		0x3
-+#define HCI_WIRELESS_WWAN_STATUS	0x2000
-+#define HCI_WIRELESS_WWAN_POWER		0x4000
- #define SCI_USB_CHARGE_MODE_MASK	0xff
- #define SCI_USB_CHARGE_DISABLED		0x00
- #define SCI_USB_CHARGE_ALTERNATE	0x09
-@@ -197,12 +202,14 @@ struct toshiba_acpi_dev {
- 	unsigned int kbd_function_keys_supported:1;
- 	unsigned int panel_power_on_supported:1;
- 	unsigned int usb_three_supported:1;
-+	unsigned int wwan_supported:1;
+@@ -206,6 +206,7 @@ struct toshiba_acpi_dev {
  	unsigned int sysfs_created:1;
  	unsigned int special_functions;
  
++	bool kbd_event_generated;
  	bool kbd_led_registered;
  	bool illumination_led_registered;
  	bool eco_led_registered;
-+	bool killswitch;
+@@ -523,6 +524,7 @@ static void toshiba_kbd_illum_available(struct toshiba_acpi_dev *dev)
+ 
+ 	dev->kbd_illum_supported = 0;
+ 	dev->kbd_led_registered = false;
++	dev->kbd_event_generated = false;
+ 
+ 	if (!sci_open(dev))
+ 		return;
+@@ -1642,6 +1644,11 @@ static const struct backlight_ops toshiba_backlight_data = {
+ 	.update_status  = set_lcd_status,
  };
  
- static struct toshiba_acpi_dev *toshiba_acpi;
-@@ -1085,6 +1092,104 @@ static int toshiba_hotkey_event_type_get(struct toshiba_acpi_dev *dev,
- 	return -EIO;
- }
++/* Keyboard backlight work */
++static void toshiba_acpi_kbd_bl_work(struct work_struct *work);
++
++static DECLARE_WORK(kbd_bl_work, toshiba_acpi_kbd_bl_work);
++
+ /*
+  * Sysfs files
+  */
+@@ -1741,6 +1748,24 @@ static ssize_t kbd_backlight_mode_store(struct device *dev,
+ 			return ret;
  
-+/* Wireless status (RFKill, WLAN, BT, WWAN) */
-+static int toshiba_wireless_status(struct toshiba_acpi_dev *dev)
+ 		toshiba->kbd_mode = mode;
++
++		/*
++		 * Some laptop models with the second generation backlit
++		 * keyboard (type 2) do not generate the keyboard backlight
++		 * changed event (0x92), and thus, the driver will never update
++		 * the sysfs entries.
++		 *
++		 * The event is generated right when changing the keyboard
++		 * backlight mode and the *notify function will set the
++		 * kbd_event_generated to true.
++		 *
++		 * In case the event is not generated, schedule the keyboard
++		 * backlight work to update the sysfs entries and emulate the
++		 * event via genetlink.
++		 */
++		if (toshiba->kbd_type == 2 &&
++		    !toshiba_acpi->kbd_event_generated)
++			schedule_work(&kbd_bl_work);
+ 	}
+ 
+ 	return count;
+@@ -2273,6 +2298,21 @@ static struct attribute_group toshiba_attr_group = {
+ 	.attrs = toshiba_attributes,
+ };
+ 
++static void toshiba_acpi_kbd_bl_work(struct work_struct *work)
 +{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
++	struct acpi_device *acpi_dev = toshiba_acpi->acpi_dev;
 +
-+	in[3] = HCI_WIRELESS_STATUS;
-+	status = tci_raw(dev, in, out);
++	/* Update the sysfs entries */
++	if (sysfs_update_group(&acpi_dev->dev.kobj,
++			       &toshiba_attr_group))
++		pr_err("Unable to update sysfs entries\n");
 +
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to get Wireless status failed\n");
-+		return -EIO;
-+	}
-+
-+	if (out[0] == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	if (out[0] != TOS_SUCCESS)
-+		return -EIO;
-+
-+	dev->killswitch = !!(out[2] & HCI_WIRELESS_STATUS);
-+
-+	return 0;
++	/* Emulate the keyboard backlight event */
++	acpi_bus_generate_netlink_event(acpi_dev->pnp.device_class,
++					dev_name(&acpi_dev->dev),
++					0x92, 0);
 +}
 +
-+/* WWAN */
-+static void toshiba_wwan_available(struct toshiba_acpi_dev *dev)
-+{
-+	u32 in[TCI_WORDS] = { HCI_GET, HCI_WIRELESS, 0, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	dev->wwan_supported = 0;
-+
-+	/*
-+	 * WWAN support can be queried by setting the in[3] value to
-+	 * HCI_WIRELESS_WWAN (0x03).
-+	 *
-+	 * If supported, out[0] contains TOS_SUCCESS and out[2] contains
-+	 * HCI_WIRELESS_WWAN_STATUS (0x2000).
-+	 *
-+	 * If not supported, out[0] contains TOS_INPUT_DATA_ERROR (0x8300)
-+	 * or TOS_NOT_SUPPORTED (0x8000).
-+	 */
-+	in[3] = HCI_WIRELESS_WWAN;
-+	status = tci_raw(dev, in, out);
-+
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to get WWAN status failed\n");
-+		return;
-+	}
-+
-+	if (out[0] != TOS_SUCCESS)
-+		return;
-+
-+	dev->wwan_supported = (out[2] == HCI_WIRELESS_WWAN_STATUS);
-+}
-+
-+static int toshiba_wwan_set(struct toshiba_acpi_dev *dev, u32 state)
-+{
-+	u32 in[TCI_WORDS] = { HCI_SET, HCI_WIRELESS, state, 0, 0, 0 };
-+	u32 out[TCI_WORDS];
-+	acpi_status status;
-+
-+	in[3] = HCI_WIRELESS_WWAN_STATUS;
-+	status = tci_raw(dev, in, out);
-+
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to set WWAN status failed\n");
-+		return -EIO;
-+	}
-+
-+	if (out[0] == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	if (out[0] != TOS_SUCCESS)
-+		return -EIO;
-+
-+	/*
-+	 * Some devices only need to call HCI_WIRELESS_WWAN_STATUS to
-+	 * (de)activate the device, but some others need the
-+	 * HCI_WIRELESS_WWAN_POWER call as well.
-+	 */
-+	in[3] = HCI_WIRELESS_WWAN_POWER;
-+	status = tci_raw(dev, in, out);
-+
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("ACPI call to set WWAN power failed\n");
-+		return -EIO;
-+	}
-+
-+	if (out[0] == TOS_NOT_SUPPORTED)
-+		return -ENODEV;
-+
-+	return out[0] == TOS_SUCCESS ? 0 : -EIO;
-+}
-+
- /* Transflective Backlight */
- static int get_tr_backlight_status(struct toshiba_acpi_dev *dev, u32 *status)
+ /*
+  * Misc device
+  */
+@@ -2871,7 +2911,6 @@ error:
+ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
  {
-@@ -2561,6 +2666,8 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
- 		pr_cont(" panel-power-on");
- 	if (dev->usb_three_supported)
- 		pr_cont(" usb3");
-+	if (dev->wwan_supported)
-+		pr_cont(" wwan");
+ 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
+-	int ret;
  
- 	pr_cont("\n");
- }
-@@ -2736,6 +2843,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = get_fan_status(dev, &dummy);
- 	dev->fan_supported = !ret;
- 
-+	toshiba_wwan_available(dev);
-+
- 	print_supported_features(dev);
- 
- 	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
+ 	switch (event) {
+ 	case 0x80: /* Hotkeys and some system events */
+@@ -2901,10 +2940,10 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 		pr_info("SATA power event received %x\n", event);
+ 		break;
+ 	case 0x92: /* Keyboard backlight mode changed */
++		toshiba_acpi->kbd_event_generated = true;
+ 		/* Update sysfs entries */
+-		ret = sysfs_update_group(&acpi_dev->dev.kobj,
+-					 &toshiba_attr_group);
+-		if (ret)
++		if (sysfs_update_group(&acpi_dev->dev.kobj,
++				       &toshiba_attr_group))
+ 			pr_err("Unable to update sysfs entries\n");
+ 		break;
+ 	case 0x85: /* Unknown */
 -- 
 2.6.3
