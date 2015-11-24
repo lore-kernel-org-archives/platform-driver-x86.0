@@ -1,44 +1,48 @@
-From: Hanjun Guo <guohanjun@huawei.com>
-Subject: Re: [PATCH 1/5] ACPICA: Add acpi_dev_present
-Date: Tue, 24 Nov 2015 12:40:51 +0800
-Message-ID: <5653EA53.8040909@huawei.com>
-References: <cover.1448282995.git.lukas@wunner.de> <d66501819cfa8f3d3b07708d3f20e3e20d07e4f8.1448282995.git.lukas@wunner.de> <2726545.001oM5V9lv@vostro.rjw.lan> <94F2FBAB4432B54E8AACC7DFDE6C92E37D998D0C@ORSMSX112.amr.corp.intel.com> <20151123233234.GA26361@wunner.de>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: Regression with dell-rbtn: radio killed on resume after suspend
+ to RAM
+Date: Tue, 24 Nov 2015 09:32:59 +0100
+Message-ID: <20151124083259.GB29874@pali>
+References: <5650BE8E.2080506@gmail.com>
+ <201511212008.46761@pali>
+ <5650D693.6050808@gmail.com>
+ <56515F57.8060801@gmail.com>
+ <20151123145026.GF24147@pali>
+ <56532D6B.8040407@gmail.com>
+ <56533D81.7070406@gmail.com>
+ <20151123192943.GY7413@malice.jf.intel.com>
+ <56539427.5090304@gmail.com>
+ <5653E243.9010707@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65]:25399 "EHLO
-	szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751700AbbKXElt (ORCPT
+Received: from mail-wm0-f52.google.com ([74.125.82.52]:32993 "EHLO
+	mail-wm0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751730AbbKXIdD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 23 Nov 2015 23:41:49 -0500
-In-Reply-To: <20151123233234.GA26361@wunner.de>
+	Tue, 24 Nov 2015 03:33:03 -0500
+Received: by wmec201 with SMTP id c201so196742077wme.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2015 00:33:01 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <5653E243.9010707@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lukas Wunner <lukas@wunner.de>, "Moore, Robert" <robert.moore@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>, Hui Wang <hui.wang@canonical.com>, Mark Brown <broonie@kernel.org>, "Zheng, Lv" <lv.zheng@intel.com>, David Box <david.e.box@linux.intel.com>
+To: Andrei Borzenkov <arvidjaar@gmail.com>
+Cc: Gabriele Mazzotta <gabriele.mzt@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 
-On 2015/11/24 7:32, Lukas Wunner wrote:
-> Hi Robert,
->
-> On Mon, Nov 23, 2015 at 10:22:27PM +0000, Moore, Robert wrote:
->>>> acpi_dev_present
->> Do you really want to be walking the ACPICA namespace for every call?
-> That's what the drivers currently do. Typically this is called only once
-> on initialization by the driver's ->probe callback.
->
-> What did you have in mind instead, cache the result? Or store the HIDs
-> in the namespace in a hash that can be queried faster?
+On Tuesday 24 November 2015 07:06:27 Andrei Borzenkov wrote:
+> I am not sure whether keyboard key should be treated as hard or soft =
+(i.e. I
+> do not know how to verify that radio is switched off without OS runni=
+ng),
+> but I still expect the same behavior in both cases.
+>=20
 
-Will those drivers be loaded before the acpi namespace is scanned? if not, I think
-those IDs already cached, in acpi_init_device_object(),
+rbtn is translated to rfkill only if type is HW slider switch, not
+toggle key! And HW slider switch cannot be overwritten by SW, so it is
+hard rfkill.
 
-INIT_LIST_HEAD(&device->pnp.ids);
-...
-acpi_set_pnp_ids(handle, &device->pnp, type);
-
-please see API acpi_device_hid(), so I think you can introduce a API with
-acpi_device and HID passed as arguments in scan.c
-
-Thanks
-Hanjun
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
