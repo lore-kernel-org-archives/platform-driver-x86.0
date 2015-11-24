@@ -1,46 +1,48 @@
-From: Hanjun Guo <hanjun.guo@linaro.org>
-Subject: Re: [PATCH 1/5] ACPICA: Add acpi_dev_present
-Date: Tue, 24 Nov 2015 22:54:35 +0800
-Message-ID: <56547A2B.8030401@linaro.org>
-References: <cover.1448282995.git.lukas@wunner.de> <20151123233234.GA26361@wunner.de> <5653EA53.8040909@huawei.com> <2460979.tXaWt9xg5Q@vostro.rjw.lan>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 2/5] eeepc-wmi: Use acpi_dev_present
+Date: Tue, 24 Nov 2015 09:08:19 -0800
+Message-ID: <20151124170819.GC30134@malice.jf.intel.com>
+References: <cover.1448282995.git.lukas@wunner.de>
+ <bdff67293ead344ccec77f55437085561b1ad88d.1448282995.git.lukas@wunner.de>
+ <20151123190413.GU7413@malice.jf.intel.com>
+ <1776557.hOTai0RnF7@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2460979.tXaWt9xg5Q@vostro.rjw.lan>
+Content-Disposition: inline
+In-Reply-To: <1776557.hOTai0RnF7@vostro.rjw.lan>
 Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <guohanjun@huawei.com>
-Cc: Lukas Wunner <lukas@wunner.de>, "Moore, Robert" <robert.moore@intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>, Hui Wang <hui.wang@canonical.com>, Mark Brown <broonie@kernel.org>, "Zheng, Lv" <lv.zheng@intel.com>, David Box <david.e.box@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Lukas Wunner <lukas@wunner.de>, linux-acpi@vger.kernel.org, devel@acpica.org, platform-driver-x86@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 11/24/2015 10:22 PM, Rafael J. Wysocki wrote:
-> On Tuesday, November 24, 2015 12:40:51 PM Hanjun Guo wrote:
->> On 2015/11/24 7:32, Lukas Wunner wrote:
->>> Hi Robert,
->>>
->>> On Mon, Nov 23, 2015 at 10:22:27PM +0000, Moore, Robert wrote:
->>>>>> acpi_dev_present
->>>> Do you really want to be walking the ACPICA namespace for every call?
->>> That's what the drivers currently do. Typically this is called only once
->>> on initialization by the driver's ->probe callback.
->>>
->>> What did you have in mind instead, cache the result? Or store the HIDs
->>> in the namespace in a hash that can be queried faster?
->>
->> Will those drivers be loaded before the acpi namespace is scanned? if not, I think
->> those IDs already cached, in acpi_init_device_object(),
->>
->> INIT_LIST_HEAD(&device->pnp.ids);
->> ...
->> acpi_set_pnp_ids(handle, &device->pnp, type);
->>
->> please see API acpi_device_hid(), so I think you can introduce a API with
->> acpi_device and HID passed as arguments in scan.c
->
-> I'd prefer that to go to utils.c to be honest, even if the namespace needs to
-> be walked.
+On Mon, Nov 23, 2015 at 11:35:55PM +0100, Rafael Wysocki wrote:
+> On Monday, November 23, 2015 11:04:13 AM Darren Hart wrote:
+> > On Mon, Nov 23, 2015 at 03:34:55PM +0100, Lukas Wunner wrote:
+> > > Use shiny new acpi_dev_present and remove all the boilerplate to search
+> > > for a particular ACPI device. No functional change.
+> > 
+> > You did add a pr_warn, which is technically a functional change. Did you intend
+> > to leave that in?
+> > 
+> > I have no objection for platform-drivers-x86, but please include all maintainers
+> > listed by get_maintainer.pl for the fastest response.
+> > 
+> > +Rafael
+> > 
+> > Rafael, I assume you will pick this up along with the acpi_dev_present ACPI
+> > change if you take that. Pleaes let me know if not.
+> > 
+> > Otherwise,
+> > 
+> > Acked-by: Darren Hart <dvhart@linux.intel.com>
+> 
+> In fact, patch [1/5] as is needs to go in through upstream ACPICA, so I'm not
+> taking this series and please don't take it too.
 
-I agree, utils.c is the better place to go.
+Ah, thanks, my mistake.
 
-Thanks
-Hanjun
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
