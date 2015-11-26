@@ -1,84 +1,80 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] dell-wmi: add module param to control Dell Instant
- Launch hotkey processing
-Date: Thu, 26 Nov 2015 15:55:56 +0100
-Message-ID: <20151126145556.GA9371@eudyptula.hq.kempniu.pl>
-References: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
- <20151126144130.GI14190@pali>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] wmi: Set wmi devices' parents
+Date: Thu, 26 Nov 2015 07:53:20 -0800
+Message-ID: <CALCETrVf1kpGhY_2GtkVd9kWhs6MqcbyEL0jUja_y0YA9wXY2A@mail.gmail.com>
+References: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org>
+ <20151123193709.GZ7413@malice.jf.intel.com> <CALCETrW8SuyZkzogg01gb6SXhPUU__H5_697EavwkEGorG9uJw@mail.gmail.com>
+ <18585447.G9NSpqgJyj@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f52.google.com ([209.85.215.52]:35915 "EHLO
-	mail-lf0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751165AbbKZO4B (ORCPT
+Received: from mail-ob0-f171.google.com ([209.85.214.171]:33826 "EHLO
+	mail-ob0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751270AbbKZPxl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Nov 2015 09:56:01 -0500
-Received: by lfs39 with SMTP id 39so97741316lfs.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2015 06:55:59 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <20151126144130.GI14190@pali>
+	Thu, 26 Nov 2015 10:53:41 -0500
+Received: by obbbj7 with SMTP id bj7so65225413obb.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2015 07:53:40 -0800 (PST)
+In-Reply-To: <18585447.G9NSpqgJyj@vostro.rjw.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Darren Hart <dvhart@infradead.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-Hi Pali,
+On Thu, Nov 26, 2015 at 6:09 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Wednesday, November 25, 2015 05:28:54 PM Andy Lutomirski wrote:
+>> On Mon, Nov 23, 2015 at 11:37 AM, Darren Hart <dvhart@infradead.org> wrote:
+>> > On Mon, Nov 23, 2015 at 11:25:30AM -0800, Andy Lutomirski wrote:
+>> >> Without this patch, wmi devices are in /sys/virtual/wmi.  They're
+>> >> logically children of the ACPI WMI device, so slot them into the
+>> >> device hierarchy.  With this change, on my laptop, they end up in
+>> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
+>> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
+>> >>
+>> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+>> >
+>> > I'd like to hear from some of the main contributors to this driver:
+>> >
+>> > Matthew?
+>> > Carlos?
+>> > Len?
+>> >
+>> > Any cocnerns on this change?
+>> >
+>> > My initial concern is about changign how we expose this to userspace, but I
+>> > believe where it appears in the /sys/devices FS is NOT part of the
+>> > kernel-userspace interface commitment (per sysfs-rules.txt).
+>>
+>>
+>> Let's drop this, actually.  I have mostly-working patches to make wmi
+>> into an actual bus driver, and this intermediate step seems like it'll
+>> just confuse people.
+>>
+>> Question, though: where do the WMI devices belong?  Multiple choice:
+>>
+>> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/[GUID]
+>>
+>> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi/[GUID]
+>>
+>> /sys/devices/platform/PNP0C14:01/[GUID]
+>>
+>> /sys/devices/platform/PNP0C14:01/wmi/[GUID]
+>>
+>> Currently I've implemented the first one because it's the smallest diff.
+>
+> That probably is not the right choice, though.
+>
+> ACPI "devices" are counterparts of DT device nodes and having other things
+> exported under them would be quite confusing.  In fact, you can argue that
+> the whole /sys/devices/LNXSYSTM:00/ directory should be located under
+> /sys/firmware/acpi, but it turns out to be difficult to move it there
+> for various reasons.
+>
+> Personally, I'd go for the last one.
 
-> Can you wait just a little bit? Till end of month two Dell kernel dev=
-s
-> are on vacation, so after that they maybe answer to question about ne=
-w
-> hotkey format/support in kernel.
+Mechanically, how do I do that?  Should I register as just a platform
+driver and use acpi_device_install_notify_handler to get the ACPI
+notifications, or should I register as *both* a platform driver and
+ACPI driver?
 
-Absolutely, after all this issue is already several months old (or even
-years, depending on how you interpret it).  I just didn't want it to
-fade into the void.
-
-> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86=
-/dell-wmi.c
-> > index 8cb0f57..e68ce3b 100644
-> > --- a/drivers/platform/x86/dell-wmi.c
-> > +++ b/drivers/platform/x86/dell-wmi.c
-> > @@ -44,6 +44,10 @@ MODULE_LICENSE("GPL");
-> >  #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
-> > =20
-> >  static int acpi_video;
-> > +static bool process_dil;
-> > +
-> > +module_param(process_dil, bool, 0644);
-> > +MODULE_PARM_DESC(process_dil, "Generate an input event when the WM=
-I event for Dell Instant Launch hotkey is received");
->=20
-> I do not like name "dil". It takes me few minutes to interpret it as
-> Dell Instant Launch...
-
-Yes, it's ugly.  I really wanted to avoid process_dell_instant_launch.
-Perhaps I shouldn't have?
-
-> Also I do not know if this is the best approach.
-
-Same here, that's why I submitted this patch for discussion.
-
-> >  	/* Shortcut and audio panel keys */
-> > -	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
-> > +	{ KE_KEY, 0xe025, { KEY_PROG4 } },
-> >  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
->=20
-> I'm trying to figure out if those two keys are really reported via
-> keyboard controller or not. They were added 4 years ago in commit
-> f1566f0dc07ec9b5409b348070f5a700032d7881. But from bug report
-> http://bugs.launchpad.net/bugs/815914 there is no information if thos=
-e
-> two keys are really reported by keyboard controller or not.
->=20
-> And if not our problem could be easier...
-
-That would indeed be sweet as this patch could then be shrinked to just
-changing the entry in the sparse keymap.  Does anyone have a Dell XPS
-L502X handy?  Also, any ideas for making sure no other model is
-generating that keypress?
-
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+--Andy
