@@ -1,72 +1,73 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] wmi: Set wmi devices' parents
-Date: Thu, 26 Nov 2015 15:09:29 +0100
-Message-ID: <18585447.G9NSpqgJyj@vostro.rjw.lan>
-References: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org> <20151123193709.GZ7413@malice.jf.intel.com> <CALCETrW8SuyZkzogg01gb6SXhPUU__H5_697EavwkEGorG9uJw@mail.gmail.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH] dell-wmi: add module param to control Dell Instant Launch hotkey processing
+Date: Thu, 26 Nov 2015 15:18:32 +0100
+Message-ID: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:63766 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1750759AbbKZNjr (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Nov 2015 08:39:47 -0500
-In-Reply-To: <CALCETrW8SuyZkzogg01gb6SXhPUU__H5_697EavwkEGorG9uJw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Darren Hart <dvhart@infradead.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday, November 25, 2015 05:28:54 PM Andy Lutomirski wrote:
-> On Mon, Nov 23, 2015 at 11:37 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Mon, Nov 23, 2015 at 11:25:30AM -0800, Andy Lutomirski wrote:
-> >> Without this patch, wmi devices are in /sys/virtual/wmi.  They're
-> >> logically children of the ACPI WMI device, so slot them into the
-> >> device hierarchy.  With this change, on my laptop, they end up in
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
-> >>
-> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> >
-> > I'd like to hear from some of the main contributors to this driver:
-> >
-> > Matthew?
-> > Carlos?
-> > Len?
-> >
-> > Any cocnerns on this change?
-> >
-> > My initial concern is about changign how we expose this to userspace, but I
-> > believe where it appears in the /sys/devices FS is NOT part of the
-> > kernel-userspace interface commitment (per sysfs-rules.txt).
-> 
-> 
-> Let's drop this, actually.  I have mostly-working patches to make wmi
-> into an actual bus driver, and this intermediate step seems like it'll
-> just confuse people.
-> 
-> Question, though: where do the WMI devices belong?  Multiple choice:
-> 
-> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/[GUID]
-> 
-> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi/[GUID]
-> 
-> /sys/devices/platform/PNP0C14:01/[GUID]
-> 
-> /sys/devices/platform/PNP0C14:01/wmi/[GUID]
-> 
-> Currently I've implemented the first one because it's the smallest diff.
+On some laptop models (e.g. Dell Vostro V131), pressing the Dell Instan=
+t
+Launch hotkey does not raise an i8042 interrupt - only WMI event 0xe025
+is generated.  As there is no flawless way to determine whether a given
+machine is capable of simulating a keypress when this hotkey is pressed=
+,
+a new module parameter is added so that the user can decide whether the
+WMI event should be processed or ignored.
 
-That probably is not the right choice, though.
+Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+---
+As my last message [1] in the rather lengthy thread failed to elicit an=
+y
+response, I guess I might just as well post the proposed patch so that
+we have something specific to discuss.
 
-ACPI "devices" are counterparts of DT device nodes and having other things
-exported under them would be quite confusing.  In fact, you can argue that
-the whole /sys/devices/LNXSYSTM:00/ directory should be located under
-/sys/firmware/acpi, but it turns out to be difficult to move it there
-for various reasons.
+[1] http://www.spinics.net/lists/platform-driver-x86/msg07679.html
 
-Personally, I'd go for the last one.
+ drivers/platform/x86/dell-wmi.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks,
-Rafael
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-wmi.c
+index 8cb0f57..e68ce3b 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -44,6 +44,10 @@ MODULE_LICENSE("GPL");
+ #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
+=20
+ static int acpi_video;
++static bool process_dil;
++
++module_param(process_dil, bool, 0644);
++MODULE_PARM_DESC(process_dil, "Generate an input event when the WMI ev=
+ent for Dell Instant Launch hotkey is received");
+=20
+ MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
+=20
+@@ -87,7 +91,7 @@ static const struct key_entry dell_wmi_legacy_keymap[=
+] __initconst =3D {
+ 	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+=20
+ 	/* Shortcut and audio panel keys */
+-	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
++	{ KE_KEY, 0xe025, { KEY_PROG4 } },
+ 	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+=20
+ 	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+@@ -183,6 +187,9 @@ static void dell_wmi_process_key(int reported_key)
+ 	     key->keycode =3D=3D KEY_BRIGHTNESSDOWN) && acpi_video)
+ 		return;
+=20
++	if (key->keycode =3D=3D KEY_PROG4 && !process_dil)
++		return;
++
+ 	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
+ }
+=20
+--=20
+1.7.10.4
