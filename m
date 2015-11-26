@@ -1,84 +1,67 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] wmi: Set wmi devices' parents
-Date: Fri, 27 Nov 2015 00:22:49 +0100
-Message-ID: <5696452.v4IW8cBceG@vostro.rjw.lan>
-References: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org> <18585447.G9NSpqgJyj@vostro.rjw.lan> <CALCETrVf1kpGhY_2GtkVd9kWhs6MqcbyEL0jUja_y0YA9wXY2A@mail.gmail.com>
+From: Central Trust Loan Limited <central@gmail.com>
+Subject: =?UTF-8?Q?L=C3=A5netilbud=20=31=2C=35=25?=
+Date: Fri, 27 Nov 2015 00:44:13 +0100
+Message-ID: <a95075175d752de93ac058bfba83cea4@multivision.com.ve>
+Reply-To: <centraltrustlltd@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:47950 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1752850AbbKZWxH (ORCPT
+Received: from mvx1.ifxnw.com.ve ([200.62.27.83]:60865 "EHLO mvx1.ifxnw.com.ve"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753357AbbKZXo6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 26 Nov 2015 17:53:07 -0500
-In-Reply-To: <CALCETrVf1kpGhY_2GtkVd9kWhs6MqcbyEL0jUja_y0YA9wXY2A@mail.gmail.com>
+	Thu, 26 Nov 2015 18:44:58 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Darren Hart <dvhart@infradead.org>, Carlos Corbacho <carlos@strangeworlds.co.uk>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Thursday, November 26, 2015 07:53:20 AM Andy Lutomirski wrote:
-> On Thu, Nov 26, 2015 at 6:09 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > On Wednesday, November 25, 2015 05:28:54 PM Andy Lutomirski wrote:
-> >> On Mon, Nov 23, 2015 at 11:37 AM, Darren Hart <dvhart@infradead.org> wrote:
-> >> > On Mon, Nov 23, 2015 at 11:25:30AM -0800, Andy Lutomirski wrote:
-> >> >> Without this patch, wmi devices are in /sys/virtual/wmi.  They're
-> >> >> logically children of the ACPI WMI device, so slot them into the
-> >> >> device hierarchy.  With this change, on my laptop, they end up in
-> >> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
-> >> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
-> >> >>
-> >> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> >> >
-> >> > I'd like to hear from some of the main contributors to this driver:
-> >> >
-> >> > Matthew?
-> >> > Carlos?
-> >> > Len?
-> >> >
-> >> > Any cocnerns on this change?
-> >> >
-> >> > My initial concern is about changign how we expose this to userspace, but I
-> >> > believe where it appears in the /sys/devices FS is NOT part of the
-> >> > kernel-userspace interface commitment (per sysfs-rules.txt).
-> >>
-> >>
-> >> Let's drop this, actually.  I have mostly-working patches to make wmi
-> >> into an actual bus driver, and this intermediate step seems like it'll
-> >> just confuse people.
-> >>
-> >> Question, though: where do the WMI devices belong?  Multiple choice:
-> >>
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/[GUID]
-> >>
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi/[GUID]
-> >>
-> >> /sys/devices/platform/PNP0C14:01/[GUID]
-> >>
-> >> /sys/devices/platform/PNP0C14:01/wmi/[GUID]
-> >>
-> >> Currently I've implemented the first one because it's the smallest diff.
-> >
-> > That probably is not the right choice, though.
-> >
-> > ACPI "devices" are counterparts of DT device nodes and having other things
-> > exported under them would be quite confusing.  In fact, you can argue that
-> > the whole /sys/devices/LNXSYSTM:00/ directory should be located under
-> > /sys/firmware/acpi, but it turns out to be difficult to move it there
-> > for various reasons.
-> >
-> > Personally, I'd go for the last one.
-> 
-> Mechanically, how do I do that?  Should I register as just a platform
-> driver and use acpi_device_install_notify_handler to get the ACPI
-> notifications, or should I register as *both* a platform driver and
-> ACPI driver?
 
-If you have a platform device for this thing, registering an ACPI driver for it
-is pretty much as valid as registering a driver for a DT device node.
 
-So yes, a platform driver is a way to go here IMO.
+--=20
+God dag,
 
-Thanks,
-Rafael
+Dette er CENTRAL TRUST l=C3=A5n selskaper tilbyr l=C3=A5n.
+
+CENTRAL TRUST L=C3=85N Selskapet tilbyr fleksible og rimelige l=C3=A5n =
+til=20
+ethvert form=C3=A5l, for =C3=A5 hjelpe deg =C3=A5 n=C3=A5 dine finansie=
+lle m=C3=A5l. vi l=C3=A5n med=20
+lav rente p=C3=A5 1,5%. Her er noen viktige trekk ved personlig l=C3=A5=
+n fra=20
+sentral stoler p=C3=A5 utl=C3=A5n selskaper tilbys. Her er de L=C3=A5ne=
+ Faktorer vi=20
+samarbeider med de ledende britiske meglere som har tilgang til toppen=20
+l=C3=A5ngivere og v=C3=A6re i stand til =C3=A5 finne den beste =C3=B8ko=
+nomiske l=C3=B8sningen til=20
+en rimelig price.Please, hvis du er interessert kan du kontakte oss via=
+=20
+denne e-post: centraltrust_ltd@webadicta .org
+
+
+Etter reaksjonen, vil du motta en s=C3=B8knad om kreditt fyll. Ingen so=
+sial=20
+sikkerhet og ingen kredittsjekk, 100% garantert.
+
+Det er en =C3=A6re for oss hvis du tillater oss til tjeneste.
+
+
+Informasjon Needed
+
+Dine navn:
+Adresse:
+Telefon:
+N=C3=B8dvendig Antall:
+Varighet:
+Okkupasjon:
+M=C3=A5nedlig inntekt:
+Kj=C3=B8nn:
+=46=C3=B8dselsdato:
+Status:
+Land:
+=46orm=C3=A5let:
+
+Oppfylle dine =C3=B8konomiske behov er v=C3=A5r stolthet.
+
+Vennlig hilsen
+David Donald
