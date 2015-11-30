@@ -1,47 +1,45 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH] dell-wmi: add module param to control Dell Instant
- Launch hotkey processing
-Date: Mon, 30 Nov 2015 15:54:58 +0100
-Message-ID: <20151130145458.GA5524@eudyptula.hq.kempniu.pl>
-References: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
- <20151126144130.GI14190@pali>
- <20151126145556.GA9371@eudyptula.hq.kempniu.pl>
- <201511292050.18883@pali>
- <20151130141400.GA5398@eudyptula.hq.kempniu.pl>
- <20151130143756.GC29576@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] dell-wmi: Improve unknown hotkey handling
+Date: Mon, 30 Nov 2015 10:27:38 -0800
+Message-ID: <20151130182738.GA30553@malice.jf.intel.com>
+References: <a19a018252f8352a5d22934c98fba2954e9b1c6c.1448069061.git.luto@kernel.org>
+ <20151123194710.GJ24147@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f44.google.com ([209.85.215.44]:34248 "EHLO
-	mail-lf0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754160AbbK3OzE (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:54306 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754403AbbK3S1k (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Nov 2015 09:55:04 -0500
-Received: by lffu14 with SMTP id u14so200360495lff.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 30 Nov 2015 06:55:02 -0800 (PST)
+	Mon, 30 Nov 2015 13:27:40 -0500
 Content-Disposition: inline
-In-Reply-To: <20151130143756.GC29576@pali>
+In-Reply-To: <20151123194710.GJ24147@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
 
-> The best would be if embedded controller could be configured to send
-> events via i8042 bus...
+On Mon, Nov 23, 2015 at 08:47:10PM +0100, Pali Roh=E1r wrote:
+> On Friday 20 November 2015 17:27:00 Andy Lutomirski wrote:
+> > +		if (keycode =3D=3D KEY_RESERVED) {
+> > +			pr_info("firmware scancode %d maps to unrecognized keycode %d\n=
+",
+> > +				bios_entry->scancode, bios_entry->keycode);
+> > +			continue;
+> > +		}
+>=20
+> Please use "0x%x" instead "%d" for those scan and key codes. Other pa=
+rts
+> in driver use "0x%x" so that new info message could be more confused =
+if
+> it has decimal codes...
+>=20
+> With that fix, you can add my:
+> Reviewed-by: Pali Roh=E1r <pali.rohar@gmail.com>
 
-Yes, but if I correctly understand Mario's message back from July [1],
-V131's EC simply does not support generating scancodes at all.
-
-> I'm starting to thing that blacklist or whitelist of machines is need=
-ed
-> to collect. And via it decide if WMI event will be accepted or droppe=
-d.
-
-If you believe this is the way to go, I'm perfectly fine with that.
-
-[1] http://www.spinics.net/lists/platform-driver-x86/msg07220.html
+Andy, will you be resending with this change?
 
 --=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+Darren Hart
+Intel Open Source Technology Center
