@@ -1,55 +1,51 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] wmi: Set wmi devices' parents
-Date: Mon, 30 Nov 2015 12:49:41 -0800
-Message-ID: <20151130204941.GC30553@malice.jf.intel.com>
-References: <7c58f0a208e0c903008989aec457230e5e58608e.1448306649.git.luto@kernel.org>
- <20151123193709.GZ7413@malice.jf.intel.com>
- <CALCETrW8SuyZkzogg01gb6SXhPUU__H5_697EavwkEGorG9uJw@mail.gmail.com>
+Subject: Re: [PATCH] dell-wmi: add module param to control Dell Instant
+ Launch hotkey processing
+Date: Mon, 30 Nov 2015 12:55:42 -0800
+Message-ID: <20151130205542.GD30553@malice.jf.intel.com>
+References: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
+ <20151126144130.GI14190@pali>
+ <20151126145556.GA9371@eudyptula.hq.kempniu.pl>
+ <201511292050.18883@pali>
+ <20151130141400.GA5398@eudyptula.hq.kempniu.pl>
+ <20151130143756.GC29576@pali>
+ <20151130145458.GA5524@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:46188 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751915AbbK3Uto (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 30 Nov 2015 15:49:44 -0500
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrW8SuyZkzogg01gb6SXhPUU__H5_697EavwkEGorG9uJw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Carlos Corbacho <carlos@strangeworlds.co.uk>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20151130145458.GA5524@eudyptula.hq.kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 25, 2015 at 05:28:54PM -0800, Andy Lutomirski wrote:
-> On Mon, Nov 23, 2015 at 11:37 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Mon, Nov 23, 2015 at 11:25:30AM -0800, Andy Lutomirski wrote:
-> >> Without this patch, wmi devices are in /sys/virtual/wmi.  They're
-> >> logically children of the ACPI WMI device, so slot them into the
-> >> device hierarchy.  With this change, on my laptop, they end up in
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:00/wmi and
-> >> /sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C14:01/wmi.
-> >>
-> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> >
-> > I'd like to hear from some of the main contributors to this driver:
-> >
-> > Matthew?
-> > Carlos?
-> > Len?
-> >
-> > Any cocnerns on this change?
-> >
-> > My initial concern is about changign how we expose this to userspace, but I
-> > believe where it appears in the /sys/devices FS is NOT part of the
-> > kernel-userspace interface commitment (per sysfs-rules.txt).
-> 
-> 
-> Let's drop this, actually.  I have mostly-working patches to make wmi
-> into an actual bus driver, and this intermediate step seems like it'll
-> just confuse people.
+On Mon, Nov 30, 2015 at 03:54:58PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
+wrote:
+> > The best would be if embedded controller could be configured to sen=
+d
+> > events via i8042 bus...
+>=20
+> Yes, but if I correctly understand Mario's message back from July [1]=
+,
+> V131's EC simply does not support generating scancodes at all.
+>=20
+> > I'm starting to thing that blacklist or whitelist of machines is ne=
+eded
+> > to collect. And via it decide if WMI event will be accepted or drop=
+ped.
+>=20
+> If you believe this is the way to go, I'm perfectly fine with that.
 
-Dropped.
+This is a common approach among platform drivers since we try to suppor=
+t
+multiple products with a single driver.
 
--- 
+Ideally, we could detect if this was necessary by the response of some =
+ACPI call
+or another, but failing that, DMI matching is our fallback.
+
+--=20
 Darren Hart
 Intel Open Source Technology Center
