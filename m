@@ -1,50 +1,39 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-wmi: add module param to control Dell Instant
- Launch hotkey processing
-Date: Mon, 30 Nov 2015 13:15:42 -0800
-Message-ID: <20151130211542.GE30553@malice.jf.intel.com>
-References: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 0/3] dell platform driver tweaks v2
+Date: Mon, 30 Nov 2015 17:01:58 -0800
+Message-ID: <cover.1448931589.git.luto@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1f6ac54784b39ebb6ce02a9fb9e944c840fddb7b.1448547341.git.kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail.kernel.org ([198.145.29.136]:46261 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1754314AbbLABCK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 30 Nov 2015 20:02:10 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
 
-On Thu, Nov 26, 2015 at 03:18:32PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
-wrote:
-> On some laptop models (e.g. Dell Vostro V131), pressing the Dell Inst=
-ant
-> Launch hotkey does not raise an i8042 interrupt - only WMI event 0xe0=
-25
-> is generated.  As there is no flawless way to determine whether a giv=
-en
-> machine is capable of simulating a keypress when this hotkey is press=
-ed,
-> a new module parameter is added so that the user can decide whether t=
-he
-> WMI event should be processed or ignored.
->=20
-> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+Here's v2.
 
-Module parameters are to be avoided wherever possible, especially for t=
-hings
-like this which set precedent and don't scale well. If we cannot detect=
- which
-machines use the EC and which only use WMI, then we can fall back to ch=
-ecking
-DMI for specific models.
+I'm still hoping to hear more details about the rfkill button.
+Meanwhile, let's at least wire up the WMI decoding stuff and
+get the rest in.
 
-Per the above, and Pali's feedback. I'll be dropping this one in antici=
-pation of
-a V2.
+Changes from v1:
+ - The new hotkey code matches reality better.
+ - Don't send key events for the new hotkeys (yet?)
+ - Improve warning formatting.
 
-Thanks,
+Andy Lutomirski (3):
+  dell-wmi: Use a C99-style array for bios_to_linux_keycode
+  dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
+  dell-wmi: Improve unknown hotkey handling
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+ drivers/platform/x86/dell-wmi.c | 143 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 112 insertions(+), 31 deletions(-)
+
+-- 
+2.5.0
