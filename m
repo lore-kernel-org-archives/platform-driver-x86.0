@@ -1,129 +1,116 @@
-From: Mario Limonciello <mario_limonciello@dell.com>
-Subject: Re: [PATCH v2 2/3] dell-wmi: Support new hotkeys on the XPS 13 9350
- (Skylake)
-Date: Tue, 1 Dec 2015 10:38:15 -0600
-Message-ID: <565DCCF7.6070503@dell.com>
-References: <cover.1448931589.git.luto@kernel.org>
- <d9ff5adc7e496b7714202785f8279af313bbcc59.1448931589.git.luto@kernel.org>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell Vostro V131
+Date: Tue,  1 Dec 2015 20:51:34 +0100
+Message-ID: <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
+References: <20151130211542.GE30553@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <d9ff5adc7e496b7714202785f8279af313bbcc59.1448931589.git.luto@kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151130211542.GE30553@malice.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+On some laptop models (e.g. Dell Vostro V131), pressing the Dell Instan=
+t
+Launch hotkey does not raise an i8042 interrupt - only WMI event 0xe025
+is generated.  As there seems to be no ACPI method or SMI call to
+determine without possible side effects whether a given machine is
+capable of simulating a keypress when this hotkey is pressed, DMI
+matching is used to whitelist the models for which an input event shoul=
+d
+be generated when WMI event 0xe025 is received.
 
+Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+---
+Changes from v1:
 
-On 11/30/2015 07:02 PM, Andy Lutomirski wrote:
-> The XPS 13 9350 sends WMI keypress events that aren't enumerated in
-> the DMI table.  Add a table listing them.  To avoid breaking things
-> that worked before, these un-enumerated hotkeys won't be used if the
-> DMI table maps them to something else.
->
-> FWIW, it appears that the DMI table may be a legacy thing and we
-> might want to rethink how we handle events in general.  As an
-> example, a whole lot of things map to KEY_PROG3 via the DMI table.
->
-> So far, this doesn't send keypress events for any of the new
-> events.  Depnding on whether we figure out exactly what needs to
-> happen to get the wireless button working in time for Linux 4.5,
-> we might want to temporarily handle it in dell-wmi.
->
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> ---
->  drivers/platform/x86/dell-wmi.c | 59 ++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 52 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index ad6e965c5862..baff658a3621 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -161,6 +161,27 @@ static const u16 bios_to_linux_keycode[256] __initconst = {
->  	[255]	= KEY_PROG3,
->  };
->  
-> +/* These are applied if the hk table is present and doesn't override them. */
-> +static const struct key_entry dell_wmi_extra_keymap[] __initconst = {
-> +	/* Fn-lock */
-> +	{ KE_IGNORE, 0x151, { KEY_RESERVED } },
-> +
-> +	/* Change keyboard illumination */
-> +	{ KE_IGNORE, 0x152, { KEY_KBDILLUMTOGGLE } },
-> +
-> +	/*
-> +	 * Radio disable (notify only -- there is no model for which the
-> +	 * WMI event is supposed to trigger an action.
-> +	 */
-> +	{ KE_IGNORE, 0x153, { KEY_RFKILL } },
-> +
-> +	/* RGB keyboard backlight control */
-> +	{ KE_IGNORE, 0x154, { KEY_RESERVED } },
-> +
-> +	/* Stealth mode toggle */
-> +	{ KE_IGNORE, 0x155, { KEY_RESERVED } },
-> +};
-> +
->  static struct input_dev *dell_wmi_input_dev;
->  
->  static void dell_wmi_process_key(int reported_key)
-> @@ -319,9 +340,10 @@ static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
->  	int hotkey_num = (dell_bios_hotkey_table->header.length - 4) /
->  				sizeof(struct dell_bios_keymap_entry);
->  	struct key_entry *keymap;
-> -	int i;
-> +	int i, pos = 0, num_bios_keys;
->  
-> -	keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
-> +	keymap = kcalloc(hotkey_num + ARRAY_SIZE(dell_wmi_extra_keymap),
-> +			 sizeof(struct key_entry), GFP_KERNEL);
->  	if (!keymap)
->  		return NULL;
->  
-> @@ -333,14 +355,37 @@ static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
->  				    KEY_RESERVED;
->  
->  		if (keycode == KEY_KBDILLUMTOGGLE)
-> -			keymap[i].type = KE_IGNORE;
-> +			keymap[pos].type = KE_IGNORE;
->  		else
-> -			keymap[i].type = KE_KEY;
-> -		keymap[i].code = bios_entry->scancode;
-> -		keymap[i].keycode = keycode;
-> +			keymap[pos].type = KE_KEY;
-> +		keymap[pos].code = bios_entry->scancode;
-> +		keymap[pos].keycode = keycode;
-> +
-> +		pos++;
-> +	}
-> +
-> +	num_bios_keys = pos;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_extra_keymap); i++) {
-> +		int j;
-> +
-> +		/*
-> +		 * Check if we've already found this scancode.  This takes
-> +		 * quadratic time, but it doesn't matter unless the list
-> +		 * of extra keys gets very long.
-> +		 */
-> +		for (j = 0; j < num_bios_keys; j++)
-> +			if (keymap[j].code == dell_wmi_extra_keymap[i].code)
-> +				goto skip;
-> +
-> +		keymap[pos] = dell_wmi_extra_keymap[i];
-> +		pos++;
-> +
-> +skip:
-> +		;
->  	}
->  
-> -	keymap[hotkey_num].type = KE_END;
-> +	keymap[pos].type = KE_END;
->  
->  	return keymap;
->  }
-I agree, if you don't come up with a solution for using INT33D5 for 4.5,
-you may as well repurpose the WMI notification temporarily.
+  - Use DMI matching instead of a module parameter
+  - Change flag name to improve readability
+
+Darren, I am aware this patch conflicts with Andy's WMI rework series
+posted yesterday, so please just let me know if you want me to rebase.
+
+ drivers/platform/x86/dell-wmi.c |   39 +++++++++++++++++++++++++++++++=
++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-wmi.c
+index 8cb0f57..27c8f49 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -47,6 +47,38 @@ static int acpi_video;
+=20
+ MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
+=20
++struct quirk_entry {
++	bool process_dell_instant_launch;
++};
++
++static struct quirk_entry *quirks;
++
++static struct quirk_entry quirk_unknown =3D {
++};
++
++static struct quirk_entry quirk_dell_vostro_v131 =3D {
++	.process_dell_instant_launch =3D true,
++};
++
++static int __init dmi_matched(const struct dmi_system_id *dmi)
++{
++	quirks =3D dmi->driver_data;
++	return 1;
++}
++
++static const struct dmi_system_id dell_wmi_quirks[] __initconst =3D {
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "Dell Vostro V131",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
++		},
++		.driver_data =3D &quirk_dell_vostro_v131,
++	},
++	{ }
++};
++
+ /*
+  * Certain keys are flagged as KE_IGNORE. All of these are either
+  * notifications (rather than requests for change) or are also sent
+@@ -87,7 +119,7 @@ static const struct key_entry dell_wmi_legacy_keymap=
+[] __initconst =3D {
+ 	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
+=20
+ 	/* Shortcut and audio panel keys */
+-	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
++	{ KE_KEY, 0xe025, { KEY_PROG4 } },
+ 	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
+=20
+ 	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
+@@ -183,6 +215,9 @@ static void dell_wmi_process_key(int reported_key)
+ 	     key->keycode =3D=3D KEY_BRIGHTNESSDOWN) && acpi_video)
+ 		return;
+=20
++	if (key->keycode =3D=3D KEY_PROG4 && !quirks->process_dell_instant_la=
+unch)
++		return;
++
+ 	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
+ }
+=20
+@@ -432,6 +467,8 @@ static int __init dell_wmi_init(void)
+ 		return -ENODEV;
+ 	}
+=20
++	quirks =3D &quirk_unknown;
++	dmi_check_system(dell_wmi_quirks);
+ 	dmi_walk(find_hk_type, NULL);
+ 	acpi_video =3D acpi_video_get_backlight_type() !=3D acpi_backlight_ve=
+ndor;
+=20
+--=20
+1.7.10.4
