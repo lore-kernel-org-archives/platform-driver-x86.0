@@ -1,65 +1,63 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
  Vostro V131
-Date: Fri, 4 Dec 2015 13:55:21 +0100
-Message-ID: <20151204125521.GA13406@eudyptula.hq.kempniu.pl>
+Date: Fri, 4 Dec 2015 14:27:45 +0100
+Message-ID: <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
 References: <20151130211542.GE30553@malice.jf.intel.com>
  <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
  <20151204011606.GI1800@malice.jf.intel.com>
+ <20151204085624.GN10982@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f42.google.com ([209.85.215.42]:36098 "EHLO
-	mail-lf0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751889AbbLDMzZ (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Dec 2015 07:55:25 -0500
-Received: by lfs39 with SMTP id 39so107952537lfs.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Dec 2015 04:55:24 -0800 (PST)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20151204011606.GI1800@malice.jf.intel.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+In-Reply-To: <20151204085624.GN10982@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-> > On some laptop models (e.g. Dell Vostro V131), pressing the Dell In=
-stant
-> > Launch hotkey does not raise an i8042 interrupt - only WMI event 0x=
-e025
-> > is generated.  As there seems to be no ACPI method or SMI call to
-> > determine without possible side effects whether a given machine is
-> > capable of simulating a keypress when this hotkey is pressed, DMI
-> > matching is used to whitelist the models for which an input event s=
-hould
-> > be generated when WMI event 0xe025 is received.
-> >=20
-> > Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-> > ---
-> > Changes from v1:
-> >=20
-> >   - Use DMI matching instead of a module parameter
-> >   - Change flag name to improve readability
-> >=20
-> > Darren, I am aware this patch conflicts with Andy's WMI rework seri=
-es
-> > posted yesterday, so please just let me know if you want me to reba=
-se.
->=20
-> Thanks for the heads' up. Andy's series is longer and likely going to=
- need more
-> review from more people, so I don't necessarily want to hold this one=
- up on it -
-> unless it makes sense to include it in that series so they can evolve=
- together.
-> I'll leave that to you and Andy to decide.
+> This patch is not enough for enabling 0xe025 key on that Vostro machi=
+ne.
+> Some extra SMBIOS call is needed, without them ACPI will not send WMI
+> keypress event.
 
-As merging my patch with Andy's work is just a matter of moving code
-around, not actually changing it, personally I don't feel this patch
-should be somehow linked to the WMI rework.  Andy, please let me know i=
-f
-you disagree, I don't really have any strong feelings about this.
+Indeed.  But have you read the last e-mail I wrote before submitting th=
+e
+original patch [1]?  Brightness control on the V131 is already broken
+"out of the box" with newer kernels (flickering upon brightness change)=
+,
+but if we do what you're suggesting and include the SMI call in the
+kernel, we'll break it even more, to the point where pressing one of th=
+e
+brightness control keys might not result in any brightness change at
+all.  Sure, we can fix that by overriding an arbitrary ACPI method.  Oh=
+,
+wait, did I say "fix"?
+
+I posted the patch without the SMI call because that way if you want to
+use the Dell Instant Launch hotkey, you just fire up a userspace script
+(which uses libsmbios and takes care of overriding the ACPI method) and
+chances are you will end up with a fully functional system.  Of course
+you need to understand that using this script is not an elegant solutio=
+n
+and that it might break something else, but it's your choice, not the
+kernel's.  And the patch itself does not change kernel's default
+behavior, so we're not risking breaking any other models out there.
+
+> At least I think this one patch should not be included into kernel un=
+til
+> there will be full support for 0xe025 key (adding that SMBIOS call).
+
+Again, fully supporting the Dell Instant Launch hotkey makes brightness
+control even more broken than it has to be.  In other words, everything
+is terrible.
+
+The only real solution to all these issues is a BIOS fix and I'm pretty
+sure it's not happening.
+
+[1] http://www.spinics.net/lists/platform-driver-x86/msg07679.html
 
 --=20
 Best regards,
