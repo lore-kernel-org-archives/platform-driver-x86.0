@@ -1,104 +1,65 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
  Vostro V131
-Date: Fri, 4 Dec 2015 13:36:50 +0100
-Message-ID: <20151204123650.GA12988@eudyptula.hq.kempniu.pl>
+Date: Fri, 4 Dec 2015 13:55:21 +0100
+Message-ID: <20151204125521.GA13406@eudyptula.hq.kempniu.pl>
 References: <20151130211542.GE30553@malice.jf.intel.com>
  <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
- <20151204084806.GM10982@pali>
+ <20151204011606.GI1800@malice.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f49.google.com ([209.85.215.49]:36281 "EHLO
-	mail-lf0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751136AbbLDMgy (ORCPT
+Received: from mail-lf0-f42.google.com ([209.85.215.42]:36098 "EHLO
+	mail-lf0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751889AbbLDMzZ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Dec 2015 07:36:54 -0500
-Received: by lfs39 with SMTP id 39so107648739lfs.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Dec 2015 04:36:53 -0800 (PST)
+	Fri, 4 Dec 2015 07:55:25 -0500
+Received: by lfs39 with SMTP id 39so107952537lfs.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Dec 2015 04:55:24 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <20151204084806.GM10982@pali>
+In-Reply-To: <20151204011606.GI1800@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-> > --- a/drivers/platform/x86/dell-wmi.c
-> > +++ b/drivers/platform/x86/dell-wmi.c
-> > @@ -47,6 +47,38 @@ static int acpi_video;
-> > =20
-> >  MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
-> > =20
-> > +struct quirk_entry {
-> > +	bool process_dell_instant_launch;
-> > +};
-> > +
-> > +static struct quirk_entry *quirks;
-> > +
-> > +static struct quirk_entry quirk_unknown =3D {
-> > +};
-> > +
-> > +static struct quirk_entry quirk_dell_vostro_v131 =3D {
-> > +	.process_dell_instant_launch =3D true,
-> > +};
-> > +
-> > +static int __init dmi_matched(const struct dmi_system_id *dmi)
-> > +{
-> > +	quirks =3D dmi->driver_data;
-> > +	return 1;
-> > +}
-> > +
-> > +static const struct dmi_system_id dell_wmi_quirks[] __initconst =3D=
- {
-> > +	{
-> > +		.callback =3D dmi_matched,
-> > +		.ident =3D "Dell Vostro V131",
-> > +		.matches =3D {
-> > +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
-> > +		},
-> > +		.driver_data =3D &quirk_dell_vostro_v131,
-> > +	},
-> > +	{ }
-> > +};
-> > +
+> > On some laptop models (e.g. Dell Vostro V131), pressing the Dell In=
+stant
+> > Launch hotkey does not raise an i8042 interrupt - only WMI event 0x=
+e025
+> > is generated.  As there seems to be no ACPI method or SMI call to
+> > determine without possible side effects whether a given machine is
+> > capable of simulating a keypress when this hotkey is pressed, DMI
+> > matching is used to whitelist the models for which an input event s=
+hould
+> > be generated when WMI event 0xe025 is received.
+> >=20
+> > Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+> > ---
+> > Changes from v1:
+> >=20
+> >   - Use DMI matching instead of a module parameter
+> >   - Change flag name to improve readability
+> >=20
+> > Darren, I am aware this patch conflicts with Andy's WMI rework seri=
+es
+> > posted yesterday, so please just let me know if you want me to reba=
+se.
 >=20
-> It is not possible to simplify this part of code? Currently we only n=
-eed
-> boolean variable: ignore 0xe025 event or not. I think that whole quir=
-k
-> structure is not needed yet (and I would be happy if never in future)=
-=2E
+> Thanks for the heads' up. Andy's series is longer and likely going to=
+ need more
+> review from more people, so I don't necessarily want to hold this one=
+ up on it -
+> unless it makes sense to include it in that series so they can evolve=
+ together.
+> I'll leave that to you and Andy to decide.
 
-Of course it is possible.  I just got the feeling that using a quirk
-structure is the way to go for this subsystem as it currently contains =
-7
-drivers using something like this.  Moreover, I saw that in some commit=
-s
-initially adding a quirk structure to a driver (2d8b90be, a979e2e2) tha=
-t
-structure contained just one field. =20
-
-So, between KISS and following the beaten path, I chose the latter.  If
-you still think this patch should be reworked to use a single global
-boolean instead, please let me know and I'll prepare a v3.
-
-> > @@ -432,6 +467,8 @@ static int __init dell_wmi_init(void)
-> >  		return -ENODEV;
-> >  	}
-> > =20
-> > +	quirks =3D &quirk_unknown;
->=20
-> Unknown sounds like something is not know or we do not know what it i=
-s.
-> But here we know exactly what is needed (=3D ignore 0xe025 key).
-
-Again, not my idea, I just thought it would be wise to follow what seem=
-s
-to be an established pattern:
-
-    $ git grep 'quirk.*unknown' drivers/platform/x86/
+As merging my patch with Andy's work is just a matter of moving code
+around, not actually changing it, personally I don't feel this patch
+should be somehow linked to the WMI rework.  Andy, please let me know i=
+f
+you disagree, I don't really have any strong feelings about this.
 
 --=20
 Best regards,
