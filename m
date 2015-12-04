@@ -1,66 +1,68 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 3/3] dell-wmi: Improve unknown hotkey handling
-Date: Thu, 3 Dec 2015 16:21:34 -0800
-Message-ID: <20151204002134.GH1800@malice.jf.intel.com>
-References: <cover.1448931589.git.luto@kernel.org>
- <b409d60963f81611e398b492a73ffd998414cd68.1448931589.git.luto@kernel.org>
- <20151203233856.GC1800@malice.jf.intel.com>
- <CALCETrXq3MNAWLWRR47-dW4XhOZCdsMOX=Jz7-frCCb88C8Czg@mail.gmail.com>
- <20151204000721.GF1800@malice.jf.intel.com>
- <CALCETrXg7=4v6_YkuJ_-MFL7q5WmC5FMOBVpyvrqTnYuCEs2SQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
+ Vostro V131
+Date: Thu, 3 Dec 2015 17:16:06 -0800
+Message-ID: <20151204011606.GI1800@malice.jf.intel.com>
+References: <20151130211542.GE30553@malice.jf.intel.com>
+ <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from bombadil.infradead.org ([198.137.202.9]:56632 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755051AbbLDBQK (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 3 Dec 2015 20:16:10 -0500
 Content-Disposition: inline
-In-Reply-To: <CALCETrXg7=4v6_YkuJ_-MFL7q5WmC5FMOBVpyvrqTnYuCEs2SQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Andy Lutomirski <luto@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-On Thu, Dec 03, 2015 at 04:10:49PM -0800, Andy Lutomirski wrote:
-> On Thu, Dec 3, 2015 at 4:07 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Thu, Dec 03, 2015 at 03:45:11PM -0800, Andy Lutomirski wrote:
-> >> On Thu, Dec 3, 2015 at 3:38 PM, Darren Hart <dvhart@infradead.org> wrote:
-> >> > On Mon, Nov 30, 2015 at 05:02:01PM -0800, Andy Lutomirski wrote:
-> >> >> If DMI lists a hotkey that we don't recognize, log and ignore it
-> >> >> instead of trying to map it to keycode 0.  I haven't seen this happen,
-> >> >> but it will help maintain the key map in the future and it will help
-> >> >> avoid sending bogus events.
-> >> >>
-> >> >> This also improves the message that we log when we get an unknown key
-> >> >> event.
-> >> >>
-> >> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> >> >> ---
-> >> >
-> >> > Please include the individual patch changelogs here under --- in the patch
-> >> > itself - this helps me build confidence that I am indeed looking at the right
-> >> > patch and the expected changes are here.
-> >>
-> >> Will do in the future -- different maintainers have different
-> >> preferences here, I think.
-> >
-> > Oh really?
-> >
-> > This is the documented process in Documentation/SubmittingPatches Section 14)
-> > The canonical patch format...
-> >
-> 
-> Ingo and the other -tip maintainers seem to like all the comments up
-> front on the cover letter.  Or at least they haven't complained yet.
-> 
+On Tue, Dec 01, 2015 at 08:51:34PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
+wrote:
+> On some laptop models (e.g. Dell Vostro V131), pressing the Dell Inst=
+ant
+> Launch hotkey does not raise an i8042 interrupt - only WMI event 0xe0=
+25
+> is generated.  As there seems to be no ACPI method or SMI call to
+> determine without possible side effects whether a given machine is
+> capable of simulating a keypress when this hotkey is pressed, DMI
+> matching is used to whitelist the models for which an input event sho=
+uld
+> be generated when WMI event 0xe025 is received.
+>=20
+> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+> ---
+> Changes from v1:
+>=20
+>   - Use DMI matching instead of a module parameter
+>   - Change flag name to improve readability
+>=20
+> Darren, I am aware this patch conflicts with Andy's WMI rework series
+> posted yesterday, so please just let me know if you want me to rebase=
+=2E
 
-Ugh, well, I don't like to ask contributors to treat this subsystem special by
-sticking to the documentation as much as possible. I really do find the
-per-patch changelog to be very useful. Thanks for working with me on that.
+Thanks for the heads' up. Andy's series is longer and likely going to n=
+eed more
+review from more people, so I don't necessarily want to hold this one u=
+p on it -
+unless it makes sense to include it in that series so they can evolve t=
+ogether.
+I'll leave that to you and Andy to decide.
 
-> Anyway, I'm giving 'git notes' a try to generate nice change comments for v3.
+This looks fine to me, and if Pali will ack it, I'll move it from for-r=
+eview to
+testing and Andy will need to update patch 14/14 to accomodate - unless=
+ you guys
+decide to include this in his.
 
-If you get a good solution, that would be nice to add to the documentation to
-help automate the process. Anything we can do to avoid mechanical errors here is
-goodness.
+=46or now, this is queued to for-review.
 
--- 
+Thanks!
+
+--=20
 Darren Hart
 Intel Open Source Technology Center
