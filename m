@@ -1,141 +1,59 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
  Vostro V131
-Date: Fri, 4 Dec 2015 09:48:06 +0100
-Message-ID: <20151204084806.GM10982@pali>
+Date: Fri, 4 Dec 2015 09:56:24 +0100
+Message-ID: <20151204085624.GN10982@pali>
 References: <20151130211542.GE30553@malice.jf.intel.com>
  <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
+ <20151204011606.GI1800@malice.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f54.google.com ([74.125.82.54]:32908 "EHLO
-	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755372AbbLDIsJ (ORCPT
+Received: from mail-wm0-f45.google.com ([74.125.82.45]:33329 "EHLO
+	mail-wm0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755472AbbLDI41 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 4 Dec 2015 03:48:09 -0500
+	Fri, 4 Dec 2015 03:56:27 -0500
 Content-Disposition: inline
-In-Reply-To: <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
+In-Reply-To: <20151204011606.GI1800@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-On Tuesday 01 December 2015 20:51:34 Micha=C5=82 K=C4=99pie=C5=84 wrote=
-:
-> On some laptop models (e.g. Dell Vostro V131), pressing the Dell Inst=
-ant
-> Launch hotkey does not raise an i8042 interrupt - only WMI event 0xe0=
-25
-> is generated.  As there seems to be no ACPI method or SMI call to
-> determine without possible side effects whether a given machine is
-> capable of simulating a keypress when this hotkey is pressed, DMI
-> matching is used to whitelist the models for which an input event sho=
-uld
-> be generated when WMI event 0xe025 is received.
->=20
-> Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-> ---
-> Changes from v1:
->=20
->   - Use DMI matching instead of a module parameter
->   - Change flag name to improve readability
->=20
-> Darren, I am aware this patch conflicts with Andy's WMI rework series
-> posted yesterday, so please just let me know if you want me to rebase=
+On Thursday 03 December 2015 17:16:06 Darren Hart wrote:
+> This looks fine to me, and if Pali will ack it, I'll move it from for=
+-review to
+> testing and Andy will need to update patch 14/14 to accomodate - unle=
+ss you guys
+> decide to include this in his.
+
+This patch is not enough for enabling 0xe025 key on that Vostro machine=
 =2E
->=20
->  drivers/platform/x86/dell-wmi.c |   39 +++++++++++++++++++++++++++++=
-+++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index 8cb0f57..27c8f49 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -47,6 +47,38 @@ static int acpi_video;
-> =20
->  MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
-> =20
-> +struct quirk_entry {
-> +	bool process_dell_instant_launch;
-> +};
-> +
-> +static struct quirk_entry *quirks;
-> +
-> +static struct quirk_entry quirk_unknown =3D {
-> +};
-> +
-> +static struct quirk_entry quirk_dell_vostro_v131 =3D {
-> +	.process_dell_instant_launch =3D true,
-> +};
-> +
-> +static int __init dmi_matched(const struct dmi_system_id *dmi)
-> +{
-> +	quirks =3D dmi->driver_data;
-> +	return 1;
-> +}
-> +
-> +static const struct dmi_system_id dell_wmi_quirks[] __initconst =3D =
-{
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Vostro V131",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
-> +		},
-> +		.driver_data =3D &quirk_dell_vostro_v131,
-> +	},
-> +	{ }
-> +};
-> +
+Some extra SMBIOS call is needed, without them ACPI will not send WMI
+keypress event.
 
-It is not possible to simplify this part of code? Currently we only nee=
-d
-boolean variable: ignore 0xe025 event or not. I think that whole quirk
-structure is not needed yet (and I would be happy if never in future).
+Dell SMBIOS call can be done either via WMI or via SMI inb/outb
+instructions which implements dcdbas.ko driver. Module dell-laptop.ko
+uses only SMBIOS API for all functionality and uses dcdbas.ko.
 
->  /*
->   * Certain keys are flagged as KE_IGNORE. All of these are either
->   * notifications (rather than requests for change) or are also sent
-> @@ -87,7 +119,7 @@ static const struct key_entry dell_wmi_legacy_keym=
-ap[] __initconst =3D {
->  	{ KE_IGNORE, 0xe020, { KEY_MUTE } },
-> =20
->  	/* Shortcut and audio panel keys */
-> -	{ KE_IGNORE, 0xe025, { KEY_RESERVED } },
-> +	{ KE_KEY, 0xe025, { KEY_PROG4 } },
->  	{ KE_IGNORE, 0xe026, { KEY_RESERVED } },
-> =20
->  	{ KE_IGNORE, 0xe02e, { KEY_VOLUMEDOWN } },
-> @@ -183,6 +215,9 @@ static void dell_wmi_process_key(int reported_key=
-)
->  	     key->keycode =3D=3D KEY_BRIGHTNESSDOWN) && acpi_video)
->  		return;
-> =20
-> +	if (key->keycode =3D=3D KEY_PROG4 && !quirks->process_dell_instant_=
-launch)
-> +		return;
-> +
->  	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
->  }
-> =20
-> @@ -432,6 +467,8 @@ static int __init dell_wmi_init(void)
->  		return -ENODEV;
->  	}
-> =20
-> +	quirks =3D &quirk_unknown;
+There is another driver which uses SMBIOS API, but use WMI calls. It is
+dell-led.ko in leds subsystem.
 
-Unknown sounds like something is not know or we do not know what it is.
-But here we know exactly what is needed (=3D ignore 0xe025 key).
+So now I do not know where to put that needed SMBIOS call for enabling
+0xe025 hotkey event and also I do not know if it is better to use WMI o=
+r
+dcdbas.ko.
 
-> +	dmi_check_system(dell_wmi_quirks);
->  	dmi_walk(find_hk_type, NULL);
->  	acpi_video =3D acpi_video_get_backlight_type() !=3D acpi_backlight_=
-vendor;
-> =20
+Maybe now it could make sense to unify Dell SMBIOS API in kernel and
+move common functions to one place and let drivers to use just common
+functions. According to older Dell ACPI WMI documentation in DMI is bit
+which specify if BIOS support SMBIOS via WMI or not.
+
+At least I think this one patch should not be included into kernel unti=
+l
+there will be full support for 0xe025 key (adding that SMBIOS call).
 
 --=20
 Pali Roh=C3=A1r
