@@ -1,580 +1,121 @@
-From: Qipeng Zha <qipeng.zha@intel.com>
-Subject: [PATCH V8 2/2] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Tue,  8 Dec 2015 00:55:05 +0800
-Message-ID: <1449507305-51709-2-git-send-email-qipeng.zha@intel.com>
-References: <1449507305-51709-1-git-send-email-qipeng.zha@intel.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: Dell Vostro V131 hotkeys revisited
+Date: Mon, 7 Dec 2015 12:43:20 +0100
+Message-ID: <20151207114320.GC13893@pali>
+References: <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
+ <201507022258.32104@pali>
+ <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
+ <20150703074813.GD1841@pali>
+ <559C1C17.3060009@dell.com>
+ <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
+ <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
+ <20150831095107.GA2397@eudyptula.hq.kempniu.pl>
+ <20150910043812.GB108260@vmdeb7>
+ <20151113101716.GA5458@eudyptula.hq.kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:38845 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755087AbbLGIui (ORCPT
+Received: from mail-wm0-f48.google.com ([74.125.82.48]:36900 "EHLO
+	mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754928AbbLGLnY (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Dec 2015 03:50:38 -0500
-In-Reply-To: <1449507305-51709-1-git-send-email-qipeng.zha@intel.com>
+	Mon, 7 Dec 2015 06:43:24 -0500
+Received: by wmww144 with SMTP id w144so146403572wmw.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2015 03:43:23 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <20151113101716.GA5458@eudyptula.hq.kempniu.pl>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario_limonciello@dell.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
-This driver provides support for P-Unit mailbox IPC on Intel platforms.
-The heart of the P-Unit is the Foxton microcontroller and its firmware,
-which provide mailbox interface for power management usage.
+Hi Micha=C5=82!
 
-Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+On Friday 13 November 2015 11:17:16 Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> For those of you playing along at home, I have some news (mostly bad,
+> I'm afraid).
+>=20
+> TL;DR: I don't believe there is any way of getting Vostro V131 fully
+> supported by the kernel without breaking stuff that already works, so=
+ I
+> suggest a slightly different approach (see the last paragraph).
+>=20
+> I have recently noticed that backlight control on a Vostro V131 runni=
+ng
+> Linux has some glitches as well.  Before WMI gets enabled, pressing
+> either the "brightness down" (Fn+F4) or the "brightness up" (Fn+F5) k=
+ey
+> causes two "presses" of the respective keycode (KEY_BRIGHTNESSUP or
+> KEY_BRIGHTNESSDOWN) to be reported.  This itself seems buggy to me, b=
+ut
+> whatever.  The worse part is that there is an irritating flickering
+> effect as well [1].
 
----
-change in v8
- Change the way to get three IPCs's resources due to udpated acpi entries,
+=46rom that bug I understood that solution is to use native backlight
+control (via acpi_backlight=3Dnative). This is something which can be
+forced or changed by default per DMI type (for buggy machines like
+this). Right?
 
- In the new acpi resources layout, two entries for each IPC, one for data
-and one for interface.
+> But if that wasn't enough, it gets even worse after
+> issuing the WMI-enabling SMI call, because the keycode simulated by A=
+CPI
+> gets "shifted" by one event while the WMI events are reported correct=
+ly.
+> Consider the following sequence of key presses:
+>=20
+> Key pressed     Keycode reported        WMI event reported=20
+> -----------     ----------------        ------------------
+> Fn+F4           (none)                  0xe005
+> Fn+F4           KEY_BRIGHTNESSDOWN      0xe005
+> Fn+F5           KEY_BRIGHTNESSDOWN      0xe006
+> Fn+F5           KEY_BRIGHTNESSUP        0xe006
+> Fn+Mute         KEY_BRIGHTNESSUP        0x0000
+> Fn+Mute         (none)                  0x0000
 
-change in v7
- Update ipc_err_string()'s return type to "const char *" from "char *";
- Add terminator in acpi id array.
+Hm... I'm not sure if I understood this problem correctly, but those
+keycodes are reported on i8042 bus by atk keyboard? Or are reported by
+ACPI video.ko module? And problem is only with brightness keys?
 
-change in v6
- Update header file;
- Update interface of lowlevel register access;
- Restructure implementation of two command functions;
- Save IPC private data pointer to pdev's priv;
+What happen if you boot 4.2+ kernel with acpi_backlight=3Dnative?
 
-change in v5
- Fix commend style in header file;
- Replace EINVAL with ENODEV in stub functions;
- Replace ipc_err_sources array with ipc_err_string function;
- Correct comments: "if invalid" -> "if not used";
- Propagate return error of devm_request_irq.
+> I determined that both brightness flickering and incorrect keycode
+> reporting are caused (the latter indirectly) by ACPI method CESM (and
+> later I found out that [1] agrees in regard to flickering).  While I
+> haven't found the source of the "shifting" bug (and I am not willing =
+to,
+> thanks, I'd rather cut myself with a butter knife), the basic tests I=
+'ve
+> performed indicate that simply overriding that CESM method with a no-=
+op
+> does the job, if combined with correct kernel parameters.
+>=20
+> However, all this nonsense makes me come to the conclusion that any
+> attempts to fix it by only changing existing kernel code are futile [=
+2].
+> Thus, to avoid breaking other Dell devices which already work fine wi=
+th
+> Linux, I devised a "solution" using libsmbios (which in turn uses
+> dcdbas) and ACPI method overriding which seems to work fine.  It stil=
+l
+> needs a kernel patch which enables reporting the 0xe025 event as a
+> keypress (this event is currently associated with a KE_IGNORE sparse
+> keymap entry).  I prepared a patch which adds a module parameter to
+> dell-wmi that enables event 0xe025 to be either ignored or not,
+> depending on the user's choice.  Does that sound sane or is there a
+> better way to do it?  I'll be happy to post the patch once I'm done
+> polishing it, given that this route sounds reasonable to the
+> maintainers.  If we enable the kernel to react to WMI event 0xe025,
+> Vostro V131 users (at least those using kernels compiled with
+> CONFIG_ACPI_CUSTOM_METHOD) will actually be able to use all standard
+> features of their laptops on Linux without recompiling the kernel, wh=
+ich
+> I would consider a win (a Pyrrhic one, but still).
+>=20
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D100441
+> [2] without Dell's assistance
+>=20
 
-change in v4
- Fix two code style issues: make /* as a whole line and replace
-"return ret" with "goto out";
- Replace -EINVAL with -ENXIO for failures due to resource.
-
-change in v3
- Fix compile issue in intel_punit_ipc.h, it happened when built-in
-and the header file is included in other source file.
-
-change in v2
- Fix issues in code style and comments;
- Remove "default y" in Kconfig;
- Remove some header files;
- Replace request_mem_region with devm_request_mem_region,
-and same for request_irq;
- Change to use prefix of IPC_PUNIT_ to define commands;
----
- MAINTAINERS                            |   4 +-
- arch/x86/include/asm/intel_punit_ipc.h | 101 ++++++++++
- drivers/platform/x86/Kconfig           |   6 +
- drivers/platform/x86/Makefile          |   1 +
- drivers/platform/x86/intel_punit_ipc.c | 348 +++++++++++++++++++++++++++++++++
- 5 files changed, 459 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/include/asm/intel_punit_ipc.h
- create mode 100644 drivers/platform/x86/intel_punit_ipc.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5192700..333a022 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5683,12 +5683,14 @@ F:	drivers/dma/mic_x100_dma.c
- F:	drivers/dma/mic_x100_dma.h
- F	Documentation/mic/
- 
--INTEL PMC IPC DRIVER
-+INTEL PMC/P-Unit IPC DRIVER
- M:	Zha Qipeng<qipeng.zha@intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_pmc_ipc.c
-+F:	drivers/platform/x86/intel_punit_ipc.c
- F:	arch/x86/include/asm/intel_pmc_ipc.h
-+F:	arch/x86/include/asm/intel_punit_ipc.h
- 
- IOC3 ETHERNET DRIVER
- M:	Ralf Baechle <ralf@linux-mips.org>
-diff --git a/arch/x86/include/asm/intel_punit_ipc.h b/arch/x86/include/asm/intel_punit_ipc.h
-new file mode 100644
-index 0000000..201eb9d
---- /dev/null
-+++ b/arch/x86/include/asm/intel_punit_ipc.h
-@@ -0,0 +1,101 @@
-+#ifndef _ASM_X86_INTEL_PUNIT_IPC_H_
-+#define  _ASM_X86_INTEL_PUNIT_IPC_H_
-+
-+/*
-+ * Three types of 8bit P-Unit IPC commands are supported,
-+ * bit[7:6]: [00]: BIOS; [01]: GTD; [10]: ISPD.
-+ */
-+typedef enum {
-+	BIOS_IPC = 0,
-+	GTDRIVER_IPC,
-+	ISPDRIVER_IPC,
-+	RESERVED_IPC,
-+} IPC_TYPE;
-+
-+#define IPC_TYPE_OFFSET			6
-+#define IPC_PUNIT_BIOS_CMD_BASE		(BIOS_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_GTD_CMD_BASE		(GTDDRIVER_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_ISPD_CMD_BASE		(ISPDRIVER_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_CMD_TYPE_MASK		(RESERVED_IPC << IPC_TYPE_OFFSET)
-+
-+/* BIOS => Pcode commands */
-+#define IPC_PUNIT_BIOS_ZERO			(IPC_PUNIT_BIOS_CMD_BASE | 0x00)
-+#define IPC_PUNIT_BIOS_VR_INTERFACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x01)
-+#define IPC_PUNIT_BIOS_READ_PCS			(IPC_PUNIT_BIOS_CMD_BASE | 0x02)
-+#define IPC_PUNIT_BIOS_WRITE_PCS		(IPC_PUNIT_BIOS_CMD_BASE | 0x03)
-+#define IPC_PUNIT_BIOS_READ_PCU_CONFIG		(IPC_PUNIT_BIOS_CMD_BASE | 0x04)
-+#define IPC_PUNIT_BIOS_WRITE_PCU_CONFIG		(IPC_PUNIT_BIOS_CMD_BASE | 0x05)
-+#define IPC_PUNIT_BIOS_READ_PL1_SETTING		(IPC_PUNIT_BIOS_CMD_BASE | 0x06)
-+#define IPC_PUNIT_BIOS_WRITE_PL1_SETTING	(IPC_PUNIT_BIOS_CMD_BASE | 0x07)
-+#define IPC_PUNIT_BIOS_TRIGGER_VDD_RAM		(IPC_PUNIT_BIOS_CMD_BASE | 0x08)
-+#define IPC_PUNIT_BIOS_READ_TELE_INFO		(IPC_PUNIT_BIOS_CMD_BASE | 0x09)
-+#define IPC_PUNIT_BIOS_READ_TELE_TRACE_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0a)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_TRACE_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0b)
-+#define IPC_PUNIT_BIOS_READ_TELE_EVENT_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0c)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_EVENT_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0d)
-+#define IPC_PUNIT_BIOS_READ_TELE_TRACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x0e)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_TRACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x0f)
-+#define IPC_PUNIT_BIOS_READ_TELE_EVENT		(IPC_PUNIT_BIOS_CMD_BASE | 0x10)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_EVENT		(IPC_PUNIT_BIOS_CMD_BASE | 0x11)
-+#define IPC_PUNIT_BIOS_READ_MODULE_TEMP		(IPC_PUNIT_BIOS_CMD_BASE | 0x12)
-+#define IPC_PUNIT_BIOS_RESERVED			(IPC_PUNIT_BIOS_CMD_BASE | 0x13)
-+#define IPC_PUNIT_BIOS_READ_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE | 0x14)
-+#define IPC_PUNIT_BIOS_WRITE_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE | 0x15)
-+#define IPC_PUNIT_BIOS_READ_RATIO_OVER		(IPC_PUNIT_BIOS_CMD_BASE | 0x16)
-+#define IPC_PUNIT_BIOS_WRITE_RATIO_OVER		(IPC_PUNIT_BIOS_CMD_BASE | 0x17)
-+#define IPC_PUNIT_BIOS_READ_VF_GL_CTRL		(IPC_PUNIT_BIOS_CMD_BASE | 0x18)
-+#define IPC_PUNIT_BIOS_WRITE_VF_GL_CTRL		(IPC_PUNIT_BIOS_CMD_BASE | 0x19)
-+#define IPC_PUNIT_BIOS_READ_FM_SOC_TEMP_THRESH	(IPC_PUNIT_BIOS_CMD_BASE | 0x1a)
-+#define IPC_PUNIT_BIOS_WRITE_FM_SOC_TEMP_THRESH	(IPC_PUNIT_BIOS_CMD_BASE | 0x1b)
-+
-+/* GT Driver => Pcode commands */
-+#define IPC_PUNIT_GTD_ZERO			(IPC_PUNIT_GTD_CMD_BASE | 0x00)
-+#define IPC_PUNIT_GTD_CONFIG			(IPC_PUNIT_GTD_CMD_BASE | 0x01)
-+#define IPC_PUNIT_GTD_READ_ICCP_LIC_CDYN_SCAL	(IPC_PUNIT_GTD_CMD_BASE | 0x02)
-+#define IPC_PUNIT_GTD_WRITE_ICCP_LIC_CDYN_SCAL	(IPC_PUNIT_GTD_CMD_BASE | 0x03)
-+#define IPC_PUNIT_GTD_GET_WM_VAL		(IPC_PUNIT_GTD_CMD_BASE | 0x06)
-+#define IPC_PUNIT_GTD_WRITE_CONFIG_WISHREQ	(IPC_PUNIT_GTD_CMD_BASE | 0x07)
-+#define IPC_PUNIT_GTD_READ_REQ_DUTY_CYCLE	(IPC_PUNIT_GTD_CMD_BASE | 0x16)
-+#define IPC_PUNIT_GTD_DIS_VOL_FREQ_CHG_REQUEST	(IPC_PUNIT_GTD_CMD_BASE | 0x17)
-+#define IPC_PUNIT_GTD_DYNA_DUTY_CYCLE_CTRL	(IPC_PUNIT_GTD_CMD_BASE | 0x1a)
-+#define IPC_PUNIT_GTD_DYNA_DUTY_CYCLE_TUNING	(IPC_PUNIT_GTD_CMD_BASE | 0x1c)
-+
-+/* ISP Driver => Pcode commands */
-+#define IPC_PUNIT_ISPD_ZERO			(IPC_PUNIT_ISPD_CMD_BASE | 0x00)
-+#define IPC_PUNIT_ISPD_CONFIG			(IPC_PUNIT_ISPD_CMD_BASE | 0x01)
-+#define IPC_PUNIT_ISPD_GET_ISP_LTR_VAL		(IPC_PUNIT_ISPD_CMD_BASE | 0x02)
-+#define IPC_PUNIT_ISPD_ACCESS_IU_FREQ_BOUNDS	(IPC_PUNIT_ISPD_CMD_BASE | 0x03)
-+#define IPC_PUNIT_ISPD_READ_CDYN_LEVEL		(IPC_PUNIT_ISPD_CMD_BASE | 0x04)
-+#define IPC_PUNIT_ISPD_WRITE_CDYN_LEVEL		(IPC_PUNIT_ISPD_CMD_BASE | 0x05)
-+
-+/* Error codes */
-+#define IPC_PUNIT_ERR_SUCCESS			0
-+#define IPC_PUNIT_ERR_INVALID_CMD		1
-+#define IPC_PUNIT_ERR_INVALID_PARAMETER		2
-+#define IPC_PUNIT_ERR_CMD_TIMEOUT		3
-+#define IPC_PUNIT_ERR_CMD_LOCKED		4
-+#define IPC_PUNIT_ERR_INVALID_VR_ID		5
-+#define IPC_PUNIT_ERR_VR_ERR			6
-+
-+#if IS_ENABLED(CONFIG_INTEL_PUNIT_IPC)
-+
-+int intel_punit_ipc_simple_command(int cmd, int para1, int para2);
-+int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out);
-+
-+#else
-+
-+static inline int intel_punit_ipc_simple_command(int cmd,
-+						  int para1, int para2)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2,
-+					  u32 *in, u32 *out)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif /* CONFIG_INTEL_PUNIT_IPC */
-+
-+#endif
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1089eaa..148ff88 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -944,4 +944,10 @@ config SURFACE_PRO3_BUTTON
- 	depends on ACPI && INPUT
- 	---help---
- 	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
-+
-+config INTEL_PUNIT_IPC
-+	tristate "Intel P-Unit IPC Driver"
-+	---help---
-+	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
-+	  which is used to bridge the communications between kernel and P-Unit.
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 3ca78a3..5ee5425 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -62,3 +62,4 @@ obj-$(CONFIG_PVPANIC)           += pvpanic.o
- obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
- obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
- obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
-+obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-new file mode 100644
-index 0000000..345ad71
---- /dev/null
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -0,0 +1,348 @@
-+/*
-+ * Driver for the Intel P-Unit Mailbox IPC mechanism
-+ *
-+ * (C) Copyright 2015 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * The heart of the P-Unit is the Foxton microcontroller and its firmware,
-+ * which provide mailbox interface for power management usage.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <asm/intel_punit_ipc.h>
-+
-+/* IPC Mailbox registers */
-+#define OFFSET_DATA_LOW		0x0
-+#define OFFSET_DATA_HIGH	0x4
-+/* bit field of interface register */
-+#define	CMD_RUN			(1 << 31)
-+#define	CMD_ERRCODE_MASK	0xFF
-+#define	CMD_PARA1_SHIFT		8
-+#define	CMD_PARA2_SHIFT		16
-+
-+#define CMD_TIMEOUT_SECONDS	1
-+
-+enum {
-+	DATA = 0,
-+	INTERFACE,
-+};
-+
-+typedef struct {
-+	struct device *dev;
-+	struct mutex lock;
-+	int irq;
-+	struct completion cmd_complete;
-+	/* base of interface and data registers */
-+	void __iomem *base[RESERVED_IPC][INTERFACE + 1];
-+	IPC_TYPE type;
-+} IPC_DEV;
-+
-+static IPC_DEV *punit_ipcdev;
-+
-+static inline u32 ipc_read_status(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][INTERFACE]);
-+}
-+
-+static inline void ipc_write_cmd(IPC_DEV *ipcdev, IPC_TYPE type, u32 cmd)
-+{
-+	writel(cmd, ipcdev->base[type][INTERFACE]);
-+}
-+
-+static inline u32 ipc_read_data_low(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][DATA] + OFFSET_DATA_LOW);
-+}
-+
-+static inline u32 ipc_read_data_high(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][DATA] + OFFSET_DATA_HIGH);
-+}
-+
-+static inline void ipc_write_data_low(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
-+{
-+	writel(data, ipcdev->base[type][DATA] + OFFSET_DATA_LOW);
-+}
-+
-+static inline void ipc_write_data_high(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
-+{
-+	writel(data, ipcdev->base[type][DATA] + OFFSET_DATA_HIGH);
-+}
-+
-+static const char *ipc_err_string(int error)
-+{
-+	if (error == IPC_PUNIT_ERR_SUCCESS)
-+		return "no error";
-+	else if (error == IPC_PUNIT_ERR_INVALID_CMD)
-+		return "invalid command";
-+	else if (error == IPC_PUNIT_ERR_INVALID_PARAMETER)
-+		return "invalid parameter";
-+	else if (error == IPC_PUNIT_ERR_CMD_TIMEOUT)
-+		return "command timeout";
-+	else if (error == IPC_PUNIT_ERR_CMD_LOCKED)
-+		return "command locked";
-+	else if (error == IPC_PUNIT_ERR_INVALID_VR_ID)
-+		return "invalid vr id";
-+	else if (error == IPC_PUNIT_ERR_VR_ERR)
-+		return "vr error";
-+	else
-+		return "unknown error";
-+}
-+
-+static int intel_punit_ipc_check_status(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
-+	int errcode;
-+	int status;
-+
-+	if (ipcdev->irq) {
-+		if (!wait_for_completion_timeout(&ipcdev->cmd_complete,
-+						 CMD_TIMEOUT_SECONDS * HZ)) {
-+			dev_err(ipcdev->dev, "IPC timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+	} else {
-+		while ((ipc_read_status(ipcdev, type) & CMD_RUN) && --loops)
-+			udelay(1);
-+		if (!loops) {
-+			dev_err(ipcdev->dev, "IPC timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+	}
-+
-+	status = ipc_read_status(ipcdev, type);
-+	errcode = status & CMD_ERRCODE_MASK;
-+	if (errcode) {
-+		dev_err(ipcdev->dev, "IPC failed: %s, IPC_STS=0x%x\n",
-+			ipc_err_string(errcode), status);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * intel_punit_ipc_simple_command() - Simple IPC command
-+ * @cmd:	IPC command code.
-+ * @para1:	First 8bit parameter, set 0 if not used.
-+ * @para2:	Second 8bit parameter, set 0 if not used.
-+ *
-+ * Send a IPC command to P-Unit when there is no data transaction
-+ *
-+ * Return:	IPC error code or 0 on success.
-+ */
-+int intel_punit_ipc_simple_command(int cmd, int para1, int para2)
-+{
-+	IPC_DEV *ipcdev = punit_ipcdev;
-+	IPC_TYPE type;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&ipcdev->lock);
-+
-+	reinit_completion(&ipcdev->cmd_complete);
-+	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
-+
-+	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
-+	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
-+	ipc_write_cmd(ipcdev, type, val);
-+	ret = intel_punit_ipc_check_status(ipcdev, type);
-+
-+	mutex_unlock(&ipcdev->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(intel_punit_ipc_simple_command);
-+
-+/**
-+ * intel_punit_ipc_command() - IPC command with data and pointers
-+ * @cmd:	IPC command code.
-+ * @para1:	First 8bit parameter, set 0 if not used.
-+ * @para2:	Second 8bit parameter, set 0 if not used.
-+ * @in:		Input data, 32bit for BIOS cmd, two 32bit for GTD and ISPD.
-+ * @out:	Output data.
-+ *
-+ * Send a IPC command to P-Unit with data transaction
-+ *
-+ * Return:	IPC error code or 0 on success.
-+ */
-+int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
-+{
-+	IPC_DEV *ipcdev = punit_ipcdev;
-+	IPC_TYPE type;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&ipcdev->lock);
-+
-+	reinit_completion(&ipcdev->cmd_complete);
-+	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
-+	ipc_write_data_low(ipcdev, type, *in);
-+
-+	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
-+		ipc_write_data_high(ipcdev, type, *++in);
-+
-+	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
-+	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
-+	ipc_write_cmd(ipcdev, type, val);
-+
-+	ret = intel_punit_ipc_check_status(ipcdev, type);
-+	if (ret)
-+		goto out;
-+	*out = ipc_read_data_low(ipcdev, type);
-+
-+	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
-+		*++out = ipc_read_data_high(ipcdev, type);
-+
-+out:
-+	mutex_unlock(&ipcdev->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(intel_punit_ipc_command);
-+
-+static irqreturn_t intel_punit_ioc(int irq, void *dev_id)
-+{
-+	IPC_DEV *ipcdev = (IPC_DEV *)dev_id;
-+
-+	complete(&ipcdev->cmd_complete);
-+	return IRQ_HANDLED;
-+}
-+
-+static int intel_punit_get_bars(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	void __iomem *addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for BIOS DATA\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[BIOS_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for BIOS inter\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[BIOS_IPC][INTERFACE] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for ISP DATA\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[ISPDRIVER_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for ISP inter\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[ISPDRIVER_IPC][INTERFACE] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for GTD DATA\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[GTDRIVER_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr)) {
-+		dev_err(&pdev->dev, "Failed to map resouce for GTD inter\n");
-+		return PTR_ERR(addr);
-+	}
-+	punit_ipcdev->base[GTDRIVER_IPC][INTERFACE] = addr;
-+
-+	return 0;
-+}
-+
-+static int intel_punit_ipc_probe(struct platform_device *pdev)
-+{
-+	int irq, ret;
-+
-+	punit_ipcdev = devm_kzalloc(&pdev->dev,
-+				    sizeof(*punit_ipcdev), GFP_KERNEL);
-+	if (!punit_ipcdev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, punit_ipcdev);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		punit_ipcdev->irq = 0;
-+		dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
-+	} else {
-+		ret = devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
-+				       IRQF_NO_SUSPEND, "intel_punit_ipc",
-+				       &punit_ipcdev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to request irq: %d\n", irq);
-+			return ret;
-+		}
-+		punit_ipcdev->irq = irq;
-+	}
-+
-+	ret = intel_punit_get_bars(pdev);
-+	if (ret)
-+		goto out;
-+
-+	punit_ipcdev->dev = &pdev->dev;
-+	mutex_init(&punit_ipcdev->lock);
-+	init_completion(&punit_ipcdev->cmd_complete);
-+
-+out:
-+	return ret;
-+}
-+
-+static int intel_punit_ipc_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct acpi_device_id punit_ipc_acpi_ids[] = {
-+	{ "INT34D4", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver intel_punit_ipc_driver = {
-+	.probe = intel_punit_ipc_probe,
-+	.remove = intel_punit_ipc_remove,
-+	.driver = {
-+		.name = "intel_punit_ipc",
-+		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
-+	},
-+};
-+
-+static int __init intel_punit_ipc_init(void)
-+{
-+	return platform_driver_register(&intel_punit_ipc_driver);
-+}
-+
-+static void __exit intel_punit_ipc_exit(void)
-+{
-+	platform_driver_unregister(&intel_punit_ipc_driver);
-+}
-+
-+MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
-+MODULE_DESCRIPTION("Intel P-Unit IPC driver");
-+MODULE_LICENSE("GPL v2");
-+
-+/* Some modules are dependent on this, so init earlier */
-+fs_initcall(intel_punit_ipc_init);
-+module_exit(intel_punit_ipc_exit);
--- 
-1.8.3.2
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
