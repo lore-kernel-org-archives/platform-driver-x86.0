@@ -1,121 +1,284 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: Dell Vostro V131 hotkeys revisited
-Date: Mon, 7 Dec 2015 12:43:20 +0100
-Message-ID: <20151207114320.GC13893@pali>
-References: <20150702204122.GA2610@eudyptula.hq.kempniu.pl>
- <201507022258.32104@pali>
- <20150703065244.GA2401@eudyptula.hq.kempniu.pl>
- <20150703074813.GD1841@pali>
- <559C1C17.3060009@dell.com>
- <20150708035346.GB2413@eudyptula.hq.kempniu.pl>
- <20150722073513.GA2381@eudyptula.hq.kempniu.pl>
- <20150831095107.GA2397@eudyptula.hq.kempniu.pl>
- <20150910043812.GB108260@vmdeb7>
- <20151113101716.GA5458@eudyptula.hq.kempniu.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH V8 1/2] intel_pmc_ipc: update acpi resource structure for
+ Punit
+Date: Mon, 7 Dec 2015 15:45:14 -0800
+Message-ID: <20151207234514.GA12897@malice.jf.intel.com>
+References: <1449507305-51709-1-git-send-email-qipeng.zha@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f48.google.com ([74.125.82.48]:36900 "EHLO
-	mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754928AbbLGLnY (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:43494 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S964814AbbLGXpT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 7 Dec 2015 06:43:24 -0500
-Received: by wmww144 with SMTP id w144so146403572wmw.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2015 03:43:23 -0800 (PST)
+	Mon, 7 Dec 2015 18:45:19 -0500
 Content-Disposition: inline
-In-Reply-To: <20151113101716.GA5458@eudyptula.hq.kempniu.pl>
+In-Reply-To: <1449507305-51709-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario_limonciello@dell.com>, "Gowda, Srinivas G" <Srinivas_G_Gowda@dell.com>, "Brown, Michael E" <Michael_E_Brown@dell.com>, "Warzecha, Douglas" <Douglas_Warzecha@dell.com>, Matthew Garrett <mjg@redhat.com>, "Kabir, Rezwanul" <Rezwanul_Kabir@dell.com>, Alex Hung <alex.hung@canonical.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Qipeng Zha <qipeng.zha@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 
-Hi Micha=C5=82!
+On Tue, Dec 08, 2015 at 12:55:04AM +0800, Qipeng Zha wrote:
+> BIOS restructure exported memory resources for Punit
+> in acpi table, So update resources for Punit.
+> 
+> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
 
-On Friday 13 November 2015 11:17:16 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> For those of you playing along at home, I have some news (mostly bad,
-> I'm afraid).
->=20
-> TL;DR: I don't believe there is any way of getting Vostro V131 fully
-> supported by the kernel without breaking stuff that already works, so=
- I
-> suggest a slightly different approach (see the last paragraph).
->=20
-> I have recently noticed that backlight control on a Vostro V131 runni=
-ng
-> Linux has some glitches as well.  Before WMI gets enabled, pressing
-> either the "brightness down" (Fn+F4) or the "brightness up" (Fn+F5) k=
-ey
-> causes two "presses" of the respective keycode (KEY_BRIGHTNESSUP or
-> KEY_BRIGHTNESSDOWN) to be reported.  This itself seems buggy to me, b=
-ut
-> whatever.  The worse part is that there is an irritating flickering
-> effect as well [1].
+Thank you for the update Qipeng. I will review shortly.
 
-=46rom that bug I understood that solution is to use native backlight
-control (via acpi_backlight=3Dnative). This is something which can be
-forced or changed by default per DMI type (for buggy machines like
-this). Right?
++Andriy who originally raised the concern over the ACPI resource assumptions in
+the previous version. Andriy, this resource allocation looks to be a substantial
+improvement to me. Do you have any further concerns?
 
-> But if that wasn't enough, it gets even worse after
-> issuing the WMI-enabling SMI call, because the keycode simulated by A=
-CPI
-> gets "shifted" by one event while the WMI events are reported correct=
-ly.
-> Consider the following sequence of key presses:
->=20
-> Key pressed     Keycode reported        WMI event reported=20
-> -----------     ----------------        ------------------
-> Fn+F4           (none)                  0xe005
-> Fn+F4           KEY_BRIGHTNESSDOWN      0xe005
-> Fn+F5           KEY_BRIGHTNESSDOWN      0xe006
-> Fn+F5           KEY_BRIGHTNESSUP        0xe006
-> Fn+Mute         KEY_BRIGHTNESSUP        0x0000
-> Fn+Mute         (none)                  0x0000
+> ---
+>  drivers/platform/x86/intel_pmc_ipc.c | 142 +++++++++++++++++++++++------------
+>  1 file changed, 96 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 28b2a12..c699950 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -65,12 +65,16 @@
+>  #define IPC_TRIGGER_MODE_IRQ		true
+>  
+>  /* exported resources from IFWI */
+> -#define PLAT_RESOURCE_IPC_INDEX		0
+> -#define PLAT_RESOURCE_IPC_SIZE		0x1000
+> -#define PLAT_RESOURCE_GCR_SIZE		0x1000
+> -#define PLAT_RESOURCE_PUNIT_DATA_INDEX	1
+> -#define PLAT_RESOURCE_PUNIT_INTER_INDEX	2
+> -#define PLAT_RESOURCE_ACPI_IO_INDEX	0
+> +#define PLAT_RES_IPC_INDEX		0
+> +#define PLAT_RES_IPC_SIZE		0x1000
+> +#define PLAT_RES_GCR_SIZE		0x1000
+> +#define PLAT_RES_PUNIT_BIOS_DATA_INDEX	1
+> +#define PLAT_RES_PUNIT_BIOS_INTER_INDEX	2
+> +#define PLAT_RES_PUNIT_ISP_DATA_INDEX	4
+> +#define PLAT_RES_PUNIT_ISP_INTER_INDEX	5
+> +#define PLAT_RES_PUNIT_GTD_DATA_INDEX	6
+> +#define PLAT_RES_PUNIT_GTD_INTER_INDEX	7
+> +#define PLAT_RES_ACPI_IO_INDEX	0
+>  
+>  /*
+>   * BIOS does not create an ACPI device for each PMC function,
+> @@ -105,10 +109,6 @@ static struct intel_pmc_ipc_dev {
+>  	int gcr_size;
+>  
+>  	/* punit */
+> -	resource_size_t punit_base;
+> -	int punit_size;
+> -	resource_size_t punit_base2;
+> -	int punit_size2;
+>  	struct platform_device *punit_dev;
+>  } ipcdev;
+>  
+> @@ -444,9 +444,22 @@ static const struct attribute_group intel_ipc_group = {
+>  	.attrs = intel_ipc_attrs,
+>  };
+>  
+> -#define PUNIT_RESOURCE_INTER		1
+> -static struct resource punit_res[] = {
+> -	/* Punit */
+> +static struct resource punit_res_array[] = {
+> +	/* Punit BIOS */
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +	/* Punit ISP */
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +	/* Punit GTD */
+>  	{
+>  		.flags = IORESOURCE_MEM,
+>  	},
+> @@ -481,7 +494,6 @@ static struct itco_wdt_platform_data tco_info = {
+>  static int ipc_create_punit_device(void)
+>  {
+>  	struct platform_device *pdev;
+> -	struct resource *res;
+>  	int ret;
+>  
+>  	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+> @@ -491,17 +503,8 @@ static int ipc_create_punit_device(void)
+>  	}
+>  
+>  	pdev->dev.parent = ipcdev.dev;
+> -
+> -	res = punit_res;
+> -	res->start = ipcdev.punit_base;
+> -	res->end = res->start + ipcdev.punit_size - 1;
+> -
+> -	res = punit_res + PUNIT_RESOURCE_INTER;
+> -	res->start = ipcdev.punit_base2;
+> -	res->end = res->start + ipcdev.punit_size2 - 1;
+> -
+> -	ret = platform_device_add_resources(pdev, punit_res,
+> -					    ARRAY_SIZE(punit_res));
+> +	ret = platform_device_add_resources(pdev, punit_res_array,
+> +					    ARRAY_SIZE(punit_res_array));
+>  	if (ret) {
+>  		dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
+>  		goto err;
+> @@ -590,12 +593,12 @@ static int ipc_create_pmc_devices(void)
+>  
+>  static int ipc_plat_get_res(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+> +	struct resource *res, *punit_res;
+>  	void __iomem *addr;
+>  	int size;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_IO,
+> -				    PLAT_RESOURCE_ACPI_IO_INDEX);
+> +				    PLAT_RES_ACPI_IO_INDEX);
+>  	if (!res) {
+>  		dev_err(&pdev->dev, "Failed to get io resource\n");
+>  		return -ENXIO;
+> @@ -606,37 +609,84 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>  	dev_info(&pdev->dev, "io res: %llx %x\n",
+>  		 (long long)res->start, (int)resource_size(res));
+>  
+> +	punit_res = punit_res_array;
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> -				    PLAT_RESOURCE_PUNIT_DATA_INDEX);
+> +				    PLAT_RES_PUNIT_BIOS_DATA_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get punit resource\n");
+> +		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
+>  		return -ENXIO;
+>  	}
+> -	size = resource_size(res);
+> -	ipcdev.punit_base = res->start;
+> -	ipcdev.punit_size = size;
+> -	dev_info(&pdev->dev, "punit data res: %llx %x\n",
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit BIOS data res: %llx %x\n",
+>  		 (long long)res->start, (int)resource_size(res));
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> -				    PLAT_RESOURCE_PUNIT_INTER_INDEX);
+> +				    PLAT_RES_PUNIT_BIOS_INTER_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get punit inter resource\n");
+> +		dev_err(&pdev->dev, "Failed to get res of punit BIOS inter\n");
+>  		return -ENXIO;
+>  	}
+> -	size = resource_size(res);
+> -	ipcdev.punit_base2 = res->start;
+> -	ipcdev.punit_size2 = size;
+> -	dev_info(&pdev->dev, "punit interface res: %llx %x\n",
+> +	punit_res++;
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit BIOS interface res: %llx %x\n",
+> +		 (long long)res->start, (int)resource_size(res));
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> +				    PLAT_RES_PUNIT_ISP_DATA_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit ISP data\n");
+> +		return -ENXIO;
+> +	}
+> +	punit_res++;
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit ISP data res: %llx %x\n",
+>  		 (long long)res->start, (int)resource_size(res));
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> -				    PLAT_RESOURCE_IPC_INDEX);
+> +				    PLAT_RES_PUNIT_ISP_INTER_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit ISP inter\n");
+> +		return -ENXIO;
+> +	}
+> +	punit_res++;
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit ISP interface res: %llx %x\n",
+> +		 (long long)res->start, (int)resource_size(res));
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> +				    PLAT_RES_PUNIT_GTD_DATA_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit GTD data\n");
+> +		return -ENXIO;
+> +	}
+> +	punit_res++;
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit GTD data res: %llx %x\n",
+> +		 (long long)res->start, (int)resource_size(res));
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> +				    PLAT_RES_PUNIT_GTD_INTER_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit GTD inter\n");
+> +		return -ENXIO;
+> +	}
+> +	punit_res++;
+> +	punit_res->start = res->start;
+> +	punit_res->end = res->start + resource_size(res) - 1;
+> +	dev_info(&pdev->dev, "punit GTD interface res: %llx %x\n",
+> +		 (long long)res->start, (int)resource_size(res));
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, PLAT_RES_IPC_INDEX);
+>  	if (!res) {
+>  		dev_err(&pdev->dev, "Failed to get ipc resource\n");
+>  		return -ENXIO;
+>  	}
+> -	size = PLAT_RESOURCE_IPC_SIZE;
+> +	size = PLAT_RES_IPC_SIZE;
+>  	if (!request_mem_region(res->start, size, pdev->name)) {
+>  		dev_err(&pdev->dev, "Failed to request ipc resource\n");
+>  		return -EBUSY;
+> @@ -650,7 +700,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>  	ipcdev.ipc_base = addr;
+>  
+>  	ipcdev.gcr_base = res->start + size;
+> -	ipcdev.gcr_size = PLAT_RESOURCE_GCR_SIZE;
+> +	ipcdev.gcr_size = PLAT_RES_GCR_SIZE;
+>  	dev_info(&pdev->dev, "ipc res: %llx %x\n",
+>  		 (long long)res->start, (int)resource_size(res));
+>  
+> @@ -714,9 +764,9 @@ err_irq:
+>  err_device:
+>  	iounmap(ipcdev.ipc_base);
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> -				    PLAT_RESOURCE_IPC_INDEX);
+> +				    PLAT_RES_IPC_INDEX);
+>  	if (res)
+> -		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
+> +		release_mem_region(res->start, PLAT_RES_IPC_SIZE);
+>  	return ret;
+>  }
+>  
+> @@ -730,9 +780,9 @@ static int ipc_plat_remove(struct platform_device *pdev)
+>  	platform_device_unregister(ipcdev.punit_dev);
+>  	iounmap(ipcdev.ipc_base);
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> -				    PLAT_RESOURCE_IPC_INDEX);
+> +				    PLAT_RES_IPC_INDEX);
+>  	if (res)
+> -		release_mem_region(res->start, PLAT_RESOURCE_IPC_SIZE);
+> +		release_mem_region(res->start, PLAT_RES_IPC_SIZE);
+>  	ipcdev.dev = NULL;
+>  	return 0;
+>  }
+> -- 
+> 1.8.3.2
+> 
+> 
 
-Hm... I'm not sure if I understood this problem correctly, but those
-keycodes are reported on i8042 bus by atk keyboard? Or are reported by
-ACPI video.ko module? And problem is only with brightness keys?
-
-What happen if you boot 4.2+ kernel with acpi_backlight=3Dnative?
-
-> I determined that both brightness flickering and incorrect keycode
-> reporting are caused (the latter indirectly) by ACPI method CESM (and
-> later I found out that [1] agrees in regard to flickering).  While I
-> haven't found the source of the "shifting" bug (and I am not willing =
-to,
-> thanks, I'd rather cut myself with a butter knife), the basic tests I=
-'ve
-> performed indicate that simply overriding that CESM method with a no-=
-op
-> does the job, if combined with correct kernel parameters.
->=20
-> However, all this nonsense makes me come to the conclusion that any
-> attempts to fix it by only changing existing kernel code are futile [=
-2].
-> Thus, to avoid breaking other Dell devices which already work fine wi=
-th
-> Linux, I devised a "solution" using libsmbios (which in turn uses
-> dcdbas) and ACPI method overriding which seems to work fine.  It stil=
-l
-> needs a kernel patch which enables reporting the 0xe025 event as a
-> keypress (this event is currently associated with a KE_IGNORE sparse
-> keymap entry).  I prepared a patch which adds a module parameter to
-> dell-wmi that enables event 0xe025 to be either ignored or not,
-> depending on the user's choice.  Does that sound sane or is there a
-> better way to do it?  I'll be happy to post the patch once I'm done
-> polishing it, given that this route sounds reasonable to the
-> maintainers.  If we enable the kernel to react to WMI event 0xe025,
-> Vostro V131 users (at least those using kernels compiled with
-> CONFIG_ACPI_CUSTOM_METHOD) will actually be able to use all standard
-> features of their laptops on Linux without recompiling the kernel, wh=
-ich
-> I would consider a win (a Pyrrhic one, but still).
->=20
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D100441
-> [2] without Dell's assistance
->=20
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+-- 
+Darren Hart
+Intel Open Source Technology Center
