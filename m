@@ -1,35 +1,207 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH V8 1/2] intel_pmc_ipc: update acpi resource structure
- for Punit
-Date: Thu, 10 Dec 2015 02:39:07 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD03832063@SHSMSX104.ccr.corp.intel.com>
-References: <1449507305-51709-1-git-send-email-qipeng.zha@intel.com>
-	 <20151207234514.GA12897@malice.jf.intel.com>
- <1449580757.30729.52.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Qipeng Zha <qipeng.zha@intel.com>
+Subject: [PATCH V9 1/2] intel_pmc_ipc: update acpi resource structure for Punit
+Date: Fri, 11 Dec 2015 02:21:00 +0800
+Message-ID: <1449771661-40300-1-git-send-email-qipeng.zha@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:48006 "EHLO mga09.intel.com"
+Received: from mga02.intel.com ([134.134.136.20]:58416 "EHLO mga02.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751897AbbLJCjL (ORCPT
+	id S1751054AbbLJKQb (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 9 Dec 2015 21:39:11 -0500
-In-Reply-To: <1449580757.30729.52.camel@linux.intel.com>
-Content-Language: en-US
+	Thu, 10 Dec 2015 05:16:31 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com
 
-Pj4gK0FuZHJpeSB3aG8gb3JpZ2luYWxseSByYWlzZWQgdGhlIGNvbmNlcm4gb3ZlciB0aGUgQUNQ
-SSByZXNvdXJjZQ0KPj4gYXNzdW1wdGlvbnMgaW4NCj4+IHRoZSBwcmV2aW91cyB2ZXJzaW9uLiBB
-bmRyaXksIHRoaXMgcmVzb3VyY2UgYWxsb2NhdGlvbiBsb29rcyB0byBiZSBhIA0KPj4gc3Vic3Rh
-bnRpYWwgaW1wcm92ZW1lbnQgdG8gbWUuIERvIHlvdSBoYXZlIGFueSBmdXJ0aGVyIGNvbmNlcm5z
-Pw0KDQo+U28sIHJlZ2FyZGluZyB0byB0aGUgc2Vjb25kIHBhdGNoDQoNCj4xLiBJbiBleGNlcnB0
-cyBsaWtlIGZvbGxvd2luZw0KDQo+aWYgKElTX0VSUihhZGRyKSkgew0KPgkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiRmFpbGVkIHRvIG1hcCByZXNvdWNlIGZvciBCSU9TIERBVEFcbiIpOw0KPgkJcmV0
-dXJuIFBUUl9FUlIoYWRkcik7DQo+CX0NCg0KPk5vIG5lZWQgdG8gaGF2ZSBhbiBlcnJvciBtZXNz
-YWdlLiBDb3JlIGFscmVhZHkgaGFzIHNvbWV0aGluZyB0byBwcmludCBhdCB0aGF0IHBvaW50Lg0K
-DQpDb3JlIGVycm9yIG1lc3NhZ2Ugd2lsbCBub3Qgc2hvdyB3aGljaCByZXNvdXJjZSBpcyBmYWls
-ZWQsDQpBbnl3YXksIEkgd2lsbCBtYWRlIHRoaXMgY2hhbmdlDQoNCg==
+BIOS restructure exported memory resources for Punit
+in acpi table, So update resources for Punit.
+
+Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+
+---
+change in v9
+ rename indexes of all acpi resources;
+ add comments for punit_res;
+---
+ drivers/platform/x86/intel_pmc_ipc.c | 114 ++++++++++++++++++++++++-----------
+ 1 file changed, 80 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 28b2a12..00812a4 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -68,8 +68,12 @@
+ #define PLAT_RESOURCE_IPC_INDEX		0
+ #define PLAT_RESOURCE_IPC_SIZE		0x1000
+ #define PLAT_RESOURCE_GCR_SIZE		0x1000
+-#define PLAT_RESOURCE_PUNIT_DATA_INDEX	1
+-#define PLAT_RESOURCE_PUNIT_INTER_INDEX	2
++#define PLAT_RESOURCE_BIOS_DATA_INDEX	1
++#define PLAT_RESOURCE_BIOS_INTER_INDEX	2
++#define PLAT_RESOURCE_ISP_DATA_INDEX	4
++#define PLAT_RESOURCE_ISP_INTER_INDEX	5
++#define PLAT_RESOURCE_GTD_DATA_INDEX	6
++#define PLAT_RESOURCE_GTD_INTER_INDEX	7
+ #define PLAT_RESOURCE_ACPI_IO_INDEX	0
+ 
+ /*
+@@ -105,10 +109,6 @@ static struct intel_pmc_ipc_dev {
+ 	int gcr_size;
+ 
+ 	/* punit */
+-	resource_size_t punit_base;
+-	int punit_size;
+-	resource_size_t punit_base2;
+-	int punit_size2;
+ 	struct platform_device *punit_dev;
+ } ipcdev;
+ 
+@@ -444,9 +444,22 @@ static const struct attribute_group intel_ipc_group = {
+ 	.attrs = intel_ipc_attrs,
+ };
+ 
+-#define PUNIT_RESOURCE_INTER		1
+-static struct resource punit_res[] = {
+-	/* Punit */
++static struct resource punit_res_array[] = {
++	/* Punit BIOS */
++	{
++		.flags = IORESOURCE_MEM,
++	},
++	{
++		.flags = IORESOURCE_MEM,
++	},
++	/* Punit ISP */
++	{
++		.flags = IORESOURCE_MEM,
++	},
++	{
++		.flags = IORESOURCE_MEM,
++	},
++	/* Punit GTD */
+ 	{
+ 		.flags = IORESOURCE_MEM,
+ 	},
+@@ -481,7 +494,6 @@ static struct itco_wdt_platform_data tco_info = {
+ static int ipc_create_punit_device(void)
+ {
+ 	struct platform_device *pdev;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	pdev = platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+@@ -491,17 +503,8 @@ static int ipc_create_punit_device(void)
+ 	}
+ 
+ 	pdev->dev.parent = ipcdev.dev;
+-
+-	res = punit_res;
+-	res->start = ipcdev.punit_base;
+-	res->end = res->start + ipcdev.punit_size - 1;
+-
+-	res = punit_res + PUNIT_RESOURCE_INTER;
+-	res->start = ipcdev.punit_base2;
+-	res->end = res->start + ipcdev.punit_size2 - 1;
+-
+-	ret = platform_device_add_resources(pdev, punit_res,
+-					    ARRAY_SIZE(punit_res));
++	ret = platform_device_add_resources(pdev, punit_res_array,
++					    ARRAY_SIZE(punit_res_array));
+ 	if (ret) {
+ 		dev_err(ipcdev.dev, "Failed to add platform punit resources\n");
+ 		goto err;
+@@ -590,7 +593,7 @@ static int ipc_create_pmc_devices(void)
+ 
+ static int ipc_plat_get_res(struct platform_device *pdev)
+ {
+-	struct resource *res;
++	struct resource *res, *punit_res;
+ 	void __iomem *addr;
+ 	int size;
+ 
+@@ -606,28 +609,71 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+ 	dev_info(&pdev->dev, "io res: %llx %x\n",
+ 		 (long long)res->start, (int)resource_size(res));
+ 
++	/* This is index 0 to cover BIOS data register */
++	punit_res = punit_res_array;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM,
+-				    PLAT_RESOURCE_PUNIT_DATA_INDEX);
++				    PLAT_RESOURCE_BIOS_DATA_INDEX);
+ 	if (!res) {
+-		dev_err(&pdev->dev, "Failed to get punit resource\n");
++		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
+ 		return -ENXIO;
+ 	}
+-	size = resource_size(res);
+-	ipcdev.punit_base = res->start;
+-	ipcdev.punit_size = size;
+-	dev_info(&pdev->dev, "punit data res: %llx %x\n",
++	*punit_res = *res;
++	dev_info(&pdev->dev, "punit BIOS data res: %llx %x\n",
+ 		 (long long)res->start, (int)resource_size(res));
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM,
+-				    PLAT_RESOURCE_PUNIT_INTER_INDEX);
++				    PLAT_RESOURCE_BIOS_INTER_INDEX);
+ 	if (!res) {
+-		dev_err(&pdev->dev, "Failed to get punit inter resource\n");
++		dev_err(&pdev->dev, "Failed to get res of punit BIOS inter\n");
+ 		return -ENXIO;
+ 	}
+-	size = resource_size(res);
+-	ipcdev.punit_base2 = res->start;
+-	ipcdev.punit_size2 = size;
+-	dev_info(&pdev->dev, "punit interface res: %llx %x\n",
++	/* This is index 1 to cover BIOS interface register */
++	*++punit_res = *res;
++	dev_info(&pdev->dev, "punit BIOS interface res: %llx %x\n",
++		 (long long)res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				    PLAT_RESOURCE_ISP_DATA_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Failed to get res of punit ISP data\n");
++		return -ENXIO;
++	}
++	/* This is index 2 to cover ISP data register */
++	*++punit_res = *res;
++	dev_info(&pdev->dev, "punit ISP data res: %llx %x\n",
++		 (long long)res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				    PLAT_RESOURCE_ISP_INTER_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Failed to get res of punit ISP inter\n");
++		return -ENXIO;
++	}
++	/* This is index 3 to cover ISP interface register */
++	*++punit_res = *res;
++	dev_info(&pdev->dev, "punit ISP interface res: %llx %x\n",
++		 (long long)res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				    PLAT_RESOURCE_GTD_DATA_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Failed to get res of punit GTD data\n");
++		return -ENXIO;
++	}
++	/* This is index 4 to cover GTD data register */
++	*++punit_res = *res;
++	dev_info(&pdev->dev, "punit GTD data res: %llx %x\n",
++		 (long long)res->start, (int)resource_size(res));
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM,
++				    PLAT_RESOURCE_GTD_INTER_INDEX);
++	if (!res) {
++		dev_err(&pdev->dev, "Failed to get res of punit GTD inter\n");
++		return -ENXIO;
++	}
++	/* This is index 5 to cover GTD interface register */
++	*++punit_res = *res;
++	dev_info(&pdev->dev, "punit GTD interface res: %llx %x\n",
+ 		 (long long)res->start, (int)resource_size(res));
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM,
+-- 
+1.8.3.2
