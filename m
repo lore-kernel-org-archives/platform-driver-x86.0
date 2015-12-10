@@ -1,572 +1,247 @@
-From: Qipeng Zha <qipeng.zha@intel.com>
-Subject: [PATCH V9 2/2] platform:x86: add Intel P-Unit mailbox IPC driver
-Date: Fri, 11 Dec 2015 02:21:01 +0800
-Message-ID: <1449771661-40300-2-git-send-email-qipeng.zha@intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH V9 1/2] intel_pmc_ipc: update acpi resource structure
+ for Punit
+Date: Thu, 10 Dec 2015 13:13:01 +0200
+Message-ID: <1449745981.30729.71.camel@linux.intel.com>
 References: <1449771661-40300-1-git-send-email-qipeng.zha@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:58416 "EHLO mga02.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:31608 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751509AbbLJKQc (ORCPT
+	id S1751375AbbLJLMs (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 10 Dec 2015 05:16:32 -0500
+	Thu, 10 Dec 2015 06:12:48 -0500
 In-Reply-To: <1449771661-40300-1-git-send-email-qipeng.zha@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com
+To: Qipeng Zha <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org
 
-This driver provides support for P-Unit mailbox IPC on Intel platforms.
-The heart of the P-Unit is the Foxton microcontroller and its firmware,
-which provide mailbox interface for power management usage.
+On Fri, 2015-12-11 at 02:21 +0800, Qipeng Zha wrote:
+> BIOS restructure exported memory resources for Punit
+> in acpi table, So update resources for Punit.
+>=20
+> Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+>=20
 
-Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+Almost. See below.
 
----
-change in v9
- remove non-necessary cast for void pointer;
- remove redundant error messages.
+> ---
+> change in v9
+> =C2=A0rename indexes of all acpi resources;
+> =C2=A0add comments for punit_res;
+> ---
+> =C2=A0drivers/platform/x86/intel_pmc_ipc.c | 114 ++++++++++++++++++++=
+++++-
+> ----------
+> =C2=A01 file changed, 80 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c
+> b/drivers/platform/x86/intel_pmc_ipc.c
+> index 28b2a12..00812a4 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -68,8 +68,12 @@
+> =C2=A0#define PLAT_RESOURCE_IPC_INDEX		0
+> =C2=A0#define PLAT_RESOURCE_IPC_SIZE		0x1000
+> =C2=A0#define PLAT_RESOURCE_GCR_SIZE		0x1000
+> -#define PLAT_RESOURCE_PUNIT_DATA_INDEX	1
+> -#define PLAT_RESOURCE_PUNIT_INTER_INDEX	2
+> +#define PLAT_RESOURCE_BIOS_DATA_INDEX	1
+> +#define PLAT_RESOURCE_BIOS_INTER_INDEX	2
 
-change in v8
- Change the way to get three IPCs's resources due to udpated acpi entries,
+Since there is a comment and new version will be anticipated I also
+would like to propose to change INTER to IFACE because latter more
+particular. Darren?
 
- In the new acpi resources layout, two entries for each IPC, one for data
-and one for interface.
+> +#define PLAT_RESOURCE_ISP_DATA_INDEX	4
+> +#define PLAT_RESOURCE_ISP_INTER_INDEX	5
+> +#define PLAT_RESOURCE_GTD_DATA_INDEX	6
+> +#define PLAT_RESOURCE_GTD_INTER_INDEX	7
+> =C2=A0#define PLAT_RESOURCE_ACPI_IO_INDEX	0
+> =C2=A0
+> =C2=A0/*
+> @@ -105,10 +109,6 @@ static struct intel_pmc_ipc_dev {
+> =C2=A0	int gcr_size;
+> =C2=A0
+> =C2=A0	/* punit */
+> -	resource_size_t punit_base;
+> -	int punit_size;
+> -	resource_size_t punit_base2;
+> -	int punit_size2;
+> =C2=A0	struct platform_device *punit_dev;
+> =C2=A0} ipcdev;
+> =C2=A0
+> @@ -444,9 +444,22 @@ static const struct attribute_group
+> intel_ipc_group =3D {
+> =C2=A0	.attrs =3D intel_ipc_attrs,
+> =C2=A0};
+> =C2=A0
+> -#define PUNIT_RESOURCE_INTER		1
+> -static struct resource punit_res[] =3D {
+> -	/* Punit */
+> +static struct resource punit_res_array[] =3D {
+> +	/* Punit BIOS */
+> +	{
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +	/* Punit ISP */
+> +	{
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +	{
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +	/* Punit GTD */
+> =C2=A0	{
+> =C2=A0		.flags =3D IORESOURCE_MEM,
+> =C2=A0	},
+> @@ -481,7 +494,6 @@ static struct itco_wdt_platform_data tco_info =3D=
+ {
+> =C2=A0static int ipc_create_punit_device(void)
+> =C2=A0{
+> =C2=A0	struct platform_device *pdev;
+> -	struct resource *res;
+> =C2=A0	int ret;
+> =C2=A0
+> =C2=A0	pdev =3D platform_device_alloc(PUNIT_DEVICE_NAME, -1);
+> @@ -491,17 +503,8 @@ static int ipc_create_punit_device(void)
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	pdev->dev.parent =3D ipcdev.dev;
+> -
+> -	res =3D punit_res;
+> -	res->start =3D ipcdev.punit_base;
+> -	res->end =3D res->start + ipcdev.punit_size - 1;
+> -
+> -	res =3D punit_res + PUNIT_RESOURCE_INTER;
+> -	res->start =3D ipcdev.punit_base2;
+> -	res->end =3D res->start + ipcdev.punit_size2 - 1;
+> -
+> -	ret =3D platform_device_add_resources(pdev, punit_res,
+> -					=C2=A0=C2=A0=C2=A0=C2=A0ARRAY_SIZE(punit_res));
+> +	ret =3D platform_device_add_resources(pdev, punit_res_array,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0ARRAY_SIZE(punit_res_arr
+> ay));
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(ipcdev.dev, "Failed to add platform punit
+> resources\n");
+> =C2=A0		goto err;
+> @@ -590,7 +593,7 @@ static int ipc_create_pmc_devices(void)
+> =C2=A0
+> =C2=A0static int ipc_plat_get_res(struct platform_device *pdev)
+> =C2=A0{
+> -	struct resource *res;
+> +	struct resource *res, *punit_res;
+> =C2=A0	void __iomem *addr;
+> =C2=A0	int size;
+> =C2=A0
+> @@ -606,28 +609,71 @@ static int ipc_plat_get_res(struct
+> platform_device *pdev)
+> =C2=A0	dev_info(&pdev->dev, "io res: %llx %x\n",
+> =C2=A0		=C2=A0(long long)res->start, (int)resource_size(res));
+> =C2=A0
+> +	/* This is index 0 to cover BIOS data register */
+> +	punit_res =3D punit_res_array;
+> =C2=A0	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_PUNIT_DATA_INDEX);
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_BIOS_DATA_INDEX);
+> =C2=A0	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get punit
+> resource\n");
+> +		dev_err(&pdev->dev, "Failed to get res of punit BIOS
+> data\n");
+> =C2=A0		return -ENXIO;
+> =C2=A0	}
+> -	size =3D resource_size(res);
+> -	ipcdev.punit_base =3D res->start;
+> -	ipcdev.punit_size =3D size;
+> -	dev_info(&pdev->dev, "punit data res: %llx %x\n",
+> +	*punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit BIOS data res: %llx %x\n",
+> =C2=A0		=C2=A0(long long)res->start, (int)resource_size(res));
+> =C2=A0
+> =C2=A0	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> -				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_PUNIT_INTER_INDEX)
+> ;
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_BIOS_INTER_INDEX);
+> =C2=A0	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get punit inter
+> resource\n");
+> +		dev_err(&pdev->dev, "Failed to get res of punit BIOS
+> inter\n");
+> =C2=A0		return -ENXIO;
+> =C2=A0	}
+> -	size =3D resource_size(res);
+> -	ipcdev.punit_base2 =3D res->start;
+> -	ipcdev.punit_size2 =3D size;
+> -	dev_info(&pdev->dev, "punit interface res: %llx %x\n",
+> +	/* This is index 1 to cover BIOS interface register */
+> +	*++punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit BIOS interface res: %llx %x\n",
+> +		=C2=A0(long long)res->start, (int)resource_size(res));
 
-change in v7
- Update ipc_err_string()'s return type to "const char *" from "char *";
- Add terminator in acpi id array.
+There is a specifier to print struct resource, please use it instead.
+%pR IIRC.
 
-change in v6
- Update header file;
- Update interface of lowlevel register access;
- Restructure implementation of two command functions;
- Save IPC private data pointer to pdev's priv;
+Same for all similar cases below.
 
-change in v5
- Fix commend style in header file;
- Replace EINVAL with ENODEV in stub functions;
- Replace ipc_err_sources array with ipc_err_string function;
- Correct comments: "if invalid" -> "if not used";
- Propagate return error of devm_request_irq.
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_ISP_DATA_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit ISP
+> data\n");
+> +		return -ENXIO;
+> +	}
+> +	/* This is index 2 to cover ISP data register */
+> +	*++punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit ISP data res: %llx %x\n",
+> +		=C2=A0(long long)res->start, (int)resource_size(res));
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_ISP_INTER_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit ISP
+> inter\n");
+> +		return -ENXIO;
+> +	}
+> +	/* This is index 3 to cover ISP interface register */
+> +	*++punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit ISP interface res: %llx %x\n",
+> +		=C2=A0(long long)res->start, (int)resource_size(res));
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_GTD_DATA_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit GTD
+> data\n");
+> +		return -ENXIO;
+> +	}
+> +	/* This is index 4 to cover GTD data register */
+> +	*++punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit GTD data res: %llx %x\n",
+> +		=C2=A0(long long)res->start, (int)resource_size(res));
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0PLAT_RESOURCE_GTD_INTER_INDEX);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "Failed to get res of punit GTD
+> inter\n");
+> +		return -ENXIO;
+> +	}
+> +	/* This is index 5 to cover GTD interface register */
+> +	*++punit_res =3D *res;
+> +	dev_info(&pdev->dev, "punit GTD interface res: %llx %x\n",
+> =C2=A0		=C2=A0(long long)res->start, (int)resource_size(res));
+> =C2=A0
+> =C2=A0	res =3D platform_get_resource(pdev, IORESOURCE_MEM,
 
-change in v4
- Fix two code style issues: make /* as a whole line and replace
-"return ret" with "goto out";
- Replace -EINVAL with -ENXIO for failures due to resource.
-
-change in v3
- Fix compile issue in intel_punit_ipc.h, it happened when built-in
-and the header file is included in other source file.
-
-change in v2
- Fix issues in code style and comments;
- Remove "default y" in Kconfig;
- Remove some header files;
- Replace request_mem_region with devm_request_mem_region,
-and same for request_irq;
- Change to use prefix of IPC_PUNIT_ to define commands.
----
- MAINTAINERS                            |   4 +-
- arch/x86/include/asm/intel_punit_ipc.h | 101 ++++++++++
- drivers/platform/x86/Kconfig           |   6 +
- drivers/platform/x86/Makefile          |   1 +
- drivers/platform/x86/intel_punit_ipc.c | 336 +++++++++++++++++++++++++++++++++
- 5 files changed, 447 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/include/asm/intel_punit_ipc.h
- create mode 100644 drivers/platform/x86/intel_punit_ipc.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5192700..333a022 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5683,12 +5683,14 @@ F:	drivers/dma/mic_x100_dma.c
- F:	drivers/dma/mic_x100_dma.h
- F	Documentation/mic/
- 
--INTEL PMC IPC DRIVER
-+INTEL PMC/P-Unit IPC DRIVER
- M:	Zha Qipeng<qipeng.zha@intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_pmc_ipc.c
-+F:	drivers/platform/x86/intel_punit_ipc.c
- F:	arch/x86/include/asm/intel_pmc_ipc.h
-+F:	arch/x86/include/asm/intel_punit_ipc.h
- 
- IOC3 ETHERNET DRIVER
- M:	Ralf Baechle <ralf@linux-mips.org>
-diff --git a/arch/x86/include/asm/intel_punit_ipc.h b/arch/x86/include/asm/intel_punit_ipc.h
-new file mode 100644
-index 0000000..201eb9d
---- /dev/null
-+++ b/arch/x86/include/asm/intel_punit_ipc.h
-@@ -0,0 +1,101 @@
-+#ifndef _ASM_X86_INTEL_PUNIT_IPC_H_
-+#define  _ASM_X86_INTEL_PUNIT_IPC_H_
-+
-+/*
-+ * Three types of 8bit P-Unit IPC commands are supported,
-+ * bit[7:6]: [00]: BIOS; [01]: GTD; [10]: ISPD.
-+ */
-+typedef enum {
-+	BIOS_IPC = 0,
-+	GTDRIVER_IPC,
-+	ISPDRIVER_IPC,
-+	RESERVED_IPC,
-+} IPC_TYPE;
-+
-+#define IPC_TYPE_OFFSET			6
-+#define IPC_PUNIT_BIOS_CMD_BASE		(BIOS_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_GTD_CMD_BASE		(GTDDRIVER_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_ISPD_CMD_BASE		(ISPDRIVER_IPC << IPC_TYPE_OFFSET)
-+#define IPC_PUNIT_CMD_TYPE_MASK		(RESERVED_IPC << IPC_TYPE_OFFSET)
-+
-+/* BIOS => Pcode commands */
-+#define IPC_PUNIT_BIOS_ZERO			(IPC_PUNIT_BIOS_CMD_BASE | 0x00)
-+#define IPC_PUNIT_BIOS_VR_INTERFACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x01)
-+#define IPC_PUNIT_BIOS_READ_PCS			(IPC_PUNIT_BIOS_CMD_BASE | 0x02)
-+#define IPC_PUNIT_BIOS_WRITE_PCS		(IPC_PUNIT_BIOS_CMD_BASE | 0x03)
-+#define IPC_PUNIT_BIOS_READ_PCU_CONFIG		(IPC_PUNIT_BIOS_CMD_BASE | 0x04)
-+#define IPC_PUNIT_BIOS_WRITE_PCU_CONFIG		(IPC_PUNIT_BIOS_CMD_BASE | 0x05)
-+#define IPC_PUNIT_BIOS_READ_PL1_SETTING		(IPC_PUNIT_BIOS_CMD_BASE | 0x06)
-+#define IPC_PUNIT_BIOS_WRITE_PL1_SETTING	(IPC_PUNIT_BIOS_CMD_BASE | 0x07)
-+#define IPC_PUNIT_BIOS_TRIGGER_VDD_RAM		(IPC_PUNIT_BIOS_CMD_BASE | 0x08)
-+#define IPC_PUNIT_BIOS_READ_TELE_INFO		(IPC_PUNIT_BIOS_CMD_BASE | 0x09)
-+#define IPC_PUNIT_BIOS_READ_TELE_TRACE_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0a)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_TRACE_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0b)
-+#define IPC_PUNIT_BIOS_READ_TELE_EVENT_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0c)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_EVENT_CTRL	(IPC_PUNIT_BIOS_CMD_BASE | 0x0d)
-+#define IPC_PUNIT_BIOS_READ_TELE_TRACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x0e)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_TRACE		(IPC_PUNIT_BIOS_CMD_BASE | 0x0f)
-+#define IPC_PUNIT_BIOS_READ_TELE_EVENT		(IPC_PUNIT_BIOS_CMD_BASE | 0x10)
-+#define IPC_PUNIT_BIOS_WRITE_TELE_EVENT		(IPC_PUNIT_BIOS_CMD_BASE | 0x11)
-+#define IPC_PUNIT_BIOS_READ_MODULE_TEMP		(IPC_PUNIT_BIOS_CMD_BASE | 0x12)
-+#define IPC_PUNIT_BIOS_RESERVED			(IPC_PUNIT_BIOS_CMD_BASE | 0x13)
-+#define IPC_PUNIT_BIOS_READ_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE | 0x14)
-+#define IPC_PUNIT_BIOS_WRITE_VOLTAGE_OVER	(IPC_PUNIT_BIOS_CMD_BASE | 0x15)
-+#define IPC_PUNIT_BIOS_READ_RATIO_OVER		(IPC_PUNIT_BIOS_CMD_BASE | 0x16)
-+#define IPC_PUNIT_BIOS_WRITE_RATIO_OVER		(IPC_PUNIT_BIOS_CMD_BASE | 0x17)
-+#define IPC_PUNIT_BIOS_READ_VF_GL_CTRL		(IPC_PUNIT_BIOS_CMD_BASE | 0x18)
-+#define IPC_PUNIT_BIOS_WRITE_VF_GL_CTRL		(IPC_PUNIT_BIOS_CMD_BASE | 0x19)
-+#define IPC_PUNIT_BIOS_READ_FM_SOC_TEMP_THRESH	(IPC_PUNIT_BIOS_CMD_BASE | 0x1a)
-+#define IPC_PUNIT_BIOS_WRITE_FM_SOC_TEMP_THRESH	(IPC_PUNIT_BIOS_CMD_BASE | 0x1b)
-+
-+/* GT Driver => Pcode commands */
-+#define IPC_PUNIT_GTD_ZERO			(IPC_PUNIT_GTD_CMD_BASE | 0x00)
-+#define IPC_PUNIT_GTD_CONFIG			(IPC_PUNIT_GTD_CMD_BASE | 0x01)
-+#define IPC_PUNIT_GTD_READ_ICCP_LIC_CDYN_SCAL	(IPC_PUNIT_GTD_CMD_BASE | 0x02)
-+#define IPC_PUNIT_GTD_WRITE_ICCP_LIC_CDYN_SCAL	(IPC_PUNIT_GTD_CMD_BASE | 0x03)
-+#define IPC_PUNIT_GTD_GET_WM_VAL		(IPC_PUNIT_GTD_CMD_BASE | 0x06)
-+#define IPC_PUNIT_GTD_WRITE_CONFIG_WISHREQ	(IPC_PUNIT_GTD_CMD_BASE | 0x07)
-+#define IPC_PUNIT_GTD_READ_REQ_DUTY_CYCLE	(IPC_PUNIT_GTD_CMD_BASE | 0x16)
-+#define IPC_PUNIT_GTD_DIS_VOL_FREQ_CHG_REQUEST	(IPC_PUNIT_GTD_CMD_BASE | 0x17)
-+#define IPC_PUNIT_GTD_DYNA_DUTY_CYCLE_CTRL	(IPC_PUNIT_GTD_CMD_BASE | 0x1a)
-+#define IPC_PUNIT_GTD_DYNA_DUTY_CYCLE_TUNING	(IPC_PUNIT_GTD_CMD_BASE | 0x1c)
-+
-+/* ISP Driver => Pcode commands */
-+#define IPC_PUNIT_ISPD_ZERO			(IPC_PUNIT_ISPD_CMD_BASE | 0x00)
-+#define IPC_PUNIT_ISPD_CONFIG			(IPC_PUNIT_ISPD_CMD_BASE | 0x01)
-+#define IPC_PUNIT_ISPD_GET_ISP_LTR_VAL		(IPC_PUNIT_ISPD_CMD_BASE | 0x02)
-+#define IPC_PUNIT_ISPD_ACCESS_IU_FREQ_BOUNDS	(IPC_PUNIT_ISPD_CMD_BASE | 0x03)
-+#define IPC_PUNIT_ISPD_READ_CDYN_LEVEL		(IPC_PUNIT_ISPD_CMD_BASE | 0x04)
-+#define IPC_PUNIT_ISPD_WRITE_CDYN_LEVEL		(IPC_PUNIT_ISPD_CMD_BASE | 0x05)
-+
-+/* Error codes */
-+#define IPC_PUNIT_ERR_SUCCESS			0
-+#define IPC_PUNIT_ERR_INVALID_CMD		1
-+#define IPC_PUNIT_ERR_INVALID_PARAMETER		2
-+#define IPC_PUNIT_ERR_CMD_TIMEOUT		3
-+#define IPC_PUNIT_ERR_CMD_LOCKED		4
-+#define IPC_PUNIT_ERR_INVALID_VR_ID		5
-+#define IPC_PUNIT_ERR_VR_ERR			6
-+
-+#if IS_ENABLED(CONFIG_INTEL_PUNIT_IPC)
-+
-+int intel_punit_ipc_simple_command(int cmd, int para1, int para2);
-+int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out);
-+
-+#else
-+
-+static inline int intel_punit_ipc_simple_command(int cmd,
-+						  int para1, int para2)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2,
-+					  u32 *in, u32 *out)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif /* CONFIG_INTEL_PUNIT_IPC */
-+
-+#endif
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1089eaa..148ff88 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -944,4 +944,10 @@ config SURFACE_PRO3_BUTTON
- 	depends on ACPI && INPUT
- 	---help---
- 	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
-+
-+config INTEL_PUNIT_IPC
-+	tristate "Intel P-Unit IPC Driver"
-+	---help---
-+	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
-+	  which is used to bridge the communications between kernel and P-Unit.
- endif # X86_PLATFORM_DEVICES
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 3ca78a3..5ee5425 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -62,3 +62,4 @@ obj-$(CONFIG_PVPANIC)           += pvpanic.o
- obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
- obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
- obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
-+obj-$(CONFIG_INTEL_PUNIT_IPC)  += intel_punit_ipc.o
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-new file mode 100644
-index 0000000..e6354a7
---- /dev/null
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -0,0 +1,336 @@
-+/*
-+ * Driver for the Intel P-Unit Mailbox IPC mechanism
-+ *
-+ * (C) Copyright 2015 Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * The heart of the P-Unit is the Foxton microcontroller and its firmware,
-+ * which provide mailbox interface for power management usage.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <asm/intel_punit_ipc.h>
-+
-+/* IPC Mailbox registers */
-+#define OFFSET_DATA_LOW		0x0
-+#define OFFSET_DATA_HIGH	0x4
-+/* bit field of interface register */
-+#define	CMD_RUN			(1 << 31)
-+#define	CMD_ERRCODE_MASK	0xFF
-+#define	CMD_PARA1_SHIFT		8
-+#define	CMD_PARA2_SHIFT		16
-+
-+#define CMD_TIMEOUT_SECONDS	1
-+
-+enum {
-+	DATA = 0,
-+	INTERFACE,
-+};
-+
-+typedef struct {
-+	struct device *dev;
-+	struct mutex lock;
-+	int irq;
-+	struct completion cmd_complete;
-+	/* base of interface and data registers */
-+	void __iomem *base[RESERVED_IPC][INTERFACE + 1];
-+	IPC_TYPE type;
-+} IPC_DEV;
-+
-+static IPC_DEV *punit_ipcdev;
-+
-+static inline u32 ipc_read_status(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][INTERFACE]);
-+}
-+
-+static inline void ipc_write_cmd(IPC_DEV *ipcdev, IPC_TYPE type, u32 cmd)
-+{
-+	writel(cmd, ipcdev->base[type][INTERFACE]);
-+}
-+
-+static inline u32 ipc_read_data_low(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][DATA] + OFFSET_DATA_LOW);
-+}
-+
-+static inline u32 ipc_read_data_high(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	return readl(ipcdev->base[type][DATA] + OFFSET_DATA_HIGH);
-+}
-+
-+static inline void ipc_write_data_low(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
-+{
-+	writel(data, ipcdev->base[type][DATA] + OFFSET_DATA_LOW);
-+}
-+
-+static inline void ipc_write_data_high(IPC_DEV *ipcdev, IPC_TYPE type, u32 data)
-+{
-+	writel(data, ipcdev->base[type][DATA] + OFFSET_DATA_HIGH);
-+}
-+
-+static const char *ipc_err_string(int error)
-+{
-+	if (error == IPC_PUNIT_ERR_SUCCESS)
-+		return "no error";
-+	else if (error == IPC_PUNIT_ERR_INVALID_CMD)
-+		return "invalid command";
-+	else if (error == IPC_PUNIT_ERR_INVALID_PARAMETER)
-+		return "invalid parameter";
-+	else if (error == IPC_PUNIT_ERR_CMD_TIMEOUT)
-+		return "command timeout";
-+	else if (error == IPC_PUNIT_ERR_CMD_LOCKED)
-+		return "command locked";
-+	else if (error == IPC_PUNIT_ERR_INVALID_VR_ID)
-+		return "invalid vr id";
-+	else if (error == IPC_PUNIT_ERR_VR_ERR)
-+		return "vr error";
-+	else
-+		return "unknown error";
-+}
-+
-+static int intel_punit_ipc_check_status(IPC_DEV *ipcdev, IPC_TYPE type)
-+{
-+	int loops = CMD_TIMEOUT_SECONDS * USEC_PER_SEC;
-+	int errcode;
-+	int status;
-+
-+	if (ipcdev->irq) {
-+		if (!wait_for_completion_timeout(&ipcdev->cmd_complete,
-+						 CMD_TIMEOUT_SECONDS * HZ)) {
-+			dev_err(ipcdev->dev, "IPC timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+	} else {
-+		while ((ipc_read_status(ipcdev, type) & CMD_RUN) && --loops)
-+			udelay(1);
-+		if (!loops) {
-+			dev_err(ipcdev->dev, "IPC timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+	}
-+
-+	status = ipc_read_status(ipcdev, type);
-+	errcode = status & CMD_ERRCODE_MASK;
-+	if (errcode) {
-+		dev_err(ipcdev->dev, "IPC failed: %s, IPC_STS=0x%x\n",
-+			ipc_err_string(errcode), status);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * intel_punit_ipc_simple_command() - Simple IPC command
-+ * @cmd:	IPC command code.
-+ * @para1:	First 8bit parameter, set 0 if not used.
-+ * @para2:	Second 8bit parameter, set 0 if not used.
-+ *
-+ * Send a IPC command to P-Unit when there is no data transaction
-+ *
-+ * Return:	IPC error code or 0 on success.
-+ */
-+int intel_punit_ipc_simple_command(int cmd, int para1, int para2)
-+{
-+	IPC_DEV *ipcdev = punit_ipcdev;
-+	IPC_TYPE type;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&ipcdev->lock);
-+
-+	reinit_completion(&ipcdev->cmd_complete);
-+	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
-+
-+	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
-+	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
-+	ipc_write_cmd(ipcdev, type, val);
-+	ret = intel_punit_ipc_check_status(ipcdev, type);
-+
-+	mutex_unlock(&ipcdev->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(intel_punit_ipc_simple_command);
-+
-+/**
-+ * intel_punit_ipc_command() - IPC command with data and pointers
-+ * @cmd:	IPC command code.
-+ * @para1:	First 8bit parameter, set 0 if not used.
-+ * @para2:	Second 8bit parameter, set 0 if not used.
-+ * @in:		Input data, 32bit for BIOS cmd, two 32bit for GTD and ISPD.
-+ * @out:	Output data.
-+ *
-+ * Send a IPC command to P-Unit with data transaction
-+ *
-+ * Return:	IPC error code or 0 on success.
-+ */
-+int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
-+{
-+	IPC_DEV *ipcdev = punit_ipcdev;
-+	IPC_TYPE type;
-+	u32 val;
-+	int ret;
-+
-+	mutex_lock(&ipcdev->lock);
-+
-+	reinit_completion(&ipcdev->cmd_complete);
-+	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
-+	ipc_write_data_low(ipcdev, type, *in);
-+
-+	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
-+		ipc_write_data_high(ipcdev, type, *++in);
-+
-+	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
-+	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
-+	ipc_write_cmd(ipcdev, type, val);
-+
-+	ret = intel_punit_ipc_check_status(ipcdev, type);
-+	if (ret)
-+		goto out;
-+	*out = ipc_read_data_low(ipcdev, type);
-+
-+	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
-+		*++out = ipc_read_data_high(ipcdev, type);
-+
-+out:
-+	mutex_unlock(&ipcdev->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(intel_punit_ipc_command);
-+
-+static irqreturn_t intel_punit_ioc(int irq, void *dev_id)
-+{
-+	IPC_DEV *ipcdev = dev_id;
-+
-+	complete(&ipcdev->cmd_complete);
-+	return IRQ_HANDLED;
-+}
-+
-+static int intel_punit_get_bars(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	void __iomem *addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[BIOS_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[BIOS_IPC][INTERFACE] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[ISPDRIVER_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[ISPDRIVER_IPC][INTERFACE] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[GTDRIVER_IPC][DATA] = addr;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 5);
-+	addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+	punit_ipcdev->base[GTDRIVER_IPC][INTERFACE] = addr;
-+
-+	return 0;
-+}
-+
-+static int intel_punit_ipc_probe(struct platform_device *pdev)
-+{
-+	int irq, ret;
-+
-+	punit_ipcdev = devm_kzalloc(&pdev->dev,
-+				    sizeof(*punit_ipcdev), GFP_KERNEL);
-+	if (!punit_ipcdev)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, punit_ipcdev);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		punit_ipcdev->irq = 0;
-+		dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
-+	} else {
-+		ret = devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
-+				       IRQF_NO_SUSPEND, "intel_punit_ipc",
-+				       &punit_ipcdev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to request irq: %d\n", irq);
-+			return ret;
-+		}
-+		punit_ipcdev->irq = irq;
-+	}
-+
-+	ret = intel_punit_get_bars(pdev);
-+	if (ret)
-+		goto out;
-+
-+	punit_ipcdev->dev = &pdev->dev;
-+	mutex_init(&punit_ipcdev->lock);
-+	init_completion(&punit_ipcdev->cmd_complete);
-+
-+out:
-+	return ret;
-+}
-+
-+static int intel_punit_ipc_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static const struct acpi_device_id punit_ipc_acpi_ids[] = {
-+	{ "INT34D4", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver intel_punit_ipc_driver = {
-+	.probe = intel_punit_ipc_probe,
-+	.remove = intel_punit_ipc_remove,
-+	.driver = {
-+		.name = "intel_punit_ipc",
-+		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
-+	},
-+};
-+
-+static int __init intel_punit_ipc_init(void)
-+{
-+	return platform_driver_register(&intel_punit_ipc_driver);
-+}
-+
-+static void __exit intel_punit_ipc_exit(void)
-+{
-+	platform_driver_unregister(&intel_punit_ipc_driver);
-+}
-+
-+MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
-+MODULE_DESCRIPTION("Intel P-Unit IPC driver");
-+MODULE_LICENSE("GPL v2");
-+
-+/* Some modules are dependent on this, so init earlier */
-+fs_initcall(intel_punit_ipc_init);
-+module_exit(intel_punit_ipc_exit);
--- 
-1.8.3.2
+--=20
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
