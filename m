@@ -1,39 +1,42 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH V10 1/2] intel_pmc_ipc: update acpi resource structure
- for Punit
-Date: Fri, 11 Dec 2015 10:09:27 -0800
-Message-ID: <20151211180927.GI11972@malice.jf.intel.com>
-References: <1449845100-119784-1-git-send-email-qipeng.zha@intel.com>
- <1449830951.30729.108.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Azael Avalos <coproscefalo@gmail.com>
+Subject: [PATCH] platform/x86: Add rfkill dependency to ACPI_TOSHIBA entry
+Date: Mon, 14 Dec 2015 13:00:59 -0700
+Message-ID: <1450123259-2638-1-git-send-email-coproscefalo@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:53806 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750923AbbLKSJ3 (ORCPT
+Received: from mail-ig0-f178.google.com ([209.85.213.178]:33814 "EHLO
+	mail-ig0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751317AbbLNUBJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 11 Dec 2015 13:09:29 -0500
-Content-Disposition: inline
-In-Reply-To: <1449830951.30729.108.camel@linux.intel.com>
+	Mon, 14 Dec 2015 15:01:09 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Qipeng Zha <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Azael Avalos <coproscefalo@gmail.com>
 
-On Fri, Dec 11, 2015 at 12:49:11PM +0200, Andy Shevchenko wrote:
-> On Fri, 2015-12-11 at 22:44 +0800, Qipeng Zha wrote:
-> > BIOS restructure exported memory resources for Punit
-> > in acpi table, So update resources for Punit.
-> > 
-> > Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
-> 
-> Right, my tag for both patches:
-> 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Commit 2fdde83443aa ("toshiba_acpi: Add WWAN RFKill support") added
+WWAN rfkill support to the driver, but the KConfig entry was not
+updated to add the RFKill dependency, causing a broken build if
+RFKill is not selected.
 
-Thank you for all your time helping to improve this series Andriy, very much
-appreciated.
+This patch adds the RFKILL dependency to the KConfig entry, fixing
+the build issue.
 
+Signed-off-by: Azael Avalos <coproscefalo@gmail.com>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1089eaa..25a02f9 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -641,6 +641,7 @@ config ACPI_TOSHIBA
+ 	depends on INPUT
+ 	depends on SERIO_I8042 || SERIO_I8042 = n
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	depends on RFKILL || RFKILL = n
+ 	select INPUT_POLLDEV
+ 	select INPUT_SPARSEKMAP
+ 	---help---
 -- 
-Darren Hart
-Intel Open Source Technology Center
+2.6.3
