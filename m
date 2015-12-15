@@ -1,91 +1,115 @@
 From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [RFC 0/4] Asus Wireless Radio Control driver
-Date: Tue, 15 Dec 2015 10:30:38 -0500
-Message-ID: <1450193442-7930-1-git-send-email-jprvita@endlessm.com>
+Subject: [PATCH 3/4] net/rfkill: Create "airplane mode" LED trigger
+Date: Tue, 15 Dec 2015 10:30:41 -0500
+Message-ID: <1450193442-7930-4-git-send-email-jprvita@endlessm.com>
+References: <1450193442-7930-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f171.google.com ([209.85.220.171]:34798 "EHLO
-	mail-qk0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S964829AbbLOPaq (ORCPT
+Received: from mail-qk0-f177.google.com ([209.85.220.177]:36347 "EHLO
+	mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965288AbbLOPas (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Dec 2015 10:30:46 -0500
-Received: by mail-qk0-f171.google.com with SMTP id p187so18007532qkd.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2015 07:30:46 -0800 (PST)
+	Tue, 15 Dec 2015 10:30:48 -0500
+Received: by mail-qk0-f177.google.com with SMTP id t125so17884113qkh.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2015 07:30:48 -0800 (PST)
+In-Reply-To: <1450193442-7930-1-git-send-email-jprvita@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Corentin Chary <corentin.chary@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, jprvita@gmail.com, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
 
-This series is a request for comments on the driver for the "Asus Wirel=
-ess
-Radio Control" device, as named on the vendor website, which handles
-notifications from the airplane mode hotkey and drives the airplane mod=
+=46or platform drivers to be able to correctly drive the "Airplane Mode=
+"
+indicative LED there needs to be a RFKill LED trigger tied to the globa=
+l
+state of RFKILL_TYPE_ALL (instead of to a specific RFKill) and that
+works in an inverted manner of regular RFKill LED triggers, that is, th=
 e
-indicator LED. This device appears in the DSDT as "ASHS".
+LED is ON when the state is blocked, and OFF otherwise.
 
-When the airplane mode hotkey is pressed a query 0x0B is started in the
-Embedded Controller, and all this query does is a notify ASHS with the =
-value
-0x88. ASHS also has one method HSWC, which can drive the airplane mode =
-LED and
-query its status, according to its parameter.
+This commit implements such a trigger, which will be used by the
+asus-wrc x86 platform driver.
 
-To properly drive the LED a new RFKill trigger was implemented, to trac=
-k the
-global state of all RFKill switches in the system, and turn the LED ON =
-when all
-are blocked, and OFF otherwise. This code will have to go through revie=
-w on
-linux-wireless, but first I wanted to get feedback on the WRC driver it=
-self.
+Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+---
+ net/rfkill/core.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-There is one known issue: the airplane mode LED uses the same ID as the=
- WLAN
-LED in asus-wmi, so at the moment to have the LED being driven correctl=
-y by
-asus-wrc I have to disable asus-wmi. Even with wapf=3D0, which does not=
- register
-a WLAN LED in asus-wmi, the conflict still occurs because
-ASUS_WMI_DSTS_USER_BIT is set. Please advise on what is the best way to=
- solve
-this problem.
-
-I've chosen to make this a separate module because this is a separate e=
-ntry in
-the DSDT, and checkpatch told me to add an entry in MAINTAINERS in this=
- case.
-Please let me know if any of this should have been done differently.
-
-I have access to two Asus laptops which need this driver for the airpla=
-ne mode
-hotkey to work: E202SA (which does not have a LED) and X555UB (which ha=
-ve a
-LED), and on https://bugzilla.kernel.org/show_bug.cgi?id=3D98931#c22 th=
-ere is
-report of a 3rd laptop that gets fixed with this driver. This should al=
-so fix
-the mentioned bug report.
-
-Regards,
-
-Joao Paulo.
-
-Jo=C3=A3o Paulo Rechi Vita (4):
-  platform/x86: Add Asus Wireless Radio Control driver
-  asus-wrc: Add ACPI HID ATK4001
-  net/rfkill: Create "airplane mode" LED trigger
-  asus-wrc: Toggle airplane mode LED
-
- MAINTAINERS                     |   6 ++
- drivers/platform/x86/Kconfig    |  15 +++
- drivers/platform/x86/Makefile   |   1 +
- drivers/platform/x86/asus-wrc.c | 200 ++++++++++++++++++++++++++++++++=
-++++++++
- net/rfkill/core.c               |  30 ++++++
- 5 files changed, 252 insertions(+)
- create mode 100644 drivers/platform/x86/asus-wrc.c
-
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index b41e9ea..3effc29 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -124,6 +124,26 @@ static bool rfkill_epo_lock_active;
+=20
+=20
+ #ifdef CONFIG_RFKILL_LEDS
++static void airplane_mode_led_trigger_activate(struct led_classdev *le=
+d);
++
++static struct led_trigger airplane_mode_led_trigger =3D {
++	.name     =3D "rfkill-airplane-mode",
++	.activate =3D airplane_mode_led_trigger_activate,
++};
++
++static void airplane_mode_led_trigger_event(void)
++{
++	if (rfkill_global_states[RFKILL_TYPE_ALL].cur & RFKILL_BLOCK_ANY)
++		led_trigger_event(&airplane_mode_led_trigger, LED_FULL);
++	else
++		led_trigger_event(&airplane_mode_led_trigger, LED_OFF);
++}
++
++static void airplane_mode_led_trigger_activate(struct led_classdev *le=
+d)
++{
++	airplane_mode_led_trigger_event();
++}
++
+ static void rfkill_led_trigger_event(struct rfkill *rfkill)
+ {
+ 	struct led_trigger *trigger;
+@@ -175,6 +195,10 @@ static void rfkill_led_trigger_unregister(struct r=
+fkill *rfkill)
+ 	led_trigger_unregister(&rfkill->led_trigger);
+ }
+ #else
++static void airplane_mode_led_trigger_event(void)
++{
++}
++
+ static void rfkill_led_trigger_event(struct rfkill *rfkill)
+ {
+ }
+@@ -346,6 +370,7 @@ static void __rfkill_switch_all(const enum rfkill_t=
+ype type, bool blocked)
+=20
+ 		for (i =3D 0; i < NUM_RFKILL_TYPES; i++)
+ 			rfkill_global_states[i].cur =3D blocked;
++		airplane_mode_led_trigger_event();
+ 	} else {
+ 		rfkill_global_states[type].cur =3D blocked;
+ 	}
+@@ -1177,6 +1202,7 @@ static ssize_t rfkill_fop_write(struct file *file=
+, const char __user *buf,
+ 			enum rfkill_type i;
+ 			for (i =3D 0; i < NUM_RFKILL_TYPES; i++)
+ 				rfkill_global_states[i].cur =3D ev.soft;
++			airplane_mode_led_trigger_event();
+ 		} else {
+ 			rfkill_global_states[ev.type].cur =3D ev.soft;
+ 		}
+@@ -1293,6 +1319,10 @@ static int __init rfkill_init(void)
+ 	}
+ #endif
+=20
++#ifdef CONFIG_RFKILL_LEDS
++	led_trigger_register(&airplane_mode_led_trigger);
++#endif
++
+  out:
+ 	return error;
+ }
 --=20
 2.5.0
