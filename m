@@ -1,38 +1,57 @@
-From: Nish Aravamudan <nish.aravamudan@gmail.com>
-Subject: "special" key when Lenovo Yoga 900 in tablet mode
-Date: Tue, 15 Dec 2015 11:27:42 -0800
-Message-ID: <CAOhV88N1A3Y2BfBsUNhQ8PNM42teJdDrx-r4GdzkV2U6Y3cwww@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ig0-f169.google.com ([209.85.213.169]:37303 "EHLO
-	mail-ig0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754133AbbLOT1n (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 15 Dec 2015 14:27:43 -0500
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Ike Panhc <ike.pan@canonical.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: [PATCH] ideapad: Report hard block off if it is never on
+Date: Wed, 16 Dec 2015 11:49:33 +0800
+Message-ID: <1450237773-1685-1-git-send-email-ike.pan@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-So the Lenovo Yoga 900 has 4 "modes" (laptop, tent, stand and tablet).
-In tablet mode, it appears that the following is printed roughly every
-second:
+Hardware radio switch is rare on recently ideapad and some of them
+reported radio hardware blocked by error. With more and more ideapads
+available in market to maintain the dmi table becomes a
+never-finished job.
 
-atkbd serio0: Unknown key pressed (translated set 2, code 0xbf on
-isa0060/serio0).
-atkbd serio0: Use 'setkeycodes e03f <keycode>' to make it known.
-ideapad_laptop: Unknown event: 1
-atkbd serio0: Unknown key released (translated set 2, code 0xbf on
-isa0060/serio0).
-atkbd serio0: Use 'setkeycodes e03f <keycode>' to make it known.
-ideapad_laptop: Unknown event: 1
+Therefore I am thinking an easy way to detect by response from
+hardware. This patch will make driver says hardware switch is not
+blocked if the response from ACPI is always radio blocked.
 
-What I would like to do is rotate the screen when I see the unknown
-key (a la https://gist.github.com/emiller/6488449), although that's not
-super-efficient, but is fine. But I'm wondering if the ideapad event
-should actually be properly handled and how that would be done? I
-guess it could also just emit a key like the other ideapad values?
+For an ideapad without radio switch, no matter what ACPI says, driver
+will report false on hardware blocked.
 
-Thanks,
-Nish
+For an ideapad with radio switch, if driver loaded with radio on, no
+behavior is changed.
+
+For an ideapad with radio switch and driver loaded with radio off,
+driver will report unblocked falsely and network manager might not
+scan if wireless driver reports blocked. Once the switch is on,
+driver will report correct information.
+
+Signed-off-by: Ike Panhc <ike.pan@canonical.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index a313dfc..91ccb4e 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -482,11 +482,16 @@ static void ideapad_sync_rfk_state(struct ideapad_private *priv)
+ {
+ 	unsigned long hw_blocked = 0;
+ 	int i;
++	static int hw_unblock_once;
+ 
+ 	if (priv->has_hw_rfkill_switch) {
+ 		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
+ 			return;
++		if (hw_blocked)
++			hw_unblock_once = 1;
+ 		hw_blocked = !hw_blocked;
++		if (!hw_unblock_once)
++			hw_blocked = 0;
+ 	}
+ 
+ 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+-- 
+1.9.1
