@@ -1,374 +1,43 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: [PATCH][v2] intel-hid: new hid event driver for hotkeys
-Date: Fri, 18 Dec 2015 23:31:10 +0800
-Message-ID: <1450452670-26556-1-git-send-email-alex.hung@canonical.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH][v2] intel-hid: new hid event driver for hotkeys
+Date: Fri, 18 Dec 2015 08:41:32 -0800
+Message-ID: <CALCETrVFkd4=LqtVexusQcpNi8F1rMXmwEh_zYuc-eTc20tSVw@mail.gmail.com>
+References: <1450452670-26556-1-git-send-email-alex.hung@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from youngberry.canonical.com ([91.189.89.112]:40041 "EHLO
-	youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753794AbbLRPbS (ORCPT
+Received: from mail-ob0-f170.google.com ([209.85.214.170]:33550 "EHLO
+	mail-ob0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932294AbbLRQlw (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 18 Dec 2015 10:31:18 -0500
+	Fri, 18 Dec 2015 11:41:52 -0500
+Received: by mail-ob0-f170.google.com with SMTP id sd4so84416373obb.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Dec 2015 08:41:52 -0800 (PST)
+In-Reply-To: <1450452670-26556-1-git-send-email-alex.hung@canonical.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: alex.hung@canonical.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, luto@amacapital.net
+To: Alex Hung <alex.hung@canonical.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
 
-This driver supports various HID events including hotkeys.
-Dell XPS 13 9350 requires it for the wireless hotkey.
+On Fri, Dec 18, 2015 at 7:31 AM, Alex Hung <alex.hung@canonical.com> wrote:
+> This driver supports various HID events including hotkeys.
+> Dell XPS 13 9350 requires it for the wireless hotkey.
+>
 
-Signed-off-by: Alex Hung <alex.hung@canonical.com>
----
- MAINTAINERS                      |   6 +
- drivers/platform/x86/Kconfig     |  11 ++
- drivers/platform/x86/Makefile    |   1 +
- drivers/platform/x86/intel-hid.c | 289 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 307 insertions(+)
- create mode 100644 drivers/platform/x86/intel-hid.c
+Still:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6889a6d..9fbd357 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5502,6 +5502,12 @@ T:	git git://git.code.sf.net/p/intel-sas/isci
- S:	Supported
- F:	drivers/scsi/isci/
- 
-+INTEL HID EVENT DRIVER
-+M:	Alex Hung <alex.hung@canonical.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel-hid.c
-+
- INTEL IDLE DRIVER
- M:	Len Brown <lenb@kernel.org>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1089eaa..c9400c6 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -731,6 +731,17 @@ config ACPI_CMPC
- 	  keys as input device, backlight device, tablet and accelerometer
- 	  devices.
- 
-+config INTEL_HID_EVENT
-+	tristate "INTEL HID Event"
-+	depends on ACPI
-+	depends on INPUT
-+	help
-+	 This driver provides support for the Intel HID Event hotkey interface.
-+	 Some aptops require this driver for hotkey support.
-+
-+	 To compile this driver as a module, choose M here: the module will
-+	 be called intel_hid.
-+
- config INTEL_SCU_IPC
- 	bool "Intel SCU IPC Support"
- 	depends on X86_INTEL_MID
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 3ca78a3..c7766a4 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -41,6 +41,7 @@ obj-$(CONFIG_ACPI_TOSHIBA)	+= toshiba_acpi.o
- obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
- obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
-+obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
- obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
- obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-new file mode 100644
-index 0000000..20f0ad9
---- /dev/null
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -0,0 +1,289 @@
-+/*
-+ *  Intel HID event driver for Windows 8
-+ *
-+ *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
-+ *  Copyright (C) 2015 Andrew Lutomirski <luto@kernel.org>
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/platform_device.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/acpi.h>
-+#include <acpi/acpi_bus.h>
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Alex Hung");
-+
-+static const struct acpi_device_id intel_hid_ids[] = {
-+	{"INT33D5", 0},
-+	{"", 0},
-+};
-+
-+/* In theory, these are HID usages. */
-+static const struct key_entry intel_hid_keymap[] = {
-+	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
-+	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
-+	{ KE_KEY, 3, { KEY_NUMLOCK } },
-+	{ KE_KEY, 4, { KEY_HOME } },
-+	{ KE_KEY, 5, { KEY_END } },
-+	{ KE_KEY, 6, { KEY_PAGEUP } },
-+	{ KE_KEY, 4, { KEY_PAGEDOWN } },
-+	{ KE_KEY, 4, { KEY_HOME } },
-+	{ KE_KEY, 8, { KEY_RFKILL } },
-+	{ KE_KEY, 9, { KEY_POWER } },
-+	{ KE_KEY, 11, { KEY_SLEEP } },
-+	/* 13 has two different meanings in the spec -- ignore it. */
-+	{ KE_KEY, 14, { KEY_STOPCD } },
-+	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
-+	{ KE_KEY, 16, { KEY_MUTE } },
-+	{ KE_KEY, 17, { KEY_VOLUMEUP } },
-+	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
-+	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
-+	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
-+	/* 27: wake -- needs special handling */
-+	{ KE_END },
-+};
-+
-+struct intel_hid_priv {
-+	struct input_dev *input_dev;
-+};
-+
-+static int intel_hid_set_enable(struct device *device, int enable)
-+{
-+	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
-+	struct acpi_object_list args = { 1, &arg0 };
-+	acpi_status status;
-+
-+	arg0.integer.value = enable;
-+	status = acpi_evaluate_object(ACPI_HANDLE(device), "HDSM", &args, NULL);
-+	if (!ACPI_SUCCESS(status)) {
-+		dev_warn(device, "failed to %sable hotkeys\n",
-+			 enable ? "en" : "dis");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_hid_pl_suspend_handler(struct device *device)
-+{
-+	intel_hid_set_enable(device, 0);
-+	return 0;
-+}
-+
-+static int intel_hid_pl_resume_handler(struct device *device)
-+{
-+	intel_hid_set_enable(device, 1);
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops intel_hid_pl_pm_ops = {
-+	.suspend  = intel_hid_pl_suspend_handler,
-+	.resume  = intel_hid_pl_resume_handler,
-+};
-+
-+static int intel_hid_input_setup(struct platform_device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-+	int ret;
-+
-+	priv->input_dev = input_allocate_device();
-+	if (!priv->input_dev)
-+		return -ENOMEM;
-+
-+	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
-+	if (ret)
-+		goto err_free_device;
-+
-+	priv->input_dev->dev.parent = &device->dev;
-+	priv->input_dev->name = "Intel HID events";
-+	priv->input_dev->id.bustype = BUS_HOST;
-+	set_bit(KEY_RFKILL, priv->input_dev->keybit);
-+
-+	ret = input_register_device(priv->input_dev);
-+	if (ret)
-+		goto err_free_device;
-+
-+	return 0;
-+
-+err_free_device:
-+		input_free_device(priv->input_dev);
-+		return ret;
-+}
-+
-+static void intel_hid_input_destroy(struct platform_device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-+
-+	input_unregister_device(priv->input_dev);
-+}
-+
-+static void notify_handler(acpi_handle handle, u32 event, void *context)
-+{
-+	struct platform_device *device = context;
-+	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-+	unsigned long long ev_index;
-+	acpi_status status;
-+
-+	/* The platform spec only defines one event code: 0xC0. */
-+	if (event != 0xc0) {
-+		dev_warn(&device->dev, "received unknown event (0x%x)\n",
-+			 event);
-+		return;
-+	}
-+
-+	status = acpi_evaluate_integer(handle, "HDEM", NULL, &ev_index);
-+	if (!ACPI_SUCCESS(status)) {
-+		dev_warn(&device->dev, "failed to get event index\n");
-+		return;
-+	}
-+
-+	if (!sparse_keymap_report_event(priv->input_dev, ev_index, 1, true))
-+		dev_info(&device->dev, "unknown event index 0x%llx\n",
-+			 ev_index);
-+}
-+
-+static int intel_hid_probe(struct platform_device *device)
-+{
-+	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+	struct intel_hid_priv *priv;
-+	unsigned long long mode;
-+	acpi_status status;
-+	int err;
-+
-+	status = acpi_evaluate_integer(handle, "HDMM", NULL, &mode);
-+	if (!ACPI_SUCCESS(status)) {
-+		dev_warn(&device->dev, "failed to read mode\n");
-+		return -ENODEV;
-+	}
-+
-+	if (mode != 0) {
-+		/*
-+		 * This driver only implements "simple" mode.  There appear
-+		 * to be no other modes, but we should be paranoid and check
-+		 * for compatibility.
-+		 */
-+		dev_info(&device->dev, "platform is not in simple mode\n");
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&device->dev,
-+			    sizeof(struct intel_hid_priv *), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	dev_set_drvdata(&device->dev, priv);
-+
-+	err = intel_hid_input_setup(device);
-+	if (err) {
-+		pr_err("Failed to setup Intel HID hotkeys\n");
-+		return err;
-+	}
-+
-+	status = acpi_install_notify_handler(handle,
-+					     ACPI_DEVICE_NOTIFY,
-+					     notify_handler,
-+					     device);
-+	if (ACPI_FAILURE(status)) {
-+		err = -EBUSY;
-+		goto err_remove_input;
-+	}
-+
-+	err = intel_hid_set_enable(&device->dev, 1);
-+	if (err)
-+		goto err_remove_notify;
-+
-+	return 0;
-+
-+err_remove_notify:
-+	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
-+
-+err_remove_input:
-+	intel_hid_input_destroy(device);
-+
-+	return err;
-+}
-+
-+static int intel_hid_remove(struct platform_device *device)
-+{
-+	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+
-+	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
-+	intel_hid_input_destroy(device);
-+	intel_hid_set_enable(&device->dev, 0);
-+	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
-+
-+	/*
-+	 * Even if we failed to shut off the event stream, we can still
-+	 * safely detach from the device.
-+	 */
-+	return 0;
-+}
-+
-+static struct platform_driver intel_hid_pl_driver = {
-+	.driver = {
-+		.name = "intel-hid",
-+		.acpi_match_table = intel_hid_ids,
-+		.pm = &intel_hid_pl_pm_ops,
-+	},
-+	.probe = intel_hid_probe,
-+	.remove = intel_hid_remove,
-+};
-+MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
-+
-+/*
-+ * Unfortunately, some laptops provide a _HID="INT33D5" device with
-+ * _CID="PNP0C02".  This causes the pnpacpi scan driver to claim the
-+ * ACPI node, so no platform device will be created.  The pnpacpi
-+ * driver rejects this device in subsequent processing, so no physical
-+ * node is created at all.
-+ *
-+ * As a workaround until the ACPI core figures out how to handle
-+ * this corner case, manually ask the ACPI platform device code to
-+ * claim the ACPI node.
-+ */
-+static acpi_status __init
-+check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
-+{
-+	const struct acpi_device_id *ids = context;
-+	struct acpi_device *dev;
-+
-+	if (acpi_bus_get_device(handle, &dev) != 0)
-+		return AE_OK;
-+
-+	if (acpi_match_device_ids(dev, ids) == 0)
-+		if (acpi_create_platform_device(dev))
-+			dev_info(&dev->dev,
-+				 "intel-hid: created platform device\n");
-+
-+	return AE_OK;
-+}
-+
-+static int __init intel_hid_init(void)
-+{
-+	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-+			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
-+			    (void *)intel_hid_ids, NULL);
-+
-+	return platform_driver_register(&intel_hid_pl_driver);
-+}
-+module_init(intel_hid_init);
-+
-+static void __exit intel_hid_exit(void)
-+{
-+	platform_driver_unregister(&intel_hid_pl_driver);
-+}
-+module_exit(intel_hid_exit);
--- 
-2.5.0
+Reviewed-and-tested-by: Andy Lutomirski <luto@kernel.org>
+
+with the single character nitpick:
+
+> +config INTEL_HID_EVENT
+> +       tristate "INTEL HID Event"
+> +       depends on ACPI
+> +       depends on INPUT
+> +       help
+> +        This driver provides support for the Intel HID Event hotkey interface.
+> +        Some aptops require this driver for hotkey support.
+
+laptops
+
+--Andy
