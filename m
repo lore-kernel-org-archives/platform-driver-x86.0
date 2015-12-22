@@ -1,48 +1,30 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/5] acpi-video and platform/x86 driver fixes
-Date: Tue, 22 Dec 2015 13:00:59 -0800
-Message-ID: <20151222210059.GP7244@malice.jf.intel.com>
-References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] asus-wmi: drop to_platform_driver macro
+Date: Tue, 22 Dec 2015 13:01:24 -0800
+Message-ID: <20151222210124.GQ7244@malice.jf.intel.com>
+References: <e04e60378a5e76bf5f5bbde8172a850de2e11922.1450793632.git.geliangtang@163.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39347 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:39417 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751726AbbLVVBF (ORCPT
+	with ESMTP id S1751726AbbLVVB2 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Dec 2015 16:01:05 -0500
+	Tue, 22 Dec 2015 16:01:28 -0500
 Content-Disposition: inline
-In-Reply-To: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+In-Reply-To: <e04e60378a5e76bf5f5bbde8172a850de2e11922.1450793632.git.geliangtang@163.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
+To: Geliang Tang <geliangtang@163.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Dec 22, 2015 at 07:09:47PM +0100, Hans de Goede wrote:
-> Hi All,
+On Tue, Dec 22, 2015 at 10:16:13PM +0800, Geliang Tang wrote:
+> to_platform_driver has been defined in platform_device.h, so drop
+> this repetitive macro in asus-wmi.c.
 > 
-> This patch-set is the result of the discussion surrounding the
-> backlight issues on the Dell Vostro V131. The first 3 patches
-> cleanup how some platform/x86 drivers detect if acpi-video
-> is handling brightness key presses and that they should
-> not report duplicate events. This is a cleanup which I wanted
-> to do for a while already and the Vostro V131 fix actually
-> benefits from this.
-> 
-> The last 2 patches together actually fix the issues on the
-> Vostro V131. Since the 2 platform patches in this set depend
-> on an acpi patch, I believe that it would be best if this
-> entire set gets merged via the acpi tree with acks
-> from the platform driver maintainer.
+> Signed-off-by: Geliang Tang <geliangtang@163.com>
 
-Agreed on the path. For this situation, the addition of the module parameter
-will facilitate identifying similarly broken paltforms to the Vostro V131, and
-provide users with a temporary solution until the DMI match can be added. Very
-practical.
-
-I have no objection to the changes in platform-drivers-x86.
-
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+Thanks, applied.
 
 -- 
 Darren Hart
