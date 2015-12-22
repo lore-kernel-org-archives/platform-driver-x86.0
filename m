@@ -1,72 +1,96 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/5] dell-wmi: Use
- acpi_video_handles_brightness_key_presses()
-Date: Tue, 22 Dec 2015 11:53:19 -0800
-Message-ID: <20151222195319.GN7244@malice.jf.intel.com>
+Subject: Re: [PATCH 4/5] acpi-video: Add a module option to disable the
+ reporting of keypresses
+Date: Tue, 22 Dec 2015 12:09:32 -0800
+Message-ID: <20151222200932.GO7244@malice.jf.intel.com>
 References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
- <1450807792-4980-3-git-send-email-hdegoede@redhat.com>
+ <1450807792-4980-5-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43622 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754794AbbLVTx1 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 22 Dec 2015 14:53:27 -0500
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1450807792-4980-3-git-send-email-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+In-Reply-To: <1450807792-4980-5-git-send-email-hdegoede@redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 22, 2015 at 07:09:49PM +0100, Hans de Goede wrote:
-
-+ Pali
-
-> Use the new acpi_video_handles_brightness_key_presses function to check
-> if we should report brightness key-presses.
+On Tue, Dec 22, 2015 at 07:09:51PM +0100, Hans de Goede wrote:
+> Add a module option to disable the reporting of keypresses, in some buggy
+> firmware implementatinon, the reported events are wrong. E.g. they lag
+> reality by one event in the case triggering the writing of this patch.
 > 
-> This makes the code both easier to read and makes it properly report
-> key-presses when acpi-video is not reporting them for reasons other
-> then the backlight type being vendor.
+> In this case it is better to not forward these wrong events to userspace
+> (esp.) when there is another source of the same events which is not buggy.
+> 
+> Note this is only intended to work around implementations which send
+> events which are plain wrong. In some cases we get double events, e.g.
+> from both acpi-video and the atkbd driver, in this case acpi-video is
+> considered the canonical source, and the events from the other source
+> should be filtered (using e.g. /lib/udev/hwdb.d/60-keyboard.hwdb).
 > 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/dell-wmi.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/acpi/acpi_video.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index f2d77fe..cb8a9c2 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -43,8 +43,6 @@ MODULE_LICENSE("GPL");
+> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+> index 2a649f3e..2971154 100644
+> --- a/drivers/acpi/acpi_video.c
+> +++ b/drivers/acpi/acpi_video.c
+> @@ -77,6 +77,13 @@ module_param(allow_duplicates, bool, 0644);
+>  static int disable_backlight_sysfs_if = -1;
+>  module_param(disable_backlight_sysfs_if, int, 0444);
 >  
->  #define DELL_EVENT_GUID "9DBB5994-A997-11DA-B012-B622A1EF5492"
+> +#define REPORT_OUTPUT_KEY_EVENTS		0x01
+> +#define REPORT_BRIGHTNESS_KEY_EVENTS		0x02
+
+Since report_key_events is used as a bitmask, it might be preferable to use
+bitops.
+
+> +static int report_key_events = -1;
+> +module_param(report_key_events, int, 0644);
+> +MODULE_PARM_DESC(report_key_events,
+> +	"0: none, 1: output changes, 2: brightness changes, 3: all");
+> +
+>  static bool device_id_scheme = false;
+>  module_param(device_id_scheme, bool, 0444);
 >  
-> -static int acpi_video;
-> -
->  MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
+> @@ -1480,7 +1487,7 @@ static void acpi_video_bus_notify(struct acpi_device *device, u32 event)
+>  		/* Something vetoed the keypress. */
+>  		keycode = 0;
 >  
->  /*
-> @@ -159,7 +157,8 @@ static void dell_wmi_process_key(int reported_key)
+> -	if (keycode) {
+> +	if (keycode && (report_key_events & REPORT_OUTPUT_KEY_EVENTS)) {
+>  		input_report_key(input, keycode, 1);
+>  		input_sync(input);
+>  		input_report_key(input, keycode, 0);
+> @@ -1544,7 +1551,7 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
 >  
->  	/* Don't report brightness notifications that will also come via ACPI */
->  	if ((key->keycode == KEY_BRIGHTNESSUP ||
-> -	     key->keycode == KEY_BRIGHTNESSDOWN) && acpi_video)
-> +	     key->keycode == KEY_BRIGHTNESSDOWN) &&
-> +	    acpi_video_handles_brightness_key_presses())
->  		return;
+>  	acpi_notifier_call_chain(device, event, 0);
 >  
->  	sparse_keymap_report_entry(dell_wmi_input_dev, key, 1, true);
-> @@ -398,7 +397,6 @@ static int __init dell_wmi_init(void)
->  	}
+> -	if (keycode) {
+> +	if (keycode && (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS)) {
+
+This and the above test would be more explicit if written as:
+
+if (keycode && (report_key_events & BIT(REPORT_BRIGHTNESS_KEY_EVENTS))
+
+Do you have a preference Rafael?
+
+>  		input_report_key(input, keycode, 1);
+>  		input_sync(input);
+>  		input_report_key(input, keycode, 0);
+> @@ -2080,7 +2087,8 @@ bool acpi_video_handles_brightness_key_presses(void)
+>  	have_video_busses = !list_empty(&video_bus_head);
+>  	mutex_unlock(&video_list_lock);
 >  
->  	dmi_walk(find_hk_type, NULL);
-> -	acpi_video = acpi_video_get_backlight_type() != acpi_backlight_vendor;
+> -	return have_video_busses;
+> +	return have_video_busses &&
+> +	       (report_key_events & REPORT_BRIGHTNESS_KEY_EVENTS);
+>  }
+>  EXPORT_SYMBOL(acpi_video_handles_brightness_key_presses);
 >  
->  	err = dell_wmi_input_setup();
->  	if (err)
 > -- 
 > 2.5.0
 > 
