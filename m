@@ -1,269 +1,526 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Thu, 24 Dec 2015 19:46:57 +0100
-Message-ID: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Weng Xuetian <wengxt@gmail.com>
+Subject: [PATCH] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Thu, 24 Dec 2015 12:28:39 -0800
+Message-ID: <1450988919-945-1-git-send-email-wengxt@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f50.google.com ([74.125.82.50]:35401 "EHLO
-	mail-wm0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754551AbbLXSr5 (ORCPT
+Received: from mail-wm0-f46.google.com ([74.125.82.46]:34357 "EHLO
+	mail-wm0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751410AbbLXU2y (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Dec 2015 13:47:57 -0500
+	Thu, 24 Dec 2015 15:28:54 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Weng Xuetian <wengxt@gmail.com>
 
-This patch adds support for controlling keyboard backlight via standard
-linux led class interface (::kbd_backlight). It uses ACPI HKEY device w=
-ith
-MLCG and MLCS methods.
+Surface Pro 4 button is managed by a device with _HID "MSHW0040"
+different from Surface Pro 3.
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
+This commit adds MSHW0040 to id list to Support Surface Pro 4, and
+rename the driver to surfacepro_button accordingly.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+Signed-off-by: Weng Xuetian <wengxt@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c |  205 ++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 205 insertions(+)
+ MAINTAINERS                               |   4 +-
+ drivers/platform/x86/Kconfig              |   6 +-
+ drivers/platform/x86/Makefile             |   2 +-
+ drivers/platform/x86/surfacepro3_button.c | 216 -----------------------------
+ drivers/platform/x86/surfacepro_button.c  | 218 ++++++++++++++++++++++++++++++
+ 5 files changed, 224 insertions(+), 222 deletions(-)
+ delete mode 100644 drivers/platform/x86/surfacepro3_button.c
+ create mode 100644 drivers/platform/x86/surfacepro_button.c
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
-6/thinkpad_acpi.c
-index 0bed473..477afa1 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -303,6 +303,7 @@ static struct {
- 	u32 hotkey_mask:1;
- 	u32 hotkey_wlsw:1;
- 	u32 hotkey_tablet:1;
-+	u32 kbdlight:1;
- 	u32 light:1;
- 	u32 light_status:1;
- 	u32 bright_acpimode:1;
-@@ -4986,6 +4987,206 @@ static struct ibm_struct video_driver_data =3D =
-{
- #endif /* CONFIG_THINKPAD_ACPI_VIDEO */
-=20
- /*********************************************************************=
-****
-+ * Keyboard backlight subdriver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 233f834..1c07436 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7019,11 +7019,11 @@ T:	git git://git.monstr.eu/linux-2.6-microblaze.git
+ S:	Supported
+ F:	arch/microblaze/
+ 
+-MICROSOFT SURFACE PRO 3 BUTTON DRIVER
++MICROSOFT SURFACE PRO SERIES BUTTON DRIVER
+ M:	Chen Yu <yu.c.chen@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Supported
+-F:	drivers/platform/x86/surfacepro3_button.c
++F:	drivers/platform/x86/surfacepro_button.c
+ 
+ MICROTEK X6 SCANNER
+ M:	Oliver Neukum <oliver@neukum.org>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1089eaa..3358fb0 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -939,9 +939,9 @@ config INTEL_PMC_IPC
+ 	The PMC is an ARC processor which defines IPC commands for communication
+ 	with other entities in the CPU.
+ 
+-config SURFACE_PRO3_BUTTON
+-	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
++config SURFACE_PRO_BUTTON
++	tristate "Power/home/volume buttons driver for Microsoft Surface Pro Series tablet"
+ 	depends on ACPI && INPUT
+ 	---help---
+-	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
++	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro Series tablet.
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 3ca78a3..b4ece33 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -61,4 +61,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+-obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
++obj-$(CONFIG_SURFACE_PRO_BUTTON)	+= surfacepro_button.o
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+deleted file mode 100644
+index f7dade3..0000000
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ /dev/null
+@@ -1,216 +0,0 @@
+-/*
+- * power/home/volume button support for
+- * Microsoft Surface Pro 3 tablet.
+- *
+- * Copyright (c) 2015 Intel Corporation.
+- * All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; version 2
+- * of the License.
+- */
+-
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/types.h>
+-#include <linux/input.h>
+-#include <linux/acpi.h>
+-#include <acpi/button.h>
+-
+-#define SURFACE_BUTTON_HID		"MSHW0028"
+-#define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+-#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3 Buttons"
+-
+-#define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+-#define SURFACE_BUTTON_NOTIFY_RELEASE_POWER	0xc7
+-
+-#define SURFACE_BUTTON_NOTIFY_PRESS_HOME	0xc4
+-#define SURFACE_BUTTON_NOTIFY_RELEASE_HOME	0xc5
+-
+-#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP	0xc0
+-#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP	0xc1
+-
+-#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN	0xc2
+-#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN	0xc3
+-
+-ACPI_MODULE_NAME("surface pro 3 button");
+-
+-MODULE_AUTHOR("Chen Yu");
+-MODULE_DESCRIPTION("Surface Pro3 Button Driver");
+-MODULE_LICENSE("GPL v2");
+-
+-/*
+- * Power button, Home button, Volume buttons support is supposed to
+- * be covered by drivers/input/misc/soc_button_array.c, which is implemented
+- * according to "Windows ACPI Design Guide for SoC Platforms".
+- * However surface pro3 seems not to obey the specs, instead it uses
+- * device VGBI(MSHW0028) for dispatching the events.
+- * We choose acpi_driver rather than platform_driver/i2c_driver because
+- * although VGBI has an i2c resource connected to i2c controller, it
+- * is not embedded in any i2c controller's scope, thus neither platform_device
+- * will be created, nor i2c_client will be enumerated, we have to use
+- * acpi_driver.
+- */
+-static const struct acpi_device_id surface_button_device_ids[] = {
+-	{SURFACE_BUTTON_HID,    0},
+-	{"", 0},
+-};
+-MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
+-
+-struct surface_button {
+-	unsigned int type;
+-	struct input_dev *input;
+-	char phys[32];			/* for input device */
+-	unsigned long pushed;
+-	bool suspended;
+-};
+-
+-static void surface_button_notify(struct acpi_device *device, u32 event)
+-{
+-	struct surface_button *button = acpi_driver_data(device);
+-	struct input_dev *input;
+-	int key_code = KEY_RESERVED;
+-	bool pressed = false;
+-
+-	switch (event) {
+-	/* Power button press,release handle */
+-	case SURFACE_BUTTON_NOTIFY_PRESS_POWER:
+-		pressed = true;
+-		/*fall through*/
+-	case SURFACE_BUTTON_NOTIFY_RELEASE_POWER:
+-		key_code = KEY_POWER;
+-		break;
+-	/* Home button press,release handle */
+-	case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
+-		pressed = true;
+-		/*fall through*/
+-	case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
+-		key_code = KEY_LEFTMETA;
+-		break;
+-	/* Volume up button press,release handle */
+-	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP:
+-		pressed = true;
+-		/*fall through*/
+-	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP:
+-		key_code = KEY_VOLUMEUP;
+-		break;
+-	/* Volume down button press,release handle */
+-	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN:
+-		pressed = true;
+-		/*fall through*/
+-	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
+-		key_code = KEY_VOLUMEDOWN;
+-		break;
+-	default:
+-		dev_info_ratelimited(&device->dev,
+-				  "Unsupported event [0x%x]\n", event);
+-		break;
+-	}
+-	input = button->input;
+-	if (KEY_RESERVED == key_code)
+-		return;
+-	if (pressed)
+-		pm_wakeup_event(&device->dev, 0);
+-	if (button->suspended)
+-		return;
+-	input_report_key(input, key_code, pressed?1:0);
+-	input_sync(input);
+-}
+-
+-#ifdef CONFIG_PM_SLEEP
+-static int surface_button_suspend(struct device *dev)
+-{
+-	struct acpi_device *device = to_acpi_device(dev);
+-	struct surface_button *button = acpi_driver_data(device);
+-
+-	button->suspended = true;
+-	return 0;
+-}
+-
+-static int surface_button_resume(struct device *dev)
+-{
+-	struct acpi_device *device = to_acpi_device(dev);
+-	struct surface_button *button = acpi_driver_data(device);
+-
+-	button->suspended = false;
+-	return 0;
+-}
+-#endif
+-
+-static int surface_button_add(struct acpi_device *device)
+-{
+-	struct surface_button *button;
+-	struct input_dev *input;
+-	const char *hid = acpi_device_hid(device);
+-	char *name;
+-	int error;
+-
+-	if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
+-	    strlen(SURFACE_BUTTON_OBJ_NAME)))
+-		return -ENODEV;
+-
+-	button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+-	if (!button)
+-		return -ENOMEM;
+-
+-	device->driver_data = button;
+-	button->input = input = input_allocate_device();
+-	if (!input) {
+-		error = -ENOMEM;
+-		goto err_free_button;
+-	}
+-
+-	name = acpi_device_name(device);
+-	strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
+-	snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
+-
+-	input->name = name;
+-	input->phys = button->phys;
+-	input->id.bustype = BUS_HOST;
+-	input->dev.parent = &device->dev;
+-	input_set_capability(input, EV_KEY, KEY_POWER);
+-	input_set_capability(input, EV_KEY, KEY_LEFTMETA);
+-	input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
+-	input_set_capability(input, EV_KEY, KEY_VOLUMEDOWN);
+-
+-	error = input_register_device(input);
+-	if (error)
+-		goto err_free_input;
+-	dev_info(&device->dev,
+-			"%s [%s]\n", name, acpi_device_bid(device));
+-	return 0;
+-
+- err_free_input:
+-	input_free_device(input);
+- err_free_button:
+-	kfree(button);
+-	return error;
+-}
+-
+-static int surface_button_remove(struct acpi_device *device)
+-{
+-	struct surface_button *button = acpi_driver_data(device);
+-
+-	input_unregister_device(button->input);
+-	kfree(button);
+-	return 0;
+-}
+-
+-static SIMPLE_DEV_PM_OPS(surface_button_pm,
+-		surface_button_suspend, surface_button_resume);
+-
+-static struct acpi_driver surface_button_driver = {
+-	.name = "surface_pro3_button",
+-	.class = "SurfacePro3",
+-	.ids = surface_button_device_ids,
+-	.ops = {
+-		.add = surface_button_add,
+-		.remove = surface_button_remove,
+-		.notify = surface_button_notify,
+-	},
+-	.drv.pm = &surface_button_pm,
+-};
+-
+-module_acpi_driver(surface_button_driver);
+diff --git a/drivers/platform/x86/surfacepro_button.c b/drivers/platform/x86/surfacepro_button.c
+new file mode 100644
+index 0000000..cda52b8
+--- /dev/null
++++ b/drivers/platform/x86/surfacepro_button.c
+@@ -0,0 +1,218 @@
++/*
++ * power/home/volume button support for
++ * Microsoft Surface Pro Series tablet.
++ *
++ * Copyright (c) 2015 Intel Corporation.
++ * All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
 + */
 +
-+static int kbdlight_set_level(int level)
-+{
-+	if (!hkey_handle)
-+		return -ENXIO;
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/input.h>
++#include <linux/acpi.h>
++#include <acpi/button.h>
 +
-+	if (!acpi_evalf(hkey_handle, NULL, "MLCS", "dd", level))
-+		return -EIO;
++#define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO4_BUTTON_HID		"MSHW0040"
++#define SURFACE_BUTTON_OBJ_NAME		"VGBI"
++#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro Series Buttons"
 +
-+	return 0;
-+}
++#define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
++#define SURFACE_BUTTON_NOTIFY_RELEASE_POWER	0xc7
 +
-+static int kbdlight_get_level(void)
-+{
-+	int status =3D 0;
++#define SURFACE_BUTTON_NOTIFY_PRESS_HOME	0xc4
++#define SURFACE_BUTTON_NOTIFY_RELEASE_HOME	0xc5
 +
-+	if (!hkey_handle)
-+		return -ENXIO;
++#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP	0xc0
++#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP	0xc1
 +
-+	if (!acpi_evalf(hkey_handle, &status, "MLCG", "dd", 0))
-+		return -EIO;
++#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN	0xc2
++#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN	0xc3
 +
-+	if (status < 0)
-+		return status;
++ACPI_MODULE_NAME("surface pro series button");
 +
-+	return status & 0x3;
-+}
++MODULE_AUTHOR("Chen Yu");
++MODULE_DESCRIPTION("Surface Pro Series Button Driver");
++MODULE_LICENSE("GPL v2");
 +
-+static bool kbdlight_is_supported(void)
-+{
-+	int status =3D 0;
++/*
++ * Power button, Home button, Volume buttons support is supposed to
++ * be covered by drivers/input/misc/soc_button_array.c, which is implemented
++ * according to "Windows ACPI Design Guide for SoC Platforms".
++ * However surface pro3 seems not to obey the specs, instead it uses
++ * device VGBI(MSHW0028) for dispatching the events.
++ * We choose acpi_driver rather than platform_driver/i2c_driver because
++ * although VGBI has an i2c resource connected to i2c controller, it
++ * is not embedded in any i2c controller's scope, thus neither platform_device
++ * will be created, nor i2c_client will be enumerated, we have to use
++ * acpi_driver.
++ */
++static const struct acpi_device_id surface_button_device_ids[] = {
++	{SURFACE_PRO3_BUTTON_HID,    0},
++	{SURFACE_PRO4_BUTTON_HID,    0},
++	{"", 0},
++};
++MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
 +
-+	if (!hkey_handle)
-+		return false;
-+
-+	if (!acpi_has_method(hkey_handle, "MLCG")) {
-+		vdbg_printk(TPACPI_DBG_INIT, "kbdlight MLCG is unavailable\n");
-+		return false;
-+	}
-+
-+	if (!acpi_evalf(hkey_handle, &status, "MLCG", "qdd", 0)) {
-+		vdbg_printk(TPACPI_DBG_INIT, "kbdlight MLCG failed\n");
-+		return false;
-+	}
-+
-+	if (status < 0) {
-+		vdbg_printk(TPACPI_DBG_INIT, "kbdlight MLCG err: %d\n", status);
-+		return false;
-+	}
-+
-+	vdbg_printk(TPACPI_DBG_INIT, "kbdlight MLCG returned 0x%x\n", status)=
-;
-+	/*
-+	 * Guessed test for keyboard backlight:
-+	 *
-+	 * Machines with backlight keyboard return:
-+	 *   b010100000010000000XX - ThinkPad X1 Carbon 3rd
-+	 *   b110100010010000000XX - ThinkPad x230
-+	 *   b010100000010000000XX - ThinkPad x240
-+	 *   b010100000010000000XX - ThinkPad W541
-+	 * (XX is current backlight level)
-+	 *
-+	 * Machines without backlight keyboard return:
-+	 *   b10100001000000000000 - ThinkPad x230
-+	 *   b10110001000000000000 - ThinkPad E430
-+	 *   b00000000000000000000 - ThinkPad E450
-+	 *
-+	 * Candidate BITs for detection test (XOR):
-+	 *   b01000000001000000000
-+	 *              ^
-+	 */
-+	return status & BIT(9);
-+}
-+
-+static void kbdlight_set_worker(struct work_struct *work)
-+{
-+	struct tpacpi_led_classdev *data =3D
-+			container_of(work, struct tpacpi_led_classdev, work);
-+
-+	if (likely(tpacpi_lifecycle =3D=3D TPACPI_LIFE_RUNNING))
-+		kbdlight_set_level(data->new_state);
-+}
-+
-+static void kbdlight_sysfs_set(struct led_classdev *led_cdev,
-+			enum led_brightness brightness)
-+{
-+	struct tpacpi_led_classdev *data =3D
-+			container_of(led_cdev,
-+				     struct tpacpi_led_classdev,
-+				     led_classdev);
-+	data->new_state =3D brightness;
-+	queue_work(tpacpi_wq, &data->work);
-+}
-+
-+static enum led_brightness kbdlight_sysfs_get(struct led_classdev *led=
-_cdev)
-+{
-+	int level;
-+
-+	level =3D kbdlight_get_level();
-+	if (level < 0)
-+		return 0;
-+
-+	return level;
-+}
-+
-+static struct tpacpi_led_classdev tpacpi_led_kbdlight =3D {
-+	.led_classdev =3D {
-+		.name		=3D "tpacpi::kbd_backlight",
-+		.max_brightness	=3D 2,
-+		.brightness_set	=3D &kbdlight_sysfs_set,
-+		.brightness_get	=3D &kbdlight_sysfs_get,
-+	}
++struct surface_button {
++	unsigned int type;
++	struct input_dev *input;
++	char phys[32];			/* for input device */
++	unsigned long pushed;
++	bool suspended;
 +};
 +
-+static int __init kbdlight_init(struct ibm_init_struct *iibm)
++static void surface_button_notify(struct acpi_device *device, u32 event)
 +{
-+	int rc;
++	struct surface_button *button = acpi_driver_data(device);
++	struct input_dev *input;
++	int key_code = KEY_RESERVED;
++	bool pressed = false;
 +
-+	vdbg_printk(TPACPI_DBG_INIT, "initializing kbdlight subdriver\n");
-+
-+	TPACPI_ACPIHANDLE_INIT(hkey);
-+	INIT_WORK(&tpacpi_led_kbdlight.work, kbdlight_set_worker);
-+
-+	if (!kbdlight_is_supported()) {
-+		tp_features.kbdlight =3D 0;
-+		vdbg_printk(TPACPI_DBG_INIT, "kbdlight is unsupported\n");
-+		return 1;
++	switch (event) {
++	/* Power button press,release handle */
++	case SURFACE_BUTTON_NOTIFY_PRESS_POWER:
++		pressed = true;
++		/*fall through*/
++	case SURFACE_BUTTON_NOTIFY_RELEASE_POWER:
++		key_code = KEY_POWER;
++		break;
++	/* Home button press,release handle */
++	case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
++		pressed = true;
++		/*fall through*/
++	case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
++		key_code = KEY_LEFTMETA;
++		break;
++	/* Volume up button press,release handle */
++	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP:
++		pressed = true;
++		/*fall through*/
++	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP:
++		key_code = KEY_VOLUMEUP;
++		break;
++	/* Volume down button press,release handle */
++	case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN:
++		pressed = true;
++		/*fall through*/
++	case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
++		key_code = KEY_VOLUMEDOWN;
++		break;
++	default:
++		dev_info_ratelimited(&device->dev,
++				  "Unsupported event [0x%x]\n", event);
++		break;
 +	}
++	input = button->input;
++	if (KEY_RESERVED == key_code)
++		return;
++	if (pressed)
++		pm_wakeup_event(&device->dev, 0);
++	if (button->suspended)
++		return;
++	input_report_key(input, key_code, pressed?1:0);
++	input_sync(input);
++}
 +
-+	tp_features.kbdlight =3D 1;
++#ifdef CONFIG_PM_SLEEP
++static int surface_button_suspend(struct device *dev)
++{
++	struct acpi_device *device = to_acpi_device(dev);
++	struct surface_button *button = acpi_driver_data(device);
 +
-+	rc =3D led_classdev_register(&tpacpi_pdev->dev,
-+				   &tpacpi_led_kbdlight.led_classdev);
-+	if (rc < 0) {
-+		tp_features.kbdlight =3D 0;
-+		return rc;
-+	}
-+
++	button->suspended = true;
 +	return 0;
 +}
 +
-+static void kbdlight_exit(void)
++static int surface_button_resume(struct device *dev)
 +{
-+	if (tp_features.kbdlight)
-+		led_classdev_unregister(&tpacpi_led_kbdlight.led_classdev);
-+	flush_workqueue(tpacpi_wq);
-+}
++	struct acpi_device *device = to_acpi_device(dev);
++	struct surface_button *button = acpi_driver_data(device);
 +
-+static int kbdlight_read(struct seq_file *m)
-+{
-+	int level;
-+
-+	if (!tp_features.kbdlight) {
-+		seq_printf(m, "status:\t\tnot supported\n");
-+	} else {
-+		level =3D kbdlight_get_level();
-+		if (level < 0)
-+			seq_printf(m, "status:\t\terror %d\n", level);
-+		else
-+			seq_printf(m, "status:\t\t%d\n", level);
-+		seq_printf(m, "commands:\t0, 1, 2\n");
-+	}
-+
++	button->suspended = false;
 +	return 0;
 +}
++#endif
 +
-+static int kbdlight_write(char *buf)
++static int surface_button_add(struct acpi_device *device)
 +{
-+	char *cmd;
-+	int level =3D -1;
++	struct surface_button *button;
++	struct input_dev *input;
++	const char *hid = acpi_device_hid(device);
++	char *name;
++	int error;
 +
-+	if (!tp_features.kbdlight)
++	if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
++	    strlen(SURFACE_BUTTON_OBJ_NAME)))
 +		return -ENODEV;
 +
-+	while ((cmd =3D next_cmd(&buf))) {
-+		if (strlencmp(cmd, "0") =3D=3D 0)
-+			level =3D 0;
-+		else if (strlencmp(cmd, "1") =3D=3D 0)
-+			level =3D 1;
-+		else if (strlencmp(cmd, "2") =3D=3D 0)
-+			level =3D 2;
-+		else
-+			return -EINVAL;
++	button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
++	if (!button)
++		return -ENOMEM;
++
++	device->driver_data = button;
++	button->input = input = input_allocate_device();
++	if (!input) {
++		error = -ENOMEM;
++		goto err_free_button;
 +	}
 +
-+	if (level =3D=3D -1)
-+		return -EINVAL;
++	name = acpi_device_name(device);
++	strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
++	snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
 +
-+	return kbdlight_set_level(level);
++	input->name = name;
++	input->phys = button->phys;
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = &device->dev;
++	input_set_capability(input, EV_KEY, KEY_POWER);
++	input_set_capability(input, EV_KEY, KEY_LEFTMETA);
++	input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
++	input_set_capability(input, EV_KEY, KEY_VOLUMEDOWN);
++
++	error = input_register_device(input);
++	if (error)
++		goto err_free_input;
++	dev_info(&device->dev,
++			"%s [%s]\n", name, acpi_device_bid(device));
++	return 0;
++
++ err_free_input:
++	input_free_device(input);
++ err_free_button:
++	kfree(button);
++	return error;
 +}
 +
-+static struct ibm_struct kbdlight_driver_data =3D {
-+	.name =3D "kbdlight",
-+	.read =3D kbdlight_read,
-+	.write =3D kbdlight_write,
-+	.exit =3D kbdlight_exit,
++static int surface_button_remove(struct acpi_device *device)
++{
++	struct surface_button *button = acpi_driver_data(device);
++
++	input_unregister_device(button->input);
++	kfree(button);
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(surface_button_pm,
++		surface_button_suspend, surface_button_resume);
++
++static struct acpi_driver surface_button_driver = {
++	.name = "surface_pro_button",
++	.class = "SurfacePro",
++	.ids = surface_button_device_ids,
++	.ops = {
++		.add = surface_button_add,
++		.remove = surface_button_remove,
++		.notify = surface_button_notify,
++	},
++	.drv.pm = &surface_button_pm,
 +};
 +
-+/*********************************************************************=
-****
-  * Light (thinklight) subdriver
-  */
-=20
-@@ -9207,6 +9408,10 @@ static struct ibm_init_struct ibms_init[] __init=
-data =3D {
- 	},
- #endif
- 	{
-+		.init =3D kbdlight_init,
-+		.data =3D &kbdlight_driver_data,
-+	},
-+	{
- 		.init =3D light_init,
- 		.data =3D &light_driver_data,
- 	},
---=20
-1.7.9.5
++module_acpi_driver(surface_button_driver);
+-- 
+2.6.4
