@@ -1,66 +1,97 @@
-From: Unknown <unknown@unknown.invalid>
-Subject: Quick Response
-Date: Fri, 25 Dec 2015 07:49:07 +0200
-Message-ID: <AM2PR05MB1092C2EF61D2DE292E5AC256B8F80@AM2PR05MB1092.eurprd05.prod.outlook.com>
-Reply-To: <kazimtaylor03@gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is valid
+Date: Fri, 25 Dec 2015 14:02:41 +0100
+Message-ID: <201512251402.42066@pali>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com> <1450991926-20937-2-git-send-email-pali.rohar@gmail.com> <CALCETrW0HmHiXmM23Y0XV1FBKaw9dcEwdrRWzwSJJhj89RkQYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart27911669.1Ux5pOvkZo";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-am1hn0245.outbound.protection.outlook.com ([157.56.112.245]:6272
-	"EHLO emea01-am1-obe.outbound.protection.outlook.com"
-	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-	id S1751156AbbLYFtZ convert rfc822-to-8bit (ORCPT
+Received: from mail-wm0-f49.google.com ([74.125.82.49]:38041 "EHLO
+	mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753550AbbLYNCu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 25 Dec 2015 00:49:25 -0500
-Content-Description: Mail message body
-From: <>
+	Fri, 25 Dec 2015 08:02:50 -0500
+In-Reply-To: <CALCETrW0HmHiXmM23Y0XV1FBKaw9dcEwdrRWzwSJJhj89RkQYQ@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Recipients@vger.kernel.org
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-=46ROM MR. KAZIM TAYLOR
-PHONE, +27-73-639-4004
-JOHANNESBURG,
-SOUTH AFRICA.
-Dear,
+--nextPart27911669.1Ux5pOvkZo
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Good day, you may be surprise to receive this email since you don=E2=80=
-=99t know me in person, but
-With due respect, trust and humility, I write to you this proposal. I a=
-m Mr. Kazim Taylor the
-Son of late Mr. Tariq Taylor of Darfur in South Sudan. It is indeed my =
-pleasure to contact you
-=46or assistance for a business venture which I intend to establish.
+On Friday 25 December 2015 02:23:04 Andy Lutomirski wrote:
+> On Thu, Dec 24, 2015 at 1:18 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> wrote:
+> > According to Dell WMI document mentioned in ML dicussion archived
+> > at http://www.spinics.net/lists/platform-driver-x86/msg07220.html
+> > OS should check Dell WMI descriptor structure. Structure also
+> > provide Dell WMI interface version which is used later.
+>=20
+> I will rebase my big series on top of this.  It'll give me a good
+> excuse to test that I got the probe ordering right.  (The code is
+> explicitly intended to support use cases like this, and now I'll have
+> a real-world test for it.)  I'll also test this in a bit.
 
-I need you assistance to move the sum of EIGHTEEN MILLION UNITED
-STATES DOLLARS) which my late Father deposited with a private Security =
-Company here
-In South Africa awaiting claim before he was assassinated by unknown pe=
-rsons during the
-War in Darfur, Sudan.
+Ok!
 
-Now I have decided to invest the money in your country or anywhere safe=
- for security
-Reasons. I want you to help me retrieve the money for onward transfer t=
-o any designated bank
-Account of your choice for investment purposes
+> > +MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
+>=20
+> I don't think this is necessary.  The driver will only work if both
+> wmi devices and, hence, modaliases are present, so there's no need to
+> cause just one or the other to trigger dell-wmi autoloading.
 
-I will furnish you with more details I and my family have agreed to com=
-pensate you with 30%
-Of the total sum which will be your own share for assisting us, and 5% =
-for any expenses that
-Might be incurred by both parties in the course of the transaction. The=
-n the remaining 65%
-Will be for me and my family, which you will help us to invest in your =
-country. Please feel
-=46ree to contact me on my phone number +27736394004, All I require fro=
-m you is honest &
-Your kind co-operation. I will give you further details as soon as you =
-show interest in helping
-Me.
+Maybe now when you are working on big WMI patch series is time to change=20
+modalias support in WMI to support AND-conjunction (&&) on WMI aliases,=20
+not just OR (one alias match).
 
-I wait for your kind consideration to my proposal.
+Something like: load dell-wmi.ko driver if system provides both WMI=20
+GUIDs.
 
-Yours faithfully,
-Mr. Kazim Taylor.
+> > +/**
+>=20
+> > + * Descriptor buffer is 128 byte long and contains:
+> This isn't kerneldoc format, so I think this should just be "/*".
+>=20
+
+Ok, I will fix this in next version.
+
+> > +       if (obj->buffer.length !=3D 128) {
+> > +               pr_err("Dell descriptor buffer has invalid length
+> > (%d)\n", +                       obj->buffer.length);
+> > +               kfree(obj);
+> > +               return -EINVAL;
+> > +       }
+>=20
+> I would advocate for being more permissive: a buffer that is actually
+> too short for the fields we need would result in -EINVAL, but a
+> buffer that isn't 128 bytes would just be a warning and not cause
+> module load to fail.
+>=20
+> --Andy
+
+Sounds good, I will change this part.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart27911669.1Ux5pOvkZo
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlZ9PnIACgkQi/DJPQPkQ1JIeACgq8prmCsdMWMP+DIBZWMof3lq
+TH8An19Yd2U5us3gn3TjX2lTvz5YPxmK
+=lTow
+-----END PGP SIGNATURE-----
+
+--nextPart27911669.1Ux5pOvkZo--
