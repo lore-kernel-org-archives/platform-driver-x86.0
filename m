@@ -1,53 +1,66 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is valid
-Date: Thu, 24 Dec 2015 17:23:04 -0800
-Message-ID: <CALCETrW0HmHiXmM23Y0XV1FBKaw9dcEwdrRWzwSJJhj89RkQYQ@mail.gmail.com>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com> <1450991926-20937-2-git-send-email-pali.rohar@gmail.com>
+From: Unknown <unknown@unknown.invalid>
+Subject: Quick Response
+Date: Fri, 25 Dec 2015 07:49:07 +0200
+Message-ID: <AM2PR05MB1092C2EF61D2DE292E5AC256B8F80@AM2PR05MB1092.eurprd05.prod.outlook.com>
+Reply-To: <kazimtaylor03@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1450991926-20937-2-git-send-email-pali.rohar@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-am1hn0245.outbound.protection.outlook.com ([157.56.112.245]:6272
+	"EHLO emea01-am1-obe.outbound.protection.outlook.com"
+	rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+	id S1751156AbbLYFtZ convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 25 Dec 2015 00:49:25 -0500
+Content-Description: Mail message body
+From: <>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Recipients@vger.kernel.org
 
-On Thu, Dec 24, 2015 at 1:18 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
- wrote:
-> According to Dell WMI document mentioned in ML dicussion archived at
-> http://www.spinics.net/lists/platform-driver-x86/msg07220.html OS sho=
-uld
-> check Dell WMI descriptor structure. Structure also provide Dell WMI
-> interface version which is used later.
+=46ROM MR. KAZIM TAYLOR
+PHONE, +27-73-639-4004
+JOHANNESBURG,
+SOUTH AFRICA.
+Dear,
 
-I will rebase my big series on top of this.  It'll give me a good
-excuse to test that I got the probe ordering right.  (The code is
-explicitly intended to support use cases like this, and now I'll have
-a real-world test for it.)  I'll also test this in a bit.
+Good day, you may be surprise to receive this email since you don=E2=80=
+=99t know me in person, but
+With due respect, trust and humility, I write to you this proposal. I a=
+m Mr. Kazim Taylor the
+Son of late Mr. Tariq Taylor of Darfur in South Sudan. It is indeed my =
+pleasure to contact you
+=46or assistance for a business venture which I intend to establish.
 
-> +MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
+I need you assistance to move the sum of EIGHTEEN MILLION UNITED
+STATES DOLLARS) which my late Father deposited with a private Security =
+Company here
+In South Africa awaiting claim before he was assassinated by unknown pe=
+rsons during the
+War in Darfur, Sudan.
 
-I don't think this is necessary.  The driver will only work if both
-wmi devices and, hence, modaliases are present, so there's no need to
-cause just one or the other to trigger dell-wmi autoloading.
+Now I have decided to invest the money in your country or anywhere safe=
+ for security
+Reasons. I want you to help me retrieve the money for onward transfer t=
+o any designated bank
+Account of your choice for investment purposes
 
-> +/**
-> + * Descriptor buffer is 128 byte long and contains:
+I will furnish you with more details I and my family have agreed to com=
+pensate you with 30%
+Of the total sum which will be your own share for assisting us, and 5% =
+for any expenses that
+Might be incurred by both parties in the course of the transaction. The=
+n the remaining 65%
+Will be for me and my family, which you will help us to invest in your =
+country. Please feel
+=46ree to contact me on my phone number +27736394004, All I require fro=
+m you is honest &
+Your kind co-operation. I will give you further details as soon as you =
+show interest in helping
+Me.
 
-This isn't kerneldoc format, so I think this should just be "/*".
+I wait for your kind consideration to my proposal.
 
-> +       if (obj->buffer.length !=3D 128) {
-> +               pr_err("Dell descriptor buffer has invalid length (%d=
-)\n",
-> +                       obj->buffer.length);
-> +               kfree(obj);
-> +               return -EINVAL;
-> +       }
-
-I would advocate for being more permissive: a buffer that is actually
-too short for the fields we need would result in -EINVAL, but a buffer
-that isn't 128 bytes would just be a warning and not cause module load
-to fail.
-
---Andy
+Yours faithfully,
+Mr. Kazim Taylor.
