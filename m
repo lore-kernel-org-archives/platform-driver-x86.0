@@ -1,75 +1,53 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH 2/2] dell-wmi: Process only one event on devices with interface version 0
-Date: Thu, 24 Dec 2015 22:18:46 +0100
-Message-ID: <1450991926-20937-3-git-send-email-pali.rohar@gmail.com>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is valid
+Date: Thu, 24 Dec 2015 17:23:04 -0800
+Message-ID: <CALCETrW0HmHiXmM23Y0XV1FBKaw9dcEwdrRWzwSJJhj89RkQYQ@mail.gmail.com>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com> <1450991926-20937-2-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f53.google.com ([74.125.82.53]:37124 "EHLO
-	mail-wm0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753343AbbLXVTG (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 24 Dec 2015 16:19:06 -0500
-In-Reply-To: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1450991926-20937-2-git-send-email-pali.rohar@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-BIOS/ACPI on devices with WMI interface version 0 does not clear buffer
-before filling it. So next time when BIOS/ACPI send WMI event which is
-smaller as previous then it contains garbage in buffer from previous ev=
-ent.
+On Thu, Dec 24, 2015 at 1:18 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com>=
+ wrote:
+> According to Dell WMI document mentioned in ML dicussion archived at
+> http://www.spinics.net/lists/platform-driver-x86/msg07220.html OS sho=
+uld
+> check Dell WMI descriptor structure. Structure also provide Dell WMI
+> interface version which is used later.
 
-BIOS/ACPI on devices with WMI interface version 1 clears buffer and
-sometimes send more events in buffer at one call.
+I will rebase my big series on top of this.  It'll give me a good
+excuse to test that I got the probe ordering right.  (The code is
+explicitly intended to support use cases like this, and now I'll have
+a real-world test for it.)  I'll also test this in a bit.
 
-Since commit 83fc44c32ad8 ("dell-wmi: Update code for processing WMI
-events") dell-wmi process all events in buffer (and not just first).
+> +MODULE_ALIAS("wmi:"DELL_DESCRIPTOR_GUID);
 
-So to prevent reading garbage from buffer we will process only first on=
-e
-event on devices with WMI interface version 0.
+I don't think this is necessary.  The driver will only work if both
+wmi devices and, hence, modaliases are present, so there's no need to
+cause just one or the other to trigger dell-wmi autoloading.
 
-Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
----
- drivers/platform/x86/dell-wmi.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> +/**
+> + * Descriptor buffer is 128 byte long and contains:
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
-l-wmi.c
-index 09ee8ed..62f2f7a 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -237,6 +237,22 @@ static void dell_wmi_notify(u32 value, void *conte=
-xt)
-=20
- 	buffer_end =3D buffer_entry + buffer_size;
-=20
-+	/*
-+	 * BIOS/ACPI on devices with WMI interface version 0 does not clear
-+	 * buffer before filling it. So next time when BIOS/ACPI send WMI eve=
-nt
-+	 * which is smaller as previous then it contains garbage in buffer fr=
-om
-+	 * previous event.
-+	 *
-+	 * BIOS/ACPI on devices with WMI interface version 1 clears buffer an=
-d
-+	 * sometimes send more events in buffer at one call.
-+	 *
-+	 * So to prevent reading garbage from buffer we will process only fir=
-st
-+	 * one event on devices with WMI interface version 0.
-+	 */
-+	if (dell_wmi_interface_version =3D=3D 0 && buffer_entry < buffer_end)
-+		if (buffer_end > buffer_entry + buffer_entry[0] + 1)
-+			buffer_end =3D buffer_entry + buffer_entry[0] + 1;
-+
- 	while (buffer_entry < buffer_end) {
-=20
- 		len =3D buffer_entry[0];
---=20
-1.7.9.5
+This isn't kerneldoc format, so I think this should just be "/*".
+
+> +       if (obj->buffer.length !=3D 128) {
+> +               pr_err("Dell descriptor buffer has invalid length (%d=
+)\n",
+> +                       obj->buffer.length);
+> +               kfree(obj);
+> +               return -EINVAL;
+> +       }
+
+I would advocate for being more permissive: a buffer that is actually
+too short for the fields we need would result in -EINVAL, but a buffer
+that isn't 128 bytes would just be a warning and not cause module load
+to fail.
+
+--Andy
