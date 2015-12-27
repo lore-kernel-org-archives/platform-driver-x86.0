@@ -1,289 +1,546 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 4/4] asus-wireless: Toggle airplane mode LED
-Date: Sun, 27 Dec 2015 15:32:05 +0200
-Message-ID: <CAHp75Vc+drvNsT5+isZ_EYuneJOMnv9gUObRxkZVzCA+P3qR7w@mail.gmail.com>
-References: <1451141797-1066-1-git-send-email-jprvita@endlessm.com>
-	<1451141797-1066-5-git-send-email-jprvita@endlessm.com>
+Subject: Re: [PATCH] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Sun, 27 Dec 2015 15:36:39 +0200
+Message-ID: <CAHp75Vdq+XcSkLwHG5r7p36Ngvb5FjZ0ENVvC8uHsQq7CQ7zZw@mail.gmail.com>
+References: <1450988919-945-1-git-send-email-wengxt@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1451141797-1066-5-git-send-email-jprvita@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-yk0-f179.google.com ([209.85.160.179]:34758 "EHLO
+	mail-yk0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751786AbbL0Ngk (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 27 Dec 2015 08:36:40 -0500
+In-Reply-To: <1450988919-945-1-git-send-email-wengxt@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Weng Xuetian <wengxt@gmail.com>
+Cc: Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 
-On Sat, Dec 26, 2015 at 4:56 PM, Jo=C3=A3o Paulo Rechi Vita
-<jprvita@gmail.com> wrote:
-> In the ASHS device we have the HSWC method, which basically calls eit=
-her
-> OWGD or OWGS, depending on its parameter:
+On Thu, Dec 24, 2015 at 10:28 PM, Weng Xuetian <wengxt@gmail.com> wrote:
+> Surface Pro 4 button is managed by a device with _HID "MSHW0040"
+> different from Surface Pro 3.
 >
->         Device (ASHS)
->         {
->                 Name (_HID, "ATK4002")  // _HID: Hardware ID
->                 Method (HSWC, 1, Serialized)
->                 {
->                         If ((Arg0 < 0x02))
->                         {
->                                 OWGD (Arg0)
->                                 Return (One)
->                         }
->                         If ((Arg0 =3D=3D 0x02))
->                         {
->                                 Local0 =3D OWGS ()
->                                 If (Local0)
->                                 {
->                                         Return (0x05)
->                                 }
->                                 Else
->                                 {
->                                         Return (0x04)
->                                 }
->                         }
->                         If ((Arg0 =3D=3D 0x03))
->                         {
->                                 Return (0xFF)
->                         }
->                         If ((Arg0 =3D=3D 0x04))
->                         {
->                                 OWGD (Zero)
->                                 Return (One)
->                         }
->                         If ((Arg0 =3D=3D 0x05))
->                         {
->                                 OWGD (One)
->                                 Return (One)
->                         }
->                         If ((Arg0 =3D=3D 0x80))
->                         {
->                                 Return (One)
->                         }
->                 }
->                 Method (_STA, 0, NotSerialized)  // _STA: Status
->                 {
->                         If ((MSOS () >=3D OSW8))
->                         {
->                                 Return (0x0F)
->                         }
->                         Else
->                         {
->                                 Return (Zero)
->                         }
->                 }
->         }
+> This commit adds MSHW0040 to id list to Support Surface Pro 4, and
+> rename the driver to surfacepro_button accordingly.
 >
-> On the Asus E202SA laptop, which does not have an airplane mode LED,
-> OWGD has an empty implementation and OWGS simply returns 0. On the As=
-us
-> X555UB these methods have the following implementation:
->
->         Method (OWGD, 1, Serialized)
->         {
->                 SGPL (0x0203000F, Arg0)
->                 SGPL (0x0203000F, Arg0)
->         }
->
->         Method (OWGS, 0, Serialized)
->         {
->                 Store (RGPL (0x0203000F), Local0)
->                 Return (Local0)
->         }
->
-> Where OWGD(1) sets the airplane mode LED ON, OWGD(0) set it off, and
-> OWGS() returns its state.
->
-> This commit makes use of a newly implemented RFKill LED trigger to
-> trigger the LED when the system enters or exits "Airplane Mode", ther=
-e
-> is, when all radios are blocked.
->
-> Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
+
+No review until you resend with a properly formatted patch, i.e. with -M -C.
+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+> Signed-off-by: Weng Xuetian <wengxt@gmail.com>
 > ---
->  drivers/platform/x86/Kconfig         |  2 +
->  drivers/platform/x86/asus-wireless.c | 81 ++++++++++++++++++++++++++=
-++++++++++
->  2 files changed, 83 insertions(+)
+>  MAINTAINERS                               |   4 +-
+>  drivers/platform/x86/Kconfig              |   6 +-
+>  drivers/platform/x86/Makefile             |   2 +-
+>  drivers/platform/x86/surfacepro3_button.c | 216 -----------------------------
+>  drivers/platform/x86/surfacepro_button.c  | 218 ++++++++++++++++++++++++++++++
+>  5 files changed, 224 insertions(+), 222 deletions(-)
+>  delete mode 100644 drivers/platform/x86/surfacepro3_button.c
+>  create mode 100644 drivers/platform/x86/surfacepro_button.c
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
-> index d3a088b..3d8dc0b 100644
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 233f834..1c07436 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7019,11 +7019,11 @@ T:      git git://git.monstr.eu/linux-2.6-microblaze.git
+>  S:     Supported
+>  F:     arch/microblaze/
+>
+> -MICROSOFT SURFACE PRO 3 BUTTON DRIVER
+> +MICROSOFT SURFACE PRO SERIES BUTTON DRIVER
+>  M:     Chen Yu <yu.c.chen@intel.com>
+>  L:     platform-driver-x86@vger.kernel.org
+>  S:     Supported
+> -F:     drivers/platform/x86/surfacepro3_button.c
+> +F:     drivers/platform/x86/surfacepro_button.c
+>
+>  MICROTEK X6 SCANNER
+>  M:     Oliver Neukum <oliver@neukum.org>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 1089eaa..3358fb0 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -592,6 +592,8 @@ config ASUS_WIRELESS
->         depends on ACPI
->         depends on INPUT
->         default m
-> +       select NEW_LEDS
-> +       select LEDS_CLASS
+> @@ -939,9 +939,9 @@ config INTEL_PMC_IPC
+>         The PMC is an ARC processor which defines IPC commands for communication
+>         with other entities in the CPU.
+>
+> -config SURFACE_PRO3_BUTTON
+> -       tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
+> +config SURFACE_PRO_BUTTON
+> +       tristate "Power/home/volume buttons driver for Microsoft Surface Pro Series tablet"
+>         depends on ACPI && INPUT
 >         ---help---
->           The Asus Wireless Radio Control handles the airplane mode h=
-otkey
->           present on some Asus laptops.
-> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/=
-x86/asus-wireless.c
-> index 7928efd..489ef83 100644
-> --- a/drivers/platform/x86/asus-wireless.c
-> +++ b/drivers/platform/x86/asus-wireless.c
-> @@ -17,13 +17,76 @@
->  #include <linux/acpi.h>
->  #include <linux/input.h>
->  #include <linux/pci_ids.h>
-> +#include <linux/leds.h>
->
->  #define ASUS_WIRELESS_MODULE_NAME "Asus Wireless Radio Control Drive=
-r"
-> +#define ASUS_WIRELESS_LED_STATUS 0x2
-> +#define ASUS_WIRELESS_LED_OFF 0x4
-> +#define ASUS_WIRELESS_LED_ON 0x5
->
->  struct asus_wireless_data {
->         struct input_dev *inputdev;
-> +       struct acpi_device *acpidev;
-
-You can get this easily from struct device.
-
-> +       struct workqueue_struct *wq;
-> +       struct work_struct led_work;
-> +       struct led_classdev led;
-> +       int led_state;
->  };
->
-> +static u64 asus_wireless_method(acpi_handle handle, const char *meth=
-od,
-> +                               int param)
+> -         This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
+> +         This driver handles the power/home/volume buttons on the Microsoft Surface Pro Series tablet.
+>  endif # X86_PLATFORM_DEVICES
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 3ca78a3..b4ece33 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -61,4 +61,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)      += intel-smartconnect.o
+>  obj-$(CONFIG_PVPANIC)           += pvpanic.o
+>  obj-$(CONFIG_ALIENWARE_WMI)    += alienware-wmi.o
+>  obj-$(CONFIG_INTEL_PMC_IPC)    += intel_pmc_ipc.o
+> -obj-$(CONFIG_SURFACE_PRO3_BUTTON)      += surfacepro3_button.o
+> +obj-$(CONFIG_SURFACE_PRO_BUTTON)       += surfacepro_button.o
+> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+> deleted file mode 100644
+> index f7dade3..0000000
+> --- a/drivers/platform/x86/surfacepro3_button.c
+> +++ /dev/null
+> @@ -1,216 +0,0 @@
+> -/*
+> - * power/home/volume button support for
+> - * Microsoft Surface Pro 3 tablet.
+> - *
+> - * Copyright (c) 2015 Intel Corporation.
+> - * All rights reserved.
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; version 2
+> - * of the License.
+> - */
+> -
+> -#include <linux/kernel.h>
+> -#include <linux/module.h>
+> -#include <linux/init.h>
+> -#include <linux/types.h>
+> -#include <linux/input.h>
+> -#include <linux/acpi.h>
+> -#include <acpi/button.h>
+> -
+> -#define SURFACE_BUTTON_HID             "MSHW0028"
+> -#define SURFACE_BUTTON_OBJ_NAME                "VGBI"
+> -#define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3 Buttons"
+> -
+> -#define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
+> -#define SURFACE_BUTTON_NOTIFY_RELEASE_POWER    0xc7
+> -
+> -#define SURFACE_BUTTON_NOTIFY_PRESS_HOME       0xc4
+> -#define SURFACE_BUTTON_NOTIFY_RELEASE_HOME     0xc5
+> -
+> -#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP  0xc0
+> -#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP        0xc1
+> -
+> -#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN        0xc2
+> -#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN      0xc3
+> -
+> -ACPI_MODULE_NAME("surface pro 3 button");
+> -
+> -MODULE_AUTHOR("Chen Yu");
+> -MODULE_DESCRIPTION("Surface Pro3 Button Driver");
+> -MODULE_LICENSE("GPL v2");
+> -
+> -/*
+> - * Power button, Home button, Volume buttons support is supposed to
+> - * be covered by drivers/input/misc/soc_button_array.c, which is implemented
+> - * according to "Windows ACPI Design Guide for SoC Platforms".
+> - * However surface pro3 seems not to obey the specs, instead it uses
+> - * device VGBI(MSHW0028) for dispatching the events.
+> - * We choose acpi_driver rather than platform_driver/i2c_driver because
+> - * although VGBI has an i2c resource connected to i2c controller, it
+> - * is not embedded in any i2c controller's scope, thus neither platform_device
+> - * will be created, nor i2c_client will be enumerated, we have to use
+> - * acpi_driver.
+> - */
+> -static const struct acpi_device_id surface_button_device_ids[] = {
+> -       {SURFACE_BUTTON_HID,    0},
+> -       {"", 0},
+> -};
+> -MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
+> -
+> -struct surface_button {
+> -       unsigned int type;
+> -       struct input_dev *input;
+> -       char phys[32];                  /* for input device */
+> -       unsigned long pushed;
+> -       bool suspended;
+> -};
+> -
+> -static void surface_button_notify(struct acpi_device *device, u32 event)
+> -{
+> -       struct surface_button *button = acpi_driver_data(device);
+> -       struct input_dev *input;
+> -       int key_code = KEY_RESERVED;
+> -       bool pressed = false;
+> -
+> -       switch (event) {
+> -       /* Power button press,release handle */
+> -       case SURFACE_BUTTON_NOTIFY_PRESS_POWER:
+> -               pressed = true;
+> -               /*fall through*/
+> -       case SURFACE_BUTTON_NOTIFY_RELEASE_POWER:
+> -               key_code = KEY_POWER;
+> -               break;
+> -       /* Home button press,release handle */
+> -       case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
+> -               pressed = true;
+> -               /*fall through*/
+> -       case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
+> -               key_code = KEY_LEFTMETA;
+> -               break;
+> -       /* Volume up button press,release handle */
+> -       case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP:
+> -               pressed = true;
+> -               /*fall through*/
+> -       case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP:
+> -               key_code = KEY_VOLUMEUP;
+> -               break;
+> -       /* Volume down button press,release handle */
+> -       case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN:
+> -               pressed = true;
+> -               /*fall through*/
+> -       case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
+> -               key_code = KEY_VOLUMEDOWN;
+> -               break;
+> -       default:
+> -               dev_info_ratelimited(&device->dev,
+> -                                 "Unsupported event [0x%x]\n", event);
+> -               break;
+> -       }
+> -       input = button->input;
+> -       if (KEY_RESERVED == key_code)
+> -               return;
+> -       if (pressed)
+> -               pm_wakeup_event(&device->dev, 0);
+> -       if (button->suspended)
+> -               return;
+> -       input_report_key(input, key_code, pressed?1:0);
+> -       input_sync(input);
+> -}
+> -
+> -#ifdef CONFIG_PM_SLEEP
+> -static int surface_button_suspend(struct device *dev)
+> -{
+> -       struct acpi_device *device = to_acpi_device(dev);
+> -       struct surface_button *button = acpi_driver_data(device);
+> -
+> -       button->suspended = true;
+> -       return 0;
+> -}
+> -
+> -static int surface_button_resume(struct device *dev)
+> -{
+> -       struct acpi_device *device = to_acpi_device(dev);
+> -       struct surface_button *button = acpi_driver_data(device);
+> -
+> -       button->suspended = false;
+> -       return 0;
+> -}
+> -#endif
+> -
+> -static int surface_button_add(struct acpi_device *device)
+> -{
+> -       struct surface_button *button;
+> -       struct input_dev *input;
+> -       const char *hid = acpi_device_hid(device);
+> -       char *name;
+> -       int error;
+> -
+> -       if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
+> -           strlen(SURFACE_BUTTON_OBJ_NAME)))
+> -               return -ENODEV;
+> -
+> -       button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+> -       if (!button)
+> -               return -ENOMEM;
+> -
+> -       device->driver_data = button;
+> -       button->input = input = input_allocate_device();
+> -       if (!input) {
+> -               error = -ENOMEM;
+> -               goto err_free_button;
+> -       }
+> -
+> -       name = acpi_device_name(device);
+> -       strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
+> -       snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
+> -
+> -       input->name = name;
+> -       input->phys = button->phys;
+> -       input->id.bustype = BUS_HOST;
+> -       input->dev.parent = &device->dev;
+> -       input_set_capability(input, EV_KEY, KEY_POWER);
+> -       input_set_capability(input, EV_KEY, KEY_LEFTMETA);
+> -       input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
+> -       input_set_capability(input, EV_KEY, KEY_VOLUMEDOWN);
+> -
+> -       error = input_register_device(input);
+> -       if (error)
+> -               goto err_free_input;
+> -       dev_info(&device->dev,
+> -                       "%s [%s]\n", name, acpi_device_bid(device));
+> -       return 0;
+> -
+> - err_free_input:
+> -       input_free_device(input);
+> - err_free_button:
+> -       kfree(button);
+> -       return error;
+> -}
+> -
+> -static int surface_button_remove(struct acpi_device *device)
+> -{
+> -       struct surface_button *button = acpi_driver_data(device);
+> -
+> -       input_unregister_device(button->input);
+> -       kfree(button);
+> -       return 0;
+> -}
+> -
+> -static SIMPLE_DEV_PM_OPS(surface_button_pm,
+> -               surface_button_suspend, surface_button_resume);
+> -
+> -static struct acpi_driver surface_button_driver = {
+> -       .name = "surface_pro3_button",
+> -       .class = "SurfacePro3",
+> -       .ids = surface_button_device_ids,
+> -       .ops = {
+> -               .add = surface_button_add,
+> -               .remove = surface_button_remove,
+> -               .notify = surface_button_notify,
+> -       },
+> -       .drv.pm = &surface_button_pm,
+> -};
+> -
+> -module_acpi_driver(surface_button_driver);
+> diff --git a/drivers/platform/x86/surfacepro_button.c b/drivers/platform/x86/surfacepro_button.c
+> new file mode 100644
+> index 0000000..cda52b8
+> --- /dev/null
+> +++ b/drivers/platform/x86/surfacepro_button.c
+> @@ -0,0 +1,218 @@
+> +/*
+> + * power/home/volume button support for
+> + * Microsoft Surface Pro Series tablet.
+> + *
+> + * Copyright (c) 2015 Intel Corporation.
+> + * All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; version 2
+> + * of the License.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/types.h>
+> +#include <linux/input.h>
+> +#include <linux/acpi.h>
+> +#include <acpi/button.h>
+> +
+> +#define SURFACE_PRO3_BUTTON_HID                "MSHW0028"
+> +#define SURFACE_PRO4_BUTTON_HID                "MSHW0040"
+> +#define SURFACE_BUTTON_OBJ_NAME                "VGBI"
+> +#define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro Series Buttons"
+> +
+> +#define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
+> +#define SURFACE_BUTTON_NOTIFY_RELEASE_POWER    0xc7
+> +
+> +#define SURFACE_BUTTON_NOTIFY_PRESS_HOME       0xc4
+> +#define SURFACE_BUTTON_NOTIFY_RELEASE_HOME     0xc5
+> +
+> +#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP  0xc0
+> +#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP        0xc1
+> +
+> +#define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN        0xc2
+> +#define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN      0xc3
+> +
+> +ACPI_MODULE_NAME("surface pro series button");
+> +
+> +MODULE_AUTHOR("Chen Yu");
+> +MODULE_DESCRIPTION("Surface Pro Series Button Driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> +/*
+> + * Power button, Home button, Volume buttons support is supposed to
+> + * be covered by drivers/input/misc/soc_button_array.c, which is implemented
+> + * according to "Windows ACPI Design Guide for SoC Platforms".
+> + * However surface pro3 seems not to obey the specs, instead it uses
+> + * device VGBI(MSHW0028) for dispatching the events.
+> + * We choose acpi_driver rather than platform_driver/i2c_driver because
+> + * although VGBI has an i2c resource connected to i2c controller, it
+> + * is not embedded in any i2c controller's scope, thus neither platform_device
+> + * will be created, nor i2c_client will be enumerated, we have to use
+> + * acpi_driver.
+> + */
+> +static const struct acpi_device_id surface_button_device_ids[] = {
+> +       {SURFACE_PRO3_BUTTON_HID,    0},
+> +       {SURFACE_PRO4_BUTTON_HID,    0},
+> +       {"", 0},
+> +};
+> +MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
+> +
+> +struct surface_button {
+> +       unsigned int type;
+> +       struct input_dev *input;
+> +       char phys[32];                  /* for input device */
+> +       unsigned long pushed;
+> +       bool suspended;
+> +};
+> +
+> +static void surface_button_notify(struct acpi_device *device, u32 event)
 > +{
-> +       union acpi_object obj;
-> +       struct acpi_object_list p;
-> +       acpi_status s;
-> +       u64 ret;
+> +       struct surface_button *button = acpi_driver_data(device);
+> +       struct input_dev *input;
+> +       int key_code = KEY_RESERVED;
+> +       bool pressed = false;
 > +
-> +       pr_debug("Evaluating method %s, parameter 0x%X\n", method, pa=
-ram);
-
-acpi_handle_* in such cases.
-
-> +       obj.type =3D ACPI_TYPE_INTEGER;
-> +       obj.integer.value =3D param;
-> +       p.count =3D 1;
-> +       p.pointer =3D &obj;
-> +
-> +       s =3D acpi_evaluate_integer(handle, (acpi_string) method, &p,=
- &ret);
-> +       if (!ACPI_SUCCESS(s))
-
-ACPI_FAILURE()
-
-> +               pr_err("Failed to evaluate method %s, parameter 0x%X =
-(%d)\n",
-> +                      method, param, s);
-> +       pr_debug("%s returned 0x%X\n", method, (uint) ret);
-> +       return ret;
+> +       switch (event) {
+> +       /* Power button press,release handle */
+> +       case SURFACE_BUTTON_NOTIFY_PRESS_POWER:
+> +               pressed = true;
+> +               /*fall through*/
+> +       case SURFACE_BUTTON_NOTIFY_RELEASE_POWER:
+> +               key_code = KEY_POWER;
+> +               break;
+> +       /* Home button press,release handle */
+> +       case SURFACE_BUTTON_NOTIFY_PRESS_HOME:
+> +               pressed = true;
+> +               /*fall through*/
+> +       case SURFACE_BUTTON_NOTIFY_RELEASE_HOME:
+> +               key_code = KEY_LEFTMETA;
+> +               break;
+> +       /* Volume up button press,release handle */
+> +       case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_UP:
+> +               pressed = true;
+> +               /*fall through*/
+> +       case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_UP:
+> +               key_code = KEY_VOLUMEUP;
+> +               break;
+> +       /* Volume down button press,release handle */
+> +       case SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN:
+> +               pressed = true;
+> +               /*fall through*/
+> +       case SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN:
+> +               key_code = KEY_VOLUMEDOWN;
+> +               break;
+> +       default:
+> +               dev_info_ratelimited(&device->dev,
+> +                                 "Unsupported event [0x%x]\n", event);
+> +               break;
+> +       }
+> +       input = button->input;
+> +       if (KEY_RESERVED == key_code)
+> +               return;
+> +       if (pressed)
+> +               pm_wakeup_event(&device->dev, 0);
+> +       if (button->suspended)
+> +               return;
+> +       input_report_key(input, key_code, pressed?1:0);
+> +       input_sync(input);
 > +}
 > +
-> +static enum led_brightness asus_wireless_led_get(struct led_classdev=
- *led)
+> +#ifdef CONFIG_PM_SLEEP
+> +static int surface_button_suspend(struct device *dev)
 > +{
-> +       struct asus_wireless_data *data;
-> +       int s;
+> +       struct acpi_device *device = to_acpi_device(dev);
+> +       struct surface_button *button = acpi_driver_data(device);
 > +
-> +       data =3D container_of(led, struct asus_wireless_data, led);
-> +       s =3D asus_wireless_method(data->acpidev->handle, "HSWC",
-
-Usually we get a handle through specific macro ACPI_HANDLE from a
-struct device (see above).
-
-> +                                ASUS_WIRELESS_LED_STATUS);
-> +       if (s =3D=3D ASUS_WIRELESS_LED_ON)
-> +               return LED_FULL;
-> +       return LED_OFF;
+> +       button->suspended = true;
+> +       return 0;
 > +}
 > +
-> +static void asus_wireless_led_update(struct work_struct *work)
+> +static int surface_button_resume(struct device *dev)
 > +{
-> +       struct asus_wireless_data *data;
+> +       struct acpi_device *device = to_acpi_device(dev);
+> +       struct surface_button *button = acpi_driver_data(device);
 > +
-> +       data =3D container_of(work, struct asus_wireless_data, led_wo=
-rk);
-> +       asus_wireless_method(data->acpidev->handle, "HSWC", data->led=
-_state);
-
-Ditto.
-
+> +       button->suspended = false;
+> +       return 0;
+> +}
+> +#endif
+> +
+> +static int surface_button_add(struct acpi_device *device)
+> +{
+> +       struct surface_button *button;
+> +       struct input_dev *input;
+> +       const char *hid = acpi_device_hid(device);
+> +       char *name;
+> +       int error;
+> +
+> +       if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
+> +           strlen(SURFACE_BUTTON_OBJ_NAME)))
+> +               return -ENODEV;
+> +
+> +       button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+> +       if (!button)
+> +               return -ENOMEM;
+> +
+> +       device->driver_data = button;
+> +       button->input = input = input_allocate_device();
+> +       if (!input) {
+> +               error = -ENOMEM;
+> +               goto err_free_button;
+> +       }
+> +
+> +       name = acpi_device_name(device);
+> +       strcpy(name, SURFACE_BUTTON_DEVICE_NAME);
+> +       snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
+> +
+> +       input->name = name;
+> +       input->phys = button->phys;
+> +       input->id.bustype = BUS_HOST;
+> +       input->dev.parent = &device->dev;
+> +       input_set_capability(input, EV_KEY, KEY_POWER);
+> +       input_set_capability(input, EV_KEY, KEY_LEFTMETA);
+> +       input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
+> +       input_set_capability(input, EV_KEY, KEY_VOLUMEDOWN);
+> +
+> +       error = input_register_device(input);
+> +       if (error)
+> +               goto err_free_input;
+> +       dev_info(&device->dev,
+> +                       "%s [%s]\n", name, acpi_device_bid(device));
+> +       return 0;
+> +
+> + err_free_input:
+> +       input_free_device(input);
+> + err_free_button:
+> +       kfree(button);
+> +       return error;
 > +}
 > +
-> +static void asus_wireless_led_set(struct led_classdev *led,
-> +                                 enum led_brightness value)
+> +static int surface_button_remove(struct acpi_device *device)
 > +{
-> +       struct asus_wireless_data *data;
+> +       struct surface_button *button = acpi_driver_data(device);
 > +
-> +       data =3D container_of(led, struct asus_wireless_data, led);
-> +       data->led_state =3D value =3D=3D LED_OFF ? ASUS_WIRELESS_LED_=
-OFF :
-> +                                            ASUS_WIRELESS_LED_ON;
-> +       queue_work(data->wq, &data->led_work);
+> +       input_unregister_device(button->input);
+> +       kfree(button);
+> +       return 0;
 > +}
 > +
->  static void asus_wireless_notify(struct acpi_device *device, u32 eve=
-nt)
->  {
->         struct asus_wireless_data *data =3D acpi_driver_data(device);
-> @@ -49,6 +112,7 @@ static int asus_wireless_add(struct acpi_device *d=
-evice)
->                 return -ENOMEM;
->         device->driver_data =3D data;
->
-> +       data->acpidev =3D device;
->         data->inputdev =3D input_allocate_device();
->         if (!data->inputdev)
->                 goto fail;
-> @@ -64,6 +128,21 @@ static int asus_wireless_add(struct acpi_device *=
-device)
->         err =3D input_register_device(data->inputdev);
->         if (err)
->                 goto fail;
+> +static SIMPLE_DEV_PM_OPS(surface_button_pm,
+> +               surface_button_suspend, surface_button_resume);
 > +
-> +       data->wq =3D create_singlethread_workqueue("asus_wireless_wor=
-kqueue");
-> +       if (!data->wq)
-> +               goto fail;
+> +static struct acpi_driver surface_button_driver = {
+> +       .name = "surface_pro_button",
+> +       .class = "SurfacePro",
+> +       .ids = surface_button_device_ids,
+> +       .ops = {
+> +               .add = surface_button_add,
+> +               .remove = surface_button_remove,
+> +               .notify = surface_button_notify,
+> +       },
+> +       .drv.pm = &surface_button_pm,
+> +};
 > +
-> +       INIT_WORK(&data->led_work, asus_wireless_led_update);
-> +       data->led.name =3D "asus-wireless::airplane_mode";
-> +       data->led.brightness_set =3D asus_wireless_led_set;
-> +       data->led.brightness_get =3D asus_wireless_led_get;
-> +       data->led.flags =3D LED_CORE_SUSPENDRESUME;
-> +       data->led.max_brightness =3D 1;
-> +       data->led.default_trigger =3D "rfkill-airplane-mode";
-> +       err =3D led_classdev_register(&device->dev, &data->led);
-> +       if (err)
-> +               goto fail;
->         return 0;
->
->  fail:
-> @@ -78,6 +157,8 @@ static int asus_wireless_remove(struct acpi_device=
- *device)
->         pr_info("Removing "ASUS_WIRELESS_MODULE_NAME"\n");
->         if (data->inputdev)
->                 input_unregister_device(data->inputdev);
-> +       if (data->wq)
-> +               destroy_workqueue(data->wq);
->         kfree(data);
->         return 0;
->  }
+> +module_acpi_driver(surface_button_driver);
 > --
-> 2.5.0
+> 2.6.4
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
-l" in
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > Please read the FAQ at  http://www.tux.org/lkml/
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
