@@ -1,36 +1,44 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 3/5] thinkpad_acpi: Use
- acpi_video_handles_brightness_key_presses()
-Date: Sun, 27 Dec 2015 21:08:12 -0200
-Message-ID: <20151227230812.GA8731@khazad-dum.debian.net>
-References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
- <1450807792-4980-4-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
+Date: Sun, 27 Dec 2015 21:14:17 -0200
+Message-ID: <20151227231417.GB8731@khazad-dum.debian.net>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58416 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753960AbbL0XOW (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 27 Dec 2015 18:14:22 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2129D202EE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 27 Dec 2015 18:14:22 -0500 (EST)
 Content-Disposition: inline
-In-Reply-To: <1450807792-4980-4-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-On Tue, 22 Dec 2015, Hans de Goede wrote:
-> Use the new acpi_video_handles_brightness_key_presses function to check
-> if we should report brightness key-presses.
-> 
-> This makes the code both easier to read and makes it properly report
-> key-presses when acpi-video is not reporting them for reasons other
-> then the backlight type being vendor.
+On Thu, 24 Dec 2015, Pali Roh=E1r wrote:
+> This patch adds support for controlling keyboard backlight via standa=
+rd
+> linux led class interface (::kbd_backlight). It uses ACPI HKEY device=
+ with
+> MLCG and MLCS methods.
+>=20
+> Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+> Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
 
-If this new function will return false when acpi video is not reporting
-keypresses *BUT* still allowing any sort of brightness changes (e.g. through
-sysfs), I don't think it is safe in thinkpad-acpi's case.
+It looks good at a first glance.  But at init you might need to take st=
+eps
+so that the current state is not changed.  Did you test this?
 
-So, will it return false in any situation whether acpi-video attached to the
-backlight class?
+Also, is it working properly across suspend+resume?
 
--- 
+--=20
   "One disk to rule them all, One disk to find them. One disk to bring
   them all and in the darkness grind them. In the Land of Redmond
   where the shadows lie." -- The Silicon Valley Tarot
