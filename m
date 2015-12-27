@@ -1,50 +1,147 @@
-From: "Chen, Yu C" <yu.c.chen@intel.com>
-Subject: RE: [PATCH v2] surface pro 4: Add support for Surface Pro 4 Buttons
-Date: Sun, 27 Dec 2015 19:07:30 +0000
-Message-ID: <36DF59CE26D8EE47B0655C516E9CE6402868F7D6@shsmsx102.ccr.corp.intel.com>
-References: <1450988919-945-1-git-send-email-wengxt@gmail.com>
- <1451237389-7993-1-git-send-email-wengxt@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Weng Xuetian <wengxt@gmail.com>
+Subject: [PATCH v3] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Sun, 27 Dec 2015 11:21:20 -0800
+Message-ID: <1451244080-940-1-git-send-email-wengxt@gmail.com>
+References: <1451237389-7993-1-git-send-email-wengxt@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:64930 "EHLO mga09.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751648AbbL0THe convert rfc822-to-8bit (ORCPT
+Received: from mail-wm0-f48.google.com ([74.125.82.48]:34331 "EHLO
+	mail-wm0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751695AbbL0TWT (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 27 Dec 2015 14:07:34 -0500
+	Sun, 27 Dec 2015 14:22:19 -0500
 In-Reply-To: <1451237389-7993-1-git-send-email-wengxt@gmail.com>
-Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Weng Xuetian <wengxt@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Weng Xuetian <wengxt@gmail.com>
 
-Hi,
+Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
+different from Surface Pro 3.
 
-> -----Original Message-----
-> From: Weng Xuetian [mailto:wengxt@gmail.com]
-> Sent: Monday, December 28, 2015 1:30 AM
-> To: Chen, Yu C
-> Cc: Darren Hart; linux-kernel@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; Weng Xuetian
-> Subject: [PATCH v2] surface pro 4: Add support for Surface Pro 4 Buttons
-> 
-> Surface Pro 4 button is managed by a device with _HID "MSHW0040"
-> different from Surface Pro 3.
-> 
-s/button is/buttons are
-> This commit adds MSHW0040 to id list to Support Surface Pro 4, and rename
-> the driver to surfacepro_button accordingly.
-> 
-s/Support/support the
-s/rename/renames
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
-> Signed-off-by: Weng Xuetian <wengxt@gmail.com>
-> ---
-> v2:
->  - Reformat patch with -M -C
-others look good to me, 
+This commit adds MSHW0040 to id list to support the Surface Pro 4, and
+renames the driver to surfacepro_button accordingly.
 
-thanks,
-yu
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+Signed-off-by: Weng Xuetian <wengxt@gmail.com>
+---
+v3:
+ - Fix commit message grammar mistakes.
+v2:
+ - Reformat patch with -M -C
+---
+ MAINTAINERS                                            |  4 ++--
+ drivers/platform/x86/Kconfig                           |  6 +++---
+ drivers/platform/x86/Makefile                          |  2 +-
+ .../x86/{surfacepro3_button.c => surfacepro_button.c}  | 18 ++++++++++--------
+ 4 files changed, 16 insertions(+), 14 deletions(-)
+ rename drivers/platform/x86/{surfacepro3_button.c => surfacepro_button.c} (93%)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 233f834..1c07436 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7019,11 +7019,11 @@ T:	git git://git.monstr.eu/linux-2.6-microblaze.git
+ S:	Supported
+ F:	arch/microblaze/
+ 
+-MICROSOFT SURFACE PRO 3 BUTTON DRIVER
++MICROSOFT SURFACE PRO SERIES BUTTON DRIVER
+ M:	Chen Yu <yu.c.chen@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Supported
+-F:	drivers/platform/x86/surfacepro3_button.c
++F:	drivers/platform/x86/surfacepro_button.c
+ 
+ MICROTEK X6 SCANNER
+ M:	Oliver Neukum <oliver@neukum.org>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1089eaa..3358fb0 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -939,9 +939,9 @@ config INTEL_PMC_IPC
+ 	The PMC is an ARC processor which defines IPC commands for communication
+ 	with other entities in the CPU.
+ 
+-config SURFACE_PRO3_BUTTON
+-	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
++config SURFACE_PRO_BUTTON
++	tristate "Power/home/volume buttons driver for Microsoft Surface Pro Series tablet"
+ 	depends on ACPI && INPUT
+ 	---help---
+-	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
++	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro Series tablet.
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 3ca78a3..b4ece33 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -61,4 +61,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+-obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
++obj-$(CONFIG_SURFACE_PRO_BUTTON)	+= surfacepro_button.o
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro_button.c
+similarity index 93%
+rename from drivers/platform/x86/surfacepro3_button.c
+rename to drivers/platform/x86/surfacepro_button.c
+index f7dade3..cda52b8 100644
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ b/drivers/platform/x86/surfacepro_button.c
+@@ -1,6 +1,6 @@
+ /*
+  * power/home/volume button support for
+- * Microsoft Surface Pro 3 tablet.
++ * Microsoft Surface Pro Series tablet.
+  *
+  * Copyright (c) 2015 Intel Corporation.
+  * All rights reserved.
+@@ -19,9 +19,10 @@
+ #include <linux/acpi.h>
+ #include <acpi/button.h>
+ 
+-#define SURFACE_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO4_BUTTON_HID		"MSHW0040"
+ #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+-#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3 Buttons"
++#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro Series Buttons"
+ 
+ #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_POWER	0xc7
+@@ -35,10 +36,10 @@
+ #define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN	0xc2
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN	0xc3
+ 
+-ACPI_MODULE_NAME("surface pro 3 button");
++ACPI_MODULE_NAME("surface pro series button");
+ 
+ MODULE_AUTHOR("Chen Yu");
+-MODULE_DESCRIPTION("Surface Pro3 Button Driver");
++MODULE_DESCRIPTION("Surface Pro Series Button Driver");
+ MODULE_LICENSE("GPL v2");
+ 
+ /*
+@@ -54,7 +55,8 @@ MODULE_LICENSE("GPL v2");
+  * acpi_driver.
+  */
+ static const struct acpi_device_id surface_button_device_ids[] = {
+-	{SURFACE_BUTTON_HID,    0},
++	{SURFACE_PRO3_BUTTON_HID,    0},
++	{SURFACE_PRO4_BUTTON_HID,    0},
+ 	{"", 0},
+ };
+ MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
+@@ -202,8 +204,8 @@ static SIMPLE_DEV_PM_OPS(surface_button_pm,
+ 		surface_button_suspend, surface_button_resume);
+ 
+ static struct acpi_driver surface_button_driver = {
+-	.name = "surface_pro3_button",
+-	.class = "SurfacePro3",
++	.name = "surface_pro_button",
++	.class = "SurfacePro",
+ 	.ids = surface_button_device_ids,
+ 	.ops = {
+ 		.add = surface_button_add,
+-- 
+2.6.4
