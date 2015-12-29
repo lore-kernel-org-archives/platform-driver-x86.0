@@ -1,115 +1,74 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 3/5] thinkpad_acpi: Use
- acpi_video_handles_brightness_key_presses()
-Date: Tue, 29 Dec 2015 13:27:43 +0100
-Message-ID: <56827C3F.8090509@redhat.com>
-References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
- <1450807792-4980-4-git-send-email-hdegoede@redhat.com>
- <20151227230812.GA8731@khazad-dum.debian.net>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is
+ valid
+Date: Tue, 29 Dec 2015 13:44:13 +0100
+Message-ID: <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
+ <1450991926-20937-2-git-send-email-pali.rohar@gmail.com>
+ <20151228133707.GB7540@eudyptula.hq.kempniu.pl>
+ <201512281508.20683@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx1.redhat.com ([209.132.183.28]:48176 "EHLO mx1.redhat.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752957AbbL2M1w (ORCPT
+Received: from mail-lf0-f44.google.com ([209.85.215.44]:35709 "EHLO
+	mail-lf0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753265AbbL2MoS (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Dec 2015 07:27:52 -0500
-In-Reply-To: <20151227230812.GA8731@khazad-dum.debian.net>
+	Tue, 29 Dec 2015 07:44:18 -0500
+Received: by mail-lf0-f44.google.com with SMTP id c192so35355326lfe.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Dec 2015 04:44:17 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <201512281508.20683@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi,
+> > > According to Dell WMI document mentioned in ML dicussion archived
+> > > at http://www.spinics.net/lists/platform-driver-x86/msg07220.html
+> > > OS should check Dell WMI descriptor structure.
+> >=20
+> > "Should" or "can"?  I skimmed through the ACPI-WMI PDF and Mario's
+> > message again and I couldn't find any explicit statement urging the
+> > reader to check the structure in question before doing anything els=
+e.
+>=20
+> That's questionable... In "Design flow" is first point that WMI=20
+> descriptor check.
 
-On 28-12-15 00:08, Henrique de Moraes Holschuh wrote:
-> On Tue, 22 Dec 2015, Hans de Goede wrote:
->> Use the new acpi_video_handles_brightness_key_presses function to check
->> if we should report brightness key-presses.
->>
->> This makes the code both easier to read and makes it properly report
->> key-presses when acpi-video is not reporting them for reasons other
->> then the backlight type being vendor.
->
-> If this new function will return false when acpi video is not reporting
-> keypresses *BUT* still allowing any sort of brightness changes (e.g. through
-> sysfs), I don't think it is safe in thinkpad-acpi's case.
+Which "Design flow" are you referring to?  Because I found at least two=
+:
+chapter 2.3 and a subsection of chapter 2.3.3.  Funnily enough, in both
+of these locations the WMI Descriptor Method is discussed first.
 
-Have you closely looked at the patch? It only applies to this bit of
-thinkpad-acpi code:
+Personally, I wouldn't use the structure of that document to draw
+cause-effect conclusions.  Just look at the last chapter (2.3.4), which
+shows how to tell whether the BIOS supports the ACPI-WMI interface.
+Shouldn't that be the first thing to check, before doing anything else
+mentioned in that document?  Yet, it's the last thing discussed.
 
-         /* Do not issue duplicate brightness change events to
-          * userspace. tpacpi_detect_brightness_capabilities() must have
-          * been called before this point  */
-         if (acpi_video_handles_brightness_key_presses()) {
-                 pr_info("This ThinkPad has standard ACPI backlight "
-                         "brightness control, supported by the ACPI "
-                         "video driver\n");
-                 pr_notice("Disabling thinkpad-acpi brightness events "
-                           "by default...\n");
+Anyway, while the document mentions in several places that the BIOS WMI
+Descriptor object can be queried, it fails to convince me as to why thi=
+s
+is necessary at all as all values in the returned buffer are constant.
+Perhaps parsing the buffer is useful as a sanity check of some kind, bu=
+t
+it certainly isn't a prerequisite for performing further actions.
 
-                 /* Disable brightness up/down on Lenovo thinkpads when
-                  * ACPI is handling them, otherwise it is plain impossible
-                  * for userspace to do something even remotely sane */
-                 hotkey_reserved_mask |=
-                         (1 << TP_ACPI_HOTKEYSCAN_FNHOME)
-                         | (1 << TP_ACPI_HOTKEYSCAN_FNEND);
-                 hotkey_unmap(TP_ACPI_HOTKEYSCAN_FNHOME);
-                 hotkey_unmap(TP_ACPI_HOTKEYSCAN_FNEND);
-         }
+Given the nature of your patchset, I'd personally rephrase the commit
+message(s) to state that according to your observations, there are
+behavioral differences between models with different versions of the WM=
+I
+Interface, so we parse the WMI Descriptor object to determine which WMI
+Interface version is used on the machine we're running on.  Perhaps wit=
+h
+an additional word or two that it won't hurt to also check the WMI
+Descriptor object's correctness while we're at it.
 
-So it only disables hotkey press reporting, not to the thinkpad_acpi
-backlight handling code, that still is using acpi_video_get_backlight_type()  :
+If you feel like I'm nit-picking and none of the above matters, please
+feel free to disregard my input and just follow your gut.
 
-         if (acpi_video_get_backlight_type() != acpi_backlight_vendor) {
-                 if (brightness_enable > 1) {
-                         pr_info("Standard ACPI backlight interface "
-                                 "available, not loading native one\n");
-                         return 1;
-                 } else if (brightness_enable == 1) {
-                         pr_warn("Cannot enable backlight brightness support, "
-                                 "ACPI is already handling it.  Refer to the "
-                                 "acpi_backlight kernel parameter.\n");
-                         return 1;
-                 }
-         } else if (tp_features.bright_acpimode && brightness_enable > 1) {
-                 pr_notice("Standard ACPI backlight interface not "
-                           "available, thinkpad_acpi native "
-                           "brightness control enabled\n");
-         }
-
-> So, will it return false in any situation whether acpi-video attached to the
-> backlight class?
-
-When the new video.report_key_events kernel cmdline option gets manually set to
-a non default value then yes it may report false while acpi-video is attached
-to the backlight class. By default, no it will never return false when acpi-video
-is attached to the backlight class.
-
-This should not matter though, as said this new function is only used to suppress
-the reporting of key-presses. I realize that doing so will also cause
-tpacpi_driver_event() to get called on brightness hotkey presses, but that has:
-
-         if (ibm_backlight_device) {
-                 switch (hkey_event) {
-                 case TP_HKEY_EV_BRGHT_UP:
-                 case TP_HKEY_EV_BRGHT_DOWN:
-                         tpacpi_brightness_notify_change();
-                 }
-         }
-
-And the creating of ibm_backlight_device is still protected by
-
-if (acpi_video_get_backlight_type() != acpi_backlight_vendor) return 1;
-
-So this new check really does nothing other then NOT suppress the hotkey presses
-reported by thinkpad-acpi when for some reason a user has asked acpi-video to
-suppress its reporting of hotkey presses, which is exactly what it should do.
-
-IMHO this only shows that having a separate function to detect if acpi-video
-is reporting keypresses is the right thing to do.
-
-Regards,
-
-Hans
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
