@@ -1,61 +1,35 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Mon, 28 Dec 2015 15:48:14 +0100
-Message-ID: <201512281548.14411@pali>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com> <20151227231417.GB8731@khazad-dum.debian.net>
+From: "Jeff Skoll" <verna.viajar@icdd.uni-kassel.de>
+Subject: Charity/Donation
+Date: Mon, 28 Dec 2015 19:48:41 -0500
+Message-ID: <auto-000005534356@mailadmin.uni-kassel.de>
+Reply-To: jeff.skoll@skollcharity.org
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart12101165.radMcZ7XEk";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20151227231417.GB8731@khazad-dum.debian.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mx3.its.uni-kassel.de ([141.51.12.64]:63275 "EHLO
+	mx3.its.uni-kassel.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751120AbbL2CSo convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 28 Dec 2015 21:18:44 -0500
+Content-Description: Mail message body
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Me <verna.viajar@icdd.uni-kassel.de>
 
---nextPart12101165.radMcZ7XEk
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi,
+My name is Jeffrey Skoll, a philanthropist and the founder of one of th=
+e largest private foundations in the world. I believe strongly in =E2=80=
+=98giving while living.=E2=80=99 I had one idea that never changed in m=
+y mind =E2=80=94 that you should use your wealth to help people and I h=
+ave decided to secretly give USD2.498 Million to a randomly selected in=
+dividual. On receipt of this email, you should count yourself as the in=
+dividual. Kindly get back to me at your earliest convenience, so I know=
+ your email address is valid.
 
-On Monday 28 December 2015 00:14:17 Henrique de Moraes Holschuh wrote:
-> On Thu, 24 Dec 2015, Pali Roh=C3=A1r wrote:
-> > This patch adds support for controlling keyboard backlight via
-> > standard linux led class interface (::kbd_backlight). It uses ACPI
-> > HKEY device with MLCG and MLCS methods.
-> >=20
-> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> > Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
->=20
-> It looks good at a first glance.  But at init you might need to take
-> steps so that the current state is not changed.  Did you test this?
+Visit the web page to know more about me: http://www.theglobeandmail.co=
+m/news/national/meet-the-canadian-billionaire-whos-giving-it-all-away/a=
+rticle4209888/ or you can read an article of me on Wikipedia.
 
-Tested. Modprobing driver does not change keyboard backlight level.
-
-> Also, is it working properly across suspend+resume?
-
-When doing resume from suspend or hibernate BIOS turning keyboard=20
-backlight automatically off.
-
-But driver at any time report correct backlight level from sysfs node.
-
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---nextPart12101165.radMcZ7XEk
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlaBS64ACgkQi/DJPQPkQ1LU9QCfVuqiOqBPwLqvYTpVG9LNcaiU
-hJwAnRpW/QtLrBFKOtX+qtk0gPqZ/oBk
-=okNf
------END PGP SIGNATURE-----
-
---nextPart12101165.radMcZ7XEk--
+Regards,
+Jeffrey Skoll.
