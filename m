@@ -1,56 +1,115 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 0/2] Fixes for dell-wmi
-Date: Tue, 29 Dec 2015 13:18:49 +0100
-Message-ID: <20151229121849.GA2467@eudyptula.hq.kempniu.pl>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <20151228133317.GA7540@eudyptula.hq.kempniu.pl>
- <201512281446.36868@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 3/5] thinkpad_acpi: Use
+ acpi_video_handles_brightness_key_presses()
+Date: Tue, 29 Dec 2015 13:27:43 +0100
+Message-ID: <56827C3F.8090509@redhat.com>
+References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+ <1450807792-4980-4-git-send-email-hdegoede@redhat.com>
+ <20151227230812.GA8731@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f50.google.com ([209.85.215.50]:36364 "EHLO
-	mail-lf0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752156AbbL2MSz (ORCPT
+Received: from mx1.redhat.com ([209.132.183.28]:48176 "EHLO mx1.redhat.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752957AbbL2M1w (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Dec 2015 07:18:55 -0500
-Received: by mail-lf0-f50.google.com with SMTP id z124so206512072lfa.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Dec 2015 04:18:54 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <201512281446.36868@pali>
+	Tue, 29 Dec 2015 07:27:52 -0500
+In-Reply-To: <20151227230812.GA8731@khazad-dum.debian.net>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
 
-> > > This patch series adds check if Dell WMI descriptor structure is
-> > > valid and fixes processing WMI events on devices with WMI
-> > > interface version 0.
-> > >=20
-> > > After testing, second patch is good candidate for backporting int=
-o
-> > > stable kernels, but problem is that it cannot be used without
-> > > first patch. So I let decision to other people.
-> > >=20
-> > > Gabriele and Micha=C5=82, this patch series should fix processing=
- events
-> > > on yours Dell laptops (you have in DSDT defined version 0). Can
-> > > you test it?
-> >=20
-> > My Vostro V131 (and any other as well, judging from the DSDT dumps =
-I
-> > found scattered around the web) has the WMI Interface Version field
-> > set to 1, as the first one of your patches correctly asserts.
->=20
-> Ok, great. Can you post DEBUG output when receiving events before and=
-=20
-> after patch (to check that processing is correct)?=20
+Hi,
 
-After applying your patches on my Vostro V131, the WMI events reported
-are exactly the same as they were when I originally posted them [1].
+On 28-12-15 00:08, Henrique de Moraes Holschuh wrote:
+> On Tue, 22 Dec 2015, Hans de Goede wrote:
+>> Use the new acpi_video_handles_brightness_key_presses function to check
+>> if we should report brightness key-presses.
+>>
+>> This makes the code both easier to read and makes it properly report
+>> key-presses when acpi-video is not reporting them for reasons other
+>> then the backlight type being vendor.
+>
+> If this new function will return false when acpi video is not reporting
+> keypresses *BUT* still allowing any sort of brightness changes (e.g. through
+> sysfs), I don't think it is safe in thinkpad-acpi's case.
 
-[1] http://www.spinics.net/lists/platform-driver-x86/msg07191.html
+Have you closely looked at the patch? It only applies to this bit of
+thinkpad-acpi code:
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+         /* Do not issue duplicate brightness change events to
+          * userspace. tpacpi_detect_brightness_capabilities() must have
+          * been called before this point  */
+         if (acpi_video_handles_brightness_key_presses()) {
+                 pr_info("This ThinkPad has standard ACPI backlight "
+                         "brightness control, supported by the ACPI "
+                         "video driver\n");
+                 pr_notice("Disabling thinkpad-acpi brightness events "
+                           "by default...\n");
+
+                 /* Disable brightness up/down on Lenovo thinkpads when
+                  * ACPI is handling them, otherwise it is plain impossible
+                  * for userspace to do something even remotely sane */
+                 hotkey_reserved_mask |=
+                         (1 << TP_ACPI_HOTKEYSCAN_FNHOME)
+                         | (1 << TP_ACPI_HOTKEYSCAN_FNEND);
+                 hotkey_unmap(TP_ACPI_HOTKEYSCAN_FNHOME);
+                 hotkey_unmap(TP_ACPI_HOTKEYSCAN_FNEND);
+         }
+
+So it only disables hotkey press reporting, not to the thinkpad_acpi
+backlight handling code, that still is using acpi_video_get_backlight_type()  :
+
+         if (acpi_video_get_backlight_type() != acpi_backlight_vendor) {
+                 if (brightness_enable > 1) {
+                         pr_info("Standard ACPI backlight interface "
+                                 "available, not loading native one\n");
+                         return 1;
+                 } else if (brightness_enable == 1) {
+                         pr_warn("Cannot enable backlight brightness support, "
+                                 "ACPI is already handling it.  Refer to the "
+                                 "acpi_backlight kernel parameter.\n");
+                         return 1;
+                 }
+         } else if (tp_features.bright_acpimode && brightness_enable > 1) {
+                 pr_notice("Standard ACPI backlight interface not "
+                           "available, thinkpad_acpi native "
+                           "brightness control enabled\n");
+         }
+
+> So, will it return false in any situation whether acpi-video attached to the
+> backlight class?
+
+When the new video.report_key_events kernel cmdline option gets manually set to
+a non default value then yes it may report false while acpi-video is attached
+to the backlight class. By default, no it will never return false when acpi-video
+is attached to the backlight class.
+
+This should not matter though, as said this new function is only used to suppress
+the reporting of key-presses. I realize that doing so will also cause
+tpacpi_driver_event() to get called on brightness hotkey presses, but that has:
+
+         if (ibm_backlight_device) {
+                 switch (hkey_event) {
+                 case TP_HKEY_EV_BRGHT_UP:
+                 case TP_HKEY_EV_BRGHT_DOWN:
+                         tpacpi_brightness_notify_change();
+                 }
+         }
+
+And the creating of ibm_backlight_device is still protected by
+
+if (acpi_video_get_backlight_type() != acpi_backlight_vendor) return 1;
+
+So this new check really does nothing other then NOT suppress the hotkey presses
+reported by thinkpad-acpi when for some reason a user has asked acpi-video to
+suppress its reporting of hotkey presses, which is exactly what it should do.
+
+IMHO this only shows that having a separate function to detect if acpi-video
+is reporting keypresses is the right thing to do.
+
+Regards,
+
+Hans
