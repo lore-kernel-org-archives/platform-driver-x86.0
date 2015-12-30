@@ -1,97 +1,58 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
- interfaces
-Date: Tue, 29 Dec 2015 23:26:13 -0800
-Message-ID: <20151230072613.GF29978@malice.jf.intel.com>
-References: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
- <20151230005005.GA29978@malice.jf.intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB42B74AE95@BGSMSX105.gar.corp.intel.com>
+Subject: Re: [PATCH v3 5/5] platform:x86: Makefile/Kconfig/MAINTAINERS
+ changes for Intel Telemetry
+Date: Tue, 29 Dec 2015 23:32:10 -0800
+Message-ID: <20151230073210.GG29978@malice.jf.intel.com>
+References: <1450867481-11404-1-git-send-email-souvik.k.chakravarty@intel.com>
+ <20151230005910.GD29978@malice.jf.intel.com>
+ <3324542.b0Ltp5HvhD@vostro.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:49516 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:49758 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751187AbbL3H0P (ORCPT
+	with ESMTP id S1751238AbbL3HcN (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Dec 2015 02:26:15 -0500
+	Wed, 30 Dec 2015 02:32:13 -0500
 Content-Disposition: inline
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB42B74AE95@BGSMSX105.gar.corp.intel.com>
+In-Reply-To: <3324542.b0Ltp5HvhD@vostro.rjw.lan>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, platform-driver-x86@vger.kernel.org, srinidhi.kasagar@intel.com, qipeng.zha@intel.com, rajeev.d.muralidhar@intel.com, sukumar.ghorai@intel.com, ong.hock.yu@intel.com, aubrey.li@intel.com
 
-On Wed, Dec 30, 2015 at 04:48:42AM +0000, Chakravarty, Souvik K wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
-> > x86-owner@vger.kernel.org] On Behalf Of Darren Hart
-> > Sent: Wednesday, December 30, 2015 6:20 AM
-> > To: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>; Rafael Wysocki
-> > <rjw@rjwysocki.net>
-> > Cc: platform-driver-x86@vger.kernel.org; Kasagar, Srinidhi
-> > <srinidhi.kasagar@intel.com>; Zha, Qipeng <qipeng.zha@intel.com>;
-> > Muralidhar, Rajeev D <rajeev.d.muralidhar@intel.com>; Ghorai, Sukumar
-> > <sukumar.ghorai@intel.com>; Yu, Ong Hock <ong.hock.yu@intel.com>; Li,
-> > Aubrey <aubrey.li@intel.com>
-> > Subject: Re: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
-> > interfaces
+On Wed, Dec 30, 2015 at 02:59:09AM +0100, Rafael Wysocki wrote:
+> On Tuesday, December 29, 2015 04:59:10 PM Darren Hart wrote:
+> > On Wed, Dec 23, 2015 at 04:14:41PM +0530, Souvik Kumar Chakravarty wrote:
+> > > Makefile, Kconfig & MAINTAINERS changes for compiling Telemetry.
+> > > It depends on PUNIT and PMC IPC drivers.
 > > 
-> > On Wed, Dec 23, 2015 at 04:14:16PM +0530, Souvik Kumar Chakravarty wrote:
-
-...
-
-> > What is the plan for supporting future SoCs here? You have APL incorporated
-> > into this file. Do you intend to add each generation to this file?
-> 
-> Yes that is the intention.
-
-OK, I guess we'll see how it scales and how many SoC generations follow with
-this interface.
-
-...
-
+> > ...
 > > 
-> > > +				d3_sts[idx] =
-> > > +				(evtlog[index].telem_evtlog >>
-> > > +				debugfs_conf->ioss_d0ix_data[idx].bit_pos)
-> > &
-> > > +				TELEM_MASK_BIT;
+> > > +config INTEL_TELEMETRY
+> > > +	tristate "Intel SoC Telemetry Driver"
+> > > +	default n
+> > > +	depends on INTEL_PMC_IPC && INTEL_PUNIT_IPC && X86_64
+> > > +	---help---
+> > > +	  This driver provides interfaces to configure and use
+> > > +	  telemetry for INTEL SoC from APL onwards. It is also
+> > > +	  used to get various SoC events and parameters
+> > > +	  directly via debugfs files. Various tools may use
 > > 
-> > By the time you have indented 4, and really should be 5, the preference is to
-> > determine if this can be refactored into a shallower nesting structure.
+> > If tools are going to be relying on it, debugfs doesn't seem like the right
+> > place for it to me. Would /sys/power be more apt?
 > > 
-> > Perhaps a macro of some sort as these all seem fairly repetitive.
+> > Rafael?
 > 
-> We can get in a macro or inline function, something like this:  
->         for (index = 0; index < ret; index++) {
->                 seq_printf(s, "%-32s %llu\n",
->                            name[index], evtlog[index].telem_evtlog);
+> Using debugfs for things like these is not unheard of.
 > 
->                 if (evtlog[index].telem_evtid == debugfs_conf->pss_idle_id) 
-> 		TELEM_PARSE_LOG(debugfs_conf->ioss_d3_id, debugfs_conf->ioss_d0ix_evts , d3_sts , debugfs_conf->ioss_d0ix_data)
-> 	If.....
-> 
+> It all depends on whether or not the tools in question are intended to work
+> on systems where debugfs is not enabled.
 
-With a shorter alians for debugfs_conf, something like this is much more legible
-and far less repetitive (easier to maintain).
+It was my understanding that debugfs was intended to make it clear that it may
+change at any time and shouldn't be relied upon. Strictly for debug.
 
-> 	}
-> 
-> #define TELEM_PARSE_LOG (EVTS, BUF, EVT_DATA)     \    
->                         for (int idx = 0; idx < EVTS; idx++) \
->                                	BUF[idx] = (evtlog[index].telem_evtlog >> EVT_DATA[idx].bit_pos) & TELEM_MASK_BIT; \
->                         continue; \
-> 
-> And something on the same lines for parsing counters.
-> 
-> Or we could have TELEM_CHECK_AND_PARSE where even the 'if' is moved inside the macro.
-> Does that look OK?
-
-I think the above will work, but if you think you can remove some of the
-redundancy with a CHECK_AND_PARSE without obfuscating the logic too much, give
-it a shot.
+But, I'll defer to Rafael on this point.
 
 -- 
 Darren Hart
