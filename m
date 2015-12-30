@@ -1,54 +1,1223 @@
 From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
 Subject: RE: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
  interfaces
-Date: Wed, 30 Dec 2015 03:03:48 +0000
-Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42B74AD91@BGSMSX105.gar.corp.intel.com>
+Date: Wed, 30 Dec 2015 03:30:28 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42B74ADAF@BGSMSX105.gar.corp.intel.com>
 References: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
- <20151230005005.GA29978@malice.jf.intel.com>
- <4325247.Z0uDHDCMpF@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga02.intel.com ([134.134.136.20]:39612 "EHLO mga02.intel.com"
+Received: from mga04.intel.com ([192.55.52.120]:58586 "EHLO mga04.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752158AbbL3DDx (ORCPT
+	id S1752664AbbL3Dae convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Dec 2015 22:03:53 -0500
-In-Reply-To: <4325247.Z0uDHDCMpF@vostro.rjw.lan>
+	Tue, 29 Dec 2015 22:30:34 -0500
+In-Reply-To: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>
+To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
-LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXItDQo+IHg4
-Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBSYWZhZWwgSi4gV3lzb2NraQ0K
-PiBTZW50OiBXZWRuZXNkYXksIERlY2VtYmVyIDMwLCAyMDE1IDc6NDIgQU0NCj4gVG86IERhcnJl
-biBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IENoYWtyYXZhcnR5LCBTb3V2aWsg
-SyA8c291dmlrLmsuY2hha3JhdmFydHlAaW50ZWwuY29tPjsgcGxhdGZvcm0tDQo+IGRyaXZlci14
-ODZAdmdlci5rZXJuZWwub3JnOyBLYXNhZ2FyLCBTcmluaWRoaSA8c3JpbmlkaGkua2FzYWdhckBp
-bnRlbC5jb20+Ow0KPiBaaGEsIFFpcGVuZyA8cWlwZW5nLnpoYUBpbnRlbC5jb20+OyBNdXJhbGlk
-aGFyLCBSYWplZXYgRA0KPiA8cmFqZWV2LmQubXVyYWxpZGhhckBpbnRlbC5jb20+OyBHaG9yYWks
-IFN1a3VtYXINCj4gPHN1a3VtYXIuZ2hvcmFpQGludGVsLmNvbT47IFl1LCBPbmcgSG9jayA8b25n
-LmhvY2sueXVAaW50ZWwuY29tPjsgTGksDQo+IEF1YnJleSA8YXVicmV5LmxpQGludGVsLmNvbT4N
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiA0LzVdIHBsYXRmb3JtOng4NjogQWRkIEludGVsIFRl
-bGVtZXRyeSBEZWJ1Z2ZzDQo+IGludGVyZmFjZXMNCj4gDQo+IE9uIFR1ZXNkYXksIERlY2VtYmVy
-IDI5LCAyMDE1IDA0OjUwOjA1IFBNIERhcnJlbiBIYXJ0IHdyb3RlOg0KPiA+IE9uIFdlZCwgRGVj
-IDIzLCAyMDE1IGF0IDA0OjE0OjE2UE0gKzA1MzAsIFNvdXZpayBLdW1hciBDaGFrcmF2YXJ0eQ0K
-PiB3cm90ZToNCj4gPiA+IFRoaXMgaW1wbGVtZW50cyBkZWJ1Z2ZzIGludGVyZmFjZXMgZm9yIHJl
-YWRpbmcgdGhlIHRlbGVtZXRyeSBzYW1wbGVzDQo+ID4gPiBmcm9tIFNTUkFNIGFuZCBjb25maWd1
-cmluZyBmaXJtd2FyZSB0cmFjZSB2ZXJib3NpdHkuDQo+ID4gPiBJbnRlcmZhY2UgY3JlYXRlZCB1
-bmRlciAvc3lzL2tlcm5lbC9kZWJ1Zy90ZWxlbWV0cnkNCj4gPg0KPiA+IFdoYXQgd2FzIHRoZSBy
-YXRpb25hbGUgZm9yIHBsYWNpbmcgdGhpcyB1bmRlcg0KPiA+IC9zeXMva2VybmVsL2RlYnVnL3Rl
-bGVtZXRyeSwgaW5zdGVhZCBvZiAvc3lzL3Bvd2VyL3RlbGVtZXRyeSA/DQo+ID4NCj4gPiBSYWZh
-ZWwsIHdvdWxkIHlvdSBsaWtlIHRvIHdlaWdoIGluIG9uIHRoaXMgc2VyaWVzPyBUaGlzIGJ1aWxk
-cyBvbiB0b3ANCj4gPiBvZiBRaXBlbmcncyBwdW5pdCBkcml2ZXIgcXVldWVkIGluIG15IHRyZWUg
-Zm9yIDQuNS4NCj4gDQo+IFdlbGwsIG1heSBJIHNlZSB0aGUgd2hvbGUgc2VyaWVzPw0KDQpJIGZv
-cndhcmRlZCB0aGUgcmVzdCBvZiB0aGUgc2VyaWVzIDEvNSwgMi81ICYgMy81IHRvIHlvdS4NCg0K
-PiANCj4gVGhhbmtzLA0KPiBSYWZhZWwNCj4gDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20g
-dGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBwbGF0Zm9ybS1kcml2ZXIteDg2
-Ig0KPiBpbiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9y
-ZyBNb3JlIG1ham9yZG9tbw0KPiBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9y
-ZG9tby1pbmZvLmh0bWwNCg==
++ rafael
+
+> -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
+> x86-owner@vger.kernel.org] On Behalf Of Souvik Kumar Chakravarty
+> Sent: Wednesday, December 23, 2015 4:14 PM
+> To: platform-driver-x86@vger.kernel.org
+> Cc: dvhart@infradead.org; Kasagar, Srinidhi <srinidhi.kasagar@intel.com>;
+> Zha, Qipeng <qipeng.zha@intel.com>; Muralidhar, Rajeev D
+> <rajeev.d.muralidhar@intel.com>; Ghorai, Sukumar
+> <sukumar.ghorai@intel.com>; Yu, Ong Hock <ong.hock.yu@intel.com>; Li,
+> Aubrey <aubrey.li@intel.com>; Chakravarty, Souvik K
+> <souvik.k.chakravarty@intel.com>
+> Subject: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
+> interfaces
+> 
+> This implements debugfs interfaces for reading the telemetry samples from
+> SSRAM and configuring firmware trace verbosity.
+> Interface created under /sys/kernel/debug/telemetry
+> soc_states: SoC Device and Low Power States
+> pss_info: Info from the Primary SubSystem
+> ioss_info: Info from IO SubSusytem
+> pss_trace_verbosity: Read/Modify PSS F/W trace verbosity
+> ioss_trace_verbosity: Read/Modify IOSS F/W trace verbosity.
+> 
+> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+> 
+> ---
+> Changes in v2:
+> * Fix issues in code style, indentation & comments
+> * Changed Banner to include "All Rights Reserved"
+> * Group all ApolloLake specific #defines under banner
+> * Change to MODULE_LICENSE to GPL
+> ---
+>  drivers/platform/x86/intel_telemetry_debugfs.c | 1094
+> ++++++++++++++++++++++++
+>  1 file changed, 1094 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_telemetry_debugfs.c
+> 
+> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c
+> b/drivers/platform/x86/intel_telemetry_debugfs.c
+> new file mode 100644
+> index 0000000..5b79899
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+> @@ -0,0 +1,1094 @@
+> +/*
+> + * Intel SOC Telemetry debugfs Driver: Currently supports APL
+> + * Copyright (c) 2015, Intel Corporation.
+> + * All Rights Reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> +it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but
+> +WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of
+> MERCHANTABILITY
+> +or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+> +License for
+> + * more details.
+> + *
+> + * This file provides the debugfs interfaces for telemetry.
+> + * /sys/kernel/debug/telemetry/pss_info: Shows Primary Control Sub-Sys
+> +Counters
+> + * /sys/kernel/debug/telemetry/ioss_info: Shows IO Sub-System Counters
+> + * /sys/kernel/debug/telemetry/soc_states: Shows SoC State
+> + * /sys/kernel/debug/telemetry/pss_trace_verbosity: Read and Change
+> Tracing
+> + *				Verbosity via firmware
+> + * /sys/kernel/debug/telemetry/ioss_race_verbosity: Write and Change
+> Tracing
+> + *				Verbosity via firmware
+> + */
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/device.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/io.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/pci.h>
+> +#include <linux/suspend.h>
+> +
+> +#include <asm/cpu_device_id.h>
+> +#include <asm/intel_pmc_ipc.h>
+> +#include <asm/intel_punit_ipc.h>
+> +#include <asm/intel_telemetry.h>
+> +
+> +#define DRIVER_NAME	"telemetry_soc_debugfs"
+> +#define DRIVER_VERSION	"1.0.0"
+> +
+> +/* ApolloLake SoC Event-IDs */
+> +#define TELEM_APL_PSS_PSTATES_ID	0x2802
+> +#define TELEM_APL_PSS_IDLE_ID		0x2806
+> +#define TELEM_APL_PCS_IDLE_BLOCKED_ID	0x2C00
+> +#define TELEM_APL_PCS_S0IX_BLOCKED_ID	0x2C01
+> +#define TELEM_APL_PSS_WAKEUP_ID		0x2C02
+> +#define TELEM_APL_PSS_LTR_BLOCKING_ID	0x2C03
+> +
+> +#define TELEM_APL_S0IX_TOTAL_OCC_ID	0x4000
+> +#define TELEM_APL_S0IX_SHLW_OCC_ID	0x4001
+> +#define TELEM_APL_S0IX_DEEP_OCC_ID	0x4002
+> +#define TELEM_APL_S0IX_TOTAL_RES_ID	0x4800
+> +#define TELEM_APL_S0IX_SHLW_RES_ID	0x4801
+> +#define TELEM_APL_S0IX_DEEP_RES_ID	0x4802
+> +#define TELEM_APL_D0IX_ID		0x581A
+> +#define TELEM_APL_D3_ID			0x5819
+> +#define TELEM_APL_PG_ID			0x5818
+> +
+> +#define TELEM_INFO_SRAMEVTS_MASK	0xFF00
+> +#define TELEM_INFO_SRAMEVTS_SHIFT	0x8
+> +#define TELEM_SSRAM_READ_TIMEOUT	10
+> +
+> +#define TELEM_MASK_BIT			1
+> +#define TELEM_MASK_BYTE			0xFF
+> +#define BYTES_PER_LONG			8
+> +#define TELEM_APL_MASK_PCS_STATE	0xF
+> +
+> +/* Max events in bitmap to check for */
+> +#define TELEM_PSS_IDLE_EVTS		25
+> +#define TELEM_PSS_IDLE_BLOCKED_EVTS	20
+> +#define TELEM_PSS_S0IX_BLOCKED_EVTS	20
+> +#define TELEM_PSS_S0IX_WAKEUP_EVTS	20
+> +#define TELEM_PSS_LTR_BLOCKING_EVTS	20
+> +#define TELEM_IOSS_DX_D0IX_EVTS		25
+> +#define TELEM_IOSS_PG_EVTS		30
+> +
+> +#define TELEM_EVT_LEN(x) (sizeof(x)/sizeof((x)[0]))
+> +
+> +#define TELEM_DEBUGFS_CPU(model, data) \
+> +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_MWAIT, (unsigned
+> long)&data}
+> +
+> +static u8 suspend_prep_ok;
+> +static u32 suspend_shlw_ctr_temp, suspend_deep_ctr_temp; static u64
+> +suspend_shlw_res_temp, suspend_deep_res_temp;
+> +
+> +struct telemetry_susp_stats {
+> +	u32 suspend_shlw_swake_ctr;
+> +	u32 suspend_deep_swake_ctr;
+> +	u64 suspend_shlw_swake_res;
+> +	u64 suspend_deep_swake_res;
+> +	u32 suspend_shlw_ctr;
+> +	u32 suspend_deep_ctr;
+> +	u64 suspend_shlw_res;
+> +	u64 suspend_deep_res;
+> +};
+> +
+> +/* Bitmap definitions for default counters in APL */ struct
+> +telem_pss_idle_stateinfo {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_pss_idle_stateinfo telem_apl_pss_idle_data[] = {
+> +	{"IA_CORE0_C1E",		0},
+> +	{"IA_CORE1_C1E",		1},
+> +	{"IA_CORE2_C1E",		2},
+> +	{"IA_CORE3_C1E",		3},
+> +	{"IA_CORE0_C6",			16},
+> +	{"IA_CORE1_C6",			17},
+> +	{"IA_CORE2_C6",			18},
+> +	{"IA_CORE3_C6",			19},
+> +	{"IA_MODULE0_C7",		32},
+> +	{"IA_MODULE1_C7",		33},
+> +	{"GT_RC6",			40},
+> +	{"IUNIT_PROCESSING_IDLE",	41},
+> +	{"FAR_MEM_IDLE",		43},
+> +	{"DISPLAY_IDLE",		44},
+> +	{"IUNIT_INPUT_SYSTEM_IDLE",	45},
+> +	{"PCS_STATUS",			60},
+> +};
+> +
+> +struct telem_pcs_blkd_info {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_pcs_blkd_info telem_apl_pcs_idle_blkd_data[] = {
+> +	{"COMPUTE",			0},
+> +	{"MISC",			8},
+> +	{"MODULE_ACTIONS_PENDING",	16},
+> +	{"LTR",				24},
+> +	{"DISPLAY_WAKE",		32},
+> +	{"ISP_WAKE",			40},
+> +	{"PSF0_ACTIVE",			48},
+> +};
+> +
+> +static struct telem_pcs_blkd_info telem_apl_pcs_s0ix_blkd_data[] = {
+> +	{"LTR",				0},
+> +	{"IRTL",			8},
+> +	{"WAKE_DEADLINE_PENDING",	16},
+> +	{"DISPLAY",			24},
+> +	{"ISP",				32},
+> +	{"CORE",			40},
+> +	{"PMC",				48},
+> +	{"MISC",			56},
+> +};
+> +
+> +struct telem_pss_ltr_info {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_pss_ltr_info telem_apl_pss_ltr_data[] = {
+> +	{"CORE_ACTIVE",		0},
+> +	{"MEM_UP",		8},
+> +	{"DFX",			16},
+> +	{"DFX_FORCE_LTR",	24},
+> +	{"DISPLAY",		32},
+> +	{"ISP",			40},
+> +	{"SOUTH",		48},
+> +};
+> +
+> +struct telem_pss_wakeup_info {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_pss_wakeup_info telem_apl_pss_wakeup[] = {
+> +	{"IP_IDLE",			0},
+> +	{"DISPLAY_WAKE",		8},
+> +	{"VOLTAGE_REG_INT",		16},
+> +	{"DROWSY_TIMER (HOTPLUG)",	24},
+> +	{"CORE_WAKE",			32},
+> +	{"MISC_S0IX",			40},
+> +	{"MISC_ABORT",			56},
+> +};
+> +
+> +struct telem_ioss_d0ix_stateinfo {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_ioss_d0ix_stateinfo telem_apl_ioss_d0ix_data[] = {
+> +	{"CSE",		0},
+> +	{"SCC2",	1},
+> +	{"GMM",		2},
+> +	{"XDCI",	3},
+> +	{"XHCI",	4},
+> +	{"ISH",		5},
+> +	{"AVS",		6},
+> +	{"PCIE0P1",	7},
+> +	{"PECI0P0",	8},
+> +	{"LPSS",	9},
+> +	{"SCC",		10},
+> +	{"PWM",		11},
+> +	{"PCIE1_P3",    12},
+> +	{"PCIE1_P2",    13},
+> +	{"PCIE1_P1",    14},
+> +	{"PCIE1_P0",    15},
+> +	{"CNV",		16},
+> +	{"SATA",	17},
+> +	{"PRTC",	18},
+> +};
+> +
+> +struct telem_ioss_pg_info {
+> +	const char *name;
+> +	u32 bit_pos;
+> +};
+> +
+> +static struct telem_ioss_pg_info telem_apl_ioss_pg_data[] = {
+> +	{"LPSS",	0},
+> +	{"SCC",		1},
+> +	{"P2SB",	2},
+> +	{"SCC2",	3},
+> +	{"GMM",		4},
+> +	{"PCIE0",	5},
+> +	{"XDCI",	6},
+> +	{"xHCI",	7},
+> +	{"CSE",		8},
+> +	{"SPI",		9},
+> +	{"AVSPGD4",	10},
+> +	{"AVSPGD3",	11},
+> +	{"AVSPGD2",	12},
+> +	{"AVSPGD1",	13},
+> +	{"ISH",		14},
+> +	{"EXI",		15},
+> +	{"NPKVRC",	16},
+> +	{"NPKVNN",	17},
+> +	{"CUNIT",	18},
+> +	{"FUSE_CTRL",	19},
+> +	{"PCIE1",	20},
+> +	{"CNV",		21},
+> +	{"LPC",		22},
+> +	{"SATA",	23},
+> +	{"SMB",		24},
+> +	{"PRTC",	25},
+> +};
+> +
+> +
+> +struct telemetry_debugfs_conf {
+> +	struct telemetry_susp_stats suspend_stats;
+> +	struct dentry *telemetry_dbg_dir;
+> +
+> +	/* Bitmap Data */
+> +	struct telem_ioss_d0ix_stateinfo *ioss_d0ix_data;
+> +	struct telem_pss_idle_stateinfo *pss_idle_data;
+> +	struct telem_pcs_blkd_info *pcs_idle_blkd_data;
+> +	struct telem_pcs_blkd_info *pcs_s0ix_blkd_data;
+> +	struct telem_pss_wakeup_info *pss_wakeup;
+> +	struct telem_pss_ltr_info *pss_ltr_data;
+> +	struct telem_ioss_pg_info *ioss_pg_data;
+> +	u8 pcs_idle_blkd_evts;
+> +	u8 pcs_s0ix_blkd_evts;
+> +	u8 pss_wakeup_evts;
+> +	u8 pss_idle_evts;
+> +	u8 pss_ltr_evts;
+> +	u8 ioss_d0ix_evts;
+> +	u8 ioss_pg_evts;
+> +
+> +	/* IDs */
+> +	u16  pss_ltr_blocking_id;
+> +	u16  pcs_idle_blkd_id;
+> +	u16  pcs_s0ix_blkd_id;
+> +	u16  s0ix_total_occ_id;
+> +	u16  s0ix_shlw_occ_id;
+> +	u16  s0ix_deep_occ_id;
+> +	u16  s0ix_total_res_id;
+> +	u16  s0ix_shlw_res_id;
+> +	u16  s0ix_deep_res_id;
+> +	u16  pss_wakeup_id;
+> +	u16  ioss_d0ix_id;
+> +	u16  pstates_id;
+> +	u16  pss_idle_id;
+> +	u16  ioss_d3_id;
+> +	u16  ioss_pg_id;
+> +};
+> +
+> +static struct telemetry_debugfs_conf *debugfs_conf;
+> +
+> +static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
+> +	.pss_idle_data = telem_apl_pss_idle_data,
+> +	.pcs_idle_blkd_data = telem_apl_pcs_idle_blkd_data,
+> +	.pcs_s0ix_blkd_data = telem_apl_pcs_s0ix_blkd_data,
+> +	.pss_ltr_data = telem_apl_pss_ltr_data,
+> +	.pss_wakeup = telem_apl_pss_wakeup,
+> +	.ioss_d0ix_data = telem_apl_ioss_d0ix_data,
+> +	.ioss_pg_data = telem_apl_ioss_pg_data,
+> +
+> +	.pss_idle_evts = TELEM_EVT_LEN(telem_apl_pss_idle_data),
+> +	.pcs_idle_blkd_evts =
+> TELEM_EVT_LEN(telem_apl_pcs_idle_blkd_data),
+> +	.pcs_s0ix_blkd_evts =
+> TELEM_EVT_LEN(telem_apl_pcs_s0ix_blkd_data),
+> +	.pss_ltr_evts = TELEM_EVT_LEN(telem_apl_pss_ltr_data),
+> +	.pss_wakeup_evts = TELEM_EVT_LEN(telem_apl_pss_wakeup),
+> +	.ioss_d0ix_evts = TELEM_EVT_LEN(telem_apl_ioss_d0ix_data),
+> +	.ioss_pg_evts = TELEM_EVT_LEN(telem_apl_ioss_pg_data),
+> +
+> +	.pstates_id = TELEM_APL_PSS_PSTATES_ID,
+> +	.pss_idle_id = TELEM_APL_PSS_IDLE_ID,
+> +	.pcs_idle_blkd_id = TELEM_APL_PCS_IDLE_BLOCKED_ID,
+> +	.pcs_s0ix_blkd_id = TELEM_APL_PCS_S0IX_BLOCKED_ID,
+> +	.pss_wakeup_id = TELEM_APL_PSS_WAKEUP_ID,
+> +	.pss_ltr_blocking_id = TELEM_APL_PSS_LTR_BLOCKING_ID,
+> +	.s0ix_total_occ_id = TELEM_APL_S0IX_TOTAL_OCC_ID,
+> +	.s0ix_shlw_occ_id = TELEM_APL_S0IX_SHLW_OCC_ID,
+> +	.s0ix_deep_occ_id = TELEM_APL_S0IX_DEEP_OCC_ID,
+> +	.s0ix_total_res_id = TELEM_APL_S0IX_TOTAL_RES_ID,
+> +	.s0ix_shlw_res_id = TELEM_APL_S0IX_SHLW_RES_ID,
+> +	.s0ix_deep_res_id = TELEM_APL_S0IX_DEEP_RES_ID,
+> +	.ioss_d0ix_id = TELEM_APL_D0IX_ID,
+> +	.ioss_d3_id = TELEM_APL_D3_ID,
+> +	.ioss_pg_id = TELEM_APL_PG_ID,
+> +};
+> +
+> +static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
+> +	TELEM_DEBUGFS_CPU(0x5c, telem_apl_debugfs_conf),
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(x86cpu, telemetry_debugfs_cpu_ids);
+> +
+> +static int telemetry_debugfs_check_evts(void)
+> +{
+> +	if ((debugfs_conf->pss_idle_evts > TELEM_PSS_IDLE_EVTS) ||
+> +	    (debugfs_conf->pcs_idle_blkd_evts >
+> TELEM_PSS_IDLE_BLOCKED_EVTS) ||
+> +	    (debugfs_conf->pcs_s0ix_blkd_evts >
+> TELEM_PSS_S0IX_BLOCKED_EVTS) ||
+> +	    (debugfs_conf->pss_ltr_evts > TELEM_PSS_LTR_BLOCKING_EVTS)
+> ||
+> +	    (debugfs_conf->pss_wakeup_evts >
+> TELEM_PSS_S0IX_WAKEUP_EVTS) ||
+> +	    (debugfs_conf->ioss_d0ix_evts > TELEM_IOSS_DX_D0IX_EVTS) ||
+> +	    (debugfs_conf->ioss_pg_evts > TELEM_IOSS_PG_EVTS))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int telem_pss_states_show(struct seq_file *s, void *unused) {
+> +	struct telemetry_evtlog
+> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	const char *name[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	u32 pcs_idle_blkd[TELEM_PSS_IDLE_BLOCKED_EVTS],
+> +	    pcs_s0ix_blkd[TELEM_PSS_S0IX_BLOCKED_EVTS],
+> +	    pss_s0ix_wakeup[TELEM_PSS_S0IX_WAKEUP_EVTS],
+> +	    pss_ltr_blkd[TELEM_PSS_LTR_BLOCKING_EVTS],
+> +	    pss_idle[TELEM_PSS_IDLE_EVTS];
+> +	int index, idx, ret, err = 0;
+> +	u64 pstates = 0;
+> +
+> +	ret = telemetry_read_eventlog(TELEM_PSS, evtlog,
+> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	err = telemetry_get_evtname(TELEM_PSS, name,
+> +				    TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	seq_puts(s, "\n----------------------------------------------------\n");
+> +	seq_puts(s, "\tPSS TELEM EVENTLOG (Residency = field/19.2 us\n");
+> +	seq_puts(s, "----------------------------------------------------\n");
+> +	for (index = 0; index < ret; index++) {
+> +		seq_printf(s, "%-32s %llu\n",
+> +			   name[index], evtlog[index].telem_evtlog);
+> +
+> +		if (evtlog[index].telem_evtid == debugfs_conf->pss_idle_id)
+> {
+> +			for (idx = 0; idx < debugfs_conf->pss_idle_evts - 1;
+> +			     idx++) {
+> +				pss_idle[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->pss_idle_data[idx].bit_pos)
+> &
+> +				TELEM_MASK_BIT;
+> +			}
+> +
+> +			pss_idle[idx] =
+> +			(evtlog[index].telem_evtlog >>
+> +			debugfs_conf->pss_idle_data[idx].bit_pos) &
+> +			TELEM_APL_MASK_PCS_STATE;
+> +
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->pcs_idle_blkd_id) {
+> +			for (idx = 0; idx < debugfs_conf->pcs_idle_blkd_evts;
+> +			     idx++) {
+> +				pcs_idle_blkd[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf-
+> >pcs_idle_blkd_data[idx].bit_pos) &
+> +				TELEM_MASK_BYTE;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->pcs_s0ix_blkd_id) {
+> +			for (idx = 0; idx < debugfs_conf->pcs_s0ix_blkd_evts;
+> +			     idx++) {
+> +				pcs_s0ix_blkd[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf-
+> >pcs_s0ix_blkd_data[idx].bit_pos) &
+> +				TELEM_MASK_BYTE;
+> +			}
+> +			continue;
+> +		}
+> +
+> +
+> +		if (evtlog[index].telem_evtid == debugfs_conf-
+> >pss_wakeup_id) {
+> +			for (idx = 0; idx < debugfs_conf->pss_wakeup_evts;
+> +			     idx++) {
+> +				pss_s0ix_wakeup[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->pss_wakeup[idx].bit_pos) &
+> +				TELEM_MASK_BYTE;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->pss_ltr_blocking_id) {
+> +			for (idx = 0; idx < debugfs_conf->pss_ltr_evts; idx++)
+> {
+> +				pss_ltr_blkd[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->pss_ltr_data[idx].bit_pos) &
+> +				TELEM_MASK_BYTE;
+> +			}
+> +			continue;
+> +		}
+> +
+> +
+> +		if (evtlog[index].telem_evtid == debugfs_conf->pstates_id)
+> +			pstates = evtlog[index].telem_evtlog;
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "PStates\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Domain\t\t\t\tFreq(Mhz)\n");
+> +	seq_printf(s, " IA\t\t\t\t %llu\n GT\t\t\t\t %llu\n",
+> +		   (pstates & TELEM_MASK_BYTE)*100,
+> +		   ((pstates >> 8) & TELEM_MASK_BYTE)*50/3);
+> +
+> +	seq_printf(s, " IUNIT\t\t\t\t %llu\n SA\t\t\t\t %llu\n",
+> +		   ((pstates >> 16) & TELEM_MASK_BYTE)*25,
+> +		   ((pstates >> 24) & TELEM_MASK_BYTE)*50/3);
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "PSS IDLE Status\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Device\t\t\t\t\tIDLE\n");
+> +	for (index = 0; index < debugfs_conf->pss_idle_evts; index++) {
+> +		seq_printf(s, "%-32s\t%u\n",
+> +			   debugfs_conf->pss_idle_data[index].name,
+> +			   pss_idle[index]);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "PSS Idle blkd Status (~1ms saturating bucket)\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
+> +	for (index = 0; index < debugfs_conf->pcs_idle_blkd_evts; index++) {
+> +		seq_printf(s, "%-32s\t%u\n",
+> +			   debugfs_conf->pcs_idle_blkd_data[index].name,
+> +			   pcs_idle_blkd[index]);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "PSS S0ix blkd Status (~1ms saturating bucket)\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
+> +	for (index = 0; index < debugfs_conf->pcs_s0ix_blkd_evts; index++)
+> {
+> +		seq_printf(s, "%-32s\t%u\n",
+> +			   debugfs_conf->pcs_s0ix_blkd_data[index].name,
+> +			   pcs_s0ix_blkd[index]);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "LTR Blocking Status (~1ms saturating bucket)\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
+> +	for (index = 0; index < debugfs_conf->pss_ltr_evts; index++) {
+> +		seq_printf(s, "%-32s\t%u\n",
+> +			   debugfs_conf->pss_ltr_data[index].name,
+> +			   pss_s0ix_wakeup[index]);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "Wakes Status (~1ms saturating bucket)\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Wakes\t\t\t\t\tCount\n");
+> +	for (index = 0; index < debugfs_conf->pss_wakeup_evts; index++) {
+> +		seq_printf(s, "%-32s\t%u\n",
+> +			   debugfs_conf->pss_wakeup[index].name,
+> +			   pss_ltr_blkd[index]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int telem_pss_state_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, telem_pss_states_show, inode->i_private);
+> }
+> +
+> +static const struct file_operations telem_pss_ops = {
+> +	.open		= telem_pss_state_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +
+> +static int telem_ioss_states_show(struct seq_file *s, void *unused) {
+> +	struct telemetry_evtlog
+> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	const char *name[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	int index, ret, err;
+> +
+> +	ret = telemetry_read_eventlog(TELEM_IOSS, evtlog,
+> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	err = telemetry_get_evtname(TELEM_IOSS, name,
+> +				    TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "\tI0SS TELEMETRY EVENTLOG\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	for (index = 0; index < ret; index++) {
+> +		seq_printf(s, "%-32s 0x%llx\n",
+> +			   name[index], evtlog[index].telem_evtlog);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int telem_ioss_state_open(struct inode *inode, struct file
+> +*file) {
+> +	return single_open(file, telem_ioss_states_show, inode->i_private);
+> }
+> +
+> +static const struct file_operations telem_ioss_ops = {
+> +	.open		= telem_ioss_state_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +static int telem_soc_states_show(struct seq_file *s, void *unused) {
+> +	u32 d3_sts[TELEM_IOSS_DX_D0IX_EVTS],
+> d0ix_sts[TELEM_IOSS_DX_D0IX_EVTS];
+> +	u32 pg_sts[TELEM_IOSS_PG_EVTS],
+> pss_idle[TELEM_PSS_IDLE_EVTS];
+> +	struct telemetry_evtlog
+> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	u32 s0ix_total_ctr = 0, s0ix_shlw_ctr = 0, s0ix_deep_ctr = 0;
+> +	u64 s0ix_total_res = 0, s0ix_shlw_res = 0, s0ix_deep_res = 0;
+> +	struct pci_dev *dev = NULL;
+> +	int index, idx, ret;
+> +	u32 d3_state;
+> +	u16 pmcsr;
+> +
+> +	ret = telemetry_read_eventlog(TELEM_IOSS, evtlog,
+> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (index = 0; index < ret; index++) {
+> +		if (evtlog[index].telem_evtid == debugfs_conf->ioss_d3_id)
+> {
+> +			for (idx = 0; idx < debugfs_conf->ioss_d0ix_evts;
+> +			     idx++) {
+> +				d3_sts[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->ioss_d0ix_data[idx].bit_pos)
+> &
+> +				TELEM_MASK_BIT;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid == debugfs_conf->ioss_pg_id)
+> {
+> +			for (idx = 0; idx < debugfs_conf->ioss_pg_evts;
+> idx++) {
+> +				pg_sts[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->ioss_pg_data[idx].bit_pos) &
+> +				TELEM_MASK_BIT;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid == debugfs_conf-
+> >ioss_d0ix_id) {
+> +			for (idx = 0; idx < debugfs_conf->ioss_d0ix_evts;
+> +			     idx++) {
+> +				d0ix_sts[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->ioss_d0ix_data[idx].bit_pos)
+> &
+> +				TELEM_MASK_BIT;
+> +			}
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_total_occ_id) {
+> +			s0ix_total_ctr = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_occ_id) {
+> +			s0ix_shlw_ctr = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_occ_id) {
+> +			s0ix_deep_ctr = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_total_res_id) {
+> +			s0ix_total_res = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_res_id) {
+> +			s0ix_shlw_res = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_res_id) {
+> +			s0ix_deep_res = evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +	}
+> +
+> +	seq_puts(s, "\n---------------------------------------------------\n");
+> +	seq_puts(s, "S0IX Type\t\t\t Occurrence\t\t Residency(us)\n");
+> +	seq_puts(s, "---------------------------------------------------\n");
+> +
+> +	seq_printf(s, "S0IX Shallow\t\t\t %10u\t %10llu\n",
+> +		   s0ix_shlw_ctr -
+> +		   debugfs_conf->suspend_stats.suspend_shlw_ctr -
+> +		   debugfs_conf->suspend_stats.suspend_shlw_swake_ctr,
+> +		   (u64)((s0ix_shlw_res -
+> +		   debugfs_conf->suspend_stats.suspend_shlw_res -
+> +		   debugfs_conf-
+> >suspend_stats.suspend_shlw_swake_res)*10/192));
+> +
+> +	seq_printf(s, "S0IX Deep\t\t\t %10u\t %10llu\n",
+> +		   s0ix_deep_ctr -
+> +		   debugfs_conf->suspend_stats.suspend_deep_ctr -
+> +		   debugfs_conf->suspend_stats.suspend_deep_swake_ctr,
+> +		   (u64)((s0ix_deep_res -
+> +		   debugfs_conf->suspend_stats.suspend_deep_res -
+> +		   debugfs_conf-
+> >suspend_stats.suspend_deep_swake_res)*10/192));
+> +
+> +	seq_printf(s, "Suspend(With S0ixShallow)\t %10u\t %10llu\n",
+> +		   debugfs_conf->suspend_stats.suspend_shlw_ctr,
+> +		   (u64)(debugfs_conf-
+> >suspend_stats.suspend_shlw_res*10)/192);
+> +
+> +	seq_printf(s, "Suspend(With S0ixDeep)\t\t %10u\t %10llu\n",
+> +		   debugfs_conf->suspend_stats.suspend_deep_ctr,
+> +		   (u64)(debugfs_conf-
+> >suspend_stats.suspend_deep_res*10)/192);
+> +
+> +	seq_printf(s, "Suspend(With Shallow-Wakes)\t %10u\t %10llu\n",
+> +		   debugfs_conf->suspend_stats.suspend_shlw_swake_ctr +
+> +		   debugfs_conf->suspend_stats.suspend_deep_swake_ctr,
+> +		   (u64)((debugfs_conf-
+> >suspend_stats.suspend_shlw_swake_res +
+> +		   debugfs_conf-
+> >suspend_stats.suspend_deep_swake_res)*10/192));
+> +
+> +	seq_printf(s, "S0IX+Suspend Total\t\t %10u\t %10llu\n",
+> s0ix_total_ctr,
+> +				(u64)(s0ix_total_res*10/192));
+> +	seq_puts(s, "\n-------------------------------------------------\n");
+> +	seq_puts(s, "\t\tDEVICE STATES\n");
+> +	seq_puts(s, "-------------------------------------------------\n");
+> +
+> +	for_each_pci_dev(dev) {
+> +		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL,
+> &pmcsr);
+> +		d3_state = ((pmcsr & PCI_PM_CTRL_STATE_MASK) ==
+> +			    (__force int)PCI_D3hot) ? 1 : 0;
+> +
+> +		seq_printf(s, "pci %04x %04X %s %20.20s: ",
+> +			   dev->vendor, dev->device, dev_name(&dev-
+> >dev),
+> +			   dev_driver_string(&dev->dev));
+> +		seq_printf(s, " d3:%x\n", d3_state);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "D3/D0i3 Status\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Block\t\t D3\t D0i3\n");
+> +	for (index = 0; index < debugfs_conf->ioss_d0ix_evts; index++) {
+> +		seq_printf(s, "%-10s\t %u\t %u\n",
+> +			   debugfs_conf->ioss_d0ix_data[index].name,
+> +			   d3_sts[index], d0ix_sts[index]);
+> +	}
+> +
+> +	seq_puts(s, "\n--------------------------------------\n");
+> +	seq_puts(s, "South Complex PowerGate Status\n");
+> +	seq_puts(s, "--------------------------------------\n");
+> +	seq_puts(s, "Device\t\t PG\n");
+> +	for (index = 0; index < debugfs_conf->ioss_pg_evts; index++) {
+> +		seq_printf(s, "%-10s\t %u\n",
+> +			   debugfs_conf->ioss_pg_data[index].name,
+> +			   pg_sts[index]);
+> +	}
+> +
+> +	evtlog->telem_evtid = debugfs_conf->pss_idle_id;
+> +	ret = telemetry_read_events(TELEM_PSS, evtlog, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	seq_puts(s, "\n-----------------------------------------\n");
+> +	seq_puts(s, "North Idle Status\n");
+> +	seq_puts(s, "-----------------------------------------\n");
+> +	for (idx = 0; idx < debugfs_conf->pss_idle_evts - 1; idx++) {
+> +		pss_idle[idx] =	(evtlog->telem_evtlog >>
+> +				debugfs_conf->pss_idle_data[idx].bit_pos)
+> &
+> +				TELEM_MASK_BIT;
+> +	}
+> +
+> +	pss_idle[idx] = (evtlog->telem_evtlog >>
+> +			debugfs_conf->pss_idle_data[idx].bit_pos) &
+> +			TELEM_APL_MASK_PCS_STATE;
+> +
+> +	for (index = 0; index < debugfs_conf->pss_idle_evts; index++) {
+> +		seq_printf(s, "%-30s %u\n",
+> +			   debugfs_conf->pss_idle_data[index].name,
+> +			   pss_idle[index]);
+> +	}
+> +
+> +	seq_puts(s, "\nPCS_STATUS Code\n");
+> +	seq_puts(s, "0:C0 1:C1 2:C1_DN_WT_DEV 3:C2
+> 4:C2_WT_DE_MEM_UP\n");
+> +	seq_puts(s, "5:C2_WT_DE_MEM_DOWN 6:C2_UP_WT_DEV 7:C2_DN
+> 8:C2_VOA\n");
+> +	seq_puts(s, "9:C2_VOA_UP 10:S0IX_PRE 11:S0IX\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int telem_soc_state_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, telem_soc_states_show, inode->i_private);
+> }
+> +
+> +static const struct file_operations telem_socstate_ops = {
+> +	.open		= telem_soc_state_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +static int telem_pss_trc_verb_show(struct seq_file *s, void *unused) {
+> +	u32 verbosity;
+> +	int err;
+> +
+> +	err = telemetry_get_trace_verbosity(TELEM_PSS, &verbosity);
+> +	if (err) {
+> +		pr_err("Get PSS Trace Verbosity Failed with Error %d\n", err);
+> +		return -EFAULT;
+> +	}
+> +
+> +	seq_printf(s, "PSS Trace Verbosity %u\n", verbosity);
+> +	return 0;
+> +}
+> +
+> +static ssize_t telem_pss_trc_verb_write(struct file *file,
+> +					const char __user *userbuf,
+> +					size_t count, loff_t *ppos)
+> +{
+> +	u32 verbosity;
+> +	int err;
+> +
+> +	if (kstrtou32_from_user(userbuf, count, 0, &verbosity))
+> +		return -EFAULT;
+> +
+> +	err = telemetry_set_trace_verbosity(TELEM_PSS, verbosity);
+> +	if (err) {
+> +		pr_err("Changing PSS Trace Verbosity Failed. Error %d\n",
+> err);
+> +		count = err;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static int telem_pss_trc_verb_open(struct inode *inode, struct file
+> +*file) {
+> +	return single_open(file, telem_pss_trc_verb_show, inode-
+> >i_private); }
+> +
+> +static const struct file_operations telem_pss_trc_verb_ops = {
+> +	.open		= telem_pss_trc_verb_open,
+> +	.read		= seq_read,
+> +	.write		= telem_pss_trc_verb_write,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +
+> +static int telem_ioss_trc_verb_show(struct seq_file *s, void *unused) {
+> +	u32 verbosity;
+> +	int err;
+> +
+> +	err = telemetry_get_trace_verbosity(TELEM_IOSS, &verbosity);
+> +	if (err) {
+> +		pr_err("Get IOSS Trace Verbosity Failed with Error %d\n",
+> err);
+> +		return -EFAULT;
+> +	}
+> +
+> +	seq_printf(s, "IOSS Trace Verbosity %u\n", verbosity);
+> +	return 0;
+> +}
+> +
+> +static ssize_t telem_ioss_trc_verb_write(struct file *file,
+> +					 const char __user *userbuf,
+> +					 size_t count, loff_t *ppos)
+> +{
+> +	u32 verbosity;
+> +	int err;
+> +
+> +	if (kstrtou32_from_user(userbuf, count, 0, &verbosity))
+> +		return -EFAULT;
+> +
+> +	err = telemetry_set_trace_verbosity(TELEM_IOSS, verbosity);
+> +	if (err) {
+> +		pr_err("Changing IOSS Trace Verbosity Failed. Error %d\n",
+> err);
+> +		count = err;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static int telem_ioss_trc_verb_open(struct inode *inode, struct file
+> +*file) {
+> +	return single_open(file, telem_ioss_trc_verb_show, inode-
+> >i_private);
+> +}
+> +
+> +static const struct file_operations telem_ioss_trc_verb_ops = {
+> +	.open		= telem_ioss_trc_verb_open,
+> +	.read		= seq_read,
+> +	.write		= telem_ioss_trc_verb_write,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pm_suspend_prep_cb(void)
+> +{
+> +	struct telemetry_evtlog
+> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	int ret, index;
+> +
+> +	ret = telemetry_raw_read_eventlog(TELEM_IOSS, evtlog,
+> +			TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0) {
+> +		suspend_prep_ok = 0;
+> +		goto out;
+> +	}
+> +
+> +	for (index = 0; index < ret; index++) {
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_occ_id) {
+> +			suspend_shlw_ctr_temp =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_occ_id) {
+> +			suspend_deep_ctr_temp =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_res_id) {
+> +			suspend_shlw_res_temp =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_res_id) {
+> +			suspend_deep_res_temp =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +	}
+> +
+> +	suspend_prep_ok = 1;
+> +out:
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int pm_suspend_exit_cb(void)
+> +{
+> +	struct telemetry_evtlog
+> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	static u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
+> +	static u64 suspend_shlw_res_exit, suspend_deep_res_exit;
+> +	int ret, index;
+> +
+> +	if (!suspend_prep_ok)
+> +		goto out;
+> +
+> +	ret = telemetry_raw_read_eventlog(TELEM_IOSS, evtlog,
+> +
+> TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	for (index = 0; index < ret; index++) {
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_occ_id) {
+> +			suspend_shlw_ctr_exit =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_occ_id) {
+> +			suspend_deep_ctr_exit =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_shlw_res_id) {
+> +			suspend_shlw_res_exit =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +
+> +		if (evtlog[index].telem_evtid ==
+> +		    debugfs_conf->s0ix_deep_res_id) {
+> +			suspend_deep_res_exit =
+> evtlog[index].telem_evtlog;
+> +			continue;
+> +		}
+> +	}
+> +
+> +	if ((suspend_shlw_ctr_exit < suspend_shlw_ctr_temp) ||
+> +	    (suspend_deep_ctr_exit < suspend_deep_ctr_temp) ||
+> +	    (suspend_shlw_res_exit < suspend_shlw_res_temp) ||
+> +	    (suspend_deep_res_exit < suspend_deep_res_temp)) {
+> +		pr_err("Wrong s0ix counters detected\n");
+> +		goto out;
+> +	}
+> +
+> +	suspend_shlw_ctr_exit -= suspend_shlw_ctr_temp;
+> +	suspend_deep_ctr_exit -= suspend_deep_ctr_temp;
+> +	suspend_shlw_res_exit -= suspend_shlw_res_temp;
+> +	suspend_deep_res_exit -= suspend_deep_res_temp;
+> +
+> +	if (suspend_shlw_ctr_exit == 1) {
+> +		debugfs_conf->suspend_stats.suspend_shlw_ctr +=
+> +		suspend_shlw_ctr_exit;
+> +
+> +		debugfs_conf->suspend_stats.suspend_shlw_res +=
+> +		suspend_shlw_res_exit;
+> +	}
+> +	/* Shallow Wakes Case */
+> +	else if (suspend_shlw_ctr_exit > 1) {
+> +		debugfs_conf->suspend_stats.suspend_shlw_swake_ctr +=
+> +		suspend_shlw_ctr_exit;
+> +
+> +		debugfs_conf->suspend_stats.suspend_shlw_swake_res +=
+> +		suspend_shlw_res_exit;
+> +	}
+> +
+> +	if (suspend_deep_ctr_exit == 1) {
+> +		debugfs_conf->suspend_stats.suspend_deep_ctr +=
+> +		suspend_deep_ctr_exit;
+> +
+> +		debugfs_conf->suspend_stats.suspend_deep_res +=
+> +		suspend_deep_res_exit;
+> +	}
+> +
+> +	/* Shallow Wakes Case */
+> +	else if (suspend_deep_ctr_exit > 1) {
+> +		debugfs_conf->suspend_stats.suspend_deep_swake_ctr +=
+> +		suspend_deep_ctr_exit;
+> +
+> +		debugfs_conf->suspend_stats.suspend_deep_swake_res
+> +=
+> +		suspend_deep_res_exit;
+> +	}
+> +
+> +out:
+> +	suspend_prep_ok = 0;
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int pm_notification(struct notifier_block *this,
+> +			   unsigned long event, void *ptr)
+> +{
+> +	switch (event) {
+> +	case PM_SUSPEND_PREPARE:
+> +		return pm_suspend_prep_cb();
+> +	case PM_POST_SUSPEND:
+> +		return pm_suspend_exit_cb();
+> +	}
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block pm_notifier = {
+> +	.notifier_call = pm_notification,
+> +};
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +static int __init telemetry_debugfs_init(void) {
+> +	const struct x86_cpu_id *id;
+> +	int err = -ENOMEM;
+> +	struct dentry *f;
+> +
+> +	/* Only APL supported for now */
+> +	id = x86_match_cpu(telemetry_debugfs_cpu_ids);
+> +	if (!id)
+> +		return -ENODEV;
+> +
+> +	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
+> +
+> +	err = telemetry_pltconfig_valid();
+> +	if (err < 0)
+> +		return -ENODEV;
+> +
+> +	err = telemetry_debugfs_check_evts();
+> +	if (err < 0)
+> +		return -EINVAL;
+> +
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +	register_pm_notifier(&pm_notifier);
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +	debugfs_conf->telemetry_dbg_dir =
+> debugfs_create_dir("telemetry", NULL);
+> +	if (!debugfs_conf->telemetry_dbg_dir)
+> +		return -ENOMEM;
+> +
+> +	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir, NULL,
+> +				&telem_pss_ops);
+> +	if (!f) {
+> +		pr_err("pss_sample_info debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+> +	f = debugfs_create_file("ioss_info", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir, NULL,
+> +				&telem_ioss_ops);
+> +	if (!f) {
+> +		pr_err("ioss_sample_info debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+> +	f = debugfs_create_file("soc_states", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir,
+> +				NULL, &telem_socstate_ops);
+> +	if (!f) {
+> +		pr_err("ioss_sample_info debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+> +	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir, NULL,
+> +				&telem_pss_trc_verb_ops);
+> +	if (!f) {
+> +		pr_err("pss_trace_verbosity debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+> +	f = debugfs_create_file("ioss_trace_verbosity", S_IFREG | S_IRUGO,
+> +				debugfs_conf->telemetry_dbg_dir, NULL,
+> +				&telem_ioss_trc_verb_ops);
+> +	if (!f) {
+> +		pr_err("ioss_trace_verbosity debugfs register failed\n");
+> +		goto out;
+> +	}
+> +
+> +	return 0;
+> +
+> +out:
+> +	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+> +	debugfs_conf->telemetry_dbg_dir = NULL;
+> +
+> +	return err;
+> +}
+> +
+> +static void __exit telemetry_debugfs_exit(void) {
+> +	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
+> +	debugfs_conf->telemetry_dbg_dir = NULL; }
+> +
+> +late_initcall(telemetry_debugfs_init);
+> +module_exit(telemetry_debugfs_exit);
+> +
+> +MODULE_AUTHOR("Souvik Kumar Chakravarty
+> +<souvik.k.chakravarty@intel.com>");
+> +MODULE_DESCRIPTION("Intel SoC Telemetry debugfs Interface");
+> +MODULE_VERSION(DRIVER_VERSION); MODULE_LICENSE("GPL");
+> --
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86"
+> in the body of a message to majordomo@vger.kernel.org More majordomo
+> info at  http://vger.kernel.org/majordomo-info.html
