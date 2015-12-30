@@ -1,103 +1,131 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is valid
-Date: Tue, 29 Dec 2015 17:05:43 +0100
-Message-ID: <201512291705.43939@pali>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com> <201512281508.20683@pali> <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
+ interfaces
+Date: Tue, 29 Dec 2015 16:50:05 -0800
+Message-ID: <20151230005005.GA29978@malice.jf.intel.com>
+References: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart3662813.7YN0OWsI29";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f41.google.com ([74.125.82.41]:35399 "EHLO
-	mail-wm0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753282AbbL2QFr (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:35611 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753987AbbL3AuJ (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Dec 2015 11:05:47 -0500
-In-Reply-To: <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
+	Tue, 29 Dec 2015 19:50:09 -0500
+Content-Disposition: inline
+In-Reply-To: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Rafael Wysocki <rjw@rjwysocki.net>
+Cc: platform-driver-x86@vger.kernel.org, srinidhi.kasagar@intel.com, qipeng.zha@intel.com, rajeev.d.muralidhar@intel.com, sukumar.ghorai@intel.com, ong.hock.yu@intel.com, aubrey.li@intel.com
 
---nextPart3662813.7YN0OWsI29
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, Dec 23, 2015 at 04:14:16PM +0530, Souvik Kumar Chakravarty wrote:
+> This implements debugfs interfaces for reading the telemetry
+> samples from SSRAM and configuring firmware trace verbosity.
+> Interface created under /sys/kernel/debug/telemetry
 
-On Tuesday 29 December 2015 13:44:13 Micha=C5=82 K=C4=99pie=C5=84 wrote:
-> > > > According to Dell WMI document mentioned in ML dicussion
-> > > > archived at
-> > > > http://www.spinics.net/lists/platform-driver-x86/msg07220.html
-> > > > OS should check Dell WMI descriptor structure.
-> > >=20
-> > > "Should" or "can"?  I skimmed through the ACPI-WMI PDF and
-> > > Mario's message again and I couldn't find any explicit statement
-> > > urging the reader to check the structure in question before
-> > > doing anything else.
-> >=20
-> > That's questionable... In "Design flow" is first point that WMI
-> > descriptor check.
->=20
-> Which "Design flow" are you referring to?  Because I found at least
-> two: chapter 2.3 and a subsection of chapter 2.3.3.  Funnily enough,
-> in both of these locations the WMI Descriptor Method is discussed
-> first.
->=20
-> Personally, I wouldn't use the structure of that document to draw
-> cause-effect conclusions.  Just look at the last chapter (2.3.4),
-> which shows how to tell whether the BIOS supports the ACPI-WMI
-> interface. Shouldn't that be the first thing to check, before doing
-> anything else mentioned in that document?  Yet, it's the last thing
-> discussed.
->=20
-> Anyway, while the document mentions in several places that the BIOS
-> WMI Descriptor object can be queried, it fails to convince me as to
-> why this is necessary at all as all values in the returned buffer
-> are constant. Perhaps parsing the buffer is useful as a sanity check
-> of some kind, but it certainly isn't a prerequisite for performing
-> further actions.
->=20
-> Given the nature of your patchset, I'd personally rephrase the commit
-> message(s) to state that according to your observations, there are
-> behavioral differences between models with different versions of the
-> WMI Interface, so we parse the WMI Descriptor object to determine
-> which WMI Interface version is used on the machine we're running on.
->  Perhaps with an additional word or two that it won't hurt to also
-> check the WMI Descriptor object's correctness while we're at it.
->=20
-> If you feel like I'm nit-picking and none of the above matters,
-> please feel free to disregard my input and just follow your gut.
+What was the rationale for placing this under /sys/kernel/debug/telemetry,
+instead of /sys/power/telemetry ?
 
-It's ok. We just understand it quite differently. And in this case what=20
-about changing commit message to something like this?
+Rafael, would you like to weigh in on this series? This builds on top of
+Qipeng's punit driver queued in my tree for 4.5.
 
-=3D=3D=3D
-dell-wmi: Check if Dell WMI descriptor structure is valid
+> soc_states: SoC Device and Low Power States
+> pss_info: Info from the Primary SubSystem
+> ioss_info: Info from IO SubSusytem
+> pss_trace_verbosity: Read/Modify PSS F/W trace verbosity
+> ioss_trace_verbosity: Read/Modify IOSS F/W trace verbosity.
+> 
+> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 
-After examining existing DSDT ACPI tables of more laptops and looking=20
-into Dell WMI document mentioned in ML dicussion archived at=20
-http://www.spinics.net/lists/platform-driver-x86/msg07220.html we will=20
-parse and check WMI descriptor if contains expected data. It is because=20
-WMI descriptor contains interface version number and it is needed to=20
-know in next commit.
-=3D=3D=3D
+Hi Souvik,
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+This particular patche's legibility suffers from a number of very long variables
+- or struct paths to variables. A couple of ideas below.
 
---nextPart3662813.7YN0OWsI29
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+What is the plan for supporting future SoCs here? You have APL incorporated into
+this file. Do you intend to add each generation to this file?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+> 
+> ---
+> Changes in v2:
+> * Fix issues in code style, indentation & comments
+> * Changed Banner to include "All Rights Reserved"
+> * Group all ApolloLake specific #defines under banner
+> * Change to MODULE_LICENSE to GPL
+> ---
+>  drivers/platform/x86/intel_telemetry_debugfs.c | 1094 ++++++++++++++++++++++++
+>  1 file changed, 1094 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_telemetry_debugfs.c
+> 
+> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+> new file mode 100644
+> index 0000000..5b79899
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+...
+> +static u8 suspend_prep_ok;
+> +static u32 suspend_shlw_ctr_temp, suspend_deep_ctr_temp;
+> +static u64 suspend_shlw_res_temp, suspend_deep_res_temp;
+> +
+> +struct telemetry_susp_stats {
+> +	u32 suspend_shlw_swake_ctr;
+> +	u32 suspend_deep_swake_ctr;
+> +	u64 suspend_shlw_swake_res;
+> +	u64 suspend_deep_swake_res;
+> +	u32 suspend_shlw_ctr;
+> +	u32 suspend_deep_ctr;
+> +	u64 suspend_shlw_res;
+> +	u64 suspend_deep_res;
+> +};
 
-iEYEABECAAYFAlaCr1cACgkQi/DJPQPkQ1LyFACcDSdrdGM0ll7iqREaIdkzyfgr
-v/EAn1rKx7Ys8xsgTdvmyQrUIjn23/I2
-=Mtri
------END PGP SIGNATURE-----
+The suspend_ prefix to every variable seems redundant with the fact that they
+are part of a telemetry_suspend_stats structure. Eliminating this would help
+legibility considerably below.
 
---nextPart3662813.7YN0OWsI29--
+...
+
+> +
+> +static int telem_soc_states_show(struct seq_file *s, void *unused)
+> +{
+> +	u32 d3_sts[TELEM_IOSS_DX_D0IX_EVTS], d0ix_sts[TELEM_IOSS_DX_D0IX_EVTS];
+> +	u32 pg_sts[TELEM_IOSS_PG_EVTS], pss_idle[TELEM_PSS_IDLE_EVTS];
+> +	struct telemetry_evtlog evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
+> +	u32 s0ix_total_ctr = 0, s0ix_shlw_ctr = 0, s0ix_deep_ctr = 0;
+> +	u64 s0ix_total_res = 0, s0ix_shlw_res = 0, s0ix_deep_res = 0;
+> +	struct pci_dev *dev = NULL;
+> +	int index, idx, ret;
+> +	u32 d3_state;
+> +	u16 pmcsr;
+> +
+> +	ret = telemetry_read_eventlog(TELEM_IOSS, evtlog,
+> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (index = 0; index < ret; index++) {
+> +		if (evtlog[index].telem_evtid == debugfs_conf->ioss_d3_id) {
+> +			for (idx = 0; idx < debugfs_conf->ioss_d0ix_evts;
+> +			     idx++) {
+
+The above can be on one line with a shorter name for debugfs_conf, even if just
+a local alias.
+
+> +				d3_sts[idx] =
+> +				(evtlog[index].telem_evtlog >>
+> +				debugfs_conf->ioss_d0ix_data[idx].bit_pos) &
+> +				TELEM_MASK_BIT;
+
+By the time you have indented 4, and really should be 5, the preference is to
+determine if this can be refactored into a shallower nesting structure.
+
+Perhaps a macro of some sort as these all seem fairly repetitive.
+
+...
+
+This needs more time for review than I can give today, I'll have to get back to
+this one. Hopefully tomorrow.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
