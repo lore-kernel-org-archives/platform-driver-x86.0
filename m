@@ -1,53 +1,61 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is
- valid
-Date: Wed, 30 Dec 2015 12:27:07 +0100
-Message-ID: <20151230112707.GA3352@eudyptula.hq.kempniu.pl>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <201512281508.20683@pali>
- <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
- <201512291705.43939@pali>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 3/5] thinkpad_acpi: Use
+ acpi_video_handles_brightness_key_presses()
+Date: Wed, 30 Dec 2015 15:28:17 -0200
+Message-ID: <1451496497.3131362.479322962.48D393C4@webmail.messagingengine.com>
+References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+ <1450807792-4980-4-git-send-email-hdegoede@redhat.com>
+ <20151227230812.GA8731@khazad-dum.debian.net>
+ <56827C3F.8090509@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f43.google.com ([209.85.215.43]:35594 "EHLO
-	mail-lf0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754019AbbL3L0p (ORCPT
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55992 "EHLO
+	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753659AbbL3R2U (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Dec 2015 06:26:45 -0500
-Received: by mail-lf0-f43.google.com with SMTP id c192so48566944lfe.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Dec 2015 03:26:45 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <201512291705.43939@pali>
+	Wed, 30 Dec 2015 12:28:20 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id 7FF9D20384
+	for <platform-driver-x86@vger.kernel.org>; Wed, 30 Dec 2015 12:28:17 -0500 (EST)
+In-Reply-To: <56827C3F.8090509@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, =?utf-8?Q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net
 
-> > If you feel like I'm nit-picking and none of the above matters,
-> > please feel free to disregard my input and just follow your gut.
->=20
-> It's ok. We just understand it quite differently. And in this case wh=
-at=20
-> about changing commit message to something like this?
->=20
-> =3D=3D=3D
-> dell-wmi: Check if Dell WMI descriptor structure is valid
->=20
-> After examining existing DSDT ACPI tables of more laptops and looking=
-=20
-> into Dell WMI document mentioned in ML dicussion archived at=20
-> http://www.spinics.net/lists/platform-driver-x86/msg07220.html we wil=
-l=20
-> parse and check WMI descriptor if contains expected data. It is becau=
-se=20
-> WMI descriptor contains interface version number and it is needed to=20
-> know in next commit.
-> =3D=3D=3D
+On Tue, Dec 29, 2015, at 10:27, Hans de Goede wrote:
+> So it only disables hotkey press reporting, not to the thinkpad_acpi
+> backlight handling code, that still is using
+> acpi_video_get_backlight_type()  :
 
-I like it way more than the previous one.
+...
 
---=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+> This should not matter though, as said this new function is only used to
+> suppress
+> the reporting of key-presses. I realize that doing so will also cause
+> tpacpi_driver_event() to get called on brightness hotkey presses, but
+> that has:
+> 
+>          if (ibm_backlight_device) {
+>                  switch (hkey_event) {
+>                  case TP_HKEY_EV_BRGHT_UP:
+>                  case TP_HKEY_EV_BRGHT_DOWN:
+>                          tpacpi_brightness_notify_change();
+>                  }
+>          }
+> 
+> And the creating of ibm_backlight_device is still protected by
+> 
+> if (acpi_video_get_backlight_type() != acpi_backlight_vendor) return 1;
+
+Indeed.  I have no objections to the patch, then.
+
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
