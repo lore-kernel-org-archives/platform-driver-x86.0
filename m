@@ -1,59 +1,53 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 5/5] platform:x86: Makefile/Kconfig/MAINTAINERS
- changes for Intel Telemetry
-Date: Tue, 29 Dec 2015 23:32:10 -0800
-Message-ID: <20151230073210.GG29978@malice.jf.intel.com>
-References: <1450867481-11404-1-git-send-email-souvik.k.chakravarty@intel.com>
- <20151230005910.GD29978@malice.jf.intel.com>
- <3324542.b0Ltp5HvhD@vostro.rjw.lan>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is
+ valid
+Date: Wed, 30 Dec 2015 12:27:07 +0100
+Message-ID: <20151230112707.GA3352@eudyptula.hq.kempniu.pl>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
+ <201512281508.20683@pali>
+ <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
+ <201512291705.43939@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:49758 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751238AbbL3HcN (ORCPT
+Received: from mail-lf0-f43.google.com ([209.85.215.43]:35594 "EHLO
+	mail-lf0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754019AbbL3L0p (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 30 Dec 2015 02:32:13 -0500
+	Wed, 30 Dec 2015 06:26:45 -0500
+Received: by mail-lf0-f43.google.com with SMTP id c192so48566944lfe.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Dec 2015 03:26:45 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <3324542.b0Ltp5HvhD@vostro.rjw.lan>
+In-Reply-To: <201512291705.43939@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, platform-driver-x86@vger.kernel.org, srinidhi.kasagar@intel.com, qipeng.zha@intel.com, rajeev.d.muralidhar@intel.com, sukumar.ghorai@intel.com, ong.hock.yu@intel.com, aubrey.li@intel.com
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Dec 30, 2015 at 02:59:09AM +0100, Rafael Wysocki wrote:
-> On Tuesday, December 29, 2015 04:59:10 PM Darren Hart wrote:
-> > On Wed, Dec 23, 2015 at 04:14:41PM +0530, Souvik Kumar Chakravarty wrote:
-> > > Makefile, Kconfig & MAINTAINERS changes for compiling Telemetry.
-> > > It depends on PUNIT and PMC IPC drivers.
-> > 
-> > ...
-> > 
-> > > +config INTEL_TELEMETRY
-> > > +	tristate "Intel SoC Telemetry Driver"
-> > > +	default n
-> > > +	depends on INTEL_PMC_IPC && INTEL_PUNIT_IPC && X86_64
-> > > +	---help---
-> > > +	  This driver provides interfaces to configure and use
-> > > +	  telemetry for INTEL SoC from APL onwards. It is also
-> > > +	  used to get various SoC events and parameters
-> > > +	  directly via debugfs files. Various tools may use
-> > 
-> > If tools are going to be relying on it, debugfs doesn't seem like the right
-> > place for it to me. Would /sys/power be more apt?
-> > 
-> > Rafael?
-> 
-> Using debugfs for things like these is not unheard of.
-> 
-> It all depends on whether or not the tools in question are intended to work
-> on systems where debugfs is not enabled.
+> > If you feel like I'm nit-picking and none of the above matters,
+> > please feel free to disregard my input and just follow your gut.
+>=20
+> It's ok. We just understand it quite differently. And in this case wh=
+at=20
+> about changing commit message to something like this?
+>=20
+> =3D=3D=3D
+> dell-wmi: Check if Dell WMI descriptor structure is valid
+>=20
+> After examining existing DSDT ACPI tables of more laptops and looking=
+=20
+> into Dell WMI document mentioned in ML dicussion archived at=20
+> http://www.spinics.net/lists/platform-driver-x86/msg07220.html we wil=
+l=20
+> parse and check WMI descriptor if contains expected data. It is becau=
+se=20
+> WMI descriptor contains interface version number and it is needed to=20
+> know in next commit.
+> =3D=3D=3D
 
-It was my understanding that debugfs was intended to make it clear that it may
-change at any time and shouldn't be relied upon. Strictly for debug.
+I like it way more than the previous one.
 
-But, I'll defer to Rafael on this point.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
