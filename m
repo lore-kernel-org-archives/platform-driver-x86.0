@@ -1,1222 +1,423 @@
 From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Subject: RE: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
- interfaces
-Date: Wed, 30 Dec 2015 03:30:28 +0000
-Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42B74ADAF@BGSMSX105.gar.corp.intel.com>
-References: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH v4 3/5] platform:x86: Add Intel telemetry platform driver
+Date: Wed, 30 Dec 2015 04:16:11 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42B74AE72@BGSMSX105.gar.corp.intel.com>
+References: <1450867412-11329-1-git-send-email-souvik.k.chakravarty@intel.com>
+ <20151230005731.GC29978@malice.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:58586 "EHLO mga04.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:38920 "EHLO mga03.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752664AbbL3Dae convert rfc822-to-8bit (ORCPT
+	id S1754017AbbL3EQQ convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 29 Dec 2015 22:30:34 -0500
-In-Reply-To: <1450867456-11366-1-git-send-email-souvik.k.chakravarty@intel.com>
+	Tue, 29 Dec 2015 23:16:16 -0500
+In-Reply-To: <20151230005731.GC29978@malice.jf.intel.com>
 Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Zha, Qipeng" <qipeng.zha@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-+ rafael
+
 
 > -----Original Message-----
 > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
-> x86-owner@vger.kernel.org] On Behalf Of Souvik Kumar Chakravarty
-> Sent: Wednesday, December 23, 2015 4:14 PM
-> To: platform-driver-x86@vger.kernel.org
-> Cc: dvhart@infradead.org; Kasagar, Srinidhi <srinidhi.kasagar@intel.com>;
-> Zha, Qipeng <qipeng.zha@intel.com>; Muralidhar, Rajeev D
-> <rajeev.d.muralidhar@intel.com>; Ghorai, Sukumar
+> x86-owner@vger.kernel.org] On Behalf Of Darren Hart
+> Sent: Wednesday, December 30, 2015 6:28 AM
+> To: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>
+> Cc: platform-driver-x86@vger.kernel.org; Kasagar, Srinidhi
+> <srinidhi.kasagar@intel.com>; Zha, Qipeng <qipeng.zha@intel.com>;
+> Muralidhar, Rajeev D <rajeev.d.muralidhar@intel.com>; Ghorai, Sukumar
 > <sukumar.ghorai@intel.com>; Yu, Ong Hock <ong.hock.yu@intel.com>; Li,
-> Aubrey <aubrey.li@intel.com>; Chakravarty, Souvik K
-> <souvik.k.chakravarty@intel.com>
-> Subject: [PATCH v2 4/5] platform:x86: Add Intel Telemetry Debugfs
-> interfaces
+> Aubrey <aubrey.li@intel.com>
+> Subject: Re: [PATCH v4 3/5] platform:x86: Add Intel telemetry platform driver
 > 
-> This implements debugfs interfaces for reading the telemetry samples from
-> SSRAM and configuring firmware trace verbosity.
-> Interface created under /sys/kernel/debug/telemetry
-> soc_states: SoC Device and Low Power States
-> pss_info: Info from the Primary SubSystem
-> ioss_info: Info from IO SubSusytem
-> pss_trace_verbosity: Read/Modify PSS F/W trace verbosity
-> ioss_trace_verbosity: Read/Modify IOSS F/W trace verbosity.
+> On Wed, Dec 23, 2015 at 04:13:32PM +0530, Souvik Kumar Chakravarty wrote:
 > 
-> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+> Hi Souvik,
 > 
-> ---
-> Changes in v2:
-> * Fix issues in code style, indentation & comments
-> * Changed Banner to include "All Rights Reserved"
-> * Group all ApolloLake specific #defines under banner
-> * Change to MODULE_LICENSE to GPL
-> ---
->  drivers/platform/x86/intel_telemetry_debugfs.c | 1094
-> ++++++++++++++++++++++++
->  1 file changed, 1094 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_telemetry_debugfs.c
+> In general this series is looking pretty good. Clean and consistent for the
+> most part. This one and the debugfs one in particular do have some issues I'd
+> like to see addressed.
 > 
-> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c
-> b/drivers/platform/x86/intel_telemetry_debugfs.c
-> new file mode 100644
-> index 0000000..5b79899
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> @@ -0,0 +1,1094 @@
-> +/*
-> + * Intel SOC Telemetry debugfs Driver: Currently supports APL
-> + * Copyright (c) 2015, Intel Corporation.
-> + * All Rights Reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> +it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but
-> +WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of
-> MERCHANTABILITY
-> +or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
-> +License for
-> + * more details.
-> + *
-> + * This file provides the debugfs interfaces for telemetry.
-> + * /sys/kernel/debug/telemetry/pss_info: Shows Primary Control Sub-Sys
-> +Counters
-> + * /sys/kernel/debug/telemetry/ioss_info: Shows IO Sub-System Counters
-> + * /sys/kernel/debug/telemetry/soc_states: Shows SoC State
-> + * /sys/kernel/debug/telemetry/pss_trace_verbosity: Read and Change
-> Tracing
-> + *				Verbosity via firmware
-> + * /sys/kernel/debug/telemetry/ioss_race_verbosity: Write and Change
-> Tracing
-> + *				Verbosity via firmware
-> + */
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/device.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/io.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/pci.h>
-> +#include <linux/suspend.h>
-> +
-> +#include <asm/cpu_device_id.h>
-> +#include <asm/intel_pmc_ipc.h>
-> +#include <asm/intel_punit_ipc.h>
-> +#include <asm/intel_telemetry.h>
-> +
-> +#define DRIVER_NAME	"telemetry_soc_debugfs"
-> +#define DRIVER_VERSION	"1.0.0"
-> +
-> +/* ApolloLake SoC Event-IDs */
-> +#define TELEM_APL_PSS_PSTATES_ID	0x2802
-> +#define TELEM_APL_PSS_IDLE_ID		0x2806
-> +#define TELEM_APL_PCS_IDLE_BLOCKED_ID	0x2C00
-> +#define TELEM_APL_PCS_S0IX_BLOCKED_ID	0x2C01
-> +#define TELEM_APL_PSS_WAKEUP_ID		0x2C02
-> +#define TELEM_APL_PSS_LTR_BLOCKING_ID	0x2C03
-> +
-> +#define TELEM_APL_S0IX_TOTAL_OCC_ID	0x4000
-> +#define TELEM_APL_S0IX_SHLW_OCC_ID	0x4001
-> +#define TELEM_APL_S0IX_DEEP_OCC_ID	0x4002
-> +#define TELEM_APL_S0IX_TOTAL_RES_ID	0x4800
-> +#define TELEM_APL_S0IX_SHLW_RES_ID	0x4801
-> +#define TELEM_APL_S0IX_DEEP_RES_ID	0x4802
-> +#define TELEM_APL_D0IX_ID		0x581A
-> +#define TELEM_APL_D3_ID			0x5819
-> +#define TELEM_APL_PG_ID			0x5818
-> +
-> +#define TELEM_INFO_SRAMEVTS_MASK	0xFF00
-> +#define TELEM_INFO_SRAMEVTS_SHIFT	0x8
-> +#define TELEM_SSRAM_READ_TIMEOUT	10
-> +
-> +#define TELEM_MASK_BIT			1
-> +#define TELEM_MASK_BYTE			0xFF
-> +#define BYTES_PER_LONG			8
-> +#define TELEM_APL_MASK_PCS_STATE	0xF
-> +
-> +/* Max events in bitmap to check for */
-> +#define TELEM_PSS_IDLE_EVTS		25
-> +#define TELEM_PSS_IDLE_BLOCKED_EVTS	20
-> +#define TELEM_PSS_S0IX_BLOCKED_EVTS	20
-> +#define TELEM_PSS_S0IX_WAKEUP_EVTS	20
-> +#define TELEM_PSS_LTR_BLOCKING_EVTS	20
-> +#define TELEM_IOSS_DX_D0IX_EVTS		25
-> +#define TELEM_IOSS_PG_EVTS		30
-> +
-> +#define TELEM_EVT_LEN(x) (sizeof(x)/sizeof((x)[0]))
-> +
-> +#define TELEM_DEBUGFS_CPU(model, data) \
-> +	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_MWAIT, (unsigned
-> long)&data}
-> +
-> +static u8 suspend_prep_ok;
-> +static u32 suspend_shlw_ctr_temp, suspend_deep_ctr_temp; static u64
-> +suspend_shlw_res_temp, suspend_deep_res_temp;
-> +
-> +struct telemetry_susp_stats {
-> +	u32 suspend_shlw_swake_ctr;
-> +	u32 suspend_deep_swake_ctr;
-> +	u64 suspend_shlw_swake_res;
-> +	u64 suspend_deep_swake_res;
-> +	u32 suspend_shlw_ctr;
-> +	u32 suspend_deep_ctr;
-> +	u64 suspend_shlw_res;
-> +	u64 suspend_deep_res;
-> +};
-> +
-> +/* Bitmap definitions for default counters in APL */ struct
-> +telem_pss_idle_stateinfo {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_pss_idle_stateinfo telem_apl_pss_idle_data[] = {
-> +	{"IA_CORE0_C1E",		0},
-> +	{"IA_CORE1_C1E",		1},
-> +	{"IA_CORE2_C1E",		2},
-> +	{"IA_CORE3_C1E",		3},
-> +	{"IA_CORE0_C6",			16},
-> +	{"IA_CORE1_C6",			17},
-> +	{"IA_CORE2_C6",			18},
-> +	{"IA_CORE3_C6",			19},
-> +	{"IA_MODULE0_C7",		32},
-> +	{"IA_MODULE1_C7",		33},
-> +	{"GT_RC6",			40},
-> +	{"IUNIT_PROCESSING_IDLE",	41},
-> +	{"FAR_MEM_IDLE",		43},
-> +	{"DISPLAY_IDLE",		44},
-> +	{"IUNIT_INPUT_SYSTEM_IDLE",	45},
-> +	{"PCS_STATUS",			60},
-> +};
-> +
-> +struct telem_pcs_blkd_info {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_pcs_blkd_info telem_apl_pcs_idle_blkd_data[] = {
-> +	{"COMPUTE",			0},
-> +	{"MISC",			8},
-> +	{"MODULE_ACTIONS_PENDING",	16},
-> +	{"LTR",				24},
-> +	{"DISPLAY_WAKE",		32},
-> +	{"ISP_WAKE",			40},
-> +	{"PSF0_ACTIVE",			48},
-> +};
-> +
-> +static struct telem_pcs_blkd_info telem_apl_pcs_s0ix_blkd_data[] = {
-> +	{"LTR",				0},
-> +	{"IRTL",			8},
-> +	{"WAKE_DEADLINE_PENDING",	16},
-> +	{"DISPLAY",			24},
-> +	{"ISP",				32},
-> +	{"CORE",			40},
-> +	{"PMC",				48},
-> +	{"MISC",			56},
-> +};
-> +
-> +struct telem_pss_ltr_info {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_pss_ltr_info telem_apl_pss_ltr_data[] = {
-> +	{"CORE_ACTIVE",		0},
-> +	{"MEM_UP",		8},
-> +	{"DFX",			16},
-> +	{"DFX_FORCE_LTR",	24},
-> +	{"DISPLAY",		32},
-> +	{"ISP",			40},
-> +	{"SOUTH",		48},
-> +};
-> +
-> +struct telem_pss_wakeup_info {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_pss_wakeup_info telem_apl_pss_wakeup[] = {
-> +	{"IP_IDLE",			0},
-> +	{"DISPLAY_WAKE",		8},
-> +	{"VOLTAGE_REG_INT",		16},
-> +	{"DROWSY_TIMER (HOTPLUG)",	24},
-> +	{"CORE_WAKE",			32},
-> +	{"MISC_S0IX",			40},
-> +	{"MISC_ABORT",			56},
-> +};
-> +
-> +struct telem_ioss_d0ix_stateinfo {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_ioss_d0ix_stateinfo telem_apl_ioss_d0ix_data[] = {
-> +	{"CSE",		0},
-> +	{"SCC2",	1},
-> +	{"GMM",		2},
-> +	{"XDCI",	3},
-> +	{"XHCI",	4},
-> +	{"ISH",		5},
-> +	{"AVS",		6},
-> +	{"PCIE0P1",	7},
-> +	{"PECI0P0",	8},
-> +	{"LPSS",	9},
-> +	{"SCC",		10},
-> +	{"PWM",		11},
-> +	{"PCIE1_P3",    12},
-> +	{"PCIE1_P2",    13},
-> +	{"PCIE1_P1",    14},
-> +	{"PCIE1_P0",    15},
-> +	{"CNV",		16},
-> +	{"SATA",	17},
-> +	{"PRTC",	18},
-> +};
-> +
-> +struct telem_ioss_pg_info {
-> +	const char *name;
-> +	u32 bit_pos;
-> +};
-> +
-> +static struct telem_ioss_pg_info telem_apl_ioss_pg_data[] = {
-> +	{"LPSS",	0},
-> +	{"SCC",		1},
-> +	{"P2SB",	2},
-> +	{"SCC2",	3},
-> +	{"GMM",		4},
-> +	{"PCIE0",	5},
-> +	{"XDCI",	6},
-> +	{"xHCI",	7},
-> +	{"CSE",		8},
-> +	{"SPI",		9},
-> +	{"AVSPGD4",	10},
-> +	{"AVSPGD3",	11},
-> +	{"AVSPGD2",	12},
-> +	{"AVSPGD1",	13},
-> +	{"ISH",		14},
-> +	{"EXI",		15},
-> +	{"NPKVRC",	16},
-> +	{"NPKVNN",	17},
-> +	{"CUNIT",	18},
-> +	{"FUSE_CTRL",	19},
-> +	{"PCIE1",	20},
-> +	{"CNV",		21},
-> +	{"LPC",		22},
-> +	{"SATA",	23},
-> +	{"SMB",		24},
-> +	{"PRTC",	25},
-> +};
-> +
-> +
-> +struct telemetry_debugfs_conf {
-> +	struct telemetry_susp_stats suspend_stats;
-> +	struct dentry *telemetry_dbg_dir;
-> +
-> +	/* Bitmap Data */
-> +	struct telem_ioss_d0ix_stateinfo *ioss_d0ix_data;
-> +	struct telem_pss_idle_stateinfo *pss_idle_data;
-> +	struct telem_pcs_blkd_info *pcs_idle_blkd_data;
-> +	struct telem_pcs_blkd_info *pcs_s0ix_blkd_data;
-> +	struct telem_pss_wakeup_info *pss_wakeup;
-> +	struct telem_pss_ltr_info *pss_ltr_data;
-> +	struct telem_ioss_pg_info *ioss_pg_data;
-> +	u8 pcs_idle_blkd_evts;
-> +	u8 pcs_s0ix_blkd_evts;
-> +	u8 pss_wakeup_evts;
-> +	u8 pss_idle_evts;
-> +	u8 pss_ltr_evts;
-> +	u8 ioss_d0ix_evts;
-> +	u8 ioss_pg_evts;
-> +
-> +	/* IDs */
-> +	u16  pss_ltr_blocking_id;
-> +	u16  pcs_idle_blkd_id;
-> +	u16  pcs_s0ix_blkd_id;
-> +	u16  s0ix_total_occ_id;
-> +	u16  s0ix_shlw_occ_id;
-> +	u16  s0ix_deep_occ_id;
-> +	u16  s0ix_total_res_id;
-> +	u16  s0ix_shlw_res_id;
-> +	u16  s0ix_deep_res_id;
-> +	u16  pss_wakeup_id;
-> +	u16  ioss_d0ix_id;
-> +	u16  pstates_id;
-> +	u16  pss_idle_id;
-> +	u16  ioss_d3_id;
-> +	u16  ioss_pg_id;
-> +};
-> +
-> +static struct telemetry_debugfs_conf *debugfs_conf;
-> +
-> +static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
-> +	.pss_idle_data = telem_apl_pss_idle_data,
-> +	.pcs_idle_blkd_data = telem_apl_pcs_idle_blkd_data,
-> +	.pcs_s0ix_blkd_data = telem_apl_pcs_s0ix_blkd_data,
-> +	.pss_ltr_data = telem_apl_pss_ltr_data,
-> +	.pss_wakeup = telem_apl_pss_wakeup,
-> +	.ioss_d0ix_data = telem_apl_ioss_d0ix_data,
-> +	.ioss_pg_data = telem_apl_ioss_pg_data,
-> +
-> +	.pss_idle_evts = TELEM_EVT_LEN(telem_apl_pss_idle_data),
-> +	.pcs_idle_blkd_evts =
-> TELEM_EVT_LEN(telem_apl_pcs_idle_blkd_data),
-> +	.pcs_s0ix_blkd_evts =
-> TELEM_EVT_LEN(telem_apl_pcs_s0ix_blkd_data),
-> +	.pss_ltr_evts = TELEM_EVT_LEN(telem_apl_pss_ltr_data),
-> +	.pss_wakeup_evts = TELEM_EVT_LEN(telem_apl_pss_wakeup),
-> +	.ioss_d0ix_evts = TELEM_EVT_LEN(telem_apl_ioss_d0ix_data),
-> +	.ioss_pg_evts = TELEM_EVT_LEN(telem_apl_ioss_pg_data),
-> +
-> +	.pstates_id = TELEM_APL_PSS_PSTATES_ID,
-> +	.pss_idle_id = TELEM_APL_PSS_IDLE_ID,
-> +	.pcs_idle_blkd_id = TELEM_APL_PCS_IDLE_BLOCKED_ID,
-> +	.pcs_s0ix_blkd_id = TELEM_APL_PCS_S0IX_BLOCKED_ID,
-> +	.pss_wakeup_id = TELEM_APL_PSS_WAKEUP_ID,
-> +	.pss_ltr_blocking_id = TELEM_APL_PSS_LTR_BLOCKING_ID,
-> +	.s0ix_total_occ_id = TELEM_APL_S0IX_TOTAL_OCC_ID,
-> +	.s0ix_shlw_occ_id = TELEM_APL_S0IX_SHLW_OCC_ID,
-> +	.s0ix_deep_occ_id = TELEM_APL_S0IX_DEEP_OCC_ID,
-> +	.s0ix_total_res_id = TELEM_APL_S0IX_TOTAL_RES_ID,
-> +	.s0ix_shlw_res_id = TELEM_APL_S0IX_SHLW_RES_ID,
-> +	.s0ix_deep_res_id = TELEM_APL_S0IX_DEEP_RES_ID,
-> +	.ioss_d0ix_id = TELEM_APL_D0IX_ID,
-> +	.ioss_d3_id = TELEM_APL_D3_ID,
-> +	.ioss_pg_id = TELEM_APL_PG_ID,
-> +};
-> +
-> +static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
-> +	TELEM_DEBUGFS_CPU(0x5c, telem_apl_debugfs_conf),
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(x86cpu, telemetry_debugfs_cpu_ids);
-> +
-> +static int telemetry_debugfs_check_evts(void)
-> +{
-> +	if ((debugfs_conf->pss_idle_evts > TELEM_PSS_IDLE_EVTS) ||
-> +	    (debugfs_conf->pcs_idle_blkd_evts >
-> TELEM_PSS_IDLE_BLOCKED_EVTS) ||
-> +	    (debugfs_conf->pcs_s0ix_blkd_evts >
-> TELEM_PSS_S0IX_BLOCKED_EVTS) ||
-> +	    (debugfs_conf->pss_ltr_evts > TELEM_PSS_LTR_BLOCKING_EVTS)
-> ||
-> +	    (debugfs_conf->pss_wakeup_evts >
-> TELEM_PSS_S0IX_WAKEUP_EVTS) ||
-> +	    (debugfs_conf->ioss_d0ix_evts > TELEM_IOSS_DX_D0IX_EVTS) ||
-> +	    (debugfs_conf->ioss_pg_evts > TELEM_IOSS_PG_EVTS))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int telem_pss_states_show(struct seq_file *s, void *unused) {
-> +	struct telemetry_evtlog
-> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	const char *name[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	u32 pcs_idle_blkd[TELEM_PSS_IDLE_BLOCKED_EVTS],
-> +	    pcs_s0ix_blkd[TELEM_PSS_S0IX_BLOCKED_EVTS],
-> +	    pss_s0ix_wakeup[TELEM_PSS_S0IX_WAKEUP_EVTS],
-> +	    pss_ltr_blkd[TELEM_PSS_LTR_BLOCKING_EVTS],
-> +	    pss_idle[TELEM_PSS_IDLE_EVTS];
-> +	int index, idx, ret, err = 0;
-> +	u64 pstates = 0;
-> +
-> +	ret = telemetry_read_eventlog(TELEM_PSS, evtlog,
-> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	err = telemetry_get_evtname(TELEM_PSS, name,
-> +				    TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	seq_puts(s, "\n----------------------------------------------------\n");
-> +	seq_puts(s, "\tPSS TELEM EVENTLOG (Residency = field/19.2 us\n");
-> +	seq_puts(s, "----------------------------------------------------\n");
-> +	for (index = 0; index < ret; index++) {
-> +		seq_printf(s, "%-32s %llu\n",
-> +			   name[index], evtlog[index].telem_evtlog);
-> +
-> +		if (evtlog[index].telem_evtid == debugfs_conf->pss_idle_id)
-> {
-> +			for (idx = 0; idx < debugfs_conf->pss_idle_evts - 1;
-> +			     idx++) {
-> +				pss_idle[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->pss_idle_data[idx].bit_pos)
-> &
-> +				TELEM_MASK_BIT;
-> +			}
-> +
-> +			pss_idle[idx] =
-> +			(evtlog[index].telem_evtlog >>
-> +			debugfs_conf->pss_idle_data[idx].bit_pos) &
-> +			TELEM_APL_MASK_PCS_STATE;
-> +
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->pcs_idle_blkd_id) {
-> +			for (idx = 0; idx < debugfs_conf->pcs_idle_blkd_evts;
-> +			     idx++) {
-> +				pcs_idle_blkd[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf-
-> >pcs_idle_blkd_data[idx].bit_pos) &
-> +				TELEM_MASK_BYTE;
-> +			}
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->pcs_s0ix_blkd_id) {
-> +			for (idx = 0; idx < debugfs_conf->pcs_s0ix_blkd_evts;
-> +			     idx++) {
-> +				pcs_s0ix_blkd[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf-
-> >pcs_s0ix_blkd_data[idx].bit_pos) &
-> +				TELEM_MASK_BYTE;
-> +			}
-> +			continue;
-> +		}
-> +
-> +
-> +		if (evtlog[index].telem_evtid == debugfs_conf-
-> >pss_wakeup_id) {
-> +			for (idx = 0; idx < debugfs_conf->pss_wakeup_evts;
-> +			     idx++) {
-> +				pss_s0ix_wakeup[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->pss_wakeup[idx].bit_pos) &
-> +				TELEM_MASK_BYTE;
-> +			}
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->pss_ltr_blocking_id) {
-> +			for (idx = 0; idx < debugfs_conf->pss_ltr_evts; idx++)
-> {
-> +				pss_ltr_blkd[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->pss_ltr_data[idx].bit_pos) &
-> +				TELEM_MASK_BYTE;
-> +			}
-> +			continue;
-> +		}
-> +
-> +
-> +		if (evtlog[index].telem_evtid == debugfs_conf->pstates_id)
-> +			pstates = evtlog[index].telem_evtlog;
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "PStates\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Domain\t\t\t\tFreq(Mhz)\n");
-> +	seq_printf(s, " IA\t\t\t\t %llu\n GT\t\t\t\t %llu\n",
-> +		   (pstates & TELEM_MASK_BYTE)*100,
-> +		   ((pstates >> 8) & TELEM_MASK_BYTE)*50/3);
-> +
-> +	seq_printf(s, " IUNIT\t\t\t\t %llu\n SA\t\t\t\t %llu\n",
-> +		   ((pstates >> 16) & TELEM_MASK_BYTE)*25,
-> +		   ((pstates >> 24) & TELEM_MASK_BYTE)*50/3);
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "PSS IDLE Status\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Device\t\t\t\t\tIDLE\n");
-> +	for (index = 0; index < debugfs_conf->pss_idle_evts; index++) {
-> +		seq_printf(s, "%-32s\t%u\n",
-> +			   debugfs_conf->pss_idle_data[index].name,
-> +			   pss_idle[index]);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "PSS Idle blkd Status (~1ms saturating bucket)\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
-> +	for (index = 0; index < debugfs_conf->pcs_idle_blkd_evts; index++) {
-> +		seq_printf(s, "%-32s\t%u\n",
-> +			   debugfs_conf->pcs_idle_blkd_data[index].name,
-> +			   pcs_idle_blkd[index]);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "PSS S0ix blkd Status (~1ms saturating bucket)\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
-> +	for (index = 0; index < debugfs_conf->pcs_s0ix_blkd_evts; index++)
-> {
-> +		seq_printf(s, "%-32s\t%u\n",
-> +			   debugfs_conf->pcs_s0ix_blkd_data[index].name,
-> +			   pcs_s0ix_blkd[index]);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "LTR Blocking Status (~1ms saturating bucket)\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Blocker\t\t\t\t\tCount\n");
-> +	for (index = 0; index < debugfs_conf->pss_ltr_evts; index++) {
-> +		seq_printf(s, "%-32s\t%u\n",
-> +			   debugfs_conf->pss_ltr_data[index].name,
-> +			   pss_s0ix_wakeup[index]);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "Wakes Status (~1ms saturating bucket)\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Wakes\t\t\t\t\tCount\n");
-> +	for (index = 0; index < debugfs_conf->pss_wakeup_evts; index++) {
-> +		seq_printf(s, "%-32s\t%u\n",
-> +			   debugfs_conf->pss_wakeup[index].name,
-> +			   pss_ltr_blkd[index]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int telem_pss_state_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, telem_pss_states_show, inode->i_private);
-> }
-> +
-> +static const struct file_operations telem_pss_ops = {
-> +	.open		= telem_pss_state_open,
-> +	.read		= seq_read,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +
-> +static int telem_ioss_states_show(struct seq_file *s, void *unused) {
-> +	struct telemetry_evtlog
-> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	const char *name[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	int index, ret, err;
-> +
-> +	ret = telemetry_read_eventlog(TELEM_IOSS, evtlog,
-> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	err = telemetry_get_evtname(TELEM_IOSS, name,
-> +				    TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "\tI0SS TELEMETRY EVENTLOG\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	for (index = 0; index < ret; index++) {
-> +		seq_printf(s, "%-32s 0x%llx\n",
-> +			   name[index], evtlog[index].telem_evtlog);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int telem_ioss_state_open(struct inode *inode, struct file
-> +*file) {
-> +	return single_open(file, telem_ioss_states_show, inode->i_private);
-> }
-> +
-> +static const struct file_operations telem_ioss_ops = {
-> +	.open		= telem_ioss_state_open,
-> +	.read		= seq_read,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +static int telem_soc_states_show(struct seq_file *s, void *unused) {
-> +	u32 d3_sts[TELEM_IOSS_DX_D0IX_EVTS],
-> d0ix_sts[TELEM_IOSS_DX_D0IX_EVTS];
-> +	u32 pg_sts[TELEM_IOSS_PG_EVTS],
-> pss_idle[TELEM_PSS_IDLE_EVTS];
-> +	struct telemetry_evtlog
-> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	u32 s0ix_total_ctr = 0, s0ix_shlw_ctr = 0, s0ix_deep_ctr = 0;
-> +	u64 s0ix_total_res = 0, s0ix_shlw_res = 0, s0ix_deep_res = 0;
-> +	struct pci_dev *dev = NULL;
-> +	int index, idx, ret;
-> +	u32 d3_state;
-> +	u16 pmcsr;
-> +
-> +	ret = telemetry_read_eventlog(TELEM_IOSS, evtlog,
-> +				      TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (index = 0; index < ret; index++) {
-> +		if (evtlog[index].telem_evtid == debugfs_conf->ioss_d3_id)
-> {
-> +			for (idx = 0; idx < debugfs_conf->ioss_d0ix_evts;
-> +			     idx++) {
-> +				d3_sts[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->ioss_d0ix_data[idx].bit_pos)
-> &
-> +				TELEM_MASK_BIT;
-> +			}
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid == debugfs_conf->ioss_pg_id)
-> {
-> +			for (idx = 0; idx < debugfs_conf->ioss_pg_evts;
-> idx++) {
-> +				pg_sts[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->ioss_pg_data[idx].bit_pos) &
-> +				TELEM_MASK_BIT;
-> +			}
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid == debugfs_conf-
-> >ioss_d0ix_id) {
-> +			for (idx = 0; idx < debugfs_conf->ioss_d0ix_evts;
-> +			     idx++) {
-> +				d0ix_sts[idx] =
-> +				(evtlog[index].telem_evtlog >>
-> +				debugfs_conf->ioss_d0ix_data[idx].bit_pos)
-> &
-> +				TELEM_MASK_BIT;
-> +			}
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_total_occ_id) {
-> +			s0ix_total_ctr = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_occ_id) {
-> +			s0ix_shlw_ctr = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_occ_id) {
-> +			s0ix_deep_ctr = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_total_res_id) {
-> +			s0ix_total_res = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_res_id) {
-> +			s0ix_shlw_res = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_res_id) {
-> +			s0ix_deep_res = evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +	}
-> +
-> +	seq_puts(s, "\n---------------------------------------------------\n");
-> +	seq_puts(s, "S0IX Type\t\t\t Occurrence\t\t Residency(us)\n");
-> +	seq_puts(s, "---------------------------------------------------\n");
-> +
-> +	seq_printf(s, "S0IX Shallow\t\t\t %10u\t %10llu\n",
-> +		   s0ix_shlw_ctr -
-> +		   debugfs_conf->suspend_stats.suspend_shlw_ctr -
-> +		   debugfs_conf->suspend_stats.suspend_shlw_swake_ctr,
-> +		   (u64)((s0ix_shlw_res -
-> +		   debugfs_conf->suspend_stats.suspend_shlw_res -
-> +		   debugfs_conf-
-> >suspend_stats.suspend_shlw_swake_res)*10/192));
-> +
-> +	seq_printf(s, "S0IX Deep\t\t\t %10u\t %10llu\n",
-> +		   s0ix_deep_ctr -
-> +		   debugfs_conf->suspend_stats.suspend_deep_ctr -
-> +		   debugfs_conf->suspend_stats.suspend_deep_swake_ctr,
-> +		   (u64)((s0ix_deep_res -
-> +		   debugfs_conf->suspend_stats.suspend_deep_res -
-> +		   debugfs_conf-
-> >suspend_stats.suspend_deep_swake_res)*10/192));
-> +
-> +	seq_printf(s, "Suspend(With S0ixShallow)\t %10u\t %10llu\n",
-> +		   debugfs_conf->suspend_stats.suspend_shlw_ctr,
-> +		   (u64)(debugfs_conf-
-> >suspend_stats.suspend_shlw_res*10)/192);
-> +
-> +	seq_printf(s, "Suspend(With S0ixDeep)\t\t %10u\t %10llu\n",
-> +		   debugfs_conf->suspend_stats.suspend_deep_ctr,
-> +		   (u64)(debugfs_conf-
-> >suspend_stats.suspend_deep_res*10)/192);
-> +
-> +	seq_printf(s, "Suspend(With Shallow-Wakes)\t %10u\t %10llu\n",
-> +		   debugfs_conf->suspend_stats.suspend_shlw_swake_ctr +
-> +		   debugfs_conf->suspend_stats.suspend_deep_swake_ctr,
-> +		   (u64)((debugfs_conf-
-> >suspend_stats.suspend_shlw_swake_res +
-> +		   debugfs_conf-
-> >suspend_stats.suspend_deep_swake_res)*10/192));
-> +
-> +	seq_printf(s, "S0IX+Suspend Total\t\t %10u\t %10llu\n",
-> s0ix_total_ctr,
-> +				(u64)(s0ix_total_res*10/192));
-> +	seq_puts(s, "\n-------------------------------------------------\n");
-> +	seq_puts(s, "\t\tDEVICE STATES\n");
-> +	seq_puts(s, "-------------------------------------------------\n");
-> +
-> +	for_each_pci_dev(dev) {
-> +		pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL,
-> &pmcsr);
-> +		d3_state = ((pmcsr & PCI_PM_CTRL_STATE_MASK) ==
-> +			    (__force int)PCI_D3hot) ? 1 : 0;
-> +
-> +		seq_printf(s, "pci %04x %04X %s %20.20s: ",
-> +			   dev->vendor, dev->device, dev_name(&dev-
-> >dev),
-> +			   dev_driver_string(&dev->dev));
-> +		seq_printf(s, " d3:%x\n", d3_state);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "D3/D0i3 Status\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Block\t\t D3\t D0i3\n");
-> +	for (index = 0; index < debugfs_conf->ioss_d0ix_evts; index++) {
-> +		seq_printf(s, "%-10s\t %u\t %u\n",
-> +			   debugfs_conf->ioss_d0ix_data[index].name,
-> +			   d3_sts[index], d0ix_sts[index]);
-> +	}
-> +
-> +	seq_puts(s, "\n--------------------------------------\n");
-> +	seq_puts(s, "South Complex PowerGate Status\n");
-> +	seq_puts(s, "--------------------------------------\n");
-> +	seq_puts(s, "Device\t\t PG\n");
-> +	for (index = 0; index < debugfs_conf->ioss_pg_evts; index++) {
-> +		seq_printf(s, "%-10s\t %u\n",
-> +			   debugfs_conf->ioss_pg_data[index].name,
-> +			   pg_sts[index]);
-> +	}
-> +
-> +	evtlog->telem_evtid = debugfs_conf->pss_idle_id;
-> +	ret = telemetry_read_events(TELEM_PSS, evtlog, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	seq_puts(s, "\n-----------------------------------------\n");
-> +	seq_puts(s, "North Idle Status\n");
-> +	seq_puts(s, "-----------------------------------------\n");
-> +	for (idx = 0; idx < debugfs_conf->pss_idle_evts - 1; idx++) {
-> +		pss_idle[idx] =	(evtlog->telem_evtlog >>
-> +				debugfs_conf->pss_idle_data[idx].bit_pos)
-> &
-> +				TELEM_MASK_BIT;
-> +	}
-> +
-> +	pss_idle[idx] = (evtlog->telem_evtlog >>
-> +			debugfs_conf->pss_idle_data[idx].bit_pos) &
-> +			TELEM_APL_MASK_PCS_STATE;
-> +
-> +	for (index = 0; index < debugfs_conf->pss_idle_evts; index++) {
-> +		seq_printf(s, "%-30s %u\n",
-> +			   debugfs_conf->pss_idle_data[index].name,
-> +			   pss_idle[index]);
-> +	}
-> +
-> +	seq_puts(s, "\nPCS_STATUS Code\n");
-> +	seq_puts(s, "0:C0 1:C1 2:C1_DN_WT_DEV 3:C2
-> 4:C2_WT_DE_MEM_UP\n");
-> +	seq_puts(s, "5:C2_WT_DE_MEM_DOWN 6:C2_UP_WT_DEV 7:C2_DN
-> 8:C2_VOA\n");
-> +	seq_puts(s, "9:C2_VOA_UP 10:S0IX_PRE 11:S0IX\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int telem_soc_state_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, telem_soc_states_show, inode->i_private);
-> }
-> +
-> +static const struct file_operations telem_socstate_ops = {
-> +	.open		= telem_soc_state_open,
-> +	.read		= seq_read,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +static int telem_pss_trc_verb_show(struct seq_file *s, void *unused) {
-> +	u32 verbosity;
-> +	int err;
-> +
-> +	err = telemetry_get_trace_verbosity(TELEM_PSS, &verbosity);
-> +	if (err) {
-> +		pr_err("Get PSS Trace Verbosity Failed with Error %d\n", err);
-> +		return -EFAULT;
-> +	}
-> +
-> +	seq_printf(s, "PSS Trace Verbosity %u\n", verbosity);
-> +	return 0;
-> +}
-> +
-> +static ssize_t telem_pss_trc_verb_write(struct file *file,
-> +					const char __user *userbuf,
-> +					size_t count, loff_t *ppos)
-> +{
-> +	u32 verbosity;
-> +	int err;
-> +
-> +	if (kstrtou32_from_user(userbuf, count, 0, &verbosity))
-> +		return -EFAULT;
-> +
-> +	err = telemetry_set_trace_verbosity(TELEM_PSS, verbosity);
-> +	if (err) {
-> +		pr_err("Changing PSS Trace Verbosity Failed. Error %d\n",
-> err);
-> +		count = err;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int telem_pss_trc_verb_open(struct inode *inode, struct file
-> +*file) {
-> +	return single_open(file, telem_pss_trc_verb_show, inode-
-> >i_private); }
-> +
-> +static const struct file_operations telem_pss_trc_verb_ops = {
-> +	.open		= telem_pss_trc_verb_open,
-> +	.read		= seq_read,
-> +	.write		= telem_pss_trc_verb_write,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +
-> +static int telem_ioss_trc_verb_show(struct seq_file *s, void *unused) {
-> +	u32 verbosity;
-> +	int err;
-> +
-> +	err = telemetry_get_trace_verbosity(TELEM_IOSS, &verbosity);
-> +	if (err) {
-> +		pr_err("Get IOSS Trace Verbosity Failed with Error %d\n",
-> err);
-> +		return -EFAULT;
-> +	}
-> +
-> +	seq_printf(s, "IOSS Trace Verbosity %u\n", verbosity);
-> +	return 0;
-> +}
-> +
-> +static ssize_t telem_ioss_trc_verb_write(struct file *file,
-> +					 const char __user *userbuf,
-> +					 size_t count, loff_t *ppos)
-> +{
-> +	u32 verbosity;
-> +	int err;
-> +
-> +	if (kstrtou32_from_user(userbuf, count, 0, &verbosity))
-> +		return -EFAULT;
-> +
-> +	err = telemetry_set_trace_verbosity(TELEM_IOSS, verbosity);
-> +	if (err) {
-> +		pr_err("Changing IOSS Trace Verbosity Failed. Error %d\n",
-> err);
-> +		count = err;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static int telem_ioss_trc_verb_open(struct inode *inode, struct file
-> +*file) {
-> +	return single_open(file, telem_ioss_trc_verb_show, inode-
-> >i_private);
-> +}
-> +
-> +static const struct file_operations telem_ioss_trc_verb_ops = {
-> +	.open		= telem_ioss_trc_verb_open,
-> +	.read		= seq_read,
-> +	.write		= telem_ioss_trc_verb_write,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int pm_suspend_prep_cb(void)
-> +{
-> +	struct telemetry_evtlog
-> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	int ret, index;
-> +
-> +	ret = telemetry_raw_read_eventlog(TELEM_IOSS, evtlog,
-> +			TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (ret < 0) {
-> +		suspend_prep_ok = 0;
-> +		goto out;
-> +	}
-> +
-> +	for (index = 0; index < ret; index++) {
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_occ_id) {
-> +			suspend_shlw_ctr_temp =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_occ_id) {
-> +			suspend_deep_ctr_temp =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_res_id) {
-> +			suspend_shlw_res_temp =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_res_id) {
-> +			suspend_deep_res_temp =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +	}
-> +
-> +	suspend_prep_ok = 1;
-> +out:
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int pm_suspend_exit_cb(void)
-> +{
-> +	struct telemetry_evtlog
-> evtlog[TELEM_MAX_OS_ALLOCATED_EVENTS];
-> +	static u32 suspend_shlw_ctr_exit, suspend_deep_ctr_exit;
-> +	static u64 suspend_shlw_res_exit, suspend_deep_res_exit;
-> +	int ret, index;
-> +
-> +	if (!suspend_prep_ok)
-> +		goto out;
-> +
-> +	ret = telemetry_raw_read_eventlog(TELEM_IOSS, evtlog,
-> +
-> TELEM_MAX_OS_ALLOCATED_EVENTS);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	for (index = 0; index < ret; index++) {
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_occ_id) {
-> +			suspend_shlw_ctr_exit =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_occ_id) {
-> +			suspend_deep_ctr_exit =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_shlw_res_id) {
-> +			suspend_shlw_res_exit =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +
-> +		if (evtlog[index].telem_evtid ==
-> +		    debugfs_conf->s0ix_deep_res_id) {
-> +			suspend_deep_res_exit =
-> evtlog[index].telem_evtlog;
-> +			continue;
-> +		}
-> +	}
-> +
-> +	if ((suspend_shlw_ctr_exit < suspend_shlw_ctr_temp) ||
-> +	    (suspend_deep_ctr_exit < suspend_deep_ctr_temp) ||
-> +	    (suspend_shlw_res_exit < suspend_shlw_res_temp) ||
-> +	    (suspend_deep_res_exit < suspend_deep_res_temp)) {
-> +		pr_err("Wrong s0ix counters detected\n");
-> +		goto out;
-> +	}
-> +
-> +	suspend_shlw_ctr_exit -= suspend_shlw_ctr_temp;
-> +	suspend_deep_ctr_exit -= suspend_deep_ctr_temp;
-> +	suspend_shlw_res_exit -= suspend_shlw_res_temp;
-> +	suspend_deep_res_exit -= suspend_deep_res_temp;
-> +
-> +	if (suspend_shlw_ctr_exit == 1) {
-> +		debugfs_conf->suspend_stats.suspend_shlw_ctr +=
-> +		suspend_shlw_ctr_exit;
-> +
-> +		debugfs_conf->suspend_stats.suspend_shlw_res +=
-> +		suspend_shlw_res_exit;
-> +	}
-> +	/* Shallow Wakes Case */
-> +	else if (suspend_shlw_ctr_exit > 1) {
-> +		debugfs_conf->suspend_stats.suspend_shlw_swake_ctr +=
-> +		suspend_shlw_ctr_exit;
-> +
-> +		debugfs_conf->suspend_stats.suspend_shlw_swake_res +=
-> +		suspend_shlw_res_exit;
-> +	}
-> +
-> +	if (suspend_deep_ctr_exit == 1) {
-> +		debugfs_conf->suspend_stats.suspend_deep_ctr +=
-> +		suspend_deep_ctr_exit;
-> +
-> +		debugfs_conf->suspend_stats.suspend_deep_res +=
-> +		suspend_deep_res_exit;
-> +	}
-> +
-> +	/* Shallow Wakes Case */
-> +	else if (suspend_deep_ctr_exit > 1) {
-> +		debugfs_conf->suspend_stats.suspend_deep_swake_ctr +=
-> +		suspend_deep_ctr_exit;
-> +
-> +		debugfs_conf->suspend_stats.suspend_deep_swake_res
-> +=
-> +		suspend_deep_res_exit;
-> +	}
-> +
-> +out:
-> +	suspend_prep_ok = 0;
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int pm_notification(struct notifier_block *this,
-> +			   unsigned long event, void *ptr)
-> +{
-> +	switch (event) {
-> +	case PM_SUSPEND_PREPARE:
-> +		return pm_suspend_prep_cb();
-> +	case PM_POST_SUSPEND:
-> +		return pm_suspend_exit_cb();
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block pm_notifier = {
-> +	.notifier_call = pm_notification,
-> +};
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +static int __init telemetry_debugfs_init(void) {
-> +	const struct x86_cpu_id *id;
-> +	int err = -ENOMEM;
-> +	struct dentry *f;
-> +
-> +	/* Only APL supported for now */
-> +	id = x86_match_cpu(telemetry_debugfs_cpu_ids);
-> +	if (!id)
-> +		return -ENODEV;
-> +
-> +	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
-> +
-> +	err = telemetry_pltconfig_valid();
-> +	if (err < 0)
-> +		return -ENODEV;
-> +
-> +	err = telemetry_debugfs_check_evts();
-> +	if (err < 0)
-> +		return -EINVAL;
-> +
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +	register_pm_notifier(&pm_notifier);
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +	debugfs_conf->telemetry_dbg_dir =
-> debugfs_create_dir("telemetry", NULL);
-> +	if (!debugfs_conf->telemetry_dbg_dir)
-> +		return -ENOMEM;
-> +
-> +	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
-> +				debugfs_conf->telemetry_dbg_dir, NULL,
-> +				&telem_pss_ops);
-> +	if (!f) {
-> +		pr_err("pss_sample_info debugfs register failed\n");
-> +		goto out;
-> +	}
-> +
-> +	f = debugfs_create_file("ioss_info", S_IFREG | S_IRUGO,
-> +				debugfs_conf->telemetry_dbg_dir, NULL,
-> +				&telem_ioss_ops);
-> +	if (!f) {
-> +		pr_err("ioss_sample_info debugfs register failed\n");
-> +		goto out;
-> +	}
-> +
-> +	f = debugfs_create_file("soc_states", S_IFREG | S_IRUGO,
-> +				debugfs_conf->telemetry_dbg_dir,
-> +				NULL, &telem_socstate_ops);
-> +	if (!f) {
-> +		pr_err("ioss_sample_info debugfs register failed\n");
-> +		goto out;
-> +	}
-> +
-> +	f = debugfs_create_file("pss_trace_verbosity", S_IFREG | S_IRUGO,
-> +				debugfs_conf->telemetry_dbg_dir, NULL,
-> +				&telem_pss_trc_verb_ops);
-> +	if (!f) {
-> +		pr_err("pss_trace_verbosity debugfs register failed\n");
-> +		goto out;
-> +	}
-> +
-> +	f = debugfs_create_file("ioss_trace_verbosity", S_IFREG | S_IRUGO,
-> +				debugfs_conf->telemetry_dbg_dir, NULL,
-> +				&telem_ioss_trc_verb_ops);
-> +	if (!f) {
-> +		pr_err("ioss_trace_verbosity debugfs register failed\n");
-> +		goto out;
-> +	}
-> +
-> +	return 0;
-> +
-> +out:
-> +	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
-> +	debugfs_conf->telemetry_dbg_dir = NULL;
-> +
-> +	return err;
-> +}
-> +
-> +static void __exit telemetry_debugfs_exit(void) {
-> +	debugfs_remove_recursive(debugfs_conf->telemetry_dbg_dir);
-> +	debugfs_conf->telemetry_dbg_dir = NULL; }
-> +
-> +late_initcall(telemetry_debugfs_init);
-> +module_exit(telemetry_debugfs_exit);
-> +
-> +MODULE_AUTHOR("Souvik Kumar Chakravarty
-> +<souvik.k.chakravarty@intel.com>");
-> +MODULE_DESCRIPTION("Intel SoC Telemetry debugfs Interface");
-> +MODULE_VERSION(DRIVER_VERSION); MODULE_LICENSE("GPL");
+> > Telemetry platform driver implements the telemetry interfaces.
+> > Currently it supports ApolloLake. It uses the PUNIT and PMC IPC
+> > interfaces to configure the telemetry samples to read.
+> > The samples are read from a Secure SRAM region.
+> >
+> > Signed-off-by: Souvik Kumar Chakravarty
+> > <souvik.k.chakravarty@intel.com>
+> >
+> > ---
+> > Changes in v4:
+> > * Patch v3 2/5 is split in 2 patches. This is the second in series.
+> > * Change PUNIT CMDs according to changes in intel_punit_ipc.c
+> > ---
+> > Changes in v3:
+> > * Clean code using checkpatch.pl from Kernel v4.3-rc4
+> > ---
+> > Changes in v2:
+> > * Fix issues in code style, indentation & comments
+> > * Changed Banner to include "All Rights Reserved"
+> > * Remove unnecessary casting between void* and resource_size_t
+> > * Split telemetry_setup_evtconfig into two more functions
+> > * Use 'ret' consistently instead of 'err'
+> > * Change to MODULE_LICENSE to GPL
+> > ---
+> >  drivers/platform/x86/intel_telemetry_pltdrv.c | 1221
+> > +++++++++++++++++++++++++
+> >  1 file changed, 1221 insertions(+)
+> >  create mode 100644 drivers/platform/x86/intel_telemetry_pltdrv.c
+> >
+> > diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c
+> > b/drivers/platform/x86/intel_telemetry_pltdrv.c
+> > new file mode 100644
+> > index 0000000..97807ed
+> > --- /dev/null
+> > +++ b/drivers/platform/x86/intel_telemetry_pltdrv.c
+> 
+> ...
+> 
+> > +/* The following counters are programmed by default during setup.
+> > + * Only 20 allocated to kernel driver */
+> 
+> Nit on multiline formatting:
+> 
+> /*
+>  * First Line.
+>  * Second Line.
+>  */
+> 
+> Empty first line, last line * aligns with those above. I'll correct.
+> 
+> ...
+> 
+> > +
+> > +	/* Add some Events */
+> > +	if (action == TELEM_ADD) {
+> > +		/* Configure Events */
+> > +		for (index = telm_conf->ioss_config.ssram_evts_used, idx =
+> 0,
+> > +		     evts = 0; idx < num_ioss_evts; index++, idx++) {
+> > +			telm_conf->ioss_config.telem_evts[index].evt_id =
+> > +			ioss_evtmap[idx];
+> > +
+> > +			ret = telemetry_plt_config_ioss_event(
+> > +				telm_conf-
+> >ioss_config.telem_evts[index].evt_id,
+> > +				index);
+> > +			if (ret)
+> > +				pr_err("IOSS TELEM_ADD Fail for Event
+> %x\n",
+> > +					ioss_evtmap[idx]);
+> > +			else
+> > +				evts++;
+> > +		}
+> > +		telm_conf->ioss_config.ssram_evts_used += evts;
+> > +	}
+> 
+> There's quite a bit of code here to use the evts variable rather than
+> increment the ssram_evts_used variable directly, but I don't see a particular
+> reason to do so. By incrementing the ssram_evts_used directly we could
+> eliminate the evts variable, all the evts = 0 assignments in the already long for
+> loop initializer, and drop the assignment after each for loop.
+> 
+> You might consider dropping the else for each of these and adding continue
+> in the if (ret) block, and doing the ssram_evts_used increment with one less
+> indent:
+> 
+> 	for (index = telm_conf->ioss_config.ssram_evts_used, idx = 0;
+> 	     idx < num_ioss_evts; index++, idx++) {
+> 		if (telemtry_plt_config_ioss_event( ... ) {
+> 			pr_err("...", ...);
+> 			continue;
+> 		}
+> 		telm_conf->ioss_config.ssram_evts_used++;
+> 	}
+> 
+> This simplifies the logic in my opinion and makes the error path clearly
+> distinguishable from the normal execution path.
+> 
+> Any compelling reason to keep evts as a separate variable?
+
+Yes this seems a good thing to do. Will do this in the next spin....
+> 
+> (Ditto throughout)
+> 
+> ...
+> 
+> > +	/* Add some Events */
+> > +	if (action == TELEM_ADD) {
+> > +		/* Configure Events */
+> > +		for (index = telm_conf->pss_config.ssram_evts_used, idx =
+> 0,
+> > +		     evts = 0; idx < num_pss_evts; index++, idx++) {
+> > +
+> > +			telm_conf->pss_config.telem_evts[index].evt_id =
+> > +			pss_evtmap[idx];
+> > +
+> > +			ret = telemetry_plt_config_pss_event(
+> > +				telm_conf-
+> >pss_config.telem_evts[index].evt_id,
+> > +				index);
+> > +			if (ret)
+> > +				pr_err("PSS TELEM_ADD Fail for Event %x\n",
+> > +					pss_evtmap[idx]);
+> > +			else
+> > +				evts++;
+> > +		}
+> > +		telm_conf->pss_config.ssram_evts_used += evts;
+> > +	}
+> > +
+> 
+> Same comment on evts above...
+> 
+> > +	/* Enable Periodic Telemetry Events and enable SRAM trace */
+> > +	TELEM_CLEAR_SAMPLE_PERIOD(telem_ctrl);
+> > +	TELEM_ENABLE_SRAM_EVT_TRACE(telem_ctrl);
+> > +	TELEM_ENABLE_PERIODIC(telem_ctrl);
+> > +	telem_ctrl |= pss_period;
+> > +
+> > +	ret =
+> intel_punit_ipc_command(IPC_PUNIT_BIOS_WRITE_TELE_EVENT_CTRL,
+> > +				      0, 0, &telem_ctrl, NULL);
+> > +	if (ret) {
+> > +		pr_err("PSS TELEM_CTRL Event Enable Write Failed\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	telm_conf->pss_config.curr_period = pss_period;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int telemetry_setup_evtconfig(struct telemetry_evtconfig
+> pss_evtconfig,
+> > +				     struct telemetry_evtconfig ioss_evtconfig,
+> > +				     enum telemetry_action action) {
+> > +	int ret = 0;
+> 
+> Assignment is not necessary.
+> 
+> > +
+> > +	mutex_lock(&(telm_conf->telem_lock));
+> > +
+> > +	if ((action == TELEM_UPDATE) && (telm_conf->telem_in_use)) {
+> > +		ret = -EBUSY;
+> > +		goto out;
+> > +	}
+> > +
+> > +	ret = telemetry_check_evtid(TELEM_PSS, pss_evtconfig.evtmap,
+> > +				    pss_evtconfig.num_evts, action);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	ret = telemetry_check_evtid(TELEM_IOSS, ioss_evtconfig.evtmap,
+> > +				    ioss_evtconfig.num_evts, action);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	if (ioss_evtconfig.num_evts) {
+> > +		ret = telemetry_setup_iossevtconfig(ioss_evtconfig, action);
+> > +		if (ret)
+> > +			goto out;
+> > +	}
+> > +
+> > +	if (pss_evtconfig.num_evts) {
+> > +		ret = telemetry_setup_pssevtconfig(pss_evtconfig, action);
+> > +		if (ret)
+> > +			goto out;
+> > +	}
+> > +
+> > +	if (action == TELEM_RESET)
+> > +		telm_conf->telem_in_use = 0;
+> > +	else if ((action == TELEM_UPDATE) || (action == TELEM_ADD))
+> > +		telm_conf->telem_in_use = 1;
+> 
+> And if it's not one of these 3 values, we want to leave telem_in_use at
+> whatever value it was previously?
+>
+Correct
+ 
+> If not, would it make sense to have an if (this or that) set to 1, else set to
+> 0 logic block here?
+> 
+> Can telem_in_use be a bool as that appears to be how it is used here.
+I will make this a bool.
+> 
+> ...
+> 
+> > +
+> > +
+> > +static int telemetry_plt_get_sampling_period(u8 *pss_min_period,
+> > +					     u8 *pss_max_period,
+> > +					     u8 *ioss_min_period,
+> > +					     u8 *ioss_max_period)
+> > +{
+> > +	struct telemetry_plt_config *telem_conf = telm_conf;
+> > +
+> 
+> What is the point of creating *telem_conf here instead of just using
+> telm_conf directly? Appears perfectly redundant at first glance to me...
+> 
+Will Change.
+> > +	*pss_min_period = telem_conf->pss_config.min_period;
+> > +	*pss_max_period = telem_conf->pss_config.max_period;
+> > +	*ioss_min_period = telem_conf->ioss_config.min_period;
+> > +	*ioss_max_period = telem_conf->ioss_config.max_period;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +
+> > +static int telemetry_plt_reset_events(void) {
+> > +	struct telemetry_evtconfig pss_evtconfig, ioss_evtconfig;
+> > +	int ret = 0;
+> 
+> Assignment is not necessary.
+> 
+> > +
+> > +	pss_evtconfig.evtmap = NULL;
+> > +	pss_evtconfig.num_evts = TELEM_MAX_OS_ALLOCATED_EVENTS;
+> > +	pss_evtconfig.period = TELEM_SAMPLING_DEFAULT_PERIOD;
+> > +
+> > +	ioss_evtconfig.evtmap = NULL;
+> > +	ioss_evtconfig.num_evts = TELEM_MAX_OS_ALLOCATED_EVENTS;
+> > +	ioss_evtconfig.period = TELEM_SAMPLING_DEFAULT_PERIOD;
+> > +
+> > +	ret = telemetry_setup_evtconfig(pss_evtconfig, ioss_evtconfig,
+> > +					TELEM_RESET);
+> > +	if (ret)
+> > +		pr_err("TELEMTRY Reset Failed\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +
+> > +static int telemetry_plt_get_eventconfig(struct telemetry_evtconfig
+> *pss_config,
+> > +					struct telemetry_evtconfig
+> *ioss_config,
+> > +					int pss_len, int ioss_len)
+> > +{
+> > +	struct telemetry_plt_config *telem_conf = telm_conf;
+> 
+> Confused again I guess, why create telem_conf to point at the same struct as
+> telm_conf and then use them both interchangeably below... ?
+
+I guess I can merge them.
+
+> 
+> > +	u32 *pss_evtmap, *ioss_evtmap;
+> > +	u32 index;
+> > +
+> > +	pss_evtmap = pss_config->evtmap;
+> > +	ioss_evtmap = ioss_config->evtmap;
+> > +
+> > +	mutex_lock(&(telm_conf->telem_lock));
+> > +	pss_config->num_evts = telem_conf->pss_config.ssram_evts_used;
+> > +	ioss_config->num_evts = telem_conf-
+> >ioss_config.ssram_evts_used;
+> > +
+> > +	pss_config->period = telm_conf->pss_config.curr_period;
+> > +	ioss_config->period = telm_conf->ioss_config.curr_period;
+> > +
+> > +	if ((pss_len < telem_conf->pss_config.ssram_evts_used) ||
+> > +	    (ioss_len < telem_conf->ioss_config.ssram_evts_used)) {
+> > +		mutex_unlock(&(telm_conf->telem_lock));
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	for (index = 0; index < telem_conf->pss_config.ssram_evts_used;
+> > +	     index++) {
+> > +		pss_evtmap[index] =
+> > +		telem_conf->pss_config.telem_evts[index].evt_id;
+> > +	}
+> > +
+> > +	for (index = 0; index < telem_conf->ioss_config.ssram_evts_used;
+> > +	     index++) {
+> > +		ioss_evtmap[index] =
+> > +		telem_conf->ioss_config.telem_evts[index].evt_id;
+> > +	}
+> > +
+> > +	mutex_unlock(&(telm_conf->telem_lock));
+> > +	return 0;
+> > +}
+> > +
+> > +
+> > +static int telemetry_plt_add_events(u8 num_pss_evts, u8
+> num_ioss_evts,
+> > +				    u32 *pss_evtmap, u32 *ioss_evtmap) {
+> > +	struct telemetry_evtconfig pss_evtconfig, ioss_evtconfig;
+> > +	struct telemetry_plt_config *telem_conf = telm_conf;
+> 
+> Ditto on telm_conf... and throughout.
+> 
+> > +	int ret = 0;
+> 
+> Assignment is unnecessary, more like this below / throughout.
+> 
+> ...
+> 
+> > +static int telemetry_plt_get_trace_verbosity(enum telemetry_unit
+> telem_unit,
+> > +					     u32 *verbosity)
+> > +{
+> > +	u32 temp = 0;
+> > +	int ret = 0;
+> > +
+> > +	if (verbosity == NULL)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&(telm_conf->telem_trace_lock));
+> > +	switch (telem_unit) {
+> > +	case TELEM_PSS:
+> > +		ret = intel_punit_ipc_command(
+> > +				IPC_PUNIT_BIOS_READ_TELE_TRACE_CTRL,
+> > +				0, 0, NULL, &temp);
+> > +		if (ret) {
+> > +			pr_err("PSS TRACE_CTRL Read Failed\n");
+> > +			goto err;
+> 
+> This should be out: or out_unlock: as it is part of the successful path and not
+> specifically an error patth.
+OK
+> 
+> > +
+> > +static int telemetry_pltdrv_probe(struct platform_device *pdev) {
+> > +	struct resource *res0 = NULL, *res1 = NULL;
+> > +	const struct x86_cpu_id *id;
+> > +	int size, ret = -ENOMEM;
+> > +
+> > +	id = x86_match_cpu(telemetry_cpu_ids);
+> > +	if (!id)
+> > +		return -ENODEV;
+> > +
+> > +	telm_conf = (struct telemetry_plt_config *)id->driver_data;
+> > +
+> > +	res0 = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	if (!res0) {
+> > +		dev_err(&pdev->dev, "Fail to get iomem resource\n");
+> 
+> Please use "Failed" and possible "platform iomem".
+> 
+> I believe we opted not to emit these errs on the punit driver, relying on the
+> calling code to issue their own messages. However, I'm not seeing such
+> messages in platform_get_resource or in the
+> devm_requeuest_mem_region, something to investigate. I would like these
+> to be consistent. If there is a subsystem message already, these could be
+> made into debug statements to aid in narrowing down a failure when
+> necessary.
+Will convert to debug msg or remove.
+
+> 
+> Thanks,
+> 
 > --
-> 1.7.9.5
-> 
+> Darren Hart
+> Intel Open Source Technology Center
 > --
 > To unsubscribe from this list: send the line "unsubscribe platform-driver-x86"
 > in the body of a message to majordomo@vger.kernel.org More majordomo
