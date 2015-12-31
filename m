@@ -1,48 +1,66 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Wed, 30 Dec 2015 23:28:48 +0100
-Message-ID: <201512302328.48620@pali>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com> <20151227231417.GB8731@khazad-dum.debian.net> <201512281548.14411@pali>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH] intel-hid: Fix build failure when CONFIG_INTEL_HID_EVENT=m
+Date: Thu, 31 Dec 2015 04:28:08 -0800
+Message-ID: <CALCETrVnyMgKGwPPn2Tp7gy_=y7jeXN-oFJOKW8ZXvdds_LtFA@mail.gmail.com>
+References: <1451559413-30977-1-git-send-email-sedat.dilek@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart4130501.4n4BXMsT4E";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201512281548.14411@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-oi0-f46.google.com ([209.85.218.46]:33305 "EHLO
+	mail-oi0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750991AbbLaM22 (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 31 Dec 2015 07:28:28 -0500
+Received: by mail-oi0-f46.google.com with SMTP id y66so215415260oig.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 31 Dec 2015 04:28:28 -0800 (PST)
+In-Reply-To: <1451559413-30977-1-git-send-email-sedat.dilek@gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Sedat Dilek <sedat.dilek@gmail.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Alex Hung <alex.hung@canonical.com>, Andy Lutomirski <luto@kernel.org>
 
---nextPart4130501.4n4BXMsT4E
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Darren-
 
-On Monday 28 December 2015 15:48:14 Pali Roh=C3=A1r wrote:
-> > Also, is it working properly across suspend+resume?
->=20
-> When doing resume from suspend or hibernate BIOS turning keyboard
-> backlight automatically off.
+It looks like your tree will need this fix.
 
-=46ixed in v2.
+Thanks,
+Andy
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+On Thu, Dec 31, 2015 at 2:56 AM, Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> When building with CONFIG_INTEL_HID_EVENT=m on Andy's luto.git#xps13
+> Git branch I see the following build failure:
+>
+> ERROR: "sparse_keymap_setup" [drivers/platform/x86/intel-hid.ko] undefined!
+> ERROR: "sparse_keymap_report_event" [drivers/platform/x86/intel-hid.ko] undefined!
+>
+> Looks like 'select INPUT_SPARSEKMAP' is missing.
+>
+> Fixes: e06871da47db ("intel-hid: new hid event driver for hotkeys")
+> CC: Alex Hung <alex.hung@canonical.com>
+> CC: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> ---
+>  drivers/platform/x86/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 96a4f18a1c35..ee0ff9287159 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -747,6 +747,7 @@ config INTEL_HID_EVENT
+>         tristate "INTEL HID Event Filter"
+>         depends on ACPI
+>         depends on INPUT
+> +       select INPUT_SPARSEKMAP
+>         help
+>          This driver provides supports for Intel HID event. Some laptops
+>          require this driver for hotkey supports.
+> --
+> 2.6.4
+>
 
---nextPart4130501.4n4BXMsT4E
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
 
-iEYEABECAAYFAlaEWqAACgkQi/DJPQPkQ1KSpgCggdN8kJzvYdEdZTQOunp/ohY8
-UtQAoJKvd7sQvWcWcOv5GjP17jE+JAHY
-=g7uz
------END PGP SIGNATURE-----
-
---nextPart4130501.4n4BXMsT4E--
+-- 
+Andy Lutomirski
+AMA Capital Management, LLC
