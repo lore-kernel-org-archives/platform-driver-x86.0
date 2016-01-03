@@ -1,59 +1,38 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: Heads up: dell-wmi bug
-Date: Thu, 31 Dec 2015 13:21:58 -0800
-Message-ID: <CALCETrUyzSvvw24RSqCdrjaUp+QtE=7EuQ=SL5HHy+tskp1_+Q@mail.gmail.com>
-References: <CALCETrUh6VPfwdCHAZyqcou4VQN4_xZuZ+St=gjhCB1aqPvuag@mail.gmail.com>
- <201512311334.20816@pali>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 0/5] acpi-video and platform/x86 driver fixes
+Date: Sun, 03 Jan 2016 01:37:12 +0100
+Message-ID: <1756666.ndedFZbz5I@vostro.rjw.lan>
+References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-oi0-f54.google.com ([209.85.218.54]:34501 "EHLO
-	mail-oi0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751808AbbLaVWS convert rfc822-to-8bit (ORCPT
+Received: from v094114.home.net.pl ([79.96.170.134]:43702 "HELO
+	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with SMTP id S1751537AbcACAGg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 31 Dec 2015 16:22:18 -0500
-Received: by mail-oi0-f54.google.com with SMTP id o124so220392369oia.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 31 Dec 2015 13:22:18 -0800 (PST)
-In-Reply-To: <201512311334.20816@pali>
+	Sat, 2 Jan 2016 19:06:36 -0500
+In-Reply-To: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
 
-On Dec 31, 2015 8:34 PM, "Pali Roh=C3=A1r" <pali.rohar@gmail.com> wrote=
-:
->
-> On Thursday 31 December 2015 13:31:03 Andy Lutomirski wrote:
-> > Hi-
-> >
-> > I'm getting intermittent OOPSes when playing with dell-wmi.  I thin=
-k
-> > that find_hk_type function is buggy: it's saving a pointer to DMI
-> > data, but you can't do that, because dmi_walk unmaps the data at th=
-e
-> > end.  It probably works reliably on current kernels due to luck
-> > (either a memory layout such that the unmap has no effect or deferr=
-ed
-> > vmap zapping).
-> >
-> > If no one beats me to it, I'll fix this as part of the rebase work =
-on
-> > my big wmi series.
-> >
-> > --Andy
->
-> Hi! If this is truth, then I think separate patch for fixing this
-> problem should be created and backported also to stable kernels.
->
-> In my opinion WMI rework patches should not change functionality, jus=
-t
-> API... Other function changes should be in separate commits.
+On Tuesday, December 22, 2015 07:09:47 PM Hans de Goede wrote:
+> Hi All,
+> 
+> This patch-set is the result of the discussion surrounding the
+> backlight issues on the Dell Vostro V131. The first 3 patches
+> cleanup how some platform/x86 drivers detect if acpi-video
+> is handling brightness key presses and that they should
+> not report duplicate events. This is a cleanup which I wanted
+> to do for a while already and the Vostro V131 fix actually
+> benefits from this.
+> 
+> The last 2 patches together actually fix the issues on the
+> Vostro V131. Since the 2 platform patches in this set depend
+> on an acpi patch, I believe that it would be best if this
+> entire set gets merged via the acpi tree with acks
+> from the platform driver maintainer.
 
-Agreed.  I just meant that I'd do it at the same time, not that it
-would be the same patch.
-
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+Series applied, thanks!
