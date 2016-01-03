@@ -1,38 +1,35 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 0/5] acpi-video and platform/x86 driver fixes
-Date: Sun, 03 Jan 2016 01:37:12 +0100
-Message-ID: <1756666.ndedFZbz5I@vostro.rjw.lan>
-References: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+From: "Jeff Skoll" <s_w9gc9x@uni-kassel.de>
+Subject: Charity Donation
+Date: Sun, 03 Jan 2016 04:50:30 -0500
+Message-ID: <auto-000000721463@mailadmin.uni-kassel.de>
+Reply-To: jeff.skoll@skollcharity.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from v094114.home.net.pl ([79.96.170.134]:43702 "HELO
-	v094114.home.net.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1751537AbcACAGg (ORCPT
+Received: from mx4.its.uni-kassel.de ([141.51.12.63]:6041 "EHLO
+	mx4.its.uni-kassel.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751329AbcACJxj convert rfc822-to-8bit (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 2 Jan 2016 19:06:36 -0500
-In-Reply-To: <1450807792-4980-1-git-send-email-hdegoede@redhat.com>
+	Sun, 3 Jan 2016 04:53:39 -0500
+Content-Description: Mail message body
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, ibm-acpi-devel@lists.sourceforge.net
+To: Me <s_w9gc9x@uni-kassel.de>
 
-On Tuesday, December 22, 2015 07:09:47 PM Hans de Goede wrote:
-> Hi All,
-> 
-> This patch-set is the result of the discussion surrounding the
-> backlight issues on the Dell Vostro V131. The first 3 patches
-> cleanup how some platform/x86 drivers detect if acpi-video
-> is handling brightness key presses and that they should
-> not report duplicate events. This is a cleanup which I wanted
-> to do for a while already and the Vostro V131 fix actually
-> benefits from this.
-> 
-> The last 2 patches together actually fix the issues on the
-> Vostro V131. Since the 2 platform patches in this set depend
-> on an acpi patch, I believe that it would be best if this
-> entire set gets merged via the acpi tree with acks
-> from the platform driver maintainer.
+Hi,
+My name is Jeffrey Skoll, a philanthropist and the founder of one of th=
+e largest private foundations in the world. I believe strongly in =E2=80=
+=98giving while living.=E2=80=99 I had one idea that never changed in m=
+y mind =E2=80=94 that you should use your wealth to help people and I h=
+ave decided to secretly give USD2.498 Million to a randomly selected in=
+dividual. On receipt of this email, you should count yourself as the in=
+dividual. Kindly get back to me at your earliest convenience, so I know=
+ your email address is valid.
 
-Series applied, thanks!
+Visit the web page to know more about me: http://www.theglobeandmail.co=
+m/news/national/meet-the-canadian-billionaire-whos-giving-it-all-away/a=
+rticle4209888/ or you can read an article of me on Wikipedia.
+
+Regards,
+Jeffrey Skoll.
