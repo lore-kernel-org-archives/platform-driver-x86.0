@@ -1,54 +1,82 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 1/2] dell-wmi: Check if Dell WMI descriptor structure is valid
-Date: Mon, 4 Jan 2016 10:23:52 -0800
-Message-ID: <CALCETrUBkkc_TGcQfFKmGOtNy_URjzsibrkmWU066hXMTqpM9g@mail.gmail.com>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <201512281508.20683@pali> <20151229124413.GB2467@eudyptula.hq.kempniu.pl>
- <201512291705.43939@pali> <20151230112707.GA3352@eudyptula.hq.kempniu.pl>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel-hid: Fix build failure when
+ CONFIG_INTEL_HID_EVENT=m
+Date: Mon, 4 Jan 2016 11:28:59 -0800
+Message-ID: <20160104192859.GA26072@malice.jf.intel.com>
+References: <1451559413-30977-1-git-send-email-sedat.dilek@gmail.com>
+ <CALCETrVnyMgKGwPPn2Tp7gy_=y7jeXN-oFJOKW8ZXvdds_LtFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f170.google.com ([209.85.214.170]:35906 "EHLO
-	mail-ob0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752720AbcADSYN convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:43115 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752040AbcADT3C (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jan 2016 13:24:13 -0500
-Received: by mail-ob0-f170.google.com with SMTP id ba1so254742501obb.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2016 10:24:12 -0800 (PST)
-In-Reply-To: <20151230112707.GA3352@eudyptula.hq.kempniu.pl>
+	Mon, 4 Jan 2016 14:29:02 -0500
+Content-Disposition: inline
+In-Reply-To: <CALCETrVnyMgKGwPPn2Tp7gy_=y7jeXN-oFJOKW8ZXvdds_LtFA@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Sedat Dilek <sedat.dilek@gmail.com>, platform-driver-x86@vger.kernel.org, Alex Hung <alex.hung@canonical.com>, Andy Lutomirski <luto@kernel.org>
 
-On Wed, Dec 30, 2015 at 3:27 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@k=
-empniu.pl> wrote:
->> > If you feel like I'm nit-picking and none of the above matters,
->> > please feel free to disregard my input and just follow your gut.
->>
->> It's ok. We just understand it quite differently. And in this case w=
-hat
->> about changing commit message to something like this?
->>
->> =3D=3D=3D
->> dell-wmi: Check if Dell WMI descriptor structure is valid
->>
->> After examining existing DSDT ACPI tables of more laptops and lookin=
-g
->> into Dell WMI document mentioned in ML dicussion archived at
->> http://www.spinics.net/lists/platform-driver-x86/msg07220.html we wi=
-ll
->> parse and check WMI descriptor if contains expected data. It is beca=
-use
->> WMI descriptor contains interface version number and it is needed to
->> know in next commit.
->> =3D=3D=3D
->
-> I like it way more than the previous one.
->
+On Thu, Dec 31, 2015 at 04:28:08AM -0800, Andy Lutomirski wrote:
+> Hi Darren-
+> 
+> It looks like your tree will need this fix.
+> 
+> Thanks,
+> Andy
 
-=46WIW, the original version of this series works fine on my laptop
-(after fixing the separate dmi_walk misuse bug).
+Thanks, since this is still in for-next, I've merged the following, crediting
+Sedat, with the original patch. We don't want to introduce a build breakage by
+applying this as a separate patch.
 
---Andy
+Sedat, please Cc all maintainers listed by get_maintainer.pl in the future.
+
+Thanks,
+
+> 
+> On Thu, Dec 31, 2015 at 2:56 AM, Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > When building with CONFIG_INTEL_HID_EVENT=m on Andy's luto.git#xps13
+> > Git branch I see the following build failure:
+> >
+> > ERROR: "sparse_keymap_setup" [drivers/platform/x86/intel-hid.ko] undefined!
+> > ERROR: "sparse_keymap_report_event" [drivers/platform/x86/intel-hid.ko] undefined!
+> >
+> > Looks like 'select INPUT_SPARSEKMAP' is missing.
+> >
+> > Fixes: e06871da47db ("intel-hid: new hid event driver for hotkeys")
+> > CC: Alex Hung <alex.hung@canonical.com>
+> > CC: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > ---
+> >  drivers/platform/x86/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index 96a4f18a1c35..ee0ff9287159 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -747,6 +747,7 @@ config INTEL_HID_EVENT
+> >         tristate "INTEL HID Event Filter"
+> >         depends on ACPI
+> >         depends on INPUT
+> > +       select INPUT_SPARSEKMAP
+> >         help
+> >          This driver provides supports for Intel HID event. Some laptops
+> >          require this driver for hotkey supports.
+> > --
+> > 2.6.4
+> >
+> 
+> 
+> 
+> -- 
+> Andy Lutomirski
+> AMA Capital Management, LLC
+> 
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
