@@ -1,184 +1,70 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3] surface pro 4: Add support for Surface Pro 4 Buttons
-Date: Mon, 4 Jan 2016 12:35:59 -0800
-Message-ID: <20160104203559.GB4219@malice.jf.intel.com>
-References: <1451237389-7993-1-git-send-email-wengxt@gmail.com>
- <1451244080-940-1-git-send-email-wengxt@gmail.com>
- <CAHp75VepPax_eqc4PLgDMvzM4jpQNRXdUe5q3rXPOj81MFcwHQ@mail.gmail.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
+Date: Mon, 4 Jan 2016 21:40:01 +0100
+Message-ID: <201601042140.02085@pali>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com> <20160104201231.GB5847@amd> <201601042123.52524@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed;
+  boundary="nextPart2572146.8jNRuuBMSq";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43665 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751908AbcADUgB (ORCPT
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:36150 "EHLO
+	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751912AbcADUkE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jan 2016 15:36:01 -0500
-Content-Disposition: inline
-In-Reply-To: <CAHp75VepPax_eqc4PLgDMvzM4jpQNRXdUe5q3rXPOj81MFcwHQ@mail.gmail.com>
+	Mon, 4 Jan 2016 15:40:04 -0500
+In-Reply-To: <201601042123.52524@pali>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Weng Xuetian <wengxt@gmail.com>, Chen Yu <yu.c.chen@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-On Sun, Dec 27, 2015 at 10:58:06PM +0200, Andy Shevchenko wrote:
-> On Sun, Dec 27, 2015 at 9:21 PM, Weng Xuetian <wengxt@gmail.com> wrote:
-> > Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
-> > different from Surface Pro 3.
-> >
-> > This commit adds MSHW0040 to id list to support the Surface Pro 4, and
-> > renames the driver to surfacepro_button accordingly.
-> >
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
-> > Signed-off-by: Weng Xuetian <wengxt@gmail.com>
-> 
-> Darren, this one looks fine for me, still couple of question up to you.
-> 
-> First is do we really want to rename driver? (Renaming variables and
-> stuff like I said if fine to me)
+--nextPart2572146.8jNRuuBMSq
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, replied before seeing this.
+On Monday 04 January 2016 21:23:52 Pali Roh=C3=A1r wrote:
+> Looks like userspace already uses /sys/class/leds/*::kbd_backlight
+> for keyboard backlight (light under the keyboard). At least other
+> drivers uses this name and my KDE desktop recognized
+> "dell::kbd_backlight" (from dell-laptop.ko) and
+> "tpacpi::kbd_backlight" too.
+>=20
+> So really for keyboard backlight use *::kbd_backlight it is already
+> handled by existing userspace applications.
 
-I agree that renaming the file is probably not necessary (this works on v3+ as I
-understand it, so the name isn't really a problem, and dropping the 3 suggests
-it works on v1 and v2).
+upower is one of tool used on linux desktops. See this source code:
 
-I'd prefer to keep the name changing to a minimum, and add some information to
-the Kconfig help and driver comments making it clear that this supports 3+.
+http://cgit.freedesktop.org/upower/tree/src/up-kbd-backlight.c
 
---
-Darren
+It has function up_kbd_backlight_find() which do:
 
-> 
-> > ---
-> > v3:
-> >  - Fix commit message grammar mistakes.
-> > v2:
-> >  - Reformat patch with -M -C
-> > ---
-> >  MAINTAINERS                                            |  4 ++--
-> >  drivers/platform/x86/Kconfig                           |  6 +++---
-> >  drivers/platform/x86/Makefile                          |  2 +-
-> >  .../x86/{surfacepro3_button.c => surfacepro_button.c}  | 18 ++++++++++--------
-> >  4 files changed, 16 insertions(+), 14 deletions(-)
-> >  rename drivers/platform/x86/{surfacepro3_button.c => surfacepro_button.c} (93%)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 233f834..1c07436 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7019,11 +7019,11 @@ T:      git git://git.monstr.eu/linux-2.6-microblaze.git
-> >  S:     Supported
-> >  F:     arch/microblaze/
-> >
-> > -MICROSOFT SURFACE PRO 3 BUTTON DRIVER
-> > +MICROSOFT SURFACE PRO SERIES BUTTON DRIVER
-> >  M:     Chen Yu <yu.c.chen@intel.com>
-> >  L:     platform-driver-x86@vger.kernel.org
-> >  S:     Supported
-> > -F:     drivers/platform/x86/surfacepro3_button.c
-> > +F:     drivers/platform/x86/surfacepro_button.c
-> >
-> >  MICROTEK X6 SCANNER
-> >  M:     Oliver Neukum <oliver@neukum.org>
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index 1089eaa..3358fb0 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -939,9 +939,9 @@ config INTEL_PMC_IPC
-> >         The PMC is an ARC processor which defines IPC commands for communication
-> >         with other entities in the CPU.
-> >
-> > -config SURFACE_PRO3_BUTTON
-> > -       tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
-> > +config SURFACE_PRO_BUTTON
-> > +       tristate "Power/home/volume buttons driver for Microsoft Surface Pro Series tablet"
-> >         depends on ACPI && INPUT
-> >         ---help---
-> > -         This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
-> > +         This driver handles the power/home/volume buttons on the Microsoft Surface Pro Series tablet.
-> >  endif # X86_PLATFORM_DEVICES
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> > index 3ca78a3..b4ece33 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -61,4 +61,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)      += intel-smartconnect.o
-> >  obj-$(CONFIG_PVPANIC)           += pvpanic.o
-> >  obj-$(CONFIG_ALIENWARE_WMI)    += alienware-wmi.o
-> >  obj-$(CONFIG_INTEL_PMC_IPC)    += intel_pmc_ipc.o
-> > -obj-$(CONFIG_SURFACE_PRO3_BUTTON)      += surfacepro3_button.o
-> > +obj-$(CONFIG_SURFACE_PRO_BUTTON)       += surfacepro_button.o
-> > diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro_button.c
-> > similarity index 93%
-> > rename from drivers/platform/x86/surfacepro3_button.c
-> > rename to drivers/platform/x86/surfacepro_button.c
-> > index f7dade3..cda52b8 100644
-> > --- a/drivers/platform/x86/surfacepro3_button.c
-> > +++ b/drivers/platform/x86/surfacepro_button.c
-> > @@ -1,6 +1,6 @@
-> >  /*
-> >   * power/home/volume button support for
-> > - * Microsoft Surface Pro 3 tablet.
-> > + * Microsoft Surface Pro Series tablet.
-> >   *
-> >   * Copyright (c) 2015 Intel Corporation.
-> >   * All rights reserved.
-> > @@ -19,9 +19,10 @@
-> >  #include <linux/acpi.h>
-> >  #include <acpi/button.h>
-> >
-> > -#define SURFACE_BUTTON_HID             "MSHW0028"
-> > +#define SURFACE_PRO3_BUTTON_HID                "MSHW0028"
-> > +#define SURFACE_PRO4_BUTTON_HID                "MSHW0040"
-> >  #define SURFACE_BUTTON_OBJ_NAME                "VGBI"
-> > -#define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3 Buttons"
-> > +#define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro Series Buttons"
-> >
-> >  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
-> >  #define SURFACE_BUTTON_NOTIFY_RELEASE_POWER    0xc7
-> > @@ -35,10 +36,10 @@
-> >  #define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN        0xc2
-> >  #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN      0xc3
-> >
-> > -ACPI_MODULE_NAME("surface pro 3 button");
-> > +ACPI_MODULE_NAME("surface pro series button");
-> >
-> >  MODULE_AUTHOR("Chen Yu");
-> > -MODULE_DESCRIPTION("Surface Pro3 Button Driver");
-> > +MODULE_DESCRIPTION("Surface Pro Series Button Driver");
-> >  MODULE_LICENSE("GPL v2");
-> >
-> >  /*
-> > @@ -54,7 +55,8 @@ MODULE_LICENSE("GPL v2");
-> >   * acpi_driver.
-> >   */
-> >  static const struct acpi_device_id surface_button_device_ids[] = {
-> > -       {SURFACE_BUTTON_HID,    0},
-> > +       {SURFACE_PRO3_BUTTON_HID,    0},
-> > +       {SURFACE_PRO4_BUTTON_HID,    0},
-> >         {"", 0},
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
-> > @@ -202,8 +204,8 @@ static SIMPLE_DEV_PM_OPS(surface_button_pm,
-> >                 surface_button_suspend, surface_button_resume);
-> >
-> >  static struct acpi_driver surface_button_driver = {
-> > -       .name = "surface_pro3_button",
-> > -       .class = "SurfacePro3",
-> > +       .name = "surface_pro_button",
-> > +       .class = "SurfacePro",
-> 
-> So, beside the driver renaming I don't know the side effect of
-> renaming .class field here.
-> 
-> >         .ids = surface_button_device_ids,
-> >         .ops = {
-> >                 .add = surface_button_add,
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
+	/* find a led device that is a keyboard device */
+	while ((filename =3D g_dir_read_name (dir)) !=3D NULL) {
+		if (g_strstr_len (filename, -1, "kbd_backlight") !=3D NULL) {
+			dir_path =3D g_build_filename ("/sys/class/leds",
+						    filename, NULL);
+			break;
+		}
+	}
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2572146.8jNRuuBMSq
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlaK2KIACgkQi/DJPQPkQ1I6dQCfR164oXhoiOFJzcanfFjnam1H
+aW0AoKZyGMcODJ+Sy7HpGC3ztNqbQMWF
+=ISD3
+-----END PGP SIGNATURE-----
+
+--nextPart2572146.8jNRuuBMSq--
