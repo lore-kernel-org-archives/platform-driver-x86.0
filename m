@@ -1,87 +1,39 @@
-From: Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH] intel-hid: Fix build failure when CONFIG_INTEL_HID_EVENT=m
-Date: Mon, 4 Jan 2016 07:34:02 +0100
-Message-ID: <CA+icZUU1hLY=k4hWvLyoitbtkXgEZuZo1Y0G8J94x+ZEwUfa1w@mail.gmail.com>
-References: <8c329ffac51276860bff1911a0f257dd108ee5e8.1451832665.git.luto@kernel.org>
-Reply-To: sedat.dilek@gmail.com
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH 0/1] apple-gmux: Add initial documentation
+Date: Mon, 4 Jan 2016 17:52:06 +0100
+Message-ID: <cover.1451909346.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-vk0-f51.google.com ([209.85.213.51]:33221 "EHLO
-	mail-vk0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751268AbcADGeE (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 4 Jan 2016 01:34:04 -0500
-Received: by mail-vk0-f51.google.com with SMTP id a188so245752157vkc.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 03 Jan 2016 22:34:03 -0800 (PST)
-In-Reply-To: <8c329ffac51276860bff1911a0f257dd108ee5e8.1451832665.git.luto@kernel.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Andreas Heider <andreas@meetr.de>, Seth Forshee <seth.forshee@canonical.com>, William Brown <william@blackhats.net.au>, Bruno Bierbaumer <bruno@bierbaumer.net>, Bruno Premont <bonbons@linux-vserver.org>, Bernhard Froemel <froemel@vmars.tuwien.ac.at>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jan 3, 2016 at 3:54 PM, Andy Lutomirski <luto@kernel.org> wrote:
-> From: Sedat Dilek <sedat.dilek@gmail.com>
->
-> When building with CONFIG_INTEL_HID_EVENT=m on Andy's luto.git#xps13
-> Git branch I see the following build failure:
->
-> ERROR: "sparse_keymap_setup" [drivers/platform/x86/intel-hid.ko] undefined!
-> ERROR: "sparse_keymap_report_event" [drivers/platform/x86/intel-hid.ko] undefined!
->
-> Looks like 'select INPUT_SPARSEKMAP' is missing.
->
-> Fixes: cd8d25841a65 ("intel-hid: new hid event driver for hotkeys")
-> [andy: fixed commit hash above]
-
-Happy and prosperous new 2016,
-
-OK, this was refreshed against linux-platform-drivers-x86.git#for-next
-where intel-hid driver was already included.
-
-[ Next/Trees ]
-drivers-x86 git
-git://git.infradead.org/users/dvhart/linux-platform-drivers-x86.git#for-next
-
-Thanks Andy and all involved people.
-
-- Sedat -
-
-P.S.: Personally, I do not need the intel-hid driver. I was interested
-in 4 patches from luto.git/xps13 in the area acpi-pm/pci-aspm/hid/etc.
-(as I have ACPI-OSC/ASPM troubles and with llvmlinux I see a hid
-issue) which are all in the appropriate -next trees.
-Looks like Dell's XPS13 9350 (Skylake) is well supported on Linux -
-worth promoting.
-( Maybe I try today's Linux-next tree. )
-
-[1] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Next/Trees
-
-> CC: Alex Hung <alex.hung@canonical.com>
-> CC: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> ---
->
-> Hi Alex and Darren-
->
-> I'm relaying this fix from Sedat with a trivial correction.
->
-> drivers/platform/x86/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index d0bfcf8e8b8e..9d7704e51366 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -736,6 +736,7 @@ config INTEL_HID_EVENT
->         tristate "INTEL HID Event"
->         depends on ACPI
->         depends on INPUT
-> +       select INPUT_SPARSEKMAP
->         help
->           This driver provides support for the Intel HID Event hotkey interface.
->           Some laptops require this driver for hotkey support.
-> --
-> 2.5.0
->
+SW5pdGlhbCBkb2N1bWVudGF0aW9uIGZvciBhcHBsZS1nbXV4LiBJZiBhbnlvbmUgaGFzIGFkZGl0
+aW9ucyBvcgpjb3JyZWN0aW9ucyBwbGVhc2UgbGV0IG1lIGtub3cuCgpUaGlzIHVzZXMgYXNjaWlk
+b2MgbWFya3VwLCBhbiBIVE1MIHJlbmRlcmVkIHZlcnNpb24gaXMgYXZhaWxhYmxlIGhlcmU6Cmh0
+dHA6Ly93dW5uZXIuZGUvZ3B1X2RvY3MvaGFuZGxlcnMuaHRtbAoKSWYgeW91IHByZWZlciBwZXJ1
+c2luZyB0aGUgcGF0Y2ggaW4gYSBicm93c2VyOgpodHRwczovL2dpdGh1Yi5jb20vbDFrL2xpbnV4
+L2NvbW1pdC82OGViMDY2MDg5MzQ2YjRiYTlhZWZkY2JjNjllNjY1MjQ0Mjc1MTVlCgpARGFycmVu
+IEhhcnQ6CkJhcnJpbmcgYW55IG9iamVjdGlvbnMsIHBsZWFzZSBraW5kbHkgcHJvdmlkZSBhbiBh
+Y2sgZm9yIG1lcmdpbmcgdmlhCmRybS1uZXh0IG9yIGRybS1pbnRlbCBhcyBJIHdpbGwgcG9zdCBh
+IG5ldyBpdGVyYXRpb24gb2YgbXkgR1BVIHN3aXRjaGluZwpwYXRjaGVzIHNob3J0bHkgd2hpY2gg
+YXJlIGJhc2VkIG9uIHRoaXMgcGF0Y2ggYW5kIHdoaWNoIHNob3VsZCBhbHNvIGdvIGluCnZpYSBk
+cm0tbmV4dC9kcm0taW50ZWwuIFRoYW5rIHlvdSEKCgpMdWthcyBXdW5uZXIgKDEpOgogIGFwcGxl
+LWdtdXg6IEFkZCBpbml0aWFsIGRvY3VtZW50YXRpb24KCiBEb2N1bWVudGF0aW9uL0RvY0Jvb2sv
+Z3B1LnRtcGwgICAgfCAgMjIgKysrKysrKysKIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdt
+dXguYyB8IDExMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxl
+cyBjaGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKQoKLS0gCjEuOC41LjIgKEFwcGxlIEdpdC00OCkK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
