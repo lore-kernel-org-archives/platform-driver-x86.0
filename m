@@ -1,57 +1,67 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] thinkpad_acpi: Add support for keyboard backlight
-Date: Mon, 4 Jan 2016 13:42:00 -0800
-Message-ID: <20160104214200.GE4219@malice.jf.intel.com>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
- <201601042126.19417@pali>
- <20160104204020.GC4219@malice.jf.intel.com>
- <201601042151.23995@pali>
+From: "Chen, Yu C" <yu.c.chen@intel.com>
+Subject: RE: [PATCH v3] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Tue, 5 Jan 2016 00:00:13 +0000
+Message-ID: <36DF59CE26D8EE47B0655C516E9CE640286AEF41@shsmsx102.ccr.corp.intel.com>
+References: <1451237389-7993-1-git-send-email-wengxt@gmail.com>
+ <1451244080-940-1-git-send-email-wengxt@gmail.com>
+ <CAHp75VepPax_eqc4PLgDMvzM4jpQNRXdUe5q3rXPOj81MFcwHQ@mail.gmail.com>
+ <20160104203559.GB4219@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201601042151.23995@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
-List-Id: platform-driver-x86.vger.kernel.org
-
-On Mon, Jan 04, 2016 at 09:51:23PM +0100, Pali Roh=E1r wrote:
-> On Monday 04 January 2016 21:40:20 Darren Hart wrote:
-> > On Mon, Jan 04, 2016 at 09:26:19PM +0100, Pali Roh=E1r wrote:
-> > > On Monday 04 January 2016 21:04:25 Darren Hart wrote:
-> > > > On Wed, Dec 30, 2015 at 11:27:41PM +0100, Pali Roh=E1r wrote:
-> > > > > This patch adds support for controlling keyboard backlight vi=
-a
-> > > > > standard linux led class interface (::kbd_backlight). It uses
-> > > > > ACPI HKEY device with MLCG and MLCS methods.
-> > > >=20
-> > > > Which laptops is this intended to support?
-> > >=20
-> > > Thinkpad ??30 series and new which have backlight keyboard.
-> >=20
-> > Thanks, we should include that in the commit message as well as the
-> > comments surrounding the driver section.
->=20
-> ??30 is probably not good characteristic, but I mean all those Thinkp=
-ad=20
-> laptops like T430, x230, E430, X1 (1st) and their successors (T440,=20
-> T450, X1 3rd, ...) All those which are from Ivy Bridge processor=20
-> generation (and new).
->=20
-> But basically it cover all Thinkpad laptops which have backlight=20
-> keyboard. Older Thinkpad laptops had only light in bezel.
->=20
-> So if you have better idea for commit message, feel free to change it=
-=2E
-
-Ah, I see. New feature that didn't exist previously. OK, no need for ch=
-anges on
-that score then.
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga11.intel.com ([192.55.52.93]:22161 "EHLO mga11.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753752AbcAEAAR convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 4 Jan 2016 19:00:17 -0500
+In-Reply-To: <20160104203559.GB4219@malice.jf.intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Weng Xuetian <wengxt@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 
 
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+Hi Darren,
+
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Tuesday, January 05, 2016 4:36 AM
+> To: Andy Shevchenko
+> Cc: Weng Xuetian; Chen, Yu C; linux-kernel@vger.kernel.org; platform-
+> driver-x86@vger.kernel.org
+> Subject: Re: [PATCH v3] surface pro 4: Add support for Surface Pro 4 Buttons
+> 
+> On Sun, Dec 27, 2015 at 10:58:06PM +0200, Andy Shevchenko wrote:
+> > On Sun, Dec 27, 2015 at 9:21 PM, Weng Xuetian <wengxt@gmail.com>
+> wrote:
+> > > Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
+> > > different from Surface Pro 3.
+> > >
+> > > This commit adds MSHW0040 to id list to support the Surface Pro 4,
+> > > and renames the driver to surfacepro_button accordingly.
+> > >
+> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+> > > Signed-off-by: Weng Xuetian <wengxt@gmail.com>
+> >
+> > Darren, this one looks fine for me, still couple of question up to you.
+> >
+> > First is do we really want to rename driver? (Renaming variables and
+> > stuff like I said if fine to me)
+> 
+> Sorry, replied before seeing this.
+> 
+> I agree that renaming the file is probably not necessary (this works on v3+ as
+> I understand it, so the name isn't really a problem, and dropping the 3
+> suggests it works on v1 and v2).
+> 
+> I'd prefer to keep the name changing to a minimum, and add some
+> information to the Kconfig help and driver comments making it clear that this
+> supports 3+.
+> 
+[Yu] I agree, since I don't have a surface pro < 3 tested, there is no need to rename it.
+
+thanks,
+yu
