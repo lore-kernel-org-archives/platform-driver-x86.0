@@ -1,18 +1,18 @@
 From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
 Subject: [PATCH 1/2] asus-wireless: Toggle airplane mode LED
-Date: Tue,  5 Jan 2016 21:19:27 -0500
-Message-ID: <1452046768-6291-2-git-send-email-jprvita@endlessm.com>
-References: <1452046768-6291-1-git-send-email-jprvita@endlessm.com>
+Date: Tue,  5 Jan 2016 21:29:07 -0500
+Message-ID: <1452047347-7101-1-git-send-email-jprvita@endlessm.com>
+References: <1452046768-6291-2-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qg0-f52.google.com ([209.85.192.52]:33770 "EHLO
-	mail-qg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751809AbcAFCTm (ORCPT
+Received: from mail-qk0-f175.google.com ([209.85.220.175]:36769 "EHLO
+	mail-qk0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750846AbcAFC3N (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Jan 2016 21:19:42 -0500
-In-Reply-To: <1452046768-6291-1-git-send-email-jprvita@endlessm.com>
+	Tue, 5 Jan 2016 21:29:13 -0500
+In-Reply-To: <1452046768-6291-2-git-send-email-jprvita@endlessm.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
@@ -122,7 +122,7 @@ index f37821f..5798cc4 100644
  	  present on some Asus laptops.
 diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x8=
 6/asus-wireless.c
-index 9ec721e..51a33a0 100644
+index 9ec721e..052a527 100644
 --- a/drivers/platform/x86/asus-wireless.c
 +++ b/drivers/platform/x86/asus-wireless.c
 @@ -15,11 +15,78 @@
@@ -153,7 +153,7 @@ index 9ec721e..51a33a0 100644
 +	acpi_status s;
 +	u64 ret;
 +
-+	acpi_handle_debug(handle, "Evaluating method %s, parameter 0x%X\n",
++	acpi_handle_debug(handle, "Evaluating method %s, parameter %#x\n",
 +			  method, param);
 +	obj.type =3D ACPI_TYPE_INTEGER;
 +	obj.integer.value =3D param;
@@ -163,9 +163,9 @@ index 9ec721e..51a33a0 100644
 +	s =3D acpi_evaluate_integer(handle, (acpi_string) method, &p, &ret);
 +	if (ACPI_FAILURE(s))
 +		acpi_handle_err(handle,
-+				"Failed to eval method %s, param 0x%X (%d)\n",
++				"Failed to eval method %s, param %#x (%d)\n",
 +				method, param, s);
-+	acpi_handle_debug(handle, "%s returned 0x%X\n", method, (uint) ret);
++	acpi_handle_debug(handle, "%s returned %#x\n", method, (uint) ret);
 +	return ret;
 +}
 +
