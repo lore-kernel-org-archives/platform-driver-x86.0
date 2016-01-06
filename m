@@ -1,37 +1,45 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 2/2] asus-wireless: Add ACPI HID ATK4001
-Date: Tue, 5 Jan 2016 09:27:57 -0800
-Message-ID: <20160105172757.GH4219@malice.jf.intel.com>
-References: <1452000361-13640-1-git-send-email-jprvita@endlessm.com>
- <1452000361-13640-3-git-send-email-jprvita@endlessm.com>
+From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
+Subject: [PATCH 0/2] asus-wireless: Drive airplane mode LED
+Date: Tue,  5 Jan 2016 21:19:26 -0500
+Message-ID: <1452046768-6291-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:46345 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751667AbcAER2A (ORCPT
+Received: from mail-qg0-f42.google.com ([209.85.192.42]:36111 "EHLO
+	mail-qg0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751636AbcAFCTl (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 5 Jan 2016 12:28:00 -0500
-Content-Disposition: inline
-In-Reply-To: <1452000361-13640-3-git-send-email-jprvita@endlessm.com>
+	Tue, 5 Jan 2016 21:19:41 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
 
-On Tue, Jan 05, 2016 at 08:26:01AM -0500, Jo=E3o Paulo Rechi Vita wrote=
-:
-> As reported in https://bugzilla.kernel.org/show_bug.cgi?id=3D98931#c2=
-2 in
-> the Asus UX31A the Asus Wireless Radio Control device (ASHS) uses the
-> HID "ATK4001".
->=20
-> Signed-off-by: Jo=E3o Paulo Rechi Vita <jprvita@endlessm.com>
-> Reported-by: Tasev Nikola <tasev.stefanoska@skynet.be>
+This series adds code to drive the airplane mode indicator LED present =
+in some
+of the Asus laptops that have an airplane mode hotkey. It depends on a =
+new LED
+trigger created in the RFKill subsystem, which is currently pending rev=
+iew on
+linux-wireless.
 
-Queued to testing, thanks.
+It also creates a new DMI quirk on asus-wmi because it also tries to dr=
+ive the
+same LED on laptops where the BIOS reports it does not save the WLAN LE=
+D state.
+
+Jo=C3=A3o Paulo Rechi Vita (2):
+  asus-wireless: Toggle airplane mode LED
+  asus-wmi: Create quirk for airplane_mode LED
+
+ drivers/platform/x86/Kconfig         |  2 +
+ drivers/platform/x86/asus-nb-wmi.c   | 31 ++++++++++++
+ drivers/platform/x86/asus-wireless.c | 92 ++++++++++++++++++++++++++++=
++++++++-
+ drivers/platform/x86/asus-wmi.c      |  8 ++--
+ drivers/platform/x86/asus-wmi.h      |  1 +
+ 5 files changed, 130 insertions(+), 4 deletions(-)
 
 --=20
-Darren Hart
-Intel Open Source Technology Center
+2.5.0
