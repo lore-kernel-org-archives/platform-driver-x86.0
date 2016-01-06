@@ -1,141 +1,256 @@
 From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH 2/2] asus-wmi: Create quirk for airplane_mode LED
-Date: Tue,  5 Jan 2016 21:19:28 -0500
-Message-ID: <1452046768-6291-3-git-send-email-jprvita@endlessm.com>
+Subject: [PATCH 1/2] asus-wireless: Toggle airplane mode LED
+Date: Tue,  5 Jan 2016 21:19:27 -0500
+Message-ID: <1452046768-6291-2-git-send-email-jprvita@endlessm.com>
 References: <1452046768-6291-1-git-send-email-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qg0-f52.google.com ([209.85.192.52]:33770 "EHLO
+	mail-qg0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751809AbcAFCTm (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 5 Jan 2016 21:19:42 -0500
 In-Reply-To: <1452046768-6291-1-git-send-email-jprvita@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Darren Hart <dvhart@infradead.org>
 Cc: Corentin Chary <corentin.chary@gmail.com>, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
-List-Id: platform-driver-x86.vger.kernel.org
 
-Some Asus laptops have a "airplane mode" indicator LED, have the WMI
-WLAN user bit set, and also have the following bits in their DSDT:
+In the ASHS device we have the HSWC method, which basically calls eithe=
+r
+OWGD or OWGS, depending on its parameter:
 
-Scope (_SB)
-{
-  (...)
-  Device (ATKD)
-  {
-    (...)
-    Method (WMNB, 3, Serialized)
-    {
-      (...)
-      If (LEqual (IIA0, 0x00010002))
-      {
-        OWGD (IIA1)
-        Return (One)
-      }
-    }
-  }
-}
+	Device (ASHS)
+	{
+		Name (_HID, "ATK4002")  // _HID: Hardware ID
+		Method (HSWC, 1, Serialized)
+		{
+			If ((Arg0 < 0x02))
+			{
+				OWGD (Arg0)
+				Return (One)
+			}
+			If ((Arg0 =3D=3D 0x02))
+			{
+				Local0 =3D OWGS ()
+				If (Local0)
+				{
+					Return (0x05)
+				}
+				Else
+				{
+					Return (0x04)
+				}
+			}
+			If ((Arg0 =3D=3D 0x03))
+			{
+				Return (0xFF)
+			}
+			If ((Arg0 =3D=3D 0x04))
+			{
+				OWGD (Zero)
+				Return (One)
+			}
+			If ((Arg0 =3D=3D 0x05))
+			{
+				OWGD (One)
+				Return (One)
+			}
+			If ((Arg0 =3D=3D 0x80))
+			{
+				Return (One)
+			}
+		}
+		Method (_STA, 0, NotSerialized)  // _STA: Status
+		{
+			If ((MSOS () >=3D OSW8))
+			{
+				Return (0x0F)
+			}
+			Else
+			{
+				Return (Zero)
+			}
+		}
+	}
 
-So when asus-wmi uses ASUS_WMI_DEVID_WLAN_LED (0x00010002) to store the
-wlan state, it drives the airplane mode indicator LED (throught the cal=
-l
-to OWGD)in an inverted fashion: the LED is ON when airplane mode is OFF
-(since wlan is ON), and vice-versa.
+On the Asus E202SA laptop, which does not have an airplane mode LED,
+OWGD has an empty implementation and OWGS simply returns 0. On the Asus
+X555UB these methods have the following implementation:
 
-This commit creates a quirk to no register a RFKill switch at all for
-these laptops, to allow the asus-wireless driver to drive the airplane
-mode LED correctly.
+	Method (OWGD, 1, Serialized)
+	{
+		SGPL (0x0203000F, Arg0)
+		SGPL (0x0203000F, Arg0)
+	}
+
+	Method (OWGS, 0, Serialized)
+	{
+		Store (RGPL (0x0203000F), Local0)
+		Return (Local0)
+	}
+
+Where OWGD(1) sets the airplane mode LED ON, OWGD(0) set it off, and
+OWGS() returns its state.
+
+This commit makes use of a newly implemented RFKill LED trigger to
+trigger the LED when the system enters or exits "Airplane Mode", there
+is, when all radios are blocked.
 
 Signed-off-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 31 ++++++++++++++++++++++++++++++=
-+
- drivers/platform/x86/asus-wmi.c    |  8 +++++---
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 37 insertions(+), 3 deletions(-)
+ drivers/platform/x86/Kconfig         |  2 +
+ drivers/platform/x86/asus-wireless.c | 92 ++++++++++++++++++++++++++++=
++++++++-
+ 2 files changed, 93 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/=
-asus-nb-wmi.c
-index 131fee2..4ded187 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -78,6 +78,10 @@ static struct quirk_entry quirk_asus_x200ca =3D {
- 	.wapf =3D 2,
- };
-=20
-+static struct quirk_entry quirk_no_rfkill =3D {
-+	.no_rfkill =3D true,
-+};
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+index f37821f..5798cc4 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -591,6 +591,8 @@ config ASUS_WIRELESS
+ 	tristate "Asus Wireless Radio Control Driver"
+ 	depends on ACPI
+ 	depends on INPUT
++	select NEW_LEDS
++	select LEDS_CLASS
+ 	---help---
+ 	  The Asus Wireless Radio Control handles the airplane mode hotkey
+ 	  present on some Asus laptops.
+diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x8=
+6/asus-wireless.c
+index 9ec721e..51a33a0 100644
+--- a/drivers/platform/x86/asus-wireless.c
++++ b/drivers/platform/x86/asus-wireless.c
+@@ -15,11 +15,78 @@
+ #include <linux/acpi.h>
+ #include <linux/input.h>
+ #include <linux/pci_ids.h>
++#include <linux/leds.h>
 +
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	quirks =3D dmi->driver_data;
-@@ -297,6 +301,33 @@ static const struct dmi_system_id asus_quirks[] =3D=
- {
- 		},
- 		.driver_data =3D &quirk_asus_x200ca,
- 	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "ASUSTeK COMPUTER INC. X555UB",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X555UB"),
-+		},
-+		.driver_data =3D &quirk_no_rfkill,
-+	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "ASUSTeK COMPUTER INC. X552VW",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "X552VW"),
-+		},
-+		.driver_data =3D &quirk_no_rfkill,
-+	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "ASUSTeK COMPUTER INC. U303LB",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "U303LB"),
-+		},
-+		.driver_data =3D &quirk_no_rfkill,
-+	},
- 	{},
++#define ASUS_WIRELESS_LED_STATUS 0x2
++#define ASUS_WIRELESS_LED_OFF 0x4
++#define ASUS_WIRELESS_LED_ON 0x5
+=20
+ struct asus_wireless_data {
+ 	struct input_dev *idev;
++	struct acpi_device *adev;
++	struct workqueue_struct *wq;
++	struct work_struct led_work;
++	struct led_classdev led;
++	int led_state;
  };
 =20
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asu=
-s-wmi.c
-index a96630d..370fa347 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2064,9 +2064,11 @@ static int asus_wmi_add(struct platform_device *=
-pdev)
- 	if (err)
- 		goto fail_leds;
++static u64 asus_wireless_method(acpi_handle handle, const char *method=
+,
++				int param)
++{
++	union acpi_object obj;
++	struct acpi_object_list p;
++	acpi_status s;
++	u64 ret;
++
++	acpi_handle_debug(handle, "Evaluating method %s, parameter 0x%X\n",
++			  method, param);
++	obj.type =3D ACPI_TYPE_INTEGER;
++	obj.integer.value =3D param;
++	p.count =3D 1;
++	p.pointer =3D &obj;
++
++	s =3D acpi_evaluate_integer(handle, (acpi_string) method, &p, &ret);
++	if (ACPI_FAILURE(s))
++		acpi_handle_err(handle,
++				"Failed to eval method %s, param 0x%X (%d)\n",
++				method, param, s);
++	acpi_handle_debug(handle, "%s returned 0x%X\n", method, (uint) ret);
++	return ret;
++}
++
++static enum led_brightness asus_wireless_led_get(struct led_classdev *=
+led)
++{
++	struct asus_wireless_data *data;
++	int s;
++
++	data =3D container_of(led, struct asus_wireless_data, led);
++	s =3D asus_wireless_method(acpi_device_handle(data->adev), "HSWC",
++				 ASUS_WIRELESS_LED_STATUS);
++	if (s =3D=3D ASUS_WIRELESS_LED_ON)
++		return LED_FULL;
++	return LED_OFF;
++}
++
++static void asus_wireless_led_update(struct work_struct *work)
++{
++	struct asus_wireless_data *data;
++
++	data =3D container_of(work, struct asus_wireless_data, led_work);
++	asus_wireless_method(acpi_device_handle(data->adev), "HSWC",
++			     data->led_state);
++}
++
++static void asus_wireless_led_set(struct led_classdev *led,
++				  enum led_brightness value)
++{
++	struct asus_wireless_data *data;
++
++	data =3D container_of(led, struct asus_wireless_data, led);
++	data->led_state =3D value =3D=3D LED_OFF ? ASUS_WIRELESS_LED_OFF :
++					     ASUS_WIRELESS_LED_ON;
++	queue_work(data->wq, &data->led_work);
++}
++
+ static void asus_wireless_notify(struct acpi_device *adev, u32 event)
+ {
+ 	struct asus_wireless_data *data =3D acpi_driver_data(adev);
+@@ -37,6 +104,7 @@ static void asus_wireless_notify(struct acpi_device =
+*adev, u32 event)
+ static int asus_wireless_add(struct acpi_device *adev)
+ {
+ 	struct asus_wireless_data *data;
++	int err;
 =20
--	err =3D asus_wmi_rfkill_init(asus);
--	if (err)
--		goto fail_rfkill;
-+	if (!asus->driver->quirks->no_rfkill) {
-+		err =3D asus_wmi_rfkill_init(asus);
-+		if (err)
-+			goto fail_rfkill;
-+	}
+ 	data =3D devm_kzalloc(&adev->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+@@ -52,11 +120,33 @@ static int asus_wireless_add(struct acpi_device *a=
+dev)
+ 	data->idev->id.vendor =3D PCI_VENDOR_ID_ASUSTEK;
+ 	set_bit(EV_KEY, data->idev->evbit);
+ 	set_bit(KEY_RFKILL, data->idev->keybit);
+-	return input_register_device(data->idev);
++	err =3D input_register_device(data->idev);
++	if (err)
++		return err;
++
++	data->adev =3D adev;
++	data->wq =3D create_singlethread_workqueue("asus_wireless_workqueue")=
+;
++	if (!data->wq)
++		return -ENOMEM;
++	INIT_WORK(&data->led_work, asus_wireless_led_update);
++	data->led.name =3D "asus-wireless::airplane_mode";
++	data->led.brightness_set =3D asus_wireless_led_set;
++	data->led.brightness_get =3D asus_wireless_led_get;
++	data->led.flags =3D LED_CORE_SUSPENDRESUME;
++	data->led.max_brightness =3D 1;
++	data->led.default_trigger =3D "rfkill-airplane-mode";
++	err =3D devm_led_classdev_register(&adev->dev, &data->led);
++	if (err)
++		destroy_workqueue(data->wq);
++	return err;
+ }
 =20
- 	/* Some Asus desktop boards export an acpi-video backlight interface,
- 	   stop this from showing up */
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asu=
-s-wmi.h
-index 4da4c8b..5de1df5 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -38,6 +38,7 @@ struct key_entry;
- struct asus_wmi;
+ static int asus_wireless_remove(struct acpi_device *adev)
+ {
++	struct asus_wireless_data *data =3D acpi_driver_data(adev);
++
++	if (data->wq)
++		destroy_workqueue(data->wq);
+ 	return 0;
+ }
 =20
- struct quirk_entry {
-+	bool no_rfkill;
- 	bool hotplug_wireless;
- 	bool scalar_panel_brightness;
- 	bool store_backlight_power;
 --=20
 2.5.0
