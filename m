@@ -1,55 +1,61 @@
-From: "Zha, Qipeng" <qipeng.zha@intel.com>
-Subject: RE: [PATCH v3 1/5] platform:x86: Add Intel Telemetry Core Driver
-Date: Fri, 8 Jan 2016 01:00:11 +0000
-Message-ID: <C6287702A945AC47BE5DB5DFD4B5C6DD03844C45@SHSMSX104.ccr.corp.intel.com>
-References: <1450867350-11253-1-git-send-email-souvik.k.chakravarty@intel.com>
- <20151230005031.GB29978@malice.jf.intel.com>
- <5F7315E704FA0841B5DFCE90329B2BB42C0F4EB7@BGSMSX102.gar.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Qipeng Zha <qipeng.zha@intel.com>
+Subject: [PATCH] intel_punit_ipc: add NULL check for input parameters
+Date: Fri,  8 Jan 2016 18:32:27 +0800
+Message-ID: <1452249147-34712-1-git-send-email-qipeng.zha@intel.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga09.intel.com ([134.134.136.24]:51303 "EHLO mga09.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:63057 "EHLO mga11.intel.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753498AbcAHBAP convert rfc822-to-8bit (ORCPT
+	id S1753946AbcAHC1p (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 7 Jan 2016 20:00:15 -0500
-In-Reply-To: <5F7315E704FA0841B5DFCE90329B2BB42C0F4EB7@BGSMSX102.gar.corp.intel.com>
-Content-Language: en-US
+	Thu, 7 Jan 2016 21:27:45 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>, Darren Hart <dvhart@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Kasagar, Srinidhi" <srinidhi.kasagar@intel.com>, "Muralidhar, Rajeev D" <rajeev.d.muralidhar@intel.com>, "Ghorai, Sukumar" <sukumar.ghorai@intel.com>, "Yu, Ong Hock" <ong.hock.yu@intel.com>, "Li, Aubrey" <aubrey.li@intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andriy.shevchenko@linux.intel.com, souvik.k.chakravarty@intel.com
 
-> -----Original Message-----
-> From: platform-driver-x86-owner@vger.kernel.org 
-> [mailto:platform-driver- x86-owner@vger.kernel.org] On Behalf Of 
-> Darren Hart
-> Sent: Wednesday, December 30, 2015 6:21 AM
-> To: Chakravarty, Souvik K <souvik.k.chakravarty@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org; Kasagar, Srinidhi 
-> <srinidhi.kasagar@intel.com>; Zha, Qipeng <qipeng.zha@intel.com>; 
-> Muralidhar, Rajeev D <rajeev.d.muralidhar@intel.com>; Ghorai, Sukumar 
-> <sukumar.ghorai@intel.com>; Yu, Ong Hock <ong.hock.yu@intel.com>; Li, 
-> Aubrey <aubrey.li@intel.com>
-> Subject: Re: [PATCH v3 1/5] platform:x86: Add Intel Telemetry Core 
-> Driver
-> 
-> On Wed, Dec 23, 2015 at 04:12:30PM +0530, Souvik Kumar Chakravarty wrote:
-> > Intel PM Telemetry is a software mechanism via which various SoC PM 
-> > and performance related parameters like PM counters, firmware trace 
-> > verbosity, the status of different devices inside the SoC, etc can 
-> > be monitored and analyzed. The different samples that may be 
-> > monitored can be configured at runtime via exported APIs.
-> >
-> > This patch adds the telemetry core driver that implements basic 
-> > exported APIs.
-> >
-> > Signed-off-by: Souvik Kumar Chakravarty 
-> > <souvik.k.chakravarty@intel.com>
-> 
-> Qipeng, would you please review this series and confirm that you and 
-> Souvik have aligned on this implementation?
+intel_punit_ipc_command() maybe called when in or out
+data pointers are NULL.
 
-> Yes I have already aligned with Qipeng internally for this telemetry PMC resource addition.
-Yes,  I think it's ok for the PMC resource additition.
+Signed-off-by: Qipeng Zha <qipeng.zha@intel.com>
+---
+ drivers/platform/x86/intel_punit_ipc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+index 16685bc..bd87540 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -187,10 +187,12 @@ int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
+ 
+ 	reinit_completion(&ipcdev->cmd_complete);
+ 	type = (cmd & IPC_PUNIT_CMD_TYPE_MASK) >> IPC_TYPE_OFFSET;
+-	ipc_write_data_low(ipcdev, type, *in);
+ 
+-	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
+-		ipc_write_data_high(ipcdev, type, *++in);
++	if (in) {
++		ipc_write_data_low(ipcdev, type, *in);
++		if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
++			ipc_write_data_high(ipcdev, type, *++in);
++	}
+ 
+ 	val = cmd & ~IPC_PUNIT_CMD_TYPE_MASK;
+ 	val |= CMD_RUN | para2 << CMD_PARA2_SHIFT | para1 << CMD_PARA1_SHIFT;
+@@ -199,10 +201,12 @@ int intel_punit_ipc_command(u32 cmd, u32 para1, u32 para2, u32 *in, u32 *out)
+ 	ret = intel_punit_ipc_check_status(ipcdev, type);
+ 	if (ret)
+ 		goto out;
+-	*out = ipc_read_data_low(ipcdev, type);
+ 
+-	if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
+-		*++out = ipc_read_data_high(ipcdev, type);
++	if (out) {
++		*out = ipc_read_data_low(ipcdev, type);
++		if (type == GTDRIVER_IPC || type == ISPDRIVER_IPC)
++			*++out = ipc_read_data_high(ipcdev, type);
++	}
+ 
+ out:
+ 	mutex_unlock(&ipcdev->lock);
+-- 
+1.8.3.2
