@@ -1,45 +1,53 @@
 From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] thinkpad_acpi: don't yell on unsupported brightness
- interfaces
-Date: Sat, 09 Jan 2016 15:32:38 -0200
-Message-ID: <1452360758.672752.487412298.7D14D501@webmail.messagingengine.com>
-References: <1445424370-4725-1-git-send-email-dh.herrmann@gmail.com>
- <1445438032.750540.416379153.1ECC9658@webmail.messagingengine.com>
- <20151021144410.GB29166@vmdeb7>
- <CANq1E4TQUunxqfuxMjwmJGfOD0tjoJuH8T548XaGkSKEp-Ep_g@mail.gmail.com>
- <20151106175706.GE18221@malice.jf.intel.com>
- <CANpvso5BV-i8eE24vnTFPH=VAYFDy04U2N-Q7YRqpzd9bkbhJA@mail.gmail.com>
- <CANq1E4SZZGxt21c3KpxJD_S=poMOttYaEOLYpDrSfmgXLQ+e7g@mail.gmail.com>
- <CANpvso73jhJsFDVyid9akNqcPUbSYT1b4LBb=ywUxj47PXQ7qA@mail.gmail.com>
+Subject: Re: [PATCH v2] thinkpad_acpi: Add support for keyboard backlight
+Date: Sat, 09 Jan 2016 15:34:35 -0200
+Message-ID: <1452360875.672905.487413202.45C93A5C@webmail.messagingengine.com>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
+ <1451514461-31999-1-git-send-email-pali.rohar@gmail.com>
+ <20160104200425.GC26072@malice.jf.intel.com> <201601042126.19417@pali>
+ <20160104204020.GC4219@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:46862 "EHLO
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:54596 "EHLO
 	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754221AbcAIRcj (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sat, 9 Jan 2016 12:32:39 -0500
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-	by mailout.nyi.internal (Postfix) with ESMTP id 679442076B
-	for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jan 2016 12:32:38 -0500 (EST)
-In-Reply-To: <CANpvso73jhJsFDVyid9akNqcPUbSYT1b4LBb=ywUxj47PXQ7qA@mail.gmail.com>
+	by vger.kernel.org with ESMTP id S1755209AbcAIReg convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 9 Jan 2016 12:34:36 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 398BC203BC
+	for <platform-driver-x86@vger.kernel.org>; Sat,  9 Jan 2016 12:34:36 -0500 (EST)
+In-Reply-To: <20160104204020.GC4219@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Eric Curtin <ericcurtin17@gmail.com>, David Herrmann <dh.herrmann@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, linux-kernel <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, =?ISO-8859-1?Q?Pali=20Roh=E1r?= <pali.rohar@gmail.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-On Fri, Jan 8, 2016, at 15:26, Eric Curtin wrote:
-> As regards the "Unsupported brightness interface" log message will I
-> add 101 to the switch statement so it doesn't get reported on my device
-> or just remove it? This seems to be reporting many false positives (or
-> negatives whatever way you want to look at it) on different machines so
-> can I remove this logging?
+On Mon, Jan 4, 2016, at 18:40, Darren Hart wrote:
+> On Mon, Jan 04, 2016 at 09:26:19PM +0100, Pali Roh=E1r wrote:
+> > On Monday 04 January 2016 21:04:25 Darren Hart wrote:
+> > > On Wed, Dec 30, 2015 at 11:27:41PM +0100, Pali Roh=E1r wrote:
+> > > > This patch adds support for controlling keyboard backlight via
+> > > > standard linux led class interface (::kbd_backlight). It uses A=
+CPI
+> > > > HKEY device with MLCG and MLCS methods.
+> > >=20
+> > > Which laptops is this intended to support?
+> >=20
+> > Thinkpad ??30 series and new which have backlight keyboard.
+>=20
+> Thanks, we should include that in the commit message as well as the
+> comments
+> surrounding the driver section.
+>=20
+> Henrique, are your concerns surrounding suspend/resume resolved?
 
-Either remove the message, or leave it at debug level.  Do not add 101
-to the switch case, please.
+Yes.
 
--- 
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+--=20
   "One disk to rule them all, One disk to find them. One disk to bring
   them all and in the darkness grind them. In the Land of Redmond
   where the shadows lie." -- The Silicon Valley Tarot
