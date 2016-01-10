@@ -1,84 +1,68 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for
-	keyboard backlight
-Date: Sat, 09 Jan 2016 15:46:41 -0200
-Message-ID: <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
-	<20160104201231.GB5847@amd>
-	<1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH v2 0/1] apple-gmux: Add initial documentation
+Date: Mon, 11 Jan 2016 00:08:35 +0100
+Message-ID: <cover.1452431795.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1452361154.673684.487414482.6CCEAE4B-2RFepEojUI2N1INw9kWLP6GC3tUn3ZHUQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
-	<mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?ISO-8859-1?Q?Pali=20Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio D'Urso <fabiodurso-PkbjNfxxIASonA0d6jMUrA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout2.hostsharing.net ([83.223.90.233]:56551 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757634AbcAJXIn (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sun, 10 Jan 2016 18:08:43 -0500
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>
+Cc: Darren Hart <dvhart@linux.intel.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Bruno Premont <bonbons@linux-vserver.org>
 
-On Sat, Jan 9, 2016, at 15:39, Henrique de Moraes Holschuh wrote:
-> On Mon, Jan 4, 2016, at 18:12, Pavel Machek wrote:
-> > > This patch adds support for controlling keyboard backlight via standa=
-rd
-> > > linux led class interface (::kbd_backlight). It uses ACPI HKEY device=
- with
-> > > MLCG and MLCS methods.
-> > > =
+On Fri, Jan 08, 2016 at 09:49:22AM -0700, Jonathan Corbet wrote:
+> Well, it's built around the asciidoc patch, which isn't in the mainli=
+ne
+> at this point.  Should things go a different direction, that could fo=
+rce
+> some changes here;
 
-> > > Signed-off-by: Pali Roh=E1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Tested-by: Fabio D'Urso <fabiodurso-PkbjNfxxIASonA0d6jMUrA@public.gmane.org>
-> > =
+If/when that happens, I'll be happy to fixup the documentation as neede=
+d.
+In fact I originally wrote this in markdown in November, then converted
+it to asciidoc in December and that really wasn't a big deal.
 
-> > On my thinkpad, keyboard light is controlled by
-> > =
+The need for asciidoc arises from the desire to not clutter up the pros=
+e
+text with URLs. To achieve this, asciidoc allows defining so-called
+"attribute entries" which may then be referenced in the text:
+http://asciidoc.org/userguide.html#X62
 
-> > /sys/class/leds/tpacpi\:\:thinklight/brightness
-> > =
+Markdown has a similar feature called "reference style links", the
+difference being that they can be defined anywhere in the document,
+whereas asciidoc's "attribute entries" must precede their usage in
+the text:
+https://daringfireball.net/projects/markdown/syntax#link
 
-> > (that's a bad name).
-> =
 
-> That's because the driver was not updated to support your laptop, AND I
-> don't recall if someone mapped the full behavior of the ACPI thinklight
-> interface in your thinkpad :-(
+Here's a v2, the only change is Bruno Pr=E9mont's addition to the commi=
+t
+message.
 
-Argh.  If by "keyboard light" you mean the LED above the *screen* that
-shines down on the whole keyboard, please disregard my previous reply...
+@Daniel Vetter: Could you pick this up for topic/drm-misc please?
 
-As for the naming, the idea of a LED up there shining in the keyboard
-is:
- 1. patented by IBM
- 2. named "ThinkLight" by IBM, one of the "Think Technologies" in the
- "ThinkPad" (add TM after everything :p)  and every
-     old-timer thinkpad user knew it by that name.
- 4. called "thinklight" by the driver since before the LED sysfs class
- even existed :p
+An ack for drivers/platform/x86 was kindly provided by Darren Hart with=
+:
+Message-ID: <20160104203150.GA4219@malice.jf.intel.com>
+Link: http://lists.freedesktop.org/archives/dri-devel/2016-January/0979=
+18.html
 
-ibm-acpi, since then renamed thinkpad-acpi *predates* most generic
-interfaces.  Heck, it predates sysfs.
+Thanks everyone!
 
-So, this is ABI set in stone.  If there is a way to add an "alias" of
-kbd_backlight that won't drive userspace crazy, we might do that though.
- But it looks quite risky to me...
 
--- =
+Lukas Wunner (1):
+  apple-gmux: Add initial documentation
 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+ Documentation/DocBook/gpu.tmpl    |  22 ++++++++
+ drivers/platform/x86/apple-gmux.c | 113 ++++++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 135 insertions(+)
 
----------------------------------------------------------------------------=
----
-Site24x7 APM Insight: Get Deep Visibility into Application Performance
-APM + Mobile APM + RUM: Monitor 3 App instances at just $35/Month
-Monitor end-to-end web transactions and take corrective actions now
-Troubleshoot faster and improve end-user experience. Signup Now!
-http://pubads.g.doubleclick.net/gampad/clk?id=3D267308311&iu=3D/4140
+--=20
+1.8.5.2 (Apple Git-48)
