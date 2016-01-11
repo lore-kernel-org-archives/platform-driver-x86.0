@@ -1,108 +1,66 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
 Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Mon, 11 Jan 2016 17:28:00 -0200
-Message-ID: <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
- <20160104201231.GB5847@amd>
- <1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
- <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
- <20160111190411.GE10643@malice.jf.intel.com>
+Date: Mon, 11 Jan 2016 21:03:01 +0100
+Message-ID: <201601112103.01145@pali>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com> <20160111190411.GE10643@malice.jf.intel.com> <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed;
+  boundary="nextPart1953989.BUkrITcQSi";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39108 "EHLO
-	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S932632AbcAKT2B convert rfc822-to-8bit
-	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:28:01 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 3857C209BE
-	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jan 2016 14:28:01 -0500 (EST)
-In-Reply-To: <20160111190411.GE10643@malice.jf.intel.com>
+Received: from mail-wm0-f44.google.com ([74.125.82.44]:38581 "EHLO
+	mail-wm0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934638AbcAKUDE (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 15:03:04 -0500
+In-Reply-To: <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: Pavel Machek <pavel@ucw.cz>, =?ISO-8859-1?Q?Pali=20Roh=E1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Darren Hart <dvhart@infradead.org>, Pavel Machek <pavel@ucw.cz>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-On Mon, Jan 11, 2016, at 17:04, Darren Hart wrote:
-> On Sat, Jan 09, 2016 at 03:46:41PM -0200, Henrique de Moraes Holschuh
-> wrote:
-> > On Sat, Jan 9, 2016, at 15:39, Henrique de Moraes Holschuh wrote:
-> > > On Mon, Jan 4, 2016, at 18:12, Pavel Machek wrote:
-> > > > > This patch adds support for controlling keyboard backlight vi=
-a standard
-> > > > > linux led class interface (::kbd_backlight). It uses ACPI HKE=
-Y device with
-> > > > > MLCG and MLCS methods.
-> > > > >=20
-> > > > > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> > > > > Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
-> > > >=20
-> > > > On my thinkpad, keyboard light is controlled by
-> > > >=20
-> > > > /sys/class/leds/tpacpi\:\:thinklight/brightness
-> > > >=20
-> > > > (that's a bad name).
-> > >=20
-> > > That's because the driver was not updated to support your laptop,=
- AND I
-> > > don't recall if someone mapped the full behavior of the ACPI thin=
-klight
-> > > interface in your thinkpad :-(
-> >=20
-> > Argh.  If by "keyboard light" you mean the LED above the *screen* t=
-hat
-> > shines down on the whole keyboard, please disregard my previous rep=
-ly...
-> >=20
-> > As for the naming, the idea of a LED up there shining in the keyboa=
-rd
-> > is:
-> >  1. patented by IBM
-> >  2. named "ThinkLight" by IBM, one of the "Think Technologies" in t=
-he
-> >  "ThinkPad" (add TM after everything :p)  and every
-> >      old-timer thinkpad user knew it by that name.
-> >  4. called "thinklight" by the driver since before the LED sysfs cl=
-ass
-> >  even existed :p
-> >=20
-> > ibm-acpi, since then renamed thinkpad-acpi *predates* most generic
-> > interfaces.  Heck, it predates sysfs.
-> >=20
-> > So, this is ABI set in stone.  If there is a way to add an "alias" =
-of
-> > kbd_backlight that won't drive userspace crazy, we might do that th=
-ough.
-> >  But it looks quite risky to me...
->=20
-> Henrique, so are you taking back your Ack from 10 minutes prior?
+--nextPart1953989.BUkrITcQSi
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hmm? No, the ACK stands.
+On Monday 11 January 2016 20:28:00 Henrique de Moraes Holschuh wrote
+> The two features are not the same (and are handled differently by the
+> firmware, for whatever reason), although they do serve the same
+> purpose. I don't think a thinkpad will ever have both features at
+> the same time, so I have no idea why they changed the firmware
+> interface.
 
-Pavel was talking about another feature altogether, apparently: older
-thinkpads did not have "keyboard backlight" (as in light from below the
-keys).  They had a "ThinkLight", which is an overhead light that shines
-down on the keyboard.
+Maybe we should decide if ::kbd_backlight LED suffix could be used also=20
+for other LED devices and not only for those which are physically under=20
+the keyboard.
 
-The two features are not the same (and are handled differently by the
-firmware, for whatever reason), although they do serve the same purpose=
-=2E
- I don't think a thinkpad will ever have both features at the same time=
-,
-so I have no idea why they changed the firmware interface.
+At least I understand "keyboard backlight" as light which is under the=20
+keyboard...
 
-The patch adds support to the "keyboard backlight" feature, which was
-previously NOT supported.
+And more important, I was told that ThinkPad x230 comes in variant with=20
+both ThinkLight (that LED upper the display) and keyboard backlight=20
+(under they keyboard).
 
-> I've dropped this patch. Please let me know if I should pick it back =
-up.
+So I'm against merging ThinkLight and keyboard backlight to one sysfs=20
+path...
 
-Please pick it back up.
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
---=20
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+--nextPart1953989.BUkrITcQSi
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlaUCnUACgkQi/DJPQPkQ1KdngCcCdNG7RIcdOiSBPDyrQluTfzF
+tnUAnjts7lfUt4uYuJ+dn1JY1Bczfg7O
+=i71w
+-----END PGP SIGNATURE-----
+
+--nextPart1953989.BUkrITcQSi--
