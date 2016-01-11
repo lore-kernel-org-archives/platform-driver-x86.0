@@ -1,61 +1,68 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 11/12] drm/nouveau: Defer probe if gmux is present but its
+Subject: [PATCH v5 12/12] drm/radeon: Defer probe if gmux is present but its
  driver isn't
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <d9542ca5041178165d3ff286c90cc99634f7d2ce.1452525860.git.lukas@wunner.de>
+Message-ID: <552da6d85a82092146af7b0693595fa2a9ea376b.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout1.hostsharing.net ([83.223.95.204]:52626 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758737AbcAKTMS (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 14:12:18 -0500
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: nouveau@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Alex Deucher <alexander.deucher@amd.com>
 
-Z211eCBpcyBhIG1pY3JvY29udHJvbGxlciBidWlsdCBpbnRvIGR1YWwgR1BVIE1hY0Jvb2sgUHJv
-cy4KT24gcHJlLXJldGluYSBNQlBzLCBpZiB3ZSdyZSB0aGUgaW5hY3RpdmUgR1BVLCB3ZSBuZWVk
-IGFwcGxlLWdtdXgKdG8gdGVtcG9yYXJpbHkgc3dpdGNoIEREQyBzbyB0aGF0IHdlIGNhbiBwcm9i
-ZSB0aGUgcGFuZWwncyBFRElELgoKVGhlIGNoZWNrcyBmb3IgQ09ORklHX1ZHQV9BUkIgYW5kIENP
-TkZJR19WR0FfU1dJVENIRVJPTyBhcmUgbmVjZXNzYXJ5CmJlY2F1c2UgaWYgZWl0aGVyIG9mIHRo
-ZW0gaXMgZGlzYWJsZWQgYnV0IGdtdXggaXMgcHJlc2VudCwgdGhlIGRyaXZlcgp3b3VsZCBuZXZl
-ciBsb2FkLCBldmVuIGlmIHdlJ3JlIHRoZSBhY3RpdmUgR1BVLiAodmdhX2RlZmF1bHRfZGV2aWNl
-KCkKd291bGQgZXZhbHVhdGUgdG8gTlVMTCBhbmQgdmdhX3N3aXRjaGVyb29faGFuZGxlcl9mbGFn
-cygpIHdvdWxkCmV2YWx1YXRlIHRvIDAuKQoKQnVnemlsbGE6IGh0dHBzOi8vYnVnemlsbGEua2Vy
-bmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9ODg4NjEKQnVnemlsbGE6IGh0dHBzOi8vYnVncy5mcmVl
-ZGVza3RvcC5vcmcvc2hvd19idWcuY2dpP2lkPTYxMTE1ClRlc3RlZC1ieTogTHVrYXMgV3VubmVy
-IDxsdWthc0B3dW5uZXIuZGU+CiAgICBbTUJQICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlh
-IEdLMTA3ICBwcmUtcmV0aW5hICAxNSJdClNpZ25lZC1vZmYtYnk6IEx1a2FzIFd1bm5lciA8bHVr
-YXNAd3VubmVyLmRlPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfZHJtLmMg
-fCAxMSArKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykKCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1X2RybS5jIGIvZHJpdmVycy9n
-cHUvZHJtL25vdXZlYXUvbm91dmVhdV9kcm0uYwppbmRleCAyZjJmMjUyLi5iYjg0OThjIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1X2RybS5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfZHJtLmMKQEAgLTIyLDExICsyMiwxMyBAQAogICog
-QXV0aG9yczogQmVuIFNrZWdncwogICovCiAKKyNpbmNsdWRlIDxsaW51eC9hcHBsZS1nbXV4Lmg+
-CiAjaW5jbHVkZSA8bGludXgvY29uc29sZS5oPgogI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+CiAj
-aW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAjaW5jbHVkZSA8bGludXgvcGNpLmg+CiAjaW5jbHVk
-ZSA8bGludXgvcG1fcnVudGltZS5oPgorI2luY2x1ZGUgPGxpbnV4L3ZnYWFyYi5oPgogI2luY2x1
-ZGUgPGxpbnV4L3ZnYV9zd2l0Y2hlcm9vLmg+CiAKICNpbmNsdWRlICJkcm1QLmgiCkBAIC0zMTIs
-NiArMzE0LDE1IEBAIHN0YXRpYyBpbnQgbm91dmVhdV9kcm1fcHJvYmUoc3RydWN0IHBjaV9kZXYg
-KnBkZXYsCiAJYm9vbCBib290ID0gZmFsc2U7CiAJaW50IHJldDsKIAorCS8qCisJICogYXBwbGUt
-Z211eCBpcyBuZWVkZWQgb24gZHVhbCBHUFUgTWFjQm9vayBQcm8KKwkgKiB0byBwcm9iZSB0aGUg
-cGFuZWwgaWYgd2UncmUgdGhlIGluYWN0aXZlIEdQVS4KKwkgKi8KKwlpZiAoSVNfRU5BQkxFRChD
-T05GSUdfVkdBX0FSQikgJiYgSVNfRU5BQkxFRChDT05GSUdfVkdBX1NXSVRDSEVST08pICYmCisJ
-ICAgIGFwcGxlX2dtdXhfcHJlc2VudCgpICYmIHBkZXYgIT0gdmdhX2RlZmF1bHRfZGV2aWNlKCkg
-JiYKKwkgICAgIXZnYV9zd2l0Y2hlcm9vX2hhbmRsZXJfZmxhZ3MoKSkKKwkJcmV0dXJuIC1FUFJP
-QkVfREVGRVI7CisKIAkvKiByZW1vdmUgY29uZmxpY3RpbmcgZHJpdmVycyAodmVzYWZiLCBlZmlm
-YiBldGMpICovCiAJYXBlciA9IGFsbG9jX2FwZXJ0dXJlcygzKTsKIAlpZiAoIWFwZXIpCi0tIAox
-LjguNS4yIChBcHBsZSBHaXQtNDgpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+gmux is a microcontroller built into dual GPU MacBook Pros.
+On pre-retina MBPs, if we're the inactive GPU, we need apple-gmux
+to temporarily switch DDC so that we can probe the panel's EDID.
+
+The checks for CONFIG_VGA_ARB and CONFIG_VGA_SWITCHEROO are necessary
+because if either of them is disabled but gmux is present, the driver
+would never load, even if we're the active GPU. (vga_default_device()
+would evaluate to NULL and vga_switcheroo_handler_flags() would
+evaluate to 0.)
+
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ drivers/gpu/drm/radeon/radeon_drv.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index e266ffc..cad2555 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -34,9 +34,11 @@
+ #include "radeon_drv.h"
+ 
+ #include <drm/drm_pciids.h>
++#include <linux/apple-gmux.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/vgaarb.h>
+ #include <linux/vga_switcheroo.h>
+ #include <drm/drm_gem.h>
+ 
+@@ -319,6 +321,15 @@ static int radeon_pci_probe(struct pci_dev *pdev,
+ {
+ 	int ret;
+ 
++	/*
++	 * apple-gmux is needed on dual GPU MacBook Pro
++	 * to probe the panel if we're the inactive GPU.
++	 */
++	if (IS_ENABLED(CONFIG_VGA_ARB) && IS_ENABLED(CONFIG_VGA_SWITCHEROO) &&
++	    apple_gmux_present() && pdev != vga_default_device() &&
++	    !vga_switcheroo_handler_flags())
++		return -EPROBE_DEFER;
++
+ 	/* Get rid of things like offb */
+ 	ret = radeon_kick_out_firmware_fb(pdev);
+ 	if (ret)
+-- 
+1.8.5.2 (Apple Git-48)
