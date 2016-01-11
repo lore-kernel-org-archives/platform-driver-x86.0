@@ -1,89 +1,79 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
- Vostro V131
-Date: Mon, 11 Jan 2016 11:12:26 -0800
-Message-ID: <20160111191226.GF10643@malice.jf.intel.com>
-References: <20151130211542.GE30553@malice.jf.intel.com>
- <1654e7bcde98f1cf89f698a1e359110c06c6fcd4.1448999372.git.kernel@kempniu.pl>
- <20151204011606.GI1800@malice.jf.intel.com>
- <20151204085624.GN10982@pali>
- <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2 0/1] apple-gmux: Add initial documentation
+Date: Mon, 11 Jan 2016 20:19:54 +0100
+Message-ID: <20160111191954.GA6562@wunner.de>
+References: <cover.1452431795.git.lukas@wunner.de>
+ <20160111070318.GC8076@phenom.ffwll.local>
+ <20160111174525.GA1813@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:42180 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759074AbcAKTM2 (ORCPT
+Received: from mailout2.hostsharing.net ([83.223.90.233]:46299 "EHLO
+	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934419AbcAKTT6 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:12:28 -0500
+	Mon, 11 Jan 2016 14:19:58 -0500
 Content-Disposition: inline
-In-Reply-To: <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
+In-Reply-To: <20160111174525.GA1813@malice.jf.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Bruno Premont <bonbons@linux-vserver.org>
 
-On Fri, Dec 04, 2015 at 02:27:45PM +0100, Micha=C5=82 K=C4=99pie=C5=84 =
-wrote:
-> > This patch is not enough for enabling 0xe025 key on that Vostro mac=
-hine.
-> > Some extra SMBIOS call is needed, without them ACPI will not send W=
-MI
-> > keypress event.
->=20
-> Indeed.  But have you read the last e-mail I wrote before submitting =
-the
-> original patch [1]?  Brightness control on the V131 is already broken
-> "out of the box" with newer kernels (flickering upon brightness chang=
-e),
-> but if we do what you're suggesting and include the SMI call in the
-> kernel, we'll break it even more, to the point where pressing one of =
-the
-> brightness control keys might not result in any brightness change at
-> all.  Sure, we can fix that by overriding an arbitrary ACPI method.  =
-Oh,
-> wait, did I say "fix"?
->=20
-> I posted the patch without the SMI call because that way if you want =
-to
-> use the Dell Instant Launch hotkey, you just fire up a userspace scri=
-pt
-> (which uses libsmbios and takes care of overriding the ACPI method) a=
-nd
-> chances are you will end up with a fully functional system.  Of cours=
-e
-> you need to understand that using this script is not an elegant solut=
-ion
-> and that it might break something else, but it's your choice, not the
-> kernel's.  And the patch itself does not change kernel's default
-> behavior, so we're not risking breaking any other models out there.
->=20
-> > At least I think this one patch should not be included into kernel =
-until
-> > there will be full support for 0xe025 key (adding that SMBIOS call)=
-=2E
->=20
-> Again, fully supporting the Dell Instant Launch hotkey makes brightne=
-ss
-> control even more broken than it has to be.  In other words, everythi=
-ng
-> is terrible.
->=20
-> The only real solution to all these issues is a BIOS fix and I'm pret=
-ty
-> sure it's not happening.
->=20
-> [1] http://www.spinics.net/lists/platform-driver-x86/msg07679.html
->=20
+Hi Darren,
 
-I have this patch as still pending review, and I *think* where we are i=
-s Pali
-had some objections but Michal felt they didn't help address the proble=
-m.
+On Mon, Jan 11, 2016 at 09:45:25AM -0800, Darren Hart wrote:
+> On Mon, Jan 11, 2016 at 08:03:18AM +0100, Daniel Vetter wrote:
+> > On Mon, Jan 11, 2016 at 12:08:35AM +0100, Lukas Wunner wrote:
+> > > On Fri, Jan 08, 2016 at 09:49:22AM -0700, Jonathan Corbet wrote:
+> > > > Well, it's built around the asciidoc patch, which isn't in the mainline
+> > > > at this point.  Should things go a different direction, that could force
+> > > > some changes here;
+> > > 
+> > > If/when that happens, I'll be happy to fixup the documentation as needed.
+> > > In fact I originally wrote this in markdown in November, then converted
+> > > it to asciidoc in December and that really wasn't a big deal.
+> > > 
+> > > The need for asciidoc arises from the desire to not clutter up the prose
+> > > text with URLs. To achieve this, asciidoc allows defining so-called
+> > > "attribute entries" which may then be referenced in the text:
+> > > http://asciidoc.org/userguide.html#X62
+> > > 
+> > > Markdown has a similar feature called "reference style links", the
+> > > difference being that they can be defined anywhere in the document,
+> > > whereas asciidoc's "attribute entries" must precede their usage in
+> > > the text:
+> > > https://daringfireball.net/projects/markdown/syntax#link
+> > > 
+> > > 
+> > > Here's a v2, the only change is Bruno Pr?mont's addition to the commit
+> > > message.
+> > > 
+> > > @Daniel Vetter: Could you pick this up for topic/drm-misc please?
+> > 
+> > I think it makes more sense to pull this in through Darren's tree, and I
+> > acked that on the last round already.
+> 
+> OK, I'm happy to take it. Lukas, this doesn't apply cleanly to my 4.4-rc* based
+> for-next branch or Linus's 4.4 from yesterday. I can manually apply it:
+> 
+> $ patch -p1 < ~/incoming/PATCH_v2_1-1_apple-gmux_Add_initial_documentation.mbox 
+> patching file Documentation/DocBook/gpu.tmpl
+> Hunk #1 succeeded at 4279 with fuzz 1 (offset 809 lines).
+> patching file drivers/platform/x86/apple-gmux.c
+> 
+> But that is one hell of an offset. What are you developing against and can you
+> send me something that applies cleanly?
 
-Where are we?
+I'm developing against drm-next and/or drm-intel-nightly.
+Looks like gpu.tmpl is touched very frequently. :-)
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+As for the apple-gmux documentation, Daniel picked it up this afternoon:
+http://cgit.freedesktop.org/drm-intel/commit/?h=topic/drm-misc&id=3d7b75fdae9c81dd71c7573dbc285af90e0924fa
+
+So, everything's fine. Thanks a lot though for being such a responsive
+and speedy maintainer, much appreciated!
+
+Best regards,
+
+Lukas
