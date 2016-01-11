@@ -1,145 +1,110 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 04/12] apple-gmux: Add switch_ddc support
+Subject: [PATCH v5 05/12] drm/edid: Switch DDC when reading the EDID
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <17fe8bfb0415d713bb4174f84ac9aae5d7d9a5f8.1452525860.git.lukas@wunner.de>
+Message-ID: <b898d0da4c134f2642d0122479006863e1830723.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout1.hostsharing.net ([83.223.95.204]:57719 "EHLO
+Received: from mailout1.hostsharing.net ([83.223.95.204]:56371 "EHLO
 	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934275AbcAKTKc (ORCPT
+	with ESMTP id S1752296AbcAKTKq (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:10:32 -0500
+	Mon, 11 Jan 2016 14:10:46 -0500
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>, Darren Hart <dvhart@infradead.org>
+Cc: Seth Forshee <seth.forshee@canonical.com>, Dave Airlie <airlied@redhat.com>
 
 Originally by Seth Forshee <seth.forshee@canonical.com>, 2012-10-04:
-    The gmux allows muxing the DDC independently from the display, so
-    support this functionality. This will allow reading the EDID for the
-    inactive GPU, fixing issues with machines that either don't have a
-    VBT or have invalid mode data in the VBT.
+    Some dual graphics machines support muxing the DDC separately from
+    the display, so make use of this functionality when reading the EDID
+    on the inactive GPU. Also serialize drm_get_edid() with a mutex to
+    avoid races on the DDC mux state.
 
-Modified by Lukas Wunner <lukas@wunner.de>, 2015-04 - 2015-12:
-    Change semantics of ->switch_ddc handler callback to return previous
-    DDC owner. Original version tried to determine previous DDC owner
-    with find_active_client() in vga_switcheroo but this fails if the
-    inactive client registers before the active client.
+Modified by Dave Airlie <airlied@gmail.com>, 2012-12-22:
+    I can't figure out why I didn't like this, but I rewrote this [...]
+    to lock/unlock the ddc lines [...]. I think I'd prefer something
+    like that otherwise the interface got really ugly.
 
-    v2.4: Retain semantics of ->switchto handler callback to switch all
-          pins, including DDC (Daniel Vetter)
-
-    v4:   Advertise ->switch_ddc handler callback only on the pre-retina
-          Macbook Pro. The retina uses eDP instead of LVDS and gmux no
-          longer does the muxing itself but merely controls an external
-          mux. That mux is incapable of switching the AUX channel
-          separately from the main link. It's an NXP CBTL06142
-          (alternate parts: TI HD3SS212, Pericom PI3VDP12412,
-          see datasheets below).
-
-    v5:   Rebase on "apple-gmux: Track switch state".
-          Rebase on "vga_switcheroo: Add handler flags infrastructure".
-          Rebase on 5d170139eb10 ("Constify vga_switcheroo_handler"),
-          requires 2 structs, 1x with ->switchto for pre-retinas,
-          1x without for retinas).
-          Add error message if handler registration with vga_switcheroo
-          fails.
-
-    Teardowns identifying the mux:
-    http://www.electronicproducts.com/-whatsinside_text-145.aspx
-    http://slideshare.net/jjwu6266/apple-2012-wwdc-apple-macbook-pro-with-retina-display
-    http://www.techrepublic.com/blog/cracking-open/teardown-shows-retina-macbook-pro-is-nearly-impossible-to-upgrade-difficult-to-work-on/
-
-    Mux Datasheets:
-    http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-    http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
-    https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+Modified by Lukas Wunner <lukas@wunner.de>, 2015-04 - 2015-09:
+    v3:   Move vga_switcheroo calls to a wrapper around drm_get_edid()
+          which drivers can call on muxed machines. This avoids other
+          drivers having to go through the vga_switcheroo motions even
+          though they are never used on a muxed platform
+          (Thierry Reding, Daniel Vetter, Alex Deucher)
 
 Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88861
 Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
+Tested-by: Pierre Moreau <pierre.morrow@free.fr>
+    [MBP  5,3 2009  nvidia MCP79 + G96        pre-retina  15"]
+Tested-by: William Brown <william@blackhats.net.au>
+    [MBP  8,2 2011  intel SNB + amd turks     pre-retina  15"]
 Tested-by: Lukas Wunner <lukas@wunner.de>
     [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
 Cc: Seth Forshee <seth.forshee@canonical.com>
+Cc: Dave Airlie <airlied@gmail.com>
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 ---
- drivers/platform/x86/apple-gmux.c | 45 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_edid.c | 26 ++++++++++++++++++++++++++
+ include/drm/drm_crtc.h     |  2 ++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 5c6c708..1384a39 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -417,6 +417,25 @@ static int gmux_switchto(enum vga_switcheroo_client_id id)
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index c214f12..1e8f660 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -32,6 +32,7 @@
+ #include <linux/hdmi.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
++#include <linux/vga_switcheroo.h>
+ #include <drm/drmP.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_displayid.h>
+@@ -1389,6 +1390,31 @@ struct edid *drm_get_edid(struct drm_connector *connector,
+ EXPORT_SYMBOL(drm_get_edid);
  
-+static int gmux_switch_ddc(enum vga_switcheroo_client_id id)
+ /**
++ * drm_get_edid_switcheroo - get EDID data for a vga_switcheroo output
++ * @connector: connector we're probing
++ * @adapter: I2C adapter to use for DDC
++ *
++ * Wrapper around drm_get_edid() for laptops with dual GPUs using one set of
++ * outputs. The wrapper adds the requisite vga_switcheroo calls to temporarily
++ * switch DDC to the GPU which is retrieving EDID.
++ *
++ * Return: Pointer to valid EDID or %NULL if we couldn't find any.
++ */
++struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
++				     struct i2c_adapter *adapter)
 +{
-+	enum vga_switcheroo_client_id old_ddc_owner =
-+		apple_gmux_data->switch_state_ddc;
++	struct pci_dev *pdev = connector->dev->pdev;
++	struct edid *edid;
 +
-+	if (id == old_ddc_owner)
-+		return id;
++	vga_switcheroo_lock_ddc(pdev);
++	edid = drm_get_edid(connector, adapter);
++	vga_switcheroo_unlock_ddc(pdev);
 +
-+	pr_debug("Switching DDC from %d to %d\n", old_ddc_owner, id);
-+	apple_gmux_data->switch_state_ddc = id;
-+
-+	if (id == VGA_SWITCHEROO_IGD)
-+		gmux_write8(apple_gmux_data, GMUX_PORT_SWITCH_DDC, 1);
-+	else
-+		gmux_write8(apple_gmux_data, GMUX_PORT_SWITCH_DDC, 2);
-+
-+	return old_ddc_owner;
++	return edid;
 +}
++EXPORT_SYMBOL(drm_get_edid_switcheroo);
 +
- /**
-  * DOC: Power control
++/**
+  * drm_edid_duplicate - duplicate an EDID and the extensions
+  * @edid: EDID to duplicate
   *
-@@ -474,12 +493,19 @@ static int gmux_get_client_id(struct pci_dev *pdev)
- 		return VGA_SWITCHEROO_DIS;
- }
- 
--static const struct vga_switcheroo_handler gmux_handler = {
-+static const struct vga_switcheroo_handler gmux_handler_indexed = {
- 	.switchto = gmux_switchto,
- 	.power_state = gmux_set_power_state,
- 	.get_client_id = gmux_get_client_id,
- };
- 
-+static const struct vga_switcheroo_handler gmux_handler_classic = {
-+	.switchto = gmux_switchto,
-+	.switch_ddc = gmux_switch_ddc,
-+	.power_state = gmux_set_power_state,
-+	.get_client_id = gmux_get_client_id,
-+};
-+
- /**
-  * DOC: Interrupt
-  *
-@@ -730,8 +756,21 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	gmux_enable_interrupts(gmux_data);
- 	gmux_read_switch_state(gmux_data);
- 
--	if (vga_switcheroo_register_handler(&gmux_handler, 0)) {
--		ret = -ENODEV;
-+	/*
-+	 * Retina MacBook Pros cannot switch the panel's AUX separately
-+	 * and need eDP pre-calibration. They are distinguishable from
-+	 * pre-retinas by having an "indexed" gmux.
-+	 *
-+	 * Pre-retina MacBook Pros can switch the panel's DDC separately.
-+	 */
-+	if (gmux_data->indexed)
-+		ret = vga_switcheroo_register_handler(&gmux_handler_indexed,
-+					      VGA_SWITCHEROO_NEEDS_EDP_CONFIG);
-+	else
-+		ret = vga_switcheroo_register_handler(&gmux_handler_classic,
-+					      VGA_SWITCHEROO_CAN_SWITCH_DDC);
-+	if (ret) {
-+		pr_err("Failed to register vga_switcheroo handler\n");
- 		goto err_register_handler;
- 	}
- 
+diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+index 3b040b3..65df8e7 100644
+--- a/include/drm/drm_crtc.h
++++ b/include/drm/drm_crtc.h
+@@ -2278,6 +2278,8 @@ extern void drm_property_destroy_user_blobs(struct drm_device *dev,
+ extern bool drm_probe_ddc(struct i2c_adapter *adapter);
+ extern struct edid *drm_get_edid(struct drm_connector *connector,
+ 				 struct i2c_adapter *adapter);
++extern struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
++					    struct i2c_adapter *adapter);
+ extern struct edid *drm_edid_duplicate(const struct edid *edid);
+ extern int drm_add_edid_modes(struct drm_connector *connector, struct edid *edid);
+ extern void drm_mode_config_init(struct drm_device *dev);
 -- 
 1.8.5.2 (Apple Git-48)
