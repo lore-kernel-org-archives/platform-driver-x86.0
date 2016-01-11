@@ -1,88 +1,115 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 07/12] drm/nouveau: Switch DDC when reading the EDID
+Subject: [PATCH v5 09/12] apple-gmux: Add helper for presence detect
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <e9466eb3d66b5b30f1e93c3b3da79d8b9ad0830f.1452525860.git.lukas@wunner.de>
+Message-ID: <89c23769058a340e5e11d4a7102f3793d3b0c94c.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout1.hostsharing.net ([83.223.95.204]:41325 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752296AbcAKTLj (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 14:11:39 -0500
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: nouveau@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
 
-VGhlIHByZS1yZXRpbmEgTWFjQm9vayBQcm8gdXNlcyBhbiBMVkRTIHBhbmVsIGFuZCBhIGdtdXgg
-Y29udHJvbGxlcgp0byBzd2l0Y2ggdGhlIHBhbmVsIGJldHdlZW4gaXRzIHR3byBHUFVzLiBUaGUg
-cGFuZWwgbW9kZSBpbiBWQklPUwppcyBub3RvcmlvdXNseSBib2d1cyBvbiB0aGVzZSBtYWNoaW5l
-cy4KClVzZSBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIGluIGxpZXUgb2YgZHJtX2dldF9lZGlk
-KCkgb24gTFZEUwppZiB0aGUgdmdhX3N3aXRjaGVyb28gaGFuZGxlciBpcyBjYXBhYmxlIG9mIHRl
-bXBvcmFyaWx5IHN3aXRjaGluZwp0aGUgcGFuZWwncyBEREMgbGluZXMgdG8gdGhlIGRpc2NyZXRl
-IEdQVS4gVGhpcyBhbGxvd3MgdXMgdG8gcmV0cmlldmUKdGhlIEVESUQgaWYgdGhlIHBhbmVsIGlz
-IGN1cnJlbnRseSBtdXhlZCB0byB0aGUgaW50ZWdyYXRlZCBHUFUuCkxpa2V3aXNlLCBhc2sgdmdh
-X3N3aXRjaGVyb28gdG8gc3dpdGNoIEREQyBiZWZvcmUgcHJvYmluZyBMVkRTCmNvbm5lY3RvcnMu
-CgpUaGlzIG9ubHkgZW5hYmxlcyBFRElEIHByb2Jpbmcgb24gdGhlIHByZS1yZXRpbmEgTUJQICgy
-MDA4IC0gMjAxMykuClRoZSByZXRpbmEgTUJQICgyMDEyIC0gcHJlc2VudCkgdXNlcyBlRFAgYW5k
-IGdtdXggaXMgbm90IGNhcGFibGUgb2YKc3dpdGNoaW5nIEFVWCBzZXBhcmF0ZWx5IGZyb20gdGhl
-IG1haW4gbGluayBvbiB0aGVzZSBtb2RlbHMuClRoaXMgd2lsbCBiZSBhZGRyZXNzZWQgaW4gbGF0
-ZXIgcGF0Y2hlcy4KCkxpc3Qgb2YgcHJlLXJldGluYSBNQlBzIHdpdGggZHVhbCBHUFVzLCBlaXRo
-ZXIgb3IgYm90aCBOdmlkaWE6CiAgICBbTUJQICA1LDEgMjAwOCAgbnZpZGlhIE1DUDc5ICsgRzk2
-ICAgICAgICBwcmUtcmV0aW5hICAxNSJdCiAgICBbTUJQICA1LDIgMjAwOSAgbnZpZGlhIE1DUDc5
-ICsgRzk2ICAgICAgICBwcmUtcmV0aW5hICAxNyJdCiAgICBbTUJQICA1LDMgMjAwOSAgbnZpZGlh
-IE1DUDc5ICsgRzk2ICAgICAgICBwcmUtcmV0aW5hICAxNSJdCiAgICBbTUJQICA2LDIgMjAxMCAg
-aW50ZWwgSUxLICsgbnZpZGlhIEdUMjE2ICBwcmUtcmV0aW5hICAxNSJdCiAgICBbTUJQICA2LDEg
-MjAxMCAgaW50ZWwgSUxLICsgbnZpZGlhIEdUMjE2ICBwcmUtcmV0aW5hICAxNyJdCiAgICBbTUJQ
-ICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlhIEdLMTA3ICBwcmUtcmV0aW5hICAxNSJdCgp2
-MzogQ29tbWl0IG5ld2x5IGFkZGVkIGR1ZSB0byBpbnRyb2R1Y3Rpb24gb2YgZHJtX2dldF9lZGlk
-X3N3aXRjaGVyb28oKQogICAgd3JhcHBlciB3aGljaCBkcml2ZXJzIG5lZWQgdG8gb3B0LWluIHRv
-LgoKdjU6IFJlYmFzZSBvbiAidmdhX3N3aXRjaGVyb286IEFkZCBoYW5kbGVyIGZsYWdzIGluZnJh
-c3RydWN0dXJlIiwKICAgIGkuZS4gY2FsbCBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIG9ubHkg
-aWYgdGhlIGhhbmRsZXIKICAgIGluZGljYXRlcyB0aGF0IEREQyBpcyBzd2l0Y2hhYmxlLgoKQnVn
-emlsbGE6IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9ODg4NjEK
-QnVnemlsbGE6IGh0dHBzOi8vYnVncy5mcmVlZGVza3RvcC5vcmcvc2hvd19idWcuY2dpP2lkPTYx
-MTE1ClRlc3RlZC1ieTogTHVrYXMgV3VubmVyIDxsdWthc0B3dW5uZXIuZGU+CiAgICBbTUJQICA5
-LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlhIEdLMTA3ICBwcmUtcmV0aW5hICAxNSJdClNpZ25l
-ZC1vZmYtYnk6IEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPgotLS0KIGRyaXZlcnMvZ3B1
-L2RybS9ub3V2ZWF1L25vdXZlYXVfY29ubmVjdG9yLmMgfCAyMSArKysrKysrKysrKysrKysrKysr
-Ky0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbm91dmVhdV9jb25uZWN0b3IuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9ub3V2ZWF1L25vdXZlYXVfY29ubmVjdG9yLmMKaW5kZXggZmNlYmZhZS4u
-YWU5NmViYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbm91dmVhdV9jb25u
-ZWN0b3IuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1X2Nvbm5lY3Rvci5j
-CkBAIC0yNyw2ICsyNyw3IEBACiAjaW5jbHVkZSA8YWNwaS9idXR0b24uaD4KIAogI2luY2x1ZGUg
-PGxpbnV4L3BtX3J1bnRpbWUuaD4KKyNpbmNsdWRlIDxsaW51eC92Z2Ffc3dpdGNoZXJvby5oPgog
-CiAjaW5jbHVkZSA8ZHJtL2RybVAuaD4KICNpbmNsdWRlIDxkcm0vZHJtX2VkaWQuaD4KQEAgLTE1
-Myw2ICsxNTQsMTcgQEAgbm91dmVhdV9jb25uZWN0b3JfZGRjX2RldGVjdChzdHJ1Y3QgZHJtX2Nv
-bm5lY3RvciAqY29ubmVjdG9yKQogCQkJaWYgKHJldCA9PSAwKQogCQkJCWJyZWFrOwogCQl9IGVs
-c2UKKwkJaWYgKCh2Z2Ffc3dpdGNoZXJvb19oYW5kbGVyX2ZsYWdzKCkgJgorCQkgICAgIFZHQV9T
-V0lUQ0hFUk9PX0NBTl9TV0lUQ0hfRERDKSAmJgorCQkgICAgbnZfZW5jb2Rlci0+ZGNiLT50eXBl
-ID09IERDQl9PVVRQVVRfTFZEUyAmJgorCQkgICAgbnZfZW5jb2Rlci0+aTJjKSB7CisJCQlpbnQg
-cmV0OworCQkJdmdhX3N3aXRjaGVyb29fbG9ja19kZGMoZGV2LT5wZGV2KTsKKwkJCXJldCA9IG52
-a21fcHJvYmVfaTJjKG52X2VuY29kZXItPmkyYywgMHg1MCk7CisJCQl2Z2Ffc3dpdGNoZXJvb191
-bmxvY2tfZGRjKGRldi0+cGRldik7CisJCQlpZiAocmV0KQorCQkJCWJyZWFrOworCQl9IGVsc2UK
-IAkJaWYgKG52X2VuY29kZXItPmkyYykgewogCQkJaWYgKG52a21fcHJvYmVfaTJjKG52X2VuY29k
-ZXItPmkyYywgMHg1MCkpCiAJCQkJYnJlYWs7CkBAIC0yNjUsNyArMjc3LDE0IEBAIG5vdXZlYXVf
-Y29ubmVjdG9yX2RldGVjdChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLCBib29sIGZv
-cmNlKQogCiAJbnZfZW5jb2RlciA9IG5vdXZlYXVfY29ubmVjdG9yX2RkY19kZXRlY3QoY29ubmVj
-dG9yKTsKIAlpZiAobnZfZW5jb2RlciAmJiAoaTJjID0gbnZfZW5jb2Rlci0+aTJjKSAhPSBOVUxM
-KSB7Ci0JCW52X2Nvbm5lY3Rvci0+ZWRpZCA9IGRybV9nZXRfZWRpZChjb25uZWN0b3IsIGkyYyk7
-CisJCWlmICgodmdhX3N3aXRjaGVyb29faGFuZGxlcl9mbGFncygpICYKKwkJICAgICBWR0FfU1dJ
-VENIRVJPT19DQU5fU1dJVENIX0REQykgJiYKKwkJICAgIG52X2Nvbm5lY3Rvci0+dHlwZSA9PSBE
-Q0JfQ09OTkVDVE9SX0xWRFMpCisJCQludl9jb25uZWN0b3ItPmVkaWQgPSBkcm1fZ2V0X2VkaWRf
-c3dpdGNoZXJvbyhjb25uZWN0b3IsCisJCQkJCQkJCSAgICAgaTJjKTsKKwkJZWxzZQorCQkJbnZf
-Y29ubmVjdG9yLT5lZGlkID0gZHJtX2dldF9lZGlkKGNvbm5lY3RvciwgaTJjKTsKKwogCQlkcm1f
-bW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLAogCQkJCQkJCW52
-X2Nvbm5lY3Rvci0+ZWRpZCk7CiAJCWlmICghbnZfY29ubmVjdG9yLT5lZGlkKSB7Ci0tIAoxLjgu
-NS4yIChBcHBsZSBHaXQtNDgpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+Centralize gmux' ACPI HID in a header file and add apple_gmux_present().
+This can be used by other drivers to activate quirks specific to dual
+GPU MacBook Pros & Mac Pros. The alternative would be to hardcode DMI
+or PCI IDs and amend them whenever Apple introduces a new machine.
+
+Tested-by: Lukas Wunner <lukas@wunner.de>
+    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ Documentation/DocBook/gpu.tmpl    |  4 ++++
+ drivers/platform/x86/apple-gmux.c |  3 ++-
+ include/linux/apple-gmux.h        | 39 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/apple-gmux.h
+
+diff --git a/Documentation/DocBook/gpu.tmpl b/Documentation/DocBook/gpu.tmpl
+index 88e7c39..a5e6e3c 100644
+--- a/Documentation/DocBook/gpu.tmpl
++++ b/Documentation/DocBook/gpu.tmpl
+@@ -3677,6 +3677,10 @@ int num_ioctls;</synopsis>
+         <title>Backlight control</title>
+ !Pdrivers/platform/x86/apple-gmux.c Backlight control
+       </sect2>
++      <sect2>
++        <title>Public functions</title>
++!Iinclude/linux/apple-gmux.h
++      </sect2>
+     </sect1>
+   </chapter>
+ 
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 1384a39..4034d2d 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -19,6 +19,7 @@
+ #include <linux/acpi.h>
+ #include <linux/pnp.h>
+ #include <linux/apple_bl.h>
++#include <linux/apple-gmux.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+@@ -828,7 +829,7 @@ static void gmux_remove(struct pnp_dev *pnp)
+ }
+ 
+ static const struct pnp_device_id gmux_device_ids[] = {
+-	{"APP000B", 0},
++	{GMUX_ACPI_HID, 0},
+ 	{"", 0}
+ };
+ 
+diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
+new file mode 100644
+index 0000000..feebc28
+--- /dev/null
++++ b/include/linux/apple-gmux.h
+@@ -0,0 +1,39 @@
++/*
++ * apple-gmux.h - microcontroller built into dual GPU MacBook Pro & Mac Pro
++ * Copyright (C) 2015 Lukas Wunner <lukas@wunner.de>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License (version 2) as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef LINUX_APPLE_GMUX_H
++#define LINUX_APPLE_GMUX_H
++
++#include <linux/acpi.h>
++
++#define GMUX_ACPI_HID "APP000B"
++
++/**
++ * apple_gmux_present() - detect if gmux is built into the machine
++ *
++ * Drivers may use this to activate quirks specific to dual GPU MacBook Pros
++ * and Mac Pros, e.g. for deferred probing, runtime pm and backlight.
++ *
++ * Return: %true if gmux is present and the kernel was configured
++ * with CONFIG_APPLE_GMUX, %false otherwise.
++ */
++static inline bool apple_gmux_present(void)
++{
++	return IS_ENABLED(CONFIG_APPLE_GMUX) && acpi_dev_present(GMUX_ACPI_HID);
++}
++
++#endif /* LINUX_APPLE_GMUX_H */
+-- 
+1.8.5.2 (Apple Git-48)
