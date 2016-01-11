@@ -1,80 +1,108 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/1] apple-gmux: Add initial documentation
-Date: Mon, 11 Jan 2016 11:26:23 -0800
-Message-ID: <20160111192623.GH10643@malice.jf.intel.com>
-References: <cover.1452431795.git.lukas@wunner.de>
- <20160111070318.GC8076@phenom.ffwll.local>
- <20160111174525.GA1813@malice.jf.intel.com>
- <20160111191954.GA6562@wunner.de>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
+Date: Mon, 11 Jan 2016 17:28:00 -0200
+Message-ID: <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
+ <20160104201231.GB5847@amd>
+ <1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
+ <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
+ <20160111190411.GE10643@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160111191954.GA6562@wunner.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Bruno Premont <bonbons@linux-vserver.org>, platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org, Jonathan Corbet <corbet@lwn.net>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39108 "EHLO
+	out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S932632AbcAKT2B convert rfc822-to-8bit
+	(ORCPT <rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 14:28:01 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id 3857C209BE
+	for <platform-driver-x86@vger.kernel.org>; Mon, 11 Jan 2016 14:28:01 -0500 (EST)
+In-Reply-To: <20160111190411.GE10643@malice.jf.intel.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Pavel Machek <pavel@ucw.cz>, =?ISO-8859-1?Q?Pali=20Roh=E1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-T24gTW9uLCBKYW4gMTEsIDIwMTYgYXQgMDg6MTk6NTRQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
-b3RlOgo+IEhpIERhcnJlbiwKPiAKPiBPbiBNb24sIEphbiAxMSwgMjAxNiBhdCAwOTo0NToyNUFN
-IC0wODAwLCBEYXJyZW4gSGFydCB3cm90ZToKPiA+IE9uIE1vbiwgSmFuIDExLCAyMDE2IGF0IDA4
-OjAzOjE4QU0gKzAxMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gPiA+IE9uIE1vbiwgSmFuIDEx
-LCAyMDE2IGF0IDEyOjA4OjM1QU0gKzAxMDAsIEx1a2FzIFd1bm5lciB3cm90ZToKPiA+ID4gPiBP
-biBGcmksIEphbiAwOCwgMjAxNiBhdCAwOTo0OToyMkFNIC0wNzAwLCBKb25hdGhhbiBDb3JiZXQg
-d3JvdGU6Cj4gPiA+ID4gPiBXZWxsLCBpdCdzIGJ1aWx0IGFyb3VuZCB0aGUgYXNjaWlkb2MgcGF0
-Y2gsIHdoaWNoIGlzbid0IGluIHRoZSBtYWlubGluZQo+ID4gPiA+ID4gYXQgdGhpcyBwb2ludC4g
-IFNob3VsZCB0aGluZ3MgZ28gYSBkaWZmZXJlbnQgZGlyZWN0aW9uLCB0aGF0IGNvdWxkIGZvcmNl
-Cj4gPiA+ID4gPiBzb21lIGNoYW5nZXMgaGVyZTsKPiA+ID4gPiAKPiA+ID4gPiBJZi93aGVuIHRo
-YXQgaGFwcGVucywgSSdsbCBiZSBoYXBweSB0byBmaXh1cCB0aGUgZG9jdW1lbnRhdGlvbiBhcyBu
-ZWVkZWQuCj4gPiA+ID4gSW4gZmFjdCBJIG9yaWdpbmFsbHkgd3JvdGUgdGhpcyBpbiBtYXJrZG93
-biBpbiBOb3ZlbWJlciwgdGhlbiBjb252ZXJ0ZWQKPiA+ID4gPiBpdCB0byBhc2NpaWRvYyBpbiBE
-ZWNlbWJlciBhbmQgdGhhdCByZWFsbHkgd2Fzbid0IGEgYmlnIGRlYWwuCj4gPiA+ID4gCj4gPiA+
-ID4gVGhlIG5lZWQgZm9yIGFzY2lpZG9jIGFyaXNlcyBmcm9tIHRoZSBkZXNpcmUgdG8gbm90IGNs
-dXR0ZXIgdXAgdGhlIHByb3NlCj4gPiA+ID4gdGV4dCB3aXRoIFVSTHMuIFRvIGFjaGlldmUgdGhp
-cywgYXNjaWlkb2MgYWxsb3dzIGRlZmluaW5nIHNvLWNhbGxlZAo+ID4gPiA+ICJhdHRyaWJ1dGUg
-ZW50cmllcyIgd2hpY2ggbWF5IHRoZW4gYmUgcmVmZXJlbmNlZCBpbiB0aGUgdGV4dDoKPiA+ID4g
-PiBodHRwOi8vYXNjaWlkb2Mub3JnL3VzZXJndWlkZS5odG1sI1g2Mgo+ID4gPiA+IAo+ID4gPiA+
-IE1hcmtkb3duIGhhcyBhIHNpbWlsYXIgZmVhdHVyZSBjYWxsZWQgInJlZmVyZW5jZSBzdHlsZSBs
-aW5rcyIsIHRoZQo+ID4gPiA+IGRpZmZlcmVuY2UgYmVpbmcgdGhhdCB0aGV5IGNhbiBiZSBkZWZp
-bmVkIGFueXdoZXJlIGluIHRoZSBkb2N1bWVudCwKPiA+ID4gPiB3aGVyZWFzIGFzY2lpZG9jJ3Mg
-ImF0dHJpYnV0ZSBlbnRyaWVzIiBtdXN0IHByZWNlZGUgdGhlaXIgdXNhZ2UgaW4KPiA+ID4gPiB0
-aGUgdGV4dDoKPiA+ID4gPiBodHRwczovL2RhcmluZ2ZpcmViYWxsLm5ldC9wcm9qZWN0cy9tYXJr
-ZG93bi9zeW50YXgjbGluawo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IEhlcmUncyBhIHYyLCB0
-aGUgb25seSBjaGFuZ2UgaXMgQnJ1bm8gUHI/bW9udCdzIGFkZGl0aW9uIHRvIHRoZSBjb21taXQK
-PiA+ID4gPiBtZXNzYWdlLgo+ID4gPiA+IAo+ID4gPiA+IEBEYW5pZWwgVmV0dGVyOiBDb3VsZCB5
-b3UgcGljayB0aGlzIHVwIGZvciB0b3BpYy9kcm0tbWlzYyBwbGVhc2U/Cj4gPiA+IAo+ID4gPiBJ
-IHRoaW5rIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gcHVsbCB0aGlzIGluIHRocm91Z2ggRGFycmVu
-J3MgdHJlZSwgYW5kIEkKPiA+ID4gYWNrZWQgdGhhdCBvbiB0aGUgbGFzdCByb3VuZCBhbHJlYWR5
-Lgo+ID4gCj4gPiBPSywgSSdtIGhhcHB5IHRvIHRha2UgaXQuIEx1a2FzLCB0aGlzIGRvZXNuJ3Qg
-YXBwbHkgY2xlYW5seSB0byBteSA0LjQtcmMqIGJhc2VkCj4gPiBmb3ItbmV4dCBicmFuY2ggb3Ig
-TGludXMncyA0LjQgZnJvbSB5ZXN0ZXJkYXkuIEkgY2FuIG1hbnVhbGx5IGFwcGx5IGl0Ogo+ID4g
-Cj4gPiAkIHBhdGNoIC1wMSA8IH4vaW5jb21pbmcvUEFUQ0hfdjJfMS0xX2FwcGxlLWdtdXhfQWRk
-X2luaXRpYWxfZG9jdW1lbnRhdGlvbi5tYm94IAo+ID4gcGF0Y2hpbmcgZmlsZSBEb2N1bWVudGF0
-aW9uL0RvY0Jvb2svZ3B1LnRtcGwKPiA+IEh1bmsgIzEgc3VjY2VlZGVkIGF0IDQyNzkgd2l0aCBm
-dXp6IDEgKG9mZnNldCA4MDkgbGluZXMpLgo+ID4gcGF0Y2hpbmcgZmlsZSBkcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9hcHBsZS1nbXV4LmMKPiA+IAo+ID4gQnV0IHRoYXQgaXMgb25lIGhlbGwgb2YgYW4g
-b2Zmc2V0LiBXaGF0IGFyZSB5b3UgZGV2ZWxvcGluZyBhZ2FpbnN0IGFuZCBjYW4geW91Cj4gPiBz
-ZW5kIG1lIHNvbWV0aGluZyB0aGF0IGFwcGxpZXMgY2xlYW5seT8KPiAKPiBJJ20gZGV2ZWxvcGlu
-ZyBhZ2FpbnN0IGRybS1uZXh0IGFuZC9vciBkcm0taW50ZWwtbmlnaHRseS4KPiBMb29rcyBsaWtl
-IGdwdS50bXBsIGlzIHRvdWNoZWQgdmVyeSBmcmVxdWVudGx5LiA6LSkKPiAKPiBBcyBmb3IgdGhl
-IGFwcGxlLWdtdXggZG9jdW1lbnRhdGlvbiwgRGFuaWVsIHBpY2tlZCBpdCB1cCB0aGlzIGFmdGVy
-bm9vbjoKPiBodHRwOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvZHJtLWludGVsL2NvbW1pdC8/aD10
-b3BpYy9kcm0tbWlzYyZpZD0zZDdiNzVmZGFlOWM4MWRkNzFjNzU3M2RiYzI4NWFmOTBlMDkyNGZh
-Cj4gCj4gU28sIGV2ZXJ5dGhpbmcncyBmaW5lLiBUaGFua3MgYSBsb3QgdGhvdWdoIGZvciBiZWlu
-ZyBzdWNoIGEgcmVzcG9uc2l2ZQo+IGFuZCBzcGVlZHkgbWFpbnRhaW5lciwgbXVjaCBhcHByZWNp
-YXRlZCEKPiAKCkhhaCwgYW5kIGhlcmUgSSBhbSBiZWF0aW5nIG15c2VsZiB1cCBvdmVyIGxldHRp
-bmcgdGhpbmdzIHN0YWduYXRlLiBUaGFua3MgOi0pCgotLSAKRGFycmVuIEhhcnQKSW50ZWwgT3Bl
-biBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On Mon, Jan 11, 2016, at 17:04, Darren Hart wrote:
+> On Sat, Jan 09, 2016 at 03:46:41PM -0200, Henrique de Moraes Holschuh
+> wrote:
+> > On Sat, Jan 9, 2016, at 15:39, Henrique de Moraes Holschuh wrote:
+> > > On Mon, Jan 4, 2016, at 18:12, Pavel Machek wrote:
+> > > > > This patch adds support for controlling keyboard backlight vi=
+a standard
+> > > > > linux led class interface (::kbd_backlight). It uses ACPI HKE=
+Y device with
+> > > > > MLCG and MLCS methods.
+> > > > >=20
+> > > > > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
+> > > > > Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
+> > > >=20
+> > > > On my thinkpad, keyboard light is controlled by
+> > > >=20
+> > > > /sys/class/leds/tpacpi\:\:thinklight/brightness
+> > > >=20
+> > > > (that's a bad name).
+> > >=20
+> > > That's because the driver was not updated to support your laptop,=
+ AND I
+> > > don't recall if someone mapped the full behavior of the ACPI thin=
+klight
+> > > interface in your thinkpad :-(
+> >=20
+> > Argh.  If by "keyboard light" you mean the LED above the *screen* t=
+hat
+> > shines down on the whole keyboard, please disregard my previous rep=
+ly...
+> >=20
+> > As for the naming, the idea of a LED up there shining in the keyboa=
+rd
+> > is:
+> >  1. patented by IBM
+> >  2. named "ThinkLight" by IBM, one of the "Think Technologies" in t=
+he
+> >  "ThinkPad" (add TM after everything :p)  and every
+> >      old-timer thinkpad user knew it by that name.
+> >  4. called "thinklight" by the driver since before the LED sysfs cl=
+ass
+> >  even existed :p
+> >=20
+> > ibm-acpi, since then renamed thinkpad-acpi *predates* most generic
+> > interfaces.  Heck, it predates sysfs.
+> >=20
+> > So, this is ABI set in stone.  If there is a way to add an "alias" =
+of
+> > kbd_backlight that won't drive userspace crazy, we might do that th=
+ough.
+> >  But it looks quite risky to me...
+>=20
+> Henrique, so are you taking back your Ack from 10 minutes prior?
+
+Hmm? No, the ACK stands.
+
+Pavel was talking about another feature altogether, apparently: older
+thinkpads did not have "keyboard backlight" (as in light from below the
+keys).  They had a "ThinkLight", which is an overhead light that shines
+down on the keyboard.
+
+The two features are not the same (and are handled differently by the
+firmware, for whatever reason), although they do serve the same purpose=
+=2E
+ I don't think a thinkpad will ever have both features at the same time=
+,
+so I have no idea why they changed the firmware interface.
+
+The patch adds support to the "keyboard backlight" feature, which was
+previously NOT supported.
+
+> I've dropped this patch. Please let me know if I should pick it back =
+up.
+
+Please pick it back up.
+
+--=20
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
