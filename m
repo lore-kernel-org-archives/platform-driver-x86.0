@@ -1,115 +1,60 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 09/12] apple-gmux: Add helper for presence detect
+Subject: [PATCH v5 10/12] drm/i915: Defer probe if gmux is
+ present but its driver isn't
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <89c23769058a340e5e11d4a7102f3793d3b0c94c.1452525860.git.lukas@wunner.de>
+Message-ID: <f56ee6a0600a3e1bb5bed4d0db4ed9ade7445c47.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout1.hostsharing.net ([83.223.95.204]:41325 "EHLO
-	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752296AbcAKTLj (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:11:39 -0500
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, intel-gfx@lists.freedesktop.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Centralize gmux' ACPI HID in a header file and add apple_gmux_present().
-This can be used by other drivers to activate quirks specific to dual
-GPU MacBook Pros & Mac Pros. The alternative would be to hardcode DMI
-or PCI IDs and amend them whenever Apple introduces a new machine.
-
-Tested-by: Lukas Wunner <lukas@wunner.de>
-    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- Documentation/DocBook/gpu.tmpl    |  4 ++++
- drivers/platform/x86/apple-gmux.c |  3 ++-
- include/linux/apple-gmux.h        | 39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/apple-gmux.h
-
-diff --git a/Documentation/DocBook/gpu.tmpl b/Documentation/DocBook/gpu.tmpl
-index 88e7c39..a5e6e3c 100644
---- a/Documentation/DocBook/gpu.tmpl
-+++ b/Documentation/DocBook/gpu.tmpl
-@@ -3677,6 +3677,10 @@ int num_ioctls;</synopsis>
-         <title>Backlight control</title>
- !Pdrivers/platform/x86/apple-gmux.c Backlight control
-       </sect2>
-+      <sect2>
-+        <title>Public functions</title>
-+!Iinclude/linux/apple-gmux.h
-+      </sect2>
-     </sect1>
-   </chapter>
- 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 1384a39..4034d2d 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -19,6 +19,7 @@
- #include <linux/acpi.h>
- #include <linux/pnp.h>
- #include <linux/apple_bl.h>
-+#include <linux/apple-gmux.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/pci.h>
-@@ -828,7 +829,7 @@ static void gmux_remove(struct pnp_dev *pnp)
- }
- 
- static const struct pnp_device_id gmux_device_ids[] = {
--	{"APP000B", 0},
-+	{GMUX_ACPI_HID, 0},
- 	{"", 0}
- };
- 
-diff --git a/include/linux/apple-gmux.h b/include/linux/apple-gmux.h
-new file mode 100644
-index 0000000..feebc28
---- /dev/null
-+++ b/include/linux/apple-gmux.h
-@@ -0,0 +1,39 @@
-+/*
-+ * apple-gmux.h - microcontroller built into dual GPU MacBook Pro & Mac Pro
-+ * Copyright (C) 2015 Lukas Wunner <lukas@wunner.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License (version 2) as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef LINUX_APPLE_GMUX_H
-+#define LINUX_APPLE_GMUX_H
-+
-+#include <linux/acpi.h>
-+
-+#define GMUX_ACPI_HID "APP000B"
-+
-+/**
-+ * apple_gmux_present() - detect if gmux is built into the machine
-+ *
-+ * Drivers may use this to activate quirks specific to dual GPU MacBook Pros
-+ * and Mac Pros, e.g. for deferred probing, runtime pm and backlight.
-+ *
-+ * Return: %true if gmux is present and the kernel was configured
-+ * with CONFIG_APPLE_GMUX, %false otherwise.
-+ */
-+static inline bool apple_gmux_present(void)
-+{
-+	return IS_ENABLED(CONFIG_APPLE_GMUX) && acpi_dev_present(GMUX_ACPI_HID);
-+}
-+
-+#endif /* LINUX_APPLE_GMUX_H */
--- 
-1.8.5.2 (Apple Git-48)
+Z211eCBpcyBhIG1pY3JvY29udHJvbGxlciBidWlsdCBpbnRvIGR1YWwgR1BVIE1hY0Jvb2sgUHJv
+cy4KT24gcHJlLXJldGluYSBNQlBzLCBpZiB3ZSdyZSB0aGUgaW5hY3RpdmUgR1BVLCB3ZSBuZWVk
+IGFwcGxlLWdtdXgKdG8gdGVtcG9yYXJpbHkgc3dpdGNoIEREQyBzbyB0aGF0IHdlIGNhbiBwcm9i
+ZSB0aGUgcGFuZWwncyBFRElELgoKVGhlIGNoZWNrcyBmb3IgQ09ORklHX1ZHQV9BUkIgYW5kIENP
+TkZJR19WR0FfU1dJVENIRVJPTyBhcmUgbmVjZXNzYXJ5CmJlY2F1c2UgaWYgZWl0aGVyIG9mIHRo
+ZW0gaXMgZGlzYWJsZWQgYnV0IGdtdXggaXMgcHJlc2VudCwgdGhlIGRyaXZlcgp3b3VsZCBuZXZl
+ciBsb2FkLCBldmVuIGlmIHdlJ3JlIHRoZSBhY3RpdmUgR1BVLiAodmdhX2RlZmF1bHRfZGV2aWNl
+KCkKd291bGQgZXZhbHVhdGUgdG8gTlVMTCBhbmQgdmdhX3N3aXRjaGVyb29faGFuZGxlcl9mbGFn
+cygpIHdvdWxkCmV2YWx1YXRlIHRvIDAuKQoKQnVnemlsbGE6IGh0dHBzOi8vYnVnemlsbGEua2Vy
+bmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9ODg4NjEKQnVnemlsbGE6IGh0dHBzOi8vYnVncy5mcmVl
+ZGVza3RvcC5vcmcvc2hvd19idWcuY2dpP2lkPTYxMTE1ClRlc3RlZC1ieTogTHVrYXMgV3VubmVy
+IDxsdWthc0B3dW5uZXIuZGU+CiAgICBbTUJQICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlh
+IEdLMTA3ICBwcmUtcmV0aW5hICAxNSJdClNpZ25lZC1vZmYtYnk6IEx1a2FzIFd1bm5lciA8bHVr
+YXNAd3VubmVyLmRlPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2k5MTVfZHJ2LmMgfCAxMiAr
+KysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvaTkxNV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1
+L2k5MTVfZHJ2LmMKaW5kZXggM2FjNjE2ZC4uNGE1ZmM1ZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2k5MTUvaTkxNV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vaTkxNS9pOTE1X2Ry
+di5jCkBAIC0zNSw5ICszNSwxMiBAQAogI2luY2x1ZGUgImk5MTVfdHJhY2UuaCIKICNpbmNsdWRl
+ICJpbnRlbF9kcnYuaCIKIAorI2luY2x1ZGUgPGxpbnV4L2FwcGxlLWdtdXguaD4KICNpbmNsdWRl
+IDxsaW51eC9jb25zb2xlLmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAjaW5jbHVkZSA8
+bGludXgvcG1fcnVudGltZS5oPgorI2luY2x1ZGUgPGxpbnV4L3ZnYWFyYi5oPgorI2luY2x1ZGUg
+PGxpbnV4L3ZnYV9zd2l0Y2hlcm9vLmg+CiAjaW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5o
+PgogCiBzdGF0aWMgc3RydWN0IGRybV9kcml2ZXIgZHJpdmVyOwpAQCAtOTY3LDYgKzk3MCwxNSBA
+QCBzdGF0aWMgaW50IGk5MTVfcGNpX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBjb25zdCBz
+dHJ1Y3QgcGNpX2RldmljZV9pZCAqZW50KQogCWlmIChQQ0lfRlVOQyhwZGV2LT5kZXZmbikpCiAJ
+CXJldHVybiAtRU5PREVWOwogCisJLyoKKwkgKiBhcHBsZS1nbXV4IGlzIG5lZWRlZCBvbiBkdWFs
+IEdQVSBNYWNCb29rIFBybworCSAqIHRvIHByb2JlIHRoZSBwYW5lbCBpZiB3ZSdyZSB0aGUgaW5h
+Y3RpdmUgR1BVLgorCSAqLworCWlmIChJU19FTkFCTEVEKENPTkZJR19WR0FfQVJCKSAmJiBJU19F
+TkFCTEVEKENPTkZJR19WR0FfU1dJVENIRVJPTykgJiYKKwkgICAgYXBwbGVfZ211eF9wcmVzZW50
+KCkgJiYgcGRldiAhPSB2Z2FfZGVmYXVsdF9kZXZpY2UoKSAmJgorCSAgICAhdmdhX3N3aXRjaGVy
+b29faGFuZGxlcl9mbGFncygpKQorCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKKwogCXJldHVybiBk
+cm1fZ2V0X3BjaV9kZXYocGRldiwgZW50LCAmZHJpdmVyKTsKIH0KIAotLSAKMS44LjUuMiAoQXBw
+bGUgR2l0LTQ4KQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KSW50ZWwtZ2Z4IG1haWxpbmcgbGlzdApJbnRlbC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9pbnRlbC1nZngK
