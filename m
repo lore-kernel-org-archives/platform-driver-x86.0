@@ -1,51 +1,80 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2 0/2] Fixes for dell-wmi
-Date: Mon, 11 Jan 2016 11:22:51 -0800
-Message-ID: <20160111192251.GG10643@malice.jf.intel.com>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <1451942796-26574-1-git-send-email-pali.rohar@gmail.com>
+Subject: Re: [PATCH v2 0/1] apple-gmux: Add initial documentation
+Date: Mon, 11 Jan 2016 11:26:23 -0800
+Message-ID: <20160111192623.GH10643@malice.jf.intel.com>
+References: <cover.1452431795.git.lukas@wunner.de>
+ <20160111070318.GC8076@phenom.ffwll.local>
+ <20160111174525.GA1813@malice.jf.intel.com>
+ <20160111191954.GA6562@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:43318 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934419AbcAKTWz (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:22:55 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1451942796-26574-1-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160111191954.GA6562@wunner.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Bruno Premont <bonbons@linux-vserver.org>, platform-driver-x86@vger.kernel.org, dri-devel@lists.freedesktop.org, Jonathan Corbet <corbet@lwn.net>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 04, 2016 at 10:26:34PM +0100, Pali Roh=E1r wrote:
-> This patch series adds check if Dell WMI descriptor structure is vali=
-d and
-> fixes processing WMI events on devices with WMI interface version 0.
->=20
-> After testing, second patch is good candidate for backporting into st=
-able
-> kernels, but problem is that it cannot be used without first patch. S=
-o I
-> let decision to other people.
->=20
-> Pali Roh=E1r (2):
->   dell-wmi: Check if Dell WMI descriptor structure is valid
->   dell-wmi: Process only one event on devices with interface version =
-0
->=20
->  drivers/platform/x86/dell-wmi.c |   96 +++++++++++++++++++++++++++++=
-+++++++++-
->  1 file changed, 94 insertions(+), 2 deletions(-)
-
-Thank you everyone. I have queued these to testing.
-
-Should I add a tested-by for Michal, Andy, and Gabriele?
-
-Do I have any Reviewed-by's to add?
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+T24gTW9uLCBKYW4gMTEsIDIwMTYgYXQgMDg6MTk6NTRQTSArMDEwMCwgTHVrYXMgV3VubmVyIHdy
+b3RlOgo+IEhpIERhcnJlbiwKPiAKPiBPbiBNb24sIEphbiAxMSwgMjAxNiBhdCAwOTo0NToyNUFN
+IC0wODAwLCBEYXJyZW4gSGFydCB3cm90ZToKPiA+IE9uIE1vbiwgSmFuIDExLCAyMDE2IGF0IDA4
+OjAzOjE4QU0gKzAxMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gPiA+IE9uIE1vbiwgSmFuIDEx
+LCAyMDE2IGF0IDEyOjA4OjM1QU0gKzAxMDAsIEx1a2FzIFd1bm5lciB3cm90ZToKPiA+ID4gPiBP
+biBGcmksIEphbiAwOCwgMjAxNiBhdCAwOTo0OToyMkFNIC0wNzAwLCBKb25hdGhhbiBDb3JiZXQg
+d3JvdGU6Cj4gPiA+ID4gPiBXZWxsLCBpdCdzIGJ1aWx0IGFyb3VuZCB0aGUgYXNjaWlkb2MgcGF0
+Y2gsIHdoaWNoIGlzbid0IGluIHRoZSBtYWlubGluZQo+ID4gPiA+ID4gYXQgdGhpcyBwb2ludC4g
+IFNob3VsZCB0aGluZ3MgZ28gYSBkaWZmZXJlbnQgZGlyZWN0aW9uLCB0aGF0IGNvdWxkIGZvcmNl
+Cj4gPiA+ID4gPiBzb21lIGNoYW5nZXMgaGVyZTsKPiA+ID4gPiAKPiA+ID4gPiBJZi93aGVuIHRo
+YXQgaGFwcGVucywgSSdsbCBiZSBoYXBweSB0byBmaXh1cCB0aGUgZG9jdW1lbnRhdGlvbiBhcyBu
+ZWVkZWQuCj4gPiA+ID4gSW4gZmFjdCBJIG9yaWdpbmFsbHkgd3JvdGUgdGhpcyBpbiBtYXJrZG93
+biBpbiBOb3ZlbWJlciwgdGhlbiBjb252ZXJ0ZWQKPiA+ID4gPiBpdCB0byBhc2NpaWRvYyBpbiBE
+ZWNlbWJlciBhbmQgdGhhdCByZWFsbHkgd2Fzbid0IGEgYmlnIGRlYWwuCj4gPiA+ID4gCj4gPiA+
+ID4gVGhlIG5lZWQgZm9yIGFzY2lpZG9jIGFyaXNlcyBmcm9tIHRoZSBkZXNpcmUgdG8gbm90IGNs
+dXR0ZXIgdXAgdGhlIHByb3NlCj4gPiA+ID4gdGV4dCB3aXRoIFVSTHMuIFRvIGFjaGlldmUgdGhp
+cywgYXNjaWlkb2MgYWxsb3dzIGRlZmluaW5nIHNvLWNhbGxlZAo+ID4gPiA+ICJhdHRyaWJ1dGUg
+ZW50cmllcyIgd2hpY2ggbWF5IHRoZW4gYmUgcmVmZXJlbmNlZCBpbiB0aGUgdGV4dDoKPiA+ID4g
+PiBodHRwOi8vYXNjaWlkb2Mub3JnL3VzZXJndWlkZS5odG1sI1g2Mgo+ID4gPiA+IAo+ID4gPiA+
+IE1hcmtkb3duIGhhcyBhIHNpbWlsYXIgZmVhdHVyZSBjYWxsZWQgInJlZmVyZW5jZSBzdHlsZSBs
+aW5rcyIsIHRoZQo+ID4gPiA+IGRpZmZlcmVuY2UgYmVpbmcgdGhhdCB0aGV5IGNhbiBiZSBkZWZp
+bmVkIGFueXdoZXJlIGluIHRoZSBkb2N1bWVudCwKPiA+ID4gPiB3aGVyZWFzIGFzY2lpZG9jJ3Mg
+ImF0dHJpYnV0ZSBlbnRyaWVzIiBtdXN0IHByZWNlZGUgdGhlaXIgdXNhZ2UgaW4KPiA+ID4gPiB0
+aGUgdGV4dDoKPiA+ID4gPiBodHRwczovL2RhcmluZ2ZpcmViYWxsLm5ldC9wcm9qZWN0cy9tYXJr
+ZG93bi9zeW50YXgjbGluawo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IEhlcmUncyBhIHYyLCB0
+aGUgb25seSBjaGFuZ2UgaXMgQnJ1bm8gUHI/bW9udCdzIGFkZGl0aW9uIHRvIHRoZSBjb21taXQK
+PiA+ID4gPiBtZXNzYWdlLgo+ID4gPiA+IAo+ID4gPiA+IEBEYW5pZWwgVmV0dGVyOiBDb3VsZCB5
+b3UgcGljayB0aGlzIHVwIGZvciB0b3BpYy9kcm0tbWlzYyBwbGVhc2U/Cj4gPiA+IAo+ID4gPiBJ
+IHRoaW5rIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gcHVsbCB0aGlzIGluIHRocm91Z2ggRGFycmVu
+J3MgdHJlZSwgYW5kIEkKPiA+ID4gYWNrZWQgdGhhdCBvbiB0aGUgbGFzdCByb3VuZCBhbHJlYWR5
+Lgo+ID4gCj4gPiBPSywgSSdtIGhhcHB5IHRvIHRha2UgaXQuIEx1a2FzLCB0aGlzIGRvZXNuJ3Qg
+YXBwbHkgY2xlYW5seSB0byBteSA0LjQtcmMqIGJhc2VkCj4gPiBmb3ItbmV4dCBicmFuY2ggb3Ig
+TGludXMncyA0LjQgZnJvbSB5ZXN0ZXJkYXkuIEkgY2FuIG1hbnVhbGx5IGFwcGx5IGl0Ogo+ID4g
+Cj4gPiAkIHBhdGNoIC1wMSA8IH4vaW5jb21pbmcvUEFUQ0hfdjJfMS0xX2FwcGxlLWdtdXhfQWRk
+X2luaXRpYWxfZG9jdW1lbnRhdGlvbi5tYm94IAo+ID4gcGF0Y2hpbmcgZmlsZSBEb2N1bWVudGF0
+aW9uL0RvY0Jvb2svZ3B1LnRtcGwKPiA+IEh1bmsgIzEgc3VjY2VlZGVkIGF0IDQyNzkgd2l0aCBm
+dXp6IDEgKG9mZnNldCA4MDkgbGluZXMpLgo+ID4gcGF0Y2hpbmcgZmlsZSBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9hcHBsZS1nbXV4LmMKPiA+IAo+ID4gQnV0IHRoYXQgaXMgb25lIGhlbGwgb2YgYW4g
+b2Zmc2V0LiBXaGF0IGFyZSB5b3UgZGV2ZWxvcGluZyBhZ2FpbnN0IGFuZCBjYW4geW91Cj4gPiBz
+ZW5kIG1lIHNvbWV0aGluZyB0aGF0IGFwcGxpZXMgY2xlYW5seT8KPiAKPiBJJ20gZGV2ZWxvcGlu
+ZyBhZ2FpbnN0IGRybS1uZXh0IGFuZC9vciBkcm0taW50ZWwtbmlnaHRseS4KPiBMb29rcyBsaWtl
+IGdwdS50bXBsIGlzIHRvdWNoZWQgdmVyeSBmcmVxdWVudGx5LiA6LSkKPiAKPiBBcyBmb3IgdGhl
+IGFwcGxlLWdtdXggZG9jdW1lbnRhdGlvbiwgRGFuaWVsIHBpY2tlZCBpdCB1cCB0aGlzIGFmdGVy
+bm9vbjoKPiBodHRwOi8vY2dpdC5mcmVlZGVza3RvcC5vcmcvZHJtLWludGVsL2NvbW1pdC8/aD10
+b3BpYy9kcm0tbWlzYyZpZD0zZDdiNzVmZGFlOWM4MWRkNzFjNzU3M2RiYzI4NWFmOTBlMDkyNGZh
+Cj4gCj4gU28sIGV2ZXJ5dGhpbmcncyBmaW5lLiBUaGFua3MgYSBsb3QgdGhvdWdoIGZvciBiZWlu
+ZyBzdWNoIGEgcmVzcG9uc2l2ZQo+IGFuZCBzcGVlZHkgbWFpbnRhaW5lciwgbXVjaCBhcHByZWNp
+YXRlZCEKPiAKCkhhaCwgYW5kIGhlcmUgSSBhbSBiZWF0aW5nIG15c2VsZiB1cCBvdmVyIGxldHRp
+bmcgdGhpbmdzIHN0YWduYXRlLiBUaGFua3MgOi0pCgotLSAKRGFycmVuIEhhcnQKSW50ZWwgT3Bl
+biBTb3VyY2UgVGVjaG5vbG9neSBDZW50ZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
