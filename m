@@ -1,83 +1,70 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 06/12] drm/i915: Switch DDC when reading the EDID
+Subject: [PATCH v5 08/12] drm/radeon: Switch DDC when reading the EDID
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <bb095e14a2259be7fdd10092f9d6874a9be8f27b.1452525860.git.lukas@wunner.de>
+Message-ID: <dae71655e8c484fbef492d3389c157975f9622c9.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.hostsharing.net ([83.223.90.233]:42858 "EHLO
-	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752296AbcAKTK7 (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:10:59 -0500
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: intel-gfx@lists.freedesktop.org, Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The pre-retina MacBook Pro uses an LVDS panel and a gmux controller
-to switch the panel between its two GPUs. The panel mode in VBIOS
-is notoriously bogus on these machines and some models have no
-VBIOS at all.
-
-Use drm_get_edid_switcheroo() in lieu of drm_get_edid() on LVDS
-if the vga_switcheroo handler is capable of temporarily switching
-the panel's DDC lines to the integrated GPU. This allows us to
-retrieve the EDID if the panel is currently muxed to the discrete GPU.
-
-This only enables EDID probing on the pre-retina MBP (2008 - 2013).
-The retina MBP (2012 - present) uses eDP and gmux is not capable of
-switching AUX separately from the main link on these models.
-This will be addressed in later patches.
-
-List of pre-retina MBPs with dual GPUs, one of them Intel:
-    [MBP  6,2 2010  intel ILK + nvidia GT216  pre-retina  15"]
-    [MBP  6,1 2010  intel ILK + nvidia GT216  pre-retina  17"]
-    [MBP  8,2 2011  intel SNB + amd turks     pre-retina  15"]
-    [MBP  8,3 2011  intel SNB + amd turks     pre-retina  17"]
-    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
-
-v3: Commit newly added due to introduction of drm_get_edid_switcheroo()
-    wrapper which drivers need to opt-in to.
-
-v5: Rebase on "vga_switcheroo: Add handler flags infrastructure",
-    i.e. call drm_get_edid_switcheroo() only if the handler
-    indicates that DDC is switchable.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88861
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
-Tested-by: Lukas Wunner <lukas@wunner.de>
-    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/gpu/drm/i915/intel_lvds.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/intel_lvds.c b/drivers/gpu/drm/i915/intel_lvds.c
-index 0da0240..811ddf7 100644
---- a/drivers/gpu/drm/i915/intel_lvds.c
-+++ b/drivers/gpu/drm/i915/intel_lvds.c
-@@ -31,6 +31,7 @@
- #include <linux/dmi.h>
- #include <linux/i2c.h>
- #include <linux/slab.h>
-+#include <linux/vga_switcheroo.h>
- #include <drm/drmP.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_crtc.h>
-@@ -1080,7 +1081,12 @@ void intel_lvds_init(struct drm_device *dev)
- 	 * preferred mode is the right one.
- 	 */
- 	mutex_lock(&dev->mode_config.mutex);
--	edid = drm_get_edid(connector, intel_gmbus_get_adapter(dev_priv, pin));
-+	if (vga_switcheroo_handler_flags() & VGA_SWITCHEROO_CAN_SWITCH_DDC)
-+		edid = drm_get_edid_switcheroo(connector,
-+				    intel_gmbus_get_adapter(dev_priv, pin));
-+	else
-+		edid = drm_get_edid(connector,
-+				    intel_gmbus_get_adapter(dev_priv, pin));
- 	if (edid) {
- 		if (drm_add_edid_modes(connector, edid)) {
- 			drm_mode_connector_update_edid_property(connector,
--- 
-1.8.5.2 (Apple Git-48)
+VGhlIHByZS1yZXRpbmEgTWFjQm9vayBQcm8gdXNlcyBhbiBMVkRTIHBhbmVsIGFuZCBhIGdtdXgg
+Y29udHJvbGxlcgp0byBzd2l0Y2ggdGhlIHBhbmVsIGJldHdlZW4gaXRzIHR3byBHUFVzLiBUaGUg
+cGFuZWwgbW9kZSBpbiBWQklPUwppcyBub3RvcmlvdXNseSBib2d1cyBvbiB0aGVzZSBtYWNoaW5l
+cy4KClVzZSBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIGluIGxpZXUgb2YgZHJtX2dldF9lZGlk
+KCkgb24gTFZEUwppZiB0aGUgdmdhX3N3aXRjaGVyb28gaGFuZGxlciBpcyBjYXBhYmxlIG9mIHRl
+bXBvcmFyaWx5IHN3aXRjaGluZwp0aGUgcGFuZWwncyBEREMgbGluZXMgdG8gdGhlIGRpc2NyZXRl
+IEdQVS4gVGhpcyBhbGxvd3MgdXMgdG8gcmV0cmlldmUKdGhlIEVESUQgaWYgdGhlIHBhbmVsIGlz
+IGN1cnJlbnRseSBtdXhlZCB0byB0aGUgaW50ZWdyYXRlZCBHUFUuCgpUaGlzIG9ubHkgZW5hYmxl
+cyBFRElEIHByb2Jpbmcgb24gdGhlIHByZS1yZXRpbmEgTUJQICgyMDA4IC0gMjAxMykuClRoZSBy
+ZXRpbmEgTUJQICgyMDEyIC0gcHJlc2VudCkgdXNlcyBlRFAgYW5kIGdtdXggaXMgbm90IGNhcGFi
+bGUgb2YKc3dpdGNoaW5nIEFVWCBzZXBhcmF0ZWx5IGZyb20gdGhlIG1haW4gbGluayBvbiB0aGVz
+ZSBtb2RlbHMuClRoaXMgd2lsbCBiZSBhZGRyZXNzZWQgaW4gbGF0ZXIgcGF0Y2hlcy4KCkxpc3Qg
+b2YgcHJlLXJldGluYSBNQlBzIHdpdGggZHVhbCBHUFVzLCBvbmUgb2YgdGhlbSBBTUQ6CiAgICBb
+TUJQICA4LDIgMjAxMSAgaW50ZWwgU05CICsgYW1kIHR1cmtzICAgICBwcmUtcmV0aW5hICAxNSJd
+CiAgICBbTUJQICA4LDMgMjAxMSAgaW50ZWwgU05CICsgYW1kIHR1cmtzICAgICBwcmUtcmV0aW5h
+ICAxNyJdCgp2MzogQ29tbWl0IG5ld2x5IGFkZGVkIGR1ZSB0byBpbnRyb2R1Y3Rpb24gb2YgZHJt
+X2dldF9lZGlkX3N3aXRjaGVyb28oKQogICAgd3JhcHBlciB3aGljaCBkcml2ZXJzIG5lZWQgdG8g
+b3B0LWluIHRvLgoKdjU6IFJlYmFzZSBvbiAidmdhX3N3aXRjaGVyb286IEFkZCBoYW5kbGVyIGZs
+YWdzIGluZnJhc3RydWN0dXJlIiwKICAgIGkuZS4gY2FsbCBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJv
+bygpIG9ubHkgaWYgdGhlIGhhbmRsZXIKICAgIGluZGljYXRlcyB0aGF0IEREQyBpcyBzd2l0Y2hh
+YmxlLgoKQnVnemlsbGE6IGh0dHBzOi8vYnVncy5mcmVlZGVza3RvcC5vcmcvc2hvd19idWcuY2dp
+P2lkPTYxMTE1ClNpZ25lZC1vZmYtYnk6IEx1a2FzIFd1bm5lciA8bHVrYXNAd3VubmVyLmRlPgot
+LS0KIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2Nvbm5lY3RvcnMuYyB8IDYgKysrKysr
+CiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL3JhZGVvbi9yYWRlb25fY29ubmVjdG9ycy5jIGIvZHJpdmVycy9ncHUvZHJtL3JhZGVv
+bi9yYWRlb25fY29ubmVjdG9ycy5jCmluZGV4IDM0MGYzZjUuLmNmY2MwOTkgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2Nvbm5lY3RvcnMuYworKysgYi9kcml2ZXJz
+L2dwdS9kcm0vcmFkZW9uL3JhZGVvbl9jb25uZWN0b3JzLmMKQEAgLTM0LDYgKzM0LDcgQEAKICNp
+bmNsdWRlICJhdG9tLmgiCiAKICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+CisjaW5jbHVk
+ZSA8bGludXgvdmdhX3N3aXRjaGVyb28uaD4KIAogc3RhdGljIGludCByYWRlb25fZHBfaGFuZGxl
+X2hwZChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQogewpAQCAtMzQ0LDYgKzM0NSwx
+MSBAQCBzdGF0aWMgdm9pZCByYWRlb25fY29ubmVjdG9yX2dldF9lZGlkKHN0cnVjdCBkcm1fY29u
+bmVjdG9yICpjb25uZWN0b3IpCiAJCWVsc2UgaWYgKHJhZGVvbl9jb25uZWN0b3ItPmRkY19idXMp
+CiAJCQlyYWRlb25fY29ubmVjdG9yLT5lZGlkID0gZHJtX2dldF9lZGlkKCZyYWRlb25fY29ubmVj
+dG9yLT5iYXNlLAogCQkJCQkJCSAgICAgICZyYWRlb25fY29ubmVjdG9yLT5kZGNfYnVzLT5hZGFw
+dGVyKTsKKwl9IGVsc2UgaWYgKHZnYV9zd2l0Y2hlcm9vX2hhbmRsZXJfZmxhZ3MoKSAmIFZHQV9T
+V0lUQ0hFUk9PX0NBTl9TV0lUQ0hfRERDICYmCisJCSAgIGNvbm5lY3Rvci0+Y29ubmVjdG9yX3R5
+cGUgPT0gRFJNX01PREVfQ09OTkVDVE9SX0xWRFMgJiYKKwkJICAgcmFkZW9uX2Nvbm5lY3Rvci0+
+ZGRjX2J1cykgeworCQlyYWRlb25fY29ubmVjdG9yLT5lZGlkID0gZHJtX2dldF9lZGlkX3N3aXRj
+aGVyb28oJnJhZGVvbl9jb25uZWN0b3ItPmJhc2UsCisJCQkJCQkJCSAmcmFkZW9uX2Nvbm5lY3Rv
+ci0+ZGRjX2J1cy0+YWRhcHRlcik7CiAJfSBlbHNlIGlmIChyYWRlb25fY29ubmVjdG9yLT5kZGNf
+YnVzKSB7CiAJCXJhZGVvbl9jb25uZWN0b3ItPmVkaWQgPSBkcm1fZ2V0X2VkaWQoJnJhZGVvbl9j
+b25uZWN0b3ItPmJhc2UsCiAJCQkJCQkgICAgICAmcmFkZW9uX2Nvbm5lY3Rvci0+ZGRjX2J1cy0+
+YWRhcHRlcik7Ci0tIAoxLjguNS4yIChBcHBsZSBHaXQtNDgpCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
