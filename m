@@ -1,80 +1,99 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Mon, 11 Jan 2016 11:04:11 -0800
-Message-ID: <20160111190411.GE10643@malice.jf.intel.com>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
- <20160104201231.GB5847@amd>
- <1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
- <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH v5 00/12] Enable GPU switching on pre-retina
+	MacBook Pro
+Date: Mon, 11 Jan 2016 20:09:20 +0100
+Message-ID: <cover.1452525860.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:39280 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933295AbcAKTEO (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:04:14 -0500
-Content-Disposition: inline
-In-Reply-To: <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <intel-gfx-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
+List-Post: <mailto:intel-gfx@lists.freedesktop.org>
+List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
+ <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: intel-gfx-bounces@lists.freedesktop.org
+Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, intel-gfx@lists.freedesktop.org, Seth Forshee <seth.forshee@canonical.com>, Ben Skeggs <bskeggs@redhat.com>, nouveau@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, Thierry Reding <treding@nvidia.com>, Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jan 09, 2016 at 03:46:41PM -0200, Henrique de Moraes Holschuh w=
-rote:
-> On Sat, Jan 9, 2016, at 15:39, Henrique de Moraes Holschuh wrote:
-> > On Mon, Jan 4, 2016, at 18:12, Pavel Machek wrote:
-> > > > This patch adds support for controlling keyboard backlight via =
-standard
-> > > > linux led class interface (::kbd_backlight). It uses ACPI HKEY =
-device with
-> > > > MLCG and MLCS methods.
-> > > >=20
-> > > > Signed-off-by: Pali Roh=E1r <pali.rohar@gmail.com>
-> > > > Tested-by: Fabio D'Urso <fabiodurso@hotmail.it>
-> > >=20
-> > > On my thinkpad, keyboard light is controlled by
-> > >=20
-> > > /sys/class/leds/tpacpi\:\:thinklight/brightness
-> > >=20
-> > > (that's a bad name).
-> >=20
-> > That's because the driver was not updated to support your laptop, A=
-ND I
-> > don't recall if someone mapped the full behavior of the ACPI thinkl=
-ight
-> > interface in your thinkpad :-(
->=20
-> Argh.  If by "keyboard light" you mean the LED above the *screen* tha=
-t
-> shines down on the whole keyboard, please disregard my previous reply=
-=2E..
->=20
-> As for the naming, the idea of a LED up there shining in the keyboard
-> is:
->  1. patented by IBM
->  2. named "ThinkLight" by IBM, one of the "Think Technologies" in the
->  "ThinkPad" (add TM after everything :p)  and every
->      old-timer thinkpad user knew it by that name.
->  4. called "thinklight" by the driver since before the LED sysfs clas=
-s
->  even existed :p
->=20
-> ibm-acpi, since then renamed thinkpad-acpi *predates* most generic
-> interfaces.  Heck, it predates sysfs.
->=20
-> So, this is ABI set in stone.  If there is a way to add an "alias" of
-> kbd_backlight that won't drive userspace crazy, we might do that thou=
-gh.
->  But it looks quite risky to me...
-
-Henrique, so are you taking back your Ack from 10 minutes prior?
-
-I've dropped this patch. Please let me know if I should pick it back up=
-=2E
-
---=20
-Darren Hart
-Intel Open Source Technology Center
+RW5hYmxlIEdQVSBzd2l0Y2hpbmcgb24gdGhlIHByZS1yZXRpbmEgTWFjQm9vayBQcm8gKDIwMDgg
+LSAyMDEzKSwgdjUuCgpUaGUgbWFpbiBvYnN0YWNsZSBvbiB0aGVzZSBtYWNoaW5lcyBpcyB0aGF0
+IHRoZSBwYW5lbCBtb2RlIGluIFZCSU9TCmlzIGJvZ3VzLiBGb3J0dW5hdGVseSBnbXV4IGNhbiBz
+d2l0Y2ggRERDIGluZGVwZW5kZW50bHkgZnJvbSB0aGUKZGlzcGxheSwgdGhlcmVieSBhbGxvd2lu
+ZyB0aGUgaW5hY3RpdmUgR1BVIHRvIHByb2JlIHRoZSBwYW5lbCdzIEVESUQuCgpJbiBzaG9ydCwg
+dmdhX3N3aXRjaGVyb28gYW5kIGFwcGxlLWdtdXggYXJlIGFtZW5kZWQgd2l0aCBob29rcyB0bwpz
+d2l0Y2ggRERDLCBEUk0gY29yZSBpcyBhbWVuZGVkIHdpdGggYSBkcm1fZ2V0X2VkaWRfc3dpdGNo
+ZXJvbygpIGhlbHBlciwKYW5kIHJlbGV2YW50IGRyaXZlcnMgYXJlIGFtZW5kZWQgdG8gY2FsbCB0
+aGF0IGZvciBMVkRTIG91dHB1dHMuCgpUaGUgcmV0aW5hIE1hY0Jvb2sgUHJvICgyMDEyIC0gcHJl
+c2VudCkgdXNlcyBlRFAgYW5kIGNhbm5vdCBzd2l0Y2gKQVVYIGluZGVwZW5kZW50bHkgZnJvbSB0
+aGUgbWFpbiBsaW5rLiBUaGUgbWFpbiBvYnN0YWNsZSB0aGVyZSBpcyBsaW5rCnRyYWluaW5nLCBJ
+J20gY3VycmVudGx5IHdvcmtpbmcgb24gdGhpcywgaXQgd2lsbCBiZSBhZGRyZXNzZWQgaW4gYQpm
+dXR1cmUgcGF0Y2ggc2V0LgoKVGhpcyBzZXJpZXMgaXMgYWxzbyByZXZpZXdhYmxlIG9uIEdpdEh1
+YjoKaHR0cHM6Ly9naXRodWIuY29tL2wxay9saW51eC9jb21taXRzL21icF9zd2l0Y2hlcm9vX3Y1
+CgpDaGFuZ2VzOgoKKiBOZXcgcGF0Y2ggWzAxLzEyXTogdmdhX3N3aXRjaGVyb28gaGFuZGxlciBm
+bGFncwogIEFsZXggRGV1Y2hlciBhc2tlZCBpZiB0aGlzIHNlcmllcyBtaWdodCByZWdyZXNzIG9u
+IG5vbi1BcHBsZSBsYXB0b3BzLgogIFRvIGFkZHJlc3MgdGhpcyBjb25jZXJuLCBJIGxldCBoYW5k
+bGVycyBkZWNsYXJlIHRoZWlyIGNhcGFiaWxpdGllcyBpbgogIGEgYml0bWFzay4gRFJNIGRyaXZl
+cnMgY2FsbCBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIG9ubHkgaWYgdGhlCiAgaGFuZGxlciBo
+YXMgc2V0IHRoZSBWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQyBmbGFnLgogIEN1cnJlbnRs
+eSBqdXN0IG9uZSBvdGhlciBmbGFnIGlzIGRlZmluZWQgd2hpY2ggaXMgdXNlZCBvbiByZXRpbmFz
+LgoKKiBDaGFuZ2VkIHBhdGNoIFswMi8xMl06IHZnYV9zd2l0Y2hlcm9vIEREQyBsb2NraW5nCiAg
+UmVuYW1lIGRkY19sb2NrIHRvIG11eF9od19sb2NrLCBzdWdnZXN0ZWQgYnkgRGFuaWVsIFZldHRl
+ci4KCiogTmV3IHBhdGNoIFswMy8xMl06IHRyYWNrIHN3aXRjaCBzdGF0ZSBvZiBhcHBsZS1nbXV4
+CiAgRml4ZXMgYSBidWcgaW4gcHJldmlvdXMgdmVyc2lvbnMgb2YgdGhpcyBzZXJpZXMgd2hpY2gg
+b2NjdXJyZWQgaWYKICB0aGUgc3lzdGVtIHdhcyBzdXNwZW5kZWQgd2hpbGUgRERDIHdhcyB0ZW1w
+b3JhcmlseSBzd2l0Y2hlZDoKICBPbiByZXN1bWUgRERDIHdhcyBzd2l0Y2hlZCB0byB0aGUgd3Jv
+bmcgR1BVLgoKKiBOZXcgcGF0Y2hlcyBbMDkvMTIgLSAxMi8xMl06IGRlZmVycmVkIHByb2JpbmcK
+ICBQcmV2aW91c2x5IEkgdXNlZCBjb25uZWN0b3IgcmVwcm9iaW5nIGlmIHRoZSBpbmFjdGl2ZSBH
+UFUncyBkcml2ZXIKICBsb2FkZWQgYmVmb3JlIGdtdXguIEkndmUgZGl0Y2hlZCB0aGF0IGluIGZh
+dm9yIG9mIGRlZmVycmVkIGRyaXZlcgogIHByb2JpbmcsIHdoaWNoIGlzIG11Y2ggc2ltcGxlci4g
+VGhhbmtzIHRvIERhbmllbCBWZXR0ZXIgZm9yIHRoZQogIHN1Z2dlc3Rpb24uCgpDYXV0aW9uOiBQ
+YXRjaCBbMDkvMTJdIGRlcGVuZHMgb24gYSBuZXcgYWNwaV9kZXZfcHJlc2VudCgpIEFQSSB3aGlj
+aAp3aWxsIGxhbmQgaW4gNC41IHZpYSBSYWZhZWwgSi4gV3lzb2NraSdzIHRyZWUuCgpJIHdvdWxk
+IHBhcnRpY3VsYXJseSBiZSBpbnRlcmVzdGVkIGluIGZlZWRiYWNrIG9uIHRoZSBoYW5kbGVyIGZs
+YWdzCnBhdGNoIFswMS8xMl0uIEknbSBub3QgMTAwJSBoYXBweSB3aXRoIHRoZSBudW1iZXIgb2Yg
+Y2hhcmFjdGVycwpyZXF1aXJlZCB0byBxdWVyeSB0aGUgZmxhZ3MgKGUuZy46IGlmICh2Z2Ffc3dp
+dGNoZXJvb19oYW5kbGVyX2ZsYWdzKCkgJgpWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQykp
+LCBidXQgZmFpbGVkIHRvIGNvbWUgdXAgd2l0aCBzb21ldGhpbmcKc2hvcnRlci4gVGhpZXJyeSBS
+ZWRpbmcgdXNlZCBhIHN0cnVjdCBvZiBib29scyBpbnN0ZWFkIG9mIGEgYml0bWFzawpmb3IgaGlz
+IHJlY2VudCBkcm1fZHBfbGlua19jYXBzIHBhdGNoZXMuIE1heWJlIHVzZSB0aGF0IGluc3RlYWQ/
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtRGVj
+ZW1iZXIvMDk3MDI1Lmh0bWwKClRoYW5rcywKCkx1a2FzCgoKTHVrYXMgV3VubmVyICgxMik6CiAg
+dmdhX3N3aXRjaGVyb286IEFkZCBoYW5kbGVyIGZsYWdzIGluZnJhc3RydWN0dXJlCiAgdmdhX3N3
+aXRjaGVyb286IEFkZCBzdXBwb3J0IGZvciBzd2l0Y2hpbmcgb25seSB0aGUgRERDCiAgYXBwbGUt
+Z211eDogVHJhY2sgc3dpdGNoIHN0YXRlCiAgYXBwbGUtZ211eDogQWRkIHN3aXRjaF9kZGMgc3Vw
+cG9ydAogIGRybS9lZGlkOiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9p
+OTE1OiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9ub3V2ZWF1OiBTd2l0
+Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9yYWRlb246IFN3aXRjaCBEREMgd2hl
+biByZWFkaW5nIHRoZSBFRElECiAgYXBwbGUtZ211eDogQWRkIGhlbHBlciBmb3IgcHJlc2VuY2Ug
+ZGV0ZWN0CiAgZHJtL2k5MTU6IERlZmVyIHByb2JlIGlmIGdtdXggaXMgcHJlc2VudCBidXQgaXRz
+IGRyaXZlciBpc24ndAogIGRybS9ub3V2ZWF1OiBEZWZlciBwcm9iZSBpZiBnbXV4IGlzIHByZXNl
+bnQgYnV0IGl0cyBkcml2ZXIgaXNuJ3QKICBkcm0vcmFkZW9uOiBEZWZlciBwcm9iZSBpZiBnbXV4
+IGlzIHByZXNlbnQgYnV0IGl0cyBkcml2ZXIgaXNuJ3QKCiBEb2N1bWVudGF0aW9uL0RvY0Jvb2sv
+Z3B1LnRtcGwgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvYW1kZ3B1X2F0cHhfaGFuZGxlci5jIHwgICAzICstCiBkcml2ZXJzL2dwdS9kcm0vZHJt
+X2VkaWQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgMjYgKysrKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9pOTE1L2k5MTVfZHJ2LmMgICAgICAgICAgICAgICAgICB8ICAxMiArKysKIGRyaXZlcnMvZ3B1
+L2RybS9pOTE1L2ludGVsX2x2ZHMuYyAgICAgICAgICAgICAgICB8ICAgOCArLQogZHJpdmVycy9n
+cHUvZHJtL25vdXZlYXUvbm91dmVhdV9hY3BpLmMgICAgICAgICAgIHwgICAyICstCiBkcml2ZXJz
+L2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1X2Nvbm5lY3Rvci5jICAgICAgfCAgMjEgKysrLQogZHJp
+dmVycy9ncHUvZHJtL25vdXZlYXUvbm91dmVhdV9kcm0uYyAgICAgICAgICAgIHwgIDExICsrKwog
+ZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fYXRweF9oYW5kbGVyLmMgICAgIHwgICAzICst
+CiBkcml2ZXJzL2dwdS9kcm0vcmFkZW9uL3JhZGVvbl9jb25uZWN0b3JzLmMgICAgICAgfCAgIDYg
+KysKIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2Rydi5jICAgICAgICAgICAgICB8ICAx
+MSArKysKIGRyaXZlcnMvZ3B1L3ZnYS92Z2Ffc3dpdGNoZXJvby5jICAgICAgICAgICAgICAgICB8
+IDExOSArKysrKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9wbGF0Zm9ybS94ODYvYXBwbGUt
+Z211eC5jICAgICAgICAgICAgICAgIHwgMTExICsrKysrKysrKysrKysrKystLS0tLQogaW5jbHVk
+ZS9kcm0vZHJtX2NydGMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGluY2x1
+ZGUvbGludXgvYXBwbGUtZ211eC5oICAgICAgICAgICAgICAgICAgICAgICB8ICAzOSArKysrKysr
+KwogaW5jbHVkZS9saW51eC92Z2Ffc3dpdGNoZXJvby5oICAgICAgICAgICAgICAgICAgIHwgIDM2
+ICsrKysrKy0KIDE2IGZpbGVzIGNoYW5nZWQsIDM4MiBpbnNlcnRpb25zKCspLCAzMyBkZWxldGlv
+bnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2FwcGxlLWdtdXguaAoKLS0g
+CjEuOC41LjIgKEFwcGxlIEdpdC00OCkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwtZ2Z4QGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vaW50ZWwtZ2Z4Cg==
