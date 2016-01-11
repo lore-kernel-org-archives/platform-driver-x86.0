@@ -1,99 +1,263 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 00/12] Enable GPU switching on pre-retina
-	MacBook Pro
+Subject: [PATCH v5 01/12] vga_switcheroo: Add handler flags infrastructure
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <cover.1452525860.git.lukas@wunner.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
+Message-ID: <2b0d93ed6e511ca09e95e45e0b35627f330fabce.1452525860.git.lukas@wunner.de>
+References: <cover.1452525860.git.lukas@wunner.de>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mailout1.hostsharing.net ([83.223.95.204]:35247 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934275AbcAKTJo (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 14:09:44 -0500
+In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, intel-gfx@lists.freedesktop.org, Seth Forshee <seth.forshee@canonical.com>, Ben Skeggs <bskeggs@redhat.com>, nouveau@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, Thierry Reding <treding@nvidia.com>, Darren Hart <dvhart@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Cc: nouveau@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>, Alex Deucher <alexander.deucher@amd.com>, Darren Hart <dvhart@infradead.org>
 
-RW5hYmxlIEdQVSBzd2l0Y2hpbmcgb24gdGhlIHByZS1yZXRpbmEgTWFjQm9vayBQcm8gKDIwMDgg
-LSAyMDEzKSwgdjUuCgpUaGUgbWFpbiBvYnN0YWNsZSBvbiB0aGVzZSBtYWNoaW5lcyBpcyB0aGF0
-IHRoZSBwYW5lbCBtb2RlIGluIFZCSU9TCmlzIGJvZ3VzLiBGb3J0dW5hdGVseSBnbXV4IGNhbiBz
-d2l0Y2ggRERDIGluZGVwZW5kZW50bHkgZnJvbSB0aGUKZGlzcGxheSwgdGhlcmVieSBhbGxvd2lu
-ZyB0aGUgaW5hY3RpdmUgR1BVIHRvIHByb2JlIHRoZSBwYW5lbCdzIEVESUQuCgpJbiBzaG9ydCwg
-dmdhX3N3aXRjaGVyb28gYW5kIGFwcGxlLWdtdXggYXJlIGFtZW5kZWQgd2l0aCBob29rcyB0bwpz
-d2l0Y2ggRERDLCBEUk0gY29yZSBpcyBhbWVuZGVkIHdpdGggYSBkcm1fZ2V0X2VkaWRfc3dpdGNo
-ZXJvbygpIGhlbHBlciwKYW5kIHJlbGV2YW50IGRyaXZlcnMgYXJlIGFtZW5kZWQgdG8gY2FsbCB0
-aGF0IGZvciBMVkRTIG91dHB1dHMuCgpUaGUgcmV0aW5hIE1hY0Jvb2sgUHJvICgyMDEyIC0gcHJl
-c2VudCkgdXNlcyBlRFAgYW5kIGNhbm5vdCBzd2l0Y2gKQVVYIGluZGVwZW5kZW50bHkgZnJvbSB0
-aGUgbWFpbiBsaW5rLiBUaGUgbWFpbiBvYnN0YWNsZSB0aGVyZSBpcyBsaW5rCnRyYWluaW5nLCBJ
-J20gY3VycmVudGx5IHdvcmtpbmcgb24gdGhpcywgaXQgd2lsbCBiZSBhZGRyZXNzZWQgaW4gYQpm
-dXR1cmUgcGF0Y2ggc2V0LgoKVGhpcyBzZXJpZXMgaXMgYWxzbyByZXZpZXdhYmxlIG9uIEdpdEh1
-YjoKaHR0cHM6Ly9naXRodWIuY29tL2wxay9saW51eC9jb21taXRzL21icF9zd2l0Y2hlcm9vX3Y1
-CgpDaGFuZ2VzOgoKKiBOZXcgcGF0Y2ggWzAxLzEyXTogdmdhX3N3aXRjaGVyb28gaGFuZGxlciBm
-bGFncwogIEFsZXggRGV1Y2hlciBhc2tlZCBpZiB0aGlzIHNlcmllcyBtaWdodCByZWdyZXNzIG9u
-IG5vbi1BcHBsZSBsYXB0b3BzLgogIFRvIGFkZHJlc3MgdGhpcyBjb25jZXJuLCBJIGxldCBoYW5k
-bGVycyBkZWNsYXJlIHRoZWlyIGNhcGFiaWxpdGllcyBpbgogIGEgYml0bWFzay4gRFJNIGRyaXZl
-cnMgY2FsbCBkcm1fZ2V0X2VkaWRfc3dpdGNoZXJvbygpIG9ubHkgaWYgdGhlCiAgaGFuZGxlciBo
-YXMgc2V0IHRoZSBWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQyBmbGFnLgogIEN1cnJlbnRs
-eSBqdXN0IG9uZSBvdGhlciBmbGFnIGlzIGRlZmluZWQgd2hpY2ggaXMgdXNlZCBvbiByZXRpbmFz
-LgoKKiBDaGFuZ2VkIHBhdGNoIFswMi8xMl06IHZnYV9zd2l0Y2hlcm9vIEREQyBsb2NraW5nCiAg
-UmVuYW1lIGRkY19sb2NrIHRvIG11eF9od19sb2NrLCBzdWdnZXN0ZWQgYnkgRGFuaWVsIFZldHRl
-ci4KCiogTmV3IHBhdGNoIFswMy8xMl06IHRyYWNrIHN3aXRjaCBzdGF0ZSBvZiBhcHBsZS1nbXV4
-CiAgRml4ZXMgYSBidWcgaW4gcHJldmlvdXMgdmVyc2lvbnMgb2YgdGhpcyBzZXJpZXMgd2hpY2gg
-b2NjdXJyZWQgaWYKICB0aGUgc3lzdGVtIHdhcyBzdXNwZW5kZWQgd2hpbGUgRERDIHdhcyB0ZW1w
-b3JhcmlseSBzd2l0Y2hlZDoKICBPbiByZXN1bWUgRERDIHdhcyBzd2l0Y2hlZCB0byB0aGUgd3Jv
-bmcgR1BVLgoKKiBOZXcgcGF0Y2hlcyBbMDkvMTIgLSAxMi8xMl06IGRlZmVycmVkIHByb2JpbmcK
-ICBQcmV2aW91c2x5IEkgdXNlZCBjb25uZWN0b3IgcmVwcm9iaW5nIGlmIHRoZSBpbmFjdGl2ZSBH
-UFUncyBkcml2ZXIKICBsb2FkZWQgYmVmb3JlIGdtdXguIEkndmUgZGl0Y2hlZCB0aGF0IGluIGZh
-dm9yIG9mIGRlZmVycmVkIGRyaXZlcgogIHByb2JpbmcsIHdoaWNoIGlzIG11Y2ggc2ltcGxlci4g
-VGhhbmtzIHRvIERhbmllbCBWZXR0ZXIgZm9yIHRoZQogIHN1Z2dlc3Rpb24uCgpDYXV0aW9uOiBQ
-YXRjaCBbMDkvMTJdIGRlcGVuZHMgb24gYSBuZXcgYWNwaV9kZXZfcHJlc2VudCgpIEFQSSB3aGlj
-aAp3aWxsIGxhbmQgaW4gNC41IHZpYSBSYWZhZWwgSi4gV3lzb2NraSdzIHRyZWUuCgpJIHdvdWxk
-IHBhcnRpY3VsYXJseSBiZSBpbnRlcmVzdGVkIGluIGZlZWRiYWNrIG9uIHRoZSBoYW5kbGVyIGZs
-YWdzCnBhdGNoIFswMS8xMl0uIEknbSBub3QgMTAwJSBoYXBweSB3aXRoIHRoZSBudW1iZXIgb2Yg
-Y2hhcmFjdGVycwpyZXF1aXJlZCB0byBxdWVyeSB0aGUgZmxhZ3MgKGUuZy46IGlmICh2Z2Ffc3dp
-dGNoZXJvb19oYW5kbGVyX2ZsYWdzKCkgJgpWR0FfU1dJVENIRVJPT19DQU5fU1dJVENIX0REQykp
-LCBidXQgZmFpbGVkIHRvIGNvbWUgdXAgd2l0aCBzb21ldGhpbmcKc2hvcnRlci4gVGhpZXJyeSBS
-ZWRpbmcgdXNlZCBhIHN0cnVjdCBvZiBib29scyBpbnN0ZWFkIG9mIGEgYml0bWFzawpmb3IgaGlz
-IHJlY2VudCBkcm1fZHBfbGlua19jYXBzIHBhdGNoZXMuIE1heWJlIHVzZSB0aGF0IGluc3RlYWQ/
-Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTUtRGVj
-ZW1iZXIvMDk3MDI1Lmh0bWwKClRoYW5rcywKCkx1a2FzCgoKTHVrYXMgV3VubmVyICgxMik6CiAg
-dmdhX3N3aXRjaGVyb286IEFkZCBoYW5kbGVyIGZsYWdzIGluZnJhc3RydWN0dXJlCiAgdmdhX3N3
-aXRjaGVyb286IEFkZCBzdXBwb3J0IGZvciBzd2l0Y2hpbmcgb25seSB0aGUgRERDCiAgYXBwbGUt
-Z211eDogVHJhY2sgc3dpdGNoIHN0YXRlCiAgYXBwbGUtZ211eDogQWRkIHN3aXRjaF9kZGMgc3Vw
-cG9ydAogIGRybS9lZGlkOiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9p
-OTE1OiBTd2l0Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9ub3V2ZWF1OiBTd2l0
-Y2ggRERDIHdoZW4gcmVhZGluZyB0aGUgRURJRAogIGRybS9yYWRlb246IFN3aXRjaCBEREMgd2hl
-biByZWFkaW5nIHRoZSBFRElECiAgYXBwbGUtZ211eDogQWRkIGhlbHBlciBmb3IgcHJlc2VuY2Ug
-ZGV0ZWN0CiAgZHJtL2k5MTU6IERlZmVyIHByb2JlIGlmIGdtdXggaXMgcHJlc2VudCBidXQgaXRz
-IGRyaXZlciBpc24ndAogIGRybS9ub3V2ZWF1OiBEZWZlciBwcm9iZSBpZiBnbXV4IGlzIHByZXNl
-bnQgYnV0IGl0cyBkcml2ZXIgaXNuJ3QKICBkcm0vcmFkZW9uOiBEZWZlciBwcm9iZSBpZiBnbXV4
-IGlzIHByZXNlbnQgYnV0IGl0cyBkcml2ZXIgaXNuJ3QKCiBEb2N1bWVudGF0aW9uL0RvY0Jvb2sv
-Z3B1LnRtcGwgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogZHJpdmVycy9ncHUvZHJtL2FtZC9h
-bWRncHUvYW1kZ3B1X2F0cHhfaGFuZGxlci5jIHwgICAzICstCiBkcml2ZXJzL2dwdS9kcm0vZHJt
-X2VkaWQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgMjYgKysrKysKIGRyaXZlcnMvZ3B1L2Ry
-bS9pOTE1L2k5MTVfZHJ2LmMgICAgICAgICAgICAgICAgICB8ICAxMiArKysKIGRyaXZlcnMvZ3B1
-L2RybS9pOTE1L2ludGVsX2x2ZHMuYyAgICAgICAgICAgICAgICB8ICAgOCArLQogZHJpdmVycy9n
-cHUvZHJtL25vdXZlYXUvbm91dmVhdV9hY3BpLmMgICAgICAgICAgIHwgICAyICstCiBkcml2ZXJz
-L2dwdS9kcm0vbm91dmVhdS9ub3V2ZWF1X2Nvbm5lY3Rvci5jICAgICAgfCAgMjEgKysrLQogZHJp
-dmVycy9ncHUvZHJtL25vdXZlYXUvbm91dmVhdV9kcm0uYyAgICAgICAgICAgIHwgIDExICsrKwog
-ZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9yYWRlb25fYXRweF9oYW5kbGVyLmMgICAgIHwgICAzICst
-CiBkcml2ZXJzL2dwdS9kcm0vcmFkZW9uL3JhZGVvbl9jb25uZWN0b3JzLmMgICAgICAgfCAgIDYg
-KysKIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vcmFkZW9uX2Rydi5jICAgICAgICAgICAgICB8ICAx
-MSArKysKIGRyaXZlcnMvZ3B1L3ZnYS92Z2Ffc3dpdGNoZXJvby5jICAgICAgICAgICAgICAgICB8
-IDExOSArKysrKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9wbGF0Zm9ybS94ODYvYXBwbGUt
-Z211eC5jICAgICAgICAgICAgICAgIHwgMTExICsrKysrKysrKysrKysrKystLS0tLQogaW5jbHVk
-ZS9kcm0vZHJtX2NydGMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGluY2x1
-ZGUvbGludXgvYXBwbGUtZ211eC5oICAgICAgICAgICAgICAgICAgICAgICB8ICAzOSArKysrKysr
-KwogaW5jbHVkZS9saW51eC92Z2Ffc3dpdGNoZXJvby5oICAgICAgICAgICAgICAgICAgIHwgIDM2
-ICsrKysrKy0KIDE2IGZpbGVzIGNoYW5nZWQsIDM4MiBpbnNlcnRpb25zKCspLCAzMyBkZWxldGlv
-bnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2FwcGxlLWdtdXguaAoKLS0g
-CjEuOC41LjIgKEFwcGxlIEdpdC00OCkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwtZ2Z4QGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vaW50ZWwtZ2Z4Cg==
+Allow handlers to declare their capabilities and allow clients to
+obtain that information. So far we have these use cases:
+
+* If the handler is able to switch DDC separately, clients need to
+  probe EDID with drm_get_edid_switcheroo(). We should allow them
+  to detect a capable handler to ensure this function only gets
+  called when needed.
+
+* Likewise if the handler is unable to switch AUX separately, the active
+  client needs to communicate link training parameters to the inactive
+  client, which may then skip the AUX handshake and set up its output
+  with these pre-calibrated values (DisplayPort specification v1.1a,
+  section 2.5.3.3). Clients need a way to recognize such a situation.
+
+The flags for the radeon_atpx_handler and amdgpu_atpx_handler are
+initially set to 0, this can later on be amended with
+  handler_flags |= VGA_SWITCHEROO_CAN_SWITCH_DDC;
+when a ->switch_ddc callback is added.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88861
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
+Tested-by: Lukas Wunner <lukas@wunner.de>
+    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+---
+ Documentation/DocBook/gpu.tmpl                   |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c |  3 ++-
+ drivers/gpu/drm/nouveau/nouveau_acpi.c           |  2 +-
+ drivers/gpu/drm/radeon/radeon_atpx_handler.c     |  3 ++-
+ drivers/gpu/vga/vga_switcheroo.c                 | 22 ++++++++++++++++++-
+ drivers/platform/x86/apple-gmux.c                |  2 +-
+ include/linux/vga_switcheroo.h                   | 28 ++++++++++++++++++++++--
+ 7 files changed, 54 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/DocBook/gpu.tmpl b/Documentation/DocBook/gpu.tmpl
+index 9e95aa1..88e7c39 100644
+--- a/Documentation/DocBook/gpu.tmpl
++++ b/Documentation/DocBook/gpu.tmpl
+@@ -3648,6 +3648,7 @@ int num_ioctls;</synopsis>
+     </sect1>
+     <sect1>
+       <title>Public constants</title>
++!Finclude/linux/vga_switcheroo.h vga_switcheroo_handler_flags_t
+ !Finclude/linux/vga_switcheroo.h vga_switcheroo_client_id
+ !Finclude/linux/vga_switcheroo.h vga_switcheroo_state
+     </sect1>
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
+index 3c89586..fa948dc 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
+@@ -552,13 +552,14 @@ static bool amdgpu_atpx_detect(void)
+ void amdgpu_register_atpx_handler(void)
+ {
+ 	bool r;
++	enum vga_switcheroo_handler_flags_t handler_flags = 0;
+ 
+ 	/* detect if we have any ATPX + 2 VGA in the system */
+ 	r = amdgpu_atpx_detect();
+ 	if (!r)
+ 		return;
+ 
+-	vga_switcheroo_register_handler(&amdgpu_atpx_handler);
++	vga_switcheroo_register_handler(&amdgpu_atpx_handler, handler_flags);
+ }
+ 
+ /**
+diff --git a/drivers/gpu/drm/nouveau/nouveau_acpi.c b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+index d5e6938..cdf5227 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_acpi.c
++++ b/drivers/gpu/drm/nouveau/nouveau_acpi.c
+@@ -314,7 +314,7 @@ void nouveau_register_dsm_handler(void)
+ 	if (!r)
+ 		return;
+ 
+-	vga_switcheroo_register_handler(&nouveau_dsm_handler);
++	vga_switcheroo_register_handler(&nouveau_dsm_handler, 0);
+ }
+ 
+ /* Must be called for Optimus models before the card can be turned off */
+diff --git a/drivers/gpu/drm/radeon/radeon_atpx_handler.c b/drivers/gpu/drm/radeon/radeon_atpx_handler.c
+index c4b4f29..56482e3 100644
+--- a/drivers/gpu/drm/radeon/radeon_atpx_handler.c
++++ b/drivers/gpu/drm/radeon/radeon_atpx_handler.c
+@@ -551,13 +551,14 @@ static bool radeon_atpx_detect(void)
+ void radeon_register_atpx_handler(void)
+ {
+ 	bool r;
++	enum vga_switcheroo_handler_flags_t handler_flags = 0;
+ 
+ 	/* detect if we have any ATPX + 2 VGA in the system */
+ 	r = radeon_atpx_detect();
+ 	if (!r)
+ 		return;
+ 
+-	vga_switcheroo_register_handler(&radeon_atpx_handler);
++	vga_switcheroo_register_handler(&radeon_atpx_handler, handler_flags);
+ }
+ 
+ /**
+diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
+index d64d905..81da941 100644
+--- a/drivers/gpu/vga/vga_switcheroo.c
++++ b/drivers/gpu/vga/vga_switcheroo.c
+@@ -125,6 +125,7 @@ static DEFINE_MUTEX(vgasr_mutex);
+  * 	(counting only vga clients, not audio clients)
+  * @clients: list of registered clients
+  * @handler: registered handler
++ * @handler_flags: flags of registered handler
+  *
+  * vga_switcheroo private data. Currently only one vga_switcheroo instance
+  * per system is supported.
+@@ -141,6 +142,7 @@ struct vgasr_priv {
+ 	struct list_head clients;
+ 
+ 	const struct vga_switcheroo_handler *handler;
++	enum vga_switcheroo_handler_flags_t handler_flags;
+ };
+ 
+ #define ID_BIT_AUDIO		0x100
+@@ -189,13 +191,15 @@ static void vga_switcheroo_enable(void)
+ /**
+  * vga_switcheroo_register_handler() - register handler
+  * @handler: handler callbacks
++ * @handler_flags: handler flags
+  *
+  * Register handler. Enable vga_switcheroo if two vga clients have already
+  * registered.
+  *
+  * Return: 0 on success, -EINVAL if a handler was already registered.
+  */
+-int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler)
++int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler,
++				    enum vga_switcheroo_handler_flags_t handler_flags)
+ {
+ 	mutex_lock(&vgasr_mutex);
+ 	if (vgasr_priv.handler) {
+@@ -204,6 +208,7 @@ int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler
+ 	}
+ 
+ 	vgasr_priv.handler = handler;
++	vgasr_priv.handler_flags = handler_flags;
+ 	if (vga_switcheroo_ready()) {
+ 		pr_info("enabled\n");
+ 		vga_switcheroo_enable();
+@@ -221,6 +226,7 @@ EXPORT_SYMBOL(vga_switcheroo_register_handler);
+ void vga_switcheroo_unregister_handler(void)
+ {
+ 	mutex_lock(&vgasr_mutex);
++	vgasr_priv.handler_flags = 0;
+ 	vgasr_priv.handler = NULL;
+ 	if (vgasr_priv.active) {
+ 		pr_info("disabled\n");
+@@ -231,6 +237,20 @@ void vga_switcheroo_unregister_handler(void)
+ }
+ EXPORT_SYMBOL(vga_switcheroo_unregister_handler);
+ 
++/**
++ * vga_switcheroo_handler_flags() - obtain handler flags
++ *
++ * Helper for clients to obtain the handler flags bitmask.
++ *
++ * Return: Handler flags. A value of 0 means that no handler is registered
++ * or that the handler has no special capabilities.
++ */
++enum vga_switcheroo_handler_flags_t vga_switcheroo_handler_flags(void)
++{
++	return vgasr_priv.handler_flags;
++}
++EXPORT_SYMBOL(vga_switcheroo_handler_flags);
++
+ static int register_client(struct pci_dev *pdev,
+ 			   const struct vga_switcheroo_client_ops *ops,
+ 			   enum vga_switcheroo_client_id id, bool active,
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index f236250..c401d49 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -705,7 +705,7 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 	init_completion(&gmux_data->powerchange_done);
+ 	gmux_enable_interrupts(gmux_data);
+ 
+-	if (vga_switcheroo_register_handler(&gmux_handler)) {
++	if (vga_switcheroo_register_handler(&gmux_handler, 0)) {
+ 		ret = -ENODEV;
+ 		goto err_register_handler;
+ 	}
+diff --git a/include/linux/vga_switcheroo.h b/include/linux/vga_switcheroo.h
+index 69e1d4a1..a745f4f0 100644
+--- a/include/linux/vga_switcheroo.h
++++ b/include/linux/vga_switcheroo.h
+@@ -36,6 +36,26 @@
+ struct pci_dev;
+ 
+ /**
++ * enum vga_switcheroo_handler_flags_t - handler flags bitmask
++ * @VGA_SWITCHEROO_CAN_SWITCH_DDC: whether the handler is able to switch the
++ * 	DDC lines separately. This signals to clients that they should call
++ * 	drm_get_edid_switcheroo() to probe the EDID
++ * @VGA_SWITCHEROO_NEEDS_EDP_CONFIG: whether the handler is unable to switch
++ * 	the AUX channel separately. This signals to clients that the active
++ * 	GPU needs to train the link and communicate the link parameters to the
++ * 	inactive GPU (mediated by vga_switcheroo). The inactive GPU may then
++ * 	skip the AUX handshake and set up its output with these pre-calibrated
++ * 	values (DisplayPort specification v1.1a, section 2.5.3.3)
++ *
++ * Handler flags bitmask. Used by handlers to declare their capabilities upon
++ * registering with vga_switcheroo.
++ */
++enum vga_switcheroo_handler_flags_t {
++	VGA_SWITCHEROO_CAN_SWITCH_DDC	= (1 << 0),
++	VGA_SWITCHEROO_NEEDS_EDP_CONFIG	= (1 << 1),
++};
++
++/**
+  * enum vga_switcheroo_state - client power state
+  * @VGA_SWITCHEROO_OFF: off
+  * @VGA_SWITCHEROO_ON: on
+@@ -132,8 +152,10 @@ int vga_switcheroo_register_audio_client(struct pci_dev *pdev,
+ void vga_switcheroo_client_fb_set(struct pci_dev *dev,
+ 				  struct fb_info *info);
+ 
+-int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler);
++int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler,
++				    enum vga_switcheroo_handler_flags_t handler_flags);
+ void vga_switcheroo_unregister_handler(void);
++enum vga_switcheroo_handler_flags_t vga_switcheroo_handler_flags(void);
+ 
+ int vga_switcheroo_process_delayed_switch(void);
+ 
+@@ -150,11 +172,13 @@ static inline void vga_switcheroo_unregister_client(struct pci_dev *dev) {}
+ static inline int vga_switcheroo_register_client(struct pci_dev *dev,
+ 		const struct vga_switcheroo_client_ops *ops, bool driver_power_control) { return 0; }
+ static inline void vga_switcheroo_client_fb_set(struct pci_dev *dev, struct fb_info *info) {}
+-static inline int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler) { return 0; }
++static inline int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler,
++		enum vga_switcheroo_handler_flags_t handler_flags) { return 0; }
+ static inline int vga_switcheroo_register_audio_client(struct pci_dev *pdev,
+ 	const struct vga_switcheroo_client_ops *ops,
+ 	enum vga_switcheroo_client_id id) { return 0; }
+ static inline void vga_switcheroo_unregister_handler(void) {}
++static inline enum vga_switcheroo_handler_flags_t vga_switcheroo_handler_flags(void) { return 0; }
+ static inline int vga_switcheroo_process_delayed_switch(void) { return 0; }
+ static inline enum vga_switcheroo_state vga_switcheroo_get_client_state(struct pci_dev *dev) { return VGA_SWITCHEROO_ON; }
+ 
+-- 
+1.8.5.2 (Apple Git-48)
