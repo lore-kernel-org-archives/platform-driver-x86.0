@@ -1,110 +1,131 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 05/12] drm/edid: Switch DDC when reading the EDID
+Subject: [PATCH v5 03/12] apple-gmux: Track switch state
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <b898d0da4c134f2642d0122479006863e1830723.1452525860.git.lukas@wunner.de>
+Message-ID: <5679f414cb0ddf1654dcc359571f3764b275edf0.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout1.hostsharing.net ([83.223.95.204]:56371 "EHLO
-	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752296AbcAKTKq (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:10:46 -0500
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>, Dave Airlie <airlied@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Originally by Seth Forshee <seth.forshee@canonical.com>, 2012-10-04:
-    Some dual graphics machines support muxing the DDC separately from
-    the display, so make use of this functionality when reading the EDID
-    on the inactive GPU. Also serialize drm_get_edid() with a mutex to
-    avoid races on the DDC mux state.
-
-Modified by Dave Airlie <airlied@gmail.com>, 2012-12-22:
-    I can't figure out why I didn't like this, but I rewrote this [...]
-    to lock/unlock the ddc lines [...]. I think I'd prefer something
-    like that otherwise the interface got really ugly.
-
-Modified by Lukas Wunner <lukas@wunner.de>, 2015-04 - 2015-09:
-    v3:   Move vga_switcheroo calls to a wrapper around drm_get_edid()
-          which drivers can call on muxed machines. This avoids other
-          drivers having to go through the vga_switcheroo motions even
-          though they are never used on a muxed platform
-          (Thierry Reding, Daniel Vetter, Alex Deucher)
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88861
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
-Tested-by: Pierre Moreau <pierre.morrow@free.fr>
-    [MBP  5,3 2009  nvidia MCP79 + G96        pre-retina  15"]
-Tested-by: William Brown <william@blackhats.net.au>
-    [MBP  8,2 2011  intel SNB + amd turks     pre-retina  15"]
-Tested-by: Lukas Wunner <lukas@wunner.de>
-    [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
-Cc: Seth Forshee <seth.forshee@canonical.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/gpu/drm/drm_edid.c | 26 ++++++++++++++++++++++++++
- include/drm/drm_crtc.h     |  2 ++
- 2 files changed, 28 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index c214f12..1e8f660 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -32,6 +32,7 @@
- #include <linux/hdmi.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
-+#include <linux/vga_switcheroo.h>
- #include <drm/drmP.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_displayid.h>
-@@ -1389,6 +1390,31 @@ struct edid *drm_get_edid(struct drm_connector *connector,
- EXPORT_SYMBOL(drm_get_edid);
- 
- /**
-+ * drm_get_edid_switcheroo - get EDID data for a vga_switcheroo output
-+ * @connector: connector we're probing
-+ * @adapter: I2C adapter to use for DDC
-+ *
-+ * Wrapper around drm_get_edid() for laptops with dual GPUs using one set of
-+ * outputs. The wrapper adds the requisite vga_switcheroo calls to temporarily
-+ * switch DDC to the GPU which is retrieving EDID.
-+ *
-+ * Return: Pointer to valid EDID or %NULL if we couldn't find any.
-+ */
-+struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
-+				     struct i2c_adapter *adapter)
-+{
-+	struct pci_dev *pdev = connector->dev->pdev;
-+	struct edid *edid;
-+
-+	vga_switcheroo_lock_ddc(pdev);
-+	edid = drm_get_edid(connector, adapter);
-+	vga_switcheroo_unlock_ddc(pdev);
-+
-+	return edid;
-+}
-+EXPORT_SYMBOL(drm_get_edid_switcheroo);
-+
-+/**
-  * drm_edid_duplicate - duplicate an EDID and the extensions
-  * @edid: EDID to duplicate
-  *
-diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-index 3b040b3..65df8e7 100644
---- a/include/drm/drm_crtc.h
-+++ b/include/drm/drm_crtc.h
-@@ -2278,6 +2278,8 @@ extern void drm_property_destroy_user_blobs(struct drm_device *dev,
- extern bool drm_probe_ddc(struct i2c_adapter *adapter);
- extern struct edid *drm_get_edid(struct drm_connector *connector,
- 				 struct i2c_adapter *adapter);
-+extern struct edid *drm_get_edid_switcheroo(struct drm_connector *connector,
-+					    struct i2c_adapter *adapter);
- extern struct edid *drm_edid_duplicate(const struct edid *edid);
- extern int drm_add_edid_modes(struct drm_connector *connector, struct edid *edid);
- extern void drm_mode_config_init(struct drm_device *dev);
--- 
-1.8.5.2 (Apple Git-48)
+Z211eCBoYXMgMyBzd2l0Y2ggcmVnaXN0ZXJzOgoKKiBHTVVYX1BPUlRfU1dJVENIX0RJU1BMQVkg
+c3dpdGNoZXMgdGhlIHBhbmVsCiogR01VWF9QT1JUX1NXSVRDSF9EREMgc3dpdGNoZXMgdGhlIHBh
+bmVsJ3MgRERDIGxpbmVzCiAgKG9ubHkgb24gcHJlLXJldGluYXM7IG9uIHJldGluYXMgdGhpcyBp
+cyBhIG5vLW9wKQoqIEdNVVhfUE9SVF9TV0lUQ0hfRVhURVJOQUwgc3dpdGNoZXMgdGhlIGV4dGVy
+bmFsIERQIHBvcnQocykKICAob25seSBvbiBtb2RlbHMgd2l0aG91dCBUaHVuZGVyYm9sdCwgaS5l
+LiBpbnRyb2R1Y2VkIGJlZm9yZSAyMDExOwogIHRob3NlIHdpdGggVGh1bmRlcmJvbHQgc3dpdGNo
+IG9ubHkgSFBEL0FVWCwgbm90IHRoZSBtYWluIGxpbmspCgpDdXJyZW50bHkgd2Ugc3dpdGNoIGFs
+bCAzIHJlZ2lzdGVycyBpbiB1bmlzb24uCgpnbXV4IGRvZXMgbm90IHByZXNlcnZlIHRoZSBzd2l0
+Y2ggc3RhdGUgZHVyaW5nIHN1c3BlbmQsIHNvIHdlIGN1cnJlbnRseQpyZWFkIEdNVVhfUE9SVF9T
+V0lUQ0hfRElTUExBWSBiZWZvcmUgc3VzcGVuZCBhbmQgcmVzdG9yZSBhbGwgMyByZWdpc3RlcnMK
+dG8gdGhpcyB2YWx1ZSBvbiByZXN1bWUuCgpXaXRoIHRoZSB1cGNvbWluZyAtPnN3aXRjaF9kZGMg
+Y2FsbGJhY2ssIEdNVVhfUE9SVF9TV0lUQ0hfRERDIG1heQp0ZW1wb3JhcmlseSBjb250YWluIGEg
+ZGlmZmVyZW50IHZhbHVlIHRoYW4gdGhlIG90aGVyIDIgcmVnaXN0ZXJzLgpJZiB3ZSBoYXBwZW4g
+dG8gc3VzcGVuZCBhdCB0aGlzIG1vbWVudCwgd2UnbGwgd3JpdGUgYW4gaW5jb3JyZWN0CnZhbHVl
+IHRvIEdNVVhfUE9SVF9TV0lUQ0hfRERDIG9uIHJlc3VtZS4KCkFsc28sIG9uIG1vZGVscyB3aXRo
+IFRodW5kZXJib2x0IHRoZSBpbnRlZ3JhdGVkIEdQVSBpcyB1bmFibGUgdG8gZHJpdmUKdGhlIGV4
+dGVybmFsIERQIHBvcnQocyksIHNvIHdlIHdhbnQgdG8ga2VlcCBHTVVYX1BPUlRfU1dJVENIX0VY
+VEVSTkFMCnBlcm1hbmVudGx5IHN3aXRjaGVkIHRvIHRoZSBkaXNjcmV0ZSBHUFUgb24gdGhvc2Ug
+bWFjaGluZXMuCgpDb25zZXF1ZW50bHkgd2UgY2FuIG5vIGxvbmdlciBhc3N1bWUgdGhhdCBHTVVY
+X1BPUlRfU1dJVENIX0RJU1BMQVkKcmVwcmVzZW50cyB0aGUgY29ycmVjdCB2YWx1ZSBmb3IgYWxs
+IDMgcmVnaXN0ZXJzIG9uIHN1c3BlbmQuCgpUcmFjayB0aGUgc3RhdGUgb2YgYWxsIDMgcmVnaXN0
+ZXJzOiBBZGQgZ211eF9yZWFkX3N3aXRjaF9zdGF0ZSgpIGFuZApnbXV4X3dyaXRlX3N3aXRjaF9z
+dGF0ZSgpLiBJbnN0ZWFkIG9mIHJlYWRpbmcgdGhlIHN3aXRjaCBzdGF0ZSBvbgpldmVyeSBzdXNw
+ZW5kLCByZWFkIGl0IG9uY2Ugb24gZHJpdmVyIGluaXRpYWxpemF0aW9uIHNvIHRoYXQgd2Uga25v
+dwp0aGUgY3VycmVudCBzd2l0Y2ggc3RhdGUgYWxsIHRoZSB0aW1lLiAoVGhpcyBhbGxvd3MgdXMg
+dG8gdXNlIHNvbWUKb3B0aW1pemF0aW9ucyBhbmQgc2hvcnRjdXRzLCBlLmcuIHdlIGNhbiBza2lw
+IHN3aXRjaGluZyBEREMgaWYgd2UKa25vdyB0aGF0IGl0J3MgYWxyZWFkeSBzd2l0Y2hlZCB0byB0
+aGUgcmVxdWVzdGVkIEdQVS4pIENoYW5nZSB0aGUKLT5zd2l0Y2h0byBjYWxsYmFjayB0byB1c2Ug
+Z211eF93cml0ZV9zd2l0Y2hfc3RhdGUoKS4KClRlc3RlZC1ieTogTHVrYXMgV3VubmVyIDxsdWth
+c0B3dW5uZXIuZGU+CiAgICBbTUJQICA5LDEgMjAxMiAgaW50ZWwgSVZCICsgbnZpZGlhIEdLMTA3
+ICBwcmUtcmV0aW5hICAxNSJdClNpZ25lZC1vZmYtYnk6IEx1a2FzIFd1bm5lciA8bHVrYXNAd3Vu
+bmVyLmRlPgotLS0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdtdXguYyB8IDY3ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDQ2IGlu
+c2VydGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2FwcGxlLWdtdXguYyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FwcGxlLWdtdXguYwpp
+bmRleCBjNDAxZDQ5Li41YzZjNzA4IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9h
+cHBsZS1nbXV4LmMKKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvYXBwbGUtZ211eC5jCkBAIC01
+Nyw3ICs1Nyw5IEBAIHN0cnVjdCBhcHBsZV9nbXV4X2RhdGEgewogCS8qIHN3aXRjaGVyb28gZGF0
+YSAqLwogCWFjcGlfaGFuZGxlIGRoYW5kbGU7CiAJaW50IGdwZTsKLQllbnVtIHZnYV9zd2l0Y2hl
+cm9vX2NsaWVudF9pZCByZXN1bWVfY2xpZW50X2lkOworCWVudW0gdmdhX3N3aXRjaGVyb29fY2xp
+ZW50X2lkIHN3aXRjaF9zdGF0ZV9kaXNwbGF5OworCWVudW0gdmdhX3N3aXRjaGVyb29fY2xpZW50
+X2lkIHN3aXRjaF9zdGF0ZV9kZGM7CisJZW51bSB2Z2Ffc3dpdGNoZXJvb19jbGllbnRfaWQgc3dp
+dGNoX3N0YXRlX2V4dGVybmFsOwogCWVudW0gdmdhX3N3aXRjaGVyb29fc3RhdGUgcG93ZXJfc3Rh
+dGU7CiAJc3RydWN0IGNvbXBsZXRpb24gcG93ZXJjaGFuZ2VfZG9uZTsKIH07CkBAIC0zNjgsMTcg
+KzM3MCw0OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGJhY2tsaWdodF9vcHMgZ211eF9ibF9vcHMg
+PSB7CiAgKiBmb3IgdGhlIHNlbGVjdGVkIEdQVS4KICAqLwogCitzdGF0aWMgdm9pZCBnbXV4X3Jl
+YWRfc3dpdGNoX3N0YXRlKHN0cnVjdCBhcHBsZV9nbXV4X2RhdGEgKmdtdXhfZGF0YSkKK3sKKwlp
+ZiAoZ211eF9yZWFkOChnbXV4X2RhdGEsIEdNVVhfUE9SVF9TV0lUQ0hfRERDKSA9PSAxKQorCQln
+bXV4X2RhdGEtPnN3aXRjaF9zdGF0ZV9kZGMgPSBWR0FfU1dJVENIRVJPT19JR0Q7CisJZWxzZQor
+CQlnbXV4X2RhdGEtPnN3aXRjaF9zdGF0ZV9kZGMgPSBWR0FfU1dJVENIRVJPT19ESVM7CisKKwlp
+ZiAoZ211eF9yZWFkOChnbXV4X2RhdGEsIEdNVVhfUE9SVF9TV0lUQ0hfRElTUExBWSkgPT0gMikK
+KwkJZ211eF9kYXRhLT5zd2l0Y2hfc3RhdGVfZGlzcGxheSA9IFZHQV9TV0lUQ0hFUk9PX0lHRDsK
+KwllbHNlCisJCWdtdXhfZGF0YS0+c3dpdGNoX3N0YXRlX2Rpc3BsYXkgPSBWR0FfU1dJVENIRVJP
+T19ESVM7CisKKwlpZiAoZ211eF9yZWFkOChnbXV4X2RhdGEsIEdNVVhfUE9SVF9TV0lUQ0hfRVhU
+RVJOQUwpID09IDIpCisJCWdtdXhfZGF0YS0+c3dpdGNoX3N0YXRlX2V4dGVybmFsID0gVkdBX1NX
+SVRDSEVST09fSUdEOworCWVsc2UKKwkJZ211eF9kYXRhLT5zd2l0Y2hfc3RhdGVfZXh0ZXJuYWwg
+PSBWR0FfU1dJVENIRVJPT19ESVM7Cit9CisKK3N0YXRpYyB2b2lkIGdtdXhfd3JpdGVfc3dpdGNo
+X3N0YXRlKHN0cnVjdCBhcHBsZV9nbXV4X2RhdGEgKmdtdXhfZGF0YSkKK3sKKwlpZiAoZ211eF9k
+YXRhLT5zd2l0Y2hfc3RhdGVfZGRjID09IFZHQV9TV0lUQ0hFUk9PX0lHRCkKKwkJZ211eF93cml0
+ZTgoZ211eF9kYXRhLCBHTVVYX1BPUlRfU1dJVENIX0REQywgMSk7CisJZWxzZQorCQlnbXV4X3dy
+aXRlOChnbXV4X2RhdGEsIEdNVVhfUE9SVF9TV0lUQ0hfRERDLCAyKTsKKworCWlmIChnbXV4X2Rh
+dGEtPnN3aXRjaF9zdGF0ZV9kaXNwbGF5ID09IFZHQV9TV0lUQ0hFUk9PX0lHRCkKKwkJZ211eF93
+cml0ZTgoZ211eF9kYXRhLCBHTVVYX1BPUlRfU1dJVENIX0RJU1BMQVksIDIpOworCWVsc2UKKwkJ
+Z211eF93cml0ZTgoZ211eF9kYXRhLCBHTVVYX1BPUlRfU1dJVENIX0RJU1BMQVksIDMpOworCisJ
+aWYgKGdtdXhfZGF0YS0+c3dpdGNoX3N0YXRlX2V4dGVybmFsID09IFZHQV9TV0lUQ0hFUk9PX0lH
+RCkKKwkJZ211eF93cml0ZTgoZ211eF9kYXRhLCBHTVVYX1BPUlRfU1dJVENIX0VYVEVSTkFMLCAy
+KTsKKwllbHNlCisJCWdtdXhfd3JpdGU4KGdtdXhfZGF0YSwgR01VWF9QT1JUX1NXSVRDSF9FWFRF
+Uk5BTCwgMyk7Cit9CisKIHN0YXRpYyBpbnQgZ211eF9zd2l0Y2h0byhlbnVtIHZnYV9zd2l0Y2hl
+cm9vX2NsaWVudF9pZCBpZCkKIHsKLQlpZiAoaWQgPT0gVkdBX1NXSVRDSEVST09fSUdEKSB7Ci0J
+CWdtdXhfd3JpdGU4KGFwcGxlX2dtdXhfZGF0YSwgR01VWF9QT1JUX1NXSVRDSF9EREMsIDEpOwot
+CQlnbXV4X3dyaXRlOChhcHBsZV9nbXV4X2RhdGEsIEdNVVhfUE9SVF9TV0lUQ0hfRElTUExBWSwg
+Mik7Ci0JCWdtdXhfd3JpdGU4KGFwcGxlX2dtdXhfZGF0YSwgR01VWF9QT1JUX1NXSVRDSF9FWFRF
+Uk5BTCwgMik7Ci0JfSBlbHNlIHsKLQkJZ211eF93cml0ZTgoYXBwbGVfZ211eF9kYXRhLCBHTVVY
+X1BPUlRfU1dJVENIX0REQywgMik7Ci0JCWdtdXhfd3JpdGU4KGFwcGxlX2dtdXhfZGF0YSwgR01V
+WF9QT1JUX1NXSVRDSF9ESVNQTEFZLCAzKTsKLQkJZ211eF93cml0ZTgoYXBwbGVfZ211eF9kYXRh
+LCBHTVVYX1BPUlRfU1dJVENIX0VYVEVSTkFMLCAzKTsKLQl9CisJYXBwbGVfZ211eF9kYXRhLT5z
+d2l0Y2hfc3RhdGVfZGRjID0gaWQ7CisJYXBwbGVfZ211eF9kYXRhLT5zd2l0Y2hfc3RhdGVfZGlz
+cGxheSA9IGlkOworCWFwcGxlX2dtdXhfZGF0YS0+c3dpdGNoX3N0YXRlX2V4dGVybmFsID0gaWQ7
+CisKKwlnbXV4X3dyaXRlX3N3aXRjaF9zdGF0ZShhcHBsZV9nbXV4X2RhdGEpOwogCiAJcmV0dXJu
+IDA7CiB9CkBAIC00NDAsMTUgKzQ3NCw2IEBAIHN0YXRpYyBpbnQgZ211eF9nZXRfY2xpZW50X2lk
+KHN0cnVjdCBwY2lfZGV2ICpwZGV2KQogCQlyZXR1cm4gVkdBX1NXSVRDSEVST09fRElTOwogfQog
+Ci1zdGF0aWMgZW51bSB2Z2Ffc3dpdGNoZXJvb19jbGllbnRfaWQKLWdtdXhfYWN0aXZlX2NsaWVu
+dChzdHJ1Y3QgYXBwbGVfZ211eF9kYXRhICpnbXV4X2RhdGEpCi17Ci0JaWYgKGdtdXhfcmVhZDgo
+Z211eF9kYXRhLCBHTVVYX1BPUlRfU1dJVENIX0RJU1BMQVkpID09IDIpCi0JCXJldHVybiBWR0Ff
+U1dJVENIRVJPT19JR0Q7Ci0KLQlyZXR1cm4gVkdBX1NXSVRDSEVST09fRElTOwotfQotCiBzdGF0
+aWMgY29uc3Qgc3RydWN0IHZnYV9zd2l0Y2hlcm9vX2hhbmRsZXIgZ211eF9oYW5kbGVyID0gewog
+CS5zd2l0Y2h0byA9IGdtdXhfc3dpdGNodG8sCiAJLnBvd2VyX3N0YXRlID0gZ211eF9zZXRfcG93
+ZXJfc3RhdGUsCkBAIC01MTMsNyArNTM4LDYgQEAgc3RhdGljIGludCBnbXV4X3N1c3BlbmQoc3Ry
+dWN0IGRldmljZSAqZGV2KQogCXN0cnVjdCBwbnBfZGV2ICpwbnAgPSB0b19wbnBfZGV2KGRldik7
+CiAJc3RydWN0IGFwcGxlX2dtdXhfZGF0YSAqZ211eF9kYXRhID0gcG5wX2dldF9kcnZkYXRhKHBu
+cCk7CiAKLQlnbXV4X2RhdGEtPnJlc3VtZV9jbGllbnRfaWQgPSBnbXV4X2FjdGl2ZV9jbGllbnQo
+Z211eF9kYXRhKTsKIAlnbXV4X2Rpc2FibGVfaW50ZXJydXB0cyhnbXV4X2RhdGEpOwogCXJldHVy
+biAwOwogfQpAQCAtNTI0LDcgKzU0OCw3IEBAIHN0YXRpYyBpbnQgZ211eF9yZXN1bWUoc3RydWN0
+IGRldmljZSAqZGV2KQogCXN0cnVjdCBhcHBsZV9nbXV4X2RhdGEgKmdtdXhfZGF0YSA9IHBucF9n
+ZXRfZHJ2ZGF0YShwbnApOwogCiAJZ211eF9lbmFibGVfaW50ZXJydXB0cyhnbXV4X2RhdGEpOwot
+CWdtdXhfc3dpdGNodG8oZ211eF9kYXRhLT5yZXN1bWVfY2xpZW50X2lkKTsKKwlnbXV4X3dyaXRl
+X3N3aXRjaF9zdGF0ZShnbXV4X2RhdGEpOwogCWlmIChnbXV4X2RhdGEtPnBvd2VyX3N0YXRlID09
+IFZHQV9TV0lUQ0hFUk9PX09GRikKIAkJZ211eF9zZXRfZGlzY3JldGVfc3RhdGUoZ211eF9kYXRh
+LCBnbXV4X2RhdGEtPnBvd2VyX3N0YXRlKTsKIAlyZXR1cm4gMDsKQEAgLTcwNCw2ICs3MjgsNyBA
+QCBzdGF0aWMgaW50IGdtdXhfcHJvYmUoc3RydWN0IHBucF9kZXYgKnBucCwgY29uc3Qgc3RydWN0
+IHBucF9kZXZpY2VfaWQgKmlkKQogCWFwcGxlX2dtdXhfZGF0YSA9IGdtdXhfZGF0YTsKIAlpbml0
+X2NvbXBsZXRpb24oJmdtdXhfZGF0YS0+cG93ZXJjaGFuZ2VfZG9uZSk7CiAJZ211eF9lbmFibGVf
+aW50ZXJydXB0cyhnbXV4X2RhdGEpOworCWdtdXhfcmVhZF9zd2l0Y2hfc3RhdGUoZ211eF9kYXRh
+KTsKIAogCWlmICh2Z2Ffc3dpdGNoZXJvb19yZWdpc3Rlcl9oYW5kbGVyKCZnbXV4X2hhbmRsZXIs
+IDApKSB7CiAJCXJldCA9IC1FTk9ERVY7Ci0tIAoxLjguNS4yIChBcHBsZSBHaXQtNDgpCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
