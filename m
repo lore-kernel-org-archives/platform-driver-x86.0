@@ -1,298 +1,145 @@
 From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v5 02/12] vga_switcheroo: Add support for switching only the
- DDC
+Subject: [PATCH v5 04/12] apple-gmux: Add switch_ddc support
 Date: Mon, 11 Jan 2016 20:09:20 +0100
-Message-ID: <e81ae9722b84c5ed591805fee3ea6dbf5dc6c4b3.1452525860.git.lukas@wunner.de>
+Message-ID: <17fe8bfb0415d713bb4174f84ac9aae5d7d9a5f8.1452525860.git.lukas@wunner.de>
 References: <cover.1452525860.git.lukas@wunner.de>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout2.hostsharing.net ([83.223.90.233]:45933 "EHLO
-	mailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S934275AbcAKTKF (ORCPT
+Received: from mailout1.hostsharing.net ([83.223.95.204]:57719 "EHLO
+	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S934275AbcAKTKc (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 14:10:05 -0500
+	Mon, 11 Jan 2016 14:10:32 -0500
 In-Reply-To: <cover.1452525860.git.lukas@wunner.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-Cc: Seth Forshee <seth.forshee@canonical.com>, Dave Airlie <airlied@redhat.com>
+Cc: Seth Forshee <seth.forshee@canonical.com>, Darren Hart <dvhart@infradead.org>
 
 Originally by Seth Forshee <seth.forshee@canonical.com>, 2012-10-04:
-    During graphics driver initialization it's useful to be able to mux
-    only the DDC to the inactive client in order to read the EDID. Add
-    a switch_ddc callback to allow capable handlers to provide this
-    functionality, and add vga_switcheroo_switch_ddc() to allow DRM
-    to mux only the DDC.
+    The gmux allows muxing the DDC independently from the display, so
+    support this functionality. This will allow reading the EDID for the
+    inactive GPU, fixing issues with machines that either don't have a
+    VBT or have invalid mode data in the VBT.
 
-Modified by Dave Airlie <airlied@gmail.com>, 2012-12-22:
-    I can't figure out why I didn't like this, but I rewrote this [...]
-    to lock/unlock the ddc lines [...]. I think I'd prefer something
-    like that otherwise the interface got really ugly.
-
-Modified by Lukas Wunner <lukas@wunner.de>, 2015-04 - 2015-10:
+Modified by Lukas Wunner <lukas@wunner.de>, 2015-04 - 2015-12:
     Change semantics of ->switch_ddc handler callback to return previous
     DDC owner. Original version tried to determine previous DDC owner
-    with find_active_client() but this fails if the inactive client
-    registers before the active client.
-
-    Don't lock vgasr_mutex in _lock_ddc() / _unlock_ddc(), it can cause
-    deadlocks because (a) during switch (with vgasr_mutex already held),
-    GPU is woken and probes its outputs, tries to re-acquire vgasr_mutex
-    to lock DDC lines; (b) Likewise during switch, GPU is suspended and
-    calls cancel_delayed_work_sync() to stop output polling, if poll
-    task is running at this moment we may wait forever for it to finish.
-
-    Instead, lock mux_hw_lock when unregistering the handler because
-    the only reason why we'd want to lock vgasr_mutex in _lock_ddc() /
-    _unlock_ddc() is to block the handler from disappearing while DDC
-    lines are switched.
-
-    Also acquire mux_hw_lock in stage2 to avoid race condition where
-    reading the EDID and switching happens simultaneously. Likewise on
-    MIGD / MDIS commands and on runtime suspend.
-
-    v2.1: Overhaul locking, squash commits (Daniel Vetter)
-
-    v2.2: Readability improvements (Thierry Reding)
-
-    v2.3: Overhaul locking once more
+    with find_active_client() in vga_switcheroo but this fails if the
+    inactive client registers before the active client.
 
     v2.4: Retain semantics of ->switchto handler callback to switch all
           pins, including DDC (Daniel Vetter)
 
-    v5:   Rename ddc_lock to mux_hw_lock: Since we acquire this both
-          when calling ->switch_ddc and ->switchto, it protects not just
-          access to the DDC lines but to the mux in general. This is in
-          line with the DRM convention to use low-level locks to avoid
-          concurrent hw access (e.g. i2c, dp_aux) which are often called
-          hw_lock (Daniel Vetter)
+    v4:   Advertise ->switch_ddc handler callback only on the pre-retina
+          Macbook Pro. The retina uses eDP instead of LVDS and gmux no
+          longer does the muxing itself but merely controls an external
+          mux. That mux is incapable of switching the AUX channel
+          separately from the main link. It's an NXP CBTL06142
+          (alternate parts: TI HD3SS212, Pericom PI3VDP12412,
+          see datasheets below).
+
+    v5:   Rebase on "apple-gmux: Track switch state".
+          Rebase on "vga_switcheroo: Add handler flags infrastructure".
+          Rebase on 5d170139eb10 ("Constify vga_switcheroo_handler"),
+          requires 2 structs, 1x with ->switchto for pre-retinas,
+          1x without for retinas).
+          Add error message if handler registration with vga_switcheroo
+          fails.
+
+    Teardowns identifying the mux:
+    http://www.electronicproducts.com/-whatsinside_text-145.aspx
+    http://slideshare.net/jjwu6266/apple-2012-wwdc-apple-macbook-pro-with-retina-display
+    http://www.techrepublic.com/blog/cracking-open/teardown-shows-retina-macbook-pro-is-nearly-impossible-to-upgrade-difficult-to-work-on/
+
+    Mux Datasheets:
+    http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+    http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+    https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
 
 Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=88861
 Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=61115
 Tested-by: Lukas Wunner <lukas@wunner.de>
     [MBP  9,1 2012  intel IVB + nvidia GK107  pre-retina  15"]
 Cc: Seth Forshee <seth.forshee@canonical.com>
-Cc: Dave Airlie <airlied@gmail.com>
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 ---
- drivers/gpu/vga/vga_switcheroo.c | 97 +++++++++++++++++++++++++++++++++++++++-
- include/linux/vga_switcheroo.h   |  8 ++++
- 2 files changed, 103 insertions(+), 2 deletions(-)
+ drivers/platform/x86/apple-gmux.c | 45 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-index 81da941..56287ae 100644
---- a/drivers/gpu/vga/vga_switcheroo.c
-+++ b/drivers/gpu/vga/vga_switcheroo.c
-@@ -73,9 +73,17 @@
-  * there can thus be up to three clients: Two vga clients (GPUs) and one audio
-  * client (on the discrete GPU). The code is mostly prepared to support
-  * machines with more than two GPUs should they become available.
-+ *
-  * The GPU to which the outputs are currently switched is called the
-  * active client in vga_switcheroo parlance. The GPU not in use is the
-- * inactive client.
-+ * inactive client. When the inactive client's DRM driver is loaded,
-+ * it will be unable to probe the panel's EDID and hence depends on
-+ * VBIOS to provide its display modes. If the VBIOS modes are bogus or
-+ * if there is no VBIOS at all (which is common on the MacBook Pro),
-+ * a client may alternatively request that the DDC lines are temporarily
-+ * switched to it, provided that the handler supports this. Switching
-+ * only the DDC lines and not the entire output avoids unnecessary
-+ * flickering.
-  */
- 
- /**
-@@ -126,6 +134,9 @@ static DEFINE_MUTEX(vgasr_mutex);
-  * @clients: list of registered clients
-  * @handler: registered handler
-  * @handler_flags: flags of registered handler
-+ * @mux_hw_lock: protects mux state
-+ *	(in particular while DDC lines are temporarily switched)
-+ * @old_ddc_owner: client to which DDC lines will be switched back on unlock
-  *
-  * vga_switcheroo private data. Currently only one vga_switcheroo instance
-  * per system is supported.
-@@ -143,6 +154,8 @@ struct vgasr_priv {
- 
- 	const struct vga_switcheroo_handler *handler;
- 	enum vga_switcheroo_handler_flags_t handler_flags;
-+	struct mutex mux_hw_lock;
-+	int old_ddc_owner;
- };
- 
- #define ID_BIT_AUDIO		0x100
-@@ -157,6 +170,7 @@ static void vga_switcheroo_debugfs_fini(struct vgasr_priv *priv);
- /* only one switcheroo per system */
- static struct vgasr_priv vgasr_priv = {
- 	.clients = LIST_HEAD_INIT(vgasr_priv.clients),
-+	.mux_hw_lock = __MUTEX_INITIALIZER(vgasr_priv.mux_hw_lock),
- };
- 
- static bool vga_switcheroo_ready(void)
-@@ -226,6 +240,7 @@ EXPORT_SYMBOL(vga_switcheroo_register_handler);
- void vga_switcheroo_unregister_handler(void)
- {
- 	mutex_lock(&vgasr_mutex);
-+	mutex_lock(&vgasr_priv.mux_hw_lock);
- 	vgasr_priv.handler_flags = 0;
- 	vgasr_priv.handler = NULL;
- 	if (vgasr_priv.active) {
-@@ -233,6 +248,7 @@ void vga_switcheroo_unregister_handler(void)
- 		vga_switcheroo_debugfs_fini(&vgasr_priv);
- 		vgasr_priv.active = false;
- 	}
-+	mutex_unlock(&vgasr_priv.mux_hw_lock);
- 	mutex_unlock(&vgasr_mutex);
- }
- EXPORT_SYMBOL(vga_switcheroo_unregister_handler);
-@@ -432,6 +448,76 @@ void vga_switcheroo_client_fb_set(struct pci_dev *pdev,
- EXPORT_SYMBOL(vga_switcheroo_client_fb_set);
- 
- /**
-+ * vga_switcheroo_lock_ddc() - temporarily switch DDC lines to a given client
-+ * @pdev: client pci device
-+ *
-+ * Temporarily switch DDC lines to the client identified by @pdev
-+ * (but leave the outputs otherwise switched to where they are).
-+ * This allows the inactive client to probe EDID. The DDC lines must
-+ * afterwards be switched back by calling vga_switcheroo_unlock_ddc(),
-+ * even if this function returns an error.
-+ *
-+ * Return: Previous DDC owner on success or a negative int on error.
-+ * Specifically, %-ENODEV if no handler has registered or if the handler
-+ * does not support switching the DDC lines. Also, a negative value
-+ * returned by the handler is propagated back to the caller.
-+ * The return value has merely an informational purpose for any caller
-+ * which might be interested in it. It is acceptable to ignore the return
-+ * value and simply rely on the result of the subsequent EDID probe,
-+ * which will be %NULL if DDC switching failed.
-+ */
-+int vga_switcheroo_lock_ddc(struct pci_dev *pdev)
-+{
-+	enum vga_switcheroo_client_id id;
-+
-+	mutex_lock(&vgasr_priv.mux_hw_lock);
-+	if (!vgasr_priv.handler || !vgasr_priv.handler->switch_ddc) {
-+		vgasr_priv.old_ddc_owner = -ENODEV;
-+		return -ENODEV;
-+	}
-+
-+	id = vgasr_priv.handler->get_client_id(pdev);
-+	vgasr_priv.old_ddc_owner = vgasr_priv.handler->switch_ddc(id);
-+	return vgasr_priv.old_ddc_owner;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_lock_ddc);
-+
-+/**
-+ * vga_switcheroo_unlock_ddc() - switch DDC lines back to previous owner
-+ * @pdev: client pci device
-+ *
-+ * Switch DDC lines back to the previous owner after calling
-+ * vga_switcheroo_lock_ddc(). This must be called even if
-+ * vga_switcheroo_lock_ddc() returned an error.
-+ *
-+ * Return: Previous DDC owner on success (i.e. the client identifier of @pdev)
-+ * or a negative int on error.
-+ * Specifically, %-ENODEV if no handler has registered or if the handler
-+ * does not support switching the DDC lines. Also, a negative value
-+ * returned by the handler is propagated back to the caller.
-+ * Finally, invoking this function without calling vga_switcheroo_lock_ddc()
-+ * first is not allowed and will result in %-EINVAL.
-+ */
-+int vga_switcheroo_unlock_ddc(struct pci_dev *pdev)
-+{
-+	enum vga_switcheroo_client_id id;
-+	int ret = vgasr_priv.old_ddc_owner;
-+
-+	if (WARN_ON_ONCE(!mutex_is_locked(&vgasr_priv.mux_hw_lock)))
-+		return -EINVAL;
-+
-+	if (vgasr_priv.old_ddc_owner >= 0) {
-+		id = vgasr_priv.handler->get_client_id(pdev);
-+		if (vgasr_priv.old_ddc_owner != id)
-+			ret = vgasr_priv.handler->switch_ddc(
-+						     vgasr_priv.old_ddc_owner);
-+	}
-+	mutex_unlock(&vgasr_priv.mux_hw_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL(vga_switcheroo_unlock_ddc);
-+
-+/**
-  * DOC: Manual switching and manual power control
-  *
-  * In this mode of use, the file /sys/kernel/debug/vgaswitcheroo/switch
-@@ -568,7 +654,9 @@ static int vga_switchto_stage2(struct vga_switcheroo_client *new_client)
- 		console_unlock();
- 	}
- 
-+	mutex_lock(&vgasr_priv.mux_hw_lock);
- 	ret = vgasr_priv.handler->switchto(new_client->id);
-+	mutex_unlock(&vgasr_priv.mux_hw_lock);
- 	if (ret)
- 		return ret;
- 
-@@ -683,7 +771,9 @@ vga_switcheroo_debugfs_write(struct file *filp, const char __user *ubuf,
- 	vgasr_priv.delayed_switch_active = false;
- 
- 	if (just_mux) {
-+		mutex_lock(&vgasr_priv.mux_hw_lock);
- 		ret = vgasr_priv.handler->switchto(client_id);
-+		mutex_unlock(&vgasr_priv.mux_hw_lock);
- 		goto out;
- 	}
- 
-@@ -895,8 +985,11 @@ static int vga_switcheroo_runtime_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 	mutex_lock(&vgasr_mutex);
--	if (vgasr_priv.handler->switchto)
-+	if (vgasr_priv.handler->switchto) {
-+		mutex_lock(&vgasr_priv.mux_hw_lock);
- 		vgasr_priv.handler->switchto(VGA_SWITCHEROO_IGD);
-+		mutex_unlock(&vgasr_priv.mux_hw_lock);
-+	}
- 	vga_switcheroo_power_switch(pdev, VGA_SWITCHEROO_OFF);
- 	mutex_unlock(&vgasr_mutex);
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 5c6c708..1384a39 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -417,6 +417,25 @@ static int gmux_switchto(enum vga_switcheroo_client_id id)
  	return 0;
-diff --git a/include/linux/vga_switcheroo.h b/include/linux/vga_switcheroo.h
-index a745f4f0..b39a5f3 100644
---- a/include/linux/vga_switcheroo.h
-+++ b/include/linux/vga_switcheroo.h
-@@ -102,6 +102,9 @@ enum vga_switcheroo_client_id {
-  * 	Mandatory. For muxless machines this should be a no-op. Returning 0
-  * 	denotes success, anything else failure (in which case the switch is
-  * 	aborted)
-+ * @switch_ddc: switch DDC lines to given client.
-+ * 	Optional. Should return the previous DDC owner on success or a
-+ * 	negative int on failure
-  * @power_state: cut or reinstate power of given client.
-  * 	Optional. The return value is ignored
-  * @get_client_id: determine if given pci device is integrated or discrete GPU.
-@@ -113,6 +116,7 @@ enum vga_switcheroo_client_id {
- struct vga_switcheroo_handler {
- 	int (*init)(void);
- 	int (*switchto)(enum vga_switcheroo_client_id id);
-+	int (*switch_ddc)(enum vga_switcheroo_client_id id);
- 	int (*power_state)(enum vga_switcheroo_client_id id,
- 			   enum vga_switcheroo_state state);
- 	enum vga_switcheroo_client_id (*get_client_id)(struct pci_dev *pdev);
-@@ -156,6 +160,8 @@ int vga_switcheroo_register_handler(const struct vga_switcheroo_handler *handler
- 				    enum vga_switcheroo_handler_flags_t handler_flags);
- void vga_switcheroo_unregister_handler(void);
- enum vga_switcheroo_handler_flags_t vga_switcheroo_handler_flags(void);
-+int vga_switcheroo_lock_ddc(struct pci_dev *pdev);
-+int vga_switcheroo_unlock_ddc(struct pci_dev *pdev);
+ }
  
- int vga_switcheroo_process_delayed_switch(void);
++static int gmux_switch_ddc(enum vga_switcheroo_client_id id)
++{
++	enum vga_switcheroo_client_id old_ddc_owner =
++		apple_gmux_data->switch_state_ddc;
++
++	if (id == old_ddc_owner)
++		return id;
++
++	pr_debug("Switching DDC from %d to %d\n", old_ddc_owner, id);
++	apple_gmux_data->switch_state_ddc = id;
++
++	if (id == VGA_SWITCHEROO_IGD)
++		gmux_write8(apple_gmux_data, GMUX_PORT_SWITCH_DDC, 1);
++	else
++		gmux_write8(apple_gmux_data, GMUX_PORT_SWITCH_DDC, 2);
++
++	return old_ddc_owner;
++}
++
+ /**
+  * DOC: Power control
+  *
+@@ -474,12 +493,19 @@ static int gmux_get_client_id(struct pci_dev *pdev)
+ 		return VGA_SWITCHEROO_DIS;
+ }
  
-@@ -179,6 +185,8 @@ static inline int vga_switcheroo_register_audio_client(struct pci_dev *pdev,
- 	enum vga_switcheroo_client_id id) { return 0; }
- static inline void vga_switcheroo_unregister_handler(void) {}
- static inline enum vga_switcheroo_handler_flags_t vga_switcheroo_handler_flags(void) { return 0; }
-+static inline int vga_switcheroo_lock_ddc(struct pci_dev *pdev) { return -ENODEV; }
-+static inline int vga_switcheroo_unlock_ddc(struct pci_dev *pdev) { return -ENODEV; }
- static inline int vga_switcheroo_process_delayed_switch(void) { return 0; }
- static inline enum vga_switcheroo_state vga_switcheroo_get_client_state(struct pci_dev *dev) { return VGA_SWITCHEROO_ON; }
+-static const struct vga_switcheroo_handler gmux_handler = {
++static const struct vga_switcheroo_handler gmux_handler_indexed = {
+ 	.switchto = gmux_switchto,
+ 	.power_state = gmux_set_power_state,
+ 	.get_client_id = gmux_get_client_id,
+ };
+ 
++static const struct vga_switcheroo_handler gmux_handler_classic = {
++	.switchto = gmux_switchto,
++	.switch_ddc = gmux_switch_ddc,
++	.power_state = gmux_set_power_state,
++	.get_client_id = gmux_get_client_id,
++};
++
+ /**
+  * DOC: Interrupt
+  *
+@@ -730,8 +756,21 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
+ 	gmux_enable_interrupts(gmux_data);
+ 	gmux_read_switch_state(gmux_data);
+ 
+-	if (vga_switcheroo_register_handler(&gmux_handler, 0)) {
+-		ret = -ENODEV;
++	/*
++	 * Retina MacBook Pros cannot switch the panel's AUX separately
++	 * and need eDP pre-calibration. They are distinguishable from
++	 * pre-retinas by having an "indexed" gmux.
++	 *
++	 * Pre-retina MacBook Pros can switch the panel's DDC separately.
++	 */
++	if (gmux_data->indexed)
++		ret = vga_switcheroo_register_handler(&gmux_handler_indexed,
++					      VGA_SWITCHEROO_NEEDS_EDP_CONFIG);
++	else
++		ret = vga_switcheroo_register_handler(&gmux_handler_classic,
++					      VGA_SWITCHEROO_CAN_SWITCH_DDC);
++	if (ret) {
++		pr_err("Failed to register vga_switcheroo handler\n");
+ 		goto err_register_handler;
+ 	}
  
 -- 
 1.8.5.2 (Apple Git-48)
