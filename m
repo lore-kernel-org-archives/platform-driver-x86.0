@@ -1,52 +1,66 @@
-From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [PATCH v2 0/2] Fixes for dell-wmi
-Date: Tue, 12 Jan 2016 01:30:44 +0100
-Message-ID: <CABFtUbT2a+x7NDmY9cFaLXh4fSN2VGnLgrNCrjOJ3_XiobuC4A@mail.gmail.com>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
-	<1451942796-26574-1-git-send-email-pali.rohar@gmail.com>
-	<20160111192251.GG10643@malice.jf.intel.com>
+From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
+Subject: RE: [PATCH] intel_punit_ipc: add NULL check for input parameters
+Date: Tue, 12 Jan 2016 03:59:04 +0000
+Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42C0F5B78@BGSMSX102.gar.corp.intel.com>
+References: <1452249147-34712-1-git-send-email-qipeng.zha@intel.com>
+ <20160108112644.4a64e49e@lxorguk.ukuu.org.uk>
+ <20160111175229.GA10643@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160111192251.GG10643@malice.jf.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mga03.intel.com ([134.134.136.65]:29984 "EHLO mga03.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1760856AbcALD7J convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Mon, 11 Jan 2016 22:59:09 -0500
+In-Reply-To: <20160111175229.GA10643@malice.jf.intel.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: "Zha, Qipeng" <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
 
-2016-01-11 20:22 GMT+01:00 Darren Hart <dvhart@infradead.org>:
-> On Mon, Jan 04, 2016 at 10:26:34PM +0100, Pali Roh=C3=A1r wrote:
->> This patch series adds check if Dell WMI descriptor structure is val=
-id and
->> fixes processing WMI events on devices with WMI interface version 0.
->>
->> After testing, second patch is good candidate for backporting into s=
-table
->> kernels, but problem is that it cannot be used without first patch. =
-So I
->> let decision to other people.
->>
->> Pali Roh=C3=A1r (2):
->>   dell-wmi: Check if Dell WMI descriptor structure is valid
->>   dell-wmi: Process only one event on devices with interface version=
- 0
->>
->>  drivers/platform/x86/dell-wmi.c |   96 ++++++++++++++++++++++++++++=
-++++++++++-
->>  1 file changed, 94 insertions(+), 2 deletions(-)
->
-> Thank you everyone. I have queued these to testing.
->
-> Should I add a tested-by for Michal, Andy, and Gabriele?
 
-I tested both the patches, but I'm actually touched only by the
-first one. So at least of that one
 
-Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
+> x86-owner@vger.kernel.org] On Behalf Of Darren Hart
+> Sent: Monday, January 11, 2016 11:22 PM
+> To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+> Cc: Zha, Qipeng <qipeng.zha@intel.com>; platform-driver-
+> x86@vger.kernel.org; andriy.shevchenko@linux.intel.com; Chakravarty,
+> Souvik K <souvik.k.chakravarty@intel.com>
+> Subject: Re: [PATCH] intel_punit_ipc: add NULL check for input parameters
+> 
+> On Fri, Jan 08, 2016 at 11:26:44AM +0000, One Thousand Gnomes wrote:
+> > On Fri,  8 Jan 2016 18:32:27 +0800
+> > Qipeng Zha <qipeng.zha@intel.com> wrote:
+> >
+> > > intel_punit_ipc_command() maybe called when in or out data pointers
+> > > are NULL.
+> >
+> > In which case what happens: the command is not issued but there seems
+> > to be no way for the caller to discover this, and nohing is logged.
+> >
+> > Alan
+> >
+> 
+> These functinos are not void, it seems an errcode or a message is in order.
+> 
+> Also, the commit message needs to document in what scenario
+> intel_punit_ipc_command() may be called with null pointers - and why we
+> consider that to be OK.
 
-> Do I have any Reviewed-by's to add?
->
+Darren,
+In Punit IPC, all of the commands do not need an Input parameter; similarly all cmds do not need an output parameter(eg setting events).
+Telemetry uses all the flavors. (This fix is already there in our internal codebase for a long time, but somehow got missed during upstreaming).
+So this is not an error condition & the API needs to handle all cases properly. 
+> 
 > --
 > Darren Hart
 > Intel Open Source Technology Center
+> --
+> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86"
+> in the body of a message to majordomo@vger.kernel.org More majordomo
+> info at  http://vger.kernel.org/majordomo-info.html
