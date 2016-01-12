@@ -1,57 +1,52 @@
-From: Yves-Alexis Perez <corsac@debian.org>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Add support for
- keyboard backlight
-Date: Mon, 11 Jan 2016 23:44:23 +0100
-Message-ID: <1452552263.3807.12.camel@debian.org>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
-	 <20160104201231.GB5847@amd>
-	 <1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
-	 <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
-	 <20160111190411.GE10643@malice.jf.intel.com>
-	 <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
+From: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [PATCH v2 0/2] Fixes for dell-wmi
+Date: Tue, 12 Jan 2016 01:30:44 +0100
+Message-ID: <CABFtUbT2a+x7NDmY9cFaLXh4fSN2VGnLgrNCrjOJ3_XiobuC4A@mail.gmail.com>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
+	<1451942796-26574-1-git-send-email-pali.rohar@gmail.com>
+	<20160111192251.GG10643@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-PJcTR/syQ8QS1GB5h0bD"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
+In-Reply-To: <20160111192251.GG10643@malice.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Darren Hart <dvhart@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Pavel Machek <pavel@ucw.cz>, Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+2016-01-11 20:22 GMT+01:00 Darren Hart <dvhart@infradead.org>:
+> On Mon, Jan 04, 2016 at 10:26:34PM +0100, Pali Roh=C3=A1r wrote:
+>> This patch series adds check if Dell WMI descriptor structure is val=
+id and
+>> fixes processing WMI events on devices with WMI interface version 0.
+>>
+>> After testing, second patch is good candidate for backporting into s=
+table
+>> kernels, but problem is that it cannot be used without first patch. =
+So I
+>> let decision to other people.
+>>
+>> Pali Roh=C3=A1r (2):
+>>   dell-wmi: Check if Dell WMI descriptor structure is valid
+>>   dell-wmi: Process only one event on devices with interface version=
+ 0
+>>
+>>  drivers/platform/x86/dell-wmi.c |   96 ++++++++++++++++++++++++++++=
+++++++++++-
+>>  1 file changed, 94 insertions(+), 2 deletions(-)
+>
+> Thank you everyone. I have queued these to testing.
+>
+> Should I add a tested-by for Michal, Andy, and Gabriele?
 
---=-PJcTR/syQ8QS1GB5h0bD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I tested both the patches, but I'm actually touched only by the
+first one. So at least of that one
 
-On lun., 2016-01-11 at 17:28 -0200, Henrique de Moraes Holschuh wrote:
-> =C2=A0I don't think a thinkpad will ever have both features at the same t=
-ime,
-> so I have no idea why they changed the firmware interface.
+Tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
 
-At least the X230 (and I guess other ThinkPads from the *30 generation) hav=
-e
-both ThinkLight and keyboard backlight.
-
-Regards,
---=20
-Yves-Alexis
-
-
---=-PJcTR/syQ8QS1GB5h0bD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABCAAGBQJWlDBIAAoJEG3bU/KmdcCl8LcH/i+qQmS7kRpLzQ6jhQsUZrbE
-78yMgfzfIZKFtEJw2s623xPQDsZ1fW8uUFUSduu2Myt2PNXWLEK1a/gOAU0QpDyF
-g5Qg01I8ucdD5xkQpoVb+rsSpGby7ssmWH9FA57tpiB1hWmhE0n1hG8UHlhhy/Wj
-5dBvYi/ZaSQmAbIEEMhsCS6x918t5CrfCy1YqgGmz9MUbA4pNRdDNYZs0Gc0ijcm
-p7yUPplPOOHirAVw5fB9I6CR/r6vpJjhDUWjQ4Ej0VoyI22ppCMZD8N9hy/HUPhq
-40zqG/qspHjX4t4TtIRB8r8Ia3/7+Q1L1wOoaluug9G2uie8X4JSxx2Qci3wTng=
-=jHNh
------END PGP SIGNATURE-----
-
---=-PJcTR/syQ8QS1GB5h0bD--
+> Do I have any Reviewed-by's to add?
+>
+> --
+> Darren Hart
+> Intel Open Source Technology Center
