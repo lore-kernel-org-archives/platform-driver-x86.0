@@ -1,66 +1,124 @@
-From: "Chakravarty, Souvik K" <souvik.k.chakravarty@intel.com>
-Subject: RE: [PATCH] intel_punit_ipc: add NULL check for input parameters
-Date: Tue, 12 Jan 2016 03:59:04 +0000
-Message-ID: <5F7315E704FA0841B5DFCE90329B2BB42C0F5B78@BGSMSX102.gar.corp.intel.com>
-References: <1452249147-34712-1-git-send-email-qipeng.zha@intel.com>
- <20160108112644.4a64e49e@lxorguk.ukuu.org.uk>
- <20160111175229.GA10643@malice.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga03.intel.com ([134.134.136.65]:29984 "EHLO mga03.intel.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1760856AbcALD7J convert rfc822-to-8bit (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 11 Jan 2016 22:59:09 -0500
-In-Reply-To: <20160111175229.GA10643@malice.jf.intel.com>
-Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: "Zha, Qipeng" <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+From: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Subject: [PATCH v2 0/4] Add Intel Telemetry Support
+Date: Tue, 12 Jan 2016 16:00:13 +0530
+Message-ID: <1452594613-20409-1-git-send-email-souvik.k.chakravarty@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, srinidhi.kasagar@intel.com, qipeng.zha@intel.com, rajeev.d.muralidhar@intel.com, sukumar.ghorai@intel.com, ong.hock.yu@intel.com, aubrey.li@intel.com, david.ginat@intel.com, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
+This set of 4 patches enables PM Telemetry Support for Intel
+Platforms. Intel PM Telemetry is a software mechanism via which
+various SoC PM and performance related parameters like PM counters,
+firmware trace verbosity, the status of different devices inside
+the SoC, etc can be monitored and analyzed.
+The statictics are fetched via IPC from the Punit & PMC firmware
+and hence it depends on the PMC & PUNIT IPC driver. The different
+samples that may be monitored can be configured at runtime via
+exported APIs.
 
+Currently it supports Intel ApolloLake platform and is intended to
+be extended to future platforms as well.
 
-> -----Original Message-----
-> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-
-> x86-owner@vger.kernel.org] On Behalf Of Darren Hart
-> Sent: Monday, January 11, 2016 11:22 PM
-> To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-> Cc: Zha, Qipeng <qipeng.zha@intel.com>; platform-driver-
-> x86@vger.kernel.org; andriy.shevchenko@linux.intel.com; Chakravarty,
-> Souvik K <souvik.k.chakravarty@intel.com>
-> Subject: Re: [PATCH] intel_punit_ipc: add NULL check for input parameters
-> 
-> On Fri, Jan 08, 2016 at 11:26:44AM +0000, One Thousand Gnomes wrote:
-> > On Fri,  8 Jan 2016 18:32:27 +0800
-> > Qipeng Zha <qipeng.zha@intel.com> wrote:
-> >
-> > > intel_punit_ipc_command() maybe called when in or out data pointers
-> > > are NULL.
-> >
-> > In which case what happens: the command is not issued but there seems
-> > to be no way for the caller to discover this, and nohing is logged.
-> >
-> > Alan
-> >
-> 
-> These functinos are not void, it seems an errcode or a message is in order.
-> 
-> Also, the commit message needs to document in what scenario
-> intel_punit_ipc_command() may be called with null pointers - and why we
-> consider that to be OK.
+ChangeLog:
+*[Patch v5 1/4] platform:x86: Add Intel Telemetry Core Driver
+	v5:
+	- Add MAINTAINERS, Kconfig and Makefile changes per patch
+        v4:
+        - Remove redundant zero assignment for variables
+        v3:
+        - Clean code using checkpatch.pl from Kernel v4.3-rc4
+        v2:
+        - Fix issues in code style, indentation & comments
+        - Follow kernel-doc sytle comments
+        - Changed Banner to include "All Rights Reserved"
+        - Change telemetry_plt_config.telem_in_use type to bool
+        - Introduce Default empty platform specific callbacks to
+          remove NULL checks
+        - Use pr_fmt in init
+        - Change to MODULE_LICENSE to GPL
 
-Darren,
-In Punit IPC, all of the commands do not need an Input parameter; similarly all cmds do not need an output parameter(eg setting events).
-Telemetry uses all the flavors. (This fix is already there in our internal codebase for a long time, but somehow got missed during upstreaming).
-So this is not an error condition & the API needs to handle all cases properly. 
-> 
-> --
-> Darren Hart
-> Intel Open Source Technology Center
-> --
-> To unsubscribe from this list: send the line "unsubscribe platform-driver-x86"
-> in the body of a message to majordomo@vger.kernel.org More majordomo
-> info at  http://vger.kernel.org/majordomo-info.html
+*[Patch v6 2/4] platform:x86: Add Intel telemetry platform driver
+	v6:
+	- Add MAINTAINERS, Kconfig and Makefile changes per patch
+        v5:
+        - Add Device Driver first. Device is created later for
+          better bisectibility.
+        - Multiline comment formatting fixed
+        - Redundant zero initialization removed
+        - Optimize for loops, by removing 'evts' while
+          initializing Telemetry setup
+        - Change bool value of telem_in_use to 'true' or 'false'.
+          Clean the if else loop.
+        - Remove redundant telem_conf variable
+        - Suppress excess error messages
+        v4:
+        - Patch v3 2/5 is split in 2 patches according to Device
+          and Driver addition
+        - Change PUNIT CMDs according to changes in
+          intel_punit_ipc.c
+        v3:
+        - Clean code using checkpatch.pl from Kernel v4.3-rc4
+        v2:
+        - Fix issues in code style, indentation & comments
+        - Follow kernel-doc sytle comments
+        - Changed Banner to include "All Rights Reserved"
+        - Change telemetry_plt_config.telem_in_use type to bool
+        - Introduce Default empty platform specific callbacks to
+          remove NULL checks
+        - Use pr_fmt in init
+        - Change to MODULE_LICENSE to GPL
+
+*[Patch v5 3/4] platform:x86: Add Intel telemetry platform device
+	v5:
+	- Add MAINTAINERS, Kconfig and Makefile changes per patch
+        v4:
+        - Patch v3 2/5 is split in 2 patches according to Device
+          and Driver addition.
+        v3:
+        - Clean code using checkpatch.pl from Kernel v4.3-rc4
+        v2:
+        - Fix issues in code style, indentation & comments
+        - Changed Banner to include "All Rights Reserved"
+        - Remove unnecessary casting between void* and
+          resource_size_t
+        - Split telemetry_setup_evtconfig into two more functions
+        - Use 'ret' consistently instead of 'err'
+        - Change to MODULE_LICENSE to GPL
+
+*[Patch v4 4/4] platform:x86: Add Intel Telemetry Debugfs interfaces
+	v4:
+	- Add MAINTAINERS, Kconfig and Makefile changes per patch
+        v3:
+        - Shorter variable names for better viewability
+        - Define Macros for repeated code in for loop during
+          event parsing
+        v2:
+        - Fix issues in code style, indentation & comments
+        - Changed Banner to include "All Rights Reserved"
+        - Group all ApolloLake specific #defines under banner
+        - Change to MODULE_LICENSE to GPL
+
+Souvik Kumar Chakravarty (4):
+  platform:x86: Add Intel Telemetry Core Driver
+  platform:x86: Add Intel telemetry platform driver
+  platform:x86: Add Intel telemetry platform device
+  platform:x86: Add Intel Telemetry Debugfs interfaces
+
+ MAINTAINERS                                    |    9 +
+ arch/x86/include/asm/intel_telemetry.h         |  147 +++
+ drivers/platform/x86/Kconfig                   |   11 +
+ drivers/platform/x86/Makefile                  |    3 +
+ drivers/platform/x86/intel_pmc_ipc.c           |   96 ++
+ drivers/platform/x86/intel_telemetry_core.c    |  464 +++++++++
+ drivers/platform/x86/intel_telemetry_debugfs.c | 1030 ++++++++++++++++++++
+ drivers/platform/x86/intel_telemetry_pltdrv.c  | 1206 ++++++++++++++++++++++++
+ 8 files changed, 2966 insertions(+)
+ create mode 100644 arch/x86/include/asm/intel_telemetry.h
+ create mode 100644 drivers/platform/x86/intel_telemetry_core.c
+ create mode 100644 drivers/platform/x86/intel_telemetry_debugfs.c
+ create mode 100644 drivers/platform/x86/intel_telemetry_pltdrv.c
+
+-- 
+1.7.9.5
