@@ -1,57 +1,134 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Tue, 12 Jan 2016 08:59:19 -0800
-Message-ID: <20160112165919.GA1989@malice.jf.intel.com>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
- <20160104201231.GB5847@amd>
- <1452361154.673684.487414482.6CCEAE4B@webmail.messagingengine.com>
- <1452361601.676356.487415834.4652D305@webmail.messagingengine.com>
- <20160111190411.GE10643@malice.jf.intel.com>
- <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2 2/2] dell-wmi: Process only one event on devices with interface version 0
+Date: Tue, 12 Jan 2016 18:49:44 +0100
+Message-ID: <201601121849.44256@pali>
+References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com> <1451942796-26574-3-git-send-email-pali.rohar@gmail.com> <20160112111439.GA7630@eudyptula.hq.kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:40859 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752999AbcALQ7X (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jan 2016 11:59:23 -0500
-Content-Disposition: inline
-In-Reply-To: <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
+Content-Type: multipart/signed;
+  boundary="nextPart4560551.xe7CYA1sCh";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160112111439.GA7630@eudyptula.hq.kempniu.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?q?Micha=C5=82_K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 11, 2016 at 05:28:00PM -0200, Henrique de Moraes Holschuh wrote:
- > 
-> > Henrique, so are you taking back your Ack from 10 minutes prior?
-> 
-> Hmm? No, the ACK stands.
-> 
-> Pavel was talking about another feature altogether, apparently: older
-> thinkpads did not have "keyboard backlight" (as in light from below the
-> keys).  They had a "ThinkLight", which is an overhead light that shines
-> down on the keyboard.
-> 
-> The two features are not the same (and are handled differently by the
-> firmware, for whatever reason), although they do serve the same purpose.
->  I don't think a thinkpad will ever have both features at the same time,
-> so I have no idea why they changed the firmware interface.
-> 
-> The patch adds support to the "keyboard backlight" feature, which was
-> previously NOT supported.
-> 
-> > I've dropped this patch. Please let me know if I should pick it back up.
-> 
-> Please pick it back up.
-> 
+--nextPart4560551.xe7CYA1sCh
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Gah, these two threads landed next to each other in my Inbox and I didn't pick
-up the split. Apologies.
+On Tuesday 12 January 2016 12:14:39 Micha=C5=82 K=C4=99pie=C5=84 wrote:
+> > BIOS/ACPI on devices with WMI interface version 0 does not clear
+> > buffer before filling it. So next time when BIOS/ACPI send WMI
+> > event which is smaller as previous then it contains garbage in
+> > buffer from previous event.
+> >=20
+> > BIOS/ACPI on devices with WMI interface version 1 clears buffer and
+> > sometimes send more events in buffer at one call.
+> >=20
+> > Since commit 83fc44c32ad8 ("dell-wmi: Update code for processing
+> > WMI events") dell-wmi process all events in buffer (and not just
+> > first).
+> >=20
+> > So to prevent reading garbage from buffer we will process only
+> > first one event on devices with WMI interface version 0.
+> >=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > ---
+> >=20
+> >  drivers/platform/x86/dell-wmi.c |   16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/dell-wmi.c
+> > b/drivers/platform/x86/dell-wmi.c index 1ad7a7b..5db9efb 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -237,6 +237,22 @@ static void dell_wmi_notify(u32 value, void
+> > *context)
+> >=20
+> >  	buffer_end =3D buffer_entry + buffer_size;
+> >=20
+> > +	/*
+> > +	 * BIOS/ACPI on devices with WMI interface version 0 does not
+> > clear +	 * buffer before filling it. So next time when BIOS/ACPI
+> > send WMI event +	 * which is smaller as previous then it contains
+> > garbage in buffer from +	 * previous event.
+> > +	 *
+> > +	 * BIOS/ACPI on devices with WMI interface version 1 clears
+> > buffer and +	 * sometimes send more events in buffer at one call.
+> > +	 *
+> > +	 * So to prevent reading garbage from buffer we will process only
+> > first +	 * one event on devices with WMI interface version 0.
+> > +	 */
+> > +	if (dell_wmi_interface_version =3D=3D 0 && buffer_entry < buffer_end)
+> > +		if (buffer_end > buffer_entry + buffer_entry[0] + 1)
+> > +			buffer_end =3D buffer_entry + buffer_entry[0] + 1;
+>=20
+> Wouldn't it be a bit more clear if we clamped buffer_size before
+> setting buffer_end?  E.g. like this:
+>=20
+> 	if (buffer_size =3D=3D 0)
+> 		return;
+>=20
+> 	if (dell_wmi_interface_version =3D=3D 0 &&
+> 	    buffer_size > buffer_entry[0] + 1)
+> 		buffer_size =3D buffer_entry[0] + 1;
+>=20
+> 	buffer_end =3D buffer_entry + buffer_size;
 
-This is queued in testing (again).
+Before return adds correct cleanup part and code will be same as my=20
+original patch.
 
--- 
-Darren Hart
-Intel Open Source Technology Center
+So if more people think that your code is cleaner I'm OK with replacing=20
+it.
+
+> If I understand correctly, the second check on the first line added
+> by your patch prevents a bad dereference when accesing
+> buffer_entry[0].
+
+Yes. Same check (buffer_entry < buffer_end) is used in next whole loop,=20
+so I uses it in my patch too...
+
+> The only case when that may happen is when
+> buffer_size is 0,
+
+In this one case, yes. But you can see that buffer_entry variable is=20
+changing (increasing pointer offset), it means that it points to some=20
+entry in buffer.
+
+> which means we got notified with rubbish anyway,
+> so we can just return (perhaps with a log message, which I omitted
+> above).
+>=20
+> One more minor nit: you should probably decide between "first" and
+> "one" as the phrase "only first one event" (found both in the commit
+> message and in the code comment) sounds incorrect to me.
+
+=46eel free to correct commit message, I'm not very good in english...
+
+It should mean something like this... in buffer received by bios can be=20
+more events. That while loop iterate over events. And this my patch on=20
+machines with wmi version 0 will process only *one* event. And that=20
+event is *first* in buffer.
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart4560551.xe7CYA1sCh
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlaVPLgACgkQi/DJPQPkQ1IiMACgnEJzoCSa9d0HBMDt2LCguxJk
+z4EAoMRTyD1x8Eyfo6OjeGNiWkm9rL4p
+=TUjF
+-----END PGP SIGNATURE-----
+
+--nextPart4560551.xe7CYA1sCh--
