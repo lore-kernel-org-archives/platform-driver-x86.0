@@ -1,255 +1,220 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 02/14] dell-smbios: don't pass a buffer to dell_send_request()
-Date: Tue, 12 Jan 2016 15:02:48 +0100
-Message-ID: <1452607380-20861-3-git-send-email-kernel@kempniu.pl>
-References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] dell-wmi: Stop storing pointers to DMI tables
+Date: Tue, 12 Jan 2016 15:25:38 +0100
+Message-ID: <20160112142538.GB11560@pali>
+References: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
+ <CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f49.google.com ([74.125.82.49]:33456 "EHLO
+	mail-wm0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752828AbcALOZl (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 12 Jan 2016 09:25:41 -0500
+Content-Disposition: inline
+In-Reply-To: <CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
 
-Passing a struct calling_interface_buffer pointer to dell_send_request(=
-)
-is redundant as it should always operate on the buffer exported from th=
-e
-module.
+On Monday 11 January 2016 13:58:20 Andy Lutomirski wrote:
+> On Sun, Jan 3, 2016 at 6:52 AM, Andy Lutomirski <luto@kernel.org> wro=
+te:
+> > The dmi_walk function maps the DMI table, walks it, and unmaps it.
+> > This means that the dell_bios_hotkey_table that find_hk_type stores
+> > points to unmapped memory by the time it gets read.
+> >
+> > I've been able to trigger crashes caused by the stale pointer a
+> > couple of times, but never on a stock kernel.
+> >
+> > Fix it by generating the keymap in the dmi_walk callback instead of
+> > storing a pointer.
+>=20
+> Quick ping: has anyone had a chance to look at this?
+>=20
+> --Andy
+>=20
 
-Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
----
- drivers/platform/x86/dell-laptop.c |   42 ++++++++++++++++++----------=
---------
- drivers/platform/x86/dell-smbios.c |    4 +---
- drivers/platform/x86/dell-smbios.h |    4 +---
- 3 files changed, 23 insertions(+), 27 deletions(-)
+Hi Andy, I looked at this patch, but I think some people from -mm or DM=
+I
+code should look at it as it is memory problem... We also has one in
+dell-laptop.ko (wrong API usage) and so -mm people could know it better=
+=2E
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
-dell-laptop.c
-index d45d356..572bdca 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -418,7 +418,7 @@ static int dell_rfkill_set(void *data, bool blocked=
-)
-=20
- 	get_buffer();
-=20
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-=20
-@@ -428,7 +428,7 @@ static int dell_rfkill_set(void *data, bool blocked=
-)
- 	clear_buffer();
-=20
- 	buffer->input[0] =3D 0x2;
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	hwswitch =3D buffer->output[1];
-=20
-@@ -441,7 +441,7 @@ static int dell_rfkill_set(void *data, bool blocked=
-)
- 	clear_buffer();
-=20
- 	buffer->input[0] =3D (1 | (radio<<8) | (disable << 16));
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
-=20
-  out:
-@@ -458,7 +458,7 @@ static void dell_rfkill_update_sw_state(struct rfki=
-ll *rfkill, int radio,
- 		int block =3D rfkill_blocked(rfkill);
- 		clear_buffer();
- 		buffer->input[0] =3D (1 | (radio << 8) | (block << 16));
--		dell_send_request(buffer, 17, 11);
-+		dell_send_request(17, 11);
- 	} else {
- 		/* No hw-switch, sync BIOS state to sw_state */
- 		rfkill_set_sw_state(rfkill, !!(status & BIT(radio + 16)));
-@@ -481,7 +481,7 @@ static void dell_rfkill_query(struct rfkill *rfkill=
-, void *data)
-=20
- 	get_buffer();
-=20
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-=20
-@@ -493,7 +493,7 @@ static void dell_rfkill_query(struct rfkill *rfkill=
-, void *data)
- 	clear_buffer();
-=20
- 	buffer->input[0] =3D 0x2;
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	hwswitch =3D buffer->output[1];
-=20
-@@ -521,14 +521,14 @@ static int dell_debugfs_show(struct seq_file *s, =
-void *data)
-=20
- 	get_buffer();
-=20
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-=20
- 	clear_buffer();
-=20
- 	buffer->input[0] =3D 0x2;
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	hwswitch_ret =3D buffer->output[0];
- 	hwswitch_state =3D buffer->output[1];
-=20
-@@ -619,7 +619,7 @@ static void dell_update_rfkill(struct work_struct *=
-ignored)
-=20
- 	get_buffer();
-=20
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
-=20
-@@ -629,7 +629,7 @@ static void dell_update_rfkill(struct work_struct *=
-ignored)
- 	clear_buffer();
-=20
- 	buffer->input[0] =3D 0x2;
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
-=20
- 	if (ret =3D=3D 0 && (status & BIT(0)))
-@@ -710,7 +710,7 @@ static int __init dell_setup_rfkill(void)
- 		return 0;
-=20
- 	get_buffer();
--	dell_send_request(buffer, 17, 11);
-+	dell_send_request(17, 11);
- 	ret =3D buffer->output[0];
- 	status =3D buffer->output[1];
- 	release_buffer();
-@@ -878,9 +878,9 @@ static int dell_send_intensity(struct backlight_dev=
-ice *bd)
- 	buffer->input[1] =3D bd->props.brightness;
-=20
- 	if (power_supply_is_system_supplied() > 0)
--		dell_send_request(buffer, 1, 2);
-+		dell_send_request(1, 2);
- 	else
--		dell_send_request(buffer, 1, 1);
-+		dell_send_request(1, 1);
-=20
- 	ret =3D dell_smi_error(buffer->output[0]);
-=20
-@@ -901,9 +901,9 @@ static int dell_get_intensity(struct backlight_devi=
-ce *bd)
- 	buffer->input[0] =3D token;
-=20
- 	if (power_supply_is_system_supplied() > 0)
--		dell_send_request(buffer, 0, 2);
-+		dell_send_request(0, 2);
- 	else
--		dell_send_request(buffer, 0, 1);
-+		dell_send_request(0, 1);
-=20
- 	if (buffer->output[0])
- 		ret =3D dell_smi_error(buffer->output[0]);
-@@ -1160,7 +1160,7 @@ static int kbd_get_info(struct kbd_info *info)
- 	get_buffer();
-=20
- 	buffer->input[0] =3D 0x0;
--	dell_send_request(buffer, 4, 11);
-+	dell_send_request(4, 11);
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
-@@ -1248,7 +1248,7 @@ static int kbd_get_state(struct kbd_state *state)
- 	get_buffer();
-=20
- 	buffer->input[0] =3D 0x1;
--	dell_send_request(buffer, 4, 11);
-+	dell_send_request(4, 11);
- 	ret =3D buffer->output[0];
-=20
- 	if (ret) {
-@@ -1284,7 +1284,7 @@ static int kbd_set_state(struct kbd_state *state)
- 	buffer->input[1] |=3D (state->timeout_unit & 0x3) << 30;
- 	buffer->input[2] =3D state->als_setting & 0xFF;
- 	buffer->input[2] |=3D (state->level & 0xFF) << 16;
--	dell_send_request(buffer, 4, 11);
-+	dell_send_request(4, 11);
- 	ret =3D buffer->output[0];
- 	release_buffer();
-=20
-@@ -1326,7 +1326,7 @@ static int kbd_set_token_bit(u8 bit)
- 	get_buffer();
- 	buffer->input[0] =3D da_tokens[id].location;
- 	buffer->input[1] =3D da_tokens[id].value;
--	dell_send_request(buffer, 1, 0);
-+	dell_send_request(1, 0);
- 	ret =3D buffer->output[0];
- 	release_buffer();
-=20
-@@ -1348,7 +1348,7 @@ static int kbd_get_token_bit(u8 bit)
-=20
- 	get_buffer();
- 	buffer->input[0] =3D da_tokens[id].location;
--	dell_send_request(buffer, 0, 0);
-+	dell_send_request(0, 0);
- 	ret =3D buffer->output[0];
- 	val =3D buffer->output[1];
- 	release_buffer();
-@@ -2019,7 +2019,7 @@ static int __init dell_init(void)
- 	if (token !=3D -1) {
- 		get_buffer();
- 		buffer->input[0] =3D token;
--		dell_send_request(buffer, 0, 2);
-+		dell_send_request(0, 2);
- 		if (buffer->output[0] =3D=3D 0)
- 			max_intensity =3D buffer->output[3];
- 		release_buffer();
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-index 260a32a..758680f 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -84,9 +84,7 @@ int find_token_location(int tokenid)
- }
- EXPORT_SYMBOL_GPL(find_token_location);
-=20
--struct calling_interface_buffer *
--dell_send_request(struct calling_interface_buffer *buffer, int class,
--		  int select)
-+struct calling_interface_buffer *dell_send_request(int class, int sele=
-ct)
- {
- 	struct smi_cmd command;
-=20
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/=
-dell-smbios.h
-index 00e03b2..0f58ce8 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -45,7 +45,5 @@ void release_buffer(void);
- int find_token_id(int tokenid);
- int find_token_location(int tokenid);
-=20
--struct calling_interface_buffer *
--dell_send_request(struct calling_interface_buffer *buffer, int class,
--		  int select);
-+struct calling_interface_buffer *dell_send_request(int class, int sele=
-ct);
- #endif
+> >
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> > ---
+> >
+> > This seems to work on my laptop.  It applies to platform-drivers-x8=
+6/for-next.
+> >
+> > drivers/platform/x86/dell-wmi.c | 69 +++++++++++++++++++++++++-----=
+-----------
+> >  1 file changed, 42 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86=
+/dell-wmi.c
+> > index 57402c4c394e..52db2721d7e3 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -116,7 +116,10 @@ struct dell_bios_hotkey_table {
+> >
+> >  };
+> >
+> > -static const struct dell_bios_hotkey_table *dell_bios_hotkey_table=
+;
+> > +struct dell_dmi_results {
+> > +       int err;
+> > +       struct key_entry *keymap;
+> > +};
+> >
+> >  /* Uninitialized entries here are KEY_RESERVED =3D=3D 0. */
+> >  static const u16 bios_to_linux_keycode[256] __initconst =3D {
+> > @@ -316,20 +319,34 @@ static void dell_wmi_notify(u32 value, void *=
+context)
+> >         kfree(obj);
+> >  }
+> >
+> > -static const struct key_entry * __init dell_wmi_prepare_new_keymap=
+(void)
+> > +static void __init handle_dmi_table(const struct dmi_header *dm,
+> > +                                   void *opaque)
+> >  {
+> > -       int hotkey_num =3D (dell_bios_hotkey_table->header.length -=
+ 4) /
+> > -                               sizeof(struct dell_bios_keymap_entr=
+y);
+> > +       struct dell_dmi_results *results =3D opaque;
+> > +       struct dell_bios_hotkey_table *table;
+> >         struct key_entry *keymap;
+> > -       int i;
+> > +       int hotkey_num, i;
+> > +
+> > +       if (results->err || results->keymap)
+> > +               return;         /* We already found the hotkey tabl=
+e. */
+> > +
+> > +       if (dm->type !=3D 0xb2 || dm->length <=3D 6)
+> > +               return;
+> > +
+> > +       table =3D container_of(dm, struct dell_bios_hotkey_table, h=
+eader);
+> > +
+> > +       hotkey_num =3D (table->header.length - 4) /
+> > +                               sizeof(struct dell_bios_keymap_entr=
+y);
+> >
+> >         keymap =3D kcalloc(hotkey_num + 1, sizeof(struct key_entry)=
+, GFP_KERNEL);
+> > -       if (!keymap)
+> > -               return NULL;
+> > +       if (!keymap) {
+> > +               results->err =3D -ENOMEM;
+> > +               return;
+> > +       }
+> >
+> >         for (i =3D 0; i < hotkey_num; i++) {
+> >                 const struct dell_bios_keymap_entry *bios_entry =3D
+> > -                                       &dell_bios_hotkey_table->ke=
+ymap[i];
+> > +                                       &table->keymap[i];
+> >
+> >                 /* Uninitialized entries are 0 aka KEY_RESERVED. */
+> >                 u16 keycode =3D (bios_entry->keycode <
+> > @@ -358,11 +375,13 @@ static const struct key_entry * __init dell_w=
+mi_prepare_new_keymap(void)
+> >
+> >         keymap[hotkey_num].type =3D KE_END;
+> >
+> > -       return keymap;
+> > +       results->err =3D 0;
+> > +       results->keymap =3D keymap;
+> >  }
+> >
+> >  static int __init dell_wmi_input_setup(void)
+> >  {
+> > +       struct dell_dmi_results dmi_results =3D {};
+> >         int err;
+> >
+> >         dell_wmi_input_dev =3D input_allocate_device();
+> > @@ -373,20 +392,26 @@ static int __init dell_wmi_input_setup(void)
+> >         dell_wmi_input_dev->phys =3D "wmi/input0";
+> >         dell_wmi_input_dev->id.bustype =3D BUS_HOST;
+> >
+> > -       if (dell_new_hk_type) {
+> > -               const struct key_entry *keymap =3D dell_wmi_prepare=
+_new_keymap();
+> > -               if (!keymap) {
+> > -                       err =3D -ENOMEM;
+> > -                       goto err_free_dev;
+> > -               }
+> > +       err =3D dmi_walk(handle_dmi_table, &dmi_results);
+> > +       if (err)
+> > +               goto err_free_dev;
+> >
+> > -               err =3D sparse_keymap_setup(dell_wmi_input_dev, key=
+map, NULL);
+> > +       if (dmi_results.err) {
+> > +               err =3D dmi_results.err;
+> > +               goto err_free_dev;
+> > +       }
+> > +
+> > +       if (dmi_results.keymap) {
+> > +               dell_new_hk_type =3D true;
+> > +
+> > +               err =3D sparse_keymap_setup(dell_wmi_input_dev,
+> > +                                         dmi_results.keymap, NULL)=
+;
+> >
+> >                 /*
+> >                  * Sparse keymap library makes a copy of keymap so =
+we
+> >                  * don't need the original one that was allocated.
+> >                  */
+> > -               kfree(keymap);
+> > +               kfree(dmi_results.keymap);
+> >         } else {
+> >                 err =3D sparse_keymap_setup(dell_wmi_input_dev,
+> >                                           dell_wmi_legacy_keymap, N=
+ULL);
+> > @@ -413,15 +438,6 @@ static void dell_wmi_input_destroy(void)
+> >         input_unregister_device(dell_wmi_input_dev);
+> >  }
+> >
+> > -static void __init find_hk_type(const struct dmi_header *dm, void =
+*dummy)
+> > -{
+> > -       if (dm->type =3D=3D 0xb2 && dm->length > 6) {
+> > -               dell_new_hk_type =3D true;
+> > -               dell_bios_hotkey_table =3D
+> > -                       container_of(dm, struct dell_bios_hotkey_ta=
+ble, header);
+> > -       }
+> > -}
+> > -
+> >  static int __init dell_wmi_init(void)
+> >  {
+> >         int err;
+> > @@ -432,7 +448,6 @@ static int __init dell_wmi_init(void)
+> >                 return -ENODEV;
+> >         }
+> >
+> > -       dmi_walk(find_hk_type, NULL);
+> >         acpi_video =3D acpi_video_get_backlight_type() !=3D acpi_ba=
+cklight_vendor;
+> >
+> >         err =3D dell_wmi_input_setup();
+> > --
+> > 2.5.0
+> >
+>=20
+>=20
+>=20
+
 --=20
-1.7.10.4
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
