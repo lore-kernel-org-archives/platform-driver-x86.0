@@ -1,108 +1,59 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v2 2/2] dell-wmi: Process only one event on devices with
- interface version 0
-Date: Tue, 12 Jan 2016 12:14:39 +0100
-Message-ID: <20160112111439.GA7630@eudyptula.hq.kempniu.pl>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <1451942796-26574-1-git-send-email-pali.rohar@gmail.com>
- <1451942796-26574-3-git-send-email-pali.rohar@gmail.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH 00/14] Common Dell SMBIOS API
+Date: Tue, 12 Jan 2016 15:02:46 +0100
+Message-ID: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lb0-f194.google.com ([209.85.217.194]:33995 "EHLO
-	mail-lb0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752901AbcALLOm (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jan 2016 06:14:42 -0500
-Received: by mail-lb0-f194.google.com with SMTP id oe3so1677317lbb.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 Jan 2016 03:14:42 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <1451942796-26574-3-git-send-email-pali.rohar@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> BIOS/ACPI on devices with WMI interface version 0 does not clear buff=
-er
-> before filling it. So next time when BIOS/ACPI send WMI event which i=
+The Linux kernel tree currently contains two Dell laptop-related driver=
 s
-> smaller as previous then it contains garbage in buffer from previous =
-event.
->=20
-> BIOS/ACPI on devices with WMI interface version 1 clears buffer and
-> sometimes send more events in buffer at one call.
->=20
-> Since commit 83fc44c32ad8 ("dell-wmi: Update code for processing WMI
-> events") dell-wmi process all events in buffer (and not just first).
->=20
-> So to prevent reading garbage from buffer we will process only first =
-one
-> event on devices with WMI interface version 0.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> ---
->  drivers/platform/x86/dell-wmi.c |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
-ell-wmi.c
-> index 1ad7a7b..5db9efb 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -237,6 +237,22 @@ static void dell_wmi_notify(u32 value, void *con=
-text)
-> =20
->  	buffer_end =3D buffer_entry + buffer_size;
-> =20
-> +	/*
-> +	 * BIOS/ACPI on devices with WMI interface version 0 does not clear
-> +	 * buffer before filling it. So next time when BIOS/ACPI send WMI e=
-vent
-> +	 * which is smaller as previous then it contains garbage in buffer =
-from
-> +	 * previous event.
-> +	 *
-> +	 * BIOS/ACPI on devices with WMI interface version 1 clears buffer =
-and
-> +	 * sometimes send more events in buffer at one call.
-> +	 *
-> +	 * So to prevent reading garbage from buffer we will process only f=
-irst
-> +	 * one event on devices with WMI interface version 0.
-> +	 */
-> +	if (dell_wmi_interface_version =3D=3D 0 && buffer_entry < buffer_en=
-d)
-> +		if (buffer_end > buffer_entry + buffer_entry[0] + 1)
-> +			buffer_end =3D buffer_entry + buffer_entry[0] + 1;
-
-Wouldn't it be a bit more clear if we clamped buffer_size before settin=
-g
-buffer_end?  E.g. like this:
-
-	if (buffer_size =3D=3D 0)
-		return;
-
-	if (dell_wmi_interface_version =3D=3D 0 &&
-	    buffer_size > buffer_entry[0] + 1)
-		buffer_size =3D buffer_entry[0] + 1;
-
-	buffer_end =3D buffer_entry + buffer_size;
-
-If I understand correctly, the second check on the first line added by
-your patch prevents a bad dereference when accesing buffer_entry[0].
-The only case when that may happen is when buffer_size is 0, which mean=
-s
-we got notified with rubbish anyway, so we can just return (perhaps wit=
+issuing SMBIOS requests in different ways (dell-laptop in
+drivers/platform/x86 and dell-led in drivers/led).  As an upcoming patc=
 h
-a log message, which I omitted above).
+series for the dell-wmi driver (also in drivers/platform/x86) will
+change it so that it also performs SMBIOS requests, I took the
+opportunity to unify the API used for issuing Dell SMBIOS requests
+throughout the kernel before any further code duplication happens.
+Credit for suggesting this goes to Pali Roh=C3=A1r.
 
-One more minor nit: you should probably decide between "first" and "one=
-"
-as the phrase "only first one event" (found both in the commit message
-and in the code comment) sounds incorrect to me.
+This patch series is primarily intended for the platform-x86 subsystem,
+with only 2 final patches touching the LED subsystem.  I decided to sen=
+d
+the whole series to everyone involved to provide context - my apologies
+if this is frowned upon.
+
+As for making dell-led dependent on a driver in drivers/platform/x86,
+let me just hint that Pali and I think it could be possible to
+eventually move all of dell-led's code to drivers/platform/x86.  But
+first things first.
+
+The first patch generates a lot of checkpatch warnings, but these are
+also raised for the original code and I decided that not changing the
+code while moving around large quantities of it is critical for
+reviewability.
+
+Alex, as I don't have the hardware to test the changes in dell-led
+(beyond compilation) and you contributed the parts of it which this
+patch series changes, is there any way you might test it on relevant
+hardware?
+
+ drivers/leds/Kconfig               |    1 +
+ drivers/leds/dell-led.c            |  125 ++--------
+ drivers/platform/x86/Kconfig       |   12 +-
+ drivers/platform/x86/Makefile      |    1 +
+ drivers/platform/x86/dell-laptop.c |  444 ++++++++++++----------------=
+--------
+ drivers/platform/x86/dell-smbios.c |  179 +++++++++++++++
+ drivers/platform/x86/dell-smbios.h |   48 ++++
+ 7 files changed, 395 insertions(+), 415 deletions(-)
+ create mode 100644 drivers/platform/x86/dell-smbios.c
+ create mode 100644 drivers/platform/x86/dell-smbios.h
 
 --=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+1.7.10.4
