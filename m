@@ -1,40 +1,85 @@
-From: Kevin Locke <kevin@kevinlocke.name>
-Subject: Re: [ibm-acpi-devel] [PATCH] thinkpad_acpi: Add support for keyboard
- backlight
-Date: Tue, 12 Jan 2016 10:36:47 -0800
-Message-ID: <569547BF.3030104@kevinlocke.name>
-References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
- <20160111190411.GE10643@malice.jf.intel.com>
- <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
- <201601112103.01145@pali> <20160111211228.GA4171@sig21.net>
- <1452614830.376787.489968026.5FAEDB86@webmail.messagingengine.com>
- <569541B4.1020905@kevinlocke.name>
- <1452622815.408163.490114450.23398941@webmail.messagingengine.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Weng Xuetian <wengxt@gmail.com>
+Subject: [PATCH v4] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Tue, 12 Jan 2016 11:43:55 -0800
+Message-ID: <1452627835-20806-1-git-send-email-wengxt@gmail.com>
+References: <1451244080-940-1-git-send-email-wengxt@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from praxis.kevinlocke.name ([205.185.125.39]:60453 "EHLO
-	praxis.kevinlocke.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752287AbcALSgu (ORCPT
+Received: from mail-wm0-f65.google.com ([74.125.82.65]:34117 "EHLO
+	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752716AbcALToX (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jan 2016 13:36:50 -0500
-In-Reply-To: <1452622815.408163.490114450.23398941@webmail.messagingengine.com>
+	Tue, 12 Jan 2016 14:44:23 -0500
+In-Reply-To: <1451244080-940-1-git-send-email-wengxt@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net
-Cc: Johannes Stezenbach <js@sig21.net>, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>, platform-driver-x86@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Weng Xuetian <wengxt@gmail.com>
 
-On 01/12/2016 10:20 AM, Henrique de Moraes Holschuh wrote:
-> On Tue, Jan 12, 2016, at 16:11, Kevin Locke wrote:
->> I looked through the DSDT and SSDT AML on the T430 (which also has both
->> a keyboard backlight and ThinkLight) and couldn't deduce which method
->> was being invoked for Fn+Space or an analog to MLCG/MLCS for the
->> ThinkLight.  However, that may be due to my inexperience interpreting
->> AML.  I'll keep looking/learning.
->
-> It calls directly into the SMBIOS :-(
+Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
+different from Surface Pro 3.
 
-Bummer!  Thank you for taking the time to figure that out.
+This commit adds MSHW0040 to id list to support the Surface Pro 4.
 
-Kevin
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+Signed-off-by: Weng Xuetian <wengxt@gmail.com>
+---
+v4:
+ - Do not rename the driver.
+v3:
+ - Fix commit message grammar mistakes.
+v2:
+ - Reformat patch with -M -C
+---
+ drivers/platform/x86/Kconfig              | 4 ++--
+ drivers/platform/x86/surfacepro3_button.c | 8 +++++---
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1089eaa..ea76d67 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -940,8 +940,8 @@ config INTEL_PMC_IPC
+ 	with other entities in the CPU.
+ 
+ config SURFACE_PRO3_BUTTON
+-	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
++	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
+ 	depends on ACPI && INPUT
+ 	---help---
+-	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
++	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+index f7dade3..2c0e7d7 100644
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ b/drivers/platform/x86/surfacepro3_button.c
+@@ -1,6 +1,6 @@
+ /*
+  * power/home/volume button support for
+- * Microsoft Surface Pro 3 tablet.
++ * Microsoft Surface Pro 3/4 tablet.
+  *
+  * Copyright (c) 2015 Intel Corporation.
+  * All rights reserved.
+@@ -19,7 +19,8 @@
+ #include <linux/acpi.h>
+ #include <acpi/button.h>
+ 
+-#define SURFACE_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO4_BUTTON_HID		"MSHW0040"
+ #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+ #define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3 Buttons"
+ 
+@@ -54,7 +55,8 @@ MODULE_LICENSE("GPL v2");
+  * acpi_driver.
+  */
+ static const struct acpi_device_id surface_button_device_ids[] = {
+-	{SURFACE_BUTTON_HID,    0},
++	{SURFACE_PRO3_BUTTON_HID,    0},
++	{SURFACE_PRO4_BUTTON_HID,    0},
+ 	{"", 0},
+ };
+ MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
+-- 
+2.6.4
