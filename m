@@ -1,57 +1,74 @@
-From: Pavel Machek <pavel@ucw.cz>
+From: Johannes Stezenbach <js@sig21.net>
 Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
-Date: Tue, 12 Jan 2016 22:58:04 +0100
-Message-ID: <20160112215804.GA12869@amd>
+Date: Tue, 12 Jan 2016 23:07:15 +0100
+Message-ID: <20160112220715.GA13350@sig21.net>
 References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
  <20160111190411.GE10643@malice.jf.intel.com>
  <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
  <201601112103.01145@pali>
+ <20160111211228.GA4171@sig21.net>
+ <1452614830.376787.489968026.5FAEDB86@webmail.messagingengine.com>
+ <20160112163514.GA24900@sig21.net>
+ <1452621367.403228.490087522.151796A7@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54785 "EHLO
-	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751890AbcALV6G (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 12 Jan 2016 16:58:06 -0500
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201601112103.01145@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
+In-Reply-To: <1452621367.403228.490087522.151796A7@webmail.messagingengine.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Pavel Machek <pavel@ucw.cz>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi!
+On Tue, Jan 12, 2016 at 03:56:07PM -0200, Henrique de Moraes Holschuh wrote:
+> On Tue, Jan 12, 2016, at 14:35, Johannes Stezenbach wrote:
+> > But what to look out for?
+> 
+> Well, you should familiarize yourself with ACPI AML a bit. Then, look
+> for the ACPI methods that thinkpad-acpi (and the patch to add backlight
+> support) calls, and try to work out how they work in your thinkpad.
+> 
+> Typical thinkpad firmware behavior is to sometimes have a lower level
+> implementation, a higher level ACPI API that the O.S. is supposed to
+> call (and which will call into the lower level implementation, or to the
+> work itself).
+> 
+> We want to stick to the higher level API, as it is more stable.  Use of
+> lower-level APIs or direct EC access must be whitelist-restricted.
 
-On Mon 2016-01-11 21:03:01, Pali Roh=E1r wrote:
-> On Monday 11 January 2016 20:28:00 Henrique de Moraes Holschuh wrote
-> > The two features are not the same (and are handled differently by t=
-he
-> > firmware, for whatever reason), although they do serve the same
-> > purpose. I don't think a thinkpad will ever have both features at
-> > the same time, so I have no idea why they changed the firmware
-> > interface.
->=20
-> Maybe we should decide if ::kbd_backlight LED suffix could be used al=
-so=20
-> for other LED devices and not only for those which are physically und=
-er=20
-> the keyboard.
+So if I interpret this correctly it calls SMI BIOS on x230, too:
 
-Another problem is that N900 has _6_ backlight LEDs. Named
-lp5523::kb1..6. ... Which does means desktop software will probably
-not pick them up :-(.=20
+                        Method (MLCG, 1, NotSerialized)
+                        {
+                            Local0 = \KBLS (0x00, 0x00)
+                            Return (Local0)
+                        }
 
-I guess we could have "/sys/class/kbd_light/brightness" that would
-control all of them with one write.
+                        Method (MLCS, 1, NotSerialized)
+                        {
+                            Local0 = \KBLS (0x01, Arg0)
+                            If (!(Local0 & 0x80000000))
+                            {
+                                If ((Arg0 & 0x00010000))
+                                {
+                                    \_SB.PCI0.LPC.EC.HKEY.MHKQ (0x6001)
+                                }
+                                ElseIf (\_SB.PCI0.LPC.EC.HKEY.MHKK (0x00020000))
+                                {
+                                    \_SB.PCI0.LPC.EC.HKEY.MHKQ (0x1012)
+                                }
+                            }
 
-Next question is.. apparently there are some keyboards that have
-per-key RGB backlight... but maybe we can just call that "weird
-enough" and ignore...
+                            Return (Local0)
+                        }
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
+
+    Method (KBLS, 2, NotSerialized)
+    {
+        Return (SMI (0x14, 0x09, Arg0, Arg1, 0x00))
+    }
+
+FWIW, full dump is here:
+https://linuxtv.org/~js/ahSheaw0eezahqu1aethohLae4MeiPhe/
+
+Johannes
