@@ -1,68 +1,57 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v2 2/2] dell-wmi: Process only one event on devices with
- interface version 0
-Date: Tue, 12 Jan 2016 21:12:46 +0100
-Message-ID: <20160112201246.GA19348@eudyptula.hq.kempniu.pl>
-References: <1450991926-20937-1-git-send-email-pali.rohar@gmail.com>
- <1451942796-26574-3-git-send-email-pali.rohar@gmail.com>
- <20160112111439.GA7630@eudyptula.hq.kempniu.pl>
- <201601121849.44256@pali>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] thinkpad_acpi: Add support for keyboard backlight
+Date: Tue, 12 Jan 2016 22:58:04 +0100
+Message-ID: <20160112215804.GA12869@amd>
+References: <1450982818-11694-1-git-send-email-pali.rohar@gmail.com>
+ <20160111190411.GE10643@malice.jf.intel.com>
+ <1452540480.2848000.489039714.26068C20@webmail.messagingengine.com>
+ <201601112103.01145@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54785 "EHLO
+	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751890AbcALV6G (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 12 Jan 2016 16:58:06 -0500
 Content-Disposition: inline
-In-Reply-To: <201601121849.44256@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <201601112103.01145@pali>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio D'Urso <fabiodurso@hotmail.it>
 
-> > Wouldn't it be a bit more clear if we clamped buffer_size before
-> > setting buffer_end?  E.g. like this:
-> >=20
-> > 	if (buffer_size =3D=3D 0)
-> > 		return;
-> >=20
-> > 	if (dell_wmi_interface_version =3D=3D 0 &&
-> > 	    buffer_size > buffer_entry[0] + 1)
-> > 		buffer_size =3D buffer_entry[0] + 1;
-> >=20
-> > 	buffer_end =3D buffer_entry + buffer_size;
+Hi!
+
+On Mon 2016-01-11 21:03:01, Pali Roh=E1r wrote:
+> On Monday 11 January 2016 20:28:00 Henrique de Moraes Holschuh wrote
+> > The two features are not the same (and are handled differently by t=
+he
+> > firmware, for whatever reason), although they do serve the same
+> > purpose. I don't think a thinkpad will ever have both features at
+> > the same time, so I have no idea why they changed the firmware
+> > interface.
 >=20
-> Before return adds correct cleanup part and code will be same as my=20
-> original patch.
->=20
-> So if more people think that your code is cleaner I'm OK with replaci=
-ng=20
-> it.
+> Maybe we should decide if ::kbd_backlight LED suffix could be used al=
+so=20
+> for other LED devices and not only for those which are physically und=
+er=20
+> the keyboard.
 
-Both solutions are fine and I realize I'm a bit late to the party as yo=
-u
-posted the original patch almost 3 weeks ago, so I don't want to delay
-it any longer.  I think it's just a matter of deciding whether to
-enforce the buffer size limit using buffer_size or buffer_end.  As the
-first option involves a little bit less writing, I thought I'd suggest
-it.
+Another problem is that N900 has _6_ backlight LEDs. Named
+lp5523::kb1..6. ... Which does means desktop software will probably
+not pick them up :-(.=20
 
-> > One more minor nit: you should probably decide between "first" and
-> > "one" as the phrase "only first one event" (found both in the commi=
-t
-> > message and in the code comment) sounds incorrect to me.
->=20
-> Feel free to correct commit message, I'm not very good in english...
->=20
-> It should mean something like this... in buffer received by bios can =
-be=20
-> more events. That while loop iterate over events. And this my patch o=
-n=20
-> machines with wmi version 0 will process only *one* event. And that=20
-> event is *first* in buffer.
+I guess we could have "/sys/class/kbd_light/brightness" that would
+control all of them with one write.
 
-Don't worry, I understood your intentions from the commit message, so I
-don't think it's worth posting a v3 only to correct minor stylistic
-errors.
+Next question is.. apparently there are some keyboards that have
+per-key RGB backlight... but maybe we can just call that "weird
+enough" and ignore...
 
+									Pavel
 --=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
+/blog.html
