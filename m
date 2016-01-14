@@ -1,41 +1,41 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4/4] Revert "thinkpad_acpi: Use acpi_video_handles_brightness_key_presses()"
-Date: Thu, 14 Jan 2016 09:41:48 +0100
-Message-ID: <1452760908-15965-4-git-send-email-hdegoede@redhat.com>
-References: <1452760908-15965-1-git-send-email-hdegoede@redhat.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1452760908-15965-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Adrien Schildknecht <adrien+dev@schischi.me>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH] dell-wmi: Stop storing pointers to DMI tables
+Date: Thu, 14 Jan 2016 10:52:04 +0100
+Message-ID: <20160114095204.GA5473@eudyptula.hq.kempniu.pl>
+References: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
+ <CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
+ <20160112142538.GB11560@pali>
+ <CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-acpi_video_handles_brightness_key_presses()'s may return false if the i915
-driver is not loaded yet when thinkpad_acpi loads, and then return true
-after the i915 driver has loaded. This means that thinkpad_acpi cannot
-use it as is since thinkpad_acpi caches the return value.
+> > Hi Andy, I looked at this patch, but I think some people from -mm o=
+r DMI
+> > code should look at it as it is memory problem... We also has one i=
+n
+> > dell-laptop.ko (wrong API usage) and so -mm people could know it be=
+tter.
 
-This reverts commit 7714687a2b2d ("thinkpad_acpi: Use
-acpi_video_handles_brightness_key_presses()").
+> There are at least two platform drivers (dell-wmi and dell-laptop)
+> that don't play well with the current interface.  This patch is
+> intended to fix one of them.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Pali, Andy,
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index f453d5d..0bed473 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3488,7 +3488,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 	/* Do not issue duplicate brightness change events to
- 	 * userspace. tpacpi_detect_brightness_capabilities() must have
- 	 * been called before this point  */
--	if (acpi_video_handles_brightness_key_presses()) {
-+	if (acpi_video_get_backlight_type() != acpi_backlight_vendor) {
- 		pr_info("This ThinkPad has standard ACPI backlight "
- 			"brightness control, supported by the ACPI "
- 			"video driver\n");
--- 
-2.5.0
+Could you point out the exact place where dell-laptop errs?  AFAICT, it
+only has one use of dmi_walk(), the callback there calls
+parse_da_table(), which does the right thing, i.e. krealloc()'ing memor=
+y
+and then memcpy()'ing table contents there...
 
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
