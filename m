@@ -1,40 +1,62 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH] dell-wmi: Stop storing pointers to DMI tables
-Date: Thu, 14 Jan 2016 10:52:04 +0100
-Message-ID: <20160114095204.GA5473@eudyptula.hq.kempniu.pl>
+Date: Thu, 14 Jan 2016 11:29:20 +0100
+Message-ID: <20160114102920.GB5473@eudyptula.hq.kempniu.pl>
 References: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
- <CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
- <20160112142538.GB11560@pali>
- <CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f54.google.com ([74.125.82.54]:35703 "EHLO
+	mail-wm0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753621AbcANK3X (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Thu, 14 Jan 2016 05:29:23 -0500
+Received: by mail-wm0-f54.google.com with SMTP id f206so336040911wmf.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Jan 2016 02:29:22 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-> > Hi Andy, I looked at this patch, but I think some people from -mm o=
-r DMI
-> > code should look at it as it is memory problem... We also has one i=
-n
-> > dell-laptop.ko (wrong API usage) and so -mm people could know it be=
-tter.
+> The dmi_walk function maps the DMI table, walks it, and unmaps it.
+> This means that the dell_bios_hotkey_table that find_hk_type stores
+> points to unmapped memory by the time it gets read.
+>=20
+> I've been able to trigger crashes caused by the stale pointer a
+> couple of times, but never on a stock kernel.
+>=20
+> Fix it by generating the keymap in the dmi_walk callback instead of
+> storing a pointer.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> ---
+>=20
+> This seems to work on my laptop.  It applies to platform-drivers-x86/=
+for-next.
+>=20
+> drivers/platform/x86/dell-wmi.c | 69 +++++++++++++++++++++++++-------=
+---------
+>  1 file changed, 42 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/d=
+ell-wmi.c
+> index 57402c4c394e..52db2721d7e3 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -116,7 +116,10 @@ struct dell_bios_hotkey_table {
+> =20
+>  };
+> =20
+> -static const struct dell_bios_hotkey_table *dell_bios_hotkey_table;
+> +struct dell_dmi_results {
+> +	int err;
+> +	struct key_entry *keymap;
 
-> There are at least two platform drivers (dell-wmi and dell-laptop)
-> that don't play well with the current interface.  This patch is
-> intended to fix one of them.
-
-Pali, Andy,
-
-Could you point out the exact place where dell-laptop errs?  AFAICT, it
-only has one use of dmi_walk(), the callback there calls
-parse_da_table(), which does the right thing, i.e. krealloc()'ing memor=
-y
-and then memcpy()'ing table contents there...
+Nit: keymap can be a const struct key_entry *.
 
 --=20
 Best regards,
