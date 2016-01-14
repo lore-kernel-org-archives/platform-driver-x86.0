@@ -1,45 +1,44 @@
-From: Jean Delvare <jdelvare@suse.de>
-Subject: Re: [PATCH] dell-wmi: Stop storing pointers to DMI tables
-Date: Thu, 14 Jan 2016 21:16:12 +0100
-Message-ID: <20160114211612.5c253e32@endymion.delvare>
-References: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
-	<CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
-	<20160112142538.GB11560@pali>
-	<CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
-	<20160114140731.0b324e92@lxorguk.ukuu.org.uk>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] intel_punit_ipc: add NULL check for input parameters
+Date: Thu, 14 Jan 2016 14:22:59 -0800
+Message-ID: <20160114222259.GB1989@malice.jf.intel.com>
+References: <1452249147-34712-1-git-send-email-qipeng.zha@intel.com>
+ <20160108112644.4a64e49e@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx2.suse.de ([195.135.220.15]:50198 "EHLO mx2.suse.de"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753649AbcANUQQ (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:33900 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752476AbcANWXD (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 14 Jan 2016 15:16:16 -0500
-In-Reply-To: <20160114140731.0b324e92@lxorguk.ukuu.org.uk>
+	Thu, 14 Jan 2016 17:23:03 -0500
+Content-Disposition: inline
+In-Reply-To: <20160108112644.4a64e49e@lxorguk.ukuu.org.uk>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
 To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Andy Lutomirski <luto@amacapital.net>, Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Jean Delvare <jdelvare@suse.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Qipeng Zha <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, souvik.k.chakravarty@intel.com
 
-Hi Alan,
-
-On Thu, 14 Jan 2016 14:07:31 +0000, One Thousand Gnomes wrote:
-> > Jean, am I right that drivers must not store pointers to DMI tables
-> > that they find through dmi_walk?  Is there any alternative interface
-> > that could be used to get a longer-lived pointer to DMI tables, or
-> > should drivers just parse them and copy out any info needed from the
-> > dmi_walk callback?
+On Fri, Jan 08, 2016 at 11:26:44AM +0000, One Thousand Gnomes wrote:
+> On Fri,  8 Jan 2016 18:32:27 +0800
+> Qipeng Zha <qipeng.zha@intel.com> wrote:
 > 
-> The easiest long term solution might be to just map the dmi buffer once
-> and keep it. It's not that huge so it's not a big address space hog.
+> > intel_punit_ipc_command() maybe called when in or out
+> > data pointers are NULL.
+> 
+> In which case what happens: the command is not issued but there seems to
+> be no way for the caller to discover this, and nohing is logged.
 
-Please note that SMBIOS specification version 3.0 allows for 32-bit
-length for DMI tables, suggesting that 64k tables were not large enough
-for everyone.
+My reading of this is different.
 
-Just saying. I have no strong opinion on the matter.
+A command receives a type and a val. It may or may not also require data in the
+"in" buffer, and the caller may or may not provide an out buffer.
+
+The command is issued in any case.
+
+I have merged this to avoid a crash, but we can certainly revisit this if I have
+missed something.
 
 -- 
-Jean Delvare
-SUSE L3 Support
+Darren Hart
+Intel Open Source Technology Center
