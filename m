@@ -1,7 +1,7 @@
 From: "Chen, Yu C" <yu.c.chen@intel.com>
 Subject: RE: [PATCH v4] surface pro 4: Add support for Surface Pro 4 Buttons
-Date: Fri, 15 Jan 2016 01:41:15 +0000
-Message-ID: <36DF59CE26D8EE47B0655C516E9CE640286BCD0A@shsmsx102.ccr.corp.intel.com>
+Date: Fri, 15 Jan 2016 01:50:14 +0000
+Message-ID: <36DF59CE26D8EE47B0655C516E9CE640286BCD1A@shsmsx102.ccr.corp.intel.com>
 References: <1451244080-940-1-git-send-email-wengxt@gmail.com>
  <1452627835-20806-1-git-send-email-wengxt@gmail.com>
  <20160114230100.GF1989@malice.jf.intel.com>
@@ -16,7 +16,7 @@ To: Darren Hart <dvhart@infradead.org>, Weng Xuetian <wengxt@gmail.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
+Hi Darren, Xuetian
 
 > -----Original Message-----
 > From: Darren Hart [mailto:dvhart@infradead.org]
@@ -39,8 +39,10 @@ Hi Darren,
 > 
 > Yu, are you happy with this version?
 > 
- Looks good to me.
-Acked-by: Chen Yu <yu.c.chen@intel.com>
+One minor nit below, other than that,
+Acked-by: Chen Yu <yu.c.chen@intel.com> 
 
-thanks,
-Yu
+-- #define SURFACE_BUTTON_DEVICE_NAME      "Surface Pro 3 Buttons"
+++ #define SURFACE_BUTTON_DEVICE_NAME      "Surface Pro 3/4 Buttons"
+
+And  
