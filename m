@@ -1,58 +1,46 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 4/4] Revert "thinkpad_acpi: Use acpi_video_handles_brightness_key_presses()"
-Date: Fri, 15 Jan 2016 01:52:01 +0100
-Message-ID: <5899370.z9zLpjS80K@vostro.rjw.lan>
-References: <1452760908-15965-1-git-send-email-hdegoede@redhat.com> <1452760908-15965-4-git-send-email-hdegoede@redhat.com> <20160114231856.GA20294@malice.jf.intel.com>
+From: "Chen, Yu C" <yu.c.chen@intel.com>
+Subject: RE: [PATCH v4] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Fri, 15 Jan 2016 01:41:15 +0000
+Message-ID: <36DF59CE26D8EE47B0655C516E9CE640286BCD0A@shsmsx102.ccr.corp.intel.com>
+References: <1451244080-940-1-git-send-email-wengxt@gmail.com>
+ <1452627835-20806-1-git-send-email-wengxt@gmail.com>
+ <20160114230100.GF1989@malice.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160114231856.GA20294@malice.jf.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, Adrien Schildknecht <adrien+dev@schischi.me>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160114230100.GF1989@malice.jf.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Weng Xuetian <wengxt@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday, January 14, 2016 03:18:56 PM Darren Hart wrote:
-> On Thu, Jan 14, 2016 at 09:41:48AM +0100, Hans de Goede wrote:
-> > acpi_video_handles_brightness_key_presses()'s may return false if the i915
-> > driver is not loaded yet when thinkpad_acpi loads, and then return true
-> > after the i915 driver has loaded. This means that thinkpad_acpi cannot
-> > use it as is since thinkpad_acpi caches the return value.
-> > 
-> > This reverts commit 7714687a2b2d ("thinkpad_acpi: Use
-> > acpi_video_handles_brightness_key_presses()").
-> > 
-> 
-> Rafael, I presume this would go through your tree?
+Hi Darren,
 
-Yes, I'll take care of this, thanks!
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Friday, January 15, 2016 7:01 AM
+> To: Weng Xuetian
+> Cc: Chen, Yu C; linux-kernel@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org
+> Subject: Re: [PATCH v4] surface pro 4: Add support for Surface Pro 4 Buttons
+> 
+> On Tue, Jan 12, 2016 at 11:43:55AM -0800, Weng Xuetian wrote:
+> > Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
+> > different from Surface Pro 3.
+> >
+> > This commit adds MSHW0040 to id list to support the Surface Pro 4.
+> >
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+> > Signed-off-by: Weng Xuetian <wengxt@gmail.com>
+> 
+> This is so much better, thank you Weng.
+> 
+> Yu, are you happy with this version?
+> 
+ Looks good to me.
+Acked-by: Chen Yu <yu.c.chen@intel.com>
 
-> No objection from me. Henrique?
-> 
-> Acked-by: Darren Hart <dvhart@linux.intel.com>
-> 
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> >  drivers/platform/x86/thinkpad_acpi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> > index f453d5d..0bed473 100644
-> > --- a/drivers/platform/x86/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/thinkpad_acpi.c
-> > @@ -3488,7 +3488,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
-> >  	/* Do not issue duplicate brightness change events to
-> >  	 * userspace. tpacpi_detect_brightness_capabilities() must have
-> >  	 * been called before this point  */
-> > -	if (acpi_video_handles_brightness_key_presses()) {
-> > +	if (acpi_video_get_backlight_type() != acpi_backlight_vendor) {
-> >  		pr_info("This ThinkPad has standard ACPI backlight "
-> >  			"brightness control, supported by the ACPI "
-> >  			"video driver\n");
-> 
-> 
-
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+thanks,
+Yu
