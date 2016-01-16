@@ -1,51 +1,361 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH] dell-wmi: Stop storing pointers to DMI tables
-Date: Fri, 15 Jan 2016 12:00:02 -0800
-Message-ID: <CALCETrWsm1OVuZQNeU-UkcdNg1rt6Wu9CKY=xc_0M9kKzedYYg@mail.gmail.com>
-References: <119170b95d373bc943eb4f16818239bac9fa6c59.1451832667.git.luto@kernel.org>
- <CALCETrVZ23t8u34VtgC+VVQC4PQ0JAw2u27+W_MQiwS=BgMAXQ@mail.gmail.com>
- <20160112142538.GB11560@pali> <CALCETrWUJ+5DowyLFDp7N_iNLsday4uKX3iO3NMC8Pfqma=O7w@mail.gmail.com>
- <20160115142719.36eea015@endymion.delvare> <CALCETrWXVxYLP0yTg4hS7JFjccjskvAF79ec6iSZsKJbLYi9GQ@mail.gmail.com>
- <1452880405.4941.0.camel@chaos.site>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 05/14] wmi: Turn WMI into a bus driver
+Date: Sat, 16 Jan 2016 13:56:39 +0100
+Message-ID: <20160116125639.GA7816@eudyptula.hq.kempniu.pl>
+References: <cover.1448931782.git.luto@kernel.org>
+ <e51677868b69e4bcf8847b340c92673e7e92b20d.1448931782.git.luto@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1452880405.4941.0.camel@chaos.site>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.de>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lb0-f196.google.com ([209.85.217.196]:33354 "EHLO
+	mail-lb0-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751533AbcAPM4n (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Sat, 16 Jan 2016 07:56:43 -0500
+Received: by mail-lb0-f196.google.com with SMTP id bc4so22489385lbc.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2016 04:56:42 -0800 (PST)
+Content-Disposition: inline
+In-Reply-To: <e51677868b69e4bcf8847b340c92673e7e92b20d.1448931782.git.luto@kernel.org>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 
-On Fri, Jan 15, 2016 at 9:53 AM, Jean Delvare <jdelvare@suse.de> wrote:
-> Hi Andy,
->
-> Le Friday 15 January 2016 =C3=A0 08:27 -0800, Andy Lutomirski a =C3=A9=
-crit :
->> FWIW, especially if we consider mapping it persistently, maybe we
->> should use ioremap_prot and map it both cached and ro.
->>
->> Actually, switching to a cached mapping regardless of persistence
->> could noticeably help boot times.  UC accesses are very, very slow.
->
-> Sorry if it is obvious for everybody else, but what does "UC accesses=
-"
-> mean?
->
+> WMI is logically a bus: the WMI driver binds to an ACPI node (or
+> more than one), and each instance of the WMI driver enumerates its
+> children and hopes that drivers will attach to the children that are
+> useful.
+>=20
+> This patch gives WMI a driver model bus type and the ability to
+> match to drivers.  The bus itself is a device in the new "wmi_bus"
+> class, and all of the individual WMI devices are slotted into the
+> device hierarchy correctly.
+>=20
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> ---
+>  drivers/platform/x86/wmi.c | 198 +++++++++++++++++++++++++++++++++++=
+----------
+>  include/linux/wmi.h        |  47 +++++++++++
+>  2 files changed, 202 insertions(+), 43 deletions(-)
+>  create mode 100644 include/linux/wmi.h
+>=20
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index dcb34a5f5669..2fa9493bd35c 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -37,14 +37,13 @@
+>  #include <linux/acpi.h>
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+> +#include <linux/wmi.h>
+> =20
+>  ACPI_MODULE_NAME("wmi");
+>  MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+>  MODULE_LICENSE("GPL");
+> =20
+> -#define ACPI_WMI_CLASS "wmi"
+> -
+>  static LIST_HEAD(wmi_block_list);
+> =20
+>  struct guid_block {
+> @@ -61,12 +60,12 @@ struct guid_block {
+>  };
+> =20
+>  struct wmi_block {
+> +	struct wmi_device dev;
+>  	struct list_head list;
+>  	struct guid_block gblock;
+>  	struct acpi_device *acpi_device;
+>  	wmi_notify_handler handler;
+>  	void *handler_data;
+> -	struct device dev;
+>  };
+> =20
+> =20
+> @@ -101,8 +100,8 @@ static const struct acpi_device_id wmi_device_ids=
+[] =3D {
+>  MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
+> =20
+>  static struct acpi_driver acpi_wmi_driver =3D {
+> -	.name =3D "wmi",
+> -	.class =3D ACPI_WMI_CLASS,
+> +	.name =3D "acpi-wmi",
+> +	.owner =3D THIS_MODULE,
+>  	.ids =3D wmi_device_ids,
+>  	.ops =3D {
+>  		.add =3D acpi_wmi_add,
+> @@ -623,77 +622,146 @@ bool wmi_has_guid(const char *guid_string)
+>  }
+>  EXPORT_SYMBOL_GPL(wmi_has_guid);
+> =20
+> +static struct wmi_block *dev_to_wblock(struct device *dev)
+> +{
+> +	return container_of(dev, struct wmi_block, dev.dev);
+> +}
+> +
+> +static struct wmi_device *dev_to_wdev(struct device *dev)
+> +{
+> +	return container_of(dev, struct wmi_device, dev);
+> +}
+> +
+>  /*
+>   * sysfs interface
+>   */
+>  static ssize_t modalias_show(struct device *dev, struct device_attri=
+bute *attr,
+>  			     char *buf)
+>  {
+> -	struct wmi_block *wblock;
+> -
+> -	wblock =3D dev_get_drvdata(dev);
+> -	if (!wblock) {
+> -		strcat(buf, "\n");
+> -		return strlen(buf);
+> -	}
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> =20
+>  	return sprintf(buf, "wmi:%pUL\n", wblock->gblock.guid);
+>  }
+>  static DEVICE_ATTR_RO(modalias);
+> =20
+> +static ssize_t guid_show(struct device *dev, struct device_attribute=
+ *attr,
+> +			 char *buf)
+> +{
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> +
+> +	return sprintf(buf, "%pUL\n", wblock->gblock.guid);
+> +}
+> +static DEVICE_ATTR_RO(guid);
+> +
+>  static struct attribute *wmi_attrs[] =3D {
+>  	&dev_attr_modalias.attr,
+> +	&dev_attr_guid.attr,
+>  	NULL,
+>  };
+>  ATTRIBUTE_GROUPS(wmi);
+> =20
+>  static int wmi_dev_uevent(struct device *dev, struct kobj_uevent_env=
+ *env)
+>  {
+> -	char guid_string[37];
+> -
+> -	struct wmi_block *wblock;
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> =20
+> -	if (add_uevent_var(env, "MODALIAS=3D"))
+> +	if (add_uevent_var(env, "MODALIAS=3Dwmi:%pUL", wblock->gblock.guid)=
+)
+>  		return -ENOMEM;
+> =20
+> -	wblock =3D dev_get_drvdata(dev);
+> -	if (!wblock)
+> +	if (add_uevent_var(env, "WMI_GUID=3D%pUL", wblock->gblock.guid))
+>  		return -ENOMEM;
+> =20
+> -	sprintf(guid_string, "%pUL", wblock->gblock.guid);
+> +	return 0;
+> +}
+> +
+> +static void wmi_dev_release(struct device *dev)
+> +{
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> +
+> +	kfree(wblock);
+> +}
+> +
+> +static int wmi_dev_match(struct device *dev, struct device_driver *d=
+river)
+> +{
+> +	struct wmi_driver *wmi_driver =3D
+> +		container_of(driver, struct wmi_driver, driver);
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> +	const struct wmi_device_id *id =3D wmi_driver->id_table;
+> =20
+> -	strcpy(&env->buf[env->buflen - 1], "wmi:");
+> -	memcpy(&env->buf[env->buflen - 1 + 4], guid_string, 36);
+> -	env->buflen +=3D 40;
+> +	while (id->guid_string) {
+> +		u8 tmp[16], driver_guid[16];
+> +
+> +		wmi_parse_guid(id->guid_string, tmp);
+> +		wmi_swap_bytes(tmp, driver_guid);
+> +		if (!memcmp(driver_guid, wblock->gblock.guid, 16))
+> +			return 1;
+> +
+> +		id++;
+> +	}
+> =20
+>  	return 0;
+>  }
+> =20
+> -static void wmi_dev_free(struct device *dev)
+> +int wmi_dev_probe(struct device *dev)
 
-Sorry, I sometimes have my head buried too far in the CPU :)
+Can be static.
 
-UC means uncached.  ioremap, on x86, asks for an uncached mapping, so
-every memory access (load or store) hits main memory individually.
-Assuming that the spec says that whatever physical memory the DMI
-tables live in is permitted to be used with cached accesses, asking
-for the CPU cache to be permitted on those accesses will make them a
-whole lot faster.
+>  {
+> -	struct wmi_block *wmi_block =3D container_of(dev, struct wmi_block,=
+ dev);
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> +	struct wmi_driver *wdriver =3D
+> +		container_of(dev->driver, struct wmi_driver, driver);
+> +	int ret =3D 0;
+> +
+> +	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
+> +		dev_warn(dev, "failed to enable device -- probing anyway\n");
+> +
+> +	if (wdriver->probe) {
+> +		ret =3D wdriver->probe(dev_to_wdev(dev));
+> +		if (ret !=3D 0 && ACPI_FAILURE(wmi_method_enable(wblock, 0)))
+> +			dev_warn(dev, "failed to disable device\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +int wmi_dev_remove(struct device *dev)
 
-If that isn't safe, you could also just copy each table out of the
-ioremap space into normal RAM as needed using MOVNTDQA.  I forget what
-the helper for that is called, but it basically does a fast streaming
-IO read and then writes to normal RAM, memcpy style.  Most modern CPUs
-support it.
+Can be static.
 
---Andy
+> +{
+> +	struct wmi_block *wblock =3D dev_to_wblock(dev);
+> +	struct wmi_driver *wdriver =3D
+> +		container_of(dev->driver, struct wmi_driver, driver);
+> +	int ret =3D 0;
+> +
+> +	if (wdriver->remove)
+> +		ret =3D wdriver->remove(dev_to_wdev(dev));
+> +
+> +	if (ACPI_FAILURE(wmi_method_enable(wblock, 0)))
+> +		dev_warn(dev, "failed to disable device\n");
+> =20
+> -	kfree(wmi_block);
+> +	return ret;
+>  }
+> =20
+> -static struct class wmi_class =3D {
+> +static struct class wmi_bus_class =3D {
+> +	.name =3D "wmi_bus",
+> +};
+> +
+> +static struct bus_type wmi_bus_type =3D {
+>  	.name =3D "wmi",
+> -	.dev_release =3D wmi_dev_free,
+> -	.dev_uevent =3D wmi_dev_uevent,
+>  	.dev_groups =3D wmi_groups,
+> +	.match =3D wmi_dev_match,
+> +	.uevent =3D wmi_dev_uevent,
+> +	.probe =3D wmi_dev_probe,
+> +	.remove =3D wmi_dev_remove,
+>  };
+> =20
+> -static int wmi_create_device(const struct guid_block *gblock,
+> +static int wmi_create_device(struct device *wmi_bus_dev,
+> +			     const struct guid_block *gblock,
+>  			     struct wmi_block *wblock,
+>  			     struct acpi_device *device)
+>  {
+> -	wblock->dev.class =3D &wmi_class;
+> +	wblock->dev.dev.bus =3D &wmi_bus_type;
+> +	wblock->dev.dev.parent =3D wmi_bus_dev;
+> =20
+> -	dev_set_name(&wblock->dev, "%pUL", gblock->guid);
+> +	dev_set_name(&wblock->dev.dev, "%pUL", gblock->guid);
+> =20
+> -	dev_set_drvdata(&wblock->dev, wblock);
+> +	wblock->dev.dev.release =3D wmi_dev_release;
+> =20
+> -	return device_register(&wblock->dev);
+> +	return device_register(&wblock->dev.dev);
+>  }
+> =20
+>  static void wmi_free_devices(struct acpi_device *device)
+> @@ -704,8 +772,8 @@ static void wmi_free_devices(struct acpi_device *=
+device)
+>  	list_for_each_entry_safe(wblock, next, &wmi_block_list, list) {
+>  		if (wblock->acpi_device =3D=3D device) {
+>  			list_del(&wblock->list);
+> -			if (wblock->dev.class)
+> -				device_unregister(&wblock->dev);
+> +			if (wblock->dev.dev.bus)
+> +				device_unregister(&wblock->dev.dev);
+>  			else
+>  				kfree(wblock);
+>  		}
+> @@ -737,7 +805,7 @@ static bool guid_already_parsed(struct acpi_devic=
+e *device,
+>  /*
+>   * Parse the _WDG method for the GUID data blocks
+>   */
+> -static int parse_wdg(struct acpi_device *device)
+> +static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device =
+*device)
+>  {
+>  	struct acpi_buffer out =3D {ACPI_ALLOCATE_BUFFER, NULL};
+>  	union acpi_object *obj;
+> @@ -781,7 +849,8 @@ static int parse_wdg(struct acpi_device *device)
+>  		  for device creation.
+>  		*/
+>  		if (!guid_already_parsed(device, gblock[i].guid)) {
+> -			retval =3D wmi_create_device(&gblock[i], wblock, device);
+> +			retval =3D wmi_create_device(wmi_bus_dev, &gblock[i],
+> +						   wblock, device);
+>  			if (retval) {
+>  				wmi_free_devices(device);
+>  				goto out_free_pointer;
+> @@ -881,12 +950,15 @@ static int acpi_wmi_remove(struct acpi_device *=
+device)
+>  	acpi_remove_address_space_handler(device->handle,
+>  				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+>  	wmi_free_devices(device);
+> +	device_unregister((struct device *)acpi_driver_data(device));
+> +	device->driver_data =3D NULL;
+> =20
+>  	return 0;
+>  }
+> =20
+>  static int acpi_wmi_add(struct acpi_device *device)
+>  {
+> +	struct device *wmi_bus_dev;
+>  	acpi_status status;
+>  	int error;
+> =20
+> @@ -899,14 +971,26 @@ static int acpi_wmi_add(struct acpi_device *dev=
+ice)
+>  		return -ENODEV;
+>  	}
+> =20
+> -	error =3D parse_wdg(device);
+> +	wmi_bus_dev =3D device_create(&wmi_bus_class, &device->dev, MKDEV(0=
+, 0),
+> +				    NULL, "wmi_bus-%s", dev_name(&device->dev));
+> +	if (IS_ERR(wmi_bus_dev)) {
+> +		error =3D PTR_ERR(wmi_bus_dev);
+> +		goto err_remove_handler;
+> +	}
+> +	device->driver_data =3D wmi_bus_dev;
+> +
+> +	error =3D parse_wdg(wmi_bus_dev, device);
+>  	if (error) {
+>  		pr_err("Failed to parse WDG method\n");
+> -		goto err_remove_handler;
+> +		goto err_remove_busdev;
+>  	}
+> =20
+>  	return 0;
+> =20
+> +err_remove_busdev:
+> +	device_unregister(wmi_bus_dev);
+> +	put_device(wmi_bus_dev);
+
+I believe this put_device() call is excessive.  device_create() calls
+device_initialize() and device_add(); device_unregister() calls
+device_del() and put_device(), so it should already take care of
+removing all references to wmi_bus_dev.  Am I missing something?
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
