@@ -1,64 +1,90 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH 2/2] acer-wmi: Use acpi_dev_present()
-Date: Sun, 17 Jan 2016 21:49:41 +0100
-Message-ID: <0ba4ef20f869501875e0815f34e5defa70fe0a03.1453060661.git.lukas@wunner.de>
-References: <cover.1453060661.git.lukas@wunner.de>
+From: Weng Xuetian <wengxt@gmail.com>
+Subject: [PATCH v5] surface pro 4: Add support for Surface Pro 4 Buttons
+Date: Sun, 17 Jan 2016 15:10:38 -0800
+Message-ID: <1453072238-14789-1-git-send-email-wengxt@gmail.com>
+References: <1452627835-20806-1-git-send-email-wengxt@gmail.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mailout1.hostsharing.net ([83.223.95.204]:40981 "EHLO
-	mailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751788AbcAQUuT (ORCPT
+Received: from mail-wm0-f68.google.com ([74.125.82.68]:35785 "EHLO
+	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753191AbcAQXLE (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Sun, 17 Jan 2016 15:50:19 -0500
-In-Reply-To: <cover.1453060661.git.lukas@wunner.de>
+	Sun, 17 Jan 2016 18:11:04 -0500
+In-Reply-To: <1452627835-20806-1-git-send-email-wengxt@gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Weng Xuetian <wengxt@gmail.com>
 
-Use shiny new acpi_dev_present() and remove all the boilerplate
-to search for a particular ACPI device. No functional change.
-Cf. 2d12b6b381ba ("ACPI / utils: Add acpi_dev_present()").
+Surface Pro 4 buttons are managed by a device with _HID "MSHW0040"
+different from Surface Pro 3.
 
-Cc: Lee, Chun-Yi <jlee@suse.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Acked-by: Darren Hart <dvhart@linux.intel.com>
+This commit adds MSHW0040 to id list to support the Surface Pro 4.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=109871
+Signed-off-by: Weng Xuetian <wengxt@gmail.com>
 ---
- drivers/platform/x86/acer-wmi.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+v5:
+ - rename device name macro as required by Chen Yu
+v4:
+ - Do not rename the driver.
+v3:
+ - Fix commit message grammar mistakes.
+v2:
+ - Reformat patch with -M -C
+---
+ drivers/platform/x86/Kconfig              |  4 ++--
+ drivers/platform/x86/surfacepro3_button.c | 10 ++++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1062fa4..3deadd5 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -793,15 +793,6 @@ static acpi_status __init AMW0_find_mailled(void)
- 	return AE_OK;
- }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1089eaa..ea76d67 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -940,8 +940,8 @@ config INTEL_PMC_IPC
+ 	with other entities in the CPU.
  
--static int AMW0_set_cap_acpi_check_device_found __initdata;
--
--static acpi_status __init AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
--	u32 level, void *context, void **retval)
--{
--	AMW0_set_cap_acpi_check_device_found = 1;
--	return AE_OK;
--}
--
- static const struct acpi_device_id norfkill_ids[] __initconst = {
- 	{ "VPC2004", 0},
- 	{ "IBM0068", 0},
-@@ -816,9 +807,10 @@ static int __init AMW0_set_cap_acpi_check_device(void)
- 	const struct acpi_device_id *id;
+ config SURFACE_PRO3_BUTTON
+-	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3 tablet"
++	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
+ 	depends on ACPI && INPUT
+ 	---help---
+-	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3 tablet.
++	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
+ endif # X86_PLATFORM_DEVICES
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+index f7dade3..b9c38f6 100644
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ b/drivers/platform/x86/surfacepro3_button.c
+@@ -1,6 +1,6 @@
+ /*
+  * power/home/volume button support for
+- * Microsoft Surface Pro 3 tablet.
++ * Microsoft Surface Pro 3/4 tablet.
+  *
+  * Copyright (c) 2015 Intel Corporation.
+  * All rights reserved.
+@@ -19,9 +19,10 @@
+ #include <linux/acpi.h>
+ #include <acpi/button.h>
  
- 	for (id = norfkill_ids; id->id[0]; id++)
--		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
--				NULL, NULL);
--	return AMW0_set_cap_acpi_check_device_found;
-+		if (acpi_dev_present(id->id))
-+			return true;
-+
-+	return false;
- }
+-#define SURFACE_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
++#define SURFACE_PRO4_BUTTON_HID		"MSHW0040"
+ #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+-#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3 Buttons"
++#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
  
- static acpi_status __init AMW0_set_capabilities(void)
+ #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+ #define SURFACE_BUTTON_NOTIFY_RELEASE_POWER	0xc7
+@@ -54,7 +55,8 @@ MODULE_LICENSE("GPL v2");
+  * acpi_driver.
+  */
+ static const struct acpi_device_id surface_button_device_ids[] = {
+-	{SURFACE_BUTTON_HID,    0},
++	{SURFACE_PRO3_BUTTON_HID,    0},
++	{SURFACE_PRO4_BUTTON_HID,    0},
+ 	{"", 0},
+ };
+ MODULE_DEVICE_TABLE(acpi, surface_button_device_ids);
 -- 
-1.8.5.2 (Apple Git-48)
+2.7.0
