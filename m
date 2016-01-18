@@ -1,78 +1,67 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH 2/2] acer-wmi: Use acpi_dev_present()
-Date: Mon, 18 Jan 2016 11:48:43 +0800
-Message-ID: <20160118034843.GD9328@linux-rxt1.site>
-References: <cover.1453060661.git.lukas@wunner.de>
- <0ba4ef20f869501875e0815f34e5defa70fe0a03.1453060661.git.lukas@wunner.de>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 01/14] dell-laptop: extract SMBIOS-related code to a
+ separate module
+Date: Mon, 18 Jan 2016 11:34:32 +0100
+Message-ID: <20160118103432.GA2444@eudyptula.hq.kempniu.pl>
+References: <1452607380-20861-1-git-send-email-kernel@kempniu.pl>
+ <1452607380-20861-2-git-send-email-kernel@kempniu.pl>
+ <20160116151922.GA5060@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.nue.novell.com ([195.135.221.5]:43748 "EHLO
-	smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751281AbcARDs7 (ORCPT
-	<rfc822;groupwise-platform-driver-x86@vger.kernel.org:0:0>);
-	Sun, 17 Jan 2016 22:48:59 -0500
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0ba4ef20f869501875e0815f34e5defa70fe0a03.1453060661.git.lukas@wunner.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20160116151922.GA5060@pali>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Alex Hung <alex.hung@canonical.com>, platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Lukas,
+Hi Pali,
 
-On Sun, Jan 17, 2016 at 09:49:41PM +0100, Lukas Wunner wrote:
-> Use shiny new acpi_dev_present() and remove all the boilerplate
-> to search for a particular ACPI device. No functional change.
-> Cf. 2d12b6b381ba ("ACPI / utils: Add acpi_dev_present()").
-> 
-> Cc: Lee, Chun-Yi <jlee@suse.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Acked-by: Darren Hart <dvhart@linux.intel.com>
+Thanks for taking a look.
 
-Reviewed-by: Lee, Chun-Yi <jlee@suse.com>
+> > +struct calling_interface_token {
+> > +	u16 tokenID;
+> > +	u16 location;
+> > +	union {
+> > +		u16 value;
+> > +		u16 stringlength;
+> > +	};
+> > +};
+>=20
+> After patch 12/14 you do not need to define this struct in header fil=
+e.
 
-Thanks a lot!
-Joey Lee
+dell_smbios_find_token() returns a struct calling_interface_token *,
+which can then be dereferenced by the caller.  See patch 13.
 
-> ---
->  drivers/platform/x86/acer-wmi.c | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 1062fa4..3deadd5 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -793,15 +793,6 @@ static acpi_status __init AMW0_find_mailled(void)
->  	return AE_OK;
->  }
->  
-> -static int AMW0_set_cap_acpi_check_device_found __initdata;
-> -
-> -static acpi_status __init AMW0_set_cap_acpi_check_device_cb(acpi_handle handle,
-> -	u32 level, void *context, void **retval)
-> -{
-> -	AMW0_set_cap_acpi_check_device_found = 1;
-> -	return AE_OK;
-> -}
-> -
->  static const struct acpi_device_id norfkill_ids[] __initconst = {
->  	{ "VPC2004", 0},
->  	{ "IBM0068", 0},
-> @@ -816,9 +807,10 @@ static int __init AMW0_set_cap_acpi_check_device(void)
->  	const struct acpi_device_id *id;
->  
->  	for (id = norfkill_ids; id->id[0]; id++)
-> -		acpi_get_devices(id->id, AMW0_set_cap_acpi_check_device_cb,
-> -				NULL, NULL);
-> -	return AMW0_set_cap_acpi_check_device_found;
-> +		if (acpi_dev_present(id->id))
-> +			return true;
-> +
-> +	return false;
->  }
->  
->  static acpi_status __init AMW0_set_capabilities(void)
-> -- 
-> 1.8.5.2 (Apple Git-48)
-> 
+> > +extern struct calling_interface_buffer *buffer;
+> > +extern struct calling_interface_token *da_tokens;
+>=20
+> Better hide this variable in dell-smbios.c code ...
+
+Patch 12 makes da_tokens static, but I believe you were referring to
+buffer.
+
+> > +void clear_buffer(void);
+> > +void get_buffer(void);
+> > +void release_buffer(void);
+>=20
+> ... and let those functions to get parameter to buffer.
+>=20
+> E.g. get_buffer will return buffer and other two functions will take
+> buffer parameter.
+
+You're right.  My original approach looked tempting because it reduces
+the amount of changes required in dell-laptop, but on second thought, i=
+t
+_assumes_ that users of this API would play nicely with the SMBIOS
+buffer while your way _enforces_ it.
+
+I will prepare a v2 including this suggestion within the next couple of
+days.
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
