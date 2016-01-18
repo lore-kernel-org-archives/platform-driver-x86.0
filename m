@@ -1,60 +1,51 @@
 From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v2 2/3] dell-wmi: Fix hotkey table size check
-Date: Mon, 18 Jan 2016 12:59:39 -0800
-Message-ID: <0282cf1f0c15ae9006b119dd92bfb4bad2e924a7.1453150613.git.luto@kernel.org>
+Subject: [PATCH v2 3/3] dmi: Make dmi_walk and dmi_walk_early return real error codes
+Date: Mon, 18 Jan 2016 12:59:40 -0800
+Message-ID: <9d1eb8634669ef09334c7e792eb21f20b320a07b.1453150613.git.luto@kernel.org>
 References: <cover.1453150613.git.luto@kernel.org>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:47192 "EHLO mail.kernel.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932164AbcARU7s (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Jan 2016 15:59:48 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1453150613.git.luto@kernel.org>
 In-Reply-To: <cover.1453150613.git.luto@kernel.org>
 References: <cover.1453150613.git.luto@kernel.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
 Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-The minimum size of the table is 4, not 6.  Replace the hard-coded
-number with a sizeof expression.  While we're at it, repace the
-hard-coded 4 below as well.
+Currently they return -1 on error, which will confuse callers if
+they try to interpret it as a normal negative error code.
 
-Reported-by: Jean Delvare <jdelvare@suse.de>
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/platform/x86/dell-wmi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/firmware/dmi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 5c0d037fcd40..48838942d593 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -111,7 +111,6 @@ struct dell_bios_keymap_entry {
- struct dell_bios_hotkey_table {
- 	struct dmi_header header;
- 	struct dell_bios_keymap_entry keymap[];
--
- };
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 0e08e665f715..451ac04ed18d 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -144,7 +144,7 @@ static int __init dmi_walk_early(void (*decode)(const struct dmi_header *,
  
- struct dell_dmi_results {
-@@ -329,12 +328,14 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
- 	if (results->err || results->keymap)
- 		return;		/* We already found the hotkey table. */
+ 	buf = dmi_early_remap(dmi_base, orig_dmi_len);
+ 	if (buf == NULL)
+-		return -1;
++		return -ENOMEM;
  
--	if (dm->type != 0xb2 || dm->length <= 6)
-+	if (dm->type != 0xb2 ||
-+	    dm->length <= sizeof(struct dell_bios_hotkey_table))
- 		return;
+ 	dmi_decode_table(buf, decode, NULL);
  
- 	table = container_of(dm, struct dell_bios_hotkey_table, header);
+@@ -978,11 +978,11 @@ int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+ 	u8 *buf;
  
--	hotkey_num = (table->header.length - 4) /
-+	hotkey_num = (table->header.length -
-+		      sizeof(struct dell_bios_hotkey_table)) /
- 				sizeof(struct dell_bios_keymap_entry);
+ 	if (!dmi_available)
+-		return -1;
++		return -ENOENT;
  
- 	keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
+ 	buf = dmi_remap(dmi_base, dmi_len);
+ 	if (buf == NULL)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	dmi_decode_table(buf, decode, private_data);
+ 
 -- 
 2.5.0
