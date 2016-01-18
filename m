@@ -1,54 +1,36 @@
-From: Josh Boyer <jwboyer@fedoraproject.org>
-Subject: [PATCH] ideapad-laptop: Add Lenovo Yoga 700 to no_hw_rfkill dmi list
-Date: Mon, 18 Jan 2016 14:32:53 -0500
-Message-ID: <1453145573-15600-1-git-send-email-jwboyer@fedoraproject.org>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 0/3] dell-wmi: DMI misuse fixes
+Date: Mon, 18 Jan 2016 12:59:37 -0800
+Message-ID: <cover.1453150613.git.luto@kernel.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-yk0-f176.google.com ([209.85.160.176]:34845 "EHLO
-	mail-yk0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754270AbcARTdF (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:47132 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932164AbcARU7o (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Mon, 18 Jan 2016 14:33:05 -0500
+	Mon, 18 Jan 2016 15:59:44 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-Like the Yoga 900 models the Lenovo Yoga 700 does not have a
-hw rfkill switch, and trying to read the hw rfkill switch through the
-ideapad module causes it to always reported blocking breaking wifi.
+Darren, patches 1 and 2 are for platform-drivers-x86, assuming that
+people like them when reviewed.  They're probably 4.5 material, since
+they fix a real bug, even if it's hard to trigger.
 
-This commit adds the Lenovo Yoga 700 to the no_hw_rfkill dmi list, fixing
-the wifi breakage.
+Jean, patch 3 is for you if you like it.
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1295272
-Tested-by: <dinyar.rabady+spam@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
----
+Changes from v1:
+ - Patch 1 has minor tweaks from Jean.
+ - Patches 2 and 3 are new.
 
-This applies to the for-next branch of the platform-x86-drivers tree
+Andy Lutomirski (3):
+  dell-wmi: Stop storing pointers to DMI tables
+  dell-wmi: Fix hotkey table size check
+  dmi: Make dmi_walk and dmi_walk_early return real error codes
 
+ drivers/firmware/dmi_scan.c     |  6 ++--
+ drivers/platform/x86/dell-wmi.c | 71 +++++++++++++++++++++++++----------------
+ 2 files changed, 46 insertions(+), 31 deletions(-)
 
- drivers/platform/x86/ideapad-laptop.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index d28db0e793df..51178626305d 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -900,6 +900,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		},
- 	},
- 	{
-+		.ident = "Lenogo Yoga 700",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 700"),
-+		},
-+	},
-+	{
- 		.ident = "Lenovo Yoga 900",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
 -- 
 2.5.0
