@@ -1,161 +1,76 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v4] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-Date: Tue, 19 Jan 2016 15:07:47 -0800
-Message-ID: <a343d7d11816d86d04c51505f6e33c5b99086ff6.1453244706.git.luto@kernel.org>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>, Andy Lutomirski <luto@kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v2 3/3] dmi: Make dmi_walk and dmi_walk_early return real
+ error codes
+Date: Tue, 19 Jan 2016 15:51:49 -0800
+Message-ID: <CALCETrWXE1aG+q4aXx99X7kh6r7_dm6PuuUPfEiju7JZo7xgnQ@mail.gmail.com>
+References: <cover.1453150613.git.luto@kernel.org> <9d1eb8634669ef09334c7e792eb21f20b320a07b.1453150613.git.luto@kernel.org>
+ <20160119085426.7d4b1f8b@endymion.delvare> <20160119083633.GD7192@pali>
+ <20160119100303.73cf6256@endymion.delvare> <20160119090736.GF7192@pali> <20160119104051.21d8e2ac@endymion.delvare>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-ob0-f180.google.com ([209.85.214.180]:35538 "EHLO
+	mail-ob0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754295AbcASXwJ convert rfc822-to-8bit (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Tue, 19 Jan 2016 18:52:09 -0500
+Received: by mail-ob0-f180.google.com with SMTP id py5so233282035obc.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2016 15:52:09 -0800 (PST)
+In-Reply-To: <20160119104051.21d8e2ac@endymion.delvare>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-The XPS 13 9350 sends WMI keypress events that aren't enumerated in
-the DMI table.  Add a table listing them.  To avoid breaking things
-that worked before, these un-enumerated hotkeys won't be used if the
-DMI table maps them to something else.
+On Tue, Jan 19, 2016 at 1:40 AM, Jean Delvare <jdelvare@suse.de> wrote:
+> On Tue, 19 Jan 2016 10:07:36 +0100, Pali Roh=C3=A1r wrote:
+>> On Tuesday 19 January 2016 10:03:03 Jean Delvare wrote:
+>> > Hi Pali,
+>> >
+>> > On Tue, 19 Jan 2016 09:36:33 +0100, Pali Roh=C3=A1r wrote:
+>> > > On Tuesday 19 January 2016 08:54:26 Jean Delvare wrote:
+>> > > > > @@ -978,11 +978,11 @@ int dmi_walk(void (*decode)(const stru=
+ct dmi_header *, void *),
+>> > > > >       u8 *buf;
+>> > > > >
+>> > > > >       if (!dmi_available)
+>> > > > > -             return -1;
+>> > > > > +             return -ENOENT;
+>> > > >
+>> > > > -ENOSYS would seem more appropriate?
+>> > >
+>> > > IIRC -ENOSYS is for non implemented syscalls.
+>> >
+>> > I can see a lot of -ENOSYS in include/linux/*.h returned by stubs =
+when
+>> > a specific subsystem is not included. Not related to syscalls at a=
+ll.
+>> > This is what lead to my suggestion.
+>>
+>> https://lkml.org/lkml/2014/8/22/492
+>
+> Thanks for the pointer, I wasn't aware of that.
+>
+> It really should be documented. No, checkpatch.pl isn't documentation=
+=2E
+>
+> Also the commit sadly doesn't say why using ENOSYS in other contexts =
+is
+> considered a bad thing. What actual trouble did it cause?
 
-FWIW, it appears that the DMI table may be a legacy thing and we
-might want to rethink how we handle events in general.  As an
-example, a whole lot of things map to KEY_PROG3 via the DMI table.
+The trouble is that user code likes to assume that, when a syscall
+returns -ENOSYS, that syscall isn't implemented.  Letting ENOSYS leak
+out to userspace via a syscall that *is* implemented can confused
+things.
 
-So far, this doesn't send keypress events for any of the new
-events.  Depnding on whether we figure out exactly what needs to
-happen to get the wireless button working in time for Linux 4.5,
-we might want to temporarily handle it in dell-wmi.
+>
+> Are the current presumably incorrect uses of ENOSYS ultimately going =
+to
+> be fixed? If not, I see no point in preventing other use cases.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
+We at least want to prevent it from newly introduced syscalls.
 
-This applies after the dmi-walk fix.
+I'll try to clean up the docs.
 
-Notes:
-    Changes from v3:
-     - Rebase in top of interface version stuff.  (This changes context
-       but not any diff lines.)
-    Changes from v2:
-     - Factor check for already-known scancodes into a helper.
-     - Un-abbreviate comments.
-     - Fix off-by-one.
-     - Rebase on top of of dmi_walk fixes.
-    
-    Changes from v1:
-     - The new hotkey code matches reality better.
-     - Don't send key events for the new hotkeys.
-
-drivers/platform/x86/dell-wmi.c | 71 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 64 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 3e30f77b70e1..afb7150bf2c1 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -168,6 +168,30 @@ static const u16 bios_to_linux_keycode[256] __initconst = {
- 	[255]	= KEY_PROG3,
- };
- 
-+/*
-+ * These are applied if the 0xB2 DMI hotkey table is present and doesn't
-+ * override them.
-+ */
-+static const struct key_entry dell_wmi_extra_keymap[] __initconst = {
-+	/* Fn-lock */
-+	{ KE_IGNORE, 0x151, { KEY_RESERVED } },
-+
-+	/* Change keyboard illumination */
-+	{ KE_IGNORE, 0x152, { KEY_KBDILLUMTOGGLE } },
-+
-+	/*
-+	 * Radio disable (notify only -- there is no model for which the
-+	 * WMI event is supposed to trigger an action).
-+	 */
-+	{ KE_IGNORE, 0x153, { KEY_RFKILL } },
-+
-+	/* RGB keyboard backlight control */
-+	{ KE_IGNORE, 0x154, { KEY_RESERVED } },
-+
-+	/* Stealth mode toggle */
-+	{ KE_IGNORE, 0x155, { KEY_RESERVED } },
-+};
-+
- static struct input_dev *dell_wmi_input_dev;
- 
- static void dell_wmi_process_key(int reported_key)
-@@ -339,13 +363,27 @@ static void dell_wmi_notify(u32 value, void *context)
- 	kfree(obj);
- }
- 
-+static bool have_scancode(u32 scancode, const struct key_entry *keymap, int len)
-+{
-+	int i;
-+
-+	for (i = 0; i < len; i++)
-+		if (keymap[i].code == scancode)
-+			return true;
-+
-+	return false;
-+}
-+
- static void __init handle_dmi_entry(const struct dmi_header *dm,
-+
- 				    void *opaque)
-+
- {
- 	struct dell_dmi_results *results = opaque;
- 	struct dell_bios_hotkey_table *table;
-+	int hotkey_num, i, pos = 0;
- 	struct key_entry *keymap;
--	int hotkey_num, i;
-+	int num_bios_keys;
- 
- 	if (results->err || results->keymap)
- 		return;		/* We already found the hotkey table. */
-@@ -369,7 +407,8 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
- 		return;
- 	}
- 
--	keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
-+	keymap = kcalloc(hotkey_num + ARRAY_SIZE(dell_wmi_extra_keymap) + 1,
-+			 sizeof(struct key_entry), GFP_KERNEL);
- 	if (!keymap) {
- 		results->err = -ENOMEM;
- 		return;
-@@ -397,14 +436,32 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
- 		}
- 
- 		if (keycode == KEY_KBDILLUMTOGGLE)
--			keymap[i].type = KE_IGNORE;
-+			keymap[pos].type = KE_IGNORE;
- 		else
--			keymap[i].type = KE_KEY;
--		keymap[i].code = bios_entry->scancode;
--		keymap[i].keycode = keycode;
-+			keymap[pos].type = KE_KEY;
-+		keymap[pos].code = bios_entry->scancode;
-+		keymap[pos].keycode = keycode;
-+
-+		pos++;
-+	}
-+
-+	num_bios_keys = pos;
-+
-+	for (i = 0; i < ARRAY_SIZE(dell_wmi_extra_keymap); i++) {
-+		const struct key_entry *entry = &dell_wmi_extra_keymap[i];
-+
-+		/*
-+		 * Check if we've already found this scancode.  This takes
-+		 * quadratic time, but it doesn't matter unless the list
-+		 * of extra keys gets very long.
-+		 */
-+		if (!have_scancode(entry->code, keymap, num_bios_keys)) {
-+			keymap[pos] = *entry;
-+			pos++;
-+		}
- 	}
- 
--	keymap[hotkey_num].type = KE_END;
-+	keymap[pos].type = KE_END;
- 
- 	results->keymap = keymap;
- }
--- 
-2.5.0
-
+--Andy
