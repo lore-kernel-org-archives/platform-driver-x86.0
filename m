@@ -1,76 +1,85 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 3/3] dmi: Make dmi_walk and dmi_walk_early return real
- error codes
-Date: Tue, 19 Jan 2016 15:51:49 -0800
-Message-ID: <CALCETrWXE1aG+q4aXx99X7kh6r7_dm6PuuUPfEiju7JZo7xgnQ@mail.gmail.com>
-References: <cover.1453150613.git.luto@kernel.org> <9d1eb8634669ef09334c7e792eb21f20b320a07b.1453150613.git.luto@kernel.org>
- <20160119085426.7d4b1f8b@endymion.delvare> <20160119083633.GD7192@pali>
- <20160119100303.73cf6256@endymion.delvare> <20160119090736.GF7192@pali> <20160119104051.21d8e2ac@endymion.delvare>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v3] dmi: Make dmi_walk and dmi_walk_early return real error codes
+Date: Tue, 19 Jan 2016 15:54:46 -0800
+Message-ID: <0e75e48f9944d14ed914342a4780c199095ad747.1453247603.git.luto@kernel.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f180.google.com ([209.85.214.180]:35538 "EHLO
-	mail-ob0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754295AbcASXwJ convert rfc822-to-8bit (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:43999 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757993AbcASXyu (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Jan 2016 18:52:09 -0500
-Received: by mail-ob0-f180.google.com with SMTP id py5so233282035obc.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2016 15:52:09 -0800 (PST)
-In-Reply-To: <20160119104051.21d8e2ac@endymion.delvare>
+	Tue, 19 Jan 2016 18:54:50 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-On Tue, Jan 19, 2016 at 1:40 AM, Jean Delvare <jdelvare@suse.de> wrote:
-> On Tue, 19 Jan 2016 10:07:36 +0100, Pali Roh=C3=A1r wrote:
->> On Tuesday 19 January 2016 10:03:03 Jean Delvare wrote:
->> > Hi Pali,
->> >
->> > On Tue, 19 Jan 2016 09:36:33 +0100, Pali Roh=C3=A1r wrote:
->> > > On Tuesday 19 January 2016 08:54:26 Jean Delvare wrote:
->> > > > > @@ -978,11 +978,11 @@ int dmi_walk(void (*decode)(const stru=
-ct dmi_header *, void *),
->> > > > >       u8 *buf;
->> > > > >
->> > > > >       if (!dmi_available)
->> > > > > -             return -1;
->> > > > > +             return -ENOENT;
->> > > >
->> > > > -ENOSYS would seem more appropriate?
->> > >
->> > > IIRC -ENOSYS is for non implemented syscalls.
->> >
->> > I can see a lot of -ENOSYS in include/linux/*.h returned by stubs =
-when
->> > a specific subsystem is not included. Not related to syscalls at a=
-ll.
->> > This is what lead to my suggestion.
->>
->> https://lkml.org/lkml/2014/8/22/492
->
-> Thanks for the pointer, I wasn't aware of that.
->
-> It really should be documented. No, checkpatch.pl isn't documentation=
-=2E
->
-> Also the commit sadly doesn't say why using ENOSYS in other contexts =
-is
-> considered a bad thing. What actual trouble did it cause?
+Currently they return -1 on error, which will confuse callers if
+they try to interpret it as a normal negative error code.
 
-The trouble is that user code likes to assume that, when a syscall
-returns -ENOSYS, that syscall isn't implemented.  Letting ENOSYS leak
-out to userspace via a syscall that *is* implemented can confused
-things.
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
 
->
-> Are the current presumably incorrect uses of ENOSYS ultimately going =
-to
-> be fixed? If not, I see no point in preventing other use cases.
+Changes from v3:
+ - Split out from the series it was in.
+ - Use -ENXIO for "there's no DMI".
+ - Also fix docs and !DMI case.
 
-We at least want to prevent it from newly introduced syscalls.
+Changes from v2:
+ - Total rewrite.
 
-I'll try to clean up the docs.
+drivers/firmware/dmi_scan.c | 9 +++++----
+ include/linux/dmi.h         | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---Andy
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 0e08e665f715..0418fed261bb 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -144,7 +144,7 @@ static int __init dmi_walk_early(void (*decode)(const struct dmi_header *,
+ 
+ 	buf = dmi_early_remap(dmi_base, orig_dmi_len);
+ 	if (buf == NULL)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	dmi_decode_table(buf, decode, NULL);
+ 
+@@ -970,7 +970,8 @@ EXPORT_SYMBOL(dmi_get_date);
+  *	@decode: Callback function
+  *	@private_data: Private data to be passed to the callback function
+  *
+- *	Returns -1 when the DMI table can't be reached, 0 on success.
++ *	Returns 0 on success, -ENXIO if DMI is not selected or not present,
++ *	or a different negative error code if DMI walking fails.
+  */
+ int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+ 	     void *private_data)
+@@ -978,11 +979,11 @@ int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+ 	u8 *buf;
+ 
+ 	if (!dmi_available)
+-		return -1;
++		return -ENOENT;
+ 
+ 	buf = dmi_remap(dmi_base, dmi_len);
+ 	if (buf == NULL)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	dmi_decode_table(buf, decode, private_data);
+ 
+diff --git a/include/linux/dmi.h b/include/linux/dmi.h
+index 5055ac34142d..770d548e9a9d 100644
+--- a/include/linux/dmi.h
++++ b/include/linux/dmi.h
+@@ -135,7 +135,7 @@ static inline int dmi_name_in_vendors(const char *s) { return 0; }
+ static inline int dmi_name_in_serial(const char *s) { return 0; }
+ #define dmi_available 0
+ static inline int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+-	void *private_data) { return -1; }
++	void *private_data) { return -ENXIO; }
+ static inline bool dmi_match(enum dmi_field f, const char *str)
+ 	{ return false; }
+ static inline void dmi_memdev_name(u16 handle, const char **bank,
+-- 
+2.5.0
