@@ -1,88 +1,38 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 2/3] dell-wmi: Fix hotkey table size check
-Date: Tue, 19 Jan 2016 10:42:05 -0800
-Message-ID: <CALCETrXheMKeQ_s4wAopk_Jcv-CwJCVrksoKdeuPDF7tsyCpFA@mail.gmail.com>
-References: <cover.1453150613.git.luto@kernel.org> <0282cf1f0c15ae9006b119dd92bfb4bad2e924a7.1453150613.git.luto@kernel.org>
- <20160119093146.28aa10e1@endymion.delvare>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v3 0/3] dell-wmi: DMI misuse fixes
+Date: Tue, 19 Jan 2016 11:07:23 -0800
+Message-ID: <cover.1453229127.git.luto@kernel.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f173.google.com ([209.85.214.173]:32883 "EHLO
-	mail-ob0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932840AbcASSm0 (ORCPT
+Received: from mail.kernel.org ([198.145.29.136]:58891 "EHLO mail.kernel.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1756789AbcASTHd (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Jan 2016 13:42:26 -0500
-Received: by mail-ob0-f173.google.com with SMTP id is5so194600927obc.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2016 10:42:25 -0800 (PST)
-In-Reply-To: <20160119093146.28aa10e1@endymion.delvare>
+	Tue, 19 Jan 2016 14:07:33 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-On Tue, Jan 19, 2016 at 12:31 AM, Jean Delvare <jdelvare@suse.de> wrote:
-> Hi Andy,
->
-> On Mon, 18 Jan 2016 12:59:39 -0800, Andy Lutomirski wrote:
->> The minimum size of the table is 4, not 6.  Replace the hard-coded
->> number with a sizeof expression.  While we're at it, repace the
->> hard-coded 4 below as well.
->>
->> Reported-by: Jean Delvare <jdelvare@suse.de>
->> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->> ---
->>  drivers/platform/x86/dell-wmi.c | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
->> index 5c0d037fcd40..48838942d593 100644
->> --- a/drivers/platform/x86/dell-wmi.c
->> +++ b/drivers/platform/x86/dell-wmi.c
->> @@ -111,7 +111,6 @@ struct dell_bios_keymap_entry {
->>  struct dell_bios_hotkey_table {
->>       struct dmi_header header;
->>       struct dell_bios_keymap_entry keymap[];
->> -
->>  };
->>
->>  struct dell_dmi_results {
->
-> Nice cleanup but in general we recommend to not mix style cleanups with
-> functional changes. If you want to clean up dell-wmi you could do it in
-> a separate patch and maybe include the fixes suggested by checkpatch.pl
-> -f.
+This may all be 4.5 material.
 
-/me sheepishly puts the newline back in.
+Changes from v2:
+ - Dropped the dmi_walk return value change.  I'll resend it separately.
+ - Rewrite the hotkey_num change
+ - Add the select DMI patch.
+ - Fix patch 1 error handling.
 
->
->> @@ -329,12 +328,14 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
->>       if (results->err || results->keymap)
->>               return;         /* We already found the hotkey table. */
->>
->> -     if (dm->type != 0xb2 || dm->length <= 6)
->> +     if (dm->type != 0xb2 ||
->> +         dm->length <= sizeof(struct dell_bios_hotkey_table))
->>               return;
->
-> I'm confused. sizeof(struct dell_bios_hotkey_table) is 4. Given that
-> dm->length is guaranteed to be at least 4 per the SMBIOS specification,
-> you are really only testing that dm->length != 4. Which means you are
-> still accepting 5, 6 and 7, even though they would lead to hotkey_num =
-> 0 below.
->
-> If the purpose of this check is only to guarantee that the container_of
-> below is valid then you should check for dm->length < sizeof(struct
-> dell_bios_hotkey_table) (not <=.) This is still useless in practice but
-> I can understand and accept it because it is conceptually correct.
->
-> OTOH if the purpose of the check is to ensure that there is at least
-> one hotkey, you should check for dm->length < sizeof(struct
-> dell_bios_hotkey_table) + sizeof(struct dell_bios_keymap_entry)
-> instead. hotkey_num could also be checked separately below but it is
-> more efficient to have a single test.
+Changes from v1:
+ - Patch 1 has minor tweaks from Jean.
+ - Patches 2 and 3 are new.
+ 
+Andy Lutomirski (3):
+  dell-wmi: Stop storing pointers to DMI tables
+  dell-wmi, dell-laptop: select DMI
+  dell-wmi: Clean up hotkey table size check
 
-I think the check is just to see if the buffer is big enough, but
-maybe there's history here, and I don't want to be the old to break
-ancient laptops for the sake of a cleanup.  Let me try this again.
+ drivers/platform/x86/Kconfig    |  2 +
+ drivers/platform/x86/dell-wmi.c | 85 +++++++++++++++++++++++++++--------------
+ 2 files changed, 59 insertions(+), 28 deletions(-)
 
---Andy
+-- 
+2.5.0
