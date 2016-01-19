@@ -1,14 +1,14 @@
 From: Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH v3 1/3] dell-wmi: Stop storing pointers to DMI tables
-Date: Tue, 19 Jan 2016 11:07:24 -0800
-Message-ID: <4928c77e3558e97c4731f30c8321c261a7e814c2.1453229127.git.luto@kernel.org>
+Subject: [PATCH v3 3/3] dell-wmi: Clean up hotkey table size check
+Date: Tue, 19 Jan 2016 11:07:26 -0800
+Message-ID: <d5bc1864a695ba892a2657f559261fc5ec25ee31.1453229127.git.luto@kernel.org>
 References: <cover.1453229127.git.luto@kernel.org>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail.kernel.org ([198.145.29.136]:58906 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.136]:58933 "EHLO mail.kernel.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757453AbcASTHf (ORCPT
+	id S1757462AbcASTHg (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Tue, 19 Jan 2016 14:07:35 -0500
+	Tue, 19 Jan 2016 14:07:36 -0500
 In-Reply-To: <cover.1453229127.git.luto@kernel.org>
 In-Reply-To: <cover.1453229127.git.luto@kernel.org>
 References: <cover.1453229127.git.luto@kernel.org>
@@ -17,165 +17,54 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
 Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
 
-The dmi_walk function maps the DMI table, walks it, and unmaps it.
-This means that the dell_bios_hotkey_table that find_hk_type stores
-points to unmapped memory by the time it gets read.
+Checking the table for a minimum size of 7 bytes makes no sense: any valid
+hotkey table has a size that's a multiple of 4.
 
-I've been able to trigger crashes caused by the stale pointer a
-couple of times, but never on a stock kernel.
+Clean this up: replace the hardcoded header length with a sizeof and
+change the check to ignore an empty hotkey table.  The only behavior
+change is that a 7-byte table (which is nonsensical) will now be
+treated as absent instead of as valid but empty.
 
-Fix it by generating the keymap in the dmi_walk callback instead of
-storing a pointer.
-
+Reported-by: Jean Delvare <jdelvare@suse.de>
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
 
 Changes from v2:
- - dmi_walk failure is no longer fatal (Jean)
+ - Total rewrite.
 
-Changes from v1:
- - Rename handle_dmi_table to handle_dmi_entry (Jean)
- - Remove useless assignment to results->err (Jean)
-
-drivers/platform/x86/dell-wmi.c | 74 +++++++++++++++++++++++++----------------
- 1 file changed, 46 insertions(+), 28 deletions(-)
+drivers/platform/x86/dell-wmi.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index b6f193b07566..5f5b321062a4 100644
+index 5f5b321062a4..ae1e643e3464 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -114,7 +114,10 @@ struct dell_bios_hotkey_table {
+@@ -329,13 +329,24 @@ static void __init handle_dmi_entry(const struct dmi_header *dm,
+ 	if (results->err || results->keymap)
+ 		return;		/* We already found the hotkey table. */
  
- };
+-	if (dm->type != 0xb2 || dm->length <= 6)
++	if (dm->type != 0xb2)
+ 		return;
  
--static const struct dell_bios_hotkey_table *dell_bios_hotkey_table;
-+struct dell_dmi_results {
-+	int err;
-+	struct key_entry *keymap;
-+};
+ 	table = container_of(dm, struct dell_bios_hotkey_table, header);
  
- /* Uninitialized entries here are KEY_RESERVED == 0. */
- static const u16 bios_to_linux_keycode[256] __initconst = {
-@@ -315,20 +318,34 @@ static void dell_wmi_notify(u32 value, void *context)
- 	kfree(obj);
- }
- 
--static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
-+static void __init handle_dmi_entry(const struct dmi_header *dm,
-+				    void *opaque)
- {
--	int hotkey_num = (dell_bios_hotkey_table->header.length - 4) /
--				sizeof(struct dell_bios_keymap_entry);
-+	struct dell_dmi_results *results = opaque;
-+	struct dell_bios_hotkey_table *table;
- 	struct key_entry *keymap;
--	int i;
-+	int hotkey_num, i;
-+
-+	if (results->err || results->keymap)
-+		return;		/* We already found the hotkey table. */
-+
-+	if (dm->type != 0xb2 || dm->length <= 6)
+-	hotkey_num = (table->header.length - 4) /
++	hotkey_num = (table->header.length -
++		      sizeof(struct dell_bios_hotkey_table)) /
+ 				sizeof(struct dell_bios_keymap_entry);
++	if (hotkey_num < 1) {
++		/*
++		 * Historically, dell-wmi would ignore a DMI entry of
++		 * fewer than 7 bytes.  Sizes between 4 and 8 bytes are
++		 * nonsensical (both the header and all entries are 4
++		 * bytes), so we approximate the old behavior by
++		 * ignoring tables with fewer than one entry.
++		 */
 +		return;
-+
-+	table = container_of(dm, struct dell_bios_hotkey_table, header);
-+
-+	hotkey_num = (table->header.length - 4) /
-+				sizeof(struct dell_bios_keymap_entry);
++	}
  
  	keymap = kcalloc(hotkey_num + 1, sizeof(struct key_entry), GFP_KERNEL);
--	if (!keymap)
--		return NULL;
-+	if (!keymap) {
-+		results->err = -ENOMEM;
-+		return;
-+	}
- 
- 	for (i = 0; i < hotkey_num; i++) {
- 		const struct dell_bios_keymap_entry *bios_entry =
--					&dell_bios_hotkey_table->keymap[i];
-+					&table->keymap[i];
- 
- 		/* Uninitialized entries are 0 aka KEY_RESERVED. */
- 		u16 keycode = (bios_entry->keycode <
-@@ -357,11 +374,12 @@ static const struct key_entry * __init dell_wmi_prepare_new_keymap(void)
- 
- 	keymap[hotkey_num].type = KE_END;
- 
--	return keymap;
-+	results->keymap = keymap;
- }
- 
- static int __init dell_wmi_input_setup(void)
- {
-+	struct dell_dmi_results dmi_results = {};
- 	int err;
- 
- 	dell_wmi_input_dev = input_allocate_device();
-@@ -372,20 +390,31 @@ static int __init dell_wmi_input_setup(void)
- 	dell_wmi_input_dev->phys = "wmi/input0";
- 	dell_wmi_input_dev->id.bustype = BUS_HOST;
- 
--	if (dell_new_hk_type) {
--		const struct key_entry *keymap = dell_wmi_prepare_new_keymap();
--		if (!keymap) {
--			err = -ENOMEM;
--			goto err_free_dev;
--		}
-+	if (dmi_walk(handle_dmi_entry, &dmi_results)) {
-+		/*
-+		 * Historically, dell-wmi ignored dmi_walk errors.  A failure
-+		 * is certainly surprising, but it probably just indicates
-+		 * a very old laptop.
-+		 */
-+		pr_warn("no DMI; using the old-style hotkey interface\n");
-+	}
-+
-+	if (dmi_results.err) {
-+		err = dmi_results.err;
-+		goto err_free_dev;
-+	}
-+
-+	if (dmi_results.keymap) {
-+		dell_new_hk_type = true;
- 
--		err = sparse_keymap_setup(dell_wmi_input_dev, keymap, NULL);
-+		err = sparse_keymap_setup(dell_wmi_input_dev,
-+					  dmi_results.keymap, NULL);
- 
- 		/*
- 		 * Sparse keymap library makes a copy of keymap so we
- 		 * don't need the original one that was allocated.
- 		 */
--		kfree(keymap);
-+		kfree(dmi_results.keymap);
- 	} else {
- 		err = sparse_keymap_setup(dell_wmi_input_dev,
- 					  dell_wmi_legacy_keymap, NULL);
-@@ -412,15 +441,6 @@ static void dell_wmi_input_destroy(void)
- 	input_unregister_device(dell_wmi_input_dev);
- }
- 
--static void __init find_hk_type(const struct dmi_header *dm, void *dummy)
--{
--	if (dm->type == 0xb2 && dm->length > 6) {
--		dell_new_hk_type = true;
--		dell_bios_hotkey_table =
--			container_of(dm, struct dell_bios_hotkey_table, header);
--	}
--}
--
- static int __init dell_wmi_init(void)
- {
- 	int err;
-@@ -431,8 +451,6 @@ static int __init dell_wmi_init(void)
- 		return -ENODEV;
- 	}
- 
--	dmi_walk(find_hk_type, NULL);
--
- 	err = dell_wmi_input_setup();
- 	if (err)
- 		return err;
+ 	if (!keymap) {
 -- 
 2.5.0
