@@ -1,55 +1,46 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v4] dell-wmi: Support new hotkeys on the XPS 13 9350 (Skylake)
-Date: Wed, 20 Jan 2016 12:46:23 -0800
-Message-ID: <CALCETrUqH7FLPyHasx020vyjZNtTdVSk+0LJKcGjXyj+iwE8Dw@mail.gmail.com>
-References: <a343d7d11816d86d04c51505f6e33c5b99086ff6.1453244706.git.luto@kernel.org>
- <20160120194050.GL7192@pali>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 4/4] platform:x86: Add Intel Telemetry Debugfs
+ interfaces
+Date: Wed, 20 Jan 2016 15:34:52 -0800
+Message-ID: <20160120164758.GD1979@malice.jf.intel.com>
+References: <1453269897-14601-1-git-send-email-souvik.k.chakravarty@intel.com>
+ <1453273246.22381.1.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-ob0-f175.google.com ([209.85.214.175]:36831 "EHLO
-	mail-ob0-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758365AbcATUqo convert rfc822-to-8bit (ORCPT
+Received: from bombadil.infradead.org ([198.137.202.9]:32869 "EHLO
+	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752516AbcATXez (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Wed, 20 Jan 2016 15:46:44 -0500
-Received: by mail-ob0-f175.google.com with SMTP id ba1so17761633obb.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Jan 2016 12:46:43 -0800 (PST)
-In-Reply-To: <20160120194050.GL7192@pali>
+	Wed, 20 Jan 2016 18:34:55 -0500
+Content-Disposition: inline
+In-Reply-To: <1453273246.22381.1.camel@perches.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Jon Eyolfson <jon@eyl.io>
+To: Joe Perches <joe@perches.com>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Jan 20, 2016 at 11:40 AM, Pali Roh=C3=A1r <pali.rohar@gmail.com=
-> wrote:
-> On Tuesday 19 January 2016 15:07:47 Andy Lutomirski wrote:
->> The XPS 13 9350 sends WMI keypress events that aren't enumerated in
->> the DMI table.  Add a table listing them.  To avoid breaking things
->> that worked before, these un-enumerated hotkeys won't be used if the
->> DMI table maps them to something else.
->>
->> FWIW, it appears that the DMI table may be a legacy thing and we
->> might want to rethink how we handle events in general.  As an
->> example, a whole lot of things map to KEY_PROG3 via the DMI table.
->>
->> So far, this doesn't send keypress events for any of the new
->> events.  Depnding on whether we figure out exactly what needs to
->> happen to get the wireless button working in time for Linux 4.5,
->> we might want to temporarily handle it in dell-wmi.
->>
->> Signed-off-by: Andy Lutomirski <luto@kernel.org>
->
-> Looks good,
->
-> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+On Tue, Jan 19, 2016 at 11:00:46PM -0800, Joe Perches wrote:
+> On Wed, 2016-01-20 at 11:34 +0530, Souvik Kumar Chakravarty wrote:
+> > This implements debugfs interfaces for reading the telemetry
+> > samples from SSRAM and configuring firmware trace verbosity.
+> []
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -5698,6 +5698,7 @@ S:	Maintained
+> > =A0F:	drivers/platform/x86/intel_telemetry_core.c
+> > =A0F:	arch/x86/include/asm/intel_telemetry.h
+> > =A0F:	drivers/platform/x86/intel_telemetry_pltdrv.c
+> > +F:	drivers/platform/x86/intel_telemetry_debugfs.c
+>=20
+> Maybe most of these should be deleted and
+> this should be a single entry:
+>=20
+> F:	drivers/platform/x86/intel_telemetry*
 
-Darren, if/when you apply this, can you fix up the last paragraph of
-the commit message?
+Indeed, thanks for catching that Joe.
 
-    This doesn't send keypress events for any of the new
-    events, as no models appear to require it.
-
-I wrote the old text before intel-hid landed.
-
---Andy
+--=20
+Darren Hart
+Intel Open Source Technology Center
