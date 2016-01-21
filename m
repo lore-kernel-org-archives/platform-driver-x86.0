@@ -1,39 +1,30 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 700 to no_hw_rfkill dmi
- list
-Date: Thu, 21 Jan 2016 13:52:51 -0800
-Message-ID: <20160121215251.GF1979@malice.jf.intel.com>
-References: <1453145573-15600-1-git-send-email-jwboyer@fedoraproject.org>
+Subject: Re: [PATCH] MAINTAINERS: Combine multiple telemetry entries
+Date: Thu, 21 Jan 2016 13:56:34 -0800
+Message-ID: <20160121215634.GG1979@malice.jf.intel.com>
+References: <1453348850-18866-1-git-send-email-souvik.k.chakravarty@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:53616 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.9]:55230 "EHLO
 	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752850AbcAUVwy (ORCPT
+	with ESMTP id S1752406AbcAUV4g (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Jan 2016 16:52:54 -0500
+	Thu, 21 Jan 2016 16:56:36 -0500
 Content-Disposition: inline
-In-Reply-To: <1453145573-15600-1-git-send-email-jwboyer@fedoraproject.org>
+In-Reply-To: <1453348850-18866-1-git-send-email-souvik.k.chakravarty@intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Josh Boyer <jwboyer@fedoraproject.org>
-Cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 02:32:53PM -0500, Josh Boyer wrote:
-> Like the Yoga 900 models the Lenovo Yoga 700 does not have a
-> hw rfkill switch, and trying to read the hw rfkill switch through the
-> ideapad module causes it to always reported blocking breaking wifi.
+On Thu, Jan 21, 2016 at 09:30:50AM +0530, Souvik Kumar Chakravarty wrote:
+> This patch combines all the telemetry file entries in MAINTAINERS via
+> wildcard.
 > 
-> This commit adds the Lenovo Yoga 700 to the no_hw_rfkill dmi list, fixing
-> the wifi breakage.
-> 
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1295272
-> Tested-by: <dinyar.rabady+spam@gmail.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+> Signed-off-by: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 
-Queued to testing, thank you.
-
+Thanks, queued.
 -- 
 Darren Hart
 Intel Open Source Technology Center
