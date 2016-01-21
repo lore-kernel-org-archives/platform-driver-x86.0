@@ -1,59 +1,57 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
- Vostro V131
-Date: Thu, 21 Jan 2016 14:44:25 +0100
-Message-ID: <20160121134425.GG7192@pali>
-References: <20151130211542.GE30553@malice.jf.intel.com>
- <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
- <20160111191226.GF10643@malice.jf.intel.com>
- <201601112107.43510@pali>
- <20160121090401.GR7192@pali>
- <20160121105203.GA4312@eudyptula.hq.kempniu.pl>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH] Remove logging for "Unsupported brightness interface"
+Date: Thu, 21 Jan 2016 11:54:43 -0200
+Message-ID: <1453384483.1258747.498568498.27762FC4@webmail.messagingengine.com>
+References: <CANpvso6S3jH0qYoPRmoNAc7sCsRd4UkosfzXFBAuLLUuZaPKCw@mail.gmail.com>
+ <CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f68.google.com ([74.125.82.68]:35976 "EHLO
-	mail-wm0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965064AbcAUNo2 (ORCPT
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52285 "EHLO
+	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1759566AbcAUNyo (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Jan 2016 08:44:28 -0500
-Content-Disposition: inline
-In-Reply-To: <20160121105203.GA4312@eudyptula.hq.kempniu.pl>
+	Thu, 21 Jan 2016 08:54:44 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 39C752095E
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jan 2016 08:54:44 -0500 (EST)
+In-Reply-To: <CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>
+To: Eric Curtin <ericcurtin17@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, ibm-acpi@hmh.eng.br, Kernel development list <linux-kernel@vger.kernel.org>
 
-On Thursday 21 January 2016 11:52:03 Micha=C5=82 K=C4=99pie=C5=84 wrote=
-:
-> > Micha=C5=82, can you prepare new (v3) version of this patch? Now re=
-quired
-> > acpi video changes are included and so dell-wmi changes should go t=
-o...
-> > To finally fix this keypress bug on Dell Vostro V131 machine.
->=20
-> I keep this on my to-do list, but the updated patch will depend on th=
-e
-> final version of the SMBIOS API rework, so I guess there is little po=
-int
-> in posting it now as that API is subject to change.  But rest assured
-> that as soon as the final version of the API rework series (which I h=
-ave
-> yet to prepare, of course) gets applied by Darren, I will post a v3 o=
-f
-> this patch - after all, it is the very reason I am working on the API
-> rework.
+On Thu, Jan 21, 2016, at 09:18, Eric Curtin wrote:
+> On 16 January 2016 at 23:43, Eric Curtin <ericcurtin17@gmail.com> wrote:
+> > Message gets logged on machines that are well supported.
+> > Fixed one checkpatch.pl ERROR also.
+> >
+> > Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
+> > ---
+> >  drivers/platform/x86/thinkpad_acpi.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c
+> > b/drivers/platform/x86/thinkpad_acpi.c
+> > index 0bed473..b149dec 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> > @@ -6434,7 +6434,7 @@ static const struct tpacpi_quirk
+> > brightness_quirk_table[] __initconst = {
+> >   */
+> >  static void __init tpacpi_detect_brightness_capabilities(void)
+> >  {
+> > - unsigned int b;
+> > + const unsigned int b = tpacpi_check_std_acpi_brightness_support();
 
-There is still need to patch dell-wmi.c? And this change does not depen=
-d
-on another SMBIOS change (in dell-laptop), right?
+This unrelated change can have side-effects, and I didn't stop to look
+at the code yet to know if it is desired.  Regardless, it should be in a
+separate patch anyway as it has nothing to do with the removal of the
+log message, so please drop it.
 
-I still have in my mind some changes for dell-wmi.c code but I'm waitin=
-g
-until all other changes for dell-wmi.c will be merged to prevent
-conflicts and needed rebase.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+-- 
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
+  Henrique Holschuh
