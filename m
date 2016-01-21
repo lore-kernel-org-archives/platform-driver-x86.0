@@ -1,57 +1,93 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH] Remove logging for "Unsupported brightness interface"
-Date: Thu, 21 Jan 2016 11:54:43 -0200
-Message-ID: <1453384483.1258747.498568498.27762FC4@webmail.messagingengine.com>
-References: <CANpvso6S3jH0qYoPRmoNAc7sCsRd4UkosfzXFBAuLLUuZaPKCw@mail.gmail.com>
- <CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
+ Vostro V131
+Date: Thu, 21 Jan 2016 15:56:12 +0100
+Message-ID: <20160121145612.GA4684@eudyptula.hq.kempniu.pl>
+References: <20151130211542.GE30553@malice.jf.intel.com>
+ <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
+ <20160111191226.GF10643@malice.jf.intel.com>
+ <201601112107.43510@pali>
+ <20160121090401.GR7192@pali>
+ <20160121105203.GA4312@eudyptula.hq.kempniu.pl>
+ <20160121134425.GG7192@pali>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52285 "EHLO
-	out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1759566AbcAUNyo (ORCPT
-	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Jan 2016 08:54:44 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 39C752095E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 Jan 2016 08:54:44 -0500 (EST)
-In-Reply-To: <CANpvso4NpQgTj2x-65PxXw3VEY2rMiMpP+qT2Xjbx9q_n1g0zg@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Eric Curtin <ericcurtin17@gmail.com>, platform-driver-x86@vger.kernel.org
-Cc: ibm-acpi-devel@lists.sourceforge.net, Darren Hart <dvhart@infradead.org>, ibm-acpi@hmh.eng.br, Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160121134425.GG7192@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 21, 2016, at 09:18, Eric Curtin wrote:
-> On 16 January 2016 at 23:43, Eric Curtin <ericcurtin17@gmail.com> wrote:
-> > Message gets logged on machines that are well supported.
-> > Fixed one checkpatch.pl ERROR also.
-> >
-> > Signed-off-by: Eric Curtin <ericcurtin17@gmail.com>
-> > ---
-> >  drivers/platform/x86/thinkpad_acpi.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/thinkpad_acpi.c
-> > b/drivers/platform/x86/thinkpad_acpi.c
-> > index 0bed473..b149dec 100644
-> > --- a/drivers/platform/x86/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/thinkpad_acpi.c
-> > @@ -6434,7 +6434,7 @@ static const struct tpacpi_quirk
-> > brightness_quirk_table[] __initconst = {
-> >   */
-> >  static void __init tpacpi_detect_brightness_capabilities(void)
-> >  {
-> > - unsigned int b;
-> > + const unsigned int b = tpacpi_check_std_acpi_brightness_support();
+> > > Micha=C5=82, can you prepare new (v3) version of this patch? Now =
+required
+> > > acpi video changes are included and so dell-wmi changes should go=
+ to...
+> > > To finally fix this keypress bug on Dell Vostro V131 machine.
+> >=20
+> > I keep this on my to-do list, but the updated patch will depend on =
+the
+> > final version of the SMBIOS API rework, so I guess there is little =
+point
+> > in posting it now as that API is subject to change.  But rest assur=
+ed
+> > that as soon as the final version of the API rework series (which I=
+ have
+> > yet to prepare, of course) gets applied by Darren, I will post a v3=
+ of
+> > this patch - after all, it is the very reason I am working on the A=
+PI
+> > rework.
+>=20
+> There is still need to patch dell-wmi.c? And this change does not dep=
+end
+> on another SMBIOS change (in dell-laptop), right?
 
-This unrelated change can have side-effects, and I didn't stop to look
-at the code yet to know if it is desired.  Regardless, it should be in a
-separate patch anyway as it has nothing to do with the removal of the
-log message, so please drop it.
+Well, back in December, you wrote [1]:
 
--- 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
-  Henrique Holschuh
+> This patch is not enough for enabling 0xe025 key on that Vostro machi=
+ne.
+> Some extra SMBIOS call is needed, without them ACPI will not send WMI
+> keypress event.
+>=20
+> (...)
+>=20
+> Maybe now it could make sense to unify Dell SMBIOS API in kernel and
+> move common functions to one place and let drivers to use just common
+> functions. According to older Dell ACPI WMI documentation in DMI is b=
+it
+> which specify if BIOS support SMBIOS via WMI or not.
+>=20
+> At least I think this one patch should not be included into kernel un=
+til
+> there will be full support for 0xe025 key (adding that SMBIOS call).
+
+=46rom the above I understood that first you want to unify the Dell SMB=
+IOS
+API used throughout the kernel (that's currently in progress), so that
+it can then be used in dell-wmi as well to perform the SMBIOS call
+needed on the Vostro V131.
+
+If you want me to just rework the patch so that it doesn't introduce a
+quirk structure, I recalled another reason to use it after all: there
+are other Dell laptops which require the special SMI for enabling WMI
+events, but report the Dell Instant Launch Hotkey using a different WMI
+event code [2].  So I'd say that two separate issues should be fixed
+using DMI matching:
+
+  * whether the special SMBIOS call is required,
+  * whether the 0x0e25 event should be translated into a keypress.
+
+A quirk structure looks like an elegant way to deal with this.
+
+Could you please advise how you would like me to proceed with this?
+
+[1] http://www.spinics.net/lists/platform-driver-x86/msg07845.html
+[2] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1205791/commen=
+ts/12
+
+--=20
+Best regards,
+Micha=C5=82 K=C4=99pie=C5=84
