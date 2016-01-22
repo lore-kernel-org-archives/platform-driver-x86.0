@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH v2 14/16] dell-smbios: make da_tokens static
-Date: Fri, 22 Jan 2016 15:27:26 +0100
-Message-ID: <1453472848-3118-15-git-send-email-kernel@kempniu.pl>
+Subject: [PATCH v2 11/16] dell-laptop: use dell_smbios_find_token() instead of find_token_id()
+Date: Fri, 22 Jan 2016 15:27:23 +0100
+Message-ID: <1453472848-3118-12-git-send-email-kernel@kempniu.pl>
 References: <1453472848-3118-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,44 +13,86 @@ To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =
 Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-As dell-laptop has been changed to use dell_smbios_find_token() instead
-of directly accessing members of the da_tokens table, the latter can be
-marked static.
+Replace all uses of find_token_id() with dell_smbios_find_token() to
+avoid directly accessing the da_tokens table.
 
 Signed-off-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
 ---
- drivers/platform/x86/dell-smbios.c |    3 +--
- drivers/platform/x86/dell-smbios.h |    2 --
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ drivers/platform/x86/dell-laptop.c |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/=
-dell-smbios.c
-index e313c16..f68c434 100644
---- a/drivers/platform/x86/dell-smbios.c
-+++ b/drivers/platform/x86/dell-smbios.c
-@@ -36,8 +36,7 @@ static DEFINE_MUTEX(buffer_mutex);
- static int da_command_address;
- static int da_command_code;
- static int da_num_tokens;
--struct calling_interface_token *da_tokens;
--EXPORT_SYMBOL_GPL(da_tokens);
-+static struct calling_interface_token *da_tokens;
-=20
- struct calling_interface_buffer *dell_smbios_get_buffer(void)
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/=
+dell-laptop.c
+index 5b200f2..4d1694d 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -1326,19 +1326,19 @@ static int kbd_set_state_safe(struct kbd_state =
+*state, struct kbd_state *old)
+ static int kbd_set_token_bit(u8 bit)
  {
-diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/=
-dell-smbios.h
-index f17cf7b..4f69b16 100644
---- a/drivers/platform/x86/dell-smbios.h
-+++ b/drivers/platform/x86/dell-smbios.h
-@@ -35,8 +35,6 @@ struct calling_interface_token {
- 	};
- };
+ 	struct calling_interface_buffer *buffer;
+-	int id;
++	struct calling_interface_token *token;
+ 	int ret;
 =20
--extern struct calling_interface_token *da_tokens;
--
- struct calling_interface_buffer *dell_smbios_get_buffer(void);
- void dell_smbios_clear_buffer(void);
- void dell_smbios_release_buffer(void);
+ 	if (bit >=3D ARRAY_SIZE(kbd_tokens))
+ 		return -EINVAL;
+=20
+-	id =3D find_token_id(kbd_tokens[bit]);
+-	if (id =3D=3D -1)
++	token =3D dell_smbios_find_token(kbd_tokens[bit]);
++	if (!token)
+ 		return -EINVAL;
+=20
+ 	buffer =3D dell_smbios_get_buffer();
+-	buffer->input[0] =3D da_tokens[id].location;
+-	buffer->input[1] =3D da_tokens[id].value;
++	buffer->input[0] =3D token->location;
++	buffer->input[1] =3D token->value;
+ 	dell_smbios_send_request(1, 0);
+ 	ret =3D buffer->output[0];
+ 	dell_smbios_release_buffer();
+@@ -1349,19 +1349,19 @@ static int kbd_set_token_bit(u8 bit)
+ static int kbd_get_token_bit(u8 bit)
+ {
+ 	struct calling_interface_buffer *buffer;
+-	int id;
++	struct calling_interface_token *token;
+ 	int ret;
+ 	int val;
+=20
+ 	if (bit >=3D ARRAY_SIZE(kbd_tokens))
+ 		return -EINVAL;
+=20
+-	id =3D find_token_id(kbd_tokens[bit]);
+-	if (id =3D=3D -1)
++	token =3D dell_smbios_find_token(kbd_tokens[bit]);
++	if (!token)
+ 		return -EINVAL;
+=20
+ 	buffer =3D dell_smbios_get_buffer();
+-	buffer->input[0] =3D da_tokens[id].location;
++	buffer->input[0] =3D token->location;
+ 	dell_smbios_send_request(0, 0);
+ 	ret =3D buffer->output[0];
+ 	val =3D buffer->output[1];
+@@ -1370,7 +1370,7 @@ static int kbd_get_token_bit(u8 bit)
+ 	if (ret)
+ 		return dell_smi_error(ret);
+=20
+-	return (val =3D=3D da_tokens[id].value);
++	return (val =3D=3D token->value);
+ }
+=20
+ static int kbd_get_first_active_token_bit(void)
+@@ -1472,7 +1472,7 @@ static inline void kbd_init_tokens(void)
+ 	int i;
+=20
+ 	for (i =3D 0; i < ARRAY_SIZE(kbd_tokens); ++i)
+-		if (find_token_id(kbd_tokens[i]) !=3D -1)
++		if (dell_smbios_find_token(kbd_tokens[i]))
+ 			kbd_token_bits |=3D BIT(i);
+ }
+=20
 --=20
 1.7.10.4
