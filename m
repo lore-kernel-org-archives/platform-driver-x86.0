@@ -1,70 +1,30 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4] dell-wmi: Support new hotkeys on the XPS 13 9350
- (Skylake)
-Date: Thu, 21 Jan 2016 13:57:42 -0800
-Message-ID: <20160121215742.GH1979@malice.jf.intel.com>
-References: <a343d7d11816d86d04c51505f6e33c5b99086ff6.1453244706.git.luto@kernel.org>
- <20160120194050.GL7192@pali>
- <CALCETrUqH7FLPyHasx020vyjZNtTdVSk+0LJKcGjXyj+iwE8Dw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Mario Limonciello <mario_limonciello@dell.com>
+Subject: [PATCH 0/4] alienware-wmi new platform and feature support
+Date: Thu, 21 Jan 2016 18:04:56 -0600
+Message-ID: <1453421100-12984-1-git-send-email-mario_limonciello@dell.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.9]:55973 "EHLO
-	bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751276AbcAUV5q (ORCPT
+Received: from ausxippc101.us.dell.com ([143.166.85.207]:11406 "EHLO
+	ausxippc101.us.dell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750878AbcAVAIj (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Thu, 21 Jan 2016 16:57:46 -0500
-Content-Disposition: inline
-In-Reply-To: <CALCETrUqH7FLPyHasx020vyjZNtTdVSk+0LJKcGjXyj+iwE8Dw@mail.gmail.com>
+	Thu, 21 Jan 2016 19:08:39 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Lutomirski <luto@kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Linux ACPI <linux-acpi@vger.kernel.org>, Jon Eyolfson <jon@eyl.io>
+To: dvhart@infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario_limonciello@dell.com>
 
-On Wed, Jan 20, 2016 at 12:46:23PM -0800, Andy Lutomirski wrote:
-> On Wed, Jan 20, 2016 at 11:40 AM, Pali Roh=E1r <pali.rohar@gmail.com>=
- wrote:
-> > On Tuesday 19 January 2016 15:07:47 Andy Lutomirski wrote:
-> >> The XPS 13 9350 sends WMI keypress events that aren't enumerated i=
-n
-> >> the DMI table.  Add a table listing them.  To avoid breaking thing=
-s
-> >> that worked before, these un-enumerated hotkeys won't be used if t=
-he
-> >> DMI table maps them to something else.
-> >>
-> >> FWIW, it appears that the DMI table may be a legacy thing and we
-> >> might want to rethink how we handle events in general.  As an
-> >> example, a whole lot of things map to KEY_PROG3 via the DMI table.
-> >>
-> >> So far, this doesn't send keypress events for any of the new
-> >> events.  Depnding on whether we figure out exactly what needs to
-> >> happen to get the wireless button working in time for Linux 4.5,
-> >> we might want to temporarily handle it in dell-wmi.
-> >>
-> >> Signed-off-by: Andy Lutomirski <luto@kernel.org>
-> >
-> > Looks good,
-> >
-> > Reviewed-by: Pali Roh=E1r <pali.rohar@gmail.com>
->=20
-> Darren, if/when you apply this, can you fix up the last paragraph of
-> the commit message?
->=20
->     This doesn't send keypress events for any of the new
->     events, as no models appear to require it.
->=20
-> I wrote the old text before intel-hid landed.
+I've got some extensions for the alienware-wmi driver that have
+been introduced for a few new platforms and can be controlled via the WMI
+interface.
 
-Planning on queueing for 4.6 as soon as this window closes, likely tomo=
-rrow. I
-want this to have some time in -next. Thanks!
+Mario Limonciello (4):
+  Add support for new platform, X51-R3
+  Add support for alienware graphics amplifier
+  Add support for deep sleep control.
+  Add support for two new systems: ASM200 & ASM201
 
->=20
-> --Andy
->=20
+ drivers/platform/x86/alienware-wmi.c | 285 +++++++++++++++++++++++++++++++----
+ 1 file changed, 252 insertions(+), 33 deletions(-)
 
---=20
-Darren Hart
-Intel Open Source Technology Center
+-- 
+1.9.1
