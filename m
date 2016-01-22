@@ -1,85 +1,115 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 1/3] dell_wmi: Support new hotkeys on the XPS 13 Skylake
-Date: Fri, 22 Jan 2016 09:26:02 +0100
-Message-ID: <20160122082602.GK7192@pali>
-References: <cover.1447479930.git.luto@kernel.org>
- <db83b63cc163ecc640d5d1c5554f8aa87beaadfc.1447479930.git.luto@kernel.org>
- <20151121000636.GG7413@malice.jf.intel.com>
- <CALCETrVz+4CX=rjY5OZfCSGQDcgW1oQe6t8d9940ubQKDv-Eqg@mail.gmail.com>
- <20151122020414.GR16374@dell.com>
- <20151123145351.GG24147@pali>
- <20160121101711.GY7192@pali>
- <56A17306.3010503@dell.com>
+From: Jean Delvare <jdelvare@suse.de>
+Subject: Re: [PATCH v3] dmi: Make dmi_walk and dmi_walk_early return real
+ error codes
+Date: Fri, 22 Jan 2016 10:12:22 +0100
+Message-ID: <20160122101222.3a29841d@endymion.delvare>
+References: <0e75e48f9944d14ed914342a4780c199095ad747.1453247603.git.luto@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:35704 "EHLO
-	mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751378AbcAVI0G (ORCPT
+Received: from mx2.suse.de ([195.135.220.15]:54600 "EHLO mx2.suse.de"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751818AbcAVJM0 (ORCPT
 	<rfc822;platform-driver-x86@vger.kernel.org>);
-	Fri, 22 Jan 2016 03:26:06 -0500
-Received: by mail-wm0-f65.google.com with SMTP id 123so15787246wmz.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Jan 2016 00:26:04 -0800 (PST)
-Content-Disposition: inline
-In-Reply-To: <56A17306.3010503@dell.com>
+	Fri, 22 Jan 2016 04:12:26 -0500
+In-Reply-To: <0e75e48f9944d14ed914342a4780c199095ad747.1453247603.git.luto@kernel.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario_limonciello@dell.com>
-Cc: "Dominguez, Jared" <Jared_Dominguez@DELL.com>, Andy Lutomirski <luto@amacapital.net>, Darren Hart <dvhart@infradead.org>, Andy Lutomirski <luto@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Thursday 21 January 2016 18:08:38 Mario Limonciello wrote:
->=20
->=20
-> On 01/21/2016 04:17 AM, Pali Roh=C3=A1r wrote:
-> > On Monday 23 November 2015 15:53:51 Pali Roh=C3=A1r wrote:
-> >> On Saturday 21 November 2015 20:04:15 D. Jared Dominguez wrote:
-> >>> On Fri, Nov 20, 2015 at 06:12:58PM -0600, Andy Lutomirski wrote:
-> >>>> Jared, want to give us some guidance as to whether this code is
-> >>>> correct at all and, if so, whether we should actually send a
-> >>>> KEY_RFKILL event from dell-wmi when the key is pressed?
-> >>>>
-> >>>> IOW, should we allow dell-wmi to handle rfkill or should we wait=
- for
-> >>>> the other mechanism?
-> >>>>
-> >>>> --Andy
-> >>> I'm adding Mario since he's worked on our client systems much lon=
-ger and
-> >>> knows more about the correct behavior for our hotkeys. I've not y=
-et read
-> >>> through any of our documentation about our hotkey behavior so wou=
-ldn't be as
-> >>> qualified to answer that. Note that both Mario and I are on vacat=
-ion until
-> >>> the 30th, so he may not reply until then.
-> >>>
-> >>> --Jared
-> >>>
-> >> Jared, thanks for your input! When you or Mario are back from vaca=
-tion,
-> >> can you look at it? Or if you do not have much time, can you provi=
-de
-> >> documentation (or some snippets), so somebody else can update driv=
-er to
-> >> work correctly?
-> > Hi Jared & Mario, I believe you are back from vacation, can you loo=
-k at it?
-> >
-> Pali,
->=20
-> I understand that intel-hid will be making it in at this point.  If I=
-'m
-> not mistaken, it should be handling this portion.
+Hi Andy,
 
-Hi Mario! Thats truth, but we still needs to know all codes which
-dell-wmi should ignore (because they will be handled by intel-hid).
+Sorry for the delay.
 
-Currently Andy's patch adds three codes which are not specified in
-vendor-specific DMI table.
+On Tue, 19 Jan 2016 15:54:46 -0800, Andy Lutomirski wrote:
+> Currently they return -1 on error, which will confuse callers if
+> they try to interpret it as a normal negative error code.
+> 
+> Signed-off-by: Andy Lutomirski <luto@kernel.org>
+> ---
+> 
+> Changes from v3:
 
-Do you such table of key events which can ACPI/BIOS/WMI send to OS?
+You mean from v2...
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+>  - Split out from the series it was in.
+>  - Use -ENXIO for "there's no DMI".
+>  - Also fix docs and !DMI case.
+> 
+> Changes from v2:
+
+... and from v1.
+
+>  - Total rewrite.
+> 
+> drivers/firmware/dmi_scan.c | 9 +++++----
+>  include/linux/dmi.h         | 2 +-
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> index 0e08e665f715..0418fed261bb 100644
+> --- a/drivers/firmware/dmi_scan.c
+> +++ b/drivers/firmware/dmi_scan.c
+> @@ -144,7 +144,7 @@ static int __init dmi_walk_early(void (*decode)(const struct dmi_header *,
+>  
+>  	buf = dmi_early_remap(dmi_base, orig_dmi_len);
+>  	if (buf == NULL)
+> -		return -1;
+> +		return -ENOMEM;
+>  
+>  	dmi_decode_table(buf, decode, NULL);
+>  
+> @@ -970,7 +970,8 @@ EXPORT_SYMBOL(dmi_get_date);
+>   *	@decode: Callback function
+>   *	@private_data: Private data to be passed to the callback function
+>   *
+> - *	Returns -1 when the DMI table can't be reached, 0 on success.
+> + *	Returns 0 on success, -ENXIO if DMI is not selected or not present,
+> + *	or a different negative error code if DMI walking fails.
+
+Returning an error from DMI walking isn't yet implemented so this is
+confusing. If it ever is, most likely it will be implemented as a
+separate function. Or were you only referring to the -ENOMEM case below?
+
+>   */
+>  int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+>  	     void *private_data)
+> @@ -978,11 +979,11 @@ int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+>  	u8 *buf;
+>  
+>  	if (!dmi_available)
+> -		return -1;
+> +		return -ENOENT;
+
+Should be -ENXIO as documented above? Not that I really understand how
+"No such device or address" is going to be a helpful error message for
+the user. What's wrong with -ENOTSUP I suggested earlier?
+
+>  
+>  	buf = dmi_remap(dmi_base, dmi_len);
+>  	if (buf == NULL)
+> -		return -1;
+> +		return -ENOMEM;
+>  
+>  	dmi_decode_table(buf, decode, private_data);
+>  
+> diff --git a/include/linux/dmi.h b/include/linux/dmi.h
+> index 5055ac34142d..770d548e9a9d 100644
+> --- a/include/linux/dmi.h
+> +++ b/include/linux/dmi.h
+> @@ -135,7 +135,7 @@ static inline int dmi_name_in_vendors(const char *s) { return 0; }
+>  static inline int dmi_name_in_serial(const char *s) { return 0; }
+>  #define dmi_available 0
+>  static inline int dmi_walk(void (*decode)(const struct dmi_header *, void *),
+> -	void *private_data) { return -1; }
+> +	void *private_data) { return -ENXIO; }
+>  static inline bool dmi_match(enum dmi_field f, const char *str)
+>  	{ return false; }
+>  static inline void dmi_memdev_name(u16 handle, const char **bank,
+
+
+-- 
+Jean Delvare
+SUSE L3 Support
