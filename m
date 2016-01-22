@@ -1,52 +1,74 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH v2] dell-wmi: process Dell Instant Launch hotkey on Dell
- Vostro V131
-Date: Fri, 22 Jan 2016 12:08:30 +0100
-Message-ID: <20160122110830.GA5557@eudyptula.hq.kempniu.pl>
-References: <20151130211542.GE30553@malice.jf.intel.com>
- <20151204132745.GA13441@eudyptula.hq.kempniu.pl>
- <20160111191226.GF10643@malice.jf.intel.com>
- <201601112107.43510@pali>
- <20160121090401.GR7192@pali>
- <20160121105203.GA4312@eudyptula.hq.kempniu.pl>
- <20160121134425.GG7192@pali>
- <20160121145612.GA4684@eudyptula.hq.kempniu.pl>
- <20160121154248.GI7192@pali>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH v2 00/16] Common Dell SMBIOS API
+Date: Fri, 22 Jan 2016 15:27:12 +0100
+Message-ID: <1453472848-3118-1-git-send-email-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160121154248.GI7192@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, Darren Hart <dvhart@infradead.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-lf0-f67.google.com ([209.85.215.67]:36014 "EHLO
+	mail-lf0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753569AbcAVO1l (ORCPT
+	<rfc822;platform-driver-x86@vger.kernel.org>);
+	Fri, 22 Jan 2016 09:27:41 -0500
+Received: by mail-lf0-f67.google.com with SMTP id t141so4143978lfd.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Jan 2016 06:27:40 -0800 (PST)
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
 
-> For full support we need:
->=20
-> 1) invoke special SMBIOS call for some machine
->=20
-> 2) patch dell-wmi.c to do not drop some events for some machines
->=20
-> Part 2) needs to touch only dell-wmi.c code, this is obvious. But I
-> thought that part 1) will be done in dell-laptop.c code where are all
-> others SMBIOS calls. Reason is just because dell-wmi.c is doing WMI
-> stuff. Do you want to include this is part 1) also to dell-wmi.c file=
-?
+The Linux kernel tree currently contains two Dell laptop-related driver=
+s
+issuing SMBIOS requests in different ways (dell-laptop in
+drivers/platform/x86 and dell-led in drivers/led).  As an upcoming patc=
+h
+series for the dell-wmi driver (also in drivers/platform/x86) will
+change it so that it also performs SMBIOS requests, I took the
+opportunity to unify the API used for issuing Dell SMBIOS requests
+throughout the kernel before any further code duplication happens.
+Credit for suggesting this goes to Pali Roh=C3=A1r.
 
-Yes, that was my idea.  That SMBIOS call is basically WMI initializatio=
-n
-code.  Consider the case of Vostro V131 - there is no WMI on that
-machine without that SMBIOS call and there is no need to issue that
-SMBIOS call if you don't want to use WMI.  Given that dell-wmi does not
-depend on dell-laptop, consider the extreme case where the user selects
-CONFIG_DELL_LAPTOP=3Dn and CONFIG_DELL_WMI=3Dm, expecting WMI to work. =
- If
-we put the WMI-enabling SMBIOS call in dell-laptop, it won't.  Also,
-once my Dell SMBIOS API rework series gets applied, adding the relevant
-call to dell-wmi will be easy.
+This patch series is primarily intended for the platform-x86 subsystem,
+with only 2 final patches touching the LED subsystem.
+
+The first patch generates a lot of checkpatch warnings, but these are
+also raised for the original code and I decided that not changing the
+code while moving around large quantities of it is critical for
+reviewability.
+
+Changes from v1:
+
+  - the SMBIOS buffer is no longer exported from the new dell-smbios
+    module (patch 03 from v1 has been dropped, patches 08-09 from v2
+    implement this change),
+
+  - dell_smbios_send_request() is changed so that it doesn't return an
+    SMBIOS buffer (patch 07 from v2),
+
+  - slight patch reordering.
+
+Note:
+
+    In this series (both v1 and v2) I tried to stick to the overall
+    concept used in dell-laptop, but in the v1 thread me and Pali also
+    briefly discussed his alternative ideas [1][2] as to what this API
+    could look like, so feel free to suggest a different approach.
+
+[1] http://www.spinics.net/lists/platform-driver-x86/msg08260.html
+[2] http://www.spinics.net/lists/platform-driver-x86/msg08268.html
+
+ drivers/leds/Kconfig               |    1 +
+ drivers/leds/dell-led.c            |  126 ++-----------
+ drivers/platform/x86/Kconfig       |   12 +-
+ drivers/platform/x86/Makefile      |    1 +
+ drivers/platform/x86/dell-laptop.c |  340 ++++++++++------------------=
+--------
+ drivers/platform/x86/dell-smbios.c |  176 +++++++++++++++++++
+ drivers/platform/x86/dell-smbios.h |   44 +++++
+ 7 files changed, 344 insertions(+), 356 deletions(-)
+ create mode 100644 drivers/platform/x86/dell-smbios.c
+ create mode 100644 drivers/platform/x86/dell-smbios.h
 
 --=20
-Best regards,
-Micha=C5=82 K=C4=99pie=C5=84
+1.7.10.4
